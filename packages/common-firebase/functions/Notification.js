@@ -1,5 +1,4 @@
 const admin = require('firebase-admin');
-admin.initializeApp();
 const messaging = admin.messaging();
 
 module.exports = new class Notification {
