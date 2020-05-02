@@ -2,6 +2,7 @@
   "name": "lambda_functions",
   "description": "Cloud Functions for Firebase",
   "scripts": {
+    "lint": "echo 'running deploy without linter'",
     "serve": "firebase serve --only functions",
     "shell": "firebase functions:shell",
     "start": "npm run shell",

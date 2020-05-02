@@ -39,38 +39,33 @@ const arc = new Arc({
   }
 });
 
-async function main() {
-  try {
-    const db = admin.firestore();
-    //
-    // const kany = await fetch('https://api.kanye.rest/');
-    // console.log("YE SAYS: ", await kany.json());
-
-    // get a list of DAOs
-    arc
-      .daos({orderBy: 'name', orderDirection: 'asc'}, {fetchAllData: true})
-      .subscribe(res => {
-        res.map(dao => {
-          const {name, id, memberCount, tokenName} = dao.coreState;
-          db.collection('daos').doc(id).set({name, id, memberCount, tokenName}).then(() => {
-            console.log('added dao');
-          }, (error) => {
-            console.error('Failed to add dao');
-            console.error(error);
-          });
-          console.log(name + ': ', {name, id, memberCount, tokenName})
-        })
-        // console.log(res);
-      });
-
-  } catch(e) {
-    console.log('ERROR: ', e)
+async function pingDaos() {
+  //loop that runs a function every 10 seconds for 5 intervals
+  for(var i = 0; i < 4; i++) {
+    (function(index) {
+      setTimeout(function() {
+        try {
+          const db = admin.firestore();
+          arc
+            .daos({orderBy: 'name', orderDirection: 'asc'}, {fetchAllData: true})
+            .subscribe(res => {
+              res.map(dao => {
+                const {name, id, memberCount, tokenName} = dao.coreState;
+                db.collection('daos').doc(id).set({name, id, memberCount, tokenName}).then(() => {
+                }, (error) => {
+                  console.error('Failed to updated DAOs: ');
+                  console.error(error);
+                });
+              })
+            });
+          console.log(`[ PING DAOS ] Updated DAOs`);
+        } catch(e) {
+          console.log('Error querying DAOs: ', e)
+        }
+      }, index*15000);
+    })(i);
   }
-
 }
-
-main();
-
 
 const app = express();
 
@@ -96,7 +91,7 @@ app.get('/', async (req, res) => {
 app.get('/send-test-eth/:address', async (req, res) => {
   try {
     const address = req.param("address");
-    console.log('address: ', address)
+    console.log('address: ', address);
     if (address) {
       let balance = ethers.utils.formatEther(await provider.getBalance(address));
       // console.log(address + ': ' + balance);
@@ -105,6 +100,7 @@ app.get('/send-test-eth/:address', async (req, res) => {
         res.status(code).send('Balance exceeds 0.1 ETH');
         return
       }
+
 
       let tx = {
         to: address,
@@ -223,3 +219,8 @@ exports.sendFollowerNotification = functions.firestore.document('/notification/f
 
     return Notification.send(title, body,)
   })
+
+exports.scheduledFunction = functions.pubsub.schedule('* * * * *').onRun((context) => {
+  pingDaos();
+  return null;
+});
