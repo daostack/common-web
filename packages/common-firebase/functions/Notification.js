@@ -2,7 +2,7 @@ const admin = require('firebase-admin');
 const messaging = admin.messaging();
 
 module.exports = new class Notification {
-    send(tokens, title, body, options={contentAvailable: true, priority: 'high',}, data) {
+    send(tokens, title, body, options={contentAvailable: true, priority: 'high'}, data={}) {
         const payload = {
             notification: {
               title,
@@ -10,6 +10,10 @@ module.exports = new class Notification {
             },
             data
         };
-        return messaging.sendToDevice(tokens, payload, options);
+        messaging.sendToDevice(tokens, payload, options).then(()=> {
+            console.log('Send Success')
+        }).catch( e => {
+            console.log(e)
+        });
     }
 };
