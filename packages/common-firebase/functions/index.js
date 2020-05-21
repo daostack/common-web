@@ -7,7 +7,7 @@ admin.initializeApp({
 });
 
 const ethers = require('ethers');
-const Notification = require('./Notification')
+const Notification = require('./Notification');
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');

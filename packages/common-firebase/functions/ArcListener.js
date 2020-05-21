@@ -100,54 +100,6 @@ async function updatePlugins() {
 
 }
 
-async function updateProposals() {
-  arc.proposals({}, {subscribe: true, fetchAllData: true})
-    .subscribe(async proposals => {
-      proposals.map(async proposal => {
-        const {coreState} = proposal;
-        const proposalObject = {
-
-          boostedAt: coreState.boostedAt,
-          createdAt: coreState.createdAt,
-          dao: coreState.dao.id,
-          description: coreState.description,
-          expiresInQueueAt: coreState.expiresInQueueAt,
-          executionState: coreState.executionState,
-          executed: coreState.executed,
-          funding: coreState.funding.toString(),
-          executedAt: coreState.executedAt,
-          joinAndQuit: {
-            funding: coreState.funding.toString(),
-            proposedMemberId: coreState.proposer,
-            proposedMemberAddress: coreState.proposer,
-          },
-          preBoostedAt: coreState.preBoostedAt,
-          id: coreState.id,
-          name: coreState.name,
-          proposer: coreState.proposer,
-          proposerId: coreState.proposer,
-          resolvedAt: coreState.resolvedAt,
-          stage: coreState.stage,
-          title: coreState.title,
-          type: coreState.type,
-          votes: {
-            list: coreState.votes,
-            votesAgainst: parseInt(coreState.votesAgainst),
-            votesFor: parseInt(coreState.votesFor),
-          },
-          links: [{
-            title: "website",
-            url: coreState.url,
-          }],
-          images: [],
-          winningOutcome: coreState.winningOutcome,
-        }
-        await db.collection('proposals').doc(coreState.id).set(proposalObject)
-      });
-
-    })
-}
-
 async function updateProposals(first=null) {
   const db = admin.firestore();
   const proposals = await arc.proposals({first}).first()
