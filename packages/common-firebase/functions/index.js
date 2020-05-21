@@ -11,8 +11,7 @@ const Notification = require('./Notification')
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const updateDaos = require('./ArcListener').updateDaos;
-const updateProposals = require('./ArcListener').updateProposals;
+const {updateDaos, updateProposals, test} = require('./ArcListener')
 
 const env = require('./_keys/env');
 const privateKey = env.wallet_info.private_key;
@@ -21,8 +20,6 @@ let wallet = new ethers.Wallet(privateKey, provider);
 let amount = ethers.utils.parseEther('0.1');
 
 // create an Arc instance
-
-
 const app = express();
 
 // Automatically allow cross-origin requests
@@ -35,14 +32,18 @@ app.use(express.urlencoded({ extended: true })); // to support URL-encoded bodie
 app.use(cors({ origin: true }));
 
 
-const messaging = admin.messaging();
+// const messaging = admin.messaging();
 
 app.get('/', async (req, res) => {
   const message = "G'day mate";
-  updateDaos();
   res.send({message})
 });
 
+
+app.get('/test', async (req, res) => {
+  const message = await test()
+  res.send(message)
+})
 app.get('/update-daos', async (req, res) => {
   try {
     const result = await updateDaos();
@@ -62,11 +63,11 @@ app.get('/update-proposals', async (req, res) => {
     const result = await updateProposals();
     console.log(result)
     const code = 200;
-    res.status(code).send(`Updated DAOs successfully: ${result}`);
+    res.status(code).send(`Updated Propsals successfully: ${result}`);
   } catch(e) {
     const code = 500;
     console.log(e)
-    res.status(code).send(new Error(`Unable to update DAOs: ${e}`));
+    res.status(code).send(new Error(`Unable to update Proposals: ${e}`));
   }
 
 });
@@ -78,7 +79,7 @@ app.get('/send-test-eth/:address', async (req, res) => {
     if (address) {
       let balance = ethers.utils.formatEther(await provider.getBalance(address));
       // console.log(address + ': ' + balance);
-      if (balance > 0.1) {
+      if (balance > 0.5) {
         const code = 200;
         res.status(code).send('Balance exceeds 0.1 ETH');
         return
@@ -105,7 +106,7 @@ app.get('/send-test-eth/:address', async (req, res) => {
 
 app.get('/notification', async (req, res) => {
   try {
-    const message = await messaging.send(payload);
+    // const message = await messaging.send(payload);
     res.send({message: 'hello'});
 
   } catch(e) {
@@ -147,8 +148,34 @@ exports.listenToTransaction = functions.firestore.document('/notification/transa
   return Notification.send(tokens, title, body);
 });
 
+// Follow User
+function follow(userId, userList) {
+  console.log('Follow User', userId, userList);
+  for (var targetUid of userList) {
+    console.log('New follow', userId, targetUid);
+    const writeNotifications = admin.firestore().doc(`notification/follow/${userId}/${targetUid}`).set({createdAt: new Date()}, {merge: false});
+    const writeFollow = admin.firestore().doc(`users/${targetUid}`).update({follower: admin.firestore.FieldValue.arrayUnion(userId)})
+    // tasks.append(writeNotifications)
+    // tasks.append(writeFollow)
+    Promise.all([writeNotifications, writeFollow]);
+  }
+}
+
+function unfollow(userId, userList) {
+  // let tasks = [];
+  for (const targetUid of userList) {
+    const writeUnFollow = admin.firestore().doc(`users/${targetUid}`).update({follower: admin.firestore.FieldValue.arrayRemove(userId)})
+    Promise.all([writeUnFollow]);
+  }
+}
+
 exports.userInfoTrigger = functions.firestore.document('/users/{userId}')
   .onUpdate(async (change, context) => {
+
+    Array.prototype.diff = function(a) {
+      return this.filter(function(i) {return a.indexOf(i) < 0;});
+    };
+
     const userId = context.params.userId;
     const txBList = change.before.get('transactionHistory')
     const txAList = change.after.get('transactionHistory')
@@ -158,17 +185,20 @@ exports.userInfoTrigger = functions.firestore.document('/users/{userId}')
       return admin.firestore().doc(`notification/transaction/${userId}/${txHash}`).set({createdAt: new Date()})
     }
 
-    const followedBList = change.before.get('following')
-    const followedAList = change.after.get('following')
-    if (JSON.stringify(followedBList) !== JSON.stringify(followedAList)) {
-      const targetUid = followedAList.pop();
-      console.log('New follow', userId, targetUid);
-      const writeNotifications = admin.firestore().doc(`notification/follow/${userId}/${targetUid}`).set({createdAt: new Date()})
-      const writeFollow = admin.firestore().doc(`users/${targetUid}`).update({follower: admin.firestore.FieldValue.arrayUnion(userId)})
-      return Promise.all([writeNotifications, writeFollow])
+    const followB = change.before.get('following')
+    const followA = change.after.get('following')
+    const diffFollow = followB.diff(followA).concat(followA.diff(followB));
+    console.log('diffFollow', diffFollow);
+    if (diffFollow.length > 0) {
+      if (followB.length > followA.length) {
+        console.log('UNFOLLOW')
+        unfollow(userId, diffFollow);
+      } else {
+        console.log('FOLLOW')
+        follow(userId, diffFollow);
+      }
     }
     return Promise.resolve(null);
-
   })
 
 exports.sendFollowerNotification = functions.firestore.document('/notification/follow/{userId}/{targetUid}')
@@ -184,10 +214,11 @@ exports.sendFollowerNotification = functions.firestore.document('/notification/f
 
     console.log(`tokens: ${tokens}  - follower: ${follower.displayName}`);
 
-    let title = 'You have a new follower!';
+    let title = 'You have a new follower';
     let body = `${follower.displayName} is now following you.`
+    let image = follower.photoURL
 
-    return Notification.send(tokens, title, body)
+    return Notification.send(tokens, title, body, image);
   })
 
 //
