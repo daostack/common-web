@@ -1,21 +1,20 @@
 const { Arc } = require('@daostack/arc.js');
 const admin = require('firebase-admin');
 
-const graphHttpLink =
-  'https://api.thegraph.com/subgraphs/name/daostack/v7_5_exp_rinkeby';
-const graphwsLink =
-  'wss://api.thegraph.com/subgraphs/name/daostack/v7_5_exp_rinkeby';
+const graphHttpLink = 'https://api.thegraph.com/subgraphs/name/daostack/v8_1_exp_xdai'
+const graphwsLink = 'wss://api.thegraph.com/subgraphs/name/daostack/v8_1_exp_xdai'
 
 const arc = new Arc({
   graphqlHttpProvider: graphHttpLink,
   graphqlWsProvider: graphwsLink,
 });
+
 const db = admin.firestore();
 
 // get all DAOs data from graphql and read it into the subgraph
 async function updateDaos() {
   const response = [];
-  const daos = await arc.daos({first: 4}).first();
+  const daos = await arc.daos().first();
   console.log(`Found ${daos.length} DAOs`);
   for (const dao of daos) {
     const joinAndQuitPlugins = await dao.plugins({where: {name: 'JoinAndQuit'}}).first();
@@ -25,8 +24,8 @@ async function updateDaos() {
       console.log(msg);
       response.push(msg)
     } else {
-      console.log(`updating ${dao.id}`)
-      const joinAndQuitPlugin = joinAndQuitPlugins[0]
+      console.log(`updating ${dao.id}`);
+      const joinAndQuitPlugin = joinAndQuitPlugins[0];
       const {
         fundingGoal,
         minFeeToJoin,
