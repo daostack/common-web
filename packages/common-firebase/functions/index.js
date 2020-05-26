@@ -1,5 +1,6 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const axios = require('axios');
 
 admin.initializeApp({
   credential: admin.credential.cert(require('./_keys/adminsdk-keys.json')),
@@ -11,8 +12,8 @@ const Notification = require('./Notification');
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const {updateDaos, updateProposals, test} = require('./ArcListener')
-
+const {updateDaos, updateProposals, test, updateUsers} = require('./ArcListener')
+const abi = require('./abi.json');
 const env = require('./_keys/env');
 const privateKey = env.wallet_info.private_key;
 const provider = new ethers.providers.JsonRpcProvider('https://xdai.poanetwork.dev/');
@@ -72,6 +73,20 @@ app.get('/update-proposals', async (req, res) => {
   }
 
 });
+app.get('/update-users', async (req, res) => {
+  try {
+    const result = await updateUsers();
+    console.log(result)
+    const code = 200;
+    res.status(code).send(`Updated users successfully: ${result}`);
+  } catch(e) {
+    const code = 500;
+    console.log(e)
+    res.status(code).send(new Error(`Unable to update users: ${e}`));
+  }
+
+});
+
 
 app.get('/send-test-eth/:address', async (req, res) => {
   try {
@@ -115,15 +130,97 @@ app.get('/notification', async (req, res) => {
   }
 });
 
+app.get('/createWallet', async (req, res) => {
+  try {
+    let idToken = req.header('idToken');
+    const decodedToken = await admin.auth().verifyIdToken(idToken)
+    let uid = decodedToken.uid;
+    const userData = await admin.firestore().collection('users').doc(uid).get().then(doc => { return doc.data() })
+    let address = userData.ethereumAddress
+    const options = {headers: {'x-api-key' : env.biconomy.apiKey, 'Content-Type': 'application/json'}}
+    var iface = new ethers.utils.Interface(abi.MasterCopy);
+    const zeroAddress = `0x${'0'.repeat(40)}`;
+    let encodedData = iface.functions.setup.encode([
+      [address],
+      1,
+      zeroAddress,
+      '0x',
+      zeroAddress,
+      zeroAddress,
+      '0x',
+      zeroAddress,
+    ]);
+    const data = {
+    'apiId': env.biconomy.createProxy,
+    'to': env.biconomy.proxyFactory, 
+    'from': address,
+    'params': [env.biconomy.masterCopy, encodedData]
+    }
+    axios.post('https://api.biconomy.io/api/v2/meta-tx/native', data, options)
+    .then(receive => {
+      res.send(receive.data);
+    })
+    .catch(err => {
+      res.send(err);
+    }) 
+  } catch (err) {
+    res.send(err);
+  }
+})
+
+app.get('/create2Wallet', async (req, res) => {
+  try {
+    let idToken = req.header('idToken');
+    const decodedToken = await admin.auth().verifyIdToken(idToken)
+    let uid = decodedToken.uid;
+    const userData = await admin.firestore().collection('users').doc(uid).get().then(doc => { return doc.data() })
+    let address = userData.ethereumAddress
+    const options = {headers: {'x-api-key' : env.biconomy.apiKey, 'Content-Type': 'application/json'}}
+    var iface = new ethers.utils.Interface(abi.MasterCopy);
+    const zeroAddress = `0x${'0'.repeat(40)}`;
+    let encodedData = iface.functions.setup.encode([
+      [address],
+      1,
+      zeroAddress,
+      '0x',
+      zeroAddress,
+      zeroAddress,
+      '0x',
+      zeroAddress,
+    ]);
+    let nonceSalt = Math.floor(Math.random() * 10000000000);
+    const data = {
+    'apiId': env.biconomy.create2Proxy,
+    'to': env.biconomy.proxyFactory, 
+    'from': address,
+    'params': [env.biconomy.masterCopy, encodedData, nonceSalt]
+    }
+
+    let testAddress = ethers.utils.getContractAddress({from: env.biconomy.proxyFactory, nonce: nonceSalt})
+    axios.post('https://api.biconomy.io/api/v2/meta-tx/native', data, options)
+    .then(receive => {
+      let object = Object.assign(receive.data, {address: testAddress, nonce: nonceSalt})
+      res.send(object);
+    })
+    .catch(err => {
+      res.send(err);
+    }) 
+  } catch (err) {
+    res.send(err);
+  }
+})
+
+
 // Expose Express API as a single Cloud Function:
 exports.api = functions.https.onRequest(app);
 
 
-exports.listenToTransaction = functions.firestore.document('/notification/transaction/{uid}/{txHash}').onCreate(async (change, context) => {
+exports.listenToTransaction = functions.firestore.document('/notification/transaction/{uid}/{txHash}')
+.onCreate(async (change, context) => {
   const uid = context.params.uid;
   const txHash = context.params.txHash;
 
-  const tokenRef = admin.firestore().collection('users').doc(`${uid}`)
+  const tokenRef = admin.firestore().collection('users').doc(uid)
   const tokens = await tokenRef.get().then(doc => { return doc.data().tokens })
 
   console.log("Token: ", tokens);

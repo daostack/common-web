@@ -13,7 +13,7 @@
     "node": "10"
   },
   "dependencies": {
-    "@daostack/arc.js": "^2.0.0-experimental.7",
+    "@daostack/arc.js": "^2.0.0-experimental.35",
     "apollo-cache-inmemory": "^1.6.5",
     "apollo-client": "^2.6.8",
     "apollo-link": "^1.2.14",
