@@ -15,7 +15,8 @@ const {updateDaos, updateProposals, test} = require('./ArcListener')
 
 const env = require('./_keys/env');
 const privateKey = env.wallet_info.private_key;
-const provider = ethers.getDefaultProvider('rinkeby');
+const provider = new ethers.providers.JsonRpcProvider('https://xdai.poanetwork.dev/');
+
 let wallet = new ethers.Wallet(privateKey, provider);
 let amount = ethers.utils.parseEther('0.1');
 

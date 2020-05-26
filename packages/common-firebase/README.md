@@ -35,6 +35,9 @@ api.get('update-daos')
 api.get('update-proposals')
 ```
 
+### Top up the relayer
+To top up the relayer send xDAI or rinkeby to this address ```0x86FC3E21B2897641BCa28404e06f37E9157E12b3```
+
 
 ## API endpoints
 
