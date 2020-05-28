@@ -62,7 +62,8 @@ async function updateDaos() {
       const {
         fundingGoal,
         minFeeToJoin,
-        memberReputation
+        memberReputation,
+        fundingGoalDeadline
       } = joinAndQuitPlugin.coreState.pluginParams;
       try {
         let metadata
@@ -91,6 +92,7 @@ async function updateDaos() {
           // reputationId: reputation.id,
           reputationTotalSupply: parseInt(daoState.reputationTotalSupply),
           fundingGoal: fundingGoal.toString(),
+          fundingGoalDeadline: fundingGoalDeadline,
           minFeeToJoin: minFeeToJoin.toString(),
           memberReputation: memberReputation.toString(),
           metadata,
@@ -100,7 +102,7 @@ async function updateDaos() {
         // also update the member information if it has changed
         const existingDoc = await db.collection("daos").doc(dao.id).get()
         const existingDocData = existingDoc.data()
-        if (true || !existingDocData.members || existingDocData.members.length !== daoState.memberCount) {
+        if (!existingDocData || !existingDocData.members || existingDocData.members.length !== daoState.memberCount) {
           console.log(`Membercount changed, updating member collections`)
           const members = await dao.members().first()
           doc.members = []
@@ -129,7 +131,11 @@ async function updateDaos() {
           }
         }
 
-        await db.collection('daos').doc(dao.id).update(doc)
+        if (existingDocData) {
+          await db.collection('daos').doc(dao.id).update(doc)
+        } else {
+          await db.collection('daos').doc(dao.id).create(doc)
+        }
         const msg =`Updated dao ${dao.id}`
         response.push(msg)
         console.log(msg)
