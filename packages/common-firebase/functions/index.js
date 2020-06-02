@@ -9,6 +9,7 @@ admin.initializeApp({
 
 const ethers = require('ethers');
 const Notification = require('./Notification');
+const Relayer = require('./Relayer');
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -25,7 +26,7 @@ let amount = ethers.utils.parseEther('0.1');
 const app = express();
 
 // Automatically allow cross-origin requests
-app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
@@ -38,7 +39,7 @@ app.use(cors({ origin: true }));
 
 app.get('/', async (req, res) => {
   const message = "G'day mate";
-  res.send({message})
+  res.send({ message })
 });
 
 
@@ -51,7 +52,7 @@ app.get('/update-daos', async (req, res) => {
     const result = await updateDaos();
     const code = 200;
     res.status(code).send(`Updated DAOs successfully: ${result}`);
-  } catch(e) {
+  } catch (e) {
     const code = 500;
     console.log(e)
     res.status(code).send(new Error(`Unable to update DAOs: ${e}`));
@@ -111,7 +112,7 @@ app.get('/send-test-eth/:address', async (req, res) => {
 
     }
 
-  } catch(e) {
+  } catch (e) {
     const code = 500;
     res.status(code).send(new Error('Unable to send transaction'));
   }
@@ -120,46 +121,28 @@ app.get('/send-test-eth/:address', async (req, res) => {
 app.get('/notification', async (req, res) => {
   try {
     // const message = await messaging.send(payload);
-    res.send({message: 'hello'});
+    res.send({ message: 'hello' });
 
-  } catch(e) {
+  } catch (e) {
     console.log('notification error: ', e);
   }
 });
 
 app.get('/createWallet', async (req, res) => {
   try {
-    let idToken = req.header('idToken');
+    const idToken = req.header('idToken');
     const decodedToken = await admin.auth().verifyIdToken(idToken)
-    let uid = decodedToken.uid;
-    const userData = await admin.firestore().collection('users').doc(uid).get().then(doc => { return doc.data() })
-    let address = userData.ethereumAddress
-    const options = {headers: {'x-api-key' : env.biconomy.apiKey, 'Content-Type': 'application/json'}}
-    var iface = new ethers.utils.Interface(abi.MasterCopy);
-    const zeroAddress = `0x${'0'.repeat(40)}`;
-    let encodedData = iface.functions.setup.encode([
-      [address],
-      1,
-      zeroAddress,
-      '0x',
-      zeroAddress,
-      zeroAddress,
-      '0x',
-      zeroAddress,
-    ]);
-    const data = {
-    'apiId': env.biconomy.createProxy,
-    'to': env.biconomy.proxyFactory,
-    'from': address,
-    'params': [env.biconomy.masterCopy, encodedData]
-    }
-    axios.post('https://api.biconomy.io/api/v2/meta-tx/native', data, options)
-    .then(receive => {
-      res.send(receive.data);
-    })
-    .catch(err => {
-      res.send(err);
-    })
+    const uid = decodedToken.uid;
+    const userRef = admin.firestore().collection('users').doc(uid)
+    const userData = await userRef.get().then(doc => { return doc.data() })
+    const address = userData.ethereumAddress
+    const response = await Relayer.createWallet(address)
+    const txHash = response.data.txHash
+    const safeAddress = await Relayer.getAddressFromEvent(txHash)
+    await userRef.update({safeAddress: safeAddress.toLowerCase()})
+    await Relayer.addAddressToWhitelist([address]);
+    const whitelist = await Relayer.addProxyToWhitelist([safeAddress]);
+    res.send({txHash, safeAddress, whitelist: whitelist.data.message})
   } catch (err) {
     res.send(err);
   }
@@ -167,15 +150,18 @@ app.get('/createWallet', async (req, res) => {
 
 app.get('/create2Wallet', async (req, res) => {
   try {
-    let idToken = req.header('idToken');
+
+    // TODO: Change this with calculate address
+    // SaltNonce need to change
+    const idToken = req.header('idToken');
     const decodedToken = await admin.auth().verifyIdToken(idToken)
-    let uid = decodedToken.uid;
+    const uid = decodedToken.uid;
     const userData = await admin.firestore().collection('users').doc(uid).get().then(doc => { return doc.data() })
-    let address = userData.ethereumAddress
-    const options = {headers: {'x-api-key' : env.biconomy.apiKey, 'Content-Type': 'application/json'}}
-    var iface = new ethers.utils.Interface(abi.MasterCopy);
+    const address = userData.ethereumAddress
+    const options = { headers: { 'x-api-key': env.biconomy.apiKey, 'Content-Type': 'application/json' } }
+    const iface = new ethers.utils.Interface(abi.MasterCopy);
     const zeroAddress = `0x${'0'.repeat(40)}`;
-    let encodedData = iface.functions.setup.encode([
+    const encodedData = iface.functions.setup.encode([
       [address],
       1,
       zeroAddress,
@@ -185,71 +171,102 @@ app.get('/create2Wallet', async (req, res) => {
       '0x',
       zeroAddress,
     ]);
-    let nonceSalt = Math.floor(Math.random() * 10000000000);
+    const nonceSalt = Math.floor(Math.random() * 10000000000);
     const data = {
-    'apiId': env.biconomy.create2Proxy,
-    'to': env.biconomy.proxyFactory,
-    'from': address,
-    'params': [env.biconomy.masterCopy, encodedData, nonceSalt]
+      'apiId': env.biconomy.create2Proxy,
+      'to': env.biconomy.proxyFactory,
+      'from': address,
+      'params': [env.biconomy.masterCopy, encodedData, nonceSalt]
     }
 
-    let testAddress = ethers.utils.getContractAddress({from: env.biconomy.proxyFactory, nonce: nonceSalt})
+    const testAddress = ethers.utils.getContractAddress({ from: env.biconomy.proxyFactory, nonce: nonceSalt })
     axios.post('https://api.biconomy.io/api/v2/meta-tx/native', data, options)
-    .then(receive => {
-      let object = Object.assign(receive.data, {address: testAddress, nonce: nonceSalt})
-      res.send(object);
-    })
-    .catch(err => {
-      res.send(err);
-    })
+      .then(receive => {
+        let object = Object.assign(receive.data, { address: testAddress, nonce: nonceSalt })
+        res.send(object);
+      })
+      .catch(err => {
+        res.send(err);
+      })
   } catch (err) {
     res.send(err);
   }
 })
 
+app.get('/addWhitleList', async (req, res) => {
+  try {
+    const idToken = req.header('idToken');
+    const decodedToken = await admin.auth().verifyIdToken(idToken)
+    const uid = decodedToken.uid;
+    const userData = await admin.firestore().collection('users').doc(uid).get().then(doc => { return doc.data() })
+    const address = userData.safeAddress
+    const result = await Relayer.addProxyToWhitelist([address]);
+    res.send(result.data);
+  } catch (err) {
+    res.send(err);
+  }
+})
+
+app.post('/execTransaction', async (req, res) => {
+  try {
+    // const idToken = req.header('idToken');
+    const {to, value, data, signature, idToken} = req.body;
+    const decodedToken = await admin.auth().verifyIdToken(idToken)
+    const uid = decodedToken.uid;
+    const userData = await admin.firestore().collection('users').doc(uid).get().then(doc => { return doc.data() })
+    const safeAddress = userData.safeAddress
+    const ethereumAddress = userData.ethereumAddress
+    await Relayer.addAddressToWhitelist([to]);
+    const response = await Relayer.execTransaction(safeAddress, ethereumAddress, to, value, data, signature)
+    // TODO: Once it failed, it will send detail to client which have apiKey
+    res.send(response.data);
+  } catch (err) {
+    res.send(err);
+  }
+})
 
 // Expose Express API as a single Cloud Function:
 exports.api = functions.https.onRequest(app);
 
 
 exports.listenToTransaction = functions.firestore.document('/notification/transaction/{uid}/{txHash}')
-.onCreate(async (change, context) => {
-  const uid = context.params.uid;
-  const txHash = context.params.txHash;
+  .onCreate(async (change, context) => {
+    const uid = context.params.uid;
+    const txHash = context.params.txHash;
 
-  const tokenRef = admin.firestore().collection('users').doc(uid)
-  const tokens = await tokenRef.get().then(doc => { return doc.data().tokens })
+    const tokenRef = admin.firestore().collection('users').doc(uid)
+    const tokens = await tokenRef.get().then(doc => { return doc.data().tokens })
 
-  console.log("Token: ", tokens);
+    console.log("Token: ", tokens);
 
-  const provider = new ethers.providers.InfuraProvider(
-    'rinkeby',
-    '3c08878d00734c0c98a3e4741d0b4cfc',
-  );
+    const provider = new ethers.providers.InfuraProvider(
+      'rinkeby',
+      '3c08878d00734c0c98a3e4741d0b4cfc',
+    );
 
-  const receipt = await provider.waitForTransaction(txHash);
+    const receipt = await provider.waitForTransaction(txHash);
 
-  let title;
-  let body;
+    let title;
+    let body;
 
-  if (receipt.status === 0) {
-    title = "❌ Your transaction have failed"
-    body = txHash
-  } else {
-    title = "✅ Your transaction have been confirmed"
-    body = txHash
-  }
+    if (receipt.status === 0) {
+      title = "❌ Your transaction have failed"
+      body = txHash
+    } else {
+      title = "✅ Your transaction have been confirmed"
+      body = txHash
+    }
 
-  return Notification.send(tokens, title, body);
-});
+    return Notification.send(tokens, title, body);
+  });
 
 // Follow User
 function follow(userId, userList) {
   console.log('Follow User', userId, userList);
   for (var targetUid of userList) {
     console.log('New follow', userId, targetUid);
-    const writeNotifications = admin.firestore().doc(`notification/follow/${userId}/${targetUid}`).set({createdAt: new Date()}, {merge: false});
-    const writeFollow = admin.firestore().doc(`users/${targetUid}`).update({follower: admin.firestore.FieldValue.arrayUnion(userId)})
+    const writeNotifications = admin.firestore().doc(`notification/follow/${userId}/${targetUid}`).set({ createdAt: new Date() }, { merge: false });
+    const writeFollow = admin.firestore().doc(`users/${targetUid}`).update({ follower: admin.firestore.FieldValue.arrayUnion(userId) })
     // tasks.append(writeNotifications)
     // tasks.append(writeFollow)
     Promise.all([writeNotifications, writeFollow]);
@@ -259,7 +276,7 @@ function follow(userId, userList) {
 function unfollow(userId, userList) {
   // let tasks = [];
   for (const targetUid of userList) {
-    const writeUnFollow = admin.firestore().doc(`users/${targetUid}`).update({follower: admin.firestore.FieldValue.arrayRemove(userId)})
+    const writeUnFollow = admin.firestore().doc(`users/${targetUid}`).update({ follower: admin.firestore.FieldValue.arrayRemove(userId) })
     Promise.all([writeUnFollow]);
   }
 }
@@ -267,8 +284,8 @@ function unfollow(userId, userList) {
 exports.userInfoTrigger = functions.firestore.document('/users/{userId}')
   .onUpdate(async (change, context) => {
 
-    Array.prototype.diff = function(a) {
-      return this.filter(function(i) {return a.indexOf(i) < 0;});
+    Array.prototype.diff = function (a) {
+      return this.filter(function (i) { return a.indexOf(i) < 0; });
     };
 
     const userId = context.params.userId;
@@ -277,7 +294,7 @@ exports.userInfoTrigger = functions.firestore.document('/users/{userId}')
     if (JSON.stringify(txBList) !== JSON.stringify(txAList)) {
       const txHash = txAList.pop();
       console.log('New transaction', userId, txHash);
-      return admin.firestore().doc(`notification/transaction/${userId}/${txHash}`).set({createdAt: new Date()})
+      return admin.firestore().doc(`notification/transaction/${userId}/${txHash}`).set({ createdAt: new Date() })
     }
 
     const followB = change.before.get('following')
