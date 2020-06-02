@@ -1,8 +1,6 @@
 const { Arc, Member } = require('@daostack/arc.js');
 const admin = require('firebase-admin');
-
-const graphHttpLink = 'https://api.thegraph.com/subgraphs/name/daostack/v8_1_exp_xdai'
-const graphwsLink = 'wss://api.thegraph.com/subgraphs/name/daostack/v8_1_exp_xdai'
+const { graphHttpLink, graphwsLink} = require('./settings')
 
 const arc = new Arc({
   graphqlHttpProvider: graphHttpLink,
@@ -14,16 +12,6 @@ const db = admin.firestore();
 function error(msg) {
   console.error(msg)
 }
-
-async function test() {
-  const query = db.collection(`users`)
-    .where(`ethereumAddress`, `==`, `0x12a525B5A23626CAf20062DeD7C280358bB27e05`)
-  // console.log(await query.listDocuments())
-  const snapshot = await query.get()
-  snapshot.forEach((doc) => { console.log(doc)})
-  return 'ok'
-}
-
 
 async function findUserByEthereumAddress(ethereumAddress) {
     // const query = await admin.database().ref(`users`)
@@ -67,7 +55,6 @@ async function updateDaos() {
       } = joinAndQuitPlugin.coreState.pluginParams;
       try {
         let metadata
-        console.log(daoState.metadata)
         if (daoState.metadata) {
           try {
             metadata = JSON.parse(daoState.metadata)
@@ -121,12 +108,10 @@ async function updateDaos() {
                 userDaos.push(dao.id)
                 db.collection("users").doc(user.id).update({ daos: userDaos})
               }
-              console.log(user.id)
               doc.members.push({
                 address: member.coreState.address,
                 userId: user.id 
               })
-              console.log(doc.members)
             }
           }
         }
@@ -149,20 +134,20 @@ async function updateDaos() {
 }
 
 
- async function updateProposals(first=null) {
+async function updateProposals(first=null) {
   const db = admin.firestore();
   const proposals = await arc.proposals({first}, {fetchPolicy: 'no-cache'}).first()
   console.log(`found ${proposals.length} proposals`)
 
+  const docs = []
   for (const proposal of proposals) {
     const s = proposal.coreState
-    console.log(s)
 
     // TODO: for optimization, consider looking for a new member not as part of this update process
     // but as a separate cloudfunction instead (that watches for changes in the database and keeps it consistent)
 
     // try to find the memberId corresponding to this address
-    const proposer = await findUserByEthereumAddress(db, s.proposer)
+    const proposer = await findUserByEthereumAddress(s.proposer)
     const proposerId = proposer.id
     let proposedMemberId
     if (!s.proposedMember) {
@@ -170,7 +155,7 @@ async function updateDaos() {
     } else if (s.proposer === s.proposedMember) {
       proposedMemberId = proposerId
     } else {
-      const proposedMember = await findUserByEthereumAddress(db, s.proposedMember)
+      const proposedMember = await findUserByEthereumAddress(s.proposedMember)
       proposedMemberId = proposedMember.id
     }
 
@@ -211,8 +196,9 @@ async function updateDaos() {
     }
 
     await db.collection('proposals').doc(s.id).set(doc)
-    return doc
+    docs.push(doc)
   }
+  return docs
 }
 async function updateUsers() {
   // this function is not used, leaving it here for reference
@@ -225,12 +211,10 @@ async function updateUsers() {
     daos.push(member.coreState.dao.id)
     mapMembersToDaos[member.coreState.address] = daos
   }
-  console.log(mapMembersToDaos)
   for (const memberAddress of Object.keys(mapMembersToDaos)) {
     // find the member with this address
     const user = await findUserByEthereumAddress(memberAddress)
     if (user) {
-      console.log(user)
       const doc = {
         daos: mapMembersToDaos[memberAddress]
       }
@@ -244,6 +228,5 @@ async function updateUsers() {
 module.exports = {
   updateDaos,
   updateProposals,
-  updateUsers,
-  test
+  updateUsers
 }

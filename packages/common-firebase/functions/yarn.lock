@@ -23,10 +23,10 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@daostack/arc.js@^2.0.0-experimental.35":
-  version "2.0.0-experimental.35"
-  resolved "https://registry.yarnpkg.com/@daostack/arc.js/-/arc.js-2.0.0-experimental.35.tgz#bdae8f0c5fef1fe08963983690f915a7c6bffdc9"
-  integrity sha512-i0bBMxhs0VLyTgKdcsddM6vW+XnpiQu4XreM3FZ1LnvZXOMjiutNR/IjrAVmF7tVBSx19TCP8U2o74aYMn2KSQ==
+"@daostack/arc.js@^2.0.0-experimental.39":
+  version "2.0.0-experimental.39"
+  resolved "https://registry.yarnpkg.com/@daostack/arc.js/-/arc.js-2.0.0-experimental.39.tgz#06368d8feba689f5e54ecd8c77e1e5ba017183b2"
+  integrity sha512-HJlqgn846I+4mO94ABytSLSgMmE0FokohNCT76VpkjL0TU5rGB8MVxba6RaHmEYvDHXJMJr9RItKNsrWzfxijQ==
   dependencies:
     apollo-cache-inmemory "^1.6.5"
     apollo-client "^2.6.8"
