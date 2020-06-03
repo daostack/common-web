@@ -51,7 +51,7 @@ async function updateDaos() {
         fundingGoal,
         minFeeToJoin,
         memberReputation,
-        fundingGoalDeadline
+        activationTime
       } = joinAndQuitPlugin.coreState.pluginParams;
       try {
         let metadata
@@ -79,7 +79,7 @@ async function updateDaos() {
           // reputationId: reputation.id,
           reputationTotalSupply: parseInt(daoState.reputationTotalSupply),
           fundingGoal: fundingGoal.toString(),
-          fundingGoalDeadline: fundingGoalDeadline,
+          fundingGoalDeadline: activationTime,
           minFeeToJoin: minFeeToJoin.toString(),
           memberReputation: memberReputation.toString(),
           metadata,
@@ -178,6 +178,7 @@ async function updateProposals(first=null) {
       proposerId,
       resolvedAt: s.resolvedAt,
       stage: s.stage,
+      stageStr: s.stage.toString(),
       title: s.title,
       type: s.type,
       joinAndQuit: {
