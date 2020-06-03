@@ -49,7 +49,9 @@ module.exports = new class Relayer {
       'apiId': env.biconomy.execTransaction,
       'to': safeWallet,
       'from': localWallet,
-      'params': Object.values(params)
+      'params': Object.values(params),
+      //TODO: Replace with calculate value
+      'gasLimit': '0x989680' // 10000000
     }
     return await axios.post('https://api.biconomy.io/api/v2/meta-tx/native', data, options)
   }
