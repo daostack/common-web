@@ -51,8 +51,8 @@ async function updateDaos() {
         fundingGoal,
         minFeeToJoin,
         memberReputation,
-        activationTime
       } = joinAndQuitPlugin.coreState.pluginParams;
+      const { activationTime } = joinAndQuitPlugin.coreState.pluginParams.voteParams
       try {
         let metadata
         if (daoState.metadata) {
