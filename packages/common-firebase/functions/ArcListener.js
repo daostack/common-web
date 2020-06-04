@@ -14,19 +14,19 @@ function error(msg) {
 }
 
 async function findUserByEthereumAddress(ethereumAddress) {
-    // const query = await admin.database().ref(`users`)
-    const query = db.collection(`users`)
-      .where(`ethereumAddress`, `==`, ethereumAddress)
-
-    const snapshot = await query.get()
-    if (snapshot.size === 0) {
-      // we hae an ethereum address but no registered user: this is unexpected but not impossibl
-      error(`No member found with ethereumAddress === ${ethereumAddress} `)
-      return null
-    } else {
-      const member = snapshot.docs[0]
-      return member
-    }
+  // const query = await admin.database().ref(`users`)
+  const query = db.collection(`users`)
+  .where(`ethereumAddress`, `==`, ethereumAddress)
+  
+  const snapshot = await query.get()
+  if (snapshot.size === 0) {
+    // we hae an ethereum address but no registered user: this is unexpected but not impossibl
+    error(`No member found with ethereumAddress === ${ethereumAddress} `)
+    return null
+  } else {
+    const member = snapshot.docs[0]
+    return member
+  }
 }
 
 
@@ -35,99 +35,116 @@ async function updateDaos() {
   const response = []
   const daos = await arc.daos({},{fetchPolicy: 'no-cache'}).first()
   console.log(`found ${daos.length} DAOs`)
-
+  
   for (const dao of daos) {
-    const joinAndQuitPlugins = await dao.plugins({where: {name: 'JoinAndQuit'}}).first();
-    if (joinAndQuitPlugins.length === 0) {
-      // not a properly configured common DAO, skipping
+    const plugins = await dao.plugins().first()
+    let joinAndQuitPlugin
+    let fundingPlugin
+    for (const plugin of plugins) {
+      if (plugin.coreState.name === "JoinAndQuit") {
+        joinAndQuitPlugin = plugin
+      }
+      if (plugin.coreState.name === "FundingRequest") {
+        fundingPlugin = plugin
+      }
+    }
+    if (!joinAndQuitPlugin || !fundingPlugin) {
       const msg = `Skipping ${dao.id} as it is not properly configured`;
       console.log(msg);
       response.push(msg)
-    } else {
-       const daoState = dao.coreState
-      console.log(`updating ${dao.id}: ${daoState.name}`);
-      const joinAndQuitPlugin = joinAndQuitPlugins[0];
-      const {
-        fundingGoal,
-        minFeeToJoin,
-        memberReputation,
-      } = joinAndQuitPlugin.coreState.pluginParams;
-      const { activationTime } = joinAndQuitPlugin.coreState.pluginParams.voteParams
-      try {
-        let metadata
-        if (daoState.metadata) {
-          try {
-            metadata = JSON.parse(daoState.metadata)
-          } catch(err) {
-            metadata = {
-              error: err.message
-            }
-            throw err
+      return
+    }
+    // const joinAndQuitPlugins = await dao.plugins({where: {name: 'JoinAndQuit'}}).first();
+    // if (joinAndQuitPlugins.length === 0) {
+    //   // not a properly configured common DAO, skipping
+    //   const msg = `Skipping ${dao.id} as it is not properly configured`;
+    //   console.log(msg);
+    //   response.push(msg)
+    // } else {
+    const daoState = dao.coreState
+    console.log(`updating ${dao.id}: ${daoState.name}`);
+    const {
+      fundingGoal,
+      minFeeToJoin,
+      memberReputation,
+    } = joinAndQuitPlugin.coreState.pluginParams;
+    const { activationTime } = fundingPlugin.coreState.pluginParams.voteParams
+    console.log(fundingPlugin.coreState)
+    console.log(activationTime)
+    try {
+      let metadata
+      if (daoState.metadata) {
+        try {
+          metadata = JSON.parse(daoState.metadata)
+        } catch(err) {
+          metadata = {
+            error: err.message
           }
-        } else {
-          metadata = {}
+          throw err
         }
-        const doc = {
-          id: dao.id,
-          address: daoState.address,
-          memberCount: daoState.memberCount,
-          name: daoState.name,
-          numberOfBoostedProposals: daoState.numberOfBoostedProposals,
-          numberOfPreBoostedProposals: daoState.numberOfPreBoostedProposals,
-          numberOfQueuedProposals: daoState.numberOfQueuedProposals,
-          register: daoState.register,
-          // reputationId: reputation.id,
-          reputationTotalSupply: parseInt(daoState.reputationTotalSupply),
-          fundingGoal: fundingGoal.toString(),
-          fundingGoalDeadline: activationTime,
-          minFeeToJoin: minFeeToJoin.toString(),
-          memberReputation: memberReputation.toString(),
-          metadata,
-          metadataHash: daoState.metadataHash
-        }
-
-        // also update the member information if it has changed
-        const existingDoc = await db.collection("daos").doc(dao.id).get()
-        const existingDocData = existingDoc.data()
-        if (!existingDocData || !existingDocData.members || existingDocData.members.length !== daoState.memberCount) {
-          console.log(`Membercount changed, updating member collections`)
-          const members = await dao.members().first()
-          doc.members = []
-          for (const member of members) {
-            const user = await findUserByEthereumAddress(member.coreState.address)
-            if (user === null) {
-              console.log(`no user found with this address ${member.coreState.address}`)  
-              doc.members.push({
-                address: member.coreState.address,
-                userId: null
-              })
-            } else {
-              console.log(`user found with this address ${member.coreState.adress}`)  
-              const userDaos = user.daos || []
-              if (!(dao.id in userDaos)) {
-                userDaos.push(dao.id)
-                db.collection("users").doc(user.id).update({ daos: userDaos})
-              }
-              doc.members.push({
-                address: member.coreState.address,
-                userId: user.id 
-              })
-            }
-          }
-        }
-
-        if (existingDocData) {
-          await db.collection('daos').doc(dao.id).update(doc)
-        } else {
-          await db.collection('daos').doc(dao.id).create(doc)
-        }
-        const msg =`Updated dao ${dao.id}`
-        response.push(msg)
-        console.log(msg)
-      } catch(err) {
-        console.log(err)
-        throw err
+      } else {
+        metadata = {}
       }
+      const doc = {
+        id: dao.id,
+        address: daoState.address,
+        memberCount: daoState.memberCount,
+        name: daoState.name,
+        numberOfBoostedProposals: daoState.numberOfBoostedProposals,
+        numberOfPreBoostedProposals: daoState.numberOfPreBoostedProposals,
+        numberOfQueuedProposals: daoState.numberOfQueuedProposals,
+        register: daoState.register,
+        // reputationId: reputation.id,
+        reputationTotalSupply: parseInt(daoState.reputationTotalSupply),
+        fundingGoal: fundingGoal.toString(),
+        fundingGoalDeadline: activationTime,
+        minFeeToJoin: minFeeToJoin.toString(),
+        memberReputation: memberReputation.toString(),
+        metadata,
+        metadataHash: daoState.metadataHash
+      }
+      
+      // also update the member information if it has changed
+      const existingDoc = await db.collection("daos").doc(dao.id).get()
+      const existingDocData = existingDoc.data()
+      if (!existingDocData || !existingDocData.members || existingDocData.members.length !== daoState.memberCount) {
+        console.log(`Membercount changed, updating member collections`)
+        const members = await dao.members().first()
+        doc.members = []
+        for (const member of members) {
+          const user = await findUserByEthereumAddress(member.coreState.address)
+          if (user === null) {
+            console.log(`no user found with this address ${member.coreState.address}`)  
+            doc.members.push({
+              address: member.coreState.address,
+              userId: null
+            })
+          } else {
+            console.log(`user found with this address ${member.coreState.adress}`)  
+            const userDaos = user.daos || []
+            if (!(dao.id in userDaos)) {
+              userDaos.push(dao.id)
+              db.collection("users").doc(user.id).update({ daos: userDaos})
+            }
+            doc.members.push({
+              address: member.coreState.address,
+              userId: user.id 
+            })
+          }
+        }
+      }
+      
+      if (existingDocData) {
+        await db.collection('daos').doc(dao.id).update(doc)
+      } else {
+        await db.collection('daos').doc(dao.id).create(doc)
+      }
+      const msg =`Updated dao ${dao.id}`
+      response.push(msg)
+      console.log(msg)
+    } catch(err) {
+      console.log(err)
+      throw err
     }
   }
   return response.join('\n')
@@ -138,14 +155,14 @@ async function updateProposals(first=null) {
   const db = admin.firestore();
   const proposals = await arc.proposals({first}, {fetchPolicy: 'no-cache'}).first()
   console.log(`found ${proposals.length} proposals`)
-
+  
   const docs = []
   for (const proposal of proposals) {
     const s = proposal.coreState
-
+    
     // TODO: for optimization, consider looking for a new member not as part of this update process
     // but as a separate cloudfunction instead (that watches for changes in the database and keeps it consistent)
-
+    
     // try to find the memberId corresponding to this address
     const proposer = await findUserByEthereumAddress(s.proposer)
     const proposerId = proposer.id
@@ -158,7 +175,7 @@ async function updateProposals(first=null) {
       const proposedMember = await findUserByEthereumAddress(s.proposedMember)
       proposedMemberId = proposedMember.id
     }
-
+    
     const doc = {
       boostedAt: s.boostedAt,
       description: s.description,
@@ -195,7 +212,7 @@ async function updateProposals(first=null) {
       }],
       images: [],
     }
-
+    
     await db.collection('proposals').doc(s.id).set(doc)
     docs.push(doc)
   }
