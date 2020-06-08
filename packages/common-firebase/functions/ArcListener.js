@@ -13,15 +13,21 @@ function error(msg) {
   console.error(msg)
 }
 
-async function findUserByEthereumAddress(ethereumAddress) {
-  // const query = await admin.database().ref(`users`)
+async function findUserByAddress(ethereumAddress, key = 'safeAddress') {
   const query = db.collection(`users`)
-  .where(`ethereumAddress`, `==`, ethereumAddress)
+    .where(key, `==`, ethereumAddress)
   
   const snapshot = await query.get()
   if (snapshot.size === 0) {
-    // we hae an ethereum address but no registered user: this is unexpected but not impossibl
-    error(`No member found with ethereumAddress === ${ethereumAddress} `)
+
+    // TODO: remove looking for a user by ethereuAddress code once we reset the database
+    if (key === "safeAddress") {
+      let memberFromEthereumAddress = await findUserByAddress(ethereumAddress, "ethereumAddress")
+      if (memberFromEthereumAddress) {
+        return memberFromEthereumAddress
+      } 
+    }
+    error(`No member found with ${key} === ${ethereumAddress}`)
     return null
   } else {
     const member = snapshot.docs[0]
@@ -54,13 +60,7 @@ async function updateDaos() {
       response.push(msg)
       return
     }
-    // const joinAndQuitPlugins = await dao.plugins({where: {name: 'JoinAndQuit'}}).first();
-    // if (joinAndQuitPlugins.length === 0) {
-    //   // not a properly configured common DAO, skipping
-    //   const msg = `Skipping ${dao.id} as it is not properly configured`;
-    //   console.log(msg);
-    //   response.push(msg)
-    // } else {
+
     const daoState = dao.coreState
     console.log(`updating ${dao.id}: ${daoState.name}`);
     const {
@@ -68,9 +68,9 @@ async function updateDaos() {
       minFeeToJoin,
       memberReputation,
     } = joinAndQuitPlugin.coreState.pluginParams;
+
     const { activationTime } = fundingPlugin.coreState.pluginParams.voteParams
-    console.log(fundingPlugin.coreState)
-    console.log(activationTime)
+
     try {
       let metadata
       if (daoState.metadata) {
@@ -112,7 +112,7 @@ async function updateDaos() {
         const members = await dao.members().first()
         doc.members = []
         for (const member of members) {
-          const user = await findUserByEthereumAddress(member.coreState.address)
+          const user = await findUserByAddress(member.coreState.address)
           if (user === null) {
             console.log(`no user found with this address ${member.coreState.address}`)  
             doc.members.push({
@@ -120,7 +120,8 @@ async function updateDaos() {
               userId: null
             })
           } else {
-            console.log(`user found with this address ${member.coreState.adress}`)  
+            console.log(`user found with this address ${member.coreState.address}`)  
+            console.log(user)
             const userDaos = user.daos || []
             if (!(dao.id in userDaos)) {
               userDaos.push(dao.id)
@@ -164,7 +165,7 @@ async function updateProposals(first=null) {
     // but as a separate cloudfunction instead (that watches for changes in the database and keeps it consistent)
     
     // try to find the memberId corresponding to this address
-    const proposer = await findUserByEthereumAddress(s.proposer)
+    const proposer = await findUserByAddress(s.proposer)
     const proposerId = proposer.id
     let proposedMemberId
     if (!s.proposedMember) {
@@ -172,7 +173,7 @@ async function updateProposals(first=null) {
     } else if (s.proposer === s.proposedMember) {
       proposedMemberId = proposerId
     } else {
-      const proposedMember = await findUserByEthereumAddress(s.proposedMember)
+      const proposedMember = await findUserByAddress(s.proposedMember)
       proposedMemberId = proposedMember.id
     }
     
@@ -231,7 +232,7 @@ async function updateUsers() {
   }
   for (const memberAddress of Object.keys(mapMembersToDaos)) {
     // find the member with this address
-    const user = await findUserByEthereumAddress(memberAddress)
+    const user = await findUserByAddress(memberAddress)
     if (user) {
       const doc = {
         daos: mapMembersToDaos[memberAddress]
