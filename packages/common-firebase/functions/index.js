@@ -16,6 +16,8 @@ const bodyParser = require('body-parser');
 const {updateDaos, updateProposals, test, updateUsers} = require('./ArcListener')
 const abi = require('./abi.json');
 const env = require('./_keys/env');
+
+
 const privateKey = env.wallet_info.private_key;
 const provider = new ethers.providers.JsonRpcProvider('https://dai.poa.network/'); // TODO: move to ./settings.js
 
@@ -118,16 +120,6 @@ app.get('/send-test-eth/:address', async (req, res) => {
   }
 });
 
-app.get('/notification', async (req, res) => {
-  try {
-    // const message = await messaging.send(payload);
-    res.send({ message: 'hello' });
-
-  } catch (e) {
-    console.log('notification error: ', e);
-  }
-});
-
 app.get('/createWallet', async (req, res) => {
   try {
     const idToken = req.header('idToken');
@@ -220,6 +212,52 @@ app.post('/execTransaction', async (req, res) => {
     const response = await Relayer.execTransaction(safeAddress, ethereumAddress, to, value, data, signature)
     // TODO: Once it failed, it will send detail to client which have apiKey
     res.send(response.data);
+  } catch (err) {
+    res.send(err);
+  }
+})
+
+app.post('/requestToJoin', async (req, res) => {
+  try {
+    const {to, value, data, signature, idToken, plugin} = req.body;
+    const decodedToken = await admin.auth().verifyIdToken(idToken)
+    const uid = decodedToken.uid;
+    const userData = await admin.firestore().collection('users').doc(uid).get().then(doc => { return doc.data() })
+    const safeAddress = userData.safeAddress
+    const ethereumAddress = userData.ethereumAddress
+
+    // TODO: replace with estimate gas
+    const OVERRIDES = {
+        gasLimit: 10000000,
+        gasPrice: 15000000000,
+    };
+
+    let minter = new ethers.Wallet(env.commonInfo.pk, provider);
+    let contract = new ethers.Contract(env.commonInfo.commonToken, abi.CommonToken, minter);
+    let tx = await contract.mint(safeAddress, ethers.utils.parseEther('0.1'), OVERRIDES);
+    let receipt = await tx.wait();
+
+    if (!receipt) {
+      res.send({ error: 'Claim Token failed', errorCode: 101})
+    }
+
+    await Relayer.addAddressToWhitelist([to]);
+
+    let allowance = await contract.allowance(safeAddress, plugin);
+    const allowanceStr = ethers.utils.formatEther(allowance);
+
+    // If allowance is 0.0, we need approve the allowance
+    if (allowanceStr === '0.0') {
+      const response = await Relayer.execTransaction(safeAddress, ethereumAddress, to, value, data, signature)
+      if (response.status !== 200) {
+        res.send({error: 'Approve address failed', errorCode: 102})
+        return
+      }
+      res.send({mint: tx.hash, approve: response.data.txHash});
+    } else {
+      res.send({mint: tx.hash, allowance: allowanceStr})
+    }
+    res.send({error: 'Should not be here', errorCode: 103})
   } catch (err) {
     res.send(err);
   }
