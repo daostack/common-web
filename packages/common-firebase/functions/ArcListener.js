@@ -19,14 +19,6 @@ async function findUserByAddress(ethereumAddress, key = 'safeAddress') {
   
   const snapshot = await query.get()
   if (snapshot.size === 0) {
-
-    // TODO: remove looking for a user by ethereuAddress code once we reset the database
-    if (key === "safeAddress") {
-      let memberFromEthereumAddress = await findUserByAddress(ethereumAddress, "ethereumAddress")
-      if (memberFromEthereumAddress) {
-        return memberFromEthereumAddress
-      } 
-    }
     error(`No member found with ${key} === ${ethereumAddress}`)
     return null
   } else {
@@ -43,6 +35,22 @@ async function updateDaos() {
   console.log(`found ${daos.length} DAOs`)
   
   for (const dao of daos) {
+    const daoState = dao.coreState
+    if (!daoState.metadata) {
+      console.log(`${dao.id} Skipping this dao ${dao.coreState.name}  as it has no metadata`)
+      continue
+    }
+    const metadata = JSON.parse(daoState.metadata)
+    const daoVersion = metadata.VERSION
+    if (!daoVersion) {
+      console.log(`${dao.id} Skipping this dao ${dao.coreState.name}  as it has no metadata.VERSION`)
+      continue
+    }
+    if (daoVersion < "000001") {
+      console.log(`${dao.id} Skipping this dao ${dao.coreState.name} as has an unsupported version ${daoVersion}`)
+      continue
+    }
+
     const plugins = await dao.plugins().first()
     let joinAndQuitPlugin
     let fundingPlugin
@@ -58,11 +66,10 @@ async function updateDaos() {
       const msg = `Skipping ${dao.id} as it is not properly configured`;
       console.log(msg);
       response.push(msg)
-      return
+      continue
     }
 
-    const daoState = dao.coreState
-    console.log(`updating ${dao.id}: ${daoState.name}`);
+    console.log(`UPDATING ${dao.id}: ${daoState.name}`);
     const {
       fundingGoal,
       minFeeToJoin,
@@ -72,22 +79,10 @@ async function updateDaos() {
     const { activationTime } = fundingPlugin.coreState.pluginParams.voteParams
 
     try {
-      let metadata
-      if (daoState.metadata) {
-        try {
-          metadata = JSON.parse(daoState.metadata)
-        } catch(err) {
-          metadata = {
-            error: err.message
-          }
-          throw err
-        }
-      } else {
-        metadata = {}
-      }
       const doc = {
         id: dao.id,
         address: daoState.address,
+        balance: 0, // TODO: get the actual token balance here
         memberCount: daoState.memberCount,
         name: daoState.name,
         numberOfBoostedProposals: daoState.numberOfBoostedProposals,
@@ -134,12 +129,14 @@ async function updateDaos() {
           }
         }
       }
-      
+
       if (existingDocData) {
         await db.collection('daos').doc(dao.id).update(doc)
       } else {
         await db.collection('daos').doc(dao.id).create(doc)
       }
+
+      
       const msg =`Updated dao ${dao.id}`
       response.push(msg)
       console.log(msg)
@@ -166,7 +163,7 @@ async function updateProposals(first=null) {
     
     // try to find the memberId corresponding to this address
     const proposer = await findUserByAddress(s.proposer)
-    const proposerId = proposer.id
+    const proposerId = proposer && proposer.id
     let proposedMemberId
     if (!s.proposedMember) {
       proposedMemberId = null
@@ -177,8 +174,10 @@ async function updateProposals(first=null) {
       proposedMemberId = proposedMember.id
     }
     
+    console.log(s)
     const doc = {
       boostedAt: s.boostedAt,
+      // TODO: get actual links and images (these can be found in JSON.parse(s.description))
       description: s.description,
       createdAt: s.createdAt,
       dao: s.dao.id,
@@ -200,17 +199,17 @@ async function updateProposals(first=null) {
       title: s.title,
       type: s.type,
       joinAndQuit: {
-        proposedMemberAddress: s.proposedMember,
+        proposedMemberAddress: s.proposedMember || null,
         proposedMemberId: proposedMemberId,
-        funding: s.funding.toString()
+        funding: s.funding && s.funding.toString() || null
+      },
+      fundingRequest: {
+        beneficiary: s.beneficiary || null,
+        amount: s.amount && s.amount.toString() || null,
+        amountRedemeed: s.amountRedeemd && s.amountRedeemed.toString() || null,
       },
       votes: s.votes,
       winningOutcome: s.winningOutcome,
-      // TODO: get actual links and images (these can be found in JSON.parse(s.description))
-      links: [{
-        title: "website",
-        url: s.url,
-      }],
       images: [],
     }
     
