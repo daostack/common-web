@@ -1,6 +1,6 @@
-const { Arc, Member } = require('@daostack/arc.js');
+const { Arc, Member } = require('../node_modules/@daostack/arc.js');
 const admin = require('firebase-admin');
-const { graphHttpLink, graphwsLink} = require('./settings')
+const { graphHttpLink, graphwsLink } = require('../settings')
 
 const arc = new Arc({
   graphqlHttpProvider: graphHttpLink,
@@ -16,7 +16,7 @@ function error(msg) {
 async function findUserByAddress(ethereumAddress, key = 'safeAddress') {
   const query = db.collection(`users`)
     .where(key, `==`, ethereumAddress)
-  
+
   const snapshot = await query.get()
   if (snapshot.size === 0) {
     error(`No member found with ${key} === ${ethereumAddress}`)
@@ -27,13 +27,12 @@ async function findUserByAddress(ethereumAddress, key = 'safeAddress') {
   }
 }
 
-
 // get all DAOs data from graphql and read it into the subgraph
 async function updateDaos() {
   const response = []
-  const daos = await arc.daos({},{fetchPolicy: 'no-cache'}).first()
+  const daos = await arc.daos({}, { fetchPolicy: 'no-cache' }).first()
   console.log(`found ${daos.length} DAOs`)
-  
+
   for (const dao of daos) {
     const daoState = dao.coreState
     if (!daoState.metadata) {
@@ -98,7 +97,7 @@ async function updateDaos() {
         metadata,
         metadataHash: daoState.metadataHash
       }
-      
+
       // also update the member information if it has changed
       const existingDoc = await db.collection("daos").doc(dao.id).get()
       const existingDocData = existingDoc.data()
@@ -109,22 +108,22 @@ async function updateDaos() {
         for (const member of members) {
           const user = await findUserByAddress(member.coreState.address)
           if (user === null) {
-            console.log(`no user found with this address ${member.coreState.address}`)  
+            console.log(`no user found with this address ${member.coreState.address}`)
             doc.members.push({
               address: member.coreState.address,
               userId: null
             })
           } else {
-            console.log(`user found with this address ${member.coreState.address}`)  
+            console.log(`user found with this address ${member.coreState.address}`)
             console.log(user)
             const userDaos = user.daos || []
             if (!(dao.id in userDaos)) {
               userDaos.push(dao.id)
-              db.collection("users").doc(user.id).update({ daos: userDaos})
+              db.collection("users").doc(user.id).update({ daos: userDaos })
             }
             doc.members.push({
               address: member.coreState.address,
-              userId: user.id 
+              userId: user.id
             })
           }
         }
@@ -136,11 +135,11 @@ async function updateDaos() {
         await db.collection('daos').doc(dao.id).create(doc)
       }
 
-      
-      const msg =`Updated dao ${dao.id}`
+
+      const msg = `Updated dao ${dao.id}`
       response.push(msg)
       console.log(msg)
-    } catch(err) {
+    } catch (err) {
       console.log(err)
       throw err
     }
@@ -149,18 +148,18 @@ async function updateDaos() {
 }
 
 
-async function updateProposals(first=null) {
+async function updateProposals(first = null) {
   const db = admin.firestore();
-  const proposals = await arc.proposals({first}, {fetchPolicy: 'no-cache'}).first()
+  const proposals = await arc.proposals({ first }, { fetchPolicy: 'no-cache' }).first()
   console.log(`found ${proposals.length} proposals`)
-  
+
   const docs = []
   for (const proposal of proposals) {
     const s = proposal.coreState
-    
+
     // TODO: for optimization, consider looking for a new member not as part of this update process
     // but as a separate cloudfunction instead (that watches for changes in the database and keeps it consistent)
-    
+
     // try to find the memberId corresponding to this address
     const proposer = await findUserByAddress(s.proposer)
     const proposerId = proposer && proposer.id
@@ -173,7 +172,7 @@ async function updateProposals(first=null) {
       const proposedMember = await findUserByAddress(s.proposedMember)
       proposedMemberId = proposedMember.id
     }
-    
+
     console.log(s)
     const doc = {
       boostedAt: s.boostedAt,
@@ -212,7 +211,7 @@ async function updateProposals(first=null) {
       winningOutcome: s.winningOutcome,
       images: [],
     }
-    
+
     await db.collection('proposals').doc(s.id).set(doc)
     docs.push(doc)
   }
@@ -221,11 +220,11 @@ async function updateProposals(first=null) {
 async function updateUsers() {
   // this function is not used, leaving it here for reference
   const response = []
-  const members = await Member.search(arc, {},{fetchPolicy: 'no-cache'}).first()
+  const members = await Member.search(arc, {}, { fetchPolicy: 'no-cache' }).first()
   console.log(`found ${members.length} members`)
   const mapMembersToDaos = {}
   for (const member of members) {
-    const daos = mapMembersToDaos[member.coreState.address] || [] 
+    const daos = mapMembersToDaos[member.coreState.address] || []
     daos.push(member.coreState.dao.id)
     mapMembersToDaos[member.coreState.address] = daos
   }

@@ -1,9 +1,10 @@
 const ethers = require('ethers');
 const abi = require('./abi.json');
 const axios = require('axios');
-const env = require('./_keys/env');
+const env = require('../_keys/env');
+const { jsonRpcProvider } = require('../settings');
 
-const provider = new ethers.providers.JsonRpcProvider('https://dai.poa.network');
+const provider = new ethers.providers.JsonRpcProvider(jsonRpcProvider);
 const zeroAddress = `0x${'0'.repeat(40)}`;
 const options = { headers: { 'x-api-key': env.biconomy.apiKey, 'Content-Type': 'application/json' } }
 
