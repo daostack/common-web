@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const ethers = require('ethers');
 const env = require('../_keys/env');
 
-const { updateProposals } = require('../graphql/ArcListener');
+const { updateProposals, updateDaos } = require('../graphql/ArcListener');
 const provider = new ethers.providers.JsonRpcProvider('https://dai.poa.network/');
 
 // create an Arc instance
@@ -222,6 +222,35 @@ relayer.post('/requestToJoin', async (req, res) => {
   }
 })
 
+relayer.post('/createCommonStep2', async (req, res) => {
+  try {
+    const { idToken, commonTx } = req.body;
+    const decodedToken = await admin.auth().verifyIdToken(idToken)
+    const uid = decodedToken.uid;
+    const userData = await admin.firestore().collection('users').doc(uid).get().then(doc => { return doc.data() })
+    const safeAddress = userData.safeAddress
+    const ethereumAddress = userData.ethereumAddress
+
+    const response = await Relayer.execTransaction(safeAddress, ethereumAddress, commonTx.to, commonTx.value, commonTx.data, commonTx.signature)
+    if (response.status !== 200) {
+      res.statusCode(500).send(JSON.stringify(response.data))
+      return
+    }
+
+    const receipt = await provider.waitForTransaction(response.data.txHash)
+    const isSuccess = isRelayerTxSuccessWithReceipt(receipt)
+
+    if (!isSuccess) {
+      return res.send({msg: 'Failed in Safe Exectution', code: 201, txHash: response.data.txHash})
+    }
+    
+    await updateDaos();
+    res.send({txHash: response.data.txHash})
+  } catch (err) {
+    res.send(err);
+  }
+})
+
 function getTransactionEvents(interf, receipt) {
   const txEvents = {};
   const abiEvents = Object.values(interf.events);
@@ -234,6 +263,21 @@ function getTransactionEvents(interf, receipt) {
     }
   }
   return txEvents;
+}
+
+// async function isRelayerTxSuccess(txHash) {
+//   const receipt = await this.provider.waitForTransaction(txHash);
+//   return this.isRelayerTxSuccessWithReceipt(receipt);
+// }
+
+function isRelayerTxSuccessWithReceipt(receipt) {
+  const ExecutionFailureTopic = '0x23428b18acfb3ea64b08dc0c1d296ea9c09702c09083ca5272e64d115b687d23';
+  for (const log of receipt.logs) {
+    if (log.topics[0] === ExecutionFailureTopic) {
+      return false;
+    }
+  }
+  return true;
 }
 
 exports.relayer = functions.https.onRequest(relayer);
