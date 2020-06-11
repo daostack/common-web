@@ -8,9 +8,9 @@
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "relayer": "firebase deploy --only functions:relayer",
-    "notification": "firebase deploy --only functions:notification",
-    "graphql": "firebase deploy --only functions:graphql"
+    "deploy-relayer": "firebase deploy --only functions:relayer",
+    "deploy-notification": "firebase deploy --only functions:notification",
+    "deploy-graphql": "firebase deploy --only functions:graphql"
   },
   "engines": {
     "node": "10"
