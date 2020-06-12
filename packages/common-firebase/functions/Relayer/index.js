@@ -182,7 +182,7 @@ relayer.post('/requestToJoin', async (req, res) => {
       // TODO:  if the transacdtion reverts, we can check for that here and include that in the error message
 
       if (!events.JoinInProposal) {
-        res.send({ mint: tx.hash, allowance: allowanceStr, joinHash: response2.data.txHash, msg: 'Join in failed', ...response2.data })
+        res.send({ mint: tx.hash, allowance: allowanceStr, joinHash: response2.data.txHash, msg: 'Join in failed' })
         return
       }
 
