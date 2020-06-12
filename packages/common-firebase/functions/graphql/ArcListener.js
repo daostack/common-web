@@ -70,11 +70,12 @@ async function updateDaos() {
 
     console.log(`UPDATING ${dao.id}: ${daoState.name}`);
     const {
-      fundingGoal,
+      // fundingGoal, // We ignore the "official" funding gaol, instead we use the one from the metadata field
       minFeeToJoin,
       memberReputation,
     } = joinAndQuitPlugin.coreState.pluginParams;
 
+    const fundingGoal = metadata.fundingGoal 
     const { activationTime } = fundingPlugin.coreState.pluginParams.voteParams
 
     try {

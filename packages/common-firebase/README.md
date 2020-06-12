@@ -31,8 +31,8 @@ firebase functions:shell
 you can then call the API functions
 
 ```
-api.get('update-daos')
-api.get('update-proposals')
+graphql.graphql.get('update-daos')
+graphql.graphql.get('update-proposals')
 ```
 
 ### Top up the relayer

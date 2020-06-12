@@ -147,6 +147,7 @@ relayer.post('/requestToJoin', async (req, res) => {
 
     let minter = new ethers.Wallet(env.commonInfo.pk, provider);
     let contract = new ethers.Contract(env.commonInfo.commonToken, abi.CommonToken, minter);
+    // TODO: fix the bug here: this must be the amount the user is actually paying!!!
     let tx = await contract.mint(safeAddress, ethers.utils.parseEther('0.1'), OVERRIDES);
     let receipt = await tx.wait();
 
@@ -160,6 +161,7 @@ relayer.post('/requestToJoin', async (req, res) => {
     const allowanceStr = ethers.utils.formatEther(allowance);
 
     // If allowance is 0.0, we need approve the allowance
+    // TODO: we should check here for allowance > amounttopay
     if (allowance.isZero()) {
       const response = await Relayer.execTransaction(safeAddress, ethereumAddress, commonTx.to, commonTx.value, commonTx.data, commonTx.signature)
       if (response.status !== 200) {
@@ -177,8 +179,10 @@ relayer.post('/requestToJoin', async (req, res) => {
       const interf = new ethers.utils.Interface(abi.JoinAndQuit)
       const events = getTransactionEvents(interf, receipt)
 
+      // TODO:  if the transacdtion reverts, we can check for that here and include that in the error message
+
       if (!events.JoinInProposal) {
-        res.send({ mint: tx.hash, allowance: allowanceStr, joinHash: response2.data.txHash, msg: 'Join in failed' })
+        res.send({ mint: tx.hash, allowance: allowanceStr, joinHash: response2.data.txHash, msg: 'Join in failed', ...response2.data })
         return
       }
 
