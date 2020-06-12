@@ -4,6 +4,10 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const { updateDaos, updateProposals, updateUsers } = require('./ArcListener')
 
+const runtimeOptions = {
+  timeoutSeconds: 540, // Maximum time 9 mins
+ }
+
 const graphql = express();
 
 // Automatically allow cross-origin requests
@@ -52,4 +56,4 @@ graphql.get('/update-users', async (req, res) => {
   }
 });
 
-exports.graphql = functions.https.onRequest(graphql);
+exports.graphql = functions.runWith(runtimeOptions).https.onRequest(graphql);

@@ -12,6 +12,10 @@ const env = require('../_keys/env');
 const { updateProposals, updateDaos } = require('../graphql/ArcListener');
 const provider = new ethers.providers.JsonRpcProvider('https://dai.poa.network/');
 
+const runtimeOptions = {
+  timeoutSeconds: 540, // Maximum time 9 mins
+ }
+
 // create an Arc instance
 const relayer = express();
 
@@ -280,4 +284,4 @@ function isRelayerTxSuccessWithReceipt(receipt) {
   return true;
 }
 
-exports.relayer = functions.https.onRequest(relayer);
+exports.relayer = functions.runWith(runtimeOptions).https.onRequest(relayer);
