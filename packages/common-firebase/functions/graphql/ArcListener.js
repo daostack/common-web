@@ -1,4 +1,4 @@
-const { Arc, Member } = require('../node_modules/@daostack/arc.js');
+const { Arc, Member, Vote } = require('../node_modules/@daostack/arc.js');
 const admin = require('firebase-admin');
 const { graphHttpLink, graphwsLink } = require('../settings')
 
@@ -242,9 +242,36 @@ async function updateUsers() {
   return response.join('\n')
 }
 
+async function updateVotes() {
+
+  const db = admin.firestore();
+  const votes = await Vote.search(arc, {}, { fetchPolicy: 'no-cache' }).first()
+  console.log(`found ${votes.length} votes`)
+  
+  const docs = []
+  for (const vote of votes) {
+
+    const user = await findUserByAddress(vote.voter)
+    const voteUserId = user ? user.id : null;
+    
+    const doc = {
+      id: vote.id,
+      voterAddress: vote.voter,
+      voterUserId: voteUserId,
+      proposalId: vote.proposal.id,
+
+    }
+    await db.collection('votes').doc(vote.id).set(doc)
+    docs.push(doc)
+    
+  }
+  return docs;
+}
+
 
 module.exports = {
   updateDaos,
   updateProposals,
-  updateUsers
+  updateUsers,
+  updateVotes
 }

@@ -2,7 +2,7 @@ const functions = require('firebase-functions');
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const { updateDaos, updateProposals, updateUsers } = require('./ArcListener')
+const { updateDaos, updateProposals, updateUsers, updateVotes } = require('./ArcListener')
 
 const runtimeOptions = {
   timeoutSeconds: 540, // Maximum time 9 mins
@@ -53,6 +53,17 @@ graphql.get('/update-users', async (req, res) => {
     const code = 500;
     console.log(e)
     res.status(code).send(new Error(`Unable to update users: ${e}`));
+  }
+});
+graphql.get('/update-votes', async (req, res) => {
+  try {
+    const result = await updateVotes();
+    const code = 200;
+    res.status(code).send(`Updated votes successfully: ${result}`);
+  } catch (e) {
+    const code = 500;
+    console.log(e)
+    res.status(code).send(new Error(`Unable to update votes: ${e}`));
   }
 });
 
