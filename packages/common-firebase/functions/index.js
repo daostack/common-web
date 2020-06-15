@@ -10,5 +10,5 @@ const relayer = require('./relayer');
 const graphql = require('./graphql');
 
 exports.relayer = relayer.relayer; 
-exports.graphql = graphql.graphql
+exports.graphql = graphql.graphql;
 exports.notification = require('./notification');

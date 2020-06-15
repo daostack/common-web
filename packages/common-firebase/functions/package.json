@@ -10,7 +10,8 @@
     "logs": "firebase functions:log",
     "deploy-relayer": "firebase deploy --only functions:relayer",
     "deploy-notification": "firebase deploy --only functions:notification",
-    "deploy-graphql": "firebase deploy --only functions:graphql"
+    "deploy-graphql": "firebase deploy --only functions:graphql",
+    "emulator": "firebase emulator --only functions"
   },
   "engines": {
     "node": "10"
@@ -29,7 +30,7 @@
     "cors": "^2.8.5",
     "eslint": "^7.0.0",
     "express": "^4.17.1",
-    "firebase": "^7.4.0",
+    "firebase": "^7.15.1",
     "firebase-admin": "^8.6.0",
     "firebase-functions": "^3.3.0",
     "graphql": "^15.0.0",

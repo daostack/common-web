@@ -44,7 +44,7 @@ relayer.get('/createWallet', async (req, res) => {
     const whitelist = await Relayer.addProxyToWhitelist([safeAddress]);
     res.send({ txHash, safeAddress, whitelist: whitelist.data.message })
   } catch (err) {
-    res.send(err);
+    res.send(err.response.data);
   }
 })
 
@@ -89,7 +89,7 @@ relayer.get('/create2Wallet', async (req, res) => {
         res.send(err);
       })
   } catch (err) {
-    res.send(err);
+    res.send(err.response.data);
   }
 })
 
@@ -103,25 +103,28 @@ relayer.get('/addWhitleList', async (req, res) => {
     const result = await Relayer.addProxyToWhitelist([address]);
     res.send(result.data);
   } catch (err) {
-    res.send(err);
+    res.send(err.response.data);
   }
 })
 
 relayer.post('/execTransaction', async (req, res) => {
   try {
-    // const idToken = req.header('idToken');
+    console.log('execTransaction');
     const { to, value, data, signature, idToken } = req.body;
     const decodedToken = await admin.auth().verifyIdToken(idToken)
     const uid = decodedToken.uid;
     const userData = await admin.firestore().collection('users').doc(uid).get().then(doc => { return doc.data() })
     const safeAddress = userData.safeAddress
     const ethereumAddress = userData.ethereumAddress
+    console.log('safeAddress', safeAddress);
+    console.log('ethereumAddress', ethereumAddress);
     await Relayer.addAddressToWhitelist([to]);
     const response = await Relayer.execTransaction(safeAddress, ethereumAddress, to, value, data, signature)
     // TODO: Once it failed, it will send detail to client which have apiKey
     res.send(response.data);
   } catch (err) {
-    res.send(err);
+    res.send(err.response.data);
+    console.log(err.response.data)
   }
 })
 
@@ -226,7 +229,7 @@ relayer.post('/requestToJoin', async (req, res) => {
 
     res.send({ error: 'Should not be here', errorCode: 106 })
   } catch (err) {
-    res.send(err);
+    res.send(err.response.data);
   }
 })
 
@@ -255,7 +258,7 @@ relayer.post('/createCommonStep2', async (req, res) => {
     await updateDaos();
     res.send({txHash: response.data.txHash})
   } catch (err) {
-    res.send(err);
+    res.send(err.response.data);
   }
 })
 
