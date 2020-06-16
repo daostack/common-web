@@ -27,6 +27,11 @@ async function findUserByAddress(ethereumAddress, key = 'safeAddress') {
   }
 }
 
+const parseVotes = (votesArr) => {
+  return votesArr.map(item => item.id)
+}
+
+
 // get all DAOs data from graphql and read it into the subgraph
 async function updateDaos() {
   const response = []
@@ -175,6 +180,7 @@ async function updateProposals(first = null) {
     }
 
     console.log(s)
+    
     const doc = {
       boostedAt: s.boostedAt,
       // TODO: get actual links and images (these can be found in JSON.parse(s.description))
@@ -186,8 +192,8 @@ async function updateProposals(first = null) {
       executedAt: s.executedAt,
       expiresInQueueAt: s.expiresInQueueAt,
       // TODO: votesFor and votesAgainst are in terms of reputation - we need to divide by 1000
-      votesFor: parseInt(s.votesFor),
-      votesAgainst: parseInt(s.votesAgainst),
+      votesFor: s.votesFor.toNumber()/1000,
+      votesAgainst: s.votesAgainst.toNumber()/1000,
       id: s.id,
       name: s.name,
       preBoostedAt: s.preBoostedAt,
@@ -205,12 +211,15 @@ async function updateProposals(first = null) {
       },
       fundingRequest: {
         beneficiary: s.beneficiary || null,
+        proposedMemberId: proposedMemberId,
         amount: s.amount && s.amount.toString() || null,
         amountRedemeed: s.amountRedeemd && s.amountRedeemed.toString() || null,
       },
-      votes: s.votes,
+      votes: parseVotes(s.votes),
       winningOutcome: s.winningOutcome,
-      images: [],
+      images: s.images || [],
+      links: s.links || [],
+      files: s.files || [],
     }
 
     await db.collection('proposals').doc(s.id).set(doc)
@@ -240,6 +249,7 @@ async function updateUsers() {
     }
   }
   return response.join('\n')
+  
 }
 
 async function updateVotes() {
