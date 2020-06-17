@@ -179,12 +179,20 @@ async function updateProposals(first = null) {
       proposedMemberId = proposedMember.id
     }
 
+    // TO-BE-REMOVED: That should be deleted once we reset the data again.
+    // It's needed because right now we have description property of type string which could be a jsoon or just a description of a proposal.
+    let proposalDescription = null;
+    try {
+      proposalDescription = JSON.parse(s.description);
+    } catch(error) {
+      proposalDescription = { description: s.description };
+    }
+
     console.log(s)
     
     const doc = {
       boostedAt: s.boostedAt,
-      // TODO: get actual links and images (these can be found in JSON.parse(s.description))
-      description: s.description,
+      description: proposalDescription,
       createdAt: s.createdAt,
       dao: s.dao.id,
       executionState: s.executionState,
@@ -217,9 +225,6 @@ async function updateProposals(first = null) {
       },
       votes: parseVotes(s.votes),
       winningOutcome: s.winningOutcome,
-      images: s.images || [],
-      links: s.links || [],
-      files: s.files || [],
     }
 
     await db.collection('proposals').doc(s.id).set(doc)
