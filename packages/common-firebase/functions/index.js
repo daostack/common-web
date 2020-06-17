@@ -6,7 +6,7 @@ admin.initializeApp({
   databaseURL: databaseURL,
 });
 
-const relayer = require('./Relayer/Relayer');
+const relayer = require('./relayer');
 const graphql = require('./graphql');
 
 exports.relayer = relayer.relayer; 
