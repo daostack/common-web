@@ -9,8 +9,9 @@ const bodyParser = require('body-parser');
 const ethers = require('ethers');
 const env = require('../_keys/env');
 
+const { jsonRpcProvider } = require('../settings')
 const { updateProposals, updateDaos } = require('../graphql/ArcListener');
-const provider = new ethers.providers.JsonRpcProvider('https://dai.poa.network/');
+const provider = new ethers.providers.JsonRpcProvider(jsonRpcProvider);
 
 const runtimeOptions = {
   timeoutSeconds: 540, // Maximum time 9 mins
@@ -171,6 +172,9 @@ relayer.post('/requestToJoin', async (req, res) => {
         res.status(500).send({ error: 'Approve address failed', errorCode: 102, mint: tx.hash })
         return
       }
+
+      // Wait for the allowance to be confirm
+      await provider.waitForTransaction(response.data.txHash)
 
       const response2 = await Relayer.execTransaction(safeAddress, ethereumAddress, pluginTx.to, pluginTx.value, pluginTx.data, pluginTx.signature)
       if (response2.status !== 200) {
