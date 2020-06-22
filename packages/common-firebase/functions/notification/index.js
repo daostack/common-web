@@ -75,6 +75,33 @@ exports.sendFollowerNotification = functions.firestore.document('/notification/f
     return Notification.send(tokens, title, body, image);
   })
 
+
+exports.commonCreation = functions.firestore.document('/daos/{daoId}')
+.onCreate(async (snapshot, context) => {
+  const daoId = context.params.daoId;
+  const daoData = admin.firestore().collection('daos').doc(`${daoId}`).get().then(doc =>{ return doc.data()})
+  const ownerId = daoData.members[0].userId;
+  return admin.firestore().doc(`notification/commonCreation/${ownerId}/${daoId}`).set({ createdAt: new Date() })
+})
+
+exports.commonCreationNotification = functions.firestore.document('/notification/commonCreation/{userId}/{commonId}')
+.onCreate(async (snapshot, context) => {
+  const userId = context.params.userId;
+  const commonId = context.params.commonId;
+
+  const tokenRef = admin.firestore().collection('users').doc(`${userId}`)
+  const tokens = await tokenRef.get().then(doc => { return doc.data().tokens })
+
+  const commonRef = await admin.auth().collection('daos').doc(`${commonId}`)
+  const common = await commonRef.get().then(doc => { return doc.data() })
+
+  let title = 'Your common have been created 🎉';
+  let body = `${common.name} is available on common list.`
+  let image = common.metadata.avatar || '';
+
+  return Notification.send(tokens, title, body, image);
+})
+
 // exports.listenToTransaction = functions.firestore.document('/notification/transaction/{uid}/{txHash}')
 // .onCreate(async (change, context) => {
 //   const uid = context.params.uid;
