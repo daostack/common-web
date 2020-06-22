@@ -92,7 +92,7 @@ exports.commonCreationNotification = functions.firestore.document('/notification
   const tokenRef = admin.firestore().collection('users').doc(`${userId}`)
   const tokens = await tokenRef.get().then(doc => { return doc.data().tokens })
 
-  const commonRef = await admin.auth().collection('daos').doc(`${commonId}`)
+  const commonRef = await admin.firestore().collection('daos').doc(`${commonId}`)
   const common = await commonRef.get().then(doc => { return doc.data() })
 
   let title = 'Your common have been created 🎉';
