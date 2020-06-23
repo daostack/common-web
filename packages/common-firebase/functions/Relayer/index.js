@@ -10,7 +10,7 @@ const ethers = require('ethers');
 const env = require('../_keys/env');
 
 const { jsonRpcProvider } = require('../settings')
-const { updateProposals, updateDaos } = require('../graphql/ArcListener');
+const { updateProposalById, updateDaos } = require('../graphql/ArcListener');
 const provider = new ethers.providers.JsonRpcProvider(jsonRpcProvider);
 
 const runtimeOptions = {
@@ -196,7 +196,7 @@ relayer.post('/requestToJoin', async (req, res) => {
       const proposalId = events.JoinInProposal._proposalId
 
       if (proposalId && proposalId.length) {
-        await updateProposals();
+        await updateProposalById(proposalId);
         res.send({ mint: tx.hash, allowance: allowanceStr, joinHash: response2.data.txHash, proposalId: proposalId });
         return;
       }
@@ -223,7 +223,7 @@ relayer.post('/requestToJoin', async (req, res) => {
       const proposalId = events.JoinInProposal._proposalId
 
       if (proposalId && proposalId.length) {
-        await updateProposals();
+        await updateProposalById(proposalId);
         res.send({ mint: tx.hash, allowance: allowanceStr, joinHash: response2.data.txHash, proposalId: proposalId });
         return;
       }

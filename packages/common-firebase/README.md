@@ -33,6 +33,7 @@ you can then call the API functions
 ```
 graphql.graphql.get('update-daos')
 graphql.graphql.get('update-proposals')
+graphql.graphql.get('update-proposal-by-id')
 ```
 
 ### Top up the relayer

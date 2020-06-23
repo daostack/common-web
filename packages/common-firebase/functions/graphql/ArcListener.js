@@ -153,14 +153,8 @@ async function updateDaos() {
   return response.join('\n')
 }
 
-
-async function updateProposals(first = null) {
-  const db = admin.firestore();
-  const proposals = await arc.proposals({ first }, { fetchPolicy: 'no-cache' }).first()
-  console.log(`found ${proposals.length} proposals`)
-
-  const docs = []
-  for (const proposal of proposals) {
+async function _updateProposalDb(proposal) {
+  
     const s = proposal.coreState
 
     // TODO: for optimization, consider looking for a new member not as part of this update process
@@ -184,12 +178,15 @@ async function updateProposals(first = null) {
     let proposalDescription = null;
     try {
       proposalDescription = JSON.parse(s.description);
-    } catch(error) {
-      proposalDescription = { description: s.description };
+    } catch (error) {
+      proposalDescription = {
+        description: s.description,
+        title: s.title
+      };
     }
 
     console.log(s)
-    
+
     const doc = {
       boostedAt: s.boostedAt,
       description: proposalDescription,
@@ -199,9 +196,8 @@ async function updateProposals(first = null) {
       executed: s.executed,
       executedAt: s.executedAt,
       expiresInQueueAt: s.expiresInQueueAt,
-      // TODO: votesFor and votesAgainst are in terms of reputation - we need to divide by 1000
-      votesFor: s.votesFor.toNumber()/1000,
-      votesAgainst: s.votesAgainst.toNumber()/1000,
+      votesFor: s.votesFor.toNumber() / 1000,
+      votesAgainst: s.votesAgainst.toNumber() / 1000,
       id: s.id,
       name: s.name,
       preBoostedAt: s.preBoostedAt,
@@ -210,7 +206,6 @@ async function updateProposals(first = null) {
       resolvedAt: s.resolvedAt,
       stage: s.stage,
       stageStr: s.stage.toString(),
-      title: s.title,
       type: s.type,
       joinAndQuit: {
         proposedMemberAddress: s.proposedMember || null,
@@ -227,11 +222,30 @@ async function updateProposals(first = null) {
       winningOutcome: s.winningOutcome,
     }
 
-    await db.collection('proposals').doc(s.id).set(doc)
-    docs.push(doc)
+  await db.collection('proposals').doc(s.id).set(doc)
+  return doc;
+  
+}
+
+async function updateProposalById(proposalId) {
+  const proposal = await arc.proposal({ where: { id: proposalId } }, { fetchPolicy: 'no-cache' })
+  const updatedDoc = await _updateProposalDb(proposal);
+  console.log("UPDATED PROPOSAL: ", proposal);
+  return updatedDoc;
+}
+
+async function updateProposals(first = null) {
+  const proposals = await arc.proposals({ first }, { fetchPolicy: 'no-cache' }).first()
+  console.log(`found ${proposals.length} proposals`)
+
+  const docs = []
+  for (const proposal of proposals) {
+    const updatedDoc = await _updateProposalDb(proposal);
+    docs.push(updatedDoc)
   }
   return docs
 }
+
 async function updateUsers() {
   // this function is not used, leaving it here for reference
   const response = []
@@ -287,6 +301,7 @@ async function updateVotes() {
 module.exports = {
   updateDaos,
   updateProposals,
+  updateProposalById,
   updateUsers,
   updateVotes
 }
