@@ -6,12 +6,15 @@
     "serve": "firebase serve --only functions",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
+    "deploy": "./env/env.sh && firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "deploy-relayer": "firebase deploy --only functions:relayer",
-    "deploy-notification": "firebase deploy --only functions:notification",
-    "deploy-graphql": "firebase deploy --only functions:graphql",
-    "emulator": "firebase emulator --only functions"
+    "deploy-relayer": "./env/env.sh && firebase deploy --only functions:relayer",
+    "deploy-notification": "./env/env.sh && firebase deploy --only functions:notification",
+    "deploy-graphql": "./env/env.sh && firebase deploy --only functions:graphql",
+    "emulator": "firebase emulator --only functions",
+    "use-staging": "firebase use staging && ./env/env.sh -stg",
+    "use-production": "firebase use production && ./env/env.sh -prod",
+    "env": "./env/env.sh"
   },
   "engines": {
     "node": "10"

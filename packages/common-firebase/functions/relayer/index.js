@@ -7,7 +7,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const ethers = require('ethers');
-const env = require('../_keys/env');
+const env = require('../env/env');
 
 const { jsonRpcProvider } = require('../settings')
 const { updateProposalById, updateDaos } = require('../graphql/ArcListener');

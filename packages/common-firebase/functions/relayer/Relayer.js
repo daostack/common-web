@@ -1,7 +1,7 @@
 const ethers = require('ethers');
 const abi = require('./abi.json');
 const axios = require('axios');
-const env = require('../_keys/env');
+const env = require('../env/env');
 const { jsonRpcProvider } = require('../settings');
 
 const provider = new ethers.providers.JsonRpcProvider(jsonRpcProvider);

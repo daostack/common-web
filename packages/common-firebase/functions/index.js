@@ -2,7 +2,7 @@ const admin = require('firebase-admin');
 const { databaseURL } = require('./settings');
 
 admin.initializeApp({
-  credential: admin.credential.cert(require('./_keys/adminsdk-keys.json')),
+  credential: admin.credential.cert(require('./env/adminsdk-keys.json')),
   databaseURL: databaseURL,
 });
 
