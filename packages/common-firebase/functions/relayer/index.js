@@ -133,8 +133,8 @@ relayer.post('/requestToJoin', async (req, res) => {
   try {
     const {
       idToken,
-      commonTx,
-      pluginTx,
+      commonTx, // This is the signed transaction to set the allowance. TODO: rename this param to approveCommonTokenTx
+      pluginTx, // This is the signed transacxtion to create the proposal. TODO: rename tis param to createProposalTx
     } = req.body;
     // const {to, value, data, signature, idToken, plugin} = req.body;
     const decodedToken = await admin.auth().verifyIdToken(idToken)
@@ -153,6 +153,7 @@ relayer.post('/requestToJoin', async (req, res) => {
     let contract = new ethers.Contract(env.commonInfo.commonToken, abi.CommonToken, minter);
     // TODO: fix the bug here: this must be the amount the user is actually paying!!!
     let tx = await contract.mint(safeAddress, ethers.utils.parseEther('0.1'), OVERRIDES);
+    // TODO: we probably want to send this transaction through the relayer (?)
     let receipt = await tx.wait();
 
     if (!receipt) {
@@ -167,13 +168,15 @@ relayer.post('/requestToJoin', async (req, res) => {
     // If allowance is 0.0, we need approve the allowance
     // TODO: we should check here for allowance > amounttopay
     if (allowance.isZero()) {
+      // set the allowance
       const response = await Relayer.execTransaction(safeAddress, ethereumAddress, commonTx.to, commonTx.value, commonTx.data, commonTx.signature)
       if (response.status !== 200) {
+        // TODO: please do not return the tx.hash here, which is the has from the minting transaction which ahppend earlier
         res.status(500).send({ error: 'Approve address failed', errorCode: 102, mint: tx.hash })
         return
       }
 
-      // Wait for the allowance to be confirm
+      // Wait for the allowance to be confirmed
       await provider.waitForTransaction(response.data.txHash)
 
       const response2 = await Relayer.execTransaction(safeAddress, ethereumAddress, pluginTx.to, pluginTx.value, pluginTx.data, pluginTx.signature)
@@ -187,7 +190,6 @@ relayer.post('/requestToJoin', async (req, res) => {
       const events = getTransactionEvents(interf, receipt)
 
       // TODO:  if the transacdtion reverts, we can check for that here and include that in the error message
-
       if (!events.JoinInProposal) {
         res.send({ mint: tx.hash, allowance: allowanceStr, joinHash: response2.data.txHash, msg: 'Join in failed' })
         return
@@ -205,6 +207,7 @@ relayer.post('/requestToJoin', async (req, res) => {
 
     } else {
 
+      // TODO: there is duplicate code here and above, where the same transaction is sent. Please refactor this.
       const response2 = await Relayer.execTransaction(safeAddress, ethereumAddress, pluginTx.to, pluginTx.value, pluginTx.data, pluginTx.signature)
       if (response2.status !== 200) {
         res.status(500).send({ error: 'Request to join failed', errorCode: 105, mint: tx.hash, allowance: allowanceStr })
