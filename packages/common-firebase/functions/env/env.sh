@@ -32,12 +32,12 @@ currentBranch=`git branch --no-color | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
 if [ "$currentMD5" = "$stagingMD5" ]; then
   echo "Current environment is $(tput setaf 2)Staging $(tput sgr0)"
   if [[ $1 = "-check" ]]; then
-    if [[ "$currentBranch" = "staging" ]]; then
-      echo "$(tput setaf 2)Enviroment check pass$(tput sgr0)"
+    if [[ "$currentBranch" = "dev" ]]; then
+      echo "$(tput setaf 2)Enviroment check ok$(tput sgr0)"
       exit
     fi
     echo "$(tput setaf 1)Enviroment mismatched$(tput sgr0)"
-    echo "Current branch is $(tput setaf 1) $currentBranch $(tput sgr0), you need switch to $(tput setaf 1) Staging $(tput sgr0)"
+    echo "Current branch is $(tput setaf 1) $currentBranch $(tput sgr0), you need switch to $(tput setaf 1) dev $(tput sgr0)"
     echo "Only$(tput setaf 1) Staging $(tput sgr0)branch can depoly to $(tput setaf 1)Staging Environment$(tput sgr0)"
     exit 1
   fi
@@ -49,7 +49,7 @@ elif [ "$currentMD5" = "$productionMD5" ]; then
       exit
     fi
     echo "$(tput setaf 1)Enviroment mismatched$(tput sgr0)"
-    echo "Current branch is $(tput setaf 1)$currentBranch$(tput sgr0), you need switch to $(tput setaf 1)Master $(tput sgr0)"
+    echo "Current branch is $(tput setaf 1)$currentBranch$(tput sgr0), you need switch to $(tput setaf 1)master $(tput sgr0)"
     echo "Only$(tput setaf 1) Master $(tput sgr0)branch can depoly to $(tput setaf 1)Production Environment$(tput sgr0)\n"
     exit 1
   fi
