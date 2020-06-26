@@ -8,7 +8,9 @@ admin.initializeApp({
 
 const relayer = require('./relayer');
 const graphql = require('./graphql');
+const mangopay = require('./mangopay');
 
 exports.relayer = relayer.relayer; 
 exports.graphql = graphql.graphql;
+exports.mangopay = mangopay.mangopay;
 exports.notification = require('./notification');

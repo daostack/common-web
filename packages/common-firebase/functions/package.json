@@ -11,6 +11,7 @@
     "deploy-relayer": "./env/env.sh -check && firebase deploy --only functions:relayer",
     "deploy-notification": "./env/env.sh -check  && firebase deploy --only functions:notification",
     "deploy-graphql": "./env/env.sh -check && firebase deploy --only functions:graphql",
+    "deploy-mangopay": "./env/env.sh -check && firebase deploy --only functions:mangopay",
     "emulator": "firebase emulator --only functions",
     "use:staging": "firebase use staging && ./env/env.sh -stg",
     "use:production": "firebase use production && ./env/env.sh -prod",
