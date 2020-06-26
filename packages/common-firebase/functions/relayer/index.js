@@ -11,7 +11,7 @@ const env = require('../env/env');
 const { jsonRpcProvider } = require('../settings')
 const { updateProposalById, updateDaoById } = require('../graphql/ArcListener');
 const provider = new ethers.providers.JsonRpcProvider(jsonRpcProvider);
-const { registerCard, preauthorizePayment, payToDAOStackWallet, cancelPreauthorizedPayment } = require('../mangopay/mangopay');
+const { registerCard, preauthorizePayment, cancelPreauthorizedPayment } = require('../mangopay/mangopay');
 
 const runtimeOptions = {
   timeoutSeconds: 540, // Maximum time 9 mins
