@@ -1,7 +1,7 @@
 const { Arc, Member, Vote } = require('../node_modules/@daostack/arc.js');
 const promiseRetry = require('promise-retry');
 const admin = require('firebase-admin');
-const { graphHttpLink, graphwsLink } = require('../settings')
+const { graphHttpLink, graphwsLink , retryOptions} = require('../settings')
 
 const arc = new Arc({
   graphqlHttpProvider: graphHttpLink,
@@ -214,7 +214,8 @@ async function updateDaoById(daoId, retry = false) {
         retryFunc(`Not found Dao with id ${daoId} in the graph. Retrying...`);
       }
       return currDaosResult[0];
-    }
+    }, 
+    retryOptions
   );
 
   const { updatedDoc, errorMsg }  = await _updateDaoDb(dao);
@@ -233,10 +234,8 @@ async function updateDaoById(daoId, retry = false) {
             retryFunc(errorMsg);
           }
           return currResult;
-        }, 
-        {
-          minTimeout: 1000
-        }
+        },
+        retryOptions
       );
 
       return awaitedResult.updatedDoc;
@@ -342,7 +341,8 @@ async function updateProposalById(proposalId, retry = false) {
         }
       }
       return currProposalResult;
-    }
+    },
+    retryOptions
   );
 
   const { updatedDoc, errorMsg } = await _updateProposalDb(proposal);
