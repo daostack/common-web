@@ -15,7 +15,7 @@ const { registerCard, preauthorizePayment, payToDAOStackWallet, cancelPreauthori
 
 const runtimeOptions = {
   timeoutSeconds: 540, // Maximum time 9 mins
- }
+}
 
 // create an Arc instance
 const relayer = express();
@@ -51,7 +51,7 @@ relayer.get('/createWallet', async (req, res) => {
 
 relayer.get('/create2Wallet', async (req, res) => {
   try {
-
+    
     // TODO: Change this with calculate address
     // SaltNonce need to change
     const idToken = req.header('idToken');
@@ -79,16 +79,16 @@ relayer.get('/create2Wallet', async (req, res) => {
       'from': address,
       'params': [env.biconomy.masterCopy, encodedData, nonceSalt]
     }
-
+    
     const testAddress = ethers.utils.getContractAddress({ from: env.biconomy.proxyFactory, nonce: nonceSalt })
     axios.post('https://api.biconomy.io/api/v2/meta-tx/native', data, options)
-      .then(receive => {
-        let object = Object.assign(receive.data, { address: testAddress, nonce: nonceSalt })
-        res.send(object);
-      })
-      .catch(err => {
-        res.send(err);
-      })
+    .then(receive => {
+      let object = Object.assign(receive.data, { address: testAddress, nonce: nonceSalt })
+      res.send(object);
+    })
+    .catch(err => {
+      res.send(err);
+    })
   } catch (err) {
     res.send(err.response.data);
   }
@@ -144,123 +144,102 @@ relayer.post('/requestToJoin', async (req, res) => {
     let userData = await admin.firestore().collection('users').doc(uid).get().then(doc => { return doc.data() })
     const safeAddress = userData.safeAddress
     const ethereumAddress = userData.ethereumAddress
-    
+    let _preAuthId;
+    let _amount = 0;
     
     // TO-DO what if uses another 2nd card, decide if will keep the cardId at all
-    
-    if (!userData.mangopayCardId) {
-      const cardId = await registerCard({ paymentData, userData });
-      await userRef.update({ mangopayCardId: cardId });
-    }
-    userData = await admin.firestore().collection('users').doc(uid).get().then(doc => { return doc.data() }) // re-get userData if cardId is saved
-    
-    const { Id: preAuthId, Status, DebitedFunds: {Amount} } = await preauthorizePayment({ paymentData, userData })
-    
-    console.log('PRE AUTH STATUS', Status);
-    
-    if (Status === 'FAILED') {
-      res.status(500).send({ error: 'Request to join failed. Card preauthorization failed.', errorCode: 105, mint: tx.hash, allowance: allowanceStr })
-    }
-    
-    // TODO: replace with estimate gas
-    const OVERRIDES = {
-      gasLimit: 10000000,
-      gasPrice: 15000000000,
-    };
-
-    let minter = new ethers.Wallet(env.commonInfo.pk, provider);
-    let contract = new ethers.Contract(env.commonInfo.commonToken, abi.CommonToken, minter);
-    // TODO: fix the bug here: this must be the amount the user is actually paying!!!
-    let tx = await contract.mint(safeAddress, Amount, OVERRIDES); // Amount is USD * 100, so the exact token number
-    // TODO: we probably want to send this transaction through the relayer (?)
-    let receipt = await tx.wait();
-
-    if (!receipt) {
-      res.send({ error: 'Claim Token failed', errorCode: 101 })
-    }
-
-    await Relayer.addAddressToWhitelist([commonTx.to, pluginTx.to]);
-
-    let allowance = await contract.allowance(safeAddress, pluginTx.to);
-    const allowanceStr = ethers.utils.formatEther(allowance);
-
-    // If allowance is 0.0, we need approve the allowance
-    // TODO: we should check here for allowance > amounttopay
-    if (allowance.isZero()) {
-      // set the allowance
-      const response = await Relayer.execTransaction(safeAddress, ethereumAddress, commonTx.to, commonTx.value, commonTx.data, commonTx.signature)
-      if (response.status !== 200) {
-        // TODO: please do not return the tx.hash here, which is the has from the minting transaction which ahppend earlier
-        res.status(500).send({ error: 'Approve address failed', errorCode: 102, mint: tx.hash })
-        cancelPreauthorizedPayment(preAuthId);
-        return
+    if (paymentData.funding > 0) {
+      if (!userData.mangopayCardId) {
+        const cardId = await registerCard({ paymentData, userData });
+        await userRef.update({ mangopayCardId: cardId });
+      }
+      userData = await admin.firestore().collection('users').doc(uid).get().then(doc => { return doc.data() }) // re-get userData if cardId is saved
+      
+      const { Id: preAuthId, Status, DebitedFunds: { Amount } } = await preauthorizePayment({ paymentData, userData })
+      _preAuthId = preAuthId;
+      _amount = Amount;
+      console.log('PRE AUTH STATUS', Status);
+      
+      if (Status === 'FAILED') {
+        res.status(500).send({ error: 'Request to join failed. Card preauthorization failed.' })
+      }
+      
+      // TODO: replace with estimate gas
+      const OVERRIDES = {
+        gasLimit: 10000000,
+        gasPrice: 15000000000,
+      };
+      
+      let minter = new ethers.Wallet(env.commonInfo.pk, provider);
+      let contract = new ethers.Contract(env.commonInfo.commonToken, abi.CommonToken, minter);
+      // TODO: fix the bug here: this must be the amount the user is actually paying!!!
+      let tx = await contract.mint(safeAddress, _amount, OVERRIDES); // Amount is USD * 100, so the exact token number
+      // TODO: we probably want to send this transaction through the relayer (?)
+      let receipt = await tx.wait();
+      
+      if (!receipt) {
+        res.send({ error: 'Mint Token failed', errorCode: 101 })
       }
 
-      // Wait for the allowance to be confirmed
-      await provider.waitForTransaction(response.data.txHash)
-
-      const response2 = await Relayer.execTransaction(safeAddress, ethereumAddress, pluginTx.to, pluginTx.value, pluginTx.data, pluginTx.signature)
-      if (response2.status !== 200) {
-        res.status(500).send({ error: 'Request to join failed', errorCode: 104, mint: tx.hash, allowance: allowanceStr })
-        cancelPreauthorizedPayment(preAuthId);
-        return
+      let allowance = await contract.allowance(safeAddress, pluginTx.to);
+      
+      // If allowance is 0.0, we need approve the allowance
+      // TODO: we should check here for allowance > amounttopay
+      if (allowance.isZero()) {
+        // set the allowance
+        const response = await Relayer.execTransaction(safeAddress, ethereumAddress, commonTx.to, commonTx.value, commonTx.data, commonTx.signature)
+        if (response.status !== 200) {
+          // TODO: please do not return the tx.hash here, which is the has from the minting transaction which ahppend earlier
+          res.status(500).send({ error: 'Approve address failed', errorCode: 102, mint: tx.hash })
+          if (_preAuthId) {
+            cancelPreauthorizedPayment(_preAuthId);
+          }
+          return
+        }
+        // Wait for the allowance to be confirmed
+        await provider.waitForTransaction(response.data.txHash)
       }
-
-      const receipt = await provider.waitForTransaction(response2.data.txHash);
-      const interf = new ethers.utils.Interface(abi.JoinAndQuit)
-      const events = getTransactionEvents(interf, receipt)
-
-      // TODO:  if the transacdtion reverts, we can check for that here and include that in the error message
-      if (!events.JoinInProposal) {
-        res.send({ mint: tx.hash, allowance: allowanceStr, joinHash: response2.data.txHash, msg: 'Join in failed' })
-        return
-      }
-
-      const proposalId = events.JoinInProposal._proposalId
-
-      if (proposalId && proposalId.length) {
-        await updateProposalById(proposalId, true);
-        res.send({ mint: tx.hash, allowance: allowanceStr, joinHash: response2.data.txHash, proposalId: proposalId });
-        return;
-      }
-
-      res.send({ mint: tx.hash, allowance: allowanceStr, joinHash: response2.data.txHash, msg: 'Join in failed' });
-
     } else {
-
-      // TODO: there is duplicate code here and above, where the same transaction is sent. Please refactor this.
-      const response2 = await Relayer.execTransaction(safeAddress, ethereumAddress, pluginTx.to, pluginTx.value, pluginTx.data, pluginTx.signature)
-      if (response2.status !== 200) {
-        res.status(500).send({ error: 'Request to join failed', errorCode: 105, mint: tx.hash, allowance: allowanceStr })
-        cancelPreauthorizedPayment(preAuthId);
-        return
-      }
-
-      const receipt = await provider.waitForTransaction(response2.data.txHash);
-      const interf = new ethers.utils.Interface(abi.JoinAndQuit)
-      const events = getTransactionEvents(interf, receipt)
-
-      if (!events.JoinInProposal) {
-        res.send({ mint: tx.hash, allowance: allowanceStr, joinHash: response2.data.txHash, msg: 'Join in failed' })
-        return
-      }
-
-      const proposalId = events.JoinInProposal._proposalId
-      
-      const { Status: payInStatus } = await payToDAOStackWallet({ preAuthId, Amount, userData });
-      
-      console.log('PayIn Status:', payInStatus);
-
-      if (proposalId && proposalId.length) {
-        await updateProposalById(proposalId, true);
-        res.send({ mint: tx.hash, allowance: allowanceStr, joinHash: response2.data.txHash, proposalId: proposalId });
-        return;
-      }
-
-      res.send({ mint: tx.hash, allowance: allowanceStr, joinHash: response2.data.txHash, msg: 'Join in failed' });
+      console.log('Funding is 0. NO PAYMENT SERVICES.');  
     }
+    
+    await Relayer.addAddressToWhitelist([commonTx.to, pluginTx.to]);
+     
+    const response2 = await Relayer.execTransaction(safeAddress, ethereumAddress, pluginTx.to, pluginTx.value, pluginTx.data, pluginTx.signature)
+    if (response2.status !== 200) {
+      response2.status(500).send({ error: 'Request to join failed', errorCode: 104, data: response2.data })
+      cancelPreauthorizedPayment(_preAuthId);
+      return
+    }
+    
+    const receipt2 = await provider.waitForTransaction(response2.data.txHash);
+    // we can get the ABI from arc.js using arc.getABI("JoinAndQuit", ARC_VERSION)
+    const interf = new ethers.utils.Interface(abi.JoinAndQuit)
+    const events = getTransactionEvents(interf, receipt2)
+    
+    // TODO:  if the transacdtion reverts, we can check for that here and include that in the error message
+    if (!events.JoinInProposal) {
+      res.send({ joinHash: response2.data.txHash, msg: 'Join in failed' })
+      return
+    }
+    
+    const proposalId = events.JoinInProposal._proposalId
+    console.debug(`Created proposal ${proposalId}`)
+    
+    // TODO: the payment will be made only after the proposal is accepted. There is an issue in jira on this..
+    // if (paymentData.funding > 0) {
+    //   const { Status: payInStatus } = await payToDAOStackWallet({ _preAuthId, _amount, userData });
+    //   console.log('PayIn Status:', payInStatus);
+    // }
+    
+    if (proposalId && proposalId.length) {
+      await updateProposalById(proposalId, true);
+      res.send({ joinHash: response2.data.txHash, proposalId: proposalId });
+      return;
+    } else {
+      res.send({ joinHash: response2.data.txHash, msg: 'Join in failed' });
 
-    res.send({ error: 'Should not be here', errorCode: 106 })
+    }
   } catch (err) {
     console.log(err);
     res.send(err.response.data);
@@ -275,16 +254,16 @@ relayer.post('/createCommonStep2', async (req, res) => {
     const userData = await admin.firestore().collection('users').doc(uid).get().then(doc => { return doc.data() })
     const safeAddress = userData.safeAddress
     const ethereumAddress = userData.ethereumAddress
-
+    
     const response = await Relayer.execTransaction(safeAddress, ethereumAddress, commonTx.to, commonTx.value, commonTx.data, commonTx.signature)
     if (response.status !== 200) {
       res.statusCode(500).send(JSON.stringify(response.data))
       return
     }
-
+    
     const receipt = await provider.waitForTransaction(response.data.txHash)
     const isSuccess = isRelayerTxSuccessWithReceipt(receipt)
-
+    
     if (!isSuccess) {
       return res.send({msg: 'Failed in Safe Exectution', code: 201, txHash: response.data.txHash})
     }
