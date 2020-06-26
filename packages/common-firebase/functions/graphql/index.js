@@ -23,11 +23,11 @@ graphql.get('/update-daos', async (req, res) => {
   try {
     const result = await updateDaos();
     const code = 200;
-    res.status(code).send(`Updated DAOs successfully: ${result}`);
+    res.status(code).send({message: `Updated DAOs successfully`, result});
   } catch (e) {
     const code = 500;
     console.log(e)
-    res.status(code).send(new Error(`Unable to update DAOs: ${e}`));
+    res.status(code).send({error: `Unable to update Daos: ${e}`});
   }
 
 });
@@ -36,13 +36,13 @@ graphql.get('/update-dao-by-id', async (req, res) => {
   try {
     console.log(req.query);
     const { daoId } = req.query;
-    await updateDaoById(daoId, true);
+    const daoData = await updateDaoById(daoId, true);
     const code = 200;
-    res.status(code).send(`Updated dao with id ${daoId}`);
+    res.status(code).send({message: `Updated dao with id ${daoId}`, daoId, data: daoData});
   } catch (e) {
     const code = 500;
     console.log(e)
-    res.status(code).send(new Error(`Unable to update Dao: ${e}`));
+    res.status(code).send({error: `Unable to update Dao: ${e}`, daoId: req.query.daoId});
   }
 
 });
@@ -55,7 +55,7 @@ graphql.get('/update-proposals', async (req, res) => {
   } catch (e) {
     const code = 500;
     console.log(e)
-    res.status(code).send(new Error(`Unable to update Proposals: ${e}`));
+    res.status(code).send({error: `Unable to update Proposals: ${e}`});
   }
 
 });
@@ -69,7 +69,7 @@ graphql.get('/update-proposal-by-id', async (req, res) => {
   } catch (e) {
     const code = 500;
     console.log(e)
-    res.status(code).send(new Error(`Unable to update Proposals: ${e}`));
+    res.status(code).send({error: `Unable to update Proposal by id: ${e}`, proposalId: req.query.proposalId});
   }
 
 });
@@ -82,7 +82,7 @@ graphql.get('/update-users', async (req, res) => {
   } catch (e) {
     const code = 500;
     console.log(e)
-    res.status(code).send(new Error(`Unable to update users: ${e}`));
+    res.status(code).send({error: `Unable to update users: ${e}`});
   }
 });
 graphql.get('/update-votes', async (req, res) => {
@@ -93,7 +93,7 @@ graphql.get('/update-votes', async (req, res) => {
   } catch (e) {
     const code = 500;
     console.log(e)
-    res.status(code).send(new Error(`Unable to update votes: ${e}`));
+    res.status(code).send({error: `Unable to update votes: ${e}`});
   }
 });
 

@@ -197,11 +197,12 @@ async function _updateDaoDb(dao) {
 }
 
 async function updateDaoById(daoId, retry = false) {
-  //const dao = arc.dao(daoId);
-  //const daos = await arc.daos({ where: { id: daoId } }, { fetchPolicy: 'no-cache' }).first();
 
   console.log(`UPDATE DAO BY ID: ${daoId}`);
   console.log("----------------------------------------------------------");
+  if (!daoId) {
+    throw Error(`You must provide a daoId (current value is "${daoId}")`)
+  }
 
   const dao = await promiseRetry(
         
