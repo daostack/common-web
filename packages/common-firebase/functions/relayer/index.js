@@ -10,7 +10,7 @@ const ethers = require('ethers');
 const env = require('../env/env');
 
 const { jsonRpcProvider } = require('../settings')
-const { updateProposalById, updateDaos } = require('../graphql/ArcListener');
+const { updateProposalById, updateDaoById } = require('../graphql/ArcListener');
 const provider = new ethers.providers.JsonRpcProvider(jsonRpcProvider);
 
 const runtimeOptions = {
@@ -198,7 +198,7 @@ relayer.post('/requestToJoin', async (req, res) => {
       const proposalId = events.JoinInProposal._proposalId
 
       if (proposalId && proposalId.length) {
-        await updateProposalById(proposalId);
+        await updateProposalById(proposalId, true);
         res.send({ mint: tx.hash, allowance: allowanceStr, joinHash: response2.data.txHash, proposalId: proposalId });
         return;
       }
@@ -226,7 +226,7 @@ relayer.post('/requestToJoin', async (req, res) => {
       const proposalId = events.JoinInProposal._proposalId
 
       if (proposalId && proposalId.length) {
-        await updateProposalById(proposalId);
+        await updateProposalById(proposalId, true);
         res.send({ mint: tx.hash, allowance: allowanceStr, joinHash: response2.data.txHash, proposalId: proposalId });
         return;
       }
@@ -242,7 +242,7 @@ relayer.post('/requestToJoin', async (req, res) => {
 
 relayer.post('/createCommonStep2', async (req, res) => {
   try {
-    const { idToken, commonTx } = req.body;
+    const { idToken, commonTx, commonId } = req.body;
     const decodedToken = await admin.auth().verifyIdToken(idToken)
     const uid = decodedToken.uid;
     const userData = await admin.firestore().collection('users').doc(uid).get().then(doc => { return doc.data() })
@@ -262,7 +262,7 @@ relayer.post('/createCommonStep2', async (req, res) => {
       return res.send({msg: 'Failed in Safe Exectution', code: 201, txHash: response.data.txHash})
     }
     
-    await updateDaos();
+    await updateDaoById(commonId, true);
     res.send({txHash: response.data.txHash})
   } catch (err) {
     res.send(err.response.data);
