@@ -327,20 +327,24 @@ async function _updateProposalDb(proposal) {
 }
 
 async function updateProposalById(proposalId, retry = false) {
-  let proposal = null;
-  try {
-    proposal = await arc.proposal({ where: { id: proposalId } }, { fetchPolicy: 'no-cache' })
-  } catch(error) {
-    // Catch the case if there is no proposal with given id.
-
-    if (retry) {
-      // TODO: Logic for retrying until the proposal appear in the DB
-      // HINT: Subscribe to firestore proposals structure for the current Id and wait until it's updated. 
-      // If the proposal is not created yet it will be updated from the common-listener once the graph is updated, so just wait for the firebase to be updated is enought.
+  let proposal = await promiseRetry(
+        
+    async function (retryFunc, number) {
+      console.log(`Try #${number} to get Proposal...`);
+      let currProposalResult = null;
+      try {
+        currProposalResult = await arc.proposal({ where: { id: proposalId } }, { fetchPolicy: 'no-cache' })
+      } catch(error) {
+        if (retry) {
+          retryFunc(`Not found Proposal with id ${proposalId} in the graph. Retrying... `);
+        } else {
+          throw error;
+        }
+      }
+      return currProposalResult;
     }
+  );
 
-    throw error;
-  }
   const { updatedDoc, errorMsg } = await _updateProposalDb(proposal);
   
   if (errorMsg) {
