@@ -54,7 +54,7 @@ async function updateDaos() {
       continue;
     }
 
-    await db.collection('daos').doc(dao.id).update(updatedDoc)
+    await db.collection('daos').doc(dao.id).set(updatedDoc, {merge: true})
     const msg = `Updated dao ${dao.id}`
     response.push(msg)
     console.log(msg)
@@ -320,7 +320,7 @@ async function _updateProposalDb(proposal) {
       winningOutcome: s.winningOutcome,
     }
 
-  await db.collection('proposals').doc(s.id).update(doc)
+  await db.collection('proposals').doc(s.id).set(doc, {merge: true})
   result.updatedDoc = doc;
 
   return result;
@@ -391,7 +391,7 @@ async function updateUsers() {
       const doc = {
         daos: mapMembersToDaos[memberAddress]
       }
-      await db.collection('users').doc(user.id).update(doc)
+      await db.collection('users').doc(user.id).set(doc, { merge: true})
     }
   }
   return response.join('\n')
