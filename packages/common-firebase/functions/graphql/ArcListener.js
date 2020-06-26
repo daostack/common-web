@@ -287,6 +287,7 @@ async function _updateProposalDb(proposal) {
     const doc = {
       boostedAt: s.boostedAt,
       description: proposalDescription,
+      closingAt: s.closingAt,
       createdAt: s.createdAt,
       dao: s.dao.id,
       executionState: s.executionState,
@@ -358,8 +359,8 @@ async function updateProposalById(proposalId, retry = false) {
   return updatedDoc;
 }
 
-async function updateProposals(first = null) {
-  const proposals = await arc.proposals({ first }, { fetchPolicy: 'no-cache' }).first()
+async function updateProposals() {
+  const proposals = await arc.proposals({ }, { fetchPolicy: 'no-cache' }).first()
   console.log(`found ${proposals.length} proposals`)
 
   const docs = []
