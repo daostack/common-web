@@ -54,7 +54,7 @@ async function updateDaos() {
       continue;
     }
 
-    await db.collection('daos').doc(dao.id).set(updatedDoc)
+    await db.collection('daos').doc(dao.id).update(updatedDoc)
     const msg = `Updated dao ${dao.id}`
     response.push(msg)
     console.log(msg)
@@ -105,7 +105,6 @@ function _validateDaoState(daoState) {
 
 async function _updateDaoDb(dao) {
 
-  
   const daoState = dao.coreState
   
   // Validate Dao state
@@ -320,7 +319,7 @@ async function _updateProposalDb(proposal) {
       winningOutcome: s.winningOutcome,
     }
 
-  await db.collection('proposals').doc(s.id).set(doc)
+  await db.collection('proposals').doc(s.id).update(doc)
   result.updatedDoc = doc;
 
   return result;
@@ -360,7 +359,9 @@ async function updateProposalById(proposalId, retry = false) {
 }
 
 async function updateProposals() {
-  const proposals = await arc.proposals({ }, { fetchPolicy: 'no-cache' }).first()
+  // TOOD: this function will be useless once we have > 1000 proposals!
+  // take first: 1000  (this is the maximum, the default is 100)
+  const proposals = await arc.proposals({ first: 1000 }, { fetchPolicy: 'no-cache' }).first()
   console.log(`found ${proposals.length} proposals`)
 
   const docs = []

@@ -271,7 +271,7 @@ relayer.post('/createCommonStep2', async (req, res) => {
     await updateDaoById(commonId, true);
     res.send({txHash: response.data.txHash})
   } catch (err) {
-    res.send(err.response.data);
+    res.send(err);
   }
 })
 
