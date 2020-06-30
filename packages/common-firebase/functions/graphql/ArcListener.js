@@ -44,9 +44,9 @@ async function updateDaos() {
 
   for (const dao of daos) {
     console.log(`UPDATE DAO WITH ID: ${dao.id}`);
-    const { updatedDoc, errorMsg }  = await _updateDaoDb(dao);
+    const { errorMsg }  = await _updateDaoDb(dao);
     
-
+    // TODO: this is not the way to handle errors
     if (errorMsg) {
       response.push(errorMsg);
       console.log(errorMsg);
@@ -54,7 +54,6 @@ async function updateDaos() {
       continue;
     }
 
-    await db.collection('daos').doc(dao.id).set(updatedDoc, {merge: true})
     const msg = `Updated dao ${dao.id}`
     response.push(msg)
     console.log(msg)
@@ -174,11 +173,11 @@ async function _updateDaoDb(dao) {
           })
         } else {
           console.log(`User found with this address ${member.coreState.address}`)
-          const userDaos = user.daos || []
-          if (!(dao.id in userDaos)) {
-            userDaos.push(dao.id)
-            db.collection("users").doc(user.id).update({ daos: userDaos })
-          }
+          // const userDaos = user.daos || []
+          // if (!(dao.id in userDaos)) {
+          //   userDaos.push(dao.id)
+          //   db.collection("users").doc(user.id).update({ daos: userDaos })
+          // }
           doc.members.push({
             address: member.coreState.address,
             userId: user.id
@@ -186,7 +185,7 @@ async function _updateDaoDb(dao) {
         }
       }
     }
-
+    await db.collection('daos').doc(dao.id).set(doc, {merge: true})
     return { updatedDoc: doc };
 
     
@@ -196,51 +195,30 @@ async function _updateDaoDb(dao) {
   }
 }
 
-async function updateDaoById(daoId, retry = false) {
+async function updateDaoById(daoId, customRetryOptions = {} ) {
 
-  console.log(`UPDATE DAO BY ID: ${daoId}`);
-  console.log("----------------------------------------------------------");
   if (!daoId) {
     throw Error(`You must provide a daoId (current value is "${daoId}")`)
   }
-
+  daoId = daoId.toLowerCase()
   const dao = await promiseRetry(
-        
     async function (retryFunc, number) {
       console.log(`Try #${number} to get Dao...`);
       const currDaosResult = await arc.daos({ where: { id: daoId } }, { fetchPolicy: 'no-cache' }).first();
       
       if (currDaosResult.length === 0) {
-        retryFunc(`Not found Dao with id ${daoId} in the graph. Retrying...`);
+        retryFunc(`We could not find a dao with id "${daoId}" in the graph.`);
       }
       return currDaosResult[0];
     }, 
-    retryOptions
+    {...retryOptions, ...customRetryOptions }
   );
 
+  // TODO: _updateDaoDb should throw en error, not ereturn error messages
   const { updatedDoc, errorMsg }  = await _updateDaoDb(dao);
   if (errorMsg) {
     console.log(`Dao update failed for id: ${dao.id}!`);
     console.log(errorMsg);
-    
-    if (retry) {
-      // Begin retry functionality
-      const awaitedResult = await promiseRetry(
-        
-        async function (retryFunc, number) {
-          console.log(`Try #${number} to update Dao...`);
-          const currResult = await _updateDaoDb(dao);
-          if (currResult.errorMsg) {
-            retryFunc(errorMsg);
-          }
-          return currResult;
-        },
-        retryOptions
-      );
-
-      return awaitedResult.updatedDoc;
-    }
-
     throw Error(errorMsg);
   }
   console.log("UPDATED DAO WITH ID: ", daoId);
@@ -328,7 +306,6 @@ async function _updateProposalDb(proposal) {
 
 async function updateProposalById(proposalId, retry = false) {
   let proposal = await promiseRetry(
-        
     async function (retryFunc, number) {
       console.log(`Try #${number} to get Proposal...`);
       let currProposalResult = null;
@@ -336,7 +313,7 @@ async function updateProposalById(proposalId, retry = false) {
         currProposalResult = await arc.proposal({ where: { id: proposalId } }, { fetchPolicy: 'no-cache' })
       } catch(error) {
         if (retry) {
-          retryFunc(`Not found Proposal with id ${proposalId} in the graph. Retrying... `);
+          retryFunc(`Not found Proposal with id ${proposalId} in the graph`);
         } else {
           throw error;
         }

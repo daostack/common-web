@@ -268,10 +268,12 @@ relayer.post('/createCommonStep2', async (req, res) => {
       return res.send({msg: 'Failed in Safe Exectution', code: 201, txHash: response.data.txHash})
     }
     
-    await updateDaoById(commonId, true);
-    res.send({txHash: response.data.txHash})
+    // TODO: wait a second before calling this function, so we have a higher probalby to find the result at the first try
+    await updateDaoById(commonId, {retries: 4});
+
+    res.send({message: `Created common with id ${commonId}`, daoId: commonId, txHash: response.data.txHash})
   } catch (err) {
-    res.send(err);
+    res.statusCode(500).send({error: `${err}`});
   }
 })
 

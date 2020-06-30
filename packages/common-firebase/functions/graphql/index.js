@@ -36,7 +36,7 @@ graphql.get('/update-dao-by-id', async (req, res) => {
   try {
     console.log(req.query);
     const { daoId } = req.query;
-    const daoData = await updateDaoById(daoId, true);
+    const daoData = await updateDaoById(daoId, { retries: 1 });
     const code = 200;
     res.status(code).send({message: `Updated dao with id ${daoId}`, daoId, data: daoData});
   } catch (e) {

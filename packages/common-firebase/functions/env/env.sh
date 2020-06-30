@@ -37,8 +37,8 @@ if [ "$currentMD5" = "$stagingMD5" ]; then
       exit
     fi
     echo "$(tput setaf 1)Enviroment mismatched$(tput sgr0)"
-    echo "Current branch is $(tput setaf 1) $currentBranch $(tput sgr0), you need switch to $(tput setaf 1) dev $(tput sgr0)"
-    echo "Only$(tput setaf 1) Staging $(tput sgr0)branch can depoly to $(tput setaf 1)Staging Environment$(tput sgr0)"
+    echo "Current branch is $(tput setaf 1) $currentBranch $(tput sgr0), you need to either switch environment, or checkout $(tput setaf 1) dev $(tput sgr0) branch"
+    echo "Only$(tput setaf 1) dev $(tput sgr0)branch can deploy to $(tput setaf 1)Staging Environment$(tput sgr0)"
     exit 1
   fi
 elif [ "$currentMD5" = "$productionMD5" ]; then

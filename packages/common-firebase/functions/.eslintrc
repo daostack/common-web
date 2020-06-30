@@ -5,7 +5,7 @@
       "node": true,
       "es6": true,
     },
-    "parserOptions": {"ecmaVersion": 8},
+    "parserOptions": {"ecmaVersion": 2018},
     "rules": {
         "eol-last": 2,
         "eqeqeq": "error",
