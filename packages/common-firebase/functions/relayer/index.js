@@ -233,7 +233,7 @@ relayer.post('/requestToJoin', async (req, res) => {
     // }
     
     if (proposalId && proposalId.length) {
-      await updateProposalById(proposalId, true);
+      await updateProposalById(proposalId, {retries: 4});
       res.send({ joinHash: response2.data.txHash, proposalId: proposalId });
       return;
     } else {
@@ -242,7 +242,7 @@ relayer.post('/requestToJoin', async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.send(err.response.data);
+    res.status(500).send({error: `${err}`});
   }
 })
 

@@ -260,8 +260,6 @@ async function _updateProposalDb(proposal) {
       };
     }
 
-    console.log(s)
-
     const doc = {
       boostedAt: s.boostedAt,
       description: proposalDescription,
@@ -304,23 +302,23 @@ async function _updateProposalDb(proposal) {
   return result;
 }
 
-async function updateProposalById(proposalId, retry = false) {
+async function updateProposalById(proposalId, customRetryOptions = {}) {
   let proposal = await promiseRetry(
     async function (retryFunc, number) {
       console.log(`Try #${number} to get Proposal...`);
       let currProposalResult = null;
       try {
         currProposalResult = await arc.proposal({ where: { id: proposalId } }, { fetchPolicy: 'no-cache' })
-      } catch(error) {
-        if (retry) {
-          retryFunc(`Not found Proposal with id ${proposalId} in the graph`);
-        } else {
-          throw error;
+      } catch (err) {
+        if (err.message.match(/Could not find a unique proposal satisfying these options/)) {
+          retryFunc(`We could not find a proposal with id "${proposalId}" in the graph.`);
         }
+        console.log(err)
+        throw err
       }
       return currProposalResult;
     },
-    retryOptions
+    {...retryOptions, ...customRetryOptions}
   );
 
   const { updatedDoc, errorMsg } = await _updateProposalDb(proposal);
@@ -328,8 +326,7 @@ async function updateProposalById(proposalId, retry = false) {
   if (errorMsg) {
     console.log(`Proposal update failed for id: ${proposalId}!`);
     console.log(errorMsg);
-    
-    return errorMsg;
+    throw Error(errorMsg) 
   }
   
   console.log("UPDATED PROPOSAL: ", proposal);
