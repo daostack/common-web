@@ -238,7 +238,6 @@ relayer.post('/requestToJoin', async (req, res) => {
       return;
     } else {
       res.send({ joinHash: response2.data.txHash, msg: 'Join in failed' });
-
     }
   } catch (err) {
     console.log(err);
@@ -257,7 +256,7 @@ relayer.post('/createCommonStep2', async (req, res) => {
     
     const response = await Relayer.execTransaction(safeAddress, ethereumAddress, commonTx.to, commonTx.value, commonTx.data, commonTx.signature)
     if (response.status !== 200) {
-      res.statusCode(500).send(JSON.stringify(response.data))
+      res.status(500).send(JSON.stringify(response.data))
       return
     }
     
@@ -273,7 +272,7 @@ relayer.post('/createCommonStep2', async (req, res) => {
 
     res.send({message: `Created common with id ${commonId}`, daoId: commonId, txHash: response.data.txHash})
   } catch (err) {
-    res.statusCode(500).send({error: `${err}`});
+    res.status(500).send({error: `${err}`});
   }
 })
 

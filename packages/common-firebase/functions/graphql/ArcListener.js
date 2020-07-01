@@ -209,6 +209,9 @@ async function updateDaoById(daoId, customRetryOptions = {} ) {
       if (currDaosResult.length === 0) {
         retryFunc(`We could not find a dao with id "${daoId}" in the graph.`);
       }
+      if (!currDaosResult[0].coreState.metadata) {
+        retryFunc(`The dao with id "${daoId}" has no metadata`);
+      }
       return currDaosResult[0];
     }, 
     {...retryOptions, ...customRetryOptions }
