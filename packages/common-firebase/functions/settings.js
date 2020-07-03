@@ -1,3 +1,5 @@
+const ethers = require('ethers');
+const { Arc } = require('@daostack/arc.js');
 
 const env = require('./env/env.json')
 
@@ -14,11 +16,21 @@ const retryOptions = {
     randomize: false, //Randomizes the timeouts by multiplying with a factor between 1 to 2. Default is false.
 };
 
+const provider = new ethers.providers.JsonRpcProvider(jsonRpcProvider);
+
+const arc = new Arc({
+  graphqlHttpProvider: graphHttpLink,
+  graphqlWsProvider: graphwsLink,
+});
+
+
 module.exports = {
+    arc,
     graphwsLink,
     graphHttpLink,
     databaseURL,
     jsonRpcProvider,
     mangoPayApi,
+    provider,
     retryOptions
 }

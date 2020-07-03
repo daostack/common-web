@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { updateDaos, updateDaoById, updateProposals, updateUsers, updateVotes, updateProposalById } = require('./ArcListener')
+const { updateDAOBalance} = require("./updateDAOBalance")
 
 const runtimeOptions = {
   timeoutSeconds: 540, // Maximum time 9 mins
@@ -71,7 +72,6 @@ graphql.get('/update-proposal-by-id', async (req, res) => {
     console.log(e)
     res.status(code).send({error: `Unable to update Proposal by id: ${e}`, proposalId: req.query.proposalId});
   }
-
 });
 
 graphql.get('/update-users', async (req, res) => {
@@ -94,6 +94,19 @@ graphql.get('/update-votes', async (req, res) => {
     const code = 500;
     console.log(e)
     res.status(code).send({error: `Unable to update votes: ${e}`});
+  }
+});
+
+graphql.get('/update-dao-balance', async (req, res) => {
+  const { daoId } = req.query;
+  try {
+    const data = await updateDAOBalance(daoId);
+    const code = 200;
+    res.status(code).send({message: `Updated balance of Common at ${daoId}`, data });
+  } catch (e) {
+    const code = 500;
+    console.log(e)
+    res.status(code).send({error: `Unable to update Common balance ${e}`, query: req.query});
   }
 });
 

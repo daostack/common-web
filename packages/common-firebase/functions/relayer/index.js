@@ -8,9 +8,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const ethers = require('ethers');
 const env = require('../env/env');
-const { jsonRpcProvider } = require('../settings')
+const { provider } = require('../settings')
 const { updateProposalById, updateDaoById } = require('../graphql/ArcListener');
-const provider = new ethers.providers.JsonRpcProvider(jsonRpcProvider);
 const { registerCard, preauthorizePayment, cancelPreauthorizedPayment } = require('../mangopay/mangopay');
 
 const runtimeOptions = {

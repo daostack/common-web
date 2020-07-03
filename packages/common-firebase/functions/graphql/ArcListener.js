@@ -1,14 +1,10 @@
-const { Arc, Member, Vote } = require('../node_modules/@daostack/arc.js');
+const { Member, Vote } = require('@daostack/arc.js');
 const promiseRetry = require('promise-retry');
 const admin = require('firebase-admin');
-const { graphHttpLink, graphwsLink , retryOptions} = require('../settings')
+const { arc, retryOptions} = require('../settings')
+const { getBalance } = require("./updateDAOBalance.js")
 
-const arc = new Arc({
-  graphqlHttpProvider: graphHttpLink,
-  graphqlWsProvider: graphwsLink,
-});
-
-const db = admin.firestore();
+const db = admin.firestore()
 
 function error(msg) {
   console.error(msg)
@@ -135,11 +131,13 @@ async function _updateDaoDb(dao) {
   const fundingGoal = Number(metadata.fundingGoal)
   const { activationTime } = fundingPlugin.coreState.pluginParams.voteParams
 
+  // also get the balance
+  const balance = await getBalance(dao.id)
   try {
     const doc = {
       id: dao.id,
       address: daoState.address,
-      balance: 0, // TODO: get the actual token balance here
+      balance,
       memberCount: daoState.memberCount,
       name: daoState.name,
       numberOfBoostedProposals: daoState.numberOfBoostedProposals,
