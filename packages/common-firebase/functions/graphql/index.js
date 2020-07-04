@@ -64,7 +64,7 @@ graphql.get('/update-proposals', async (req, res) => {
 graphql.get('/update-proposal-by-id', async (req, res) => {
   try {
     const { proposalId, retries } = req.query;
-    const data = await updateProposalById(proposalId, retries || 0);
+    const data = await updateProposalById(proposalId, { retries: retries || 0 });
     const code = 200;
     res.status(code).send({message: `Updated proposal ${proposalId}`, data });
   } catch (e) {
