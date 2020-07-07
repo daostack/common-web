@@ -79,8 +79,8 @@ exports.sendFollowerNotification = functions.firestore.document('/notification/f
 exports.commonCreation = functions.firestore.document('/daos/{daoId}')
 .onCreate(async (snapshot, context) => {
   const daoId = context.params.daoId;
-  const daoData = admin.firestore().collection('daos').doc(`${daoId}`).get().then(doc =>{ return doc.data()})
-  const ownerId = daoData.members[0].userId;
+ const daoData = snapshot.data();
+ const ownerId = daoData.members[0].userId;
   return admin.firestore().doc(`notification/commonCreation/${ownerId}/${daoId}`).set({ createdAt: new Date() })
 })
 
