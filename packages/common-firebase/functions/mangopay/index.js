@@ -7,7 +7,7 @@ const cors = require('cors');
 
 const {
   createUser,
-  createWallet,
+  // createWallet,
   /*registerCard,
   payToDAOStackWallet, */
 } = require('./mangopay');
