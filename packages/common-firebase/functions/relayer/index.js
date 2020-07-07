@@ -163,7 +163,7 @@ relayer.post('/requestToJoin', async (req, res) => {
       console.log('PRE AUTH STATUS', Status);
       
       if (Status === 'FAILED') {
-        res.status(500).send({ error: 'Request to join failed. Card preauthorization failed.' })
+        throw new Error('Request to join failed. Card preauthorization failed.');
       }
       
       // TODO: replace with estimate gas

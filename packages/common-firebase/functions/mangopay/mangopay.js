@@ -265,7 +265,7 @@ Custom data that you can add to this item
 const payToDAOStackWallet = async ({preAuthId, Amount, userData }) => {
   const PayInData = {
     "AuthorId": userData.mangopayId,
-    "CreditedWalletId": "82642751", // The DAOSTACK USD WALLET ID
+    "CreditedWalletId": env.mangopay.daoStackWalletId, // The DAOSTACK USD WALLET ID
     "DebitedFunds": {
       "Currency": "USD",
       "Amount": Amount

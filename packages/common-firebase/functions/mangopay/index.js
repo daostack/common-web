@@ -39,14 +39,16 @@ mangopay.post('/create-user', async (req, res) => {
     if (!userData.mangopayId) {
       const { Id: mangopayId } = await createUser(userData);
       await userRef.update({ mangopayId });
+      result = 'Created new user in mangopay.'
     }
-    userData = await userRef.get().then(doc => { return doc.data() }); // update document if changes
+  // we don't need wallet for preAuthorization
+    /* userData = await userRef.get().then(doc => { return doc.data() }); // update document if changes
     if (!userData.mangopayWalletId) {
       const { Id: mangopayWalletId } = await createWallet(userData.mangopayId);
       await userRef.update({ mangopayWalletId });
-    }
+    } */
     const code = 200;
-    res.status(code).send(`Created mangopay user successfully: ${result}`);
+    res.status(code).send(`Mangopay user status: ${result ? result : 'User is already registred in mangopay.'}`);
   } catch (e) {
     const code = 500;
     console.log(e);
