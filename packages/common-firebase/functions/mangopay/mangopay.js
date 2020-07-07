@@ -1,14 +1,14 @@
-const env = require('../env/env.json')
-const { mangoPayApi } = require('../settings')
-const axios = require('axios')
-const Querystring = require('querystring')
+const env = require('../env/env.json');
+const { mangoPayApi } = require('../settings');
+const axios = require('axios');
+const Querystring = require('querystring');
 
 const options = {
   auth: { username: env.mangopay.clientId, password: env.mangopay.apiKey },
   headers: {
     'Content-Type': 'application/json',
   },
-}
+};
 
 /*
 
@@ -42,20 +42,19 @@ const createUser = async (userData) => {
     Birthday: -258443002, // can be fake and hadcoded
     Nationality: 'BG', // can be fake and hadcoded
     CountryOfResidence: 'BG', // can be fake and hadcoded
-    
   };
   try {
     const response = await axios.post(
       `${mangoPayApi}` + '/users/natural',
       userObject,
       options
-    )
-    return response.data
+    );
+    return response.data;
   } catch (e) {
-    console.log(e)
+    console.log(e);
     throw e;
   }
-}
+};
 
 /*
 
@@ -73,27 +72,25 @@ Custom data that you can add to this item
 
 */
 
-
-
 const createWallet = async (mangopayId) => {
   const walletData = {
     Owners: [mangopayId],
     Description: 'A very cool wallet',
     Currency: 'EUR',
     Tag: 'Cloud function create a wallet',
-  }
+  };
   try {
     const response = await axios.post(
       `${mangoPayApi}` + '/wallets',
       walletData,
       options
-    )
+    );
     return response.data;
   } catch (e) {
-    console.log(e)
+    console.log(e);
     throw e;
   }
-}
+};
 
 /*
 
@@ -114,22 +111,22 @@ const registerCard = async ({ paymentData, userData }) => {
     UserId: userData.mangopayId,
     Currency: 'EUR',
     CardType: 'CB_VISA_MASTERCARD', // optional
-  }
+  };
   try {
     const preRegData = await axios.post(
       `${mangoPayApi}` + '/CardRegistrations',
       userCardData,
       options
-    )
+    );
 
     const {
       Id,
       PreregistrationData,
       AccessKey,
       CardRegistrationURL,
-    } = preRegData.data
+    } = preRegData.data;
 
-    console.log(preRegData.data)
+    console.log(preRegData.data);
 
     const cardInfo = Querystring['stringify']({
       data: PreregistrationData,
@@ -137,30 +134,30 @@ const registerCard = async ({ paymentData, userData }) => {
       cardNumber: paymentData.cardNumber,
       cardExpirationDate: paymentData.expDate,
       cardCvx: paymentData.cvv,
-    })
+    });
 
     const postCardInfo = await axios.post(CardRegistrationURL, cardInfo, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-    })
+    });
 
-    console.log(postCardInfo.data)
+    console.log(postCardInfo.data);
 
     const finalizeCardReg = await axios.put(
       `${mangoPayApi}` + `/cardregistrations/${Id}`,
       { RegistrationData: postCardInfo.data },
       options
-    )
+    );
 
-    console.log('Card registered', finalizeCardReg.data)
+    console.log('Card registered', finalizeCardReg.data);
     const { CardId } = finalizeCardReg.data;
     return CardId;
   } catch (e) {
-    console.log(e)
+    console.log(e);
     throw e;
   }
-}
+};
 
 /* 
 
@@ -179,35 +176,33 @@ SecureModeReturnURL string REQUIRED
 const preauthorizePayment = async ({ paymentData, userData }) => {
   try {
     const preAuthData = {
-      "AuthorId": userData.mangopayId,
-        "DebitedFunds": {
-        "Currency": "USD",
-          "Amount": paymentData.funding
+      AuthorId: userData.mangopayId,
+      DebitedFunds: {
+        Currency: 'USD',
+        Amount: paymentData.funding,
       },
-      "CardId": userData.mangopayCardId,
-      "SecureModeReturnURL": "http://google.com",
-    }
-    
+      CardId: userData.mangopayCardId,
+      SecureModeReturnURL: 'http://google.com',
+    };
+
     const preAuthReqData = await axios.post(
       `${mangoPayApi}` + '/preauthorizations/card/direct',
       preAuthData,
       options
     );
-    
+
     console.log('PRE AUTH DATA', preAuthReqData.data);
     return preAuthReqData.data;
   } catch (e) {
     console.log(e);
   }
-}
-
-
+};
 
 const cancelPreauthorizedPayment = async (preAuthId) => {
   try {
     const cancelData = {
-      "PaymentStatus": "CANCELED"
-    }
+      PaymentStatus: 'CANCELED',
+    };
 
     const preAuthReqData = await axios.put(
       `${mangoPayApi}` + `preauthorizations/${preAuthId}/`,
@@ -220,7 +215,7 @@ const cancelPreauthorizedPayment = async (preAuthId) => {
   } catch (e) {
     console.log(e);
   }
-}
+};
 
 /*
 
@@ -262,34 +257,34 @@ Custom data that you can add to this item
 
 */
 
-const payToDAOStackWallet = async ({preAuthId, Amount, userData }) => {
+const payToDAOStackWallet = async ({ preAuthId, Amount, userData }) => {
   const PayInData = {
-    "AuthorId": userData.mangopayId,
-    "CreditedWalletId": env.mangopay.daoStackWalletId, // The DAOSTACK USD WALLET ID
-    "DebitedFunds": {
-      "Currency": "USD",
-      "Amount": Amount
+    AuthorId: userData.mangopayId,
+    CreditedWalletId: env.mangopay.daoStackWalletId, // The DAOSTACK USD WALLET ID
+    DebitedFunds: {
+      Currency: 'USD',
+      Amount: Amount,
     },
-    "Fees": {
-      "Currency": "USD",
-        "Amount": 0
+    Fees: {
+      Currency: 'USD',
+      Amount: 0,
     },
-    "PreauthorizationId": preAuthId
-  }
-  
+    PreauthorizationId: preAuthId,
+  };
+
   try {
     const payInData = await axios.post(
       `${mangoPayApi}` + '/payins/preauthorized/direct/',
       PayInData,
       options
-    )
+    );
 
-    return payInData.data
+    return payInData.data;
   } catch (e) {
-    console.log(e)
+    console.log(e);
     throw e;
   }
-}
+};
 
 module.exports = {
   createUser,
@@ -298,4 +293,4 @@ module.exports = {
   preauthorizePayment,
   cancelPreauthorizedPayment,
   payToDAOStackWallet,
-}
+};

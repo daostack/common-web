@@ -237,6 +237,14 @@ relayer.post('/requestToJoin', async (req, res) => {
     if (proposalId && proposalId.length) {
       await updateProposalById(proposalId, {retries: 4});
       res.send({ joinHash: response2.data.txHash, proposalId: proposalId });
+        if (paymentData.funding > 0) {
+          const proposalRef = admin
+          .firestore()
+          .collection('proposals')
+          .doc(proposalId);
+        // attach preAuthId to the proposal document
+        await proposalRef.update({ preAuthId: _preAuthId });
+      }
       return;
     } else {
       res.send({ joinHash: response2.data.txHash, msg: 'Join in failed' });

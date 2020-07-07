@@ -57,6 +57,4 @@ mangopay.post('/create-user', async (req, res) => {
 });
 
 
-
-
 exports.mangopay = functions.runWith(runtimeOptions).https.onRequest(mangopay);
