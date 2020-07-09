@@ -1,4 +1,4 @@
-const env = require('../env/env.json');
+const env = require('../env/env');
 const { mangoPayApi } = require('../settings');
 const axios = require('axios');
 const Querystring = require('querystring');
@@ -184,7 +184,7 @@ const preauthorizePayment = async ({ paymentData, userData }) => {
       CardId: userData.mangopayCardId,
       SecureModeReturnURL: 'http://google.com',
     };
-
+    
     const preAuthReqData = await axios.post(
       `${mangoPayApi}` + '/preauthorizations/card/direct',
       preAuthData,
@@ -194,7 +194,8 @@ const preauthorizePayment = async ({ paymentData, userData }) => {
     console.log('PRE AUTH DATA', preAuthReqData.data);
     return preAuthReqData.data;
   } catch (e) {
-    console.log(e);
+    console.log('ERROR in CARD PREAUTHORIZATION', e);
+    throw new Error(`Error with card pre-authorization, ${e}`);
   }
 };
 
