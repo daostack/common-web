@@ -1,5 +1,5 @@
 const abi = require('../relayer/abi.json');
-const env = require('../env/env');
+const { env } = require('../env');
 const ethers = require('ethers');
 const admin = require('firebase-admin');
 const { provider } = require("../settings.js")

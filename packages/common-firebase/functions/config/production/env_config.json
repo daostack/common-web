@@ -1,0 +1,32 @@
+{
+  "firebase": {
+    "databaseURL": "https://common-daostack.firebaseio.com"
+  },
+  "blockchain": {
+    "jsonRpcProvider": "https://dai.poa.network/",
+    "chainId": 100
+  },
+  "graphql": {
+    "httpLink": "https://api.thegraph.com/subgraphs-daostack/name/daostack/v8_2_exp_xdai",
+    "websocket": "wss://api.thegraph.com/subgraphs-daostack/name/daostack/v8_2_exp_xdai"
+  },
+  "commonInfo": {
+    "commonToken": "0x2ea0be07dfc0357f40884365f2c9cfd2a36d4a6e"
+  },
+  "biconomy": {
+    "createProxy": "5ecb88b02d7ac07924bcd639",
+    "execTransaction": "5ec544046959bd3dbb4133f0",
+    "create2Proxy": "5ecb88b02d7ac07924bcd63a",
+    "proxyFactory": "0x76E2cFc1F5Fa8F6a5b3fC4c8F4788F0116861F9B",
+    "masterCopy": "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F"
+  },
+  "mangopay": {
+    "apiUrl": "https://api.sandbox.mangopay.com/v2.01/daostack-common",
+    "clientId": "daostack-common",
+    "daoStackWalletId": "83405793"
+  },
+  "mail": {
+    "sender": "tpettrovdev@gmail.com",
+    "adminMail": "jelle@daostack.io"
+  }
+}

@@ -1,7 +1,7 @@
 const ethers = require('ethers');
 const { Arc } = require('@daostack/arc.js');
 
-const env = require('./env/env.json')
+const { env } = require('./env');
 
 const graphHttpLink = env.graphql.httpLink;
 const graphwsLink = env.graphql.websocket;

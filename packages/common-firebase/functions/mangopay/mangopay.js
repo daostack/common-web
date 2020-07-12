@@ -1,4 +1,4 @@
-const env = require('../env/env');
+const { env } = require('../env')
 const { mangoPayApi } = require('../settings');
 const axios = require('axios');
 const Querystring = require('querystring');
