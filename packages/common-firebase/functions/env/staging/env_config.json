@@ -1,0 +1,35 @@
+{
+    "firebase": {
+      "databaseURL": "https://common-staging-50741.firebaseio.com"
+    },
+    "blockchain": {
+      "jsonRpcProvider": "https://kovan.infura.io/v3/3c08878d00734c0c98a3e4741d0b4cfc",
+      "chainId": 42
+    },
+    "graphql": {
+      "httpLink": "https://api.thegraph.com/subgraphs-daostack/name/daostack/v8_7_exp_kovan",
+      "websocket": "wss://api.thegraph.com/subgraphs-daostack/name/daostack/v8_7_exp_kovan"
+    },
+    "commonInfo": {
+      "pk": "0xDF3E1DE67741940202A7148731ED3EA7980A21AA8F40BCCCDCF4DDA8546B88DA",
+      "commonToken": "0xdff3e43710d39d2ba5dda7a8d959ed22cc905b01"
+    },
+    "biconomy": {
+      "apiKey": "05nK2y2MH.10202825-89cc-4d5a-b59d-b014c278b24d",
+      "whitelistKey": "a43c2dff-3b51-4ae0-b0ee-92b00cb425a2",
+      "createProxy": "5eac2a2d-c157-487a-8ff7-c4f6f1f9292a",
+      "execTransaction": "e921df41-71bf-4241-9389-1a1f8f6e993c",
+      "create2Proxy": "1b4cbfd3-bb38-4f84-8b13-38bc488335cf",
+      "proxyFactory": "0xfC7577774887aAE7bAcdf0Fc8ce041DA0b3200f7",
+      "masterCopy": "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F"
+    },
+    "mangopay": {
+      "apiUrl": "https://api.sandbox.mangopay.com/v2.01/daostack-common",
+      "clientId": "daostack-common",
+      "daoStackWalletId": "83405793"
+    },
+    "mail": {
+      "sender": "tpettrovdev@gmail.com",
+      "adminMail": "jelle@daostack.io"
+    }
+  }

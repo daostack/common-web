@@ -1,0 +1,37 @@
+{
+    "firebase": {
+        "databaseURL": "https://common-daostack.firebaseio.com"
+    },
+    "blockchain": {
+        "jsonRpcProvider": "https://dai.poa.network/",
+        "chainId": 100
+    },
+    "graphql": {
+        "httpLink": "https://api.thegraph.com/subgraphs-common/name/daostack/v8_2_exp_xdai",
+        "websocket": "wss://api.thegraph.com/subgraphs-common/name/daostack/v8_2_exp_xdai"
+    },
+    "commonInfo": {
+        "pk": "0xDF3E1DE67741940202A7148731ED3EA7980A21AA8F40BCCCDCF4DDA8546B88DA",
+        "commonToken": "0x2ea0be07dfc0357f40884365f2c9cfd2a36d4a6e"
+    },
+    "biconomy": {
+        "apiKey": "Rdscx2G8A.7a256f77-6566-4376-bb17-be2f162033ac",
+        "whitelistKey": "752ffcb6-5f88-4bbb-9fde-59499f3a9209",
+        "createProxy": "5ecb88b02d7ac07924bcd639",
+        "execTransaction": "5ec544046959bd3dbb4133f0",
+        "create2Proxy": "5ecb88b02d7ac07924bcd63a",
+        "proxyFactory": "0x76E2cFc1F5Fa8F6a5b3fC4c8F4788F0116861F9B",
+        "masterCopy": "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F"
+    },
+    "mangopay": {
+    "apiUrl": "https://api.sandbox.mangopay.com/v2.01/daostack-common",
+    "clientId": "daostack-common",
+    "apiKey": "skixZx7ms1QMAuJUAanEtRDwWKLM9gBBtqVzFDb0v776PbhAT4",
+    "daoStackWalletId": "83405793"
+  },
+  "mail": {
+    "sender": "tpettrovdev@gmail.com",
+    "adminMail": "jelle@daostack.io",
+    "SENDGRID_API_KEY": "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"
+  }
+}
