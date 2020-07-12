@@ -5,7 +5,7 @@ const {
   cancelPreauthorizedPayment,
 } = require('../mangopay/mangopay');
 const { sendMail } = require('../mailer');
-const env = require('../env/env.json');
+const { env } = require('../env');
 
 exports.watchForExecutedProposals = functions.firestore
   .document('/proposals/{id}')
