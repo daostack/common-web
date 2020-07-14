@@ -95,7 +95,7 @@ exports.commonCreationNotification = functions.firestore.document('/notification
   const commonRef = await admin.firestore().collection('daos').doc(`${commonId}`)
   const common = await commonRef.get().then(doc => { return doc.data() })
 
-  let title = 'Your common have been created 🎉';
+  let title = 'Your common was created 🎉';
   let body = `${common.name} is available on common list.`
   let image = common.metadata.avatar || '';
 
