@@ -148,7 +148,7 @@ relayer.post('/requestToJoin', async (req, res) => {
     const ethereumAddress = userData.ethereumAddress
     let _preAuthId;
     let _amount = 0;
-    
+  
     // TO-DO what if uses another 2nd card, decide if will keep the cardId at all
     if (paymentData.funding > 0) {
       if (!userData.mangopayCardId) {
@@ -157,13 +157,14 @@ relayer.post('/requestToJoin', async (req, res) => {
       }
       userData = await admin.firestore().collection('users').doc(uid).get().then(doc => { return doc.data() }) // re-get userData if cardId is saved
       
-      const { Id: preAuthId, Status, DebitedFunds: { Amount } } = await preauthorizePayment({ paymentData, userData })
+      const { Id: preAuthId, Status, DebitedFunds: { Amount }, ResultMessage } = await preauthorizePayment({ paymentData, userData })
       _preAuthId = preAuthId;
       _amount = Amount;
       console.log('PRE AUTH STATUS', Status);
       
       if (Status === 'FAILED') {
-        throw new Error('Request to join failed. Card preauthorization failed.');
+        // send the user the Result Message which explains why the preAuth failed
+        throw new Error(`Request to join failed. ${ResultMessage}`);
       }
       
       // TODO: replace with estimate gas
