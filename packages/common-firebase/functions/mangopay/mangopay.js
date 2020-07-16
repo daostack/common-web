@@ -35,10 +35,8 @@ The person's email address (not more than 12 consecutive numbers) - must be a va
 
 const createUser = async (userData) => {
   const userObject = {
-    FirstName: userData.displayName.split(' ')[0],
-    LastName:
-      userData.displayName.split(' ').length > 0 &&
-      userData.displayName.split(' ')[1],
+    FirstName: 'FakeFirstName',
+    LastName: userData.displayName,
     Email: userData.email,
     Birthday: -258443002, // can be fake and hadcoded
     Nationality: 'BG', // can be fake and hadcoded
@@ -229,7 +227,7 @@ const preauthorizePayment = async ({ funding, userData }) => {
       CardId: userData.mangopayCardId,
       SecureModeReturnURL: 'http://google.com',
     };
-    
+
     const preAuthReqData = await axios.post(
       `${mangoPayApi}` + '/preauthorizations/card/direct',
       preAuthData,
