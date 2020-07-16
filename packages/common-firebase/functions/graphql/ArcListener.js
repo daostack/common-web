@@ -285,7 +285,8 @@ async function _updateProposalDb(proposal) {
       joinAndQuit: {
         proposedMemberAddress: s.proposedMember || null,
         proposedMemberId: proposedMemberId,
-        funding: s.funding && s.funding.toString() || null
+        funding: s.funding && s.funding.toString() || null,
+        reputationMinted: s.reputationMinted && s.reputationMinted.toString() || null
       },
       fundingRequest: {
         beneficiary: s.beneficiary || null,
