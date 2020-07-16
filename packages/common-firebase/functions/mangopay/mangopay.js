@@ -3,6 +3,7 @@ const { mangoPayApi } = require('../settings');
 const axios = require('axios');
 const Querystring = require('querystring');
 
+
 const options = {
   auth: { username: env.mangopay.clientId, password: env.mangopay.apiKey },
   headers: {
@@ -56,6 +57,17 @@ const createUser = async (userData) => {
   }
 };
 
+const checkMangopayUserValidity = async (mangopayId) => {
+  try {
+    const response = await axios.get(`${mangoPayApi}` + `/users/${mangopayId}`, options);
+    return !response.errors ? true : false;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+}
+
+
 /*
 
 Owners list REQUIRED
@@ -104,6 +116,39 @@ CardType CardType OPTIONAL
 The type of card . The card type is optional, but the default parameter is "CB_VISA_MASTERCARD" .
 
 */
+
+const getCardRegistrationObject = async (userData) => {
+  const userCardData = {
+    UserId: userData.mangopayId,
+    Currency: 'USD',
+  };
+  try {
+    const response = await axios.post(
+      `${mangoPayApi}` + '/CardRegistrations',
+      userCardData,
+      options
+    );
+    return response.data;
+  } catch (e) {
+    console.log('Error while getting Card Registration Object', e);
+    throw e;
+  }
+}
+
+const finalizeCardReg = async (cardRegistrationResult, Id) => {
+  try {
+    const {data: {CardId}} = await axios.put(
+      `${mangoPayApi}` + `/cardregistrations/${Id}`,
+      { RegistrationData: cardRegistrationResult.data },
+      options
+    );
+    return CardId;
+  } catch (e) {
+    console.log(e);
+    throw (e);
+  }
+  
+}
 
 const registerCard = async ({ paymentData, userData }) => {
   console.log('Registering card with data:', paymentData, userData);
@@ -173,13 +218,13 @@ SecureModeReturnURL string REQUIRED
 
  */
 
-const preauthorizePayment = async ({ paymentData, userData }) => {
+const preauthorizePayment = async ({ funding, userData }) => {
   try {
     const preAuthData = {
       AuthorId: userData.mangopayId,
       DebitedFunds: {
         Currency: 'USD',
-        Amount: paymentData.funding,
+        Amount: funding,
       },
       CardId: userData.mangopayCardId,
       SecureModeReturnURL: 'http://google.com',
@@ -294,4 +339,7 @@ module.exports = {
   preauthorizePayment,
   cancelPreauthorizedPayment,
   payToDAOStackWallet,
+  checkMangopayUserValidity,
+  getCardRegistrationObject,
+  finalizeCardReg
 };

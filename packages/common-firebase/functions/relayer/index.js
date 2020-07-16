@@ -137,36 +137,18 @@ relayer.post('/requestToJoin', async (req, res) => {
       idToken,
       commonTx, // This is the signed transaction to set the allowance. TODO: rename this param to approveCommonTokenTx
       pluginTx, // This is the signed transacxtion to create the proposal. TODO: rename tis param to createProposalTx
-      paymentData,
+      funding,
+      preAuthId
     } = req.body;
     // const {to, value, data, signature, idToken, plugin} = req.body;
     const decodedToken = await admin.auth().verifyIdToken(idToken)
     const uid = decodedToken.uid;
-    const userRef = admin.firestore().collection('users').doc(decodedToken.uid);
     let userData = await admin.firestore().collection('users').doc(uid).get().then(doc => { return doc.data() })
     const safeAddress = userData.safeAddress
     const ethereumAddress = userData.ethereumAddress
-    let _preAuthId;
-    let _amount = 0;
-  
-    // TO-DO what if uses another 2nd card, decide if will keep the cardId at all
-    if (paymentData.funding > 0) {
-      if (!userData.mangopayCardId) {
-        const cardId = await registerCard({ paymentData, userData });
-        await userRef.update({ mangopayCardId: cardId });
-      }
-      userData = await admin.firestore().collection('users').doc(uid).get().then(doc => { return doc.data() }) // re-get userData if cardId is saved
-      
-      const { Id: preAuthId, Status, DebitedFunds: { Amount }, ResultMessage } = await preauthorizePayment({ paymentData, userData })
-      _preAuthId = preAuthId;
-      _amount = Amount;
-      console.log('PRE AUTH STATUS', Status);
-      
-      if (Status === 'FAILED') {
-        // send the user the Result Message which explains why the preAuth failed
-        throw new Error(`Request to join failed. ${ResultMessage}`);
-      }
-      
+    
+
+    if (preAuthId) {      
       // TODO: replace with estimate gas
       const OVERRIDES = {
         gasLimit: 10000000,
@@ -176,7 +158,7 @@ relayer.post('/requestToJoin', async (req, res) => {
       let minter = new ethers.Wallet(env.commonInfo.pk, provider);
       let contract = new ethers.Contract(env.commonInfo.commonToken, abi.CommonToken, minter);
       // TODO: fix the bug here: this must be the amount the user is actually paying!!!
-      let tx = await contract.mint(safeAddress, _amount, OVERRIDES); // Amount is USD * 100, so the exact token number
+      let tx = await contract.mint(safeAddress, funding, OVERRIDES); // Amount is USD * 100, so the exact token number
       // TODO: we probably want to send this transaction through the relayer (?)
       let receipt = await tx.wait();
       
@@ -194,8 +176,8 @@ relayer.post('/requestToJoin', async (req, res) => {
         if (response.status !== 200) {
           // TODO: please do not return the tx.hash here, which is the has from the minting transaction which ahppend earlier
           res.status(500).send({ error: 'Approve address failed', errorCode: 102, mint: tx.hash })
-          if (_preAuthId) {
-            cancelPreauthorizedPayment(_preAuthId);
+          if (preAuthId) {
+            cancelPreauthorizedPayment(preAuthId);
           }
           return
         }
@@ -203,7 +185,7 @@ relayer.post('/requestToJoin', async (req, res) => {
         await provider.waitForTransaction(response.data.txHash)
       }
     } else {
-      console.log('Funding is 0. NO PAYMENT SERVICES.');  
+      console.log('No PreAuthId. NO PAYMENT SERVICES.');  
     }
     
     await Relayer.addAddressToWhitelist([commonTx.to, pluginTx.to]);
@@ -211,7 +193,7 @@ relayer.post('/requestToJoin', async (req, res) => {
     const response2 = await Relayer.execTransaction(safeAddress, ethereumAddress, pluginTx.to, pluginTx.value, pluginTx.data, pluginTx.signature)
     if (response2.status !== 200) {
       response2.status(500).send({ error: 'Request to join failed', errorCode: 104, data: response2.data })
-      cancelPreauthorizedPayment(_preAuthId);
+      cancelPreauthorizedPayment(preAuthId);
       return
     }
     
@@ -238,14 +220,6 @@ relayer.post('/requestToJoin', async (req, res) => {
     if (proposalId && proposalId.length) {
       await updateProposalById(proposalId, {retries: 4});
       res.send({ joinHash: response2.data.txHash, proposalId: proposalId });
-        if (paymentData.funding > 0) {
-          const proposalRef = admin
-          .firestore()
-          .collection('proposals')
-          .doc(proposalId);
-        // attach preAuthId to the proposal document
-        await proposalRef.update({ preAuthId: _preAuthId });
-      }
       return;
     } else {
       res.send({ joinHash: response2.data.txHash, msg: 'Join in failed' });
