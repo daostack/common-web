@@ -10,7 +10,7 @@ const ethers = require('ethers');
 const { env } = require('../env');
 const { provider } = require('../settings')
 const { updateProposalById, updateDaoById } = require('../graphql/ArcListener');
-const { registerCard, preauthorizePayment, cancelPreauthorizedPayment } = require('../mangopay/mangopay');
+const { cancelPreauthorizedPayment } = require('../mangopay/mangopay');
 
 const runtimeOptions = {
   timeoutSeconds: 540, // Maximum time 9 mins

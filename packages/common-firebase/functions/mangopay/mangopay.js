@@ -225,7 +225,7 @@ const preauthorizePayment = async ({ funding, userData }) => {
         Amount: funding,
       },
       CardId: userData.mangopayCardId,
-      SecureModeReturnURL: 'http://google.com',
+      SecureModeReturnURL: 'https://common.io',
     };
 
     const preAuthReqData = await axios.post(
@@ -249,7 +249,7 @@ const cancelPreauthorizedPayment = async (preAuthId) => {
     };
 
     const preAuthReqData = await axios.put(
-      `${mangoPayApi}` + `preauthorizations/${preAuthId}/`,
+      `${mangoPayApi}` + `/preauthorizations/${preAuthId}/`,
       cancelData,
       options
     );
@@ -258,6 +258,19 @@ const cancelPreauthorizedPayment = async (preAuthId) => {
     return preAuthReqData.data;
   } catch (e) {
     console.log(e);
+  }
+};
+
+const viewPreauthorization = async (preAuthId) => {
+  try {
+    const { data } = await axios.get(
+      `${mangoPayApi}` + `/preauthorizations/${preAuthId}/`,
+      options
+    );
+    return data;
+  } catch (e) {
+    console.log(e);
+    throw (e);
   }
 };
 
@@ -336,6 +349,7 @@ module.exports = {
   registerCard,
   preauthorizePayment,
   cancelPreauthorizedPayment,
+  viewPreauthorization,
   payToDAOStackWallet,
   checkMangopayUserValidity,
   getCardRegistrationObject,
