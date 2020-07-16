@@ -163,7 +163,7 @@ relayer.post('/requestToJoin', async (req, res) => {
       let receipt = await tx.wait();
       
       if (!receipt) {
-        res.send({ error: 'Mint Token failed', errorCode: 101 })
+        res.status(500).send({ error: 'Mint Token failed', errorCode: 101 })
       }
 
       let allowance = await contract.allowance(safeAddress, pluginTx.to);
@@ -204,7 +204,10 @@ relayer.post('/requestToJoin', async (req, res) => {
     
     // TODO:  if the transacdtion reverts, we can check for that here and include that in the error message
     if (!events.JoinInProposal) {
-      res.send({ joinHash: response2.data.txHash, msg: 'Join in failed' })
+      res.status(500).send({ 
+        txHash: response2.data.txHash, 
+        error: 'Transaction was mined, but no JoinInProposal event was found in the receipt'
+      })
       return
     }
     
@@ -219,10 +222,12 @@ relayer.post('/requestToJoin', async (req, res) => {
     
     if (proposalId && proposalId.length) {
       await updateProposalById(proposalId, {retries: 4});
-      res.send({ joinHash: response2.data.txHash, proposalId: proposalId });
+      res.send({ txHash: response2.data.txHash, proposalId: proposalId });
       return;
     } else {
-      res.send({ joinHash: response2.data.txHash, msg: 'Join in failed' });
+      res.status(500).send({ 
+        txHash: response2.data.txHash, 
+        error: 'Transation was mined, but no proposalId was found in the JoinInProposal event' });
     }
   } catch (err) {
     console.log(err);
