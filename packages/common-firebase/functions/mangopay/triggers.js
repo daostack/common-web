@@ -41,6 +41,11 @@ exports.watchForExecutedProposals = functions.firestore
             'Successfull pay-In',
             `Pay-In successfull for Proposal with ID ${data.id}`
           );
+          sendMail(
+            userData.email,
+            'Successfull payment',
+            `Your request to join has been approved and the amount of ${data.joinAndQuit.funding}$ was charged.`
+          );
           await updateDAOBalance(data.dao);
           return change.after.ref.set(
             {
