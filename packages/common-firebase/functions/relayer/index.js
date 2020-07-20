@@ -198,7 +198,7 @@ relayer.post('/requestToJoin', async (req, res) => {
     }
     
     const receipt2 = await provider.waitForTransaction(response2.data.txHash);
-    // we can get the ABI from arc.js using arc.getABI("JoinAndQuit", ARC_VERSION)
+    // TODO: we should get the ABI from arc.js using arc.getABI("JoinAndQuit", ARC_VERSION)
     const interf = new ethers.utils.Interface(abi.JoinAndQuit)
     const events = getTransactionEvents(interf, receipt2)
     
