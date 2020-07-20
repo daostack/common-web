@@ -12,3 +12,9 @@ exports.sendMail = (dest, subject, message) => {
   };
   sgMail.send(msg);
 };
+
+
+exports.MAIL_SUBJECTS = {
+PREAUTH_FAIL: 'Failed preauthorization' 
+};
+

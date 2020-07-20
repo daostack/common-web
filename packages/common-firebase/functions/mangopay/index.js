@@ -4,6 +4,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mangopay = express();
 const cors = require('cors');
+const { sendMail, MAIL_SUBJECTS } = require('../mailer');
+const { env } = require('../env');
 
 const {
   createUser,
@@ -100,6 +102,7 @@ mangopay.post('/register-card', async (req, res) => {
       ResultMessage,
     } = await preauthorizePayment({ funding, userData });
     if (Status === 'FAILED') {
+      sendMail(env.mail.adminMail, MAIL_SUBJECTS.PREAUTH_FAIL, `Preauthorization failed for ${funding}$ for userID ${userData.uid}`);
       throw new Error(`Request to join failed. ${ResultMessage}`);
     } else {
       res.status(200).send({
@@ -119,7 +122,10 @@ mangopay.post('/register-card', async (req, res) => {
 mangopay.post('/get-preauthorisation-status', async (req, res) => {
   try {
     const { preAuthId } = req.body;
-    const { Status } = await viewPreauthorization(preAuthId);
+    const { Status, DebitedFunds: { Amount }, AuthorId } = await viewPreauthorization(preAuthId);
+    if (Status === 'FAILED') { // this is 3d Authentitacion FAILURE
+      sendMail(env.mail.adminMail, MAIL_SUBJECTS.PREAUTH_FAIL, `3D authentication failed for ${Amount}$ for user with mangopayId ${AuthorId}`);
+    }
     res.status(200).send({ message: 'PreauthStatus', Status });
   } catch (e) {
     console.log('Error viewing preauthorization', e);
