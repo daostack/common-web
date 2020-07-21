@@ -10,25 +10,43 @@ const options = { headers: { 'x-api-key': env.biconomy.apiKey, 'Content-Type': '
 
 module.exports = new class Relayer {
 
+  handleAxiosError(error) {
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      return error.response
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.log(error.request);
+      return error.request;
+    } 
+
+    return new CommonError();
+  }
+
   async createWallet(address) {
-    const iface = new ethers.utils.Interface(abi.MasterCopy);
-    const encodedData = iface.functions.setup.encode([
-      [address],
-      1,
-      zeroAddress,
-      '0x',
-      zeroAddress,
-      zeroAddress,
-      '0x',
-      zeroAddress,
-    ]);
-    const data = {
-      'apiId': env.biconomy.createProxy,
-      'to': env.biconomy.proxyFactory,
-      'from': address,
-      'params': [env.biconomy.masterCopy, encodedData]
+    try {
+      const iface = new ethers.utils.Interface(abi.MasterCopy);
+      const encodedData = iface.functions.setup.encode([
+        [address],
+        1,
+        zeroAddress,
+        '0x',
+        zeroAddress,
+        zeroAddress,
+        '0x',
+        zeroAddress,
+      ]);
+      const data = {
+        'apiId': env.biconomy.createProxy,
+        'to': env.biconomy.proxyFactory,
+        'from': address,
+        'params': [env.biconomy.masterCopy, encodedData]
+      }
+      return await axios.post('https://api.biconomy.io/api/v2/meta-tx/native', data, options) 
+    } catch (error) {
+      throw this.handleAxiosError(error);
     }
-    return await axios.post('https://api.biconomy.io/api/v2/meta-tx/native', data, options)
   }
 
   async execTransaction(safeWallet, localWallet, to, value, dataHash, signature) {

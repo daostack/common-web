@@ -12,6 +12,10 @@ const { provider } = require('../settings')
 const { updateProposalById, updateDaoById } = require('../graphql/ArcListener');
 const { cancelPreauthorizedPayment } = require('../mangopay/mangopay');
 
+const createWallet = require('./createWallet');
+const requestToJoin = require('./requestToJoin');
+const setAllowance = require('./setAllowance');
+
 const runtimeOptions = {
   timeoutSeconds: 540, // Maximum time 9 mins
 }
@@ -30,23 +34,24 @@ relayer.use(cors({ origin: true }));
 
 relayer.get('/createWallet', async (req, res) => {
   try {
-    const idToken = req.header('idToken');
-    const decodedToken = await admin.auth().verifyIdToken(idToken)
-    const uid = decodedToken.uid;
-    const userRef = admin.firestore().collection('users').doc(uid)
-    const userData = await userRef.get().then(doc => { return doc.data() })
-    const address = userData.ethereumAddress
-    const response = await Relayer.createWallet(address)
-    const txHash = response.data.txHash
-    const safeAddress = await Relayer.getAddressFromEvent(txHash)
-    await userRef.update({ safeAddress: safeAddress.toLowerCase() })
-    await Relayer.addAddressToWhitelist([address]);
-    const whitelist = await Relayer.addProxyToWhitelist([safeAddress]);
-    res.send({ txHash, safeAddress, whitelist: whitelist.data.message })
+    const data = await createWallet(req)
+    res.send(JSON.stringify(data));
   } catch (err) {
     res.send(err.response.data);
   }
 })
+
+relayer.post('/requestToJoin', async (req, res) => {
+  try {
+    const data = await requestToJoin(req, res);
+    setAllowance(req, res);
+    res.send(JSON.stringify(data));
+  } catch (err) {
+    res.send(err.response.data);
+  }
+})
+
+/* ------------------- Old Version ----------------- */
 
 relayer.get('/create2Wallet', async (req, res) => {
   try {
@@ -131,7 +136,7 @@ relayer.post('/execTransaction', async (req, res) => {
   }
 })
 
-relayer.post('/requestToJoin', async (req, res) => {
+relayer.post('/v1/requestToJoin', async (req, res) => {
   try {
     const {
       idToken,
@@ -265,34 +270,5 @@ relayer.post('/createCommonStep2', async (req, res) => {
     res.status(500).send({error: `${err}`});
   }
 })
-
-function getTransactionEvents(interf, receipt) {
-  const txEvents = {};
-  const abiEvents = Object.values(interf.events);
-  for (const log of receipt.logs) {
-    for (const abiEvent of abiEvents) {
-      if (abiEvent.topic === log.topics[0]) {
-        txEvents[abiEvent.name] = abiEvent.decode(log.data, log.topics);
-        break;
-      }
-    }
-  }
-  return txEvents;
-}
-
-// async function isRelayerTxSuccess(txHash) {
-//   const receipt = await this.provider.waitForTransaction(txHash);
-//   return this.isRelayerTxSuccessWithReceipt(receipt);
-// }
-
-function isRelayerTxSuccessWithReceipt(receipt) {
-  const ExecutionFailureTopic = '0x23428b18acfb3ea64b08dc0c1d296ea9c09702c09083ca5272e64d115b687d23';
-  for (const log of receipt.logs) {
-    if (log.topics[0] === ExecutionFailureTopic) {
-      return false;
-    }
-  }
-  return true;
-}
 
 exports.relayer = functions.runWith(runtimeOptions).https.onRequest(relayer);
