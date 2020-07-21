@@ -21,4 +21,4 @@ const createWallet = async req => {
   }
 }
 
- export default createWallet;
+ module.exports = { createWallet };

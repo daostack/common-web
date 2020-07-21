@@ -26,6 +26,16 @@ module.exports = new class Utils {
     }
   }
 
+  async getCommonById(commonId) {
+    try {
+      const userRef = admin.firestore().collection('daos').doc(commonId);
+      const userData = await userRef.get().then(doc => { return doc.data() })
+      return userData
+    } catch (err) {
+      throw new CommonError(CFError.emptyUserData)
+    }
+  }
+
   getTransactionEvents(interf, receipt) {
     const txEvents = {};
     const abiEvents = Object.values(interf.events);

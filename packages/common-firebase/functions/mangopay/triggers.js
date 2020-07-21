@@ -1,5 +1,4 @@
 const functions = require('firebase-functions');
-const admin = require('firebase-admin');
 const {
   payToDAOStackWallet,
   cancelPreauthorizedPayment,
@@ -7,6 +6,8 @@ const {
 const { sendMail } = require('../mailer');
 const { env } = require('../env');
 const { updateDAOBalance } = require("../graphql/updateDAOBalance");
+const { minterToken } = require('../relayer/minterToken')
+const util = require('../util/util');
 
 exports.watchForExecutedProposals = functions.firestore
   .document('/proposals/{id}')
@@ -21,18 +22,13 @@ exports.watchForExecutedProposals = functions.firestore
       console.log(
         'Proposal EXECUTED and WINNING OUTCOME IS 1 -> INITIATING PAYMENT'
       );
-      const userData = await admin
-        .firestore()
-        .collection('users')
-        .doc(data.proposerId)
-        .get()
-        .then((doc) => {
-          return doc.data();
-        });
+      const userData = await util.getUserById(data.proposerId)
       try {
+        const preAuthId = data.description.preAuthId;
+        const amount = parseInt(data.description.funding, 16);
         const { Status } = await payToDAOStackWallet({
-          preAuthId: data.description.preAuthId,
-          Amount: data.joinAndQuit.funding,
+          preAuthId,
+          Amount: amount,
           userData,
         });
         if (Status === 'SUCCEEDED') {
@@ -46,6 +42,7 @@ exports.watchForExecutedProposals = functions.firestore
             'Successfull payment',
             `Your request to join has been approved and the amount of ${data.joinAndQuit.funding}$ was charged.`
           );
+          await minterToken(data.dao, amount)
           await updateDAOBalance(data.dao);
           return change.after.ref.set(
             {

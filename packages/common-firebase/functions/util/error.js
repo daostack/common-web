@@ -8,13 +8,13 @@ module.exports = new class CommonError extends Error {
   }
 }
 
-export const Error = Object.freeze({
-  invalidIdToken: {
-    errorCode: 'U-001',
-    errorMsg: 'Invaild id token'
-  },
-  emptyUserData: {
-    errorCode: 'U-002',
-    errorMsg: 'Empty data find by uid',
-  }
-})
+// const Error = Object.freeze({
+//   invalidIdToken: {
+//     errorCode: 'U-001',
+//     errorMsg: 'Invaild id token'
+//   },
+//   emptyUserData: {
+//     errorCode: 'U-002',
+//     errorMsg: 'Empty data find by uid',
+//   }
+// })
