@@ -1,5 +1,8 @@
 const functions = require('firebase-functions');
+const admin = require('firebase-admin');
 const { updateDaoById } = require('./ArcListener');
+const { sendMail } = require('../mailer');
+const { env } = require('../env');
 
 exports.watchForReputationRedeemed = functions.firestore
     .document('/proposals/{id}')
@@ -21,3 +24,28 @@ exports.watchForReputationRedeemed = functions.firestore
           }
         } 
     });
+
+exports.newDaoCreated = functions.firestore
+  .document('/daos/{id}')
+  .onCreate(async (snap) => {
+    const newDao = snap.data();
+    const userData = await admin
+      .firestore()
+      .collection('users')
+      .doc(newDao.members[0].userId)
+      .get()
+      .then((doc) => {
+        return doc.data();
+      });
+    const daoName = newDao.name;
+    sendMail(
+      userData.email,
+      `Your DAO is ready`,
+      `Your DAO ${daoName} has been created.`
+    );
+    sendMail(
+      env.mail.adminMail,
+      `New DAO has been created`,
+      `New DAO ${daoName} from user ${userData.displayName} has been created.`
+    );
+  });
