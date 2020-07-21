@@ -8,9 +8,6 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const ethers = require('ethers');
 const { env } = require('../env');
-const { provider } = require('../settings')
-const { updateProposalById, updateDaoById } = require('../graphql/ArcListener');
-const { cancelPreauthorizedPayment } = require('../mangopay/mangopay');
 const Utils = require('../util/util');
 const {createWallet} = require('./createWallet');
 const {requestToJoin} = require('./requestToJoin');
@@ -45,7 +42,7 @@ relayer.post('/requestToJoin', async (req, res) => {
     const data = await requestToJoin(req, res);
     res.send(JSON.stringify(data));
   } catch (err) {
-    res.send(err.response.data);
+    res.send(err.response && err.response.data || err);
   }
 })
 
