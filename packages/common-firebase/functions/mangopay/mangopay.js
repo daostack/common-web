@@ -1,7 +1,6 @@
 const { env } = require('../env')
 const { mangoPayApi } = require('../settings');
 const axios = require('axios');
-const Querystring = require('querystring');
 
 
 const options = {
@@ -135,11 +134,14 @@ const getCardRegistrationObject = async (userData) => {
 
 const finalizeCardReg = async (cardRegistrationResult, Id) => {
   try {
-    const {data: {CardId}} = await axios.put(
+    const { data: { CardId, Status, ResultMessage } } = await axios.put(
       `${mangoPayApi}` + `/cardregistrations/${Id}`,
       { RegistrationData: cardRegistrationResult.data },
       options
     );
+    if (Status === 'ERROR' || !!CardId) {
+      throw new Error(ResultMessage);
+    }
     return CardId;
   } catch (e) {
     console.log(e);
@@ -147,60 +149,6 @@ const finalizeCardReg = async (cardRegistrationResult, Id) => {
   }
   
 }
-
-const registerCard = async ({ paymentData, userData }) => {
-  console.log('Registering card with data:', paymentData, userData);
-  const userCardData = {
-    UserId: userData.mangopayId,
-    Currency: 'EUR',
-    CardType: 'CB_VISA_MASTERCARD', // optional
-  };
-  try {
-    const preRegData = await axios.post(
-      `${mangoPayApi}` + '/CardRegistrations',
-      userCardData,
-      options
-    );
-
-    const {
-      Id,
-      PreregistrationData,
-      AccessKey,
-      CardRegistrationURL,
-    } = preRegData.data;
-
-    console.log(preRegData.data);
-
-    const cardInfo = Querystring['stringify']({
-      data: PreregistrationData,
-      accessKeyRef: AccessKey,
-      cardNumber: paymentData.cardNumber,
-      cardExpirationDate: paymentData.expDate,
-      cardCvx: paymentData.cvv,
-    });
-
-    const postCardInfo = await axios.post(CardRegistrationURL, cardInfo, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    });
-
-    console.log(postCardInfo.data);
-
-    const finalizeCardReg = await axios.put(
-      `${mangoPayApi}` + `/cardregistrations/${Id}`,
-      { RegistrationData: postCardInfo.data },
-      options
-    );
-
-    console.log('Card registered', finalizeCardReg.data);
-    const { CardId } = finalizeCardReg.data;
-    return CardId;
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
-};
 
 /* 
 

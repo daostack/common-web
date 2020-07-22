@@ -115,7 +115,7 @@ mangopay.post('/register-card', async (req, res) => {
       'Error in finalizing card registration and preauthorization',
       e
     );
-    res.status(500).send({ error: e });
+    res.status(500).send({ error: e.message });
   }
 });
 
