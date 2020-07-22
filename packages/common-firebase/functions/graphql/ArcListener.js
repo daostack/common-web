@@ -1,7 +1,7 @@
 const { Member, Vote } = require('@daostack/arc.js');
 const promiseRetry = require('promise-retry');
 const admin = require('firebase-admin');
-const { arc, retryOptions} = require('../settings')
+const { arc, retryOptions, ipfsDataVersion} = require('../settings')
 const { getBalance } = require("./updateDAOBalance.js")
 
 const db = admin.firestore()
@@ -91,7 +91,7 @@ function _validateDaoState(daoState) {
   if (!daoVersion) {
     return { isValid: false, errorMsg: `Skipping this dao ${daoState.name}  as it has no metadata.VERSION`};
   }
-  if (daoVersion < "000001") {
+  if (daoVersion !== ipfsDataVersion) {
     return { isValid: false, errorMsg: `Skipping this dao ${daoState.name} as has an unsupported version ${daoVersion}`};
   }
 
@@ -259,6 +259,13 @@ async function _updateProposalDb(proposal) {
         description: s.description,
         title: s.title
       };
+    }
+
+  const proposalDataVersion = proposalDescription.VERSION;
+  
+  if (proposalDataVersion !== ipfsDataVersion) {
+      console.log(`Skipping this proposal ${s.id} as it has an unsupported version ${proposalDataVersion}`);
+      return;
     }
 
     const doc = {

@@ -7,6 +7,7 @@ const graphwsLink = env.graphql.websocket;
 const databaseURL = env.firebase.databaseURL;
 const jsonRpcProvider = env.blockchain.jsonRpcProvider;
 const mangoPayApi = env.mangopay.apiUrl;
+const ipfsDataVersion = env.graphql.ipfsDataVersion;
 
 const retryOptions = {
     retries: 4, // The maximum amount of times to retry the operation. Default is 10.
@@ -31,5 +32,6 @@ module.exports = {
     jsonRpcProvider,
     mangoPayApi,
     provider,
-    retryOptions
+    retryOptions,
+    ipfsDataVersion
 }
