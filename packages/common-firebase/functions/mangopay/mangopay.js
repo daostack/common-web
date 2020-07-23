@@ -294,7 +294,6 @@ const payToDAOStackWallet = async ({ preAuthId, Amount, userData }) => {
 module.exports = {
   createUser,
   createWallet,
-  registerCard,
   preauthorizePayment,
   cancelPreauthorizedPayment,
   viewPreauthorization,
