@@ -41,6 +41,7 @@ const createUser = async (userData) => {
     Nationality: 'BG', // can be fake and hadcoded
     CountryOfResidence: 'BG', // can be fake and hadcoded
   };
+  // eslint-disable-next-line no-useless-catch
   try {
     const response = await axios.post(
       `${mangoPayApi}` + '/users/natural',
@@ -49,7 +50,6 @@ const createUser = async (userData) => {
     );
     return response.data;
   } catch (e) {
-    console.log(e);
     throw e;
   }
 };
@@ -139,7 +139,7 @@ const finalizeCardReg = async (cardRegistrationResult, Id) => {
       { RegistrationData: cardRegistrationResult.data },
       options
     );
-    if (Status === 'ERROR' || !!CardId) {
+    if (Status === 'ERROR') {
       throw new Error(ResultMessage);
     }
     return CardId;
