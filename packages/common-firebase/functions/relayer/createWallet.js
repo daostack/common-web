@@ -1,4 +1,4 @@
-const Relayer = require('./Relayer');
+const Relayer = require('./relayer');
 const Utils = require('../util/util');
 
 const createWallet = async req => {

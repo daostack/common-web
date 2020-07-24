@@ -1,20 +1,12 @@
 const functions = require('firebase-functions');
-const admin = require('firebase-admin');
 const express = require('express');
 const bodyParser = require('body-parser');
 const mangopay = express();
 const cors = require('cors');
-const { sendMail, MAIL_SUBJECTS } = require('../mailer');
-const { env } = require('../env');
-
-const {
-  createUser,
-  checkMangopayUserValidity,
-  getCardRegistrationObject,
-  finalizeCardReg,
-  preauthorizePayment,
-  viewPreauthorization,
-} = require('./mangopay');
+const {createMangoPayUser} = require('./createMangoPayUser');
+const {getCardRegistration} = require('./getCardRegistration')
+const {registerCard} = require('./registerCard');
+const {getPreAuthStatus} = require('./getPreAuthStatus');
 
 const runtimeOptions = {
   timeoutSeconds: 540, // Maximum time 9 mins
@@ -33,35 +25,8 @@ mangopay.use(cors({ origin: true }));
 
 mangopay.post('/create-user', async (req, res) => {
   try {
-    let result;
-    let isValid = false;
-    const { idToken } = req.body;
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
-    const userRef = admin.firestore().collection('users').doc(decodedToken.uid);
-    let userData = await userRef.get().then((doc) => {
-      return doc.data();
-    });
-
-    if (userData.mangopayId) {
-      isValid = checkMangopayUserValidity(userData.mangopayId);
-    }
-
-    if (!userData.mangopayId || !isValid) {
-      const { Id: mangopayId } = await createUser(userData);
-      await userRef.update({ mangopayId });
-      result = 'Created new user in mangopay.';
-    }
-    // we don't need wallet for preAuthorization
-    /* userData = await userRef.get().then(doc => { return doc.data() }); // update document if changes
-    if (!userData.mangopayWalletId) {
-      const { Id: mangopayWalletId } = await createWallet(userData.mangopayId);
-      await userRef.update({ mangopayWalletId });
-    } */
-    res.status(200).send({
-      message: `Mangopay user status: ${
-        result ? result : 'User is already registred in mangopay.'
-      }`,
-    });
+    const data = await createMangoPayUser(req);
+    res.send(data);
   } catch (e) {
     console.log(e);
     res.status(500).send({ error: e.response ? e.response.data.Message : e.message });
@@ -70,14 +35,8 @@ mangopay.post('/create-user', async (req, res) => {
 
 mangopay.post('/get-card-registration', async (req, res) => {
   try {
-    const { idToken } = req.body;
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
-    const userRef = admin.firestore().collection('users').doc(decodedToken.uid);
-    let userData = await userRef.get().then((doc) => {
-      return doc.data();
-    });
-    const preRegData = await getCardRegistrationObject(userData);
-    res.status(200).send({ preRegData });
+    const data = await getCardRegistration(req)
+    res.send(data);
   } catch (e) {
     console.log('Error in pre card registration', e);
     res.status(500).send({ error: 'Error getting card registration.' });
@@ -86,30 +45,8 @@ mangopay.post('/get-card-registration', async (req, res) => {
 
 mangopay.post('/register-card', async (req, res) => {
   try {
-    const { idToken, cardRegistrationData, Id, funding } = req.body;
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
-    const userRef = admin.firestore().collection('users').doc(decodedToken.uid);
-    let userData = await userRef.get().then((doc) => {
-      return doc.data();
-    });
-    const cardId = await finalizeCardReg(cardRegistrationData, Id);
-    console.log('CARD REGISTERED', cardId);
-    await userRef.update({ mangopayCardId: cardId });
-    const {
-      Id: preAuthId,
-      Status,
-      DebitedFunds: { Amount },
-      ResultMessage,
-    } = await preauthorizePayment({ funding, userData });
-    if (Status === 'FAILED') {
-      sendMail(env.mail.adminMail, MAIL_SUBJECTS.PREAUTH_FAIL, `Preauthorization failed for ${funding}$ for userID ${userData.uid}`);
-      throw new Error(`Request to join failed. ${ResultMessage}`);
-    } else {
-      res.status(200).send({
-        message: 'Card registered successfully',
-        preAuthData: { preAuthId, Amount },
-      });
-    }
+    const data = await registerCard(req)
+    res.send(data);
   } catch (e) {
     console.log(
       'Error in finalizing card registration and preauthorization',
@@ -121,12 +58,8 @@ mangopay.post('/register-card', async (req, res) => {
 
 mangopay.post('/get-preauthorisation-status', async (req, res) => {
   try {
-    const { preAuthId } = req.body;
-    const { Status, DebitedFunds: { Amount }, AuthorId } = await viewPreauthorization(preAuthId);
-    if (Status === 'FAILED') { // this is 3d Authentitacion FAILURE
-      sendMail(env.mail.adminMail, MAIL_SUBJECTS.PREAUTH_FAIL, `3D authentication failed for ${Amount}$ for user with mangopayId ${AuthorId}`);
-    }
-    res.status(200).send({ message: 'PreauthStatus', Status });
+    const data = await getPreAuthStatus(req)
+    res.send(data);
   } catch (e) {
     console.log('Error viewing preauthorization', e);
     res.status(500).send({ error: `${e}` });

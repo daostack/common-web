@@ -5,14 +5,22 @@ module.exports = new class Utils {
   async verifyId(idToken) {
     try {
       const decodedToken = await admin.auth().verifyIdToken(idToken)
-      const uid = decodedToken.uid;
-      return uid
+      return decodedToken.uid;
     } catch (error) {
       throw new CommonError(CFError.invalidIdToken)
     }
   }
   
-  geyUserReference(uid) {
+  async getUserDataByIdToken(idToken) {
+    try {
+      const decodedToken = await admin.auth().verifyIdToken(idToken)
+      return await this.getUserById(decodedToken.uid);
+    } catch (error) {
+      throw new CommonError(CFError.invalidIdToken)
+    }
+  }
+
+  getUserRef(uid) {
     return admin.firestore().collection('users').doc(uid);
   }
 

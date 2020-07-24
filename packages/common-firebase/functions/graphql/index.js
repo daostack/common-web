@@ -23,12 +23,10 @@ graphql.use(cors({ origin: true }));
 graphql.get('/update-daos', async (req, res) => {
   try {
     const result = await updateDaos();
-    const code = 200;
-    res.status(code).send({message: `Updated DAOs successfully`, result});
+    res.status(200).send({message: `Updated DAOs successfully`, result});
   } catch (e) {
-    const code = 500;
-    console.log(e)
-    res.status(code).send({error: `Unable to update Daos: ${e}`, query: req.query});
+    console.log(500)
+    res.status(500).send({error: `Unable to update Daos: ${e}`, query: req.query});
   }
 
 });
@@ -38,12 +36,10 @@ graphql.get('/update-dao-by-id', async (req, res) => {
     console.log(req.query);
     const { daoId, retries } = req.query;
     const daoData = await updateDaoById(daoId, { retries: retries || 0  });
-    const code = 200;
-    res.status(code).send({message: `Updated dao with id ${daoId}`, daoId, data: daoData});
+    res.status(200).send({message: `Updated dao with id ${daoId}`, daoId, data: daoData});
   } catch (e) {
-    const code = 500;
     console.log(e)
-    res.status(code).send({error: `Unable to update Dao: ${e}`, query: req.query});
+    res.status(500).send({error: `Unable to update Dao: ${e}`, query: req.query});
   }
 
 });
@@ -51,12 +47,10 @@ graphql.get('/update-dao-by-id', async (req, res) => {
 graphql.get('/update-proposals', async (req, res) => {
   try {
     const result = await updateProposals();
-    const code = 200;
-    res.status(code).send(`Updated ${result.length} proposals`);
+    res.status(200).send(`Updated ${result.length} proposals`);
   } catch (e) {
-    const code = 500;
     console.log(e)
-    res.status(code).send({error: `Unable to update Proposals: ${e}`, query: req.query});
+    res.status(500).send({error: `Unable to update Proposals: ${e}`, query: req.query});
   }
 
 });
@@ -65,35 +59,29 @@ graphql.get('/update-proposal-by-id', async (req, res) => {
   try {
     const { proposalId, retries } = req.query;
     const data = await updateProposalById(proposalId, { retries: retries || 0 });
-    const code = 200;
-    res.status(code).send({message: `Updated proposal ${proposalId}`, data });
+    res.status(200).send({message: `Updated proposal ${proposalId}`, data });
   } catch (e) {
-    const code = 500;
     console.log(e)
-    res.status(code).send({error: `Unable to update Proposal by id: ${e}`, query: req.query});
+    res.status(500).send({error: `Unable to update Proposal by id: ${e}`, query: req.query});
   }
 });
 
 graphql.get('/update-users', async (req, res) => {
   try {
     const result = await updateUsers();
-    const code = 200;
-    res.status(code).send(`Updated users successfully: ${result}`);
+    res.status(200).send(`Updated users successfully: ${result}`);
   } catch (e) {
-    const code = 500;
     console.log(e)
-    res.status(code).send({error: `Unable to update users: ${e}`, query: req.query});
+    res.status(500).send({error: `Unable to update users: ${e}`, query: req.query});
   }
 });
 graphql.get('/update-votes', async (req, res) => {
   try {
     const result = await updateVotes();
-    const code = 200;
-    res.status(code).send(`Updated votes successfully: ${result}`);
+    res.status(200).send(`Updated votes successfully: ${result}`);
   } catch (e) {
-    const code = 500;
     console.log(e)
-    res.status(code).send({error: `Unable to update votes: ${e}`, query: req.query});
+    res.status(500).send({error: `Unable to update votes: ${e}`, query: req.query});
   }
 });
 
@@ -101,12 +89,10 @@ graphql.get('/update-dao-balance', async (req, res) => {
   const { daoId } = req.query;
   try {
     const data = await updateDAOBalance(daoId);
-    const code = 200;
-    res.status(code).send({message: `Updated balance of Common at ${daoId}`, data });
+    res.status(200).send({message: `Updated balance of Common at ${daoId}`, data });
   } catch (e) {
-    const code = 500;
     console.log(e)
-    res.status(code).send({error: `Unable to update Common balance ${e}`, query: req.query});
+    res.status(500).send({error: `Unable to update Common balance ${e}`, query: req.query});
   }
 });
 
