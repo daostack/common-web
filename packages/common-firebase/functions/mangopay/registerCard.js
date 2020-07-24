@@ -11,12 +11,13 @@ const registerCard = async (req) => {
   try {
 
     const { idToken, cardRegistrationData, Id, funding } = req.body;
-    const uid = await Utils.verifyIdToken(idToken);
-    const userData = await Utils.getUserById(uid);
+    const uid = await Utils.verifyId(idToken);
+    let userData = await Utils.getUserById(uid);
     const userRef = Utils.getUserRef(uid);
     const cardId = await finalizeCardReg(cardRegistrationData, Id);
     console.log('CARD REGISTERED', cardId);
     await userRef.update({ mangopayCardId: cardId });
+    userData = await Utils.getUserById(uid); // update userData with the new cardId which we register each time user pays
     const {
       Id: preAuthId,
       Status,

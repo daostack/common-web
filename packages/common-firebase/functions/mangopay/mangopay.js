@@ -185,7 +185,7 @@ const preauthorizePayment = async ({ funding, userData }) => {
     return preAuthReqData.data;
   } catch (e) {
     console.log('ERROR in CARD PREAUTHORIZATION', e);
-    throw new Error(`Error with card pre-authorization, ${e}`);
+    throw new Error(`Error with card pre-authorization, ${e.response ? e.response.data.Message : e.message}`);
   }
 };
 

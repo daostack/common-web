@@ -10,7 +10,7 @@ const getCardRegistration = async (req) => {
     const uid = await Utils.verifyId(idToken);
     const userData = await Utils.getUserById(uid);
     const preRegData = await getCardRegistrationObject(userData);
-    return preRegData;
+    return {preRegData};
   } catch (error) {
     throw error; 
   }

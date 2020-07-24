@@ -35,7 +35,7 @@ mangopay.post('/create-user', async (req, res) => {
 
 mangopay.post('/get-card-registration', async (req, res) => {
   try {
-    const data = await getCardRegistration(req)
+    const data = await getCardRegistration(req);
     res.send(data);
   } catch (e) {
     console.log('Error in pre card registration', e);
