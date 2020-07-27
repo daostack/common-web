@@ -264,8 +264,7 @@ async function _updateProposalDb(proposal) {
   const proposalDataVersion = proposalDescription.VERSION;
   
   if (proposalDataVersion !== ipfsDataVersion) {
-      console.log(`Skipping this proposal ${s.id} as it has an unsupported version ${proposalDataVersion}`);
-      return;
+    throw {message: `Skipping this proposal ${s.id} as it has an unsupported version ${proposalDataVersion}`, code: 1};
     }
 
     const doc = {
@@ -324,14 +323,7 @@ async function updateProposalById(proposalId, customRetryOptions = {}) {
     {...retryOptions, ...customRetryOptions}
   );
 
-  // TODO: remove this errorMsg logic, and just throw and catch proper errors
-  const { updatedDoc, errorMsg } = await _updateProposalDb(proposal);
-  
-  if (errorMsg) {
-    const msg = `Proposal update failed for id: ${proposalId}, ${errorMsg}`;
-    console.log(msg)
-    throw Error(msg) 
-  }
+  const updatedDoc = await _updateProposalDb(proposal);
   
   console.log("UPDATED PROPOSAL: ", proposal.id);
   return updatedDoc;
@@ -343,12 +335,17 @@ async function updateProposals() {
   const proposals = await arc.proposals({ first: 1000 }, { fetchPolicy: 'no-cache' }).first()
   console.log(`found ${proposals.length} proposals`)
 
-  const docs = []
+  const docs = [];
+  let notUpdated = 0;
   for (const proposal of proposals) {
-    const updatedDoc = await _updateProposalDb(proposal);
-    docs.push(updatedDoc)
+    try {
+      const updatedDoc = await _updateProposalDb(proposal);
+      docs.push(updatedDoc);
+    } catch (e) {
+      if (e.code === 1) { notUpdated++; continue; } else throw e;
+    }
   }
-  return docs
+  return { docs, notUpdated };
 }
 
 async function updateUsers() {

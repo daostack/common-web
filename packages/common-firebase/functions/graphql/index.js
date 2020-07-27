@@ -46,8 +46,8 @@ graphql.get('/update-dao-by-id', async (req, res) => {
 
 graphql.get('/update-proposals', async (req, res) => {
   try {
-    const result = await updateProposals();
-    res.status(200).send(`Updated ${result.length} proposals`);
+    const {docs, notUpdated} = await updateProposals();
+    res.status(200).send(`Updated ${docs.length} proposals. Skipped ${notUpdated} due to old data version.`);
   } catch (e) {
     console.log(e)
     res.status(500).send({error: `Unable to update Proposals: ${e}`, query: req.query});
@@ -62,7 +62,7 @@ graphql.get('/update-proposal-by-id', async (req, res) => {
     res.status(200).send({message: `Updated proposal ${proposalId}`, data });
   } catch (e) {
     console.log(e)
-    res.status(500).send({error: `Unable to update Proposal by id: ${e}`, query: req.query});
+    res.status(500).send({error: `Unable to update Proposal by id: ${e.message ? e.message : e}`, query: req.query});
   }
 });
 
