@@ -59,8 +59,8 @@ relayer.get('/addWhitleList', async (req, res) => {
 
 relayer.post('/execTransaction', async (req, res) => {
   try {
-    const response = await execTransaction(req);
-    res.send(response.data);
+    const data = await execTransaction(req);
+    res.send(data);
   } catch (err) {
     const errDoc = { error: `${err}`, data: res.data, response: err.response}
     console.log(errDoc)
