@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const { provider } = require('../settings')
 const { CommonError, CFError} = require('./error')
 
 module.exports = new class Utils {
@@ -59,7 +60,7 @@ module.exports = new class Utils {
   }
 
   async isRelayerTxSuccess(txHash) {
-    const receipt = await this.provider.waitForTransaction(txHash);
+    const receipt = await provider.waitForTransaction(txHash);
     return this.isRelayerTxSuccessWithReceipt(receipt);
   }
   

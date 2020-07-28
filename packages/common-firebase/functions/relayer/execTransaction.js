@@ -12,6 +12,10 @@ const execTransaction = async req => {
     await Relayer.addAddressToWhitelist([to]);
     const response = await Relayer.execTransaction(safeAddress, ethereumAddress, to, value, data, signature)
     // TODO: Once it failed, it will send detail to client which have apiKey
+    const success = await Utils.isRelayerTxSuccess(response.data.txHash)
+    if (!success) {
+      throw new Error(`ExecutionFailure while executing ${response.data.txHash}`)
+    }
     return response.data;
   } catch (error) {
     throw error; 
