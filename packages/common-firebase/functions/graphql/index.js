@@ -48,7 +48,11 @@ graphql.get('/update-dao-by-id', async (req, res) => {
 graphql.get('/update-proposals', async (req, res) => {
   try {
     const {docs, notUpdated} = await updateProposals();
-    res.status(200).send(`Updated ${docs.length} proposals. Skipped ${notUpdated} due to old data version.`);
+    res.status(200).send({
+      message: `Updated ${docs.length} proposals. Skipped ${notUpdated} due to old data version.`,
+      docs: docs.map((d) => d.updatedDoc.id),
+      notUpdated 
+    });
   } catch (e) {
     console.error(e)
     res.status(500).send({error: `Unable to update Proposals: ${e}`, query: req.query});

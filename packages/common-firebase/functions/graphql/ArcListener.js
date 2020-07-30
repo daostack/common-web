@@ -337,13 +337,16 @@ async function updateProposals() {
   console.log(`found ${proposals.length} proposals`)
 
   const docs = [];
-  let notUpdated = 0;
+  const notUpdated = [];
   for (const proposal of proposals) {
     try {
       const updatedDoc = await _updateProposalDb(proposal);
       docs.push(updatedDoc);
     } catch (e) {
-      if (e.code === 1) { notUpdated++; continue; } else throw e;
+      if (e.code === 1) { 
+        notUpdated.push(proposal.id); 
+        continue; 
+      } else throw e;
     }
   }
   return { docs, notUpdated };
