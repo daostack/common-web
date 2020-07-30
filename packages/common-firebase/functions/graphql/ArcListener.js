@@ -25,7 +25,7 @@ async function findUserByAddress(ethereumAddress, key = 'safeAddress') {
 }
 
 const parseVotes = (votesArr) => {
-  return votesArr.map(item => item.id)
+  return votesArr.map(({coreState: {voter, outcome}}) => {return {voter, outcome}})
 }
 
 
@@ -232,6 +232,8 @@ async function _updateProposalDb(proposal) {
   
     const s = proposal.coreState
 
+    const votes = await Vote.search(arc, {where: {proposal: s.id}}, { fetchPolicy: 'no-cache' }).first();
+
     // TODO: for optimization, consider looking for a new member not as part of this update process
     // but as a separate cloudfunction instead (that watches for changes in the database and keeps it consistent)
 
@@ -299,7 +301,7 @@ async function _updateProposalDb(proposal) {
         amount: s.amount && s.amount.toString() || null,
         amountRedemeed: s.amountRedeemd && s.amountRedeemed.toString() || null,
       },
-      votes: parseVotes(s.votes),
+      votes: votes.length > 0 ? parseVotes(votes) : [],
       winningOutcome: s.winningOutcome,
     }
 
