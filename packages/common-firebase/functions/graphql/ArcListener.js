@@ -45,8 +45,7 @@ async function updateDaos() {
     // TODO: this is not the way to handle errors
     if (errorMsg) {
       response.push(errorMsg);
-      console.log(errorMsg);
-      console.log("----------------------------------------------------------");
+      console.error(errorMsg);
       continue;
     }
 
@@ -188,7 +187,7 @@ async function _updateDaoDb(dao) {
 
     
   } catch (err) {
-    console.log(err)
+    console.error(err)
     throw err
   }
 }
@@ -218,8 +217,8 @@ async function updateDaoById(daoId, customRetryOptions = {} ) {
   // TODO: _updateDaoDb should throw en error, not ereturn error messages
   const { updatedDoc, errorMsg }  = await _updateDaoDb(dao);
   if (errorMsg) {
-    console.log(`Dao update failed for id: ${dao.id}!`);
-    console.log(errorMsg);
+    console.error(`Dao update failed for id: ${dao.id}!`);
+    console.error(errorMsg);
     throw Error(errorMsg);
   }
   console.log("UPDATED DAO WITH ID: ", daoId);

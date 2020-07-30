@@ -28,7 +28,7 @@ mangopay.post('/create-user', async (req, res) => {
     const data = await createMangoPayUser(req);
     res.send(data);
   } catch (e) {
-    console.log(e);
+    console.error(e);
     res.status(500).send({ error: e.response ? e.response.data.Message : e.message });
   }
 });
@@ -38,7 +38,7 @@ mangopay.post('/get-card-registration', async (req, res) => {
     const data = await getCardRegistration(req);
     res.send(data);
   } catch (e) {
-    console.log('Error in pre card registration', e);
+    console.error('Error in pre card registration', e);
     res.status(500).send({ error: 'Error getting card registration.' });
   }
 });
@@ -48,7 +48,7 @@ mangopay.post('/register-card', async (req, res) => {
     const data = await registerCard(req)
     res.send(data);
   } catch (e) {
-    console.log(
+    console.error(
       'Error in finalizing card registration and preauthorization',
       e
     );
@@ -61,7 +61,7 @@ mangopay.post('/get-preauthorisation-status', async (req, res) => {
     const data = await getPreAuthStatus(req)
     res.send(data);
   } catch (e) {
-    console.log('Error viewing preauthorization', e);
+    console.error('Error viewing preauthorization', e);
     res.status(500).send({ error: `${e}` });
   }
 });

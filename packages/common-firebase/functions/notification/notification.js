@@ -14,7 +14,7 @@ module.exports = new class Notification {
         messaging.sendToDevice(tokens, payload, options).then(()=> {
             console.log('Send Success')
         }).catch( e => {
-            console.log(e)
+            console.error(e)
         });
     }
 };

@@ -18,7 +18,7 @@ module.exports = new class Relayer {
       return error.response
     } else if (error.request) {
       // The request was made but no response was received
-      console.log(error.request);
+      console.error(error.request);
       return error.request;
     } 
 

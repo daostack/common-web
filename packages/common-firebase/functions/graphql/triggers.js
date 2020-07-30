@@ -20,7 +20,7 @@ exports.watchForReputationRedeemed = functions.firestore
           try {
             await updateDaoById(data.dao);
           } catch (e) {
-            console.log(e);
+            console.error(e);
           }
         } 
     });

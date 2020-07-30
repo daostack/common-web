@@ -52,7 +52,7 @@ exports.watchForExecutedProposals = functions.firestore
           );
         } else throw new Error('Payment failed');
       } catch (e) {
-        console.log('ERROR EXECUTING PRE AUTH PAYMENT', e);
+        console.error('ERROR EXECUTING PRE AUTH PAYMENT', e);
         sendMail(
           env.mail.adminMail,
           'Failed pay-In',

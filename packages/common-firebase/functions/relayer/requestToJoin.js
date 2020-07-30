@@ -43,6 +43,7 @@ const requestToJoin = async (req, res) => {
     if (response.status !== 200) {
       res.status(500).send({ error: 'Request to join failed', errorCode: 104, data: response.data })
       cancelPreauthorizedPayment(preAuthId);
+      console.error('Request to join failed, tx rejected in Relayer')
       return
     }
     
@@ -65,6 +66,7 @@ const requestToJoin = async (req, res) => {
         txHash: response.data.txHash, 
         error: 'Transaction was mined, but no JoinInProposal event was not found in the receipt'
       })
+      console.error('Request to join failed, Transaction was mined, but no JoinInProposal event was not found in the receipt')
       return
     }
     
@@ -75,12 +77,14 @@ const requestToJoin = async (req, res) => {
       res.status(500).send({ 
         txHash: response.data.txHash, 
         error: 'Transation was mined, but no proposalId was found in the JoinInProposal event' });
+      console.error('Request to join failed, Transaction was mined, but no proposalId was found in the JoinInProposal event')
       return
     }
 
     await updateProposalById(proposalId, {retries: 4});
     res.send({ txHash: response.data.txHash, proposalId: proposalId });
   } catch (error) {
+    console.error('Request to join failed')
     throw error; 
   }
 }

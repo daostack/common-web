@@ -58,7 +58,7 @@ const checkMangopayUserValidity = async (mangopayId) => {
     const response = await axios.get(`${mangoPayApi}` + `/users/${mangopayId}`, options);
     return !response.errors ? true : false;
   } catch (e) {
-    console.log(e);
+    console.error(e);
     throw e;
   }
 }
@@ -95,7 +95,7 @@ const createWallet = async (mangopayId) => {
     );
     return response.data;
   } catch (e) {
-    console.log(e);
+    console.error(e);
     throw e;
   }
 };
@@ -126,7 +126,7 @@ const getCardRegistrationObject = async (userData) => {
     );
     return response.data;
   } catch (e) {
-    console.log('Error while getting Card Registration Object', e);
+    console.error('Error while getting Card Registration Object', e);
     throw e;
   }
 }
@@ -143,7 +143,7 @@ const finalizeCardReg = async (cardRegistrationResult, Id) => {
     }
     return CardId;
   } catch (e) {
-    console.log(e);
+    console.error(e);
     throw (e);
   }
   
@@ -184,7 +184,7 @@ const preauthorizePayment = async ({ funding, userData }) => {
     console.log('PRE AUTH DATA', preAuthReqData.data);
     return preAuthReqData.data;
   } catch (e) {
-    console.log('ERROR in CARD PREAUTHORIZATION', e);
+    console.error('ERROR in CARD PREAUTHORIZATION', e);
     throw new Error(`Error with card pre-authorization, ${e.response ? e.response.data.Message : e.message}`);
   }
 };
@@ -204,7 +204,7 @@ const cancelPreauthorizedPayment = async (preAuthId) => {
     console.log('PRE AUTH DATA', preAuthReqData.data);
     return preAuthReqData.data;
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 };
 
@@ -216,7 +216,7 @@ const viewPreauthorization = async (preAuthId) => {
     );
     return data;
   } catch (e) {
-    console.log(e);
+    console.error(e);
     throw (e);
   }
 };
@@ -285,7 +285,7 @@ const payToDAOStackWallet = async ({ preAuthId, Amount, userData }) => {
 
     return payInData.data;
   } catch (e) {
-    console.log(e);
+    console.error(e);
     throw e;
   }
 };

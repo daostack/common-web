@@ -23,6 +23,7 @@ const minterToken = async (address, amount) => {
 
     return receipt.txHash;
   } catch (error) {
+    console.error(error);
     throw error; 
   }
 }

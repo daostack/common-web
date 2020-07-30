@@ -52,7 +52,7 @@ relayer.get('/addWhitleList', async (req, res) => {
     res.send(result.data);
   } catch (err) {
     const errDoc = { error: `${err}`, data: res.data, response: err.response}
-    console.log(errDoc)
+    console.error(errDoc)
     res.status(500).send(errDoc)
   }
 })
@@ -63,7 +63,7 @@ relayer.post('/execTransaction', async (req, res) => {
     res.send(data);
   } catch (err) {
     const errDoc = { error: `${err}`, data: res.data, response: err.response}
-    console.log(errDoc)
+    console.error(errDoc)
     res.status(500).send(errDoc)
   }
 })
