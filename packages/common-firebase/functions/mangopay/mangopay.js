@@ -53,6 +53,31 @@ const createUser = async (userData) => {
   }
 };
 
+const createLegalUser = async (daoData) => {
+  const legalUserObject = {
+    LegalPersonType: 'ORGANIZATION',
+    Name: daoData.name,
+    Email: 'jelle@daostack.io',
+    LegalRepresentativeBirthday: -258443002, 
+    LegalRepresentativeCountryOfResidence: 'IT', 
+    LegalRepresentativeNationality: 'IT',
+    LegalRepresentativeFirstName: 'Jelle',
+    LegalRepresentativeLastName: 'Gerbrandy'
+  };
+  // eslint-disable-next-line no-useless-catch
+  try {
+    const response = await axios.post(
+      `${mangoPayApi}` + '/users/legal',
+      legalUserObject,
+      options
+    );
+    return response.data;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+};
+
 const checkMangopayUserValidity = async (mangopayId) => {
   try {
     const response = await axios.get(`${mangoPayApi}` + `/users/${mangopayId}`, options);
@@ -84,7 +109,7 @@ const createWallet = async (mangopayId) => {
   const walletData = {
     Owners: [mangopayId],
     Description: 'A very cool wallet',
-    Currency: 'EUR',
+    Currency: 'USD',
     Tag: 'Cloud function create a wallet',
   };
   try {
@@ -261,10 +286,10 @@ Custom data that you can add to this item
 
 */
 
-const payToDAOStackWallet = async ({ preAuthId, Amount, userData }) => {
+const payToDAOWallet = async ({ preAuthId, Amount, userData, daoData }) => {
   const PayInData = {
     AuthorId: userData.mangopayId,
-    CreditedWalletId: env.mangopay.daoStackWalletId, // The DAOSTACK USD WALLET ID
+    CreditedWalletId: daoData.mangopayWalletId, // The DAO USD WALLET ID
     DebitedFunds: {
       Currency: 'USD',
       Amount: Amount,
@@ -292,11 +317,12 @@ const payToDAOStackWallet = async ({ preAuthId, Amount, userData }) => {
 
 module.exports = {
   createUser,
+  createLegalUser,
   createWallet,
   preauthorizePayment,
   cancelPreauthorizedPayment,
   viewPreauthorization,
-  payToDAOStackWallet,
+  payToDAOWallet,
   checkMangopayUserValidity,
   getCardRegistrationObject,
   finalizeCardReg

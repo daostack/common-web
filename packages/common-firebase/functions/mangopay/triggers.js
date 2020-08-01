@@ -1,13 +1,16 @@
 const functions = require('firebase-functions');
 const {
-  payToDAOStackWallet,
+  payToDAOWallet,
   cancelPreauthorizedPayment,
+  createLegalUser,
+  createWallet
 } = require('../mangopay/mangopay');
 const { sendMail } = require('../mailer');
 const { env } = require('../env');
 const { updateDAOBalance } = require("../graphql/updateDAOBalance");
 const { minterToken } = require('../relayer/minterToken')
 const util = require('../util/util');
+
 
 exports.watchForExecutedProposals = functions.firestore
   .document('/proposals/{id}')
@@ -22,14 +25,32 @@ exports.watchForExecutedProposals = functions.firestore
       console.log(
         'Proposal EXECUTED and WINNING OUTCOME IS 1 -> INITIATING PAYMENT'
       );
-      const userData = await util.getUserById(data.proposerId)
+      const userData = await util.getUserById(data.proposerId);
+      let daoData = await util.getCommonById(data.dao);
       try {
+        // this block here up to line 46 can be extracted to a method, same is used in graphql's trigger newDaoCreated
+        if (!daoData.mangopayId) {
+          const { Id: mangopayId } = await createLegalUser(daoData);
+          const { Id: mangopayWalletId } = await createWallet(mangopayId);
+          if (mangopayId && mangopayWalletId) {
+            const daoRef = await util.getDaoRef(daoData.id);
+            await daoRef.update({ mangopayId, mangopayWalletId });
+            daoData = await util.getCommonById(data.dao); // update daoData
+          } else {
+            sendMail(
+              env.mail.adminMail,
+              `Failed to create mangopayId or walletId for DAO: ${daoData.name} with id: ${daoData.id}`,
+              `Failed to create mangopayId or walletId`
+            );
+          }
+        }
         const preAuthId = data.description.preAuthId;
-        const amount = parseInt(data.description.funding, 16);
-        const { Status } = await payToDAOStackWallet({
+        const amount = data.description.funding;
+        const { Status } = await payToDAOWallet({
           preAuthId,
           Amount: amount,
           userData,
+          daoData
         });
         if (Status === 'SUCCEEDED') {
           sendMail(

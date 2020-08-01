@@ -24,6 +24,10 @@ module.exports = new class Utils {
   getUserRef(uid) {
     return admin.firestore().collection('users').doc(uid);
   }
+  
+  getDaoRef(daoId) {
+    return admin.firestore().collection('daos').doc(daoId);
+  }
 
   async getUserById(uid) {
     try {
