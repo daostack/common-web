@@ -6,7 +6,7 @@ const createWallet = async req => {
   try {
     const idToken = req.header('idToken');
     const uid = await Utils.verifyId(idToken)
-    const userRef = Utils.geyUserReference(uid);
+    const userRef = Utils.getUserRef(uid);
     const userData = await Utils.getUserById(uid);
     const address = userData.ethereumAddress
     const response = await Relayer.createWallet(address)

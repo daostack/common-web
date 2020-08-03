@@ -29,7 +29,8 @@ relayer.get('/createWallet', async (req, res) => {
     const data = await createWallet(req)
     res.send(JSON.stringify(data));
   } catch (err) {
-    res.send(err.response.data);
+    console.error(err);
+    res.send(err.response && err.response.data || err);
   }
 })
 
@@ -38,6 +39,7 @@ relayer.post('/requestToJoin', async (req, res) => {
     const data = await requestToJoin(req, res);
     res.send(JSON.stringify(data));
   } catch (err) {
+    console.error(err);
     res.send(err.response && err.response.data || err);
   }
 })
