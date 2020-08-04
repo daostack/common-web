@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const functions = require('firebase-functions');
 const Notification = require('./notification');
 const admin = require('firebase-admin');
@@ -25,7 +26,6 @@ function unfollow(userId, userList) {
 
 const userInfoTrigger = functions.firestore.document('/users/{userId}')
   .onUpdate(async (change, context) => {
-
     Array.prototype.diff = function (a) {
       return this.filter(function (i) { return a.indexOf(i) < 0; });
     };
@@ -75,4 +75,5 @@ const sendFollowerNotification = functions.firestore.document('/notification/fol
     return Notification.send(tokens, title, body, image);
   })
 
-module.exports = { userInfoTrigger, sendFollowerNotification };
+// Disable following logic
+// module.exports = { userInfoTrigger, sendFollowerNotification };

@@ -17,4 +17,5 @@ exports.graphql = graphql.graphql;
 exports.mangopay = mangopay.mangopay;
 exports.mangopaySubs = mangopayTriggers;
 exports.graphqlSubs = graphqlTriggers;
-exports.notification = require('./notification');
+// Disable notification
+// exports.notification = require('./notification');
