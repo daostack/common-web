@@ -7,9 +7,9 @@
       "chainId": 42
     },
     "graphql": {
-      "httpLink": "https://api.thegraph.com/subgraphs-daostack/name/daostack/v8_7_exp_kovan",
-      "websocket": "wss://api.thegraph.com/subgraphs-daostack/name/daostack/v8_7_exp_kovan",
-      "arcVersion": "0.1.2-rc.0"
+      "httpLink": "https://api.thegraph.com/subgraphs-daostack/name/daostack/v8_10_exp_kovan",
+      "websocket": "wss://api.thegraph.com/subgraphs-daostack/name/daostack/v8_10_exp_kovan",
+      "arcVersion": "0.1.2-rc.2"
     },
     "commonInfo": {
       "commonToken": "0xdff3e43710d39d2ba5dda7a8d959ed22cc905b01"
