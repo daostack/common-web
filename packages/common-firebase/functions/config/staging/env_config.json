@@ -7,8 +7,8 @@
     "chainId": 42
   },
   "graphql": {
-    "httpLink": "https://api.thegraph.com/subgraphs-daostack/name/daostack/v8_10_exp_kovan",
-    "websocket": "wss://api.thegraph.com/subgraphs-daostack/name/daostack/v8_10_exp_kovan",
+    "subgraphName": "daostack/v8_10_exp_kovan",
+    "graphApiUrl": "https://api.thegraph.com/index-node/graphql",
     "ipfsDataVersion": "000002"
   },
   "commonInfo": {

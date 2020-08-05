@@ -3,6 +3,7 @@ const promiseRetry = require('promise-retry');
 const admin = require('firebase-admin');
 const { arc, retryOptions, ipfsDataVersion} = require('../settings')
 const { getBalance } = require("./updateDAOBalance.js")
+const Utils = require('../util/util');
 
 const db = admin.firestore()
 
@@ -311,14 +312,32 @@ async function _updateProposalDb(proposal) {
   return result;
 }
 
-async function updateProposalById(proposalId, customRetryOptions = {}) {
+async function updateProposalById(proposalId, customRetryOptions = {}, blockNumber) {
+  let currBlockNumber = null;
+  if (blockNumber) {
+    currBlockNumber = Number(blockNumber);
+    if (Number.isNaN(currBlockNumber)) {
+      throw Error(`The blockNumber parameter should be a number between 0 and ${Number.MAX_SAFE_INTEGER}`);
+    }
+  }
+
   let proposal = await promiseRetry(
     async function (retryFunc, number) {
       console.log(`Try #${number} to get Proposal ${proposalId}`);
       const proposals = await arc.proposals({ where: { id: proposalId } }, { fetchPolicy: 'no-cache' }).first()
-      if (proposals.length === 0) {
-        await retryFunc(`We could not find a proposal with id "${proposalId}" in the graph.`);
+      
+      let isBehindLatestBlock = true; // set initally to true and change only if the blockNumber is provided and checked
+      if (currBlockNumber) {
+        const latestBlockNumber = await Utils.getGraphLatestBlockNumber();
+        isBehindLatestBlock = currBlockNumber <= latestBlockNumber;
       }
+
+      if ( proposals.length === 0 ) {
+        await retryFunc( `We could not find a proposal with id "${proposalId}" in the graph.`);
+      } else if (!isBehindLatestBlock) {
+        await retryFunc( `We could not find an update for block "${blockNumber}" in the graph.`);
+      }
+
       return proposals[0]
     },
     {...retryOptions, ...customRetryOptions}

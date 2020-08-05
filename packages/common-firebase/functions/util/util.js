@@ -1,8 +1,26 @@
 const admin = require('firebase-admin');
 const { provider } = require('../settings')
 const { CommonError, CFError} = require('./error')
+const fetch = require('node-fetch');
+const { env } = require('../env');
+
+const QUERY_LATEST_BLOCK_NUMBER = `query {
+  indexingStatusForCurrentVersion(subgraphName: "${env.graphql.subgraphName}") { 
+    chains { 
+      network ... on EthereumIndexingStatus { 
+        latestBlock { 
+          number 
+        } 
+        chainHeadBlock { 
+          number  
+        } 
+      } 
+    } 
+  } 
+}`;
 
 module.exports = new class Utils {
+  
   async verifyId(idToken) {
     try {
       const decodedToken = await admin.auth().verifyIdToken(idToken)
@@ -76,5 +94,17 @@ module.exports = new class Utils {
       }
     }
     return true;
+  }
+  
+  async getGraphLatestBlockNumber() {
+    const response = await fetch( env.graphql.graphApiUrl, {
+      method: 'POST',
+      body: JSON.stringify({ query: QUERY_LATEST_BLOCK_NUMBER }),
+      headers: { 'Content-Type': 'application/graphql' },
+    });  
+
+    const graphData = await response.json();
+    const blockNumber = graphData.data.indexingStatusForCurrentVersion.chains[0].latestBlock.number;
+    return Number(blockNumber);
   }
 }
