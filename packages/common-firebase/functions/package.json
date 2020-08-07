@@ -42,6 +42,7 @@
     "firebase-tools": "^8.4.1",
     "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",
+    "mangopay2-nodejs-sdk": "^1.13.0",
     "node-fetch": "^2.6.0",
     "promise-retry": "^2.0.1",
     "subscriptions-transport-ws": "^0.9.16"
