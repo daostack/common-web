@@ -32,10 +32,10 @@
     enabled "2.0.x"
     kuler "^2.0.0"
 
-"@daostack/arc.js@^2.0.0-experimental.48":
-  version "2.0.0-experimental.49"
-  resolved "https://registry.yarnpkg.com/@daostack/arc.js/-/arc.js-2.0.0-experimental.49.tgz#e392ee51a1466550a4eadb698c7a247eeaa34b69"
-  integrity sha512-HVKcNRQ4H74jS1RaJvUy5hSPcN0rjCKCMLL8A1cuEURv3IUM0jItd3l4Rl9gd0OAAjYSsPHRTRAOn5bBLyeY2w==
+"@daostack/arc.js@2.0.0-experimental.48":
+  version "2.0.0-experimental.48"
+  resolved "https://registry.yarnpkg.com/@daostack/arc.js/-/arc.js-2.0.0-experimental.48.tgz#b2b71249ec617e1edfabdc310bbf9441c45b5e8b"
+  integrity sha512-VVVMOxES/K7fUWvKUmFW+mOQLPI0LsP/Xw8Q6AVdKHWrXjfVpvrA0mDk9VL7Ss6K/XZQE6GXg2brqm3xUy6pcw==
   dependencies:
     abi-decoder "^2.3.0"
     apollo-cache-inmemory "^1.6.5"

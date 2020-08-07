@@ -1,3 +1,4 @@
+const { env } = require('./env');
 const admin = require('firebase-admin');
 const { databaseURL } = require('./settings');
 
@@ -11,6 +12,11 @@ const graphql = require('./graphql');
 const graphqlTriggers = require('./graphql/triggers');
 const mangopay = require('./mangopay');
 const mangopayTriggers = require('./mangopay/triggers');
+
+// Add the tests endpoints only if enabled
+if(env.tests.enabled) {
+  exports.tests = require('./tests').tests;
+}
 
 exports.relayer = relayer.relayer;
 exports.graphql = graphql.graphql;

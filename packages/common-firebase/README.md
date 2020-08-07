@@ -42,3 +42,15 @@ To top up the relayer send xDAI or rinkeby to this address ```0x86FC3E21B2897641
 
 ## API endpoints
 
+There are API endpoint for testing the functionality of the application. They are:
+
+1. For testing the email sending functionality
+   
+   **Endpoint** `/tests/sendEmail
+   
+   **Query Parameters**
+   
+    - **To (required)** - the email address of the test mail receiver
+    - **Subject (optional)** - optional subject for the test email
+    - **Message (optional)** - optional message for the test email
+

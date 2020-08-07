@@ -1,4 +1,7 @@
 {
+  "tests": {
+    "enabled": true
+  },
   "firebase": {
     "databaseURL": "https://common-staging-50741.firebaseio.com"
   },
