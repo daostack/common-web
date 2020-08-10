@@ -16,10 +16,14 @@ async function updateDAOBalance(daoId) {
 const getCurrentDaoWallet = async (daoId) => {
   const dao = (await db.collection('daos')
     .doc(daoId).get()).data();
-
-  return dao.mangopayWalletId
-    ? mangopayClient.Wallets.get(dao.mangopayWalletId)
-    : null;
+  
+  if (!dao) {
+    return null
+  } else if (dao.mangopayWalletId) {
+    return mangopayClient.Wallets.get(dao.mangopayWalletId)
+  } else {
+    return null;
+  }
 };
 
 const getBalance = async (daoId) => {
