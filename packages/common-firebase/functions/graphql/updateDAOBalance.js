@@ -2,34 +2,38 @@ const { mangopayClient } = require('../util/mangoPay');
 const db = require('firebase-admin').firestore();
 
 async function updateDAOBalance(daoId) {
-    const daoWallet = await getCurrentDaoWallet(daoId);
+  const { balance } = await getBalance(daoId);
 
-    await db.collection('daos').doc(daoId).set({
-        balance: daoWallet.Balance.Amount
-    }, {merge: true})
+  await db.collection('daos').doc(daoId).set({
+    balance
+  }, { merge: true });
 
-    return {
-        balance: daoWallet.Balance.Amount
-    }
+  return {
+    balance
+  };
 }
 
 const getCurrentDaoWallet = async (daoId) => {
-    const dao = (await db.collection('daos')
-      .doc(daoId).get()).data();
+  const dao = (await db.collection('daos')
+    .doc(daoId).get()).data();
 
-    return mangopayClient.Wallets.get(dao.mangopayWalletId);
+  return dao.mangopayWalletId
+    ? mangopayClient.Wallets.get(dao.mangopayWalletId)
+    : null;
 };
 
 const getBalance = async (daoId) => {
-    const wallet = await getCurrentDaoWallet(daoId);
+  const wallet = await getCurrentDaoWallet(daoId);
 
-    return {
-        balance: wallet.Balance.Amount
-    }
-}
+  return {
+    balance: wallet
+      ? wallet.Balance.Amount
+      : 0
+  };
+};
 
 module.exports = {
-    getBalance,
-    updateDAOBalance,
-    getCurrentDaoWallet
-}
+  getBalance,
+  updateDAOBalance,
+  getCurrentDaoWallet
+};
