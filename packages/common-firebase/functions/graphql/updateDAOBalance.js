@@ -29,11 +29,9 @@ const getCurrentDaoWallet = async (daoId) => {
 const getBalance = async (daoId) => {
   const wallet = await getCurrentDaoWallet(daoId);
 
-  return {
-    balance: wallet
+  return wallet
       ? wallet.Balance.Amount
       : 0
-  };
 };
 
 module.exports = {
