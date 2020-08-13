@@ -1,6 +1,5 @@
 const functions = require('firebase-functions');
 const {updateDaoById} = require('./ArcListener');
-const {sendMail} = require('../mailer');
 const {env} = require('../env');
 const {createLegalUser, createWallet} = require('../mangopay/mangopay');
 const util = require('../util/util');
