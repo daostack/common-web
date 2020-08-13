@@ -1,4 +1,18 @@
 
+# Firebase code in support for common
+
+This repository contains code for the clodufunctions and the website hosting, and some scripts to manage the code.
+
+# firestore
+
+To run the script, you need to install gcloud and 
+
+For ios:
+```curl https://sdk.cloud.google.com | bash```
+
+# hosting 
+# functions
+
 ## Running the Cloud functions
 
 To run the firebase functions for the api you can run the following commands to:

@@ -1,0 +1,127 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "discussion",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "commonId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createTime",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "discussionMessage",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "discussionId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createTime",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "proposals",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "dao",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "stageStr",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "closingAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "proposals",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "dao",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "stageStr",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "closingAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "proposals",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "dao",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "stageStr",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "expiresInQueueAt",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "proposals",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "proposer",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "closingAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "proposals",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "proposer",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "stageStr",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "closingAt",
+          "order": "DESCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
