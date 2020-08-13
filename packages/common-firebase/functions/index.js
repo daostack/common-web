@@ -4,7 +4,7 @@ const { databaseURL } = require('./settings');
 
 admin.initializeApp({
   credential: admin.credential.cert(require('./env/adminsdk-keys.json')),
-  databaseURL: databaseURL,
+  databaseURL: databaseURL
 });
 
 const relayer = require('./relayer');
