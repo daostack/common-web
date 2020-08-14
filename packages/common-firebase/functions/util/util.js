@@ -20,6 +20,10 @@ const QUERY_LATEST_BLOCK_NUMBER = `query {
 }`;
 
 module.exports = new class Utils {
+
+  getCommonLink(commonId)  {
+    return `https://app.common.io/common/${commonId}`
+  }
   
   async verifyId(idToken) {
     try {

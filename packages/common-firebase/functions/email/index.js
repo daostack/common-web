@@ -8,8 +8,12 @@ const userFundingRequestAccepted = require('./templates/userFundingRequestAccept
 const userJoinedButFailedPayment = require('./templates/userJoinedButFailedPayment');
 const userJoinedSuccess = require('./templates/userJoinedSuccess');
 const adminWalletCreationFailed = require('./templates/adminWalletCreationFailed');
+const adminJoinedButPaymentFailed = require('./templates/adminJoinedButFailedPayment');
+const adminPayInSuccess = require('./templates/adminPayInSuccess');
 
-const mailer = require("../mailer");
+const mailer = require('../mailer');
+const env = require('../env').env;
+
 
 const templates = {
   requestToJoinSubmitted,
@@ -21,8 +25,10 @@ const templates = {
   userCommonFeatured,
   userFundingRequestAccepted,
   userJoinedButFailedPayment,
-  userJoinedSuccess
-}
+  userJoinedSuccess,
+  adminJoinedButPaymentFailed,
+  adminPayInSuccess
+};
 
 const globalDefaultStubs = {
   supportChatLink: 'https://common.io/help'
@@ -30,7 +36,7 @@ const globalDefaultStubs = {
 
 const replaceAll = (string, search, replace) => {
   return string.split(search).join(replace);
-}
+};
 
 const isNullOrUndefined = (val) =>
   val === null || val === undefined;
@@ -48,7 +54,9 @@ const isNullOrUndefined = (val) =>
  *  'userFundingRequestAccepted',
  *  'userJoinedButFailedPayment',
  *  'userJoinedSuccess',
- *  'adminWalletCreationFailed'
+ *  'adminWalletCreationFailed',
+ *  'adminJoinedButPaymentFailed',
+ *  'adminPayInSuccess'
  * } templateKey
  *
  * @param {{
@@ -62,7 +70,9 @@ const isNullOrUndefined = (val) =>
  * }}
  */
 const getTemplatedEmail = (templateKey, payload) => {
-  let {template, subject, emailStubs, subjectStubs} = templates[templateKey];
+  let { template, subject, emailStubs, subjectStubs } = templates[templateKey];
+
+  console.debug('Email templating started');
 
   if (isNullOrUndefined(template)) {
     throw new Error(`The requested template (${templateKey}) cannot be found`);
@@ -79,38 +89,40 @@ const getTemplatedEmail = (templateKey, payload) => {
         isNullOrUndefined(globalDefaultStubs[stub])
       )
     ) {
-      throw new Error(`Required stub ${stub} was not provided for email template`)
+      throw new Error(`Required stub ${stub} was not provided for email template`);
     }
 
     // If there is a default value for the stub and has not been replaced add it here
     if (!isNullOrUndefined(emailStubs[stub].default) && isNullOrUndefined(payload.emailStubs[stub])) {
-      template = template.replace(`{{${stub}}}`, emailStubs[stub])
+      template = template.replace(`{{${stub}}}`, emailStubs[stub]);
     } else if (!isNullOrUndefined(globalDefaultStubs[stub]) && isNullOrUndefined(payload.emailStubs[stub])) {
-      template = template.replace(`{{${stub}}}`, globalDefaultStubs[stub])
+      template = template.replace(`{{${stub}}}`, globalDefaultStubs[stub]);
     }
   }
 
   // Replace all provided stubs in the template
   for (const stub in payload.emailStubs) {
-    template = replaceAll(template, `{{${stub}}}`, payload.emailStubs[stub])
+    template = replaceAll(template, `{{${stub}}}`, payload.emailStubs[stub]);
   }
 
   // Validate the email subject
   for (const stub in subjectStubs) {
     if (subjectStubs[stub].required && isNullOrUndefined(payload.subjectStubs[stub])) {
-      throw new Error(`Required stub ${stub} was not provided for subject template`)
+      throw new Error(`Required stub ${stub} was not provided for subject template`);
     }
   }
 
   for (const stub in payload.subjectStubs) {
-    subject = replaceAll(subject, `{{${stub}}}`, payload.subjectStubs[stub])
+    subject = replaceAll(subject, `{{${stub}}}`, payload.subjectStubs[stub]);
   }
+
+  console.debug(`Email templating finished for template ${templateKey}`);
 
   return {
     template,
     subject
   };
-}
+};
 
 /***
  *
@@ -119,30 +131,54 @@ const getTemplatedEmail = (templateKey, payload) => {
  *  'adminCommonCreated',
  *  'adminFundingRequestAccepted',
  *  'adminPreauthorizationFailed' ,
+ *  'adminJoinedButPaymentFailed',
  *  'userCommonCreated',
  *  'userCommonFeatured',
  *  'userFundingRequestAccepted',
  *  'userJoinedButFailedPayment',
  *  'userJoinedSuccess',
- *  'adminWalletCreationFailed'
+ *  'adminWalletCreationFailed',
+ *  'adminPayInSuccess'
  * } templateKey
  *
  * @param { object } emailStubs
  * @param { object } subjectStubs
  *
- * @param { string } to
+ * @param { string | string[] | 'admin' } to
  */
-const sendTemplatedEmail = async ({ templateKey, emailStubs, subjectStubs, to}) => {
-  const {template, subject} = getTemplatedEmail(templateKey, { emailStubs, subjectStubs });
+const sendTemplatedEmail = async ({ templateKey, emailStubs, subjectStubs, to }) => {
+  console.log('Template email begin sending');
 
-  await mailer.sendMail(
-    to,
-    subject,
-    template
-  );
-}
+  to === 'admin' && (to = env.mail.adminMail);
+
+  const { template, subject } = getTemplatedEmail(templateKey, { emailStubs, subjectStubs });
+
+  if (Array.isArray(to)) {
+    const emailPromises = [];
+
+    to.forEach((emailTo) => {
+      emailPromises.push(mailer.sendMail({
+        to: emailTo,
+        subject,
+        template
+      }));
+    });
+
+    await Promise.all(emailPromises);
+  } else {
+    await mailer.sendMail(
+      to,
+      subject,
+      template
+    );
+  }
+
+
+  console.log('Templated email send successfully');
+};
 
 module.exports = {
   getTemplatedEmail,
-  sendTemplatedEmail
-}
+  sendTemplatedEmail,
+  sendPreauthorizationFailedEmail: require('./sendPreauthorizationFailedEmail')
+};

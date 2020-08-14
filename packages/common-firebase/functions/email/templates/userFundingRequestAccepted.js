@@ -1,17 +1,15 @@
 const template = `
 Hello {{name}},
-
-Congratulations! 
+<br /><br />
+Congratulations! <br />
 Your proposal: {{proposal}} has been approved. To receive the funds you will need to provide your bank account details, as well as some identification information.
-
+<br /><br />
 Please fill all the required information on the attached form and send it back to us at: payout@common.io
-
+<br /><br />
 For more information you can contact us any time using our  <a href="{{supportChatLink}}">support chat</a>
-
-Common,
+<br /><br />
+Common,<br />
 Collaborative Social Action.
-
-
 `;
 
 const emailStubs = {

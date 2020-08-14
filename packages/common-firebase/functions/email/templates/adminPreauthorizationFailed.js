@@ -1,14 +1,16 @@
 const template = `
     The following payment pre-authorization failed:
 
-    Common name: {{commonName}}
-    Membership request ID: {{membershipRequestId}}
-    User Full Name: {{userFullName}}
-    User ID: {{userId}}
-    User Email: {{userEmail}}
-    Payment amount: {{paymentAmount}}
-    Submitted on: {{submittedOn}}
-    Failure reason: {{failureReason}}
+ <br /><br /><br />
+
+    Common name: {{commonName}}<br />
+    Membership request ID: {{membershipRequestId}}<br />
+    User Full Name: {{userFullName}}<br />
+    User ID: {{userId}}<br />
+    User Email: {{userEmail}}<br />
+    Payment amount: {{paymentAmount}}<br />
+    Submitted on: {{submittedOn}}<br />
+    Failure reason: {{failureReason}}<br />
 `;
 
 const emailStubs = {
@@ -19,6 +21,9 @@ const emailStubs = {
     required: true
   },
   userId: {
+    required: true
+  },
+  userEmail: {
     required: true
   },
   userFullName: {

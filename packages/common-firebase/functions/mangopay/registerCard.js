@@ -1,42 +1,40 @@
 const Utils = require('../util/util');
-const { env } = require('../env');
 const {
   finalizeCardReg,
   preauthorizePayment,
 } = require('./mangopay');
-const { sendMail, MAIL_SUBJECTS } = require('../mailer');
+
+const emailClient = require('../email');
+
 
 const registerCard = async (req) => {
   // eslint-disable-next-line no-useless-catch
-  try {
 
-    const { idToken, cardRegistrationData, Id, funding } = req.body;
-    const uid = await Utils.verifyId(idToken);
-    let userData = await Utils.getUserById(uid);
-    const userRef = Utils.getUserRef(uid);
-    const cardId = await finalizeCardReg(cardRegistrationData, Id);
-    console.log('CARD REGISTERED', cardId);
-    await userRef.update({ mangopayCardId: cardId });
-    userData = await Utils.getUserById(uid); // update userData with the new cardId which we register each time user pays
-    const {
-      Id: preAuthId,
-      Status,
-      DebitedFunds: { Amount },
-      ResultMessage,
-    } = await preauthorizePayment({ funding, userData });
-    if (Status === 'FAILED') {
-      sendMail(env.mail.adminMail, MAIL_SUBJECTS.PREAUTH_FAIL, `Preauthorization failed for ${funding}$ for userID ${userData.uid}`);
-      throw new Error(`Request to join failed. ${ResultMessage}`);
-    }
+  const { idToken, cardRegistrationData, Id, funding } = req.body;
+  const uid = await Utils.verifyId(idToken);
+  let userData = await Utils.getUserById(uid);
+  const userRef = Utils.getUserRef(uid);
+  const cardId = await finalizeCardReg(cardRegistrationData, Id);
+  console.log('CARD REGISTERED', cardId);
+  await userRef.update({ mangopayCardId: cardId });
+  userData = await Utils.getUserById(uid); // update userData with the new cardId which we register each time user pays
+  const {
+    Id: preAuthId,
+    Status,
+    DebitedFunds: { Amount },
+    ResultMessage,
+  } = await preauthorizePayment({ funding, userData });
 
-    return {
-      message: 'Card registered successfully',
-      preAuthData: { preAuthId, Amount },
-    }
+  if (Status === 'FAILED') {
+    await emailClient.sendPreauthorizationFailedEmail(preAuthId)
 
-  } catch (error) {
-    throw error; 
+    throw new Error(`Request to join failed. ${ResultMessage}`);
+  }
+
+  return {
+    message: 'Card registered successfully',
+    preAuthData: { preAuthId, Amount },
   }
 }
 
- module.exports = { registerCard };
+module.exports = { registerCard };

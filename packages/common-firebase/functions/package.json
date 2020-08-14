@@ -13,6 +13,7 @@
     "deploy:graphql": "./env/env.sh -check && firebase deploy --only functions:graphql",
     "deploy:mangopay": "./env/env.sh -check && firebase deploy --only functions:mangopay",
     "emulator": "firebase emulators:start --only functions",
+    "emulators": "firebase emulators:start",
     "use:staging": "firebase use staging && ./env/env.sh -stg",
     "use:production": "firebase use production && ./env/env.sh -prod",
     "env": "./env/env.sh",

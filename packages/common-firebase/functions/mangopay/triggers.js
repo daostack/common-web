@@ -5,18 +5,19 @@ const {
   createLegalUser,
   createWallet
 } = require('../mangopay/mangopay');
-const { sendMail } = require('../mailer');
-const { env } = require('../env');
+
 const { updateDAOBalance } = require("../graphql/updateDAOBalance");
 const { minterToken } = require('../relayer/minterToken')
 const util = require('../util/util');
 
+const emailClient = require('../email');
 
 exports.watchForExecutedProposals = functions.firestore
   .document('/proposals/{id}')
   .onUpdate(async (change) => {
     const data = change.after.data();
     const previousData = change.before.data();
+
     if (
       data.executed !== previousData.executed &&
       data.executed === true &&
@@ -37,32 +38,55 @@ exports.watchForExecutedProposals = functions.firestore
             await daoRef.update({ mangopayId, mangopayWalletId });
             daoData = await util.getCommonById(data.dao); // update daoData
           } else {
-            sendMail(
-              env.mail.adminMail,
-              `Failed to create mangopayId or walletId for DAO: ${daoData.name} with id: ${daoData.id}`,
-              `Failed to create mangopayId or walletId`
-            );
+            await emailClient.sendTemplatedEmail({
+              to: 'admin',
+              templateKey: 'adminWalletCreationFailed',
+              emailStubs: {
+                commonName: daoData.name,
+                commonId: daoData.id
+              }
+            })
           }
         }
         const preAuthId = data.description.preAuthId;
         const amount = data.description.funding;
-        const { Status } = await payToDAOWallet({
+        const { Status, ...paymentInfo } = await payToDAOWallet({
           preAuthId,
           Amount: amount,
           userData,
           daoData
         });
         if (Status === 'SUCCEEDED') {
-          sendMail(
-            env.mail.adminMail,
-            'Successfull pay-In',
-            `Pay-In successfull for Proposal with ID ${data.id}`
-          );
-          sendMail(
-            userData.email,
-            'Successfull payment',
-            `Your request to join has been approved and the amount of ${data.joinAndQuit.funding}$ was charged.`
-          );
+          // sendMail(
+          //   env.mail.adminMail,
+          //   'Successfull pay-In',
+          //   `Pay-In successfull for Proposal with ID ${data.id}`
+          // );
+          // sendMail(
+          //   userData.email,
+          //   'Successfull payment',
+          //   `Your request to join has been approved and the amount of ${data.joinAndQuit.funding}$ was charged.`
+          // );
+
+          await Promise.all([
+            emailClient.sendTemplatedEmail({
+              to: userData.email,
+              templateKey: "userJoinedSuccess",
+              emailStubs: {
+                name: userData.displayName,
+                commonName: daoData.name,
+                commonLink: util.getCommonLink(daoData.id)
+              }
+            }),
+            emailClient.sendTemplatedEmail({
+              to: 'admin',
+              templateKey: 'adminPayInSuccess',
+              emailStubs: {
+                proposalId: data.id
+              }
+            })
+          ]);
+          
           await minterToken(data.dao, amount)
           await updateDAOBalance(data.dao);
           return change.after.ref.set(
@@ -71,20 +95,53 @@ exports.watchForExecutedProposals = functions.firestore
             },
             { merge: true }
           );
-        } else throw new Error('Payment failed');
+        } else {
+          // Template userJoinedButPaymentFailed
+          // Template adminJoinedButFailedPayment
+
+          await Promise.all([
+            emailClient.sendTemplatedEmail({
+              to: 'admin',
+              templateKey: 'adminJoinedButPaymentFailed',
+              emailStubs: {
+                commonId: daoData.id,
+                commonLink: util.getCommonLink(daoData.id),
+                commonName: daoData.name,
+                proposalId: data.id,
+                userFullName: userData.displayName,
+                paymentAmount: data.fundingRequest ? data.fundingRequest.amount : 'Unknown',
+                submittedOn: new Date(data.createAt / 1000).toDateString(),
+                log: JSON.stringify({
+                  Status,
+                  ...paymentInfo
+                })
+              }
+            }),
+            emailClient.sendTemplatedEmail({
+              to: userData.email,
+              templateKey: 'userJoinedButFailedPayment',
+              emailStubs: {
+                name: userData.displayName,
+                commonName: daoData.name,
+                commonLink: util.getCommonLink(daoData.id)
+              }
+            })
+          ]);
+
+          throw new Error('Payment failed');
+        }
       } catch (e) {
         console.error('ERROR EXECUTING PRE AUTH PAYMENT', e);
-        sendMail(
-          env.mail.adminMail,
-          'Failed pay-In',
-          `Pay-In failed for Proposal with ID ${data.id}`
-        );
-        return change.after.ref.set(
-          {
-            paymentStatus: 'failed',
-          },
-          { merge: true }
-        );
+
+        const preAuthId = data.description.preAuthId;
+
+        await emailClient.sendPreauthorizationFailedEmail(preAuthId, e.message);
+
+        return change.after.ref.set({
+          paymentStatus: 'failed',
+        }, {
+          merge: true
+        });
       }
     } else if (
       data.executed !== previousData.executed &&
@@ -92,5 +149,42 @@ exports.watchForExecutedProposals = functions.firestore
       data.winningOutcome === 0
     ) {
       await cancelPreauthorizedPayment(data.description.preAuthId);
+    }
+
+    if (
+      data.name === "FundingRequest" &&
+      data.executed !== previousData.executed &&
+      data.executed === true &&
+      data.winningOutcome === 1
+    ) {
+      const userData = await util.getUserById(data.proposerId);
+      let daoData = await util.getCommonById(data.dao);
+
+      // Template fundingRequestAccepted (admin & user)
+      await Promise.all([
+        emailClient.sendTemplatedEmail({
+          to: userData.email,
+          templateKey: 'userFundingRequestAccepted',
+          emailStubs: {
+            name: userData.displayName,
+            proposal: data.description.title
+          }
+        }),
+        emailClient.sendTemplatedEmail({
+          to: 'admin',
+          templateKey: 'adminFundingRequestAccepted',
+          emailStubs: {
+            userId: userData.uid,
+            userFullName: userData.displayName,
+            commonName: daoData.name,
+            commonLink: util.getCommonLink(daoData.id),
+            commonId: daoData.id,
+            paymentAmount: data.fundingRequest.amount,
+            submittedOn: new Date(data.createdAt / 1000).toDateString(),
+            passedOn: new Date(data.executedAt / 1000).toDateString(),
+            log: 'No additional information available'
+          }
+        })
+      ])
     }
   });

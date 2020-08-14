@@ -1,29 +1,27 @@
 const template = `
-Notice to Admin
+Notice to Admin<br />
 The following proposal was approved and is awaiting payment.
-
-Common name: {{commonName}}
-Common id: <a href="{{commonLink}}">{{commmonId}}</a>
-Common balance: {{commonBalance}}
-Proposal ID: {{proposalId}}
-User Full Name: {{userFullName}}
-User ID: {{userId}}
-User Email: {{userEmail}}
-Payment Id: {{paymentId}}
-Payment amount: {{paymentAmount}}
-Submitted on: {{submittedOn}}
-Passed on: {{passedOn}}
-
+<br /><br /><br />
+Common name: {{commonName}}<br />
+Common id: <a href="{{commonLink}}">{{commmonId}}</a><br />
+Common balance: {{commonBalance}}<br />
+Proposal ID: {{proposalId}}<br />
+User Full Name: {{userFullName}}<br />
+User ID: {{userId}}<br />
+User Email: {{userEmail}}<br />
+Payment Id: {{paymentId}}<br />
+Payment amount: {{paymentAmount}}<br />
+Submitted on: {{submittedOn}}<br />
+Passed on: {{passedOn}}<br />
+<br /><br />
 Log/info:
+<br /><br />
 
 {{log}}
 
 `;
 
 const emailStubs = {
-  name: {
-    required: true
-  },
   commonName: {
     required: true
   },
