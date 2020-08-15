@@ -91,8 +91,8 @@ function _validateDaoState(daoState) {
   if (!daoVersion) {
     return { isValid: false, errorMsg: `Skipping this dao ${daoState.name}  as it has no metadata.VERSION`};
   }
-  if (daoVersion !== ipfsDataVersion) {
-    return { isValid: false, errorMsg: `Skipping this dao ${daoState.name} as has an unsupported version ${daoVersion}`};
+  if (daoVersion <  ipfsDataVersion) {
+    return { isValid: false, errorMsg: `Skipping this dao ${daoState.name} as has an unsupported version ${daoVersion} (should be >= ${ipfsDataVersion})`};
   }
 
   return { isValid: true };
@@ -265,8 +265,8 @@ async function _updateProposalDb(proposal) {
 
   const proposalDataVersion = proposalDescription.VERSION;
   
-  if (proposalDataVersion !== ipfsDataVersion) {
-    throw {message: `Skipping this proposal ${s.id} as it has an unsupported version ${proposalDataVersion}`, code: 1};
+  if (proposalDataVersion < ipfsDataVersion) {
+    throw {message: `Skipping this proposal ${s.id} as it has an unsupported version ${proposalDataVersion} (should be >= ${ipfsDataVersion})`, code: 1};
     }
 
     const doc = {
