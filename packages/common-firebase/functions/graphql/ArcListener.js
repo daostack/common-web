@@ -265,7 +265,7 @@ async function updateDaoById(daoId, customRetryOptions = {} ) {
     const proposalDataVersion = proposalDescription.VERSION;
     
     if (proposalDataVersion < ipfsDataVersion) {
-      throw {message: `Skipping this proposal ${s.id} as it has an unsupported version ${proposalDataVersion} (should be >= ${ipfsDataVersion})`, code: 1};
+      throw Error(`Skipping this proposal ${s.id} as it has an unsupported version ${proposalDataVersion} (should be >= ${ipfsDataVersion})`);
     }
     
     const doc = {
@@ -278,8 +278,8 @@ async function updateDaoById(daoId, customRetryOptions = {} ) {
       executed: s.executed,
       executedAt: s.executedAt,
       expiresInQueueAt: s.expiresInQueueAt,
-      votesFor: s.votesFor.ndiv(1000).toNumber() ,
-      votesAgainst: s.votesAgainst.ndiv(1000).toNumber(),
+      votesFor: s.votesFor.toNumber()/1000,
+      votesAgainst: s.votesAgainst.toNumber()/1000,
       id: s.id,
       name: s.name,
       preBoostedAt: s.preBoostedAt,
