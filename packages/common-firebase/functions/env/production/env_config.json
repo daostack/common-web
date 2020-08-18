@@ -10,8 +10,8 @@
     "chainId": 100
   },
   "graphql": {
-    "httpLink": "https://api.thegraph.com/subgraphs-daostack/name/daostack/v8_10_exp_xdai",
-    "websocket": "wss://api.thegraph.com/subgraphs-daostack/name/daostack/v8_10_exp_xdai",
+    "httpLink": "https://api.thegraph.com/subgraphs/name/daostack/v8_10_exp_xdai",
+    "websocket": "wss://api.thegraph.com/subgraphs/name/daostack/v8_10_exp_xdai",
     "arcVersion": "0.1.2-rc.2"
   },
   "commonInfo": {

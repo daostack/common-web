@@ -2,8 +2,8 @@ const ethers = require('ethers');
 const { Arc } = require('@daostack/arc.js');
 const { env } = require('./env');
 
-const graphHttpLink = `https://api.thegraph.com/subgraphs-daostack/name/${env.graphql.subgraphName}`;
-const graphwsLink = `wss://api.thegraph.com/subgraphs-daostack/name/${env.graphql.subgraphName}`;
+const graphHttpLink = `https://api.thegraph.com/subgraphs/name/${env.graphql.subgraphName}`;
+const graphwsLink = `wss://api.thegraph.com/subgraphs/name/${env.graphql.subgraphName}`;
 const databaseURL = env.firebase.databaseURL;
 const jsonRpcProvider = env.blockchain.jsonRpcProvider;
 const mangoPayApi = env.mangopay.apiUrl;

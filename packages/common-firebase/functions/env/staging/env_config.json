@@ -10,8 +10,8 @@
       "chainId": 42
     },
     "graphql": {
-      "httpLink": "https://api.thegraph.com/subgraphs-daostack/name/daostack/v8_10_exp_kovan",
-      "websocket": "wss://api.thegraph.com/subgraphs-daostack/name/daostack/v8_10_exp_kovan",
+      "httpLink": "https://api.thegraph.com/subgraphs/name/daostack/v8_10_exp_kovan",
+      "websocket": "wss://api.thegraph.com/subgraphs/name/daostack/v8_10_exp_kovan",
       "arcVersion": "0.1.2-rc.2"
     },
     "commonInfo": {
