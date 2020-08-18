@@ -13,8 +13,8 @@ function error(msg) {
 
 async function findUserByAddress(ethereumAddress, key = 'safeAddress') {
   const query = db.collection(`users`)
-    .where(key, `==`, ethereumAddress)
-
+  .where(key, `==`, ethereumAddress)
+  
   const snapshot = await query.get()
   if (snapshot.size === 0) {
     error(`No member found with ${key} === ${ethereumAddress}`)
@@ -34,11 +34,11 @@ const parseVotes = (votesArr) => {
 async function updateDaos() {
   console.log("UPDATE DAOS:");
   console.log("----------------------------------------------------------");
-
+  
   const response = []
   const daos = await arc.daos({}, { fetchPolicy: 'no-cache' }).first()
   console.log(`found ${daos.length} DAOs`)
-
+  
   for (const dao of daos) {
     console.log(`UPDATE DAO WITH ID: ${dao.id}`);
     const { errorMsg }  = await _updateDaoDb(dao);
@@ -49,7 +49,7 @@ async function updateDaos() {
       console.error(errorMsg);
       continue;
     }
-
+    
     const msg = `Updated dao ${dao.id}`
     response.push(msg)
     console.log(msg)
@@ -76,7 +76,7 @@ function _validateDaoPlugins(plugins) {
     
     return { isValid: false, errorMsg: msg};
   }
-
+  
   return { isValid: true, plugins: daoPlugins};
   
 }
@@ -84,22 +84,22 @@ function _validateDaoPlugins(plugins) {
 function _validateDaoState(daoState) {
   
   if (!daoState.metadata) {
-    return { isValid: false, errorMsg: `Skipping this dao ${daoState.name}  as it has no metadata`};
+    return { isValid: false, errorMsg: `Skipping this dao ${daoState.name} - ${daoState.id}  as it has no metadata`};
   }
   const metadata = JSON.parse(daoState.metadata)
   const daoVersion = metadata.VERSION
   if (!daoVersion) {
-    return { isValid: false, errorMsg: `Skipping this dao ${daoState.name}  as it has no metadata.VERSION`};
+    return { isValid: false, errorMsg: `Skipping this dao ${daoState.name} - ${daoState.id} as it has no metadata.VERSION`};
   }
   if (daoVersion <  ipfsDataVersion) {
-    return { isValid: false, errorMsg: `Skipping this dao ${daoState.name} as has an unsupported version ${daoVersion} (should be >= ${ipfsDataVersion})`};
+    return { isValid: false, errorMsg: `Skipping this dao ${daoState.name} - ${daoState.id} as has an unsupported version ${daoVersion} (should be >= ${ipfsDataVersion})`};
   }
-
+  
   return { isValid: true };
 }
 
 async function _updateDaoDb(dao) {
-
+  
   const daoState = dao.coreState
   
   // Validate Dao state
@@ -108,16 +108,16 @@ async function _updateDaoDb(dao) {
     console.log(`Dao state validation failed for id: ${dao.id}!`);
     return { errorMsg: validation.errorMsg };
   }
-
+  
   // Validate plugins
   const plugins = await dao.plugins().first()
   const pluginValidation = _validateDaoPlugins(plugins);
-
+  
   if (!pluginValidation.isValid) {
     console.log(`Dao plugins validation failed for id: ${dao.id}!`);
     return { errorMsg: pluginValidation.errorMsg };
   }
-
+  
   const { joinAndQuitPlugin, fundingPlugin } = pluginValidation.plugins;
   
   console.log(`UPDATING dao ${daoState.name} ...`);
@@ -126,11 +126,11 @@ async function _updateDaoDb(dao) {
     minFeeToJoin,
     memberReputation,
   } = joinAndQuitPlugin.coreState.pluginParams;
-
+  
   const metadata = JSON.parse(daoState.metadata)
   const fundingGoal = Number(metadata.fundingGoal)
   const { activationTime } = fundingPlugin.coreState.pluginParams.voteParams
-
+  
   // also get the balance
   const balance = await getBalance(dao.id)
   try {
@@ -153,7 +153,7 @@ async function _updateDaoDb(dao) {
       metadata,
       metadataHash: daoState.metadataHash
     }
-
+    
     // also update the member information if it has changed
     const existingDoc = await db.collection("daos").doc(dao.id).get()
     const existingDocData = existingDoc.data()
@@ -185,7 +185,7 @@ async function _updateDaoDb(dao) {
     }
     await db.collection('daos').doc(dao.id).set(doc, {merge: true})
     return { updatedDoc: doc };
-
+    
     
   } catch (err) {
     console.error(err)
@@ -194,7 +194,7 @@ async function _updateDaoDb(dao) {
 }
 
 async function updateDaoById(daoId, customRetryOptions = {} ) {
-
+  
   if (!daoId) {
     throw Error(`You must provide a daoId (current value is "${daoId}")`)
   }
@@ -213,31 +213,30 @@ async function updateDaoById(daoId, customRetryOptions = {} ) {
       return currDaosResult[0];
     }, 
     {...retryOptions, ...customRetryOptions }
-  );
-
-  // TODO: _updateDaoDb should throw en error, not ereturn error messages
-  const { updatedDoc, errorMsg }  = await _updateDaoDb(dao);
-  if (errorMsg) {
-    console.error(`Dao update failed for id: ${dao.id}!`);
-    console.error(errorMsg);
-    throw Error(errorMsg);
+    );
+    
+    // TODO: _updateDaoDb should throw en error, not ereturn error messages
+    const { updatedDoc, errorMsg }  = await _updateDaoDb(dao);
+    if (errorMsg) {
+      console.error(`Dao update failed for id: ${dao.id}!`);
+      console.error(errorMsg);
+      throw Error(errorMsg);
+    }
+    console.log("UPDATED DAO WITH ID: ", daoId);
+    console.log("----------------------------------------------------------");
+    return updatedDoc;
   }
-  console.log("UPDATED DAO WITH ID: ", daoId);
-  console.log("----------------------------------------------------------");
-  return updatedDoc;
-}
-
-async function _updateProposalDb(proposal) {
-
-  const result = { updatedDoc: null, errorMsg: null }; 
   
+  async function _updateProposalDb(proposal) {
+    
+    const result = { updatedDoc: null, errorMsg: null }; 
     const s = proposal.coreState
-
+    
     const votes = await Vote.search(arc, {where: {proposal: s.id}}, { fetchPolicy: 'no-cache' }).first();
-
+    
     // TODO: for optimization, consider looking for a new member not as part of this update process
     // but as a separate cloudfunction instead (that watches for changes in the database and keeps it consistent)
-
+    
     // try to find the memberId corresponding to this address
     const proposer = await findUserByAddress(s.proposer)
     const proposerId = proposer && proposer.id
@@ -250,7 +249,7 @@ async function _updateProposalDb(proposal) {
       const proposedMember = await findUserByAddress(s.proposedMember)
       proposedMemberId = proposedMember.id
     }
-
+    
     // TO-BE-REMOVED: That should be deleted once we reset the data again.
     // It's needed because right now we have description property of type string which could be a jsoon or just a description of a proposal.
     let proposalDescription = null;
@@ -262,13 +261,13 @@ async function _updateProposalDb(proposal) {
         title: s.title
       };
     }
-
-  const proposalDataVersion = proposalDescription.VERSION;
-  
-  if (proposalDataVersion < ipfsDataVersion) {
-    throw {message: `Skipping this proposal ${s.id} as it has an unsupported version ${proposalDataVersion} (should be >= ${ipfsDataVersion})`, code: 1};
+    
+    const proposalDataVersion = proposalDescription.VERSION;
+    
+    if (proposalDataVersion < ipfsDataVersion) {
+      throw {message: `Skipping this proposal ${s.id} as it has an unsupported version ${proposalDataVersion} (should be >= ${ipfsDataVersion})`, code: 1};
     }
-
+    
     const doc = {
       boostedAt: s.boostedAt,
       description: proposalDescription,
@@ -279,8 +278,8 @@ async function _updateProposalDb(proposal) {
       executed: s.executed,
       executedAt: s.executedAt,
       expiresInQueueAt: s.expiresInQueueAt,
-      votesFor: s.votesFor.toNumber() / 1000,
-      votesAgainst: s.votesAgainst.toNumber() / 1000,
+      votesFor: s.votesFor.ndiv(1000).toNumber() ,
+      votesAgainst: s.votesAgainst.ndiv(1000).toNumber(),
       id: s.id,
       name: s.name,
       preBoostedAt: s.preBoostedAt,
@@ -305,129 +304,130 @@ async function _updateProposalDb(proposal) {
       votes: votes.length > 0 ? parseVotes(votes) : [],
       winningOutcome: s.winningOutcome,
     }
-
-  await db.collection('proposals').doc(s.id).set(doc, {merge: true})
-  result.updatedDoc = doc;
-
-  return result;
-}
-
-async function updateProposalById(proposalId, customRetryOptions = {}, blockNumber) {
-  let currBlockNumber = null;
-  if (blockNumber) {
-    currBlockNumber = Number(blockNumber);
-    if (Number.isNaN(currBlockNumber)) {
-      throw Error(`The blockNumber parameter should be a number between 0 and ${Number.MAX_SAFE_INTEGER}`);
-    }
+    
+    await db.collection('proposals').doc(s.id).set(doc, {merge: true})
+    result.updatedDoc = doc;
+    
+    return result;
   }
-
-  let proposal = await promiseRetry(
-    async function (retryFunc, number) {
-      console.log(`Try #${number} to get Proposal ${proposalId}`);
-      const proposals = await arc.proposals({ where: { id: proposalId } }, { fetchPolicy: 'no-cache' }).first()
+  
+  async function updateProposalById(proposalId, customRetryOptions = {}, blockNumber) {
+    let currBlockNumber = null;
+    if (blockNumber) {
+      currBlockNumber = Number(blockNumber);
+      if (Number.isNaN(currBlockNumber)) {
+        throw Error(`The blockNumber parameter should be a number between 0 and ${Number.MAX_SAFE_INTEGER}`);
+      }
+    }
+    
+    let proposal = await promiseRetry(
+      async function (retryFunc, number) {
+        console.log(`Try #${number} to get Proposal ${proposalId}`);
+        const proposals = await arc.proposals({ where: { id: proposalId } }, { fetchPolicy: 'no-cache' }).first()
+        
+        let isBehindLatestBlock = true; // set initally to true and change only if the blockNumber is provided and checked
+        if (currBlockNumber) {
+          const latestBlockNumber = await Utils.getGraphLatestBlockNumber();
+          isBehindLatestBlock = currBlockNumber <= latestBlockNumber;
+        }
+        
+        if ( proposals.length === 0 ) {
+          await retryFunc( `We could not find a proposal with id "${proposalId}" in the graph.`);
+        } else if (!isBehindLatestBlock) {
+          await retryFunc( `We could not find an update for block "${blockNumber}" in the graph.`);
+        }
+        
+        return proposals[0]
+      },
+      {...retryOptions, ...customRetryOptions}
+      );
       
-      let isBehindLatestBlock = true; // set initally to true and change only if the blockNumber is provided and checked
-      if (currBlockNumber) {
-        const latestBlockNumber = await Utils.getGraphLatestBlockNumber();
-        isBehindLatestBlock = currBlockNumber <= latestBlockNumber;
-      }
-
-      if ( proposals.length === 0 ) {
-        await retryFunc( `We could not find a proposal with id "${proposalId}" in the graph.`);
-      } else if (!isBehindLatestBlock) {
-        await retryFunc( `We could not find an update for block "${blockNumber}" in the graph.`);
-      }
-
-      return proposals[0]
-    },
-    {...retryOptions, ...customRetryOptions}
-  );
-
-  const updatedDoc = await _updateProposalDb(proposal);
-  
-  console.log("UPDATED PROPOSAL: ", proposal.id);
-  return updatedDoc;
-}
-
-async function updateProposals() {
-  // TOOD: this function will be useless once we have > 1000 proposals!
-  // take first: 1000  (this is the maximum, the default is 100)
-  const proposals = await arc.proposals({ first: 1000 }, { fetchPolicy: 'no-cache' }).first()
-  console.log(`found ${proposals.length} proposals`)
-
-  const docs = [];
-  const notUpdated = [];
-  for (const proposal of proposals) {
-    try {
       const updatedDoc = await _updateProposalDb(proposal);
-      docs.push(updatedDoc);
-    } catch (e) {
-      if (e.code === 1) { 
-        notUpdated.push(proposal.id); 
-        continue; 
-      } else throw e;
+      
+      console.log("UPDATED PROPOSAL: ", proposal.id);
+      return updatedDoc;
     }
-  }
-  return { docs, notUpdated };
-}
-
-async function updateUsers() {
-  // this function is not used, leaving it here for reference
-  const response = []
-  const members = await Member.search(arc, {}, { fetchPolicy: 'no-cache' }).first()
-  console.log(`found ${members.length} members`)
-  const mapMembersToDaos = {}
-  for (const member of members) {
-    const daos = mapMembersToDaos[member.coreState.address] || []
-    daos.push(member.coreState.dao.id)
-    mapMembersToDaos[member.coreState.address] = daos
-  }
-  for (const memberAddress of Object.keys(mapMembersToDaos)) {
-    // find the member with this address
-    const user = await findUserByAddress(memberAddress)
-    if (user) {
-      const doc = {
-        daos: mapMembersToDaos[memberAddress]
+    
+    async function updateProposals() {
+      // TOOD: this function will be useless once we have > 1000 proposals!
+      // take first: 1000  (this is the maximum, the default is 100)
+      const proposals = await arc.proposals({ first: 1000 }, { fetchPolicy: 'no-cache' }).first()
+      console.log(`found ${proposals.length} proposals`)
+      
+      const docs = [];
+      const notUpdated = [];
+      for (const proposal of proposals) {
+        try {
+          const updatedDoc = await _updateProposalDb(proposal);
+          docs.push(updatedDoc);
+        } catch (e) {
+          if (e.code === 1) { 
+            notUpdated.push(proposal.id); 
+            continue; 
+          } else throw e;
+        }
       }
-      await db.collection('users').doc(user.id).set(doc, { merge: true})
+      return { docs, notUpdated };
     }
-  }
-  return response.join('\n')
-  
-}
-
-async function updateVotes() {
-
-  const db = admin.firestore();
-  const votes = await Vote.search(arc, {}, { fetchPolicy: 'no-cache' }).first()
-  console.log(`found ${votes.length} votes`)
-  
-  const docs = []
-  for (const vote of votes) {
-
-    const user = await findUserByAddress(vote.voter)
-    const voteUserId = user ? user.id : null;
     
-    const doc = {
-      id: vote.id,
-      voterAddress: vote.voter,
-      voterUserId: voteUserId,
-      proposalId: vote.proposal.id,
-
+    async function updateUsers() {
+      // this function is not used, leaving it here for reference
+      const response = []
+      const members = await Member.search(arc, {}, { fetchPolicy: 'no-cache' }).first()
+      console.log(`found ${members.length} members`)
+      const mapMembersToDaos = {}
+      for (const member of members) {
+        const daos = mapMembersToDaos[member.coreState.address] || []
+        daos.push(member.coreState.dao.id)
+        mapMembersToDaos[member.coreState.address] = daos
+      }
+      for (const memberAddress of Object.keys(mapMembersToDaos)) {
+        // find the member with this address
+        const user = await findUserByAddress(memberAddress)
+        if (user) {
+          const doc = {
+            daos: mapMembersToDaos[memberAddress]
+          }
+          await db.collection('users').doc(user.id).set(doc, { merge: true})
+        }
+      }
+      return response.join('\n')
+      
     }
-    await db.collection('votes').doc(vote.id).set(doc)
-    docs.push(doc)
     
-  }
-  return docs;
-}
-
-
-module.exports = {
-  updateDaos,
-  updateDaoById,
-  updateProposals,
-  updateProposalById,
-  updateUsers,
-  updateVotes
-}
+    async function updateVotes() {
+      
+      const db = admin.firestore();
+      const votes = await Vote.search(arc, {}, { fetchPolicy: 'no-cache' }).first()
+      console.log(`found ${votes.length} votes`)
+      
+      const docs = []
+      for (const vote of votes) {
+        
+        const user = await findUserByAddress(vote.voter)
+        const voteUserId = user ? user.id : null;
+        
+        const doc = {
+          id: vote.id,
+          voterAddress: vote.voter,
+          voterUserId: voteUserId,
+          proposalId: vote.proposal.id,
+          
+        }
+        await db.collection('votes').doc(vote.id).set(doc)
+        docs.push(doc)
+        
+      }
+      return docs;
+    }
+    
+    
+    module.exports = {
+      updateDaos,
+      updateDaoById,
+      updateProposals,
+      updateProposalById,
+      updateUsers,
+      updateVotes
+    }
+    

@@ -41,9 +41,10 @@ const requestToJoin = async (req, res) => {
     console.log('--- Relayer response ---', response);
 
     if (response.status !== 200) {
+      console.error('Request to join failed, tx rejected in Relayer')
+      console.error(response.data)
       res.status(500).send({ error: 'Request to join failed', errorCode: 104, data: response.data })
       cancelPreauthorizedPayment(preAuthId);
-      console.error('Request to join failed, tx rejected in Relayer')
       return
     }
     
@@ -62,11 +63,11 @@ const requestToJoin = async (req, res) => {
     
     // TODO:  if the transacdtion reverts, we can check for that here and include that in the error message
     if (!events.JoinInProposal) {
+      console.error('Request to join failed, Transaction was mined, but no JoinInProposal event was not found in the receipt')
       res.status(500).send({ 
         txHash: response.data.txHash, 
         error: 'Transaction was mined, but no JoinInProposal event was not found in the receipt'
       })
-      console.error('Request to join failed, Transaction was mined, but no JoinInProposal event was not found in the receipt')
       return
     }
     
