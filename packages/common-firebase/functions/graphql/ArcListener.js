@@ -361,10 +361,7 @@ async function updateDaoById(daoId, customRetryOptions = {} ) {
           const updatedDoc = await _updateProposalDb(proposal);
           docs.push(updatedDoc);
         } catch (e) {
-          if (e.code === 1) { 
-            notUpdated.push(proposal.id); 
-            continue; 
-          } else throw e;
+          notUpdated.push(proposal.id); 
         }
       }
       return { docs, notUpdated };
