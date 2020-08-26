@@ -1,8 +1,8 @@
 
 const ethers = require('ethers');
-const { env } = require('../env');
-const abi = require('./abi.json');
-const Utils = require('../util/util');
+const { env } = require('../../env');
+const abi = require('../util/abi.json')
+const Utils = require('../../util/util');
 const axios = require('axios');
 
 const create2Wallet = async (req, res) => {

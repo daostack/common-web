@@ -9,7 +9,7 @@ admin.initializeApp({
 
 const relayer = require('./relayer');
 const graphql = require('./graphql');
-const graphqlTriggers = require('./graphql/triggers');
+const graphqlTriggers = require('./graphql/util/triggers');
 const mangopay = require('./mangopay');
 const mangopayTriggers = require('./mangopay/triggers');
 

@@ -1,5 +1,5 @@
-const Utils = require('../util/util');
-const Relayer = require('./relayer');
+const Utils = require('../../util/util');
+const Relayer = require('../relayer');
 
 const execTransaction = async req => {
   // eslint-disable-next-line no-useless-catch

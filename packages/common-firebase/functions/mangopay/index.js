@@ -6,7 +6,8 @@ const cors = require('cors');
 const {createMangoPayUser} = require('./createMangoPayUser');
 const {getCardRegistration} = require('./getCardRegistration')
 const {registerCard} = require('./registerCard');
-const {getPreAuthStatus} = require('./getPreAuthStatus');
+const { getPreAuthStatus } = require('./getPreAuthStatus');
+const { responseExecutor } = require('../util/responseExecutor');
 
 const runtimeOptions = {
   timeoutSeconds: 540, // Maximum time 9 mins
@@ -24,46 +25,61 @@ mangopay.use(express.urlencoded({ extended: true })); // to support URL-encoded 
 mangopay.use(cors({ origin: true }));
 
 mangopay.post('/create-user', async (req, res) => {
-  try {
-    const data = await createMangoPayUser(req);
-    res.send(data);
-  } catch (e) {
-    console.error(e);
-    res.status(500).send({ error: e.response ? e.response.data.Message : e.message });
-  }
+  //res.status(500).send({ error: e.response ? e.response.data.Message : e.message });
+  responseExecutor(
+    async () => {
+      return await createMangoPayUser(req);
+    },
+    {
+      req,
+      res,
+      successMessage: `Created mangopay user!`,
+      errorMessage: `Unable to create MangoPay user!`
+    }
+  );
 });
 
 mangopay.post('/get-card-registration', async (req, res) => {
-  try {
-    const data = await getCardRegistration(req);
-    res.send(data);
-  } catch (e) {
-    console.error('Error in pre card registration', e);
-    res.status(500).send({ error: 'Error getting card registration.' });
-  }
+  responseExecutor(
+    async () => {
+      return await getCardRegistration(req);
+    },
+    {
+      req,
+      res,
+      successMessage: `Got a card registration!`,
+      errorMessage: `Error getting card registration.!`
+    }
+  );
 });
 
 mangopay.post('/register-card', async (req, res) => {
-  try {
-    const data = await registerCard(req)
-    res.send(data);
-  } catch (e) {
-    console.error(
-      'Error in finalizing card registration and preauthorization',
-      e
-    );
-    res.status(500).send({ error: e.response ? e.response.data.Message : e.message });
-  }
+  //res.status(500).send({ error: e.response ? e.response.data.Message : e.message });
+  responseExecutor(
+    async () => {
+      return await registerCard(req);
+    },
+    {
+      req,
+      res,
+      successMessage: `Registered MangoPay card!`,
+      errorMessage: `Error in finalizing card registration and preauthorization!`
+    }
+  );
 });
 
 mangopay.post('/get-preauthorisation-status', async (req, res) => {
-  try {
-    const data = await getPreAuthStatus(req)
-    res.send(data);
-  } catch (e) {
-    console.error('Error viewing preauthorization', e);
-    res.status(500).send({ error: `${e}` });
-  }
+  responseExecutor(
+    async () => {
+      return await getPreAuthStatus(req);
+    },
+    {
+      req,
+      res,
+      successMessage: `Got preauthorisation status!`,
+      errorMessage: `Error in getting preauthorization!`
+    }
+  );
 });
 
 exports.mangopay = functions.runWith(runtimeOptions).https.onRequest(mangopay);

@@ -2,103 +2,130 @@ const functions = require('firebase-functions');
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const { updateDaos, updateDaoById, updateProposals, updateUsers, updateVotes, updateProposalById } = require('./ArcListener')
-const { updateDAOBalance} = require("./updateDAOBalance")
+
+const { updateDaos, updateDaoById,  } = require('./Dao')
+const { updateProposals,  updateProposalById } = require('./Proposal')
+const { updateUsers } = require('./User')
+const { updateVotes } = require('./Vote')
+
+const { updateDAOBalance } = require("../db/daoDbService")
+
+const { responseExecutor } = require('../util/responseExecutor');
 
 const runtimeOptions = {
-  timeoutSeconds: 540, // Maximum time 9 mins
- }
+    timeoutSeconds: 540, // Maximum time 9 mins
+}
 
 const graphql = express();
 
 // Automatically allow cross-origin requests
 graphql.use(bodyParser.json());       // to support JSON-encoded bodies
 graphql.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-  extended: true
+    extended: true
 }));
 graphql.use(express.json());       // to support JSON-encoded bodies
 graphql.use(express.urlencoded({ extended: true })); // to support URL-encoded bodies
 graphql.use(cors({ origin: true }));
 
 graphql.get('/update-daos', async (req, res) => {
-  try {
-    const result = await updateDaos();
-    res.status(200).send({message: `Updated DAOs successfully`, result});
-  } catch (e) {
-    const msg = `Unable to update Daos: ${e}`
-    console.error(msg)
-    res.status(500).send({error: msg, query: req.query});
-  }
+    responseExecutor(
+        async () => {
+            return await updateDaos();
+        },
+        {
+            req,
+            res,
+            successMessage: `Updated DAOs successfully!`,
+            errorMessage: `Unable to update Daos!`
+        }
+    );
 
 });
 
 graphql.get('/update-dao-by-id', async (req, res) => {
-  try {
-    console.log(req.query);
     const { daoId, retries } = req.query;
-    const daoData = await updateDaoById(daoId, { retries: retries || 0  });
-    res.status(200).send({message: `Updated dao with id ${daoId}`, daoId, data: daoData});
-  } catch (e) {
-    console.error(e)
-    res.status(500).send({error: `Unable to update Dao: ${e}`, query: req.query});
-  }
-
+    responseExecutor(
+        async () => {
+            return await updateDaoById(daoId, { retries: retries || 0 });
+        },
+        {
+            req,
+            res,
+            successMessage: `Updated dao with id ${daoId}!`,
+            errorMessage: `Unable to update Dao with id ${daoId}!`
+        }
+    );
 });
 
 graphql.get('/update-proposals', async (req, res) => {
-  try {
-    const {docs, notUpdated} = await updateProposals();
-    res.status(200).send({
-      message: `Updated ${docs.length} proposals. Skipped ${notUpdated} due to old data version.`,
-      docs: docs.map((d) => d.updatedDoc.id),
-      notUpdated 
-    });
-  } catch (e) {
-    console.error(e)
-    res.status(500).send({error: `Unable to update Proposals: ${e}`, query: req.query});
-  }
-
+    responseExecutor(
+        async () => {
+            return await updateProposals();
+        },
+        {
+            req,
+            res,
+            successMessage: `Updated proposals!`,
+            errorMessage: `Unable to update Proposals!`
+        }
+    );
 });
 
 graphql.get('/update-proposal-by-id', async (req, res) => {
-  try {
     const { proposalId, retries, blockNumber } = req.query;
-    const data = await updateProposalById(proposalId, { retries: retries || 0 }, blockNumber);
-    res.status(200).send({message: `Updated proposal ${proposalId}`, data });
-  } catch (e) {
-    console.error(e)
-    res.status(500).send({error: `Unable to update Proposal by id: ${e.message ? e.message : e}`, query: req.query});
-  }
+    responseExecutor(
+        async () => {
+            return await updateProposalById(proposalId, { retries: retries || 0 }, blockNumber);
+        },
+        {
+            req,
+            res,
+            successMessage: `Updated proposal ${proposalId}!`,
+            errorMessage: `Unable to update Proposal by id: ${proposalId}!`
+        }
+    );
 });
 
 graphql.get('/update-users', async (req, res) => {
-  try {
-    const result = await updateUsers();
-    res.status(200).send(`Updated users successfully: ${result}`);
-  } catch (e) {
-    console.error(e)
-    res.status(500).send({error: `Unable to update users: ${e}`, query: req.query});
-  }
+    responseExecutor(
+        async () => {
+            return await updateUsers();
+        },
+        {
+            req,
+            res,
+            successMessage: `Updated users successfully!`,
+            errorMessage: `Unable to update users!`
+        }
+    );
 });
 graphql.get('/update-votes', async (req, res) => {
-  try {
-    const result = await updateVotes();
-    res.status(200).send(`Updated votes successfully: ${result}`);
-  } catch (e) {
-    console.error(e)
-    res.status(500).send({error: `Unable to update votes: ${e}`, query: req.query});
-  }
+    responseExecutor(
+        async () => {
+            return await updateVotes();
+        },
+        {
+            req,
+            res,
+            successMessage: `Updated votes successfully!`,
+            errorMessage: `Unable to update votes!`
+        }
+    );
 });
 
 graphql.get('/update-dao-balance', async (req, res) => {
-  const { daoId } = req.query;
-  try {
-    const data = await updateDAOBalance(daoId);
-    res.status(200).send({message: `Updated balance of Common at ${daoId}`, data });
-  } catch (e) {
-    console.error(e)
-    res.status(500).send({error: `Unable to update Common balance ${e}`, query: req.query});
-  }
+    const { daoId } = req.query;
+    responseExecutor(
+        async () => {
+            return await updateDAOBalance(daoId);
+        },
+        {
+            req,
+            res,
+            successMessage: `Updated balance of Common at ${daoId}!`,
+            errorMessage: `Unable to update Common balance!`
+        }
+    );
 });
 
 exports.graphql = functions.runWith(runtimeOptions).https.onRequest(graphql);

@@ -2,7 +2,7 @@ const Relayer = require('./relayer');
 const Utils = require('../util/util');
 const { env } = require('../env');
 const ethers = require('ethers');
-const abi = require('./abi.json');
+const abi = require('../util/abi.json')
 const { provider } = require('../settings.js');
 
 const setAllowance = async (req) => {
