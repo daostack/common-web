@@ -1,6 +1,6 @@
 
 const ethers = require('ethers');
-const { env } = require('../../env');
+const { env } = require('@env');
 const abi = require('../util/abi.json')
 const Utils = require('../../util/util');
 const axios = require('axios');
@@ -9,7 +9,7 @@ const create2Wallet = async (req, res) => {
   // eslint-disable-next-line no-useless-catch
   try {
 
-        // TODO: Change this with calculate address
+    // TODO: Change this with calculate address
     // SaltNonce need to change
     const idToken = req.header('idToken');
     const uid = await Utils.verifyId(idToken);
@@ -35,19 +35,18 @@ const create2Wallet = async (req, res) => {
       'from': address,
       'params': [env.biconomy.masterCopy, encodedData, nonceSalt]
     }
-    
+
     const testAddress = ethers.utils.getContractAddress({ from: env.biconomy.proxyFactory, nonce: nonceSalt })
     axios.post('https://api.biconomy.io/api/v2/meta-tx/native', data, options)
-    .then(receive => {
-      let object = Object.assign(receive.data, { address: testAddress, nonce: nonceSalt })
-      res.send(object);
-    })
-    .catch(err => {
-      res.send(err);
-    })
+      .then((receive) => {
+        return res.send(Object.assign(receive.data, { address: testAddress, nonce: nonceSalt }));
+      })
+      .catch(err => {
+        res.send(err);
+      })
 
   } catch (error) {
-    throw error; 
+    throw error;
   }
 }
 

@@ -1,9 +1,10 @@
-const { env } = require('./env');
+require('module-alias/register')
 const admin = require('firebase-admin');
 const { databaseURL } = require('./settings');
+const {env} = require('@env');
 
 admin.initializeApp({
-  credential: admin.credential.cert(require('./env/adminsdk-keys.json')),
+  credential: admin.credential.cert(require('@env/adminsdk-keys.json')),
   databaseURL: databaseURL
 });
 

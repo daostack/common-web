@@ -1,5 +1,5 @@
 const mangopay = require('mangopay2-nodejs-sdk');
-const { env } = require('../env');
+const { env } = require('@env');
 
 const mangopayClient = new mangopay({
   clientId: env.mangopay.clientId,

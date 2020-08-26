@@ -1,7 +1,7 @@
 const emailClient = require('.');
 
 const db = require('firebase-admin').firestore();
-const env = require('../env').env;
+const { env } = require('@env');
 
 module.exports = async (preAuthId, failureReason = 'Unknown') => {
   const proposalsSnapshot = await db.collection('proposals')

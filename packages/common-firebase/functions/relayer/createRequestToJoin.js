@@ -1,6 +1,5 @@
 const Relayer = require('./relayer');
 const Utils = require('../util/util');
-// const { env } = require('../env');
 const { updateProposalById } = require('../graphql/Proposal');
 const ethers = require('ethers');
 const { provider } = require('../settings.js');

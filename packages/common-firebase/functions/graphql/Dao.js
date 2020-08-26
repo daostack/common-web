@@ -14,22 +14,34 @@ async function updateDaos() {
     const daos = await arc.daos({}, { fetchPolicy: 'no-cache' }).first()
     console.log(`found ${daos.length} DAOs`)
 
+    const promiseArr = [];
+
     for (const dao of daos) {
-        console.log(`UPDATE DAO WITH ID: ${dao.id}`);
-        const { errorMsg } = await _updateDaoDb(dao);
+        // eslint-disable-next-line no-loop-func
+        promiseArr.push(async () => {
+            console.log(`UPDATE DAO WITH ID: ${dao.id}`);
 
-        // TODO: this is not the way to handle errors
-        if (errorMsg) {
-            response.push(errorMsg);
-            console.error(errorMsg);
-            continue;
-        }
+            // eslint-disable-next-line
+            const { errorMsg } = await _updateDaoDb(dao);
 
-        const msg = `Updated dao ${dao.id}`
-        response.push(msg)
-        console.log(msg)
-        console.log("----------------------------------------------------------");
+            // TODO: this is not the way to handle errors
+            if (errorMsg) {
+                response.push(errorMsg);
+                console.error(errorMsg);
+
+                // continue;
+                return;
+            }
+
+            const msg = `Updated dao ${dao.id}`
+            response.push(msg)
+            console.log(msg)
+            console.log("----------------------------------------------------------");
+        })
     }
+
+    await Promise.all(promiseArr);
+
     return response.join('\n')
 }
 
@@ -139,6 +151,7 @@ async function _updateDaoDb(dao) {
             const members = await dao.members().first()
             doc.members = []
             for (const member of members) {
+                // eslint-disable-next-line
                 const user = await findUserByAddress(member.coreState.address)
                 if (user === null) {
                     console.log(`No user found with this address ${member.coreState.address}`)
@@ -177,7 +190,7 @@ async function updateDaoById(daoId, customRetryOptions = {}) {
     }
     daoId = daoId.toLowerCase()
     const dao = await promiseRetry(
-        async function (retryFunc, number) {
+        async (retryFunc, number) => {
             console.log(`Try #${number} to get Dao...`);
             const currDaosResult = await arc.daos({ where: { id: daoId } }, { fetchPolicy: 'no-cache' }).first();
 
@@ -189,7 +202,7 @@ async function updateDaoById(daoId, customRetryOptions = {}) {
             }
             return currDaosResult[0];
         },
-        { ...retryOptions, ...customRetryOptions }
+        {...retryOptions, ...customRetryOptions }
     );
 
     // TODO: _updateDaoDb should throw en error, not ereturn error messages

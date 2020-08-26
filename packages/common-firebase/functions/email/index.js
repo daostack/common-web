@@ -12,7 +12,7 @@ const adminJoinedButPaymentFailed = require('./templates/adminJoinedButFailedPay
 const adminPayInSuccess = require('./templates/adminPayInSuccess');
 
 const mailer = require('../mailer');
-const env = require('../env').env;
+const env = require('@env').env;
 
 
 const templates = {

@@ -13,16 +13,24 @@ async function updateUsers() {
         daos.push(member.coreState.dao.id)
         mapMembersToDaos[member.coreState.address] = daos
     }
+
+    const promiseArr = [];
+
     for (const memberAddress of Object.keys(mapMembersToDaos)) {
         // find the member with this address
-        const user = await findUserByAddress(memberAddress)
-        if (user) {
-            const doc = {
-                daos: mapMembersToDaos[memberAddress]
+        promiseArr.push(async () => {
+            const user = await findUserByAddress(memberAddress)
+            if (user) {
+                const doc = {
+                    daos: mapMembersToDaos[memberAddress]
+                }
+                await updateUser(user.id, doc)
             }
-            await updateUser(user.id, doc)
-        }
+        })
     }
+
+    await Promise.all(promiseArr);
+
     return response.join('\n')
 
 }

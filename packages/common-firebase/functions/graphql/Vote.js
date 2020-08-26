@@ -1,19 +1,22 @@
 const { findUserByAddress } = require('../db/userDbService');
 const { Vote } = require('@daostack/arc.js');
-const { arc} = require('../settings')
-const admin = require('firebase-admin');
-const db = admin.firestore();
+const { arc } = require('../settings')
+const { updateVote } = require('../db/voteDbService');
 
 async function updateVotes() {
 
     const votes = await Vote.search(arc, {}, { fetchPolicy: 'no-cache' }).first()
     console.log(`found ${votes.length} votes`)
 
-    const docs = []
-    for (const vote of votes) {
 
-        const user = await findUserByAddress(vote.voter)
-        const voteUserId = user ? user.id : null;
+    const docs = []
+    await Promise.all(
+      votes.map(async vote =>  {
+        const user = await findUserByAddress(vote.voter);
+
+        const voteUserId = user
+          ? user.id
+          : null;
 
         const doc = {
             id: vote.id,
@@ -22,10 +25,12 @@ async function updateVotes() {
             proposalId: vote.proposal.id,
 
         }
-        await db.collection('votes').doc(vote.id).set(doc)
-        docs.push(doc)
 
-    }
+        await updateVote(vote.id, doc);
+
+        docs.push(doc);
+    }));
+
     return docs;
 }
 

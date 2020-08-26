@@ -12,6 +12,9 @@ function follow(userId, userList) {
     const writeFollow = admin.firestore().doc(`users/${targetUid}`).update({ follower: admin.firestore.FieldValue.arrayUnion(userId) })
     // tasks.append(writeNotifications)
     // tasks.append(writeFollow)
+
+    // @question Ask about this. Maybe make the whole function async?
+    // eslint-disable-next-line
     Promise.all([writeNotifications, writeFollow]);
   }
 }
@@ -20,12 +23,16 @@ function unfollow(userId, userList) {
   // let tasks = [];
   for (const targetUid of userList) {
     const writeUnFollow = admin.firestore().doc(`users/${targetUid}`).update({ follower: admin.firestore.FieldValue.arrayRemove(userId) })
+
+    // @question Ask about this. Maybe make the whole function async?
+    // eslint-disable-next-line
     Promise.all([writeUnFollow]);
   }
 }
 
 const userInfoTrigger = functions.firestore.document('/users/{userId}')
   .onUpdate(async (change, context) => {
+    // eslint-disable-next-line
     Array.prototype.diff = function (a) {
       return this.filter(function (i) { return a.indexOf(i) < 0; });
     };

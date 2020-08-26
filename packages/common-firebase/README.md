@@ -3,6 +3,14 @@
 
 This repository contains code for the clodufunctions and the website hosting, and some scripts to manage the code.
 
+# Local environment
+
+To run everything locally you could use the following command:
+
+`yarn start`
+
+For more information you could check [here](https://github.com/daostack/common-firebase/blob/dev/doc/local.md)
+
 # firestore
 
 To run the script, you need to install gcloud and 

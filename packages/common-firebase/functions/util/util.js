@@ -2,7 +2,7 @@ const admin = require('firebase-admin');
 const { provider } = require('../settings')
 const { CommonError, CFError} = require('./error')
 const fetch = require('node-fetch');
-const { env } = require('../env');
+const { env } = require('@env');
 
 const QUERY_LATEST_BLOCK_NUMBER = `query {
   indexingStatusForCurrentVersion(subgraphName: "${env.graphql.subgraphName}") { 

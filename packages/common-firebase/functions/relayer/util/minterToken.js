@@ -1,7 +1,7 @@
 const { provider } = require('../../settings')
 const ethers = require('ethers');
-const { env } = require('../../env');
-const abi = require('./abi.json')
+const { env } = require('@env');
+const abi = require('./abi.json');
 
 const minterToken = async (address, amount) => {
   // eslint-disable-next-line no-useless-catch

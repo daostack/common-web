@@ -4,6 +4,9 @@
       "npm --prefix \"$RESOURCE_DIR\" run lint"
     ]
   },
+  "firestore": {
+    "rules": "./firestore/firestore.rules"
+  },
   "emulators": {
     "firestore": {
       "port": "8080"
@@ -37,10 +40,12 @@
         "dynamicLinks": true
       }
     ],
-    "redirects": [ {
-      "regex": "^/[^\\.well\\-known].*$",
-      "destination": "https://common.io/", 
-      "type": 302
-    }]
+    "redirects": [
+      {
+        "regex": "^/[^\\.well\\-known].*$",
+        "destination": "https://common.io/",
+        "type": 302
+      }
+    ]
   }
 }

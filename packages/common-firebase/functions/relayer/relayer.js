@@ -1,7 +1,7 @@
 const ethers = require('ethers');
 const abi = require('./util/abi.json')
 const axios = require('axios');
-const { env } = require('../env');
+const { env } = require('@env');
 const { jsonRpcProvider } = require('../settings');
 // const { CommonError } = require('../uril/error');
 

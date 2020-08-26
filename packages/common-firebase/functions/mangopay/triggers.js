@@ -50,6 +50,9 @@ exports.watchForExecutedProposals = functions.firestore
         }
         const preAuthId = data.description.preAuthId;
         const amount = data.description.funding;
+
+        // @question Ask about this. Maybe make the whole function async?
+        // eslint-disable-next-line
         const { Status, ...paymentInfo } = await payToDAOWallet({
           preAuthId,
           Amount: amount,
