@@ -8,6 +8,8 @@ const HTTP_STATUS_CODE = {
 const responseExecutor = async (action, { req, res, successMessage, errorMessage }) => {
     try {
         const actionResult = await action();
+        console.log(actionResult);
+
         res.status(HTTP_STATUS_CODE.OK)
             .json(
                 {

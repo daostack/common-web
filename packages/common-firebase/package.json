@@ -5,7 +5,7 @@
     "lint": "eslint .",
     "serve": "firebase serve --only functions",
     "shell": "firebase functions:shell",
-    "start": "npm run emulator",
+    "start": "yarn emulator",
     "deploy": "./env/env.sh -check && firebase deploy --only functions",
     "logs": "firebase functions:log",
     "deploy:relayer": "./env/env.sh -check && firebase deploy --only functions:relayer",
