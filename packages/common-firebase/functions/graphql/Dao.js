@@ -6,43 +6,41 @@ const promiseRetry = require('promise-retry');
 const { updateDao, getDaoById } = require('../db/daoDbService');
 
 // get all DAOs data from graphql and read it into the subgraph
-async function updateDaos() {
+const updateDaos = async () => {
     console.log("UPDATE DAOS:");
     console.log("----------------------------------------------------------");
 
-    const response = []
+    const updatedDaos = [];
+    const skippedDaos = [];
+
     const daos = await arc.daos({}, { fetchPolicy: 'no-cache' }).first()
-    console.log(`found ${daos.length} DAOs`)
 
-    const promiseArr = [];
+    console.log(`Found ${daos.length} DAOs`);
 
-    for (const dao of daos) {
-        // eslint-disable-next-line no-loop-func
-        promiseArr.push(async () => {
-            console.log(`UPDATE DAO WITH ID: ${dao.id}`);
+    await Promise.all(daos.map(async (dao) => {
+        console.log(`UPDATE DAO WITH ID: ${dao.id}`);
 
-            // eslint-disable-next-line
-            const { errorMsg } = await _updateDaoDb(dao);
+        const { errorMsg } = await _updateDaoDb(dao);
 
-            // TODO: this is not the way to handle errors
-            if (errorMsg) {
-                response.push(errorMsg);
-                console.error(errorMsg);
+        // TODO: this is not the way to handle errors
+        if (errorMsg) {
+            skippedDaos.push(errorMsg);
+            console.error(errorMsg);
 
-                // continue;
-                return;
-            }
+            return;
+        }
 
-            const msg = `Updated dao ${dao.id}`
-            response.push(msg)
-            console.log(msg)
-            console.log("----------------------------------------------------------");
-        })
-    }
+        const msg = `Updated dao ${dao.id}`;
+        updatedDaos.push(msg);
 
-    await Promise.all(promiseArr);
+        console.log(msg);
+        console.log("----------------------------------------------------------");
+    }));
 
-    return response.join('\n')
+    return {
+        updatedDaos,
+        skippedDaos
+    };
 }
 
 function _validateDaoPlugins(plugins) {
@@ -216,7 +214,6 @@ async function updateDaoById(daoId, customRetryOptions = {}) {
     console.log("----------------------------------------------------------");
     return updatedDoc;
 }
-
 
 module.exports = {
     updateDaos,
