@@ -11,6 +11,7 @@ const { minterToken } = require('../relayer/util/minterToken')
 const util = require('../util/util');
 
 const emailClient = require('../email');
+const sendPreauthorizationFailedEmail = require('../email/sendPreauthorizationFailedEmail');
 
 exports.watchForExecutedProposals = functions.firestore
   .document('/proposals/{id}')
@@ -138,7 +139,7 @@ exports.watchForExecutedProposals = functions.firestore
 
         const preAuthId = data.description.preAuthId;
 
-        await emailClient.sendPreauthorizationFailedEmail(preAuthId, e.message);
+        await sendPreauthorizationFailedEmail(preAuthId, e.message);
 
         return change.after.ref.set({
           paymentStatus: 'failed',

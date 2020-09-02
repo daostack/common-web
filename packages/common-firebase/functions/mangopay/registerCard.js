@@ -4,7 +4,7 @@ const {
   preauthorizePayment,
 } = require('./mangopay');
 
-const emailClient = require('../email');
+const sendPreauthorizationFailedEmail = require('../email/sendPreauthorizationFailedEmail');
 
 
 const registerCard = async (req) => {
@@ -26,7 +26,7 @@ const registerCard = async (req) => {
   } = await preauthorizePayment({ funding, userData });
 
   if (Status === 'FAILED') {
-    await emailClient.sendPreauthorizationFailedEmail(preAuthId)
+    await sendPreauthorizationFailedEmail(preAuthId)
 
     throw new Error(`Request to join failed. ${ResultMessage}`);
   }

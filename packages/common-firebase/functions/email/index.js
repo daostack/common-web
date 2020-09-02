@@ -180,5 +180,4 @@ const sendTemplatedEmail = async ({ templateKey, emailStubs, subjectStubs, to })
 module.exports = {
   getTemplatedEmail,
   sendTemplatedEmail,
-  sendPreauthorizationFailedEmail: require('./sendPreauthorizationFailedEmail')
 };

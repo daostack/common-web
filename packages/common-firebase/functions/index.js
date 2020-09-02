@@ -14,7 +14,7 @@ const graphqlTriggers = require('./graphql/util/triggers');
 const mangopay = require('./mangopay');
 const mangopayTriggers = require('./mangopay/triggers');
 
-// Add the tests endpoints only if enabled
+// Add the __tests__ endpoints only if enabled
 if(env.tests.enabled) {
   exports.tests = require('./tests').tests;
 }

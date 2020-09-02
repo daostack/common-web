@@ -1,3 +1,7 @@
+![Statements Coverage](docs/assests/badges/badge-statements.svg)
+![Functions Coverage](docs/assests/badges/badge-functions.svg)
+![Lines Coverage](docs/assests/badges/badge-lines.svg)
+
 
 # Firebase code in support for common
 
@@ -75,4 +79,40 @@ There are API endpoint for testing the functionality of the application. They ar
     - **To (required)** - the email address of the test mail receiver
     - **Subject (optional)** - optional subject for the test email
     - **Message (optional)** - optional message for the test email
+    
+## Testing
 
+For testing we are using the Jest testing framework. All tests are written in TypeScript
+and must be ending with either *.spec.ts or *.test.ts. The testing commands are:
+
+`yarn test` - runs the testing suit once. This command is also ran after each commit.
+
+`yarn test:watch` - runs the test suit on file changes.
+
+`yarn test:coverage` - collects the coverage of the tests.
+
+`yarn test:badges` - generates code coverage badges.
+
+`yarn ci:test` - for now it does exactly the same as `yarn test`, but we can add additional logic in the feature 
+only for when we are running the tests in CI environment.
+
+----
+
+### Test helpers
+
+* `runTest.ts` - Used for running the tests. It has some initialization and cleanup logic for the firebase that 
+otherwise has to be duplicated in every test suite. Must not be used with custom `beforeAll()` and `afterAll()`. 
+Example usage: 
+
+```
+import { runTest } from '@helpers/runTest';
+
+// Required for the Firebase Setup
+const functions = require('@functions'); 
+
+runTest((funcs) => {
+  it('should do stuff', () => {
+    doStuff();
+  });
+})
+```
