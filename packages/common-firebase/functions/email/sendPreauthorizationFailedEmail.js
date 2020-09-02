@@ -1,4 +1,4 @@
-const emailClient = require('.');
+const emailClient = require('./index');
 
 const db = require('firebase-admin').firestore();
 const { env } = require('@env');

@@ -6,6 +6,28 @@ const util = require('../../util/util');
 
 const emailClient = require('../../email');
 
+exports.newProposalCreated = functions
+  .firestore
+  .document('/proposals/{id}')
+  .onCreate(async (snap) => {
+    const proposal = snap.data();
+
+    if(proposal.name === 'JoinAndQuit') {
+      const proposer = await util.getUserById(proposal.proposerId);
+      const common = await util.getCommonById(proposal.dao);
+
+      await emailClient.sendTemplatedEmail({
+        to: proposer.email,
+        templateKey: 'requestToJoinSubmitted',
+        emailStubs: {
+          name: proposer.displayName,
+          link: util.getCommonLink(common.id),
+          commonName: common.metadata.name
+        }
+      })
+    }
+  })
+
 exports.watchForReputationRedeemed = functions.firestore
   .document('/proposals/{id}')
   .onUpdate(async (change) => {

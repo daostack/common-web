@@ -157,8 +157,8 @@ exports.watchForExecutedProposals = functions.firestore
     if (
       data.name === "FundingRequest" &&
       data.executed !== previousData.executed &&
-      data.executed === true &&
-      data.winningOutcome === 1
+      data.winningOutcome === 1 &&
+      Boolean(data.executed)
     ) {
       const userData = await util.getUserById(data.proposerId);
       let daoData = await util.getCommonById(data.dao);

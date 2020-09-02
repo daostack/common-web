@@ -1,13 +1,13 @@
 const template = `
-  Hello {{name}},
+  Hello {{name}},<br />
   Thank you for Joining Common!
-  
+  <br /><br />
   Your request to join <a href="{{link}}">{{commonName}}</a> has been submitted and is pending approval by the Common members. 
   You will be notified by email once voting has concluded. 
-  
+  <br /><br />
   For more information you can contact us any time using our <a href="{{supportChatLink}}">support chat</a>
-  
-  Common,
+  <br />
+  Common,<br />
   Collaborative Social Action.
 `;
 
