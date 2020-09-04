@@ -10,14 +10,23 @@ const updateDaos = async () => {
     console.log("UPDATE DAOS:");
     console.log("----------------------------------------------------------");
 
+    const allDaos = [];
+    let currDaos = null;
+    let skip = 0;
+
+    do {
+        // eslint-disable-next-line no-await-in-loop
+        currDaos = await arc.daos({ first: 1000, skip: skip * 1000 }, { fetchPolicy: 'no-cache' }).first();
+        allDaos.push(...currDaos);
+        skip++;
+    } while (currDaos && currDaos.length > 0);
+
     const updatedDaos = [];
     const skippedDaos = [];
 
-    const daos = await arc.daos({}, { fetchPolicy: 'no-cache' }).first()
+    console.log(`Found ${allDaos.length} DAOs`);
 
-    console.log(`Found ${daos.length} DAOs`);
-
-    await Promise.all(daos.map(async (dao) => {
+    await Promise.all(allDaos.map(async (dao) => {
         console.log(`UPDATE DAO WITH ID: ${dao.id}`);
 
         const { errorMsg } = await _updateDaoDb(dao);

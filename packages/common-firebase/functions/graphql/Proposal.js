@@ -133,15 +133,23 @@ async function updateProposalById(proposalId, customRetryOptions = {}, blockNumb
 }
 
 async function updateProposals() {
-    // TOOD: this function will be useless once we have > 1000 proposals!
-    // take first: 1000  (this is the maximum, the default is 100)
-    const proposals = await arc.proposals({ first: 1000 }, { fetchPolicy: 'no-cache' }).first()
-    console.log(`found ${proposals.length} proposals`)
+    const allProposals = [];
+    let currProposals = null;
+    let skip = 0;
+    
+    do {
+        // eslint-disable-next-line no-await-in-loop
+        currProposals = await arc.proposals({ first: 1000, skip: skip * 1000 }, { fetchPolicy: 'no-cache' }).first();
+        allProposals.push(...currProposals);
+        skip++;
+    } while (currProposals && currProposals.length > 0);
+    
+    console.log(`found ${allProposals.length} proposals`)
 
     const updatedProposals = [];
     const skippedProposals = [];
 
-    await Promise.all(proposals.map(async proposal => {
+    await Promise.all(allProposals.map(async proposal => {
         try {
             updatedProposals.push(await _updateProposalDb(proposal));
         } catch (e) {
@@ -157,7 +165,7 @@ async function updateProposals() {
             }
         }
     }));
-
+        
     return {
         updatedProposals,
         skippedProposals
