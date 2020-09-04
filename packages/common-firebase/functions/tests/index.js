@@ -4,7 +4,7 @@ const functions = require('firebase-functions');
 const {
   testEmailSending,
   testDaoCreationEmails,
-  testPreauthFailedEmails,
+  testPreauthFailedEmails
   // testEmailProposalsEmails
 } = require('./testEmailSending');
 
@@ -49,11 +49,9 @@ app.get('/sendPreauthFailedEmails', async (req, res) => {
   });
 });
 
-// app.get('/sendMakeProposalsEmails', async (req, res) => {
-//   await processReq(req, res, async () => {
-//     return await testEmailProposalsEmails(req);
-//   })
-// });
+app.get('/backup', async (req, res) => {
+  res.send(await require('@util/backup').backup())
+})
 
 exports.tests = functions
   .runWith(runtimeOptions)
