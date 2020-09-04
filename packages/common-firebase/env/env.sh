@@ -50,7 +50,8 @@ if [[ $1 = "-dev" ]]; then
   exit
 fi
 
-devMD5=`md5sum $devMD5 | awk '{ print $1 }'`
+
+devMD5=`md5sum $devENV | awk '{ print $1 }'`
 currentMD5=`md5sum $currentENV | awk '{ print $1 }'`
 stagingMD5=`md5sum $stagingENV | awk '{ print $1 }'`
 productionMD5=`md5sum $productionENV | awk '{ print $1 }'`
@@ -60,13 +61,13 @@ currentBranch=`git branch --no-color | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
 if [ "$currentMD5" = "$stagingMD5" ]; then
   echo "Current environment is $(tput setaf 2)Staging $(tput sgr0)"
   if [[ $1 = "-check" ]]; then
-    if [[ "$currentBranch" = "dev" ]]; then
+    if [[ "$currentBranch" = "staging" ]]; then
       echo "$(tput setaf 2)Enviroment check ok$(tput sgr0)"
       exit
     fi
     echo "$(tput setaf 1)Enviroment mismatched$(tput sgr0)"
-    echo "Current branch is $(tput setaf 1) $currentBranch $(tput sgr0), you need to either switch environment, or checkout $(tput setaf 1) dev $(tput sgr0) branch"
-    echo "Only$(tput setaf 1) dev $(tput sgr0)branch can deploy to $(tput setaf 1)Staging Environment$(tput sgr0)"
+    echo "Current branch is $(tput setaf 1) $currentBranch $(tput sgr0), you need to either switch environment, or checkout $(tput setaf 1) staging $(tput sgr0) branch"
+    echo "Only$(tput setaf 1) staging $(tput sgr0)branch can deploy to $(tput setaf 1)Staging Environment$(tput sgr0)"
     exit 1
   fi
 elif [ "$currentMD5" = "$productionMD5" ]; then
