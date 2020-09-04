@@ -8,7 +8,51 @@
   "private": true,
   "version": "1.0.0",
   "dependencies": {
+    "@daostack/arc.js": "2.0.0-experimental.48",
+    "@sendgrid/mail": "^7.2.1",
+    "apollo-cache-inmemory": "^1.6.5",
+    "apollo-client": "^2.6.8",
+    "apollo-link": "^1.2.14",
+    "apollo-link-context": "^1.0.20",
+    "apollo-link-error": "^1.1.13",
+    "apollo-link-http": "^1.5.17",
+    "apollo-link-ws": "^1.0.20",
+    "apollo-utilities": "^1.3.3",
+    "axios": "^0.19.0",
+    "cors": "^2.8.5",
+    "dateformat": "^3.0.3",
+    "deepmerge": "^4.2.2",
+    "express": "^4.17.1",
+    "firebase": "^7.14.5",
     "firebase-admin": "~8.10.0",
-    "firebase-functions": "^3.6.2"
+    "firebase-functions": "^3.6.2",
+    "firebase-tools": "^8.4.1",
+    "graphql": "^15.0.0",
+    "graphql-tag": "^2.10.3",
+    "mangopay2-nodejs-sdk": "^1.13.0",
+    "module-alias": "^2.2.2",
+    "node-fetch": "^2.6.0",
+    "promise-retry": "^2.0.1",
+    "subscriptions-transport-ws": "^0.9.16"
+  },
+  "_moduleAliases": {
+    "@env": "./env",
+    "@util": "./util"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.10",
+    "@types/sinon": "^9.0.5",
+    "babel-jest": "^26.3.0",
+    "concurrently": "^5.3.0",
+    "eslint": "^7.8.1",
+    "eslint-plugin-promise": "^4.2.1",
+    "firebase-functions-test": "^0.2.1",
+    "husky": "^4.2.5",
+    "jest": "^26.4.2",
+    "jest-coverage-badges": "^1.1.2",
+    "lint-staged": "^10.2.11",
+    "sinon": "^9.0.3",
+    "ts-jest": "^26.3.0",
+    "typescript": "^4.0.2"
   }
 }
