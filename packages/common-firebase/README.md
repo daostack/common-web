@@ -104,7 +104,7 @@ only for when we are running the tests in CI environment.
 otherwise has to be duplicated in every test suite. Must not be used with custom `beforeAll()` and `afterAll()`. 
 Example usage: 
 
-```
+```javascript
 import { runTest } from '@helpers/runTest';
 
 // Required for the Firebase Setup

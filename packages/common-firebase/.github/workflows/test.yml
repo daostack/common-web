@@ -1,0 +1,29 @@
+name: CloudFunctions Test CI
+
+on: [pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.22.0
+
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install packages
+        run: yarn install
+
+      - name: Setup CI environment
+        run: yarn ci:setup --token ${{ secrets.FIREBASE_TOKEN }}
+
+      - name: Run tests
+        run: yarn ci:test

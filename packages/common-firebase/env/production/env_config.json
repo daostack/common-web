@@ -1,4 +1,5 @@
 {
+  "environment": "production",
   "tests": {
     "enabled": true
   },
