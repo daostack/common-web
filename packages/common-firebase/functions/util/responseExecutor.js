@@ -14,7 +14,7 @@ const responseExecutor = async (action, { req, res, successMessage, errorMessage
             .json(
                 {
                     message: successMessage,
-                    data: actionResult
+                    ...actionResult
                 }
             );
     } catch (e) {
