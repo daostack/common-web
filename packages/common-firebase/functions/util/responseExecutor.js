@@ -24,7 +24,8 @@ const responseExecutor = async (action, { req, res, successMessage, errorMessage
                 {
                     error: {
                         commonMessage: errorMessage,
-                        errorObject: JSON.stringify(e, null, 4)
+                        errorObject: JSON.stringify(e, null, 4),
+                        error: e.toString()
                     },
                     query: req.query
                 });

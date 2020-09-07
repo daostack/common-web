@@ -202,7 +202,8 @@ async function updateDaoById(daoId, customRetryOptions = {}) {
             const currDaosResult = await arc.daos({ where: { id: daoId } }, { fetchPolicy: 'no-cache' }).first();
 
             if (currDaosResult.length === 0) {
-                retryFunc(`We could not find a dao with id "${daoId}" in the graph.`);
+                console.log(arc)
+                retryFunc(`We could not find a dao with id "${daoId}" in the graph at ${arc.graphqlHttpProvider}.`);
             }
             if (!currDaosResult[0].coreState.metadata) {
                 retryFunc(`The dao with id "${daoId}" has no metadata`);
