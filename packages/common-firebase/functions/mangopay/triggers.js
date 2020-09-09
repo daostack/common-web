@@ -31,109 +31,137 @@ exports.watchForExecutedProposals = functions.firestore
       let daoData = await util.getCommonById(data.dao);
       try {
         // this block here up to line 46 can be extracted to a method, same is used in graphql's trigger newDaoCreated
-        if (!daoData.mangopayId) {
-          const { Id: mangopayId } = await createLegalUser(daoData);
-          const { Id: mangopayWalletId } = await createWallet(mangopayId);
-          if (mangopayId && mangopayWalletId) {
-            const daoRef = await util.getDaoRef(daoData.id);
-            await daoRef.update({ mangopayId, mangopayWalletId });
-            daoData = await util.getCommonById(data.dao); // update daoData
-          } else {
-            await emailClient.sendTemplatedEmail({
-              to: 'admin',
-              templateKey: 'adminWalletCreationFailed',
-              emailStubs: {
-                commonName: daoData.name,
-                commonId: daoData.id
-              }
-            })
-          }
-        }
-        const preAuthId = data.description.preAuthId;
+        // Skip mangoPay for now
+        // if (!daoData.mangopayId) {
+        //   const { Id: mangopayId } = await createLegalUser(daoData);
+        //   const { Id: mangopayWalletId } = await createWallet(mangopayId);
+        //   if (mangopayId && mangopayWalletId) {
+        //     const daoRef = await util.getDaoRef(daoData.id);
+        //     await daoRef.update({ mangopayId, mangopayWalletId });
+        //     daoData = await util.getCommonById(data.dao); // update daoData
+        //   } else {
+        //     await emailClient.sendTemplatedEmail({
+        //       to: 'admin',
+        //       templateKey: 'adminWalletCreationFailed',
+        //       emailStubs: {
+        //         commonName: daoData.name,
+        //         commonId: daoData.id
+        //       }
+        //     })
+        //   }
+        // }
+        
         const amount = data.description.funding;
+        await Promise.all([
+          emailClient.sendTemplatedEmail({
+            to: userData.email,
+            templateKey: "userJoinedSuccess",
+            emailStubs: {
+              name: userData.displayName,
+              commonName: daoData.name,
+              commonLink: util.getCommonLink(daoData.id)
+            }
+          }),
+          emailClient.sendTemplatedEmail({
+            to: 'admin',
+            templateKey: 'adminPayInSuccess',
+            emailStubs: {
+              proposalId: data.id
+            }
+          })
+        ]);
+
+        await minterToken(data.dao, amount)
+        await updateDAOBalance(data.dao);
+        return change.after.ref.set(
+          {
+            paymentStatus: 'paid',
+          },
+          { merge: true }
+        );
 
         // @question Ask about this. Maybe make the whole function async?
         // eslint-disable-next-line
-        const { Status, ...paymentInfo } = await payToDAOWallet({
-          preAuthId,
-          Amount: amount,
-          userData,
-          daoData
-        });
-        if (Status === 'SUCCEEDED') {
-          // sendMail(
-          //   env.mail.adminMail,
-          //   'Successfull pay-In',
-          //   `Pay-In successfull for Proposal with ID ${data.id}`
-          // );
-          // sendMail(
-          //   userData.email,
-          //   'Successfull payment',
-          //   `Your request to join has been approved and the amount of ${data.joinAndQuit.funding}$ was charged.`
-          // );
+        // const { Status, ...paymentInfo } = await payToDAOWallet({
+        //   preAuthId,
+        //   Amount: amount,
+        //   userData,
+        //   daoData
+        // });
+        // if (Status === 'SUCCEEDED') {
+        //   // sendMail(
+        //   //   env.mail.adminMail,
+        //   //   'Successfull pay-In',
+        //   //   `Pay-In successfull for Proposal with ID ${data.id}`
+        //   // );
+        //   // sendMail(
+        //   //   userData.email,
+        //   //   'Successfull payment',
+        //   //   `Your request to join has been approved and the amount of ${data.joinAndQuit.funding}$ was charged.`
+        //   // );
 
-          await Promise.all([
-            emailClient.sendTemplatedEmail({
-              to: userData.email,
-              templateKey: "userJoinedSuccess",
-              emailStubs: {
-                name: userData.displayName,
-                commonName: daoData.name,
-                commonLink: util.getCommonLink(daoData.id)
-              }
-            }),
-            emailClient.sendTemplatedEmail({
-              to: 'admin',
-              templateKey: 'adminPayInSuccess',
-              emailStubs: {
-                proposalId: data.id
-              }
-            })
-          ]);
+        //   await Promise.all([
+        //     emailClient.sendTemplatedEmail({
+        //       to: userData.email,
+        //       templateKey: "userJoinedSuccess",
+        //       emailStubs: {
+        //         name: userData.displayName,
+        //         commonName: daoData.name,
+        //         commonLink: util.getCommonLink(daoData.id)
+        //       }
+        //     }),
+        //     emailClient.sendTemplatedEmail({
+        //       to: 'admin',
+        //       templateKey: 'adminPayInSuccess',
+        //       emailStubs: {
+        //         proposalId: data.id
+        //       }
+        //     })
+        //   ]);
 
-          await minterToken(data.dao, amount)
-          await updateDAOBalance(data.dao);
-          return change.after.ref.set(
-            {
-              paymentStatus: 'paid',
-            },
-            { merge: true }
-          );
-        } else {
-          // Template userJoinedButPaymentFailed
-          // Template adminJoinedButFailedPayment
+        //   await minterToken(data.dao, amount)
+        //   await updateDAOBalance(data.dao);
+        //   return change.after.ref.set(
+        //     {
+        //       paymentStatus: 'paid',
+        //     },
+        //     { merge: true }
+        //   );
+        // } else {
+        //   // Template userJoinedButPaymentFailed
+        //   // Template adminJoinedButFailedPayment
 
-          await Promise.all([
-            emailClient.sendTemplatedEmail({
-              to: 'admin',
-              templateKey: 'adminJoinedButPaymentFailed',
-              emailStubs: {
-                commonId: daoData.id,
-                commonLink: util.getCommonLink(daoData.id),
-                commonName: daoData.name,
-                proposalId: data.id,
-                userFullName: userData.displayName,
-                paymentAmount: data.fundingRequest ? data.fundingRequest.amount : 'Unknown',
-                submittedOn: new Date(data.createAt / 1000).toDateString(),
-                log: JSON.stringify({
-                  Status,
-                  ...paymentInfo
-                })
-              }
-            }),
-            emailClient.sendTemplatedEmail({
-              to: userData.email,
-              templateKey: 'userJoinedButFailedPayment',
-              emailStubs: {
-                name: userData.displayName,
-                commonName: daoData.name,
-                commonLink: util.getCommonLink(daoData.id)
-              }
-            })
-          ]);
+        //   await Promise.all([
+        //     emailClient.sendTemplatedEmail({
+        //       to: 'admin',
+        //       templateKey: 'adminJoinedButPaymentFailed',
+        //       emailStubs: {
+        //         commonId: daoData.id,
+        //         commonLink: util.getCommonLink(daoData.id),
+        //         commonName: daoData.name,
+        //         proposalId: data.id,
+        //         userFullName: userData.displayName,
+        //         paymentAmount: data.fundingRequest ? data.fundingRequest.amount : 'Unknown',
+        //         submittedOn: new Date(data.createAt / 1000).toDateString(),
+        //         log: JSON.stringify({
+        //           Status,
+        //           ...paymentInfo
+        //         })
+        //       }
+        //     }),
+        //     emailClient.sendTemplatedEmail({
+        //       to: userData.email,
+        //       templateKey: 'userJoinedButFailedPayment',
+        //       emailStubs: {
+        //         name: userData.displayName,
+        //         commonName: daoData.name,
+        //         commonLink: util.getCommonLink(daoData.id)
+        //       }
+        //     })
+        //   ]);
 
-          throw new Error('Payment failed');
-        }
+        //   throw new Error('Payment failed');
+        // }
       } catch (e) {
         console.error('ERROR EXECUTING PRE AUTH PAYMENT', e);
 
