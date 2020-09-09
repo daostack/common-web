@@ -1,7 +1,4 @@
 import functions from "firebase-functions-test";
-import * as admin from "firebase-admin";
-
-const testEnv = functions();
 
 const mockSet = jest.fn();
 

@@ -1,8 +1,6 @@
-// @ts-ignore
 import { getTemplatedEmail } from '@functions/email';
-
 import { runTest } from '@helpers/runTest';
-const functions = require('@functions');
+import '@functions';
 
 const requestToJoinStubs = {
   name: 'Test Name',
@@ -14,7 +12,7 @@ const requestToJoinPartialStubs = {
   name: 'Test Name'
 };
 
-runTest((funcs) => {
+runTest(() => {
   it('should be successful with all stubs', () => {
     const templatedEmail = getTemplatedEmail('requestToJoinSubmitted', {
       emailStubs: requestToJoinStubs

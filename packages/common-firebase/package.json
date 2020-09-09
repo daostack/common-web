@@ -3,71 +3,51 @@
   "description": "Cloud Functions for Firebase",
   "scripts": {
     "dev": "concurrently -n \"Tests,Emulator\" \"yarn test:watch\" \"yarn emulator\"",
+
     "lint": "eslint .",
+    "logs": "firebase functions:log",
     "serve": "firebase serve --only functions",
     "shell": "firebase functions:shell",
     "start": "yarn emulator",
-    "deploy": "./functions/env/env.sh -check && firebase deploy --only functions",
-    "logs": "firebase functions:log",
-    "deploy:relayer": "./functions/env/env.sh -check && firebase deploy --only functions:relayer",
-    "deploy:notification": "./functions/env/env.sh -check  && firebase deploy --only functions:notification",
-    "deploy:graphql": "./functions/env/env.sh -check && firebase deploy --only functions:graphql",
-    "deploy:mangopay": "./functions/env/env.sh -check && firebase deploy --only functions:mangopay",
+
+    "deploy": "./env/env.sh -check && firebase deploy --only functions",
+    "deploy:relayer": "./env/env.sh -check && firebase deploy --only functions:relayer",
+    "deploy:notification": "./env/env.sh -check  && firebase deploy --only functions:notification",
+    "deploy:graphql": "./env/env.sh -check && firebase deploy --only functions:graphql",
+    "deploy:mangopay": "./env/env.sh -check && firebase deploy --only functions:mangopay",
+
     "emulator": "open -a Safari http://localhost:4000 && firebase emulators:start --import ./firestore/data",
     "emulator:functions": "open -a Safari http://localhost:4000 && firebase emulators:start --only functions",
-    "use:ci": "cd functions && yarn use:ci",
-    "use:dev": "firebase use staging && ./env/env.sh -dev",
-    "use:staging": "firebase use staging && ./env/env.sh -stg",
-    "use:production": "firebase use production && ./env/env.sh -prod",
+
     "data:backup": "./firestore/data.sh -backup",
     "data:update": "./firestore/data.sh -update",
-    "env": "./functions/env/env.sh",
-    "precommit": "lint-staged && yarn test",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --collectCoverage",
+
+    "env": "./env/env.sh",
+
+    "use:ci": "./env/env.sh -dev",
+    "use:dev": "./env/env.sh -dev",
+    "use:staging": "firebase use staging && ./env/env.sh -stg",
+    "use:production": "firebase use production && ./env/env.sh -prod",
+
+    "ci:test": "jest",
     "ci:setup": "yarn use:ci",
-    "ci:test": "yarn test",
-    "test:badges": "yarn test:coverage && jest-coverage-badges --output \"./docs/assests/badges\""
+
+    "test": "yarn use:dev && jest",
+    "test:watch": "yarn test --watch",
+    "test:coverage": "yarn test --collectCoverage",
+    "test:badges": "yarn test:coverage && jest-coverage-badges --output \"./docs/assets/badges\"",
+
+    "precommit": "lint-staged && yarn test"
   },
   "engines": {
     "node": "10"
   },
-  "dependencies": {
-    "@daostack/arc.js": "2.0.0-experimental.48",
-    "@sendgrid/mail": "^7.2.1",
-    "apollo-cache-inmemory": "^1.6.5",
-    "apollo-client": "^2.6.8",
-    "apollo-link": "^1.2.14",
-    "apollo-link-context": "^1.0.20",
-    "apollo-link-error": "^1.1.13",
-    "apollo-link-http": "^1.5.17",
-    "apollo-link-ws": "^1.0.20",
-    "apollo-utilities": "^1.3.3",
-    "axios": "^0.19.0",
-    "cors": "^2.8.5",
-    "dateformat": "^3.0.3",
-    "deepmerge": "^4.2.2",
-    "express": "^4.17.1",
-    "firebase": "^7.14.5",
-    "firebase-admin": "~8.10.0",
-    "firebase-functions": "^3.6.2",
-    "firebase-tools": "^8.4.1",
-    "graphql": "^15.0.0",
-    "graphql-tag": "^2.10.3",
-    "mangopay2-nodejs-sdk": "^1.13.0",
-    "module-alias": "^2.2.2",
-    "node-fetch": "^2.6.0",
-    "promise-retry": "^2.0.1",
-    "subscriptions-transport-ws": "^0.9.16"
-  },
-  "_moduleAliases": {
-    "@env": "./functions/env",
-    "@util": "./functions/util"
-  },
+
   "devDependencies": {
     "@types/jest": "^26.0.10",
     "@types/sinon": "^9.0.5",
+    "@typescript-eslint/eslint-plugin": "^4.1.0",
+    "@typescript-eslint/parser": "^4.1.0",
     "babel-jest": "^26.3.0",
     "concurrently": "^5.3.0",
     "eslint": "^7.8.1",
@@ -82,11 +62,6 @@
     "typescript": "^4.0.2"
   },
   "private": true,
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn precommit"
-    }
-  },
   "workspaces": [
     "functions"
   ]

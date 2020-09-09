@@ -1,6 +1,6 @@
-![Statements Coverage](docs/assests/badges/badge-statements.svg)
-![Functions Coverage](docs/assests/badges/badge-functions.svg)
-![Lines Coverage](docs/assests/badges/badge-lines.svg)
+![Statements Coverage](docs/assets/badges/badge-statements.svg)
+![Functions Coverage](docs/assets/badges/badge-functions.svg)
+![Lines Coverage](docs/assets/badges/badge-lines.svg)
 
 
 # Firebase code in support for common
@@ -41,8 +41,10 @@ Note that this these cloud functions will operate on the production instance if 
 To deploy these functions, you will need some secrets in ./functions/_keys.
 Please ask the administrators for these keys.
 
+
 ```
-firebase deploy --only functions
+yarn deploy:staging
+yarn deploy:production
 ```
 
 ### Development
@@ -108,7 +110,7 @@ Example usage:
 import { runTest } from '@helpers/runTest';
 
 // Required for the Firebase Setup
-const functions = require('@functions'); 
+import '@functions';
 
 runTest((funcs) => {
   it('should do stuff', () => {

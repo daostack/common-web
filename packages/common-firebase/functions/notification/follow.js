@@ -34,7 +34,7 @@ const userInfoTrigger = functions.firestore.document('/users/{userId}')
   .onUpdate(async (change, context) => {
     // eslint-disable-next-line
     Array.prototype.diff = function (a) {
-      return this.filter(function (i) { return a.indexOf(i) < 0; });
+      return this.filter((i) => { return a.indexOf(i) < 0; });
     };
 
     const userId = context.params.userId;
