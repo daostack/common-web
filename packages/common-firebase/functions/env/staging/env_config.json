@@ -13,7 +13,7 @@
   "graphql": {
     "subgraphName": "daostack/v8_11_exp_kovan",
     "graphApiUrl": "https://api.thegraph.com/index-node/graphql",
-    "ipfsDataVersion": "000003"
+    "ipfsDataVersion": "000004"
   },
   "commonInfo": {
     "commonToken": "0xdff3e43710d39d2ba5dda7a8d959ed22cc905b01"
