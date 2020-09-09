@@ -1,6 +1,6 @@
 const db = require('firebase-admin').firestore();
 const emailClient = require('../email');
-const util = require('../util/util');
+const { Utils } = require('../util/util');
 
 const {getTemplatedEmail} = require('../email');
 const {sendMail} = require('../mailer');
@@ -49,7 +49,7 @@ const testDaoCreationEmails = async (req) => {
 
   const newDao = (await db.collection('daos').doc("0x1d169610875b37d39ea71868b75b6160146a2c9d").get()).data();
   const userId = newDao.members[0].userId;
-  const userData = await util.getUserById(userId);
+  const userData = await Utils.getUserById(userId);
   const daoName = newDao.name;
 
   const commonLink = `https://app.common.io/common/${newDao.id}`;
@@ -118,7 +118,7 @@ const testPreauthFailedEmails = async (req) => {
     .data();
 
   const requester = (await db.collection(usersCollection)
-    .doc(proposal.joinAndQuit.proposedMemberId)
+    .doc(proposal.join.proposedMemberId)
     .get())
     .data()
   
@@ -131,7 +131,7 @@ const testPreauthFailedEmails = async (req) => {
       userId: requester.uid,
       userEmail: requester.email,
       userFullName: requester.displayName,
-      paymentAmount: proposal.joinAndQuit.funding,
+      paymentAmount: proposal.join.funding,
       submittedOn: new Date(proposal.executedAt * 1000).toDateString(),
       failureReason: 'Unknown'
     }
@@ -144,8 +144,8 @@ const testPreauthFailedEmails = async (req) => {
 //   const {to, proposalId} = req.query;
 //
 //   const data = (await db.collection(proposalCollection).doc(proposalId || "0x015056f2499f40f09ef36e588adcbead8d06aea64652772ff12d5706bc65ae67").get()).data();
-//   const userData = await util.getUserById(data.proposerId);
-//   let daoData = await util.getCommonById(data.dao);
+//   const userData = await Utils.getUserById(data.proposerId);
+//   let daoData = await Utils.getCommonById(data.dao);
 //
 //   const preAuthId = data.description.preAuthId;
 //   const amount = data.description.funding;
@@ -168,7 +168,7 @@ const testPreauthFailedEmails = async (req) => {
 //     sendMail(
 //       userData.email,
 //       'Successfull payment',
-//       `Your request to join has been approved and the amount of ${data.joinAndQuit.funding}$ was charged.`
+//       `Your request to join has been approved and the amount of ${data.join.funding}$ was charged.`
 //     ),
 //     sendMail(
 //       env.mail.adminMail,

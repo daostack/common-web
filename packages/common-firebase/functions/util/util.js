@@ -19,7 +19,8 @@ const QUERY_LATEST_BLOCK_NUMBER = `query {
   } 
 }`;
 
-module.exports = new class Utils {
+// Arc.js related string constants
+class Utils {
 
   getCommonLink(commonId)  {
     return `https://app.common.io/common/${commonId}`
@@ -111,4 +112,12 @@ module.exports = new class Utils {
     const blockNumber = graphData.data.indexingStatusForCurrentVersion.chains[0].latestBlock.number;
     return Number(blockNumber);
   }
+}
+
+module.exports = {
+  Utils: new Utils(),
+  PROPOSAL_TYPE: {
+    Join: 'Join',
+    FundingRequest: 'FundingRequest',
+  },
 }

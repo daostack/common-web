@@ -11,7 +11,7 @@
     "chainId": 100
   },
   "graphql": {
-    "subgraphName": "daostack/v8_10_exp_xdai",
+    "subgraphName": "daostack/v8_11_exp_xdai",
     "graphApiUrl": "https://api.thegraph.com/index-node/graphql",
     "ipfsDataVersion": "000003"
   },

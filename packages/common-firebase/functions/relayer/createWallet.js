@@ -1,5 +1,5 @@
 const Relayer = require('./relayer');
-const Utils = require('../util/util');
+const { Utils } = require('../util/util');
 
 const createWallet = async req => {
   // eslint-disable-next-line no-useless-catch

@@ -37,7 +37,7 @@
     "test:badges": "yarn test:coverage && jest-coverage-badges --output \"./docs/assests/badges\""
   },
   "dependencies": {
-    "@daostack/arc.js": "2.0.0-experimental.48",
+    "@daostack/arc.js": "2.0.0-experimental.53",
     "@sendgrid/mail": "^7.2.1",
     "apollo-cache-inmemory": "^1.6.5",
     "apollo-client": "^2.6.8",

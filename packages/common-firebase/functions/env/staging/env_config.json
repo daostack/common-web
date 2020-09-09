@@ -11,7 +11,7 @@
     "chainId": 42
   },
   "graphql": {
-    "subgraphName": "daostack/v8_10_exp_kovan",
+    "subgraphName": "daostack/v8_11_exp_kovan",
     "graphApiUrl": "https://api.thegraph.com/index-node/graphql",
     "ipfsDataVersion": "000003"
   },

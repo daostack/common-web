@@ -1,4 +1,4 @@
-const Utils = require('../../util/util');
+const { Utils } = require('../../util/util');
 const Relayer = require('../relayer');
 
 const execTransaction = async req => {

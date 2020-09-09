@@ -1878,7 +1878,7 @@
             "type": "function"
         }
     ],
-    "JoinAndQuit": [
+    "Join": [
         {
             "anonymous": false,
             "inputs": [

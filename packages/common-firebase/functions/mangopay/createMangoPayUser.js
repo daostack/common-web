@@ -1,4 +1,4 @@
-const Utils = require('../util/util');
+const { Utils } = require('../util/util');
 const {
   createUser,
   checkMangopayUserValidity,

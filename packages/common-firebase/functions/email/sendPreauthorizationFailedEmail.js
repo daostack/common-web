@@ -20,7 +20,7 @@ module.exports = async (preAuthId, failureReason = 'Unknown') => {
     .data();
 
   const requester = (await db.collection('users')
-    .doc(proposal.joinAndQuit.proposedMemberId)
+    .doc(proposal.join.proposedMemberId)
     .get())
     .data()
 
@@ -34,7 +34,7 @@ module.exports = async (preAuthId, failureReason = 'Unknown') => {
       userId: requester.uid,
       userEmail: requester.email,
       userFullName: requester.displayName,
-      paymentAmount: proposal.joinAndQuit.funding,
+      paymentAmount: proposal.join.funding,
       submittedOn: new Date(proposal.executedAt * 1000).toDateString()
     }
   });

@@ -2,7 +2,7 @@ const functions = require('firebase-functions');
 const { updateDaoById } = require('../Dao');
 const env = require('@env');
 const { createLegalUser, createWallet } = require('../../mangopay/mangopay');
-const util = require('../../util/util');
+const { Utils, PROPOSAL_TYPE } = require('../../util/util');
 
 const emailClient = require('../../email');
 
@@ -12,16 +12,16 @@ exports.newProposalCreated = functions
   .onCreate(async (snap) => {
     const proposal = snap.data();
 
-    if(proposal.name === 'JoinAndQuit') {
-      const proposer = await util.getUserById(proposal.proposerId);
-      const common = await util.getCommonById(proposal.dao);
+    if(proposal.name === PROPOSAL_TYPE.Join) {
+      const proposer = await Utils.getUserById(proposal.proposerId);
+      const common = await Utils.getCommonById(proposal.dao);
 
       await emailClient.sendTemplatedEmail({
         to: proposer.email,
         templateKey: 'requestToJoinSubmitted',
         emailStubs: {
           name: proposer.displayName,
-          link: util.getCommonLink(common.id),
+          link: Utils.getCommonLink(common.id),
           commonName: common.metadata.name
         }
       })
@@ -34,12 +34,12 @@ exports.watchForReputationRedeemed = functions.firestore
     const data = change.after.data();
     const previousData = change.before.data();
     if (
-      data.type === 'JoinAndQuit' &&
-      previousData.joinAndQuit.reputationMinted === '0' &&
-      data.joinAndQuit.reputationMinted !== '0'
+      data.type === PROPOSAL_TYPE.Join &&
+      previousData.join.reputationMinted === '0' &&
+      data.join.reputationMinted !== '0'
     ) {
       console.log(
-        'JoinAndQuit proposal reputationMinted changed from "0" Initiating DAO update'
+        'Join proposal reputationMinted changed from "0" Initiating DAO update'
       );
       try {
         await updateDaoById(data.dao);
@@ -56,7 +56,7 @@ exports.daoUpdated = functions.firestore
     const oldDao = snap.before.data();
 
     if (dao.register === 'registered' && (dao.register !== oldDao.register)) {
-      const creator = await util.getUserById(dao.members[0].userId);
+      const creator = await Utils.getUserById(dao.members[0].userId);
 
       await emailClient.sendTemplatedEmail({
         to: creator.email,
@@ -64,7 +64,7 @@ exports.daoUpdated = functions.firestore
         emailStubs: {
           name: creator.displayName,
           commonName: dao.name,
-          commonLink: util.getCommonLink(dao.id)
+          commonLink: Utils.getCommonLink(dao.id)
         }
       })
     }
@@ -76,7 +76,7 @@ exports.newDaoCreated = functions.firestore
     let newDao = snap.data();
 
     const userId = newDao.members[0].userId;
-    const userData = await util.getUserById(userId);
+    const userData = await Utils.getUserById(userId);
     const daoName = newDao.name;
 
     try {
@@ -84,7 +84,7 @@ exports.newDaoCreated = functions.firestore
       const { Id: mangopayWalletId } = await createWallet(mangopayId);
 
       if (mangopayId && mangopayWalletId) {
-        const commonLink = util.getCommonLink(newDao.id);
+        const commonLink = Utils.getCommonLink(newDao.id);
 
         console.debug(`Sending admin email for CommonCreated to ${env.mail.adminMail}`);
         console.debug(`Sending user email for CommonCreated to ${userData.email}`);

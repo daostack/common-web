@@ -2,7 +2,7 @@ const { findUserByAddress } = require('../db/userDbService');
 const { Vote } = require('@daostack/arc.js');
 const { arc, retryOptions, ipfsDataVersion } = require('../settings')
 const promiseRetry = require('promise-retry');
-const Utils = require('../util/util');
+const { Utils } = require('../util/util');
 const { UnsupportedVersionError } = require('../util/error');
 const { updateProposal } = require('../db/proposalDbService');
 
@@ -72,7 +72,7 @@ async function _updateProposalDb(proposal) {
         stage: s.stage,
         stageStr: s.stage.toString(),
         type: s.type,
-        joinAndQuit: {
+        join: {
             proposedMemberAddress: s.proposedMember || null,
             proposedMemberId: proposedMemberId,
             funding: s.funding && s.funding.toString() || null,

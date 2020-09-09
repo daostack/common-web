@@ -8,7 +8,7 @@ const {
 
 const { updateDAOBalance } = require("../db/daoDbService");
 const { minterToken } = require('../relayer/util/minterToken')
-const util = require('../util/util');
+const { Utils } = require('../util/util');
 
 const emailClient = require('../email');
 const sendPreauthorizationFailedEmail = require('../email/sendPreauthorizationFailedEmail');
@@ -27,8 +27,8 @@ exports.watchForExecutedProposals = functions.firestore
       console.log(
         'Proposal EXECUTED and WINNING OUTCOME IS 1 -> INITIATING PAYMENT'
       );
-      const userData = await util.getUserById(data.proposerId);
-      let daoData = await util.getCommonById(data.dao);
+      const userData = await Utils.getUserById(data.proposerId);
+      let daoData = await Utils.getCommonById(data.dao);
       try {
         // this block here up to line 46 can be extracted to a method, same is used in graphql's trigger newDaoCreated
         // Skip mangoPay for now
@@ -189,8 +189,8 @@ exports.watchForExecutedProposals = functions.firestore
       data.winningOutcome === 1 &&
       Boolean(data.executed)
     ) {
-      const userData = await util.getUserById(data.proposerId);
-      let daoData = await util.getCommonById(data.dao);
+      const userData = await Utils.getUserById(data.proposerId);
+      let daoData = await Utils.getCommonById(data.dao);
 
       // Template fundingRequestAccepted (admin & user)
       await Promise.all([
@@ -209,7 +209,7 @@ exports.watchForExecutedProposals = functions.firestore
             userId: userData.uid,
             userFullName: userData.displayName,
             commonName: daoData.name,
-            commonLink: util.getCommonLink(daoData.id),
+            commonLink: Utils.getCommonLink(daoData.id),
             commonId: daoData.id,
             paymentAmount: data.fundingRequest.amount,
             submittedOn: new Date(data.createdAt / 1000).toDateString(),
