@@ -11,7 +11,7 @@ on:
 jobs:
   eslint:
     runs-on: ubuntu-latest
-    steps:  
+    steps:
       - name: Checkout files
         uses: actions/checkout@v2
 
@@ -20,8 +20,10 @@ jobs:
         with:
           node-version: '10.22'
 
-      - name: Install yarn
-        run: npm install -g yarn
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install dependencies
         run: yarn

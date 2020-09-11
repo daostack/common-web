@@ -1,4 +1,5 @@
-require('module-alias/register')
+require('module-alias/register');
+
 const admin = require('firebase-admin');
 const { databaseURL } = require('./settings');
 const {env} = require('@env');

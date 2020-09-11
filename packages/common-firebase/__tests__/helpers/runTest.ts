@@ -2,15 +2,16 @@ import * as sinon from 'sinon';
 import * as admin from 'firebase-admin';
 import functionsTest from 'firebase-functions-test';
 
+import functions from '@functions';
+
 const test = functionsTest();
 
 export const runTest = (testsFunc: (functions: any) => any): void => {
   describe('Cloud Functions', () => {
-    let functions, adminInitStub;
+    let adminInitStub;
 
     beforeAll(() => {
       adminInitStub = sinon.stub(admin, 'initializeApp');
-      functions = require('@functions')
     });
 
     afterAll(() => {
