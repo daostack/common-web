@@ -24,7 +24,6 @@
     "use:dev": "./env/env.sh -dev",
     "use:staging": "firebase use staging && ./env/env.sh -stg",
     "use:production": "firebase use production && ./env/env.sh -prod",
-    "ci:testddsdfsf": "start-server-and-test 'yarn emulator:headless' 4000 'yarn test'",
     "ci:test": "yarn test",
     "ci:setup": "yarn use:ci",
     "test": "jest",
@@ -37,6 +36,7 @@
     "node": "10"
   },
   "devDependencies": {
+    "@types/express": "^4.17.8",
     "@types/jest": "^26.0.10",
     "@types/sinon": "^9.0.5",
     "@typescript-eslint/eslint-plugin": "^4.1.0",
