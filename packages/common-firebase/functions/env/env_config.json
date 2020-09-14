@@ -35,7 +35,7 @@
     "daoStackWalletId": "83405793"
   },
   "mail": {
-    "sender": "staging@common.io",
-    "adminMail": "jelle@daostack.io"
+    "sender": "support@common.io",
+    "adminMail": "support@common.io"
   }
 }

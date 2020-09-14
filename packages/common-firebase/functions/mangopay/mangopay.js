@@ -57,7 +57,7 @@ const createLegalUser = async (daoData) => {
   const legalUserObject = {
     LegalPersonType: 'ORGANIZATION',
     Name: daoData.name,
-    Email: 'jelle@daostack.io',
+    Email: 'support@daostack.io',
     LegalRepresentativeBirthday: -258443002, 
     LegalRepresentativeCountryOfResidence: 'IT', 
     LegalRepresentativeNationality: 'IT',
