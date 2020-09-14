@@ -11,7 +11,7 @@
     "chainId": 42
   },
   "graphql": {
-    "subgraphName": "daostack/v8_10_exp_kovan",
+    "subgraphName": "daostack/v8_11_exp_kovan",
     "graphqlHttpProvider": "https://api.thegraph.com/subgraphs/name/daostack/v8_11_exp_kovan",
     "graphqlWsProvider": "wss://api.thegraph.com/subgraphs/name/daostack/v8_11_exp_kovan",
     "graphApiUrl": "https://api.thegraph.com/index-node/graphql",
@@ -35,7 +35,7 @@
     "daoStackWalletId": "83405793"
   },
   "mail": {
-    "sender": "support@common.io",
+    "sender": "staging@common.io",
     "adminMail": "support@common.io"
   }
 }
