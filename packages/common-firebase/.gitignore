@@ -73,3 +73,5 @@ functions/_keys/*
 functions/node_modules/
 .DS_Store
 firestore/backup
+
+functions/env/env_config.json
