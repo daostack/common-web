@@ -16,6 +16,14 @@ exports.newProposalCreated = functions
       const proposer = await Utils.getUserById(proposal.proposerId);
       const common = await Utils.getCommonById(proposal.dao);
 
+      if(!common) {
+        throw new Error(`
+          New proposal was created from user (${proposal.proposerId}) 
+          in common (${proposal.dao}), but the common was not found. 
+          Created proposal id is ${proposal.id}
+        `);
+      }
+
       await emailClient.sendTemplatedEmail({
         to: proposer.email,
         templateKey: 'requestToJoinSubmitted',
