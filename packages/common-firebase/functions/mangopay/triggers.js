@@ -60,7 +60,7 @@ exports.watchForExecutedProposals = functions.firestore
             emailStubs: {
               name: userData.displayName,
               commonName: daoData.name,
-              commonLink: util.getCommonLink(daoData.id)
+              commonLink: Utils.getCommonLink(daoData.id)
             }
           }),
           emailClient.sendTemplatedEmail({
@@ -72,6 +72,7 @@ exports.watchForExecutedProposals = functions.firestore
           })
         ]);
 
+        console.log(`Minting ${amount} tokens to ${data.dao}`)
         await minterToken(data.dao, amount)
         await updateDAOBalance(data.dao);
         return change.after.ref.set(
