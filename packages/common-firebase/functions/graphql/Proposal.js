@@ -5,6 +5,7 @@ const promiseRetry = require('promise-retry');
 const { Utils } = require('../util/util');
 const { UnsupportedVersionError } = require('../util/error');
 const { updateProposal } = require('../db/proposalDbService');
+const BN = require('bn.js');
 
 const parseVotes = (votesArr) => {
     return votesArr.map(({ coreState: { voter, outcome } }) => { return { voter, outcome } })
@@ -50,6 +51,7 @@ async function _updateProposalDb(proposal) {
         throw new UnsupportedVersionError(`Skipping this proposal ${s.id} as it has an unsupported version ${proposalDataVersion} (should be >= ${ipfsDataVersion})`);
     }
 
+    const thousand = new BN(1000);
     // @refactor
     const doc = {
         boostedAt: s.boostedAt,
@@ -61,8 +63,8 @@ async function _updateProposalDb(proposal) {
         executed: s.executed,
         executedAt: s.executedAt,
         expiresInQueueAt: s.expiresInQueueAt,
-        votesFor: s.votesFor.toNumber() / 1000,
-        votesAgainst: s.votesAgainst.toNumber() / 1000,
+        votesFor: s.votesFor.div(thousand).toString(),
+        votesAgainst: s.votesAgainst.div(thousand).toString(),
         id: s.id,
         name: s.name,
         preBoostedAt: s.preBoostedAt,
