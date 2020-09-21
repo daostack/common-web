@@ -3,12 +3,12 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-const { getPublicSettings } = require('./Settings');
+const { getPublicSettings } = require('./settings');
 
-const { updateDaos, updateDaoById } = require('./Dao');
-const { updateProposals, updateProposalById } = require('./Proposal');
-const { updateUsers } = require('./User');
-const { updateVotes } = require('./Vote');
+const { updateDaos, updateDaoById } = require('./dao');
+const { updateProposals, updateProposalById } = require('./proposal');
+const { updateUsers } = require('./user');
+const { updateVotes } = require('./vote');
 
 const { updateDAOBalance } = require('../db/daoDbService');
 

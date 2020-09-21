@@ -1,6 +1,6 @@
 const Relayer = require('./relayer');
 const { Utils } = require('../util/util');
-const { updateProposalById } = require('../graphql/Proposal');
+const { updateProposalById } = require('../graphql/proposal');
 const ethers = require('ethers');
 const { provider } = require('../settings.js');
 const { cancelPreauthorizedPayment } = require('../mangopay/mangopay');

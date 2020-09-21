@@ -1,5 +1,5 @@
 const functions = require('firebase-functions');
-const { updateDaoById } = require('../Dao');
+const { updateDaoById } = require('../dao');
 const { createLegalUser, createWallet } = require('../../mangopay/mangopay');
 const { Utils, PROPOSAL_TYPE } = require('../../util/util');
 const { env } = require('@env');

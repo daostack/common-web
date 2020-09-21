@@ -3,10 +3,10 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { responseExecutor, responseCreateExecutor } = require('../util/responseExecutor');
-const { createCommon, createCommonTransaction } = require('./Common')
-const { createRequestToJoinTransaction, createRequestToJoin  } = require('./RequestToJoin')
-const { createVoteProposalTransaction, voteProposal  } = require('./VoteProposal')
-const { createFundingProposalTransaction, createFundingProposal } = require('./FundingProposal');
+const { createCommon, createCommonTransaction } = require('./common')
+const { createRequestToJoinTransaction, createRequestToJoin  } = require('./requestToJoin')
+const { createVoteProposalTransaction, voteProposal  } = require('./voteProposal')
+const { createFundingProposalTransaction, createFundingProposal } = require('./fundingProposal');
 
 const runtimeOptions = {
   timeoutSeconds: 540, // Maximum time 9 mins

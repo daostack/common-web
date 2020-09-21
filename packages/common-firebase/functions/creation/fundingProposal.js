@@ -2,7 +2,7 @@
 const { env } = require('@env');
 const { Utils } = require('../util/util');
 const { IpfsClient, provider, arc, PROPOSAL_TYPE } = require('../settings')
-const { updateProposalById } = require('../graphql/Proposal');
+const { updateProposalById } = require('../graphql/proposal');
 const { first } = require('rxjs/operators');
 const ethers = require('ethers');
 const { execTransaction } = require('../relayer/util/execTransaction');

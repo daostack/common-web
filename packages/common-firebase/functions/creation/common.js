@@ -5,7 +5,7 @@ const DAOFactoryABI = require('@daostack/common-factory/abis/DAOFactory');
 const {getForgeOrgData} = require('@daostack/common-factory');
 const { execTransaction } = require('../relayer/util/execTransaction');
 const { Utils } = require('../util/util');
-const { updateDaoById } = require('../graphql/Dao')
+const { updateDaoById } = require('../graphql/dao')
 
 const createCommonTransaction = async (req) => {
   // eslint-disable-next-line no-useless-catch
