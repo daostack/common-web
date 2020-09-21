@@ -1,10 +1,8 @@
 const { mangopayClient } = require('../util/mangoPay');
-const admin = require('firebase-admin');
-const db = admin.firestore();
 const {env} = require('@env');
 const ethers = require('ethers');
 const abi = require('../relayer/util/abi.json');
-const { provider } = require('../settings');
+const { provider, db } = require('../settings');
 const COLLECTION_NAME = 'daos';
 
 async function updateDao(daoId, doc) {

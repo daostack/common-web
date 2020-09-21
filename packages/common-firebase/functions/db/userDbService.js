@@ -1,7 +1,4 @@
-
-const admin = require('firebase-admin');
-const db = admin.firestore();
-
+const { db } = require('../settings.js');
 const COLLECTION_NAME = 'users';
 
 async function findUserByAddress(ethereumAddress, key = 'safeAddress') {

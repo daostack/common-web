@@ -14,10 +14,13 @@
     "graphqlHttpProvider": "https://api.thegraph.com/subgraphs/name/daostack/v8_11_exp_xdai",
     "graphqlWsProvider": "wss://api.thegraph.com/subgraphs/name/daostack/v8_11_exp_xdai",
     "graphApiUrl": "https://api.thegraph.com/index-node/graphql",
+    "ipfsProvider": "https://api.thegraph.com/ipfs-daostack/api/v0",
     "ipfsDataVersion": "000004"
   },
   "commonInfo": {
-    "commonToken": "0x2ea0be07dfc0357f40884365f2c9cfd2a36d4a6e"
+    "commonToken": "0x2ea0be07dfc0357f40884365f2c9cfd2a36d4a6e",
+    "memberReputation": 1000,
+    "arcVersion": "0.1.2-rc.6"
   },
   "biconomy": {
     "createProxy": "5ecb88b02d7ac07924bcd639",

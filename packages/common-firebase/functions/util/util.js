@@ -1,8 +1,11 @@
 const admin = require('firebase-admin');
-const { provider } = require('../settings')
+const { provider, arc } = require('../settings')
 const { CommonError, CFError} = require('./error')
 const fetch = require('node-fetch');
 const { env } = require('@env');
+const ethers = require('ethers');
+const ABI = require('../relayer/util/abi.json');
+const gql = require('graphql-tag');
 
 const QUERY_LATEST_BLOCK_NUMBER = `query {
   indexingStatusForCurrentVersion(subgraphName: "${env.graphql.subgraphName}") { 
@@ -19,7 +22,6 @@ const QUERY_LATEST_BLOCK_NUMBER = `query {
   } 
 }`;
 
-// Arc.js related string constants
 class Utils {
 
   getCommonLink(commonId)  {
@@ -111,6 +113,36 @@ class Utils {
     const graphData = await response.json();
     const blockNumber = graphData.data.indexingStatusForCurrentVersion.chains[0].latestBlock.number;
     return Number(blockNumber);
+  }
+
+  async createSafeTransactionHash (myWallet, toAddress, value, data = '0x', useNextNonce = false) {
+    try {
+      const masterCopyContract = new ethers.Contract(
+        myWallet,
+        ABI.MasterCopy,
+        provider,
+      );
+      const zeroAddress = ethers.constants.AddressZero;
+      let nonce = await masterCopyContract.nonce();
+      nonce = useNextNonce ? nonce.add(1) : nonce;
+      const SAFE_TX_TYPEHASH = '0xbb8310d486368db6bd6f849402fdd73ad53d316b5a4b2644ad6efe0f941286d8';
+      const DOMAIN_SEPARATOR_TYPEHASH = '0x035aff83d86937d35b32e04f0ddc6ff469290eef2f1b692d8a815c89404d4749';
+      const domainSeperator = ethers.utils.keccak256(ethers.utils.defaultAbiCoder.encode(['bytes32', 'address'], [DOMAIN_SEPARATOR_TYPEHASH, myWallet]));
+      let mySafeTxHash = ethers.utils.keccak256(
+        ethers.utils.defaultAbiCoder.encode(
+          ['bytes32', 'address', 'uint256', 'bytes32', 'uint8', 'uint256', 'uint256', 'uint256', 'address', 'address', 'uint'],
+          [SAFE_TX_TYPEHASH, toAddress, value, ethers.utils.keccak256(data), 0, 0, 0, 0, zeroAddress, zeroAddress, nonce]
+        )
+      );
+      let myTxHash = ethers.utils.solidityKeccak256(
+        ['bytes1', 'bytes1', 'bytes32', 'bytes32'],
+        ['0x19', '0x01', domainSeperator, mySafeTxHash]
+      );
+      return myTxHash;
+    } catch (err) {
+      logger.log(err);
+      throw (err);
+    }
   }
 }
 

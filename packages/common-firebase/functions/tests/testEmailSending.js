@@ -1,4 +1,4 @@
-const db = require('firebase-admin').firestore();
+const { db } = require('../settings.js');
 const emailClient = require('../email');
 const { Utils } = require('../util/util');
 

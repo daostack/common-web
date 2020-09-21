@@ -15,14 +15,15 @@
     "graphqlHttpProvider": "https://api.thegraph.com/subgraphs/name/daostack/v8_11_exp_kovan",
     "graphqlWsProvider": "wss://api.thegraph.com/subgraphs/name/daostack/v8_11_exp_kovan",
     "graphApiUrl": "https://api.thegraph.com/index-node/graphql",
+    "ipfsProvider": "https://api.thegraph.com/ipfs-daostack/api/v0",
     "ipfsDataVersion": "000004"
   },
   "commonInfo": {
-    "commonToken": "0xdff3e43710d39d2ba5dda7a8d959ed22cc905b01"
+    "commonToken": "0xdff3e43710d39d2ba5dda7a8d959ed22cc905b01",
+    "memberReputation": 1000,
+    "arcVersion": "0.1.2-rc.6"
   },
   "biconomy": {
-    "apiKey": "05nK2y2MH.10202825-89cc-4d5a-b59d-b014c278b24d",
-    "whitelistKey": "a43c2dff-3b51-4ae0-b0ee-92b00cb425a2",
     "createProxy": "5eac2a2d-c157-487a-8ff7-c4f6f1f9292a",
     "execTransaction": "e921df41-71bf-4241-9389-1a1f8f6e993c",
     "create2Proxy": "1b4cbfd3-bb38-4f84-8b13-38bc488335cf",

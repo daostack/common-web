@@ -1,6 +1,5 @@
 const emailClient = require('./index');
-
-const db = require('firebase-admin').firestore();
+const { db } = require('../settings.js');
 const { env } = require('@env');
 
 module.exports = async (preAuthId, failureReason = 'Unknown') => {
