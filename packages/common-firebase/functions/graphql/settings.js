@@ -27,7 +27,8 @@ const getPublicSettings = (req) => {
       subgraph: graphql.subgraphName,
       httpProvider: graphql.graphqlHttpProvider,
       wsProvider: graphql.graphqlWsProvider,
-      ipfsDataVersion: graphql.ipfsDataVersion
+      ipfsDataVersion: graphql.ipfsDataVersion,
+      ipfsProvider: graphql.ipfsProvider
     }
   };
 };
