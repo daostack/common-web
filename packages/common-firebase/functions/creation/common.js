@@ -31,7 +31,7 @@ const createCommonTransaction = async (req) => {
       VERSION: IPFS_DATA_VERSION, // just some alphanumberic marker  that is useful for understanding what our data is shaped like
     };
     const opts = {...defaultOptions, ...data};
-    console.log('saving data on ipfs: ', opts);
+    console.log('saving data on ipfs');
     const ipfsHash = await IpfsClient.addAndPinString(JSON.stringify(opts));
     console.log('ipfsHash ->', ipfsHash);
 
