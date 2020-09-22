@@ -32,19 +32,15 @@ const retryOptions = {
     randomize: false, //Randomizes the timeouts by multiplying with a factor between 1 to 2. Default is false.
 };
 
-// const provider = new ethers.providers.JsonRpcProvider(jsonRpcProvider);
-const provider = jsonRpcProvider
+const provider = new ethers.providers.JsonRpcProvider(jsonRpcProvider);
+const minterWallet = new ethers.Wallet(env.commonInfo.pk, provider);
 
 const arc = new Arc({
   graphqlHttpProvider: graphHttpLink,
   graphqlWsProvider: graphwsLink,
   ipfsProvider: ipfsProvider,
-  web3Provider: provider,
+  web3Provider: minterWallet,
 });
-
-ethers.Contract.prototype.addProvider = async function() {
-  return new Contract(this.address, this.interface.abi, arc.web3Provider);
-};
 
 Arc.prototype.fetchAllContracts = async function (useCache) {
   const contracts = await db.collection('arc').doc('contract').get();

@@ -10,8 +10,7 @@ const { execTransaction } = require('../relayer/util/execTransaction');
 const fundingCheck = async (daoId, safeAddress) => {
 
   const dao = arc.dao(daoId);
-  const oldDaoContract = await arc.getContract(daoId);
-  const daoContract = await oldDaoContract.addProvider();
+  const daoContract = await arc.getContract(daoId);
 
   // lets first check some sanity things about the dao
   const joinPlugin = await dao.plugin({ where: { name: PROPOSAL_TYPE.Join } });
@@ -150,8 +149,7 @@ const createFundingProposal = async (req) => {
 
     await waitForSetFlagTx();
     console.log('--- Execute fundingRequestTx ---');
-    const oldDaoContract = await arc.getContract(daoId);
-    const daoContract = await oldDaoContract.addProvider();
+    const daoContract = await arc.getContract(daoId);
     const fundingGoalReachedFlag = await daoContract.db('FUNDED_BEFORE_DEADLINE');
     if (fundingGoalReachedFlag !== 'TRUE') {
       throw Error('funding goal is not reached yet - cannot create a funding request');

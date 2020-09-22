@@ -37,8 +37,7 @@ const createVoteProposalTransaction = async (req ) => {
       const dao = proposalState.dao.entity;
       const daoState = await dao.fetchState();
       const reputation = await daoState.reputation.entity;
-      const oldReputationContract = await reputation.contract();
-      const reputationContract = await oldReputationContract.addProvider();
+      const reputationContract = await reputation.contract();
       const reputationBalance = await reputationContract.balanceOf(voter);
       if (Number(reputationBalance) === 0) {
         throw Error(`Voting failed because you (${voter}) are not a member of this DAO (${dao.id}) - rep: ${reputationBalance}`);
