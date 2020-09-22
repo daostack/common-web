@@ -140,7 +140,7 @@ class Utils {
       );
       return myTxHash;
     } catch (err) {
-      logger.log(err);
+      console.log(err);
       throw (err);
     }
   }
