@@ -42,7 +42,6 @@ graphql.get('/update-daos', async (req, res) => {
       errorMessage: `Unable to update Daos!`
     }
   );
-
 });
 
 graphql.get('/update-dao-by-id', async (req, res) => {
@@ -102,6 +101,7 @@ graphql.get('/update-users', async (req, res) => {
     }
   );
 });
+
 graphql.get('/update-votes', async (req, res) => {
   responseExecutor(
     async () => {

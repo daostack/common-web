@@ -130,7 +130,7 @@ async function updateProposalById(proposalId, customRetryOptions = {}, blockNumb
 
     const updatedDoc = await _updateProposalDb(proposal);
 
-    console.log("UPDATED PROPOSAL: ", proposal.id);
+    console.log("updated proposal", proposal.id);
     return updatedDoc;
 }
 

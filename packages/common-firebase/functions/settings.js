@@ -47,10 +47,10 @@ Arc.prototype.fetchAllContracts = async function (useCache) {
   if (contracts.exists && useCache) {
     const allContractInfos = JSON.parse(contracts.data().allContractInfos);
     this.setContractInfos(allContractInfos);
-    console.log('ARC is uing cache');
     return
   }
 
+  console.log('Fetching contratInfos from the graph');
   let allContractInfos = [];
   let contractInfos = null;
   let skip = 0;

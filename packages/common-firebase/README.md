@@ -84,6 +84,15 @@ There are API endpoint for testing the functionality of the application. They ar
     
 ## Testing
 
+### set up the environment
+
+The cloud functions are communicating with a variety of services. Some of them are mocked, others 
+are running in a docker containers. To start these run 
+
+`docker-compose up`
+
+### Running the tests
+
 For testing we are using the Jest testing framework. All tests are written in TypeScript
 and must be ending with either *.spec.ts or *.test.ts. The testing commands are:
 

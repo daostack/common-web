@@ -50,6 +50,7 @@ const createCommonTransaction = async (req) => {
       ARC_VERSION,
     );
 
+    console.log('Calling DAOFactory.forgeOrg(...)');
     const args = {
       DAOFactoryInstance: daoFactoryInfo.address,
       orgName: opts.name,
@@ -65,13 +66,11 @@ const createCommonTransaction = async (req) => {
       deadline: opts.fundingGoalDeadline,
       metaData: ipfsHash,
     };
-    console.log('Calling DAOFactory.forgeOrg(...)', args);
     const params = getForgeOrgData(args);
     const encodedData = daoFactoryContract.interface.functions.forgeOrg.encode(params)
 
     const safeTxHash = await Utils.createSafeTransactionHash(userData.safeAddress, daoFactoryContract.address, 0, encodedData);
-    console.log('safeTxHash -->', safeTxHash);
-
+    console.log(`createCommonTransaction done`)
     return { 
       encodedData: encodedData,
       toAddress: daoFactoryContract.address,

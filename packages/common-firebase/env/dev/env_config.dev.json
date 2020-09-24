@@ -14,7 +14,7 @@
     "graphqlHttpProvider": "http://127.0.0.1:8000/subgraphs/name/daostack",
     "graphqlWsProvider": "http://127.0.0.1:8000/subgraphs/name/daostack",
     "graphApiUrl": "http://127.0.0.1:8000/subgraphs/name",
-    "ipfsDataVersion": "00003"
+    "ipfsDataVersion": "00004"
   },
   "commonInfo": {
     "commonToken": ""
