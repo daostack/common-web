@@ -19,7 +19,7 @@ const responseExecutor = async (action, { req, res, successMessage, errorMessage
                 }
             );
     } catch (e) {
-        console.error(e)
+        console.error(errorMessage, e)
         res.status(HTTP_STATUS_CODE.INTERNAL_SERVER)
             .json(
                 {
