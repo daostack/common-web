@@ -123,7 +123,7 @@ exports.newDaoCreated = functions.firestore
               description: newDao.metadata.description,
               about: newDao.metadata.byline,
               paymentType: 'one-time',
-              minContribution: newDao.minFeeToJoin
+              minContribution: newDao.metadata.minimum
             }
           })
         ]);
