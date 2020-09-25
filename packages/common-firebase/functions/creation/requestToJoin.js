@@ -52,11 +52,12 @@ const createRequestToJoinTransaction = async (req) => {
     // if (!data.funding) {
     //   throw Error('"funding" argument must be given');
     // }
-    const newData = {...data, VERSION: IPFS_DATA_VERSION};
+    const ipfsdata = {...data, VERSION: IPFS_DATA_VERSION};
+
     console.log('saving ipfs data');
     // not working :-()
     // ipfsHash = await arc.saveIPFSData(data);
-    const ipfsHash = await IpfsClient.addAndPinString(JSON.stringify(newData));
+    const ipfsHash = await IpfsClient.addAndPinString({description: JSON.stringify(ipfsdata)});
     console.log('ipfsHash', ipfsHash);
 
     const params = {

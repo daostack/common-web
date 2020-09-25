@@ -12,7 +12,7 @@ module.exports = class IPFSApiClient {
 
   async addString(data) {
     const bodyFormData = new FormData();
-    bodyFormData.append('file', data);
+    bodyFormData.append('file', JSON.stringify(data));
     const res = await axios.post(`${this.baseUrl}/add`, bodyFormData, {
       headers: bodyFormData.getHeaders()
     });

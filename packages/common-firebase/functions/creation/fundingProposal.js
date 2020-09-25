@@ -1,7 +1,7 @@
 // const Utils = require('../util/util');
 const { env } = require('@env');
 const { Utils } = require('../util/util');
-const { IpfsClient, provider, arc, PROPOSAL_TYPE } = require('../settings')
+const { IpfsClient, provider, arc, PROPOSAL_TYPE } = require('../settings');
 const { updateProposalById } = require('../graphql/proposal');
 const { first } = require('rxjs/operators');
 const ethers = require('ethers');
@@ -90,8 +90,8 @@ const createFundingProposalTransaction = async (req) => {
     }
 
     // TODO: check if the user is a member
-    const ipfsdata = { ...data, VERSION: IPFS_DATA_VERSION };
-    const ipfsHash = await IpfsClient.addAndPinString(JSON.stringify(ipfsdata));
+    const ipfsdata = {...data, VERSION: IPFS_DATA_VERSION};
+    const ipfsHash = await IpfsClient.addAndPinString({description: JSON.stringify(ipfsdata)});
     console.log('ipfsHash', ipfsHash);
 
     const params = {
