@@ -32,7 +32,7 @@ const createCommonTransaction = async (req) => {
     };
     const opts = {...defaultOptions, ...data};
     console.log('saving data on ipfs');
-    const ipfsHash = await IpfsClient.addAndPinString(JSON.stringify(opts));
+    const ipfsHash = await IpfsClient.addAndPinString(opts);
     console.log('ipfsHash ->', ipfsHash);
 
     const daoFactoryInfo = arc.getContractInfoByName(
