@@ -4,7 +4,14 @@
     "enabled": true
   },
   "firebase": {
-    "databaseURL": ""
+    "databaseURL": "",
+    "functions": {
+      "endpoint": "http://127.0.0.1:5003",
+      "endpoints": {
+        "create": "http://127.0.0.1:5003/common-staging-50741/us-central1/create",
+        "tests": "http://127.0.0.1:5003/common-staging-50741/us-central1/tests"
+      }
+    }
   },
   "blockchain": {
     "jsonRpcProvider": "http://127.0.0.1:8545",
@@ -14,10 +21,13 @@
     "graphqlHttpProvider": "http://127.0.0.1:8000/subgraphs/name/daostack",
     "graphqlWsProvider": "http://127.0.0.1:8000/subgraphs/name/daostack",
     "graphApiUrl": "http://127.0.0.1:8000/subgraphs/name",
+    "ipfsProvider": "http://127.0.0.1:5001/api/v0",
     "ipfsDataVersion": "00004"
   },
   "commonInfo": {
-    "commonToken": ""
+    "commonToken": "0xdff3e43710d39d2ba5dda7a8d959ed22cc905b01",
+    "memberReputation": 1000,
+    "arcVersion": "0.1.2-rc.6"
   },
   "biconomy": {
     "apiKey": "",

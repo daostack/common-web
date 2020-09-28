@@ -14,8 +14,20 @@ const createCommonTransaction = async (req) => {
       idToken,
       data
     } = req.body;
-    const uid = await Utils.verifyId(idToken);
-    const userData = await Utils.getUserById(uid);
+
+    let uid, userData;
+
+    if(env.environment === 'dev') {
+      if(!data) {
+        throw new Error('Cannot create a common without the needed data!')
+      }
+
+      userData = req.body.user;
+      userData.safeAddress = data.founderAddresses;
+    } else {
+      uid = await Utils.verifyId(idToken);
+      userData = await Utils.getUserById(uid);
+    }
 
     const MEMBER_REPUTATION = env.commonInfo.memberReputation;
     const COMMONTOKENADDRESS = env.commonInfo.commonToken;
@@ -77,7 +89,7 @@ const createCommonTransaction = async (req) => {
       safeTxHash: safeTxHash
      }
   } catch (error) {
-    throw error; 
+    throw error;
   }
 }
 
@@ -110,6 +122,9 @@ const createCommon = async (req) => {
     const events = Utils.getTransactionEvents(daoFactoryContract.interface, receipt);
     const newOrgEvent = events.NewOrg;
     const daoId = newOrgEvent._avatar;
+
+    console.log("We are here");
+
     await updateDaoById(daoId, { retries: 6 });
     return { daoId }
 };

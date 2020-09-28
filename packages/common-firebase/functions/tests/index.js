@@ -53,6 +53,10 @@ app.get('/backup', async (req, res) => {
   res.send(await require('@util/backup').backup())
 })
 
+app.get('/ping', (req, res) => {
+  res.send('pong');
+});
+
 exports.tests = functions
   .runWith(runtimeOptions)
   .https.onRequest(app);
