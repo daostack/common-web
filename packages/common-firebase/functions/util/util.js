@@ -1,5 +1,5 @@
 const admin = require('firebase-admin');
-const { provider, arc } = require('../settings')
+const { provider } = require('../settings')
 const { CommonError, CFError} = require('./error')
 const fetch = require('node-fetch');
 const { env } = require('@env');

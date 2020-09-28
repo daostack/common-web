@@ -42,6 +42,17 @@ const arc = new Arc({
   web3Provider: minterWallet,
 });
 
+const getArc = async () => {
+  if (arc.contractInfos && arc.contractInfos.length > 0) {
+    console.log("<-- ARC END 1 ");
+    return arc;
+  }
+  else {
+    await arc.fetchAllContracts(true);
+    return arc;
+  }
+}
+
 Arc.prototype.fetchAllContracts = async function (useCache) {
   const contracts = await db.collection('arc').doc('contract').get();
   if (contracts.exists && useCache) {
@@ -85,8 +96,6 @@ Arc.prototype.fetchAllContracts = async function (useCache) {
   )
 }
 
-arc.fetchAllContracts(true);
-
 const IpfsClient = new IPFSApiClient(ipfsProvider);
 
 const PROPOSAL_TYPE = {
@@ -111,7 +120,6 @@ const PROPOSAL_STAGES_HISTORY = [
 const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 module.exports = {
-    arc,
     IpfsClient,
     graphwsLink,
     graphHttpLink,
@@ -124,5 +132,6 @@ module.exports = {
     PROPOSAL_TYPE,
     PROPOSAL_STAGES_HISTORY,
     NULL_ADDRESS,
-    db
+    db,
+    getArc,
 }

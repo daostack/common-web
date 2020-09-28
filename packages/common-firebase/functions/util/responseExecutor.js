@@ -1,4 +1,4 @@
-const {arc} = require('../settings')
+const {getArc} = require('../settings')
 const HTTP_STATUS_CODE = {
   OK: 200,
   BAD_REQUEST: 400,
@@ -32,8 +32,9 @@ const responseExecutor = async (action, { req, res, successMessage, errorMessage
   }
 }
 
-let retried = false;
 const responseCreateExecutor = async (action, { req, res, successMessage, errorMessage }) => {
+  const arc = await getArc();
+  let retried = false;
   try {
     let actionResult = await action();
     console.log(actionResult)

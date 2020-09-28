@@ -1,10 +1,10 @@
 const { findUserByAddress } = require('../db/userDbService');
 const { Vote } = require('@daostack/arc.js');
-const { arc } = require('../settings')
+const { getArc } = require('../settings')
 const { updateVote } = require('../db/voteDbService');
 
 async function updateVotes() {
-
+  const arc = await getArc();
   const allVotes = [];
   let currVotes = null;
   let skip = 0;

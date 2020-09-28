@@ -1,5 +1,5 @@
 const { findUserByAddress } = require('../db/userDbService');
-const { arc, retryOptions, ipfsDataVersion } = require('../settings')
+const { getArc, retryOptions, ipfsDataVersion } = require('../settings')
 const { getBalance } = require("../db/daoDbService")
 const promiseRetry = require('promise-retry');
 const { PROPOSAL_TYPE } = require('../util/util');
@@ -8,6 +8,7 @@ const { updateDao, getDaoById } = require('../db/daoDbService');
 
 // get all DAOs data from graphql and read it into the subgraph
 const updateDaos = async () => {
+    const arc = await getArc();
     console.log("UPDATE DAOS:");
     console.log("----------------------------------------------------------");
 
@@ -192,7 +193,7 @@ async function _updateDaoDb(dao) {
 }
 
 async function updateDaoById(daoId, customRetryOptions = {}) {
-
+    const arc = await getArc();
     if (!daoId) {
         throw Error(`You must provide a daoId (current value is "${daoId}")`)
     }

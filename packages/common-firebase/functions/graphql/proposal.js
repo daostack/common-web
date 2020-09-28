@@ -1,6 +1,6 @@
 const { findUserByAddress } = require('../db/userDbService');
 const { Vote } = require('@daostack/arc.js');
-const { arc, retryOptions, ipfsDataVersion } = require('../settings')
+const { getArc, retryOptions, ipfsDataVersion } = require('../settings')
 const promiseRetry = require('promise-retry');
 const { Utils } = require('../util/util');
 const { UnsupportedVersionError } = require('../util/error');
@@ -12,6 +12,7 @@ const parseVotes = (votesArr) => {
 }
 
 async function _updateProposalDb(proposal) {
+    const arc = await getArc();
     const result = { updatedDoc: null, errorMsg: null };
     const s = proposal.coreState
 
@@ -98,6 +99,7 @@ async function _updateProposalDb(proposal) {
 }
 
 async function updateProposalById(proposalId, customRetryOptions = {}, blockNumber) {
+    const arc = await getArc();
     let currBlockNumber = null;
     if (blockNumber) {
         currBlockNumber = Number(blockNumber);
@@ -135,6 +137,7 @@ async function updateProposalById(proposalId, customRetryOptions = {}, blockNumb
 }
 
 async function updateProposals() {
+    const arc = await getArc();
     const allProposals = [];
     let currProposals = null;
     let skip = 0;

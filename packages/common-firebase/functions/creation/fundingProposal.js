@@ -1,7 +1,7 @@
 // const Utils = require('../util/util');
 const { env } = require('@env');
 const { Utils } = require('../util/util');
-const { IpfsClient, provider, arc, PROPOSAL_TYPE } = require('../settings');
+const { IpfsClient, provider, getArc, PROPOSAL_TYPE } = require('../settings');
 const { updateProposalById } = require('../graphql/proposal');
 const { first } = require('rxjs/operators');
 const ethers = require('ethers');
@@ -9,6 +9,7 @@ const { execTransaction } = require('../relayer/util/execTransaction');
 
 const fundingCheck = async (daoId, safeAddress) => {
 
+  const arc = await getArc();
   const dao = arc.dao(daoId);
   const daoContract = await arc.getContract(daoId);
 
@@ -53,6 +54,7 @@ const fundingCheck = async (daoId, safeAddress) => {
 }
 
 const createFundingProposalTransaction = async (req) => {
+  const arc = await getArc();
   // eslint-disable-next-line no-useless-catch
   try {
     const {
@@ -119,6 +121,7 @@ const createFundingProposalTransaction = async (req) => {
 }
 
 const createFundingProposal = async (req) => {
+  const arc = await getArc();
   // eslint-disable-next-line no-useless-catch
   try {
     console.log('---Funding Proposal---');

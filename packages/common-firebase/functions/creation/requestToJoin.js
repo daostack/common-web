@@ -1,7 +1,7 @@
 const { IpfsClient, provider } = require('../settings');
 const { env } = require('@env');
 const { Utils } = require('../util/util');
-const { arc, PROPOSAL_TYPE } = require('../settings')
+const { getArc, PROPOSAL_TYPE } = require('../settings')
 const { cancelPreauthorizedPayment } = require('../mangopay/mangopay');
 const { updateProposalById } = require('../graphql/proposal');
 const {first} = require('rxjs/operators');
@@ -20,6 +20,7 @@ const abi = require('../relayer/util/abi.json')
   // .  payment: { ... }
   // };
 const createRequestToJoinTransaction = async (req) => {
+  const arc = await getArc();
   // eslint-disable-next-line no-useless-catch
   try {
     const {
@@ -116,7 +117,7 @@ const createRequestToJoinTransaction = async (req) => {
   }
 }
 
-const createRequestToJoin = async (req ) => {
+const createRequestToJoin = async (req) => {
   // eslint-disable-next-line no-useless-catch
   try {
     console.log('---requestToJoin---')

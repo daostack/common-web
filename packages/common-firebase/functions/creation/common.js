@@ -1,5 +1,5 @@
 // const Utils = require('../util/util');
-const { IpfsClient, provider, arc } = require('../settings');
+const { IpfsClient, provider, getArc } = require('../settings');
 const { env } = require('@env');
 const DAOFactoryABI = require('@daostack/common-factory/abis/DAOFactory');
 const {getForgeOrgData} = require('@daostack/common-factory');
@@ -47,6 +47,8 @@ const createCommonTransaction = async (req) => {
     const ipfsHash = await IpfsClient.addAndPinString(opts);
     console.log('ipfsHash ->', ipfsHash);
 
+    const arc = await getArc();
+    
     const daoFactoryInfo = arc.getContractInfoByName(
       'DAOFactoryInstance',
       ARC_VERSION,
@@ -106,6 +108,7 @@ const createCommon = async (req) => {
     }
 
     const ARC_VERSION = env.commonInfo.arcVersion;
+    const arc = await getArc();
     const daoFactoryInfo = arc.getContractInfoByName(
       'DAOFactoryInstance',
       ARC_VERSION,

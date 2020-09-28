@@ -3,10 +3,11 @@ const { provider } = require('../settings');
 const { execTransaction } = require('../relayer/util/execTransaction');
 const { Utils } = require('../util/util');
 const { updateProposalById } = require('../graphql/proposal')
-const { arc, PROPOSAL_TYPE, PROPOSAL_STAGES_HISTORY, NULL_ADDRESS } = require('../settings')
+const { getArc, PROPOSAL_TYPE, PROPOSAL_STAGES_HISTORY, NULL_ADDRESS } = require('../settings')
 const {JoinProposal, FundingRequestProposal} = require('@daostack/arc.js');
 
-const createVoteProposalTransaction = async (req ) => {
+const createVoteProposalTransaction = async (req) => {
+  const arc = await getArc();
   // eslint-disable-next-line no-useless-catch
   try {
     const {

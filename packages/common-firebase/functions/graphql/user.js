@@ -1,8 +1,9 @@
 const { Member } = require('@daostack/arc.js');
 const { findUserByAddress, updateUser } = require('../db/userDbService');
-const { arc } = require('../settings')
+const { getArc } = require('../settings')
 
 async function updateUsers() {
+    const arc = await getArc();
     // this function is not used, leaving it here for reference
     const response = []
     const members = await Member.search(arc, {}, { fetchPolicy: 'no-cache' }).first()
