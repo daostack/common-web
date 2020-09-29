@@ -59,7 +59,7 @@ const getTokenBalance = async (daoId) => {
     if (daoId) {
         let contract = new ethers.Contract(env.commonInfo.commonToken, abi.CommonToken, provider);
         const balance = await contract.balanceOf(daoId);
-        const balanceStr = ethers.utils.formatEther(balance);
+        const balanceStr = balance.toString();
         console.log('DAO Balance ->', balanceStr);
         return balanceStr;
     }
