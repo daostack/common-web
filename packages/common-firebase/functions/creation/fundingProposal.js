@@ -87,7 +87,8 @@ const createFundingProposalTransaction = async (req) => {
     console.log('fundingRequestPlugin', fundingRequestPlugin.id);
 
     const funding = data.funding;
-    if (!funding) {
+    
+    if (!funding && funding !== 0) {
       throw Error('"funding" argument must be given');
     }
 
