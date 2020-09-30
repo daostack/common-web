@@ -106,7 +106,7 @@ async function _updateDaoDb(dao) {
     }
 
     // Validate plugins
-    const plugins = await dao.plugins().first()
+    const plugins = await dao.plugins({}, { fetchPolicy: 'no-cache' }).first();
     const pluginValidation = _validateDaoPlugins(plugins);
 
     if (!pluginValidation.isValid) {
@@ -157,7 +157,7 @@ async function _updateDaoDb(dao) {
         const existingDocData = existingDoc.data()
         if (!existingDocData || !existingDocData.members || existingDocData.members.length !== daoState.memberCount) {
             console.log(`Membercount changed, updating member collections`)
-            const members = await dao.members().first()
+            const members = await dao.members({}, { fetchPolicy: 'no-cache' }).first();
             doc.members = []
             for (const member of members) {
                 // eslint-disable-next-line
