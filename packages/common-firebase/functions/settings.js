@@ -54,11 +54,14 @@ const getArc = async () => {
 }
 
 Arc.prototype.fetchAllContracts = async function (useCache) {
-  const contracts = await db.collection('arc').doc('contract').get();
-  if (contracts.exists && useCache) {
-    const allContractInfos = JSON.parse(contracts.data().allContractInfos);
-    this.setContractInfos(allContractInfos);
-    return
+  
+  if (useCache) {
+    const contracts = await db.collection('arc').doc('contract').get();
+    if (contracts.exists) {
+      const allContractInfos = JSON.parse(contracts.data().allContractInfos);
+      this.setContractInfos(allContractInfos);
+      return
+    }
   }
 
   console.log('Fetching contratInfos from the graph');
