@@ -36,15 +36,14 @@ exports.newProposalCreated = functions
     }
   })
 
-exports.watchForReputationRedeemed = functions.firestore
+exports.watchForNewMembers = functions.firestore
   .document('/proposals/{id}')
   .onUpdate(async (change) => {
     const data = change.after.data();
     const previousData = change.before.data();
     if (
       data.type === PROPOSAL_TYPE.Join &&
-      previousData.join.reputationMinted === '0' &&
-      data.join.reputationMinted !== '0'
+      previousData.join.reputationMinted !== data.join.reputationMinted
     ) {
       console.log(
         'Join proposal reputationMinted changed from "0" Initiating DAO update'
