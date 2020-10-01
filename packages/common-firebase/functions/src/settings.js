@@ -44,7 +44,6 @@ const arc = new Arc({
 
 const getArc = async () => {
   if (arc.contractInfos && arc.contractInfos.length > 0) {
-    console.log("<-- ARC END 1 ");
     return arc;
   }
   else {

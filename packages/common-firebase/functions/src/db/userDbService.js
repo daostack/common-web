@@ -1,6 +1,12 @@
 const { db } = require('../settings.js');
 const COLLECTION_NAME = 'users';
 
+async function getUserById(userId) {
+    return await db.collection(COLLECTION_NAME)
+        .doc(userId)
+        .get();
+}
+
 async function findUserByAddress(ethereumAddress, key = 'safeAddress') {
     const query = db.collection(COLLECTION_NAME)
         .where(key, `==`, ethereumAddress)
@@ -30,5 +36,6 @@ async function updateUser(userId, doc) {
 
 module.exports = {
     findUserByAddress,
+    getUserById,
     updateUser
 };

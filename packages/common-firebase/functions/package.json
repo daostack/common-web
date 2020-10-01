@@ -1,6 +1,6 @@
 {
   "name": "@common/functions",
-  "main": "index.js",
+  "main": "dist/index.js",
   "private": true,
   "version": "1.0.0",
   "description": "Cloud Functions for Common",
@@ -39,8 +39,8 @@
     "subscriptions-transport-ws": "^0.9.16"
   },
   "_moduleAliases": {
-    "@env": "./env",
-    "@settings": "./settings",
-    "@util": "./util"
+    "@env": "./src/env",
+    "@settings": "./src/settings",
+    "@util": "./src/util"
   }
 }

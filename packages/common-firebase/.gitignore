@@ -69,11 +69,13 @@ adminsdk-keys.json
 
 .idea
 functions/_keys/*
+functions/dist
 
 functions/node_modules/
 .DS_Store
 firestore/backup
 
 functions/env/env_config.json
+functions/src/env/env_config.json
 
 safe-contracts

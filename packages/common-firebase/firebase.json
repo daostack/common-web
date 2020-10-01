@@ -1,8 +1,10 @@
 {
   "functions": {
     "predeploy": [
-      "yarn lint"
-    ]
+      "yarn lint",
+      "yarn build"
+    ],
+    "source": "functions"
   },
   "firestore": {
     "rules": "./firestore/firestore.rules"

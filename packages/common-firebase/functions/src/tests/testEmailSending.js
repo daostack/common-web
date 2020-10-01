@@ -1,3 +1,4 @@
+const env = require('@env');
 const { db } = require('../settings.js');
 const emailClient = require('../email');
 const { Utils } = require('../util/util');
@@ -13,12 +14,13 @@ const testEmailSending = async (req) => {
   const {to, subject, message, template} = req.query;
 
   if (!to) {
-    throw new Error("Email is not provided!");
+    console.log("Email not provided. Sending to admin")
   }
+
 
   if (!template) {
     await sendMail(
-      to,
+      to || env.env.mail.adminMail,
       subject || "Test email",
       message || "This is test email for testing the email sending capabilities of the application."
     );

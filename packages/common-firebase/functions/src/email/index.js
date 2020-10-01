@@ -61,7 +61,7 @@ const isNullOrUndefined = (val) =>
  *
  * @param {{
  *   emailStubs: object
- *   subjectStubs: object
+ *   subjectStubs?: object
  * }} payload
  *
  * @return {{

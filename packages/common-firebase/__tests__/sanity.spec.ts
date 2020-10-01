@@ -4,17 +4,19 @@ import FormData from 'form-data';
 
 import { env } from '@env';
 import { runTest } from '@helpers/runTest';
-import { arc, jsonRpcProvider } from '@settings';
+import { getArc, jsonRpcProvider } from '@settings';
 
 runTest((funcs) => {
   describe('the services', () => {
     it('check if we are using development settings', async () => {
+      const arc = await getArc();
       expect(env.environment).toEqual('dev');
       expect(arc.graphqlHttpProvider).toEqual('http://127.0.0.1:8000/subgraphs/name/daostack');
       expect(jsonRpcProvider).toEqual('http://127.0.0.1:8545');
     });
 
     it('check if services are running', async () => {
+      const arc = await getArc();
       // Ganache should be running on jsonRPCProvider url - it response (with a 400 error)
       // if it is not, perhaps try `docker-compose up`
       try {

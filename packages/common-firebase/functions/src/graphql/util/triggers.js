@@ -1,9 +1,10 @@
 const functions = require('firebase-functions');
 const { updateDaoById } = require('../dao');
 const { createLegalUser, createWallet } = require('../../mangopay/mangopay');
+const { createEvent } = require('../../db/eventDbService');
 const { Utils, PROPOSAL_TYPE } = require('../../util/util');
 const { env } = require('@env');
-
+const { EVENT_TYPES } = require('../../event/event');
 const emailClient = require('../../email');
 
 exports.newProposalCreated = functions
@@ -85,7 +86,7 @@ exports.newDaoCreated = functions.firestore
     const userId = newDao.members[0].userId;
     const userData = await Utils.getUserById(userId);
     const daoName = newDao.name;
-
+    
     try {
       const { Id: mangopayId } = await createLegalUser(newDao);
       const { Id: mangopayWalletId } = await createWallet(mangopayId);
@@ -95,6 +96,15 @@ exports.newDaoCreated = functions.firestore
 
         console.debug(`Sending admin email for CommonCreated to ${env.mail.adminMail}`);
         console.debug(`Sending user email for CommonCreated to ${userData.email}`);
+
+        // Temporary Disable for the Event functionality
+        //
+        // await createEvent({
+        //   userId: userId,
+        //   objectId: newDao.id,
+        //   createdAt: new Date(),
+        //   type: EVENT_TYPES.CREATION_COMMON
+        // });
 
         await Promise.all([
           emailClient.sendTemplatedEmail({
@@ -134,7 +144,15 @@ exports.newDaoCreated = functions.firestore
     } catch (e) {
       console.error(e);
 
-      console.debug(`Sending admin email for WalletCreationFailed to ${env.mail.adminMail}`);
+      // Temporary Disable for the Event functionality
+      //
+      // await createEvent({
+      //   userId: userId,
+      //   objectId: newDao.id,
+      //   createdAt: new Date(),
+      //   type: EVENT_TYPES.CREATION_COMMON_FAILED
+      // });
+
       await emailClient.sendTemplatedEmail({
         to: env.mail.adminMail,
         templateKey: 'adminWalletCreationFailed',
@@ -143,5 +161,6 @@ exports.newDaoCreated = functions.firestore
           commonId: newDao.id
         }
       });
+
     }
   });

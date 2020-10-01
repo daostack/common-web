@@ -1,12 +1,21 @@
+//import { INotificationModel } from "./";
+
+// declare global {
+//   interface Array<T> {
+//     diff(array: Array<T>);
+//   }
+// }
+
 /* eslint-disable no-unused-vars */
-const functions = require('firebase-functions');
-const Notification = require('./notification');
-const admin = require('firebase-admin');
+/*
+import functions from 'firebase-functions';
+//import Notification from './notification';
+import admin from 'firebase-admin';
 
 // Follow User
 function follow(userId, userList) {
   console.log('Follow User', userId, userList);
-  for (var targetUid of userList) {
+  for (const targetUid of userList) {
     console.log('New follow', userId, targetUid);
     const writeNotifications = admin.firestore().doc(`notification/follow/${userId}/${targetUid}`).set({ createdAt: new Date() }, { merge: false });
     const writeFollow = admin.firestore().doc(`users/${targetUid}`).update({ follower: admin.firestore.FieldValue.arrayUnion(userId) })
@@ -19,7 +28,7 @@ function follow(userId, userList) {
   }
 }
 
-function unfollow(userId, userList) {
+const unfollow = (userId, userList) => {
   // let tasks = [];
   for (const targetUid of userList) {
     const writeUnFollow = admin.firestore().doc(`users/${targetUid}`).update({ follower: admin.firestore.FieldValue.arrayRemove(userId) })
@@ -60,27 +69,21 @@ const userInfoTrigger = functions.firestore.document('/users/{userId}')
       }
     }
     return Promise.resolve(null);
-})
-
-const sendFollowerNotification = functions.firestore.document('/notification/follow/{userId}/{targetUid}')
-  .onCreate(async (snapshot, context) => {
-    const userId = context.params.userId;
-    const targetUid = context.params.targetUid;
-    // response.send(`Change: ${change.after.val()} - ID: ${commonId}`)
-
-    console.log(`uid: ${targetUid} - ID: ${userId}`);
-    const tokenRef = admin.firestore().collection('users').doc(`${targetUid}`)
-    const tokens = await tokenRef.get().then(doc => { return doc.data().tokens })
-    const follower = await admin.auth().getUser(userId);
-
-    console.log(`tokens: ${tokens}  - follower: ${follower.displayName}`);
-
-    let title = 'You have a new follower';
-    let body = `${follower.displayName} is now following you.`
-    let image = follower.photoURL
-
-    return Notification.send(tokens, title, body, image);
   })
+*/
+
+// const sendFollowerNotification = async (notification: INotificationModel, tokens: [string]) => {
+
+//   const follower = await admin.auth().getUser(notification.userId);
+
+//   console.log(`tokens: ${tokens}  - follower: ${follower.displayName}`);
+
+//   const title = 'You have a new follower';
+//   const body = `${follower.displayName} is now following you.`
+//   const image = follower.photoURL
+
+//   return Notification.send(tokens, title, body, image);
+// }
 
 // Disable following logic
 // module.exports = { userInfoTrigger, sendFollowerNotification };
