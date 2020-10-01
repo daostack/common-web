@@ -1,12 +1,11 @@
 import axios from 'axios';
 import FormData from 'form-data';
 
-
 import { env } from '@env';
 import { runTest } from '@helpers/runTest';
 import { getArc, jsonRpcProvider } from '@settings';
 
-runTest((funcs) => {
+runTest(() => {
   describe('the services', () => {
     it('check if we are using development settings', async () => {
       const arc = await getArc();
