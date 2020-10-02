@@ -210,16 +210,21 @@ exports.watchForExecutedProposals = functions.firestore
           emailStubs: {
             userId: userData.uid,
             userFullName: userData.displayName,
+            userEmail: userData.email,
             commonName: daoData.name,
+            commonBalance: daoData.balance,
             commonLink: Utils.getCommonLink(daoData.id),
             commonId: daoData.id,
+            proposalId: data.id,
             paymentAmount: data.fundingRequest.amount,
-            submittedOn: new Date(data.createdAt / 1000).toDateString(),
-            passedOn: new Date(data.executedAt / 1000).toDateString(),
-            log: 'No additional information available'
+            submittedOn: new Date(data.createdAt * 1000).toDateString(),
+            passedOn: new Date(data.executedAt * 1000).toDateString(),
+            log: 'No additional information available',
+            paymentId: 'Not available'
           }
         })
       ])
     }
-    return true
+
+    return true;
   });

@@ -3,7 +3,7 @@ Notice to Admin<br />
 The following proposal was approved and is awaiting payment.
 <br /><br /><br />
 Common name: {{commonName}}<br />
-Common id: <a href="{{commonLink}}">{{commmonId}}</a><br />
+Common id: <a href="{{commonLink}}">{{commonId}}</a><br />
 Common balance: {{commonBalance}}<br />
 Proposal ID: {{proposalId}}<br />
 User Full Name: {{userFullName}}<br />
@@ -28,11 +28,23 @@ const emailStubs = {
   commonLink: {
     required: true
   },
+  commonBalance: {
+    required: true
+  },
   commonId: {
+    required: true
+  },
+  proposalId: {
     required: true
   },
   userFullName: {
     required: true
+  },
+  userEmail: {
+    required: true
+  },
+  paymentId: {
+
   },
   userId: {
     required: true
