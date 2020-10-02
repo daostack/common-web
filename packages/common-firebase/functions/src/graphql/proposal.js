@@ -3,7 +3,7 @@ const { Vote } = require('@daostack/arc.js');
 const { getArc, retryOptions, ipfsDataVersion } = require('../settings')
 const promiseRetry = require('promise-retry');
 const { Utils } = require('../util/util');
-const { UnsupportedVersionError } = require('../util/error');
+const { UnsupportedVersionError } = require('../util/errors');
 const { updateProposal } = require('../db/proposalDbService');
 const BN = require('bn.js');
 
@@ -104,7 +104,7 @@ async function updateProposalById(proposalId, customRetryOptions = {}, blockNumb
     if (blockNumber) {
         currBlockNumber = Number(blockNumber);
         if (Number.isNaN(currBlockNumber)) {
-            throw Error(`The blockNumber parameter should be a number between 0 and ${Number.MAX_SAFE_INTEGER}`);
+            throw new CommonError(`The blockNumber parameter should be a number between 0 and ${Number.MAX_SAFE_INTEGER}`);
         }
     }
 

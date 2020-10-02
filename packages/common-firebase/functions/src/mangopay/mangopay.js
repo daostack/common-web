@@ -1,5 +1,6 @@
 const { env } = require('@env');
 const { mangoPayApi } = require('../settings');
+const { CommonError } = require('../util/errors');
 const axios = require('axios');
 
 const options = {
@@ -164,7 +165,7 @@ const finalizeCardReg = async (cardRegistrationResult, Id) => {
       options
     );
     if (Status === 'ERROR') {
-      throw new Error(ResultMessage);
+      throw new CommonError(ResultMessage);
     }
     return CardId;
   } catch (e) {
@@ -210,7 +211,7 @@ const preauthorizePayment = async ({ funding, userData }) => {
     return preAuthReqData.data;
   } catch (e) {
     console.error('ERROR in CARD PREAUTHORIZATION', e);
-    throw new Error(`Error with card pre-authorization, ${e.response ? e.response.data.Message : e.message}`);
+    throw new CommonError(`Error with card pre-authorization, ${e.response ? e.response.data.Message : e.message}`);
   }
 };
 

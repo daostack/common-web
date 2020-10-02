@@ -3,6 +3,8 @@ const dateformat = require('dateformat');
 
 const client = new firestore.v1.FirestoreAdminClient();
 
+const { CommonError } = require('../util/errors');
+
 /**
  * Util for creating a firestore backup for the current
  * firebase project
@@ -21,7 +23,7 @@ exports.backup = () => {
       && `gs://common-daostack.appspot.com/backup/${timestamp}`;
 
   if(!bucket) {
-    throw new Error('Environment Error: cannot find the current GCloud project!');
+    throw new CommonError('EnvironmentCommonError: cannot find the current GCloud project!');
   }
 
   return client.exportDocuments({

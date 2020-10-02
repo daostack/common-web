@@ -1,5 +1,6 @@
 const { Utils } = require('../../util/util');
 const Relayer = require('../relayer');
+const { CommonError } = require('../../util/errors');
 
 const execTransaction = async req => {
   // eslint-disable-next-line no-useless-catch
@@ -14,7 +15,7 @@ const execTransaction = async req => {
     // TODO: Once it failed, it will send detail to client which have apiKey
     const success = await Utils.isRelayerTxSuccess(response.data.txHash)
     if (!success) {
-      throw new Error(`ExecutionFailure while executing ${response.data.txHash}`)
+      throw new CommonError(`ExecutionFailure while executing ${response.data.txHash}`)
     }
     return response.data;
   } catch (error) {

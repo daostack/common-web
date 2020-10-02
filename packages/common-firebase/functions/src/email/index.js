@@ -11,6 +11,8 @@ const adminWalletCreationFailed = require('./templates/adminWalletCreationFailed
 const adminJoinedButPaymentFailed = require('./templates/adminJoinedButFailedPayment');
 const adminPayInSuccess = require('./templates/adminPayInSuccess');
 
+const { CommonError } = require('../util/errors');
+
 const mailer = require('../mailer');
 const env = require('@env').env;
 
@@ -75,7 +77,7 @@ const getTemplatedEmail = (templateKey, payload) => {
   console.debug('Email templating started');
 
   if (isNullOrUndefined(template)) {
-    throw new Error(`The requested template (${templateKey}) cannot be found`);
+    throw new CommonError(`The requested template (${templateKey}) cannot be found`);
   }
 
   // Validate and add default values for the email template
@@ -89,7 +91,7 @@ const getTemplatedEmail = (templateKey, payload) => {
         isNullOrUndefined(globalDefaultStubs[stub])
       )
     ) {
-      throw new Error(`Required stub ${stub} was not provided for email template`);
+      throw new CommonError(`Required stub ${stub} was not provided for email template`);
     }
 
     // If there is a default value for the stub and has not been replaced add it here
@@ -108,7 +110,7 @@ const getTemplatedEmail = (templateKey, payload) => {
   // Validate the email subject
   for (const stub in subjectStubs) {
     if (subjectStubs[stub].required && isNullOrUndefined(payload.subjectStubs[stub])) {
-      throw new Error(`Required stub ${stub} was not provided for subject template`);
+      throw new CommonError(`Required stub ${stub} was not provided for subject template`);
     }
   }
 

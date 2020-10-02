@@ -6,6 +6,8 @@ const { Utils } = require('../util/util');
 const {getTemplatedEmail} = require('../email');
 const {sendMail} = require('../mailer');
 
+const { CommonError } = require('../util/errors');
+
 const usersCollection = 'users';
 const commonsCollection = 'daos';
 const proposalCollection = 'proposals';
@@ -111,7 +113,7 @@ const testPreauthFailedEmails = async (req) => {
   const proposal = proposalsSnapshot.docs.map(doc => doc.data())[0];
 
   if(!proposal) {
-    throw new Error("Proposal not found for preauth id " + preAuthId);
+    throw new CommonError("Proposal not found for preauth id " + preAuthId);
   }
 
   const common = (await db.collection(commonsCollection)

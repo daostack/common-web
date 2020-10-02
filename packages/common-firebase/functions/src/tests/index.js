@@ -1,5 +1,6 @@
 const app = require('express')();
 const functions = require('firebase-functions');
+const { CommonError } = require('../util/errors');
 
 const {
   testEmailSending,
@@ -55,6 +56,10 @@ app.get('/backup', async (req, res) => {
 
 app.get('/ping', (req, res) => {
   res.send('pong');
+});
+
+app.get('/throw', (req, res) => {
+  throw new CommonError(req.query.message, req.query.userMessage, req.query.statusCode);
 });
 
 exports.tests = functions

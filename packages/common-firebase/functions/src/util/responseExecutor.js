@@ -49,23 +49,37 @@ const responseCreateExecutor = async (action, { req, res, successMessage, errorM
     );
   } catch (e) {
     if ( e.message.match('^No contract with address') && !retried ) {
+      // WebStorm Error Reporting: the value is assigned, but never used
       retried = true;
+
       await arc.fetchAllContracts(false);
+
       console.log('<--- No contract with address error, updating new arc --->');
-      await responseCreateExecutor(action, { req, res, successMessage, errorMessage });
+
+      await responseCreateExecutor(action, {
+        req,
+        res,
+        successMessage,
+        errorMessage
+      });
+
       return;
     }
-    
-    console.error(e)
-    res.status(HTTP_STATUS_CODE.INTERNAL_SERVER)
-    .json( {
+
+    const response =  {
       error: {
         commonMessage: errorMessage,
         errorObject: JSON.stringify(e, null, 4),
         error: e.toString()
       },
       query: req.query
-    });
+    };
+
+    console.error(response, e)
+
+    res
+      .status(HTTP_STATUS_CODE.INTERNAL_SERVER)
+      .json(response);
   }
 }
 

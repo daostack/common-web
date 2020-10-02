@@ -2,6 +2,8 @@ const emailClient = require('./index');
 const { db } = require('../settings.js');
 const { env } = require('@env');
 
+const { CommonError } = require('../util/errors');
+
 module.exports = async (preAuthId, failureReason = 'Unknown') => {
   const proposalsSnapshot = await db.collection('proposals')
     .where('description.preAuthId', '==', preAuthId)
@@ -10,7 +12,7 @@ module.exports = async (preAuthId, failureReason = 'Unknown') => {
   const proposal = proposalsSnapshot.docs.map(doc => doc.data())[0];
 
   if (!proposal) {
-    throw new Error("Proposal not found for preauth id " + preAuthId);
+    throw new CommonError("Proposal not found for preauth id " + preAuthId);
   }
 
   const common = (await db.collection('daos')

@@ -1,11 +1,17 @@
 const admin = require('firebase-admin');
 const { provider } = require('../settings')
-const { CommonError, CFError} = require('./error')
+const { CommonError } = require('./errors')
 const fetch = require('node-fetch');
 const { env } = require('@env');
 const ethers = require('ethers');
 const ABI = require('../relayer/util/abi.json');
 const gql = require('graphql-tag');
+
+// That was imported from './error', but was not
+// there so I don't know what is it
+const CFError = {
+  invalidIdToken: 'invalidIdToken'
+}
 
 const QUERY_LATEST_BLOCK_NUMBER = `query {
   indexingStatusForCurrentVersion(subgraphName: "${env.graphql.subgraphName}") { 
@@ -118,7 +124,7 @@ class Utils {
       const blockNumber = graphData.data.indexingStatusForCurrentVersion.chains[0].latestBlock.number;
       return Number(blockNumber);
     } catch(error) {
-      throw new Error(`Error trying to fetch latest blocknumber from ${env.graphql.graphApiUrl}: ${error}`)
+      throw new CommonError(`Error trying to fetch latest blocknumber from ${env.graphql.graphApiUrl}: ${error}`)
     }
   }
 

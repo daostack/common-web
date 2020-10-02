@@ -1,4 +1,5 @@
 const { Utils } = require('../util/util');
+const { CommonError } = require('../util/errors');
 const {
   finalizeCardReg,
   preauthorizePayment,
@@ -28,7 +29,7 @@ const registerCard = async (req) => {
   if (Status === 'FAILED') {
     await sendPreauthorizationFailedEmail(preAuthId)
 
-    throw new Error(`Request to join failed. ${ResultMessage}`);
+    throw new CommonError(`Request to join failed. ${ResultMessage}`);
   }
 
   return {
