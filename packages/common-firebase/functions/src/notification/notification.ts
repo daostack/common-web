@@ -4,6 +4,7 @@ import { env } from '@env';
 import { getDaoById } from '../db/daoDbService';
 import { getProposalById } from '../db/proposalDbService';
 import { getUserById } from '../db/userDbService';
+import { Utils } from '../util/util';
 
 const messaging = admin.messaging();
 
@@ -28,8 +29,7 @@ export const notifyData: Record<string, IEventData> = {
       // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       email: ( {commonData} ) => {
           return {
-              to: env.mail.adminMail,
-              templateKey: 'adminWalletCreationFailed',
+              templateKey: 'userCommonCreated',
               emailStubs: {
                   commonName: commonData.name,
                   commonId: commonData.id
@@ -47,7 +47,6 @@ export const notifyData: Record<string, IEventData> = {
       // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       email: ( {commonData} ) => {
           return {
-              to: env.mail.adminMail,
               templateKey: 'adminWalletCreationFailed',
               emailStubs: {
                   commonName: commonData.name,
@@ -56,13 +55,35 @@ export const notifyData: Record<string, IEventData> = {
           }
       }
   },
+  [EVENT_TYPES.CREATION_REQUEST_TO_JOIN] : {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    data: async (proposalId: string) => {
+        const proposalData = (await getProposalById(proposalId)).data();
+        return {
+            commonData: (await getDaoById(proposalData.dao)).data(),
+            userData: (await getUserById(proposalData.proposerId)).data()
+        }
+    },
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    email: ( { commonData, userData } ) => {
+        return {
+          templateKey: 'requestToJoinSubmitted',
+          emailStubs: {
+            name: userData.displayName,
+            link: Utils.getCommonLink(commonData.id),
+            commonName: commonData.metadata.name
+          }
+        }
+    }
+  },
   [EVENT_TYPES.CREATION_PROPOSAL] : {
       // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       data: async (objectId: string) => {
+          const proposalData = (await getProposalById(objectId)).data();
           return {
-              proposalData: (await getProposalById(objectId)).data(),
-              commonData: (await getDaoById(objectId)).data(),
-              userData: (await getUserById(objectId)).data()
+              proposalData,
+              commonData: (await getDaoById(proposalData.dao)).data(),
+              userData: (await getUserById(proposalData.proposerId)).data()
           }
       },
       // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -75,6 +96,107 @@ export const notifyData: Record<string, IEventData> = {
       },
       
   },
+  [EVENT_TYPES.COMMON_WHITELISTED] : {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    data: async (objectId: string) => {
+        return { 
+          commonData : (await getDaoById(objectId)).data()
+        }
+    },
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    email: ( {commonData} ) => {
+      return {
+        templateKey: 'userCommonFeatured',
+        emailStubs: {
+            commonName: commonData.name,
+            commonId: commonData.id,
+            commonLink: Utils.getCommonLink(commonData.id)
+        }
+      }
+    },
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    notification: async ( {commonData} ) => {
+        return {
+            title: 'A new Common was just featured!',
+            body: `A new Common was just featured: "${commonData.name}". You might want to check it out.`,
+            image: commonData.metadata.image || ''
+        }
+    },
+    
+  },
+  [EVENT_TYPES.APPROVED_PROPOSAL] : {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    data: async (objectId: string) => {
+        const proposalData = (await getProposalById(objectId)).data();
+        return { 
+          proposalData,
+          commonData : (await getDaoById(proposalData.dao)).data()
+        }
+    },
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    notification: async ( {proposalData , commonData} ) => {
+        return {
+            title: 'Your funding proposal was approved!',
+            body: `A funding proposal for ${proposalData.fundingRequest.amount} was approved by "${commonData.name}".`,
+            image: commonData.metadata.image || ''
+        }
+    },
+  },
+  [EVENT_TYPES.APPROVED_REQUEST_TO_JOIN]: {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    data: async (objectId: string) => {
+        const proposalData = (await getProposalById(objectId)).data();
+        return { 
+          commonData : (await getDaoById(proposalData.dao)).data()
+        }
+    },
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    notification: async ( {commonData} ) => {
+        return {
+            title: 'Congrats!',
+            body: `Your request to join "${commonData.name}" was accepted, you are now a member!`,
+            image: commonData.metadata.image || ''
+        }
+    },
+  },
+  
+  [EVENT_TYPES.REJECTED_REQUEST_TO_JOIN]: {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    data: async (objectId: string) => {
+        const proposalData = (await getProposalById(objectId)).data();
+        return { 
+          commonData : (await getDaoById(proposalData.dao)).data()
+        }
+    },
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    notification: async ( {commonData} ) => {
+        return {
+            title: `Bad news, your request to join "${commonData.name}" was rejected.`,
+            body: `Don't give up, there are plenty of other Commons you can join.`,
+            image: commonData.metadata.image || ''
+        }
+    },
+  }
+  // TODO: We don't have defined notification for the rejected funding proposal. Ask if we need that.
+  //
+  // [EVENT_TYPES.REJECTED_PROPOSAL]: {
+  //   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  //   data: async (objectId: string) => {
+  //       const proposalData = (await getProposalById(objectId)).data();
+  //       return { 
+  //         proposalData,
+  //         commonData : (await getDaoById(proposalData.dao)).data()
+  //       }
+  //   },
+  //   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  //   notification: async ( {proposalData , commonData} ) => {
+  //       return {
+  //           title: 'Your funding proposal was approved!',
+  //           body: `A funding proposal for ${proposalData.fundingRequest.amount} was approved by "${commonData.name}".`,
+  //           image: commonData.metadata.image || ''
+  //       }
+  //   },
+  // },
 }
 
 export default new class Notification implements INotification {

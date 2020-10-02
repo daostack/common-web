@@ -165,4 +165,5 @@ module.exports = {
     Join: 'Join',
     FundingRequest: 'FundingRequest',
   },
+  DAO_REGISTERED: 'registered'
 }

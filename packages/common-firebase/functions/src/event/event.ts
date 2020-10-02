@@ -18,7 +18,8 @@ export enum EVENT_TYPES {
     //REJECTED notifications
     REJECTED_REQUEST_TO_JOIN = 'approvedReqToJoin',
     REJECTED_PROPOSAL = 'rejectedProposal',
-
+    //COMMON 
+    COMMON_WHITELISTED = 'commonWhitelisted',
 }
 
 export const eventData: Record<string, IEventData> = {
@@ -42,10 +43,43 @@ export const eventData: Record<string, IEventData> = {
         // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         notifyUserFilter: async (proposal: any): Promise<string[]> => {
             const proposalDao = (await getDaoById(proposal.dao)).data();
-            const userFilter = proposalDao.memberrs.map(member => {
+            const userFilter = proposalDao.members.map(member => {
                 return member.userId;
             });
             return userFilter;
         }
     },
+    [EVENT_TYPES.CREATION_REQUEST_TO_JOIN]: {
+        eventObject: async (proposalId: string): Promise<any> => (await getProposalById(proposalId)).data(),
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+        notifyUserFilter: async (proposal: any): Promise<string[]> => {
+            const proposalDao = (await getDaoById(proposal.dao)).data();
+            const userFilter = proposalDao.members.map(member => {
+                return member.userId;
+            });
+            return userFilter;
+        }
+    },
+    [EVENT_TYPES.COMMON_WHITELISTED]: {
+        eventObject: async (commonId: string): Promise<any> => (await getDaoById(commonId)).data(),
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+        notifyUserFilter: async (dao: any): Promise<string[]> => {
+            return [dao.members[0].userId];
+        }
+    },
+    [EVENT_TYPES.APPROVED_PROPOSAL]: {
+        eventObject: async (proposalId: string): Promise<any> => (await getProposalById(proposalId)).data(),
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+        notifyUserFilter: async (proposal: any): Promise<string[]> => {
+            return [proposal.proposerId];
+        }
+    },
+    [EVENT_TYPES.APPROVED_REQUEST_TO_JOIN]: {
+        eventObject: async (proposalId: string): Promise<any> => (await getProposalById(proposalId)).data(),
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+        notifyUserFilter: async (proposal: any): Promise<string[]> => {
+            return [proposal.proposerId];
+        }
+    }
+    
 }
