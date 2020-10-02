@@ -32,11 +32,17 @@ const processNotification = async (notification: INotificationModel) => {
 
             if (currNotifyObj.email) {
                 const emailTemplate = currNotifyObj.email(eventNotifyData);
-                emailTemplate.to = userData.email;
-                await emailClient.sendTemplatedEmail(emailTemplate);
+                const emailTemplateArr = Array.isArray(emailTemplate) ? emailTemplate : [emailTemplate];
+                emailTemplateArr.forEach( async (currEmailTemplate) => {
+                    const template = currEmailTemplate;
+                    if (!template.to) {
+                        template.to = userData.email;
+                    }
+                    await emailClient.sendTemplatedEmail(template);
+                });
             }
 
-        } );
+        });
     } else {
         const eventNotifyData = await currNotifyObj.data(notification.eventObjectId);
         if (currNotifyObj.notification) {

@@ -22,19 +22,41 @@ export const notifyData: Record<string, IEventData> = {
   [EVENT_TYPES.CREATION_COMMON]: {
       // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       data: async (objectId: string) => {
+          const commonData = (await getDaoById(objectId)).data();
           return {
-              commonData: (await getDaoById(objectId)).data()
+            commonData,
+            userData: (await getUserById(commonData.members[0].userId)).data(),
           }
       },
       // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-      email: ( {commonData} ) => {
-          return {
-              templateKey: 'userCommonCreated',
-              emailStubs: {
-                  commonName: commonData.name,
-                  commonId: commonData.id
-              }
+      email: ( {commonData, userData} ) => {
+        return [
+          {
+            templateKey: 'userCommonCreated',
+            emailStubs: {
+                commonName: commonData.name,
+                commonId: commonData.id
+            }
+          },
+          {
+            to: env.mail.adminMail,
+            templateKey: 'adminCommonCreated',
+            emailStubs: {
+              userId: userData.uid,
+              commonLink: Utils.getCommonLink(commonData.id),
+              userName: userData.displayName,
+              userEmail: userData.email,
+              commonCreatedOn: new Date().toDateString(),
+              log: 'Successfully created common',
+              commonId: commonData.id,
+              commonName: commonData.name,
+              description: commonData.metadata.description,
+              about: commonData.metadata.byline,
+              paymentType: 'one-time',
+              minContribution: commonData.metadata.minimum
+            }
           }
+        ]
       }
   },
   [EVENT_TYPES.CREATION_COMMON_FAILED] : {
