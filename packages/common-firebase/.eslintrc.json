@@ -3,7 +3,8 @@
     "*.md",
     "*.json",
     "*.yml",
-    "*.sh"
+    "*.sh",
+    "functions/dist/**"
   ],
   "parserOptions": {
     // Required for certain syntax usages
