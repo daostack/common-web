@@ -72,35 +72,16 @@ const createFundingProposalTransaction = async (req) => {
   const IPFS_DATA_VERSION = env.graphql.ipfsDataVersion;
   const dao = arc.dao(daoId);
 
-  let fundingRequestPlugin;
-  try {
-    fundingRequestPlugin = await dao.plugin({
+  const fundingRequestPlugin = await dao.plugin({
       where: {
         name: 'FundingRequest'
       }
-    });
-  } catch (e) {
-    console.log(e);
-    console.log(daoId);
-
-    // const catchPlugins = await dao
-    //   .plugins()
-    //   .pipe(first())
-    //   .toPromise();
-
-    const funding = data.funding;
-    
-    if (!funding && funding !== 0) {
-      throw new CommonError('"funding" argument must be given');
-    }
-
-    throw e;
-  }
+  });
 
   console.log('fundingRequestPlugin', fundingRequestPlugin.id);
 
   const funding = data.funding;
-  if (!funding) {
+  if (!funding && funding !== 0) {
     throw new CommonError(
       '"funding" argument must be given',
       'The funding argument was not provided!'
