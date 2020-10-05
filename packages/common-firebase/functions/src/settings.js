@@ -11,6 +11,7 @@ const jsonRpcProvider = env.blockchain.jsonRpcProvider;
 const mangoPayApi = env.mangopay.apiUrl;
 const ipfsDataVersion = env.graphql.ipfsDataVersion;
 const ipfsProvider = env.graphql.ipfsProvider;
+const ARC_VERSION = env.commonInfo.arcVersion;
 
 if(env.environment === 'dev') {
   admin.initializeApp();
@@ -71,7 +72,7 @@ Arc.prototype.fetchAllContracts = async function (useCache) {
   do {
     const query = gql`
     query AllContractInfos {
-      contractInfos(first: 1000 skip: ${skip * 1000}) {
+      contractInfos(first: 1000 skip: ${skip * 1000} where: { version: "${ARC_VERSION}" }) {
         id
         name
         version
