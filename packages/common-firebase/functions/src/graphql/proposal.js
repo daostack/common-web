@@ -98,42 +98,60 @@ async function _updateProposalDb(proposal) {
     return result;
 }
 
-async function updateProposalById(proposalId, customRetryOptions = {}, blockNumber) {
-    const arc = await getArc();
-    let currBlockNumber = null;
-    if (blockNumber) {
-        currBlockNumber = Number(blockNumber);
-        if (Number.isNaN(currBlockNumber)) {
-            throw new CommonError(`The blockNumber parameter should be a number between 0 and ${Number.MAX_SAFE_INTEGER}`);
-        }
+async function updateProposalById(proposalId, customRetryOptions = {}, blockNumber, currentTry = 0) {
+  const arc = await getArc();
+  let currBlockNumber = null;
+
+  if (blockNumber) {
+    currBlockNumber = Number(blockNumber);
+    if (Number.isNaN(currBlockNumber)) {
+      throw new CommonError(`The blockNumber parameter should be a number between 0 and ${Number.MAX_SAFE_INTEGER}`);
     }
+  }
 
-    let proposal = await promiseRetry(
-        async (retryFunc, number) => {
-            console.log(`Try #${number} to get Proposal ${proposalId}`);
-            const proposals = await arc.proposals({ where: { id: proposalId } }, { fetchPolicy: 'no-cache' }).first()
+  let proposal = await promiseRetry(
+    async (retryFunc, number) => {
+      console.log(`Try #${number + 1} to get proposal ${proposalId}`);
+      const proposals = await arc.proposals({
+        where: {
+          id: proposalId
+        }
+      }, {
+        fetchPolicy: 'no-cache'
+      }).first();
 
-            let isBehindLatestBlock = true; // set initally to true and change only if the blockNumber is provided and checked
-            if (currBlockNumber) {
-                const latestBlockNumber = await Utils.getGraphLatestBlockNumber();
-                isBehindLatestBlock = currBlockNumber <= latestBlockNumber;
-            }
+      let isBehindLatestBlock = true; // set initially to true and change only if the blockNumber is provided and checked
+      if (currBlockNumber) {
+        const latestBlockNumber = await Utils.getGraphLatestBlockNumber();
+        isBehindLatestBlock = currBlockNumber <= latestBlockNumber;
+      }
 
-            if (proposals.length === 0) {
-                await retryFunc(`We could not find a proposal with id "${proposalId}" in the graph.`);
-            } else if (!isBehindLatestBlock) {
-                await retryFunc(`We could not find an update for block "${blockNumber}" in the graph.`);
-            }
+      if (proposals.length === 0) {
+        await retryFunc(`We could not find a proposal with id "${proposalId}" in the graph.`);
+      } else if (!isBehindLatestBlock) {
+        await retryFunc(`We could not find an update for block "${blockNumber}" in the graph.`);
+      }
+      // @notice The current implementation is a workaround a problem that actually needs to be solved
+      else if (proposals[0].votes.length !== Number(proposals[0].votesFor) + Number(proposals[0].votesAgainst)) {
+        // We want to log this error, as the graph people deny that this could happen and we need evidence :)
+        console.error(
+          'Inconsistent data from the subgraph',
+          new CommonError('Inconsistent data from the subgraph')
+        );
 
-            return proposals[0]
-        },
-        { ...retryOptions, ...customRetryOptions }
-    );
+        await retryFunc('The data from the graph about the votes is not consistent.');
+      }
 
-    const updatedDoc = await _updateProposalDb(proposal);
+      return proposals[0]
+    },
+    { ...retryOptions, ...customRetryOptions }
+  );
 
-    console.log("updated proposal", proposal.id);
-    return updatedDoc;
+  const updatedDoc = await _updateProposalDb(proposal);
+
+  console.log("Updated proposal", proposal.id);
+
+  return updatedDoc;
 }
 
 async function updateProposals() {
