@@ -1,4 +1,5 @@
 const { findUserByAddress } = require('../db/userDbService');
+const { CommonError } = require('../util/errors');
 const { Vote } = require('@daostack/arc.js');
 const { getArc, retryOptions, ipfsDataVersion } = require('../settings')
 const promiseRetry = require('promise-retry');
