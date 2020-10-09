@@ -133,16 +133,15 @@ async function updateProposalById(proposalId, customRetryOptions = {}, blockNumb
         await retryFunc(`We could not find an update for block "${blockNumber}" in the graph.`);
       }
       // @notice The current implementation is a workaround a problem that actually needs to be solved
-      else if (proposals[0].votes.length !== Number(proposals[0].votesFor) + Number(proposals[0].votesAgainst)) {
-        // We want to log this error, as the graph people deny that this could happen and we need evidence :)
-        console.error(
-          'Inconsistent data from the subgraph',
-          new CommonError('Inconsistent data from the subgraph')
-        );
+      else  {
+        const propState = proposals[0].coreState  
+        if (propState.votes.length !== propState.votesCount) {
+          // We want to log this error, as the graph people deny that this could happen and we need evidence :)
+          console.error( 'Inconsistent data from the subgraph', new CommonError('Inconsistent data from the subgraph'));
 
-        await retryFunc('The data from the graph about the votes is not consistent.');
+          await retryFunc(`The data from the graph about the votes is not consistent: votesCount is ${propState.votesCount} but there are ${propState.votes.length} votes`);
+        }
       }
-
       return proposals[0]
     },
     { ...retryOptions, ...customRetryOptions }
