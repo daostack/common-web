@@ -209,6 +209,10 @@ async function updateDaoById(daoId, customRetryOptions = {}) {
       console.log(`Try #${number} to get Dao...`);
       const currDaosResult = await arc.daos({ where: { id: daoId } }, { fetchPolicy: 'no-cache' }).first();
 
+      if(number > 7) {
+        console.warn('Cannot get dao after a lot of retries. Current result: ', currDaosResult);
+      }
+
       if (currDaosResult.length === 0) {
         console.log(arc);
         retryFunc(`We could not find a dao with id "${daoId}" in the graph at ${arc.graphqlHttpProvider}.`);
