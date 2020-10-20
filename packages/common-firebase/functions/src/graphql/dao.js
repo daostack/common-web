@@ -215,10 +215,11 @@ async function updateDaoById(daoId, customRetryOptions = {}) {
       }
 
       if (currDaosResult.length === 0) {
-        console.log(arc);
+        console.log(`retrying because we did not find a dao ${daoId}`)
         retryFunc(`We could not find a dao with id "${daoId}" in the graph at ${arc.graphqlHttpProvider}.`);
       }
       if (!currDaosResult[0].coreState.metadata) {
+        console.log(`retrying because the dao ${daoId} has no metadata`)
         retryFunc(`The dao with id "${daoId}" has no metadata`);
       }
 
@@ -228,7 +229,8 @@ async function updateDaoById(daoId, customRetryOptions = {}) {
       const { updatedDoc, errorMsg } = await _updateDaoDb(dao);
 
       if (errorMsg) {
-        throw new CommonError(errorMsg);
+        console.log(`retrying because of error: ${errorMsg}`)
+        retryFunc(errorMsg)
       }
 
       console.log('UPDATED DAO WITH ID: ', daoId);
