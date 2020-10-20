@@ -11,9 +11,9 @@
     "chainId": 100
   },
   "graphql": {
-    "subgraphName": "daostack/v8_11_exp_xdai",
-    "graphqlHttpProvider": "https://api.thegraph.com/subgraphs/name/daostack/v8_11_exp_xdai",
-    "graphqlWsProvider": "wss://api.thegraph.com/subgraphs/name/daostack/v8_11_exp_xdai",
+    "subgraphName": "daostack/v8_13_exp_xdai",
+    "graphqlHttpProvider": "https://api.thegraph.com/subgraphs/name/daostack/v8_13_exp_xdai",
+    "graphqlWsProvider": "wss://api.thegraph.com/subgraphs/name/daostack/v8_13_exp_xdai",
     "graphApiUrl": "https://api.thegraph.com/index-node/graphql",
     "ipfsProvider": "https://api.thegraph.com/ipfs-daostack/api/v0",
     "ipfsDataVersion": "000004"
