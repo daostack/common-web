@@ -1,10 +1,9 @@
 const functions = require('firebase-functions');
 const { updateDaoById } = require('../dao');
-const { createLegalUser, createWallet } = require('../../mangopay/mangopay');
 const { createEvent } = require('../../db/eventDbService');
 const { Utils, PROPOSAL_TYPE, DAO_REGISTERED } = require('../../util/util');
 const { CommonError } = require('../../util/errors');
-const { env } = require('@env');
+const { env } = require('../../env');
 const { EVENT_TYPES } = require('../../event/event');
 const emailClient = require('../../email');
 const { getDiscussionById } = require('../../db/discussionDbService');
@@ -113,47 +112,15 @@ exports.daoUpdated = functions.firestore
     }
   });
 
-exports.newDaoCreated = functions.firestore
-  .document('/daos/{id}')
-  .onCreate(async (snap) => {
-    let newDao = snap.data();
+// exports.newDaoCreated = functions.firestore
+//   .document('/daos/{id}')
+//   // eslint-disable-next-line consistent-return
+//   .onCreate(async (snap) => {
+//     let newDao = snap.data();
 
-    const userId = newDao.members[0].userId;
-    const userData = await Utils.getUserById(userId);
-    
-    try {
-      const { Id: mangopayId } = await createLegalUser(newDao);
-      const { Id: mangopayWalletId } = await createWallet(mangopayId);
-
-      if (mangopayId && mangopayWalletId) {
-        const commonLink = Utils.getCommonLink(newDao.id);
-
-        console.debug(`Sending admin email for CommonCreated to ${env.mail.adminMail}`);
-        console.debug(`Sending user email for CommonCreated to ${userData.email}`);
-
-        await createEvent({
-          userId: userId,
-          objectId: newDao.id,
-          createdAt: new Date(),
-          type: EVENT_TYPES.CREATION_COMMON
-        });
-
-        console.debug('Done sending emails for dao creation');
-
-        return snap.ref.set({ mangopayId, mangopayWalletId }, { merge: true });
-      }
-    } catch (e) {
-      console.error(e);
-
-      await createEvent({
-        userId: userId,
-        objectId: newDao.id,
-        createdAt: new Date(),
-        type: EVENT_TYPES.CREATION_COMMON_FAILED
-      });
-      
-    }
-  });
+//     const userId = newDao.members[0].userId;
+//     const userData = await Utils.getUserById(userId);
+//   });
 
   // exports.newDaoCreated = functions.firestore
   // .document('/discussionMessage/{id}')

@@ -35,9 +35,11 @@ const processNotification = async (notification: INotificationModel) => {
                 const emailTemplateArr = Array.isArray(emailTemplate) ? emailTemplate : [emailTemplate];
                 emailTemplateArr.forEach( async (currEmailTemplate) => {
                     const template = currEmailTemplate;
+
                     if (!template.to) {
                         template.to = userData.email;
                     }
+                    
                     await emailClient.sendTemplatedEmail(template);
                 });
             }

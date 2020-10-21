@@ -38,5 +38,8 @@
   "mail": {
     "sender": "support@common.io",
     "adminMail": "support@common.io"
+  },
+  "circlepay": {
+    "apiUrl": "https://api-sandbox.circle.com/v1"
   }
 }

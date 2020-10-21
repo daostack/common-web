@@ -1,6 +1,8 @@
+
 const app = require('express')();
 const functions = require('firebase-functions');
 const { CommonError } = require('../util/errors');
+const { responseExecutor } =  require('../util/responseExecutor');
 
 const {
   testEmailSending,
@@ -51,7 +53,7 @@ app.get('/sendPreauthFailedEmails', async (req, res) => {
 });
 
 app.get('/backup', async (req, res) => {
-  res.send(await require('@util/backup').backup())
+  res.send(await require('../util/backup').backup())
 })
 
 app.get('/ping', (req, res) => {
@@ -59,8 +61,37 @@ app.get('/ping', (req, res) => {
 });
 
 app.get('/throw', (req, res) => {
-  throw new CommonError(req.query.message, req.query.userMessage, req.query.statusCode);
+  const result = responseExecutor(
+    async () => {
+      throw new CommonError('This is bad', 'Bad indeed', {
+        errorCode: 'SmtBadHapnd',
+        statusCode: req.query.statusCode || 500,
+        payload: {
+          hey: 'there'
+        },
+      });
+    }, {
+      req,
+      res,
+      successMessage: `Updated proposals!`,
+      errorMessage: `Unable to update Proposals!`
+    }
+  );
 });
+
+app.post('/create/event/commonCreation', async (req, res) => {
+  const { createEvent } = require('../db/eventDbService');
+  const { userId, daoId } = req.query;
+
+  await createEvent({
+    userId: userId,
+    objectId: daoId,
+    createdAt: new Date(),
+    type: 'creationCommon'
+  });
+
+  res.send('Email sent!')
+})
 
 exports.tests = functions
   .runWith(runtimeOptions)

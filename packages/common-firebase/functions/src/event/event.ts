@@ -36,7 +36,6 @@ export const eventData: Record<string, IEventData> = {
         notifyUserFilter: (common: any): string[] => {
             return [common.members[0].userId];
         }
-        
     },
     [EVENT_TYPES.CREATION_PROPOSAL]: {
         eventObject: async (proposalId: string): Promise<any> => (await getProposalById(proposalId)).data(),
@@ -53,11 +52,9 @@ export const eventData: Record<string, IEventData> = {
         eventObject: async (proposalId: string): Promise<any> => (await getProposalById(proposalId)).data(),
         // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         notifyUserFilter: async (proposal: any): Promise<string[]> => {
-            const proposalDao = (await getDaoById(proposal.dao)).data();
-            const userFilter = proposalDao.members.map(member => {
-                return member.userId;
-            });
-            return userFilter;
+            return [
+              proposal.proposerId
+            ];
         }
     },
     [EVENT_TYPES.COMMON_WHITELISTED]: {

@@ -1,6 +1,6 @@
 const { provider } = require('../../settings')
 const ethers = require('ethers');
-const { env } = require('@env');
+const { env } = require('../../env');
 const abi = require('./abi.json');
 
 const minterToken = async (address, amount) => {

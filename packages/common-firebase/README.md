@@ -131,10 +131,10 @@ otherwise has to be duplicated in every test suite. Must not be used with custom
 Example usage: 
 
 ```javascript
-import { runTest } from '@helpers/runTest';
+import { runTest } from '{path to helpers}/runTest';
 
 // Required for the Firebase Setup
-import '@functions';
+import '{path to src directory of the functions}';
 
 runTest((funcs) => {
   it('should do stuff', () => {

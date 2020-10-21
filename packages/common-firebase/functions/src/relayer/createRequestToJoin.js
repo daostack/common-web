@@ -1,9 +1,9 @@
+const { assignCardToProposal, createCirclePayCard } = require('../circlepay/createCirclePayCard');
 const Relayer = require('./relayer');
 const { Utils } = require('../util/util');
 const { updateProposalById } = require('../graphql/proposal');
 const ethers = require('ethers');
 const { provider } = require('../settings.js');
-const { cancelPreauthorizedPayment } = require('../mangopay/mangopay');
 const abi = require('./util/abi.json');
 const { CommonError } = require('../util/errors');
 
@@ -13,7 +13,8 @@ const createRequestToJoin = async (req, res) => {
   const {
     idToken,
     createProposalTx, // This is the signed transacxtion to create the proposal.
-    preAuthId
+    preAuthId,
+    cardData
   } = req.body;
 
   const uid = await Utils.verifyId(idToken);
@@ -21,11 +22,20 @@ const createRequestToJoin = async (req, res) => {
   const safeAddress = userData.safeAddress;
   const ethereumAddress = userData.ethereumAddress;
 
+  // --- Create card
+  // @todo Extract the create card method to not depend on express request
+  const { cardId } = await createCirclePayCard({
+    ...req,
+    body: {
+      ...cardData,
+      idToken
+    }
+  });
+
   console.log('--- Add white list ---', createProposalTx.to);
 
-  const repw1 = await Relayer.addAddressToWhitelist([ createProposalTx.to ]);
-
-  console.log('Add white list Success', repw1);
+  await Relayer.addAddressToWhitelist([ createProposalTx.to ]);
+  // console.log('Add white list Success', repw1);
 
   const response = await Relayer.execTransaction(
     safeAddress,
@@ -36,7 +46,7 @@ const createRequestToJoin = async (req, res) => {
     createProposalTx.signature
   );
 
-  console.log('--- Relayer response ---', response);
+  // console.log('--- Relayer response ---', response);
 
   if (response.status !== 200) {
     console.error(
@@ -52,16 +62,15 @@ const createRequestToJoin = async (req, res) => {
         errorCode: 104
       });
 
-    await cancelPreauthorizedPayment(preAuthId);
-
     return;
   }
 
-  console.log('wait for tx to mined');
+  console.log('waiting for tx to be mined');
 
   const receipt = await provider.waitForTransaction(response.data.txHash);
 
-  console.log('tx mined', receipt);
+  // console.log('tx mined', receipt);
+  console.log(`tx was mined`)
 
   // await arc.fetchContractInfos();
   // const JoinABI = arc.getABI("Join", env.graphql.arcVersion)
@@ -96,7 +105,7 @@ const createRequestToJoin = async (req, res) => {
       .status(500)
       .send({
         txHash: response.data.txHash,
-        error: 'Transation was mined, but no proposalId was found in the JoinInProposal event'
+        error: 'Transaction was mined, but no proposalId was found in the JoinInProposal event'
       });
 
     console.error(
@@ -108,6 +117,8 @@ const createRequestToJoin = async (req, res) => {
   }
 
   await updateProposalById(proposalId, { retries: 8 });
+
+  await assignCardToProposal(cardId, proposalId);
 
   // TODO: add error handling wrapper
   res.send({

@@ -63,10 +63,9 @@ const createVoteProposalTransaction = async (req) => {
     NULL_ADDRESS
   ];
 
-  console.log('waiting for the transaction to be processed');
   const encodedData = contract.interface.functions.vote.encode(params);
   const safeTxHash = await Utils.createSafeTransactionHash(userData.safeAddress, contract.address, 0, encodedData);
-  console.log('safeTxHash -->', safeTxHash);
+  // console.log('safeTxHash -->', safeTxHash);
   return {
     encodedData: encodedData,
     toAddress: contract.address,
@@ -75,8 +74,9 @@ const createVoteProposalTransaction = async (req) => {
 };
 
 const voteProposal = async (req) => {
+  console.log(`voteProposal started`)
   const { encodedData, signedData, idToken, toAddress, proposalId } = req.body;
-  const reqest = {
+  const request = {
     body: {
       to: toAddress,
       value: '0',
@@ -85,10 +85,11 @@ const voteProposal = async (req) => {
       idToken: idToken
     }
   };
-  const response = await execTransaction(reqest);
-  console.log('response  ->', response);
+  const response = await execTransaction(request);
   const receipt = await provider.waitForTransaction(response.txHash);
+  console.log(`call updateProposalById`)
   await updateProposalById(proposalId, { retries: 8 }, receipt.blockNumber);
+  console.log(`voteProposal done`)
   return { receipt };
 };
 

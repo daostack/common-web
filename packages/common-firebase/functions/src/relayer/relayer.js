@@ -1,9 +1,9 @@
 const ethers = require('ethers');
 const abi = require('./util/abi.json')
 const axios = require('axios');
-const { env } = require('@env');
+const { env } = require('../env');
 const { jsonRpcProvider } = require('../settings');
-const { CommonError } = require('../util/errors');
+const CommonError = require('../util/errors').CommonError;
 
 const provider = new ethers.providers.JsonRpcProvider(jsonRpcProvider);
 const zeroAddress = `0x${'0'.repeat(40)}`;

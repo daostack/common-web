@@ -1,6 +1,6 @@
 const {ethers, Contract} = require('ethers');
 const { Arc } = require('@daostack/arc.js');
-const { env } = require('@env');
+const { env } = require('./env');
 const IPFSApiClient = require('./util/IPFSClient')
 const gql = require('graphql-tag');
 const admin = require('firebase-admin');
@@ -8,16 +8,18 @@ const graphHttpLink = env.graphql.graphqlHttpProvider;
 const graphwsLink = env.graphql.graphqlWsProvider;
 const databaseURL = env.firebase.databaseURL;
 const jsonRpcProvider = env.blockchain.jsonRpcProvider;
-const mangoPayApi = env.mangopay.apiUrl;
 const ipfsDataVersion = env.graphql.ipfsDataVersion;
 const ipfsProvider = env.graphql.ipfsProvider;
 const ARC_VERSION = env.commonInfo.arcVersion;
+const circlePayApi = env.circlepay.apiUrl;
+
+const adminKeys = require('./env/adminsdk-keys.json');
 
 if(env.environment === 'dev') {
   admin.initializeApp();
 } else {
   admin.initializeApp({
-    credential: admin.credential.cert(require('@env/adminsdk-keys.json')),
+    credential: admin.credential.cert(adminKeys),
     databaseURL: databaseURL
   });
 }
@@ -128,7 +130,6 @@ module.exports = {
     graphHttpLink,
     databaseURL,
     jsonRpcProvider,
-    mangoPayApi,
     provider,
     retryOptions,
     ipfsDataVersion,
@@ -137,4 +138,5 @@ module.exports = {
     NULL_ADDRESS,
     db,
     getArc,
+    circlePayApi,
 }

@@ -1,5 +1,4 @@
-const { mangopayClient } = require('../util/mangoPay');
-const {env} = require('@env');
+const {env} = require('../env');
 const ethers = require('ethers');
 const abi = require('../relayer/util/abi.json');
 const { provider, db } = require('../settings');
@@ -38,18 +37,6 @@ async function updateDAOBalance(daoId) {
     };
 }
 
-const getCurrentDaoWallet = async (daoId) => {
-    const dao = (await getDaoById(daoId)).data();
-
-    if (!dao) {
-        return null
-    } else if (dao.mangopayWalletId) {
-        return mangopayClient.Wallets.get(dao.mangopayWalletId)
-    } else {
-        return null;
-    }
-};
-
 const getBalance = async (daoId) => {
     const wallet = await getTokenBalance(daoId);
     return wallet
@@ -71,6 +58,5 @@ module.exports = {
     updateDao,
     getDaoById,
     updateDAOBalance,
-    getCurrentDaoWallet,
     getBalance,
 };

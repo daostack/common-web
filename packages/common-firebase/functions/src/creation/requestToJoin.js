@@ -1,8 +1,7 @@
 const { IpfsClient, provider } = require('../settings');
-const { env } = require('@env');
+const { env } = require('../env');
 const { Utils } = require('../util/util');
 const { getArc, PROPOSAL_TYPE } = require('../settings');
-const { cancelPreauthorizedPayment } = require('../mangopay/mangopay');
 const { updateProposalById } = require('../graphql/proposal');
 const { first } = require('rxjs/operators');
 const Relayer = require('../relayer/relayer');
@@ -117,7 +116,6 @@ const createRequestToJoinTransaction = async (req) => {
   console.log('Encoding transaction');
   const encodedData = contract.interface.functions[method].encode(args);
   const safeTxHash = await Utils.createSafeTransactionHash(userData.safeAddress, contract.address, '0', encodedData);
-  console.log('safeTxHash -->', safeTxHash);
   return { encodedData, safeTxHash, toAddress: contract.address };
 };
 
@@ -127,8 +125,10 @@ const createRequestToJoin = async (req) => {
   const {
     idToken,
     createProposalTx, // This is the signed transaction to create the proposal.
-    preAuthId
+    preAuthId,
+    cardData
   } = req.body;
+
   const uid = await Utils.verifyId(idToken);
   const userData = await Utils.getUserById(uid);
   const safeAddress = userData.safeAddress;
@@ -156,12 +156,10 @@ const createRequestToJoin = async (req) => {
     console.error(response.data);
     console.error('Request to join failed, Transaction failed in relayer');
 
-    await cancelPreauthorizedPayment(preAuthId);
-
     throw new CommonError('Request to join failed, Transaction failed in relayer');
   }
 
-  console.log('wait for tx to mined');
+  console.log('waiting for tx to be mined');
 
   const receipt = await provider.waitForTransaction(response.data.txHash);
 

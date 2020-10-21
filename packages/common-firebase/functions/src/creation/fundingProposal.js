@@ -1,5 +1,5 @@
 // const Utils = require('../util/util');
-const { env } = require('@env');
+const { env } = require('../env');
 const { Utils } = require('../util/util');
 const { IpfsClient, provider, getArc, PROPOSAL_TYPE } = require('../settings');
 const { updateProposalById } = require('../graphql/proposal');
@@ -178,7 +178,7 @@ const createFundingProposal = async (req) => {
   };
 
   const response = await execTransaction(reqest2);
-  console.log('response -->', response);
+  // console.log('response -->', response);
 
   const ARC_VERSION = env.commonInfo.arcVersion;
   const abi = arc.getABI({ abiName: 'FundingRequest', version: ARC_VERSION });

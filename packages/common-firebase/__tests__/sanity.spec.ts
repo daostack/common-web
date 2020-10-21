@@ -1,9 +1,9 @@
 import axios from 'axios';
 import FormData from 'form-data';
 
-import { env } from '@env';
-import { runTest } from '@helpers/runTest';
-import { getArc, jsonRpcProvider } from '@settings';
+import { env } from './helpers/env';
+import { runTest } from './helpers/runTest';
+import { getArc, jsonRpcProvider } from '../functions/src/settings';
 
 runTest(() => {
   describe('the services', () => {

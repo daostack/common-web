@@ -1,6 +1,6 @@
 
 const ethers = require('ethers');
-const { env } = require('@env');
+const { env } = require('../../env');
 const abi = require('../util/abi.json')
 const { Utils } = require('../../util/util');
 const axios = require('axios');

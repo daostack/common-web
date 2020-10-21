@@ -14,7 +14,7 @@ const adminPayInSuccess = require('./templates/adminPayInSuccess');
 const { CommonError } = require('../util/errors');
 
 const mailer = require('../mailer');
-const env = require('@env').env;
+const env = require('../env').env;
 
 
 const templates = {
@@ -91,7 +91,7 @@ const getTemplatedEmail = (templateKey, payload) => {
         isNullOrUndefined(globalDefaultStubs[stub])
       )
     ) {
-      throw new CommonError(`Required stub ${stub} was not provided for email template`);
+      throw new CommonError(`Required stub ${stub} was not provided for ${templateKey} template`);
     }
 
     // If there is a default value for the stub and has not been replaced add it here
@@ -149,8 +149,6 @@ const getTemplatedEmail = (templateKey, payload) => {
  * @param { string | string[] | 'admin' } to
  */
 const sendTemplatedEmail = async ({ templateKey, emailStubs, subjectStubs, to }) => {
-  console.log('Template email begin sending');
-
   to === 'admin' && (to = env.mail.adminMail);
 
   const { template, subject } = getTemplatedEmail(templateKey, { emailStubs, subjectStubs });
@@ -159,6 +157,8 @@ const sendTemplatedEmail = async ({ templateKey, emailStubs, subjectStubs, to })
     const emailPromises = [];
 
     to.forEach((emailTo) => {
+      console.log(`Sending ${templateKey} to ${emailTo}.`)
+
       emailPromises.push(mailer.sendMail({
         to: emailTo,
         subject,
@@ -168,6 +168,8 @@ const sendTemplatedEmail = async ({ templateKey, emailStubs, subjectStubs, to })
 
     await Promise.all(emailPromises);
   } else {
+    console.log(`Sending ${templateKey} to ${to}.`)
+
     await mailer.sendMail(
       to,
       subject,

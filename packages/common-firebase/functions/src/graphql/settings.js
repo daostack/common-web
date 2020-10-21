@@ -1,4 +1,4 @@
-const { env } = require('@env');
+const { env } = require('../env');
 const settings = require('../settings');
 
 const { graphql } = env;

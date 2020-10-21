@@ -27,7 +27,7 @@ relayer.use(express.urlencoded({ extended: true }));
 relayer.use(cors({ origin: true }));
 
 relayer.get('/createWallet', async (req, res) => {
-  responseExecutor(
+  await responseExecutor(
     async () => {
       return await createWallet(req);
     },
@@ -41,7 +41,7 @@ relayer.get('/createWallet', async (req, res) => {
 })
 
 relayer.post('/requestToJoin', async (req, res) => {
-  responseExecutor(
+  await responseExecutor(
     async () => {
       return await createRequestToJoin(req, res);
     },
@@ -68,7 +68,7 @@ relayer.get('/addWhitleList', async (req, res) => {
   //   res.status(500).send(errDoc)
   // }
 
-  responseExecutor(
+  await responseExecutor(
     async () => {
       const idToken = req.header('idToken');
       const uid = await Utils.verifyId(idToken);
@@ -95,7 +95,7 @@ relayer.post('/execTransaction', async (req, res) => {
   //   res.status(500).send(errDoc)
   // }
 
-  responseExecutor(
+  await responseExecutor(
     async () => {
       return await execTransaction(req);
     },

@@ -18,7 +18,7 @@
     "chainId": 0
   },
   "graphql": {
-    "subgraphName": "daostack/v8_11_exp_kovan",
+    "subgraphName": "daostack/v8_13_exp_kovan",
     "graphqlHttpProvider": "http://127.0.0.1:8000/subgraphs/name/daostack",
     "graphqlWsProvider": "http://127.0.0.1:8000/subgraphs/name/daostack",
     "graphApiUrl": "http://127.0.0.1:8000/subgraphs/name",
@@ -27,7 +27,6 @@
   },
   "commonInfo": {
     "commonToken": "0xdff3e43710d39d2ba5dda7a8d959ed22cc905b01",
-    "memberReputation": 1000,
     "arcVersion": "0.1.2-rc.6"
   },
   "biconomy": {
@@ -39,13 +38,11 @@
     "proxyFactory": "",
     "masterCopy": ""
   },
-  "mangopay": {
-    "apiUrl": "",
-    "clientId": "",
-    "daoStackWalletId": ""
-  },
   "mail": {
     "sender": "dev@common.io",
     "adminMail": "support@common.io"
+  },
+  "circlepay": {
+    "apiUrl": "https://api-sandbox.circle.com/v1"
   }
 }

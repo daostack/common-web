@@ -1,6 +1,6 @@
 import admin from 'firebase-admin';
 import { EVENT_TYPES } from "../event/event";
-import { env } from '@env';
+import { env } from '../env';
 import { getDaoById } from '../db/daoDbService';
 import { getProposalById } from '../db/proposalDbService';
 import { getUserById } from '../db/userDbService';
@@ -34,8 +34,9 @@ export const notifyData: Record<string, IEventData> = {
           {
             templateKey: 'userCommonCreated',
             emailStubs: {
-                commonName: commonData.name,
-                commonId: commonData.id
+              name: userData.displayName,
+              commonName: commonData.name,
+              commonLink: Utils.getCommonLink(commonData.id)
             }
           },
           {
@@ -59,24 +60,24 @@ export const notifyData: Record<string, IEventData> = {
         ]
       }
   },
-  [EVENT_TYPES.CREATION_COMMON_FAILED] : {
-      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-      data: async (objectId: string) => {
-          return {
-              commonData: (await getDaoById(objectId)).data()
-          }
-      },
-      // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-      email: ( {commonData} ) => {
-          return {
-              templateKey: 'adminWalletCreationFailed',
-              emailStubs: {
-                  commonName: commonData.name,
-                  commonId: commonData.id
-              }
-          }
-      }
-  },
+  // [EVENT_TYPES.CREATION_COMMON_FAILED] : {
+  //     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  //     data: async (objectId: string) => {
+  //         return {
+  //             commonData: (await getDaoById(objectId)).data()
+  //         }
+  //     },
+  //     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  //     email: ( {commonData} ) => {
+  //         return {
+  //             templateKey: 'adminWalletCreationFailed',
+  //             emailStubs: {
+  //                 commonName: commonData.name,
+  //                 commonId: commonData.id
+  //             }
+  //         }
+  //     }
+  // },
   [EVENT_TYPES.CREATION_REQUEST_TO_JOIN] : {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (proposalId: string) => {
@@ -87,8 +88,9 @@ export const notifyData: Record<string, IEventData> = {
         }
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ( { commonData, userData } ) => {
+    email: ({ commonData, userData } ) => {
         return {
+          to: userData.email,
           templateKey: 'requestToJoinSubmitted',
           emailStubs: {
             name: userData.displayName,

@@ -1,6 +1,6 @@
-import { getTemplatedEmail } from '@functions/email';
-import { runTest } from '@helpers/runTest';
-import '@functions';
+import { getTemplatedEmail } from '../../functions/src/email';
+import { runTest } from '../helpers/runTest';
+import '../../functions/src';
 
 const requestToJoinStubs = {
   name: 'Test Name',

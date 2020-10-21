@@ -1,5 +1,5 @@
 const functions = require('firebase-functions');
-const backupUtil = require('@util/backup');
+const backupUtil = require('../util/backup');
 
 exports.backup = functions.pubsub
   .schedule('0 */3 * * *')

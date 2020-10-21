@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 
-import '@functions';
-import { runTest } from '@helpers/runTest';
+import '../../../functions/src';
+import { runTest } from '../../helpers/runTest';
 
 runTest((funcs, test) => {
   const create = supertest(funcs.create);
@@ -12,7 +12,7 @@ runTest((funcs, test) => {
     name: 'Test Common',
     founderAddresses: '0xEAe13cD0b3586C09AFe762F933dA190D614628b6',
     tokenDist: [0],
-    repDist: [100],
+    repDist: [1000],
     minFeeToJoin: 100,
     fundingGoal: 1000,
     fundingGoalDeadline: new Date().getTime() + 3000,
@@ -46,7 +46,7 @@ runTest((funcs, test) => {
 
       expect(res.status).toBe(200);
 
-      expect(res.body.message).toMatchSnapshot();
+      expect(res.body).toMatchSnapshot();
     });
   });
 });

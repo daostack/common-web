@@ -71,7 +71,7 @@ function _validateDaoPlugins(plugins) {
   }
 
   if (!daoPlugins.joinPlugin || !daoPlugins.fundingPlugin) {
-    const msg = `Skipping dao as it is not properly configured`;
+    const msg = `Skipping dao as it is not properly configured - missing the required plugins`;
 
     return { isValid: false, errorMsg: msg };
   }
@@ -178,21 +178,17 @@ async function _updateDaoDb(dao) {
           userId: null
         });
       } else {
-        console.log(`User found with this address ${member.coreState.address}`);
-        // const userDaos = user.daos || []
-        // if (!(dao.id in userDaos)) {
-        //   userDaos.push(dao.id)
-        //   db.collection("users").doc(user.id).update({ daos: userDaos })
-        // }
+        // console.log(`User found with this address ${member.coreState.address}`);
         doc.members.push({
           address: member.coreState.address,
           userId: user.id
         });
       }
     }
+  } else {
+    doc.members = existingDocData.members
   }
   await updateDao(dao.id, doc);
-
   return { 
     updatedDoc: doc 
   };

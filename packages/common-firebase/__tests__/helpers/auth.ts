@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 import axios from 'axios';
 
-import { env } from '@env';
+import { env } from './env';
 
 export const getIdToken = async (uid: string): Promise<string> => {
   const customToken = await admin.auth().createCustomToken(uid);

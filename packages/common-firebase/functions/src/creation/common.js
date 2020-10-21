@@ -1,6 +1,6 @@
 // const Utils = require('../util/util');
 const { IpfsClient, provider, getArc } = require('../settings');
-const { env } = require('@env');
+const { env } = require('../env');
 const DAOFactoryABI = require('@daostack/common-factory/abis/DAOFactory');
 const { CommonError } = require('../util/errors');
 const { getForgeOrgData } = require('@daostack/common-factory');
@@ -29,7 +29,9 @@ const createCommonTransaction = async (req) => {
     userData = await Utils.getUserById(uid);
   }
 
-  const MEMBER_REPUTATION = env.commonInfo.memberReputation;
+  const REP_DIST = [1000]; 
+  // TODO: we want to change this and set it to 0, and mint the repution when the proposalis accepted (and the payment succeeded)
+  const MEMBER_REPUTATION = 1000;
   const COMMONTOKENADDRESS = env.commonInfo.commonToken;
   const IPFS_DATA_VERSION = env.graphql.ipfsDataVersion;
   const ARC_VERSION = env.commonInfo.arcVersion;
@@ -37,7 +39,7 @@ const createCommonTransaction = async (req) => {
   // need these keys:
   const defaultOptions = {
     tokenDist: [ 0 ],
-    repDist: [ MEMBER_REPUTATION ],
+    repDist: REP_DIST ,
     memberReputation: MEMBER_REPUTATION,
     fundingToken: COMMONTOKENADDRESS,
     VERSION: IPFS_DATA_VERSION // just some alphanumberic marker  that is useful for understanding what our data is shaped like
@@ -69,11 +71,11 @@ const createCommonTransaction = async (req) => {
     DAOFactoryInstance: daoFactoryInfo.address,
     orgName: opts.name,
     founderAddresses: [ opts.founderAddresses ],
-    repDist: opts.repDist,
+    repDist: REP_DIST,
     votingMachine: votingMachineInfo.address,
     fundingToken: opts.fundingToken,
     minFeeToJoin: 0, // Make the min fee to 0, simplify request to join logic
-    memberReputation: opts.memberReputation,
+    memberReputation: MEMBER_REPUTATION,
     // we set the OFFICIAL funding goal to 0 - in the frontend we show the fundingGaol from ipfs data
     // goal: parseInt(opts.fundingGoal, 10),
     goal: 0,
@@ -118,7 +120,7 @@ const createCommon = async (req) => {
   );
 
   const response = await execTransaction(reqest);
-  console.log('response  ->', response);
+  // console.log('response  ->', response);
   const receipt = await provider.waitForTransaction(response.txHash);
   const events = Utils.getTransactionEvents(daoFactoryContract.interface, receipt);
   const newOrgEvent = events.NewOrg;

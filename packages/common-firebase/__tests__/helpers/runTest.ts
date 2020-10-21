@@ -1,4 +1,4 @@
-import * as functions from '@functions';
+import * as functions from '../../functions/src';
 import firebaseFunctionsTests from 'firebase-functions-test';
 
 import { FeaturesList } from 'firebase-functions-test/lib/features';

@@ -31,7 +31,7 @@ graphql.use(express.urlencoded({ extended: true })); // to support URL-encoded b
 graphql.use(cors({ origin: true }));
 
 graphql.get('/update-daos', async (req, res) => {
-  responseExecutor(
+  await responseExecutor(
     async () => {
       return await updateDaos();
     },
@@ -46,7 +46,7 @@ graphql.get('/update-daos', async (req, res) => {
 
 graphql.get('/update-dao-by-id', async (req, res) => {
   const { daoId, retries } = req.query;
-  responseExecutor(
+  await responseExecutor(
     async () => {
       return await updateDaoById(daoId, { retries: retries || 0 });
     },
@@ -60,7 +60,7 @@ graphql.get('/update-dao-by-id', async (req, res) => {
 });
 
 graphql.get('/update-proposals', async (req, res) => {
-  responseExecutor(
+  await responseExecutor(
     async () => {
       return await updateProposals();
     },
@@ -75,7 +75,7 @@ graphql.get('/update-proposals', async (req, res) => {
 
 graphql.get('/update-proposal-by-id', async (req, res) => {
   const { proposalId, retries, blockNumber } = req.query;
-  responseExecutor(
+  await responseExecutor(
     async () => {
       return await updateProposalById(proposalId, { retries: retries || 0 }, blockNumber);
     },
@@ -89,7 +89,7 @@ graphql.get('/update-proposal-by-id', async (req, res) => {
 });
 
 graphql.get('/update-users', async (req, res) => {
-  responseExecutor(
+  await responseExecutor(
     async () => {
       return await updateUsers();
     },
@@ -103,7 +103,7 @@ graphql.get('/update-users', async (req, res) => {
 });
 
 graphql.get('/update-votes', async (req, res) => {
-  responseExecutor(
+  await responseExecutor(
     async () => {
       return await updateVotes();
     },
@@ -118,7 +118,7 @@ graphql.get('/update-votes', async (req, res) => {
 
 graphql.get('/update-dao-balance', async (req, res) => {
   const { daoId } = req.query;
-  responseExecutor(
+  await responseExecutor(
     async () => {
       return await updateDAOBalance(daoId);
     },
