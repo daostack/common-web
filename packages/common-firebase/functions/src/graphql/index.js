@@ -4,7 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const { getPublicSettings } = require('./settings');
-
+const { fetchAllContracts } = require('../settings');
 const { updateDaos, updateDaoById } = require('./dao');
 const { updateProposals, updateProposalById } = require('./proposal');
 const { updateUsers } = require('./user');
@@ -133,6 +133,16 @@ graphql.get('/update-dao-balance', async (req, res) => {
 
 graphql.get('/settings', async (req, res) => {
   await responseExecutor(() =>  getPublicSettings(req), {
+    req,
+    res,
+    successMessage: 'Setting successfully acquired!',
+    errorMessage: 'An error occurred while trying to acquire the settingss'
+  });
+});
+
+graphql.get('/fetch-contractinfos', async (req, res) => {
+  console.log(fetchAllContracts)
+  await responseExecutor(() =>  fetchAllContracts(false), {
     req,
     res,
     successMessage: 'Setting successfully acquired!',

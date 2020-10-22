@@ -66,15 +66,19 @@ Arc.prototype.fetchAllContracts = async function (useCache) {
     }
   }
 
-  console.log('Fetching contratInfos from the graph');
+  console.log('Fetching contractInfos from the graph');
   let allContractInfos = [];
   let contractInfos = null;
   let skip = 0;
 
   do {
+    // TODO: I (jelle) made this ugly hack fo adding 0.1.2-rc.7 to the version, to recover from an earlier bug
+    // in which we, by accident, created a few commons in this version.
+    // In any case, this approach is not scaleable. I thikn we should fetch the contracts as needed, 
+    // i.e. cache the contracts singularly as needed, and not as a block
     const query = gql`
     query AllContractInfos {
-      contractInfos(first: 1000 skip: ${skip * 1000} where: { version: "${ARC_VERSION}" }) {
+      contractInfos(first: 1000 skip: ${skip * 1000} where: { version_in: ["${ARC_VERSION}", "0.1.2-rc.7"] }) {
         id
         name
         version
@@ -93,12 +97,17 @@ Arc.prototype.fetchAllContracts = async function (useCache) {
   const universalContracts = await this.fetchUniversalContractInfos();
   allContractInfos.push(...universalContracts);
   this.setContractInfos(allContractInfos);
-  console.log('ARC is not using cache');
   db.collection('arc').doc('contract').set(
     {
       'allContractInfos': JSON.stringify(allContractInfos)
     }
   )
+}
+
+const fetchAllContracts = async (useCache) => {
+  const arc = await getArc(useCache)
+  await arc.fetchAllContracts()
+  return arc.contractInfos
 }
 
 const IpfsClient = new IPFSApiClient(ipfsProvider);
@@ -126,6 +135,7 @@ const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 module.exports = {
     IpfsClient,
+    fetchAllContracts,
     graphwsLink,
     graphHttpLink,
     databaseURL,
