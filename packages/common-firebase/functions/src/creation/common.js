@@ -47,7 +47,9 @@ const createCommonTransaction = async (req) => {
   const opts = { ...defaultOptions, ...data };
   console.log('saving data on ipfs');
   const ipfsHash = await IpfsClient.addAndPinString(opts);
-  console.log('ipfsHash ->', ipfsHash);
+  if (!ipfsHash) {
+    throw CommonError("IPFS hash is empty - something went wrong calling addAndPintString")
+  }
 
   const arc = await getArc();
 
