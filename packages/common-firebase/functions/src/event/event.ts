@@ -16,7 +16,7 @@ export enum EVENT_TYPES {
     APPROVED_REQUEST_TO_JOIN = 'approvedReqToJoin',
     APPROVED_PROPOSAL = 'approvedProposal',
     //REJECTED notifications
-    REJECTED_REQUEST_TO_JOIN = 'approvedReqToJoin',
+    REJECTED_REQUEST_TO_JOIN = 'rejectedReqToJoin',
     REJECTED_PROPOSAL = 'rejectedProposal',
     //COMMON 
     COMMON_WHITELISTED = 'commonWhitelisted',
@@ -72,6 +72,20 @@ export const eventData: Record<string, IEventData> = {
         }
     },
     [EVENT_TYPES.APPROVED_REQUEST_TO_JOIN]: {
+        eventObject: async (proposalId: string): Promise<any> => (await getProposalById(proposalId)).data(),
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+        notifyUserFilter: async (proposal: any): Promise<string[]> => {
+            return [proposal.proposerId];
+        }
+    },
+    [EVENT_TYPES.REJECTED_REQUEST_TO_JOIN]: {
+        eventObject: async (proposalId: string): Promise<any> => (await getProposalById(proposalId)).data(),
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+        notifyUserFilter: async (proposal: any): Promise<string[]> => {
+            return [proposal.proposerId];
+        }
+    },
+    [EVENT_TYPES.REJECTED_PROPOSAL]: {
         eventObject: async (proposalId: string): Promise<any> => (await getProposalById(proposalId)).data(),
         // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         notifyUserFilter: async (proposal: any): Promise<string[]> => {
