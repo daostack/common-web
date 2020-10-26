@@ -30,11 +30,6 @@
     "proxyFactory": "0x76E2cFc1F5Fa8F6a5b3fC4c8F4788F0116861F9B",
     "masterCopy": "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F"
   },
-  "mangopay": {
-    "apiUrl": "https://api.sandbox.mangopay.com/v2.01/daostack-common",
-    "clientId": "daostack-common",
-    "daoStackWalletId": "83405793"
-  },
   "mail": {
     "sender": "support@common.io",
     "adminMail": "support@common.io"
