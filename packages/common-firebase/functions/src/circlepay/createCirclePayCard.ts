@@ -53,7 +53,6 @@ interface ICardCreatedPayload {
 }
 
 export const createCirclePayCard = async (req: IRequest): Promise<ICardCreatedPayload> => {
-
   const { idToken, ...cardData } = req.body;
 
   const uid = await Utils.verifyId(idToken);

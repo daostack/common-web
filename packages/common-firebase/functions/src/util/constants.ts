@@ -10,6 +10,7 @@ export const ErrorCodes = {
   NotFound: 'NotFound',
 
   GenericError: 'GenericError',
+  UncaughtError: 'UncaughtError',
 
   // ---- External providers errors
   CirclePayError: 'External.CirclePayError'

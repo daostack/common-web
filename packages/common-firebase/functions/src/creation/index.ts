@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 
-import { commonApp } from '../util/commonApp';
+import { commonApp, commonRouter } from '../util/commonApp';
 import { responseCreateExecutor, responseExecutor } from '../util/responseExecutor';
 import { createCommon, createCommonTransaction } from './common';
 import { createFundingProposal, createFundingProposalTransaction } from './fundingProposal';
@@ -9,25 +9,26 @@ import { createVoteProposalTransaction, voteProposal } from './voteProposal';
 
 
 const runtimeOptions = {
-  timeoutSeconds: 540, // Maximum time 9 mins
-}
+  timeoutSeconds: 540 // Maximum time 9 mins
+};
 
-const createApp = commonApp();
+const router = commonRouter();
 
-createApp.post('/createCommonTransaction', async (req, res) => {
+router.post('/createCommonTransaction', async (req, res, next) => {
   await responseCreateExecutor(
     async () => {
-      return await createCommonTransaction(req)
+      return await createCommonTransaction(req);
     },
     {
       req,
       res,
+      next,
       successMessage: `Create common transaction successfully!`
     }
   );
-})
+});
 
-createApp.post('/createCommon', async (req, res) => {
+router.post('/createCommon', async (req, res, next) => {
   await responseExecutor(
     async () => {
       return await createCommon(req);
@@ -35,12 +36,13 @@ createApp.post('/createCommon', async (req, res) => {
     {
       req,
       res,
-      successMessage: `Common Created successfully!`,
+      next,
+      successMessage: `Common Created successfully!`
     }
   );
-})
+});
 
-createApp.post('/createRequestToJoinTransaction', async (req, res) => {
+router.post('/createRequestToJoinTransaction', async (req, res, next) => {
   await responseCreateExecutor(
     async () => {
       return await createRequestToJoinTransaction(req);
@@ -48,12 +50,13 @@ createApp.post('/createRequestToJoinTransaction', async (req, res) => {
     {
       req,
       res,
-      successMessage: `Create requestToJoin transaction successfully!`,
+      next,
+      successMessage: `Create requestToJoin transaction successfully!`
     }
   );
-})
+});
 
-createApp.post('/createRequestToJoin', async (req, res) => {
+router.post('/createRequestToJoin', async (req, res, next) => {
   await responseExecutor(
     async () => {
       return await createRequestToJoin(req);
@@ -61,63 +64,68 @@ createApp.post('/createRequestToJoin', async (req, res) => {
     {
       req,
       res,
-      successMessage: `Request to join successfully!`,
+      next,
+      successMessage: `Request to join successfully!`
     }
   );
-})
+});
 
-  createApp.post('/createFundingProposalTransaction', async (req, res) => {
-    await responseCreateExecutor(
-      async () => {
-        return await createFundingProposalTransaction(req);
-      },
-      {
-        req,
-        res,
-        successMessage: `Create funding proposal transaction successfully!!`,
-      }
-    );
-})
-  
-  createApp.post('/createFundingProposal', async (req, res) => {
-    await responseExecutor(
-      async () => {
-        return await createFundingProposal(req);
-      },
-      {
-        req,
-        res,
-        successMessage: `Create funding proposal successfully!`,
-      }
-    );
-})
+router.post('/createFundingProposalTransaction', async (req, res, next) => {
+  await responseCreateExecutor(
+    async () => {
+      return await createFundingProposalTransaction(req);
+    },
+    {
+      req,
+      res,
+      next,
+      successMessage: `Create funding proposal transaction successfully!!`
+    }
+  );
+});
 
-  createApp.post('/createVoteProposalTransaction', async (req, res) => {
-    await responseCreateExecutor(
-      async () => {
-        return await createVoteProposalTransaction(req);
-      },
-      {
-        req,
-        res,
-        successMessage: `Create a vote proposal transaction successfully!`,
-      }
-    );
-  })
-  
-  createApp.post('/votePropoal', async (req, res) => {
-    await responseExecutor(
-      async () => {
-        return await voteProposal(req);
-      },
-      {
-        req,
-        res,
-        successMessage: `Vote for the proposal successfully!`,
-      }
-    );
-  })
+router.post('/createFundingProposal', async (req, res, next) => {
+  await responseExecutor(
+    async () => {
+      return await createFundingProposal(req);
+    },
+    {
+      req,
+      res,
+      next,
+      successMessage: `Create funding proposal successfully!`
+    }
+  );
+});
 
-export const create = functions
+router.post('/createVoteProposalTransaction', async (req, res, next) => {
+  await responseCreateExecutor(
+    async () => {
+      return await createVoteProposalTransaction(req);
+    },
+    {
+      req,
+      res,
+      next,
+      successMessage: `Create a vote proposal transaction successfully!`
+    }
+  );
+});
+
+router.post('/votePropoal', async (req, res, next) => {
+  await responseExecutor(
+    async () => {
+      return await voteProposal(req);
+    },
+    {
+      req,
+      res,
+      next,
+      successMessage: `Vote for the proposal successfully!`
+    }
+  );
+});
+
+export const createApp = functions
   .runWith(runtimeOptions)
-  .https.onRequest(createApp);
+  .https.onRequest(commonApp(router));

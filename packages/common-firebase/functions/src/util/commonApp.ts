@@ -2,7 +2,11 @@ import cors from 'cors';
 import express from 'express';
 import bodyParser from 'body-parser';
 
-export const commonApp = (): express.Application => {
+import { errorHandling } from '../middleware/errorHandlingMiddleware';
+
+export const commonRouter = express.Router;
+
+export const commonApp = (router: express.Router): express.Application => {
   const app = express();
 
   app.use(bodyParser.json());
@@ -19,6 +23,10 @@ export const commonApp = (): express.Application => {
   app.use(cors({
     origin: true
   }));
+
+  app.use(router);
+
+  app.use(errorHandling);
 
   return app;
 };

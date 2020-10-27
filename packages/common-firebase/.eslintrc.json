@@ -35,8 +35,6 @@
     "no-template-curly-in-string": 1,
     // Warn if return statements do not either always or never specify values
     "consistent-return": 1,
-    // Warn if no return statements in callbacks of array methods
-    "array-callback-return": 1,
     // Require the use of === and !==
     "eqeqeq": 2,
     // Disallow the use of alert, confirm, and prompt

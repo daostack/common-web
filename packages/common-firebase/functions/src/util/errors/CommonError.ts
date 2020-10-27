@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { ErrorCodes } from '../constants';
+import { ErrorCodes, StatusCodes } from '../constants';
 
 interface IErrorData {
   statusCode?: number;
@@ -49,9 +49,9 @@ export class CommonError extends Error implements ICommonError {
     this.name = "Common Error";
 
     this.userMessage = userMessage;
-    this.statusCode = data.statusCode;
     this.errorCode = data.errorCode || ErrorCodes.GenericError;
-    
+    this.statusCode = data.statusCode || StatusCodes.InternalServerError;
+
     this.data = data.payload;
   }
 }
