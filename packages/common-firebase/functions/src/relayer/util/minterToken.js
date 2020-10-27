@@ -19,11 +19,9 @@ const minterToken = async (address, amount) => {
     // TODO: we probably want to send this transaction through the relayer (?)
     let receipt = await tx.wait();
 
-    console.log('--- minter receipt---', receipt);
 
     return receipt.txHash;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 }

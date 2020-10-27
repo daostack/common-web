@@ -113,6 +113,7 @@ async function updateProposalById(proposalId, customRetryOptions = {}, blockNumb
   let proposal = await promiseRetry(
     async (retryFunc, number) => {
       console.log(`Try #${number} to get proposal ${proposalId}`);
+
       const proposals = await arc.proposals({
         where: {
           id: proposalId
@@ -149,7 +150,7 @@ async function updateProposalById(proposalId, customRetryOptions = {}, blockNumb
     
     const updatedDoc = await _updateProposalDb(proposal);
     
-    console.log("Updated proposal", proposal.id);
+    console.log(`Updated proposal with id (${proposal.id})`);
     
     return updatedDoc;
   }

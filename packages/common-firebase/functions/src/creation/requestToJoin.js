@@ -37,13 +37,11 @@ const createRequestToJoinTransaction = async (req) => {
   try {
     joinPlugin = await dao.plugin({ where: { name: PROPOSAL_TYPE.Join } });
   } catch (e) {
-    console.log(e);
-    console.log(daoId);
     const plugins = await dao
       .plugins()
       .pipe(first())
       .toPromise();
-    console.log(plugins.map((p) => p.coreState.name));
+
     throw e;
   }
 
@@ -120,8 +118,6 @@ const createRequestToJoinTransaction = async (req) => {
 };
 
 const createRequestToJoin = async (req) => {
-
-  console.log('---requestToJoin---');
   const {
     idToken,
     createProposalTx, // This is the signed transaction to create the proposal.
@@ -138,7 +134,7 @@ const createRequestToJoin = async (req) => {
 
   const repw1 = await Relayer.addAddressToWhitelist([ createProposalTx.to ]);
 
-  console.log('Add white list Success', repw1);
+  console.log('Add white list Success');
 
   const response = await Relayer.execTransaction(
     safeAddress,
@@ -148,8 +144,6 @@ const createRequestToJoin = async (req) => {
     createProposalTx.data,
     createProposalTx.signature
   );
-
-  console.log('--- Relayer response ---', response);
 
   if (response.status !== 200) {
     console.error('Request to join failed, tx rejected in Relayer');
@@ -163,7 +157,7 @@ const createRequestToJoin = async (req) => {
 
   const receipt = await provider.waitForTransaction(response.data.txHash);
 
-  console.log('tx mined', receipt);
+  console.log('tx mined');
   const interf = new ethers.utils.Interface(abi.Join);
   const events = Utils.getTransactionEvents(interf, receipt);
 

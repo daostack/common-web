@@ -31,10 +31,10 @@ const QUERY_LATEST_BLOCK_NUMBER = `query {
 
 class Utils {
 
-  getCommonLink(commonId)  {
+  getCommonLink(commonId) {
     return `https://app.common.io/common/${commonId}`
   }
-  
+
   async verifyId(idToken) {
     try {
       const decodedToken = await admin.auth().verifyIdToken(idToken)
@@ -45,7 +45,7 @@ class Utils {
       throw new CommonError(CFError.invalidIdToken)
     }
   }
-  
+
   async getUserDataByIdToken(idToken) {
     try {
       const decodedToken = await admin.auth().verifyIdToken(idToken)
@@ -58,7 +58,7 @@ class Utils {
   getUserRef(uid) {
     return admin.firestore().collection('users').doc(uid);
   }
-  
+
   getDaoRef(daoId) {
     return admin.firestore().collection('daos').doc(daoId);
   }
@@ -101,8 +101,9 @@ class Utils {
       const cardData = cardRef.docs.map(doc => doc.data())[0];
       return cardData;
     } catch (err) {
-      console.log('err', err)
-       throw new CommonError(CFError.emptyUserData)
+      console.error('err', err);
+
+      throw new CommonError(CFError.emptyUserData)
     }
   }
 
@@ -114,7 +115,7 @@ class Utils {
       const cardData = cardRef.docs.map(doc => doc.data())[0];
       return cardData;
     } catch (err) {
-       throw CommonError(CFError.emptyUserData)
+      throw CommonError(CFError.emptyUserData)
     }
   }
 
@@ -126,7 +127,7 @@ class Utils {
       const paymentData = paymentRef.docs.map(doc => doc.data())[0];
       return paymentData;
     } catch (err) {
-       throw CommonError(CFError.emptyUserData)
+      throw CommonError(CFError.emptyUserData)
     }
   }
 
@@ -148,8 +149,8 @@ class Utils {
     const receipt = await provider.waitForTransaction(txHash);
     return this.isRelayerTxSuccessWithReceipt(receipt);
   }
-  
-   isRelayerTxSuccessWithReceipt(receipt) {
+
+  isRelayerTxSuccessWithReceipt(receipt) {
     const ExecutionFailureTopic = '0x23428b18acfb3ea64b08dc0c1d296ea9c09702c09083ca5272e64d115b687d23';
     for (const log of receipt.logs) {
       if (log.topics[0] === ExecutionFailureTopic) {
@@ -158,52 +159,47 @@ class Utils {
     }
     return true;
   }
-  
+
   async getGraphLatestBlockNumber() {
-    const response = await fetch( env.graphql.graphApiUrl, {
+    const response = await fetch(env.graphql.graphApiUrl, {
       method: 'POST',
       body: JSON.stringify({ query: QUERY_LATEST_BLOCK_NUMBER }),
       headers: { 'Content-Type': 'application/graphql' },
-    });  
+    });
 
     const graphData = await response.json();
     try {
 
       const blockNumber = graphData.data.indexingStatusForCurrentVersion.chains[0].latestBlock.number;
       return Number(blockNumber);
-    } catch(error) {
+    } catch (error) {
       throw new CommonError(`Error trying to fetch latest blocknumber from ${env.graphql.graphApiUrl}: ${error}`)
     }
   }
 
-  async createSafeTransactionHash (myWallet, toAddress, value, data = '0x', useNextNonce = false) {
-    try {
-      const masterCopyContract = new ethers.Contract(
-        myWallet,
-        ABI.MasterCopy,
-        provider,
-      );
-      const zeroAddress = ethers.constants.AddressZero;
-      let nonce = await masterCopyContract.nonce();
-      nonce = useNextNonce ? nonce.add(1) : nonce;
-      const SAFE_TX_TYPEHASH = '0xbb8310d486368db6bd6f849402fdd73ad53d316b5a4b2644ad6efe0f941286d8';
-      const DOMAIN_SEPARATOR_TYPEHASH = '0x035aff83d86937d35b32e04f0ddc6ff469290eef2f1b692d8a815c89404d4749';
-      const domainSeperator = ethers.utils.keccak256(ethers.utils.defaultAbiCoder.encode(['bytes32', 'address'], [DOMAIN_SEPARATOR_TYPEHASH, myWallet]));
-      let mySafeTxHash = ethers.utils.keccak256(
-        ethers.utils.defaultAbiCoder.encode(
-          ['bytes32', 'address', 'uint256', 'bytes32', 'uint8', 'uint256', 'uint256', 'uint256', 'address', 'address', 'uint'],
-          [SAFE_TX_TYPEHASH, toAddress, value, ethers.utils.keccak256(data), 0, 0, 0, 0, zeroAddress, zeroAddress, nonce]
-        )
-      );
-      let myTxHash = ethers.utils.solidityKeccak256(
-        ['bytes1', 'bytes1', 'bytes32', 'bytes32'],
-        ['0x19', '0x01', domainSeperator, mySafeTxHash]
-      );
-      return myTxHash;
-    } catch (err) {
-      console.log(err);
-      throw (err);
-    }
+  async createSafeTransactionHash(myWallet, toAddress, value, data = '0x', useNextNonce = false) {
+    const masterCopyContract = new ethers.Contract(
+      myWallet,
+      ABI.MasterCopy,
+      provider,
+    );
+    const zeroAddress = ethers.constants.AddressZero;
+    let nonce = await masterCopyContract.nonce();
+    nonce = useNextNonce ? nonce.add(1) : nonce;
+    const SAFE_TX_TYPEHASH = '0xbb8310d486368db6bd6f849402fdd73ad53d316b5a4b2644ad6efe0f941286d8';
+    const DOMAIN_SEPARATOR_TYPEHASH = '0x035aff83d86937d35b32e04f0ddc6ff469290eef2f1b692d8a815c89404d4749';
+    const domainSeperator = ethers.utils.keccak256(ethers.utils.defaultAbiCoder.encode(['bytes32', 'address'], [DOMAIN_SEPARATOR_TYPEHASH, myWallet]));
+    let mySafeTxHash = ethers.utils.keccak256(
+      ethers.utils.defaultAbiCoder.encode(
+        ['bytes32', 'address', 'uint256', 'bytes32', 'uint8', 'uint256', 'uint256', 'uint256', 'address', 'address', 'uint'],
+        [SAFE_TX_TYPEHASH, toAddress, value, ethers.utils.keccak256(data), 0, 0, 0, 0, zeroAddress, zeroAddress, nonce]
+      )
+    );
+    let myTxHash = ethers.utils.solidityKeccak256(
+      ['bytes1', 'bytes1', 'bytes32', 'bytes32'],
+      ['0x19', '0x01', domainSeperator, mySafeTxHash]
+    );
+    return myTxHash;
   }
 }
 

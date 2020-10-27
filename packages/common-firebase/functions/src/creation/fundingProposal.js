@@ -126,8 +126,6 @@ const createFundingProposalTransaction = async (req) => {
 
 const createFundingProposal = async (req) => {
   const arc = await getArc();
-
-  console.log('---Funding Proposal---');
   const {
     fundingRequestTx, // This is the signed transaction to create the proposal.
     setFlagTx,
@@ -137,8 +135,6 @@ const createFundingProposal = async (req) => {
 
   const waitForSetFlagTx = async () => {
     if (!setFlagTx) return;
-
-    console.log('--- Execute setFlagTx ---');
 
     const reqest1 = {
       body: {
@@ -154,8 +150,6 @@ const createFundingProposal = async (req) => {
   };
 
   await waitForSetFlagTx();
-
-  console.log('--- Execute fundingRequestTx ---');
 
   const daoContract = await arc.getContract(daoId);
   const fundingGoalReachedFlag = await daoContract.db('FUNDED_BEFORE_DEADLINE');
@@ -178,7 +172,6 @@ const createFundingProposal = async (req) => {
   };
 
   const response = await execTransaction(reqest2);
-  // console.log('response -->', response);
 
   const ARC_VERSION = env.commonInfo.arcVersion;
   const abi = arc.getABI({ abiName: 'FundingRequest', version: ARC_VERSION });

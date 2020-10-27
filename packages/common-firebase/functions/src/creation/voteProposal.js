@@ -65,7 +65,6 @@ const createVoteProposalTransaction = async (req) => {
 
   const encodedData = contract.interface.functions.vote.encode(params);
   const safeTxHash = await Utils.createSafeTransactionHash(userData.safeAddress, contract.address, 0, encodedData);
-  // console.log('safeTxHash -->', safeTxHash);
   return {
     encodedData: encodedData,
     toAddress: contract.address,
