@@ -177,7 +177,7 @@ const createRequestToJoin = async (req) => {
     throw new CommonError('Request to join failed, Transaction was mined, but no proposalId was found in the JoinInProposal event');
   }
 
-  await updateProposalById(proposalId, { retries: 8 });
+  await updateProposalById(proposalId, { retries: 8 }, receipt.blockNumber);
 
   return {
     proposalId,

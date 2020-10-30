@@ -32,12 +32,13 @@ graphqlRouter.get('/update-daos', async (req, res, next) => {
 });
 
 graphqlRouter.get('/update-dao-by-id', async (req, res, next) => {
-  const { daoId, retries } = req.query;
+
+  const { daoId, retries, blockNumber } = req.query;
   await responseExecutor(
     async () => {
       console.log('hey');
 
-      const res = await updateDaoById(daoId, { retries: retries || 0 });
+      const res = await updateDaoById(daoId, { retries: retries || 0 }, blockNumber);
       console.log('there');
 
       return res;

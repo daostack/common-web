@@ -4,6 +4,7 @@ const { getBalance } = require('../db/daoDbService');
 const promiseRetry = require('promise-retry');
 const { CommonError } = require('../util/errors');
 const { PROPOSAL_TYPE } = require('../util/util');
+const { validateBlockNumber } = require('./util/util');
 
 const { updateDao, getDaoById } = require('../db/daoDbService');
 
@@ -101,7 +102,35 @@ function _validateDaoState(daoState) {
   return { isValid: true };
 }
 
-async function _updateDaoDb(dao) {
+const _getDaoPlugins = async (dao, { blockNumber, customRetryOptions }) => {
+  let plugins = null;
+  const daoPluginsQuery = {};
+  if (blockNumber) {
+    daoPluginsQuery.block = { number: blockNumber }
+    plugins = await promiseRetry(
+      async (retryFunc, number) => {
+        console.log(`Try #${number} get dao plugins for graph block with number ${blockNumber}`);
+        try {
+          plugins = await dao.plugins(daoPluginsQuery).first();
+        } catch (err) {
+          if (err.message.includes('has only indexed up to block number')) {
+            retryFunc(`The current graph block "${blockNumber}" is still not indexed.`);
+          } else {
+            throw err;
+          }
+        }
+
+        return plugins;
+      },
+      { ...retryOptions, ...customRetryOptions }
+    );
+  } else {
+    plugins = await dao.plugins(daoPluginsQuery, { fetchPolicy: 'no-cache' }).first();
+  }
+  return plugins;
+}
+
+async function _updateDaoDb(dao, blockNumberInfo) {
 
   const daoState = dao.coreState;
 
@@ -113,7 +142,7 @@ async function _updateDaoDb(dao) {
   }
 
   // Validate plugins
-  const plugins = await dao.plugins({}, { fetchPolicy: 'no-cache' }).first();
+  const plugins = await _getDaoPlugins(dao, blockNumberInfo);
   const pluginValidation = _validateDaoPlugins(plugins);
 
   if (!pluginValidation.isValid) {
@@ -191,23 +220,44 @@ async function _updateDaoDb(dao) {
   };
 }
 
-async function updateDaoById(daoId, customRetryOptions = {}) {
+async function updateDaoById(daoId, customRetryOptions = {}, blockNumber) {
   const arc = await getArc();
   if (!daoId) {
     throw new CommonError(`You must provide a daoId (current value is "${daoId}")`);
   }
   daoId = daoId.toLowerCase();
 
+  const daoQuery = {
+    where: {
+      id: daoId
+    }
+  }
+
+  const currBlockNumber = validateBlockNumber(blockNumber);
+
+  if (currBlockNumber) {
+    daoQuery.block = { number: currBlockNumber }
+  }
+
   const res =  await promiseRetry(
     async (retryFunc, number) => {
       console.log(`Try #${number} to get Dao ${daoId}...`);
-      const currDaosResult = await arc.daos({ where: { id: daoId } }, { fetchPolicy: 'no-cache' }).first();
+      let currDaosResult = null;
+      try {
+        currDaosResult = await arc.daos(daoQuery, !daoQuery.block ? { fetchPolicy: 'no-cache' } : null ).first();
+      } catch (err) {
+        if (err.message.includes('has only indexed up to block number')) {
+          retryFunc(`The current graph block "${blockNumber}" is still not indexed.`);
+        } else {
+          throw err;
+        }
+      }
 
       if(number > 7) {
         console.warn('Cannot get dao after a lot of retries. Current result: ', currDaosResult);
       }
 
-      if (currDaosResult.length === 0) {
+      if (!currBlockNumber && currDaosResult.length === 0) {
         console.log(`retrying because we did not find a dao ${daoId}`)
         retryFunc(`We could not find a dao with id "${daoId}" in the graph at ${arc.graphqlHttpProvider}.`);
       }
@@ -219,7 +269,7 @@ async function updateDaoById(daoId, customRetryOptions = {}) {
       const dao = currDaosResult[0];
 
       // @todo: _updateDaoDb should throw en error, not return error messages
-      const { updatedDoc, errorMsg } = await _updateDaoDb(dao);
+      const { updatedDoc, errorMsg } = await _updateDaoDb(dao, { blockNumber: currBlockNumber, customRetryOptions });
 
       if (errorMsg) {
         console.log(`retrying because of error: ${errorMsg}`)

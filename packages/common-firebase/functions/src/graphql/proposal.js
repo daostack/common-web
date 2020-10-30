@@ -7,17 +7,52 @@ const { Utils } = require('../util/util');
 const { UnsupportedVersionError } = require('../util/errors');
 const { updateProposal } = require('../db/proposalDbService');
 const BN = require('bn.js');
+const { validateBlockNumber } = require('./util/util');
 
 const parseVotes = (votesArr) => {
   return votesArr.map(({ coreState: { voter, outcome } }) => { return { voter, outcome } })
 }
 
-async function _updateProposalDb(proposal) {
+const _getVotes = async (arc, voteQuery, { blockNumber, customRetryOptions }) => {
+  let votes = null;
+  if (blockNumber) {
+    voteQuery.block = { number: blockNumber }
+    votes = await promiseRetry(
+      async (retryFunc, number) => {
+        console.log(`Try #${number} find proposal votes for block with number ${blockNumber}`);
+        try {
+          votes = await Vote.search(arc, voteQuery).first();
+        } catch (err) {
+          if (err.message.includes('has only indexed up to block number')) {
+            retryFunc(`The current graph block "${blockNumber}" is still not indexed.`);
+          } else {
+            throw err;
+          }
+        }
+
+        return votes;
+      },
+      { ...retryOptions, ...customRetryOptions }
+    );
+  } else {
+    console.log("voteQuery -> ", voteQuery);
+    votes = await Vote.search(arc, voteQuery, { fetchPolicy: 'no-cache' }).first();
+  }
+  return votes;
+}
+
+async function _updateProposalDb(proposal, graphBlockInfo) {
   const arc = await getArc();
   const result = { updatedDoc: null, errorMsg: null };
   const s = proposal.coreState
   
-  const votes = await Vote.search(arc, { where: { proposal: s.id } }, { fetchPolicy: 'no-cache' }).first();
+  const voteQuery = {
+    where: {
+      proposal: s.id
+    }
+  }
+
+  const votes = await _getVotes(arc, voteQuery, graphBlockInfo);
   
   // TODO: for optimization, consider looking for a new member not as part of this update process
   // but as a separate cloudfunction instead (that watches for changes in the database and keeps it consistent)
@@ -101,40 +136,34 @@ async function _updateProposalDb(proposal) {
 
 async function updateProposalById(proposalId, customRetryOptions = {}, blockNumber, currentTry = 0) {
   const arc = await getArc();
-  let currBlockNumber = null;
+  let currBlockNumber = validateBlockNumber(blockNumber);
   
-  if (blockNumber) {
-    currBlockNumber = Number(blockNumber);
-    if (Number.isNaN(currBlockNumber)) {
-      throw new CommonError(`The blockNumber parameter should be a number between 0 and ${Number.MAX_SAFE_INTEGER}`);
+  const proposalQuery = {
+    where: {
+      id: proposalId
     }
+  };
+
+  if (currBlockNumber) {
+    proposalQuery.block = { number: currBlockNumber }
   }
   
   let proposal = await promiseRetry(
     async (retryFunc, number) => {
       console.log(`Try #${number} to get proposal ${proposalId}`);
-
-      const proposals = await arc.proposals({
-        where: {
-          id: proposalId
-        }
-      }, {
-        fetchPolicy: 'no-cache'
-      }).first();
-      
-      let isBehindLatestBlock = true; // set initially to true and change only if the blockNumber is provided and checked
-      if (currBlockNumber) {
-        const latestBlockNumber = await Utils.getGraphLatestBlockNumber();
-        isBehindLatestBlock = currBlockNumber <= latestBlockNumber;
+      let proposals = null;
+      try {
+        proposals = await arc.proposals(proposalQuery, !proposalQuery.block ? { fetchPolicy: 'no-cache'} : null ).first();
+      } catch (err) {
+        console.log("Retry reason: ", err);
+        await retryFunc(`We could not find a proposal with id "${proposalId}" in the graph${currBlockNumber ? ` for block ${currBlockNumber}` : '.'}`);
       }
       
       if (proposals.length === 0) {
         await retryFunc(`We could not find a proposal with id "${proposalId}" in the graph.`);
-      } else if (!isBehindLatestBlock) {
-        await retryFunc(`We could not find an update for block "${blockNumber}" in the graph.`);
       }
       // @notice The current implementation is a workaround a problem that actually needs to be solved
-      else  {
+      else {
         const propState = proposals[0].coreState  
         if (propState.votes.length !== propState.votesCount) {
           // We want to log this error, as the graph people deny that this could happen and we need evidence :)
@@ -148,7 +177,7 @@ async function updateProposalById(proposalId, customRetryOptions = {}, blockNumb
     { ...retryOptions, ...customRetryOptions }
     );
     
-    const updatedDoc = await _updateProposalDb(proposal);
+    const updatedDoc = await _updateProposalDb(proposal, { blockNumber: currBlockNumber, customRetryOptions });
     
     console.log(`Updated proposal with id (${proposal.id})`);
     

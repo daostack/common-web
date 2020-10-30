@@ -187,7 +187,7 @@ const createFundingProposal = async (req) => {
     );
   }
   const proposalId = events.NewFundingProposal._proposalId;
-  await updateProposalById(proposalId, { retries: 8 });
+  await updateProposalById(proposalId, { retries: 8 }, receipt.blockNumber);
   return { proposalId };
 };
 

@@ -114,7 +114,7 @@ const createRequestToJoin = async (req, res) => {
     return;
   }
 
-  await updateProposalById(proposalId, { retries: 8 });
+  await updateProposalById(proposalId, { retries: 8 }, receipt.blockNumber);
 
   await assignCardToProposal(cardId, proposalId);
 
