@@ -155,7 +155,7 @@ async function updateProposalById(proposalId, customRetryOptions = {}, blockNumb
       console.log(`Try #${number} to get proposal ${proposalId}`);
       let proposals = null;
       try {
-        proposals = await arc.proposals(proposalQuery, !proposalQuery.block ? { fetchPolicy: 'no-cache' } : {} ).first();
+        proposals = await arc.proposals(proposalQuery, { fetchPolicy: 'no-cache' } ).first();
       } catch (err) {
         if (err.message.includes('has only indexed up to block number')) {
           retryFunc(`The current graph block "${blockNumber}" is still not indexed.`);

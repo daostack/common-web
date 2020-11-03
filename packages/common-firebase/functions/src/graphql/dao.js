@@ -244,7 +244,7 @@ async function updateDaoById(daoId, customRetryOptions = {}, blockNumber) {
       console.log(`Try #${number} to get Dao ${daoId}...`);
       let currDaosResult = null;
       try {
-        currDaosResult = await arc.daos(daoQuery, !daoQuery.block ? { fetchPolicy: 'no-cache' } : {} ).first();
+        currDaosResult = await arc.daos(daoQuery, { fetchPolicy: 'no-cache' } ).first();
       } catch (err) {
         if (err.message.includes('has only indexed up to block number')) {
           retryFunc(`The current graph block "${blockNumber}" is still not indexed.`);
