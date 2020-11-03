@@ -257,7 +257,7 @@ async function updateDaoById(daoId, customRetryOptions = {}, blockNumber) {
         console.warn('Cannot get dao after a lot of retries. Current result: ', currDaosResult);
       }
 
-      if (!currBlockNumber && currDaosResult.length === 0) {
+      if (currDaosResult.length === 0) {
         console.log(`retrying because we did not find a dao ${daoId}`)
         retryFunc(`We could not find a dao with id "${daoId}" in the graph at ${arc.graphqlHttpProvider}.`);
       }
