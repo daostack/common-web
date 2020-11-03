@@ -13,7 +13,9 @@ const parseVotes = (votesArr) => {
   return votesArr.map(({ coreState: { voter, outcome } }) => { return { voter, outcome } })
 }
 
-const _getVotes = async (arc, voteQuery, { blockNumber, customRetryOptions }) => {
+const _getVotes = async (arc, voteQuery, options) => {
+  const { blockNumber, customRetryOptions } = options || {};
+
   let votes = null;
   if (blockNumber) {
     voteQuery.block = { number: blockNumber }
