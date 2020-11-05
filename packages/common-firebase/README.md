@@ -6,6 +6,25 @@ This repository contains code for the firebase backend of the project.
 
 To see the endpoint documentation you can click [here](https://documenter.getpostman.com/view/5095300/TVemAUcq)
 
+
+# Quick start for developers
+
+- clone the repository
+- get the secrets: https://daostack1.atlassian.net/wiki/spaces/CMN/pages/45711371/SECRETS+needed+for+common-firebase
+- yarn
+- yarn build # compile the typescript code into javascript, alternative, yarn build:watch will run a watcher
+
+To run the functions locally but connect to the staging database in the cloud:
+
+- yarn use:staging # connect to the staging backed in the cloud, yarn use:production will connect to the prodcution backend
+- yarn serve # run the functions locally, and connect to the backend
+
+To run both db adn functions locally:
+- mkdir firestore/data
+- yarn use:staging
+- yarn data:update # download the dta from staging database
+- yarn emulator # run the whole suite locally
+
 # Local environment
 
 To run everything locally you could use the following command:
