@@ -83,7 +83,6 @@ const createFundingProposalTransaction = async (req) => {
   const funding = data.funding;
   if (!funding && funding !== 0) {
     throw new CommonError(
-      '"funding" argument must be given',
       'The funding argument was not provided!'
     );
   }

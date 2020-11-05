@@ -12,9 +12,9 @@ export const errorHandling = (err: Error, req: express.Request, res: express.Res
 
     createErrorResponse(req, res, new CommonError(
       err.message || err as unknown as string || 'Something bad happened',
-      null,
       {
-        payload: err
+        error: err,
+        errorString: JSON.stringify(err)
       }
     ));
   }

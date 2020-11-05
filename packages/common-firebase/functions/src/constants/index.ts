@@ -12,6 +12,9 @@ interface Env {
 
   mail: {
     SENDGRID_API_KEY: string;
+
+    sender: string;
+    adminMail: string;
   };
 
   circlepay: {
@@ -20,7 +23,8 @@ interface Env {
   };
 }
 
-export const env = merge(envSecrets, envConfig) as Env;
+export const env = merge(envConfig, envSecrets) as Env;
 
 // ---- Reexports
 export { runtimeOptions } from './runtimeOptions';
+export { Collections } from './collections';

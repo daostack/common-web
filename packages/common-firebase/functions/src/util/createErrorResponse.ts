@@ -50,7 +50,7 @@ export const createErrorResponse = (req: express.Request, res: express.Response,
       new CommonError(`
         The error passed to createErrorResponse was not of
         CommonError type. This should never happen!
-      `, null, {
+      `, {
         payload: error
       })
     );
