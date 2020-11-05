@@ -2,7 +2,7 @@
 
 CURRENTDIR=$(pwd)
 DIRNAME=$(dirname "$0")
-OUTPUTDIR="$CURRENTDIR/functions/src/env"
+OUTPUTDIR="$CURRENTDIR/functions/src/constants/env"
 
 echo "Writing config files to $OUTPUTDIR"
 

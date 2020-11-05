@@ -1,4 +1,4 @@
-const {env} = require('../env');
+const {env} = require('../constants');
 const ethers = require('ethers');
 const abi = require('../relayer/util/abi.json');
 const { provider, db } = require('../settings');

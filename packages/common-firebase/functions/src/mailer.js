@@ -1,5 +1,5 @@
 const sgMail = require('@sendgrid/mail');
-const { env } = require('./env');
+const { env } = require('./constants');
 sgMail.setApiKey(env.mail.SENDGRID_API_KEY);
 
 exports.sendMail = async (dest, subject, message) => {

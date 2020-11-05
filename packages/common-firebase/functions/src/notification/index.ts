@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import { getUserById } from '../db/userDbService';
-import { env } from '../env';
+import { env } from '../constants';
 import Notification from './notification';
 import emailClient from './email';
 import { notifyData } from './notification';

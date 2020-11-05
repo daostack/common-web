@@ -6,7 +6,7 @@ const ethers = require('ethers');
 const ABI = require('../relayer/util/abi.json');
 const { CommonError } = require('./errors');
 const { provider } = require('../settings');
-const { env } = require('../env');
+const { env } = require('../constants');
 
 // That was imported from './error', but was not
 // there so I don't know what is it

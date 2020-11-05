@@ -1,6 +1,6 @@
 import admin from 'firebase-admin';
 import { EVENT_TYPES } from "../event/event";
-import { env } from '../env';
+import { env } from '../constants';
 import { getDaoById } from '../db/daoDbService';
 import { getProposalById } from '../db/proposalDbService';
 import { getUserById } from '../db/userDbService';

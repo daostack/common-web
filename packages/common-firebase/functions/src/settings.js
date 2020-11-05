@@ -1,6 +1,6 @@
 const {ethers, Contract} = require('ethers');
 const { Arc } = require('@daostack/arc.js');
-const { env } = require('./env');
+const { env } = require('./constants');
 const IPFSApiClient = require('./util/IPFSClient')
 const gql = require('graphql-tag');
 const admin = require('firebase-admin');

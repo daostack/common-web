@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 
-import { env } from '../env';
+import { env } from '../constants';
 import { circlePayApi } from '../settings';
 import { externalRequestExecutor } from '../util';
 import { ErrorCodes } from '../util/constants';
