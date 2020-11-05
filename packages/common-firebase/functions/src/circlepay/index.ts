@@ -4,7 +4,6 @@ import { responseExecutor } from '../util/responseExecutor';
 import { commonApp, commonRouter } from '../util/commonApp';
 
 import { createCirclePayCard, assignCard } from './createCirclePayCard';
-import { createPayment } from './createPayment';
 import { encryption } from './circlepay';
 
 const runtimeOptions = {
@@ -44,18 +43,6 @@ circlepay.get('/encryption', async (req, res, next) => {
       next,
       successMessage: `PCI encryption key generated!`
     });
-});
-
-circlepay.post('/create-a-payment', async (req, res, next) => {
-  console.log('index/create-a-payment');
-  await responseExecutor(
-    async () => (await createPayment(req.body)),
-    {
-      req,
-      res,
-      next,
-      successMessage: `Payment was successful`
-    })
 });
 
 export const circlepayApp = functions
