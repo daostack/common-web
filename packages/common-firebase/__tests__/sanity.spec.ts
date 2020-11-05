@@ -3,7 +3,7 @@ import FormData from 'form-data';
 
 import { env } from './helpers/env';
 import { runTest } from './helpers/runTest';
-import { getArc, jsonRpcProvider } from '../functions/src/settings';
+import { getArc, jsonRpcProvider } from '@common/functions/dist/settings';
 
 runTest(() => {
   describe('the services', () => {

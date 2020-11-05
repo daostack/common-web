@@ -1,6 +1,5 @@
 import express from 'express';
 
-import { getArc } from '../settings';
 import { StatusCodes } from './constants';
 
 interface IResponseExecutorAction {
@@ -46,8 +45,6 @@ interface IResponseCreateExecutor {
 }
 
 export const responseCreateExecutor: IResponseCreateExecutor = async (action, { req, res, next, successMessage }, retried = false): Promise<void> => {
-  const arc = await getArc();
-
   try {
     let actionResult = await action();
 
@@ -64,25 +61,6 @@ export const responseCreateExecutor: IResponseCreateExecutor = async (action, { 
 
     return next();
   } catch (e) {
-    if (e.message.match('^No contract with address') && !retried) {
-
-      // @todo Type the arc if possible
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      await arc.fetchAllContracts(false);
-
-      console.log('<--- No contract with address error, updating new arc --->');
-
-      await responseCreateExecutor(action, {
-        req,
-        res,
-        next,
-        successMessage
-      }, true);
-
-      return next();
-    }
-
     return next(e);
   }
 };

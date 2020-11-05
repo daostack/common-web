@@ -1,7 +1,9 @@
-const { db } = require('../settings.js');
-const COLLECTION_NAME = 'payments';
+// @ts-ignore
+const { db } = require('../settings');
 const { getPayment } = require('../circlepay/circlepay');
 const { Utils } = require('../util/util');
+
+const COLLECTION_NAME = 'payments';
 
 const polling = async ({validate, interval, paymentId}) => {
 	console.log('start polling');

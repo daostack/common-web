@@ -43,34 +43,6 @@ const replaceAll = (string, search, replace) => {
 const isNullOrUndefined = (val) =>
   val === null || val === undefined;
 
-
-/***
- *
- * @param {
- *  'requestToJoinSubmitted',
- *  'adminCommonCreated',
- *  'adminFundingRequestAccepted',
- *  'adminPreauthorizationFailed' ,
- *  'userCommonCreated',
- *  'userCommonFeatured',
- *  'userFundingRequestAccepted',
- *  'userJoinedButFailedPayment',
- *  'userJoinedSuccess',
- *  'adminWalletCreationFailed',
- *  'adminJoinedButPaymentFailed',
- *  'adminPayInSuccess'
- * } templateKey
- *
- * @param {{
- *   emailStubs: object
- *   subjectStubs?: object
- * }} payload
- *
- * @return {{
- *   template: string The templated body
- *   subject: string The templated subject
- * }}
- */
 const getTemplatedEmail = (templateKey, payload) => {
   let { template, subject, emailStubs, subjectStubs } = templates[templateKey];
 
@@ -126,28 +98,6 @@ const getTemplatedEmail = (templateKey, payload) => {
   };
 };
 
-/***
- *
- * @param {
- *  'requestToJoinSubmitted',
- *  'adminCommonCreated',
- *  'adminFundingRequestAccepted',
- *  'adminPreauthorizationFailed' ,
- *  'adminJoinedButPaymentFailed',
- *  'userCommonCreated',
- *  'userCommonFeatured',
- *  'userFundingRequestAccepted',
- *  'userJoinedButFailedPayment',
- *  'userJoinedSuccess',
- *  'adminWalletCreationFailed',
- *  'adminPayInSuccess'
- * } templateKey
- *
- * @param { object } emailStubs
- * @param { object } subjectStubs
- *
- * @param { string | string[] | 'admin' } to
- */
 const sendTemplatedEmail = async ({ templateKey, emailStubs, subjectStubs, to }) => {
   to === 'admin' && (to = env.mail.adminMail);
 

@@ -1,7 +1,7 @@
 const shell = require('shelljs');
 
 const deployTestsContracts = () => {
-  // Clone the repository
+  // Clone the database
   shell.exec('git clone https://github.com/gnosis/safe-contracts');
 
   // Move to the directory and install dependencies

@@ -1,6 +1,6 @@
 export interface ICommonEntity {
   /**
-   * The main identitfier of the common
+   * The main identifier of the common
    */
   id: string;
 
@@ -40,6 +40,11 @@ export interface ICommonMetadata {
   action: string;
   byline: string;
   description: string;
+
+  /**
+   * The id of the user, who created the common
+   */
+  founderId: string;
 
   /**
    * The minimum amount in cents, required

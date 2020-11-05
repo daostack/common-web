@@ -1,10 +1,11 @@
 import merge from 'deepmerge';
 
+import adminKeys from './env/adminsdk-keys.json';
 import envSecrets from './env/env_secrets.json';
 import envConfig from './env/env_config.json';
 
 interface Env {
-  environment: 'staging' | 'production';
+  environment: 'staging' | 'production' | 'dev';
 
   firebase: {
     databaseURL: string;
@@ -28,3 +29,5 @@ export const env = merge(envConfig, envSecrets) as Env;
 // ---- Reexports
 export { runtimeOptions } from './runtimeOptions';
 export { Collections } from './collections';
+
+export { adminKeys };

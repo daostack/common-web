@@ -1,4 +1,4 @@
-const { db } = require('../settings.js');
+const { db } = require('../settings.ts');
 const COLLECTION_NAME = 'users';
 
 async function getUserById(userId) {
