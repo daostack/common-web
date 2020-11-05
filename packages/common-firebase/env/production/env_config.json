@@ -1,34 +1,7 @@
 {
   "environment": "production",
-  "tests": {
-    "enabled": true
-  },
   "firebase": {
     "databaseURL": "https://common-daostack.firebaseio.com"
-  },
-  "blockchain": {
-    "jsonRpcProvider": "https://dai.poa.network/",
-    "chainId": 100
-  },
-  "graphql": {
-    "subgraphName": "daostack/v8_13_exp_xdai",
-    "graphqlHttpProvider": "https://api.thegraph.com/subgraphs/name/daostack/v8_13_exp_xdai",
-    "graphqlWsProvider": "wss://api.thegraph.com/subgraphs/name/daostack/v8_13_exp_xdai",
-    "graphApiUrl": "https://api.thegraph.com/index-node/graphql",
-    "ipfsProvider": "https://api.thegraph.com/ipfs-daostack/api/v0",
-    "ipfsDataVersion": "000004"
-  },
-  "commonInfo": {
-    "commonToken": "0x2ea0be07dfc0357f40884365f2c9cfd2a36d4a6e",
-    "memberReputation": 1000,
-    "arcVersion": "0.1.2-rc.6"
-  },
-  "biconomy": {
-    "createProxy": "5ecb88b02d7ac07924bcd639",
-    "execTransaction": "5ec544046959bd3dbb4133f0",
-    "create2Proxy": "5ecb88b02d7ac07924bcd63a",
-    "proxyFactory": "0x76E2cFc1F5Fa8F6a5b3fC4c8F4788F0116861F9B",
-    "masterCopy": "0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F"
   },
   "mail": {
     "sender": "support@common.io",

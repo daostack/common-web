@@ -11,10 +11,10 @@ const adminWalletCreationFailed = require('./templates/adminWalletCreationFailed
 const adminJoinedButPaymentFailed = require('./templates/adminJoinedButFailedPayment');
 const adminPayInSuccess = require('./templates/adminPayInSuccess');
 
-const { CommonError } = require('../util/errors');
+const { CommonError } = require('../../util/errors');
 
-const mailer = require('../mailer');
-const env = require('../env').env;
+const mailer = require('../../mailer');
+const env = require('../../env').env;
 
 
 const templates = {

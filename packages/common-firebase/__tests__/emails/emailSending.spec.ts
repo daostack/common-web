@@ -1,4 +1,4 @@
-import { getTemplatedEmail } from '../../functions/src/email';
+import { getTemplatedEmail } from '../../functions/src/notification/email';
 import { runTest } from '../helpers/runTest';
 import '../../functions/src';
 

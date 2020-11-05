@@ -1,9 +1,9 @@
 const functions = require('firebase-functions');
-const { updateDAOBalance } = require("../db/daoDbService");
-const { minterToken } = require('../relayer/util/minterToken')
-const { Utils } = require('../util/util');
+const {updateDAOBalance} = require("../../db/daoDbService");
+const {minterToken} = require('../relayer/util/minterToken');
+const {Utils} = require('../../util/util');
 
-const emailClient = require('.');
+const emailClient = require('./index');
 
 exports.watchForExecutedProposals = functions.firestore
   .document('/proposals/{id}')
@@ -14,8 +14,7 @@ exports.watchForExecutedProposals = functions.firestore
     if (
       data.executed !== previousData.executed &&
       data.executed === true &&
-      data.winningOutcome === 1 
-      // && data.description.preAuthId
+      data.winningOutcome === 1
     ) {
       console.log(
         'Proposal EXECUTED and WINNING OUTCOME IS 1 -> INITIATING PAYMENT'
@@ -43,20 +42,20 @@ exports.watchForExecutedProposals = functions.firestore
           })
         ]);
 
-        console.log(`Minting ${amount} tokens to ${data.dao}`)
-        await minterToken(data.dao, amount)
+        console.log(`Minting ${amount} tokens to ${data.dao}`);
+        await minterToken(data.dao, amount);
         await updateDAOBalance(data.dao);
         return change.after.ref.set(
           {
-            paymentStatus: 'paid',
+            paymentStatus: 'paid'
           },
-          { merge: true }
+          {merge: true}
         );
 
       } catch (e) {
 
         return change.after.ref.set({
-          paymentStatus: 'failed',
+          paymentStatus: 'failed'
         }, {
           merge: true
         });
@@ -66,7 +65,7 @@ exports.watchForExecutedProposals = functions.firestore
       data.executed === true &&
       data.winningOutcome === 0
     ) {
-       // await cancelPreauthorizedPayment(data.description.preAuthId);
+      // await cancelPreauthorizedPayment(data.description.preAuthId);
     }
 
     if (
@@ -107,7 +106,7 @@ exports.watchForExecutedProposals = functions.firestore
             paymentId: 'Not available'
           }
         })
-      ])
+      ]);
     }
 
     return true;

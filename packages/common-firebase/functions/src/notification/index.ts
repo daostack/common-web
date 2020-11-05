@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 import { getUserById } from '../db/userDbService';
 import { env } from '../env';
 import Notification from './notification';
-import emailClient from '../email';
+import emailClient from './email';
 import { notifyData } from './notification';
 
 export interface INotificationModel {
