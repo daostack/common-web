@@ -2,33 +2,26 @@ import admin from 'firebase-admin';
 
 import { adminKeys, env } from './constants';
 
-const databaseURL = env.firebase.databaseURL;
-const circlePayApi = env.circlepay.apiUrl;
+export const databaseURL = env.firebase.databaseURL;
+export const circlePayApi = env.circlepay.apiUrl;
 
 if (env.environment === 'dev') {
   admin.initializeApp();
 } else {
   admin.initializeApp({
-    credential: admin.credential.cert(JSON.stringify(adminKeys)),
-    databaseURL: databaseURL
+    credential: admin.credential.cert(adminKeys as unknown as string),
+    databaseURL
   });
 }
 
-const db = admin.firestore();
+export const db = admin.firestore();
 
 db.settings({
   ignoreUndefinedProperties: true
 });
 
 // @todo Move to constants
-const PROPOSAL_TYPE = {
+export const PROPOSAL_TYPE = {
   Join: 'Join',
   FundingRequest: 'FundingRequest'
-};
-
-module.exports = {
-  databaseURL,
-  PROPOSAL_TYPE,
-  circlePayApi,
-  db
 };
