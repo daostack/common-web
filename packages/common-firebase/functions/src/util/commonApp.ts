@@ -2,7 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import bodyParser from 'body-parser';
 
-import { errorHandling } from '../middleware/errorHandlingMiddleware';
+import { errorHandling } from '../middleware';
 
 export const commonRouter = express.Router;
 

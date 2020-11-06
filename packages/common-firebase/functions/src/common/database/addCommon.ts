@@ -10,9 +10,13 @@ import { commonCollection } from './index';
  *
  * @param common - The common that we want to save
  */
-export const addCommon = async (common: Omit<ICommonEntity, 'id'>): Promise<ICommonEntity> => {
+export const addCommon = async (common: Omit<ICommonEntity, 'id' | 'createdAt' | 'updatedAt'>): Promise<ICommonEntity> => {
   const commonDoc: ICommonEntity = {
     id: v4(),
+
+    createdAt: new Date(),
+    updatedAt: new Date(),
+
     ...common
   }
 

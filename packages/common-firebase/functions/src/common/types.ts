@@ -1,9 +1,6 @@
-export interface ICommonEntity {
-  /**
-   * The main identifier of the common
-   */
-  id: string;
+import { IBaseEntity } from '../util/types';
 
+export interface ICommonEntity extends IBaseEntity{
   /**
    * The name of the common showed in the app and
    * other places (email, notification etc.)
