@@ -32,8 +32,8 @@ const processNotification = async (notification: INotificationModel) => {
             const userData: any = (await getUserById(filterUserId)).data();
 
             if (currNotifyObj.notification) {
-                const {title, body, image} = await currNotifyObj.notification(eventNotifyData);
-                await Notification.send(userData.tokens, title, body, image);
+                const {title, body, image, path} = await currNotifyObj.notification(eventNotifyData);
+                await Notification.send(userData.tokens, title, body, image, path);
             }
 
             if (currNotifyObj.email) {
@@ -54,8 +54,8 @@ const processNotification = async (notification: INotificationModel) => {
     } else {
         const eventNotifyData = await currNotifyObj.data(notification.eventObjectId);
         if (currNotifyObj.notification) {
-            const {title, body, image} = currNotifyObj.notification(eventNotifyData);
-            await Notification.sendToAllUsers(title, body, image);
+            const {title, body, image, path} = currNotifyObj.notification(eventNotifyData);
+            await Notification.sendToAllUsers(title, body, image, path);
         }
 
         // if (currNotifyObj.email) {

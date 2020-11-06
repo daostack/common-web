@@ -1,5 +1,7 @@
 import { getDaoById } from '../util/db/daoDbService';
 import { getProposalById } from '../util/db/proposalDbService';
+import { getDiscussionMessageById } from '../util/db/discussionMessagesDb';
+import { getDiscussionById } from '../util/db/discussionDbService';
 
 interface IEventData {
     eventObject: (eventObjId: string) => any;
@@ -12,6 +14,7 @@ export enum EVENT_TYPES {
     CREATION_COMMON_FAILED = 'creationCommonFailed',
     CREATION_PROPOSAL = 'creationProposal',
     REQUEST_TO_JOIN_CREATED = 'creationReqToJoin',
+    MESSAGE_CREATED = 'messageCreated',
     //APPROVED notifications
     REQUEST_TO_JOIN_ACCEPTED = 'approvedJoinRequest',
     APPROVED_FUNDING_REQUEST = 'approvedFundingRequest',
@@ -56,6 +59,15 @@ export const eventData: Record<string, IEventData> = {
             return [
               proposal.proposerId
             ];
+        }
+    },
+    [EVENT_TYPES.MESSAGE_CREATED]: {
+        eventObject: async (discussionMessageId: string): Promise<any> => (await getDiscussionMessageById(discussionMessageId)).data(),
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+        notifyUserFilter: async (discussionMessage: any): Promise<string[]> => {
+            const discussion = (await getDiscussionById(discussionMessage.discussionId)).data()
+            const common =(await getDaoById(discussion.commonId)).data();
+            return common.members.map(member => member.userId)
         }
     },
     [EVENT_TYPES.COMMON_WHITELISTED]: {
