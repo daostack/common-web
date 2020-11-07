@@ -3,18 +3,18 @@ import * as functions from 'firebase-functions';
 import { commonApp, commonRouter } from '../util';
 import { runtimeOptions } from '../constants';
 import { responseExecutor } from '../util/responseExecutor';
-import { createCommon } from './business/createCommon';
+import { getAuthToken } from '../util/getAuthToken';
+
+import { createCommon } from './business';
 
 const router = commonRouter();
 
 router.post('/create', async (req, res, next) => {
   await responseExecutor(
     async () => {
-      const userId = '@todo Get the real user id';
-
       return await createCommon({
         ...req.body,
-        userId
+        userId: req.user.uid
       });
     }, {
       req,
@@ -24,6 +24,16 @@ router.post('/create', async (req, res, next) => {
     });
 });
 
+// @remark If I have pushed this to the PR hit me up. It SHOULD NOT be included
+router.get('/get-token', async (req, res) => {
+  const token = await getAuthToken('H5ZkcKBX5eXXNyBiPaph8EHCiax2');
+
+  res.send(token);
+});
+
+router.get('/me', async (req, res) => {
+  res.send(req.user);
+})
 
 export const commonsApp = functions
   .runWith(runtimeOptions)

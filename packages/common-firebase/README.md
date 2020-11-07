@@ -1,11 +1,6 @@
-![Statements Coverage](docs/assets/badges/badge-statements.svg)
-![Functions Coverage](docs/assets/badges/badge-functions.svg)
-![Lines Coverage](docs/assets/badges/badge-lines.svg)
+# The backend code, powering Common
 
-
-# Firebase code in support for common
-
-This repository contains code for the clodufunctions and the website hosting, and some scripts to manage the code.
+This repository contains code for the firebase backend of the project.
 
 # Local environment
 
@@ -77,68 +72,4 @@ you can then call the API functions
 graphql.graphql.get('update-daos')
 graphql.graphql.get('update-proposals')
 graphql.graphql.get('update-proposal-by-id')
-```
-
-### Top up the relayer
-To top up the relayer send xDAI or rinkeby to this address ```0x86FC3E21B2897641BCa28404e06f37E9157E12b3```
-
-
-## API endpoints
-
-There are API endpoint for testing the functionality of the application. They are:
-
-1. For testing the email sending functionality
-   
-   **Endpoint** `/tests/sendEmail
-   
-   **Query Parameters**
-   
-    - **To (required)** - the email address of the test mail receiver
-    - **Subject (optional)** - optional subject for the test email
-    - **Message (optional)** - optional message for the test email
-    
-## Testing
-
-### set up the environment
-
-The cloud functions are communicating with a variety of services. Some of them are mocked, others 
-are running in a docker containers. To start these run 
-
-`docker-compose up`
-
-### Running the tests
-
-For testing we are using the Jest testing framework. All tests are written in TypeScript
-and must be ending with either *.spec.ts or *.test.ts. The testing commands are:
-
-`yarn test` - runs the testing suit once. This command is also ran after each commit.
-
-`yarn test:watch` - runs the test suit on file changes.
-
-`yarn test:coverage` - collects the coverage of the tests.
-
-`yarn test:badges` - generates code coverage badges.
-
-`yarn ci:test` - for now it does exactly the same as `yarn test`, but we can add additional logic in the feature 
-only for when we are running the tests in CI environment.
-
-----
-
-### Test helpers
-
-* `runTest.ts` - Used for running the tests. It has some initialization and cleanup logic for the firebase that 
-otherwise has to be duplicated in every test suite. Must not be used with custom `beforeAll()` and `afterAll()`. 
-Example usage: 
-
-```javascript
-import { runTest } from '{path to helpers}/runTest';
-
-// Required for the Firebase Setup
-import '{path to src directory of the functions}';
-
-runTest((funcs) => {
-  it('should do stuff', () => {
-    doStuff();
-  });
-})
 ```

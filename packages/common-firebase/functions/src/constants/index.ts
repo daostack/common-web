@@ -9,6 +9,7 @@ interface Env {
 
   firebase: {
     databaseURL: string;
+    apiKey: string;
   };
 
   mail: {
@@ -46,6 +47,7 @@ export const ErrorCodes = {
   ValidationError: 'ValidationError',
   ArgumentError: 'ArgumentError',
   ArgumentNullError: 'ArgumentNullError',
+  AuthenticationError: 'AuthenticationError',
 
   // ---- External providers errors
   CirclePayError: 'External.CirclePayError'

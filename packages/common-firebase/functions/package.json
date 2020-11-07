@@ -33,6 +33,7 @@
     "graphql-tag": "^2.11.0",
     "node-fetch": "^2.6.0",
     "promise-retry": "^2.0.1",
+    "request-promise": "^4.2.6",
     "rxjs": "^6.6.3",
     "subscriptions-transport-ws": "^0.9.16",
     "uuid": "^8.3.0",

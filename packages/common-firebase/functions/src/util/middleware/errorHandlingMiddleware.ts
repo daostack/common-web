@@ -1,8 +1,8 @@
 import express from 'express';
 
-import { CommonError } from '../util/errors';
-import { createErrorResponse } from '../util/createErrorResponse';
-import { ICommonError } from '../util/errors/CommonError';
+import { CommonError } from '../errors';
+import { createErrorResponse } from '../createErrorResponse';
+import { ICommonError } from '../errors/CommonError';
 
 export const errorHandling = (err: Error, req: express.Request, res: express.Response, next: express.NextFunction): void => {
   if ((err as ICommonError).errorId) {
