@@ -26,6 +26,36 @@ interface Env {
 
 export const env = merge(envConfig, envSecrets) as Env;
 
+export const StatusCodes = {
+  InternalServerError: 500,
+
+  BadRequest: 400,
+  Unauthorized: 401,
+  Forbidden: 403,
+  NotFound: 404,
+  UnprocessableEntity: 422,
+
+  Ok: 200
+}
+
+export const ErrorCodes = {
+  NotFound: 'NotFound',
+
+  GenericError: 'GenericError',
+  UncaughtError: 'UncaughtError',
+  ValidationError: 'ValidationError',
+  ArgumentError: 'ArgumentError',
+  ArgumentNullError: 'ArgumentNullError',
+
+  // ---- External providers errors
+  CirclePayError: 'External.CirclePayError'
+}
+
+export const ProposalTypes = {
+  Join: 'join',
+  Funding: 'fundingRequest'
+}
+
 // ---- Reexports
 export { runtimeOptions } from './runtimeOptions';
 export { Collections } from './collections';

@@ -3,7 +3,7 @@ import * as functions from 'firebase-functions';
 import { commonApp, commonRouter } from '../util';
 import { runtimeOptions } from '../constants';
 import { responseExecutor } from '../util/responseExecutor';
-import { createCommon } from './bussiness/createCommon';
+import { createCommon } from './business/createCommon';
 
 const router = commonRouter();
 
@@ -13,8 +13,8 @@ router.post('/create', async (req, res, next) => {
       const userId = '@todo Get the real user id';
 
       return await createCommon({
-        userId,
-        ...req.body
+        ...req.body,
+        userId
       });
     }, {
       req,

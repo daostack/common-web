@@ -1,10 +1,9 @@
 import axios from 'axios';
 
 
-import { env } from '../constants';
+import { env, ErrorCodes } from '../constants';
 import { circlePayApi } from '../settings';
 import { externalRequestExecutor } from '../util';
-import { ErrorCodes } from '../util/constants';
 
 const options = {
 	headers: {

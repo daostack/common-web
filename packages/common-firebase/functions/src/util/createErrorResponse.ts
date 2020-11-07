@@ -1,7 +1,7 @@
 import express from 'express';
 
 import { CommonError, ICommonError } from './errors/CommonError';
-import { StatusCodes } from './constants';
+import { StatusCodes } from '../constants';
 
 export interface IErrorResponse {
   error: string;

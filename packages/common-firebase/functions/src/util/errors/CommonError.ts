@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import { ErrorCodes, StatusCodes } from '../constants';
+
+import { ErrorCodes, StatusCodes } from '../../constants';
 
 interface IErrorData {
   userMessage?: string;
@@ -19,6 +20,11 @@ export interface ICommonError {
   data: any;
 }
 
+/**
+ * The base error of the project. All other errors must be derived
+ * from the CommonError and in all cases, for witch we do
+ * no have custom error the CommonError must be used
+ */
 export class CommonError extends Error implements ICommonError {
   public errorId: string;
   public errorCode: string;

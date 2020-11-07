@@ -1,5 +1,7 @@
 import { v4 } from 'uuid';
 
+import { BaseEntityType } from '../../util/types';
+
 import { ICommonEntity } from '../types';
 import { commonCollection } from './index';
 
@@ -10,7 +12,7 @@ import { commonCollection } from './index';
  *
  * @param common - The common that we want to save
  */
-export const addCommon = async (common: Omit<ICommonEntity, 'id' | 'createdAt' | 'updatedAt'>): Promise<ICommonEntity> => {
+export const addCommon = async (common: Omit<ICommonEntity, BaseEntityType>): Promise<ICommonEntity> => {
   const commonDoc: ICommonEntity = {
     id: v4(),
 
@@ -18,9 +20,11 @@ export const addCommon = async (common: Omit<ICommonEntity, 'id' | 'createdAt' |
     updatedAt: new Date(),
 
     ...common
-  }
+  };
 
-  await commonCollection.add(commonDoc);
+  await commonCollection
+    .doc(commonDoc.id)
+    .set(commonDoc);
 
   return commonDoc;
-}
+};

@@ -5,9 +5,11 @@ import * as circlepayTriggers from './circlepay/triggers';
 
 import { circlepayApp } from './circlepay';
 import { commonsApp } from './common';
+import { proposalsApp } from './proposals';
 
 // --- Express apps
 exports.commons = commonsApp;
+exports.proposals = proposalsApp;
 exports.circlepay = circlepayApp;
 
 // --- Triggers and Subscriptions

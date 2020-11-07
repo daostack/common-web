@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { StatusCodes } from './constants';
+import { StatusCodes } from '../constants';
 
 interface IResponseExecutorAction {
   (): any;

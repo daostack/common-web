@@ -1,5 +1,13 @@
 export type valueOf<T> = T[keyof T];
 
+export type Nullable<T> = T | null | undefined;
+
+export type BaseEntityType = 'id' | 'createdAt' | 'updatedAt';
+
+export type DistributiveOmit<T, K extends keyof any> = T extends any
+  ? Omit<T, K>
+  : never;
+
 export interface IBaseEntity {
   /**
    * The main identifier of the common
