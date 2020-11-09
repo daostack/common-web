@@ -21,7 +21,7 @@ interface IBaseProposalEntity extends IBaseEntity {
   /**
    * The type of the proposal: fundingRequest or join
    */
-  type: string;
+  type: 'join' | 'fundingRequest';
 
   /**
    * Object with some description of the proposal

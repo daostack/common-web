@@ -1,26 +1,77 @@
 import * as yup from 'yup';
 
 import { IFundingRequestProposal } from '../proposalTypes';
-import { NotImplementedError } from '../../util/errors';
+import { CommonError, NotImplementedError } from '../../util/errors';
 import { validate } from '../../util/validate';
+import { isCommonMember } from '../../common/business';
+import { commonDb } from '../../common/database';
+import { StatusCodes } from '../../constants';
+import { proposalDb } from '../database';
 
 const createFundingProposalValidationSchema = yup.object({
   commonId: yup
     .string()
     .uuid()
+    .required(),
+
+  proposerId: yup
+    .string()
+    .required(),
+
+  description: yup
+    .string()
+    .required(),
+
+  amount: yup
+    .number()
     .required()
 });
 
 type CreateFundingProposalPayload = yup.InferType<typeof createFundingProposalValidationSchema>;
 
-export const createFundingProposal = async (payload: CreateFundingProposalPayload): Promise<IFundingRequestProposal> => {
+export const createFundingRequest = async (payload: CreateFundingProposalPayload): Promise<IFundingRequestProposal> => {
   await validate<CreateFundingProposalPayload>(payload, createFundingProposalValidationSchema);
 
-  // Check if user is member of the common
-  // Check if the common has enough funds
-  // Create the funding proposal
-  // Broadcast the event
-  // Return the payload
+  // Acquire the necessary data
+  const common = await commonDb.getCommon(payload.commonId);
 
-  throw new NotImplementedError();
-}
+  // Check if user is member of the common
+  if (!isCommonMember(common, payload.proposerId)) {
+    throw new CommonError('User tried to create funding request in common, that he is not part of', {
+      statusCode: StatusCodes.Forbidden,
+
+      userMessage: 'You can only create funding requests in commons, that you are part of',
+
+      commonId: common.id,
+      userId: payload.proposerId
+    });
+  }
+
+  // @question
+  //    Is this necessary tho? The funding request should
+  //    be made and paid when the common has enough funding?
+
+  // @todo Check if the common has enough funds
+
+
+  // Create the funding proposal
+  const fundingProposal = await proposalDb.addProposal({
+    proposerId: payload.proposerId,
+    commonId: payload.commonId,
+
+    type: 'fundingRequest',
+
+    description: {
+      description: payload.description
+    },
+
+    fundingRequest: {
+      amount: payload.amount
+    }
+  });
+
+  // @todo Broadcast the event
+
+  // Return the payload
+  return fundingProposal as IFundingRequestProposal;
+};

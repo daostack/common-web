@@ -1,7 +1,7 @@
 import admin from 'firebase-admin';
 
 import { IVoteEntity } from '../../voteTypes';
-import { votesCollection } from './index';
+import { votesCollection } from '../index';
 
 import QuerySnapshot = admin.firestore.QuerySnapshot;
 

@@ -3,7 +3,7 @@ import { v4 } from 'uuid';
 import { IVoteEntity } from '../../voteTypes';
 import { BaseEntityType } from '../../../util/types';
 
-import { votesCollection } from './index';
+import { votesCollection } from '../index';
 
 /**
  * Creates a vote document and saves it in the database

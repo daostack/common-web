@@ -15,7 +15,7 @@ const createRequestToJoinValidationSchema = yup.object({
     .uuid()
     .required(),
 
-  userId: yup
+  proposerId: yup
     .string()
     .required(),
 
@@ -46,7 +46,7 @@ export const createJoinRequest = async (payload: CreateRequestToJoinPayload): Pr
   const common = await commonDb.getCommon(payload.commonId);
 
   // Check if the user is already member of that common
-  if (isCommonMember(common, payload.userId)) {
+  if (isCommonMember(common, payload.proposerId)) {
     throw new CommonError('User tried to create join request in common, that is a member of', {
       userMessage: 'Cannot create join request for commons, that you are a member of',
       statusCode: StatusCodes.BadRequest,
@@ -67,7 +67,7 @@ export const createJoinRequest = async (payload: CreateRequestToJoinPayload): Pr
 
   // Create the document and save it
   const joinRequest = await proposalDb.addProposal({
-    proposerId: payload.userId,
+    proposerId: payload.proposerId,
     commonId: payload.commonId,
 
     type: 'join',

@@ -3,12 +3,11 @@ import * as yup from 'yup';
 import { IVoteEntity, VoteOutcome } from '../../voteTypes';
 import { commonDb } from '../../../common/database';
 import { isCommonMember } from '../../../common/business';
-import { proposalDb } from '../../database';
+import { proposalDb, voteDb } from '../../database';
 import { StatusCodes } from '../../../constants';
 import { validate } from '../../../util/validate';
 import { CommonError, NotImplementedError } from '../../../util/errors';
 import { hasVoted } from './hasVoted';
-import { voteDb } from '../../database/votes';
 import { updateProposal } from '../../database/updateProposal';
 
 const createVoteValidationScheme = yup.object({
@@ -26,6 +25,18 @@ const createVoteValidationScheme = yup.object({
 
 type CreateVotePayload = yup.InferType<typeof createVoteValidationScheme>;
 
+/**
+ * Cast a vote for proposal. Please note that where is no authentication check
+ * being done here, so please be sure that the id of the user you
+ * pass is from *authenticated* user
+ *
+ * @param payload - The payload from witch the vote will be created
+ *
+ * @throws { CommonError } - If the user is not part of the common, for witch the proposal was created
+ * @throws { CommonError } - If the user has already casted a vote for this proposal
+ *
+ * @returns - The created vote entity as is in the *Votes* collection
+ */
 export const createVote = async (payload: CreateVotePayload): Promise<IVoteEntity> => {
   // Validate the data
   await validate(payload, createVoteValidationScheme);
@@ -48,7 +59,7 @@ export const createVote = async (payload: CreateVotePayload): Promise<IVoteEntit
   if (await hasVoted(proposal, payload.voterId)) {
     throw new CommonError('Only one vote from one user is allowed on one proposal', {
       userMessage: 'You can only cast one vote per proposal',
-      statusCode: StatusCodes.Forbidden,
+      statusCode: StatusCodes.UnprocessableEntity,
 
       common,
       payload,

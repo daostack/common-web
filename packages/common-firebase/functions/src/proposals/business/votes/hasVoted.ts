@@ -1,6 +1,7 @@
-import { IProposalEntity } from '../../proposalTypes';
-import { voteDb, votesCollection } from '../../database/votes';
 import { CommonError } from '../../../util/errors';
+
+import { IProposalEntity } from '../../proposalTypes';
+import { voteDb } from '../../database';
 
 /**
  * Check if user is voter for proposal
