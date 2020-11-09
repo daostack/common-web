@@ -1,9 +1,9 @@
 import admin from 'firebase-admin';
 import { EVENT_TYPES } from "../event/event";
 import { env } from '../constants';
-import { getDaoById } from '../db/daoDbService';
-import { getProposalById } from '../db/proposalDbService';
-import { getUserById } from '../db/userDbService';
+import { getDaoById } from '../util/db/daoDbService';
+import { getProposalById } from '../util/db/proposalDbService';
+import { getUserById } from '../util/db/userDbService';
 import { Utils } from '../util/util';
 
 const messaging = admin.messaging();

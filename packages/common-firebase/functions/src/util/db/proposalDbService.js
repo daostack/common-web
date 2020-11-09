@@ -1,5 +1,5 @@
 // @ts-ignore
-const { db } = require('../settings');
+const { db } = require('../../settings');
 
 const COLLECTION_NAME = 'proposals';
 

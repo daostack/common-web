@@ -1,7 +1,7 @@
 import express from 'express';
 import { Utils } from '../util/util';
 import { createCard } from './circlepay';
-import cardDb, { updateCard } from '../db/cardDb';
+import cardDb, { updateCard } from '../util/db/cardDb';
 import { v4 } from 'uuid';
 import { CommonError } from '../util/errors';
 

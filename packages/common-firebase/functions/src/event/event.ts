@@ -1,5 +1,5 @@
-import { getDaoById } from '../db/daoDbService';
-import { getProposalById } from '../db/proposalDbService';
+import { getDaoById } from '../util/db/daoDbService';
+import { getProposalById } from '../util/db/proposalDbService';
 
 interface IEventData {
     eventObject: (eventObjId: string) => any;

@@ -1,7 +1,8 @@
-const functions = require('firebase-functions');
-const backupUtil = require('../util/backup');
+import * as functions from 'firebase-functions';
 
-exports.backup = functions.pubsub
+import backupUtil from '../util/backup';
+
+export const backup = functions.pubsub
   .schedule('0 */3 * * *')
   .onRun(async () => {
     console.time('Backup');

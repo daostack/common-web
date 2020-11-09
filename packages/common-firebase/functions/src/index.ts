@@ -17,4 +17,4 @@ exports.eventSub = event;
 exports.notificationSub = notification;
 exports.circlepayTriggers = circlepayTriggers;
 
-exports.cronJobs = cron.crons;
+exports.cronJobs = cron;

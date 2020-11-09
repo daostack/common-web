@@ -22,6 +22,12 @@ router.post('/create/join', async (req, res, next) => {
     });
 });
 
+router.post('/:proposalId/create/vote', async (req, res, next) => {
+  console.log(req.params);
+
+  res.send(req.params)
+});
+
 export const proposalsApp = functions
   .runWith(runtimeOptions)
   .https.onRequest(commonApp(router));

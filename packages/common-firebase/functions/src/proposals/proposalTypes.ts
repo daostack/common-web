@@ -1,5 +1,6 @@
 import { IBaseEntity } from '../util/types';
 import { ContributionType } from '../common/types';
+import { VoteOutcome } from './voteTypes';
 
 /**
  * The base proposal fields, that will be available
@@ -17,16 +18,44 @@ interface IBaseProposalEntity extends IBaseEntity {
    */
   commonId: string;
 
+  /**
+   * The type of the proposal: fundingRequest or join
+   */
   type: string;
 
+  /**
+   * Object with some description of the proposal
+   */
   description: {
+    /**
+     * The proposal description
+     */
     description: string;
   }
 
-  // @todo Votes
+  /**
+   * Collection with some of the vote information
+   * for this proposal
+   */
+  votes: IProposalVote[];
 }
 
-export type ProposalType = 'fundingRequest' | 'join';
+interface IProposalVote {
+  /**
+   * The identifier of the vote in the votes collection
+   */
+  voteId: string;
+
+  /**
+   * The id of the user, who voted
+   */
+  voterId: string;
+
+  /**
+   * The outcome of the vote
+   */
+  voteOutcome: VoteOutcome;
+}
 
 /**
  * The extended version of the proposal including

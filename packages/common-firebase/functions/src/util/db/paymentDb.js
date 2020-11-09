@@ -1,7 +1,7 @@
 // @ts-ignore
-const { db } = require('../settings');
-const { getPayment } = require('../circlepay/circlepay');
-const { Utils } = require('../util/util');
+const { db } = require('../../settings');
+const { getPayment } = require('../../circlepay/circlepay');
+const { Utils } = require('../util');
 
 const COLLECTION_NAME = 'payments';
 

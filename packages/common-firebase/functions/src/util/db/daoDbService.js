@@ -1,8 +1,8 @@
-const {Collections} = require('../constants');
+const {Collections} = require('../../constants');
 
 // @ts-ignore
-const {db} = require('../settings');
-const {env} = require('../constants');
+const {db} = require('../../settings');
+const {env} = require('../../constants');
 
 
 async function updateDao(daoId, doc) {

@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-import { IJoinRequestProposal } from '../type';
+import { IJoinRequestProposal } from '../proposalTypes';
 import { CommonError } from '../../util/errors';
 import { validate } from '../../util/validate';
 import { StatusCodes } from '../../constants';
@@ -42,8 +42,11 @@ export const createJoinRequest = async (payload: CreateRequestToJoinPayload): Pr
   // Validate the data
   await validate(payload, createRequestToJoinValidationSchema);
 
+  // Acquire the required data
+  const common = await commonDb.getCommon(payload.commonId);
+
   // Check if the user is already member of that common
-  if (await isCommonMember(payload.commonId, payload.userId)) {
+  if (isCommonMember(common, payload.userId)) {
     throw new CommonError('User tried to create join request in common, that is a member of', {
       userMessage: 'Cannot create join request for commons, that you are a member of',
       statusCode: StatusCodes.BadRequest,
@@ -51,8 +54,6 @@ export const createJoinRequest = async (payload: CreateRequestToJoinPayload): Pr
       payload
     });
   }
-
-  const common = await commonDb.getCommon(payload.commonId);
 
   // Check if the request is funded with less than required amount
   if (common.metadata.minFeeToJoin > payload.funding) {
@@ -65,8 +66,6 @@ export const createJoinRequest = async (payload: CreateRequestToJoinPayload): Pr
   }
 
   // Create the document and save it
-
-
   const joinRequest = await proposalDb.addProposal({
     proposerId: payload.userId,
     commonId: payload.commonId,

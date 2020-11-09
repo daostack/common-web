@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import { notifyData } from '../notification/notification'
-import { createNotification } from '../db/notificationDbService';
+import { createNotification } from '../util/db/notificationDbService';
 import { eventData } from './event'
 
 

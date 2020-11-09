@@ -1,4 +1,4 @@
-import { db } from '../settings';
+import { db } from '../../settings';
 import { DocumentData, DocumentReference } from '@google-cloud/firestore';
 
 // @todo Move to constants

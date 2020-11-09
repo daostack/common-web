@@ -2,7 +2,7 @@ import { v4 } from 'uuid';
 
 import { BaseEntityType, DistributiveOmit } from '../../util/types';
 
-import { IProposalEntity } from '../type';
+import { IProposalEntity } from '../proposalTypes';
 import { proposalsCollection } from './index';
 
 
@@ -12,12 +12,14 @@ import { proposalsCollection } from './index';
  *
  * @param proposal - the proposal to be saves
  */
-export const addProposal = async (proposal: DistributiveOmit<IProposalEntity, BaseEntityType>): Promise<IProposalEntity> => {
+export const addProposal = async (proposal: DistributiveOmit<IProposalEntity, BaseEntityType | 'votes'>): Promise<IProposalEntity> => {
   const proposalDoc: IProposalEntity = {
     id: v4(),
 
     createdAt: new Date(),
     updatedAt: new Date(),
+
+    votes: [],
 
     ...(proposal as IProposalEntity)
   };

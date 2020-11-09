@@ -1,7 +1,7 @@
 import { Utils } from '../util/util';
 import { createAPayment } from './circlepay';
-import { updateCard } from '../db/cardDb';
-import { updatePayment, pollPaymentStatus } from '../db/paymentDb';
+import { updateCard } from '../util/db/cardDb';
+import { updatePayment, pollPaymentStatus } from '../util/db/paymentDb';
 import {ethers} from 'ethers';
 import v4 from 'uuid';
 
