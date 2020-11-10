@@ -4,7 +4,7 @@ export type Nullable<T> = T | null | undefined;
 
 export type BaseEntityType = 'id' | 'createdAt' | 'updatedAt';
 
-export type DistributiveOmit<T, K extends keyof any> = T extends any
+export type SharedOmit<T, K extends keyof any> = T extends any
   ? Omit<T, K>
   : never;
 

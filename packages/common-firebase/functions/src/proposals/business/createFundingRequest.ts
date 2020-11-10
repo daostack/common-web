@@ -1,12 +1,14 @@
 import * as yup from 'yup';
 
-import { IFundingRequestProposal } from '../proposalTypes';
+import { IFundingRequestProposal, IProposalLink } from '../proposalTypes';
 import { CommonError, NotImplementedError } from '../../util/errors';
 import { validate } from '../../util/validate';
 import { isCommonMember } from '../../common/business';
 import { commonDb } from '../../common/database';
-import { StatusCodes } from '../../constants';
+import { env, StatusCodes } from '../../constants';
 import { proposalDb } from '../database';
+import { linkValidationSchema } from '../shemas';
+import { Nullable } from '../../util/types';
 
 const createFundingProposalValidationSchema = yup.object({
   commonId: yup
@@ -24,7 +26,10 @@ const createFundingProposalValidationSchema = yup.object({
 
   amount: yup
     .number()
-    .required()
+    .required(),
+
+  links: yup.array(linkValidationSchema)
+    .optional()
 });
 
 type CreateFundingProposalPayload = yup.InferType<typeof createFundingProposalValidationSchema>;
@@ -62,12 +67,17 @@ export const createFundingRequest = async (payload: CreateFundingProposalPayload
     type: 'fundingRequest',
 
     description: {
-      description: payload.description
+      description: payload.description,
+
+      links: payload.links as Nullable<IProposalLink[]>|| []
     },
 
     fundingRequest: {
       amount: payload.amount
-    }
+    },
+
+    countdownPeriod: env.durations.funding.countdownPeriod,
+    quietEndingPeriod: env.durations.funding.quietEndingPeriod
   });
 
   // @todo Broadcast the event

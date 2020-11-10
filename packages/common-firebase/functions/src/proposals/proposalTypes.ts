@@ -84,11 +84,11 @@ interface IProposalVote {
   voteOutcome: VoteOutcome;
 }
 
-interface IProposalLink {
+export interface IProposalLink {
   /**
    * The title, that the user will see
    */
-  title: string;
+  title?: string;
 
   /**
    * The place, where the user will be taken upon click

@@ -1,12 +1,15 @@
 import * as yup from 'yup';
 
-import { IJoinRequestProposal } from '../proposalTypes';
 import { CommonError } from '../../util/errors';
 import { validate } from '../../util/validate';
-import { StatusCodes } from '../../constants';
+import { Nullable } from '../../util/types';
+import { env, StatusCodes } from '../../constants';
+
 import { isCommonMember } from '../../common/business';
 import { commonDb } from '../../common/database';
 
+import { IJoinRequestProposal, IProposalLink } from '../proposalTypes';
+import { linkValidationSchema } from '../shemas';
 import { proposalDb } from '../database';
 
 const createRequestToJoinValidationSchema = yup.object({
@@ -25,7 +28,10 @@ const createRequestToJoinValidationSchema = yup.object({
 
   funding: yup
     .number()
-    .required()
+    .required(),
+
+  links: yup.array(linkValidationSchema)
+    .optional()
 });
 
 type CreateRequestToJoinPayload = yup.InferType<typeof createRequestToJoinValidationSchema>;
@@ -73,13 +79,17 @@ export const createJoinRequest = async (payload: CreateRequestToJoinPayload): Pr
     type: 'join',
 
     description: {
-      description: payload.description
+      description: payload.description,
+      links: payload.links as Nullable<IProposalLink[]> || []
     },
 
     join: {
       funding: payload.funding,
       fundingType: common.metadata.contributionType
-    }
+    },
+
+    countdownPeriod: env.durations.join.countdownPeriod,
+    quietEndingPeriod: env.durations.join.quietEndingPeriod
   });
 
   // @todo Create event

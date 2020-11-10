@@ -23,6 +23,18 @@ interface Env {
     apiUrl: string;
     apiKey: string;
   };
+
+  durations: {
+    funding: {
+      countdownPeriod: number;
+      quietEndingPeriod: number;
+    };
+
+    join: {
+      countdownPeriod: number;
+      quietEndingPeriod: number;
+    };
+  }
 }
 
 export const env = merge(envConfig, envSecrets) as Env;
@@ -37,7 +49,7 @@ export const StatusCodes = {
   UnprocessableEntity: 422,
 
   Ok: 200
-}
+};
 
 export const ErrorCodes = {
   NotFound: 'NotFound',
@@ -51,12 +63,12 @@ export const ErrorCodes = {
 
   // ---- External providers errors
   CirclePayError: 'External.CirclePayError'
-}
+};
 
 export const ProposalTypes = {
   Join: 'join',
   Funding: 'fundingRequest'
-}
+};
 
 // ---- Reexports
 export { runtimeOptions } from './runtimeOptions';

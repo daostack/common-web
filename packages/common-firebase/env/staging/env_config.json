@@ -11,13 +11,13 @@
     "apiUrl": "https://api-sandbox.circle.com/v1"
   },
   "durations": {
-    "countdownPeriod": {
-      "funding": 604800,
-      "join": 86400
+    "funding": {
+      "countdownPeriod": 604800,
+      "quietEndingPeriod": 86400
     },
-    "quietEndingPeriod": {
-      "funding":  100,
-      "join": 100
+    "join": {
+      "countdownPeriod": 86400,
+      "quietEndingPeriod": 3600
     }
   }
 }

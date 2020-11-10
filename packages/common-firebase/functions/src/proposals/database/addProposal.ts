@@ -1,6 +1,6 @@
 import { v4 } from 'uuid';
 
-import { BaseEntityType, DistributiveOmit } from '../../util/types';
+import { BaseEntityType, SharedOmit } from '../../util/types';
 
 import { IProposalEntity } from '../proposalTypes';
 import { proposalsCollection } from './index';
@@ -12,7 +12,7 @@ import { proposalsCollection } from './index';
  *
  * @param proposal - the proposal to be saves
  */
-export const addProposal = async (proposal: DistributiveOmit<IProposalEntity, BaseEntityType | 'votes'>): Promise<IProposalEntity> => {
+export const addProposal = async (proposal: SharedOmit<IProposalEntity, BaseEntityType | 'votes' | 'state'>): Promise<IProposalEntity> => {
   const proposalDoc: IProposalEntity = {
     id: v4(),
 
@@ -20,6 +20,8 @@ export const addProposal = async (proposal: DistributiveOmit<IProposalEntity, Ba
     updatedAt: new Date(),
 
     votes: [],
+
+    state: 'countdown',
 
     ...(proposal as IProposalEntity)
   };
