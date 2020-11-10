@@ -1,7 +1,10 @@
 import { CommonError } from './CommonError';
 import { ErrorCodes, StatusCodes } from '../../constants';
 
-
+/**
+ * The error that is thrown when the requested object
+ * is not present and thus not found.
+ */
 export class NotFoundError extends CommonError {
   /**
    * Creates new NotFound error that should set the correct

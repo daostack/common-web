@@ -3,9 +3,11 @@ import * as functions from 'firebase-functions';
 import { commonApp, commonRouter } from '../util';
 import { runtimeOptions } from '../constants';
 import { responseExecutor } from '../util/responseExecutor';
+
+import * as crons from './cron';
+import { createVote } from './business/votes/createVote';
 import { createJoinRequest } from './business/createJoinRequest';
 import { createFundingRequest } from './business/createFundingRequest';
-import { createVote } from './business/votes/createVote';
 
 const router = commonRouter();
 
@@ -56,3 +58,5 @@ router.post('/create/vote', async (req, res, next) => {
 export const proposalsApp = functions
   .runWith(runtimeOptions)
   .https.onRequest(commonApp(router));
+
+export const proposalCrons = crons;

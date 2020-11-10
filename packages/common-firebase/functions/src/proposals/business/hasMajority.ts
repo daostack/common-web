@@ -1,7 +1,9 @@
-import { IProposalEntity } from '../proposalTypes';
+import { ArgumentError } from '../../util/errors';
+
 import { ICommonEntity } from '../../common/types';
 import { commonDb } from '../../common/database';
-import { ArgumentError } from '../../util/errors';
+
+import { IProposalEntity } from '../proposalTypes';
 import { calculateVotes } from './calculateVotes';
 
 /**
@@ -9,6 +11,10 @@ import { calculateVotes } from './calculateVotes';
  *
  * @param proposal - The proposal that we want to check for majority
  * @param common - The common, in witch the proposal is created *Optional*
+ *
+ * @throws { ArgumentError } - If the passed proposal is with falsy value
+ *
+ * @returns - Boolean specifying if the proposal has majority in either of the votes
  */
 export const hasMajority = async (proposal: IProposalEntity, common?: ICommonEntity): Promise<boolean> => {
   if(!proposal) {

@@ -9,6 +9,9 @@ import { validate } from '../../../util/validate';
 import { CommonError, NotImplementedError } from '../../../util/errors';
 import { hasVoted } from './hasVoted';
 import { updateProposal } from '../../database/updateProposal';
+import { hasMajority } from '../hasMajority';
+import { hasExpired } from '../hasExpired';
+import { finalizeProposal } from '../finalizeProposal';
 
 const createVoteValidationScheme = yup.object({
   voterId: yup.string()
@@ -67,7 +70,15 @@ export const createVote = async (payload: CreateVotePayload): Promise<IVoteEntit
     });
   }
 
-  // @todo Check if the proposal is expired
+  // Check if the proposal is expired
+  if (await hasExpired(proposal)) {
+    throw new CommonError('Vote was tried to be cast on expired proposal', {
+      userMessage: 'Cannot vote on expired proposals!',
+      statusCode: StatusCodes.UnprocessableEntity,
+
+      proposal
+    });
+  }
 
   // Save the vote in the votes collection
   const vote = await voteDb.addVote({
@@ -87,8 +98,14 @@ export const createVote = async (payload: CreateVotePayload): Promise<IVoteEntit
   // Save the updated proposal to the database
   await updateProposal(proposal);
 
-  // @todo Check for majority and update the proposal state
-  // @todo Create the event, that vote was created
+  // Check for majority and update the proposal state
+  if (await hasMajority(proposal, common)) {
+    console.info(`After vote (${vote.id}) proposal (${proposal.id}) ha majority. Finalizing.`);
+
+    await finalizeProposal(proposal);
+  }
+
+  // @tbd Create the event, that vote was created
 
   // Return the created vote document
   return vote;

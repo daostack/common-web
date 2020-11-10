@@ -7,7 +7,7 @@ import { ErrorCodes, StatusCodes } from '../../constants';
  * of the passed arguments is null but should never be null.
  */
 export class ArgumentError extends CommonError {
-  constructor(argument: string, argumentValue?: string) {
+  constructor(argument: string, argumentValue?: any) {
     super(`An argument (${argument}) error occurred!`, {
       argument,
       argumentValue,

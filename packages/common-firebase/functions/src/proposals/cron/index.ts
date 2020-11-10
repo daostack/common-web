@@ -1,0 +1,1 @@
+export { finalizeProposals } from './finalizeProposalsCron';

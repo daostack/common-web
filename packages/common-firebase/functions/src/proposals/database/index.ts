@@ -3,6 +3,7 @@ import { Collections } from '../../constants';
 
 import { addProposal } from './addProposal';
 import { getProposal } from './getProposal';
+import { getProposals } from './getProposals';
 import { updateProposal } from './updateProposal';
 
 import { addVote } from './votes/addVote';
@@ -14,6 +15,7 @@ export const proposalsCollection = db.collection(Collections.Proposals);
 export const proposalDb = {
   addProposal,
   getProposal,
+  getProposals,
   updateProposal
 };
 

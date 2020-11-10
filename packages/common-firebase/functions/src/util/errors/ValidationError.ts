@@ -13,6 +13,10 @@ const handleInner = (err: yup.ValidationError[], includeValues: boolean) => {
   }));
 };
 
+/**
+ * The validation error occurs if an input value does not match
+ * the expected data type, range or pattern of the data field.
+ */
 export class ValidationError extends CommonError {
   constructor(validationError: yup.ValidationError, includeValues = true) {
     super('Validation failed', {
