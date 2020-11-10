@@ -38,11 +38,11 @@ router.post('/create/funding', async (req, res, next) => {
   });
 });
 
-router.post('/:proposalId/create/vote', async (req, res, next) => {
+router.post('/create/vote', async (req, res, next) => {
   await responseExecutor(async () => {
     return createVote({
       voterId: req.user.uid,
-      proposalId: req.params.proposalId,
+      proposalId: req.body.proposalId,
       outcome: req.body.outcome
     });
   }, {

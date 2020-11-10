@@ -9,5 +9,15 @@
   },
   "circlepay": {
     "apiUrl": "https://api-sandbox.circle.com/v1"
+  },
+  "durations": {
+    "countdownPeriod": {
+      "funding": 604800,
+      "join": 86400
+    },
+    "quietEndingPeriod": {
+      "funding":  100,
+      "join": 100
+    }
   }
 }

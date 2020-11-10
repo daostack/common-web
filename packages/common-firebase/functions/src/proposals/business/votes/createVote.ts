@@ -67,6 +67,8 @@ export const createVote = async (payload: CreateVotePayload): Promise<IVoteEntit
     });
   }
 
+  // @todo Check if the proposal is expired
+
   // Save the vote in the votes collection
   const vote = await voteDb.addVote({
     commonId: common.id,

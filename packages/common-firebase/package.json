@@ -11,7 +11,7 @@
     "serve": "firebase serve --only functions",
     "shell": "firebase functions:shell",
     "start": "firebase emulators:start",
-    "kill": "kill $(lsof -t -i:8080) && kill $(lsof -t -i:8085) && kill $(lsof -t -i:9000) && kill $(lsof -t -i:4000) && kill $(lsof -t -i:5003)",
+    "kill": "kill $(lsof -t -i:8080) & kill $(lsof -t -i:8085) & kill $(lsof -t -i:9000) & kill $(lsof -t -i:4000) & kill $(lsof -t -i:5003)",
     "deploy:staging": "yarn use:staging && ./env/env.sh -check && firebase deploy --only functions",
     "deploy:production": "yarn use:production && ./env/env.sh -check && firebase deploy --only functions",
     "emulator": "firebase emulators:start --import ./firestore/data",

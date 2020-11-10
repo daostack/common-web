@@ -2,6 +2,8 @@ import { IBaseEntity } from '../util/types';
 import { ContributionType } from '../common/types';
 import { VoteOutcome } from './voteTypes';
 
+export type ProposalState = 'countdown' | 'passed' | 'failed';
+
 /**
  * The base proposal fields, that will be available
  * to all proposal regardless of their type
@@ -31,6 +33,11 @@ interface IBaseProposalEntity extends IBaseEntity {
      * The proposal description
      */
     description: string;
+
+    /**
+     * Array of all links, backing up the proposal
+     */
+    links: IProposalLink[];
   }
 
   /**
@@ -38,11 +45,31 @@ interface IBaseProposalEntity extends IBaseEntity {
    * for this proposal
    */
   votes: IProposalVote[];
+
+  /**
+   * The current state of the proposal.
+   *
+   * Countdown - the proposal has not been finalized yet. The voting is ongoing
+   * Passed - The voting is ended. The proposal is accepted
+   * Failed - The voting is ended. The proposal is rejected
+   */
+  state: ProposalState;
+
+  /**
+   * The countdown period in seconds relative to the creation date
+   */
+  countdownPeriod: number;
+
+  /**
+   * @todo No idea what that is. Find out :D
+   */
+  quietEndingPeriod: number;
 }
 
 interface IProposalVote {
   /**
-   * The identifier of the vote in the votes collection
+   * The identifier of the vote in the votes
+   * collection
    */
   voteId: string;
 
@@ -55,6 +82,18 @@ interface IProposalVote {
    * The outcome of the vote
    */
   voteOutcome: VoteOutcome;
+}
+
+interface IProposalLink {
+  /**
+   * The title, that the user will see
+   */
+  title: string;
+
+  /**
+   * The place, where the user will be taken upon click
+   */
+  address: string;
 }
 
 /**
