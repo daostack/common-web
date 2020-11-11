@@ -2,6 +2,10 @@
 
 This repository contains code for the firebase backend of the project.
 
+# Documentation
+
+To see the endpoint documentation you can click [here](https://documenter.getpostman.com/view/5095300/TVemAUcq)
+
 # Local environment
 
 To run everything locally you could use the following command:

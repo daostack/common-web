@@ -3,6 +3,7 @@ import { auth } from 'firebase-admin';
 
 import { CommonError, UnauthorizedError } from '../errors';
 import { ErrorCodes, StatusCodes } from '../../constants';
+import { getAuthToken } from '../getAuthToken';
 
 export const authenticate: RequestHandler = async (req, res, next) => {
   try {
@@ -32,6 +33,9 @@ export const authenticate: RequestHandler = async (req, res, next) => {
       });
     }
   } catch (e) {
+    // @notice This should not be in the final PR. If I forgot to delete it hit me up
+    console.log(await getAuthToken('H5ZkcKBX5eXXNyBiPaph8EHCiax3'));
+
     return next(e);
   }
 };

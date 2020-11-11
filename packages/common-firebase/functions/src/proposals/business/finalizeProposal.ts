@@ -1,22 +1,30 @@
-import { IProposalEntity } from '../proposalTypes';
 import { ArgumentError, CommonError } from '../../util/errors';
-import { calculateVotes } from './calculateVotes';
-import { hasExpired } from './hasExpired';
+import { createEvent } from '../../util/db/eventDbService';
+import { EVENT_TYPES } from '../../event/event';
+
 import { updateProposal } from '../database/updateProposal';
+import { IProposalEntity } from '../proposalTypes';
+
+import { calculateVotes } from './calculateVotes';
+import { hasMajority } from './hasMajority';
+import { hasExpired } from './hasExpired';
 
 /**
- * Finalizes (counts votes, changes status and more) the prassed proposal
+ * Finalizes (counts votes, changes status and more) the passed proposal
  *
  * @param proposal - The proposal to finalize
  *
  * @throws { ArgumentError } - If the proposal is with falsy value
+ *
+ * @returns - The finalized proposal
  */
 export const finalizeProposal = async (proposal: IProposalEntity): Promise<IProposalEntity> => {
   if (!proposal) {
     throw new ArgumentError('proposal', proposal);
   }
 
-  if (!await hasExpired(proposal)) {
+  // If the proposal does not have a majority and is not expired we should not finalize it
+  if (!await hasExpired(proposal) && !(await hasMajority(proposal))) {
     throw new CommonError('Trying to finalize non expired proposal', {
       proposal
     });
@@ -24,17 +32,31 @@ export const finalizeProposal = async (proposal: IProposalEntity): Promise<IProp
 
   const votes = calculateVotes(proposal);
 
-  // @todo What happens on tie
-  proposal.state = votes.votesFor > votes.votesAgainst
-    ? 'passed'
-    : 'failed';
+  proposal.state =
+    votes.votesFor > votes.votesAgainst &&
+    votes.votesFor > 0
+      ? 'passed'
+      : 'failed';
 
   await updateProposal(proposal);
 
-  // @tbd This is for the events. How are we going to them?
-  // if(proposal.state === 'passed') {
-  //
-  // }
+  if (proposal.state === 'passed') {
+    await createEvent({
+      objectId: proposal.id,
+      userId: proposal.proposerId,
+      type: proposal.type === 'join'
+        ? EVENT_TYPES.APPROVED_JOIN_REQUEST
+        : EVENT_TYPES.APPROVED_FUNDING_REQUEST
+    });
+  } else {
+    await createEvent({
+      objectId: proposal.id,
+      userId: proposal.proposerId,
+      type: proposal.type === 'join'
+        ? EVENT_TYPES.REJECTED_JOIN_REQUEST
+        : EVENT_TYPES.REJECTED_FUNDING_REQUEST
+    });
+  }
 
   return proposal;
 };

@@ -24,11 +24,11 @@ export const hasExpired = async (proposal: IProposalEntity, finalize = true): Pr
   }
 
   const now = new Date();
-  const expiration = new Date(now.getTime() + (proposal.countdownPeriod * 1000))
+  const expiration = new Date(now.getTime() + (proposal.countdownPeriod * 1000));
 
   // If the expiration is in the past it is therefore expired
   if (expiration < now) {
-    if(finalize) {
+    if (finalize) {
       // If the expiration is in the past and the proposal is
       // not finalized maybe we should finalize it
       await finalizeProposal(proposal);

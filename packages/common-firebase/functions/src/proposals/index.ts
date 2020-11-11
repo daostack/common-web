@@ -16,7 +16,7 @@ router.post('/create/join', async (req, res, next) => {
     async () => {
       return await createJoinRequest({
         ...req.body,
-        userId: req.user.uid
+        proposerId: req.user.uid
       });
     }, {
       req,
@@ -27,6 +27,8 @@ router.post('/create/join', async (req, res, next) => {
 });
 
 router.post('/create/funding', async (req, res, next) => {
+  console.log(req.user.uid);
+
   await responseExecutor(async () => {
     return createFundingRequest({
       ...req.body,

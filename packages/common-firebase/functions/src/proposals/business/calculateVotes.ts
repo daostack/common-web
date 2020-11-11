@@ -1,9 +1,13 @@
-import { IProposalEntity } from '../proposalTypes';
 import { ArgumentError } from '../../util/errors';
+
+import { IProposalEntity } from '../proposalTypes';
+import { VoteOutcome } from '../voteTypes';
 
 export interface ICalculatedVotes {
   votesFor: number;
   votesAgainst: number;
+
+  outcome: VoteOutcome;
 }
 
 /**
@@ -22,7 +26,8 @@ export const calculateVotes = (proposal: IProposalEntity): ICalculatedVotes => {
 
   const votes: ICalculatedVotes = {
     votesAgainst: 0,
-    votesFor: 0
+    votesFor: 0,
+    outcome: null
   };
 
   proposal.votes.forEach((vote) => {
@@ -32,6 +37,10 @@ export const calculateVotes = (proposal: IProposalEntity): ICalculatedVotes => {
       votes.votesAgainst += 1;
     }
   });
+
+  votes.outcome = votes.votesFor > votes.votesAgainst && votes.votesFor > 0
+    ? 'approved'
+    : 'rejected';
 
   return votes;
 };

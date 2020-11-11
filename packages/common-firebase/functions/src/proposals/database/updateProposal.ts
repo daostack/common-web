@@ -1,6 +1,11 @@
 import { IProposalEntity } from '../proposalTypes';
-import { proposalDb, proposalsCollection } from './index';
+import { proposalsCollection } from './index';
 
+/**
+ * Updates the proposal in the backing store
+ *
+ * @param proposal - The updated proposal
+ */
 export const updateProposal = async (proposal: IProposalEntity): Promise<IProposalEntity> => {
   const proposalDoc = {
     ...proposal,
