@@ -14,6 +14,18 @@ export interface ICommonEntity extends IBaseEntity{
   image: string;
 
   /**
+   * The currently available funds of
+   * the common in cents
+   */
+  balance: number;
+
+  /**
+   * The total amount of funds that the
+   * common has raised to date in cents
+   */
+  raised: number;
+
+  /**
    * List of all users, that are members of this common
    */
   members: ICommonMember[];

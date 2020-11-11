@@ -73,7 +73,8 @@ export const createFundingRequest = async (payload: CreateFundingProposalPayload
     },
 
     fundingRequest: {
-      amount: payload.amount
+      amount: payload.amount,
+      funded: false
     },
 
     countdownPeriod: env.durations.funding.countdownPeriod,

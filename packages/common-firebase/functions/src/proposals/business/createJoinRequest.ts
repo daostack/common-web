@@ -85,7 +85,8 @@ export const createJoinRequest = async (payload: CreateRequestToJoinPayload): Pr
 
     join: {
       funding: payload.funding,
-      fundingType: common.metadata.contributionType
+      fundingType: common.metadata.contributionType,
+      cardId: '@todo Real card id'
     },
 
     countdownPeriod: env.durations.join.countdownPeriod,

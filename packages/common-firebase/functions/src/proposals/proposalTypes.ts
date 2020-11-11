@@ -108,6 +108,12 @@ export interface IFundingRequestProposal extends IBaseProposalEntity {
      * The amount (in US cents) that was requested
      */
     amount: number;
+
+    /**
+     * Whether the funds have been send
+     * to the requested
+     */
+    funded: boolean;
   }
 }
 
@@ -119,6 +125,7 @@ export interface IJoinRequestProposal extends IBaseProposalEntity{
   type: 'join';
 
   join: {
+
     /**
      *  The amount that will be contributed
      */
@@ -128,8 +135,20 @@ export interface IJoinRequestProposal extends IBaseProposalEntity{
      * Whether the contribution will be monthly or one time
      */
     fundingType: ContributionType;
+
+    /**
+     * The card that will be charged if the
+     * proposal is approved
+     */
+    cardId: string;
+
+    /**
+     * The ID of the payment if the payment is made
+     */
+    paymentId?: string;
   }
 }
+
 
 /**
  * The proposal base type. This is advanced typing that will change the

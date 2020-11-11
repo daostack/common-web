@@ -4,6 +4,7 @@ import { IEventEntity } from '../../event/type';
 import { EVENT_TYPES } from '../../event/event';
 import { proposalDb } from '../database';
 import { addCommonMemberByProposalId } from '../../common/business/addCommonMember';
+import { fundProposal } from '../business/fundProposal';
 
 
 exports.watchForExecutedProposals = functions.firestore
@@ -14,7 +15,7 @@ exports.watchForExecutedProposals = functions.firestore
       if(event.type === EVENT_TYPES.APPROVED_FUNDING_REQUEST) {
         console.info('Funding request was approved. Crunching some numbers');
 
-        // @todo Change the common balance
+        await fundProposal(event.objectId);
       }
 
       if(event.type === EVENT_TYPES.APPROVED_JOIN_REQUEST) {
