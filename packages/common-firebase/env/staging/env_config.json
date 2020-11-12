@@ -19,5 +19,6 @@
       "countdownPeriod": 86400,
       "quietEndingPeriod": 3600
     }
-  }
+  },
+  "secretManagerProject": "common-staging-50741"
 }

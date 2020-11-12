@@ -1,17 +1,22 @@
 import axios from 'axios';
 
-
-import { env, ErrorCodes } from '../constants';
-import { circlePayApi } from '../settings';
+import { circlePayApi, getSecret } from '../settings';
 import { externalRequestExecutor } from '../util';
+import { ErrorCodes, env } from '../constants';
 
-const options = {
-	headers: {
-		accept: 'application/json',
-		'Content-Type': 'application/json',
-		authorization: `Bearer ${env.circlepay.apiKey}`
-	},
-};
+const CIRCLEPAY_APIKEY = 'CIRCLEPAY_APIKEY';
+
+const getOptions = async () => (
+  getSecret(CIRCLEPAY_APIKEY).then((apiKey) => (
+    {
+      headers: {
+        accept: 'application/json',
+       'Content-Type': 'application/json',
+        authorization: `Bearer ${apiKey}`
+      }
+    })
+  )
+)
 
 export interface ICardData {
 	billingDetails: {
@@ -36,6 +41,7 @@ export interface ICardData {
 }
 
 export const createCard = async (cardData: ICardData) : Promise<any> => {
+  const options = await getOptions();
   const response = await externalRequestExecutor(async () => {
     return await axios.post(`${circlePayApi}/cards`,
       cardData,
@@ -51,7 +57,7 @@ export const createCard = async (cardData: ICardData) : Promise<any> => {
 
 export const encryption = async () : Promise<any> => {
 	// const response = await axios.get(`${circlePayApi}/encryption/public`, options);
-
+  const options = await getOptions();
   const response = await externalRequestExecutor(async () => {
     return await axios.get(`${circlePayApi}/encryption/public`, options);
   }, {
@@ -81,6 +87,7 @@ interface IPayment {
 }
 
 export const createAPayment = async (paymentData: IPayment) : Promise<any> => {
+  const options = await getOptions();
   return await externalRequestExecutor(async () => {
     return await axios.post(`${circlePayApi}/payments`,
       paymentData,
@@ -93,6 +100,7 @@ export const createAPayment = async (paymentData: IPayment) : Promise<any> => {
 }
 
 export const getPayment = async(paymentId: string) : Promise<any> => {
+  const options = await getOptions();
   return await externalRequestExecutor(async () => {
     return await axios.get(`${circlePayApi}/payments/${paymentId}`, options)
   }, {

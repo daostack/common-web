@@ -44,5 +44,6 @@
   },
   "circlepay": {
     "apiUrl": "https://api-sandbox.circle.com/v1"
-  }
+  },
+  "secretManagerProject": "common-staging-50741"
 }

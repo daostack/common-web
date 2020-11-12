@@ -31,3 +31,13 @@ export const PROPOSAL_TYPE = {
   Join: 'Join',
   FundingRequest: 'FundingRequest'
 };
+
+// @todo Refactor for TypeScript
+const {SecretManagerServiceClient} = require('@google-cloud/secret-manager');
+const secretClient = new SecretManagerServiceClient();
+
+export const getSecret = async (secretName) => {
+  const secret = `projects/${env.secretManagerProject}/secrets/${secretName}/versions/latest`;
+  let [secretResult] = await secretClient.accessSecretVersion({name: secret})
+  return secretResult.payload.data.toString();
+};

@@ -35,7 +35,7 @@ const pollPaymentStatus = async (paymentData) => (
       .then(async (payment) => {  
         return await updateStatus(paymentData.id, 'confirmed');
       })
-      .catch(async ({error, payment}) => {
+      .catch(async (error) => {
       	console.error('Polling error', error);
       	// burn user's rep
         return await updateStatus(paymentData.id, 'failed');
