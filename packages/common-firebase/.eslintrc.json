@@ -91,7 +91,10 @@
     //Enforces the use of catch() on un-returned promises
     "promise/catch-or-return": 2,
     // Warn against nested then() or catch() statements
-    "promise/no-nesting": 1
+    "promise/no-nesting": 1,
+
+    // This is temporary rule that we should remove on later stage
+    "@typescript-eslint/no-var-requires": 0
   },
   "overrides": [
     {

@@ -5,14 +5,11 @@ import { adminKeys, env } from './constants';
 export const databaseURL = env.firebase.databaseURL;
 export const circlePayApi = env.circlepay.apiUrl;
 
-if (env.environment === 'dev') {
-  admin.initializeApp();
-} else {
-  admin.initializeApp({
-    credential: admin.credential.cert(adminKeys as unknown as string),
-    databaseURL
-  });
-}
+
+admin.initializeApp({
+  credential: admin.credential.cert(adminKeys as unknown as string),
+  databaseURL
+});
 
 export const db = admin.firestore();
 

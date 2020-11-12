@@ -1,3 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`Cloud Functions Settings endpoint should be able to get settings endpoint 1`] = `"Setting successfully acquired!"`;

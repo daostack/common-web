@@ -28,6 +28,25 @@ export const commonApp = (router: express.Router): express.Application => {
 
   app.use(router);
 
+  // Add simple health check
+  app.get('/health', (req, res) => {
+    const health = {
+      message: 'OK',
+      healthy: true,
+      uptime: process.uptime(),
+      timestamp: Date.now()
+    };
+
+    try {
+      res.status(200).send(health);
+    } catch (e) {
+      health.message = e.message;
+      health.healthy = false;
+
+      res.status(503).send();
+    }
+  })
+
   app.use(errorHandling);
 
   return app;

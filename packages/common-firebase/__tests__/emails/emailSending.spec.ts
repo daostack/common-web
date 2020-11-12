@@ -12,7 +12,7 @@ const requestToJoinPartialStubs = {
   name: 'Test Name'
 };
 
-runTest(() => {
+runTest(async () => {
   it('should be successful with all stubs', () => {
     const templatedEmail = getTemplatedEmail('requestToJoinSubmitted', {
       emailStubs: requestToJoinStubs

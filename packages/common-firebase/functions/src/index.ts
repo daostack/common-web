@@ -8,9 +8,9 @@ import { commonsApp } from './common';
 import { proposalCrons, proposalsApp } from './proposals';
 
 // --- Express apps
-exports.commons = commonsApp;
-exports.proposals = proposalsApp;
-exports.circlepay = circlepayApp;
+export const commons = commonsApp;
+export const circlepay = circlepayApp;
+export const proposals = proposalsApp;
 
 // --- Triggers and Subscriptions
 exports.eventSub = event;
