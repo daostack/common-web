@@ -1,7 +1,6 @@
 module.exports = {
   testMatch: [
-    // '**/?(*.)+(spec|test).ts',
-    '**/proposal.test.ts'
+    '**/?(*.)+(spec|test).ts'
   ],
   preset: 'ts-jest',
   testEnvironment: 'node',
@@ -9,6 +8,9 @@ module.exports = {
     'json-summary',
     'text',
     'lcov'
+  ],
+  setupFilesAfterEnv: [
+    '<rootDir>/__tests__/cleanup.ts'
   ],
   "moduleNameMapper": {
     "^@root(.*)$": "<rootDir>/$1",

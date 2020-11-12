@@ -1,6 +1,7 @@
 import express from 'express';
 
 import { StatusCodes } from '../constants';
+import { ValidationError } from './errors';
 
 interface IResponseExecutorAction {
   (): any;
@@ -19,38 +20,7 @@ interface IResponseExecutor {
 
 export const responseExecutor: IResponseExecutor = async (action, { res, next, successMessage }): Promise<void> => {
   try {
-    let actionResult = await action();
-
-    // console.log(`ActionResult --> ${actionResult}`);
-
-    if (!actionResult) {
-      actionResult = {};
-    }
-
-    res
-      .status(StatusCodes.Ok)
-      .json({
-        message: successMessage,
-        ...actionResult
-      });
-
-    return next();
-  } catch (e) {
-    return next(e);
-  }
-};
-
-interface IResponseCreateExecutor {
-  (action: IResponseExecutorAction, payload: IResponseExecutorPayload, retried?: boolean): Promise<void>
-}
-
-export const responseCreateExecutor: IResponseCreateExecutor = async (action, { req, res, next, successMessage }, retried = false): Promise<void> => {
-  try {
-    let actionResult = await action();
-
-    if (!actionResult) {
-      actionResult = {};
-    }
+    let actionResult = await action() || {};
 
     res
       .status(StatusCodes.Ok)

@@ -20,6 +20,10 @@ export const addVote = async (vote: Omit<IVoteEntity, BaseEntityType>): Promise<
     ...vote
   };
 
+  if(process.env.NODE_ENV === 'test') {
+    voteDoc['testCreated'] = true;
+  }
+
   await votesCollection
     .doc(voteDoc.id)
     .set(voteDoc);

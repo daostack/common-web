@@ -39,6 +39,8 @@ export const validate = async <T extends any>(payload: T, schema: ObjectSchema):
 
     console.trace('Validation failed', validatorPayload);
 
+    console.log('ValidationErrors:', e.errors);
+
     throw new ValidationError(e);
   }
 }

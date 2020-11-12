@@ -1,13 +1,10 @@
-import supertest from 'supertest';
+// @ts-ignore
 import firebaseFunctionsTests from 'firebase-functions-test';
+import { v4 } from 'uuid';
 
-import * as functions from '../../functions/src';
 import { getAuthToken } from '../helpers/auth';
 import { proposalsApp } from '../helpers/supertests';
 import { createTestCommon } from '../helpers/createTestCommon';
-import exp = require('constants');
-
-const proposal = supertest(functions.commons);
 
 const joinEndpoint = '/create/join';
 const fundingEndpoint = '/create/funding';
@@ -48,7 +45,7 @@ describe('Proposal Related Cloud Functions', () => {
   });
 
   it('should be healthy', async () => {
-    const authToken = await getAuthToken('test-user');
+    const authToken = await getAuthToken(v4());
 
     const response = await proposalsApp
       .get('/health')
@@ -77,7 +74,7 @@ describe('Proposal Related Cloud Functions', () => {
 
     it('should fail validation on invalid input', async () => {
       // Setup
-      const authToken = await getAuthToken('test-user');
+      const authToken = await getAuthToken(v4());
 
       // Act
       const response = await proposalsApp
@@ -95,9 +92,11 @@ describe('Proposal Related Cloud Functions', () => {
     });
 
     it('should not allow founders to create join requests', async () => {
+      const userId = v4();
+
       // Setup
-      const authToken = await getAuthToken('test-user');
-      const common = await createTestCommon('test-user');
+      const authToken = await getAuthToken(userId);
+      const common = await createTestCommon(userId);
 
       // Act
       const response = await proposalsApp
@@ -114,24 +113,43 @@ describe('Proposal Related Cloud Functions', () => {
 
     it('should not allow to create join requests, if there is ongoing one', async () => {
       // Setup
-      const authToken = await getAuthToken('test-user');
-      const common = await createTestCommon('test-user');
+      const founderId = v4();
+      const joinerId = v4();
+
+      const authToken = await getAuthToken(joinerId);
+      const common = await createTestCommon(founderId);
 
       // Act
-      const response = await proposalsApp
+      const response1 = await proposalsApp
         .post(joinEndpoint)
         .send(validJoinData(common.id))
         .set({
           Authorization: authToken
         });
 
-      // @todo
+      const response2 = await proposalsApp
+        .post(joinEndpoint)
+        .send(validJoinData(common.id))
+        .set({
+          Authorization: authToken
+        });
+
+      // Assert
+      expect(response1.status).toBe(200);
+      expect(response1.body.message).toBe('Join request successfully created!');
+      expect(response1.body.proposerId).toBe(joinerId);
+
+      expect(response2.status).toBe(400);
+      expect(response2.body.error.includes('User with ongoing join request tried to create new one')).toBeTruthy();
     });
 
     it('should make join request with valid input in commons, that you are not member of', async () => {
       // Setup
-      const authToken = await getAuthToken('test-user');
-      const common = await createTestCommon('another-test');
+      const joinerId = v4();
+      const founderId = v4();
+
+      const authToken = await getAuthToken(joinerId);
+      const common = await createTestCommon(founderId);
 
       // Act
       const response = await proposalsApp
@@ -143,7 +161,7 @@ describe('Proposal Related Cloud Functions', () => {
 
       // Assert
       expect(response.body.message).toBe('Join request successfully created!');
-      expect(response.body.proposerId).toBe('test-user');
+      expect(response.body.proposerId).toBe(joinerId);
       expect(response.body.type).toBe('join');
       expect(response.body.commonId).toBe(common.id);
     });
@@ -166,8 +184,11 @@ describe('Proposal Related Cloud Functions', () => {
 
     it('should not allow non members to create funding requests', async () => {
       // Setup
-      const common = await createTestCommon('test-user');
-      const authToken = await getAuthToken('test-user-not-member');
+      const funderId = v4();
+      const founderId = v4()
+
+      const common = await createTestCommon(founderId);
+      const authToken = await getAuthToken(funderId);
 
       // Act
       const response = await proposalsApp
@@ -184,7 +205,9 @@ describe('Proposal Related Cloud Functions', () => {
 
     it('should fail on invalid input', async () => {
       // Setup
-      const authToken = await getAuthToken('test-user-not-member');
+      const userId = v4();
+
+      const authToken = await getAuthToken(userId);
 
       // Act
       const response = await proposalsApp
@@ -201,8 +224,10 @@ describe('Proposal Related Cloud Functions', () => {
 
     it('should create funding request on valid data in commons, that you are a member of', async () => {
       // Setup
-      const common = await createTestCommon('test-user');
-      const authToken = await getAuthToken('test-user');
+      const userId = v4();
+
+      const common = await createTestCommon(userId);
+      const authToken = await getAuthToken(userId);
 
       // Act
       const response = await proposalsApp
@@ -216,7 +241,7 @@ describe('Proposal Related Cloud Functions', () => {
       expect(response.status).toBe(200);
       expect(response.body.message).toBe('Funding request successfully created!');
 
-      expect(response.body.proposerId).toBe('test-user');
+      expect(response.body.proposerId).toBe(userId);
       expect(response.body.type).toBe('fundingRequest');
       expect(response.body.state).toBe('countdown');
     });

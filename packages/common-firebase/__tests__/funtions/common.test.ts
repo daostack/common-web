@@ -1,10 +1,8 @@
-import supertest from 'supertest';
+// @ts-ignore
 import firebaseFunctionsTests from 'firebase-functions-test';
 
-import * as functions from '../../functions/src';
 import { getAuthToken } from '../helpers/auth';
-
-const common = supertest(functions.commons);
+import { commonApp } from '../helpers/supertests';
 
 const test = firebaseFunctionsTests({
   projectId: 'common-tests'
@@ -37,7 +35,7 @@ describe('Common Related Cloud Functions', () => {
   it('should be healthy', async () => {
     const authToken = await getAuthToken('test-user');
 
-    const response = await common
+    const response = await commonApp
       .get('/health')
       .set({
         Authorization: authToken
@@ -50,7 +48,7 @@ describe('Common Related Cloud Functions', () => {
 
   describe('Common Creation', () => {
     it('should not allow unauthorized requests', async () => {
-      const response = await common
+      const response = await commonApp
         .post('/create');
 
       expect(response.status).toBe(401);
@@ -66,14 +64,14 @@ describe('Common Related Cloud Functions', () => {
       };
 
       // Act
-      const response = await common
+      const response = await commonApp
         .post('/create')
         .set({
           Authorization: authToken
         })
         .send(invalidCommonCreationPayload);
 
-      const invalidContributionResponse = await common
+      const invalidContributionResponse = await commonApp
         .post('/create')
         .set({
           Authorization: authToken
@@ -101,7 +99,7 @@ describe('Common Related Cloud Functions', () => {
       const authToken = await getAuthToken('test-user');
 
       // Act
-      const response = await common
+      const response = await commonApp
         .post('/create')
         .set({
           Authorization: authToken

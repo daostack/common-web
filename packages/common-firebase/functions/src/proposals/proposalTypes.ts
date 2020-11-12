@@ -23,7 +23,7 @@ interface IBaseProposalEntity extends IBaseEntity {
   /**
    * The type of the proposal: fundingRequest or join
    */
-  type: 'join' | 'fundingRequest';
+  type: ProposalType;
 
   /**
    * Object with some description of the proposal
@@ -149,6 +149,8 @@ export interface IJoinRequestProposal extends IBaseProposalEntity{
   }
 }
 
+
+export type ProposalType = 'join' | 'fundingRequest';
 
 /**
  * The proposal base type. This is advanced typing that will change the

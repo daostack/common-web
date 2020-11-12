@@ -26,6 +26,10 @@ export const addProposal = async (proposal: SharedOmit<IProposalEntity, BaseEnti
     ...(proposal as IProposalEntity)
   };
 
+  if(process.env.NODE_ENV === 'test') {
+    proposalDoc['testCreated'] = true;
+  }
+
   await proposalsCollection
     .doc(proposalDoc.id)
     .set(proposalDoc);

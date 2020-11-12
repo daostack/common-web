@@ -71,6 +71,21 @@ export const createJoinRequest = async (payload: CreateRequestToJoinPayload): Pr
     });
   }
 
+  // Check if the user has ongoing join request
+  const activeUserJoinRequest = await proposalDb.getProposals({
+    proposerId: payload.proposerId,
+    commonId: payload.commonId,
+    state: 'countdown',
+    type: 'join'
+  });
+
+  if (activeUserJoinRequest.length) {
+    throw new CommonError('User with ongoing join request tried to create new one', {
+      userMessage: 'You can only have one active join request per common',
+      statusCode: StatusCodes.BadRequest
+    });
+  }
+
   // Create the document and save it
   const joinRequest = await proposalDb.addProposal({
     proposerId: payload.proposerId,

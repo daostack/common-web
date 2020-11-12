@@ -6,10 +6,19 @@ export const databaseURL = env.firebase.databaseURL;
 export const circlePayApi = env.circlepay.apiUrl;
 
 
-admin.initializeApp({
-  credential: admin.credential.cert(adminKeys as unknown as string),
-  databaseURL
-});
+// if(process.env.NODE_ENV === 'test') {
+//   process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
+//
+//   admin.initializeApp({
+//     projectId: 'test',
+//     credential: admin.credential.applicationDefault()
+//   });
+// } else {
+  admin.initializeApp({
+    credential: admin.credential.cert(adminKeys as unknown as string),
+    databaseURL
+  });
+// }
 
 export const db = admin.firestore();
 
