@@ -8,7 +8,7 @@
     "adminMail": "support@common.io"
   },
   "circlepay": {
-    "apiUrl": "https://api-sandbox.circle.com/v1"
+    "apiUrl": "https://api.circle.com/v1"
   },
   "secretManagerProject": "common-daostack"
 }
