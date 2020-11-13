@@ -13,6 +13,7 @@ exports.watchForVoteCreated = functions.firestore
     const event = eventSnap.data() as IEventEntity;
 
     if(event.type === EVENT_TYPES.VOTE_CREATED) {
-      await processVote(await voteDb.getVote(event.objectId));
+      // It is being done directly on voting
+      // await processVote(await voteDb.getVote(event.objectId));
     }
   });

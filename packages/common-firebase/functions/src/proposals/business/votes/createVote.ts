@@ -11,6 +11,7 @@ import { hasVoted } from './hasVoted';
 import { isExpired } from '../isExpired';
 import { createEvent } from '../../../util/db/eventDbService';
 import { EVENT_TYPES } from '../../../event/event';
+import { processVote } from './processVotes';
 
 const createVoteValidationScheme = yup.object({
   voterId: yup.string()
@@ -89,6 +90,9 @@ export const createVote = async (payload: CreateVotePayload): Promise<IVoteEntit
     voterId: payload.voterId,
     outcome: payload.outcome as VoteOutcome
   });
+
+  // Process the vote
+  await processVote(vote);
 
   // @tbd Create the event, that vote was created
   await createEvent({
