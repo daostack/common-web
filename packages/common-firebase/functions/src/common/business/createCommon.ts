@@ -1,29 +1,51 @@
 import * as yup from 'yup';
-import { ICommonEntity } from '../types';
+
 import { validate } from '../../util/validate';
+import { commonRuleValidationSchema } from '../../util/schemas';
+
 import { commonDb } from '../database';
+import { ICommonEntity, ICommonRule } from '../types';
 
 // The validation schema for creating commons (and creating typings by inferring them)
 const createCommonDataValidationScheme = yup.object({
-  userId: yup.string().defined(),
+  userId: yup
+    .string()
+    .required(),
 
-  name: yup.string().defined(),
+  name: yup
+    .string()
+    .required(),
 
   image: yup.string()
     .url()
-    .defined(),
+    .required(),
 
-  action: yup.string().defined(),
-  byline: yup.string().defined(),
-  description: yup.string().defined(),
+  action: yup
+    .string()
+    .required(),
+
+  byline: yup
+    .string()
+    .required(),
+
+  description: yup
+    .string()
+    .required(),
+
+  fundingGoalDeadline: yup
+    .number()
+    .required(),
 
   contributionAmount: yup.number()
     .min(500)
-    .defined(),
+    .required(),
 
   contributionType: yup.string()
     .oneOf(['one-time', 'monthly'])
-    .default('one-time')
+    .default('one-time'),
+
+  rules: yup.array(commonRuleValidationSchema)
+    .optional()
 });
 
 type CreateCommonPayload = yup.InferType<typeof createCommonDataValidationScheme>
@@ -45,12 +67,14 @@ export const createCommon = async (payload: CreateCommonPayload): Promise<ICommo
   const {
     name,
     image,
+    rules,
     userId,
     action,
     byline,
     description,
     contributionType,
-    contributionAmount
+    contributionAmount,
+    fundingGoalDeadline
   } = payload;
 
   // @todo Check if user exists
@@ -58,6 +82,9 @@ export const createCommon = async (payload: CreateCommonPayload): Promise<ICommo
   const common = await commonDb.addCommon({
     name,
     image,
+    fundingGoalDeadline,
+
+    rules: rules as ICommonRule[] || [],
 
     members: [{
       userId

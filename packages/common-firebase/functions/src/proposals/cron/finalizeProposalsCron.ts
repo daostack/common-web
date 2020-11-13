@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 
 import { proposalDb } from '../database';
-import { hasExpired } from '../business/hasExpired';
+import { isExpired } from '../business/isExpired';
 import { finalizeProposal } from '../business/finalizeProposal';
 
 
@@ -13,7 +13,7 @@ export const finalizeProposals = functions.pubsub
     const promiseArray: Promise<void>[] = [];
 
     for (const proposal of proposals) {
-      if (await hasExpired(proposal)) {
+      if (await isExpired(proposal)) {
         promiseArray.push((async () => {
           console.info(`Finalizing expired proposal with id ${proposal.id}`);
 

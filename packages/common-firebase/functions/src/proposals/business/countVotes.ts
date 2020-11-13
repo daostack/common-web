@@ -13,13 +13,13 @@ export interface ICalculatedVotes {
 /**
  * Calculates the votes for given proposal
  *
- * @param proposal - The proposal, for witch we want to calculate the votes
+ * @param proposal - The proposal, for which we want to calculate the votes
  *
  * @throws { ArgumentError } - If the passed proposal is with falsy value
  *
- * @returns The calculated votes
+ * @returns The counted votes and the voting outcome
  */
-export const calculateVotes = (proposal: IProposalEntity): ICalculatedVotes => {
+export const countVotes = (proposal: IProposalEntity): ICalculatedVotes => {
   if(!proposal) {
     throw new ArgumentError('proposal', proposal);
   }

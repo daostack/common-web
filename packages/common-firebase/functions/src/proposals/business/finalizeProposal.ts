@@ -5,9 +5,9 @@ import { EVENT_TYPES } from '../../event/event';
 import { updateProposal } from '../database/updateProposal';
 import { IProposalEntity } from '../proposalTypes';
 
-import { calculateVotes } from './calculateVotes';
-import { hasMajority } from './hasMajority';
-import { hasExpired } from './hasExpired';
+import { countVotes } from './countVotes';
+import { hasAbsoluteMajority } from './hasAbsoluteMajority';
+import { isExpired } from './isExpired';
 
 /**
  * Finalizes (counts votes, changes status and more) the passed proposal
@@ -24,13 +24,13 @@ export const finalizeProposal = async (proposal: IProposalEntity): Promise<IProp
   }
 
   // If the proposal does not have a majority and is not expired we should not finalize it
-  if (!await hasExpired(proposal) && !(await hasMajority(proposal))) {
+  if (!await isExpired(proposal) && !(await hasAbsoluteMajority(proposal))) {
     throw new CommonError('Trying to finalize non expired proposal', {
       proposal
     });
   }
 
-  const votes = calculateVotes(proposal);
+  const votes = countVotes(proposal);
 
   proposal.state =
     votes.votesFor > votes.votesAgainst &&

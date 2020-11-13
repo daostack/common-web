@@ -28,10 +28,10 @@ export const addCommonMemberByProposalId = async (proposalId: string): Promise<v
  * Adds a user to the members of the passed common. There is no validation
  * being done here and you should more than likely user `addCommonMemberByProposalId`
  *
- * @param common - The common, to witch the user will be added
+ * @param common - The common, to which the user will be added
  * @param userId - The ID of the user, that will be added
  */
-export const addCommonMember = async (common: ICommonEntity, userId: string): Promise<ICommonEntity> => {
+const addCommonMember = async (common: ICommonEntity, userId: string): Promise<ICommonEntity> => {
   common.members.push({
     userId
   });

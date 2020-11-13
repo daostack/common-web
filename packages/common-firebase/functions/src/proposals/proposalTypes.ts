@@ -30,6 +30,11 @@ interface IBaseProposalEntity extends IBaseEntity {
    */
   description: {
     /**
+     * The proposal in short
+     */
+    title: string;
+
+    /**
      * The proposal description
      */
     description: string;
@@ -38,6 +43,11 @@ interface IBaseProposalEntity extends IBaseEntity {
      * Array of all links, backing up the proposal
      */
     links: IProposalLink[];
+
+    /**
+     * Array of all files, backing up the proposal
+     */
+    files: IProposalFile[];
   }
 
   /**
@@ -94,6 +104,13 @@ export interface IProposalLink {
    * The place, where the user will be taken upon click
    */
   address: string;
+}
+
+export interface IProposalFile {
+  /**
+   * The URL of where the file is
+   */
+  value: string;
 }
 
 /**

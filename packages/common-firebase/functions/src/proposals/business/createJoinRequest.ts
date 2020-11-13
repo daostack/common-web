@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-import { CommonError } from '../../util/errors';
+import { CommonError, NotFoundError } from '../../util/errors';
 import { validate } from '../../util/validate';
 import { Nullable } from '../../util/types';
 import { env, StatusCodes } from '../../constants';
@@ -8,9 +8,10 @@ import { env, StatusCodes } from '../../constants';
 import { isCommonMember } from '../../common/business';
 import { commonDb } from '../../common/database';
 
-import { IJoinRequestProposal, IProposalLink } from '../proposalTypes';
-import { linkValidationSchema } from '../shemas';
+import { IJoinRequestProposal, IProposalFile, IProposalLink } from '../proposalTypes';
+import { fileValidationSchema, linkValidationSchema } from '../../util/schemas';
 import { proposalDb } from '../database';
+import { isCardOwner } from '../../circlepay/business/isCardOnwer';
 
 const createRequestToJoinValidationSchema = yup.object({
   commonId: yup
@@ -19,6 +20,14 @@ const createRequestToJoinValidationSchema = yup.object({
     .required(),
 
   proposerId: yup
+    .string()
+    .required(),
+
+  cardId: yup
+    .string()
+    .required(),
+
+  title: yup
     .string()
     .required(),
 
@@ -31,6 +40,9 @@ const createRequestToJoinValidationSchema = yup.object({
     .required(),
 
   links: yup.array(linkValidationSchema)
+    .optional(),
+
+  files: yup.array(fileValidationSchema)
     .optional()
 });
 
@@ -50,6 +62,14 @@ export const createJoinRequest = async (payload: CreateRequestToJoinPayload): Pr
 
   // Acquire the required data
   const common = await commonDb.getCommon(payload.commonId);
+
+  // Check if the card is owned by the user
+  if(!(await isCardOwner(payload.proposerId, payload.cardId))) {
+    // Do not let them know if that card exists. It is just 'NotFound' even
+    // if it exists, but is not theirs
+    throw new NotFoundError(payload.cardId, 'card');
+  }
+
 
   // Check if the user is already member of that common
   if (isCommonMember(common, payload.proposerId)) {
@@ -94,14 +114,16 @@ export const createJoinRequest = async (payload: CreateRequestToJoinPayload): Pr
     type: 'join',
 
     description: {
+      title: payload.title,
       description: payload.description,
-      links: payload.links as Nullable<IProposalLink[]> || []
+      links: payload.links as Nullable<IProposalLink[]> || [],
+      files: payload.files as Nullable<IProposalFile[]> || []
     },
 
     join: {
+      cardId: payload.cardId,
       funding: payload.funding,
       fundingType: common.metadata.contributionType,
-      cardId: '@todo Real card id'
     },
 
     countdownPeriod: env.durations.join.countdownPeriod,

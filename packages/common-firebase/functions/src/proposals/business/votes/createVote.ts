@@ -6,13 +6,13 @@ import { isCommonMember } from '../../../common/business';
 import { proposalDb, voteDb } from '../../database';
 import { StatusCodes } from '../../../constants';
 import { validate } from '../../../util/validate';
-import { CommonError, NotImplementedError } from '../../../util/errors';
+import { CommonError } from '../../../util/errors';
 import { hasVoted } from './hasVoted';
 import { updateProposal } from '../../database/updateProposal';
-import { hasMajority } from '../hasMajority';
-import { hasExpired } from '../hasExpired';
+import { hasAbsoluteMajority } from '../hasAbsoluteMajority';
+import { isExpired } from '../isExpired';
 import { finalizeProposal } from '../finalizeProposal';
-import { calculateVotes } from '../calculateVotes';
+import { countVotes } from '../countVotes';
 import { isInQuietEnding } from '../isInQuietEnding';
 
 const createVoteValidationScheme = yup.object({
@@ -73,7 +73,7 @@ export const createVote = async (payload: CreateVotePayload): Promise<IVoteEntit
   }
 
   // Check if the proposal is expired
-  if (await hasExpired(proposal)) {
+  if (await isExpired(proposal)) {
     throw new CommonError('Vote was tried to be cast on expired proposal', {
       userMessage: 'Cannot vote on expired proposals!',
       statusCode: StatusCodes.UnprocessableEntity,
@@ -82,7 +82,7 @@ export const createVote = async (payload: CreateVotePayload): Promise<IVoteEntit
     });
   }
 
-  const votesBefore = calculateVotes(proposal);
+  const votesBefore = countVotes(proposal);
 
   // Save the vote in the votes collection
   const vote = await voteDb.addVote({
@@ -103,13 +103,13 @@ export const createVote = async (payload: CreateVotePayload): Promise<IVoteEntit
   await updateProposal(proposal);
 
   // Check for majority and update the proposal state
-  if (await hasMajority(proposal, common)) {
+  if (await hasAbsoluteMajority(proposal, common)) {
     console.info(`After vote (${vote.id}) proposal (${proposal.id}) has majority. Finalizing.`);
 
     await finalizeProposal(proposal);
   }
 
-  const votesAfter = calculateVotes(proposal);
+  const votesAfter = countVotes(proposal);
 
   if (votesBefore.outcome !== votesAfter.outcome) {
     console.info(`A vote flip occurred after vote ${vote.id}`);

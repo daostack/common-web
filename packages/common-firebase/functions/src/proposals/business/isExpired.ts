@@ -14,12 +14,12 @@ import { finalizeProposal } from './finalizeProposal';
  *
  * @returns - Promise resolved in boolean, the result
  */
-export const hasExpired = async (proposal: IProposalEntity, finalize = true): Promise<boolean> => {
+export const isExpired = async (proposal: IProposalEntity, finalize = true): Promise<boolean> => {
   if (!proposal) {
     throw new ArgumentError('proposal', proposal);
   }
 
-  if (proposal.state !== 'countdown') {
+  if (['passed', 'failed'].includes(proposal.state)) {
     return true;
   }
 

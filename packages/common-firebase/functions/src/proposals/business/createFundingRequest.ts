@@ -1,13 +1,13 @@
 import * as yup from 'yup';
 
-import { IFundingRequestProposal, IProposalLink } from '../proposalTypes';
+import { IFundingRequestProposal, IProposalFile, IProposalLink } from '../proposalTypes';
 import { CommonError, NotImplementedError } from '../../util/errors';
 import { validate } from '../../util/validate';
 import { isCommonMember } from '../../common/business';
 import { commonDb } from '../../common/database';
 import { env, StatusCodes } from '../../constants';
 import { proposalDb } from '../database';
-import { linkValidationSchema } from '../shemas';
+import { fileValidationSchema, linkValidationSchema } from '../../util/schemas';
 import { Nullable } from '../../util/types';
 
 const createFundingProposalValidationSchema = yup.object({
@@ -20,6 +20,10 @@ const createFundingProposalValidationSchema = yup.object({
     .string()
     .required(),
 
+  title: yup
+    .string()
+    .required(),
+
   description: yup
     .string()
     .required(),
@@ -29,6 +33,9 @@ const createFundingProposalValidationSchema = yup.object({
     .required(),
 
   links: yup.array(linkValidationSchema)
+    .optional(),
+
+  files: yup.array(fileValidationSchema)
     .optional()
 });
 
@@ -67,14 +74,15 @@ export const createFundingRequest = async (payload: CreateFundingProposalPayload
     type: 'fundingRequest',
 
     description: {
+      title: payload.title,
       description: payload.description,
-
-      links: payload.links as Nullable<IProposalLink[]>|| []
+      links: payload.links as Nullable<IProposalLink[]> || [],
+      files: payload.files as Nullable<IProposalFile[]> || []
     },
 
     fundingRequest: {
       amount: payload.amount,
-      funded: false
+      funded: false,
     },
 
     countdownPeriod: env.durations.funding.countdownPeriod,

@@ -33,8 +33,10 @@ export const authenticate: RequestHandler = async (req, res, next) => {
       });
     }
   } catch (e) {
-    // @notice This should not be in the final PR. If I forgot to delete it hit me up
-    console.log(await getAuthToken('H5ZkcKBX5eXXNyBiPaph8EHCiax3'));
+    // Use this only for development purposed. It SHOULD NOT
+    // be committed uncommented
+
+    // console.log(await getAuthToken('H5ZkcKBX5eXXNyBiPaph8EHCiax3'));
 
     return next(e);
   }

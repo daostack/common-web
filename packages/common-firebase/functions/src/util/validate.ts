@@ -24,23 +24,24 @@ export const validate = async <T extends any>(payload: T, schema: ObjectSchema):
   };
 
   try {
-    await schema.validate(payload, {
-      abortEarly: false
-    });
+    await schema
+      .noUnknown()
+      .validate(payload, {
+        abortEarly: false
+      });
 
     console.trace('Validation succeeded', validatorPayload);
   } catch (e) {
-    if(!(e instanceof yup.ValidationError)) {
+    if (!(e instanceof yup.ValidationError)) {
       throw new CommonError('Unknown error occurred while doing the validation', {
         error: e,
         validatorPayload
       });
     }
-
     console.trace('Validation failed', validatorPayload);
 
-    console.log('ValidationErrors:', e.errors);
+    console.log('Validation Errors:', e.errors);
 
     throw new ValidationError(e);
   }
-}
+};

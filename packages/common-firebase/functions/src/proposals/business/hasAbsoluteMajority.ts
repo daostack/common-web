@@ -4,7 +4,7 @@ import { ICommonEntity } from '../../common/types';
 import { commonDb } from '../../common/database';
 
 import { IProposalEntity } from '../proposalTypes';
-import { calculateVotes } from './calculateVotes';
+import { countVotes } from './countVotes';
 
 /**
  * Checks if proposal has majority for any of the vote options
@@ -16,7 +16,7 @@ import { calculateVotes } from './calculateVotes';
  *
  * @returns - Boolean specifying if the proposal has majority in either of the votes
  */
-export const hasMajority = async (proposal: IProposalEntity, common?: ICommonEntity): Promise<boolean> => {
+export const hasAbsoluteMajority = async (proposal: IProposalEntity, common?: ICommonEntity): Promise<boolean> => {
   if(!proposal) {
     throw new ArgumentError('proposal', proposal);
   }
@@ -25,7 +25,7 @@ export const hasMajority = async (proposal: IProposalEntity, common?: ICommonEnt
     common = await commonDb.getCommon(proposal.commonId);
   }
 
-  const votes = calculateVotes(proposal);
+  const votes = countVotes(proposal);
   const votesNeededForMajority = Math.floor(common.members.length / 2) + 1;
 
   return votes.votesAgainst >= votesNeededForMajority

@@ -20,12 +20,18 @@ export const fundProposal = async (proposalId: string): Promise<void> => {
     throw new CommonError('Only funding proposal can be funded');
   }
 
-  if (proposal.state === 'countdown') {
-    throw new CommonError('Only finalized proposal can be funded');
+  if (proposal.state !== 'passed') {
+    throw new CommonError('Only passed proposal can be funded');
+  }
+
+  if (proposal.fundingRequest.funded) {
+    throw new CommonError('The proposal is already funded');
   }
 
   if (common.balance < proposal.fundingRequest.amount) {
     console.warn(`Proposal with id ${proposal.id} cannot be funded, because the common does not have enough balance!`);
+
+    throw new CommonError(`Proposal with id ${proposal.id} cannot be funded, because the common does not have enough balance!`);
 
     return;
   }
