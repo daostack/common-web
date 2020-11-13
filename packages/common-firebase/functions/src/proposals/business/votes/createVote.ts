@@ -8,12 +8,9 @@ import { StatusCodes } from '../../../constants';
 import { validate } from '../../../util/validate';
 import { CommonError } from '../../../util/errors';
 import { hasVoted } from './hasVoted';
-import { updateProposal } from '../../database/updateProposal';
-import { hasAbsoluteMajority } from '../hasAbsoluteMajority';
 import { isExpired } from '../isExpired';
-import { finalizeProposal } from '../finalizeProposal';
-import { countVotes } from '../countVotes';
-import { isInQuietEnding } from '../isInQuietEnding';
+import { createEvent } from '../../../util/db/eventDbService';
+import { EVENT_TYPES } from '../../../event/event';
 
 const createVoteValidationScheme = yup.object({
   voterId: yup.string()
@@ -39,6 +36,7 @@ type CreateVotePayload = yup.InferType<typeof createVoteValidationScheme>;
  *
  * @throws { CommonError } - If the user is not part of the common, for witch the proposal was created
  * @throws { CommonError } - If the user has already casted a vote for this proposal
+ * @throws { CommonError } - If the proposal is expired
  *
  * @returns - The created vote entity as is in the *Votes* collection
  */
@@ -74,6 +72,8 @@ export const createVote = async (payload: CreateVotePayload): Promise<IVoteEntit
 
   // Check if the proposal is expired
   if (await isExpired(proposal)) {
+    // @tbd Maybe finalize the proposal here?
+
     throw new CommonError('Vote was tried to be cast on expired proposal', {
       userMessage: 'Cannot vote on expired proposals!',
       statusCode: StatusCodes.UnprocessableEntity,
@@ -81,8 +81,6 @@ export const createVote = async (payload: CreateVotePayload): Promise<IVoteEntit
       proposal
     });
   }
-
-  const votesBefore = countVotes(proposal);
 
   // Save the vote in the votes collection
   const vote = await voteDb.addVote({
@@ -92,43 +90,12 @@ export const createVote = async (payload: CreateVotePayload): Promise<IVoteEntit
     outcome: payload.outcome as VoteOutcome
   });
 
-  // Update the votes in the proposal document
-  proposal.votes.push({
-    voteId: vote.id,
-    voterId: vote.voterId,
-    voteOutcome: vote.outcome
-  });
-
-  // Save the updated proposal to the database
-  await updateProposal(proposal);
-
-  // Check for majority and update the proposal state
-  if (await hasAbsoluteMajority(proposal, common)) {
-    console.info(`After vote (${vote.id}) proposal (${proposal.id}) has majority. Finalizing.`);
-
-    await finalizeProposal(proposal);
-  }
-
-  const votesAfter = countVotes(proposal);
-
-  if (votesBefore.outcome !== votesAfter.outcome) {
-    console.info(`A vote flip occurred after vote ${vote.id}`);
-
-    // If the proposal is in the quiet ending stage and
-    // there was a vote flip extend the countdown
-    if (isInQuietEnding(proposal)) {
-      console.info(`
-        Extending the countdown period of proposal (${proposal.id}) 
-        because there was a vote flip during the quiet ending period.
-      `);
-
-      proposal.countdownPeriod += proposal.quietEndingPeriod;
-
-      await updateProposal(proposal);
-    }
-  }
-
   // @tbd Create the event, that vote was created
+  await createEvent({
+    type: EVENT_TYPES.VOTE_CREATED,
+    objectId: vote.id,
+    userId: vote.voterId
+  });
 
   // Return the created vote document
   return vote;

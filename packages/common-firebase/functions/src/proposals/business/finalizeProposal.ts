@@ -45,7 +45,7 @@ export const finalizeProposal = async (proposal: IProposalEntity): Promise<IProp
       objectId: proposal.id,
       userId: proposal.proposerId,
       type: proposal.type === 'join'
-        ? EVENT_TYPES.APPROVED_JOIN_REQUEST
+        ? EVENT_TYPES.REQUEST_TO_JOIN_ACCEPTED
         : EVENT_TYPES.APPROVED_FUNDING_REQUEST
     });
   } else {
@@ -53,7 +53,7 @@ export const finalizeProposal = async (proposal: IProposalEntity): Promise<IProp
       objectId: proposal.id,
       userId: proposal.proposerId,
       type: proposal.type === 'join'
-        ? EVENT_TYPES.REJECTED_JOIN_REQUEST
+        ? EVENT_TYPES.REQUEST_TO_JOIN_REJECTED
         : EVENT_TYPES.REJECTED_FUNDING_REQUEST
     });
   }

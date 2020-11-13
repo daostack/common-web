@@ -74,6 +74,16 @@ interface IBaseProposalEntity extends IBaseEntity {
    * @todo No idea what that is. Find out :D
    */
   quietEndingPeriod: number;
+
+  /**
+   * The number of votes for the proposal
+   */
+  votesFor: number;
+
+  /**
+   * The number of votes against the proposal
+   */
+  votesAgainst: number;
 }
 
 interface IProposalVote {

@@ -3,6 +3,7 @@ import { auth } from 'firebase-admin';
 
 import { CommonError, UnauthorizedError } from '../errors';
 import { ErrorCodes, StatusCodes } from '../../constants';
+
 import { getAuthToken } from '../getAuthToken';
 
 export const authenticate: RequestHandler = async (req, res, next) => {

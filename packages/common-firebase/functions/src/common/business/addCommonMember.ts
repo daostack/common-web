@@ -32,13 +32,15 @@ export const addCommonMemberByProposalId = async (proposalId: string): Promise<v
  * @param userId - The ID of the user, that will be added
  */
 const addCommonMember = async (common: ICommonEntity, userId: string): Promise<ICommonEntity> => {
-  common.members.push({
-    userId
-  });
+  if(!common.members.includes({ userId })) {
+    common.members.push({
+      userId
+    });
 
-  // @tbd New Common Member added event?
+    // @tbd New Common Member added event?
 
-  await commonDb.updateCommon(common);
+    await commonDb.updateCommon(common);
+  }
 
   return common;
 };

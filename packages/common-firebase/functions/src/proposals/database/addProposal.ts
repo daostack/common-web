@@ -6,13 +6,15 @@ import { IProposalEntity } from '../proposalTypes';
 import { proposalsCollection } from './index';
 
 
+type OmittedProperties = 'votes' | 'state' | 'votesFor' | 'votesAgainst';
+
 /**
  * Prepares the passed proposal for saving and saves it. Please note that
  * there is *no* validation being done here
  *
  * @param proposal - the proposal to be saves
  */
-export const addProposal = async (proposal: SharedOmit<IProposalEntity, BaseEntityType | 'votes' | 'state'>): Promise<IProposalEntity> => {
+export const addProposal = async (proposal: SharedOmit<IProposalEntity, BaseEntityType | OmittedProperties>): Promise<IProposalEntity> => {
   const proposalDoc: IProposalEntity = {
     id: v4(),
 
@@ -20,6 +22,8 @@ export const addProposal = async (proposal: SharedOmit<IProposalEntity, BaseEnti
     updatedAt: new Date(),
 
     votes: [],
+    votesFor: 0,
+    votesAgainst: 0,
 
     state: 'countdown',
 

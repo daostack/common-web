@@ -18,7 +18,7 @@ exports.watchForExecutedProposals = functions.firestore
         await fundProposal(event.objectId);
       }
 
-      if(event.type === EVENT_TYPES.APPROVED_JOIN_REQUEST) {
+      if(event.type === EVENT_TYPES.REQUEST_TO_JOIN_ACCEPTED) {
         console.info('Join request was approved. Adding new members to common');
 
         // @todo Create payment
