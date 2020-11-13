@@ -13,12 +13,12 @@ export const finalizeProposals = functions.pubsub
     const promiseArray: Promise<void>[] = [];
 
     for (const proposal of proposals) {
-      if (await isExpired(proposal)) {
-        promiseArray.push((async () => {
+      promiseArray.push((async () => {
+        if (await isExpired(proposal)) {
           console.info(`Finalizing expired proposal with id ${proposal.id}`);
 
           await finalizeProposal(proposal);
-        })());
-      }
+        }
+      })());
     }
   });

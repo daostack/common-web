@@ -2,6 +2,10 @@ import admin from 'firebase-admin';
 
 import { adminKeys, env } from './constants';
 
+
+// @todo Refactor for TypeScript
+import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
+
 export const databaseURL = env.firebase.databaseURL;
 export const circlePayApi = env.circlepay.apiUrl;
 
@@ -31,13 +35,10 @@ export const PROPOSAL_TYPE = {
   Join: 'Join',
   FundingRequest: 'FundingRequest'
 };
-
-// @todo Refactor for TypeScript
-const {SecretManagerServiceClient} = require('@google-cloud/secret-manager');
 const secretClient = new SecretManagerServiceClient();
 
 export const getSecret = async (secretName) => {
   const secret = `projects/${env.secretManagerProject}/secrets/${secretName}/versions/latest`;
-  let [secretResult] = await secretClient.accessSecretVersion({name: secret})
+  const [secretResult] = await secretClient.accessSecretVersion({name: secret})
   return secretResult.payload.data.toString();
 };

@@ -21,6 +21,6 @@ export interface IVoteEntity extends IBaseEntity {
    * The outcome of this voter of this proposal
    */
   outcome: VoteOutcome;
-};
+}
 
 export type VoteOutcome = 'approved' | 'rejected';

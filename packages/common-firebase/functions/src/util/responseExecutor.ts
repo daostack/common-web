@@ -20,7 +20,7 @@ interface IResponseExecutor {
 
 export const responseExecutor: IResponseExecutor = async (action, { res, next, successMessage }): Promise<void> => {
   try {
-    let actionResult = await action() || {};
+    const actionResult = await action() || {};
 
     res
       .status(StatusCodes.Ok)
