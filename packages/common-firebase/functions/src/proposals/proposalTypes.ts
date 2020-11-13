@@ -26,31 +26,6 @@ interface IBaseProposalEntity extends IBaseEntity {
   type: ProposalType;
 
   /**
-   * Object with some description of the proposal
-   */
-  description: {
-    /**
-     * The proposal in short
-     */
-    title: string;
-
-    /**
-     * The proposal description
-     */
-    description: string;
-
-    /**
-     * Array of all links, backing up the proposal
-     */
-    links: IProposalLink[];
-
-    /**
-     * Array of all files, backing up the proposal
-     */
-    files: IProposalFile[];
-  }
-
-  /**
    * Collection with some of the vote information
    * for this proposal
    */
@@ -104,6 +79,23 @@ interface IProposalVote {
   voteOutcome: VoteOutcome;
 }
 
+interface IProposalDescription {
+  /**
+   * The proposal description
+   */
+  description: string;
+
+  /**
+   * Array of all links, backing up the proposal
+   */
+  links: IProposalLink[];
+
+  /**
+   * Array of all files, backing up the proposal
+   */
+  files: IProposalFile[];
+}
+
 export interface IProposalLink {
   /**
    * The title, that the user will see
@@ -130,6 +122,17 @@ export interface IProposalFile {
 export interface IFundingRequestProposal extends IBaseProposalEntity {
   type: 'fundingRequest';
 
+  /**
+   * Object with some description of the proposal
+   */
+  description: IProposalDescription | {
+    /**
+     * The proposal in short
+     */
+    title: string;
+  }
+
+
   fundingRequest: {
     /**
      * The amount (in US cents) that was requested
@@ -148,11 +151,15 @@ export interface IFundingRequestProposal extends IBaseProposalEntity {
  * The extended version of the proposal including
  * the fields for join requests
  */
-export interface IJoinRequestProposal extends IBaseProposalEntity{
+export interface IJoinRequestProposal extends IBaseProposalEntity {
   type: 'join';
 
-  join: {
+  /**
+   * Object with some description of the proposal
+   */
+  description: IProposalDescription;
 
+  join: {
     /**
      *  The amount that will be contributed
      */
