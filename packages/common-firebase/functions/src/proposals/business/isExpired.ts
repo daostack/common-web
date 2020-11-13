@@ -22,7 +22,7 @@ export const isExpired = async (proposal: IProposalEntity): Promise<boolean> => 
   }
 
   const now = new Date();
-  const expiration = new Date(now.getTime() + (proposal.countdownPeriod * 1000));
+  const expiration = new Date(proposal.createdAt.getTime() + (proposal.countdownPeriod * 1000));
 
   // If the expiration is in the past it is therefore expired
   return expiration < now;
