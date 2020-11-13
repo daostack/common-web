@@ -35,6 +35,8 @@ interface Env {
       quietEndingPeriod: number;
     };
   }
+
+  secretManagerProject: string;
 }
 
 export const env = merge(envConfig, envSecrets) as Env;

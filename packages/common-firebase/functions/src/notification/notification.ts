@@ -5,7 +5,7 @@ import { getDaoById } from '../util/db/daoDbService';
 import { getProposalById } from '../util/db/proposalDbService';
 import { getUserById } from '../util/db/userDbService';
 import { Utils } from '../util/util';
-import { getDiscussionMessageById } from '../db/discussionMessagesDb'; 
+import { getDiscussionMessageById } from '../util/db/discussionMessagesDb';
 
 const messaging = admin.messaging();
 
