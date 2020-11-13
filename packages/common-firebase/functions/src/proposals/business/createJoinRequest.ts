@@ -60,11 +60,11 @@ export const createJoinRequest = async (payload: CreateRequestToJoinPayload): Pr
   const common = await commonDb.getCommon(payload.commonId);
 
   // Check if the card is owned by the user
-  if(!(await isCardOwner(payload.proposerId, payload.cardId))) {
-    // Do not let them know if that card exists. It is just 'NotFound' even
-    // if it exists, but is not theirs
-    throw new NotFoundError(payload.cardId, 'card');
-  }
+  // if(!(await isCardOwner(payload.proposerId, payload.cardId))) {
+  //   // Do not let them know if that card exists. It is just 'NotFound' even
+  //   // if it exists, but is not theirs
+  //   throw new NotFoundError(payload.cardId, 'card');
+  // }
 
 
   // Check if the user is already member of that common
