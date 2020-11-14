@@ -1,5 +1,5 @@
 // @ts-ignore
-const { db } = require('../../settings.ts');
+const { db } = require('../../settings');
 const COLLECTION_NAME = 'discussion';
 
 async function getDiscussionById(discussionId) {
