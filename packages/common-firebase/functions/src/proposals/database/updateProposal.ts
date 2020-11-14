@@ -1,3 +1,5 @@
+import { firestore } from 'firebase-admin';
+
 import { IProposalEntity } from '../proposalTypes';
 import { proposalsCollection } from './index';
 
@@ -10,7 +12,7 @@ export const updateProposal = async (proposal: IProposalEntity): Promise<IPropos
   const proposalDoc = {
     ...proposal,
 
-    updatedAt: new Date()
+    updatedAt: firestore.Timestamp.fromDate(new Date())
   };
 
   await proposalsCollection

@@ -9,7 +9,6 @@ interface Env {
 
   firebase: {
     databaseURL: string;
-    apiKey: string;
   };
 
   mail: {

@@ -1,4 +1,5 @@
 import { v4 } from 'uuid';
+import { firestore } from 'firebase-admin';
 
 import { IVoteEntity } from '../../voteTypes';
 import { BaseEntityType } from '../../../util/types';
@@ -14,8 +15,8 @@ export const addVote = async (vote: Omit<IVoteEntity, BaseEntityType>): Promise<
   const voteDoc: IVoteEntity = {
     id: v4(),
 
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: firestore.Timestamp.fromDate(new Date()),
+    updatedAt: firestore.Timestamp.fromDate(new Date()),
 
     ...vote
   };

@@ -1,4 +1,5 @@
 import { v4 } from 'uuid';
+import { firestore } from 'firebase-admin';
 
 import { db } from '../index';
 import { Collections } from '../../constants';
@@ -12,8 +13,8 @@ export const createEvent = async (doc: Omit<IEventEntity, BaseEntityType>): Prom
     ...doc,
     id: v4(),
 
-    createdAt: new Date(),
-    updatedAt: new Date()
+    createdAt: firestore.Timestamp.fromDate(new Date()),
+    updatedAt: firestore.Timestamp.fromDate(new Date())
   };
 
   await eventCollection

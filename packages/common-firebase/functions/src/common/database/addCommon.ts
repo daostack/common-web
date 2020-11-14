@@ -1,4 +1,5 @@
 import { v4 } from 'uuid';
+import { firestore } from 'firebase-admin';
 
 import { BaseEntityType } from '../../util/types';
 
@@ -18,8 +19,8 @@ export const addCommon = async (common: Omit<ICommonEntity, BaseEntityType | Omi
   const commonDoc: ICommonEntity = {
     id: v4(),
 
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: firestore.Timestamp.fromDate(new Date()),
+    updatedAt: firestore.Timestamp.fromDate(new Date()),
 
     raised: 0,
     balance: 0,

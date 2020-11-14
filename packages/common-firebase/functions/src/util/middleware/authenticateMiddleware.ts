@@ -4,8 +4,6 @@ import { auth } from 'firebase-admin';
 import { CommonError, UnauthorizedError } from '../errors';
 import { ErrorCodes, StatusCodes } from '../../constants';
 
-import { getAuthToken } from '../getAuthToken';
-
 export const authenticate: RequestHandler = async (req, res, next) => {
   try {
     if (!req.headers.authorization || typeof req.headers.authorization !== 'string') {
@@ -21,7 +19,6 @@ export const authenticate: RequestHandler = async (req, res, next) => {
       req.user = await auth().verifyIdToken(req.headers.authorization);
 
       return next();
-
     } catch (error) {
       throw new CommonError('An error occurred while authenticating the user', {
         userMessage: 'An error occurred during the authentication. Please log out and sign in again!',
@@ -34,11 +31,6 @@ export const authenticate: RequestHandler = async (req, res, next) => {
       });
     }
   } catch (e) {
-    // Use this only for development purposed. It SHOULD NOT
-    // be committed uncommented
-
-    // console.log(await getAuthToken('H5ZkcKBX5eXXNyBiPaph8EHCiax3'));
-
     return next(e);
   }
 };

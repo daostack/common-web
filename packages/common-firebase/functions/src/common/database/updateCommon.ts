@@ -1,3 +1,5 @@
+import { firestore } from 'firebase-admin';
+
 import { ICommonEntity } from '../types';
 import { commonCollection } from './index';
 
@@ -10,7 +12,7 @@ export const updateCommon = async (common: ICommonEntity): Promise<ICommonEntity
   const commonEntity = {
     ...common,
 
-    updatedAt: new Date()
+    updatedAt: firestore.Timestamp.fromDate(new Date())
   };
 
   await commonCollection

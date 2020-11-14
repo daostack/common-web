@@ -1,3 +1,6 @@
+import admin from 'firebase-admin';
+import Timestamp = admin.firestore.Timestamp;
+
 export type valueOf<T> = T[keyof T];
 
 export type Nullable<T> = T | null | undefined;
@@ -18,11 +21,11 @@ export interface IBaseEntity {
    * The time that the entity
    * was created
    */
-  createdAt: Date;
+  createdAt: Timestamp;
 
   /**
    * The last time that the entity
    * was modified
    */
-  updatedAt: Date;
+  updatedAt: Timestamp;
 }

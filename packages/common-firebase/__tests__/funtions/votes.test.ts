@@ -1,10 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import firebaseFunctionsTests from 'firebase-functions-test';
-import { v4 } from 'uuid';
-
-import { getAuthToken } from '../helpers/auth';
-import { proposalsApp } from '../helpers/supertests';
 
 const votingEndpoint = '/create/vote';
 
