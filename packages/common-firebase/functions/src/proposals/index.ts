@@ -4,7 +4,8 @@ import { commonApp, commonRouter } from '../util';
 import { runtimeOptions } from '../constants';
 import { responseExecutor } from '../util/responseExecutor';
 
-import * as crons from './cron';
+import * as crons from './crons';
+import * as triggers from './triggers';
 import { createVote } from './business/votes/createVote';
 import { createJoinRequest } from './business/createJoinRequest';
 import { createFundingRequest } from './business/createFundingRequest';
@@ -60,3 +61,4 @@ export const proposalsApp = functions
   .https.onRequest(commonApp(router));
 
 export const proposalCrons = crons;
+export const proposalTriggers = triggers;

@@ -6,7 +6,7 @@ import * as messageTriggers from './discussionMessage/triggers';
 
 import { circlepayApp } from './circlepay';
 import { commonsApp } from './common';
-import { proposalCrons, proposalsApp } from './proposals';
+import { proposalCrons, proposalTriggers, proposalsApp } from './proposals';
 
 // --- Express apps
 export const commons = commonsApp;
@@ -19,5 +19,6 @@ exports.notificationSub = notification;
 exports.circlepayTriggers = circlepayTriggers;
 exports.proposalCrons = proposalCrons;
 exports.messageTriggers = messageTriggers;
+exports.proposalTriggers = proposalTriggers;
 
 exports.cronJobs = cron;

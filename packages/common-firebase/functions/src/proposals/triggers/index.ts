@@ -1,0 +1,1 @@
+export { onProposalApproved } from  './onProposalApproved';
