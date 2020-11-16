@@ -226,7 +226,29 @@ export const notifyData: Record<string, IEventData> = {
           path: `Discussions/${commonData.id}/${message.discussionId}`
       }
     ),
-  }
+  },
+  [EVENT_TYPES.PAYMENT_FAILED] : {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    data: async (proposalId: string) => {
+        const proposalData = (await getProposalById(proposalId)).data();
+        return {
+            commonData: (await getDaoById(proposalData.dao)).data(),
+            userData: (await getUserById(proposalData.proposerId)).data()
+        }
+    },
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    email: ({ commonData, userData } ) => {
+        return {
+          to: userData.email,
+          templateKey: 'userJoinedButFailedPayment',
+          emailStubs: {
+            name: userData.displayName,
+            commonLink: Utils.getCommonLink(commonData.id),
+            commonName: commonData.metadata.name
+          }
+        }
+    }
+  },
   // TODO: We don't have defined notification for the rejected funding proposal. Ask if we need that.
   //
   // [EVENT_TYPES.REJECTED_PROPOSAL]: {
