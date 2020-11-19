@@ -3,6 +3,7 @@
 exports[`Proposal Related Cloud Functions Funding Proposal Creation should fail on invalid input 1`] = `
 Array [
   "commonId is a required field",
+  "title is a required field",
   "amount is a required field",
 ]
 `;
@@ -10,6 +11,7 @@ Array [
 exports[`Proposal Related Cloud Functions Join Proposal Creation should fail validation on invalid input 1`] = `
 Array [
   "commonId is a required field",
+  "cardId is a required field",
   "funding is a required field",
 ]
 `;

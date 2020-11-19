@@ -11,12 +11,25 @@ export const authenticate: RequestHandler = async (req, res, next) => {
     }
 
     try {
-      // Use firebase-admin auth to verify the token passed in from the client header.
-      // Decoding this token returns the userPayload and all the other token
-      // claims you added while creating the custom token and adds them
-      // to the express request object so they are easily accessible
-      // from everywhere
-      req.user = await auth().verifyIdToken(req.headers.authorization);
+      if (process.env.NODE_ENV !== 'test') {
+        // Use firebase-admin auth to verify the token passed in from the client header.
+        // Decoding this token returns the userPayload and all the other token
+        // claims you added while creating the custom token and adds them
+        // to the express request object so they are easily accessible
+        // from everywhere
+        req.user = await auth().verifyIdToken(req.headers.authorization);
+      } else {
+        // Here we should only be on test environment
+        console.warn(`Testing authorization is being used! ${req.sessionId}`);
+
+        const parsedUser = JSON.parse(req.headers.authorization);
+
+        if (typeof parsedUser === 'object' && parsedUser.uid) {
+          req.user = parsedUser;
+        } else {
+          throw new UnauthorizedError();
+        }
+      }
 
       return next();
     } catch (error) {

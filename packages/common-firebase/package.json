@@ -21,9 +21,10 @@
     "use:dev": "./env/env.sh -dev",
     "use:staging": "firebase use staging && ./env/env.sh -stg",
     "use:production": "firebase use production && ./env/env.sh -prod",
-    "ci:test": "yarn build && firebase emulators:exec 'yarn test'",
+    "ci:test": "yarn build && cross-env NODE_ENV=test firebase emulators:exec 'yarn test'",
     "ci:setup": "yarn use:ci",
     "test": "jest",
+    "test:emulators": "cross-env NODE_ENV=test firebase emulators:exec 'yarn test'",
     "test:watch": "jest --watch",
     "precommit": "lint-staged && yarn test"
   },

@@ -3,6 +3,7 @@ import { updateCard } from '../util/db/cardDb';
 import { v4 } from 'uuid';
 import * as cardDb from '../util/db/cardDb';
 import axios from 'axios';
+import { NotFoundError } from '../util/errors';
 
 const _updateCard = async (userId: string, id: string, proposalId: string): Promise<any> => {
   const doc = {
@@ -85,6 +86,10 @@ export const createCirclePayCard = async (req: IRequest): Promise<ICardCreatedPa
  */
 export const assignCardToProposal = async (cardId: string, proposalId: string): Promise<void> => {
   const card = (await cardDb.getCardRef(cardId).get()).data();
+
+  if(!card) {
+    throw new NotFoundError(cardId, 'card');
+  }
 
   if (card.proposals.some(x => x === proposalId)) {
     // The proposal is already assigned to

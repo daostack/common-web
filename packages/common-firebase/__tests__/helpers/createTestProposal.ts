@@ -1,19 +1,21 @@
 import { v4 } from 'uuid';
 import { IJoinRequestProposal } from '../../functions/src/proposals/proposalTypes';
-import { getAuthToken } from './auth';
+import { getTestAuthToken } from './auth';
 import { createTestCommon } from './createTestCommon';
 import { proposalsApp } from './supertests';
 
 const validJoinData = (commonId: string) => ({
   commonId,
   description: 'I wanna be a part',
-  funding: 50000
+  funding: 50000,
+  cardId: 'cardId'
 });
 
 const validFundingData = (commonId: string) => ({
   commonId,
   description: 'I wanna be a part',
-  amount: 50000
+  amount: 50000,
+
 });
 
 export const createTestJoinRequest = async ({
@@ -21,7 +23,7 @@ export const createTestJoinRequest = async ({
   commonCreatorId = 'test-user',
   common = null
 } = {}): Promise<IJoinRequestProposal> => {
-  const authToken = await getAuthToken(proposerId);
+  const authToken = await getTestAuthToken(proposerId);
 
   if (common) {
     common = createTestCommon(commonCreatorId);
@@ -42,7 +44,7 @@ export const createTestFundingRequest = async ({
   commonCreatorId = v4(),
   common = null
 } = {}): Promise<IJoinRequestProposal> => {
-  const authToken = await getAuthToken(proposerId);
+  const authToken = await getTestAuthToken(proposerId);
 
   if (common) {
     common = createTestCommon(commonCreatorId);

@@ -3,7 +3,7 @@
 import firebaseFunctionsTests from 'firebase-functions-test';
 import { v4 } from 'uuid';
 
-import { getAuthToken } from '../helpers/auth';
+import { getTestAuthToken } from '../helpers/auth';
 import { proposalsApp } from '../helpers/supertests';
 import { createTestCommon } from '../helpers/createTestCommon';
 
@@ -27,13 +27,15 @@ const invalidFundingCreationPayload = {
 const validJoinData = (commonId: string) => ({
   commonId,
   description: 'I wanna be a part',
-  funding: 50000
+  funding: 50000,
+  cardId: `test-card-id-for-common-${commonId}`
 });
 
 const validFundingData = (commonId: string) => ({
   commonId,
   description: 'I wanna be a part',
-  amount: 50000
+  amount: 50000,
+  title: 'I need money'
 });
 
 describe('Proposal Related Cloud Functions', () => {
@@ -46,7 +48,7 @@ describe('Proposal Related Cloud Functions', () => {
   });
 
   it('should be healthy', async () => {
-    const authToken = await getAuthToken(v4());
+    const authToken = await getTestAuthToken(v4());
 
     const response = await proposalsApp
       .get('/health')
@@ -75,7 +77,7 @@ describe('Proposal Related Cloud Functions', () => {
 
     it('should fail validation on invalid input', async () => {
       // Setup
-      const authToken = await getAuthToken(v4());
+      const authToken = await getTestAuthToken(v4());
 
       // Act
       const response = await proposalsApp
@@ -96,7 +98,7 @@ describe('Proposal Related Cloud Functions', () => {
       const userId = v4();
 
       // Setup
-      const authToken = await getAuthToken(userId);
+      const authToken = await getTestAuthToken(userId);
       const common = await createTestCommon(userId);
 
       // Act
@@ -117,7 +119,7 @@ describe('Proposal Related Cloud Functions', () => {
       const founderId = v4();
       const joinerId = v4();
 
-      const authToken = await getAuthToken(joinerId);
+      const authToken = await getTestAuthToken(joinerId);
       const common = await createTestCommon(founderId);
 
       // Act
@@ -149,7 +151,7 @@ describe('Proposal Related Cloud Functions', () => {
       const joinerId = v4();
       const founderId = v4();
 
-      const authToken = await getAuthToken(joinerId);
+      const authToken = await getTestAuthToken(joinerId);
       const common = await createTestCommon(founderId);
 
       // Act
@@ -189,7 +191,7 @@ describe('Proposal Related Cloud Functions', () => {
       const founderId = v4()
 
       const common = await createTestCommon(founderId);
-      const authToken = await getAuthToken(funderId);
+      const authToken = await getTestAuthToken(funderId);
 
       // Act
       const response = await proposalsApp
@@ -208,7 +210,7 @@ describe('Proposal Related Cloud Functions', () => {
       // Setup
       const userId = v4();
 
-      const authToken = await getAuthToken(userId);
+      const authToken = await getTestAuthToken(userId);
 
       // Act
       const response = await proposalsApp
@@ -228,7 +230,7 @@ describe('Proposal Related Cloud Functions', () => {
       const userId = v4();
 
       const common = await createTestCommon(userId);
-      const authToken = await getAuthToken(userId);
+      const authToken = await getTestAuthToken(userId);
 
       // Act
       const response = await proposalsApp

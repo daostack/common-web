@@ -1,49 +1,24 @@
 {
-  "environment": "dev",
-  "tests": {
-    "enabled": true
-  },
+  "environment": "staging",
   "firebase": {
-    "databaseURL": "",
-    "functions": {
-      "endpoint": "http://127.0.0.1:5003",
-      "endpoints": {
-        "create": "http://127.0.0.1:5003/common-staging-50741/us-central1/create",
-        "tests": "http://127.0.0.1:5003/common-staging-50741/us-central1/tests"
-      }
-    }
-  },
-  "blockchain": {
-    "jsonRpcProvider": "http://127.0.0.1:8545",
-    "chainId": 0
-  },
-  "graphql": {
-    "subgraphName": "daostack/v8_13_exp_kovan",
-    "graphqlHttpProvider": "http://127.0.0.1:8000/subgraphs/name/daostack",
-    "graphqlWsProvider": "http://127.0.0.1:8000/subgraphs/name/daostack",
-    "graphApiUrl": "http://127.0.0.1:8000/subgraphs/name",
-    "ipfsProvider": "http://127.0.0.1:5001/api/v0",
-    "ipfsDataVersion": "00004"
-  },
-  "commonInfo": {
-    "commonToken": "0xdff3e43710d39d2ba5dda7a8d959ed22cc905b01",
-    "arcVersion": "0.1.2-rc.6"
-  },
-  "biconomy": {
-    "apiKey": "",
-    "whitelistKey": "",
-    "createProxy": "",
-    "execTransaction": "",
-    "create2Proxy": "",
-    "proxyFactory": "",
-    "masterCopy": ""
+    "databaseURL": "https://common-staging-50741.firebaseio.com"
   },
   "mail": {
-    "sender": "dev@common.io",
+    "sender": "staging@common.io",
     "adminMail": "support@common.io"
   },
   "circlepay": {
     "apiUrl": "https://api-sandbox.circle.com/v1"
+  },
+  "durations": {
+    "funding": {
+      "countdownPeriod": 604800,
+      "quietEndingPeriod": 86400
+    },
+    "join": {
+      "countdownPeriod": 86400,
+      "quietEndingPeriod": 3600
+    }
   },
   "secretManagerProject": "common-staging-50741"
 }

@@ -21,13 +21,10 @@ jobs:
         with:
           node-version: 10.22.0
 
-      - name: Start docker containers
-        run: docker-compose up -d
-
-      - name: Setting-up JAVA
-        uses: actions/setup-java@v1.3.0
+      - name: Setting up Java
+        uses: actions/setup-java@v1
         with:
-          java-version: "12.x"
+          java-version: "9.0.4"
 
       - uses: actions/cache@v2
         with:
@@ -39,15 +36,6 @@ jobs:
 
       - name: Setup CI environment
         run: yarn ci:setup --token ${{ secrets.FIREBASE_TOKEN }}
-
-      - name: Deploy contracts
-        run: yarn script:deployTestContracts
-
-      - name: Modify firebase.json
-        run: npx json -I -f firebase.json -e "this.emulators.functions.port=5003"
-
-      - name: Add firebase token to secrets
-        run: npx json -I -f functions/src/env/env_secrets.json -e "this.firebaseToken=${{ secrets.FIREBASE_TOKEN }}"
 
       - name: Run tests
         run: yarn ci:test

@@ -2,7 +2,7 @@
 // @ts-ignore
 import firebaseFunctionsTests from 'firebase-functions-test';
 
-import { getAuthToken } from '../helpers/auth';
+import { getTestAuthToken } from '../helpers/auth';
 import { commonApp } from '../helpers/supertests';
 
 const test = firebaseFunctionsTests({
@@ -15,13 +15,14 @@ const invalidCommonCreationPayload = {
 };
 
 const validCommonCreationPayload = {
-  'name': 'Common Test',
-  'image': 'https://llandscapes-10674.kxcdn.com/wp-content/uploads/2019/07/lighting.jpg',
-  'action': 'to do or not to',
-  'byline': 'basically',
-  'description': 'hey there, am i descriptive',
-  'contributionType': 'one-time',
-  'contributionAmount': 6500
+  name: 'Common Test',
+  image: 'https://llandscapes-10674.kxcdn.com/wp-content/uploads/2019/07/lighting.jpg',
+  action: 'to do or not to',
+  byline: 'basically im long byline',
+  description: 'hey there, am i descriptive',
+  contributionType: 'one-time',
+  contributionAmount: 6500,
+  fundingGoalDeadline: new Date().getTime()
 };
 
 describe('Common Related Cloud Functions', () => {
@@ -34,7 +35,7 @@ describe('Common Related Cloud Functions', () => {
   });
 
   it('should be healthy', async () => {
-    const authToken = await getAuthToken('test-user');
+    const authToken = await getTestAuthToken('test-user');
 
     const response = await commonApp
       .get('/health')
@@ -57,7 +58,7 @@ describe('Common Related Cloud Functions', () => {
 
     it('should fail validation on invalid input', async () => {
       // Setup
-      const authToken = await getAuthToken('test-user');
+      const authToken = await getTestAuthToken('test-user');
 
       const invalidContributionType = {
         ...validCommonCreationPayload,
@@ -97,7 +98,7 @@ describe('Common Related Cloud Functions', () => {
 
     it('should create common successfully given valid data', async () => {
       // Setup
-      const authToken = await getAuthToken('test-user');
+      const authToken = await getTestAuthToken('test-user');
 
       // Act
       const response = await commonApp
