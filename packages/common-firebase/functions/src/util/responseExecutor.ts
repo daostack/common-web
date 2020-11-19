@@ -1,7 +1,6 @@
 import express from 'express';
 
 import { StatusCodes } from '../constants';
-import { ValidationError } from './errors';
 
 interface IResponseExecutorAction {
   (): any;
@@ -18,9 +17,11 @@ interface IResponseExecutor {
   (action: IResponseExecutorAction, payload: IResponseExecutorPayload): Promise<void>
 }
 
-export const responseExecutor: IResponseExecutor = async (action, { res, next, successMessage }): Promise<void> => {
+export const responseExecutor: IResponseExecutor = async (action, { req, res, next, successMessage }): Promise<void> => {
   try {
     const actionResult = await action() || {};
+
+    console.info(`Creating response for request ${req.sessionId}`);
 
     res
       .status(StatusCodes.Ok)

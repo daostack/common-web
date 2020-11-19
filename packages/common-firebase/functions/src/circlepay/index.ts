@@ -5,6 +5,7 @@ import { commonApp, commonRouter } from '../util/commonApp';
 
 import { createCirclePayCard, testIP } from './createCirclePayCard';
 import { encryption } from './circlepay';
+import { createPayment } from './createPayment';
 
 const runtimeOptions = {
   timeoutSeconds: 540
@@ -45,6 +46,17 @@ circlepay.get('/testIP', async (req, res, next) => {
       successMessage: `Test Ip generated`
     });
 });
+
+circlepay.post('/create-a-payment', async (req, res, next) => {    
+   await responseExecutor(    
+     async () => (await createPayment(req.body)),    
+     {    
+       req,    
+       res,    
+       next,    
+       successMessage: `Payment was successful`    
+     })    
+ });
 
 export const circlepayApp = functions
   .runWith(runtimeOptions)

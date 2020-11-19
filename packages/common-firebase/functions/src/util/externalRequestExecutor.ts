@@ -17,12 +17,15 @@ export const externalRequestExecutor = async (func: () => any, data: IExternalEr
 
     return result;
   } catch (err) {
-    // @todo Please also bulble up the original error to be handled later or shown to the user 
-    console.error(err.toString(), err)
+    console.error(`External service error: ${err.toString()}`, err);
 
     throw new CommonError(
-      data.message || `External service failed. ErrorCode: ${data.errorCode}`,
-      data
+      data.message || `External service failed. ErrorCode: ${data.errorCode}`, {
+        userMessage: 'Request to external service failed. Please try again later',
+        data,
+        error: err,
+        errorString: JSON.stringify(err)
+      }
     );
   }
 };

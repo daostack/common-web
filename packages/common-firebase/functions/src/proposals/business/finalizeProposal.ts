@@ -46,7 +46,7 @@ export const finalizeProposal = async (proposal: IProposalEntity): Promise<IProp
       userId: proposal.proposerId,
       type: proposal.type === 'join'
         ? EVENT_TYPES.REQUEST_TO_JOIN_ACCEPTED
-        : EVENT_TYPES.APPROVED_FUNDING_REQUEST
+        : EVENT_TYPES.FUNDING_REQUEST_ACCEPTED
     });
   } else {
     await createEvent({
@@ -54,7 +54,7 @@ export const finalizeProposal = async (proposal: IProposalEntity): Promise<IProp
       userId: proposal.proposerId,
       type: proposal.type === 'join'
         ? EVENT_TYPES.REQUEST_TO_JOIN_REJECTED
-        : EVENT_TYPES.REJECTED_FUNDING_REQUEST
+        : EVENT_TYPES.FUNDING_REQUEST_REJECTED
     });
   }
 

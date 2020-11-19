@@ -4,7 +4,7 @@ export const linkValidationSchema = yup.object({
   title: yup.string()
     .max(64),
 
-  address: yup.string()
+  value: yup.string()
     .required()
     .url()
 });
@@ -14,12 +14,19 @@ export const commonRuleValidationSchema = yup.object({
     .string()
     .required(),
 
-  url: yup
+  value: yup
     .string()
-    .max(512) // @todo Rename
+    .max(512)
 });
 
 export const fileValidationSchema = yup.object({
+  value: yup
+    .string()
+    .url()
+    .required()
+});
+
+export const imageValidationSchema = yup.object({
   value: yup
     .string()
     .url()

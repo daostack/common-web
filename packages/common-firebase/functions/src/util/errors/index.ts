@@ -1,5 +1,3 @@
-import { CommonError } from './CommonError';
-
 export { CommonError } from './CommonError';
 export { NotFoundError } from './NotFoundError';
 export { ArgumentError } from './ArgumentError';

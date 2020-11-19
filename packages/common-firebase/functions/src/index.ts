@@ -1,7 +1,6 @@
 import * as cron from './cron';
 import * as event from './event';
 import * as notification from './notification';
-import * as circlepayTriggers from './circlepay/triggers';
 import * as messageTriggers from './discussionMessage/triggers';
 
 import { circlepayApp } from './circlepay';
@@ -16,7 +15,6 @@ export const proposals = proposalsApp;
 // --- Triggers and Subscriptions
 exports.eventSub = event;
 exports.notificationSub = notification;
-exports.circlepayTriggers = circlepayTriggers;
 exports.proposalCrons = proposalCrons;
 exports.messageTriggers = messageTriggers;
 exports.proposalTriggers = proposalTriggers;

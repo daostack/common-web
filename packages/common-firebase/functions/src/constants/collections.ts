@@ -4,7 +4,7 @@ export const Collections = {
   Payments: 'payments',
   Commons: 'daos',
   Votes: 'votes',
-  // @question Why is this singular, when everything else is plural. Can I make it plural?
+  // @todo Make this plural
   Event: 'event',
   Cards: 'cards'
 };

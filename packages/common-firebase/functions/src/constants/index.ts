@@ -71,6 +71,15 @@ export const ProposalTypes = {
   Funding: 'fundingRequest'
 };
 
+export const ProposalActiveStates = [
+  'countdown'
+];
+
+export const ProposalFinalStates = [
+  'passed',
+  'failed'
+];
+
 // ---- Reexports
 export { runtimeOptions } from './runtimeOptions';
 export { Collections } from './collections';

@@ -1,14 +1,17 @@
 import * as yup from 'yup';
 
-import { IFundingRequestProposal, IProposalFile, IProposalLink } from '../proposalTypes';
-import { CommonError, NotImplementedError } from '../../util/errors';
+import { fileValidationSchema, imageValidationSchema, linkValidationSchema } from '../../util/schemas';
+import { CommonError } from '../../util/errors';
 import { validate } from '../../util/validate';
+import { Nullable } from '../../util/types';
+import { env, StatusCodes } from '../../constants';
 import { isCommonMember } from '../../common/business';
 import { commonDb } from '../../common/database';
-import { env, StatusCodes } from '../../constants';
+
 import { proposalDb } from '../database';
-import { fileValidationSchema, linkValidationSchema } from '../../util/schemas';
-import { Nullable } from '../../util/types';
+import { IFundingRequestProposal, IProposalFile, IProposalImage, IProposalLink } from '../proposalTypes';
+import { createEvent } from '../../util/db/eventDbService';
+import { EVENT_TYPES } from '../../event/event';
 
 const createFundingProposalValidationSchema = yup.object({
   commonId: yup
@@ -36,6 +39,9 @@ const createFundingProposalValidationSchema = yup.object({
     .optional(),
 
   files: yup.array(fileValidationSchema)
+    .optional(),
+
+  images: yup.array(imageValidationSchema)
     .optional()
 });
 
@@ -77,6 +83,7 @@ export const createFundingRequest = async (payload: CreateFundingProposalPayload
       title: payload.title,
       description: payload.description,
       links: payload.links as Nullable<IProposalLink[]> || [],
+      images: payload.images as Nullable<IProposalImage[]> || [],
       files: payload.files as Nullable<IProposalFile[]> || []
     },
 
@@ -89,7 +96,12 @@ export const createFundingRequest = async (payload: CreateFundingProposalPayload
     quietEndingPeriod: env.durations.funding.quietEndingPeriod
   });
 
-  // @todo Broadcast the event
+  // Emit funding request created event
+  await createEvent({
+    userId: payload.proposerId,
+    objectId: fundingProposal.id,
+    type: EVENT_TYPES.FUNDING_REQUEST_CREATED
+  })
 
   // Return the payload
   return fundingProposal as IFundingRequestProposal;

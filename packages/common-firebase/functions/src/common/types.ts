@@ -43,6 +43,11 @@ export interface ICommonEntity extends IBaseEntity{
   rules: ICommonRule[];
 
   /**
+   * List of links, that the common provided
+   */
+  links: ICommonLink[];
+
+  /**
    * The common metadata properties
    */
   metadata: ICommonMetadata;
@@ -58,8 +63,27 @@ export interface ICommonMember {
 }
 
 export interface ICommonRule {
+  /**
+   * The title for the rule
+   */
   title: string;
-  url: string; // @todo Rename
+
+  /**
+   * The description of the rule
+   */
+  value: string;
+}
+
+export interface ICommonLink {
+  /**
+   * The title of the link
+   */
+  title: string;
+
+  /**
+   * The address, to which the link is pointing
+   */
+  value: string;
 }
 
 export interface ICommonMetadata {

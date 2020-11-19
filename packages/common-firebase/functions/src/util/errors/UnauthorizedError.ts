@@ -1,6 +1,4 @@
 import express from 'express';
-import { stringify } from 'flatted';
-
 
 import { ErrorCodes, StatusCodes } from '../../constants';
 import { CommonError } from './CommonError';
@@ -10,6 +8,7 @@ import { CommonError } from './CommonError';
  * fails for the passed security tokens.
  */
 export class UnauthorizedError extends CommonError {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   constructor(req?: express.Request, rest?: any) {
     super('Unauthorized request was made', {
       req: {

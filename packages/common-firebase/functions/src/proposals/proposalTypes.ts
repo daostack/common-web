@@ -46,7 +46,8 @@ interface IBaseProposalEntity extends IBaseEntity {
   countdownPeriod: number;
 
   /**
-   * @todo No idea what that is. Find out :D
+   * This is the period at the end of the voting in which if
+   * vote flip occurs the countdown period will be extended
    */
   quietEndingPeriod: number;
 
@@ -89,11 +90,6 @@ interface IProposalDescription {
    * Array of all links, backing up the proposal
    */
   links: IProposalLink[];
-
-  /**
-   * Array of all files, backing up the proposal
-   */
-  files: IProposalFile[];
 }
 
 export interface IProposalLink {
@@ -105,7 +101,14 @@ export interface IProposalLink {
   /**
    * The place, where the user will be taken upon click
    */
-  address: string;
+  value: string;
+}
+
+export interface IProposalImage {
+  /**
+   * The URL of where the image is
+   */
+  value: string;
 }
 
 export interface IProposalFile {
@@ -130,6 +133,16 @@ export interface IFundingRequestProposal extends IBaseProposalEntity {
      * The proposal in short
      */
     title: string;
+
+    /**
+     * Collection of images supporting the request
+     */
+    images: IProposalImage[];
+
+    /**
+     * Collection of files supporting the request
+     */
+    files: IProposalFile[];
   }
 
 

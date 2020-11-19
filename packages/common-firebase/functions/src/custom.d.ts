@@ -3,5 +3,7 @@ declare namespace Express {
     user: {
       uid: string;
     }
+
+    sessionId: string;
   }
 }

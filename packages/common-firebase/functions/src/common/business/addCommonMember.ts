@@ -2,6 +2,8 @@ import { ICommonEntity } from '../types';
 import { commonDb } from '../database';
 import { proposalDb } from '../../proposals/database';
 import { CommonError } from '../../util/errors';
+import { createEvent } from '../../util/db/eventDbService';
+import { EVENT_TYPES } from '../../event/event';
 
 /**
  * Adds user to the common
@@ -37,9 +39,14 @@ const addCommonMember = async (common: ICommonEntity, userId: string): Promise<I
       userId
     });
 
-    // @tbd New Common Member added event?
-
     await commonDb.updateCommon(common);
+
+    // Emmit the event
+    await createEvent({
+      userId,
+      objectId: common.id,
+      type: EVENT_TYPES.COMMON_MEMBER_ADDED
+    })
   }
 
   return common;

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import { circlePayApi, getSecret } from '../settings';
 import { externalRequestExecutor } from '../util';
-import { ErrorCodes, env } from '../constants';
+import { ErrorCodes } from '../constants';
 
 const CIRCLEPAY_APIKEY = 'CIRCLEPAY_APIKEY';
 

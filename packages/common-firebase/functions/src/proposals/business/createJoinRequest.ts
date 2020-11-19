@@ -12,6 +12,9 @@ import { IJoinRequestProposal, IProposalFile, IProposalLink } from '../proposalT
 import { fileValidationSchema, linkValidationSchema } from '../../util/schemas';
 import { proposalDb } from '../database';
 import { isCardOwner } from '../../circlepay/business/isCardOnwer';
+import { assignCardToProposal } from '../../circlepay/createCirclePayCard';
+import { createEvent } from '../../util/db/eventDbService';
+import { EVENT_TYPES } from '../../event/event';
 
 const createRequestToJoinValidationSchema = yup.object({
   commonId: yup
@@ -36,9 +39,6 @@ const createRequestToJoinValidationSchema = yup.object({
     .required(),
 
   links: yup.array(linkValidationSchema)
-    .optional(),
-
-  files: yup.array(fileValidationSchema)
     .optional()
 });
 
@@ -60,11 +60,11 @@ export const createJoinRequest = async (payload: CreateRequestToJoinPayload): Pr
   const common = await commonDb.getCommon(payload.commonId);
 
   // Check if the card is owned by the user
-  // if(!(await isCardOwner(payload.proposerId, payload.cardId))) {
-  //   // Do not let them know if that card exists. It is just 'NotFound' even
-  //   // if it exists, but is not theirs
-  //   throw new NotFoundError(payload.cardId, 'card');
-  // }
+  if (!(await isCardOwner(payload.proposerId, payload.cardId))) {
+    // Do not let them know if that card exists. It is just 'NotFound' even
+    // if it exists, but is not theirs
+    throw new NotFoundError(payload.cardId, 'card');
+  }
 
 
   // Check if the user is already member of that common
@@ -80,7 +80,7 @@ export const createJoinRequest = async (payload: CreateRequestToJoinPayload): Pr
   // Check if the request is funded with less than required amount
   if (common.metadata.minFeeToJoin > payload.funding) {
     throw new CommonError('The funding cannot be less than the minimum required funding', {
-      userMessage: `Your join request cannot be created, because the min fee to join is ${common.metadata.minFeeToJoin}, but you provided ${payload.funding}`,
+      userMessage: `Your join request cannot be created, because the min fee to join is $${(common.metadata.minFeeToJoin / 100).toFixed(2)}, but you provided $${(payload.funding / 100).toFixed(2)}`,
       statusCode: StatusCodes.BadRequest,
 
       payload
@@ -111,21 +111,28 @@ export const createJoinRequest = async (payload: CreateRequestToJoinPayload): Pr
 
     description: {
       description: payload.description,
-      links: payload.links as Nullable<IProposalLink[]> || [],
-      files: payload.files as Nullable<IProposalFile[]> || []
+      links: payload.links as Nullable<IProposalLink[]> || []
     },
 
     join: {
       cardId: payload.cardId,
       funding: payload.funding,
-      fundingType: common.metadata.contributionType,
+      fundingType: common.metadata.contributionType
     },
 
     countdownPeriod: env.durations.join.countdownPeriod,
     quietEndingPeriod: env.durations.join.quietEndingPeriod
-  });
+  }) as IJoinRequestProposal;
 
-  // @todo Create event
+  // Link the card to the proposal
+  await assignCardToProposal(joinRequest.join.cardId, joinRequest.id);
+
+  // Create event
+  await createEvent({
+    userId: payload.proposerId,
+    objectId: joinRequest.id,
+    type: EVENT_TYPES.REQUEST_TO_JOIN_CREATED
+  });
 
   return joinRequest as IJoinRequestProposal;
 };

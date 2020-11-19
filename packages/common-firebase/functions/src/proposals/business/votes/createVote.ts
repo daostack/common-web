@@ -4,7 +4,7 @@ import { IVoteEntity, VoteOutcome } from '../../voteTypes';
 import { commonDb } from '../../../common/database';
 import { isCommonMember } from '../../../common/business';
 import { proposalDb, voteDb } from '../../database';
-import { StatusCodes } from '../../../constants';
+import { ProposalFinalStates, StatusCodes } from '../../../constants';
 import { validate } from '../../../util/validate';
 import { CommonError } from '../../../util/errors';
 import { hasVoted } from './hasVoted';
@@ -12,6 +12,7 @@ import { isExpired } from '../isExpired';
 import { createEvent } from '../../../util/db/eventDbService';
 import { EVENT_TYPES } from '../../../event/event';
 import { processVote } from './processVotes';
+import { finalizeProposal } from '../finalizeProposal';
 
 const createVoteValidationScheme = yup.object({
   voterId: yup.string()
@@ -73,7 +74,10 @@ export const createVote = async (payload: CreateVotePayload): Promise<IVoteEntit
 
   // Check if the proposal is expired
   if (await isExpired(proposal)) {
-    // @tbd Maybe finalize the proposal here?
+    // If the proposal is not in final state finalize it
+    if(!ProposalFinalStates.includes(proposal.state)) {
+      await finalizeProposal(proposal);
+    }
 
     throw new CommonError('Vote was tried to be cast on expired proposal', {
       userMessage: 'Cannot vote on expired proposals!',
@@ -94,7 +98,7 @@ export const createVote = async (payload: CreateVotePayload): Promise<IVoteEntit
   // Process the vote
   await processVote(vote);
 
-  // @tbd Create the event, that vote was created
+  // Emit the vote created event
   await createEvent({
     type: EVENT_TYPES.VOTE_CREATED,
     objectId: vote.id,

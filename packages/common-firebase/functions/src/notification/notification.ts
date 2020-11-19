@@ -20,7 +20,7 @@ interface IEventData {
 }
 
 export const notifyData: Record<string, IEventData> = {
-  [EVENT_TYPES.CREATION_COMMON]: {
+  [EVENT_TYPES.COMMON_CREATED]: {
       // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       data: async (objectId: string) => {
           const commonData = (await getDaoById(objectId)).data();
@@ -61,24 +61,6 @@ export const notifyData: Record<string, IEventData> = {
         ]
       }
   },
-  // [EVENT_TYPES.CREATION_COMMON_FAILED] : {
-  //     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  //     data: async (objectId: string) => {
-  //         return {
-  //             commonData: (await getDaoById(objectId)).data()
-  //         }
-  //     },
-  //     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  //     email: ( {commonData} ) => {
-  //         return {
-  //             templateKey: 'adminWalletCreationFailed',
-  //             emailStubs: {
-  //                 commonName: commonData.name,
-  //                 commonId: commonData.id
-  //             }
-  //         }
-  //     }
-  // },
   [EVENT_TYPES.REQUEST_TO_JOIN_CREATED] : {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (proposalId: string) => {
@@ -101,7 +83,7 @@ export const notifyData: Record<string, IEventData> = {
         }
     }
   },
-  [EVENT_TYPES.CREATION_PROPOSAL] : {
+  [EVENT_TYPES.FUNDING_REQUEST_CREATED] : {
       // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       data: async (objectId: string) => {
           const proposalData = (await getProposalById(objectId)).data();
@@ -151,7 +133,7 @@ export const notifyData: Record<string, IEventData> = {
     },
     
   },
-  [EVENT_TYPES.APPROVED_FUNDING_REQUEST] : {
+  [EVENT_TYPES.FUNDING_REQUEST_ACCEPTED] : {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (objectId: string) => {
         const proposalData = (await getProposalById(objectId)).data();
@@ -249,26 +231,6 @@ export const notifyData: Record<string, IEventData> = {
         }
     }
   },
-  // TODO: We don't have defined notification for the rejected funding proposal. Ask if we need that.
-  //
-  // [EVENT_TYPES.REJECTED_PROPOSAL]: {
-  //   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  //   data: async (objectId: string) => {
-  //       const proposalData = (await getProposalById(objectId)).data();
-  //       return { 
-  //         proposalData,
-  //         commonData : (await getDaoById(proposalData.dao)).data()
-  //       }
-  //   },
-  //   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  //   notification: async ( {proposalData , commonData} ) => {
-  //       return {
-  //           title: 'Your funding proposal was approved!',
-  //           body: `A funding proposal for ${proposalData.fundingRequest.amount} was approved by "${commonData.name}".`,
-  //           image: commonData.metadata.image || ''
-  //       }
-  //   },
-  // },
 }
 
 export default new class Notification implements INotification {
