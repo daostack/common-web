@@ -25,7 +25,7 @@ export const createTestJoinRequest = async ({
 } = {}): Promise<IJoinRequestProposal> => {
   const authToken = await getTestAuthToken(proposerId);
 
-  if (common) {
+  if (!common) {
     common = createTestCommon(commonCreatorId);
   }
 
@@ -46,7 +46,7 @@ export const createTestFundingRequest = async ({
 } = {}): Promise<IJoinRequestProposal> => {
   const authToken = await getTestAuthToken(proposerId);
 
-  if (common) {
+  if (!common) {
     common = createTestCommon(commonCreatorId);
   }
 

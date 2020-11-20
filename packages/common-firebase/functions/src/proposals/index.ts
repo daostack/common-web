@@ -52,7 +52,7 @@ router.post('/create/vote', async (req, res, next) => {
     req,
     res,
     next,
-    successMessage: 'Funding request successfully created!'
+    successMessage: `Successfully ${req.body.outcome} proposal!`
   });
 });
 
