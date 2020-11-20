@@ -45,7 +45,8 @@ const createCommonDataValidationScheme = yup.object({
 
   contributionType: yup.string()
     .oneOf(['one-time', 'monthly'])
-    .default('one-time'),
+    .default('one-time')
+    .required(),
 
   rules: yup.array(commonRuleValidationSchema)
     .optional(),
