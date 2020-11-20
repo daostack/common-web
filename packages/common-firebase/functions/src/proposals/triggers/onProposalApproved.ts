@@ -9,6 +9,7 @@ import { createPayment } from '../../circlepay/createPayment';
 import { CommonError } from '../../util/errors';
 import { commonDb } from '../../common/database';
 import { proposalDb } from '../database';
+import { createEvent } from '../../util/db/eventDbService';
 
 
 export const onProposalApproved = functions.firestore
@@ -20,6 +21,13 @@ export const onProposalApproved = functions.firestore
         console.info('Funding request was approved. Crunching some numbers');
 
         await fundProposal(event.objectId);
+
+        // Everything went fine so it is event time
+        await createEvent({
+          userId: event.userId,
+          objectId: event.objectId,
+          type: EVENT_TYPES.FUNDING_REQUEST_EXECUTED
+        });
       }
 
       // @refactor
@@ -55,6 +63,13 @@ export const onProposalApproved = functions.firestore
 
         // Add member to the common
         await addCommonMemberByProposalId(event.objectId);
+
+        // Everything went fine so it is event time
+        await createEvent({
+          userId: proposal.proposerId,
+          objectId: proposal.id,
+          type: EVENT_TYPES.REQUEST_TO_JOIN_EXECUTED
+        });
       }
     }
   );
