@@ -38,7 +38,7 @@ export const onProposalApproved = functions.firestore
         const proposal = await proposalDb.getProposal(event.objectId);
 
         if (proposal.type !== 'join') {
-          throw new CommonError(`Cannot process approved request to join with id ${event.objectId}`);
+          throw new CommonError(`Cannot process REQUEST_TO_JOIN_ACCEPTED because the associated object (${event.objectId}) is not a join proposal`);
         }
 
         await createPayment({
