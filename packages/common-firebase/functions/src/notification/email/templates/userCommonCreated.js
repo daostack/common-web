@@ -1,5 +1,5 @@
 const template = `
-Hello {{userName}},
+Hello {{name}},
 <br /><br />
 Congratulations! <br />
 Your new Common: {{commonName}}, is all set up. You can share it with friends via this direct link:
@@ -18,7 +18,7 @@ Collaborative Social Action.
 `;
 
 const emailStubs = {
-  userName: {
+  name: {
     required: true
   },
   commonName: {

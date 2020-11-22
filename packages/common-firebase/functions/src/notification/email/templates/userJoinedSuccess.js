@@ -1,5 +1,5 @@
 const template = `
-Hello {{userName}},
+Hello {{name}},
 <br /><br />
 Congratulations,<br />
 Your request to join <a href="{{commonLink}}">{{commonName}}</a> has been approved. You are now an equal member. You can join the discussion, vote, and submit proposals to the common.
@@ -11,7 +11,7 @@ Collaborative Social Action.
 `;
 
 const emailStubs = {
-  userName: {
+  name: {
     required: true
   },
   commonLink: {

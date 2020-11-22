@@ -9,14 +9,6 @@ import { getDiscussionMessageById } from '../util/db/discussionMessagesDb';
 
 const messaging = admin.messaging();
 
-const getNameString = (userData) => {
-  console.log('getNameString userData', userData)
-  if (!userData.firstName && userData.lastName) {
-    return 'A Common member'
-  }
-  return `${userData.firstName || ''} ${userData.lastName || ''}`
-}
-
 export interface INotification {
   send: any
 }
@@ -43,7 +35,7 @@ export const notifyData: Record<string, IEventData> = {
           {
             templateKey: 'userCommonCreated',
             emailStubs: {
-              userName: getNameString(userData),
+              name: userData.displayName,
               commonName: commonData.name,
               commonLink: Utils.getCommonLink(commonData.id)
             }
@@ -54,7 +46,7 @@ export const notifyData: Record<string, IEventData> = {
             emailStubs: {
               userId: userData.uid,
               commonLink: Utils.getCommonLink(commonData.id),
-              userName: getNameString(userData),
+              userName: userData.displayName,
               userEmail: userData.email,
               commonCreatedOn: new Date().toDateString(),
               log: 'Successfully created common',
@@ -84,7 +76,7 @@ export const notifyData: Record<string, IEventData> = {
           to: userData.email,
           templateKey: 'requestToJoinSubmitted',
           emailStubs: {
-            userName: getNameString(userData),
+            name: userData.displayName,
             link: Utils.getCommonLink(commonData.id),
             commonName: commonData.metadata.name
           }
@@ -105,7 +97,7 @@ export const notifyData: Record<string, IEventData> = {
       notification: async ( {proposalData, commonData, userData} ) => {
           return {
               title: 'A new funding proposal in your Common!',
-              body: `${getNameString(userData)} is asking for ${proposalData.fundingRequest.amount / 100} for their proposal in "${commonData.name}". See the proposal and vote.`,
+              body: `${userData.firstName} is asking for ${proposalData.fundingRequest.amount / 100} for their proposal in "${commonData.name}". See the proposal and vote.`,
               image: commonData.metadata.image || '',
               path: `ProposalScreen/${commonData.id}/${proposalData.id}`,
           }
@@ -114,21 +106,19 @@ export const notifyData: Record<string, IEventData> = {
   },
   [EVENT_TYPES.COMMON_WHITELISTED] : {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    data: async (commonId: string) => {
-        const commonData = (await getDaoById(commonId)).data();
+    data: async (objectId: string) => {
         return { 
-          commonData,
-          userData: (await getUserById(commonData.metadata.founderId)),
+          commonData : (await getDaoById(objectId)).data()
         }
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ( {commonData, userData} ) => {
+    email: ( {commonData} ) => {
       return {
         templateKey: 'userCommonFeatured',
         emailStubs: {
             commonName: commonData.name,
-            commonLink: Utils.getCommonLink(commonData.id),
-            userName: getNameString(userData),
+            commonId: commonData.id,
+            commonLink: Utils.getCommonLink(commonData.id)
         }
       }
     },
@@ -213,7 +203,7 @@ export const notifyData: Record<string, IEventData> = {
     notification: async ( {message, sender, commonData} ) => (
       {
           title: `New message!`,
-          body: `${getNameString(sender)} commented in "${commonData.name}"`,
+          body: `${sender.displayName} commented in "${commonData.name}"`,
           image: commonData.metadata.image || '',
           path: `Discussions/${commonData.id}/${message.discussionId}`
       }
@@ -225,24 +215,18 @@ export const notifyData: Record<string, IEventData> = {
         const proposalData = (await getProposalById(proposalId)).data();
         return {
             commonData: (await getDaoById(proposalData.dao)).data(),
-            userData: (await getUserById(proposalData.proposerId)).data(),
-            proposalId
+            userData: (await getUserById(proposalData.proposerId)).data()
         }
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ({ commonData, userData, proposalData } ) => {
+    email: ({ commonData, userData } ) => {
         return {
           to: userData.email,
           templateKey: 'userJoinedButFailedPayment',
           emailStubs: {
-            commonId: commonData.id,
-            userName: getNameString(userData),
+            name: userData.displayName,
             commonLink: Utils.getCommonLink(commonData.id),
-            commonName: commonData.metadata.name,
-            proposalId: proposalData.id,
-            paymentAmount: proposalData.join.funding / 100,
-            submittedOn: proposalData.createdAt,
-            log: 'User was accepted, but payment failed - user did not join'
+            commonName: commonData.metadata.name
           }
         }
     }

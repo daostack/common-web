@@ -5,7 +5,7 @@ const template = `
 
     Common name: {{commonName}}<br />
     Membership request ID: {{membershipRequestId}}<br />
-    User Full Name: {{userName}}<br />
+    User Full Name: {{userFullName}}<br />
     User ID: {{userId}}<br />
     User Email: {{userEmail}}<br />
     Payment amount: {{paymentAmount}}<br />
@@ -26,7 +26,7 @@ const emailStubs = {
   userEmail: {
     required: true
   },
-  userName: {
+  userFullName: {
     required: true
   },
   paymentAmount: {

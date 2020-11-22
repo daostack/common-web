@@ -4,7 +4,7 @@ The following proposal was approved but the payment could not be processed.
 Common name: {{commonName}}
 Common ID: <a href="{{commonLink}}">{{commonId}}</a>
 Proposal ID: {{proposalId}}
-User Full Name: {{userName}}
+User Full Name: {{userFullName}}
 User ID: {{userId}}
 User Email: {{userEmail}}
 Payment amount: {{paymentAmount}}
@@ -28,7 +28,7 @@ const emailStubs = {
   proposalId: {
     required: true
   },
-  userName: {
+  userFullName: {
     required: true
   },
   paymentAmount: {
