@@ -6,7 +6,7 @@ Common name: {{commonName}}<br />
 Common id: <a href="{{commonLink}}">{{commonId}}</a><br />
 Common balance: {{commonBalance}}<br />
 Proposal ID: {{proposalId}}<br />
-User Full Name: {{userFullName}}<br />
+User Full Name: {{userName}}<br />
 User ID: {{userId}}<br />
 User Email: {{userEmail}}<br />
 Payment Id: {{paymentId}}<br />
@@ -37,7 +37,7 @@ const emailStubs = {
   proposalId: {
     required: true
   },
-  userFullName: {
+  userName: {
     required: true
   },
   userEmail: {

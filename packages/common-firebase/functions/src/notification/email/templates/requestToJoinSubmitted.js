@@ -1,5 +1,5 @@
 const template = `
-  Hello {{name}},<br />
+  Hello {{userName}},<br />
   Thank you for Joining Common!
   <br /><br />
   Your request to join <a href="{{link}}">{{commonName}}</a> has been submitted and is pending approval by the Common members. 
@@ -12,7 +12,7 @@ const template = `
 `;
 
 const emailStubs = {
-  name: {
+  userName: {
     required: true
   },
   link: {

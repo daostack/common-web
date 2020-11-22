@@ -1,5 +1,5 @@
 const template = `
-Hello {{name}},
+Hello {{userName}},
 <br />
 The Common you created: {{commonName}}, was selected to appear on the app’s “discover” section. Log in to find it there, and feel free to share the news with your fellow members.
 <br /><br />
@@ -12,7 +12,7 @@ Collaborative Social Action.
 `;
 
 const emailStubs = {
-  name: {
+  userName: {
     required: true
   },
   commonName: {

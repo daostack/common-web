@@ -1,5 +1,5 @@
 const template = `
-Hello {{name}},<br />
+Hello {{userName}},<br />
 Thank you for Joining Common!
 <br /><br />
 Your request to join <a href="{{commonLink}}">{{commonName}}</a> has been approved by the common but there seems to be a problem with processing your payment. 
@@ -14,7 +14,7 @@ Collaborative Social Action.
 `;
 
 const emailStubs = {
-  name: {
+  userName: {
     required: true
   },
   commonLink: {
