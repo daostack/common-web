@@ -2,11 +2,6 @@
 
 This repository contains code for the firebase backend of the project.
 
-# Documentation
-
-To see the endpoint documentation you can click [here](https://documenter.getpostman.com/view/5095300/TVemAUcq)
-
-
 # Quick start for developers
 
 - clone the repository
@@ -19,7 +14,7 @@ To run the functions locally but connect to the staging database in the cloud:
 - yarn use:staging # connect to the staging backed in the cloud, yarn use:production will connect to the prodcution backend
 - yarn serve # run the functions locally, and connect to the backend
 
-To run both db adn functions locally:
+To run both db and functions locally:
 - mkdir firestore/data
 - yarn use:staging
 - yarn data:update # download the dta from staging database
@@ -31,23 +26,9 @@ To run everything locally you could use the following command:
 
 `yarn start`
 
-For more information you could check [here](https://github.com/daostack/common-firebase/blob/dev/doc/local.md)
-
-# firestore
-
-To run the script, you need to install gcloud and 
-
-For ios:
-```curl https://sdk.cloud.google.com | bash```
-
-# hosting 
-# functions
-
-## Running the Cloud functions
+# Cloud Functions
 
 To run the firebase functions for the api you can run the following commands to:
-
-### Locally
 
 
 **1. Set the environment which you want to start locally.**\
@@ -60,12 +41,12 @@ To run the firebase functions for the api you can run the following commands to:
 **2. Backup staging database on local project.**
 
 -  `yarn data:backup`  - Execute in order to store locally the current database stage from the environment that you use.
--  `yarn data:update`  - Execute every time when you want to sync your local database with the databse on the current environment.
+-  `yarn data:update`  - Execute every time when you want to sync your local database with the database on the current environment.
 
-**3. Start firebase emulator with local clouldfunctions and firestore. The firestore will be loaded with the latest backup version which you have locally.**
+**3. Start firebase emulator with local cloud functions and firestore. The firestore will be loaded with the latest backup version which you have locally.**
 
--  `yarn dev` - starts all services - 1) http clould functions 2) stub functions 3) local firestore
--  `yarn emulator:functions` - starts only http clould functions - 1) http clould functions
+-  `yarn dev` - starts all services - 1) http cloud functions 2) stub functions 3) local firestore
+-  `yarn emulator:functions` - starts only http cloud functions - 1) http cloud functions
 
 Note that this these cloud functions will operate on the production instance if started like that.
 
@@ -81,18 +62,30 @@ yarn deploy:production
 ```
 
 ### Development
-To run a pubsub function you will need to have firebase-tools installed, run
-```
-npm i -g firebase-tools
-```
-Then run the following command to create a shell
-```
-firebase functions:shell
-```
-you can then call the API functions
+
+#### Authentication
+
+Most (if not all) of the http functions are placed behind the authentication layer. This can be 
+annoying for development especially taking into consideration the one-hour period in which the authentication token is 
+valid. Because of that there is a way to 'bypass' the authentication layer by either running command that uses the development
+authentication by default or by placing `cross-env NODE_ENV=dev` before the command you want to run with the development auth.
+After that the only thing you need to do is provide token in the `Authorization` header of the following format:
 
 ```
-graphql.graphql.get('update-daos')
-graphql.graphql.get('update-proposals')
-graphql.graphql.get('update-proposal-by-id')
+{ uid: {{userId}} }
 ```
+
+Here `{{userId}}` is the ID of the user you want to authenticate with.
+
+
+#### Testing
+
+Each of the cloud functions should have extensive test suites written for them. For that we are using 
+[Jest](https://jestjs.io/docs/en/getting-started). All tests are placed under the __tests__ folder and should end
+with either `.spec.ts` or `.test.ts`. The commands for running the tests are:
+
+`yarn test` - Just runs the tests once without setting up the firebase emulator.
+`yarn test:watch` - Just runs the tests on every file change, but without setting up any firebase emulators
+
+`yarn test:emulator` - Bad name, cool command. It first setups the firebase emulators and then runs the tests on top 
+of it. This command is mainly used by the GitHub Actions CI.

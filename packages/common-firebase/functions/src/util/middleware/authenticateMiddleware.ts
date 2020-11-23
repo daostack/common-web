@@ -11,7 +11,7 @@ export const authenticate: RequestHandler = async (req, res, next) => {
     }
 
     try {
-      if (process.env.NODE_ENV !== 'test') {
+      if (process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'dev') {
         // Use firebase-admin auth to verify the token passed in from the client header.
         // Decoding this token returns the userPayload and all the other token
         // claims you added while creating the custom token and adds them
