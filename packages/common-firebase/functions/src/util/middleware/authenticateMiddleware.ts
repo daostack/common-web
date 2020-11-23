@@ -20,9 +20,13 @@ export const authenticate: RequestHandler = async (req, res, next) => {
         req.user = await auth().verifyIdToken(req.headers.authorization);
       } else {
         // Here we should only be on test environment
-        console.warn(`Testing authorization is being used! ${req.sessionId}`);
+        console.warn(`Testing authorization is being used! ${req.sessionId}`, req.headers.authorization);
+
+        console.log(req.headers.authorization)
 
         const parsedUser = JSON.parse(req.headers.authorization);
+
+        console.log(typeof parsedUser)
 
         if (typeof parsedUser === 'object' && parsedUser.uid) {
           req.user = parsedUser;
