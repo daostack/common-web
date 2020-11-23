@@ -5,7 +5,6 @@ Array [
   "commonId is a required field",
   "title is a required field",
   "amount is a required field",
-  "No unknown keys are allowed. Unknown keys: name",
 ]
 `;
 
@@ -14,6 +13,5 @@ Array [
   "commonId is a required field",
   "cardId is a required field",
   "funding is a required field",
-  "No unknown keys are allowed. Unknown keys: name",
 ]
 `;
