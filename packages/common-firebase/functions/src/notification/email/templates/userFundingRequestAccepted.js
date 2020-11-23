@@ -1,5 +1,5 @@
 const template = `
-Hello {{name}},
+Hello {{userName}},
 <br /><br />
 Congratulations! <br />
 Your proposal: {{proposal}} has been approved. To receive the funds you will need to provide your bank account details, as well as some identification information.
@@ -13,7 +13,7 @@ Collaborative Social Action.
 `;
 
 const emailStubs = {
-  name: {
+  userName: {
     required: true
   },
   proposal: {

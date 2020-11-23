@@ -3,13 +3,13 @@ import { runTest } from '../helpers/runTest';
 import '../../functions/src';
 
 const requestToJoinStubs = {
-  name: 'Test Name',
+  userName: 'Test Name',
   link: 'https://google.com',
   commonName: 'Test Common Name'
 };
 
 const requestToJoinPartialStubs = {
-  name: 'Test Name'
+  userName: 'Test Name'
 };
 
 runTest(async () => {
