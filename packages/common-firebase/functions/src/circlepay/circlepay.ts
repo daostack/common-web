@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 import { circlePayApi, getSecret } from '../settings';
 import { externalRequestExecutor } from '../util';
 import { ErrorCodes } from '../constants';
@@ -36,7 +35,6 @@ export interface ICardData {
   },
   keyId: string,
   encryptedData: string,
-  proposalId: string,
   idempotencyKey: string,
 }
 

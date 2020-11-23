@@ -9,7 +9,6 @@ const { env } = require('../constants');
 const CFError = {
   invalidIdToken: 'invalidIdToken',
   emptyPaymentData: 'emptyPaymentData',
-  emptyCardData: 'emptyCardData',
   emptyUserData: 'emptyUserData'
 }
 
@@ -43,38 +42,6 @@ class Utils {
       const userRef = admin.firestore().collection('daos').doc(commonId);
       const userData = await userRef.get().then(doc => { return doc.data() })
       return userData
-    } catch (err) {
-      throw new CommonError(CFError.emptyUserData)
-    }
-  }
-
-  async getCardById(cardId) {
-    const cardRef = admin.firestore().collection('cards').doc(cardId);
-    const cardData = await cardRef.get().then(doc => doc.data());
-    if (!cardData) {
-      throw new CommonError(`Could not find card with id ${cardId}.`)
-    }
-    return cardData;
-  }
-
-  async getCardByUserId(userId) {
-    const cardRef = await admin.firestore().collection('cards')
-      .where('userId', '==', userId)
-      .get();
-        if (cardRef.docs.length === 0) {
-          throw new CommonError(`Could not find user with id ${userId} associated with a CirclePay card.`);
-        }
-    const cardData = cardRef.docs.map(doc => doc.data())[0];
-    return cardData;
-  }
-
-  async getCardByProposalId(proposalId) {
-    try {
-      const cardRef = await admin.firestore().collection('cards')
-        .where('proposals', 'array-contains', proposalId)
-        .get();
-      const cardData = cardRef.docs.map(doc => doc.data())[0];
-      return cardData;
     } catch (err) {
       throw new CommonError(CFError.emptyUserData)
     }

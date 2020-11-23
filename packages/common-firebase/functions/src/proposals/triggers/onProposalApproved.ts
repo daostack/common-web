@@ -1,13 +1,10 @@
 import * as functions from 'firebase-functions';
-
 import { Collections } from '../../constants';
 import { IEventEntity } from '../../event/type';
 import { EVENT_TYPES } from '../../event/event';
-import { addCommonMemberByProposalId } from '../../common/business/addCommonMember';
 import { fundProposal } from '../business/fundProposal';
 import { createPayment } from '../../circlepay/createPayment';
 import { CommonError } from '../../util/errors';
-import { commonDb } from '../../common/database';
 import { proposalDb } from '../database';
 import { createEvent } from '../../util/db/eventDbService';
 
@@ -52,24 +49,6 @@ export const onProposalApproved = functions.firestore
         if(proposal.join.fundingType === 'monthly') {
           // @todo Create subscription
         }
-
-        // Update common funding info
-        const common = await commonDb.getCommon(proposal.commonId);
-
-        common.raised += proposal.join.funding;
-        common.balance += proposal.join.funding;
-
-        await commonDb.updateCommon(common);
-
-        // Add member to the common
-        await addCommonMemberByProposalId(event.objectId);
-
-        // Everything went fine so it is event time
-        await createEvent({
-          userId: proposal.proposerId,
-          objectId: proposal.id,
-          type: EVENT_TYPES.REQUEST_TO_JOIN_EXECUTED
-        });
       }
     }
   );
