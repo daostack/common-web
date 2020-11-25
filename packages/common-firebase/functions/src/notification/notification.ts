@@ -1,11 +1,11 @@
 import admin from 'firebase-admin';
 import { EVENT_TYPES } from "../event/event";
 import { env } from '../constants';
-import { getDaoById } from '../util/db/daoDbService';
-import { getProposalById } from '../util/db/proposalDbService';
 import { getUserById } from '../util/db/userDbService';
 import { Utils } from '../util/util';
 import { getDiscussionMessageById } from '../util/db/discussionMessagesDb';
+import { proposalDb } from '../proposals/database';
+import { commonDb } from '../common/database';
 
 const messaging = admin.messaging();
 
@@ -30,7 +30,7 @@ export const notifyData: Record<string, IEventData> = {
   [EVENT_TYPES.COMMON_CREATED]: {
       // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       data: async (objectId: string) => {
-          const commonData = (await getDaoById(objectId)).data();
+          const commonData = (await commonDb.getCommon(objectId));
           return {
             commonData,
             userData: (await getUserById(commonData.members[0].userId)).data(),
@@ -62,7 +62,7 @@ export const notifyData: Record<string, IEventData> = {
               description: commonData.metadata.description,
               about: commonData.metadata.byline,
               paymentType: 'one-time',
-              minContribution: commonData.metadata.minimum
+              minContribution: commonData.metadata.minFeeToJoin
             }
           }
         ]
@@ -71,9 +71,9 @@ export const notifyData: Record<string, IEventData> = {
   [EVENT_TYPES.REQUEST_TO_JOIN_CREATED] : {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (proposalId: string) => {
-        const proposalData = (await getProposalById(proposalId)).data();
+        const proposalData = (await proposalDb.getProposal(proposalId));
         return {
-            commonData: (await getDaoById(proposalData.dao)).data(),
+            commonData: (await commonDb.getCommon(proposalData.commonId)),
             userData: (await getUserById(proposalData.proposerId)).data()
         }
     },
@@ -85,7 +85,7 @@ export const notifyData: Record<string, IEventData> = {
           emailStubs: {
             userName: getNameString(userData),
             link: Utils.getCommonLink(commonData.id),
-            commonName: commonData.metadata.name
+            commonName: commonData.name
           }
         }
     }
@@ -93,10 +93,10 @@ export const notifyData: Record<string, IEventData> = {
   [EVENT_TYPES.FUNDING_REQUEST_CREATED] : {
       // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
       data: async (objectId: string) => {
-          const proposalData = (await getProposalById(objectId)).data();
+          const proposalData = (await proposalDb.getProposal(objectId));
           return {
               proposalData,
-              commonData: (await getDaoById(proposalData.dao)).data(),
+              commonData: (await commonDb.getCommon(proposalData.commonId)),
               userData: (await getUserById(proposalData.proposerId)).data(),
           }
       },
@@ -104,8 +104,8 @@ export const notifyData: Record<string, IEventData> = {
       notification: async ( {proposalData, commonData, userData} ) => {
           return {
               title: 'A new funding proposal in your Common!',
-              body: `${getNameString(userData)} is asking for ${proposalData.fundingRequest.amount / 100} for their proposal in "${commonData.name}". See the proposal and vote.`,
-              image: commonData.metadata.image || '',
+              body: `${getNameString(userData)} is asking for $${proposalData.fundingRequest.amount / 100} for their proposal in "${commonData.name}". See the proposal and vote.`,
+              image: commonData.image || '',
               path: `ProposalScreen/${commonData.id}/${proposalData.id}`,
           }
       },
@@ -114,7 +114,7 @@ export const notifyData: Record<string, IEventData> = {
   [EVENT_TYPES.COMMON_WHITELISTED] : {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (commonId: string) => {
-      const commonData = (await getDaoById(commonId)).data();
+      const commonData = (await commonDb.getCommon(commonId));
         return { 
           commonData,
           userData: (await getUserById(commonData.metadata.founderId)),
@@ -136,7 +136,7 @@ export const notifyData: Record<string, IEventData> = {
         return {
             title: 'A new Common was just featured!',
             body: `A new Common was just featured: "${commonData.name}". You might want to check it out.`,
-            image: commonData.metadata.image || '',
+            image: commonData.image || '',
             path: `CommonProfile/${commonData.id}`
         }
     },
@@ -145,18 +145,18 @@ export const notifyData: Record<string, IEventData> = {
   [EVENT_TYPES.FUNDING_REQUEST_ACCEPTED] : {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (objectId: string) => {
-        const proposalData = (await getProposalById(objectId)).data();
+        const proposalData = (await proposalDb.getProposal(objectId));
         return { 
           proposalData,
-          commonData : (await getDaoById(proposalData.dao)).data()
+          commonData : (await commonDb.getCommon(proposalData.commonId))
         }
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     notification: async ( {proposalData , commonData} ) => {
         return {
             title: 'Your funding proposal was approved!',
-            body: `A funding proposal for ${proposalData.fundingRequest.amount} was approved by "${commonData.name}".`,
-            image: commonData.metadata.image || '',
+            body: `A funding proposal for $${proposalData.fundingRequest.amount / 100} was approved by "${commonData.name}".`,
+            image: commonData.image || '',
             path: `ProposalScreen/${commonData.id}/${proposalData.id}`,
         }
     },
@@ -164,9 +164,9 @@ export const notifyData: Record<string, IEventData> = {
   [EVENT_TYPES.REQUEST_TO_JOIN_ACCEPTED]: {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (objectId: string) => {
-        const proposalData = (await getProposalById(objectId)).data();
+        const proposalData = (await proposalDb.getProposal(objectId));
         return { 
-          commonData : (await getDaoById(proposalData.dao)).data()
+          commonData : (await commonDb.getCommon(proposalData.commonId))
         }
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -174,7 +174,7 @@ export const notifyData: Record<string, IEventData> = {
         return {
             title: 'Congrats!',
             body: `Your request to join "${commonData.name}" was accepted, you are now a member!`,
-            image: commonData.metadata.image || '',
+            image: commonData.image || '',
             path: `CommonProfile/${commonData.id}`
         }
     },
@@ -183,9 +183,9 @@ export const notifyData: Record<string, IEventData> = {
   [EVENT_TYPES.REQUEST_TO_JOIN_REJECTED]: {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (objectId: string) => {
-        const proposalData = (await getProposalById(objectId)).data();
+        const proposalData = (await proposalDb.getProposal(objectId));
         return { 
-          commonData : (await getDaoById(proposalData.dao)).data()
+          commonData : (await commonDb.getCommon(proposalData.commonId))
         }
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -193,7 +193,7 @@ export const notifyData: Record<string, IEventData> = {
         return {
             title: `Bad news, your request to join "${commonData.name}" was rejected.`,
             body: `Don't give up, there are plenty of other Commons you can join.`,
-            image: commonData.metadata.image || '',
+            image: commonData.image || '',
             path: `CommonProfile/${commonData.id}`
         }
     },
@@ -201,29 +201,36 @@ export const notifyData: Record<string, IEventData> = {
   [EVENT_TYPES.MESSAGE_CREATED]: {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (messageId: string) => {
-        const message = (await getDiscussionMessageById(messageId)).data();
+        const discussionMessage = (await getDiscussionMessageById(messageId)).data();
+        const commonId = discussionMessage.commonId
+          || (await proposalDb.getProposal(discussionMessage.discussionId))?.commonId;
+        
+        const path = discussionMessage.commonId
+          ? `Discussions/${commonId}/${discussionMessage.discussionId}`
+          : `ProposalScreen/${commonId}/${discussionMessage.discussionId}/1`; // 1 is tabIndex of chats in ProposalScreen
+        
         return {
-          message,
-          sender: (await getUserById(message.ownerId)).data(),
-          commonData : (await getDaoById(message.commonId)).data()
+          sender: (await getUserById(discussionMessage.ownerId)).data(),
+          commonData : (await commonDb.getCommon(commonId)),
+          path
         }
       },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    notification: async ( {message, sender, commonData} ) => (
+    notification: async ( {sender, commonData, path} ) => (
       {
           title: `New message!`,
-          body: `${sender.displayName} commented in "${commonData.name}"`,
-          image: commonData.metadata.image || '',
-          path: `Discussions/${commonData.id}/${message.discussionId}`
+          body: `${getNameString(sender)} commented in "${commonData.name}"`,
+          image: commonData.image || '',
+          path
       }
     ),
   },
   [EVENT_TYPES.PAYMENT_FAILED] : {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (proposalId: string) => {
-        const proposalData = (await getProposalById(proposalId)).data();
+        const proposalData = (await proposalDb.getProposal(proposalId));
         return {
-            commonData: (await getDaoById(proposalData.dao)).data(),
+            commonData: (await commonDb.getCommon(proposalData.commonId)),
             userData: (await getUserById(proposalData.proposerId)).data(),
         }
     },
@@ -235,7 +242,7 @@ export const notifyData: Record<string, IEventData> = {
           emailStubs: {
             userName: getNameString(userData),
             commonLink: Utils.getCommonLink(commonData.id),
-            commonName: commonData.metadata.name,
+            commonName: commonData.name,
           }
         }
     }

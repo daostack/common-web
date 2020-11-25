@@ -48,7 +48,8 @@ export const createCirclePayCard = async (req: IRequest): Promise<ICardCreatedPa
       id: data.id,
       userId: req.user.uid,
       creationDate: new Date(),
-      payments: []
+      payments: [],
+      proposals: [],
   });
 
   return {
