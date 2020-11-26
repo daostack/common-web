@@ -3,8 +3,10 @@ import { Collections } from '../../constants';
 import { IEventEntity } from '../../event/type';
 import { EVENT_TYPES } from '../../event/event';
 import { fundProposal } from '../business/fundProposal';
+import { createSubscription } from '../../subscriptions/business';
+import { addCommonMemberByProposalId } from '../../common/business/addCommonMember';
 import { createPayment } from '../../circlepay/createPayment';
-import { CommonError } from '../../util/errors';
+import { commonDb } from '../../common/database';
 import { proposalDb } from '../database';
 import { createEvent } from '../../util/db/eventDbService';
 
@@ -31,24 +33,32 @@ export const onProposalApproved = functions.firestore
       if (event.type === EVENT_TYPES.REQUEST_TO_JOIN_ACCEPTED) {
         console.info('Join request was approved. Adding new members to common');
 
-        // Create payment
-        const proposal = await proposalDb.getProposal(event.objectId);
+        const proposal = await proposalDb.getJoinRequest(event.objectId);
+        
+        // If the proposal is monthly create subscription. Otherwise charge
+        if (proposal.join.fundingType === 'monthly') {
+          await createSubscription(proposal);
+        } else {
+          // @todo Rework this (and extract it, this is way too much logic for event listener)
+          await createPayment({
+            ipAddress: '127.0.0.1',
+            proposalId: proposal.id,
+            proposerId: proposal.proposerId,
+            funding: proposal.join.funding,
+            sessionId: context.eventId
+          });
 
-        if (proposal.type !== 'join') {
-          throw new CommonError(`Cannot process REQUEST_TO_JOIN_ACCEPTED because the associated object (${event.objectId}) is not a join proposal`);
+          // Update common funding info
+          const common = await commonDb.getCommon(proposal.commonId);
+
+          common.raised += proposal.join.funding;
+          common.balance += proposal.join.funding;
+
+          await commonDb.updateCommon(common);
         }
 
-        await createPayment({
-          ipAddress: '127.0.0.1',
-          proposalId: proposal.id,
-          proposerId: proposal.proposerId,
-          funding: proposal.join.funding,
-          sessionId: context.eventId
-        });
-
-        if(proposal.join.fundingType === 'monthly') {
-          // @todo Create subscription
-        }
+        // Add member to the common
+        await addCommonMemberByProposalId(proposal.id);
       }
     }
   );

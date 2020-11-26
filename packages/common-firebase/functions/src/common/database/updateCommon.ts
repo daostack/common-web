@@ -12,7 +12,7 @@ export const updateCommon = async (common: ICommonEntity): Promise<ICommonEntity
   const commonEntity = {
     ...common,
 
-    updatedAt: firestore.Timestamp.fromDate(new Date())
+    updatedAt: firestore.Timestamp.now()
   };
 
   await commonCollection

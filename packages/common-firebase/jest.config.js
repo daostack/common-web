@@ -1,6 +1,6 @@
 module.exports = {
   testMatch: [
-    '**/?(*.)+(spec|test).ts'
+    '**/?(*.)+(spec|test|tests).ts'
   ],
   preset: 'ts-jest',
   testEnvironment: 'node',

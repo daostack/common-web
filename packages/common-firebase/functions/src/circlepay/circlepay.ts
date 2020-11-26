@@ -5,7 +5,12 @@ import { ErrorCodes } from '../constants';
 
 const CIRCLEPAY_APIKEY = 'CIRCLEPAY_APIKEY';
 
-const getOptions = async () => (
+export const getCirclePayOptions = async (): Promise<{
+  headers: {
+    authorization: string;
+    [key: string]: string;
+  }
+}> => (
   getSecret(CIRCLEPAY_APIKEY).then((apiKey) => (
     {
       headers: {
@@ -39,7 +44,7 @@ export interface ICardData {
 }
 
 export const createCard = async (cardData: ICardData) : Promise<any> => {
-  const options = await getOptions();
+  const options = await getCirclePayOptions();
   const response = await externalRequestExecutor(async () => {
     return await axios.post(`${circlePayApi}/cards`,
       cardData,
@@ -55,7 +60,7 @@ export const createCard = async (cardData: ICardData) : Promise<any> => {
 
 export const encryption = async () : Promise<any> => {
 	// const response = await axios.get(`${circlePayApi}/encryption/public`, options);
-  const options = await getOptions();
+  const options = await getCirclePayOptions();
   const response = await externalRequestExecutor(async () => {
     return await axios.get(`${circlePayApi}/encryption/public`, options);
   }, {
@@ -85,7 +90,7 @@ interface IPayment {
 }
 
 export const createAPayment = async (paymentData: IPayment) : Promise<any> => {
-  const options = await getOptions();
+  const options = await getCirclePayOptions();
   return await externalRequestExecutor(async () => {
     return await axios.post(`${circlePayApi}/payments`,
       paymentData,
@@ -98,7 +103,7 @@ export const createAPayment = async (paymentData: IPayment) : Promise<any> => {
 }
 
 export const getPayment = async(paymentId: string) : Promise<any> => {
-  const options = await getOptions();
+  const options = await getCirclePayOptions();
   return await externalRequestExecutor(async () => {
     return await axios.get(`${circlePayApi}/payments/${paymentId}`, options)
   }, {

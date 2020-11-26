@@ -63,6 +63,12 @@
     "functions"
   ],
   "dependencies": {
-    "crossenv": "^0.0.2-security"
+    "crossenv": "^0.0.2-security",
+    "shelljs": "^0.8.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn build"
+    }
   }
 }

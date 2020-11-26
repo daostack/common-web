@@ -25,7 +25,7 @@ interface IRequest {
   proposerId: string,
   proposalId: string,
   funding: number,
-  sessionId: string,
+  sessionId: string
 }
 
 export const createPayment = async (req: IRequest) : Promise<any> => {
@@ -40,7 +40,7 @@ export const createPayment = async (req: IRequest) : Promise<any> => {
       idempotencyKey: v4(),
       proposalId,
       metadata: {
-        email: user.email, 
+        email: user.email,
         sessionId: req.sessionId,
         ipAddress,
       },

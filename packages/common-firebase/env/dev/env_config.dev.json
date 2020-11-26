@@ -20,5 +20,9 @@
       "quietEndingPeriod": 3600
     }
   },
+  "endpoints": {
+    "base": "some-address",
+    "notifications": "/notifications/ping"
+  },
   "secretManagerProject": "common-staging-50741"
 }

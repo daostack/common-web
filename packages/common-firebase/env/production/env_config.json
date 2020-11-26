@@ -10,6 +10,11 @@
   "circlepay": {
     "apiUrl": "https://api.circle.com/v1"
   },
+  "secretManagerProject": "common-daostack",
+  "endpoints": {
+    "base": "https://us-central1-common-daostack.cloudfunctions.net",
+    "notifications": "/notifications/ping"
+  },
   "durations": {
     "funding": {
       "countdownPeriod": 604800,
@@ -19,6 +24,5 @@
       "countdownPeriod": 86400,
       "quietEndingPeriod": 3600
     }
-  },
-  "secretManagerProject": "common-daostack"
+  }
 }

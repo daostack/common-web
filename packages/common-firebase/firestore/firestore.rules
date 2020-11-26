@@ -30,5 +30,10 @@ service cloud.firestore {
     match /notification/{document=**} {
     	allow read, write: if false;
     }
+
+    match /subscriptions/{subscriptionId} {
+      allow read:
+        if request.auth.uid == resource.data.userId;
+    }
   }
 }

@@ -30,7 +30,6 @@ To run everything locally you could use the following command:
 
 To run the firebase functions for the api you can run the following commands to:
 
-
 **1. Set the environment which you want to start locally.**\
   (at this point we are using the **staging** env while testing/develop locally)
 
@@ -54,7 +53,6 @@ Note that this these cloud functions will operate on the production instance if 
 
 To deploy these functions, you will need some secrets in ./functions/_keys.
 Please ask the administrators for these keys.
-
 
 ```
 yarn deploy:staging

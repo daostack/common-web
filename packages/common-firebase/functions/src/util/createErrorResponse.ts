@@ -45,6 +45,8 @@ export const createErrorResponse = (req: express.Request, res: express.Response,
       occurred in request ${req.sessionId}
     `);
 
+    console.error(error);
+
 
     res
       .status(statusCode)

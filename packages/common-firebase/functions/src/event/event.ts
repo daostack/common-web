@@ -14,6 +14,7 @@ export enum EVENT_TYPES {
     COMMON_CREATION_FAILED = 'commonCreationFailed',
     COMMON_WHITELISTED = 'commonWhitelisted',
     COMMON_MEMBER_ADDED = 'commonMemberAdded',
+    COMMON_MEMBER_REMOVED = 'commonMemberRemoved',
 
 
     // Request to join related events
@@ -35,11 +36,24 @@ export enum EVENT_TYPES {
 
 
     // Payment related events
+    PAYMENT_CREATED = 'paymentCreated',
+    PAYMENT_CONFIRMED = 'paymentConfirmed',
     PAYMENT_FAILED = 'paymentFailed',
+    PAYMENT_PAID = 'paymentPaid',
 
 
     // Messaging related events
     MESSAGE_CREATED = 'messageCreated',
+
+    // Subscriptions
+    SUBSCRIPTION_CREATED = 'subscriptionCreated',
+    SUBSCRIPTION_PAYMENT_CREATED = 'subscriptionPaymentCreated',
+    SUBSCRIPTION_PAYMENT_FAILED = 'subscriptionPaymentFailed',
+    SUBSCRIPTION_CANCELED_BY_USER = 'subscriptionCanceledByUser',
+    SUBSCRIPTION_CANCELED_BY_PAYMENT_FAILURE = 'subscriptionCanceledByPaymentFailure',
+
+    // Membership
+    MEMBERSHIP_REVOKED = 'membershipRevoked'
 }
 
 export const eventData: Record<string, IEventData> = {

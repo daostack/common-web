@@ -19,6 +19,17 @@ export const commonRuleValidationSchema = yup.object({
     .max(512)
 });
 
+export const commonLinkValidationScheme = yup.object({
+  title: yup
+    .string()
+    .required(),
+
+  value: yup
+    .string()
+    .url()
+    .required()
+})
+
 export const fileValidationSchema = yup.object({
   value: yup
     .string()

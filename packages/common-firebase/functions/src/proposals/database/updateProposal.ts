@@ -12,7 +12,7 @@ export const updateProposal = async (proposal: IProposalEntity): Promise<IPropos
   const proposalDoc = {
     ...proposal,
 
-    updatedAt: firestore.Timestamp.fromDate(new Date())
+    updatedAt: firestore.Timestamp.now()
   };
 
   await proposalsCollection

@@ -9,7 +9,7 @@ interface IExternalErrorData {
   [key: string]: any;
 }
 
-export const externalRequestExecutor = async (func: () => any, data: IExternalErrorData): Promise<any> => {
+export const externalRequestExecutor = async <T = any,>(func: () => any, data: IExternalErrorData): Promise<T> => {
   try {
     const result = await func();
 

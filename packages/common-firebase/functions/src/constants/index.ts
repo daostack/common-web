@@ -35,6 +35,11 @@ interface Env {
     };
   }
 
+  endpoints: {
+    base: string;
+    notifications: string;
+  }
+
   secretManagerProject: string;
 }
 

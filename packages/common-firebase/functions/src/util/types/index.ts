@@ -1,0 +1,66 @@
+import { IPaymentAmount, IPaymentRefund, IPaymentSource } from './payments';
+import admin from 'firebase-admin';
+
+import Timestamp = admin.firestore.Timestamp;
+
+export type valueOf<T> = T[keyof T];
+export type Nullable<T> = T | null | undefined;
+
+export type CirclePaymentStatus = 'pending' | 'confirmed' | 'paid' | 'failed';
+
+// @todo Fix
+export interface IUserEntity {
+  id: string;
+
+  email: string;
+}
+
+export interface ICircleNotification {
+  clientId: string;
+  notificationType: 'payments' | string;
+
+  payment: {
+    id: string;
+    merchantId: string;
+    merchantWalletId: string;
+
+    status: CirclePaymentStatus;
+
+    amount: IPaymentAmount;
+    source: IPaymentSource;
+
+    createDate: Date;
+    updateDate: Date;
+
+    refunds: IPaymentRefund[];
+  }
+}
+
+export * from '../../subscriptions/types';
+export * from './payments';
+export * from './cards';
+
+export type BaseEntityType = 'id' | 'createdAt' | 'updatedAt';
+
+export type SharedOmit<T, K extends keyof any> = T extends any
+  ? Omit<T, K>
+  : never;
+
+export interface IBaseEntity {
+  /**
+   * The main identifier of the common
+   */
+  id: string;
+
+  /**
+   * The time that the entity
+   * was created
+   */
+  createdAt: Timestamp;
+
+  /**
+   * The last time that the entity
+   * was modified
+   */
+  updatedAt: Timestamp;
+}
