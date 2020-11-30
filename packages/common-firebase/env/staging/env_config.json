@@ -12,11 +12,11 @@
   },
   "durations": {
     "funding": {
-      "countdownPeriod": 604800,
-      "quietEndingPeriod": 86400
+      "countdownPeriod": 86400,
+      "quietEndingPeriod": 3600
     },
     "join": {
-      "countdownPeriod": 86400,
+      "countdownPeriod": 7200,
       "quietEndingPeriod": 3600
     }
   },
