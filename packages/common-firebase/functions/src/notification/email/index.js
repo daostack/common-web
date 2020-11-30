@@ -103,30 +103,29 @@ const sendTemplatedEmail = async ({ templateKey, emailStubs, subjectStubs, to })
 
   const { template, subject } = getTemplatedEmail(templateKey, { emailStubs, subjectStubs });
 
-  // @todo Uncomment!
-  // if (Array.isArray(to)) {
-  //   const emailPromises = [];
-  //
-  //   to.forEach((emailTo) => {
-  //     console.log(`Sending ${templateKey} to ${emailTo}.`)
-  //
-  //     emailPromises.push(mailer.sendMail({
-  //       to: emailTo,
-  //       subject,
-  //       template
-  //     }));
-  //   });
-  //
-  //   await Promise.all(emailPromises);
-  // } else {
-  //   console.log(`Sending ${templateKey} to ${to}.`)
-  //
-  //   await mailer.sendMail(
-  //     to,
-  //     subject,
-  //     template
-  //   );
-  // }
+  if (Array.isArray(to)) {
+    const emailPromises = [];
+
+    to.forEach((emailTo) => {
+      console.log(`Sending ${templateKey} to ${emailTo}.`)
+
+      emailPromises.push(mailer.sendMail({
+        to: emailTo,
+        subject,
+        template
+      }));
+    });
+
+    await Promise.all(emailPromises);
+  } else {
+    console.log(`Sending ${templateKey} to ${to}.`)
+
+    await mailer.sendMail(
+      to,
+      subject,
+      template
+    );
+  }
 
 
   console.log('Templated email send successfully');
