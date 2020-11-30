@@ -104,7 +104,7 @@ export const notifyData: Record<string, IEventData> = {
       notification: async ( {proposalData, commonData, userData} ) => {
           return {
               title: 'A new funding proposal in your Common!',
-              body: `${getNameString(userData)} is asking for $${proposalData.fundingRequest.amount / 100} for their proposal in "${commonData.name}". See the proposal and vote.`,
+              body: `Your fellow member ${getNameString(userData)} is asking for $${proposalData.fundingRequest.amount / 100} for their proposal in "${commonData.name}". See the proposal and vote.`,
               image: commonData.image || '',
               path: `ProposalScreen/${commonData.id}/${proposalData.id}`,
           }
@@ -219,7 +219,7 @@ export const notifyData: Record<string, IEventData> = {
     notification: async ( {sender, commonData, path} ) => (
       {
           title: `New message!`,
-          body: `${getNameString(sender)} commented in "${commonData.name}"`,
+          body: `The member ${getNameString(sender)} commented in "${commonData.name}"`,
           image: commonData.image || '',
           path
       }
