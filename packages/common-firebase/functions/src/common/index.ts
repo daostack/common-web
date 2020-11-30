@@ -5,6 +5,7 @@ import { runtimeOptions } from '../constants';
 import { responseExecutor } from '../util/responseExecutor';
 
 import { createCommon } from './business';
+import * as triggers from './triggers';
 
 const router = commonRouter();
 
@@ -26,3 +27,5 @@ router.post('/create', async (req, res, next) => {
 export const commonsApp = functions
   .runWith(runtimeOptions)
   .https.onRequest(commonApp(router));
+
+export const commonTriggers = triggers;
