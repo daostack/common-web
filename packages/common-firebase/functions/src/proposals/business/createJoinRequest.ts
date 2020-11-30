@@ -31,10 +31,6 @@ const createRequestToJoinValidationSchema = yup.object({
     .string()
     .required(),
 
-  description: yup
-    .string()
-    .required(),
-
   funding: yup
     .number()
     .required(),
@@ -112,7 +108,7 @@ export const createJoinRequest = async (payload: CreateRequestToJoinPayload): Pr
     type: 'join',
 
     description: {
-      description: payload.description,
+      description: `Request to join ${payload.commonId} from ${payload.proposerId}`,
       links: payload.links as Nullable<IProposalLink[]> || []
     },
 
