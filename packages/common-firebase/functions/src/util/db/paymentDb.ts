@@ -52,7 +52,7 @@ export const pollPaymentStatus = async (paymentData: IPaymentResp, proposerId: s
   })
     .then(async (payment) => {
       // Don't think that this should be here and is causing conflicts
-      // await addNewMemberToCommon(proposalId);
+      await addNewMemberToCommon(proposalId);
       return await updateStatus(payment, 'confirmed');
     })
     .catch(async ({err, payment}) => {
@@ -86,6 +86,25 @@ export const updatePayment = async (paymentId: string, doc: DocumentData): Promi
       }
     )
 );
+
+const addNewMemberToCommon = async (proposalId) => {    
+   const proposal = (await getProposalById(proposalId)).data();    
+   const common = await commonDb.getCommon(proposal.commonId);    
+   // Update common funding info    
+   common.raised += proposal.join.funding;    
+   common.balance += proposal.join.funding;    
+
+    await commonDb.updateCommon(common);    
+   // Add member to the common    
+   await addCommonMemberByProposalId(proposalId);    
+
+    // Everything went fine so it is event time    
+   await createEvent({    
+     userId: proposal.proposerId,    
+     objectId: proposal.id,    
+     type: EVENT_TYPES.REQUEST_TO_JOIN_EXECUTED    
+   });    
+ }
 
 export const getPaymentSnapshot = async (paymentId: string): Promise<DocumentSnapshot<IPaymentEntity>> => (
   await db.collection(Collections.Payments)

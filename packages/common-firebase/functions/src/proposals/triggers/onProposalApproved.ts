@@ -4,9 +4,7 @@ import { IEventEntity } from '../../event/type';
 import { EVENT_TYPES } from '../../event/event';
 import { fundProposal } from '../business/fundProposal';
 import { createSubscription } from '../../subscriptions/business';
-import { addCommonMemberByProposalId } from '../../common/business/addCommonMember';
 import { createPayment } from '../../circlepay/createPayment';
-import { commonDb } from '../../common/database';
 import { proposalDb } from '../database';
 import { createEvent } from '../../util/db/eventDbService';
 
@@ -47,18 +45,7 @@ export const onProposalApproved = functions.firestore
             funding: proposal.join.funding,
             sessionId: context.eventId
           });
-
-          // Update common funding info
-          const common = await commonDb.getCommon(proposal.commonId);
-
-          common.raised += proposal.join.funding;
-          common.balance += proposal.join.funding;
-
-          await commonDb.updateCommon(common);
         }
-
-        // Add member to the common
-        await addCommonMemberByProposalId(proposal.id);
       }
     }
   );
