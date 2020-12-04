@@ -1,6 +1,5 @@
 import * as functions from 'firebase-functions';
 import { getUserById } from '../util/db/userDbService';
-import { env } from '../constants';
 import Notification from './notification';
 import emailClient from './email';
 import { notifyData } from './notification';
@@ -16,11 +15,6 @@ export interface INotificationModel {
 const processNotification = async (notification: INotificationModel) => {
 
     const currNotifyObj = notifyData[notification.eventType];
-
-    // disable notifications in production
-    if (env.environment === 'production') {
-      currNotifyObj.notification = null
-    }
 
     if (!currNotifyObj.data) {
         throw Error(`Not found data method for notification on event type "${notification.eventType}".`);
