@@ -9,8 +9,7 @@ Proposal ID: {{proposalId}}<br />
 User Full Name: {{userName}}<br />
 User ID: {{userId}}<br />
 User Email: {{userEmail}}<br />
-Payment Id: {{paymentId}}<br />
-Payment amount: {{paymentAmount}}<br />
+Payment amount: {{fundingAmount}}<br />
 Submitted on: {{submittedOn}}<br />
 Passed on: {{passedOn}}<br />
 <br /><br />
@@ -43,13 +42,10 @@ const emailStubs = {
   userEmail: {
     required: true
   },
-  paymentId: {
-
-  },
   userId: {
     required: true
   },
-  paymentAmount: {
+  fundingAmount: {
     required: true
   },
   submittedOn: {

@@ -1,6 +1,7 @@
 {
   "include": [
-    "functions/src/**/*"
+    "functions/src/**/*",
+    "node_modules/@types/shelljs/make.d.ts"
   ],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */

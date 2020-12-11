@@ -22,11 +22,6 @@ export interface ISubscriptionEntity extends IBaseEntity {
   proposalId: string;
 
   /**
-   * List of all payment made for that subscription
-   */
-  payments: ISubscriptionPayment[];
-
-  /**
    * When the next payment is going to be created
    */
   dueDate: Timestamp;
@@ -55,6 +50,16 @@ export interface ISubscriptionEntity extends IBaseEntity {
    * Whether the membership for the user in the common was revoked
    */
   revoked: boolean;
+
+  /**
+   * The number of charges made for the subscription
+   */
+  charges: number;
+
+  /**
+   * The last time the subscription was successfully charged
+   */
+  lastChargedAt: Timestamp;
 }
 
 export interface ISubscriptionPayment {

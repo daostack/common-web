@@ -4,7 +4,7 @@ service cloud.firestore {
   	match /daos/{document=**} {
     	allow read;
     }
-    
+
     match /proposals/{document=**} {
     	allow read;
     }

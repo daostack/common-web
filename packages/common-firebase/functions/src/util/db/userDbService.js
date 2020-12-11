@@ -14,6 +14,7 @@ async function findUserByAddress(ethereumAddress, key = 'safeAddress') {
 
     const snapshot = await query.get()
     if (snapshot.size === 0) {
+        // eslint-disable-next-line no-console
         console.error(`No member found with ${key} === ${ethereumAddress}`)
         return null
     } else {
@@ -32,11 +33,16 @@ async function updateUser(userId, doc) {
                 merge: true
             }
         );
+}
 
+async function getAllUsers() {
+    const snapshot = await db.collection(COLLECTION_NAME).get();
+    return snapshot.docs.map(doc => doc.data());
 }
 
 module.exports = {
     findUserByAddress,
     getUserById,
-    updateUser
+    updateUser,
+    getAllUsers
 };

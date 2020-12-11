@@ -4,11 +4,12 @@ import { commonApp, commonRouter } from '../util';
 import { runtimeOptions } from '../constants';
 import { responseExecutor } from '../util/responseExecutor';
 
-import * as crons from './crons';
-import * as triggers from './triggers';
 import { createVote } from './business/votes/createVote';
 import { createJoinRequest } from './business/createJoinRequest';
 import { createFundingRequest } from './business/createFundingRequest';
+
+import * as crons from './crons';
+import * as triggers from './triggers';
 
 const router = commonRouter();
 

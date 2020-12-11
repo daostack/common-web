@@ -24,5 +24,6 @@
       "countdownPeriod": 7200,
       "quietEndingPeriod": 3600
     }
-  }
+  },
+  "local": "http://localhost:5003/common-staging-50741/us-central1"
 }

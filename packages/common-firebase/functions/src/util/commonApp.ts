@@ -2,11 +2,15 @@ import cors from 'cors';
 import express from 'express';
 import bodyParser from 'body-parser';
 
-import { authenticate, errorHandling, sessions } from './middleware';
+import { authenticate, errorHandling, routeBasedMiddleware, sessions } from './middleware';
 
 export const commonRouter = express.Router;
 
-export const commonApp = (router: express.Router): express.Application => {
+interface ICommonAppOptions {
+  unauthenticatedRoutes: string[]
+}
+
+export const commonApp = (router: express.Router, options?: ICommonAppOptions): express.Application => {
   const app = express();
 
   app.use(sessions);
@@ -26,7 +30,9 @@ export const commonApp = (router: express.Router): express.Application => {
     origin: true
   }));
 
-  app.use(authenticate);
+  app.use(routeBasedMiddleware(authenticate, {
+    exclude: options?.unauthenticatedRoutes || []
+  }));
 
   app.use(router);
 
@@ -47,7 +53,7 @@ export const commonApp = (router: express.Router): express.Application => {
 
       res.status(503).send();
     }
-  })
+  });
 
   app.use(errorHandling);
 

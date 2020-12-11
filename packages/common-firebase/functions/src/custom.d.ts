@@ -1,18 +1,26 @@
-declare namespace Express {
-  export interface Request {
-    user: {
-      uid: string;
+import { ILogger } from './util/logger';
+
+declare global {
+  declare namespace Express {
+    export interface Request {
+      user: {
+        uid: string;
+      }
+
+      requestId: string;
+    }
+  }
+
+
+  declare namespace NodeJS {
+    export interface ProcessEnv {
+      NODE_ENV: 'dev' | 'production' | 'staging' | 'test';
     }
 
-    sessionId: string;
+    interface Global {
+      logger: ILogger;
+    }
   }
-}
 
-
-declare namespace NodeJS
-{
-  export interface ProcessEnv
-  {
-    NODE_ENV: "dev" | "production" | "staging" | 'test';
-  }
+  declare const logger: ILogger;
 }

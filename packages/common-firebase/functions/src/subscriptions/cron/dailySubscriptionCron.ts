@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 import { chargeSubscriptions, revokeMemberships } from '../business';
 
 /**
- * Runs the daily cron job, responsible for charging the subscriptions
+ * Runs the daily crons job, responsible for charging the subscriptions
  * due and revoking memberships for canceled subscription
  */
 exports.backup = functions.pubsub

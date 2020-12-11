@@ -21,6 +21,8 @@ export const addSubscription = async (subscription: SharedOmit<ISubscriptionEnti
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
 
+    charges: 0,
+
     ...(subscription as ISubscriptionEntity)
   };
 

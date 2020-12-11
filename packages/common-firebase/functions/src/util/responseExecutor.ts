@@ -21,7 +21,7 @@ export const responseExecutor: IResponseExecutor = async (action, { req, res, ne
   try {
     const actionResult = await action() || {};
 
-    console.info(`Creating response for request ${req.sessionId}`);
+    logger.info(`Creating response for request ${req.requestId}`);
 
     res
       .status(StatusCodes.Ok)

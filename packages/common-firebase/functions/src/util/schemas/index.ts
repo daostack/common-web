@@ -43,3 +43,32 @@ export const imageValidationSchema = yup.object({
     .url()
     .required()
 });
+
+export const billingDetailsValidationSchema = yup.object({
+  name: yup
+    .string()
+    .required(),
+
+  city: yup
+    .string()
+    .required(),
+
+  country: yup
+    .string()
+    .required(),
+
+  line1: yup
+    .string()
+    .required(),
+
+  line2: yup
+    .string(),
+
+  district: yup
+    .string()
+    .required(),
+
+  postalCode: yup
+    .string()
+    .required()
+});

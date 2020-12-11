@@ -26,7 +26,7 @@ const emailStubs = {
 };
 
 module.exports = {
-  subject: 'You are in! ',
+  subject: 'You are in!',
   emailStubs,
   template
 };

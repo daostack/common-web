@@ -21,7 +21,7 @@ export const proposalDb = {
   getFundingRequest,
   getJoinRequest,
   getProposals,
-  updateProposal
+  update: updateProposal
 };
 
 export const voteDb = {

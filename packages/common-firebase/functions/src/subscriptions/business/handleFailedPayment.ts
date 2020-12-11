@@ -1,8 +1,8 @@
 import { ISubscriptionEntity } from '../types';
-import { IPaymentEntity } from '../../util/types';
 import { CommonError } from '../../util/errors';
 import { updateSubscription } from '../database/updateSubscription';
 import { revokeMembership } from './revokeMembership';
+import { IPaymentEntity } from '../../circlepay/payments/types';
 
 /**
  * Handles update for the subscription document on payment failure
@@ -35,6 +35,9 @@ export const handleFailedPayment = async (subscription: ISubscriptionEntity, pay
       for subscription with id ${subscription.id}
     `);
   }
+
+  // Update metadata about the subscription
+  subscription.charges = (subscription.charges || 0) + 1;
 
   await updateSubscription(subscription);
 };

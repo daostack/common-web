@@ -4,7 +4,8 @@
     "*.json",
     "*.yml",
     "*.sh",
-    "functions/dist/**"
+    "functions/dist/**",
+    "*.test.ts"
   ],
   "parserOptions": {
     // Required for certain syntax usages
@@ -20,8 +21,6 @@
   ],
   "extends": "eslint:recommended",
   "rules": {
-    // Removed rule "disallow the use of console" from recommended eslint rules
-    "no-console": "off",
     // Removed rule "disallow multiple spaces in regular expressions" from recommended eslint rules
     "no-regex-spaces": "off",
     // Removed rule "disallow the use of debugger" from recommended eslint rules
@@ -94,7 +93,10 @@
     "promise/no-nesting": 1,
 
     // This is temporary rule that we should remove on later stage
-    "@typescript-eslint/no-var-requires": 0
+    "@typescript-eslint/no-var-requires": 0,
+
+    // Console usage is not allowed. Use logger instead
+    "no-console": 2
   },
   "overrides": [
     {

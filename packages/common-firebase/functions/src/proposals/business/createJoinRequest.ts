@@ -11,8 +11,7 @@ import { commonDb } from '../../common/database';
 import { IJoinRequestProposal, IProposalLink } from '../proposalTypes';
 import { linkValidationSchema } from '../../util/schemas';
 import { proposalDb } from '../database';
-import { isCardOwner } from '../../circlepay/business/isCardOnwer';
-import { assignCardToProposal } from '../../circlepay/createCirclePayCard';
+import { isCardOwner } from '../../circlepay/cards/business/isCardOnwer';
 import { createEvent } from '../../util/db/eventDbService';
 import { EVENT_TYPES } from '../../event/event';
 import { isTest } from '../../util/environment';
@@ -119,7 +118,8 @@ export const createJoinRequest = async (payload: CreateRequestToJoinPayload): Pr
     join: {
       cardId: payload.cardId,
       funding: payload.funding,
-      fundingType: common.metadata.contributionType
+      fundingType: common.metadata.contributionType,
+      payments: []
     },
 
     countdownPeriod: env.durations.join.countdownPeriod,
@@ -128,7 +128,8 @@ export const createJoinRequest = async (payload: CreateRequestToJoinPayload): Pr
 
   // Link the card to the proposal
   if(!isTest) {
-    await assignCardToProposal(joinRequest.join.cardId, joinRequest.id);
+    // await assignCardToProposal(joinRequest.join.cardId, joinRequest.id);
+    // @todo Do the opposite: add the card id to the proposal
   }
 
   // Create event

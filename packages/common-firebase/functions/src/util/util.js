@@ -58,6 +58,18 @@ class Utils {
       throw new CommonError(CFError.emptyUserData)
     }
   }
+
+  async getPaymentByProposalId(proposalId) {
+    try {
+      const paymentRef = await admin.firestore().collection('payments')
+        .where('proposalId', '==', proposalId)
+        .get();
+      const paymentData = paymentRef.docs.map(doc => doc.data())[0];
+      return paymentData;
+    } catch (err) {
+      throw new CommonError(CFError.emptyUserData)
+    }
+  }
 }
 
 module.exports = {

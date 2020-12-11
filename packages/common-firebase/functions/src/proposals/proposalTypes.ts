@@ -190,9 +190,9 @@ export interface IJoinRequestProposal extends IBaseProposalEntity {
     cardId: string;
 
     /**
-     * The ID of the payment if the payment is made
+     * Array of the payment IDs made for this proposal
      */
-    paymentId?: string;
+    payments: string[];
   }
 }
 

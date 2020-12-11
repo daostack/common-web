@@ -1,0 +1,27 @@
+import { PayoutsCollection } from './index';
+import { IPayoutEntity, PayoutStatus } from '../types';
+
+interface IGetPayoutsOptions {
+  proposalId?: string;
+  status?: PayoutStatus;
+}
+
+/**
+ * Returns array of payouts matching all the requirements
+ *
+ * @param options - The options for which to retrieve payouts
+ */
+export const getPayouts = async (options: IGetPayoutsOptions): Promise<IPayoutEntity[]> => {
+  let payoutsQuery: any = PayoutsCollection;
+
+  if (options.proposalId) {
+    payoutsQuery = payoutsQuery.where('proposalId', '==', options.proposalId);
+  }
+
+  if (options.status) {
+    payoutsQuery = payoutsQuery.where('status', '==', options.status);
+  }
+
+  return (await payoutsQuery.get())
+    .docs.map(x => x.data());
+};

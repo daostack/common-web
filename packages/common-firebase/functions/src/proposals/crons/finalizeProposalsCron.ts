@@ -13,9 +13,10 @@ export const finalizeProposals = functions.pubsub
     const promiseArray: Promise<void>[] = [];
 
     for (const proposal of proposals) {
+      // eslint-disable-next-line no-loop-func
       promiseArray.push((async () => {
         if (await isExpired(proposal)) {
-          console.info(`Finalizing expired proposal with id ${proposal.id}`);
+          logger.info(`Finalizing expired proposal with id ${proposal.id}`);
 
           await finalizeProposal(proposal);
         }

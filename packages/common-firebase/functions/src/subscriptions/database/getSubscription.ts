@@ -1,8 +1,10 @@
 import admin from 'firebase-admin';
 
-import { ISubscriptionEntity, Nullable } from '../../util/types';
+import { Nullable } from '../../util/types';
 import { Collections } from '../../util/constants';
 import { CommonError, NotFoundError } from '../../util/errors';
+
+import { ISubscriptionEntity } from '../types';
 
 const db = admin.firestore();
 

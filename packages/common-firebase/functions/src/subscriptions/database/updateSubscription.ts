@@ -1,8 +1,8 @@
 import admin from 'firebase-admin';
 import Timestamp = admin.firestore.Timestamp;
 
-import { ISubscriptionEntity } from '../../util/types';
 import { Collections } from '../../util/constants';
+import { ISubscriptionEntity } from '../types';
 
 const db = admin.firestore()
 

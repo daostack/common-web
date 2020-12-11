@@ -117,19 +117,8 @@ export const notifyData: Record<string, IEventData> = {
       const commonData = (await commonDb.getCommon(commonId));
         return { 
           commonData,
-          userData: (await getUserById(commonData.metadata.founderId)),
+          userData: (await getUserById(commonData.metadata.founderId)).data(),
         }
-    },
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ( {commonData, userData} ) => {
-      return {
-        templateKey: 'userCommonFeatured',
-        emailStubs: {
-            commonName: commonData.name,
-            commonLink: Utils.getCommonLink(commonData.id),
-            userName: getNameString(userData),
-        }
-      }
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     notification: async ( {commonData} ) => {
@@ -140,7 +129,18 @@ export const notifyData: Record<string, IEventData> = {
             path: `CommonProfile/${commonData.id}`
         }
     },
-    
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    email: ( {commonData, userData} ) => {
+      return {
+        to: userData.email,
+        templateKey: 'userCommonFeatured',
+        emailStubs: {
+            commonName: commonData.name,
+            commonLink: Utils.getCommonLink(commonData.id),
+            userName: getNameString(userData),
+        }
+      }
+    },
   },
   [EVENT_TYPES.FUNDING_REQUEST_ACCEPTED] : {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -148,7 +148,9 @@ export const notifyData: Record<string, IEventData> = {
         const proposalData = (await proposalDb.getProposal(objectId));
         return { 
           proposalData,
-          commonData : (await commonDb.getCommon(proposalData.commonId))
+          commonData : (await commonDb.getCommon(proposalData.commonId)),
+          userData: (await getUserById(proposalData.proposerId)).data(),
+          //paymentData: (await Utils.getPaymentByProposalId(proposalData.id))?.data() //@question funding request has no payment though 
         }
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -160,13 +162,45 @@ export const notifyData: Record<string, IEventData> = {
             path: `ProposalScreen/${commonData.id}/${proposalData.id}`,
         }
     },
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    email: ({ userData, proposalData, commonData, /*paymentData*/ } ) => {
+        return [
+          {
+            to: userData.email,
+            templateKey: 'userFundingRequestAccepted',
+            emailStubs: {
+              userName: getNameString(userData),
+              proposal: proposalData.description.title
+            }
+          },
+          {
+            to: env.mail.adminMail,
+            templateKey: 'adminFundingRequestAccepted',
+            emailStubs: {
+              commonName: commonData.name,
+              commonLink: Utils.getCommonLink(commonData.id),
+              commonBalance: commonData.balance,
+              commonId: commonData.id,
+              proposalId: proposalData.id,
+              userName: getNameString(userData),
+              userEmail: userData.email,
+              userId: userData.uid,
+              fundingAmount: proposalData.fundingRequest.amount,
+              submittedOn: proposalData.createdAt,
+              passedOn: new Date(),
+              log: 'Funding request accepted',
+            }
+          }
+        ]
+    }
   },
   [EVENT_TYPES.REQUEST_TO_JOIN_ACCEPTED]: {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (objectId: string) => {
         const proposalData = (await proposalDb.getProposal(objectId));
         return { 
-          commonData : (await commonDb.getCommon(proposalData.commonId))
+          commonData : (await commonDb.getCommon(proposalData.commonId)),
+          userData: (await getUserById(proposalData.proposerId)).data(),
         }
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -178,6 +212,18 @@ export const notifyData: Record<string, IEventData> = {
             path: `CommonProfile/${commonData.id}`
         }
     },
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    email: ({ commonData, userData } ) => {
+        return {
+          to: userData.email,
+          templateKey: 'userJoinedSuccess',
+          emailStubs: {
+            userName: getNameString(userData),
+            commonLink: Utils.getCommonLink(commonData.id),
+            commonName: commonData.name,
+          }
+        }
+    }
   },
   
   [EVENT_TYPES.REQUEST_TO_JOIN_REJECTED]: {
@@ -218,7 +264,7 @@ export const notifyData: Record<string, IEventData> = {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     notification: async ( {sender, commonData, path} ) => (
       {
-          title: `New message!`,
+          title: `New comment!`,
           body: `The member ${getNameString(sender)} commented in "${commonData.name}"`,
           image: commonData.image || '',
           path
@@ -269,7 +315,7 @@ export default new class Notification implements INotification {
     // @question Ask about this rule "promise/always-return". It is kinda useless so we may disable it globally?
     // eslint-disable-next-line promise/always-return
     const messageSent: admin.messaging.MessagingDevicesResponse = await messaging.sendToDevice(tokens, payload, options);
-    console.log('Send Success', messageSent);
+    logger.info('Send Success', messageSent);
   }
 
   async sendToAllUsers(title: string, body: string, image = '', path: string) {
@@ -288,11 +334,11 @@ export default new class Notification implements INotification {
       },
     } as admin.messaging.Message;
     
-    console.log("payload -> ", payload);
+    logger.info("payload -> ", payload);
 
     // @question Ask about this rule "promise/always-return". It is kinda useless so we may disable it globally?
     // eslint-disable-next-line promise/always-return
     const messageSent: string = await messaging.send(payload);
-    console.log('Send Success', messageSent);
+    logger.info('Send Success', { messageSent });
   }
 };

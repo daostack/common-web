@@ -8,7 +8,7 @@ export const errorHandling = (err: Error, req: express.Request, res: express.Res
   if ((err as ICommonError).errorId) {
     createErrorResponse(req, res, err as ICommonError);
   } else {
-    console.error('Error that is not CommonError occurred. Raw error: ', err);
+    logger.warn('Error that is not CommonError occurred. Raw error: ', err);
 
     createErrorResponse(req, res, new CommonError(
       err.message || err as unknown as string || 'Something bad happened',

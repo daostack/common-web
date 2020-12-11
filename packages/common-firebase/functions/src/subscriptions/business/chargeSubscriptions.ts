@@ -2,19 +2,18 @@ import admin from 'firebase-admin';
 import { QuerySnapshot } from '@google-cloud/firestore';
 
 import { Collections } from '../../util/constants';
-import { ISubscriptionEntity } from '../../util/types';
-import { CommonError } from '../../util/errors';
 
 import { chargeSubscription } from './chargeSubscription';
+import { ISubscriptionEntity } from '../types';
 
 const db = admin.firestore();
 
 /**
  *  Charges all subscriptions that are due today. Only
- *  to be used from the cron job!
+ *  to be used from the crons job!
  */
 export const chargeSubscriptions = async (): Promise<void> => {
-  console.info(`Beginning subscription charging for ${new Date().getDate()}`);
+  logger.info(`Beginning subscription charging for ${new Date().getDate()}`);
 
   const subscriptionsDueToday = await db.collection(Collections.Subscriptions)
     // .where('dueDate', '>=', new Date().setHours(0,0,0,0))
@@ -29,7 +28,7 @@ export const chargeSubscriptions = async (): Promise<void> => {
 
     if (subscriptionEntity.status === 'PaymentFailed') {
       if (subscriptionEntity.paymentFailures.length > 3) {
-        console.warn(`
+        logger.warn(`
           Subscription (${subscriptionEntity.id}) with more than 
           3 failed payment was tried to be charged!
         `);
@@ -39,32 +38,33 @@ export const chargeSubscriptions = async (): Promise<void> => {
     }
 
     if (subscriptionEntity.status === 'Active' || subscriptionEntity.status === 'PaymentFailed') {
+      // eslint-disable-next-line no-loop-func
       promiseArr.push((async () => {
-        console.info(`Charging subscription (${subscriptionEntity.id}) with $${subscriptionEntity.amount}`);
-        console.trace(`Charging subscription`, subscriptionEntity);
+        logger.info(`Charging subscription (${subscriptionEntity.id}) with $${subscriptionEntity.amount}`);
+        logger.debug(`Charging subscription`, subscriptionEntity);
 
         // Add try/catch so that if one charge fails
         // the others won't be canceled because of it
         try {
           await chargeSubscription(subscriptionEntity);
 
-          console.info(`Charged subscription (${subscriptionEntity.id}) with $${subscriptionEntity.amount}`);
-          console.trace(`Charged subscription`, subscriptionEntity);
+          logger.info(`Charged subscription (${subscriptionEntity.id}) with $${subscriptionEntity.amount}`);
+          logger.debug(`Charged subscription`, subscriptionEntity);
         } catch (e) {
-          console.error('Error occurred while trying to charge subscription', e);
+          logger.warn('Error occurred while trying to charge subscription', e);
         }
       })());
     } else {
-      console.error(new CommonError(`
+      logger.error(`
         Subscription (${subscriptionEntity.id}) with unsupported 
         status (${subscriptionEntity.status}) was in the charge loop.
-      `));
+      `);
     }
 
   }
 
   await Promise.all(promiseArr);
 
-  console.info(`Subscriptions charged successfully`);
+  logger.info(`Subscriptions charged successfully`);
 
 };

@@ -41,6 +41,12 @@ interface Env {
   }
 
   secretManagerProject: string;
+  local: string;
+
+  payouts: {
+    approvers: string[];
+    neededApprovals: number;
+  }
 }
 
 export const env = merge(envConfig, envSecrets) as Env;

@@ -1,7 +1,7 @@
 import { IBaseEntity } from '../util/types';
 
 export interface IUserEntity extends IBaseEntity {
-   id: string;
+   uid: string;
 
    email: string;
    photoURL: string;
