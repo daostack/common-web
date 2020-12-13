@@ -34,7 +34,7 @@ export interface IBankAccountBillingDetails {
    * is US or Canada district is required and should use the two-letter
    * code for the subdivision.
    */
-  district: string;
+  district?: string;
 
   /**
    * Postal / ZIP code of the address.
@@ -55,7 +55,7 @@ export interface IBankAccountBillingDetails {
   /**
    * Line two of the street address.
    */
-  line2: string;
+  line2?: string;
 }
 
 export interface IBankAccountBank {
@@ -75,7 +75,7 @@ export interface IBankAccountBank {
    * is US or Canada district is required and should use the two-letter
    * code for the subdivision.
    */
-  district: string;
+  district?: string;
 
   /**
    * Postal / ZIP code of the address.
@@ -96,5 +96,5 @@ export interface IBankAccountBank {
   /**
    * Line two of the street address.
    */
-  line2: string;
+  line2?: string;
 }

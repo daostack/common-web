@@ -65,7 +65,7 @@ export interface ICardBillingDetails {
   /**
    * Line two of the street address. Optional
    */
-  line2: string;
+  line2?: string;
 
   /**
    * State / County / Province / Region portion of the address. It is optional

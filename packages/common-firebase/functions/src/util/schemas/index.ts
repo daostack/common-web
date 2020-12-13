@@ -65,8 +65,7 @@ export const billingDetailsValidationSchema = yup.object({
     .string(),
 
   district: yup
-    .string()
-    .required(),
+    .string(),
 
   postalCode: yup
     .string()
