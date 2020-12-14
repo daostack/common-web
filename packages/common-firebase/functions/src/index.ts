@@ -11,9 +11,11 @@ import { commonsApp } from './common';
 import { proposalCrons, proposalTriggers, proposalsApp } from './proposals';
 import { subscriptionsApp } from './subscriptions';
 import { payoutTriggers } from './circlepay/payouts/triggers';
+import { metadataApp } from './metadata';
 
 // --- Express apps
 export const commons = commonsApp;
+export const metadata = metadataApp;
 export const circlepay = circlePayApp;
 export const proposals = proposalsApp;
 export const subscriptions = subscriptionsApp;
