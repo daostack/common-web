@@ -25,6 +25,9 @@
       "quietEndingPeriod": 3600
     }
   },
+  "storage": {
+    "bucket": "gs://common-daostack.appspot.com"
+  },
   "payouts": {
     "approvers": ["alexander2001ivanov@gmail.com"],
     "neededApprovals": 1

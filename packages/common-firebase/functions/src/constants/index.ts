@@ -40,6 +40,10 @@ interface Env {
     notifications: string;
   }
 
+  storage: {
+    bucket: string;
+  }
+
   secretManagerProject: string;
   local: string;
 
