@@ -32,7 +32,7 @@ const emailStubs = {
   }
 };
 
-module.exports = {
+export const userCommonCreated = {
   subject: 'Common successfully created',
   emailStubs,
   template

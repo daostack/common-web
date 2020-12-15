@@ -25,7 +25,7 @@ const emailStubs = {
   }
 };
 
-module.exports = {
+export const userJoinedSuccess = {
   subject: 'You are in!',
   emailStubs,
   template

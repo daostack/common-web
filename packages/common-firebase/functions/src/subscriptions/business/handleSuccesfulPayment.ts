@@ -11,6 +11,8 @@ import { ISubscriptionEntity } from '../types';
 import { subscriptionDb } from '../database';
 import { proposalDb } from '../../proposals/database';
 import { commonDb } from '../../common/database';
+import { createEvent } from '../../util/db/eventDbService';
+import { EVENT_TYPES } from '../../event/event';
 
 
 /**
@@ -39,10 +41,12 @@ export const handleSuccessfulSubscriptionPayment = async (subscription: ISubscri
   if (moment(subscription.dueDate.toDate()).isSameOrBefore(new Date(), 'day')) {
     subscription.dueDate = Timestamp.fromDate(addMonth(subscription.dueDate));
   } else {
-    throw new CommonError(
+    logger.error(
       `Trying to update due date that is in the future 
       for subscription with id (${subscription.id})! 
-    `);
+    `, {
+        subscription
+      });
   }
 
   // Update metadata about the subscription

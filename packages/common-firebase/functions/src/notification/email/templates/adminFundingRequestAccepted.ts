@@ -59,7 +59,7 @@ const emailStubs = {
   }
 };
 
-module.exports = {
+export const adminFundingRequestAccepted = {
   subject: 'Funding proposal was approved',
   emailStubs,
   template

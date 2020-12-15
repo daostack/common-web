@@ -2,8 +2,7 @@
 
 exports[`Cloud Functions should produce the same email for the same stubs 1`] = `
 Object {
-  "subject": "Request to join submitted",
-  "template": "
+  "body": "
   Hello Test Name,<br />
   Thank you for Joining Common!
   <br /><br />
@@ -15,5 +14,6 @@ Object {
   Common,<br />
   Collaborative Social Action.
 ",
+  "subject": "Request to join submitted",
 }
 `;

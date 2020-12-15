@@ -8,6 +8,8 @@ import { createPayment } from './createPayment';
 import { pollPaymentStatus } from './pollPaymentStatus';
 import { isFinalized, isSuccessful } from '../helpers';
 import { handleFailedPayment, handleSuccessfulSubscriptionPayment } from '../../../subscriptions/business';
+import { createEvent } from '../../../util/db/eventDbService';
+import { EVENT_TYPES } from '../../../event/event';
 
 const createSubscriptionPaymentValidationSchema = yup.object({
   subscriptionId: yup.string()
@@ -40,28 +42,35 @@ export const createSubscriptionPayment = async (payload: yup.InferType<typeof cr
 
     type: 'subscription',
     amount: subscription.amount,
-    objectId: v4()
+    objectId: subscription.id
   });
-
-  // let payment = await createPayment({
-  //   userId: proposal.proposerId,
-  //   cardId: proposal.join.cardId,
-  //   ipAddress: payload.ipAddress,
-  //   sessionId: payload.sessionId,
-  //
-  //   type: 'one-time',
-  //   amount: proposal.join.funding,
-  //   objectId: proposal.id
-  // });
 
   // Poll the payment
   payment = await pollPaymentStatus(payment);
 
   if (isSuccessful(payment)) {
+    await createEvent({
+      type: EVENT_TYPES.SUBSCRIPTION_PAYMENT_CONFIRMED,
+      objectId: payment.id,
+      userId: payment.userId
+    });
+
     await handleSuccessfulSubscriptionPayment(subscription);
   } else if (isFinalized(payment)) {
+    await createEvent({
+      type: EVENT_TYPES.SUBSCRIPTION_PAYMENT_FAILED,
+      objectId: payment.id,
+      userId: payment.userId
+    });
+
     await handleFailedPayment(subscription, payment);
   } else {
+    await createEvent({
+      type: EVENT_TYPES.SUBSCRIPTION_PAYMENT_STUCK,
+      objectId: payment.id,
+      userId: payment.userId
+    });
+
     logger.warn('Payment is not in finalized or successful state after polling {payment}', payment);
   }
 

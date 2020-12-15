@@ -8,6 +8,8 @@ import { proposalDb } from '../../../proposals/database';
 import { createPayment } from './createPayment';
 import { pollPaymentStatus } from './pollPaymentStatus';
 import { isFailed } from '../helpers/statusHelper';
+import { EVENT_TYPES } from '../../../event/event';
+import { createEvent } from '../../../util/db/eventDbService';
 
 const createProposalPaymentValidationSchema = yup.object({
   proposalId: yup.string()
@@ -89,6 +91,19 @@ export const createProposalPayment = async (payload: yup.InferType<typeof create
 
   // Poll the payment
   payment = await pollPaymentStatus(payment);
+
+  await createEvent({
+    type: payment.status === 'failed'
+      ? EVENT_TYPES.PAYMENT_FAILED
+      : payment.status === 'paid'
+        ? EVENT_TYPES.PAYMENT_PAID
+        : payment.status === 'confirmed'
+          ? EVENT_TYPES.PAYMENT_CONFIRMED
+          : EVENT_TYPES.PAYMENT_UPDATED,
+    objectId: payment.id,
+    userId: payment.userId
+  });
+
 
   if (options.throwOnFailure && isFailed(payment)) {
     throw new PaymentError(payment.id, payment.circlePaymentId);

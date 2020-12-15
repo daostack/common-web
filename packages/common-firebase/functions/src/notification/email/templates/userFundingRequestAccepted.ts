@@ -24,7 +24,7 @@ const emailStubs = {
   }
 };
 
-module.exports = {
+export const userFundingRequestAccepted = {
   subject: 'Your funding proposal was approved',
   emailStubs,
   template

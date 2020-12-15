@@ -1,6 +1,6 @@
 import admin from 'firebase-admin';
 import { ISubscriptionEntity } from '../types';
-import { subscriptionsCollection } from './index';
+import { SubscriptionsCollection } from './index';
 
 
 import DocumentSnapshot = admin.firestore.DocumentSnapshot;
@@ -20,11 +20,11 @@ export const subscriptionExists = async (args: ISubscriptionExistsArgs): Promise
   let subscription: DocumentSnapshot<ISubscriptionEntity>;
 
   if (args.id) {
-    subscription = (await subscriptionsCollection.doc(args.id).get()) as DocumentSnapshot<ISubscriptionEntity>;
+    subscription = (await SubscriptionsCollection.doc(args.id).get()) as DocumentSnapshot<ISubscriptionEntity>;
   }
 
   if (args.proposalId) {
-    const where = await subscriptionsCollection.where('proposalId', '==', args.proposalId).get();
+    const where = await SubscriptionsCollection.where('proposalId', '==', args.proposalId).get();
 
     if (where.empty) {
       return false;

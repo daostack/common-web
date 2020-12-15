@@ -1,29 +1,28 @@
-const requestToJoinSubmitted = require('./templates/requestToJoinSubmitted');
-const adminCommonCreated = require('./templates/adminCommonCreated');
-const adminFundingRequestAccepted = require('./templates/adminFundingRequestAccepted');
-const adminPreauthorizationFailed = require('./templates/adminPreauthorizationFailed');
-const userCommonCreated = require('./templates/userCommonCreated');
-const userCommonFeatured = require('./templates/userCommonFeatured');
-const userFundingRequestAccepted = require('./templates/userFundingRequestAccepted');
-const userJoinedButFailedPayment = require('./templates/userJoinedButFailedPayment');
-const userJoinedSuccess = require('./templates/userJoinedSuccess');
-const adminWalletCreationFailed = require('./templates/adminWalletCreationFailed');
-const adminJoinedButPaymentFailed = require('./templates/adminJoinedButFailedPayment');
-const adminPayInSuccess = require('./templates/adminPayInSuccess');
-const approvePayout = require('./templates/approvePayout');
+import { sendMail } from './mailer';
+import { env } from '../../constants';
+import { CommonError } from '../../util/errors';
 
-const { CommonError } = require('../../util/errors');
-
-const mailer = require('../../mailer');
-const env = require('../../constants').env;
-
+import { approvePayout } from './templates/approvePayout';
+import { userCommonCreated } from './templates/userCommonCreated';
+import { userJoinedSuccess } from './templates/userJoinedSuccess';
+import { adminPayInSuccess } from './templates/adminPayInSuccess';
+import { adminCommonCreated } from './templates/adminCommonCreated';
+import { userCommonFeatured } from './templates/userCommonFeatured';
+import { requestToJoinSubmitted } from './templates/requestToJoinSubmitted';
+import { userFundingRequestAccepted } from './templates/userFundingRequestAccepted';
+import { userJoinedButFailedPayment } from './templates/userJoinedButFailedPayment';
+import { adminFundingRequestAccepted } from './templates/adminFundingRequestAccepted';
+import { adminPreauthorizationFailed } from './templates/adminPreauthorizationFailed';
+import { adminJoinedButPaymentFailed } from './templates/adminJoinedButFailedPayment';
+import { subscriptionCanceled } from './templates/subscriptionCanceled';
+import { subscriptionChargeFailed } from './templates/subscriptionChargeFailed';
+import { subscriptionCharged } from './templates/subscriptionCharged';
 
 const templates = {
   requestToJoinSubmitted,
   adminCommonCreated,
   adminFundingRequestAccepted,
   adminPreauthorizationFailed,
-  adminWalletCreationFailed,
   userCommonCreated,
   userCommonFeatured,
   userFundingRequestAccepted,
@@ -31,7 +30,10 @@ const templates = {
   userJoinedSuccess,
   adminJoinedButPaymentFailed,
   adminPayInSuccess,
-  approvePayout
+  approvePayout,
+  subscriptionCanceled,
+  subscriptionCharged,
+  subscriptionChargeFailed
 };
 
 const globalDefaultStubs = {
@@ -45,8 +47,36 @@ const replaceAll = (string, search, replace) => {
 const isNullOrUndefined = (val) =>
   val === null || val === undefined;
 
-const getTemplatedEmail = (templateKey, payload) => {
-  let { template, subject, emailStubs, subjectStubs } = templates[templateKey];
+interface IStub {
+  required: boolean;
+  default?: string;
+}
+
+export interface IEmailTemplate {
+  template: string;
+  subject: string;
+
+  emailStubs?: {
+    [key: string]: IStub;
+  };
+
+  subjectStubs?: {
+    [key: string]: IStub;
+  };
+}
+
+interface ITemplatedEmail {
+  body: string;
+  subject: string;
+}
+
+// @todo Make the payload type based on the templateKey
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const getTemplatedEmail = (templateKey: keyof typeof templates, payload: any): ITemplatedEmail => {
+  let { template, subject } = templates[templateKey];
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const { emailStubs, subjectStubs } = templates[templateKey];
 
 
   // @todo Logger is not definded here because the file is JS. Move it to TS
@@ -99,39 +129,48 @@ const getTemplatedEmail = (templateKey, payload) => {
   console.debug(`Email templating finished for template ${templateKey}`);
 
   return {
-    template,
+    body: template,
     subject
   };
 };
 
-const sendTemplatedEmail = async ({ templateKey, emailStubs, subjectStubs, to }) => {
+export interface ISendTempalatedEmailData {
+  templateKey: keyof typeof templates,
+  emailStubs?: any,
+  subjectStubs?: any,
+  to: string | string[]
+}
+
+type SendTemplatedEmail = (data: ISendTempalatedEmailData) => Promise<void>;
+
+export const sendTemplatedEmail: SendTemplatedEmail = async ({ templateKey, emailStubs, subjectStubs, to }) => {
   to === 'admin' && (to = env.mail.adminMail);
 
-  const { template, subject } = getTemplatedEmail(templateKey, { emailStubs, subjectStubs });
+  const { body, subject } = getTemplatedEmail(templateKey, { emailStubs, subjectStubs });
 
   if (Array.isArray(to)) {
     const emailPromises = [];
 
     to.forEach((emailTo) => {
       // eslint-disable-next-line no-console
-      console.log(`Sending ${templateKey} to ${emailTo}.`)
+      console.log(`Sending ${templateKey} to ${emailTo}.`);
 
-      emailPromises.push(mailer.sendMail({
-        to: emailTo,
+      emailPromises.push(sendMail(
+        emailTo,
         subject,
-        template
-      }));
+        body
+      ));
     });
 
     await Promise.all(emailPromises);
   } else {
     // eslint-disable-next-line no-console
-    console.log(`Sending ${templateKey} to ${to}.`)
+    console.log(`Sending ${templateKey} to ${to}.`);
 
-    await mailer.sendMail(
+    await sendMail(
       to,
       subject,
-      template
+      body
     );
   }
 
@@ -140,7 +179,7 @@ const sendTemplatedEmail = async ({ templateKey, emailStubs, subjectStubs, to })
   console.log('Templated email send successfully');
 };
 
-module.exports = {
+export default {
   getTemplatedEmail,
-  sendTemplatedEmail,
+  sendTemplatedEmail
 };

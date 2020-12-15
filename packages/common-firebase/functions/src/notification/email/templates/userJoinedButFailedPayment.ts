@@ -28,7 +28,7 @@ const emailStubs = {
   }
 };
 
-module.exports = {
+export const userJoinedButFailedPayment = {
   subject: 'Payment could not be processed',
   emailStubs,
   template

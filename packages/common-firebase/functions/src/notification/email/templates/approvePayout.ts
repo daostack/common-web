@@ -14,7 +14,7 @@ const emailStubs = {
   }
 };
 
-module.exports = {
+export const approvePayout = {
   subject: 'Approve payout',
   emailStubs,
   template

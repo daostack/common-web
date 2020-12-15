@@ -8,7 +8,7 @@ const emailStubs = {
   }
 };
 
-module.exports = {
+export const adminPayInSuccess = {
   subject: 'Successful pay-in',
   emailStubs,
   template

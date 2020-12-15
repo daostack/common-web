@@ -1,11 +1,13 @@
+import axios from 'axios';
 import * as yup from 'yup';
+import { v4 } from 'uuid';
+
 import { IPaymentEntity } from '../types';
 import { validate } from '../../../util/validate';
 import { getCircleHeaders } from '../../index';
 import { ICircleCreatePaymentPayload, ICircleCreatePaymentResponse } from '../../types';
 import { userDb } from '../../../users/database';
 import { externalRequestExecutor } from '../../../util';
-import axios from 'axios';
 import { circlePayApi } from '../../../settings';
 import { ErrorCodes } from '../../../constants';
 import { paymentDb } from '../database';
@@ -107,15 +109,12 @@ export const createPayment = async (payload: ICreatePaymentPayload): Promise<IPa
       sessionId: payload.sessionId
     },
 
-    idempotencyKey: payload.objectId, // @todo This will not work for the second subscription payment, so append the
-                                      // times that the subscription has been charged?
+    idempotencyKey: payload.type === 'one-time'
+      ? payload.objectId
+      : v4(), // @todo This will not work for the second subscription payment, so append the
+              //    times that the subscription has been charged?
 
-    // @todo If the payment is one time and not originating from
-    //      subscription make it require cvv. For now the UI will fail
     verification: 'none'
-    // encryptedData: payload.encryptedData,
-    // keyId: payload.keyId,
-
   };
 
   // Create the request @todo Handle errors better

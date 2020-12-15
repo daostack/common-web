@@ -26,7 +26,7 @@ const emailStubs = {
   }
 };
 
-module.exports = {
+export const userCommonFeatured = {
   subject: 'Your Common is now featured ',
   emailStubs,
   template

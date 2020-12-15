@@ -6,7 +6,7 @@ import { addSubscription } from './addSubscription';
 import { subscriptionExists } from './subscriptionExists';
 import { deleteSubscription } from './deleteSubscription';
 
-export const subscriptionsCollection = db.collection(Collections.Subscriptions);
+export const SubscriptionsCollection = db.collection(Collections.Subscriptions);
 
 export const subscriptionDb = {
   add: addSubscription,

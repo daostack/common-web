@@ -5,7 +5,7 @@ import { v4 } from 'uuid';
 import { BaseEntityType, SharedOmit } from '../../util/types';
 
 import { ISubscriptionEntity } from '../types';
-import { subscriptionsCollection } from './index';
+import { SubscriptionsCollection } from './index';
 
 
 /**
@@ -30,7 +30,7 @@ export const addSubscription = async (subscription: SharedOmit<ISubscriptionEnti
     subscriptionDoc['testCreated'] = true;
   }
 
-  await subscriptionsCollection
+  await SubscriptionsCollection
     .doc(subscriptionDoc.id)
     .set(subscriptionDoc);
 

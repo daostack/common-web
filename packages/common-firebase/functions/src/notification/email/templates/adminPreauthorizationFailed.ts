@@ -40,7 +40,7 @@ const emailStubs = {
   }
 };
 
-module.exports = {
+export const adminPreauthorizationFailed = {
   subject: 'Payment pre-authorization failed',
   emailStubs,
   template

@@ -78,20 +78,13 @@ export const pollPaymentStatus = async (payment: IPaymentEntity, pollPaymentOpti
     status
   });
 
-  // Event
-  await createEvent({
-    type: status === 'failed'
-      ? EVENT_TYPES.PAYMENT_FAILED
-      : status === 'paid'
-        ? EVENT_TYPES.PAYMENT_PAID
-        : status === 'confirmed'
-          ? EVENT_TYPES.PAYMENT_CONFIRMED
-          : EVENT_TYPES.PAYMENT_UPDATED,
-    objectId: payment.id,
-    userId: payment.userId
-  });
-
   if (options.throwOnPaymentFailed && payment.status === 'failed') {
+    await createEvent({
+      type: EVENT_TYPES.PAYMENT_FAILED,
+      objectId: payment.id,
+      userId: payment.userId
+    });
+
     throw new CommonError('Payment failed');
   }
 

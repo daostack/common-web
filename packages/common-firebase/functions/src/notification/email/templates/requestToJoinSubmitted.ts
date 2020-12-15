@@ -26,7 +26,7 @@ const emailStubs = {
   }
 };
 
-module.exports = {
+export const requestToJoinSubmitted = {
   subject: 'Request to join submitted',
   emailStubs,
   template
