@@ -189,14 +189,14 @@ export const notifyData: Record<string, IEventData> = {
           emailStubs: {
             commonName: commonData.name,
             commonLink: Utils.getCommonLink(commonData.id),
-            commonBalance: commonData.balance,
+            commonBalance: (commonData.balance / 100).toLocaleString('en-US', {style: 'currency', currency: 'USD'}),
             commonId: commonData.id,
             proposalId: proposalData.id,
             userName: getNameString(userData),
             userEmail: userData.email,
             userId: userData.uid,
-            fundingAmount: proposalData.fundingRequest.amount,
-            submittedOn: proposalData.createdAt,
+            fundingAmount: (proposalData.fundingRequest.amount / 100).toLocaleString('en-US', {style: 'currency', currency: 'USD'}),
+            submittedOn: proposalData.createdAt.toDate(),
             passedOn: new Date(),
             log: 'Funding request accepted'
           }
