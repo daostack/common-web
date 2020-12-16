@@ -1,1 +1,1 @@
-export { backupCron } from './backupCron';
+export { backup } from './backupCron';

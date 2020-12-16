@@ -37,5 +37,3 @@ export const getSecret = async (secretName: string): Promise<any> => {
   const [secretResult] = await secretClient.accessSecretVersion({name: secret})
   return secretResult.payload.data.toString();
 };
-
-export const firebaseAdmin = admin;
