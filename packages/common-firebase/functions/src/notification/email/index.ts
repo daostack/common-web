@@ -134,14 +134,14 @@ export const getTemplatedEmail = (templateKey: keyof typeof templates, payload: 
   };
 };
 
-export interface ISendTempalatedEmailData {
+export interface ISendTemplatedEmailData {
   templateKey: keyof typeof templates,
   emailStubs?: any,
   subjectStubs?: any,
   to: string | string[]
 }
 
-type SendTemplatedEmail = (data: ISendTempalatedEmailData) => Promise<void>;
+type SendTemplatedEmail = (data: ISendTemplatedEmailData) => Promise<void>;
 
 export const sendTemplatedEmail: SendTemplatedEmail = async ({ templateKey, emailStubs, subjectStubs, to }) => {
   to === 'admin' && (to = env.mail.adminMail);

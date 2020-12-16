@@ -7,7 +7,7 @@ import { getDiscussionMessageById } from '../util/db/discussionMessagesDb';
 import { proposalDb } from '../proposals/database';
 import { commonDb } from '../common/database';
 import { subscriptionDb } from '../subscriptions/database';
-import { ISendTempalatedEmailData } from './email';
+import { ISendTemplatedEmailData } from './email';
 import { ISubscriptionEntity } from '../subscriptions/types';
 import { IUserEntity } from '../users/types';
 import { userDb } from '../users/database';
@@ -319,7 +319,7 @@ export const notifyData: Record<string, IEventData> = {
     email: ({ subscription, user }: {
       subscription: ISubscriptionEntity,
       user: IUserEntity
-    }): ISendTempalatedEmailData => ({
+    }): ISendTemplatedEmailData => ({
       to: user.email,
       templateKey: 'subscriptionChargeFailed',
       emailStubs: {
@@ -345,7 +345,7 @@ export const notifyData: Record<string, IEventData> = {
     email: ({ subscription, user }: {
       subscription: ISubscriptionEntity,
       user: IUserEntity
-    }): ISendTempalatedEmailData => ({
+    }): ISendTemplatedEmailData => ({
       to: user.email,
       templateKey: 'subscriptionCanceled',
       emailStubs: {
@@ -376,7 +376,7 @@ export const notifyData: Record<string, IEventData> = {
       subscription: ISubscriptionEntity,
       user: IUserEntity,
       card: ICardEntity
-    }): ISendTempalatedEmailData => ({
+    }): ISendTemplatedEmailData => ({
       to: user.email,
       templateKey: 'subscriptionCharged',
       subjectStubs: {
