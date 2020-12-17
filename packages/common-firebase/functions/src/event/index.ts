@@ -32,6 +32,6 @@ const processEvent = async (event: IEventModel) => {
 exports.commonEventListeners = functions
   .firestore
   .document('/event/{id}')
-  .onCreate(async (snap) => {
-    await processEvent(snap.data() as IEventModel)
+  .onUpdate(async (snap) => {
+    await processEvent(snap.after.data() as IEventModel)
   })
