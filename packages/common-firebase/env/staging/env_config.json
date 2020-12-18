@@ -26,7 +26,7 @@
     "notifications": "/notifications/ping"
   },
   "payouts": {
-    "approvers": ["alexander2001ivanov@gmail.com"],
+    "approvers": ["alexander2001ivanov@gmail.com", "enrico@piramid.studio", "jelle@daostack.io"],
     "neededApprovals": 1
   },
   "local": "http://localhost:5003/common-staging-50741/us-central1"

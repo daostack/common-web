@@ -26,7 +26,7 @@
     }
   },
   "payouts": {
-    "approvers": ["alexander2001ivanov@gmail.com"],
+    "approvers": ["jelle@daostack.io"],
     "neededApprovals": 1
   },
   "local": "http://localhost:5003/common-daostack/us-central1",
