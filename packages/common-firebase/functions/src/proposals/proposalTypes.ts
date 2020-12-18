@@ -3,6 +3,7 @@ import { ContributionType } from '../common/types';
 import { VoteOutcome } from './voteTypes';
 
 export type ProposalState = 'countdown' | 'passed' | 'failed';
+export type ProposalPaymentState = 'notAttempted' | 'pending' | 'failed' | 'confirmed'
 
 /**
  * The base proposal fields, that will be available
@@ -39,6 +40,16 @@ interface IBaseProposalEntity extends IBaseEntity {
    * Failed - The voting is ended. The proposal is rejected
    */
   state: ProposalState;
+
+  /**
+   * The current state of the payment for the proposal
+   *
+   * notAttempted - the payment is not attempted. Maybe the proposal is not approved?
+   * pending - the payment is currently pending
+   * failed - the payment was not successful
+   * confirmed - the payment was successful
+   */
+  paymentState: ProposalPaymentState;
 
   /**
    * The countdown period in seconds relative to the creation date

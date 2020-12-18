@@ -2,7 +2,6 @@ import moment from 'moment';
 import { v4 } from 'uuid';
 
 import { ISubscriptionEntity } from '../types';
-import { CommonError } from '../../util/errors';
 
 import { EVENT_TYPES } from '../../event/event';
 import { createEvent } from '../../util/db/eventDbService';
@@ -29,10 +28,12 @@ export const chargeSubscriptionById = async (subscriptionId: string): Promise<vo
  */
 export const chargeSubscription = async (subscription: ISubscriptionEntity): Promise<void> => {
   // Check if the due date is in the past (only the date and not the time)
-  if (moment(subscription.dueDate.toDate()).isSameOrBefore(new Date(), 'day')) {
-    throw new CommonError(`Trying to charge subscription ${subscription.id}, but the due date is in the future!`, {
+  if (!moment(subscription.dueDate.toDate()).isSameOrBefore(new Date(), 'day')) {
+    logger.error(`Trying to charge subscription ${subscription.id}, but the due date is in the future!`, {
       subscription
     });
+
+    return;
   }
 
   try {

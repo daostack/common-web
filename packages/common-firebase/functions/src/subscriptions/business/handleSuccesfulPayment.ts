@@ -11,8 +11,6 @@ import { ISubscriptionEntity } from '../types';
 import { subscriptionDb } from '../database';
 import { proposalDb } from '../../proposals/database';
 import { commonDb } from '../../common/database';
-import { createEvent } from '../../util/db/eventDbService';
-import { EVENT_TYPES } from '../../event/event';
 
 
 /**
@@ -63,6 +61,10 @@ export const handleSuccessfulSubscriptionPayment = async (subscription: ISubscri
   // Save the updated data
   await Promise.all([
     commonDb.updateCommon(common),
-    subscriptionDb.update(subscription)
+    subscriptionDb.update(subscription),
+    proposalDb.update({
+      id: subscription.proposalId,
+      paymentState: 'confirmed'
+    })
   ]);
 };

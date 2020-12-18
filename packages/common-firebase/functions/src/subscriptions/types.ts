@@ -108,4 +108,4 @@ export interface ISubscriptionMetadata {
  * CanceledByUser - The subscription is not active, because the user has canceled it. The membership may
  * still be active, but it will be revoked on the next due date
  */
-export type SubscriptionStatus = 'Active' | 'CanceledByUser' | 'CanceledByPaymentFailure' | 'PaymentFailed';
+export type SubscriptionStatus = 'Pending' | 'Active' | 'CanceledByUser' | 'CanceledByPaymentFailure' | 'PaymentFailed';

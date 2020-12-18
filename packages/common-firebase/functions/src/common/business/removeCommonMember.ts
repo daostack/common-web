@@ -1,4 +1,3 @@
-import { CommonError } from '../../util/errors';
 import { ICommonEntity } from '../types';
 import { commonDb } from '../database';
 import { EVENT_TYPES } from '../../event/event';
@@ -13,11 +12,18 @@ import { createEvent } from '../../util/db/eventDbService';
  */
 export const removeCommonMember = async (common: ICommonEntity, memberId: string): Promise<void> => {
   if (!common.members.some(x => x.userId === memberId)) {
-    throw new CommonError('Trying to remove non member from common', {
+    logger.error('Trying to remove non member from common', {
       common,
       memberId
     });
+
+    return;
   }
+
+  logger.info('Removing common member', {
+    common,
+    member: memberId
+  });
 
   // Remove the member
   common.members.splice(
@@ -33,5 +39,5 @@ export const removeCommonMember = async (common: ICommonEntity, memberId: string
     userId: memberId,
     objectId: common.id,
     type: EVENT_TYPES.COMMON_MEMBER_REMOVED
-  })
+  });
 };

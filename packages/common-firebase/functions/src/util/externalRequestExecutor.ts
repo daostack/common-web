@@ -14,8 +14,6 @@ export const externalRequestExecutor = async <T = any>(func: () => T | Promise<T
   try {
     const result = await func();
 
-    logger.info('External request made successfully');
-
     return result;
   } catch (err) {
     logger.warn('Circle error response: ', err.response?.data);

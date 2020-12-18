@@ -20,6 +20,8 @@ export const deleteSubscription = async (subscriptionId: Nullable<string>): Prom
     throw new CommonError('Cannot get subscription without providing the id!');
   }
 
+  logger.warn(`Deleting subscription with id ${subscriptionId}`);
+
   return (await db.collection(Collections.Subscriptions)
     .doc(subscriptionId)
     .delete());

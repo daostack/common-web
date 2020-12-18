@@ -1,15 +1,15 @@
-import { ISubscriptionPayment } from '../types';
-import { v4 } from 'uuid';
-
 import * as yup from 'yup';
+
+import { ISubscriptionPayment } from '../types';
 import { validate } from '../../../util/validate';
 import { subscriptionDb } from '../../../subscriptions/database';
 import { createPayment } from './createPayment';
 import { pollPaymentStatus } from './pollPaymentStatus';
-import { isFinalized, isSuccessful } from '../helpers';
-import { handleFailedPayment, handleSuccessfulSubscriptionPayment } from '../../../subscriptions/business';
-import { createEvent } from '../../../util/db/eventDbService';
 import { EVENT_TYPES } from '../../../event/event';
+import { createEvent } from '../../../util/db/eventDbService';
+import { isFinalized, isSuccessful } from '../helpers';
+import { handleFailedSubscriptionPayment, handleSuccessfulSubscriptionPayment } from '../../../subscriptions/business';
+import { proposalDb } from '../../../proposals/database';
 
 const createSubscriptionPaymentValidationSchema = yup.object({
   subscriptionId: yup.string()
@@ -45,8 +45,34 @@ export const createSubscriptionPayment = async (payload: yup.InferType<typeof cr
     objectId: subscription.id
   });
 
+
+  logger.info(`Starting polling subscription payment with ID ${payment.id}`, {
+    payment,
+    subscription
+  });
+
+  // If this is the initial subscription charge
+  // update the proposal as well
+  if (subscription.charges === 0) {
+    logger.info('Creating initial subscription charge. Marking it as pending', {
+      subscription,
+      payment
+    });
+
+    await proposalDb.update({
+      id: subscription.proposalId,
+      paymentState: 'pending'
+    });
+  }
+
   // Poll the payment
   payment = await pollPaymentStatus(payment);
+
+  logger.info(`Polling finished for subscription payment with ID ${payment.id} with status ${payment.status}`, {
+    payment,
+    subscription
+  });
+
 
   if (isSuccessful(payment)) {
     await createEvent({
@@ -63,7 +89,7 @@ export const createSubscriptionPayment = async (payload: yup.InferType<typeof cr
       userId: payment.userId
     });
 
-    await handleFailedPayment(subscription, payment);
+    await handleFailedSubscriptionPayment(subscription, payment);
   } else {
     await createEvent({
       type: EVENT_TYPES.SUBSCRIPTION_PAYMENT_STUCK,
@@ -71,7 +97,7 @@ export const createSubscriptionPayment = async (payload: yup.InferType<typeof cr
       userId: payment.userId
     });
 
-    logger.warn('Payment is not in finalized or successful state after polling {payment}', payment);
+    logger.warn('Payment is not in finalized or successful state after polling', { payment });
   }
 
   return payment as ISubscriptionPayment;

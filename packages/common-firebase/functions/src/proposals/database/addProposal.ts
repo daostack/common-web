@@ -8,7 +8,7 @@ import { IProposalEntity } from '../proposalTypes';
 import { proposalsCollection } from './index';
 
 
-type OmittedProperties = 'votes' | 'state' | 'votesFor' | 'votesAgainst';
+type OmittedProperties = 'votes' | 'state' | 'paymentState' | 'votesFor' | 'votesAgainst';
 
 /**
  * Prepares the passed proposal for saving and saves it. Please note that
@@ -28,6 +28,7 @@ export const addProposal = async (proposal: SharedOmit<IProposalEntity, BaseEnti
     votesAgainst: 0,
 
     state: 'countdown',
+    paymentState: 'notAttempted',
 
     ...(proposal as IProposalEntity)
   };

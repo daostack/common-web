@@ -9,7 +9,8 @@ import { removeCommonMember } from '../../common/business/removeCommonMember';
 export const revokeMembership = async (subscription: ISubscriptionEntity): Promise<void> => {
   const common = await commonDb.getCommon(subscription.metadata.common.id);
 
-  await removeCommonMember(common, subscription.userId);
+
+  await removeCommonMember(common, subscription.userId)
 
   subscription.revoked = true;
 

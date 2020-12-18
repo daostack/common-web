@@ -32,11 +32,16 @@ export const finalizeProposal = async (proposal: IProposalEntity): Promise<IProp
 
   const votes = countVotes(proposal);
 
+  // If the votes for are more than the votes against give it pass (
   proposal.state =
     votes.votesFor > votes.votesAgainst &&
     votes.votesFor > 0
       ? 'passed'
       : 'failed';
+
+  logger.info(`Proposal finalized with ${proposal.state}`, {
+    proposal
+  });
 
   await updateProposal(proposal);
 

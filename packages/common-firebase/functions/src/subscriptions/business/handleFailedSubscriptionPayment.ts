@@ -3,6 +3,7 @@ import { CommonError } from '../../util/errors';
 import { updateSubscription } from '../database/updateSubscription';
 import { revokeMembership } from './revokeMembership';
 import { IPaymentEntity } from '../../circlepay/payments/types';
+import { proposalDb } from '../../proposals/database';
 
 /**
  * Handles update for the subscription document on payment failure
@@ -12,7 +13,7 @@ import { IPaymentEntity } from '../../circlepay/payments/types';
  *
  * @throws { CommonError } - If the subscription status is not 'Active' or 'PaymentFailed'
  */
-export const handleFailedPayment = async (subscription: ISubscriptionEntity, payment: IPaymentEntity): Promise<void> => {
+export const handleFailedSubscriptionPayment = async (subscription: ISubscriptionEntity, payment: IPaymentEntity): Promise<void> => {
   const failedPayment = {
     paymentStatus: payment.status,
     paymentId: payment.id
@@ -23,6 +24,8 @@ export const handleFailedPayment = async (subscription: ISubscriptionEntity, pay
     subscription.paymentFailures = [failedPayment];
   } else if (subscription.status === 'PaymentFailed') {
     subscription.paymentFailures.push(failedPayment);
+
+    await updateSubscription(subscription);
 
     // If there are more than 3 failed payment cancel
     // the subscription (so on the 4th attempt)
@@ -39,5 +42,11 @@ export const handleFailedPayment = async (subscription: ISubscriptionEntity, pay
   // Update metadata about the subscription
   subscription.charges = (subscription.charges || 0) + 1;
 
-  await updateSubscription(subscription);
+  await Promise.all([
+    updateSubscription(subscription),
+    await proposalDb.update({
+      id: subscription.proposalId,
+      paymentState: 'failed'
+    })
+  ]);
 };

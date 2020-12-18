@@ -23,5 +23,5 @@ export const handleNotification = async (notification: ICircleNotification): Pro
 
   logger.warn('New notification from circle', {
     notification
-  })
+  });
 };

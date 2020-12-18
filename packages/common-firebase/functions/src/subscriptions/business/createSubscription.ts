@@ -10,7 +10,7 @@ import { subscriptionDb } from '../database';
 import { createEvent } from '../../util/db/eventDbService';
 import { EVENT_TYPES } from '../../event/event';
 import { createSubscriptionPayment } from '../../circlepay/payments/business/createSubscriptionPayment';
-import { isFinalized, isSuccessful } from '../../circlepay/payments/helpers';
+import { isSuccessful } from '../../circlepay/payments/helpers';
 import { addCommonMemberByProposalId } from '../../common/business/addCommonMember';
 import { cardDb } from '../../circlepay/cards/database';
 
@@ -85,13 +85,14 @@ export const createSubscription = async (proposal: IProposalEntity): Promise<ISu
     ipAddress: '127.0.0.1'
   });
 
-  if(isSuccessful(payment)) {
+
+  if (isSuccessful(payment)) {
     // Add the member to the common
     await addCommonMemberByProposalId(proposal.id);
-  } else if (!isFinalized(payment)){
-    // Delete the subscription
-    // await subscriptionDb.delete(subscription.id);
-    logger.warn('Initial subscription payment for subscription failed!', { subscription, payment })
+  } else {
+    logger.warn('Initial subscription payment for subscription failed!', { subscription, payment });
+
+    await subscriptionDb.delete(subscription.id);
   }
 
   return subscription;

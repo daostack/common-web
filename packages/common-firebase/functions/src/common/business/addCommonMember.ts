@@ -23,6 +23,12 @@ export const addCommonMemberByProposalId = async (proposalId: string): Promise<v
 
   const common = await commonDb.getCommon(proposal.commonId);
 
+  logger.info('Adding new member to common', {
+    common,
+    proposal,
+    newMemberId: proposal.proposerId
+  });
+
   await addCommonMember(common, proposal.proposerId);
 };
 
