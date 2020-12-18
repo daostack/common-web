@@ -3,7 +3,7 @@ import { ContributionType } from '../common/types';
 import { VoteOutcome } from './voteTypes';
 
 export type ProposalState = 'countdown' | 'passed' | 'failed';
-export type ProposalPaymentState = 'notAttempted' | 'pending' | 'failed' | 'confirmed'
+export type ProposalPaymentState = 'notAttempted' | 'pending' | 'failed' | 'confirmed';
 
 /**
  * The base proposal fields, that will be available
@@ -40,16 +40,6 @@ interface IBaseProposalEntity extends IBaseEntity {
    * Failed - The voting is ended. The proposal is rejected
    */
   state: ProposalState;
-
-  /**
-   * The current state of the payment for the proposal
-   *
-   * notAttempted - the payment is not attempted. Maybe the proposal is not approved?
-   * pending - the payment is currently pending
-   * failed - the payment was not successful
-   * confirmed - the payment was successful
-   */
-  paymentState: ProposalPaymentState;
 
   /**
    * The countdown period in seconds relative to the creation date
@@ -154,7 +144,7 @@ export interface IFundingRequestProposal extends IBaseProposalEntity {
      * Collection of files supporting the request
      */
     files: IProposalFile[];
-  }
+  };
 
 
   fundingRequest: {
@@ -168,7 +158,7 @@ export interface IFundingRequestProposal extends IBaseProposalEntity {
      * to the requested
      */
     funded: boolean;
-  }
+  };
 }
 
 /**
@@ -182,6 +172,16 @@ export interface IJoinRequestProposal extends IBaseProposalEntity {
    * Object with some description of the proposal
    */
   description: IProposalDescription;
+
+  /**
+   * The current state of the payment for the proposal
+   *
+   * notAttempted - the payment is not attempted. Maybe the proposal is not approved?
+   * pending - the payment is currently pending
+   * failed - the payment was not successful
+   * confirmed - the payment was successful
+   */
+  paymentState: ProposalPaymentState;
 
   join: {
     /**
@@ -204,7 +204,7 @@ export interface IJoinRequestProposal extends IBaseProposalEntity {
      * Array of the payment IDs made for this proposal
      */
     payments: string[];
-  }
+  };
 }
 
 
