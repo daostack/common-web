@@ -6,8 +6,10 @@ export const Collections = {
   Payouts: 'payouts',
   Commons: 'daos',
   Votes: 'votes',
+  DiscussionMessage: 'discussionMessage',
   // @todo Make this plural
   Event: 'event',
   Cards: 'cards',
-  Users: 'users'
+  Users: 'users',
+  Discussion: 'discussion',
 };
