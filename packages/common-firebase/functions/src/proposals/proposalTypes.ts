@@ -3,7 +3,7 @@ import { ContributionType } from '../common/types';
 import { VoteOutcome } from './voteTypes';
 
 export type ProposalState = 'countdown' | 'passed' | 'failed';
-export type ProposalPaymentState = 'notAttempted' | 'pending' | 'failed' | 'confirmed';
+export type ProposalPaymentState = 'notAttempted' | 'pending' | 'failed' | 'confirmed' | 'notRelevant';
 
 /**
  * The base proposal fields, that will be available

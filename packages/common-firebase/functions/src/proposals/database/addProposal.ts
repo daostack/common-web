@@ -29,7 +29,7 @@ export const addProposal = async (proposal: SharedOmit<IProposalEntity, BaseEnti
 
     state: 'countdown',
     ...(proposal.type === 'fundingRequest' && {
-      paymentState: 'notAttempted',
+      paymentState: 'notRelevant',
     }),
 
     ...(proposal as IProposalEntity)
