@@ -4,7 +4,7 @@ import * as cron from './crons';
 import * as event from './event';
 import * as notification from './notification';
 import * as messageTriggers from './discussionMessage/triggers';
-// import * as commonTriggers from './common';
+import * as commonTriggers from './common/triggers';
 
 import { circlePayApp, circlePayCrons } from './circlepay';
 import { commonsApp } from './common';
@@ -28,7 +28,7 @@ exports.proposalCrons = proposalCrons;
 exports.messageTriggers = messageTriggers;
 exports.proposalTriggers = proposalTriggers;
 exports.payoutTriggers = payoutTriggers;
-// exports.commonTriggers = commonTriggers;
+exports.commonTriggers = commonTriggers;
 
 exports.cronJobs = cron;
 exports.circlePayCrons = circlePayCrons;

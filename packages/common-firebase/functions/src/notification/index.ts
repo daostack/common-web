@@ -12,6 +12,12 @@ export interface INotificationModel {
     eventId: string,
 }
 
+/**
+ * Process notification && email sendings
+ *   - send notifications to users in userFilter, if there's on user filter, send to all
+ *   - send emails to email addresses in the the template in the currNotifyObj
+ * @param notification     - notification object with data of what and to whom to send it
+ */
 const processNotification = async (notification: INotificationModel) => {
 
     const currNotifyObj = notifyData[notification.eventType];
@@ -19,9 +25,10 @@ const processNotification = async (notification: INotificationModel) => {
     if (!currNotifyObj.data) {
         throw Error(`Not found data method for notification on event type "${notification.eventType}".`);
     }
+
+    const eventNotifyData = await currNotifyObj.data(notification.eventObjectId);
     
     if (notification.userFilter) {
-        const eventNotifyData = await currNotifyObj.data(notification.eventObjectId);
         notification.userFilter.forEach( async filterUserId => {
             const userData: any = (await getUserById(filterUserId)).data();
 
@@ -30,32 +37,25 @@ const processNotification = async (notification: INotificationModel) => {
                 await Notification.send(userData.tokens, title, body, image, path);
             }
 
-            if (currNotifyObj.email) {
-                const emailTemplate = currNotifyObj.email(eventNotifyData);
-                const emailTemplateArr = Array.isArray(emailTemplate) ? emailTemplate : [emailTemplate];
-                emailTemplateArr.forEach( async (currEmailTemplate) => {
-                    const template = currEmailTemplate;
-
-                    if (!template.to) {
-                        template.to = userData.email;
-                    }
-                    
-                    await emailClient.sendTemplatedEmail(template);
-                });
-            }
-
         });
     } else {
-        const eventNotifyData = await currNotifyObj.data(notification.eventObjectId);
         if (currNotifyObj.notification) {
             const {title, body, image, path} = currNotifyObj.notification(eventNotifyData);
             await Notification.sendToAllUsers(title, body, image, path);
         }
-
-        // if (currNotifyObj.email) {
-        //     await emailClient.sendTemplatedEmail(currNotifyObj.email(eventNotifyData))
-        // }
     }
+    // handling email sending separately  from notifications because we don't want to send as many emails as userFilter.length
+    if (currNotifyObj.email) {
+      const emailTemplate = currNotifyObj.email(eventNotifyData);
+      const emailTemplateArr = Array.isArray(emailTemplate) ? emailTemplate : [emailTemplate];
+      emailTemplateArr.forEach( async (currEmailTemplate) => {
+          const template = currEmailTemplate;
+          await emailClient.sendTemplatedEmail(template);
+      });
+    }
+
+
+
         
 }
 

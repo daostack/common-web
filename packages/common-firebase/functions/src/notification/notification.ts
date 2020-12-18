@@ -46,9 +46,10 @@ export const notifyData: Record<string, IEventData> = {
       };
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ({ commonData, userData }) => {
+    email: ({ commonData, userData }) : ISendTemplatedEmailData[] => {
       return [
         {
+          to: userData.email,
           templateKey: 'userCommonCreated',
           emailStubs: {
             userName: getNameString(userData),
@@ -87,7 +88,7 @@ export const notifyData: Record<string, IEventData> = {
       };
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ({ commonData, userData }) => {
+    email: ({ commonData, userData }) : ISendTemplatedEmailData => {
       return {
         to: userData.email,
         templateKey: 'requestToJoinSubmitted',
@@ -139,7 +140,7 @@ export const notifyData: Record<string, IEventData> = {
       };
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ({ commonData, userData }) => {
+    email: ({ commonData, userData }) : ISendTemplatedEmailData => {
       return {
         to: userData.email,
         templateKey: 'userCommonFeatured',
@@ -173,7 +174,7 @@ export const notifyData: Record<string, IEventData> = {
       };
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ({ userData, proposalData, commonData /*paymentData*/ }) => {
+    email: ({ userData, proposalData, commonData /*paymentData*/ }) : ISendTemplatedEmailData[] => {
       return [
         {
           to: userData.email,
@@ -223,7 +224,7 @@ export const notifyData: Record<string, IEventData> = {
       };
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ({ commonData, userData }) => {
+    email: ({ commonData, userData }) : ISendTemplatedEmailData => {
       return {
         to: userData.email,
         templateKey: 'userJoinedSuccess',
@@ -291,7 +292,7 @@ export const notifyData: Record<string, IEventData> = {
       };
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ({ commonData, userData }) => {
+    email: ({ commonData, userData }) : ISendTemplatedEmailData => {
       return {
         to: userData.email,
         templateKey: 'userJoinedButFailedPayment',
@@ -434,7 +435,7 @@ export default new class Notification implements INotification {
       }
     } as admin.messaging.Message;
 
-    logger.info('payload -> ', payload);
+    //console.info('payload -> ', payload);
 
     // @question Ask about this rule "promise/always-return". It is kinda useless so we may disable it globally?
     // eslint-disable-next-line promise/always-return
