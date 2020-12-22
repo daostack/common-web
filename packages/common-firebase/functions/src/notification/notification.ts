@@ -416,7 +416,8 @@ export default new class Notification implements INotification {
     // eslint-disable-next-line promise/always-return
     // sendToDevice cannot have an empty tokens array
     const messageSent: admin.messaging.MessagingDevicesResponse = tokens.length > 0 && await messaging.sendToDevice(tokens, payload, options);
-    logger.info('Send Success', messageSent);
+
+    logger.debug('Send Success', messageSent);
   }
 
   async sendToAllUsers(title: string, body: string, image = '', path: string) {
@@ -440,6 +441,7 @@ export default new class Notification implements INotification {
     // @question Ask about this rule "promise/always-return". It is kinda useless so we may disable it globally?
     // eslint-disable-next-line promise/always-return
     const messageSent: string = await messaging.send(payload);
-    logger.info('Send Success', { messageSent });
+
+    logger.debug('Send Success', { messageSent });
   }
 };

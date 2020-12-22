@@ -4,7 +4,9 @@ import { CirclePaymentStatus } from '../util/types';
 
 // ---- Shared
 
-interface ICircleIndempotentPayload {
+type CircleCurrency = 'USD';
+
+interface ICircleIdempotentPayload {
   idempotencyKey: string;
 }
 
@@ -122,8 +124,15 @@ interface IPaymentSource {
 }
 
 interface IPaymentFee {
+  /**
+   * The amount of the fee in dollars
+   */
   amount: string;
-  currency: string;
+
+  /**
+   * The currency of the payment (only USD)
+   */
+  currency: CircleCurrency;
 }
 
 interface ICircleCreatePaymentBase {
@@ -199,7 +208,7 @@ interface ICirclePayoutMetadata {
   beneficiaryEmail: string;
 }
 
-export interface ICircleCreatePayoutPayload extends ICircleIndempotentPayload {
+export interface ICircleCreatePayoutPayload extends ICircleIdempotentPayload {
   destination: ICirclePayoutDestination;
   metadata: ICirclePayoutMetadata;
   amount: IPayoutAmount;

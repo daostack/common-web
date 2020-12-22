@@ -23,6 +23,11 @@ interface IPaymentEntityBase extends IBaseEntity {
   amount: IPaymentAmount;
 
   /**
+   * The amount and currency of the payment fees
+   */
+  fees: IPaymentFees;
+
+  /**
    * The source of the payment
    */
   source: IPaymentSource;
@@ -47,6 +52,18 @@ interface IPaymentEntityBase extends IBaseEntity {
 export interface IPaymentAmount {
   /**
    * The amount in cents of the currency
+   */
+  amount: number;
+
+  /**
+   * The currency of the payment
+   */
+  currency: PaymentCurrency;
+}
+
+export interface IPaymentFees {
+  /**
+   * The amount of the fee in cents of the currency
    */
   amount: number;
 
