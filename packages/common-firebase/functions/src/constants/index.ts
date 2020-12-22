@@ -47,6 +47,10 @@ interface Env {
     approvers: string[];
     neededApprovals: number;
   }
+  
+  backoffice: {
+    sheetUrl: string;
+  }
 }
 
 export const env = merge(envConfig, envSecrets) as Env;

@@ -29,5 +29,8 @@
     "approvers": ["alexander2001ivanov@gmail.com", "enrico@piramid.studio", "jelle@daostack.io"],
     "neededApprovals": 1
   },
-  "local": "http://localhost:5003/common-staging-50741/us-central1"
+  "local": "http://localhost:5003/common-staging-50741/us-central1",
+  "backoffice":{
+    "sheetUrl": "1muC-dGhS_MOEZYKSTNyMthG1NHlo8-4mlb_K5ExD7QM"
+  }
 }

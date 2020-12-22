@@ -24,5 +24,8 @@
     "base": "some-address",
     "notifications": "/notifications/ping"
   },
-  "secretManagerProject": "common-staging-50741"
+  "secretManagerProject": "common-staging-50741",
+  "backoffice":{
+    "sheetUrl": "1muC-dGhS_MOEZYKSTNyMthG1NHlo8-4mlb_K5ExD7QM"
+  }
 }
