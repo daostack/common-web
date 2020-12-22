@@ -6,7 +6,7 @@ import { validate } from '../../../util/validate';
 import { proposalDb } from '../../../proposals/database';
 
 import { createPayment } from './createPayment';
-import { pollPaymentStatus } from './pollPaymentStatus';
+import { pollPayment } from './pollPayment';
 import { isFailed } from '../helpers/statusHelper';
 import { EVENT_TYPES } from '../../../event/event';
 import { createEvent } from '../../../util/db/eventDbService';
@@ -95,7 +95,7 @@ export const createProposalPayment = async (payload: yup.InferType<typeof create
   });
 
   // Poll the payment
-  payment = await pollPaymentStatus(payment);
+  payment = await pollPayment(payment);
 
   logger.info(`Polling finished for payment with ID ${payment.id} with status ${payment.status}`, {
     payment

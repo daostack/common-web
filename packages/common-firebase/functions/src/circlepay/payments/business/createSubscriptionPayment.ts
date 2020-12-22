@@ -4,7 +4,7 @@ import { ISubscriptionPayment } from '../types';
 import { validate } from '../../../util/validate';
 import { subscriptionDb } from '../../../subscriptions/database';
 import { createPayment } from './createPayment';
-import { pollPaymentStatus } from './pollPaymentStatus';
+import { pollPayment } from './pollPayment';
 import { EVENT_TYPES } from '../../../event/event';
 import { createEvent } from '../../../util/db/eventDbService';
 import { isFinalized, isSuccessful } from '../helpers';
@@ -66,7 +66,7 @@ export const createSubscriptionPayment = async (payload: yup.InferType<typeof cr
   }
 
   // Poll the payment
-  payment = await pollPaymentStatus(payment);
+  payment = await pollPayment(payment);
 
   logger.info(`Polling finished for subscription payment with ID ${payment.id} with status ${payment.status}`, {
     payment,

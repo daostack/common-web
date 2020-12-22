@@ -160,15 +160,23 @@ export type ICircleCreatePaymentPayload = ICircleCreatePaymentVerification | ICi
 
 export type ICircleCreatePaymentResponse = ICirclePayment;
 
-export interface ICirclePayment {
-  data: {
-    id: string;
-    type: 'payment';
-    status: CirclePaymentStatus;
-    fees: IPaymentFee;
+export interface ICircleBasePaymentData {
+  id: string;
+  type: 'payment';
+  status: CirclePaymentStatus;
+  fees: IPaymentFee;
 
-    [key: string]: any;
-  }
+  [key: string]: any;
+}
+
+export interface ICircleFailedPaymentData extends ICircleBasePaymentData {
+  status: 'failed';
+
+  errorCode: string;
+}
+
+export interface ICirclePayment {
+  data: ICircleBasePaymentData | ICircleFailedPaymentData;
 }
 
 // ---- Shared ---- //
