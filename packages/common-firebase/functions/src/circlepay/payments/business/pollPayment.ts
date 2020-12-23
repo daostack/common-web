@@ -1,17 +1,14 @@
 import axios from 'axios';
 
-import { db, externalRequestExecutor, poll } from '../../../util';
+import { externalRequestExecutor, poll } from '../../../util';
 import { ArgumentError, CommonError } from '../../../util/errors';
-import { createEvent } from '../../../util/db/eventDbService';
-import { EVENT_TYPES } from '../../../event/event';
 import { circlePayApi } from '../../../settings';
 import { ErrorCodes } from '../../../constants';
 
 import { getCircleHeaders } from '../../index';
 import { ICirclePayment } from '../../types';
 import { IPaymentEntity } from '../types';
-import { paymentDb } from '../database';
-import { failureHelper, feesHelper } from '../helpers';
+import { updatePayment } from './updatePayment';
 
 interface IPollPaymentOptions {
   interval?: number;
@@ -68,45 +65,13 @@ export const pollPayment = async (payment: IPaymentEntity, pollPaymentOptions?: 
   };
 
   const circlePaymentObj = await poll<ICirclePayment>(pollFn, validateFn, options.interval, options.maxRetries);
-
-  await db.collection('test').add(circlePaymentObj);
-
-  let updatedPaymentObj: IPaymentEntity;
-
-  switch (circlePaymentObj.data.status) {
-    case 'failed':
-      updatedPaymentObj = {
-        ...payment,
-
-        status: circlePaymentObj.data.status,
-        failure: failureHelper.processFailedPayment(circlePaymentObj)
-      };
-
-      break;
-    case 'confirmed':
-    case 'paid':
-      updatedPaymentObj = {
-        ...payment,
-
-        status: circlePaymentObj.data.status,
-        fees: feesHelper.processCircleFee(circlePaymentObj)
-      }
-
-      break;
-    default:
-
-  }
-
-  updatedPaymentObj = await paymentDb.update(updatedPaymentObj);
+  
+  const updatedPaymentObj = await updatePayment(payment, circlePaymentObj);
 
   if (options.throwOnPaymentFailed && updatedPaymentObj.status === 'failed') {
-    await createEvent({
-      type: EVENT_TYPES.PAYMENT_FAILED,
-      objectId: payment.id,
-      userId: payment.userId
+    throw new CommonError('Payment failed', {
+      payment: updatedPaymentObj
     });
-
-    throw new CommonError('Payment failed');
   }
 
   // Return the updated payment

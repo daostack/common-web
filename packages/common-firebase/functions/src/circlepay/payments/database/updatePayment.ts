@@ -8,7 +8,7 @@ import { PaymentsCollection } from './index';
  *
  * @param payment - The updated payment
  */
-export const updatePayment = async (payment: IPaymentEntity): Promise<IPaymentEntity> => {
+export const updatePaymentInDatabase = async (payment: IPaymentEntity): Promise<IPaymentEntity> => {
   const paymentDoc = {
     ...payment,
 

@@ -3,7 +3,7 @@ import { Collections } from '../../../constants';
 
 import { IPaymentEntity } from '../types';
 import { addPayment } from './addPayment';
-import { updatePayment } from './updatePayment';
+import { updatePaymentInDatabase } from './updatePayment';
 import { getPayments } from './getPayments';
 import { getPayment } from './getPayment';
 
@@ -41,5 +41,5 @@ export const paymentDb = {
   /**
    * Update existing payment in the database
    */
-  update: updatePayment
+  update: updatePaymentInDatabase
 };

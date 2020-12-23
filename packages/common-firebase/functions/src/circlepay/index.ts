@@ -19,6 +19,7 @@ import { approvePayout } from './payouts/business/approvePayout';
 import { createIndependentPayout } from './payouts/business/createIndependentPayout';
 import { chargeSubscription, chargeSubscriptions, revokeMemberships } from '../subscriptions/business';
 import { subscriptionDb } from '../subscriptions/database';
+import { updatePaymentFromCircle } from './payments/business/updatePaymentFromCircle';
 
 const runtimeOptions = {
   timeoutSeconds: 540
@@ -76,6 +77,23 @@ circlepay.get('/encryption', async (req, res, next) => {
       next,
       successMessage: `PCI encryption key generated!`
     });
+});
+
+// ----- Payment Related requests
+circlepay.get('/payments/update', async (req, res, next) => {
+  await responseExecutor(async () => {
+    logger.notice(`User requested update for payment from circle`, {
+      userId: req.user.uid,
+      paymentId: req.query.paymentId
+    });
+
+    await updatePaymentFromCircle(req.query.paymentId as string);
+  }, {
+    req,
+    res,
+    next,
+    successMessage: 'Payment update succeeded'
+  });
 });
 
 circlepay.get('/testIP', async (req, res, next) => {
@@ -212,7 +230,7 @@ circlepay.get('/test', async (req, res) => {
   ]);
 
   res.send('done');
-})
+});
 
 circlepay.get('/charge/subscription', async (req, res) => {
   const subscription = await subscriptionDb.get(req.query.id as string);
@@ -226,7 +244,7 @@ circlepay.get('/charge/subscription', async (req, res) => {
     res.status(500)
       .send(e);
   }
-})
+});
 
 export const circlePayCrons = {
   ...payoutCrons

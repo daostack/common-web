@@ -12,7 +12,7 @@ import { getCircleHeaders } from './index';
  *
  * @param paymentId - the Circle payment ID (not the local one)
  */
-export const getPaymentFromCircle = async (paymentId: string): Promise<ICirclePayment> => {
+const getPaymentFromCircle = async (paymentId: string): Promise<ICirclePayment> => {
   const headers = await getCircleHeaders();
 
   return externalRequestExecutor<ICirclePayment>(async () => {
@@ -22,3 +22,7 @@ export const getPaymentFromCircle = async (paymentId: string): Promise<ICirclePa
     message: 'Polling circle call failed'
   });
 };
+
+export const circleClient = {
+  getPayment: getPaymentFromCircle
+}
