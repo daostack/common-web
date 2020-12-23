@@ -29,6 +29,13 @@ export interface INotification {
   send: any
 }
 
+const memberAddedNotification = (commonData) => ({
+    title: 'Congrats!',
+    body: `Your request to join "${commonData.name}" was accepted, you are now a member!`,
+    image: commonData.image || '',
+    path: `CommonProfile/${commonData.id}`
+  });
+
 interface IEventData {
   data: (eventObj: string) => any;
   email?: (notifyData: any) => any;
@@ -205,24 +212,17 @@ export const notifyData: Record<string, IEventData> = {
       ];
     }
   },
-  [EVENT_TYPES.REQUEST_TO_JOIN_ACCEPTED]: {
+  [EVENT_TYPES.REQUEST_TO_JOIN_EXECUTED]: {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    data: async (objectId: string) => {
-      const proposalData = (await proposalDb.getProposal(objectId));
+    data: async (proposalId: string) => {
+      const proposalData = (await proposalDb.getProposal(proposalId));
       return {
         commonData: (await commonDb.getCommon(proposalData.commonId)),
         userData: (await getUserById(proposalData.proposerId)).data()
       };
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    notification: async ({ commonData }) => {
-      return {
-        title: 'Congrats!',
-        body: `Your request to join "${commonData.name}" was accepted, you are now a member!`,
-        image: commonData.image || '',
-        path: `CommonProfile/${commonData.id}`
-      };
-    },
+    notification: async ({ commonData }) => memberAddedNotification(commonData),
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     email: ({ commonData, userData }) : ISendTemplatedEmailData => {
       return {
@@ -364,15 +364,21 @@ export const notifyData: Record<string, IEventData> = {
       const card = await cardDb.get(payment.source.id);
       const subscription = await subscriptionDb.get(payment.objectId);
       const user = await userDb.get(subscription.userId);
-
+      const commonData = subscription.metadata.common;
 
       return {
         subscription,
         user,
-        card
+        card,
+        commonData
       };
     },
-
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    notification: async ({ commonData, subscription }) => (
+      subscription.charges === 1
+      ? memberAddedNotification(commonData)
+      : null
+    ),
     email: ({ subscription, user, card }: {
       subscription: ISubscriptionEntity,
       user: IUserEntity,

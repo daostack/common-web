@@ -32,7 +32,7 @@ export const onProposalApproved = functions.firestore
 
       // @refactor
       if (event.type === EVENT_TYPES.REQUEST_TO_JOIN_ACCEPTED) {
-        logger.info('Join request was approved. Adding new members to common');
+        logger.info('Join request was approved. Starting to process payment');
 
         const proposal = await proposalDb.getJoinRequest(event.objectId);
 

@@ -182,13 +182,6 @@ export const eventData: Record<string, IEventData> = {
       return [proposal.proposerId];
     }
   },
-  [EVENT_TYPES.REQUEST_TO_JOIN_ACCEPTED]: {
-    eventObject: async (proposalId: string): Promise<any> => (await proposalDb.getProposal(proposalId)),
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    notifyUserFilter: async (proposal: any): Promise<string[]> => {
-      return [proposal.proposerId];
-    }
-  },
   [EVENT_TYPES.FUNDING_REQUEST_REJECTED]: {
     eventObject: async (proposalId: string): Promise<any> => (await proposalDb.getProposal(proposalId)),
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -230,5 +223,13 @@ export const eventData: Record<string, IEventData> = {
     notifyUserFilter: async (subscription: any): Promise<string[]> => {
       return [subscription.userId];
     }
-  }
+  },
+  [EVENT_TYPES.REQUEST_TO_JOIN_EXECUTED]: {
+    eventObject: async (proposalId: string): Promise<any> => (await proposalDb.getProposal(proposalId)),
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    notifyUserFilter: async (proposal: any): Promise<string[]> => {
+      return [proposal.proposerId];
+    }
+  },
+
 };

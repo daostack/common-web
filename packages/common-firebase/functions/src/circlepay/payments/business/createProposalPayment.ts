@@ -121,6 +121,14 @@ export const createProposalPayment = async (payload: yup.InferType<typeof create
       ? 'confirmed'
       : payment.status
   });
+  // payment was successful -> notify user he's now a member
+  if (payment.status === 'confirmed') {
+    await createEvent({
+      type: EVENT_TYPES.REQUEST_TO_JOIN_EXECUTED,
+      userId: proposal.proposerId,
+      objectId: proposal.id
+    });
+  }
 
   if (options.throwOnFailure && isFailed(payment)) {
     throw new PaymentError(payment.id, payment.circlePaymentId);
