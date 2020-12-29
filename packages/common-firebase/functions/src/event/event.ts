@@ -4,10 +4,10 @@ import { commonDb } from '../common/database';
 import { getAllUsers } from '../util/db/userDbService';
 import { subscriptionDb } from '../subscriptions/database';
 import { paymentDb } from '../circlepay/payments/database';
-import { ISubscriptionPayment } from '../circlepay/payments/types';
 
 import { discussionDb } from '../discussion/database';
 import { discussionMessageDb } from '../discussionMessage/database';
+import { IPaymentEntity } from '../circlepay/payments/types';
 
 interface IEventData {
   eventObject: (eventObjId: string) => any;
@@ -213,7 +213,7 @@ export const eventData: Record<string, IEventData> = {
   [EVENT_TYPES.SUBSCRIPTION_PAYMENT_CONFIRMED]: {
     eventObject: async (paymentId: string): Promise<any> => (await paymentDb.get(paymentId)),
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    notifyUserFilter: async (payment: ISubscriptionPayment): Promise<string[]> => {
+    notifyUserFilter: async (payment: IPaymentEntity): Promise<string[]> => {
       return [payment.userId];
     }
   },

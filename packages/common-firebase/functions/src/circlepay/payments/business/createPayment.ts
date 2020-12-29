@@ -24,8 +24,14 @@ const createPaymentValidationSchema = yup.object({
     .uuid()
     .required(),
 
-  objectId: yup.string()
+  proposalId: yup.string()
     .required(),
+
+  subscriptionId: yup.string()
+    .when('type', {
+      is: 'subscription',
+      then: yup.string().required()
+    }),
 
   ipAddress: yup.string()
     .required(),
@@ -55,10 +61,10 @@ const createPaymentValidationSchema = yup.object({
 
 interface ICreatePaymentPayload extends yup.InferType<typeof createPaymentValidationSchema> {
   /**
-   * This is the ID of the object that we are charging (either the subscription or proposal id). It is used
-   * as idempotency key, so we don't charge more than one time for one thing (@todo figure out the subscription)
+   * This is the ID of the object that we are charging (the proposal in this case). It is used
+   * as idempotency key, so we don't charge more than one time for one thing
    */
-  objectId: string;
+  proposalId: string;
 
   /**
    * This is the amount that the source will be charged in US dollar cents
@@ -93,7 +99,7 @@ export const createPayment = async (payload: ICreatePaymentPayload): Promise<IPa
   const headers = await getCircleHeaders();
   const circleData: ICircleCreatePaymentPayload = {
     amount: {
-      // In our code all money values sould be in cents
+      // In our code all money values should be in cents
       amount: payload.amount / 100,
       currency: 'USD'
     },
@@ -110,7 +116,7 @@ export const createPayment = async (payload: ICreatePaymentPayload): Promise<IPa
     },
 
     idempotencyKey: payload.type === 'one-time'
-      ? payload.objectId
+      ? payload.proposalId
       : v4(), // @todo This will not work for the second subscription payment, so append the
               //    times that the subscription has been charged?
 
@@ -146,10 +152,15 @@ export const createPayment = async (payload: ICreatePaymentPayload): Promise<IPa
     },
 
     type: payload.type,
-    objectId: payload.objectId,
+    proposalId: payload.proposalId,
     userId: user.uid,
     status: response.status,
-    circlePaymentId: response.id
+    circlePaymentId: response.id,
+
+    // Add the subscription ID to the entity if the payment is for subscription
+    ...({
+      subscriptionId: payload.subscriptionId
+    })
   });
 
   logger.debug('New payment created', {

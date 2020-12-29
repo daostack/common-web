@@ -362,7 +362,7 @@ export const notifyData: Record<string, IEventData> = {
     data: async (paymentId) => {
       const payment = await paymentDb.get(paymentId);
       const card = await cardDb.get(payment.source.id);
-      const subscription = await subscriptionDb.get(payment.objectId);
+      const subscription = await subscriptionDb.get(payment.subscriptionId);
       const user = await userDb.get(subscription.userId);
       const commonData = subscription.metadata.common;
 

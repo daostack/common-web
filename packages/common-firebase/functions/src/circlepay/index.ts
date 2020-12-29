@@ -20,6 +20,7 @@ import { createIndependentPayout } from './payouts/business/createIndependentPay
 import { chargeSubscription, chargeSubscriptions, revokeMemberships } from '../subscriptions/business';
 import { subscriptionDb } from '../subscriptions/database';
 import { updatePaymentFromCircle } from './payments/business/updatePaymentFromCircle';
+import { updatePayments } from './payments/helpers';
 
 const runtimeOptions = {
   timeoutSeconds: 540
@@ -93,6 +94,19 @@ circlepay.get('/payments/update', async (req, res, next) => {
     res,
     next,
     successMessage: 'Payment update succeeded'
+  });
+});
+
+circlepay.get('/payments/upgrade', async (req, res, next) => {
+  await responseExecutor(async () => {
+    logger.notice('Upgrading payment from object ID usage');
+
+    await updatePayments();
+  }, {
+    req,
+    res,
+    next,
+    successMessage: 'Payments updated successfully'
   });
 });
 

@@ -1,4 +1,4 @@
-import { IBaseEntity } from '../../util/types';
+import { IBaseEntity, Nullable } from '../../util/types';
 
 export type PaymentType = 'one-time' | 'subscription';
 export type PaymentStatus = 'pending' | 'confirmed' | 'paid' | 'failed';
@@ -46,9 +46,15 @@ interface IPaymentEntityBase extends IBaseEntity {
   source: IPaymentSource;
 
   /**
-   * The ID of the object, for which the payment was created
+   * The ID of the proposal, for which the payment was created
    */
-  objectId: string;
+  proposalId: string;
+
+  /**
+   * The ID of the subscription, for which the payment was created
+   * if created for subscription. Undefined otherwise
+   */
+  subscriptionId?: Nullable<string>;
 
   /**
    * The ID of the user that was charged. Useful for retrieving all
@@ -109,16 +115,6 @@ export interface IPaymentFailureReason {
    * from the Circle documentation. Can be shown to the user
    */
   errorDescription: string;
-}
-
-// Exports and unions
-
-export interface ISubscriptionPayment extends IPaymentEntityBase {
-  type: 'subscription';
-}
-
-export interface IProposalPayment extends IPaymentEntityBase {
-  type: 'one-time';
 }
 
 // Payment divided by their type

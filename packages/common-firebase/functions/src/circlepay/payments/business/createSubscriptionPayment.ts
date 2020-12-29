@@ -1,6 +1,5 @@
 import * as yup from 'yup';
 
-import { ISubscriptionPayment } from '../types';
 import { validate } from '../../../util/validate';
 import { subscriptionDb } from '../../../subscriptions/database';
 import { createPayment } from './createPayment';
@@ -10,6 +9,7 @@ import { createEvent } from '../../../util/db/eventDbService';
 import { isFinalized, isSuccessful } from '../helpers';
 import { handleFailedSubscriptionPayment, handleSuccessfulSubscriptionPayment } from '../../../subscriptions/business';
 import { proposalDb } from '../../../proposals/database';
+import { IPaymentEntity } from '../types';
 
 const createSubscriptionPaymentValidationSchema = yup.object({
   subscriptionId: yup.string()
@@ -24,7 +24,7 @@ const createSubscriptionPaymentValidationSchema = yup.object({
 });
 
 
-export const createSubscriptionPayment = async (payload: yup.InferType<typeof createSubscriptionPaymentValidationSchema>): Promise<ISubscriptionPayment> => {
+export const createSubscriptionPayment = async (payload: yup.InferType<typeof createSubscriptionPaymentValidationSchema>): Promise<IPaymentEntity> => {
   // Validate the data
   await validate(payload, createSubscriptionPaymentValidationSchema);
 
@@ -42,7 +42,9 @@ export const createSubscriptionPayment = async (payload: yup.InferType<typeof cr
 
     type: 'subscription',
     amount: subscription.amount,
-    objectId: subscription.id
+
+    proposalId: subscription.proposalId,
+    subscriptionId: subscription.id
   });
 
 
@@ -100,5 +102,5 @@ export const createSubscriptionPayment = async (payload: yup.InferType<typeof cr
     logger.warn('Payment is not in finalized or successful state after polling', { payment });
   }
 
-  return payment as ISubscriptionPayment;
+  return payment;
 };

@@ -19,5 +19,11 @@ export const updatePaymentInDatabase = async (payment: IPaymentEntity): Promise<
     .doc(paymentDoc.id)
     .update(paymentDoc);
 
+  logger.info('Updating payment', {
+    updatedPayment: paymentDoc,
+    updatedAt: paymentDoc.updatedAt,
+    previousUpdateAt: payment.updatedAt
+  });
+
   return paymentDoc;
 };

@@ -1,6 +1,5 @@
 import * as yup from 'yup';
 
-import { IProposalPayment } from '../types';
 import { CommonError, PaymentError } from '../../../util/errors';
 import { validate } from '../../../util/validate';
 import { proposalDb } from '../../../proposals/database';
@@ -10,6 +9,7 @@ import { pollPayment } from './pollPayment';
 import { isFailed } from '../helpers/statusHelper';
 import { EVENT_TYPES } from '../../../event/event';
 import { createEvent } from '../../../util/db/eventDbService';
+import { IPaymentEntity } from '../types';
 
 const createProposalPaymentValidationSchema = yup.object({
   proposalId: yup.string()
@@ -41,8 +41,9 @@ const createPaymentDefaultOptions: ICreatePaymentOptions = {
  * @throws { PaymentError } - If the payment fails and the throw option is true
  *
  * @param payload
+ * @param createPaymentOptions
  */
-export const createProposalPayment = async (payload: yup.InferType<typeof createProposalPaymentValidationSchema>, createPaymentOptions?: Partial<ICreatePaymentOptions>): Promise<IProposalPayment> => {
+export const createProposalPayment = async (payload: yup.InferType<typeof createProposalPaymentValidationSchema>, createPaymentOptions?: Partial<ICreatePaymentOptions>): Promise<IPaymentEntity> => {
   const options = {
     ...createPaymentDefaultOptions,
     ...createPaymentOptions
@@ -74,7 +75,7 @@ export const createProposalPayment = async (payload: yup.InferType<typeof create
 
     type: 'one-time',
     amount: proposal.join.funding,
-    objectId: proposal.id
+    proposalId: proposal.id
   });
 
   // Attach the payment to the proposal
@@ -135,5 +136,5 @@ export const createProposalPayment = async (payload: yup.InferType<typeof create
   }
 
   // Return the payment
-  return payment as IProposalPayment;
+  return payment;
 };
