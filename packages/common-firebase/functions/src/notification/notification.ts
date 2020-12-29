@@ -76,8 +76,8 @@ export const notifyData: Record<string, IEventData> = {
             log: 'Successfully created common',
             commonId: commonData.id,
             commonName: commonData.name,
-            description: commonData.metadata.description,
-            about: commonData.metadata.byline,
+            tagline: commonData.metadata.byline,
+            about: commonData.metadata.description,
             paymentType: 'one-time',
             minContribution: commonData.metadata.minFeeToJoin
           }

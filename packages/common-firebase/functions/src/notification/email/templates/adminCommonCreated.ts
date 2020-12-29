@@ -22,7 +22,7 @@ const template = `
   
   Common Id: {{commonId}}<br />
   Common name: {{commonName}}<br />
-  Short Description: {{description}}<br />
+  Tagline: {{tagline}}<br />
   About: {{about}}<br />
   Payment type: {{paymentType}}<br />
   Min. contribution: {{minContribution}}<br />
@@ -53,7 +53,7 @@ const emailStubs = {
   commonName: {
     required: true
   },
-  description: {
+  tagline: {
     required: true
   },
   about: {
