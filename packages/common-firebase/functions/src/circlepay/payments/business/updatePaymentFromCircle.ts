@@ -1,4 +1,4 @@
-import { circleClient } from '../../circleClient';
+import { circleClient } from '../../client';
 
 import { IPaymentEntity } from '../types';
 import { isFinalized } from '../helpers';

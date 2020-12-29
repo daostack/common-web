@@ -14,6 +14,7 @@ import { userDb } from '../../../users/database';
 import { cardDb } from '../database';
 import { createEvent } from '../../../util/db/eventDbService';
 import { EVENT_TYPES } from '../../../event/event';
+import { pollCard } from './pollCard';
 
 const createCardValidationSchema = yup.object({
   ownerId: yup.string()
@@ -81,6 +82,7 @@ export const createCard = async (payload: CreateCardPayload): Promise<ICardEntit
     }
   };
 
+  // @todo Move this to the circle client
   // Create the card on Circle
   const { data: response } = await externalRequestExecutor<ICircleCreateCardResponse>(async () => {
     return (await axios.post<ICircleCreateCardResponse>(`${circlePayApi}/cards`,
@@ -123,8 +125,14 @@ export const createCard = async (payload: CreateCardPayload): Promise<ICardEntit
       billingDetails: data.billingDetails,
       digits: response.last4,
       network: response.network
+    },
+    verification: {
+      cvv: response.verification.cvv as any
     }
   });
+
+  // After the card is saved check the status of the card
+  await pollCard(card);
 
   // Create event
   await createEvent({

@@ -77,6 +77,8 @@ export const ErrorCodes = {
   ArgumentNullError: 'ArgumentNullError',
   AuthenticationError: 'AuthenticationError',
 
+  CvvVerificationFail: 'CvvVerificationFail',
+
   // ---- External providers errors
   CirclePayError: 'External.CirclePayError'
 };

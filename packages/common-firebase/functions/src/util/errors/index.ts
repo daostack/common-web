@@ -5,4 +5,5 @@ export { ArgumentError } from './ArgumentError';
 export { ValidationError } from './ValidationError';
 export { UnauthorizedError } from './UnauthorizedError';
 export { NotImplementedError } from './NotImplementedError';
+export { CvvVerificationError } from './CvvVerificationError';
 export { UnsupportedVersionError, UnsupportedVersionErrorCode } from './UnsupportedVerionError';

@@ -14,7 +14,7 @@ import { paymentDb } from '../database';
 import { createEvent } from '../../../util/db/eventDbService';
 import { EVENT_TYPES } from '../../../event/event';
 import { cardDb } from '../../cards/database';
-import { CommonError } from '../../../util/errors';
+import { CommonError, CvvVerificationError } from '../../../util/errors';
 
 const createPaymentValidationSchema = yup.object({
   userId: yup.string()
@@ -88,11 +88,23 @@ export const createPayment = async (payload: ICreatePaymentPayload): Promise<IPa
   const user = await userDb.get(payload.userId);
   const card = await cardDb.get(payload.cardId);
 
+  // If the user is not the owner of the card throw an error
   if (card.ownerId !== user.uid) {
     throw new CommonError('Cannot charge card, that you do not own', {
       card,
       user
     });
+  }
+
+  // If the card has failed CVV verification check do not allow the payment
+  // In real cases we should never end up here
+  if (card.verification && card.verification.cvv !== 'pass') {
+    logger.warn('Payment is attempted on card without CVV verification pass', {
+      card,
+      paymentCreationPayload: payload
+    });
+
+    throw new CvvVerificationError(card.id);
   }
 
   // Format the data for circle

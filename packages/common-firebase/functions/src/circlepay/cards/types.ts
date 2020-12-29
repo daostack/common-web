@@ -16,6 +16,11 @@ export interface ICardEntity extends IBaseEntity {
    * Some metadata, useful for the UI
    */
   metadata: ICardMetadata;
+
+  /**
+   * The current state of all card verifications
+   */
+  verification: ICardVerification;
 }
 
 /**
@@ -38,7 +43,8 @@ export interface ICardMetadata {
 }
 
 /**
- *
+ *  The billing details of the user for whom
+ *  the card entity was created
  */
 export interface ICardBillingDetails {
   /**
@@ -79,3 +85,17 @@ export interface ICardBillingDetails {
    */
   postalCode: string;
 }
+
+/**
+ * The latest got verification state of the card from Circle
+ */
+export interface ICardVerification {
+  /**
+   * The current cvv check status of the card
+   */
+  cvv: CardCvvCheck;
+}
+
+// ---- Type helpers
+
+export type CardCvvCheck = 'pending' | 'pass' | 'fail' | 'unavailable';

@@ -6,6 +6,7 @@ import { EventContext } from 'firebase-functions/lib/cloud-functions';
 
 export type valueOf<T> = T[keyof T];
 export type Nullable<T> = T | null | undefined;
+export type Promisable<T> = T | Promise<T>;
 
 export type CirclePaymentStatus = 'pending' | 'confirmed' | 'paid' | 'failed';
 

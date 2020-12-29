@@ -5,6 +5,7 @@ import { ICardEntity } from '../types';
 import { addCard } from './addCard';
 import { getCard } from './getCard';
 import { getCards } from './getCards';
+import { updateCardInDatabase } from './updateCard';
 
 export const CardCollection = db.collection(Collections.Cards)
   .withConverter<ICardEntity>({
@@ -35,5 +36,7 @@ export const cardDb = {
    * Gets an array of card that match the provided options or if
    * no cards are found just an empty array
    */
-  getMany: getCards
+  getMany: getCards,
+
+  update: updateCardInDatabase
 };

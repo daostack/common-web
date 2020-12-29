@@ -1,6 +1,10 @@
 import { CommonError } from './errors';
 import { sleep } from './sleep';
+import { Promisable } from './types';
 
+
+export type IPollAction<T> = () => Promisable<T>;
+export type IPollValidator<T> = (result: T) => Promisable<boolean>;
 
 /**
  * Continually polls an action until it's result is validated successfully
@@ -13,8 +17,8 @@ import { sleep } from './sleep';
  * @param maxAttempts - The max attempt after which an error will be thrown. *Default is 64*
  */
 export const poll = async <T = any>(
-  action: () => T | Promise<T>,
-  validate: (result: T) => boolean | Promise<boolean>,
+  action: IPollAction<T>,
+  validate: IPollValidator<T>,
   interval = 60,
   maxAttempts = 64
 ): Promise<T> => {

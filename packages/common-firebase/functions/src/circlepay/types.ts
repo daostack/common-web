@@ -1,6 +1,7 @@
 // ---- Card related ---- //
 
 import { CirclePaymentStatus } from '../util/types';
+import { CircleCvvCheck } from './client/getCardFromCircle';
 
 // ---- Shared
 
@@ -29,6 +30,10 @@ export interface ICircleCreateCardResponse {
     last4: string;
     createDate: Date;
     updateDate: Date;
+
+    verification: {
+      cvv: CircleCvvCheck;
+    }
   }
 }
 

@@ -1,18 +1,18 @@
 import axios from 'axios';
 
-import { ErrorCodes } from '../constants';
-import { circlePayApi } from '../settings';
-import { externalRequestExecutor } from '../util';
+import { externalRequestExecutor } from '../../util';
+import { circlePayApi } from '../../settings';
+import { ErrorCodes } from '../../constants';
 
-import { ICirclePayment } from './types';
-import { getCircleHeaders } from './index';
+import { getCircleHeaders } from '../index';
+import { ICirclePayment } from '../types';
 
 /**
  * Gets the current state of the payment from Circle
  *
  * @param paymentId - the Circle payment ID (not the local one)
  */
-const getPaymentFromCircle = async (paymentId: string): Promise<ICirclePayment> => {
+export const getPaymentFromCircle = async (paymentId: string): Promise<ICirclePayment> => {
   const headers = await getCircleHeaders();
 
   return externalRequestExecutor<ICirclePayment>(async () => {
@@ -23,6 +23,3 @@ const getPaymentFromCircle = async (paymentId: string): Promise<ICirclePayment> 
   });
 };
 
-export const circleClient = {
-  getPayment: getPaymentFromCircle
-}
