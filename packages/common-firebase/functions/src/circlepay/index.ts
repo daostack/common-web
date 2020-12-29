@@ -5,20 +5,22 @@ import axios from 'axios';
 import * as payoutCrons from './payouts/crons';
 
 import { commonApp, commonRouter, externalRequestExecutor } from '../util';
-import { ICircleNotification } from '../util/types';
 import { responseExecutor } from '../util/responseExecutor';
+import { ICircleNotification } from '../util/types';
 import { CommonError } from '../util/errors';
+import { circlePayApi, getSecret } from '../settings';
+import { ErrorCodes } from '../constants';
+
+
 import { handleNotification } from './notifications/bussiness/handleNotification';
 import { subscribeToNotifications } from './notifications/bussiness/subscribeToNotifications';
-import { circlePayApi, getSecret } from '../settings';
+
 import { createCard } from './cards/business/createCard';
-import { ErrorCodes } from '../constants';
 import { createBankAccount } from './backAccounts/bussiness/createBankAccount';
-import { createProposalPayout } from './payouts/business/createProposalPayout';
+
 import { approvePayout } from './payouts/business/approvePayout';
+import { createProposalPayout } from './payouts/business/createProposalPayout';
 import { createIndependentPayout } from './payouts/business/createIndependentPayout';
-import { chargeSubscription, chargeSubscriptions, revokeMemberships } from '../subscriptions/business';
-import { subscriptionDb } from '../subscriptions/database';
 import { updatePaymentFromCircle } from './payments/business/updatePaymentFromCircle';
 import { updatePayments } from './payments/helpers';
 
@@ -237,29 +239,6 @@ circlepay.get('/payouts/approve', async (req, res, next) => {
   });
 });
 
-circlepay.get('/test', async (req, res) => {
-  await Promise.all([
-    chargeSubscriptions(),
-    revokeMemberships()
-  ]);
-
-  res.send('done');
-});
-
-circlepay.get('/charge/subscription', async (req, res) => {
-  const subscription = await subscriptionDb.get(req.query.id as string);
-
-  try {
-    await chargeSubscription(subscription);
-
-    res.status(200)
-      .send('done');
-  } catch (e) {
-    res.status(500)
-      .send(e);
-  }
-});
-
 export const circlePayCrons = {
   ...payoutCrons
 };
@@ -268,8 +247,6 @@ export const circlePayApp = functions
   .runWith(runtimeOptions)
   .https.onRequest(commonApp(circlepay, {
     unauthenticatedRoutes: [
-      '/payouts/approve',
-      '/charge/subscription',
-      '/test'
+      '/payouts/approve'
     ]
   }));
