@@ -26,7 +26,7 @@
     }
   },
   "payouts": {
-    "approvers": ["jelle@daostack.io"],
+    "approvers": ["jelle@daostack.io", "payout@common.io"],
     "neededApprovals": 1
   },
   "local": "http://localhost:5003/common-daostack/us-central1",
