@@ -19,7 +19,7 @@ export const getPaymentFromCircle = async (paymentId: string): Promise<ICirclePa
     return (await axios.get<ICirclePayment>(`${circlePayApi}/payments/${paymentId}`, headers)).data;
   }, {
     errorCode: ErrorCodes.CirclePayError,
-    message: 'Polling circle call failed'
+    message: `Circle call to GET payment with id ${paymentId} failed`
   });
 };
 

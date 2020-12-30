@@ -56,7 +56,7 @@ export const pollPayment = async (payment: IPaymentEntity, pollPaymentOptions?: 
       return (await axios.get<ICirclePayment>(`${circlePayApi}/payments/${payment.circlePaymentId}`, headers)).data;
     }, {
       errorCode: ErrorCodes.CirclePayError,
-      message: 'Polling circle call failed'
+      message: `Polling Circle call to get payment with id ${payment.circlePaymentId} failed`
     });
   };
 
