@@ -17,7 +17,6 @@ const invalidCommonCreationPayload = {
 const validCommonCreationPayload = {
   name: 'Common Test',
   image: 'https://llandscapes-10674.kxcdn.com/wp-content/uploads/2019/07/lighting.jpg',
-  action: 'to do or not to',
   byline: 'basically im long byline',
   description: 'hey there, am i descriptive',
   contributionType: 'one-time',

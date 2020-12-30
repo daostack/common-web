@@ -87,7 +87,6 @@ export interface ICommonLink {
 }
 
 export interface ICommonMetadata {
-  action: string;
   byline: string;
   description: string;
 

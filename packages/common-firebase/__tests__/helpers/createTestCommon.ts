@@ -7,7 +7,6 @@ export const createTestCommon = async (userId = 'test-user'): Promise<ICommonEnt
   const payload = {
     name: 'Common Test',
     image: 'https://llandscapes-10674.kxcdn.com/wp-content/uploads/2019/07/lighting.jpg',
-    action: 'to do or not to',
     byline: 'basically this is a test common',
     description: 'hey there, am i descriptive',
     contributionType: 'one-time',
