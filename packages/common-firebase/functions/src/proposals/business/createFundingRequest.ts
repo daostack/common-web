@@ -51,7 +51,7 @@ export const createFundingRequest = async (payload: CreateFundingProposalPayload
   await validate<CreateFundingProposalPayload>(payload, createFundingProposalValidationSchema);
 
   // Acquire the necessary data
-  const common = await commonDb.getCommon(payload.commonId);
+  const common = await commonDb.get(payload.commonId);
 
   // Check if user is member of the common
   if (!isCommonMember(common, payload.proposerId)) {

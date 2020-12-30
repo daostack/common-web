@@ -48,7 +48,7 @@ export const createVote = async (payload: CreateVotePayload): Promise<IVoteEntit
 
   // Get the required data
   const proposal = await proposalDb.getProposal(payload.proposalId);
-  const common = await commonDb.getCommon(proposal.commonId);
+  const common = await commonDb.get(proposal.commonId);
 
   // Check if the user is in that common
   if (!isCommonMember(common, payload.voterId)) {

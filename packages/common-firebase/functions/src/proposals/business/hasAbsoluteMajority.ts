@@ -22,7 +22,7 @@ export const hasAbsoluteMajority = async (proposal: IProposalEntity, common?: IC
   }
 
   if(!common) {
-    common = await commonDb.getCommon(proposal.commonId);
+    common = await commonDb.get(proposal.commonId);
   }
 
   const votes = countVotes(proposal);

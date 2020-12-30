@@ -48,12 +48,12 @@ export const onProposalApproved = functions.firestore
           }, { throwOnFailure: true });
 
           // Update common funding info
-          const common = await commonDb.getCommon(proposal.commonId);
+          const common = await commonDb.get(proposal.commonId);
 
           common.raised += proposal.join.funding;
           common.balance += proposal.join.funding;
 
-          await commonDb.updateCommon(common);
+          await commonDb.update(common);
 
           // Add the user as member
           await addCommonMemberByProposalId(proposal.id);

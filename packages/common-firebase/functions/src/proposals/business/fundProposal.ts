@@ -16,7 +16,7 @@ import FieldValue = admin.firestore.FieldValue;
  */
 export const fundProposal = async (proposalId: string): Promise<void> => {
   const proposal = await proposalDb.getProposal(proposalId);
-  const common = await commonDb.getCommon(proposal.commonId);
+  const common = await commonDb.get(proposal.commonId);
 
   if (proposal.type !== 'fundingRequest') {
     throw new CommonError('Only funding proposal can be funded');
@@ -46,7 +46,7 @@ export const fundProposal = async (proposalId: string): Promise<void> => {
 
   // Persist the changes asynchronously
   await Promise.all([
-    commonDb.updateCommon(common),
+    commonDb.update(common),
     proposalDb.update(proposal)
   ]);
 };

@@ -2,7 +2,7 @@ import { ArgumentError, CommonError } from '../../util/errors';
 import { NotFoundError } from '../../util/errors';
 import { Nullable } from '../../util/types';
 
-import { proposalsCollection } from './index';
+import { ProposalsCollection } from './index';
 import { IFundingRequestProposal, IProposalEntity } from '../proposalTypes';
 
 /**
@@ -21,7 +21,7 @@ export const getFundingRequest = async (proposalId: string): Promise<IFundingReq
     throw new ArgumentError('proposalId', proposalId);
   }
 
-  const proposal = (await proposalsCollection
+  const proposal = (await ProposalsCollection
     .doc(proposalId)
     .get()).data() as Nullable<IProposalEntity>;
 

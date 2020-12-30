@@ -57,7 +57,7 @@ export const createJoinRequest = async (payload: CreateRequestToJoinPayload): Pr
   await validate(payload, createRequestToJoinValidationSchema);
 
   // Acquire the required data
-  const common = await commonDb.getCommon(payload.commonId);
+  const common = await commonDb.get(payload.commonId);
 
   // @todo Make it work without difference for running in test mode (tests are needed for circlepay)
   // Check if the card is owned by the user (only if not in tests)

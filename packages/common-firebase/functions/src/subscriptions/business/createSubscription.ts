@@ -44,7 +44,7 @@ export const createSubscription = async (proposal: IProposalEntity): Promise<ISu
 
   // Acquire the required data
   const card = await cardDb.get(proposal.join.cardId);
-  const common = await commonDb.getCommon(proposal.commonId);
+  const common = await commonDb.get(proposal.commonId);
 
   // Save the created subscription
   const subscription: ISubscriptionEntity = await subscriptionDb.add({

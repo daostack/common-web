@@ -9,7 +9,7 @@ import { updateProposal } from '../../database/updateProposal';
 
 export const processVote = async (vote: IVoteEntity): Promise<void> => {
   const proposal = await proposalDb.getProposal(vote.proposalId);
-  const common = await commonDb.getCommon(vote.commonId);
+  const common = await commonDb.get(vote.commonId);
 
   const votesBefore = countVotes(proposal);
 

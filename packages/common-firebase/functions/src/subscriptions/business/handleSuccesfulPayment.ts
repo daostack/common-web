@@ -53,14 +53,14 @@ export const handleSuccessfulSubscriptionPayment = async (subscription: ISubscri
 
   // Update the common
   const proposal = await proposalDb.getJoinRequest(subscription.proposalId);
-  const common = await commonDb.getCommon(proposal.commonId);
+  const common = await commonDb.get(proposal.commonId);
 
   common.balance = FieldValue.increment(proposal.join.funding) as any;
   common.raised = FieldValue.increment(proposal.join.funding) as any;
 
   // Save the updated data
   await Promise.all([
-    commonDb.updateCommon(common),
+    commonDb.update(common),
     subscriptionDb.update(subscription),
     proposalDb.update({
       id: subscription.proposalId,

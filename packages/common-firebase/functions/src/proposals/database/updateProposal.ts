@@ -1,7 +1,7 @@
 import { firestore } from 'firebase-admin';
 
 import { IProposalEntity } from '../proposalTypes';
-import { proposalsCollection } from './index';
+import { ProposalsCollection } from './index';
 
 type WithRequired<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>;
 
@@ -17,7 +17,7 @@ export const updateProposal = async (proposal: WithRequired<IProposalEntity, 'id
     updatedAt: firestore.Timestamp.now()
   };
 
-  await proposalsCollection
+  await ProposalsCollection
     .doc(proposalDoc.id)
     .update(proposalDoc);
 

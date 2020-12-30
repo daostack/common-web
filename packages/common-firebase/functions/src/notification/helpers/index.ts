@@ -1,4 +1,4 @@
-export const getFundingRequestAcceptedTemplate = (country: string, amount: number) => {
+export const getFundingRequestAcceptedTemplate = (country: string, amount: number): string => {
   if (amount) {
     return !country
       ? 'userFundingRequestAcceptedUnknown'

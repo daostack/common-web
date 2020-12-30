@@ -1,6 +1,6 @@
 import admin from 'firebase-admin';
 
-import { proposalsCollection } from './index';
+import { ProposalsCollection } from './index';
 import { IProposalEntity, ProposalState, ProposalType } from '../proposalTypes';
 import QuerySnapshot = admin.firestore.QuerySnapshot;
 
@@ -17,7 +17,7 @@ interface IGetProposalsOptions {
  * @param proposalId - The ID of the proposal for witch we want to retrieve the proposals
  */
 export const getProposals = async (options: IGetProposalsOptions): Promise<IProposalEntity[]> => {
-  let proposalsQuery: any = proposalsCollection;
+  let proposalsQuery: any = ProposalsCollection;
 
   if (options.state) {
     const operator = typeof options.state === 'string' ? '==' : 'in';

@@ -2,7 +2,7 @@ import { ArgumentError } from '../../util/errors';
 import { NotFoundError } from '../../util/errors';
 import { Nullable } from '../../util/types';
 
-import { proposalsCollection } from './index';
+import { ProposalsCollection } from './index';
 import { IProposalEntity } from '../proposalTypes';
 
 /**
@@ -20,7 +20,7 @@ export const getProposal = async (proposalId: string): Promise<IProposalEntity> 
     throw new ArgumentError('proposalId', proposalId);
   }
 
-  const proposal = (await proposalsCollection
+  const proposal = (await ProposalsCollection
     .doc(proposalId)
     .get()).data() as Nullable<IProposalEntity>;
 

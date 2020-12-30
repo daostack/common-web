@@ -21,7 +21,7 @@ export const addCommonMemberByProposalId = async (proposalId: string): Promise<v
     });
   }
 
-  const common = await commonDb.getCommon(proposal.commonId);
+  const common = await commonDb.get(proposal.commonId);
 
   logger.info('Adding new member to common', {
     common,
@@ -45,7 +45,7 @@ const addCommonMember = async (common: ICommonEntity, userId: string): Promise<I
       userId
     });
 
-    await commonDb.updateCommon(common);
+    await commonDb.update(common);
 
     // Emmit the event
     await createEvent({

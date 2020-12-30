@@ -2,7 +2,7 @@ import { ArgumentError } from '../../../util/errors';
 import { NotFoundError } from '../../../util/errors';
 import { Nullable } from '../../../util/types';
 
-import { votesCollection } from '../index';
+import { VotesCollection } from '../index';
 import { IVoteEntity } from '../../voteTypes';
 
 /**
@@ -20,7 +20,7 @@ export const getVote = async (voteId: string): Promise<IVoteEntity> => {
     throw new ArgumentError('voteId', voteId);
   }
 
-  const vote = (await votesCollection
+  const vote = (await VotesCollection
     .doc(voteId)
     .get()).data() as Nullable<IVoteEntity>;
 

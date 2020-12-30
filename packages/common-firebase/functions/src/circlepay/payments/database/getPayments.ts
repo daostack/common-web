@@ -20,16 +20,16 @@ interface IGetCardOptions {
  * @param options - The options for filtering the payments
  */
 export const getPayments = async (options: IGetCardOptions): Promise<IPaymentEntity[]> => {
-  const paymentsQuery: any = PaymentsCollection;
+  let paymentsQuery: any = PaymentsCollection;
 
   if (options.subscriptionId) {
-    paymentsQuery
+    paymentsQuery = paymentsQuery
       .where('type', '==', 'subscription')
       .where('subscription.id', '==', options.subscriptionId);
   }
 
   if (options.status) {
-    paymentsQuery
+    paymentsQuery = paymentsQuery
       .where('status', '==', options.status);
   }
 

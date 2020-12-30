@@ -32,7 +32,7 @@ export const removeCommonMember = async (common: ICommonEntity, memberId: string
   );
 
   // Persist the changes
-  await commonDb.updateCommon(common);
+  await commonDb.update(common);
 
   // Create event
   await createEvent({

@@ -5,7 +5,7 @@ import { v4 } from 'uuid';
 import { BaseEntityType, SharedOmit } from '../../util/types';
 
 import { IProposalEntity } from '../proposalTypes';
-import { proposalsCollection } from './index';
+import { ProposalsCollection } from './index';
 
 
 type OmittedProperties = 'votes' | 'state' | 'paymentState' | 'votesFor' | 'votesAgainst';
@@ -39,7 +39,7 @@ export const addProposal = async (proposal: SharedOmit<IProposalEntity, BaseEnti
     proposalDoc['testCreated'] = true;
   }
 
-  await proposalsCollection
+  await ProposalsCollection
     .doc(proposalDoc.id)
     .set(proposalDoc);
 

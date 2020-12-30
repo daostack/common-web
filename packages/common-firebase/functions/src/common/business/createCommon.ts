@@ -82,7 +82,7 @@ export const createCommon = async (payload: CreateCommonPayload): Promise<ICommo
 
   // @todo Check if user exists
 
-  const common = await commonDb.addCommon({
+  const common = await commonDb.add({
     name,
     image,
     fundingGoalDeadline,

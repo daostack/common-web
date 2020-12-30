@@ -48,7 +48,7 @@ export const notifyData: Record<string, IEventData> = {
   [EVENT_TYPES.COMMON_CREATED]: {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (objectId: string) => {
-      const commonData = (await commonDb.getCommon(objectId));
+      const commonData = (await commonDb.get(objectId));
       return {
         commonData,
         userData: (await getUserById(commonData.members[0].userId)).data()
@@ -92,7 +92,7 @@ export const notifyData: Record<string, IEventData> = {
     data: async (proposalId: string) => {
       const proposalData = (await proposalDb.getProposal(proposalId));
       return {
-        commonData: (await commonDb.getCommon(proposalData.commonId)),
+        commonData: (await commonDb.get(proposalData.commonId)),
         userData: (await getUserById(proposalData.proposerId)).data()
       };
     },
@@ -115,7 +115,7 @@ export const notifyData: Record<string, IEventData> = {
       const proposalData = (await proposalDb.getProposal(objectId));
       return {
         proposalData,
-        commonData: (await commonDb.getCommon(proposalData.commonId)),
+        commonData: (await commonDb.get(proposalData.commonId)),
         userData: (await getUserById(proposalData.proposerId)).data()
       };
     },
@@ -133,7 +133,7 @@ export const notifyData: Record<string, IEventData> = {
   [EVENT_TYPES.COMMON_WHITELISTED]: {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (commonId: string) => {
-      const commonData = (await commonDb.getCommon(commonId));
+      const commonData = (await commonDb.get(commonId));
       return {
         commonData,
         userData: (await getUserById(commonData.metadata.founderId)).data()
@@ -176,7 +176,7 @@ export const notifyData: Record<string, IEventData> = {
 
       return {
         proposalData,
-        commonData: (await commonDb.getCommon(proposalData.commonId)),
+        commonData: (await commonDb.get(proposalData.commonId)),
         userData: (await getUserById(proposalData.proposerId)).data(),
         cardMetadata: cards[0]?.metadata
       };
@@ -196,7 +196,7 @@ export const notifyData: Record<string, IEventData> = {
       return [
         {
           to: userData.email,
-          templateKey: userTemplate,
+          templateKey: (userTemplate as any),
           emailStubs: {
             userName: getNameString(userData),
             proposal: proposalData.description.title,
@@ -236,7 +236,7 @@ export const notifyData: Record<string, IEventData> = {
     data: async (proposalId: string) => {
       const proposalData = (await proposalDb.getProposal(proposalId));
       return {
-        commonData: (await commonDb.getCommon(proposalData.commonId)),
+        commonData: (await commonDb.get(proposalData.commonId)),
         userData: (await getUserById(proposalData.proposerId)).data()
       };
     },
@@ -261,7 +261,7 @@ export const notifyData: Record<string, IEventData> = {
     data: async (objectId: string) => {
       const proposalData = (await proposalDb.getProposal(objectId));
       return {
-        commonData: (await commonDb.getCommon(proposalData.commonId))
+        commonData: (await commonDb.get(proposalData.commonId))
       };
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -287,7 +287,7 @@ export const notifyData: Record<string, IEventData> = {
 
       return {
         sender: (await getUserById(discussionMessage.ownerId)).data(),
-        commonData: (await commonDb.getCommon(commonId)),
+        commonData: (await commonDb.get(commonId)),
         path
       };
     },
@@ -306,7 +306,7 @@ export const notifyData: Record<string, IEventData> = {
     data: async (proposalId: string) => {
       const proposalData = (await proposalDb.getProposal(proposalId));
       return {
-        commonData: (await commonDb.getCommon(proposalData.commonId)),
+        commonData: (await commonDb.get(proposalData.commonId)),
         userData: (await getUserById(proposalData.proposerId)).data()
       };
     },

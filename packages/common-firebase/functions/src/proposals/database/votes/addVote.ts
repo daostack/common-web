@@ -4,7 +4,7 @@ import { firestore } from 'firebase-admin';
 import { IVoteEntity } from '../../voteTypes';
 import { BaseEntityType } from '../../../util/types';
 
-import { votesCollection } from '../index';
+import { VotesCollection } from '../index';
 
 /**
  * Creates a vote document and saves it in the database
@@ -25,7 +25,7 @@ export const addVote = async (vote: Omit<IVoteEntity, BaseEntityType>): Promise<
     voteDoc['testCreated'] = true;
   }
 
-  await votesCollection
+  await VotesCollection
     .doc(voteDoc.id)
     .set(voteDoc);
 

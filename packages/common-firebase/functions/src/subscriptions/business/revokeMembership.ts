@@ -7,7 +7,7 @@ import { commonDb } from '../../common/database';
 import { removeCommonMember } from '../../common/business/removeCommonMember';
 
 export const revokeMembership = async (subscription: ISubscriptionEntity): Promise<void> => {
-  const common = await commonDb.getCommon(subscription.metadata.common.id);
+  const common = await commonDb.get(subscription.metadata.common.id);
 
 
   await removeCommonMember(common, subscription.userId)

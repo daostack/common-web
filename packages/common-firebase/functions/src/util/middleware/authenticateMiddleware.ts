@@ -5,7 +5,6 @@ import { CommonError, UnauthorizedError } from '../errors';
 import { ErrorCodes, StatusCodes } from '../../constants';
 
 export const authenticate: RequestHandler = async (req, res, next) => {
-
   try {
     if (!req.headers.authorization || typeof req.headers.authorization !== 'string') {
       throw new UnauthorizedError();
