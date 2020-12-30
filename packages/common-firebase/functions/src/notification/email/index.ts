@@ -9,7 +9,10 @@ import { adminPayInSuccess } from './templates/adminPayInSuccess';
 import { adminCommonCreated } from './templates/adminCommonCreated';
 import { userCommonFeatured } from './templates/userCommonFeatured';
 import { requestToJoinSubmitted } from './templates/requestToJoinSubmitted';
-import { userFundingRequestAccepted } from './templates/userFundingRequestAccepted';
+import { userFundingRequestAcceptedUnknown } from './templates/userFundingRequestAcceptedUnknown';
+import { userFundingRequestAcceptedIsraeli } from './templates/userFundingRequestAcceptedIsraeli';
+import { userFundingRequestAcceptedForeign } from './templates/userFundingRequestAcceptedForeign';
+import { userFundingRequestAcceptedZeroAmount } from './templates/userFundingRequestAcceptedZeroAmount';
 import { userJoinedButFailedPayment } from './templates/userJoinedButFailedPayment';
 import { adminFundingRequestAccepted } from './templates/adminFundingRequestAccepted';
 import { adminPreauthorizationFailed } from './templates/adminPreauthorizationFailed';
@@ -25,7 +28,10 @@ const templates = {
   adminPreauthorizationFailed,
   userCommonCreated,
   userCommonFeatured,
-  userFundingRequestAccepted,
+  userFundingRequestAcceptedUnknown,
+  userFundingRequestAcceptedIsraeli,
+  userFundingRequestAcceptedForeign,
+  userFundingRequestAcceptedZeroAmount,
   userJoinedButFailedPayment,
   userJoinedSuccess,
   adminJoinedButPaymentFailed,

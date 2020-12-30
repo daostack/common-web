@@ -2,7 +2,7 @@ const template = `
 Hello {{userName}},
 <br /><br />
 Congratulations! <br />
-Your proposal: {{proposal}} has been approved. To receive the funds you will need to provide your bank account details, as well as some identification information.
+Your proposal: {{proposal}} to {{commonName}} has been approved. To receive the funds ({{fundingAmount}}) you will need to provide your bank account details, as well as some identification information.
 <br /><br />
 Please fill all the required information on the attached form and send it back to us at: payout@common.io
 <br /><br />
@@ -19,12 +19,18 @@ const emailStubs = {
   proposal: {
     required: true
   },
+  fundingAmount: {
+    required: true
+  },
+  commonName: {
+    required: true
+  },
   supportChatLink: {
     required: true
   }
 };
 
-export const userFundingRequestAccepted = {
+export const userFundingRequestAcceptedForeign = {
   subject: 'Your funding proposal was approved',
   emailStubs,
   template

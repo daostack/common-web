@@ -15,6 +15,7 @@ import { paymentDb } from '../circlepay/payments/database';
 import { cardDb } from '../circlepay/cards/database';
 import { ICardEntity } from '../circlepay/cards/types';
 import moment from 'moment';
+import { getFundingRequestAcceptedTemplate } from './helpers';
 
 const messaging = admin.messaging();
 
@@ -30,11 +31,12 @@ export interface INotification {
 }
 
 const memberAddedNotification = (commonData) => ({
-    title: 'Congrats!',
-    body: `Your request to join "${commonData.name}" was accepted, you are now a member!`,
-    image: commonData.image || '',
-    path: `CommonProfile/${commonData.id}`
-  });
+  title: 'Congrats!',
+  body: `Your request to join "${commonData.name}" was accepted, you are now a member!`,
+  image: commonData.image || '',
+  path: `CommonProfile/${commonData.id}`
+});
+
 
 interface IEventData {
   data: (eventObj: string) => any;
@@ -53,7 +55,7 @@ export const notifyData: Record<string, IEventData> = {
       };
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ({ commonData, userData }) : ISendTemplatedEmailData[] => {
+    email: ({ commonData, userData }): ISendTemplatedEmailData[] => {
       return [
         {
           to: userData.email,
@@ -95,7 +97,7 @@ export const notifyData: Record<string, IEventData> = {
       };
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ({ commonData, userData }) : ISendTemplatedEmailData => {
+    email: ({ commonData, userData }): ISendTemplatedEmailData => {
       return {
         to: userData.email,
         templateKey: 'requestToJoinSubmitted',
@@ -147,7 +149,7 @@ export const notifyData: Record<string, IEventData> = {
       };
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ({ commonData, userData }) : ISendTemplatedEmailData => {
+    email: ({ commonData, userData }): ISendTemplatedEmailData => {
       return {
         to: userData.email,
         templateKey: 'userCommonFeatured',
@@ -163,12 +165,20 @@ export const notifyData: Record<string, IEventData> = {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (objectId: string) => {
       const proposalData = (await proposalDb.getProposal(objectId));
+      const cards = await cardDb.getMany({
+        ownerId: proposalData.proposerId,
+
+        sort: {
+          orderByDesc: 'updatedAt',
+          limit: 1
+        }
+      });
+
       return {
         proposalData,
         commonData: (await commonDb.getCommon(proposalData.commonId)),
-        userData: (await getUserById(proposalData.proposerId)).data()
-        //paymentData: (await Utils.getPaymentByProposalId(proposalData.id))?.data() //@question funding request has no
-        // payment though
+        userData: (await getUserById(proposalData.proposerId)).data(),
+        cardMetadata: cards[0]?.metadata
       };
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -181,14 +191,20 @@ export const notifyData: Record<string, IEventData> = {
       };
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ({ userData, proposalData, commonData /*paymentData*/ }) : ISendTemplatedEmailData[] => {
+    email: ({ userData, proposalData, commonData, cardMetadata }): ISendTemplatedEmailData[] => {
+      const userTemplate = getFundingRequestAcceptedTemplate(cardMetadata?.billingDetails?.country, proposalData.fundingRequest.amount);
       return [
         {
           to: userData.email,
-          templateKey: 'userFundingRequestAccepted',
+          templateKey: userTemplate,
           emailStubs: {
             userName: getNameString(userData),
-            proposal: proposalData.description.title
+            proposal: proposalData.description.title,
+            fundingAmount: (proposalData.fundingRequest.amount / 100).toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD'
+            }),
+            commonName: commonData.name
           }
         },
         {
@@ -197,13 +213,16 @@ export const notifyData: Record<string, IEventData> = {
           emailStubs: {
             commonName: commonData.name,
             commonLink: Utils.getCommonLink(commonData.id),
-            commonBalance: (commonData.balance / 100).toLocaleString('en-US', {style: 'currency', currency: 'USD'}),
+            commonBalance: (commonData.balance / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
             commonId: commonData.id,
             proposalId: proposalData.id,
             userName: getNameString(userData),
             userEmail: userData.email,
             userId: userData.uid,
-            fundingAmount: (proposalData.fundingRequest.amount / 100).toLocaleString('en-US', {style: 'currency', currency: 'USD'}),
+            fundingAmount: (proposalData.fundingRequest.amount / 100).toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD'
+            }),
             submittedOn: proposalData.createdAt.toDate(),
             passedOn: new Date(),
             log: 'Funding request accepted'
@@ -224,7 +243,7 @@ export const notifyData: Record<string, IEventData> = {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     notification: async ({ commonData }) => memberAddedNotification(commonData),
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ({ commonData, userData }) : ISendTemplatedEmailData => {
+    email: ({ commonData, userData }): ISendTemplatedEmailData => {
       return {
         to: userData.email,
         templateKey: 'userJoinedSuccess',
@@ -292,7 +311,7 @@ export const notifyData: Record<string, IEventData> = {
       };
     },
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ({ commonData, userData }) : ISendTemplatedEmailData => {
+    email: ({ commonData, userData }): ISendTemplatedEmailData => {
       return {
         to: userData.email,
         templateKey: 'userJoinedButFailedPayment',
@@ -376,8 +395,8 @@ export const notifyData: Record<string, IEventData> = {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     notification: async ({ commonData, subscription }) => (
       subscription.charges === 1
-      ? memberAddedNotification(commonData)
-      : null
+        ? memberAddedNotification(commonData)
+        : null
     ),
     email: ({ subscription, user, card }: {
       subscription: ISubscriptionEntity,
@@ -387,7 +406,7 @@ export const notifyData: Record<string, IEventData> = {
       to: user.email,
       templateKey: 'subscriptionCharged',
       subjectStubs: {
-        commonName: subscription.metadata.common.name,
+        commonName: subscription.metadata.common.name
       },
       emailStubs: {
         firstName: user.firstName,

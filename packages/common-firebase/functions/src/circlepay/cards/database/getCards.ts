@@ -12,6 +12,26 @@ interface IGetCardOptions {
    * by the circle card ID
    */
   circleCardId?: string;
+
+  sort?: {
+    /**
+     * Order the result set by this field
+     * in descending order
+     */
+    orderByDesc?: keyof ICardEntity;
+
+    /**
+     * Order the results set by this field
+     * in ascending order
+     */
+    orderByAsc?: keyof ICardEntity;
+
+    /**
+     * The maximum number of records that can
+     * be returned
+     */
+    limit?: number;
+  }
 }
 
 /**
@@ -28,6 +48,20 @@ export const getCards = async (options: IGetCardOptions): Promise<ICardEntity[]>
 
   if (options.circleCardId) {
     cardsQuery = cardsQuery.where('circleCardId', '==', options.circleCardId);
+  }
+
+  if (options.sort) {
+    const { sort } = options;
+
+    if (sort.orderByAsc) {
+      cardsQuery = cardsQuery.orderBy(sort.orderByAsc);
+    } else if (sort.orderByDesc) {
+      cardsQuery = cardsQuery.orderBy(sort.orderByDesc, 'desc');
+    }
+
+    if (sort.limit) {
+      cardsQuery = cardsQuery.limit(sort.limit);
+    }
   }
 
   return (await cardsQuery.get()).docs
