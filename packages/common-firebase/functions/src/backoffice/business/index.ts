@@ -2,6 +2,7 @@ import { backofficeDb } from '../database';
 import { getSecret } from '../../settings';
 import { env } from '../../constants';
 import { google } from 'googleapis'
+import { date } from '../helper'
 
 
 const SERVICE_ACCOUNT = 'SERVICE_ACCOUNT' 
@@ -29,47 +30,69 @@ export async function fillPayOutSheet():Promise<any> {
         'Last name',
         'Common id',
         'Common name',
+        'Init Link',
         'Payment id',
         'Payment status',
         'Payment amount',
         'Fees',
         'Payment creation date',
-        'Payment updated'
+        'Payment updated',
+
       ]];
+
+      let row = 2;
       for (const key in data) {
           // eslint-disable-next-line no-prototype-builtins
           if (data.hasOwnProperty(key)) {
               const cells = []
               cells.push(data[key].proposal.id)
               cells.push(data[key].proposal.fundingRequest.amount/100)
-              cells.push(new Date(data[key].proposal.createdAt.toDate()).toDateString())
-              cells.push(new Date(data[key].proposal.updatedAt.toDate()).toDateString())
+              cells.push(date(new Date(data[key].proposal.createdAt.toDate())))
+              cells.push(date(new Date(data[key].proposal.updatedAt.toDate())))
               cells.push(data[key].proposal.proposerId)
               cells.push(data[key].user.email)
               cells.push(data[key].user.firstName)
               cells.push(data[key].user.lastName)
               cells.push(data[key].common.id)
               cells.push(data[key].common.name)
-              if(data[key].payment){
-                cells.push(data[key].payment.id)
-                cells.push(data[key].payment.status)
-                cells.push(data[key].payment.amount? `${data[key].payment.amount.amount} ${data[key].payment.amount.currency}` : '' )
-                cells.push(data[key].payment.fee/100)
-                const creationDate = data[key].payment.creationDate.split(/\D+/)
-                const updateDate = data[key].payment.updateDate.split(/\D+/)
-                cells.push(new Date(Date.UTC(creationDate[0], --creationDate[1], creationDate[2], creationDate[3], creationDate[4], creationDate[5], creationDate[6])).toDateString())
-                cells.push(new Date(Date.UTC(updateDate[0], --updateDate[1], updateDate[2], updateDate[3], updateDate[4], updateDate[5], updateDate[6])).toDateString())
-              } else {
-                cells.push("")
-                cells.push("")
-                cells.push("")
-                cells.push("")
-                cells.push("")
-                cells.push("")
+              
+              cells.push(`=createInitLink(R${row}:AG${row}, A${row})`);
+
+
+              if(data[key].payout){
+                //this is init link, must be empty
+
+                cells.push(data[key].payout.id);
+
+                let status = '';
+                if(!data[key].payout.executed){
+                  status = 'initiated';
+                } else {
+                  if(data[key].payout.status === 'pending'){
+                    status = 'pending';
+  
+                  }
+                  if(data[key].payout.status === 'complete'){
+                    status = 'complete';
+  
+                  }
+                  if(data[key].payout.status === 'failed'){
+                    status = 'failed';
+  
+                  }
+                }
+                cells.push(status);
+                cells.push(data[key].payout.amount);
+                //this is fees
+                cells.push("");
+                cells.push(date(new Date(data[key].payout.createdAt.toDate())))
+                cells.push(date(new Date(data[key].payout.updatedAt.toDate())))
+
               }
               
-              values.push(cells)
+              values.push(cells);
           }
+          row++;
       }
       const resource = {
         values,
@@ -81,7 +104,7 @@ export async function fillPayOutSheet():Promise<any> {
           auth: jwtClient,
           spreadsheetId: env.backoffice.sheetUrl,
           range: 'PAY_OUT!A1',  // update this range of cells
-          valueInputOption: 'RAW',
+          valueInputOption: 'USER_ENTERED',
           requestBody: resource
       }, {})
 
@@ -100,73 +123,39 @@ export async function fillPayInSheet():Promise<any> {
   })
   
   const values = [[
-    'Proposal Id',
-    'Funding',
-    'Proposal title',
-    'Proposal created at',
-    'Proposal updated at',
-    'User UID',
-    'User email',
-    'First name',
-    'Last name',
-    'Common id',
-    'Common name',
-    'Common information',
-    'Payment id',
-    'Payment status',
-    'Payment amount',
-    'Fees',
-    'Payment creation date',
-    'Payment updated'
+    "Payment id",
+    "Payment status",
+    "Payment amount",
+    "Fees",
+    "Payment creation date",
+    "Payment updated",
+    "User UID",
+    "User email",
+    "First name",
+    "Last name",
+    "Common id",
+    "Common name",
+    "Common information",
+    "Proposal Id",
+    "Funding",
+    "Proposal title",
+    "Proposal created at",
+    "Proposal updated at",
+    
+    
   ]];
   for (const key in data) {
       // eslint-disable-next-line no-prototype-builtins
       if (data.hasOwnProperty(key)) {
           const cells = []
-          if(data[key].proposal){
-            cells.push(data[key].proposal.id)
-            cells.push(data[key].proposal.join.funding/100)
-            cells.push(data[key].proposal.description.title)
-            cells.push(new Date(data[key].proposal.createdAt.toDate()).toDateString())
-            cells.push(new Date(data[key].proposal.updatedAt.toDate()).toDateString())
-            cells.push(data[key].proposal.proposerId)
-          } else {
-            cells.push("")
-            cells.push("")
-            cells.push("")
-            cells.push("")
-            cells.push("")
-            cells.push("")
-          }
-          
-          if(data[key].user){
-            cells.push(data[key].user.email)
-            cells.push(data[key].user.firstName)
-            cells.push(data[key].user.lastName)
-          } else {
-            cells.push("")
-            cells.push("")
-            cells.push("")
-          }
-          
-          if(data[key].common){
-            cells.push(data[key].common.id)
-            cells.push(data[key].common.name)
-            cells.push(data[key].common.metadata.contributionType)
-          } else {
-            cells.push("")
-            cells.push("")
-            cells.push("")
-          }
-          
+
           if(data[key].payment){
             cells.push(data[key].payment.id)
             cells.push(data[key].payment.status)
             cells.push(data[key].payment.amount.amount/100)
-            cells.push(data[key].payment.fee/100)
-            cells.push(new Date(data[key].payment.createdAt.toDate()).toDateString())
-            cells.push(new Date(data[key].payment.updatedAt.toDate()).toDateString())
-            
+            cells.push(data[key].payment.fees.amount/100)
+            cells.push(`${date(new Date(data[key].payment.createdAt.toDate()))}`)
+            cells.push(`${date(new Date(data[key].payment.updatedAt.toDate()))}`)            
           }
           else{
             cells.push("")
@@ -176,6 +165,54 @@ export async function fillPayInSheet():Promise<any> {
             cells.push("")
             cells.push("")
           }
+
+          if(data[key].proposal){
+         
+            cells.push(data[key].proposal.proposerId)
+          } else {
+            cells.push("")
+          }
+
+          if(data[key].user){
+            cells.push(data[key].user.email)
+            cells.push(data[key].user.firstName)
+            cells.push(data[key].user.lastName)
+          } else {
+            cells.push("")
+            cells.push("")
+            cells.push("")
+          }
+
+          if(data[key].common){
+            cells.push(data[key].common.id)
+            cells.push(data[key].common.name)
+            cells.push(data[key].common.metadata.contributionType)
+          } else {
+            cells.push("")
+            cells.push("")
+            cells.push("")
+          }
+
+          if(data[key].proposal){
+            cells.push(data[key].proposal.id)
+            cells.push(data[key].proposal.join.funding/100)
+            cells.push(data[key].proposal.description.title)
+            cells.push(`${date(new Date(data[key].proposal.createdAt.toDate()))}`)
+            cells.push(`${date(new Date(data[key].proposal.updatedAt.toDate()))}`)
+          } else {
+            cells.push("")
+            cells.push("")
+            cells.push("")
+            cells.push("")
+            cells.push("")
+            cells.push("")
+          }
+          
+          
+          
+          
+          
+          
           
           values.push(cells)
       }
@@ -190,7 +227,7 @@ export async function fillPayInSheet():Promise<any> {
       auth: jwtClient,
       spreadsheetId: env.backoffice.sheetUrl,
       range: 'PAY_IN!A1',  // update this range of cells
-      valueInputOption: 'RAW',
+      valueInputOption: 'USER_ENTERED',
       requestBody: resource
   }, {})
 
@@ -209,12 +246,14 @@ export async function filCircleBalanceSheet():Promise<any> {
     'Account',
     'Available',
     'Unsettled',
+    'Date',
   ]];
   for (let i = 0; i<data.available.length; i++){
     const cells = []
     cells.push(i+1)
     if (data.available[i]) cells.push(parseFloat(data.available[i].amount)); else cells.push(0);
     if (data.unsettled[i]) cells.push(parseFloat(data.unsettled[i].amount)); else cells.push(0);
+    cells.push(date())
     values.push(cells)
   }
 
@@ -228,7 +267,7 @@ export async function filCircleBalanceSheet():Promise<any> {
       auth: jwtClient,
       spreadsheetId: env.backoffice.sheetUrl,
       range: 'CIRCLE_BALANCES!A1',  // update this range of cells
-      valueInputOption: 'RAW',
+      valueInputOption: 'USER_ENTERED',
       requestBody: resource
   }, {})
 
@@ -248,7 +287,6 @@ export async function fillCommonBalanceSheet():Promise<any> {
         'Common id',
         'Common name',
         'Balance',
-        'Updated At',
         'Date'
       ]];
       for (const key in data) {
@@ -258,8 +296,7 @@ export async function fillCommonBalanceSheet():Promise<any> {
           cells.push(data[key].id)
           cells.push(data[key].name)
           cells.push(data[key].balance/100)
-          cells.push(new Date(data[key].updatedAt.toDate()).toDateString())
-          cells.push(new Date().toDateString())
+          cells.push(date())
           values.push(cells)
         }
 
@@ -275,7 +312,7 @@ export async function fillCommonBalanceSheet():Promise<any> {
           auth: jwtClient,
           spreadsheetId: env.backoffice.sheetUrl,
           range: 'COMMON_BALANCES!A1',  // update this range of cells
-          valueInputOption: 'RAW',
+          valueInputOption: 'USER_ENTERED',
           requestBody: resource
       }, {})
 
