@@ -122,7 +122,8 @@ export const createProposalPayment = async (payload: yup.InferType<typeof create
       ? 'confirmed'
       : payment.status
   });
-  // payment was successful -> notify user he's now a member
+
+  // If the payment was confirmed execute the join request
   if (payment.status === 'confirmed') {
     await createEvent({
       type: EVENT_TYPES.REQUEST_TO_JOIN_EXECUTED,
