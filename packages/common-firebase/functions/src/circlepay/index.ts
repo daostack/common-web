@@ -248,6 +248,7 @@ export const circlePayApp = functions
     unauthenticatedRoutes: [
       '/payments/update',
       '/payouts/approve',
+      '/payouts/create',
       '/testIP'
     ]
   }));
