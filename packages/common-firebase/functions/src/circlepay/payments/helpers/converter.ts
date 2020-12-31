@@ -1,3 +1,5 @@
+import { v4 } from 'uuid';
+
 import { paymentDb } from '../database';
 import { IPaymentEntity } from '../types';
 
@@ -46,7 +48,9 @@ const convertObjectId = async (payment: IPaymentEntity): Promise<IPaymentEntity>
       updatedPayment.proposalId = objectId;
     }
 
-    return paymentDb.update(updatedPayment);
+    return paymentDb.update(updatedPayment, {
+      useSet: true
+    });
   } catch (e) {
     logger.notice('Unable to update payment', {
       payment,
@@ -73,11 +77,11 @@ const convertOlderPaymentFormat = async (payment: any): Promise<IPaymentEntity> 
     : null;
 
   const paymentObj: IPaymentEntity = {
-    id: payment.id,
+    id: v4(),
     circlePaymentId: payment.id,
 
     amount: {
-      amount: Number(payment.amount.amount),
+      amount: Number(payment.amount.amount) * 100,
       currency: 'USD'
     },
 
@@ -90,7 +94,9 @@ const convertOlderPaymentFormat = async (payment: any): Promise<IPaymentEntity> 
       ? 'subscription'
       : 'one-time',
 
-    createdAt: Timestamp.now(),
+    createdAt: Timestamp.fromDate(
+      new Date(payment.creationDate)
+    ),
     updatedAt: Timestamp.now(),
 
     status: payment.status,
@@ -117,9 +123,13 @@ const convertOlderPaymentFormat = async (payment: any): Promise<IPaymentEntity> 
   });
 };
 
-export const updatePaymentStructure = async (payment: IPaymentEntity | any): Promise<IPaymentEntity> => {
-  if (payment.creationDate) {
-    return convertOlderPaymentFormat(payment);
+export const updatePaymentStructure = async (payment: IPaymentEntity | string | any): Promise<IPaymentEntity> => {
+  if (typeof payment === 'string') {
+    payment = await paymentDb.get(payment);
+  }
+
+  if (payment.creationDate || payment.createdFromObject) {
+    return convertOlderPaymentFormat(payment.createdFromObject || payment);
   } else if (payment.createdAt && payment.objectId) {
     return convertObjectId(payment);
   } else {
@@ -133,13 +143,17 @@ export const updatePaymentStructure = async (payment: IPaymentEntity | any): Pro
 
 export const updatePayments = async (): Promise<void> => {
   const payments = await paymentDb.getMany({});
-  const promiseArr: Promise<IPaymentEntity>[] = [];
+  const promiseArr: Promise<void>[] = [];
 
-  payments.forEach(payment => promiseArr.push(updatePaymentStructure(payment)));
+  payments.forEach(payment => promiseArr.push((async () => {
+    try {
+      await updatePaymentStructure(payment);
+    } catch (e) {
+      logger.info('Error occurred while updating payment', {
+        error: e
+      });
+    }
+  })()));
 
-  await Promise.all(promiseArr.map(p => p.catch(e => {
-    logger.info('Error occurred while updating payment', {
-      error: e
-    });
-  })));
+  await Promise.all(promiseArr);
 };

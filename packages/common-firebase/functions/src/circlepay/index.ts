@@ -24,7 +24,6 @@ import { createIndependentPayout } from './payouts/business/createIndependentPay
 import { updatePaymentFromCircle } from './payments/business/updatePaymentFromCircle';
 import { updatePaymentsFromCircle } from './payments/business/updatePaymentsFromCircle';
 import { updatePayments } from './payments/helpers';
-import { paymentDb } from './payments/database';
 import { updatePaymentStructure } from './payments/helpers/converter';
 
 const runtimeOptions = {
@@ -32,6 +31,7 @@ const runtimeOptions = {
 };
 
 const CIRCLEPAY_APIKEY = 'CIRCLEPAY_APIKEY';
+
 export const getCircleHeaders = async (): Promise<any> => (
   getSecret(CIRCLEPAY_APIKEY).then((apiKey) => (
     {
@@ -94,6 +94,7 @@ circlepay.get('/payments/update', async (req, res, next) => {
         paymentId: req.query.paymentId
       });
 
+      await updatePaymentStructure(req.query.paymentId as string);
       await updatePaymentFromCircle(req.query.paymentId as string);
     } else {
       logger.notice('User requested update for all payments from circle', {
