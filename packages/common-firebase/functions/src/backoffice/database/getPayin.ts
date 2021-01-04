@@ -1,4 +1,4 @@
-import { PaymentsCollection, ProposalsCollection, CommonCollection, UsersCollection } from './index';
+import { PaymentsCollection, ProposalsCollection, CommonCollection, UsersCollection, SubscriptionsCollection } from './index';
 
 export async function getPayin():Promise<any> {
 
@@ -18,18 +18,35 @@ export async function getPayin():Promise<any> {
 
         const payment = payments[property];
 
-        if(!payment.proposalId) continue;
+        if(!payment.proposalId && !payment.subscriptionId) continue;
 
 
         const proposalsQuery: any = ProposalsCollection;
         proposalsQuery.orderBy("createdAt", "asc")
 
-        // eslint-disable-next-line no-await-in-loop
-        const proposal = (await proposalsQuery.doc(payment.proposalId).get())
+        const subscriptionsQuery: any = SubscriptionsCollection;
+        subscriptionsQuery.orderBy("createdAt", "asc")
+
+        let proposal, subscription;
+        if(payment.proposalId){
+            // eslint-disable-next-line no-await-in-loop
+            proposal = (await proposalsQuery.doc(payment.proposalId).get())
+        }
+        
+
         const proposalData = proposal.data()
 
         if(proposalData){
+                // eslint-disable-next-line no-await-in-loop
             payInCollection[key] = { payment: payment, proposal: proposalData}
+
+            if(payment.subscriptionId){
+                // eslint-disable-next-line no-await-in-loop
+                subscription = (await subscriptionsQuery.doc(payment.subscriptionId).get())
+                const subscriptionData = subscription.data()
+                payInCollection[key] = { ...payInCollection[key], subscription: subscriptionData}
+
+            }
 
 
             const commonQuery: any = CommonCollection;

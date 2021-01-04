@@ -9,7 +9,18 @@ import { getCommonBalance } from './getCommonBalance';
 import { getPayout } from './getPayout';
 import { getPayin } from './getPayin';
 import { IPayoutEntity } from '../../circlepay/payouts/types';
+import { ISubscriptionEntity } from '../../subscriptions/types';
 
+
+export const SubscriptionsCollection = db.collection(Collections.Subscriptions)
+.withConverter<ISubscriptionEntity>({
+    fromFirestore(snapshot: FirebaseFirestore.QueryDocumentSnapshot): ISubscriptionEntity {
+    return snapshot.data() as ISubscriptionEntity;
+    },
+    toFirestore(object: ISubscriptionEntity | Partial<ISubscriptionEntity>): FirebaseFirestore.DocumentData {
+    return object;
+    }
+});
 
 export const PayoutsCollection = db.collection(Collections.Payouts)
 .withConverter<IPayoutEntity>({
