@@ -6,7 +6,7 @@ export async function getPayin():Promise<any> {
 
     const payments = (await PaymentsCollection
         .orderBy("createdAt", "asc")
-        .where("status", "==", "confirmed")
+        .where("status", "in", ['paid', 'confirmed'])
         .get()
     ).docs.map(p => p.data());
 
