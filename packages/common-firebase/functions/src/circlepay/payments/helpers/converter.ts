@@ -62,7 +62,7 @@ const convertObjectId = async (payment: IPaymentEntity): Promise<IPaymentEntity>
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const convertOlderPaymentFormat = async (payment: any): Promise<IPaymentEntity> => {
+const convertOlderPaymentFormat = async (payment: any, trackId: string): Promise<IPaymentEntity> => {
   //  If the payment is not of the type we need it to be
   if (!payment.updateDate) {
     return null;
@@ -77,7 +77,8 @@ const convertOlderPaymentFormat = async (payment: any): Promise<IPaymentEntity> 
     : null;
 
   const paymentObj: IPaymentEntity = {
-    id: v4(),
+    id: payment.id,
+    // id: v4(),
     circlePaymentId: payment.id,
 
     amount: {
@@ -112,24 +113,44 @@ const convertOlderPaymentFormat = async (payment: any): Promise<IPaymentEntity> 
   };
 
   paymentObj['createdFromObject'] = payment;
+  paymentObj['trackIds'] = [
+    trackId,
+    ...(payment['trackIds'] || [])
+  ];
 
   logger.debug('Deleting older payment and replacing it with payment of the new format', {
     oldPayment: payment,
     newPayment: paymentObj
   });
 
+  // Delete all other payments
+  const payments = [
+    ...(await paymentDb.getMany({ id: (payment.id as string) })),
+    ...(await paymentDb.getMany({
+      createdFromObject: {
+        id: (payment.createdFromObject?.id as string) || payment.id
+      }
+    }))
+  ];
+
+  for (const ptd of payments) {
+    // eslint-disable-next-line no-await-in-loop
+    await paymentDb.delete(ptd.id, trackId);
+  }
+
+  // Save the payment
   return await paymentDb.update(paymentObj, {
     useSet: true
   });
 };
 
-export const updatePaymentStructure = async (payment: IPaymentEntity | string | any): Promise<IPaymentEntity> => {
+export const updatePaymentStructure = async (payment: IPaymentEntity | string | any, trackId: string): Promise<IPaymentEntity> => {
   if (typeof payment === 'string') {
     payment = await paymentDb.get(payment);
   }
 
   if (payment.creationDate || payment.createdFromObject) {
-    return convertOlderPaymentFormat(payment.createdFromObject || payment);
+    return convertOlderPaymentFormat(payment.createdFromObject || payment, trackId);
   } else if (payment.createdAt && payment.objectId) {
     return convertObjectId(payment);
   } else {
@@ -141,13 +162,18 @@ export const updatePaymentStructure = async (payment: IPaymentEntity | string | 
   }
 };
 
-export const updatePayments = async (): Promise<void> => {
+/**
+ * Update the payment structure of all payments
+ *
+ * @param trackId - the ID to keep the track of the batch
+ */
+export const updatePayments = async (trackId: string): Promise<void> => {
   const payments = await paymentDb.getMany({});
   const promiseArr: Promise<void>[] = [];
 
   payments.forEach(payment => promiseArr.push((async () => {
     try {
-      await updatePaymentStructure(payment);
+      await updatePaymentStructure(payment, trackId);
     } catch (e) {
       logger.info('Error occurred while updating payment', {
         error: e

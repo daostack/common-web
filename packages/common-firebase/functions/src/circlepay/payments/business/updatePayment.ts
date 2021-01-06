@@ -54,7 +54,7 @@ export const updatePayment = async (payment: IPaymentEntity, circlePayment: ICir
       case 'paid':
       case 'pending':
         // @todo Implement the payment status changed events
-        logger.error('NotImplementedError: Payment status changes events');
+        // logger.error('NotImplementedError: Payment status changes events');
 
         break;
       default:

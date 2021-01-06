@@ -2,7 +2,7 @@ import { getPayments } from '../database/getPayments';
 import { updatePaymentFromCircle } from './updatePaymentFromCircle';
 import { paymentDb } from '../database';
 
-export const updatePaymentsFromCircle = async (): Promise<void> => {
+export const updatePaymentsFromCircle = async (trackId: string): Promise<void> => {
   const payments = await getPayments({});
   const paymentUpdatePromiseArr: Promise<any>[] = [];
 
@@ -10,7 +10,7 @@ export const updatePaymentsFromCircle = async (): Promise<void> => {
     if (payment.createdAt) {
       paymentUpdatePromiseArr.push((async () => {
         try {
-          await updatePaymentFromCircle(payment.id);
+          await updatePaymentFromCircle(payment.id, trackId);
         } catch (e) {
           logger.warn('Unable to update payment from circle because error occurred trying to do so', {
             payment,

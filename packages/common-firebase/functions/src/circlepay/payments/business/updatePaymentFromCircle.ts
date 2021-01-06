@@ -24,11 +24,12 @@ const defaultOptions: IUpdatePaymentFromCircleOptions = {
  * Update payment to be the latest possible version from circle
  *
  * @param paymentId - The payment ID as is in the FireStore
+ * @param trackId - ID used for tracking batch updates
  * @param customOptions - Options to change the updating behaviour
  *
  * @returns - The updated payment entity
  */
-export const updatePaymentFromCircle = async (paymentId: string, customOptions?: Partial<IUpdatePaymentFromCircleOptions>): Promise<IPaymentEntity> => {
+export const updatePaymentFromCircle = async (paymentId: string, trackId: string, customOptions?: Partial<IUpdatePaymentFromCircleOptions>,): Promise<IPaymentEntity> => {
   // Verify the required arguments
   if (typeof paymentId !== 'string') {
     throw new ArgumentError('paymentId', paymentId);
@@ -51,6 +52,12 @@ export const updatePaymentFromCircle = async (paymentId: string, customOptions?:
 
   // Get the current payment from circle
   const circlePayment = await circleClient.getPayment(payment.circlePaymentId);
+
+  // Add the track ID to the list
+  payment['trackIds'] = [
+    trackId,
+    ...(payment['trackIds'] || [])
+  ];
 
   // Update the payment and return it
   return updatePayment(payment, circlePayment);

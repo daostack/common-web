@@ -1,7 +1,12 @@
 import { IPaymentEntity, PaymentStatus } from '../types';
 import { PaymentsCollection } from './index';
 
-interface IGetCardOptions {
+interface IGetPaymentsOptions {
+  /**
+   * Get all payments with ID (should be only one)
+   */
+  id?: string;
+
   /**
    * Filter so only payments for subscription
    * fill be returned
@@ -12,6 +17,10 @@ interface IGetCardOptions {
    * Filter by the status of the payment
    */
   status?: PaymentStatus;
+
+  createdFromObject?: {
+    id?: string;
+  }
 }
 
 /**
@@ -19,8 +28,12 @@ interface IGetCardOptions {
  *
  * @param options - The options for filtering the payments
  */
-export const getPayments = async (options: IGetCardOptions): Promise<IPaymentEntity[]> => {
+export const getPayments = async (options: IGetPaymentsOptions): Promise<IPaymentEntity[]> => {
   let paymentsQuery: any = PaymentsCollection;
+
+  if (options.id) {
+    paymentsQuery = paymentsQuery.where('id', '==', options.id);
+  }
 
   if (options.subscriptionId) {
     paymentsQuery = paymentsQuery
@@ -31,6 +44,14 @@ export const getPayments = async (options: IGetCardOptions): Promise<IPaymentEnt
   if (options.status) {
     paymentsQuery = paymentsQuery
       .where('status', '==', options.status);
+  }
+
+  if (options.createdFromObject) {
+    const { createdFromObject } = options;
+
+    if (createdFromObject.id) {
+      paymentsQuery = paymentsQuery.where('createdFromObject.id', '==', createdFromObject.id);
+    }
   }
 
   return (await paymentsQuery.get()).docs

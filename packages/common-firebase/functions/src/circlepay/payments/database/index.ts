@@ -6,6 +6,7 @@ import { addPayment } from './addPayment';
 import { updatePaymentInDatabase } from './updatePayment';
 import { getPayments } from './getPayments';
 import { getPayment } from './getPayment';
+import { deletePayment } from './deletePayment';
 
 export const PaymentsCollection = db.collection(Collections.Payments)
   .withConverter<IPaymentEntity>({
@@ -41,5 +42,11 @@ export const paymentDb = {
   /**
    * Update existing payment in the database
    */
-  update: updatePaymentInDatabase
+  update: updatePaymentInDatabase,
+
+  /**
+   * Delete payment from the payments collection and
+   * created deleted entity for it
+   */
+  delete: deletePayment
 };
