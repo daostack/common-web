@@ -15,7 +15,7 @@ import { PaymentsCollection } from './index';
  *
  * @returns - The found payment
  */
-export const getPayment = async (paymentId: string): Promise<IPaymentEntity> => {
+export const getPayment = async (paymentId: string, throwErr = true): Promise<IPaymentEntity> => {
   if (!paymentId) {
     throw new ArgumentError('paymentId', paymentId);
   }
@@ -24,7 +24,7 @@ export const getPayment = async (paymentId: string): Promise<IPaymentEntity> => 
     .doc(paymentId)
     .get()).data();
 
-  if (!payment) {
+  if (!payment && throwErr) {
     throw new NotFoundError(paymentId, 'payment');
   }
 

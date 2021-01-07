@@ -15,7 +15,7 @@ import { IProposalEntity } from '../proposalTypes';
  *
  * @returns - The found proposal
  */
-export const getProposal = async (proposalId: string): Promise<IProposalEntity> => {
+export const getProposal = async (proposalId: string, throwErr = true): Promise<IProposalEntity> => {
   if(!proposalId) {
     throw new ArgumentError('proposalId', proposalId);
   }
@@ -24,7 +24,7 @@ export const getProposal = async (proposalId: string): Promise<IProposalEntity> 
     .doc(proposalId)
     .get()).data() as Nullable<IProposalEntity>;
 
-  if(!proposal) {
+  if(!proposal && throwErr) {
     throw new NotFoundError(proposalId, 'proposal');
   }
 

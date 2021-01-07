@@ -17,7 +17,13 @@ import { PaymentsCollection } from './index';
  * @param deletionId - THe tracker for the deletion
  */
 export const deletePayment = async (paymentId: string, deletionId = v4()): Promise<IDeletedEntity<IPaymentEntity>> => {
-  const latestPaymentSnapshot = await getPayment(paymentId);
+  const latestPaymentSnapshot = await getPayment(paymentId, false);
+
+  if (!latestPaymentSnapshot) {
+    logger.notice(`Cannot delete payment with ID ${paymentId} cause it does not exist`);
+
+    return null;
+  }
 
   logger.notice(`Deleting payment with ID ${paymentId}`, {
     snapshot: latestPaymentSnapshot

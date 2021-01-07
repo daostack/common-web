@@ -87,32 +87,15 @@ circlepay.get('/encryption', async (req, res, next) => {
 });
 
 // ----- Payment Related requests
-circlepay.get('/payments/update', async (req, res, next) => {
+circlepay.get('/payments/update/structure', async (req, res, next) => {
   await responseExecutor(async () => {
     const trackId = req.requestId || v4();
 
-    if (req.query.paymentId) {
-      logger.notice(`User requested update for payment from circle`, {
-        userId: req.user?.uid,
-        paymentId: req.query.paymentId
-      });
+    logger.notice('User requested update for all payments structure', {
+      userId: req.user?.uid
+    });
 
-      const paymentWithUpdatedStructure = await updatePaymentStructure(req.query.paymentId as string, trackId);
-      const finalUpdatedStructure = await updatePaymentFromCircle(paymentWithUpdatedStructure.id as string, trackId);
-
-      logger.info('Upgraded and updated payment', {
-        initialPaymentId: req.query.paymentId,
-        paymentWithUpdatedStructure,
-        finalUpdatedStructure
-      });
-    } else {
-      logger.notice('User requested update for all payments from circle', {
-        userId: req.user?.uid
-      });
-
-      await updatePayments(trackId);
-      await updatePaymentsFromCircle(trackId);
-    }
+    await updatePayments(trackId);
   }, {
     req,
     res,
@@ -120,6 +103,24 @@ circlepay.get('/payments/update', async (req, res, next) => {
     successMessage: 'Payment update succeeded'
   });
 });
+
+circlepay.get('/payments/update/data', async (req, res, next) => {
+  await responseExecutor(async () => {
+    const trackId = req.requestId || v4();
+
+    logger.notice('User requested update for all payments from circle', {
+      userId: req.user?.uid
+    });
+
+    await updatePaymentsFromCircle(trackId);
+  }, {
+    req,
+    res,
+    next,
+    successMessage: 'Payment update succeeded'
+  });
+});
+
 
 circlepay.get('/testIP', async (req, res, next) => {
   await responseExecutor(
@@ -261,7 +262,8 @@ export const circlePayApp = functions
   .runWith(runtimeOptions)
   .https.onRequest(commonApp(circlepay, {
     unauthenticatedRoutes: [
-      '/payments/update',
+      '/payments/update/structure',
+      '/payments/update/data',
       '/payouts/approve',
       '/charge/subscription',
       '/payouts/create',

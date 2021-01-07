@@ -8,6 +8,8 @@ import { proposalDb } from '../../../proposals/database';
 
 import firebase from 'firebase-admin';
 import Timestamp = firebase.firestore.Timestamp;
+import { getPayments } from '../database/getPayments';
+import { catchError } from 'rxjs/operators';
 
 /**
  * Function for updating payments with object IDs to payment
@@ -69,16 +71,16 @@ const convertOlderPaymentFormat = async (payment: any, trackId: string): Promise
   }
 
   const subscription = payment.type === 'SubscriptionPayment'
-    ? await subscriptionDb.get(payment.subscriptionId)
+    ? await subscriptionDb.get(payment.subscriptionId, false)
     : null;
 
   const proposal = payment.type !== 'SubscriptionPayment'
-    ? await proposalDb.getProposal(payment.proposalId)
-    : null;
+    ? await proposalDb.getProposal(payment.proposalId, false)
+    : await proposalDb.getProposal(subscription.proposalId, false);
+
 
   const paymentObj: IPaymentEntity = {
-    id: payment.id,
-    // id: v4(),
+    id: v4(),
     circlePaymentId: payment.id,
 
     amount: {
@@ -102,13 +104,13 @@ const convertOlderPaymentFormat = async (payment: any, trackId: string): Promise
 
     status: payment.status,
 
-    userId: proposal?.proposerId || subscription.userId,
-    proposalId: payment.proposalId || subscription.proposalId,
+    userId: proposal?.proposerId || subscription?.userId || 'manual work needed',
+    proposalId: payment?.proposalId || subscription?.proposalId || 'manual work needed',
 
     fees: null as any,
 
     ...(payment.type === 'SubscriptionPayment' && {
-      subscriptionId: subscription.id
+      subscriptionId: subscription?.id || 'manual work needed'
     })
   };
 
@@ -125,8 +127,8 @@ const convertOlderPaymentFormat = async (payment: any, trackId: string): Promise
 
   // Delete all other payments
   const payments = [
-    ...(await paymentDb.getMany({ id: (payment.id as string) })),
-    ...(await paymentDb.getMany({
+    ...(await getPayments({ id: (payment.id as string) })),
+    ...(await getPayments({
       createdFromObject: {
         id: (payment.createdFromObject?.id as string) || payment.id
       }
@@ -150,7 +152,11 @@ export const updatePaymentStructure = async (payment: IPaymentEntity | string | 
   }
 
   if (payment.creationDate || payment.createdFromObject) {
-    return convertOlderPaymentFormat(payment.createdFromObject || payment, trackId);
+    try {
+      const paymentObj = await convertOlderPaymentFormat(payment.createdFromObject || payment, trackId);
+    } catch (e) {
+      logger.critical('boooooo. something wrong', e, payment);
+    }
   } else if (payment.createdAt && payment.objectId) {
     return convertObjectId(payment);
   } else {
@@ -168,18 +174,12 @@ export const updatePaymentStructure = async (payment: IPaymentEntity | string | 
  * @param trackId - the ID to keep the track of the batch
  */
 export const updatePayments = async (trackId: string): Promise<void> => {
-  const payments = await paymentDb.getMany({});
-  const promiseArr: Promise<void>[] = [];
+  const payments = await getPayments({});
 
-  payments.forEach(payment => promiseArr.push((async () => {
-    try {
-      await updatePaymentStructure(payment, trackId);
-    } catch (e) {
-      logger.info('Error occurred while updating payment', {
-        error: e
-      });
-    }
-  })()));
+  logger.info(`Updating ${payments.length} payments`);
 
-  await Promise.all(promiseArr);
+  for(const payment of payments) {
+    // eslint-disable-next-line no-await-in-loop
+    await updatePaymentStructure(payment, trackId);
+  }
 };
