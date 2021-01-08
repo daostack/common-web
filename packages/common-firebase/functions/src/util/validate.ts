@@ -1,4 +1,6 @@
 import * as yup from 'yup';
+import * as _ from 'lodash';
+
 import { ObjectSchema } from 'yup';
 
 import { CommonError, ValidationError } from './errors';
@@ -18,7 +20,21 @@ import { CommonError, ValidationError } from './errors';
 export const validate = async <T extends Record<string, any>>(payload: T, schema: ObjectSchema<T>): Promise<void> => {
   try {
     await schema
-      .noUnknown()
+      .test('no-unknown', 'No unknown keys are allowed', function (value) {
+        const providedKeys = Object.keys(value);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const knownKeys = Object.keys(this.schema.fields);
+        const unknownKeys = _.without(providedKeys, ...knownKeys); // lodash
+
+        if (unknownKeys.length) {
+          return this.createError({
+            message: `No unknown keys are allowed. Unknown keys: ${unknownKeys.join(', ')}`
+          });
+        }
+
+        return true;
+      })
       .validate(payload, {
         abortEarly: false
       });
