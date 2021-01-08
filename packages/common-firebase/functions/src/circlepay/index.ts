@@ -188,7 +188,7 @@ circlepay.post('/notification/register', async (req, res, next) => {
 
 // ----- Bank Accounts
 
-circlepay.get('/wires/create', async (req, res, next) => {
+circlepay.post('/wires/create', async (req, res, next) => {
   await responseExecutor(async () => {
     const data = await createBankAccount(req.body);
 

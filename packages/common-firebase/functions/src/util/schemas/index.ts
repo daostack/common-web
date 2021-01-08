@@ -78,3 +78,29 @@ export const billingDetailsValidationSchema = yup.object({
     .string()
     .required()
 });
+
+export const bankAccountValidationSchema = yup.object({
+  name: yup
+    .string(),
+
+  city: yup
+    .string()
+    .required(),
+
+  country: yup
+    .string()
+    .required(),
+
+  line1: yup
+    .string(),
+
+  line2: yup
+    .string(),
+
+  district: yup
+    .string()
+    .when('country', {
+      is: isDistrictRequired,
+      then: yup.string().required()
+    })
+})

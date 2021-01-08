@@ -3,12 +3,15 @@ import * as yup from 'yup';
 import * as iban from 'ibantools';
 
 import { v4 } from 'uuid';
-import { billingDetailsValidationSchema } from '../../../util/schemas';
+import {
+  billingDetailsValidationSchema,
+  bankAccountValidationSchema as bankAccountValidationExternalSchema
+} from '../../../util/schemas';
 import { validate } from '../../../util/validate';
 import { IBankAccountEntity } from '../types';
 import { getCircleHeaders } from '../../index';
 import { ICircleCreateBankAccountPayload, ICircleCreateBankAccountResponse } from '../../cards/circleTypes';
-import { externalRequestExecutor } from '../../../util';
+import { externalRequestExecutor, isNullOrUndefined } from '../../../util';
 import { circlePayApi } from '../../../settings';
 import { ErrorCodes } from '../../../constants';
 import { bankAccountDb } from '../database';
@@ -16,17 +19,55 @@ import { bankAccountDb } from '../database';
 const bankAccountValidationSchema = yup.object({
   iban: yup
     .string()
-    .required()
+    // This is workaround the cyclic dependency
+    //
+    // iban -> accountNumber, but not accountNumber -> iban
+    // routingNumber -> iban, but not iban -> routingNumber
+    .when('accountNumber', {
+      is: (accountNumber) => isNullOrUndefined(accountNumber),
+      then: yup
+        .string()
+        .required('The IBAN is required field when there are not account number and routing number provided'),
+      otherwise: yup
+        .string()
+        .test({
+          test: (value) => isNullOrUndefined(value),
+          message: 'Cannot have both account number and IBAN'
+        })
+    })
     .test({
       name: 'Validate IBAN',
       message: 'Please provide valid IBAN',
       test: (value): boolean => {
-        return iban.isValidIBAN(value);
+        return isNullOrUndefined(value) ||
+          iban.isValidIBAN(value);
       }
     }),
 
+  accountNumber: yup.string()
+    .when('billingDetails.country', {
+      is: (country: string) => country?.toLowerCase() === 'us',
+      then: yup
+        .string()
+        .required('The account number is required for US transfers.')
+    }),
+
+  routingNumber: yup.string()
+    .when('iban', {
+      is: (iban: string) => isNullOrUndefined(iban),
+      then: yup
+        .string()
+        .required('The routing number is required when the IBAN is not provided')
+    })
+    .when('billingDetails.country', {
+      is: (country: string) => country?.toLowerCase() === 'us',
+      then: yup
+        .string()
+        .required('The routing number is required for US transfers.')
+    }),
+
   billingDetails: billingDetailsValidationSchema,
-  bankAddress: billingDetailsValidationSchema
+  bankAddress: bankAccountValidationExternalSchema
 });
 
 type CreateBankAccountPayload = yup.InferType<typeof bankAccountValidationSchema>;
@@ -47,8 +88,8 @@ export const createBankAccount = async (payload: CreateBankAccountPayload): Prom
     bankAddress: {
       ...payload.bankAddress as any,
       bankName: payload.bankAddress.name
-    },
-  }
+    }
+  };
 
   // Create the account on Circle
   const { data: response } = await externalRequestExecutor<ICircleCreateBankAccountResponse>(async () => {
