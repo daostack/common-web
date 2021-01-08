@@ -1,9 +1,10 @@
 import { db } from '../../util';
 import { Collections } from '../../constants';
-import { getAllMessagesOfDiscussion } from './getAllMessagesOfDiscussion';
+import { getDiscussionMessages, getDiscussionMessagsSnapshot } from './getDiscussionMessages';
 
 export const discussionMessageCollection = db.collection(Collections.DiscussionMessage);
 
 export const discussionMessageDb = {
-	getAllMessagesOfDiscussion,
+	getDiscussionMessages,
+	getDiscussionMessagsSnapshot,
 };
