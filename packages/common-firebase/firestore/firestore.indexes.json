@@ -1,6 +1,20 @@
 {
   "indexes": [
     {
+      "collectionGroup": "cards",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "ownerId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "updatedAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "discussion",
       "queryScope": "COLLECTION",
       "fields": [
@@ -10,6 +24,20 @@
         },
         {
           "fieldPath": "createTime",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "discussion",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "commonId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "lastMessage",
           "order": "DESCENDING"
         }
       ]
@@ -29,19 +57,33 @@
       ]
     },
     {
+      "collectionGroup": "payments",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "proposals",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "dao",
+          "fieldPath": "commonId",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "stageStr",
+          "fieldPath": "state",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "closingAt",
+          "fieldPath": "createdAt",
           "order": "DESCENDING"
         }
       ]
@@ -51,11 +93,11 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "dao",
+          "fieldPath": "commonId",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "stageStr",
+          "fieldPath": "state",
           "order": "ASCENDING"
         },
         {
@@ -63,7 +105,7 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "closingAt",
+          "fieldPath": "createdAt",
           "order": "DESCENDING"
         }
       ]
@@ -73,11 +115,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "dao",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "stageStr",
+          "fieldPath": "proposerId",
           "order": "ASCENDING"
         },
         {
@@ -85,21 +123,7 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "expiresInQueueAt",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "proposals",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "proposer",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "closingAt",
+          "fieldPath": "createdAt",
           "order": "DESCENDING"
         }
       ]
@@ -109,30 +133,34 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "proposer",
+          "fieldPath": "state",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "stageStr",
+          "fieldPath": "type",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "closingAt",
-          "order": "DESCENDING"
+          "fieldPath": "fundingRequest.amount",
+          "order": "ASCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "cards",
+      "collectionGroup": "proposals",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "ownerId",
+          "fieldPath": "state",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "updatedAt",
-          "order": "DESCENDING"
+          "fieldPath": "type",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "join.funding",
+          "order": "ASCENDING"
         }
       ]
     }
