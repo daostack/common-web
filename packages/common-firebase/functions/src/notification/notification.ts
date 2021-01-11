@@ -196,6 +196,8 @@ export const notifyData: Record<string, IEventData> = {
       return [
         {
           to: userData.email,
+          from: proposalData.fundingRequest.amount === 0 ? env.mail.sender : env.mail.payoutEmail,
+          bcc: env.mail.payoutEmail,
           templateKey: (userTemplate as any),
           emailStubs: {
             userName: getNameString(userData),

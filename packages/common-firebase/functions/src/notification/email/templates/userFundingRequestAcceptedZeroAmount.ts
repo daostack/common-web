@@ -1,11 +1,14 @@
 const template = `
 Hello {{userName}},
 <br /><br />
-Congratulations! <br />
-Your proposal: {{proposal}} to {{commonName}} has been approved.
+Congratulations!
+<br /><br />
+Your proposal "{{proposal}}" to "{{commonName}}" has been approved by the Common.
+<br /><br />
 For more information you can contact us any time using our  <a href="{{supportChatLink}}">support chat</a>
 <br /><br />
-Common,<br />
+Common,
+<br /><br />
 Collaborative Social Action.
 `;
 
@@ -25,7 +28,7 @@ const emailStubs = {
 };
 
 export const userFundingRequestAcceptedZeroAmount = {
-  subject: 'Your funding proposal was approved',
+  subject: 'Your proposal was approved!',
   emailStubs,
   template
 };

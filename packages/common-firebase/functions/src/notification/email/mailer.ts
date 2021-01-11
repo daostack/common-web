@@ -10,14 +10,15 @@ const setApiKey = async () => {
   sendgrid.setApiKey(apiKey);
 }
 
-export const sendMail = async (dest: string, subject: string, message: string): Promise<void> => {
+export const sendMail = async (dest: string, subject: string, message: string, from = env.mail.sender, bcc = null): Promise<void> => {
   // @question Moore, why are we awaiting this on every single mail we send?
   await setApiKey();
 
   await sendgrid.send({
     to: dest,
-    from: env.mail.sender,
-    subject: subject,
+    from,
+    bcc,
+    subject,
     text: message,
     html: message
   });

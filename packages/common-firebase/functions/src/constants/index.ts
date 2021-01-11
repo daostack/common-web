@@ -15,6 +15,7 @@ interface Env {
     SENDGRID_API_KEY: string;
 
     sender: string;
+    payoutEmail: string;
     adminMail: string;
   };
 
