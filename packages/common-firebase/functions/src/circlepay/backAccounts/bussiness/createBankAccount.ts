@@ -82,7 +82,13 @@ export const createBankAccount = async (payload: CreateBankAccountPayload): Prom
   const headers = await getCircleHeaders();
   const data: ICircleCreateBankAccountPayload = {
     idempotencyKey: v4(),
-    iban: normalizeIban(payload.iban),
+
+    ...(payload.iban ? {
+      iban: normalizeIban(payload.iban),
+    } : {
+      routingNumber: payload.routingNumber,
+      accountNumber: payload.accountNumber
+    }),
 
     billingDetails: payload.billingDetails as any,
     bankAddress: {
@@ -103,13 +109,10 @@ export const createBankAccount = async (payload: CreateBankAccountPayload): Prom
   });
 
   // Check if the account exists
-  const existingBankAccounts = await bankAccountDb.getMany({
-    fingerprint: response.fingerprint
-  });
-
-  // If there is entity for that bank account just return it
-  if (existingBankAccounts.length) {
-    return existingBankAccounts[0];
+  const existingBankAccount = await bankAccountDb.get(response?.id, false);
+  
+  if(existingBankAccount) {
+    return existingBankAccount;
   }
 
   // If there are no entities for this account - create it
