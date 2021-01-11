@@ -3,12 +3,6 @@
   "firebase": {
     "databaseURL": "https://common-staging-50741.firebaseio.com"
   },
-  "metadata": {
-    "app": {
-      "currentVersion": "1.9.4",
-      "oldestSupportedVersion": "1.9"
-    }
-  },
   "mail": {
     "sender": "staging@common.io",
     "payoutEmail": "payout@common.io",

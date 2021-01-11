@@ -3,12 +3,6 @@
   "firebase": {
     "databaseURL": "https://common-daostack.firebaseio.com"
   },
-  "metadata": {
-    "app": {
-      "currentVersion": "1.9.4",
-      "oldestSupportedVersion": "1.9"
-    }
-  },
   "mail": {
     "sender": "support@common.io",
     "payoutEmail": "payout@common.io",
