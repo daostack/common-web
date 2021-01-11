@@ -37,22 +37,24 @@ export async function fillPayOutSheet():Promise<any> {
         'Fees',
         'Payment creation date',
         'Payment updated',
-        'IBAN',
-        'Name',
-        'City',
-        'Country',
-        'Line 1',
-        'Line 2',
-        'District',
-        'Postal code',
-        'Name',
-        'City',
-        'Country',
-        'Line 1',
-        'Line 2',
-        'District',
-        'Postal code',
-        'Type'
+        'IBAN**',
+        'Routing number**',
+        'Bank account**',
+        'Full Name* - Billing address',
+        'City* - Billing address',
+        'Country* - Billing address',
+        'Line 1* - Billing address',
+        'Line 2 - Billing address',
+        'District - Billing address',
+        'Postal code* - Billing address',
+        'Name* - Bank',
+        'City* - Bank',
+        'Country* - Bank',
+        'Line 1 - Bank',
+        'Line 2 - Bank',
+        'District - Bank',
+        'Postal code - Bank',
+        'Type* - Payout'
       ]];
 
       let row = 2;
@@ -139,6 +141,7 @@ export async function fillPayInSheet():Promise<any> {
   
   const values = [[
     "Payment id",
+    "Circle Payment id",
     "Payment status",
     "Payment amount",
     "Fees",
@@ -168,6 +171,7 @@ export async function fillPayInSheet():Promise<any> {
 
           if(data[key].payment){
             cells.push(data[key].payment.id)
+            cells.push(data[key].payment.circlePaymentId)
             cells.push(data[key].payment.status)
             cells.push(data[key].payment.amount.amount/100)
             if(data[key].payment.fees){
