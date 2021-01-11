@@ -26,6 +26,5 @@ export const getBankAccount = async (bankAccountId: string, throwErr = true): Pr
   if(!bankAccount && throwErr) {
     throw new NotFoundError(bankAccountId, 'bankAccount');
   }
-
   return bankAccount;
 }

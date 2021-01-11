@@ -41,3 +41,20 @@ export interface ICircleCreateBankAccountResponse {
  }
 }
 
+export interface ICircleGetBankAccountResponse {
+  data: {
+    id: string;
+    description: string;
+    trackingRef: string;
+    fingerprint: string;
+    billingDetails: IBillingDetailsBase & {
+      name: string;
+    };
+
+    bankAddress: IBillingDetailsBase & {
+      bankName: string;
+      line1?: string;
+    }
+  }
+}
+

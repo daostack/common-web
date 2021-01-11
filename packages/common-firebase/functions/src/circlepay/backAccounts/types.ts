@@ -8,6 +8,11 @@ export interface IBankAccountEntity extends IBaseEntity {
   circleId: string;
 
   /**
+   * Bank name plus last four digits of the bank account number or IBAN.
+   */
+  description: string;
+
+  /**
    * A UUID that uniquely identifies the bank account. If the same bank
    * account is used more than once, each account object will have a
    * different id, but the fingerprint will stay the same.

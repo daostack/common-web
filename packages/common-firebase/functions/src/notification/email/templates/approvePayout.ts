@@ -1,5 +1,28 @@
 const template = `
- You can approve payout {{payoutId}} for {{amount}} by clicking <a href="{{url}}">here</a>
+<div>
+  Hello stranger,
+  <br /><br />
+  New payout was requested with the following parameters:
+  <br /> <hr /> <br />
+  
+  Beneficiary: <b>{{beneficiary}}</b> <br />
+  Proposal: <b>{{proposal}}</b>  <br />
+  Common: <b>{{common}}</b>  <br />
+  
+  <br /> <br /> <br />
+  Bank Account Details:  
+  <br /> <hr /> <br />
+  <span style="margin-right: 10px">Bank: <b>{{bank}}</b></span> <br />
+  <span style="margin-right: 10px">Description: <b>{{bankDescription}}</b></span> <br />
+  
+  <br /><br />
+  You can approve payout {{payoutId}} for {{amount}} by clicking <a href="{{url}}">here</a>. Please note
+  that for doing the proposal there will be <b>$25 fee</b> charged by the payout provider.
+  <br /><br />
+  Have a nice day,
+  <br>
+  Common
+</div>
 `;
 
 const emailStubs = {
@@ -10,6 +33,21 @@ const emailStubs = {
     required: true
   },
   url: {
+    required: true
+  },
+  beneficiary: {
+    required: true
+  },
+  proposal: {
+    required: true
+  },
+  common: {
+    required: true
+  },
+  bankDescription: {
+    required: true
+  },
+  bank: {
     required: true
   }
 };

@@ -99,7 +99,7 @@ export interface IPayoutDestination {
   circleId: string;
 }
 
-type IProposalPayoutEntity = IExecutablePayoutEntity & {
+export type IProposalPayoutEntity = IExecutablePayoutEntity & {
   type: 'proposal'
 
   /**

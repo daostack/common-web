@@ -120,6 +120,8 @@ export const createBankAccount = async (payload: CreateBankAccountPayload): Prom
     circleId: response.id,
     circleFingerprint: response.fingerprint,
 
+    description: response.description,
+
     bank: response.bankAddress as any,
     billingDetails: response.billingDetails as any
   });

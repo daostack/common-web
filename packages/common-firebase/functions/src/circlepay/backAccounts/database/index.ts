@@ -5,6 +5,7 @@ import { addBankAccount } from './addBankAccount';
 import { getBankAccounts } from './getBankAccounts';
 import { bankAccountExists } from './bankAccountExists';
 import { getBankAccount } from './getBankAccount';
+import { updateBankAccountInDatabase } from './updateBankAccount';
 
 
 export const BankAccountCollection = db.collection(Collections.BankAccounts)
@@ -22,5 +23,6 @@ export const bankAccountDb = {
   add: addBankAccount,
   get: getBankAccount,
   getMany: getBankAccounts,
-  exists: bankAccountExists
+  exists: bankAccountExists,
+  update: updateBankAccountInDatabase
 };
