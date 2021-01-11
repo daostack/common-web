@@ -148,20 +148,26 @@ circlepay.get('/payouts/create', async (req, res, next) => {
 
       if (payload.payout.type === 'proposal') {
         await createProposalPayout({
-          ...payload.payout,
+          proposalId: payload.proposalId,
           bankAccountId: bankAccount.id
         });
       } else if (payload.payout.type === 'independent') {
         await createIndependentPayout({
-          ...payload.payout,
+          amount: payload.amount,
           bankAccountId: bankAccount.id
         });
       }
     } else {
       if (payload.type === 'proposal') {
-        await createProposalPayout(payload);
+        await createProposalPayout({
+          proposalId: payload.proposalId,
+          bankAccountId: payload.bankAccountId
+        });
       } else if (payload.type === 'independent') {
-        await createIndependentPayout(payload);
+        await createIndependentPayout({
+          amount: payload.amount,
+          bankAccountId: payload.bankAccountId
+        });
       }
     }
   }, {

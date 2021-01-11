@@ -9,6 +9,7 @@ import { proposalDb } from '../../../proposals/database';
 import { env } from '../../../constants';
 import { createEvent } from '../../../util/db/eventDbService';
 import { EVENT_TYPES } from '../../../event/event';
+import { CommonError } from '../../../util/errors';
 
 const createProposalPayoutValidationSchema = yup.object({
   proposalId: yup
@@ -32,8 +33,29 @@ export const createProposalPayout = async (payload: CreateProposalPayoutPayload)
   const proposal = await proposalDb.getFundingRequest(payload.proposalId);
   const bankAccount = await bankAccountDb.get(payload.bankAccountId);
 
-  // @todo Check if there is no (or all are expired) payouts for that proposal
-  // @todo Check if the proposal is funded
+  // Do some validation on the proposal
+  if (proposal.state !== 'passed') {
+    throw new CommonError('Cannot create payout for proposals that are not in the passed state');
+  }
+
+  // Make sure there are no (or all are expired) payouts for that proposal
+  const activeOrCompletedPayoutForProposal = await payoutDb.getMany({
+    proposalId: proposal.id,
+    status: [
+      'complete',
+      'pending'
+    ]
+  });
+
+  if (activeOrCompletedPayoutForProposal.length) {
+    logger.warn('Payout was attempted to be created for proposal that has completed or pending payout');
+
+    throw new CommonError(`Cannot create payout for proposal with completed or pending payout`, {
+      proposal,
+      // If I just left it all it would return the security tokens
+      activeOrCompletedPayoutForProposal: activeOrCompletedPayoutForProposal.map(payout => payout.id)
+    });
+  }
 
   // Create the payout
   const payout = await payoutDb.add({
