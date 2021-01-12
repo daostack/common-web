@@ -81,7 +81,11 @@ export const notifyData: Record<string, IEventData> = {
             tagline: commonData.metadata.byline,
             about: commonData.metadata.description,
             paymentType: 'one-time',
-            minContribution: commonData.metadata.minFeeToJoin
+            minContribution: (commonData.metadata.minFeeToJoin / 100)
+              .toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD'
+              })
           }
         }
       ];
