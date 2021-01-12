@@ -60,7 +60,7 @@ export interface ICommonEntity extends IBaseEntity {
 
 export interface ICommonMember {
   userId: string;
-  joinedAt: number;
+  joinedAt?: string;
 }
 
 export interface ICommonRule {
