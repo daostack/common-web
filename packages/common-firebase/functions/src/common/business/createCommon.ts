@@ -1,57 +1,46 @@
 import * as yup from 'yup';
 
-import { validate } from '../../util/validate';
-import { commonRuleValidationSchema, linkValidationSchema } from '../../util/schemas';
+import {validate} from '../../util/validate';
+import {
+  commonRuleValidationSchema,
+  linkValidationSchema,
+} from '../../util/schemas';
 
-import { commonDb } from '../database';
-import { ICommonEntity, ICommonLink, ICommonRule } from '../types';
-import { createEvent } from '../../util/db/eventDbService';
-import { EVENT_TYPES } from '../../event/event';
+import {commonDb} from '../database';
+import {ICommonEntity, ICommonLink, ICommonRule} from '../types';
+import {createEvent} from '../../util/db/eventDbService';
+import {EVENT_TYPES} from '../../event/event';
 
 // The validation schema for creating commons (and creating typings by inferring them)
 const createCommonDataValidationScheme = yup.object({
-  userId: yup
+  userId: yup.string().required(),
+
+  name: yup.string().required(),
+
+  image: yup.string().url().required(),
+
+  byline: yup.string().min(10).required(),
+
+  description: yup.string().required(),
+
+  fundingGoalDeadline: yup.number().required(),
+
+  contributionAmount: yup.number().min(0).required(),
+
+  contributionType: yup
     .string()
-    .required(),
-
-  name: yup
-    .string()
-    .required(),
-
-  image: yup.string()
-    .url()
-    .required(),
-
-  byline: yup
-    .string()
-    .min(10)
-    .required(),
-
-  description: yup
-    .string()
-    .required(),
-
-  fundingGoalDeadline: yup
-    .number()
-    .required(),
-
-  contributionAmount: yup.number()
-    .min(500)
-    .required(),
-
-  contributionType: yup.string()
     .oneOf(['one-time', 'monthly'])
     .default('one-time')
     .required(),
 
-  rules: yup.array(commonRuleValidationSchema)
-    .optional(),
+  rules: yup.array(commonRuleValidationSchema).optional(),
 
-  links: yup.array(linkValidationSchema)
-    .optional()
+  links: yup.array(linkValidationSchema).optional(),
 });
 
-type CreateCommonPayload = yup.InferType<typeof createCommonDataValidationScheme>
+type CreateCommonPayload = yup.InferType<
+  typeof createCommonDataValidationScheme
+>;
 
 /**
  * Creates common for the provided payload. Please note that this is
@@ -64,8 +53,13 @@ type CreateCommonPayload = yup.InferType<typeof createCommonDataValidationScheme
  *
  * @returns - The created common
  */
-export const createCommon = async (payload: CreateCommonPayload): Promise<ICommonEntity> => {
-  await validate<CreateCommonPayload>(payload, createCommonDataValidationScheme);
+export const createCommon = async (
+  payload: CreateCommonPayload,
+): Promise<ICommonEntity> => {
+  await validate<CreateCommonPayload>(
+    payload,
+    createCommonDataValidationScheme,
+  );
 
   const {
     name,
@@ -77,7 +71,7 @@ export const createCommon = async (payload: CreateCommonPayload): Promise<ICommo
     description,
     contributionType,
     contributionAmount,
-    fundingGoalDeadline
+    fundingGoalDeadline,
   } = payload;
 
   // @todo Check if user exists
@@ -87,12 +81,14 @@ export const createCommon = async (payload: CreateCommonPayload): Promise<ICommo
     image,
     fundingGoalDeadline,
 
-    rules: rules as ICommonRule[] || [],
-    links: links as ICommonLink[] || [],
+    rules: (rules as ICommonRule[]) || [],
+    links: (links as ICommonLink[]) || [],
 
-    members: [{
-      userId
-    }],
+    members: [
+      {
+        userId,
+      },
+    ],
 
     metadata: {
       byline,
@@ -100,17 +96,17 @@ export const createCommon = async (payload: CreateCommonPayload): Promise<ICommo
       contributionType,
 
       founderId: userId,
-      minFeeToJoin: contributionAmount
+      minFeeToJoin: contributionAmount,
     },
 
-    register: 'na'
+    register: 'na',
   });
 
   // Broadcast the common created event
   await createEvent({
     userId,
     objectId: common.id,
-    type: EVENT_TYPES.COMMON_CREATED
+    type: EVENT_TYPES.COMMON_CREATED,
   });
 
   return common;
