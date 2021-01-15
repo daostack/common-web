@@ -450,29 +450,4 @@ export default new class Notification implements INotification {
 
     logger.debug('Send Success', messageSent);
   }
-
-  async sendToAllUsers(title: string, body: string, image = '', path: string) {
-    const payload = {
-      topic: 'notification',
-      android: {
-        priority: 'high'
-      },
-      data: {
-        path
-      },
-      notification: {
-        title,
-        body,
-        image
-      }
-    } as admin.messaging.Message;
-
-    //console.info('payload -> ', payload);
-
-    // @question Ask about this rule "promise/always-return". It is kinda useless so we may disable it globally?
-    // eslint-disable-next-line promise/always-return
-    const messageSent: string = await messaging.send(payload);
-
-    logger.debug('Send Success', { messageSent });
-  }
 };
