@@ -85,6 +85,10 @@ export const createCard = async (payload: CreateCardPayload): Promise<ICardEntit
   // @todo Move this to the circle client
   // Create the card on Circle
   const { data: response } = await externalRequestExecutor<ICircleCreateCardResponse>(async () => {
+    logger.debug('Trying to create new card with circle', {
+      data
+    });
+
     return (await axios.post<ICircleCreateCardResponse>(`${circlePayApi}/cards`,
       data,
       headers

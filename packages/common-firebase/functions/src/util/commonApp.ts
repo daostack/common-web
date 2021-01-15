@@ -2,7 +2,13 @@ import cors from 'cors';
 import express from 'express';
 import bodyParser from 'body-parser';
 
-import { authenticate, errorHandling, routeBasedMiddleware, sessions } from './middleware';
+import {
+  sessions,
+  authenticate,
+  errorHandling,
+  routeBasedMiddleware,
+  requestLoggingMiddleware
+} from './middleware';
 
 export const commonRouter = express.Router;
 
@@ -25,6 +31,8 @@ export const commonApp = (router: express.Router, options?: ICommonAppOptions): 
   app.use(express.urlencoded({
     extended: true
   }));
+
+  app.use(requestLoggingMiddleware);
 
   app.use(cors({
     origin: true

@@ -137,9 +137,8 @@ export const createPayment = async (payload: ICreatePaymentPayload): Promise<IPa
 
   // Create the request @todo Handle errors better
   const { data: response } = await externalRequestExecutor<ICircleCreatePaymentResponse>(async () => {
-    logger.info('Creating payment in Circle', {
-      circleData,
-      headers
+    logger.debug('Creating payment in Circle', {
+      data: circleData
     });
 
     return (await axios.post<ICircleCreatePaymentResponse>(`${circlePayApi}/payments`,

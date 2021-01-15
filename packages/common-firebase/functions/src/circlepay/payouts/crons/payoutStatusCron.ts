@@ -10,7 +10,7 @@ export const payoutStatusCron = functions.pubsub
       status: 'pending'
     });
 
-    if(pendingPayouts && pendingPayouts.length) {
+    if (pendingPayouts && pendingPayouts.length) {
       const promiseArr: Promise<void>[] = [];
 
       pendingPayouts.forEach(payout => {
@@ -18,7 +18,7 @@ export const payoutStatusCron = functions.pubsub
           logger.info(`Updating the status of payout ${payout.id}`);
 
           await updatePayoutStatus(payout);
-        })())
-      })
+        })());
+      });
     }
   });

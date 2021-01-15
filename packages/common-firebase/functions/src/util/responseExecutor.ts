@@ -21,7 +21,11 @@ export const responseExecutor: IResponseExecutor = async (action, { req, res, ne
   try {
     const actionResult = await action() || {};
 
-    logger.info(`Creating response for request ${req.requestId}`);
+    logger.info(`Request action successfully finished execution.`, {
+      requestId: req.requestId,
+
+      result: actionResult
+    });
 
     res
       .status(StatusCodes.Ok)
@@ -32,6 +36,10 @@ export const responseExecutor: IResponseExecutor = async (action, { req, res, ne
 
     return next();
   } catch (e) {
+    logger.debug('An error occurred while executing the response executor\'s action', {
+      error: e
+    });
+
     return next(e);
   }
 };

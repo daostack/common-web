@@ -12,11 +12,12 @@ interface IExternalErrorData {
 
 export const externalRequestExecutor = async <T = any>(func: () => T | Promise<T>, data: IExternalErrorData): Promise<T> => {
   try {
-    const result = await func();
-
-    return result;
+    return await func();
   } catch (err) {
-    logger.warn('Circle error response: ', err.response?.data);
+    logger.warn('Circle error response: ', {
+      data: err.response?.data,
+      error: err
+    });
 
     throw new CommonError(
       data.message || `External service failed. ErrorCode: ${data.errorCode}`, {

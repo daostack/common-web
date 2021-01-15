@@ -43,6 +43,10 @@ export const executePayout = async (payout: IPayoutEntity): Promise<void> => {
 
   // Make the request to circle
   const { data: response } = await externalRequestExecutor<ICircleCreatePayoutResponse>(async () => {
+    logger.debug('Creating new payout with circle', {
+      data
+    });
+
     return (await axios.post<ICircleCreatePayoutResponse>(`${circlePayApi}/payouts`,
       data,
       headers

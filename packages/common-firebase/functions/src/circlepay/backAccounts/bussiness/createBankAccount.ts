@@ -99,6 +99,10 @@ export const createBankAccount = async (payload: CreateBankAccountPayload): Prom
 
   // Create the account on Circle
   const { data: response } = await externalRequestExecutor<ICircleCreateBankAccountResponse>(async () => {
+    logger.debug('Trying to create new bank account with circle', {
+      data
+    });
+
     return (await axios.post<ICircleCreateBankAccountResponse>(`${circlePayApi}/banks/wires`,
       data,
       headers

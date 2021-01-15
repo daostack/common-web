@@ -1,3 +1,4 @@
+export { requestLoggingMiddleware } from './requestLoggingMiddleware';
 export { routeBasedMiddleware } from './routeBasedMiddleware';
 export { errorHandling } from './errorHandlingMiddleware';
 export { authenticate } from './authenticateMiddleware';
