@@ -82,6 +82,7 @@ export enum EVENT_TYPES {
   COMMON_WHITELISTED = 'commonWhitelisted',
   COMMON_MEMBER_ADDED = 'commonMemberAdded',
   COMMON_MEMBER_REMOVED = 'commonMemberRemoved',
+  COMMON_UPDATED = 'commonUpdated',
 
 
   // Request to join related events

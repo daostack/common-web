@@ -5,7 +5,7 @@ import { commonApp, commonRouter } from '../util';
 import { runtimeOptions } from '../constants';
 import { responseExecutor } from '../util/responseExecutor';
 
-import { createCommon } from './business';
+import { createCommon, updateCommon } from './business';
 import * as triggers from './triggers';
 import { commonDb } from './database';
 import { deleteCommon } from './business/deleteCommon';
@@ -44,6 +44,18 @@ if (env.environment === 'staging' || env.environment === 'dev') {
       });
   });
 }
+
+router.post('/update', async (req, res, next) => (
+  await responseExecutor(
+    async () => {
+      return await updateCommon(req.body);
+    }, {
+      req,
+      res,
+      next,
+      successMessage: 'Common updated successfully'
+    })
+));
 
 export const commonsApp = functions
   .runWith(runtimeOptions)
