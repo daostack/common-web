@@ -19,12 +19,12 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 10.22.0
+          node-version: 12.20.1
 
       - name: Setting up Java
         uses: actions/setup-java@v1
         with:
-          java-version: "9.0.4"
+          java-version: '9.0.4'
 
       - uses: actions/cache@v2
         with:

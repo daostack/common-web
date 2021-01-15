@@ -28,12 +28,11 @@
     "test:emulators": "cross-env NODE_ENV=test firebase emulators:exec 'yarn test'",
     "test:watch": "jest --watch",
     "precommit": "lint-staged && yarn test",
-
     "deploy:indexes": "yarn use:staging && firebase deploy -only firestore:indexes",
     "deploy:indexes:prod": "yarn use:production && firebase deploy -only firestore:indexes"
   },
   "engines": {
-    "node": "10"
+    "node": "12"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^1.0.3",

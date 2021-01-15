@@ -18,7 +18,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: '10.22'
+          node-version: '12.20.1'
 
       - uses: actions/cache@v2
         with:
@@ -32,5 +32,3 @@ jobs:
         uses: bradennapier/eslint-plus-action@v3.4.2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
-          
