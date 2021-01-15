@@ -20,6 +20,7 @@ import { adminJoinedButPaymentFailed } from './templates/adminJoinedButFailedPay
 import { subscriptionCanceled } from './templates/subscriptionCanceled';
 import { subscriptionChargeFailed } from './templates/subscriptionChargeFailed';
 import { subscriptionCharged } from './templates/subscriptionCharged';
+import { userFundingRequestAcceptedInsufficientFunds } from './templates/userFundingRequestAcceptedInsufficientFunds';
 
 const templates = {
   requestToJoinSubmitted,
@@ -39,7 +40,8 @@ const templates = {
   approvePayout,
   subscriptionCanceled,
   subscriptionCharged,
-  subscriptionChargeFailed
+  subscriptionChargeFailed,
+  userFundingRequestAcceptedInsufficientFunds
 };
 
 const globalDefaultStubs = {

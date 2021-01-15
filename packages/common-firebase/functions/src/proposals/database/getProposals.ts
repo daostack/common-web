@@ -1,11 +1,11 @@
 import admin from 'firebase-admin';
 
 import { ProposalsCollection } from './index';
-import { IProposalEntity, ProposalState, ProposalType } from '../proposalTypes';
+import { FundingRequestState, IProposalEntity, ProposalType, RequestToJoinState } from '../proposalTypes';
 import QuerySnapshot = admin.firestore.QuerySnapshot;
 
 interface IGetProposalsOptions {
-  state?: ProposalState | ProposalState[];
+  state?: RequestToJoinState | RequestToJoinState[] | FundingRequestState | FundingRequestState[];
   type?: ProposalType;
   proposerId?: string;
   commonId?: string;
@@ -14,7 +14,7 @@ interface IGetProposalsOptions {
 /**
  * Returns array of all votes casted to the proposal
  *
- * @param proposalId - The ID of the proposal for witch we want to retrieve the proposals
+ * @param options - List of params that all of the returned proposal must match
  */
 export const getProposals = async (options: IGetProposalsOptions): Promise<IProposalEntity[]> => {
   let proposalsQuery: any = ProposalsCollection;

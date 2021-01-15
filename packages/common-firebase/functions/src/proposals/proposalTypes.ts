@@ -2,7 +2,9 @@ import { IBaseEntity } from '../util/types';
 import { ContributionType } from '../common/types';
 import { VoteOutcome } from './voteTypes';
 
-export type ProposalState = 'countdown' | 'passed' | 'failed';
+export type FundingRequestState = 'countdown' | 'passed' | 'failed' | 'passedInsufficientBalance';
+export type RequestToJoinState = 'countdown' | 'passed' | 'failed';
+
 export type ProposalPaymentState = 'notAttempted' | 'pending' | 'failed' | 'confirmed' | 'notRelevant';
 
 /**
@@ -38,8 +40,14 @@ interface IBaseProposalEntity extends IBaseEntity {
    * Countdown - the proposal has not been finalized yet. The voting is ongoing
    * Passed - The voting is ended. The proposal is accepted
    * Failed - The voting is ended. The proposal is rejected
+   *
+   * If the proposal is of funding type it may have one additional proposal state:
+   *
+   * PassedInsufficientBalance - The voting has ended and the proposal has been approved,
+   *    however there were not enough funds in the common balance at the time of the approval
+   *    to fund this proposal
    */
-  state: ProposalState;
+  state: string;
 
   /**
    * The countdown period in seconds relative to the creation date
@@ -126,6 +134,8 @@ export interface IProposalFile {
 export interface IFundingRequestProposal extends IBaseProposalEntity {
   type: 'fundingRequest';
 
+  state: FundingRequestState;
+
   /**
    * Object with some description of the proposal
    */
@@ -167,6 +177,8 @@ export interface IFundingRequestProposal extends IBaseProposalEntity {
  */
 export interface IJoinRequestProposal extends IBaseProposalEntity {
   type: 'join';
+
+  state: RequestToJoinState;
 
   /**
    * Object with some description of the proposal
