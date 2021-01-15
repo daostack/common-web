@@ -11,6 +11,13 @@ interface Env {
     databaseURL: string;
   };
 
+  metadata: {
+    app: {
+      currentVersion: string;
+      oldestSupportedVersion: string;
+    }
+  };
+
   mail: {
     SENDGRID_API_KEY: string;
 
@@ -48,7 +55,7 @@ interface Env {
     approvers: string[];
     neededApprovals: number;
   }
-  
+
   backoffice: {
     sheetUrl: string;
   }
