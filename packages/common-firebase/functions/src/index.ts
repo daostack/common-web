@@ -11,7 +11,7 @@ import { commonsApp } from './common';
 import { proposalCrons, proposalTriggers, proposalsApp } from './proposals';
 import { subscriptionsApp } from './subscriptions';
 import { payoutTriggers } from './circlepay/payouts/triggers';
-import { backofficeApp } from './backoffice';
+import { backofficeApp, circleBalanceCrons } from './backoffice';
 import { metadataApp } from './metadata';
 
 // --- Express apps
@@ -33,3 +33,4 @@ exports.commonTriggers = commonTriggers;
 
 exports.cronJobs = cron;
 exports.circlePayCrons = circlePayCrons;
+exports.circleBalanceCrons = circleBalanceCrons;

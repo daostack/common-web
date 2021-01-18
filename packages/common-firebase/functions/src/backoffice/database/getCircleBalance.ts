@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { ICircleBalance } from '../types';
+import { ICircleBalancePayload } from '../types';
 import { circlePayApi } from '../../settings';
 import { externalRequestExecutor } from '../../util';
 import { ErrorCodes } from '../../constants';
@@ -11,7 +11,7 @@ export const getCircleBalance = async() : Promise<any> => {
   const headers = await getCircleHeaders();
 
   return await externalRequestExecutor(async () => {
-    return await axios.get<ICircleBalance>(`${circlePayApi}/balances`, headers)
+    return await axios.get<ICircleBalancePayload>(`${circlePayApi}/balances`, headers)
   }, {
     errorCode: ErrorCodes.CirclePayError,
     userMessage: 'Call to CirclePay failed. Please try again later and if the issue persist contact us.'

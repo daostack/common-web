@@ -5,11 +5,14 @@ import { IProposalEntity } from '../../proposals/proposalTypes';
 import { db } from '../../settings';
 import { IUserEntity } from '../../util/types';
 import { getCircleBalance } from './getCircleBalance';
+import { getCircleBalanceHistorical } from './getCircleBalanceHistorical';
 import { getCommonBalance } from './getCommonBalance';
 import { getPayout } from './getPayout';
 import { getPayin } from './getPayin';
+import { addCircleBalance } from './addCircleBalance';
 import { IPayoutEntity } from '../../circlepay/payouts/types';
 import { ISubscriptionEntity } from '../../subscriptions/types';
+import { ICircleBalanceBase } from '../types';
 
 
 export const SubscriptionsCollection = db.collection(Collections.Subscriptions)
@@ -75,10 +78,23 @@ export const UsersCollection = db.collection(Collections.Users)
     }
 });
 
+export const CircleBalancesCollection = db.collection(Collections.CircleBalances)
+  .withConverter<ICircleBalanceBase>({
+    fromFirestore(snapshot: FirebaseFirestore.QueryDocumentSnapshot): ICircleBalanceBase {
+      return snapshot.data() as ICircleBalanceBase;
+    },
+
+    toFirestore(object: ICircleBalanceBase | Partial<ICircleBalanceBase>): FirebaseFirestore.DocumentData {
+      return object;
+    }
+  });
+
 
 export const backofficeDb = {
     getCircleBalance,
+    getCircleBalanceHistorical,
     getCommonBalance,
     getPayout,
-    getPayin
+    getPayin,
+    addCircleBalance
   };

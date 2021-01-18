@@ -2,14 +2,32 @@ import * as functions from 'firebase-functions';
 
 import { commonApp, commonRouter } from '../util';
 import { responseExecutor } from '../util/responseExecutor';
-import {fillPayInSheet, fillPayOutSheet, filCircleBalanceSheet, fillCommonBalanceSheet} from './business'
-
+import {fillPayInSheet} from './business/fillPayInSheet'
+import {fillPayOutSheet} from './business/fillPayOutSheet'
+import {fillCircleBalanceSheet} from './business/fillCircleBalanceSheet'
+import {fillCommonBalanceSheet} from './business/fillCommonBalanceSheet'
+import {fillCircleBalanceSheetHistoricalSheet} from './business/fillCircleBalanceHistoricalSheet'
+import { addCircleBalance } from './database/addCircleBalance';
+import * as cron from './crons'
 
 const runtimeOptions = {
   timeoutSeconds: 540 // Maximum time 9 mins
 };
 
 const router = commonRouter();
+
+router.get('/test', async (req, res, next) => {
+  await responseExecutor(
+    async () => {
+      return addCircleBalance()
+    }, {
+      req,
+      res,
+      next,
+      successMessage: `Added CircleBalance succesfully!`
+    }
+  );
+});
 
 router.get('/payout', async (req, res, next) => {
   await responseExecutor(
@@ -49,11 +67,23 @@ router.get('/commonbalance', async (req, res, next) => {
     }
   );
 });
+router.get('/circlebalancehistorical', async (req, res, next) => {
+  await responseExecutor(
+    async () => {
+      return fillCircleBalanceSheetHistoricalSheet()
+    }, {
+      req,
+      res,
+      next,
+      successMessage: `Fetch BALANCE succesfully!`
+    }
+  );
+});
 
 router.get('/circlebalance', async (req, res, next) => {
   await responseExecutor(
     async () => {
-      return filCircleBalanceSheet()
+      return fillCircleBalanceSheet()
     }, {
       req,
       res,
@@ -69,7 +99,11 @@ export const backofficeApp = functions
     unauthenticatedRoutes:[
       '/payin', 
       '/payout', 
-      '/circlebalance', 
-      '/commonbalance'
+      '/circlebalancehistorical', 
+      '/commonbalance',
+      '/test'
     ]
   }));
+
+
+  export const circleBalanceCrons = cron;
