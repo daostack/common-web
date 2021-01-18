@@ -1,22 +1,25 @@
 
 import { commonDb } from '../database';
-import { ICommonEntity } from '../types';
+import { ICommonUpdate, ICommonEntity } from '../types';
 import { createEvent } from '../../util/db/eventDbService';
 import { EVENT_TYPES } from '../../event/event';
+import { commonEditHistoryDb } from '../../commonEditHistory/database';
 
-export const updateCommon = async (common: ICommonEntity) : Promise<ICommonEntity> => {
-  // should we validate here like in createCommon?
-  // check if user is owner of common
-  const updatedCommon = await commonDb.update(common);
+/**
+ * Updating the common with the new data in commonUpdate
+ * @param commonUpdate       - info of the common that needs to be updated
+ * @return updatedCommon     - the common doc after the update
+ */
+export const updateCommon = async (commonUpdate: ICommonUpdate) : Promise<ICommonEntity> => {
+  // should we validate here like in createCommon? 
 
-  // but we need to save more data:
-  // we have
-  // - ownerId who initiaed the change,
-  // - changed common id
-  // TODO we need to record the changes
+  // the doc that was saved in the commonEditHistory collection
+  const commonHistoryRecord = await commonEditHistoryDb.add(commonUpdate); 
+  const updatedCommon = await commonDb.update(commonUpdate.newCommon);
+
   await createEvent({
-    userId: common.metadata.founderId,
-    objectId: common.id,
+    userId: commonHistoryRecord.changedBy,
+    objectId: commonHistoryRecord.commonId,
     type: EVENT_TYPES.COMMON_UPDATED
   })
 

@@ -112,6 +112,18 @@ export interface ICommonMetadata {
   contributionType: ContributionType;
 }
 
+export interface ICommonUpdate {
+  /**
+   * The new common entity 
+   */
+  newCommon: ICommonEntity,
+
+  /**
+   * The userId of the user who is responsible for the change
+   */
+  changedBy: string
+}
+
 export type ContributionType = 'one-time' | 'monthly';
 
 /**

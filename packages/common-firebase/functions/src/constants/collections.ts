@@ -8,6 +8,7 @@ export const Collections = {
   Votes: 'votes',
   DiscussionMessage: 'discussionMessage',
   CircleBalances: 'circleBalances',
+  CommonEditHistory: 'commonEditHistory',
   // @todo Make this plural
   Event: 'event',
   Cards: 'cards',
