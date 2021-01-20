@@ -47,6 +47,9 @@ export const subscriptionCharged: IEmailTemplate = {
     },
     chargeAmount: {
       required: true
+    },
+    supportChatLink: {
+      required: true
     }
   }
 };
