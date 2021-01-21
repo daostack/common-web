@@ -31,7 +31,7 @@ export const commonLinkValidationScheme = yup.object({
     .string()
     .url()
     .required()
-})
+});
 
 export const fileValidationSchema = yup.object({
   value: yup
@@ -50,6 +50,10 @@ export const imageValidationSchema = yup.object({
 export const billingDetailsValidationSchema = yup.object({
   name: yup
     .string()
+    .matches(/^[a-zA-Z'. ]*$/, 'You name can only contain latin characters and spaces.')
+    .test('Must provide at least two names', 'You must provide your fist and last name', (value) => {
+      return value.split(' ').length >= 2;
+    })
     .required(),
 
   city: yup
@@ -103,4 +107,4 @@ export const bankAccountValidationSchema = yup.object({
       is: isDistrictRequired,
       then: yup.string().required()
     })
-})
+});
