@@ -14,9 +14,8 @@ import { createCard } from './cards/business/createCard';
 import { createBankAccount } from './backAccounts/bussiness/createBankAccount';
 
 import { approvePayout } from './payouts/business/approvePayout';
-import { createProposalPayout } from './payouts/business/createProposalPayout';
-import { createIndependentPayout } from './payouts/business/createIndependentPayout';
 import { updatePaymentFromCircle } from './payments/business/updatePaymentFromCircle';
+import { createPayout } from './payouts/business/createPayout';
 
 const runtimeOptions = {
   timeoutSeconds: 540
@@ -142,34 +141,16 @@ circlepay.get('/payouts/create', async (req, res, next) => {
     const obj = JSON.parse(JSON.stringify(req.query));
     const payload = JSON.parse(obj.payload);
 
+    const bankAccountId = payload.wire
+      ? (await createBankAccount(payload.wire)).id
+      : payload.bankAccountId;
 
-    if (payload.wire) {
-      const bankAccount = await createBankAccount(payload.wire);
+    const payoutCreationPayload = payload.payout || payload;
 
-      if (payload.payout.type === 'proposal') {
-        await createProposalPayout({
-          proposalId: payload.proposalId,
-          bankAccountId: bankAccount.id
-        });
-      } else if (payload.payout.type === 'independent') {
-        await createIndependentPayout({
-          amount: payload.amount,
-          bankAccountId: bankAccount.id
-        });
-      }
-    } else {
-      if (payload.type === 'proposal') {
-        await createProposalPayout({
-          proposalId: payload.proposalId,
-          bankAccountId: payload.bankAccountId
-        });
-      } else if (payload.type === 'independent') {
-        await createIndependentPayout({
-          amount: payload.amount,
-          bankAccountId: payload.bankAccountId
-        });
-      }
-    }
+    await createPayout({
+      bankAccountId,
+      ...payoutCreationPayload
+    });
   }, {
     req,
     res,
