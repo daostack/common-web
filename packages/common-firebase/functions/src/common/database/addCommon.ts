@@ -4,7 +4,7 @@ import { firestore } from 'firebase-admin';
 import { BaseEntityType } from '../../util/types';
 
 import { ICommonEntity } from '../types';
-import { commonCollection } from './index';
+import { CommonsCollection } from './index';
 
 
 type OmittedCommonCreationProperties = 'raised' | 'balance';
@@ -32,7 +32,7 @@ export const addCommon = async (common: Omit<ICommonEntity, BaseEntityType | Omi
     commonDoc['testCreated'] = true;
   }
 
-  await commonCollection
+  await CommonsCollection
     .doc(commonDoc.id)
     .set(commonDoc);
 
