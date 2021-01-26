@@ -425,12 +425,6 @@ export const notifyData: Record<string, IEventData> = {
         commonData
       };
     },
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    notification: async ({ commonData, subscription }) => (
-      subscription.charges === 1
-        ? memberAddedNotification(commonData)
-        : null
-    ),
     email: ({ subscription, user, card }: {
       subscription: ISubscriptionEntity,
       user: IUserEntity,
