@@ -100,6 +100,7 @@ export const backofficeApp = functions
       '/payin', 
       '/payout', 
       '/circlebalancehistorical', 
+      '/circlebalance', 
       '/commonbalance',
       '/test'
     ]

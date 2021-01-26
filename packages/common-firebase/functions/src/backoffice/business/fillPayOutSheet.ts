@@ -62,7 +62,7 @@ export async function fillPayOutSheet():Promise<any> {
           cells.push(data[key].common.id)
           cells.push(data[key].common.name)
           
-          cells.push(`=createInitLink(R${row}:AG${row}, A${row})`);
+          cells.push(`=createInitLink(R${row}:AI${row}, A${row})`);
 
 
           if(data[key].payout){
