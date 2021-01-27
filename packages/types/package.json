@@ -2,7 +2,7 @@
   "name": "@common/types",
   "version": "0.0.1",
   "description": "Shared typings for the project",
-  "author": "Alexander Ivanov <alexander2001ivanov@gmail.com>",
+  "author": "The Common Team",
   "homepage": "",
   "license": "ISC",
   "main": "src/index.ts",
