@@ -59,7 +59,7 @@ type CreateCardPayload = yup.InferType<typeof createCardValidationSchema>;
  *
  * @param payload
  */
-export const createCard = async (payload: CreateCardPayload): Promise<ICardEntity> => {
+export const createCard = async (payload: CreateCardPayload = {}): Promise<ICardEntity> => {
   // Validate the passed data
   await validate(payload, createCardValidationSchema);
 

@@ -2,13 +2,13 @@ import * as functions from 'firebase-functions';
 
 import { commonApp, commonRouter } from '../util';
 import { responseExecutor } from '../util/responseExecutor';
-import {fillPayInSheet} from './business/fillPayInSheet'
-import {fillPayOutSheet} from './business/fillPayOutSheet'
-import {fillCircleBalanceSheet} from './business/fillCircleBalanceSheet'
-import {fillCommonBalanceSheet} from './business/fillCommonBalanceSheet'
-import {fillCircleBalanceSheetHistoricalSheet} from './business/fillCircleBalanceHistoricalSheet'
+import { fillPayInSheet } from './business/fillPayInSheet';
+import { fillPayOutSheet } from './business/fillPayOutSheet';
+import { fillCircleBalanceSheet } from './business/fillCircleBalanceSheet';
+import { fillCommonBalanceSheet } from './business/fillCommonBalanceSheet';
+import { fillCircleBalanceSheetHistoricalSheet } from './business/fillCircleBalanceHistoricalSheet';
 import { addCircleBalance } from './database/addCircleBalance';
-import * as cron from './crons'
+import * as cron from './crons';
 
 const runtimeOptions = {
   timeoutSeconds: 540 // Maximum time 9 mins
@@ -96,11 +96,11 @@ router.get('/circlebalance', async (req, res, next) => {
 export const backofficeApp = functions
   .runWith(runtimeOptions)
   .https.onRequest(commonApp(router, {
-    unauthenticatedRoutes:[
-      '/payin', 
-      '/payout', 
-      '/circlebalancehistorical', 
-      '/circlebalance', 
+    unauthenticatedRoutes: [
+      '/payin',
+      '/payout',
+      '/circlebalancehistorical',
+      '/circlebalance',
       '/commonbalance',
       '/test'
     ]

@@ -17,7 +17,7 @@ export interface ICircleCardBillingDetails {
   name: string;
   city: string;
   line1: string;
-  line2: string;
+  line2?: string;
   country: string;
   district: string;
   postalCode: string;
@@ -25,7 +25,7 @@ export interface ICircleCardBillingDetails {
 
 export interface ICircleCardMetadata {
   email: string;
-  phoneNumber: string;
+  phoneNumber?: string;
 }
 
 export interface ICircleCardVerification {
@@ -43,12 +43,15 @@ export interface ICircleCardRiskEvaluation {
 export interface ICircleCard {
   id: string;
 
-  riskEvaluation: ICircleCardRiskEvaluation;
+  riskEvaluation?: ICircleCardRiskEvaluation;
   billingDetails: ICircleCardBillingDetails;
   verification: ICircleCardVerification;
   metadata: ICircleCardMetadata;
 
   network: CircleCardNetwork;
+
+  fingerprint: string;
+  errorCode?: string;
 
   createDate: Date;
   updateDate: Date;

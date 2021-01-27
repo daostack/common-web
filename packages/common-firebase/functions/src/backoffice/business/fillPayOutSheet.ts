@@ -1,13 +1,13 @@
 import { backofficeDb } from '../database';
 import { env } from '../../constants';
-import { google } from 'googleapis'
-import { date } from '../helper'
-import { jwt } from './jwtClient'
+import { google } from 'googleapis';
+import { date } from '../helper';
+import { jwt } from './jwtClient';
 
-export async function fillPayOutSheet():Promise<any> {
-  const jwtClient = await jwt();  
+export async function fillPayOutSheet(): Promise<any> {
+  const jwtClient = await jwt();
   const data = await backofficeDb.getPayout();
-  const sheets = google.sheets('v4')
+  const sheets = google.sheets('v4');
   const values = [[
     'Proposal Id',
     'Amount',
@@ -51,28 +51,28 @@ export async function fillPayOutSheet():Promise<any> {
       // eslint-disable-next-line no-prototype-builtins
       if (data.hasOwnProperty(key)) {
           const cells = []
-          cells.push(data[key].proposal.id)
-          cells.push(data[key].proposal.fundingRequest.amount/100)
-          cells.push(date(new Date(data[key].proposal.createdAt.toDate())))
-          cells.push(date(new Date(data[key].proposal.updatedAt.toDate())))
-          cells.push(data[key].proposal.proposerId)
-          cells.push(data[key].user.email)
-          cells.push(data[key].user.firstName)
-          cells.push(data[key].user.lastName)
-          cells.push(data[key].common.id)
-          cells.push(data[key].common.name)
-          
-          cells.push(`=createInitLink(R${row}:AI${row}, A${row})`);
+        cells.push(data[key].proposal.id);
+        cells.push(data[key].proposal.fundingRequest.amount / 100);
+        cells.push(date(new Date(data[key].proposal.createdAt.toDate())));
+        cells.push(date(new Date(data[key].proposal.updatedAt.toDate())));
+        cells.push(data[key].proposal.proposerId);
+        cells.push(data[key].user.email);
+        cells.push(data[key].user.firstName);
+        cells.push(data[key].user.lastName);
+        cells.push(data[key].common.id);
+        cells.push(data[key].common.name);
+
+        cells.push(`=createInitLink(R${row}:AI${row}, A${row})`);
 
 
-          if(data[key].payout){
-            //this is init link, must be empty
+        if (data[key].payout) {
+          //this is init link, must be empty
 
-            cells.push(data[key].payout.id);
+          cells.push(data[key].payout.id);
 
-            let status = '';
-            if(!data[key].payout.executed){
-              status = 'initiated';
+          let status = '';
+          if (!data[key].payout.executed) {
+            status = 'initiated';
             } else {
               if(data[key].payout.status === 'pending'){
                 status = 'pending';

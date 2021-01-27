@@ -18,10 +18,11 @@ export interface ICircleCreateCardResponse {
     id: string;
 
     billingDetails: ICircleBillingDetails;
+    fingerprint: string;
 
     metadata: {
       email: string;
-      phoneNumber: string;
+      phoneNumber?: string;
     }
 
     expMonth: number;
@@ -33,6 +34,7 @@ export interface ICircleCreateCardResponse {
 
     verification: {
       cvv: CircleCvvCheck;
+      avs: 'pending' | any;
     }
   }
 }

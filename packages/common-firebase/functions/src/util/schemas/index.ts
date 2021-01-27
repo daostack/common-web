@@ -52,7 +52,7 @@ export const billingDetailsValidationSchema = yup.object({
     .string()
     .matches(/^[a-zA-Z'. ]*$/, 'You name can only contain latin characters and spaces.')
     .test('Must provide at least two names', 'You must provide your fist and last name', (value) => {
-      return value.split(' ').length >= 2;
+      return value?.split(' ').length >= 2;
     })
     .required(),
 

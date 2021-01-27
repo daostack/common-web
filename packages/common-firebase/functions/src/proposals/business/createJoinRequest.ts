@@ -11,7 +11,7 @@ import {commonDb} from '../../common/database';
 import {IJoinRequestProposal, IProposalLink} from '../proposalTypes';
 import {linkValidationSchema} from '../../util/schemas';
 import {proposalDb} from '../database';
-import {isCardOwner} from '../../circlepay/cards/business/isCardOnwer';
+import {isCardOwner} from '../../circlepay/cards/business/isCardOwner';
 import {createEvent} from '../../util/db/eventDbService';
 import {EVENT_TYPES} from '../../event/event';
 import {isTest} from '../../util/environment';

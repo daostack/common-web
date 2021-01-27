@@ -1,5 +1,4 @@
-import { ArgumentError, CommonError } from '../../util/errors';
-import { NotFoundError } from '../../util/errors';
+import { ArgumentError, CommonError, NotFoundError } from '../../util/errors';
 import { Nullable } from '../../util/types';
 
 import { ProposalsCollection } from './index';

@@ -1,7 +1,8 @@
 import { ICommonEntity } from '../types';
+import { ArgumentError, NotFoundError } from '../../util/errors';
 import { CommonsCollection } from './index';
 import { Nullable } from '../../util/types';
-import { ArgumentError, NotFoundError } from '../../util/errors';
+
 import admin from 'firebase-admin';
 import Transaction = admin.firestore.Transaction;
 
@@ -16,7 +17,7 @@ import Transaction = admin.firestore.Transaction;
  * @returns - The found common
  */
 export const getCommon = async (commonId: string): Promise<ICommonEntity> => {
-  if(!commonId) {
+  if (!commonId) {
     throw new ArgumentError('commonId', commonId);
   }
 
@@ -29,7 +30,7 @@ export const getCommon = async (commonId: string): Promise<ICommonEntity> => {
   }
 
   return common;
-}
+};
 
 /**
  * Get common by it's ID with up to date transactional

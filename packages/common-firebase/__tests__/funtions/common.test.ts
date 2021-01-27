@@ -91,8 +91,6 @@ describe('Common Related Cloud Functions', () => {
         invalidContributionResponse.body.data.errors
           .some(x => x === 'contributionType must be one of the following values: one-time, monthly')
       ).toBeTruthy();
-
-      console.log(response.body);
     });
 
     it('should create common successfully given valid data', async () => {
