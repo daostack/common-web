@@ -1,5 +1,4 @@
 import * as functions from 'firebase-functions';
-import { commonDb } from '../common/database';
 
 import { env } from '../constants';
 import { commonApp, commonRouter } from '../util';
@@ -15,8 +14,11 @@ metadataRouter.get('/app', (req, res) => {
     });
 });
 
-metadataRouter.get('/common', async (req, res) => {
-  res.send(await commonDb.get(req.query.commonId as string));
+metadataRouter.get('/headers', async (req, res) => {
+  res.send({
+    headers: JSON.stringify(req.headers),
+    rawHeaders: JSON.stringify(req.rawHeaders)
+  });
 });
 
 export const metadataApp = functions
@@ -25,6 +27,7 @@ export const metadataApp = functions
   })
   .https.onRequest(commonApp(metadataRouter, {
     unauthenticatedRoutes: [
-      '/app'
+      '/app',
+      '/headers'
     ]
   }));
