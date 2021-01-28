@@ -1,14 +1,15 @@
 import merge from 'deepmerge';
 
 import adminKeys from './env/adminsdk-keys.json';
-import envSecrets from './env/env_secrets.json';
 import envConfig from './env/env_config.json';
+import envSecrets from './env/env_secrets.json';
 
 interface Env {
   environment: 'staging' | 'production' | 'dev';
 
   firebase: {
     databaseURL: string;
+    logsUrl: string;
   };
 
   metadata: {
@@ -58,6 +59,10 @@ interface Env {
 
   backoffice: {
     sheetUrl: string;
+  }
+
+  slack: {
+    errorWebhook: string;
   }
 }
 

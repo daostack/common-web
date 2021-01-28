@@ -1,10 +1,19 @@
 import express from 'express';
+import { createErrorResponse } from '../createErrorResponse';
 
 import { CommonError } from '../errors';
-import { createErrorResponse } from '../createErrorResponse';
 import { ICommonError } from '../errors/CommonError';
+import { slackClient } from '../slack';
 
-export const errorHandling = (err: Error, req: express.Request, res: express.Response, next: express.NextFunction): void => {
+export const errorHandling = async (err: Error, req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
+  try {
+    await slackClient.sendError(err as CommonError, req.requestId);
+  } catch (e) {
+    logger.error('An error occurred while trying to communicate with slack', {
+      error: e
+    });
+  }
+
   if ((err as ICommonError).errorId) {
     createErrorResponse(req, res, err as ICommonError);
   } else {

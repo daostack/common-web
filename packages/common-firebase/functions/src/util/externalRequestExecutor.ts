@@ -1,5 +1,5 @@
-import { CommonError } from './errors';
 import { stringify } from 'flatted';
+import { CommonError } from './errors';
 
 interface IExternalErrorData {
   errorCode: string;
