@@ -4,12 +4,10 @@ import { validate } from '../../../util/validate';
 import { subscriptionDb } from '../../../subscriptions/database';
 import { createPayment } from './createPayment';
 import { pollPayment } from './pollPayment';
-import { EVENT_TYPES } from '../../../event/event';
-import { createEvent } from '../../../util/db/eventDbService';
-import { isFinalized, isSuccessful } from '../helpers';
-import { handleFailedSubscriptionPayment, handleSuccessfulSubscriptionPayment } from '../../../subscriptions/business';
 import { proposalDb } from '../../../proposals/database';
 import { IPaymentEntity } from '../types';
+import { handleFinalizedSubscriptionPayment } from './handlers/subscriptions/handleFinalizedSubscriptionPayment';
+import { isFinalized } from '../helpers';
 
 const createSubscriptionPaymentValidationSchema = yup.object({
   subscriptionId: yup.string()
@@ -20,7 +18,7 @@ const createSubscriptionPaymentValidationSchema = yup.object({
     .required(),
 
   sessionId: yup.string()
-    .required(),
+    .required()
 });
 
 
@@ -75,31 +73,13 @@ export const createSubscriptionPayment = async (payload: yup.InferType<typeof cr
     subscription
   });
 
-
-  if (isSuccessful(payment)) {
-    await createEvent({
-      type: EVENT_TYPES.SUBSCRIPTION_PAYMENT_CONFIRMED,
-      objectId: payment.id,
-      userId: payment.userId
-    });
-
-    await handleSuccessfulSubscriptionPayment(subscription);
-  } else if (isFinalized(payment)) {
-    await createEvent({
-      type: EVENT_TYPES.SUBSCRIPTION_PAYMENT_FAILED,
-      objectId: payment.id,
-      userId: payment.userId
-    });
-
-    await handleFailedSubscriptionPayment(subscription, payment);
+  // Process the payment if it is finalize. If it is not something went wrong
+  if (isFinalized(payment)) {
+    await handleFinalizedSubscriptionPayment(subscription, payment);
   } else {
-    await createEvent({
-      type: EVENT_TYPES.SUBSCRIPTION_PAYMENT_STUCK,
-      objectId: payment.id,
-      userId: payment.userId
+    logger.error('Payment not finalized after poling', {
+      payment
     });
-
-    logger.warn('Payment is not in finalized or successful state after polling', { payment });
   }
 
   return payment;

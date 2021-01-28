@@ -1,36 +1,42 @@
-import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 import { v4 } from 'uuid';
+
+// Add the logger to the tests globals
+import '../../../util/logger';
+import '../../../util/tests/helpers/mockers/cards/getCard.mocker';
+import '../../../util/tests/helpers/mockers/commons/getCommon.mocker';
+import '../../../util/tests/helpers/mockers/commons/updateCommon.mocker';
+import '../../../util/tests/helpers/mockers/firebase.mocker';
+import '../../../util/tests/helpers/mockers/getUser.mocker';
+import '../../../util/tests/helpers/mockers/payments/addPayment.mocker';
+
+// Mockers
+import '../../../util/tests/helpers/mockers/payments/updatePayment.mocker';
+import '../../../util/tests/helpers/mockers/proposals/getJoinRequest.mocker';
+import '../../../util/tests/helpers/mockers/proposals/getProposal.mocker';
+import '../../../util/tests/helpers/mockers/proposals/updateProposal.mocker';
+import '../../../util/tests/helpers/mockers/subscriptions/getSubscription.mocker';
+import '../../../util/tests/helpers/mockers/subscriptions/updateSubscription.mocker';
+
+import { ICircleCreatePaymentResponse, ICirclePayment } from '../../types';
+import { createPayment } from '../business/createPayment';
+import { createProposalPayment } from '../business/createProposalPayment';
+import { pollPayment } from '../business/pollPayment';
 import {
   createPaymentValidResponse,
   getPaymentFailedResponse,
   getPaymentPendingResponce,
   getPaymentSuccessfulResponce
 } from './data/testCircleResponses';
-import { ICircleCreatePaymentResponse, ICirclePayment } from '../../types';
-
-// Add the logger to the tests globals
-import '../../../util/logger';
-
-// Mockers
-import '../../../util/tests/helpers/mockers/payments/updatePayment.mocker';
-import '../../../util/tests/helpers/mockers/payments/addPayment.mocker';
-import '../../../util/tests/helpers/mockers/firebase.mocker';
-import '../../../util/tests/helpers/mockers/getUser.mocker';
-import '../../../util/tests/helpers/mockers/cards/getCard.mocker';
-import '../../../util/tests/helpers/mockers/proposals/getJoinRequest.mocker';
-import '../../../util/tests/helpers/mockers/proposals/updateProposal.mocker';
 
 import { pendingPaymentEntity, successfulPaymentEntity } from './data/testPaymentEntities';
-import { pollPayment } from '../business/pollPayment';
-import { createPayment } from '../business/createPayment';
 import {
   createPaymentInvalidPayload,
   createPaymentValidPayload,
   createProposalPaymentInvalidPayload,
   createProposalPaymentValidPayload
 } from './data/testPaymentPayloads';
-import { createProposalPayment } from '../business/createProposalPayment';
 
 const circleMatcher = /.+circle\.com\/.*/;
 const circePaymentEndpointMatcher = new RegExp(circleMatcher.source + (/\/payments/).source);
@@ -39,7 +45,10 @@ const circePaymentEndpointMatcher = new RegExp(circleMatcher.source + (/\/paymen
 
 jest.mock('firebase-admin', () => ({
   initializeApp: jest.fn(),
-  firestore: () => ({
+  firestore: jest.fn(() => ({
+    Timestamp: jest.fn(() => ({
+      now: jest.fn()
+    })),
     collection: jest.fn(() => ({
       withConverter: jest.fn()
         .mockImplementation(() => jest.fn())
@@ -50,7 +59,7 @@ jest.mock('firebase-admin', () => ({
       // }))
     })),
     settings: jest.fn()
-  })
+  }))
 }));
 
 jest.mock('../../../util/db/eventDbService', () => ({

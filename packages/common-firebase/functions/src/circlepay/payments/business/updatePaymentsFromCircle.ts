@@ -1,9 +1,25 @@
-import { getPayments } from '../database/getPayments';
+import { getPayments, IGetPaymentsOptions } from '../database/getPayments';
 import { updatePaymentFromCircle } from './updatePaymentFromCircle';
 import { paymentDb } from '../database';
 
-export const updatePaymentsFromCircle = async (trackId: string): Promise<void> => {
-  const payments = await getPayments({});
+const defaultGetPaymentOptions: IGetPaymentsOptions = {
+  status: 'pending',
+  olderThan: new Date((new Date().getTime()) - 60 * 60 * 1000) // 1 hour before now
+};
+
+/**
+ * Update all payments that match the passed option from circle and acts upon
+ * the status changes
+ *
+ * @param trackId - Required. Id used for identifying the update batch
+ * @param options - Optional. Sorting and filtering options for getting
+ *    the payments. If not provided only pending payments will be updated
+ */
+export const updatePaymentsFromCircle = async (
+  trackId: string,
+  options: IGetPaymentsOptions = defaultGetPaymentOptions
+): Promise<void> => {
+  const payments = await getPayments(options);
   const paymentUpdatePromiseArr: Promise<any>[] = [];
 
   payments.forEach(payment => {

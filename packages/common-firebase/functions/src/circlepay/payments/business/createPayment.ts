@@ -169,7 +169,7 @@ export const createPayment = async (payload: ICreatePaymentPayload): Promise<IPa
     circlePaymentId: response.id,
 
     // Add the subscription ID to the entity if the payment is for subscription
-    ...({
+    ...(payload.subscriptionId && {
       subscriptionId: payload.subscriptionId
     })
   });

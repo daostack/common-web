@@ -1,10 +1,10 @@
-import { ICommonEntity } from '../types';
-import { commonDb } from '../database';
-import { proposalDb } from '../../proposals/database';
-import { CommonError } from '../../util/errors';
-import { createEvent } from '../../util/db/eventDbService';
-import { EVENT_TYPES } from '../../event/event';
 import admin from 'firebase-admin';
+import { EVENT_TYPES } from '../../event/event';
+import { proposalDb } from '../../proposals/database';
+import { createEvent } from '../../util/db/eventDbService';
+import { CommonError } from '../../util/errors';
+import { commonDb } from '../database';
+import { ICommonEntity } from '../types';
 import Timestamp = admin.firestore.Timestamp;
 
 /**
@@ -44,8 +44,8 @@ export const addCommonMemberByProposalId = async (proposalId: string): Promise<v
 const addCommonMember = async (common: ICommonEntity, userId: string): Promise<ICommonEntity> => {
   if(!common.members.includes({ userId })) {
     common.members.push({
-      userId, 
-      joinedAt: Timestamp.now()
+      userId,
+      joinedAt: Timestamp?.now()
     });
 
     await commonDb.update(common);

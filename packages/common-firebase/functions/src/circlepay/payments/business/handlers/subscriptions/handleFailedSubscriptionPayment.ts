@@ -1,9 +1,11 @@
-import { ISubscriptionEntity } from '../types';
-import { CommonError } from '../../util/errors';
-import { updateSubscription } from '../database/updateSubscription';
-import { revokeMembership } from './revokeMembership';
-import { IPaymentEntity } from '../../circlepay/payments/types';
-import { proposalDb } from '../../proposals/database';
+import { CommonError } from '../../../../../util/errors';
+import { IPaymentEntity } from '../../../types';
+
+import { proposalDb } from '../../../../../proposals/database';
+
+import { updateSubscription } from '../../../../../subscriptions/database/updateSubscription';
+import { ISubscriptionEntity } from '../../../../../subscriptions/types';
+import { revokeMembership } from '../../../../../subscriptions/business';
 
 /**
  * Handles update for the subscription document on payment failure

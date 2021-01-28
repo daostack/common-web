@@ -5,7 +5,6 @@ import {IEventEntity} from '../../event/type';
 import {EVENT_TYPES} from '../../event/event';
 import {fundProposal} from '../business/fundProposal';
 import {createSubscription} from '../../subscriptions/business';
-import {commonDb} from '../../common/database';
 import {proposalDb} from '../database';
 import {createEvent} from '../../util/db/eventDbService';
 import {createProposalPayment} from '../../circlepay/payments/business/createProposalPayment';
@@ -41,26 +40,15 @@ export const onProposalApproved = functions.firestore
       } else {
         if (proposal.join.funding > 0) {
           // Create the payment
-          await createProposalPayment(
-            {
-              proposalId: proposal.id,
-              sessionId: context.eventId,
-              ipAddress: '127.0.0.1', // @todo Get ip, but what IP?
-            },
-            {throwOnFailure: true},
-          );
-
-          // Update common funding info
-          const common = await commonDb.get(proposal.commonId);
-
-          common.raised += proposal.join.funding;
-          common.balance += proposal.join.funding;
-
-          await commonDb.update(common);
+          await createProposalPayment({
+            proposalId: proposal.id,
+            sessionId: context.eventId,
+            ipAddress: '127.0.0.1' // @todo Get ip, but what IP?
+          }, { throwOnFailure: true });
+        } else {
+          // Add the user as member
+          await addCommonMemberByProposalId(proposal.id);
         }
-
-        // Add the user as member
-        await addCommonMemberByProposalId(proposal.id);
       }
     }
   });

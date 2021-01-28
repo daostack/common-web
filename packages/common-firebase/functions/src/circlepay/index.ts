@@ -3,6 +3,7 @@ import { v4 } from 'uuid';
 import axios from 'axios';
 
 import * as payoutCrons from './payouts/crons';
+import * as paymentCrons from './payments/crons';
 
 import { commonApp, commonRouter, externalRequestExecutor } from '../util';
 import { responseExecutor } from '../util/responseExecutor';
@@ -173,7 +174,8 @@ circlepay.get('/payouts/approve', async (req, res, next) => {
 });
 
 export const circlePayCrons = {
-  ...payoutCrons
+  ...payoutCrons,
+  ...paymentCrons
 };
 
 export const circlePayApp = functions

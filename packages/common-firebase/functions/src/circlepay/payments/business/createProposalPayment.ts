@@ -4,12 +4,11 @@ import { CommonError, PaymentError } from '../../../util/errors';
 import { validate } from '../../../util/validate';
 import { proposalDb } from '../../../proposals/database';
 
-import { createPayment } from './createPayment';
-import { pollPayment } from './pollPayment';
-import { isFailed } from '../helpers/statusHelper';
-import { EVENT_TYPES } from '../../../event/event';
-import { createEvent } from '../../../util/db/eventDbService';
 import { IPaymentEntity } from '../types';
+import { pollPayment } from './pollPayment';
+import { createPayment } from './createPayment';
+import { isFailed, isFinalized } from '../helpers';
+import { handleFinalizedJoinPayment } from './handlers/joins/handleFinalizedJoinPayment';
 
 const createProposalPaymentValidationSchema = yup.object({
   proposalId: yup.string()
@@ -102,33 +101,11 @@ export const createProposalPayment = async (payload: yup.InferType<typeof create
     payment
   });
 
-  await createEvent({
-    type: payment.status === 'failed'
-      ? EVENT_TYPES.PAYMENT_FAILED
-      : payment.status === 'paid'
-        ? EVENT_TYPES.PAYMENT_PAID
-        : payment.status === 'confirmed'
-          ? EVENT_TYPES.PAYMENT_CONFIRMED
-          : EVENT_TYPES.PAYMENT_UPDATED,
-    objectId: payment.id,
-    userId: payment.userId
-  });
-
-
-  // Update the payment status
-  await proposalDb.update({
-    ...proposal,
-    paymentState: payment.status === 'paid'
-      ? 'confirmed'
-      : payment.status
-  });
-
-  // If the payment was confirmed execute the join request
-  if (payment.status === 'confirmed') {
-    await createEvent({
-      type: EVENT_TYPES.REQUEST_TO_JOIN_EXECUTED,
-      userId: proposal.proposerId,
-      objectId: proposal.id
+  if (isFinalized(payment)) {
+    await handleFinalizedJoinPayment(proposal, payment);
+  } else {
+    logger.warn('Non finalized join payment present after polling', {
+      payment
     });
   }
 

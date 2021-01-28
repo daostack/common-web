@@ -1,4 +1,3 @@
-
 import { commonDb } from '../database';
 import { ICommonUpdate, ICommonEntity } from '../types';
 import { createEvent } from '../../util/db/eventDbService';
@@ -15,7 +14,7 @@ export const updateCommon = async (commonUpdate: ICommonUpdate) : Promise<ICommo
 
   // the doc that was saved in the commonEditHistory collection
   const commonHistoryRecord = await commonEditHistoryDb.add(commonUpdate); 
-  const updatedCommon = await commonDb.update(commonUpdate.newCommon);
+  const updatedCommon = (await commonDb.update(commonUpdate.newCommon)) as ICommonEntity;
 
   await createEvent({
     userId: commonHistoryRecord.changedBy,

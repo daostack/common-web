@@ -2,8 +2,7 @@ import { CommonError } from '../../util/errors';
 
 import { proposalDb } from '../database';
 import { commonDb } from '../../common/database';
-import admin from 'firebase-admin';
-import FieldValue = admin.firestore.FieldValue;
+import { updateCommonBalance } from '../../common/business/updateCommonBalance';
 
 /**
  * Changes the status of the proposal and updates the common. If the common currently has
@@ -33,15 +32,18 @@ export const fundProposal = async (proposalId: string): Promise<void> => {
   if (common.balance < proposal.fundingRequest.amount) {
     logger.warn(`Proposal with id ${proposal.id} cannot be funded, because the common does not have enough balance!`);
 
+    // @todo Don't know what is happening here. Look it up
+
     throw new CommonError(`Proposal with id ${proposal.id} cannot be funded, because the common does not have enough balance!`);
 
     return;
   }
 
-  // Change the commons balance and
-  // update the funding proposal
-  common.balance = FieldValue.increment(proposal.fundingRequest.amount * -1) as any;
+  // Change the commons balance and update the funding proposal
+  await updateCommonBalance(proposal.commonId, proposal.fundingRequest.amount * -1);
 
+  // Mark the proposal as funded
+  // @question(for: Jelle) I think we should move this mark only when the payout is created. What would you say?
   proposal.fundingRequest.funded = true;
 
   // Persist the changes asynchronously

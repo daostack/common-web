@@ -1,7 +1,10 @@
+import admin from 'firebase-admin';
+
 import { IPaymentEntity, PaymentStatus } from '../types';
 import { PaymentsCollection } from './index';
+import Query = admin.firestore.Query;
 
-interface IGetPaymentsOptions {
+export interface IGetPaymentsOptions {
   /**
    * Get all payments with ID (should be only one)
    */
@@ -16,7 +19,13 @@ interface IGetPaymentsOptions {
   /**
    * Filter by the status of the payment
    */
-  status?: PaymentStatus;
+  status?: PaymentStatus | PaymentStatus[];
+
+  /**
+   * Get payment that were created before
+   * the passed date
+   */
+  olderThan?: Date;
 
   createdFromObject?: {
     id?: string;
@@ -29,7 +38,7 @@ interface IGetPaymentsOptions {
  * @param options - The options for filtering the payments
  */
 export const getPayments = async (options: IGetPaymentsOptions): Promise<IPaymentEntity[]> => {
-  let paymentsQuery: any = PaymentsCollection;
+  let paymentsQuery: Query<IPaymentEntity> = PaymentsCollection;
 
   if (options.id) {
     paymentsQuery = paymentsQuery.where('id', '==', options.id);
@@ -42,8 +51,9 @@ export const getPayments = async (options: IGetPaymentsOptions): Promise<IPaymen
   }
 
   if (options.status) {
-    paymentsQuery = paymentsQuery
-      .where('status', '==', options.status);
+    paymentsQuery = Array.isArray(options.status)
+      ? paymentsQuery.where('status', 'in', options.status)
+      : paymentsQuery.where('status', '==', options.status);
   }
 
   if (options.createdFromObject) {
@@ -52,6 +62,12 @@ export const getPayments = async (options: IGetPaymentsOptions): Promise<IPaymen
     if (createdFromObject.id) {
       paymentsQuery = paymentsQuery.where('createdFromObject.id', '==', createdFromObject.id);
     }
+  }
+
+  if (options.olderThan) {
+    paymentsQuery = paymentsQuery
+      .orderBy('createdAt')
+      .where('createdAt', '<', options.olderThan);
   }
 
   return (await paymentsQuery.get()).docs
