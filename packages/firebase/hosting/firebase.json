@@ -1,0 +1,22 @@
+{
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "appAssociation": "AUTO",
+    "rewrites": [
+      {
+        "source": "/**",
+        "dynamicLinks": true
+      }
+    ],
+    "redirects": [ {
+      "regex": "^/[^\\.well\\-known].*$",
+      "destination": "https://common.io/", 
+      "type": 302
+    }]
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "functions": {
+    "predeploy": [
+      "yarn lint",
+      "yarn build"
+    ],
+    "source": "functions"
+  },
+  "firestore": {
+    "rules": "./firestore/firestore.rules",
+    "indexes": "./firestore/firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "./storage/storage.rules"
+  },
+  "emulators": {
+    "firestore": {
+      "port": 8080
+    },
+    "ui": {
+      "enabled": true,
+      "host": "localhost",
+      "port": 4000
+    },
+    "functions": {
+      "port": 5003
+    },
+    "database": {
+      "port": 9000
+    },
+    "pubsub": {
+      "port": 8085
+    }
+  },
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "appAssociation": "AUTO",
+    "rewrites": [
+      {
+        "source": "/**",
+        "dynamicLinks": true
+      }
+    ],
+    "redirects": [
+      {
+        "regex": "^/[^\\.well\\-known].*$",
+        "destination": "https://common.io/",
+        "type": 302
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Cloud Functions should produce the same email for the same stubs 1`] = `
+Object {
+  "body": "
+  Hello Test Name,<br />
+  Thank you for Joining Common!
+  <br /><br />
+  Your request to join <a href=\\"https://google.com\\">Test Common Name</a> has been submitted and is pending approval by the Common members. 
+  You will be notified by email once voting has concluded. 
+  <br /><br />
+  For more information you can contact us any time using our <a href=\\"https://common.io/help\\">support chat</a>
+  <br />
+  Common,<br />
+  Collaborative Social Action.
+",
+  "subject": "Request to join submitted",
+}
+`;

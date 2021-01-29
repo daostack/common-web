@@ -527,3 +527,12 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,webstorm,visualstudiocode,node,reactnative,firebase
+
+# Custom Ignores
+
+**/env/**/adminsdk-keys.json
+**/env/**/env_secrets.json
+**/constants/env
+
+**/firestore/backup
+**/firestore/data/firestore_export

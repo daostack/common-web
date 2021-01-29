@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Payment Unit Tests One-time payments should create the payment given the correct payload 1`] = `
+Object {
+  "amount": 1598,
+  "currency": "USD",
+}
+`;
+
+exports[`Payment Unit Tests Payment polling should poll until successful status is reached 1`] = `
+Object {
+  "amount": 1598,
+  "currency": "USD",
+}
+`;

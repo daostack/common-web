@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Common Related Cloud Functions Common Creation should fail validation on invalid input 1`] = `
+Array [
+  "image is a required field",
+  "byline is a required field",
+  "fundingGoalDeadline is a required field",
+  "contributionAmount is a required field",
+]
+`;
