@@ -9,6 +9,11 @@
     "packages/firebase/functions"
   ],
   "scripts": {
-    "bootstrap": "yarn && lerna bootstrap"
+    "bootstrap": "yarn && lerna bootstrap",
+
+    "types:compile": "lerna exec 'yarn compile' --scope @common/types",
+
+    "firebase:ci:setup": "lerna exec 'yarn ci:setup --token ${{ secrets.FIREBASE_TOKEN }}' --scope @common/firebase",
+    "firebase:ci:test": "lerna exec 'yarn ci:test' --scope @common/firebase"
   }
 }
