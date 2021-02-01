@@ -25,7 +25,9 @@ metadataRouter.get('/headers', async (req, res) => {
 metadataRouter.get('/addJoinedAt', async (req, res) => {
   await addJoinedAtDateToAllCommonMembers();
 
-  res.send('done!');
+  res
+  .status(200)
+  .send('done!');
 })
 
 export const metadataApp = functions

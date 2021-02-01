@@ -5,13 +5,16 @@ import { EVENT_TYPES } from '../../event/event';
 
 export const addJoinedAtDateToAllCommonMembers = async () => {
   const commons = await commonDb.getMany({});
-  const commonUpdateArr: Promise<void>[] = [];
 
-  commons.forEach((common) => {
-    commonUpdateArr.push(addJoinedAtDate(common))
-  });
-
-  await Promise.all(commonUpdateArr);
+  for(const common of commons) {
+    try {
+      await addJoinedAtDate(common);
+    } catch(err) {
+      logger.error('An error occurred while adding joined at dates', {
+        error: err.message
+      });
+    }
+  }
 }
 
 const addJoinedAtDate = async (common: ICommonEntity): Promise<void> => {
@@ -46,7 +49,9 @@ const addJoinedAtDate = async (common: ICommonEntity): Promise<void> => {
           memberId,
           commonId: common.id,
           joinEvents
-        })
+        });
+
+        break;
       }
 
       members[memberIndex] = {
