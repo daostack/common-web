@@ -6,13 +6,17 @@ on:
       - 'packages/firebase/**'
       - 'packages/types/**'
     branches:
-      - dev
+      - main
+      - main/firebase
+      - main/app
   pull_request:
     paths:
       - 'packages/firebase/**'
       - 'packages/types/**'
     branches:
-      - dev
+      - main
+      - main/firebase
+      - main/app
 
 jobs:
   test:
