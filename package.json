@@ -9,6 +9,6 @@
     "packages/firebase/functions"
   ],
   "scripts": {
-    "bootstrap": "yarn && lerna boostrap"
+    "bootstrap": "yarn && lerna bootstrap"
   }
 }
