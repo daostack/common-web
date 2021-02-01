@@ -36,16 +36,19 @@ jobs:
         with:
           java-version: '9.0.4'
 
-      #      - uses: actions/cache@v2
-      #        with:
-      #          path: '**/node_modules'
-      #          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Setup Lerna
+        run: yarn global add lerna
 
-      - name: Install packages
-        run: yarn install
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install packages and bootstrap project
+        run: yarn install && lerna bootstrap
 
       - name: Setup CI environment
-        run: yarn ci:setup --token ${{ secrets.FIREBASE_TOKEN }}
+        run: lerna exec 'yarn ci:setup --token ${{ secrets.FIREBASE_TOKEN }}' --scope @common/firebase
 
       - name: Run tests
-        run: yarn ci:test
+        run:  lerna exec 'yarn ci:test' --scope @common/firebase
