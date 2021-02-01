@@ -1,12 +1,12 @@
 import * as functions from 'firebase-functions';
 import { Collections } from '../../../constants';
-import { IEventEntity } from '../../../event/type';
+import { IEventEntity } from '../../../event/types';
 import { EVENT_TYPES } from '../../../event/event';
 import { onPayoutCreated } from './onPayoutCreated';
 import { onPayoutApproved } from './onPayoutApproved';
 
 export const payoutTriggers = functions.firestore
-  .document(`/${Collections.Event}/{id}`)
+  .document(`/${Collections.Events}/{id}`)
   .onCreate(async (snap, context) => {
     const eventObj = snap.data() as IEventEntity;
 

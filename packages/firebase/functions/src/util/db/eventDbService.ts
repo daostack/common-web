@@ -3,10 +3,10 @@ import { firestore } from 'firebase-admin';
 
 import { db } from '../index';
 import { Collections } from '../../constants';
-import { IEventEntity } from '../../event/type';
+import { IEventEntity } from '../../event/types';
 import { BaseEntityType } from '../types';
 
-export const eventCollection = db.collection(Collections.Event);
+export const eventCollection = db.collection(Collections.Events);
 
 export const createEvent = async (doc: Omit<IEventEntity, BaseEntityType>): Promise<IEventEntity> => {
   const eventDoc: IEventEntity = {

@@ -3,6 +3,7 @@ import { Collections } from '../../constants';
 
 import { addCommon } from './addCommon';
 import { getCommon, getCommonTransactional } from './getCommon';
+import { getCommons } from './getCommons';
 import { updateCommon } from './updateCommon';
 import { deleteCommonFromDatabase } from './deleteCommon';
 import { ICommonEntity } from '../types';
@@ -20,6 +21,7 @@ export const CommonsCollection = db.collection(Collections.Commons)
 export const commonDb = {
   add: addCommon,
   get: getCommon,
+  getMany: getCommons,
   update: updateCommon,
   delete: deleteCommonFromDatabase,
 

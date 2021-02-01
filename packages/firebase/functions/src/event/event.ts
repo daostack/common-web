@@ -16,8 +16,14 @@ interface IEventData {
 }
 
 /**
+ * @discuss - I don't think this is event related and I think this
+ * should be moved to the notifications domain
+ */
+
+/**
+ *
  * [Notification limiting; users would stop
- * recieving comment notifications after 5 notifications were already sent
+ * receiving comment notifications after 5 notifications were already sent
  * when the user comments, the counter is 'reset' and starting counting 5 notifications again
  * 
  * @param  discussionOwner        - owner of the discussion/proposal
