@@ -45,7 +45,10 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install packages and bootstrap project
-        run: yarn install && lerna bootstrap
+        run: yarn bootstrap
+
+      - name: Compile the types project
+        run: lerna exec 'yarn compile' --scope @common/types
 
       - name: Setup CI environment
         run: lerna exec 'yarn ci:setup --token ${{ secrets.FIREBASE_TOKEN }}' --scope @common/firebase
