@@ -9,6 +9,8 @@
     "packages/firebase/functions"
   ],
   "scripts": {
+    "exec": "lerna exec",
+
     "bootstrap": "yarn && lerna bootstrap",
 
     "types:compile": "lerna exec 'yarn compile' --scope @common/types",
