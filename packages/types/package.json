@@ -19,7 +19,8 @@
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1",
     "compile": "tsc -p tsconfig.json",
-    "compile:watch": "tsc -p tsconfig.json --watch"
+    "compile:watch": "tsc -p tsconfig.json --watch",
+    "hooks:precommit": "yarn compile"
   },
   "dependencies": {
     "firebase-admin": "^9.4.2"

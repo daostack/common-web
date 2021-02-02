@@ -3,8 +3,11 @@
   "description": "Cloud Functions for Firebase",
   "version": "1.9.6",
   "scripts": {
-    "build": "rimraf ./functions/dist/**/* && tsc -p tsconfig.json",
-    "build:watch": "rimraf ./functions/dist/**/* && tsc -p tsconfig.json --watch",
+    "build": "yarn compile",
+    "build:watch": "yarn compile:watch",
+    "compile": "rimraf ./functions/dist/**/* && tsc -p tsconfig.json",
+    "compile:watch": "rimraf ./functions/dist/**/* && tsc -p tsconfig.json --watch",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint .",
     "clean": "find ./ -name '*.log' -delete",
     "logs": "firebase functions:log",
@@ -28,9 +31,9 @@
     "test": "jest",
     "test:emulators": "cross-env NODE_ENV=test firebase emulators:exec 'yarn test'",
     "test:watch": "jest --watch",
-    "precommit": "lint-staged && yarn test",
     "deploy:indexes": "yarn use:staging && firebase deploy -only firestore:indexes",
-    "deploy:indexes:prod": "yarn use:production && firebase deploy -only firestore:indexes"
+    "deploy:indexes:prod": "yarn use:production && firebase deploy -only firestore:indexes",
+    "hooks:precommit": "yarn lint && yarn compile"
   },
   "engines": {
     "node": "12"
