@@ -1,6 +1,6 @@
+import { ICommonEntity } from '@common/types';
 import { firestore } from 'firebase-admin';
 
-import { ICommonEntity } from '../types';
 import { CommonsCollection } from './index';
 
 export type IUpdatableCommonEntity = Partial<ICommonEntity> & {

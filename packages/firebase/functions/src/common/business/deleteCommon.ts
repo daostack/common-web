@@ -1,4 +1,4 @@
-import { ICommonEntity } from '../types';
+import { ICommonEntity } from '../../../../../types';
 import { proposalDb } from '../../proposals/database';
 import { deleteProposal } from '../../proposals/business/deleteProposal';
 import { commonDb } from '../database';

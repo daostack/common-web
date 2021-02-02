@@ -1,5 +1,6 @@
+import { ContributionType } from '@common/types';
 import { IBaseEntity } from '../util/types';
-import { ContributionType } from '../common/types';
+
 import { VoteOutcome } from './voteTypes';
 
 export type FundingRequestState = 'countdown' | 'passed' | 'failed' | 'passedInsufficientBalance';

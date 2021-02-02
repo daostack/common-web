@@ -1,9 +1,9 @@
 import { firestore } from 'firebase-admin';
 import { v4 } from 'uuid';
 
-import { ICommonUpdate } from '../../common/types';
 import { commonDb } from '../../common/database';
 import { commonHistoryCollection } from './index';
+import { ICommonUpdate } from '../../common/types';
 import { ICommonEditHistory } from '../types';
 
 /**
