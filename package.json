@@ -2,7 +2,10 @@
   "name": "root",
   "private": true,
   "devDependencies": {
-    "lerna": "^3.22.1"
+    "concurrently": "^5.3.0",
+    "husky": "^4.3.8",
+    "lerna": "^3.22.1",
+    "lint-staged": "^10.5.3"
   },
   "workspaces": [
     "packages/*",
@@ -10,12 +13,19 @@
   ],
   "scripts": {
     "exec": "lerna exec",
-
+    "clean": "lerna run clean",
+    "typecheck": "lerna run --parallel 'typecheck'",
+    "compile": "lerna run --parallel --no-bail 'compile'",
+    "compile:wacth": "lerna run --parallel --no-bail 'compile:watch'",
     "bootstrap": "yarn && lerna bootstrap",
-
     "types:compile": "lerna exec 'yarn compile' --scope @common/types",
-
+    "types:compile:watch": "lerna exec 'yarn compile:watch' --scope @common/types",
+    "firebase:dev": "concurrently -n compiler:types,compiler:functions,emulators \"yarn types:compile:watch\" \"yarn firebase:compile:watch\" \"yarn firebase:start\"",
+    "firebase:compile": "lerna exec 'yarn compile' --scope @common/firebase",
+    "firebase:compile:watch": "lerna exec 'yarn compile:watch' --scope @common/firebase",
+    "firebase:start": "lerna exec 'yarn start' --scope @common/firebase",
     "firebase:ci:setup": "cd packages/firebase && yarn ci:setup",
-    "firebase:ci:test": "lerna exec 'yarn ci:test' --scope @common/firebase"
+    "firebase:ci:test": "lerna exec 'yarn ci:test' --scope @common/firebase",
+    "hooks:precommit": "lerna run precommit"
   }
 }
