@@ -6,13 +6,17 @@ on:
       - 'packages/firebase/**'
       - 'packages/types/**'
     branches:
-      - dev
+      - main
+      - main/firebase
+      - main/app
   pull_request:
     paths:
       - 'packages/firebase/**'
       - 'packages/types/**'
     branches:
-      - dev
+      - main
+      - main/firebase
+      - main/app
 
 jobs:
   test:
@@ -32,16 +36,22 @@ jobs:
         with:
           java-version: '9.0.4'
 
-      #      - uses: actions/cache@v2
-      #        with:
-      #          path: '**/node_modules'
-      #          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Setup Lerna
+        run: yarn global add lerna
 
-      - name: Install packages
-        run: yarn install
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install packages and bootstrap project
+        run: yarn bootstrap
+
+      - name: Compile the types project
+        run: yarn types:compile
 
       - name: Setup CI environment
-        run: yarn ci:setup --token ${{ secrets.FIREBASE_TOKEN }}
+        run: yarn firebase:ci:setup --token ${{ secrets.FIREBASE_TOKEN }}
 
       - name: Run tests
-        run: yarn ci:test
+        run: yarn firebase:ci:test
