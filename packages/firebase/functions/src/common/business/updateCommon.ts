@@ -1,5 +1,7 @@
+import { ICommonEntity } from '@common/types';
+
 import { commonDb } from '../database';
-import { ICommonUpdate, ICommonEntity } from '../types';
+import { ICommonUpdate } from '../types';
 import { createEvent } from '../../util/db/eventDbService';
 import { EVENT_TYPES } from '../../event/event';
 import { commonEditHistoryDb } from '../../commonEditHistory/database';
@@ -10,7 +12,7 @@ import { commonEditHistoryDb } from '../../commonEditHistory/database';
  * @return updatedCommon     - the common doc after the update
  */
 export const updateCommon = async (commonUpdate: ICommonUpdate) : Promise<ICommonEntity> => {
-  // should we validate here like in createCommon? 
+  // should we validate here like in createCommon? - yes!
 
   // the doc that was saved in the commonEditHistory collection
   const commonHistoryRecord = await commonEditHistoryDb.add(commonUpdate); 

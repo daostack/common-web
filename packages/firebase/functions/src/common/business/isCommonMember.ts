@@ -1,6 +1,7 @@
+import { ICommonEntity } from '@common/types';
+
 import { CommonError } from '../../util/errors';
 
-import { ICommonEntity } from '../types';
 
 /**
  * Check if the user is part of the common

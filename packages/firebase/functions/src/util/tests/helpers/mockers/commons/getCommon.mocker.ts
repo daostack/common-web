@@ -1,5 +1,5 @@
+import { ICommonEntity } from '@common/types';
 import firebase from 'firebase';
-import { ICommonEntity } from '../../../../../common/types';
 import { NotFoundError } from '../../../../errors';
 import Timestamp = firebase.firestore.Timestamp;
 

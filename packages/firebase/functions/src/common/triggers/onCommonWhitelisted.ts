@@ -1,6 +1,7 @@
+import { ICommonEntity } from '@common/types';
 import * as functions from 'firebase-functions';
+
 import { Collections } from '../../constants';
-import { ICommonEntity } from '../../common/types';
 import { EVENT_TYPES } from '../../event/event';
 import { createEvent } from '../../util/db/eventDbService';
 

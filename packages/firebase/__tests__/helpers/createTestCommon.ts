@@ -1,4 +1,4 @@
-import { ICommonEntity } from '../../functions/src/common/types';
+import { ICommonEntity } from '@common/types';
 
 import { commonApp } from './supertests';
 import { getTestAuthToken } from './auth';

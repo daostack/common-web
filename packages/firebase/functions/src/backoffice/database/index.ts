@@ -1,5 +1,4 @@
 import { IPaymentEntity } from '../../circlepay/payments/types';
-import { ICommonEntity } from '../../common/types';
 import { Collections } from '../../constants';
 import { IProposalEntity } from '../../proposals/proposalTypes';
 import { db } from '../../settings';
@@ -13,6 +12,7 @@ import { addCircleBalance } from './addCircleBalance';
 import { IPayoutEntity } from '../../circlepay/payouts/types';
 import { ISubscriptionEntity } from '../../subscriptions/types';
 import { ICircleBalanceBase } from '../types';
+import { ICommonEntity } from '@common/types';
 
 
 export const SubscriptionsCollection = db.collection(Collections.Subscriptions)
@@ -35,6 +35,7 @@ export const PayoutsCollection = db.collection(Collections.Payouts)
     }
 });
 
+// this is wrong. Why not use the CommonCollection from the common domain?
 export const CommonCollection = db.collection(Collections.Commons)
 .withConverter<ICommonEntity>({
     fromFirestore(snapshot: FirebaseFirestore.QueryDocumentSnapshot): ICommonEntity {

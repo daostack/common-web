@@ -7,5 +7,15 @@
   "workspaces": [
     "packages/*",
     "packages/firebase/functions"
-  ]
+  ],
+  "scripts": {
+    "exec": "lerna exec",
+
+    "bootstrap": "yarn && lerna bootstrap",
+
+    "types:compile": "lerna exec 'yarn compile' --scope @common/types",
+
+    "firebase:ci:setup": "cd packages/firebase && yarn ci:setup",
+    "firebase:ci:test": "lerna exec 'yarn ci:test' --scope @common/firebase"
+  }
 }

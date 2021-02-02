@@ -1,10 +1,10 @@
+import { ICommonEntity } from '@common/types';
 import admin from 'firebase-admin';
 import { EVENT_TYPES } from '../../event/event';
 import { proposalDb } from '../../proposals/database';
 import { createEvent } from '../../util/db/eventDbService';
 import { CommonError } from '../../util/errors';
 import { commonDb } from '../database';
-import { ICommonEntity } from '../types';
 import Timestamp = admin.firestore.Timestamp;
 
 /**

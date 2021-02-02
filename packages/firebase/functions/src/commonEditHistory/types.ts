@@ -1,6 +1,6 @@
-import admin from 'firebase-admin';
+import { ICommonEntity } from '@common/types';
+
 import { IBaseEntity } from '../util/types';
-import { ICommonEntity } from '../common/types';
 
 export interface ICommonEditHistory extends IBaseEntity {
 	commonId: string,
