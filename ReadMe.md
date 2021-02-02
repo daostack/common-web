@@ -27,9 +27,12 @@ install lerna globally. To do so you should run `yarn global add lerna` in any l
 
 
 - Firebase Commands
-    - [`firebase:dev`](/docs/commands/firebase-commands.md)
-    - [`firebase:compile`](/docs/commands/firebase-commands.md)
-    - [`firebase:compile:watch`](/docs/commands/firebase-commands.md)
+    - [`firebase:dev`](/docs/commands/firebase-commands.md#dev)
+    - [`firebase:start`](/docs/commands/firebase-commands.md#start)
+    - [`firebase:compile`](/docs/commands/firebase-commands.md#compile)
+    - [`firebase:compile:watch`](/docs/commands/firebase-commands.md#compile:watch)
+    - *`Internal: firebase:ci:setup`*
+    - *`Internal: firebase:ci:test`*
     
 
 - Typings Commands
