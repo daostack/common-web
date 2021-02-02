@@ -1,4 +1,4 @@
-import { ICommonEntity } from '../../../../../common/types';
+import { ICommonEntity } from '@common/types';
 
 jest.mock('../../../../../common/database/updateCommon', () => ({
   updateCommon: jest.fn()
