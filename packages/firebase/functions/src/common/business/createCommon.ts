@@ -1,16 +1,17 @@
+import { firestore } from 'firebase-admin';
 import * as yup from 'yup';
 
-import {validate} from '../../util/validate';
+import { validate } from '../../util/validate';
 import {
   commonRuleValidationSchema,
   linkValidationSchema,
 } from '../../util/schemas';
 
 import {commonDb} from '../database';
-// import {ICommonEntity, ICommonLink, ICommonRule} from '../types';
 import {createEvent} from '../../util/db/eventDbService';
 import {EVENT_TYPES} from '../../event/event';
 import { ICommonEntity, ICommonLink, ICommonRule } from '@common/types';
+import Timestamp = firestore.Timestamp;
 
 // The validation schema for creating commons (and creating typings by inferring them)
 const createCommonDataValidationScheme = yup.object({
@@ -85,11 +86,10 @@ export const createCommon = async (
     rules: (rules as ICommonRule[]) || [],
     links: (links as ICommonLink[]) || [],
 
-    members: [
-      {
-        userId,
-      },
-    ],
+    members: [{
+      userId,
+      joinedAt: Timestamp.now()
+    }],
 
     metadata: {
       byline,

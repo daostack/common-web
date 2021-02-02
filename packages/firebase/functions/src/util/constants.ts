@@ -21,7 +21,7 @@ export const Collections = {
   Proposals: 'proposals',
   Payments: 'payments',
   Commons: 'daos',
-  Event: 'event',
+  Events: 'event',
   Cards: 'cards'
 };
 

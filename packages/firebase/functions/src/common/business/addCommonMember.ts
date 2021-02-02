@@ -17,7 +17,7 @@ import Timestamp = admin.firestore.Timestamp;
 export const addCommonMemberByProposalId = async (proposalId: string): Promise<void> => {
   const proposal = await proposalDb.getProposal(proposalId);
 
-  if(proposal.state !== 'passed') {
+  if (proposal.state !== 'passed') {
     throw new CommonError('Cannot add user from proposal, for witch the proposal is not approved', {
       proposalId
     });
@@ -42,7 +42,7 @@ export const addCommonMemberByProposalId = async (proposalId: string): Promise<v
  * @param userId - The ID of the user, that will be added
  */
 const addCommonMember = async (common: ICommonEntity, userId: string): Promise<ICommonEntity> => {
-  if(!common.members.includes({ userId })) {
+  if (!isCommonMember(common, userId)) {
     common.members.push({
       userId,
       joinedAt: Timestamp?.now()
@@ -55,8 +55,11 @@ const addCommonMember = async (common: ICommonEntity, userId: string): Promise<I
       userId,
       objectId: common.id,
       type: EVENT_TYPES.COMMON_MEMBER_ADDED
-    })
+    });
   }
 
   return common;
 };
+
+const isCommonMember = (common: ICommonEntity, userId: string): boolean =>
+  common.members.some((member) => member.userId === userId);

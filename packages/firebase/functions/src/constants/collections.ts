@@ -10,7 +10,7 @@ export const Collections = {
   CircleBalances: 'circleBalances',
   CommonEditHistory: 'commonEditHistory',
   // @todo Make this plural
-  Event: 'event',
+  Events: 'event',
   Cards: 'cards',
   Users: 'users',
   Discussion: 'discussion',

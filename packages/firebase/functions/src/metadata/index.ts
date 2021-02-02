@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions';
 
 import { env } from '../constants';
 import { commonApp, commonRouter } from '../util';
+import { addJoinedAtDateToAllCommonMembers } from '../util/scripts/addJoinedAtDate';
 
 const metadataRouter = commonRouter();
 
@@ -21,6 +22,14 @@ metadataRouter.get('/headers', async (req, res) => {
   });
 });
 
+metadataRouter.get('/addJoinedAt', async (req, res) => {
+  await addJoinedAtDateToAllCommonMembers();
+
+  res
+  .status(200)
+  .send('done!');
+})
+
 export const metadataApp = functions
   .runWith({
     timeoutSeconds: 540
@@ -28,6 +37,7 @@ export const metadataApp = functions
   .https.onRequest(commonApp(metadataRouter, {
     unauthenticatedRoutes: [
       '/app',
-      '/headers'
+      '/headers',
+      '/addJoinedAt'
     ]
   }));

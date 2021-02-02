@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 
 import {Collections} from '../../constants';
-import {IEventEntity} from '../../event/type';
+import {IEventEntity} from '../../event/types';
 import {EVENT_TYPES} from '../../event/event';
 import {fundProposal} from '../business/fundProposal';
 import {createSubscription} from '../../subscriptions/business';
@@ -11,7 +11,7 @@ import {createProposalPayment} from '../../circlepay/payments/business/createPro
 import {addCommonMemberByProposalId} from '../../common/business/addCommonMember';
 
 export const onProposalApproved = functions.firestore
-  .document(`/${Collections.Event}/{id}`)
+  .document(`/${Collections.Events}/{id}`)
   .onCreate(async (eventSnap, context) => {
     const event = eventSnap.data() as IEventEntity;
 

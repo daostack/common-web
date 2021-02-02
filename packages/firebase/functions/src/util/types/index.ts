@@ -1,7 +1,7 @@
 import admin from 'firebase-admin';
 
 import Timestamp = admin.firestore.Timestamp;
-import { IEventEntity } from '../../event/type';
+import { IEventEntity } from '../../event/types';
 import { EventContext } from 'firebase-functions/lib/cloud-functions';
 
 export type valueOf<T> = T[keyof T];
