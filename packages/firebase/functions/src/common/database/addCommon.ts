@@ -1,9 +1,10 @@
 import { v4 } from 'uuid';
 import { firestore } from 'firebase-admin';
 
+import { ICommonEntity } from '@common/types';
+
 import { BaseEntityType } from '../../util/types';
 
-import { ICommonEntity } from '../types';
 import { CommonsCollection } from './index';
 
 

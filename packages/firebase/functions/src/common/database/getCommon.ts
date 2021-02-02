@@ -1,10 +1,10 @@
-import { ICommonEntity } from '../types';
 import { ArgumentError, NotFoundError } from '../../util/errors';
 import { CommonsCollection } from './index';
 import { Nullable } from '../../util/types';
 
 import admin from 'firebase-admin';
 import Transaction = admin.firestore.Transaction;
+import { ICommonEntity } from '@common/types';
 
 /**
  * Gets common by id

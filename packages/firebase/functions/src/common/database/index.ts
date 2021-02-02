@@ -1,3 +1,5 @@
+import { ICommonEntity } from '@common/types';
+
 import { db } from '../../util';
 import { Collections } from '../../constants';
 
@@ -5,7 +7,6 @@ import { addCommon } from './addCommon';
 import { getCommon, getCommonTransactional } from './getCommon';
 import { updateCommon } from './updateCommon';
 import { deleteCommonFromDatabase } from './deleteCommon';
-import { ICommonEntity } from '../types';
 
 export const CommonsCollection = db.collection(Collections.Commons)
   .withConverter<ICommonEntity>({

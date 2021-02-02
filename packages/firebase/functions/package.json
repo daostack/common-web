@@ -33,5 +33,8 @@
     "subscriptions-transport-ws": "^0.9.16",
     "uuid": "^8.3.0",
     "yup": "^0.29.3"
+  },
+  "devDependencies": {
+    "typescript": "^4.1.3"
   }
 }

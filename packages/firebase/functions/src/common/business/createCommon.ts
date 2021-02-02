@@ -7,9 +7,10 @@ import {
 } from '../../util/schemas';
 
 import {commonDb} from '../database';
-import {ICommonEntity, ICommonLink, ICommonRule} from '../types';
+// import {ICommonEntity, ICommonLink, ICommonRule} from '../types';
 import {createEvent} from '../../util/db/eventDbService';
 import {EVENT_TYPES} from '../../event/event';
+import { ICommonEntity, ICommonLink, ICommonRule } from '@common/types';
 
 // The validation schema for creating commons (and creating typings by inferring them)
 const createCommonDataValidationScheme = yup.object({
