@@ -31,7 +31,6 @@
     "test": "jest",
     "test:emulators": "cross-env NODE_ENV=test firebase emulators:exec 'yarn test'",
     "test:watch": "jest --watch",
-    "precommit": "lint-staged && yarn test",
     "deploy:indexes": "yarn use:staging && firebase deploy -only firestore:indexes",
     "deploy:indexes:prod": "yarn use:production && firebase deploy -only firestore:indexes",
     "hooks:precommit": "yarn lint && yarn compile"

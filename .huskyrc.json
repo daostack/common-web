@@ -1,5 +1,5 @@
 {
   "hooks": {
-    "pre-commit": "yarn precommit --since ..."
+    "pre-commit": "yarn hooks:precommit"
   }
 }

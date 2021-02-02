@@ -26,6 +26,6 @@
     "firebase:start": "lerna exec 'yarn start' --scope @common/firebase",
     "firebase:ci:setup": "cd packages/firebase && yarn ci:setup",
     "firebase:ci:test": "lerna exec 'yarn ci:test' --scope @common/firebase",
-    "hooks:precommit": "lerna run precommit"
+    "hooks:precommit": "lerna run hooks:precommit --since HEAD"
   }
 }
