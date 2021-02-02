@@ -51,7 +51,7 @@ jobs:
         run: yarn types:compile
 
       - name: Setup CI environment
-        run: yarn exec 'yarn ci:setup --token ${{ secrets.FIREBASE_TOKEN }}' --scope @common/firebase
+        run: yarn firebase:ci:setup --token ${{ secrets.FIREBASE_TOKEN }}
 
       - name: Run tests
         run: yarn firebase:ci:test

@@ -15,7 +15,7 @@
 
     "types:compile": "lerna exec 'yarn compile' --scope @common/types",
 
-    "firebase:ci:setup": "lerna exec 'yarn ci:setup --token ${{ secrets.FIREBASE_TOKEN }}' --scope @common/firebase",
+    "firebase:ci:setup": "cd packages/firebase && yarn ci:setup --token ${{ secrets.FIREBASE_TOKEN }}",
     "firebase:ci:test": "lerna exec 'yarn ci:test' --scope @common/firebase"
   }
 }
