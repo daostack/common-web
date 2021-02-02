@@ -1,6 +1,6 @@
+import { ICommonEntity } from '@common/types';
 import admin from 'firebase-admin';
 
-import { ICommonEntity } from '../types';
 import { CommonsCollection } from './index';
 import QuerySnapshot = admin.firestore.QuerySnapshot;
 

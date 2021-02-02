@@ -1,5 +1,5 @@
+import { ICommonEntity } from '@common/types';
 import { commonDb } from '../../common/database';
-import { ICommonEntity } from '../../common/types';
 import { eventsDb } from '../../event/database';
 import { EVENT_TYPES } from '../../event/event';
 
