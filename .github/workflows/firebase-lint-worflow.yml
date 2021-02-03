@@ -1,0 +1,48 @@
+name: Lint
+
+on:
+  push:
+    paths:
+      - 'packages/firebase/**'
+      - 'packages/types/**'
+    branches:
+      - main
+      - main/firebase
+      - main/app
+  pull_request:
+    paths:
+      - 'packages/firebase/**'
+      - 'packages/types/**'
+    branches:
+      - main
+      - main/firebase
+      - main/app
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout files
+        uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.20.1'
+
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install packages and bootstrap project
+        run: yarn bootstrap
+
+      - name: Compile the types project
+        run: yarn types:compile
+
+      - name: Lint
+        uses: bradennapier/eslint-plus-action@v3.4.2
+        with:
+          includeGlob: "packages/firebase/**/*"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
