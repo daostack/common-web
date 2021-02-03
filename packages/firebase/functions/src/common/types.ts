@@ -112,19 +112,32 @@
 //   contributionType: ContributionType;
 // }
 
-import { ICommonEntity } from "@common/types";
 
-export interface ICommonUpdate {
-  /**
-   * The new common entity
-   */
-  newCommon: ICommonEntity,
+// export interface ICommonUpdate {
+//   /**
+//    * The new common with the changes
+//    */
+//   changes: {
+//     name?: string;
+//     rules?: ICommonRule[];
+//     image?: string;
 
-  /**
-   * The userId of the user who is responsible for the change
-   */
-  changedBy: string
-}
+//     metadata: {
+//       founderId: string;
+//       byline?: string;
+//       description?: string;
+//     }
+//   };
+
+//   /**
+//    * The id of the common that needs to be changed
+//    */
+//   commonId: string;
+//   /**
+//    * The userId of the user who is responsible for the change
+//    */
+//   userId: string;
+// }
 //
 // export type ContributionType = 'one-time' | 'monthly';
 //
