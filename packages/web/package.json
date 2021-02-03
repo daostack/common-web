@@ -29,14 +29,9 @@
     "eject": "react-scripts eject",
     "commit-hook": "git add .",
     "lint": "eslint src/**/*.ts{,x} --fix",
-    "prettier": "prettier --write \"**/*.+(ts|tsx)\""
+    "prettier": "prettier --write \"**/*.+(ts|tsx)\"",
+    "hooks:precommit": "yarn prettier && yarn lint && yarn commit-hook && yarn test"
   },
-  "pre-commit": [
-    "prettier",
-    "lint",
-    "commit-hook",
-    "test"
-  ],
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -75,7 +70,6 @@
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-unused-imports": "^1.0.0",
-    "pre-commit": "^1.2.2",
     "prettier": "^2.1.1",
     "react-test-renderer": "^16.10.0",
     "redux-devtools": "^3.5.0",
