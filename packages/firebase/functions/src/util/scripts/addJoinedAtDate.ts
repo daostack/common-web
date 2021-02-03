@@ -3,11 +3,12 @@ import { commonDb } from '../../common/database';
 import { eventsDb } from '../../event/database';
 import { EVENT_TYPES } from '../../event/event';
 
-export const addJoinedAtDateToAllCommonMembers = async () => {
+export const addJoinedAtDateToAllCommonMembers = async (): Promise<void> => {
   const commons = await commonDb.getMany({});
 
   for(const common of commons) {
     try {
+      // eslint-disable-next-line no-await-in-loop
       await addJoinedAtDate(common);
     } catch(err) {
       logger.error('An error occurred while adding joined at dates', {
@@ -24,8 +25,9 @@ const addJoinedAtDate = async (common: ICommonEntity): Promise<void> => {
     ...members
   };
 
-  for (let memberIndex in members) {
+  for (const memberIndex in members) {
     const memberId = members[memberIndex].userId;
+
     if(!memberId) {
       logger.error('No member id', { common });
 
@@ -38,6 +40,8 @@ const addJoinedAtDate = async (common: ICommonEntity): Promise<void> => {
         joinedAt: common.createdAt
       }
     } else if(!members[memberIndex].joinedAt) {
+
+      // eslint-disable-next-line no-await-in-loop
       const joinEvents = await eventsDb.getMany({
         type: EVENT_TYPES.COMMON_MEMBER_ADDED,
         userId: memberId,
