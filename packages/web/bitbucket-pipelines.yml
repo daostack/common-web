@@ -1,0 +1,41 @@
+# This is a sample build configuration for JavaScript.
+# Check our guides at https://confluence.atlassian.com/x/14UWN for more examples.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: node:10.15.0
+
+
+pipelines:
+  branches:
+    master:
+      - step:
+          caches:
+            - node
+          script:
+            - npm install
+            - REACT_APP_ENV=production npm run-script build
+          artifacts:
+            - build/**
+      - step:
+             image: atlassian/pipelines-awscli
+             script:
+               - aws s3 sync --delete build s3://$AWS_BUCKET_TARGET/production
+               - aws cloudfront create-invalidation --distribution-id $PRODUCTION_DISTRIBUTION_ID  --invalidation-batch "Paths={Quantity=1,Items=['/*']},CallerReference=$(date)"
+             deployment: production
+
+    develop:
+       - step:
+           caches:
+              - node
+           script:
+               - npm install
+               - REACT_APP_ENV=stage npm run-script build
+           artifacts:
+                - build/**
+       - step:
+              image: atlassian/pipelines-awscli
+              script:
+               - aws s3 sync --delete build s3://$AWS_BUCKET_TARGET/stage
+               - aws cloudfront create-invalidation --distribution-id $STAGE_DISTRIBUTION_ID  --invalidation-batch "Paths={Quantity=1,Items=['/*']},CallerReference=$(date)"
+              deployment: staging
