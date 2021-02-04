@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@welldone-software/why-did-you-render": "^5.0.0",
     "axios": "^0.21.0",
     "connected-react-router": "^6.8.0",
     "formik": "^2.2.1",
@@ -19,8 +18,7 @@
     "reselect": "^4.0.0",
     "styled-components": "^5.2.0",
     "typesafe-actions": "^4.4.2",
-    "yup": "^0.27.0",
-    "jest": "24.9.0"
+    "yup": "^0.27.0"
   },
   "scripts": {
     "build": "react-scripts build",
@@ -48,6 +46,8 @@
     ]
   },
   "devDependencies": {
+    "@welldone-software/why-did-you-render": "^5.0.0",
+    "jest": "24.9.0",
     "@types/enzyme": "^3.10.8",
     "@types/lodash": "^4.14.163",
     "@types/node": "^12.19.3",
