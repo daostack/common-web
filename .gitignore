@@ -535,3 +535,6 @@ $RECYCLE.BIN/
 
 **/firestore/backup
 **/firestore/data/firestore_export
+
+# Web Ignores
+packages/build
