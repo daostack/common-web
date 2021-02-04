@@ -15,7 +15,7 @@
     "dateformat": "^3.0.3",
     "deepmerge": "^4.2.2",
     "express": "^4.17.1",
-    "firebase": "^8.2.4",
+    "firebase": "^8.2.5",
     "firebase-admin": "^9.4.2",
     "firebase-functions": "^3.6.2",
     "firebase-tools": "^8.4.1",
