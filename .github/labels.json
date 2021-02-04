@@ -1,0 +1,64 @@
+[
+  {
+    "name": "firebase",
+    "color": "5319E7",
+    "description": "The item is related to the firebase code"
+  },
+  {
+    "name": "app",
+    "color": "0E8A16",
+    "description": "The item is related to the app code"
+  },
+  {
+    "name": "web",
+    "color": "FBCA04",
+    "description": "The item is related to the web app code"
+  },
+  {
+    "name": "types",
+    "color": "0052CC",
+    "description": "The item is related to the types code"
+  },
+  {
+    "name": "tests",
+    "color": "006B75",
+    "description": "The item is related to the tests code"
+  },
+  {
+    "name": "actions",
+    "color": "FBCA04",
+    "description": "The item is related to the actions code"
+  },
+
+  {
+    "name": "bug",
+    "color": "B60205",
+    "description": "The item fixes bug or is bug report"
+  },
+  {
+    "name": "feature",
+    "color": "C5DEF5",
+    "description": "The item is about new feature"
+  },
+  {
+    "name": "enhancement",
+    "color": "C2E0C6",
+    "description": "The item is enhancement to the development experience, user experience or speed optimization"
+  },
+
+  {
+    "name": "priority:low",
+    "color": "D4C5F9",
+    "description": "The item is with low priority"
+  },
+  {
+    "name": "priority:normal",
+    "color": "1D76DB",
+    "description": "The item is with normal priority"
+  },
+  {
+    "name": "priority:high",
+    "color": "B60205",
+    "description": "The item is with high priority"
+  }
+]
