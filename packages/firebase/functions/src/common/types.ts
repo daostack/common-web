@@ -112,7 +112,6 @@
 //   contributionType: ContributionType;
 // }
 
-
 // export interface ICommonUpdate {
 //   /**
 //    * The new common with the changes
@@ -123,7 +122,6 @@
 //     image?: string;
 
 //     metadata: {
-//       founderId: string;
 //       byline?: string;
 //       description?: string;
 //     }

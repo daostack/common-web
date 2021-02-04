@@ -3,11 +3,11 @@ import * as yup from 'yup';
 import { ICommonUpdate } from '@common/types';
 import { IUpdatableCommonEntity } from '../database/updateCommon';
 import { commonDb } from '../database';
+import { createCommonHistory } from '../../commonEditHistory/business';
+import { CommonError } from '../../util/errors';
 import { createEvent } from '../../util/db/eventDbService';
 import { EVENT_TYPES } from '../../event/event';
 import { commonRuleValidationSchema } from '../../util/schemas';
-import { createCommonHistory } from '../../commonEditHistory/business';
-import { CommonError } from '../../util/errors';
 import {validate} from '../../util/validate';
 
 

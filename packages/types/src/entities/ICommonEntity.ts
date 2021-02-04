@@ -122,7 +122,6 @@ export interface ICommonUpdate {
     image?: string;
 
     metadata: {
-      founderId: string;
       byline?: string;
       description?: string;
     }
