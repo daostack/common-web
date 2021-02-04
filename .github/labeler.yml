@@ -1,0 +1,14 @@
+actions:
+  - .github/workflows/**/*
+
+firebase:
+  - packages/firebase/**/*
+
+web:
+  - packages/web/**/*
+
+types:
+  - packages/types/**/*
+
+app:
+  - packages/app/**/*

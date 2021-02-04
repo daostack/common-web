@@ -14,6 +14,7 @@ import { userDb } from '../users/database';
 import { paymentDb } from '../circlepay/payments/database';
 import { cardDb } from '../circlepay/cards/database';
 import { ICardEntity } from '../circlepay/cards/types';
+import { discussionDb } from '../discussion/database';
 import moment from 'moment';
 import { getFundingRequestAcceptedTemplate } from './helpers';
 
@@ -329,6 +330,31 @@ export const notifyData: Record<string, IEventData> = {
       {
         title: `New comment!`,
         body: `The member ${getNameString(sender)} commented in "${commonData.name}"`,
+        image: commonData.image || '',
+        path
+      }
+    )
+  },
+  [EVENT_TYPES.DISCUSSION_CREATED]: {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    data: async (discussionId: string) => {
+      const discussion = (await discussionDb.getDiscussion(discussionId));
+      const commonId = discussion.commonId;
+
+      const path = `Discussions/${commonId}/${discussionId}`;
+
+      return {
+        discussion,
+        creator: (await getUserById(discussion.ownerId)).data(),
+        commonData: (await commonDb.get(commonId)),
+        path
+      };
+    },
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    notification: async ({ discussion, creator, commonData, path }) => (
+      {
+        title: `New post in ${commonData.name}`,
+        body: `By ${getNameString(creator)}: "${discussion.title}"`,
         image: commonData.image || '',
         path
       }

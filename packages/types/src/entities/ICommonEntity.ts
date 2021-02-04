@@ -114,14 +114,27 @@ export interface ICommonMetadata {
 
 export interface ICommonUpdate {
   /**
-   * The new common entity
+   * The new common with the changes
    */
-  newCommon: ICommonEntity,
+  changes: {
+    name?: string;
+    rules?: ICommonRule[];
+    image?: string;
 
+    metadata: {
+      byline?: string;
+      description?: string;
+    }
+  };
+
+  /**
+   * The id of the common that needs to be changed
+   */
+  commonId: string;
   /**
    * The userId of the user who is responsible for the change
    */
-  changedBy: string
+  userId: string;
 }
 
 export type ContributionType = 'one-time' | 'monthly';

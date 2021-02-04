@@ -16,10 +16,7 @@ metadataRouter.get('/app', (req, res) => {
 });
 
 metadataRouter.get('/headers', async (req, res) => {
-  res.send({
-    headers: JSON.stringify(req.headers),
-    rawHeaders: JSON.stringify(req.rawHeaders)
-  });
+  res.send(req.ipAddress);
 });
 
 metadataRouter.get('/addJoinedAt', async (req, res) => {

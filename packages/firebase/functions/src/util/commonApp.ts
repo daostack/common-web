@@ -1,13 +1,14 @@
+import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
-import bodyParser from 'body-parser';
 
 import {
-  sessions,
   authenticate,
   errorHandling,
+  ipMiddleware,
+  requestLoggingMiddleware,
   routeBasedMiddleware,
-  requestLoggingMiddleware
+  sessions
 } from './middleware';
 
 export const commonRouter = express.Router;
@@ -20,6 +21,7 @@ export const commonApp = (router: express.Router, options?: ICommonAppOptions): 
   const app = express();
 
   app.use(sessions);
+  app.use(ipMiddleware);
 
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({

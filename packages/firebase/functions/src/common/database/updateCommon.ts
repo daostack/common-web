@@ -13,6 +13,12 @@ export type IUpdatableCommonEntity = Partial<ICommonEntity> & {
  * @param common - The updated common
  */
 export const updateCommon = async (common: IUpdatableCommonEntity): Promise<IUpdatableCommonEntity> => {
+  if(typeof common.balance === 'number') {
+    logger.warn('Only FieldIncrement is allowed for balance update', { common });
+
+    delete common.balance;
+  }
+
   const commonEntity: IUpdatableCommonEntity = {
     ...common,
 

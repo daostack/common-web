@@ -130,6 +130,7 @@ export enum EVENT_TYPES {
   CARD_CREATED = 'cardCreated',
 
   // Messaging related events
+  DISCUSSION_CREATED = 'discussionCreated',
   MESSAGE_CREATED = 'messageCreated',
 
   // Subscriptions
@@ -191,6 +192,15 @@ export const eventData: Record<string, IEventData> = {
 
             const discussionOwner = discussion.proposerId || discussion.ownerId;
             return await limitRecipients(discussionOwner, discussionId, discussionMessage.ownerId);
+        }
+  },
+  [EVENT_TYPES.DISCUSSION_CREATED]: {
+    eventObject: async (discussionId: string): Promise<any> => (await discussionDb.getDiscussion(discussionId)),
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    notifyUserFilter: async (discussion: any): Promise<string[]> => {
+            const common = await commonDb.get(discussion.commonId);
+            const members = common.members.map((member) => member.userId);
+            return excludeOwner(members, discussion.ownerId);
         }
   },
   [EVENT_TYPES.COMMON_WHITELISTED]: {

@@ -81,14 +81,12 @@ if [ "$currentMD5" = "$stagingMD5" ]; then
   echo "Current environment is $(tput setaf 2)Staging $(tput sgr0)"
 
   if [[ $1 = "-check" ]]; then
-    if [[ "$currentBranch" = "staging" ]]; then
+    if [[ "$currentBranch" = "environment/staging" ]]; then
       echo "$(tput setaf 2)Environment check ok$(tput sgr0)"
       exit
     fi
 
     echo "$(tput setaf 1)Environment mismatched$(tput sgr0)"
-    echo "Current branch is $(tput setaf 1) $currentBranch $(tput sgr0), you need to either switch environment, or checkout $(tput setaf 1) staging $(tput sgr0) branch"
-    echo "Only$(tput setaf 1) staging $(tput sgr0)branch can deploy to $(tput setaf 1)Staging Environment$(tput sgr0)"
 
     exit 1
   fi
@@ -96,14 +94,12 @@ if [ "$currentMD5" = "$stagingMD5" ]; then
 elif [ "$currentMD5" = "$productionMD5" ]; then
   echo "Current environment is $(tput setaf 2)Production $(tput sgr0)"
   if [[ $1 = "-check" ]]; then
-    if [[ "$currentBranch" = "master" ]]; then
+    if [[ "$currentBranch" = "environment/production" ]]; then
       echo "$(tput setaf 2)Environment check pass$(tput sgr0)"
       exit
     fi
 
     echo "$(tput setaf 1)Environment mismatched$(tput sgr0)"
-    echo "Current branch is $(tput setaf 1)$currentBranch$(tput sgr0), you need switch to $(tput setaf 1)master $(tput sgr0)"
-    echo "Only$(tput setaf 1) Master $(tput sgr0)branch can depoly to $(tput setaf 1)Production Environment$(tput sgr0)"
 
     exit 1
   fi
