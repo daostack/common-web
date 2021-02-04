@@ -6,6 +6,7 @@ import { Route } from "react-router-dom";
 import { AuthWrapper } from "../../components";
 import { LoginContainer, RegistrationContainer } from "../";
 import { authentificated } from "../../store/selectors";
+import firebase from "../../../../shared/utils/firebase";
 
 const AuthContainer = () => {
   const isAuthorized = useSelector(authentificated());
@@ -17,6 +18,14 @@ const AuthContainer = () => {
       dispatch(push("/"));
     }
   }, [isAuthorized, dispatch]);
+
+  useEffect(() => {
+    (async () => {
+      const data = await firebase.firestore().collection("users").get();
+      const users = data.docs.map((u) => u.data());
+      console.log(users);
+    })();
+  }, []);
 
   return (
     <AuthWrapper>
