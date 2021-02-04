@@ -8,6 +8,8 @@ declare global {
       }
 
       requestId: string;
+
+      ipAddress: string;
     }
   }
 
