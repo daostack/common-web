@@ -38,6 +38,6 @@ jobs:
       - name: Lint
         uses: bradennapier/eslint-plus-action@v3.4.2
         with:
-          rulePaths: packages/firebase/.eslintrc.json
+          rulePaths: packages/firebase/
           includeGlob: "packages/firebase/**/*"
           github-token: ${{ secrets.GITHUB_TOKEN }}
