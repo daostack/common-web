@@ -1,6 +1,5 @@
 import { IPaymentEntity } from '../../circlepay/payments/types';
 import { Collections } from '../../constants';
-import { IProposalEntity } from '../../proposals/proposalTypes';
 import { db } from '../../settings';
 import { IUserEntity } from '../../util/types';
 import { getCircleBalance } from './getCircleBalance';
@@ -10,9 +9,8 @@ import { getPayout } from './getPayout';
 import { getPayin } from './getPayin';
 import { addCircleBalance } from './addCircleBalance';
 import { IPayoutEntity } from '../../circlepay/payouts/types';
-import { ISubscriptionEntity } from '../../subscriptions/types';
 import { ICircleBalanceBase } from '../types';
-import { ICommonEntity } from '@common/types';
+import { ICommonEntity, IProposalEntity, ISubscriptionEntity } from '@common/types';
 
 
 export const SubscriptionsCollection = db.collection(Collections.Subscriptions)

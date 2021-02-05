@@ -1,18 +1,18 @@
+import { IVoteEntity, VoteOutcome } from '@common/types';
 import * as yup from 'yup';
 
-import { IVoteEntity, VoteOutcome } from '../../voteTypes';
-import { commonDb } from '../../../common/database';
 import { isCommonMember } from '../../../common/business';
-import { proposalDb, voteDb } from '../../database';
+import { commonDb } from '../../../common/database';
 import { ProposalFinalStates, StatusCodes } from '../../../constants';
-import { validate } from '../../../util/validate';
-import { CommonError } from '../../../util/errors';
-import { hasVoted } from './hasVoted';
-import { isExpired } from '../isExpired';
-import { createEvent } from '../../../util/db/eventDbService';
 import { EVENT_TYPES } from '../../../event/event';
-import { processVote } from './processVotes';
+import { createEvent } from '../../../util/db/eventDbService';
+import { CommonError } from '../../../util/errors';
+import { validate } from '../../../util/validate';
+import { proposalDb, voteDb } from '../../database';
 import { finalizeProposal } from '../finalizeProposal';
+import { isExpired } from '../isExpired';
+import { hasVoted } from './hasVoted';
+import { processVote } from './processVotes';
 
 const createVoteValidationScheme = yup.object({
   voterId: yup.string()
@@ -75,7 +75,7 @@ export const createVote = async (payload: CreateVotePayload): Promise<IVoteEntit
   // Check if the proposal is expired
   if (await isExpired(proposal)) {
     // If the proposal is not in final state finalize it
-    if(!ProposalFinalStates.includes(proposal.state)) {
+    if (!ProposalFinalStates.includes(proposal.state)) {
       await finalizeProposal(proposal);
     }
 

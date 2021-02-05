@@ -1,4 +1,4 @@
-import { IProposalEntity } from '../proposalTypes';
+import { IProposalEntity } from '@common/types';
 
 /**
  * Checks if the current proposal is in it's quiet ending period
@@ -11,4 +11,4 @@ export const isInQuietEnding = (proposal: IProposalEntity): boolean => {
   const quietEndingStart = new Date(expiration.getTime() - (proposal.quietEndingPeriod * 1000));
 
   return now < expiration && now > quietEndingStart;
-}
+};

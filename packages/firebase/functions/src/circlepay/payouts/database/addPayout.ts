@@ -1,8 +1,8 @@
+import { SharedOmit } from '@common/types';
+import { firestore } from 'firebase-admin';
 import { v4 } from 'uuid';
-import admin from 'firebase-admin';
-import Timestamp = admin.firestore.Timestamp;
 
-import { BaseEntityType, SharedOmit } from '../../../util/types';
+import { BaseEntityType } from '../../../util/types';
 
 import { IPayoutEntity } from '../types';
 import { PayoutsCollection } from './index';
@@ -17,8 +17,8 @@ export const addPayout = async (payout: SharedOmit<IPayoutEntity, BaseEntityType
   const payoutDoc: IPayoutEntity = {
     id: v4(),
 
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
+    createdAt: firestore.Timestamp.now(),
+    updatedAt: firestore.Timestamp.now(),
 
     ...payout
   };

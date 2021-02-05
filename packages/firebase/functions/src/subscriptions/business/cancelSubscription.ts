@@ -1,9 +1,9 @@
-import { EVENT_TYPES } from '../../event/event';
-import { ISubscriptionEntity } from '../types';
+import { ISubscriptionEntity } from '@common/types';
 
+import { EVENT_TYPES } from '../../event/event';
+import { createEvent } from '../../util/db/eventDbService';
 import { updateSubscription } from '../database/updateSubscription';
 import { revokeMembership } from './revokeMembership';
-import { createEvent } from '../../util/db/eventDbService';
 
 export enum CancellationReason {
   CanceledByUser = 'CanceledByUser',
@@ -14,7 +14,7 @@ export enum CancellationReason {
 /**
  * Cancel recurring payment so the user is not charged again. Does not revoke memberships!
  *
- * @param subscriptionId - the id of the subscription
+ * @param subscription
  * @param cancellationReason - whether the user canceled or the payment has failed multiple times
  */
 export const cancelSubscription = async (subscription: ISubscriptionEntity, cancellationReason: CancellationReason): Promise<void> => {
@@ -23,7 +23,7 @@ export const cancelSubscription = async (subscription: ISubscriptionEntity, canc
   await updateSubscription(subscription);
 
   // If the subscription is canceled by payment failure we shoukd
-  if(cancellationReason === CancellationReason.CanceledByPaymentFailure) {
+  if (cancellationReason === CancellationReason.CanceledByPaymentFailure) {
     await revokeMembership(subscription);
   }
 

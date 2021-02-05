@@ -2,9 +2,8 @@ import { ArgumentError } from '../../util/errors';
 
 import { commonDb } from '../../common/database';
 
-import { IProposalEntity } from '../proposalTypes';
 import { countVotes } from './countVotes';
-import { ICommonEntity } from '@common/types';
+import { ICommonEntity, IProposalEntity } from '@common/types';
 
 /**
  * Checks if proposal has majority for any of the vote options

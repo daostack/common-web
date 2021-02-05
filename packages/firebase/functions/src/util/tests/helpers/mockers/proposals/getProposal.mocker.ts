@@ -1,5 +1,5 @@
+import { IProposalEntity } from '@common/types';
 import firebase from 'firebase';
-import { IProposalEntity } from '../../../../../proposals/proposalTypes';
 import { NotFoundError } from '../../../../errors';
 import Timestamp = firebase.firestore.Timestamp;
 

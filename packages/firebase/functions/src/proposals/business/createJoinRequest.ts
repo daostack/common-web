@@ -1,20 +1,18 @@
+import { IJoinRequestProposal, IProposalLink } from '@common/types';
 import * as yup from 'yup';
 
-import {CommonError, NotFoundError} from '../../util/errors';
-import {validate} from '../../util/validate';
-import {Nullable} from '../../util/types';
-import {env, StatusCodes} from '../../constants';
-
-import {isCommonMember} from '../../common/business';
-import {commonDb} from '../../common/database';
-
-import {IJoinRequestProposal, IProposalLink} from '../proposalTypes';
-import {linkValidationSchema} from '../../util/schemas';
-import {proposalDb} from '../database';
-import {isCardOwner} from '../../circlepay/cards/business/isCardOwner';
-import {createEvent} from '../../util/db/eventDbService';
-import {EVENT_TYPES} from '../../event/event';
-import {isTest} from '../../util/environment';
+import { isCardOwner } from '../../circlepay/cards/business/isCardOwner';
+import { isCommonMember } from '../../common/business';
+import { commonDb } from '../../common/database';
+import { env, StatusCodes } from '../../constants';
+import { EVENT_TYPES } from '../../event/event';
+import { createEvent } from '../../util/db/eventDbService';
+import { isTest } from '../../util/environment';
+import { CommonError, NotFoundError } from '../../util/errors';
+import { linkValidationSchema } from '../../util/schemas';
+import { Nullable } from '../../util/types';
+import { validate } from '../../util/validate';
+import { proposalDb } from '../database';
 
 const createRequestToJoinValidationSchema = yup.object({
   commonId: yup.string().uuid().required(),
@@ -27,12 +25,10 @@ const createRequestToJoinValidationSchema = yup.object({
 
   funding: yup.number().required(),
 
-  links: yup.array(linkValidationSchema).optional(),
+  links: yup.array(linkValidationSchema).optional()
 });
 
-type CreateRequestToJoinPayload = yup.InferType<
-  typeof createRequestToJoinValidationSchema
->;
+type CreateRequestToJoinPayload = yup.InferType<typeof createRequestToJoinValidationSchema>;
 
 /**
  * Creates new join request based on the provided payload
@@ -43,7 +39,7 @@ type CreateRequestToJoinPayload = yup.InferType<
  * @param payload
  */
 export const createJoinRequest = async (
-  payload: CreateRequestToJoinPayload,
+  payload: CreateRequestToJoinPayload
 ): Promise<IJoinRequestProposal> => {
   // Validate the data
   await validate(payload, createRequestToJoinValidationSchema);
@@ -72,8 +68,8 @@ export const createJoinRequest = async (
           'Cannot create join request for commons, that you are a member of',
         statusCode: StatusCodes.BadRequest,
 
-        payload,
-      },
+        payload
+      }
     );
   }
 
@@ -87,8 +83,8 @@ export const createJoinRequest = async (
         ).toFixed(2)}, but you provided $${(payload.funding / 100).toFixed(2)}`,
         statusCode: StatusCodes.BadRequest,
 
-        payload,
-      },
+        payload
+      }
     );
   }
 
@@ -97,7 +93,7 @@ export const createJoinRequest = async (
     proposerId: payload.proposerId,
     commonId: payload.commonId,
     state: 'countdown',
-    type: 'join',
+    type: 'join'
   });
 
   if (activeUserJoinRequest.length) {
@@ -105,8 +101,8 @@ export const createJoinRequest = async (
       'User with ongoing join request tried to create new one',
       {
         userMessage: 'You can only have one active join request per common',
-        statusCode: StatusCodes.BadRequest,
-      },
+        statusCode: StatusCodes.BadRequest
+      }
     );
   }
 
@@ -119,18 +115,18 @@ export const createJoinRequest = async (
 
     description: {
       description: payload.description,
-      links: (payload.links as Nullable<IProposalLink[]>) || [],
+      links: (payload.links as Nullable<IProposalLink[]>) || []
     },
 
     join: {
       cardId: payload.cardId,
       funding: payload.funding,
       fundingType: common.metadata.contributionType,
-      payments: [],
+      payments: []
     },
 
     countdownPeriod: env.durations.join.countdownPeriod,
-    quietEndingPeriod: env.durations.join.quietEndingPeriod,
+    quietEndingPeriod: env.durations.join.quietEndingPeriod
   })) as IJoinRequestProposal;
 
   // Link the card to the proposal
@@ -143,7 +139,7 @@ export const createJoinRequest = async (
   await createEvent({
     userId: payload.proposerId,
     objectId: joinRequest.id,
-    type: EVENT_TYPES.REQUEST_TO_JOIN_CREATED,
+    type: EVENT_TYPES.REQUEST_TO_JOIN_CREATED
   });
 
   return joinRequest as IJoinRequestProposal;

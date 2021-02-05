@@ -1,9 +1,9 @@
+import { IProposalEntity } from '@common/types';
 import { ArgumentError, CommonError } from '../../util/errors';
 import { createEvent } from '../../util/db/eventDbService';
 import { EVENT_TYPES } from '../../event/event';
 
 import { updateProposal } from '../database/updateProposal';
-import { IProposalEntity } from '../proposalTypes';
 
 import { countVotes } from './countVotes';
 import { hasAbsoluteMajority } from './hasAbsoluteMajority';

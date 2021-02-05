@@ -1,13 +1,12 @@
-import admin from 'firebase-admin';
-import { QuerySnapshot } from '@google-cloud/firestore';
+import { ISubscriptionEntity } from '@common/types';
+import { firestore } from 'firebase-admin';
 
-import { ISubscriptionEntity } from '../types';
 import { Collections } from '../../util/constants';
 
 import { CancellationReason } from './cancelSubscription';
 import { revokeMembership } from './revokeMembership';
 
-const db = admin.firestore();
+const db = firestore();
 
 /**
  * Revokes all membership that are expired, but not yet revoked
@@ -21,7 +20,7 @@ export const revokeMemberships = async (): Promise<void> => {
     .where('dueDate', '<=', new Date().setHours(23, 59, 59, 999))
     .where('status', '==', CancellationReason.CanceledByUser)
     .where('revoked', '==', false)
-    .get() as QuerySnapshot<ISubscriptionEntity>;
+    .get() as firestore.QuerySnapshot<ISubscriptionEntity>;
 
   const promiseArr: Promise<any>[] = [];
 

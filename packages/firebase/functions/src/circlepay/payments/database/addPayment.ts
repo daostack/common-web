@@ -1,8 +1,8 @@
+import { SharedOmit } from '@common/types';
 import { v4 } from 'uuid';
-import admin from 'firebase-admin';
-import Timestamp = admin.firestore.Timestamp;
+import { firestore } from 'firebase-admin';
 
-import { BaseEntityType, SharedOmit } from '../../../util/types';
+import { BaseEntityType } from '../../../util/types';
 
 import { IPaymentEntity } from '../types';
 import { PaymentsCollection } from './index';
@@ -20,8 +20,8 @@ export const addPayment = async (payment: SharedOmit<IPaymentEntity, OmittedProp
   const paymentDoc: IPaymentEntity = {
     id: v4(),
 
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
+    createdAt: firestore.Timestamp.now(),
+    updatedAt: firestore.Timestamp.now(),
 
     fees: {
       amount: 0,

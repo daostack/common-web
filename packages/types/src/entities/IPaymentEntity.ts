@@ -1,5 +1,5 @@
 import { IBaseEntity } from './helpers/IBaseEntity';
-import { Nullable } from '../utility';
+import { Nullable } from '../utils';
 
 export type PaymentType = 'one-time' | 'subscription';
 export type PaymentStatus = 'pending' | 'confirmed' | 'paid' | 'failed';

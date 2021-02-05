@@ -1,6 +1,4 @@
-import admin from 'firebase-admin';
-
-import WriteResult = admin.firestore.WriteResult;
+import { firestore } from 'firebase-admin';
 
 import { ArgumentError } from '../../util/errors';
 import { ProposalsCollection } from './index';
@@ -13,7 +11,7 @@ import { ProposalsCollection } from './index';
  *
  * @throws { ArgumentError } - If the proposal ID is not provided
  */
-export const deleteProposalFromDatabase = async (proposalId: string): Promise<WriteResult> => {
+export const deleteProposalFromDatabase = async (proposalId: string): Promise<firestore.WriteResult> => {
   if (!proposalId) {
     throw new ArgumentError('proposalId');
   }

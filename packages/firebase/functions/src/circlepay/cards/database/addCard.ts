@@ -1,8 +1,8 @@
+import { SharedOmit } from '@common/types';
+import { firestore } from 'firebase-admin';
 import { v4 } from 'uuid';
-import admin from 'firebase-admin';
-import Timestamp = admin.firestore.Timestamp;
 
-import { BaseEntityType, SharedOmit } from '../../../util/types';
+import { BaseEntityType } from '../../../util/types';
 
 import { ICardEntity } from '../types';
 import { CardCollection } from './index';
@@ -17,8 +17,8 @@ export const addCard = async (card: SharedOmit<ICardEntity, BaseEntityType>): Pr
   const cardDoc: ICardEntity = {
     id: v4(),
 
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
+    createdAt: firestore.Timestamp.now(),
+    updatedAt: firestore.Timestamp.now(),
 
     ...card
   };

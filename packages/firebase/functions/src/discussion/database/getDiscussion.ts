@@ -1,7 +1,6 @@
 import { ArgumentError } from '../../util/errors';
 import { Nullable } from '../../util/types';
 import { IDiscussionEntity } from '../types';
-import { IProposalEntity } from '../../proposals/proposalTypes';
 import { NotFoundError } from '../../util/errors';
 import { discussionCollection } from './index';
 
@@ -29,7 +28,7 @@ export const getDiscussion = async (discussionId: string, customOptions?: Partia
 
   const discussion = (await discussionCollection
     .doc(discussionId)
-    .get()).data() as Nullable<IDiscussionEntity | IProposalEntity>
+    .get()).data() as Nullable<IDiscussionEntity> // | IProposalEntity> @question(for: Moore) Why this can be proposal entity? Does not make any sense to me whatsoever
 
   if (!discussion && options.throwOnFailure) {
     throw new NotFoundError(discussionId, 'discussion');

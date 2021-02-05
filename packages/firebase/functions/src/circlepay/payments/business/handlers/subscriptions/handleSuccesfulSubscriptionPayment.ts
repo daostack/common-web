@@ -1,18 +1,17 @@
-import admin from 'firebase-admin';
+import { ISubscriptionEntity } from '@common/types';
+import { firestore } from 'firebase-admin';
 import moment from 'moment';
 
-import { addMonth } from '../../../../../util';
-import { ArgumentError, CommonError } from '../../../../../util/errors';
-
 import { updateCommonBalance } from '../../../../../common/business/updateCommonBalance';
-import { ISubscriptionEntity } from '../../../../../subscriptions/types';
-import { subscriptionDb } from '../../../../../subscriptions/database';
-import { proposalDb } from '../../../../../proposals/database';
-import { IPaymentEntity } from '../../../types';
-import { isSuccessful } from '../../../helpers';
-import { createEvent } from '../../../../../util/db/eventDbService';
 import { EVENT_TYPES } from '../../../../../event/event';
-import Timestamp = admin.firestore.Timestamp;
+import { proposalDb } from '../../../../../proposals/database';
+import { subscriptionDb } from '../../../../../subscriptions/database';
+
+import { addMonth } from '../../../../../util';
+import { createEvent } from '../../../../../util/db/eventDbService';
+import { ArgumentError, CommonError } from '../../../../../util/errors';
+import { isSuccessful } from '../../../helpers';
+import { IPaymentEntity } from '../../../types';
 
 
 /**
@@ -60,7 +59,7 @@ export const handleSuccessfulSubscriptionPayment = async (subscription: ISubscri
 
   // Update the date only if it is in the past (it should always be!)
   if (moment(subscription.dueDate.toDate()).isSameOrBefore(new Date(), 'day')) {
-    subscription.dueDate = Timestamp.fromDate(addMonth(subscription.dueDate));
+    subscription.dueDate = firestore.Timestamp.fromDate(addMonth(subscription.dueDate));
   } else {
     logger.error(
       `Trying to update due date that is in the future 
@@ -72,7 +71,7 @@ export const handleSuccessfulSubscriptionPayment = async (subscription: ISubscri
 
   // Update metadata about the subscription
   subscription.charges = (subscription.charges || 0) + 1;
-  subscription.lastChargedAt = Timestamp.now();
+  subscription.lastChargedAt = firestore.Timestamp.now();
 
   // Update the commons balance
   await updateCommonBalance(subscription.metadata.common.id, subscription.amount);

@@ -1,4 +1,4 @@
-import { IProposalEntity } from '../../../../../proposals/proposalTypes';
+import { IProposalEntity } from '@common/types';
 
 jest.mock('../../../../../proposals/database/updateProposal', () => ({
   updateProposal: jest.fn()

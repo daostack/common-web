@@ -1,5 +1,5 @@
+import { IJoinRequestProposal } from '@common/types';
 import { v4 } from 'uuid';
-import { IJoinRequestProposal } from '../../functions/src/proposals/proposalTypes';
 import { getTestAuthToken } from './auth';
 import { createTestCommon } from './createTestCommon';
 import { proposalsApp } from './supertests';

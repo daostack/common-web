@@ -27,5 +27,9 @@
   },
   "devDependencies": {
     "typescript": "^4.1.3"
+  },
+  "exports": {
+    "./entities": "./dist/entities",
+    "./utils": "./dist/utils"
   }
 }

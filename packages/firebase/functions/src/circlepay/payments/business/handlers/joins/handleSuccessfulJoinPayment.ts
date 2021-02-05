@@ -1,12 +1,13 @@
-import { IPaymentEntity } from '../../../types';
+import { IJoinRequestProposal } from '@common/types';
+
 import { addCommonMemberByProposalId } from '../../../../../common/business/addCommonMember';
-import { IJoinRequestProposal } from '../../../../../proposals/proposalTypes';
-import { isSuccessful } from '../../../helpers';
-import { CommonError } from '../../../../../util/errors';
-import { createEvent } from '../../../../../util/db/eventDbService';
-import { EVENT_TYPES } from '../../../../../event/event';
 import { updateCommonBalance } from '../../../../../common/business/updateCommonBalance';
+import { EVENT_TYPES } from '../../../../../event/event';
 import { proposalDb } from '../../../../../proposals/database';
+import { createEvent } from '../../../../../util/db/eventDbService';
+import { CommonError } from '../../../../../util/errors';
+import { isSuccessful } from '../../../helpers';
+import { IPaymentEntity } from '../../../types';
 
 export const handleSuccessfulJoinPayment = async (proposal: IJoinRequestProposal, payment: IPaymentEntity): Promise<void> => {
   if (!isSuccessful(payment)) {

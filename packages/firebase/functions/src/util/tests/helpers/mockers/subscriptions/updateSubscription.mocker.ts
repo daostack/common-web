@@ -1,4 +1,4 @@
-import { ISubscriptionEntity } from '../../../../../subscriptions/types';
+import { ISubscriptionEntity } from '@common/types';
 
 jest.mock('../../../../../subscriptions/database/updateSubscription', () => ({
   updateSubscription: jest.fn()

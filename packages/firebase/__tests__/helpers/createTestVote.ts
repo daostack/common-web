@@ -1,10 +1,8 @@
-import { IVoteEntity } from '@common/functions/dist/proposals/voteTypes';
 import { createTestCommon } from './createTestCommon';
 import { createTestFundingRequest, createTestJoinRequest } from './createTestProposal';
-import { IProposalEntity } from '@common/functions/dist/proposals/proposalTypes';
 import { proposalsApp } from './supertests';
 import { getTestAuthToken } from './auth';
-import { ICommonEntity } from '@common/types';
+import { ICommonEntity, IProposalEntity, IVoteEntity } from '@common/types';
 
 export const createTestVote = async ({
  common = null,
