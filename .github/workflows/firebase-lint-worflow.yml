@@ -4,19 +4,13 @@ on:
   push:
     paths:
       - 'packages/firebase/**'
-      - 'packages/types/**'
     branches:
       - main
-      - main/firebase
-      - main/app
   pull_request:
     paths:
       - 'packages/firebase/**'
-      - 'packages/types/**'
     branches:
       - main
-      - main/firebase
-      - main/app
 
 jobs:
   eslint:
@@ -44,5 +38,6 @@ jobs:
       - name: Lint
         uses: bradennapier/eslint-plus-action@v3.4.2
         with:
+          rulePaths: packages/firebase/.eslintrc.json
           includeGlob: "packages/firebase/**/*"
           github-token: ${{ secrets.GITHUB_TOKEN }}
