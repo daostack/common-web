@@ -38,8 +38,7 @@ export const chargeSubscription = async (subscription: ISubscriptionEntity): Pro
   try {
     await createSubscriptionPayment({
       subscriptionId: subscription.id,
-      sessionId: v4(),
-      ipAddress: '127.0.0.1'
+      sessionId: v4()
     });
   } catch (e) {
     logger.error('Payment for subscription has failed!', {
