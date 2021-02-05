@@ -3,67 +3,33 @@ import { AnyAction } from "redux";
 
 import history from "../../../shared/history";
 import { tokenHandler } from "../../../shared/utils";
-import { getUserData, logout, login, registration } from "./actions";
-import api from "../api";
-import { AuthActionTypes } from "./constants";
-import { startLoading, stopLoading } from "../../../shared/store/actions";
+import * as actions from "./actions";
+import firebase from "../../../shared/utils/firebase";
 
-function* getUserDataSaga() {
+import { startLoading, stopLoading } from "../../../shared/store/actions";
+import { GoogleAuthInterface } from "../interface";
+
+function* googleSignInSaga({ payload }: AnyAction & { payload: GoogleAuthInterface }) {
   try {
+    const { _token } = payload;
+    const { idToken, accessToken } = _token;
+    const user = yield call(firebase.auth.GoogleAuthProvider.credential, idToken, accessToken);
+
+    console.log(JSON.stringify(user, null, 2));
     yield put(startLoading());
 
-    const { email } = yield call(api.getUserInfo);
-    yield put(getUserData.success(email));
     yield history.push("/");
 
     yield put(stopLoading());
   } catch (error) {
+    console.log(error);
     yield put(stopLoading());
-    yield put(getUserData.failure(error));
-  }
-}
-
-function* logoutSaga() {
-  yield localStorage.clear();
-  yield put(logout.success());
-  yield history.push("/auth");
-}
-
-function* registrationSaga({ payload }: AnyAction) {
-  try {
-    yield put(startLoading());
-    const { token } = yield call(api.registration, payload);
-    yield tokenHandler.set(token);
-    yield put(getUserData.request());
-    yield put(registration.success());
-    yield put(stopLoading());
-    history.push("/");
-  } catch (error) {
-    yield put(registration.failure(error));
-    yield put(stopLoading());
-  }
-}
-
-function* loginSaga({ payload }: AnyAction) {
-  try {
-    yield put(startLoading());
-    const { token } = yield call(api.login, payload);
-    yield tokenHandler.set(token);
-    yield put(getUserData.request());
-    yield put(login.success());
-    yield put(stopLoading());
-    history.push("/");
-  } catch (error) {
-    yield put(login.failure(error));
-    yield put(stopLoading());
+    yield put(actions.googleSignIn.failure(error));
   }
 }
 
 function* authSagas() {
-  yield takeLatest(AuthActionTypes.LOGOUT, logoutSaga);
-  yield takeLatest(AuthActionTypes.LOGIN, loginSaga);
-  yield takeLatest(AuthActionTypes.CHECK_USER, getUserDataSaga);
-  yield takeLatest(AuthActionTypes.REGISTRATION, registrationSaga);
+  yield takeLatest(actions.googleSignIn.request, googleSignInSaga);
 }
 
 export default authSagas;

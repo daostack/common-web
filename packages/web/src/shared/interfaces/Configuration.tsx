@@ -1,3 +1,5 @@
+import { Provider } from "react-social-login";
+
 export interface Configuration {
   env: string;
   baseApiUrl: string;
@@ -10,6 +12,7 @@ export interface Configuration {
     messagingSenderId: string;
     appId: string;
   };
+  socialLoginClientId: Partial<{ [key in Provider]: string }>;
 }
 
 export interface ConfigurationObject {

@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { push } from "connected-react-router";
 import { useSelector, useDispatch } from "react-redux";
-import { Route } from "react-router-dom";
 
-import { AuthWrapper } from "../../components";
-import { LoginContainer, RegistrationContainer } from "../";
 import { authentificated } from "../../store/selectors";
 import firebase from "../../../../shared/utils/firebase";
+import SocialLoginButton from "../../../../shared/components/SocialLogin";
+import { AuthWrapper } from "./styles";
+import { GoogleAuthInterface } from "../../interface";
+import { googleSignIn } from "../../store/actions";
 
 const AuthContainer = () => {
   const isAuthorized = useSelector(authentificated());
@@ -27,10 +28,27 @@ const AuthContainer = () => {
     })();
   }, []);
 
+  const onSocialLoginSuccess = (data: GoogleAuthInterface) => {
+    dispatch(googleSignIn.request(data));
+  };
+
+  const onSocialLoginFailure = (error: Error) => {
+    console.log(error);
+    // TODO : add notifications
+  };
+
   return (
     <AuthWrapper>
-      <Route path="/auth/" exact component={LoginContainer} />
-      <Route path="/auth/signup" component={RegistrationContainer} />
+      <div className="inner-wrapper">
+        <div className="button-wrapper">
+          <SocialLoginButton
+            provider="google"
+            text="Continue with Google"
+            onSuccess={onSocialLoginSuccess}
+            onFailure={onSocialLoginFailure}
+          />
+        </div>
+      </div>
     </AuthWrapper>
   );
 };
