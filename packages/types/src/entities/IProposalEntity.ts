@@ -198,6 +198,11 @@ export interface IJoinRequestProposal extends IBaseProposalEntity {
 
   join: {
     /**
+     * The IP address, from which the join request was created
+     */
+    ip: string;
+
+    /**
      *  The amount that will be contributed
      */
     funding: number;
