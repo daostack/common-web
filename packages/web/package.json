@@ -16,7 +16,6 @@
     "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.1.2",
-    "react-social-login": "^3.4.10",
     "redux": "^4.0.4",
     "redux-saga": "^1.1.3",
     "reselect": "^4.0.0",
@@ -32,7 +31,7 @@
     "commit-hook": "git add .",
     "lint": "eslint src/**/*.ts{,x} --fix",
     "prettier": "prettier --write \"**/*.+(ts|tsx)\"",
-    "hooks:precommit": "yarn prettier && yarn lint && yarn commit-hook && yarn test"
+    "hooks:precommit": "yarn prettier && yarn lint && yarn commit-hook"
   },
   "eslintConfig": {
     "extends": "react-app"

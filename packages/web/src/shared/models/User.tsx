@@ -1,14 +1,23 @@
-import { Role } from "./Role";
-
 export interface User {
-  first_name: string;
-  last_name: string;
+  apiKey: string;
+  appName: string;
+  authDomain: string;
+  createdAt: string;
+  displayName: string;
   email: string;
-  phone: string;
-  password_hash: string;
-  id?: number;
-  address?: string;
-  birthday?: string;
-  roles?: Role[];
-  is_active: boolean;
+  emailVerified: boolean;
+  isAnonymous: boolean;
+  lastLoginAt: string;
+
+  phoneNumber: null | string;
+  photoURL: string;
+
+  stsTokenManager: {
+    apiKey: string;
+    refreshToken: string;
+    accessToken: string;
+    expirationTime: number;
+  };
+
+  uid: string;
 }

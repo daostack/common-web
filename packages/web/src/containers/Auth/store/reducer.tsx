@@ -12,7 +12,7 @@ const initialState: AuthStateType = {
   user: null,
 };
 
-const reducer = createReducer<AuthStateType, Action>(initialState).handleAction(actions.googleSignIn.success, (state) =>
+const reducer = createReducer<AuthStateType, Action>(initialState).handleAction(actions.socialLogin.success, (state) =>
   produce(state, (nextState) => {
     nextState.authentificated = true;
   }),

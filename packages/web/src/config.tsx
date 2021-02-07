@@ -13,9 +13,6 @@ const dev: Configuration = {
     messagingSenderId: "78965953367",
     appId: "1:78965953367:android:257ae3c68f0101542f6412",
   },
-  socialLoginClientId: {
-    google: "78965953367-gp6r7vuvceqj4k8gngrqkng98thgqmo8.apps.googleusercontent.com",
-  },
 };
 
 const stage: Configuration = {

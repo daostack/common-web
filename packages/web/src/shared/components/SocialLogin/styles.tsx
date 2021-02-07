@@ -18,14 +18,16 @@ const SocialButtonWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    margin-bottom: 24px;
     img {
       margin-right: 24px;
+      width: 24px;
     }
     &.google {
       background: #dd4b39;
     }
-    &.facebook {
-      background: #3b5998;
+    &.apple {
+      background: black;
     }
   }
 `;

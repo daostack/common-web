@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from "redux-saga/effects";
+import { put, takeLatest } from "redux-saga/effects";
 import { AnyAction } from "redux";
 
 import history from "../../../shared/history";
@@ -7,29 +7,38 @@ import * as actions from "./actions";
 import firebase from "../../../shared/utils/firebase";
 
 import { startLoading, stopLoading } from "../../../shared/store/actions";
-import { GoogleAuthInterface } from "../interface";
+import store from "../../../index";
+import { User } from "../../../shared/models";
+import { GoogleAuthResultInterface } from "../interface";
 
-function* googleSignInSaga({ payload }: AnyAction & { payload: GoogleAuthInterface }) {
+function* socialLoginSaga({ payload }: AnyAction & { payload: string }) {
   try {
-    const { _token } = payload;
-    const { idToken, accessToken } = _token;
-    const user = yield call(firebase.auth.GoogleAuthProvider.credential, idToken, accessToken);
-
-    console.log(JSON.stringify(user, null, 2));
     yield put(startLoading());
+    const provider =
+      payload === "google" ? new firebase.auth.GoogleAuthProvider() : new firebase.auth.OAuthProvider("apple.com");
 
-    yield history.push("/");
-
-    yield put(stopLoading());
+    yield firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then((result) => {
+        const credentials = result.credential?.toJSON() as GoogleAuthResultInterface;
+        const user = result.user?.toJSON() as User;
+        if (credentials && user) {
+          tokenHandler.set(credentials.oauthAccessToken);
+          tokenHandler.setUser(user);
+          history.push("/");
+          store.dispatch(actions.socialLogin.success());
+        }
+      });
   } catch (error) {
-    console.log(error);
+    yield put(actions.socialLogin.failure(error));
+  } finally {
     yield put(stopLoading());
-    yield put(actions.googleSignIn.failure(error));
   }
 }
 
 function* authSagas() {
-  yield takeLatest(actions.googleSignIn.request, googleSignInSaga);
+  yield takeLatest(actions.socialLogin.request, socialLoginSaga);
 }
 
 export default authSagas;

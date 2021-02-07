@@ -1,2 +1,2 @@
 export * from "./AuthState";
-export * from "./GoogleAuthInterface";
+export * from "./GoogleAuthResultInterface";
