@@ -18,9 +18,9 @@ const DashboardHomePage: NextPage = () => {
 
   return (
     <React.Fragment>
-      <Text h1>Dashboard</Text>
+      <Spacer y={1} />
 
-      <Divider />
+      <Text h1>Dashboard</Text>
 
 
       <Text h3>Today's overview</Text>
