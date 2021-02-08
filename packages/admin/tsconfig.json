@@ -16,7 +16,13 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "baseUrl": "./src",
+    "paths": {
+      "@hoc": ["hoc/index"],
+      "@components": ["components/index"],
+      "@hooks": ["hooks/index"]
+    }
   },
   "include": [
     "next-env.d.ts",
