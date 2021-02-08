@@ -1,12 +1,11 @@
+import { ISubscriptionEntity } from '@common/types';
 import moment from 'moment';
 import { v4 } from 'uuid';
 
-import { ISubscriptionEntity } from '../types';
-
+import { createSubscriptionPayment } from '../../circlepay/payments/business/createSubscriptionPayment';
 import { EVENT_TYPES } from '../../event/event';
 import { createEvent } from '../../util/db/eventDbService';
 import { subscriptionDb } from '../database';
-import { createSubscriptionPayment } from '../../circlepay/payments/business/createSubscriptionPayment';
 
 /**
  * Charges one subscription (only if the due date is

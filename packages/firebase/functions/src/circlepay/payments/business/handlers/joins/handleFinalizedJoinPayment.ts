@@ -1,10 +1,11 @@
-import { IJoinRequestProposal } from '../../../../../proposals/proposalTypes';
-import { isFailed, isPending, isSuccessful } from '../../../helpers';
+import { IJoinRequestProposal } from '@common/types';
+
 import { CommonError } from '../../../../../util/errors';
+import { isFailed, isPending, isSuccessful } from '../../../helpers';
 import { IPaymentEntity } from '../../../types';
 
-import { handleSuccessfulJoinPayment } from './handleSuccessfulJoinPayment';
 import { handleUnsuccessfulJoinPayment } from './handleFailedJoinPayment';
+import { handleSuccessfulJoinPayment } from './handleSuccessfulJoinPayment';
 
 export const handleFinalizedJoinPayment = async (proposal: IJoinRequestProposal, payment: IPaymentEntity): Promise<void> => {
   if (isPending(payment)) {

@@ -1,22 +1,30 @@
-import { db } from '../../util';
+import { IProposalEntity, IVoteEntity } from '@common/types';
+
 import { Collections } from '../../constants';
+import { db } from '../../util';
 
 import { addProposal } from './addProposal';
+import { deleteProposalFromDatabase } from './deleteProposal';
+import { getFundingRequest } from './getFundingRequest';
+import { getJoinRequest } from './getJoinRequest';
 import { getProposal, getProposalTransactional } from './getProposal';
 import { getProposals } from './getProposals';
 import { updateProposal, updateProposalTransactional } from './updateProposal';
-import { deleteProposalFromDatabase } from './deleteProposal';
 
 import { addVote } from './votes/addVote';
-import { getVote } from './votes/getVote';
-import { getAllProposalVotes } from './votes/getAllProposalVotes';
-import { getFundingRequest } from './getFundingRequest';
-import { getJoinRequest } from './getJoinRequest';
 import { deleteVoteFromDatabase } from './votes/deleteVote';
+import { getAllProposalVotes } from './votes/getAllProposalVotes';
+import { getVote } from './votes/getVote';
 
-import { IProposalEntity } from '../proposalTypes';
-
-export const VotesCollection = db.collection(Collections.Votes);
+export const VotesCollection = db.collection(Collections.Votes)
+  .withConverter<IVoteEntity>({
+    fromFirestore(snapshot: FirebaseFirestore.QueryDocumentSnapshot): IVoteEntity {
+      return snapshot.data() as IVoteEntity;
+    },
+    toFirestore(object: IVoteEntity | Partial<IVoteEntity>): FirebaseFirestore.DocumentData {
+      return object;
+    }
+  });
 
 export const ProposalsCollection = db.collection(Collections.Proposals)
   .withConverter<IProposalEntity>({

@@ -1,21 +1,21 @@
+import { ISubscriptionEntity } from '@common/types';
 import admin from 'firebase-admin';
-import { EVENT_TYPES } from '../event/event';
-import { env } from '../constants';
-import { getUserById } from '../util/db/userDbService';
-import { Utils } from '../util/util';
-import { getDiscussionMessageById } from '../util/db/discussionMessagesDb';
-import { proposalDb } from '../proposals/database';
-import { commonDb } from '../common/database';
-import { subscriptionDb } from '../subscriptions/database';
-import { ISendTemplatedEmailData } from './email';
-import { ISubscriptionEntity } from '../subscriptions/types';
-import { IUserEntity } from '../users/types';
-import { userDb } from '../users/database';
-import { paymentDb } from '../circlepay/payments/database';
+import moment from 'moment';
+
 import { cardDb } from '../circlepay/cards/database';
 import { ICardEntity } from '../circlepay/cards/types';
-import { discussionDb } from '../discussion/database';
-import moment from 'moment';
+import { paymentDb } from '../circlepay/payments/database';
+import { commonDb } from '../common/database';
+import { env } from '../constants';
+import { EVENT_TYPES } from '../event/event';
+import { proposalDb } from '../proposals/database';
+import { subscriptionDb } from '../subscriptions/database';
+import { userDb } from '../users/database';
+import { IUserEntity } from '../users/types';
+import { getDiscussionMessageById } from '../util/db/discussionMessagesDb';
+import { getUserById } from '../util/db/userDbService';
+import { Utils } from '../util/util';
+import { ISendTemplatedEmailData } from './email';
 import { getFundingRequestAcceptedTemplate } from './helpers';
 
 const messaging = admin.messaging();
@@ -330,31 +330,6 @@ export const notifyData: Record<string, IEventData> = {
       {
         title: `New comment!`,
         body: `The member ${getNameString(sender)} commented in "${commonData.name}"`,
-        image: commonData.image || '',
-        path
-      }
-    )
-  },
-  [EVENT_TYPES.DISCUSSION_CREATED]: {
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    data: async (discussionId: string) => {
-      const discussion = (await discussionDb.getDiscussion(discussionId));
-      const commonId = discussion.commonId;
-
-      const path = `Discussions/${commonId}/${discussionId}`;
-
-      return {
-        discussion,
-        creator: (await getUserById(discussion.ownerId)).data(),
-        commonData: (await commonDb.get(commonId)),
-        path
-      };
-    },
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    notification: async ({ discussion, creator, commonData, path }) => (
-      {
-        title: `New post in ${commonData.name}`,
-        body: `By ${getNameString(creator)}: "${discussion.title}"`,
         image: commonData.image || '',
         path
       }

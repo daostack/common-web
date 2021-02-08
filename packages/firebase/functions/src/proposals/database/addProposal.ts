@@ -2,9 +2,10 @@ import admin from 'firebase-admin';
 import Timestamp = admin.firestore.Timestamp;
 import { v4 } from 'uuid';
 
-import { BaseEntityType, SharedOmit } from '../../util/types';
+import { IProposalEntity, SharedOmit } from '@common/types';
 
-import { IProposalEntity } from '../proposalTypes';
+import { BaseEntityType } from '../../util/types';
+
 import { ProposalsCollection } from './index';
 
 

@@ -1,9 +1,10 @@
+import { IFundingRequestProposal, IProposalEntity } from '@common/types';
+
 import { ArgumentError, CommonError } from '../../util/errors';
 import { NotFoundError } from '../../util/errors';
 import { Nullable } from '../../util/types';
 
 import { ProposalsCollection } from './index';
-import { IFundingRequestProposal, IProposalEntity } from '../proposalTypes';
 
 /**
  * Gets funding request by id

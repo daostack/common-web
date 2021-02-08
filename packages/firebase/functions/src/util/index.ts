@@ -1,7 +1,7 @@
-import admin from 'firebase-admin';
 import { Nullable } from './types';
+import { db as settingsDb } from '../settings';
 
-export const db = admin.firestore();
+export const db = settingsDb;
 
 export const isNullOrUndefined = (obj: Nullable<any>): boolean =>
   obj === null ||

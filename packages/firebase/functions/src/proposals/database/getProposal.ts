@@ -1,11 +1,10 @@
+import { firestore } from 'firebase-admin';
+import { IProposalEntity } from '@common/types';
+
 import { ArgumentError, NotFoundError } from '../../util/errors';
 import { Nullable } from '../../util/types';
 
 import { ProposalsCollection } from './index';
-import { IProposalEntity } from '../proposalTypes';
-
-import admin from 'firebase-admin';
-import Transaction = admin.firestore.Transaction;
 
 /**
  * Gets proposal by id
@@ -42,7 +41,7 @@ export const getProposal = async (proposalId: string, throwErr = true): Promise<
  *
  * @returns - The found proposal
  */
-export const getProposalTransactional = async (transaction: Transaction, proposalId: string): Promise<IProposalEntity> => {
+export const getProposalTransactional = async (transaction: firestore.Transaction, proposalId: string): Promise<IProposalEntity> => {
   if (!proposalId) {
     throw new ArgumentError('proposalId', proposalId);
   }

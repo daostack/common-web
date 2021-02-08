@@ -1,7 +1,7 @@
-import { v4 } from 'uuid';
+import { IVoteEntity } from '@common/types';
 import { firestore } from 'firebase-admin';
+import { v4 } from 'uuid';
 
-import { IVoteEntity } from '../../voteTypes';
 import { BaseEntityType } from '../../../util/types';
 
 import { VotesCollection } from '../index';
@@ -21,7 +21,7 @@ export const addVote = async (vote: Omit<IVoteEntity, BaseEntityType>): Promise<
     ...vote
   };
 
-  if(process.env.NODE_ENV === 'test') {
+  if (process.env.NODE_ENV === 'test') {
     voteDoc['testCreated'] = true;
   }
 

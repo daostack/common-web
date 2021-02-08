@@ -1,5 +1,5 @@
+import { IJoinRequestProposal } from '@common/types';
 import firebase from 'firebase';
-import { IJoinRequestProposal } from '../../../../../proposals/proposalTypes';
 import { NotFoundError } from '../../../../errors';
 import Timestamp = firebase.firestore.Timestamp;
 

@@ -58,9 +58,6 @@ export interface ICircleNotification {
 
 export type BaseEntityType = 'id' | 'createdAt' | 'updatedAt';
 
-export type SharedOmit<T, K extends keyof any> = T extends any
-  ? Omit<T, K>
-  : never;
 
 export interface IBaseEntity {
   /**

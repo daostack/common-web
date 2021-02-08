@@ -1,14 +1,14 @@
 import * as functions from 'firebase-functions';
+import { createProposalPayment } from '../../circlepay/payments/business/createProposalPayment';
+import { addCommonMemberByProposalId } from '../../common/business/addCommonMember';
 
-import {Collections} from '../../constants';
-import {IEventEntity} from '../../event/types';
-import {EVENT_TYPES} from '../../event/event';
-import {fundProposal} from '../business/fundProposal';
-import {createSubscription} from '../../subscriptions/business';
-import {proposalDb} from '../database';
-import {createEvent} from '../../util/db/eventDbService';
-import {createProposalPayment} from '../../circlepay/payments/business/createProposalPayment';
-import {addCommonMemberByProposalId} from '../../common/business/addCommonMember';
+import { Collections } from '../../constants';
+import { EVENT_TYPES } from '../../event/event';
+import { IEventEntity } from '../../event/types';
+import { createSubscription } from '../../subscriptions/business';
+import { createEvent } from '../../util/db/eventDbService';
+import { fundProposal } from '../business/fundProposal';
+import { proposalDb } from '../database';
 
 export const onProposalApproved = functions.firestore
   .document(`/${Collections.Events}/{id}`)
@@ -24,7 +24,7 @@ export const onProposalApproved = functions.firestore
       await createEvent({
         userId: event.userId,
         objectId: event.objectId,
-        type: EVENT_TYPES.FUNDING_REQUEST_EXECUTED,
+        type: EVENT_TYPES.FUNDING_REQUEST_EXECUTED
       });
     }
 

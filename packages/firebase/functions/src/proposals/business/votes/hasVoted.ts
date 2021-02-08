@@ -1,4 +1,4 @@
-import { IProposalEntity } from '../../proposalTypes';
+import { IProposalEntity } from '@common/types';
 
 /**
  * Check if user is voter for proposal

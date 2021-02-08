@@ -1,17 +1,17 @@
+import { IFundingRequestProposal, IProposalFile, IProposalImage, IProposalLink } from '@common/types';
 import * as yup from 'yup';
 
-import { fileValidationSchema, imageValidationSchema, linkValidationSchema } from '../../util/schemas';
-import { CommonError } from '../../util/errors';
-import { validate } from '../../util/validate';
-import { Nullable } from '../../util/types';
-import { env, StatusCodes } from '../../constants';
 import { isCommonMember } from '../../common/business';
 import { commonDb } from '../../common/database';
+import { env, StatusCodes } from '../../constants';
+import { EVENT_TYPES } from '../../event/event';
+import { createEvent } from '../../util/db/eventDbService';
+import { CommonError } from '../../util/errors';
+import { fileValidationSchema, imageValidationSchema, linkValidationSchema } from '../../util/schemas';
+import { Nullable } from '../../util/types';
+import { validate } from '../../util/validate';
 
 import { proposalDb } from '../database';
-import { IFundingRequestProposal, IProposalFile, IProposalImage, IProposalLink } from '../proposalTypes';
-import { createEvent } from '../../util/db/eventDbService';
-import { EVENT_TYPES } from '../../event/event';
 
 const createFundingProposalValidationSchema = yup.object({
   commonId: yup
@@ -89,7 +89,7 @@ export const createFundingRequest = async (payload: CreateFundingProposalPayload
 
     fundingRequest: {
       amount: payload.amount,
-      funded: false,
+      funded: false
     },
 
     countdownPeriod: env.durations.funding.countdownPeriod,
@@ -101,7 +101,7 @@ export const createFundingRequest = async (payload: CreateFundingProposalPayload
     userId: payload.proposerId,
     objectId: fundingProposal.id,
     type: EVENT_TYPES.FUNDING_REQUEST_CREATED
-  })
+  });
 
   // Return the payload
   return fundingProposal as IFundingRequestProposal;

@@ -1,4 +1,4 @@
-import { IProposalEntity } from '../proposalTypes';
+import { IProposalEntity } from '@common/types';
 import { proposalDb, voteDb } from '../database';
 
 /**

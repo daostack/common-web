@@ -1,19 +1,16 @@
+import { IProposalEntity, ISubscriptionEntity } from '@common/types';
+import { firestore } from 'firebase-admin';
 import { v4 } from 'uuid';
-import admin from 'firebase-admin';
-import Timestamp = admin.firestore.Timestamp;
 
-import { CommonError } from '../../util/errors';
-import { IProposalEntity } from '../../proposals/proposalTypes';
-import { ISubscriptionEntity } from '../types';
-import { commonDb } from '../../common/database';
-import { subscriptionDb } from '../database';
-import { createEvent } from '../../util/db/eventDbService';
-import { EVENT_TYPES } from '../../event/event';
+import { cardDb } from '../../circlepay/cards/database';
 import { createSubscriptionPayment } from '../../circlepay/payments/business/createSubscriptionPayment';
 import { isSuccessful } from '../../circlepay/payments/helpers';
 import { addCommonMemberByProposalId } from '../../common/business/addCommonMember';
-import { cardDb } from '../../circlepay/cards/database';
-
+import { commonDb } from '../../common/database';
+import { EVENT_TYPES } from '../../event/event';
+import { createEvent } from '../../util/db/eventDbService';
+import { CommonError } from '../../util/errors';
+import { subscriptionDb } from '../database';
 
 /**
  * Creates subscription based on proposal
@@ -56,7 +53,7 @@ export const createSubscription = async (proposal: IProposalEntity): Promise<ISu
     cardId: card.id,
 
     // Using Date().getDate() to ignore the time
-    dueDate: Timestamp.now(),
+    dueDate: firestore.Timestamp.now(),
 
     amount: proposal.join.funding,
 

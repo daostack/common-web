@@ -1,5 +1,5 @@
+import { ISubscriptionEntity } from '@common/types';
 import firebase from 'firebase';
-import { ISubscriptionEntity } from '../../../../../subscriptions/types';
 import { NotFoundError } from '../../../../errors';
 import Timestamp = firebase.firestore.Timestamp;
 

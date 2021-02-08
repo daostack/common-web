@@ -1,10 +1,9 @@
-import admin from 'firebase-admin';
-import Timestamp = admin.firestore.Timestamp;
+import { ISubscriptionEntity, SharedOmit } from '@common/types';
+import { firestore } from 'firebase-admin';
 import { v4 } from 'uuid';
 
-import { BaseEntityType, SharedOmit } from '../../util/types';
+import { BaseEntityType } from '../../util/types';
 
-import { ISubscriptionEntity } from '../types';
 import { SubscriptionsCollection } from './index';
 
 
@@ -18,15 +17,15 @@ export const addSubscription = async (subscription: SharedOmit<ISubscriptionEnti
   const subscriptionDoc: ISubscriptionEntity = {
     id: v4(),
 
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
+    createdAt: firestore.Timestamp.now(),
+    updatedAt: firestore.Timestamp.now(),
 
     charges: 0,
 
     ...(subscription as ISubscriptionEntity)
   };
 
-  if(process.env.NODE_ENV === 'test') {
+  if (process.env.NODE_ENV === 'test') {
     subscriptionDoc['testCreated'] = true;
   }
 

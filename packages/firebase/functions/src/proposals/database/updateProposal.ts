@@ -1,12 +1,12 @@
+import { IProposalEntity } from '@common/types';
 import admin, { firestore } from 'firebase-admin';
 
-import { IProposalEntity } from '../proposalTypes';
 import { ProposalsCollection } from './index';
 import Transaction = admin.firestore.Transaction;
 
 type WithRequired<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>;
 
-type IndetifiablePartialProposal = WithRequired<Partial<IProposalEntity>, 'id'>;
+type IdentifiablePartialProposal = WithRequired<Partial<IProposalEntity>, 'id'>;
 
 /**
  * Updates the proposal in the backing store
@@ -33,7 +33,7 @@ export const updateProposal = async (proposal: WithRequired<IProposalEntity, 'id
  * @param transaction - The transactional scope
  * @param proposal - The updated proposal properties (must have the ID)
  */
-export const updateProposalTransactional = async (transaction: Transaction, proposal: IndetifiablePartialProposal): Promise<IndetifiablePartialProposal> => {
+export const updateProposalTransactional = async (transaction: Transaction, proposal: IdentifiablePartialProposal): Promise<IdentifiablePartialProposal> => {
   const updatedProposal = {
     ...proposal,
     updatedAt: firestore.Timestamp.now()

@@ -1,8 +1,9 @@
+import { IJoinRequestProposal, IProposalEntity } from '@common/types';
+
 import { ArgumentError, CommonError, NotFoundError } from '../../util/errors';
 import { Nullable } from '../../util/types';
 
 import { ProposalsCollection } from './index';
-import { IJoinRequestProposal, IProposalEntity } from '../proposalTypes';
 
 /**
  * Gets join request by id

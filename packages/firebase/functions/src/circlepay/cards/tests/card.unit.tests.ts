@@ -2,7 +2,6 @@ import { v4 } from 'uuid';
 
 import '../../../util/tests/helpers/mockers/cards/getCard.mocker';
 import '../../../util/tests/helpers/mockers/cards/updateCard.mocker';
-import '../../../util/tests/helpers/mockers/firebase.mocker';
 
 import { isCardOwner } from '../business/isCardOwner';
 import MockAdapter from 'axios-mock-adapter';

@@ -1,12 +1,11 @@
-import { ISubscriptionEntity } from '../../../../../subscriptions/types';
-import { createEvent } from '../../../../../util/db/eventDbService';
+import { ISubscriptionEntity } from '@common/types';
+
 import { EVENT_TYPES } from '../../../../../event/event';
-
-import { IPaymentEntity } from '../../../types';
+import { createEvent } from '../../../../../util/db/eventDbService';
 import { isFinalized, isPending, isSuccessful } from '../../../helpers';
-
-import { handleSuccessfulSubscriptionPayment } from './handleSuccesfulSubscriptionPayment';
+import { IPaymentEntity } from '../../../types';
 import { handleFailedSubscriptionPayment } from './handleFailedSubscriptionPayment';
+import { handleSuccessfulSubscriptionPayment } from './handleSuccesfulSubscriptionPayment';
 
 /**
  * Processes the payment, made for subscription, after it has been finalized

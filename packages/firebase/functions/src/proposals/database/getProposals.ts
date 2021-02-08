@@ -1,8 +1,7 @@
-import admin from 'firebase-admin';
+import { FundingRequestState, IProposalEntity, ProposalType, RequestToJoinState } from '@common/types';
+import { firestore } from 'firebase-admin';
 
 import { ProposalsCollection } from './index';
-import { FundingRequestState, IProposalEntity, ProposalType, RequestToJoinState } from '../proposalTypes';
-import QuerySnapshot = admin.firestore.QuerySnapshot;
 
 interface IGetProposalsOptions {
   state?: RequestToJoinState | RequestToJoinState[] | FundingRequestState | FundingRequestState[];
@@ -37,6 +36,6 @@ export const getProposals = async (options: IGetProposalsOptions): Promise<IProp
     proposalsQuery = proposalsQuery.where('commonId', '==', options.commonId);
   }
 
-  return (await proposalsQuery.get() as QuerySnapshot<IProposalEntity>)
+  return (await proposalsQuery.get() as firestore.QuerySnapshot<IProposalEntity>)
     .docs.map(x => x.data());
 };

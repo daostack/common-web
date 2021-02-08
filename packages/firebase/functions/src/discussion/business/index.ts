@@ -1,0 +1,1 @@
+export { updateDiscussion } from './updateDiscussion';

@@ -1,10 +1,11 @@
-import { IJoinRequestProposal } from '../../../../../proposals/proposalTypes';
-import { IPaymentEntity } from '../../../types';
-import { isFailed } from '../../../helpers';
-import { CommonError } from '../../../../../util/errors';
-import { proposalDb } from '../../../../../proposals/database';
+import { IJoinRequestProposal } from '@common/types';
+
 import { EVENT_TYPES } from '../../../../../event/event';
+import { proposalDb } from '../../../../../proposals/database';
 import { createEvent } from '../../../../../util/db/eventDbService';
+import { CommonError } from '../../../../../util/errors';
+import { isFailed } from '../../../helpers';
+import { IPaymentEntity } from '../../../types';
 
 export const handleUnsuccessfulJoinPayment = async (proposal: IJoinRequestProposal, payment: IPaymentEntity): Promise<void> => {
   if (!isFailed(payment)) {

@@ -1,9 +1,7 @@
-import admin from 'firebase-admin';
+import { firestore } from 'firebase-admin';
+import { IVoteEntity } from '@common/types';
 
-import { IVoteEntity } from '../../voteTypes';
 import { VotesCollection } from '../index';
-
-import QuerySnapshot = admin.firestore.QuerySnapshot;
 
 
 /**
@@ -14,7 +12,7 @@ import QuerySnapshot = admin.firestore.QuerySnapshot;
 export const getAllProposalVotes = async (proposalId: string): Promise<IVoteEntity[]> => {
   const votes = await VotesCollection
     .where('proposalId', '==', proposalId)
-    .get() as QuerySnapshot<IVoteEntity>;
+    .get() as firestore.QuerySnapshot<IVoteEntity>;
 
   return votes.docs.map(x => x.data());
 };

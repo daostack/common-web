@@ -1,14 +1,10 @@
-import admin from 'firebase-admin';
-
-import { QuerySnapshot } from '@google-cloud/firestore';
+import { ISubscriptionEntity } from '@common/types';
+import { firestore } from 'firebase-admin';
 
 import { Collections } from '../../util/constants';
-
 import { chargeSubscription } from './chargeSubscription';
-import { ISubscriptionEntity } from '../types';
 
-import Timestamp = admin.firestore.Timestamp;
-const db = admin.firestore();
+const db = firestore();
 
 /**
  *  Charges all subscriptions that are due today. Only
@@ -19,9 +15,9 @@ export const chargeSubscriptions = async (): Promise<void> => {
 
   const subscriptionsDueToday = await db.collection(Collections.Subscriptions)
     // .where('dueDate', '>=', new Date().setHours(0,0,0,0))
-    .where('dueDate', '<=', Timestamp.fromMillis(new Date().setHours(23, 59, 59, 999)))
+    .where('dueDate', '<=', firestore.Timestamp.fromMillis(new Date().setHours(23, 59, 59, 999)))
     .where('status', 'in', ['Active', 'PaymentFailed'])
-    .get() as QuerySnapshot<ISubscriptionEntity>;
+    .get() as firestore.QuerySnapshot<ISubscriptionEntity>;
 
   const promiseArr: Promise<any>[] = [];
 

@@ -1,12 +1,12 @@
-import { IVoteEntity } from '../../voteTypes';
-import { proposalDb } from '../../database';
-import { hasAbsoluteMajority } from '../hasAbsoluteMajority';
-import { finalizeProposal } from '../finalizeProposal';
+import { IProposalEntity, IVoteEntity } from '@common/types';
+
 import { commonDb } from '../../../common/database';
-import { countVotes } from '../countVotes';
-import { isInQuietEnding } from '../isInQuietEnding';
 import { db } from '../../../util';
-import { IProposalEntity } from '../../proposalTypes';
+import { proposalDb } from '../../database';
+import { countVotes } from '../countVotes';
+import { finalizeProposal } from '../finalizeProposal';
+import { hasAbsoluteMajority } from '../hasAbsoluteMajority';
+import { isInQuietEnding } from '../isInQuietEnding';
 
 export const processVote = async (vote: IVoteEntity): Promise<void> => {
   try {
@@ -21,25 +21,6 @@ export const processVote = async (vote: IVoteEntity): Promise<void> => {
         voterId: vote.voterId,
         voteOutcome: vote.outcome
       });
-
-      // Verify the votes integrity
-      //
-      // @remark(for: Jelle) This is no longer needed, but wanted to see what do you think about removing this
-      // from the code. Maybe move it only in finalization only?
-      //
-      //
-      //
-      // if (votes.length !== proposal.votes.length) {
-      //   proposal.votes = [];
-      //
-      //   votes.forEach((voteData) => {
-      //     proposal.votes.push({
-      //       voteId: voteData.id,
-      //       voterId: voteData.voterId,
-      //       voteOutcome: voteData.outcome
-      //     });
-      //   });
-      // }
 
       // After the integrity is verified update the votesFor and votesAgainst
       const currentVoteCount = countVotes(proposal);

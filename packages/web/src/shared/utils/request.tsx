@@ -8,7 +8,6 @@ const axiosInstance: AxiosInstance = axios.create();
 
 const makeRequest = (instance: AxiosInstance) => (method: string, url: string, params: unknown) => {
   const token = tokenHandler.get();
-
   if (token) {
     axios.defaults.headers.common.Authorization = `Bearer ${token}`;
   }

@@ -1,11 +1,10 @@
-import { CommonError } from '../../../../../util/errors';
-import { IPaymentEntity } from '../../../types';
+import { ISubscriptionEntity } from '@common/types';
 
 import { proposalDb } from '../../../../../proposals/database';
-
-import { updateSubscription } from '../../../../../subscriptions/database/updateSubscription';
-import { ISubscriptionEntity } from '../../../../../subscriptions/types';
 import { revokeMembership } from '../../../../../subscriptions/business';
+import { updateSubscription } from '../../../../../subscriptions/database/updateSubscription';
+import { CommonError } from '../../../../../util/errors';
+import { IPaymentEntity } from '../../../types';
 
 /**
  * Handles update for the subscription document on payment failure

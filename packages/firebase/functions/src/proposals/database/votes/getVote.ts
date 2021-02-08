@@ -1,9 +1,9 @@
-import { ArgumentError } from '../../../util/errors';
-import { NotFoundError } from '../../../util/errors';
+import { IVoteEntity } from '@common/types';
+
+import { ArgumentError, NotFoundError } from '../../../util/errors';
 import { Nullable } from '../../../util/types';
 
 import { VotesCollection } from '../index';
-import { IVoteEntity } from '../../voteTypes';
 
 /**
  * Gets vote by id
@@ -16,7 +16,7 @@ import { IVoteEntity } from '../../voteTypes';
  * @returns - The found vote
  */
 export const getVote = async (voteId: string): Promise<IVoteEntity> => {
-  if(!voteId) {
+  if (!voteId) {
     throw new ArgumentError('voteId', voteId);
   }
 
@@ -24,9 +24,9 @@ export const getVote = async (voteId: string): Promise<IVoteEntity> => {
     .doc(voteId)
     .get()).data() as Nullable<IVoteEntity>;
 
-  if(!vote) {
+  if (!vote) {
     throw new NotFoundError(voteId, 'vote');
   }
 
   return vote;
-}
+};

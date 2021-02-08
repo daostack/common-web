@@ -7,7 +7,6 @@ import '../../../util/logger';
 import '../../../util/tests/helpers/mockers/cards/getCard.mocker';
 import '../../../util/tests/helpers/mockers/commons/getCommon.mocker';
 import '../../../util/tests/helpers/mockers/commons/updateCommon.mocker';
-import '../../../util/tests/helpers/mockers/firebase.mocker';
 import '../../../util/tests/helpers/mockers/getUser.mocker';
 import '../../../util/tests/helpers/mockers/payments/addPayment.mocker';
 
