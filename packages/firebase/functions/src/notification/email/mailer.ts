@@ -8,12 +8,11 @@ const SENDGRID_APIKEY = 'SENDGRID_APIKEY';
 const setApiKey = async () => {
   const apiKey = await getSecret(SENDGRID_APIKEY);
   sendgrid.setApiKey(apiKey);
-  env.mail.SENDGRID_API_KEY = apiKey;
 }
 
 export const sendMail = async (dest: string, subject: string, message: string, from = env.mail.sender, bcc = null): Promise<void> => {
-  // if env.mail.SENDGRID_API_KEY has no value, set it with apiKey 
-  !env.mail.SENDGRID_API_KEY && await setApiKey();
+  // @question Moore, why are we awaiting this on every single mail we send?
+  await setApiKey();
 
   await sendgrid.send({
     to: dest,
