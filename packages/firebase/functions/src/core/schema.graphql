@@ -2,7 +2,70 @@
 ### Do not make changes to this file directly
 
 
+"""Date custom scalar type"""
+scalar Date
+
+type Event {
+  """The date, at which the event was created"""
+  createdAt: Date!
+
+  """The unique identifier of the event"""
+  id: ID!
+
+  """The id of the object on which was acted to created the event"""
+  objectId: ID
+  type: EventType!
+
+  """The date, at which the event was last updated"""
+  updatedAt: Date!
+
+  """The id of the actor"""
+  userId: ID
+}
+
+enum EventType {
+  cardCreated
+  commonCreated
+  commonCreationFailed
+  commonMemberAdded
+  commonMemberRemoved
+  commonUpdated
+  commonWhitelisted
+  discussionCreated
+  fundingRequestAccepted
+  fundingRequestAcceptedInsufficientFunds
+  fundingRequestCreated
+  fundingRequestExecuted
+  fundingRequestRejected
+  membershipRevoked
+  messageCreated
+  paymentConfirmed
+  paymentCreated
+  paymentFailed
+  paymentPaid
+  payoutApproved
+  payoutCompleted
+  payoutCreated
+  payoutExecuted
+  payoutFailed
+  payoutVoided
+  requestToJoinAccepted
+  requestToJoinCreated
+  requestToJoinExecuted
+  requestToJoinRejected
+  subscriptionCanceledByPaymentFailure
+  subscriptionCanceledByUser
+  subscriptionCreated
+  subscriptionPaymentConfirmed
+  subscriptionPaymentCreated
+  subscriptionPaymentFailed
+  subscriptionPaymentStuck
+  voteCreated
+}
+
 type Query {
+  event(eventId: ID!): Event
+  events(after: Int, first: Int!): [Event]
   today: Statistics
 }
 

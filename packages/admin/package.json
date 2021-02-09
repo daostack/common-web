@@ -5,11 +5,15 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@apollo/client": "^3.3.8",
     "@geist-ui/react": "^2.1.0-canary.2",
     "@geist-ui/react-icons": "^1.0.1",
+    "@graphql-codegen/typescript-react-apollo": "^2.2.1",
+    "graphql": "^15.5.0",
     "next": "10.0.6",
     "react": "17.0.1",
     "react-dom": "17.0.1"
@@ -24,5 +28,11 @@
       "react/prop-types": 0,
       "@typescript-eslint/interface-name-prefix": 0
     }
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "1.20.1",
+    "@graphql-codegen/typescript": "1.20.2",
+    "@graphql-codegen/typescript-operations": "1.17.14",
+    "@graphql-codegen/typescript-react-apollo": "2.2.1"
   }
 }

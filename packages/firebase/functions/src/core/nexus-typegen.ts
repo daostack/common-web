@@ -4,9 +4,23 @@
  */
 
 
-
-
-
+import { core } from "nexus"
+declare global {
+  interface NexusGenCustomInputMethods<TypeName extends string> {
+    /**
+     * Date custom scalar type
+     */
+    date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Date";
+  }
+}
+declare global {
+  interface NexusGenCustomOutputMethods<TypeName extends string> {
+    /**
+     * Date custom scalar type
+     */
+    date<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Date";
+  }
+}
 
 
 declare global {
@@ -17,6 +31,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  EventType: "cardCreated" | "commonCreated" | "commonCreationFailed" | "commonMemberAdded" | "commonMemberRemoved" | "commonUpdated" | "commonWhitelisted" | "discussionCreated" | "fundingRequestAccepted" | "fundingRequestAcceptedInsufficientFunds" | "fundingRequestCreated" | "fundingRequestExecuted" | "fundingRequestRejected" | "membershipRevoked" | "messageCreated" | "paymentConfirmed" | "paymentCreated" | "paymentFailed" | "paymentPaid" | "payoutApproved" | "payoutCompleted" | "payoutCreated" | "payoutExecuted" | "payoutFailed" | "payoutVoided" | "requestToJoinAccepted" | "requestToJoinCreated" | "requestToJoinExecuted" | "requestToJoinRejected" | "subscriptionCanceledByPaymentFailure" | "subscriptionCanceledByUser" | "subscriptionCreated" | "subscriptionPaymentConfirmed" | "subscriptionPaymentCreated" | "subscriptionPaymentFailed" | "subscriptionPaymentStuck" | "voteCreated"
 }
 
 export interface NexusGenScalars {
@@ -25,9 +40,18 @@ export interface NexusGenScalars {
   Float: number
   Boolean: boolean
   ID: string
+  Date: any
 }
 
 export interface NexusGenObjects {
+  Event: { // root type
+    createdAt: NexusGenScalars['Date']; // Date!
+    id: string; // ID!
+    objectId?: string | null; // ID
+    type: NexusGenEnums['EventType']; // EventType!
+    updatedAt: NexusGenScalars['Date']; // Date!
+    userId?: string | null; // ID
+  }
   Query: {};
   Statistics: { // root type
     newCommons?: number | null; // Int
@@ -42,10 +66,20 @@ export interface NexusGenUnions {
 
 export type NexusGenRootTypes = NexusGenObjects
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  Event: { // field return type
+    createdAt: NexusGenScalars['Date']; // Date!
+    id: string; // ID!
+    objectId: string | null; // ID
+    type: NexusGenEnums['EventType']; // EventType!
+    updatedAt: NexusGenScalars['Date']; // Date!
+    userId: string | null; // ID
+  }
   Query: { // field return type
+    event: NexusGenRootTypes['Event'] | null; // Event
+    events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     today: NexusGenRootTypes['Statistics'] | null; // Statistics
   }
   Statistics: { // field return type
@@ -54,7 +88,17 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  Event: { // field return type name
+    createdAt: 'Date'
+    id: 'ID'
+    objectId: 'ID'
+    type: 'EventType'
+    updatedAt: 'Date'
+    userId: 'ID'
+  }
   Query: { // field return type name
+    event: 'Event'
+    events: 'Event'
     today: 'Statistics'
   }
   Statistics: { // field return type name
@@ -63,6 +107,15 @@ export interface NexusGenFieldTypeNames {
 }
 
 export interface NexusGenArgTypes {
+  Query: {
+    event: { // args
+      eventId: string; // ID!
+    }
+    events: { // args
+      after?: number | null; // Int
+      last: number; // Int!
+    }
+  }
 }
 
 export interface NexusGenAbstractTypeMembers {
@@ -75,7 +128,7 @@ export type NexusGenObjectNames = keyof NexusGenObjects;
 
 export type NexusGenInputNames = never;
 
-export type NexusGenEnumNames = never;
+export type NexusGenEnumNames = keyof NexusGenEnums;
 
 export type NexusGenInterfaceNames = never;
 

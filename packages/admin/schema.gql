@@ -1,0 +1,67 @@
+directive @specifiedBy(url: String!) on SCALAR
+scalar Date
+
+type Event {
+  id: ID!
+  type: EventType!
+  createdAt: Date!
+  updatedAt: Date!
+  objectId: ID
+  userId: ID
+}
+
+enum EventType {
+  commonCreated
+  commonCreationFailed
+  commonWhitelisted
+  commonMemberAdded
+  commonMemberRemoved
+  commonUpdated
+  requestToJoinCreated
+  requestToJoinAccepted
+  requestToJoinRejected
+  requestToJoinExecuted
+  fundingRequestCreated
+  fundingRequestRejected
+  fundingRequestExecuted
+  fundingRequestAccepted
+  fundingRequestAcceptedInsufficientFunds
+  voteCreated
+  paymentCreated
+  paymentConfirmed
+  paymentFailed
+  paymentPaid
+  payoutCreated
+  payoutApproved
+  payoutExecuted
+  payoutVoided
+  payoutCompleted
+  payoutFailed
+  cardCreated
+  discussionCreated
+  messageCreated
+  subscriptionCreated
+  subscriptionPaymentCreated
+  subscriptionPaymentFailed
+  subscriptionPaymentConfirmed
+  subscriptionPaymentStuck
+  subscriptionCanceledByUser
+  subscriptionCanceledByPaymentFailure
+  membershipRevoked
+}
+
+type Query {
+  today: Statistics
+  event(eventId: ID!): Event
+  events(last: Int!, after: Int): [Event]
+}
+
+type Statistics {
+  newCommons: Int
+  newJoinRequests: Int
+  newFundingRequests: Int
+  newDiscussions: Int
+  newDiscussionMessages: Int
+}
+
+

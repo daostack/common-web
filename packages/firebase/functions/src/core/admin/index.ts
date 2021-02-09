@@ -1,11 +1,24 @@
-import { ApolloServer } from 'apollo-server';
+import { ApolloServer } from 'apollo-server-express';
 import { schema } from './adminSchema';
+import { commonApp } from '../../util';
+import * as functions from 'firebase-functions';
+import { runtimeOptions } from '../../constants';
 
 
 export const server = new ApolloServer({
   schema
 });
 
-server.listen({ port: 2000 }).then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`);
+const app = commonApp(null, {
+  unauthenticatedRoutes: [
+    '/graphql'
+  ]
 });
+
+server.applyMiddleware({
+  app
+});
+
+export const adminApp = functions
+  .runWith(runtimeOptions)
+  .https.onRequest(app);

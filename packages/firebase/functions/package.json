@@ -11,6 +11,7 @@
     "@google-cloud/secret-manager": "^3.2.1",
     "@sendgrid/mail": "^7.2.1",
     "apollo-server": "^2.19.2",
+    "apollo-server-express": "^2.19.2",
     "axios": "^0.20.0",
     "cors": "^2.8.5",
     "dateformat": "^3.0.3",
