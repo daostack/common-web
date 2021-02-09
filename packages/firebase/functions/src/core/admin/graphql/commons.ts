@@ -19,6 +19,14 @@ export const CommonType = objectType({
       description: 'The unique identifier of the common'
     });
 
+    t.nonNull.date('createdAt', {
+      description: 'The date, at which the common was created'
+    });
+
+    t.nonNull.date('updatedAt', {
+      description: 'The date, at which the common was last updated'
+    });
+
     t.nonNull.string('name', {
       description: 'The display name of the common'
     });

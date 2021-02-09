@@ -14,6 +14,38 @@ export type Scalars = {
   Date: any;
 };
 
+export type Common = {
+  __typename?: 'Common';
+  id: Scalars['ID'];
+  createdAt: Scalars['Date'];
+  updatedAt: Scalars['Date'];
+  name: Scalars['String'];
+  balance: Scalars['Int'];
+  raised: Scalars['Int'];
+  metadata: CommonMetadata;
+  members?: Maybe<Array<Maybe<CommonMember>>>;
+};
+
+export enum CommonContributionType {
+  OneTime = 'oneTime',
+  Monthly = 'monthly'
+}
+
+export type CommonMember = {
+  __typename?: 'CommonMember';
+  userId: Scalars['ID'];
+  joinedAt?: Maybe<Scalars['Date']>;
+};
+
+export type CommonMetadata = {
+  __typename?: 'CommonMetadata';
+  byline: Scalars['String'];
+  description: Scalars['String'];
+  founderId: Scalars['String'];
+  minFeeToJoin: Scalars['Int'];
+  contributionType: CommonContributionType;
+};
+
 
 export type Event = {
   __typename?: 'Event';
@@ -70,6 +102,8 @@ export type Query = {
   today?: Maybe<Statistics>;
   event?: Maybe<Event>;
   events?: Maybe<Array<Maybe<Event>>>;
+  common?: Maybe<Common>;
+  commons?: Maybe<Array<Maybe<Common>>>;
 };
 
 
@@ -83,6 +117,17 @@ export type QueryEventsArgs = {
   after?: Maybe<Scalars['Int']>;
 };
 
+
+export type QueryCommonArgs = {
+  commonId: Scalars['ID'];
+};
+
+
+export type QueryCommonsArgs = {
+  last?: Maybe<Scalars['Int']>;
+  after?: Maybe<Scalars['Int']>;
+};
+
 export type Statistics = {
   __typename?: 'Statistics';
   newCommons?: Maybe<Scalars['Int']>;
@@ -91,6 +136,24 @@ export type Statistics = {
   newDiscussions?: Maybe<Scalars['Int']>;
   newDiscussionMessages?: Maybe<Scalars['Int']>;
 };
+
+export type GetCommonsHomescreenDataQueryVariables = Exact<{
+  last?: Maybe<Scalars['Int']>;
+  after?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetCommonsHomescreenDataQuery = (
+  { __typename?: 'Query' }
+  & { commons?: Maybe<Array<Maybe<(
+    { __typename?: 'Common' }
+    & Pick<Common, 'id' | 'name' | 'raised' | 'balance' | 'createdAt' | 'updatedAt'>
+    & { metadata: (
+      { __typename?: 'CommonMetadata' }
+      & Pick<CommonMetadata, 'byline' | 'description' | 'contributionType'>
+    ) }
+  )>>> }
+);
 
 export type GetDashboardDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -107,6 +170,50 @@ export type GetDashboardDataQuery = (
 );
 
 
+export const GetCommonsHomescreenDataDocument = gql`
+    query getCommonsHomescreenData($last: Int, $after: Int) {
+  commons(last: $last, after: $after) {
+    id
+    name
+    raised
+    balance
+    createdAt
+    updatedAt
+    metadata {
+      byline
+      description
+      contributionType
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCommonsHomescreenDataQuery__
+ *
+ * To run a query within a React component, call `useGetCommonsHomescreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommonsHomescreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCommonsHomescreenDataQuery({
+ *   variables: {
+ *      last: // value for 'last'
+ *      after: // value for 'after'
+ *   },
+ * });
+ */
+export function useGetCommonsHomescreenDataQuery(baseOptions?: Apollo.QueryHookOptions<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>) {
+        return Apollo.useQuery<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>(GetCommonsHomescreenDataDocument, baseOptions);
+      }
+export function useGetCommonsHomescreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>) {
+          return Apollo.useLazyQuery<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>(GetCommonsHomescreenDataDocument, baseOptions);
+        }
+export type GetCommonsHomescreenDataQueryHookResult = ReturnType<typeof useGetCommonsHomescreenDataQuery>;
+export type GetCommonsHomescreenDataLazyQueryHookResult = ReturnType<typeof useGetCommonsHomescreenDataLazyQuery>;
+export type GetCommonsHomescreenDataQueryResult = Apollo.QueryResult<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>;
 export const GetDashboardDataDocument = gql`
     query getDashboardData {
   today {

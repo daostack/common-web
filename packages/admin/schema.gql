@@ -1,4 +1,33 @@
 directive @specifiedBy(url: String!) on SCALAR
+type Common {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  name: String!
+  balance: Int!
+  raised: Int!
+  metadata: CommonMetadata!
+  members: [CommonMember]
+}
+
+enum CommonContributionType {
+  oneTime
+  monthly
+}
+
+type CommonMember {
+  userId: ID!
+  joinedAt: Date
+}
+
+type CommonMetadata {
+  byline: String!
+  description: String!
+  founderId: String!
+  minFeeToJoin: Int!
+  contributionType: CommonContributionType!
+}
+
 scalar Date
 
 type Event {
@@ -54,6 +83,8 @@ type Query {
   today: Statistics
   event(eventId: ID!): Event
   events(last: Int!, after: Int): [Event]
+  common(commonId: ID!): Common
+  commons(last: Int = 10, after: Int = 0): [Common]
 }
 
 type Statistics {
