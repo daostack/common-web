@@ -125,8 +125,8 @@ export const createJoinRequest = async (
       payments: []
     },
 
-    countdownPeriod: env.durations.join.countdownPeriod,
-    quietEndingPeriod: env.durations.join.quietEndingPeriod
+    countdownPeriod: common.id === 'a4bb2ec4-e88d-4269-96f9-d76264a01a0b' ? 576 : env.durations.join.countdownPeriod,
+    quietEndingPeriod: common.id === 'a4bb2ec4-e88d-4269-96f9-d76264a01a0b' ? 36 : env.durations.join.quietEndingPeriod
   })) as IJoinRequestProposal;
 
   // Link the card to the proposal
