@@ -3,6 +3,13 @@ import { scalarType } from 'nexus';
 
 import { StatisticsType, StatisticsTypeQueryExtension } from './statistics';
 import { EventTypeEnum, EventType, EventTypeQueryExtensions } from './events';
+import {
+  CommonMemberType,
+  CommonMetadataType,
+  CommonType,
+  CommonTypeQueryExtension,
+  CommonContributionTypeEnum
+} from './commons';
 
 // Scalars
 
@@ -36,5 +43,11 @@ export const types = [
 
   EventType,
   EventTypeEnum,
-  EventTypeQueryExtensions
+  EventTypeQueryExtensions,
+
+  CommonType,
+  CommonMemberType,
+  CommonMetadataType,
+  CommonTypeQueryExtension,
+  CommonContributionTypeEnum
 ];
