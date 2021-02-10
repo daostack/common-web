@@ -1,7 +1,7 @@
 {
   "name": "@common/firebase",
   "description": "Cloud Functions for Firebase",
-  "version": "1.9.7",
+  "version": "1.9.8",
   "scripts": {
     "build": "yarn compile",
     "build:watch": "yarn compile:watch",
