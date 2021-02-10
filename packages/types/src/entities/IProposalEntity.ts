@@ -72,7 +72,7 @@ interface IBaseProposalEntity extends IBaseEntity {
   votesAgainst: number;
 }
 
-interface IProposalVote {
+export interface IProposalVote {
   /**
    * The identifier of the vote in the votes
    * collection

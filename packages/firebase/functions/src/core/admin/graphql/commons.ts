@@ -2,6 +2,7 @@ import { objectType, extendType, idArg, nonNull, enumType, list, intArg } from '
 import { ICommonEntity, ICommonMetadata } from '@common/types';
 import { commonDb } from '../../../common/database';
 import {convertTimestampToDate, sleep} from '../../../util';
+import {ProposalType} from './proposals';
 
 export const CommonContributionTypeEnum = enumType({
   name: 'CommonContributionType',
@@ -44,6 +45,18 @@ export const CommonType = objectType({
     t.nonNull.field('metadata', {
       type: CommonMetadataType
     });
+
+     t.list.field('proposals', {
+       type: ProposalType,
+       args: {
+         page: intArg({
+           default: 1
+         })
+       },
+       resolve: (root) => {
+         const propsoals
+       }
+     })
 
     t.list.field('members', {
       type: CommonMemberType,

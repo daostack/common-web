@@ -36,6 +36,7 @@ export interface NexusGenEnums {
   ProposalPaymentState: "confirmed" | "failed" | "notAttempted" | "notRelevant" | "pending"
   ProposalState: "countdown" | "failed" | "passed" | "passedInsufficientBalance"
   ProposalType: "fundingRequest" | "join"
+  ProposalVoteOutcome: "passed" | "rejected"
 }
 
 export interface NexusGenScalars {
@@ -77,13 +78,14 @@ export interface NexusGenObjects {
     createdAt: NexusGenScalars['Date']; // Date!
     description: NexusGenRootTypes['ProposalDescription']; // ProposalDescription!
     fundingRequest?: NexusGenRootTypes['ProposalFunding'] | null; // ProposalFunding
-    fundingType: NexusGenEnums['ProposalType']; // ProposalType!
     id: string; // ID!
     join?: NexusGenRootTypes['ProposalJoin'] | null; // ProposalJoin
     paymentState?: NexusGenEnums['ProposalPaymentState'] | null; // ProposalPaymentState
     proposerId: string; // ID!
     state: NexusGenEnums['ProposalState']; // ProposalState!
+    type: NexusGenEnums['ProposalType']; // ProposalType!
     updatedAt: NexusGenScalars['Date']; // Date!
+    votes?: Array<NexusGenEnums['ProposalVoteOutcome'] | null> | null; // [ProposalVoteOutcome]
     votesAgainst: number; // Int!
     votesFor: number; // Int!
   }
@@ -98,6 +100,11 @@ export interface NexusGenObjects {
     cardId: string; // ID!
     funding: number; // Int!
     fundingType: NexusGenEnums['CommonContributionType']; // CommonContributionType!
+  }
+  ProposalVote: { // root type
+    outcome: NexusGenEnums['ProposalVoteOutcome']; // ProposalVoteOutcome!
+    voteId: string; // ID!
+    voterId: string; // ID!
   }
   Query: {};
   Statistics: { // root type
@@ -153,13 +160,14 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['Date']; // Date!
     description: NexusGenRootTypes['ProposalDescription']; // ProposalDescription!
     fundingRequest: NexusGenRootTypes['ProposalFunding'] | null; // ProposalFunding
-    fundingType: NexusGenEnums['ProposalType']; // ProposalType!
     id: string; // ID!
     join: NexusGenRootTypes['ProposalJoin'] | null; // ProposalJoin
     paymentState: NexusGenEnums['ProposalPaymentState'] | null; // ProposalPaymentState
     proposerId: string; // ID!
     state: NexusGenEnums['ProposalState']; // ProposalState!
+    type: NexusGenEnums['ProposalType']; // ProposalType!
     updatedAt: NexusGenScalars['Date']; // Date!
+    votes: Array<NexusGenEnums['ProposalVoteOutcome'] | null> | null; // [ProposalVoteOutcome]
     votesAgainst: number; // Int!
     votesFor: number; // Int!
   }
@@ -174,6 +182,11 @@ export interface NexusGenFieldTypes {
     cardId: string; // ID!
     funding: number; // Int!
     fundingType: NexusGenEnums['CommonContributionType']; // CommonContributionType!
+  }
+  ProposalVote: { // field return type
+    outcome: NexusGenEnums['ProposalVoteOutcome']; // ProposalVoteOutcome!
+    voteId: string; // ID!
+    voterId: string; // ID!
   }
   Query: { // field return type
     common: NexusGenRootTypes['Common'] | null; // Common
@@ -226,13 +239,14 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'Date'
     description: 'ProposalDescription'
     fundingRequest: 'ProposalFunding'
-    fundingType: 'ProposalType'
     id: 'ID'
     join: 'ProposalJoin'
     paymentState: 'ProposalPaymentState'
     proposerId: 'ID'
     state: 'ProposalState'
+    type: 'ProposalType'
     updatedAt: 'Date'
+    votes: 'ProposalVoteOutcome'
     votesAgainst: 'Int'
     votesFor: 'Int'
   }
@@ -247,6 +261,11 @@ export interface NexusGenFieldTypeNames {
     cardId: 'ID'
     funding: 'Int'
     fundingType: 'CommonContributionType'
+  }
+  ProposalVote: { // field return type name
+    outcome: 'ProposalVoteOutcome'
+    voteId: 'ID'
+    voterId: 'ID'
   }
   Query: { // field return type name
     common: 'Common'

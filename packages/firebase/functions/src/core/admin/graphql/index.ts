@@ -16,7 +16,7 @@ import {
   ProposalFundingType,
   ProposalJoinType,
   ProposalStateEnum,
-  ProposalPaymentStateEnum, ProposalDescriptionType, ProposalsQueryExtension,
+  ProposalPaymentStateEnum, ProposalDescriptionType, ProposalsQueryExtension, ProposalVoteOutcomeEnum, ProposalVoteType,
 } from './proposals';
 
 // Scalars
@@ -61,10 +61,12 @@ export const types = [
 
   ProposalType,
   ProposalTypeEnum,
+  ProposalVoteType,
   ProposalJoinType,
   ProposalStateEnum,
   ProposalFundingType,
   ProposalDescriptionType,
+  ProposalVoteOutcomeEnum,
   ProposalsQueryExtension,
   ProposalPaymentStateEnum,
 ];

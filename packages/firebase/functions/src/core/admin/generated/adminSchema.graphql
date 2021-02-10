@@ -113,7 +113,6 @@ type Proposal {
   Details about the funding request. Exists only on funding request proposals
   """
   fundingRequest: ProposalFunding
-  fundingType: ProposalType!
   id: ID!
 
   """Details about the join request. Exists only on join request proposals"""
@@ -121,7 +120,9 @@ type Proposal {
   paymentState: ProposalPaymentState
   proposerId: ID!
   state: ProposalState!
+  type: ProposalType!
   updatedAt: Date!
+  votes: [ProposalVoteOutcome]
   votesAgainst: Int!
   votesFor: Int!
 }
@@ -159,6 +160,17 @@ enum ProposalState {
 enum ProposalType {
   fundingRequest
   join
+}
+
+type ProposalVote {
+  outcome: ProposalVoteOutcome!
+  voteId: ID!
+  voterId: ID!
+}
+
+enum ProposalVoteOutcome {
+  passed
+  rejected
 }
 
 type Query {

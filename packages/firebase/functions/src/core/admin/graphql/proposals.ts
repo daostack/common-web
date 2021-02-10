@@ -1,3 +1,4 @@
+import { IProposalVote } from '@common/types';
 import {enumType, extendType, idArg, nonNull, objectType} from 'nexus';
 import {proposalDb} from '../../../proposals/database';
 
@@ -7,6 +8,14 @@ export const ProposalTypeEnum = enumType({
     fundingRequest: 'fundingRequest',
     join: 'join',
   },
+});
+
+export const ProposalVoteOutcomeEnum = enumType({
+  name: 'ProposalVoteOutcome',
+  members: [
+    'passed',
+    'rejected',
+  ],
 });
 
 export const ProposalStateEnum = enumType({
@@ -43,6 +52,10 @@ export const ProposalType = objectType({
     t.nonNull.int('votesFor');
     t.nonNull.int('votesAgainst');
 
+    t.list.field('votes', {
+      type: ProposalVoteType,
+    });
+
     t.field('fundingRequest', {
       description: 'Details about the funding request. Exists only on funding request proposals',
       type: ProposalFundingType,
@@ -67,6 +80,18 @@ export const ProposalType = objectType({
 
     t.nonNull.field('type', {
       type: ProposalTypeEnum,
+    });
+  },
+});
+
+export const ProposalVoteType = objectType({
+  name: 'ProposalVote',
+  definition(t) {
+    t.nonNull.id('voteId');
+    t.nonNull.id('voterId');
+    t.nonNull.field('outcome', {
+      type: ProposalVoteOutcomeEnum,
+      resolve: ((root: IProposalVote) => root.voteOutcome) as any
     });
   },
 });
@@ -108,7 +133,7 @@ export const ProposalsQueryExtension = extendType({
         id: nonNull(idArg()),
       },
       resolve: (root, args) => {
-        return proposalDb.getProposal(args.id);
+        return proposalDb.getProposal(args.id) as any;
       },
     });
   },
