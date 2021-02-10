@@ -3,6 +3,7 @@ import { ICommonEntity, ICommonMetadata } from '@common/types';
 import { commonDb } from '../../../common/database';
 import {convertTimestampToDate, sleep} from '../../../util';
 import {ProposalType} from './proposals';
+import {proposalDb} from '../../../proposals/database';
 
 export const CommonContributionTypeEnum = enumType({
   name: 'CommonContributionType',
@@ -53,8 +54,15 @@ export const CommonType = objectType({
            default: 1
          })
        },
-       resolve: (root) => {
-         const propsoals
+       resolve: (root, args) => {
+         const proposals = proposalDb.getMany({
+           commonId: root.id,
+
+           last: 10,
+           after: (args.page - 1) * 10
+         });
+
+         return proposals as any;
        }
      })
 

@@ -8,7 +8,7 @@ import { finalizeProposal } from '../business/finalizeProposal';
 export const finalizeProposals = functions.pubsub
   .schedule('*/5 * * * *') // At every 5th minute
   .onRun(async () => {
-    const proposals = await proposalDb.getProposals({ state: 'countdown' });
+    const proposals = await proposalDb.getMany({ state: 'countdown' });
 
     const promiseArray: Promise<void>[] = [];
 

@@ -41,7 +41,7 @@ export const proposalDb = {
   getProposal,
   getFundingRequest,
   getJoinRequest,
-  getProposals,
+  getMany: getProposals,
   update: updateProposal,
 
   delete: deleteProposalFromDatabase,

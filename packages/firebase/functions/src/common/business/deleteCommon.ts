@@ -5,7 +5,7 @@ import { commonDb } from '../database';
 
 export const deleteCommon = async (common: ICommonEntity): Promise<void> => {
   // Find and delete all proposals for the common
-  const proposals = await proposalDb.getProposals({
+  const proposals = await proposalDb.getMany({
     commonId: common.id
   });
 

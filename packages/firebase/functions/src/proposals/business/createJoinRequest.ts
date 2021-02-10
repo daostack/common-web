@@ -86,7 +86,7 @@ export const createJoinRequest = async (payload: CreateRequestToJoinPayload): Pr
   }
 
   // Check if the user has ongoing join request
-  const activeUserJoinRequest = await proposalDb.getProposals({
+  const activeUserJoinRequest = await proposalDb.getMany({
     proposerId: payload.proposerId,
     commonId: payload.commonId,
     state: 'countdown',

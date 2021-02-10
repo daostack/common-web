@@ -17,6 +17,7 @@ type Common {
 
   """The display name of the common"""
   name: String!
+  proposals(page: Int = 1): [Proposal]
 
   """The total amount of money, raised by the common"""
   raised: Int!
@@ -122,14 +123,14 @@ type Proposal {
   state: ProposalState!
   type: ProposalType!
   updatedAt: Date!
-  votes: [ProposalVoteOutcome]
+  votes: [ProposalVote]
   votesAgainst: Int!
   votesFor: Int!
 }
 
 type ProposalDescription {
   description: String!
-  title: String!
+  title: String
 }
 
 type ProposalFunding {
