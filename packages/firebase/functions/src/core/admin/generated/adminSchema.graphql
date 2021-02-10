@@ -104,11 +104,69 @@ enum EventType {
   voteCreated
 }
 
+"""The proposals type"""
+type Proposal {
+  createdAt: Date!
+  description: ProposalDescription!
+
+  """
+  Details about the funding request. Exists only on funding request proposals
+  """
+  fundingRequest: ProposalFunding
+  fundingType: ProposalType!
+  id: ID!
+
+  """Details about the join request. Exists only on join request proposals"""
+  join: ProposalJoin
+  paymentState: ProposalPaymentState
+  proposerId: ID!
+  state: ProposalState!
+  updatedAt: Date!
+  votesAgainst: Int!
+  votesFor: Int!
+}
+
+type ProposalDescription {
+  description: String!
+  title: String!
+}
+
+type ProposalFunding {
+  amount: Int!
+}
+
+type ProposalJoin {
+  cardId: ID!
+  funding: Int!
+  fundingType: CommonContributionType!
+}
+
+enum ProposalPaymentState {
+  confirmed
+  failed
+  notAttempted
+  notRelevant
+  pending
+}
+
+enum ProposalState {
+  countdown
+  failed
+  passed
+  passedInsufficientBalance
+}
+
+enum ProposalType {
+  fundingRequest
+  join
+}
+
 type Query {
   common(commonId: ID!): Common
   commons(after: Int = 0, last: Int = 10): [Common]
   event(eventId: ID!): Event
   events(after: Int, last: Int!): [Event]
+  proposal(id: ID!): Proposal
   today: Statistics
 }
 

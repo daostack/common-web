@@ -78,7 +78,7 @@ const CommonAdminApp = ({ Component, pageProps }: AppProps): React.ReactElement 
                     <Grid xs={12} justify="flex-end" style={{ display: 'flex' }}>
                       <Tooltip text={(
                         <React.Fragment>
-                          <Divider>
+                          <Divider align="start">
                             Settings
                           </Divider>
 

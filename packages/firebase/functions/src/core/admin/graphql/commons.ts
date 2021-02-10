@@ -82,6 +82,8 @@ export const CommonMetadataType = objectType({
   }
 });
 
+// ----- Query extension
+
 export const CommonTypeQueryExtension = extendType({
   type: 'Query',
   definition(t) {
