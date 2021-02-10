@@ -11,9 +11,14 @@ export const server = new ApolloServer({
 
 const app = commonApp(null, {
   unauthenticatedRoutes: [
-    '/graphql'
+    '/graphql',
+    '/ping'
   ]
 });
+
+app.get('/ping', (req, res) => {
+  res.send('pong');
+})
 
 server.applyMiddleware({
   app

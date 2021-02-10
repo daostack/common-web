@@ -60,7 +60,7 @@ const CommonsHomepage: NextPage = () => {
   );
 
   const transformCommonsArray = (data: GetCommonsHomescreenDataQueryResult): any => {
-    if (data.loadin) {
+    if (data.loading) {
       console.debug('Data is still loading, skipping transform');
 
       const arr = Array(10).fill({
