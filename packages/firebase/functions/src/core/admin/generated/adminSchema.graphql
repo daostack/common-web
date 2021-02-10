@@ -2,6 +2,47 @@
 ### Do not make changes to this file directly
 
 
+"""The common type"""
+type Common {
+  """The currently available funds of the common"""
+  balance: Int!
+
+  """The date, at which the common was created"""
+  createdAt: Date!
+
+  """The unique identifier of the common"""
+  id: ID!
+  members: [CommonMember]
+  metadata: CommonMetadata!
+
+  """The display name of the common"""
+  name: String!
+
+  """The total amount of money, raised by the common"""
+  raised: Int!
+
+  """The date, at which the common was last updated"""
+  updatedAt: Date!
+}
+
+enum CommonContributionType {
+  monthly
+  oneTime
+}
+
+type CommonMember {
+  joinedAt: Date
+  userId: ID!
+}
+
+type CommonMetadata {
+  byline: String!
+  contributionType: CommonContributionType!
+  description: String!
+  founderId: String!
+  minFeeToJoin: Int!
+}
+
 """Date custom scalar type"""
 scalar Date
 
@@ -64,12 +105,26 @@ enum EventType {
 }
 
 type Query {
+  common(commonId: ID!): Common
+  commons(after: Int = 0, last: Int = 10): [Common]
   event(eventId: ID!): Event
-  events(after: Int, first: Int!): [Event]
+  events(after: Int, last: Int!): [Event]
   today: Statistics
 }
 
 type Statistics {
   """Commons, created on that date"""
   newCommons: Int
+
+  """The amount of new discussion messages, send on that date"""
+  newDiscussionMessages: Int
+
+  """The amount of discussions, started on that date"""
+  newDiscussions: Int
+
+  """The amount of proposals with funding type, created on that date"""
+  newFundingRequests: Int
+
+  """The amount of proposals with join type, created on that date"""
+  newJoinRequests: Int
 }

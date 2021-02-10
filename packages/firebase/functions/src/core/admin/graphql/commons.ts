@@ -1,7 +1,7 @@
 import { objectType, extendType, idArg, nonNull, enumType, list, intArg } from 'nexus';
 import { ICommonEntity, ICommonMetadata } from '@common/types';
 import { commonDb } from '../../../common/database';
-import { convertTimestampToDate } from '../../../util';
+import {convertTimestampToDate, sleep} from '../../../util';
 
 export const CommonContributionTypeEnum = enumType({
   name: 'CommonContributionType',
@@ -48,8 +48,6 @@ export const CommonType = objectType({
     t.list.field('members', {
       type: CommonMemberType,
       resolve: (root: ICommonEntity) => {
-        console.log(root);
-
         return root.members.map((member) => ({
           userId: member.userId,
           joinedAt: member.joinedAt?.toDate()

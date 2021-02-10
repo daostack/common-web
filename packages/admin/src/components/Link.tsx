@@ -18,7 +18,7 @@ export const Link: React.FC<React.PropsWithChildren<ILinkProps>> = ({ to, Icon, 
         <span style={{ display: 'flex', justifyContent: 'center', ...props.containerStyles }}>
           {Icon && <Icon />}
 
-          <span style={{ paddingLeft: 10, ...props.textStyles }}>
+          <span style={{ ...props.textStyles }}>
             {children}
           </span>
         </span>

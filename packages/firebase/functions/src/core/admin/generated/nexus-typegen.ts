@@ -31,6 +31,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  CommonContributionType: "monthly" | "one-time"
   EventType: "cardCreated" | "commonCreated" | "commonCreationFailed" | "commonMemberAdded" | "commonMemberRemoved" | "commonUpdated" | "commonWhitelisted" | "discussionCreated" | "fundingRequestAccepted" | "fundingRequestAcceptedInsufficientFunds" | "fundingRequestCreated" | "fundingRequestExecuted" | "fundingRequestRejected" | "membershipRevoked" | "messageCreated" | "paymentConfirmed" | "paymentCreated" | "paymentFailed" | "paymentPaid" | "payoutApproved" | "payoutCompleted" | "payoutCreated" | "payoutExecuted" | "payoutFailed" | "payoutVoided" | "requestToJoinAccepted" | "requestToJoinCreated" | "requestToJoinExecuted" | "requestToJoinRejected" | "subscriptionCanceledByPaymentFailure" | "subscriptionCanceledByUser" | "subscriptionCreated" | "subscriptionPaymentConfirmed" | "subscriptionPaymentCreated" | "subscriptionPaymentFailed" | "subscriptionPaymentStuck" | "voteCreated"
 }
 
@@ -44,6 +45,23 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Common: { // root type
+    createdAt: NexusGenScalars['Date']; // Date!
+    id: string; // ID!
+    metadata: NexusGenRootTypes['CommonMetadata']; // CommonMetadata!
+    name: string; // String!
+    updatedAt: NexusGenScalars['Date']; // Date!
+  }
+  CommonMember: { // root type
+    joinedAt?: NexusGenScalars['Date'] | null; // Date
+    userId: string; // ID!
+  }
+  CommonMetadata: { // root type
+    byline: string; // String!
+    description: string; // String!
+    founderId: string; // String!
+    minFeeToJoin: number; // Int!
+  }
   Event: { // root type
     createdAt: NexusGenScalars['Date']; // Date!
     id: string; // ID!
@@ -55,6 +73,10 @@ export interface NexusGenObjects {
   Query: {};
   Statistics: { // root type
     newCommons?: number | null; // Int
+    newDiscussionMessages?: number | null; // Int
+    newDiscussions?: number | null; // Int
+    newFundingRequests?: number | null; // Int
+    newJoinRequests?: number | null; // Int
   }
 }
 
@@ -69,6 +91,27 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  Common: { // field return type
+    balance: number; // Int!
+    createdAt: NexusGenScalars['Date']; // Date!
+    id: string; // ID!
+    members: Array<NexusGenRootTypes['CommonMember'] | null> | null; // [CommonMember]
+    metadata: NexusGenRootTypes['CommonMetadata']; // CommonMetadata!
+    name: string; // String!
+    raised: number; // Int!
+    updatedAt: NexusGenScalars['Date']; // Date!
+  }
+  CommonMember: { // field return type
+    joinedAt: NexusGenScalars['Date'] | null; // Date
+    userId: string; // ID!
+  }
+  CommonMetadata: { // field return type
+    byline: string; // String!
+    contributionType: NexusGenEnums['CommonContributionType']; // CommonContributionType!
+    description: string; // String!
+    founderId: string; // String!
+    minFeeToJoin: number; // Int!
+  }
   Event: { // field return type
     createdAt: NexusGenScalars['Date']; // Date!
     id: string; // ID!
@@ -78,16 +121,43 @@ export interface NexusGenFieldTypes {
     userId: string | null; // ID
   }
   Query: { // field return type
+    common: NexusGenRootTypes['Common'] | null; // Common
+    commons: Array<NexusGenRootTypes['Common'] | null> | null; // [Common]
     event: NexusGenRootTypes['Event'] | null; // Event
     events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     today: NexusGenRootTypes['Statistics'] | null; // Statistics
   }
   Statistics: { // field return type
     newCommons: number | null; // Int
+    newDiscussionMessages: number | null; // Int
+    newDiscussions: number | null; // Int
+    newFundingRequests: number | null; // Int
+    newJoinRequests: number | null; // Int
   }
 }
 
 export interface NexusGenFieldTypeNames {
+  Common: { // field return type name
+    balance: 'Int'
+    createdAt: 'Date'
+    id: 'ID'
+    members: 'CommonMember'
+    metadata: 'CommonMetadata'
+    name: 'String'
+    raised: 'Int'
+    updatedAt: 'Date'
+  }
+  CommonMember: { // field return type name
+    joinedAt: 'Date'
+    userId: 'ID'
+  }
+  CommonMetadata: { // field return type name
+    byline: 'String'
+    contributionType: 'CommonContributionType'
+    description: 'String'
+    founderId: 'String'
+    minFeeToJoin: 'Int'
+  }
   Event: { // field return type name
     createdAt: 'Date'
     id: 'ID'
@@ -97,17 +167,30 @@ export interface NexusGenFieldTypeNames {
     userId: 'ID'
   }
   Query: { // field return type name
+    common: 'Common'
+    commons: 'Common'
     event: 'Event'
     events: 'Event'
     today: 'Statistics'
   }
   Statistics: { // field return type name
     newCommons: 'Int'
+    newDiscussionMessages: 'Int'
+    newDiscussions: 'Int'
+    newFundingRequests: 'Int'
+    newJoinRequests: 'Int'
   }
 }
 
 export interface NexusGenArgTypes {
   Query: {
+    common: { // args
+      commonId: string; // ID!
+    }
+    commons: { // args
+      after?: number | null; // Int
+      last: number | null; // Int
+    }
     event: { // args
       eventId: string; // ID!
     }

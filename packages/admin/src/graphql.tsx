@@ -137,6 +137,26 @@ export type Statistics = {
   newDiscussionMessages?: Maybe<Scalars['Int']>;
 };
 
+export type GetCommonDetailsQueryVariables = Exact<{
+  commonId: Scalars['ID'];
+}>;
+
+
+export type GetCommonDetailsQuery = (
+  { __typename?: 'Query' }
+  & { common?: Maybe<(
+    { __typename?: 'Common' }
+    & Pick<Common, 'name' | 'createdAt' | 'updatedAt' | 'balance' | 'raised'>
+    & { metadata: (
+      { __typename?: 'CommonMetadata' }
+      & Pick<CommonMetadata, 'byline' | 'description' | 'founderId' | 'contributionType'>
+    ), members?: Maybe<Array<Maybe<(
+      { __typename?: 'CommonMember' }
+      & Pick<CommonMember, 'userId' | 'joinedAt'>
+    )>>> }
+  )> }
+);
+
 export type GetCommonsHomescreenDataQueryVariables = Exact<{
   last?: Maybe<Scalars['Int']>;
   after?: Maybe<Scalars['Int']>;
@@ -170,6 +190,53 @@ export type GetDashboardDataQuery = (
 );
 
 
+export const GetCommonDetailsDocument = gql`
+    query getCommonDetails($commonId: ID!) {
+  common(commonId: $commonId) {
+    name
+    createdAt
+    updatedAt
+    balance
+    raised
+    metadata {
+      byline
+      description
+      founderId
+      contributionType
+    }
+    members {
+      userId
+      joinedAt
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCommonDetailsQuery__
+ *
+ * To run a query within a React component, call `useGetCommonDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommonDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCommonDetailsQuery({
+ *   variables: {
+ *      commonId: // value for 'commonId'
+ *   },
+ * });
+ */
+export function useGetCommonDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>) {
+        return Apollo.useQuery<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>(GetCommonDetailsDocument, baseOptions);
+      }
+export function useGetCommonDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>) {
+          return Apollo.useLazyQuery<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>(GetCommonDetailsDocument, baseOptions);
+        }
+export type GetCommonDetailsQueryHookResult = ReturnType<typeof useGetCommonDetailsQuery>;
+export type GetCommonDetailsLazyQueryHookResult = ReturnType<typeof useGetCommonDetailsLazyQuery>;
+export type GetCommonDetailsQueryResult = Apollo.QueryResult<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>;
 export const GetCommonsHomescreenDataDocument = gql`
     query getCommonsHomescreenData($last: Int, $after: Int) {
   commons(last: $last, after: $after) {

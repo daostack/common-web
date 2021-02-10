@@ -123,14 +123,6 @@ const CommonsHomepage: NextPage = () => {
 
       <Text h1>Commons</Text>
 
-      {/*<Text h3>Commons, created today</Text>*/}
-
-      {/*<Table data={null} emptyText={"Loading"}>*/}
-      {/*  <Table.Column prop="name" label="Display Name" />*/}
-      {/*  <Table.Column prop="byline" label="Byline" />*/}
-      {/*  <Table.Column prop="action" label="Actions" />*/}
-      {/*</Table>*/}
-
       <Spacer y={2}/>
 
       <Text h3>All commons</Text>
