@@ -6,7 +6,8 @@
     "*.yml",
     "*.sh",
     "functions/dist/**",
-    "*.test.ts"
+    "*.test.ts",
+    "nexus-typegen.ts"
   ],
   "parserOptions": {
     // Required for certain syntax usages
