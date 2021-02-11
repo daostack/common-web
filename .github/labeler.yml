@@ -12,3 +12,7 @@ types:
 
 app:
   - packages/app/**/*
+
+admin:
+  - packages/admin/**/*
+  - packages/firebase/functions/src/core/admin/**/*
