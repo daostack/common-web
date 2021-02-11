@@ -37,8 +37,6 @@ const DashboardHomePage: NextPage = () => {
 
   return (
     <React.Fragment>
-      <Spacer y={1}/>
-
       <Text h1>Dashboard</Text>
 
 

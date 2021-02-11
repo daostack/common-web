@@ -1,4 +1,4 @@
-import { CssBaseline, GeistProvider, Page, Tabs, Text, User, Grid, Tooltip, Divider } from '@geist-ui/react';
+import { CssBaseline, GeistProvider, Page, Tabs, Text, User, Grid, Tooltip, Divider, Spacer } from '@geist-ui/react';
 import { AppProps } from 'next/app';
 import React from 'react';
 import { useRouter } from 'next/router';
@@ -99,12 +99,15 @@ const CommonAdminApp = ({ Component, pageProps }: AppProps): React.ReactElement 
                     <Tabs.Item value="dashboard" label="Dashboard"/>
                     <Tabs.Item value="commons" label="Commons"/>
                     <Tabs.Item value="proposals" label="Proposals"/>
+                    <Tabs.Item value="users" label="Users"/>
                     <Tabs.Item value="payouts" label="Payouts"/>
                     <Tabs.Item value="events" label="Events"/>
                   </Tabs>
                 </Page.Header>
 
                 <Page.Body style={{ paddingTop: 0 }}>
+                  <Spacer y={1}/>
+
                   <Component {...pageProps} />
                 </Page.Body>
               </Page>

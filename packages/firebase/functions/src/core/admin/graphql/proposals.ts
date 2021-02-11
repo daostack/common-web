@@ -1,8 +1,10 @@
-import {IProposalEntity, IProposalVote} from '@common/types';
-import {enumType, extendType, idArg, nonNull, objectType} from 'nexus';
-import {proposalDb} from '../../../proposals/database';
+import { IProposalVote } from '@common/types';
+import { enumType, extendType, idArg, nonNull, objectType } from 'nexus';
+import { proposalDb } from '../../../proposals/database';
 import { UserType } from './user';
 import { userDb } from '../../users/database';
+import { CommonType } from './commons';
+import { commonDb } from '../../../common/database';
 
 export const ProposalTypeEnum = enumType({
   name: 'ProposalType',
@@ -15,7 +17,7 @@ export const ProposalTypeEnum = enumType({
 export const ProposalVoteOutcomeEnum = enumType({
   name: 'ProposalVoteOutcome',
   members: [
-    'passed',
+    'approved',
     'rejected',
   ],
 });
@@ -83,6 +85,22 @@ export const ProposalType = objectType({
     t.nonNull.field('type', {
       type: ProposalTypeEnum,
     });
+
+    t.nonNull.string('commonId');
+
+    t.nonNull.field('common', {
+      type: CommonType,
+      resolve: (root) => {
+        return commonDb.get((root as any).commonId);
+      },
+    });
+
+    t.nonNull.field('proposer', {
+      type: UserType,
+      resolve: (root) => {
+        return userDb.get(root.proposerId);
+      },
+    });
   },
 });
 
@@ -100,8 +118,8 @@ export const ProposalVoteType = objectType({
       type: UserType,
       resolve: (root) => {
         return userDb.get(root.voterId);
-      }
-    })
+      },
+    });
   },
 });
 
@@ -125,7 +143,7 @@ export const ProposalJoinType = objectType({
   definition(t) {
     t.nonNull.id('cardId');
     t.nonNull.int('funding');
-    t.nonNull.field('fundingType', {
+    t.field('fundingType', {
       type: 'CommonContributionType',
     });
   },

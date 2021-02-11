@@ -1,8 +1,8 @@
 directive @specifiedBy(url: String!) on SCALAR
 type Common {
   id: ID!
-  createdAt: Date!
-  updatedAt: Date!
+  createdAt: Date
+  updatedAt: Date
   name: String!
   balance: Int!
   raised: Int!
@@ -21,6 +21,7 @@ enum CommonContributionType {
 type CommonMember {
   userId: ID!
   joinedAt: Date
+  user: User
 }
 
 type CommonMetadata {
@@ -28,7 +29,7 @@ type CommonMetadata {
   description: String!
   founderId: String!
   minFeeToJoin: Int!
-  contributionType: CommonContributionType!
+  contributionType: CommonContributionType
 }
 
 scalar Date
@@ -96,6 +97,9 @@ type Proposal {
   description: ProposalDescription!
   paymentState: ProposalPaymentState
   type: ProposalType!
+  commonId: String!
+  common: Common!
+  proposer: User!
 }
 
 type ProposalDescription {
@@ -110,7 +114,7 @@ type ProposalFunding {
 type ProposalJoin {
   cardId: ID!
   funding: Int!
-  fundingType: CommonContributionType!
+  fundingType: CommonContributionType
 }
 
 enum ProposalPaymentState {
@@ -137,10 +141,11 @@ type ProposalVote {
   voteId: ID!
   voterId: ID!
   outcome: ProposalVoteOutcome!
+  voter: User
 }
 
 enum ProposalVoteOutcome {
-  passed
+  approved
   rejected
 }
 
@@ -151,6 +156,7 @@ type Query {
   common(commonId: ID!): Common
   commons(last: Int = 10, after: Int = 0): [Common]
   proposal(id: ID!): Proposal
+  user(id: ID!): User
 }
 
 type Statistics {
@@ -159,6 +165,51 @@ type Statistics {
   newFundingRequests: Int
   newDiscussions: Int
   newDiscussionMessages: Int
+}
+
+type Subscription {
+  id: ID!
+  cardId: ID!
+  userId: ID!
+  proposalId: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  charges: Int!
+  amount: Int!
+  lastChargedAt: Date
+  dueDate: Date
+  revoked: Boolean!
+  status: SubscriptionStatus!
+  metadata: SubscriptionMetadata!
+}
+
+type SubscriptionMetadata {
+  common: SubscriptionMetadataCommon
+}
+
+type SubscriptionMetadataCommon {
+  id: ID
+  name: String
+}
+
+enum SubscriptionStatus {
+  pending
+  active
+  canceledByUser
+  canceledByPaymentFailure
+  paymentFailed
+}
+
+type User {
+  id: ID!
+  firstName: String
+  lastName: String
+  email: String
+  photoURL: String
+  createdAt: Date
+  tokens: [String]
+  subscriptions(page: Int = 1, status: SubscriptionStatus): [Subscription]
+  proposals(page: Int = 1): [Proposal]
 }
 
 

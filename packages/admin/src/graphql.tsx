@@ -17,8 +17,8 @@ export type Scalars = {
 export type Common = {
   __typename?: 'Common';
   id: Scalars['ID'];
-  createdAt: Scalars['Date'];
-  updatedAt: Scalars['Date'];
+  createdAt?: Maybe<Scalars['Date']>;
+  updatedAt?: Maybe<Scalars['Date']>;
   name: Scalars['String'];
   balance: Scalars['Int'];
   raised: Scalars['Int'];
@@ -43,6 +43,7 @@ export type CommonMember = {
   __typename?: 'CommonMember';
   userId: Scalars['ID'];
   joinedAt?: Maybe<Scalars['Date']>;
+  user?: Maybe<User>;
 };
 
 export type CommonMetadata = {
@@ -51,7 +52,7 @@ export type CommonMetadata = {
   description: Scalars['String'];
   founderId: Scalars['String'];
   minFeeToJoin: Scalars['Int'];
-  contributionType: CommonContributionType;
+  contributionType?: Maybe<CommonContributionType>;
 };
 
 
@@ -120,6 +121,9 @@ export type Proposal = {
   description: ProposalDescription;
   paymentState?: Maybe<ProposalPaymentState>;
   type: ProposalType;
+  commonId: Scalars['String'];
+  common: Common;
+  proposer: User;
 };
 
 export type ProposalDescription = {
@@ -137,7 +141,7 @@ export type ProposalJoin = {
   __typename?: 'ProposalJoin';
   cardId: Scalars['ID'];
   funding: Scalars['Int'];
-  fundingType: CommonContributionType;
+  fundingType?: Maybe<CommonContributionType>;
 };
 
 export enum ProposalPaymentState {
@@ -165,10 +169,11 @@ export type ProposalVote = {
   voteId: Scalars['ID'];
   voterId: Scalars['ID'];
   outcome: ProposalVoteOutcome;
+  voter?: Maybe<User>;
 };
 
 export enum ProposalVoteOutcome {
-  Passed = 'passed',
+  Approved = 'approved',
   Rejected = 'rejected'
 }
 
@@ -180,6 +185,7 @@ export type Query = {
   common?: Maybe<Common>;
   commons?: Maybe<Array<Maybe<Common>>>;
   proposal?: Maybe<Proposal>;
+  user?: Maybe<User>;
 };
 
 
@@ -209,6 +215,11 @@ export type QueryProposalArgs = {
   id: Scalars['ID'];
 };
 
+
+export type QueryUserArgs = {
+  id: Scalars['ID'];
+};
+
 export type Statistics = {
   __typename?: 'Statistics';
   newCommons?: Maybe<Scalars['Int']>;
@@ -216,6 +227,66 @@ export type Statistics = {
   newFundingRequests?: Maybe<Scalars['Int']>;
   newDiscussions?: Maybe<Scalars['Int']>;
   newDiscussionMessages?: Maybe<Scalars['Int']>;
+};
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  id: Scalars['ID'];
+  cardId: Scalars['ID'];
+  userId: Scalars['ID'];
+  proposalId: Scalars['ID'];
+  createdAt: Scalars['Date'];
+  updatedAt: Scalars['Date'];
+  charges: Scalars['Int'];
+  amount: Scalars['Int'];
+  lastChargedAt?: Maybe<Scalars['Date']>;
+  dueDate?: Maybe<Scalars['Date']>;
+  revoked: Scalars['Boolean'];
+  status: SubscriptionStatus;
+  metadata: SubscriptionMetadata;
+};
+
+export type SubscriptionMetadata = {
+  __typename?: 'SubscriptionMetadata';
+  common?: Maybe<SubscriptionMetadataCommon>;
+};
+
+export type SubscriptionMetadataCommon = {
+  __typename?: 'SubscriptionMetadataCommon';
+  id?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export enum SubscriptionStatus {
+  Pending = 'pending',
+  Active = 'active',
+  CanceledByUser = 'canceledByUser',
+  CanceledByPaymentFailure = 'canceledByPaymentFailure',
+  PaymentFailed = 'paymentFailed'
+}
+
+export type User = {
+  __typename?: 'User';
+  id: Scalars['ID'];
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  photoURL?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Date']>;
+  tokens?: Maybe<Array<Maybe<Scalars['String']>>>;
+  subscriptions?: Maybe<Array<Maybe<Subscription>>>;
+  proposals?: Maybe<Array<Maybe<Proposal>>>;
+};
+
+
+export type UserSubscriptionsArgs = {
+  page?: Maybe<Scalars['Int']>;
+  status?: Maybe<SubscriptionStatus>;
+};
+
+
+export type UserProposalsArgs = {
+  page?: Maybe<Scalars['Int']>;
 };
 
 export type GetCommonDetailsQueryVariables = Exact<{
@@ -235,6 +306,10 @@ export type GetCommonDetailsQuery = (
     ), members?: Maybe<Array<Maybe<(
       { __typename?: 'CommonMember' }
       & Pick<CommonMember, 'userId' | 'joinedAt'>
+      & { user?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'firstName' | 'lastName'>
+      )> }
     )>>>, proposals?: Maybe<Array<Maybe<(
       { __typename?: 'Proposal' }
       & Pick<Proposal, 'id' | 'type'>
@@ -284,6 +359,76 @@ export type GetDashboardDataQuery = (
   )>>> }
 );
 
+export type GetProposalDetailsQueryVariables = Exact<{
+  proposalId: Scalars['ID'];
+}>;
+
+
+export type GetProposalDetailsQuery = (
+  { __typename?: 'Query' }
+  & { proposal?: Maybe<(
+    { __typename?: 'Proposal' }
+    & Pick<Proposal, 'id' | 'type' | 'createdAt' | 'updatedAt' | 'votesFor' | 'votesAgainst' | 'state' | 'paymentState'>
+    & { join?: Maybe<(
+      { __typename?: 'ProposalJoin' }
+      & Pick<ProposalJoin, 'funding' | 'fundingType'>
+    )>, fundingRequest?: Maybe<(
+      { __typename?: 'ProposalFunding' }
+      & Pick<ProposalFunding, 'amount'>
+    )>, proposer: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstName' | 'lastName'>
+    ), common: (
+      { __typename?: 'Common' }
+      & { members?: Maybe<Array<Maybe<(
+        { __typename?: 'CommonMember' }
+        & Pick<CommonMember, 'userId'>
+      )>>> }
+    ), description: (
+      { __typename?: 'ProposalDescription' }
+      & Pick<ProposalDescription, 'description'>
+    ), votes?: Maybe<Array<Maybe<(
+      { __typename?: 'ProposalVote' }
+      & Pick<ProposalVote, 'outcome'>
+      & { voter?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'firstName' | 'lastName'>
+      )> }
+    )>>> }
+  )> }
+);
+
+export type GetUserDetailsQueryQueryVariables = Exact<{
+  userId: Scalars['ID'];
+}>;
+
+
+export type GetUserDetailsQueryQuery = (
+  { __typename?: 'Query' }
+  & { user?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'firstName' | 'lastName' | 'email' | 'createdAt' | 'photoURL'>
+    & { proposals?: Maybe<Array<Maybe<(
+      { __typename?: 'Proposal' }
+      & Pick<Proposal, 'id' | 'type' | 'state' | 'paymentState'>
+      & { description: (
+        { __typename?: 'ProposalDescription' }
+        & Pick<ProposalDescription, 'title'>
+      ) }
+    )>>>, subscriptions?: Maybe<Array<Maybe<(
+      { __typename?: 'Subscription' }
+      & Pick<Subscription, 'id' | 'amount' | 'status' | 'revoked' | 'createdAt' | 'updatedAt' | 'lastChargedAt' | 'dueDate'>
+      & { metadata: (
+        { __typename?: 'SubscriptionMetadata' }
+        & { common?: Maybe<(
+          { __typename?: 'SubscriptionMetadataCommon' }
+          & Pick<SubscriptionMetadataCommon, 'id' | 'name'>
+        )> }
+      ) }
+    )>>> }
+  )> }
+);
+
 
 export const GetCommonDetailsDocument = gql`
     query getCommonDetails($commonId: ID!, $page: Int!) {
@@ -304,6 +449,10 @@ export const GetCommonDetailsDocument = gql`
     members {
       userId
       joinedAt
+      user {
+        firstName
+        lastName
+      }
     }
     proposals(page: $page) {
       id
@@ -437,3 +586,134 @@ export function useGetDashboardDataLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type GetDashboardDataQueryHookResult = ReturnType<typeof useGetDashboardDataQuery>;
 export type GetDashboardDataLazyQueryHookResult = ReturnType<typeof useGetDashboardDataLazyQuery>;
 export type GetDashboardDataQueryResult = Apollo.QueryResult<GetDashboardDataQuery, GetDashboardDataQueryVariables>;
+export const GetProposalDetailsDocument = gql`
+    query getProposalDetails($proposalId: ID!) {
+  proposal(id: $proposalId) {
+    id
+    join {
+      funding
+      fundingType
+    }
+    fundingRequest {
+      amount
+    }
+    type
+    createdAt
+    updatedAt
+    votesFor
+    votesAgainst
+    state
+    paymentState
+    proposer {
+      id
+      firstName
+      lastName
+    }
+    common {
+      members {
+        userId
+      }
+    }
+    description {
+      description
+    }
+    votes {
+      outcome
+      voter {
+        id
+        firstName
+        lastName
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetProposalDetailsQuery__
+ *
+ * To run a query within a React component, call `useGetProposalDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProposalDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProposalDetailsQuery({
+ *   variables: {
+ *      proposalId: // value for 'proposalId'
+ *   },
+ * });
+ */
+export function useGetProposalDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>) {
+        return Apollo.useQuery<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>(GetProposalDetailsDocument, baseOptions);
+      }
+export function useGetProposalDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>) {
+          return Apollo.useLazyQuery<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>(GetProposalDetailsDocument, baseOptions);
+        }
+export type GetProposalDetailsQueryHookResult = ReturnType<typeof useGetProposalDetailsQuery>;
+export type GetProposalDetailsLazyQueryHookResult = ReturnType<typeof useGetProposalDetailsLazyQuery>;
+export type GetProposalDetailsQueryResult = Apollo.QueryResult<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>;
+export const GetUserDetailsQueryDocument = gql`
+    query getUserDetailsQuery($userId: ID!) {
+  user(id: $userId) {
+    id
+    firstName
+    lastName
+    email
+    createdAt
+    photoURL
+    proposals {
+      id
+      type
+      state
+      paymentState
+      description {
+        title
+      }
+    }
+    subscriptions {
+      id
+      amount
+      metadata {
+        common {
+          id
+          name
+        }
+      }
+      status
+      revoked
+      createdAt
+      updatedAt
+      lastChargedAt
+      dueDate
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUserDetailsQueryQuery__
+ *
+ * To run a query within a React component, call `useGetUserDetailsQueryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserDetailsQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserDetailsQueryQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetUserDetailsQueryQuery(baseOptions: Apollo.QueryHookOptions<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>) {
+        return Apollo.useQuery<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>(GetUserDetailsQueryDocument, baseOptions);
+      }
+export function useGetUserDetailsQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>) {
+          return Apollo.useLazyQuery<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>(GetUserDetailsQueryDocument, baseOptions);
+        }
+export type GetUserDetailsQueryQueryHookResult = ReturnType<typeof useGetUserDetailsQueryQuery>;
+export type GetUserDetailsQueryLazyQueryHookResult = ReturnType<typeof useGetUserDetailsQueryLazyQuery>;
+export type GetUserDetailsQueryQueryResult = Apollo.QueryResult<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>;

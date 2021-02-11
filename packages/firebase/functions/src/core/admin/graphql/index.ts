@@ -1,8 +1,8 @@
-import {Kind} from 'graphql';
-import {scalarType} from 'nexus';
+import { Kind } from 'graphql';
+import { scalarType } from 'nexus';
 
-import {StatisticsType, StatisticsTypeQueryExtension} from './statistics';
-import {EventTypeEnum, EventType, EventTypeQueryExtensions} from './events';
+import { StatisticsType, StatisticsTypeQueryExtension } from './statistics';
+import { EventTypeEnum, EventType, EventTypeQueryExtensions } from './events';
 import {
   CommonMemberType,
   CommonMetadataType,
@@ -23,6 +23,12 @@ import {
   ProposalVoteType,
 } from './proposals';
 import { UserQueryExtension, UserType } from './user';
+import {
+  SubscriptionType,
+  SubscriptionStatusEnum,
+  SubscriptionMetadataType,
+  SubscriptionMetadataCommonType,
+} from './subscription';
 
 // Scalars
 
@@ -34,11 +40,16 @@ const DateScalar = scalarType({
     return new Date(value);
   },
   serialize(value) {
-    if (typeof value.toDate === 'function') {
-      value = value.toDate();
+    if (!(value instanceof Date)) {
+      if (typeof value.toDate === 'function') {
+        value = value.toDate();
+      } else {
+        value = new Date(value);
+      }
     }
 
-    return value.getTime();
+
+    return value?.getTime();
   },
   parseLiteral(ast) {
     if (ast.kind === Kind.INT) {
@@ -80,5 +91,10 @@ export const types = [
   ProposalPaymentStateEnum,
 
   UserType,
-  UserQueryExtension
+  UserQueryExtension,
+
+  SubscriptionType,
+  SubscriptionStatusEnum,
+  SubscriptionMetadataType,
+  SubscriptionMetadataCommonType
 ];

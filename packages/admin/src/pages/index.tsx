@@ -1,12 +1,16 @@
 import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import { withSidebar } from '../hoc/withSidebar';
+import React from 'react';
 
 const IndexPage: NextPage = () => {
-  return (
-    <div>
-      Index Page
-    </div>
-  );
+  const router = useRouter();
+
+  React.useEffect(() => {
+    router.push('/dashboard');
+  }, []);
+
+  return (<div />);
 }
 
-export default withSidebar(IndexPage);
+export default IndexPage;

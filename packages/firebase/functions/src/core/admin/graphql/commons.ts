@@ -1,7 +1,6 @@
 import { objectType, extendType, idArg, nonNull, enumType, list, intArg } from 'nexus';
 import { ICommonEntity, ICommonMetadata } from '@common/types';
 import { commonDb } from '../../../common/database';
-import { convertTimestampToDate } from '../../../util';
 import { ProposalType } from './proposals';
 import { proposalDb } from '../../../proposals/database';
 import { userDb } from '../../users/database';
@@ -23,11 +22,11 @@ export const CommonType = objectType({
       description: 'The unique identifier of the common',
     });
 
-    t.nonNull.date('createdAt', {
+    t.date('createdAt', {
       description: 'The date, at which the common was created',
     });
 
-    t.nonNull.date('updatedAt', {
+    t.date('updatedAt', {
       description: 'The date, at which the common was last updated',
     });
 
@@ -53,6 +52,7 @@ export const CommonType = objectType({
       resolve: async (root) => {
         const openJoinRequest = await proposalDb.getMany({
           type: 'join',
+          commonId: root.id,
           state: [
             'countdown',
           ],
@@ -67,6 +67,7 @@ export const CommonType = objectType({
       resolve: async (root) => {
         const openJoinRequest = await proposalDb.getMany({
           type: 'fundingRequest',
+          commonId: root.id,
           state: [
             'countdown',
           ],
@@ -92,7 +93,7 @@ export const CommonType = objectType({
           after: (args.page - 1) * 10,
         });
 
-        return proposals.map(convertTimestampToDate) as any;
+        return proposals as any;
       },
     });
 
@@ -101,7 +102,7 @@ export const CommonType = objectType({
       resolve: (root: ICommonEntity) => {
         return root.members.map((member) => ({
           userId: member.userId,
-          joinedAt: member.joinedAt?.toDate(),
+          joinedAt: member.joinedAt,
         }));
       },
     });
@@ -117,9 +118,9 @@ export const CommonMemberType = objectType({
     t.field('user', {
       type: UserType,
       resolve: (root) => {
-        return userDb.get(root.userId)
-      }
-    })
+        return userDb.get(root.userId);
+      },
+    });
   },
 });
 
@@ -131,7 +132,7 @@ export const CommonMetadataType = objectType({
     t.nonNull.string('founderId');
     t.nonNull.int('minFeeToJoin');
 
-    t.nonNull.field('contributionType', {
+    t.field('contributionType', {
       type: CommonContributionTypeEnum,
       resolve: (root: ICommonMetadata) => {
         return root.contributionType;
@@ -150,10 +151,8 @@ export const CommonTypeQueryExtension = extendType({
       args: {
         commonId: nonNull(idArg()),
       },
-      resolve: async (root, args) => {
-        return convertTimestampToDate(
-          await commonDb.get(args.commonId),
-        );
+      resolve: (root, args) => {
+        return commonDb.get(args.commonId);
       },
     });
 
@@ -167,13 +166,11 @@ export const CommonTypeQueryExtension = extendType({
           default: 0,
         }),
       },
-      resolve: async (root, args) => {
-        const commons = await commonDb.getMany({
+      resolve: (root, args) => {
+        return commonDb.getMany({
           last: args.last,
           after: args.after,
         });
-
-        return commons.map(convertTimestampToDate);
       },
     });
   },

@@ -119,8 +119,6 @@ const CommonsHomepage: NextPage = () => {
 
   return (
     <React.Fragment>
-      <Spacer y={1}/>
-
       <Text h1>Commons</Text>
       <Breadcrumbs>
         <Breadcrumbs.Item>Home</Breadcrumbs.Item>

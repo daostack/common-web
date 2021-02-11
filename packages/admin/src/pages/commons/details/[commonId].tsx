@@ -4,11 +4,11 @@ import { useRouter } from 'next/router';
 import ErrorPage from 'next/error';
 
 import { gql } from '@apollo/client';
-import { Spacer, Text, Grid, Card, Breadcrumbs, Table, Tag, Pagination, Tooltip } from '@geist-ui/react';
+import { Spacer, Text, Grid, Card, Breadcrumbs, Table, Tag, Pagination, Tooltip, useClipboard, useToasts } from '@geist-ui/react';
+import { ChevronLeftCircleFill, ChevronRightCircleFill, ExternalLink, User, Copy, Trash2 as Trash } from '@geist-ui/react-icons';
 
 import { useGetCommonDetailsQuery, GetCommonDetailsQueryResult } from '@graphql';
 import { Link } from 'components/Link';
-import { ChevronLeftCircleFill, ChevronRightCircleFill, ExternalLink } from '@geist-ui/react-icons';
 
 const GetCommonDetailsQuery = gql`
   query getCommonDetails($commonId: ID!, $page: Int!) {
@@ -35,6 +35,11 @@ const GetCommonDetailsQuery = gql`
       members {
         userId
         joinedAt
+
+        user {
+          firstName
+          lastName
+        }
       }
 
       proposals(page: $page) {
@@ -66,6 +71,8 @@ const CommonDetailsPage: NextPage = () => {
 
   // Hooks
   const router = useRouter();
+  const clipboard = useClipboard();
+  const [_, setToast] = useToasts();
   const data = useGetCommonDetailsQuery({
     variables: {
       commonId: router.query.commonId as string || '',
@@ -84,10 +91,17 @@ const CommonDetailsPage: NextPage = () => {
       .slice((membersPage - 1) * 10, 10);
 
     return members.map((member) => ({
-      userId: member.userId,
+      userId: (
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+          <Tooltip text={member.userId}>
+            <User />
+          </Tooltip>
+        </div>
+      ),
       joinedAt: member.joinedAt
         ? new Date(member.joinedAt).toLocaleDateString()
         : 'No data available',
+      name: `${member.user.firstName} ${member.user.lastName[0]}.`,
       roles: (
         <React.Fragment>
           {member.userId === common.metadata.founderId && (
@@ -99,11 +113,21 @@ const CommonDetailsPage: NextPage = () => {
       ),
 
       actions: (
-        <React.Fragment>
-          <Tooltip text={'Go to user\'s profile'} enterDelay={1000}>
-            <Link to={``} Icon={ExternalLink}/>
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}>
+          <Tooltip text={'Copy user ID'} enterDelay={1000}>
+            <div onClick={copyUserId(member.userId)}>
+              <Copy />
+            </div>
           </Tooltip>
-        </React.Fragment>
+
+          <Tooltip text={'Go to user\'s profile'} enterDelay={1000}>
+            <Link to={`/users/details/${member.userId}`} Icon={ExternalLink}/>
+          </Tooltip>
+
+          <Tooltip text={'Remove user from the common'} enterDelay={1000}>
+            <Link to={``} Icon={Trash}/>
+          </Tooltip>
+        </div>
       )
     }));
   };
@@ -126,7 +150,7 @@ const CommonDetailsPage: NextPage = () => {
         <React.Fragment>
           <React.Fragment>
             <Tooltip text={'Go to proposal\'s details'} enterDelay={1000}>
-              <Link to={``} Icon={ExternalLink}/>
+              <Link to={`/proposals/details/${proposal.id}`} Icon={ExternalLink}/>
             </Tooltip>
           </React.Fragment>
         </React.Fragment>
@@ -139,6 +163,16 @@ const CommonDetailsPage: NextPage = () => {
   const onMembersPageChange = (val: number): void => {
     setMembersPage(val);
   };
+
+  const copyUserId = (userId: string): () => void => {
+    return () => {
+      clipboard.copy(userId);
+
+      setToast({
+        text: 'Successfully copied the user ID'
+      })
+    }
+  }
 
   return (
     <React.Fragment>
@@ -256,7 +290,8 @@ const CommonDetailsPage: NextPage = () => {
             <Text h3>Members</Text>
 
             <Table data={transformMembersForTable(data)}>
-              <Table.Column prop="userId" label="Member ID"/>
+              <Table.Column prop="userId" label="" width={70} />
+              <Table.Column prop="name" label="Member Name"/>
               <Table.Column prop="joinedAt" label="Joined At"/>
               <Table.Column prop="roles" label="Roles"/>
               <Table.Column prop="actions" label="Actions" width={100}/>
