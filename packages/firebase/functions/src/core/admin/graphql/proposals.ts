@@ -1,6 +1,8 @@
 import {IProposalEntity, IProposalVote} from '@common/types';
 import {enumType, extendType, idArg, nonNull, objectType} from 'nexus';
 import {proposalDb} from '../../../proposals/database';
+import { UserType } from './user';
+import { userDb } from '../../users/database';
 
 export const ProposalTypeEnum = enumType({
   name: 'ProposalType',
@@ -46,21 +48,8 @@ export const ProposalType = objectType({
     t.nonNull.id('id');
     t.nonNull.id('proposerId');
 
-    t.nonNull.date('createdAt', {
-      resolve: (root) => {
-        return typeof (root as IProposalEntity).createdAt?.toDate() === 'function'
-          ? (root as IProposalEntity).createdAt.toDate()
-          : (root as IProposalEntity).createdAt;
-      },
-    });
-
-    t.nonNull.date('updatedAt', {
-      resolve: (root) => {
-        return typeof (root as IProposalEntity).updatedAt?.toDate() === 'function'
-          ? (root as IProposalEntity).updatedAt.toDate()
-          : (root as IProposalEntity).updatedAt;
-      },
-    });
+    t.nonNull.date('createdAt');
+    t.nonNull.date('updatedAt');
 
     t.nonNull.int('votesFor');
     t.nonNull.int('votesAgainst');
@@ -106,6 +95,13 @@ export const ProposalVoteType = objectType({
       type: ProposalVoteOutcomeEnum,
       resolve: ((root: IProposalVote) => root.voteOutcome) as any,
     });
+
+    t.field('voter', {
+      type: UserType,
+      resolve: (root) => {
+        return userDb.get(root.voterId);
+      }
+    })
   },
 });
 

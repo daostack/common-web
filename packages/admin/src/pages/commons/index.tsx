@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 
 import Skeleton from 'react-loading-skeleton';
 import { gql } from '@apollo/client/core';
-import { Spacer, Text, Table, Pagination, Tag, useToasts } from '@geist-ui/react';
+import { Spacer, Text, Table, Pagination, Tag, useToasts, Breadcrumbs, Grid, Card } from '@geist-ui/react';
 import { ExternalLink, Edit, Trash2, ChevronRightCircleFill, ChevronLeftCircleFill } from '@geist-ui/react-icons';
 
 import { Link } from '../../components/Link';
@@ -122,8 +122,50 @@ const CommonsHomepage: NextPage = () => {
       <Spacer y={1}/>
 
       <Text h1>Commons</Text>
+      <Breadcrumbs>
+        <Breadcrumbs.Item>Home</Breadcrumbs.Item>
+        <Breadcrumbs.Item>
+          <Link to="/commons">Commons</Link>
+        </Breadcrumbs.Item>
+      </Breadcrumbs>
 
       <Spacer y={2}/>
+
+      <React.Fragment>
+        <Text h3>Commons in a nutshell</Text>
+
+        <Grid.Container gap={2} alignItems="stretch" style={{ display: 'flex' }}>
+          <Grid sm={24} md={8}>
+            <Card hoverable>
+              <Text h1>
+                1424
+              </Text>
+              <Text p>Total commons</Text>
+            </Card>
+          </Grid>
+
+          <Grid sm={24} md={8}>
+            <Card hoverable>
+              <Text h1>
+                98
+              </Text>
+              <Text p>Commons from the last week</Text>
+            </Card>
+          </Grid>
+
+          <Grid sm={24} md={8}>
+            <Card hoverable>
+              <Text h1>
+                432
+              </Text>
+              <Text p>Commons with funds</Text>
+            </Card>
+          </Grid>
+        </Grid.Container>
+
+        <Spacer y={2}/>
+      </React.Fragment>
+
 
       <Text h3>All commons</Text>
 
@@ -156,7 +198,7 @@ const CommonsHomepage: NextPage = () => {
       </Table>
 
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-        <Pagination count={5} onChange={onPageChange}>
+        <Pagination count={38} onChange={onPageChange}>
           <Pagination.Next><ChevronRightCircleFill/></Pagination.Next>
           <Pagination.Previous><ChevronLeftCircleFill/></Pagination.Previous>
         </Pagination>

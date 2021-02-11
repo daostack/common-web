@@ -75,6 +75,7 @@ export interface NexusGenObjects {
     userId?: string | null; // ID
   }
   Proposal: { // root type
+    createdAt: NexusGenScalars['Date']; // Date!
     description: NexusGenRootTypes['ProposalDescription']; // ProposalDescription!
     fundingRequest?: NexusGenRootTypes['ProposalFunding'] | null; // ProposalFunding
     id: string; // ID!
@@ -83,6 +84,7 @@ export interface NexusGenObjects {
     proposerId: string; // ID!
     state: NexusGenEnums['ProposalState']; // ProposalState!
     type: NexusGenEnums['ProposalType']; // ProposalType!
+    updatedAt: NexusGenScalars['Date']; // Date!
     votes?: Array<NexusGenRootTypes['ProposalVote'] | null> | null; // [ProposalVote]
     votesAgainst: number; // Int!
     votesFor: number; // Int!
@@ -131,6 +133,8 @@ export interface NexusGenFieldTypes {
     members: Array<NexusGenRootTypes['CommonMember'] | null> | null; // [CommonMember]
     metadata: NexusGenRootTypes['CommonMetadata']; // CommonMetadata!
     name: string; // String!
+    openFundingRequests: number; // Int!
+    openJoinRequests: number; // Int!
     proposals: Array<NexusGenRootTypes['Proposal'] | null> | null; // [Proposal]
     raised: number; // Int!
     updatedAt: NexusGenScalars['Date']; // Date!
@@ -211,6 +215,8 @@ export interface NexusGenFieldTypeNames {
     members: 'CommonMember'
     metadata: 'CommonMetadata'
     name: 'String'
+    openFundingRequests: 'Int'
+    openJoinRequests: 'Int'
     proposals: 'Proposal'
     raised: 'Int'
     updatedAt: 'Date'

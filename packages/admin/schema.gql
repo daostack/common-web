@@ -7,6 +7,9 @@ type Common {
   balance: Int!
   raised: Int!
   metadata: CommonMetadata!
+  openJoinRequests: Int!
+  openFundingRequests: Int!
+  proposals(page: Int = 1): [Proposal]
   members: [CommonMember]
 }
 
@@ -79,12 +82,75 @@ enum EventType {
   membershipRevoked
 }
 
+type Proposal {
+  id: ID!
+  proposerId: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  votesFor: Int!
+  votesAgainst: Int!
+  votes: [ProposalVote]
+  fundingRequest: ProposalFunding
+  join: ProposalJoin
+  state: ProposalState!
+  description: ProposalDescription!
+  paymentState: ProposalPaymentState
+  type: ProposalType!
+}
+
+type ProposalDescription {
+  title: String
+  description: String!
+}
+
+type ProposalFunding {
+  amount: Int!
+}
+
+type ProposalJoin {
+  cardId: ID!
+  funding: Int!
+  fundingType: CommonContributionType!
+}
+
+enum ProposalPaymentState {
+  notAttempted
+  notRelevant
+  confirmed
+  pending
+  failed
+}
+
+enum ProposalState {
+  passedInsufficientBalance
+  countdown
+  passed
+  failed
+}
+
+enum ProposalType {
+  fundingRequest
+  join
+}
+
+type ProposalVote {
+  voteId: ID!
+  voterId: ID!
+  outcome: ProposalVoteOutcome!
+}
+
+enum ProposalVoteOutcome {
+  passed
+  rejected
+}
+
 type Query {
   today: Statistics
   event(eventId: ID!): Event
   events(last: Int!, after: Int): [Event]
   common(commonId: ID!): Common
   commons(last: Int = 10, after: Int = 0): [Common]
+  proposal(id: ID!): Proposal
 }
 
 type Statistics {

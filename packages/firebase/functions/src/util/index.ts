@@ -8,12 +8,10 @@ export const isNullOrUndefined = (obj: Nullable<any>): boolean =>
   obj === null ||
   obj === undefined;
 
-export const convertTimestampToDate = <T extends object>(obj: T & {
+export const convertTimestampToDate = <T extends Record<string, any>>(obj: T & {
   createdAt: firestore.Timestamp;
   updatedAt: firestore.Timestamp;
 }): T => {
-  console.log(obj)
-
   return {
     ...obj,
     createdAt: obj.createdAt.toDate(),

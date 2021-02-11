@@ -23,7 +23,15 @@ export type Common = {
   balance: Scalars['Int'];
   raised: Scalars['Int'];
   metadata: CommonMetadata;
+  openJoinRequests: Scalars['Int'];
+  openFundingRequests: Scalars['Int'];
+  proposals?: Maybe<Array<Maybe<Proposal>>>;
   members?: Maybe<Array<Maybe<CommonMember>>>;
+};
+
+
+export type CommonProposalsArgs = {
+  page?: Maybe<Scalars['Int']>;
 };
 
 export enum CommonContributionType {
@@ -97,6 +105,73 @@ export enum EventType {
   MembershipRevoked = 'membershipRevoked'
 }
 
+export type Proposal = {
+  __typename?: 'Proposal';
+  id: Scalars['ID'];
+  proposerId: Scalars['ID'];
+  createdAt: Scalars['Date'];
+  updatedAt: Scalars['Date'];
+  votesFor: Scalars['Int'];
+  votesAgainst: Scalars['Int'];
+  votes?: Maybe<Array<Maybe<ProposalVote>>>;
+  fundingRequest?: Maybe<ProposalFunding>;
+  join?: Maybe<ProposalJoin>;
+  state: ProposalState;
+  description: ProposalDescription;
+  paymentState?: Maybe<ProposalPaymentState>;
+  type: ProposalType;
+};
+
+export type ProposalDescription = {
+  __typename?: 'ProposalDescription';
+  title?: Maybe<Scalars['String']>;
+  description: Scalars['String'];
+};
+
+export type ProposalFunding = {
+  __typename?: 'ProposalFunding';
+  amount: Scalars['Int'];
+};
+
+export type ProposalJoin = {
+  __typename?: 'ProposalJoin';
+  cardId: Scalars['ID'];
+  funding: Scalars['Int'];
+  fundingType: CommonContributionType;
+};
+
+export enum ProposalPaymentState {
+  NotAttempted = 'notAttempted',
+  NotRelevant = 'notRelevant',
+  Confirmed = 'confirmed',
+  Pending = 'pending',
+  Failed = 'failed'
+}
+
+export enum ProposalState {
+  PassedInsufficientBalance = 'passedInsufficientBalance',
+  Countdown = 'countdown',
+  Passed = 'passed',
+  Failed = 'failed'
+}
+
+export enum ProposalType {
+  FundingRequest = 'fundingRequest',
+  Join = 'join'
+}
+
+export type ProposalVote = {
+  __typename?: 'ProposalVote';
+  voteId: Scalars['ID'];
+  voterId: Scalars['ID'];
+  outcome: ProposalVoteOutcome;
+};
+
+export enum ProposalVoteOutcome {
+  Passed = 'passed',
+  Rejected = 'rejected'
+}
+
 export type Query = {
   __typename?: 'Query';
   today?: Maybe<Statistics>;
@@ -104,6 +179,7 @@ export type Query = {
   events?: Maybe<Array<Maybe<Event>>>;
   common?: Maybe<Common>;
   commons?: Maybe<Array<Maybe<Common>>>;
+  proposal?: Maybe<Proposal>;
 };
 
 
@@ -128,6 +204,11 @@ export type QueryCommonsArgs = {
   after?: Maybe<Scalars['Int']>;
 };
 
+
+export type QueryProposalArgs = {
+  id: Scalars['ID'];
+};
+
 export type Statistics = {
   __typename?: 'Statistics';
   newCommons?: Maybe<Scalars['Int']>;
@@ -139,6 +220,7 @@ export type Statistics = {
 
 export type GetCommonDetailsQueryVariables = Exact<{
   commonId: Scalars['ID'];
+  page: Scalars['Int'];
 }>;
 
 
@@ -146,13 +228,26 @@ export type GetCommonDetailsQuery = (
   { __typename?: 'Query' }
   & { common?: Maybe<(
     { __typename?: 'Common' }
-    & Pick<Common, 'name' | 'createdAt' | 'updatedAt' | 'balance' | 'raised'>
+    & Pick<Common, 'name' | 'createdAt' | 'updatedAt' | 'balance' | 'raised' | 'openFundingRequests' | 'openJoinRequests'>
     & { metadata: (
       { __typename?: 'CommonMetadata' }
       & Pick<CommonMetadata, 'byline' | 'description' | 'founderId' | 'contributionType'>
     ), members?: Maybe<Array<Maybe<(
       { __typename?: 'CommonMember' }
       & Pick<CommonMember, 'userId' | 'joinedAt'>
+    )>>>, proposals?: Maybe<Array<Maybe<(
+      { __typename?: 'Proposal' }
+      & Pick<Proposal, 'id' | 'type'>
+      & { fundingRequest?: Maybe<(
+        { __typename?: 'ProposalFunding' }
+        & Pick<ProposalFunding, 'amount'>
+      )>, join?: Maybe<(
+        { __typename?: 'ProposalJoin' }
+        & Pick<ProposalJoin, 'fundingType' | 'funding'>
+      )>, description: (
+        { __typename?: 'ProposalDescription' }
+        & Pick<ProposalDescription, 'description'>
+      ) }
     )>>> }
   )> }
 );
@@ -191,13 +286,15 @@ export type GetDashboardDataQuery = (
 
 
 export const GetCommonDetailsDocument = gql`
-    query getCommonDetails($commonId: ID!) {
+    query getCommonDetails($commonId: ID!, $page: Int!) {
   common(commonId: $commonId) {
     name
     createdAt
     updatedAt
     balance
     raised
+    openFundingRequests
+    openJoinRequests
     metadata {
       byline
       description
@@ -207,6 +304,20 @@ export const GetCommonDetailsDocument = gql`
     members {
       userId
       joinedAt
+    }
+    proposals(page: $page) {
+      id
+      type
+      fundingRequest {
+        amount
+      }
+      join {
+        fundingType
+        funding
+      }
+      description {
+        description
+      }
     }
   }
 }
@@ -225,6 +336,7 @@ export const GetCommonDetailsDocument = gql`
  * const { data, loading, error } = useGetCommonDetailsQuery({
  *   variables: {
  *      commonId: // value for 'commonId'
+ *      page: // value for 'page'
  *   },
  * });
  */

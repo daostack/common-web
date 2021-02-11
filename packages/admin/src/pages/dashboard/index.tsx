@@ -2,9 +2,10 @@ import React from 'react';
 import { NextPage } from 'next';
 
 import { gql } from '@apollo/client/core';
-import { Card, Grid, Spacer, Table, Text } from '@geist-ui/react';
+import { Card, Grid, Spacer, Table, Text, Breadcrumbs } from '@geist-ui/react';
 
 import { useGetDashboardDataQuery } from '../../graphql';
+import { Link } from '../../components/Link';
 
 const GetDashboardDataQuery = gql`
   query getDashboardData {
@@ -39,6 +40,9 @@ const DashboardHomePage: NextPage = () => {
       <Spacer y={1}/>
 
       <Text h1>Dashboard</Text>
+
+
+      <Spacer y={2}/>
 
 
       <Text h3>Today's overview</Text>

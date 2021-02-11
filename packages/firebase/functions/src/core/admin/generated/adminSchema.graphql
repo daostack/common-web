@@ -17,6 +17,8 @@ type Common {
 
   """The display name of the common"""
   name: String!
+  openFundingRequests: Int!
+  openJoinRequests: Int!
   proposals(page: Int = 1): [Proposal]
 
   """The total amount of money, raised by the common"""

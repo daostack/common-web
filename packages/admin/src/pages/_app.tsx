@@ -1,4 +1,4 @@
-import { CssBaseline, GeistProvider, Page, Tabs, User, Grid, Tooltip, Divider } from '@geist-ui/react';
+import { CssBaseline, GeistProvider, Page, Tabs, Text, User, Grid, Tooltip, Divider } from '@geist-ui/react';
 import { AppProps } from 'next/app';
 import React from 'react';
 import { useRouter } from 'next/router';
@@ -74,7 +74,9 @@ const CommonAdminApp = ({ Component, pageProps }: AppProps): React.ReactElement 
               <Page dotBackdrop>
                 <Page.Header>
                   <Grid.Container style={{ marginTop: 15 }}>
-                    <Grid xs={12}/>
+                    <Grid xs={12}>
+                      <Text h2>Common Admin</Text>
+                    </Grid>
                     <Grid xs={12} justify="flex-end" style={{ display: 'flex' }}>
                       <Tooltip text={(
                         <React.Fragment>
@@ -86,7 +88,7 @@ const CommonAdminApp = ({ Component, pageProps }: AppProps): React.ReactElement 
                         </React.Fragment>
                       )} trigger="click" placement="bottomEnd">
                         <User
-                          src="https://lh3.googleusercontent.com/a-/AOh14GgaBxrLDOb-f5M1KCWmV6u39I_8hZQr3FGzSwEMLZc=s96-c"
+                          src="https://scontent.fsof8-1.fna.fbcdn.net/v/t1.0-9/125179462_843039883183225_644338599158826343_n.jpg?_nc_cat=103&ccb=3&_nc_sid=09cbfe&_nc_ohc=9zaPQ_Y0wqYAX-AutYn&_nc_ht=scontent.fsof8-1.fna&oh=505127f70c6b832d6966f855a1048f10&oe=6048998C"
                           name={null}
                         />
                       </Tooltip>

@@ -16,8 +16,13 @@ import {
   ProposalFundingType,
   ProposalJoinType,
   ProposalStateEnum,
-  ProposalPaymentStateEnum, ProposalDescriptionType, ProposalsQueryExtension, ProposalVoteOutcomeEnum, ProposalVoteType,
+  ProposalPaymentStateEnum,
+  ProposalDescriptionType,
+  ProposalsQueryExtension,
+  ProposalVoteOutcomeEnum,
+  ProposalVoteType,
 } from './proposals';
+import { UserQueryExtension, UserType } from './user';
 
 // Scalars
 
@@ -29,6 +34,10 @@ const DateScalar = scalarType({
     return new Date(value);
   },
   serialize(value) {
+    if (typeof value.toDate === 'function') {
+      value = value.toDate();
+    }
+
     return value.getTime();
   },
   parseLiteral(ast) {
@@ -69,4 +78,7 @@ export const types = [
   ProposalVoteOutcomeEnum,
   ProposalsQueryExtension,
   ProposalPaymentStateEnum,
+
+  UserType,
+  UserQueryExtension
 ];

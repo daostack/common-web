@@ -1,4 +1,4 @@
-import { IUserEntity } from '../../../../users/types';
+import { IUserEntity } from '../../../../core/users/types';
 import { NotFoundError } from '../../../errors';
 import firebase from 'firebase';
 import Timestamp = firebase.firestore.Timestamp;
