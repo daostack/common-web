@@ -12,6 +12,7 @@
     "packages/firebase/functions"
   ],
   "scripts": {
+    "lint": "eslint .",
     "exec": "lerna exec",
     "clean": "lerna run clean",
     "typecheck": "lerna run --parallel 'typecheck'",
