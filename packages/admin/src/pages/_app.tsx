@@ -39,10 +39,10 @@ export function useApollo(initialState, uri: string) {
   return React.useMemo(() => initializeApollo(initialState, uri), [initialState, uri]);
 }
 
-const uri = 'http://localhost:5003/common-staging-50741/us-central1/admin/graphql';
-
 const CommonAdminApp = ({ Component, pageProps }: AppProps): React.ReactElement => {
-  const apolloClient = useApollo(pageProps.initialApolloState, uri);
+  console.log(process.env.NEXT_PUBLIC_ADMIN_GRAPH_ENDPOINT)
+
+  const apolloClient = useApollo(pageProps.initialApolloState, process.env.NEXT_PUBLIC_ADMIN_GRAPH_ENDPOINT);
 
   // State
   const themeHook = React.useState<'light' | 'dark'>('light');
