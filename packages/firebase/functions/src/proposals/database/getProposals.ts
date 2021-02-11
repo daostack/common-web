@@ -58,8 +58,6 @@ export const getProposals = async (options: IGetProposalsOptions): Promise<IProp
   if (options.first || options.last) {
     const { first, last, after } = options;
 
-    console.log(options);
-
     if (first && last) {
       throw new CommonError('Only first or only last can be selected, not both!');
     }
