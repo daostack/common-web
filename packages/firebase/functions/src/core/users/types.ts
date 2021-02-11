@@ -1,4 +1,4 @@
-import { IBaseEntity } from '../util/types';
+import { IBaseEntity } from '../../util/types';
 
 export interface IUserEntity extends IBaseEntity {
    uid: string;

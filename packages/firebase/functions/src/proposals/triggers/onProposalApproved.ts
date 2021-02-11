@@ -42,8 +42,7 @@ export const onProposalApproved = functions.firestore
           // Create the payment
           await createProposalPayment({
             proposalId: proposal.id,
-            sessionId: context.eventId,
-            ipAddress: '127.0.0.1' // @todo Get ip, but what IP?
+            sessionId: context.eventId
           }, { throwOnFailure: true });
         } else {
           // Add the user as member

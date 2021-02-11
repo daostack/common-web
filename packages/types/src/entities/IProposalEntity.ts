@@ -72,7 +72,7 @@ interface IBaseProposalEntity extends IBaseEntity {
   votesAgainst: number;
 }
 
-interface IProposalVote {
+export interface IProposalVote {
   /**
    * The identifier of the vote in the votes
    * collection
@@ -197,6 +197,11 @@ export interface IJoinRequestProposal extends IBaseProposalEntity {
   paymentState: ProposalPaymentState;
 
   join: {
+    /**
+     * The IP address, from which the join request was created
+     */
+    ip: string;
+
     /**
      *  The amount that will be contributed
      */

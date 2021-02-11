@@ -5,6 +5,11 @@
     "description": "The item is related to the firebase code"
   },
   {
+    "name": "admin",
+    "color": "5319E7",
+    "description": "The item is related to the admin frontend or backend code"
+  },
+  {
     "name": "app",
     "color": "0E8A16",
     "description": "The item is related to the app code"

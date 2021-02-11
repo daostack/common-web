@@ -1,26 +1,24 @@
-// import { ISubscriptionEntity } from '../types';
-// import { SubscriptionsCollection } from './index';
-//
-// interface IGetSubscriptionsOptions {
-//   /**
-//    * Returns the subscription, containing the paymentId
-//    */
-//   paymentId?: string;
-// }
-//
-// /**
-//  * Returns all subscriptions matching the chosen options
-//  *
-//  * @param options - The options for filtering the subscriptions
-//  */
-// export const getSubscription = async (options: IGetSubscriptionsOptions): Promise<ISubscriptionEntity[]> => {
-//   let subscriptionsQuery: any = SubscriptionsCollection;
-//
-//   if (options.paymentId) {
-//     subscriptionsQuery = subscriptionsQuery.where('circleFingerprint', '==', options.fingerprint);
-//   }
-//
-//   return (await subscriptionsQuery.get()).docs
-//     .map(bankAccount => bankAccount.data());
-// };
+import { ISubscriptionEntity } from '@common/types';
+import { SubscriptionsCollection } from './index';
+import { firestore } from 'firebase-admin';
+
+interface IGetSubscriptionsOptions {
+  userId?: string;
+}
+
+/**
+ * Returns all subscriptions matching the chosen options
+ *
+ * @param options - The options for filtering the subscriptions
+ */
+export const getSubscriptions = async (options: IGetSubscriptionsOptions): Promise<ISubscriptionEntity[]> => {
+  let subscriptionsQuery: firestore.Query<ISubscriptionEntity> = SubscriptionsCollection;
+
+  if(options.userId) {
+    subscriptionsQuery = subscriptionsQuery.where('userId', '==', options.userId)
+  }
+
+  return (await subscriptionsQuery.get()).docs
+    .map(bankAccount => bankAccount.data());
+};
 

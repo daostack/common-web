@@ -6,7 +6,8 @@
     "*.yml",
     "*.sh",
     "functions/dist/**",
-    "*.test.ts"
+    "*.test.ts",
+    "nexus-typegen.ts"
   ],
   "parserOptions": {
     // Required for certain syntax usages
@@ -20,8 +21,13 @@
   "plugins": [
     "promise"
   ],
+  "globals": {
+    "logger": false
+  },
   "extends": "eslint:recommended",
   "rules": {
+    "@typescript-eslint/no-use-before-define": 0,
+    "@typescript-eslint/interface-name-prefix": 0,
     // Removed rule "disallow multiple spaces in regular expressions" from recommended eslint rules
     "no-regex-spaces": "off",
     // Removed rule "disallow the use of debugger" from recommended eslint rules

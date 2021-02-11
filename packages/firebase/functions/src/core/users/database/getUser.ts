@@ -1,6 +1,6 @@
-import { ArgumentError, NotFoundError } from '../../util/errors';
+import { IUserEntity } from '@common/types';
 
-import { IUserEntity } from '../types';
+import { ArgumentError, NotFoundError } from '../../../util/errors';
 import { UserCollection } from './index';
 
 /**
@@ -23,7 +23,6 @@ export const getUser = async (userId: string): Promise<IUserEntity> => {
   if (!user.exists) {
     throw new NotFoundError('user.userId', userId);
   }
-
 
   return user.data();
 };

@@ -2,6 +2,7 @@ import { IEventEntity } from '../types';
 import { Collections } from '../../constants';
 import { db } from '../../util';
 import { getEvents } from './getEvents';
+import { getEvent } from './getEvent';
 
 export const EventsCollection = db.collection(Collections.Events)
   .withConverter<IEventEntity>({
@@ -15,5 +16,6 @@ export const EventsCollection = db.collection(Collections.Events)
 
 
 export const eventsDb = {
-  getMany: getEvents
+  getMany: getEvents,
+  get: getEvent
 };

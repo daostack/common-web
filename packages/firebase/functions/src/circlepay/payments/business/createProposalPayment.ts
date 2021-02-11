@@ -15,9 +15,6 @@ const createProposalPaymentValidationSchema = yup.object({
     .uuid()
     .required(),
 
-  ipAddress: yup.string()
-    .required(),
-
   sessionId: yup.string()
     .required()
 });
@@ -69,7 +66,7 @@ export const createProposalPayment = async (payload: yup.InferType<typeof create
   let payment = await createPayment({
     userId: proposal.proposerId,
     cardId: proposal.join.cardId,
-    ipAddress: payload.ipAddress,
+    ipAddress: proposal.join.ip || '127.0.0.1', // This is for backwards compatibility with proposals that do not have the ip
     sessionId: payload.sessionId,
 
     type: 'one-time',

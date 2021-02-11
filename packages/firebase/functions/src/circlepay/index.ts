@@ -43,7 +43,7 @@ circlepay.post('/create-card', async (req, res, next) => {
   await responseExecutor(
     async () => (await createCard({
       ...req.body,
-      ipAddress: '127.0.0.1', // @todo Strange. There is no Ip to be find in the request object. Make it be :D
+      ipAddress: req.ipAddress,
       ownerId: req.user.uid,
       sessionId: req.requestId
     })),

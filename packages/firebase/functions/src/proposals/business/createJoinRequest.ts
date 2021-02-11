@@ -25,7 +25,9 @@ const createRequestToJoinValidationSchema = yup.object({
 
   funding: yup.number().required(),
 
-  links: yup.array(linkValidationSchema).optional()
+  links: yup.array(linkValidationSchema).optional(),
+
+  ipAddress: yup.string().required()
 });
 
 type CreateRequestToJoinPayload = yup.InferType<typeof createRequestToJoinValidationSchema>;
@@ -38,9 +40,7 @@ type CreateRequestToJoinPayload = yup.InferType<typeof createRequestToJoinValida
  *
  * @param payload
  */
-export const createJoinRequest = async (
-  payload: CreateRequestToJoinPayload
-): Promise<IJoinRequestProposal> => {
+export const createJoinRequest = async (payload: CreateRequestToJoinPayload): Promise<IJoinRequestProposal> => {
   // Validate the data
   await validate(payload, createRequestToJoinValidationSchema);
 
@@ -75,12 +75,9 @@ export const createJoinRequest = async (
 
   // Check if the request is funded with less than required amount
   if (common.metadata.minFeeToJoin > payload.funding) {
-    throw new CommonError(
-      'The funding cannot be less than the minimum required funding',
-      {
-        userMessage: `Your join request cannot be created, because the min fee to join is $${(
-          common.metadata.minFeeToJoin / 100
-        ).toFixed(2)}, but you provided $${(payload.funding / 100).toFixed(2)}`,
+    throw new CommonError('The funding cannot be less than the minimum required funding', {
+        userMessage: `Your join request cannot be created, because the min fee to join is $${(common.metadata.minFeeToJoin / 100)
+          .toFixed(2)}, but you provided $${(payload.funding / 100).toFixed(2)}`,
         statusCode: StatusCodes.BadRequest,
 
         payload
@@ -89,7 +86,7 @@ export const createJoinRequest = async (
   }
 
   // Check if the user has ongoing join request
-  const activeUserJoinRequest = await proposalDb.getProposals({
+  const activeUserJoinRequest = await proposalDb.getMany({
     proposerId: payload.proposerId,
     commonId: payload.commonId,
     state: 'countdown',
@@ -97,13 +94,10 @@ export const createJoinRequest = async (
   });
 
   if (activeUserJoinRequest.length) {
-    throw new CommonError(
-      'User with ongoing join request tried to create new one',
-      {
-        userMessage: 'You can only have one active join request per common',
-        statusCode: StatusCodes.BadRequest
-      }
-    );
+    throw new CommonError('User with ongoing join request tried to create new one', {
+      userMessage: 'You can only have one active join request per common',
+      statusCode: StatusCodes.BadRequest
+    });
   }
 
   // Create the document and save it
@@ -119,6 +113,7 @@ export const createJoinRequest = async (
     },
 
     join: {
+      ip: payload.ipAddress,
       cardId: payload.cardId,
       funding: payload.funding,
       fundingType: common.metadata.contributionType,

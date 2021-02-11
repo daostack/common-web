@@ -18,7 +18,8 @@ router.post('/create/join', async (req, res, next) => {
     async () => {
       return await createJoinRequest({
         ...req.body,
-        proposerId: req.user.uid
+        proposerId: req.user.uid,
+        ipAddress: req.ipAddress
       });
     }, {
       req,

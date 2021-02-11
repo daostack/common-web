@@ -15,6 +15,7 @@ import { payoutTriggers } from './circlepay/payouts/triggers';
 import { backofficeApp, circleBalanceCrons } from './backoffice';
 import { metadataApp } from './metadata';
 import { discussionApp } from './discussion';
+import { adminApp } from './core/admin';
 
 // --- Express apps
 export const commons = commonsApp;
@@ -24,6 +25,7 @@ export const proposals = proposalsApp;
 export const subscriptions = subscriptionsApp;
 export const backoffice = backofficeApp;
 export const discussions = discussionApp;
+export const admin = adminApp;
 
 // --- Triggers and Subscriptions
 exports.eventSub = event;
