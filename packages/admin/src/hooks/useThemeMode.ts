@@ -1,6 +1,8 @@
 import React from 'react';
+import { useSystemTheme } from './useSystemTheme';
+import { useLocalStorage } from './useLocalStorage';
 
-type ThemeModes = 'light' | 'dark';
+export type ThemeModes = 'light' | 'dark';
 
 const themeKey = 'common.theme.mode';
 
@@ -17,12 +19,14 @@ const setKey = <T>(key: string, value: T): void => {
 };
 
 export const useThemeMode = (): [ThemeModes, (theme: ThemeModes) => void] => {
-  const [themeMode, setThemeModeState] = React.useState<ThemeModes>(getKey<ThemeModes>(themeKey, 'light'));
+  const systemTheme = useSystemTheme('light');
+  // const [themeMode, setThemeModeState] = React.useState<ThemeModes>(getKey<ThemeModes>(themeKey, systemTheme));
+  const [themeMode, setThemeModeState] = useLocalStorage('common.theme.themeMode')
 
   const setThemeMode = (themeMode: ThemeModes): void => {
     setKey(themeKey, themeMode);
     setThemeModeState(themeMode);
   };
 
-  return [themeMode, setThemeMode];
+  return [themeMode as ThemeModes, setThemeMode];
 };

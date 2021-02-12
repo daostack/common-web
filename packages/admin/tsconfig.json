@@ -22,6 +22,7 @@
       "@hoc": ["hoc/index"],
       "@graphql": ["graphql"],
       "@components": ["components/index"],
+      "@components/*": ["components/*"],
       "@hooks": ["hooks/index"]
     }
   },
