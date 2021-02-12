@@ -1,5 +1,5 @@
 import { IProposalVote } from '@common/types';
-import { enumType, extendType, idArg, nonNull, objectType } from 'nexus';
+import { booleanArg, enumType, extendType, idArg, nonNull, objectType } from 'nexus';
 import { proposalDb } from '../../../proposals/database';
 import { UserType } from './user';
 import { userDb } from '../../users/database';
@@ -163,5 +163,15 @@ export const ProposalsQueryExtension = extendType({
         return proposalDb.getProposal(args.id) as any;
       },
     });
+
+    t.list.field('proposals', {
+      type: ProposalType,
+      args: {
+        funded: booleanArg()
+      },
+      resolve: (root, args) => {
+
+      }
+    })
   },
 });

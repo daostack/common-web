@@ -25,6 +25,9 @@ const CommonAdminApp = ({ Component, pageProps }: AppProps): React.ReactElement 
         router.push('/auth');
       } else {
         // sessionStorage.setItem('token', user.getIdToken(true).)
+
+        localStorage.setItem('user.id', user.uid);
+        localStorage.setItem('user.photoURL', user.photoURL);
       }
     });
   }, []);

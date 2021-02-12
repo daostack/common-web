@@ -3,10 +3,11 @@ import { useRouter } from 'next/router';
 
 import firebase from 'firebase/app';
 import { FirebaseAuthConsumer } from '@react-firebase/auth';
-import { Divider, Grid, Page, Spacer, Tabs, Tooltip, User, Text } from '@geist-ui/react';
+import { Grid, Page, Spacer, Tabs, Tooltip, User, Text } from '@geist-ui/react';
 
 import { ThemeToggle } from '../ThemeToggle';
 import { ApolloProvider } from '@components/providers/ApolloProvider';
+import { Link } from '@components/Link';
 
 export const AuthenticationBasedLayout: React.FC<PropsWithChildren<any>> = ({ children, ...rest }) => {
   const [currentTab, setCurrentTab] = React.useState<string>('dashboard');
@@ -67,7 +68,7 @@ export const AuthenticationBasedLayout: React.FC<PropsWithChildren<any>> = ({ ch
                             </React.Fragment>
                           )} trigger="click" placement="bottomEnd">
                             <User
-                              src="https://scontent.fsof8-1.fna.fbcdn.net/v/t1.0-9/125179462_843039883183225_644338599158826343_n.jpg?_nc_cat=103&ccb=3&_nc_sid=09cbfe&_nc_ohc=9zaPQ_Y0wqYAX-AutYn&_nc_ht=scontent.fsof8-1.fna&oh=505127f70c6b832d6966f855a1048f10&oe=6048998C"
+                              src={localStorage.getItem('user.photoURL')}
                               name={null}
                             />
                           </Tooltip>
@@ -82,6 +83,10 @@ export const AuthenticationBasedLayout: React.FC<PropsWithChildren<any>> = ({ ch
                         <Tabs.Item value="payouts" label="Payouts"/>
                         <Tabs.Item value="events" label="Events"/>
                       </Tabs>
+
+                      {/*<Link to="/dashboard">Dashboard</Link>*/}
+                      {/*<Link to="/commons">Commons</Link>*/}
+                      {/*<Link to="/proposals">Proposals</Link>*/}
                     </Page.Header>
 
                     <Page.Body style={{ paddingTop: 0 }}>

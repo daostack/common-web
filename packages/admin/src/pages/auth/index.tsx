@@ -28,9 +28,6 @@ const AuthenticationPage: NextPage<IAuthenticatePageProps> = ({ auth }) => {
         const signInResult = await firebase.auth()
           .signInWithPopup(provider);
 
-        // Check permissions
-        console.log(signInResult)
-
         setToasts({
           type: 'success',
           text: 'Successfully authenticated'
