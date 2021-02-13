@@ -5,6 +5,7 @@ import { CommonMetadataType } from './types/CommonMetadata.type';
 
 import { CommonMembersExtension } from './extensions/CommonMembers.extension';
 import { CommonProposalsExtension } from './extensions/CommonProposals.extension';
+import { CommonMemberUserExtension } from './extensions/CommonMemberUser.extension';
 import { CommonOpenJoinRequestsExtension } from './extensions/CommonOpenJoinRequestExtension';
 import { CommonOpenFundingRequestsExtension } from './extensions/CommonOpenFundingRequests.extension';
 
@@ -19,6 +20,7 @@ export const CommonTypes = [
 
   CommonMembersExtension,
   CommonProposalsExtension,
+  CommonMemberUserExtension,
   CommonOpenJoinRequestsExtension,
   CommonOpenFundingRequestsExtension,
 

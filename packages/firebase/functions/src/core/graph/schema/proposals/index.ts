@@ -13,6 +13,7 @@ import { GetProposalQuery } from './queries/GetProposal.query';
 
 import { ProposalCommonExtension } from './extensions/ProposalCommon.extension';
 import { ProposalProposerExtension } from './extensions/ProposalProposer.extension';
+import { ProposalVoteVoterExtension } from './extensions/ProposalVoteVoter.extension';
 
 export const ProposalTypes = [
   ProposalTypeEnum,
@@ -29,5 +30,6 @@ export const ProposalTypes = [
   GetProposalQuery,
 
   ProposalCommonExtension,
-  ProposalProposerExtension
+  ProposalProposerExtension,
+  ProposalVoteVoterExtension
 ];

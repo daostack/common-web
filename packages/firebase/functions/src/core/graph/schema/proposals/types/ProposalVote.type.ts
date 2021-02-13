@@ -1,9 +1,9 @@
-import { UserType } from '../../users/user';
 import { userDb } from '../../../../domain/users/database';
 import { objectType } from 'nexus';
 import { IProposalVote } from '@common/types';
 
 import { ProposalVoteOutcomeEnum } from '../enums/ProposalVoteOutcome.enum';
+import { UserType } from '../../users/types/User.type';
 
 export const ProposalVoteType = objectType({
   name: 'ProposalVote',
@@ -14,13 +14,6 @@ export const ProposalVoteType = objectType({
     t.nonNull.field('outcome', {
       type: ProposalVoteOutcomeEnum,
       resolve: ((root: IProposalVote) => root.voteOutcome) as any,
-    });
-
-    t.field('voter', {
-      type: UserType,
-      resolve: (root) => {
-        return userDb.get(root.voterId);
-      },
     });
   },
 });

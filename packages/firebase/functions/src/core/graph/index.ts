@@ -3,18 +3,19 @@ import { makeSchema } from 'nexus';
 
 import { Scalars } from './scalars';
 
+import { UserTypes } from './schema/users';
 import { EventTypes } from './schema/events';
 import { CommonTypes } from './schema/commons';
 import { ProposalTypes } from './schema/proposals';
 import { SubscriptionTypes } from './schema/subscriptions';
 
-import { UserQueryExtension, UserType } from './schema/users/user';
 import { StatisticsType, StatisticsTypeQueryExtension } from './schema/statistics/statistics';
 
 
 const types = [
   ...Scalars,
 
+  ...UserTypes,
   ...EventTypes,
   ...CommonTypes,
   ...ProposalTypes,
@@ -22,10 +23,6 @@ const types = [
 
   StatisticsType,
   StatisticsTypeQueryExtension,
-
-  UserType,
-  UserQueryExtension
-
 ];
 
 export const schema = makeSchema({

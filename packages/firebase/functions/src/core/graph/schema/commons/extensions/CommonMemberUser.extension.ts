@@ -4,13 +4,13 @@ import { userDb } from '../../../../domain/users/database';
 
 import { UserType } from '../../users/types/User.type';
 
-export const ProposalProposerExtension = extendType({
-  type: 'Proposal',
+export const CommonMemberUserExtension = extendType({
+  type: 'CommonMember',
   definition(t) {
-    t.nonNull.field('proposer', {
+    t.field('user', {
       type: UserType,
       resolve: (root) => {
-        return userDb.get(root.proposerId);
+        return userDb.get(root.userId);
       }
     });
   }

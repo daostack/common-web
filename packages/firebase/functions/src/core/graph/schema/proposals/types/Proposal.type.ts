@@ -1,7 +1,5 @@
 import { objectType } from 'nexus';
 
-import { GraphTypes } from '../../../constants/TypeNames';
-
 import { ProposalVoteType } from './ProposalVote.type';
 import { ProposalJoinType } from './ProposalJoin.type';
 import { ProposalFundingType } from './ProposalFunding.type';
@@ -12,7 +10,7 @@ import { ProposalStateEnum } from '../enums/ProposalState.enum';
 import { ProposalPaymentStateEnum } from '../enums/ProposalPaymentState.enum';
 
 export const ProposalType = objectType({
-  name: GraphTypes.Proposal,
+  name: 'Proposal',
   description: 'The proposals type',
 
   definition(t) {
@@ -27,39 +25,38 @@ export const ProposalType = objectType({
     t.nonNull.id('proposerId');
 
 
-    // Fields
+    // ---  Fields
     t.nonNull.int('votesFor');
     t.nonNull.int('votesAgainst');
 
     t.nonNull.field('state', {
-      type: ProposalStateEnum,
+      type: ProposalStateEnum
     });
 
     t.nonNull.field('description', {
-      type: ProposalDescriptionType,
+      type: ProposalDescriptionType
     });
 
     t.nonNull.field('type', {
-      type: ProposalTypeEnum,
+      type: ProposalTypeEnum
     });
 
     t.field('paymentState', {
-      type: ProposalPaymentStateEnum,
+      type: ProposalPaymentStateEnum
     });
 
     t.field('fundingRequest', {
       description: 'Details about the funding request. Exists only on funding request proposals',
-      type: ProposalFundingType,
+      type: ProposalFundingType
     });
 
     t.field('join', {
       description: 'Details about the join request. Exists only on join request proposals',
-      type: ProposalJoinType,
+      type: ProposalJoinType
     });
 
     t.list.field('votes', {
-      type: ProposalVoteType,
+      type: ProposalVoteType
     });
-
-  },
+  }
 });
