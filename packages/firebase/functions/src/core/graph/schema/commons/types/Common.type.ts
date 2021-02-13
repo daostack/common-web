@@ -1,7 +1,7 @@
 import { ICommonEntity } from '@common/types';
 import { objectType } from 'nexus';
 import { proposalDb } from '../../../../../proposals/database';
-import { ProposalType } from '../../proposals/proposals';
+import { ProposalType } from '../../proposals';
 import { CommonMetadataType } from './CommonMetadata.type';
 
 export const CommonType = objectType({

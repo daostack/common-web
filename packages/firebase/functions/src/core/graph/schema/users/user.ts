@@ -3,7 +3,7 @@ import { IUserEntity } from '../../../domain/users/types';
 import { userDb } from '../../../domain/users/database';
 import { SubscriptionType, SubscriptionStatusEnum } from '../subscriptions/subscription';
 import { subscriptionDb } from '../../../../subscriptions/database';
-import { ProposalType } from '../proposals/proposals';
+import { ProposalType } from '../proposals';
 import { CommonError } from '../../../../util/errors';
 import { proposalDb } from '../../../../proposals/database';
 

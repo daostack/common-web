@@ -1,5 +1,5 @@
 import { extendType, intArg } from 'nexus';
-import { ProposalType } from '../../proposals/proposals';
+import { ProposalType } from '../../proposals';
 import { proposalDb } from '../../../../../proposals/database';
 
 export const CommonProposalsExtension = extendType({
