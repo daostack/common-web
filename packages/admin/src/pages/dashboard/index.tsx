@@ -1,12 +1,11 @@
 import React from 'react';
 import { NextPage } from 'next';
 
-import { gql } from '@apollo/client';
-import { withAuthUser, withAuthUserSSR } from 'next-firebase-auth';
-
-import { Card, Grid, Spacer, Table, Text } from '@geist-ui/react';
+import { gql } from '@apollo/client/core';
+import { Card, Grid, Spacer, Table, Text, Breadcrumbs } from '@geist-ui/react';
 
 import { useGetDashboardDataQuery } from '../../graphql';
+import { Link } from '../../components/Link';
 
 const GetDashboardDataQuery = gql`
   query getDashboardData {
@@ -124,30 +123,4 @@ const DashboardHomePage: NextPage = () => {
   );
 };
 
-
-export const getServerSideProps = withAuthUserSSR()(async (ctx) => {
-  const { AuthUser } = ctx;
-
-  console.log(AuthUser)
-
-  if (!AuthUser || !AuthUser.id) {
-    return {
-      redirect: {
-        destination: '/auth',
-        permanent: false
-      }
-    };
-  }
-
-  return {
-    props: {
-      email: AuthUser.email,
-      emailVerified: AuthUser.emailVerified,
-      someOtherProp: 'any other data can be added'
-    }
-  };
-});
-
-export default withAuthUser()(DashboardHomePage);
-
-// export default DashboardHomePage;
+export default DashboardHomePage;
