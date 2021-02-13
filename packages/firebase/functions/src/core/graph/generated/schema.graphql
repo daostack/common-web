@@ -61,6 +61,8 @@ type Event {
 
   """The id of the object on which was acted to created the event"""
   objectId: ID
+
+  """The type of the event"""
   type: EventType!
 
   """The date, at which the event was last updated"""
@@ -113,7 +115,7 @@ enum EventType {
 """The proposals type"""
 type Proposal {
   common: Common!
-  commonId: String!
+  commonId: ID!
   createdAt: Date!
   description: ProposalDescription!
 
@@ -192,7 +194,6 @@ type Query {
   event(eventId: ID!): Event
   events(after: Int, last: Int!): [Event]
   proposal(id: ID!): Proposal
-  proposals(funded: Boolean): [Proposal]
   today: Statistics
   user(id: ID!): User
 }

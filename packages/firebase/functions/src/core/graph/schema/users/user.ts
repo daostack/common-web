@@ -3,9 +3,9 @@ import { IUserEntity } from '../../../domain/users/types';
 import { userDb } from '../../../domain/users/database';
 import { SubscriptionType, SubscriptionStatusEnum } from '../subscriptions/subscription';
 import { subscriptionDb } from '../../../../subscriptions/database';
-import { ProposalType } from '../proposals';
 import { CommonError } from '../../../../util/errors';
 import { proposalDb } from '../../../../proposals/database';
+import { ProposalType } from '../proposals/types/Proposal.type';
 
 export const UserType = objectType({
   name: 'User',
@@ -13,7 +13,7 @@ export const UserType = objectType({
     t.nonNull.id('id', {
       resolve: ((root: IUserEntity) => {
         return root.uid;
-      }) as any,
+      }) as any
     });
 
     t.string('firstName');
@@ -31,26 +31,26 @@ export const UserType = objectType({
       type: SubscriptionType,
       args: {
         page: intArg({
-          default: 1,
+          default: 1
         }),
 
         status: arg({
-          type: SubscriptionStatusEnum,
-        }),
+          type: SubscriptionStatusEnum
+        })
       },
       resolve: async (root: any, args) => {
         return subscriptionDb.getMany({
-          userId: root.id || root.uid,
+          userId: root.id || root.uid
         });
-      },
+      }
     });
 
     t.list.field('proposals', {
       type: ProposalType,
       args: {
         page: intArg({
-          default: 1,
-        }),
+          default: 1
+        })
       },
       resolve: (root: any, args) => {
         if (args.page < 1) {
@@ -60,11 +60,11 @@ export const UserType = objectType({
         return proposalDb.getMany({
           proposerId: root.id || root.uid,
           last: 10,
-          after: (args.page - 1) * 10,
+          after: (args.page - 1) * 10
         }) as any;
-      },
+      }
     });
-  },
+  }
 });
 
 export const UserQueryExtension = extendType({
@@ -73,11 +73,11 @@ export const UserQueryExtension = extendType({
     t.field('user', {
       type: UserType,
       args: {
-        id: nonNull(idArg()),
+        id: nonNull(idArg())
       },
       resolve: (root, args) => {
         return userDb.get(args.id);
-      },
+      }
     });
-  },
+  }
 });

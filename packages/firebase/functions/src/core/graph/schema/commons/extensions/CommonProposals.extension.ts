@@ -1,6 +1,8 @@
 import { extendType, intArg } from 'nexus';
-import { ProposalType } from '../../proposals';
+
 import { proposalDb } from '../../../../../proposals/database';
+
+import { ProposalType } from '../../proposals/types/Proposal.type';
 
 export const CommonProposalsExtension = extendType({
   // @todo Use Constant

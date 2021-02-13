@@ -71,7 +71,7 @@ export interface NexusGenObjects {
     userId?: string | null; // ID
   }
   Proposal: { // root type
-    commonId: string; // String!
+    commonId: string; // ID!
     createdAt: NexusGenScalars['Date']; // Date!
     description: NexusGenRootTypes['ProposalDescription']; // ProposalDescription!
     fundingRequest?: NexusGenRootTypes['ProposalFunding'] | null; // ProposalFunding
@@ -187,7 +187,7 @@ export interface NexusGenFieldTypes {
   }
   Proposal: { // field return type
     common: NexusGenRootTypes['Common']; // Common!
-    commonId: string; // String!
+    commonId: string; // ID!
     createdAt: NexusGenScalars['Date']; // Date!
     description: NexusGenRootTypes['ProposalDescription']; // ProposalDescription!
     fundingRequest: NexusGenRootTypes['ProposalFunding'] | null; // ProposalFunding
@@ -227,7 +227,6 @@ export interface NexusGenFieldTypes {
     event: NexusGenRootTypes['Event'] | null; // Event
     events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
-    proposals: Array<NexusGenRootTypes['Proposal'] | null> | null; // [Proposal]
     today: NexusGenRootTypes['Statistics'] | null; // Statistics
     user: NexusGenRootTypes['User'] | null; // User
   }
@@ -309,7 +308,7 @@ export interface NexusGenFieldTypeNames {
   }
   Proposal: { // field return type name
     common: 'Common'
-    commonId: 'String'
+    commonId: 'ID'
     createdAt: 'Date'
     description: 'ProposalDescription'
     fundingRequest: 'ProposalFunding'
@@ -349,7 +348,6 @@ export interface NexusGenFieldTypeNames {
     event: 'Event'
     events: 'Event'
     proposal: 'Proposal'
-    proposals: 'Proposal'
     today: 'Statistics'
     user: 'User'
   }
@@ -418,9 +416,6 @@ export interface NexusGenArgTypes {
     }
     proposal: { // args
       id: string; // ID!
-    }
-    proposals: { // args
-      funded?: boolean | null; // Boolean
     }
     user: { // args
       id: string; // ID!

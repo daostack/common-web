@@ -11,6 +11,9 @@ import { ProposalDescriptionType } from './types/ProposalDescription.type';
 
 import { GetProposalQuery } from './queries/GetProposal.query';
 
+import { ProposalCommonExtension } from './extensions/ProposalCommon.extension';
+import { ProposalProposerExtension } from './extensions/ProposalProposer.extension';
+
 export const ProposalTypes = [
   ProposalTypeEnum,
   ProposalStateEnum,
@@ -23,5 +26,8 @@ export const ProposalTypes = [
   ProposalJoinType,
   ProposalVoteType,
 
-  GetProposalQuery
+  GetProposalQuery,
+
+  ProposalCommonExtension,
+  ProposalProposerExtension
 ];
