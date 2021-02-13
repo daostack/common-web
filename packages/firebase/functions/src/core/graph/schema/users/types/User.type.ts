@@ -21,5 +21,13 @@ export const UserType = objectType({
 
     t.list.string('tokens');
 
+    t.list.string('permissions', {
+      resolve: (root, args, ctx) => {
+        return [
+          'admin.commons.read'
+        ]
+      }
+    })
+
   }
 });

@@ -5,9 +5,11 @@ import firebase from 'firebase/app';
 import { Grid, Page, Spacer, Tabs, Tooltip, User, Text } from '@geist-ui/react';
 
 import { ApolloProvider } from '@components/providers/ApolloProvider';
+import { PermissionsContextProvider, useAuthContext } from '@context';
 
 export const AuthenticationBasedLayout: React.FC<PropsWithChildren<any>> = ({ children, ...rest }) => {
   const [currentTab, setCurrentTab] = React.useState<string>('dashboard');
+  const authContext = useAuthContext();
 
   // Hooks
   const router = useRouter();
@@ -16,6 +18,14 @@ export const AuthenticationBasedLayout: React.FC<PropsWithChildren<any>> = ({ ch
   React.useEffect(() => {
     setCurrentTab(router.pathname.split('/')[1]);
   });
+
+  React.useEffect(() => {
+    if (authContext.loaded) {
+      if (!authContext.authenticated && router.pathname !== '/auth') {
+        router.push('/auth');
+      }
+    }
+  }, [authContext]);
 
   // Actions
   const onTabChange = (value: string): void => {
@@ -26,51 +36,62 @@ export const AuthenticationBasedLayout: React.FC<PropsWithChildren<any>> = ({ ch
 
   const onSignOut = async (): Promise<void> => {
     await firebase.auth().signOut();
+
+    router.push('/');
   };
 
   return (
     <React.Fragment>
-      <React.Fragment>
-        <ApolloProvider>
-          <Page>
-            <Page.Header>
-              <Grid.Container style={{ marginTop: 15 }}>
-                <Grid xs={12}>
-                  <Text h2>Common Admin</Text>
-                </Grid>
-                <Grid xs={12} justify="flex-end" style={{ display: 'flex' }}>
-                  <Tooltip text={(
-                    <React.Fragment>
-                      <Text onClick={onSignOut}>Sign Out</Text>
-                    </React.Fragment>
-                  )} trigger="click" placement="bottomEnd">
-                    <User
-                      src={localStorage.getItem('user.photoURL')}
-                      name={null}
-                    />
-                  </Tooltip>
-                </Grid>
-              </Grid.Container>
+      {authContext.loaded && (
+        <React.Fragment>
+          {(authContext.authenticated) ? (
+            <ApolloProvider>
+              <PermissionsContextProvider>
+                <Page>
+                  <Page.Header>
+                    <Grid.Container style={{ marginTop: 15 }}>
+                      <Grid xs={12}>
+                        <Text h2>Common Admin</Text>
+                      </Grid>
+                      <Grid xs={12} justify="flex-end" style={{ display: 'flex' }}>
+                        <Tooltip text={(
+                          <React.Fragment>
+                            <Text onClick={onSignOut}>Sign Out</Text>
+                          </React.Fragment>
+                        )} trigger="click" placement="bottomEnd">
+                          <User
+                            src={authContext.userInfo?.photoURL}
+                            name={authContext.userInfo.displayName}
+                          />
+                        </Tooltip>
+                      </Grid>
+                    </Grid.Container>
 
-              <Tabs value={currentTab} onChange={onTabChange} hideDivider>
-                <Tabs.Item value="dashboard" label="Dashboard"/>
-                <Tabs.Item value="commons" label="Commons"/>
-                <Tabs.Item value="proposals" label="Proposals"/>
-                <Tabs.Item value="users" label="Users"/>
-                <Tabs.Item value="payouts" label="Payouts"/>
-                <Tabs.Item value="events" label="Events"/>
-              </Tabs>
-            </Page.Header>
+                    <Tabs value={currentTab} onChange={onTabChange} hideDivider>
+                      <Tabs.Item value="dashboard" label="Dashboard"/>
+                      <Tabs.Item value="commons" label="Commons"/>
+                      <Tabs.Item value="proposals" label="Proposals"/>
+                      <Tabs.Item value="users" label="Users"/>
+                      <Tabs.Item value="payouts" label="Payouts"/>
+                      <Tabs.Item value="events" label="Events"/>
+                    </Tabs>
+                  </Page.Header>
 
-            <Page.Body style={{ paddingTop: 0 }}>
-              <Spacer y={1}/>
+                  <Page.Body style={{ paddingTop: 0 }}>
+                    <Spacer y={1}/>
 
+                    {React.isValidElement(children) && React.cloneElement(children, { ...rest })}
+                  </Page.Body>
+                </Page>
+              </PermissionsContextProvider>
+            </ApolloProvider>
+          ) : (
+            <React.Fragment>
               {React.isValidElement(children) && React.cloneElement(children, { ...rest })}
-            </Page.Body>
-          </Page>
-        </ApolloProvider>
-
-      </React.Fragment>
+            </React.Fragment>
+          )}
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 };

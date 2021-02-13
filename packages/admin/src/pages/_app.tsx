@@ -6,6 +6,7 @@ import { FirebaseAuthProvider } from '@react-firebase/auth';
 import { AuthenticationBasedLayout } from '@components/layout/AuthenticationBasedLayout';
 import { useRouter } from 'next/router';
 import { CssBaseline, GeistProvider } from '@geist-ui/react';
+import { AuthContextProvider } from '@components/../context/AuthContext';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyClh8UZh-PDyVgwPrHZwURoA4HWuiXUbR8',
@@ -24,8 +25,6 @@ const CommonAdminApp = ({ Component, pageProps }: AppProps): React.ReactElement 
       if (!user) {
         router.push('/auth');
       } else {
-        // sessionStorage.setItem('token', user.getIdToken(true).)
-
         localStorage.setItem('user.id', user.uid);
         localStorage.setItem('user.photoURL', user.photoURL);
       }
@@ -34,14 +33,16 @@ const CommonAdminApp = ({ Component, pageProps }: AppProps): React.ReactElement 
 
   return (
     <GeistProvider>
-      <CssBaseline />
+      <CssBaseline/>
 
       {typeof window !== 'undefined' && (
-        <FirebaseAuthProvider firebase={firebase} {...firebaseConfig}>
-          <AuthenticationBasedLayout>
-            <Component {...pageProps} />
-          </AuthenticationBasedLayout>
-        </FirebaseAuthProvider>
+        <AuthContextProvider>
+          <FirebaseAuthProvider firebase={firebase} {...firebaseConfig}>
+            <AuthenticationBasedLayout>
+              <Component {...pageProps} />
+            </AuthenticationBasedLayout>
+          </FirebaseAuthProvider>
+        </AuthContextProvider>
       )}
     </GeistProvider>
   );

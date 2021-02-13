@@ -21,9 +21,11 @@
     "paths": {
       "@hoc": ["hoc/index"],
       "@graphql": ["graphql"],
+      "@context": ["context/index"],
       "@components": ["components/index"],
       "@components/*": ["components/*"],
-      "@hooks": ["hooks/index"]
+      "@hooks": ["hooks/index"],
+      "@helpers": ["helpers/index"]
     }
   },
   "include": [

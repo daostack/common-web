@@ -11,6 +11,7 @@ type User {
   photoURL: String
   createdAt: Date
   tokens: [String]
+  permissions: [String]
   proposals(page: Int = 1): [Proposal]
   subscriptions(page: Int = 1, status: SubscriptionStatus): [Subscription]
 }
