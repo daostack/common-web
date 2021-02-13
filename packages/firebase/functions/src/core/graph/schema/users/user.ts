@@ -1,11 +1,11 @@
 import { objectType, extendType, nonNull, idArg, intArg, arg } from 'nexus';
-import { IUserEntity } from '../../users/types';
-import { userDb } from '../../users/database';
-import { SubscriptionType, SubscriptionStatusEnum } from './subscription';
-import { subscriptionDb } from '../../../subscriptions/database';
-import { ProposalType } from './proposals';
-import { CommonError } from '../../../util/errors';
-import { proposalDb } from '../../../proposals/database';
+import { IUserEntity } from '../../../domain/users/types';
+import { userDb } from '../../../domain/users/database';
+import { SubscriptionType, SubscriptionStatusEnum } from '../subscriptions/subscription';
+import { subscriptionDb } from '../../../../subscriptions/database';
+import { ProposalType } from '../proposals/proposals';
+import { CommonError } from '../../../../util/errors';
+import { proposalDb } from '../../../../proposals/database';
 
 export const UserType = objectType({
   name: 'User',
@@ -38,7 +38,7 @@ export const UserType = objectType({
           type: SubscriptionStatusEnum,
         }),
       },
-      resolve: async (root, args) => {
+      resolve: async (root: any, args) => {
         return subscriptionDb.getMany({
           userId: root.id || root.uid,
         });
@@ -52,7 +52,7 @@ export const UserType = objectType({
           default: 1,
         }),
       },
-      resolve: (root, args) => {
+      resolve: (root: any, args) => {
         if (args.page < 1) {
           throw new CommonError('Request at least the first page');
         }
@@ -61,7 +61,7 @@ export const UserType = objectType({
           proposerId: root.id || root.uid,
           last: 10,
           after: (args.page - 1) * 10,
-        });
+        }) as any;
       },
     });
   },

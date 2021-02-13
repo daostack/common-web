@@ -1,7 +1,7 @@
 import { objectType, enumType, extendType, nonNull, idArg, list, intArg } from 'nexus';
-import { EVENT_TYPES } from '../../../event/event';
-import { eventsDb } from '../../../event/database';
-import { convertTimestampToDate } from '../../../util';
+import { EVENT_TYPES } from '../../../../event/event';
+import { eventsDb } from '../../../../event/database';
+import { convertTimestampToDate } from '../../../../util';
 
 export const EventTypeEnum = enumType({
   name: 'EventType',

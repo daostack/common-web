@@ -7,8 +7,8 @@ export const SubscriptionStatusEnum = enumType({
     'active',
     'canceledByUser',
     'canceledByPaymentFailure',
-    'paymentFailed',
-  ],
+    'paymentFailed'
+  ]
 });
 
 export const SubscriptionType = objectType({
@@ -31,28 +31,29 @@ export const SubscriptionType = objectType({
 
 
     t.nonNull.boolean('revoked');
+
     t.nonNull.field('status', {
       type: SubscriptionStatusEnum,
       resolve: (root) => {
-        const {status} = root;
+        const { status } = root as any;
 
         return status.charAt(0).toLowerCase() + status.slice(1);
-      },
+      }
     });
 
     t.nonNull.field('metadata', {
-      type: SubscriptionMetadataType,
+      type: SubscriptionMetadataType
     });
-  },
+  }
 });
 
 export const SubscriptionMetadataType = objectType({
   name: 'SubscriptionMetadata',
   definition(t) {
     t.field('common', {
-      type: SubscriptionMetadataCommonType,
+      type: SubscriptionMetadataCommonType
     });
-  },
+  }
 });
 
 export const SubscriptionMetadataCommonType = objectType({
@@ -60,5 +61,5 @@ export const SubscriptionMetadataCommonType = objectType({
   definition(t) {
     t.id('id');
     t.string('name');
-  },
+  }
 });

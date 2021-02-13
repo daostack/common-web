@@ -1,5 +1,5 @@
-import { db } from '../../../util';
-import { Collections } from '../../../constants';
+import { db } from '../../../../util';
+import { Collections } from '../../../../constants';
 
 import { IUserEntity } from '../types';
 

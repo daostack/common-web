@@ -1,10 +1,10 @@
 import { IProposalVote } from '@common/types';
 import { booleanArg, enumType, extendType, idArg, nonNull, objectType } from 'nexus';
-import { proposalDb } from '../../../proposals/database';
-import { UserType } from './user';
-import { userDb } from '../../users/database';
-import { CommonType } from './commons';
-import { commonDb } from '../../../common/database';
+import { proposalDb } from '../../../../proposals/database';
+import { UserType } from '../users/user';
+import { userDb } from '../../../domain/users/database';
+import { commonDb } from '../../../../common/database';
+import { CommonType } from '../commons/types/Common.type';
 
 export const ProposalTypeEnum = enumType({
   name: 'ProposalType',
@@ -164,14 +164,14 @@ export const ProposalsQueryExtension = extendType({
       },
     });
 
-    t.list.field('proposals', {
-      type: ProposalType,
-      args: {
-        funded: booleanArg()
-      },
-      resolve: (root, args) => {
-
-      }
-    })
+    // t.list.field('proposals', {
+    //   type: ProposalType,
+    //   args: {
+    //     funded: booleanArg()
+    //   },
+    //   resolve: (root, args) => {
+    //
+    //   }
+    // })
   },
 });
