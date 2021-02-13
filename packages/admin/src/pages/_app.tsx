@@ -5,7 +5,7 @@ import 'firebase/auth';
 import { FirebaseAuthProvider } from '@react-firebase/auth';
 import { AuthenticationBasedLayout } from '@components/layout/AuthenticationBasedLayout';
 import { useRouter } from 'next/router';
-import { ThemeProvider } from '@components/providers/ThemeProvider';
+import { CssBaseline, GeistProvider } from '@geist-ui/react';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyClh8UZh-PDyVgwPrHZwURoA4HWuiXUbR8',
@@ -33,17 +33,17 @@ const CommonAdminApp = ({ Component, pageProps }: AppProps): React.ReactElement 
   }, []);
 
   return (
-    <React.Fragment>
+    <GeistProvider>
+      <CssBaseline />
+
       {typeof window !== 'undefined' && (
         <FirebaseAuthProvider firebase={firebase} {...firebaseConfig}>
-          <ThemeProvider>
-            <AuthenticationBasedLayout>
-              <Component {...pageProps} />
-            </AuthenticationBasedLayout>
-          </ThemeProvider>
+          <AuthenticationBasedLayout>
+            <Component {...pageProps} />
+          </AuthenticationBasedLayout>
         </FirebaseAuthProvider>
       )}
-    </React.Fragment>
+    </GeistProvider>
   );
 };
 

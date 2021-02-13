@@ -1,7 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 
 import firebase from 'firebase/app';
-import { AuthEmission } from '@react-firebase/auth/dist/types';
 import { InMemoryCache, ApolloProvider as BareApolloProvider, ApolloClient, HttpLink } from '@apollo/client';
 import { setContext } from 'apollo-link-context';
 
@@ -10,7 +9,7 @@ const createApolloClient = (uri: string) => {
     uri
   });
 
-  const withToken = setContext(async (request) => {
+  const withToken = setContext(async () => {
     return {
       headers: {
         authorization: await firebase.auth().currentUser.getIdToken()
@@ -18,16 +17,8 @@ const createApolloClient = (uri: string) => {
     };
   });
 
-
   return new ApolloClient({
     ssrMode: typeof window === 'undefined',
-    // link: new HttpLink({
-    //   uri, // Server URL (must be absolute)
-    //   credentials: 'same-origin', // Additional fetch() options like `credentials` or `headers`
-    //   headers: {
-    //     authorization: token
-    //   }
-    // }),
     cache: new InMemoryCache(),
     link: withToken.concat(baseLink as any) as any
   });
@@ -37,16 +28,7 @@ const useApollo = (initialState: any, uri: string) => {
   return createApolloClient(uri);
 };
 
-interface IApolloProviderProps {
-  auth: AuthEmission;
-  token: string;
-}
-
-export const ApolloProvider: React.FC<PropsWithChildren<IApolloProviderProps>> = ({
-                                                                                    auth,
-                                                                                    children,
-                                                                                    ...rest
-                                                                                  }) => {
+export const ApolloProvider: React.FC<PropsWithChildren<any>> = ({ children, ...rest }) => {
   const apollo = useApollo(null, process.env.NEXT_PUBLIC_ADMIN_GRAPH_ENDPOINT);
 
   React.useEffect(() => {
@@ -59,7 +41,7 @@ export const ApolloProvider: React.FC<PropsWithChildren<IApolloProviderProps>> =
 
   return (
     <BareApolloProvider client={apollo}>
-      {React.isValidElement(children) && React.cloneElement(children, { ...rest, auth })}
+      {React.isValidElement(children) && React.cloneElement(children, { ...rest })}
     </BareApolloProvider>
   );
 };
