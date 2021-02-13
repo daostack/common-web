@@ -15,11 +15,13 @@
     "@react-firebase/auth": "^0.2.10",
     "apollo-link": "^1.2.14",
     "apollo-link-context": "^1.0.20",
-    "firebase": "^8.2.6",
+    "firebase": "^8.2.7",
+    "firebase-admin": "^9.5.0",
     "graphql": "^15.5.0",
-    "next": "10.0.6",
-    "react": "17.0.1",
-    "react-dom": "17.0.1",
+    "next": "^10.0.6",
+    "next-firebase-auth": "^0.12.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "react-loading-skeleton": "^2.1.1"
   },
   "eslintConfig": {
@@ -35,7 +37,9 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "1.20.1",
-    "@graphql-codegen/typescript": "1.20.2",
+    "@graphql-codegen/introspection": "^1.18.1",
+    "@graphql-codegen/schema-ast": "^1.18.1",
+    "@graphql-codegen/typescript": "1.21.0",
     "@graphql-codegen/typescript-operations": "1.17.14",
     "@graphql-codegen/typescript-react-apollo": "2.2.1"
   }

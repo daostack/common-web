@@ -1,0 +1,220 @@
+schema {
+  query: Query
+  subscription: Subscription
+}
+scalar Date
+type User {
+  id: ID!
+  firstName: String
+  lastName: String
+  email: String
+  photoURL: String
+  createdAt: Date
+  tokens: [String]
+  proposals(page: Int = 1): [Proposal]
+  subscriptions(page: Int = 1, status: SubscriptionStatus): [Subscription]
+}
+enum EventType {
+  commonCreated
+  commonCreationFailed
+  commonWhitelisted
+  commonMemberAdded
+  commonMemberRemoved
+  commonUpdated
+  requestToJoinCreated
+  requestToJoinAccepted
+  requestToJoinRejected
+  requestToJoinExecuted
+  fundingRequestCreated
+  fundingRequestRejected
+  fundingRequestExecuted
+  fundingRequestAccepted
+  fundingRequestAcceptedInsufficientFunds
+  voteCreated
+  paymentCreated
+  paymentConfirmed
+  paymentFailed
+  paymentPaid
+  payoutCreated
+  payoutApproved
+  payoutExecuted
+  payoutVoided
+  payoutCompleted
+  payoutFailed
+  cardCreated
+  discussionCreated
+  messageCreated
+  subscriptionCreated
+  subscriptionPaymentCreated
+  subscriptionPaymentFailed
+  subscriptionPaymentConfirmed
+  subscriptionPaymentStuck
+  subscriptionCanceledByUser
+  subscriptionCanceledByPaymentFailure
+  membershipRevoked
+}
+type Event {
+  """The unique identifier of the event"""
+  id: ID!
+  """The type of the event"""
+  type: EventType!
+  """The date, at which the event was created"""
+  createdAt: Date!
+  """The date, at which the event was last updated"""
+  updatedAt: Date!
+  """The id of the object on which was acted to created the event"""
+  objectId: ID
+  """The id of the actor"""
+  userId: ID
+}
+enum CommonContributionType {
+  oneTime
+  monthly
+}
+type CommonMember {
+  """The user ID of the member"""
+  userId: ID!
+  """The date, at witch the member joined the common"""
+  joinedAt: Date
+  user: User
+}
+type CommonMetadata {
+  byline: String!
+  description: String!
+  founderId: String!
+  minFeeToJoin: Int!
+  contributionType: CommonContributionType
+}
+enum ProposalType {
+  fundingRequest
+  join
+}
+enum ProposalState {
+  passedInsufficientBalance
+  countdown
+  passed
+  failed
+}
+enum ProposalVoteOutcome {
+  approved
+  rejected
+}
+enum ProposalPaymentState {
+  notAttempted
+  notRelevant
+  confirmed
+  pending
+  failed
+}
+"""The proposals type"""
+type Proposal {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  commonId: ID!
+  proposerId: ID!
+  votesFor: Int!
+  votesAgainst: Int!
+  state: ProposalState!
+  description: ProposalDescription!
+  type: ProposalType!
+  paymentState: ProposalPaymentState
+  """Details about the funding request. Exists only on funding request proposals"""
+  fundingRequest: ProposalFunding
+  """Details about the join request. Exists only on join request proposals"""
+  join: ProposalJoin
+  votes: [ProposalVote]
+  common: Common!
+  proposer: User!
+}
+type ProposalDescription {
+  title: String
+  description: String!
+}
+type ProposalFunding {
+  amount: Int!
+}
+type ProposalJoin {
+  cardId: ID!
+  funding: Int!
+  fundingType: CommonContributionType
+}
+type ProposalVote {
+  voteId: ID!
+  voterId: ID!
+  outcome: ProposalVoteOutcome!
+  voter: User
+}
+enum SubscriptionStatus {
+  pending
+  active
+  canceledByUser
+  canceledByPaymentFailure
+  paymentFailed
+}
+type Subscription {
+  id: ID!
+  cardId: ID!
+  userId: ID!
+  proposalId: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  charges: Int!
+  amount: Int!
+  lastChargedAt: Date
+  dueDate: Date
+  revoked: Boolean!
+  status: SubscriptionStatus!
+  metadata: SubscriptionMetadata!
+}
+type SubscriptionMetadata {
+  common: SubscriptionMetadataCommon
+}
+type SubscriptionMetadataCommon {
+  id: ID
+  name: String
+}
+type Statistics {
+  """Commons, created on that date"""
+  newCommons: Int
+  """The amount of proposals with join type, created on that date"""
+  newJoinRequests: Int
+  """The amount of proposals with funding type, created on that date"""
+  newFundingRequests: Int
+  """The amount of discussions, started on that date"""
+  newDiscussions: Int
+  """The amount of new discussion messages, send on that date"""
+  newDiscussionMessages: Int
+}
+"""The common type"""
+type Common {
+  """The unique identifier of the common"""
+  id: ID!
+  """The date, at which the common was created"""
+  createdAt: Date
+  """The date, at which the common was last updated"""
+  updatedAt: Date
+  """The display name of the common"""
+  name: String!
+  """The currently available funds of the common"""
+  balance: Int!
+  """The total amount of money, raised by the common"""
+  raised: Int!
+  metadata: CommonMetadata!
+  members: [CommonMember]
+  proposals(page: Int = 1): [Proposal]
+  openJoinRequests: Int!
+  openFundingRequests: Int!
+}
+type Query {
+  user(id: ID!): User
+  event(eventId: ID!): Event
+  events(last: Int!, after: Int): [Event]
+  common(
+    """The ID of the common, that you want to retrieve"""
+    commonId: ID!
+  ): Common
+  commons(last: Int = 10, after: Int = 0): [Common]
+  proposal(id: ID!): Proposal
+  today: Statistics
+}

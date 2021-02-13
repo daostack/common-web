@@ -14,56 +14,29 @@ export type Scalars = {
   Date: any;
 };
 
-export type Common = {
-  __typename?: 'Common';
+
+export type User = {
+  __typename?: 'User';
   id: Scalars['ID'];
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  photoURL?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['Date']>;
-  updatedAt?: Maybe<Scalars['Date']>;
-  name: Scalars['String'];
-  balance: Scalars['Int'];
-  raised: Scalars['Int'];
-  metadata: CommonMetadata;
-  openJoinRequests: Scalars['Int'];
-  openFundingRequests: Scalars['Int'];
+  tokens?: Maybe<Array<Maybe<Scalars['String']>>>;
   proposals?: Maybe<Array<Maybe<Proposal>>>;
-  members?: Maybe<Array<Maybe<CommonMember>>>;
+  subscriptions?: Maybe<Array<Maybe<Subscription>>>;
 };
 
 
-export type CommonProposalsArgs = {
+export type UserProposalsArgs = {
   page?: Maybe<Scalars['Int']>;
 };
 
-export enum CommonContributionType {
-  OneTime = 'oneTime',
-  Monthly = 'monthly'
-}
 
-export type CommonMember = {
-  __typename?: 'CommonMember';
-  userId: Scalars['ID'];
-  joinedAt?: Maybe<Scalars['Date']>;
-  user?: Maybe<User>;
-};
-
-export type CommonMetadata = {
-  __typename?: 'CommonMetadata';
-  byline: Scalars['String'];
-  description: Scalars['String'];
-  founderId: Scalars['String'];
-  minFeeToJoin: Scalars['Int'];
-  contributionType?: Maybe<CommonContributionType>;
-};
-
-
-export type Event = {
-  __typename?: 'Event';
-  id: Scalars['ID'];
-  type: EventType;
-  createdAt: Scalars['Date'];
-  updatedAt: Scalars['Date'];
-  objectId?: Maybe<Scalars['ID']>;
-  userId?: Maybe<Scalars['ID']>;
+export type UserSubscriptionsArgs = {
+  page?: Maybe<Scalars['Int']>;
+  status?: Maybe<SubscriptionStatus>;
 };
 
 export enum EventType {
@@ -106,22 +79,89 @@ export enum EventType {
   MembershipRevoked = 'membershipRevoked'
 }
 
+export type Event = {
+  __typename?: 'Event';
+  /** The unique identifier of the event */
+  id: Scalars['ID'];
+  /** The type of the event */
+  type: EventType;
+  /** The date, at which the event was created */
+  createdAt: Scalars['Date'];
+  /** The date, at which the event was last updated */
+  updatedAt: Scalars['Date'];
+  /** The id of the object on which was acted to created the event */
+  objectId?: Maybe<Scalars['ID']>;
+  /** The id of the actor */
+  userId?: Maybe<Scalars['ID']>;
+};
+
+export enum CommonContributionType {
+  OneTime = 'oneTime',
+  Monthly = 'monthly'
+}
+
+export type CommonMember = {
+  __typename?: 'CommonMember';
+  /** The user ID of the member */
+  userId: Scalars['ID'];
+  /** The date, at witch the member joined the common */
+  joinedAt?: Maybe<Scalars['Date']>;
+  user?: Maybe<User>;
+};
+
+export type CommonMetadata = {
+  __typename?: 'CommonMetadata';
+  byline: Scalars['String'];
+  description: Scalars['String'];
+  founderId: Scalars['String'];
+  minFeeToJoin: Scalars['Int'];
+  contributionType?: Maybe<CommonContributionType>;
+};
+
+export enum ProposalType {
+  FundingRequest = 'fundingRequest',
+  Join = 'join'
+}
+
+export enum ProposalState {
+  PassedInsufficientBalance = 'passedInsufficientBalance',
+  Countdown = 'countdown',
+  Passed = 'passed',
+  Failed = 'failed'
+}
+
+export enum ProposalVoteOutcome {
+  Approved = 'approved',
+  Rejected = 'rejected'
+}
+
+export enum ProposalPaymentState {
+  NotAttempted = 'notAttempted',
+  NotRelevant = 'notRelevant',
+  Confirmed = 'confirmed',
+  Pending = 'pending',
+  Failed = 'failed'
+}
+
+/** The proposals type */
 export type Proposal = {
   __typename?: 'Proposal';
   id: Scalars['ID'];
-  proposerId: Scalars['ID'];
   createdAt: Scalars['Date'];
   updatedAt: Scalars['Date'];
+  commonId: Scalars['ID'];
+  proposerId: Scalars['ID'];
   votesFor: Scalars['Int'];
   votesAgainst: Scalars['Int'];
-  votes?: Maybe<Array<Maybe<ProposalVote>>>;
-  fundingRequest?: Maybe<ProposalFunding>;
-  join?: Maybe<ProposalJoin>;
   state: ProposalState;
   description: ProposalDescription;
-  paymentState?: Maybe<ProposalPaymentState>;
   type: ProposalType;
-  commonId: Scalars['String'];
+  paymentState?: Maybe<ProposalPaymentState>;
+  /** Details about the funding request. Exists only on funding request proposals */
+  fundingRequest?: Maybe<ProposalFunding>;
+  /** Details about the join request. Exists only on join request proposals */
+  join?: Maybe<ProposalJoin>;
+  votes?: Maybe<Array<Maybe<ProposalVote>>>;
   common: Common;
   proposer: User;
 };
@@ -144,26 +184,6 @@ export type ProposalJoin = {
   fundingType?: Maybe<CommonContributionType>;
 };
 
-export enum ProposalPaymentState {
-  NotAttempted = 'notAttempted',
-  NotRelevant = 'notRelevant',
-  Confirmed = 'confirmed',
-  Pending = 'pending',
-  Failed = 'failed'
-}
-
-export enum ProposalState {
-  PassedInsufficientBalance = 'passedInsufficientBalance',
-  Countdown = 'countdown',
-  Passed = 'passed',
-  Failed = 'failed'
-}
-
-export enum ProposalType {
-  FundingRequest = 'fundingRequest',
-  Join = 'join'
-}
-
 export type ProposalVote = {
   __typename?: 'ProposalVote';
   voteId: Scalars['ID'];
@@ -172,62 +192,13 @@ export type ProposalVote = {
   voter?: Maybe<User>;
 };
 
-export enum ProposalVoteOutcome {
-  Approved = 'approved',
-  Rejected = 'rejected'
+export enum SubscriptionStatus {
+  Pending = 'pending',
+  Active = 'active',
+  CanceledByUser = 'canceledByUser',
+  CanceledByPaymentFailure = 'canceledByPaymentFailure',
+  PaymentFailed = 'paymentFailed'
 }
-
-export type Query = {
-  __typename?: 'Query';
-  today?: Maybe<Statistics>;
-  event?: Maybe<Event>;
-  events?: Maybe<Array<Maybe<Event>>>;
-  common?: Maybe<Common>;
-  commons?: Maybe<Array<Maybe<Common>>>;
-  proposal?: Maybe<Proposal>;
-  user?: Maybe<User>;
-};
-
-
-export type QueryEventArgs = {
-  eventId: Scalars['ID'];
-};
-
-
-export type QueryEventsArgs = {
-  last: Scalars['Int'];
-  after?: Maybe<Scalars['Int']>;
-};
-
-
-export type QueryCommonArgs = {
-  commonId: Scalars['ID'];
-};
-
-
-export type QueryCommonsArgs = {
-  last?: Maybe<Scalars['Int']>;
-  after?: Maybe<Scalars['Int']>;
-};
-
-
-export type QueryProposalArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryUserArgs = {
-  id: Scalars['ID'];
-};
-
-export type Statistics = {
-  __typename?: 'Statistics';
-  newCommons?: Maybe<Scalars['Int']>;
-  newJoinRequests?: Maybe<Scalars['Int']>;
-  newFundingRequests?: Maybe<Scalars['Int']>;
-  newDiscussions?: Maybe<Scalars['Int']>;
-  newDiscussionMessages?: Maybe<Scalars['Int']>;
-};
 
 export type Subscription = {
   __typename?: 'Subscription';
@@ -257,36 +228,89 @@ export type SubscriptionMetadataCommon = {
   name?: Maybe<Scalars['String']>;
 };
 
-export enum SubscriptionStatus {
-  Pending = 'pending',
-  Active = 'active',
-  CanceledByUser = 'canceledByUser',
-  CanceledByPaymentFailure = 'canceledByPaymentFailure',
-  PaymentFailed = 'paymentFailed'
-}
+export type Statistics = {
+  __typename?: 'Statistics';
+  /** Commons, created on that date */
+  newCommons?: Maybe<Scalars['Int']>;
+  /** The amount of proposals with join type, created on that date */
+  newJoinRequests?: Maybe<Scalars['Int']>;
+  /** The amount of proposals with funding type, created on that date */
+  newFundingRequests?: Maybe<Scalars['Int']>;
+  /** The amount of discussions, started on that date */
+  newDiscussions?: Maybe<Scalars['Int']>;
+  /** The amount of new discussion messages, send on that date */
+  newDiscussionMessages?: Maybe<Scalars['Int']>;
+};
 
-export type User = {
-  __typename?: 'User';
+/** The common type */
+export type Common = {
+  __typename?: 'Common';
+  /** The unique identifier of the common */
   id: Scalars['ID'];
-  firstName?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
-  photoURL?: Maybe<Scalars['String']>;
+  /** The date, at which the common was created */
   createdAt?: Maybe<Scalars['Date']>;
-  tokens?: Maybe<Array<Maybe<Scalars['String']>>>;
-  subscriptions?: Maybe<Array<Maybe<Subscription>>>;
+  /** The date, at which the common was last updated */
+  updatedAt?: Maybe<Scalars['Date']>;
+  /** The display name of the common */
+  name: Scalars['String'];
+  /** The currently available funds of the common */
+  balance: Scalars['Int'];
+  /** The total amount of money, raised by the common */
+  raised: Scalars['Int'];
+  metadata: CommonMetadata;
+  members?: Maybe<Array<Maybe<CommonMember>>>;
   proposals?: Maybe<Array<Maybe<Proposal>>>;
+  openJoinRequests: Scalars['Int'];
+  openFundingRequests: Scalars['Int'];
 };
 
 
-export type UserSubscriptionsArgs = {
+/** The common type */
+export type CommonProposalsArgs = {
   page?: Maybe<Scalars['Int']>;
-  status?: Maybe<SubscriptionStatus>;
+};
+
+export type Query = {
+  __typename?: 'Query';
+  user?: Maybe<User>;
+  event?: Maybe<Event>;
+  events?: Maybe<Array<Maybe<Event>>>;
+  common?: Maybe<Common>;
+  commons?: Maybe<Array<Maybe<Common>>>;
+  proposal?: Maybe<Proposal>;
+  today?: Maybe<Statistics>;
 };
 
 
-export type UserProposalsArgs = {
-  page?: Maybe<Scalars['Int']>;
+export type QueryUserArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryEventArgs = {
+  eventId: Scalars['ID'];
+};
+
+
+export type QueryEventsArgs = {
+  last: Scalars['Int'];
+  after?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryCommonArgs = {
+  commonId: Scalars['ID'];
+};
+
+
+export type QueryCommonsArgs = {
+  last?: Maybe<Scalars['Int']>;
+  after?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryProposalArgs = {
+  id: Scalars['ID'];
 };
 
 export type GetCommonDetailsQueryVariables = Exact<{
