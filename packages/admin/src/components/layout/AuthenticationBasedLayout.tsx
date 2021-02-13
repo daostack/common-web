@@ -5,7 +5,6 @@ import firebase from 'firebase/app';
 import { FirebaseAuthConsumer } from '@react-firebase/auth';
 import { Grid, Page, Spacer, Tabs, Tooltip, User, Text } from '@geist-ui/react';
 
-import { ThemeToggle } from '../ThemeToggle';
 import { ApolloProvider } from '@components/providers/ApolloProvider';
 import { Link } from '@components/Link';
 
@@ -61,8 +60,6 @@ export const AuthenticationBasedLayout: React.FC<PropsWithChildren<any>> = ({ ch
                         <Grid xs={12} justify="flex-end" style={{ display: 'flex' }}>
                           <Tooltip text={(
                             <React.Fragment>
-
-                              <ThemeToggle/>
 
                               <Text onClick={onSignOut}>Sign Out</Text>
                             </React.Fragment>

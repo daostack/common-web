@@ -5,6 +5,8 @@ import { CheckInCircleFill } from '@geist-ui/react-icons';
 import firebase from 'firebase/app';
 import { AuthEmission } from '@react-firebase/auth/dist/types';
 import { useRouter } from 'next/router';
+import { withAuthUser, AuthAction } from 'next-firebase-auth';
+
 
 interface IAuthenticatePageProps {
   auth: AuthEmission;
@@ -17,7 +19,7 @@ const AuthenticationPage: NextPage<IAuthenticatePageProps> = ({ auth }) => {
   const [toasts, setToasts] = useToasts();
 
   React.useEffect(() => {
-    if(auth.isSignedIn) {
+    if (auth.isSignedIn) {
       router.push('/dashboard');
     }
   }, []);
@@ -31,7 +33,7 @@ const AuthenticationPage: NextPage<IAuthenticatePageProps> = ({ auth }) => {
         setToasts({
           type: 'success',
           text: 'Successfully authenticated'
-        })
+        });
       } catch (e) {
         if (e.code === 'auth/popup-closed-by-user') {
           setToasts({
@@ -134,4 +136,9 @@ const AuthenticationPage: NextPage<IAuthenticatePageProps> = ({ auth }) => {
   );
 };
 
-export default AuthenticationPage;
+
+export default withAuthUser({
+  whenAuthed: AuthAction.REDIRECT_TO_APP,
+  whenUnauthedBeforeInit: AuthAction.RETURN_NULL,
+  whenUnauthedAfterInit: AuthAction.RENDER
+})(AuthenticationPage);
