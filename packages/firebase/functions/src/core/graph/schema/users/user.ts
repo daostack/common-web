@@ -1,7 +1,7 @@
 import { objectType, extendType, nonNull, idArg, intArg, arg } from 'nexus';
 import { IUserEntity } from '../../../domain/users/types';
 import { userDb } from '../../../domain/users/database';
-import { SubscriptionType, SubscriptionStatusEnum } from '../subscriptions/subscription';
+import { SubscriptionType, SubscriptionStatusEnum } from '../subscriptions';
 import { subscriptionDb } from '../../../../subscriptions/database';
 import { CommonError } from '../../../../util/errors';
 import { proposalDb } from '../../../../proposals/database';

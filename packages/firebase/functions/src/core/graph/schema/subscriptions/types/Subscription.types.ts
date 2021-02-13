@@ -1,15 +1,8 @@
-import { enumType, objectType } from 'nexus';
+import { objectType } from 'nexus';
 
-export const SubscriptionStatusEnum = enumType({
-  name: 'SubscriptionStatus',
-  members: [
-    'pending',
-    'active',
-    'canceledByUser',
-    'canceledByPaymentFailure',
-    'paymentFailed'
-  ]
-});
+import { SubscriptionMetadataType } from './SubscriptionMetadata.type';
+
+import { SubscriptionStatusEnum } from '../enums/SubscriptionStatus.enum';
 
 export const SubscriptionType = objectType({
   name: 'Subscription',
@@ -29,7 +22,6 @@ export const SubscriptionType = objectType({
     t.date('lastChargedAt');
     t.date('dueDate');
 
-
     t.nonNull.boolean('revoked');
 
     t.nonNull.field('status', {
@@ -47,19 +39,3 @@ export const SubscriptionType = objectType({
   }
 });
 
-export const SubscriptionMetadataType = objectType({
-  name: 'SubscriptionMetadata',
-  definition(t) {
-    t.field('common', {
-      type: SubscriptionMetadataCommonType
-    });
-  }
-});
-
-export const SubscriptionMetadataCommonType = objectType({
-  name: 'SubscriptionMetadataCommon',
-  definition(t) {
-    t.id('id');
-    t.string('name');
-  }
-});
