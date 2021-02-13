@@ -1,20 +1,19 @@
-import { ApolloServer } from 'apollo-server-express';
-import bodyParser from 'body-parser';
+import cors from 'cors';
 import express from 'express';
+import bodyParser from 'body-parser';
+import { ApolloServer } from 'apollo-server-express';
 
 import { schema } from './graph';
 
 const app = express();
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
-
 const apollo = new ApolloServer({
   schema
 });
 
-apollo.applyMiddleware({app});
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+apollo.applyMiddleware({ app });
 
 export const graphApp = app;

@@ -3,12 +3,12 @@ import { makeSchema } from 'nexus';
 
 import { Scalars } from './scalars';
 
+import { EventTypes } from './schema/events';
 import { CommonTypes } from './schema/commons';
 import { ProposalTypes } from './schema/proposals';
 
 import { UserQueryExtension, UserType } from './schema/users/user';
 import { StatisticsType, StatisticsTypeQueryExtension } from './schema/statistics/statistics';
-import { EventType, EventTypeQueryExtensions, EventTypeEnum } from './schema/events/events';
 import {
   SubscriptionMetadataType,
   SubscriptionStatusEnum,
@@ -20,16 +20,12 @@ import {
 const types = [
   ...Scalars,
 
+  ...EventTypes,
   ...CommonTypes,
   ...ProposalTypes,
 
   StatisticsType,
   StatisticsTypeQueryExtension,
-
-  EventType,
-  EventTypeEnum,
-  EventTypeQueryExtensions,
-
 
   UserType,
   UserQueryExtension,
