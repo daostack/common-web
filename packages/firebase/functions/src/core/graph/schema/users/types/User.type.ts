@@ -24,8 +24,9 @@ export const UserType = objectType({
     t.list.string('permissions', {
       resolve: (root, args, ctx) => {
         return [
-          'admin.commons.read'
-        ]
+          `admin.dashboard.read.overview`,
+          `admin.dashboard.read.events`
+        ];
       }
     })
 

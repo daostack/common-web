@@ -6,6 +6,7 @@ import { Grid, Page, Spacer, Tabs, Tooltip, User, Text } from '@geist-ui/react';
 
 import { ApolloProvider } from '@components/providers/ApolloProvider';
 import { PermissionsContextProvider, useAuthContext } from '@context';
+import { HasPermission } from '@components/HasPermission';
 
 export const AuthenticationBasedLayout: React.FC<PropsWithChildren<any>> = ({ children, ...rest }) => {
   const [currentTab, setCurrentTab] = React.useState<string>('dashboard');
@@ -48,34 +49,36 @@ export const AuthenticationBasedLayout: React.FC<PropsWithChildren<any>> = ({ ch
             <ApolloProvider>
               <PermissionsContextProvider>
                 <Page>
-                  <Page.Header>
-                    <Grid.Container style={{ marginTop: 15 }}>
-                      <Grid xs={12}>
-                        <Text h2>Common Admin</Text>
-                      </Grid>
-                      <Grid xs={12} justify="flex-end" style={{ display: 'flex' }}>
-                        <Tooltip text={(
-                          <React.Fragment>
-                            <Text onClick={onSignOut}>Sign Out</Text>
-                          </React.Fragment>
-                        )} trigger="click" placement="bottomEnd">
-                          <User
-                            src={authContext.userInfo?.photoURL}
-                            name={authContext.userInfo.displayName}
-                          />
-                        </Tooltip>
-                      </Grid>
-                    </Grid.Container>
+                  <HasPermission permission="admin.*">
+                    <Page.Header>
+                      <Grid.Container style={{ marginTop: 15 }}>
+                        <Grid xs={12}>
+                          <Text h2>Common Admin</Text>
+                        </Grid>
+                        <Grid xs={12} justify="flex-end" style={{ display: 'flex' }}>
+                          <Tooltip text={(
+                            <React.Fragment>
+                              <Text onClick={onSignOut}>Sign Out</Text>
+                            </React.Fragment>
+                          )} trigger="click" placement="bottomEnd">
+                            <User
+                              src={authContext.userInfo?.photoURL}
+                              name={authContext.userInfo.displayName}
+                            />
+                          </Tooltip>
+                        </Grid>
+                      </Grid.Container>
 
-                    <Tabs value={currentTab} onChange={onTabChange} hideDivider>
-                      <Tabs.Item value="dashboard" label="Dashboard"/>
-                      <Tabs.Item value="commons" label="Commons"/>
-                      <Tabs.Item value="proposals" label="Proposals"/>
-                      <Tabs.Item value="users" label="Users"/>
-                      <Tabs.Item value="payouts" label="Payouts"/>
-                      <Tabs.Item value="events" label="Events"/>
-                    </Tabs>
-                  </Page.Header>
+                      <Tabs value={currentTab} onChange={onTabChange} hideDivider>
+                        <Tabs.Item value="dashboard" label="Dashboard"/>
+                        <Tabs.Item value="commons" label="Commons"/>
+                        <Tabs.Item value="proposals" label="Proposals"/>
+                        <Tabs.Item value="users" label="Users"/>
+                        <Tabs.Item value="payouts" label="Payouts"/>
+                        <Tabs.Item value="events" label="Events"/>
+                      </Tabs>
+                    </Page.Header>
+                  </HasPermission>
 
                   <Page.Body style={{ paddingTop: 0 }}>
                     <Spacer y={1}/>

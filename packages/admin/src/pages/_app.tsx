@@ -1,12 +1,14 @@
-import { AppProps } from 'next/app';
+import 'firebase/auth';
+
 import React from 'react';
 import firebase from 'firebase/app';
-import 'firebase/auth';
+import { AppProps } from 'next/app';
+
 import { FirebaseAuthProvider } from '@react-firebase/auth';
-import { AuthenticationBasedLayout } from '@components/layout/AuthenticationBasedLayout';
-import { useRouter } from 'next/router';
+
 import { CssBaseline, GeistProvider } from '@geist-ui/react';
-import { AuthContextProvider } from '@components/../context/AuthContext';
+import { AuthenticationBasedLayout } from '@components/layout/AuthenticationBasedLayout';
+import { AuthContextProvider } from '@context';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyClh8UZh-PDyVgwPrHZwURoA4HWuiXUbR8',
@@ -19,18 +21,6 @@ const firebaseConfig = {
 };
 
 const CommonAdminApp = ({ Component, pageProps }: AppProps): React.ReactElement => {
-  const router = useRouter();
-  React.useEffect(() => {
-    return firebase.auth().onAuthStateChanged((user) => {
-      if (!user) {
-        router.push('/auth');
-      } else {
-        localStorage.setItem('user.id', user.uid);
-        localStorage.setItem('user.photoURL', user.photoURL);
-      }
-    });
-  }, []);
-
   return (
     <GeistProvider>
       <CssBaseline/>
