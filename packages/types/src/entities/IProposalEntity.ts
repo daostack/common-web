@@ -3,7 +3,8 @@ import { IBaseEntity } from './helpers/IBaseEntity';
 import { ContributionType } from './ICommonEntity';
 import { VoteOutcome } from './IVoteEntity';
 
-export type ProposalPaymentState = 'notAttempted' | 'pending' | 'failed' | 'confirmed' | 'notRelevant';
+export type ProposalPaymentState = 'notRelevant' | 'notAttempted' | 'pending' | 'failed' | 'confirmed';
+export type ProposalFundingState = 'notRelevant' | 'notAvailable' | 'available' | 'funded';
 
 export type FundingRequestState = 'countdown' | 'passed' | 'failed' | 'passedInsufficientBalance';
 export type RequestToJoinState = 'countdown' | 'passed' | 'failed';
@@ -136,6 +137,17 @@ export interface IFundingRequestProposal extends IBaseProposalEntity {
   type: 'fundingRequest';
 
   state: FundingRequestState;
+
+  /**
+   * The state of the funding (payout) of the proposal
+   *
+   * notRelevant - If the proposal is not a funding one
+   * notAvailable - The funding proposal is still in voting or was rejected
+   * available - The funding proposal was approved, but the payout has yet to be executed
+   * funded - The funding proposal was approved and payout for it was made. The link for that
+   *          is on the payout side
+   */
+  fundingState: ProposalFundingState;
 
   /**
    * Object with some description of the proposal

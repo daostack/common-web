@@ -123,6 +123,7 @@ type Proposal {
   Details about the funding request. Exists only on funding request proposals
   """
   fundingRequest: ProposalFunding
+  fundingState: ProposalFundingState
   id: ID!
 
   """Details about the join request. Exists only on join request proposals"""
@@ -145,6 +146,13 @@ type ProposalDescription {
 
 type ProposalFunding {
   amount: Int!
+}
+
+enum ProposalFundingState {
+  available
+  funded
+  notAvailable
+  notRelevant
 }
 
 type ProposalJoin {
@@ -194,6 +202,7 @@ type Query {
   event(eventId: ID!): Event
   events(after: Int, last: Int!): [Event]
   proposal(id: ID!): Proposal
+  proposals(fundingState: ProposalFundingState, ids: [String], page: Int = 1, pageItems: Int = 10, type: ProposalType): [Proposal]
   today: Statistics
   user(id: ID!): User
 }
@@ -254,6 +263,7 @@ type User {
   firstName: String
   id: ID!
   lastName: String
+  permissions: [String]
   photoURL: String
   proposals(page: Int = 1): [Proposal]
   subscriptions(page: Int = 1, status: SubscriptionStatus): [Subscription]

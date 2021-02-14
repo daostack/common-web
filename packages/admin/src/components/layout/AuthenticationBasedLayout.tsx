@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from 'react';
 import { useRouter } from 'next/router';
 
 import firebase from 'firebase/app';
-import { Grid, Page, Spacer, Tabs, Tooltip, User, Text } from '@geist-ui/react';
+import { Grid, Page, Spacer, Tabs, Tooltip, User, Text, Link } from '@geist-ui/react';
 
 import { ApolloProvider } from '@components/providers/ApolloProvider';
 import { PermissionsContextProvider, useAuthContext } from '@context';
@@ -52,13 +52,12 @@ export const AuthenticationBasedLayout: React.FC<PropsWithChildren<any>> = ({ ch
                   <HasPermission permission="admin.*">
                     <Page.Header>
                       <Grid.Container style={{ marginTop: 15 }}>
-                        <Grid xs={12}>
-                          <Text h2>Common Admin</Text>
-                        </Grid>
-                        <Grid xs={12} justify="flex-end" style={{ display: 'flex' }}>
+                        <Grid xs={24} justify="flex-end" style={{ display: 'flex' }}>
                           <Tooltip text={(
                             <React.Fragment>
-                              <Text onClick={onSignOut}>Sign Out</Text>
+                              <Link onClick={onSignOut}>
+                                Sign Out
+                              </Link>
                             </React.Fragment>
                           )} trigger="click" placement="bottomEnd">
                             <User

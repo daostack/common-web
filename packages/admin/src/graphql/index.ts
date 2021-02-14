@@ -144,6 +144,13 @@ export enum ProposalPaymentState {
   Failed = 'failed'
 }
 
+export enum ProposalFundingState {
+  NotRelevant = 'notRelevant',
+  NotAvailable = 'notAvailable',
+  Available = 'available',
+  Funded = 'funded'
+}
+
 /** The proposals type */
 export type Proposal = {
   __typename?: 'Proposal';
@@ -158,6 +165,7 @@ export type Proposal = {
   description: ProposalDescription;
   type: ProposalType;
   paymentState?: Maybe<ProposalPaymentState>;
+  fundingState?: Maybe<ProposalFundingState>;
   /** Details about the funding request. Exists only on funding request proposals */
   fundingRequest?: Maybe<ProposalFunding>;
   /** Details about the join request. Exists only on join request proposals */
@@ -279,6 +287,7 @@ export type Query = {
   common?: Maybe<Common>;
   commons?: Maybe<Array<Maybe<Common>>>;
   proposal?: Maybe<Proposal>;
+  proposals?: Maybe<Array<Maybe<Proposal>>>;
   today?: Maybe<Statistics>;
 };
 
@@ -312,6 +321,15 @@ export type QueryCommonsArgs = {
 
 export type QueryProposalArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryProposalsArgs = {
+  ids?: Maybe<Array<Maybe<Scalars['String']>>>;
+  page?: Maybe<Scalars['Int']>;
+  pageItems?: Maybe<Scalars['Int']>;
+  type?: Maybe<ProposalType>;
+  fundingState?: Maybe<ProposalFundingState>;
 };
 
 export type GetUserPermissionsQueryVariables = Exact<{
@@ -394,6 +412,50 @@ export type GetDashboardDataQuery = (
   )>, events?: Maybe<Array<Maybe<(
     { __typename?: 'Event' }
     & Pick<Event, 'id' | 'createdAt' | 'updatedAt' | 'userId' | 'objectId' | 'type'>
+  )>>> }
+);
+
+export type GetProposalsSelectedForBatchQueryVariables = Exact<{
+  ids: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+
+export type GetProposalsSelectedForBatchQuery = (
+  { __typename?: 'Query' }
+  & { proposals?: Maybe<Array<Maybe<(
+    { __typename?: 'Proposal' }
+    & Pick<Proposal, 'id' | 'state' | 'fundingState'>
+    & { proposer: (
+      { __typename?: 'User' }
+      & Pick<User, 'firstName' | 'lastName'>
+    ), common: (
+      { __typename?: 'Common' }
+      & Pick<Common, 'name'>
+    ), fundingRequest?: Maybe<(
+      { __typename?: 'ProposalFunding' }
+      & Pick<ProposalFunding, 'amount'>
+    )> }
+  )>>> }
+);
+
+export type GetPayoutsPageDataQueryVariables = Exact<{
+  fundingState?: Maybe<ProposalFundingState>;
+  fundingRequestPage?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetPayoutsPageDataQuery = (
+  { __typename?: 'Query' }
+  & { proposals?: Maybe<Array<Maybe<(
+    { __typename?: 'Proposal' }
+    & Pick<Proposal, 'id' | 'commonId' | 'proposerId' | 'type' | 'createdAt' | 'updatedAt' | 'state' | 'fundingState'>
+    & { description: (
+      { __typename?: 'ProposalDescription' }
+      & Pick<ProposalDescription, 'title'>
+    ), fundingRequest?: Maybe<(
+      { __typename?: 'ProposalFunding' }
+      & Pick<ProposalFunding, 'amount'>
+    )> }
   )>>> }
 );
 
@@ -657,6 +719,102 @@ export function useGetDashboardDataLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type GetDashboardDataQueryHookResult = ReturnType<typeof useGetDashboardDataQuery>;
 export type GetDashboardDataLazyQueryHookResult = ReturnType<typeof useGetDashboardDataLazyQuery>;
 export type GetDashboardDataQueryResult = Apollo.QueryResult<GetDashboardDataQuery, GetDashboardDataQueryVariables>;
+export const GetProposalsSelectedForBatchDocument = gql`
+    query getProposalsSelectedForBatch($ids: [String!]!) {
+  proposals(ids: $ids) {
+    id
+    state
+    fundingState
+    proposer {
+      firstName
+      lastName
+    }
+    common {
+      name
+    }
+    fundingRequest {
+      amount
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetProposalsSelectedForBatchQuery__
+ *
+ * To run a query within a React component, call `useGetProposalsSelectedForBatchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProposalsSelectedForBatchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProposalsSelectedForBatchQuery({
+ *   variables: {
+ *      ids: // value for 'ids'
+ *   },
+ * });
+ */
+export function useGetProposalsSelectedForBatchQuery(baseOptions: Apollo.QueryHookOptions<GetProposalsSelectedForBatchQuery, GetProposalsSelectedForBatchQueryVariables>) {
+        return Apollo.useQuery<GetProposalsSelectedForBatchQuery, GetProposalsSelectedForBatchQueryVariables>(GetProposalsSelectedForBatchDocument, baseOptions);
+      }
+export function useGetProposalsSelectedForBatchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalsSelectedForBatchQuery, GetProposalsSelectedForBatchQueryVariables>) {
+          return Apollo.useLazyQuery<GetProposalsSelectedForBatchQuery, GetProposalsSelectedForBatchQueryVariables>(GetProposalsSelectedForBatchDocument, baseOptions);
+        }
+export type GetProposalsSelectedForBatchQueryHookResult = ReturnType<typeof useGetProposalsSelectedForBatchQuery>;
+export type GetProposalsSelectedForBatchLazyQueryHookResult = ReturnType<typeof useGetProposalsSelectedForBatchLazyQuery>;
+export type GetProposalsSelectedForBatchQueryResult = Apollo.QueryResult<GetProposalsSelectedForBatchQuery, GetProposalsSelectedForBatchQueryVariables>;
+export const GetPayoutsPageDataDocument = gql`
+    query getPayoutsPageData($fundingState: ProposalFundingState, $fundingRequestPage: Int) {
+  proposals(
+    type: fundingRequest
+    page: $fundingRequestPage
+    fundingState: $fundingState
+  ) {
+    id
+    commonId
+    proposerId
+    type
+    description {
+      title
+    }
+    fundingRequest {
+      amount
+    }
+    createdAt
+    updatedAt
+    state
+    fundingState
+  }
+}
+    `;
+
+/**
+ * __useGetPayoutsPageDataQuery__
+ *
+ * To run a query within a React component, call `useGetPayoutsPageDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPayoutsPageDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPayoutsPageDataQuery({
+ *   variables: {
+ *      fundingState: // value for 'fundingState'
+ *      fundingRequestPage: // value for 'fundingRequestPage'
+ *   },
+ * });
+ */
+export function useGetPayoutsPageDataQuery(baseOptions?: Apollo.QueryHookOptions<GetPayoutsPageDataQuery, GetPayoutsPageDataQueryVariables>) {
+        return Apollo.useQuery<GetPayoutsPageDataQuery, GetPayoutsPageDataQueryVariables>(GetPayoutsPageDataDocument, baseOptions);
+      }
+export function useGetPayoutsPageDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPayoutsPageDataQuery, GetPayoutsPageDataQueryVariables>) {
+          return Apollo.useLazyQuery<GetPayoutsPageDataQuery, GetPayoutsPageDataQueryVariables>(GetPayoutsPageDataDocument, baseOptions);
+        }
+export type GetPayoutsPageDataQueryHookResult = ReturnType<typeof useGetPayoutsPageDataQuery>;
+export type GetPayoutsPageDataLazyQueryHookResult = ReturnType<typeof useGetPayoutsPageDataLazyQuery>;
+export type GetPayoutsPageDataQueryResult = Apollo.QueryResult<GetPayoutsPageDataQuery, GetPayoutsPageDataQueryVariables>;
 export const GetProposalDetailsDocument = gql`
     query getProposalDetails($proposalId: ID!) {
   proposal(id: $proposalId) {

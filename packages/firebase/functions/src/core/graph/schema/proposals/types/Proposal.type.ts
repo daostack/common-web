@@ -8,6 +8,7 @@ import { ProposalDescriptionType } from './ProposalDescription.type';
 import { ProposalTypeEnum } from '../enums/ProposalType.enum';
 import { ProposalStateEnum } from '../enums/ProposalState.enum';
 import { ProposalPaymentStateEnum } from '../enums/ProposalPaymentState.enum';
+import { ProposalFundingStateEnum } from '../enums/ProposalFundingState.enum';
 
 export const ProposalType = objectType({
   name: 'Proposal',
@@ -44,6 +45,10 @@ export const ProposalType = objectType({
     t.field('paymentState', {
       type: ProposalPaymentStateEnum
     });
+
+    t.field('fundingState', {
+      type: ProposalFundingStateEnum
+    })
 
     t.field('fundingRequest', {
       description: 'Details about the funding request. Exists only on funding request proposals',

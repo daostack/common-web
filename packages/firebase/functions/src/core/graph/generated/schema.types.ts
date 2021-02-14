@@ -27,6 +27,7 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
   CommonContributionType: "monthly" | "one-time"
   EventType: "cardCreated" | "commonCreated" | "commonCreationFailed" | "commonMemberAdded" | "commonMemberRemoved" | "commonUpdated" | "commonWhitelisted" | "discussionCreated" | "fundingRequestAccepted" | "fundingRequestAcceptedInsufficientFunds" | "fundingRequestCreated" | "fundingRequestExecuted" | "fundingRequestRejected" | "membershipRevoked" | "messageCreated" | "paymentConfirmed" | "paymentCreated" | "paymentFailed" | "paymentPaid" | "payoutApproved" | "payoutCompleted" | "payoutCreated" | "payoutExecuted" | "payoutFailed" | "payoutVoided" | "requestToJoinAccepted" | "requestToJoinCreated" | "requestToJoinExecuted" | "requestToJoinRejected" | "subscriptionCanceledByPaymentFailure" | "subscriptionCanceledByUser" | "subscriptionCreated" | "subscriptionPaymentConfirmed" | "subscriptionPaymentCreated" | "subscriptionPaymentFailed" | "subscriptionPaymentStuck" | "voteCreated"
+  ProposalFundingState: "available" | "funded" | "notAvailable" | "notRelevant"
   ProposalPaymentState: "confirmed" | "failed" | "notAttempted" | "notRelevant" | "pending"
   ProposalState: "countdown" | "failed" | "passed" | "passedInsufficientBalance"
   ProposalType: "fundingRequest" | "join"
@@ -75,6 +76,7 @@ export interface NexusGenObjects {
     createdAt: NexusGenScalars['Date']; // Date!
     description: NexusGenRootTypes['ProposalDescription']; // ProposalDescription!
     fundingRequest?: NexusGenRootTypes['ProposalFunding'] | null; // ProposalFunding
+    fundingState?: NexusGenEnums['ProposalFundingState'] | null; // ProposalFundingState
     id: string; // ID!
     join?: NexusGenRootTypes['ProposalJoin'] | null; // ProposalJoin
     paymentState?: NexusGenEnums['ProposalPaymentState'] | null; // ProposalPaymentState
@@ -191,6 +193,7 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['Date']; // Date!
     description: NexusGenRootTypes['ProposalDescription']; // ProposalDescription!
     fundingRequest: NexusGenRootTypes['ProposalFunding'] | null; // ProposalFunding
+    fundingState: NexusGenEnums['ProposalFundingState'] | null; // ProposalFundingState
     id: string; // ID!
     join: NexusGenRootTypes['ProposalJoin'] | null; // ProposalJoin
     paymentState: NexusGenEnums['ProposalPaymentState'] | null; // ProposalPaymentState
@@ -227,6 +230,7 @@ export interface NexusGenFieldTypes {
     event: NexusGenRootTypes['Event'] | null; // Event
     events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
+    proposals: Array<NexusGenRootTypes['Proposal'] | null> | null; // [Proposal]
     today: NexusGenRootTypes['Statistics'] | null; // Statistics
     user: NexusGenRootTypes['User'] | null; // User
   }
@@ -265,6 +269,7 @@ export interface NexusGenFieldTypes {
     firstName: string | null; // String
     id: string; // ID!
     lastName: string | null; // String
+    permissions: Array<string | null> | null; // [String]
     photoURL: string | null; // String
     proposals: Array<NexusGenRootTypes['Proposal'] | null> | null; // [Proposal]
     subscriptions: Array<NexusGenRootTypes['Subscription'] | null> | null; // [Subscription]
@@ -312,6 +317,7 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'Date'
     description: 'ProposalDescription'
     fundingRequest: 'ProposalFunding'
+    fundingState: 'ProposalFundingState'
     id: 'ID'
     join: 'ProposalJoin'
     paymentState: 'ProposalPaymentState'
@@ -348,6 +354,7 @@ export interface NexusGenFieldTypeNames {
     event: 'Event'
     events: 'Event'
     proposal: 'Proposal'
+    proposals: 'Proposal'
     today: 'Statistics'
     user: 'User'
   }
@@ -386,6 +393,7 @@ export interface NexusGenFieldTypeNames {
     firstName: 'String'
     id: 'ID'
     lastName: 'String'
+    permissions: 'String'
     photoURL: 'String'
     proposals: 'Proposal'
     subscriptions: 'Subscription'
@@ -416,6 +424,13 @@ export interface NexusGenArgTypes {
     }
     proposal: { // args
       id: string; // ID!
+    }
+    proposals: { // args
+      fundingState?: NexusGenEnums['ProposalFundingState'] | null; // ProposalFundingState
+      ids?: Array<string | null> | null; // [String]
+      page: number | null; // Int
+      pageItems: number | null; // Int
+      type?: NexusGenEnums['ProposalType'] | null; // ProposalType
     }
     user: { // args
       id: string; // ID!

@@ -107,6 +107,12 @@ enum ProposalPaymentState {
   pending
   failed
 }
+enum ProposalFundingState {
+  notRelevant
+  notAvailable
+  available
+  funded
+}
 """The proposals type"""
 type Proposal {
   id: ID!
@@ -120,6 +126,7 @@ type Proposal {
   description: ProposalDescription!
   type: ProposalType!
   paymentState: ProposalPaymentState
+  fundingState: ProposalFundingState
   """Details about the funding request. Exists only on funding request proposals"""
   fundingRequest: ProposalFunding
   """Details about the join request. Exists only on join request proposals"""
@@ -217,5 +224,6 @@ type Query {
   ): Common
   commons(last: Int = 10, after: Int = 0): [Common]
   proposal(id: ID!): Proposal
+  proposals(ids: [String], page: Int = 1, pageItems: Int = 10, type: ProposalType, fundingState: ProposalFundingState): [Proposal]
   today: Statistics
 }

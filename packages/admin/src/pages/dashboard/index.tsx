@@ -4,7 +4,7 @@ import { NextPage } from 'next';
 import { gql } from '@apollo/client/core';
 import { Card, Grid, Spacer, Table, Text } from '@geist-ui/react';
 
-import { useGetDashboardDataQuery } from '../../graphql';
+import { useGetDashboardDataQuery } from '@graphql';
 import { HasPermission } from '@components/HasPermission';
 
 const GetDashboardDataQuery = gql`
@@ -51,7 +51,7 @@ const DashboardHomePage: NextPage = () => {
             <Grid.Container gap={2} alignItems="stretch" style={{ display: 'flex' }}>
               <Grid sm={24} md={12}>
                 <Card hoverable>
-                  <Text h1>
+                  <Text h1 type="error">
                     {data.data.today.newCommons}
                   </Text>
                   <Text p>Commons created</Text>
@@ -60,7 +60,7 @@ const DashboardHomePage: NextPage = () => {
 
               <Grid sm={24} md={12}>
                 <Card hoverable>
-                  <Text h1>
+                  <Text h1 type="error">
 
                     {data.data.today.newJoinRequests + data.data.today.newFundingRequests}
                   </Text>
@@ -70,7 +70,7 @@ const DashboardHomePage: NextPage = () => {
 
               <Grid sm={24} md={12}>
                 <Card hoverable>
-                  <Text h1>
+                  <Text h1 type="error">
                     {data.data.today.newDiscussions}
                   </Text>
                   <Text p>Discussions started</Text>
@@ -79,7 +79,7 @@ const DashboardHomePage: NextPage = () => {
 
               <Grid sm={24} md={12}>
                 <Card hoverable>
-                  <Text h1>
+                  <Text h1 type="error">
                     {data.data.today.newDiscussionMessages}
                   </Text>
                   <Text p>Discussion messages send</Text>
