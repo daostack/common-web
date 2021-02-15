@@ -30,16 +30,12 @@ export const fundProposal = async (proposalId: string): Promise<void> => {
   }
 
   if (common.balance < proposal.fundingRequest.amount) {
-    logger.warn(`Proposal with id ${proposal.id} cannot be funded, because the common does not have enough balance!`);
-
-    // @todo Don't know what is happening here. Look it up
-
-    throw new CommonError(`Proposal with id ${proposal.id} cannot be funded, because the common does not have enough balance!`);
+    throw new CommonError(
+      `Proposal with id ${proposal.id} cannot be funded, because the common does not have enough balance!`
+    );
   }
 
-  // Mark the proposal as funded
-  // @question(for: Jelle) I think we should move this mark only when the payout is created. What would you say?
-  proposal.fundingRequest.funded = true;
+  proposal.fundingState = 'available';
 
   // Persist the changes asynchronously
   await Promise.all([

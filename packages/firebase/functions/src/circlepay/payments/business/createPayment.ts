@@ -6,7 +6,7 @@ import { IPaymentEntity } from '../types';
 import { validate } from '../../../util/validate';
 import { getCircleHeaders } from '../../index';
 import { ICircleCreatePaymentPayload, ICircleCreatePaymentResponse } from '../../types';
-import { userDb } from '../../../core/users/database';
+import { userDb } from '../../../core/domain/users/database';
 import { externalRequestExecutor } from '../../../util';
 import { circlePayApi } from '../../../settings';
 import { ErrorCodes } from '../../../constants';

@@ -10,15 +10,15 @@ import { IProposalPayoutEntity } from '../types';
 import { commonDb } from '../../../common/database';
 
 export const onPayoutCreated: IEventTrigger = async (eventObj) => {
-  if(eventObj.type !== EVENT_TYPES.PAYOUT_CREATED) {
-    throw new CommonError(`onPayoutCreated was executed on ${eventObj.type}`);
+  if (eventObj.type !== EVENT_TYPES.PAYOUT_CREATED) {
+    throw new CommonError(`onPayoutCreated was executed on ${ eventObj.type }`);
   }
 
   const payout = await payoutDb.get(eventObj.objectId);
   const wire = await bankAccountDb.get(payout.destination.id);
 
   const proposal = payout.type === 'proposal'
-    ? await proposalDb.getProposal((payout as IProposalPayoutEntity).proposalId)
+    ? await proposalDb.getProposal((payout as IProposalPayoutEntity).proposalIds[0])
     : null;
 
   const common = proposal
@@ -35,13 +35,15 @@ export const onPayoutCreated: IEventTrigger = async (eventObj) => {
       to: approver,
       subjectStubs: null,
       emailStubs: {
-        beneficiary: `${wire.billingDetails.name}`,
+        beneficiary: `${ wire.billingDetails.name }`,
         proposal: proposal
-          ? `${(proposal.description as any).title} (${proposal.id})`
+          ? (payout as IProposalPayoutEntity)?.proposalIds?.length > 1
+            ? 'Batch Payout'
+            : `${ (proposal.description as any).title } (${ proposal.id })`
           : 'Independent Payout',
 
         common: common
-          ? `${common.name} (${common.id})`
+          ? `${ common.name } (${ common.id })`
           : 'Independent Payout',
 
         bankDescription: wire.description || 'The bank account has no description',
@@ -49,8 +51,8 @@ export const onPayoutCreated: IEventTrigger = async (eventObj) => {
 
         payoutId: payout.id,
         amount: (payout.amount / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
-        url: `${urlBase}/circlepay/payouts/approve?payoutId=${payout.id}&index=${index}&token=${payout.security[index].token}`
+        url: `${ urlBase }/circlepay/payouts/approve?payoutId=${ payout.id }&index=${ index }&token=${ payout.security[index].token }`
       }
     });
   }));
-}
+};

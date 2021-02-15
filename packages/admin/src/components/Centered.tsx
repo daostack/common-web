@@ -1,12 +1,14 @@
 import React, { PropsWithChildren } from 'react';
 
 interface ICenteredProps {
-  content: React.FC | React.ReactFragment;
+  content?: React.FC | React.ReactFragment;
 }
 
-export const Centered: React.FC<PropsWithChildren<ICenteredProps>> = ({ children, content }) => {
+type Props = ICenteredProps &  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+
+export const Centered: React.FC<Props> = ({ children, content, ...props }) => {
   return (
-    <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+    <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }} {...props}>
       {content || children}
     </div>
   );

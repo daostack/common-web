@@ -172,7 +172,7 @@ const UserDetailsPage: NextPage = () => {
             )}
 
             {proposal.paymentState === 'confirmed' && (
-              <Tooltip text="The payment on this proposal was successfill">
+              <Tooltip text="The payment on this proposal was successful">
                 <CheckCircle />
               </Tooltip>
             )}
@@ -182,7 +182,7 @@ const UserDetailsPage: NextPage = () => {
         actions: (
           <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
             <Tooltip text={'Go to proposal\'s details'} enterDelay={1000}>
-              <Link to={``} Icon={ExternalLink}/>
+              <Link to={`/proposals/details/${proposal.id}`} Icon={ExternalLink}/>
             </Tooltip>
           </div>
         )

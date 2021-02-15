@@ -35,9 +35,10 @@ jobs:
       - name: Compile the types project
         run: yarn types:compile
 
+      # - name: Lint
+      #   uses: bradennapier/eslint-plus-action@v3.4.2
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Lint
-        uses: bradennapier/eslint-plus-action@v3.4.2
-        with:
-          rulePaths: packages/firebase/
-          includeGlob: "packages/firebase/**/*"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+        run: yarn lint

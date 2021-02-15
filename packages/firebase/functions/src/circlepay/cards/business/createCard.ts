@@ -10,7 +10,7 @@ import { billingDetailsValidationSchema } from '../../../util/schemas';
 import { ICircleCreateCardPayload, ICircleCreateCardResponse } from '../../types';
 import { getCircleHeaders } from '../../index';
 import { ICardEntity } from '../types';
-import { userDb } from '../../../core/users/database';
+import { userDb } from '../../../core/domain/users/database';
 import { cardDb } from '../database';
 import { createEvent } from '../../../util/db/eventDbService';
 import { EVENT_TYPES } from '../../../event/event';

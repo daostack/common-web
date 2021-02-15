@@ -79,6 +79,8 @@ export const createFundingRequest = async (payload: CreateFundingProposalPayload
 
     type: 'fundingRequest',
 
+    fundingState: 'notAvailable',
+
     description: {
       title: payload.title,
       description: payload.description,

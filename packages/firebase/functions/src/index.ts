@@ -1,4 +1,6 @@
 import './util/logger';
+import * as functions from 'firebase-functions';
+import { runtimeOptions } from './constants';
 
 import * as cron from './crons';
 import * as event from './event';
@@ -15,7 +17,8 @@ import { payoutTriggers } from './circlepay/payouts/triggers';
 import { backofficeApp, circleBalanceCrons } from './backoffice';
 import { metadataApp } from './metadata';
 import { discussionApp } from './discussion';
-import { adminApp } from './core/admin';
+import { graphApp } from './core';
+// import { adminApp } from './core/domain/admin';
 
 // --- Express apps
 export const commons = commonsApp;
@@ -25,7 +28,10 @@ export const proposals = proposalsApp;
 export const subscriptions = subscriptionsApp;
 export const backoffice = backofficeApp;
 export const discussions = discussionApp;
-export const admin = adminApp;
+// export const admin = adminApp;
+export const graph = functions
+  .runWith(runtimeOptions)
+  .https.onRequest(graphApp);
 
 // --- Triggers and Subscriptions
 exports.eventSub = event;
