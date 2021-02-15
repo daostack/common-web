@@ -6,6 +6,7 @@ import { Card, Grid, Spacer, Table, Text } from '@geist-ui/react';
 
 import { useGetDashboardDataQuery } from '@graphql';
 import { HasPermission } from '@components/HasPermission';
+import { withPermission } from '../../helpers/hoc/withPermission';
 
 const GetDashboardDataQuery = gql`
   query getDashboardData {
@@ -107,4 +108,6 @@ const DashboardHomePage: NextPage = () => {
   );
 };
 
-export default DashboardHomePage;
+export default withPermission('admin.dashboard.*', {
+  redirect: true
+})(DashboardHomePage);

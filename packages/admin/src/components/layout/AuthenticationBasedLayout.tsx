@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from 'react';
 import { useRouter } from 'next/router';
 
 import firebase from 'firebase/app';
-import { Grid, Page, Spacer, Tabs, Tooltip, User, Text, Link } from '@geist-ui/react';
+import { Grid, Page, Spacer, Tabs, Tooltip, User, Link } from '@geist-ui/react';
 
 import { ApolloProvider } from '@components/providers/ApolloProvider';
 import { PermissionsContextProvider, useAuthContext } from '@context';
@@ -49,25 +49,25 @@ export const AuthenticationBasedLayout: React.FC<PropsWithChildren<any>> = ({ ch
             <ApolloProvider>
               <PermissionsContextProvider>
                 <Page>
-                  <HasPermission permission="admin.*">
-                    <Page.Header>
-                      <Grid.Container style={{ marginTop: 15 }}>
-                        <Grid xs={24} justify="flex-end" style={{ display: 'flex' }}>
-                          <Tooltip text={(
-                            <React.Fragment>
-                              <Link onClick={onSignOut}>
-                                Sign Out
-                              </Link>
-                            </React.Fragment>
-                          )} trigger="click" placement="bottomEnd">
-                            <User
-                              src={authContext.userInfo?.photoURL}
-                              name={authContext.userInfo.displayName}
-                            />
-                          </Tooltip>
-                        </Grid>
-                      </Grid.Container>
+                  <Page.Header>
+                    <Grid.Container style={{ marginTop: 15 }}>
+                      <Grid xs={24} justify="flex-end" style={{ display: 'flex' }}>
+                        <Tooltip text={(
+                          <React.Fragment>
+                            <Link onClick={onSignOut}>
+                              Sign Out
+                            </Link>
+                          </React.Fragment>
+                        )} trigger="click" placement="bottomEnd">
+                          <User
+                            src={authContext.userInfo?.photoURL}
+                            name={authContext.userInfo.displayName}
+                          />
+                        </Tooltip>
+                      </Grid>
+                    </Grid.Container>
 
+                    <HasPermission permission="admin.*">
                       <Tabs value={currentTab} onChange={onTabChange} hideDivider>
                         <Tabs.Item value="dashboard" label="Dashboard"/>
                         <Tabs.Item value="commons" label="Commons"/>
@@ -76,8 +76,8 @@ export const AuthenticationBasedLayout: React.FC<PropsWithChildren<any>> = ({ ch
                         <Tabs.Item value="payouts" label="Payouts"/>
                         <Tabs.Item value="events" label="Events"/>
                       </Tabs>
-                    </Page.Header>
-                  </HasPermission>
+                    </HasPermission>
+                  </Page.Header>
 
                   <Page.Body style={{ paddingTop: 0 }}>
                     <Spacer y={1}/>

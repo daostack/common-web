@@ -12,20 +12,10 @@ const initialState: AuthStateType = {
   user: null,
 };
 
-const reducer = createReducer<AuthStateType, Action>(initialState)
-  .handleAction(actions.login.success, (state) =>
-    produce(state, (nextState) => {
-      nextState.authentificated = true;
-    }),
-  )
-  .handleAction(actions.getUserData.success, (state, action) =>
-    produce(state, (nextState) => {
-      nextState.user = action.payload;
-    }),
-  )
-  .handleAction(actions.logout.success, (state) =>
-    produce(state, (nexState) => {
-      nexState = initialState;
-    }),
-  );
+const reducer = createReducer<AuthStateType, Action>(initialState).handleAction(actions.socialLogin.success, (state) =>
+  produce(state, (nextState) => {
+    nextState.authentificated = true;
+  }),
+);
+
 export { reducer as AuthReducer };

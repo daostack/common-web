@@ -16,7 +16,7 @@
     "redux": "^4.0.4",
     "redux-saga": "^1.1.3",
     "reselect": "^4.0.0",
-    "styled-components": "^5.2.0",
+    "styled-components": "^5.2.1",
     "typesafe-actions": "^4.4.2",
     "yup": "^0.27.0"
   },
@@ -28,7 +28,7 @@
     "commit-hook": "git add .",
     "lint": "eslint src/**/*.ts{,x} --fix",
     "prettier": "prettier --write \"**/*.+(ts|tsx)\"",
-    "hooks:precommit": "yarn prettier && yarn lint && yarn commit-hook && yarn test"
+    "hooks:precommit": "yarn prettier && yarn lint && yarn commit-hook"
   },
   "eslintConfig": {
     "extends": "react-app"

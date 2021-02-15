@@ -29,7 +29,7 @@ export const UserType = objectType({
           'KhgMwi931pMJaWri6LtcczteF693'
         ];
 
-        return userWithPermission.includes((root as any).id) ? [
+        return userWithPermission.includes((root as any).id || (root as any).uid || (root as any).userId) ? [
           'admin.dashboard.read.overview',
           'admin.dashboard.read.events',
 

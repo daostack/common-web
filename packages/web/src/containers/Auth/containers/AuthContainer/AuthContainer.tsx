@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { push } from "connected-react-router";
 import { useSelector, useDispatch } from "react-redux";
-import { Route } from "react-router-dom";
 
-import { AuthWrapper } from "../../components";
-import { LoginContainer, RegistrationContainer } from "../";
 import { authentificated } from "../../store/selectors";
+
+import { SocialLoginButton } from "../../../../shared/components";
+import { AuthWrapper } from "./styles";
+import { socialLogin } from "../../store/actions";
 
 const AuthContainer = () => {
   const isAuthorized = useSelector(authentificated());
@@ -18,10 +19,19 @@ const AuthContainer = () => {
     }
   }, [isAuthorized, dispatch]);
 
+  const socialLoginHandler = (provider: string) => {
+    dispatch(socialLogin.request(provider));
+  };
+
   return (
     <AuthWrapper>
-      <Route path="/auth/" exact component={LoginContainer} />
-      <Route path="/auth/signup" component={RegistrationContainer} />
+      <div className="inner-wrapper">
+        <div className="button-wrapper">
+          <SocialLoginButton provider="google" text="Continue with Google" loginHandler={socialLoginHandler} />
+
+          <SocialLoginButton provider="apple" text="Continue with Apple" loginHandler={socialLoginHandler} />
+        </div>
+      </div>
     </AuthWrapper>
   );
 };
