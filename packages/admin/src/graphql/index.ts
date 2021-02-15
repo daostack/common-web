@@ -150,7 +150,30 @@ export type CommonMetadata = {
 export type Payout = {
   __typename?: 'Payout';
   id: Scalars['ID'];
+  createdAt: Scalars['Date'];
+  updatedAt: Scalars['Date'];
+  circlePayoutId?: Maybe<Scalars['String']>;
+  amount: Scalars['Int'];
+  executed?: Maybe<Scalars['Boolean']>;
+  voided?: Maybe<Scalars['Boolean']>;
+  status?: Maybe<PayoutStatus>;
+  security?: Maybe<Array<Maybe<PayoutSecurity>>>;
+  proposalIds?: Maybe<Array<Maybe<Scalars['String']>>>;
+  proposals?: Maybe<Array<Maybe<Proposal>>>;
 };
+
+export type PayoutSecurity = {
+  __typename?: 'PayoutSecurity';
+  id?: Maybe<Scalars['Int']>;
+  redemptionAttempts?: Maybe<Scalars['Int']>;
+  redeemed?: Maybe<Scalars['Boolean']>;
+};
+
+export enum PayoutStatus {
+  Pending = 'pending',
+  Complete = 'complete',
+  Failed = 'failed'
+}
 
 export type ExecutePayoutInput = {
   /** The ID of the the wire to witch the payout will be made */
@@ -327,6 +350,8 @@ export type Query = {
   events?: Maybe<Array<Maybe<Event>>>;
   common?: Maybe<Common>;
   commons?: Maybe<Array<Maybe<Common>>>;
+  payout?: Maybe<Payout>;
+  payouts?: Maybe<Array<Maybe<Payout>>>;
   proposal?: Maybe<Proposal>;
   proposals?: Maybe<Array<Maybe<Proposal>>>;
   today?: Maybe<Statistics>;
@@ -362,6 +387,16 @@ export type QueryCommonArgs = {
 export type QueryCommonsArgs = {
   last?: Maybe<Scalars['Int']>;
   after?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryPayoutArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryPayoutsArgs = {
+  page?: Maybe<Scalars['Int']>;
 };
 
 
@@ -517,6 +552,33 @@ export type ExecutePayoutMutation = (
   )> }
 );
 
+export type GetPayoutDetailsQueryVariables = Exact<{
+  payoutId: Scalars['ID'];
+}>;
+
+
+export type GetPayoutDetailsQuery = (
+  { __typename?: 'Query' }
+  & { payout?: Maybe<(
+    { __typename?: 'Payout' }
+    & Pick<Payout, 'voided' | 'executed' | 'status'>
+    & { proposals?: Maybe<Array<Maybe<(
+      { __typename?: 'Proposal' }
+      & Pick<Proposal, 'id'>
+      & { fundingRequest?: Maybe<(
+        { __typename?: 'ProposalFunding' }
+        & Pick<ProposalFunding, 'amount'>
+      )>, description: (
+        { __typename?: 'ProposalDescription' }
+        & Pick<ProposalDescription, 'title' | 'description'>
+      ) }
+    )>>>, security?: Maybe<Array<Maybe<(
+      { __typename?: 'PayoutSecurity' }
+      & Pick<PayoutSecurity, 'id' | 'redeemed' | 'redemptionAttempts'>
+    )>>> }
+  )> }
+);
+
 export type GetPayoutsPageDataQueryVariables = Exact<{
   fundingState?: Maybe<ProposalFundingState>;
   fundingRequestPage?: Maybe<Scalars['Int']>;
@@ -535,6 +597,9 @@ export type GetPayoutsPageDataQuery = (
       { __typename?: 'ProposalFunding' }
       & Pick<ProposalFunding, 'amount'>
     )> }
+  )>>>, payouts?: Maybe<Array<Maybe<(
+    { __typename?: 'Payout' }
+    & Pick<Payout, 'id' | 'amount' | 'voided' | 'executed' | 'status' | 'proposalIds'>
   )>>> }
 );
 
@@ -888,6 +953,56 @@ export function useExecutePayoutMutation(baseOptions?: Apollo.MutationHookOption
 export type ExecutePayoutMutationHookResult = ReturnType<typeof useExecutePayoutMutation>;
 export type ExecutePayoutMutationResult = Apollo.MutationResult<ExecutePayoutMutation>;
 export type ExecutePayoutMutationOptions = Apollo.BaseMutationOptions<ExecutePayoutMutation, ExecutePayoutMutationVariables>;
+export const GetPayoutDetailsDocument = gql`
+    query GetPayoutDetails($payoutId: ID!) {
+  payout(id: $payoutId) {
+    voided
+    executed
+    status
+    proposals {
+      id
+      fundingRequest {
+        amount
+      }
+      description {
+        title
+        description
+      }
+    }
+    security {
+      id
+      redeemed
+      redemptionAttempts
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPayoutDetailsQuery__
+ *
+ * To run a query within a React component, call `useGetPayoutDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPayoutDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPayoutDetailsQuery({
+ *   variables: {
+ *      payoutId: // value for 'payoutId'
+ *   },
+ * });
+ */
+export function useGetPayoutDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetPayoutDetailsQuery, GetPayoutDetailsQueryVariables>) {
+        return Apollo.useQuery<GetPayoutDetailsQuery, GetPayoutDetailsQueryVariables>(GetPayoutDetailsDocument, baseOptions);
+      }
+export function useGetPayoutDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPayoutDetailsQuery, GetPayoutDetailsQueryVariables>) {
+          return Apollo.useLazyQuery<GetPayoutDetailsQuery, GetPayoutDetailsQueryVariables>(GetPayoutDetailsDocument, baseOptions);
+        }
+export type GetPayoutDetailsQueryHookResult = ReturnType<typeof useGetPayoutDetailsQuery>;
+export type GetPayoutDetailsLazyQueryHookResult = ReturnType<typeof useGetPayoutDetailsLazyQuery>;
+export type GetPayoutDetailsQueryResult = Apollo.QueryResult<GetPayoutDetailsQuery, GetPayoutDetailsQueryVariables>;
 export const GetPayoutsPageDataDocument = gql`
     query getPayoutsPageData($fundingState: ProposalFundingState, $fundingRequestPage: Int) {
   proposals(
@@ -909,6 +1024,14 @@ export const GetPayoutsPageDataDocument = gql`
     updatedAt
     state
     fundingState
+  }
+  payouts {
+    id
+    amount
+    voided
+    executed
+    status
+    proposalIds
   }
 }
     `;

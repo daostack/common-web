@@ -2,7 +2,7 @@ import React from 'react';
 import { NextPage } from 'next';
 
 import { Breadcrumbs, Text, Spacer, Grid, Card, Table, Tooltip, useTheme, Button } from '@geist-ui/react';
-import { Circle, Home, User, ExternalLink, CheckInCircleFill } from '@geist-ui/react-icons';
+import { Circle, Home, User, ExternalLink, CheckInCircleFill, CheckCircle, XCircle } from '@geist-ui/react-icons';
 
 import { Link } from '@components/Link';
 import { withPermission } from '../../helpers/hoc/withPermission';
@@ -25,7 +25,7 @@ const PayoutsQuery = gql`
       proposerId
 
       type
-      
+
       description {
         title
       }
@@ -39,6 +39,19 @@ const PayoutsQuery = gql`
 
       state
       fundingState
+    }
+
+    payouts {
+      id
+
+      amount
+
+      voided
+      executed
+
+      status
+
+      proposalIds
     }
   }
 `;
@@ -113,7 +126,7 @@ const PayoutsPage: NextPage = () => {
     const { proposals } = data.data;
 
     return proposals.map((proposal) => ({
-      checkbox: (
+      checkbox: data.data.payouts.some(p => !p.proposalIds.includes(proposal.id)) && (
         <Centered onClick={onProposalCheckboxClick(proposal.id)}>
           {isSelectedProposal(proposal.id) ? (
             <CheckInCircleFill size={20} color={theme.palette.success}/>
@@ -146,6 +159,45 @@ const PayoutsPage: NextPage = () => {
     }));
   };
 
+  const transformPayoutsForTable = (data: GetPayoutsPageDataQueryResult) => {
+    const { payouts } = data.data;
+
+    return payouts.map((p) => ({
+      id: p.id,
+      executed: (
+        <Centered>
+          {p.executed ? (
+            <CheckCircle color={theme.palette.success}/>
+          ) : (
+            <XCircle />
+          )}
+        </Centered>
+      ),
+
+      voided: (
+        <Centered>
+          {p.voided ? (
+            <CheckCircle color={theme.palette.error}/>
+          ) : (
+            <XCircle />
+          )}
+        </Centered>
+      ),
+
+      amount: p.amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
+
+      status: p.voided ? 'Voided' : p.status,
+
+      actions: (
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}>
+          <Tooltip text="See payout's details" enterDelay={1000}>
+            <Link to={`/payouts/details/${p.id}`} Icon={ExternalLink}/>
+          </Tooltip>
+        </div>
+      )
+    }));
+  };
+
   return (
     <React.Fragment>
       {/* --- Header --- */}
@@ -169,8 +221,8 @@ const PayoutsPage: NextPage = () => {
             <Grid.Container gap={2} alignItems="stretch" style={{ display: 'flex' }}>
               <Grid sm={24} md={12}>
                 <Card hoverable>
-                  <Text h1 type="error">
-                    12
+                  <Text h1>
+                    {data.data.payouts.filter(p => !p.voided && p.status === 'pending').length}
                   </Text>
                   <Text p>Pending payouts</Text>
                 </Card>
@@ -229,6 +281,24 @@ const PayoutsPage: NextPage = () => {
                 <Text>No funding proposals need funding</Text>
               </Centered>
             )}
+          </React.Fragment>
+
+
+          <React.Fragment>
+            <Text h3>Payouts</Text>
+
+            <Table data={transformPayoutsForTable(data)}>
+              <Table.Column prop="id" label="Payout ID" width={350}/>
+              <Table.Column prop="amount" label="Payout amount"/>
+              <Table.Column prop="status" label="Status"/>
+              <Table.Column prop="executed" label="Executed" width={70}/>
+              <Table.Column prop="voided" label="Voided" width={70}/>
+              <Table.Column prop="actions" width={100}>
+                <Centered>
+                  <Text>Actions</Text>
+                </Centered>
+              </Table.Column>
+            </Table>
           </React.Fragment>
         </React.Fragment>
       )}

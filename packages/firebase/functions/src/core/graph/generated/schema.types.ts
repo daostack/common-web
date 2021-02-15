@@ -22,11 +22,16 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  ExecutePayoutInput: { // input type
+    proposalIds: string[]; // [ID!]!
+    wireId: string; // ID!
+  }
 }
 
 export interface NexusGenEnums {
   CommonContributionType: "monthly" | "one-time"
   EventType: "cardCreated" | "commonCreated" | "commonCreationFailed" | "commonMemberAdded" | "commonMemberRemoved" | "commonUpdated" | "commonWhitelisted" | "discussionCreated" | "fundingRequestAccepted" | "fundingRequestAcceptedInsufficientFunds" | "fundingRequestCreated" | "fundingRequestExecuted" | "fundingRequestRejected" | "membershipRevoked" | "messageCreated" | "paymentConfirmed" | "paymentCreated" | "paymentFailed" | "paymentPaid" | "payoutApproved" | "payoutCompleted" | "payoutCreated" | "payoutExecuted" | "payoutFailed" | "payoutVoided" | "requestToJoinAccepted" | "requestToJoinCreated" | "requestToJoinExecuted" | "requestToJoinRejected" | "subscriptionCanceledByPaymentFailure" | "subscriptionCanceledByUser" | "subscriptionCreated" | "subscriptionPaymentConfirmed" | "subscriptionPaymentCreated" | "subscriptionPaymentFailed" | "subscriptionPaymentStuck" | "voteCreated"
+  PayoutStatus: "complete" | "failed" | "pending"
   ProposalFundingState: "available" | "funded" | "notAvailable" | "notRelevant"
   ProposalPaymentState: "confirmed" | "failed" | "notAttempted" | "notRelevant" | "pending"
   ProposalState: "countdown" | "failed" | "passed" | "passedInsufficientBalance"
@@ -70,6 +75,18 @@ export interface NexusGenObjects {
     type: NexusGenEnums['EventType']; // EventType!
     updatedAt: NexusGenScalars['Date']; // Date!
     userId?: string | null; // ID
+  }
+  Mutation: {};
+  Payout: { // root type
+    amount: number; // Int!
+    circlePayoutId?: string | null; // String
+    createdAt: NexusGenScalars['Date']; // Date!
+    executed?: boolean | null; // Boolean
+    id: string; // ID!
+    proposalIds?: Array<string | null> | null; // [String]
+    status?: NexusGenEnums['PayoutStatus'] | null; // PayoutStatus
+    updatedAt: NexusGenScalars['Date']; // Date!
+    voided?: boolean | null; // Boolean
   }
   Proposal: { // root type
     commonId: string; // ID!
@@ -141,6 +158,27 @@ export interface NexusGenObjects {
     photoURL?: string | null; // String
     tokens?: Array<string | null> | null; // [String]
   }
+  Wire: { // root type
+    bank?: NexusGenRootTypes['WireBank'] | null; // WireBank
+    billingDetails?: NexusGenRootTypes['WireBillingDetailsType'] | null; // WireBillingDetailsType
+    createdAt?: NexusGenScalars['Date'] | null; // Date
+    description?: string | null; // String
+    id: string; // ID!
+    updatedAt?: NexusGenScalars['Date'] | null; // Date
+  }
+  WireBank: { // root type
+    bankName?: string | null; // String
+    city?: string | null; // String
+    country?: string | null; // String
+  }
+  WireBillingDetailsType: { // root type
+    city?: string | null; // String
+    country?: string | null; // String
+    line1?: string | null; // String
+    line2?: string | null; // String
+    name?: string | null; // String
+    postalCode?: string | null; // String
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -187,6 +225,21 @@ export interface NexusGenFieldTypes {
     updatedAt: NexusGenScalars['Date']; // Date!
     userId: string | null; // ID
   }
+  Mutation: { // field return type
+    executePayouts: NexusGenRootTypes['Payout'] | null; // Payout
+  }
+  Payout: { // field return type
+    amount: number; // Int!
+    circlePayoutId: string | null; // String
+    createdAt: NexusGenScalars['Date']; // Date!
+    executed: boolean | null; // Boolean
+    id: string; // ID!
+    proposalIds: Array<string | null> | null; // [String]
+    proposals: Array<NexusGenRootTypes['Proposal'] | null> | null; // [Proposal]
+    status: NexusGenEnums['PayoutStatus'] | null; // PayoutStatus
+    updatedAt: NexusGenScalars['Date']; // Date!
+    voided: boolean | null; // Boolean
+  }
   Proposal: { // field return type
     common: NexusGenRootTypes['Common']; // Common!
     commonId: string; // ID!
@@ -229,10 +282,13 @@ export interface NexusGenFieldTypes {
     commons: Array<NexusGenRootTypes['Common'] | null> | null; // [Common]
     event: NexusGenRootTypes['Event'] | null; // Event
     events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
+    payout: NexusGenRootTypes['Payout'] | null; // Payout
+    payouts: Array<NexusGenRootTypes['Payout'] | null> | null; // [Payout]
     proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
     proposals: Array<NexusGenRootTypes['Proposal'] | null> | null; // [Proposal]
     today: NexusGenRootTypes['Statistics'] | null; // Statistics
     user: NexusGenRootTypes['User'] | null; // User
+    wires: Array<NexusGenRootTypes['Wire'] | null> | null; // [Wire]
   }
   Statistics: { // field return type
     newCommons: number | null; // Int
@@ -275,6 +331,27 @@ export interface NexusGenFieldTypes {
     subscriptions: Array<NexusGenRootTypes['Subscription'] | null> | null; // [Subscription]
     tokens: Array<string | null> | null; // [String]
   }
+  Wire: { // field return type
+    bank: NexusGenRootTypes['WireBank'] | null; // WireBank
+    billingDetails: NexusGenRootTypes['WireBillingDetailsType'] | null; // WireBillingDetailsType
+    createdAt: NexusGenScalars['Date'] | null; // Date
+    description: string | null; // String
+    id: string; // ID!
+    updatedAt: NexusGenScalars['Date'] | null; // Date
+  }
+  WireBank: { // field return type
+    bankName: string | null; // String
+    city: string | null; // String
+    country: string | null; // String
+  }
+  WireBillingDetailsType: { // field return type
+    city: string | null; // String
+    country: string | null; // String
+    line1: string | null; // String
+    line2: string | null; // String
+    name: string | null; // String
+    postalCode: string | null; // String
+  }
 }
 
 export interface NexusGenFieldTypeNames {
@@ -310,6 +387,21 @@ export interface NexusGenFieldTypeNames {
     type: 'EventType'
     updatedAt: 'Date'
     userId: 'ID'
+  }
+  Mutation: { // field return type name
+    executePayouts: 'Payout'
+  }
+  Payout: { // field return type name
+    amount: 'Int'
+    circlePayoutId: 'String'
+    createdAt: 'Date'
+    executed: 'Boolean'
+    id: 'ID'
+    proposalIds: 'String'
+    proposals: 'Proposal'
+    status: 'PayoutStatus'
+    updatedAt: 'Date'
+    voided: 'Boolean'
   }
   Proposal: { // field return type name
     common: 'Common'
@@ -353,10 +445,13 @@ export interface NexusGenFieldTypeNames {
     commons: 'Common'
     event: 'Event'
     events: 'Event'
+    payout: 'Payout'
+    payouts: 'Payout'
     proposal: 'Proposal'
     proposals: 'Proposal'
     today: 'Statistics'
     user: 'User'
+    wires: 'Wire'
   }
   Statistics: { // field return type name
     newCommons: 'Int'
@@ -399,12 +494,38 @@ export interface NexusGenFieldTypeNames {
     subscriptions: 'Subscription'
     tokens: 'String'
   }
+  Wire: { // field return type name
+    bank: 'WireBank'
+    billingDetails: 'WireBillingDetailsType'
+    createdAt: 'Date'
+    description: 'String'
+    id: 'ID'
+    updatedAt: 'Date'
+  }
+  WireBank: { // field return type name
+    bankName: 'String'
+    city: 'String'
+    country: 'String'
+  }
+  WireBillingDetailsType: { // field return type name
+    city: 'String'
+    country: 'String'
+    line1: 'String'
+    line2: 'String'
+    name: 'String'
+    postalCode: 'String'
+  }
 }
 
 export interface NexusGenArgTypes {
   Common: {
     proposals: { // args
       page: number | null; // Int
+    }
+  }
+  Mutation: {
+    executePayouts: { // args
+      input: NexusGenInputs['ExecutePayoutInput']; // ExecutePayoutInput!
     }
   }
   Query: {
@@ -422,6 +543,12 @@ export interface NexusGenArgTypes {
       after?: number | null; // Int
       last: number; // Int!
     }
+    payout: { // args
+      id: string; // ID!
+    }
+    payouts: { // args
+      page: number | null; // Int
+    }
     proposal: { // args
       id: string; // ID!
     }
@@ -434,6 +561,9 @@ export interface NexusGenArgTypes {
     }
     user: { // args
       id: string; // ID!
+    }
+    wires: { // args
+      page: number | null; // Int
     }
   }
   User: {
@@ -455,7 +585,7 @@ export interface NexusGenTypeInterfaces {
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
-export type NexusGenInputNames = never;
+export type NexusGenInputNames = keyof NexusGenInputs;
 
 export type NexusGenEnumNames = keyof NexusGenEnums;
 

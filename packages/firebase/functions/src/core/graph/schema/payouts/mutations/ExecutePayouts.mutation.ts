@@ -16,7 +16,7 @@ export const ExecutePayoutsMutation = extendType({
         )
       },
       resolve: async (root, args) => {
-        return await createBatchPayout(args.input);
+        return await createBatchPayout(args.input as any);
       }
     });
   }

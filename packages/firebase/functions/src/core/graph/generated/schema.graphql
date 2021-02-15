@@ -112,6 +112,37 @@ enum EventType {
   voteCreated
 }
 
+input ExecutePayoutInput {
+  """List of the all proposals IDs that are in this batch"""
+  proposalIds: [ID!]!
+
+  """The ID of the the wire to witch the payout will be made"""
+  wireId: ID!
+}
+
+type Mutation {
+  executePayouts(input: ExecutePayoutInput!): Payout
+}
+
+type Payout {
+  amount: Int!
+  circlePayoutId: String
+  createdAt: Date!
+  executed: Boolean
+  id: ID!
+  proposalIds: [String]
+  proposals: [Proposal]
+  status: PayoutStatus
+  updatedAt: Date!
+  voided: Boolean
+}
+
+enum PayoutStatus {
+  complete
+  failed
+  pending
+}
+
 """The proposals type"""
 type Proposal {
   common: Common!
@@ -201,10 +232,13 @@ type Query {
   commons(after: Int = 0, last: Int = 10): [Common]
   event(eventId: ID!): Event
   events(after: Int, last: Int!): [Event]
+  payout(id: ID!): Payout
+  payouts(page: Int = 1): [Payout]
   proposal(id: ID!): Proposal
   proposals(fundingState: ProposalFundingState, ids: [String], page: Int = 1, pageItems: Int = 10, type: ProposalType): [Proposal]
   today: Statistics
   user(id: ID!): User
+  wires(page: Int = 1): [Wire]
 }
 
 type Statistics {
@@ -268,4 +302,30 @@ type User {
   proposals(page: Int = 1): [Proposal]
   subscriptions(page: Int = 1, status: SubscriptionStatus): [Subscription]
   tokens: [String]
+}
+
+type Wire {
+  bank: WireBank
+  billingDetails: WireBillingDetailsType
+  createdAt: Date
+  description: String
+
+  """The local ID of the payout"""
+  id: ID!
+  updatedAt: Date
+}
+
+type WireBank {
+  bankName: String
+  city: String
+  country: String
+}
+
+type WireBillingDetailsType {
+  city: String
+  country: String
+  line1: String
+  line2: String
+  name: String
+  postalCode: String
 }

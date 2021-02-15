@@ -34,7 +34,7 @@ export const UserType = objectType({
 
           'admin.payouts.read.list',
           'admin.payouts.read.details',
-          'admin.payouts.create',
+          // 'admin.payouts.create',
         ];
       }
     })

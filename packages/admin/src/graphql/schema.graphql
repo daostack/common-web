@@ -111,6 +111,26 @@ type CommonMetadata {
 }
 type Payout {
   id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  circlePayoutId: String
+  amount: Int!
+  executed: Boolean
+  voided: Boolean
+  status: PayoutStatus
+  security: [PayoutSecurity]
+  proposalIds: [String]
+  proposals: [Proposal]
+}
+type PayoutSecurity {
+  id: Int
+  redemptionAttempts: Int
+  redeemed: Boolean
+}
+enum PayoutStatus {
+  pending
+  complete
+  failed
 }
 input ExecutePayoutInput {
   """The ID of the the wire to witch the payout will be made"""
@@ -256,6 +276,8 @@ type Query {
     commonId: ID!
   ): Common
   commons(last: Int = 10, after: Int = 0): [Common]
+  payout(id: ID!): Payout
+  payouts(page: Int = 1): [Payout]
   proposal(id: ID!): Proposal
   proposals(ids: [String], page: Int = 1, pageItems: Int = 10, type: ProposalType, fundingState: ProposalFundingState): [Proposal]
   today: Statistics

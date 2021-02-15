@@ -146,7 +146,7 @@ const CreateBatchPayoutPage: NextPage = () => {
 
   const onExecute = async () => {
     try {
-      await executePayout({
+      const res = await executePayout({
         variables: {
           input: {
             wireId: selectedWire,
@@ -156,8 +156,13 @@ const CreateBatchPayoutPage: NextPage = () => {
       });
 
       setToast({
-        text: 'Payout executed'
+        text: 'Payout executed',
+        delay: 4000
       });
+
+      router.push({
+        pathname: `/payouts/details/${res.data.executePayouts.id}`
+      })
     } catch (e) {
       setToast({
         type: 'error',
@@ -314,7 +319,7 @@ const CreateBatchPayoutPage: NextPage = () => {
 
           <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
             <Button size="small" disabled={isExecuteDisabled()} loading={loading} onClick={onExecute}>
-              Execute payout
+              Create payout
             </Button>
           </div>
         </React.Fragment>
