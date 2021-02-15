@@ -1,7 +1,7 @@
 import { arg, extendType, nonNull } from 'nexus';
 import { PayoutType } from '../types/Payout.type';
 import { ExecutePayoutsInput } from '../inputs/ExecutePayouts.input';
-import { NotImplementedError } from '../../../../../util/errors';
+import { createBatchPayout } from '../../../../../circlepay/payouts/business/createBatchPayout';
 
 export const ExecutePayoutsMutation = extendType({
   type: 'Mutation',
@@ -16,9 +16,7 @@ export const ExecutePayoutsMutation = extendType({
         )
       },
       resolve: async (root, args) => {
-        setTimeout(() => {
-          throw new NotImplementedError()
-        }, 2000);
+        return await createBatchPayout(args.input);
       }
     });
   }

@@ -61,7 +61,7 @@ export const createProposalPayout = async (payload: CreateProposalPayoutPayload)
   const payout = await payoutDb.add({
     circlePayoutId: null,
     type: 'proposal',
-    proposalId: payload.proposalId,
+    proposalIds: [payload.proposalId],
 
     amount: proposal.fundingRequest.amount,
 

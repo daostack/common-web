@@ -103,10 +103,10 @@ export type IProposalPayoutEntity = IExecutablePayoutEntity & {
   type: 'proposal'
 
   /**
-   * The ID of the proposal, for witch the payout
+   * The IDs of the proposals, for witch the payout
    * is made
    */
-  proposalId: string;
+  proposalIds: string[];
 }
 
 type IIndependentPayoutEntity = IExecutablePayoutEntity;

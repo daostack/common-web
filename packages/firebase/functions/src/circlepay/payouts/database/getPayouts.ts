@@ -3,6 +3,8 @@ import { IPayoutEntity, PayoutStatus } from '../types';
 
 interface IGetPayoutsOptions {
   proposalId?: string;
+  proposalIds?: string;
+
   status?: PayoutStatus | PayoutStatus[];
 }
 
@@ -16,6 +18,11 @@ export const getPayouts = async (options: IGetPayoutsOptions): Promise<IPayoutEn
 
   if (options.proposalId) {
     payoutsQuery = payoutsQuery.where('proposalId', '==', options.proposalId);
+  }
+
+  if(options.proposalIds) {
+    payoutsQuery = payoutsQuery.where('proposalIds', 'array-contains', options.proposalIds);
+
   }
 
   if (options.status) {
