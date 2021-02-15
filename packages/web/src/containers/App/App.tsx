@@ -16,15 +16,12 @@ const App = () => {
     <div className="App">
       {is_authorized && "hello"}
       <Content>
-        {!is_loading ? (
-          <Switch>
-            <Route path="/auth/" component={AuthContainer} />
-            <PrivateRoute path="/" exact component={Dashboard} authentificated={is_authorized} />
-            <Route component={NotFound} />
-          </Switch>
-        ) : (
-          <LoadingIndicator />
-        )}
+        {is_loading ? <LoadingIndicator /> : null}
+        <Switch>
+          <Route path="/auth/" component={AuthContainer} />
+          <PrivateRoute path="/" exact component={Dashboard} authentificated={is_authorized} />
+          <Route component={NotFound} />
+        </Switch>
       </Content>
 
       {is_authorized && <Footer />}
