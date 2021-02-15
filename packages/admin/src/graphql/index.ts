@@ -40,6 +40,34 @@ export type UserSubscriptionsArgs = {
   status?: Maybe<SubscriptionStatus>;
 };
 
+export type Wire = {
+  __typename?: 'Wire';
+  /** The local ID of the payout */
+  id: Scalars['ID'];
+  createdAt?: Maybe<Scalars['Date']>;
+  updatedAt?: Maybe<Scalars['Date']>;
+  description?: Maybe<Scalars['String']>;
+  bank?: Maybe<WireBank>;
+  billingDetails?: Maybe<WireBillingDetailsType>;
+};
+
+export type WireBank = {
+  __typename?: 'WireBank';
+  bankName?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+};
+
+export type WireBillingDetailsType = {
+  __typename?: 'WireBillingDetailsType';
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  line1?: Maybe<Scalars['String']>;
+  line2?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  postalCode?: Maybe<Scalars['String']>;
+};
+
 export enum EventType {
   CommonCreated = 'commonCreated',
   CommonCreationFailed = 'commonCreationFailed',
@@ -117,6 +145,18 @@ export type CommonMetadata = {
   founderId: Scalars['String'];
   minFeeToJoin: Scalars['Int'];
   contributionType?: Maybe<CommonContributionType>;
+};
+
+export type Payout = {
+  __typename?: 'Payout';
+  id: Scalars['ID'];
+};
+
+export type ExecutePayoutInput = {
+  /** The ID of the the wire to witch the payout will be made */
+  wireId: Scalars['ID'];
+  /** List of the all proposals IDs that are in this batch */
+  proposalIds: Array<Scalars['ID']>;
 };
 
 export enum ProposalType {
@@ -282,6 +322,7 @@ export type CommonProposalsArgs = {
 export type Query = {
   __typename?: 'Query';
   user?: Maybe<User>;
+  wires?: Maybe<Array<Maybe<Wire>>>;
   event?: Maybe<Event>;
   events?: Maybe<Array<Maybe<Event>>>;
   common?: Maybe<Common>;
@@ -294,6 +335,11 @@ export type Query = {
 
 export type QueryUserArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryWiresArgs = {
+  page?: Maybe<Scalars['Int']>;
 };
 
 
@@ -330,6 +376,16 @@ export type QueryProposalsArgs = {
   pageItems?: Maybe<Scalars['Int']>;
   type?: Maybe<ProposalType>;
   fundingState?: Maybe<ProposalFundingState>;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  executePayouts?: Maybe<Payout>;
+};
+
+
+export type MutationExecutePayoutsArgs = {
+  input: ExecutePayoutInput;
 };
 
 export type GetUserPermissionsQueryVariables = Exact<{
@@ -428,6 +484,9 @@ export type GetProposalsSelectedForBatchQuery = (
     & { proposer: (
       { __typename?: 'User' }
       & Pick<User, 'firstName' | 'lastName'>
+    ), description: (
+      { __typename?: 'ProposalDescription' }
+      & Pick<ProposalDescription, 'title' | 'description'>
     ), common: (
       { __typename?: 'Common' }
       & Pick<Common, 'name'>
@@ -435,7 +494,27 @@ export type GetProposalsSelectedForBatchQuery = (
       { __typename?: 'ProposalFunding' }
       & Pick<ProposalFunding, 'amount'>
     )> }
+  )>>>, wires?: Maybe<Array<Maybe<(
+    { __typename?: 'Wire' }
+    & Pick<Wire, 'id' | 'description'>
+    & { billingDetails?: Maybe<(
+      { __typename?: 'WireBillingDetailsType' }
+      & Pick<WireBillingDetailsType, 'city' | 'country' | 'name'>
+    )> }
   )>>> }
+);
+
+export type ExecutePayoutMutationVariables = Exact<{
+  input: ExecutePayoutInput;
+}>;
+
+
+export type ExecutePayoutMutation = (
+  { __typename?: 'Mutation' }
+  & { executePayouts?: Maybe<(
+    { __typename?: 'Payout' }
+    & Pick<Payout, 'id'>
+  )> }
 );
 
 export type GetPayoutsPageDataQueryVariables = Exact<{
@@ -729,11 +808,24 @@ export const GetProposalsSelectedForBatchDocument = gql`
       firstName
       lastName
     }
+    description {
+      title
+      description
+    }
     common {
       name
     }
     fundingRequest {
       amount
+    }
+  }
+  wires {
+    id
+    description
+    billingDetails {
+      city
+      country
+      name
     }
   }
 }
@@ -764,6 +856,38 @@ export function useGetProposalsSelectedForBatchLazyQuery(baseOptions?: Apollo.La
 export type GetProposalsSelectedForBatchQueryHookResult = ReturnType<typeof useGetProposalsSelectedForBatchQuery>;
 export type GetProposalsSelectedForBatchLazyQueryHookResult = ReturnType<typeof useGetProposalsSelectedForBatchLazyQuery>;
 export type GetProposalsSelectedForBatchQueryResult = Apollo.QueryResult<GetProposalsSelectedForBatchQuery, GetProposalsSelectedForBatchQueryVariables>;
+export const ExecutePayoutDocument = gql`
+    mutation ExecutePayout($input: ExecutePayoutInput!) {
+  executePayouts(input: $input) {
+    id
+  }
+}
+    `;
+export type ExecutePayoutMutationFn = Apollo.MutationFunction<ExecutePayoutMutation, ExecutePayoutMutationVariables>;
+
+/**
+ * __useExecutePayoutMutation__
+ *
+ * To run a mutation, you first call `useExecutePayoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useExecutePayoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [executePayoutMutation, { data, loading, error }] = useExecutePayoutMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useExecutePayoutMutation(baseOptions?: Apollo.MutationHookOptions<ExecutePayoutMutation, ExecutePayoutMutationVariables>) {
+        return Apollo.useMutation<ExecutePayoutMutation, ExecutePayoutMutationVariables>(ExecutePayoutDocument, baseOptions);
+      }
+export type ExecutePayoutMutationHookResult = ReturnType<typeof useExecutePayoutMutation>;
+export type ExecutePayoutMutationResult = Apollo.MutationResult<ExecutePayoutMutation>;
+export type ExecutePayoutMutationOptions = Apollo.BaseMutationOptions<ExecutePayoutMutation, ExecutePayoutMutationVariables>;
 export const GetPayoutsPageDataDocument = gql`
     query getPayoutsPageData($fundingState: ProposalFundingState, $fundingRequestPage: Int) {
   proposals(

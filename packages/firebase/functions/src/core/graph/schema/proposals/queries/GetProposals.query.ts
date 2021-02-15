@@ -33,14 +33,8 @@ export const GetProposalsQuery = extendType({
           type: ProposalFundingStateEnum
         })
       },
-      resolve: (root, args) => {
+      resolve: async (root, args) => {
         // --- Validation
-        if (args.type && args.funded) {
-          throw new CommonError(
-            'You can only select proposal type or proposal funding type, but not both'
-          );
-        }
-
         if (args.page <= 0) {
           throw new CommonError(
             'The page must be at least one'
@@ -61,7 +55,7 @@ export const GetProposalsQuery = extendType({
           ...args
         };
 
-        return proposalDb.getMany(options);
+        return (await proposalDb.getMany(options)) as any[];
       }
     });
   }

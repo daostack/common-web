@@ -139,7 +139,7 @@ const PayoutsPage: NextPage = () => {
           </Tooltip>
 
           <Tooltip text="See proposal's details" enterDelay={1000}>
-            <Link to={`/proposals/details/${proposal.proposalId}`} Icon={ExternalLink}/>
+            <Link to={`/proposals/details/${proposal.id}`} Icon={ExternalLink}/>
           </Tooltip>
         </div>
       )
