@@ -17,7 +17,7 @@ interface ICommonAppOptions {
   unauthenticatedRoutes: string[]
 }
 
-export const commonApp = (router: express.Router, options?: ICommonAppOptions): express.Application => {
+export const commonApp = (router?: express.Router, options?: ICommonAppOptions): express.Application => {
   const app = express();
 
   app.use(sessions);
@@ -44,7 +44,9 @@ export const commonApp = (router: express.Router, options?: ICommonAppOptions): 
     exclude: options?.unauthenticatedRoutes || []
   }));
 
-  app.use(router);
+  if (router) {
+    app.use(router);
+  }
 
   // Add simple health check
   app.get('/health', (req, res) => {

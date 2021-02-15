@@ -30,6 +30,7 @@ jest.mock('../../../../../proposals/database/getJoinRequest', () => ({
           links: []
         },
         join: {
+          ip: '127.0.0.1',
           cardId: proposalId,
           funding: 500000,
           fundingType: contributionType,

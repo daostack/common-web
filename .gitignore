@@ -538,3 +538,24 @@ $RECYCLE.BIN/
 
 # Web Ignores
 packages/build
+
+.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+.next/
+
+# production
+build
+
+# local env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# vercel
+.vercel

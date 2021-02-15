@@ -14,9 +14,6 @@ const createSubscriptionPaymentValidationSchema = yup.object({
     .uuid()
     .required(),
 
-  ipAddress: yup.string()
-    .required(),
-
   sessionId: yup.string()
     .required()
 });
@@ -26,8 +23,9 @@ export const createSubscriptionPayment = async (payload: yup.InferType<typeof cr
   // Validate the data
   await validate(payload, createSubscriptionPaymentValidationSchema);
 
-  // Find the subscription
+  // Find the subscription and the proposal for it
   const subscription = await subscriptionDb.get(payload.subscriptionId);
+  const subscriptionJoin = await proposalDb.getJoinRequest(subscription.proposalId);
 
   // The cardID and if the user is the owner of that card will be validated in that function. Also the Id of the
   // proposal will be used as idempotency key, so we are insured that only one payment will be made for one proposal
@@ -35,7 +33,7 @@ export const createSubscriptionPayment = async (payload: yup.InferType<typeof cr
   let payment = await createPayment({
     userId: subscription.userId,
     cardId: subscription.cardId,
-    ipAddress: payload.ipAddress,
+    ipAddress: subscriptionJoin.join.ip || '127.0.0.1', // The local host is for backwards compatibility
     sessionId: payload.sessionId,
 
     type: 'subscription',

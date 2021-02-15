@@ -7,8 +7,15 @@ declare global {
         uid: string;
       }
 
+      /**
+       * Unique ID for each request made
+       */
       requestId: string;
 
+      /**
+       * The IP address, parsed from the AppEngine headers or
+       * 127.0.0.1 if unable to do so
+       */
       ipAddress: string;
     }
   }

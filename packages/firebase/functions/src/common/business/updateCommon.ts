@@ -13,7 +13,6 @@ import {validate} from '../../util/validate';
 
 
 const updateCommonDataValidationScheme = yup.object({
-  
   commonId: yup
     .string()
     .required(),

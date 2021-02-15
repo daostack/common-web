@@ -1,0 +1,215 @@
+directive @specifiedBy(url: String!) on SCALAR
+type Common {
+  id: ID!
+  createdAt: Date
+  updatedAt: Date
+  name: String!
+  balance: Int!
+  raised: Int!
+  metadata: CommonMetadata!
+  openJoinRequests: Int!
+  openFundingRequests: Int!
+  proposals(page: Int = 1): [Proposal]
+  members: [CommonMember]
+}
+
+enum CommonContributionType {
+  oneTime
+  monthly
+}
+
+type CommonMember {
+  userId: ID!
+  joinedAt: Date
+  user: User
+}
+
+type CommonMetadata {
+  byline: String!
+  description: String!
+  founderId: String!
+  minFeeToJoin: Int!
+  contributionType: CommonContributionType
+}
+
+scalar Date
+
+type Event {
+  id: ID!
+  type: EventType!
+  createdAt: Date!
+  updatedAt: Date!
+  objectId: ID
+  userId: ID
+}
+
+enum EventType {
+  commonCreated
+  commonCreationFailed
+  commonWhitelisted
+  commonMemberAdded
+  commonMemberRemoved
+  commonUpdated
+  requestToJoinCreated
+  requestToJoinAccepted
+  requestToJoinRejected
+  requestToJoinExecuted
+  fundingRequestCreated
+  fundingRequestRejected
+  fundingRequestExecuted
+  fundingRequestAccepted
+  fundingRequestAcceptedInsufficientFunds
+  voteCreated
+  paymentCreated
+  paymentConfirmed
+  paymentFailed
+  paymentPaid
+  payoutCreated
+  payoutApproved
+  payoutExecuted
+  payoutVoided
+  payoutCompleted
+  payoutFailed
+  cardCreated
+  discussionCreated
+  messageCreated
+  subscriptionCreated
+  subscriptionPaymentCreated
+  subscriptionPaymentFailed
+  subscriptionPaymentConfirmed
+  subscriptionPaymentStuck
+  subscriptionCanceledByUser
+  subscriptionCanceledByPaymentFailure
+  membershipRevoked
+}
+
+type Proposal {
+  id: ID!
+  proposerId: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  votesFor: Int!
+  votesAgainst: Int!
+  votes: [ProposalVote]
+  fundingRequest: ProposalFunding
+  join: ProposalJoin
+  state: ProposalState!
+  description: ProposalDescription!
+  paymentState: ProposalPaymentState
+  type: ProposalType!
+  commonId: String!
+  common: Common!
+  proposer: User!
+}
+
+type ProposalDescription {
+  title: String
+  description: String!
+}
+
+type ProposalFunding {
+  amount: Int!
+}
+
+type ProposalJoin {
+  cardId: ID!
+  funding: Int!
+  fundingType: CommonContributionType
+}
+
+enum ProposalPaymentState {
+  notAttempted
+  notRelevant
+  confirmed
+  pending
+  failed
+}
+
+enum ProposalState {
+  passedInsufficientBalance
+  countdown
+  passed
+  failed
+}
+
+enum ProposalType {
+  fundingRequest
+  join
+}
+
+type ProposalVote {
+  voteId: ID!
+  voterId: ID!
+  outcome: ProposalVoteOutcome!
+  voter: User
+}
+
+enum ProposalVoteOutcome {
+  approved
+  rejected
+}
+
+type Query {
+  today: Statistics
+  event(eventId: ID!): Event
+  events(last: Int!, after: Int): [Event]
+  common(commonId: ID!): Common
+  commons(last: Int = 10, after: Int = 0): [Common]
+  proposal(id: ID!): Proposal
+  user(id: ID!): User
+}
+
+type Statistics {
+  newCommons: Int
+  newJoinRequests: Int
+  newFundingRequests: Int
+  newDiscussions: Int
+  newDiscussionMessages: Int
+}
+
+type Subscription {
+  id: ID!
+  cardId: ID!
+  userId: ID!
+  proposalId: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  charges: Int!
+  amount: Int!
+  lastChargedAt: Date
+  dueDate: Date
+  revoked: Boolean!
+  status: SubscriptionStatus!
+  metadata: SubscriptionMetadata!
+}
+
+type SubscriptionMetadata {
+  common: SubscriptionMetadataCommon
+}
+
+type SubscriptionMetadataCommon {
+  id: ID
+  name: String
+}
+
+enum SubscriptionStatus {
+  pending
+  active
+  canceledByUser
+  canceledByPaymentFailure
+  paymentFailed
+}
+
+type User {
+  id: ID!
+  firstName: String
+  lastName: String
+  email: String
+  photoURL: String
+  createdAt: Date
+  tokens: [String]
+  subscriptions(page: Int = 1, status: SubscriptionStatus): [Subscription]
+  proposals(page: Int = 1): [Proposal]
+}
+
+

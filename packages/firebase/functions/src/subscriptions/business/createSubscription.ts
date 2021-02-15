@@ -78,8 +78,7 @@ export const createSubscription = async (proposal: IProposalEntity): Promise<ISu
   // Charge the subscription for the initial payment
   const payment = await createSubscriptionPayment({
     subscriptionId: subscription.id,
-    sessionId: v4(),
-    ipAddress: '127.0.0.1'
+    sessionId: v4()
   });
 
 
