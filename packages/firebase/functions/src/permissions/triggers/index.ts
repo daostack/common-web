@@ -1,0 +1,1 @@
+export {onCommonCreated} from './onCommonCreated';

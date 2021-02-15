@@ -1,10 +1,12 @@
+/*global FirebaseFirestore*/
 import { db } from '../../../../util';
 import { Collections } from '../../../../constants';
 
-import { IUserEntity } from '../types';
+import { IUserEntity } from '@common/types';
+import { getUser } from './getUser';
 
 import { getUserByEmail } from './getUserByEmail';
-import { getUser } from './getUser';
+import { updateUser } from './updateUser';
 
 export const UserCollection = db.collection(Collections.Users)
   .withConverter<IUserEntity>({
@@ -18,5 +20,6 @@ export const UserCollection = db.collection(Collections.Users)
 
 export const userDb = {
   get: getUser,
-  getByEmail: getUserByEmail
+  getByEmail: getUserByEmail,
+  update: updateUser
 };

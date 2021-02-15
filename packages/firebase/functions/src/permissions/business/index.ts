@@ -1,0 +1,1 @@
+export {addPermission} from './addPermission';
