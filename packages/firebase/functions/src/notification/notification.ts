@@ -1,4 +1,4 @@
-import { ISubscriptionEntity, IUserEntity, IEventData, INotification } from '@common/types';
+import { ISubscriptionEntity, IUserEntity, IEventObject, INotification } from '@common/types';
 import admin from 'firebase-admin';
 import moment from 'moment';
 
@@ -34,7 +34,7 @@ const memberAddedNotification = (commonData): Record<string, string> => ({
   path: `CommonProfile/${commonData.id}`
 });
 
-export const notifyData: Record<string, IEventData> = {
+export const notifyData: Record<string, IEventObject> = {
   [EVENT_TYPES.COMMON_CREATED]: {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (objectId: string): Promise<Record<string, any>> => {
@@ -254,8 +254,7 @@ export const notifyData: Record<string, IEventData> = {
       }
     })
   },
-  [EVENT_TYPES.REQUEST_TO_JOIN_EXECUTED]: {
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  [EVENT_TYPES.COMMON_MEMBER_ADDED]: {
     data: async (proposalId: string): Promise<Record<string, any>> => {
       const proposalData = (await proposalDb.getProposal(proposalId));
       return {
