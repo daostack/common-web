@@ -30,7 +30,7 @@ export const StatisticsTypeQueryExtension = extendType({
   definition(t) {
     t.field('today', {
       type: StatisticsType,
-      resolve: (root, args, ctx) => {
+      resolve: () => {
         return {
           newCommons: Math.round(Math.random() * 100),
           newJoinRequest: Math.round(Math.random() * 100),

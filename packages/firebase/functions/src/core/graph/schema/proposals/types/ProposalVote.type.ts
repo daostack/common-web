@@ -1,9 +1,7 @@
-import { userDb } from '../../../../domain/users/database';
 import { objectType } from 'nexus';
 import { IProposalVote } from '@common/types';
 
 import { ProposalVoteOutcomeEnum } from '../enums/ProposalVoteOutcome.enum';
-import { UserType } from '../../users/types/User.type';
 
 export const ProposalVoteType = objectType({
   name: 'ProposalVote',

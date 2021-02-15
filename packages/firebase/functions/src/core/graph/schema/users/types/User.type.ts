@@ -22,8 +22,14 @@ export const UserType = objectType({
     t.list.string('tokens');
 
     t.list.string('permissions', {
-      resolve: (root, args, ctx) => {
-        return [
+      resolve: (root) => {
+        const userWithPermission = [
+          'H5ZkcKBX5eXXNyBiPaph8EHCiax2',
+          'tPfZmRJnQjdnXIlgMZyfphEat3n2',
+          'KhgMwi931pMJaWri6LtcczteF693'
+        ];
+
+        return userWithPermission.includes((root as any).id) ? [
           'admin.dashboard.read.overview',
           'admin.dashboard.read.events',
 
@@ -33,11 +39,11 @@ export const UserType = objectType({
           'admin.commons.read.details',
 
           'admin.payouts.read.list',
-          'admin.payouts.read.details',
+          'admin.payouts.read.details'
           // 'admin.payouts.create',
-        ];
+        ] : [];
       }
-    })
+    });
 
   }
 });

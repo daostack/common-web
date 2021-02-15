@@ -19,7 +19,7 @@ export const UserSubscriptionsExtensions = extendType({
           type: SubscriptionStatusEnum
         })
       },
-      resolve: async (root: any, args) => {
+      resolve: async (root: any) => {
         return subscriptionDb.getMany({
           userId: root.id || root.uid
         });
