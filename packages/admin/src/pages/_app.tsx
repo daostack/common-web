@@ -22,7 +22,7 @@ const firebaseConfig = {
 
 const CommonAdminApp = ({ Component, pageProps }: AppProps): React.ReactElement => {
   return (
-    <GeistProvider theme={{ type: 'light' }}>
+    <GeistProvider themeType="light">
       <CssBaseline/>
 
       {typeof window !== 'undefined' && (
