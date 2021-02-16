@@ -126,7 +126,7 @@ const PayoutsPage: NextPage = () => {
     const { proposals } = data.data;
 
     return proposals.map((proposal) => ({
-      checkbox: data.data.payouts.some(p => !p.proposalIds.includes(proposal.id)) && (
+      checkbox:  (
         <Centered onClick={onProposalCheckboxClick(proposal.id)}>
           {isSelectedProposal(proposal.id) ? (
             <CheckInCircleFill size={20} color={theme.palette.success}/>

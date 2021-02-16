@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from 'react';
 import { useRouter } from 'next/router';
 
 import firebase from 'firebase/app';
-import { Grid, Page, Spacer, Tabs, Tooltip, User, Link } from '@geist-ui/react';
+import { Page, Spacer, Tabs, Tooltip, Link, Text, Avatar } from '@geist-ui/react';
 
 import { ApolloProvider } from '@components/providers/ApolloProvider';
 import { PermissionsContextProvider, useAuthContext } from '@context';
@@ -50,22 +50,35 @@ export const AuthenticationBasedLayout: React.FC<PropsWithChildren<any>> = ({ ch
               <PermissionsContextProvider>
                 <Page>
                   <Page.Header>
-                    <Grid.Container style={{ marginTop: 15 }}>
-                      <Grid xs={24} justify="flex-end" style={{ display: 'flex' }}>
-                        <Tooltip text={(
-                          <React.Fragment>
+                    <div
+                      style={{
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        alignContent: 'center',
+                        marginTop: 10
+                      }}
+                    >
+                      <Text h6 style={{ margin: 0 }}>{authContext.userInfo.displayName}</Text>
+                      <Tooltip
+                        trigger="click"
+                        placement="bottomEnd"
+                        text={(
+                          <div style={{ minWidth: '10vw' }}>
                             <Link onClick={onSignOut}>
-                              Sign Out
+                              <b>Sign Out</b>
                             </Link>
-                          </React.Fragment>
-                        )} trigger="click" placement="bottomEnd">
-                          <User
-                            src={authContext.userInfo?.photoURL}
-                            name={authContext.userInfo.displayName}
-                          />
-                        </Tooltip>
-                      </Grid>
-                    </Grid.Container>
+                          </div>
+                        )}
+                        style={{
+                          marginLeft: 10
+                        }}
+                      >
+                        <div style={{ cursor: 'pointer' }}>
+                          <Avatar src={authContext.userInfo.photoURL}/>
+                        </div>
+                      </Tooltip>
+                    </div>
 
                     <HasPermission permission="admin.*">
                       <Tabs value={currentTab} onChange={onTabChange} hideDivider>

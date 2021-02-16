@@ -312,6 +312,20 @@ export type Statistics = {
   newDiscussions?: Maybe<Scalars['Int']>;
   /** The amount of new discussion messages, send on that date */
   newDiscussionMessages?: Maybe<Scalars['Int']>;
+  commons?: Maybe<Scalars['Int']>;
+  joinRequests?: Maybe<Scalars['Int']>;
+  fundingRequests?: Maybe<Scalars['Int']>;
+  users?: Maybe<Scalars['Int']>;
+};
+
+
+export type StatisticsJoinRequestsArgs = {
+  onlyOpen?: Maybe<Scalars['Boolean']>;
+};
+
+
+export type StatisticsFundingRequestsArgs = {
+  onlyOpen?: Maybe<Scalars['Boolean']>;
 };
 
 /** The common type */
@@ -345,6 +359,7 @@ export type CommonProposalsArgs = {
 export type Query = {
   __typename?: 'Query';
   user?: Maybe<User>;
+  users?: Maybe<Array<Maybe<User>>>;
   wires?: Maybe<Array<Maybe<Wire>>>;
   event?: Maybe<Event>;
   events?: Maybe<Array<Maybe<Event>>>;
@@ -354,12 +369,18 @@ export type Query = {
   payouts?: Maybe<Array<Maybe<Payout>>>;
   proposal?: Maybe<Proposal>;
   proposals?: Maybe<Array<Maybe<Proposal>>>;
-  today?: Maybe<Statistics>;
+  statistics?: Maybe<Statistics>;
 };
 
 
 export type QueryUserArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryUsersArgs = {
+  page?: Maybe<Scalars['Int']>;
+  perPage?: Maybe<Scalars['Int']>;
 };
 
 
@@ -497,13 +518,24 @@ export type GetDashboardDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetDashboardDataQuery = (
   { __typename?: 'Query' }
-  & { today?: Maybe<(
+  & { statistics?: Maybe<(
     { __typename?: 'Statistics' }
     & Pick<Statistics, 'newCommons' | 'newJoinRequests' | 'newFundingRequests' | 'newDiscussions' | 'newDiscussionMessages'>
   )>, events?: Maybe<Array<Maybe<(
     { __typename?: 'Event' }
     & Pick<Event, 'id' | 'createdAt' | 'updatedAt' | 'userId' | 'objectId' | 'type'>
   )>>> }
+);
+
+export type StatisticsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StatisticsQuery = (
+  { __typename?: 'Query' }
+  & { statistics?: Maybe<(
+    { __typename?: 'Statistics' }
+    & Pick<Statistics, 'users' | 'commons' | 'joinRequests' | 'fundingRequests'>
+  )> }
 );
 
 export type GetProposalsSelectedForBatchQueryVariables = Exact<{
@@ -673,6 +705,20 @@ export type GetUserDetailsQueryQuery = (
   )> }
 );
 
+export type GetUsersHomepageDataQueryVariables = Exact<{
+  page?: Maybe<Scalars['Int']>;
+  perPage?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetUsersHomepageDataQuery = (
+  { __typename?: 'Query' }
+  & { users?: Maybe<Array<Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'photoURL' | 'email' | 'firstName' | 'lastName' | 'createdAt'>
+  )>>> }
+);
+
 
 export const GetUserPermissionsDocument = gql`
     query getUserPermissions($userId: ID!) {
@@ -821,7 +867,7 @@ export type GetCommonsHomescreenDataLazyQueryHookResult = ReturnType<typeof useG
 export type GetCommonsHomescreenDataQueryResult = Apollo.QueryResult<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>;
 export const GetDashboardDataDocument = gql`
     query getDashboardData {
-  today {
+  statistics {
     newCommons
     newJoinRequests
     newFundingRequests
@@ -863,6 +909,41 @@ export function useGetDashboardDataLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type GetDashboardDataQueryHookResult = ReturnType<typeof useGetDashboardDataQuery>;
 export type GetDashboardDataLazyQueryHookResult = ReturnType<typeof useGetDashboardDataLazyQuery>;
 export type GetDashboardDataQueryResult = Apollo.QueryResult<GetDashboardDataQuery, GetDashboardDataQueryVariables>;
+export const StatisticsDocument = gql`
+    query Statistics {
+  statistics {
+    users
+    commons
+    joinRequests
+    fundingRequests
+  }
+}
+    `;
+
+/**
+ * __useStatisticsQuery__
+ *
+ * To run a query within a React component, call `useStatisticsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStatisticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useStatisticsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useStatisticsQuery(baseOptions?: Apollo.QueryHookOptions<StatisticsQuery, StatisticsQueryVariables>) {
+        return Apollo.useQuery<StatisticsQuery, StatisticsQueryVariables>(StatisticsDocument, baseOptions);
+      }
+export function useStatisticsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<StatisticsQuery, StatisticsQueryVariables>) {
+          return Apollo.useLazyQuery<StatisticsQuery, StatisticsQueryVariables>(StatisticsDocument, baseOptions);
+        }
+export type StatisticsQueryHookResult = ReturnType<typeof useStatisticsQuery>;
+export type StatisticsLazyQueryHookResult = ReturnType<typeof useStatisticsLazyQuery>;
+export type StatisticsQueryResult = Apollo.QueryResult<StatisticsQuery, StatisticsQueryVariables>;
 export const GetProposalsSelectedForBatchDocument = gql`
     query getProposalsSelectedForBatch($ids: [String!]!) {
   proposals(ids: $ids) {
@@ -1193,3 +1274,42 @@ export function useGetUserDetailsQueryLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type GetUserDetailsQueryQueryHookResult = ReturnType<typeof useGetUserDetailsQueryQuery>;
 export type GetUserDetailsQueryLazyQueryHookResult = ReturnType<typeof useGetUserDetailsQueryLazyQuery>;
 export type GetUserDetailsQueryQueryResult = Apollo.QueryResult<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>;
+export const GetUsersHomepageDataDocument = gql`
+    query getUsersHomepageData($page: Int = 1, $perPage: Int = 15) {
+  users(page: $page, perPage: $perPage) {
+    id
+    photoURL
+    email
+    firstName
+    lastName
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useGetUsersHomepageDataQuery__
+ *
+ * To run a query within a React component, call `useGetUsersHomepageDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUsersHomepageDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUsersHomepageDataQuery({
+ *   variables: {
+ *      page: // value for 'page'
+ *      perPage: // value for 'perPage'
+ *   },
+ * });
+ */
+export function useGetUsersHomepageDataQuery(baseOptions?: Apollo.QueryHookOptions<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>) {
+        return Apollo.useQuery<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>(GetUsersHomepageDataDocument, baseOptions);
+      }
+export function useGetUsersHomepageDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>) {
+          return Apollo.useLazyQuery<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>(GetUsersHomepageDataDocument, baseOptions);
+        }
+export type GetUsersHomepageDataQueryHookResult = ReturnType<typeof useGetUsersHomepageDataQuery>;
+export type GetUsersHomepageDataLazyQueryHookResult = ReturnType<typeof useGetUsersHomepageDataLazyQuery>;
+export type GetUsersHomepageDataQueryResult = Apollo.QueryResult<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>;

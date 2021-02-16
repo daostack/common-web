@@ -245,6 +245,10 @@ type Statistics {
   newDiscussions: Int
   """The amount of new discussion messages, send on that date"""
   newDiscussionMessages: Int
+  commons: Int
+  joinRequests(onlyOpen: Boolean = false): Int
+  fundingRequests(onlyOpen: Boolean = false): Int
+  users: Int
 }
 """The common type"""
 type Common {
@@ -268,6 +272,7 @@ type Common {
 }
 type Query {
   user(id: ID!): User
+  users(page: Int = 1, perPage: Int = 10): [User]
   wires(page: Int = 1): [Wire]
   event(eventId: ID!): Event
   events(last: Int!, after: Int): [Event]
@@ -280,7 +285,7 @@ type Query {
   payouts(page: Int = 1): [Payout]
   proposal(id: ID!): Proposal
   proposals(ids: [String], page: Int = 1, pageItems: Int = 10, type: ProposalType, fundingState: ProposalFundingState): [Proposal]
-  today: Statistics
+  statistics: Statistics
 }
 type Mutation {
   executePayouts(input: ExecutePayoutInput!): Payout

@@ -10,7 +10,7 @@ import { withPermission } from '../../helpers/hoc/withPermission';
 
 const GetDashboardDataQuery = gql`
   query getDashboardData {
-    today {
+    statistics {
       newCommons
       newJoinRequests
       newFundingRequests
@@ -29,6 +29,17 @@ const GetDashboardDataQuery = gql`
       objectId
 
       type
+    }
+  }
+`;
+
+const GetStatisticsQuery = gql`
+  query Statistics {
+    statistics {
+      users
+      commons
+      joinRequests
+      fundingRequests
     }
   }
 `;
@@ -53,7 +64,7 @@ const DashboardHomePage: NextPage = () => {
               <Grid sm={24} md={12}>
                 <Card hoverable>
                   <Text h1 type="error">
-                    {data.data.today.newCommons}
+                    {data.data.statistics.newCommons}
                   </Text>
                   <Text p>Commons created</Text>
                 </Card>
@@ -63,7 +74,7 @@ const DashboardHomePage: NextPage = () => {
                 <Card hoverable>
                   <Text h1 type="error">
 
-                    {data.data.today.newJoinRequests + data.data.today.newFundingRequests}
+                    {data.data.statistics.newJoinRequests + data.data.statistics.newFundingRequests}
                   </Text>
                   <Text p>Proposals created</Text>
                 </Card>
@@ -72,7 +83,7 @@ const DashboardHomePage: NextPage = () => {
               <Grid sm={24} md={12}>
                 <Card hoverable>
                   <Text h1 type="error">
-                    {data.data.today.newDiscussions}
+                    {data.data.statistics.newDiscussions}
                   </Text>
                   <Text p>Discussions started</Text>
                 </Card>
@@ -81,7 +92,7 @@ const DashboardHomePage: NextPage = () => {
               <Grid sm={24} md={12}>
                 <Card hoverable>
                   <Text h1 type="error">
-                    {data.data.today.newDiscussionMessages}
+                    {data.data.statistics.newDiscussionMessages}
                   </Text>
                   <Text p>Discussion messages send</Text>
                 </Card>

@@ -1,4 +1,4 @@
-import { IUserEntity } from '../types';
+import { IUserEntity } from '@common/types';
 import { ArgumentError, CommonError, NotFoundError } from '../../../../util/errors';
 import { UserCollection } from './index';
 

@@ -1,4 +1,4 @@
-import { ISubscriptionEntity } from '@common/types';
+import { ISubscriptionEntity, IUserEntity } from '@common/types';
 import admin from 'firebase-admin';
 import moment from 'moment';
 
@@ -11,7 +11,6 @@ import { EVENT_TYPES } from '../event/event';
 import { proposalDb } from '../proposals/database';
 import { subscriptionDb } from '../subscriptions/database';
 import { userDb } from '../core/domain/users/database';
-import { IUserEntity } from '../core/domain/users/types';
 import { getDiscussionMessageById } from '../util/db/discussionMessagesDb';
 import { getUserById } from '../util/db/userDbService';
 import { Utils } from '../util/util';

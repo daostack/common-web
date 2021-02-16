@@ -1,4 +1,7 @@
-import { objectType, extendType } from 'nexus';
+import { objectType, extendType, booleanArg } from 'nexus';
+import { commonDb } from '../../../../common/database';
+import { proposalDb } from '../../../../proposals/database';
+import { userDb } from '../../../domain/users/database';
 
 export const StatisticsType = objectType({
   name: 'Statistics',
@@ -21,14 +24,61 @@ export const StatisticsType = objectType({
 
     t.int('newDiscussionMessages', {
       description: 'The amount of new discussion messages, send on that date'
-    })
+    });
+
+    t.int('commons', {
+      resolve: async () => {
+        // @todo This is bad, bad, bad and expensive
+        return (await commonDb.getMany({})).length;
+      }
+    });
+
+    t.int('joinRequests', {
+      args: {
+        onlyOpen: booleanArg({
+          default: false
+        })
+      },
+      resolve: async (root, args) => {
+        // @todo This is bad, bad, bad and expensive
+        return (await proposalDb.getMany({
+          type: 'join',
+          ...(args.onlyOpen ? ({
+            state: 'countdown'
+          }) : ({}))
+        })).length;
+      }
+    });
+
+    t.int('fundingRequests', {
+      args: {
+        onlyOpen: booleanArg({
+          default: false
+        })
+      },
+      resolve: async (root, args) => {
+        // @todo This is bad, bad, bad and expensive
+        return (await proposalDb.getMany({
+          type: 'fundingRequest',
+          ...(args.onlyOpen ? ({
+            state: 'countdown'
+          }) : ({}))
+        })).length;
+      }
+    });
+
+    t.int('users', {
+      resolve: async () => {
+        return (await userDb.getMany({})).length;
+      }
+    });
   }
 });
 
 export const StatisticsTypeQueryExtension = extendType({
   type: 'Query',
   definition(t) {
-    t.field('today', {
+    t.field('statistics', {
       type: StatisticsType,
       resolve: () => {
         return {

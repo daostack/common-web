@@ -1,10 +1,11 @@
+import { IUserEntity } from '@common/types';
+
 import { db } from '../../../../util';
 import { Collections } from '../../../../constants';
 
-import { IUserEntity } from '../types';
-
 import { getUserByEmail } from './getUserByEmail';
 import { getUser } from './getUser';
+import { getUsers } from './getUsers';
 
 export const UserCollection = db.collection(Collections.Users)
   .withConverter<IUserEntity>({
@@ -18,5 +19,6 @@ export const UserCollection = db.collection(Collections.Users)
 
 export const userDb = {
   get: getUser,
+  getMany: getUsers,
   getByEmail: getUserByEmail
 };
