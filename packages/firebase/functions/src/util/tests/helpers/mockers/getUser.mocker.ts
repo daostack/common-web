@@ -1,9 +1,11 @@
-import { IUserEntity } from '../../../../core/users/types';
+/*global firestore, jest*/
+import { IUserEntity } from '@common/types';
 import { NotFoundError } from '../../../errors';
 import firebase from 'firebase';
 import Timestamp = firebase.firestore.Timestamp;
 
-jest.mock('../../../../core/users/database/getUser', () => ({
+
+jest.mock('../../../../core/domain/users/database/getUser', () => ({
   getUser: jest.fn()
     .mockImplementation(async (userId: string): Promise<IUserEntity> => {
       if (userId === '404') {

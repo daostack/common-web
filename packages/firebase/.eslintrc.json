@@ -7,7 +7,8 @@
     "*.sh",
     "functions/dist/**",
     "*.test.ts",
-    "nexus-typegen.ts"
+    "nexus-typegen.ts",
+    "schema.types.ts"
   ],
   "parserOptions": {
     // Required for certain syntax usages
@@ -26,6 +27,7 @@
   },
   "extends": "eslint:recommended",
   "rules": {
+    "@typescript-eslint/no-empty-interface": 0,
     "@typescript-eslint/no-use-before-define": 0,
     "@typescript-eslint/interface-name-prefix": 0,
     // Removed rule "disallow multiple spaces in regular expressions" from recommended eslint rules

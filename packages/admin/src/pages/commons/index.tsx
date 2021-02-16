@@ -8,6 +8,7 @@ import { ExternalLink, Edit, Trash2, ChevronRightCircleFill, ChevronLeftCircleFi
 
 import { Link } from '../../components/Link';
 import { useGetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryResult } from '@graphql';
+import { withPermission } from '../../helpers/hoc/withPermission';
 
 const GetCommonsHomescreenData = gql`
   query getCommonsHomescreenData($last: Int, $after: Int) {
@@ -63,17 +64,13 @@ const CommonsHomepage: NextPage = () => {
     if (data.loading) {
       console.debug('Data is still loading, skipping transform');
 
-      const arr = Array(10).fill({
+      return Array(10).fill({
         name: FullWidthLoader,
         raised: FullWidthLoader,
         balance: FullWidthLoader,
         type: FullWidthLoader,
         action: FullWidthLoader
       });
-
-      console.log(arr)
-
-      return arr;
     }
 
     if (data.error) {
@@ -164,7 +161,6 @@ const CommonsHomepage: NextPage = () => {
         <Spacer y={2}/>
       </React.Fragment>
 
-
       <Text h3>All commons</Text>
 
       <Table data={transformCommonsArray(data)}>
@@ -206,4 +202,6 @@ const CommonsHomepage: NextPage = () => {
   );
 };
 
-export default CommonsHomepage;
+export default withPermission('admin.commons.*', {
+  redirect: true
+})(CommonsHomepage);

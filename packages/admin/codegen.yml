@@ -1,11 +1,17 @@
 overwrite: true
-schema: "./schema.gql"
+schema: "http://localhost:5003/common-staging-50741/us-central1/graph/graphql"
 documents: "src/**/*.tsx"
 generates:
-  src/graphql.tsx:
+  ./src/graphql/index.ts:
     plugins:
       - "typescript"
       - "typescript-operations"
       - "typescript-react-apollo"
+  ./src/graphql/schema.json:
+    plugins:
+      - "introspection"
+  ./src/graphql/schema.graphql:
+    plugins:
+      - schema-ast
     config:
-      withHooks: true
+      includeDirectives: true

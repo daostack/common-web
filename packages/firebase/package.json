@@ -1,14 +1,14 @@
 {
   "name": "@common/firebase",
   "description": "Cloud Functions for Firebase",
-  "version": "1.9.9-alpha.0",
+  "version": "1.9.9-alpha.1",
   "scripts": {
     "build": "yarn compile",
     "build:watch": "yarn compile:watch",
     "compile": "rimraf ./functions/dist/**/* && tsc -p tsconfig.json",
     "compile:watch": "rimraf ./functions/dist/**/* && tsc -p tsconfig.json --watch",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "lint": "eslint .",
+    "lint": "eslint ./",
     "clean": "find ./ -name '*.log' -delete",
     "logs": "firebase functions:log",
     "serve": "firebase serve --only functions",
@@ -69,7 +69,7 @@
   },
   "private": true,
   "dependencies": {
-    "@common/types": "^1.9.9-alpha.0",
+    "@common/types": "^1.9.9-alpha.1",
     "apollo-server": "^2.19.2",
     "crossenv": "^0.0.2-security",
     "graphql": "^15.5.0",

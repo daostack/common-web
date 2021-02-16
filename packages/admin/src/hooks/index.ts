@@ -1,1 +1,1 @@
-export { useThemeMode } from './useThemeMode'
+export { useApollo } from './useApollo';

@@ -1,14 +1,27 @@
-import {FundingRequestState, IProposalEntity, ProposalType, RequestToJoinState} from '@common/types';
-import {firestore} from 'firebase-admin';
+import {
+  FundingRequestState,
+  IProposalEntity,
+  ProposalType,
+  RequestToJoinState,
+  ProposalFundingState
+} from '@common/types';
+import { firestore } from 'firebase-admin';
 
-import {ProposalsCollection} from './index';
-import {CommonError} from '../../util/errors';
+import { ProposalsCollection } from './index';
+import { CommonError } from '../../util/errors';
 
-interface IGetProposalsOptions {
+export interface IGetProposalsOptions {
   state?: RequestToJoinState | RequestToJoinState[] | FundingRequestState | FundingRequestState[];
   type?: ProposalType;
   proposerId?: string;
   commonId?: string;
+
+  /**
+   * Get the proposals for the ids. If the ID is not found no error will be thrown!
+   */
+  ids?: string[];
+
+  fundingState?: ProposalFundingState;
 
   /**
    * Get the last {number} of elements sorted
@@ -52,6 +65,15 @@ export const getProposals = async (options: IGetProposalsOptions): Promise<IProp
 
   if (options.commonId) {
     proposalsQuery = proposalsQuery.where('commonId', '==', options.commonId);
+  }
+
+  if (options.fundingState) {
+    proposalsQuery = proposalsQuery
+      .where('fundingState', '==', options.fundingState);
+  }
+
+  if (options.ids) {
+    proposalsQuery = proposalsQuery.where('id', 'in', options.ids);
   }
 
   // Sorting and paging

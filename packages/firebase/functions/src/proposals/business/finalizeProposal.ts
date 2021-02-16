@@ -52,6 +52,7 @@ export const finalizeProposal = async (proposal: IProposalEntity): Promise<IProp
 
       // Change the state of the proposal
       proposal.state = 'passedInsufficientBalance';
+      proposal.fundingState = 'notAvailable';
 
       // Create an event
       await createEvent({
