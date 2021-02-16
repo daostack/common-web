@@ -13,7 +13,7 @@ export const hideContent = async (payload) => {
   const moderationEntity = {
     flag: 'hidden',
     reasons: moderation.reasons.split(','), //IReasons
-    note: moderation?.note || '',
+    note: moderation?.moderatorNote || '',
     updatedAt: firestore.Timestamp.now(),
     moderator: userId,
   }

@@ -1,6 +1,6 @@
 import { discussionDb } from '../../discussion/database'
 
-export const updateEntity = async (itemId, moderationEntity, type) => {
+export const updateEntity = async (itemId: string, moderationEntity, type: string) => {
   switch (type) {
     case 'discussion':
       return await discussionDb.moderateDiscussion(itemId, moderationEntity);
