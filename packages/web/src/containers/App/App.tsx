@@ -5,8 +5,10 @@ import { useSelector } from "react-redux";
 import { AuthContainer } from "../Auth";
 import PrivateRoute from "./PrivateRoute";
 import { authentificated } from "../Auth/store/selectors";
-import { Content, NotFound, LoadingIndicator, Footer, Dashboard } from "../../shared/components";
+import { Content, NotFound, LoadingIndicator, Footer, Header, Dashboard } from "../../shared/components";
 import { getLoading } from "../../shared/store/selectors";
+import { CommonContainer } from "../Common";
+import { ROUTE_PATHS } from "../../shared/constants";
 
 const App = () => {
   const is_authorized = useSelector(authentificated());
@@ -14,17 +16,18 @@ const App = () => {
 
   return (
     <div className="App">
-      {is_authorized && "hello"}
+      <Header />
       <Content>
         {is_loading ? <LoadingIndicator /> : null}
         <Switch>
-          <Route path="/auth/" component={AuthContainer} />
+          <Route path={ROUTE_PATHS.AUTH} component={AuthContainer} />
           <PrivateRoute path="/" exact component={Dashboard} authentificated={is_authorized} />
+          <PrivateRoute path={ROUTE_PATHS.COMMON_LIST} component={CommonContainer} authentificated={true} />
           <Route component={NotFound} />
         </Switch>
       </Content>
 
-      {is_authorized && <Footer />}
+      <Footer />
     </div>
   );
 };

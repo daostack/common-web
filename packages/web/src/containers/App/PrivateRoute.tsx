@@ -4,7 +4,7 @@ import { Route, Redirect, RouteProps } from "react-router-dom";
 import { LOGIN_REDIRECT_LINK } from "./constants";
 
 interface PrivateRouteProps extends RouteProps {
-  component: any;
+  component: React.JSXElementConstructor<any>;
   authentificated: boolean;
 }
 
