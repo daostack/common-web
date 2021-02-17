@@ -2,7 +2,16 @@ import React from 'react';
 import { NextPage } from 'next';
 
 import { Breadcrumbs, Text, Spacer, Grid, Card, Table, Tooltip, useTheme, Button } from '@geist-ui/react';
-import { Circle, Home, User, ExternalLink, CheckInCircleFill, CheckCircle, XCircle, QuestionCircle } from '@geist-ui/react-icons';
+import {
+  Circle,
+  Home,
+  User,
+  ExternalLink,
+  CheckInCircleFill,
+  CheckCircle,
+  XCircle,
+  QuestionCircle
+} from '@geist-ui/react-icons';
 
 import { Link } from '@components/Link';
 import { withPermission } from '../../helpers/hoc/withPermission';
@@ -137,7 +146,7 @@ const PayoutsPage: NextPage = () => {
       ) : (
         <Centered>
           <Tooltip text="The proposal is currently part of payout and cannot be added to new one">
-            <QuestionCircle size={20} />
+            <QuestionCircle size={20}/>
           </Tooltip>
         </Centered>
       ),
@@ -175,7 +184,7 @@ const PayoutsPage: NextPage = () => {
           {p.executed ? (
             <CheckCircle color={theme.palette.success}/>
           ) : (
-            <XCircle />
+            <XCircle/>
           )}
         </Centered>
       ),
@@ -185,12 +194,13 @@ const PayoutsPage: NextPage = () => {
           {p.voided ? (
             <CheckCircle color={theme.palette.error}/>
           ) : (
-            <XCircle />
+            <XCircle/>
           )}
         </Centered>
       ),
 
-      amount: p.amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
+      amount: (p.amount / 100)
+        .toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
 
       status: p.voided ? 'Voided' : p.status,
 
@@ -286,7 +296,7 @@ const PayoutsPage: NextPage = () => {
               <Centered>
                 <Text>No funding proposals need funding</Text>
 
-                <Spacer y={5} />
+                <Spacer y={5}/>
               </Centered>
             )}
           </React.Fragment>
