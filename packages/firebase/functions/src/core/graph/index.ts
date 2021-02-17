@@ -9,6 +9,7 @@ import { EventTypes } from './schema/events';
 import { PayoutTypes } from './schema/payouts';
 import { CommonTypes } from './schema/commons';
 import { ProposalTypes } from './schema/proposals';
+import { IntentionTypes } from './schema/intentions';
 import { SubscriptionTypes } from './schema/subscriptions';
 
 import { StatisticsType, StatisticsTypeQueryExtension } from './schema/statistics/statistics';
@@ -23,10 +24,11 @@ const types = [
   ...CommonTypes,
   ...PayoutTypes,
   ...ProposalTypes,
+  ...IntentionTypes,
   ...SubscriptionTypes,
 
   StatisticsType,
-  StatisticsTypeQueryExtension,
+  StatisticsTypeQueryExtension
 ];
 
 export const schema = makeSchema({

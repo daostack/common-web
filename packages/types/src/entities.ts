@@ -6,4 +6,5 @@ export * from './entities/IProposalEntity';
 export * from './entities/ISubscriptionEntity';
 export * from './entities/IVoteEntity';
 export * from './entities/IUserEntity';
+export * from './entities/IIntentionEntity';
 
