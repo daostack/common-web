@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import firebase from 'firebase';
 import { gql } from '@apollo/client';
-import { useCreateIntentionMutation } from '@graphql';
+import { useCreateIntentionMutation, IntentionType } from '@graphql';
 
 const CreateIntentionMutation = gql`
   mutation createIntention($type: IntentionType!, $intention: String!) {
@@ -29,7 +29,7 @@ const UnauthorizedPage: NextPage = () => {
       if (router.query.failedPermission) {
         const { data } = await createIntention({
           variables: {
-            type: 'access',
+            type: IntentionType.Access,
             intention: router.query.failedPermission as string
           }
         });

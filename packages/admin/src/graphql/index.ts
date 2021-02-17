@@ -122,6 +122,7 @@ export type Event = {
   objectId?: Maybe<Scalars['ID']>;
   /** The id of the actor */
   userId?: Maybe<Scalars['ID']>;
+  user?: Maybe<User>;
 };
 
 export enum CommonContributionType {
@@ -414,7 +415,7 @@ export type QueryEventArgs = {
 
 
 export type QueryEventsArgs = {
-  last: Scalars['Int'];
+  last?: Maybe<Scalars['Int']>;
   after?: Maybe<Scalars['Int']>;
 };
 
@@ -468,6 +469,24 @@ export type MutationExecutePayoutsArgs = {
 export type MutationCreateIntentionArgs = {
   input: CreateIntentionInput;
 };
+
+export type GetLatestEventsQueryVariables = Exact<{
+  last?: Maybe<Scalars['Int']>;
+  after?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetLatestEventsQuery = (
+  { __typename?: 'Query' }
+  & { events?: Maybe<Array<Maybe<(
+    { __typename?: 'Event' }
+    & Pick<Event, 'id' | 'createdAt' | 'type'>
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstName' | 'lastName' | 'photoURL'>
+    )> }
+  )>>> }
+);
 
 export type GetUserPermissionsQueryVariables = Exact<{
   userId: Scalars['ID'];
@@ -546,10 +565,7 @@ export type GetDashboardDataQuery = (
   & { statistics?: Maybe<(
     { __typename?: 'Statistics' }
     & Pick<Statistics, 'newCommons' | 'newJoinRequests' | 'newFundingRequests' | 'newDiscussions' | 'newDiscussionMessages'>
-  )>, events?: Maybe<Array<Maybe<(
-    { __typename?: 'Event' }
-    & Pick<Event, 'id' | 'createdAt' | 'updatedAt' | 'userId' | 'objectId' | 'type'>
-  )>>> }
+  )> }
 );
 
 export type StatisticsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -759,6 +775,48 @@ export type GetUsersHomepageDataQuery = (
 );
 
 
+export const GetLatestEventsDocument = gql`
+    query GetLatestEvents($last: Int = 10, $after: Int = 0) {
+  events(last: $last, after: $after) {
+    id
+    createdAt
+    type
+    user {
+      id
+      firstName
+      lastName
+      photoURL
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetLatestEventsQuery__
+ *
+ * To run a query within a React component, call `useGetLatestEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLatestEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLatestEventsQuery({
+ *   variables: {
+ *      last: // value for 'last'
+ *      after: // value for 'after'
+ *   },
+ * });
+ */
+export function useGetLatestEventsQuery(baseOptions?: Apollo.QueryHookOptions<GetLatestEventsQuery, GetLatestEventsQueryVariables>) {
+        return Apollo.useQuery<GetLatestEventsQuery, GetLatestEventsQueryVariables>(GetLatestEventsDocument, baseOptions);
+      }
+export function useGetLatestEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLatestEventsQuery, GetLatestEventsQueryVariables>) {
+          return Apollo.useLazyQuery<GetLatestEventsQuery, GetLatestEventsQueryVariables>(GetLatestEventsDocument, baseOptions);
+        }
+export type GetLatestEventsQueryHookResult = ReturnType<typeof useGetLatestEventsQuery>;
+export type GetLatestEventsLazyQueryHookResult = ReturnType<typeof useGetLatestEventsLazyQuery>;
+export type GetLatestEventsQueryResult = Apollo.QueryResult<GetLatestEventsQuery, GetLatestEventsQueryVariables>;
 export const GetUserPermissionsDocument = gql`
     query getUserPermissions($userId: ID!) {
   user(id: $userId) {
@@ -912,14 +970,6 @@ export const GetDashboardDataDocument = gql`
     newFundingRequests
     newDiscussions
     newDiscussionMessages
-  }
-  events(last: 10) {
-    id
-    createdAt
-    updatedAt
-    userId
-    objectId
-    type
   }
 }
     `;

@@ -7,7 +7,7 @@ import { Spacer, Text, Table, Pagination, Tag, useToasts, Breadcrumbs, Grid, Car
 import { ExternalLink, Edit, Trash2, ChevronRightCircleFill, ChevronLeftCircleFill } from '@geist-ui/react-icons';
 
 import { Link } from '../../components/Link';
-import { useGetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryResult } from '@graphql';
+import { useGetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryResult, useStatisticsQuery } from '@graphql';
 import { withPermission } from '../../helpers/hoc/withPermission';
 
 const GetCommonsHomescreenData = gql`
@@ -41,6 +41,7 @@ const CommonsHomepage: NextPage = () => {
 
   // Data fetching and custom hooks
   const [toasts, setToast] = useToasts();
+  const statistics = useStatisticsQuery();
   const data = useGetCommonsHomescreenDataQuery({
     variables: {
       last: 10,
@@ -133,7 +134,13 @@ const CommonsHomepage: NextPage = () => {
           <Grid sm={24} md={8}>
             <Card hoverable>
               <Text h1>
-                1424
+                {statistics.data && (
+                  statistics.data.statistics.commons
+                )}
+
+                {!statistics.data && (
+                  <Skeleton/>
+                )}
               </Text>
               <Text p>Total commons</Text>
             </Card>
@@ -141,7 +148,7 @@ const CommonsHomepage: NextPage = () => {
 
           <Grid sm={24} md={8}>
             <Card hoverable>
-              <Text h1>
+              <Text h1 type="error">
                 98
               </Text>
               <Text p>Commons from the last week</Text>
@@ -150,7 +157,7 @@ const CommonsHomepage: NextPage = () => {
 
           <Grid sm={24} md={8}>
             <Card hoverable>
-              <Text h1>
+              <Text h1 type="error">
                 432
               </Text>
               <Text p>Commons with funds</Text>
@@ -191,12 +198,14 @@ const CommonsHomepage: NextPage = () => {
         />
       </Table>
 
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-        <Pagination count={38} onChange={onPageChange}>
-          <Pagination.Next><ChevronRightCircleFill/></Pagination.Next>
-          <Pagination.Previous><ChevronLeftCircleFill/></Pagination.Previous>
-        </Pagination>
-      </div>
+      {statistics.data && statistics.data.statistics.commons > 10 && (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
+          <Pagination count={Math.ceil(statistics.data.statistics.commons / 10)} onChange={onPageChange}>
+            <Pagination.Next><ChevronRightCircleFill/></Pagination.Next>
+            <Pagination.Previous><ChevronLeftCircleFill/></Pagination.Previous>
+          </Pagination>
+        </div>
+      )}
 
     </React.Fragment>
   );

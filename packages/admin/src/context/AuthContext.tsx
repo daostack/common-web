@@ -47,6 +47,7 @@ export const AuthContextProvider: React.FC<PropsWithChildren<any>> = ({ children
     });
   }, []);
 
+
   return (
     <AuthContext.Provider value={context}>
       {children}

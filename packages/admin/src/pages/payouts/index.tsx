@@ -2,7 +2,7 @@ import React from 'react';
 import { NextPage } from 'next';
 
 import { Breadcrumbs, Text, Spacer, Grid, Card, Table, Tooltip, useTheme, Button } from '@geist-ui/react';
-import { Circle, Home, User, ExternalLink, CheckInCircleFill, CheckCircle, XCircle } from '@geist-ui/react-icons';
+import { Circle, Home, User, ExternalLink, CheckInCircleFill, CheckCircle, XCircle, QuestionCircle } from '@geist-ui/react-icons';
 
 import { Link } from '@components/Link';
 import { withPermission } from '../../helpers/hoc/withPermission';
@@ -123,16 +123,22 @@ const PayoutsPage: NextPage = () => {
   // --- Transformers
 
   const transformFundingRequestForTable = (data: GetPayoutsPageDataQueryResult) => {
-    const { proposals } = data.data;
+    const { proposals, payouts } = data.data;
 
     return proposals.map((proposal) => ({
-      checkbox:  (
+      checkbox: !(payouts.some(p => p.proposalIds.includes(proposal.id))) ? (
         <Centered onClick={onProposalCheckboxClick(proposal.id)}>
           {isSelectedProposal(proposal.id) ? (
             <CheckInCircleFill size={20} color={theme.palette.success}/>
           ) : (
             <Circle size={20}/>
           )}
+        </Centered>
+      ) : (
+        <Centered>
+          <Tooltip text="The proposal is currently part of payout and cannot be added to new one">
+            <QuestionCircle size={20} />
+          </Tooltip>
         </Centered>
       ),
 
@@ -279,6 +285,8 @@ const PayoutsPage: NextPage = () => {
             ) : (
               <Centered>
                 <Text>No funding proposals need funding</Text>
+
+                <Spacer y={5} />
               </Centered>
             )}
           </React.Fragment>
@@ -299,6 +307,12 @@ const PayoutsPage: NextPage = () => {
                 </Centered>
               </Table.Column>
             </Table>
+
+            {(!data.data.payouts.length) && (
+              <Centered>
+                <Text>No payouts found</Text>
+              </Centered>
+            )}
           </React.Fragment>
         </React.Fragment>
       )}

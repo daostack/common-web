@@ -41,8 +41,6 @@ export const PermissionsContextProvider: React.FC<PropsWithChildren<any>> = ({ c
   const [context, setContext] = React.useState<IPermissionsContext>(defaultPermissionsContext);
 
   React.useEffect(() => {
-    console.log(data);
-
     if (authContext.authenticated && data?.user) {
       setContext({
         loaded: true,

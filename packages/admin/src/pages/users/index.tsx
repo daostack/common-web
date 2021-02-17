@@ -8,7 +8,13 @@ import { Avatar, Breadcrumbs, Card, Grid, Pagination, Spacer, Table, Text } from
 
 import { Link } from '@components/Link';
 import { Centered } from '@components/Centered';
-import { useGetUsersHomepageDataQuery, User, useStatisticsQuery } from '@graphql';
+import {
+  useGetUsersHomepageDataQuery,
+  User,
+  useStatisticsQuery,
+  GetUsersHomepageDataQueryResult,
+  GetUsersHomepageDataQuery
+} from '@graphql';
 import Skeleton from 'react-loading-skeleton';
 
 const UsersHomepageData = gql`
@@ -55,16 +61,22 @@ const UsersHomepage: NextPage = () => {
   };
 
   // --- Transformers
-  const transformDataForTable = () => {
+  const transformDataForTable = (data: GetUsersHomepageDataQuery) => {
     const { users } = data;
 
-    if (loading) {
+    if (loading || !users) {
+      const FullWidthLoader = (
+        <div style={{ width: '100%' }}>
+          <Skeleton/>
+        </div>
+      );
+
       return Array(10).fill({
-        user: Skeleton,
-        avatar: Skeleton,
-        name: Skeleton,
-        email: Skeleton,
-        registeredOn: Skeleton
+        user: FullWidthLoader,
+        avatar: FullWidthLoader,
+        name: FullWidthLoader,
+        email: FullWidthLoader,
+        registeredOn: FullWidthLoader
       });
     }
 
@@ -98,7 +110,6 @@ const UsersHomepage: NextPage = () => {
       )
     }));
   };
-
 
   return (
     <React.Fragment>
@@ -135,7 +146,7 @@ const UsersHomepage: NextPage = () => {
 
               <Grid sm={24} md={8}>
                 <Card hoverable>
-                  <Text h1>
+                  <Text h1 type="error">
                     123
                   </Text>
                   <Text p>Users joined last week</Text>
@@ -144,7 +155,7 @@ const UsersHomepage: NextPage = () => {
 
               <Grid sm={24} md={8}>
                 <Card hoverable>
-                  <Text h1>
+                  <Text h1 type="error">
                     7621
                   </Text>
                   <Text p>Users active last week</Text>
@@ -161,7 +172,7 @@ const UsersHomepage: NextPage = () => {
         <React.Fragment>
           <Text h3>Common users</Text>
 
-          <Table data={transformDataForTable()} onRow={onUserRowClick}>
+          <Table data={transformDataForTable(data)} onRow={onUserRowClick}>
             <Table.Column prop="avatar" width={70}/>
             <Table.Column prop="name" label="Name" width={200}/>
             <Table.Column prop="email" label="Email Address"/>
@@ -171,7 +182,10 @@ const UsersHomepage: NextPage = () => {
           {statistics.data && (
             <Centered>
               <div style={{ margin: '20px 0' }}>
-                <Pagination count={Math.ceil(statistics.data.statistics.users / 10)} onChange={onPageChange}>
+                <Pagination
+                  count={Math.ceil(statistics.data.statistics.users / 10)}
+                  onChange={onPageChange}
+                >
                   <Pagination.Next>
                     <ChevronRightCircleFill/>
                   </Pagination.Next>

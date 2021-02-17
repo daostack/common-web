@@ -1,12 +1,16 @@
 import React from 'react';
 import { NextPage } from 'next';
 
+import Skeleton from 'react-loading-skeleton';
 import { gql } from '@apollo/client/core';
-import { Card, Grid, Spacer, Table, Text } from '@geist-ui/react';
+import { Breadcrumbs, Card, Grid, Spacer, Text } from '@geist-ui/react';
 
-import { useGetDashboardDataQuery } from '@graphql';
+import { useGetDashboardDataQuery, useStatisticsQuery } from '@graphql';
 import { HasPermission } from '@components/HasPermission';
 import { withPermission } from '../../helpers/hoc/withPermission';
+import { LatestEventsTable } from '@components/tables/LatestEventsTable';
+import { useRouter } from 'next/router';
+import { Link } from '@components/Link';
 
 const GetDashboardDataQuery = gql`
   query getDashboardData {
@@ -17,18 +21,6 @@ const GetDashboardDataQuery = gql`
 
       newDiscussions
       newDiscussionMessages
-    }
-
-    events(last: 10) {
-      id
-
-      createdAt
-      updatedAt
-
-      userId
-      objectId
-
-      type
     }
   }
 `;
@@ -45,72 +37,89 @@ const GetStatisticsQuery = gql`
 `;
 
 const DashboardHomePage: NextPage = () => {
+  const router = useRouter();
+
   const data = useGetDashboardDataQuery();
+  const statistics = useStatisticsQuery();
+
+  const onCardClick = (url: string) => {
+    return () => {
+      router.push(url);
+    };
+  };
 
   return (
     <React.Fragment>
       <Text h1>Dashboard</Text>
 
+      <Breadcrumbs>
+        <Breadcrumbs.Item>Home</Breadcrumbs.Item>
+        <Breadcrumbs.Item>
+          <Link to="/dashboard">Dashboard</Link>
+        </Breadcrumbs.Item>
+      </Breadcrumbs>
 
       <Spacer y={2}/>
-
 
       {data.data && (
         <React.Fragment>
           <HasPermission permission="admin.dashboard.read.overview">
-            <Text h3>Today's overview</Text>
+            <Text h3>Application's overview</Text>
 
             <Grid.Container gap={2} alignItems="stretch" style={{ display: 'flex' }}>
-              <Grid sm={24} md={12}>
+              <Grid sm={24} md={8} onClick={onCardClick('/commons')} style={{ cursor: 'pointer' }}>
                 <Card hoverable>
-                  <Text h1 type="error">
-                    {data.data.statistics.newCommons}
+                  <Text h1>
+                    {statistics.data && (
+                      statistics.data.statistics.commons
+                    )}
+
+                    {!statistics.data && (
+                      <Skeleton/>
+                    )}
                   </Text>
-                  <Text p>Commons created</Text>
+                  <Text p>Total commons created</Text>
                 </Card>
               </Grid>
 
-              <Grid sm={24} md={12}>
+              <Grid sm={24} md={8} onClick={onCardClick('/proposals')} style={{ cursor: 'pointer' }}>
                 <Card hoverable>
-                  <Text h1 type="error">
+                  <Text h1>
+                    {statistics.data && (
+                      statistics.data.statistics.joinRequests +
+                      statistics.data.statistics.fundingRequests
+                    )}
 
-                    {data.data.statistics.newJoinRequests + data.data.statistics.newFundingRequests}
+                    {!statistics.data && (
+                      <Skeleton/>
+                    )}
                   </Text>
                   <Text p>Proposals created</Text>
                 </Card>
               </Grid>
 
-              <Grid sm={24} md={12}>
+              <Grid sm={24} md={8} onClick={onCardClick('/users')} style={{ cursor: 'pointer' }}>
                 <Card hoverable>
-                  <Text h1 type="error">
-                    {data.data.statistics.newDiscussions}
-                  </Text>
-                  <Text p>Discussions started</Text>
-                </Card>
-              </Grid>
+                  <Text h1>
+                    {statistics.data && (
+                      statistics.data.statistics.users
+                    )}
 
-              <Grid sm={24} md={12}>
-                <Card hoverable>
-                  <Text h1 type="error">
-                    {data.data.statistics.newDiscussionMessages}
+                    {!statistics.data && (
+                      <Skeleton/>
+                    )}
                   </Text>
-                  <Text p>Discussion messages send</Text>
+                  <Text p>User on common</Text>
                 </Card>
               </Grid>
             </Grid.Container>
 
             <Spacer y={2}/>
-          </HasPermission>
 
-          <HasPermission permission="admin.dashboard.read.events">
-            <Text h3>Latest events</Text>
-
-            <Table data={data.data.events} hover>
-              <Table.Column prop="createdAt" label="Occurred at"/>
-              <Table.Column prop="type" label="Event Type"/>
-              <Table.Column prop="userId" label="User ID"/>
-              <Table.Column prop="objectId" label="Object ID"/>
-            </Table>
+            <LatestEventsTable
+              refresh
+              notify
+            />
           </HasPermission>
         </React.Fragment>
       )}

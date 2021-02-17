@@ -90,6 +90,7 @@ type Event {
   objectId: ID
   """The id of the actor"""
   userId: ID
+  user: User
 }
 enum CommonContributionType {
   oneTime
@@ -290,7 +291,7 @@ type Query {
   users(page: Int = 1, perPage: Int = 10): [User]
   wires(page: Int = 1): [Wire]
   event(eventId: ID!): Event
-  events(last: Int!, after: Int): [Event]
+  events(last: Int = 10, after: Int = 0): [Event]
   common(
     """The ID of the common, that you want to retrieve"""
     commonId: ID!
