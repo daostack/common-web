@@ -205,6 +205,21 @@ type ProposalVote {
   outcome: ProposalVoteOutcome!
   voter: User
 }
+type Intention {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  type: IntentionType!
+  intention: String!
+}
+enum IntentionType {
+  access
+  request
+}
+input CreateIntentionInput {
+  type: IntentionType!
+  intention: String!
+}
 enum SubscriptionStatus {
   pending
   active
@@ -289,4 +304,5 @@ type Query {
 }
 type Mutation {
   executePayouts(input: ExecutePayoutInput!): Payout
+  createIntention(input: CreateIntentionInput!): Intention
 }

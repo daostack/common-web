@@ -264,6 +264,25 @@ export type ProposalVote = {
   voter?: Maybe<User>;
 };
 
+export type Intention = {
+  __typename?: 'Intention';
+  id: Scalars['ID'];
+  createdAt: Scalars['Date'];
+  updatedAt: Scalars['Date'];
+  type: IntentionType;
+  intention: Scalars['String'];
+};
+
+export enum IntentionType {
+  Access = 'access',
+  Request = 'request'
+}
+
+export type CreateIntentionInput = {
+  type: IntentionType;
+  intention: Scalars['String'];
+};
+
 export enum SubscriptionStatus {
   Pending = 'pending',
   Active = 'active',
@@ -437,11 +456,17 @@ export type QueryProposalsArgs = {
 export type Mutation = {
   __typename?: 'Mutation';
   executePayouts?: Maybe<Payout>;
+  createIntention?: Maybe<Intention>;
 };
 
 
 export type MutationExecutePayoutsArgs = {
   input: ExecutePayoutInput;
+};
+
+
+export type MutationCreateIntentionArgs = {
+  input: CreateIntentionInput;
 };
 
 export type GetUserPermissionsQueryVariables = Exact<{
@@ -535,6 +560,20 @@ export type StatisticsQuery = (
   & { statistics?: Maybe<(
     { __typename?: 'Statistics' }
     & Pick<Statistics, 'users' | 'commons' | 'joinRequests' | 'fundingRequests'>
+  )> }
+);
+
+export type CreateIntentionMutationVariables = Exact<{
+  type: IntentionType;
+  intention: Scalars['String'];
+}>;
+
+
+export type CreateIntentionMutation = (
+  { __typename?: 'Mutation' }
+  & { createIntention?: Maybe<(
+    { __typename?: 'Intention' }
+    & Pick<Intention, 'id'>
   )> }
 );
 
@@ -944,6 +983,39 @@ export function useStatisticsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type StatisticsQueryHookResult = ReturnType<typeof useStatisticsQuery>;
 export type StatisticsLazyQueryHookResult = ReturnType<typeof useStatisticsLazyQuery>;
 export type StatisticsQueryResult = Apollo.QueryResult<StatisticsQuery, StatisticsQueryVariables>;
+export const CreateIntentionDocument = gql`
+    mutation createIntention($type: IntentionType!, $intention: String!) {
+  createIntention(input: {type: $type, intention: $intention}) {
+    id
+  }
+}
+    `;
+export type CreateIntentionMutationFn = Apollo.MutationFunction<CreateIntentionMutation, CreateIntentionMutationVariables>;
+
+/**
+ * __useCreateIntentionMutation__
+ *
+ * To run a mutation, you first call `useCreateIntentionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateIntentionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createIntentionMutation, { data, loading, error }] = useCreateIntentionMutation({
+ *   variables: {
+ *      type: // value for 'type'
+ *      intention: // value for 'intention'
+ *   },
+ * });
+ */
+export function useCreateIntentionMutation(baseOptions?: Apollo.MutationHookOptions<CreateIntentionMutation, CreateIntentionMutationVariables>) {
+        return Apollo.useMutation<CreateIntentionMutation, CreateIntentionMutationVariables>(CreateIntentionDocument, baseOptions);
+      }
+export type CreateIntentionMutationHookResult = ReturnType<typeof useCreateIntentionMutation>;
+export type CreateIntentionMutationResult = Apollo.MutationResult<CreateIntentionMutation>;
+export type CreateIntentionMutationOptions = Apollo.BaseMutationOptions<CreateIntentionMutation, CreateIntentionMutationVariables>;
 export const GetProposalsSelectedForBatchDocument = gql`
     query getProposalsSelectedForBatch($ids: [String!]!) {
   proposals(ids: $ids) {
