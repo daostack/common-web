@@ -7,4 +7,7 @@ export * from './entities/ISubscriptionEntity';
 export * from './entities/IVoteEntity';
 export * from './entities/IUserEntity';
 export * from './entities/IIntentionEntity';
+export * from './entities/IPermission';
+export * from './entities/IEvent';
+export * from './entities/INotification';
 

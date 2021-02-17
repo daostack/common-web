@@ -1,4 +1,5 @@
-import { IUserEntity } from '../../../../core/domain/users/types';
+/*global firestore, jest*/
+import { IUserEntity } from '@common/types';
 import { NotFoundError } from '../../../errors';
 import firebase from 'firebase';
 import Timestamp = firebase.firestore.Timestamp;
