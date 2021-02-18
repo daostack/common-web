@@ -4,11 +4,13 @@ import { NextPage } from 'next';
 import Skeleton from 'react-loading-skeleton';
 import { gql } from '@apollo/client/core';
 import { Spacer, Text, Table, Pagination, Tag, useToasts, Breadcrumbs, Grid, Card } from '@geist-ui/react';
-import { ExternalLink, Edit, Trash2, ChevronRightCircleFill, ChevronLeftCircleFill } from '@geist-ui/react-icons';
+import { ExternalLink, Edit, Trash2, ChevronRightCircleFill, ChevronLeftCircleFill, Home } from '@geist-ui/react-icons';
 
 import { Link } from '../../components/Link';
 import { useGetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryResult, useStatisticsQuery } from '@graphql';
 import { withPermission } from '../../helpers/hoc/withPermission';
+import { useRouter } from 'next/router';
+import { Centered } from '@components/Centered';
 
 const GetCommonsHomescreenData = gql`
   query getCommonsHomescreenData($last: Int, $after: Int) {
@@ -25,6 +27,10 @@ const GetCommonsHomescreenData = gql`
 
       createdAt
       updatedAt
+      
+      members { 
+        userId
+      }
 
       metadata {
         byline
@@ -41,6 +47,7 @@ const CommonsHomepage: NextPage = () => {
 
   // Data fetching and custom hooks
   const [toasts, setToast] = useToasts();
+  const router = useRouter();
   const statistics = useStatisticsQuery();
   const data = useGetCommonsHomescreenDataQuery({
     variables: {
@@ -88,12 +95,26 @@ const CommonsHomepage: NextPage = () => {
     const { commons } = data.data;
 
     return commons.map((common) => ({
+      id: common.id,
+
+      icon: (
+        <Centered>
+          <Home />
+        </Centered>
+      ),
+
       name: common.name,
 
       raised: (common.raised / 100)
         .toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
       balance: (common.balance / 100)
         .toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
+
+      members: (
+        <Text b>
+          {common.members.length}
+        </Text>
+      ),
 
       type: (
         <React.Fragment>
@@ -103,17 +124,15 @@ const CommonsHomepage: NextPage = () => {
             <Tag type="secondary">Monthly</Tag>
           )}
         </React.Fragment>
-      ),
-
-      action: (
-        <React.Fragment>
-          <Link to={`/commons/details/${common.id}`} Icon={ExternalLink}/>
-          <Link to="" Icon={Edit}/>
-          <Link to="" Icon={Trash2}/>
-        </React.Fragment>
       )
     }));
   };
+
+  const onCommonTableRow = (data: { id: string }) => {
+    router.push({
+      pathname: `/commons/details/${data.id}`
+    })
+  }
 
   return (
     <React.Fragment>
@@ -170,8 +189,9 @@ const CommonsHomepage: NextPage = () => {
 
       <Text h3>All commons</Text>
 
-      <Table data={transformCommonsArray(data)}>
-        <Table.Column prop="name" label="Display Name"/>
+      <Table data={transformCommonsArray(data)} onRow={onCommonTableRow}>
+        <Table.Column prop="icon" width={70} />
+        <Table.Column prop="name" label="Display Name" />
 
         <Table.Column
           prop="raised"
@@ -186,15 +206,15 @@ const CommonsHomepage: NextPage = () => {
         />
 
         <Table.Column
-          prop="type"
-          label="Common Type"
-          width={150}
+          prop="members"
+          label="Members"
+          width={40}
         />
 
         <Table.Column
-          prop="action"
-          label="Actions"
-          width={130}
+          prop="type"
+          label="Common Type"
+          width={150}
         />
       </Table>
 

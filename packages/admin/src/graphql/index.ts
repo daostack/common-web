@@ -550,7 +550,10 @@ export type GetCommonsHomescreenDataQuery = (
   & { commons?: Maybe<Array<Maybe<(
     { __typename?: 'Common' }
     & Pick<Common, 'id' | 'name' | 'raised' | 'balance' | 'createdAt' | 'updatedAt'>
-    & { metadata: (
+    & { members?: Maybe<Array<Maybe<(
+      { __typename?: 'CommonMember' }
+      & Pick<CommonMember, 'userId'>
+    )>>>, metadata: (
       { __typename?: 'CommonMetadata' }
       & Pick<CommonMetadata, 'byline' | 'description' | 'contributionType'>
     ) }
@@ -927,6 +930,9 @@ export const GetCommonsHomescreenDataDocument = gql`
     balance
     createdAt
     updatedAt
+    members {
+      userId
+    }
     metadata {
       byline
       description

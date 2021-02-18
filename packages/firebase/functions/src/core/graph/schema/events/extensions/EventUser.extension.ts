@@ -8,7 +8,7 @@ export const EventUserExtension = extendType({
     t.field('user', {
       type: UserType,
       resolve: (root) => {
-        return userDb.get(root.userId);
+        return root.userId && userDb.get(root.userId);
       }
     });
   }

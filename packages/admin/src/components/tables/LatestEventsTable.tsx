@@ -109,6 +109,7 @@ export const LatestEventsTable: React.FC<ILatestEventsTableProps> = ({ paginatio
 
   return (
     <HasPermission permission="admin.events.read.list">
+      {console.log('data', data)}
       {data && (
         <React.Fragment>
           <Text h3>Latest events</Text>
