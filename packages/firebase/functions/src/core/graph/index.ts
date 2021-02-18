@@ -36,5 +36,9 @@ export const schema = makeSchema({
   outputs: {
     typegen: join(__dirname, './generated/schema.types.ts'),
     schema: join(__dirname, './generated/schema.graphql')
+  },
+  contextType: {
+    module: join(__dirname, '..'),
+    export: "IRequestContext"
   }
 });

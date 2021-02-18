@@ -1,5 +1,6 @@
 import { arg, extendType, nonNull } from 'nexus';
 
+import { IRequestContext } from '../../../..';
 import { IntentionType } from '../type/Inetention.type';
 import { CreateIntentionInput } from '../inputs/CreateIntention.input';
 import { intentionDb } from '../../../../domain/intentions';
@@ -16,13 +17,13 @@ export const CreateIntentionMutation = extendType({
           })
         )
       },
-      resolve: async (root, args, ctx) => {
+      resolve: async (root, args, ctx: IRequestContext) => {
         const { type, intention } = args.input;
-
-        console.log(ctx)
+        const userId = await ctx.getUserId();
 
         return intentionDb.add({
           type,
+          userId,
           intention
         });
       }
