@@ -1,14 +1,15 @@
-import { discussionDb } from '../../discussion/database'
-import { discussionMessageDb } from '../../discussionMessage/database'
+import { discussionDb } from '../../discussion/database';
+import { discussionMessageDb } from '../../discussionMessage/database';
+import { proposalDb } from '../../proposals/database';
 
 export const updateEntity = async (itemId: string, moderationEntity, type: string) => {
   switch (type) {
-    case 'discussion':
+    case 'Discussion':
       return await discussionDb.moderateDiscussion(itemId, moderationEntity);
-    case 'discussionMessage':
+    case 'DiscussionMessage':
       return await discussionMessageDb.moderateDiscussionMessage(itemId, moderationEntity);
-    case 'proposal':
-      break;
+    case 'Proposal':
+      return await proposalDb.moderateProposal(itemId, moderationEntity);
     
     default:
       // code...
