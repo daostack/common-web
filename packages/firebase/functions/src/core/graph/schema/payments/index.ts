@@ -1,0 +1,25 @@
+import { PaymentTypeEnum } from './enums/PaymentType.enum';
+import { PaymentStatusEnum } from './enums/PaymentStatus.enum';
+import { PaymentSourceEnum } from './enums/PaymentSource.enum';
+import { PaymentCurrencyEnum } from './enums/PaymentCurrency.enum';
+
+import { PaymentType } from './types/Payment.type';
+import { PaymentFeesType } from './types/PaymentFees.type';
+import { PaymentSourceType } from './types/PaymentSoure.type';
+import { PaymentAmountType } from './types/PaymentAmount.type';
+
+import { GetPaymentQuery } from './queries/GetPayment.query';
+
+export const PaymentTypes = [
+  PaymentTypeEnum,
+  PaymentSourceEnum,
+  PaymentStatusEnum,
+  PaymentCurrencyEnum,
+
+  PaymentType,
+  PaymentFeesType,
+  PaymentSourceType,
+  PaymentAmountType,
+
+  GetPaymentQuery
+];
