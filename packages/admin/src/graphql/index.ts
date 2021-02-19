@@ -732,6 +732,40 @@ export type GetProposalDetailsQuery = (
   )> }
 );
 
+export type GetProposalsHomescreenQueryVariables = Exact<{
+  fundingPage?: Maybe<Scalars['Int']>;
+  joinPage?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetProposalsHomescreenQuery = (
+  { __typename?: 'Query' }
+  & { funding?: Maybe<Array<Maybe<(
+    { __typename?: 'Proposal' }
+    & Pick<Proposal, 'id' | 'commonId' | 'votesFor' | 'votesAgainst'>
+    & { votes?: Maybe<Array<Maybe<(
+      { __typename?: 'ProposalVote' }
+      & Pick<ProposalVote, 'outcome'>
+    )>>>, description: (
+      { __typename?: 'ProposalDescription' }
+      & Pick<ProposalDescription, 'title' | 'description'>
+    ), fundingRequest?: Maybe<(
+      { __typename?: 'ProposalFunding' }
+      & Pick<ProposalFunding, 'amount'>
+    )> }
+  )>>>, join?: Maybe<Array<Maybe<(
+    { __typename?: 'Proposal' }
+    & Pick<Proposal, 'id' | 'commonId'>
+    & { description: (
+      { __typename?: 'ProposalDescription' }
+      & Pick<ProposalDescription, 'title' | 'description'>
+    ), join?: Maybe<(
+      { __typename?: 'ProposalJoin' }
+      & Pick<ProposalJoin, 'funding' | 'fundingType'>
+    )> }
+  )>>> }
+);
+
 export type GetUserDetailsQueryQueryVariables = Exact<{
   userId: Scalars['ID'];
 }>;
@@ -1339,6 +1373,65 @@ export function useGetProposalDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetProposalDetailsQueryHookResult = ReturnType<typeof useGetProposalDetailsQuery>;
 export type GetProposalDetailsLazyQueryHookResult = ReturnType<typeof useGetProposalDetailsLazyQuery>;
 export type GetProposalDetailsQueryResult = Apollo.QueryResult<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>;
+export const GetProposalsHomescreenDocument = gql`
+    query getProposalsHomescreen($fundingPage: Int, $joinPage: Int) {
+  funding: proposals(type: fundingRequest, page: $fundingPage) {
+    id
+    commonId
+    votes {
+      outcome
+    }
+    votesFor
+    votesAgainst
+    description {
+      title
+      description
+    }
+    fundingRequest {
+      amount
+    }
+  }
+  join: proposals(type: join, page: $joinPage) {
+    id
+    commonId
+    description {
+      title
+      description
+    }
+    join {
+      funding
+      fundingType
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetProposalsHomescreenQuery__
+ *
+ * To run a query within a React component, call `useGetProposalsHomescreenQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProposalsHomescreenQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProposalsHomescreenQuery({
+ *   variables: {
+ *      fundingPage: // value for 'fundingPage'
+ *      joinPage: // value for 'joinPage'
+ *   },
+ * });
+ */
+export function useGetProposalsHomescreenQuery(baseOptions?: Apollo.QueryHookOptions<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>) {
+        return Apollo.useQuery<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>(GetProposalsHomescreenDocument, baseOptions);
+      }
+export function useGetProposalsHomescreenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>) {
+          return Apollo.useLazyQuery<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>(GetProposalsHomescreenDocument, baseOptions);
+        }
+export type GetProposalsHomescreenQueryHookResult = ReturnType<typeof useGetProposalsHomescreenQuery>;
+export type GetProposalsHomescreenLazyQueryHookResult = ReturnType<typeof useGetProposalsHomescreenLazyQuery>;
+export type GetProposalsHomescreenQueryResult = Apollo.QueryResult<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>;
 export const GetUserDetailsQueryDocument = gql`
     query getUserDetailsQuery($userId: ID!) {
   user(id: $userId) {

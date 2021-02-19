@@ -44,7 +44,9 @@ export const UserType = objectType({
           'admin.payouts.create',
 
           'admin.events.read.list',
-          'admin.events.read.details'
+          'admin.events.read.details',
+
+          'admin.payments.read'
         ] : [];
       }
     });
