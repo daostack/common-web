@@ -9,6 +9,7 @@ import { PaymentSourceType } from './types/PaymentSoure.type';
 import { PaymentAmountType } from './types/PaymentAmount.type';
 
 import { GetPaymentQuery } from './queries/GetPayment.query';
+import { GetPaymentsQuery } from './queries/GetPayments.query';
 
 export const PaymentTypes = [
   PaymentTypeEnum,
@@ -21,5 +22,6 @@ export const PaymentTypes = [
   PaymentSourceType,
   PaymentAmountType,
 
-  GetPaymentQuery
+  GetPaymentQuery,
+  GetPaymentsQuery
 ];
