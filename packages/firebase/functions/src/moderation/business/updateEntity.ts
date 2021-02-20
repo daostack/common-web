@@ -6,7 +6,7 @@ export const updateEntity = async (itemId: string, moderationEntity, type: strin
   switch (type) {
     case 'Discussion':
       return await discussionDb.moderateDiscussion(itemId, moderationEntity);
-    case 'DiscussionMessage':
+    case 'discussionMessage':
       return await discussionMessageDb.moderateDiscussionMessage(itemId, moderationEntity);
     case 'Proposal':
       return await proposalDb.moderateProposal(itemId, moderationEntity);
