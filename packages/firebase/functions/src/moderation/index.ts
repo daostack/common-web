@@ -19,7 +19,7 @@ router.post('/hide', async (req, res, next) => {
       req,
       res,
       next,
-      successMessage: 'Permission added successfully!'
+      successMessage: `Your ${req.body.type} was successfully hidden`
     });
 });
 
@@ -34,7 +34,7 @@ router.post('/show', async (req, res, next) => {
       req,
       res,
       next,
-      successMessage: 'Permission added successfully!'
+      successMessage: 'Content is now visible'
     });
 });
 
