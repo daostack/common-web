@@ -1,4 +1,5 @@
 import admin from 'firebase-admin';
+import { IModerationEntity } from '@common/types'
 import Timestamp = admin.firestore.Timestamp;
 
 export interface IDiscussionMessage {
@@ -32,5 +33,7 @@ export interface IDiscussionMessage {
    * Image URLs of the user's avatar
    */
 	ownerAvatar: string;
+
+  moderation?: IModerationEntity;
 
 }

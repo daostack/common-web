@@ -2,6 +2,7 @@ import { IBaseEntity } from './helpers/IBaseEntity';
 
 import { ContributionType } from './ICommonEntity';
 import { VoteOutcome } from './IVoteEntity';
+import { IModerationEntity } from './IModerationEntity';
 
 export type ProposalPaymentState = 'notRelevant' | 'notAttempted' | 'pending' | 'failed' | 'confirmed';
 export type ProposalFundingState = 'notRelevant' | 'notAvailable' | 'available' | 'funded';
@@ -71,6 +72,8 @@ interface IBaseProposalEntity extends IBaseEntity {
    * The number of votes against the proposal
    */
   votesAgainst: number;
+
+  moderation?: IModerationEntity;
 }
 
 export interface IProposalVote {

@@ -1,22 +1,27 @@
+import { IModerationEntity } from '@common/types'; 
 import { firestore } from 'firebase-admin';
 import { hasPermission } from '../../core/domain/users/business';
 import { CommonError } from '../../util/errors';
 import { updateEntity } from './updateEntity';
+import { db } from '../../util';
 
 export const hideContent = async (payload) => {
 	//check user has permission to hide content
-  const { moderation, commonId, userId, type } = payload;
+  const { itemId, commonId, userId, type } = payload;
   if (!hasPermission(userId, commonId)) {
     throw new CommonError(`Permission denied`);
   }
 
-  const moderationEntity = {
+  const item = (await db.collection(type).doc(itemId).get()).data();
+
+  const moderationEntity: IModerationEntity = {
     flag: 'hidden',
-    reasons: moderation.reasons?.split(',') || [], //IReasons
-    note: moderation.moderatorNote || '',
+    reasons: item.moderation?.reasons || [],
+    note: item.moderation?.note || '',
     updatedAt: firestore.Timestamp.now(),
+    reporter: userId,
     moderator: userId,
   }
 
-  return await updateEntity(moderation.itemId, moderationEntity, type);
+  return await updateEntity(itemId, moderationEntity, type);
 }

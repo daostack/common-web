@@ -143,7 +143,12 @@ export enum EVENT_TYPES {
   SUBSCRIPTION_CANCELED_BY_PAYMENT_FAILURE = 'subscriptionCanceledByPaymentFailure',
 
   // Membership
-  MEMBERSHIP_REVOKED = 'membershipRevoked'
+  MEMBERSHIP_REVOKED = 'membershipRevoked',
+
+  //moderation
+  DISCUSSION_MESSAGE_REPORTED = 'discussionMessageReported',
+  PROPOSAL_REPORTED = 'proposalReported',
+  DISCUSSION_REPORTED = 'discussionReported',
 }
 
 export const eventData: Record<string, IEventData> = {
@@ -176,8 +181,10 @@ export const eventData: Record<string, IEventData> = {
     eventObject: async (proposalId: string): Promise<any> => (await proposalDb.getProposal(proposalId)),
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     notifyUserFilter: async (proposal: any): Promise<string[]> => {
+      const common = (await commonDb.get(proposal.commonId));
       return [
-        proposal.proposerId
+        //proposal.proposerId,
+        common.metadata.founderId,
       ];
     }
   },
@@ -273,6 +280,32 @@ export const eventData: Record<string, IEventData> = {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     notifyUserFilter: async (proposal: any): Promise<string[]> => {
       return [proposal.proposerId];
+    }
+  },
+  [EVENT_TYPES.DISCUSSION_MESSAGE_REPORTED]: {
+    eventObject: async (discussionMessageId: string): Promise<any> => (await getDiscussionMessageById(discussionMessageId)).data(),
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    notifyUserFilter: async (discussionMessage: any): Promise<string[]> => {
+      const common = await commonDb.get(discussionMessage.commonId)
+      return [common.members[0].userId]; // send to founder for now, need to send to all moderators
+    }
+  },
+  [EVENT_TYPES.PROPOSAL_REPORTED]: {
+    eventObject: async (proposalId: string): Promise<any> => (await proposalDb.getProposal(proposalId)),
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    notifyUserFilter: async (proposal: any): Promise<string[]> => {
+      const common = await commonDb.get(proposal.commonId)
+      return [common.members[0].userId]; // send to founder for now, need to send to all moderators
+    }
+  },
+  [EVENT_TYPES.DISCUSSION_REPORTED]: {
+    eventObject: async (discussionId: string): Promise<any> => 
+      (await discussionDb.getDiscussion(discussionId, { throwOnFailure: false }))
+                || (await proposalDb.getProposal(discussionId)),
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    notifyUserFilter: async (discussion: any): Promise<string[]> => {
+      const common = await commonDb.get(discussion.commonId);
+      return [common.members[0].userId]; // send to founder for now, need to send to all moderators
     }
   },
 

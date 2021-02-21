@@ -1,6 +1,7 @@
 import admin from 'firebase-admin';
 import Timestamp = admin.firestore.Timestamp;
 import { IBaseEntity } from '../util/types';
+import { IModerationEntity } from '@common/types'
 
 export interface IDiscussionEntity extends IBaseEntity {
   /**
@@ -47,5 +48,7 @@ export interface IDiscussionEntity extends IBaseEntity {
    * Users who follow this discussion
    */
   followers: string[];
+
+  moderation?: IModerationEntity
 
 }
