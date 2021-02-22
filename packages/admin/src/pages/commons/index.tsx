@@ -11,6 +11,7 @@ import { useGetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryResult, 
 import { withPermission } from '../../helpers/hoc/withPermission';
 import { useRouter } from 'next/router';
 import { Centered } from '@components/Centered';
+import { FullWidthLoader } from '@components/FullWidthLoader';
 
 const GetCommonsHomescreenData = gql`
   query getCommonsHomescreenData($last: Int, $after: Int) {
@@ -60,13 +61,6 @@ const CommonsHomepage: NextPage = () => {
   const onPageChange = (val: number): void => {
     setPage(val);
   };
-
-  // Helpers
-  const FullWidthLoader = (
-    <div style={{ width: '100%' }}>
-      <Skeleton/>
-    </div>
-  );
 
   const transformCommonsArray = (data: GetCommonsHomescreenDataQueryResult): any => {
     if (data.loading) {

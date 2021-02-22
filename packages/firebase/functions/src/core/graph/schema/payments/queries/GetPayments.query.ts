@@ -22,7 +22,7 @@ export const GetPaymentsQuery = extendType({
             olderThan: new Date((new Date().getTime()) - 60 * 60 * 1000)
           } : {
             first: 10,
-            after: (args - 1) * 10
+            after: (args.page - 1) * 10
           }
         );
       }

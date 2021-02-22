@@ -21,7 +21,7 @@ const ProposalsHomepageData = gql`
       votes { outcome }
       votesFor
       votesAgainst
-      
+
       description {
         title
         description
@@ -71,10 +71,8 @@ const ProposalsHomepage: NextPage = () => {
 
   const transformJoinData = () => {
     if (!data) {
-      return Array(10).fill({
-        
-      })
-    };
+      return Array(10).fill({});
+    }
 
     return data.join.map((j) => ({
       id: j.id
@@ -172,12 +170,13 @@ const ProposalsHomepage: NextPage = () => {
             <Text h3>Funding Requests</Text>
 
             <Table data={transformFundingData()} onRow={onTableRow}>
-              <Table.Column prop="id" />
+              <Table.Column prop="id"/>
             </Table>
 
             {statistics && statistics.statistics.fundingRequests > 10 && (
               <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-                <Pagination count={Math.ceil(statistics.statistics.fundingRequests / 10)} onChange={onFundingPageChange}>
+                <Pagination count={Math.ceil(statistics.statistics.fundingRequests / 10)}
+                            onChange={onFundingPageChange}>
                   <Pagination.Next>
                     <ChevronRightCircleFill/>
                   </Pagination.Next>
@@ -189,14 +188,14 @@ const ProposalsHomepage: NextPage = () => {
               </div>
             )}
 
-            <Spacer y={2} />
+            <Spacer y={2}/>
           </React.Fragment>
 
           <React.Fragment>
             <Text h3>Join Requests</Text>
 
             <Table data={transformJoinData()} onRow={onTableRow}>
-              <Table.Column prop="id" />
+              <Table.Column prop="id"/>
             </Table>
 
             {statistics && statistics.statistics.joinRequests > 10 && (

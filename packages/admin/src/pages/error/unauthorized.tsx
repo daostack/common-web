@@ -2,8 +2,8 @@ import { NextPage } from 'next';
 
 import { Text } from '@geist-ui/react';
 import { useRouter } from 'next/router';
+import firebase from 'firebase/app';
 import React from 'react';
-import firebase from 'firebase';
 import { gql } from '@apollo/client';
 import { useCreateIntentionMutation, IntentionType } from '@graphql';
 

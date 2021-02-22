@@ -183,6 +183,68 @@ export type ExecutePayoutInput = {
   proposalIds: Array<Scalars['ID']>;
 };
 
+export enum PaymentType {
+  OneTime = 'oneTime',
+  Subscription = 'subscription'
+}
+
+export enum PaymentSourceType {
+  Card = 'card'
+}
+
+export enum PaymentStatus {
+  Pending = 'pending',
+  Confirmed = 'confirmed',
+  Paid = 'paid',
+  Failed = 'failed'
+}
+
+export enum PaymentCurrency {
+  Usd = 'USD'
+}
+
+export type Payment = {
+  __typename?: 'Payment';
+  /** The ID of the payment */
+  id: Scalars['ID'];
+  /** The date at witch the payment was created */
+  createdAt: Scalars['Date'];
+  /** The date at witch the payment was last updated */
+  updatedAt: Scalars['Date'];
+  type: PaymentType;
+  status: PaymentStatus;
+  /** The source from witch the payment was funded */
+  source: PaymentSource;
+  amount: PaymentAmount;
+  /** The fees on the payment */
+  fees?: Maybe<PaymentFees>;
+  circlePaymentId: Scalars['ID'];
+  proposalId: Scalars['ID'];
+  userId: Scalars['ID'];
+  subscriptionId?: Maybe<Scalars['ID']>;
+  user?: Maybe<User>;
+  proposal?: Maybe<Proposal>;
+  subscription?: Maybe<Subscription>;
+};
+
+export type PaymentFees = {
+  __typename?: 'PaymentFees';
+  amount?: Maybe<Scalars['Int']>;
+  currency?: Maybe<PaymentCurrency>;
+};
+
+export type PaymentSource = {
+  __typename?: 'PaymentSource';
+  type: PaymentSourceType;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type PaymentAmount = {
+  __typename?: 'PaymentAmount';
+  currency?: Maybe<PaymentCurrency>;
+  amount?: Maybe<Scalars['Int']>;
+};
+
 export enum ProposalType {
   FundingRequest = 'fundingRequest',
   Join = 'join'
@@ -387,6 +449,8 @@ export type Query = {
   commons?: Maybe<Array<Maybe<Common>>>;
   payout?: Maybe<Payout>;
   payouts?: Maybe<Array<Maybe<Payout>>>;
+  payment?: Maybe<Payment>;
+  payments?: Maybe<Array<Maybe<Payment>>>;
   proposal?: Maybe<Proposal>;
   proposals?: Maybe<Array<Maybe<Proposal>>>;
   statistics?: Maybe<Statistics>;
@@ -438,6 +502,17 @@ export type QueryPayoutArgs = {
 
 export type QueryPayoutsArgs = {
   page?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryPaymentArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryPaymentsArgs = {
+  page?: Maybe<Scalars['Int']>;
+  hanging?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -594,6 +669,29 @@ export type CreateIntentionMutation = (
     { __typename?: 'Intention' }
     & Pick<Intention, 'id'>
   )> }
+);
+
+export type GetPaymentsHomeScreenDataQueryVariables = Exact<{
+  page?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetPaymentsHomeScreenDataQuery = (
+  { __typename?: 'Query' }
+  & { hangingPayments?: Maybe<Array<Maybe<(
+    { __typename?: 'Payment' }
+    & Pick<Payment, 'id' | 'createdAt' | 'updatedAt' | 'status'>
+  )>>>, payments?: Maybe<Array<Maybe<(
+    { __typename?: 'Payment' }
+    & Pick<Payment, 'id' | 'proposalId' | 'subscriptionId' | 'type' | 'status'>
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstName' | 'lastName'>
+    )>, amount: (
+      { __typename?: 'PaymentAmount' }
+      & Pick<PaymentAmount, 'amount' | 'currency'>
+    ) }
+  )>>> }
 );
 
 export type GetProposalsSelectedForBatchQueryVariables = Exact<{
@@ -1106,6 +1204,58 @@ export function useCreateIntentionMutation(baseOptions?: Apollo.MutationHookOpti
 export type CreateIntentionMutationHookResult = ReturnType<typeof useCreateIntentionMutation>;
 export type CreateIntentionMutationResult = Apollo.MutationResult<CreateIntentionMutation>;
 export type CreateIntentionMutationOptions = Apollo.BaseMutationOptions<CreateIntentionMutation, CreateIntentionMutationVariables>;
+export const GetPaymentsHomeScreenDataDocument = gql`
+    query GetPaymentsHomeScreenData($page: Int = 1) {
+  hangingPayments: payments(hanging: true) {
+    id
+    createdAt
+    updatedAt
+    status
+  }
+  payments: payments(page: $page) {
+    id
+    proposalId
+    subscriptionId
+    type
+    status
+    user {
+      id
+      firstName
+      lastName
+    }
+    amount {
+      amount
+      currency
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPaymentsHomeScreenDataQuery__
+ *
+ * To run a query within a React component, call `useGetPaymentsHomeScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPaymentsHomeScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPaymentsHomeScreenDataQuery({
+ *   variables: {
+ *      page: // value for 'page'
+ *   },
+ * });
+ */
+export function useGetPaymentsHomeScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<GetPaymentsHomeScreenDataQuery, GetPaymentsHomeScreenDataQueryVariables>) {
+        return Apollo.useQuery<GetPaymentsHomeScreenDataQuery, GetPaymentsHomeScreenDataQueryVariables>(GetPaymentsHomeScreenDataDocument, baseOptions);
+      }
+export function useGetPaymentsHomeScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPaymentsHomeScreenDataQuery, GetPaymentsHomeScreenDataQueryVariables>) {
+          return Apollo.useLazyQuery<GetPaymentsHomeScreenDataQuery, GetPaymentsHomeScreenDataQueryVariables>(GetPaymentsHomeScreenDataDocument, baseOptions);
+        }
+export type GetPaymentsHomeScreenDataQueryHookResult = ReturnType<typeof useGetPaymentsHomeScreenDataQuery>;
+export type GetPaymentsHomeScreenDataLazyQueryHookResult = ReturnType<typeof useGetPaymentsHomeScreenDataLazyQuery>;
+export type GetPaymentsHomeScreenDataQueryResult = Apollo.QueryResult<GetPaymentsHomeScreenDataQuery, GetPaymentsHomeScreenDataQueryVariables>;
 export const GetProposalsSelectedForBatchDocument = gql`
     query getProposalsSelectedForBatch($ids: [String!]!) {
   proposals(ids: $ids) {

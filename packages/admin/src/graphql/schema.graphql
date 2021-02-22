@@ -139,6 +139,56 @@ input ExecutePayoutInput {
   """List of the all proposals IDs that are in this batch"""
   proposalIds: [ID!]!
 }
+enum PaymentType {
+  oneTime
+  subscription
+}
+enum PaymentSourceType {
+  card
+}
+enum PaymentStatus {
+  pending
+  confirmed
+  paid
+  failed
+}
+enum PaymentCurrency {
+  USD
+}
+type Payment {
+  """The ID of the payment"""
+  id: ID!
+  """The date at witch the payment was created"""
+  createdAt: Date!
+  """The date at witch the payment was last updated"""
+  updatedAt: Date!
+  type: PaymentType!
+  status: PaymentStatus!
+  """The source from witch the payment was funded"""
+  source: PaymentSource!
+  amount: PaymentAmount!
+  """The fees on the payment"""
+  fees: PaymentFees
+  circlePaymentId: ID!
+  proposalId: ID!
+  userId: ID!
+  subscriptionId: ID
+  user: User
+  proposal: Proposal
+  subscription: Subscription
+}
+type PaymentFees {
+  amount: Int
+  currency: PaymentCurrency
+}
+type PaymentSource {
+  type: PaymentSourceType!
+  id: ID
+}
+type PaymentAmount {
+  currency: PaymentCurrency
+  amount: Int
+}
 enum ProposalType {
   fundingRequest
   join
@@ -299,6 +349,8 @@ type Query {
   commons(last: Int = 10, after: Int = 0): [Common]
   payout(id: ID!): Payout
   payouts(page: Int = 1): [Payout]
+  payment(id: ID!): Payment
+  payments(page: Int = 1, hanging: Boolean): [Payment]
   proposal(id: ID!): Proposal
   proposals(ids: [String], page: Int = 1, pageItems: Int = 10, type: ProposalType, fundingState: ProposalFundingState): [Proposal]
   statistics: Statistics

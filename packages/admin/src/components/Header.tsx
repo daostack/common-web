@@ -4,7 +4,7 @@ import { HasPermission } from '@components/HasPermission';
 import { useCreateIntentionMutation, IntentionType } from '@graphql';
 import { useAuthContext } from '@context';
 import { useRouter } from 'next/router';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 
 export const Header: React.FC = () => {
   const [createIntention] = useCreateIntentionMutation();

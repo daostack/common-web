@@ -11,6 +11,10 @@ import { PaymentAmountType } from './types/PaymentAmount.type';
 import { GetPaymentQuery } from './queries/GetPayment.query';
 import { GetPaymentsQuery } from './queries/GetPayments.query';
 
+import { PaymentUserExtension } from './extensions/PaymentUser.extension';
+import { PaymentProposalExtension } from './extensions/PaymentProposal.extension';
+import { PaymentSubscriptionExtension } from './extensions/PaymentSubscription.extension';
+
 export const PaymentTypes = [
   PaymentTypeEnum,
   PaymentSourceEnum,
@@ -23,5 +27,9 @@ export const PaymentTypes = [
   PaymentAmountType,
 
   GetPaymentQuery,
-  GetPaymentsQuery
+  GetPaymentsQuery,
+
+  PaymentUserExtension,
+  PaymentProposalExtension,
+  PaymentSubscriptionExtension
 ];

@@ -8,6 +8,8 @@ export const PaymentAmountType = objectType({
       type: PaymentCurrencyEnum
     });
 
-    t.int('amount');
+    t.int('amount', {
+      resolve: (root) => Math.round(root.amount)
+    });
   }
 })
