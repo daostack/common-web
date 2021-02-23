@@ -5,7 +5,7 @@ import { ProposalType } from '../../proposals/types/Proposal.type';
 import { proposalDb } from '../../../../../proposals/database';
 
 export const PaymentProposalExtension = extendType({
-  type: 'Payment',
+  type: 'Payment' as any,
   definition(t) {
     t.field('proposal', {
       type: ProposalType,

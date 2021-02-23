@@ -2,14 +2,16 @@ import React from 'react';
 import { NextPage } from 'next';
 
 import { gql } from '@apollo/client';
-import { Breadcrumbs, Card, Note, Spacer, Table, Tag, Text } from '@geist-ui/react';
+import { Breadcrumbs, Card, Col, Note, Row, Spacer, Table, Tag, Text, useTheme } from '@geist-ui/react';
 
-import { withPermission } from '../../helpers/hoc/withPermission';
+import { withPermission } from '../../../helpers/hoc/withPermission';
 import { useGetPaymentsHomeScreenDataQuery } from '@graphql';
 import { Link } from '@components/Link';
 import { Centered } from '@components/Centered';
 import { CheckCircle, ChevronLeftCircle, ChevronRightCircle, Clock, DollarSign, XCircle } from '@geist-ui/react-icons';
 import { FullWidthLoader } from '@components/FullWidthLoader';
+import { PaymentDetailsModal } from '@components/modals/PaymentDetailsModal';
+import { useRouter } from 'next/router';
 
 const GetPaymentsHomepageData = gql`
   query GetPaymentsHomeScreenData($page: Int = 1) {
@@ -47,8 +49,12 @@ const GetPaymentsHomepageData = gql`
 `;
 
 export const PaymentsHomepage: NextPage = () => {
+  const router = useRouter();
+  const theme = useTheme();
+
   // --- State
   const [page, setPage] = React.useState<number>(1);
+  const [selectedPayment, setSelectedPayment] = React.useState<string>();
 
 
   // --- Data fetching
@@ -79,6 +85,18 @@ export const PaymentsHomepage: NextPage = () => {
     });
   };
 
+  const onPaymentDetailsOpen = (paymentId: string) => {
+    setSelectedPayment(paymentId);
+  };
+
+  const onPaymentDetailsClose = () => {
+    setSelectedPayment(null);
+  };
+
+  const onRow = (row: { id: string }) => {
+    router.push(`/financials/payments/details/${row.id}`);
+  }
+
   // --- Transformers
   const transformPaymentsForTable = () => {
     if (!payments) {
@@ -96,6 +114,8 @@ export const PaymentsHomepage: NextPage = () => {
 
 
       return {
+        id: p.id,
+
         icon: (
           <Centered>
             <DollarSign/>
@@ -155,14 +175,25 @@ export const PaymentsHomepage: NextPage = () => {
       <Breadcrumbs>
         <Breadcrumbs.Item>Home</Breadcrumbs.Item>
         <Breadcrumbs.Item>
-          <Link to="/payments">Payments</Link>
+          <Link to="/financials">Financials</Link>
+        </Breadcrumbs.Item>
+        <Breadcrumbs.Item>
+          <Link to="/financials/payments">Payments</Link>
         </Breadcrumbs.Item>
       </Breadcrumbs>
 
       <Spacer y={2}/>
 
+      {selectedPayment && (
+        <PaymentDetailsModal
+          open={!!selectedPayment}
+          paymentId={selectedPayment}
+          onClose={onPaymentDetailsClose}
+        />
+      )}
+
       <React.Fragment>
-        {(!!payments?.hangingPayments?.length || previousData?.hangingPayments?.length) && (
+        {(!!payments?.hangingPayments?.length || !!previousData?.hangingPayments?.length) && (
           <React.Fragment>
             <Note type="error">There are hanging payments. Please, take a look!</Note>
 
@@ -184,7 +215,7 @@ export const PaymentsHomepage: NextPage = () => {
 
 
         <Text h3>Payments</Text>
-        <Table data={transformPaymentsForTable()}>
+        <Table data={transformPaymentsForTable()} onRow={onRow}>
           <Table.Column width={70} prop="icon"/>
 
           <Table.Column prop="amount" label="Payment amount" width={150}/>
@@ -194,6 +225,48 @@ export const PaymentsHomepage: NextPage = () => {
         </Table>
 
         <Spacer/>
+
+        <Card style={{ backgroundColor: theme.palette.accents_1, padding: 10 }}>
+          <Card.Content style={{ padding: 0 }}>
+            <Row style={{ padding: 0 }}>
+              <Col span={2} />
+              <Col span={6}>
+                <Text small style={{ margin: 0 }}>Payment Amount</Text>
+              </Col>
+
+              <Col span={6}>
+                <Text small style={{ margin: 0 }}>User</Text>
+              </Col>
+
+              <Col span={6}>
+                <Text small style={{ margin: 0 }}>Payment Type</Text>
+              </Col>
+            </Row>
+          </Card.Content>
+        </Card>
+
+        <div style={{ margin: '2rem 0' }}>
+          {payments?.payments?.map((p) => {
+            return (
+              <div key={p.id}>
+                <Row style={{ padding: 0 }}>
+                  <Col span={2} />
+                  <Col span={6}>
+                    <Text small style={{ margin: 0 }}>Payment Amount</Text>
+                  </Col>
+
+                  <Col span={6}>
+                    <Text small style={{ margin: 0 }}>User</Text>
+                  </Col>
+
+                  <Col span={6}>
+                    <Text small style={{ margin: 0 }}>Payment Type</Text>
+                  </Col>
+                </Row>
+              </div>
+            )
+          })}
+        </div>
 
         <Centered>
           <div style={{ display: 'flex', alignContent: 'center' }}>

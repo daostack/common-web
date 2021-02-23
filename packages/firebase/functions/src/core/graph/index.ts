@@ -14,11 +14,13 @@ import { IntentionTypes } from './schema/intentions';
 import { SubscriptionTypes } from './schema/subscriptions';
 
 import { StatisticsType, StatisticsTypeQueryExtension } from './schema/statistics/statistics';
+import { CardTypes } from './schema/cards';
 
 
 const types = [
   ...Scalars,
 
+  ...CardTypes,
   ...UserTypes,
   ...WireTypes,
   ...EventTypes,

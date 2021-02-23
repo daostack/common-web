@@ -3,7 +3,8 @@ import {
   IProposalEntity,
   ProposalType,
   RequestToJoinState,
-  ProposalFundingState
+  ProposalFundingState,
+  ProposalPaymentState
 } from '@common/types';
 import { firestore } from 'firebase-admin';
 
@@ -12,6 +13,7 @@ import { CommonError } from '../../util/errors';
 
 export interface IGetProposalsOptions {
   state?: RequestToJoinState | RequestToJoinState[] | FundingRequestState | FundingRequestState[];
+  paymentState?: ProposalPaymentState;
   type?: ProposalType;
   proposerId?: string;
   commonId?: string;
@@ -53,6 +55,12 @@ export const getProposals = async (options: IGetProposalsOptions): Promise<IProp
     const operator = typeof options.state === 'string' ? '==' : 'in';
 
     proposalsQuery = proposalsQuery.where('state', operator, options.state);
+  }
+
+  if (options.paymentState) {
+    const operator = typeof options.paymentState === 'string' ? '==' : 'in';
+
+    proposalsQuery = proposalsQuery.where('paymentState', operator, options.state);
   }
 
   if (options.type) {

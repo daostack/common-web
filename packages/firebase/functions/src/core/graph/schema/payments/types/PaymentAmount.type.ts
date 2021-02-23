@@ -9,7 +9,7 @@ export const PaymentAmountType = objectType({
     });
 
     t.int('amount', {
-      resolve: (root) => Math.round(root.amount)
+      resolve: (root) => Math.round((root as any).amount)
     });
   }
 })

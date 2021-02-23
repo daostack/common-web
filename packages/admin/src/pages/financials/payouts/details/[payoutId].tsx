@@ -1,5 +1,5 @@
 import { NextPage } from 'next';
-import { withPermission } from '../../../helpers/hoc/withPermission';
+import { withPermission } from '../../../../helpers/hoc/withPermission';
 import { Link } from '@components/Link';
 import React from 'react';
 import { Breadcrumbs, Card, Divider, Grid, Spacer, Text, Tag, useToasts } from '@geist-ui/react';

@@ -14,7 +14,7 @@ import {
 } from '@geist-ui/react-icons';
 
 import { Link } from '@components/Link';
-import { withPermission } from '../../helpers/hoc/withPermission';
+import { withPermission } from '../../../helpers/hoc/withPermission';
 import { gql } from '@apollo/client';
 import { useGetPayoutsPageDataQuery, ProposalFundingState, GetPayoutsPageDataQueryResult } from '@graphql';
 import { HasPermission } from '@components/HasPermission';

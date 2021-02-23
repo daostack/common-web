@@ -15,6 +15,47 @@ export type Scalars = {
 };
 
 
+export enum CartNetwork {
+  Visa = 'visa',
+  Mastercard = 'mastercard'
+}
+
+export type Card = {
+  __typename?: 'Card';
+  /** The ID of the payment */
+  id: Scalars['ID'];
+  /** The date at witch the payment was created */
+  createdAt: Scalars['Date'];
+  /** The date at witch the payment was last updated */
+  updatedAt: Scalars['Date'];
+  circleCardId: Scalars['ID'];
+  ownerId: Scalars['ID'];
+  metadata?: Maybe<CardMetadata>;
+  verification?: Maybe<CardVerification>;
+};
+
+export type CardMetadata = {
+  __typename?: 'CardMetadata';
+  digits?: Maybe<Scalars['String']>;
+  network?: Maybe<CartNetwork>;
+  billingDetails?: Maybe<CardBillingDetails>;
+};
+
+export type CardVerification = {
+  __typename?: 'CardVerification';
+  cvv?: Maybe<Scalars['String']>;
+};
+
+export type CardBillingDetails = {
+  __typename?: 'CardBillingDetails';
+  name?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  postalCode?: Maybe<Scalars['String']>;
+  district?: Maybe<Scalars['String']>;
+  line1?: Maybe<Scalars['String']>;
+};
+
 export type User = {
   __typename?: 'User';
   id: Scalars['ID'];
@@ -223,6 +264,7 @@ export type Payment = {
   userId: Scalars['ID'];
   subscriptionId?: Maybe<Scalars['ID']>;
   user?: Maybe<User>;
+  card?: Maybe<Card>;
   proposal?: Maybe<Proposal>;
   subscription?: Maybe<Subscription>;
 };
@@ -544,6 +586,42 @@ export type MutationExecutePayoutsArgs = {
 export type MutationCreateIntentionArgs = {
   input: CreateIntentionInput;
 };
+
+export type GetPaymentDetailsQueryVariables = Exact<{
+  paymentId: Scalars['ID'];
+}>;
+
+
+export type GetPaymentDetailsQuery = (
+  { __typename?: 'Query' }
+  & { payment?: Maybe<(
+    { __typename?: 'Payment' }
+    & Pick<Payment, 'id' | 'type' | 'status'>
+    & { amount: (
+      { __typename?: 'PaymentAmount' }
+      & Pick<PaymentAmount, 'amount' | 'currency'>
+    ), user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'firstName' | 'lastName' | 'email' | 'photoURL'>
+    )>, card?: Maybe<(
+      { __typename?: 'Card' }
+      & { metadata?: Maybe<(
+        { __typename?: 'CardMetadata' }
+        & Pick<CardMetadata, 'digits' | 'network'>
+      )> }
+    )>, proposal?: Maybe<(
+      { __typename?: 'Proposal' }
+      & Pick<Proposal, 'id'>
+      & { description: (
+        { __typename?: 'ProposalDescription' }
+        & Pick<ProposalDescription, 'title' | 'description'>
+      ), join?: Maybe<(
+        { __typename?: 'ProposalJoin' }
+        & Pick<ProposalJoin, 'funding' | 'fundingType'>
+      )> }
+    )> }
+  )> }
+);
 
 export type GetLatestEventsQueryVariables = Exact<{
   last?: Maybe<Scalars['Int']>;
@@ -910,6 +988,68 @@ export type GetUsersHomepageDataQuery = (
 );
 
 
+export const GetPaymentDetailsDocument = gql`
+    query GetPaymentDetails($paymentId: ID!) {
+  payment(id: $paymentId) {
+    id
+    amount {
+      amount
+      currency
+    }
+    type
+    status
+    user {
+      firstName
+      lastName
+      email
+      photoURL
+    }
+    card {
+      metadata {
+        digits
+        network
+      }
+    }
+    proposal {
+      id
+      description {
+        title
+        description
+      }
+      join {
+        funding
+        fundingType
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPaymentDetailsQuery__
+ *
+ * To run a query within a React component, call `useGetPaymentDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPaymentDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPaymentDetailsQuery({
+ *   variables: {
+ *      paymentId: // value for 'paymentId'
+ *   },
+ * });
+ */
+export function useGetPaymentDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>) {
+        return Apollo.useQuery<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>(GetPaymentDetailsDocument, baseOptions);
+      }
+export function useGetPaymentDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>) {
+          return Apollo.useLazyQuery<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>(GetPaymentDetailsDocument, baseOptions);
+        }
+export type GetPaymentDetailsQueryHookResult = ReturnType<typeof useGetPaymentDetailsQuery>;
+export type GetPaymentDetailsLazyQueryHookResult = ReturnType<typeof useGetPaymentDetailsLazyQuery>;
+export type GetPaymentDetailsQueryResult = Apollo.QueryResult<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>;
 export const GetLatestEventsDocument = gql`
     query GetLatestEvents($last: Int = 10, $after: Int = 0) {
   events(last: $last, after: $after) {

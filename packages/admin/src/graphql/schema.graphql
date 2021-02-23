@@ -4,6 +4,38 @@ schema {
   subscription: Subscription
 }
 scalar Date
+enum CartNetwork {
+  visa
+  mastercard
+}
+type Card {
+  """The ID of the payment"""
+  id: ID!
+  """The date at witch the payment was created"""
+  createdAt: Date!
+  """The date at witch the payment was last updated"""
+  updatedAt: Date!
+  circleCardId: ID!
+  ownerId: ID!
+  metadata: CardMetadata
+  verification: CardVerification
+}
+type CardMetadata {
+  digits: String
+  network: CartNetwork
+  billingDetails: CardBillingDetails
+}
+type CardVerification {
+  cvv: String
+}
+type CardBillingDetails {
+  name: String
+  city: String
+  country: String
+  postalCode: String
+  district: String
+  line1: String
+}
 type User {
   id: ID!
   firstName: String
@@ -174,6 +206,7 @@ type Payment {
   userId: ID!
   subscriptionId: ID
   user: User
+  card: Card
   proposal: Proposal
   subscription: Subscription
 }
