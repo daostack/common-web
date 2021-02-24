@@ -151,78 +151,6 @@ export const PaymentsHomepage: NextPage = () => {
     };
   };
 
-  // --- Transformers
-  const transformPaymentsForTable = () => {
-    if (!payments) {
-      return Array(10).fill({
-        icon: FullWidthLoader,
-        amount: FullWidthLoader,
-        type: FullWidthLoader,
-        user: FullWidthLoader,
-        status: FullWidthLoader
-      });
-    }
-
-    return payments.payments.map((p) => {
-      const { amount, type, status, user } = p;
-
-
-      return {
-        id: p.id,
-
-        icon: (
-          <Centered>
-            <DollarSign/>
-          </Centered>
-        ),
-
-        amount: (
-          <Text>
-            {amount.amount / 100} {amount.currency}
-          </Text>
-        ),
-
-        type: (
-          <Tag type={type === 'oneTime' ? 'warning' : 'success'}>
-            {type === 'oneTime'
-              ? 'One Time'
-              : 'Subscription'}
-          </Tag>
-        ),
-
-        user: (
-          <Link to={`/users/details/${user.id}`}>
-            {user.firstName} {user.lastName}
-          </Link>
-        ),
-
-        status: (
-          <React.Fragment>
-            {status === 'pending' && (
-              <Text type="warning" style={{ margin: 0, display: 'flex', alignContent: 'center' }}>
-                <Clock/> <Spacer x={0.2}/> Pending
-              </Text>
-            )}
-
-            {status === 'failed' && (
-              <Text type="error" style={{ margin: 0, display: 'flex', alignContent: 'center' }}>
-                <XCircle/> <Spacer x={0.2}/> Failed
-              </Text>
-            )}
-
-            {(status === 'paid' || status === 'confirmed') && (
-              // <Tooltip text={status}>
-              <Text type="success" style={{ margin: 0, display: 'flex', alignContent: 'center' }}>
-                <CheckCircle/> <Spacer x={0.2}/> Successful
-              </Text>
-              // </Tooltip>
-            )}
-          </React.Fragment>
-        )
-      };
-    });
-  };
-
   return (
     <React.Fragment>
       <Text h1>Payments</Text>
@@ -261,19 +189,11 @@ export const PaymentsHomepage: NextPage = () => {
 
 
         <Text h3>Payments</Text>
-        {/*<Table data={transformPaymentsForTable()} onRow={onRow}>*/}
-        {/*  <Table.Column width={70} prop="icon"/>*/}
 
-        {/*  <Table.Column prop="amount" label="Payment amount" width={150}/>*/}
-        {/*  <Table.Column prop="user" label="User"/>*/}
-        {/*  <Table.Column prop="type" label="Payment type"/>*/}
-        {/*  <Table.Column prop="status" label="Payment status"/>*/}
-        {/*</Table>*/}
-
-        <Spacer/>
+        <Spacer y={.5}/>
 
         <Card style={{ backgroundColor: theme.palette.accents_1, padding: 10 }}>
-          <Card.Content style={{ padding: 0 }}>
+          <Card.Content style={{ paddingTop: 0, paddingBottom: 0 }}>
             <Row style={{ padding: 0 }}>
               <Col span={3}>
                 <Text small style={{ margin: 0 }}>Amount</Text>
@@ -291,7 +211,7 @@ export const PaymentsHomepage: NextPage = () => {
           </Card.Content>
         </Card>
 
-        <div style={{ margin: '2rem 0' }}>
+        <div style={{ margin: '1rem 0' }}>
           {payments?.payments?.map((p) => {
             return (
               <Card key={p.id} style={{ margin: '.5rem 0' }}>
@@ -369,36 +289,43 @@ export const PaymentsHomepage: NextPage = () => {
                           <React.Fragment>
                             <Col span={12}>
                               <Text h4 style={{ margin: 0 }}>Billing Plan</Text>
-                              <Text h2
-                                    style={{ margin: 0 }}>{payment.payment.type === 'oneTime' ? 'One Time' : 'Subscription'} Payment</Text>
+                              <Text
+                                h2
+                                style={{ margin: 0 }}
+                              >
+                                {payment.payment.type === 'oneTime' ? 'One Time' : 'Subscription'} Payment
+                              </Text>
 
                               <Text style={{ margin: 0 }}>
                                 For {payment.payment.type === 'oneTime' ? 'joining' : 'participating in'}{' '}
-                                <Link to={`/commons/details/${payment.payment.common.id}`}>{payment.payment.common.name}</Link>
+
+                                <Link to={`/commons/details/${payment.payment.common.id}`}>
+                                  {payment.payment.common.name}
+                                </Link>
                               </Text>
 
-                              <div style={{ marginTop: 15 }}>
-                                <Row>
-                                  <Col span={12}>
-                                    <Text h6>Fees</Text>
-                                    <Text h4>
-                                      {(payment.payment.fees.amount / 100).toLocaleString('en-US', {
-                                        style: 'currency',
-                                        currency: payment.payment.fees.currency
-                                      })}
-                                    </Text>
-                                  </Col>
+                              <div style={{ display: 'flex', marginTop: 15 }}>
+                                <div>
+                                  <Text h6>Fees</Text>
+                                  <Text h4>
+                                    {(payment.payment.fees.amount / 100).toLocaleString('en-US', {
+                                      style: 'currency',
+                                      currency: payment.payment.fees.currency
+                                    })}
+                                  </Text>
+                                </div>
 
-                                  <Col span={12}>
-                                    <Text h6>Money left</Text>
-                                    <Text h4>
-                                      {((payment.payment.amount.amount - payment.payment.fees.amount) / 100).toLocaleString('en-US', {
-                                        style: 'currency',
-                                        currency: payment.payment.fees.currency
-                                      })}
-                                    </Text>
-                                  </Col>
-                                </Row>
+                                <Spacer x={1}/>
+
+                                <div>
+                                  <Text h6>Money left</Text>
+                                  <Text h4>
+                                    {((payment.payment.amount.amount - payment.payment.fees.amount) / 100).toLocaleString('en-US', {
+                                      style: 'currency',
+                                      currency: payment.payment.fees.currency
+                                    })}
+                                  </Text>
+                                </div>
                               </div>
                             </Col>
 
