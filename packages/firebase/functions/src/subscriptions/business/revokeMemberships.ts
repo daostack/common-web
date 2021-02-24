@@ -12,12 +12,11 @@ const db = firestore();
  * Revokes all membership that are expired, but not yet revoked
  */
 export const revokeMemberships = async (): Promise<void> => {
-  logger.info(`Beginning membership revoking for ${new Date().getDate()}`);
+  logger.info(`Beginning membership revoking for ${ new Date().getDate() }`);
 
   // Only get the subscription cancelled by user, because the subscriptions
   // canceled by payment failure should already be revoked
   const subscriptions = await db.collection(Collections.Subscriptions)
-    .where('dueDate', '<=', new Date().setHours(23, 59, 59, 999))
     .where('status', '==', CancellationReason.CanceledByUser)
     .where('revoked', '==', false)
     .get() as firestore.QuerySnapshot<ISubscriptionEntity>;
@@ -31,24 +30,31 @@ export const revokeMemberships = async (): Promise<void> => {
       logger.warn(
         `
             Trying to revoke subscription with status 
-            (${subscription.status}) from the cron
+            (${ subscription.status }) from the cron
           `
       );
     } else {
-      // eslint-disable-next-line no-loop-func
-      promiseArr.push((async () => {
-        // Add try/catch so that if one revoke fails
-        // the others won't be canceled because of it
-        try {
-          logger.info(`Revoking membership for subscription with id ${subscription.id}`);
+      // If the subscription is pass it's due date: revoke it, If is not leave it be
+      if (subscription.dueDate.toDate() < new Date()) {
+        // eslint-disable-next-line no-loop-func
+        promiseArr.push((async () => {
+          // Add try/catch so that if one revoke fails
+          // the others won't be canceled because of it
+          try {
+            logger.info(`Revoking membership for subscription with id ${ subscription.id }`);
 
-          await revokeMembership(subscription);
+            await revokeMembership(subscription);
 
-          logger.info(`Revoked membership ${subscription.id}`);
-        } catch (e) {
-          logger.warn('Error occurred while trying to revoke subscription', e);
-        }
-      })());
+            logger.info(`Revoked membership ${ subscription.id }`);
+          } catch (e) {
+            logger.warn('Error occurred while trying to revoke subscription', e);
+          }
+        })());
+      } else {
+        logger.debug('Skipping revoke for user canceled subscription', {
+          subscription
+        });
+      }
     }
   }
 
