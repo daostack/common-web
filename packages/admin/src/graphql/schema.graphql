@@ -207,6 +207,7 @@ type Payment {
   subscriptionId: ID
   user: User
   card: Card
+  common: Common
   proposal: Proposal
   subscription: Subscription
 }
@@ -365,7 +366,7 @@ type Common {
   raised: Int!
   metadata: CommonMetadata!
   members: [CommonMember]
-  proposals(page: Int = 1): [Proposal]
+  proposals(page: Int, type: ProposalType, state: ProposalState, paymentState: ProposalPaymentState): [Proposal]
   openJoinRequests: Int!
   openFundingRequests: Int!
 }
@@ -374,7 +375,7 @@ type Query {
   users(page: Int = 1, perPage: Int = 10): [User]
   wires(page: Int = 1): [Wire]
   event(eventId: ID!): Event
-  events(last: Int = 10, after: Int = 0): [Event]
+  events(last: Int = 10, after: Int = 0, type: EventType, objectId: ID): [Event]
   common(
     """The ID of the common, that you want to retrieve"""
     commonId: ID!

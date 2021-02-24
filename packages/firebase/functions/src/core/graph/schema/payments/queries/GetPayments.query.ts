@@ -21,7 +21,7 @@ export const GetPaymentsQuery = extendType({
             status: 'pending',
             olderThan: new Date((new Date().getTime()) - 60 * 60 * 1000)
           } : {
-            first: 10,
+            last: 10,
             after: (args.page - 1) * 10
           }
         );

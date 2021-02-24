@@ -97,9 +97,10 @@ export const Header: React.FC = () => {
           <Tabs.Item value="commons" label="Commons"/>
           <Tabs.Item value="proposals" label="Proposals"/>
           <Tabs.Item value="users" label="Users"/>
-          <Tabs.Item value="payments" label="Payments"/>
-          <Tabs.Item value="payouts" label="Payouts"/>
+          <Tabs.Item value="financials/payments" label="Payments"/>
+          <Tabs.Item value="financials/payouts" label="Payouts"/>
           <Tabs.Item value="events" label="Events"/>
+          {/*<Tabs.Item value="development/playground" label="Playground"/>*/}
         </Tabs>
       </HasPermission>
     </Page.Header>
