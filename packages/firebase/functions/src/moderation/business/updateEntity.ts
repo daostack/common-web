@@ -5,6 +5,13 @@ import { proposalDb } from '../../proposals/database';
 import { createEvent } from '../../util/db/eventDbService';
 import { EVENT_TYPES } from '../../event/event';
 
+/**
+ * Mapping each entity to the corresponsing database update function
+ * @param  {string}       itemId [description]
+ * @param  {ItemType}     item   [description]
+ * @param  {string}       type   [description]
+ * @return {Promise<any>}        [description]
+ */
 export const updateEntity = async (itemId: string, item: ItemType, type: string): Promise<any> => {
   let eventType = '';
   switch (type) {
@@ -23,6 +30,7 @@ export const updateEntity = async (itemId: string, item: ItemType, type: string)
     default:
       break;
   }
+  // this event creats a notification for the moderator that an item was reported
   if (item.moderation.flag === 'reported') {
     await createEvent({
       userId: item.moderation.reporter,

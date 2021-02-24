@@ -6,7 +6,7 @@ import { IProposalEntity } from './IProposalEntity'
 export interface IModerationEntity {
 	flag: string;
     reasons: string[];
-    note: string;
+    moderatorNote: string;
     updatedAt: firestore.Timestamp;
     moderator: string;
     reporter: string;

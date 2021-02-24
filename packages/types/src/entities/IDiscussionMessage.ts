@@ -5,6 +5,11 @@ import Timestamp = admin.firestore.Timestamp;
 export interface IDiscussionMessage {
 
   /**
+   * ID of the common which is associated with the parent discussion of this message
+   */
+  commonId: string;
+
+  /**
    * ID of the parent discussion of this message, could be a Discussion ID, or a Proposal ID 
    */
 	discussionId: string;
@@ -34,6 +39,9 @@ export interface IDiscussionMessage {
    */
 	ownerAvatar: string;
 
+  /**
+   * Moderation object which holds reasons for reporting/hiding the message
+   */
   moderation?: IModerationEntity;
 
 }
