@@ -1,4 +1,5 @@
 import { firestore } from 'firebase-admin';
+import { ItemType, IModerationEntity } from '@common/types';
 import { hasPermission } from '../../core/domain/users/business';
 import { CommonError } from '../../util/errors';
 import { updateEntity } from './updateEntity';
@@ -13,12 +14,15 @@ export const showContent = async (payload) => {
 
   const item = (await db.collection(type).doc(itemId).get()).data();
 
-  const moderationEntity = {
-    ...item.moderation,
-    flag: 'visible',
-    updatedAt: firestore.Timestamp.now(),
-    moderator: userId,
+  const updatedItem = {
+    ...item,
+    moderation: {
+      ...item.moderation,
+      flag: 'visible',
+      updatedAt: firestore.Timestamp.now(),
+      moderator: userId,
+    } as IModerationEntity,
   }
 
-  return await updateEntity(itemId, moderationEntity, type);
+  return await updateEntity(itemId, updatedItem as ItemType, type);
 }

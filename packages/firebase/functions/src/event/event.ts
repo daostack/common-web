@@ -6,7 +6,7 @@ import { subscriptionDb } from '../subscriptions/database';
 import { paymentDb } from '../circlepay/payments/database';
 import { discussionDb } from '../discussion/database';
 import { discussionMessageDb } from '../discussionMessage/database';
-import { IDiscussionMessage } from '../discussionMessage/types';
+import { IDiscussionMessage } from '@common/types';
 import { Notifications } from '../constants';
 import { IPaymentEntity } from '../circlepay/payments/types';
 

@@ -10,7 +10,6 @@ import { getJoinRequest } from './getJoinRequest';
 import { getProposal, getProposalTransactional } from './getProposal';
 import { getProposals } from './getProposals';
 import { updateProposal, updateProposalTransactional } from './updateProposal';
-import { moderateProposal } from './moderateProposal';
 
 import { addVote } from './votes/addVote';
 import { deleteVoteFromDatabase } from './votes/deleteVote';
@@ -44,7 +43,6 @@ export const proposalDb = {
   getJoinRequest,
   getMany: getProposals,
   update: updateProposal,
-  moderateProposal,
 
   delete: deleteProposalFromDatabase,
 

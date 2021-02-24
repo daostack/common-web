@@ -10,4 +10,5 @@ export * from './entities/IPermission';
 export * from './entities/IEventData';
 export * from './entities/INotification';
 export * from './entities/IModerationEntity';
-
+export * from './entities/IDiscussionMessage';
+export * from './entities/IDiscussionEntity';

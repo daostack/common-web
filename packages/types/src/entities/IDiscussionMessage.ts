@@ -1,5 +1,5 @@
 import admin from 'firebase-admin';
-import { IModerationEntity } from '@common/types'
+import { IModerationEntity } from './IModerationEntity';
 import Timestamp = admin.firestore.Timestamp;
 
 export interface IDiscussionMessage {
