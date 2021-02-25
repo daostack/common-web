@@ -14,5 +14,6 @@ export const Collections = {
   Cards: 'cards',
   Users: 'users',
   Discussion: 'discussion',
-  Deleted: 'deleted'
+  Deleted: 'deleted',
+  Intentions: 'intentions'
 };

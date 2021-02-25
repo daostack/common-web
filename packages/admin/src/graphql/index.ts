@@ -15,6 +15,47 @@ export type Scalars = {
 };
 
 
+export enum CardNetwork {
+  Visa = 'visa',
+  Mastercard = 'mastercard'
+}
+
+export type Card = {
+  __typename?: 'Card';
+  /** The ID of the payment */
+  id: Scalars['ID'];
+  /** The date at witch the payment was created */
+  createdAt: Scalars['Date'];
+  /** The date at witch the payment was last updated */
+  updatedAt: Scalars['Date'];
+  circleCardId: Scalars['ID'];
+  ownerId: Scalars['ID'];
+  metadata?: Maybe<CardMetadata>;
+  verification?: Maybe<CardVerification>;
+};
+
+export type CardMetadata = {
+  __typename?: 'CardMetadata';
+  digits?: Maybe<Scalars['String']>;
+  network?: Maybe<CardNetwork>;
+  billingDetails?: Maybe<CardBillingDetails>;
+};
+
+export type CardVerification = {
+  __typename?: 'CardVerification';
+  cvv?: Maybe<Scalars['String']>;
+};
+
+export type CardBillingDetails = {
+  __typename?: 'CardBillingDetails';
+  name?: Maybe<Scalars['String']>;
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  postalCode?: Maybe<Scalars['String']>;
+  district?: Maybe<Scalars['String']>;
+  line1?: Maybe<Scalars['String']>;
+};
+
 export type User = {
   __typename?: 'User';
   id: Scalars['ID'];
@@ -122,6 +163,7 @@ export type Event = {
   objectId?: Maybe<Scalars['ID']>;
   /** The id of the actor */
   userId?: Maybe<Scalars['ID']>;
+  user?: Maybe<User>;
 };
 
 export enum CommonContributionType {
@@ -180,6 +222,70 @@ export type ExecutePayoutInput = {
   wireId: Scalars['ID'];
   /** List of the all proposals IDs that are in this batch */
   proposalIds: Array<Scalars['ID']>;
+};
+
+export enum PaymentType {
+  OneTime = 'oneTime',
+  Subscription = 'subscription'
+}
+
+export enum PaymentSourceType {
+  Card = 'card'
+}
+
+export enum PaymentStatus {
+  Pending = 'pending',
+  Confirmed = 'confirmed',
+  Paid = 'paid',
+  Failed = 'failed'
+}
+
+export enum PaymentCurrency {
+  Usd = 'USD'
+}
+
+export type Payment = {
+  __typename?: 'Payment';
+  /** The ID of the payment */
+  id: Scalars['ID'];
+  /** The date at witch the payment was created */
+  createdAt: Scalars['Date'];
+  /** The date at witch the payment was last updated */
+  updatedAt: Scalars['Date'];
+  type: PaymentType;
+  status: PaymentStatus;
+  /** The source from witch the payment was funded */
+  source: PaymentSource;
+  amount: PaymentAmount;
+  /** The fees on the payment */
+  fees?: Maybe<PaymentFees>;
+  circlePaymentId: Scalars['ID'];
+  proposalId: Scalars['ID'];
+  userId: Scalars['ID'];
+  subscriptionId?: Maybe<Scalars['ID']>;
+  user?: Maybe<User>;
+  card?: Maybe<Card>;
+  common?: Maybe<Common>;
+  proposal?: Maybe<Proposal>;
+  subscription?: Maybe<Subscription>;
+};
+
+export type PaymentFees = {
+  __typename?: 'PaymentFees';
+  amount?: Maybe<Scalars['Int']>;
+  currency?: Maybe<PaymentCurrency>;
+};
+
+export type PaymentSource = {
+  __typename?: 'PaymentSource';
+  type: PaymentSourceType;
+  id?: Maybe<Scalars['ID']>;
+};
+
+export type PaymentAmount = {
+  __typename?: 'PaymentAmount';
+  currency?: Maybe<PaymentCurrency>;
+  amount?: Maybe<Scalars['Int']>;
 };
 
 export enum ProposalType {
@@ -264,6 +370,25 @@ export type ProposalVote = {
   voter?: Maybe<User>;
 };
 
+export type Intention = {
+  __typename?: 'Intention';
+  id: Scalars['ID'];
+  createdAt: Scalars['Date'];
+  updatedAt: Scalars['Date'];
+  type: IntentionType;
+  intention: Scalars['String'];
+};
+
+export enum IntentionType {
+  Access = 'access',
+  Request = 'request'
+}
+
+export type CreateIntentionInput = {
+  type: IntentionType;
+  intention: Scalars['String'];
+};
+
 export enum SubscriptionStatus {
   Pending = 'pending',
   Active = 'active',
@@ -312,6 +437,20 @@ export type Statistics = {
   newDiscussions?: Maybe<Scalars['Int']>;
   /** The amount of new discussion messages, send on that date */
   newDiscussionMessages?: Maybe<Scalars['Int']>;
+  commons?: Maybe<Scalars['Int']>;
+  joinRequests?: Maybe<Scalars['Int']>;
+  fundingRequests?: Maybe<Scalars['Int']>;
+  users?: Maybe<Scalars['Int']>;
+};
+
+
+export type StatisticsJoinRequestsArgs = {
+  onlyOpen?: Maybe<Scalars['Boolean']>;
+};
+
+
+export type StatisticsFundingRequestsArgs = {
+  onlyOpen?: Maybe<Scalars['Boolean']>;
 };
 
 /** The common type */
@@ -340,11 +479,15 @@ export type Common = {
 /** The common type */
 export type CommonProposalsArgs = {
   page?: Maybe<Scalars['Int']>;
+  type?: Maybe<ProposalType>;
+  state?: Maybe<ProposalState>;
+  paymentState?: Maybe<ProposalPaymentState>;
 };
 
 export type Query = {
   __typename?: 'Query';
   user?: Maybe<User>;
+  users?: Maybe<Array<Maybe<User>>>;
   wires?: Maybe<Array<Maybe<Wire>>>;
   event?: Maybe<Event>;
   events?: Maybe<Array<Maybe<Event>>>;
@@ -352,14 +495,22 @@ export type Query = {
   commons?: Maybe<Array<Maybe<Common>>>;
   payout?: Maybe<Payout>;
   payouts?: Maybe<Array<Maybe<Payout>>>;
+  payment?: Maybe<Payment>;
+  payments?: Maybe<Array<Maybe<Payment>>>;
   proposal?: Maybe<Proposal>;
   proposals?: Maybe<Array<Maybe<Proposal>>>;
-  today?: Maybe<Statistics>;
+  statistics?: Maybe<Statistics>;
 };
 
 
 export type QueryUserArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryUsersArgs = {
+  page?: Maybe<Scalars['Int']>;
+  perPage?: Maybe<Scalars['Int']>;
 };
 
 
@@ -374,8 +525,10 @@ export type QueryEventArgs = {
 
 
 export type QueryEventsArgs = {
-  last: Scalars['Int'];
+  last?: Maybe<Scalars['Int']>;
   after?: Maybe<Scalars['Int']>;
+  type?: Maybe<EventType>;
+  objectId?: Maybe<Scalars['ID']>;
 };
 
 
@@ -400,6 +553,17 @@ export type QueryPayoutsArgs = {
 };
 
 
+export type QueryPaymentArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryPaymentsArgs = {
+  page?: Maybe<Scalars['Int']>;
+  hanging?: Maybe<Scalars['Boolean']>;
+};
+
+
 export type QueryProposalArgs = {
   id: Scalars['ID'];
 };
@@ -416,12 +580,43 @@ export type QueryProposalsArgs = {
 export type Mutation = {
   __typename?: 'Mutation';
   executePayouts?: Maybe<Payout>;
+  updatePaymentData?: Maybe<Scalars['Boolean']>;
+  createIntention?: Maybe<Intention>;
 };
 
 
 export type MutationExecutePayoutsArgs = {
   input: ExecutePayoutInput;
 };
+
+
+export type MutationUpdatePaymentDataArgs = {
+  id: Scalars['ID'];
+  trackId?: Maybe<Scalars['ID']>;
+};
+
+
+export type MutationCreateIntentionArgs = {
+  input: CreateIntentionInput;
+};
+
+export type GetLatestEventsQueryVariables = Exact<{
+  last?: Maybe<Scalars['Int']>;
+  after?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetLatestEventsQuery = (
+  { __typename?: 'Query' }
+  & { events?: Maybe<Array<Maybe<(
+    { __typename?: 'Event' }
+    & Pick<Event, 'id' | 'createdAt' | 'type'>
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstName' | 'lastName' | 'photoURL'>
+    )> }
+  )>>> }
+);
 
 export type GetUserPermissionsQueryVariables = Exact<{
   userId: Scalars['ID'];
@@ -485,7 +680,10 @@ export type GetCommonsHomescreenDataQuery = (
   & { commons?: Maybe<Array<Maybe<(
     { __typename?: 'Common' }
     & Pick<Common, 'id' | 'name' | 'raised' | 'balance' | 'createdAt' | 'updatedAt'>
-    & { metadata: (
+    & { members?: Maybe<Array<Maybe<(
+      { __typename?: 'CommonMember' }
+      & Pick<CommonMember, 'userId'>
+    )>>>, metadata: (
       { __typename?: 'CommonMetadata' }
       & Pick<CommonMetadata, 'byline' | 'description' | 'contributionType'>
     ) }
@@ -497,13 +695,98 @@ export type GetDashboardDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetDashboardDataQuery = (
   { __typename?: 'Query' }
-  & { today?: Maybe<(
+  & { statistics?: Maybe<(
     { __typename?: 'Statistics' }
     & Pick<Statistics, 'newCommons' | 'newJoinRequests' | 'newFundingRequests' | 'newDiscussions' | 'newDiscussionMessages'>
-  )>, events?: Maybe<Array<Maybe<(
-    { __typename?: 'Event' }
-    & Pick<Event, 'id' | 'createdAt' | 'updatedAt' | 'userId' | 'objectId' | 'type'>
+  )> }
+);
+
+export type StatisticsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StatisticsQuery = (
+  { __typename?: 'Query' }
+  & { statistics?: Maybe<(
+    { __typename?: 'Statistics' }
+    & Pick<Statistics, 'users' | 'commons' | 'joinRequests' | 'fundingRequests'>
+  )> }
+);
+
+export type CreateIntentionMutationVariables = Exact<{
+  type: IntentionType;
+  intention: Scalars['String'];
+}>;
+
+
+export type CreateIntentionMutation = (
+  { __typename?: 'Mutation' }
+  & { createIntention?: Maybe<(
+    { __typename?: 'Intention' }
+    & Pick<Intention, 'id'>
+  )> }
+);
+
+export type GetPaymentsHomeScreenDataQueryVariables = Exact<{
+  page?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetPaymentsHomeScreenDataQuery = (
+  { __typename?: 'Query' }
+  & { hangingPayments?: Maybe<Array<Maybe<(
+    { __typename?: 'Payment' }
+    & Pick<Payment, 'id' | 'createdAt' | 'updatedAt' | 'status'>
+  )>>>, payments?: Maybe<Array<Maybe<(
+    { __typename?: 'Payment' }
+    & Pick<Payment, 'id' | 'type' | 'status'>
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstName' | 'lastName' | 'photoURL' | 'email'>
+    )>, amount: (
+      { __typename?: 'PaymentAmount' }
+      & Pick<PaymentAmount, 'amount' | 'currency'>
+    ) }
   )>>> }
+);
+
+export type GetPaymentDetailsQueryVariables = Exact<{
+  paymentId: Scalars['ID'];
+}>;
+
+
+export type GetPaymentDetailsQuery = (
+  { __typename?: 'Query' }
+  & { payment?: Maybe<(
+    { __typename?: 'Payment' }
+    & Pick<Payment, 'type'>
+    & { common?: Maybe<(
+      { __typename?: 'Common' }
+      & Pick<Common, 'id' | 'name'>
+    )>, amount: (
+      { __typename?: 'PaymentAmount' }
+      & Pick<PaymentAmount, 'amount' | 'currency'>
+    ), fees?: Maybe<(
+      { __typename?: 'PaymentFees' }
+      & Pick<PaymentFees, 'amount' | 'currency'>
+    )>, card?: Maybe<(
+      { __typename?: 'Card' }
+      & Pick<Card, 'id'>
+      & { metadata?: Maybe<(
+        { __typename?: 'CardMetadata' }
+        & Pick<CardMetadata, 'digits' | 'network'>
+      )> }
+    )> }
+  )> }
+);
+
+export type UpdatePaymentDataMutationVariables = Exact<{
+  paymentId: Scalars['ID'];
+}>;
+
+
+export type UpdatePaymentDataMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'updatePaymentData'>
 );
 
 export type GetProposalsSelectedForBatchQueryVariables = Exact<{
@@ -642,6 +925,40 @@ export type GetProposalDetailsQuery = (
   )> }
 );
 
+export type GetProposalsHomescreenQueryVariables = Exact<{
+  fundingPage?: Maybe<Scalars['Int']>;
+  joinPage?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetProposalsHomescreenQuery = (
+  { __typename?: 'Query' }
+  & { funding?: Maybe<Array<Maybe<(
+    { __typename?: 'Proposal' }
+    & Pick<Proposal, 'id' | 'commonId' | 'votesFor' | 'votesAgainst'>
+    & { votes?: Maybe<Array<Maybe<(
+      { __typename?: 'ProposalVote' }
+      & Pick<ProposalVote, 'outcome'>
+    )>>>, description: (
+      { __typename?: 'ProposalDescription' }
+      & Pick<ProposalDescription, 'title' | 'description'>
+    ), fundingRequest?: Maybe<(
+      { __typename?: 'ProposalFunding' }
+      & Pick<ProposalFunding, 'amount'>
+    )> }
+  )>>>, join?: Maybe<Array<Maybe<(
+    { __typename?: 'Proposal' }
+    & Pick<Proposal, 'id' | 'commonId'>
+    & { description: (
+      { __typename?: 'ProposalDescription' }
+      & Pick<ProposalDescription, 'title' | 'description'>
+    ), join?: Maybe<(
+      { __typename?: 'ProposalJoin' }
+      & Pick<ProposalJoin, 'funding' | 'fundingType'>
+    )> }
+  )>>> }
+);
+
 export type GetUserDetailsQueryQueryVariables = Exact<{
   userId: Scalars['ID'];
 }>;
@@ -673,7 +990,63 @@ export type GetUserDetailsQueryQuery = (
   )> }
 );
 
+export type GetUsersHomepageDataQueryVariables = Exact<{
+  page?: Maybe<Scalars['Int']>;
+  perPage?: Maybe<Scalars['Int']>;
+}>;
 
+
+export type GetUsersHomepageDataQuery = (
+  { __typename?: 'Query' }
+  & { users?: Maybe<Array<Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'photoURL' | 'email' | 'firstName' | 'lastName' | 'createdAt'>
+  )>>> }
+);
+
+
+export const GetLatestEventsDocument = gql`
+    query GetLatestEvents($last: Int = 10, $after: Int = 0) {
+  events(last: $last, after: $after) {
+    id
+    createdAt
+    type
+    user {
+      id
+      firstName
+      lastName
+      photoURL
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetLatestEventsQuery__
+ *
+ * To run a query within a React component, call `useGetLatestEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLatestEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLatestEventsQuery({
+ *   variables: {
+ *      last: // value for 'last'
+ *      after: // value for 'after'
+ *   },
+ * });
+ */
+export function useGetLatestEventsQuery(baseOptions?: Apollo.QueryHookOptions<GetLatestEventsQuery, GetLatestEventsQueryVariables>) {
+        return Apollo.useQuery<GetLatestEventsQuery, GetLatestEventsQueryVariables>(GetLatestEventsDocument, baseOptions);
+      }
+export function useGetLatestEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLatestEventsQuery, GetLatestEventsQueryVariables>) {
+          return Apollo.useLazyQuery<GetLatestEventsQuery, GetLatestEventsQueryVariables>(GetLatestEventsDocument, baseOptions);
+        }
+export type GetLatestEventsQueryHookResult = ReturnType<typeof useGetLatestEventsQuery>;
+export type GetLatestEventsLazyQueryHookResult = ReturnType<typeof useGetLatestEventsLazyQuery>;
+export type GetLatestEventsQueryResult = Apollo.QueryResult<GetLatestEventsQuery, GetLatestEventsQueryVariables>;
 export const GetUserPermissionsDocument = gql`
     query getUserPermissions($userId: ID!) {
   user(id: $userId) {
@@ -784,6 +1157,9 @@ export const GetCommonsHomescreenDataDocument = gql`
     balance
     createdAt
     updatedAt
+    members {
+      userId
+    }
     metadata {
       byline
       description
@@ -821,20 +1197,12 @@ export type GetCommonsHomescreenDataLazyQueryHookResult = ReturnType<typeof useG
 export type GetCommonsHomescreenDataQueryResult = Apollo.QueryResult<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>;
 export const GetDashboardDataDocument = gql`
     query getDashboardData {
-  today {
+  statistics {
     newCommons
     newJoinRequests
     newFundingRequests
     newDiscussions
     newDiscussionMessages
-  }
-  events(last: 10) {
-    id
-    createdAt
-    updatedAt
-    userId
-    objectId
-    type
   }
 }
     `;
@@ -863,6 +1231,208 @@ export function useGetDashboardDataLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type GetDashboardDataQueryHookResult = ReturnType<typeof useGetDashboardDataQuery>;
 export type GetDashboardDataLazyQueryHookResult = ReturnType<typeof useGetDashboardDataLazyQuery>;
 export type GetDashboardDataQueryResult = Apollo.QueryResult<GetDashboardDataQuery, GetDashboardDataQueryVariables>;
+export const StatisticsDocument = gql`
+    query Statistics {
+  statistics {
+    users
+    commons
+    joinRequests
+    fundingRequests
+  }
+}
+    `;
+
+/**
+ * __useStatisticsQuery__
+ *
+ * To run a query within a React component, call `useStatisticsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStatisticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useStatisticsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useStatisticsQuery(baseOptions?: Apollo.QueryHookOptions<StatisticsQuery, StatisticsQueryVariables>) {
+        return Apollo.useQuery<StatisticsQuery, StatisticsQueryVariables>(StatisticsDocument, baseOptions);
+      }
+export function useStatisticsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<StatisticsQuery, StatisticsQueryVariables>) {
+          return Apollo.useLazyQuery<StatisticsQuery, StatisticsQueryVariables>(StatisticsDocument, baseOptions);
+        }
+export type StatisticsQueryHookResult = ReturnType<typeof useStatisticsQuery>;
+export type StatisticsLazyQueryHookResult = ReturnType<typeof useStatisticsLazyQuery>;
+export type StatisticsQueryResult = Apollo.QueryResult<StatisticsQuery, StatisticsQueryVariables>;
+export const CreateIntentionDocument = gql`
+    mutation createIntention($type: IntentionType!, $intention: String!) {
+  createIntention(input: {type: $type, intention: $intention}) {
+    id
+  }
+}
+    `;
+export type CreateIntentionMutationFn = Apollo.MutationFunction<CreateIntentionMutation, CreateIntentionMutationVariables>;
+
+/**
+ * __useCreateIntentionMutation__
+ *
+ * To run a mutation, you first call `useCreateIntentionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateIntentionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createIntentionMutation, { data, loading, error }] = useCreateIntentionMutation({
+ *   variables: {
+ *      type: // value for 'type'
+ *      intention: // value for 'intention'
+ *   },
+ * });
+ */
+export function useCreateIntentionMutation(baseOptions?: Apollo.MutationHookOptions<CreateIntentionMutation, CreateIntentionMutationVariables>) {
+        return Apollo.useMutation<CreateIntentionMutation, CreateIntentionMutationVariables>(CreateIntentionDocument, baseOptions);
+      }
+export type CreateIntentionMutationHookResult = ReturnType<typeof useCreateIntentionMutation>;
+export type CreateIntentionMutationResult = Apollo.MutationResult<CreateIntentionMutation>;
+export type CreateIntentionMutationOptions = Apollo.BaseMutationOptions<CreateIntentionMutation, CreateIntentionMutationVariables>;
+export const GetPaymentsHomeScreenDataDocument = gql`
+    query GetPaymentsHomeScreenData($page: Int = 1) {
+  hangingPayments: payments(hanging: true) {
+    id
+    createdAt
+    updatedAt
+    status
+  }
+  payments: payments(page: $page) {
+    id
+    type
+    status
+    user {
+      id
+      firstName
+      lastName
+      photoURL
+      email
+    }
+    amount {
+      amount
+      currency
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPaymentsHomeScreenDataQuery__
+ *
+ * To run a query within a React component, call `useGetPaymentsHomeScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPaymentsHomeScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPaymentsHomeScreenDataQuery({
+ *   variables: {
+ *      page: // value for 'page'
+ *   },
+ * });
+ */
+export function useGetPaymentsHomeScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<GetPaymentsHomeScreenDataQuery, GetPaymentsHomeScreenDataQueryVariables>) {
+        return Apollo.useQuery<GetPaymentsHomeScreenDataQuery, GetPaymentsHomeScreenDataQueryVariables>(GetPaymentsHomeScreenDataDocument, baseOptions);
+      }
+export function useGetPaymentsHomeScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPaymentsHomeScreenDataQuery, GetPaymentsHomeScreenDataQueryVariables>) {
+          return Apollo.useLazyQuery<GetPaymentsHomeScreenDataQuery, GetPaymentsHomeScreenDataQueryVariables>(GetPaymentsHomeScreenDataDocument, baseOptions);
+        }
+export type GetPaymentsHomeScreenDataQueryHookResult = ReturnType<typeof useGetPaymentsHomeScreenDataQuery>;
+export type GetPaymentsHomeScreenDataLazyQueryHookResult = ReturnType<typeof useGetPaymentsHomeScreenDataLazyQuery>;
+export type GetPaymentsHomeScreenDataQueryResult = Apollo.QueryResult<GetPaymentsHomeScreenDataQuery, GetPaymentsHomeScreenDataQueryVariables>;
+export const GetPaymentDetailsDocument = gql`
+    query GetPaymentDetails($paymentId: ID!) {
+  payment(id: $paymentId) {
+    type
+    common {
+      id
+      name
+    }
+    amount {
+      amount
+      currency
+    }
+    fees {
+      amount
+      currency
+    }
+    card {
+      id
+      metadata {
+        digits
+        network
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPaymentDetailsQuery__
+ *
+ * To run a query within a React component, call `useGetPaymentDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPaymentDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPaymentDetailsQuery({
+ *   variables: {
+ *      paymentId: // value for 'paymentId'
+ *   },
+ * });
+ */
+export function useGetPaymentDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>) {
+        return Apollo.useQuery<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>(GetPaymentDetailsDocument, baseOptions);
+      }
+export function useGetPaymentDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>) {
+          return Apollo.useLazyQuery<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>(GetPaymentDetailsDocument, baseOptions);
+        }
+export type GetPaymentDetailsQueryHookResult = ReturnType<typeof useGetPaymentDetailsQuery>;
+export type GetPaymentDetailsLazyQueryHookResult = ReturnType<typeof useGetPaymentDetailsLazyQuery>;
+export type GetPaymentDetailsQueryResult = Apollo.QueryResult<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>;
+export const UpdatePaymentDataDocument = gql`
+    mutation UpdatePaymentData($paymentId: ID!) {
+  updatePaymentData(id: $paymentId)
+}
+    `;
+export type UpdatePaymentDataMutationFn = Apollo.MutationFunction<UpdatePaymentDataMutation, UpdatePaymentDataMutationVariables>;
+
+/**
+ * __useUpdatePaymentDataMutation__
+ *
+ * To run a mutation, you first call `useUpdatePaymentDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePaymentDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePaymentDataMutation, { data, loading, error }] = useUpdatePaymentDataMutation({
+ *   variables: {
+ *      paymentId: // value for 'paymentId'
+ *   },
+ * });
+ */
+export function useUpdatePaymentDataMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePaymentDataMutation, UpdatePaymentDataMutationVariables>) {
+        return Apollo.useMutation<UpdatePaymentDataMutation, UpdatePaymentDataMutationVariables>(UpdatePaymentDataDocument, baseOptions);
+      }
+export type UpdatePaymentDataMutationHookResult = ReturnType<typeof useUpdatePaymentDataMutation>;
+export type UpdatePaymentDataMutationResult = Apollo.MutationResult<UpdatePaymentDataMutation>;
+export type UpdatePaymentDataMutationOptions = Apollo.BaseMutationOptions<UpdatePaymentDataMutation, UpdatePaymentDataMutationVariables>;
 export const GetProposalsSelectedForBatchDocument = gql`
     query getProposalsSelectedForBatch($ids: [String!]!) {
   proposals(ids: $ids) {
@@ -1130,6 +1700,65 @@ export function useGetProposalDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetProposalDetailsQueryHookResult = ReturnType<typeof useGetProposalDetailsQuery>;
 export type GetProposalDetailsLazyQueryHookResult = ReturnType<typeof useGetProposalDetailsLazyQuery>;
 export type GetProposalDetailsQueryResult = Apollo.QueryResult<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>;
+export const GetProposalsHomescreenDocument = gql`
+    query getProposalsHomescreen($fundingPage: Int, $joinPage: Int) {
+  funding: proposals(type: fundingRequest, page: $fundingPage) {
+    id
+    commonId
+    votes {
+      outcome
+    }
+    votesFor
+    votesAgainst
+    description {
+      title
+      description
+    }
+    fundingRequest {
+      amount
+    }
+  }
+  join: proposals(type: join, page: $joinPage) {
+    id
+    commonId
+    description {
+      title
+      description
+    }
+    join {
+      funding
+      fundingType
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetProposalsHomescreenQuery__
+ *
+ * To run a query within a React component, call `useGetProposalsHomescreenQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProposalsHomescreenQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProposalsHomescreenQuery({
+ *   variables: {
+ *      fundingPage: // value for 'fundingPage'
+ *      joinPage: // value for 'joinPage'
+ *   },
+ * });
+ */
+export function useGetProposalsHomescreenQuery(baseOptions?: Apollo.QueryHookOptions<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>) {
+        return Apollo.useQuery<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>(GetProposalsHomescreenDocument, baseOptions);
+      }
+export function useGetProposalsHomescreenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>) {
+          return Apollo.useLazyQuery<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>(GetProposalsHomescreenDocument, baseOptions);
+        }
+export type GetProposalsHomescreenQueryHookResult = ReturnType<typeof useGetProposalsHomescreenQuery>;
+export type GetProposalsHomescreenLazyQueryHookResult = ReturnType<typeof useGetProposalsHomescreenLazyQuery>;
+export type GetProposalsHomescreenQueryResult = Apollo.QueryResult<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>;
 export const GetUserDetailsQueryDocument = gql`
     query getUserDetailsQuery($userId: ID!) {
   user(id: $userId) {
@@ -1193,3 +1822,42 @@ export function useGetUserDetailsQueryLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type GetUserDetailsQueryQueryHookResult = ReturnType<typeof useGetUserDetailsQueryQuery>;
 export type GetUserDetailsQueryLazyQueryHookResult = ReturnType<typeof useGetUserDetailsQueryLazyQuery>;
 export type GetUserDetailsQueryQueryResult = Apollo.QueryResult<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>;
+export const GetUsersHomepageDataDocument = gql`
+    query getUsersHomepageData($page: Int = 1, $perPage: Int = 15) {
+  users(page: $page, perPage: $perPage) {
+    id
+    photoURL
+    email
+    firstName
+    lastName
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useGetUsersHomepageDataQuery__
+ *
+ * To run a query within a React component, call `useGetUsersHomepageDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUsersHomepageDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUsersHomepageDataQuery({
+ *   variables: {
+ *      page: // value for 'page'
+ *      perPage: // value for 'perPage'
+ *   },
+ * });
+ */
+export function useGetUsersHomepageDataQuery(baseOptions?: Apollo.QueryHookOptions<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>) {
+        return Apollo.useQuery<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>(GetUsersHomepageDataDocument, baseOptions);
+      }
+export function useGetUsersHomepageDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>) {
+          return Apollo.useLazyQuery<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>(GetUsersHomepageDataDocument, baseOptions);
+        }
+export type GetUsersHomepageDataQueryHookResult = ReturnType<typeof useGetUsersHomepageDataQuery>;
+export type GetUsersHomepageDataLazyQueryHookResult = ReturnType<typeof useGetUsersHomepageDataLazyQuery>;
+export type GetUsersHomepageDataQueryResult = Apollo.QueryResult<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>;

@@ -4,11 +4,14 @@ import { NextPage } from 'next';
 import Skeleton from 'react-loading-skeleton';
 import { gql } from '@apollo/client/core';
 import { Spacer, Text, Table, Pagination, Tag, useToasts, Breadcrumbs, Grid, Card } from '@geist-ui/react';
-import { ExternalLink, Edit, Trash2, ChevronRightCircleFill, ChevronLeftCircleFill } from '@geist-ui/react-icons';
+import { ExternalLink, Edit, Trash2, ChevronRightCircleFill, ChevronLeftCircleFill, Home } from '@geist-ui/react-icons';
 
 import { Link } from '../../components/Link';
-import { useGetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryResult } from '@graphql';
+import { useGetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryResult, useStatisticsQuery } from '@graphql';
 import { withPermission } from '../../helpers/hoc/withPermission';
+import { useRouter } from 'next/router';
+import { Centered } from '@components/Centered';
+import { FullWidthLoader } from '@components/FullWidthLoader';
 
 const GetCommonsHomescreenData = gql`
   query getCommonsHomescreenData($last: Int, $after: Int) {
@@ -25,6 +28,10 @@ const GetCommonsHomescreenData = gql`
 
       createdAt
       updatedAt
+      
+      members { 
+        userId
+      }
 
       metadata {
         byline
@@ -41,6 +48,8 @@ const CommonsHomepage: NextPage = () => {
 
   // Data fetching and custom hooks
   const [toasts, setToast] = useToasts();
+  const router = useRouter();
+  const statistics = useStatisticsQuery();
   const data = useGetCommonsHomescreenDataQuery({
     variables: {
       last: 10,
@@ -52,13 +61,6 @@ const CommonsHomepage: NextPage = () => {
   const onPageChange = (val: number): void => {
     setPage(val);
   };
-
-  // Helpers
-  const FullWidthLoader = (
-    <div style={{ width: '100%' }}>
-      <Skeleton/>
-    </div>
-  );
 
   const transformCommonsArray = (data: GetCommonsHomescreenDataQueryResult): any => {
     if (data.loading) {
@@ -87,12 +89,26 @@ const CommonsHomepage: NextPage = () => {
     const { commons } = data.data;
 
     return commons.map((common) => ({
+      id: common.id,
+
+      icon: (
+        <Centered>
+          <Home />
+        </Centered>
+      ),
+
       name: common.name,
 
       raised: (common.raised / 100)
         .toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
       balance: (common.balance / 100)
         .toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
+
+      members: (
+        <Text b>
+          {common.members.length}
+        </Text>
+      ),
 
       type: (
         <React.Fragment>
@@ -102,17 +118,15 @@ const CommonsHomepage: NextPage = () => {
             <Tag type="secondary">Monthly</Tag>
           )}
         </React.Fragment>
-      ),
-
-      action: (
-        <React.Fragment>
-          <Link to={`/commons/details/${common.id}`} Icon={ExternalLink}/>
-          <Link to="" Icon={Edit}/>
-          <Link to="" Icon={Trash2}/>
-        </React.Fragment>
       )
     }));
   };
+
+  const onCommonTableRow = (data: { id: string }) => {
+    router.push({
+      pathname: `/commons/details/${data.id}`
+    })
+  }
 
   return (
     <React.Fragment>
@@ -133,7 +147,13 @@ const CommonsHomepage: NextPage = () => {
           <Grid sm={24} md={8}>
             <Card hoverable>
               <Text h1>
-                1424
+                {statistics.data && (
+                  statistics.data.statistics.commons
+                )}
+
+                {!statistics.data && (
+                  <Skeleton/>
+                )}
               </Text>
               <Text p>Total commons</Text>
             </Card>
@@ -141,7 +161,7 @@ const CommonsHomepage: NextPage = () => {
 
           <Grid sm={24} md={8}>
             <Card hoverable>
-              <Text h1>
+              <Text h1 type="error">
                 98
               </Text>
               <Text p>Commons from the last week</Text>
@@ -150,7 +170,7 @@ const CommonsHomepage: NextPage = () => {
 
           <Grid sm={24} md={8}>
             <Card hoverable>
-              <Text h1>
+              <Text h1 type="error">
                 432
               </Text>
               <Text p>Commons with funds</Text>
@@ -163,8 +183,9 @@ const CommonsHomepage: NextPage = () => {
 
       <Text h3>All commons</Text>
 
-      <Table data={transformCommonsArray(data)}>
-        <Table.Column prop="name" label="Display Name"/>
+      <Table data={transformCommonsArray(data)} onRow={onCommonTableRow}>
+        <Table.Column prop="icon" width={70} />
+        <Table.Column prop="name" label="Display Name" />
 
         <Table.Column
           prop="raised"
@@ -179,24 +200,26 @@ const CommonsHomepage: NextPage = () => {
         />
 
         <Table.Column
+          prop="members"
+          label="Members"
+          width={40}
+        />
+
+        <Table.Column
           prop="type"
           label="Common Type"
           width={150}
         />
-
-        <Table.Column
-          prop="action"
-          label="Actions"
-          width={130}
-        />
       </Table>
 
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-        <Pagination count={38} onChange={onPageChange}>
-          <Pagination.Next><ChevronRightCircleFill/></Pagination.Next>
-          <Pagination.Previous><ChevronLeftCircleFill/></Pagination.Previous>
-        </Pagination>
-      </div>
+      {statistics.data && statistics.data.statistics.commons > 10 && (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
+          <Pagination count={Math.ceil(statistics.data.statistics.commons / 10)} onChange={onPageChange}>
+            <Pagination.Next><ChevronRightCircleFill/></Pagination.Next>
+            <Pagination.Previous><ChevronLeftCircleFill/></Pagination.Previous>
+          </Pagination>
+        </div>
+      )}
 
     </React.Fragment>
   );

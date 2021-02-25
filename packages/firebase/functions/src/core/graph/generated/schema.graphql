@@ -2,6 +2,46 @@
 ### Do not make changes to this file directly
 
 
+type Card {
+  circleCardId: ID!
+
+  """The date at witch the payment was created"""
+  createdAt: Date!
+
+  """The ID of the payment"""
+  id: ID!
+  metadata: CardMetadata
+  ownerId: ID!
+
+  """The date at witch the payment was last updated"""
+  updatedAt: Date!
+  verification: CardVerification
+}
+
+type CardBillingDetails {
+  city: String
+  country: String
+  district: String
+  line1: String
+  name: String
+  postalCode: String
+}
+
+type CardMetadata {
+  billingDetails: CardBillingDetails
+  digits: String
+  network: CardNetwork
+}
+
+type CardVerification {
+  cvv: String
+}
+
+enum CardNetwork {
+  mastercard
+  visa
+}
+
 """The common type"""
 type Common {
   """The currently available funds of the common"""
@@ -19,7 +59,7 @@ type Common {
   name: String!
   openFundingRequests: Int!
   openJoinRequests: Int!
-  proposals(page: Int = 1): [Proposal]
+  proposals(page: Int, paymentState: ProposalPaymentState, state: ProposalState, type: ProposalType): [Proposal]
 
   """The total amount of money, raised by the common"""
   raised: Int!
@@ -50,6 +90,11 @@ type CommonMetadata {
   minFeeToJoin: Int!
 }
 
+input CreateIntentionInput {
+  intention: String!
+  type: IntentionType!
+}
+
 scalar Date
 
 type Event {
@@ -67,6 +112,7 @@ type Event {
 
   """The date, at which the event was last updated"""
   updatedAt: Date!
+  user: User
 
   """The id of the actor"""
   userId: ID
@@ -120,8 +166,86 @@ input ExecutePayoutInput {
   wireId: ID!
 }
 
+type Intention {
+  createdAt: Date!
+  id: ID!
+  intention: String!
+  type: IntentionType!
+  updatedAt: Date!
+}
+
+enum IntentionType {
+  access
+  request
+}
+
 type Mutation {
+  createIntention(input: CreateIntentionInput!): Intention
   executePayouts(input: ExecutePayoutInput!): Payout
+}
+
+type Payment {
+  amount: PaymentAmount!
+  card: Card
+  circlePaymentId: ID!
+
+  """The date at witch the payment was created"""
+  createdAt: Date!
+
+  """The fees on the payment"""
+  fees: PaymentFees
+
+  """The ID of the payment"""
+  id: ID!
+  proposal: Proposal
+  proposalId: ID!
+
+  """The source from witch the payment was funded"""
+  source: PaymentSource!
+  status: PaymentStatus!
+  subscription: Subscription
+  subscriptionId: ID
+  type: PaymentType!
+
+  """The date at witch the payment was last updated"""
+  updatedAt: Date!
+  user: User
+  userId: ID!
+}
+
+type PaymentAmount {
+  amount: Int
+  currency: PaymentCurrency
+}
+
+enum PaymentCurrency {
+  USD
+}
+
+type PaymentFees {
+  amount: Int
+  currency: PaymentCurrency
+}
+
+type PaymentSource {
+  id: ID
+  type: PaymentSourceType!
+}
+
+enum PaymentSourceType {
+  card
+}
+
+enum PaymentStatus {
+  confirmed
+  failed
+  paid
+  pending
+}
+
+enum PaymentType {
+  oneTime
+  subscription
 }
 
 type Payout {
@@ -132,9 +256,16 @@ type Payout {
   id: ID!
   proposalIds: [String]
   proposals: [Proposal]
+  security: [PayoutSecurity]
   status: PayoutStatus
   updatedAt: Date!
   voided: Boolean
+}
+
+type PayoutSecurity {
+  id: Int
+  redeemed: Boolean
+  redemptionAttempts: Int
 }
 
 enum PayoutStatus {
@@ -231,17 +362,24 @@ type Query {
   ): Common
   commons(after: Int = 0, last: Int = 10): [Common]
   event(eventId: ID!): Event
-  events(after: Int, last: Int!): [Event]
+  events(after: Int = 0, last: Int = 10, objectId: ID, type: EventType): [Event]
+  payment(id: ID!): Payment
+  payments(hanging: Boolean, page: Int = 1): [Payment]
   payout(id: ID!): Payout
   payouts(page: Int = 1): [Payout]
   proposal(id: ID!): Proposal
   proposals(fundingState: ProposalFundingState, ids: [String], page: Int = 1, pageItems: Int = 10, type: ProposalType): [Proposal]
-  today: Statistics
+  statistics: Statistics
   user(id: ID!): User
+  users(page: Int = 1, perPage: Int = 10): [User]
   wires(page: Int = 1): [Wire]
 }
 
 type Statistics {
+  commons: Int
+  fundingRequests(onlyOpen: Boolean = false): Int
+  joinRequests(onlyOpen: Boolean = false): Int
+
   """Commons, created on that date"""
   newCommons: Int
 
@@ -256,6 +394,7 @@ type Statistics {
 
   """The amount of proposals with join type, created on that date"""
   newJoinRequests: Int
+  users: Int
 }
 
 type Subscription {

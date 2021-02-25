@@ -32,7 +32,7 @@ export const PermissionsContextProvider: React.FC<PropsWithChildren<any>> = ({ c
 
   const { data, loading } = useGetUserPermissionsQuery({
     skip: !authContext.loaded && !authContext.authenticated,
-    pollInterval: 5 * 1000, // Refresh the permissions every 5 seconds (@todo Make it 10 minutes)
+    pollInterval: 120 * 1000,
     variables: {
       userId: authContext.userInfo?.uid
     }
@@ -41,8 +41,6 @@ export const PermissionsContextProvider: React.FC<PropsWithChildren<any>> = ({ c
   const [context, setContext] = React.useState<IPermissionsContext>(defaultPermissionsContext);
 
   React.useEffect(() => {
-    console.log(data);
-
     if (authContext.authenticated && data?.user) {
       setContext({
         loaded: true,

@@ -4,6 +4,38 @@ schema {
   subscription: Subscription
 }
 scalar Date
+enum CardNetwork {
+  visa
+  mastercard
+}
+type Card {
+  """The ID of the payment"""
+  id: ID!
+  """The date at witch the payment was created"""
+  createdAt: Date!
+  """The date at witch the payment was last updated"""
+  updatedAt: Date!
+  circleCardId: ID!
+  ownerId: ID!
+  metadata: CardMetadata
+  verification: CardVerification
+}
+type CardMetadata {
+  digits: String
+  network: CardNetwork
+  billingDetails: CardBillingDetails
+}
+type CardVerification {
+  cvv: String
+}
+type CardBillingDetails {
+  name: String
+  city: String
+  country: String
+  postalCode: String
+  district: String
+  line1: String
+}
 type User {
   id: ID!
   firstName: String
@@ -90,6 +122,7 @@ type Event {
   objectId: ID
   """The id of the actor"""
   userId: ID
+  user: User
 }
 enum CommonContributionType {
   oneTime
@@ -137,6 +170,58 @@ input ExecutePayoutInput {
   wireId: ID!
   """List of the all proposals IDs that are in this batch"""
   proposalIds: [ID!]!
+}
+enum PaymentType {
+  oneTime
+  subscription
+}
+enum PaymentSourceType {
+  card
+}
+enum PaymentStatus {
+  pending
+  confirmed
+  paid
+  failed
+}
+enum PaymentCurrency {
+  USD
+}
+type Payment {
+  """The ID of the payment"""
+  id: ID!
+  """The date at witch the payment was created"""
+  createdAt: Date!
+  """The date at witch the payment was last updated"""
+  updatedAt: Date!
+  type: PaymentType!
+  status: PaymentStatus!
+  """The source from witch the payment was funded"""
+  source: PaymentSource!
+  amount: PaymentAmount!
+  """The fees on the payment"""
+  fees: PaymentFees
+  circlePaymentId: ID!
+  proposalId: ID!
+  userId: ID!
+  subscriptionId: ID
+  user: User
+  card: Card
+  common: Common
+  proposal: Proposal
+  subscription: Subscription
+}
+type PaymentFees {
+  amount: Int
+  currency: PaymentCurrency
+}
+type PaymentSource {
+  type: PaymentSourceType!
+  id: ID
+}
+type PaymentAmount {
+  currency: PaymentCurrency
+  amount: Int
 }
 enum ProposalType {
   fundingRequest
@@ -205,6 +290,21 @@ type ProposalVote {
   outcome: ProposalVoteOutcome!
   voter: User
 }
+type Intention {
+  id: ID!
+  createdAt: Date!
+  updatedAt: Date!
+  type: IntentionType!
+  intention: String!
+}
+enum IntentionType {
+  access
+  request
+}
+input CreateIntentionInput {
+  type: IntentionType!
+  intention: String!
+}
 enum SubscriptionStatus {
   pending
   active
@@ -245,6 +345,10 @@ type Statistics {
   newDiscussions: Int
   """The amount of new discussion messages, send on that date"""
   newDiscussionMessages: Int
+  commons: Int
+  joinRequests(onlyOpen: Boolean = false): Int
+  fundingRequests(onlyOpen: Boolean = false): Int
+  users: Int
 }
 """The common type"""
 type Common {
@@ -262,15 +366,16 @@ type Common {
   raised: Int!
   metadata: CommonMetadata!
   members: [CommonMember]
-  proposals(page: Int = 1): [Proposal]
+  proposals(page: Int, type: ProposalType, state: ProposalState, paymentState: ProposalPaymentState): [Proposal]
   openJoinRequests: Int!
   openFundingRequests: Int!
 }
 type Query {
   user(id: ID!): User
+  users(page: Int = 1, perPage: Int = 10): [User]
   wires(page: Int = 1): [Wire]
   event(eventId: ID!): Event
-  events(last: Int!, after: Int): [Event]
+  events(last: Int = 10, after: Int = 0, type: EventType, objectId: ID): [Event]
   common(
     """The ID of the common, that you want to retrieve"""
     commonId: ID!
@@ -278,10 +383,14 @@ type Query {
   commons(last: Int = 10, after: Int = 0): [Common]
   payout(id: ID!): Payout
   payouts(page: Int = 1): [Payout]
+  payment(id: ID!): Payment
+  payments(page: Int = 1, hanging: Boolean): [Payment]
   proposal(id: ID!): Proposal
   proposals(ids: [String], page: Int = 1, pageItems: Int = 10, type: ProposalType, fundingState: ProposalFundingState): [Proposal]
-  today: Statistics
+  statistics: Statistics
 }
 type Mutation {
   executePayouts(input: ExecutePayoutInput!): Payout
+  updatePaymentData(id: ID!, trackId: ID = "a06d7a1f-c179-42f8-8279-5c896d231308"): Boolean
+  createIntention(input: CreateIntentionInput!): Intention
 }
