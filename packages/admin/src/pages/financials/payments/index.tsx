@@ -116,7 +116,7 @@ export const PaymentsHomepage: NextPage = () => {
 
 
   // --- Data fetching
-  const { data: payments, previousData, refetch: updatePayments } = useGetPaymentsHomeScreenDataQuery({
+  const { data: payments, previousData, loading, refetch: updatePayments } = useGetPaymentsHomeScreenDataQuery({
     variables: {
       page
     }
@@ -212,7 +212,7 @@ export const PaymentsHomepage: NextPage = () => {
       <Spacer y={2}/>
 
       <React.Fragment>
-        {(payments?.hangingPayments?.length || !!previousData?.hangingPayments?.length) && (
+        {(payments?.hangingPayments?.length || (!!previousData?.hangingPayments?.length && loading)) && (
           <React.Fragment>
             <Note type="error">There are hanging payments. Please, take a look!</Note>
 
