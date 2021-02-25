@@ -7,7 +7,7 @@ const permissions = ['founder', 'moderator']; // @discuss can we maybe have a `c
  * Checks if a user has permissions for a certain common
  * @param userId    - the id of the user we want to check permissions
  * @param commonId  - the id of the common we want to check if the user has permission to
- * @return boolean  - true -> user has permission, otherwise -> false
+ * @return boolean  - indicating whether the user has permission or not
  */
 export const hasPermission = async (userId: string, commonId: string): Promise<boolean> =>  {
   const user = await userDb.get(userId);

@@ -1,9 +1,9 @@
 import * as yup from 'yup';
 
-import {validate} from '../../util/validate';
+import { validate } from '../../util/validate';
 
 import { firestore } from 'firebase-admin';
-import { ItemType, IModerationEntity } from '@common/types';
+import { ItemType, IModeration } from '@common/types';
 import { hasPermission } from '../../core/domain/users/business';
 import { UnauthorizedError } from '../../util/errors';
 import { updateEntity } from './updateEntity';
@@ -46,7 +46,7 @@ export const showContent = async (showContentPayload: ShowContentPayload): Promi
       flag: 'visible',
       updatedAt: firestore.Timestamp.now(),
       moderator: userId,
-    } as IModerationEntity,
+    } as IModeration,
   }
 
   return await updateEntity(itemId, updatedItem as ItemType, type);

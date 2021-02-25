@@ -7,10 +7,9 @@ import { EVENT_TYPES } from '../../event/event';
 
 /**
  * Mapping each entity to the corresponsing database update function
- * @param  {string}       itemId [description]
- * @param  {ItemType}     item   [description]
- * @param  {string}       type   [description]
- * @return {Promise<any>}        [description]
+ * @param  itemId  - the id of the item we want to update
+ * @param  item    - the item with all moderation changes
+ * @param  type    - type of the item
  */
 export const updateEntity = async (itemId: string, item: ItemType, type: string): Promise<any> => {
   let eventType = '';

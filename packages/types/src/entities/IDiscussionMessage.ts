@@ -1,5 +1,5 @@
 import admin from 'firebase-admin';
-import { IModerationEntity } from './IModerationEntity';
+import { IModeration } from './IModeration';
 import Timestamp = admin.firestore.Timestamp;
 
 export interface IDiscussionMessage {
@@ -42,6 +42,6 @@ export interface IDiscussionMessage {
   /**
    * Moderation object which holds reasons for reporting/hiding the message
    */
-  moderation?: IModerationEntity;
+  moderation?: IModeration;
 
 }

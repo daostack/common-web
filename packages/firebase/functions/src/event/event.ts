@@ -293,7 +293,7 @@ export const eventData: Record<string, IEventData> = {
 
     notifyUserFilter: async (discussionMessage: IDiscussionMessage): Promise<string[]> => {
       const common = await commonDb.get(discussionMessage.commonId)
-      return [common.members[0].userId]; // send to founder for now, need to send to all moderators
+      return [common.metadata.founderId]; // send to founder for now, need to send to all moderators
     }
   },
   [EVENT_TYPES.PROPOSAL_REPORTED]: {
@@ -301,7 +301,7 @@ export const eventData: Record<string, IEventData> = {
 
     notifyUserFilter: async (proposal: IProposalEntity): Promise<string[]> => {
       const common = await commonDb.get(proposal.commonId)
-      return [common.members[0].userId]; // send to founder for now, need to send to all moderators
+      return [common.metadata.founderId]; // send to founder for now, need to send to all moderators
     }
   },
   [EVENT_TYPES.DISCUSSION_REPORTED]: {
@@ -311,7 +311,7 @@ export const eventData: Record<string, IEventData> = {
 
     notifyUserFilter: async (discussion: IDiscussionEntity): Promise<string[]> => {
       const common = await commonDb.get(discussion.commonId);
-      return [common.members[0].userId]; // send to founder for now, need to send to all moderators
+      return [common.metadata.founderId]; // send to founder for now, need to send to all moderators
     }
   },
 

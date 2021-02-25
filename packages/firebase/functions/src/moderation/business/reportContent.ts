@@ -1,10 +1,10 @@
 import * as yup from 'yup';
 
-import {validate} from '../../util/validate';
+import { validate } from '../../util/validate';
 
 import { firestore } from 'firebase-admin';
-import { ItemType, IModerationEntity } from '@common/types';
-import { CommonError } from '../../util/errors';
+import { ItemType, IModeration } from '@common/types';
+import { UnauthorizedError } from '../../util/errors';
 import { updateEntity } from './updateEntity';
 import { commonDb } from '../../common/database';
 import { db } from '../../util';
@@ -41,7 +41,7 @@ export const reportContent = async (reportContentPayload: ReportContentPayload):
 
   // all members, and only members can report content
   if (!memberIds.includes(userId)) {
-    throw new CommonError('Only members can report');
+    throw new UnauthorizedError();
   }
 
   const item = (await db.collection(type).doc(moderationData.itemId).get()).data();
@@ -55,7 +55,7 @@ export const reportContent = async (reportContentPayload: ReportContentPayload):
       updatedAt: firestore.Timestamp.now(),
       moderator: '',
       reporter: userId
-    } as IModerationEntity,
+    } as IModeration,
   }
 
   return await updateEntity(moderationData.itemId, updatedItem as ItemType, type);
