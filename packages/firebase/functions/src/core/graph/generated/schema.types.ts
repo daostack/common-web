@@ -34,7 +34,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  CartNetwork: "MASTERCARD" | "VISA"
+  CardNetwork: "MASTERCARD" | "VISA"
   CommonContributionType: "monthly" | "one-time"
   EventType: "cardCreated" | "commonCreated" | "commonCreationFailed" | "commonMemberAdded" | "commonMemberRemoved" | "commonUpdated" | "commonWhitelisted" | "discussionCreated" | "fundingRequestAccepted" | "fundingRequestAcceptedInsufficientFunds" | "fundingRequestCreated" | "fundingRequestExecuted" | "fundingRequestRejected" | "membershipRevoked" | "messageCreated" | "paymentConfirmed" | "paymentCreated" | "paymentFailed" | "paymentPaid" | "payoutApproved" | "payoutCompleted" | "payoutCreated" | "payoutExecuted" | "payoutFailed" | "payoutVoided" | "requestToJoinAccepted" | "requestToJoinCreated" | "requestToJoinExecuted" | "requestToJoinRejected" | "subscriptionCanceledByPaymentFailure" | "subscriptionCanceledByUser" | "subscriptionCreated" | "subscriptionPaymentConfirmed" | "subscriptionPaymentCreated" | "subscriptionPaymentFailed" | "subscriptionPaymentStuck" | "voteCreated"
   IntentionType: "access" | "request"
@@ -81,7 +81,7 @@ export interface NexusGenObjects {
   CardMetadata: { // root type
     billingDetails?: NexusGenRootTypes['CardBillingDetails'] | null; // CardBillingDetails
     digits?: string | null; // String
-    network?: NexusGenEnums['CartNetwork'] | null; // CartNetwork
+    network?: NexusGenEnums['CardNetwork'] | null; // CardNetwork
   }
   CardVerification: { // root type
     cvv?: string | null; // String
@@ -286,7 +286,7 @@ export interface NexusGenFieldTypes {
   CardMetadata: { // field return type
     billingDetails: NexusGenRootTypes['CardBillingDetails'] | null; // CardBillingDetails
     digits: string | null; // String
-    network: NexusGenEnums['CartNetwork'] | null; // CartNetwork
+    network: NexusGenEnums['CardNetwork'] | null; // CardNetwork
   }
   CardVerification: { // field return type
     cvv: string | null; // String
@@ -526,7 +526,7 @@ export interface NexusGenFieldTypeNames {
   CardMetadata: { // field return type name
     billingDetails: 'CardBillingDetails'
     digits: 'String'
-    network: 'CartNetwork'
+    network: 'CardNetwork'
   }
   CardVerification: { // field return type name
     cvv: 'String'

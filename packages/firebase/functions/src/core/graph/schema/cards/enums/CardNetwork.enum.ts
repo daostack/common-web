@@ -1,7 +1,7 @@
 import { enumType } from 'nexus';
 
 export const CardNetworkEnum = enumType({
-  name: 'CartNetwork',
+  name: 'CardNetwork',
   members: {
     visa: 'VISA',
     mastercard: 'MASTERCARD'

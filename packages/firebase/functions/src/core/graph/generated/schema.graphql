@@ -30,14 +30,14 @@ type CardBillingDetails {
 type CardMetadata {
   billingDetails: CardBillingDetails
   digits: String
-  network: CartNetwork
+  network: CardNetwork
 }
 
 type CardVerification {
   cvv: String
 }
 
-enum CartNetwork {
+enum CardNetwork {
   mastercard
   visa
 }

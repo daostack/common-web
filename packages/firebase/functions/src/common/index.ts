@@ -4,7 +4,7 @@ import { env, runtimeOptions } from '../constants';
 import { commonApp, commonRouter } from '../util';
 import { responseExecutor } from '../util/responseExecutor';
 
-import { createCommon, updateCommon, refreshCommonMembers } from './business';
+import { createCommon, updateCommon } from './business';
 import * as triggers from './triggers';
 import { commonDb } from './database';
 import { deleteCommon } from './business/deleteCommon';
