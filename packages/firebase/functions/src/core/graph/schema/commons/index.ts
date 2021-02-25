@@ -12,6 +12,8 @@ import { CommonOpenFundingRequestsExtension } from './extensions/CommonOpenFundi
 import { GetCommonQuery } from './queries/GetCommon.query';
 import { GetCommonsQuery } from './queries/GetCommons.query';
 
+import { RefreshCommonMembersMutation } from './mutations/refreshCommonMembers.mutation';
+
 export const CommonTypes = [
   CommonContributionTypeEnum,
 
@@ -25,5 +27,7 @@ export const CommonTypes = [
   CommonOpenFundingRequestsExtension,
 
   GetCommonQuery,
-  GetCommonsQuery
+  GetCommonsQuery,
+
+  RefreshCommonMembersMutation
 ]

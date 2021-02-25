@@ -59,12 +59,6 @@ router.post('/update', async (req, res, next) => (
     })
 ));
 
-router.post('/refreshMembers', async (req, res) => {
-  await refreshCommonMembers(req.query.commonId as string);
-
-  res.send();
-});
-
 export const commonsApp = functions
   .runWith(runtimeOptions)
   .https.onRequest(commonApp(router));
