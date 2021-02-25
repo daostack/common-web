@@ -35,7 +35,8 @@ const AuthenticationPage: NextPage<IAuthenticatePageProps> = () => {
 
         setToasts({
           type: 'success',
-          text: 'Successfully authenticated'
+          text: 'Successfully authenticated',
+          delay: 3000
         });
 
         router.push('/dashboard');

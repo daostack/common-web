@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { withPermission } from '../../../helpers/hoc/withPermission';
+import { withPermission } from '../../../../helpers/hoc/withPermission';
 import { useGetProposalsSelectedForBatchQuery, Wire, useExecutePayoutMutation } from '@graphql';
 import { Link } from '@components/Link';
 import React from 'react';

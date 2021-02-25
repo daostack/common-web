@@ -1,45 +1,14 @@
 import React, { PropsWithChildren } from 'react';
-import { useRouter } from 'next/router';
+import { Page, Spacer } from '@geist-ui/react';
 
-import firebase from 'firebase/app';
-import { Grid, Page, Spacer, Tabs, Tooltip, User, Text, Link } from '@geist-ui/react';
+
+import { PermissionsContextProvider, useAuthContext } from '@context';
 
 import { ApolloProvider } from '@components/providers/ApolloProvider';
-import { PermissionsContextProvider, useAuthContext } from '@context';
-import { HasPermission } from '@components/HasPermission';
+import { Header } from '@components/Header';
 
 export const AuthenticationBasedLayout: React.FC<PropsWithChildren<any>> = ({ children, ...rest }) => {
-  const [currentTab, setCurrentTab] = React.useState<string>('dashboard');
   const authContext = useAuthContext();
-
-  // Hooks
-  const router = useRouter();
-
-  // Effects
-  React.useEffect(() => {
-    setCurrentTab(router.pathname.split('/')[1]);
-  });
-
-  React.useEffect(() => {
-    if (authContext.loaded) {
-      if (!authContext.authenticated && router.pathname !== '/auth') {
-        router.push('/auth');
-      }
-    }
-  }, [authContext]);
-
-  // Actions
-  const onTabChange = (value: string): void => {
-    setCurrentTab(value);
-
-    router.push(`/${value}`);
-  };
-
-  const onSignOut = async (): Promise<void> => {
-    await firebase.auth().signOut();
-
-    router.push('/');
-  };
 
   return (
     <React.Fragment>
@@ -49,35 +18,7 @@ export const AuthenticationBasedLayout: React.FC<PropsWithChildren<any>> = ({ ch
             <ApolloProvider>
               <PermissionsContextProvider>
                 <Page>
-                  <HasPermission permission="admin.*">
-                    <Page.Header>
-                      <Grid.Container style={{ marginTop: 15 }}>
-                        <Grid xs={24} justify="flex-end" style={{ display: 'flex' }}>
-                          <Tooltip text={(
-                            <React.Fragment>
-                              <Link onClick={onSignOut}>
-                                Sign Out
-                              </Link>
-                            </React.Fragment>
-                          )} trigger="click" placement="bottomEnd">
-                            <User
-                              src={authContext.userInfo?.photoURL}
-                              name={authContext.userInfo.displayName}
-                            />
-                          </Tooltip>
-                        </Grid>
-                      </Grid.Container>
-
-                      <Tabs value={currentTab} onChange={onTabChange} hideDivider>
-                        <Tabs.Item value="dashboard" label="Dashboard"/>
-                        <Tabs.Item value="commons" label="Commons"/>
-                        <Tabs.Item value="proposals" label="Proposals"/>
-                        <Tabs.Item value="users" label="Users"/>
-                        <Tabs.Item value="payouts" label="Payouts"/>
-                        <Tabs.Item value="events" label="Events"/>
-                      </Tabs>
-                    </Page.Header>
-                  </HasPermission>
+                  <Header />
 
                   <Page.Body style={{ paddingTop: 0 }}>
                     <Spacer y={1}/>

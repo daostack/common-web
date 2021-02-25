@@ -5,6 +5,7 @@ import { proposalDb } from '../../proposals/database';
 import { createEvent } from '../../util/db/eventDbService';
 import { CommonError } from '../../util/errors';
 import { commonDb } from '../database';
+
 import Timestamp = admin.firestore.Timestamp;
 
 /**
@@ -36,12 +37,12 @@ export const addCommonMemberByProposalId = async (proposalId: string): Promise<v
 
 /**
  * Adds a user to the members of the passed common. There is no validation
- * being done here and you should more than likely user `addCommonMemberByProposalId`
+ * being done here and you should more than likely use `addCommonMemberByProposalId`
  *
  * @param common - The common, to which the user will be added
  * @param userId - The ID of the user, that will be added
  */
-const addCommonMember = async (common: ICommonEntity, userId: string): Promise<ICommonEntity> => {
+export const addCommonMember = async (common: ICommonEntity, userId: string): Promise<ICommonEntity> => {
   if (!isCommonMember(common, userId)) {
     common.members.push({
       userId,
