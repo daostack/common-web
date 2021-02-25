@@ -4,7 +4,7 @@ schema {
   subscription: Subscription
 }
 scalar Date
-enum CartNetwork {
+enum CardNetwork {
   visa
   mastercard
 }
@@ -22,7 +22,7 @@ type Card {
 }
 type CardMetadata {
   digits: String
-  network: CartNetwork
+  network: CardNetwork
   billingDetails: CardBillingDetails
 }
 type CardVerification {

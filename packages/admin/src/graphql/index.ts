@@ -15,7 +15,7 @@ export type Scalars = {
 };
 
 
-export enum CartNetwork {
+export enum CardNetwork {
   Visa = 'visa',
   Mastercard = 'mastercard'
 }
@@ -37,7 +37,7 @@ export type Card = {
 export type CardMetadata = {
   __typename?: 'CardMetadata';
   digits?: Maybe<Scalars['String']>;
-  network?: Maybe<CartNetwork>;
+  network?: Maybe<CardNetwork>;
   billingDetails?: Maybe<CardBillingDetails>;
 };
 

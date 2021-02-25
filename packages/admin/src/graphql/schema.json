@@ -22,7 +22,7 @@
       },
       {
         "kind": "ENUM",
-        "name": "CartNetwork",
+        "name": "CardNetwork",
         "description": null,
         "fields": null,
         "inputFields": null,
@@ -191,7 +191,7 @@
             "args": [],
             "type": {
               "kind": "ENUM",
-              "name": "CartNetwork",
+              "name": "CardNetwork",
               "ofType": null
             },
             "isDeprecated": false,
