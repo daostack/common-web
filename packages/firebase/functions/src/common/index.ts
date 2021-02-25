@@ -1,11 +1,10 @@
 import * as functions from 'firebase-functions';
 
-import { env } from '../constants';
+import { env, runtimeOptions } from '../constants';
 import { commonApp, commonRouter } from '../util';
-import { runtimeOptions } from '../constants';
 import { responseExecutor } from '../util/responseExecutor';
 
-import { createCommon, updateCommon } from './business';
+import { createCommon, updateCommon, refreshCommonMembers } from './business';
 import * as triggers from './triggers';
 import { commonDb } from './database';
 import { deleteCommon } from './business/deleteCommon';
@@ -31,11 +30,11 @@ if (env.environment === 'staging' || env.environment === 'dev') {
   router.delete('/delete', async (req, res, next) => {
     await responseExecutor(
       async () => {
-        logger.notice(`User ${req.user.uid} is trying to delete common with ID ${req.query.commonId}`);
+        logger.notice(`User ${ req.user.uid } is trying to delete common with ID ${ req.query.commonId }`);
 
         const common = await commonDb.get(req.query.commonId as string);
 
-        return deleteCommon(common)
+        return deleteCommon(common);
       }, {
         req,
         res,
