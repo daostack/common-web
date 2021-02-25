@@ -4,11 +4,8 @@ interface ICenteredProps {
   content?: React.FC | React.ReactFragment;
 
   vertical?: boolean;
-  horizontal?: boolea;
+  horizontal?: boolean;
 }
-
-
-const defaultProposa
 
 type Props = ICenteredProps &  React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 

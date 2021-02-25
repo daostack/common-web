@@ -2,110 +2,127 @@ import React from 'react';
 import { NextPage } from 'next';
 
 import { gql } from '@apollo/client';
-import { Breadcrumbs, Card, Col, Divider, Note, Row, Spacer, Tag, Text, User, useTheme } from '@geist-ui/react';
+import {
+  Breadcrumbs,
+  Card,
+  Col,
+  Divider,
+  Note,
+  Row,
+  Spacer,
+  Spinner,
+  Tag,
+  Text,
+  User,
+  useTheme,
+  useToasts
+} from '@geist-ui/react';
 
 import { withPermission } from '../../../helpers/hoc/withPermission';
-import { useGetPaymentsHomeScreenDataQuery, useGetPaymentDetailsLazyQuery } from '@graphql';
+import {
+  useGetPaymentsHomeScreenDataQuery,
+  useGetPaymentDetailsLazyQuery,
+  useUpdatePaymentDataMutation
+} from '@graphql';
 import { Link } from '@components/Link';
 import { Centered } from '@components/Centered';
-import {
-  CheckCircle,
-  ChevronDownCircle,
-  ChevronLeftCircle,
-  ChevronRightCircle,
-  ChevronUpCircle,
-  Clock,
-  DollarSign,
-  XCircle
-} from '@geist-ui/react-icons';
-import { FullWidthLoader } from '@components/FullWidthLoader';
+import { ChevronDownCircle, ChevronLeftCircle, ChevronRightCircle, ChevronUpCircle, Zap } from '@geist-ui/react-icons';
 import { useRouter } from 'next/router';
 
 const GetPaymentsHomepageData = gql`
-    query GetPaymentsHomeScreenData($page: Int = 1) {
-        hangingPayments: payments(hanging: true) {
-            id
+  query GetPaymentsHomeScreenData($page: Int = 1) {
+    hangingPayments: payments(hanging: true) {
+      id
 
-            createdAt
-            updatedAt
+      createdAt
+      updatedAt
 
-            status
-        }
-
-        payments: payments(page: $page) {
-            id
-
-            type
-            status
-
-            user {
-                id
-
-                firstName
-                lastName
-
-                photoURL
-
-                email
-            }
-
-            amount {
-                amount
-                currency
-            }
-        }
+      status
     }
+
+    payments: payments(page: $page) {
+      id
+
+      type
+      status
+
+      user {
+        id
+
+        firstName
+        lastName
+
+        photoURL
+
+        email
+      }
+
+      amount {
+        amount
+        currency
+      }
+    }
+  }
 `;
 
 const GetPaymentDetailsQuery = gql`
-    query GetPaymentDetails($paymentId: ID!) {
-        payment(id: $paymentId) {
-            type
+  query GetPaymentDetails($paymentId: ID!) {
+    payment(id: $paymentId) {
+      type
 
-            common {
-                id
+      common {
+        id
 
-                name
-            }
+        name
+      }
 
-            amount {
-                amount
-                currency
-            }
+      amount {
+        amount
+        currency
+      }
 
-            fees {
-                amount
-                currency
-            }
+      fees {
+        amount
+        currency
+      }
 
-            card {
-                id
+      card {
+        id
 
-                metadata {
-                    digits
-                    network
-                }
-            }
+        metadata {
+          digits
+          network
         }
+      }
     }
+  }
+`;
+
+const UpdatePaymentDataMutation = gql`
+  mutation UpdatePaymentData($paymentId: ID!) {
+    updatePaymentData(id: $paymentId)
+  }
 `;
 
 export const PaymentsHomepage: NextPage = () => {
   const router = useRouter();
   const theme = useTheme();
+  const [, setToast] = useToasts();
 
   // --- State
   const [page, setPage] = React.useState<number>(1);
+  const [updatingPayment, setUpdatingPayment] = React.useState<string>();
   const [selectedPayment, setSelectedPayment] = React.useState<string>();
 
 
   // --- Data fetching
-  const { data: payments, previousData } = useGetPaymentsHomeScreenDataQuery({
+  const { data: payments, previousData, refetch: updatePayments } = useGetPaymentsHomeScreenDataQuery({
     variables: {
       page
     }
   });
 
+  const [updatePayment] = useUpdatePaymentDataMutation();
   const [getPayment, { data: payment, loading: paymentLoading }] = useGetPaymentDetailsLazyQuery();
 
   // Effects
@@ -151,6 +168,34 @@ export const PaymentsHomepage: NextPage = () => {
     };
   };
 
+  const onUpdatePaymentClick = (paymentId: string): () => Promise<void> => {
+    return async () => {
+      setUpdatingPayment(paymentId);
+
+      const result = await updatePayment({
+        variables: {
+          paymentId
+        }
+      });
+
+      if (result.data) {
+        await updatePayments();
+
+        setToast({
+          type: 'success',
+          text: 'Payment updated!'
+        });
+      } else {
+        setToast({
+          type: 'error',
+          text: 'An error occurred while updating the payment!'
+        });
+      }
+
+      setUpdatingPayment(null);
+    };
+  };
+
   return (
     <React.Fragment>
       <Text h1>Payments</Text>
@@ -167,7 +212,7 @@ export const PaymentsHomepage: NextPage = () => {
       <Spacer y={2}/>
 
       <React.Fragment>
-        {(!!payments?.hangingPayments?.length || !!previousData?.hangingPayments?.length) && (
+        {(payments?.hangingPayments?.length || !!previousData?.hangingPayments?.length) && (
           <React.Fragment>
             <Note type="error">There are hanging payments. Please, take a look!</Note>
 
@@ -178,7 +223,35 @@ export const PaymentsHomepage: NextPage = () => {
             {(payments?.hangingPayments || previousData?.hangingPayments).map((payment) => (
               <React.Fragment key={payment.id}>
                 <Card>
-                  <Text h5>Payment #{payment.id}</Text>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <div>
+                      <Centered vertical>
+                        <Text h5>Payment #{payment.id}</Text>
+                      </Centered>
+                    </div>
+
+                    <div>
+                      <Centered horizontal>
+                        {(updatingPayment !== payment.id) ? (
+                          <div
+                            onClick={onUpdatePaymentClick(payment.id)}
+                            style={{
+                              cursor: updatingPayment
+                                ? 'not-allowed'
+                                : 'pointer'
+                            }}
+                          >
+                            <Zap/>
+                          </div>
+                        ) : (
+                          <div style={{ cursor: 'not-allowed' }}>
+                            <Spinner/>
+                          </div>
+                        )}
+                      </Centered>
+                    </div>
+                  </div>
+
                 </Card>
 
                 <Spacer/>
@@ -277,7 +350,7 @@ export const PaymentsHomepage: NextPage = () => {
 
                 {selectedPayment === p.id && (
                   <React.Fragment>
-                    <Divider/>
+                    <Divider y={0}/>
 
                     <Card.Content>
                       <Row>

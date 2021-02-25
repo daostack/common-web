@@ -391,5 +391,6 @@ type Query {
 }
 type Mutation {
   executePayouts(input: ExecutePayoutInput!): Payout
+  updatePaymentData(id: ID!, trackId: ID = "a06d7a1f-c179-42f8-8279-5c896d231308"): Boolean
   createIntention(input: CreateIntentionInput!): Intention
 }

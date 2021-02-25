@@ -4,7 +4,7 @@ import { commonApp, commonRouter } from '../util';
 import { runtimeOptions } from '../util/constants';
 import { CommonError } from '../util/errors';
 import { responseExecutor } from '../util/responseExecutor';
-import { cancelSubscription } from './business';
+import { cancelSubscription, revokeMemberships } from './business';
 import { CancellationReason } from './business/cancelSubscription';
 import { subscriptionDb } from './database';
 

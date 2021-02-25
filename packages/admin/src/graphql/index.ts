@@ -580,12 +580,19 @@ export type QueryProposalsArgs = {
 export type Mutation = {
   __typename?: 'Mutation';
   executePayouts?: Maybe<Payout>;
+  updatePaymentData?: Maybe<Scalars['Boolean']>;
   createIntention?: Maybe<Intention>;
 };
 
 
 export type MutationExecutePayoutsArgs = {
   input: ExecutePayoutInput;
+};
+
+
+export type MutationUpdatePaymentDataArgs = {
+  id: Scalars['ID'];
+  trackId?: Maybe<Scalars['ID']>;
 };
 
 
@@ -770,6 +777,16 @@ export type GetPaymentDetailsQuery = (
       )> }
     )> }
   )> }
+);
+
+export type UpdatePaymentDataMutationVariables = Exact<{
+  paymentId: Scalars['ID'];
+}>;
+
+
+export type UpdatePaymentDataMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'updatePaymentData'>
 );
 
 export type GetProposalsSelectedForBatchQueryVariables = Exact<{
@@ -1386,6 +1403,36 @@ export function useGetPaymentDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GetPaymentDetailsQueryHookResult = ReturnType<typeof useGetPaymentDetailsQuery>;
 export type GetPaymentDetailsLazyQueryHookResult = ReturnType<typeof useGetPaymentDetailsLazyQuery>;
 export type GetPaymentDetailsQueryResult = Apollo.QueryResult<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>;
+export const UpdatePaymentDataDocument = gql`
+    mutation UpdatePaymentData($paymentId: ID!) {
+  updatePaymentData(id: $paymentId)
+}
+    `;
+export type UpdatePaymentDataMutationFn = Apollo.MutationFunction<UpdatePaymentDataMutation, UpdatePaymentDataMutationVariables>;
+
+/**
+ * __useUpdatePaymentDataMutation__
+ *
+ * To run a mutation, you first call `useUpdatePaymentDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePaymentDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePaymentDataMutation, { data, loading, error }] = useUpdatePaymentDataMutation({
+ *   variables: {
+ *      paymentId: // value for 'paymentId'
+ *   },
+ * });
+ */
+export function useUpdatePaymentDataMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePaymentDataMutation, UpdatePaymentDataMutationVariables>) {
+        return Apollo.useMutation<UpdatePaymentDataMutation, UpdatePaymentDataMutationVariables>(UpdatePaymentDataDocument, baseOptions);
+      }
+export type UpdatePaymentDataMutationHookResult = ReturnType<typeof useUpdatePaymentDataMutation>;
+export type UpdatePaymentDataMutationResult = Apollo.MutationResult<UpdatePaymentDataMutation>;
+export type UpdatePaymentDataMutationOptions = Apollo.BaseMutationOptions<UpdatePaymentDataMutation, UpdatePaymentDataMutationVariables>;
 export const GetProposalsSelectedForBatchDocument = gql`
     query getProposalsSelectedForBatch($ids: [String!]!) {
   proposals(ids: $ids) {
