@@ -16,54 +16,14 @@ import { discussionMessageDb } from '../discussionMessage/database';
 import { Notifications } from '../constants';
 import { IPaymentEntity } from '../circlepay/payments/types';
 
-interface IEventData {
-  eventObject: (eventObjId: string) => any;
-  notifyUserFilter: (eventObj: any) => string[] | Promise<string[]>;
-}
-
 /**
- * @discuss - I don't think this is event related and I think this
- * should be moved to the notifications domain
- */
-
-/**
- *
- * [Notification limiting; users would stop
- * receiving comment notifications after 5 notifications were already sent
- * when the user comments, the counter is 'reset' and starting counting 5 notifications again
- * 
- * @param  discussionOwner        - owner of the discussion/proposal
- * @param  discussionId           - id of the discussion/proposal
- * @return userFilter             - array of users that should be notified about this comment
- */
-const limitRecipients = async (discussionOwner: string, discussionId: string, discussionMessageOwner: string) : Promise<string[]> => {   
-    let users = [], lastDoc = null, didBreak = false;
-    const userFilter = [];
-
-    do {
-      // eslint-disable-next-line no-await-in-loop
-      const messages = await discussionMessageDb.getDiscussionMessagsSnapshot(discussionId, Notifications.messageLimit, lastDoc);
-      // the last doc from which to start counting the next batch of messages
-      lastDoc = messages[messages.length - 1];
-      users = messages.map(message => (message.data() as IDiscussionMessage).ownerId);
-      // when this is the first comment, users will be empty, discussionOwner should get this notification, if we get here after a few baches, it's fine
-      messages.length < Notifications.messageLimit && users.push(discussionOwner);
-      didBreak = handleUserFilter(users, userFilter);
-    } while (userFilter.length <= Notifications.maxNotifications
-        && users.length >= Notifications.messageLimit
-        && !didBreak);
-
-    return excludeOwner(userFilter, discussionMessageOwner);
-}
-
-/**
- * [handleUserFilter description]
+ * [handleUserFilter      - handles adding users to the userFilter of the notification]
  * @param userIDs         - IDs of the owners of the last X messages
  * @param userFilter      - the array of userId of the users that need to recieve the notification
  * @return                - true: the loop got to break; in this scenario we want to stop the loop in 'limitRecipients' as well
  *                          false: when we didn't hit 'break' and we need 'limitRecipients' to keep running
  */
-const handleUserFilter = (userIDs: string[], userFilter: string[]) : boolean => {
+const handleUserFilter = (userIDs: string[], userFilter: string[]): boolean => {
     const discussionMessageOwner = userIDs[0];
     for (let i = 1, limitCounter = userFilter.length; i < userIDs.length && limitCounter <= Notifications.maxNotifications; i++) {
       if (discussionMessageOwner === userIDs[1] && limitCounter === 0) {
@@ -86,6 +46,41 @@ const handleUserFilter = (userIDs: string[], userFilter: string[]) : boolean => 
 const excludeOwner = (membersId: string[], ownerId: string): string[] => (
   membersId.filter((memberId) => memberId !== ownerId)
 );
+
+/**
+ * @discuss - I don't think this is event related and I think this
+ * should be moved to the notifications domain
+ */
+
+/**
+ *
+ * [Notification limiting; users would stop
+ * receiving comment notifications after 5 notifications were already sent
+ * when the user comments, the counter is 'reset' and starting counting 5 notifications again
+ * 
+ * @param  discussionOwner        - owner of the discussion/proposal
+ * @param  discussionId           - id of the discussion/proposal
+ * @return userFilter             - array of users that should be notified about this comment
+ */
+const limitRecipients = async (discussionOwner: string, discussionId: string, discussionMessageOwner: string): Promise<string[]> => {   
+    let users = [], lastDoc = null, didBreak = false;
+    const userFilter = [];
+
+    do {
+      // eslint-disable-next-line no-await-in-loop
+      const messages = await discussionMessageDb.getDiscussionMessagsSnapshot(discussionId, Notifications.messageLimit, lastDoc);
+      // the last doc from which to start counting the next batch of messages
+      lastDoc = messages[messages.length - 1];
+      users = messages.map(message => (message.data() as IDiscussionMessage).ownerId);
+      // when this is the first comment, users will be empty, discussionOwner should get this notification, if we get here after a few baches, it's fine
+      messages.length < Notifications.messageLimit && users.push(discussionOwner);
+      didBreak = handleUserFilter(users, userFilter);
+    } while (userFilter.length <= Notifications.maxNotifications
+        && users.length >= Notifications.messageLimit
+        && !didBreak);
+
+    return excludeOwner(userFilter, discussionMessageOwner);
+}
 
 export enum EVENT_TYPES {
   // Common related events
@@ -285,6 +280,13 @@ export const eventData: Record<string, IEventData> = {
     eventObject: async (proposalId: string): Promise<any> => (await proposalDb.getProposal(proposalId)),
 
     notifyUserFilter: async (proposal: IProposalEntity): Promise<string[]> => {
+      return [proposal.proposerId];
+    }
+  },
+  [EVENT_TYPES.COMMON_MEMBER_ADDED]: {
+    eventObject: async (proposalId: string): Promise<any> => (await proposalDb.getProposal(proposalId)),
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    notifyUserFilter: async (proposal: any): Promise<string[]> => {
       return [proposal.proposerId];
     }
   },

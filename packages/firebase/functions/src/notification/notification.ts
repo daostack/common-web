@@ -56,7 +56,7 @@ const notifyModerators = (reporter: IUserEntity, commonData: ICommonEntity, path
     path
   })
 
-export const notifyData: Record<string, IEventData> = {
+export const notifyData: Record<string, IEventObject> = {
   [EVENT_TYPES.COMMON_CREATED]: {
     data: async (objectId: string): Promise<Record<string, any>> => {
       const commonData = (await commonDb.get(objectId));
@@ -349,7 +349,7 @@ export const notifyData: Record<string, IEventData> = {
       }
     })
   },
-  [EVENT_TYPES.REQUEST_TO_JOIN_EXECUTED]: {
+  [EVENT_TYPES.COMMON_MEMBER_ADDED]: {
     data: async (proposalId: string): Promise<Record<string, any>> => {
       const proposalData = (await proposalDb.getProposal(proposalId));
       return {
