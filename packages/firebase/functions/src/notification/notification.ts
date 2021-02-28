@@ -1,7 +1,7 @@
 import {
   ISubscriptionEntity,
   IUserEntity,
-  IEventData,
+  IEventObject,
   INotification,
   IProposalEntity,
   ICommonEntity,

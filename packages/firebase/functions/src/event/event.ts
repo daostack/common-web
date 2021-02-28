@@ -3,7 +3,8 @@ import {
   IProposalEntity,
   IDiscussionMessage,
   IDiscussionEntity,
-  ISubscriptionEntity
+  ISubscriptionEntity,
+  IEventData,
 } from '@common/types';
 import { getDiscussionMessageById } from '../util/db/discussionMessagesDb';
 import { proposalDb } from '../proposals/database';
