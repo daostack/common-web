@@ -1,6 +1,6 @@
 {
   "name": "@common/web",
-  "version": "1.9.9-alpha.1",
+  "version": "1.9.9-rc.1",
   "private": true,
   "dependencies": {
     "axios": "^0.21.0",
