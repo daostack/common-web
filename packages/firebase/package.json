@@ -6,6 +6,7 @@
     "build": "yarn compile",
     "build:watch": "yarn compile:watch",
     "compile": "rimraf ./functions/dist/**/* && tsc -p tsconfig.json",
+    "compile:types": "cd ../types && yarn compile",
     "compile:watch": "rimraf ./functions/dist/**/* && tsc -p tsconfig.json --watch",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint ./",
