@@ -1,9 +1,12 @@
 import React, { useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+
+import { CommonListItem } from "../../components";
 import { getCommonsList } from "../../store/actions";
 import { selectCommonList } from "../../store/selectors";
+
+import "./index.scss";
 
 export default function CommonListContainer() {
   const commons = useSelector(selectCommonList);
@@ -16,14 +19,13 @@ export default function CommonListContainer() {
   }, [dispatch]);
 
   return (
-    <div>
-      <ul>
+    <div className="common-list-wrapper">
+      <h1 className="page-title">Explore commons</h1>
+      <div className="common-list">
         {commons.map((c) => (
-          <li key={c.id}>
-            <Link to={`/commons/` + c.id}>{c.name}</Link>
-          </li>
+          <CommonListItem common={c} key={c.id} />
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
