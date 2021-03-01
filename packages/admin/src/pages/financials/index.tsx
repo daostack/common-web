@@ -89,7 +89,7 @@ const FinancialsHomePage: NextPage = () => {
               <Text h3 style={{ display: 'flex', alignItems: 'center' }}>
                 Hanging payments ({(data?.hangingPayments).length})
 
-                  <Link to={'/financials/payment'}>
+                  <Link to={'/financials/payments'}>
                     <ExternalLink style={{ paddingLeft: 10 }}/>
                   </Link>
               </Text>

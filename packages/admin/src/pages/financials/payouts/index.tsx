@@ -122,7 +122,7 @@ const PayoutsPage: NextPage = () => {
 
   const onCreateBatchPayout = () => {
     router.push({
-      pathname: '/payouts/create/batch',
+      pathname: '/financials/payouts/create/batch',
       query: {
         selectedProposals
       }
@@ -207,7 +207,7 @@ const PayoutsPage: NextPage = () => {
       actions: (
         <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}>
           <Tooltip text="See payout's details" enterDelay={1000}>
-            <Link to={`/payouts/details/${p.id}`} Icon={ExternalLink}/>
+            <Link to={`/financials/payouts/details/${p.id}`} Icon={ExternalLink}/>
           </Tooltip>
         </div>
       )
