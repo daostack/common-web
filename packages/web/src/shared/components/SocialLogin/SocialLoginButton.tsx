@@ -14,7 +14,7 @@ const SocialLoginButton: React.FC<Props> = ({ provider, text, loginHandler }) =>
   return (
     <SocialButtonWrapper>
       <button className={provider} onClick={() => loginHandler(provider)}>
-        <img src={`/icons/socialLogin/${provider}.svg`} alt={provider} />
+        <img src={`/icons/social-login/${provider}.svg`} alt={provider} />
         <span>{text}</span>
       </button>
     </SocialButtonWrapper>
