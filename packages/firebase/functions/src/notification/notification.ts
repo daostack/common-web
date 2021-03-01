@@ -287,7 +287,7 @@ export const notifyData: Record<string, IEventObject> = {
           templateKey: (userTemplate as any),
           emailStubs: {
             userName: getNameString(userData),
-            proposal: proposalData.description.title,
+            proposal: (proposalData as any).description.title,
             fundingAmount: (proposalData.fundingRequest.amount / 100).toLocaleString('en-US', {
               style: 'currency',
               currency: 'USD'
@@ -341,7 +341,7 @@ export const notifyData: Record<string, IEventObject> = {
       emailStubs: {
         firstName: user.firstName,
         commonName: common.name,
-        proposalName: proposal.description.title,
+        proposalName: (proposal as any).description.title,
         amountRequested: (proposal.fundingRequest.amount / 100)
           .toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
         commonBalance: (common.balance / 100)
