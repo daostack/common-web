@@ -222,7 +222,11 @@ const PayoutsPage: NextPage = () => {
         <Breadcrumbs>
           <Breadcrumbs.Item>Home</Breadcrumbs.Item>
           <Breadcrumbs.Item>
-            <Link to="/payouts">Payouts</Link>
+            <Link to="/financials">Financials</Link>
+          </Breadcrumbs.Item>
+
+          <Breadcrumbs.Item>
+            <Link to="/financials/payouts">Payouts</Link>
           </Breadcrumbs.Item>
         </Breadcrumbs>
 

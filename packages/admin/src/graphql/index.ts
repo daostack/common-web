@@ -288,6 +288,18 @@ export type PaymentAmount = {
   amount?: Maybe<Scalars['Int']>;
 };
 
+export type Balance = {
+  __typename?: 'Balance';
+  available?: Maybe<Amount>;
+  unsettled?: Maybe<Amount>;
+};
+
+export type Amount = {
+  __typename?: 'Amount';
+  amount?: Maybe<Scalars['String']>;
+  currency?: Maybe<Scalars['String']>;
+};
+
 export enum ProposalType {
   FundingRequest = 'fundingRequest',
   Join = 'join'
@@ -497,6 +509,7 @@ export type Query = {
   payouts?: Maybe<Array<Maybe<Payout>>>;
   payment?: Maybe<Payment>;
   payments?: Maybe<Array<Maybe<Payment>>>;
+  balance?: Maybe<Balance>;
   proposal?: Maybe<Proposal>;
   proposals?: Maybe<Array<Maybe<Proposal>>>;
   statistics?: Maybe<Statistics>;
@@ -579,9 +592,16 @@ export type QueryProposalsArgs = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Refresh the common members from the events. Returns the new common member count */
+  refreshCommonMembers?: Maybe<Scalars['Int']>;
   executePayouts?: Maybe<Payout>;
   updatePaymentData?: Maybe<Scalars['Boolean']>;
   createIntention?: Maybe<Intention>;
+};
+
+
+export type MutationRefreshCommonMembersArgs = {
+  commonId: Scalars['ID'];
 };
 
 
@@ -724,6 +744,26 @@ export type CreateIntentionMutation = (
     { __typename?: 'Intention' }
     & Pick<Intention, 'id'>
   )> }
+);
+
+export type GetFinancialsDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetFinancialsDataQuery = (
+  { __typename?: 'Query' }
+  & { balance?: Maybe<(
+    { __typename?: 'Balance' }
+    & { available?: Maybe<(
+      { __typename?: 'Amount' }
+      & Pick<Amount, 'amount' | 'currency'>
+    )>, unsettled?: Maybe<(
+      { __typename?: 'Amount' }
+      & Pick<Amount, 'amount' | 'currency'>
+    )> }
+  )>, hangingPayments?: Maybe<Array<Maybe<(
+    { __typename?: 'Payment' }
+    & Pick<Payment, 'id' | 'createdAt' | 'updatedAt' | 'status'>
+  )>>> }
 );
 
 export type GetPaymentsHomeScreenDataQueryVariables = Exact<{
@@ -1299,6 +1339,51 @@ export function useCreateIntentionMutation(baseOptions?: Apollo.MutationHookOpti
 export type CreateIntentionMutationHookResult = ReturnType<typeof useCreateIntentionMutation>;
 export type CreateIntentionMutationResult = Apollo.MutationResult<CreateIntentionMutation>;
 export type CreateIntentionMutationOptions = Apollo.BaseMutationOptions<CreateIntentionMutation, CreateIntentionMutationVariables>;
+export const GetFinancialsDataDocument = gql`
+    query GetFinancialsData {
+  balance {
+    available {
+      amount
+      currency
+    }
+    unsettled {
+      amount
+      currency
+    }
+  }
+  hangingPayments: payments(hanging: true) {
+    id
+    createdAt
+    updatedAt
+    status
+  }
+}
+    `;
+
+/**
+ * __useGetFinancialsDataQuery__
+ *
+ * To run a query within a React component, call `useGetFinancialsDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFinancialsDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFinancialsDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetFinancialsDataQuery(baseOptions?: Apollo.QueryHookOptions<GetFinancialsDataQuery, GetFinancialsDataQueryVariables>) {
+        return Apollo.useQuery<GetFinancialsDataQuery, GetFinancialsDataQueryVariables>(GetFinancialsDataDocument, baseOptions);
+      }
+export function useGetFinancialsDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetFinancialsDataQuery, GetFinancialsDataQueryVariables>) {
+          return Apollo.useLazyQuery<GetFinancialsDataQuery, GetFinancialsDataQueryVariables>(GetFinancialsDataDocument, baseOptions);
+        }
+export type GetFinancialsDataQueryHookResult = ReturnType<typeof useGetFinancialsDataQuery>;
+export type GetFinancialsDataLazyQueryHookResult = ReturnType<typeof useGetFinancialsDataLazyQuery>;
+export type GetFinancialsDataQueryResult = Apollo.QueryResult<GetFinancialsDataQuery, GetFinancialsDataQueryVariables>;
 export const GetPaymentsHomeScreenDataDocument = gql`
     query GetPaymentsHomeScreenData($page: Int = 1) {
   hangingPayments: payments(hanging: true) {

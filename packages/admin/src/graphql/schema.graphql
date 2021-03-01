@@ -223,6 +223,14 @@ type PaymentAmount {
   currency: PaymentCurrency
   amount: Int
 }
+type Balance {
+  available: Amount
+  unsettled: Amount
+}
+type Amount {
+  amount: String
+  currency: String
+}
 enum ProposalType {
   fundingRequest
   join
@@ -385,12 +393,18 @@ type Query {
   payouts(page: Int = 1): [Payout]
   payment(id: ID!): Payment
   payments(page: Int = 1, hanging: Boolean): [Payment]
+  balance: Balance
   proposal(id: ID!): Proposal
   proposals(ids: [String], page: Int = 1, pageItems: Int = 10, type: ProposalType, fundingState: ProposalFundingState): [Proposal]
   statistics: Statistics
 }
 type Mutation {
+  """Refresh the common members from the events. Returns the new common member count"""
+  refreshCommonMembers(
+    """The common id to refresh"""
+    commonId: ID!
+  ): Int
   executePayouts(input: ExecutePayoutInput!): Payout
-  updatePaymentData(id: ID!, trackId: ID = "a06d7a1f-c179-42f8-8279-5c896d231308"): Boolean
+  updatePaymentData(id: ID!, trackId: ID = "7dd3a7a1-afc2-4183-bc63-44234f855d50"): Boolean
   createIntention(input: CreateIntentionInput!): Intention
 }
