@@ -54,13 +54,13 @@ export const createProposalPayment = async (payload: yup.InferType<typeof create
   console.log(proposal);
 
   // Check if the proposal is with the correct contribution type
-  // if (proposal.join.fundingType !== 'one-time') {
-  //   throw new CommonError(
-  //     'Cannot create proposal payment for proposals that are not of funding type `one-time`. ' +
-  //     'For charging subscription proposals you must use `createSubscriptionPayment`!', {
-  //       proposalId: proposal.id
-  //     });
-  // }
+  if (proposal.join.fundingType !== 'one-time') {
+    throw new CommonError(
+      'Cannot create proposal payment for proposals that are not of funding type `one-time`. ' +
+      'For charging subscription proposals you must use `createSubscriptionPayment`!', {
+        proposalId: proposal.id
+      });
+  }
 
   // The cardID and if the user is the owner of that card will be validated in that function. Also the Id of the
   // proposal will be used as idempotency key, so we are insured that only one payment will be made for one proposal
