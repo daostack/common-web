@@ -51,6 +51,11 @@ interface IPaymentEntityBase extends IBaseEntity {
    */
   proposalId: string;
 
+  /*
+   *  The ID of the common that is the beneficiary of the payment
+   */
+  commonId: string;
+
   /**
    * The ID of the subscription, for which the payment was created
    * if created for subscription. Undefined otherwise
