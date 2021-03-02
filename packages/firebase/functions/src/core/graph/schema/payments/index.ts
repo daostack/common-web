@@ -12,6 +12,7 @@ import { GetPaymentQuery } from './queries/GetPayment.query';
 import { GetPaymentsQuery } from './queries/GetPayments.query';
 
 import { UpdatePaymentDataMutation } from './mutations/UpdatePaymentData.mutation';
+import { UpdatePaymentsCommonIdMutation } from './mutations/UpdatePaymentsCommonId.mutation';
 
 import { PaymentCardExtension } from './extensions/PaymentCard.extension';
 import { PaymentUserExtension } from './extensions/PaymentUser.extension';
@@ -34,6 +35,7 @@ export const PaymentTypes = [
   GetPaymentsQuery,
 
   UpdatePaymentDataMutation,
+  UpdatePaymentsCommonIdMutation,
 
   PaymentUserExtension,
   PaymentCardExtension,
