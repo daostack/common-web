@@ -22,6 +22,7 @@ import { graphApp } from './core';
 // import { adminApp } from './core/domain/admin';
 import { permissionApp } from './permissions';
 import { dailySubscriptionCron } from './subscriptions/cron/dailySubscriptionCron';
+import { moderationApp } from './moderation';
 
 // --- Express apps
 export const commons = commonsApp;
@@ -33,6 +34,7 @@ export const backoffice = backofficeApp;
 export const discussions = discussionApp;
 // export const admin = adminApp;
 export const permissions = permissionApp;
+export const moderation = moderationApp;
 export const graph = functions
   .runWith(runtimeOptions)
   .https.onRequest(graphApp);

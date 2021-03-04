@@ -3,7 +3,7 @@
     "packages/*",
     "packages/firebase/functions"
   ],
-  "version": "1.9.9-alpha.1",
+  "version": "1.9.9-rc.2",
   "npmClient": "yarn",
   "useWorkspaces": true
 }

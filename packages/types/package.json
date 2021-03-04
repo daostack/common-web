@@ -1,6 +1,6 @@
 {
   "name": "@common/types",
-  "version": "1.9.9-alpha.1",
+  "version": "1.9.9-rc.2",
   "description": "Shared typings for the project",
   "author": "The Common Team",
   "homepage": "",

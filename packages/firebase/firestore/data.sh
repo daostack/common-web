@@ -49,7 +49,7 @@ if [[ $1 = "-update" ]]; then
 		echo "Using $(tput setaf 2)$newestDATA $(tput sgr0) backup  ... "
 		cp -r -f $CURRENTDIR/$DIRNAME/backup/production/$newestDATA/all_namespaces $CURRENTDIR/$DIRNAME/data/firestore_export
 	else
-		echo "Fetching $(tput setaf 2)Staging $(tput sgr0) Firestore ..."	
+		echo "Fetching $(tput setaf 2)Staging $(tput sgr0) Firestore ..."
 		gsutil -m cp -r gs://common-staging-50741.appspot.com/backup/* $CURRENTDIR/$DIRNAME/backup/staging
 		newestDATA=`ls $CURRENTDIR/$DIRNAME/backup/staging | sort | tail -1`
 		echo "Using $(tput setaf 2)$newestDATA $(tput sgr0) backup  ... "
