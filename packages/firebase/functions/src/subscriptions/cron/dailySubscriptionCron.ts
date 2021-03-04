@@ -5,7 +5,7 @@ import { chargeSubscriptions, revokeMemberships } from '../business';
  * Runs the daily crons job, responsible for charging the subscriptions
  * due and revoking memberships for canceled subscription
  */
-exports.backup = functions.pubsub
+export const dailySubscriptionCron = functions.pubsub
   .schedule('17 5 * * *') // => every day at 05:17 AM
   .onRun(async () => {
     // Execute the subscription charging and revoking asynchronously
