@@ -12,7 +12,7 @@ const db = firestore();
  * Revokes all membership that are expired, but not yet revoked
  */
 export const revokeMemberships = async (): Promise<void> => {
-  logger.info(`Beginning membership revoking for ${ new Date().getDate() }`);
+  logger.info(`Beginning membership revoking for ${ new Date().toDateString() }`);
 
   // Only get the subscription cancelled by user, because the subscriptions
   // canceled by payment failure should already be revoked
@@ -20,8 +20,6 @@ export const revokeMemberships = async (): Promise<void> => {
     .where('status', '==', CancellationReason.CanceledByUser)
     .where('revoked', '==', false)
     .get() as firestore.QuerySnapshot<ISubscriptionEntity>;
-
-  const promiseArr: Promise<any>[] = [];
 
   for (const subscriptionSnap of subscriptions.docs) {
     const subscription = subscriptionSnap.data() as ISubscriptionEntity;
@@ -36,20 +34,18 @@ export const revokeMemberships = async (): Promise<void> => {
     } else {
       // If the subscription is pass it's due date: revoke it, If is not leave it be
       if (subscription.dueDate.toDate() < new Date()) {
-        // eslint-disable-next-line no-loop-func
-        promiseArr.push((async () => {
-          // Add try/catch so that if one revoke fails
-          // the others won't be canceled because of it
-          try {
-            logger.info(`Revoking membership for subscription with id ${ subscription.id }`);
+        // Add try/catch so that if one revoke fails
+        // the others won't be canceled because of it
+        try {
+          logger.info(`Revoking membership for subscription with id ${ subscription.id }`);
 
-            await revokeMembership(subscription);
+          // eslint-disable-next-line no-await-in-loop
+          await revokeMembership(subscription);
 
-            logger.info(`Revoked membership ${ subscription.id }`);
-          } catch (e) {
-            logger.warn('Error occurred while trying to revoke subscription', e);
-          }
-        })());
+          logger.info(`Revoked membership ${ subscription.id }`);
+        } catch (e) {
+          logger.warn('Error occurred while trying to revoke subscription', e);
+        }
       } else {
         logger.debug('Skipping revoke for user canceled subscription', {
           subscription
@@ -57,8 +53,6 @@ export const revokeMemberships = async (): Promise<void> => {
       }
     }
   }
-
-  await Promise.all(promiseArr);
 
   logger.info(`Memberships revoked successfully`);
 };
