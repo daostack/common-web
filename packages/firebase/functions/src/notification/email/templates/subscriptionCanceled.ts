@@ -33,6 +33,9 @@ export const subscriptionCanceled: IEmailTemplate = {
     },
     commonName: {
       required: true
+    },
+    supportChatLink: {
+      required: true
     }
   }
 };
