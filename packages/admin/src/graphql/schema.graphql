@@ -390,7 +390,13 @@ type Query {
   statistics: Statistics
 }
 type Mutation {
+  whitelistCommon(commonId: ID!): Boolean
+  """Refresh the common members from the events. Returns the new common member count"""
+  refreshCommonMembers(
+    """The common id to refresh"""
+    commonId: ID!
+  ): Int
   executePayouts(input: ExecutePayoutInput!): Payout
-  updatePaymentData(id: ID!, trackId: ID = "a06d7a1f-c179-42f8-8279-5c896d231308"): Boolean
+  updatePaymentData(id: ID!, trackId: ID = "fbb61190-d465-4395-9136-3d643a717033"): Boolean
   createIntention(input: CreateIntentionInput!): Intention
 }

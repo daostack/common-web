@@ -4002,6 +4002,64 @@
         "description": null,
         "fields": [
           {
+            "name": "whitelistCommon",
+            "description": null,
+            "args": [
+              {
+                "name": "commonId",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "refreshCommonMembers",
+            "description": "Refresh the common members from the events. Returns the new common member count",
+            "args": [
+              {
+                "name": "commonId",
+                "description": "The common id to refresh",
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "executePayouts",
             "description": null,
             "args": [
@@ -4058,7 +4116,7 @@
                   "name": "ID",
                   "ofType": null
                 },
-                "defaultValue": "\"dbb29cd9-f299-4027-88a6-3d50deed6932\"",
+                "defaultValue": "\"8de250d5-0dd2-4ff3-bb18-2171ae4e49a0\"",
                 "isDeprecated": false,
                 "deprecationReason": null
               }
