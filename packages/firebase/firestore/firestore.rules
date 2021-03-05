@@ -28,7 +28,8 @@ service cloud.firestore {
     }
     
     match /notification/{document=**} {
-    	allow read, write: if false;
+    	allow read;
+      allow write: if false
     }
 
     match /subscriptions/{subscriptionId} {
