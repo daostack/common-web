@@ -111,6 +111,24 @@
       ]
     },
     {
+      "collectionGroup": "notification",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "userFilter",
+          "order": "ARRAYS"
+        },
+        {
+          "fieldPath": "eventType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "proposals",
       "queryScope": "COLLECTION",
       "fields": [
