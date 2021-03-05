@@ -1,6 +1,6 @@
 import admin from 'firebase-admin';
 
-import { IPaymentEntity, PaymentStatus } from '../types';
+import { IPaymentEntity, PaymentStatus } from '@common/types';
 import { PaymentsCollection } from './index';
 import Query = admin.firestore.Query;
 import { CommonError } from '../../../util/errors';

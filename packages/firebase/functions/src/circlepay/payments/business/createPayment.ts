@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as yup from 'yup';
 import { v4 } from 'uuid';
 
-import { IPaymentEntity } from '../types';
+import { IPaymentEntity } from '@common/types';
 import { validate } from '../../../util/validate';
 import { getCircleHeaders } from '../../index';
 import { ICircleCreatePaymentPayload, ICircleCreatePaymentResponse } from '../../types';
@@ -25,6 +25,9 @@ const createPaymentValidationSchema = yup.object({
     .required(),
 
   proposalId: yup.string()
+    .required(),
+
+  commonId: yup.string()
     .required(),
 
   subscriptionId: yup.string()
@@ -65,6 +68,12 @@ interface ICreatePaymentPayload extends yup.InferType<typeof createPaymentValida
    * as idempotency key, so we don't charge more than one time for one thing
    */
   proposalId: string;
+
+  /**
+   * This is the ID of the common that will be the beneficiary for this payment
+   */
+  commonId: string;
+
 
   /**
    * This is the amount that the source will be charged in US dollar cents
@@ -164,6 +173,7 @@ export const createPayment = async (payload: ICreatePaymentPayload): Promise<IPa
 
     type: payload.type,
     proposalId: payload.proposalId,
+    commonId: payload.commonId,
     userId: user.uid,
     status: response.status,
     circlePaymentId: response.id,
