@@ -1,14 +1,12 @@
 import { paymentDb } from '../database';
 import { proposalDb } from '../../../proposals/database';
 
-export const addCommonIdToPaymentMigration = async () => {
+export const addCommonIdToPaymentMigration = async (): Promise<void> => {
   // Get all old payments
   const payments = await paymentDb.getMany({
     olderThan: new Date(new Date().setHours(new Date().getHours() - 1)),
     status: ['paid', 'confirmed', 'failed']
   });
-
-  console.log(payments.length);
 
   for (const p of payments) {
     if(p.proposalId === 'Payment for deleted subscription') {

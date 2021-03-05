@@ -51,8 +51,6 @@ export const createProposalPayment = async (payload: yup.InferType<typeof create
   // Find the proposal
   const proposal = await proposalDb.getJoinRequest(payload.proposalId);
 
-  console.log(proposal);
-
   // Check if the proposal is with the correct contribution type
   if (proposal.join.fundingType !== 'one-time') {
     throw new CommonError(
