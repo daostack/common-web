@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -40,15 +40,13 @@ export default function CommonListContainer() {
   );
 
   useEffect(() => {
-    // initialize IntersectionObserver
-    // and attaching to Load More div
     const observer = new IntersectionObserver(handleObserver, options);
     if (loader.current) {
       observer.observe(loader.current as any);
     }
   }, [handleObserver, commons]);
 
-  const currentCommons = [...commons].splice(0, COMMON_PAGE_SIZE * page);
+  const currentCommons = useMemo(() => [...commons].splice(0, COMMON_PAGE_SIZE * page), [commons, page]);
 
   return (
     <div className="common-list-wrapper">
