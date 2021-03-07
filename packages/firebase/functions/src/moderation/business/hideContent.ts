@@ -46,7 +46,7 @@ export const hideContent = async (hideContentPayload: HideContentPayload): Promi
     moderation: {
       flag: 'hidden',
       reasons: item.moderation?.reasons || [],
-      moderatorNote: item.moderation?.moderatorNote || '',
+      moderatorNote: item.moderation?.note || '',
       updatedAt: firestore.Timestamp.now(),
       reporter: userId,
       moderator: userId,
