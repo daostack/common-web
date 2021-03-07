@@ -15,7 +15,7 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
           <img src={common.image} alt={common.name} />
           <div className="common-information">
             <div className="name"> {common.name}</div>
-            {common.metadata?.description ? <div className="description">{common.metadata?.description}</div> : null}
+            {common.metadata?.description && <div className="description">{common.metadata?.description}</div>}
           </div>
         </div>
         <div className="additional-information">

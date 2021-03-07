@@ -5,3 +5,4 @@ const selectCommons = (state: AppState) => state.commons;
 
 export const selectCommonList = createSelector(selectCommons, (state) => state.commons);
 export const selectCommonDetail = createSelector(selectCommons, (state) => state.common);
+export const getCurrentPage = createSelector(selectCommons, (state) => state.page);
