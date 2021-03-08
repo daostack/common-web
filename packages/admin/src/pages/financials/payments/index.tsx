@@ -74,7 +74,7 @@ export const PaymentsHomepage: NextPage = () => {
       });
 
       if (result.data) {
-        await updatePayments();
+        await updatePayment();
 
         setToast({
           type: 'success',
