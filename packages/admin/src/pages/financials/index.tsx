@@ -6,6 +6,8 @@ import { gql } from '@apollo/client';
 import { useGetFinancialsDataQuery } from '@graphql';
 import { Centered } from '@components/Centered';
 import { ExternalLink } from '@geist-ui/react-icons';
+import Skeleton from 'react-loading-skeleton';
+import { PaymentsTable } from '@components/tables/PaymentsTable';
 
 const GetFinancialsData = gql`
   query GetFinancialsData {
@@ -52,70 +54,95 @@ const FinancialsHomePage: NextPage = () => {
       </React.Fragment>
 
 
-      {data && (
+      <React.Fragment>
         <React.Fragment>
-          <React.Fragment>
-            <Text h3>Current circle balances</Text>
+          <Text h3>Current circle balances</Text>
 
-            <Grid.Container gap={2} alignItems="stretch" style={{ display: 'flex' }}>
-              <Grid sm={24} md={12}>
-                <Card hoverable>
-                  <Text h1>
-                    {data.balance.available.amount} {data.balance.available.currency}
-                  </Text>
-                  <Text p>Available funds</Text>
-                </Card>
-              </Grid>
+          <Grid.Container gap={2} alignItems="stretch" style={{ display: 'flex' }}>
+            <Grid sm={24} md={12}>
+              <Card hoverable>
+                <Text h1>
 
-              <Grid sm={24} md={12}>
-                <Card hoverable>
-                  <Text h1>
-                    {data.balance.unsettled?.amount || '0.00'} {data.balance.unsettled?.currency || 'USD'}
-                  </Text>
-                  <Text p>Unsettled funds</Text>
-                </Card>
-              </Grid>
-            </Grid.Container>
+                  {data && (
+                    data.balance.available.amount + ' ' + data.balance.available.currency
+                  )}
 
-            <Spacer y={2}/>
-          </React.Fragment>
+                  {!data && (
+                    <Skeleton/>
+                  )}
+                </Text>
 
-          {(!!data?.hangingPayments?.length) && (
-            <React.Fragment>
-              <Note type="error">There are hanging payments. Please, take a look!</Note>
+                <Text p>Available funds</Text>
+              </Card>
+            </Grid>
 
-              <Spacer/>
+            <Grid sm={24} md={12}>
+              <Card hoverable>
+                <Text h1>
 
-              <Text h3 style={{ display: 'flex', alignItems: 'center' }}>
-                Hanging payments ({(data?.hangingPayments).length})
+                  {data && (
+                    (data.balance.unsettled?.amount || '0.00') + ' ' + (data.balance.unsettled?.currency || 'USD')
+                  )}
 
-                  <Link to={'/financials/payments'}>
-                    <ExternalLink style={{ paddingLeft: 10 }}/>
-                  </Link>
-              </Text>
+                  {!data && (
+                    <Skeleton/>
+                  )}
+                </Text>
 
 
-              {(data?.hangingPayments).map((payment) => (
-                <React.Fragment key={payment.id}>
-                  <Card>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <div>
-                        <Centered vertical>
-                          <Text h5>Payment #{payment.id}</Text>
-                        </Centered>
-                      </div>
-                    </div>
+                <Text p>Unsettled funds</Text>
+              </Card>
+            </Grid>
+          </Grid.Container>
 
-                  </Card>
-
-                  <Spacer/>
-                </React.Fragment>
-              ))}
-            </React.Fragment>
-          )}
-
+          <Spacer y={2}/>
         </React.Fragment>
-      )}
+
+        {(!!data?.hangingPayments?.length) && (
+          <React.Fragment>
+            <Note type="error">There are hanging payments. Please, take a look!</Note>
+
+            <Spacer/>
+
+            <Text h3 style={{ display: 'flex', alignItems: 'center' }}>
+              Hanging payments ({(data?.hangingPayments).length})
+
+              <Link to={'/financials/payments'}>
+                <ExternalLink style={{ paddingLeft: 10 }}/>
+              </Link>
+            </Text>
+
+
+            {(data?.hangingPayments).map((payment) => (
+              <React.Fragment key={payment.id}>
+                <Card>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <div>
+                      <Centered vertical>
+                        <Text h5>Payment #{payment.id}</Text>
+                      </Centered>
+                    </div>
+                  </div>
+
+                </Card>
+
+                <Spacer/>
+              </React.Fragment>
+            ))}
+          </React.Fragment>
+        )}
+
+        <Text h3>
+          Latest payments{'  '}
+
+          <Link to="/financials/payments">
+            <ExternalLink />
+          </Link>
+        </Text>
+
+        <PaymentsTable hideNavigation />
+
+      </React.Fragment>
     </React.Fragment>
   );
 };
