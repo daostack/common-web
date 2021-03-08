@@ -1,4 +1,5 @@
-import { createAsyncAction } from "typesafe-actions";
+import { createAsyncAction, createStandardAction } from "typesafe-actions";
+
 import { Common } from "../../../shared/models";
 import { CommonsActionTypes } from "./constants";
 
@@ -13,3 +14,5 @@ export const getCommonDetail = createAsyncAction(
   CommonsActionTypes.GET_COMMON_DETAIL_SUCCESS,
   CommonsActionTypes.GET_COMMON_DETAIL_FAILURE,
 )<string, Common | null, Error>();
+
+export const updatePage = createStandardAction(CommonsActionTypes.UPDATE_PAGE)<number>();
