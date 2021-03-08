@@ -146,7 +146,10 @@ export enum EventType {
   SubscriptionPaymentStuck = 'subscriptionPaymentStuck',
   SubscriptionCanceledByUser = 'subscriptionCanceledByUser',
   SubscriptionCanceledByPaymentFailure = 'subscriptionCanceledByPaymentFailure',
-  MembershipRevoked = 'membershipRevoked'
+  MembershipRevoked = 'membershipRevoked',
+  DiscussionMessageReported = 'discussionMessageReported',
+  ProposalReported = 'proposalReported',
+  DiscussionReported = 'discussionReported'
 }
 
 export type Event = {
@@ -592,11 +595,18 @@ export type QueryProposalsArgs = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  whitelistCommon?: Maybe<Scalars['Boolean']>;
   /** Refresh the common members from the events. Returns the new common member count */
   refreshCommonMembers?: Maybe<Scalars['Int']>;
   executePayouts?: Maybe<Payout>;
   updatePaymentData?: Maybe<Scalars['Boolean']>;
+  updatePaymentsCommonId?: Maybe<Scalars['Boolean']>;
   createIntention?: Maybe<Intention>;
+};
+
+
+export type MutationWhitelistCommonArgs = {
+  commonId: Scalars['ID'];
 };
 
 
@@ -619,6 +629,16 @@ export type MutationUpdatePaymentDataArgs = {
 export type MutationCreateIntentionArgs = {
   input: CreateIntentionInput;
 };
+
+export type WhitelistCommonMutationVariables = Exact<{
+  commonId: Scalars['ID'];
+}>;
+
+
+export type WhitelistCommonMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'whitelistCommon'>
+);
 
 export type GetLatestEventsQueryVariables = Exact<{
   last?: Maybe<Scalars['Int']>;
@@ -1045,6 +1065,36 @@ export type GetUsersHomepageDataQuery = (
 );
 
 
+export const WhitelistCommonDocument = gql`
+    mutation whitelistCommon($commonId: ID!) {
+  whitelistCommon(commonId: $commonId)
+}
+    `;
+export type WhitelistCommonMutationFn = Apollo.MutationFunction<WhitelistCommonMutation, WhitelistCommonMutationVariables>;
+
+/**
+ * __useWhitelistCommonMutation__
+ *
+ * To run a mutation, you first call `useWhitelistCommonMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useWhitelistCommonMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [whitelistCommonMutation, { data, loading, error }] = useWhitelistCommonMutation({
+ *   variables: {
+ *      commonId: // value for 'commonId'
+ *   },
+ * });
+ */
+export function useWhitelistCommonMutation(baseOptions?: Apollo.MutationHookOptions<WhitelistCommonMutation, WhitelistCommonMutationVariables>) {
+        return Apollo.useMutation<WhitelistCommonMutation, WhitelistCommonMutationVariables>(WhitelistCommonDocument, baseOptions);
+      }
+export type WhitelistCommonMutationHookResult = ReturnType<typeof useWhitelistCommonMutation>;
+export type WhitelistCommonMutationResult = Apollo.MutationResult<WhitelistCommonMutation>;
+export type WhitelistCommonMutationOptions = Apollo.BaseMutationOptions<WhitelistCommonMutation, WhitelistCommonMutationVariables>;
 export const GetLatestEventsDocument = gql`
     query GetLatestEvents($last: Int = 10, $after: Int = 0) {
   events(last: $last, after: $after) {

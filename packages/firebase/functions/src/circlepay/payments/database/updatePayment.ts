@@ -1,6 +1,6 @@
 import { firestore } from 'firebase-admin';
 
-import { IPaymentEntity } from '../types';
+import { IPaymentEntity } from '@common/types';
 import { PaymentsCollection } from './index';
 
 interface IUpdatePaymentOptions {

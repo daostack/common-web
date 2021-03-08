@@ -976,6 +976,24 @@
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "discussionMessageReported",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "proposalReported",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "discussionReported",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "possibleTypes": null
@@ -4084,6 +4102,35 @@
         "description": null,
         "fields": [
           {
+            "name": "whitelistCommon",
+            "description": null,
+            "args": [
+              {
+                "name": "commonId",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "refreshCommonMembers",
             "description": "Refresh the common members from the events. Returns the new common member count",
             "args": [
@@ -4169,11 +4216,23 @@
                   "name": "ID",
                   "ofType": null
                 },
-                "defaultValue": "\"8ebf4054-6388-4df8-b152-f81911e720dd\"",
+                "defaultValue": "\"f9ba4c76-91f6-4f8d-83d0-278cc034f77a\"",
                 "isDeprecated": false,
                 "deprecationReason": null
               }
             ],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "updatePaymentsCommonId",
+            "description": null,
+            "args": [],
             "type": {
               "kind": "SCALAR",
               "name": "Boolean",

@@ -108,6 +108,9 @@ enum EventType {
   subscriptionCanceledByUser
   subscriptionCanceledByPaymentFailure
   membershipRevoked
+  discussionMessageReported
+  proposalReported
+  discussionReported
 }
 type Event {
   """The unique identifier of the event"""
@@ -399,12 +402,14 @@ type Query {
   statistics: Statistics
 }
 type Mutation {
+  whitelistCommon(commonId: ID!): Boolean
   """Refresh the common members from the events. Returns the new common member count"""
   refreshCommonMembers(
     """The common id to refresh"""
     commonId: ID!
   ): Int
   executePayouts(input: ExecutePayoutInput!): Payout
-  updatePaymentData(id: ID!, trackId: ID = "7dd3a7a1-afc2-4183-bc63-44234f855d50"): Boolean
+  updatePaymentData(id: ID!, trackId: ID = "5f398531-0f9b-42ec-8dd0-99896ac47e74"): Boolean
+  updatePaymentsCommonId: Boolean
   createIntention(input: CreateIntentionInput!): Intention
 }

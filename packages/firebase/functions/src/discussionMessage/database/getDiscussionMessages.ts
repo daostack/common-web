@@ -1,6 +1,6 @@
 import admin from 'firebase-admin';
 import { discussionMessageCollection } from './index';
-import { IDiscussionMessage } from '../../discussionMessage/types';
+import { IDiscussionMessage } from '@common/types';
 import QuerySnapshot = admin.firestore.QuerySnapshot;
 
 export const getDiscussionMessages = async (discussionId: string, limit = 1, startDoc = null) : Promise<IDiscussionMessage[]> => {

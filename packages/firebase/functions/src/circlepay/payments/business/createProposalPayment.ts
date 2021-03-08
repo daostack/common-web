@@ -71,7 +71,8 @@ export const createProposalPayment = async (payload: yup.InferType<typeof create
 
     type: 'one-time',
     amount: proposal.join.funding,
-    proposalId: proposal.id
+    proposalId: proposal.id,
+    commonId: proposal.commonId
   });
 
   // Attach the payment to the proposal

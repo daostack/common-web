@@ -1,6 +1,6 @@
 import { ArgumentError, NotFoundError } from '../../../util/errors';
 
-import { IPaymentEntity } from '../types';
+import { IPaymentEntity } from '@common/types';
 import { PaymentsCollection } from './index';
 
 /**

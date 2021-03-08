@@ -1,10 +1,9 @@
-import { SharedOmit } from '@common/types';
+import { SharedOmit, IPaymentEntity } from '@common/types';
 import { v4 } from 'uuid';
 import { firestore } from 'firebase-admin';
 
 import { BaseEntityType } from '../../../util/types';
 
-import { IPaymentEntity } from '../types';
 import { PaymentsCollection } from './index';
 
 

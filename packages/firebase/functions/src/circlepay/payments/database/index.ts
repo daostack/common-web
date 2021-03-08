@@ -1,7 +1,7 @@
 import { db } from '../../../util';
 import { Collections } from '../../../constants';
 
-import { IPaymentEntity } from '../types';
+import { IPaymentEntity } from '@common/types';
 import { addPayment } from './addPayment';
 import { updatePaymentInDatabase } from './updatePayment';
 import { getPayments } from './getPayments';

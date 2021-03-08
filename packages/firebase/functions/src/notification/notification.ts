@@ -1,4 +1,14 @@
-import { ISubscriptionEntity, IUserEntity, IEventObject, INotification } from '@common/types';
+import {
+  ISubscriptionEntity,
+  IUserEntity,
+  IEventObject,
+  INotification,
+  IProposalEntity,
+  ICommonEntity,
+  IDiscussionEntity,
+  ICardMetadata,
+  IFundingRequestProposal
+} from '@common/types';
 import admin from 'firebase-admin';
 import moment from 'moment';
 
@@ -27,16 +37,27 @@ const getNameString = (userData): string => {
   return `${userData.firstName || ''} ${userData.lastName || ''}`;
 };
 
-const memberAddedNotification = (commonData): Record<string, string> => ({
-  title: 'Congrats!',
-  body: `Your request to join "${commonData.name}" was accepted, you are now a member!`,
-  image: commonData.image || '',
-  path: `CommonProfile/${commonData.id}`
-});
+/**
+ * Should handle notifying moderators about items being reported
+ * right now, the userFilter we get from `event` is the founder of
+ * the common becuase getting moderators is expensive ->  we need to get the data
+ * of each user and search their `roles` entity @discuss perhaps we can add the list
+ * of moderators to the common as well
+ * 
+ * @param  reporter   - the userEntity of the reported
+ * @param  commonData - the common data of the reported item's common
+ * @param  path       - the path for the notification navigation
+ * @param  type       - the type of the item -> discussion, comment, proposals
+ */
+const notifyModerators = (reporter: IUserEntity, commonData: ICommonEntity, path: string, type: string): Record<string, string> => ({
+    title: `A ${type} was reported`,
+    body: `The member ${getNameString(reporter)} reported a ${type} in "${commonData.name}"`,
+    image: commonData.image || '',
+    path
+  })
 
 export const notifyData: Record<string, IEventObject> = {
   [EVENT_TYPES.COMMON_CREATED]: {
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (objectId: string): Promise<Record<string, any>> => {
       const commonData = (await commonDb.get(objectId));
       return {
@@ -44,8 +65,10 @@ export const notifyData: Record<string, IEventObject> = {
         userData: (await getUserById(commonData.members[0].userId)).data()
       };
     },
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ({ commonData, userData }): ISendTemplatedEmailData[] => {
+    email: ({ commonData, userData }: {
+        commonData: ICommonEntity;
+        userData:IUserEntity;
+      }): ISendTemplatedEmailData[] => {
       return [
         {
           to: userData.email,
@@ -82,16 +105,29 @@ export const notifyData: Record<string, IEventObject> = {
     }
   },
   [EVENT_TYPES.REQUEST_TO_JOIN_CREATED]: {
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (proposalId: string): Promise<Record<string, any>> => {
       const proposalData = (await proposalDb.getProposal(proposalId));
       return {
         commonData: (await commonDb.get(proposalData.commonId)),
-        userData: (await getUserById(proposalData.proposerId)).data()
+        userData: (await getUserById(proposalData.proposerId)).data(),
+        proposalData
       };
     },
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ({ commonData, userData }): ISendTemplatedEmailData => {
+    notification: async ({commonData, proposalData }: {
+      commonData: ICommonEntity,
+      proposalData: IProposalEntity
+    }): Promise<Record<string, any>> => {
+      return {
+        title: `New members want to join ${commonData.name}`,
+        body: 'Your Common has new pending members, view their requests and vote',
+        image: commonData.image || '',
+        path: `ProposalScreen/${commonData.id}/${proposalData.id}`
+      }
+    },
+    email: ({ commonData, userData }: {
+      commonData: ICommonEntity,
+      userData: IUserEntity,
+    }): ISendTemplatedEmailData => {
       return {
         to: userData.email,
         templateKey: 'requestToJoinSubmitted',
@@ -104,7 +140,6 @@ export const notifyData: Record<string, IEventObject> = {
     }
   },
   [EVENT_TYPES.FUNDING_REQUEST_CREATED]: {
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (objectId: string): Promise<Record<string, any>> => {
       const proposalData = (await proposalDb.getProposal(objectId));
       return {
@@ -113,8 +148,11 @@ export const notifyData: Record<string, IEventObject> = {
         userData: (await getUserById(proposalData.proposerId)).data()
       };
     },
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    notification: async ({ proposalData, commonData, userData }): Promise<Record<string, any>> => {
+    notification: async ({ proposalData, commonData, userData }: {
+      proposalData: IFundingRequestProposal;
+      commonData: ICommonEntity;
+      userData: IUserEntity;
+    }): Promise<Record<string, any>> => {
       return {
         title: 'A new funding proposal in your Common!',
         body: `Your fellow member ${getNameString(userData)} is asking for $${proposalData.fundingRequest.amount / 100} for their proposal in "${commonData.name}". See the proposal and vote.`,
@@ -125,7 +163,6 @@ export const notifyData: Record<string, IEventObject> = {
 
   },
   [EVENT_TYPES.COMMON_WHITELISTED]: {
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (commonId: string): Promise<Record<string, any>> => {
       const commonData = (await commonDb.get(commonId));
       return {
@@ -133,8 +170,9 @@ export const notifyData: Record<string, IEventObject> = {
         userData: (await getUserById(commonData.metadata.founderId)).data()
       };
     },
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    notification: async ({ commonData }): Promise<Record<string, any>> => {
+    notification: async ({ commonData }: {
+      commonData: ICommonEntity;
+    }): Promise<Record<string, any>> => {
       return {
         title: 'A new Common was just featured!',
         body: `A new Common was just featured: "${commonData.name}". You might want to check it out.`,
@@ -142,8 +180,10 @@ export const notifyData: Record<string, IEventObject> = {
         path: `CommonProfile/${commonData.id}`
       };
     },
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ({ commonData, userData }): ISendTemplatedEmailData => {
+    email: ({ commonData, userData }: {
+      commonData: ICommonEntity;
+      userData: IUserEntity;
+    }): ISendTemplatedEmailData => {
       return {
         to: userData.email,
         templateKey: 'userCommonFeatured',
@@ -155,8 +195,54 @@ export const notifyData: Record<string, IEventObject> = {
       };
     }
   },
+  [EVENT_TYPES.DISCUSSION_MESSAGE_REPORTED]: {
+    data: async (messageId: string): Promise<Record<string, any>> => {
+      const discussionMessage = (await getDiscussionMessageById(messageId)).data();
+      const commonId = discussionMessage.commonId
+        || (await proposalDb.getProposal(discussionMessage.discussionId))?.commonId;
+
+      const path = discussionMessage.commonId
+        ? `Discussions/${commonId}/${discussionMessage.discussionId}`
+        : `ProposalScreen/${commonId}/${discussionMessage.discussionId}/1`; // 1 is tabIndex of chats in ProposalScreen
+
+      const rep = (await getUserById(discussionMessage?.moderation?.reporter)).data();
+      return {
+        reporter: rep,//(await getUserById(discussionMessage?.moderation?.reporter)).data(),
+        commonData: (await commonDb.get(commonId)),
+        path
+      };
+    },
+    notification: async ({ reporter, commonData, path }): Promise<Record<string, string>> => notifyModerators(reporter, commonData, path, 'comment')
+  },
+  [EVENT_TYPES.PROPOSAL_REPORTED]: {
+    data: async (proposalId: string): Promise<Record<string, any>> => {
+      const proposalData = (await proposalDb.getProposal(proposalId));
+      const commonData = (await commonDb.get(proposalData.commonId));
+      return {
+        reporter: (await getUserById(proposalData?.moderation?.reporter)).data(),
+        commonData,
+        path: `ProposalScreen/${commonData.id}/${proposalData.id}`
+      };
+    },
+    notification: async ({ reporter, commonData, path }): Promise<Record<string, string>> => notifyModerators(reporter, commonData, path, 'proposal')
+  },
+  [EVENT_TYPES.DISCUSSION_REPORTED]: {
+    data: async (discussionId: string): Promise<Record<string, any>> => {
+      const discussion = (await discussionDb.getDiscussion(discussionId));
+      const commonId = discussion.commonId;
+
+      const path = `Discussions/${commonId}/${discussionId}`;
+
+      return {
+        discussion,
+        reporter: (await getUserById(discussion?.moderation?.reporter)).data(),
+        commonData: (await commonDb.get(commonId)),
+        path
+      };
+    },
+    notification: async ({reporter, commonData, path }): Promise<Record<string, string>> => notifyModerators(reporter, commonData, path, 'post')
+  },
   [EVENT_TYPES.FUNDING_REQUEST_ACCEPTED]: {
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (objectId: string): Promise<Record<string, any>> => {
       const proposalData = (await proposalDb.getProposal(objectId));
       const cards = await cardDb.getMany({
@@ -175,8 +261,10 @@ export const notifyData: Record<string, IEventObject> = {
         cardMetadata: cards[0]?.metadata
       };
     },
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    notification: async ({ proposalData, commonData }): Promise<Record<string, any>> => {
+    notification: async ({ proposalData, commonData }: {
+      proposalData: IFundingRequestProposal;
+      commonData: ICommonEntity;
+    }): Promise<Record<string, any>> => {
       return {
         title: 'Your funding proposal was approved!',
         body: `A funding proposal for $${proposalData.fundingRequest.amount / 100} was approved by "${commonData.name}".`,
@@ -184,8 +272,12 @@ export const notifyData: Record<string, IEventObject> = {
         path: `ProposalScreen/${commonData.id}/${proposalData.id}`
       };
     },
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ({ userData, proposalData, commonData, cardMetadata }): ISendTemplatedEmailData[] => {
+    email: ({ userData, proposalData, commonData, cardMetadata }: {
+      userData: IUserEntity;
+      proposalData: IFundingRequestProposal;
+      commonData: ICommonEntity;
+      cardMetadata: ICardMetadata;
+    }): ISendTemplatedEmailData[] => {
       const userTemplate = getFundingRequestAcceptedTemplate(cardMetadata?.billingDetails?.country, proposalData.fundingRequest.amount);
       return [
         {
@@ -195,7 +287,7 @@ export const notifyData: Record<string, IEventObject> = {
           templateKey: (userTemplate as any),
           emailStubs: {
             userName: getNameString(userData),
-            proposal: proposalData.description.title,
+            proposal: (proposalData as any).description.title,
             fundingAmount: (proposalData.fundingRequest.amount / 100).toLocaleString('en-US', {
               style: 'currency',
               currency: 'USD'
@@ -239,14 +331,17 @@ export const notifyData: Record<string, IEventObject> = {
         proposal
       };
     },
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ({ user, proposal, common }): ISendTemplatedEmailData => ({
+    email: ({ user, proposal, common }: {
+      user: IUserEntity;
+      proposal: IFundingRequestProposal;
+      common: ICommonEntity;
+    }): ISendTemplatedEmailData => ({
       to: user.email,
       templateKey: 'userFundingRequestAcceptedInsufficientFunds',
       emailStubs: {
         firstName: user.firstName,
         commonName: common.name,
-        proposalName: proposal.description.title,
+        proposalName: (proposal as any).description.title,
         amountRequested: (proposal.fundingRequest.amount / 100)
           .toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
         commonBalance: (common.balance / 100)
@@ -262,10 +357,20 @@ export const notifyData: Record<string, IEventObject> = {
         userData: (await getUserById(proposalData.proposerId)).data()
       };
     },
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    notification: async ({ commonData }): Promise<Record<string, string>> => memberAddedNotification(commonData),
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ({ commonData, userData }): ISendTemplatedEmailData => {
+    notification: async ({ commonData }: {
+      commonData: ICommonEntity;
+    }): Promise<Record<string, string>> => {
+      return {
+        title: 'Congrats!',
+        body: `Your request to join "${commonData.name}" was accepted, you are now a member!`,
+        image: commonData.image || '',
+        path: `CommonProfile/${commonData.id}`
+      }
+    },
+    email: ({ commonData, userData }: {
+      commonData: ICommonEntity;
+      userData: IUserEntity;
+    }): ISendTemplatedEmailData => {
       return {
         to: userData.email,
         templateKey: 'userJoinedSuccess',
@@ -279,15 +384,15 @@ export const notifyData: Record<string, IEventObject> = {
   },
 
   [EVENT_TYPES.REQUEST_TO_JOIN_REJECTED]: {
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (objectId: string): Promise<Record<string, any>> => {
       const proposalData = (await proposalDb.getProposal(objectId));
       return {
         commonData: (await commonDb.get(proposalData.commonId))
       };
     },
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    notification: async ({ commonData }): Promise<Record<string, string>> => {
+    notification: async ({ commonData }: {
+      commonData: ICommonEntity;
+    }): Promise<Record<string, string>> => {
       return {
         title: `Bad news, your request to join "${commonData.name}" was rejected.`,
         body: `Don't give up, there are plenty of other Commons you can join.`,
@@ -297,7 +402,6 @@ export const notifyData: Record<string, IEventObject> = {
     }
   },
   [EVENT_TYPES.MESSAGE_CREATED]: {
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (messageId: string): Promise<Record<string, any>> => {
       const discussionMessage = (await getDiscussionMessageById(messageId)).data();
       const commonId = discussionMessage.commonId
@@ -313,8 +417,11 @@ export const notifyData: Record<string, IEventObject> = {
         path
       };
     },
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    notification: async ({ sender, commonData, path }): Promise<Record<string, string>> => (
+    notification: async ({ sender, commonData, path }: {
+      sender: IUserEntity;
+      commonData: ICommonEntity;
+      path: string;
+    }): Promise<Record<string, string>> => (
       {
         title: `New comment!`,
         body: `The member ${getNameString(sender)} commented in "${commonData.name}"`,
@@ -324,7 +431,6 @@ export const notifyData: Record<string, IEventObject> = {
     )
   },
   [EVENT_TYPES.DISCUSSION_CREATED]: {
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (discussionId: string): Promise<Record<string, any>> => {
       const discussion = (await discussionDb.getDiscussion(discussionId));
       const commonId = discussion.commonId;
@@ -338,8 +444,12 @@ export const notifyData: Record<string, IEventObject> = {
         path
       };
     },
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    notification: async ({ discussion, creator, commonData, path }): Promise<Record<string, string>> => (
+    notification: async ({ discussion, creator, commonData, path }: {
+      discussion: IDiscussionEntity;
+      creator: IUserEntity;
+      commonData: ICommonEntity;
+      path: string;
+    }): Promise<Record<string, string>> => (
       {
         title: `New post in ${commonData.name}`,
         body: `By ${getNameString(creator)}: "${discussion.title}"`,
@@ -349,7 +459,6 @@ export const notifyData: Record<string, IEventObject> = {
     )
   },
   [EVENT_TYPES.PAYMENT_FAILED]: {
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     data: async (proposalId: string): Promise<Record<string, any>> => {
       const proposalData = (await proposalDb.getProposal(proposalId));
       return {
@@ -357,8 +466,10 @@ export const notifyData: Record<string, IEventObject> = {
         userData: (await getUserById(proposalData.proposerId)).data()
       };
     },
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    email: ({ commonData, userData }): ISendTemplatedEmailData => {
+    email: ({ commonData, userData }: {
+      commonData: ICommonEntity;
+      userData: IUserEntity;
+    }): ISendTemplatedEmailData => {
       return {
         to: userData.email,
         templateKey: 'userJoinedButFailedPayment',
@@ -371,8 +482,7 @@ export const notifyData: Record<string, IEventObject> = {
     }
   },
   [EVENT_TYPES.SUBSCRIPTION_CANCELED_BY_PAYMENT_FAILURE]: {
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    data: async (subscriptionId): Promise<Record<string, any>> => {
+    data: async (subscriptionId: string): Promise<Record<string, any>> => {
       const subscription = await subscriptionDb.get(subscriptionId);
       const user = await userDb.get(subscription.userId);
 
@@ -397,8 +507,7 @@ export const notifyData: Record<string, IEventObject> = {
     })
   },
   [EVENT_TYPES.SUBSCRIPTION_CANCELED_BY_USER]: {
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    data: async (subscriptionId): Promise<Record<string, any>> => {
+    data: async (subscriptionId: string): Promise<Record<string, any>> => {
       const subscription = await subscriptionDb.get(subscriptionId);
       const user = await userDb.get(subscription.userId);
 
@@ -424,8 +533,7 @@ export const notifyData: Record<string, IEventObject> = {
     })
   },
   [EVENT_TYPES.SUBSCRIPTION_PAYMENT_CONFIRMED]: {
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    data: async (paymentId): Promise<Record<string, any>> => {
+    data: async (paymentId: string): Promise<Record<string, any>> => {
       const payment = await paymentDb.get(paymentId);
       const card = await cardDb.get(payment.source.id);
       const subscription = await subscriptionDb.get(payment.subscriptionId);

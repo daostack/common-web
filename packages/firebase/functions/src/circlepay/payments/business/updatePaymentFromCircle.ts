@@ -1,6 +1,6 @@
 import { circleClient } from '../../client';
 
-import { IPaymentEntity } from '../types';
+import { IPaymentEntity } from '@common/types';
 import { isFinalized } from '../helpers';
 import { paymentDb } from '../database';
 

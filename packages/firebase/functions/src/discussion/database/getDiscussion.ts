@@ -1,6 +1,6 @@
 import { ArgumentError } from '../../util/errors';
 import { Nullable } from '../../util/types';
-import { IDiscussionEntity } from '../types';
+import { IDiscussionEntity } from '@common/types';
 import { NotFoundError } from '../../util/errors';
 import { discussionCollection } from './index';
 

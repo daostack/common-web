@@ -7,7 +7,7 @@ import { ErrorCodes } from '../../../constants';
 
 import { getCircleHeaders } from '../../index';
 import { ICirclePayment } from '../../types';
-import { IPaymentEntity } from '../types';
+import { IPaymentEntity } from '@common/types';
 import { updatePayment } from './updatePayment';
 
 interface IPollPaymentOptions {

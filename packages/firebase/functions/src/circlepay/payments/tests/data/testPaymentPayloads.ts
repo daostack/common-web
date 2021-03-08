@@ -11,6 +11,7 @@ export const createPaymentValidPayload = {
   userId: 'ae6b689c-5dcb-41ed-84a7-51e6ce7faa76',
   cardId: 'ae6b689c-5dcb-41ed-84a7-51e6ce7faa76',
   proposalId: 'ae6b689c-5dcb-41ed-84a7-51e6ce7faa76',
+  commonId: 'ae6b689c-5dcb-41ed-84a7-51e6ce7faa76',
   ipAddress: '127.0.0.1',
   sessionId: 'ae6b689c-5dcb-41ed-84a7-51e6ce7faa76',
   amount: 10000,
