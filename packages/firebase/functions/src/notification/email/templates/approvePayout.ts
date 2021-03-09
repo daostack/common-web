@@ -16,8 +16,8 @@ const template = `
   <span style="margin-right: 10px">Description: <b>{{bankDescription}}</b></span> <br />
   
   <br /><br />
-  You can approve payout {{payoutId}} for {{amount}} by clicking <a href="{{url}}">here</a>. Please note
-  that for doing the proposal there will be <b>$25 fee</b> charged by the payout provider.
+  You can approve payout {{payoutId}} for {{amount}} by clicking <a href="{{url}}">here</a> to approve immediately or
+   <a href="{{adminUrl}}">here</a> for more options.
   <br /><br />
   Have a nice day,
   <br>
@@ -33,6 +33,9 @@ const emailStubs = {
     required: true
   },
   url: {
+    required: true
+  },
+  adminUrl: {
     required: true
   },
   beneficiary: {

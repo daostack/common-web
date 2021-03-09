@@ -599,6 +599,7 @@ export type Mutation = {
   /** Refresh the common members from the events. Returns the new common member count */
   refreshCommonMembers?: Maybe<Scalars['Int']>;
   executePayouts?: Maybe<Payout>;
+  approvePayout?: Maybe<Scalars['Boolean']>;
   updatePaymentData?: Maybe<Scalars['Boolean']>;
   updatePaymentsCommonId?: Maybe<Scalars['Boolean']>;
   createIntention?: Maybe<Intention>;
@@ -617,6 +618,13 @@ export type MutationRefreshCommonMembersArgs = {
 
 export type MutationExecutePayoutsArgs = {
   input: ExecutePayoutInput;
+};
+
+
+export type MutationApprovePayoutArgs = {
+  payoutId: Scalars['ID'];
+  index: Scalars['Int'];
+  token: Scalars['String'];
 };
 
 
@@ -855,6 +863,42 @@ export type UpdatePaymentDataMutationVariables = Exact<{
 export type UpdatePaymentDataMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'updatePaymentData'>
+);
+
+export type GetConfirmPayoutDataQueryVariables = Exact<{
+  payoutId: Scalars['ID'];
+}>;
+
+
+export type GetConfirmPayoutDataQuery = (
+  { __typename?: 'Query' }
+  & { payout?: Maybe<(
+    { __typename?: 'Payout' }
+    & Pick<Payout, 'amount'>
+    & { proposals?: Maybe<Array<Maybe<(
+      { __typename?: 'Proposal' }
+      & Pick<Proposal, 'id'>
+      & { description: (
+        { __typename?: 'ProposalDescription' }
+        & Pick<ProposalDescription, 'title' | 'description'>
+      ), fundingRequest?: Maybe<(
+        { __typename?: 'ProposalFunding' }
+        & Pick<ProposalFunding, 'amount'>
+      )> }
+    )>>> }
+  )> }
+);
+
+export type ApprovePayoutMutationVariables = Exact<{
+  payoutId: Scalars['ID'];
+  token: Scalars['String'];
+  index: Scalars['Int'];
+}>;
+
+
+export type ApprovePayoutMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'approvePayout'>
 );
 
 export type GetProposalsSelectedForBatchQueryVariables = Exact<{
@@ -1605,6 +1649,81 @@ export function useUpdatePaymentDataMutation(baseOptions?: Apollo.MutationHookOp
 export type UpdatePaymentDataMutationHookResult = ReturnType<typeof useUpdatePaymentDataMutation>;
 export type UpdatePaymentDataMutationResult = Apollo.MutationResult<UpdatePaymentDataMutation>;
 export type UpdatePaymentDataMutationOptions = Apollo.BaseMutationOptions<UpdatePaymentDataMutation, UpdatePaymentDataMutationVariables>;
+export const GetConfirmPayoutDataDocument = gql`
+    query GetConfirmPayoutData($payoutId: ID!) {
+  payout(id: $payoutId) {
+    amount
+    proposals {
+      id
+      description {
+        title
+        description
+      }
+      fundingRequest {
+        amount
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetConfirmPayoutDataQuery__
+ *
+ * To run a query within a React component, call `useGetConfirmPayoutDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetConfirmPayoutDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetConfirmPayoutDataQuery({
+ *   variables: {
+ *      payoutId: // value for 'payoutId'
+ *   },
+ * });
+ */
+export function useGetConfirmPayoutDataQuery(baseOptions: Apollo.QueryHookOptions<GetConfirmPayoutDataQuery, GetConfirmPayoutDataQueryVariables>) {
+        return Apollo.useQuery<GetConfirmPayoutDataQuery, GetConfirmPayoutDataQueryVariables>(GetConfirmPayoutDataDocument, baseOptions);
+      }
+export function useGetConfirmPayoutDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetConfirmPayoutDataQuery, GetConfirmPayoutDataQueryVariables>) {
+          return Apollo.useLazyQuery<GetConfirmPayoutDataQuery, GetConfirmPayoutDataQueryVariables>(GetConfirmPayoutDataDocument, baseOptions);
+        }
+export type GetConfirmPayoutDataQueryHookResult = ReturnType<typeof useGetConfirmPayoutDataQuery>;
+export type GetConfirmPayoutDataLazyQueryHookResult = ReturnType<typeof useGetConfirmPayoutDataLazyQuery>;
+export type GetConfirmPayoutDataQueryResult = Apollo.QueryResult<GetConfirmPayoutDataQuery, GetConfirmPayoutDataQueryVariables>;
+export const ApprovePayoutDocument = gql`
+    mutation ApprovePayout($payoutId: ID!, $token: String!, $index: Int!) {
+  approvePayout(payoutId: $payoutId, token: $token, index: $index)
+}
+    `;
+export type ApprovePayoutMutationFn = Apollo.MutationFunction<ApprovePayoutMutation, ApprovePayoutMutationVariables>;
+
+/**
+ * __useApprovePayoutMutation__
+ *
+ * To run a mutation, you first call `useApprovePayoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useApprovePayoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [approvePayoutMutation, { data, loading, error }] = useApprovePayoutMutation({
+ *   variables: {
+ *      payoutId: // value for 'payoutId'
+ *      token: // value for 'token'
+ *      index: // value for 'index'
+ *   },
+ * });
+ */
+export function useApprovePayoutMutation(baseOptions?: Apollo.MutationHookOptions<ApprovePayoutMutation, ApprovePayoutMutationVariables>) {
+        return Apollo.useMutation<ApprovePayoutMutation, ApprovePayoutMutationVariables>(ApprovePayoutDocument, baseOptions);
+      }
+export type ApprovePayoutMutationHookResult = ReturnType<typeof useApprovePayoutMutation>;
+export type ApprovePayoutMutationResult = Apollo.MutationResult<ApprovePayoutMutation>;
+export type ApprovePayoutMutationOptions = Apollo.BaseMutationOptions<ApprovePayoutMutation, ApprovePayoutMutationVariables>;
 export const GetProposalsSelectedForBatchDocument = gql`
     query getProposalsSelectedForBatch($ids: [String!]!) {
   proposals(ids: $ids) {
