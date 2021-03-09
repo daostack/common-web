@@ -8,6 +8,7 @@ import { PayoutStatusEnum } from './enums/PayoutStatus.enum';
 import { ExecutePayoutsInput } from './inputs/ExecutePayouts.input';
 
 import { ExecutePayoutsMutation } from './mutations/ExecutePayouts.mutation';
+import { ApprovePayoutMutation } from './mutations/ApprovePayout.mutation';
 
 import { GetPayoutQuery } from './queries/GetPayout.query';
 import { GetPayoutsQuery } from './queries/GetPayouts.query';
@@ -23,6 +24,7 @@ export const PayoutTypes = [
   ExecutePayoutsInput,
 
   ExecutePayoutsMutation,
+  ApprovePayoutMutation,
 
   GetPayoutQuery,
   GetPayoutsQuery

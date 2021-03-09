@@ -8,6 +8,10 @@
     "compile": "rimraf ./functions/dist/**/* && tsc -p tsconfig.json",
     "compile:types": "cd ../types && yarn compile",
     "compile:watch": "rimraf ./functions/dist/**/* && tsc -p tsconfig.json --watch",
+    "tab:compile:watch": "ttab -t 'Firebase Compilation' yarn compile:watch",
+    "tab:compile:types:watch": "ttab -t 'Types Compilation' yarn compile:types",
+    "tab:start": "ttab -t 'Firebase Runtime' yarn start",
+    "dev": "yarn tab:compile:types:watch && yarn tab:compile:watch && yarn tab:start",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint ./",
     "clean": "find ./ -name '*.log' -delete",
@@ -66,6 +70,7 @@
     "supertest": "^4.0.2",
     "ts-jest": "^26.4.4",
     "ts-node-dev": "^1.1.1",
+    "ttab": "^0.7.0",
     "typescript": "^4.0.5"
   },
   "private": true,
