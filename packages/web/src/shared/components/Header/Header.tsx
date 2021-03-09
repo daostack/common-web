@@ -1,5 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
+import { ROUTE_PATHS } from "../../constants";
 import "./index.scss";
 
 const Header = () => (
@@ -14,9 +15,9 @@ const Header = () => (
             <Link to="/">About Common</Link>
           </li>
           <li className="navigation-item">
-            <Link to="/" className="active">
+            <NavLink to={ROUTE_PATHS.COMMON_LIST} activeClassName="active">
               Explore Commons
-            </Link>
+            </NavLink>
           </li>
         </ul>
       </div>

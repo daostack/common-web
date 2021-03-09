@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const Content: React.FunctionComponent = ({ children }) => {
-  return <div>{children}</div>;
+  return <div className="content-wrapper">{children}</div>;
 };
 
 Content.propTypes = {
