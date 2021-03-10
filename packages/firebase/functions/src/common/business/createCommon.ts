@@ -2,16 +2,14 @@ import { firestore } from 'firebase-admin';
 import * as yup from 'yup';
 
 import { validate } from '../../util/validate';
-import {
-  commonRuleValidationSchema,
-  linkValidationSchema,
-} from '../../util/schemas';
+import { commonRuleValidationSchema, linkValidationSchema } from '../../util/schemas';
 
-import {commonDb} from '../database';
-import {createEvent} from '../../util/db/eventDbService';
-import {EVENT_TYPES} from '../../event/event';
+import { commonDb } from '../database';
+import { createEvent } from '../../util/db/eventDbService';
+import { EVENT_TYPES } from '../../event/event';
 import { ICommonEntity, ICommonLink, ICommonRule } from '@common/types';
 import Timestamp = firestore.Timestamp;
+import { urlRegex } from '../../util/regex';
 
 // The validation schema for creating commons (and creating typings by inferring them)
 const createCommonDataValidationScheme = yup.object({
@@ -19,7 +17,11 @@ const createCommonDataValidationScheme = yup.object({
 
   name: yup.string().required(),
 
-  image: yup.string().url().required(),
+  image: yup.string()
+    .test('url', 'You must provide a valid URL', (value) => {
+      return new RegExp(urlRegex).test(value);
+    })
+    .required(),
 
   byline: yup.string().min(10).required(),
 
@@ -37,12 +39,10 @@ const createCommonDataValidationScheme = yup.object({
 
   rules: yup.array(commonRuleValidationSchema).optional(),
 
-  links: yup.array(linkValidationSchema).optional(),
+  links: yup.array(linkValidationSchema).optional()
 });
 
-type CreateCommonPayload = yup.InferType<
-  typeof createCommonDataValidationScheme
->;
+type CreateCommonPayload = yup.InferType<typeof createCommonDataValidationScheme>;
 
 /**
  * Creates common for the provided payload. Please note that this is
@@ -56,11 +56,11 @@ type CreateCommonPayload = yup.InferType<
  * @returns - The created common
  */
 export const createCommon = async (
-  payload: CreateCommonPayload,
+  payload: CreateCommonPayload
 ): Promise<ICommonEntity> => {
   await validate<CreateCommonPayload>(
     payload,
-    createCommonDataValidationScheme,
+    createCommonDataValidationScheme
   );
 
   const {
@@ -73,7 +73,7 @@ export const createCommon = async (
     description,
     contributionType,
     contributionAmount,
-    fundingGoalDeadline,
+    fundingGoalDeadline
   } = payload;
 
   // @todo Check if user exists
@@ -97,17 +97,17 @@ export const createCommon = async (
       contributionType,
 
       founderId: userId,
-      minFeeToJoin: contributionAmount,
+      minFeeToJoin: contributionAmount
     },
 
-    register: 'na',
+    register: 'na'
   });
 
   // Broadcast the common created event
   await createEvent({
     userId,
     objectId: common.id,
-    type: EVENT_TYPES.COMMON_CREATED,
+    type: EVENT_TYPES.COMMON_CREATED
   });
 
   return common;
