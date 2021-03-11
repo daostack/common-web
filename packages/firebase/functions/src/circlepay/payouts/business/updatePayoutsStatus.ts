@@ -4,7 +4,7 @@ import { updatePayoutStatus } from './updatePayoutStatus';
 /**
  * Updates the status of all pending payouts from circle
  */
-export const updatePayoutsStatus = async () => {
+export const updatePayoutsStatus = async (): Promise<void> => {
   const pendingPayouts = await payoutDb.getMany({
     status: 'pending'
   });
@@ -17,8 +17,6 @@ export const updatePayoutsStatus = async () => {
         // eslint-disable-next-line no-await-in-loop
         await updatePayoutStatus(payout);
       } catch (e) {
-        console.log(e);
-
         logger.error('Unable to update the status of payout', {
           payout
         });
