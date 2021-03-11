@@ -1,7 +1,8 @@
 {
   "environment": "production",
   "firebase": {
-    "databaseURL": "https://common-daostack.firebaseio.com"
+    "databaseURL": "https://common-daostack.firebaseio.com",
+    "logsUrl": "https://console.firebase.google.com/u/1/project/common-staging-50741/functions/logs"
   },
   "metadata": {
     "app": {
