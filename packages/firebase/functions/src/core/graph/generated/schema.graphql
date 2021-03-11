@@ -33,13 +33,13 @@ type CardMetadata {
   network: CardNetwork
 }
 
-type CardVerification {
-  cvv: String
-}
-
 enum CardNetwork {
   mastercard
   visa
+}
+
+type CardVerification {
+  cvv: String
 }
 
 """The common type"""
@@ -127,6 +127,8 @@ enum EventType {
   commonUpdated
   commonWhitelisted
   discussionCreated
+  discussionMessageReported
+  discussionReported
   fundingRequestAccepted
   fundingRequestAcceptedInsufficientFunds
   fundingRequestCreated
@@ -144,6 +146,7 @@ enum EventType {
   payoutExecuted
   payoutFailed
   payoutVoided
+  proposalReported
   requestToJoinAccepted
   requestToJoinCreated
   requestToJoinExecuted
@@ -182,12 +185,22 @@ enum IntentionType {
 type Mutation {
   createIntention(input: CreateIntentionInput!): Intention
   executePayouts(input: ExecutePayoutInput!): Payout
+
+  """
+  Refresh the common members from the events. Returns the new common member count
+  """
+  refreshCommonMembers(
+    """The common id to refresh"""
+    commonId: ID!
+  ): Int
+  updatePaymentData(id: ID!, trackId: ID = "f4a15b1d-19f7-4d66-a0d2-95a504f6c2c4"): Boolean
 }
 
 type Payment {
   amount: PaymentAmount!
   card: Card
   circlePaymentId: ID!
+  common: Common
 
   """The date at witch the payment was created"""
   createdAt: Date!

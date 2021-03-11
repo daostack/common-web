@@ -8,30 +8,34 @@ import { CommonError } from '../../util/errors';
 import { createEvent } from '../../util/db/eventDbService';
 import { EVENT_TYPES } from '../../event/event';
 import { commonRuleValidationSchema } from '../../util/schemas';
-import {validate} from '../../util/validate';
-
+import { validate } from '../../util/validate';
+import { urlRegex } from '../../util/regex';
 
 
 const updateCommonDataValidationScheme = yup.object({
   commonId: yup
     .string()
     .required(),
-  
+
   userId: yup
     .string()
     .required(),
 
   changes: yup.object({
-     name: yup.string().optional(),
-     rules: yup.array(commonRuleValidationSchema).optional(),
+    name: yup.string().optional(),
+    rules: yup.array(commonRuleValidationSchema).optional(),
 
-     metadata: yup.object({
-       byline: yup.string().optional(),
-       description: yup.string().optional(),
-     }),
-     image: yup.string().url().optional(),
-   }),
-})
+    metadata: yup.object({
+      byline: yup.string().optional(),
+      description: yup.string().optional()
+    }),
+    image: yup.string()
+      .test('url', 'You must provide a valid URL', (value) => {
+        return new RegExp(urlRegex).test(value);
+      })
+      .optional()
+  })
+});
 
 type UpdateCommonPayload = yup.InferType<typeof updateCommonDataValidationScheme>
 
@@ -40,25 +44,25 @@ type UpdateCommonPayload = yup.InferType<typeof updateCommonDataValidationScheme
  * @param payload - contains data of user and common updates
  * @return updatedCommon     - the common doc after the update
  */
-export const updateCommon = async (payload: UpdateCommonPayload) : Promise<IUpdatableCommonEntity> => {
+export const updateCommon = async (payload: UpdateCommonPayload): Promise<IUpdatableCommonEntity> => {
 
-  await validate<UpdateCommonPayload>(payload, updateCommonDataValidationScheme)
+  await validate<UpdateCommonPayload>(payload, updateCommonDataValidationScheme);
   const currCommon = await commonDb.get(payload.commonId);
   // TODO check if user has permission to edit this common when permissions pr is merged
-  
-   if (currCommon.metadata.founderId !== payload.userId) {
-     throw new CommonError('Try again when you created the common')
-   }
+
+  if (currCommon.metadata.founderId !== payload.userId) {
+    throw new CommonError('Try again when you created the common');
+  }
 
   // the doc that was saved in the commonEditHistory collection
   const commonHistoryRecord = await createCommonHistory(payload as ICommonUpdate, currCommon);
-  const updatedCommon = await commonDb.update(payload.changes as  IUpdatableCommonEntity)
+  const updatedCommon = await commonDb.update(payload.changes as IUpdatableCommonEntity);
 
   await createEvent({
     userId: commonHistoryRecord.changedBy,
     objectId: commonHistoryRecord.commonId,
     type: EVENT_TYPES.COMMON_UPDATED
-  })
+  });
 
   return updatedCommon;
-}
+};

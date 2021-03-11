@@ -9,6 +9,7 @@ import { EventTypes } from './schema/events';
 import { PayoutTypes } from './schema/payouts';
 import { CommonTypes } from './schema/commons';
 import { PaymentTypes } from './schema/payments';
+import { BalanceTypes } from './schema/balance';
 import { ProposalTypes } from './schema/proposals';
 import { IntentionTypes } from './schema/intentions';
 import { SubscriptionTypes } from './schema/subscriptions';
@@ -27,6 +28,7 @@ const types = [
   ...CommonTypes,
   ...PayoutTypes,
   ...PaymentTypes,
+  ...BalanceTypes,
   ...ProposalTypes,
   ...IntentionTypes,
   ...SubscriptionTypes,

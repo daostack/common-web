@@ -4,11 +4,31 @@ import { useRouter } from 'next/router';
 import ErrorPage from 'next/error';
 
 import { gql } from '@apollo/client';
-import { Spacer, Text, Grid, Card, Breadcrumbs, Table, Tag, Pagination, Tooltip, useClipboard, useToasts } from '@geist-ui/react';
-import { ChevronLeftCircleFill, ChevronRightCircleFill, ExternalLink, User, Copy, Trash2 as Trash } from '@geist-ui/react-icons';
+import {
+  Spacer,
+  Text,
+  Grid,
+  Card,
+  Breadcrumbs,
+  Table,
+  Tag,
+  Pagination,
+  Tooltip,
+  useClipboard,
+  useToasts
+} from '@geist-ui/react';
+import {
+  ChevronLeftCircleFill,
+  ChevronRightCircleFill,
+  ExternalLink,
+  User,
+  Copy,
+  Trash2 as Trash
+} from '@geist-ui/react-icons';
 
 import { useGetCommonDetailsQuery, GetCommonDetailsQueryResult } from '@graphql';
 import { Link } from 'components/Link';
+import { CommonSettings } from '@components/CommonSettings';
 
 const GetCommonDetailsQuery = gql`
   query getCommonDetails($commonId: ID!, $page: Int!) {
@@ -94,7 +114,7 @@ const CommonDetailsPage: NextPage = () => {
       userId: (
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
           <Tooltip text={member.userId}>
-            <User />
+            <User/>
           </Tooltip>
         </div>
       ),
@@ -116,7 +136,7 @@ const CommonDetailsPage: NextPage = () => {
         <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}>
           <Tooltip text={'Copy user ID'} enterDelay={1000}>
             <div onClick={copyUserId(member.userId)}>
-              <Copy />
+              <Copy/>
             </div>
           </Tooltip>
 
@@ -170,9 +190,9 @@ const CommonDetailsPage: NextPage = () => {
 
       setToast({
         text: 'Successfully copied the user ID'
-      })
-    }
-  }
+      });
+    };
+  };
 
   return (
     <React.Fragment>
@@ -195,6 +215,12 @@ const CommonDetailsPage: NextPage = () => {
             <Spacer x={1}/>
 
             <Tag>{data.data.common.metadata.contributionType}</Tag>
+
+            <div style={{ marginLeft: 'auto', cursor: 'pointer' }}>
+              {router.query.commonId && (
+                <CommonSettings commonId={router.query.commonId as string}/>
+              )}
+            </div>
           </div>
           <Breadcrumbs>
             <Breadcrumbs.Item>Home</Breadcrumbs.Item>
@@ -290,7 +316,7 @@ const CommonDetailsPage: NextPage = () => {
             <Text h3>Members</Text>
 
             <Table data={transformMembersForTable(data)}>
-              <Table.Column prop="userId" label="" width={70} />
+              <Table.Column prop="userId" label="" width={70}/>
               <Table.Column prop="name" label="Member Name"/>
               <Table.Column prop="joinedAt" label="Joined At"/>
               <Table.Column prop="roles" label="Roles"/>

@@ -4,9 +4,11 @@ import { commonApp, commonRouter } from '../util';
 import { runtimeOptions } from '../util/constants';
 import { CommonError } from '../util/errors';
 import { responseExecutor } from '../util/responseExecutor';
-import { cancelSubscription } from './business';
+import { cancelSubscription, revokeMemberships } from './business';
 import { CancellationReason } from './business/cancelSubscription';
 import { subscriptionDb } from './database';
+import { env } from '../constants';
+
 
 const router = commonRouter();
 
@@ -35,6 +37,19 @@ router.post('/cancel', async (req, res, next) => {
   });
 });
 
+if (env.environment !== 'production') {
+  router.get('/subscription/revoke', async (req, res) => {
+    await revokeMemberships();
+
+    res.send('Done!');
+  });
+}
+
+
 export const subscriptionsApp = functions
   .runWith(runtimeOptions)
-  .https.onRequest(commonApp(router));
+  .https.onRequest(commonApp(router, {
+    unauthenticatedRoutes: [
+      '/subscription/revoke'
+    ]
+  }));

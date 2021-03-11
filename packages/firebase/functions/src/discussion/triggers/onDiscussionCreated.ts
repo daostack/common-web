@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 
 import { Collections } from '../../constants';
-import { IDiscussionEntity } from '../types';
+import { IDiscussionEntity } from '@common/types';
 import { EVENT_TYPES } from '../../event/event';
 import { createEvent } from '../../util/db/eventDbService';
 

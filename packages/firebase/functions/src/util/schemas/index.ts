@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import { urlRegex } from '../regex';
 
 const isDistrictRequired = (country: string): boolean =>
   country === 'US' || country === 'CA';
@@ -9,7 +10,9 @@ export const linkValidationSchema = yup.object({
 
   value: yup.string()
     .required()
-    .url()
+    .test('url', 'You must provide a valid URL', (value) => {
+      return new RegExp(urlRegex).test(value);
+    })
 });
 
 export const commonRuleValidationSchema = yup.object({
@@ -29,21 +32,27 @@ export const commonLinkValidationScheme = yup.object({
 
   value: yup
     .string()
-    .url()
+    .test('url', 'You must provide a valid URL', (value) => {
+      return new RegExp(urlRegex).test(value);
+    })
     .required()
 });
 
 export const fileValidationSchema = yup.object({
   value: yup
     .string()
-    .url()
+    .test('url', 'You must provide a valid URL', (value) => {
+      return new RegExp(urlRegex).test(value);
+    })
     .required()
 });
 
 export const imageValidationSchema = yup.object({
   value: yup
     .string()
-    .url()
+    .test('url', 'You must provide a valid URL', (value) => {
+      return new RegExp(urlRegex).test(value);
+    })
     .required()
 });
 

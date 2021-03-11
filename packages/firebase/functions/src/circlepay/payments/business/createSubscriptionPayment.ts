@@ -40,6 +40,7 @@ export const createSubscriptionPayment = async (payload: yup.InferType<typeof cr
     amount: subscription.amount,
 
     proposalId: subscription.proposalId,
+    commonId: subscription.metadata.common.id,
     subscriptionId: subscription.id
   });
 

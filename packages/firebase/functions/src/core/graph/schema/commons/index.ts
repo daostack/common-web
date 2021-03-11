@@ -12,6 +12,7 @@ import { CommonOpenFundingRequestsExtension } from './extensions/CommonOpenFundi
 import { GetCommonQuery } from './queries/GetCommon.query';
 import { GetCommonsQuery } from './queries/GetCommons.query';
 
+import { WhitelistCommonMutation } from './mutations/whitelistCommon.mutation';
 import { RefreshCommonMembersMutation } from './mutations/refreshCommonMembers.mutation';
 
 export const CommonTypes = [
@@ -29,5 +30,6 @@ export const CommonTypes = [
   GetCommonQuery,
   GetCommonsQuery,
 
+  WhitelistCommonMutation,
   RefreshCommonMembersMutation
 ]

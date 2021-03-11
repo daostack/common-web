@@ -36,7 +36,7 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
   CardNetwork: "MASTERCARD" | "VISA"
   CommonContributionType: "monthly" | "one-time"
-  EventType: "cardCreated" | "commonCreated" | "commonCreationFailed" | "commonMemberAdded" | "commonMemberRemoved" | "commonUpdated" | "commonWhitelisted" | "discussionCreated" | "fundingRequestAccepted" | "fundingRequestAcceptedInsufficientFunds" | "fundingRequestCreated" | "fundingRequestExecuted" | "fundingRequestRejected" | "membershipRevoked" | "messageCreated" | "paymentConfirmed" | "paymentCreated" | "paymentFailed" | "paymentPaid" | "payoutApproved" | "payoutCompleted" | "payoutCreated" | "payoutExecuted" | "payoutFailed" | "payoutVoided" | "requestToJoinAccepted" | "requestToJoinCreated" | "requestToJoinExecuted" | "requestToJoinRejected" | "subscriptionCanceledByPaymentFailure" | "subscriptionCanceledByUser" | "subscriptionCreated" | "subscriptionPaymentConfirmed" | "subscriptionPaymentCreated" | "subscriptionPaymentFailed" | "subscriptionPaymentStuck" | "voteCreated"
+  EventType: "cardCreated" | "commonCreated" | "commonCreationFailed" | "commonMemberAdded" | "commonMemberRemoved" | "commonUpdated" | "commonWhitelisted" | "discussionCreated" | "discussionMessageReported" | "discussionReported" | "fundingRequestAccepted" | "fundingRequestAcceptedInsufficientFunds" | "fundingRequestCreated" | "fundingRequestExecuted" | "fundingRequestRejected" | "membershipRevoked" | "messageCreated" | "paymentConfirmed" | "paymentCreated" | "paymentFailed" | "paymentPaid" | "payoutApproved" | "payoutCompleted" | "payoutCreated" | "payoutExecuted" | "payoutFailed" | "payoutVoided" | "proposalReported" | "requestToJoinAccepted" | "requestToJoinCreated" | "requestToJoinExecuted" | "requestToJoinRejected" | "subscriptionCanceledByPaymentFailure" | "subscriptionCanceledByUser" | "subscriptionCreated" | "subscriptionPaymentConfirmed" | "subscriptionPaymentCreated" | "subscriptionPaymentFailed" | "subscriptionPaymentStuck" | "voteCreated"
   IntentionType: "access" | "request"
   PaymentCurrency: "USD"
   PaymentSourceType: "card"
@@ -335,11 +335,14 @@ export interface NexusGenFieldTypes {
   Mutation: { // field return type
     createIntention: NexusGenRootTypes['Intention'] | null; // Intention
     executePayouts: NexusGenRootTypes['Payout'] | null; // Payout
+    refreshCommonMembers: number | null; // Int
+    updatePaymentData: boolean | null; // Boolean
   }
   Payment: { // field return type
     amount: NexusGenRootTypes['PaymentAmount']; // PaymentAmount!
     card: NexusGenRootTypes['Card'] | null; // Card
     circlePaymentId: string; // ID!
+    common: NexusGenRootTypes['Common'] | null; // Common
     createdAt: NexusGenScalars['Date']; // Date!
     fees: NexusGenRootTypes['PaymentFees'] | null; // PaymentFees
     id: string; // ID!
@@ -575,11 +578,14 @@ export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
     createIntention: 'Intention'
     executePayouts: 'Payout'
+    refreshCommonMembers: 'Int'
+    updatePaymentData: 'Boolean'
   }
   Payment: { // field return type name
     amount: 'PaymentAmount'
     card: 'Card'
     circlePaymentId: 'ID'
+    common: 'Common'
     createdAt: 'Date'
     fees: 'PaymentFees'
     id: 'ID'
@@ -760,6 +766,13 @@ export interface NexusGenArgTypes {
     }
     executePayouts: { // args
       input: NexusGenInputs['ExecutePayoutInput']; // ExecutePayoutInput!
+    }
+    refreshCommonMembers: { // args
+      commonId: string; // ID!
+    }
+    updatePaymentData: { // args
+      id: string; // ID!
+      trackId: string | null; // ID
     }
   }
   Query: {

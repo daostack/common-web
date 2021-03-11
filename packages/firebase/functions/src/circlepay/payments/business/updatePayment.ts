@@ -1,4 +1,4 @@
-import { IPaymentEntity } from '../types';
+import { IPaymentEntity } from '@common/types';
 import { ICirclePayment } from '../../types';
 import { failureHelper, feesHelper, isSuccessful } from '../helpers';
 import { paymentDb } from '../database';
