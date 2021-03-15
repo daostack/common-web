@@ -14,6 +14,11 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  CreateUserInput: { // input type
+    email: string; // String!
+    firstName: string; // String!
+    lastName: string; // String!
+  }
 }
 
 export interface NexusGenEnums {
@@ -28,6 +33,7 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Mutation: {};
   Query: {};
 }
 
@@ -42,18 +48,29 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
+  Mutation: { // field return type
+    createUser: string; // String!
+  }
   Query: { // field return type
     ok: boolean; // Boolean!
   }
 }
 
 export interface NexusGenFieldTypeNames {
+  Mutation: { // field return type name
+    createUser: 'String'
+  }
   Query: { // field return type name
     ok: 'Boolean'
   }
 }
 
 export interface NexusGenArgTypes {
+  Mutation: {
+    createUser: { // args
+      input: NexusGenInputs['CreateUserInput']; // CreateUserInput!
+    }
+  }
 }
 
 export interface NexusGenAbstractTypeMembers {
@@ -64,7 +81,7 @@ export interface NexusGenTypeInterfaces {
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
-export type NexusGenInputNames = never;
+export type NexusGenInputNames = keyof NexusGenInputs;
 
 export type NexusGenEnumNames = never;
 

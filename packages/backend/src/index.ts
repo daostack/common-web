@@ -1,6 +1,6 @@
 import { ApolloServer } from 'apollo-server';
 
-import { schema } from './graph';
+import { schema } from './graph/schema';
 
 const server = new ApolloServer({ schema });
 
