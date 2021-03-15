@@ -1,0 +1,29 @@
+{
+  "name": "@common/backend",
+  "version": "1.9.10-rc.0",
+  "author": "Alexander Ivanov @alexander2001",
+  "homepage": "https://github.com/daostack/common-monorepo#readme",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node-dev --transpile-only --no-notify src/index.ts",
+    "compile": "",
+    "start": "",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/daostack/common-monorepo/issues"
+  },
+  "devDependencies": {
+    "prisma": "^2.18.0",
+    "ts-node-dev": "^1.1.6",
+    "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^2.18.0",
+    "apollo-server": "^2.21.1",
+    "apollo-server-express": "^2.21.1",
+    "express": "^4.17.1",
+    "graphql": "^15.5.0",
+    "nexus": "^1.0.0"
+  }
+}
