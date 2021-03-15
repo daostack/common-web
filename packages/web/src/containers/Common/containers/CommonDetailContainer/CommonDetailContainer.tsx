@@ -53,6 +53,20 @@ export default function CommonDetail() {
             </div>
           </div>
           <div className="line"></div>
+          <div className="common-content-selector">
+            <div className="tabs-wrapper">
+              <div className="tab-item active">
+                Agenda
+                <span></span>
+              </div>
+              <div className="tab-item">Discussions</div>
+              <div className="tab-item">Proposals</div>
+              <div className="tab-item">History</div>
+            </div>
+            <div className="social-wrapper">
+              <button className="button-blue">Join the effort</button>
+            </div>
+          </div>
         </div>
       </div>
       <pre>{JSON.stringify(common, null, 2)}</pre>
