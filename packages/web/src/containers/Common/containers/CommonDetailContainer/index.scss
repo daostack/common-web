@@ -80,11 +80,7 @@
           }
         }
       }
-      .line {
-        height: 1px;
-        background-color: #eeeeee;
-        width: 100%;
-      }
+
       .common-content-selector {
         height: 72px;
         display: flex;
@@ -124,6 +120,30 @@
           justify-content: flex-end;
           align-items: center;
         }
+      }
+    }
+  }
+
+  .main-content-container {
+    .tab-title {
+      font-family: NunitoSans;
+      font-size: 24px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.17;
+      letter-spacing: normal;
+      color: #001a36;
+      text-transform: capitalize;
+      margin-bottom: 24px;
+    }
+    .inner-main-content-wrapper {
+      display: flex;
+      .tab-content-wrapper {
+        flex: 60;
+      }
+      .sidebar-wrapper {
+        flex: 40;
       }
     }
   }

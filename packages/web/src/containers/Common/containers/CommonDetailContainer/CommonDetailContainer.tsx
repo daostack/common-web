@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { formatPrice } from "../../../../shared/utils";
+import { AboutTabComponent } from "../../components/CommonDetailContainer";
 import { getCommonDetail } from "../../store/actions";
 import { selectCommonDetail } from "../../store/selectors";
 import "./index.scss";
@@ -9,8 +10,28 @@ interface CommonDetailRouterParams {
   id: string;
 }
 
+const tabs = [
+  {
+    name: "Agenda",
+    key: "about",
+  },
+  {
+    name: "Discussions",
+    key: "discussions",
+  },
+  {
+    name: "Proposals",
+    key: "proposals",
+  },
+  {
+    name: "History",
+    key: "history",
+  },
+];
+
 export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
+  const [tab, setTab] = useState("about");
   const common = useSelector(selectCommonDetail);
   const dispatch = useDispatch();
 
@@ -22,54 +43,62 @@ export default function CommonDetail() {
   }, [dispatch, id]);
 
   return (
-    <div className="common-detail-wrapper">
-      <div className="main-information-block">
-        <div className="main-information-wrapper">
-          <div className="img-wrapper">
-            <img src={common?.image} alt={common?.name} />
-          </div>
-          <div className="text-information-wrapper">
-            <div className="text">
-              <div className="name">{common?.name}</div>
-              <div className="tagline">{common?.metadata.byline}</div>
+    common && (
+      <div className="common-detail-wrapper">
+        <div className="main-information-block">
+          <div className="main-information-wrapper">
+            <div className="img-wrapper">
+              <img src={common?.image} alt={common?.name} />
             </div>
-            <div className="numbers">
-              <div className="item">
-                <div className="value">{formatPrice(common?.balance)}</div>
-                <div className="name">Available Funds</div>
+            <div className="text-information-wrapper">
+              <div className="text">
+                <div className="name">{common?.name}</div>
+                <div className="tagline">{common?.metadata.byline}</div>
               </div>
-              <div className="item">
-                <div className="value">{formatPrice(common?.raised)}</div>
-                <div className="name">Total Raised</div>
-              </div>
-              <div className="item">
-                <div className="value">{common?.members.length}</div>
-                <div className="name">Members</div>
-              </div>
-              <div className="item">
-                <div className="value">0</div>
-                <div className="name">Active Proposals</div>
+              <div className="numbers">
+                <div className="item">
+                  <div className="value">{formatPrice(common?.balance)}</div>
+                  <div className="name">Available Funds</div>
+                </div>
+                <div className="item">
+                  <div className="value">{formatPrice(common?.raised)}</div>
+                  <div className="name">Total Raised</div>
+                </div>
+                <div className="item">
+                  <div className="value">{common?.members.length}</div>
+                  <div className="name">Members</div>
+                </div>
+                <div className="item">
+                  <div className="value">0</div>
+                  <div className="name">Active Proposals</div>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="line"></div>
-          <div className="common-content-selector">
-            <div className="tabs-wrapper">
-              <div className="tab-item active">
-                Agenda
-                <span></span>
+            <div className="line"></div>
+            <div className="common-content-selector">
+              <div className="tabs-wrapper">
+                {tabs.map((t) => (
+                  <div className={`tab-item ${tab === t.key ? "active" : ""}`} onClick={() => setTab(t.key)}>
+                    {t.name}
+                    {tab === t.key && <span></span>}
+                  </div>
+                ))}
               </div>
-              <div className="tab-item">Discussions</div>
-              <div className="tab-item">Proposals</div>
-              <div className="tab-item">History</div>
-            </div>
-            <div className="social-wrapper">
-              <button className="button-blue">Join the effort</button>
+              <div className="social-wrapper">
+                <button className="button-blue">Join the effort</button>
+              </div>
             </div>
           </div>
         </div>
+        <div className="main-content-container">
+          <div className="tab-title">{tab}</div>
+          <div className="inner-main-content-wrapper">
+            <div className="tab-content-wrapper">{tab === "about" && <AboutTabComponent common={common} />}</div>
+            <div className="sidebar-wrapper"></div>
+          </div>
+        </div>
+        <pre>{JSON.stringify(common, null, 2)}</pre>
       </div>
-      <pre>{JSON.stringify(common, null, 2)}</pre>
-    </div>
+    )
   );
 }
