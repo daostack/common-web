@@ -1,7 +1,4 @@
-import { userDb } from '../database';
 import { commonDb } from '../../../../common/database';
-
-const permissions = ['founder', 'moderator']; // @discuss can we maybe have a `constants.ts` in each folder?
 
 /**
  * Checks if a user has permissions for a certain common
@@ -10,20 +7,7 @@ const permissions = ['founder', 'moderator']; // @discuss can we maybe have a `c
  * @return boolean  - indicating whether the user has permission or not
  */
 export const hasPermission = async (userId: string, commonId: string): Promise<boolean> =>  {
-  const user = await userDb.get(userId);
-  let permission = false;
-
-  user.roles?.forEach((role) => {
-    if (commonId === role.data.commonId && permissions.includes(role.role)) {
-      permission = true
-    }
-  });
-
-  // for older commons, users don't have their founder role, so checking if founder
-  if (!permission) {
-    const common = await commonDb.get(commonId);
-    permission = common.metadata.founderId === userId;
-  }
-
-  return permission;
+  const common = await commonDb.get(commonId);
+  const memberObj = common.members.find((member) => member.userId === userId);
+  return (memberObj && memberObj?.permission === 'moderator') || common.metadata.founderId === userId;
 }

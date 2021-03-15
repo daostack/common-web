@@ -21,6 +21,7 @@ import { subscriptionCanceled } from './templates/subscriptionCanceled';
 import { subscriptionChargeFailed } from './templates/subscriptionChargeFailed';
 import { subscriptionCharged } from './templates/subscriptionCharged';
 import { userFundingRequestAcceptedInsufficientFunds } from './templates/userFundingRequestAcceptedInsufficientFunds';
+import { adminContentReported } from './templates/adminContentReported';
 
 const templates = {
   requestToJoinSubmitted,
@@ -41,7 +42,8 @@ const templates = {
   subscriptionCanceled,
   subscriptionCharged,
   subscriptionChargeFailed,
-  userFundingRequestAcceptedInsufficientFunds
+  userFundingRequestAcceptedInsufficientFunds,
+  adminContentReported
 };
 
 const globalDefaultStubs = {

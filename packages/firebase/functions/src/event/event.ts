@@ -83,6 +83,14 @@ const limitRecipients = async (discussionOwner: string, discussionId: string, di
     return excludeOwner(userFilter, discussionMessageOwner);
 }
 
+const getModerators = (common) => {
+  const moderators = common.members
+    .filter((member) => member.permission === 'moderator')
+    .map((member) => member.userId);
+  moderators.push(common.metadata.founderId);
+  return moderators;
+}
+
 export enum EVENT_TYPES {
   // Common related events
   COMMON_CREATED = 'commonCreated',
@@ -296,7 +304,7 @@ export const eventData: Record<string, IEventData> = {
 
     notifyUserFilter: async (discussionMessage: IDiscussionMessage): Promise<string[]> => {
       const common = await commonDb.get(discussionMessage.commonId)
-      return [common.metadata.founderId]; // send to founder for now, need to send to all moderators
+      return getModerators(common);
     }
   },
   [EVENT_TYPES.PROPOSAL_REPORTED]: {
@@ -304,7 +312,7 @@ export const eventData: Record<string, IEventData> = {
 
     notifyUserFilter: async (proposal: IProposalEntity): Promise<string[]> => {
       const common = await commonDb.get(proposal.commonId)
-      return [common.metadata.founderId]; // send to founder for now, need to send to all moderators
+      return getModerators(common);
     }
   },
   [EVENT_TYPES.DISCUSSION_REPORTED]: {
@@ -314,7 +322,7 @@ export const eventData: Record<string, IEventData> = {
 
     notifyUserFilter: async (discussion: IDiscussionEntity): Promise<string[]> => {
       const common = await commonDb.get(discussion.commonId);
-      return [common.metadata.founderId]; // send to founder for now, need to send to all moderators
+      return getModerators(common);
     }
   },
 

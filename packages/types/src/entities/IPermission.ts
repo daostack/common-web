@@ -20,18 +20,4 @@ export interface IPermissionPayload {
 	requestByUserId?: string;
 }
 
-export type IPermission = {
-	/**
-	 * The role of the user
-	 */
-	role: Role;
-
-	/**
-	 * The commonId of the common that a user has permission to
-	 */
-	data?: {
-		commonId?: string
-	}
-}
-
 export type Role = 'founder'| 'moderator' | 'other';

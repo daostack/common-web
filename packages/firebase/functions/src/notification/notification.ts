@@ -39,10 +39,6 @@ const getNameString = (userData): string => {
 
 /**
  * Should handle notifying moderators about items being reported
- * right now, the userFilter we get from `event` is the founder of
- * the common becuase getting moderators is expensive ->  we need to get the data
- * of each user and search their `roles` entity @discuss perhaps we can add the list
- * of moderators to the common as well
  * 
  * @param  reporter   - the userEntity of the reported
  * @param  commonData - the common data of the reported item's common
@@ -205,14 +201,31 @@ export const notifyData: Record<string, IEventObject> = {
         ? `Discussions/${commonId}/${discussionMessage.discussionId}`
         : `ProposalScreen/${commonId}/${discussionMessage.discussionId}/1`; // 1 is tabIndex of chats in ProposalScreen
 
-      const rep = (await getUserById(discussionMessage?.moderation?.reporter)).data();
       return {
-        reporter: rep,//(await getUserById(discussionMessage?.moderation?.reporter)).data(),
+        reporter: (await getUserById(discussionMessage?.moderation?.reporter)).data(),
         commonData: (await commonDb.get(commonId)),
         path
       };
     },
-    notification: async ({ reporter, commonData, path }): Promise<Record<string, string>> => notifyModerators(reporter, commonData, path, 'comment')
+    notification: async ({ reporter, commonData, path }): Promise<Record<string, string>> => notifyModerators(reporter, commonData, path, 'comment'),
+    email: ({ commonData, reporter }: {
+      commonData: ICommonEntity;
+      reporter: IUserEntity;
+    }): ISendTemplatedEmailData => {
+      return {
+        to: env.mail.adminMail,
+        templateKey: 'adminContentReported',
+        emailStubs: {
+          commonName: commonData.name,
+          commonId: commonData.id,
+          commonLink: Utils.getCommonLink(commonData.id),
+          userName: getNameString(reporter),
+          userId: reporter.uid,
+          userEmail: reporter.email,
+          contentType: 'comment',
+        }
+      };
+    }
   },
   [EVENT_TYPES.PROPOSAL_REPORTED]: {
     data: async (proposalId: string): Promise<Record<string, any>> => {
@@ -224,7 +237,25 @@ export const notifyData: Record<string, IEventObject> = {
         path: `ProposalScreen/${commonData.id}/${proposalData.id}`
       };
     },
-    notification: async ({ reporter, commonData, path }): Promise<Record<string, string>> => notifyModerators(reporter, commonData, path, 'proposal')
+    notification: async ({ reporter, commonData, path }): Promise<Record<string, string>> => notifyModerators(reporter, commonData, path, 'proposal'),
+    email: ({ commonData, reporter }: {
+      commonData: ICommonEntity;
+      reporter: IUserEntity;
+    }): ISendTemplatedEmailData => {
+      return {
+        to: env.mail.adminMail,
+        templateKey: 'adminContentReported',
+        emailStubs: {
+          commonName: commonData.name,
+          commonId: commonData.id,
+          commonLink: Utils.getCommonLink(commonData.id),
+          userName: getNameString(reporter),
+          userId: reporter.uid,
+          userEmail: reporter.email,
+          contentType: 'proposal',
+        }
+      };
+    }
   },
   [EVENT_TYPES.DISCUSSION_REPORTED]: {
     data: async (discussionId: string): Promise<Record<string, any>> => {
@@ -240,7 +271,25 @@ export const notifyData: Record<string, IEventObject> = {
         path
       };
     },
-    notification: async ({reporter, commonData, path }): Promise<Record<string, string>> => notifyModerators(reporter, commonData, path, 'post')
+    notification: async ({reporter, commonData, path }): Promise<Record<string, string>> => notifyModerators(reporter, commonData, path, 'post'),
+    email: ({ commonData, reporter }: {
+      commonData: ICommonEntity;
+      reporter: IUserEntity;
+    }): ISendTemplatedEmailData => {
+      return {
+        to: env.mail.adminMail,
+        templateKey: 'adminContentReported',
+        emailStubs: {
+          commonName: commonData.name,
+          commonId: commonData.id,
+          commonLink: Utils.getCommonLink(commonData.id),
+          userName: getNameString(reporter),
+          userId: reporter.uid,
+          userEmail: reporter.email,
+          contentType: 'post',
+        }
+      };
+    }
   },
   [EVENT_TYPES.FUNDING_REQUEST_ACCEPTED]: {
     data: async (objectId: string): Promise<Record<string, any>> => {
