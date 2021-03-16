@@ -11,7 +11,7 @@ export default function AboutTabComponent({ common }: AboutTabComponentProps) {
   return (
     <div className="about-name-wrapper">
       <div className="description">{common.metadata.description}</div>
-      {common.links.length && (
+      {common?.links?.length > 0 && (
         <div className="links">
           <div className="title">Links</div>
           {common.links.map((link) => (

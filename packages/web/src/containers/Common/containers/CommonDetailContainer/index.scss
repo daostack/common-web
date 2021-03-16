@@ -139,11 +139,11 @@
     }
     .inner-main-content-wrapper {
       display: flex;
+      align-items: flex-start;
       .tab-content-wrapper {
         flex: 60;
       }
       .sidebar-wrapper {
-        flex: 40;
       }
     }
   }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { formatPrice } from "../../../../shared/utils";
-import { AboutTabComponent } from "../../components/CommonDetailContainer";
+import { AboutTabComponent, PreviewInformationList } from "../../components/CommonDetailContainer";
 import { getCommonDetail } from "../../store/actions";
 import { selectCommonDetail } from "../../store/selectors";
 import "./index.scss";
@@ -78,7 +78,11 @@ export default function CommonDetail() {
             <div className="common-content-selector">
               <div className="tabs-wrapper">
                 {tabs.map((t) => (
-                  <div className={`tab-item ${tab === t.key ? "active" : ""}`} onClick={() => setTab(t.key)}>
+                  <div
+                    key={t.key}
+                    className={`tab-item ${tab === t.key ? "active" : ""}`}
+                    onClick={() => setTab(t.key)}
+                  >
                     {t.name}
                     {tab === t.key && <span></span>}
                   </div>
@@ -94,10 +98,12 @@ export default function CommonDetail() {
           <div className="tab-title">{tab}</div>
           <div className="inner-main-content-wrapper">
             <div className="tab-content-wrapper">{tab === "about" && <AboutTabComponent common={common} />}</div>
-            <div className="sidebar-wrapper"></div>
+            <div className="sidebar-wrapper">
+              <PreviewInformationList />
+              <PreviewInformationList />
+            </div>
           </div>
         </div>
-        <pre>{JSON.stringify(common, null, 2)}</pre>
       </div>
     )
   );
