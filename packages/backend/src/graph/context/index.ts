@@ -19,10 +19,12 @@ export interface IRequestContext {
 export const createRequestContext = ({ req }: ExpressContext): IRequestContext => {
   return {
     getUserAuthId: async () => {
+      // @todo Use custom method for that
       return (await auth().verifyIdToken(req.headers.authorization)).uid;
     },
 
     getUserDecodedToken: async () => {
+      // @todo Use custom method for that
       return (await auth().verifyIdToken(req.headers.authorization));
     }
   };

@@ -33,6 +33,12 @@ export interface NexusGenScalars {
 export interface NexusGenObjects {
   Mutation: {};
   Query: {};
+  User: { // root type
+    authId: string; // ID!
+    firstName: string; // String!
+    id: string; // ID!
+    lastName: string; // String!
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -47,19 +53,33 @@ export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
   Mutation: { // field return type
-    createUser: string; // String!
+    createUser: NexusGenRootTypes['User']; // User!
   }
   Query: { // field return type
     generateUserAuthToken: string; // String!
+  }
+  User: { // field return type
+    authId: string; // ID!
+    displayName: string; // String!
+    firstName: string; // String!
+    id: string; // ID!
+    lastName: string; // String!
   }
 }
 
 export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
-    createUser: 'String'
+    createUser: 'User'
   }
   Query: { // field return type name
     generateUserAuthToken: 'String'
+  }
+  User: { // field return type name
+    authId: 'ID'
+    displayName: 'String'
+    firstName: 'String'
+    id: 'ID'
+    lastName: 'String'
   }
 }
 

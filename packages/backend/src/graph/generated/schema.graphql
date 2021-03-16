@@ -10,9 +10,26 @@ input CreateUserInput {
 
 type Mutation {
   """Creates new user in the system"""
-  createUser(input: CreateUserInput!): String!
+  createUser(input: CreateUserInput!): User!
 }
 
 type Query {
   generateUserAuthToken(authId: String!): String!
+}
+
+type User {
+  """The ID of the user, as is in the authentication system"""
+  authId: ID!
+
+  """The display name of the user"""
+  displayName: String!
+
+  """The first name of the user"""
+  firstName: String!
+
+  """The system Id of the user"""
+  id: ID!
+
+  """The last name of the user"""
+  lastName: String!
 }

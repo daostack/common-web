@@ -30,7 +30,11 @@ const schema = z.object({
       }));
     }, {
       message: 'The email address is already in use'
-    })
+    }),
+
+  emailVerified: z.boolean()
+    .optional()
+    .default(false)
 });
 
 export const createUserCommand = async (command: z.infer<typeof schema>): Promise<User> => {
