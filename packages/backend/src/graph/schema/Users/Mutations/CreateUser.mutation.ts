@@ -23,9 +23,12 @@ export const CreateUserMutation = extendType({
         )
       },
       resolve: (root, args, ctx) => {
+        const authId = ctx.getUserAuthId();
+
+
         return userService.commands.create({
-          authId: '@todo',
-          ...args.input
+          ...args.input,
+          authId
         });
       }
     });

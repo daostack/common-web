@@ -559,3 +559,6 @@ build
 
 # vercel
 .vercel
+
+
+env/secrets/*

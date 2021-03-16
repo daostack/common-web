@@ -1,6 +1,7 @@
 import * as z from 'zod';
-import { userService } from '@services';
 import { User } from '@prisma/client';
+
+import { userService } from '@services';
 import { prisma } from '@toolkits';
 
 const schema = z.object({

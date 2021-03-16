@@ -1,11 +1,4 @@
-# `backend`
 
-> TODO: description
-
-## Usage
-
-```
-const backend = require('backend');
-
-// TODO: DEMONSTRATE API
-```
+<p align="center">
+  The package containing the backend code of the application
+</p>

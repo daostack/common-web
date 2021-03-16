@@ -5,9 +5,9 @@
   "homepage": "https://github.com/daostack/common-monorepo#readme",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "ts-node-dev -r tsconfig-paths/register --transpile-only --no-notify src/index.ts",
+    "dev": "ts-node-dev -r tsconfig-paths/register -r dotenv/config --transpile-only --no-notify src/index.ts",
     "compile": "tsc -p tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
-    "start": "node -r tsconfig-paths/register dist/index.js",
+    "start": "node -r dotenv/config dist/index.js",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "bugs": {
@@ -23,9 +23,14 @@
     "@prisma/client": "^2.18.0",
     "apollo-server": "^2.21.1",
     "apollo-server-express": "^2.21.1",
+    "axios": "^0.21.1",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "firebase-admin": "^9.5.0",
     "graphql": "^15.5.0",
     "nexus": "^1.0.0",
+    "request-promise": "^4.2.6",
     "tsconfig-paths": "^3.9.0",
     "zod": "^3.0.0-alpha.4"
   }

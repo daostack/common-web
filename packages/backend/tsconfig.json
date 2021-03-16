@@ -6,9 +6,19 @@
     "rootDir": "./src",
     "noImplicitReturns": true,
     "baseUrl": "./src",
+    "resolveJsonModule": true,
     "paths": {
       "@toolkits": [
         "./domain/toolkits/index"
+      ],
+      "@graph": [
+        "./graph/index"
+      ],
+      "@env/*": [
+        "./domain/env/*"
+      ],
+      "@secrets/*": [
+        "./domain/env/secrets/*"
       ],
       "@services": [
         "./core/users/index"

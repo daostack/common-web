@@ -14,5 +14,5 @@ type Mutation {
 }
 
 type Query {
-  ok: Boolean!
+  generateUserAuthToken(authId: String!): String!
 }

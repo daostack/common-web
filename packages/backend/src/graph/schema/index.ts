@@ -1,5 +1,4 @@
 import path from 'path';
-
 import { makeSchema } from 'nexus';
 
 import { UserTypes } from './Users';
@@ -13,5 +12,9 @@ export const schema = makeSchema({
   outputs: {
     typegen: path.join(__dirname, '../generated/', 'nexus-typegen.ts'),
     schema: path.join(__dirname, '../generated/', 'schema.graphql')
+  },
+  contextType: {
+    module: path.join(__dirname, '../context'),
+    export: 'IRequestContext'
   }
 });

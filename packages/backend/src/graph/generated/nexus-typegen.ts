@@ -4,9 +4,7 @@
  */
 
 
-
-
-
+import { IRequestContext } from './../context';
 
 
 declare global {
@@ -52,7 +50,7 @@ export interface NexusGenFieldTypes {
     createUser: string; // String!
   }
   Query: { // field return type
-    ok: boolean; // Boolean!
+    generateUserAuthToken: string; // String!
   }
 }
 
@@ -61,7 +59,7 @@ export interface NexusGenFieldTypeNames {
     createUser: 'String'
   }
   Query: { // field return type name
-    ok: 'Boolean'
+    generateUserAuthToken: 'String'
   }
 }
 
@@ -69,6 +67,11 @@ export interface NexusGenArgTypes {
   Mutation: {
     createUser: { // args
       input: NexusGenInputs['CreateUserInput']; // CreateUserInput!
+    }
+  }
+  Query: {
+    generateUserAuthToken: { // args
+      authId: string; // String!
     }
   }
 }
@@ -104,7 +107,7 @@ export type NexusGenFeaturesConfig = {
 }
 
 export interface NexusGenTypes {
-  context: any;
+  context: IRequestContext;
   inputTypes: NexusGenInputs;
   rootTypes: NexusGenRootTypes;
   inputTypeShapes: NexusGenInputs & NexusGenEnums & NexusGenScalars;

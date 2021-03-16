@@ -14,7 +14,5 @@ export const userExistsQuery = async (query: z.infer<typeof schema>): Promise<bo
     where: query
   });
 
-  console.log(userCount);
-
   return userCount !== 0;
 };

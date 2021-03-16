@@ -1,9 +1,29 @@
-import { ApolloServer } from 'apollo-server';
+import express from 'express';
+import cors from 'cors';
 
-import { schema } from './graph/schema';
+import { ApolloServer } from 'apollo-server-express';
 
-const server = new ApolloServer({ schema });
+import { FirebaseToolkit } from '@toolkits';
+import { schema, createRequestContext } from '@graph';
 
-server.listen().then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`);
+// Initialize the firebase admin app
+FirebaseToolkit.InitializeFirebase();
+
+// Initialize the servers
+const app = express();
+const apollo = new ApolloServer({
+  schema,
+  context: createRequestContext
+});
+
+
+// Configure the express app
+app.use(cors());
+
+
+// Add the Apollo middleware to the express app
+apollo.applyMiddleware({ app });
+
+app.listen({ port: 4000 }, () => {
+  console.info(`🚀 Server ready`);
 });
