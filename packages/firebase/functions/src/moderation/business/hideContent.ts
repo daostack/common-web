@@ -7,6 +7,7 @@ import { ItemType, IModeration } from '@common/types';
 import { hasPermission } from '../../core/domain/users/business';
 import { UnauthorizedError } from '../../util/errors';
 import { updateEntity } from './updateEntity';
+import { FLAGS, TYPES } from '../constants';
 import { db } from '../../util';
 
 const hideContentDataValidationScheme = yup.object({
@@ -14,7 +15,7 @@ const hideContentDataValidationScheme = yup.object({
   commonId: yup.string().required(),
   userId: yup.string().required(),
   type: yup.string()
-     .oneOf(['discussion', 'discussionMessage', 'proposals']),
+     .oneOf(Object.values(TYPES)),
 });
 
 type HideContentPayload = yup.InferType<typeof hideContentDataValidationScheme>;
@@ -44,7 +45,7 @@ export const hideContent = async (hideContentPayload: HideContentPayload): Promi
   const updatedItem = {
     ...item,
     moderation: {
-      flag: 'hidden',
+      flag: FLAGS.hidden,
       reasons: item.moderation?.reasons || [],
       moderatorNote: item.moderation?.moderatorNote || '',
       updatedAt: firestore.Timestamp.now(),

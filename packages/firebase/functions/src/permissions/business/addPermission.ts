@@ -4,12 +4,19 @@ import {validate} from '../../util/validate';
 
 import { commonDb } from '../../common/database';
 import { Role } from '@common/types';
-import { ICommonEntity } from '@common/types';
+import { IUpdatableCommonEntity } from '../../common/database/updateCommon';
 import { CommonError } from '../../util/errors';
 import { hasPermission } from '../../core/domain/users/business';
+import { PERMISSION } from '../../permissions/constants';
 
-
-const setPermission = async (commonId: string, role: Role, userId: string): Promise<ICommonEntity> => {
+/**
+ * [async description]
+ * @param  commonId     - common id of the common that a user gets permission for
+ * @param  role         - the role the user is being assigned to
+ * @param  userId       - the id of the user who gets the permission
+ * @return the updated common entity
+ */
+const setPermission = async (commonId: string, role: Role, userId: string): Promise<IUpdatableCommonEntity> => {
   try {
     const commonDoc = await commonDb.get(commonId);
     const members = commonDoc.members;
@@ -19,8 +26,7 @@ const setPermission = async (commonId: string, role: Role, userId: string): Prom
       }
     })
     commonDoc.members = members;
-    await commonDb.update(commonDoc);
-    return commonDoc;
+    return await commonDb.update(commonDoc);
   } catch (error) {
     throw new CommonError(`Could not set permission ${role} to user ${userId}`)
   }
@@ -30,7 +36,7 @@ const addPermissionDataValidationScheme = yup.object({
   commonId: yup.string().required(),
   userId: yup.string().required(),
   role: yup.string()
-    .oneOf(['founder', 'moderator']),
+    .oneOf(Object.values(PERMISSION)),
   requestByUserId: yup.string().required(),
 });
 
@@ -51,7 +57,7 @@ type AddPermissionPayload = yup.InferType<typeof addPermissionDataValidationSche
  *                           * for common creation, it will be null, the userId will get the founder role
  *                           * for other operations, it will be id of the user who sent the http request
  */
-export const addPermission = async (permissionPayload: AddPermissionPayload): Promise<ICommonEntity> => {
+export const addPermission = async (permissionPayload: AddPermissionPayload): Promise<IUpdatableCommonEntity> => {
   await validate<AddPermissionPayload>(
     permissionPayload,
     addPermissionDataValidationScheme

@@ -1,4 +1,5 @@
 import { commonDb } from '../../../../common/database';
+import { PERMISSION } from '../../../../permissions/constants';
 
 /**
  * Checks if a user has permissions for a certain common
@@ -9,5 +10,5 @@ import { commonDb } from '../../../../common/database';
 export const hasPermission = async (userId: string, commonId: string): Promise<boolean> =>  {
   const common = await commonDb.get(commonId);
   const memberObj = common.members.find((member) => member.userId === userId);
-  return (memberObj && memberObj?.permission === 'moderator') || common.metadata.founderId === userId;
+  return (memberObj && memberObj?.permission === PERMISSION.moderator) || common.metadata.founderId === userId;
 }

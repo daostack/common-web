@@ -4,6 +4,7 @@ import { discussionMessageDb } from '../../discussionMessage/database';
 import { proposalDb } from '../../proposals/database';
 import { createEvent } from '../../util/db/eventDbService';
 import { EVENT_TYPES } from '../../event/event';
+import { FLAGS, TYPES } from '../constants';
 
 /**
  * Mapping each entity to the corresponsing database update function
@@ -14,15 +15,15 @@ import { EVENT_TYPES } from '../../event/event';
 export const updateEntity = async (itemId: string, item: ItemType, type: string): Promise<any> => {
   let eventType = '';
   switch (type) {
-    case 'discussion':
+    case TYPES.discussion:
       eventType = EVENT_TYPES.DISCUSSION_REPORTED;
       await discussionDb.updateDiscussion(itemId, item as IDiscussionEntity);
       break;
-    case 'discussionMessage':
+    case TYPES.discussionMessage:
       eventType = EVENT_TYPES.DISCUSSION_MESSAGE_REPORTED;
       await discussionMessageDb.updateDiscussionMessage(itemId, item as IDiscussionMessage);
       break;
-    case 'proposals':
+    case TYPES.proposals:
       eventType = EVENT_TYPES.PROPOSAL_REPORTED;
       await proposalDb.update(item as IProposalEntity);
       break;    
@@ -30,7 +31,7 @@ export const updateEntity = async (itemId: string, item: ItemType, type: string)
       break;
   }
   // this event creats a notification for the moderator that an item was reported
-  if (item.moderation.flag === 'reported') {
+  if (item.moderation.flag === FLAGS.reported) {
     await createEvent({
       userId: item.moderation.reporter,
       objectId: itemId,

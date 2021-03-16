@@ -16,6 +16,7 @@ import { discussionDb } from '../discussion/database';
 import { discussionMessageDb } from '../discussionMessage/database';
 import { Notifications } from '../constants';
 import { IPaymentEntity } from '../circlepay/payments/types';
+import { getCommonModerators } from '../common/business';
 
 /**
  * [handleUserFilter      - handles adding users to the userFilter of the notification]
@@ -81,14 +82,6 @@ const limitRecipients = async (discussionOwner: string, discussionId: string, di
         && !didBreak);
 
     return excludeOwner(userFilter, discussionMessageOwner);
-}
-
-const getModerators = (common) => {
-  const moderators = common.members
-    .filter((member) => member.permission === 'moderator')
-    .map((member) => member.userId);
-  moderators.push(common.metadata.founderId);
-  return moderators;
 }
 
 export enum EVENT_TYPES {
@@ -303,16 +296,14 @@ export const eventData: Record<string, IEventData> = {
     eventObject: async (discussionMessageId: string): Promise<any> => (await getDiscussionMessageById(discussionMessageId)).data(),
 
     notifyUserFilter: async (discussionMessage: IDiscussionMessage): Promise<string[]> => {
-      const common = await commonDb.get(discussionMessage.commonId)
-      return getModerators(common);
+      return await getCommonModerators(discussionMessage.commonId);
     }
   },
   [EVENT_TYPES.PROPOSAL_REPORTED]: {
     eventObject: async (proposalId: string): Promise<any> => (await proposalDb.getProposal(proposalId)),
 
     notifyUserFilter: async (proposal: IProposalEntity): Promise<string[]> => {
-      const common = await commonDb.get(proposal.commonId)
-      return getModerators(common);
+      return await getCommonModerators(proposal.commonId);
     }
   },
   [EVENT_TYPES.DISCUSSION_REPORTED]: {
@@ -321,8 +312,7 @@ export const eventData: Record<string, IEventData> = {
                 || (await proposalDb.getProposal(discussionId)),
 
     notifyUserFilter: async (discussion: IDiscussionEntity): Promise<string[]> => {
-      const common = await commonDb.get(discussion.commonId);
-      return getModerators(common);
+      return await getCommonModerators(discussion.commonId);
     }
   },
 
