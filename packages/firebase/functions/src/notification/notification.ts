@@ -30,12 +30,10 @@ import { getFundingRequestAcceptedTemplate } from './helpers';
 
 const messaging = admin.messaging();
 
-const getNameString = (userData): string => {
-  if (!userData.firstName && userData.lastName) {
-    return 'A Common member';
-  }
-  return `${userData.firstName || ''} ${userData.lastName || ''}`;
-};
+const getNameString = (userData): string => 
+  !userData.firstName && !userData.lastName
+    ? 'A Common member'
+    : `${userData.firstName || ''} ${userData.lastName || ''}`;
 
 /**
  * Should handle notifying moderators about items being reported
