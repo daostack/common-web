@@ -1,8 +1,9 @@
 import * as z from 'zod';
-import { CommonFundingType, Common, CommonMemberRole } from '@prisma/client';
+import { CommonFundingType, Common, CommonMemberRole, EventType } from '@prisma/client';
 import { prisma } from '@toolkits';
 import { createCommonMemberCommand } from './createCommonMemberCommand';
 import { addCommonMemberRoleCommand } from './addCommonMemberRoleCommand';
+import { eventsService } from '@services';
 
 const schema = z.object({
   name: z.string()
@@ -36,6 +37,13 @@ export const createCommonCommand = async (command: z.infer<typeof schema>): Prom
     }
   });
 
+  // Create event for the common creation
+  await eventsService.commands.create({
+    type: EventType.CommonCreated,
+    commonId: common.id,
+    userId: command.founderId
+  });
+
   // Add the creator as member
   const founder = await createCommonMemberCommand({
     commonId: common.id,
@@ -49,8 +57,6 @@ export const createCommonCommand = async (command: z.infer<typeof schema>): Prom
       CommonMemberRole.Founder
     ]
   });
-
-  // @todo Create event for the common creation
 
   // Return the created common
   return common;

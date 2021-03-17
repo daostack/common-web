@@ -1,6 +1,7 @@
 import * as z from 'zod';
-import { CommonMemberRole, CommonMember } from '@prisma/client';
+import { CommonMemberRole, CommonMember, EventType } from '@prisma/client';
 import { prisma } from '@toolkits';
+import { eventsService } from '@services';
 
 const schema = z.object({
   memberId: z.string()
@@ -33,7 +34,12 @@ export const addCommonMemberRoleCommand = async (command: z.infer<typeof schema>
     }
   });
 
-  // @todo Create event
+  // Create event
+  await eventsService.commands.create({
+    type: EventType.CommonMemberRoleAdded,
+    commonId: memberEntity.commonId,
+    userId: memberEntity.userId
+  });
 
   // Return the updated entity
   return updatedMemberEntity;

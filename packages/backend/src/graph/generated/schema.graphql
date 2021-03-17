@@ -3,73 +3,73 @@
 
 
 type Common {
-    """The date, at which the item was created"""
-    createdAt: Date!
+  """The date, at which the item was created"""
+  createdAt: Date!
 
-    """The main identifier of the common"""
-    id: ID!
+  """The main identifier of the common"""
+  id: ID!
 
-    """The name of the common as provided"""
-    name: String!
+  """The name of the common as provided"""
+  name: String!
 
-    """The date, at which the item was last modified"""
-    updatedAt: Date!
+  """The date, at which the item was last modified"""
+  updatedAt: Date!
 
-    """The whitelisting state of a common"""
-    whitelisted: Boolean!
+  """The whitelisting state of a common"""
+  whitelisted: Boolean!
 }
 
 """The funding type of the common"""
 enum CommonFundingType {
-    Monthly
-    OneTime
+  Monthly
+  OneTime
 }
 
 input CreateCommonInput {
-    fundingCooldown: Date!
-    fundingMinimumAmount: Int!
-    fundingType: CommonFundingType!
-    name: String!
+  fundingCooldown: Date!
+  fundingMinimumAmount: Int!
+  fundingType: CommonFundingType!
+  name: String!
 }
 
 input CreateUserInput {
-    email: String!
-    firstName: String!
-    lastName: String!
+  email: String!
+  firstName: String!
+  lastName: String!
 }
 
 scalar Date
 
 type Mutation {
-    createCommon(input: CreateCommonInput!): Common!
+  createCommon(input: CreateCommonInput!): Common!
 
-    """Creates new user in the system"""
-    createUser(input: CreateUserInput!): User!
+  """Creates new user in the system"""
+  createUser(input: CreateUserInput!): User!
 }
 
 type Query {
-    generateUserAuthToken(authId: String!): String!
+  generateUserAuthToken(authId: String!): String!
 }
 
 type User {
-    """The ID of the user, as is in the authentication system"""
-    authId: ID!
+  """The ID of the user, as is in the authentication system"""
+  authId: ID!
 
-    """The date, at which the item was created"""
-    createdAt: Date!
+  """The date, at which the item was created"""
+  createdAt: Date!
 
-    """The display name of the user"""
-    displayName: String!
+  """The display name of the user"""
+  displayName: String!
 
-    """The first name of the user"""
-    firstName: String!
+  """The first name of the user"""
+  firstName: String!
 
-    """The system Id of the user"""
-    id: ID!
+  """The system Id of the user"""
+  id: ID!
 
-    """The last name of the user"""
-    lastName: String!
+  """The last name of the user"""
+  lastName: String!
 
-    """The date, at which the item was last modified"""
-    updatedAt: Date!
+  """The date, at which the item was last modified"""
+  updatedAt: Date!
 }

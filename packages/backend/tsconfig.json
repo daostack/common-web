@@ -27,7 +27,7 @@
         "./domain/constants/secrets/*"
       ],
       "@services": [
-        "./core/users/index"
+        "./core/services",
       ]
     },
     "esModuleInterop": true,

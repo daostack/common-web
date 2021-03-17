@@ -4,9 +4,8 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Date";
@@ -20,8 +19,7 @@ declare global {
 
 
 declare global {
-  interface NexusGen extends NexusGenTypes {
-  }
+  interface NexusGen extends NexusGenTypes {}
 }
 
 export interface NexusGenInputs {
@@ -39,7 +37,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  CommonFundingType: 'Monthly' | 'OneTime'
+  CommonFundingType: "Monthly" | "OneTime"
 }
 
 export interface NexusGenScalars {

@@ -25,6 +25,7 @@ model User {
   email         String  @unique
   emailVerified Boolean @default(false)
 
+  events      Event[]
   commonLinks CommonMember[]
 }
 
@@ -47,6 +48,7 @@ model Common {
   fundingCooldown      DateTime
   fundingMinimumAmount Int
 
+  events  Event[]
   members CommonMember[]
 }
 
@@ -72,4 +74,33 @@ enum CommonMemberRole {
 enum CommonFundingType {
   OneTime
   Monthly
+}
+
+// ---- Events
+
+model Event {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type EventType
+
+  payload Json?
+
+  commonId String?
+  userId String?
+
+  common Common? @relation(fields: [commonId], references: [id])
+  user   User?   @relation(fields: [userId], references: [id])
+}
+
+enum EventType {
+  CommonCreated
+
+  CommonMemberCreated
+  CommonMemberRoleAdded
+  CommonMemberRoleRemoved
+
+  UserCreated
 }
