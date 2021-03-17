@@ -1,5 +1,4 @@
 import { IBaseEntity } from './helpers/IBaseEntity';
-import { IPermission } from './IPermission';
 
 /**
  * The main entity, representing the user
@@ -13,5 +12,4 @@ export interface IUserEntity extends IBaseEntity {
    firstName: string;
    lastName: string;
    displayName: string;
-   roles?: IPermission[];
 }

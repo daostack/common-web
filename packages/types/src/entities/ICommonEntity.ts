@@ -63,6 +63,7 @@ export interface ICommonEntity extends IBaseEntity {
 export interface ICommonMember {
   userId: string;
   joinedAt?: firestore.Timestamp;
+  permission?: string;
 }
 
 export interface ICommonRule {

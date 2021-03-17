@@ -7,6 +7,7 @@ import { ItemType, IModeration } from '@common/types';
 import { hasPermission } from '../../core/domain/users/business';
 import { UnauthorizedError } from '../../util/errors';
 import { updateEntity } from './updateEntity';
+import { FLAGS, TYPES } from '../constants';
 import { db } from '../../util';
 
 const showContentDataValidationScheme = yup.object({
@@ -14,7 +15,7 @@ const showContentDataValidationScheme = yup.object({
   commonId: yup.string().required(),
   userId: yup.string().required(),
   type: yup.string()
-     .oneOf(['discussion', 'discussionMessage', 'proposals']),
+     .oneOf(Object.values(TYPES)),
 });
 
 type ShowContentPayload = yup.InferType<typeof showContentDataValidationScheme>;
@@ -43,7 +44,7 @@ export const showContent = async (showContentPayload: ShowContentPayload): Promi
     ...item,
     moderation: {
       ...item.moderation,
-      flag: 'visible',
+      flag: FLAGS.visible,
       updatedAt: firestore.Timestamp.now(),
       moderator: userId,
     } as IModeration,

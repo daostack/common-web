@@ -7,6 +7,7 @@ import { ItemType, IModeration } from '@common/types';
 import { UnauthorizedError } from '../../util/errors';
 import { updateEntity } from './updateEntity';
 import { commonDb } from '../../common/database';
+import { FLAGS, TYPES } from '../constants';
 import { db } from '../../util';
 
 const reportContentDataValidationScheme = yup.object({
@@ -18,7 +19,7 @@ const reportContentDataValidationScheme = yup.object({
   commonId: yup.string().required(),
   userId: yup.string().required(),
   type: yup.string()
-     .oneOf(['discussion', 'discussionMessage', 'proposals']),
+     .oneOf(Object.values(TYPES)),
 });
 
 type ReportContentPayload = yup.InferType<typeof reportContentDataValidationScheme>;
@@ -49,7 +50,7 @@ export const reportContent = async (reportContentPayload: ReportContentPayload):
   const updatedItem = {
     ...item,
     moderation: {
-      flag: 'reported',
+      flag: FLAGS.reported,
       reasons: moderationData.reasons.split(',') || [],
       moderatorNote: moderationData.moderatorNote || '',
       updatedAt: firestore.Timestamp.now(),
