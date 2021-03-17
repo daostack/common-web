@@ -2,9 +2,16 @@ import path from 'path';
 import { makeSchema } from 'nexus';
 
 import { UserTypes } from './Users';
+import { CommonTypes } from './Commons';
+
+import { DateScalar } from '../scalars/Date.scalar';
 
 const types = [
-  UserTypes
+  UserTypes,
+  CommonTypes,
+
+  // Scalars
+  DateScalar
 ];
 
 export const schema = makeSchema({

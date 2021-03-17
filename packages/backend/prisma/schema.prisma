@@ -10,6 +10,8 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// ---- User related stuff
+
 model User {
   id     String @id @default(uuid())
   authId String @unique
@@ -22,4 +24,52 @@ model User {
 
   email         String  @unique
   emailVerified Boolean @default(false)
+
+  commonLinks CommonMember[]
+}
+
+// ---- Common related stuff
+
+model Common {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+
+  balance Int @default(0)
+  raised  Int @default(0)
+
+  whitlisted Boolean @default(false)
+
+  fundingType          CommonFundingType
+  fundingCooldown      DateTime
+  fundingMinimumAmount Int
+
+  members CommonMember[]
+}
+
+model CommonMember {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  common Common @relation(fields: [commonId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  roles CommonMemberRole[]
+
+  commonId String
+  userId   String
+}
+
+enum CommonMemberRole {
+  Founder
+}
+
+enum CommonFundingType {
+  OneTime
+  Monthly
 }

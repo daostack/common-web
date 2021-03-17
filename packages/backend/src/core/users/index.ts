@@ -1,5 +1,6 @@
 import { createUserCommand } from './commands/createUserCommand';
 import { userExistsQuery } from './queries/userExistsQuery';
+import { getUserIdQuery } from './queries/getUserIdQuery';
 
 export const userService = {
   commands: {
@@ -13,6 +14,11 @@ export const userService = {
     /**
      * @todo Write docs
      */
-    exists: userExistsQuery
+    exists: userExistsQuery,
+
+    /**
+     * @todo Write docs
+     */
+    getId: getUserIdQuery
   }
 };

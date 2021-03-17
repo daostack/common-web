@@ -14,11 +14,17 @@
       "@graph": [
         "./graph/index"
       ],
-      "@env/*": [
-        "./domain/env/*"
+      "@constants/*": [
+        "./domain/constants/*"
+      ],
+      "@constants": [
+        "./domain/constants/index"
+      ],
+      "@errors": [
+        "./domain/errors/index"
       ],
       "@secrets/*": [
-        "./domain/env/secrets/*"
+        "./domain/constants/secrets/*"
       ],
       "@services": [
         "./core/users/index"

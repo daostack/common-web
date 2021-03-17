@@ -5,13 +5,32 @@
 
 
 import { IRequestContext } from './../context';
+import { core } from 'nexus';
+
+declare global {
+  interface NexusGenCustomInputMethods<TypeName extends string> {
+    date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Date";
+  }
+}
+declare global {
+  interface NexusGenCustomOutputMethods<TypeName extends string> {
+    date<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Date";
+  }
+}
 
 
 declare global {
-  interface NexusGen extends NexusGenTypes {}
+  interface NexusGen extends NexusGenTypes {
+  }
 }
 
 export interface NexusGenInputs {
+  CreateCommonInput: { // input type
+    fundingCooldown: NexusGenScalars['Date']; // Date!
+    fundingMinimumAmount: number; // Int!
+    fundingType: NexusGenEnums['CommonFundingType']; // CommonFundingType!
+    name: string; // String!
+  }
   CreateUserInput: { // input type
     email: string; // String!
     firstName: string; // String!
@@ -20,6 +39,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  CommonFundingType: 'Monthly' | 'OneTime'
 }
 
 export interface NexusGenScalars {
@@ -28,16 +48,26 @@ export interface NexusGenScalars {
   Float: number
   Boolean: boolean
   ID: string
+  Date: any
 }
 
 export interface NexusGenObjects {
+  Common: { // root type
+    createdAt: NexusGenScalars['Date']; // Date!
+    id: string; // ID!
+    name: string; // String!
+    updatedAt: NexusGenScalars['Date']; // Date!
+    whitelisted: boolean; // Boolean!
+  }
   Mutation: {};
   Query: {};
   User: { // root type
     authId: string; // ID!
+    createdAt: NexusGenScalars['Date']; // Date!
     firstName: string; // String!
     id: string; // ID!
     lastName: string; // String!
+    updatedAt: NexusGenScalars['Date']; // Date!
   }
 }
 
@@ -49,10 +79,18 @@ export interface NexusGenUnions {
 
 export type NexusGenRootTypes = NexusGenObjects
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  Common: { // field return type
+    createdAt: NexusGenScalars['Date']; // Date!
+    id: string; // ID!
+    name: string; // String!
+    updatedAt: NexusGenScalars['Date']; // Date!
+    whitelisted: boolean; // Boolean!
+  }
   Mutation: { // field return type
+    createCommon: NexusGenRootTypes['Common']; // Common!
     createUser: NexusGenRootTypes['User']; // User!
   }
   Query: { // field return type
@@ -60,15 +98,25 @@ export interface NexusGenFieldTypes {
   }
   User: { // field return type
     authId: string; // ID!
+    createdAt: NexusGenScalars['Date']; // Date!
     displayName: string; // String!
     firstName: string; // String!
     id: string; // ID!
     lastName: string; // String!
+    updatedAt: NexusGenScalars['Date']; // Date!
   }
 }
 
 export interface NexusGenFieldTypeNames {
+  Common: { // field return type name
+    createdAt: 'Date'
+    id: 'ID'
+    name: 'String'
+    updatedAt: 'Date'
+    whitelisted: 'Boolean'
+  }
   Mutation: { // field return type name
+    createCommon: 'Common'
     createUser: 'User'
   }
   Query: { // field return type name
@@ -76,15 +124,20 @@ export interface NexusGenFieldTypeNames {
   }
   User: { // field return type name
     authId: 'ID'
+    createdAt: 'Date'
     displayName: 'String'
     firstName: 'String'
     id: 'ID'
     lastName: 'String'
+    updatedAt: 'Date'
   }
 }
 
 export interface NexusGenArgTypes {
   Mutation: {
+    createCommon: { // args
+      input: NexusGenInputs['CreateCommonInput']; // CreateCommonInput!
+    }
     createUser: { // args
       input: NexusGenInputs['CreateUserInput']; // CreateUserInput!
     }
@@ -106,7 +159,7 @@ export type NexusGenObjectNames = keyof NexusGenObjects;
 
 export type NexusGenInputNames = keyof NexusGenInputs;
 
-export type NexusGenEnumNames = never;
+export type NexusGenEnumNames = keyof NexusGenEnums;
 
 export type NexusGenInterfaceNames = never;
 
