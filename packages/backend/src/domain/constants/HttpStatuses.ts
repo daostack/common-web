@@ -1,7 +1,8 @@
-import { GenericError } from './ErrorCodes';
+import { GenericError, NotImplementedError } from './ErrorCodes';
 
 export const GenericErrorStatus = 500;
 
 export const HttpStatuses = {
-  [GenericError]: GenericErrorStatus
+  [GenericError]: GenericErrorStatus,
+  [NotImplementedError]: GenericErrorStatus
 };

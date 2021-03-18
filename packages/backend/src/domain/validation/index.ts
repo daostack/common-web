@@ -1,0 +1,1 @@
+export { ProposalLinkSchema } from './schemas/ProposalLink.schema';

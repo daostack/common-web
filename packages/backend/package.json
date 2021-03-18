@@ -14,6 +14,7 @@
     "url": "https://github.com/daostack/common-monorepo/issues"
   },
   "devDependencies": {
+    "@types/uuid": "^8.3.0",
     "prisma": "^2.18.0",
     "ts-node-dev": "^1.1.6",
     "tscpaths": "^0.0.9",

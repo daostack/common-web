@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { CommonFundingType, Common, CommonMemberRole, EventType } from '@prisma/client';
+import { FundingType, Common, CommonMemberRole, EventType } from '@prisma/client';
 import { prisma } from '@toolkits';
 import { createCommonMemberCommand } from './createCommonMemberCommand';
 import { addCommonMemberRoleCommand } from './addCommonMemberRoleCommand';
@@ -11,7 +11,7 @@ const schema = z.object({
     .min(2)
     .max(255),
 
-  fundingType: z.enum(Object.keys(CommonFundingType) as [(keyof typeof CommonFundingType)]),
+  fundingType: z.enum(Object.keys(FundingType) as [(keyof typeof FundingType)]),
 
   fundingMinimumAmount: z.number()
     .min(0)
