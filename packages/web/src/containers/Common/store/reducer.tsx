@@ -7,6 +7,8 @@ const initialState: CommonsStateType = {
   commons: [],
   common: null,
   page: 1,
+  proposals: [],
+  discussions: [],
 };
 
 type Action = ActionType<typeof actions>;
@@ -25,6 +27,16 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
   .handleAction(actions.getCommonDetail.success, (state, action) =>
     produce(state, (nextState) => {
       nextState.common = action.payload;
+    }),
+  )
+  .handleAction(actions.setDiscussion, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.discussions = action.payload;
+    }),
+  )
+  .handleAction(actions.setProposals, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.proposals = action.payload;
     }),
   );
 
