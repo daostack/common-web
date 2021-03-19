@@ -32,6 +32,9 @@
       ],
       "@validation": [
         "./domain/validation/index"
+      ],
+      "@circle/*": [
+        "./domain/toolkits/circle"
       ]
     },
     "esModuleInterop": true,

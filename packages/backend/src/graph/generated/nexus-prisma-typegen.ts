@@ -1,12 +1,12 @@
-import * as Typegen from 'nexus-plugin-prisma/typegen';
+import * as Typegen from 'nexus-plugin-prisma/typegen'
 import * as Prisma from '@prisma/client';
 
 // Pagination type
 type Pagination = {
-  first?: boolean
-  last?: boolean
-  before?: boolean
-  after?: boolean
+    first?: boolean
+    last?: boolean
+    before?: boolean
+    after?: boolean
 }
 
 // Prisma custom scalar names
@@ -136,9 +136,15 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'userId' | 'commonId' | 'commonMemberId'
     }
   }
-  JoinProposal: {}
-  FundingProposal: {}
-  ProposalDescription: {}
+  JoinProposal: {
+
+  }
+  FundingProposal: {
+
+  }
+  ProposalDescription: {
+
+  }
   Subscription: {
     proposal: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'funding' | 'fundingType' | 'state' | 'paymentState' | 'description' | 'user' | 'common' | 'payment' | 'subscription' | 'userId' | 'commonId' | 'subscriptionId'
@@ -149,7 +155,9 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'subscriptionId' | 'proposalId' | 'userId' | 'commonId' | 'commonMemberId' | 'cardId'
     }
   }
-  Payment: {}
+  Payment: {
+
+  }
   Card: {
     payments: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'commonMember' | 'proposal' | 'subscription' | 'subscriptionId' | 'proposalId' | 'userId' | 'commonId' | 'commonMemberId' | 'cardId'
@@ -160,7 +168,9 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'cardId' | 'userId' | 'commonId' | 'commonMemberId'
     }
   }
-  Event: {}
+  Event: {
+
+  }
 }
 
 // Prisma output types metadata
@@ -420,10 +430,11 @@ interface NexusPrismaGenTypes {
 }
 
 declare global {
-  interface NexusPrismaGen extends NexusPrismaGenTypes {
-  }
+  interface NexusPrismaGen extends NexusPrismaGenTypes {}
 
-  type NexusPrisma<TypeName extends string,
-    ModelOrCrud extends 'model' | 'crud'> = Typegen.GetNexusPrisma<TypeName, ModelOrCrud>;
+  type NexusPrisma<
+    TypeName extends string,
+    ModelOrCrud extends 'model' | 'crud'
+  > = Typegen.GetNexusPrisma<TypeName, ModelOrCrud>;
 }
   
