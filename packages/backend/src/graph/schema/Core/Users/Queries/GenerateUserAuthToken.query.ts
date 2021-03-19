@@ -1,6 +1,6 @@
-import rp from 'request-promise';
-import admin from 'firebase-admin';
 import { extendType, nonNull, stringArg } from 'nexus';
+import admin from 'firebase-admin';
+import axios from 'axios';
 
 
 export const GenerateUserAuthTokenQuery = extendType({
@@ -11,29 +11,16 @@ export const GenerateUserAuthTokenQuery = extendType({
         authId: nonNull(stringArg())
       },
       resolve: async (root, args) => {
-        // const customToken = admin
-        //   .auth()
-        //   .createCustomToken(args.authId);
+        const customToken = await admin
+          .auth()
+          .createCustomToken(args.authId);
 
-        // const res = await axios.post(`https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyCustomToken?key=${process.env['Firebase.ApiKey']}`, {
-        //   token: customToken,
-        //   returnSecureToken: true
-        // })
-
-        const customToken = await admin.auth().createCustomToken(args.authId);
-        const res = await rp({
-          url: `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyCustomToken?key=${process.env['Firebase.ApiKey']}`,
-          method: 'POST',
-          body: {
-            token: customToken,
-            returnSecureToken: true
-          },
-          json: true
+        const res = await axios.post(`https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyCustomToken?key=${process.env['Firebase.ApiKey']}`, {
+          token: customToken,
+          returnSecureToken: true
         });
 
-        console.log(res);
-
-        return res.idToken;
+        return res.data.idToken;
       }
     });
   }

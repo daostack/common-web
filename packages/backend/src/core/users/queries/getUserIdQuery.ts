@@ -1,5 +1,6 @@
 import * as z from 'zod';
 import { prisma } from '@toolkits';
+import { NotFoundError } from '@errors';
 
 const schema = z.object({
   authId: z.string()
@@ -9,13 +10,20 @@ export const getUserIdQuery = async (query: z.infer<typeof schema>): Promise<str
   // Validate the payload
   schema.parse(query);
 
-  // Return the result
-  return (await prisma.user.findUnique({
+  // Find the user
+  const user = await prisma.user.findUnique({
     where: {
       authId: query.authId
     },
     select: {
       id: true
     }
-  })).id;
+  });
+
+  // Check if the common is found
+  if (!user) {
+    throw new NotFoundError('User.AuthId', query.authId);
+  }
+
+  return user.id;
 };

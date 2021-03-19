@@ -37,7 +37,10 @@ export const schema = makeSchema({
   },
   plugins: [
     nexusPrisma({
-      experimentalCRUD: true
+      experimentalCRUD: true,
+      outputs: {
+        typegen: path.join(__dirname, '../generated/', 'nexus-prisma-typegen.ts')
+      }
     })
   ]
 });

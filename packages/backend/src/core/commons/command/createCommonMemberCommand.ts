@@ -1,7 +1,7 @@
 import * as z from 'zod';
 import { CommonMember, EventType } from '@prisma/client';
 import { prisma } from '@toolkits';
-import { CommonError } from '@errors';
+import { CommonError, NotFoundError } from '@errors';
 import { eventsService } from '@services';
 
 const schema = z.object({
@@ -20,6 +20,11 @@ export const createCommonMemberCommand = async (command: z.infer<typeof schema>)
       members: true
     }
   });
+
+  // Check if the common is found
+  if (!common) {
+    throw new NotFoundError('Common', command.commonId);
+  }
 
   // Check the members
   if (common.members.some((m) => m.userId === command.userId)) {

@@ -37,19 +37,19 @@ export const createRequestContext = ({ req }: ExpressContext): IRequestContext =
     getUserId: async () => {
       // @todo Use custom method for that
       return userService.queries.getId({
-        authId: (await auth().verifyIdToken(req.headers.authorization)).uid
+        authId: (await auth().verifyIdToken(req.headers.authorization as string)).uid
       });
     },
 
 
     getUserAuthId: async () => {
       // @todo Use custom method for that
-      return (await auth().verifyIdToken(req.headers.authorization)).uid;
+      return (await auth().verifyIdToken(req.headers.authorization as string)).uid;
     },
 
     getUserDecodedToken: async () => {
       // @todo Use custom method for that
-      return (await auth().verifyIdToken(req.headers.authorization));
+      return (await auth().verifyIdToken(req.headers.authorization as string));
     }
   };
 };

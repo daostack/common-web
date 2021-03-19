@@ -28,10 +28,10 @@
         "./domain/constants/secrets/*"
       ],
       "@services": [
-        "./core/services",
+        "./core/services"
       ],
       "@validation": [
-        "./domain/validation/index",
+        "./domain/validation/index"
       ]
     },
     "esModuleInterop": true,

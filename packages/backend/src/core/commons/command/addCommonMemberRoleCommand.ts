@@ -2,6 +2,7 @@ import * as z from 'zod';
 import { CommonMemberRole, CommonMember, EventType } from '@prisma/client';
 import { prisma } from '@toolkits';
 import { eventsService } from '@services';
+import { NotFoundError } from '@errors';
 
 const schema = z.object({
   memberId: z.string()
@@ -18,6 +19,11 @@ export const addCommonMemberRoleCommand = async (command: z.infer<typeof schema>
 
   // Find the member entity (we need to fetch the entity first to ensure that the user does not have this role already)
   const memberEntity = await prisma.commonMember.findUnique({ where: { id: command.memberId } });
+
+  // Check if the common is found
+  if (!memberEntity) {
+    throw new NotFoundError('MemberEntity', command.memberId);
+  }
 
   // Add the roles (if unique)
   const updatedMemberEntity = prisma.commonMember.update({
