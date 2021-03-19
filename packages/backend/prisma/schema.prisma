@@ -56,7 +56,7 @@ model Common {
   balance Int @default(0)
   raised  Int @default(0)
 
-  whitlisted Boolean @default(false)
+  whitelisted Boolean @default(false)
 
   fundingType          FundingType
   fundingCooldown      DateTime
@@ -86,11 +86,12 @@ model CommonMember {
   payments     Payment[]
   subscription Subscription?
 
-  joinProposals    JoinProposal[]
   fundingProposals FundingProposal[]
 
   commonId String
   userId   String
+
+  @@unique([userId, commonId])
 }
 
 enum CommonMemberRole {
@@ -109,20 +110,18 @@ model JoinProposal {
   fundingType FundingType
 
   state        ProposalState
-  paymentState ProposalState
+  paymentState ProposalPaymentState
 
   description ProposalDescription?
 
   user         User         @relation(fields: [userId], references: [id])
   common       Common       @relation(fields: [commonId], references: [id])
-  commonMember CommonMember @relation(fields: [commonMemberId], references: [id])
 
   payment      Payment?
   subscription Subscription? @relation(fields: [subscriptionId], references: [id])
 
   userId         String
   commonId       String
-  commonMemberId String
   subscriptionId String?
 }
 
@@ -267,6 +266,8 @@ enum EventType {
   CommonMemberCreated
   CommonMemberRoleAdded
   CommonMemberRoleRemoved
+
+  JoinRequestCreated
 
   UserCreated
 }

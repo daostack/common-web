@@ -1,9 +1,10 @@
 import * as z from 'zod';
-import { JoinProposal, ProposalState } from '@prisma/client';
+import { JoinProposal, EventType, ProposalState, ProposalPaymentState } from '@prisma/client';
 
+import { CommonError, NotFoundError } from '@errors';
 import { ProposalLinkSchema } from '@validation';
+import { eventsService } from '@services';
 import { prisma } from '@toolkits';
-import { CommonError } from '@errors';
 
 const schema = z.object({
   title: z.string()
@@ -12,7 +13,9 @@ const schema = z.object({
   description: z.string()
     .optional(),
 
-  links: z.array(ProposalLinkSchema),
+  links: z.array(ProposalLinkSchema)
+    .nullable()
+    .optional(),
 
   fundingAmount: z.number()
     .min(0),
@@ -54,6 +57,11 @@ export const createJoinProposalCommand = async (command: z.infer<typeof schema>)
     }
   });
 
+  // Check if the common is found
+  if (!common) {
+    throw new NotFoundError('Common', command.commonId);
+  }
+
   // Check if there are other pending join requests in the common for that user
   if (common.joinProposals.length) {
     // If there are proposals at all this should mean that there are for the user
@@ -81,10 +89,26 @@ export const createJoinProposalCommand = async (command: z.infer<typeof schema>)
         }
       },
 
+      funding: command.fundingAmount,
+      fundingType: common.fundingType,
+
+      state: ProposalState.Countdown,
+      paymentState: ProposalPaymentState.NotAttempted,
+
+
       commonId: command.commonId,
       userId: command.userId
     }
-  })
+  });
 
+  // Create event
+  await eventsService.commands.create({
+    type: EventType.JoinRequestCreated,
+    commonId: command.commonId,
+    userId: command.userId
+  });
+
+  // Return the created proposal
+  return proposal;
 };
 

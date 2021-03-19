@@ -20,9 +20,15 @@ const apollo = new ApolloServer({
 // Configure the express app
 app.use(cors());
 
-
 // Add the Apollo middleware to the express app
 apollo.applyMiddleware({ app });
+
+// Temporally request logger
+app.use((req, res, next) => {
+  console.debug('New request', req);
+
+  return next();
+});
 
 app.listen({ port: 4000 }, () => {
   console.info(`🚀 Server ready`);

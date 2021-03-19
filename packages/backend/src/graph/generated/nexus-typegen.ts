@@ -26,18 +26,30 @@ export interface NexusGenInputs {
   CreateCommonInput: { // input type
     fundingCooldown: NexusGenScalars['Date']; // Date!
     fundingMinimumAmount: number; // Int!
-    fundingType: NexusGenEnums['CommonFundingType']; // CommonFundingType!
+    fundingType: NexusGenEnums['FundingType']; // FundingType!
     name: string; // String!
+  }
+  CreateJoinProposalInput: { // input type
+    cardId: string; // String!
+    commonId: string; // String!
+    description: string; // String!
+    fundingAmount: number; // Int!
+    links?: NexusGenInputs['LinkInput'][] | null; // [LinkInput!]
+    title: string; // String!
   }
   CreateUserInput: { // input type
     email: string; // String!
     firstName: string; // String!
     lastName: string; // String!
   }
+  LinkInput: { // input type
+    title: string; // String!
+    url: string; // String!
+  }
 }
 
 export interface NexusGenEnums {
-  CommonFundingType: "Monthly" | "OneTime"
+  FundingType: "Monthly" | "OneTime"
 }
 
 export interface NexusGenScalars {
@@ -57,6 +69,15 @@ export interface NexusGenObjects {
     updatedAt: NexusGenScalars['Date']; // Date!
     whitelisted: boolean; // Boolean!
   }
+  JoinProposal: { // root type
+    createdAt: NexusGenScalars['Date']; // Date!
+    id: string; // ID!
+    updatedAt: NexusGenScalars['Date']; // Date!
+  }
+  Link: { // root type
+    title: string; // String!
+    url: string; // String!
+  }
   Mutation: {};
   Query: {};
   User: { // root type
@@ -70,12 +91,13 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
+  BaseEntity: NexusGenRootTypes['JoinProposal'];
 }
 
 export interface NexusGenUnions {
 }
 
-export type NexusGenRootTypes = NexusGenObjects
+export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects
 
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
@@ -87,8 +109,18 @@ export interface NexusGenFieldTypes {
     updatedAt: NexusGenScalars['Date']; // Date!
     whitelisted: boolean; // Boolean!
   }
+  JoinProposal: { // field return type
+    createdAt: NexusGenScalars['Date']; // Date!
+    id: string; // ID!
+    updatedAt: NexusGenScalars['Date']; // Date!
+  }
+  Link: { // field return type
+    title: string; // String!
+    url: string; // String!
+  }
   Mutation: { // field return type
     createCommon: NexusGenRootTypes['Common']; // Common!
+    createJoinProposal: NexusGenRootTypes['JoinProposal']; // JoinProposal!
     createUser: NexusGenRootTypes['User']; // User!
   }
   Query: { // field return type
@@ -103,6 +135,11 @@ export interface NexusGenFieldTypes {
     lastName: string; // String!
     updatedAt: NexusGenScalars['Date']; // Date!
   }
+  BaseEntity: { // field return type
+    createdAt: NexusGenScalars['Date']; // Date!
+    id: string; // ID!
+    updatedAt: NexusGenScalars['Date']; // Date!
+  }
 }
 
 export interface NexusGenFieldTypeNames {
@@ -113,8 +150,18 @@ export interface NexusGenFieldTypeNames {
     updatedAt: 'Date'
     whitelisted: 'Boolean'
   }
+  JoinProposal: { // field return type name
+    createdAt: 'Date'
+    id: 'ID'
+    updatedAt: 'Date'
+  }
+  Link: { // field return type name
+    title: 'String'
+    url: 'String'
+  }
   Mutation: { // field return type name
     createCommon: 'Common'
+    createJoinProposal: 'JoinProposal'
     createUser: 'User'
   }
   Query: { // field return type name
@@ -129,12 +176,20 @@ export interface NexusGenFieldTypeNames {
     lastName: 'String'
     updatedAt: 'Date'
   }
+  BaseEntity: { // field return type name
+    createdAt: 'Date'
+    id: 'ID'
+    updatedAt: 'Date'
+  }
 }
 
 export interface NexusGenArgTypes {
   Mutation: {
     createCommon: { // args
       input: NexusGenInputs['CreateCommonInput']; // CreateCommonInput!
+    }
+    createJoinProposal: { // args
+      input: NexusGenInputs['CreateJoinProposalInput']; // CreateJoinProposalInput!
     }
     createUser: { // args
       input: NexusGenInputs['CreateUserInput']; // CreateUserInput!
@@ -148,9 +203,11 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
+  BaseEntity: "JoinProposal"
 }
 
 export interface NexusGenTypeInterfaces {
+  JoinProposal: "BaseEntity"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
@@ -159,7 +216,7 @@ export type NexusGenInputNames = keyof NexusGenInputs;
 
 export type NexusGenEnumNames = keyof NexusGenEnums;
 
-export type NexusGenInterfaceNames = never;
+export type NexusGenInterfaceNames = keyof NexusGenInterfaces;
 
 export type NexusGenScalarNames = keyof NexusGenScalars;
 
@@ -167,7 +224,7 @@ export type NexusGenUnionNames = never;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = never;
+export type NexusGenAbstractsUsingStrategyResolveType = "BaseEntity";
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {

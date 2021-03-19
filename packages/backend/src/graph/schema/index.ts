@@ -1,17 +1,31 @@
 import path from 'path';
 import { makeSchema } from 'nexus';
 
-import { UserTypes } from './Users';
-import { CommonTypes } from './Commons';
+import { UserTypes } from './Core/Users';
+import { CommonTypes } from './Core/Commons';
+import { ProposalTypes } from './Core/Proposals';
 
-import { DateScalar } from '../scalars/Date.scalar';
+import { LinkType, LinkInputType } from './Shared/Types/Link.type';
+import { DateScalar } from './Shared/Scalars/Date.scalar';
+import { BaseEntity } from './Shared/Interfaces/BaseEntity.interface';
+
 
 const types = [
   UserTypes,
   CommonTypes,
+  ProposalTypes,
 
   // Scalars
-  DateScalar
+  DateScalar,
+
+  // Interfaces
+  BaseEntity,
+
+  // Shared Types
+  LinkType,
+
+  // Shared Input Types
+  LinkInputType
 ];
 
 export const schema = makeSchema({

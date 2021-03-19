@@ -37,7 +37,7 @@ const schema = z.object({
     .default(false)
 });
 
-export const createUserCommand = async (command: z.infer<typeof schema>): Promise<User> => {
+export const createUserCommand: (command: z.infer<typeof schema>) => Promise<User> = async (command) => {
   // Basic validation on the payload
   await schema.parseAsync(command);
 

@@ -11,7 +11,7 @@ export const CreateCommonInput = inputObjectType({
     t.nonNull.date('fundingCooldown');
 
     t.nonNull.field('fundingType', {
-      type: 'CommonFundingType'
+      type: 'FundingType'
     });
   }
 });

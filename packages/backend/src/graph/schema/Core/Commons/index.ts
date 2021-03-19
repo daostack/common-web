@@ -1,11 +1,11 @@
 import { CommonType } from './Types/Common.type';
-import { CommonFundingTypeEnum } from './Enums/CommonFundingType.enum';
+import { FundingTypeEnum } from './Enums/FundingTypeEnum';
 import { CreateCommonInput, CreateCommonMutation } from './Mutations/CreateCommon.mutation';
 
 export const CommonTypes = [
   CommonType,
 
-  CommonFundingTypeEnum,
+  FundingTypeEnum,
 
   CreateCommonInput,
   CreateCommonMutation

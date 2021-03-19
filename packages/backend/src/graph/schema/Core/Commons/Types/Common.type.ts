@@ -4,7 +4,7 @@ export const CommonType = objectType({
   name: 'Common',
   definition(t) {
     t.nonNull.id('id', {
-      description: 'The main identifier of the common'
+      description: 'The main identifier of the item'
     });
 
     t.nonNull.date('createdAt', {

@@ -2,11 +2,22 @@
 ### Do not make changes to this file directly
 
 
+interface BaseEntity {
+  """The date, at which the item was created"""
+  createdAt: Date!
+
+  """The main identifier of the item"""
+  id: ID!
+
+  """The date, at which the item was last modified"""
+  updatedAt: Date!
+}
+
 type Common {
   """The date, at which the item was created"""
   createdAt: Date!
 
-  """The main identifier of the common"""
+  """The main identifier of the item"""
   id: ID!
 
   """The name of the common as provided"""
@@ -19,17 +30,20 @@ type Common {
   whitelisted: Boolean!
 }
 
-"""The funding type of the common"""
-enum CommonFundingType {
-  Monthly
-  OneTime
-}
-
 input CreateCommonInput {
   fundingCooldown: Date!
   fundingMinimumAmount: Int!
-  fundingType: CommonFundingType!
+  fundingType: FundingType!
   name: String!
+}
+
+input CreateJoinProposalInput {
+  cardId: String!
+  commonId: String!
+  description: String!
+  fundingAmount: Int!
+  links: [LinkInput!]
+  title: String!
 }
 
 input CreateUserInput {
@@ -40,8 +54,44 @@ input CreateUserInput {
 
 scalar Date
 
+"""The funding type of the common"""
+enum FundingType {
+  Monthly
+  OneTime
+}
+
+type JoinProposal implements BaseEntity {
+  """The date, at which the item was created"""
+  createdAt: Date!
+
+  """The main identifier of the item"""
+  id: ID!
+
+  """The date, at which the item was last modified"""
+  updatedAt: Date!
+}
+
+type Link {
+  """The display title of the link"""
+  title: String!
+
+  """The actual link part of the link"""
+  url: String!
+}
+
+input LinkInput {
+  """The display title of the link"""
+  title: String!
+
+  """The actual link part of the link"""
+  url: String!
+}
+
 type Mutation {
   createCommon(input: CreateCommonInput!): Common!
+
+  """Create new proposal of type JOIN."""
+  createJoinProposal(input: CreateJoinProposalInput!): JoinProposal!
 
   """Creates new user in the system"""
   createUser(input: CreateUserInput!): User!
