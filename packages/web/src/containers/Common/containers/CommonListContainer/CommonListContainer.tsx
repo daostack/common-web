@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { CommonListItem } from "../../components";
 import { COMMON_PAGE_SIZE } from "../../constants";
 import { getCommonsList, updatePage } from "../../store/actions";
-import { getCurrentPage, selectCommonList } from "../../store/selectors";
+import { selectCurrentPage, selectCommonList } from "../../store/selectors";
 
 import "./index.scss";
 
@@ -17,7 +17,7 @@ const options = {
 
 export default function CommonListContainer() {
   const commons = useSelector(selectCommonList);
-  const page = useSelector(getCurrentPage);
+  const page = useSelector(selectCurrentPage);
   const dispatch = useDispatch();
   const loader = useRef(null);
 

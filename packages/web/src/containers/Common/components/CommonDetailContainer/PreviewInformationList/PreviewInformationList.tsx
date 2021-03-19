@@ -1,17 +1,32 @@
 import React from "react";
 import "./index.scss";
-export default function PreviewInformationList() {
+
+interface PreviedData {
+  id: string;
+  value: string;
+}
+interface PreviewInformationListProps {
+  title: string;
+  data: PreviedData[];
+  vievAllHandler: () => void;
+}
+
+export default function PreviewInformationList(props: PreviewInformationListProps) {
+  const { title, data, vievAllHandler } = props;
   return (
     <div className="preview-information-wrapper">
       <div className="title-wrapper">
-        <div className="title">Latest Discussions</div>
-        <div className="view-all">View All</div>
+        <div className="title">{title}</div>
+        <div className="view-all" onClick={vievAllHandler}>
+          View All
+        </div>
       </div>
       <div className="information-content">
-        <div className="item">Launch a facebook campaign to raise awareness about the amazon</div>
-        <div className="item">Launch a facebook campaign to raise awareness about the amazon</div>
-        <div className="item">Launch a facebook campaign to raise awareness about the amazon</div>
-        <div className="item">Launch a facebook campaign to raise awareness about the amazon</div>
+        {data.map((d) => (
+          <div className="item" key={d.id}>
+            {d.value}
+          </div>
+        ))}
       </div>
     </div>
   );

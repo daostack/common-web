@@ -9,8 +9,7 @@ async function fetchCommonDiscussions(commonId: string) {
   const data = transformFirebaseDataList<Discussion>(commons);
 
   return data.sort(
-    (proposal: Discussion, prevProposal: Discussion) =>
-      prevProposal.lastMessage?.seconds - proposal.lastMessage?.seconds,
+    (proposal: Discussion, prevProposal: Discussion) => prevProposal.createTime?.seconds - proposal.createTime?.seconds,
   );
 }
 

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { formatPrice } from "../../../../shared/utils";
 import { AboutTabComponent, PreviewInformationList } from "../../components/CommonDetailContainer";
 import { getCommonDetail } from "../../store/actions";
-import { selectCommonDetail } from "../../store/selectors";
+import { selectCommonDetail, selectProposals, selectDiscussions } from "../../store/selectors";
 import "./index.scss";
 interface CommonDetailRouterParams {
   id: string;
@@ -33,6 +33,8 @@ export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
   const [tab, setTab] = useState("about");
   const common = useSelector(selectCommonDetail);
+  const proposals = useSelector(selectProposals);
+  const discussions = useSelector(selectDiscussions);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -41,6 +43,21 @@ export default function CommonDetail() {
       dispatch(getCommonDetail.success(null));
     };
   }, [dispatch, id]);
+
+  const lastestProposals = useMemo(
+    () =>
+      [...proposals].splice(0, 5).map((p) => {
+        return { id: p.id, value: p.description.title };
+      }),
+    [proposals],
+  );
+  const latestDiscussions = useMemo(
+    () =>
+      [...discussions].splice(0, 5).map((d) => {
+        return { id: d.title, value: d.title };
+      }),
+    [discussions],
+  );
 
   return (
     common && (
@@ -99,8 +116,16 @@ export default function CommonDetail() {
           <div className="inner-main-content-wrapper">
             <div className="tab-content-wrapper">{tab === "about" && <AboutTabComponent common={common} />}</div>
             <div className="sidebar-wrapper">
-              <PreviewInformationList />
-              <PreviewInformationList />
+              <PreviewInformationList
+                title="Latest Discussions"
+                data={latestDiscussions}
+                vievAllHandler={() => setTab("discussions")}
+              />
+              <PreviewInformationList
+                title="Latest Proposals"
+                data={lastestProposals}
+                vievAllHandler={() => setTab("proposals")}
+              />
             </div>
           </div>
         </div>
