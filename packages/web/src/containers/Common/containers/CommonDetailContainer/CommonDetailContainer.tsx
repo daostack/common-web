@@ -54,7 +54,7 @@ export default function CommonDetail() {
   const latestDiscussions = useMemo(
     () =>
       [...discussions].splice(0, 5).map((d) => {
-        return { id: d.title, value: d.title };
+        return { id: d.id, value: d.title };
       }),
     [discussions],
   );

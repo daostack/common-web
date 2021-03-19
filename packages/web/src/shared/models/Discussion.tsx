@@ -12,4 +12,5 @@ export interface Discussion {
   ownerId: string;
   title: string;
   updatedAt: Time;
+  id: string;
 }
