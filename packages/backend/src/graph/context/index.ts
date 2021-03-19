@@ -1,6 +1,8 @@
 import { auth } from 'firebase-admin';
+import { PrismaClient } from '@prisma/client';
 import { ExpressContext } from 'apollo-server-express';
 
+import { prisma } from '@toolkits';
 import { userService } from '@services';
 
 export interface IRequestContext {
@@ -21,10 +23,17 @@ export interface IRequestContext {
    * or throw an error if no user is authenticated
    */
   getUserDecodedToken: () => Promise<auth.DecodedIdToken>;
+
+  /**
+   * The prisma client
+   */
+  prisma: PrismaClient;
 }
 
 export const createRequestContext = ({ req }: ExpressContext): IRequestContext => {
   return {
+    prisma,
+
     getUserId: async () => {
       // @todo Use custom method for that
       return userService.queries.getId({

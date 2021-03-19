@@ -1,5 +1,6 @@
 import path from 'path';
 import { makeSchema } from 'nexus';
+import { nexusPrisma } from 'nexus-plugin-prisma';
 
 import { UserTypes } from './Core/Users';
 import { CommonTypes } from './Core/Commons';
@@ -7,7 +8,6 @@ import { ProposalTypes } from './Core/Proposals';
 
 import { LinkType, LinkInputType } from './Shared/Types/Link.type';
 import { DateScalar } from './Shared/Scalars/Date.scalar';
-import { BaseEntity } from './Shared/Interfaces/BaseEntity.interface';
 
 
 const types = [
@@ -17,9 +17,6 @@ const types = [
 
   // Scalars
   DateScalar,
-
-  // Interfaces
-  BaseEntity,
 
   // Shared Types
   LinkType,
@@ -37,5 +34,10 @@ export const schema = makeSchema({
   contextType: {
     module: path.join(__dirname, '../context'),
     export: 'IRequestContext'
-  }
+  },
+  plugins: [
+    nexusPrisma({
+      experimentalCRUD: true
+    })
+  ]
 });

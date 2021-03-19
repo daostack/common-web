@@ -16,13 +16,84 @@ declare global {
     date<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Date";
   }
 }
-
+declare global {
+  interface NexusGenCustomOutputProperties<TypeName extends string> {
+    crud: NexusPrisma<TypeName, 'crud'>
+    model: NexusPrisma<TypeName, 'model'>
+  }
+}
 
 declare global {
   interface NexusGen extends NexusGenTypes {}
 }
 
 export interface NexusGenInputs {
+  BoolFilter: { // input type
+    equals?: boolean | null; // Boolean
+    not?: NexusGenInputs['NestedBoolFilter'] | null; // NestedBoolFilter
+  }
+  CardListRelationFilter: { // input type
+    every?: NexusGenInputs['CardWhereInput'] | null; // CardWhereInput
+    none?: NexusGenInputs['CardWhereInput'] | null; // CardWhereInput
+    some?: NexusGenInputs['CardWhereInput'] | null; // CardWhereInput
+  }
+  CardWhereInput: { // input type
+    AND?: NexusGenInputs['CardWhereInput'][] | null; // [CardWhereInput!]
+    NOT?: NexusGenInputs['CardWhereInput'][] | null; // [CardWhereInput!]
+    OR?: NexusGenInputs['CardWhereInput'][] | null; // [CardWhereInput!]
+    createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    payments?: NexusGenInputs['PaymentListRelationFilter'] | null; // PaymentListRelationFilter
+    subscriptions?: NexusGenInputs['SubscriptionListRelationFilter'] | null; // SubscriptionListRelationFilter
+    updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+    userId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+  }
+  CommonMemberListRelationFilter: { // input type
+    every?: NexusGenInputs['CommonMemberWhereInput'] | null; // CommonMemberWhereInput
+    none?: NexusGenInputs['CommonMemberWhereInput'] | null; // CommonMemberWhereInput
+    some?: NexusGenInputs['CommonMemberWhereInput'] | null; // CommonMemberWhereInput
+  }
+  CommonMemberWhereInput: { // input type
+    AND?: NexusGenInputs['CommonMemberWhereInput'][] | null; // [CommonMemberWhereInput!]
+    NOT?: NexusGenInputs['CommonMemberWhereInput'][] | null; // [CommonMemberWhereInput!]
+    OR?: NexusGenInputs['CommonMemberWhereInput'][] | null; // [CommonMemberWhereInput!]
+    common?: NexusGenInputs['CommonWhereInput'] | null; // CommonWhereInput
+    commonId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    fundingProposals?: NexusGenInputs['FundingProposalListRelationFilter'] | null; // FundingProposalListRelationFilter
+    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    payments?: NexusGenInputs['PaymentListRelationFilter'] | null; // PaymentListRelationFilter
+    roles?: NexusGenInputs['EnumCommonMemberRoleNullableListFilter'] | null; // EnumCommonMemberRoleNullableListFilter
+    subscription?: NexusGenInputs['SubscriptionWhereInput'] | null; // SubscriptionWhereInput
+    updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+    userId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+  }
+  CommonWhereInput: { // input type
+    AND?: NexusGenInputs['CommonWhereInput'][] | null; // [CommonWhereInput!]
+    NOT?: NexusGenInputs['CommonWhereInput'][] | null; // [CommonWhereInput!]
+    OR?: NexusGenInputs['CommonWhereInput'][] | null; // [CommonWhereInput!]
+    balance?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    events?: NexusGenInputs['EventListRelationFilter'] | null; // EventListRelationFilter
+    fundingCooldown?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    fundingMinimumAmount?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    fundingProposals?: NexusGenInputs['FundingProposalListRelationFilter'] | null; // FundingProposalListRelationFilter
+    fundingType?: NexusGenInputs['EnumFundingTypeFilter'] | null; // EnumFundingTypeFilter
+    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    joinProposals?: NexusGenInputs['JoinProposalListRelationFilter'] | null; // JoinProposalListRelationFilter
+    members?: NexusGenInputs['CommonMemberListRelationFilter'] | null; // CommonMemberListRelationFilter
+    name?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    payments?: NexusGenInputs['PaymentListRelationFilter'] | null; // PaymentListRelationFilter
+    raised?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    subscriptions?: NexusGenInputs['SubscriptionListRelationFilter'] | null; // SubscriptionListRelationFilter
+    updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    whitelisted?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
+  }
+  CommonWhereUniqueInput: { // input type
+    id?: string | null; // String
+  }
   CreateCommonInput: { // input type
     fundingCooldown: NexusGenScalars['Date']; // Date!
     fundingMinimumAmount: number; // Int!
@@ -42,14 +113,325 @@ export interface NexusGenInputs {
     firstName: string; // String!
     lastName: string; // String!
   }
+  DateTimeFilter: { // input type
+    equals?: NexusGenScalars['DateTime'] | null; // DateTime
+    gt?: NexusGenScalars['DateTime'] | null; // DateTime
+    gte?: NexusGenScalars['DateTime'] | null; // DateTime
+    in?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
+    lt?: NexusGenScalars['DateTime'] | null; // DateTime
+    lte?: NexusGenScalars['DateTime'] | null; // DateTime
+    not?: NexusGenInputs['NestedDateTimeFilter'] | null; // NestedDateTimeFilter
+    notIn?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
+  }
+  EnumCommonMemberRoleNullableListFilter: { // input type
+    equals?: NexusGenEnums['CommonMemberRole'][] | null; // [CommonMemberRole!]
+    has?: NexusGenEnums['CommonMemberRole'] | null; // CommonMemberRole
+    hasEvery?: NexusGenEnums['CommonMemberRole'][] | null; // [CommonMemberRole!]
+    hasSome?: NexusGenEnums['CommonMemberRole'][] | null; // [CommonMemberRole!]
+    isEmpty?: boolean | null; // Boolean
+  }
+  EnumEventTypeFilter: { // input type
+    equals?: NexusGenEnums['EventType'] | null; // EventType
+    in?: NexusGenEnums['EventType'][] | null; // [EventType!]
+    not?: NexusGenInputs['NestedEnumEventTypeFilter'] | null; // NestedEnumEventTypeFilter
+    notIn?: NexusGenEnums['EventType'][] | null; // [EventType!]
+  }
+  EnumFundingTypeFilter: { // input type
+    equals?: NexusGenEnums['FundingType'] | null; // FundingType
+    in?: NexusGenEnums['FundingType'][] | null; // [FundingType!]
+    not?: NexusGenInputs['NestedEnumFundingTypeFilter'] | null; // NestedEnumFundingTypeFilter
+    notIn?: NexusGenEnums['FundingType'][] | null; // [FundingType!]
+  }
+  EnumProposalPaymentStateFilter: { // input type
+    equals?: NexusGenEnums['ProposalPaymentState'] | null; // ProposalPaymentState
+    in?: NexusGenEnums['ProposalPaymentState'][] | null; // [ProposalPaymentState!]
+    not?: NexusGenInputs['NestedEnumProposalPaymentStateFilter'] | null; // NestedEnumProposalPaymentStateFilter
+    notIn?: NexusGenEnums['ProposalPaymentState'][] | null; // [ProposalPaymentState!]
+  }
+  EnumProposalStateFilter: { // input type
+    equals?: NexusGenEnums['ProposalState'] | null; // ProposalState
+    in?: NexusGenEnums['ProposalState'][] | null; // [ProposalState!]
+    not?: NexusGenInputs['NestedEnumProposalStateFilter'] | null; // NestedEnumProposalStateFilter
+    notIn?: NexusGenEnums['ProposalState'][] | null; // [ProposalState!]
+  }
+  EventListRelationFilter: { // input type
+    every?: NexusGenInputs['EventWhereInput'] | null; // EventWhereInput
+    none?: NexusGenInputs['EventWhereInput'] | null; // EventWhereInput
+    some?: NexusGenInputs['EventWhereInput'] | null; // EventWhereInput
+  }
+  EventWhereInput: { // input type
+    AND?: NexusGenInputs['EventWhereInput'][] | null; // [EventWhereInput!]
+    NOT?: NexusGenInputs['EventWhereInput'][] | null; // [EventWhereInput!]
+    OR?: NexusGenInputs['EventWhereInput'][] | null; // [EventWhereInput!]
+    common?: NexusGenInputs['CommonWhereInput'] | null; // CommonWhereInput
+    commonId?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    payload?: NexusGenInputs['JsonNullableFilter'] | null; // JsonNullableFilter
+    type?: NexusGenInputs['EnumEventTypeFilter'] | null; // EnumEventTypeFilter
+    updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+    userId?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+  }
+  FundingProposalListRelationFilter: { // input type
+    every?: NexusGenInputs['FundingProposalWhereInput'] | null; // FundingProposalWhereInput
+    none?: NexusGenInputs['FundingProposalWhereInput'] | null; // FundingProposalWhereInput
+    some?: NexusGenInputs['FundingProposalWhereInput'] | null; // FundingProposalWhereInput
+  }
+  FundingProposalWhereInput: { // input type
+    AND?: NexusGenInputs['FundingProposalWhereInput'][] | null; // [FundingProposalWhereInput!]
+    NOT?: NexusGenInputs['FundingProposalWhereInput'][] | null; // [FundingProposalWhereInput!]
+    OR?: NexusGenInputs['FundingProposalWhereInput'][] | null; // [FundingProposalWhereInput!]
+    common?: NexusGenInputs['CommonWhereInput'] | null; // CommonWhereInput
+    commonId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    commonMember?: NexusGenInputs['CommonMemberWhereInput'] | null; // CommonMemberWhereInput
+    commonMemberId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    description?: NexusGenInputs['ProposalDescriptionWhereInput'] | null; // ProposalDescriptionWhereInput
+    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+    userId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+  }
+  IntFilter: { // input type
+    equals?: number | null; // Int
+    gt?: number | null; // Int
+    gte?: number | null; // Int
+    in?: number[] | null; // [Int!]
+    lt?: number | null; // Int
+    lte?: number | null; // Int
+    not?: NexusGenInputs['NestedIntFilter'] | null; // NestedIntFilter
+    notIn?: number[] | null; // [Int!]
+  }
+  JoinProposalListRelationFilter: { // input type
+    every?: NexusGenInputs['JoinProposalWhereInput'] | null; // JoinProposalWhereInput
+    none?: NexusGenInputs['JoinProposalWhereInput'] | null; // JoinProposalWhereInput
+    some?: NexusGenInputs['JoinProposalWhereInput'] | null; // JoinProposalWhereInput
+  }
+  JoinProposalWhereInput: { // input type
+    AND?: NexusGenInputs['JoinProposalWhereInput'][] | null; // [JoinProposalWhereInput!]
+    NOT?: NexusGenInputs['JoinProposalWhereInput'][] | null; // [JoinProposalWhereInput!]
+    OR?: NexusGenInputs['JoinProposalWhereInput'][] | null; // [JoinProposalWhereInput!]
+    common?: NexusGenInputs['CommonWhereInput'] | null; // CommonWhereInput
+    commonId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    description?: NexusGenInputs['ProposalDescriptionWhereInput'] | null; // ProposalDescriptionWhereInput
+    funding?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    fundingType?: NexusGenInputs['EnumFundingTypeFilter'] | null; // EnumFundingTypeFilter
+    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    payment?: NexusGenInputs['PaymentWhereInput'] | null; // PaymentWhereInput
+    paymentState?: NexusGenInputs['EnumProposalPaymentStateFilter'] | null; // EnumProposalPaymentStateFilter
+    state?: NexusGenInputs['EnumProposalStateFilter'] | null; // EnumProposalStateFilter
+    subscription?: NexusGenInputs['SubscriptionWhereInput'] | null; // SubscriptionWhereInput
+    subscriptionId?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+    userId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+  }
+  JsonNullableFilter: { // input type
+    equals?: NexusGenScalars['Json'] | null; // Json
+    not?: NexusGenScalars['Json'] | null; // Json
+  }
   LinkInput: { // input type
     title: string; // String!
     url: string; // String!
   }
+  NestedBoolFilter: { // input type
+    equals?: boolean | null; // Boolean
+    not?: NexusGenInputs['NestedBoolFilter'] | null; // NestedBoolFilter
+  }
+  NestedDateTimeFilter: { // input type
+    equals?: NexusGenScalars['DateTime'] | null; // DateTime
+    gt?: NexusGenScalars['DateTime'] | null; // DateTime
+    gte?: NexusGenScalars['DateTime'] | null; // DateTime
+    in?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
+    lt?: NexusGenScalars['DateTime'] | null; // DateTime
+    lte?: NexusGenScalars['DateTime'] | null; // DateTime
+    not?: NexusGenInputs['NestedDateTimeFilter'] | null; // NestedDateTimeFilter
+    notIn?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
+  }
+  NestedEnumEventTypeFilter: { // input type
+    equals?: NexusGenEnums['EventType'] | null; // EventType
+    in?: NexusGenEnums['EventType'][] | null; // [EventType!]
+    not?: NexusGenInputs['NestedEnumEventTypeFilter'] | null; // NestedEnumEventTypeFilter
+    notIn?: NexusGenEnums['EventType'][] | null; // [EventType!]
+  }
+  NestedEnumFundingTypeFilter: { // input type
+    equals?: NexusGenEnums['FundingType'] | null; // FundingType
+    in?: NexusGenEnums['FundingType'][] | null; // [FundingType!]
+    not?: NexusGenInputs['NestedEnumFundingTypeFilter'] | null; // NestedEnumFundingTypeFilter
+    notIn?: NexusGenEnums['FundingType'][] | null; // [FundingType!]
+  }
+  NestedEnumProposalPaymentStateFilter: { // input type
+    equals?: NexusGenEnums['ProposalPaymentState'] | null; // ProposalPaymentState
+    in?: NexusGenEnums['ProposalPaymentState'][] | null; // [ProposalPaymentState!]
+    not?: NexusGenInputs['NestedEnumProposalPaymentStateFilter'] | null; // NestedEnumProposalPaymentStateFilter
+    notIn?: NexusGenEnums['ProposalPaymentState'][] | null; // [ProposalPaymentState!]
+  }
+  NestedEnumProposalStateFilter: { // input type
+    equals?: NexusGenEnums['ProposalState'] | null; // ProposalState
+    in?: NexusGenEnums['ProposalState'][] | null; // [ProposalState!]
+    not?: NexusGenInputs['NestedEnumProposalStateFilter'] | null; // NestedEnumProposalStateFilter
+    notIn?: NexusGenEnums['ProposalState'][] | null; // [ProposalState!]
+  }
+  NestedIntFilter: { // input type
+    equals?: number | null; // Int
+    gt?: number | null; // Int
+    gte?: number | null; // Int
+    in?: number[] | null; // [Int!]
+    lt?: number | null; // Int
+    lte?: number | null; // Int
+    not?: NexusGenInputs['NestedIntFilter'] | null; // NestedIntFilter
+    notIn?: number[] | null; // [Int!]
+  }
+  NestedStringFilter: { // input type
+    contains?: string | null; // String
+    endsWith?: string | null; // String
+    equals?: string | null; // String
+    gt?: string | null; // String
+    gte?: string | null; // String
+    in?: string[] | null; // [String!]
+    lt?: string | null; // String
+    lte?: string | null; // String
+    not?: NexusGenInputs['NestedStringFilter'] | null; // NestedStringFilter
+    notIn?: string[] | null; // [String!]
+    startsWith?: string | null; // String
+  }
+  NestedStringNullableFilter: { // input type
+    contains?: string | null; // String
+    endsWith?: string | null; // String
+    equals?: string | null; // String
+    gt?: string | null; // String
+    gte?: string | null; // String
+    in?: string[] | null; // [String!]
+    lt?: string | null; // String
+    lte?: string | null; // String
+    not?: NexusGenInputs['NestedStringNullableFilter'] | null; // NestedStringNullableFilter
+    notIn?: string[] | null; // [String!]
+    startsWith?: string | null; // String
+  }
+  PaymentListRelationFilter: { // input type
+    every?: NexusGenInputs['PaymentWhereInput'] | null; // PaymentWhereInput
+    none?: NexusGenInputs['PaymentWhereInput'] | null; // PaymentWhereInput
+    some?: NexusGenInputs['PaymentWhereInput'] | null; // PaymentWhereInput
+  }
+  PaymentWhereInput: { // input type
+    AND?: NexusGenInputs['PaymentWhereInput'][] | null; // [PaymentWhereInput!]
+    NOT?: NexusGenInputs['PaymentWhereInput'][] | null; // [PaymentWhereInput!]
+    OR?: NexusGenInputs['PaymentWhereInput'][] | null; // [PaymentWhereInput!]
+    card?: NexusGenInputs['CardWhereInput'] | null; // CardWhereInput
+    cardId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    common?: NexusGenInputs['CommonWhereInput'] | null; // CommonWhereInput
+    commonId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    commonMember?: NexusGenInputs['CommonMemberWhereInput'] | null; // CommonMemberWhereInput
+    commonMemberId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    proposal?: NexusGenInputs['JoinProposalWhereInput'] | null; // JoinProposalWhereInput
+    proposalId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    subscription?: NexusGenInputs['SubscriptionWhereInput'] | null; // SubscriptionWhereInput
+    subscriptionId?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+    userId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+  }
+  ProposalDescriptionWhereInput: { // input type
+    AND?: NexusGenInputs['ProposalDescriptionWhereInput'][] | null; // [ProposalDescriptionWhereInput!]
+    NOT?: NexusGenInputs['ProposalDescriptionWhereInput'][] | null; // [ProposalDescriptionWhereInput!]
+    OR?: NexusGenInputs['ProposalDescriptionWhereInput'][] | null; // [ProposalDescriptionWhereInput!]
+    createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    description?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    files?: NexusGenInputs['JsonNullableFilter'] | null; // JsonNullableFilter
+    funding?: NexusGenInputs['FundingProposalWhereInput'] | null; // FundingProposalWhereInput
+    fundingId?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    images?: NexusGenInputs['JsonNullableFilter'] | null; // JsonNullableFilter
+    join?: NexusGenInputs['JoinProposalWhereInput'] | null; // JoinProposalWhereInput
+    joinId?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    link?: NexusGenInputs['JsonNullableFilter'] | null; // JsonNullableFilter
+    title?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+  }
+  StringFilter: { // input type
+    contains?: string | null; // String
+    endsWith?: string | null; // String
+    equals?: string | null; // String
+    gt?: string | null; // String
+    gte?: string | null; // String
+    in?: string[] | null; // [String!]
+    lt?: string | null; // String
+    lte?: string | null; // String
+    mode?: NexusGenEnums['QueryMode'] | null; // QueryMode
+    not?: NexusGenInputs['NestedStringFilter'] | null; // NestedStringFilter
+    notIn?: string[] | null; // [String!]
+    startsWith?: string | null; // String
+  }
+  StringNullableFilter: { // input type
+    contains?: string | null; // String
+    endsWith?: string | null; // String
+    equals?: string | null; // String
+    gt?: string | null; // String
+    gte?: string | null; // String
+    in?: string[] | null; // [String!]
+    lt?: string | null; // String
+    lte?: string | null; // String
+    mode?: NexusGenEnums['QueryMode'] | null; // QueryMode
+    not?: NexusGenInputs['NestedStringNullableFilter'] | null; // NestedStringNullableFilter
+    notIn?: string[] | null; // [String!]
+    startsWith?: string | null; // String
+  }
+  SubscriptionListRelationFilter: { // input type
+    every?: NexusGenInputs['SubscriptionWhereInput'] | null; // SubscriptionWhereInput
+    none?: NexusGenInputs['SubscriptionWhereInput'] | null; // SubscriptionWhereInput
+    some?: NexusGenInputs['SubscriptionWhereInput'] | null; // SubscriptionWhereInput
+  }
+  SubscriptionWhereInput: { // input type
+    AND?: NexusGenInputs['SubscriptionWhereInput'][] | null; // [SubscriptionWhereInput!]
+    NOT?: NexusGenInputs['SubscriptionWhereInput'][] | null; // [SubscriptionWhereInput!]
+    OR?: NexusGenInputs['SubscriptionWhereInput'][] | null; // [SubscriptionWhereInput!]
+    card?: NexusGenInputs['CardWhereInput'] | null; // CardWhereInput
+    cardId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    common?: NexusGenInputs['CommonWhereInput'] | null; // CommonWhereInput
+    commonId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    commonMember?: NexusGenInputs['CommonMemberWhereInput'] | null; // CommonMemberWhereInput
+    commonMemberId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    payments?: NexusGenInputs['PaymentListRelationFilter'] | null; // PaymentListRelationFilter
+    proposal?: NexusGenInputs['JoinProposalListRelationFilter'] | null; // JoinProposalListRelationFilter
+    updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+    userId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+  }
+  UserWhereInput: { // input type
+    AND?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
+    NOT?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
+    OR?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
+    authId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    cards?: NexusGenInputs['CardListRelationFilter'] | null; // CardListRelationFilter
+    commonLinks?: NexusGenInputs['CommonMemberListRelationFilter'] | null; // CommonMemberListRelationFilter
+    createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    email?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    emailVerified?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
+    events?: NexusGenInputs['EventListRelationFilter'] | null; // EventListRelationFilter
+    firstName?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    fundingProposals?: NexusGenInputs['FundingProposalListRelationFilter'] | null; // FundingProposalListRelationFilter
+    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    joinProposals?: NexusGenInputs['JoinProposalListRelationFilter'] | null; // JoinProposalListRelationFilter
+    lastName?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    payments?: NexusGenInputs['PaymentListRelationFilter'] | null; // PaymentListRelationFilter
+    subscriptions?: NexusGenInputs['SubscriptionListRelationFilter'] | null; // SubscriptionListRelationFilter
+    updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+  }
 }
 
 export interface NexusGenEnums {
+  CommonMemberRole: "Founder"
+  EventType: "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "JoinRequestCreated" | "UserCreated"
   FundingType: "Monthly" | "OneTime"
+  ProposalPaymentState: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
+  ProposalState: "Accepted" | "Countdown" | "Rejected"
+  QueryMode: "default" | "insensitive"
 }
 
 export interface NexusGenScalars {
@@ -59,6 +441,8 @@ export interface NexusGenScalars {
   Boolean: boolean
   ID: string
   Date: any
+  DateTime: any
+  Json: any
 }
 
 export interface NexusGenObjects {
@@ -91,13 +475,12 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  BaseEntity: NexusGenRootTypes['JoinProposal'];
 }
 
 export interface NexusGenUnions {
 }
 
-export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects
+export type NexusGenRootTypes = NexusGenObjects
 
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
@@ -124,6 +507,8 @@ export interface NexusGenFieldTypes {
     createUser: NexusGenRootTypes['User']; // User!
   }
   Query: { // field return type
+    common: NexusGenRootTypes['Common'] | null; // Common
+    commons: NexusGenRootTypes['Common'][]; // [Common!]!
     generateUserAuthToken: string; // String!
   }
   User: { // field return type
@@ -133,11 +518,6 @@ export interface NexusGenFieldTypes {
     firstName: string; // String!
     id: string; // ID!
     lastName: string; // String!
-    updatedAt: NexusGenScalars['Date']; // Date!
-  }
-  BaseEntity: { // field return type
-    createdAt: NexusGenScalars['Date']; // Date!
-    id: string; // ID!
     updatedAt: NexusGenScalars['Date']; // Date!
   }
 }
@@ -165,6 +545,8 @@ export interface NexusGenFieldTypeNames {
     createUser: 'User'
   }
   Query: { // field return type name
+    common: 'Common'
+    commons: 'Common'
     generateUserAuthToken: 'String'
   }
   User: { // field return type name
@@ -174,11 +556,6 @@ export interface NexusGenFieldTypeNames {
     firstName: 'String'
     id: 'ID'
     lastName: 'String'
-    updatedAt: 'Date'
-  }
-  BaseEntity: { // field return type name
-    createdAt: 'Date'
-    id: 'ID'
     updatedAt: 'Date'
   }
 }
@@ -196,6 +573,16 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    common: { // args
+      where: NexusGenInputs['CommonWhereUniqueInput']; // CommonWhereUniqueInput!
+    }
+    commons: { // args
+      after?: NexusGenInputs['CommonWhereUniqueInput'] | null; // CommonWhereUniqueInput
+      before?: NexusGenInputs['CommonWhereUniqueInput'] | null; // CommonWhereUniqueInput
+      first?: number | null; // Int
+      last?: number | null; // Int
+      where?: NexusGenInputs['CommonWhereInput'] | null; // CommonWhereInput
+    }
     generateUserAuthToken: { // args
       authId: string; // String!
     }
@@ -203,11 +590,9 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  BaseEntity: "JoinProposal"
 }
 
 export interface NexusGenTypeInterfaces {
-  JoinProposal: "BaseEntity"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
@@ -216,7 +601,7 @@ export type NexusGenInputNames = keyof NexusGenInputs;
 
 export type NexusGenEnumNames = keyof NexusGenEnums;
 
-export type NexusGenInterfaceNames = keyof NexusGenInterfaces;
+export type NexusGenInterfaceNames = never;
 
 export type NexusGenScalarNames = keyof NexusGenScalars;
 
@@ -224,7 +609,7 @@ export type NexusGenUnionNames = never;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = "BaseEntity";
+export type NexusGenAbstractsUsingStrategyResolveType = never;
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {

@@ -21,7 +21,7 @@
     "typescript": "^4.2.3"
   },
   "dependencies": {
-    "@prisma/client": "^2.18.0",
+    "@prisma/client": "^2.19.0",
     "apollo-server": "^2.21.1",
     "apollo-server-express": "^2.21.1",
     "axios": "^0.21.1",
@@ -31,6 +31,7 @@
     "firebase-admin": "^9.5.0",
     "graphql": "^15.5.0",
     "nexus": "^1.0.0",
+    "nexus-plugin-prisma": "^0.32.0",
     "request-promise": "^4.2.6",
     "tsconfig-paths": "^3.9.0",
     "zod": "^3.0.0-alpha.4"
