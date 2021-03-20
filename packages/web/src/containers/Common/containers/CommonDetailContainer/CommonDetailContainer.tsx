@@ -2,7 +2,11 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { formatPrice } from "../../../../shared/utils";
-import { AboutTabComponent, PreviewInformationList } from "../../components/CommonDetailContainer";
+import {
+  AboutTabComponent,
+  PreviewInformationList,
+  DiscussionsComponent,
+} from "../../components/CommonDetailContainer";
 import { getCommonDetail } from "../../store/actions";
 import { selectCommonDetail, selectProposals, selectDiscussions } from "../../store/selectors";
 import "./index.scss";
@@ -31,7 +35,7 @@ const tabs = [
 
 export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
-  const [tab, setTab] = useState("about");
+  const [tab, setTab] = useState("discussions");
   const common = useSelector(selectCommonDetail);
   const proposals = useSelector(selectProposals);
   const discussions = useSelector(selectDiscussions);
@@ -114,7 +118,10 @@ export default function CommonDetail() {
         <div className="main-content-container">
           <div className="tab-title">{tab}</div>
           <div className="inner-main-content-wrapper">
-            <div className="tab-content-wrapper">{tab === "about" && <AboutTabComponent common={common} />}</div>
+            <div className="tab-content-wrapper">
+              {tab === "about" && <AboutTabComponent common={common} />}
+              {tab === "discussions" && <DiscussionsComponent />}
+            </div>
             <div className="sidebar-wrapper">
               <PreviewInformationList
                 title="Latest Discussions"

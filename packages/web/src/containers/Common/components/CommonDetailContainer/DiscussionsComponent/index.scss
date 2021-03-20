@@ -1,0 +1,126 @@
+.discussions-component-wrapper {
+  .discussion-item-wrapper {
+    padding: 40px;
+    border-radius: 14px;
+    box-shadow: 0 3px 8px 0 #001a3614;
+    background-color: #ffffff;
+    margin-bottom: 24px;
+    .discussion-top-bar {
+      display: flex;
+      margin-bottom: 24px;
+      .img-wrapper {
+        margin-right: 16px;
+        img {
+          border-radius: 50%;
+        }
+      }
+      .creator-information {
+        .name {
+          font-family: NunitoSans;
+          font-size: 16px;
+          font-weight: normal;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: 1.5;
+          letter-spacing: normal;
+          color: #001a36;
+        }
+        .days-ago {
+          font-family: NunitoSans;
+          font-size: 14px;
+          font-weight: normal;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: 1.43;
+          letter-spacing: normal;
+          color: #979bba;
+        }
+      }
+    }
+    .discussion-content {
+      .title {
+        font-family: NunitoSans;
+        font-size: 18px;
+        font-weight: bold;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.22;
+        letter-spacing: normal;
+        color: #7786ff;
+        margin-bottom: 16px;
+      }
+      .description {
+        font-family: NunitoSans;
+        font-size: 16px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.5;
+        letter-spacing: normal;
+        color: #001a36;
+        margin-bottom: 16px;
+      }
+      .read-more {
+        font-family: NunitoSans;
+        font-size: 16px;
+        font-weight: bold;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.5;
+        letter-spacing: normal;
+        color: #7786ff;
+        cursor: pointer;
+        margin-bottom: 16px;
+      }
+      .line {
+        margin: 0 -40px;
+        width: auto;
+      }
+    }
+    .bottom-content {
+      margin-top: 20px;
+      margin-bottom: -15px;
+      display: flex;
+      justify-content: space-between;
+      .discussion-count {
+        display: flex;
+        .count {
+          margin-left: 8px;
+          font-family: NunitoSans;
+          font-size: 16px;
+          font-weight: bold;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: 1.5;
+          letter-spacing: normal;
+          color: #979bba;
+          display: inline-block;
+        }
+      }
+      .view-all-discussions {
+        font-family: NunitoSans;
+        font-size: 16px;
+        font-weight: bold;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.5;
+        letter-spacing: normal;
+        text-align: right;
+        color: #7786ff;
+        position: relative;
+        padding-right: 15px;
+        &::after {
+          background-image: url("/icons/right-arrow-hover.svg");
+          display: inline-block;
+          content: " ";
+          background-size: 16px 16px;
+          height: 16px;
+          width: 16px;
+          top: 5px;
+          position: absolute;
+          right: -4px;
+        }
+      }
+    }
+  }
+}
