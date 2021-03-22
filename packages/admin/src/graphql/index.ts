@@ -146,7 +146,10 @@ export enum EventType {
   SubscriptionPaymentStuck = 'subscriptionPaymentStuck',
   SubscriptionCanceledByUser = 'subscriptionCanceledByUser',
   SubscriptionCanceledByPaymentFailure = 'subscriptionCanceledByPaymentFailure',
-  MembershipRevoked = 'membershipRevoked'
+  MembershipRevoked = 'membershipRevoked',
+  DiscussionMessageReported = 'discussionMessageReported',
+  ProposalReported = 'proposalReported',
+  DiscussionReported = 'discussionReported'
 }
 
 export type Event = {
@@ -286,6 +289,18 @@ export type PaymentAmount = {
   __typename?: 'PaymentAmount';
   currency?: Maybe<PaymentCurrency>;
   amount?: Maybe<Scalars['Int']>;
+};
+
+export type Balance = {
+  __typename?: 'Balance';
+  available?: Maybe<Amount>;
+  unsettled?: Maybe<Amount>;
+};
+
+export type Amount = {
+  __typename?: 'Amount';
+  amount?: Maybe<Scalars['String']>;
+  currency?: Maybe<Scalars['String']>;
 };
 
 export enum ProposalType {
@@ -497,6 +512,7 @@ export type Query = {
   payouts?: Maybe<Array<Maybe<Payout>>>;
   payment?: Maybe<Payment>;
   payments?: Maybe<Array<Maybe<Payment>>>;
+  balance?: Maybe<Balance>;
   proposal?: Maybe<Proposal>;
   proposals?: Maybe<Array<Maybe<Proposal>>>;
   statistics?: Maybe<Statistics>;
@@ -584,6 +600,7 @@ export type Mutation = {
   refreshCommonMembers?: Maybe<Scalars['Int']>;
   executePayouts?: Maybe<Payout>;
   updatePaymentData?: Maybe<Scalars['Boolean']>;
+  updatePaymentsCommonId?: Maybe<Scalars['Boolean']>;
   createIntention?: Maybe<Intention>;
 };
 
@@ -639,6 +656,56 @@ export type GetLatestEventsQuery = (
       & Pick<User, 'id' | 'firstName' | 'lastName' | 'photoURL'>
     )> }
   )>>> }
+);
+
+export type GetPaymentsQueryVariables = Exact<{
+  page?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetPaymentsQuery = (
+  { __typename?: 'Query' }
+  & { payments?: Maybe<Array<Maybe<(
+    { __typename?: 'Payment' }
+    & Pick<Payment, 'id' | 'type' | 'status'>
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstName' | 'lastName' | 'photoURL' | 'email'>
+    )>, amount: (
+      { __typename?: 'PaymentAmount' }
+      & Pick<PaymentAmount, 'amount' | 'currency'>
+    ) }
+  )>>> }
+);
+
+export type GetPaymentDetailsQueryVariables = Exact<{
+  paymentId: Scalars['ID'];
+}>;
+
+
+export type GetPaymentDetailsQuery = (
+  { __typename?: 'Query' }
+  & { payment?: Maybe<(
+    { __typename?: 'Payment' }
+    & Pick<Payment, 'type'>
+    & { common?: Maybe<(
+      { __typename?: 'Common' }
+      & Pick<Common, 'id' | 'name'>
+    )>, amount: (
+      { __typename?: 'PaymentAmount' }
+      & Pick<PaymentAmount, 'amount' | 'currency'>
+    ), fees?: Maybe<(
+      { __typename?: 'PaymentFees' }
+      & Pick<PaymentFees, 'amount' | 'currency'>
+    )>, card?: Maybe<(
+      { __typename?: 'Card' }
+      & Pick<Card, 'id'>
+      & { metadata?: Maybe<(
+        { __typename?: 'CardMetadata' }
+        & Pick<CardMetadata, 'digits' | 'network'>
+      )> }
+    )> }
+  )> }
 );
 
 export type GetUserPermissionsQueryVariables = Exact<{
@@ -749,9 +816,27 @@ export type CreateIntentionMutation = (
   )> }
 );
 
-export type GetPaymentsHomeScreenDataQueryVariables = Exact<{
-  page?: Maybe<Scalars['Int']>;
-}>;
+export type GetFinancialsDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetFinancialsDataQuery = (
+  { __typename?: 'Query' }
+  & { balance?: Maybe<(
+    { __typename?: 'Balance' }
+    & { available?: Maybe<(
+      { __typename?: 'Amount' }
+      & Pick<Amount, 'amount' | 'currency'>
+    )>, unsettled?: Maybe<(
+      { __typename?: 'Amount' }
+      & Pick<Amount, 'amount' | 'currency'>
+    )> }
+  )>, hangingPayments?: Maybe<Array<Maybe<(
+    { __typename?: 'Payment' }
+    & Pick<Payment, 'id' | 'createdAt' | 'updatedAt' | 'status'>
+  )>>> }
+);
+
+export type GetPaymentsHomeScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetPaymentsHomeScreenDataQuery = (
@@ -759,47 +844,7 @@ export type GetPaymentsHomeScreenDataQuery = (
   & { hangingPayments?: Maybe<Array<Maybe<(
     { __typename?: 'Payment' }
     & Pick<Payment, 'id' | 'createdAt' | 'updatedAt' | 'status'>
-  )>>>, payments?: Maybe<Array<Maybe<(
-    { __typename?: 'Payment' }
-    & Pick<Payment, 'id' | 'type' | 'status'>
-    & { user?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstName' | 'lastName' | 'photoURL' | 'email'>
-    )>, amount: (
-      { __typename?: 'PaymentAmount' }
-      & Pick<PaymentAmount, 'amount' | 'currency'>
-    ) }
   )>>> }
-);
-
-export type GetPaymentDetailsQueryVariables = Exact<{
-  paymentId: Scalars['ID'];
-}>;
-
-
-export type GetPaymentDetailsQuery = (
-  { __typename?: 'Query' }
-  & { payment?: Maybe<(
-    { __typename?: 'Payment' }
-    & Pick<Payment, 'type'>
-    & { common?: Maybe<(
-      { __typename?: 'Common' }
-      & Pick<Common, 'id' | 'name'>
-    )>, amount: (
-      { __typename?: 'PaymentAmount' }
-      & Pick<PaymentAmount, 'amount' | 'currency'>
-    ), fees?: Maybe<(
-      { __typename?: 'PaymentFees' }
-      & Pick<PaymentFees, 'amount' | 'currency'>
-    )>, card?: Maybe<(
-      { __typename?: 'Card' }
-      & Pick<Card, 'id'>
-      & { metadata?: Maybe<(
-        { __typename?: 'CardMetadata' }
-        & Pick<CardMetadata, 'digits' | 'network'>
-      )> }
-    )> }
-  )> }
 );
 
 export type UpdatePaymentDataMutationVariables = Exact<{
@@ -1100,6 +1145,104 @@ export function useGetLatestEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetLatestEventsQueryHookResult = ReturnType<typeof useGetLatestEventsQuery>;
 export type GetLatestEventsLazyQueryHookResult = ReturnType<typeof useGetLatestEventsLazyQuery>;
 export type GetLatestEventsQueryResult = Apollo.QueryResult<GetLatestEventsQuery, GetLatestEventsQueryVariables>;
+export const GetPaymentsDocument = gql`
+    query GetPayments($page: Int = 1) {
+  payments: payments(page: $page) {
+    id
+    type
+    status
+    user {
+      id
+      firstName
+      lastName
+      photoURL
+      email
+    }
+    amount {
+      amount
+      currency
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPaymentsQuery__
+ *
+ * To run a query within a React component, call `useGetPaymentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPaymentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPaymentsQuery({
+ *   variables: {
+ *      page: // value for 'page'
+ *   },
+ * });
+ */
+export function useGetPaymentsQuery(baseOptions?: Apollo.QueryHookOptions<GetPaymentsQuery, GetPaymentsQueryVariables>) {
+        return Apollo.useQuery<GetPaymentsQuery, GetPaymentsQueryVariables>(GetPaymentsDocument, baseOptions);
+      }
+export function useGetPaymentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPaymentsQuery, GetPaymentsQueryVariables>) {
+          return Apollo.useLazyQuery<GetPaymentsQuery, GetPaymentsQueryVariables>(GetPaymentsDocument, baseOptions);
+        }
+export type GetPaymentsQueryHookResult = ReturnType<typeof useGetPaymentsQuery>;
+export type GetPaymentsLazyQueryHookResult = ReturnType<typeof useGetPaymentsLazyQuery>;
+export type GetPaymentsQueryResult = Apollo.QueryResult<GetPaymentsQuery, GetPaymentsQueryVariables>;
+export const GetPaymentDetailsDocument = gql`
+    query GetPaymentDetails($paymentId: ID!) {
+  payment(id: $paymentId) {
+    type
+    common {
+      id
+      name
+    }
+    amount {
+      amount
+      currency
+    }
+    fees {
+      amount
+      currency
+    }
+    card {
+      id
+      metadata {
+        digits
+        network
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPaymentDetailsQuery__
+ *
+ * To run a query within a React component, call `useGetPaymentDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPaymentDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPaymentDetailsQuery({
+ *   variables: {
+ *      paymentId: // value for 'paymentId'
+ *   },
+ * });
+ */
+export function useGetPaymentDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>) {
+        return Apollo.useQuery<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>(GetPaymentDetailsDocument, baseOptions);
+      }
+export function useGetPaymentDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>) {
+          return Apollo.useLazyQuery<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>(GetPaymentDetailsDocument, baseOptions);
+        }
+export type GetPaymentDetailsQueryHookResult = ReturnType<typeof useGetPaymentDetailsQuery>;
+export type GetPaymentDetailsLazyQueryHookResult = ReturnType<typeof useGetPaymentDetailsLazyQuery>;
+export type GetPaymentDetailsQueryResult = Apollo.QueryResult<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>;
 export const GetUserPermissionsDocument = gql`
     query getUserPermissions($userId: ID!) {
   user(id: $userId) {
@@ -1352,29 +1495,58 @@ export function useCreateIntentionMutation(baseOptions?: Apollo.MutationHookOpti
 export type CreateIntentionMutationHookResult = ReturnType<typeof useCreateIntentionMutation>;
 export type CreateIntentionMutationResult = Apollo.MutationResult<CreateIntentionMutation>;
 export type CreateIntentionMutationOptions = Apollo.BaseMutationOptions<CreateIntentionMutation, CreateIntentionMutationVariables>;
-export const GetPaymentsHomeScreenDataDocument = gql`
-    query GetPaymentsHomeScreenData($page: Int = 1) {
+export const GetFinancialsDataDocument = gql`
+    query GetFinancialsData {
+  balance {
+    available {
+      amount
+      currency
+    }
+    unsettled {
+      amount
+      currency
+    }
+  }
   hangingPayments: payments(hanging: true) {
     id
     createdAt
     updatedAt
     status
   }
-  payments: payments(page: $page) {
+}
+    `;
+
+/**
+ * __useGetFinancialsDataQuery__
+ *
+ * To run a query within a React component, call `useGetFinancialsDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFinancialsDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFinancialsDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetFinancialsDataQuery(baseOptions?: Apollo.QueryHookOptions<GetFinancialsDataQuery, GetFinancialsDataQueryVariables>) {
+        return Apollo.useQuery<GetFinancialsDataQuery, GetFinancialsDataQueryVariables>(GetFinancialsDataDocument, baseOptions);
+      }
+export function useGetFinancialsDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetFinancialsDataQuery, GetFinancialsDataQueryVariables>) {
+          return Apollo.useLazyQuery<GetFinancialsDataQuery, GetFinancialsDataQueryVariables>(GetFinancialsDataDocument, baseOptions);
+        }
+export type GetFinancialsDataQueryHookResult = ReturnType<typeof useGetFinancialsDataQuery>;
+export type GetFinancialsDataLazyQueryHookResult = ReturnType<typeof useGetFinancialsDataLazyQuery>;
+export type GetFinancialsDataQueryResult = Apollo.QueryResult<GetFinancialsDataQuery, GetFinancialsDataQueryVariables>;
+export const GetPaymentsHomeScreenDataDocument = gql`
+    query GetPaymentsHomeScreenData {
+  hangingPayments: payments(hanging: true) {
     id
-    type
+    createdAt
+    updatedAt
     status
-    user {
-      id
-      firstName
-      lastName
-      photoURL
-      email
-    }
-    amount {
-      amount
-      currency
-    }
   }
 }
     `;
@@ -1391,7 +1563,6 @@ export const GetPaymentsHomeScreenDataDocument = gql`
  * @example
  * const { data, loading, error } = useGetPaymentsHomeScreenDataQuery({
  *   variables: {
- *      page: // value for 'page'
  *   },
  * });
  */
@@ -1404,58 +1575,6 @@ export function useGetPaymentsHomeScreenDataLazyQuery(baseOptions?: Apollo.LazyQ
 export type GetPaymentsHomeScreenDataQueryHookResult = ReturnType<typeof useGetPaymentsHomeScreenDataQuery>;
 export type GetPaymentsHomeScreenDataLazyQueryHookResult = ReturnType<typeof useGetPaymentsHomeScreenDataLazyQuery>;
 export type GetPaymentsHomeScreenDataQueryResult = Apollo.QueryResult<GetPaymentsHomeScreenDataQuery, GetPaymentsHomeScreenDataQueryVariables>;
-export const GetPaymentDetailsDocument = gql`
-    query GetPaymentDetails($paymentId: ID!) {
-  payment(id: $paymentId) {
-    type
-    common {
-      id
-      name
-    }
-    amount {
-      amount
-      currency
-    }
-    fees {
-      amount
-      currency
-    }
-    card {
-      id
-      metadata {
-        digits
-        network
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useGetPaymentDetailsQuery__
- *
- * To run a query within a React component, call `useGetPaymentDetailsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPaymentDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetPaymentDetailsQuery({
- *   variables: {
- *      paymentId: // value for 'paymentId'
- *   },
- * });
- */
-export function useGetPaymentDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>) {
-        return Apollo.useQuery<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>(GetPaymentDetailsDocument, baseOptions);
-      }
-export function useGetPaymentDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>) {
-          return Apollo.useLazyQuery<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>(GetPaymentDetailsDocument, baseOptions);
-        }
-export type GetPaymentDetailsQueryHookResult = ReturnType<typeof useGetPaymentDetailsQuery>;
-export type GetPaymentDetailsLazyQueryHookResult = ReturnType<typeof useGetPaymentDetailsLazyQuery>;
-export type GetPaymentDetailsQueryResult = Apollo.QueryResult<GetPaymentDetailsQuery, GetPaymentDetailsQueryVariables>;
 export const UpdatePaymentDataDocument = gql`
     mutation UpdatePaymentData($paymentId: ID!) {
   updatePaymentData(id: $paymentId)
