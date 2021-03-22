@@ -122,7 +122,7 @@ const PayoutsPage: NextPage = () => {
 
   const onCreateBatchPayout = () => {
     router.push({
-      pathname: '/payouts/create/batch',
+      pathname: '/financials/payouts/create/batch',
       query: {
         selectedProposals
       }
