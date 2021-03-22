@@ -4,6 +4,7 @@ import { ExpressContext } from 'apollo-server-express';
 
 import { prisma } from '@toolkits';
 import { userService } from '@services';
+import { Express } from 'express';
 
 export interface IRequestContext {
   /**
@@ -28,10 +29,22 @@ export interface IRequestContext {
    * The prisma client
    */
   prisma: PrismaClient;
+
+  /**
+   * The express request object
+   */
+  req: Express.Request;
+
+  /**
+   * The express response object
+   */
+  res: Express.Response;
 }
 
-export const createRequestContext = ({ req }: ExpressContext): IRequestContext => {
+export const createRequestContext = ({ req, res }: ExpressContext): IRequestContext => {
   return {
+    req,
+    res,
     prisma,
 
     getUserId: async () => {

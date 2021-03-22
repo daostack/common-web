@@ -3,15 +3,18 @@ import { makeSchema } from 'nexus';
 import { nexusPrisma } from 'nexus-plugin-prisma';
 
 import { UserTypes } from './Core/Users';
+import { CardTypes } from './Core/Cards';
 import { CommonTypes } from './Core/Commons';
 import { ProposalTypes } from './Core/Proposals';
 
-import { LinkType, LinkInputType } from './Shared/Types/Link.type';
 import { DateScalar } from './Shared/Scalars/Date.scalar';
+import { LinkType, LinkInputType } from './Shared/Types/Link.type';
+import { BillingDetailsInput } from './Shared/Inputs/BillingDetails.input';
 
 
 const types = [
   UserTypes,
+  CardTypes,
   CommonTypes,
   ProposalTypes,
 
@@ -22,7 +25,8 @@ const types = [
   LinkType,
 
   // Shared Input Types
-  LinkInputType
+  LinkInputType,
+  BillingDetailsInput
 ];
 
 export const schema = makeSchema({

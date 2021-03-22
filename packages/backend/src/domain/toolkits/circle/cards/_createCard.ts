@@ -1,5 +1,5 @@
 import { $circleClient } from '../client';
-import { ICircleBillingDetails, ICircleMetadata } from '../types';
+import { ICircleBillingDetails, ICircleMetadata, CircleCvvCheck } from '../types';
 
 export interface ICircleCreateCardPayload {
   /**
@@ -68,7 +68,9 @@ export interface ICircleCreateCardResponse {
   }
 }
 
-export const createCircleCard = async (request: ICircleCreateCardPayload): Promise<ICircleCreateCardResponse> => {
+export const _createCircleCard = async (request: ICircleCreateCardPayload): Promise<ICircleCreateCardResponse> => {
+  console.log(request);
+
   const response = await $circleClient.post<ICircleCreateCardResponse>('/cards', request);
 
   return response.data;

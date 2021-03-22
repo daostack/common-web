@@ -28,6 +28,15 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  BillingDetailsInput: { // input type
+    city: string; // String!
+    country: string; // String!
+    district?: string | null; // String
+    line1: string; // String!
+    line2?: string | null; // String
+    name: string; // String!
+    postalCode: string; // String!
+  }
   BoolFilter: { // input type
     equals?: boolean | null; // Boolean
     not?: NexusGenInputs['NestedBoolFilter'] | null; // NestedBoolFilter
@@ -93,6 +102,13 @@ export interface NexusGenInputs {
   }
   CommonWhereUniqueInput: { // input type
     id?: string | null; // String
+  }
+  CreateCardInput: { // input type
+    billingDetails: NexusGenInputs['BillingDetailsInput']; // BillingDetailsInput!
+    encryptedData: string; // String!
+    expMonth: number; // Int!
+    expYear: number; // Int!
+    keyId: string; // String!
   }
   CreateCommonInput: { // input type
     fundingCooldown: NexusGenScalars['Date']; // Date!
@@ -446,6 +462,11 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Card: { // root type
+    createdAt: NexusGenScalars['Date']; // Date!
+    id: string; // ID!
+    updatedAt: NexusGenScalars['Date']; // Date!
+  }
   Common: { // root type
     createdAt: NexusGenScalars['Date']; // Date!
     id: string; // ID!
@@ -485,6 +506,11 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  Card: { // field return type
+    createdAt: NexusGenScalars['Date']; // Date!
+    id: string; // ID!
+    updatedAt: NexusGenScalars['Date']; // Date!
+  }
   Common: { // field return type
     createdAt: NexusGenScalars['Date']; // Date!
     id: string; // ID!
@@ -502,6 +528,7 @@ export interface NexusGenFieldTypes {
     url: string; // String!
   }
   Mutation: { // field return type
+    createCard: NexusGenRootTypes['Card']; // Card!
     createCommon: NexusGenRootTypes['Common']; // Common!
     createJoinProposal: NexusGenRootTypes['JoinProposal']; // JoinProposal!
     createUser: NexusGenRootTypes['User']; // User!
@@ -523,6 +550,11 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  Card: { // field return type name
+    createdAt: 'Date'
+    id: 'ID'
+    updatedAt: 'Date'
+  }
   Common: { // field return type name
     createdAt: 'Date'
     id: 'ID'
@@ -540,6 +572,7 @@ export interface NexusGenFieldTypeNames {
     url: 'String'
   }
   Mutation: { // field return type name
+    createCard: 'Card'
     createCommon: 'Common'
     createJoinProposal: 'JoinProposal'
     createUser: 'User'
@@ -562,6 +595,9 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    createCard: { // args
+      input: NexusGenInputs['CreateCardInput']; // CreateCardInput!
+    }
     createCommon: { // args
       input: NexusGenInputs['CreateCommonInput']; // CreateCommonInput!
     }

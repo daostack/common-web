@@ -1,4 +1,4 @@
-// Shared types
+// Shared interfaces
 
 export interface ICircleBillingDetails {
   /**
@@ -25,14 +25,14 @@ export interface ICircleBillingDetails {
   /**
    * Line two of the street address. Optional
    */
-  line2?: string;
+  line2?: string | null;
 
   /**
    * State / County / Province / Region portion of the address. It is optional
    * except if the country is US or Canada district is required and
    * should use the two-letter code for the subdivision.
    */
-  district?: string;
+  district?: string | null;
 
   /**
    * Postal / ZIP code of the address.
@@ -56,6 +56,12 @@ export interface ICircleMetadata {
    */
   ipAddress: string;
 }
+
+// Shared types
+
+export type CircleCvvCheck = 'pending' | 'pass' | 'fail' | 'unavailable' | 'not_requested';
+7;
+
 
 // Exported types
 export { ICircleCreateCardPayload } from './cards/_createCard';

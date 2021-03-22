@@ -2,9 +2,30 @@
 ### Do not make changes to this file directly
 
 
+input BillingDetailsInput {
+  city: String!
+  country: String!
+  district: String
+  line1: String!
+  line2: String
+  name: String!
+  postalCode: String!
+}
+
 input BoolFilter {
   equals: Boolean
   not: NestedBoolFilter
+}
+
+type Card {
+  """The date, at which the item was created"""
+  createdAt: Date!
+
+  """The main identifier of the item"""
+  id: ID!
+
+  """The date, at which the item was last modified"""
+  updatedAt: Date!
 }
 
 input CardListRelationFilter {
@@ -94,6 +115,18 @@ input CommonWhereInput {
 
 input CommonWhereUniqueInput {
   id: String
+}
+
+input CreateCardInput {
+  billingDetails: BillingDetailsInput!
+
+  """The sensitive part of the card as encrypted card"""
+  encryptedData: String!
+  expMonth: Int!
+  expYear: Int!
+
+  """The ID of the key used for the encryption of the sensitive data"""
+  keyId: String!
 }
 
 input CreateCommonInput {
@@ -300,6 +333,7 @@ input LinkInput {
 }
 
 type Mutation {
+  createCard(input: CreateCardInput!): Card!
   createCommon(input: CreateCommonInput!): Common!
 
   """Create new proposal of type JOIN."""
