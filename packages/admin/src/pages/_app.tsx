@@ -11,13 +11,13 @@ import { AuthenticationBasedLayout } from '@components/layout/AuthenticationBase
 import { AuthContextProvider } from '@context';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyClh8UZh-PDyVgwPrHZwURoA4HWuiXUbR8',
-  authDomain: 'common-staging-50741.firebaseapp.com',
-  databaseURL: 'https://common-staging-50741.firebaseio.com',
-  projectId: 'common-staging-50741',
-  storageBucket: 'common-staging-50741.appspot.com',
-  messagingSenderId: '78965953367',
-  appId: '1:78965953367:android:257ae3c68f0101542f6412'
+  apiKey: process.env['NEXT_PUBLIC_Firebase.apiKey'],
+  authDomain: process.env['NEXT_PUBLIC_Firebase.authDomain'],
+  databaseURL: process.env['NEXT_PUBLIC_Firebase.databaseURL'],
+  projectId: process.env['NEXT_PUBLIC_Firebase.projectId'],
+  storageBucket: process.env['NEXT_PUBLIC_Firebase.storageBucket'],
+  messagingSenderId: process.env['NEXT_PUBLIC_Firebase.messagingSenderId'],
+  appId: process.env['NEXT_PUBLIC_Firebase.appId']
 };
 
 const CommonAdminApp = ({ Component, pageProps }: AppProps): React.ReactElement => {

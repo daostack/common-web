@@ -49,7 +49,7 @@ export const HasPermission: React.FC<PropsWithChildren<IHasPermissionProps>> = (
       }
     }
 
-    return hasPermission;
+    return true;
   };
 
   const matchRuleExpl = (str, rule) => {

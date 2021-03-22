@@ -161,7 +161,7 @@ const CreateBatchPayoutPage: NextPage = () => {
       });
 
       router.push({
-        pathname: `/payouts/details/${res.data.executePayouts.id}`
+        pathname: `/financials/payouts/details/${res.data.executePayouts.id}`
       })
     } catch (e) {
       setToast({
