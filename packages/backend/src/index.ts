@@ -1,3 +1,4 @@
+import ipAddress from 'request-ip';
 import express from 'express';
 import cors from 'cors';
 
@@ -19,8 +20,7 @@ const apollo = new ApolloServer({
 
 // Configure the express app
 app.use(cors());
-
-app.set('trust proxy', true);
+app.use(ipAddress.mw());
 
 // Add the Apollo middleware to the express app
 apollo.applyMiddleware({ app });

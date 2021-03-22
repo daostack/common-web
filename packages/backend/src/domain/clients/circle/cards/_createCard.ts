@@ -1,5 +1,5 @@
-import { $circleClient } from '../client';
-import { ICircleBillingDetails, ICircleMetadata, CircleCvvCheck } from '../types';
+import { ICircleBillingDetails, ICircleMetadata, ICircleCard } from '@circle/types';
+import { $circleClient } from '@circle/client';
 
 export interface ICircleCreateCardPayload {
   /**
@@ -43,34 +43,10 @@ export interface ICircleCreateCardPayload {
 }
 
 export interface ICircleCreateCardResponse {
-  data: {
-    id: string;
-
-    billingDetails: ICircleBillingDetails;
-    fingerprint: string;
-
-    metadata: {
-      email: string;
-      phoneNumber?: string;
-    }
-
-    expMonth: number;
-    expYear: number;
-    network: 'VISA' | 'MASTERCARD';
-    last4: string;
-    createDate: Date;
-    updateDate: Date;
-
-    verification: {
-      cvv: CircleCvvCheck;
-      avs: 'pending' | any;
-    }
-  }
+  data: ICircleCard;
 }
 
 export const _createCircleCard = async (request: ICircleCreateCardPayload): Promise<ICircleCreateCardResponse> => {
-  console.log(request);
-
   const response = await $circleClient.post<ICircleCreateCardResponse>('/cards', request);
 
   return response.data;

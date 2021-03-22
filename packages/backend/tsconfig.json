@@ -34,7 +34,16 @@
         "./domain/validation/index"
       ],
       "@circle/*": [
-        "./domain/toolkits/circle"
+        "./domain/clients/circle/*"
+      ],
+      "@clients": [
+        "./domain/clients/index"
+      ],
+      "@utils": [
+        "./domain/utils/index"
+      ],
+      "@utils/*": [
+        "./domain/utils/*"
       ]
     },
     "esModuleInterop": true,

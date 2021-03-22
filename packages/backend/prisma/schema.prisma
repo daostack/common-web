@@ -114,8 +114,8 @@ model JoinProposal {
 
   description ProposalDescription?
 
-  user         User         @relation(fields: [userId], references: [id])
-  common       Common       @relation(fields: [commonId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+  common Common @relation(fields: [commonId], references: [id])
 
   payment      Payment?
   subscription Subscription? @relation(fields: [subscriptionId], references: [id])
@@ -231,14 +231,50 @@ model Payment {
 model Card {
   id String @id @default(uuid())
 
+  circleCardId String
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  digits String
+  network CardNetwork
+
+  cvvCheck String
+  avsCheck String
 
   user          User           @relation(fields: [userId], references: [id])
   payments      Payment[]
   subscriptions Subscription[]
 
+  billingDetails CardBillingDetails?
+
   userId String
+}
+
+enum CardNetwork {
+  VISA
+  MASTERCARD
+}
+
+model CardBillingDetails {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+
+  line1 String
+  line2 String?
+
+  city String
+  country String
+  district String?
+  postalCode String
+
+  card Card @relation(fields: [cardId], references: [id])
+
+  cardId String
 }
 
 // ---- Events
@@ -268,6 +304,10 @@ enum EventType {
   CommonMemberRoleRemoved
 
   JoinRequestCreated
+
+  CardCreated
+  CardCvvVerificationPassed
+  CardCvvVerificationFailed
 
   UserCreated
 }

@@ -4,8 +4,9 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Date";
@@ -41,6 +42,23 @@ export interface NexusGenInputs {
     equals?: boolean | null; // Boolean
     not?: NexusGenInputs['NestedBoolFilter'] | null; // NestedBoolFilter
   }
+  CardBillingDetailsWhereInput: { // input type
+    AND?: NexusGenInputs['CardBillingDetailsWhereInput'][] | null; // [CardBillingDetailsWhereInput!]
+    NOT?: NexusGenInputs['CardBillingDetailsWhereInput'][] | null; // [CardBillingDetailsWhereInput!]
+    OR?: NexusGenInputs['CardBillingDetailsWhereInput'][] | null; // [CardBillingDetailsWhereInput!]
+    card?: NexusGenInputs['CardWhereInput'] | null; // CardWhereInput
+    cardId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    city?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    country?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    district?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    line1?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    line2?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    name?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    postalCode?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+  }
   CardListRelationFilter: { // input type
     every?: NexusGenInputs['CardWhereInput'] | null; // CardWhereInput
     none?: NexusGenInputs['CardWhereInput'] | null; // CardWhereInput
@@ -50,8 +68,14 @@ export interface NexusGenInputs {
     AND?: NexusGenInputs['CardWhereInput'][] | null; // [CardWhereInput!]
     NOT?: NexusGenInputs['CardWhereInput'][] | null; // [CardWhereInput!]
     OR?: NexusGenInputs['CardWhereInput'][] | null; // [CardWhereInput!]
+    avsCheck?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    billingDetails?: NexusGenInputs['CardBillingDetailsWhereInput'] | null; // CardBillingDetailsWhereInput
+    circleCardId?: NexusGenInputs['StringFilter'] | null; // StringFilter
     createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    cvvCheck?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    digits?: NexusGenInputs['StringFilter'] | null; // StringFilter
     id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    network?: NexusGenInputs['EnumCardNetworkFilter'] | null; // EnumCardNetworkFilter
     payments?: NexusGenInputs['PaymentListRelationFilter'] | null; // PaymentListRelationFilter
     subscriptions?: NexusGenInputs['SubscriptionListRelationFilter'] | null; // SubscriptionListRelationFilter
     updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
@@ -138,6 +162,12 @@ export interface NexusGenInputs {
     lte?: NexusGenScalars['DateTime'] | null; // DateTime
     not?: NexusGenInputs['NestedDateTimeFilter'] | null; // NestedDateTimeFilter
     notIn?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
+  }
+  EnumCardNetworkFilter: { // input type
+    equals?: NexusGenEnums['CardNetwork'] | null; // CardNetwork
+    in?: NexusGenEnums['CardNetwork'][] | null; // [CardNetwork!]
+    not?: NexusGenInputs['NestedEnumCardNetworkFilter'] | null; // NestedEnumCardNetworkFilter
+    notIn?: NexusGenEnums['CardNetwork'][] | null; // [CardNetwork!]
   }
   EnumCommonMemberRoleNullableListFilter: { // input type
     equals?: NexusGenEnums['CommonMemberRole'][] | null; // [CommonMemberRole!]
@@ -265,6 +295,12 @@ export interface NexusGenInputs {
     lte?: NexusGenScalars['DateTime'] | null; // DateTime
     not?: NexusGenInputs['NestedDateTimeFilter'] | null; // NestedDateTimeFilter
     notIn?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
+  }
+  NestedEnumCardNetworkFilter: { // input type
+    equals?: NexusGenEnums['CardNetwork'] | null; // CardNetwork
+    in?: NexusGenEnums['CardNetwork'][] | null; // [CardNetwork!]
+    not?: NexusGenInputs['NestedEnumCardNetworkFilter'] | null; // NestedEnumCardNetworkFilter
+    notIn?: NexusGenEnums['CardNetwork'][] | null; // [CardNetwork!]
   }
   NestedEnumEventTypeFilter: { // input type
     equals?: NexusGenEnums['EventType'] | null; // EventType
@@ -442,9 +478,10 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  CommonMemberRole: "Founder"
-  EventType: "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "JoinRequestCreated" | "UserCreated"
-  FundingType: "Monthly" | "OneTime"
+  CardNetwork: 'MASTERCARD' | 'VISA'
+  CommonMemberRole: 'Founder'
+  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'JoinRequestCreated' | 'UserCreated'
+  FundingType: 'Monthly' | 'OneTime'
   ProposalPaymentState: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
   ProposalState: "Accepted" | "Countdown" | "Rejected"
   QueryMode: "default" | "insensitive"

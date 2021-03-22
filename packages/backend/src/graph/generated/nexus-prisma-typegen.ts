@@ -1,4 +1,4 @@
-import * as Typegen from 'nexus-plugin-prisma/typegen'
+import * as Typegen from 'nexus-plugin-prisma/typegen';
 import * as Prisma from '@prisma/client';
 
 // Pagination type
@@ -23,6 +23,7 @@ interface PrismaModels {
   Subscription: Prisma.Subscription
   Payment: Prisma.Payment
   Card: Prisma.Card
+  CardBillingDetails: Prisma.CardBillingDetails
   Event: Prisma.Event
 }
 
@@ -62,8 +63,12 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'subscriptionId' | 'proposalId' | 'userId' | 'commonId' | 'commonMemberId' | 'cardId'
     }
     cards: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'user' | 'payments' | 'subscriptions' | 'userId'
-      ordering: 'id' | 'createdAt' | 'updatedAt' | 'userId'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'circleCardId' | 'createdAt' | 'updatedAt' | 'digits' | 'network' | 'cvvCheck' | 'avsCheck' | 'user' | 'payments' | 'subscriptions' | 'billingDetails' | 'userId'
+      ordering: 'id' | 'circleCardId' | 'createdAt' | 'updatedAt' | 'digits' | 'network' | 'cvvCheck' | 'avsCheck' | 'userId'
+    }
+    cardBillingDetails: {
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'name' | 'line1' | 'line2' | 'city' | 'country' | 'district' | 'postalCode' | 'card' | 'cardId'
+      ordering: 'id' | 'createdAt' | 'updatedAt' | 'name' | 'line1' | 'line2' | 'city' | 'country' | 'district' | 'postalCode' | 'cardId'
     }
     events: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'type' | 'payload' | 'commonId' | 'userId' | 'common' | 'user'
@@ -72,8 +77,8 @@ interface NexusPrismaInputs {
   },
   User: {
     cards: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'user' | 'payments' | 'subscriptions' | 'userId'
-      ordering: 'id' | 'createdAt' | 'updatedAt' | 'userId'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'circleCardId' | 'createdAt' | 'updatedAt' | 'digits' | 'network' | 'cvvCheck' | 'avsCheck' | 'user' | 'payments' | 'subscriptions' | 'billingDetails' | 'userId'
+      ordering: 'id' | 'circleCardId' | 'createdAt' | 'updatedAt' | 'digits' | 'network' | 'cvvCheck' | 'avsCheck' | 'userId'
     }
     events: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'type' | 'payload' | 'commonId' | 'userId' | 'common' | 'user'
@@ -155,9 +160,7 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'subscriptionId' | 'proposalId' | 'userId' | 'commonId' | 'commonMemberId' | 'cardId'
     }
   }
-  Payment: {
-
-  }
+  Payment: {}
   Card: {
     payments: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'commonMember' | 'proposal' | 'subscription' | 'subscriptionId' | 'proposalId' | 'userId' | 'commonId' | 'commonMemberId' | 'cardId'
@@ -168,9 +171,8 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'cardId' | 'userId' | 'commonId' | 'commonMemberId'
     }
   }
-  Event: {
-
-  }
+  CardBillingDetails: {}
+  Event: {}
 }
 
 // Prisma output types metadata
@@ -194,6 +196,7 @@ interface NexusPrismaOutputs {
     payments: 'Payment'
     card: 'Card'
     cards: 'Card'
+    cardBillingDetails: 'CardBillingDetails'
     event: 'Event'
     events: 'Event'
   },
@@ -252,6 +255,12 @@ interface NexusPrismaOutputs {
     deleteOneCard: 'Card'
     deleteManyCard: 'AffectedRowsOutput'
     upsertOneCard: 'Card'
+    createOneCardBillingDetails: 'CardBillingDetails'
+    updateOneCardBillingDetails: 'CardBillingDetails'
+    updateManyCardBillingDetails: 'AffectedRowsOutput'
+    deleteOneCardBillingDetails: 'CardBillingDetails'
+    deleteManyCardBillingDetails: 'AffectedRowsOutput'
+    upsertOneCardBillingDetails: 'CardBillingDetails'
     createOneEvent: 'Event'
     updateOneEvent: 'Event'
     updateManyEvent: 'AffectedRowsOutput'
@@ -384,12 +393,32 @@ interface NexusPrismaOutputs {
   }
   Card: {
     id: 'String'
+    circleCardId: 'String'
     createdAt: 'DateTime'
     updatedAt: 'DateTime'
+    digits: 'String'
+    network: 'CardNetwork'
+    cvvCheck: 'String'
+    avsCheck: 'String'
     user: 'User'
     payments: 'Payment'
     subscriptions: 'Subscription'
+    billingDetails: 'CardBillingDetails'
     userId: 'String'
+  }
+  CardBillingDetails: {
+    id: 'String'
+    createdAt: 'DateTime'
+    updatedAt: 'DateTime'
+    name: 'String'
+    line1: 'String'
+    line2: 'String'
+    city: 'String'
+    country: 'String'
+    district: 'String'
+    postalCode: 'String'
+    card: 'Card'
+    cardId: 'String'
   }
   Event: {
     id: 'String'
@@ -415,6 +444,7 @@ interface NexusPrismaMethods {
   Subscription: Typegen.NexusPrismaFields<'Subscription'>
   Payment: Typegen.NexusPrismaFields<'Payment'>
   Card: Typegen.NexusPrismaFields<'Card'>
+  CardBillingDetails: Typegen.NexusPrismaFields<'CardBillingDetails'>
   Event: Typegen.NexusPrismaFields<'Event'>
   Query: Typegen.NexusPrismaFields<'Query'>
   Mutation: Typegen.NexusPrismaFields<'Mutation'>

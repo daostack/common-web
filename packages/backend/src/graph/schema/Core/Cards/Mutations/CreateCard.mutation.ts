@@ -42,8 +42,8 @@ export const CreateCardMutation = extendType({
 
         return createCardCommand({
           ...args.input,
-          userId,
-          ipAddress: '127.0.0.1'
+          ipAddress: ctx.req.clientIp as string,
+          userId
         });
       }
     });
