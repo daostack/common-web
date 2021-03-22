@@ -113,7 +113,7 @@ export const PaymentsHomepage: NextPage = () => {
 
             <Spacer/>
 
-            <Text h3>Hanging payments ({payments?.hangingPayments})</Text>
+            <Text h3>Hanging payments ({payments?.hangingPayments.length})</Text>
 
             {(payments?.hangingPayments).map((payment) => (
               <React.Fragment key={payment.id}>

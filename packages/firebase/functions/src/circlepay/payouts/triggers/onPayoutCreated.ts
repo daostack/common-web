@@ -30,6 +30,10 @@ export const onPayoutCreated: IEventTrigger = async (eventObj) => {
       ? env.local
       : env.endpoints.base;
 
+    const adminUrl = process.env.NODE_ENV === 'dev'
+      ? env.admin.local
+      : env.admin.url;
+
     await emailClient.sendTemplatedEmail({
       templateKey: 'approvePayout',
       to: approver,
@@ -51,7 +55,8 @@ export const onPayoutCreated: IEventTrigger = async (eventObj) => {
 
         payoutId: payout.id,
         amount: (payout.amount / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
-        url: `${ urlBase }/circlepay/payouts/approve?payoutId=${ payout.id }&index=${ index }&token=${ payout.security[index].token }`
+        url: `${ urlBase }/circlepay/payouts/approve?payoutId=${ payout.id }&index=${ index }&token=${ payout.security[index].token }`,
+        adminUrl: `${ adminUrl }/financials/payouts/confirm?payoutId=${ payout.id }&index=${ index }&token=${ payout.security[index].token }`
       }
     });
   }));

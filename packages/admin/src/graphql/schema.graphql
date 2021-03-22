@@ -409,7 +409,8 @@ type Mutation {
     commonId: ID!
   ): Int
   executePayouts(input: ExecutePayoutInput!): Payout
-  updatePaymentData(id: ID!, trackId: ID = "5f398531-0f9b-42ec-8dd0-99896ac47e74"): Boolean
+  approvePayout(payoutId: ID!, index: Int!, token: String!): Boolean
+  updatePaymentData(id: ID!, trackId: ID = "7f4fe0bd-590a-455d-b3cd-fe6045d36066"): Boolean
   updatePaymentsCommonId: Boolean
   createIntention(input: CreateIntentionInput!): Intention
 }

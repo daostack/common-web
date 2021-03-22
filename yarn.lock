@@ -22486,6 +22486,11 @@ tsutils@^3.17.1:
   dependencies:
     tslib "^1.8.1"
 
+ttab@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/ttab/-/ttab-0.7.0.tgz#eec30450877ed1b666e522234a47b4561529ecdb"
+  integrity sha512-JuQeDHCaa1LpeSXv1zmlDfWiXQ86WS/EexjBivyRPug0VdAOvEvgm8qFmmDdVFCIUdvtx0uT6jjiTAV2rb9zKg==
+
 tty-browserify@0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/tty-browserify/-/tty-browserify-0.0.0.tgz#a157ba402da24e9bf957f9aa69d524eed42901a6"
