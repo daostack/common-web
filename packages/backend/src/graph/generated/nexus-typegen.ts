@@ -139,6 +139,15 @@ export interface NexusGenInputs {
     fundingType: NexusGenEnums['FundingType']; // FundingType!
     name: string; // String!
   }
+  CreateFundingProposalInput: { // input type
+    amount: number; // Int!
+    commonId: string; // ID!
+    description: string; // String!
+    files?: NexusGenInputs['ProposalFileInput'][] | null; // [ProposalFileInput!]
+    images?: NexusGenInputs['ProposalImageInput'][] | null; // [ProposalImageInput!]
+    links?: NexusGenInputs['ProposalLinkInput'][] | null; // [ProposalLinkInput!]
+    title: string; // String!
+  }
   CreateJoinProposalInput: { // input type
     cardId: string; // String!
     commonId: string; // String!
@@ -227,13 +236,16 @@ export interface NexusGenInputs {
     AND?: NexusGenInputs['FundingProposalWhereInput'][] | null; // [FundingProposalWhereInput!]
     NOT?: NexusGenInputs['FundingProposalWhereInput'][] | null; // [FundingProposalWhereInput!]
     OR?: NexusGenInputs['FundingProposalWhereInput'][] | null; // [FundingProposalWhereInput!]
+    amount?: NexusGenInputs['IntFilter'] | null; // IntFilter
     common?: NexusGenInputs['CommonWhereInput'] | null; // CommonWhereInput
     commonId?: NexusGenInputs['StringFilter'] | null; // StringFilter
     commonMember?: NexusGenInputs['CommonMemberWhereInput'] | null; // CommonMemberWhereInput
     commonMemberId?: NexusGenInputs['StringFilter'] | null; // StringFilter
     createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     description?: NexusGenInputs['ProposalDescriptionWhereInput'] | null; // ProposalDescriptionWhereInput
+    funded?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
     id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    state?: NexusGenInputs['EnumProposalStateFilter'] | null; // EnumProposalStateFilter
     updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
     userId?: NexusGenInputs['StringFilter'] | null; // StringFilter
@@ -403,6 +415,16 @@ export interface NexusGenInputs {
     title?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
   }
+  ProposalFileInput: { // input type
+    value: string; // String!
+  }
+  ProposalImageInput: { // input type
+    value: string; // String!
+  }
+  ProposalLinkInput: { // input type
+    title: string; // String!
+    url: string; // String!
+  }
   StringFilter: { // input type
     contains?: string | null; // String
     endsWith?: string | null; // String
@@ -458,7 +480,6 @@ export interface NexusGenInputs {
     AND?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
     NOT?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
     OR?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
-    authId?: NexusGenInputs['StringFilter'] | null; // StringFilter
     cards?: NexusGenInputs['CardListRelationFilter'] | null; // CardListRelationFilter
     commonLinks?: NexusGenInputs['CommonMemberListRelationFilter'] | null; // CommonMemberListRelationFilter
     createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
@@ -479,7 +500,7 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
   CardNetwork: "MASTERCARD" | "VISA"
   CommonMemberRole: "Founder"
-  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "JoinRequestCreated" | "UserCreated"
+  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "FundingRequestCreated" | "JoinRequestCreated" | "UserCreated"
   FundingType: "Monthly" | "OneTime"
   ProposalPaymentState: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
   ProposalState: "Accepted" | "Countdown" | "Rejected"
@@ -510,6 +531,11 @@ export interface NexusGenObjects {
     updatedAt: NexusGenScalars['Date']; // Date!
     whitelisted: boolean; // Boolean!
   }
+  FundingProposal: { // root type
+    createdAt: NexusGenScalars['Date']; // Date!
+    id: string; // ID!
+    updatedAt: NexusGenScalars['Date']; // Date!
+  }
   JoinProposal: { // root type
     createdAt: NexusGenScalars['Date']; // Date!
     id: string; // ID!
@@ -522,7 +548,6 @@ export interface NexusGenObjects {
   Mutation: {};
   Query: {};
   User: { // root type
-    authId: string; // ID!
     createdAt: NexusGenScalars['Date']; // Date!
     firstName: string; // String!
     id: string; // ID!
@@ -554,6 +579,11 @@ export interface NexusGenFieldTypes {
     updatedAt: NexusGenScalars['Date']; // Date!
     whitelisted: boolean; // Boolean!
   }
+  FundingProposal: { // field return type
+    createdAt: NexusGenScalars['Date']; // Date!
+    id: string; // ID!
+    updatedAt: NexusGenScalars['Date']; // Date!
+  }
   JoinProposal: { // field return type
     createdAt: NexusGenScalars['Date']; // Date!
     id: string; // ID!
@@ -566,6 +596,7 @@ export interface NexusGenFieldTypes {
   Mutation: { // field return type
     createCard: NexusGenRootTypes['Card']; // Card!
     createCommon: NexusGenRootTypes['Common']; // Common!
+    createFundingProposal: NexusGenRootTypes['FundingProposal']; // FundingProposal!
     createJoinProposal: NexusGenRootTypes['JoinProposal']; // JoinProposal!
     createUser: NexusGenRootTypes['User']; // User!
   }
@@ -575,7 +606,6 @@ export interface NexusGenFieldTypes {
     generateUserAuthToken: string; // String!
   }
   User: { // field return type
-    authId: string; // ID!
     createdAt: NexusGenScalars['Date']; // Date!
     displayName: string; // String!
     firstName: string; // String!
@@ -598,6 +628,11 @@ export interface NexusGenFieldTypeNames {
     updatedAt: 'Date'
     whitelisted: 'Boolean'
   }
+  FundingProposal: { // field return type name
+    createdAt: 'Date'
+    id: 'ID'
+    updatedAt: 'Date'
+  }
   JoinProposal: { // field return type name
     createdAt: 'Date'
     id: 'ID'
@@ -610,6 +645,7 @@ export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
     createCard: 'Card'
     createCommon: 'Common'
+    createFundingProposal: 'FundingProposal'
     createJoinProposal: 'JoinProposal'
     createUser: 'User'
   }
@@ -619,7 +655,6 @@ export interface NexusGenFieldTypeNames {
     generateUserAuthToken: 'String'
   }
   User: { // field return type name
-    authId: 'ID'
     createdAt: 'Date'
     displayName: 'String'
     firstName: 'String'
@@ -636,6 +671,9 @@ export interface NexusGenArgTypes {
     }
     createCommon: { // args
       input: NexusGenInputs['CreateCommonInput']; // CreateCommonInput!
+    }
+    createFundingProposal: { // args
+      input: NexusGenInputs['CreateFundingProposalInput']; // CreateFundingProposalInput!
     }
     createJoinProposal: { // args
       input: NexusGenInputs['CreateJoinProposalInput']; // CreateJoinProposalInput!

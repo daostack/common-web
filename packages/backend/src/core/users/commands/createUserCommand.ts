@@ -5,11 +5,11 @@ import { userService, eventsService } from '@services';
 import { prisma } from '@toolkits';
 
 const schema = z.object({
-  authId: z.string()
+  id: z.string()
     .nonempty()
     .refine(async (value) => {
       return !(await userService.queries.exists({
-        authId: value
+        id: value
       }));
     }, {
       message: 'The auth ID is already in use. That means that the user already has an account'

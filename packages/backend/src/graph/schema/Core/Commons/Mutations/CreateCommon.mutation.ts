@@ -32,7 +32,7 @@ export const CreateCommonMutation = extendType({
       resolve: async (root, { input }, ctx) => {
         const founderId = await ctx.getUserId();
 
-        return commonService.commands.create({
+        return commonService.create({
           ...input,
           founderId
         });

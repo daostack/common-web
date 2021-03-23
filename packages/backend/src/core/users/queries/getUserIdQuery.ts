@@ -3,7 +3,8 @@ import { prisma } from '@toolkits';
 import { NotFoundError } from '@errors';
 
 const schema = z.object({
-  authId: z.string()
+  email: z.string()
+    .email()
 });
 
 export const getUserIdQuery = async (query: z.infer<typeof schema>): Promise<string> => {
@@ -13,16 +14,16 @@ export const getUserIdQuery = async (query: z.infer<typeof schema>): Promise<str
   // Find the user
   const user = await prisma.user.findUnique({
     where: {
-      authId: query.authId
+      email: query.email
     },
     select: {
       id: true
     }
   });
 
-  // Check if the common is found
+  // Check if the user is found
   if (!user) {
-    throw new NotFoundError('User.AuthId', query.authId);
+    throw new NotFoundError('User.Email', query.email);
   }
 
   return user.id;

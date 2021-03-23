@@ -20,8 +20,7 @@ enum FundingType {
 // ---- User related stuff
 
 model User {
-  id     String @id @default(uuid())
-  authId String @unique
+  id String @id
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -137,6 +136,12 @@ model FundingProposal {
 
   description ProposalDescription?
 
+  state        ProposalState
+
+  amount Int
+
+  funded Boolean @default(false)
+
   userId         String
   commonId       String
   commonMemberId String
@@ -236,7 +241,7 @@ model Card {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  digits String
+  digits  String
   network CardNetwork
 
   cvvCheck String
@@ -267,9 +272,9 @@ model CardBillingDetails {
   line1 String
   line2 String?
 
-  city String
-  country String
-  district String?
+  city       String
+  country    String
+  district   String?
   postalCode String
 
   card Card @relation(fields: [cardId], references: [id])
@@ -304,6 +309,8 @@ enum EventType {
   CommonMemberRoleRemoved
 
   JoinRequestCreated
+
+  FundingRequestCreated
 
   CardCreated
   CardCvvVerificationPassed

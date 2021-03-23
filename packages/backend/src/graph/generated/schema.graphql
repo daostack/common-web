@@ -165,6 +165,16 @@ input CreateCommonInput {
   name: String!
 }
 
+input CreateFundingProposalInput {
+  amount: Int!
+  commonId: ID!
+  description: String!
+  files: [ProposalFileInput!]
+  images: [ProposalImageInput!]
+  links: [ProposalLinkInput!]
+  title: String!
+}
+
 input CreateJoinProposalInput {
   cardId: String!
   commonId: String!
@@ -252,6 +262,7 @@ enum EventType {
   CommonMemberCreated
   CommonMemberRoleAdded
   CommonMemberRoleRemoved
+  FundingRequestCreated
   JoinRequestCreated
   UserCreated
 }
@@ -271,6 +282,17 @@ input EventWhereInput {
   userId: StringNullableFilter
 }
 
+type FundingProposal {
+  """The date, at which the item was created"""
+  createdAt: Date!
+
+  """The main identifier of the item"""
+  id: ID!
+
+  """The date, at which the item was last modified"""
+  updatedAt: Date!
+}
+
 input FundingProposalListRelationFilter {
   every: FundingProposalWhereInput
   none: FundingProposalWhereInput
@@ -281,13 +303,16 @@ input FundingProposalWhereInput {
   AND: [FundingProposalWhereInput!]
   NOT: [FundingProposalWhereInput!]
   OR: [FundingProposalWhereInput!]
+  amount: IntFilter
   common: CommonWhereInput
   commonId: StringFilter
   commonMember: CommonMemberWhereInput
   commonMemberId: StringFilter
   createdAt: DateTimeFilter
   description: ProposalDescriptionWhereInput
+  funded: BoolFilter
   id: StringFilter
+  state: EnumProposalStateFilter
   updatedAt: DateTimeFilter
   user: UserWhereInput
   userId: StringFilter
@@ -374,6 +399,7 @@ input LinkInput {
 type Mutation {
   createCard(input: CreateCardInput!): Card!
   createCommon(input: CreateCommonInput!): Common!
+  createFundingProposal(input: CreateFundingProposalInput!): FundingProposal!
 
   """Create new proposal of type JOIN."""
   createJoinProposal(input: CreateJoinProposalInput!): JoinProposal!
@@ -517,6 +543,19 @@ input ProposalDescriptionWhereInput {
   updatedAt: DateTimeFilter
 }
 
+input ProposalFileInput {
+  value: String!
+}
+
+input ProposalImageInput {
+  value: String!
+}
+
+input ProposalLinkInput {
+  title: String!
+  url: String!
+}
+
 enum ProposalPaymentState {
   NotAttempted
   Pending
@@ -597,9 +636,6 @@ input SubscriptionWhereInput {
 }
 
 type User {
-  """The ID of the user, as is in the authentication system"""
-  authId: ID!
-
   """The date, at which the item was created"""
   createdAt: Date!
 
@@ -623,7 +659,6 @@ input UserWhereInput {
   AND: [UserWhereInput!]
   NOT: [UserWhereInput!]
   OR: [UserWhereInput!]
-  authId: StringFilter
   cards: CardListRelationFilter
   commonLinks: CommonMemberListRelationFilter
   createdAt: DateTimeFilter

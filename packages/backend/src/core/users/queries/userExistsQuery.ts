@@ -4,7 +4,7 @@ import { prisma } from '@toolkits';
 
 const schema = z
   .object({
-    authId: z.string(),
+    id: z.string(),
     email: z.string()
   })
   .partial();

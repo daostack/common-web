@@ -22,7 +22,7 @@ const schema = z.object({
   fundingCooldown: z.date(),
 
   founderId: z.string()
-    .uuid()
+    .nonempty()
 });
 
 export const createCommonCommand = async (command: z.infer<typeof schema>): Promise<Common> => {

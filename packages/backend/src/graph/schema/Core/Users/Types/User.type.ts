@@ -15,11 +15,6 @@ export const UserType = objectType({
       description: 'The date, at which the item was last modified'
     });
 
-    // @todo Allow this to be seen only by the user, and system admin
-    t.nonNull.id('authId', {
-      description: 'The ID of the user, as is in the authentication system'
-    });
-
     t.nonNull.string('firstName', {
       description: 'The first name of the user'
     });

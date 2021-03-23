@@ -13,6 +13,7 @@ export const CreateUserInput = inputObjectType({
 export const CreateUserMutation = extendType({
   type: 'Mutation',
   definition(t) {
+    // @ts-ignore
     t.nonNull.field('createUser', {
       description: 'Creates new user in the system',
       type: 'User',
@@ -28,7 +29,7 @@ export const CreateUserMutation = extendType({
 
         return userService.commands.create({
           ...args.input,
-          authId: userDecodedToken.uid,
+          id: userDecodedToken.uid,
           emailVerified: userDecodedToken.email === args.input.email && userDecodedToken.email_verified
         });
       }
