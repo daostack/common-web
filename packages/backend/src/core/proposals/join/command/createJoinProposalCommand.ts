@@ -5,6 +5,7 @@ import { CommonError, NotFoundError } from '@errors';
 import { ProposalLinkSchema } from '@validation';
 import { eventsService } from '@services';
 import { prisma } from '@toolkits';
+import { cardsService } from '../../../cards';
 
 const schema = z.object({
   title: z.string()
@@ -34,7 +35,10 @@ export const createJoinProposalCommand = async (command: z.infer<typeof schema>)
   // Validate the payload
   schema.parse(command);
 
-  // @todo Validate that the user is the owner of the card
+  // Validate that the user is the owner of the card
+  if (await cardsService.isCardOwner(command.cardId, command.userId)) {
+    throw new CommonError('Cannot create proposals with cards not created by you');
+  }
 
   // Fetch the common and related data
   const common = await prisma.common.findUnique({

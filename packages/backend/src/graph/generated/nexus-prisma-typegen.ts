@@ -1,4 +1,4 @@
-import * as Typegen from 'nexus-plugin-prisma/typegen';
+import * as Typegen from 'nexus-plugin-prisma/typegen'
 import * as Prisma from '@prisma/client';
 
 // Pagination type
@@ -160,7 +160,9 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'subscriptionId' | 'proposalId' | 'userId' | 'commonId' | 'commonMemberId' | 'cardId'
     }
   }
-  Payment: {}
+  Payment: {
+
+  }
   Card: {
     payments: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'commonMember' | 'proposal' | 'subscription' | 'subscriptionId' | 'proposalId' | 'userId' | 'commonId' | 'commonMemberId' | 'cardId'
@@ -171,8 +173,12 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'cardId' | 'userId' | 'commonId' | 'commonMemberId'
     }
   }
-  CardBillingDetails: {}
-  Event: {}
+  CardBillingDetails: {
+
+  }
+  Event: {
+
+  }
 }
 
 // Prisma output types metadata
@@ -196,6 +202,7 @@ interface NexusPrismaOutputs {
     payments: 'Payment'
     card: 'Card'
     cards: 'Card'
+    cardBillingDetails: 'CardBillingDetails'
     cardBillingDetails: 'CardBillingDetails'
     event: 'Event'
     events: 'Event'

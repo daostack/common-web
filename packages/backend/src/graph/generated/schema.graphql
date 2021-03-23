@@ -18,62 +18,62 @@ input BoolFilter {
 }
 
 type Card {
-    """The date, at which the item was created"""
-    createdAt: Date!
+  """The date, at which the item was created"""
+  createdAt: Date!
 
-    """The main identifier of the item"""
-    id: ID!
+  """The main identifier of the item"""
+  id: ID!
 
-    """The date, at which the item was last modified"""
-    updatedAt: Date!
+  """The date, at which the item was last modified"""
+  updatedAt: Date!
 }
 
 input CardBillingDetailsWhereInput {
-    AND: [CardBillingDetailsWhereInput!]
-    NOT: [CardBillingDetailsWhereInput!]
-    OR: [CardBillingDetailsWhereInput!]
-    card: CardWhereInput
-    cardId: StringFilter
-    city: StringFilter
-    country: StringFilter
-    createdAt: DateTimeFilter
-    district: StringNullableFilter
-    id: StringFilter
-    line1: StringFilter
-    line2: StringNullableFilter
-    name: StringFilter
-    postalCode: StringFilter
-    updatedAt: DateTimeFilter
+  AND: [CardBillingDetailsWhereInput!]
+  NOT: [CardBillingDetailsWhereInput!]
+  OR: [CardBillingDetailsWhereInput!]
+  card: CardWhereInput
+  cardId: StringFilter
+  city: StringFilter
+  country: StringFilter
+  createdAt: DateTimeFilter
+  district: StringNullableFilter
+  id: StringFilter
+  line1: StringFilter
+  line2: StringNullableFilter
+  name: StringFilter
+  postalCode: StringFilter
+  updatedAt: DateTimeFilter
 }
 
 input CardListRelationFilter {
-    every: CardWhereInput
-    none: CardWhereInput
-    some: CardWhereInput
+  every: CardWhereInput
+  none: CardWhereInput
+  some: CardWhereInput
 }
 
 enum CardNetwork {
-    MASTERCARD
-    VISA
+  MASTERCARD
+  VISA
 }
 
 input CardWhereInput {
-    AND: [CardWhereInput!]
-    NOT: [CardWhereInput!]
-    OR: [CardWhereInput!]
-    avsCheck: StringFilter
-    billingDetails: CardBillingDetailsWhereInput
-    circleCardId: StringFilter
-    createdAt: DateTimeFilter
-    cvvCheck: StringFilter
-    digits: StringFilter
-    id: StringFilter
-    network: EnumCardNetworkFilter
-    payments: PaymentListRelationFilter
-    subscriptions: SubscriptionListRelationFilter
-    updatedAt: DateTimeFilter
-    user: UserWhereInput
-    userId: StringFilter
+  AND: [CardWhereInput!]
+  NOT: [CardWhereInput!]
+  OR: [CardWhereInput!]
+  avsCheck: StringFilter
+  billingDetails: CardBillingDetailsWhereInput
+  circleCardId: StringFilter
+  createdAt: DateTimeFilter
+  cvvCheck: StringFilter
+  digits: StringFilter
+  id: StringFilter
+  network: EnumCardNetworkFilter
+  payments: PaymentListRelationFilter
+  subscriptions: SubscriptionListRelationFilter
+  updatedAt: DateTimeFilter
+  user: UserWhereInput
+  userId: StringFilter
 }
 
 type Common {
@@ -185,29 +185,29 @@ scalar Date
 scalar DateTime
 
 input DateTimeFilter {
-    equals: DateTime
-    gt: DateTime
-    gte: DateTime
-    in: [DateTime!]
-    lt: DateTime
-    lte: DateTime
-    not: NestedDateTimeFilter
-    notIn: [DateTime!]
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeFilter
+  notIn: [DateTime!]
 }
 
 input EnumCardNetworkFilter {
-    equals: CardNetwork
-    in: [CardNetwork!]
-    not: NestedEnumCardNetworkFilter
-    notIn: [CardNetwork!]
+  equals: CardNetwork
+  in: [CardNetwork!]
+  not: NestedEnumCardNetworkFilter
+  notIn: [CardNetwork!]
 }
 
 input EnumCommonMemberRoleNullableListFilter {
-    equals: [CommonMemberRole!]
-    has: CommonMemberRole
-    hasEvery: [CommonMemberRole!]
-    hasSome: [CommonMemberRole!]
-    isEmpty: Boolean
+  equals: [CommonMemberRole!]
+  has: CommonMemberRole
+  hasEvery: [CommonMemberRole!]
+  hasSome: [CommonMemberRole!]
+  isEmpty: Boolean
 }
 
 input EnumEventTypeFilter {
@@ -245,15 +245,15 @@ input EventListRelationFilter {
 }
 
 enum EventType {
-    CardCreated
-    CardCvvVerificationFailed
-    CardCvvVerificationPassed
-    CommonCreated
-    CommonMemberCreated
-    CommonMemberRoleAdded
-    CommonMemberRoleRemoved
-    JoinRequestCreated
-    UserCreated
+  CardCreated
+  CardCvvVerificationFailed
+  CardCvvVerificationPassed
+  CommonCreated
+  CommonMemberCreated
+  CommonMemberRoleAdded
+  CommonMemberRoleRemoved
+  JoinRequestCreated
+  UserCreated
 }
 
 input EventWhereInput {
@@ -388,32 +388,32 @@ input NestedBoolFilter {
 }
 
 input NestedDateTimeFilter {
-    equals: DateTime
-    gt: DateTime
-    gte: DateTime
-    in: [DateTime!]
-    lt: DateTime
-    lte: DateTime
-    not: NestedDateTimeFilter
-    notIn: [DateTime!]
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeFilter
+  notIn: [DateTime!]
 }
 
 input NestedEnumCardNetworkFilter {
-    equals: CardNetwork
-    in: [CardNetwork!]
-    not: NestedEnumCardNetworkFilter
-    notIn: [CardNetwork!]
+  equals: CardNetwork
+  in: [CardNetwork!]
+  not: NestedEnumCardNetworkFilter
+  notIn: [CardNetwork!]
 }
 
 input NestedEnumEventTypeFilter {
-    equals: EventType
-    in: [EventType!]
-    not: NestedEnumEventTypeFilter
-    notIn: [EventType!]
+  equals: EventType
+  in: [EventType!]
+  not: NestedEnumEventTypeFilter
+  notIn: [EventType!]
 }
 
 input NestedEnumFundingTypeFilter {
-    equals: FundingType
+  equals: FundingType
   in: [FundingType!]
   not: NestedEnumFundingTypeFilter
   notIn: [FundingType!]

@@ -4,9 +4,8 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Date";
@@ -478,10 +477,10 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  CardNetwork: 'MASTERCARD' | 'VISA'
-  CommonMemberRole: 'Founder'
-  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'JoinRequestCreated' | 'UserCreated'
-  FundingType: 'Monthly' | 'OneTime'
+  CardNetwork: "MASTERCARD" | "VISA"
+  CommonMemberRole: "Founder"
+  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "JoinRequestCreated" | "UserCreated"
+  FundingType: "Monthly" | "OneTime"
   ProposalPaymentState: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
   ProposalState: "Accepted" | "Countdown" | "Rejected"
   QueryMode: "default" | "insensitive"
