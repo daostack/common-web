@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Common } from "../../../../../shared/models";
+import { formatPrice } from "../../../../../shared/utils";
 import "./index.scss";
 
 interface CommonListItemInterface {
@@ -21,7 +22,7 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
         <div className="additional-information">
           <div className="item">
             <div className="title">Raised</div>
-            <div className="value">${common.raised}</div>
+            <div className="value">{formatPrice(common.raised)}</div>
           </div>
           <div className="item">
             <div className="title">Members</div>

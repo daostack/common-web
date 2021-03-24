@@ -1,6 +1,6 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 
-import { Common } from "../../../shared/models";
+import { Common, Proposal, Discussion } from "../../../shared/models";
 import { CommonsActionTypes } from "./constants";
 
 export const getCommonsList = createAsyncAction(
@@ -16,3 +16,7 @@ export const getCommonDetail = createAsyncAction(
 )<string, Common | null, Error>();
 
 export const updatePage = createStandardAction(CommonsActionTypes.UPDATE_PAGE)<number>();
+
+export const setDiscussion = createStandardAction(CommonsActionTypes.SET_DISCUSSION)<Discussion[]>();
+
+export const setProposals = createStandardAction(CommonsActionTypes.SET_PROPOSALS)<Proposal[]>();
