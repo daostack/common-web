@@ -107,7 +107,8 @@ input CommonMemberWhereInput {
   AND: [CommonMemberWhereInput!]
   NOT: [CommonMemberWhereInput!]
   OR: [CommonMemberWhereInput!]
-  common: CommonWhereInput
+    Vote: VoteListRelationFilter
+    common: CommonWhereInput
   commonId: StringFilter
   createdAt: DateTimeFilter
   fundingProposals: FundingProposalListRelationFilter
@@ -180,14 +181,21 @@ input CreateJoinProposalInput {
   commonId: String!
   description: String!
   fundingAmount: Int!
-  links: [LinkInput!]
-  title: String!
+    links: [LinkInput!]
+    title: String!
 }
 
 input CreateUserInput {
-  email: String!
-  firstName: String!
-  lastName: String!
+    email: String!
+    firstName: String!
+    lastName: String!
+}
+
+input CreateVoteInput {
+    outcome: VoteOutcome!
+
+    """The ID of the root of the proposal whether it is funding one or join"""
+    proposalId: ID!
 }
 
 scalar Date
@@ -195,10 +203,10 @@ scalar Date
 scalar DateTime
 
 input DateTimeFilter {
-  equals: DateTime
-  gt: DateTime
-  gte: DateTime
-  in: [DateTime!]
+    equals: DateTime
+    gt: DateTime
+    gte: DateTime
+    in: [DateTime!]
   lt: DateTime
   lte: DateTime
   not: NestedDateTimeFilter
@@ -238,25 +246,32 @@ input EnumProposalPaymentStateFilter {
   equals: ProposalPaymentState
   in: [ProposalPaymentState!]
   not: NestedEnumProposalPaymentStateFilter
-  notIn: [ProposalPaymentState!]
+    notIn: [ProposalPaymentState!]
 }
 
 input EnumProposalStateFilter {
-  equals: ProposalState
-  in: [ProposalState!]
-  not: NestedEnumProposalStateFilter
-  notIn: [ProposalState!]
+    equals: ProposalState
+    in: [ProposalState!]
+    not: NestedEnumProposalStateFilter
+    notIn: [ProposalState!]
+}
+
+input EnumVoteOutcomeFilter {
+    equals: VoteOutcome
+    in: [VoteOutcome!]
+    not: NestedEnumVoteOutcomeFilter
+    notIn: [VoteOutcome!]
 }
 
 input EventListRelationFilter {
-  every: EventWhereInput
-  none: EventWhereInput
-  some: EventWhereInput
+    every: EventWhereInput
+    none: EventWhereInput
+    some: EventWhereInput
 }
 
 enum EventType {
-  CardCreated
-  CardCvvVerificationFailed
+    CardCreated
+    CardCvvVerificationFailed
   CardCvvVerificationPassed
   CommonCreated
   CommonMemberCreated
@@ -264,7 +279,8 @@ enum EventType {
   CommonMemberRoleRemoved
   FundingRequestCreated
   JoinRequestCreated
-  UserCreated
+    UserCreated
+    VoteCreated
 }
 
 input EventWhereInput {
@@ -404,8 +420,9 @@ type Mutation {
   """Create new proposal of type JOIN."""
   createJoinProposal(input: CreateJoinProposalInput!): JoinProposal!
 
-  """Creates new user in the system"""
-  createUser(input: CreateUserInput!): User!
+    """Creates new user in the system"""
+    createUser(input: CreateUserInput!): User!
+    createVote(input: CreateVoteInput!): Vote!
 }
 
 input NestedBoolFilter {
@@ -449,25 +466,32 @@ input NestedEnumProposalPaymentStateFilter {
   equals: ProposalPaymentState
   in: [ProposalPaymentState!]
   not: NestedEnumProposalPaymentStateFilter
-  notIn: [ProposalPaymentState!]
+    notIn: [ProposalPaymentState!]
 }
 
 input NestedEnumProposalStateFilter {
-  equals: ProposalState
-  in: [ProposalState!]
-  not: NestedEnumProposalStateFilter
-  notIn: [ProposalState!]
+    equals: ProposalState
+    in: [ProposalState!]
+    not: NestedEnumProposalStateFilter
+    notIn: [ProposalState!]
+}
+
+input NestedEnumVoteOutcomeFilter {
+    equals: VoteOutcome
+    in: [VoteOutcome!]
+    not: NestedEnumVoteOutcomeFilter
+    notIn: [VoteOutcome!]
 }
 
 input NestedIntFilter {
-  equals: Int
-  gt: Int
-  gte: Int
-  in: [Int!]
-  lt: Int
-  lte: Int
-  not: NestedIntFilter
-  notIn: [Int!]
+    equals: Int
+    gt: Int
+    gte: Int
+    in: [Int!]
+    lt: Int
+    lte: Int
+    not: NestedIntFilter
+    notIn: [Int!]
 }
 
 input NestedStringFilter {
@@ -540,7 +564,8 @@ input ProposalDescriptionWhereInput {
   joinId: StringNullableFilter
   link: JsonNullableFilter
   title: StringNullableFilter
-  updatedAt: DateTimeFilter
+    updatedAt: DateTimeFilter
+    votes: VoteListRelationFilter
 }
 
 input ProposalFileInput {
@@ -665,12 +690,48 @@ input UserWhereInput {
   email: StringFilter
   emailVerified: BoolFilter
   events: EventListRelationFilter
-  firstName: StringFilter
-  fundingProposals: FundingProposalListRelationFilter
-  id: StringFilter
-  joinProposals: JoinProposalListRelationFilter
-  lastName: StringFilter
-  payments: PaymentListRelationFilter
-  subscriptions: SubscriptionListRelationFilter
-  updatedAt: DateTimeFilter
+    firstName: StringFilter
+    fundingProposals: FundingProposalListRelationFilter
+    id: StringFilter
+    joinProposals: JoinProposalListRelationFilter
+    lastName: StringFilter
+    payments: PaymentListRelationFilter
+    subscriptions: SubscriptionListRelationFilter
+    updatedAt: DateTimeFilter
+}
+
+type Vote {
+    """The date, at which the item was created"""
+    createdAt: Date!
+
+    """The main identifier of the item"""
+    id: ID!
+
+    """The date, at which the item was last modified"""
+    updatedAt: Date!
+}
+
+input VoteListRelationFilter {
+    every: VoteWhereInput
+    none: VoteWhereInput
+    some: VoteWhereInput
+}
+
+enum VoteOutcome {
+    Approve
+    Condemn
+}
+
+input VoteWhereInput {
+    AND: [VoteWhereInput!]
+    NOT: [VoteWhereInput!]
+    OR: [VoteWhereInput!]
+    commonMember: CommonMemberWhereInput
+    commonMemberId: StringFilter
+    createdAt: DateTimeFilter
+    id: StringFilter
+    outcome: EnumVoteOutcomeFilter
+    proposal: ProposalDescriptionWhereInput
+    proposalDescriptionId: StringFilter
+    updatedAt: DateTimeFilter
 }

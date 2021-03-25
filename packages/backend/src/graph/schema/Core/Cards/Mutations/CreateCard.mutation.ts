@@ -1,5 +1,5 @@
 import { arg, extendType, inputObjectType, nonNull } from 'nexus';
-import { createCardCommand } from '../../../../../core/cards/commands/createCardCommand';
+import { cardsService } from '@services';
 
 export const CreateCardInput = inputObjectType({
   name: 'CreateCardInput',
@@ -40,7 +40,7 @@ export const CreateCardMutation = extendType({
       resolve: async (root, args, ctx) => {
         const userId = await ctx.getUserId();
 
-        return createCardCommand({
+        return cardsService.create({
           ...args.input,
           ipAddress: ctx.req.clientIp as string,
           userId

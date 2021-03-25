@@ -90,6 +90,8 @@ model CommonMember {
   commonId String
   userId   String
 
+  Vote Vote[]
+
   @@unique([userId, commonId])
 }
 
@@ -136,7 +138,7 @@ model FundingProposal {
 
   description ProposalDescription?
 
-  state        ProposalState
+  state ProposalState
 
   amount Int
 
@@ -160,11 +162,14 @@ model ProposalDescription {
   files  Json?
   images Json?
 
+  votes Vote[]
+
   join    JoinProposal?    @relation(fields: [joinId], references: [id])
   funding FundingProposal? @relation(fields: [fundingId], references: [id])
 
-  joinId    String?
-  fundingId String?
+
+  joinId    String? @unique
+  fundingId String? @unique
 }
 
 enum ProposalState {
@@ -204,6 +209,30 @@ model Subscription {
   userId         String
   commonId       String
   commonMemberId String
+}
+
+// ---- Votes
+
+model Vote {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  outcome VoteOutcome
+
+  proposal ProposalDescription @relation(fields: [proposalDescriptionId], references: [id])
+  commonMember CommonMember @relation(fields: [commonMemberId], references: [id])
+
+  commonMemberId        String
+  proposalDescriptionId String
+
+  @@unique([commonMemberId, proposalDescriptionId])
+}
+
+enum VoteOutcome {
+  Approve
+  Condemn
 }
 
 // ---- Payments and cards
@@ -315,6 +344,8 @@ enum EventType {
   CardCreated
   CardCvvVerificationPassed
   CardCvvVerificationFailed
+
+  VoteCreated
 
   UserCreated
 }

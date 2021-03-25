@@ -1,11 +1,10 @@
 import * as z from 'zod';
 import { JoinProposal, EventType, ProposalState, ProposalPaymentState } from '@prisma/client';
 
+import { eventsService, cardsService } from '@services';
 import { CommonError, NotFoundError } from '@errors';
 import { ProposalLinkSchema } from '@validation';
-import { eventsService } from '@services';
 import { prisma } from '@toolkits';
-import { cardsService } from '../../../cards';
 
 const schema = z.object({
   title: z.string()

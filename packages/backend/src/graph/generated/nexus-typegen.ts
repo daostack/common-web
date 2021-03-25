@@ -4,8 +4,9 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Date";
@@ -90,6 +91,7 @@ export interface NexusGenInputs {
     AND?: NexusGenInputs['CommonMemberWhereInput'][] | null; // [CommonMemberWhereInput!]
     NOT?: NexusGenInputs['CommonMemberWhereInput'][] | null; // [CommonMemberWhereInput!]
     OR?: NexusGenInputs['CommonMemberWhereInput'][] | null; // [CommonMemberWhereInput!]
+    Vote?: NexusGenInputs['VoteListRelationFilter'] | null; // VoteListRelationFilter
     common?: NexusGenInputs['CommonWhereInput'] | null; // CommonWhereInput
     commonId?: NexusGenInputs['StringFilter'] | null; // StringFilter
     createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
@@ -161,6 +163,10 @@ export interface NexusGenInputs {
     firstName: string; // String!
     lastName: string; // String!
   }
+  CreateVoteInput: { // input type
+    outcome: NexusGenEnums['VoteOutcome']; // VoteOutcome!
+    proposalId: string; // ID!
+  }
   DateTimeFilter: { // input type
     equals?: NexusGenScalars['DateTime'] | null; // DateTime
     gt?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -207,6 +213,12 @@ export interface NexusGenInputs {
     in?: NexusGenEnums['ProposalState'][] | null; // [ProposalState!]
     not?: NexusGenInputs['NestedEnumProposalStateFilter'] | null; // NestedEnumProposalStateFilter
     notIn?: NexusGenEnums['ProposalState'][] | null; // [ProposalState!]
+  }
+  EnumVoteOutcomeFilter: { // input type
+    equals?: NexusGenEnums['VoteOutcome'] | null; // VoteOutcome
+    in?: NexusGenEnums['VoteOutcome'][] | null; // [VoteOutcome!]
+    not?: NexusGenInputs['NestedEnumVoteOutcomeFilter'] | null; // NestedEnumVoteOutcomeFilter
+    notIn?: NexusGenEnums['VoteOutcome'][] | null; // [VoteOutcome!]
   }
   EventListRelationFilter: { // input type
     every?: NexusGenInputs['EventWhereInput'] | null; // EventWhereInput
@@ -337,6 +349,12 @@ export interface NexusGenInputs {
     not?: NexusGenInputs['NestedEnumProposalStateFilter'] | null; // NestedEnumProposalStateFilter
     notIn?: NexusGenEnums['ProposalState'][] | null; // [ProposalState!]
   }
+  NestedEnumVoteOutcomeFilter: { // input type
+    equals?: NexusGenEnums['VoteOutcome'] | null; // VoteOutcome
+    in?: NexusGenEnums['VoteOutcome'][] | null; // [VoteOutcome!]
+    not?: NexusGenInputs['NestedEnumVoteOutcomeFilter'] | null; // NestedEnumVoteOutcomeFilter
+    notIn?: NexusGenEnums['VoteOutcome'][] | null; // [VoteOutcome!]
+  }
   NestedIntFilter: { // input type
     equals?: number | null; // Int
     gt?: number | null; // Int
@@ -414,6 +432,7 @@ export interface NexusGenInputs {
     link?: NexusGenInputs['JsonNullableFilter'] | null; // JsonNullableFilter
     title?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    votes?: NexusGenInputs['VoteListRelationFilter'] | null; // VoteListRelationFilter
   }
   ProposalFileInput: { // input type
     value: string; // String!
@@ -495,16 +514,35 @@ export interface NexusGenInputs {
     subscriptions?: NexusGenInputs['SubscriptionListRelationFilter'] | null; // SubscriptionListRelationFilter
     updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
   }
+  VoteListRelationFilter: { // input type
+    every?: NexusGenInputs['VoteWhereInput'] | null; // VoteWhereInput
+    none?: NexusGenInputs['VoteWhereInput'] | null; // VoteWhereInput
+    some?: NexusGenInputs['VoteWhereInput'] | null; // VoteWhereInput
+  }
+  VoteWhereInput: { // input type
+    AND?: NexusGenInputs['VoteWhereInput'][] | null; // [VoteWhereInput!]
+    NOT?: NexusGenInputs['VoteWhereInput'][] | null; // [VoteWhereInput!]
+    OR?: NexusGenInputs['VoteWhereInput'][] | null; // [VoteWhereInput!]
+    commonMember?: NexusGenInputs['CommonMemberWhereInput'] | null; // CommonMemberWhereInput
+    commonMemberId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    outcome?: NexusGenInputs['EnumVoteOutcomeFilter'] | null; // EnumVoteOutcomeFilter
+    proposal?: NexusGenInputs['ProposalDescriptionWhereInput'] | null; // ProposalDescriptionWhereInput
+    proposalDescriptionId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+  }
 }
 
 export interface NexusGenEnums {
   CardNetwork: "MASTERCARD" | "VISA"
-  CommonMemberRole: "Founder"
-  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "FundingRequestCreated" | "JoinRequestCreated" | "UserCreated"
-  FundingType: "Monthly" | "OneTime"
+  CommonMemberRole: 'Founder'
+  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'FundingRequestCreated' | 'JoinRequestCreated' | 'UserCreated' | 'VoteCreated'
+  FundingType: 'Monthly' | 'OneTime'
   ProposalPaymentState: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
   ProposalState: "Accepted" | "Countdown" | "Rejected"
-  QueryMode: "default" | "insensitive"
+  QueryMode: 'default' | 'insensitive'
+  VoteOutcome: 'Approve' | 'Condemn'
 }
 
 export interface NexusGenScalars {
@@ -554,6 +592,11 @@ export interface NexusGenObjects {
     lastName: string; // String!
     updatedAt: NexusGenScalars['Date']; // Date!
   }
+  Vote: { // root type
+    createdAt: NexusGenScalars['Date']; // Date!
+    id: string; // ID!
+    updatedAt: NexusGenScalars['Date']; // Date!
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -599,6 +642,7 @@ export interface NexusGenFieldTypes {
     createFundingProposal: NexusGenRootTypes['FundingProposal']; // FundingProposal!
     createJoinProposal: NexusGenRootTypes['JoinProposal']; // JoinProposal!
     createUser: NexusGenRootTypes['User']; // User!
+    createVote: NexusGenRootTypes['Vote']; // Vote!
   }
   Query: { // field return type
     common: NexusGenRootTypes['Common'] | null; // Common
@@ -611,6 +655,11 @@ export interface NexusGenFieldTypes {
     firstName: string; // String!
     id: string; // ID!
     lastName: string; // String!
+    updatedAt: NexusGenScalars['Date']; // Date!
+  }
+  Vote: { // field return type
+    createdAt: NexusGenScalars['Date']; // Date!
+    id: string; // ID!
     updatedAt: NexusGenScalars['Date']; // Date!
   }
 }
@@ -648,6 +697,7 @@ export interface NexusGenFieldTypeNames {
     createFundingProposal: 'FundingProposal'
     createJoinProposal: 'JoinProposal'
     createUser: 'User'
+    createVote: 'Vote'
   }
   Query: { // field return type name
     common: 'Common'
@@ -660,6 +710,11 @@ export interface NexusGenFieldTypeNames {
     firstName: 'String'
     id: 'ID'
     lastName: 'String'
+    updatedAt: 'Date'
+  }
+  Vote: { // field return type name
+    createdAt: 'Date'
+    id: 'ID'
     updatedAt: 'Date'
   }
 }
@@ -680,6 +735,9 @@ export interface NexusGenArgTypes {
     }
     createUser: { // args
       input: NexusGenInputs['CreateUserInput']; // CreateUserInput!
+    }
+    createVote: { // args
+      input: NexusGenInputs['CreateVoteInput']; // CreateVoteInput!
     }
   }
   Query: {

@@ -4,6 +4,7 @@ import { nexusPrisma } from 'nexus-plugin-prisma';
 
 import { UserTypes } from './Core/Users';
 import { CardTypes } from './Core/Cards';
+import { VoteTypes } from './Core/Votes';
 import { CommonTypes } from './Core/Commons';
 import { ProposalTypes } from './Core/Proposals';
 
@@ -15,6 +16,7 @@ import { BillingDetailsInput } from './Shared/Inputs/BillingDetails.input';
 const types = [
   UserTypes,
   CardTypes,
+  VoteTypes,
   CommonTypes,
   ProposalTypes,
 

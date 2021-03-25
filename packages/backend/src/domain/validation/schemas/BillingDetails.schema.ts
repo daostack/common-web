@@ -6,8 +6,8 @@ const isDistrictRequired = (country: string): boolean =>
 export const BillingDetailsSchema = z
   .object({
     name: z.string()
-      .regex(/^[a-zA-Z'. ]*$/, 'You first name can only contain latin characters and spaces.')
-      .nonempty(),
+      .nonempty()
+      .regex(/^[a-zA-Z'. ]*$/, 'You first name can only contain latin characters and spaces.'),
 
     city: z.string()
       .nonempty(),

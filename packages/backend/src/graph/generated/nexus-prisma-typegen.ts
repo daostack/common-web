@@ -1,4 +1,4 @@
-import * as Typegen from 'nexus-plugin-prisma/typegen'
+import * as Typegen from 'nexus-plugin-prisma/typegen';
 import * as Prisma from '@prisma/client';
 
 // Pagination type
@@ -21,6 +21,7 @@ interface PrismaModels {
   FundingProposal: Prisma.FundingProposal
   ProposalDescription: Prisma.ProposalDescription
   Subscription: Prisma.Subscription
+  Vote: Prisma.Vote
   Payment: Prisma.Payment
   Card: Prisma.Card
   CardBillingDetails: Prisma.CardBillingDetails
@@ -39,7 +40,7 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'name' | 'balance' | 'raised' | 'whitelisted' | 'fundingType' | 'fundingCooldown' | 'fundingMinimumAmount'
     }
     commonMembers: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'common' | 'user' | 'roles' | 'payments' | 'subscription' | 'fundingProposals' | 'commonId' | 'userId'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'common' | 'user' | 'roles' | 'payments' | 'subscription' | 'fundingProposals' | 'commonId' | 'userId' | 'Vote'
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'roles' | 'commonId' | 'userId'
     }
     joinProposals: {
@@ -51,12 +52,16 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'state' | 'amount' | 'funded' | 'userId' | 'commonId' | 'commonMemberId'
     }
     proposalDescriptions: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'title' | 'description' | 'link' | 'files' | 'images' | 'join' | 'funding' | 'joinId' | 'fundingId'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'title' | 'description' | 'link' | 'files' | 'images' | 'votes' | 'join' | 'funding' | 'joinId' | 'fundingId'
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'title' | 'description' | 'link' | 'files' | 'images' | 'joinId' | 'fundingId'
     }
     subscriptions: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'commonMember' | 'proposal' | 'payments' | 'cardId' | 'userId' | 'commonId' | 'commonMemberId'
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'cardId' | 'userId' | 'commonId' | 'commonMemberId'
+    }
+    votes: {
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'outcome' | 'proposal' | 'commonMember' | 'commonMemberId' | 'proposalDescriptionId'
+      ordering: 'id' | 'createdAt' | 'updatedAt' | 'outcome' | 'commonMemberId' | 'proposalDescriptionId'
     }
     payments: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'commonMember' | 'proposal' | 'subscription' | 'subscriptionId' | 'proposalId' | 'userId' | 'commonId' | 'commonMemberId' | 'cardId'
@@ -85,7 +90,7 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'type' | 'payload' | 'commonId' | 'userId'
     }
     commonLinks: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'common' | 'user' | 'roles' | 'payments' | 'subscription' | 'fundingProposals' | 'commonId' | 'userId'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'common' | 'user' | 'roles' | 'payments' | 'subscription' | 'fundingProposals' | 'commonId' | 'userId' | 'Vote'
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'roles' | 'commonId' | 'userId'
     }
     payments: {
@@ -111,7 +116,7 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'type' | 'payload' | 'commonId' | 'userId'
     }
     members: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'common' | 'user' | 'roles' | 'payments' | 'subscription' | 'fundingProposals' | 'commonId' | 'userId'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'common' | 'user' | 'roles' | 'payments' | 'subscription' | 'fundingProposals' | 'commonId' | 'userId' | 'Vote'
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'roles' | 'commonId' | 'userId'
     }
     payments: {
@@ -140,6 +145,10 @@ interface NexusPrismaInputs {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'user' | 'common' | 'commonMember' | 'description' | 'state' | 'amount' | 'funded' | 'userId' | 'commonId' | 'commonMemberId'
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'state' | 'amount' | 'funded' | 'userId' | 'commonId' | 'commonMemberId'
     }
+    Vote: {
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'outcome' | 'proposal' | 'commonMember' | 'commonMemberId' | 'proposalDescriptionId'
+      ordering: 'id' | 'createdAt' | 'updatedAt' | 'outcome' | 'commonMemberId' | 'proposalDescriptionId'
+    }
   }
   JoinProposal: {
 
@@ -148,7 +157,10 @@ interface NexusPrismaInputs {
 
   }
   ProposalDescription: {
-
+    votes: {
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'outcome' | 'proposal' | 'commonMember' | 'commonMemberId' | 'proposalDescriptionId'
+      ordering: 'id' | 'createdAt' | 'updatedAt' | 'outcome' | 'commonMemberId' | 'proposalDescriptionId'
+    }
   }
   Subscription: {
     proposal: {
@@ -160,9 +172,8 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'subscriptionId' | 'proposalId' | 'userId' | 'commonId' | 'commonMemberId' | 'cardId'
     }
   }
-  Payment: {
-
-  }
+  Vote: {}
+  Payment: {}
   Card: {
     payments: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'commonMember' | 'proposal' | 'subscription' | 'subscriptionId' | 'proposalId' | 'userId' | 'commonId' | 'commonMemberId' | 'cardId'
@@ -198,6 +209,8 @@ interface NexusPrismaOutputs {
     proposalDescriptions: 'ProposalDescription'
     subscription: 'Subscription'
     subscriptions: 'Subscription'
+    vote: 'Vote'
+    votes: 'Vote'
     payment: 'Payment'
     payments: 'Payment'
     card: 'Card'
@@ -250,6 +263,12 @@ interface NexusPrismaOutputs {
     deleteOneSubscription: 'Subscription'
     deleteManySubscription: 'AffectedRowsOutput'
     upsertOneSubscription: 'Subscription'
+    createOneVote: 'Vote'
+    updateOneVote: 'Vote'
+    updateManyVote: 'AffectedRowsOutput'
+    deleteOneVote: 'Vote'
+    deleteManyVote: 'AffectedRowsOutput'
+    upsertOneVote: 'Vote'
     createOnePayment: 'Payment'
     updateOnePayment: 'Payment'
     updateManyPayment: 'AffectedRowsOutput'
@@ -321,6 +340,7 @@ interface NexusPrismaOutputs {
     fundingProposals: 'FundingProposal'
     commonId: 'String'
     userId: 'String'
+    Vote: 'Vote'
   }
   JoinProposal: {
     id: 'String'
@@ -363,6 +383,7 @@ interface NexusPrismaOutputs {
     link: 'Json'
     files: 'Json'
     images: 'Json'
+    votes: 'Vote'
     join: 'JoinProposal'
     funding: 'FundingProposal'
     joinId: 'String'
@@ -382,6 +403,16 @@ interface NexusPrismaOutputs {
     userId: 'String'
     commonId: 'String'
     commonMemberId: 'String'
+  }
+  Vote: {
+    id: 'String'
+    createdAt: 'DateTime'
+    updatedAt: 'DateTime'
+    outcome: 'VoteOutcome'
+    proposal: 'ProposalDescription'
+    commonMember: 'CommonMember'
+    commonMemberId: 'String'
+    proposalDescriptionId: 'String'
   }
   Payment: {
     id: 'String'
@@ -451,6 +482,7 @@ interface NexusPrismaMethods {
   FundingProposal: Typegen.NexusPrismaFields<'FundingProposal'>
   ProposalDescription: Typegen.NexusPrismaFields<'ProposalDescription'>
   Subscription: Typegen.NexusPrismaFields<'Subscription'>
+  Vote: Typegen.NexusPrismaFields<'Vote'>
   Payment: Typegen.NexusPrismaFields<'Payment'>
   Card: Typegen.NexusPrismaFields<'Card'>
   CardBillingDetails: Typegen.NexusPrismaFields<'CardBillingDetails'>
