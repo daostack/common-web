@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { formatPrice } from "../../../../shared/utils";
@@ -7,8 +7,13 @@ import {
   PreviewInformationList,
   DiscussionsComponent,
 } from "../../components/CommonDetailContainer";
-import { getCommonDetail } from "../../store/actions";
-import { selectCommonDetail, selectProposals, selectDiscussions } from "../../store/selectors";
+import { getCommonDetail, loadCommonDiscussionList } from "../../store/actions";
+import {
+  selectCommonDetail,
+  selectProposals,
+  selectDiscussions,
+  selectIsDiscussionsLoaded,
+} from "../../store/selectors";
 import "./index.scss";
 interface CommonDetailRouterParams {
   id: string;
@@ -36,9 +41,10 @@ const tabs = [
 export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
   const [tab, setTab] = useState("discussions");
-  const common = useSelector(selectCommonDetail);
-  const proposals = useSelector(selectProposals);
-  const discussions = useSelector(selectDiscussions);
+  const common = useSelector(selectCommonDetail());
+  const proposals = useSelector(selectProposals());
+  const discussions = useSelector(selectDiscussions());
+  const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -61,6 +67,23 @@ export default function CommonDetail() {
         return { id: d.id, value: d.title };
       }),
     [discussions],
+  );
+
+  const changeTabHandler = useCallback(
+    (tab: string) => {
+      switch (tab) {
+        case "discussions":
+          if (!isDiscussionsLoaded) {
+            dispatch(loadCommonDiscussionList.request());
+          }
+          break;
+
+        default:
+          break;
+      }
+      setTab(tab);
+    },
+    [dispatch, isDiscussionsLoaded],
   );
 
   return (
@@ -102,7 +125,7 @@ export default function CommonDetail() {
                   <div
                     key={t.key}
                     className={`tab-item ${tab === t.key ? "active" : ""}`}
-                    onClick={() => setTab(t.key)}
+                    onClick={() => changeTabHandler(t.key)}
                   >
                     {t.name}
                     {tab === t.key && <span></span>}
@@ -120,7 +143,7 @@ export default function CommonDetail() {
           <div className="inner-main-content-wrapper">
             <div className="tab-content-wrapper">
               {tab === "about" && <AboutTabComponent common={common} />}
-              {tab === "discussions" && <DiscussionsComponent />}
+              {tab === "discussions" && <DiscussionsComponent discussions={discussions} />}
             </div>
             <div className="sidebar-wrapper">
               <PreviewInformationList
