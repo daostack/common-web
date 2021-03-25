@@ -1,4 +1,4 @@
-import * as Typegen from 'nexus-plugin-prisma/typegen';
+import * as Typegen from 'nexus-plugin-prisma/typegen'
 import * as Prisma from '@prisma/client';
 
 // Pagination type
@@ -52,8 +52,8 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'state' | 'amount' | 'funded' | 'userId' | 'commonId' | 'commonMemberId'
     }
     proposalDescriptions: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'title' | 'description' | 'link' | 'files' | 'images' | 'votes' | 'join' | 'funding' | 'joinId' | 'fundingId'
-      ordering: 'id' | 'createdAt' | 'updatedAt' | 'title' | 'description' | 'link' | 'files' | 'images' | 'joinId' | 'fundingId'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'title' | 'description' | 'link' | 'files' | 'images' | 'votes' | 'votesFor' | 'votesAgainst' | 'join' | 'funding' | 'joinId' | 'fundingId'
+      ordering: 'id' | 'createdAt' | 'updatedAt' | 'title' | 'description' | 'link' | 'files' | 'images' | 'votesFor' | 'votesAgainst' | 'joinId' | 'fundingId'
     }
     subscriptions: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'commonMember' | 'proposal' | 'payments' | 'cardId' | 'userId' | 'commonId' | 'commonMemberId'
@@ -172,8 +172,12 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'subscriptionId' | 'proposalId' | 'userId' | 'commonId' | 'commonMemberId' | 'cardId'
     }
   }
-  Vote: {}
-  Payment: {}
+  Vote: {
+
+  }
+  Payment: {
+
+  }
   Card: {
     payments: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'commonMember' | 'proposal' | 'subscription' | 'subscriptionId' | 'proposalId' | 'userId' | 'commonId' | 'commonMemberId' | 'cardId'
@@ -384,6 +388,8 @@ interface NexusPrismaOutputs {
     files: 'Json'
     images: 'Json'
     votes: 'Vote'
+    votesFor: 'Int'
+    votesAgainst: 'Int'
     join: 'JoinProposal'
     funding: 'FundingProposal'
     joinId: 'String'

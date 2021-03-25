@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("Database.Url")
 }
 
 generator client {
@@ -164,6 +164,9 @@ model ProposalDescription {
 
   votes Vote[]
 
+  votesFor     Int @default(0)
+  votesAgainst Int @default(0)
+
   join    JoinProposal?    @relation(fields: [joinId], references: [id])
   funding FundingProposal? @relation(fields: [fundingId], references: [id])
 
@@ -221,8 +224,8 @@ model Vote {
 
   outcome VoteOutcome
 
-  proposal ProposalDescription @relation(fields: [proposalDescriptionId], references: [id])
-  commonMember CommonMember @relation(fields: [commonMemberId], references: [id])
+  proposal     ProposalDescription @relation(fields: [proposalDescriptionId], references: [id])
+  commonMember CommonMember        @relation(fields: [commonMemberId], references: [id])
 
   commonMemberId        String
   proposalDescriptionId String

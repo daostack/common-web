@@ -4,9 +4,8 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Date";
@@ -433,6 +432,8 @@ export interface NexusGenInputs {
     title?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     votes?: NexusGenInputs['VoteListRelationFilter'] | null; // VoteListRelationFilter
+    votesAgainst?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    votesFor?: NexusGenInputs['IntFilter'] | null; // IntFilter
   }
   ProposalFileInput: { // input type
     value: string; // String!
@@ -536,13 +537,13 @@ export interface NexusGenInputs {
 
 export interface NexusGenEnums {
   CardNetwork: "MASTERCARD" | "VISA"
-  CommonMemberRole: 'Founder'
-  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'FundingRequestCreated' | 'JoinRequestCreated' | 'UserCreated' | 'VoteCreated'
-  FundingType: 'Monthly' | 'OneTime'
+  CommonMemberRole: "Founder"
+  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "FundingRequestCreated" | "JoinRequestCreated" | "UserCreated" | "VoteCreated"
+  FundingType: "Monthly" | "OneTime"
   ProposalPaymentState: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
   ProposalState: "Accepted" | "Countdown" | "Rejected"
-  QueryMode: 'default' | 'insensitive'
-  VoteOutcome: 'Approve' | 'Condemn'
+  QueryMode: "default" | "insensitive"
+  VoteOutcome: "Approve" | "Condemn"
 }
 
 export interface NexusGenScalars {
