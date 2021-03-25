@@ -1,9 +1,8 @@
+import { sleep } from '@utils';
 import { CommonError } from '@errors';
 
 export type IPollAction<T> = () => Promise<T> | T;
 export type IPollValidator<T> = (result: T) => Promise<boolean> | boolean;
-
-const sleep = (duration: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, duration));
 
 /**
  * Continually polls an action until it's result is validated successfully
