@@ -40,7 +40,7 @@ const tabs = [
 
 export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
-  const [tab, setTab] = useState("discussions");
+  const [tab, setTab] = useState("about");
   const common = useSelector(selectCommonDetail());
   const proposals = useSelector(selectProposals());
   const discussions = useSelector(selectDiscussions());

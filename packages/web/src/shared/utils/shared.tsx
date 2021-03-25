@@ -16,7 +16,7 @@ export const getDaysAgo = (currentDate: Date, time: Time) => {
   const differenceInDays = differenceInTime / (1000 * 3600 * 24);
   if (differenceInDays < 1) {
     return "Today";
-  } else if (differenceInDays < 1) {
+  } else if (differenceInDays < 2) {
     return "1 day ago";
   } else {
     return `${differenceInDays.toFixed()} days ago`;
