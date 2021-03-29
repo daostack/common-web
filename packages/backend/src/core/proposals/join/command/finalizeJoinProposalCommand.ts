@@ -1,7 +1,8 @@
-import { ProposalState, ProposalType } from '@prisma/client';
+import { EventType, ProposalState, ProposalType } from '@prisma/client';
 import { prisma } from '@toolkits';
 import { NotFoundError, CommonError } from '@errors';
 import { getProposalVoteCountQuery } from '@votes/queries/getProposalVoteCountQuery';
+import { eventsService } from '@services';
 
 export const finalizeJoinProposalCommand = async (proposalId: string): Promise<void> => {
   // Find the proposal and the join
@@ -14,6 +15,8 @@ export const finalizeJoinProposalCommand = async (proposalId: string): Promise<v
     }
   });
 
+  // Check if the proposal exists. As this should not be user
+  // accessible the proposal should be always found
   if (!proposal) {
     throw new NotFoundError('proposal', proposalId);
   }
@@ -37,13 +40,35 @@ export const finalizeJoinProposalCommand = async (proposalId: string): Promise<v
 
   // If the proposal has been approved
   if (votesCount.votesFor > votesCount.votesAgainst) {
+    // Change the proposal state
+    await prisma.proposal.update({
+      where: {
+        id: proposalId
+      },
+      data: {
+        state: ProposalState.Accepted
+      }
+    });
+
+    // Create event @todo Add the proposal ID to the payload
+    await eventsService.create({
+      type: EventType.JoinRequestAccepted,
+      userId: proposal.userId,
+      commonId: proposal.commonId
+    });
+
+    // If the proposal is for one time commons
     // Charge the card and start polling on it
     // Change the proposal payment status to pending
     // If the charge has been successful
     // Change the proposal payment status to successful
     // Add the user as member to that common
-    // Lock the proposal
-    // Create event
+
+    // If the proposal is for subscription commons
+    // Create the subscriptions (all other handling is done there)
+
+    // @todo Mark the proposal as processed
+
   }
   // If the proposal has been rejected
   else if (votesCount.votesAgainst > votesCount.votesFor) {
@@ -57,6 +82,11 @@ export const finalizeJoinProposalCommand = async (proposalId: string): Promise<v
       }
     });
 
-    // Create event
+    // Create event @todo Add the proposal ID to the payload
+    await eventsService.create({
+      type: EventType.JoinRequestRejected,
+      userId: proposal.userId,
+      commonId: proposal.commonId
+    });
   }
 };
