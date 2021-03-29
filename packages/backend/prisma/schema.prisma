@@ -340,8 +340,12 @@ enum EventType {
   CommonMemberRoleRemoved
 
   JoinRequestCreated
+  JoinRequestAccepted
+  JoinRequestRejected
 
   FundingRequestCreated
+  FundingRequestAccepted
+  FundingRequestRejected
 
   CardCreated
   CardCvvVerificationPassed
