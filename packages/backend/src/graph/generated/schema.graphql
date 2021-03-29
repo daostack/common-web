@@ -70,6 +70,7 @@ input CardWhereInput {
   id: StringFilter
   network: EnumCardNetworkFilter
   payments: PaymentListRelationFilter
+  proposal: JoinProposalListRelationFilter
   subscriptions: SubscriptionListRelationFilter
   updatedAt: DateTimeFilter
   user: UserWhereInput
@@ -112,10 +113,8 @@ input CommonMemberWhereInput {
   commonId: StringFilter
   createdAt: DateTimeFilter
   id: StringFilter
-  payments: PaymentListRelationFilter
   proposals: ProposalListRelationFilter
   roles: EnumCommonMemberRoleNullableListFilter
-  subscription: SubscriptionWhereInput
   updatedAt: DateTimeFilter
   user: UserWhereInput
   userId: StringFilter
@@ -241,6 +240,20 @@ input EnumFundingTypeFilter {
   notIn: [FundingType!]
 }
 
+input EnumPaymentStatusFilter {
+  equals: PaymentStatus
+  in: [PaymentStatus!]
+  not: NestedEnumPaymentStatusFilter
+  notIn: [PaymentStatus!]
+}
+
+input EnumPaymentTypeFilter {
+  equals: PaymentType
+  in: [PaymentType!]
+  not: NestedEnumPaymentTypeFilter
+  notIn: [PaymentType!]
+}
+
 input EnumProposalPaymentStateFilter {
   equals: ProposalPaymentState
   in: [ProposalPaymentState!]
@@ -283,8 +296,16 @@ enum EventType {
   CommonMemberCreated
   CommonMemberRoleAdded
   CommonMemberRoleRemoved
+  FundingRequestAccepted
   FundingRequestCreated
+  FundingRequestRejected
+  JoinRequestAccepted
   JoinRequestCreated
+  JoinRequestRejected
+  PaymentConfirmed
+  PaymentCreated
+  PaymentPaid
+  PaymentRejected
   UserCreated
   VoteCreated
 }
@@ -365,6 +386,8 @@ input JoinProposalWhereInput {
   AND: [JoinProposalWhereInput!]
   NOT: [JoinProposalWhereInput!]
   OR: [JoinProposalWhereInput!]
+  card: CardWhereInput
+  cardId: StringFilter
   createdAt: DateTimeFilter
   funding: IntFilter
   id: StringFilter
@@ -449,6 +472,20 @@ input NestedEnumFundingTypeFilter {
   notIn: [FundingType!]
 }
 
+input NestedEnumPaymentStatusFilter {
+  equals: PaymentStatus
+  in: [PaymentStatus!]
+  not: NestedEnumPaymentStatusFilter
+  notIn: [PaymentStatus!]
+}
+
+input NestedEnumPaymentTypeFilter {
+  equals: PaymentType
+  in: [PaymentType!]
+  not: NestedEnumPaymentTypeFilter
+  notIn: [PaymentType!]
+}
+
 input NestedEnumProposalPaymentStateFilter {
   equals: ProposalPaymentState
   in: [ProposalPaymentState!]
@@ -522,22 +559,37 @@ input PaymentListRelationFilter {
   some: PaymentWhereInput
 }
 
+enum PaymentStatus {
+  Confirmed
+  Failed
+  NotAttempted
+  Paid
+  Pending
+}
+
+enum PaymentType {
+  OneTimePayment
+  SubscriptionPayment
+}
+
 input PaymentWhereInput {
   AND: [PaymentWhereInput!]
   NOT: [PaymentWhereInput!]
   OR: [PaymentWhereInput!]
+  amount: IntFilter
   card: CardWhereInput
   cardId: StringFilter
+  circlePaymentId: StringNullableFilter
   common: CommonWhereInput
   commonId: StringFilter
-  commonMember: CommonMemberWhereInput
-  commonMemberId: StringFilter
   createdAt: DateTimeFilter
   id: StringFilter
-  proposal: JoinProposalWhereInput
+  join: JoinProposalWhereInput
   proposalId: StringFilter
+  status: EnumPaymentStatusFilter
   subscription: SubscriptionWhereInput
   subscriptionId: StringNullableFilter
+  type: EnumPaymentTypeFilter
   updatedAt: DateTimeFilter
   user: UserWhereInput
   userId: StringFilter
@@ -596,6 +648,7 @@ input ProposalWhereInput {
   fundingId: StringNullableFilter
   id: StringFilter
   images: JsonNullableFilter
+  ipAddress: StringNullableFilter
   join: JoinProposalWhereInput
   joinId: StringNullableFilter
   link: JsonNullableFilter
@@ -665,8 +718,6 @@ input SubscriptionWhereInput {
   cardId: StringFilter
   common: CommonWhereInput
   commonId: StringFilter
-  commonMember: CommonMemberWhereInput
-  commonMemberId: StringFilter
   createdAt: DateTimeFilter
   id: StringFilter
   payments: PaymentListRelationFilter

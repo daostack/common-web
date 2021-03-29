@@ -1,11 +1,17 @@
-import { ICircleMetadata, IPaymentAmount, IPaymentSource, PaymentVerification, ICirclePayment } from '@circle/types';
+import {
+  ICircleMetadata,
+  ICirclePaymentAmount,
+  IPaymentSource,
+  PaymentVerification,
+  ICirclePayment
+} from '@circle/types';
 import { $circleClient } from '@circle/client';
 import { CommonError } from '@errors';
 
 export interface ICircleCreatePaymentPayload {
   verification: PaymentVerification;
   metadata: ICircleMetadata;
-  amount: IPaymentAmount;
+  amount: ICirclePaymentAmount;
   source: IPaymentSource;
 
 

@@ -13,6 +13,9 @@ const schema = z.object({
   description: z.string()
     .optional(),
 
+  ipAddress: z.string()
+    .nonempty(),
+
   links: z.array(ProposalLinkSchema)
     .nullable()
     .optional(),
@@ -72,6 +75,9 @@ export const createJoinProposalCommand = async (command: z.infer<typeof schema>)
   }
 
   // Check if the proposal funding is the same or more than the minimum for the common
+  if (common.fundingMinimumAmount > command.fundingAmount) {
+    throw new CommonError('Cannot create join request with less than the minimum funding amount required for the common');
+  }
 
   // Check if there are other pending join requests in the common for that user
   if (common.proposals.length) {
@@ -118,7 +124,8 @@ export const createJoinProposalCommand = async (command: z.infer<typeof schema>)
 
       join: {
         create: {
-          funding: command.fundingAmount
+          funding: command.fundingAmount,
+          cardId: command.cardId
         }
       }
     }

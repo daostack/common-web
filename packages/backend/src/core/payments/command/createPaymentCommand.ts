@@ -1,48 +1,113 @@
 import * as z from 'zod';
+import { EventType, Payment, PaymentType } from '@prisma/client';
 
-import { Payment } from '@prisma/client';
 import { prisma } from '@toolkits';
-import { NotFoundError, NotImplementedError } from '@errors';
+import { circleClient } from '@clients';
+import { eventsService } from '@services';
+
+import { convertAmountToCircleAmount, convertCirclePaymentStatus } from '../helpers';
 
 const schema = z.object({
-  proposalId: z.string()
-    .uuid()
+  amount: z.number()
+    .nonnegative(),
+
+  type: z.enum(
+    Object.keys(PaymentType) as [(keyof typeof PaymentType)]
+  ),
+
+  circleCardId: z.string()
     .nonempty()
+    .uuid(),
+
+  connect: z.object({
+    commonId: z.string()
+      .nonempty()
+      .uuid(),
+
+    commonMemberId: z.string()
+      .uuid()
+      .optional()
+      .nullable(),
+
+    userId: z.string()
+      .nonempty()
+      .uuid(),
+
+    proposalId: z.string()
+      .nonempty()
+      .uuid(),
+
+    subscriptionId: z.string()
+      .uuid()
+      .nullable()
+      .optional(),
+
+    cardId: z.string()
+      .nonempty()
+      .uuid()
+  }),
+
+  metadata: z.object({
+    ipAddress: z.string()
+      .nonempty(),
+
+    email: z.string()
+      .nonempty()
+      .email()
+  })
 });
 
-export const createPayment = async (command: z.infer<typeof schema>): Promise<Payment> => {
-  // Find the proposal (and subscription)
-  const proposal = await prisma.proposal.findUnique({
-    where: {
-      id: command.proposalId
-    },
-    select: {
-      state: true,
+/**
+ * @todo
+ *
+ * @param command
+ */
+export const createPaymentCommand = async (command: z.infer<typeof schema>): Promise<Payment> => {
+  // Validate the payload
+  schema.parse(command);
 
-      join: {
-        select: {
-          paymentState: true,
-          funding: true,
+  // Create the payment object in the database
+  let payment = await prisma.payment.create({
+    data: {
+      amount: command.amount,
+      type: command.type,
 
-          subscription: {
-            select: {
-              id: true
-            }
-          }
-        }
-      }
+      ...command.connect
     }
   });
 
-  // This is not user callable so it should never fail, but check if the proposal exists
-  if (!proposal) {
-    throw new NotFoundError('proposal', command.proposalId);
-  }
+  // Create the payment with circle
+  const { data: circlePayment } = await circleClient.payments.create({
+    metadata: {
+      sessionId: payment.id,
+      ...command.metadata
+    },
 
-  throw new NotImplementedError('The payment creation is work in progress');
+    source: {
+      type: 'card',
+      id: command.circleCardId
+    },
 
-  // Create the payment with Circle
-  // Create scheduled task for payment details update
+    amount: convertAmountToCircleAmount(command.amount),
+    idempotencyKey: payment.id,
+    verification: 'none'
+  });
+
+  // Link the circle payment to the database
+  payment = await prisma.payment.update({
+    where: payment,
+    data: {
+      circlePaymentId: circlePayment.id,
+      status: convertCirclePaymentStatus(circlePayment.status)
+    }
+  });
+
   // Create event
-  // Return the created payment
+  await eventsService.create({
+    type: EventType.PaymentCreated,
+    userId: command.connect.userId,
+    commonId: command.connect.commonId
+  });
+
+  return payment;
 };

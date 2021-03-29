@@ -1,7 +1,7 @@
 import { ProposalState, ProposalType } from '@prisma/client';
 import { prisma } from '@toolkits';
 
-import { finalizeJoinProposalCommand } from '../../join/command/finalizeJoinProposalCommand';
+import { finalizeJoinProposalCommand } from '../../join/command/finalize/finalizeJoinProposalCommand';
 import { CommonError } from '@errors';
 
 

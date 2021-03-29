@@ -1,8 +1,9 @@
-import { EventType, ProposalState, ProposalType } from '@prisma/client';
+import { EventType, FundingType, ProposalState, ProposalType } from '@prisma/client';
 import { prisma } from '@toolkits';
 import { NotFoundError, CommonError } from '@errors';
 import { getProposalVoteCountQuery } from '@votes/queries/getProposalVoteCountQuery';
 import { eventsService } from '@services';
+import { finalizeApprovedOneTimeJoinRequestCommand } from './finalizeApprovedOneTimeJoinRequestCommand';
 
 export const finalizeJoinProposalCommand = async (proposalId: string): Promise<void> => {
   // Find the proposal and the join
@@ -11,7 +12,12 @@ export const finalizeJoinProposalCommand = async (proposalId: string): Promise<v
       id: proposalId
     },
     include: {
-      join: true
+      join: true,
+      common: {
+        select: {
+          fundingType: true
+        }
+      }
     }
   });
 
@@ -40,35 +46,13 @@ export const finalizeJoinProposalCommand = async (proposalId: string): Promise<v
 
   // If the proposal has been approved
   if (votesCount.votesFor > votesCount.votesAgainst) {
-    // Change the proposal state
-    await prisma.proposal.update({
-      where: {
-        id: proposalId
-      },
-      data: {
-        state: ProposalState.Accepted
-      }
-    });
-
-    // Create event @todo Add the proposal ID to the payload
-    await eventsService.create({
-      type: EventType.JoinRequestAccepted,
-      userId: proposal.userId,
-      commonId: proposal.commonId
-    });
-
-    // @todo Successful join proposal finalization
-    // If the proposal is for one time commons
-    // Charge the card and start polling on it
-    // Change the proposal payment status to pending
-    // If the charge has been successful
-    // Change the proposal payment status to successful
-    // Add the user as member to that common
-
-    // If the proposal is for subscription commons
-    // Create the subscriptions (all other handling is done there)
-
-    // @todo Mark the proposal as processed
+    if (proposal.common.fundingType === FundingType.OneTime) {
+      await finalizeApprovedOneTimeJoinRequestCommand(proposal.id);
+    } else if (proposal.common.fundingType === FundingType.Monthly) {
+      // @todo Handle approved monthly common
+    } else {
+      throw new CommonError('Unsupported common funding type occurred');
+    }
 
   }
   // If the proposal has been rejected

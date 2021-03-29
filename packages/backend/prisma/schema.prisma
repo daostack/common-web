@@ -79,9 +79,6 @@ model CommonMember {
 
   roles CommonMemberRole[]
 
-  payments     Payment[]
-  subscription Subscription?
-
   proposals Proposal[]
 
   commonId String
@@ -107,10 +104,12 @@ model JoinProposal {
   funding      Int
   paymentState ProposalPaymentState @default(NotAttempted)
 
+  card         Card          @relation(fields: [cardId], references: [id])
   payment      Payment?
   proposal     Proposal?
   subscription Subscription? @relation(fields: [subscriptionId], references: [id])
 
+  cardId         String
   subscriptionId String?
 }
 
@@ -142,6 +141,8 @@ model Proposal {
   link   Json?
   files  Json?
   images Json?
+
+  ipAddress String?
 
   votes Vote[]
 
@@ -200,7 +201,6 @@ model Subscription {
 
   user         User         @relation(fields: [userId], references: [id])
   common       Common       @relation(fields: [commonId], references: [id])
-  commonMember CommonMember @relation(fields: [commonMemberId], references: [id])
 
   proposal JoinProposal[]
   payments Payment[]
@@ -210,7 +210,6 @@ model Subscription {
 
   userId         String
   commonId       String
-  commonMemberId String
 }
 
 // ---- Votes
@@ -245,6 +244,8 @@ model Payment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+
+  type            PaymentType
   status          PaymentStatus @default(NotAttempted)
   circlePaymentId String?
 
@@ -254,7 +255,6 @@ model Payment {
 
   user         User         @relation(fields: [userId], references: [id])
   common       Common       @relation(fields: [commonId], references: [id])
-  commonMember CommonMember @relation(fields: [commonMemberId], references: [id])
 
   join         JoinProposal  @relation(fields: [proposalId], references: [id])
   subscription Subscription? @relation(fields: [subscriptionId], references: [id])
@@ -264,9 +264,13 @@ model Payment {
 
   userId         String
   commonId       String
-  commonMemberId String
 
   cardId String
+}
+
+enum PaymentType {
+  OneTimePayment
+  SubscriptionPayment
 }
 
 enum PaymentStatus {
@@ -293,8 +297,11 @@ model Card {
   cvvCheck String
   avsCheck String
 
-  user          User           @relation(fields: [userId], references: [id])
-  payments      Payment[]
+
+  user     User      @relation(fields: [userId], references: [id])
+  payments Payment[]
+
+  proposal      JoinProposal[]
   subscriptions Subscription[]
 
   billingDetails CardBillingDetails?
@@ -365,6 +372,11 @@ enum EventType {
   CardCreated
   CardCvvVerificationPassed
   CardCvvVerificationFailed
+
+  PaymentCreated
+  PaymentConfirmed
+  PaymentRejected
+  PaymentPaid
 
   VoteCreated
 

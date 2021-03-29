@@ -34,7 +34,6 @@ const schema = z.object({
 
   emailVerified: z.boolean()
     .optional()
-    .default(false)
 });
 
 export const createUserCommand: (command: z.infer<typeof schema>) => Promise<User> = async (command) => {
