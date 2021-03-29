@@ -57,6 +57,7 @@ export const finalizeJoinProposalCommand = async (proposalId: string): Promise<v
       commonId: proposal.commonId
     });
 
+    // @todo Successful join proposal finalization
     // If the proposal is for one time commons
     // Charge the card and start polling on it
     // Change the proposal payment status to pending

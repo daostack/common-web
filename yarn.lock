@@ -24444,7 +24444,7 @@ zip-stream@^2.1.2:
     compress-commons "^2.1.1"
     readable-stream "^3.4.0"
 
-zod@^3.0.0-alpha.4:
-  version "3.0.0-alpha.33"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-3.0.0-alpha.33.tgz#8562cc92e57b7df7e0f99f3376181782d7233cfb"
-  integrity sha512-zxh7bbKBd1gPiHhjFL1f4QNJm7fnw8IJir84pFhqVsHalSBFsxIhDTduV9MdpCTpyfOvRnFgOF0rqrdLeQTEyA==
+zod@^1.11.13:
+  version "1.11.13"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-1.11.13.tgz#6acb1e52b670afeb816ce2e2ddf6ab359f9ea506"
+  integrity sha512-10+KA7eWa8g1hbKIXkOnhjJ4RKEwX85ECz3VJzP+pWkJOFKn76bHy1kG0d1JHBwmdElLcCsaB0O9HqIfT1vZnw==

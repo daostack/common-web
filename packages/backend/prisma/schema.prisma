@@ -245,13 +245,18 @@ model Payment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  status          PaymentStatus @default(NotAttempted)
+  circlePaymentId String?
+
+  amount Int
+
   card Card @relation(fields: [cardId], references: [id])
 
   user         User         @relation(fields: [userId], references: [id])
   common       Common       @relation(fields: [commonId], references: [id])
   commonMember CommonMember @relation(fields: [commonMemberId], references: [id])
 
-  proposal     JoinProposal  @relation(fields: [proposalId], references: [id])
+  join         JoinProposal  @relation(fields: [proposalId], references: [id])
   subscription Subscription? @relation(fields: [subscriptionId], references: [id])
 
   subscriptionId String?
@@ -262,6 +267,16 @@ model Payment {
   commonMemberId String
 
   cardId String
+}
+
+enum PaymentStatus {
+  NotAttempted
+
+  Pending
+  Confirmed
+
+  Paid
+  Failed
 }
 
 model Card {
