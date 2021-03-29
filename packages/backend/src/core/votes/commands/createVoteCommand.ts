@@ -23,34 +23,22 @@ const schema = z.object({
 
 export const createVoteCommand = async (command: z.infer<typeof schema>): Promise<Vote> => {
   // Find the proposal description of the proposal
-  const [proposalDescription] = await prisma.proposalDescription.findMany({
+  const [proposal] = await prisma.proposal.findMany({
     where: {
-      OR: [{
-        joinId: command.proposalId
-      }, {
-        fundingId: command.proposalId
-      }]
+      id: command.proposalId
     },
-    include: {
-      join: {
-        select: {
-          commonId: true
-        }
-      },
-      funding: {
-        select: {
-          commonId: true
-        }
-      }
+    select: {
+      id: true,
+      commonId: true
     }
   });
 
-  if (!proposalDescription) {
+  if (!proposal) {
     throw new NotFoundError('proposal.fundingId_or_joinId', command.proposalId);
   }
 
   // Find the ID of the common, owning the proposal
-  const commonId = (proposalDescription.funding?.commonId || proposalDescription.join?.commonId) as string;
+  const { commonId } = proposal;
 
   // Find the member ID of the user in that common. If the user
   // is not a member an error will be thrown and the vote will
@@ -68,12 +56,12 @@ export const createVoteCommand = async (command: z.infer<typeof schema>): Promis
       data: {
         commonMemberId: memberId,
         outcome: command.outcome,
-        proposalDescriptionId: proposalDescription.id
+        proposalId: proposal.id
       }
     });
   } catch (e) {
     // We are here so the user has most likely already voted for this proposals. Check to be sure
-    if (e.message?.includes('Unique constraint failed on the fields: (`commonMemberId`,`proposalDescriptionId`)')) {
+    if (e.message?.includes('Unique constraint failed on the fields: (`commonMemberId`,`proposalId`)')) {
       throw new CommonError('Only one vote is allowed from member per proposal');
     } else {
       // Some other error occurred, so just rethrow it

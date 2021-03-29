@@ -111,9 +111,9 @@ input CommonMemberWhereInput {
   common: CommonWhereInput
   commonId: StringFilter
   createdAt: DateTimeFilter
-  fundingProposals: FundingProposalListRelationFilter
   id: StringFilter
   payments: PaymentListRelationFilter
+  proposals: ProposalListRelationFilter
   roles: EnumCommonMemberRoleNullableListFilter
   subscription: SubscriptionWhereInput
   updatedAt: DateTimeFilter
@@ -130,13 +130,12 @@ input CommonWhereInput {
   events: EventListRelationFilter
   fundingCooldown: DateTimeFilter
   fundingMinimumAmount: IntFilter
-  fundingProposals: FundingProposalListRelationFilter
   fundingType: EnumFundingTypeFilter
   id: StringFilter
-  joinProposals: JoinProposalListRelationFilter
   members: CommonMemberListRelationFilter
   name: StringFilter
   payments: PaymentListRelationFilter
+  proposals: ProposalListRelationFilter
   raised: IntFilter
   subscriptions: SubscriptionListRelationFilter
   updatedAt: DateTimeFilter
@@ -256,6 +255,13 @@ input EnumProposalStateFilter {
   notIn: [ProposalState!]
 }
 
+input EnumProposalTypeFilter {
+  equals: ProposalType
+  in: [ProposalType!]
+  not: NestedEnumProposalTypeFilter
+  notIn: [ProposalType!]
+}
+
 input EnumVoteOutcomeFilter {
   equals: VoteOutcome
   in: [VoteOutcome!]
@@ -309,29 +315,16 @@ type FundingProposal {
   updatedAt: Date!
 }
 
-input FundingProposalListRelationFilter {
-  every: FundingProposalWhereInput
-  none: FundingProposalWhereInput
-  some: FundingProposalWhereInput
-}
-
 input FundingProposalWhereInput {
   AND: [FundingProposalWhereInput!]
   NOT: [FundingProposalWhereInput!]
   OR: [FundingProposalWhereInput!]
   amount: IntFilter
-  common: CommonWhereInput
-  commonId: StringFilter
-  commonMember: CommonMemberWhereInput
-  commonMemberId: StringFilter
   createdAt: DateTimeFilter
-  description: ProposalDescriptionWhereInput
   funded: BoolFilter
   id: StringFilter
-  state: EnumProposalStateFilter
+  proposal: ProposalWhereInput
   updatedAt: DateTimeFilter
-  user: UserWhereInput
-  userId: StringFilter
 }
 
 """The funding type of the common"""
@@ -372,21 +365,15 @@ input JoinProposalWhereInput {
   AND: [JoinProposalWhereInput!]
   NOT: [JoinProposalWhereInput!]
   OR: [JoinProposalWhereInput!]
-  common: CommonWhereInput
-  commonId: StringFilter
   createdAt: DateTimeFilter
-  description: ProposalDescriptionWhereInput
   funding: IntFilter
-  fundingType: EnumFundingTypeFilter
   id: StringFilter
   payment: PaymentWhereInput
   paymentState: EnumProposalPaymentStateFilter
-  state: EnumProposalStateFilter
+  proposal: ProposalWhereInput
   subscription: SubscriptionWhereInput
   subscriptionId: StringNullableFilter
   updatedAt: DateTimeFilter
-  user: UserWhereInput
-  userId: StringFilter
 }
 
 scalar Json
@@ -476,6 +463,13 @@ input NestedEnumProposalStateFilter {
   notIn: [ProposalState!]
 }
 
+input NestedEnumProposalTypeFilter {
+  equals: ProposalType
+  in: [ProposalType!]
+  not: NestedEnumProposalTypeFilter
+  notIn: [ProposalType!]
+}
+
 input NestedEnumVoteOutcomeFilter {
   equals: VoteOutcome
   in: [VoteOutcome!]
@@ -549,27 +543,6 @@ input PaymentWhereInput {
   userId: StringFilter
 }
 
-input ProposalDescriptionWhereInput {
-  AND: [ProposalDescriptionWhereInput!]
-  NOT: [ProposalDescriptionWhereInput!]
-  OR: [ProposalDescriptionWhereInput!]
-  createdAt: DateTimeFilter
-  description: StringNullableFilter
-  files: JsonNullableFilter
-  funding: FundingProposalWhereInput
-  fundingId: StringNullableFilter
-  id: StringFilter
-  images: JsonNullableFilter
-  join: JoinProposalWhereInput
-  joinId: StringNullableFilter
-  link: JsonNullableFilter
-  title: StringNullableFilter
-  updatedAt: DateTimeFilter
-  votes: VoteListRelationFilter
-  votesAgainst: IntFilter
-  votesFor: IntFilter
-}
-
 input ProposalFileInput {
   value: String!
 }
@@ -583,6 +556,12 @@ input ProposalLinkInput {
   url: String!
 }
 
+input ProposalListRelationFilter {
+  every: ProposalWhereInput
+  none: ProposalWhereInput
+  some: ProposalWhereInput
+}
+
 enum ProposalPaymentState {
   NotAttempted
   Pending
@@ -593,7 +572,42 @@ enum ProposalPaymentState {
 enum ProposalState {
   Accepted
   Countdown
+  Finalizing
   Rejected
+}
+
+enum ProposalType {
+  FundingRequest
+  JoinRequest
+}
+
+input ProposalWhereInput {
+  AND: [ProposalWhereInput!]
+  NOT: [ProposalWhereInput!]
+  OR: [ProposalWhereInput!]
+  common: CommonWhereInput
+  commonId: StringFilter
+  commonMember: CommonMemberWhereInput
+  commonMemberId: StringNullableFilter
+  createdAt: DateTimeFilter
+  description: StringNullableFilter
+  files: JsonNullableFilter
+  funding: FundingProposalWhereInput
+  fundingId: StringNullableFilter
+  id: StringFilter
+  images: JsonNullableFilter
+  join: JoinProposalWhereInput
+  joinId: StringNullableFilter
+  link: JsonNullableFilter
+  state: EnumProposalStateFilter
+  title: StringNullableFilter
+  type: EnumProposalTypeFilter
+  updatedAt: DateTimeFilter
+  user: UserWhereInput
+  userId: StringFilter
+  votes: VoteListRelationFilter
+  votesAgainst: IntFilter
+  votesFor: IntFilter
 }
 
 type Query {
@@ -687,17 +701,16 @@ input UserWhereInput {
   NOT: [UserWhereInput!]
   OR: [UserWhereInput!]
   cards: CardListRelationFilter
-  commonLinks: CommonMemberListRelationFilter
   createdAt: DateTimeFilter
   email: StringFilter
   emailVerified: BoolFilter
   events: EventListRelationFilter
   firstName: StringFilter
-  fundingProposals: FundingProposalListRelationFilter
   id: StringFilter
-  joinProposals: JoinProposalListRelationFilter
   lastName: StringFilter
+  memberships: CommonMemberListRelationFilter
   payments: PaymentListRelationFilter
+  proposals: ProposalListRelationFilter
   subscriptions: SubscriptionListRelationFilter
   updatedAt: DateTimeFilter
 }
@@ -733,7 +746,7 @@ input VoteWhereInput {
   createdAt: DateTimeFilter
   id: StringFilter
   outcome: EnumVoteOutcomeFilter
-  proposal: ProposalDescriptionWhereInput
-  proposalDescriptionId: StringFilter
+  proposal: ProposalWhereInput
+  proposalId: StringFilter
   updatedAt: DateTimeFilter
 }

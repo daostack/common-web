@@ -9,8 +9,8 @@ export const registerUpdateProposalVoteCountProcessor = (queue: IVotingQueue): v
     // Update the votes count
     await proposalsService.updateVoteCount(job.data.vote);
 
-    if (await proposalHasMajorityQuery(job.data.vote.proposalDescriptionId)) {
-      // Finalize the proposal
+    if (await proposalHasMajorityQuery(job.data.vote.proposalId)) {
+      // @todo Finalize the proposal
     }
 
     done();

@@ -11,11 +11,11 @@ const initialVotesCount: IVotesCount = {
   votesFor: 0
 };
 
-export const proposalHasMajorityQuery = async (proposalDescriptionId: string): Promise<boolean> => {
+export const proposalHasMajorityQuery = async (proposalId: string): Promise<boolean> => {
   // Find all the votes for the proposal
   const votes = await prisma.vote.findMany({
     where: {
-      proposalDescriptionId
+      proposalId
     },
     select: {
       outcome: true
@@ -38,23 +38,11 @@ export const proposalHasMajorityQuery = async (proposalDescriptionId: string): P
   const memberCount = await prisma.commonMember.count({
     where: {
       common: {
-        OR: [{
-          fundingProposals: {
-            some: {
-              description: {
-                id: proposalDescriptionId
-              }
-            }
+        proposals: {
+          some: {
+            id: proposalId
           }
-        }, {
-          joinProposals: {
-            some: {
-              description: {
-                id: proposalDescriptionId
-              }
-            }
-          }
-        }]
+        }
       }
     }
   });

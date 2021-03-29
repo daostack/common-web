@@ -33,13 +33,11 @@ model User {
 
   cards       Card[]
   events      Event[]
-  commonLinks CommonMember[]
+  memberships CommonMember[]
 
   payments      Payment[]
+  proposals     Proposal[]
   subscriptions Subscription[]
-
-  joinProposals    JoinProposal[]
-  fundingProposals FundingProposal[]
 }
 
 // ---- Common related stuff
@@ -67,8 +65,7 @@ model Common {
   payments      Payment[]
   subscriptions Subscription[]
 
-  joinProposals    JoinProposal[]
-  fundingProposals FundingProposal[]
+  proposals Proposal[]
 }
 
 model CommonMember {
@@ -85,7 +82,7 @@ model CommonMember {
   payments     Payment[]
   subscription Subscription?
 
-  fundingProposals FundingProposal[]
+  proposals Proposal[]
 
   commonId String
   userId   String
@@ -107,22 +104,13 @@ model JoinProposal {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  funding     Int
-  fundingType FundingType
-
-  state        ProposalState
-  paymentState ProposalPaymentState
-
-  description ProposalDescription?
-
-  user   User   @relation(fields: [userId], references: [id])
-  common Common @relation(fields: [commonId], references: [id])
+  funding      Int
+  paymentState ProposalPaymentState @default(NotAttempted)
 
   payment      Payment?
+  proposal     Proposal?
   subscription Subscription? @relation(fields: [subscriptionId], references: [id])
 
-  userId         String
-  commonId       String
   subscriptionId String?
 }
 
@@ -132,24 +120,17 @@ model FundingProposal {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user         User         @relation(fields: [userId], references: [id])
-  common       Common       @relation(fields: [commonId], references: [id])
-  commonMember CommonMember @relation(fields: [commonMemberId], references: [id])
-
-  description ProposalDescription?
-
-  state ProposalState
+  proposal Proposal?
 
   amount Int
 
+  // @todo -> to funding state
   funded Boolean @default(false)
 
-  userId         String
-  commonId       String
-  commonMemberId String
+  // @todo Payout
 }
 
-model ProposalDescription {
+model Proposal {
   id String @id @default(uuid())
 
   createdAt DateTime @default(now())
@@ -164,19 +145,37 @@ model ProposalDescription {
 
   votes Vote[]
 
+  type  ProposalType
+  state ProposalState @default(Countdown)
+
   votesFor     Int @default(0)
   votesAgainst Int @default(0)
 
   join    JoinProposal?    @relation(fields: [joinId], references: [id])
   funding FundingProposal? @relation(fields: [fundingId], references: [id])
 
+  user         User          @relation(fields: [userId], references: [id])
+  common       Common        @relation(fields: [commonId], references: [id])
+  commonMember CommonMember? @relation(fields: [commonMemberId], references: [id])
+
 
   joinId    String? @unique
   fundingId String? @unique
+
+  userId         String
+  commonId       String
+  commonMemberId String?
+}
+
+enum ProposalType {
+  FundingRequest
+  JoinRequest
 }
 
 enum ProposalState {
   Countdown
+
+  Finalizing
 
   Rejected
   Accepted
@@ -224,13 +223,13 @@ model Vote {
 
   outcome VoteOutcome
 
-  proposal     ProposalDescription @relation(fields: [proposalDescriptionId], references: [id])
-  commonMember CommonMember        @relation(fields: [commonMemberId], references: [id])
+  proposal     Proposal     @relation(fields: [proposalId], references: [id])
+  commonMember CommonMember @relation(fields: [commonMemberId], references: [id])
 
-  commonMemberId        String
-  proposalDescriptionId String
+  commonMemberId String
+  proposalId     String
 
-  @@unique([commonMemberId, proposalDescriptionId])
+  @@unique([commonMemberId, proposalId])
 }
 
 enum VoteOutcome {

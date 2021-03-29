@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { EventType, FundingProposal, ProposalState } from '@prisma/client';
+import { EventType, Proposal, ProposalType } from '@prisma/client';
 
 import { ProposalLinkSchema, ProposalImageSchema, ProposalFileSchema } from '@validation';
 import { NotFoundError, CommonError } from '@errors';
@@ -36,7 +36,7 @@ const schema = z.object({
     .nullable()
 });
 
-export const createFundingProposalCommand = async (command: z.infer<typeof schema>): Promise<FundingProposal> => {
+export const createFundingProposalCommand = async (command: z.infer<typeof schema>): Promise<Proposal> => {
   // Validate the command
   schema.parse(command);
 
@@ -86,24 +86,37 @@ export const createFundingProposalCommand = async (command: z.infer<typeof schem
   }
 
   // Create the funding request
-  const fundingRequest = await prisma.fundingProposal.create({
+  const proposal = await prisma.proposal.create({
     data: {
-      amount: command.amount,
+      title: command.title,
+      description: command.description,
+      type: ProposalType.FundingRequest,
 
-      state: ProposalState.Countdown,
+      link: command.links,
+      files: command.files,
+      images: command.images,
 
-      userId: command.proposerId,
-      commonId: command.commonId,
-      commonMemberId: common.members[0].id,
+      user: {
+        connect: {
+          id: command.proposerId
+        }
+      },
 
-      description: {
+      common: {
+        connect: {
+          id: command.commonId
+        }
+      },
+
+      commonMember: {
+        connect: {
+          id: common.members[0].id
+        }
+      },
+
+      funding: {
         create: {
-          title: command.title,
-          description: command.description,
-
-          link: command.links,
-          files: command.files,
-          images: command.images
+          amount: command.amount
         }
       }
     }
@@ -117,5 +130,5 @@ export const createFundingProposalCommand = async (command: z.infer<typeof schem
   });
 
   // Return the created funding proposal
-  return fundingRequest;
+  return proposal;
 };

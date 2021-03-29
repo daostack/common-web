@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { JoinProposal, EventType, ProposalState, ProposalPaymentState } from '@prisma/client';
+import { EventType, ProposalState, ProposalType, Proposal } from '@prisma/client';
 
 import { eventsService, cardsService } from '@services';
 import { CommonError, NotFoundError } from '@errors';
@@ -30,7 +30,7 @@ const schema = z.object({
     .nonempty()
 });
 
-export const createJoinProposalCommand = async (command: z.infer<typeof schema>): Promise<JoinProposal> => {
+export const createJoinProposalCommand = async (command: z.infer<typeof schema>): Promise<Proposal> => {
   // Validate the payload
   schema.parse(command);
 
@@ -51,10 +51,16 @@ export const createJoinProposalCommand = async (command: z.infer<typeof schema>)
         }
       },
 
-      joinProposals: {
+      proposals: {
         where: {
           userId: command.userId,
-          state: ProposalState.Countdown
+          type: ProposalType.JoinRequest,
+          state: {
+            in: [
+              ProposalState.Countdown,
+              ProposalState.Finalizing
+            ]
+          }
         }
       }
     }
@@ -65,12 +71,20 @@ export const createJoinProposalCommand = async (command: z.infer<typeof schema>)
     throw new NotFoundError('Common', command.commonId);
   }
 
+  // Check if the proposal funding is the same or more than the minimum for the common
+
   // Check if there are other pending join requests in the common for that user
-  if (common.joinProposals.length) {
+  if (common.proposals.length) {
     // If there are proposals at all this should mean that there are for the user
     // and bending, but a little check never hurt no one
-    if (common.joinProposals.some(p => p.userId === command.userId && p.state === ProposalState.Countdown)) {
-      throw new CommonError('Cannot create new join proposal when there is one that is pending');
+    if (common.proposals.some(
+      p =>
+        p.userId === command.userId &&
+        (p.state === ProposalState.Countdown || p.state === ProposalState.Finalizing)
+    )) {
+      throw new CommonError('Cannot create new join proposal when there is one that is pending or currently finalizing', {
+        proposals: common.proposals
+      });
     }
   }
 
@@ -82,25 +96,31 @@ export const createJoinProposalCommand = async (command: z.infer<typeof schema>)
   }
 
   // If this checks are successful create the proposal
-  const proposal = await prisma.joinProposal.create({
+  const proposal = await prisma.proposal.create({
     data: {
-      description: {
-        create: {
-          title: command.title,
-          description: command.description,
-          link: command.links
+      type: ProposalType.JoinRequest,
+
+      link: command.links,
+      title: command.title,
+      description: command.description,
+
+      user: {
+        connect: {
+          id: command.userId
         }
       },
 
-      funding: command.fundingAmount,
-      fundingType: common.fundingType,
+      common: {
+        connect: {
+          id: command.commonId
+        }
+      },
 
-      state: ProposalState.Countdown,
-      paymentState: ProposalPaymentState.NotAttempted,
-
-
-      commonId: command.commonId,
-      userId: command.userId
+      join: {
+        create: {
+          funding: command.fundingAmount
+        }
+      }
     }
   });
 
