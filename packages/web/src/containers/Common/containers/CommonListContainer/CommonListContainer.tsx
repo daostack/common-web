@@ -16,8 +16,8 @@ const options = {
 };
 
 export default function CommonListContainer() {
-  const commons = useSelector(selectCommonList);
-  const page = useSelector(selectCurrentPage);
+  const commons = useSelector(selectCommonList());
+  const page = useSelector(selectCurrentPage());
   const dispatch = useDispatch();
   const loader = useRef(null);
 

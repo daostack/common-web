@@ -8,6 +8,8 @@ export interface User {
   emailVerified: boolean;
   isAnonymous: boolean;
   lastLoginAt: string;
+  firstName: string;
+  lastName: string;
 
   phoneNumber: null | string;
   photoURL: string;

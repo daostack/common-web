@@ -20,3 +20,9 @@ export const updatePage = createStandardAction(CommonsActionTypes.UPDATE_PAGE)<n
 export const setDiscussion = createStandardAction(CommonsActionTypes.SET_DISCUSSION)<Discussion[]>();
 
 export const setProposals = createStandardAction(CommonsActionTypes.SET_PROPOSALS)<Proposal[]>();
+
+export const loadCommonDiscussionList = createAsyncAction(
+  CommonsActionTypes.LOAD_COMMON_DISCUSSIONS,
+  CommonsActionTypes.LOAD_COMMON_DISCUSSIONS_SUCCESS,
+  CommonsActionTypes.LOAD_COMMON_DISCUSSIONS_FAILURE,
+)<void, Discussion[], Error>();
