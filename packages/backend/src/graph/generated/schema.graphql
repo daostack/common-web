@@ -391,7 +391,7 @@ input JoinProposalWhereInput {
   createdAt: DateTimeFilter
   funding: IntFilter
   id: StringFilter
-  payment: PaymentWhereInput
+  payment: PaymentListRelationFilter
   paymentState: EnumProposalPaymentStateFilter
   proposal: ProposalWhereInput
   subscription: SubscriptionWhereInput
@@ -585,7 +585,7 @@ input PaymentWhereInput {
   createdAt: DateTimeFilter
   id: StringFilter
   join: JoinProposalWhereInput
-  proposalId: StringFilter
+  joinId: StringFilter
   status: EnumPaymentStatusFilter
   subscription: SubscriptionWhereInput
   subscriptionId: StringNullableFilter
@@ -615,10 +615,10 @@ input ProposalListRelationFilter {
 }
 
 enum ProposalPaymentState {
+  Confirmed
+  Failed
   NotAttempted
   Pending
-  Successful
-  Unsuccessful
 }
 
 enum ProposalState {

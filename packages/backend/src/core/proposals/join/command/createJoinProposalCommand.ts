@@ -38,7 +38,7 @@ export const createJoinProposalCommand = async (command: z.infer<typeof schema>)
   schema.parse(command);
 
   // Validate that the user is the owner of the card
-  if (await cardsService.isCardOwner(command.cardId, command.userId)) {
+  if (!await cardsService.isCardOwner(command.cardId, command.userId)) {
     throw new CommonError('Cannot create proposals with cards not created by you');
   }
 
@@ -132,7 +132,7 @@ export const createJoinProposalCommand = async (command: z.infer<typeof schema>)
   });
 
   // Create event
-  await eventsService.commands.create({
+  await eventsService.create({
     type: EventType.JoinRequestCreated,
     commonId: command.commonId,
     userId: command.userId

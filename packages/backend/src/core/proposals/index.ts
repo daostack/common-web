@@ -3,6 +3,7 @@ import { createFundingProposalCommand } from './funding/command/createFundingPro
 
 import { updateProposalVoteCountsCommand } from './shared/command/updateProposalVoteCountsCommand';
 import { proposalHasMajorityQuery } from './shared/queries/proposalHasMajorityQuery';
+import { finalizeProposalCommand } from './shared/command/finalizeProposalCommand';
 
 export const joinProposalService = {
   commands: {
@@ -20,6 +21,7 @@ export const proposalsService = {
 
   // Shared commands and queries
   updateVoteCount: updateProposalVoteCountsCommand,
+  finalize: finalizeProposalCommand,
 
   hasMajority: proposalHasMajorityQuery
 };

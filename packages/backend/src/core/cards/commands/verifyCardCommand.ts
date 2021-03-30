@@ -61,7 +61,7 @@ export const verifyCardCommand = async (card: Card, customOptions?: Partial<IVer
       cvvCheck !== 'pending' &&
       cvvCheck !== 'unavailable'
     ) {
-      await eventsService.commands.create({
+      await eventsService.create({
         userId: card.userId,
         type: cvvCheck === 'fail'
           ? EventType.CardCvvVerificationFailed

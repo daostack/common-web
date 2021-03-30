@@ -1,6 +1,7 @@
 import * as z from 'zod';
-import { Event, EventType } from '@prisma/client';
-import { prisma } from '@toolkits';
+import { EventType } from '@prisma/client';
+import { EventsQueue } from '../queue';
+import { CreateEvent } from '../queue/jobs/createEventProcessor';
 
 const schema = z.object({
   commonId: z.string()
@@ -11,15 +12,13 @@ const schema = z.object({
     .uuid()
     .optional(),
 
-  type: z.enum(Object.keys(EventType) as [(keyof typeof EventType)])
+  type: z.enum(Object.keys(EventType) as [(keyof typeof EventType)]),
+
+  payload: z.string()
+    .optional()
+    .nullable()
 });
 
-export const createEventCommand = (command: z.infer<typeof schema>): Promise<Event> => {
-  return prisma.event.create({
-    data: {
-      type: command.type,
-      userId: command.userId,
-      commonId: command.commonId,
-    }
-  })
-}
+export const createEventCommand = async (command: z.infer<typeof schema>): Promise<void> => {
+  EventsQueue.add(CreateEvent, command);
+};

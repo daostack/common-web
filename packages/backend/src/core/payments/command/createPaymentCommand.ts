@@ -30,10 +30,9 @@ const schema = z.object({
       .nullable(),
 
     userId: z.string()
-      .nonempty()
-      .uuid(),
+      .nonempty(),
 
-    proposalId: z.string()
+    joinId: z.string()
       .nonempty()
       .uuid(),
 
@@ -58,9 +57,9 @@ const schema = z.object({
 });
 
 /**
- * @todo
+ * Creates new payment with circle and in our database, without polling it for success
  *
- * @param command
+ * @param command - The payload for creating the payment
  */
 export const createPaymentCommand = async (command: z.infer<typeof schema>): Promise<Payment> => {
   // Validate the payload

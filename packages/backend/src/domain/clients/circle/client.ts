@@ -15,7 +15,8 @@ circleClient.interceptors.response.use(
     // @todo Save this to the database?
     console.error('New circle error occurred', {
       data: error.response.config.data,
-      status: error.response.status
+      status: error.response.status,
+      responseData: error.response.data
     });
 
     return Promise.reject(error);

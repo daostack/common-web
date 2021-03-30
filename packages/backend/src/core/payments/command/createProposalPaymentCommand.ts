@@ -1,4 +1,4 @@
-import { Payment, PaymentType, ProposalPaymentState } from '@prisma/client';
+import { FundingType, Payment, PaymentType, ProposalPaymentState } from '@prisma/client';
 
 import { prisma } from '@toolkits';
 import { NotFoundError, CommonError } from '@errors';
@@ -6,9 +6,9 @@ import { NotFoundError, CommonError } from '@errors';
 import { createPaymentCommand } from './createPaymentCommand';
 
 /**
- * Create payment for one time proposal
+ * Create payment for one time proposal. Returns the processed payment
  *
- * @param proposalId
+ * @param proposalId - The ID of the proposal for witch to create payment
  */
 export const createProposalPaymentCommand = async (proposalId: string): Promise<Payment> => {
   // Find the proposal
@@ -22,10 +22,17 @@ export const createProposalPaymentCommand = async (proposalId: string): Promise<
 
       ipAddress: true,
 
+      common: {
+        select: {
+          fundingType: true
+        }
+      },
+
       join: {
         select: {
           id: true,
           funding: true,
+          paymentState: true,
 
           card: {
             select: {
@@ -53,12 +60,23 @@ export const createProposalPaymentCommand = async (proposalId: string): Promise<
     throw new CommonError('Cannot create payment for not join proposals');
   }
 
+  if (
+    proposal.join.paymentState !== ProposalPaymentState.NotAttempted &&
+    proposal.join.paymentState !== ProposalPaymentState.Failed
+  ) {
+    throw new CommonError('Cannot create payment for proposal with pending or confirmed payment');
+  }
+
+  if (proposal.common.fundingType !== FundingType.OneTime) {
+    throw new CommonError('Cannot create payment for proposal that is not of a one time funding type');
+  }
+
   // Create the payment
-  const payment = createPaymentCommand({
+  const payment = await createPaymentCommand({
     connect: {
-      proposalId: proposal.id,
       commonId: proposal.commonId,
       cardId: proposal.join.card.id,
+      joinId: proposal.join.id,
       userId: proposal.user.id
     },
     metadata: {

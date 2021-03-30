@@ -289,7 +289,7 @@ export interface NexusGenInputs {
     createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     funding?: NexusGenInputs['IntFilter'] | null; // IntFilter
     id?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    payment?: NexusGenInputs['PaymentWhereInput'] | null; // PaymentWhereInput
+    payment?: NexusGenInputs['PaymentListRelationFilter'] | null; // PaymentListRelationFilter
     paymentState?: NexusGenInputs['EnumProposalPaymentStateFilter'] | null; // EnumProposalPaymentStateFilter
     proposal?: NexusGenInputs['ProposalWhereInput'] | null; // ProposalWhereInput
     subscription?: NexusGenInputs['SubscriptionWhereInput'] | null; // SubscriptionWhereInput
@@ -426,7 +426,7 @@ export interface NexusGenInputs {
     createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     id?: NexusGenInputs['StringFilter'] | null; // StringFilter
     join?: NexusGenInputs['JoinProposalWhereInput'] | null; // JoinProposalWhereInput
-    proposalId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    joinId?: NexusGenInputs['StringFilter'] | null; // StringFilter
     status?: NexusGenInputs['EnumPaymentStatusFilter'] | null; // EnumPaymentStatusFilter
     subscription?: NexusGenInputs['SubscriptionWhereInput'] | null; // SubscriptionWhereInput
     subscriptionId?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
@@ -573,7 +573,7 @@ export interface NexusGenEnums {
   FundingType: "Monthly" | "OneTime"
   PaymentStatus: "Confirmed" | "Failed" | "NotAttempted" | "Paid" | "Pending"
   PaymentType: "OneTimePayment" | "SubscriptionPayment"
-  ProposalPaymentState: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
+  ProposalPaymentState: "Confirmed" | "Failed" | "NotAttempted" | "Pending"
   ProposalState: "Accepted" | "Countdown" | "Finalizing" | "Rejected"
   ProposalType: "FundingRequest" | "JoinRequest"
   QueryMode: "default" | "insensitive"

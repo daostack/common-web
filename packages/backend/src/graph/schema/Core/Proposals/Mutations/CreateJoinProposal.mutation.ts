@@ -36,6 +36,7 @@ export const CreateJoinProposalMutation = extendType({
 
         return joinProposalService.commands.create({
           ...args.input,
+          ipAddress: ctx.req.clientIp || '127.0.0.1',
           userId
         });
       }

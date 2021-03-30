@@ -34,7 +34,7 @@ export const createVoteCommand = async (command: z.infer<typeof schema>): Promis
   });
 
   if (!proposal) {
-    throw new NotFoundError('proposal.fundingId_or_joinId', command.proposalId);
+    throw new NotFoundError('proposal', command.proposalId);
   }
 
   // Find the ID of the common, owning the proposal

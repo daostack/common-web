@@ -50,6 +50,9 @@
       ],
       "@votes/*": [
         "./core/votes/*"
+      ],
+      "@logger": [
+        "./domain/utils/logger"
       ]
     },
     "esModuleInterop": true,

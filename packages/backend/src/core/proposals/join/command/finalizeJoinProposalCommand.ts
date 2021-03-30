@@ -1,9 +1,8 @@
-import { EventType, FundingType, ProposalState, ProposalType } from '@prisma/client';
+import { EventType, ProposalState, ProposalType } from '@prisma/client';
 import { prisma } from '@toolkits';
 import { NotFoundError, CommonError } from '@errors';
 import { getProposalVoteCountQuery } from '@votes/queries/getProposalVoteCountQuery';
 import { eventsService } from '@services';
-import { finalizeApprovedOneTimeJoinRequestCommand } from './finalizeApprovedOneTimeJoinRequestCommand';
 
 export const finalizeJoinProposalCommand = async (proposalId: string): Promise<void> => {
   // Find the proposal and the join
@@ -46,14 +45,24 @@ export const finalizeJoinProposalCommand = async (proposalId: string): Promise<v
 
   // If the proposal has been approved
   if (votesCount.votesFor > votesCount.votesAgainst) {
-    if (proposal.common.fundingType === FundingType.OneTime) {
-      await finalizeApprovedOneTimeJoinRequestCommand(proposal.id);
-    } else if (proposal.common.fundingType === FundingType.Monthly) {
-      // @todo Handle approved monthly common
-    } else {
-      throw new CommonError('Unsupported common funding type occurred');
-    }
+    await prisma.proposal.update({
+      where: {
+        id: proposalId
+      },
+      data: {
+        state: ProposalState.Accepted
+      }
+    });
 
+    // Create event
+    await eventsService.create({
+      type: EventType.JoinRequestAccepted,
+      userId: proposal.userId,
+      commonId: proposal.commonId,
+      payload: JSON.stringify({
+        proposal
+      })
+    });
   }
   // If the proposal has been rejected
   else if (votesCount.votesAgainst > votesCount.votesFor) {
@@ -67,11 +76,12 @@ export const finalizeJoinProposalCommand = async (proposalId: string): Promise<v
       }
     });
 
-    // Create event @todo Add the proposal ID to the payload
+    // Create event
     await eventsService.create({
       type: EventType.JoinRequestRejected,
       userId: proposal.userId,
-      commonId: proposal.commonId
+      commonId: proposal.commonId,
+      payload: JSON.stringify(proposal)
     });
   }
 };
