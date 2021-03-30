@@ -199,6 +199,12 @@ export interface NexusGenInputs {
     not?: NexusGenInputs['NestedEnumFundingTypeFilter'] | null; // NestedEnumFundingTypeFilter
     notIn?: NexusGenEnums['FundingType'][] | null; // [FundingType!]
   }
+  EnumPaymentCircleStatusNullableFilter: { // input type
+    equals?: NexusGenEnums['PaymentCircleStatus'] | null; // PaymentCircleStatus
+    in?: NexusGenEnums['PaymentCircleStatus'][] | null; // [PaymentCircleStatus!]
+    not?: NexusGenInputs['NestedEnumPaymentCircleStatusNullableFilter'] | null; // NestedEnumPaymentCircleStatusNullableFilter
+    notIn?: NexusGenEnums['PaymentCircleStatus'][] | null; // [PaymentCircleStatus!]
+  }
   EnumPaymentStatusFilter: { // input type
     equals?: NexusGenEnums['PaymentStatus'] | null; // PaymentStatus
     in?: NexusGenEnums['PaymentStatus'][] | null; // [PaymentStatus!]
@@ -337,6 +343,12 @@ export interface NexusGenInputs {
     not?: NexusGenInputs['NestedEnumFundingTypeFilter'] | null; // NestedEnumFundingTypeFilter
     notIn?: NexusGenEnums['FundingType'][] | null; // [FundingType!]
   }
+  NestedEnumPaymentCircleStatusNullableFilter: { // input type
+    equals?: NexusGenEnums['PaymentCircleStatus'] | null; // PaymentCircleStatus
+    in?: NexusGenEnums['PaymentCircleStatus'][] | null; // [PaymentCircleStatus!]
+    not?: NexusGenInputs['NestedEnumPaymentCircleStatusNullableFilter'] | null; // NestedEnumPaymentCircleStatusNullableFilter
+    notIn?: NexusGenEnums['PaymentCircleStatus'][] | null; // [PaymentCircleStatus!]
+  }
   NestedEnumPaymentStatusFilter: { // input type
     equals?: NexusGenEnums['PaymentStatus'] | null; // PaymentStatus
     in?: NexusGenEnums['PaymentStatus'][] | null; // [PaymentStatus!]
@@ -422,6 +434,7 @@ export interface NexusGenInputs {
     card?: NexusGenInputs['CardWhereInput'] | null; // CardWhereInput
     cardId?: NexusGenInputs['StringFilter'] | null; // StringFilter
     circlePaymentId?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    circlePaymentStatus?: NexusGenInputs['EnumPaymentCircleStatusNullableFilter'] | null; // EnumPaymentCircleStatusNullableFilter
     common?: NexusGenInputs['CommonWhereInput'] | null; // CommonWhereInput
     commonId?: NexusGenInputs['StringFilter'] | null; // StringFilter
     createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
@@ -570,10 +583,11 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
   CardNetwork: "MASTERCARD" | "VISA"
   CommonMemberRole: "Founder"
-  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "PaymentConfirmed" | "PaymentCreated" | "PaymentPaid" | "PaymentRejected" | "PaymentStateChange" | "ProposalExpired" | "ProposalMajorityReached" | "UserCreated" | "VoteCreated"
+  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "UserCreated" | "VoteCreated"
   FundingType: "Monthly" | "OneTime"
-  PaymentStatus: "Confirmed" | "Failed" | "NotAttempted" | "Paid" | "Pending"
-  PaymentType: "OneTimePayment" | "SubscriptionPayment"
+  PaymentCircleStatus: "confirmed" | "failed" | "paid" | "pending"
+  PaymentStatus: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
+  PaymentType: "OneTimePayment" | "SubscriptionInitialPayment" | "SubscriptionSequentialPayment"
   ProposalPaymentState: "Confirmed" | "Failed" | "NotAttempted" | "Pending"
   ProposalState: "Accepted" | "Countdown" | "Finalizing" | "Rejected"
   ProposalType: "FundingRequest" | "JoinRequest"

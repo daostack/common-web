@@ -240,6 +240,13 @@ input EnumFundingTypeFilter {
   notIn: [FundingType!]
 }
 
+input EnumPaymentCircleStatusNullableFilter {
+  equals: PaymentCircleStatus
+  in: [PaymentCircleStatus!]
+  not: NestedEnumPaymentCircleStatusNullableFilter
+  notIn: [PaymentCircleStatus!]
+}
+
 input EnumPaymentStatusFilter {
   equals: PaymentStatus
   in: [PaymentStatus!]
@@ -302,11 +309,9 @@ enum EventType {
   JoinRequestAccepted
   JoinRequestCreated
   JoinRequestRejected
-  PaymentConfirmed
   PaymentCreated
-  PaymentPaid
-  PaymentRejected
-  PaymentStateChange
+  PaymentFailed
+  PaymentSucceeded
   ProposalExpired
   ProposalMajorityReached
   UserCreated
@@ -476,6 +481,13 @@ input NestedEnumFundingTypeFilter {
   notIn: [FundingType!]
 }
 
+input NestedEnumPaymentCircleStatusNullableFilter {
+  equals: PaymentCircleStatus
+  in: [PaymentCircleStatus!]
+  not: NestedEnumPaymentCircleStatusNullableFilter
+  notIn: [PaymentCircleStatus!]
+}
+
 input NestedEnumPaymentStatusFilter {
   equals: PaymentStatus
   in: [PaymentStatus!]
@@ -557,6 +569,13 @@ input NestedStringNullableFilter {
   startsWith: String
 }
 
+enum PaymentCircleStatus {
+  confirmed
+  failed
+  paid
+  pending
+}
+
 input PaymentListRelationFilter {
   every: PaymentWhereInput
   none: PaymentWhereInput
@@ -564,16 +583,16 @@ input PaymentListRelationFilter {
 }
 
 enum PaymentStatus {
-  Confirmed
-  Failed
   NotAttempted
-  Paid
   Pending
+  Successful
+  Unsuccessful
 }
 
 enum PaymentType {
   OneTimePayment
-  SubscriptionPayment
+  SubscriptionInitialPayment
+  SubscriptionSequentialPayment
 }
 
 input PaymentWhereInput {
@@ -584,6 +603,7 @@ input PaymentWhereInput {
   card: CardWhereInput
   cardId: StringFilter
   circlePaymentId: StringNullableFilter
+  circlePaymentStatus: EnumPaymentCircleStatusNullableFilter
   common: CommonWhereInput
   commonId: StringFilter
   createdAt: DateTimeFilter
