@@ -14,7 +14,7 @@ export interface ICircleCreatePaymentPayload {
   amount: ICirclePaymentAmount;
   source: IPaymentSource;
 
-
+  description: string;
   idempotencyKey: string;
 }
 
@@ -29,7 +29,7 @@ export const _createCirclePayment = async (request: ICircleCreatePaymentPayload)
     });
   }
 
-  const response = await $circleClient.post<ICircleCreatePaymentResponse>(`/payments`);
+  const response = await $circleClient.post<ICircleCreatePaymentResponse>(`/payments`, request);
 
   return response.data;
 };
