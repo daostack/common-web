@@ -8,6 +8,7 @@ import {
   AboutTabComponent,
   PreviewInformationList,
   DiscussionsComponent,
+  DiscussionDetailModal,
 } from "../../components/CommonDetailContainer";
 import { getCommonDetail, loadCommonDiscussionList } from "../../store/actions";
 import {
@@ -93,7 +94,7 @@ export default function CommonDetail() {
     common && (
       <>
         <Modal isShowing={isShowing} onClose={onClose}>
-          <div>hello</div>
+          <DiscussionDetailModal />
         </Modal>
         <div className="common-detail-wrapper">
           <div className="main-information-block">
