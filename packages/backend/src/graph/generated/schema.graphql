@@ -306,6 +306,9 @@ enum EventType {
   PaymentCreated
   PaymentPaid
   PaymentRejected
+  PaymentStateChange
+  ProposalExpired
+  ProposalMajorityReached
   UserCreated
   VoteCreated
 }
@@ -390,6 +393,7 @@ input JoinProposalWhereInput {
   cardId: StringFilter
   createdAt: DateTimeFilter
   funding: IntFilter
+  fundingType: EnumFundingTypeFilter
   id: StringFilter
   payment: PaymentListRelationFilter
   paymentState: EnumProposalPaymentStateFilter

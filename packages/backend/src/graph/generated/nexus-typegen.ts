@@ -288,6 +288,7 @@ export interface NexusGenInputs {
     cardId?: NexusGenInputs['StringFilter'] | null; // StringFilter
     createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     funding?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    fundingType?: NexusGenInputs['EnumFundingTypeFilter'] | null; // EnumFundingTypeFilter
     id?: NexusGenInputs['StringFilter'] | null; // StringFilter
     payment?: NexusGenInputs['PaymentListRelationFilter'] | null; // PaymentListRelationFilter
     paymentState?: NexusGenInputs['EnumProposalPaymentStateFilter'] | null; // EnumProposalPaymentStateFilter
@@ -569,7 +570,7 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
   CardNetwork: "MASTERCARD" | "VISA"
   CommonMemberRole: "Founder"
-  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "PaymentConfirmed" | "PaymentCreated" | "PaymentPaid" | "PaymentRejected" | "UserCreated" | "VoteCreated"
+  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "PaymentConfirmed" | "PaymentCreated" | "PaymentPaid" | "PaymentRejected" | "PaymentStateChange" | "ProposalExpired" | "ProposalMajorityReached" | "UserCreated" | "VoteCreated"
   FundingType: "Monthly" | "OneTime"
   PaymentStatus: "Confirmed" | "Failed" | "NotAttempted" | "Paid" | "Pending"
   PaymentType: "OneTimePayment" | "SubscriptionPayment"

@@ -7,10 +7,12 @@ export const UpdateProposalVoteCount = 'Common.Queue.Votes.UpdateProposalVoteCou
 
 export const registerUpdateProposalVoteCountProcessor = (queue: IVotingQueue): void => {
   queue.process(UpdateProposalVoteCount, async (job, done) => {
-    // Update the votes count
-    await proposalsService.updateVoteCount(job.data.vote);
+    const { vote } = job.data;
 
-    if (await proposalsService.hasMajority(job.data.vote.proposalId)) {
+    // Update the votes count
+    await proposalsService.updateVoteCount(vote);
+
+    if (await proposalsService.hasMajority(vote.proposalId)) {
       logger.info('Finalizing proposal reached majority');
 
       // If the proposal has majority finalize it

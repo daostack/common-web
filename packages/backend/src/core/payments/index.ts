@@ -1,5 +1,8 @@
-import { createProposalPaymentCommand } from './command/createProposalPaymentCommand';
+import { createOneTimePaymentCommand } from './command/createOneTimePaymentCommand';
+import { finalizePaymentCommand } from './command/finalizePaymentCommand';
 
 export const paymentService = {
-  createProposalPayment: createProposalPaymentCommand
+  createOneTimePayment: createOneTimePaymentCommand,
+
+  finalizePayment: finalizePaymentCommand
 };

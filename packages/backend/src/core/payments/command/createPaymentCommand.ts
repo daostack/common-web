@@ -38,8 +38,8 @@ const schema = z.object({
 
     subscriptionId: z.string()
       .uuid()
-      .nullable()
-      .optional(),
+      .optional()
+      .nullable(),
 
     cardId: z.string()
       .nonempty()
@@ -89,14 +89,18 @@ export const createPaymentCommand = async (command: z.infer<typeof schema>): Pro
 
     amount: convertAmountToCircleAmount(command.amount),
     idempotencyKey: payment.id,
-    verification: 'none'
+    verification: 'none',
+    description: `Payment for local payment ${payment.id}`
   });
 
   // Link the circle payment to the database
   payment = await prisma.payment.update({
-    where: payment,
+    where: {
+      id: payment.id
+    },
     data: {
       circlePaymentId: circlePayment.id,
+      circlePaymentStatus: circlePayment.status,
       status: convertCirclePaymentStatus(circlePayment.status)
     }
   });

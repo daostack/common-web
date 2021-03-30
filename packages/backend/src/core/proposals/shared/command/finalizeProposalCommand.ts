@@ -1,8 +1,8 @@
 import { ProposalState, ProposalType } from '@prisma/client';
 import { prisma } from '@toolkits';
 
+import { addFinalizeProposalJob } from '../../queue/jobs/finalizeJoinProposalJob';
 import { finalizeJoinProposalCommand } from '../../join/command/finalizeJoinProposalCommand';
-import { CommonError } from '@errors';
 
 
 /**
@@ -25,20 +25,10 @@ export const finalizeProposalCommand = async (proposalId: string): Promise<void>
     }
   });
 
-  // If it is join move it to handle finalizable join proposal
   if (proposal.type === ProposalType.JoinRequest) {
     await finalizeJoinProposalCommand(proposalId);
   }
 
-  // If it is funding move it to handle finalizable funding proposal
-  else if (proposal.type === ProposalType.FundingRequest) {
-    // @todo Handle finalize funding request
-  }
-
-  // If it is not supported type throw
-  else {
-    throw new CommonError('Cannot finalize proposal that is neither of funding nor join type', {
-      proposal
-    });
-  }
+  // Schedule finalization job
+  addFinalizeProposalJob(proposalId);
 };

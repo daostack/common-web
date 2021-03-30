@@ -4,10 +4,18 @@ import { createFundingProposalCommand } from './funding/command/createFundingPro
 import { updateProposalVoteCountsCommand } from './shared/command/updateProposalVoteCountsCommand';
 import { proposalHasMajorityQuery } from './shared/queries/proposalHasMajorityQuery';
 import { finalizeProposalCommand } from './shared/command/finalizeProposalCommand';
+import { processApprovedOneTimeJoinRequestCommand } from './join/command/process/processApprovedOneTimeJoinRequest';
 
 export const joinProposalService = {
   commands: {
     create: createJoinProposalCommand
+  },
+
+  process: {
+    approvedJoinRequest: null,
+
+    approvedOneTimeJoinRequest: processApprovedOneTimeJoinRequestCommand,
+    approvedSubscriptionJoinRequest: null // @todo
   }
 };
 

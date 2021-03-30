@@ -44,8 +44,8 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'roles' | 'commonId' | 'userId'
     }
     joinProposals: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'funding' | 'paymentState' | 'card' | 'payment' | 'proposal' | 'subscription' | 'cardId' | 'subscriptionId'
-      ordering: 'id' | 'createdAt' | 'updatedAt' | 'funding' | 'paymentState' | 'cardId' | 'subscriptionId'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'funding' | 'fundingType' | 'paymentState' | 'card' | 'payment' | 'proposal' | 'subscription' | 'cardId' | 'subscriptionId'
+      ordering: 'id' | 'createdAt' | 'updatedAt' | 'funding' | 'fundingType' | 'paymentState' | 'cardId' | 'subscriptionId'
     }
     fundingProposals: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'proposal' | 'amount' | 'funded'
@@ -155,8 +155,8 @@ interface NexusPrismaInputs {
   }
   Subscription: {
     proposal: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'funding' | 'paymentState' | 'card' | 'payment' | 'proposal' | 'subscription' | 'cardId' | 'subscriptionId'
-      ordering: 'id' | 'createdAt' | 'updatedAt' | 'funding' | 'paymentState' | 'cardId' | 'subscriptionId'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'funding' | 'fundingType' | 'paymentState' | 'card' | 'payment' | 'proposal' | 'subscription' | 'cardId' | 'subscriptionId'
+      ordering: 'id' | 'createdAt' | 'updatedAt' | 'funding' | 'fundingType' | 'paymentState' | 'cardId' | 'subscriptionId'
     }
     payments: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'type' | 'status' | 'circlePaymentId' | 'amount' | 'card' | 'user' | 'common' | 'join' | 'subscription' | 'subscriptionId' | 'joinId' | 'userId' | 'commonId' | 'cardId'
@@ -175,8 +175,8 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'type' | 'status' | 'circlePaymentId' | 'amount' | 'subscriptionId' | 'joinId' | 'userId' | 'commonId' | 'cardId'
     }
     proposal: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'funding' | 'paymentState' | 'card' | 'payment' | 'proposal' | 'subscription' | 'cardId' | 'subscriptionId'
-      ordering: 'id' | 'createdAt' | 'updatedAt' | 'funding' | 'paymentState' | 'cardId' | 'subscriptionId'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'funding' | 'fundingType' | 'paymentState' | 'card' | 'payment' | 'proposal' | 'subscription' | 'cardId' | 'subscriptionId'
+      ordering: 'id' | 'createdAt' | 'updatedAt' | 'funding' | 'fundingType' | 'paymentState' | 'cardId' | 'subscriptionId'
     }
     subscriptions: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'proposal' | 'payments' | 'cardId' | 'userId' | 'commonId'
@@ -342,6 +342,7 @@ interface NexusPrismaOutputs {
     createdAt: 'DateTime'
     updatedAt: 'DateTime'
     funding: 'Int'
+    fundingType: 'FundingType'
     paymentState: 'ProposalPaymentState'
     card: 'Card'
     payment: 'Payment'

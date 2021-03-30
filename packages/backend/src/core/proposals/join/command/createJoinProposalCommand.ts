@@ -1,7 +1,7 @@
 import * as z from 'zod';
 import { EventType, ProposalState, ProposalType, Proposal } from '@prisma/client';
 
-import { eventsService, cardsService } from '@services';
+import { eventsService } from '@services';
 import { CommonError, NotFoundError } from '@errors';
 import { ProposalLinkSchema } from '@validation';
 import { prisma } from '@toolkits';
@@ -38,9 +38,9 @@ export const createJoinProposalCommand = async (command: z.infer<typeof schema>)
   schema.parse(command);
 
   // Validate that the user is the owner of the card
-  if (!await cardsService.isCardOwner(command.cardId, command.userId)) {
-    throw new CommonError('Cannot create proposals with cards not created by you');
-  }
+  // if (!await cardsService.isCardOwner(command.cardId, command.userId)) {
+  //   throw new CommonError('Cannot create proposals with cards not created by you');
+  // }
 
   // Fetch the common and related data
   const common = await prisma.common.findUnique({
@@ -124,8 +124,13 @@ export const createJoinProposalCommand = async (command: z.infer<typeof schema>)
 
       join: {
         create: {
+          fundingType: common.fundingType,
           funding: command.fundingAmount,
-          cardId: command.cardId
+          card: {
+            connect: {
+              id: command.cardId
+            }
+          }
         }
       }
     }

@@ -1,3 +1,5 @@
+import { CircleCurrency } from '@circle/types/CircleCurrency';
+
 export interface ICirclePaymentAmount {
   /**
    * The amount of the payment in selected currency
@@ -8,5 +10,5 @@ export interface ICirclePaymentAmount {
   /**
    * The currency of the payment
    */
-  currency: string;
+  currency: CircleCurrency;
 }
