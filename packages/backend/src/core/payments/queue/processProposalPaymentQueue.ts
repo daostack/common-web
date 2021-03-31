@@ -8,7 +8,7 @@ interface IProcessProposalPaymentQueue {
   payment: Payment;
 }
 
-export const processProposalPaymentQueue = Queue<IProcessProposalPaymentQueue>(Queues.ProccessProposalPayment);
+export const processProposalPaymentQueue = Queue<IProcessProposalPaymentQueue>(Queues.ProcessProposalPayment);
 
 export const addProcessProposalPaymentJob = (payment: Payment) => {
   processProposalPaymentQueue.add({

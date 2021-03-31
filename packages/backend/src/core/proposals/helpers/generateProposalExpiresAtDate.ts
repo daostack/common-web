@@ -7,5 +7,5 @@ export const generateProposalExpiresAtDate = (type: ProposalType): Date => {
       : process.env['Proposals.Funding.Countdown']
   );
 
-  return new Date(new Date().getTime() + countdownPeriod);
+  return new Date(new Date().getTime() + (countdownPeriod * 1000));
 };

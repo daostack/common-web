@@ -6,6 +6,7 @@ import { NotFoundError, CommonError } from '@errors';
 import { prisma } from '@toolkits';
 import { eventsService } from '@services';
 import { generateProposalExpiresAtDate } from '../../helpers/generateProposalExpiresAtDate';
+import { addExpireProposalJob } from '../../queue/expireProposalsQueue';
 
 const schema = z.object({
   commonId: z.string()
@@ -131,6 +132,9 @@ export const createFundingProposalCommand = async (command: z.infer<typeof schem
     commonId: command.commonId,
     type: EventType.FundingRequestCreated
   });
+
+  // Set up expiration for the proposal
+  addExpireProposalJob(proposal);
 
   // Return the created funding proposal
   return proposal;

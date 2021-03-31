@@ -7,6 +7,7 @@ import { eventsService } from '@services';
 import { prisma } from '@toolkits';
 
 import { generateProposalExpiresAtDate } from '../../helpers/generateProposalExpiresAtDate';
+import { addExpireProposalJob } from '../../queue/expireProposalsQueue';
 
 const schema = z.object({
   title: z.string()
@@ -146,6 +147,9 @@ export const createJoinProposalCommand = async (command: z.infer<typeof schema>)
     commonId: command.commonId,
     userId: command.userId
   });
+
+  // Set up expiration for the proposal
+  addExpireProposalJob(proposal);
 
   // Return the created proposal
   return proposal;
