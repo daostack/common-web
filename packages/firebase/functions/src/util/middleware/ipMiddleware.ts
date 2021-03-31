@@ -7,7 +7,7 @@ export const ipMiddleware: RequestHandler = (req, res, next) => {
   req.ipAddress = userIp || forwardedFor || '127.0.0.1';
 
   if (req.ipAddress === '127.0.0.1') {
-    logger.warn('Cannot parse the IP address for request', { headers: req.headers });
+    // logger.warn('Cannot parse the IP address for request', { headers: req.headers });
   }
 
   next();

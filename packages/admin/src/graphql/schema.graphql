@@ -108,6 +108,9 @@ enum EventType {
   subscriptionCanceledByUser
   subscriptionCanceledByPaymentFailure
   membershipRevoked
+  discussionMessageReported
+  proposalReported
+  discussionReported
 }
 type Event {
   """The unique identifier of the event"""
@@ -222,6 +225,14 @@ type PaymentSource {
 type PaymentAmount {
   currency: PaymentCurrency
   amount: Int
+}
+type Balance {
+  available: Amount
+  unsettled: Amount
+}
+type Amount {
+  amount: String
+  currency: String
 }
 enum ProposalType {
   fundingRequest
@@ -385,6 +396,7 @@ type Query {
   payouts(page: Int = 1): [Payout]
   payment(id: ID!): Payment
   payments(page: Int = 1, hanging: Boolean): [Payment]
+  balance: Balance
   proposal(id: ID!): Proposal
   proposals(ids: [String], page: Int = 1, pageItems: Int = 10, type: ProposalType, fundingState: ProposalFundingState): [Proposal]
   statistics: Statistics
@@ -397,6 +409,8 @@ type Mutation {
     commonId: ID!
   ): Int
   executePayouts(input: ExecutePayoutInput!): Payout
-  updatePaymentData(id: ID!, trackId: ID = "fbb61190-d465-4395-9136-3d643a717033"): Boolean
+  approvePayout(payoutId: ID!, index: Int!, token: String!): Boolean
+  updatePaymentData(id: ID!, trackId: ID = "7f4fe0bd-590a-455d-b3cd-fe6045d36066"): Boolean
+  updatePaymentsCommonId: Boolean
   createIntention(input: CreateIntentionInput!): Intention
 }

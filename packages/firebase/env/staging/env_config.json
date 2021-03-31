@@ -40,5 +40,9 @@
   "local": "http://localhost:5003/common-staging-50741/us-central1",
   "backoffice":{
     "sheetUrl": "1muC-dGhS_MOEZYKSTNyMthG1NHlo8-4mlb_K5ExD7QM"
+  },
+  "admin": {
+    "local": "http://localhost:3000",
+    "url": "http://localhost:3000"
   }
 }

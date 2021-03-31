@@ -229,13 +229,15 @@ export const notifyData: Record<string, IEventObject> = {
     data: async (proposalId: string): Promise<Record<string, any>> => {
       const proposalData = (await proposalDb.getProposal(proposalId));
       const commonData = (await commonDb.get(proposalData.commonId));
+      const type = proposalData.type === 'join' ? 'membership request' : 'proposal';
       return {
         reporter: (await getUserById(proposalData?.moderation?.reporter)).data(),
         commonData,
-        path: `ProposalScreen/${commonData.id}/${proposalData.id}`
+        path: `ProposalScreen/${commonData.id}/${proposalData.id}`,
+        type,
       };
     },
-    notification: async ({ reporter, commonData, path }): Promise<Record<string, string>> => notifyModerators(reporter, commonData, path, 'proposal'),
+    notification: async ({ reporter, commonData, path, type }): Promise<Record<string, string>> => notifyModerators(reporter, commonData, path, type),
     email: ({ commonData, reporter }: {
       commonData: ICommonEntity;
       reporter: IUserEntity;

@@ -1,14 +1,14 @@
 import produce from "immer";
 
 import { AuthStateType } from "../interface";
-import { tokenHandler } from "../../../shared/utils";
+// import { tokenHandler } from "../../../shared/utils";
 import * as actions from "./actions";
 import { ActionType, createReducer } from "typesafe-actions";
 
 type Action = ActionType<typeof actions>;
 
 const initialState: AuthStateType = {
-  authentificated: !!tokenHandler.get(),
+  authentificated: true,
   user: null,
 };
 
