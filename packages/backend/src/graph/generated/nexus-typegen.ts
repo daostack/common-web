@@ -41,10 +41,10 @@ export interface NexusGenInputs {
     equals?: boolean | null; // Boolean
     not?: NexusGenInputs['NestedBoolFilter'] | null; // NestedBoolFilter
   }
-  CardBillingDetailsWhereInput: { // input type
-    AND?: NexusGenInputs['CardBillingDetailsWhereInput'][] | null; // [CardBillingDetailsWhereInput!]
-    NOT?: NexusGenInputs['CardBillingDetailsWhereInput'][] | null; // [CardBillingDetailsWhereInput!]
-    OR?: NexusGenInputs['CardBillingDetailsWhereInput'][] | null; // [CardBillingDetailsWhereInput!]
+  CardBillingDetailWhereInput: { // input type
+    AND?: NexusGenInputs['CardBillingDetailWhereInput'][] | null; // [CardBillingDetailWhereInput!]
+    NOT?: NexusGenInputs['CardBillingDetailWhereInput'][] | null; // [CardBillingDetailWhereInput!]
+    OR?: NexusGenInputs['CardBillingDetailWhereInput'][] | null; // [CardBillingDetailWhereInput!]
     card?: NexusGenInputs['CardWhereInput'] | null; // CardWhereInput
     cardId?: NexusGenInputs['StringFilter'] | null; // StringFilter
     city?: NexusGenInputs['StringFilter'] | null; // StringFilter
@@ -68,7 +68,7 @@ export interface NexusGenInputs {
     NOT?: NexusGenInputs['CardWhereInput'][] | null; // [CardWhereInput!]
     OR?: NexusGenInputs['CardWhereInput'][] | null; // [CardWhereInput!]
     avsCheck?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    billingDetails?: NexusGenInputs['CardBillingDetailsWhereInput'] | null; // CardBillingDetailsWhereInput
+    billingDetails?: NexusGenInputs['CardBillingDetailWhereInput'] | null; // CardBillingDetailWhereInput
     circleCardId?: NexusGenInputs['StringFilter'] | null; // StringFilter
     createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     cvvCheck?: NexusGenInputs['StringFilter'] | null; // StringFilter
@@ -193,6 +193,12 @@ export interface NexusGenInputs {
     not?: NexusGenInputs['NestedEnumEventTypeFilter'] | null; // NestedEnumEventTypeFilter
     notIn?: NexusGenEnums['EventType'][] | null; // [EventType!]
   }
+  EnumFundingStateFilter: { // input type
+    equals?: NexusGenEnums['FundingState'] | null; // FundingState
+    in?: NexusGenEnums['FundingState'][] | null; // [FundingState!]
+    not?: NexusGenInputs['NestedEnumFundingStateFilter'] | null; // NestedEnumFundingStateFilter
+    notIn?: NexusGenEnums['FundingState'][] | null; // [FundingState!]
+  }
   EnumFundingTypeFilter: { // input type
     equals?: NexusGenEnums['FundingType'] | null; // FundingType
     in?: NexusGenEnums['FundingType'][] | null; // [FundingType!]
@@ -266,7 +272,7 @@ export interface NexusGenInputs {
     OR?: NexusGenInputs['FundingProposalWhereInput'][] | null; // [FundingProposalWhereInput!]
     amount?: NexusGenInputs['IntFilter'] | null; // IntFilter
     createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
-    funded?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
+    fundingState?: NexusGenInputs['EnumFundingStateFilter'] | null; // EnumFundingStateFilter
     id?: NexusGenInputs['StringFilter'] | null; // StringFilter
     proposal?: NexusGenInputs['ProposalWhereInput'] | null; // ProposalWhereInput
     updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
@@ -336,6 +342,12 @@ export interface NexusGenInputs {
     in?: NexusGenEnums['EventType'][] | null; // [EventType!]
     not?: NexusGenInputs['NestedEnumEventTypeFilter'] | null; // NestedEnumEventTypeFilter
     notIn?: NexusGenEnums['EventType'][] | null; // [EventType!]
+  }
+  NestedEnumFundingStateFilter: { // input type
+    equals?: NexusGenEnums['FundingState'] | null; // FundingState
+    in?: NexusGenEnums['FundingState'][] | null; // [FundingState!]
+    not?: NexusGenInputs['NestedEnumFundingStateFilter'] | null; // NestedEnumFundingStateFilter
+    notIn?: NexusGenEnums['FundingState'][] | null; // [FundingState!]
   }
   NestedEnumFundingTypeFilter: { // input type
     equals?: NexusGenEnums['FundingType'] | null; // FundingType
@@ -587,6 +599,7 @@ export interface NexusGenEnums {
   CardNetwork: "MASTERCARD" | "VISA"
   CommonMemberRole: "Founder"
   EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "UserCreated" | "VoteCreated"
+  FundingState: "AwaitingApproval" | "Completed" | "Confirmed" | "NotEligible" | "Pending"
   FundingType: "Monthly" | "OneTime"
   PaymentCircleStatus: "confirmed" | "failed" | "paid" | "pending"
   PaymentStatus: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"

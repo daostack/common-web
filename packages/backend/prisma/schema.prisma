@@ -124,10 +124,18 @@ model FundingProposal {
 
   amount Int
 
-  // @todo -> to funding state
-  funded Boolean @default(false)
+
+  fundingState FundingState @default(NotEligible)
 
   // @todo Payout
+}
+
+enum FundingState {
+  NotEligible
+  AwaitingApproval
+  Pending
+  Completed
+  Confirmed
 }
 
 model Proposal {
@@ -317,7 +325,7 @@ model Card {
   proposal      JoinProposal[]
   subscriptions Subscription[]
 
-  billingDetails CardBillingDetails?
+  billingDetails CardBillingDetail?
 
   userId String
 }
@@ -327,7 +335,7 @@ enum CardNetwork {
   MASTERCARD
 }
 
-model CardBillingDetails {
+model CardBillingDetail {
   id String @id @default(uuid())
 
   createdAt DateTime @default(now())

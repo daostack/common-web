@@ -28,10 +28,10 @@ type Card {
   updatedAt: Date!
 }
 
-input CardBillingDetailsWhereInput {
-  AND: [CardBillingDetailsWhereInput!]
-  NOT: [CardBillingDetailsWhereInput!]
-  OR: [CardBillingDetailsWhereInput!]
+input CardBillingDetailWhereInput {
+  AND: [CardBillingDetailWhereInput!]
+  NOT: [CardBillingDetailWhereInput!]
+  OR: [CardBillingDetailWhereInput!]
   card: CardWhereInput
   cardId: StringFilter
   city: StringFilter
@@ -62,7 +62,7 @@ input CardWhereInput {
   NOT: [CardWhereInput!]
   OR: [CardWhereInput!]
   avsCheck: StringFilter
-  billingDetails: CardBillingDetailsWhereInput
+  billingDetails: CardBillingDetailWhereInput
   circleCardId: StringFilter
   createdAt: DateTimeFilter
   cvvCheck: StringFilter
@@ -233,6 +233,13 @@ input EnumEventTypeFilter {
   notIn: [EventType!]
 }
 
+input EnumFundingStateFilter {
+  equals: FundingState
+  in: [FundingState!]
+  not: NestedEnumFundingStateFilter
+  notIn: [FundingState!]
+}
+
 input EnumFundingTypeFilter {
   equals: FundingType
   in: [FundingType!]
@@ -350,10 +357,18 @@ input FundingProposalWhereInput {
   OR: [FundingProposalWhereInput!]
   amount: IntFilter
   createdAt: DateTimeFilter
-  funded: BoolFilter
+  fundingState: EnumFundingStateFilter
   id: StringFilter
   proposal: ProposalWhereInput
   updatedAt: DateTimeFilter
+}
+
+enum FundingState {
+  AwaitingApproval
+  Completed
+  Confirmed
+  NotEligible
+  Pending
 }
 
 """The funding type of the common"""
@@ -473,6 +488,13 @@ input NestedEnumEventTypeFilter {
   in: [EventType!]
   not: NestedEnumEventTypeFilter
   notIn: [EventType!]
+}
+
+input NestedEnumFundingStateFilter {
+  equals: FundingState
+  in: [FundingState!]
+  not: NestedEnumFundingStateFilter
+  notIn: [FundingState!]
 }
 
 input NestedEnumFundingTypeFilter {
