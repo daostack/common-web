@@ -5,6 +5,7 @@ import { ProposalLinkSchema, ProposalImageSchema, ProposalFileSchema } from '@va
 import { NotFoundError, CommonError } from '@errors';
 import { prisma } from '@toolkits';
 import { eventsService } from '@services';
+import { generateProposalExpiresAtDate } from '../../helpers/generateProposalExpiresAtDate';
 
 const schema = z.object({
   commonId: z.string()
@@ -95,6 +96,8 @@ export const createFundingProposalCommand = async (command: z.infer<typeof schem
       link: command.links,
       files: command.files,
       images: command.images,
+
+      expiresAt: generateProposalExpiresAtDate(ProposalType.FundingRequest),
 
       user: {
         connect: {

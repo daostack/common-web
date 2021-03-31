@@ -476,6 +476,7 @@ export interface NexusGenInputs {
     commonMemberId?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     description?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    expiresAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     files?: NexusGenInputs['JsonNullableFilter'] | null; // JsonNullableFilter
     funding?: NexusGenInputs['FundingProposalWhereInput'] | null; // FundingProposalWhereInput
     fundingId?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter

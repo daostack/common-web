@@ -1,10 +1,12 @@
 import * as z from 'zod';
 import { EventType, ProposalState, ProposalType, Proposal } from '@prisma/client';
 
-import { eventsService } from '@services';
 import { CommonError, NotFoundError } from '@errors';
 import { ProposalLinkSchema } from '@validation';
+import { eventsService } from '@services';
 import { prisma } from '@toolkits';
+
+import { generateProposalExpiresAtDate } from '../../helpers/generateProposalExpiresAtDate';
 
 const schema = z.object({
   title: z.string()
@@ -109,6 +111,8 @@ export const createJoinProposalCommand = async (command: z.infer<typeof schema>)
       link: command.links,
       title: command.title,
       description: command.description,
+
+      expiresAt: generateProposalExpiresAtDate(ProposalType.JoinRequest),
 
       user: {
         connect: {

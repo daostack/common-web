@@ -5,8 +5,8 @@ import { Queues } from '@constants';
 import { IVotingQueueJob } from './definition';
 import { registerUpdateProposalVoteCountProcessor } from './jobs/updateProposalVoteCount';
 
-const VotingQueue = new Queue<IVotingQueueJob>(Queues.VotingQueue);
+const votingQueue = new Queue<IVotingQueueJob>(Queues.VotingQueue);
 
-registerUpdateProposalVoteCountProcessor(VotingQueue);
+registerUpdateProposalVoteCountProcessor(votingQueue);
 
-export { VotingQueue };
+export { votingQueue };

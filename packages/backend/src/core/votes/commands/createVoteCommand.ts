@@ -6,7 +6,7 @@ import { NotFoundError, CommonError } from '@errors';
 import { prisma } from '@toolkits';
 
 import { UpdateProposalVoteCount } from '../queue/jobs/updateProposalVoteCount';
-import { VotingQueue } from '../queue';
+import { votingQueue } from '../queue';
 
 const schema = z.object({
   userId: z.string()
@@ -77,7 +77,7 @@ export const createVoteCommand = async (command: z.infer<typeof schema>): Promis
   });
 
   // Add the proposal vote count update to the queue
-  VotingQueue.add(UpdateProposalVoteCount, {
+  votingQueue.add(UpdateProposalVoteCount, {
     vote
   });
 

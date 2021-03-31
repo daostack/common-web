@@ -53,6 +53,9 @@
       ],
       "@logger": [
         "./domain/utils/logger"
+      ],
+      "@config": [
+        "./domain/config/index"
       ]
     },
     "esModuleInterop": true,

@@ -2,10 +2,13 @@ import ipAddress from 'request-ip';
 import express from 'express';
 import cors from 'cors';
 
+import { router } from 'bull-board';
 import { ApolloServer } from 'apollo-server-express';
 
 import { FirebaseToolkit } from '@toolkits';
 import { schema, createRequestContext } from '@graph';
+
+import '@config';
 
 // Initialize the firebase admin app
 FirebaseToolkit.InitializeFirebase();
@@ -21,6 +24,8 @@ const apollo = new ApolloServer({
 // Configure the express app
 app.use(cors());
 app.use(ipAddress.mw());
+
+app.use('/queues/dashboard', router);
 
 // Add the Apollo middleware to the express app
 apollo.applyMiddleware({ app });

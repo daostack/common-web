@@ -670,6 +670,7 @@ input ProposalWhereInput {
   commonMemberId: StringNullableFilter
   createdAt: DateTimeFilter
   description: StringNullableFilter
+  expiresAt: DateTimeFilter
   files: JsonNullableFilter
   funding: FundingProposalWhereInput
   fundingId: StringNullableFilter

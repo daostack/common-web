@@ -9,7 +9,7 @@ interface IPaymentProcessingQueueJob {
   retries: number;
 }
 
-const paymentStatusProcessingQueue = new Queue<IPaymentProcessingQueueJob>(Queues.PaymentsProcessingQueue);
+export const paymentStatusProcessingQueue = new Queue<IPaymentProcessingQueueJob>(Queues.PaymentsProcessingQueue);
 
 export const addPaymentStatusProcessingJob = (paymentId: string, retries = 0): void => {
   paymentStatusProcessingQueue.add({
