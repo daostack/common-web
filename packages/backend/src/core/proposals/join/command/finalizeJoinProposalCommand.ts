@@ -4,6 +4,7 @@ import { NotFoundError, CommonError } from '@errors';
 import { getProposalVoteCountQuery } from '@votes/queries/getProposalVoteCountQuery';
 import { eventsService } from '@services';
 import { processApprovedOneTimeJoinRequestCommand } from './process/processApprovedOneTimeJoinRequest';
+import { logger } from '@logger';
 
 export const finalizeJoinProposalCommand = async (proposalId: string): Promise<void> => {
   // Find the proposal and the join
@@ -50,6 +51,8 @@ export const finalizeJoinProposalCommand = async (proposalId: string): Promise<v
       await processApprovedOneTimeJoinRequestCommand(proposalId);
     } else if (proposal.join.fundingType === FundingType.Monthly) {
       // @todo Process approved subscription proposal
+
+      logger.error('Not Implemented: Process approved proposal in subscriptions common');
     }
   }
 

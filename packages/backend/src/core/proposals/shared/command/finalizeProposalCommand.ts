@@ -1,7 +1,5 @@
 import { ProposalState, ProposalType } from '@prisma/client';
 import { prisma } from '@toolkits';
-
-import { addFinalizeProposalJob } from '../../queue/jobs/finalizeJoinProposalJob';
 import { finalizeJoinProposalCommand } from '../../join/command/finalizeJoinProposalCommand';
 
 
@@ -28,7 +26,4 @@ export const finalizeProposalCommand = async (proposalId: string): Promise<void>
   if (proposal.type === ProposalType.JoinRequest) {
     await finalizeJoinProposalCommand(proposalId);
   }
-
-  // Schedule finalization job
-  addFinalizeProposalJob(proposalId);
 };

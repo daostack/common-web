@@ -442,6 +442,7 @@ type Mutation {
   """Creates new user in the system"""
   createUser(input: CreateUserInput!): User!
   createVote(input: CreateVoteInput!): Vote!
+  finalizeProposal(proposalId: ID!): Boolean!
 }
 
 input NestedBoolFilter {
@@ -610,6 +611,8 @@ input PaymentWhereInput {
   id: StringFilter
   join: JoinProposalWhereInput
   joinId: StringFilter
+  processed: BoolFilter
+  processedError: BoolFilter
   status: EnumPaymentStatusFilter
   subscription: SubscriptionWhereInput
   subscriptionId: StringNullableFilter
@@ -639,10 +642,10 @@ input ProposalListRelationFilter {
 }
 
 enum ProposalPaymentState {
-  Confirmed
-  Failed
   NotAttempted
   Pending
+  Successful
+  Unsuccessful
 }
 
 enum ProposalState {

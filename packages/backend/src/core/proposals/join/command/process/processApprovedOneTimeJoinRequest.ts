@@ -38,14 +38,11 @@ export const processApprovedOneTimeJoinRequestCommand = async (proposalId: strin
     throw new CommonError('Cannot process proposal that is not of one time');
   }
 
-  // Create payment for the join request
-  const payment = await paymentService.createOneTimePayment(proposal.id);
-
-  // Finalize the payment
-  const paymentUpdate = await paymentService.finalizePayment(payment.id);
-
-  // If the payment was successful add the user as member
-  if (paymentUpdate.paymentSuccessful) {
+  if (proposal.join.funding > 0) {
+    // Create payment
+    await paymentService.createOneTimePayment(proposal.id);
+  } else {
+    // Add the common member
     await commonService.createMember({
       commonId: proposal.commonId,
       userId: proposal.userId

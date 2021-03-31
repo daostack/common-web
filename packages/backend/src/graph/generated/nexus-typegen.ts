@@ -441,6 +441,8 @@ export interface NexusGenInputs {
     id?: NexusGenInputs['StringFilter'] | null; // StringFilter
     join?: NexusGenInputs['JoinProposalWhereInput'] | null; // JoinProposalWhereInput
     joinId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    processed?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
+    processedError?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
     status?: NexusGenInputs['EnumPaymentStatusFilter'] | null; // EnumPaymentStatusFilter
     subscription?: NexusGenInputs['SubscriptionWhereInput'] | null; // SubscriptionWhereInput
     subscriptionId?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
@@ -588,7 +590,7 @@ export interface NexusGenEnums {
   PaymentCircleStatus: "confirmed" | "failed" | "paid" | "pending"
   PaymentStatus: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
   PaymentType: "OneTimePayment" | "SubscriptionInitialPayment" | "SubscriptionSequentialPayment"
-  ProposalPaymentState: "Confirmed" | "Failed" | "NotAttempted" | "Pending"
+  ProposalPaymentState: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
   ProposalState: "Accepted" | "Countdown" | "Finalizing" | "Rejected"
   ProposalType: "FundingRequest" | "JoinRequest"
   QueryMode: "default" | "insensitive"
@@ -693,6 +695,7 @@ export interface NexusGenFieldTypes {
     createJoinProposal: NexusGenRootTypes['JoinProposal']; // JoinProposal!
     createUser: NexusGenRootTypes['User']; // User!
     createVote: NexusGenRootTypes['Vote']; // Vote!
+    finalizeProposal: boolean; // Boolean!
   }
   Query: { // field return type
     common: NexusGenRootTypes['Common'] | null; // Common
@@ -748,6 +751,7 @@ export interface NexusGenFieldTypeNames {
     createJoinProposal: 'JoinProposal'
     createUser: 'User'
     createVote: 'Vote'
+    finalizeProposal: 'Boolean'
   }
   Query: { // field return type name
     common: 'Common'
@@ -788,6 +792,9 @@ export interface NexusGenArgTypes {
     }
     createVote: { // args
       input: NexusGenInputs['CreateVoteInput']; // CreateVoteInput!
+    }
+    finalizeProposal: { // args
+      proposalId: string; // ID!
     }
   }
   Query: {

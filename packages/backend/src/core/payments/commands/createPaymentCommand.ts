@@ -5,6 +5,7 @@ import { prisma } from '@toolkits';
 import { circleClient } from '@clients';
 import { eventsService } from '@services';
 
+import { addPaymentStatusProcessingJob } from '../queue/paymentProcessingQueue';
 import { convertAmountToCircleAmount, convertCirclePaymentStatus } from '../helpers';
 
 const schema = z.object({
@@ -111,6 +112,9 @@ export const createPaymentCommand = async (command: z.infer<typeof schema>): Pro
     userId: command.connect.userId,
     commonId: command.connect.commonId
   });
+
+  // Schedule payment processing
+  addPaymentStatusProcessingJob(payment.id);
 
   return payment;
 };

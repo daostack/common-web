@@ -7,6 +7,7 @@ import { CreateFundingProposalInput, CreateFundingProposalMutation } from './Mut
 import { ProposalLinkInput } from './Inputs/ProposalLink.input';
 import { ProposalFileInput } from './Inputs/ProposalFile.input';
 import { ProposalImageInput } from './Inputs/ProposalImage.input';
+import { FinalizeProposalMutation } from './Mutations/FinalizeProposalMutation';
 
 export const ProposalTypes = [
   JoinProposalType,
@@ -14,6 +15,8 @@ export const ProposalTypes = [
 
   CreateJoinProposalInput,
   CreateJoinProposalMutation,
+
+  FinalizeProposalMutation,
 
   CreateFundingProposalInput,
   CreateFundingProposalMutation,

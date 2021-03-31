@@ -136,6 +136,8 @@ model Proposal {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  expiresAt DateTime
+
   title       String?
   description String?
 
@@ -187,8 +189,8 @@ enum ProposalPaymentState {
   NotAttempted
   Pending
 
-  Confirmed
-  Failed
+  Successful
+  Unsuccessful
 }
 
 // ---- Subscriptions
@@ -244,6 +246,9 @@ model Payment {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  processed      Boolean @default(false)
+  processedError Boolean @default(false)
 
   type   PaymentType
   status PaymentStatus @default(NotAttempted)
