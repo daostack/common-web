@@ -599,7 +599,7 @@ export interface NexusGenEnums {
   CardNetwork: "MASTERCARD" | "VISA"
   CommonMemberRole: "Founder"
   EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "UserCreated" | "VoteCreated"
-  FundingState: "AwaitingApproval" | "Completed" | "Confirmed" | "NotEligible" | "Pending"
+  FundingState: "AwaitingApproval" | "Completed" | "Confirmed" | "Eligible" | "NotEligible" | "Pending"
   FundingType: "Monthly" | "OneTime"
   PaymentCircleStatus: "confirmed" | "failed" | "paid" | "pending"
   PaymentStatus: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"

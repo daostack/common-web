@@ -1,6 +1,7 @@
 import { ProposalState, ProposalType } from '@prisma/client';
 import { prisma } from '@toolkits';
 import { finalizeJoinProposalCommand } from '../../join/command/finalizeJoinProposalCommand';
+import { finalizeFundingProposal } from '../../funding/command/finalizeFundingProposal';
 
 
 /**
@@ -23,7 +24,11 @@ export const finalizeProposalCommand = async (proposalId: string): Promise<void>
     }
   });
 
+  // @todo Check if the condition for finalization are met (has majority, or is expired)
+
   if (proposal.type === ProposalType.JoinRequest) {
     await finalizeJoinProposalCommand(proposalId);
+  } else if (proposal.type === ProposalType.FundingRequest) {
+    await finalizeFundingProposal(proposalId);
   }
 };

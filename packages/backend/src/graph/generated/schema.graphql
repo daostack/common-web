@@ -367,6 +367,7 @@ enum FundingState {
   AwaitingApproval
   Completed
   Confirmed
+  Eligible
   NotEligible
   Pending
 }

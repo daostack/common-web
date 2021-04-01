@@ -57,7 +57,7 @@ export const finalizeJoinProposalCommand = async (proposalId: string): Promise<v
   }
 
   // If the proposal has been rejected
-  else if (votesCount.votesAgainst > votesCount.votesFor) {
+  else if (votesCount.votesAgainst >= votesCount.votesFor) {
     // Change the proposal state
     await prisma.proposal.update({
       where: {

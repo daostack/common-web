@@ -132,6 +132,8 @@ model FundingProposal {
 
 enum FundingState {
   NotEligible
+  Eligible
+
   AwaitingApproval
   Pending
   Completed
