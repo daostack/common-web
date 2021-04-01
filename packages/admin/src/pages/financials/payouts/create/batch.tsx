@@ -20,6 +20,7 @@ import {
   useToasts
 } from '@geist-ui/react';
 import { Trash2 as Trash } from '@geist-ui/react-icons';
+import { CreateBankAccount } from '@components/modals/CreateBankAccountModal';
 
 const BatchQuery = gql`
   query getProposalsSelectedForBatch($ids: [String!]!) {
@@ -116,7 +117,7 @@ const CreateBatchPayoutPage: NextPage = () => {
   };
 
   const isExecuteDisabled = (): boolean => {
-    return !selectedWire || data.data.proposals.some(p => p.fundingState !== 'available');
+    return (!selectedWire || selectedWire === 'create') || data.data.proposals.some(p => p.fundingState !== 'available');
   };
 
   // --- Actions
@@ -162,7 +163,7 @@ const CreateBatchPayoutPage: NextPage = () => {
 
       router.push({
         pathname: `/financials/payouts/details/${res.data.executePayouts.id}`
-      })
+      });
     } catch (e) {
       setToast({
         type: 'error',
@@ -175,6 +176,11 @@ const CreateBatchPayoutPage: NextPage = () => {
 
   return (
     <React.Fragment>
+      <CreateBankAccount
+        open={selectedWire === 'create'}
+        onAbondon={() => setSelectedWire(null)}
+      />
+
       {/* --- Header --- */}
       <React.Fragment>
         <Text h1>Create batch payout</Text>
@@ -204,7 +210,16 @@ const CreateBatchPayoutPage: NextPage = () => {
           <React.Fragment>
             <Text h3>Bank details</Text>
 
-            <Select width="100%" onChange={onWireSelected}>
+            <Select
+              width="100%"
+              value={selectedWire}
+              onChange={onWireSelected}
+              placeholder="Please, select bank account"
+            >
+              <Select.Option value="create">
+                Create new bank account
+              </Select.Option>
+
               {data.data.wires.map((wire) => (
                 <Select.Option value={wire.id} key={wire.id}>
                   {wire.description}
@@ -285,7 +300,7 @@ const CreateBatchPayoutPage: NextPage = () => {
 
                 <Divider style={{ marginTop: 0 }}/>
 
-                {selectedWire && (
+                {(selectedWire && selectedWire !== 'create') ? (
                   <React.Fragment>
                     <Text p style={{ margin: '5px 0' }}>
                       <b>Description:</b> {getSelectedWire()?.description}
@@ -303,6 +318,8 @@ const CreateBatchPayoutPage: NextPage = () => {
                       <b>Account City:</b> {getSelectedWire()?.billingDetails?.city}
                     </Text>
                   </React.Fragment>
+                ) : (
+                  <Text>Please select bank account</Text>
                 )}
               </Grid>
 

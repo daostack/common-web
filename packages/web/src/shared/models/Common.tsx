@@ -18,6 +18,7 @@ export interface Common {
     description: string;
     minFeeToJoin: number;
     founderId: string;
+    contributionType?: string;
   };
   id: string;
   register: string;
@@ -26,4 +27,5 @@ export interface Common {
   rules: Rules[];
   balance: number;
   fundingGoalDeadline: number;
+  links: Rules[];
 }

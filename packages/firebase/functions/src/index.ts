@@ -23,6 +23,7 @@ import { graphApp } from './core';
 import { permissionApp } from './permissions';
 import { dailySubscriptionCron } from './subscriptions/cron/dailySubscriptionCron';
 import { moderationApp } from './moderation';
+import { payoutStatusCron } from './circlepay/payouts/crons';
 
 // --- Express apps
 export const commons = commonsApp;
@@ -54,3 +55,4 @@ exports.dailySubscriptionsCron = dailySubscriptionCron;
 exports.cronJobs = cron;
 exports.circlePayCrons = circlePayCrons;
 exports.circleBalanceCrons = circleBalanceCrons;
+exports.payoutsStatusCron = payoutStatusCron;

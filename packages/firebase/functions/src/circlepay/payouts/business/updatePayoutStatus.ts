@@ -32,7 +32,7 @@ export const updatePayoutStatus = async (payout: IPayoutEntity): Promise<void> =
     )).data;
   }, {
     errorCode: ErrorCodes.CirclePayError,
-    userMessage: 'Cannot create the bank account, because it was rejected by Circle'
+    userMessage: 'Cannot get the payout from circle'
   });
 
   // If the status have changed broadcast the event
