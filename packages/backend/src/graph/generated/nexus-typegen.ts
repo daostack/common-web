@@ -174,6 +174,16 @@ export interface NexusGenInputs {
     not?: NexusGenInputs['NestedDateTimeFilter'] | null; // NestedDateTimeFilter
     notIn?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
   }
+  DateTimeNullableFilter: { // input type
+    equals?: NexusGenScalars['DateTime'] | null; // DateTime
+    gt?: NexusGenScalars['DateTime'] | null; // DateTime
+    gte?: NexusGenScalars['DateTime'] | null; // DateTime
+    in?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
+    lt?: NexusGenScalars['DateTime'] | null; // DateTime
+    lte?: NexusGenScalars['DateTime'] | null; // DateTime
+    not?: NexusGenInputs['NestedDateTimeNullableFilter'] | null; // NestedDateTimeNullableFilter
+    notIn?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
+  }
   EnumCardNetworkFilter: { // input type
     equals?: NexusGenEnums['CardNetwork'] | null; // CardNetwork
     in?: NexusGenEnums['CardNetwork'][] | null; // [CardNetwork!]
@@ -240,6 +250,18 @@ export interface NexusGenInputs {
     in?: NexusGenEnums['ProposalType'][] | null; // [ProposalType!]
     not?: NexusGenInputs['NestedEnumProposalTypeFilter'] | null; // NestedEnumProposalTypeFilter
     notIn?: NexusGenEnums['ProposalType'][] | null; // [ProposalType!]
+  }
+  EnumSubscriptionPaymentStatusFilter: { // input type
+    equals?: NexusGenEnums['SubscriptionPaymentStatus'] | null; // SubscriptionPaymentStatus
+    in?: NexusGenEnums['SubscriptionPaymentStatus'][] | null; // [SubscriptionPaymentStatus!]
+    not?: NexusGenInputs['NestedEnumSubscriptionPaymentStatusFilter'] | null; // NestedEnumSubscriptionPaymentStatusFilter
+    notIn?: NexusGenEnums['SubscriptionPaymentStatus'][] | null; // [SubscriptionPaymentStatus!]
+  }
+  EnumSubscriptionStatusFilter: { // input type
+    equals?: NexusGenEnums['SubscriptionStatus'] | null; // SubscriptionStatus
+    in?: NexusGenEnums['SubscriptionStatus'][] | null; // [SubscriptionStatus!]
+    not?: NexusGenInputs['NestedEnumSubscriptionStatusFilter'] | null; // NestedEnumSubscriptionStatusFilter
+    notIn?: NexusGenEnums['SubscriptionStatus'][] | null; // [SubscriptionStatus!]
   }
   EnumVoteOutcomeFilter: { // input type
     equals?: NexusGenEnums['VoteOutcome'] | null; // VoteOutcome
@@ -331,6 +353,16 @@ export interface NexusGenInputs {
     not?: NexusGenInputs['NestedDateTimeFilter'] | null; // NestedDateTimeFilter
     notIn?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
   }
+  NestedDateTimeNullableFilter: { // input type
+    equals?: NexusGenScalars['DateTime'] | null; // DateTime
+    gt?: NexusGenScalars['DateTime'] | null; // DateTime
+    gte?: NexusGenScalars['DateTime'] | null; // DateTime
+    in?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
+    lt?: NexusGenScalars['DateTime'] | null; // DateTime
+    lte?: NexusGenScalars['DateTime'] | null; // DateTime
+    not?: NexusGenInputs['NestedDateTimeNullableFilter'] | null; // NestedDateTimeNullableFilter
+    notIn?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
+  }
   NestedEnumCardNetworkFilter: { // input type
     equals?: NexusGenEnums['CardNetwork'] | null; // CardNetwork
     in?: NexusGenEnums['CardNetwork'][] | null; // [CardNetwork!]
@@ -390,6 +422,18 @@ export interface NexusGenInputs {
     in?: NexusGenEnums['ProposalType'][] | null; // [ProposalType!]
     not?: NexusGenInputs['NestedEnumProposalTypeFilter'] | null; // NestedEnumProposalTypeFilter
     notIn?: NexusGenEnums['ProposalType'][] | null; // [ProposalType!]
+  }
+  NestedEnumSubscriptionPaymentStatusFilter: { // input type
+    equals?: NexusGenEnums['SubscriptionPaymentStatus'] | null; // SubscriptionPaymentStatus
+    in?: NexusGenEnums['SubscriptionPaymentStatus'][] | null; // [SubscriptionPaymentStatus!]
+    not?: NexusGenInputs['NestedEnumSubscriptionPaymentStatusFilter'] | null; // NestedEnumSubscriptionPaymentStatusFilter
+    notIn?: NexusGenEnums['SubscriptionPaymentStatus'][] | null; // [SubscriptionPaymentStatus!]
+  }
+  NestedEnumSubscriptionStatusFilter: { // input type
+    equals?: NexusGenEnums['SubscriptionStatus'] | null; // SubscriptionStatus
+    in?: NexusGenEnums['SubscriptionStatus'][] | null; // [SubscriptionStatus!]
+    not?: NexusGenInputs['NestedEnumSubscriptionStatusFilter'] | null; // NestedEnumSubscriptionStatusFilter
+    notIn?: NexusGenEnums['SubscriptionStatus'][] | null; // [SubscriptionStatus!]
   }
   NestedEnumVoteOutcomeFilter: { // input type
     equals?: NexusGenEnums['VoteOutcome'] | null; // VoteOutcome
@@ -545,17 +589,23 @@ export interface NexusGenInputs {
     AND?: NexusGenInputs['SubscriptionWhereInput'][] | null; // [SubscriptionWhereInput!]
     NOT?: NexusGenInputs['SubscriptionWhereInput'][] | null; // [SubscriptionWhereInput!]
     OR?: NexusGenInputs['SubscriptionWhereInput'][] | null; // [SubscriptionWhereInput!]
+    amount?: NexusGenInputs['IntFilter'] | null; // IntFilter
     card?: NexusGenInputs['CardWhereInput'] | null; // CardWhereInput
     cardId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    chargedAt?: NexusGenInputs['DateTimeNullableFilter'] | null; // DateTimeNullableFilter
     common?: NexusGenInputs['CommonWhereInput'] | null; // CommonWhereInput
     commonId?: NexusGenInputs['StringFilter'] | null; // StringFilter
     createdAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    dueDate?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    join?: NexusGenInputs['JoinProposalWhereInput'] | null; // JoinProposalWhereInput
+    paymentStatus?: NexusGenInputs['EnumSubscriptionPaymentStatusFilter'] | null; // EnumSubscriptionPaymentStatusFilter
     payments?: NexusGenInputs['PaymentListRelationFilter'] | null; // PaymentListRelationFilter
-    proposal?: NexusGenInputs['JoinProposalListRelationFilter'] | null; // JoinProposalListRelationFilter
+    status?: NexusGenInputs['EnumSubscriptionStatusFilter'] | null; // EnumSubscriptionStatusFilter
     updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
     userId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    voided?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
   }
   UserWhereInput: { // input type
     AND?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
@@ -608,6 +658,8 @@ export interface NexusGenEnums {
   ProposalState: "Accepted" | "Countdown" | "Finalizing" | "Rejected"
   ProposalType: "FundingRequest" | "JoinRequest"
   QueryMode: "default" | "insensitive"
+  SubscriptionPaymentStatus: "AwaitingInitialPayment" | "Pending" | "Successful" | "Unsuccessful"
+  SubscriptionStatus: "Active" | "CanceledByPaymentFailure" | "CanceledByUser" | "Pending"
   VoteOutcome: "Approve" | "Condemn"
 }
 

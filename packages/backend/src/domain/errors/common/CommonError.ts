@@ -1,6 +1,7 @@
 import * as uuid from 'uuid';
 
 import { ErrorCodes, HttpStatuses } from '@constants';
+import { logger } from '@logger';
 
 interface IErrorData {
   userMessage?: string;
@@ -57,5 +58,9 @@ export class CommonError extends Error implements ICommonError {
     this.userMessage = data.userMessage || 'Something bad happened.';
 
     this.data = data;
+
+    logger.error('New error occurred', {
+      error: this
+    });
   }
 }

@@ -28,11 +28,11 @@ export const CreateVoteMutation = extendType({
         )
       },
       resolve: async (root, args, ctx) => {
-        const userId = await ctx.getUserId();
+        // const userId = await ctx.getUserId();
 
         return votesService.create({
           ...args.input,
-          userId
+          userId: 'H5ZkcKBX5eXXNyBiPaph8EHCiax2'
         });
       }
     });

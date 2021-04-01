@@ -1,6 +1,8 @@
 import { Payment } from '@prisma/client';
+
 import { prisma } from '@toolkits';
 import { circleClient } from '@clients';
+import { logger as $logger } from '@logger';
 import { convertCirclePaymentStatus } from '../helpers';
 
 interface IUpdatePaymentStatusResult {
@@ -11,6 +13,13 @@ interface IUpdatePaymentStatusResult {
 }
 
 export const updatePaymentStatusCommand = async (paymentId: string): Promise<IUpdatePaymentStatusResult> => {
+  const logger = $logger.child({
+    functionName: 'updatePaymentStatusCommand',
+    payload: {
+      paymentId
+    }
+  });
+
   // Find the payment
   const initialPayment = (await prisma.payment.findUnique({
     where: {
@@ -25,6 +34,11 @@ export const updatePaymentStatusCommand = async (paymentId: string): Promise<IUp
   let updatedPayment: Payment = initialPayment;
 
   if (initialPayment.circlePaymentStatus !== circlePayment.data.status) {
+    logger.info('Payment status change occurred', {
+      previousStatus: initialPayment.circlePaymentStatus,
+      newStatus: circlePayment.data.status
+    });
+
     updatedPayment = await prisma.payment.update({
       where: {
         id: paymentId

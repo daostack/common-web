@@ -1,6 +1,9 @@
-import { Queues } from '@constants';
-import { PaymentStatus } from '@prisma/client';
 import Queue from 'bull';
+import { PaymentStatus } from '@prisma/client';
+
+
+import { Queues } from '@constants';
+import { logger } from '@logger';
 import { updatePaymentStatusCommand } from '../commands/updatePaymentStatusCommand';
 import { addProcessProposalPaymentJob } from './processProposalPaymentQueue';
 
@@ -21,9 +24,15 @@ export const addPaymentStatusProcessingJob = (paymentId: string, retries = 0): v
 };
 
 paymentStatusProcessingQueue.process(async (job, done) => {
+  logger.info('Processing payment', {
+    job: 'IPaymentProcessingQueueJob',
+    jobData: job.data
+  });
+
   const { data } = job;
 
   const { updatedPayment } = await updatePaymentStatusCommand(data.paymentId);
+
 
   if (
     updatedPayment.status === PaymentStatus.Unsuccessful ||
@@ -33,4 +42,6 @@ paymentStatusProcessingQueue.process(async (job, done) => {
   } else {
     addPaymentStatusProcessingJob(data.paymentId, data.retries + 1);
   }
+
+  done();
 });

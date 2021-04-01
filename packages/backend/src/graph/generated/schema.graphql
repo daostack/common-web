@@ -211,6 +211,17 @@ input DateTimeFilter {
   notIn: [DateTime!]
 }
 
+input DateTimeNullableFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeNullableFilter
+  notIn: [DateTime!]
+}
+
 input EnumCardNetworkFilter {
   equals: CardNetwork
   in: [CardNetwork!]
@@ -287,6 +298,20 @@ input EnumProposalTypeFilter {
   in: [ProposalType!]
   not: NestedEnumProposalTypeFilter
   notIn: [ProposalType!]
+}
+
+input EnumSubscriptionPaymentStatusFilter {
+  equals: SubscriptionPaymentStatus
+  in: [SubscriptionPaymentStatus!]
+  not: NestedEnumSubscriptionPaymentStatusFilter
+  notIn: [SubscriptionPaymentStatus!]
+}
+
+input EnumSubscriptionStatusFilter {
+  equals: SubscriptionStatus
+  in: [SubscriptionStatus!]
+  not: NestedEnumSubscriptionStatusFilter
+  notIn: [SubscriptionStatus!]
 }
 
 input EnumVoteOutcomeFilter {
@@ -477,6 +502,17 @@ input NestedDateTimeFilter {
   notIn: [DateTime!]
 }
 
+input NestedDateTimeNullableFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeNullableFilter
+  notIn: [DateTime!]
+}
+
 input NestedEnumCardNetworkFilter {
   equals: CardNetwork
   in: [CardNetwork!]
@@ -545,6 +581,20 @@ input NestedEnumProposalTypeFilter {
   in: [ProposalType!]
   not: NestedEnumProposalTypeFilter
   notIn: [ProposalType!]
+}
+
+input NestedEnumSubscriptionPaymentStatusFilter {
+  equals: SubscriptionPaymentStatus
+  in: [SubscriptionPaymentStatus!]
+  not: NestedEnumSubscriptionPaymentStatusFilter
+  notIn: [SubscriptionPaymentStatus!]
+}
+
+input NestedEnumSubscriptionStatusFilter {
+  equals: SubscriptionStatus
+  in: [SubscriptionStatus!]
+  not: NestedEnumSubscriptionStatusFilter
+  notIn: [SubscriptionStatus!]
 }
 
 input NestedEnumVoteOutcomeFilter {
@@ -761,21 +811,41 @@ input SubscriptionListRelationFilter {
   some: SubscriptionWhereInput
 }
 
+enum SubscriptionPaymentStatus {
+  AwaitingInitialPayment
+  Pending
+  Successful
+  Unsuccessful
+}
+
+enum SubscriptionStatus {
+  Active
+  CanceledByPaymentFailure
+  CanceledByUser
+  Pending
+}
+
 input SubscriptionWhereInput {
   AND: [SubscriptionWhereInput!]
   NOT: [SubscriptionWhereInput!]
   OR: [SubscriptionWhereInput!]
+  amount: IntFilter
   card: CardWhereInput
   cardId: StringFilter
+  chargedAt: DateTimeNullableFilter
   common: CommonWhereInput
   commonId: StringFilter
   createdAt: DateTimeFilter
+  dueDate: DateTimeFilter
   id: StringFilter
+  join: JoinProposalWhereInput
+  paymentStatus: EnumSubscriptionPaymentStatusFilter
   payments: PaymentListRelationFilter
-  proposal: JoinProposalListRelationFilter
+  status: EnumSubscriptionStatusFilter
   updatedAt: DateTimeFilter
   user: UserWhereInput
   userId: StringFilter
+  voided: BoolFilter
 }
 
 type User {

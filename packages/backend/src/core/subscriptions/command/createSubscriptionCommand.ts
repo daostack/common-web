@@ -2,6 +2,7 @@ import { FundingType, ProposalState, Subscription } from '@prisma/client';
 import { prisma } from '@toolkits';
 import { logger as $logger } from '@logger';
 import { NotFoundError, CommonError } from '@errors';
+import { createSubscriptionPaymentCommand } from '../../payments/commands/createSubscriptionPaymentCommand';
 
 /**
  * Creates new subscription and the initial charge for it
@@ -77,7 +78,8 @@ export const createSubscriptionCommand = async (proposalId: string): Promise<Sub
     subscription
   });
 
-  // @todo Schedule the initial payment
+  // Create the initial payment
+  await createSubscriptionPaymentCommand(subscription.id);
 
   return subscription;
 };

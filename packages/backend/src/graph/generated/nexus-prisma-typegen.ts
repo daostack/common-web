@@ -56,8 +56,8 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'expiresAt' | 'title' | 'description' | 'link' | 'files' | 'images' | 'ipAddress' | 'type' | 'state' | 'votesFor' | 'votesAgainst' | 'funding' | 'user' | 'common' | 'commonMember' | 'joinId' | 'fundingId' | 'userId' | 'commonId' | 'commonMemberId'
     }
     subscriptions: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'proposal' | 'payments' | 'cardId' | 'userId' | 'commonId'
-      ordering: 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'cardId' | 'userId' | 'commonId'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'card' | 'join' | 'user' | 'common' | 'payments' | 'amount' | 'paymentStatus' | 'status' | 'dueDate' | 'chargedAt' | 'voided' | 'cardId' | 'userId' | 'commonId'
+      ordering: 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'amount' | 'paymentStatus' | 'status' | 'dueDate' | 'chargedAt' | 'voided' | 'cardId' | 'userId' | 'commonId'
     }
     votes: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'outcome' | 'proposal' | 'commonMember' | 'commonMemberId' | 'proposalId'
@@ -102,8 +102,8 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'expiresAt' | 'title' | 'description' | 'link' | 'files' | 'images' | 'ipAddress' | 'type' | 'state' | 'votesFor' | 'votesAgainst' | 'funding' | 'user' | 'common' | 'commonMember' | 'joinId' | 'fundingId' | 'userId' | 'commonId' | 'commonMemberId'
     }
     subscriptions: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'proposal' | 'payments' | 'cardId' | 'userId' | 'commonId'
-      ordering: 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'cardId' | 'userId' | 'commonId'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'card' | 'join' | 'user' | 'common' | 'payments' | 'amount' | 'paymentStatus' | 'status' | 'dueDate' | 'chargedAt' | 'voided' | 'cardId' | 'userId' | 'commonId'
+      ordering: 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'amount' | 'paymentStatus' | 'status' | 'dueDate' | 'chargedAt' | 'voided' | 'cardId' | 'userId' | 'commonId'
     }
   }
   Common: {
@@ -120,8 +120,8 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'processed' | 'processedError' | 'type' | 'status' | 'circlePaymentStatus' | 'circlePaymentId' | 'amount' | 'card' | 'user' | 'common' | 'join' | 'subscription' | 'subscriptionId' | 'joinId' | 'userId' | 'commonId' | 'cardId'
     }
     subscriptions: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'proposal' | 'payments' | 'cardId' | 'userId' | 'commonId'
-      ordering: 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'cardId' | 'userId' | 'commonId'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'card' | 'join' | 'user' | 'common' | 'payments' | 'amount' | 'paymentStatus' | 'status' | 'dueDate' | 'chargedAt' | 'voided' | 'cardId' | 'userId' | 'commonId'
+      ordering: 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'amount' | 'paymentStatus' | 'status' | 'dueDate' | 'chargedAt' | 'voided' | 'cardId' | 'userId' | 'commonId'
     }
     proposals: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'expiresAt' | 'title' | 'description' | 'link' | 'files' | 'images' | 'ipAddress' | 'votes' | 'type' | 'state' | 'votesFor' | 'votesAgainst' | 'join' | 'funding' | 'user' | 'common' | 'commonMember' | 'joinId' | 'fundingId' | 'userId' | 'commonId' | 'commonMemberId'
@@ -154,10 +154,6 @@ interface NexusPrismaInputs {
     }
   }
   Subscription: {
-    proposal: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'funding' | 'fundingType' | 'paymentState' | 'card' | 'payment' | 'proposal' | 'subscription' | 'cardId' | 'subscriptionId'
-      ordering: 'id' | 'createdAt' | 'updatedAt' | 'funding' | 'fundingType' | 'paymentState' | 'card' | 'proposal' | 'subscription' | 'cardId' | 'subscriptionId'
-    }
     payments: {
       filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'processed' | 'processedError' | 'type' | 'status' | 'circlePaymentStatus' | 'circlePaymentId' | 'amount' | 'card' | 'user' | 'common' | 'join' | 'subscription' | 'subscriptionId' | 'joinId' | 'userId' | 'commonId' | 'cardId'
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'processed' | 'processedError' | 'type' | 'status' | 'circlePaymentStatus' | 'circlePaymentId' | 'amount' | 'card' | 'user' | 'common' | 'join' | 'subscription' | 'subscriptionId' | 'joinId' | 'userId' | 'commonId' | 'cardId'
@@ -179,8 +175,8 @@ interface NexusPrismaInputs {
       ordering: 'id' | 'createdAt' | 'updatedAt' | 'funding' | 'fundingType' | 'paymentState' | 'card' | 'proposal' | 'subscription' | 'cardId' | 'subscriptionId'
     }
     subscriptions: {
-      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'proposal' | 'payments' | 'cardId' | 'userId' | 'commonId'
-      ordering: 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'cardId' | 'userId' | 'commonId'
+      filtering: 'AND' | 'OR' | 'NOT' | 'id' | 'createdAt' | 'updatedAt' | 'card' | 'join' | 'user' | 'common' | 'payments' | 'amount' | 'paymentStatus' | 'status' | 'dueDate' | 'chargedAt' | 'voided' | 'cardId' | 'userId' | 'commonId'
+      ordering: 'id' | 'createdAt' | 'updatedAt' | 'card' | 'user' | 'common' | 'amount' | 'paymentStatus' | 'status' | 'dueDate' | 'chargedAt' | 'voided' | 'cardId' | 'userId' | 'commonId'
     }
   }
   CardBillingDetail: {
@@ -391,10 +387,16 @@ interface NexusPrismaOutputs {
     createdAt: 'DateTime'
     updatedAt: 'DateTime'
     card: 'Card'
+    join: 'JoinProposal'
     user: 'User'
     common: 'Common'
-    proposal: 'JoinProposal'
     payments: 'Payment'
+    amount: 'Int'
+    paymentStatus: 'SubscriptionPaymentStatus'
+    status: 'SubscriptionStatus'
+    dueDate: 'DateTime'
+    chargedAt: 'DateTime'
+    voided: 'Boolean'
     cardId: 'String'
     userId: 'String'
     commonId: 'String'

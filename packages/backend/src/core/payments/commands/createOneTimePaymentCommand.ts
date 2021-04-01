@@ -51,8 +51,6 @@ export const createOneTimePaymentCommand = async (proposalId: string): Promise<P
     });
   }
 
-  // Check if there are pending payments
-
   // Create the local payment and return it
   return createPaymentCommand({
     connect: {
