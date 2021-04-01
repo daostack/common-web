@@ -1,12 +1,21 @@
-import { EventType, FundingType, ProposalState, ProposalType } from '@prisma/client';
+import { FundingType, ProposalState, ProposalType } from '@prisma/client';
 import { prisma } from '@toolkits';
 import { NotFoundError, CommonError } from '@errors';
 import { getProposalVoteCountQuery } from '@votes/queries/getProposalVoteCountQuery';
-import { eventsService } from '@services';
 import { processApprovedOneTimeJoinRequestCommand } from './process/processApprovedOneTimeJoinRequest';
-import { logger } from '@logger';
+import { logger as $logger } from '@logger';
+import { processApprovedSubscriptionJoinRequest } from './process/processApprovedSubscriptionJoinRequest';
+import { processRejectedJoinRequest } from './process/processRejectedJoinRequest';
 
 export const finalizeJoinProposalCommand = async (proposalId: string): Promise<void> => {
+  // Create custom logger
+  const logger = $logger.child({
+    functionName: 'finalizeJoinProposalCommand',
+    params: {
+      proposalId
+    }
+  });
+
   // Find the proposal and the join
   const proposal = await prisma.proposal.findUnique({
     where: {
@@ -48,32 +57,20 @@ export const finalizeJoinProposalCommand = async (proposalId: string): Promise<v
   // If the proposal has been approved
   if (votesCount.votesFor > votesCount.votesAgainst) {
     if (proposal.join.fundingType === FundingType.OneTime) {
+      logger.info('Processing approved one-time join request');
+
       await processApprovedOneTimeJoinRequestCommand(proposalId);
     } else if (proposal.join.fundingType === FundingType.Monthly) {
-      // @todo Process approved subscription proposal
+      logger.info('Processing approved subscription join request');
 
-      logger.error('Not Implemented: Process approved proposal in subscriptions common');
+      await processApprovedSubscriptionJoinRequest(proposalId);
     }
   }
 
   // If the proposal has been rejected
   else if (votesCount.votesAgainst >= votesCount.votesFor) {
-    // Change the proposal state
-    await prisma.proposal.update({
-      where: {
-        id: proposalId
-      },
-      data: {
-        state: ProposalState.Rejected
-      }
-    });
+    logger.info('Processing rejected join request');
 
-    // Create event
-    await eventsService.create({
-      type: EventType.JoinRequestRejected,
-      userId: proposal.userId,
-      commonId: proposal.commonId,
-      payload: JSON.stringify(proposal)
-    });
+    await processRejectedJoinRequest(proposalId);
   }
 };

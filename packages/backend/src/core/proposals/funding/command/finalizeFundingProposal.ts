@@ -1,9 +1,11 @@
-import { ProposalState, EventType } from '@prisma/client';
+import { ProposalState } from '@prisma/client';
 
 import { prisma } from '@toolkits';
+import { votesService } from '@services';
 import { NotFoundError, CommonError } from '@errors';
-import { eventsService, votesService } from '@services';
+
 import { processApprovedFundingRequest } from './process/processApprovedFundingRequest';
+import { processRejectedFundingRequest } from './process/processRejectedFundingRequest';
 
 export const finalizeFundingProposal = async (proposalId: string): Promise<void> => {
   // Find the proposal
@@ -39,31 +41,13 @@ export const finalizeFundingProposal = async (proposalId: string): Promise<void>
   // Count the vote
   const votesCount = await votesService.getVotesCount(proposalId);
 
-
   // Process according to the votes outcome
   if (votesCount.votesFor > votesCount.votesAgainst) {
-    // @todo Process approved funding request
     await processApprovedFundingRequest(proposal);
   }
 
   // If the proposal has been rejected
   else if (votesCount.votesAgainst >= votesCount.votesFor) {
-    // Change the proposal state
-    await prisma.proposal.update({
-      where: {
-        id: proposalId
-      },
-      data: {
-        state: ProposalState.Rejected
-      }
-    });
-
-    // Create event
-    await eventsService.create({
-      type: EventType.FundingRequestRejected,
-      userId: proposal.userId,
-      commonId: proposal.commonId,
-      payload: JSON.stringify(proposal)
-    });
+    await processRejectedFundingRequest(proposal);
   }
 };
