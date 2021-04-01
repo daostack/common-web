@@ -1,8 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
+import { Loader } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
 import { useModal } from "../../../../shared/hooks";
+import { Discussion } from "../../../../shared/models";
+import { getLoading } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
 import {
   AboutTabComponent,
@@ -10,7 +13,7 @@ import {
   DiscussionsComponent,
   DiscussionDetailModal,
 } from "../../components/CommonDetailContainer";
-import { getCommonDetail, loadCommonDiscussionList } from "../../store/actions";
+import { getCommonDetail, loadCommonDiscussionList, loadDisscussionDetail } from "../../store/actions";
 import {
   selectCommonDetail,
   selectProposals,
@@ -44,10 +47,12 @@ const tabs = [
 export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
   const [tab, setTab] = useState("about");
+  const loading = useSelector(getLoading());
   const common = useSelector(selectCommonDetail());
   const proposals = useSelector(selectProposals());
   const discussions = useSelector(selectDiscussions());
   const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
+
   const dispatch = useDispatch();
   const { isShowing, onOpen, onClose } = useModal(false);
 
@@ -90,7 +95,18 @@ export default function CommonDetail() {
     [dispatch, isDiscussionsLoaded],
   );
 
-  return (
+  const getDisscussionDetail = useCallback(
+    (payload: Discussion) => {
+      if (!payload.isLoaded) {
+        dispatch(loadDisscussionDetail.request(payload));
+      }
+    },
+    [dispatch],
+  );
+
+  return loading && !common ? (
+    <Loader />
+  ) : (
     common && (
       <>
         <Modal isShowing={isShowing} onClose={onClose}>
@@ -151,7 +167,12 @@ export default function CommonDetail() {
             <div className="inner-main-content-wrapper">
               <div className="tab-content-wrapper">
                 {tab === "about" && <AboutTabComponent common={common} />}
-                {tab === "discussions" && <DiscussionsComponent discussions={discussions} />}
+                {tab === "discussions" &&
+                  (isDiscussionsLoaded ? (
+                    <DiscussionsComponent discussions={discussions} loadDisscussionDetail={getDisscussionDetail} />
+                  ) : (
+                    <Loader />
+                  ))}
               </div>
               <div className="sidebar-wrapper">
                 <PreviewInformationList

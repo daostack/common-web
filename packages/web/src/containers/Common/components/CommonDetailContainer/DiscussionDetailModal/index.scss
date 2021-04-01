@@ -1,9 +1,10 @@
 .discussion-detail-modal-wrapper {
-  width: 80vw;
+  width: 75wh;
   height: 80vh;
   display: flex;
   .left-side {
     flex: 40;
+    margin-right: 24px;
     .top-side {
       justify-content: center;
       display: flex;
@@ -143,6 +144,81 @@
   }
   .right-side {
     flex: 60;
+    .chat-wrapper {
+      padding: 32px;
+      background-color: #f3f4ff;
+      height: calc(100% - 64px);
+      border-radius: 12px;
+      overflow: scroll;
+
+      .message-wrapper {
+        display: flex;
+        position: relative;
+        margin-bottom: 16px;
+        .icon-wrapper {
+          flex: 7.5;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          font-family: NunitoSans;
+          font-size: 14px;
+          font-weight: bold;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: 1.43;
+          letter-spacing: normal;
+          text-align: center;
+          color: #ffffff;
+          background-color: #4ce2f1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-right: 12px;
+        }
+        .message-text {
+          flex: 90;
+          padding: 8px 16px;
+          border-radius: 14px;
+          background-color: #e0e3ff;
+          flex-direction: row;
+          .message-name {
+            font-family: NunitoSans;
+            font-size: 14px;
+            font-weight: bold;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.43;
+            letter-spacing: normal;
+            color: #001a36;
+            margin-bottom: 8px;
+          }
+          .message-content {
+            font-family: NunitoSans;
+            font-size: 16px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.5;
+            letter-spacing: normal;
+            color: #001a36;
+            margin-bottom: 16px;
+          }
+        }
+        .time-wrapper {
+          position: absolute;
+          font-family: NunitoSans;
+          font-size: 10px;
+          font-weight: bold;
+          font-stretch: normal;
+          line-height: 1.2;
+          letter-spacing: normal;
+          text-align: right;
+          color: #979bba;
+          right: 8px;
+          bottom: 8px;
+        }
+      }
+    }
   }
 
   .line {

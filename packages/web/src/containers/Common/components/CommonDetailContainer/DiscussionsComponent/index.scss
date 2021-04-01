@@ -118,6 +118,7 @@
         color: #7786ff;
         position: relative;
         padding-right: 15px;
+        cursor: pointer;
         &::after {
           background-image: url("/icons/right-arrow-hover.svg");
           display: inline-block;

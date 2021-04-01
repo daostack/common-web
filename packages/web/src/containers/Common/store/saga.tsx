@@ -1,86 +1,34 @@
 import { call, put, select, takeLatest } from "redux-saga/effects";
 import { actions } from ".";
-import { Common, Discussion, Proposal, User, DiscussionMessage } from "../../../shared/models";
-import { transformFirebaseDataList, transformFirebaseDataSingle } from "../../../shared/utils";
-import firebase from "../../../shared/utils/firebase";
+import { Common, Discussion, User, DiscussionMessage } from "../../../shared/models";
+import { startLoading, stopLoading } from "../../../shared/store/actions";
+import {
+  fetchCommonList,
+  fetchCommonDetail,
+  fetchCommonDiscussions,
+  fetchCommonProposals,
+  fetchDiscussionsOwners,
+  fetchDiscussionsMessages,
+} from "./api";
+
 import { selectDiscussions } from "./selectors";
-
-async function fetchCommonDiscussions(commonId: string) {
-  const commons = await firebase.firestore().collection("discussion").where("commonId", "==", commonId).get();
-  const data = transformFirebaseDataList<Discussion>(commons);
-
-  return data.sort(
-    (proposal: Discussion, prevProposal: Discussion) => prevProposal.createTime?.seconds - proposal.createTime?.seconds,
-  );
-}
-
-async function fetchCommonProposals(commonId: string) {
-  const commons = await firebase.firestore().collection("proposals").where("commonId", "==", commonId).get();
-  const data = transformFirebaseDataList<Proposal>(commons);
-
-  return data.sort(
-    (proposal: Proposal, prevProposal: Proposal) => prevProposal.createdAt?.seconds - proposal.createdAt?.seconds,
-  );
-}
-
-async function fetchCommonList(): Promise<Common[]> {
-  const commons = await firebase.firestore().collection("daos").get();
-  const data = transformFirebaseDataList<Common>(commons);
-  return data;
-}
-
-async function fetchCommonDetail(id: string): Promise<Common> {
-  const common = await firebase.firestore().collection("daos").doc(id).get();
-  const data = transformFirebaseDataSingle<Common>(common);
-  return data;
-}
-
-async function fetchDiscussionsOwners(ownerids: string[]) {
-  const users = await firebase.firestore().collection("users").where("uid", "in", ownerids).get();
-  const data = transformFirebaseDataList<User>(users);
-  return data;
-}
-
-async function fetchDiscussionsMessages(dIds: string[]) {
-  const idsChunks = dIds.reduce((resultArray: any, item, index) => {
-    const chunkIndex = Math.floor(index / 10);
-
-    if (!resultArray[chunkIndex]) {
-      resultArray[chunkIndex] = [];
-    }
-
-    resultArray[chunkIndex].push(item);
-
-    return resultArray;
-  }, []);
-
-  const discussions = await Promise.all(
-    idsChunks.map((ids: string[]) =>
-      firebase.firestore().collection("discussionMessage").where("discussionId", "in", ids).get(),
-    ),
-  );
-  const data = (discussions as unknown[])
-    .map((d: any) => transformFirebaseDataList<DiscussionMessage>(d))
-    .reduce((resultArray: any, item) => {
-      resultArray.push(...item);
-      return resultArray;
-    }, []);
-
-  return data;
-}
 
 export function* getCommonsList(): Generator {
   try {
+    yield put(startLoading());
     const commons = yield call(fetchCommonList);
 
     yield put(actions.getCommonsList.success(commons as Common[]));
+    yield put(stopLoading());
   } catch (e) {
     yield put(actions.getCommonsList.failure(e));
+    yield put(stopLoading());
   }
 }
 
 export function* getCommonDetail(action: ReturnType<typeof actions.getCommonDetail.request>): Generator {
   try {
+    yield put(startLoading());
     const common = yield call(fetchCommonDetail, action.payload);
 
     const [discussions, proposals] = (yield Promise.all([
@@ -91,8 +39,11 @@ export function* getCommonDetail(action: ReturnType<typeof actions.getCommonDeta
     yield put(actions.getCommonDetail.success(common as Common));
     yield put(actions.setDiscussion(discussions));
     yield put(actions.setProposals(proposals));
+
+    yield put(stopLoading());
   } catch (e) {
     yield put(actions.getCommonDetail.failure(e));
+    yield put(stopLoading());
   }
 }
 
@@ -100,6 +51,7 @@ export function* loadCommonDiscussionList(
   action: ReturnType<typeof actions.loadCommonDiscussionList.request>,
 ): Generator {
   try {
+    yield put(startLoading());
     const discussions: Discussion[] = (yield select(selectDiscussions())) as Discussion[];
 
     const ownerIds = Array.from(new Set(discussions.map((d) => d.ownerId)));
@@ -115,8 +67,10 @@ export function* loadCommonDiscussionList(
     });
 
     yield put(actions.loadCommonDiscussionList.success(loadedDiscussions));
+    yield put(stopLoading());
   } catch (e) {
     yield put(actions.loadCommonDiscussionList.failure(e));
+    yield put(stopLoading());
   }
 }
 

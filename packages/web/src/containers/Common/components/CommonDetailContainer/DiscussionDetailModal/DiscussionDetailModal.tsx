@@ -36,7 +36,79 @@ export default function DiscussionDetailModal() {
           </p>
         </div>
       </div>
-      <div className="right-side"></div>
+      <div className="right-side">
+        <div className="chat-wrapper">
+          <div className="message-wrapper">
+            <div className="icon-wrapper">DS</div>
+            <div className="message-text">
+              <div className="message-name">Denis Stetskov</div>
+              <div className="message-content">
+                I’ve worked with Neville. He is super professional and creative, we are lucky to have you here! I’ve
+                worked with Neville. He is super professional and creative, we are lucky to have you here!
+              </div>
+            </div>
+            <div className="time-wrapper">12.03.21, 14:00</div>
+          </div>
+
+          <div className="message-wrapper">
+            <div className="icon-wrapper">DS</div>
+            <div className="message-text">
+              <div className="message-name">Denis Stetskov</div>
+              <div className="message-content">
+                I’ve worked with Neville. He is super professional and creative, we are lucky to have you here! I’ve
+                worked with Neville. He is super professional and creative, we are lucky to have you here!
+              </div>
+            </div>
+            <div className="time-wrapper">12.03.21, 14:00</div>
+          </div>
+
+          <div className="message-wrapper">
+            <div className="icon-wrapper">DS</div>
+            <div className="message-text">
+              <div className="message-name">Denis Stetskov</div>
+              <div className="message-content">
+                I’ve worked with Neville. He is super professional and creative, we are lucky to have you here! I’ve
+                worked with Neville. He is super professional and creative, we are lucky to have you here!
+              </div>
+            </div>
+            <div className="time-wrapper">12.03.21, 14:00</div>
+          </div>
+
+          <div className="message-wrapper">
+            <div className="icon-wrapper">DS</div>
+            <div className="message-text">
+              <div className="message-name">Denis Stetskov</div>
+              <div className="message-content">
+                I’ve worked with Neville. He is super professional and creative, we are lucky to have you here! I’ve
+                worked with Neville. He is super professional and creative, we are lucky to have you here!
+              </div>
+            </div>
+            <div className="time-wrapper">12.03.21, 14:00</div>
+          </div>
+          <div className="message-wrapper">
+            <div className="icon-wrapper">DS</div>
+            <div className="message-text">
+              <div className="message-name">Denis Stetskov</div>
+              <div className="message-content">
+                I’ve worked with Neville. He is super professional and creative, we are lucky to have you here! I’ve
+                worked with Neville. He is super professional and creative, we are lucky to have you here!
+              </div>
+            </div>
+            <div className="time-wrapper">12.03.21, 14:00</div>
+          </div>
+          <div className="message-wrapper">
+            <div className="icon-wrapper">DS</div>
+            <div className="message-text">
+              <div className="message-name">Denis Stetskov</div>
+              <div className="message-content">
+                I’ve worked with Neville. He is super professional and creative, we are lucky to have you here! I’ve
+                worked with Neville. He is super professional and creative, we are lucky to have you here!
+              </div>
+            </div>
+            <div className="time-wrapper">12.03.21, 14:00</div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
