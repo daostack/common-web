@@ -26,6 +26,7 @@ type Card {
 
   """The date, at which the item was last modified"""
   updatedAt: Date!
+  user: User!
 }
 
 input CardBillingDetailWhereInput {
@@ -75,6 +76,10 @@ input CardWhereInput {
   updatedAt: DateTimeFilter
   user: UserWhereInput
   userId: StringFilter
+}
+
+input CardWhereUniqueInput {
+  id: String
 }
 
 type Common {
@@ -768,6 +773,7 @@ type Query {
   common(where: CommonWhereUniqueInput!): Common
   commons(after: CommonWhereUniqueInput, before: CommonWhereUniqueInput, first: Int, last: Int, where: CommonWhereInput): [Common!]!
   generateUserAuthToken(authId: String!): String!
+  user(where: UserWhereUniqueInput!): User
 }
 
 enum QueryMode {
@@ -849,6 +855,8 @@ input SubscriptionWhereInput {
 }
 
 type User {
+  cards(after: CardWhereUniqueInput, before: CardWhereUniqueInput, first: Int, last: Int): [Card!]!
+
   """The date, at which the item was created"""
   createdAt: Date!
 
@@ -885,6 +893,11 @@ input UserWhereInput {
   proposals: ProposalListRelationFilter
   subscriptions: SubscriptionListRelationFilter
   updatedAt: DateTimeFilter
+}
+
+input UserWhereUniqueInput {
+  email: String
+  id: String
 }
 
 type Vote {

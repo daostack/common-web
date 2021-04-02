@@ -1,11 +1,14 @@
 import { UserType } from './Types/User.type';
 
-import { CreateUserInput, CreateUserMutation } from './Mutations/CreateUser.mutation';
-
+import { GetUserQuery } from './Queries/GetUser.query';
 import { GenerateUserAuthTokenQuery } from './Queries/GenerateUserAuthToken.query';
+
+import { CreateUserInput, CreateUserMutation } from './Mutations/CreateUser.mutation';
 
 export const UserTypes = [
   UserType,
+
+  GetUserQuery,
 
   CreateUserInput,
   CreateUserMutation,

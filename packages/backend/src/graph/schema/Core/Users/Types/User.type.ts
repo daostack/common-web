@@ -29,5 +29,7 @@ export const UserType = objectType({
         return `${root.firstName[0].toUpperCase()}. ${root.lastName}`;
       }
     });
+
+    t.model.cards();
   }
 });

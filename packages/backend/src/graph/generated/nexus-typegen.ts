@@ -82,6 +82,9 @@ export interface NexusGenInputs {
     user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
     userId?: NexusGenInputs['StringFilter'] | null; // StringFilter
   }
+  CardWhereUniqueInput: { // input type
+    id?: string | null; // String
+  }
   CommonMemberListRelationFilter: { // input type
     every?: NexusGenInputs['CommonMemberWhereInput'] | null; // CommonMemberWhereInput
     none?: NexusGenInputs['CommonMemberWhereInput'] | null; // CommonMemberWhereInput
@@ -625,6 +628,10 @@ export interface NexusGenInputs {
     subscriptions?: NexusGenInputs['SubscriptionListRelationFilter'] | null; // SubscriptionListRelationFilter
     updatedAt?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
   }
+  UserWhereUniqueInput: { // input type
+    email?: string | null; // String
+    id?: string | null; // String
+  }
   VoteListRelationFilter: { // input type
     every?: NexusGenInputs['VoteWhereInput'] | null; // VoteWhereInput
     none?: NexusGenInputs['VoteWhereInput'] | null; // VoteWhereInput
@@ -732,6 +739,7 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['Date']; // Date!
     id: string; // ID!
     updatedAt: NexusGenScalars['Date']; // Date!
+    user: NexusGenRootTypes['User']; // User!
   }
   Common: { // field return type
     createdAt: NexusGenScalars['Date']; // Date!
@@ -767,8 +775,10 @@ export interface NexusGenFieldTypes {
     common: NexusGenRootTypes['Common'] | null; // Common
     commons: NexusGenRootTypes['Common'][]; // [Common!]!
     generateUserAuthToken: string; // String!
+    user: NexusGenRootTypes['User'] | null; // User
   }
   User: { // field return type
+    cards: NexusGenRootTypes['Card'][]; // [Card!]!
     createdAt: NexusGenScalars['Date']; // Date!
     displayName: string; // String!
     firstName: string; // String!
@@ -788,6 +798,7 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'Date'
     id: 'ID'
     updatedAt: 'Date'
+    user: 'User'
   }
   Common: { // field return type name
     createdAt: 'Date'
@@ -823,8 +834,10 @@ export interface NexusGenFieldTypeNames {
     common: 'Common'
     commons: 'Common'
     generateUserAuthToken: 'String'
+    user: 'User'
   }
   User: { // field return type name
+    cards: 'Card'
     createdAt: 'Date'
     displayName: 'String'
     firstName: 'String'
@@ -876,6 +889,17 @@ export interface NexusGenArgTypes {
     }
     generateUserAuthToken: { // args
       authId: string; // String!
+    }
+    user: { // args
+      where: NexusGenInputs['UserWhereUniqueInput']; // UserWhereUniqueInput!
+    }
+  }
+  User: {
+    cards: { // args
+      after?: NexusGenInputs['CardWhereUniqueInput'] | null; // CardWhereUniqueInput
+      before?: NexusGenInputs['CardWhereUniqueInput'] | null; // CardWhereUniqueInput
+      first?: number | null; // Int
+      last?: number | null; // Int
     }
   }
 }
