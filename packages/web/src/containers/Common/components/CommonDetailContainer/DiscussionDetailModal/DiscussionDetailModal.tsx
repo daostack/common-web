@@ -1,8 +1,16 @@
 import React from "react";
+import { Loader } from "../../../../../shared/components";
+import { Discussion } from "../../../../../shared/models";
 import "./index.scss";
 
-export default function DiscussionDetailModal() {
-  return (
+interface DiscussionDetailModalProps {
+  disscussion: Discussion | null;
+}
+
+export default function DiscussionDetailModal({ disscussion }: DiscussionDetailModalProps) {
+  return !disscussion ? (
+    <Loader />
+  ) : (
     <div className="discussion-detail-modal-wrapper">
       <div className="left-side">
         <div className="top-side">

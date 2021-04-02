@@ -7,7 +7,7 @@ import {
   fetchCommonDetail,
   fetchCommonDiscussions,
   fetchCommonProposals,
-  fetchDiscussionsOwners,
+  fetchOwners,
   fetchDiscussionsMessages,
 } from "./api";
 
@@ -57,7 +57,7 @@ export function* loadCommonDiscussionList(
     const ownerIds = Array.from(new Set(discussions.map((d) => d.ownerId)));
     const discussions_ids = discussions.map((d) => d.id);
 
-    const owners = (yield fetchDiscussionsOwners(ownerIds)) as User[];
+    const owners = (yield fetchOwners(ownerIds)) as User[];
     const dMessages = (yield fetchDiscussionsMessages(discussions_ids)) as DiscussionMessage[];
 
     const loadedDiscussions = discussions.map((d) => {
@@ -74,10 +74,35 @@ export function* loadCommonDiscussionList(
   }
 }
 
+export function* loadDiscussionDetail(action: ReturnType<typeof actions.loadDisscussionDetail.request>): Generator {
+  try {
+    yield put(startLoading());
+    const discussion = { ...action.payload };
+    if (!discussion.isLoaded) {
+      const { discussionMessage } = action.payload;
+
+      const ownerIds = Array.from(new Set(discussionMessage?.map((d) => d.ownerId)));
+      const owners = (yield fetchOwners(ownerIds)) as User[];
+      const loadedDisscussionMessage = discussionMessage?.map((d) => {
+        d.owner = owners.find((o) => o.uid === d.ownerId);
+        return d;
+      });
+      discussion.discussionMessage = loadedDisscussionMessage;
+    }
+
+    yield put(actions.loadDisscussionDetail.success(discussion));
+    yield put(stopLoading());
+  } catch (e) {
+    yield put(actions.loadDisscussionDetail.failure(e));
+    yield put(stopLoading());
+  }
+}
+
 function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
   yield takeLatest(actions.loadCommonDiscussionList.request, loadCommonDiscussionList);
+  yield takeLatest(actions.loadDisscussionDetail.request, loadDiscussionDetail);
 }
 
 export default commonsSaga;

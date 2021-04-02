@@ -32,9 +32,29 @@ export async function fetchCommonDetail(id: string): Promise<Common> {
   return data;
 }
 
-export async function fetchDiscussionsOwners(ownerids: string[]) {
-  const users = await firebase.firestore().collection("users").where("uid", "in", ownerids).get();
-  const data = transformFirebaseDataList<User>(users);
+export async function fetchOwners(ownerids: string[]) {
+  const idsChunks = ownerids.reduce((resultArray: any, item, index) => {
+    const chunkIndex = Math.floor(index / 10);
+
+    if (!resultArray[chunkIndex]) {
+      resultArray[chunkIndex] = [];
+    }
+
+    resultArray[chunkIndex].push(item);
+
+    return resultArray;
+  }, []);
+  const users = await Promise.all(
+    idsChunks.map((ids: string[]) => firebase.firestore().collection("users").where("uid", "in", ownerids).get()),
+  );
+
+  const data = (users as unknown[])
+    .map((d: any) => transformFirebaseDataList<User>(d))
+    .reduce((resultArray: any, item) => {
+      resultArray.push(...item);
+      return resultArray;
+    }, []);
+
   return data;
 }
 

@@ -21,6 +21,8 @@ export const setDiscussion = createStandardAction(CommonsActionTypes.SET_DISCUSS
 
 export const setProposals = createStandardAction(CommonsActionTypes.SET_PROPOSALS)<Proposal[]>();
 
+export const clearCurrentDiscussion = createStandardAction(CommonsActionTypes.CLEAR_CURRENT_DISCUSSION)();
+
 export const loadCommonDiscussionList = createAsyncAction(
   CommonsActionTypes.LOAD_COMMON_DISCUSSIONS,
   CommonsActionTypes.LOAD_COMMON_DISCUSSIONS_SUCCESS,
