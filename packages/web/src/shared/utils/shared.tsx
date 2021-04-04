@@ -10,6 +10,11 @@ export const getUserName = (user: User | undefined) => {
   return user.displayName || `${user.firstName} ${user.lastName}`;
 };
 
+export const getUserInitials = (user: User | undefined) => {
+  if (!user) return "";
+  return user.displayName || `${user.firstName[0]}${user.lastName[0]}`;
+};
+
 export const getDaysAgo = (currentDate: Date, time: Time) => {
   const previousDate = new Date(time.seconds * 1000);
   const differenceInTime = currentDate.getTime() - previousDate.getTime();

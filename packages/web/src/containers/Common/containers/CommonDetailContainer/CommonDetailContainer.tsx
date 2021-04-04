@@ -121,7 +121,7 @@ export default function CommonDetail() {
     common && (
       <>
         <Modal isShowing={isShowing} onClose={closeModalHandler}>
-          <DiscussionDetailModal disscussion={currentDisscussion} />
+          <DiscussionDetailModal disscussion={currentDisscussion} common={common} />
         </Modal>
         <div className="common-detail-wrapper">
           <div className="main-information-block">
