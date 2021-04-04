@@ -7,8 +7,7 @@
   "scripts": {
     "dev": "ts-node-dev -r tsconfig-paths/register -r dotenv/config --transpile-only --no-notify src/index.ts",
     "compile": "tsc -p tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
-    "start": "node -r dotenv/config dist/index.js",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "start": "node -r dotenv/config dist/index.js"
   },
   "bugs": {
     "url": "https://github.com/daostack/common-monorepo/issues"

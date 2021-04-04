@@ -1,0 +1,11 @@
+{
+  "name": "@common/background-worker",
+  "version": "1.9.10-rc.0",
+  "author": "Alexander Ivanov @alexander2001i",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node-dev -r tsconfig-paths/register -r dotenv/config --transpile-only --no-notify src/index.ts",
+    "compile": "tsc -p tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
+    "start": "node -r dotenv/config dist/index.js"
+  }
+}

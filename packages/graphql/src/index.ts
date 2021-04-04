@@ -1,3 +1,6 @@
+export { schema } from './schema';
+export { createRequestContext } from './context';
+
 import ipAddress from 'request-ip';
 import express from 'express';
 import cors from 'cors';

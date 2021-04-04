@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "noImplicitReturns": true,
+    "baseUrl": "./src",
+    "resolveJsonModule": true,
+    "strict": true,
+    "paths": {
+      "@services": [
+        "./services/index"
+      ],
+      "@services/*": [
+        "./services/index"
+      ]
+    },
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}
