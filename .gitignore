@@ -561,4 +561,4 @@ build
 .vercel
 
 
-secrets/*
+packages/backend/src/domain/secrets/*

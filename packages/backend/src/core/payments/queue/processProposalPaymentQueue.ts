@@ -13,6 +13,8 @@ export const processProposalPaymentQueue = Queue<IProcessProposalPaymentQueue>(Q
 export const addProcessProposalPaymentJob = (payment: Payment) => {
   processProposalPaymentQueue.add({
     payment
+  }, {
+    timeout: 60 * 60 * 1000 // 1 hour
   });
 };
 

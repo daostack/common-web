@@ -19,7 +19,8 @@ export const addPaymentStatusProcessingJob = (paymentId: string, retries = 0): v
     paymentId,
     retries
   }, {
-    delay: retries * 1000
+    delay: retries * 1000,
+    timeout: 10 * 60 * 1000 // 10 minutes
   });
 };
 

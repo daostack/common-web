@@ -249,6 +249,8 @@ enum SubscriptionStatus {
 
   Active
 
+  PaymentFailed
+
   CanceledByUser
   CanceledByPaymentFailure
 }

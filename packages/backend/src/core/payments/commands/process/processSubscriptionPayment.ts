@@ -4,6 +4,7 @@ import { Payment, PaymentStatus, PaymentType, SubscriptionStatus } from '@prisma
 import { logger as $logger } from '@logger';
 import { commonService } from '@services';
 import { prisma } from '@toolkits';
+import { scheduleSubscriptionCharge } from '../../../subscriptions/queues/chargeSubscriptionQueue';
 
 export const processSubscriptionPayment = async (payment: Payment): Promise<void> => {
   const logger = $logger.child({
@@ -49,18 +50,6 @@ export const processSubscriptionPayment = async (payment: Payment): Promise<void
     });
   }
 
-  // Update the subscription status if necessary
-  if (subscription.status !== SubscriptionStatus.Active && subscription.status !== SubscriptionStatus.CanceledByUser) {
-    await prisma.subscription.update({
-      where: {
-        id: subscription.id
-      },
-      data: {
-        status: SubscriptionStatus.Active
-      }
-    });
-  }
-
   // Update the subscription due date if the payment was successful
   if (payment.status === PaymentStatus.Successful) {
     await prisma.subscription.update({
@@ -68,9 +57,29 @@ export const processSubscriptionPayment = async (payment: Payment): Promise<void
         id: subscription.id
       },
       data: {
+        status: SubscriptionStatus.Active,
         chargedAt: new Date(),
         dueDate: addMonths(subscription.dueDate, 1)
       }
     });
+  }
+
+  if (payment.status === PaymentStatus.Unsuccessful) {
+    await prisma.subscription.update({
+      where: {
+        id: subscription.id
+      },
+      data: {
+        status: SubscriptionStatus.PaymentFailed
+      }
+    });
+  }
+
+  // Schedule the next payment
+  if (
+    subscription.status !== SubscriptionStatus.CanceledByUser &&
+    subscription.status !== SubscriptionStatus.CanceledByPaymentFailure
+  ) {
+    await scheduleSubscriptionCharge(subscription.id);
   }
 };

@@ -666,7 +666,7 @@ export interface NexusGenEnums {
   ProposalType: "FundingRequest" | "JoinRequest"
   QueryMode: "default" | "insensitive"
   SubscriptionPaymentStatus: "AwaitingInitialPayment" | "Pending" | "Successful" | "Unsuccessful"
-  SubscriptionStatus: "Active" | "CanceledByPaymentFailure" | "CanceledByUser" | "Pending"
+  SubscriptionStatus: "Active" | "CanceledByPaymentFailure" | "CanceledByUser" | "PaymentFailed" | "Pending"
   VoteOutcome: "Approve" | "Condemn"
 }
 

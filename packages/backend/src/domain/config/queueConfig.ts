@@ -6,6 +6,7 @@ import { paymentStatusProcessingQueue } from '../../core/payments/queue/paymentP
 import { processProposalPaymentQueue } from '../../core/payments/queue/processProposalPaymentQueue';
 import { finalizeProposalQueue } from '../../core/proposals/queue/finalizeProposalQueue';
 import { expireProposalsQueue } from 'core/proposals/queue/expireProposalsQueue';
+import { chargeSubscriptionQueue } from '../../core/subscriptions/queues/chargeSubscriptionQueue';
 
 setQueues([
   new BullAdapter(votingQueue),
@@ -13,5 +14,7 @@ setQueues([
   new BullAdapter(processProposalPaymentQueue),
 
   new BullAdapter(finalizeProposalQueue),
-  new BullAdapter(expireProposalsQueue)
+  new BullAdapter(expireProposalsQueue),
+
+  new BullAdapter(chargeSubscriptionQueue)
 ]);

@@ -1,6 +1,6 @@
 import admin from 'firebase-admin';
 
-import adminKeys from '@secrets/adminsdk-keys.json';
+import adminKeys from '../secrets/adminsdk-keys.json';
 
 export const InitializeFirebase = () => {
   if (!admin.apps.length) {
