@@ -23,9 +23,9 @@ const createCommonDataValidationScheme = yup.object({
     })
     .required(),
 
-  byline: yup.string().min(10).required(),
+  byline: yup.string().min(10),
 
-  description: yup.string().required(),
+  description: yup.string(),
 
   fundingGoalDeadline: yup.number().required(),
 
