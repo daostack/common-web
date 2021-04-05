@@ -24,7 +24,8 @@ jest.mock('../../../../../common/database/getCommon', () =>
             description: 'testetest',
             founderId: 'Xlun3Ux94Zfc73axkiuVdkktOWf1',
             byline: 'testtestetstetst',
-            contributionType: contributionType
+            contributionType: contributionType,
+            zeroContribution: true,
           },
           raised: 0,
           rules: [
