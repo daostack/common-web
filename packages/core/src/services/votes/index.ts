@@ -1,8 +1,11 @@
 import { createVoteCommand } from './commands/createVoteCommand';
-import { getProposalVoteCountQuery } from 'packages/core/src/services/votes/queries/getProposalVoteCountQuery';
+import { processVoteCommand } from './commands/processVoteCommand';
 
-export const votesService = {
+import { getProposalVoteCountQuery } from './queries/getProposalVoteCountQuery';
+
+export const voteService = {
   create: createVoteCommand,
+  process: processVoteCommand,
 
   getVotesCount: getProposalVoteCountQuery
 };

@@ -1,5 +1,6 @@
 import * as z from 'zod';
 import { EventType } from '@prisma/client';
+
 import { EventsQueue } from '../queue';
 import { CreateEvent } from '../queue/jobs/createEventProcessor';
 

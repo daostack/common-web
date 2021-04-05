@@ -1,4 +1,4 @@
-import { CircleCurrency } from 'packages/core/src/domain/clients/circle/types/CircleCurrency';
+import { CircleCurrency } from '@circle/types';
 
 export interface ICirclePaymentAmount {
   /**

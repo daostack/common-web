@@ -8,13 +8,10 @@ import cors from 'cors';
 import { router } from 'bull-board';
 import { ApolloServer } from 'apollo-server-express';
 
-import { FirebaseToolkit } from '@toolkits';
 import { schema, createRequestContext } from '../../graphql/src';
 
 import '@config';
 
-// Initialize the firebase admin app
-FirebaseToolkit.InitializeFirebase();
 
 // Initialize the servers
 const app = express();

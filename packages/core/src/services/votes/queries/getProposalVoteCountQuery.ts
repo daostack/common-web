@@ -1,7 +1,7 @@
 import { VoteOutcome } from '@prisma/client';
 import { prisma } from '@toolkits';
 
-interface IVotesCount {
+export interface IVotesCount {
   votesFor: number;
   votesAgainst: number;
 }

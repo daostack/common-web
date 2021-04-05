@@ -1,4 +1,4 @@
-import { CirclePaymentStatus, IPaymentFee } from 'packages/core/src/domain/clients/circle/types';
+import { CirclePaymentStatus, IPaymentFee } from '@circle/types';
 
 export interface ICirclePayment {
   id: string;

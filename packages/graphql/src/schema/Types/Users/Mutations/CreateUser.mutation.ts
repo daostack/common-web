@@ -1,5 +1,6 @@
 import { arg, extendType, inputObjectType, nonNull } from 'nexus';
-import { userService } from '../../../../../../core/src/services';
+
+import { userService } from '@common/core';
 
 export const CreateUserInput = inputObjectType({
   name: 'CreateUserInput',

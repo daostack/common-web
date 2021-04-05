@@ -1,4 +1,4 @@
-import { ICirclePaymentAmount } from '@common/backend/dist/domain/clients/circle/types/Payment/PaymentAmount';
+import { ICirclePaymentAmount } from '@circle/types';
 
 export const convertAmountToCircleAmount = (amount: number): ICirclePaymentAmount => ({
   amount: Math.round(amount) / 100,

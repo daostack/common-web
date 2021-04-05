@@ -1,9 +1,11 @@
 import * as z from 'zod';
 import { Card, EventType } from '@prisma/client';
-import { circleClient } from '@clients';
-import { BillingDetailsSchema } from '@validation';
+
 import { prisma } from '@toolkits';
-import { eventsService } from '../../index';
+import { circleClient } from '@clients';
+import { eventsService } from '@services';
+import { BillingDetailsSchema } from '@validation';
+
 import { verifyCardCommand } from './verifyCardCommand';
 
 const schema = z.object({

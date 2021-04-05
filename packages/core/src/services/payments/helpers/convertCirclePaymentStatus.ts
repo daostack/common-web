@@ -1,6 +1,7 @@
-import { CirclePaymentStatus } from '@common/backend/dist/domain/clients/circle/types';
 import { PaymentStatus } from '@prisma/client';
+
 import { CommonError } from '@errors';
+import { CirclePaymentStatus } from '@circle/types';
 
 export const convertCirclePaymentStatus = (status: CirclePaymentStatus): PaymentStatus => {
   switch (status) {

@@ -1,11 +1,12 @@
 import * as z from 'zod';
 import { EventType, Payment, PaymentType } from '@prisma/client';
 
+import { worker } from '@common/worker';
+
 import { prisma } from '@toolkits';
 import { circleClient } from '@clients';
-import { eventsService } from '../../index';
+import { eventsService } from '@services';
 
-import { addPaymentStatusProcessingJob } from '../queue/paymentProcessingQueue';
 import { convertAmountToCircleAmount, convertCirclePaymentStatus } from '../helpers';
 
 const schema = z.object({
@@ -113,8 +114,10 @@ export const createPaymentCommand = async (command: z.infer<typeof schema>): Pro
     commonId: command.connect.commonId
   });
 
-  // Schedule payment processing
-  addPaymentStatusProcessingJob(payment.id);
+  // Schedule payment status processing
+  worker.addPaymentJob('updateStatus', payment.id, {
+    delay: 1000 * 60 // Delay the job one minute
+  });
 
   return payment;
 };

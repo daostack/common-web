@@ -1,11 +1,13 @@
 import { FundingType, ProposalState, ProposalType } from '@prisma/client';
+
 import { prisma } from '@toolkits';
-import { NotFoundError, CommonError } from '@errors';
-import { getProposalVoteCountQuery } from 'packages/core/src/services/votes/queries/getProposalVoteCountQuery';
-import { processApprovedOneTimeJoinRequestCommand } from './process/processApprovedOneTimeJoinRequest';
+import { voteService } from '@services';
 import { logger as $logger } from '@logger';
-import { processApprovedSubscriptionJoinRequest } from './process/processApprovedSubscriptionJoinRequest';
+import { NotFoundError, CommonError } from '@errors';
+
 import { processRejectedJoinRequest } from './process/processRejectedJoinRequest';
+import { processApprovedSubscriptionJoinRequest } from './process/processApprovedSubscriptionJoinRequest';
+import { processApprovedOneTimeJoinRequestCommand } from './process/processApprovedOneTimeJoinRequest';
 
 export const finalizeJoinProposalCommand = async (proposalId: string): Promise<void> => {
   // Create custom logger
@@ -52,7 +54,7 @@ export const finalizeJoinProposalCommand = async (proposalId: string): Promise<v
   }
 
   // Count the votes
-  const votesCount = await getProposalVoteCountQuery(proposalId);
+  const votesCount = await voteService.getVotesCount(proposalId);
 
   // If the proposal has been approved
   if (votesCount.votesFor > votesCount.votesAgainst) {

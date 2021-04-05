@@ -1,5 +1,5 @@
 export { userService } from './users';
-export { votesService } from './votes';
+export { voteService } from './votes';
 export { cardsService } from './cards';
 export { eventsService } from './events';
 export { commonService } from './commons';

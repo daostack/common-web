@@ -2,7 +2,7 @@ import { _createCircleCard } from './cards/_createCard';
 import { _getCircleCard } from './cards/_getCard';
 
 import { _createCirclePayment } from './payment/_createPayment';
-import { _getPayment } from 'packages/core/src/domain/clients/circle/payment/_getPayment';
+import { _getPayment } from './payment/_getPayment';
 
 export const circleClient = {
   cards: {

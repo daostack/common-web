@@ -5,7 +5,7 @@ import { circleClient } from '@clients';
 import { logger as $logger } from '@logger';
 import { convertCirclePaymentStatus } from '../helpers';
 
-interface IUpdatePaymentStatusResult {
+export interface IUpdatePaymentStatusResult {
   initialPayment: Payment;
   updatedPayment: Payment;
 
@@ -49,6 +49,8 @@ export const updatePaymentStatusCommand = async (paymentId: string): Promise<IUp
       }
     });
   }
+
+  // @todo If the payment is not finalized schedule job for retrying the update
 
   // Return the result
   return {

@@ -1,12 +1,13 @@
 import * as z from 'zod';
 import { EventType, Vote, VoteOutcome } from '@prisma/client';
 
-import { commonService, eventsService } from '../../index';
+import { commonService, eventsService } from '@services';
 import { NotFoundError, CommonError } from '@errors';
 import { prisma } from '@toolkits';
 
 import { UpdateProposalVoteCount } from '../queue/jobs/updateProposalVoteCount';
 import { votingQueue } from '../queue';
+import { worker } from '../../../../../worker/src';
 
 const schema = z.object({
   userId: z.string()
@@ -77,9 +78,7 @@ export const createVoteCommand = async (command: z.infer<typeof schema>): Promis
   });
 
   // Add the proposal vote count update to the queue
-  votingQueue.add(UpdateProposalVoteCount, {
-    vote
-  });
+  worker.addVotesJob('processVote', vote.id);
 
   // Return the created vote
   return vote;

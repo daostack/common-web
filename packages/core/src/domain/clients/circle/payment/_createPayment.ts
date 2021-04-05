@@ -4,8 +4,9 @@ import {
   IPaymentSource,
   PaymentVerification,
   ICirclePayment
-} from 'packages/core/src/domain/clients/circle/types';
-import { $circleClient } from 'packages/core/src/domain/clients/circle/client';
+} from '@circle/types';
+import { $circleClient } from '@circle/client';
+
 import { CommonError } from '@errors';
 
 export interface ICircleCreatePaymentPayload {

@@ -1,13 +1,13 @@
 import { Card, EventType } from '@prisma/client';
 
 import { circleClient } from '@clients';
-import { ICircleCard } from '@common/backend/dist/domain/clients/circle/types';
+import { ICircleCard } from '@circle/cards/types';
 
 import { poll } from '@utils';
-import { IPollValidator, IPollAction } from '@common/backend/dist/domain/utils/types';
-import { eventsService } from '../../index';
 import { prisma } from '@toolkits';
+import { eventsService } from '@services';
 import { CvvVerificationCheckError } from '@errors';
+import { IPollAction, IPollValidator } from '@utils/types';
 
 interface IVerifyCommandOptions {
   /**

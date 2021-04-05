@@ -1,7 +1,7 @@
 import { ProposalState } from '@prisma/client';
 
 import { prisma } from '@toolkits';
-import { votesService } from '../../../index';
+import { voteService } from '../../../index';
 import { NotFoundError, CommonError } from '@errors';
 
 import { processApprovedFundingRequest } from './process/processApprovedFundingRequest';
@@ -39,7 +39,7 @@ export const finalizeFundingProposal = async (proposalId: string): Promise<void>
   }
 
   // Count the vote
-  const votesCount = await votesService.getVotesCount(proposalId);
+  const votesCount = await voteService.getVotesCount(proposalId);
 
   // Process according to the votes outcome
   if (votesCount.votesFor > votesCount.votesAgainst) {

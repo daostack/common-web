@@ -1,9 +1,9 @@
 import { prisma } from '@toolkits';
 
-import { getProposalVoteCountQuery } from 'packages/core/src/services/votes/queries/getProposalVoteCountQuery';
+import { voteService } from '@services';
 
 export const proposalHasMajorityQuery = async (proposalId: string): Promise<boolean> => {
-  const count = await getProposalVoteCountQuery(proposalId);
+  const count = await voteService.getVotesCount(proposalId);
 
   console.time('Member count query');
 

@@ -8,6 +8,7 @@
     "baseUrl": "./src",
     "resolveJsonModule": true,
     "strict": true,
+    "declaration": true,
     "paths": {
     },
     "esModuleInterop": true,
