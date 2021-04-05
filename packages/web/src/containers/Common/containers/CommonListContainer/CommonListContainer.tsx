@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
+import { Loader } from "../../../../shared/components";
+import { getLoading } from "../../../../shared/store/selectors";
 
 import { CommonListItem } from "../../components";
 import { COMMON_PAGE_SIZE } from "../../constants";
@@ -18,6 +20,7 @@ const options = {
 export default function CommonListContainer() {
   const commons = useSelector(selectCommonList());
   const page = useSelector(selectCurrentPage());
+  const loading = useSelector(getLoading());
   const dispatch = useDispatch();
   const loader = useRef(null);
 
@@ -48,7 +51,9 @@ export default function CommonListContainer() {
 
   const currentCommons = useMemo(() => [...commons].splice(0, COMMON_PAGE_SIZE * page), [commons, page]);
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <div className="common-list-wrapper">
       <h1 className="page-title">Explore commons</h1>
       <div className="common-list">

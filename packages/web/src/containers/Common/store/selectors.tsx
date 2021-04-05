@@ -9,3 +9,4 @@ export const selectCurrentPage = () => createSelector(selectCommons, (state) => 
 export const selectProposals = () => createSelector(selectCommons, (state) => state.proposals);
 export const selectDiscussions = () => createSelector(selectCommons, (state) => state.discussions);
 export const selectIsDiscussionsLoaded = () => createSelector(selectCommons, (state) => state.isDiscussionsLoaded);
+export const selectCurrentDisscussion = () => createSelector(selectCommons, (state) => state.currentDiscussion);
