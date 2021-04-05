@@ -1,13 +1,11 @@
 import * as z from 'zod';
 import { EventType, Vote, VoteOutcome } from '@prisma/client';
 
+import { worker } from '@common/worker';
+
 import { commonService, eventsService } from '@services';
 import { NotFoundError, CommonError } from '@errors';
 import { prisma } from '@toolkits';
-
-import { UpdateProposalVoteCount } from '../queue/jobs/updateProposalVoteCount';
-import { votingQueue } from '../queue';
-import { worker } from '../../../../../worker/src';
 
 const schema = z.object({
   userId: z.string()

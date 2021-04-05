@@ -39,7 +39,7 @@ export const addVotesJob = (job: VotesQueueJob, voteId: string, options?: JobOpt
 VotesQueue.process('processVote', async (job, done) => {
   logger.debug('Starting vote processing job', { job });
 
-  await voteService.updateStatus(job.data.voteId);
+  await voteService.process(job.data.voteId);
 
   logger.debug('Processed vote processing job', { job });
 
