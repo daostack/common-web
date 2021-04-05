@@ -111,6 +111,11 @@ export interface ICommonMetadata {
    * or only when they join
    */
   contributionType: ContributionType;
+
+  /**
+   * Allow users to join common with zero contribution
+   */
+  zeroContribution: boolean;
 }
 
 export interface ICommonUpdate {

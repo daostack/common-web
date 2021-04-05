@@ -39,7 +39,9 @@ const createCommonDataValidationScheme = yup.object({
 
   rules: yup.array(commonRuleValidationSchema).optional(),
 
-  links: yup.array(linkValidationSchema).optional()
+  links: yup.array(linkValidationSchema).optional(),
+
+  zeroContribution: yup.boolean().required(),
 });
 
 type CreateCommonPayload = yup.InferType<typeof createCommonDataValidationScheme>;
@@ -73,7 +75,8 @@ export const createCommon = async (
     description,
     contributionType,
     contributionAmount,
-    fundingGoalDeadline
+    fundingGoalDeadline,
+    zeroContribution,
   } = payload;
 
   // @todo Check if user exists
@@ -97,7 +100,8 @@ export const createCommon = async (
       contributionType,
 
       founderId: userId,
-      minFeeToJoin: contributionAmount
+      minFeeToJoin: contributionAmount,
+      zeroContribution,
     },
 
     register: 'na'
