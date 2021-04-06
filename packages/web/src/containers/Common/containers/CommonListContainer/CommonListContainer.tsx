@@ -35,8 +35,6 @@ export default function CommonListContainer() {
     (entities: any[]) => {
       const target = entities[0];
 
-      console.log("hello");
-
       if (target.isIntersecting) {
         dispatch(updatePage(page + 1));
       }
