@@ -3,6 +3,10 @@ import { router } from 'bull-board';
 
 import { logger } from '@common/core';
 
+import './processors/VotesWorker';
+import './processors/EventsWorker';
+import './processors/PaymentsWorker';
+
 const app = express();
 
 app.use('/queues/dashboard', router);

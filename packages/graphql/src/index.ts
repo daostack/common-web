@@ -4,9 +4,13 @@ import ipAddress from 'request-ip';
 import express from 'express';
 import cors from 'cors';
 
+import { FirebaseToolkit, logger } from '@common/core';
+
 import { schema } from './schema';
 import { createRequestContext } from './context';
 
+
+FirebaseToolkit.InitializeFirebase();
 
 // Initialize the servers
 const app = express();
@@ -24,6 +28,6 @@ app.use(ipAddress.mw());
 // Add the Apollo middleware to the express app
 apollo.applyMiddleware({ app });
 
-app.listen({ port: 4050 }, () => {
-  console.info(`🚀 Server ready`);
+app.listen({ port: 4000 }, () => {
+  logger.info(`🚀 Server ready`);
 });

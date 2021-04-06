@@ -1,5 +1,8 @@
 import { FirebaseToolkit } from '@toolkits';
 
+// Initialize the Firebase before exporting anything that may use it
+// FirebaseToolkit.InitializeFirebase();
+
 export { prisma } from '@toolkits';
 export { logger } from '@utils/logger';
 
@@ -11,3 +14,5 @@ export { eventService } from './services/events';
 export { commonService } from './services/commons';
 export { paymentService } from './services/payments';
 export { proposalService } from './services/proposals';
+
+export { FirebaseToolkit };
