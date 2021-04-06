@@ -1,7 +1,7 @@
 import * as z from 'zod';
 import { EventType } from '@prisma/client';
 
-import { worker } from '@common/worker';
+import { worker } from '@common/queues';
 
 const schema = z.object({
   commonId: z.string()

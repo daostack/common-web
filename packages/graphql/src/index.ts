@@ -1,11 +1,8 @@
-export { schema } from './schema';
+import { ApolloServer } from 'apollo-server-express';
 
 import ipAddress from 'request-ip';
 import express from 'express';
 import cors from 'cors';
-
-import { router } from 'bull-board';
-import { ApolloServer } from 'apollo-server-express';
 
 import { schema } from './schema';
 import { createRequestContext } from './context';
@@ -23,11 +20,10 @@ const apollo = new ApolloServer({
 app.use(cors());
 app.use(ipAddress.mw());
 
-app.use('/queues/dashboard', router);
 
 // Add the Apollo middleware to the express app
 apollo.applyMiddleware({ app });
 
-app.listen({ port: 4000 }, () => {
+app.listen({ port: 4050 }, () => {
   console.info(`🚀 Server ready`);
 });

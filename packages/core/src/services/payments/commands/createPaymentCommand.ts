@@ -1,7 +1,7 @@
 import * as z from 'zod';
 import { EventType, Payment, PaymentType } from '@prisma/client';
 
-import { worker } from '@common/worker';
+import { worker } from '@common/queues';
 
 import { prisma } from '@toolkits';
 import { circleClient } from '@clients';

@@ -1,7 +1,7 @@
 import * as z from 'zod';
 import { EventType, Vote, VoteOutcome } from '@prisma/client';
 
-import { worker } from '@common/worker';
+import { worker } from '@common/queues';
 
 import { commonService, eventService } from '@services';
 import { NotFoundError, CommonError } from '@errors';

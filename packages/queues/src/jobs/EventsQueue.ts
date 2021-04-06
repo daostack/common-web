@@ -8,7 +8,7 @@ import { logger, eventService } from '@common/core';
 
 // Create the job spec
 
-interface IEventsQueueJob {
+export interface IEventsQueueJob {
   create?: {
     type: EventType;
 
@@ -23,15 +23,10 @@ interface IEventsQueueJob {
   }
 }
 
-type EventsQueueJob = 'create' | 'handle';
+export type EventsQueueJob = 'create' | 'handle';
 
 // Create the queue
-const EventQueue = Queue(Queues.EventQueue);
-
-// Setup the queue UI
-setQueues([
-  new BullAdapter(EventQueue)
-]);
+export const EventQueue = Queue(Queues.EventQueue);
 
 // Create a way to add new job
 export const addEventJob = (job: EventsQueueJob, payload: IEventsQueueJob['create'] | IEventsQueueJob['process'], options?: JobOptions): void => {
@@ -47,24 +42,3 @@ export const addEventJob = (job: EventsQueueJob, payload: IEventsQueueJob['creat
     logger.error('Not implemented');
   }
 };
-
-// Process the jobs
-EventQueue.process('create', async (job, done) => {
-  // @todo Create log about the processing result
-  logger.debug('Starting create event job', { job });
-
-  const event = eventService.$create(job.data.create);
-
-  logger.debug('Successfully created event', {
-    job,
-    event
-  });
-
-  done();
-});
-
-EventQueue.process('process', async (job, done) => {
-  await eventService.process(job.data.process.event);
-
-  done();
-});

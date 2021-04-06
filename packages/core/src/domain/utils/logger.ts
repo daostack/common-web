@@ -16,12 +16,12 @@ $logger.add(
   })
 );
 
-if (process.env['Logs.Slack.Webhook']) {
-  $logger.add(
-    new SlackHook({
-      webhookUrl: process.env['Logs.Slack.Webhook']
-    })
-  );
-}
+// if (process.env['Logs.Slack.Webhook']) {
+//   $logger.add(
+//     new SlackHook({
+//       webhookUrl: process.env['Logs.Slack.Webhook']
+//     })
+//   );
+// }
 
 export const logger = $logger;

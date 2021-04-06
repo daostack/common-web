@@ -6,19 +6,14 @@ import { logger, voteService } from '@common/core';
 import { Queues } from '../constants/Queues';
 
 // Create the job spec
-interface IVotesQueueJob {
+export interface IVotesQueueJob {
   voteId: string;
 };
 
-type VotesQueueJob = 'processVote';
+export type VotesQueueJob = 'processVote';
 
 // Create the queue
-const VotesQueue = Queue<IVotesQueueJob>(Queues.VotesQueue);
-
-// Add the queue to the UI
-setQueues([
-  new BullAdapter(VotesQueue)
-]);
+export const VotesQueue = Queue<IVotesQueueJob>(Queues.VotesQueue);
 
 // Create a way to add jobs to the queue
 export const addVotesJob = (job: VotesQueueJob, voteId: string, options?: JobOptions): void => {
@@ -34,14 +29,3 @@ export const addVotesJob = (job: VotesQueueJob, voteId: string, options?: JobOpt
     ...options
   });
 };
-
-// Process the queue jobs
-VotesQueue.process('processVote', async (job, done) => {
-  logger.debug('Starting vote processing job', { job });
-
-  await voteService.process(job.data.voteId);
-
-  logger.debug('Processed vote processing job', { job });
-
-  done();
-});
