@@ -1,9 +1,10 @@
-import { Payment } from '@prisma/client';
+import { Payment, PaymentStatus } from '@prisma/client';
 
 import { prisma } from '@toolkits';
 import { circleClient } from '@clients';
 import { logger as $logger } from '@logger';
 import { convertCirclePaymentStatus } from '../helpers';
+import { worker } from '@common/queues';
 
 export interface IUpdatePaymentStatusResult {
   initialPayment: Payment;
@@ -48,9 +49,26 @@ export const updatePaymentStatusCommand = async (paymentId: string): Promise<IUp
         circlePaymentStatus: circlePayment.data.status
       }
     });
+
+    logger.silly('here');
+
+    // Process the payment if final state is reached
+    if (
+      (updatedPayment.status === PaymentStatus.Successful || updatedPayment.status === PaymentStatus.Unsuccessful) &&
+      (initialPayment.status !== PaymentStatus.Successful && initialPayment.status !== PaymentStatus.Unsuccessful)
+    ) {
+      logger.debug('Processing payment, reached final state');
+
+      worker.addPaymentJob('process', updatedPayment.id);
+    }
   }
 
-  // @todo If the payment is not finalized schedule job for retrying the update
+  // If the payment is not finalized schedule job for retrying the update
+  if (updatedPayment.status === PaymentStatus.Pending) {
+    logger.debug('After updating status payment is still pending. Scheduling retry');
+
+    worker.addPaymentJob('updateStatus', updatedPayment.id);
+  }
 
   // Return the result
   return {

@@ -18,21 +18,34 @@ Queues.PaymentsQueue.process((job, done) => {
   done();
 });
 
-Queues.PaymentsQueue.process('process', (job, done) => {
-  // @todo Create log about the processing
+Queues.PaymentsQueue.process('process', async (job, done) => {
+  console.log('here');
 
-  // @todo
+  // Create log about the processing
+  logger.debug('Starting processing of finalized payment');
 
-  // @todo Create log about the processing result
+  job.progress(3);
+
+  // Do the actual processing
+  await paymentService.process(job.data.paymentId);
+
+  job.progress(99);
+
+  // Create log about the processing result
+  logger.debug('Finished processing of finalized payment');
+
+  job.progress(100);
+
+  done();
 });
 
 Queues.PaymentsQueue.process('updateStatus', async (job, done) => {
-  // @todo Create log about the processing result
+  // Create log about the processing result
   logger.debug('Starting payment status update job', { job });
 
   await paymentService.updateStatus(job.data.paymentId);
 
-  // @todo Create log about the processing
+  // Create log about the processing
   logger.debug('Processed payment status update job', { job });
 
   done();

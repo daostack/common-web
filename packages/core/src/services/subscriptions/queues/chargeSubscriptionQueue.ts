@@ -5,6 +5,7 @@ import { Queues } from '@constants';
 import { prisma } from '@toolkits';
 
 import { createSubscriptionPaymentCommand } from '../../payments/commands/createSubscriptionPaymentCommand';
+import { logger } from '@utils/logger';
 
 interface IChargeSubscriptionQueue {
   subscriptionId: string;
@@ -21,8 +22,10 @@ export const scheduleSubscriptionCharge = async (subscriptionId: string) => {
 
   let delay: number = 0;
 
+  logger.info('time', new Date().getTime() - subscription.dueDate.getTime());
+
   if (subscription.status === SubscriptionStatus.Active) {
-    delay = new Date().getTime() - subscription.dueDate.getTime() + (60 * 1000); // One minute after the due date
+    delay = (subscription.dueDate.getTime() - new Date().getTime()) + (60 * 1000); // One minute after the due date
   } else if (subscription.status === SubscriptionStatus.PaymentFailed) {
     delay = new Date().getTime() + (24 * 60 * 60 * 1000) // Retry after one day
   }

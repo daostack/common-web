@@ -31,6 +31,7 @@ export const addPaymentJob = (job: PaymentsQueueJob, paymentId: string, options?
   PaymentsQueue.add(job, {
     paymentId
   }, {
+    timeout: 1000 * 60 * 10, // 10 minutes
     ...options
   });
 };
