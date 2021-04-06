@@ -1,7 +1,7 @@
 import { ProposalState, EventType } from '@prisma/client';
 
 import { prisma } from '@toolkits';
-import { eventsService } from '../../../../index';
+import { eventService } from '../../../../index';
 
 import { createSubscriptionCommand } from '../../../../subscriptions/command/createSubscriptionCommand';
 
@@ -25,7 +25,7 @@ export const processApprovedSubscriptionJoinRequest = async (proposalId: string)
   });
 
   // Create event
-  await eventsService.create({
+  await eventService.create({
     type: EventType.JoinRequestAccepted,
     userId: proposal.userId,
     commonId: proposal.commonId,

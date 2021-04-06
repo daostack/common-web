@@ -1,6 +1,6 @@
 import { extendType, inputObjectType, nonNull, arg } from 'nexus';
 
-import { commonService } from '../../../../../../core/src/services';
+import { commonService } from '@common/core';
 
 export const CreateCommonInput = inputObjectType({
   name: 'CreateCommonInput',

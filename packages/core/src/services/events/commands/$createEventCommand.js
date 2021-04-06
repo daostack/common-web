@@ -55,59 +55,34 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createCommonMemberCommand = void 0;
+exports.$createEventCommand = void 0;
 var z = __importStar(require("zod"));
 var client_1 = require("@prisma/client");
 var _toolkits_1 = require("@toolkits");
-var _services_1 = require("@services");
-var _errors_1 = require("@errors");
 var schema = z.object({
-    userId: z.string(),
+    type: z.enum(Object.keys(client_1.EventType)),
+    userId: z.string()
+        .optional()
+        .nullable(),
     commonId: z.string()
+        .optional()
+        .nullable(),
+    payload: z.any()
+        .optional()
+        .nullable()
 });
-var createCommonMemberCommand = function (command) { return __awaiter(void 0, void 0, void 0, function () {
-    var common, createdMember;
+/**
+ * Creates new event into the database. If you are not sure if
+ * you should use that function maybe you need to use
+ * `createEventCommand`.
+ *
+ * @param payload - The payload to create the event
+ */
+var $createEventCommand = function (payload) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                // Validate the command
-                schema.parse(command);
-                return [4 /*yield*/, _toolkits_1.prisma.common.findUnique({
-                        where: { id: command.commonId },
-                        include: {
-                            members: true
-                        }
-                    })];
-            case 1:
-                common = _a.sent();
-                // Check if the common is found
-                if (!common) {
-                    throw new _errors_1.NotFoundError('Common', command.commonId);
-                }
-                // Check the members
-                if (common.members.some(function (m) { return m.userId === command.userId; })) {
-                    throw new _errors_1.CommonError('Cannot add member twice for the same common!');
-                }
-                return [4 /*yield*/, _toolkits_1.prisma.commonMember.create({
-                        data: {
-                            commonId: command.commonId,
-                            userId: command.userId
-                        }
-                    })];
-            case 2:
-                createdMember = _a.sent();
-                // Create event for the new member
-                return [4 /*yield*/, _services_1.eventService.create({
-                        type: client_1.EventType.CommonMemberCreated,
-                        commonId: command.commonId,
-                        userId: command.userId
-                    })];
-            case 3:
-                // Create event for the new member
-                _a.sent();
-                // Return the created member
-                return [2 /*return*/, createdMember];
-        }
+        return [2 /*return*/, _toolkits_1.prisma.event.create({
+                data: payload
+            })];
     });
 }); };
-exports.createCommonMemberCommand = createCommonMemberCommand;
+exports.$createEventCommand = $createEventCommand;

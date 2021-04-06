@@ -69,7 +69,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createUserCommand = void 0;
 var z = __importStar(require("zod"));
 var client_1 = require("@prisma/client");
-var index_1 = require("../../index");
+var _services_1 = require("@services");
 var _toolkits_1 = require("@toolkits");
 var schema = z.object({
     id: z.string()
@@ -77,7 +77,7 @@ var schema = z.object({
         .refine(function (value) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, index_1.userService.queries.exists({
+                case 0: return [4 /*yield*/, _services_1.userService.queries.exists({
                         id: value
                     })];
                 case 1: return [2 /*return*/, !(_a.sent())];
@@ -96,7 +96,7 @@ var schema = z.object({
         .refine(function (value) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, index_1.userService.queries.exists({
+                case 0: return [4 /*yield*/, _services_1.userService.queries.exists({
                         email: value
                     })];
                 case 1: return [2 /*return*/, !(_a.sent())];
@@ -124,7 +124,7 @@ var createUserCommand = function (command) { return __awaiter(void 0, void 0, vo
             case 2:
                 user = _a.sent();
                 // Create event about the creation of the user
-                return [4 /*yield*/, index_1.eventsService.create({
+                return [4 /*yield*/, _services_1.eventService.create({
                         type: client_1.EventType.UserCreated,
                         userId: user.id
                     })];

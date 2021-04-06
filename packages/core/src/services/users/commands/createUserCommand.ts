@@ -1,7 +1,7 @@
 import * as z from 'zod';
 import { EventType, User } from '@prisma/client';
 
-import { userService, eventsService } from '../../index';
+import { userService, eventService } from '@services';
 import { prisma } from '@toolkits';
 
 const schema = z.object({
@@ -48,7 +48,7 @@ export const createUserCommand: (command: z.infer<typeof schema>) => Promise<Use
   });
 
   // Create event about the creation of the user
-  await eventsService.create({
+  await eventService.create({
     type: EventType.UserCreated,
     userId: user.id
   });

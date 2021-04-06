@@ -3,7 +3,7 @@ import { Card, EventType } from '@prisma/client';
 
 import { prisma } from '@toolkits';
 import { circleClient } from '@clients';
-import { eventsService } from '@services';
+import { eventService } from '@services';
 import { BillingDetailsSchema } from '@validation';
 
 import { verifyCardCommand } from './verifyCardCommand';
@@ -78,7 +78,7 @@ export const createCardCommand = async (command: z.infer<typeof schema>): Promis
   });
 
   // Create event for the card
-  await eventsService.create({
+  await eventService.create({
     type: EventType.CardCreated,
     userId
   });

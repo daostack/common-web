@@ -58,10 +58,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createVoteCommand = void 0;
 var z = __importStar(require("zod"));
 var client_1 = require("@prisma/client");
+var worker_1 = require("@common/worker");
 var _services_1 = require("@services");
 var _errors_1 = require("@errors");
 var _toolkits_1 = require("@toolkits");
-var src_1 = require("../../../../../worker/src");
 var schema = z.object({
     userId: z.string()
         .nonempty(),
@@ -119,7 +119,7 @@ var createVoteCommand = function (command) { return __awaiter(void 0, void 0, vo
                 return [3 /*break*/, 6];
             case 6: 
             // Create event for the creation of the vote
-            return [4 /*yield*/, _services_1.eventsService.create({
+            return [4 /*yield*/, _services_1.eventService.create({
                     type: client_1.EventType.VoteCreated,
                     userId: command.userId,
                     commonId: commonId
@@ -128,7 +128,7 @@ var createVoteCommand = function (command) { return __awaiter(void 0, void 0, vo
                 // Create event for the creation of the vote
                 _b.sent();
                 // Add the proposal vote count update to the queue
-                src_1.worker.addVotesJob('processVote', vote.id);
+                worker_1.worker.addVotesJob('processVote', vote.id);
                 // Return the created vote
                 return [2 /*return*/, vote];
         }

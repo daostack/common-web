@@ -36,28 +36,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerCreateEventProcessor = exports.CreateEvent = void 0;
-var _toolkits_1 = require("@toolkits");
-exports.CreateEvent = 'Common.Queue.Events.CreateEvent';
-var registerCreateEventProcessor = function (queue) {
-    queue.process(exports.CreateEvent, function (job, done) { return __awaiter(void 0, void 0, void 0, function () {
-        var event;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, _toolkits_1.prisma.event.create({
-                        data: {
-                            type: job.data.type,
-                            userId: job.data.userId,
-                            commonId: job.data.commonId,
-                            payload: job.data.payload
-                        }
-                    })];
-                case 1:
-                    event = _a.sent();
-                    done();
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-};
-exports.registerCreateEventProcessor = registerCreateEventProcessor;
+exports.processEventCommand = void 0;
+var processEventCommand = function (event) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        return [2 /*return*/];
+    });
+}); };
+exports.processEventCommand = processEventCommand;

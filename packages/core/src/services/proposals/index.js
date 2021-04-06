@@ -1,26 +1,32 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.proposalsService = exports.fundingProposalService = exports.joinProposalService = void 0;
+exports.proposalService = exports.fundingProposalService = exports.joinProposalService = void 0;
 var createJoinProposalCommand_1 = require("./join/command/createJoinProposalCommand");
-var createFundingProposalCommand_1 = require("./funding/command/createFundingProposalCommand");
-var updateProposalVoteCountsCommand_1 = require("./shared/command/updateProposalVoteCountsCommand");
-var proposalHasMajorityQuery_1 = require("./shared/queries/proposalHasMajorityQuery");
-var finalizeProposalCommand_1 = require("./shared/command/finalizeProposalCommand");
 var processApprovedOneTimeJoinRequest_1 = require("./join/command/process/processApprovedOneTimeJoinRequest");
+var processApprovedSubscriptionJoinRequest_1 = require("./join/command/process/processApprovedSubscriptionJoinRequest");
+var createFundingProposalCommand_1 = require("./funding/command/createFundingProposalCommand");
+var processApprovedFundingRequest_1 = require("./funding/command/process/processApprovedFundingRequest");
+var processRejectedFundingRequest_1 = require("./funding/command/process/processRejectedFundingRequest");
+var finalizeProposalCommand_1 = require("./shared/command/finalizeProposalCommand");
+var proposalHasMajorityQuery_1 = require("./shared/queries/proposalHasMajorityQuery");
+var updateProposalVoteCountsCommand_1 = require("./shared/command/updateProposalVoteCountsCommand");
 exports.joinProposalService = {
     commands: {
         create: createJoinProposalCommand_1.createJoinProposalCommand
     },
     process: {
-        approvedJoinRequest: null,
-        approvedOneTimeJoinRequest: processApprovedOneTimeJoinRequest_1.processApprovedOneTimeJoinRequestCommand,
-        approvedSubscriptionJoinRequest: null // @todo
+        approvedOneTime: processApprovedOneTimeJoinRequest_1.processApprovedOneTimeJoinRequestCommand,
+        approvedSubscription: processApprovedSubscriptionJoinRequest_1.processApprovedSubscriptionJoinRequest
     }
 };
 exports.fundingProposalService = {
-    create: createFundingProposalCommand_1.createFundingProposalCommand
+    create: createFundingProposalCommand_1.createFundingProposalCommand,
+    process: {
+        approved: processApprovedFundingRequest_1.processApprovedFundingRequest,
+        rejected: processRejectedFundingRequest_1.processRejectedFundingRequest
+    }
 };
-exports.proposalsService = {
+exports.proposalService = {
     join: exports.joinProposalService,
     funding: exports.fundingProposalService,
     // Shared commands and queries

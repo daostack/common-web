@@ -55,7 +55,7 @@ var processRejectedJoinRequest = function (proposalId) { return __awaiter(void 0
             case 1:
                 proposal = _a.sent();
                 // Create event
-                return [4 /*yield*/, index_1.eventsService.create({
+                return [4 /*yield*/, index_1.eventService.create({
                         type: client_1.EventType.JoinRequestRejected,
                         userId: proposal.userId,
                         commonId: proposal.commonId,

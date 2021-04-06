@@ -154,7 +154,7 @@ var createPaymentCommand = function (command) { return __awaiter(void 0, void 0,
                 // Link the circle payment to the database
                 payment = _a.sent();
                 // Create event
-                return [4 /*yield*/, _services_1.eventsService.create({
+                return [4 /*yield*/, _services_1.eventService.create({
                         type: client_1.EventType.PaymentCreated,
                         userId: command.connect.userId,
                         commonId: command.connect.commonId

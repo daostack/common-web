@@ -1,7 +1,7 @@
 import { createCardCommand } from './commands/createCardCommand';
 import { isCardOwnerQuery } from './queries/isCardOwnerQuery';
 
-export const cardsService = {
+export const cardService = {
   create: createCardCommand,
 
   isCardOwner: isCardOwnerQuery

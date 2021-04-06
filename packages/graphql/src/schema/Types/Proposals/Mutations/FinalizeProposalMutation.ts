@@ -1,5 +1,5 @@
 import { extendType, idArg, nonNull } from 'nexus';
-import { proposalsService } from '../../../../../../core/src/services';
+import { proposalService } from '@common/core';
 
 export const FinalizeProposalMutation = extendType({
   type: 'Mutation',
@@ -9,7 +9,7 @@ export const FinalizeProposalMutation = extendType({
         proposalId: nonNull(idArg())
       },
       resolve: async (root, { proposalId }) => {
-        await proposalsService.finalize(proposalId);
+        await proposalService.finalize(proposalId);
 
         return true;
       }

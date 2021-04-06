@@ -166,7 +166,7 @@ var createFundingProposalCommand = function (command) { return __awaiter(void 0,
             case 2:
                 proposal = _a.sent();
                 // Create event
-                return [4 /*yield*/, index_1.eventsService.create({
+                return [4 /*yield*/, index_1.eventService.create({
                         userId: command.proposerId,
                         commonId: command.commonId,
                         type: client_1.EventType.FundingRequestCreated

@@ -4,7 +4,7 @@ import { EventType, Proposal, ProposalType } from '@prisma/client';
 import { ProposalLinkSchema, ProposalImageSchema, ProposalFileSchema } from '@validation';
 import { NotFoundError, CommonError } from '@errors';
 import { prisma } from '@toolkits';
-import { eventsService } from '../../../index';
+import { eventService } from '../../../index';
 import { generateProposalExpiresAtDate } from '../../helpers/generateProposalExpiresAtDate';
 import { addExpireProposalJob } from '../../queue/expireProposalsQueue';
 
@@ -127,7 +127,7 @@ export const createFundingProposalCommand = async (command: z.infer<typeof schem
   });
 
   // Create event
-  await eventsService.create({
+  await eventService.create({
     userId: command.proposerId,
     commonId: command.commonId,
     type: EventType.FundingRequestCreated

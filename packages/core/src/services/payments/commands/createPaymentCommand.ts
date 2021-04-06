@@ -5,7 +5,7 @@ import { worker } from '@common/worker';
 
 import { prisma } from '@toolkits';
 import { circleClient } from '@clients';
-import { eventsService } from '@services';
+import { eventService } from '@services';
 
 import { convertAmountToCircleAmount, convertCirclePaymentStatus } from '../helpers';
 
@@ -108,7 +108,7 @@ export const createPaymentCommand = async (command: z.infer<typeof schema>): Pro
   });
 
   // Create event
-  await eventsService.create({
+  await eventService.create({
     type: EventType.PaymentCreated,
     userId: command.connect.userId,
     commonId: command.connect.commonId

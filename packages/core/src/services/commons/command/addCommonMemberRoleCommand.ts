@@ -3,7 +3,7 @@ import { CommonMemberRole, CommonMember, EventType } from '@prisma/client';
 
 import { prisma } from '@toolkits';
 import { NotFoundError } from '@errors';
-import { eventsService } from '@services';
+import { eventService } from '@services';
 
 const schema = z.object({
   memberId: z.string()
@@ -42,7 +42,7 @@ export const addCommonMemberRoleCommand = async (command: z.infer<typeof schema>
   });
 
   // Create event
-  await eventsService.create({
+  await eventService.create({
     type: EventType.CommonMemberRoleAdded,
     commonId: memberEntity.commonId,
     userId: memberEntity.userId

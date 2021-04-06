@@ -59,7 +59,7 @@ var processApprovedOneTimeJoinRequestCommand = function (proposalId) { return __
             case 1:
                 proposal = _a.sent();
                 // Create event
-                return [4 /*yield*/, index_1.eventsService.create({
+                return [4 /*yield*/, index_1.eventService.create({
                         type: client_1.EventType.JoinRequestAccepted,
                         userId: proposal.userId,
                         commonId: proposal.commonId,

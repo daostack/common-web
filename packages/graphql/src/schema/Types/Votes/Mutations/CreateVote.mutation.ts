@@ -1,5 +1,5 @@
 import { extendType, inputObjectType, nonNull, arg } from 'nexus';
-import { voteService } from '../../../../../../core/src/services';
+import { voteService } from '@common/core';
 
 export const CreateVoteInput = inputObjectType({
   name: 'CreateVoteInput',
@@ -28,11 +28,11 @@ export const CreateVoteMutation = extendType({
         )
       },
       resolve: async (root, args, ctx) => {
-        // const userId = await ctx.getUserId();
+        const userId = await ctx.getUserId();
 
         return voteService.create({
           ...args.input,
-          userId: 'H5ZkcKBX5eXXNyBiPaph8EHCiax2'
+          userId
         });
       }
     });

@@ -1,5 +1,11 @@
-import { createEventCommand } from './commands/createEvent';
+import { createEventCommand } from './commands/createEventCommand';
+import { $createEventCommand } from './commands/$createEventCommand';
 
-export const eventsService = {
-  create: createEventCommand
+import { processEventCommand } from './commands/processEventCommand';
+
+export const eventService = {
+  create: createEventCommand,
+  $create: $createEventCommand,
+
+  process: processEventCommand
 };

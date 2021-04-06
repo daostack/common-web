@@ -2,7 +2,7 @@ import { ProposalState, Proposal, FundingState, EventType } from '@prisma/client
 
 import { prisma } from '@toolkits';
 import { CommonError } from '@errors';
-import { eventsService } from '../../../../index';
+import { eventService } from '../../../../index';
 
 export const processApprovedFundingRequest = async (proposalArg: Proposal): Promise<void> => {
   if (!proposalArg.fundingId) {
@@ -35,7 +35,7 @@ export const processApprovedFundingRequest = async (proposalArg: Proposal): Prom
   ]);
 
   // Create event
-  await eventsService.create({
+  await eventService.create({
     type: EventType.FundingRequestAccepted,
     userId: proposal.userId,
     commonId: proposal.commonId,

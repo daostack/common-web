@@ -1,7 +1,7 @@
 import { logger } from '@logger';
 import { prisma } from '@toolkits';
 import { NotFoundError } from '@errors';
-import { proposalsService } from '@services';
+import { proposalService } from '@services';
 
 export const processVoteCommand = async (voteId: string): Promise<void> => {
   const vote = await prisma.vote.findUnique({
@@ -15,13 +15,13 @@ export const processVoteCommand = async (voteId: string): Promise<void> => {
   }
 
   // Update the votes count
-  await proposalsService.updateVoteCount(vote);
+  await proposalService.updateVoteCount(vote);
 
-  if (await proposalsService.hasMajority(vote.proposalId)) {
+  if (await proposalService.hasMajority(vote.proposalId)) {
     logger.info('Finalizing proposal reached majority');
 
     // If the proposal has majority finalize it
-    await proposalsService.finalize(vote.proposalId);
+    await proposalService.finalize(vote.proposalId);
   }
 
 };

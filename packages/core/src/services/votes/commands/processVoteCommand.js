@@ -56,16 +56,16 @@ var processVoteCommand = function (voteId) { return __awaiter(void 0, void 0, vo
                     throw new _errors_1.NotFoundError('vote', voteId);
                 }
                 // Update the votes count
-                return [4 /*yield*/, _services_1.proposalsService.updateVoteCount(vote)];
+                return [4 /*yield*/, _services_1.proposalService.updateVoteCount(vote)];
             case 2:
                 // Update the votes count
                 _a.sent();
-                return [4 /*yield*/, _services_1.proposalsService.hasMajority(vote.proposalId)];
+                return [4 /*yield*/, _services_1.proposalService.hasMajority(vote.proposalId)];
             case 3:
                 if (!_a.sent()) return [3 /*break*/, 5];
                 _logger_1.logger.info('Finalizing proposal reached majority');
                 // If the proposal has majority finalize it
-                return [4 /*yield*/, _services_1.proposalsService.finalize(vote.proposalId)];
+                return [4 /*yield*/, _services_1.proposalService.finalize(vote.proposalId)];
             case 4:
                 // If the proposal has majority finalize it
                 _a.sent();

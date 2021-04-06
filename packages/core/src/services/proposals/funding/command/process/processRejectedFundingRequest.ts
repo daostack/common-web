@@ -1,7 +1,7 @@
 import { Proposal, ProposalState, EventType } from '@prisma/client';
 
 import { prisma } from '@toolkits';
-import { eventsService } from '../../../../index';
+import { eventService } from '../../../../index';
 
 export const processRejectedFundingRequest = async (proposal: Proposal): Promise<void> => {
   // Change the proposal state
@@ -15,7 +15,7 @@ export const processRejectedFundingRequest = async (proposal: Proposal): Promise
   });
 
   // Create event
-  await eventsService.create({
+  await eventService.create({
     type: EventType.FundingRequestRejected,
     userId: proposal.userId,
     commonId: proposal.commonId,

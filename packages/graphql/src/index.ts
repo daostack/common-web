@@ -1,5 +1,4 @@
 export { schema } from './schema';
-export { createRequestContext } from './context';
 
 import ipAddress from 'request-ip';
 import express from 'express';
@@ -8,9 +7,8 @@ import cors from 'cors';
 import { router } from 'bull-board';
 import { ApolloServer } from 'apollo-server-express';
 
-import { schema, createRequestContext } from '../../graphql/src';
-
-import '@config';
+import { schema } from './schema';
+import { createRequestContext } from './context';
 
 
 // Initialize the servers

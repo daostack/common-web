@@ -1,5 +1,5 @@
 import { arg, extendType, inputObjectType, nonNull } from 'nexus';
-import { joinProposalService } from '../../../../../../core/src/services';
+import { proposalService } from '@common/core';
 
 export const CreateJoinProposalInput = inputObjectType({
   name: 'CreateJoinProposalInput',
@@ -34,7 +34,7 @@ export const CreateJoinProposalMutation = extendType({
       resolve: async (root, args, ctx) => {
         const userId = await ctx.getUserId();
 
-        return joinProposalService.commands.create({
+        return proposalService.join.create({
           ...args.input,
           ipAddress: ctx.req.clientIp || '127.0.0.1',
           userId

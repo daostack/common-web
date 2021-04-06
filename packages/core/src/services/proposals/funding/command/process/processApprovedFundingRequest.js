@@ -72,7 +72,7 @@ var processApprovedFundingRequest = function (proposalArg) { return __awaiter(vo
             case 1:
                 _a = _b.sent(), proposal = _a[0], fundingProposal = _a[1];
                 // Create event
-                return [4 /*yield*/, index_1.eventsService.create({
+                return [4 /*yield*/, index_1.eventService.create({
                         type: client_1.EventType.FundingRequestAccepted,
                         userId: proposal.userId,
                         commonId: proposal.commonId,

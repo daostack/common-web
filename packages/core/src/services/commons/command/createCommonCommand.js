@@ -92,7 +92,7 @@ var createCommonCommand = function (command) { return __awaiter(void 0, void 0, 
             case 1:
                 common = _a.sent();
                 // Create event for the common creation
-                return [4 /*yield*/, _services_1.eventsService.create({
+                return [4 /*yield*/, _services_1.eventService.create({
                         type: client_1.EventType.CommonCreated,
                         commonId: common.id,
                         userId: command.founderId

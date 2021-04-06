@@ -3,7 +3,7 @@ import { EventType, Vote, VoteOutcome } from '@prisma/client';
 
 import { worker } from '@common/worker';
 
-import { commonService, eventsService } from '@services';
+import { commonService, eventService } from '@services';
 import { NotFoundError, CommonError } from '@errors';
 import { prisma } from '@toolkits';
 
@@ -69,7 +69,7 @@ export const createVoteCommand = async (command: z.infer<typeof schema>): Promis
   }
 
   // Create event for the creation of the vote
-  await eventsService.create({
+  await eventService.create({
     type: EventType.VoteCreated,
     userId: command.userId,
     commonId

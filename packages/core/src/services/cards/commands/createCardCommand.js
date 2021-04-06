@@ -138,7 +138,7 @@ var createCardCommand = function (command) { return __awaiter(void 0, void 0, vo
             case 2:
                 card = _a.sent();
                 // Create event for the card
-                return [4 /*yield*/, _services_1.eventsService.create({
+                return [4 /*yield*/, _services_1.eventService.create({
                         type: client_1.EventType.CardCreated,
                         userId: userId
                     })];

@@ -1,5 +1,5 @@
 import { arg, extendType, inputObjectType, nonNull } from 'nexus';
-import { proposalsService } from '../../../../../../core/src/services';
+import { proposalService } from '@common/core';
 
 export const CreateFundingProposalInput = inputObjectType({
   name: 'CreateFundingProposalInput',
@@ -40,7 +40,7 @@ export const CreateFundingProposalMutation = extendType({
       resolve: async (root, args, ctx) => {
         const userId = await ctx.getUserId();
 
-        return proposalsService.funding.create({
+        return proposalService.funding.create({
           ...args.input,
           proposerId: userId
         });

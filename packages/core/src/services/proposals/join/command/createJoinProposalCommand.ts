@@ -3,7 +3,7 @@ import { EventType, ProposalState, ProposalType, Proposal } from '@prisma/client
 
 import { CommonError, NotFoundError } from '@errors';
 import { ProposalLinkSchema } from '@validation';
-import { eventsService } from '../../../index';
+import { eventService } from '../../../index';
 import { prisma } from '@toolkits';
 
 import { generateProposalExpiresAtDate } from '../../helpers/generateProposalExpiresAtDate';
@@ -142,7 +142,7 @@ export const createJoinProposalCommand = async (command: z.infer<typeof schema>)
   });
 
   // Create event
-  await eventsService.create({
+  await eventService.create({
     type: EventType.JoinRequestCreated,
     commonId: command.commonId,
     userId: command.userId

@@ -176,7 +176,7 @@ var createJoinProposalCommand = function (command) { return __awaiter(void 0, vo
             case 2:
                 proposal = _a.sent();
                 // Create event
-                return [4 /*yield*/, index_1.eventsService.create({
+                return [4 /*yield*/, index_1.eventService.create({
                         type: client_1.EventType.JoinRequestCreated,
                         commonId: command.commonId,
                         userId: command.userId

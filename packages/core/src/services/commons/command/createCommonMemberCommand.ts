@@ -2,7 +2,7 @@ import * as z from 'zod';
 import { CommonMember, EventType } from '@prisma/client';
 
 import { prisma } from '@toolkits';
-import { eventsService } from '@services';
+import { eventService } from '@services';
 import { CommonError, NotFoundError } from '@errors';
 
 const schema = z.object({
@@ -41,7 +41,7 @@ export const createCommonMemberCommand = async (command: z.infer<typeof schema>)
   });
 
   // Create event for the new member
-  await eventsService.create({
+  await eventService.create({
     type: EventType.CommonMemberCreated,
     commonId: command.commonId,
     userId: command.userId

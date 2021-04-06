@@ -58,8 +58,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createEventCommand = void 0;
 var z = __importStar(require("zod"));
 var client_1 = require("@prisma/client");
-var queue_1 = require("../queue");
-var createEventProcessor_1 = require("../queue/jobs/createEventProcessor");
+var worker_1 = require("@common/worker");
 var schema = z.object({
     commonId: z.string()
         .uuid()
@@ -74,7 +73,7 @@ var schema = z.object({
 });
 var createEventCommand = function (command) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        queue_1.EventsQueue.add(createEventProcessor_1.CreateEvent, command);
+        worker_1.worker.addEventJob('create', command);
         return [2 /*return*/];
     });
 }); };

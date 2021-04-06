@@ -1,5 +1,5 @@
 import { prisma } from '@toolkits';
-import { eventsService } from '../../../../index';
+import { eventService } from '../../../../index';
 import { ProposalState, EventType } from '@prisma/client';
 
 export const processRejectedJoinRequest = async (proposalId: string): Promise<void> => {
@@ -14,7 +14,7 @@ export const processRejectedJoinRequest = async (proposalId: string): Promise<vo
   });
 
   // Create event
-  await eventsService.create({
+  await eventService.create({
     type: EventType.JoinRequestRejected,
     userId: proposal.userId,
     commonId: proposal.commonId,

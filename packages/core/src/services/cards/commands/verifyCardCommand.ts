@@ -5,7 +5,7 @@ import { ICircleCard } from '@circle/cards/types';
 
 import { poll } from '@utils';
 import { prisma } from '@toolkits';
-import { eventsService } from '@services';
+import { eventService } from '@services';
 import { CvvVerificationCheckError } from '@errors';
 import { IPollAction, IPollValidator } from '@utils/types';
 
@@ -61,7 +61,7 @@ export const verifyCardCommand = async (card: Card, customOptions?: Partial<IVer
       cvvCheck !== 'pending' &&
       cvvCheck !== 'unavailable'
     ) {
-      await eventsService.create({
+      await eventService.create({
         userId: card.userId,
         type: cvvCheck === 'fail'
           ? EventType.CardCvvVerificationFailed

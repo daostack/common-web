@@ -1,8 +1,7 @@
 import * as z from 'zod';
 import { EventType } from '@prisma/client';
 
-import { EventsQueue } from '../queue';
-import { CreateEvent } from '../queue/jobs/createEventProcessor';
+import { worker } from '@common/worker';
 
 const schema = z.object({
   commonId: z.string()
@@ -21,5 +20,5 @@ const schema = z.object({
 });
 
 export const createEventCommand = async (command: z.infer<typeof schema>): Promise<void> => {
-  EventsQueue.add(CreateEvent, command);
+  worker.addEventJob('create', command);
 };

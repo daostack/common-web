@@ -93,7 +93,7 @@ var verifyCardCommand = function (card, customOptions) { return __awaiter(void 0
                 cvvCheck = circleCard.verification.cvv;
                 if (!(cvvCheck !== 'pending' &&
                     cvvCheck !== 'unavailable')) return [3 /*break*/, 3];
-                return [4 /*yield*/, _services_1.eventsService.create({
+                return [4 /*yield*/, _services_1.eventService.create({
                         userId: card.userId,
                         type: cvvCheck === 'fail'
                             ? client_1.EventType.CardCvvVerificationFailed

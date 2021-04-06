@@ -94,7 +94,7 @@ var addCommonMemberRoleCommand = function (command) { return __awaiter(void 0, v
                     }
                 });
                 // Create event
-                return [4 /*yield*/, _services_1.eventsService.create({
+                return [4 /*yield*/, _services_1.eventService.create({
                         type: client_1.EventType.CommonMemberRoleAdded,
                         commonId: memberEntity.commonId,
                         userId: memberEntity.userId

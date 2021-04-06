@@ -1,29 +1,34 @@
 import { createJoinProposalCommand } from './join/command/createJoinProposalCommand';
-import { createFundingProposalCommand } from './funding/command/createFundingProposalCommand';
-
-import { updateProposalVoteCountsCommand } from './shared/command/updateProposalVoteCountsCommand';
-import { proposalHasMajorityQuery } from './shared/queries/proposalHasMajorityQuery';
-import { finalizeProposalCommand } from './shared/command/finalizeProposalCommand';
 import { processApprovedOneTimeJoinRequestCommand } from './join/command/process/processApprovedOneTimeJoinRequest';
+import { processApprovedSubscriptionJoinRequest } from './join/command/process/processApprovedSubscriptionJoinRequest';
+
+import { createFundingProposalCommand } from './funding/command/createFundingProposalCommand';
+import { processApprovedFundingRequest } from './funding/command/process/processApprovedFundingRequest';
+import { processRejectedFundingRequest } from './funding/command/process/processRejectedFundingRequest';
+
+import { finalizeProposalCommand } from './shared/command/finalizeProposalCommand';
+import { proposalHasMajorityQuery } from './shared/queries/proposalHasMajorityQuery';
+import { updateProposalVoteCountsCommand } from './shared/command/updateProposalVoteCountsCommand';
 
 export const joinProposalService = {
-  commands: {
-    create: createJoinProposalCommand
-  },
+  create: createJoinProposalCommand,
 
   process: {
-    approvedJoinRequest: null,
-
-    approvedOneTimeJoinRequest: processApprovedOneTimeJoinRequestCommand,
-    approvedSubscriptionJoinRequest: null // @todo
+    approvedOneTime: processApprovedOneTimeJoinRequestCommand,
+    approvedSubscription: processApprovedSubscriptionJoinRequest
   }
 };
 
 export const fundingProposalService = {
-  create: createFundingProposalCommand
+  create: createFundingProposalCommand,
+
+  process: {
+    approved: processApprovedFundingRequest,
+    rejected: processRejectedFundingRequest
+  }
 };
 
-export const proposalsService = {
+export const proposalService = {
   join: joinProposalService,
   funding: fundingProposalService,
 

@@ -2,7 +2,7 @@ import { auth } from 'firebase-admin';
 import { PrismaClient } from '@prisma/client';
 import { ExpressContext } from 'apollo-server-express';
 
-import { prisma } from '@toolkits';
+import { prisma } from '@common/core';
 import { Express } from 'express';
 
 export interface IRequestContext {
