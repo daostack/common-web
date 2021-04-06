@@ -8,7 +8,7 @@ import { Queues } from '../constants/Queues';
 // Create the job spec
 export interface IVotesQueueJob {
   voteId: string;
-};
+}
 
 export type VotesQueueJob = 'processVote';
 
