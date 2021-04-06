@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "nexus-plugin-prisma": "^0.33.0",
+    "firebase-admin": "9.5.0",
     "request-ip": "^2.1.3"
   },
   "devDependencies": {

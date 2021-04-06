@@ -1,6 +1,6 @@
 import { extendType, nonNull, stringArg } from 'nexus';
-import admin from 'firebase-admin';
-import axios from 'axios';
+
+import { userService } from '@common/core';
 
 
 export const GenerateUserAuthTokenQuery = extendType({
@@ -11,16 +11,7 @@ export const GenerateUserAuthTokenQuery = extendType({
         authId: nonNull(stringArg())
       },
       resolve: async (root, args) => {
-        const customToken = await admin
-          .auth()
-          .createCustomToken(args.authId);
-
-        const res = await axios.post(`https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyCustomToken?key=${process.env['Firebase.ApiKey']}`, {
-          token: customToken,
-          returnSecureToken: true
-        });
-
-        return res.data.idToken;
+        return userService.queries.getIdToken(args.authId);
       }
     });
   }

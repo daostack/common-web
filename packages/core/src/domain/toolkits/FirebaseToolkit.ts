@@ -6,7 +6,7 @@ import { CommonError } from '@errors';
 import adminKeys from '../constants/secrets/adminsdk-keys.json';
 
 export const InitializeFirebase = () => {
-  if(!adminKeys) {
+  if (!adminKeys) {
     throw new CommonError('Firebase Admin keys are not present!');
   }
 
