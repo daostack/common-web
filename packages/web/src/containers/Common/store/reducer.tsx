@@ -62,6 +62,15 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
     produce(state, (nextState) => {
       nextState.currentDiscussion = null;
     }),
+  )
+  .handleAction(actions.closeCurrentCommon, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.currentDiscussion = null;
+      nextState.common = null;
+      nextState.discussions = [];
+      nextState.proposals = [];
+      nextState.isDiscussionsLoaded = false;
+    }),
   );
 
 export default reducer;

@@ -15,6 +15,7 @@ import {
 } from "../../components/CommonDetailContainer";
 import {
   clearCurrentDiscussion,
+  closeCurrentCommon,
   getCommonDetail,
   loadCommonDiscussionList,
   loadDisscussionDetail,
@@ -66,7 +67,7 @@ export default function CommonDetail() {
   useEffect(() => {
     dispatch(getCommonDetail.request(id));
     return () => {
-      dispatch(getCommonDetail.success(null));
+      dispatch(closeCurrentCommon());
     };
   }, [dispatch, id]);
 

@@ -34,3 +34,5 @@ export const loadDisscussionDetail = createAsyncAction(
   CommonsActionTypes.LOAD_DISCUSSION_DETAIL_SUCCESS,
   CommonsActionTypes.LOAD_DISCUSSION_DETAIL_FAILURE,
 )<Discussion, Discussion, Error>();
+
+export const closeCurrentCommon = createStandardAction(CommonsActionTypes.CLOSE_CURRENT_COMMON)();
