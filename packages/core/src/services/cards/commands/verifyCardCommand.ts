@@ -4,6 +4,7 @@ import { circleClient } from '@clients';
 import { ICircleCard } from '@circle/cards/types';
 
 import { poll } from '@utils';
+import { logger } from '@logger';
 import { prisma } from '@toolkits';
 import { eventService } from '@services';
 import { CvvVerificationCheckError } from '@errors';
@@ -42,6 +43,11 @@ export const verifyCardCommand = async (card: Card, customOptions?: Partial<IVer
     ...defaultOptions,
     ...customOptions
   };
+
+  logger.debug('Beginning card verification', {
+    options,
+    card
+  });
 
   const pollAction: IPollAction<ICircleCard> = async () => {
     return (await circleClient.cards.get(card.circleCardId)).data;

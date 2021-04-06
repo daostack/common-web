@@ -7,6 +7,7 @@ import { eventService } from '@services';
 import { BillingDetailsSchema } from '@validation';
 
 import { verifyCardCommand } from './verifyCardCommand';
+import { logger } from '@utils/logger';
 
 const schema = z.object({
   userId: z.string()
@@ -37,6 +38,10 @@ const schema = z.object({
 export const createCardCommand = async (command: z.infer<typeof schema>): Promise<Card> => {
   schema.parse(command);
 
+  logger.debug('Creating card from valid payload', {
+    payload: command
+  });
+
   const {
     ipAddress,
     userId,
@@ -47,10 +52,15 @@ export const createCardCommand = async (command: z.infer<typeof schema>): Promis
     ...circlePayload,
     idempotencyKey: 'b816af39-eacd-4278-b24b-3c646e69e9f2',
     metadata: {
+      // @todo Real data
       email: 'test@mail.com',
       ipAddress: command.ipAddress,
       sessionId: 'dsrh2jfp3ewojfsknbhgsoetjrelfd'
     }
+  });
+
+  logger.debug('Card created with circle, creating local card entity', {
+    circleResponse
   });
 
 
@@ -86,6 +96,10 @@ export const createCardCommand = async (command: z.infer<typeof schema>): Promis
   // Verify the created card
   await verifyCardCommand(card, {
     throwOnFailure: true
+  });
+
+  logger.debug('Card created and verified', {
+    cardId: card.id
   });
 
   // Return the created card

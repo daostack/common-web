@@ -7,24 +7,26 @@ import { getUserIdQuery } from './queries/getUserIdQuery';
 export const userService = {
   commands: {
     /**
-     * @todo Write docs
+     * Creates new user in the database. Please verify the authentication
+     * token because no authentication token is being verified here!
      */
     create: createUserCommand
   },
 
   queries: {
     /**
-     * @todo Docs
+     * Generates authentication token for given UID. Works
+     * only in dev environment
      */
     getIdToken: getUserIdTokenQuery,
 
     /**
-     * @todo Write docs
+     * Checks if the passed used exist in the database
      */
     exists: userExistsQuery,
 
     /**
-     * @todo Write docs
+     * Gets the user ID if found by one of the passed arguments
      */
     getId: getUserIdQuery
   }
