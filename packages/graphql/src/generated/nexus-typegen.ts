@@ -4,7 +4,7 @@
  */
 
 
-import { IRequestContext } from "../context"
+import { IRequestContext } from "./../context"
 import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {

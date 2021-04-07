@@ -1,12 +1,12 @@
 import path from 'path';
-import { makeSchema } from 'nexus';
-import { nexusPrisma } from 'nexus-plugin-prisma';
+import { makeSchema, queryComplexityPlugin } from 'nexus';
 
 import { UserTypes } from './Types/Users';
 import { CardTypes } from './Types/Cards';
 import { VoteTypes } from './Types/Votes';
 import { CommonTypes } from './Types/Commons';
 import { ProposalTypes } from './Types/Proposals';
+import { CommonMemberTypes } from './Types/CommonMember';
 
 import { DateScalar } from './Shared/Scalars/Date.scalar';
 import { LinkType, LinkInputType } from './Shared/Types/Link.type';
@@ -19,6 +19,7 @@ const types = [
   VoteTypes,
   CommonTypes,
   ProposalTypes,
+  CommonMemberTypes,
 
   // Scalars
   DateScalar,
@@ -42,11 +43,6 @@ export const schema = makeSchema({
     export: 'IRequestContext'
   },
   plugins: [
-    nexusPrisma({
-      experimentalCRUD: true,
-      outputs: {
-        typegen: path.join(__dirname, '../generated/', 'nexus-prisma-typegen.ts')
-      }
-    })
+    queryComplexityPlugin()
   ]
 });

@@ -9,6 +9,7 @@
     "resolveJsonModule": true,
     "strict": true,
     "paths": {
+
     },
     "esModuleInterop": true,
     "skipLibCheck": true,

@@ -14,7 +14,5 @@ export const CardType = objectType({
     t.nonNull.date('updatedAt', {
       description: 'The date, at which the item was last modified'
     });
-
-    t.model.user();
   }
 });
