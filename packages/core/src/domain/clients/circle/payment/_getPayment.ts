@@ -1,5 +1,5 @@
-import { ICirclePayment } from '@circle/types';
-import { $circleClient } from '@circle/client';
+import { ICirclePayment } from '../types';
+import { $circleClient } from '../client';
 
 export interface IGetCirclePaymentResponse {
   data: ICirclePayment;

@@ -1,7 +1,7 @@
-import { CommonError, NotFoundError } from '@errors';
+import { CommonError, NotFoundError } from '../../../domain/errors/index';
 import { FundingType, Payment, PaymentStatus, PaymentType } from '@prisma/client';
 
-import { prisma } from '@toolkits';
+import { prisma } from '../../../domain/toolkits/index';
 import { createPaymentCommand } from './createPaymentCommand';
 
 export const createOneTimePaymentCommand = async (proposalId: string): Promise<Payment> => {

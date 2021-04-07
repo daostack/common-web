@@ -1,6 +1,6 @@
 import * as z from 'zod';
-import { prisma } from '@toolkits';
-import { NotFoundError } from '@errors';
+import { prisma } from '../../../domain/toolkits/index';
+import { NotFoundError } from '../../../domain/errors/index';
 
 const schema = z.object({
   email: z.string()

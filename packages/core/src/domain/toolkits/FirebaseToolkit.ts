@@ -1,7 +1,7 @@
 import admin from 'firebase-admin';
 
-import { logger } from '@logger';
-import { CommonError } from '@errors';
+import { logger } from '../utils/logger';
+import { CommonError } from '../errors/index';
 
 import adminKeys from '../constants/secrets/adminsdk-keys.json';
 

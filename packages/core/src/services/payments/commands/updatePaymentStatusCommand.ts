@@ -1,8 +1,8 @@
 import { Payment, PaymentStatus } from '@prisma/client';
 
-import { prisma } from '@toolkits';
-import { circleClient } from '@clients';
-import { logger as $logger } from '@logger';
+import { prisma } from '../../../domain/toolkits/index';
+import { circleClient } from '../../../domain/clients/index';
+import { logger as $logger } from '../../../domain/utils/logger';
 import { convertCirclePaymentStatus } from '../helpers';
 import { worker } from '@common/queues';
 

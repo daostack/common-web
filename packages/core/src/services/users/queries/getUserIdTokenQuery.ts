@@ -1,7 +1,7 @@
 import admin from 'firebase-admin';
 import axios from 'axios';
 
-import { CommonError } from '@errors';
+import { CommonError } from '../../../domain/errors/index';
 
 /**
  * Gets the ID token for the user with the specified uid.

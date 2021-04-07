@@ -1,9 +1,9 @@
 import { FundingType, ProposalState, ProposalType } from '@prisma/client';
 
-import { prisma } from '@toolkits';
-import { voteService } from '@services';
-import { logger as $logger } from '@logger';
-import { NotFoundError, CommonError } from '@errors';
+import { prisma } from '../../../../domain/toolkits/index';
+import { voteService } from '../../../index';
+import { logger as $logger } from '../../../../domain/utils/logger';
+import { NotFoundError, CommonError } from '../../../../domain/errors/index';
 
 import { processRejectedJoinRequest } from './process/processRejectedJoinRequest';
 import { processApprovedSubscriptionJoinRequest } from './process/processApprovedSubscriptionJoinRequest';

@@ -1,6 +1,6 @@
 import { ProposalState, EventType } from '@prisma/client';
 
-import { prisma } from '@toolkits';
+import { prisma } from '../../../../../domain/toolkits/index';
 import { eventService } from '../../../../index';
 
 import { createSubscriptionCommand } from '../../../../subscriptions/command/createSubscriptionCommand';

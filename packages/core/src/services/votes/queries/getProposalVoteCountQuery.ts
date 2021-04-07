@@ -1,5 +1,5 @@
 import { VoteOutcome } from '@prisma/client';
-import { prisma } from '@toolkits';
+import { prisma } from '../../../domain/toolkits/index';
 
 export interface IVotesCount {
   votesFor: number;

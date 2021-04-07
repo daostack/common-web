@@ -1,5 +1,5 @@
-import { CommonError } from '@errors';
-import { ErrorCodes, HttpStatuses } from '@constants';
+import { CommonError } from '../index';
+import { ErrorCodes, HttpStatuses } from '../../constants/index';
 
 export class NotImplementedError extends CommonError {
   constructor(message: string = 'No message provided') {

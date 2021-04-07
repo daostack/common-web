@@ -1,6 +1,6 @@
 import Queue from 'bull';
 
-import { Queues } from '@constants';
+import { Queues } from '../../../domain/constants/index';
 import { finalizeProposalCommand } from '../shared/command/finalizeProposalCommand';
 
 interface IFinalizeProposalQueueJob {

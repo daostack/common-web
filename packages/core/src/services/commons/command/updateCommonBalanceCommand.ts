@@ -1,8 +1,8 @@
 import { Common, Payment, PaymentStatus } from '@prisma/client';
 
-import { CommonError } from '@errors';
-import { prisma } from '@toolkits';
-import { logger } from '@logger';
+import { CommonError } from '../../../domain/errors/index';
+import { prisma } from '../../../domain/toolkits/index';
+import { logger } from '../../../domain/utils/logger';
 
 /**
  * Updates the common balance with the payment

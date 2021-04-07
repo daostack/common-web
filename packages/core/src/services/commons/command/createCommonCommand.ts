@@ -1,8 +1,8 @@
 import * as z from 'zod';
 import { FundingType, Common, CommonMemberRole, EventType } from '@prisma/client';
 
-import { prisma } from '@toolkits';
-import { eventService } from '@services';
+import { prisma } from '../../../domain/toolkits/index';
+import { eventService } from '../../index';
 
 import { createCommonMemberCommand } from './createCommonMemberCommand';
 import { addCommonMemberRoleCommand } from './addCommonMemberRoleCommand';

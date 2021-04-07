@@ -1,7 +1,7 @@
 import { PaymentStatus, PaymentType } from '@prisma/client';
 
-import { prisma } from '@toolkits';
-import { logger } from '@logger';
+import { prisma } from '../../../../domain/toolkits/index';
+import { logger } from '../../../../domain/utils/logger';
 
 import { processOneTimePayment } from './processOneTimeProposalPayment';
 import { processSubscriptionPayment } from './processSubscriptionPayment';

@@ -1,10 +1,10 @@
-import { FirebaseToolkit } from '@toolkits';
+import { FirebaseToolkit } from './domain/toolkits/index';
 
 // Initialize the Firebase before exporting anything that may use it
 FirebaseToolkit.InitializeFirebase();
 
-export { prisma } from '@toolkits';
-export { logger } from '@logger';
+export { prisma } from './domain/toolkits/index';
+export { logger } from './domain/utils/logger';
 
 
 // Services

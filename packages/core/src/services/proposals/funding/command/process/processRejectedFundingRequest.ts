@@ -1,6 +1,6 @@
 import { Proposal, ProposalState, EventType } from '@prisma/client';
 
-import { prisma } from '@toolkits';
+import { prisma } from '../../../../../domain/toolkits/index';
 import { eventService } from '../../../../index';
 
 export const processRejectedFundingRequest = async (proposal: Proposal): Promise<void> => {

@@ -1,7 +1,7 @@
 import { FundingType, ProposalState, Subscription } from '@prisma/client';
-import { prisma } from '@toolkits';
-import { logger as $logger } from '@logger';
-import { NotFoundError, CommonError } from '@errors';
+import { prisma } from '../../../domain/toolkits/index';
+import { logger as $logger } from '../../../domain/utils/logger';
+import { NotFoundError, CommonError } from '../../../domain/errors/index';
 import { createSubscriptionPaymentCommand } from '../../payments/commands/createSubscriptionPaymentCommand';
 
 /**

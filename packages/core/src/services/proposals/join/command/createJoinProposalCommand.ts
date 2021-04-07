@@ -1,10 +1,10 @@
 import * as z from 'zod';
 import { EventType, ProposalState, ProposalType, Proposal } from '@prisma/client';
 
-import { CommonError, NotFoundError } from '@errors';
-import { ProposalLinkSchema } from '@validation';
+import { CommonError, NotFoundError } from '../../../../domain/errors/index';
+import { ProposalLinkSchema } from '../../../../domain/validation/index';
 import { eventService } from '../../../index';
-import { prisma } from '@toolkits';
+import { prisma } from '../../../../domain/toolkits/index';
 
 import { generateProposalExpiresAtDate } from '../../helpers/generateProposalExpiresAtDate';
 import { addExpireProposalJob } from '../../queue/expireProposalsQueue';

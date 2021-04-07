@@ -1,5 +1,5 @@
-import { sleep } from '@utils';
-import { CommonError } from '@errors';
+import { sleep } from './index';
+import { CommonError } from '../errors/index';
 
 export type IPollAction<T> = () => Promise<T> | T;
 export type IPollValidator<T> = (result: T) => Promise<boolean> | boolean;

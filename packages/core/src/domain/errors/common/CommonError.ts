@@ -1,7 +1,7 @@
 import * as uuid from 'uuid';
 
-import { ErrorCodes, HttpStatuses } from '@constants';
-import { logger } from '@logger';
+import { ErrorCodes, HttpStatuses } from '../../constants/index';
+import { logger } from '../../utils/logger';
 
 interface IErrorData {
   userMessage?: string;

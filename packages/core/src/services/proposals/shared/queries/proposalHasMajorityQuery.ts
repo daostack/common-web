@@ -1,6 +1,6 @@
-import { prisma } from '@toolkits';
+import { prisma } from '../../../../domain/toolkits/index';
 
-import { voteService } from '@services';
+import { voteService } from '../../../index';
 
 export const proposalHasMajorityQuery = async (proposalId: string): Promise<boolean> => {
   const count = await voteService.getVotesCount(proposalId);

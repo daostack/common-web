@@ -1,9 +1,9 @@
 import * as z from 'zod';
 import { CommonMemberRole, CommonMember, EventType } from '@prisma/client';
 
-import { prisma } from '@toolkits';
-import { NotFoundError } from '@errors';
-import { eventService } from '@services';
+import { prisma } from '../../../domain/toolkits/index';
+import { NotFoundError } from '../../../domain/errors/index';
+import { eventService } from '../../index';
 
 const schema = z.object({
   memberId: z.string()

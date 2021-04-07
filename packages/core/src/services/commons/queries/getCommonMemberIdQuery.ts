@@ -1,5 +1,5 @@
-import { prisma } from '@toolkits';
-import { NotFoundError } from '@errors';
+import { prisma } from '../../../domain/toolkits/index';
+import { NotFoundError } from '../../../domain/errors/index';
 
 /**
  * Find the member ID of the user on this specific common

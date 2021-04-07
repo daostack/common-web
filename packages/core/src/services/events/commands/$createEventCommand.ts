@@ -1,7 +1,7 @@
 import * as z from 'zod';
 
 import { Event, EventType } from '@prisma/client';
-import { prisma } from '@toolkits';
+import { prisma } from '../../../domain/toolkits/index';
 
 const schema = z.object({
   type: z.enum(Object.keys(EventType) as [(keyof typeof EventType)]),

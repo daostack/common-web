@@ -1,4 +1,4 @@
-import { prisma } from '@toolkits';
+import { prisma } from '../../../../../domain/toolkits/index';
 import { eventService } from '../../../../index';
 import { ProposalState, EventType } from '@prisma/client';
 

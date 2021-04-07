@@ -1,7 +1,7 @@
 import { Vote, VoteOutcome } from '@prisma/client';
 
-import { prisma } from '@toolkits';
-import { NotFoundError } from '@errors';
+import { prisma } from '../../../../domain/toolkits/index';
+import { NotFoundError } from '../../../../domain/errors/index';
 
 export const updateProposalVoteCountsCommand = async (vote: Vote | string): Promise<void> => {
   if (typeof vote === 'string') {

@@ -1,6 +1,6 @@
 import * as z from 'zod';
 
-import { prisma } from '@toolkits';
+import { prisma } from '../../../domain/toolkits/index';
 
 const schema = z
   .object({

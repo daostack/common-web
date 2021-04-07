@@ -1,5 +1,5 @@
-import { ICircleCard } from '@circle/types';
-import { $circleClient } from '@circle/client';
+import { ICircleCard } from '../types';
+import { $circleClient } from '../client';
 
 export interface IGetCircleCardResponse {
   data: ICircleCard;
