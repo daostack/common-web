@@ -7,7 +7,7 @@ import { eventService } from '@services';
 import { BillingDetailsSchema } from '@validation';
 
 import { verifyCardCommand } from './verifyCardCommand';
-import { logger } from '@utils/logger';
+import { logger } from '@logger';
 
 const schema = z.object({
   userId: z.string()

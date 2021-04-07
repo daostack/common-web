@@ -12,6 +12,7 @@
     "resolveJsonModule": true,
     "strict": true,
     "declaration": true,
+    "sourceMap": true,
     "paths": {
       "@services": [
         "./services/index"

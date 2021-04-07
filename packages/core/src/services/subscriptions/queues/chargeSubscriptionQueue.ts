@@ -3,9 +3,9 @@ import { SubscriptionStatus } from '@prisma/client';
 
 import { Queues } from '@constants';
 import { prisma } from '@toolkits';
+import { logger } from '@logger';
 
 import { createSubscriptionPaymentCommand } from '../../payments/commands/createSubscriptionPaymentCommand';
-import { logger } from '@utils/logger';
 
 interface IChargeSubscriptionQueue {
   subscriptionId: string;

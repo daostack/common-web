@@ -4,7 +4,7 @@ import { FirebaseToolkit } from '@toolkits';
 FirebaseToolkit.InitializeFirebase();
 
 export { prisma } from '@toolkits';
-export { logger } from '@utils/logger';
+export { logger } from '@logger';
 
 
 // Services
