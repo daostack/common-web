@@ -4,16 +4,15 @@
   "author": "Alexander Ivanov @alexander2001i",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "tsc-watch --onSuccess \"yarn start\"",
-    "debug": "ts-node-dev -r tsconfig-paths/register -r dotenv/config --transpile-only --no-notify src/index.ts",
+    "dev": "ts-node-dev -r tsconfig-paths/register -r dotenv/config --transpile-only --no-notify src/index.ts",
     "compile": "tsc -p tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
     "start": "node -r dotenv/config dist/index.js"
   },
   "dependencies": {
     "@common/core": "1.9.10-rc.0",
+    "@prisma/client": "2.19.0",
     "firebase-admin": "9.5.0",
     "graphql-query-complexity": "^0.8.0",
-    "nexus-plugin-prisma": "^0.33.0",
     "request-ip": "^2.1.3"
   },
   "devDependencies": {

@@ -16,10 +16,11 @@ $logger.add(
   })
 );
 
-if (process.env['Logs.Slack.Webhook']) {
+if (process.env['Logs.Slack.Webhook'] && process.env['Logs.Slack.Send']) {
   $logger.add(
     new SlackHook({
-      webhookUrl: process.env['Logs.Slack.Webhook']
+      webhookUrl: process.env['Logs.Slack.Webhook'],
+      mrkdwn: true
     })
   );
 }

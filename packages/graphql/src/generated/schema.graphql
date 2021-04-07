@@ -29,6 +29,7 @@ type Common {
 
   """The main identifier of the item"""
   id: ID!
+  members(orderBy: CommonMemberOrderByInput, skip: Int, take: Int): [CommonMember]!
 
   """The name of the common as provided"""
   name: String!
@@ -41,10 +42,24 @@ type Common {
 }
 
 type CommonMember {
+  common: Common
   commonId: ID!
   id: ID!
-  user: User!
+  roles: [CommonMemberRole!]!
+  user: User
   userId: ID!
+}
+
+input CommonMemberOrderByInput {
+  createdAt: SortOrder!
+}
+
+enum CommonMemberRole {
+  Founder
+}
+
+input CommonWhereUniqueInput {
+  id: ID!
 }
 
 input CreateCardInput {
@@ -172,7 +187,13 @@ input ProposalLinkInput {
 }
 
 type Query {
+  common(where: CommonWhereUniqueInput!): Common
   generateUserAuthToken(authId: String!): String!
+}
+
+enum SortOrder {
+  asc
+  desc
 }
 
 type User {

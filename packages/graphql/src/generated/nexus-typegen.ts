@@ -33,6 +33,12 @@ export interface NexusGenInputs {
     name: string; // String!
     postalCode: string; // String!
   }
+  CommonMemberOrderByInput: { // input type
+    createdAt: NexusGenEnums['SortOrder']; // SortOrder!
+  }
+  CommonWhereUniqueInput: { // input type
+    id: string; // ID!
+  }
   CreateCardInput: { // input type
     billingDetails: NexusGenInputs['BillingDetailsInput']; // BillingDetailsInput!
     encryptedData: string; // String!
@@ -89,7 +95,9 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  CommonMemberRole: "Founder"
   FundingType: "Monthly" | "OneTime"
+  SortOrder: "asc" | "desc"
   VoteOutcome: "Approve" | "Condemn"
 }
 
@@ -118,7 +126,7 @@ export interface NexusGenObjects {
   CommonMember: { // root type
     commonId: string; // ID!
     id: string; // ID!
-    user: NexusGenRootTypes['User']; // User!
+    roles: NexusGenEnums['CommonMemberRole'][]; // [CommonMemberRole!]!
     userId: string; // ID!
   }
   FundingProposal: { // root type
@@ -170,14 +178,17 @@ export interface NexusGenFieldTypes {
   Common: { // field return type
     createdAt: NexusGenScalars['Date']; // Date!
     id: string; // ID!
+    members: Array<NexusGenRootTypes['CommonMember'] | null>; // [CommonMember]!
     name: string; // String!
     updatedAt: NexusGenScalars['Date']; // Date!
     whitelisted: boolean; // Boolean!
   }
   CommonMember: { // field return type
+    common: NexusGenRootTypes['Common'] | null; // Common
     commonId: string; // ID!
     id: string; // ID!
-    user: NexusGenRootTypes['User']; // User!
+    roles: NexusGenEnums['CommonMemberRole'][]; // [CommonMemberRole!]!
+    user: NexusGenRootTypes['User'] | null; // User
     userId: string; // ID!
   }
   FundingProposal: { // field return type
@@ -204,6 +215,7 @@ export interface NexusGenFieldTypes {
     finalizeProposal: boolean; // Boolean!
   }
   Query: { // field return type
+    common: NexusGenRootTypes['Common'] | null; // Common
     generateUserAuthToken: string; // String!
   }
   User: { // field return type
@@ -230,13 +242,16 @@ export interface NexusGenFieldTypeNames {
   Common: { // field return type name
     createdAt: 'Date'
     id: 'ID'
+    members: 'CommonMember'
     name: 'String'
     updatedAt: 'Date'
     whitelisted: 'Boolean'
   }
   CommonMember: { // field return type name
+    common: 'Common'
     commonId: 'ID'
     id: 'ID'
+    roles: 'CommonMemberRole'
     user: 'User'
     userId: 'ID'
   }
@@ -264,6 +279,7 @@ export interface NexusGenFieldTypeNames {
     finalizeProposal: 'Boolean'
   }
   Query: { // field return type name
+    common: 'Common'
     generateUserAuthToken: 'String'
   }
   User: { // field return type name
@@ -282,6 +298,13 @@ export interface NexusGenFieldTypeNames {
 }
 
 export interface NexusGenArgTypes {
+  Common: {
+    members: { // args
+      orderBy?: NexusGenInputs['CommonMemberOrderByInput'] | null; // CommonMemberOrderByInput
+      skip?: number | null; // Int
+      take?: number | null; // Int
+    }
+  }
   Mutation: {
     createCard: { // args
       input: NexusGenInputs['CreateCardInput']; // CreateCardInput!
@@ -306,6 +329,9 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    common: { // args
+      where: NexusGenInputs['CommonWhereUniqueInput']; // CommonWhereUniqueInput!
+    }
     generateUserAuthToken: { // args
       authId: string; // String!
     }

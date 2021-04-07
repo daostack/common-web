@@ -1,16 +1,16 @@
 import { extendType } from 'nexus';
 import { prisma } from '@common/core';
 
-export const CommonMemberUserExtension = extendType({
+export const CommonMemberCommonExtensions = extendType({
   type: 'CommonMember',
   definition(t) {
-    t.field('user', {
-      type: 'User',
-      complexity: 15,
+    t.field('common', {
+      type: 'Common',
+      complexity: 10,
       resolve: (root) => {
-        return prisma.user.findUnique({
+        return prisma.common.findUnique({
           where: {
-            id: root.userId
+            id: root.commonId
           }
         });
       }

@@ -8,10 +8,9 @@ export const CommonMemberType = objectType({
     t.nonNull.id('userId');
     t.nonNull.id('commonId');
 
-    t.nonNull.field('user', {
-      type: 'User',
-      // complexity: 10,
-
-    })
+    t.nonNull.list.nonNull.field('roles', {
+      complexity: 0,
+      type: 'CommonMemberRole'
+    });
   }
 });
