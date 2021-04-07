@@ -1,5 +1,5 @@
-import { CommonError } from '../index';
-import { HttpStatuses, ErrorCodes } from '../../constants/index';
+import { CommonError } from '@errors';
+import { HttpStatuses, ErrorCodes } from '@constants';
 
 export class CvvVerificationCheckError extends CommonError {
   constructor(cardId?: string) {

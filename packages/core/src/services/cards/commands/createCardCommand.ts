@@ -1,13 +1,13 @@
 import * as z from 'zod';
 import { Card, EventType } from '@prisma/client';
 
-import { prisma } from '../../../domain/toolkits/index';
-import { circleClient } from '../../../domain/clients/index';
-import { eventService } from '../../index';
-import { BillingDetailsSchema } from '../../../domain/validation/index';
+import { prisma } from '@toolkits';
+import { circleClient } from '@clients';
+import { eventService } from '@services';
+import { BillingDetailsSchema } from '@validation';
 
 import { verifyCardCommand } from './verifyCardCommand';
-import { logger } from '../../../domain/utils/logger';
+import { logger } from '@logger';
 
 const schema = z.object({
   userId: z.string()

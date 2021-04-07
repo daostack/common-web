@@ -3,9 +3,9 @@ import { EventType, Payment, PaymentType } from '@prisma/client';
 
 import { worker } from '@common/queues';
 
-import { prisma } from '../../../domain/toolkits/index';
-import { circleClient } from '../../../domain/clients/index';
-import { eventService } from '../../index';
+import { prisma } from '@toolkits';
+import { circleClient } from '@clients';
+import { eventService } from '@services';
 
 import { convertAmountToCircleAmount, convertCirclePaymentStatus } from '../helpers';
 

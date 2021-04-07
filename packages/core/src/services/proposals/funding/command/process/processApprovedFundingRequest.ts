@@ -1,7 +1,7 @@
 import { ProposalState, Proposal, FundingState, EventType } from '@prisma/client';
 
-import { prisma } from '../../../../../domain/toolkits/index';
-import { CommonError } from '../../../../../domain/errors/index';
+import { prisma } from '@toolkits';
+import { CommonError } from '@errors';
 import { eventService } from '../../../../index';
 
 export const processApprovedFundingRequest = async (proposalArg: Proposal): Promise<void> => {

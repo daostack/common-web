@@ -1,5 +1,5 @@
-import { CommonError } from '../index';
-import { ErrorCodes, HttpStatuses } from '../../constants/index';
+import { CommonError } from '@errors';
+import { ErrorCodes, HttpStatuses } from '@constants';
 
 export class NotFoundError extends CommonError {
   constructor(entity: string, identifier?: string, ...rest: any[]) {

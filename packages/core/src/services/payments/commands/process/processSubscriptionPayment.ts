@@ -1,9 +1,9 @@
 import { addMonths } from 'date-fns';
 import { Payment, PaymentStatus, PaymentType, SubscriptionStatus } from '@prisma/client';
 
-import { logger as $logger } from '../../../../domain/utils/logger';
+import { logger as $logger } from '@logger';
 import { commonService } from '../../../index';
-import { prisma } from '../../../../domain/toolkits/index';
+import { prisma } from '@toolkits';
 import { scheduleSubscriptionCharge } from '../../../subscriptions/queues/chargeSubscriptionQueue';
 
 export const processSubscriptionPayment = async (payment: Payment): Promise<void> => {

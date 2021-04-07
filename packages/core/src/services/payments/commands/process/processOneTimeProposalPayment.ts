@@ -1,6 +1,6 @@
 import { Payment, PaymentStatus } from '@prisma/client';
 
-import { prisma } from '../../../../domain/toolkits/index';
+import { prisma } from '@toolkits';
 import { commonService } from '../../../index';
 
 export const processOneTimePayment = async (payment: Payment): Promise<void> => {

@@ -1,7 +1,7 @@
-import { logger } from '../../../domain/utils/logger';
-import { prisma } from '../../../domain/toolkits/index';
-import { NotFoundError } from '../../../domain/errors/index';
-import { proposalService } from '../../index';
+import { logger } from '@logger';
+import { prisma } from '@toolkits';
+import { NotFoundError } from '@errors';
+import { proposalService } from '@services';
 
 export const processVoteCommand = async (voteId: string): Promise<void> => {
   const vote = await prisma.vote.findUnique({

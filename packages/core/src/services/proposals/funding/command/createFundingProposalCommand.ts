@@ -1,9 +1,9 @@
 import * as z from 'zod';
 import { EventType, Proposal, ProposalType } from '@prisma/client';
 
-import { ProposalLinkSchema, ProposalImageSchema, ProposalFileSchema } from '../../../../domain/validation/index';
-import { NotFoundError, CommonError } from '../../../../domain/errors/index';
-import { prisma } from '../../../../domain/toolkits/index';
+import { ProposalLinkSchema, ProposalImageSchema, ProposalFileSchema } from '@validation';
+import { NotFoundError, CommonError } from '@errors';
+import { prisma } from '@toolkits';
 import { eventService } from '../../../index';
 import { generateProposalExpiresAtDate } from '../../helpers/generateProposalExpiresAtDate';
 import { addExpireProposalJob } from '../../queue/expireProposalsQueue';

@@ -1,4 +1,4 @@
-import { CircleCurrency } from '..';
+import { CircleCurrency } from '@circle/types';
 
 export interface ICirclePaymentAmount {
   /**

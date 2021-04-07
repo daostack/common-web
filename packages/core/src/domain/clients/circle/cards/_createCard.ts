@@ -1,5 +1,5 @@
-import { ICircleCard, ICircleMetadata, ICircleBillingDetails } from '../types';
-import { $circleClient } from '../client';
+import { ICircleCard, ICircleMetadata, ICircleBillingDetails } from '@circle/types';
+import { $circleClient } from '@circle/client';
 
 export interface ICircleCreateCardPayload {
   /**

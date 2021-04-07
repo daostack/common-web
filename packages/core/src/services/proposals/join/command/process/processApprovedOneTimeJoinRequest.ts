@@ -1,6 +1,6 @@
-import { prisma } from '../../../../../domain/toolkits/index';
+import { prisma } from '@toolkits';
 import { EventType, FundingType, ProposalState } from '@prisma/client';
-import { CommonError } from '../../../../../domain/errors/index';
+import { CommonError } from '@errors';
 import { paymentService, commonService, eventService } from '../../../../index';
 
 export const processApprovedOneTimeJoinRequestCommand = async (proposalId: string) => {

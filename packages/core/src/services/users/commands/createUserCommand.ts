@@ -1,8 +1,8 @@
 import * as z from 'zod';
 import { EventType, User } from '@prisma/client';
 
-import { userService, eventService } from '../../index';
-import { prisma } from '../../../domain/toolkits/index';
+import { userService, eventService } from '@services';
+import { prisma } from '@toolkits';
 
 const schema = z.object({
   id: z.string()

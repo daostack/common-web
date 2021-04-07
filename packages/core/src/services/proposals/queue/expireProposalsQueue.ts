@@ -1,7 +1,7 @@
 import Queue from 'bull';
 import { Proposal } from '@prisma/client';
 
-import { Queues } from '../../../domain/constants/index';
+import { Queues } from '@constants';
 import { addFinalizeProposalJob } from './finalizeProposalQueue';
 
 

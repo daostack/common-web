@@ -4,10 +4,10 @@ import {
   IPaymentSource,
   PaymentVerification,
   ICirclePayment
-} from '../types';
-import { $circleClient } from '../client';
+} from '@circle/types';
+import { $circleClient } from '@circle/client';
 
-import { CommonError } from '../../../errors/index';
+import { CommonError } from '@errors';
 
 export interface ICircleCreatePaymentPayload {
   verification: PaymentVerification;

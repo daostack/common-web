@@ -3,9 +3,9 @@ import { EventType, Vote, VoteOutcome } from '@prisma/client';
 
 import { worker } from '@common/queues';
 
-import { commonService, eventService } from '../../index';
-import { NotFoundError, CommonError } from '../../../domain/errors/index';
-import { prisma } from '../../../domain/toolkits/index';
+import { commonService, eventService } from '@services';
+import { NotFoundError, CommonError } from '@errors';
+import { prisma } from '@toolkits';
 
 const schema = z.object({
   userId: z.string()

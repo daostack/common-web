@@ -1,8 +1,8 @@
 import { Payment, PaymentStatus, PaymentType, SubscriptionStatus } from '@prisma/client';
 
-import { logger as $logger } from '../../../domain/utils/logger';
-import { prisma } from '../../../domain/toolkits/index';
-import { CommonError } from '../../../domain/errors/index';
+import { logger as $logger } from '@logger';
+import { prisma } from '@toolkits';
+import { CommonError } from '@errors';
 import { createPaymentCommand } from './createPaymentCommand';
 
 export const createSubscriptionPaymentCommand = async (subscriptionId: string): Promise<Payment> => {
