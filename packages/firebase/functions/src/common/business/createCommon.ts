@@ -41,7 +41,7 @@ const createCommonDataValidationScheme = yup.object({
 
   links: yup.array(linkValidationSchema).optional(),
 
-  zeroContribution: yup.boolean().required(),
+  zeroContribution: yup.boolean(),
 });
 
 type CreateCommonPayload = yup.InferType<typeof createCommonDataValidationScheme>;
