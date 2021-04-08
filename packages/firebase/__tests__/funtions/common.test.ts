@@ -21,7 +21,6 @@ const validCommonCreationPayload = {
   description: 'hey there, am i descriptive',
   contributionType: 'one-time',
   contributionAmount: 6500,
-  fundingGoalDeadline: new Date().getTime(),
   zeroContribution: true,
 };
 

@@ -27,8 +27,6 @@ const createCommonDataValidationScheme = yup.object({
 
   description: yup.string().required(),
 
-  fundingGoalDeadline: yup.number().required(),
-
   contributionAmount: yup.number().min(0).required(),
 
   contributionType: yup
@@ -75,7 +73,6 @@ export const createCommon = async (
     description,
     contributionType,
     contributionAmount,
-    fundingGoalDeadline,
     zeroContribution,
   } = payload;
 
@@ -84,7 +81,6 @@ export const createCommon = async (
   const common = await commonDb.add({
     name,
     image,
-    fundingGoalDeadline,
 
     rules: (rules as ICommonRule[]) || [],
     links: (links as ICommonLink[]) || [],

@@ -11,7 +11,6 @@ export const createTestCommon = async (userId = 'test-user', zeroContribution = 
     description: 'hey there, am i descriptive',
     contributionType: 'one-time',
     contributionAmount: 6500,
-    fundingGoalDeadline: new Date().getTime() / 1000,
     zeroContribution,
   };
 
