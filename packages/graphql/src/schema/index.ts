@@ -9,12 +9,15 @@ import { CommonTypes } from './Types/Commons';
 import { ProposalTypes } from './Types/Proposals';
 
 import { CommonMemberTypes } from './Types/CommonMember';
+
+import { UrlScalar } from './Shared/Scalars/Url.scalar';
 import { DateScalar } from './Shared/Scalars/Date.scalar';
+import { JsonScalar } from './Shared/Scalars/Json.scalar';
+
 import { LinkType, LinkInputType } from './Shared/Types/Link.type';
 
 import { BillingDetailsInput } from './Shared/Inputs/BillingDetails.input';
 import { SortOrder } from './Shared/Enums/SortBy.enum';
-
 
 const types = [
   UserTypes,
@@ -26,7 +29,9 @@ const types = [
   CommonMemberTypes,
 
   // Scalars
+  UrlScalar,
   DateScalar,
+  JsonScalar,
 
   // Shared Enums
   SortOrder,

@@ -14,34 +14,34 @@ input BillingDetailsInput {
 
 type Card {
   """The date, at which the item was created"""
-  createdAt: Date!
+  createdAt: DateTime!
 
-  """The main identifier of the item"""
-  id: ID!
+    """The main identifier of the item"""
+    id: ID!
 
-  """The date, at which the item was last modified"""
-  updatedAt: Date!
+    """The date, at which the item was last modified"""
+    updatedAt: DateTime!
 }
 
 type Common {
-  """The date, at which the item was created"""
-  createdAt: Date!
+    """The date, at which the item was created"""
+    createdAt: DateTime!
 
-  """List of events, that occurred in a common"""
-  events(orderBy: EventOrderByInput, skip: Int = 0, take: Int = 10): [Event!]!
+    """List of events, that occurred in a common"""
+    events(orderBy: EventOrderByInput, skip: Int = 0, take: Int = 10): [Event!]!
 
   """The main identifier of the item"""
   id: ID!
   members(orderBy: CommonMemberOrderByInput, skip: Int, take: Int): [CommonMember]!
 
-  """The name of the common as provided"""
-  name: String!
+    """The name of the common as provided"""
+    name: String!
 
-  """The date, at which the item was last modified"""
-  updatedAt: Date!
+    """The date, at which the item was last modified"""
+    updatedAt: DateTime!
 
-  """The whitelisting state of a common"""
-  whitelisted: Boolean!
+    """The whitelisting state of a common"""
+    whitelisted: Boolean!
 }
 
 type CommonMember {
@@ -78,8 +78,8 @@ input CreateCardInput {
 }
 
 input CreateCommonInput {
-  fundingCooldown: Date!
-  fundingMinimumAmount: Int!
+    fundingCooldown: DateTime!
+    fundingMinimumAmount: Int!
   fundingType: FundingType!
   name: String!
 }
@@ -116,26 +116,30 @@ input CreateVoteInput {
   proposalId: ID!
 }
 
-scalar Date
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
 
 type Event {
-  """The ID of the common, for whom the event was created"""
-  commonId: ID
+    """The ID of the common, for whom the event was created"""
+    commonId: ID
 
-  """The date, at which the item was created"""
-  createdAt: Date!
+    """The date, at which the item was created"""
+    createdAt: DateTime!
 
-  """The main identifier of the item"""
-  id: ID!
+    """The main identifier of the item"""
+    id: ID!
+    payload: JSON
 
-  """The type of the event in one of the predefined event types"""
-  type: EventType!
+    """The type of the event in one of the predefined event types"""
+    type: EventType!
 
-  """The date, at which the item was last modified"""
-  updatedAt: Date!
+    """The date, at which the item was last modified"""
+    updatedAt: DateTime!
 
-  """The ID of the event creator"""
-  userId: ID
+    """The ID of the event creator"""
+    userId: ID
 }
 
 input EventOrderByInput {
@@ -168,31 +172,36 @@ enum EventType {
 }
 
 type FundingProposal {
-  """The date, at which the item was created"""
-  createdAt: Date!
+    """The date, at which the item was created"""
+    createdAt: DateTime!
 
-  """The main identifier of the item"""
-  id: ID!
+    """The main identifier of the item"""
+    id: ID!
 
-  """The date, at which the item was last modified"""
-  updatedAt: Date!
+    """The date, at which the item was last modified"""
+    updatedAt: DateTime!
 }
 
 """The funding type of the common"""
 enum FundingType {
-  Monthly
-  OneTime
+    Monthly
+    OneTime
 }
 
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
 type JoinProposal {
-  """The date, at which the item was created"""
-  createdAt: Date!
+    """The date, at which the item was created"""
+    createdAt: DateTime!
 
-  """The main identifier of the item"""
-  id: ID!
+    """The main identifier of the item"""
+    id: ID!
 
-  """The date, at which the item was last modified"""
-  updatedAt: Date!
+    """The date, at which the item was last modified"""
+    updatedAt: DateTime!
 }
 
 type Link {
@@ -239,44 +248,49 @@ input ProposalLinkInput {
 }
 
 type Query {
-  common(where: CommonWhereUniqueInput!): Common
-  generateUserAuthToken(authId: String!): String!
+    common(where: CommonWhereUniqueInput!): Common
+    generateUserAuthToken(authId: String!): String!
 }
 
 enum SortOrder {
-  asc
-  desc
+    asc
+    desc
 }
 
+"""
+A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt.
+"""
+scalar URL
+
 type User {
-  """The date, at which the item was created"""
-  createdAt: Date!
+    """The date, at which the item was created"""
+    createdAt: DateTime!
 
-  """The display name of the user"""
-  displayName: String!
+    """The display name of the user"""
+    displayName: String!
 
-  """The first name of the user"""
-  firstName: String!
+    """The first name of the user"""
+    firstName: String!
 
   """The system Id of the user"""
   id: ID!
 
-  """The last name of the user"""
-  lastName: String!
+    """The last name of the user"""
+    lastName: String!
 
-  """The date, at which the item was last modified"""
-  updatedAt: Date!
+    """The date, at which the item was last modified"""
+    updatedAt: DateTime!
 }
 
 type Vote {
-  """The date, at which the item was created"""
-  createdAt: Date!
+    """The date, at which the item was created"""
+    createdAt: DateTime!
 
-  """The main identifier of the item"""
-  id: ID!
+    """The main identifier of the item"""
+    id: ID!
 
-  """The date, at which the item was last modified"""
-  updatedAt: Date!
+    """The date, at which the item was last modified"""
+    updatedAt: DateTime!
 }
 
 enum VoteOutcome {

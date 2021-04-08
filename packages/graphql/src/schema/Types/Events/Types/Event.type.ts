@@ -20,6 +20,8 @@ export const EventType = objectType({
       description: 'The type of the event in one of the predefined event types'
     });
 
+    t.json('payload');
+
     t.id('userId', {
       description: 'The ID of the event creator'
     });

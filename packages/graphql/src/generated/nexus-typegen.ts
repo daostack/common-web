@@ -4,17 +4,40 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
-    date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Date";
+    /**
+     * A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt.
+     */
+    url<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "URL";
+    /**
+     * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+     */
+    date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "DateTime";
+    /**
+     * The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+     */
+    json<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "JSON";
   }
 }
 declare global {
   interface NexusGenCustomOutputMethods<TypeName extends string> {
-    date<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Date";
+    /**
+     * A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt.
+     */
+    url<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "URL";
+    /**
+     * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+     */
+    date<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "DateTime";
+    /**
+     * The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+     */
+    json<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "JSON";
   }
 }
 
@@ -47,7 +70,7 @@ export interface NexusGenInputs {
     keyId: string; // String!
   }
   CreateCommonInput: { // input type
-    fundingCooldown: NexusGenScalars['Date']; // Date!
+    fundingCooldown: NexusGenScalars['DateTime']; // DateTime!
     fundingMinimumAmount: number; // Int!
     fundingType: NexusGenEnums['FundingType']; // FundingType!
     name: string; // String!
@@ -113,20 +136,22 @@ export interface NexusGenScalars {
   Float: number
   Boolean: boolean
   ID: string
-  Date: any
+  DateTime: any
+  JSON: any
+  URL: any
 }
 
 export interface NexusGenObjects {
   Card: { // root type
-    createdAt: NexusGenScalars['Date']; // Date!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
-    updatedAt: NexusGenScalars['Date']; // Date!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Common: { // root type
-    createdAt: NexusGenScalars['Date']; // Date!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
     name: string; // String!
-    updatedAt: NexusGenScalars['Date']; // Date!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
     whitelisted: boolean; // Boolean!
   }
   CommonMember: { // root type
@@ -137,21 +162,22 @@ export interface NexusGenObjects {
   }
   Event: { // root type
     commonId?: string | null; // ID
-    createdAt: NexusGenScalars['Date']; // Date!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
+    payload?: NexusGenScalars['JSON'] | null; // JSON
     type: NexusGenEnums['EventType']; // EventType!
-    updatedAt: NexusGenScalars['Date']; // Date!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
     userId?: string | null; // ID
   }
   FundingProposal: { // root type
-    createdAt: NexusGenScalars['Date']; // Date!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
-    updatedAt: NexusGenScalars['Date']; // Date!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   JoinProposal: { // root type
-    createdAt: NexusGenScalars['Date']; // Date!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
-    updatedAt: NexusGenScalars['Date']; // Date!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Link: { // root type
     title: string; // String!
@@ -160,16 +186,16 @@ export interface NexusGenObjects {
   Mutation: {};
   Query: {};
   User: { // root type
-    createdAt: NexusGenScalars['Date']; // Date!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
     firstName: string; // String!
     id: string; // ID!
     lastName: string; // String!
-    updatedAt: NexusGenScalars['Date']; // Date!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Vote: { // root type
-    createdAt: NexusGenScalars['Date']; // Date!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
-    updatedAt: NexusGenScalars['Date']; // Date!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
 }
 
@@ -185,17 +211,17 @@ export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnu
 
 export interface NexusGenFieldTypes {
   Card: { // field return type
-    createdAt: NexusGenScalars['Date']; // Date!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
-    updatedAt: NexusGenScalars['Date']; // Date!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Common: { // field return type
-    createdAt: NexusGenScalars['Date']; // Date!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
     events: NexusGenRootTypes['Event'][]; // [Event!]!
     id: string; // ID!
     members: Array<NexusGenRootTypes['CommonMember'] | null>; // [CommonMember]!
     name: string; // String!
-    updatedAt: NexusGenScalars['Date']; // Date!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
     whitelisted: boolean; // Boolean!
   }
   CommonMember: { // field return type
@@ -208,21 +234,22 @@ export interface NexusGenFieldTypes {
   }
   Event: { // field return type
     commonId: string | null; // ID
-    createdAt: NexusGenScalars['Date']; // Date!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
+    payload: NexusGenScalars['JSON'] | null; // JSON
     type: NexusGenEnums['EventType']; // EventType!
-    updatedAt: NexusGenScalars['Date']; // Date!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
     userId: string | null; // ID
   }
   FundingProposal: { // field return type
-    createdAt: NexusGenScalars['Date']; // Date!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
-    updatedAt: NexusGenScalars['Date']; // Date!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   JoinProposal: { // field return type
-    createdAt: NexusGenScalars['Date']; // Date!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
-    updatedAt: NexusGenScalars['Date']; // Date!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Link: { // field return type
     title: string; // String!
@@ -242,33 +269,33 @@ export interface NexusGenFieldTypes {
     generateUserAuthToken: string; // String!
   }
   User: { // field return type
-    createdAt: NexusGenScalars['Date']; // Date!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
     displayName: string; // String!
     firstName: string; // String!
     id: string; // ID!
     lastName: string; // String!
-    updatedAt: NexusGenScalars['Date']; // Date!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Vote: { // field return type
-    createdAt: NexusGenScalars['Date']; // Date!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
-    updatedAt: NexusGenScalars['Date']; // Date!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
 }
 
 export interface NexusGenFieldTypeNames {
   Card: { // field return type name
-    createdAt: 'Date'
+    createdAt: 'DateTime'
     id: 'ID'
-    updatedAt: 'Date'
+    updatedAt: 'DateTime'
   }
   Common: { // field return type name
-    createdAt: 'Date'
+    createdAt: 'DateTime'
     events: 'Event'
     id: 'ID'
     members: 'CommonMember'
     name: 'String'
-    updatedAt: 'Date'
+    updatedAt: 'DateTime'
     whitelisted: 'Boolean'
   }
   CommonMember: { // field return type name
@@ -281,21 +308,22 @@ export interface NexusGenFieldTypeNames {
   }
   Event: { // field return type name
     commonId: 'ID'
-    createdAt: 'Date'
+    createdAt: 'DateTime'
     id: 'ID'
+    payload: 'JSON'
     type: 'EventType'
-    updatedAt: 'Date'
+    updatedAt: 'DateTime'
     userId: 'ID'
   }
   FundingProposal: { // field return type name
-    createdAt: 'Date'
+    createdAt: 'DateTime'
     id: 'ID'
-    updatedAt: 'Date'
+    updatedAt: 'DateTime'
   }
   JoinProposal: { // field return type name
-    createdAt: 'Date'
+    createdAt: 'DateTime'
     id: 'ID'
-    updatedAt: 'Date'
+    updatedAt: 'DateTime'
   }
   Link: { // field return type name
     title: 'String'
@@ -315,17 +343,17 @@ export interface NexusGenFieldTypeNames {
     generateUserAuthToken: 'String'
   }
   User: { // field return type name
-    createdAt: 'Date'
+    createdAt: 'DateTime'
     displayName: 'String'
     firstName: 'String'
     id: 'ID'
     lastName: 'String'
-    updatedAt: 'Date'
+    updatedAt: 'DateTime'
   }
   Vote: { // field return type name
-    createdAt: 'Date'
+    createdAt: 'DateTime'
     id: 'ID'
-    updatedAt: 'Date'
+    updatedAt: 'DateTime'
   }
 }
 
