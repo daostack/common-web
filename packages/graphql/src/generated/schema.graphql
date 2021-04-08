@@ -128,6 +128,9 @@ type Event {
   """The main identifier of the item"""
   id: ID!
 
+  """The type of the event in one of the predefined event types"""
+  type: EventType!
+
   """The date, at which the item was last modified"""
   updatedAt: Date!
 
@@ -139,6 +142,29 @@ input EventOrderByInput {
   createdAt: SortOrder
   type: SortOrder
   updatedAt: SortOrder
+}
+
+enum EventType {
+  CardCreated
+  CardCvvVerificationFailed
+  CardCvvVerificationPassed
+  CommonCreated
+  CommonMemberCreated
+  CommonMemberRoleAdded
+  CommonMemberRoleRemoved
+  FundingRequestAccepted
+  FundingRequestCreated
+  FundingRequestRejected
+  JoinRequestAccepted
+  JoinRequestCreated
+  JoinRequestRejected
+  PaymentCreated
+  PaymentFailed
+  PaymentSucceeded
+  ProposalExpired
+  ProposalMajorityReached
+  UserCreated
+  VoteCreated
 }
 
 type FundingProposal {

@@ -15,6 +15,11 @@ export const EventType = objectType({
       description: 'The date, at which the item was last modified'
     });
 
+    t.nonNull.field('type', {
+      type: 'EventType',
+      description: 'The type of the event in one of the predefined event types'
+    });
+
     t.id('userId', {
       description: 'The ID of the event creator'
     });

@@ -101,6 +101,7 @@ export interface NexusGenInputs {
 
 export interface NexusGenEnums {
   CommonMemberRole: "Founder"
+  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "UserCreated" | "VoteCreated"
   FundingType: "Monthly" | "OneTime"
   SortOrder: "asc" | "desc"
   VoteOutcome: "Approve" | "Condemn"
@@ -138,6 +139,7 @@ export interface NexusGenObjects {
     commonId?: string | null; // ID
     createdAt: NexusGenScalars['Date']; // Date!
     id: string; // ID!
+    type: NexusGenEnums['EventType']; // EventType!
     updatedAt: NexusGenScalars['Date']; // Date!
     userId?: string | null; // ID
   }
@@ -208,6 +210,7 @@ export interface NexusGenFieldTypes {
     commonId: string | null; // ID
     createdAt: NexusGenScalars['Date']; // Date!
     id: string; // ID!
+    type: NexusGenEnums['EventType']; // EventType!
     updatedAt: NexusGenScalars['Date']; // Date!
     userId: string | null; // ID
   }
@@ -280,6 +283,7 @@ export interface NexusGenFieldTypeNames {
     commonId: 'ID'
     createdAt: 'Date'
     id: 'ID'
+    type: 'EventType'
     updatedAt: 'Date'
     userId: 'ID'
   }
