@@ -13,8 +13,8 @@ input BillingDetailsInput {
 }
 
 type Card {
-  """The date, at which the item was created"""
-  createdAt: DateTime!
+    """The date, at which the item was created"""
+    createdAt: DateTime!
 
     """The main identifier of the item"""
     id: ID!
@@ -30,9 +30,9 @@ type Common {
     """List of events, that occurred in a common"""
     events(orderBy: EventOrderByInput, skip: Int = 0, take: Int = 10): [Event!]!
 
-  """The main identifier of the item"""
-  id: ID!
-  members(orderBy: CommonMemberOrderByInput, skip: Int, take: Int): [CommonMember]!
+    """The main identifier of the item"""
+    id: ID!
+    members(orderBy: CommonMemberOrderByInput, skip: Int, take: Int): [CommonMember]!
 
     """The name of the common as provided"""
     name: String!
@@ -80,8 +80,8 @@ input CreateCardInput {
 input CreateCommonInput {
     fundingCooldown: DateTime!
     fundingMinimumAmount: Int!
-  fundingType: FundingType!
-  name: String!
+    fundingType: FundingType!
+    name: String!
 }
 
 input CreateFundingProposalInput {
@@ -250,6 +250,11 @@ input ProposalLinkInput {
 type Query {
     common(where: CommonWhereUniqueInput!): Common
     generateUserAuthToken(authId: String!): String!
+
+    """
+    Provide ID to fetch specific user or do not pass anything to get the currently authenticated user
+    """
+    user(userId: ID): User
 }
 
 enum SortOrder {
@@ -269,11 +274,14 @@ type User {
     """The display name of the user"""
     displayName: String!
 
+    """List of events, that occurred and are related to this user"""
+    events(orderBy: EventOrderByInput, skip: Int = 0, take: Int = 10): [Event!]!
+
     """The first name of the user"""
     firstName: String!
 
-  """The system Id of the user"""
-  id: ID!
+    """The system Id of the user"""
+    id: ID!
 
     """The last name of the user"""
     lastName: String!

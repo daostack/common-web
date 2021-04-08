@@ -267,10 +267,12 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     common: NexusGenRootTypes['Common'] | null; // Common
     generateUserAuthToken: string; // String!
+    user: NexusGenRootTypes['User'] | null; // User
   }
   User: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     displayName: string; // String!
+    events: NexusGenRootTypes['Event'][]; // [Event!]!
     firstName: string; // String!
     id: string; // ID!
     lastName: string; // String!
@@ -341,10 +343,12 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     common: 'Common'
     generateUserAuthToken: 'String'
+    user: 'User'
   }
   User: { // field return type name
     createdAt: 'DateTime'
     displayName: 'String'
+    events: 'Event'
     firstName: 'String'
     id: 'ID'
     lastName: 'String'
@@ -399,6 +403,16 @@ export interface NexusGenArgTypes {
     }
     generateUserAuthToken: { // args
       authId: string; // String!
+    }
+    user: { // args
+      userId?: string | null; // ID
+    }
+  }
+  User: {
+    events: { // args
+      orderBy?: NexusGenInputs['EventOrderByInput'] | null; // EventOrderByInput
+      skip?: number | null; // Int
+      take: number | null; // Int
     }
   }
 }

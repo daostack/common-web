@@ -4,6 +4,7 @@ import { GetUserQuery } from './Queries/GetUser.query';
 import { GenerateUserAuthTokenQuery } from './Queries/GenerateUserAuthToken.query';
 
 import { CreateUserInput, CreateUserMutation } from './Mutations/CreateUser.mutation';
+import { UserEventsExtension } from './Extensions/UserEvents.extension';
 
 export const UserTypes = [
   UserType,
@@ -13,6 +14,7 @@ export const UserTypes = [
   CreateUserInput,
   CreateUserMutation,
 
-  // Do not let me slip this into production
+  UserEventsExtension,
+
   GenerateUserAuthTokenQuery
 ];
