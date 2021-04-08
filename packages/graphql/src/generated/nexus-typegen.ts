@@ -78,6 +78,11 @@ export interface NexusGenInputs {
     outcome: NexusGenEnums['VoteOutcome']; // VoteOutcome!
     proposalId: string; // ID!
   }
+  EventOrderByInput: { // input type
+    createdAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    type?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    updatedAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
   LinkInput: { // input type
     title: string; // String!
     url: string; // String!
@@ -129,6 +134,13 @@ export interface NexusGenObjects {
     roles: NexusGenEnums['CommonMemberRole'][]; // [CommonMemberRole!]!
     userId: string; // ID!
   }
+  Event: { // root type
+    commonId?: string | null; // ID
+    createdAt: NexusGenScalars['Date']; // Date!
+    id: string; // ID!
+    updatedAt: NexusGenScalars['Date']; // Date!
+    userId?: string | null; // ID
+  }
   FundingProposal: { // root type
     createdAt: NexusGenScalars['Date']; // Date!
     id: string; // ID!
@@ -177,6 +189,7 @@ export interface NexusGenFieldTypes {
   }
   Common: { // field return type
     createdAt: NexusGenScalars['Date']; // Date!
+    events: NexusGenRootTypes['Event'][]; // [Event!]!
     id: string; // ID!
     members: Array<NexusGenRootTypes['CommonMember'] | null>; // [CommonMember]!
     name: string; // String!
@@ -190,6 +203,13 @@ export interface NexusGenFieldTypes {
     roles: NexusGenEnums['CommonMemberRole'][]; // [CommonMemberRole!]!
     user: NexusGenRootTypes['User'] | null; // User
     userId: string; // ID!
+  }
+  Event: { // field return type
+    commonId: string | null; // ID
+    createdAt: NexusGenScalars['Date']; // Date!
+    id: string; // ID!
+    updatedAt: NexusGenScalars['Date']; // Date!
+    userId: string | null; // ID
   }
   FundingProposal: { // field return type
     createdAt: NexusGenScalars['Date']; // Date!
@@ -241,6 +261,7 @@ export interface NexusGenFieldTypeNames {
   }
   Common: { // field return type name
     createdAt: 'Date'
+    events: 'Event'
     id: 'ID'
     members: 'CommonMember'
     name: 'String'
@@ -253,6 +274,13 @@ export interface NexusGenFieldTypeNames {
     id: 'ID'
     roles: 'CommonMemberRole'
     user: 'User'
+    userId: 'ID'
+  }
+  Event: { // field return type name
+    commonId: 'ID'
+    createdAt: 'Date'
+    id: 'ID'
+    updatedAt: 'Date'
     userId: 'ID'
   }
   FundingProposal: { // field return type name
@@ -299,6 +327,11 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Common: {
+    events: { // args
+      orderBy?: NexusGenInputs['EventOrderByInput'] | null; // EventOrderByInput
+      skip?: number | null; // Int
+      take: number | null; // Int
+    }
     members: { // args
       orderBy?: NexusGenInputs['CommonMemberOrderByInput'] | null; // CommonMemberOrderByInput
       skip?: number | null; // Int
