@@ -24,12 +24,12 @@ export const CommonType = objectType({
 
     t.nonNull.int('balance', {
       description: 'The currently available funds of the common',
-      resolve: (root: ICommonEntity) => Math.round(root.balance),
+      resolve: (root) => Math.round((root as ICommonEntity).balance)
     });
 
     t.nonNull.int('raised', {
       description: 'The total amount of money, raised by the common',
-      resolve: (root: ICommonEntity) => Math.round(root.raised),
+      resolve: (root) => Math.round((root as ICommonEntity).raised)
     });
 
     t.nonNull.field('metadata', {
