@@ -19,8 +19,6 @@ const schema = z.object({
     .min(0)
     .max(100000),
 
-  fundingCooldown: z.date(),
-
   founderId: z.string()
     .nonempty()
 });
@@ -34,7 +32,6 @@ export const createCommonCommand = async (command: z.infer<typeof schema>): Prom
       name: command.name,
 
       fundingType: command.fundingType,
-      fundingCooldown: command.fundingCooldown,
       fundingMinimumAmount: command.fundingMinimumAmount
     }
   });

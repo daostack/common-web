@@ -56,7 +56,6 @@ model Common {
   whitelisted Boolean @default(false)
 
   fundingType          FundingType
-  fundingCooldown      DateTime
   fundingMinimumAmount Int
 
   events  Event[]

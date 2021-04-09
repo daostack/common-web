@@ -79,7 +79,6 @@ input CreateCardInput {
 }
 
 input CreateCommonInput {
-    fundingCooldown: DateTime!
     fundingMinimumAmount: Int!
     fundingType: FundingType!
     name: String!

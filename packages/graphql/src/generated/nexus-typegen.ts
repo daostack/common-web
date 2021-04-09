@@ -70,7 +70,6 @@ export interface NexusGenInputs {
     keyId: string; // String!
   }
   CreateCommonInput: { // input type
-    fundingCooldown: NexusGenScalars['DateTime']; // DateTime!
     fundingMinimumAmount: number; // Int!
     fundingType: NexusGenEnums['FundingType']; // FundingType!
     name: string; // String!

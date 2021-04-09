@@ -8,7 +8,6 @@ export const CreateCommonInput = inputObjectType({
     t.nonNull.string('name');
 
     t.nonNull.int('fundingMinimumAmount');
-    t.nonNull.date('fundingCooldown');
 
     t.nonNull.field('fundingType', {
       type: 'FundingType'
