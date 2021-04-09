@@ -4,7 +4,7 @@ import { commonApp, commonRouter } from '../util';
 import { runtimeOptions } from '../util/constants';
 import { CommonError } from '../util/errors';
 import { responseExecutor } from '../util/responseExecutor';
-import { cancelSubscription, chargeSubscriptions, revokeMemberships } from './business';
+import { cancelSubscription, revokeMemberships } from './business';
 import { CancellationReason } from './business/cancelSubscription';
 import { subscriptionDb } from './database';
 import { env } from '../constants';
@@ -37,19 +37,13 @@ router.post('/cancel', async (req, res, next) => {
   });
 });
 
-// if (env.environment !== 'production') {
+if (env.environment !== 'production') {
   router.get('/subscription/revoke', async (req, res) => {
     await revokeMemberships();
 
     res.send('Done!');
   });
-
-  router.get('/subscription/charge', async (req, res) => {
-    await chargeSubscriptions();
-
-    res.send('Done!');
-  });
-// }
+}
 
 
 export const subscriptionsApp = functions

@@ -36,7 +36,7 @@ type Common {
 
     """The name of the common as provided"""
     name: String!
-    proposals(where: ProposalWhereInput): [Proposal!]!
+    proposals(skip: Int = 0, take: Int = 10, where: ProposalWhereInput): [Proposal!]!
 
     """The date, at which the item was last modified"""
     updatedAt: DateTime!
@@ -319,6 +319,7 @@ type User {
 
     """The last name of the user"""
     lastName: String!
+    proposals(skip: Int = 0, take: Int = 10, where: ProposalWhereInput): [Proposal!]!
 
     """The date, at which the item was last modified"""
     updatedAt: DateTime!

@@ -304,6 +304,7 @@ export interface NexusGenFieldTypes {
     firstName: string; // String!
     id: string; // ID!
     lastName: string; // String!
+    proposals: NexusGenRootTypes['Proposal'][]; // [Proposal!]!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Vote: { // field return type
@@ -387,6 +388,7 @@ export interface NexusGenFieldTypeNames {
     firstName: 'String'
     id: 'ID'
     lastName: 'String'
+    proposals: 'Proposal'
     updatedAt: 'DateTime'
   }
   Vote: { // field return type name
@@ -409,6 +411,8 @@ export interface NexusGenArgTypes {
       take?: number | null; // Int
     }
     proposals: { // args
+      skip?: number | null; // Int
+      take: number | null; // Int
       where?: NexusGenInputs['ProposalWhereInput'] | null; // ProposalWhereInput
     }
   }
@@ -451,6 +455,11 @@ export interface NexusGenArgTypes {
       orderBy?: NexusGenInputs['EventOrderByInput'] | null; // EventOrderByInput
       skip?: number | null; // Int
       take: number | null; // Int
+    }
+    proposals: { // args
+      skip?: number | null; // Int
+      take: number | null; // Int
+      where?: NexusGenInputs['ProposalWhereInput'] | null; // ProposalWhereInput
     }
   }
 }

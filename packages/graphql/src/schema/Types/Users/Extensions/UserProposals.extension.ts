@@ -1,11 +1,12 @@
-import { extendType, arg, intArg } from 'nexus';
+import { extendType, intArg, arg } from 'nexus';
 import { prisma } from '@common/core';
 
-export const CommonProposalsExtension = extendType({
-  type: 'Common',
+export const UserProposalsExtension = extendType({
+  type: 'User',
   definition(t) {
     t.nonNull.list.nonNull.field('proposals', {
       type: 'Proposal',
+      complexity: 20,
       args: {
         take: intArg({
           default: 10
@@ -20,7 +21,7 @@ export const CommonProposalsExtension = extendType({
         })
       },
       resolve: (root, args) => {
-        return prisma.common
+        return prisma.user
           .findUnique({
             where: {
               id: root.id
