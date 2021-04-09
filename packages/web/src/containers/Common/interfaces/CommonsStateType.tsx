@@ -7,5 +7,6 @@ export interface CommonsStateType {
   proposals: Proposal[];
   discussions: Discussion[];
   isDiscussionsLoaded: boolean;
+  isProposalsLoaded: boolean;
   currentDiscussion: Discussion | null;
 }

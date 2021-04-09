@@ -1,6 +1,6 @@
 import { call, put, select, takeLatest } from "redux-saga/effects";
 import { actions } from ".";
-import { Common, Discussion, User, DiscussionMessage } from "../../../shared/models";
+import { Common, Discussion, User, DiscussionMessage, Proposal } from "../../../shared/models";
 import { startLoading, stopLoading } from "../../../shared/store/actions";
 import {
   fetchCommonList,
@@ -11,7 +11,7 @@ import {
   fetchDiscussionsMessages,
 } from "./api";
 
-import { selectDiscussions } from "./selectors";
+import { selectDiscussions, selectProposals } from "./selectors";
 
 export function* getCommonsList(): Generator {
   try {
@@ -98,11 +98,38 @@ export function* loadDiscussionDetail(action: ReturnType<typeof actions.loadDiss
   }
 }
 
+export function* loadProposalList(action: ReturnType<typeof actions.loadProposalList.request>): Generator {
+  try {
+    yield put(startLoading());
+
+    const proposals: Proposal[] = (yield select(selectProposals())) as Proposal[];
+
+    const ownerIds = Array.from(new Set(proposals.map((d) => d.proposerId)));
+    const discussions_ids = proposals.map((d) => d.id);
+
+    const owners = (yield fetchOwners(ownerIds)) as User[];
+    const dMessages = (yield fetchDiscussionsMessages(discussions_ids)) as DiscussionMessage[];
+
+    const loadedProposals = proposals.map((d) => {
+      d.discussionMessage = dMessages.filter((dM) => dM.discussionId === d.id);
+      d.proposer = owners.find((o) => o.uid === d.proposerId);
+      return d;
+    });
+
+    yield put(actions.loadProposalList.success(loadedProposals));
+    yield put(stopLoading());
+  } catch (e) {
+    yield put(actions.loadProposalList.failure(e));
+    yield put(stopLoading());
+  }
+}
+
 function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
   yield takeLatest(actions.loadCommonDiscussionList.request, loadCommonDiscussionList);
   yield takeLatest(actions.loadDisscussionDetail.request, loadDiscussionDetail);
+  yield takeLatest(actions.loadProposalList.request, loadProposalList);
 }
 
 export default commonsSaga;

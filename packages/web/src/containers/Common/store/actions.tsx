@@ -36,3 +36,9 @@ export const loadDisscussionDetail = createAsyncAction(
 )<Discussion, Discussion, Error>();
 
 export const closeCurrentCommon = createStandardAction(CommonsActionTypes.CLOSE_CURRENT_COMMON)();
+
+export const loadProposalList = createAsyncAction(
+  CommonsActionTypes.LOAD_PROPOSAL_LIST,
+  CommonsActionTypes.LOAD_PROPOSAL_LIST_SUCCESS,
+  CommonsActionTypes.LOAD_PROPOSAL_LIST_FAILURE,
+)<void, Proposal[], Error>();

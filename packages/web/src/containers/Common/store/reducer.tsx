@@ -10,6 +10,7 @@ const initialState: CommonsStateType = {
   proposals: [],
   discussions: [],
   isDiscussionsLoaded: false,
+  isProposalsLoaded: false,
   currentDiscussion: null,
 };
 
@@ -47,6 +48,12 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       nextState.isDiscussionsLoaded = true;
     }),
   )
+  .handleAction(actions.loadProposalList.success, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.proposals = action.payload;
+      nextState.isProposalsLoaded = true;
+    }),
+  )
   .handleAction(actions.loadDisscussionDetail.success, (state, action) =>
     produce(state, (nextState) => {
       const disscussion = { ...action.payload };
@@ -70,6 +77,7 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       nextState.discussions = [];
       nextState.proposals = [];
       nextState.isDiscussionsLoaded = false;
+      nextState.isProposalsLoaded = false;
     }),
   );
 

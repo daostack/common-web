@@ -12,6 +12,7 @@ import {
   PreviewInformationList,
   DiscussionsComponent,
   DiscussionDetailModal,
+  ProposalsComponent,
 } from "../../components/CommonDetailContainer";
 import {
   clearCurrentDiscussion,
@@ -19,6 +20,7 @@ import {
   getCommonDetail,
   loadCommonDiscussionList,
   loadDisscussionDetail,
+  loadProposalList,
 } from "../../store/actions";
 import {
   selectCommonDetail,
@@ -26,6 +28,7 @@ import {
   selectDiscussions,
   selectIsDiscussionsLoaded,
   selectCurrentDisscussion,
+  selectIsProposalLoaded,
 } from "../../store/selectors";
 import "./index.scss";
 interface CommonDetailRouterParams {
@@ -60,6 +63,7 @@ export default function CommonDetail() {
   const proposals = useSelector(selectProposals());
   const discussions = useSelector(selectDiscussions());
   const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
+  const isProposalsLoaded = useSelector(selectIsProposalLoaded());
 
   const dispatch = useDispatch();
   const { isShowing, onOpen, onClose } = useModal(false);
@@ -95,17 +99,31 @@ export default function CommonDetail() {
           }
           break;
 
+        case "proposals":
+          if (!isProposalsLoaded) {
+            dispatch(loadProposalList.request());
+          }
+          break;
+
         default:
           break;
       }
       setTab(tab);
     },
-    [dispatch, isDiscussionsLoaded],
+    [dispatch, isDiscussionsLoaded, isProposalsLoaded],
   );
 
   const getDisscussionDetail = useCallback(
     (payload: Discussion) => {
       dispatch(loadDisscussionDetail.request(payload));
+      onOpen();
+    },
+    [dispatch, onOpen],
+  );
+
+  const getProposalDetail = useCallback(
+    (payload: Discussion) => {
+      dispatch(loadProposalList.request());
       onOpen();
     },
     [dispatch, onOpen],
@@ -182,6 +200,13 @@ export default function CommonDetail() {
                 {tab === "discussions" &&
                   (isDiscussionsLoaded ? (
                     <DiscussionsComponent discussions={discussions} loadDisscussionDetail={getDisscussionDetail} />
+                  ) : (
+                    <Loader />
+                  ))}
+
+                {tab === "proposals" &&
+                  (isProposalsLoaded ? (
+                    <ProposalsComponent proposals={proposals} loadProposalDetail={getProposalDetail} />
                   ) : (
                     <Loader />
                   ))}
