@@ -1,0 +1,438 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("Database.Url")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ---- Shared
+
+enum FundingType {
+  OneTime
+  Monthly
+}
+
+// ---- User related stuff
+
+model User {
+  id String @id
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  firstName String
+  lastName  String
+
+  email         String  @unique
+  emailVerified Boolean @default(false)
+
+  cards       Card[]
+  events      Event[]
+  memberships CommonMember[]
+
+  payments      Payment[]
+  proposals     Proposal[]
+  subscriptions Subscription[]
+}
+
+// ---- Common related stuff
+
+model Common {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+
+  balance Int @default(0)
+  raised  Int @default(0)
+
+  whitelisted Boolean @default(false)
+
+  fundingType          FundingType
+  fundingMinimumAmount Int
+
+  events  Event[]
+  members CommonMember[]
+
+  payments      Payment[]
+  subscriptions Subscription[]
+
+  proposals Proposal[]
+}
+
+model CommonMember {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  common Common @relation(fields: [commonId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  roles CommonMemberRole[]
+
+  proposals Proposal[]
+
+  commonId String
+  userId   String
+
+  Vote Vote[]
+
+  @@unique([userId, commonId])
+}
+
+enum CommonMemberRole {
+  Founder
+}
+
+// ---- Proposals
+
+model JoinProposal {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  funding      Int
+  fundingType  FundingType
+  paymentState ProposalPaymentState @default(NotAttempted)
+
+  card         Card          @relation(fields: [cardId], references: [id])
+  payment      Payment[]
+  proposal     Proposal?
+  subscription Subscription? @relation(fields: [subscriptionId], references: [id])
+
+  cardId         String
+  subscriptionId String?
+}
+
+model FundingProposal {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  proposal Proposal?
+
+  amount Int
+
+
+  fundingState FundingState @default(NotEligible)
+
+  // @todo Payout
+}
+
+enum FundingState {
+  NotEligible
+  Eligible
+
+  AwaitingApproval
+  Pending
+  Completed
+  Confirmed
+}
+
+model Proposal {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  expiresAt DateTime
+
+  title       String?
+  description String?
+
+  link   Json?
+  files  Json?
+  images Json?
+
+  ipAddress String?
+
+  votes Vote[]
+
+  type  ProposalType
+  state ProposalState @default(Countdown)
+
+  votesFor     Int @default(0)
+  votesAgainst Int @default(0)
+
+  join    JoinProposal?    @relation(fields: [joinId], references: [id])
+  funding FundingProposal? @relation(fields: [fundingId], references: [id])
+
+  user         User          @relation(fields: [userId], references: [id])
+  common       Common        @relation(fields: [commonId], references: [id])
+  commonMember CommonMember? @relation(fields: [commonMemberId], references: [id])
+
+
+  joinId    String? @unique
+  fundingId String? @unique
+
+  userId         String
+  commonId       String
+  commonMemberId String?
+}
+
+enum ProposalType {
+  FundingRequest
+  JoinRequest
+}
+
+enum ProposalState {
+  Countdown
+
+  Finalizing
+
+  Rejected
+  Accepted
+}
+
+enum ProposalPaymentState {
+  NotAttempted
+  Pending
+
+  Successful
+  Unsuccessful
+}
+
+// ---- Subscriptions
+model Subscription {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  card Card          @relation(fields: [cardId], references: [id])
+  join JoinProposal?
+
+
+  user   User   @relation(fields: [userId], references: [id])
+  common Common @relation(fields: [commonId], references: [id])
+
+  payments Payment[]
+
+  amount Int
+
+  paymentStatus SubscriptionPaymentStatus @default(AwaitingInitialPayment)
+  status        SubscriptionStatus        @default(Pending)
+
+  dueDate   DateTime
+  chargedAt DateTime?
+
+  voided Boolean @default(false)
+
+  cardId String
+
+  userId   String
+  commonId String
+}
+
+enum SubscriptionPaymentStatus {
+  AwaitingInitialPayment
+
+  Pending
+
+  Successful
+  Unsuccessful
+}
+
+enum SubscriptionStatus {
+  Pending
+
+  Active
+
+  PaymentFailed
+
+  CanceledByUser
+  CanceledByPaymentFailure
+}
+
+// ---- Votes
+
+model Vote {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  outcome VoteOutcome
+
+  proposal     Proposal     @relation(fields: [proposalId], references: [id])
+  commonMember CommonMember @relation(fields: [commonMemberId], references: [id])
+
+  commonMemberId String
+  proposalId     String
+
+  @@unique([commonMemberId, proposalId])
+}
+
+enum VoteOutcome {
+  Approve
+  Condemn
+}
+
+// ---- Payments and cards
+
+model Payment {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  processed      Boolean @default(false)
+  processedError Boolean @default(false)
+
+  type   PaymentType
+  status PaymentStatus @default(NotAttempted)
+
+  circlePaymentStatus PaymentCircleStatus?
+  circlePaymentId     String?
+
+  amount Int
+
+  card Card @relation(fields: [cardId], references: [id])
+
+  user   User   @relation(fields: [userId], references: [id])
+  common Common @relation(fields: [commonId], references: [id])
+
+  join         JoinProposal  @relation(fields: [joinId], references: [id])
+  subscription Subscription? @relation(fields: [subscriptionId], references: [id])
+
+  subscriptionId String?
+  joinId         String
+
+  userId   String
+  commonId String
+
+  cardId String
+}
+
+enum PaymentType {
+  OneTimePayment
+
+  SubscriptionInitialPayment
+  SubscriptionSequentialPayment
+}
+
+enum PaymentCircleStatus {
+  pending
+  failed
+  confirmed
+  paid
+}
+
+enum PaymentStatus {
+  NotAttempted
+  Pending
+  Successful
+  Unsuccessful
+}
+
+model Card {
+  id String @id @default(uuid())
+
+  circleCardId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  digits  String
+  network CardNetwork
+
+  cvvCheck String
+  avsCheck String
+
+
+  user     User      @relation(fields: [userId], references: [id])
+  payments Payment[]
+
+  proposal      JoinProposal[]
+  subscriptions Subscription[]
+
+  billingDetails CardBillingDetail?
+
+  userId String
+}
+
+enum CardNetwork {
+  VISA
+  MASTERCARD
+}
+
+model CardBillingDetail {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+
+  line1 String
+  line2 String?
+
+  city       String
+  country    String
+  district   String?
+  postalCode String
+
+  card Card @relation(fields: [cardId], references: [id])
+
+  cardId String
+}
+
+// ---- Events
+
+model Event {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type EventType
+
+  payload Json?
+
+  commonId String?
+  userId   String?
+
+  common Common? @relation(fields: [commonId], references: [id])
+  user   User?   @relation(fields: [userId], references: [id])
+}
+
+enum EventType {
+  CommonCreated
+
+  CommonMemberCreated
+  CommonMemberRoleAdded
+  CommonMemberRoleRemoved
+
+  JoinRequestCreated
+  JoinRequestAccepted
+  JoinRequestRejected
+
+  FundingRequestCreated
+  FundingRequestAccepted
+  FundingRequestRejected
+
+  CardCreated
+  CardCvvVerificationPassed
+  CardCvvVerificationFailed
+
+  PaymentCreated
+  PaymentSucceeded
+  PaymentFailed
+
+  ProposalMajorityReached
+  ProposalExpired
+
+  VoteCreated
+
+  UserCreated
+}

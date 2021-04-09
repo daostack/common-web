@@ -1,0 +1,58 @@
+{
+  "exclude": [
+    "dist"
+  ],
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "noImplicitReturns": true,
+    "baseUrl": "./src",
+    "resolveJsonModule": true,
+    "strict": true,
+    "declaration": true,
+    "sourceMap": true,
+    "paths": {
+      "@services": [
+        "./services/index"
+      ],
+      "@services/*": [
+        "./services/index"
+      ],
+      "@errors": [
+        "./domain/errors/index"
+      ],
+      "@toolkits": [
+        "./domain/toolkits/index"
+      ],
+      "@validation": [
+        "./domain/validation/index"
+      ],
+      "@circle/*": [
+        "./domain/clients/circle/*"
+      ],
+      "@clients": [
+        "./domain/clients/index"
+      ],
+      "@utils": [
+        "./domain/utils/index"
+      ],
+      "@utils/*": [
+        "./domain/utils/*"
+      ],
+      "@logger": [
+        "./domain/utils/logger"
+      ],
+      "@config": [
+        "./domain/config/index"
+      ],
+      "@constants": [
+        "./domain/constants/index"
+      ]
+    },
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}
