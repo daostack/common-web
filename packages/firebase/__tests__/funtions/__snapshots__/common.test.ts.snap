@@ -5,7 +5,6 @@ Array [
   "You must provide a valid URL",
   "image is a required field",
   "byline is a required field",
-  "fundingGoalDeadline is a required field",
   "contributionAmount is a required field",
 ]
 `;
