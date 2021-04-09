@@ -27,7 +27,7 @@ export const addCommonMemberRoleCommand = async (command: z.infer<typeof schema>
   }
 
   // Add the roles (if unique)
-  const updatedMemberEntity = prisma.commonMember.update({
+  const updatedMemberEntity = await prisma.commonMember.update({
     where: {
       id: command.memberId
     },
@@ -45,7 +45,13 @@ export const addCommonMemberRoleCommand = async (command: z.infer<typeof schema>
   await eventService.create({
     type: EventType.CommonMemberRoleAdded,
     commonId: memberEntity.commonId,
-    userId: memberEntity.userId
+    userId: memberEntity.userId,
+    payload: {
+      memberId: memberEntity.id,
+      addedRoles: command.roles,
+      rolesBefore: memberEntity.roles,
+      rolesAfter: updatedMemberEntity.roles
+    }
   });
 
   // Return the updated entity

@@ -14,9 +14,10 @@ const schema = z.object({
 
   type: z.enum(Object.keys(EventType) as [(keyof typeof EventType)]),
 
-  payload: z.string()
-    .optional()
-    .nullable()
+  payload: z.union([
+    z.string(),
+    z.any()
+  ])
 });
 
 export const createEventCommand = async (command: z.infer<typeof schema>): Promise<void> => {
