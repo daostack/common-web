@@ -2,7 +2,7 @@
   "name": "@common/functions",
   "main": "dist/index.js",
   "private": true,
-  "version": "1.9.10-rc.1",
+  "version": "1.9.11-rc.0",
   "description": "Cloud Functions for Common",
   "engines": {
     "node": "12"
