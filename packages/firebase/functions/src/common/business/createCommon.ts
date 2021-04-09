@@ -27,8 +27,6 @@ const createCommonDataValidationScheme = yup.object({
 
   description: yup.string(),
 
-  fundingGoalDeadline: yup.number().required(),
-
   contributionAmount: yup.number().min(0).required(),
 
   contributionType: yup
@@ -39,7 +37,9 @@ const createCommonDataValidationScheme = yup.object({
 
   rules: yup.array(commonRuleValidationSchema).optional(),
 
-  links: yup.array(linkValidationSchema).optional()
+  links: yup.array(linkValidationSchema).optional(),
+
+  zeroContribution: yup.boolean(),
 });
 
 type CreateCommonPayload = yup.InferType<typeof createCommonDataValidationScheme>;
@@ -73,7 +73,7 @@ export const createCommon = async (
     description,
     contributionType,
     contributionAmount,
-    fundingGoalDeadline
+    zeroContribution,
   } = payload;
 
   // @todo Check if user exists
@@ -81,7 +81,6 @@ export const createCommon = async (
   const common = await commonDb.add({
     name,
     image,
-    fundingGoalDeadline,
 
     rules: (rules as ICommonRule[]) || [],
     links: (links as ICommonLink[]) || [],
@@ -97,7 +96,8 @@ export const createCommon = async (
       contributionType,
 
       founderId: userId,
-      minFeeToJoin: contributionAmount
+      minFeeToJoin: contributionAmount,
+      zeroContribution,
     },
 
     register: 'na'

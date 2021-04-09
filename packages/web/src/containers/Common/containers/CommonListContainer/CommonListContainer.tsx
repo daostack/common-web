@@ -51,16 +51,19 @@ export default function CommonListContainer() {
 
   const currentCommons = useMemo(() => [...commons].splice(0, COMMON_PAGE_SIZE * page), [commons, page]);
 
-  return loading ? (
-    <Loader />
-  ) : (
+  return (
     <div className="common-list-wrapper">
       <h1 className="page-title">Explore commons</h1>
-      <div className="common-list">
-        {currentCommons.map((c) => (
-          <CommonListItem common={c} key={c.id} />
-        ))}
-      </div>
+
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className="common-list">
+          {currentCommons.map((c) => (
+            <CommonListItem common={c} key={c.id} />
+          ))}
+        </div>
+      )}
 
       {commons.length !== currentCommons.length && (
         <div className="loading" ref={loader}>
