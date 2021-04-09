@@ -7,21 +7,30 @@ import { CreateFundingProposalInput, CreateFundingProposalMutation } from './Mut
 import { ProposalLinkInput } from './Inputs/ProposalLink.input';
 import { ProposalFileInput } from './Inputs/ProposalFile.input';
 import { ProposalImageInput } from './Inputs/ProposalImage.input';
+import { ProposalWhereInput } from './Inputs/ProposalWhere.input';
+
 import { FinalizeProposalMutation } from './Mutations/FinalizeProposalMutation';
 
+import { ProposalTypeEnum } from './Enums/ProposalType.enum';
+import { ProposalType } from './Types/Proposal.type';
+
 export const ProposalTypes = [
+  ProposalType,
+
   JoinProposalType,
   FundingProposalType,
 
+  ProposalWhereInput,
   CreateJoinProposalInput,
-  CreateJoinProposalMutation,
+  CreateFundingProposalInput,
 
   FinalizeProposalMutation,
-
-  CreateFundingProposalInput,
+  CreateJoinProposalMutation,
   CreateFundingProposalMutation,
 
   ProposalLinkInput,
   ProposalFileInput,
-  ProposalImageInput
+  ProposalImageInput,
+
+  ProposalTypeEnum
 ];

@@ -17,6 +17,8 @@ import { JsonScalar } from './Shared/Scalars/Json.scalar';
 import { LinkType, LinkInputType } from './Shared/Types/Link.type';
 
 import { BillingDetailsInput } from './Shared/Inputs/BillingDetails.input';
+import { StringFilterInput } from './Shared/Inputs/StringFilter.input';
+
 import { SortOrder } from './Shared/Enums/SortBy.enum';
 
 const types = [
@@ -41,6 +43,7 @@ const types = [
 
   // Shared Input Types
   LinkInputType,
+  StringFilterInput,
   BillingDetailsInput
 ];
 

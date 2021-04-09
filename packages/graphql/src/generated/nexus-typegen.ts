@@ -120,14 +120,30 @@ export interface NexusGenInputs {
     title: string; // String!
     url: string; // String!
   }
+  ProposalWhereInput: { // input type
+    type?: NexusGenEnums['ProposalType'] | null; // ProposalType
+  }
+  StringFilter: { // input type
+    contains?: string | null; // String
+    endsWith?: string | null; // String
+    equals?: string | null; // String
+    gt?: string | null; // String
+    gte?: string | null; // String
+    in?: string[] | null; // [String!]
+    lt?: string | null; // String
+    lte?: string | null; // String
+    notIn?: string[] | null; // [String!]
+    startsWith?: string | null; // String
+  }
 }
 
 export interface NexusGenEnums {
-  CommonMemberRole: "Founder"
-  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "UserCreated" | "VoteCreated"
-  FundingType: "Monthly" | "OneTime"
-  SortOrder: "asc" | "desc"
-  VoteOutcome: "Approve" | "Condemn"
+  CommonMemberRole: 'Founder'
+  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'ProposalExpired' | 'ProposalMajorityReached' | 'UserCreated' | 'VoteCreated'
+  FundingType: 'Monthly' | 'OneTime'
+  ProposalType: 'FundingRequest' | 'JoinRequest'
+  SortOrder: 'asc' | 'desc'
+  VoteOutcome: 'Approve' | 'Condemn'
 }
 
 export interface NexusGenScalars {
@@ -184,6 +200,12 @@ export interface NexusGenObjects {
     url: string; // String!
   }
   Mutation: {};
+  Proposal: { // root type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // ID!
+    type: NexusGenEnums['ProposalType']; // ProposalType!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   Query: {};
   User: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -221,6 +243,7 @@ export interface NexusGenFieldTypes {
     id: string; // ID!
     members: Array<NexusGenRootTypes['CommonMember'] | null>; // [CommonMember]!
     name: string; // String!
+    proposals: NexusGenRootTypes['Proposal'][]; // [Proposal!]!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     whitelisted: boolean; // Boolean!
   }
@@ -264,6 +287,12 @@ export interface NexusGenFieldTypes {
     createVote: NexusGenRootTypes['Vote']; // Vote!
     finalizeProposal: boolean; // Boolean!
   }
+  Proposal: { // field return type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // ID!
+    type: NexusGenEnums['ProposalType']; // ProposalType!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   Query: { // field return type
     common: NexusGenRootTypes['Common'] | null; // Common
     generateUserAuthToken: string; // String!
@@ -297,6 +326,7 @@ export interface NexusGenFieldTypeNames {
     id: 'ID'
     members: 'CommonMember'
     name: 'String'
+    proposals: 'Proposal'
     updatedAt: 'DateTime'
     whitelisted: 'Boolean'
   }
@@ -340,6 +370,12 @@ export interface NexusGenFieldTypeNames {
     createVote: 'Vote'
     finalizeProposal: 'Boolean'
   }
+  Proposal: { // field return type name
+    createdAt: 'DateTime'
+    id: 'ID'
+    type: 'ProposalType'
+    updatedAt: 'DateTime'
+  }
   Query: { // field return type name
     common: 'Common'
     generateUserAuthToken: 'String'
@@ -372,6 +408,9 @@ export interface NexusGenArgTypes {
       orderBy?: NexusGenInputs['CommonMemberOrderByInput'] | null; // CommonMemberOrderByInput
       skip?: number | null; // Int
       take?: number | null; // Int
+    }
+    proposals: { // args
+      where?: NexusGenInputs['ProposalWhereInput'] | null; // ProposalWhereInput
     }
   }
   Mutation: {

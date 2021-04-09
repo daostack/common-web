@@ -36,6 +36,7 @@ type Common {
 
     """The name of the common as provided"""
     name: String!
+    proposals(where: ProposalWhereInput): [Proposal!]!
 
     """The date, at which the item was last modified"""
     updatedAt: DateTime!
@@ -221,30 +222,51 @@ input LinkInput {
 }
 
 type Mutation {
-  createCard(input: CreateCardInput!): Card!
-  createCommon(input: CreateCommonInput!): Common!
-  createFundingProposal(input: CreateFundingProposalInput!): FundingProposal!
+    createCard(input: CreateCardInput!): Card!
+    createCommon(input: CreateCommonInput!): Common!
+    createFundingProposal(input: CreateFundingProposalInput!): FundingProposal!
 
-  """Create new proposal of type JOIN."""
-  createJoinProposal(input: CreateJoinProposalInput!): JoinProposal!
+    """Create new proposal of type JOIN."""
+    createJoinProposal(input: CreateJoinProposalInput!): JoinProposal!
 
-  """Creates new user in the system"""
-  createUser(input: CreateUserInput!): User!
-  createVote(input: CreateVoteInput!): Vote!
-  finalizeProposal(proposalId: ID!): Boolean!
+    """Creates new user in the system"""
+    createUser(input: CreateUserInput!): User!
+    createVote(input: CreateVoteInput!): Vote!
+    finalizeProposal(proposalId: ID!): Boolean!
+}
+
+type Proposal {
+    """The date, at which the item was created"""
+    createdAt: DateTime!
+
+    """The main identifier of the item"""
+    id: ID!
+    type: ProposalType!
+
+    """The date, at which the item was last modified"""
+    updatedAt: DateTime!
 }
 
 input ProposalFileInput {
-  value: String!
+    value: String!
 }
 
 input ProposalImageInput {
-  value: String!
+    value: String!
 }
 
 input ProposalLinkInput {
-  title: String!
-  url: String!
+    title: String!
+    url: String!
+}
+
+enum ProposalType {
+    FundingRequest
+    JoinRequest
+}
+
+input ProposalWhereInput {
+    type: ProposalType
 }
 
 type Query {
@@ -260,6 +282,19 @@ type Query {
 enum SortOrder {
     asc
     desc
+}
+
+input StringFilter {
+    contains: String
+    endsWith: String
+    equals: String
+    gt: String
+    gte: String
+    in: [String!]
+    lt: String
+    lte: String
+    notIn: [String!]
+    startsWith: String
 }
 
 """
