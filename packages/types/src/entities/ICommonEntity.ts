@@ -91,8 +91,8 @@ export interface ICommonLink {
 }
 
 export interface ICommonMetadata {
-  byline: string;
-  description: string;
+  byline?: string;
+  description?: string;
 
   /**
    * The id of the user, who created the common
