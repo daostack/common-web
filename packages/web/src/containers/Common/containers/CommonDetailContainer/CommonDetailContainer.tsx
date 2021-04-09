@@ -1,20 +1,31 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
+import { Loader } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
 import { useModal } from "../../../../shared/hooks";
+import { Discussion } from "../../../../shared/models";
+import { getLoading } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
 import {
   AboutTabComponent,
   PreviewInformationList,
   DiscussionsComponent,
+  DiscussionDetailModal,
 } from "../../components/CommonDetailContainer";
-import { getCommonDetail, loadCommonDiscussionList } from "../../store/actions";
+import {
+  clearCurrentDiscussion,
+  closeCurrentCommon,
+  getCommonDetail,
+  loadCommonDiscussionList,
+  loadDisscussionDetail,
+} from "../../store/actions";
 import {
   selectCommonDetail,
   selectProposals,
   selectDiscussions,
   selectIsDiscussionsLoaded,
+  selectCurrentDisscussion,
 } from "../../store/selectors";
 import "./index.scss";
 interface CommonDetailRouterParams {
@@ -43,17 +54,20 @@ const tabs = [
 export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
   const [tab, setTab] = useState("about");
+  const loading = useSelector(getLoading());
   const common = useSelector(selectCommonDetail());
+  const currentDisscussion = useSelector(selectCurrentDisscussion());
   const proposals = useSelector(selectProposals());
   const discussions = useSelector(selectDiscussions());
   const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
+
   const dispatch = useDispatch();
   const { isShowing, onOpen, onClose } = useModal(false);
 
   useEffect(() => {
     dispatch(getCommonDetail.request(id));
     return () => {
-      dispatch(getCommonDetail.success(null));
+      dispatch(closeCurrentCommon());
     };
   }, [dispatch, id]);
 
@@ -89,11 +103,26 @@ export default function CommonDetail() {
     [dispatch, isDiscussionsLoaded],
   );
 
-  return (
+  const getDisscussionDetail = useCallback(
+    (payload: Discussion) => {
+      dispatch(loadDisscussionDetail.request(payload));
+      onOpen();
+    },
+    [dispatch, onOpen],
+  );
+
+  const closeModalHandler = useCallback(() => {
+    onClose();
+    dispatch(clearCurrentDiscussion());
+  }, [onClose, dispatch]);
+
+  return loading && !common ? (
+    <Loader />
+  ) : (
     common && (
       <>
-        <Modal isShowing={isShowing} onClose={onClose}>
-          <div>hello</div>
+        <Modal isShowing={isShowing} onClose={closeModalHandler}>
+          <DiscussionDetailModal disscussion={currentDisscussion} common={common} />
         </Modal>
         <div className="common-detail-wrapper">
           <div className="main-information-block">
@@ -150,7 +179,12 @@ export default function CommonDetail() {
             <div className="inner-main-content-wrapper">
               <div className="tab-content-wrapper">
                 {tab === "about" && <AboutTabComponent common={common} />}
-                {tab === "discussions" && <DiscussionsComponent discussions={discussions} />}
+                {tab === "discussions" &&
+                  (isDiscussionsLoaded ? (
+                    <DiscussionsComponent discussions={discussions} loadDisscussionDetail={getDisscussionDetail} />
+                  ) : (
+                    <Loader />
+                  ))}
               </div>
               <div className="sidebar-wrapper">
                 <PreviewInformationList

@@ -1,0 +1,33 @@
+{
+  "name": "@common/core",
+  "version": "1.9.10-rc.0",
+  "author": "Alexander Ivanov @alexander2001i",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "yarn compile:watch",
+    "compile": "tsc -p tsconfig.json && yarn fix:paths",
+    "compile:watch": "tsc-watch --onSuccess \"yarn fix:paths\"",
+    "fix:paths": "tscpaths -p tsconfig.json -s ./src -o ./dist"
+  },
+  "devDependencies": {
+    "@types/request-ip": "^0.0.35",
+    "@types/uuid": "^8.3.0",
+    "prisma": "^2.20.1",
+    "ts-node-dev": "^1.1.6",
+    "tsc-watch": "^4.2.9",
+    "tscpaths": "^0.0.9",
+    "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "@common/queues": "^1.9.10-rc.0",
+    "@prisma/client": "^2.20.1",
+    "axios": "^0.21.1",
+    "date-fns": "^2.19.0",
+    "dotenv": "^8.2.0",
+    "firebase-admin": "9.5.0",
+    "tsconfig-paths": "^3.9.0",
+    "winston": "^3.3.3",
+    "winston-slack-webhook-transport": "^2.0.1",
+    "zod": "^1.11.13"
+  }
+}

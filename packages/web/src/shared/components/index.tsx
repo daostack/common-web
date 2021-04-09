@@ -6,3 +6,4 @@ export { default as NotFound } from "./NotFound";
 export * from "./SocialLogin";
 export * from "./Footer";
 export * from "./Header";
+export * from "./Loader";

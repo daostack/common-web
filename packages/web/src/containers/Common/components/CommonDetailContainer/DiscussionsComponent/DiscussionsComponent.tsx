@@ -5,9 +5,10 @@ import "./index.scss";
 
 interface DiscussionsComponentProps {
   discussions: Discussion[];
+  loadDisscussionDetail: Function;
 }
 
-export default function DiscussionsComponent({ discussions }: DiscussionsComponentProps) {
+export default function DiscussionsComponent({ discussions, loadDisscussionDetail }: DiscussionsComponentProps) {
   const date = new Date();
   return (
     <div className="discussions-component-wrapper">
@@ -33,7 +34,11 @@ export default function DiscussionsComponent({ discussions }: DiscussionsCompone
               <img src="/icons/discussions.svg" alt="discussions" />
               <div className="count">{d.discussionMessage?.length || 0}</div>
             </div>
-            {(d?.discussionMessage?.length || 0) > 0 && <div className="view-all-discussions">View discussions</div>}
+            {(d?.discussionMessage?.length || 0) > 0 && (
+              <div className="view-all-discussions" onClick={() => loadDisscussionDetail(d)}>
+                View discussions
+              </div>
+            )}
           </div>
         </div>
       ))}

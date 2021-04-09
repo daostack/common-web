@@ -50,6 +50,7 @@ export const subscriptionsApp = functions
   .runWith(runtimeOptions)
   .https.onRequest(commonApp(router, {
     unauthenticatedRoutes: [
-      '/subscription/revoke'
+      '/subscription/revoke',
+      '/subscription/charge'
     ]
   }));

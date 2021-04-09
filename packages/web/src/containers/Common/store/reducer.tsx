@@ -10,6 +10,7 @@ const initialState: CommonsStateType = {
   proposals: [],
   discussions: [],
   isDiscussionsLoaded: false,
+  currentDiscussion: null,
 };
 
 type Action = ActionType<typeof actions>;
@@ -44,6 +45,31 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
     produce(state, (nextState) => {
       nextState.discussions = action.payload;
       nextState.isDiscussionsLoaded = true;
+    }),
+  )
+  .handleAction(actions.loadDisscussionDetail.success, (state, action) =>
+    produce(state, (nextState) => {
+      const disscussion = { ...action.payload };
+      const { discussions } = state;
+      disscussion.isLoaded = true;
+      const index = discussions.findIndex((d) => d.id === disscussion.id);
+      discussions[index] = disscussion;
+      nextState.discussions = discussions;
+      nextState.currentDiscussion = disscussion;
+    }),
+  )
+  .handleAction(actions.clearCurrentDiscussion, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.currentDiscussion = null;
+    }),
+  )
+  .handleAction(actions.closeCurrentCommon, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.currentDiscussion = null;
+      nextState.common = null;
+      nextState.discussions = [];
+      nextState.proposals = [];
+      nextState.isDiscussionsLoaded = false;
     }),
   );
 
