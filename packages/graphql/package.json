@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@common/core": "1.9.10-rc.0",
-    "@prisma/client": "2.19.0",
+    "@prisma/client": "^2.20.1",
     "firebase-admin": "9.5.0",
     "graphql-query-complexity": "^0.8.0",
     "graphql-scalars": "^1.9.0",
