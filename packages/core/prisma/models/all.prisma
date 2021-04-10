@@ -1,44 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-datasource db {
-  provider = "postgresql"
-  url      = env("Database.Url")
-}
-
-generator client {
-  provider = "prisma-client-js"
-}
-
-// ---- Shared
-
-enum FundingType {
-  OneTime
-  Monthly
-}
-
-// ---- User related stuff
-
-model User {
-  id String @id
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  firstName String
-  lastName  String
-
-  email         String  @unique
-  emailVerified Boolean @default(false)
-
-  cards       Card[]
-  events      Event[]
-  memberships CommonMember[]
-
-  payments      Payment[]
-  proposals     Proposal[]
-  subscriptions Subscription[]
-}
 
 // ---- Common related stuff
 

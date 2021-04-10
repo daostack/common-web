@@ -7,7 +7,8 @@
     "dev": "yarn compile:watch",
     "compile": "tsc -p tsconfig.json && yarn fix:paths",
     "compile:watch": "tsc-watch --onSuccess \"yarn fix:paths\"",
-    "fix:paths": "tscpaths -p tsconfig.json -s ./src -o ./dist"
+    "fix:paths": "tscpaths -p tsconfig.json -s ./src -o ./dist",
+    "compile:schema": "cat ./prisma/base.prisma ./prisma/models/*.prisma > ./prisma/schema.prisma && prisma format"
   },
   "devDependencies": {
     "@types/request-ip": "^0.0.35",
