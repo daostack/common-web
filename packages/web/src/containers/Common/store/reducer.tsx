@@ -12,6 +12,7 @@ const initialState: CommonsStateType = {
   isDiscussionsLoaded: false,
   isProposalsLoaded: false,
   currentDiscussion: null,
+  currentProposal: null,
 };
 
 type Action = ActionType<typeof actions>;

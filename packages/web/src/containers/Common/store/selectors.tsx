@@ -11,3 +11,4 @@ export const selectDiscussions = () => createSelector(selectCommons, (state) => 
 export const selectIsDiscussionsLoaded = () => createSelector(selectCommons, (state) => state.isDiscussionsLoaded);
 export const selectCurrentDisscussion = () => createSelector(selectCommons, (state) => state.currentDiscussion);
 export const selectIsProposalLoaded = () => createSelector(selectCommons, (state) => state.isProposalsLoaded);
+export const selectCurrentProposal = () => createSelector(selectCommons, (state) => state.currentProposal);

@@ -14,6 +14,7 @@ import {
   DiscussionDetailModal,
   ProposalsComponent,
 } from "../../components/CommonDetailContainer";
+import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
 import {
   clearCurrentDiscussion,
   closeCurrentCommon,
@@ -29,6 +30,7 @@ import {
   selectIsDiscussionsLoaded,
   selectCurrentDisscussion,
   selectIsProposalLoaded,
+  selectCurrentProposal,
 } from "../../store/selectors";
 import "./index.scss";
 interface CommonDetailRouterParams {
@@ -64,6 +66,7 @@ export default function CommonDetail() {
   const discussions = useSelector(selectDiscussions());
   const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
   const isProposalsLoaded = useSelector(selectIsProposalLoaded());
+  const currentProposal = useSelector(selectCurrentProposal());
 
   const dispatch = useDispatch();
   const { isShowing, onOpen, onClose } = useModal(false);
@@ -140,7 +143,8 @@ export default function CommonDetail() {
     common && (
       <>
         <Modal isShowing={isShowing} onClose={closeModalHandler}>
-          <DiscussionDetailModal disscussion={currentDisscussion} common={common} />
+          {tab === "discussions" && <DiscussionDetailModal disscussion={currentDisscussion} common={common} />}
+          {tab === "proposals" && <ProposalDetailModal proposal={currentProposal} common={common} />}
         </Modal>
         <div className="common-detail-wrapper">
           <div className="main-information-block">

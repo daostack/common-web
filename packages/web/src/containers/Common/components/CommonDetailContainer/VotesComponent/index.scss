@@ -1,0 +1,20 @@
+.votes-wrapper {
+  width: 280px;
+  margin: 0 auto;
+  .progress {
+    border-radius: 100px;
+    .for,
+    .against {
+      height: 8px;
+      display: inline-block;
+    }
+    .for {
+      background-color: #6ee569;
+      border-radius: 100px;
+    }
+    .against {
+      background-color: #ff603e;
+      border-radius: 100px;
+    }
+  }
+}

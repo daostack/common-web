@@ -1,7 +1,9 @@
 import React from "react";
 import { Proposal } from "../../../../../shared/models";
-import { getDaysAgo, getUserName } from "../../../../../shared/utils";
-
+import { formatPrice, getDaysAgo, getUserName } from "../../../../../shared/utils";
+import { ProposalCountDown } from "../ProposalCountDown";
+import { VotesComponent } from "../VotesComponent";
+import "./index.scss";
 interface DiscussionsComponentProps {
   proposals: Proposal[];
   loadProposalDetail: Function;
@@ -10,9 +12,20 @@ interface DiscussionsComponentProps {
 export default function ProposalsComponent({ proposals, loadProposalDetail }: DiscussionsComponentProps) {
   const date = new Date();
   return (
-    <div className="discussions-component-wrapper">
+    <div className="proposals-component-wrapper">
       {proposals.map((d) => (
         <div className="discussion-item-wrapper" key={d.id}>
+          <ProposalCountDown date={new Date((d?.createdAt.seconds + d.countdownPeriod) * 1000)} />
+          <div className="proposal-charts-wrapper">
+            <div className="proposal-title">{d.description.title}</div>
+            <div className="requested-amount">
+              Requested amount <div className="amount">{formatPrice(d.fundingRequest?.amount)}</div>
+            </div>
+            <div className="votes">
+              <VotesComponent proposal={d} />
+            </div>
+            <div className="line"></div>
+          </div>
           <div className="discussion-top-bar">
             <div className="img-wrapper">
               <img src={d.proposer?.photoURL} alt={getUserName(d.proposer)} />
@@ -23,7 +36,6 @@ export default function ProposalsComponent({ proposals, loadProposalDetail }: Di
             </div>
           </div>
           <div className="discussion-content">
-            <div className="title">{d.description.title}</div>
             <div className="description">{d.description.description}</div>
             {/* <div className="read-more">Read More</div> */}
             <div className="line"></div>
