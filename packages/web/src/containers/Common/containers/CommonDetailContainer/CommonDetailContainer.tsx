@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { Loader } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
 import { useModal } from "../../../../shared/hooks";
-import { Discussion } from "../../../../shared/models";
+import { Discussion, Proposal } from "../../../../shared/models";
 import { getLoading } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
 import {
@@ -21,6 +21,7 @@ import {
   getCommonDetail,
   loadCommonDiscussionList,
   loadDisscussionDetail,
+  loadProposalDetail,
   loadProposalList,
 } from "../../store/actions";
 import {
@@ -125,8 +126,8 @@ export default function CommonDetail() {
   );
 
   const getProposalDetail = useCallback(
-    (payload: Discussion) => {
-      dispatch(loadProposalList.request());
+    (payload: Proposal) => {
+      dispatch(loadProposalDetail.request(payload));
       onOpen();
     },
     [dispatch, onOpen],

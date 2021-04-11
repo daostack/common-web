@@ -4,6 +4,7 @@ import { Common, Proposal } from "../../../../../shared/models";
 import { formatPrice, getDaysAgo, getUserName } from "../../../../../shared/utils";
 import { ChatComponent } from "../ChatComponent";
 import { ProposalCountDown } from "../ProposalCountDown";
+import { VotesComponent } from "../VotesComponent";
 import "./index.scss";
 
 interface DiscussionDetailModalProps {
@@ -29,6 +30,7 @@ export default function ProposalDetailModal({ proposal, common }: DiscussionDeta
           </div>
           <div className="discussion-information-wrapper">
             <div className="discussion-name">{proposal.description.title}</div>
+            <VotesComponent proposal={proposal} />
             <div className="requested-amount">
               Requested amount <div className="amount">{formatPrice(common.balance)}</div>
             </div>

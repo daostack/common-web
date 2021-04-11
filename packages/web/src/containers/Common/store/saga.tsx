@@ -124,12 +124,37 @@ export function* loadProposalList(action: ReturnType<typeof actions.loadProposal
   }
 }
 
+export function* loadProposalDetail(action: ReturnType<typeof actions.loadProposalDetail.request>): Generator {
+  try {
+    yield put(startLoading());
+    const proposal = { ...action.payload };
+    if (!proposal.isLoaded) {
+      const { discussionMessage } = action.payload;
+
+      const ownerIds = Array.from(new Set(discussionMessage?.map((d) => d.ownerId)));
+      const owners = (yield fetchOwners(ownerIds)) as User[];
+      const loadedDisscussionMessage = discussionMessage?.map((d) => {
+        d.owner = owners.find((o) => o.uid === d.ownerId);
+        return d;
+      });
+      proposal.discussionMessage = loadedDisscussionMessage;
+    }
+
+    yield put(actions.loadProposalDetail.success(proposal));
+    yield put(stopLoading());
+  } catch (e) {
+    yield put(actions.loadProposalDetail.failure(e));
+    yield put(stopLoading());
+  }
+}
+
 function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
   yield takeLatest(actions.loadCommonDiscussionList.request, loadCommonDiscussionList);
   yield takeLatest(actions.loadDisscussionDetail.request, loadDiscussionDetail);
   yield takeLatest(actions.loadProposalList.request, loadProposalList);
+  yield takeLatest(actions.loadProposalDetail.request, loadProposalDetail);
 }
 
 export default commonsSaga;

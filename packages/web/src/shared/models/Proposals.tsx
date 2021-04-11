@@ -18,7 +18,7 @@ export interface Proposal {
   updatedAt: Time;
   votesAgainst?: number;
   votesFor?: number;
-
   proposer?: User;
   discussionMessage?: DiscussionMessage[];
+  isLoaded?: boolean;
 }

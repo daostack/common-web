@@ -4,7 +4,7 @@
   display: flex;
   .left-side {
     flex: 40;
-    margin-right: 24px;
+    margin-right: 48px;
     .top-side {
       justify-content: center;
       display: flex;
@@ -86,6 +86,7 @@
           color: #001a36;
           display: flex;
           margin-bottom: 24px;
+          margin-top: 24px;
           .amount {
             font-family: NunitoSans;
             font-size: 18px;
@@ -116,6 +117,7 @@
   }
   .right-side {
     flex: 60;
+    margin: -30px;
   }
 
   .line {
