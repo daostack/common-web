@@ -1,0 +1,14 @@
+model Discussion {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  topic       String
+  description String
+
+  latestMessage DateTime @default(now())
+
+  subscriptions DiscussionSubscription[]
+  messages      DiscussionMessage[]
+}

@@ -1,0 +1,30 @@
+model Subscription {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  card Card          @relation(fields: [cardId], references: [id])
+  join JoinProposal?
+
+
+  user   User   @relation(fields: [userId], references: [id])
+  common Common @relation(fields: [commonId], references: [id])
+
+  payments Payment[]
+
+  amount Int
+
+  paymentStatus SubscriptionPaymentStatus @default(AwaitingInitialPayment)
+  status        SubscriptionStatus        @default(Pending)
+
+  dueDate   DateTime
+  chargedAt DateTime?
+
+  voided Boolean @default(false)
+
+  cardId String
+
+  userId   String
+  commonId String
+}

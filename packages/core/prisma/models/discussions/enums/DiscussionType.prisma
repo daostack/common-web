@@ -1,0 +1,4 @@
+enum DiscussionType {
+  ProposalDiscussion
+  CommonDiscussion
+}

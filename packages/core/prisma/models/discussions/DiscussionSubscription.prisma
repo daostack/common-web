@@ -1,0 +1,14 @@
+model DiscussionSubscription {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  latestMessageSeen DateTime @default(now())
+
+  type DiscussionSubscriptionType @default(AllNotifications)
+
+  discussion Discussion @relation(fields: [discussionId], references: [id])
+
+  discussionId String
+}

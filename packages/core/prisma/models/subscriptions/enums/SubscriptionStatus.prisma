@@ -1,0 +1,10 @@
+enum SubscriptionStatus {
+  Pending
+
+  Active
+
+  PaymentFailed
+
+  CanceledByUser
+  CanceledByPaymentFailure
+}
