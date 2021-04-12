@@ -47,13 +47,28 @@ export const createDiscussionCommand = async (payload: z.infer<typeof schema>): 
     throw new CommonError('Cannot create discussion in a common that you are not member of!');
   }
 
-  // @todo If there is proposal id check if it is from the common
+  // If there is proposal check if that proposal is from the same common
+  if (payload.proposalId) {
+    if (
+      !(await prisma.proposal.count({
+        where: {
+          id: payload.proposalId,
+          commonId: payload.commonId
+        }
+      }))
+    ) {
+      throw new CommonError('Proposal Common Mismatch', {
+        description: 'The proposal is not from the common'
+      });
+    }
+  }
 
   // Create the discussion
   const discussion = await prisma.discussion.create({
     data: {
       userId: payload.userId,
       commonId: payload.commonId,
+      proposalId: payload.proposalId,
 
       topic: payload.topic.trim(),
       description: payload.description.trim(),

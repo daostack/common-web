@@ -4,9 +4,10 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -143,6 +144,9 @@ export interface NexusGenInputs {
   ProposalWhereInput: { // input type
     type?: NexusGenEnums['ProposalType'] | null; // ProposalType
   }
+  ProposalWhereUniqueInput: { // input type
+    id: NexusGenScalars['UUID']; // UUID!
+  }
   StringFilter: { // input type
     contains?: string | null; // String
     endsWith?: string | null; // String
@@ -203,7 +207,7 @@ export interface NexusGenObjects {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description: string; // String!
     id: NexusGenScalars['UUID']; // UUID!
-    lastMessage: NexusGenScalars['DateTime']; // DateTime!
+    latestMessage: NexusGenScalars['DateTime']; // DateTime!
     topic: string; // String!
     type: NexusGenEnums['DiscussionType']; // DiscussionType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
@@ -300,7 +304,7 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description: string; // String!
     id: NexusGenScalars['UUID']; // UUID!
-    lastMessage: NexusGenScalars['DateTime']; // DateTime!
+    latestMessage: NexusGenScalars['DateTime']; // DateTime!
     messages: NexusGenRootTypes['DiscussionMessage'][]; // [DiscussionMessage!]!
     topic: string; // String!
     type: NexusGenEnums['DiscussionType']; // DiscussionType!
@@ -349,6 +353,7 @@ export interface NexusGenFieldTypes {
   }
   Proposal: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    discussions: NexusGenRootTypes['Discussion'][]; // [Discussion!]!
     id: string; // ID!
     type: NexusGenEnums['ProposalType']; // ProposalType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
@@ -357,6 +362,7 @@ export interface NexusGenFieldTypes {
     common: NexusGenRootTypes['Common'] | null; // Common
     discussion: NexusGenRootTypes['Discussion'] | null; // Discussion
     generateUserAuthToken: string; // String!
+    proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
     user: NexusGenRootTypes['User'] | null; // User
   }
   User: { // field return type
@@ -410,7 +416,7 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'DateTime'
     description: 'String'
     id: 'UUID'
-    lastMessage: 'DateTime'
+    latestMessage: 'DateTime'
     messages: 'DiscussionMessage'
     topic: 'String'
     type: 'DiscussionType'
@@ -459,6 +465,7 @@ export interface NexusGenFieldTypeNames {
   }
   Proposal: { // field return type name
     createdAt: 'DateTime'
+    discussions: 'Discussion'
     id: 'ID'
     type: 'ProposalType'
     updatedAt: 'DateTime'
@@ -467,6 +474,7 @@ export interface NexusGenFieldTypeNames {
     common: 'Common'
     discussion: 'Discussion'
     generateUserAuthToken: 'String'
+    proposal: 'Proposal'
     user: 'User'
   }
   User: { // field return type name
@@ -549,6 +557,12 @@ export interface NexusGenArgTypes {
       proposalId: string; // ID!
     }
   }
+  Proposal: {
+    discussions: { // args
+      skip?: number | null; // Int
+      take?: number | null; // Int
+    }
+  }
   Query: {
     common: { // args
       where: NexusGenInputs['CommonWhereUniqueInput']; // CommonWhereUniqueInput!
@@ -558,6 +572,9 @@ export interface NexusGenArgTypes {
     }
     generateUserAuthToken: { // args
       authId: string; // String!
+    }
+    proposal: { // args
+      where: NexusGenInputs['ProposalWhereUniqueInput']; // ProposalWhereUniqueInput!
     }
     user: { // args
       userId?: string | null; // ID

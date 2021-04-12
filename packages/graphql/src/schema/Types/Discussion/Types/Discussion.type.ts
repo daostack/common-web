@@ -13,7 +13,7 @@ export const DiscussionType = objectType({
       description: 'Short description of the topic'
     });
 
-    t.nonNull.date('lastMessage', {
+    t.nonNull.date('latestMessage', {
       description: 'The date at which the last message on the discussion was added'
     });
 
