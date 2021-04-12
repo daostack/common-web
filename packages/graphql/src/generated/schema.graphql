@@ -37,9 +37,10 @@ type Card {
 type Common {
   """The date, at which the item was created"""
   createdAt: DateTime!
+    discussions(skip: Int, take: Int): [Discussion!]!
 
-  """List of events, that occurred in a common"""
-  events(orderBy: EventOrderByInput, skip: Int = 0, take: Int = 10): [Event!]!
+    """List of events, that occurred in a common"""
+    events(orderBy: EventOrderByInput, skip: Int = 0, take: Int = 10): [Event!]!
 
   """The main identifier of the item"""
   id: ID!

@@ -4,9 +4,10 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -274,6 +275,7 @@ export interface NexusGenFieldTypes {
   }
   Common: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    discussions: NexusGenRootTypes['Discussion'][]; // [Discussion!]!
     events: NexusGenRootTypes['Event'][]; // [Event!]!
     id: string; // ID!
     members: Array<NexusGenRootTypes['CommonMember'] | null>; // [CommonMember]!
@@ -379,6 +381,7 @@ export interface NexusGenFieldTypeNames {
   }
   Common: { // field return type name
     createdAt: 'DateTime'
+    discussions: 'Discussion'
     events: 'Event'
     id: 'ID'
     members: 'CommonMember'
@@ -478,6 +481,10 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Common: {
+    discussions: { // args
+      skip?: number | null; // Int
+      take?: number | null; // Int
+    }
     events: { // args
       orderBy?: NexusGenInputs['EventOrderByInput'] | null; // EventOrderByInput
       skip?: number | null; // Int
