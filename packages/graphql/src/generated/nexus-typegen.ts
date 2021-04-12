@@ -4,10 +4,9 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -22,6 +21,10 @@ declare global {
      * The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
      */
     json<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "JSON";
+    /**
+     * A field whose value is a generic Universally Unique Identifier: https://en.wikipedia.org/wiki/Universally_unique_identifier.
+     */
+    uuid<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "UUID";
   }
 }
 declare global {
@@ -38,6 +41,10 @@ declare global {
      * The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
      */
     json<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "JSON";
+    /**
+     * A field whose value is a generic Universally Unique Identifier: https://en.wikipedia.org/wiki/Universally_unique_identifier.
+     */
+    uuid<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "UUID";
   }
 }
 
@@ -110,6 +117,10 @@ export interface NexusGenInputs {
     outcome: NexusGenEnums['VoteOutcome']; // VoteOutcome!
     proposalId: string; // ID!
   }
+  DiscussionMessagesOrderByInput: { // input type
+    createdAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    updatedAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
   EventOrderByInput: { // input type
     createdAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
     type?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -147,13 +158,13 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  CommonMemberRole: 'Founder'
-  DiscussionMessageType: 'Message'
-  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'DiscussionCreated' | 'DiscussionMessageCreated' | 'DiscussionSubscriptionCreated' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'ProposalExpired' | 'ProposalMajorityReached' | 'UserCreated' | 'VoteCreated'
-  FundingType: 'Monthly' | 'OneTime'
-  ProposalType: 'FundingRequest' | 'JoinRequest'
-  SortOrder: 'asc' | 'desc'
-  VoteOutcome: 'Approve' | 'Condemn'
+  CommonMemberRole: "Founder"
+  DiscussionMessageType: "Message"
+  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "DiscussionCreated" | "DiscussionMessageCreated" | "DiscussionSubscriptionCreated" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "UserCreated" | "VoteCreated"
+  FundingType: "Monthly" | "OneTime"
+  ProposalType: "FundingRequest" | "JoinRequest"
+  SortOrder: "asc" | "desc"
+  VoteOutcome: "Approve" | "Condemn"
 }
 
 export interface NexusGenScalars {
@@ -165,6 +176,7 @@ export interface NexusGenScalars {
   DateTime: any
   JSON: any
   URL: any
+  UUID: any
 }
 
 export interface NexusGenObjects {
@@ -188,10 +200,12 @@ export interface NexusGenObjects {
   }
   Discussion: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: NexusGenScalars['UUID']; // UUID!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   DiscussionMessage: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: NexusGenScalars['UUID']; // UUID!
     message: string; // String!
     type: NexusGenEnums['DiscussionMessageType']; // DiscussionMessageType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
@@ -278,12 +292,13 @@ export interface NexusGenFieldTypes {
   }
   Discussion: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    id: string; // ID!
+    id: NexusGenScalars['UUID']; // UUID!
+    messages: NexusGenRootTypes['DiscussionMessage'][]; // [DiscussionMessage!]!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   DiscussionMessage: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    id: string; // ID!
+    id: NexusGenScalars['UUID']; // UUID!
     message: string; // String!
     type: NexusGenEnums['DiscussionMessageType']; // DiscussionMessageType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
@@ -330,6 +345,7 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     common: NexusGenRootTypes['Common'] | null; // Common
+    discussion: NexusGenRootTypes['Discussion'] | null; // Discussion
     generateUserAuthToken: string; // String!
     user: NexusGenRootTypes['User'] | null; // User
   }
@@ -350,7 +366,7 @@ export interface NexusGenFieldTypes {
   }
   BaseEntity: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    id: string; // ID!
+    id: NexusGenScalars['UUID']; // UUID!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
 }
@@ -381,12 +397,13 @@ export interface NexusGenFieldTypeNames {
   }
   Discussion: { // field return type name
     createdAt: 'DateTime'
-    id: 'ID'
+    id: 'UUID'
+    messages: 'DiscussionMessage'
     updatedAt: 'DateTime'
   }
   DiscussionMessage: { // field return type name
     createdAt: 'DateTime'
-    id: 'ID'
+    id: 'UUID'
     message: 'String'
     type: 'DiscussionMessageType'
     updatedAt: 'DateTime'
@@ -433,6 +450,7 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     common: 'Common'
+    discussion: 'Discussion'
     generateUserAuthToken: 'String'
     user: 'User'
   }
@@ -453,7 +471,7 @@ export interface NexusGenFieldTypeNames {
   }
   BaseEntity: { // field return type name
     createdAt: 'DateTime'
-    id: 'ID'
+    id: 'UUID'
     updatedAt: 'DateTime'
   }
 }
@@ -474,6 +492,13 @@ export interface NexusGenArgTypes {
       skip?: number | null; // Int
       take: number | null; // Int
       where?: NexusGenInputs['ProposalWhereInput'] | null; // ProposalWhereInput
+    }
+  }
+  Discussion: {
+    messages: { // args
+      orderBy: NexusGenInputs['DiscussionMessagesOrderByInput'] | null; // DiscussionMessagesOrderByInput
+      skip?: number | null; // Int
+      take: number | null; // Int
     }
   }
   Mutation: {
@@ -509,6 +534,9 @@ export interface NexusGenArgTypes {
     common: { // args
       where: NexusGenInputs['CommonWhereUniqueInput']; // CommonWhereUniqueInput!
     }
+    discussion: { // args
+      id: string; // ID!
+    }
     generateUserAuthToken: { // args
       authId: string; // String!
     }
@@ -531,12 +559,12 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  BaseEntity: 'Discussion' | 'DiscussionMessage'
+  BaseEntity: "Discussion" | "DiscussionMessage"
 }
 
 export interface NexusGenTypeInterfaces {
-  Discussion: 'BaseEntity'
-  DiscussionMessage: 'BaseEntity'
+  Discussion: "BaseEntity"
+  DiscussionMessage: "BaseEntity"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;

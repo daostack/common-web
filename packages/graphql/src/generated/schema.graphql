@@ -7,7 +7,7 @@ interface BaseEntity {
   createdAt: DateTime!
 
   """The main identifier of the item"""
-  id: ID!
+  id: UUID!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
@@ -159,7 +159,8 @@ type Discussion implements BaseEntity {
   createdAt: DateTime!
 
   """The main identifier of the item"""
-  id: ID!
+  id: UUID!
+  messages(orderBy: DiscussionMessagesOrderByInput = {createdAt: asc}, skip: Int = 0, take: Int = 10): [DiscussionMessage!]!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
@@ -170,7 +171,7 @@ type DiscussionMessage implements BaseEntity {
   createdAt: DateTime!
 
   """The main identifier of the item"""
-  id: ID!
+  id: UUID!
   message: String!
   type: DiscussionMessageType!
 
@@ -180,6 +181,11 @@ type DiscussionMessage implements BaseEntity {
 
 enum DiscussionMessageType {
   Message
+}
+
+input DiscussionMessagesOrderByInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
 }
 
 type Event {
@@ -336,6 +342,7 @@ input ProposalWhereInput {
 
 type Query {
   common(where: CommonWhereUniqueInput!): Common
+  discussion(id: ID!): Discussion
   generateUserAuthToken(authId: String!): String!
 
   """
@@ -366,6 +373,11 @@ input StringFilter {
 A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt.
 """
 scalar URL
+
+"""
+A field whose value is a generic Universally Unique Identifier: https://en.wikipedia.org/wiki/Universally_unique_identifier.
+"""
+scalar UUID
 
 type User {
   """The date, at which the item was created"""

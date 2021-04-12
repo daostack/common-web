@@ -3,8 +3,13 @@ import { DiscussionMessageType } from './Types/DiscussionMessage.type';
 
 import { DiscussionMessageTypeEnum } from './Enums/DiscussionMessageType.enum';
 
-import { CreateDiscussionInput, CreateDiscussionMutation } from './Mutations/CreateDiscussion.mutation';
+import { GetDiscussionQuery } from './Queries/GetDiscussion.query';
 
+import { DiscussionMessagesOrderByInput } from './Inputs/DiscussionMessagesOrderBy.input';
+
+import { DiscussionMessagesExtension } from './Extensions/DiscussionMessages.extension';
+
+import { CreateDiscussionInput, CreateDiscussionMutation } from './Mutations/CreateDiscussion.mutation';
 import {
   CreateDiscussionMessageInput,
   CreateDiscussionMessageMutation
@@ -15,6 +20,12 @@ export const DiscussionTypes = [
   DiscussionMessageType,
 
   DiscussionMessageTypeEnum,
+
+  GetDiscussionQuery,
+
+  DiscussionMessagesOrderByInput,
+
+  DiscussionMessagesExtension,
 
   CreateDiscussionInput,
   CreateDiscussionMutation,

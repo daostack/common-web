@@ -13,6 +13,7 @@ import { CommonMemberTypes } from './Types/CommonMember';
 import { UrlScalar } from './Shared/Scalars/Url.scalar';
 import { DateScalar } from './Shared/Scalars/Date.scalar';
 import { JsonScalar } from './Shared/Scalars/Json.scalar';
+import { UuidScalar } from './Shared/Scalars/Uuid.scalar';
 
 import { LinkType, LinkInputType } from './Shared/Types/Link.type';
 
@@ -36,6 +37,7 @@ const types = [
   UrlScalar,
   DateScalar,
   JsonScalar,
+  UuidScalar,
 
   // Shared Enums
   SortOrder,

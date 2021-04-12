@@ -1,12 +1,11 @@
 import { interfaceType } from 'nexus';
 
 export const BaseEntityInterface = interfaceType({
-  resolveType: () => undefined,
+  resolveType: () => null,
   name: 'BaseEntity',
   definition(t) {
-    t.nonNull.id('id', {
-      description: 'The main identifier of the item',
-      resolve: r => r.id
+    t.nonNull.uuid('id', {
+      description: 'The main identifier of the item'
     });
 
     t.nonNull.date('createdAt', {
