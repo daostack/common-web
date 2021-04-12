@@ -4,6 +4,7 @@ import { Discussion, EventType, DiscussionType } from '@prisma/client';
 import { prisma } from '@toolkits';
 import { CommonError } from '@errors';
 import { eventService } from '@services';
+import { createDiscussionSubscriptionCommand } from '../../subscriptions/createDiscussionSubscriptionCommand';
 
 const schema = z.object({
   commonId: z.string()
@@ -64,7 +65,7 @@ export const createDiscussionCommand = async (payload: z.infer<typeof schema>): 
   });
 
   // Create event about the discussion creation
-  await eventService.create({
+  eventService.create({
     type: EventType.DiscussionCreated,
     commonId: payload.commonId,
     userId: payload.userId,
@@ -73,7 +74,11 @@ export const createDiscussionCommand = async (payload: z.infer<typeof schema>): 
     }
   });
 
-  // @todo Subscribe the creator to the discussion
+  // Subscribe the creator to the discussion
+  await createDiscussionSubscriptionCommand({
+    discussionId: discussion.id,
+    userId: discussion.userId
+  });
 
   // Return the created discussion
   return discussion;

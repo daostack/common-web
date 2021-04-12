@@ -69,7 +69,7 @@ export const createVoteCommand = async (command: z.infer<typeof schema>): Promis
   }
 
   // Create event for the creation of the vote
-  await eventService.create({
+  eventService.create({
     type: EventType.VoteCreated,
     userId: command.userId,
     commonId

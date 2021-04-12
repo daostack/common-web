@@ -37,7 +37,7 @@ export const createCommonCommand = async (command: z.infer<typeof schema>): Prom
   });
 
   // Create event for the common creation
-  await eventService.create({
+  eventService.create({
     type: EventType.CommonCreated,
     commonId: common.id,
     userId: command.founderId

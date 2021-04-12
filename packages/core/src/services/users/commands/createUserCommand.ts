@@ -48,7 +48,7 @@ export const createUserCommand: (command: z.infer<typeof schema>) => Promise<Use
   });
 
   // Create event about the creation of the user
-  await eventService.create({
+  eventService.create({
     type: EventType.UserCreated,
     userId: user.id
   });

@@ -15,7 +15,7 @@ export const processRejectedFundingRequest = async (proposal: Proposal): Promise
   });
 
   // Create event
-  await eventService.create({
+  eventService.create({
     type: EventType.FundingRequestRejected,
     userId: proposal.userId,
     commonId: proposal.commonId,

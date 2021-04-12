@@ -17,7 +17,7 @@ export const processApprovedOneTimeJoinRequestCommand = async (proposalId: strin
   });
 
   // Create event
-  await eventService.create({
+  eventService.create({
     type: EventType.JoinRequestAccepted,
     userId: proposal.userId,
     commonId: proposal.commonId,

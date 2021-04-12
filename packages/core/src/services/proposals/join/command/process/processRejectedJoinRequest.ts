@@ -14,7 +14,7 @@ export const processRejectedJoinRequest = async (proposalId: string): Promise<vo
   });
 
   // Create event
-  await eventService.create({
+  eventService.create({
     type: EventType.JoinRequestRejected,
     userId: proposal.userId,
     commonId: proposal.commonId,

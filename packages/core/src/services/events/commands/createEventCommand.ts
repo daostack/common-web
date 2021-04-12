@@ -20,6 +20,6 @@ const schema = z.object({
   ])
 });
 
-export const createEventCommand = async (command: z.infer<typeof schema>): Promise<void> => {
+export const createEventCommand = (command: z.infer<typeof schema>): void => {
   worker.addEventJob('create', command);
 };
