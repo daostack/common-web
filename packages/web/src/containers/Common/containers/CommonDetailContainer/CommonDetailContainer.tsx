@@ -94,6 +94,9 @@ export default function CommonDetail() {
     [discussions],
   );
 
+  const activeProposals = useMemo(() => [...proposals].filter((d) => d.state === "countdown"), [proposals]);
+  const historyProposals = useMemo(() => [...proposals].filter((d) => d.state !== "countdown"), [proposals]);
+
   const changeTabHandler = useCallback(
     (tab: string) => {
       switch (tab) {
@@ -102,7 +105,7 @@ export default function CommonDetail() {
             dispatch(loadCommonDiscussionList.request());
           }
           break;
-
+        case "history":
         case "proposals":
           if (!isProposalsLoaded) {
             dispatch(loadProposalList.request());
@@ -211,7 +214,14 @@ export default function CommonDetail() {
 
                 {tab === "proposals" &&
                   (isProposalsLoaded ? (
-                    <ProposalsComponent proposals={proposals} loadProposalDetail={getProposalDetail} />
+                    <ProposalsComponent proposals={activeProposals} loadProposalDetail={getProposalDetail} />
+                  ) : (
+                    <Loader />
+                  ))}
+
+                {tab === "history" &&
+                  (isProposalsLoaded ? (
+                    <ProposalsComponent proposals={historyProposals} loadProposalDetail={getProposalDetail} />
                   ) : (
                     <Loader />
                   ))}
