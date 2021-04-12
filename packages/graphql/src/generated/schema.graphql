@@ -165,9 +165,9 @@ type Discussion implements BaseEntity {
   """The main identifier of the item"""
   id: UUID!
 
-    """The date at which the last message on the discussion was added"""
-    latestMessage: DateTime!
-    messages(orderBy: DiscussionMessagesOrderByInput = {createdAt: asc}, skip: Int = 0, take: Int = 10): [DiscussionMessage!]!
+  """The date at which the last message on the discussion was added"""
+  latestMessage: DateTime!
+  messages(orderBy: DiscussionMessagesOrderByInput = {createdAt: asc}, skip: Int = 0, take: Int = 10): [DiscussionMessage!]!
 
   """What this discussion is about"""
   topic: String!
@@ -323,12 +323,12 @@ type Mutation {
 }
 
 type Proposal {
-    """The date, at which the item was created"""
-    createdAt: DateTime!
-    discussions(skip: Int, take: Int): [Discussion!]!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  discussions(skip: Int, take: Int): [Discussion!]!
 
-    """The main identifier of the item"""
-    id: ID!
+  """The main identifier of the item"""
+  id: ID!
   type: ProposalType!
 
   """The date, at which the item was last modified"""
@@ -349,28 +349,28 @@ input ProposalLinkInput {
 }
 
 enum ProposalType {
-    FundingRequest
-    JoinRequest
+  FundingRequest
+  JoinRequest
 }
 
 input ProposalWhereInput {
-    type: ProposalType
+  type: ProposalType
 }
 
 input ProposalWhereUniqueInput {
-    id: UUID!
+  id: UUID!
 }
 
 type Query {
-    common(where: CommonWhereUniqueInput!): Common
-    discussion(id: ID!): Discussion
-    generateUserAuthToken(authId: String!): String!
-    proposal(where: ProposalWhereUniqueInput!): Proposal
+  common(where: CommonWhereUniqueInput!): Common
+  discussion(id: ID!): Discussion
+  generateUserAuthToken(authId: String!): String!
+  proposal(where: ProposalWhereUniqueInput!): Proposal
 
-    """
-    Provide ID to fetch specific user or do not pass anything to get the currently authenticated user
-    """
-    user(userId: ID): User
+  """
+  Provide ID to fetch specific user or do not pass anything to get the currently authenticated user
+  """
+  user(userId: ID): User
 }
 
 enum SortOrder {

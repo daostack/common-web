@@ -5,6 +5,7 @@ import { prisma } from '@toolkits';
 import { CommonError } from '@errors';
 import { eventService } from '@services';
 import { createDiscussionSubscriptionCommand } from '../../subscriptions/createDiscussionSubscriptionCommand';
+import { canCreateProposalDiscussionQuery } from '../queries/canCreateProposalDiscussionQuery';
 
 const schema = z.object({
   commonId: z.string()
@@ -47,8 +48,9 @@ export const createDiscussionCommand = async (payload: z.infer<typeof schema>): 
     throw new CommonError('Cannot create discussion in a common that you are not member of!');
   }
 
-  // If there is proposal check if that proposal is from the same common
+  // If there is proposal do some more checks
   if (payload.proposalId) {
+    // Check if that proposal is from the same common
     if (
       !(await prisma.proposal.count({
         where: {
@@ -60,6 +62,12 @@ export const createDiscussionCommand = async (payload: z.infer<typeof schema>): 
       throw new CommonError('Proposal Common Mismatch', {
         description: 'The proposal is not from the common'
       });
+    }
+
+    // Check if the maximum allowed discussions for one
+    // proposals has been reached
+    if (!(await canCreateProposalDiscussionQuery(payload.proposalId))) {
+      throw new CommonError('The maximum discussions per proposal has been reached!');
     }
   }
 
