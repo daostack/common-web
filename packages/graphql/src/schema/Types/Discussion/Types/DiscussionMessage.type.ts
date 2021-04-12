@@ -10,5 +10,6 @@ export const DiscussionMessageType = objectType({
     t.nonNull.field('type', {
       type: 'DiscussionMessageType'
     });
+
   }
 });

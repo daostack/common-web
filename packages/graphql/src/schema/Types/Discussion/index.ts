@@ -1,6 +1,7 @@
 import { DiscussionType } from './Types/Discussion.type';
 import { DiscussionMessageType } from './Types/DiscussionMessage.type';
 
+import { DiscussionTypeEnum } from './Enums/DiscussionType.enum';
 import { DiscussionMessageTypeEnum } from './Enums/DiscussionMessageType.enum';
 
 import { GetDiscussionQuery } from './Queries/GetDiscussion.query';
@@ -19,6 +20,7 @@ export const DiscussionTypes = [
   DiscussionType,
   DiscussionMessageType,
 
+  DiscussionTypeEnum,
   DiscussionMessageTypeEnum,
 
   GetDiscussionQuery,

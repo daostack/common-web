@@ -37,10 +37,10 @@ type Card {
 type Common {
   """The date, at which the item was created"""
   createdAt: DateTime!
-    discussions(skip: Int, take: Int): [Discussion!]!
+  discussions(skip: Int, take: Int): [Discussion!]!
 
-    """List of events, that occurred in a common"""
-    events(orderBy: EventOrderByInput, skip: Int = 0, take: Int = 10): [Event!]!
+  """List of events, that occurred in a common"""
+  events(orderBy: EventOrderByInput, skip: Int = 0, take: Int = 10): [Event!]!
 
   """The main identifier of the item"""
   id: ID!
@@ -159,9 +159,19 @@ type Discussion implements BaseEntity {
   """The date, at which the item was created"""
   createdAt: DateTime!
 
+  """Short description of the topic"""
+  description: String!
+
   """The main identifier of the item"""
   id: UUID!
+
+  """The date at which the last message on the discussion was added"""
+  lastMessage: DateTime!
   messages(orderBy: DiscussionMessagesOrderByInput = {createdAt: asc}, skip: Int = 0, take: Int = 10): [DiscussionMessage!]!
+
+  """What this discussion is about"""
+  topic: String!
+  type: DiscussionType!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
@@ -187,6 +197,11 @@ enum DiscussionMessageType {
 input DiscussionMessagesOrderByInput {
   createdAt: SortOrder
   updatedAt: SortOrder
+}
+
+enum DiscussionType {
+  CommonDiscussion
+  ProposalDiscussion
 }
 
 type Event {

@@ -4,10 +4,9 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -161,6 +160,7 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
   CommonMemberRole: "Founder"
   DiscussionMessageType: "Message"
+  DiscussionType: "CommonDiscussion" | "ProposalDiscussion"
   EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "DiscussionCreated" | "DiscussionMessageCreated" | "DiscussionSubscriptionCreated" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "UserCreated" | "VoteCreated"
   FundingType: "Monthly" | "OneTime"
   ProposalType: "FundingRequest" | "JoinRequest"
@@ -201,7 +201,11 @@ export interface NexusGenObjects {
   }
   Discussion: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    description: string; // String!
     id: NexusGenScalars['UUID']; // UUID!
+    lastMessage: NexusGenScalars['DateTime']; // DateTime!
+    topic: string; // String!
+    type: NexusGenEnums['DiscussionType']; // DiscussionType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   DiscussionMessage: { // root type
@@ -294,8 +298,12 @@ export interface NexusGenFieldTypes {
   }
   Discussion: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    description: string; // String!
     id: NexusGenScalars['UUID']; // UUID!
+    lastMessage: NexusGenScalars['DateTime']; // DateTime!
     messages: NexusGenRootTypes['DiscussionMessage'][]; // [DiscussionMessage!]!
+    topic: string; // String!
+    type: NexusGenEnums['DiscussionType']; // DiscussionType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   DiscussionMessage: { // field return type
@@ -400,8 +408,12 @@ export interface NexusGenFieldTypeNames {
   }
   Discussion: { // field return type name
     createdAt: 'DateTime'
+    description: 'String'
     id: 'UUID'
+    lastMessage: 'DateTime'
     messages: 'DiscussionMessage'
+    topic: 'String'
+    type: 'DiscussionType'
     updatedAt: 'DateTime'
   }
   DiscussionMessage: { // field return type name
