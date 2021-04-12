@@ -1,4 +1,6 @@
 import { createDiscussionCommand } from './core/commands/createDiscussionCommand';
+import { createDiscussionSubscriptionCommand } from './subscriptions/createDiscussionSubscriptionCommand';
+import { createDiscussionMessageCommand } from './messages/createDiscussionMessageCommand';
 
 export const discussionService = {
   /**
@@ -7,5 +9,17 @@ export const discussionService = {
    */
   create: createDiscussionCommand,
 
-  messages: {}
+  subscription: {
+    /**
+     * Create notification subscription for discussion
+     */
+    create: createDiscussionSubscriptionCommand
+  },
+
+  messages: {
+    /**
+     * Create new message in discussion
+     */
+    create: createDiscussionMessageCommand
+  }
 };
