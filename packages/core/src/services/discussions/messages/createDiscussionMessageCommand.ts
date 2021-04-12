@@ -1,7 +1,9 @@
 import * as z from 'zod';
-import { DiscussionMessage, DiscussionMessageType } from '@prisma/client';
+import { DiscussionMessage, DiscussionMessageType, EventType } from '@prisma/client';
+
 import { prisma } from '@toolkits';
-import { NotImplementedError } from '@errors';
+import { CommonError } from '@errors';
+import { eventService } from '@services';
 
 const schema = z.object({
   userId: z.string()
@@ -23,26 +25,51 @@ export const createDiscussionMessageCommand = async (payload: z.infer<typeof sch
   schema.parse(payload);
 
   // Check if the user can create messages in that discussion
-  const isMember = !!(
-    await prisma.commonMember.count({
-      where: {
-        userId: payload.userId,
-        common: {
-          discussions: {
-            some: {
-              id: payload.discussionId
-            }
+  const member = await prisma.commonMember.findFirst({
+    where: {
+      userId: payload.userId,
+      common: {
+        discussions: {
+          some: {
+            id: payload.discussionId
           }
         }
       }
-    })
-  );
+    },
+    select: {
+      commonId: true,
+      userId: true
+    }
+  });
 
+  if (!member) {
+    throw new CommonError(
+      'Cannot create discussion message in discussion that is' +
+      'in common that you are not member of'
+    );
+  }
 
   // Create the message
+  const message = await prisma.discussionMessage.create({
+    data: {
+      discussionId: payload.discussionId,
+      userId: payload.userId,
 
-  // Create event about the message
+      message: payload.message,
+      type: payload.messageType || DiscussionMessageType.Message
+    }
+  });
+
+  // Create event about the message @todo Types
+  eventService.create({
+    type: EventType.DiscussionMessageCreated,
+    userId: member.userId,
+    commonId: member.commonId,
+    payload: {
+      messageId: message.id
+    }
+  });
 
   // Return the created message
-  throw new NotImplementedError();
+  return message;
 };

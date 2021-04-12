@@ -150,10 +150,10 @@ export interface NexusGenEnums {
   CommonMemberRole: 'Founder'
   DiscussionMessageType: 'Message'
   EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'DiscussionCreated' | 'DiscussionMessageCreated' | 'DiscussionSubscriptionCreated' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'ProposalExpired' | 'ProposalMajorityReached' | 'UserCreated' | 'VoteCreated'
-  FundingType: "Monthly" | "OneTime"
-  ProposalType: "FundingRequest" | "JoinRequest"
-  SortOrder: "asc" | "desc"
-  VoteOutcome: "Approve" | "Condemn"
+  FundingType: 'Monthly' | 'OneTime'
+  ProposalType: 'FundingRequest' | 'JoinRequest'
+  SortOrder: 'asc' | 'desc'
+  VoteOutcome: 'Approve' | 'Condemn'
 }
 
 export interface NexusGenScalars {

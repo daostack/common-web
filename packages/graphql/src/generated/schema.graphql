@@ -99,32 +99,32 @@ input CreateDiscussionInput {
   """The ID of the common, for which we are creating the discussion"""
   commonId: ID!
 
-    """Short description about the topic"""
-    description: String!
+  """Short description about the topic"""
+  description: String!
 
-    """The ID of the proposal, if this is proposal discussion"""
-    proposalId: ID
+  """The ID of the proposal, if this is proposal discussion"""
+  proposalId: ID
 
-    """The topic of the discussion to be created"""
-    topic: String!
+  """The topic of the discussion to be created"""
+  topic: String!
 }
 
 input CreateDiscussionMessageInput {
-    """The ID of the discussion, for which we are creating the message"""
-    discussionId: ID!
+  """The ID of the discussion, for which we are creating the message"""
+  discussionId: ID!
 
-    """The message itself"""
-    message: String!
+  """The message itself"""
+  message: String!
 }
 
 input CreateFundingProposalInput {
-    amount: Int!
-    commonId: ID!
-    description: String!
-    files: [ProposalFileInput!]
-    images: [ProposalImageInput!]
-    links: [ProposalLinkInput!]
-    title: String!
+  amount: Int!
+  commonId: ID!
+  description: String!
+  files: [ProposalFileInput!]
+  images: [ProposalImageInput!]
+  links: [ProposalLinkInput!]
+  title: String!
 }
 
 input CreateJoinProposalInput {
@@ -155,42 +155,42 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 scalar DateTime
 
 type Discussion implements BaseEntity {
-    """The date, at which the item was created"""
-    createdAt: DateTime!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
 
-    """The main identifier of the item"""
-    id: ID!
+  """The main identifier of the item"""
+  id: ID!
 
-    """The date, at which the item was last modified"""
-    updatedAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
 }
 
 type DiscussionMessage implements BaseEntity {
-    """The date, at which the item was created"""
-    createdAt: DateTime!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
 
-    """The main identifier of the item"""
-    id: ID!
-    message: String!
-    type: DiscussionMessageType!
+  """The main identifier of the item"""
+  id: ID!
+  message: String!
+  type: DiscussionMessageType!
 
-    """The date, at which the item was last modified"""
-    updatedAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
 }
 
 enum DiscussionMessageType {
-    Message
+  Message
 }
 
 type Event {
-    """The ID of the common, for whom the event was created"""
-    commonId: ID
+  """The ID of the common, for whom the event was created"""
+  commonId: ID
 
-    """The date, at which the item was created"""
-    createdAt: DateTime!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
 
-    """The main identifier of the item"""
-    id: ID!
+  """The main identifier of the item"""
+  id: ID!
   payload: JSON
 
   """The type of the event in one of the predefined event types"""
@@ -287,9 +287,9 @@ input LinkInput {
 type Mutation {
   createCard(input: CreateCardInput!): Card!
   createCommon(input: CreateCommonInput!): Common!
-    createDiscussion(input: CreateDiscussionInput!): Discussion!
-    createDiscussionMessage(input: CreateDiscussionMessageInput!): DiscussionMessage!
-    createFundingProposal(input: CreateFundingProposalInput!): FundingProposal!
+  createDiscussion(input: CreateDiscussionInput!): Discussion!
+  createDiscussionMessage(input: CreateDiscussionMessageInput!): DiscussionMessage!
+  createFundingProposal(input: CreateFundingProposalInput!): FundingProposal!
 
   """Create new proposal of type JOIN."""
   createJoinProposal(input: CreateJoinProposalInput!): JoinProposal!
