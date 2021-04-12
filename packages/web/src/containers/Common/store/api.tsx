@@ -44,8 +44,9 @@ export async function fetchOwners(ownerids: string[]) {
 
     return resultArray;
   }, []);
+
   const users = await Promise.all(
-    idsChunks.map((ids: string[]) => firebase.firestore().collection("users").where("uid", "in", ownerids).get()),
+    idsChunks.map((ids: string[]) => firebase.firestore().collection("users").where("uid", "in", ids).get()),
   );
 
   const data = (users as unknown[])

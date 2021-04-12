@@ -1,4 +1,4 @@
-import { Rules } from ".";
+import { DiscussionMessage, Rules, User } from ".";
 import { Time, Moderation, File } from "./shared";
 
 export interface Proposal {
@@ -12,8 +12,13 @@ export interface Proposal {
   moderation: Moderation;
   paymentState: string;
   proposerId: string;
-  quietEndingPeriod: 10800;
+  quietEndingPeriod: number;
   state: string;
   type: string;
   updatedAt: Time;
+  votesAgainst?: number;
+  votesFor?: number;
+  proposer?: User;
+  discussionMessage?: DiscussionMessage[];
+  isLoaded?: boolean;
 }

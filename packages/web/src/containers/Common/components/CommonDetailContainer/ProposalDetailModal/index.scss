@@ -9,35 +9,7 @@
       justify-content: center;
       display: flex;
       flex-direction: column;
-      .countdown-wrapper {
-        align-items: center;
-        justify-content: center;
-        display: flex;
-        .inner-wrapper {
-          width: 315px;
-          height: 32px;
-          border-radius: 6px;
-          background-color: #fff3d8;
-          display: flex;
-          margin-bottom: 24px;
-          align-items: center;
-          justify-content: center;
-          .clock-icon {
-            width: 15px;
-            margin-right: 8px;
-          }
-          .text {
-            font-family: NunitoSans;
-            font-size: 14px;
-            font-weight: bold;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: 1.43;
-            letter-spacing: normal;
-            color: #ffae26;
-          }
-        }
-      }
+
       .owner-wrapper {
         align-items: center;
         justify-content: center;
@@ -114,6 +86,7 @@
           color: #001a36;
           display: flex;
           margin-bottom: 24px;
+          margin-top: 24px;
           .amount {
             font-family: NunitoSans;
             font-size: 18px;
