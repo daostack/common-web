@@ -23,6 +23,8 @@ model Proposal {
   votesFor     Int @default(0)
   votesAgainst Int @default(0)
 
+  discussions Discussion[]
+
   join    JoinProposal?    @relation(fields: [joinId], references: [id])
   funding FundingProposal? @relation(fields: [fundingId], references: [id])
 

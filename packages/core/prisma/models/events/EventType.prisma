@@ -27,4 +27,8 @@ enum EventType {
   VoteCreated
 
   UserCreated
+
+  DiscussionCreated
+  DiscussionMessageCreated
+  DiscussionSubscriptionCreated
 }

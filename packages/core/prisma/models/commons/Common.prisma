@@ -20,7 +20,8 @@ model Common {
   payments      Payment[]
   subscriptions Subscription[]
 
-  proposals Proposal[]
+  proposals   Proposal[]
+  discussions Discussion[]
 }
 
 

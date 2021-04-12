@@ -14,7 +14,11 @@ model User {
   events      Event[]
   memberships CommonMember[]
 
-  payments      Payment[]
-  proposals     Proposal[]
-  subscriptions Subscription[]
+  payments                Payment[]
+  proposals               Proposal[]
+  subscriptions           Subscription[]
+
+  discussionSubscriptions DiscussionSubscription[]
+  discussionMessages      DiscussionMessage[]
+  discussions             Discussion[]
 }

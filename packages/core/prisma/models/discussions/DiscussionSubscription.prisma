@@ -4,11 +4,11 @@ model DiscussionSubscription {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  latestMessageSeen DateTime @default(now())
-
   type DiscussionSubscriptionType @default(AllNotifications)
 
-  discussion Discussion @relation(fields: [discussionId], references: [id])
-
+  userId       String
   discussionId String
+
+  user       User       @relation(fields: [userId], references: [id])
+  discussion Discussion @relation(fields: [discussionId], references: [id])
 }

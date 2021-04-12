@@ -7,7 +7,9 @@ model DiscussionMessage {
   type    DiscussionMessageType @default(Message)
   message String
 
-  discussion Discussion? @relation(fields: [discussionId], references: [id])
+  discussion Discussion @relation(fields: [discussionId], references: [id])
+  user       User       @relation(fields: [userId], references: [id])
 
-  discussionId String?
+  discussionId String
+  userId       String
 }

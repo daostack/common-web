@@ -9,6 +9,10 @@ model Discussion {
 
   latestMessage DateTime @default(now())
 
-  subscriptions DiscussionSubscription[]
+  user     User
+  common   Common
+  proposal Proposal?
+
   messages      DiscussionMessage[]
+  subscriptions DiscussionSubscription[]
 }
