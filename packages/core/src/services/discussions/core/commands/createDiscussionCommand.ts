@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { Discussion, EventType } from '@prisma/client';
+import { Discussion, EventType, DiscussionType } from '@prisma/client';
 
 import { prisma } from '@toolkits';
 import { CommonError } from '@errors';
@@ -46,6 +46,8 @@ export const createDiscussionCommand = async (payload: z.infer<typeof schema>): 
     throw new CommonError('Cannot create discussion in a common that you are not member of!');
   }
 
+  // @todo If there is proposal id check if it is from the common
+
   // Create the discussion
   const discussion = await prisma.discussion.create({
     data: {
@@ -53,7 +55,11 @@ export const createDiscussionCommand = async (payload: z.infer<typeof schema>): 
       commonId: payload.commonId,
 
       topic: payload.topic.trim(),
-      description: payload.description.trim()
+      description: payload.description.trim(),
+
+      type: payload.proposalId
+        ? DiscussionType.ProposalDiscussion
+        : DiscussionType.CommonDiscussion
     }
   });
 

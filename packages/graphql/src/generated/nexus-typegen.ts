@@ -4,10 +4,9 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -74,6 +73,12 @@ export interface NexusGenInputs {
     fundingType: NexusGenEnums['FundingType']; // FundingType!
     name: string; // String!
   }
+  CreateDiscussionInput: { // input type
+    commonId: string; // ID!
+    description: string; // String!
+    proposalId?: string | null; // ID
+    topic: string; // String!
+  }
   CreateFundingProposalInput: { // input type
     amount: number; // Int!
     commonId: string; // ID!
@@ -137,12 +142,12 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  CommonMemberRole: 'Founder'
-  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'ProposalExpired' | 'ProposalMajorityReached' | 'UserCreated' | 'VoteCreated'
-  FundingType: 'Monthly' | 'OneTime'
-  ProposalType: 'FundingRequest' | 'JoinRequest'
-  SortOrder: 'asc' | 'desc'
-  VoteOutcome: 'Approve' | 'Condemn'
+  CommonMemberRole: "Founder"
+  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "DiscussionCreated" | "DiscussionMessageCreated" | "DiscussionSubscriptionCreated" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "UserCreated" | "VoteCreated"
+  FundingType: "Monthly" | "OneTime"
+  ProposalType: "FundingRequest" | "JoinRequest"
+  SortOrder: "asc" | "desc"
+  VoteOutcome: "Approve" | "Condemn"
 }
 
 export interface NexusGenScalars {
@@ -174,6 +179,10 @@ export interface NexusGenObjects {
     id: string; // ID!
     roles: NexusGenEnums['CommonMemberRole'][]; // [CommonMemberRole!]!
     userId: string; // ID!
+  }
+  Discussion: { // root type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Event: { // root type
     commonId?: string | null; // ID
@@ -221,12 +230,13 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
+  BaseEntity: NexusGenRootTypes['Discussion'];
 }
 
 export interface NexusGenUnions {
 }
 
-export type NexusGenRootTypes = NexusGenObjects
+export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects
 
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
@@ -254,6 +264,11 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User'] | null; // User
     userId: string; // ID!
   }
+  Discussion: { // field return type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // ID!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   Event: { // field return type
     commonId: string | null; // ID
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -280,6 +295,7 @@ export interface NexusGenFieldTypes {
   Mutation: { // field return type
     createCard: NexusGenRootTypes['Card']; // Card!
     createCommon: NexusGenRootTypes['Common']; // Common!
+    createDiscussion: NexusGenRootTypes['Discussion']; // Discussion!
     createFundingProposal: NexusGenRootTypes['FundingProposal']; // FundingProposal!
     createJoinProposal: NexusGenRootTypes['JoinProposal']; // JoinProposal!
     createUser: NexusGenRootTypes['User']; // User!
@@ -312,6 +328,11 @@ export interface NexusGenFieldTypes {
     id: string; // ID!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
+  BaseEntity: { // field return type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // ID!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
 }
 
 export interface NexusGenFieldTypeNames {
@@ -337,6 +358,11 @@ export interface NexusGenFieldTypeNames {
     roles: 'CommonMemberRole'
     user: 'User'
     userId: 'ID'
+  }
+  Discussion: { // field return type name
+    createdAt: 'DateTime'
+    id: 'ID'
+    updatedAt: 'DateTime'
   }
   Event: { // field return type name
     commonId: 'ID'
@@ -364,6 +390,7 @@ export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
     createCard: 'Card'
     createCommon: 'Common'
+    createDiscussion: 'Discussion'
     createFundingProposal: 'FundingProposal'
     createJoinProposal: 'JoinProposal'
     createUser: 'User'
@@ -396,6 +423,11 @@ export interface NexusGenFieldTypeNames {
     id: 'ID'
     updatedAt: 'DateTime'
   }
+  BaseEntity: { // field return type name
+    createdAt: 'DateTime'
+    id: 'ID'
+    updatedAt: 'DateTime'
+  }
 }
 
 export interface NexusGenArgTypes {
@@ -422,6 +454,9 @@ export interface NexusGenArgTypes {
     }
     createCommon: { // args
       input: NexusGenInputs['CreateCommonInput']; // CreateCommonInput!
+    }
+    createDiscussion: { // args
+      input: NexusGenInputs['CreateDiscussionInput']; // CreateDiscussionInput!
     }
     createFundingProposal: { // args
       input: NexusGenInputs['CreateFundingProposalInput']; // CreateFundingProposalInput!
@@ -465,9 +500,11 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
+  BaseEntity: "Discussion"
 }
 
 export interface NexusGenTypeInterfaces {
+  Discussion: "BaseEntity"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
@@ -476,7 +513,7 @@ export type NexusGenInputNames = keyof NexusGenInputs;
 
 export type NexusGenEnumNames = keyof NexusGenEnums;
 
-export type NexusGenInterfaceNames = never;
+export type NexusGenInterfaceNames = keyof NexusGenInterfaces;
 
 export type NexusGenScalarNames = keyof NexusGenScalars;
 
@@ -484,7 +521,7 @@ export type NexusGenUnionNames = never;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = never;
+export type NexusGenAbstractsUsingStrategyResolveType = "BaseEntity";
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {

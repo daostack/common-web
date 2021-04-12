@@ -41,8 +41,15 @@ export const createRequestContext = ({ req, res }: ExpressContext): IRequestCont
     prisma,
 
     getUserId: async () => {
-      // @todo Use custom method for that
-      return (await auth().verifyIdToken(req.headers.authorization as string)).uid;
+      // @todo Remove this
+      if (process.env['Authentication.Mock']) {
+        return req.headers.authorization
+          ? (await auth().verifyIdToken(req.headers.authorization as string)).uid
+          : req.headers.uid as string;
+      } else {
+        // @todo Use custom method for that
+        return (await auth().verifyIdToken(req.headers.authorization as string)).uid;
+      }
     },
 
     getUserDecodedToken: async () => {

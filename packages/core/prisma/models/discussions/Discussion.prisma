@@ -4,6 +4,8 @@ model Discussion {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  type DiscussionType
+
   topic       String
   description String
 
