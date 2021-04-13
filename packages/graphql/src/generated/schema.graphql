@@ -346,10 +346,10 @@ type Mutation {
   createCommon(input: CreateCommonInput!): Common!
   createDiscussion(input: CreateDiscussionInput!): Discussion!
   createDiscussionMessage(input: CreateDiscussionMessageInput!): DiscussionMessage!
-  createFundingProposal(input: CreateFundingProposalInput!): FundingProposal!
+  createFundingProposal(input: CreateFundingProposalInput!): Proposal!
 
   """Create new proposal of type JOIN."""
-  createJoinProposal(input: CreateJoinProposalInput!): JoinProposal!
+  createJoinProposal(input: CreateJoinProposalInput!): Proposal!
 
   """Creates new user in the system"""
   createUser(input: CreateUserInput!): User!
@@ -416,21 +416,21 @@ enum SortOrder {
 input StringFilter {
   contains: String
   endsWith: String
-    equals: String
-    gt: String
-    gte: String
-    in: [String!]
-    lt: String
-    lte: String
-    notIn: [String!]
-    startsWith: String
+  equals: String
+  gt: String
+  gte: String
+  in: [String!]
+  lt: String
+  lte: String
+  notIn: [String!]
+  startsWith: String
 }
 
 type Subscription {
-    discussionMessageCreated(
-        """The ID of the discussion, for which messages you want to subscribe"""
-        discussionId: ID!
-    ): DiscussionMessage
+  discussionMessageCreated(
+    """The ID of the discussion, for which messages you want to subscribe"""
+    discussionId: ID!
+  ): DiscussionMessage
 }
 
 """

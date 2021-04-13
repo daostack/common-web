@@ -4,10 +4,11 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -370,8 +371,8 @@ export interface NexusGenFieldTypes {
     createCommon: NexusGenRootTypes['Common']; // Common!
     createDiscussion: NexusGenRootTypes['Discussion']; // Discussion!
     createDiscussionMessage: NexusGenRootTypes['DiscussionMessage']; // DiscussionMessage!
-    createFundingProposal: NexusGenRootTypes['FundingProposal']; // FundingProposal!
-    createJoinProposal: NexusGenRootTypes['JoinProposal']; // JoinProposal!
+    createFundingProposal: NexusGenRootTypes['Proposal']; // Proposal!
+    createJoinProposal: NexusGenRootTypes['Proposal']; // Proposal!
     createUser: NexusGenRootTypes['User']; // User!
     createVote: NexusGenRootTypes['Vote']; // Vote!
     finalizeProposal: boolean; // Boolean!
@@ -497,8 +498,8 @@ export interface NexusGenFieldTypeNames {
     createCommon: 'Common'
     createDiscussion: 'Discussion'
     createDiscussionMessage: 'DiscussionMessage'
-    createFundingProposal: 'FundingProposal'
-    createJoinProposal: 'JoinProposal'
+    createFundingProposal: 'Proposal'
+    createJoinProposal: 'Proposal'
     createUser: 'User'
     createVote: 'Vote'
     finalizeProposal: 'Boolean'

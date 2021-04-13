@@ -3,7 +3,7 @@ import { DiscussionMessage } from '@prisma/client';
 
 import { pubSub } from '@common/core';
 
-export const DiscussionMessagesSubscription = subscriptionField('discussionMessageCreated', {
+export const DiscussionMessageCreatedSubscription = subscriptionField('discussionMessageCreated', {
   type: 'DiscussionMessage',
   args: {
     discussionId: nonNull(

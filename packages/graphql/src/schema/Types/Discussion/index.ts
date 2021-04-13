@@ -23,7 +23,7 @@ import {
 
 import { ChangeDiscussionSubscriptionTypeMutation } from './Mutations/ChangeDiscussionSubscriptionType.mutation';
 
-import { DiscussionMessagesSubscription } from './Subscriptions/DiscussionMessages.subscription';
+import { DiscussionMessageCreatedSubscription } from './Subscriptions/DiscussionMessageCreated.subscription';
 
 export const DiscussionTypes = [
   DiscussionType,
@@ -50,5 +50,5 @@ export const DiscussionTypes = [
 
   ChangeDiscussionSubscriptionTypeMutation,
 
-  DiscussionMessagesSubscription
+  DiscussionMessageCreatedSubscription
 ];

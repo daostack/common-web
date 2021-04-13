@@ -1,4 +1,4 @@
-model DiscussionMessagesSubscription {
+model DiscussionMessageCreatedSubscription {
   id String @id @default(uuid())
 
   createdAt DateTime @default(now())
