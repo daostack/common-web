@@ -19,8 +19,8 @@ export const ChangeDiscussionSubscriptionTypeMutation = extendType({
           })
         )
       },
-      authorize: (root, args, ctx) => {
-        const userId = ctx.getUserId();
+      authorize: async (root, args, ctx) => {
+        const userId = await ctx.getUserId();
 
         return authorizationService.discussions.canChangeSubscription(
           args.id,
