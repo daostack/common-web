@@ -335,6 +335,13 @@ input LinkInput {
 }
 
 type Mutation {
+  changeDiscussionSubscriptionType(
+    """The ID of the discussion subscription to change"""
+    id: ID!
+
+    """The new subscription type"""
+    type: DiscussionSubscriptionType!
+  ): DiscussionSubscription
   createCard(input: CreateCardInput!): Card!
   createCommon(input: CreateCommonInput!): Common!
   createDiscussion(input: CreateDiscussionInput!): Discussion!

@@ -364,6 +364,7 @@ export interface NexusGenFieldTypes {
     url: string; // String!
   }
   Mutation: { // field return type
+    changeDiscussionSubscriptionType: NexusGenRootTypes['DiscussionSubscription'] | null; // DiscussionSubscription
     createCard: NexusGenRootTypes['Card']; // Card!
     createCommon: NexusGenRootTypes['Common']; // Common!
     createDiscussion: NexusGenRootTypes['Discussion']; // Discussion!
@@ -487,6 +488,7 @@ export interface NexusGenFieldTypeNames {
     url: 'String'
   }
   Mutation: { // field return type name
+    changeDiscussionSubscriptionType: 'DiscussionSubscription'
     createCard: 'Card'
     createCommon: 'Common'
     createDiscussion: 'Discussion'
@@ -571,6 +573,10 @@ export interface NexusGenArgTypes {
     }
   }
   Mutation: {
+    changeDiscussionSubscriptionType: { // args
+      id: string; // ID!
+      type: NexusGenEnums['DiscussionSubscriptionType']; // DiscussionSubscriptionType!
+    }
     createCard: { // args
       input: NexusGenInputs['CreateCardInput']; // CreateCardInput!
     }
