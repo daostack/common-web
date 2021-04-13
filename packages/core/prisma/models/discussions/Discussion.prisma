@@ -16,5 +16,5 @@ model Discussion {
   proposal Proposal?
 
   messages      DiscussionMessage[]
-  subscriptions DiscussionSubscription[]
+  subscriptions DiscussionMessagesSubscription[]
 }

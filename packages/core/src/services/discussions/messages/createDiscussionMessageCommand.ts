@@ -1,7 +1,7 @@
 import * as z from 'zod';
 import { DiscussionMessage, DiscussionMessageType, EventType } from '@prisma/client';
 
-import { prisma } from '@toolkits';
+import { prisma, pubSub } from '@toolkits';
 import { CommonError } from '@errors';
 import { eventService } from '@services';
 
@@ -10,7 +10,7 @@ const schema = z.object({
     .nonempty(),
 
   discussionId: z.string()
-    .uuid()
+    // .uuid()
     .nonempty(),
 
   message: z.string()
@@ -69,6 +69,9 @@ export const createDiscussionMessageCommand = async (payload: z.infer<typeof sch
       messageId: message.id
     }
   });
+
+  // Publish the message for GQL
+  await pubSub.publish<DiscussionMessage>(`Discussions.${message.discussionId}.NewMessage`, message);
 
   // Return the created message
   return message;

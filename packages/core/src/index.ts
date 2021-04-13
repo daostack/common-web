@@ -3,7 +3,7 @@ import { FirebaseToolkit } from '@toolkits';
 // Initialize the Firebase before exporting anything that may use it
 FirebaseToolkit.InitializeFirebase();
 
-export { prisma } from '@toolkits';
+export { prisma, pubSub } from '@toolkits';
 export { logger } from '@logger';
 
 // Domain

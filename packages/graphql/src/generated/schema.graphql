@@ -416,14 +416,21 @@ enum SortOrder {
 input StringFilter {
   contains: String
   endsWith: String
-  equals: String
-  gt: String
-  gte: String
-  in: [String!]
-  lt: String
-  lte: String
-  notIn: [String!]
-  startsWith: String
+    equals: String
+    gt: String
+    gte: String
+    in: [String!]
+    lt: String
+    lte: String
+    notIn: [String!]
+    startsWith: String
+}
+
+type Subscription {
+    discussionMessageCreated(
+        """The ID of the discussion, for which messages you want to subscribe"""
+        discussionId: ID!
+    ): DiscussionMessage
 }
 
 """

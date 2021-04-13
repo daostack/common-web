@@ -263,6 +263,7 @@ export interface NexusGenObjects {
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Query: {};
+  Subscription: {};
   User: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     firstName: string; // String!
@@ -389,6 +390,9 @@ export interface NexusGenFieldTypes {
     proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
     user: NexusGenRootTypes['User'] | null; // User
   }
+  Subscription: { // field return type
+    discussionMessageCreated: NexusGenRootTypes['DiscussionMessage'] | null; // DiscussionMessage
+  }
   User: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     discussionSubscriptions: NexusGenRootTypes['DiscussionSubscription'][]; // [DiscussionSubscription!]!
@@ -513,6 +517,9 @@ export interface NexusGenFieldTypeNames {
     proposal: 'Proposal'
     user: 'User'
   }
+  Subscription: { // field return type name
+    discussionMessageCreated: 'DiscussionMessage'
+  }
   User: { // field return type name
     createdAt: 'DateTime'
     discussionSubscriptions: 'DiscussionSubscription'
@@ -626,6 +633,11 @@ export interface NexusGenArgTypes {
     }
     user: { // args
       userId?: string | null; // ID
+    }
+  }
+  Subscription: {
+    discussionMessageCreated: { // args
+      discussionId: string; // ID!
     }
   }
   User: {
