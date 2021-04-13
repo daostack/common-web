@@ -24,7 +24,9 @@ app.use(ipAddress.mw());
 
 
 // Add the Apollo middleware to the express app
-apollo.applyMiddleware({ app });
+apollo.applyMiddleware({
+  app
+});
 
 app.listen({ port: 4000 }, () => {
   logger.info(`🚀 Server ready`);
