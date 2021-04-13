@@ -28,7 +28,7 @@ export default function ProposalsComponent({ proposals, loadProposalDetail }: Di
           <div className="proposal-charts-wrapper">
             <div className="proposal-title">{d.description.title}</div>
             <div className="requested-amount">
-              Requested amount <div className="amount">{formatPrice(d.fundingRequest?.amount)}</div>
+              Requested amount <div className="amount">{formatPrice(d.fundingRequest?.amount || d.join?.funding)}</div>
             </div>
             <div className="votes">
               <VotesComponent proposal={d} />

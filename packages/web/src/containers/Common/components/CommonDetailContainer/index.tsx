@@ -5,3 +5,4 @@ export * from "./DiscussionDetailModal";
 export * from "./ProposalsComponent";
 export * from "./ChatComponent";
 export * from "./ProposalCountDown";
+export * from "./ProposalsHistory";

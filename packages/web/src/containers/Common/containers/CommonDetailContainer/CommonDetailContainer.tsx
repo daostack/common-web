@@ -13,6 +13,7 @@ import {
   DiscussionsComponent,
   DiscussionDetailModal,
   ProposalsComponent,
+  ProposalsHistory,
 } from "../../components/CommonDetailContainer";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
 import {
@@ -237,6 +238,7 @@ export default function CommonDetail() {
                   data={lastestProposals}
                   vievAllHandler={() => setTab("proposals")}
                 />
+                <ProposalsHistory proposals={historyProposals} common={common} />
               </div>
             </div>
           </div>
