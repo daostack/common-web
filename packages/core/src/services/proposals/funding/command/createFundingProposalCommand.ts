@@ -127,7 +127,7 @@ export const createFundingProposalCommand = async (command: z.infer<typeof schem
   });
 
   // Create event
-  await eventService.create({
+  eventService.create({
     userId: command.proposerId,
     commonId: command.commonId,
     type: EventType.FundingRequestCreated

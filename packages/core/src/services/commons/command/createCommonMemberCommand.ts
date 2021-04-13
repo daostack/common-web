@@ -41,7 +41,7 @@ export const createCommonMemberCommand = async (command: z.infer<typeof schema>)
   });
 
   // Create event for the new member
-  await eventService.create({
+  eventService.create({
     type: EventType.CommonMemberCreated,
     commonId: command.commonId,
     userId: command.userId,

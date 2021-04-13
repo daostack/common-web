@@ -88,7 +88,7 @@ export const createCardCommand = async (command: z.infer<typeof schema>): Promis
   });
 
   // Create event for the card
-  await eventService.create({
+  eventService.create({
     type: EventType.CardCreated,
     userId
   });

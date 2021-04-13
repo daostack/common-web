@@ -1,0 +1,8 @@
+enum ProposalState {
+  Countdown
+
+  Finalizing
+
+  Rejected
+  Accepted
+}

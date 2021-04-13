@@ -1,0 +1,15 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("Database.Url")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ---- Shared
+
+enum FundingType {
+  OneTime
+  Monthly
+}

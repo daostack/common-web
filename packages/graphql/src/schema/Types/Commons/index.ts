@@ -6,6 +6,7 @@ import { GetCommonsQuery } from './Queries/GetCommons.query';
 
 import { CommonEventsExtension } from './Extensions/CommonEvents.extension';
 import { CommonProposalsExtension } from './Extensions/CommonProposals.extension';
+import { CommonDiscussionsExtension } from './Extensions/CommonDiscussions.extension';
 import { CommonCommonMemberExtension } from './Extensions/CommonCommonMember.extension';
 
 import { CommonType } from './Types/Common.type';
@@ -26,5 +27,6 @@ export const CommonTypes = [
 
   CommonEventsExtension,
   CommonProposalsExtension,
+  CommonDiscussionsExtension,
   CommonCommonMemberExtension
 ];

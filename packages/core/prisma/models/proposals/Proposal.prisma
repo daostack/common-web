@@ -1,0 +1,42 @@
+model Proposal {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  expiresAt DateTime
+
+  title       String?
+  description String?
+
+  link   Json?
+  files  Json?
+  images Json?
+
+  ipAddress String?
+
+  votes Vote[]
+
+  type  ProposalType
+  state ProposalState @default(Countdown)
+
+  votesFor     Int @default(0)
+  votesAgainst Int @default(0)
+
+  discussions Discussion[]
+
+  join    JoinProposal?    @relation(fields: [joinId], references: [id])
+  funding FundingProposal? @relation(fields: [fundingId], references: [id])
+
+  user         User          @relation(fields: [userId], references: [id])
+  common       Common        @relation(fields: [commonId], references: [id])
+  commonMember CommonMember? @relation(fields: [commonMemberId], references: [id])
+
+
+  joinId    String? @unique
+  fundingId String? @unique
+
+  userId         String
+  commonId       String
+  commonMemberId String?
+}

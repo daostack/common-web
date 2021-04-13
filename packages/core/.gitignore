@@ -2,5 +2,7 @@
 .env.staging
 .env.production
 
+prisma/schema.prisma
+
 **/secrets/*
 

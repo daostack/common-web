@@ -14,6 +14,12 @@ import { FinalizeProposalMutation } from './Mutations/FinalizeProposalMutation';
 import { ProposalTypeEnum } from './Enums/ProposalType.enum';
 import { ProposalType } from './Types/Proposal.type';
 
+import { GetProposalQuery } from './Queries/GetProposal.query';
+
+import { ProposalWhereUniqueInput } from './Inputs/ProposalWhereUnique.input';
+
+import { ProposalDiscussionsExtension } from './Extensions/ProposalDiscussions.extension';
+
 export const ProposalTypes = [
   ProposalType,
 
@@ -32,5 +38,11 @@ export const ProposalTypes = [
   ProposalFileInput,
   ProposalImageInput,
 
-  ProposalTypeEnum
+  ProposalTypeEnum,
+
+  GetProposalQuery,
+
+  ProposalWhereUniqueInput,
+
+  ProposalDiscussionsExtension
 ];

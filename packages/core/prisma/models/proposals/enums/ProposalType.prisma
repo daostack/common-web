@@ -1,0 +1,4 @@
+enum ProposalType {
+  FundingRequest
+  JoinRequest
+}

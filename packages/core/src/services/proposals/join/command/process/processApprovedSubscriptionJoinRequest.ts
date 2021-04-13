@@ -25,7 +25,7 @@ export const processApprovedSubscriptionJoinRequest = async (proposalId: string)
   });
 
   // Create event
-  await eventService.create({
+  eventService.create({
     type: EventType.JoinRequestAccepted,
     userId: proposal.userId,
     commonId: proposal.commonId,
