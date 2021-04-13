@@ -142,7 +142,7 @@ export const createJoinProposalCommand = async (command: z.infer<typeof schema>)
   });
 
   // Create event
-  await eventService.create({
+  eventService.create({
     type: EventType.JoinRequestCreated,
     commonId: command.commonId,
     userId: command.userId

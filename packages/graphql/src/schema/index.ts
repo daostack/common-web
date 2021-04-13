@@ -7,18 +7,20 @@ import { VoteTypes } from './Types/Votes';
 import { EventTypes } from './Types/Events';
 import { CommonTypes } from './Types/Commons';
 import { ProposalTypes } from './Types/Proposals';
-
+import { DiscussionTypes } from './Types/Discussion';
 import { CommonMemberTypes } from './Types/CommonMember';
 
 import { UrlScalar } from './Shared/Scalars/Url.scalar';
 import { DateScalar } from './Shared/Scalars/Date.scalar';
 import { JsonScalar } from './Shared/Scalars/Json.scalar';
+import { UuidScalar } from './Shared/Scalars/Uuid.scalar';
 
 import { LinkType, LinkInputType } from './Shared/Types/Link.type';
 
+import { BaseEntityInterface } from './Shared/Interfaces/BaseEntity.interface';
+
 import { BillingDetailsInput } from './Shared/Inputs/BillingDetails.input';
 import { StringFilterInput } from './Shared/Inputs/StringFilter.input';
-
 import { SortOrder } from './Shared/Enums/SortBy.enum';
 
 const types = [
@@ -28,18 +30,23 @@ const types = [
   EventTypes,
   CommonTypes,
   ProposalTypes,
+  DiscussionTypes,
   CommonMemberTypes,
 
   // Scalars
   UrlScalar,
   DateScalar,
   JsonScalar,
+  UuidScalar,
 
   // Shared Enums
   SortOrder,
 
   // Shared Types
   LinkType,
+
+  // Shared Interfaces
+  BaseEntityInterface,
 
   // Shared Input Types
   LinkInputType,

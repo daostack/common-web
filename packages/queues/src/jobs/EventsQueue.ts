@@ -1,16 +1,14 @@
 import Queue, { JobOptions } from 'bull';
-import { setQueues, BullAdapter } from 'bull-board';
 import { Event, EventType } from '@prisma/client';
 
 import { Queues } from '../constants/Queues';
-import { CommonError } from '@common/core/dist/domain/errors';
-import { logger, eventService } from '@common/core';
+import { logger, CommonError } from '@common/core';
 
 // Create the job spec
 
 export interface IEventsQueueJob {
   create?: {
-    type: EventType;
+    type: EventType | string;
 
     userId?: string;
     commonId?: string;

@@ -7,6 +7,7 @@ import { CreateUserInput, CreateUserMutation } from './Mutations/CreateUser.muta
 
 import { UserEventsExtension } from './Extensions/UserEvents.extension';
 import { UserProposalsExtension } from './Extensions/UserProposals.extension';
+import { UserDiscussionSubscriptionsExtension } from './Extensions/UserDiscussionSubscriptions.extension';
 
 export const UserTypes = [
   UserType,
@@ -18,6 +19,7 @@ export const UserTypes = [
 
   UserEventsExtension,
   UserProposalsExtension,
+  UserDiscussionSubscriptionsExtension,
 
   GenerateUserAuthTokenQuery
 ];

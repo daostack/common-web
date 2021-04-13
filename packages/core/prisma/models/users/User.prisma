@@ -1,0 +1,24 @@
+model User {
+  id String @id
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  firstName String
+  lastName  String
+
+  email         String  @unique
+  emailVerified Boolean @default(false)
+
+  cards       Card[]
+  events      Event[]
+  memberships CommonMember[]
+
+  payments                Payment[]
+  proposals               Proposal[]
+  subscriptions           Subscription[]
+
+  discussionSubscriptions DiscussionSubscription[]
+  discussionMessages      DiscussionMessage[]
+  discussions             Discussion[]
+}

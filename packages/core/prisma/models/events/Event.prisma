@@ -1,0 +1,16 @@
+model Event {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type EventType
+
+  payload Json?
+
+  commonId String?
+  userId   String?
+
+  common Common? @relation(fields: [commonId], references: [id])
+  user   User?   @relation(fields: [userId], references: [id])
+}

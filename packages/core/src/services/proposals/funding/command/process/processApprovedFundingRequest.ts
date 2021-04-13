@@ -35,7 +35,7 @@ export const processApprovedFundingRequest = async (proposalArg: Proposal): Prom
   ]);
 
   // Create event
-  await eventService.create({
+  eventService.create({
     type: EventType.FundingRequestAccepted,
     userId: proposal.userId,
     commonId: proposal.commonId,

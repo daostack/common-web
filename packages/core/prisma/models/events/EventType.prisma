@@ -1,0 +1,36 @@
+enum EventType {
+  CommonCreated
+
+  CommonMemberCreated
+  CommonMemberRoleAdded
+  CommonMemberRoleRemoved
+
+  JoinRequestCreated
+  JoinRequestAccepted
+  JoinRequestRejected
+
+  FundingRequestCreated
+  FundingRequestAccepted
+  FundingRequestRejected
+
+  CardCreated
+  CardCvvVerificationPassed
+  CardCvvVerificationFailed
+
+  PaymentCreated
+  PaymentSucceeded
+  PaymentFailed
+
+  ProposalMajorityReached
+  ProposalExpired
+
+  VoteCreated
+
+  UserCreated
+
+  DiscussionCreated
+  DiscussionMessageCreated
+  DiscussionSubscriptionCreated
+
+  DiscussionSubscriptionTypeChanged
+}

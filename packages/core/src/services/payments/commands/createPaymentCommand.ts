@@ -108,7 +108,7 @@ export const createPaymentCommand = async (command: z.infer<typeof schema>): Pro
   });
 
   // Create event
-  await eventService.create({
+  eventService.create({
     type: EventType.PaymentCreated,
     userId: command.connect.userId,
     commonId: command.connect.commonId

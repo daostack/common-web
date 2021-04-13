@@ -11,5 +11,5 @@ export const CommonMetadataType = objectType({
     t.field('contributionType', {
       type: CommonContributionTypeEnum
     });
-  },
+  }
 });

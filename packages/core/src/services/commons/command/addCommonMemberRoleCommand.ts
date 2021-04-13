@@ -42,7 +42,7 @@ export const addCommonMemberRoleCommand = async (command: z.infer<typeof schema>
   });
 
   // Create event
-  await eventService.create({
+  eventService.create({
     type: EventType.CommonMemberRoleAdded,
     commonId: memberEntity.commonId,
     userId: memberEntity.userId,
