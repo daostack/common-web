@@ -31,4 +31,6 @@ enum EventType {
   DiscussionCreated
   DiscussionMessageCreated
   DiscussionSubscriptionCreated
+
+  DiscussionSubscriptionTypeChanged
 }

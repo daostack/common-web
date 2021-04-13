@@ -1,5 +1,8 @@
 import { createDiscussionCommand } from './core/commands/createDiscussionCommand';
+
 import { createDiscussionSubscriptionCommand } from './subscriptions/createDiscussionSubscriptionCommand';
+import { changeDiscussionSubscriptionTypeCommand } from './subscriptions/changeDiscussionSubscriptionTypeCommand';
+
 import { createDiscussionMessageCommand } from './messages/createDiscussionMessageCommand';
 
 export const discussionService = {
@@ -13,7 +16,14 @@ export const discussionService = {
     /**
      * Create notification subscription for discussion
      */
-    create: createDiscussionSubscriptionCommand
+    create: createDiscussionSubscriptionCommand,
+
+    /**
+     * Updates the type of the subscription in the backing store. Please note
+     * that this function does not check if the user has permission to update
+     * the specified subscription
+     */
+    changeType: changeDiscussionSubscriptionTypeCommand
   },
 
   messages: {
