@@ -1,5 +1,5 @@
 import path from 'path';
-import { makeSchema, queryComplexityPlugin } from 'nexus';
+import { makeSchema, queryComplexityPlugin, fieldAuthorizePlugin } from 'nexus';
 
 import { UserTypes } from './Types/Users';
 import { CardTypes } from './Types/Cards';
@@ -65,6 +65,7 @@ export const schema = makeSchema({
     export: 'IRequestContext'
   },
   plugins: [
-    queryComplexityPlugin()
+    queryComplexityPlugin(),
+    fieldAuthorizePlugin()
   ]
 });
