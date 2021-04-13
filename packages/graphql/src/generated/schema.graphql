@@ -61,6 +61,7 @@ type CommonMember {
   common: Common
   commonId: ID!
   id: ID!
+  proposals(skip: Int = 0, take: Int = 10, where: ProposalWhereInput): [Proposal!]!
   roles: [CommonMemberRole!]!
   user: User
   userId: ID!
@@ -197,6 +198,32 @@ enum DiscussionMessageType {
 input DiscussionMessagesOrderByInput {
   createdAt: SortOrder
   updatedAt: SortOrder
+}
+
+type DiscussionSubscription implements BaseEntity {
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  discussion: Discussion!
+  discussionId: UUID!
+
+  """The main identifier of the item"""
+  id: UUID!
+  type: DiscussionSubscriptionType!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  userId: String!
+}
+
+input DiscussionSubscriptionOrderByInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+}
+
+enum DiscussionSubscriptionType {
+  AllNotifications
+  NoNotification
+  OnlyMentions
 }
 
 enum DiscussionType {
@@ -404,6 +431,7 @@ scalar UUID
 type User {
   """The date, at which the item was created"""
   createdAt: DateTime!
+  discussionSubscriptions(orderBy: DiscussionSubscriptionOrderByInput, skip: Int = 0, take: Int = 10): [DiscussionSubscription!]!
 
   """The display name of the user"""
   displayName: String!

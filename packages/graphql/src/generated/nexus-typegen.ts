@@ -122,6 +122,10 @@ export interface NexusGenInputs {
     createdAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
     updatedAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
   }
+  DiscussionSubscriptionOrderByInput: { // input type
+    createdAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    updatedAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
   EventOrderByInput: { // input type
     createdAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
     type?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -163,8 +167,9 @@ export interface NexusGenInputs {
 
 export interface NexusGenEnums {
   CommonMemberRole: "Founder"
-  DiscussionMessageType: "Message"
-  DiscussionType: "CommonDiscussion" | "ProposalDiscussion"
+  DiscussionMessageType: 'Message'
+  DiscussionSubscriptionType: 'AllNotifications' | 'NoNotification' | 'OnlyMentions'
+  DiscussionType: 'CommonDiscussion' | 'ProposalDiscussion'
   EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "DiscussionCreated" | "DiscussionMessageCreated" | "DiscussionSubscriptionCreated" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "UserCreated" | "VoteCreated"
   FundingType: "Monthly" | "OneTime"
   ProposalType: "FundingRequest" | "JoinRequest"
@@ -219,6 +224,14 @@ export interface NexusGenObjects {
     type: NexusGenEnums['DiscussionMessageType']; // DiscussionMessageType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
+  DiscussionSubscription: { // root type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    discussionId: NexusGenScalars['UUID']; // UUID!
+    id: NexusGenScalars['UUID']; // UUID!
+    type: NexusGenEnums['DiscussionSubscriptionType']; // DiscussionSubscriptionType!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    userId: string; // String!
+  }
   Event: { // root type
     commonId?: string | null; // ID
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -265,7 +278,7 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  BaseEntity: NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'];
+  BaseEntity: NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'];
 }
 
 export interface NexusGenUnions {
@@ -296,6 +309,7 @@ export interface NexusGenFieldTypes {
     common: NexusGenRootTypes['Common'] | null; // Common
     commonId: string; // ID!
     id: string; // ID!
+    proposals: NexusGenRootTypes['Proposal'][]; // [Proposal!]!
     roles: NexusGenEnums['CommonMemberRole'][]; // [CommonMemberRole!]!
     user: NexusGenRootTypes['User'] | null; // User
     userId: string; // ID!
@@ -316,6 +330,15 @@ export interface NexusGenFieldTypes {
     message: string; // String!
     type: NexusGenEnums['DiscussionMessageType']; // DiscussionMessageType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
+  DiscussionSubscription: { // field return type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    discussion: NexusGenRootTypes['Discussion']; // Discussion!
+    discussionId: NexusGenScalars['UUID']; // UUID!
+    id: NexusGenScalars['UUID']; // UUID!
+    type: NexusGenEnums['DiscussionSubscriptionType']; // DiscussionSubscriptionType!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    userId: string; // String!
   }
   Event: { // field return type
     commonId: string | null; // ID
@@ -367,6 +390,7 @@ export interface NexusGenFieldTypes {
   }
   User: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    discussionSubscriptions: NexusGenRootTypes['DiscussionSubscription'][]; // [DiscussionSubscription!]!
     displayName: string; // String!
     events: NexusGenRootTypes['Event'][]; // [Event!]!
     firstName: string; // String!
@@ -408,6 +432,7 @@ export interface NexusGenFieldTypeNames {
     common: 'Common'
     commonId: 'ID'
     id: 'ID'
+    proposals: 'Proposal'
     roles: 'CommonMemberRole'
     user: 'User'
     userId: 'ID'
@@ -428,6 +453,15 @@ export interface NexusGenFieldTypeNames {
     message: 'String'
     type: 'DiscussionMessageType'
     updatedAt: 'DateTime'
+  }
+  DiscussionSubscription: { // field return type name
+    createdAt: 'DateTime'
+    discussion: 'Discussion'
+    discussionId: 'UUID'
+    id: 'UUID'
+    type: 'DiscussionSubscriptionType'
+    updatedAt: 'DateTime'
+    userId: 'String'
   }
   Event: { // field return type name
     commonId: 'ID'
@@ -479,6 +513,7 @@ export interface NexusGenFieldTypeNames {
   }
   User: { // field return type name
     createdAt: 'DateTime'
+    discussionSubscriptions: 'DiscussionSubscription'
     displayName: 'String'
     events: 'Event'
     firstName: 'String'
@@ -515,6 +550,13 @@ export interface NexusGenArgTypes {
       skip?: number | null; // Int
       take?: number | null; // Int
     }
+    proposals: { // args
+      skip?: number | null; // Int
+      take: number | null; // Int
+      where?: NexusGenInputs['ProposalWhereInput'] | null; // ProposalWhereInput
+    }
+  }
+  CommonMember: {
     proposals: { // args
       skip?: number | null; // Int
       take: number | null; // Int
@@ -581,6 +623,11 @@ export interface NexusGenArgTypes {
     }
   }
   User: {
+    discussionSubscriptions: { // args
+      orderBy?: NexusGenInputs['DiscussionSubscriptionOrderByInput'] | null; // DiscussionSubscriptionOrderByInput
+      skip?: number | null; // Int
+      take: number | null; // Int
+    }
     events: { // args
       orderBy?: NexusGenInputs['EventOrderByInput'] | null; // EventOrderByInput
       skip?: number | null; // Int
@@ -595,12 +642,13 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  BaseEntity: "Discussion" | "DiscussionMessage"
+  BaseEntity: 'Discussion' | 'DiscussionMessage' | 'DiscussionSubscription'
 }
 
 export interface NexusGenTypeInterfaces {
   Discussion: "BaseEntity"
-  DiscussionMessage: "BaseEntity"
+  DiscussionMessage: 'BaseEntity'
+  DiscussionSubscription: 'BaseEntity'
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
