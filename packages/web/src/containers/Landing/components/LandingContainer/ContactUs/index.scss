@@ -1,0 +1,35 @@
+@import "../../../../../constants.scss";
+
+.contact-us-wrapper {
+  display: flex;
+  justify-content: space-evenly;
+  background-image: url("../../../assets/images/goal-background.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  align-items: center;
+  .form-wrapper {
+    display: flex;
+    flex-direction: column;
+    input {
+      border: none;
+      border-radius: 5px;
+      padding: 5px;
+      margin: 5px;
+    }
+    textarea {
+      resize: none;
+      border: none;
+      border-radius: 5px;
+      padding: 5px;
+      margin: 5px;
+      width: 500px;
+      height: 150px;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .contact-us-wrapper {
+    flex-direction: column;
+  }
+}

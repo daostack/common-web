@@ -1,0 +1,26 @@
+@import "../../../../constants.scss";
+
+.landing-wrapper {
+  text-align: center;
+  .illustrations-wrapper {
+    display: flex;
+    justify-content: space-evenly;
+  }
+  .goal-wrapper {
+    background-image: url("../../assets/images/goal-background.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .illustrations-wrapper {
+    flex-direction: column;
+  }
+  .goal-wrapper {
+    flex-direction: column-reverse;
+  }
+}

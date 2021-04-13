@@ -1,16 +1,16 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import { useSelector } from "react-redux";
-
+//import { useSelector } from "react-redux";
 import { AuthContainer } from "../Auth";
 import PrivateRoute from "./PrivateRoute";
-import { authentificated } from "../Auth/store/selectors";
-import { Content, NotFound, Footer, Header, Dashboard } from "../../shared/components";
+//import { authentificated } from "../Auth/store/selectors";
+import { Content, NotFound, Footer, Header } from "../../shared/components"; // Dashboard
 import { CommonContainer } from "../Common";
+import { LandingContainer } from "../Landing";
 import { ROUTE_PATHS } from "../../shared/constants";
 
 const App = () => {
-  const is_authorized = useSelector(authentificated());
+  //const is_authorized = useSelector(authentificated());
 
   return (
     <div className="App">
@@ -18,7 +18,8 @@ const App = () => {
       <Content>
         <Switch>
           <Route path={ROUTE_PATHS.AUTH} component={AuthContainer} />
-          <PrivateRoute path="/" exact component={Dashboard} authentificated={is_authorized} />
+          {/* <PrivateRoute path="/" exact component={Dashboard} authentificated={is_authorized} /> */}
+          <Route path="/" exact component={LandingContainer} />
           <PrivateRoute path={ROUTE_PATHS.COMMON_LIST} component={CommonContainer} authentificated={true} />
           <Route component={NotFound} />
         </Switch>
