@@ -364,7 +364,8 @@ type Proposal {
 
   """The main identifier of the item"""
   id: ID!
-  type: ProposalType!
+    state: ProposalState!
+    type: ProposalType!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
@@ -375,21 +376,28 @@ input ProposalFileInput {
 }
 
 input ProposalImageInput {
-  value: String!
+    value: String!
 }
 
 input ProposalLinkInput {
-  title: String!
-  url: String!
+    title: String!
+    url: String!
+}
+
+enum ProposalState {
+    Accepted
+    Countdown
+    Finalizing
+    Rejected
 }
 
 enum ProposalType {
-  FundingRequest
-  JoinRequest
+    FundingRequest
+    JoinRequest
 }
 
 input ProposalWhereInput {
-  type: ProposalType
+    type: ProposalType
 }
 
 input ProposalWhereUniqueInput {
@@ -427,10 +435,14 @@ input StringFilter {
 }
 
 type Subscription {
-  discussionMessageCreated(
-    """The ID of the discussion, for which messages you want to subscribe"""
-    discussionId: ID!
-  ): DiscussionMessage
+    discussionMessageCreated(
+        """The ID of the discussion, for which messages you want to subscribe"""
+        discussionId: ID!
+    ): DiscussionMessage
+    onProposalChange(
+        """The ID of the proposal that you wish to subscribe to"""
+        proposalId: ID!
+    ): Proposal
 }
 
 """

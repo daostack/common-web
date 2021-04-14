@@ -172,8 +172,9 @@ export interface NexusGenEnums {
   DiscussionSubscriptionType: "AllNotifications" | "NoNotification" | "OnlyMentions"
   DiscussionType: "CommonDiscussion" | "ProposalDiscussion"
   EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "DiscussionCreated" | "DiscussionMessageCreated" | "DiscussionSubscriptionCreated" | "DiscussionSubscriptionTypeChanged" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "UserCreated" | "VoteCreated"
-  FundingType: "Monthly" | "OneTime"
-  ProposalType: "FundingRequest" | "JoinRequest"
+  FundingType: 'Monthly' | 'OneTime'
+  ProposalState: 'Accepted' | 'Countdown' | 'Finalizing' | 'Rejected'
+  ProposalType: 'FundingRequest' | 'JoinRequest'
   SortOrder: "asc" | "desc"
   VoteOutcome: "Approve" | "Condemn"
 }
@@ -260,6 +261,7 @@ export interface NexusGenObjects {
   Proposal: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
+    state: NexusGenEnums['ProposalState']; // ProposalState!
     type: NexusGenEnums['ProposalType']; // ProposalType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
@@ -381,6 +383,7 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     discussions: NexusGenRootTypes['Discussion'][]; // [Discussion!]!
     id: string; // ID!
+    state: NexusGenEnums['ProposalState']; // ProposalState!
     type: NexusGenEnums['ProposalType']; // ProposalType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
@@ -393,6 +396,7 @@ export interface NexusGenFieldTypes {
   }
   Subscription: { // field return type
     discussionMessageCreated: NexusGenRootTypes['DiscussionMessage'] | null; // DiscussionMessage
+    onProposalChange: NexusGenRootTypes['Proposal'] | null; // Proposal
   }
   User: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -508,6 +512,7 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'DateTime'
     discussions: 'Discussion'
     id: 'ID'
+    state: 'ProposalState'
     type: 'ProposalType'
     updatedAt: 'DateTime'
   }
@@ -520,6 +525,7 @@ export interface NexusGenFieldTypeNames {
   }
   Subscription: { // field return type name
     discussionMessageCreated: 'DiscussionMessage'
+    onProposalChange: 'Proposal'
   }
   User: { // field return type name
     createdAt: 'DateTime'
@@ -639,6 +645,9 @@ export interface NexusGenArgTypes {
   Subscription: {
     discussionMessageCreated: { // args
       discussionId: string; // ID!
+    }
+    onProposalChange: { // args
+      proposalId: string; // ID!
     }
   }
   User: {

@@ -1,3 +1,4 @@
+import { ProposalType } from './Types/Proposal.type';
 import { JoinProposalType } from './Types/JoinProposal.type';
 import { FundingProposalType } from './Types/FundingProposal.type';
 
@@ -8,17 +9,18 @@ import { ProposalLinkInput } from './Inputs/ProposalLink.input';
 import { ProposalFileInput } from './Inputs/ProposalFile.input';
 import { ProposalImageInput } from './Inputs/ProposalImage.input';
 import { ProposalWhereInput } from './Inputs/ProposalWhere.input';
+import { ProposalWhereUniqueInput } from './Inputs/ProposalWhereUnique.input';
 
 import { FinalizeProposalMutation } from './Mutations/FinalizeProposalMutation';
 
 import { ProposalTypeEnum } from './Enums/ProposalType.enum';
-import { ProposalType } from './Types/Proposal.type';
+import { ProposalStateEnum } from './Enums/ProposalState.enum';
 
 import { GetProposalQuery } from './Queries/GetProposal.query';
 
-import { ProposalWhereUniqueInput } from './Inputs/ProposalWhereUnique.input';
-
 import { ProposalDiscussionsExtension } from './Extensions/ProposalDiscussions.extension';
+
+import { ProposalChangeSubscription } from './Subscriptions/ProposalChange.subscription';
 
 export const ProposalTypes = [
   ProposalType,
@@ -39,10 +41,13 @@ export const ProposalTypes = [
   ProposalImageInput,
 
   ProposalTypeEnum,
+  ProposalStateEnum,
 
   GetProposalQuery,
 
   ProposalWhereUniqueInput,
 
-  ProposalDiscussionsExtension
+  ProposalDiscussionsExtension,
+
+  ProposalChangeSubscription
 ];
