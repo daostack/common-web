@@ -18,7 +18,9 @@ model User {
   proposals               Proposal[]
   subscriptions           Subscription[]
 
-  discussionSubscriptions DiscussionMessageCreatedSubscription[]
+  discussionSubscriptions DiscussionSubscription[]
   discussionMessages      DiscussionMessage[]
   discussions             Discussion[]
+
+  notifications Notification[]
 }
