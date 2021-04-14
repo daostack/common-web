@@ -12,5 +12,13 @@ model NotificationTemplate {
 
   stubs String[]
 
+  from     String?
+  fromName String?
+
+  bcc     String?
+  bccName String?
+
   language NotificationLanguage
+
+  @@unique([forType, templateType, language])
 }

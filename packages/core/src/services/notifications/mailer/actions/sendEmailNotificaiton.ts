@@ -1,14 +1,27 @@
 import { Notification, NotificationTemplateType } from '@prisma/client';
 import { set } from 'lodash';
 
-import { NotImplementedError, CommonError } from '@errors';
-import { prisma } from '@toolkits';
+import { CommonError } from '@errors';
+import { prisma, SendgridToolkit } from '@toolkits';
+import { templateEmail } from './templateEmail';
 
 const defaultLocale = 'EN';
 
 export const sendEmailNotification = async (notification: Notification): Promise<void> => {
-  // @todo Find the user locale
-  const locale = 'EN';
+  // Find the user locale and email
+  const user = (await prisma.user.findUnique({
+    where: {
+      id: notification.userId
+    },
+    select: {
+      email: true,
+      lastName: true,
+      firstName: true,
+      notificationLanguage: true
+    }
+  }))!;
+
+  const locale = user.notificationLanguage;
 
   // Find the email template
   const template = await prisma.notificationTemplate.findFirst({
@@ -28,15 +41,15 @@ export const sendEmailNotification = async (notification: Notification): Promise
     throw new CommonError('Cannot find the requested template');
   }
 
-  // Template the template
-
   // Check what entities need to be fetched
   const includeStubs = {};
 
-  for (const stub of template.stubs) {
-    set(includeStubs, stub, true);
+  for (const stub of template.stubs.filter((stub) => stub.split('.')[0] !== 'default')) {
+    set(includeStubs, stub.split('.').join('.select.'), true);
   }
 
+
+  // Create the templated email
   const notificationWithEntities = await prisma.notification.findUnique({
     where: {
       id: notification.id
@@ -45,14 +58,24 @@ export const sendEmailNotification = async (notification: Notification): Promise
   });
 
   // Send the created template
+  const { subject, content } = templateEmail(notificationWithEntities, template);
 
-  throw new NotImplementedError();
+  // Send the template
+  await SendgridToolkit.sendMail({
+    to: {
+      name: `${user.firstName} ${user.lastName}`,
+      email: user.email
+    },
+
+    from: {
+      name: template.fromName || (process.env['Sendgrid.Default.From.Name'] as string),
+      email: template.from || (process.env['Sendgrid.Default.From.Email'] as string)
+    },
+
+    bcc: template.bcc || undefined,
+
+    subject,
+    text: content,
+    html: content
+  });
 };
-
-const testObject = {
-  nested: {
-    inTheNest: 'fsdfs'
-  }
-};
-
-testObject['nested']['inTheNest'];

@@ -1,19 +1,11 @@
 import * as z from 'zod';
-import { NotificationType, Notification, NotificationSendStatus } from '@prisma/client';
+import { NotificationType, Notification } from '@prisma/client';
 import { prisma } from '@toolkits';
+import { worker } from '@common/queues';
 
 const schema = z.object({
   userId: z.string()
     .nonempty(),
-
-  show: z.boolean()
-    .optional(),
-
-  sendEmail: z.boolean()
-    .optional(),
-
-  sendPush: z.boolean()
-    .optional(),
 
   type: z.enum(Object.keys(NotificationType) as [(keyof typeof NotificationType)]),
 
@@ -42,22 +34,14 @@ export const createNotificationCommand = async (payload: z.infer<typeof schema>)
       userId: payload.userId,
       type: payload.type,
 
-      show: !!payload.show,
-
-      emailSentStatus: payload.sendEmail
-        ? NotificationSendStatus.Pending
-        : NotificationSendStatus.NotRequired,
-
-      pushSentStatus: payload.sendEmail
-        ? NotificationSendStatus.Pending
-        : NotificationSendStatus.NotRequired,
+      show: true, // @todo Do not forget
 
       ...payload.connect
     }
   });
 
-  // @todo Notify the user
-
+  // Schedule the processing
+  worker.addNotificationJob('process', notification);
 
   // Return the created notification
   return notification;

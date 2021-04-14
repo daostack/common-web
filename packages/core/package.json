@@ -24,6 +24,7 @@
     "@common/queues": "^1.9.11-rc.0",
     "@common/seeder": "^1.9.11-rc.0",
     "@prisma/client": "^2.20.1",
+    "@sendgrid/mail": "^7.4.2",
     "axios": "^0.21.1",
     "date-fns": "^2.19.0",
     "dotenv": "^8.2.0",

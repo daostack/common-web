@@ -7,6 +7,7 @@ import './processors/VotesWorker';
 import './processors/EventsWorker';
 import './processors/PaymentsWorker';
 import './processors/ProposalsWorker';
+import './processors/NotificationsWorker';
 
 import { Queues } from '@common/queues';
 

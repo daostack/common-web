@@ -13,7 +13,7 @@ export const ProposalChangeSubscription = subscriptionField('onProposalChange', 
   subscribe(root, args) {
     return pubSub.asyncIterator<Proposal>(`Proposal.${args.proposalId}.Updated`);
   },
-  resolve: (root) => {
+  resolve: (root: Proposal) => {
     return root;
   }
 });
