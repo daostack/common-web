@@ -19,8 +19,6 @@ Queues.PaymentsQueue.process((job, done) => {
 });
 
 Queues.PaymentsQueue.process('process', async (job, done) => {
-  console.log('here');
-
   // Create log about the processing
   logger.debug('Starting processing of finalized payment');
 

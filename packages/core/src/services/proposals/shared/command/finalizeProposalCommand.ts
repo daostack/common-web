@@ -2,8 +2,8 @@ import { ProposalState, ProposalType } from '@prisma/client';
 
 import { prisma } from '@toolkits';
 
-import { finalizeJoinProposalCommand } from '../../join/command/finalizeJoinProposalCommand';
-import { finalizeFundingProposal } from '../../funding/command/finalizeFundingProposal';
+import { finalizeJoinProposalCommand } from '../../commands/join/finalizeJoinProposalCommand';
+import { finalizeFundingProposal } from '../../commands/funding/finalizeFundingProposal';
 
 
 /**

@@ -1,7 +1,7 @@
 import { Proposal, ProposalState, EventType } from '@prisma/client';
 
 import { prisma } from '@toolkits';
-import { eventService } from '../../../../index';
+import { eventService } from '@services';
 
 export const processRejectedFundingRequest = async (proposal: Proposal): Promise<void> => {
   // Change the proposal state

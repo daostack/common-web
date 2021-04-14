@@ -1,7 +1,7 @@
 import { ProposalState } from '@prisma/client';
 
 import { prisma } from '@toolkits';
-import { voteService } from '../../../index';
+import { voteService } from '@services';
 import { NotFoundError, CommonError } from '@errors';
 
 import { processApprovedFundingRequest } from './process/processApprovedFundingRequest';

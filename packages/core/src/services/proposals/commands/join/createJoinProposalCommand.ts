@@ -1,13 +1,13 @@
 import * as z from 'zod';
 import { EventType, ProposalState, ProposalType, Proposal } from '@prisma/client';
 
+import { generateProposalExpiresAtDate } from '../../helpers';
 import { CommonError, NotFoundError } from '@errors';
 import { ProposalLinkSchema } from '@validation';
-import { eventService } from '../../../index';
-import { prisma } from '@toolkits';
+import { eventService } from '@services';
 
-import { generateProposalExpiresAtDate } from '../../helpers/generateProposalExpiresAtDate';
-import { addExpireProposalJob } from '../../queue/expireProposalsQueue';
+import { prisma } from '@toolkits';
+import { worker } from '@common/queues';
 
 const schema = z.object({
   title: z.string()
@@ -149,7 +149,9 @@ export const createJoinProposalCommand = async (command: z.infer<typeof schema>)
   });
 
   // Set up expiration for the proposal
-  addExpireProposalJob(proposal);
+  worker.addProposalsJob('finalizeProposal', proposal.id, {
+    delay: Math.abs((new Date()).getTime() - proposal.expiresAt.getTime())
+  });
 
   // Return the created proposal
   return proposal;

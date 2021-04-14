@@ -1,5 +1,5 @@
 import { prisma } from '@toolkits';
-import { eventService } from '../../../../index';
+import { eventService } from '@services';
 import { ProposalState, EventType } from '@prisma/client';
 
 export const processRejectedJoinRequest = async (proposalId: string): Promise<void> => {

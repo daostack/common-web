@@ -1,7 +1,7 @@
 import { prisma } from '@toolkits';
 import { EventType, FundingType, ProposalState } from '@prisma/client';
 import { CommonError } from '@errors';
-import { paymentService, commonService, eventService } from '../../../../index';
+import { paymentService, commonService, eventService } from '@services';
 
 export const processApprovedOneTimeJoinRequestCommand = async (proposalId: string) => {
   const proposal = await prisma.proposal.update({

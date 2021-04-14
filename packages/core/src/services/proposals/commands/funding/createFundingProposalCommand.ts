@@ -1,12 +1,13 @@
 import * as z from 'zod';
 import { EventType, Proposal, ProposalType } from '@prisma/client';
 
+import { worker } from '@common/queues';
+
 import { ProposalLinkSchema, ProposalImageSchema, ProposalFileSchema } from '@validation';
+import { generateProposalExpiresAtDate } from '../../helpers';
 import { NotFoundError, CommonError } from '@errors';
+import { eventService } from '@services';
 import { prisma } from '@toolkits';
-import { eventService } from '../../../index';
-import { generateProposalExpiresAtDate } from '../../helpers/generateProposalExpiresAtDate';
-import { addExpireProposalJob } from '../../queue/expireProposalsQueue';
 
 const schema = z.object({
   commonId: z.string()
@@ -134,7 +135,9 @@ export const createFundingProposalCommand = async (command: z.infer<typeof schem
   });
 
   // Set up expiration for the proposal
-  addExpireProposalJob(proposal);
+  worker.addProposalsJob('finalizeProposal', proposal.id, {
+    delay: Math.abs((new Date()).getTime() - proposal.expiresAt.getTime())
+  });
 
   // Return the created funding proposal
   return proposal;
