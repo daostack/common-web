@@ -1,0 +1,14 @@
+{
+  "name": "@common/seeder",
+  "version": "1.9.11-rc.0",
+  "author": "Alexander Ivanov @alexander2001i",
+  "license": "ISC",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daostack/common-monorepo.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  }
+}

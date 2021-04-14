@@ -1,0 +1,13 @@
+model NotificationSystemSettings {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type NotificationType @unique
+
+  sendEmail Boolean @default(false)
+  sendPush  Boolean @default(false)
+
+  showInUserFeed Boolean @default(false)
+}

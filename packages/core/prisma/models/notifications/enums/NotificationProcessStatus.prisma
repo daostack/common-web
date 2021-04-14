@@ -1,0 +1,5 @@
+enum NotificationProcessStatus {
+  NotProcessed
+  Processing
+  Processed
+}

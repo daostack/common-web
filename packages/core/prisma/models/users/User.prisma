@@ -22,5 +22,6 @@ model User {
   discussionMessages      DiscussionMessage[]
   discussions             Discussion[]
 
-  notifications Notification[]
+  notifications        Notification[]
+  notificationLanguage NotificationLanguage @default(EN)
 }
