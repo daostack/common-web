@@ -24,4 +24,5 @@ $prisma.$use(async (params, next) => {
   return result;
 });
 
+export { EventType } from '@prisma/client';
 export const prisma = $prisma;

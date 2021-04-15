@@ -8,9 +8,13 @@ model Event {
 
   payload Json?
 
-  commonId String?
-  userId   String?
+  discussionId String?
+  proposalId   String?
+  commonId     String?
+  userId       String?
 
-  common Common? @relation(fields: [commonId], references: [id])
-  user   User?   @relation(fields: [userId], references: [id])
+  discussion Discussion? @relation(fields: [discussionId], references: [id])
+  proposal   Proposal? @relation(fields: [proposalId], references: [id])
+  common     Common? @relation(fields: [commonId], references: [id])
+  user       User?   @relation(fields: [userId], references: [id])
 }

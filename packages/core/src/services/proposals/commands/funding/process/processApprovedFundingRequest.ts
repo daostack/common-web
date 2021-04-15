@@ -38,9 +38,10 @@ export const processApprovedFundingRequest = async (proposalArg: Proposal): Prom
   eventService.create({
     type: EventType.FundingRequestAccepted,
     userId: proposal.userId,
+    proposalId: proposal.id,
     commonId: proposal.commonId,
     payload: JSON.stringify({
-      proposal
+      proposalId: proposal.id
     })
   });
 };

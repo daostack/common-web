@@ -1,7 +1,8 @@
-import { FirebaseToolkit } from '@toolkits';
+import { FirebaseToolkit, SendgridToolkit } from '@toolkits';
 
 // Initialize the Firebase before exporting anything that may use it
 FirebaseToolkit.InitializeFirebase();
+SendgridToolkit.InitializeSendgrid();
 
 export { prisma, pubSub } from '@toolkits';
 export { logger } from '@logger';

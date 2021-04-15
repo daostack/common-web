@@ -18,6 +18,8 @@ export const processRejectedJoinRequest = async (proposalId: string): Promise<vo
     type: EventType.JoinRequestRejected,
     userId: proposal.userId,
     commonId: proposal.commonId,
-    payload: JSON.stringify(proposal)
+    payload: JSON.stringify({
+      proposalId: proposal.id
+    })
   });
 };

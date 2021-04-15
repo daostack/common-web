@@ -1,6 +1,7 @@
 {
   "exclude": [
-    "dist"
+    "dist",
+    "prisma"
   ],
   "compilerOptions": {
     "target": "es5",

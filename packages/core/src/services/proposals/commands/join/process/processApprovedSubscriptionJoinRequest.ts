@@ -30,7 +30,7 @@ export const processApprovedSubscriptionJoinRequest = async (proposalId: string)
     userId: proposal.userId,
     commonId: proposal.commonId,
     payload: JSON.stringify({
-      proposal
+      proposalId: proposal.id
     })
   });
 
