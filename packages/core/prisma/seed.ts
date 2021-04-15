@@ -7,11 +7,11 @@ async function main() {
 
   await prisma.notificationSystemSettings.upsert({
     where: {
-      type: NotificationType.RequestToJoinAccepted
+      type: NotificationType.FundingRequestAccepted
     },
     update: {},
     create: {
-      type: NotificationType.RequestToJoinAccepted,
+      type: NotificationType.FundingRequestAccepted,
 
       sendPush: true,
       sendEmail: true,
@@ -22,11 +22,11 @@ async function main() {
 
   await prisma.notificationSystemSettings.upsert({
     where: {
-      type: NotificationType.RequestToJoinRejected
+      type: NotificationType.FundingRequestRejected
     },
     update: {},
     create: {
-      type: NotificationType.RequestToJoinRejected,
+      type: NotificationType.FundingRequestRejected,
 
       sendPush: true,
       sendEmail: true,
@@ -39,23 +39,25 @@ async function main() {
   await prisma.notificationTemplate.upsert({
     where: {
       forType_templateType_language: {
-        forType: NotificationType.RequestToJoinAccepted,
+        forType: NotificationType.FundingRequestAccepted,
         templateType: NotificationTemplateType.EmailNotification,
         language: 'EN'
       }
     },
     update: {},
     create: {
-      forType: NotificationType.RequestToJoinAccepted,
+      forType: NotificationType.FundingRequestAccepted,
       templateType: NotificationTemplateType.EmailNotification,
       language: 'EN',
 
       subject: 'Good news {{user.firstName}} {{user.lastName}}',
-      content: '',
+      content: 'Your Proposal {{proposal.title}} for {{proposal.funding.amount}} was accepted',
 
       stubs: [
         'user.firstName',
-        'user.lastName'
+        'user.lastName',
+        'proposal.title',
+        'proposal.funding.amount'
       ]
     }
   });

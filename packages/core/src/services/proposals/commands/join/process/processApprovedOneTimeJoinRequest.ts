@@ -22,7 +22,7 @@ export const processApprovedOneTimeJoinRequestCommand = async (proposalId: strin
     userId: proposal.userId,
     commonId: proposal.commonId,
     payload: JSON.stringify({
-      proposal
+      proposalId: proposal.id
     })
   });
 

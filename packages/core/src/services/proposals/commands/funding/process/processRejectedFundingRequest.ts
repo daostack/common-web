@@ -19,6 +19,8 @@ export const processRejectedFundingRequest = async (proposal: Proposal): Promise
     type: EventType.FundingRequestRejected,
     userId: proposal.userId,
     commonId: proposal.commonId,
-    payload: JSON.stringify(proposal)
+    payload: JSON.stringify({
+      proposalId: proposal.id
+    })
   });
 };

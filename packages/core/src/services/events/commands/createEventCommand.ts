@@ -4,6 +4,14 @@ import { EventType } from '@prisma/client';
 import { worker } from '@common/queues';
 
 const schema = z.object({
+  proposalId: z.string()
+    .uuid()
+    .optional(),
+
+  discussionId: z.string()
+    .uuid()
+    .optional(),
+
   commonId: z.string()
     .uuid()
     .optional(),
