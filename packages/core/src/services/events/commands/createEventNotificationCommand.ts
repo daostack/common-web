@@ -16,5 +16,8 @@ export const createEventNotificationCommand = async (event: Event): Promise<void
           commonId: event.commonId || undefined
         }
       });
+
+    // New discussion -> All common members
+    // New discussion message -> All discussion subscribers
   }
 };

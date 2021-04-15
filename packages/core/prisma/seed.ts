@@ -1,42 +1,14 @@
 import { NotificationType, NotificationTemplateType, PrismaClient } from '@prisma/client';
+import { seedNotificationSystemSetting } from './seed/notificationSystemSettings';
 
-const prisma = new PrismaClient();
+export const seeder = new PrismaClient();
 
 async function main() {
   // Seed Notification Settings
-
-  await prisma.notificationSystemSettings.upsert({
-    where: {
-      type: NotificationType.FundingRequestAccepted
-    },
-    update: {},
-    create: {
-      type: NotificationType.FundingRequestAccepted,
-
-      sendPush: true,
-      sendEmail: true,
-
-      showInUserFeed: true
-    }
-  });
-
-  await prisma.notificationSystemSettings.upsert({
-    where: {
-      type: NotificationType.FundingRequestRejected
-    },
-    update: {},
-    create: {
-      type: NotificationType.FundingRequestRejected,
-
-      sendPush: true,
-      sendEmail: true,
-
-      showInUserFeed: true
-    }
-  });
+  await seedNotificationSystemSetting();
 
   // Create templates
-  await prisma.notificationTemplate.upsert({
+  await seeder.notificationTemplate.upsert({
     where: {
       forType_templateType_language: {
         forType: NotificationType.FundingRequestAccepted,
@@ -64,10 +36,13 @@ async function main() {
 }
 
 main()
+  .then(() => {
+    console.log('🌱  Your database has been seeded.');
+  })
   .catch(e => {
     console.error(e);
     process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect();
+    await seeder.$disconnect();
   });

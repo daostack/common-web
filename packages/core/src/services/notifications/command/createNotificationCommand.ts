@@ -2,6 +2,7 @@ import * as z from 'zod';
 import { NotificationType, Notification } from '@prisma/client';
 import { prisma } from '@toolkits';
 import { worker } from '@common/queues';
+import { CommonError } from '@errors';
 
 const schema = z.object({
   userId: z.string()
@@ -28,13 +29,27 @@ export const createNotificationCommand = async (payload: z.infer<typeof schema>)
   // Validate the payloads
   schema.parse(payload);
 
+  // Find the notification setting to see whether the notification should be shown
+  const settings = await prisma.notificationSystemSettings.findUnique({
+    where: {
+      type: payload.type
+    },
+    select: {
+      showInUserFeed: true
+    }
+  });
+
+  if (!settings) {
+    throw new CommonError(`Cannot find settings for notification type: ${payload.type}`);
+  }
+
   // Create the notification
   const notification = await prisma.notification.create({
     data: {
       userId: payload.userId,
       type: payload.type,
 
-      show: true, // @todo Do not forget
+      show: settings.showInUserFeed,
 
       ...payload.connect
     }
