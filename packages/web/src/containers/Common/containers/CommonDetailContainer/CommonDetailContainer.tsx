@@ -14,6 +14,7 @@ import {
   DiscussionDetailModal,
   ProposalsComponent,
   ProposalsHistory,
+  AboutSidebarComponent,
 } from "../../components/CommonDetailContainer";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
 import {
@@ -142,6 +143,52 @@ export default function CommonDetail() {
     dispatch(clearCurrentDiscussion());
   }, [onClose, dispatch]);
 
+  const renderSidebarContent = () => {
+    if (!common) return null;
+    switch (tab) {
+      case "about":
+        return (
+          <>
+            <PreviewInformationList
+              title="Latest Discussions"
+              data={latestDiscussions}
+              vievAllHandler={() => setTab("discussions")}
+            />
+            <PreviewInformationList
+              title="Latest Proposals"
+              data={lastestProposals}
+              vievAllHandler={() => setTab("proposals")}
+            />
+          </>
+        );
+
+      case "discussions":
+        return (
+          <>
+            <AboutSidebarComponent title="About" vievAllHandler={() => setTab("about")} common={common} />
+            <PreviewInformationList
+              title="Latest Proposals"
+              data={lastestProposals}
+              vievAllHandler={() => setTab("proposals")}
+            />
+          </>
+        );
+      case "proposals":
+        return (
+          <>
+            <AboutSidebarComponent title="About" vievAllHandler={() => setTab("about")} common={common} />
+            <PreviewInformationList
+              title="Latest Discussions"
+              data={latestDiscussions}
+              vievAllHandler={() => setTab("discussions")}
+            />
+          </>
+        );
+      case "history":
+        return <ProposalsHistory proposals={historyProposals} common={common} />;
+    }
+  };
+
   return loading && !common ? (
     <Loader />
   ) : (
@@ -227,19 +274,7 @@ export default function CommonDetail() {
                     <Loader />
                   ))}
               </div>
-              <div className="sidebar-wrapper">
-                <PreviewInformationList
-                  title="Latest Discussions"
-                  data={latestDiscussions}
-                  vievAllHandler={() => setTab("discussions")}
-                />
-                <PreviewInformationList
-                  title="Latest Proposals"
-                  data={lastestProposals}
-                  vievAllHandler={() => setTab("proposals")}
-                />
-                <ProposalsHistory proposals={historyProposals} common={common} />
-              </div>
+              <div className="sidebar-wrapper">{renderSidebarContent()}</div>
             </div>
           </div>
         </div>
