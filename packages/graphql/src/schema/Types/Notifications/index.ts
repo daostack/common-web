@@ -13,6 +13,8 @@ import { NotificationWhereUniqueInput } from './Inputs/NotificationWhereUnique.i
 
 import { NotificationOrderByInput } from './Inputs/NotificationOrderBy.input';
 
+import { NotificationCreatedSubscription } from './Subscriptions/NotificationCreated.subscription';
+
 export const NotificationTypes = [
   NotificationTypeEnum,
   NotificationSeenStatusEnum,
@@ -27,5 +29,7 @@ export const NotificationTypes = [
   NotificationWhereInput,
   NotificationWhereUniqueInput,
 
-  NotificationOrderByInput
+  NotificationOrderByInput,
+
+  NotificationCreatedSubscription
 ];

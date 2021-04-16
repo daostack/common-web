@@ -34,15 +34,23 @@ export interface IRequestContext {
   res: Express.Response;
 }
 
-export const createRequestContext = ({ req, res }: ExpressContext): IRequestContext => {
+export const createRequestContext = ({ req, res, connection }: ExpressContext): IRequestContext => {
   return {
     req,
     res,
     prisma,
 
     getUserId: async () => {
+      let token: string;
+
+      if (connection) {
+        token = connection.context.authorization;
+      } else {
+        token = req.headers.authorization as string;
+      }
+
       // @todo Use custom method for that
-      return (await auth().verifyIdToken(req.headers.authorization as string)).uid;
+      return (await auth().verifyIdToken(token)).uid;
     },
 
     getUserDecodedToken: async () => {

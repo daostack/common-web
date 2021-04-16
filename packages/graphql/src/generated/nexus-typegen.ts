@@ -442,6 +442,7 @@ export interface NexusGenFieldTypes {
   }
   Subscription: { // field return type
     discussionMessageCreated: NexusGenRootTypes['DiscussionMessage'] | null; // DiscussionMessage
+    notificationCreated: NexusGenRootTypes['Notification'] | null; // Notification
     onProposalChange: NexusGenRootTypes['Proposal'] | null; // Proposal
   }
   User: { // field return type
@@ -588,6 +589,7 @@ export interface NexusGenFieldTypeNames {
   }
   Subscription: { // field return type name
     discussionMessageCreated: 'DiscussionMessage'
+    notificationCreated: 'Notification'
     onProposalChange: 'Proposal'
   }
   User: { // field return type name

@@ -21,6 +21,14 @@ $prisma.$use(async (params, next) => {
     }
   }
 
+  if (params.action === 'create') {
+    // Publish created event for the following
+
+    if (params.model === 'Notification') {
+      await pubSub.publish(`Notifications.${result.userId}.Created`, result);
+    }
+  }
+
   return result;
 });
 

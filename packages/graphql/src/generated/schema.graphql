@@ -381,13 +381,13 @@ type Notification implements BaseEntity {
   """The linked proposal. Expensive operation that may return null"""
   proposal: Proposal
 
-  """The ID of the linked proposal. May be null"""
-  proposalId: UUID
-  seenStatus: NotificationSeenStatus!
+    """The ID of the linked proposal. May be null"""
+    proposalId: UUID
+    seenStatus: NotificationSeenStatus!
 
-  """Whether the notification should be shown in the user notification feed"""
-  show: Boolean!
-  type: NotificationType!
+    """Whether the notification should be shown in the user notification feed"""
+    show: Boolean!
+    type: NotificationType!
 
     """The date, at which the item was last modified"""
     updatedAt: DateTime!
@@ -441,8 +441,8 @@ type Proposal {
     state: ProposalState!
     type: ProposalType!
 
-  """The date, at which the item was last modified"""
-  updatedAt: DateTime!
+    """The date, at which the item was last modified"""
+    updatedAt: DateTime!
 }
 
 input ProposalFileInput {
@@ -509,14 +509,15 @@ input StringFilter {
 }
 
 type Subscription {
-  discussionMessageCreated(
-    """The ID of the discussion, for which messages you want to subscribe"""
-    discussionId: ID!
-  ): DiscussionMessage
-  onProposalChange(
-    """The ID of the proposal that you wish to subscribe to"""
-    proposalId: ID!
-  ): Proposal
+    discussionMessageCreated(
+        """The ID of the discussion, for which messages you want to subscribe"""
+        discussionId: ID!
+    ): DiscussionMessage
+    notificationCreated: Notification
+    onProposalChange(
+        """The ID of the proposal that you wish to subscribe to"""
+        proposalId: ID!
+    ): Proposal
 }
 
 """
@@ -537,22 +538,22 @@ type User {
   """The display name of the user"""
   displayName: String!
 
-  """List of events, that occurred and are related to this user"""
-  events(orderBy: EventOrderByInput, skip: Int = 0, take: Int = 10): [Event!]!
+    """List of events, that occurred and are related to this user"""
+    events(orderBy: EventOrderByInput, skip: Int = 0, take: Int = 10): [Event!]!
 
-  """The first name of the user"""
-  firstName: String!
+    """The first name of the user"""
+    firstName: String!
 
-  """The system Id of the user"""
-  id: ID!
+    """The system Id of the user"""
+    id: ID!
 
     """The last name of the user"""
     lastName: String!
     notifications(cursor: NotificationWhereUniqueInput, orderBy: NotificationOrderByInput = {createdAt: desc}, skip: Int, take: Int = 10): [Notification!]!
     proposals(skip: Int = 0, take: Int = 10, where: ProposalWhereInput): [Proposal!]!
 
-  """The date, at which the item was last modified"""
-  updatedAt: DateTime!
+    """The date, at which the item was last modified"""
+    updatedAt: DateTime!
 }
 
 type Vote {
