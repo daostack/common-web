@@ -4,11 +4,10 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
-import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
+import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -115,6 +114,10 @@ export interface NexusGenInputs {
     firstName: string; // String!
     lastName: string; // String!
   }
+  CreateUserNotificationTokenInput: { // input type
+    description: string; // String!
+    token: string; // String!
+  }
   CreateVoteInput: { // input type
     outcome: NexusGenEnums['VoteOutcome']; // VoteOutcome!
     proposalId: string; // ID!
@@ -194,6 +197,7 @@ export interface NexusGenEnums {
   ProposalState: "Accepted" | "Countdown" | "Finalizing" | "Rejected"
   ProposalType: "FundingRequest" | "JoinRequest"
   SortOrder: "asc" | "desc"
+  UserNotificationTokenState: "Active" | "Expired" | "Voided"
   VoteOutcome: "Approve" | "Condemn"
 }
 
@@ -304,6 +308,15 @@ export interface NexusGenObjects {
     lastName: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
+  UserNotificationToken: { // root type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    description: string; // String!
+    id: NexusGenScalars['UUID']; // UUID!
+    lastUsed: NexusGenScalars['DateTime']; // DateTime!
+    lastVerified: NexusGenScalars['DateTime']; // DateTime!
+    state: NexusGenEnums['UserNotificationTokenState']; // UserNotificationTokenState!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   Vote: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
@@ -312,7 +325,7 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  BaseEntity: NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['Notification'];
+  BaseEntity: NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['UserNotificationToken'];
 }
 
 export interface NexusGenUnions {
@@ -406,6 +419,7 @@ export interface NexusGenFieldTypes {
     createFundingProposal: NexusGenRootTypes['Proposal']; // Proposal!
     createJoinProposal: NexusGenRootTypes['Proposal']; // Proposal!
     createUser: NexusGenRootTypes['User']; // User!
+    createUserNotificationToken: NexusGenRootTypes['UserNotificationToken']; // UserNotificationToken!
     createVote: NexusGenRootTypes['Vote']; // Vote!
     finalizeProposal: boolean; // Boolean!
   }
@@ -453,8 +467,19 @@ export interface NexusGenFieldTypes {
     firstName: string; // String!
     id: string; // ID!
     lastName: string; // String!
+    notificationTokens: NexusGenRootTypes['UserNotificationToken'][]; // [UserNotificationToken!]!
     notifications: NexusGenRootTypes['Notification'][]; // [Notification!]!
     proposals: NexusGenRootTypes['Proposal'][]; // [Proposal!]!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
+  UserNotificationToken: { // field return type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    description: string; // String!
+    id: NexusGenScalars['UUID']; // UUID!
+    lastUsed: NexusGenScalars['DateTime']; // DateTime!
+    lastVerified: NexusGenScalars['DateTime']; // DateTime!
+    state: NexusGenEnums['UserNotificationTokenState']; // UserNotificationTokenState!
+    token: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Vote: { // field return type
@@ -553,6 +578,7 @@ export interface NexusGenFieldTypeNames {
     createFundingProposal: 'Proposal'
     createJoinProposal: 'Proposal'
     createUser: 'User'
+    createUserNotificationToken: 'UserNotificationToken'
     createVote: 'Vote'
     finalizeProposal: 'Boolean'
   }
@@ -600,8 +626,19 @@ export interface NexusGenFieldTypeNames {
     firstName: 'String'
     id: 'ID'
     lastName: 'String'
+    notificationTokens: 'UserNotificationToken'
     notifications: 'Notification'
     proposals: 'Proposal'
+    updatedAt: 'DateTime'
+  }
+  UserNotificationToken: { // field return type name
+    createdAt: 'DateTime'
+    description: 'String'
+    id: 'UUID'
+    lastUsed: 'DateTime'
+    lastVerified: 'DateTime'
+    state: 'UserNotificationTokenState'
+    token: 'String'
     updatedAt: 'DateTime'
   }
   Vote: { // field return type name
@@ -678,6 +715,9 @@ export interface NexusGenArgTypes {
     createUser: { // args
       input: NexusGenInputs['CreateUserInput']; // CreateUserInput!
     }
+    createUserNotificationToken: { // args
+      input: NexusGenInputs['CreateUserNotificationTokenInput']; // CreateUserNotificationTokenInput!
+    }
     createVote: { // args
       input: NexusGenInputs['CreateVoteInput']; // CreateVoteInput!
     }
@@ -742,7 +782,7 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  BaseEntity: "Discussion" | "DiscussionMessage" | "DiscussionSubscription" | "Notification"
+  BaseEntity: "Discussion" | "DiscussionMessage" | "DiscussionSubscription" | "Notification" | "UserNotificationToken"
 }
 
 export interface NexusGenTypeInterfaces {
@@ -750,6 +790,7 @@ export interface NexusGenTypeInterfaces {
   DiscussionMessage: "BaseEntity"
   DiscussionSubscription: "BaseEntity"
   Notification: "BaseEntity"
+  UserNotificationToken: "BaseEntity"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;

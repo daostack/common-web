@@ -1,0 +1,15 @@
+model UserNotificationToken {
+  id String @id  @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  state       UserNotificationTokenState @default(Active)
+  token       String                     @unique
+  description String
+
+  lastUsed     DateTime @default(now())
+  lastVerified DateTime @default(now())
+
+  user User
+}

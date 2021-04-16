@@ -24,4 +24,6 @@ model User {
 
   notifications        Notification[]
   notificationLanguage NotificationLanguage @default(EN)
+
+  notificationTokens UserNotificationToken[]
 }
