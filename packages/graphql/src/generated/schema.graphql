@@ -266,23 +266,25 @@ enum EventType {
   CommonMemberCreated
   CommonMemberRoleAdded
   CommonMemberRoleRemoved
-  DiscussionCreated
-  DiscussionMessageCreated
-  DiscussionSubscriptionCreated
-  DiscussionSubscriptionTypeChanged
-  FundingRequestAccepted
-  FundingRequestCreated
-  FundingRequestRejected
-  JoinRequestAccepted
-  JoinRequestCreated
-  JoinRequestRejected
-  PaymentCreated
-  PaymentFailed
-  PaymentSucceeded
-  ProposalExpired
-  ProposalMajorityReached
-  UserCreated
-  VoteCreated
+    DiscussionCreated
+    DiscussionMessageCreated
+    DiscussionSubscriptionCreated
+    DiscussionSubscriptionTypeChanged
+    FundingRequestAccepted
+    FundingRequestCreated
+    FundingRequestRejected
+    JoinRequestAccepted
+    JoinRequestCreated
+    JoinRequestRejected
+    NotificationTemplateCreated
+    NotificationTemplateUpdated
+    PaymentCreated
+    PaymentFailed
+    PaymentSucceeded
+    ProposalExpired
+    ProposalMajorityReached
+    UserCreated
+    VoteCreated
 }
 
 type FundingProposal {

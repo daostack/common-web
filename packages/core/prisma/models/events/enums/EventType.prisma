@@ -33,4 +33,7 @@ enum EventType {
   DiscussionSubscriptionCreated
 
   DiscussionSubscriptionTypeChanged
+
+  NotificationTemplateCreated
+  NotificationTemplateUpdated
 }
