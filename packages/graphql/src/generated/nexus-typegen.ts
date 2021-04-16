@@ -4,10 +4,11 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -134,6 +135,22 @@ export interface NexusGenInputs {
   LinkInput: { // input type
     title: string; // String!
     url: string; // String!
+  }
+  NotificationOrderByInput: { // input type
+    createdAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    status?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    updatedAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
+  NotificationWhereInput: { // input type
+    commonId?: NexusGenScalars['UUID'] | null; // UUID
+    discussionId?: NexusGenScalars['UUID'] | null; // UUID
+    proposalId?: NexusGenScalars['UUID'] | null; // UUID
+    seenStatus?: NexusGenEnums['NotificationSeenStatus'] | null; // NotificationSeenStatus
+    type?: NexusGenEnums['NotificationType'] | null; // NotificationType
+    userId?: string | null; // ID
+  }
+  NotificationWhereUniqueInput: { // input type
+    id?: NexusGenScalars['UUID'] | null; // UUID
   }
   ProposalFileInput: { // input type
     value: string; // String!
@@ -435,6 +452,7 @@ export interface NexusGenFieldTypes {
     firstName: string; // String!
     id: string; // ID!
     lastName: string; // String!
+    notifications: NexusGenRootTypes['Notification'][]; // [Notification!]!
     proposals: NexusGenRootTypes['Proposal'][]; // [Proposal!]!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
@@ -580,6 +598,7 @@ export interface NexusGenFieldTypeNames {
     firstName: 'String'
     id: 'ID'
     lastName: 'String'
+    notifications: 'Notification'
     proposals: 'Proposal'
     updatedAt: 'DateTime'
   }
@@ -703,6 +722,12 @@ export interface NexusGenArgTypes {
     }
     events: { // args
       orderBy?: NexusGenInputs['EventOrderByInput'] | null; // EventOrderByInput
+      skip?: number | null; // Int
+      take: number | null; // Int
+    }
+    notifications: { // args
+      cursor?: NexusGenInputs['NotificationWhereUniqueInput'] | null; // NotificationWhereUniqueInput
+      orderBy: NexusGenInputs['NotificationOrderByInput'] | null; // NotificationOrderByInput
       skip?: number | null; // Int
       take: number | null; // Int
     }

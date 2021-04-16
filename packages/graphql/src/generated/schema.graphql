@@ -389,38 +389,57 @@ type Notification implements BaseEntity {
   show: Boolean!
   type: NotificationType!
 
-  """The date, at which the item was last modified"""
-  updatedAt: DateTime!
+    """The date, at which the item was last modified"""
+    updatedAt: DateTime!
 
-  """The linked user. Expensive operation"""
-  user: User!
+    """The linked user. Expensive operation"""
+    user: User!
 
-  """The ID of the linked user"""
-  userId: UUID!
+    """The ID of the linked user"""
+    userId: UUID!
+}
+
+input NotificationOrderByInput {
+    createdAt: SortOrder
+    status: SortOrder
+    updatedAt: SortOrder
 }
 
 enum NotificationSeenStatus {
-  Done
-  NotSeen
-  Seen
+    Done
+    NotSeen
+    Seen
 }
 
 enum NotificationType {
-  FundingRequestAccepted
-  FundingRequestRejected
-  JoinRequestAccepted
-  JoinRequestRejected
+    FundingRequestAccepted
+    FundingRequestRejected
+    JoinRequestAccepted
+    JoinRequestRejected
+}
+
+input NotificationWhereInput {
+    commonId: UUID
+    discussionId: UUID
+    proposalId: UUID
+    seenStatus: NotificationSeenStatus
+    type: NotificationType
+    userId: ID
+}
+
+input NotificationWhereUniqueInput {
+    id: UUID
 }
 
 type Proposal {
-  """The date, at which the item was created"""
-  createdAt: DateTime!
-  discussions(skip: Int, take: Int): [Discussion!]!
+    """The date, at which the item was created"""
+    createdAt: DateTime!
+    discussions(skip: Int, take: Int): [Discussion!]!
 
-  """The main identifier of the item"""
-  id: ID!
-  state: ProposalState!
-  type: ProposalType!
+    """The main identifier of the item"""
+    id: ID!
+    state: ProposalState!
+    type: ProposalType!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
@@ -527,9 +546,10 @@ type User {
   """The system Id of the user"""
   id: ID!
 
-  """The last name of the user"""
-  lastName: String!
-  proposals(skip: Int = 0, take: Int = 10, where: ProposalWhereInput): [Proposal!]!
+    """The last name of the user"""
+    lastName: String!
+    notifications(cursor: NotificationWhereUniqueInput, orderBy: NotificationOrderByInput = {createdAt: desc}, skip: Int, take: Int = 10): [Notification!]!
+    proposals(skip: Int = 0, take: Int = 10, where: ProposalWhereInput): [Proposal!]!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!

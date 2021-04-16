@@ -15,7 +15,7 @@ export const NotificationCommonExtension = extendType({
       resolve: (root) => {
         return ((root as any).common) || prisma.common.findUnique({
           where: {
-            id: root.id
+            id: root.commonId
           }
         });
       }

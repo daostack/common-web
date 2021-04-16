@@ -15,7 +15,7 @@ export const NotificationDiscussionExtension = extendType({
       resolve: (root) => {
         return ((root as any).discussion) || prisma.discussion.findUnique({
           where: {
-            id: root.id
+            id: root.discussionId
           }
         });
       }

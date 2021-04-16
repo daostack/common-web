@@ -3,10 +3,15 @@ import { NotificationSeenStatusEnum } from './Enums/NotificationSeenStatus.enum'
 
 import { NotificationType } from './Types/Notification.type';
 
-import { NotificationUserExtension } from './extensions/NotificationUser.extension';
-import { NotificationCommonExtension } from './extensions/NotificationCommon.extension';
-import { NotificationProposalExtension } from './extensions/NotificationProposal.extension';
-import { NotificationDiscussionExtension } from './extensions/NotificationDiscussion.extension';
+import { NotificationUserExtension } from './Extensions/NotificationUser.extension';
+import { NotificationCommonExtension } from './Extensions/NotificationCommon.extension';
+import { NotificationProposalExtension } from './Extensions/NotificationProposal.extension';
+import { NotificationDiscussionExtension } from './Extensions/NotificationDiscussion.extension';
+
+import { NotificationWhereInput } from './Inputs/NotificationWhere.input';
+import { NotificationWhereUniqueInput } from './Inputs/NotificationWhereUnique.input';
+
+import { NotificationOrderByInput } from './Inputs/NotificationOrderBy.input';
 
 export const NotificationTypes = [
   NotificationTypeEnum,
@@ -17,5 +22,10 @@ export const NotificationTypes = [
   NotificationUserExtension,
   NotificationCommonExtension,
   NotificationProposalExtension,
-  NotificationDiscussionExtension
+  NotificationDiscussionExtension,
+
+  NotificationWhereInput,
+  NotificationWhereUniqueInput,
+
+  NotificationOrderByInput
 ];

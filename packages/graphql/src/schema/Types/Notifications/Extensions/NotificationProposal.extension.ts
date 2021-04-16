@@ -15,7 +15,7 @@ export const NotificationProposalExtension = extendType({
       resolve: (root) => {
         return ((root as any).proposal) || prisma.proposal.findUnique({
           where: {
-            id: root.id
+            id: root.proposalId
           }
         });
       }

@@ -15,7 +15,7 @@ export const NotificationUserExtension = extendType({
       resolve: (root) => {
         return ((root as any).user) || prisma.user.findUnique({
           where: {
-            id: root.id
+            id: root.userId
           }
         });
       }
