@@ -266,25 +266,25 @@ enum EventType {
   CommonMemberCreated
   CommonMemberRoleAdded
   CommonMemberRoleRemoved
-    DiscussionCreated
-    DiscussionMessageCreated
-    DiscussionSubscriptionCreated
-    DiscussionSubscriptionTypeChanged
-    FundingRequestAccepted
-    FundingRequestCreated
-    FundingRequestRejected
-    JoinRequestAccepted
-    JoinRequestCreated
-    JoinRequestRejected
-    NotificationTemplateCreated
-    NotificationTemplateUpdated
-    PaymentCreated
-    PaymentFailed
-    PaymentSucceeded
-    ProposalExpired
-    ProposalMajorityReached
-    UserCreated
-    VoteCreated
+  DiscussionCreated
+  DiscussionMessageCreated
+  DiscussionSubscriptionCreated
+  DiscussionSubscriptionTypeChanged
+  FundingRequestAccepted
+  FundingRequestCreated
+  FundingRequestRejected
+  JoinRequestAccepted
+  JoinRequestCreated
+  JoinRequestRejected
+  NotificationTemplateCreated
+  NotificationTemplateUpdated
+  PaymentCreated
+  PaymentFailed
+  PaymentSucceeded
+  ProposalExpired
+  ProposalMajorityReached
+  UserCreated
+  VoteCreated
 }
 
 type FundingProposal {
@@ -357,6 +357,59 @@ type Mutation {
   createUser(input: CreateUserInput!): User!
   createVote(input: CreateVoteInput!): Vote!
   finalizeProposal(proposalId: ID!): Boolean!
+}
+
+type Notification implements BaseEntity {
+  """The linked common. Expensive operation that may return null"""
+  common: Common
+
+  """The ID of the linked common. May be null"""
+  commonId: UUID
+
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+
+  """The linked discussion. Expensive operation that may return null"""
+  discussion: Discussion
+
+  """The ID of the linked discussion. May be null"""
+  discussionId: UUID
+
+  """The main identifier of the item"""
+  id: UUID!
+
+  """The linked proposal. Expensive operation that may return null"""
+  proposal: Proposal
+
+  """The ID of the linked proposal. May be null"""
+  proposalId: UUID
+  seenStatus: NotificationSeenStatus!
+
+  """Whether the notification should be shown in the user notification feed"""
+  show: Boolean!
+  type: NotificationType!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+
+  """The linked user. Expensive operation"""
+  user: User!
+
+  """The ID of the linked user"""
+  userId: UUID!
+}
+
+enum NotificationSeenStatus {
+  Done
+  NotSeen
+  Seen
+}
+
+enum NotificationType {
+  FundingRequestAccepted
+  FundingRequestRejected
+  JoinRequestAccepted
+  JoinRequestRejected
 }
 
 type Proposal {

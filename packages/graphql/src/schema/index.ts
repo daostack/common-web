@@ -9,6 +9,7 @@ import { CommonTypes } from './Types/Commons';
 import { ProposalTypes } from './Types/Proposals';
 import { DiscussionTypes } from './Types/Discussion';
 import { CommonMemberTypes } from './Types/CommonMember';
+import { NotificationTypes } from './Types/Notifications';
 
 import { UrlScalar } from './Shared/Scalars/Url.scalar';
 import { DateScalar } from './Shared/Scalars/Date.scalar';
@@ -32,6 +33,7 @@ const types = [
   ProposalTypes,
   DiscussionTypes,
   CommonMemberTypes,
+  NotificationTypes,
 
   // Scalars
   UrlScalar,

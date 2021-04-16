@@ -4,11 +4,10 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
-import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
+import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -170,9 +169,11 @@ export interface NexusGenEnums {
   CommonMemberRole: "Founder"
   DiscussionMessageType: "Message"
   DiscussionSubscriptionType: "AllNotifications" | "NoNotification" | "OnlyMentions"
-  DiscussionType: 'CommonDiscussion' | 'ProposalDiscussion'
-  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'DiscussionCreated' | 'DiscussionMessageCreated' | 'DiscussionSubscriptionCreated' | 'DiscussionSubscriptionTypeChanged' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'NotificationTemplateCreated' | 'NotificationTemplateUpdated' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'ProposalExpired' | 'ProposalMajorityReached' | 'UserCreated' | 'VoteCreated'
-  FundingType: 'Monthly' | 'OneTime'
+  DiscussionType: "CommonDiscussion" | "ProposalDiscussion"
+  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "DiscussionCreated" | "DiscussionMessageCreated" | "DiscussionSubscriptionCreated" | "DiscussionSubscriptionTypeChanged" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "NotificationTemplateCreated" | "NotificationTemplateUpdated" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "UserCreated" | "VoteCreated"
+  FundingType: "Monthly" | "OneTime"
+  NotificationSeenStatus: "Done" | "NotSeen" | "Seen"
+  NotificationType: "FundingRequestAccepted" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestRejected"
   ProposalState: "Accepted" | "Countdown" | "Finalizing" | "Rejected"
   ProposalType: "FundingRequest" | "JoinRequest"
   SortOrder: "asc" | "desc"
@@ -258,6 +259,18 @@ export interface NexusGenObjects {
     url: string; // String!
   }
   Mutation: {};
+  Notification: { // root type
+    commonId?: NexusGenScalars['UUID'] | null; // UUID
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    discussionId?: NexusGenScalars['UUID'] | null; // UUID
+    id: NexusGenScalars['UUID']; // UUID!
+    proposalId?: NexusGenScalars['UUID'] | null; // UUID
+    seenStatus: NexusGenEnums['NotificationSeenStatus']; // NotificationSeenStatus!
+    show: boolean; // Boolean!
+    type: NexusGenEnums['NotificationType']; // NotificationType!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    userId: NexusGenScalars['UUID']; // UUID!
+  }
   Proposal: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
@@ -282,7 +295,7 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  BaseEntity: NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'];
+  BaseEntity: NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['Notification'];
 }
 
 export interface NexusGenUnions {
@@ -378,6 +391,22 @@ export interface NexusGenFieldTypes {
     createUser: NexusGenRootTypes['User']; // User!
     createVote: NexusGenRootTypes['Vote']; // Vote!
     finalizeProposal: boolean; // Boolean!
+  }
+  Notification: { // field return type
+    common: NexusGenRootTypes['Common'] | null; // Common
+    commonId: NexusGenScalars['UUID'] | null; // UUID
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    discussion: NexusGenRootTypes['Discussion'] | null; // Discussion
+    discussionId: NexusGenScalars['UUID'] | null; // UUID
+    id: NexusGenScalars['UUID']; // UUID!
+    proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
+    proposalId: NexusGenScalars['UUID'] | null; // UUID
+    seenStatus: NexusGenEnums['NotificationSeenStatus']; // NotificationSeenStatus!
+    show: boolean; // Boolean!
+    type: NexusGenEnums['NotificationType']; // NotificationType!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    user: NexusGenRootTypes['User']; // User!
+    userId: NexusGenScalars['UUID']; // UUID!
   }
   Proposal: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -507,6 +536,22 @@ export interface NexusGenFieldTypeNames {
     createUser: 'User'
     createVote: 'Vote'
     finalizeProposal: 'Boolean'
+  }
+  Notification: { // field return type name
+    common: 'Common'
+    commonId: 'UUID'
+    createdAt: 'DateTime'
+    discussion: 'Discussion'
+    discussionId: 'UUID'
+    id: 'UUID'
+    proposal: 'Proposal'
+    proposalId: 'UUID'
+    seenStatus: 'NotificationSeenStatus'
+    show: 'Boolean'
+    type: 'NotificationType'
+    updatedAt: 'DateTime'
+    user: 'User'
+    userId: 'UUID'
   }
   Proposal: { // field return type name
     createdAt: 'DateTime'
@@ -670,13 +715,14 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  BaseEntity: "Discussion" | "DiscussionMessage" | "DiscussionSubscription"
+  BaseEntity: "Discussion" | "DiscussionMessage" | "DiscussionSubscription" | "Notification"
 }
 
 export interface NexusGenTypeInterfaces {
   Discussion: "BaseEntity"
   DiscussionMessage: "BaseEntity"
   DiscussionSubscription: "BaseEntity"
+  Notification: "BaseEntity"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
