@@ -1,9 +1,11 @@
 import { NotificationProcessStatus } from '@prisma/client';
 
-import { prisma } from '@toolkits';
 import { logger } from '@logger';
+import { prisma } from '@toolkits';
 import { CommonError } from '@errors';
+
 import { mailer } from '../mailer';
+import { pusher } from '../pusher';
 
 export const processNotificationCommand = async (notificationId: string): Promise<void> => {
   // Find the notification
@@ -37,7 +39,7 @@ export const processNotificationCommand = async (notificationId: string): Promis
   }
 
   if (settings.sendPush) {
-    // @todo Send push
+    await pusher.sendPushNotification(notification);
   }
 
   // Mark the notification as processed

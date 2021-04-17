@@ -1,9 +1,8 @@
 import { Notification, NotificationTemplateType } from '@prisma/client';
-import { set } from 'lodash';
 
 import { CommonError } from '@errors';
 import { prisma, SendgridToolkit } from '@toolkits';
-import { templateEmail } from './templateEmail';
+import { notificationsHelper } from '../../helpers';
 
 const defaultLocale = 'EN';
 
@@ -41,24 +40,8 @@ export const sendEmailNotification = async (notification: Notification): Promise
     throw new CommonError('Cannot find the requested template');
   }
 
-  // Check what entities need to be fetched
-  const includeStubs = {};
-
-  for (const stub of template.stubs.filter((stub) => stub.split('.')[0] !== 'default')) {
-    set(includeStubs, stub.split('.').join('.select.'), true);
-  }
-
-
-  // Create the templated email
-  const notificationWithEntities = await prisma.notification.findUnique({
-    where: {
-      id: notification.id
-    },
-    include: includeStubs
-  });
-
-  // Send the created template
-  const { subject, content } = templateEmail(notificationWithEntities, template);
+  // Template the notification
+  const { subject, content } = await notificationsHelper.template(template, notification);
 
   // Send the template
   await SendgridToolkit.sendMail({

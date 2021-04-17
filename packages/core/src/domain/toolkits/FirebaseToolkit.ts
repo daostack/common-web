@@ -21,3 +21,9 @@ export const InitializeFirebase = () => {
     });
   }
 };
+
+export const messaging = (() => {
+  InitializeFirebase();
+
+  return admin.messaging();
+})();

@@ -2,8 +2,9 @@ import { get } from 'lodash';
 import { NotificationTemplate } from '@prisma/client';
 
 import { logger } from '@logger';
+import { stringUtils } from '@utils';
 
-export interface ITemplatedEmail {
+export interface ISendableNotification {
   subject: string;
   content: string;
 }
@@ -12,11 +13,7 @@ const globalStubs = {
   supportChatLink: 'https://common.io/help'
 };
 
-const replaceAll = (string: string, search: string, replace: string): string => {
-  return string.split(search).join(replace);
-};
-
-export const templateEmail = (templatingData: any, template: NotificationTemplate): ITemplatedEmail => {
+export const stubReplacer = (templatingData: any, template: NotificationTemplate): ISendableNotification => {
   let { subject, content, stubs } = template;
 
   templatingData = {
@@ -25,19 +22,19 @@ export const templateEmail = (templatingData: any, template: NotificationTemplat
   };
 
   for (const stub of stubs) {
-    subject = replaceAll(subject, `{{${stub}}}`, get(templatingData, stub));
-    content = replaceAll(content, `{{${stub}}}`, get(templatingData, stub));
+    subject = stringUtils.replaceAll(subject, `{{${stub}}}`, get(templatingData, stub));
+    content = stringUtils.replaceAll(content, `{{${stub}}}`, get(templatingData, stub));
   }
 
   // Check if there is missing stub
   if (content.match(/{{.*}}/)) {
-    logger.error('There may be missing stub in email template content', {
+    logger.error('There may be missing stub in notification template content', {
       content
     });
   }
 
   if (subject.match(/{{.*}}/)) {
-    logger.error('There may be missing stub in email template subject', {
+    logger.error('There may be missing stub in notification template subject', {
       subject
     });
   }

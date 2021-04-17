@@ -48,6 +48,10 @@ export const createUserNotificationTokenCommand = async (payload: z.infer<typeof
     }
   });
 
+  logger.debug('Notification token successfully created', {
+    notificationTokenId: notificationToken.id
+  });
+
   // @todo Setup the token expiration
 
   // Return the token
