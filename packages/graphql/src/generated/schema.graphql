@@ -279,17 +279,21 @@ enum EventType {
   FundingRequestCreated
   FundingRequestRejected
   JoinRequestAccepted
-  JoinRequestCreated
-  JoinRequestRejected
-  NotificationTemplateCreated
-  NotificationTemplateUpdated
-  PaymentCreated
-  PaymentFailed
-  PaymentSucceeded
-  ProposalExpired
-  ProposalMajorityReached
-  UserCreated
-  VoteCreated
+    JoinRequestCreated
+    JoinRequestRejected
+    NotificationTemplateCreated
+    NotificationTemplateUpdated
+    PaymentCreated
+    PaymentFailed
+    PaymentSucceeded
+    ProposalExpired
+    ProposalMajorityReached
+    UserCreated
+    UserNotificationTokenCreated
+    UserNotificationTokenExpired
+    UserNotificationTokenRefreshed
+    UserNotificationTokenVoided
+    VoteCreated
 }
 
 type FundingProposal {
@@ -362,7 +366,8 @@ type Mutation {
   createUser(input: CreateUserInput!): User!
   createUserNotificationToken(input: CreateUserNotificationTokenInput!): UserNotificationToken!
   createVote(input: CreateVoteInput!): Vote!
-  finalizeProposal(proposalId: ID!): Boolean!
+    finalizeProposal(proposalId: ID!): Boolean!
+    voidUserNotificationToken(tokenId: ID!): UserNotificationToken!
 }
 
 type Notification implements BaseEntity {

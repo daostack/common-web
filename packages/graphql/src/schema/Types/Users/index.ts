@@ -19,6 +19,7 @@ import {
   CreateUserNotificationTokenMutation
 } from './Mutations/CreateUserNotificationToken.mutation';
 import { CreateUserInput, CreateUserMutation } from './Mutations/CreateUser.mutation';
+import { VoidUserNotificationTokenMutation } from './Mutations/VoidUserNotificationToken.mutation';
 
 export const UserTypes = [
   UserType,
@@ -31,6 +32,8 @@ export const UserTypes = [
 
   CreateUserNotificationTokenInput,
   CreateUserNotificationTokenMutation,
+
+  VoidUserNotificationTokenMutation,
 
   UserNotificationTokenStateEnum,
 

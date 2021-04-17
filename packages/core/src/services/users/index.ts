@@ -4,6 +4,7 @@ import { getUserIdTokenQuery } from './queries/getUserIdTokenQuery';
 import { userExistsQuery } from './queries/userExistsQuery';
 import { getUserIdQuery } from './queries/getUserIdQuery';
 import { createUserNotificationTokenCommand } from './commands/createUserNotificationTokenCommand';
+import { voidUserNotificationTokenCommand } from './commands/voidUserNotificationTokenCommand';
 
 export const userService = {
   commands: {
@@ -27,6 +28,13 @@ export const userService = {
    * activates it
    */
   createNotificationToken: createUserNotificationTokenCommand,
+
+  /**
+   * Void the user notification token so no more notification
+   * will be send to this token. Does not check if the currently
+   * authenticated user is the owner of the token
+   */
+  voidNotificationToken: voidUserNotificationTokenCommand,
 
   queries: {
     /**

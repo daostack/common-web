@@ -36,4 +36,9 @@ enum EventType {
 
   NotificationTemplateCreated
   NotificationTemplateUpdated
+
+  UserNotificationTokenVoided
+  UserNotificationTokenExpired
+  UserNotificationTokenCreated
+  UserNotificationTokenRefreshed
 }
