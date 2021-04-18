@@ -269,16 +269,16 @@ enum EventType {
   CardCvvVerificationPassed
   CommonCreated
   CommonMemberCreated
-  CommonMemberRoleAdded
-  CommonMemberRoleRemoved
-  DiscussionCreated
-  DiscussionMessageCreated
-  DiscussionSubscriptionCreated
-  DiscussionSubscriptionTypeChanged
-  FundingRequestAccepted
-  FundingRequestCreated
-  FundingRequestRejected
-  JoinRequestAccepted
+    CommonMemberRoleAdded
+    CommonMemberRoleRemoved
+    DiscussionCreated
+    DiscussionMessageCreated
+    DiscussionSubscriptionCreated
+    DiscussionSubscriptionTypeChanged
+    FundingRequestAccepted
+    FundingRequestCreated
+    FundingRequestRejected
+    JoinRequestAccepted
     JoinRequestCreated
     JoinRequestRejected
     NotificationTemplateCreated
@@ -356,16 +356,16 @@ type Mutation {
   createCard(input: CreateCardInput!): Card!
   createCommon(input: CreateCommonInput!): Common!
   createDiscussion(input: CreateDiscussionInput!): Discussion!
-  createDiscussionMessage(input: CreateDiscussionMessageInput!): DiscussionMessage!
-  createFundingProposal(input: CreateFundingProposalInput!): Proposal!
+    createDiscussionMessage(input: CreateDiscussionMessageInput!): DiscussionMessage!
+    createFundingProposal(input: CreateFundingProposalInput!): Proposal!
 
-  """Create new proposal of type JOIN."""
-  createJoinProposal(input: CreateJoinProposalInput!): Proposal!
+    """Create new proposal of type JOIN."""
+    createJoinProposal(input: CreateJoinProposalInput!): Proposal!
 
-  """Creates new user in the system"""
-  createUser(input: CreateUserInput!): User!
-  createUserNotificationToken(input: CreateUserNotificationTokenInput!): UserNotificationToken!
-  createVote(input: CreateVoteInput!): Vote!
+    """Creates new user in the system"""
+    createUser(input: CreateUserInput!): User!
+    createUserNotificationToken(input: CreateUserNotificationTokenInput!): UserNotificationToken!
+    createVote(input: CreateVoteInput!): Vote!
     finalizeProposal(proposalId: ID!): Boolean!
     voidUserNotificationToken(tokenId: ID!): UserNotificationToken!
 }

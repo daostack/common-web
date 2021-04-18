@@ -187,19 +187,19 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  CommonMemberRole: "Founder"
-  DiscussionMessageType: "Message"
-  DiscussionSubscriptionType: "AllNotifications" | "NoNotification" | "OnlyMentions"
+  CommonMemberRole: 'Founder'
+  DiscussionMessageType: 'Message'
+  DiscussionSubscriptionType: 'AllNotifications' | 'NoNotification' | 'OnlyMentions'
   DiscussionType: 'CommonDiscussion' | 'ProposalDiscussion'
   EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'DiscussionCreated' | 'DiscussionMessageCreated' | 'DiscussionSubscriptionCreated' | 'DiscussionSubscriptionTypeChanged' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'NotificationTemplateCreated' | 'NotificationTemplateUpdated' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'ProposalExpired' | 'ProposalMajorityReached' | 'UserCreated' | 'UserNotificationTokenCreated' | 'UserNotificationTokenExpired' | 'UserNotificationTokenRefreshed' | 'UserNotificationTokenVoided' | 'VoteCreated'
   FundingType: 'Monthly' | 'OneTime'
-  NotificationSeenStatus: "Done" | "NotSeen" | "Seen"
-  NotificationType: "FundingRequestAccepted" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestRejected"
-  ProposalState: "Accepted" | "Countdown" | "Finalizing" | "Rejected"
-  ProposalType: "FundingRequest" | "JoinRequest"
-  SortOrder: "asc" | "desc"
-  UserNotificationTokenState: "Active" | "Expired" | "Voided"
-  VoteOutcome: "Approve" | "Condemn"
+  NotificationSeenStatus: 'Done' | 'NotSeen' | 'Seen'
+  NotificationType: 'FundingRequestAccepted' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestRejected'
+  ProposalState: 'Accepted' | 'Countdown' | 'Finalizing' | 'Rejected'
+  ProposalType: 'FundingRequest' | 'JoinRequest'
+  SortOrder: 'asc' | 'desc'
+  UserNotificationTokenState: 'Active' | 'Expired' | 'Voided'
+  VoteOutcome: 'Approve' | 'Condemn'
 }
 
 export interface NexusGenScalars {

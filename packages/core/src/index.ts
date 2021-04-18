@@ -20,6 +20,7 @@ export { commonService } from './services/commons';
 export { paymentService } from './services/payments';
 export { proposalService } from './services/proposals';
 export { discussionService } from './services/discussions';
+export { notificationService } from './services/notifications';
 export { authorizationService } from './services/authorization';
 
 export { FirebaseToolkit };

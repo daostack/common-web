@@ -37,7 +37,16 @@ export const sendEmailNotification = async (notification: Notification): Promise
   });
 
   if (!template) {
-    throw new CommonError('Cannot find the requested template');
+    throw new CommonError('Cannot find the requested template', {
+      templateType: NotificationTemplateType.EmailNotification,
+      forType: notification.type,
+
+      OR: [{
+        language: locale
+      }, {
+        language: defaultLocale
+      }]
+    });
   }
 
   // Template the notification
