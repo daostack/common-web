@@ -13,6 +13,8 @@ import {
   DiscussionsComponent,
   DiscussionDetailModal,
   ProposalsComponent,
+  ProposalsHistory,
+  AboutSidebarComponent,
 } from "../../components/CommonDetailContainer";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
 import {
@@ -94,6 +96,9 @@ export default function CommonDetail() {
     [discussions],
   );
 
+  const activeProposals = useMemo(() => [...proposals].filter((d) => d.state === "countdown"), [proposals]);
+  const historyProposals = useMemo(() => [...proposals].filter((d) => d.state !== "countdown"), [proposals]);
+
   const changeTabHandler = useCallback(
     (tab: string) => {
       switch (tab) {
@@ -102,7 +107,7 @@ export default function CommonDetail() {
             dispatch(loadCommonDiscussionList.request());
           }
           break;
-
+        case "history":
         case "proposals":
           if (!isProposalsLoaded) {
             dispatch(loadProposalList.request());
@@ -137,6 +142,52 @@ export default function CommonDetail() {
     onClose();
     dispatch(clearCurrentDiscussion());
   }, [onClose, dispatch]);
+
+  const renderSidebarContent = () => {
+    if (!common) return null;
+    switch (tab) {
+      case "about":
+        return (
+          <>
+            <PreviewInformationList
+              title="Latest Discussions"
+              data={latestDiscussions}
+              vievAllHandler={() => setTab("discussions")}
+            />
+            <PreviewInformationList
+              title="Latest Proposals"
+              data={lastestProposals}
+              vievAllHandler={() => setTab("proposals")}
+            />
+          </>
+        );
+
+      case "discussions":
+        return (
+          <>
+            <AboutSidebarComponent title="About" vievAllHandler={() => setTab("about")} common={common} />
+            <PreviewInformationList
+              title="Latest Proposals"
+              data={lastestProposals}
+              vievAllHandler={() => setTab("proposals")}
+            />
+          </>
+        );
+      case "proposals":
+        return (
+          <>
+            <AboutSidebarComponent title="About" vievAllHandler={() => setTab("about")} common={common} />
+            <PreviewInformationList
+              title="Latest Discussions"
+              data={latestDiscussions}
+              vievAllHandler={() => setTab("discussions")}
+            />
+          </>
+        );
+      case "history":
+        return <ProposalsHistory proposals={historyProposals} common={common} />;
+    }
+  };
 
   return loading && !common ? (
     <Loader />
@@ -211,23 +262,19 @@ export default function CommonDetail() {
 
                 {tab === "proposals" &&
                   (isProposalsLoaded ? (
-                    <ProposalsComponent proposals={proposals} loadProposalDetail={getProposalDetail} />
+                    <ProposalsComponent proposals={activeProposals} loadProposalDetail={getProposalDetail} />
+                  ) : (
+                    <Loader />
+                  ))}
+
+                {tab === "history" &&
+                  (isProposalsLoaded ? (
+                    <ProposalsComponent proposals={historyProposals} loadProposalDetail={getProposalDetail} />
                   ) : (
                     <Loader />
                   ))}
               </div>
-              <div className="sidebar-wrapper">
-                <PreviewInformationList
-                  title="Latest Discussions"
-                  data={latestDiscussions}
-                  vievAllHandler={() => setTab("discussions")}
-                />
-                <PreviewInformationList
-                  title="Latest Proposals"
-                  data={lastestProposals}
-                  vievAllHandler={() => setTab("proposals")}
-                />
-              </div>
+              <div className="sidebar-wrapper">{renderSidebarContent()}</div>
             </div>
           </div>
         </div>

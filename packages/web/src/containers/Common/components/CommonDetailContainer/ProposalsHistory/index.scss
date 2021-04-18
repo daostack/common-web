@@ -1,0 +1,53 @@
+.proposals-history-wrapper {
+  width: 380px;
+  margin-left: 80px;
+  margin-bottom: 48px;
+  .history-header {
+    .title {
+      height: 76px;
+      font-family: NunitoSans;
+      font-size: 24px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.17;
+      letter-spacing: normal;
+      color: #001a36;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+    }
+  }
+  .history-content {
+    .block-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 36px 0;
+      flex-direction: column;
+      .value {
+        font-family: NunitoSans;
+        font-size: 36px;
+        font-weight: bold;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.11;
+        letter-spacing: normal;
+        text-align: center;
+        color: #001a36;
+      }
+      .title {
+        margin-top: 8px;
+        font-family: NunitoSans;
+        font-size: 18px;
+        font-weight: 300;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 0.93;
+        letter-spacing: normal;
+        text-align: center;
+        color: #001a36;
+      }
+    }
+  }
+}

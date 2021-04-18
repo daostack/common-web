@@ -15,11 +15,20 @@ export default function ProposalsComponent({ proposals, loadProposalDetail }: Di
     <div className="proposals-component-wrapper">
       {proposals.map((d) => (
         <div className="discussion-item-wrapper" key={d.id}>
-          <ProposalCountDown date={new Date((d?.createdAt.seconds + d.countdownPeriod) * 1000)} />
+          {d.state === "countdown" ? (
+            <ProposalCountDown date={new Date((d?.createdAt.seconds + d.countdownPeriod) * 1000)} />
+          ) : (
+            <div className={`state-wrapper ${d.state}`}>
+              <div className="state-inner-wrapper">
+                <img src={d.state === "failed" ? "/icons/declined.svg" : "/icons/approved.svg"} alt="state-wrapper" />
+                <span className="state-name">{d.state === "failed" ? "Rejected" : "Approved"}</span>
+              </div>
+            </div>
+          )}
           <div className="proposal-charts-wrapper">
             <div className="proposal-title">{d.description.title}</div>
             <div className="requested-amount">
-              Requested amount <div className="amount">{formatPrice(d.fundingRequest?.amount)}</div>
+              Requested amount <div className="amount">{formatPrice(d.fundingRequest?.amount || d.join?.funding)}</div>
             </div>
             <div className="votes">
               <VotesComponent proposal={d} />
