@@ -7,3 +7,4 @@ export * from "./ChatComponent";
 export * from "./ProposalCountDown";
 export * from "./ProposalsHistory";
 export * from "./AboutSidebarComponent";
+export * from "./EmptyTabContent";

@@ -17,17 +17,26 @@ export default function PreviewInformationList(props: PreviewInformationListProp
     <div className="preview-information-wrapper">
       <div className="title-wrapper">
         <div className="title">{title}</div>
-        <div className="view-all" onClick={vievAllHandler}>
-          View All
-        </div>
-      </div>
-      <div className="information-content">
-        {data.map((d) => (
-          <div className="item" key={d.id}>
-            {d.value}
+        {data.length > 0 ? (
+          <div className="view-all" onClick={vievAllHandler}>
+            View All
           </div>
-        ))}
+        ) : null}
       </div>
+
+      {data.length > 0 ? (
+        <div className="information-content">
+          {data.map((d) => (
+            <div className="item" key={d.id}>
+              {d.value}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="empty-information-wrapper">
+          <div className="message">No {title} yet</div>
+        </div>
+      )}
     </div>
   );
 }
