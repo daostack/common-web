@@ -67,4 +67,24 @@
       }
     }
   }
+  .empty-information-wrapper {
+    width: 379px;
+    height: 214px;
+    border-radius: 14px;
+    background-color: #f4f6ff;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    .message {
+      font-family: NunitoSans;
+      font-size: 16px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: normal;
+      text-align: center;
+      color: #001a36;
+    }
+  }
 }

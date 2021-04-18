@@ -62,6 +62,7 @@ const tabs = [
 export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
   const [tab, setTab] = useState("about");
+  const [imageError, setImageError] = useState(false);
   const loading = useSelector(getLoading());
   const common = useSelector(selectCommonDetail());
   const currentDisscussion = useSelector(selectCurrentDisscussion());
@@ -202,7 +203,11 @@ export default function CommonDetail() {
           <div className="main-information-block">
             <div className="main-information-wrapper">
               <div className="img-wrapper">
-                <img src={common?.image} alt={common?.name} />
+                {!imageError ? (
+                  <img src={common?.image} alt={common?.name} onError={() => setImageError(true)} />
+                ) : (
+                  <img src="/icons/logo-white.svg" alt={common.name} />
+                )}
               </div>
               <div className="text-information-wrapper">
                 <div className="text">
@@ -262,14 +267,22 @@ export default function CommonDetail() {
 
                 {tab === "proposals" &&
                   (isProposalsLoaded ? (
-                    <ProposalsComponent proposals={activeProposals} loadProposalDetail={getProposalDetail} />
+                    <ProposalsComponent
+                      currentTab={tab}
+                      proposals={activeProposals}
+                      loadProposalDetail={getProposalDetail}
+                    />
                   ) : (
                     <Loader />
                   ))}
 
                 {tab === "history" &&
                   (isProposalsLoaded ? (
-                    <ProposalsComponent proposals={historyProposals} loadProposalDetail={getProposalDetail} />
+                    <ProposalsComponent
+                      currentTab={tab}
+                      proposals={historyProposals}
+                      loadProposalDetail={getProposalDetail}
+                    />
                   ) : (
                     <Loader />
                   ))}
