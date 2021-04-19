@@ -2,14 +2,16 @@
 
 .contact-us-wrapper {
   display: flex;
-  justify-content: space-evenly;
-  background-image: url("../../../assets/images/goal-background.svg");
+  justify-content: center;
+  background: url("../../../assets/images/goal-background.svg") no-repeat;
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
   align-items: center;
   padding: $content-padding;
   .title {
+    align-self: self-start;
+    margin-right: 50px;
+    margin-bottom: 50px;
     .email-wrapper {
       display: flex;
     }

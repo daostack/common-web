@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import { ROUTE_PATHS } from "../../constants";
+import MobileLinks from "../MobileLinks/MobileLinks";
 import "./index.scss";
 
 const Header = () => (
@@ -12,7 +13,9 @@ const Header = () => (
       <div className="navigation-wrapper">
         <ul className="header-navigation">
           <li className="navigation-item">
-            <Link to="/">About Common</Link>
+            <NavLink to="/" exact activeClassName="active">
+              About Common
+            </NavLink>
           </li>
           <li className="navigation-item">
             <NavLink to={ROUTE_PATHS.COMMON_LIST} activeClassName="active">
@@ -21,29 +24,9 @@ const Header = () => (
           </li>
         </ul>
       </div>
-      <div className="mobile-links-wrapper">
-        <ul className="mobile-links">
-          <li className="mobile-item">
-            <a
-              href="https://apps.apple.com/il/app/common-collaborative-action/id1512785740"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src="/icons/app-icons/app-store.svg" alt="app-store" />
-            </a>
-          </li>
-          <li className="mobile-item">
-            <a
-              href="https://play.google.com/store/apps/details?id=com.daostack.common"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src="/icons/app-icons/google-play.svg" alt="google-play" />
-            </a>
-          </li>
-        </ul>
-      </div>
+      <MobileLinks color="black" />
     </div>
   </section>
 );
+
 export default Header;

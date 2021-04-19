@@ -6,8 +6,17 @@ import { Content, NotFound, Footer, Header } from "../../shared/components";
 import { CommonContainer } from "../Common";
 import { LandingContainer } from "../Landing";
 import { ROUTE_PATHS } from "../../shared/constants";
+import { ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants";
+import { useDispatch } from "react-redux";
+import { changeScreenSize } from "../../shared/store/actions";
 
 const App = () => {
+  const dispatch = useDispatch();
+  const screenSize = window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`);
+  screenSize.addEventListener("change", (screenSize) => {
+    dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Large : ScreenSize.Small));
+  });
+
   return (
     <div className="App">
       <Header />

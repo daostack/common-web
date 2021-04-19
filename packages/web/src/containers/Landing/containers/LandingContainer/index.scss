@@ -3,8 +3,10 @@
 .landing-wrapper {
   text-align: center;
   margin: -$content-padding; // to ignore parent content padding
-  .landing-top {
+  > div {
     padding: $content-padding;
+  }
+  .landing-top {
     background: url("../../assets/images/sea.jpg") no-repeat;
     background-size: cover;
     display: flex;
@@ -16,20 +18,25 @@
         color: $white;
         text-align: left;
       }
+      .available-on-label {
+        color: white;
+        text-align: left;
+        margin-bottom: 10px;
+      }
     }
     .iphone-full {
-      width: 300px;
+      background-image: url("../../assets/images/iphone-full.png");
+      background-repeat: no-repeat;
+      background-size: cover;
       position: absolute;
       right: 50px;
     }
   }
   .illustrations-wrapper {
-    padding: $content-padding;
     display: flex;
     justify-content: space-evenly;
   }
   .goal-wrapper {
-    padding: $content-padding;
     background: url("../../assets/images/goal-background.svg") no-repeat;
     background-size: cover;
     background-position: center;
@@ -38,18 +45,30 @@
     align-items: center;
   }
   .landing-bottom {
-    padding: $content-padding;
     background: url("../../assets/images/join.jpg") no-repeat;
     background-size: cover;
     color: $white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
-  .illustrations-wrapper {
-    flex-direction: column;
-  }
-  .goal-wrapper {
-    flex-direction: column-reverse;
+  .landing-wrapper {
+    > div {
+      padding: $content-padding-mobile;
+    }
+    .landing-top {
+      .iphone-full {
+
+      }
+    }
+    .illustrations-wrapper {
+      flex-direction: column;
+    }
+    .goal-wrapper {
+      flex-direction: column-reverse;
+    }
   }
 }
