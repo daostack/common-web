@@ -20,20 +20,16 @@ export const isExpired = async (proposal: IProposalEntity): Promise<boolean> => 
 
   const {moderation} = proposal;
 
-  // if proposal was hidden, countdown is stopped, (@askTai so it can never expire??)
-  if (moderation?.flag === FLAGS.hidden) {
-    return false;
-  }
-
   if (['passed', 'failed'].includes(proposal.state)) {
     return true;
   }
 
   const now = new Date();
   // If the proposal changed from hidden to visible, we start the countdown from the time it was changed to visible and not 
-  const startTime = moderation?.flag === FLAGS.visible
+  const startTime = moderation?.flag && moderation?.flag !== FLAGS.reported
     ? moderation?.updatedAt?.toDate().getTime()
-    :  proposal.createdAt.toDate().getTime();
+    : proposal.createdAt.toDate().getTime();
+    
   const expiration = new Date(startTime + (proposal.countdownPeriod * 1000));
   // If the expiration is in the past it is therefore expired
   return expiration < now;
