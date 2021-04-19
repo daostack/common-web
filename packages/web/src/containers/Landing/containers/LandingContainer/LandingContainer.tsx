@@ -7,46 +7,66 @@ import "./index.scss";
 const LandingContainer = () => {
   return (
     <div className="landing-wrapper">
+      <div className="landing-top">
+        <div className="info">
+          <img src="icons/logo-white.svg" alt="logo" width="200px" />
+          <h1>
+            Launch Collective Action. <br />
+            <span style={{ color: "#ff5e9d" }}>Catalyze a movement</span>
+            <br /> together.
+          </h1>
+        </div>
+        <img src={require("../../assets/images/iphone-full.png")} alt="iphone" className="iphone-full" />
+        {/* <img src={require("../../assets/images/wave-top.svg")} alt="wave" /> */}
+      </div>
       <h1>What is Common?</h1>
       <p>
-        Common enables large groups of people to collaborate on shared agendas by pooling funds and collectively making
-        decisions. <br />
-        <b>Anyone</b> can create a Common, invite thier friends, and work together to achieve a common goal.
+        Common enables large groups of people to collaborate on shared <br /> agendas by pooling funds and collectively
+        making decisions. <br />
+        <b>Anyone</b> can create a Common, invite thier friends, and work <br /> together to achieve a common goal.
       </p>
       <div className="illustrations-wrapper">
         <div>
           <img src={require("../../assets/images/transparent.svg")} alt="transparent" />
           <h3>Transparent</h3>
-          <div>Commons are fully-transparent, including all decsions and funds.</div>
+          <div>
+            Commons are fully-transparent, <br /> including all decsions and funds.
+          </div>
         </div>
         <div>
           <img src={require("../../assets/images/collective.svg")} alt="collective" />
           <h3>Collective</h3>
-          <div>Declare a goal, pool funds, vote on decisions and expenses.</div>
+          <div>
+            Declare a goal, pool funds, vote <br /> on decisions and expenses.
+          </div>
         </div>
         <div>
           <img src={require("../../assets/images/action.svg")} alt="action" />
           <h3>Action</h3>
-          <div>Any member can propose projects and use shared funds.</div>
+          <div>
+            Any member can propose <br /> projects and use shared funds.
+          </div>
         </div>
       </div>
       <div className="goal-wrapper">
-        <img src={require("../../assets/images/iphone.svg")} alt="iphone" />
+        <img src={require("../../assets/images/iphone.png")} alt="iphone" width="500px" />
         <div>
-          <h1>Leverage trust and transparency to galvanize massive action.</h1>
+          <h1>
+            Leverage trust and <br /> transparency to galvanize <br /> massive action.
+          </h1>
           <h5>
-            The goal of Common is to support large communities that wish to collaborate on simple, and well-defined
-            agendas.
+            The goal of Common is to support large communities that wish to <br /> collaborate on simple, and
+            well-defined agendas.
           </h5>
           <p>
-            Humanity's greatest achievements were made by massive collaborations. Common empowers groups to collaborate
-            with no single organizer. And when every member gets an equal part in every step of the process, we enter a
-            new era of trust and collaboration.
+            Humanity's greatest achievements were made by massive <br /> collaborations. Common empowers groups to
+            collaborate with no <br /> single organizer. And when every member gets an equal part in <br /> every step
+            of the process, we enter a new era of trust and <br /> collaboration.
           </p>
         </div>
       </div>
       <h1>Featured Commons</h1>
-      <div>Browse some of the emerging groups on the Common app</div>
+      <div style={{ marginBottom: "30px" }}>Browse some of the emerging groups on the Common app</div>
       <Link className="button-blue" to={ROUTE_PATHS.COMMON_LIST}>
         Explore all commons
       </Link>
@@ -71,6 +91,12 @@ const LandingContainer = () => {
         </div>
       </div>
       <ContactUs />
+      <div className="landing-bottom">
+        <h1>Join Common!</h1>
+        <div>
+          Download the Common app and find <br /> countless opportunities to make a difference.
+        </div>
+      </div>
     </div>
   );
 };

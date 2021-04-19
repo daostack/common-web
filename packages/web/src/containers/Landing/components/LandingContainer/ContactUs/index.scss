@@ -4,9 +4,16 @@
   display: flex;
   justify-content: space-evenly;
   background-image: url("../../../assets/images/goal-background.svg");
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   align-items: center;
+  padding: $content-padding;
+  .title {
+    .email-wrapper {
+      display: flex;
+    }
+  }
   .form-wrapper {
     display: flex;
     flex-direction: column;
@@ -24,6 +31,11 @@
       margin: 5px;
       width: 500px;
       height: 150px;
+    }
+    .send {
+      width: fit-content;
+      margin-left: auto;
+      margin-top: 20px;
     }
   }
 }

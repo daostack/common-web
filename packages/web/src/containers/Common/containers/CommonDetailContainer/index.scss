@@ -27,7 +27,6 @@
         }
         .text {
           .name {
-            font-family: NotoSerifSC;
             font-size: 36px;
             font-weight: 600;
             font-stretch: normal;
@@ -37,7 +36,6 @@
             color: #001a36;
           }
           .tagline {
-            font-family: NunitoSans;
             font-size: 16px;
             font-weight: normal;
             font-stretch: normal;
@@ -52,7 +50,6 @@
           .item {
             flex: 25%;
             .name {
-              font-family: NunitoSans;
               font-size: 16px;
               font-weight: normal;
               font-stretch: normal;
@@ -63,7 +60,6 @@
               color: #001a36;
             }
             .value {
-              font-family: NunitoSans;
               font-size: 23px;
               font-weight: bold;
               font-stretch: normal;
@@ -90,7 +86,6 @@
           align-items: center;
           height: 72px;
           .tab-item {
-            font-family: NunitoSans;
             font-size: 16px;
             font-weight: bold;
             font-stretch: normal;
@@ -126,7 +121,6 @@
 
   .main-content-container {
     .tab-title {
-      font-family: NunitoSans;
       font-size: 24px;
       font-weight: bold;
       font-stretch: normal;

@@ -2,17 +2,46 @@
 
 .landing-wrapper {
   text-align: center;
+  margin: -$content-padding; // to ignore parent content padding
+  .landing-top {
+    padding: $content-padding;
+    background: url("../../assets/images/sea.jpg") no-repeat;
+    background-size: cover;
+    display: flex;
+    position: relative;
+    .info {
+      display: flex;
+      flex-direction: column;
+      h1 {
+        color: $white;
+        text-align: left;
+      }
+    }
+    .iphone-full {
+      width: 300px;
+      position: absolute;
+      right: 50px;
+    }
+  }
   .illustrations-wrapper {
+    padding: $content-padding;
     display: flex;
     justify-content: space-evenly;
   }
   .goal-wrapper {
-    background-image: url("../../assets/images/goal-background.svg");
+    padding: $content-padding;
+    background: url("../../assets/images/goal-background.svg") no-repeat;
+    background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  .landing-bottom {
+    padding: $content-padding;
+    background: url("../../assets/images/join.jpg") no-repeat;
+    background-size: cover;
+    color: $white;
   }
 }
 
