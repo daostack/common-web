@@ -269,31 +269,34 @@ enum EventType {
   CardCvvVerificationPassed
   CommonCreated
   CommonMemberCreated
-    CommonMemberRoleAdded
-    CommonMemberRoleRemoved
-    DiscussionCreated
-    DiscussionMessageCreated
-    DiscussionSubscriptionCreated
-    DiscussionSubscriptionTypeChanged
-    FundingRequestAccepted
-    FundingRequestCreated
-    FundingRequestRejected
-    JoinRequestAccepted
-    JoinRequestCreated
-    JoinRequestRejected
-    NotificationTemplateCreated
-    NotificationTemplateUpdated
-    PaymentCreated
-    PaymentFailed
-    PaymentSucceeded
-    ProposalExpired
-    ProposalMajorityReached
-    UserCreated
-    UserNotificationTokenCreated
-    UserNotificationTokenExpired
-    UserNotificationTokenRefreshed
-    UserNotificationTokenVoided
-    VoteCreated
+  CommonMemberRoleAdded
+  CommonMemberRoleRemoved
+  DiscussionCreated
+  DiscussionMessageCreated
+  DiscussionSubscriptionCreated
+  DiscussionSubscriptionTypeChanged
+  FundingRequestAccepted
+  FundingRequestCreated
+  FundingRequestRejected
+  JoinRequestAccepted
+  JoinRequestCreated
+  JoinRequestRejected
+  NotificationTemplateCreated
+  NotificationTemplateUpdated
+  PaymentCreated
+  PaymentFailed
+  PaymentSucceeded
+  ProposalExpired
+  ProposalMajorityReached
+  ReportActionTaken
+  ReportCreated
+  ReportDismissed
+  UserCreated
+  UserNotificationTokenCreated
+  UserNotificationTokenExpired
+  UserNotificationTokenRefreshed
+  UserNotificationTokenVoided
+  VoteCreated
 }
 
 type FundingProposal {
@@ -356,18 +359,18 @@ type Mutation {
   createCard(input: CreateCardInput!): Card!
   createCommon(input: CreateCommonInput!): Common!
   createDiscussion(input: CreateDiscussionInput!): Discussion!
-    createDiscussionMessage(input: CreateDiscussionMessageInput!): DiscussionMessage!
-    createFundingProposal(input: CreateFundingProposalInput!): Proposal!
+  createDiscussionMessage(input: CreateDiscussionMessageInput!): DiscussionMessage!
+  createFundingProposal(input: CreateFundingProposalInput!): Proposal!
 
-    """Create new proposal of type JOIN."""
-    createJoinProposal(input: CreateJoinProposalInput!): Proposal!
+  """Create new proposal of type JOIN."""
+  createJoinProposal(input: CreateJoinProposalInput!): Proposal!
 
-    """Creates new user in the system"""
-    createUser(input: CreateUserInput!): User!
-    createUserNotificationToken(input: CreateUserNotificationTokenInput!): UserNotificationToken!
-    createVote(input: CreateVoteInput!): Vote!
-    finalizeProposal(proposalId: ID!): Boolean!
-    voidUserNotificationToken(tokenId: ID!): UserNotificationToken!
+  """Creates new user in the system"""
+  createUser(input: CreateUserInput!): User!
+  createUserNotificationToken(input: CreateUserNotificationTokenInput!): UserNotificationToken!
+  createVote(input: CreateVoteInput!): Vote!
+  finalizeProposal(proposalId: ID!): Boolean!
+  voidUserNotificationToken(tokenId: ID!): UserNotificationToken!
 }
 
 type Notification implements BaseEntity {
@@ -499,6 +502,56 @@ type Query {
   Provide ID to fetch specific user or do not pass anything to get the currently authenticated user
   """
   user(userId: ID): User
+}
+
+type Report implements BaseEntity {
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+
+  """The type of violation that this report is for"""
+  for: ReportFor!
+
+  """The main identifier of the item"""
+  id: UUID!
+  message: DiscussionMessage!
+  messageId: UUID!
+
+  """The note that the report has left for the content"""
+  note: String!
+  reporter: User!
+  reporterId: ID!
+
+  """The date on which the report was last reviewed if reviewed"""
+  reviewedOn: DateTime
+
+  """The current status of the report"""
+  status: ReportStatus!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+}
+
+enum ReportAuditor {
+  CommonModerator
+  SystemAdmin
+}
+
+enum ReportFor {
+  FalseNews
+  Harassment
+  Hate
+  Nudity
+  Other
+  Spam
+  Violance
+}
+
+enum ReportStatus {
+  AdminActionTaken
+  AwaitingReview
+  Clossed
+  Dissmissed
+  ModeratorActionTaken
 }
 
 enum SortOrder {
