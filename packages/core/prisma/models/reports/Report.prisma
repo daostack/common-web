@@ -1,11 +1,13 @@
 model Report {
-  id String @id
+  id String @id @default(uuid())
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   for  ReportFor
   note String
+
+  common Common
 
   reporter User @relation(name: "CreatedReports", fields: [reporterId], references: [id])
 
