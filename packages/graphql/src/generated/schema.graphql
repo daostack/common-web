@@ -73,6 +73,7 @@ input CommonMemberOrderByInput {
 
 enum CommonMemberRole {
   Founder
+  Moderator
 }
 
 input CommonWhereUniqueInput {
@@ -370,6 +371,7 @@ type Mutation {
   createUserNotificationToken(input: CreateUserNotificationTokenInput!): UserNotificationToken!
   createVote(input: CreateVoteInput!): Vote!
   finalizeProposal(proposalId: ID!): Boolean!
+  reportDiscussionMessage(input: ReportDiscussionMessageInput!): Report!
   voidUserNotificationToken(tokenId: ID!): UserNotificationToken!
 }
 
@@ -536,6 +538,12 @@ enum ReportAuditor {
   SystemAdmin
 }
 
+input ReportDiscussionMessageInput {
+  for: ReportFor!
+  messageId: UUID!
+  note: String!
+}
+
 enum ReportFor {
   FalseNews
   Harassment
@@ -552,6 +560,11 @@ enum ReportStatus {
   Clossed
   Dissmissed
   ModeratorActionTaken
+}
+
+input ReportWhereInput {
+  for: ReportFor
+  status: ReportStatus
 }
 
 enum SortOrder {

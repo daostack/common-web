@@ -19,7 +19,7 @@ export const CommonCommonMemberExtension = extendType({
         })
       },
       resolve: async (root, args) => {
-        return prisma.common
+        return (await prisma.common
           .findUnique({
             where: {
               id: root.id
@@ -29,7 +29,7 @@ export const CommonCommonMemberExtension = extendType({
             take: args.take || undefined,
             skip: args.skip || undefined,
             orderBy: (args.orderBy as any) || undefined
-          });
+          }))!;
       }
     });
   }

@@ -7,14 +7,14 @@ export const DiscussionSubscriptionDiscussionExtension = extendType({
     t.nonNull.field('discussion', {
       complexity: 10,
       type: 'Discussion',
-      resolve: (root) => {
-        return prisma.discussionSubscription
+      resolve: async (root) => {
+        return (await prisma.discussionSubscription
           .findUnique({
             where: {
               id: root.id
             }
           })
-          .discussion();
+          .discussion())!;
       }
     });
   }

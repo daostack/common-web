@@ -119,6 +119,7 @@ model Common {
 
 enum CommonMemberRole {
   Founder
+  Moderator
 }
 
 model CommonMember {
@@ -712,7 +713,6 @@ model Report {
 
   reviewedOn DateTime?
   reviewedBy User?     @relation(name: "ReviedReports", fields: [reviewerId], references: [id])
-
 
   messageId  String
   reporterId String
