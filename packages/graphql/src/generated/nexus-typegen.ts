@@ -177,6 +177,10 @@ export interface NexusGenInputs {
     messageId: NexusGenScalars['UUID']; // UUID!
     note: string; // String!
   }
+  ReportWhereInput: { // input type
+    for?: NexusGenEnums['ReportFor'] | null; // ReportFor
+    status?: NexusGenEnums['ReportStatus'] | null; // ReportStatus
+  }
   StringFilter: { // input type
     contains?: string | null; // String
     endsWith?: string | null; // String
@@ -192,18 +196,18 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  CommonMemberRole: "Founder"
-  DiscussionMessageType: "Message"
-  DiscussionSubscriptionType: "AllNotifications" | "NoNotification" | "OnlyMentions"
-  DiscussionType: "CommonDiscussion" | "ProposalDiscussion"
-  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "DiscussionCreated" | "DiscussionMessageCreated" | "DiscussionSubscriptionCreated" | "DiscussionSubscriptionTypeChanged" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "NotificationTemplateCreated" | "NotificationTemplateUpdated" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "ReportActionTaken" | "ReportCreated" | "ReportDismissed" | "UserCreated" | "UserNotificationTokenCreated" | "UserNotificationTokenExpired" | "UserNotificationTokenRefreshed" | "UserNotificationTokenVoided" | "VoteCreated"
-  FundingType: "Monthly" | "OneTime"
-  NotificationSeenStatus: "Done" | "NotSeen" | "Seen"
-  NotificationType: "FundingRequestAccepted" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestRejected"
-  ProposalState: "Accepted" | "Countdown" | "Finalizing" | "Rejected"
-  ProposalType: "FundingRequest" | "JoinRequest"
-  ReportAuditor: "CommonModerator" | "SystemAdmin"
-  ReportFor: "FalseNews" | "Harassment" | "Hate" | "Nudity" | "Other" | "Spam" | "Violance"
+  CommonMemberRole: 'Founder' | 'Moderator'
+  DiscussionMessageType: 'Message'
+  DiscussionSubscriptionType: 'AllNotifications' | 'NoNotification' | 'OnlyMentions'
+  DiscussionType: 'CommonDiscussion' | 'ProposalDiscussion'
+  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'DiscussionCreated' | 'DiscussionMessageCreated' | 'DiscussionSubscriptionCreated' | 'DiscussionSubscriptionTypeChanged' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'NotificationTemplateCreated' | 'NotificationTemplateUpdated' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'ProposalExpired' | 'ProposalMajorityReached' | 'ReportActionTaken' | 'ReportCreated' | 'ReportDismissed' | 'UserCreated' | 'UserNotificationTokenCreated' | 'UserNotificationTokenExpired' | 'UserNotificationTokenRefreshed' | 'UserNotificationTokenVoided' | 'VoteCreated'
+  FundingType: 'Monthly' | 'OneTime'
+  NotificationSeenStatus: 'Done' | 'NotSeen' | 'Seen'
+  NotificationType: 'FundingRequestAccepted' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestRejected'
+  ProposalState: 'Accepted' | 'Countdown' | 'Finalizing' | 'Rejected'
+  ProposalType: 'FundingRequest' | 'JoinRequest'
+  ReportAuditor: 'CommonModerator' | 'SystemAdmin'
+  ReportFor: 'FalseNews' | 'Harassment' | 'Hate' | 'Nudity' | 'Other' | 'Spam' | 'Violance'
   ReportStatus: "AdminActionTaken" | "AwaitingReview" | "Clossed" | "Dissmissed" | "ModeratorActionTaken"
   SortOrder: "asc" | "desc"
   UserNotificationTokenState: "Active" | "Expired" | "Voided"

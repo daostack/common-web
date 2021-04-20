@@ -4,6 +4,8 @@ import { ReportForEnum } from './Enums/ReportFor.enum';
 import { ReportStatusEnum } from './Enums/ReportStatus.enum';
 import { ReportAuditorEnum } from './Enums/ReportAuditor.enum';
 
+import { ReportWhereInput } from './Inputs/ReportWhere.input';
+
 import { ReportReporterExtension } from './Extensions/ReportReporter.extension';
 import { ReportReportedMessageExtension } from './Extensions/ReportReportedMessage.extension';
 
@@ -18,6 +20,8 @@ export const ReportTypes = [
   ReportForEnum,
   ReportStatusEnum,
   ReportAuditorEnum,
+
+  ReportWhereInput,
 
   ReportReporterExtension,
   ReportReportedMessageExtension,
