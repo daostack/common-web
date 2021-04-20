@@ -1,0 +1,9 @@
+enum ReportStatus {
+  AwaitingReview
+
+  ModeratorActionTaken
+  AdminActionTaken
+
+  Dissmissed
+  Clossed
+}

@@ -14,6 +14,9 @@ model User {
   events      Event[]
   memberships CommonMember[]
 
+  reportsCreated  Report[] @relation(name: "CreatedReports")
+  reportsReviewed Report[] @relation(name: "ReviedReports")
+
   payments                Payment[]
   proposals               Proposal[]
   subscriptions           Subscription[]
