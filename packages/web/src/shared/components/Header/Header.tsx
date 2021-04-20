@@ -1,32 +1,39 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { NavLink, Link } from "react-router-dom";
+import { ScreenSize } from "../../../containers/App/constants";
 import { ROUTE_PATHS } from "../../constants";
+import { getScreenSize } from "../../store/selectors";
 import MobileLinks from "../MobileLinks/MobileLinks";
 import "./index.scss";
 
-const Header = () => (
-  <section className="header-wrapper">
-    <div className="inner-wrapper">
-      <Link to="/" className="logo-wrapper">
-        <img src="/icons/logo.svg" alt="logo" />
+const Header = () => {
+  const screenSize = useSelector(getScreenSize());
+
+  return (
+    <section className="header-wrapper">
+      <Link to="/">
+        <img src="/icons/logo.svg" alt="logo" height="60px" />
       </Link>
-      <div className="navigation-wrapper">
-        <ul className="header-navigation">
-          <li className="navigation-item">
+      {screenSize === ScreenSize.Large ? (
+        <React.Fragment>
+          <div className="navigation-wrapper">
             <NavLink to="/" exact activeClassName="active">
               About Common
             </NavLink>
-          </li>
-          <li className="navigation-item">
             <NavLink to={ROUTE_PATHS.COMMON_LIST} activeClassName="active">
               Explore Commons
             </NavLink>
-          </li>
-        </ul>
-      </div>
-      <MobileLinks color="black" />
-    </div>
-  </section>
-);
+          </div>
+          <div style={{ marginLeft: "auto" }}>
+            <MobileLinks color="black" />
+          </div>
+        </React.Fragment>
+      ) : (
+        <img src="/icons/menu.svg" alt="humburger menu" />
+      )}
+    </section>
+  );
+};
 
 export default Header;

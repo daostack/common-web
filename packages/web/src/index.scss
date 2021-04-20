@@ -11,6 +11,9 @@
 }
 
 body {
+  #root {
+    overflow-x: hidden;
+  }
   margin: 0;
   font-family: NunitoSans-Regular;
   -webkit-font-smoothing: antialiased;

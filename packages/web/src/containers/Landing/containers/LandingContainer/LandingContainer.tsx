@@ -6,10 +6,10 @@ import { ROUTE_PATHS } from "../../../../shared/constants";
 import { ContactUs } from "../../components/LandingContainer/ContactUs";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import "./index.scss";
+import { ScreenSize } from "../../../App/constants";
 
 const LandingContainer = () => {
   const screenSize = useSelector(getScreenSize());
-  console.log(screenSize);
 
   return (
     <div className="landing-wrapper">
@@ -24,7 +24,14 @@ const LandingContainer = () => {
           <span className="available-on-label">Available on</span>
           <MobileLinks color="white" />
         </div>
-        <img src={require("../../assets/images/iphone-full.png")} alt="iphone" className="iphone-full" width="300px" />
+        {screenSize === ScreenSize.Large && (
+          <img
+            src={require("../../assets/images/iphone-full.png")}
+            alt="iphone"
+            className="iphone-full"
+            width="300px"
+          />
+        )}
       </div>
       <div>
         <h1>What is Common?</h1>
@@ -106,7 +113,7 @@ const LandingContainer = () => {
       <ContactUs />
       <div className="landing-bottom">
         <h1>Join Common!</h1>
-        <span>
+        <span style={{ marginBottom: "30px" }}>
           Download the Common app and find <br /> countless opportunities to make a difference.
         </span>
         <MobileLinks color="white" />

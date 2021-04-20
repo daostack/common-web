@@ -1,6 +1,19 @@
+@import "../../../constants.scss";
+
 .mobile-links-wrapper {
   width: fit-content;
   img:first-child {
     margin-right: 10px;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .mobile-links-wrapper {
+    display: flex;
+    flex-direction: column;
+    img:first-child {
+      margin-right: unset;
+      margin-bottom: 10px;
+    }
   }
 }

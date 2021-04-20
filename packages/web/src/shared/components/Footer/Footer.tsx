@@ -8,23 +8,29 @@ const Footer = () => {
     <section className="footer-wrapper">
       <div className="footer-top">
         <Link to="/">
-          <img src="/icons/logo-white.svg" alt="logo" width="120px" />
+          <img src="/icons/logo-white.svg" alt="logo" width="120px" className="logo" />
         </Link>
-        <a href="mailto://support@common.io">Contact</a>
-        <a
-          href="https://apps.apple.com/il/app/common-collaborative-action/id1512785740"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Download IOS
-        </a>
-        <a
-          href="https://play.google.com/store/apps/details?id=com.daostack.common"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Download Android
-        </a>
+        <div className="links">
+          <span>About</span>
+          <Link to="/commons">Explore Commons</Link>
+          <a href="mailto://support@common.io">Contact</a>
+          <span>Privacy Policy</span>
+          <span>Terms of Use</span>
+          <a
+            href="https://apps.apple.com/il/app/common-collaborative-action/id1512785740"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Download IOS app
+          </a>
+          <a
+            href="https://play.google.com/store/apps/details?id=com.daostack.common"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Download Android app
+          </a>
+        </div>
       </div>
       <div className="footer-bottom">
         <div className="powered-by">
@@ -35,4 +41,5 @@ const Footer = () => {
     </section>
   );
 };
+
 export default Footer;

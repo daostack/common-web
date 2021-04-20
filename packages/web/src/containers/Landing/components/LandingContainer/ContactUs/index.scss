@@ -9,6 +9,8 @@
   align-items: center;
   padding: $content-padding;
   .title {
+    display: flex;
+    flex-direction: column;
     align-self: self-start;
     margin-right: 50px;
     margin-bottom: 50px;
@@ -45,5 +47,17 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .contact-us-wrapper {
     flex-direction: column;
+    .title {
+      align-self: unset;
+      align-items: center;
+    }
+    .form-wrapper {
+      textarea {
+        width: 300px;
+      }
+      .send {
+        width: 100%;
+      }
+    }
   }
 }
