@@ -49,6 +49,7 @@ type Common {
   """The name of the common as provided"""
   name: String!
   proposals(skip: Int = 0, take: Int = 10, where: ProposalWhereInput): [Proposal!]!
+  reports(where: ReportWhereInput): [Report!]!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!

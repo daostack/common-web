@@ -1,5 +1,5 @@
 import { extendType, arg } from 'nexus';
-import { authorizationService } from '@common/core';
+import { authorizationService, prisma } from '@common/core';
 
 export const CommonReportsExtension = extendType({
   type: 'Common',
@@ -16,9 +16,18 @@ export const CommonReportsExtension = extendType({
         where: arg({
           type: 'ReportWhereInput'
         })
+      },
+      resolve: async (root, args) => {
+        return prisma.common
+          .findUnique({
+            where: {
+              id: root.id
+            }
+          })
+          .reports({
+            where: args.where
+          });
       }
-
-
     });
   }
 });
