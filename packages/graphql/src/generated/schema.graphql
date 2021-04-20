@@ -370,7 +370,8 @@ type Mutation {
   createUserNotificationToken(input: CreateUserNotificationTokenInput!): UserNotificationToken!
   createVote(input: CreateVoteInput!): Vote!
   finalizeProposal(proposalId: ID!): Boolean!
-  voidUserNotificationToken(tokenId: ID!): UserNotificationToken!
+    reportDiscussionMessage(input: ReportDiscussionMessageInput!): Report!
+    voidUserNotificationToken(tokenId: ID!): UserNotificationToken!
 }
 
 type Notification implements BaseEntity {
@@ -527,23 +528,29 @@ type Report implements BaseEntity {
   """The current status of the report"""
   status: ReportStatus!
 
-  """The date, at which the item was last modified"""
-  updatedAt: DateTime!
+    """The date, at which the item was last modified"""
+    updatedAt: DateTime!
 }
 
 enum ReportAuditor {
-  CommonModerator
-  SystemAdmin
+    CommonModerator
+    SystemAdmin
+}
+
+input ReportDiscussionMessageInput {
+    for: ReportFor!
+    messageId: UUID!
+    note: String!
 }
 
 enum ReportFor {
-  FalseNews
-  Harassment
-  Hate
-  Nudity
-  Other
-  Spam
-  Violance
+    FalseNews
+    Harassment
+    Hate
+    Nudity
+    Other
+    Spam
+    Violance
 }
 
 enum ReportStatus {

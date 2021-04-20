@@ -7,6 +7,11 @@ import { ReportAuditorEnum } from './Enums/ReportAuditor.enum';
 import { ReportReporterExtension } from './Extensions/ReportReporter.extension';
 import { ReportReportedMessageExtension } from './Extensions/ReportReportedMessage.extension';
 
+import {
+  ReportDiscussionMessageInput,
+  ReportDiscussionMessageMutation
+} from './Mutations/ReportDiscussionMessage.mutation';
+
 export const ReportTypes = [
   ReportType,
 
@@ -15,5 +20,8 @@ export const ReportTypes = [
   ReportAuditorEnum,
 
   ReportReporterExtension,
-  ReportReportedMessageExtension
+  ReportReportedMessageExtension,
+
+  ReportDiscussionMessageInput,
+  ReportDiscussionMessageMutation
 ];

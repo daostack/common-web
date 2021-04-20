@@ -4,10 +4,11 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -170,6 +171,11 @@ export interface NexusGenInputs {
   }
   ProposalWhereUniqueInput: { // input type
     id: NexusGenScalars['UUID']; // UUID!
+  }
+  ReportDiscussionMessageInput: { // input type
+    for: NexusGenEnums['ReportFor']; // ReportFor!
+    messageId: NexusGenScalars['UUID']; // UUID!
+    note: string; // String!
   }
   StringFilter: { // input type
     contains?: string | null; // String
@@ -436,6 +442,7 @@ export interface NexusGenFieldTypes {
     createUserNotificationToken: NexusGenRootTypes['UserNotificationToken']; // UserNotificationToken!
     createVote: NexusGenRootTypes['Vote']; // Vote!
     finalizeProposal: boolean; // Boolean!
+    reportDiscussionMessage: NexusGenRootTypes['Report']; // Report!
     voidUserNotificationToken: NexusGenRootTypes['UserNotificationToken']; // UserNotificationToken!
   }
   Notification: { // field return type
@@ -609,6 +616,7 @@ export interface NexusGenFieldTypeNames {
     createUserNotificationToken: 'UserNotificationToken'
     createVote: 'Vote'
     finalizeProposal: 'Boolean'
+    reportDiscussionMessage: 'Report'
     voidUserNotificationToken: 'UserNotificationToken'
   }
   Notification: { // field return type name
@@ -765,6 +773,9 @@ export interface NexusGenArgTypes {
     }
     finalizeProposal: { // args
       proposalId: string; // ID!
+    }
+    reportDiscussionMessage: { // args
+      input: NexusGenInputs['ReportDiscussionMessageInput']; // ReportDiscussionMessageInput!
     }
     voidUserNotificationToken: { // args
       tokenId: string; // ID!
