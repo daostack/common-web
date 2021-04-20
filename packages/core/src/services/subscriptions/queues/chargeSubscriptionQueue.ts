@@ -27,7 +27,7 @@ export const scheduleSubscriptionCharge = async (subscriptionId: string) => {
   if (subscription.status === SubscriptionStatus.Active) {
     delay = (subscription.dueDate.getTime() - new Date().getTime()) + (60 * 1000); // One minute after the due date
   } else if (subscription.status === SubscriptionStatus.PaymentFailed) {
-    delay = new Date().getTime() + (24 * 60 * 60 * 1000) // Retry after one day
+    delay = new Date().getTime() + (24 * 60 * 60 * 1000); // Retry after one day
   }
 
   chargeSubscriptionQueue.add({

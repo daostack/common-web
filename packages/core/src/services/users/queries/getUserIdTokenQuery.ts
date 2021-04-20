@@ -10,8 +10,8 @@ import { CommonError } from '@errors';
  * @param uid - The id of the user for whom we what ID token
  */
 export const getUserIdTokenQuery = async (uid: string): Promise<string> => {
-  if(process.env.Environment !== 'dev') {
-    throw new CommonError('Cannot get ID token in environment that is not dev')
+  if (process.env.Environment !== 'dev') {
+    throw new CommonError('Cannot get ID token in environment that is not dev');
   }
 
   const customToken = await admin
@@ -24,4 +24,4 @@ export const getUserIdTokenQuery = async (uid: string): Promise<string> => {
   });
 
   return res.data.idToken;
-}
+};

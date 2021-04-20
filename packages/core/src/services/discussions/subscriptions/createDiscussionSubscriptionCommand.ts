@@ -28,6 +28,13 @@ export const createDiscussionSubscriptionCommand = async (payload: z.infer<typeo
       userId: payload.userId,
 
       type: payload.subscriptionType || DiscussionSubscriptionType.AllNotifications
+    },
+    include: {
+      discussion: {
+        select: {
+          commonId: true
+        }
+      }
     }
   });
 
@@ -36,8 +43,10 @@ export const createDiscussionSubscriptionCommand = async (payload: z.infer<typeo
   eventService.create({
     type: EventType.DiscussionSubscriptionCreated,
     userId: payload.userId,
+    commonId: subscription.discussion.commonId,
     payload: {
-      discussionId: payload.discussionId
+      discussionId: payload.discussionId,
+      discussionSubscriptionId: subscription.id
     }
   });
 

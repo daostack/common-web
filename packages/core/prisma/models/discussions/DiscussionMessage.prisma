@@ -12,4 +12,6 @@ model DiscussionMessage {
 
   discussionId String
   userId       String
+
+  reports Report[]
 }
