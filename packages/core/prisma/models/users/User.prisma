@@ -15,7 +15,7 @@ model User {
   memberships CommonMember[]
 
   reportsCreated  Report[] @relation(name: "CreatedReports")
-  reportsReviewed Report[] @relation(name: "ReviedReports")
+  reportsReviewed Report[] @relation(name: "ReviewedReports")
 
   payments                Payment[]
   proposals               Proposal[]

@@ -326,7 +326,7 @@ model User {
   memberships CommonMember[]
 
   reportsCreated  Report[] @relation(name: "CreatedReports")
-  reportsReviewed Report[] @relation(name: "ReviedReports")
+  reportsReviewed Report[] @relation(name: "ReviewedReports")
 
   payments      Payment[]
   proposals     Proposal[]
@@ -411,7 +411,7 @@ enum EventType {
 
   ReportCreated
 
-  ReportActionTaken
+  ReportRespected
   ReportDismissed
 }
 
@@ -676,12 +676,7 @@ model JoinProposal {
 }
 
 enum ReportStatus {
-  AwaitingReview
-
-  ModeratorActionTaken
-  AdminActionTaken
-
-  Dissmissed
+  Active
   Clossed
 }
 
@@ -693,6 +688,11 @@ enum ReportFor {
   Spam
   Hate
   Other
+}
+
+enum ReportAction {
+  Respected
+  Dismissed
 }
 
 enum ReportAuditor {
@@ -707,7 +707,7 @@ model Report {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  status ReportStatus @default(AwaitingReview)
+  status ReportStatus @default(Active)
 
   for  ReportFor
   note String
@@ -719,8 +719,11 @@ model Report {
   message         DiscussionMessage @relation(fields: [messageId], references: [id])
   reviewAuthority ReportAuditor?
 
+  action ReportAction?
+
   reviewedOn DateTime?
-  reviewedBy User?     @relation(name: "ReviedReports", fields: [reviewerId], references: [id])
+
+  reviewedBy User? @relation(name: "ReviewedReports", fields: [reviewerId], references: [id])
 
   messageId  String
   reporterId String

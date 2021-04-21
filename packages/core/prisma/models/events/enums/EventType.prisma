@@ -44,6 +44,6 @@ enum EventType {
 
   ReportCreated
 
-  ReportActionTaken
+  ReportRespected
   ReportDismissed
 }
