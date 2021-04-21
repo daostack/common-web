@@ -1,0 +1,732 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("Database.Url")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ---- Shared
+
+enum FundingType {
+  OneTime
+  Monthly
+}
+
+model Discussion {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type DiscussionType
+
+  topic       String
+  description String
+
+  latestMessage DateTime @default(now())
+
+  user     User      @relation(fields: [userId], references: [id])
+  common   Common    @relation(fields: [commonId], references: [id])
+  proposal Proposal? @relation(fields: [proposalId], references: [id])
+
+  messages      DiscussionMessage[]
+  subscriptions DiscussionSubscription[]
+  Event         Event[]
+  Notification  Notification[]
+  userId        String
+  commonId      String
+  proposalId    String?
+}
+
+enum DiscussionMessageType {
+  Message
+}
+
+enum DiscussionSubscriptionType {
+  AllNotifications
+  OnlyMentions
+  NoNotification
+}
+
+enum DiscussionType {
+  ProposalDiscussion
+  CommonDiscussion
+}
+
+enum DiscussionMessageFlag {
+  Clear
+  Reported
+  Hidden
+}
+
+model DiscussionMessage {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  flag DiscussionMessageFlag @default(Clear)
+
+  type    DiscussionMessageType @default(Message)
+  message String
+
+  discussion Discussion @relation(fields: [discussionId], references: [id])
+  user       User       @relation(fields: [userId], references: [id])
+
+  discussionId String
+  userId       String
+
+  reports Report[]
+}
+
+model DiscussionSubscription {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type DiscussionSubscriptionType @default(AllNotifications)
+
+  userId       String
+  discussionId String
+
+  user       User       @relation(fields: [userId], references: [id])
+  discussion Discussion @relation(fields: [discussionId], references: [id])
+}
+
+model Common {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+
+  balance Int @default(0)
+  raised  Int @default(0)
+
+  whitelisted Boolean @default(false)
+
+  fundingType          FundingType
+  fundingMinimumAmount Int
+
+  events  Event[]
+  members CommonMember[]
+
+  payments      Payment[]
+  subscriptions Subscription[]
+
+  proposals   Proposal[]
+  discussions Discussion[]
+
+  reports      Report[]
+  Notification Notification[]
+}
+
+enum CommonMemberRole {
+  Founder
+  Moderator
+}
+
+model CommonMember {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  common Common @relation(fields: [commonId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  roles CommonMemberRole[]
+
+  proposals Proposal[]
+
+  commonId String
+  userId   String
+
+  Vote Vote[]
+
+  @@unique([userId, commonId])
+}
+
+enum SubscriptionStatus {
+  Pending
+
+  Active
+
+  PaymentFailed
+
+  CanceledByUser
+  CanceledByPaymentFailure
+}
+
+enum SubscriptionPaymentStatus {
+  AwaitingInitialPayment
+
+  Pending
+
+  Successful
+  Unsuccessful
+}
+
+model Subscription {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  card Card          @relation(fields: [cardId], references: [id])
+  join JoinProposal?
+
+
+  user   User   @relation(fields: [userId], references: [id])
+  common Common @relation(fields: [commonId], references: [id])
+
+  payments Payment[]
+
+  amount Int
+
+  paymentStatus SubscriptionPaymentStatus @default(AwaitingInitialPayment)
+  status        SubscriptionStatus        @default(Pending)
+
+  dueDate   DateTime
+  chargedAt DateTime?
+
+  voided Boolean @default(false)
+
+  cardId String
+
+  userId   String
+  commonId String
+}
+
+model Payment {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  processed      Boolean @default(false)
+  processedError Boolean @default(false)
+
+  type   PaymentType
+  status PaymentStatus @default(NotAttempted)
+
+  circlePaymentStatus PaymentCircleStatus?
+  circlePaymentId     String?
+
+  amount Int
+
+  card Card @relation(fields: [cardId], references: [id])
+
+  user   User   @relation(fields: [userId], references: [id])
+  common Common @relation(fields: [commonId], references: [id])
+
+  join         JoinProposal  @relation(fields: [joinId], references: [id])
+  subscription Subscription? @relation(fields: [subscriptionId], references: [id])
+
+  subscriptionId String?
+  joinId         String
+
+  userId   String
+  commonId String
+
+  cardId String
+}
+
+enum PaymentType {
+  OneTimePayment
+
+  SubscriptionInitialPayment
+  SubscriptionSequentialPayment
+}
+
+enum PaymentCircleStatus {
+  pending
+  failed
+  confirmed
+  paid
+}
+
+enum PaymentStatus {
+  NotAttempted
+  Pending
+  Successful
+  Unsuccessful
+}
+
+model Card {
+  id String @id @default(uuid())
+
+  circleCardId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  digits  String
+  network CardNetwork
+
+  cvvCheck String
+  avsCheck String
+
+
+  user     User      @relation(fields: [userId], references: [id])
+  payments Payment[]
+
+  proposal      JoinProposal[]
+  subscriptions Subscription[]
+
+  billingDetails CardBillingDetail?
+
+  userId String
+}
+
+enum CardNetwork {
+  VISA
+  MASTERCARD
+}
+
+model CardBillingDetail {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+
+  line1 String
+  line2 String?
+
+  city       String
+  country    String
+  district   String?
+  postalCode String
+
+  card Card @relation(fields: [cardId], references: [id])
+
+  cardId String
+}
+
+model User {
+  id String @id
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  firstName String
+  lastName  String
+
+  email         String  @unique
+  emailVerified Boolean @default(false)
+
+  cards       Card[]
+  events      Event[]
+  memberships CommonMember[]
+
+  reportsCreated  Report[] @relation(name: "CreatedReports")
+  reportsReviewed Report[] @relation(name: "ReviewedReports")
+
+  payments      Payment[]
+  proposals     Proposal[]
+  subscriptions Subscription[]
+
+  discussionSubscriptions DiscussionSubscription[]
+  discussionMessages      DiscussionMessage[]
+  discussions             Discussion[]
+
+  notifications        Notification[]
+  notificationLanguage NotificationLanguage @default(EN)
+
+  notificationTokens UserNotificationToken[]
+}
+
+enum UserNotificationTokenState {
+  Active
+  Expired
+  Voided
+}
+
+model UserNotificationToken {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  state       UserNotificationTokenState @default(Active)
+  token       String                     @unique
+  description String
+
+  lastUsed     DateTime @default(now())
+  lastVerified DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+}
+
+enum EventType {
+  CommonCreated
+
+  CommonMemberCreated
+  CommonMemberRoleAdded
+  CommonMemberRoleRemoved
+
+  JoinRequestCreated
+  JoinRequestAccepted
+  JoinRequestRejected
+
+  FundingRequestCreated
+  FundingRequestAccepted
+  FundingRequestRejected
+
+  CardCreated
+  CardCvvVerificationPassed
+  CardCvvVerificationFailed
+
+  PaymentCreated
+  PaymentSucceeded
+  PaymentFailed
+
+  ProposalMajorityReached
+  ProposalExpired
+
+  VoteCreated
+
+  UserCreated
+
+  DiscussionCreated
+  DiscussionMessageCreated
+  DiscussionSubscriptionCreated
+
+  DiscussionSubscriptionTypeChanged
+
+  NotificationTemplateCreated
+  NotificationTemplateUpdated
+
+  UserNotificationTokenVoided
+  UserNotificationTokenExpired
+  UserNotificationTokenCreated
+  UserNotificationTokenRefreshed
+
+  ReportCreated
+
+  ReportRespected
+  ReportDismissed
+}
+
+model Event {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type EventType
+
+  payload Json?
+
+  discussionId String?
+  proposalId   String?
+  commonId     String?
+  userId       String?
+
+  discussion Discussion? @relation(fields: [discussionId], references: [id])
+  proposal   Proposal?   @relation(fields: [proposalId], references: [id])
+  common     Common?     @relation(fields: [commonId], references: [id])
+  user       User?       @relation(fields: [userId], references: [id])
+}
+
+model NotificationSystemSettings {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type NotificationType @unique
+
+  sendEmail Boolean @default(false)
+  sendPush  Boolean @default(false)
+
+  showInUserFeed Boolean @default(false)
+}
+
+enum NotificationProcessStatus {
+  NotProcessed
+  Processing
+  Processed
+}
+
+enum NotificationSendStatus {
+  NotRequired
+  Pending
+
+  Sent
+  Failed
+}
+
+enum NotificationLanguage {
+  EN
+  RU
+  BG
+  HE
+  JP
+  KO
+}
+
+enum NotificationType {
+  JoinRequestAccepted
+  JoinRequestRejected
+
+  FundingRequestAccepted
+  FundingRequestRejected
+}
+
+enum NotificationSeenStatus {
+  NotSeen
+  Seen
+  Done
+}
+
+enum NotificationTemplateType {
+  PushNotification
+  EmailNotification
+}
+
+model Notification {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  show Boolean @default(true)
+
+  type       NotificationType
+  seenStatus NotificationSeenStatus @default(NotSeen)
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  status NotificationProcessStatus @default(NotProcessed)
+
+  // Optional Links
+  common       Common?     @relation(fields: [commonId], references: [id])
+  proposal     Proposal?   @relation(fields: [proposalId], references: [id])
+  discussion   Discussion? @relation(fields: [discussionId], references: [id])
+  commonId     String?
+  proposalId   String?
+  discussionId String?
+}
+
+model NotificationTemplate {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  forType      NotificationType
+  templateType NotificationTemplateType
+
+  subject String
+  content String
+
+  stubs String[]
+
+  from     String?
+  fromName String?
+
+  bcc     String?
+  bccName String?
+
+  language NotificationLanguage
+
+  @@unique([forType, templateType, language])
+}
+
+model Vote {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  outcome VoteOutcome
+
+  proposal     Proposal     @relation(fields: [proposalId], references: [id])
+  commonMember CommonMember @relation(fields: [commonMemberId], references: [id])
+
+  commonMemberId String
+  proposalId     String
+
+  @@unique([commonMemberId, proposalId])
+}
+
+model FundingProposal {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  proposal Proposal?
+
+  amount Int
+
+  fundingState FundingState @default(NotEligible)
+
+  // @todo Payout
+}
+
+enum FundingState {
+  NotEligible
+  Eligible
+
+  AwaitingApproval
+  Pending
+  Completed
+  Confirmed
+}
+
+enum ProposalState {
+  Countdown
+
+  Finalizing
+
+  Rejected
+  Accepted
+}
+
+enum ProposalType {
+  FundingRequest
+  JoinRequest
+}
+
+enum ProposalPaymentState {
+  NotAttempted
+  Pending
+
+  Successful
+  Unsuccessful
+}
+
+enum VoteOutcome {
+  Approve
+  Condemn
+}
+
+model Proposal {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  expiresAt DateTime
+
+  title       String?
+  description String?
+
+  link   Json?
+  files  Json?
+  images Json?
+
+  ipAddress String?
+
+  votes Vote[]
+
+  type  ProposalType
+  state ProposalState @default(Countdown)
+
+  votesFor     Int @default(0)
+  votesAgainst Int @default(0)
+
+  discussions Discussion[]
+
+  join    JoinProposal?    @relation(fields: [joinId], references: [id])
+  funding FundingProposal? @relation(fields: [fundingId], references: [id])
+
+  user         User          @relation(fields: [userId], references: [id])
+  common       Common        @relation(fields: [commonId], references: [id])
+  commonMember CommonMember? @relation(fields: [commonMemberId], references: [id])
+
+
+  joinId    String? @unique
+  fundingId String? @unique
+
+  userId         String
+  commonId       String
+  commonMemberId String?
+  Event          Event[]
+  Notification   Notification[]
+}
+
+model JoinProposal {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  funding      Int
+  fundingType  FundingType
+  paymentState ProposalPaymentState @default(NotAttempted)
+
+  card         Card          @relation(fields: [cardId], references: [id])
+  payment      Payment[]
+  proposal     Proposal?
+  subscription Subscription? @relation(fields: [subscriptionId], references: [id])
+
+  cardId         String
+  subscriptionId String?
+}
+
+enum ReportStatus {
+  Active
+  Clossed
+}
+
+enum ReportFor {
+  Nudity
+  Violance
+  Harassment
+  FalseNews
+  Spam
+  Hate
+  Other
+}
+
+enum ReportAction {
+  Respected
+  Dismissed
+}
+
+enum ReportAuditor {
+  CommonModerator
+
+  SystemAdmin
+}
+
+model Report {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  status ReportStatus @default(Active)
+
+  for  ReportFor
+  note String
+
+  common Common @relation(fields: [commonId], references: [id])
+
+  reporter User @relation(name: "CreatedReports", fields: [reporterId], references: [id])
+
+  message         DiscussionMessage @relation(fields: [messageId], references: [id])
+  reviewAuthority ReportAuditor?
+
+  action ReportAction?
+
+  reviewedOn DateTime?
+
+  reviewedBy User? @relation(name: "ReviewedReports", fields: [reviewerId], references: [id])
+
+  messageId  String
+  reporterId String
+  reviewerId String?
+  commonId   String
+}

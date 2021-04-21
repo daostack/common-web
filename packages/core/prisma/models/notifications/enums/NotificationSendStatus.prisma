@@ -1,0 +1,7 @@
+enum NotificationSendStatus {
+  NotRequired
+  Pending
+
+  Sent
+  Failed
+}

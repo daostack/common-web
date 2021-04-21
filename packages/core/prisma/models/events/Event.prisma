@@ -1,0 +1,20 @@
+model Event {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type EventType
+
+  payload Json?
+
+  discussionId String?
+  proposalId   String?
+  commonId     String?
+  userId       String?
+
+  discussion Discussion? @relation(fields: [discussionId], references: [id])
+  proposal   Proposal?   @relation(fields: [proposalId], references: [id])
+  common     Common?     @relation(fields: [commonId], references: [id])
+  user       User?       @relation(fields: [userId], references: [id])
+}

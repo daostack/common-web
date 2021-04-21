@@ -1,0 +1,5 @@
+enum UserNotificationTokenState {
+  Active
+  Expired
+  Voided
+}

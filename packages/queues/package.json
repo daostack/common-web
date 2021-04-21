@@ -1,0 +1,20 @@
+{
+  "name": "@common/queues",
+  "version": "1.9.11-rc.2",
+  "author": "Alexander Ivanov @alexander2001i",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "tsc-watch --onSuccess \"yarn fix:paths\"",
+    "compile": "tsc -p tsconfig.json && tscpaths -p tsconfig.json -s ../queues/src -o ./dist",
+    "fix:paths": "tscpaths -p tsconfig.json -s ./src -o ./dist"
+  },
+  "dependencies": {
+    "@common/core": "^1.9.11-rc.2",
+    "@prisma/client": "^2.20.1",
+    "bull": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/bull": "^3.15.0"
+  }
+}

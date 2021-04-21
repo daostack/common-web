@@ -1,0 +1,4 @@
+enum ReportStatus {
+  Active
+  Clossed
+}

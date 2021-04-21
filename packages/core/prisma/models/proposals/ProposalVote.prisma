@@ -1,0 +1,17 @@
+model Vote {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  outcome VoteOutcome
+
+  proposal     Proposal     @relation(fields: [proposalId], references: [id])
+  commonMember CommonMember @relation(fields: [commonMemberId], references: [id])
+
+  commonMemberId String
+  proposalId     String
+
+  @@unique([commonMemberId, proposalId])
+}
+

@@ -38,7 +38,7 @@ export const chargeSubscriptions = async (): Promise<void> => {
     if (subscriptionEntity.status === 'Active' || subscriptionEntity.status === 'PaymentFailed') {
       // eslint-disable-next-line no-loop-func
       promiseArr.push((async () => {
-        logger.info(`Charging subscription (${subscriptionEntity.id}) with $${subscriptionEntity.amount}`, {
+        logger.info(`Charging subscription (${subscriptionEntity.id}) with $${subscriptionEntity.amount / 100}`, {
           subscription: subscriptionEntity,
           date: new Date()
         });

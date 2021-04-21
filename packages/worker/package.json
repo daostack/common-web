@@ -1,0 +1,21 @@
+{
+  "name": "@common/worker",
+  "version": "1.9.11-rc.2",
+  "author": "Alexander Ivanov @alexander2001i",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsc-watch --onSuccess \"yarn start\"",
+    "compile": "tsc -p tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
+    "start": "node -r dotenv/config dist/index.js"
+  },
+  "dependencies": {
+    "@common/core": "^1.9.11-rc.2",
+    "@common/queues": "^1.9.11-rc.2",
+    "bull": "^3.22.0",
+    "bull-board": "^1.5.1",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@types/bull": "^3.15.0"
+  }
+}

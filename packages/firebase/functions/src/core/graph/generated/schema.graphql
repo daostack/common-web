@@ -2,6 +2,16 @@
 ### Do not make changes to this file directly
 
 
+type Amount {
+  amount: String
+  currency: String
+}
+
+type Balance {
+  available: Amount
+  unsettled: Amount
+}
+
 type Card {
   circleCardId: ID!
 
@@ -83,9 +93,7 @@ type CommonMember {
 }
 
 type CommonMetadata {
-  byline: String!
   contributionType: CommonContributionType
-  description: String!
   founderId: String!
   minFeeToJoin: Int!
 }
@@ -183,6 +191,7 @@ enum IntentionType {
 }
 
 type Mutation {
+  approvePayout(index: Int!, payoutId: ID!, token: String!): Boolean
   createIntention(input: CreateIntentionInput!): Intention
   executePayouts(input: ExecutePayoutInput!): Payout
 
@@ -193,7 +202,11 @@ type Mutation {
     """The common id to refresh"""
     commonId: ID!
   ): Int
-  updatePaymentData(id: ID!, trackId: ID = "f4a15b1d-19f7-4d66-a0d2-95a504f6c2c4"): Boolean
+  updatePaymentData(id: ID!, trackId: ID = "919d4c7d-1a93-40da-a3c1-59eac6f18ba2"): Boolean
+  updatePaymentsCommonId: Boolean
+  updatePayoutStatus(payoutId: ID!): Boolean
+  updatePayoutsStatus: Boolean
+  whitelistCommon(commonId: ID!): Boolean
 }
 
 type Payment {
@@ -369,6 +382,7 @@ enum ProposalVoteOutcome {
 }
 
 type Query {
+  balance: Balance
   common(
     """The ID of the common, that you want to retrieve"""
     commonId: ID!
