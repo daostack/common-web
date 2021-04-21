@@ -55,11 +55,19 @@ enum DiscussionType {
   CommonDiscussion
 }
 
+enum DiscussionMessageFlag {
+  Clear
+  Reported
+  Hidden
+}
+
 model DiscussionMessage {
   id String @id @default(uuid())
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  flag DiscussionMessageFlag @default(Clear)
 
   type    DiscussionMessageType @default(Message)
   message String

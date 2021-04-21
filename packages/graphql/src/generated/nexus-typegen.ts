@@ -196,6 +196,7 @@ export interface NexusGenInputs {
 
 export interface NexusGenEnums {
   CommonMemberRole: "Founder" | "Moderator"
+  DiscussionMessageFlag: "Clear" | "Hidden" | "Reported"
   DiscussionMessageType: "Message"
   DiscussionSubscriptionType: "AllNotifications" | "NoNotification" | "OnlyMentions"
   DiscussionType: "CommonDiscussion" | "ProposalDiscussion"
@@ -255,6 +256,7 @@ export interface NexusGenObjects {
   }
   DiscussionMessage: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    flag: NexusGenEnums['DiscussionMessageFlag']; // DiscussionMessageFlag!
     id: NexusGenScalars['UUID']; // UUID!
     message: string; // String!
     type: NexusGenEnums['DiscussionMessageType']; // DiscussionMessageType!
@@ -397,8 +399,10 @@ export interface NexusGenFieldTypes {
   }
   DiscussionMessage: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    flag: NexusGenEnums['DiscussionMessageFlag']; // DiscussionMessageFlag!
     id: NexusGenScalars['UUID']; // UUID!
     message: string; // String!
+    reports: NexusGenRootTypes['Report'][]; // [Report!]!
     type: NexusGenEnums['DiscussionMessageType']; // DiscussionMessageType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
@@ -572,8 +576,10 @@ export interface NexusGenFieldTypeNames {
   }
   DiscussionMessage: { // field return type name
     createdAt: 'DateTime'
+    flag: 'DiscussionMessageFlag'
     id: 'UUID'
     message: 'String'
+    reports: 'Report'
     type: 'DiscussionMessageType'
     updatedAt: 'DateTime'
   }

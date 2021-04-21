@@ -188,14 +188,22 @@ type Discussion implements BaseEntity {
 type DiscussionMessage implements BaseEntity {
   """The date, at which the item was created"""
   createdAt: DateTime!
+  flag: DiscussionMessageFlag!
 
   """The main identifier of the item"""
   id: UUID!
   message: String!
+  reports: [Report!]!
   type: DiscussionMessageType!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+}
+
+enum DiscussionMessageFlag {
+  Clear
+  Hidden
+  Reported
 }
 
 enum DiscussionMessageType {

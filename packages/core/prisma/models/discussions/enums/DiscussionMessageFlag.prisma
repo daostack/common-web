@@ -1,0 +1,5 @@
+enum DiscussionMessageFlag {
+  Clear
+  Reported
+  Hidden
+}
