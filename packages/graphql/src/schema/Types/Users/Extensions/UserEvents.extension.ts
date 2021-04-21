@@ -8,6 +8,7 @@ export const UserEventsExtension = extendType({
       type: 'Event',
       complexity: 20,
       description: 'List of events, that occurred and are related to this user',
+
       args: {
         take: intArg({
           default: 10
@@ -21,6 +22,11 @@ export const UserEventsExtension = extendType({
           type: 'EventOrderByInput'
         })
       },
+
+      authorize: async (root, args, ctx) => {
+        return root.id === (await ctx.getUserId());
+      },
+
       resolve: async (root, args) => {
         return prisma.user
           .findUnique({

@@ -53,7 +53,8 @@ export const createCommonCommand = async (command: z.infer<typeof schema>): Prom
   await addCommonMemberRoleCommand({
     memberId: founder.id,
     roles: [
-      CommonMemberRole.Founder
+      CommonMemberRole.Founder,
+      CommonMemberRole.Moderator
     ]
   });
 

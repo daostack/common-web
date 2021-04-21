@@ -1,0 +1,4 @@
+enum ReportAction {
+  Respected
+  Dismissed
+}

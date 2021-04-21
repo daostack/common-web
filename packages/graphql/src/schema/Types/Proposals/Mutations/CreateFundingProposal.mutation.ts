@@ -29,7 +29,7 @@ export const CreateFundingProposalMutation = extendType({
   type: 'Mutation',
   definition(t) {
     t.nonNull.field('createFundingProposal', {
-      type: 'FundingProposal',
+      type: 'Proposal',
       args: {
         input: nonNull(
           arg({

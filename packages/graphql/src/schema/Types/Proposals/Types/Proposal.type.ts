@@ -19,6 +19,10 @@ export const ProposalType = objectType({
       type: 'ProposalType'
     });
 
+    t.nonNull.field('state', {
+      type: 'ProposalState'
+    });
+
     // @join
     // @funding
   }

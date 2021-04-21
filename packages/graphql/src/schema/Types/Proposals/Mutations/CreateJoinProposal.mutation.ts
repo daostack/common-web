@@ -22,7 +22,7 @@ export const CreateJoinProposalMutation = extendType({
   type: 'Mutation',
   definition(t) {
     t.nonNull.field('createJoinProposal', {
-      type: 'JoinProposal',
+      type: 'Proposal',
       description: 'Create new proposal of type JOIN.',
       args: {
         input: nonNull(

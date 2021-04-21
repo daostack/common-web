@@ -1,10 +1,10 @@
-import { createJoinProposalCommand } from './join/command/createJoinProposalCommand';
-import { processApprovedOneTimeJoinRequestCommand } from './join/command/process/processApprovedOneTimeJoinRequest';
-import { processApprovedSubscriptionJoinRequest } from './join/command/process/processApprovedSubscriptionJoinRequest';
+import { createJoinProposalCommand } from './commands/join/createJoinProposalCommand';
+import { processApprovedOneTimeJoinRequestCommand } from './commands/join/process/processApprovedOneTimeJoinRequest';
+import { processApprovedSubscriptionJoinRequest } from './commands/join/process/processApprovedSubscriptionJoinRequest';
 
-import { createFundingProposalCommand } from './funding/command/createFundingProposalCommand';
-import { processApprovedFundingRequest } from './funding/command/process/processApprovedFundingRequest';
-import { processRejectedFundingRequest } from './funding/command/process/processRejectedFundingRequest';
+import { createFundingProposalCommand } from './commands/funding/createFundingProposalCommand';
+import { processApprovedFundingRequest } from './commands/funding/process/processApprovedFundingRequest';
+import { processRejectedFundingRequest } from './commands/funding/process/processRejectedFundingRequest';
 
 import { finalizeProposalCommand } from './shared/command/finalizeProposalCommand';
 import { proposalHasMajorityQuery } from './shared/queries/proposalHasMajorityQuery';

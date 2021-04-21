@@ -12,8 +12,12 @@
     "@common/core": "^1.9.11-rc.1",
     "@prisma/client": "^2.20.1",
     "firebase-admin": "9.5.0",
+    "graphql-middleware": "^6.0.7",
     "graphql-query-complexity": "^0.8.0",
+    "graphql-redis-subscriptions": "^2.3.1",
     "graphql-scalars": "^1.9.0",
+    "graphql-shield": "^7.5.0",
+    "graphql-subscriptions": "^1.2.1",
     "nexus": "^1.0.0",
     "request-ip": "^2.1.3"
   },

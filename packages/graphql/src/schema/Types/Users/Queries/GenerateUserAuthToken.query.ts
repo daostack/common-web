@@ -1,7 +1,6 @@
 import { extendType, nonNull, stringArg } from 'nexus';
 import { userService } from '@common/core';
 
-
 export const GenerateUserAuthTokenQuery = extendType({
   type: 'Query',
   definition(t) {

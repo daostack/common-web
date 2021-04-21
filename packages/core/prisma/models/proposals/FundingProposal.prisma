@@ -8,7 +8,6 @@ model FundingProposal {
 
   amount Int
 
-
   fundingState FundingState @default(NotEligible)
 
   // @todo Payout
