@@ -1,4 +1,6 @@
 import { extendType, intArg, arg } from 'nexus';
+import { DiscussionMessageFlag } from '@prisma/client';
+
 import { prisma } from '@common/core';
 
 export const DiscussionMessagesExtension = extendType({
@@ -27,7 +29,12 @@ export const DiscussionMessagesExtension = extendType({
         return prisma.discussionMessage
           .findMany({
             where: {
-              discussionId: root.id
+              discussionId: root.id,
+              flag: {
+                notIn: [
+                  DiscussionMessageFlag.Hidden
+                ]
+              }
             },
             take: args.take || 10,
             skip: args.skip || undefined,
