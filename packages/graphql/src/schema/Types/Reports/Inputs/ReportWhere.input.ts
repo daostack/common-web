@@ -10,5 +10,9 @@ export const ReportWhereInput = inputObjectType({
     t.field('for', {
       type: 'ReportFor'
     });
+
+    t.field('status', {
+      type: 'ReportStatusFilterInput'
+    });
   }
 });

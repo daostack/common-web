@@ -4,11 +4,10 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
-import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
+import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -56,6 +55,10 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  ActOnReportInput: { // input type
+    action: NexusGenEnums['ReportAction']; // ReportAction!
+    reportId: NexusGenScalars['UUID']; // UUID!
+  }
   BillingDetailsInput: { // input type
     city: string; // String!
     country: string; // String!
@@ -177,9 +180,13 @@ export interface NexusGenInputs {
     messageId: NexusGenScalars['UUID']; // UUID!
     note: string; // String!
   }
+  ReportStatusFilterInput: { // input type
+    in?: Array<NexusGenEnums['ReportStatus'] | null> | null; // [ReportStatus]
+    not?: Array<NexusGenEnums['ReportStatus'] | null> | null; // [ReportStatus]
+  }
   ReportWhereInput: { // input type
     for?: NexusGenEnums['ReportFor'] | null; // ReportFor
-    status?: NexusGenEnums['ReportStatus'] | null; // ReportStatus
+    status?: NexusGenInputs['ReportStatusFilterInput'] | null; // ReportStatusFilterInput
   }
   StringFilter: { // input type
     contains?: string | null; // String
@@ -196,19 +203,21 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  CommonMemberRole: 'Founder' | 'Moderator'
-  DiscussionMessageType: 'Message'
-  DiscussionSubscriptionType: 'AllNotifications' | 'NoNotification' | 'OnlyMentions'
-  DiscussionType: 'CommonDiscussion' | 'ProposalDiscussion'
-  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'DiscussionCreated' | 'DiscussionMessageCreated' | 'DiscussionSubscriptionCreated' | 'DiscussionSubscriptionTypeChanged' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'NotificationTemplateCreated' | 'NotificationTemplateUpdated' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'ProposalExpired' | 'ProposalMajorityReached' | 'ReportActionTaken' | 'ReportCreated' | 'ReportDismissed' | 'UserCreated' | 'UserNotificationTokenCreated' | 'UserNotificationTokenExpired' | 'UserNotificationTokenRefreshed' | 'UserNotificationTokenVoided' | 'VoteCreated'
-  FundingType: 'Monthly' | 'OneTime'
-  NotificationSeenStatus: 'Done' | 'NotSeen' | 'Seen'
-  NotificationType: 'FundingRequestAccepted' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestRejected'
-  ProposalState: 'Accepted' | 'Countdown' | 'Finalizing' | 'Rejected'
-  ProposalType: 'FundingRequest' | 'JoinRequest'
-  ReportAuditor: 'CommonModerator' | 'SystemAdmin'
-  ReportFor: 'FalseNews' | 'Harassment' | 'Hate' | 'Nudity' | 'Other' | 'Spam' | 'Violance'
-  ReportStatus: "AdminActionTaken" | "AwaitingReview" | "Clossed" | "Dissmissed" | "ModeratorActionTaken"
+  CommonMemberRole: "Founder" | "Moderator"
+  DiscussionMessageFlag: "Clear" | "Hidden" | "Reported"
+  DiscussionMessageType: "Message"
+  DiscussionSubscriptionType: "AllNotifications" | "NoNotification" | "OnlyMentions"
+  DiscussionType: "CommonDiscussion" | "ProposalDiscussion"
+  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "DiscussionCreated" | "DiscussionMessageCreated" | "DiscussionSubscriptionCreated" | "DiscussionSubscriptionTypeChanged" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "NotificationTemplateCreated" | "NotificationTemplateUpdated" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "ReportCreated" | "ReportDismissed" | "ReportRespected" | "UserCreated" | "UserNotificationTokenCreated" | "UserNotificationTokenExpired" | "UserNotificationTokenRefreshed" | "UserNotificationTokenVoided" | "VoteCreated"
+  FundingType: "Monthly" | "OneTime"
+  NotificationSeenStatus: "Done" | "NotSeen" | "Seen"
+  NotificationType: "FundingRequestAccepted" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestRejected"
+  ProposalState: "Accepted" | "Countdown" | "Finalizing" | "Rejected"
+  ProposalType: "FundingRequest" | "JoinRequest"
+  ReportAction: "Dismissed" | "Respected"
+  ReportAuditor: "CommonModerator" | "SystemAdmin"
+  ReportFor: "FalseNews" | "Harassment" | "Hate" | "Nudity" | "Other" | "Spam" | "Violance"
+  ReportStatus: "Active" | "Clossed"
   SortOrder: "asc" | "desc"
   UserNotificationTokenState: "Active" | "Expired" | "Voided"
   VoteOutcome: "Approve" | "Condemn"
@@ -256,6 +265,7 @@ export interface NexusGenObjects {
   }
   DiscussionMessage: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    flag: NexusGenEnums['DiscussionMessageFlag']; // DiscussionMessageFlag!
     id: NexusGenScalars['UUID']; // UUID!
     message: string; // String!
     type: NexusGenEnums['DiscussionMessageType']; // DiscussionMessageType!
@@ -373,6 +383,7 @@ export interface NexusGenFieldTypes {
     members: Array<NexusGenRootTypes['CommonMember'] | null>; // [CommonMember]!
     name: string; // String!
     proposals: NexusGenRootTypes['Proposal'][]; // [Proposal!]!
+    reports: NexusGenRootTypes['Report'][]; // [Report!]!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     whitelisted: boolean; // Boolean!
   }
@@ -397,8 +408,10 @@ export interface NexusGenFieldTypes {
   }
   DiscussionMessage: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    flag: NexusGenEnums['DiscussionMessageFlag']; // DiscussionMessageFlag!
     id: NexusGenScalars['UUID']; // UUID!
     message: string; // String!
+    reports: NexusGenRootTypes['Report'][]; // [Report!]!
     type: NexusGenEnums['DiscussionMessageType']; // DiscussionMessageType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
@@ -435,6 +448,7 @@ export interface NexusGenFieldTypes {
     url: string; // String!
   }
   Mutation: { // field return type
+    actOnReport: NexusGenRootTypes['Report'] | null; // Report
     changeDiscussionSubscriptionType: NexusGenRootTypes['DiscussionSubscription'] | null; // DiscussionSubscription
     createCard: NexusGenRootTypes['Card']; // Card!
     createCommon: NexusGenRootTypes['Common']; // Common!
@@ -547,6 +561,7 @@ export interface NexusGenFieldTypeNames {
     members: 'CommonMember'
     name: 'String'
     proposals: 'Proposal'
+    reports: 'Report'
     updatedAt: 'DateTime'
     whitelisted: 'Boolean'
   }
@@ -571,8 +586,10 @@ export interface NexusGenFieldTypeNames {
   }
   DiscussionMessage: { // field return type name
     createdAt: 'DateTime'
+    flag: 'DiscussionMessageFlag'
     id: 'UUID'
     message: 'String'
+    reports: 'Report'
     type: 'DiscussionMessageType'
     updatedAt: 'DateTime'
   }
@@ -609,6 +626,7 @@ export interface NexusGenFieldTypeNames {
     url: 'String'
   }
   Mutation: { // field return type name
+    actOnReport: 'Report'
     changeDiscussionSubscriptionType: 'DiscussionSubscription'
     createCard: 'Card'
     createCommon: 'Common'
@@ -728,6 +746,9 @@ export interface NexusGenArgTypes {
       take: number | null; // Int
       where?: NexusGenInputs['ProposalWhereInput'] | null; // ProposalWhereInput
     }
+    reports: { // args
+      where: NexusGenInputs['ReportWhereInput'] | null; // ReportWhereInput
+    }
   }
   CommonMember: {
     proposals: { // args
@@ -744,6 +765,9 @@ export interface NexusGenArgTypes {
     }
   }
   Mutation: {
+    actOnReport: { // args
+      input: NexusGenInputs['ActOnReportInput']; // ActOnReportInput!
+    }
     changeDiscussionSubscriptionType: { // args
       id: string; // ID!
       type: NexusGenEnums['DiscussionSubscriptionType']; // DiscussionSubscriptionType!

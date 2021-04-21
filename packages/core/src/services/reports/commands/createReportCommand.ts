@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { ReportFor, EventType } from '@prisma/client';
+import { DiscussionMessageFlag, ReportFor, EventType } from '@prisma/client';
 
 import { prisma } from '@toolkits';
 import { eventService } from '@services';
@@ -47,24 +47,41 @@ export const createReportCommand = async (payload: z.infer<typeof schema>) => {
     );
   }
 
-  // Create the report
-  const report = await prisma.report.create({
-    data: {
-      ...payload,
-      commonId: commonWithId.id
-    },
-    include: {
-      message: {
-        select: {
-          discussion: {
-            select: {
-              commonId: true
+
+  // Create the report and mark the message as reported in transaction
+  const [report] = await prisma.$transaction([
+    // Crate the report
+    prisma.report.create({
+      data: {
+        ...payload,
+        commonId: commonWithId.id
+      },
+      include: {
+        message: {
+          select: {
+            discussion: {
+              select: {
+                commonId: true
+              }
             }
           }
         }
       }
-    }
-  });
+    }),
+
+    // Mark the message as reported
+    prisma.discussionMessage.update({
+      where: {
+        id: payload.messageId
+      },
+      data: {
+        flag: DiscussionMessageFlag.Reported
+      },
+      select: {
+        id: true
+      }
+    })
+  ]);
 
   // Create the event about the report being created
   await eventService.create({

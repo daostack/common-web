@@ -4,6 +4,8 @@ model DiscussionMessage {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  flag DiscussionMessageFlag @default(Clear)
+
   type    DiscussionMessageType @default(Message)
   message String
 

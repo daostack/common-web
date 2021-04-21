@@ -44,7 +44,7 @@ export const createDiscussionMessageCommand = async (payload: z.infer<typeof sch
 
   if (!member) {
     throw new CommonError(
-      'Cannot create discussion message in discussion that is' +
+      'Cannot create discussion message in discussion that is ' +
       'in common that you are not member of'
     );
   }
