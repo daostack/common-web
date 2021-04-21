@@ -1,0 +1,7 @@
+enum NotificationType {
+  JoinRequestAccepted
+  JoinRequestRejected
+
+  FundingRequestAccepted
+  FundingRequestRejected
+}

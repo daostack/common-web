@@ -11,5 +11,4 @@ export const EventsQueue = `${BaseQueue}.Events`;
 export const PaymentsProcessingQueue = `${BaseQueue}.Payments.Processing`;
 
 
-
 export const ChargeSubscriptionQueue = `${BaseQueue}.Subscription.Charge`;

@@ -3,3 +3,4 @@ export const sleep = (duration: number): Promise<void> => new Promise((resolve) 
 
 // --- Reexports
 export { poll } from './pollingUtils';
+export * as stringUtils from './stringUtils';

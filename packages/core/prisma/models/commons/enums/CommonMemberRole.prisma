@@ -1,3 +1,4 @@
 enum CommonMemberRole {
   Founder
+  Moderator
 }

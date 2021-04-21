@@ -2,6 +2,11 @@
 ### Do not make changes to this file directly
 
 
+input ActOnReportInput {
+  action: ReportAction!
+  reportId: UUID!
+}
+
 interface BaseEntity {
   """The date, at which the item was created"""
   createdAt: DateTime!
@@ -49,6 +54,7 @@ type Common {
   """The name of the common as provided"""
   name: String!
   proposals(skip: Int = 0, take: Int = 10, where: ProposalWhereInput): [Proposal!]!
+  reports(where: ReportWhereInput = {status: {in: [Active]}}): [Report!]!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
@@ -73,6 +79,7 @@ input CommonMemberOrderByInput {
 
 enum CommonMemberRole {
   Founder
+  Moderator
 }
 
 input CommonWhereUniqueInput {
@@ -144,6 +151,11 @@ input CreateUserInput {
   lastName: String!
 }
 
+input CreateUserNotificationTokenInput {
+  description: String!
+  token: String!
+}
+
 input CreateVoteInput {
   outcome: VoteOutcome!
 
@@ -181,14 +193,22 @@ type Discussion implements BaseEntity {
 type DiscussionMessage implements BaseEntity {
   """The date, at which the item was created"""
   createdAt: DateTime!
+  flag: DiscussionMessageFlag!
 
   """The main identifier of the item"""
   id: UUID!
   message: String!
+  reports: [Report!]!
   type: DiscussionMessageType!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+}
+
+enum DiscussionMessageFlag {
+  Clear
+  Hidden
+  Reported
 }
 
 enum DiscussionMessageType {
@@ -276,12 +296,21 @@ enum EventType {
   JoinRequestAccepted
   JoinRequestCreated
   JoinRequestRejected
+  NotificationTemplateCreated
+  NotificationTemplateUpdated
   PaymentCreated
   PaymentFailed
   PaymentSucceeded
   ProposalExpired
   ProposalMajorityReached
+  ReportCreated
+  ReportDismissed
+  ReportRespected
   UserCreated
+  UserNotificationTokenCreated
+  UserNotificationTokenExpired
+  UserNotificationTokenRefreshed
+  UserNotificationTokenVoided
   VoteCreated
 }
 
@@ -335,6 +364,7 @@ input LinkInput {
 }
 
 type Mutation {
+  actOnReport(input: ActOnReportInput!): Report
   changeDiscussionSubscriptionType(
     """The ID of the discussion subscription to change"""
     id: ID!
@@ -346,15 +376,90 @@ type Mutation {
   createCommon(input: CreateCommonInput!): Common!
   createDiscussion(input: CreateDiscussionInput!): Discussion!
   createDiscussionMessage(input: CreateDiscussionMessageInput!): DiscussionMessage!
-  createFundingProposal(input: CreateFundingProposalInput!): FundingProposal!
+  createFundingProposal(input: CreateFundingProposalInput!): Proposal!
 
   """Create new proposal of type JOIN."""
-  createJoinProposal(input: CreateJoinProposalInput!): JoinProposal!
+  createJoinProposal(input: CreateJoinProposalInput!): Proposal!
 
   """Creates new user in the system"""
   createUser(input: CreateUserInput!): User!
+  createUserNotificationToken(input: CreateUserNotificationTokenInput!): UserNotificationToken!
   createVote(input: CreateVoteInput!): Vote!
   finalizeProposal(proposalId: ID!): Boolean!
+  reportDiscussionMessage(input: ReportDiscussionMessageInput!): Report!
+  voidUserNotificationToken(tokenId: ID!): UserNotificationToken!
+}
+
+type Notification implements BaseEntity {
+  """The linked common. Expensive operation that may return null"""
+  common: Common
+
+  """The ID of the linked common. May be null"""
+  commonId: UUID
+
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+
+  """The linked discussion. Expensive operation that may return null"""
+  discussion: Discussion
+
+  """The ID of the linked discussion. May be null"""
+  discussionId: UUID
+
+  """The main identifier of the item"""
+  id: UUID!
+
+  """The linked proposal. Expensive operation that may return null"""
+  proposal: Proposal
+
+  """The ID of the linked proposal. May be null"""
+  proposalId: UUID
+  seenStatus: NotificationSeenStatus!
+
+  """Whether the notification should be shown in the user notification feed"""
+  show: Boolean!
+  type: NotificationType!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+
+  """The linked user. Expensive operation"""
+  user: User!
+
+  """The ID of the linked user"""
+  userId: UUID!
+}
+
+input NotificationOrderByInput {
+  createdAt: SortOrder
+  status: SortOrder
+  updatedAt: SortOrder
+}
+
+enum NotificationSeenStatus {
+  Done
+  NotSeen
+  Seen
+}
+
+enum NotificationType {
+  FundingRequestAccepted
+  FundingRequestRejected
+  JoinRequestAccepted
+  JoinRequestRejected
+}
+
+input NotificationWhereInput {
+  commonId: UUID
+  discussionId: UUID
+  proposalId: UUID
+  seenStatus: NotificationSeenStatus
+  type: NotificationType
+  userId: ID
+}
+
+input NotificationWhereUniqueInput {
+  id: UUID
 }
 
 type Proposal {
@@ -364,6 +469,7 @@ type Proposal {
 
   """The main identifier of the item"""
   id: ID!
+  state: ProposalState!
   type: ProposalType!
 
   """The date, at which the item was last modified"""
@@ -381,6 +487,13 @@ input ProposalImageInput {
 input ProposalLinkInput {
   title: String!
   url: String!
+}
+
+enum ProposalState {
+  Accepted
+  Countdown
+  Finalizing
+  Rejected
 }
 
 enum ProposalType {
@@ -408,6 +521,74 @@ type Query {
   user(userId: ID): User
 }
 
+type Report implements BaseEntity {
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+
+  """The type of violation that this report is for"""
+  for: ReportFor!
+
+  """The main identifier of the item"""
+  id: UUID!
+  message: DiscussionMessage!
+  messageId: UUID!
+
+  """The note that the report has left for the content"""
+  note: String!
+  reporter: User!
+  reporterId: ID!
+
+  """The date on which the report was last reviewed if reviewed"""
+  reviewedOn: DateTime
+
+  """The current status of the report"""
+  status: ReportStatus!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+}
+
+enum ReportAction {
+  Dismissed
+  Respected
+}
+
+enum ReportAuditor {
+  CommonModerator
+  SystemAdmin
+}
+
+input ReportDiscussionMessageInput {
+  for: ReportFor!
+  messageId: UUID!
+  note: String!
+}
+
+enum ReportFor {
+  FalseNews
+  Harassment
+  Hate
+  Nudity
+  Other
+  Spam
+  Violance
+}
+
+enum ReportStatus {
+  Active
+  Clossed
+}
+
+input ReportStatusFilterInput {
+  in: [ReportStatus]
+  not: [ReportStatus]
+}
+
+input ReportWhereInput {
+  for: ReportFor
+  status: ReportStatusFilterInput
+}
+
 enum SortOrder {
   asc
   desc
@@ -424,6 +605,18 @@ input StringFilter {
   lte: String
   notIn: [String!]
   startsWith: String
+}
+
+type Subscription {
+  discussionMessageCreated(
+    """The ID of the discussion, for which messages you want to subscribe"""
+    discussionId: ID!
+  ): DiscussionMessage
+  notificationCreated: Notification
+  onProposalChange(
+    """The ID of the proposal that you wish to subscribe to"""
+    proposalId: ID!
+  ): Proposal
 }
 
 """
@@ -455,10 +648,34 @@ type User {
 
   """The last name of the user"""
   lastName: String!
+  notificationTokens: [UserNotificationToken!]!
+  notifications(cursor: NotificationWhereUniqueInput, orderBy: NotificationOrderByInput = {createdAt: desc}, skip: Int, take: Int = 10): [Notification!]!
   proposals(skip: Int = 0, take: Int = 10, where: ProposalWhereInput): [Proposal!]!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+}
+
+type UserNotificationToken implements BaseEntity {
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  description: String!
+
+  """The main identifier of the item"""
+  id: UUID!
+  lastUsed: DateTime!
+  lastVerified: DateTime!
+  state: UserNotificationTokenState!
+  token: String!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+}
+
+enum UserNotificationTokenState {
+  Active
+  Expired
+  Voided
 }
 
 type Vote {

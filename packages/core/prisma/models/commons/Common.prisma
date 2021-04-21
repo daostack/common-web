@@ -22,6 +22,8 @@ model Common {
 
   proposals   Proposal[]
   discussions Discussion[]
+
+  reports Report[]
 }
 
 

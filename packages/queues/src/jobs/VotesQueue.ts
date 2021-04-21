@@ -1,7 +1,6 @@
 import Queue, { JobOptions } from 'bull';
-import { setQueues, BullAdapter } from 'bull-board';
 
-import { logger, voteService } from '@common/core';
+import { logger } from '@common/core';
 
 import { Queues } from '../constants/Queues';
 

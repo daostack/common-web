@@ -1,14 +1,16 @@
 import path from 'path';
-import { makeSchema, queryComplexityPlugin } from 'nexus';
+import { makeSchema, queryComplexityPlugin, fieldAuthorizePlugin } from 'nexus';
 
 import { UserTypes } from './Types/Users';
 import { CardTypes } from './Types/Cards';
 import { VoteTypes } from './Types/Votes';
 import { EventTypes } from './Types/Events';
 import { CommonTypes } from './Types/Commons';
+import { ReportTypes } from './Types/Reports';
 import { ProposalTypes } from './Types/Proposals';
 import { DiscussionTypes } from './Types/Discussion';
 import { CommonMemberTypes } from './Types/CommonMember';
+import { NotificationTypes } from './Types/Notifications';
 
 import { UrlScalar } from './Shared/Scalars/Url.scalar';
 import { DateScalar } from './Shared/Scalars/Date.scalar';
@@ -29,9 +31,11 @@ const types = [
   VoteTypes,
   EventTypes,
   CommonTypes,
+  ReportTypes,
   ProposalTypes,
   DiscussionTypes,
   CommonMemberTypes,
+  NotificationTypes,
 
   // Scalars
   UrlScalar,
@@ -65,6 +69,7 @@ export const schema = makeSchema({
     export: 'IRequestContext'
   },
   plugins: [
-    queryComplexityPlugin()
+    queryComplexityPlugin(),
+    fieldAuthorizePlugin()
   ]
 });
