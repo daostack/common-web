@@ -1,6 +1,7 @@
 import * as z from 'zod';
-import { ReportAction, ReportStatus, DiscussionMessageFlag, EventType } from '@prisma/client';
+import { ReportAction, ReportStatus, DiscussionMessageFlag, EventType, Report } from '@prisma/client';
 
+import { logger } from '@logger';
 import { prisma } from '@toolkits';
 import { eventService } from '@services';
 import { getUserReportActingAuthority } from '../queries/getUserReportActingAuthority';
@@ -15,7 +16,7 @@ const schema = z.object({
   action: z.enum(Object.keys(ReportAction) as [(keyof typeof ReportAction)])
 });
 
-export const actOnReportCommand = async (payload: z.infer<typeof schema>): Promise<void> => {
+export const actOnReportCommand = async (payload: z.infer<typeof schema>): Promise<Report> => {
   // Validate the payload
   schema.parse(payload);
 
@@ -33,6 +34,8 @@ export const actOnReportCommand = async (payload: z.infer<typeof schema>): Promi
         messageId: true
       }
     });
+
+  logger.debug('Acting on report with {authority} authority', authority);
 
   // Update the message and report accordingly
   const [report, message] = await prisma.$transaction([
@@ -62,6 +65,8 @@ export const actOnReportCommand = async (payload: z.infer<typeof schema>): Promi
       })
   ]);
 
+  logger.debug('Successfully acted on report');
+
   // Send events
   eventService.create({
     type: payload.action === ReportAction.Respected
@@ -75,4 +80,7 @@ export const actOnReportCommand = async (payload: z.infer<typeof schema>): Promi
       authority
     }
   });
+
+  // Return the updated report
+  return report;
 };
