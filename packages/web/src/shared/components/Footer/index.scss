@@ -23,6 +23,9 @@
         margin: 10px 0px;
         color: $purple;
       }
+      span {
+        margin: 10px 0;
+      }
     }
   }
   .footer-bottom {
@@ -70,6 +73,7 @@
         align-items: center;
         text-align: center;
         justify-items: center;
+        margin-top: 20px;
       }
     }
   }

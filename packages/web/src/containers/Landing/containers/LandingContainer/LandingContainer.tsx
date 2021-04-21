@@ -13,16 +13,18 @@ const LandingContainer = () => {
 
   return (
     <div className="landing-wrapper">
-      <div className="landing-top">
+      <section className="landing-top">
         <div className="info">
-          <img src="icons/logo-white.svg" alt="logo" width="200px" />
+          <img src="icons/logo-white.svg" alt="logo" width="150px" />
           <h1>
             Launch Collective Action. <br />
             <span style={{ color: "#ff5e9d" }}>Catalyze a movement</span>
             <br /> together.
           </h1>
-          <span className="available-on-label">Available on</span>
-          <MobileLinks color="white" />
+          <div className="mobile-apps-wrapper">
+            <div className="available-on-label">Available on</div>
+            <MobileLinks color="white" />
+          </div>
         </div>
         {screenSize === ScreenSize.Large && (
           <img
@@ -32,16 +34,16 @@ const LandingContainer = () => {
             width="300px"
           />
         )}
-      </div>
-      <div>
+      </section>
+      <section>
         <h1>What is Common?</h1>
         <p>
           Common enables large groups of people to collaborate on shared <br /> agendas by pooling funds and
           collectively making decisions. <br />
           <b>Anyone</b> can create a Common, invite thier friends, and work <br /> together to achieve a common goal.
         </p>
-      </div>
-      <div className="illustrations-wrapper">
+      </section>
+      <section className="illustrations-wrapper">
         <div>
           <img src={require("../../assets/images/transparent.svg")} alt="transparent" />
           <h3>Transparent</h3>
@@ -63,8 +65,8 @@ const LandingContainer = () => {
             Any member can propose <br /> projects and use shared funds.
           </div>
         </div>
-      </div>
-      <div className="goal-wrapper">
+      </section>
+      <section className="goal-wrapper">
         <img src={require("../../assets/images/iphone.png")} alt="iphone" width="500px" />
         <div>
           <h1>
@@ -80,19 +82,19 @@ const LandingContainer = () => {
             of the process, we enter a new era of trust and <br /> collaboration.
           </p>
         </div>
-      </div>
-      <div>
+      </section>
+      <section>
         <h1>Featured Commons</h1>
         <div style={{ marginBottom: "30px" }}>Browse some of the emerging groups on the Common app</div>
         <Link className="button-blue" to={ROUTE_PATHS.COMMON_LIST}>
           Explore all commons
         </Link>
-      </div>
-      <div>
+      </section>
+      <section>
         <h1>What's Calling You?</h1>
         <div>You can start a common for any shared agenda such as...</div>
-      </div>
-      <div className="illustrations-wrapper">
+      </section>
+      <section className="illustrations-wrapper">
         <div>
           <img src={require("../../assets/images/movement.svg")} alt="movement" />
           <h5>Catalyze a Movement</h5>
@@ -109,15 +111,15 @@ const LandingContainer = () => {
           <img src={require("../../assets/images/voluneteering.svg")} alt="voluneteering" />
           <h5>Coordinate Voluneteering Work</h5>
         </div>
-      </div>
+      </section>
       <ContactUs />
-      <div className="landing-bottom">
+      <section className="landing-bottom">
         <h1>Join Common!</h1>
         <span style={{ marginBottom: "30px" }}>
           Download the Common app and find <br /> countless opportunities to make a difference.
         </span>
         <MobileLinks color="white" />
-      </div>
+      </section>
     </div>
   );
 };

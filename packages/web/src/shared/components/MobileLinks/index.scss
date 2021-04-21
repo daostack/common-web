@@ -2,6 +2,10 @@
 
 .mobile-links-wrapper {
   width: fit-content;
+  img:hover {
+    cursor: pointer;
+    opacity: 0.9;
+  }
   img:first-child {
     margin-right: 10px;
   }
@@ -9,11 +13,8 @@
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .mobile-links-wrapper {
-    display: flex;
-    flex-direction: column;
-    img:first-child {
-      margin-right: unset;
-      margin-bottom: 10px;
+    img {
+      max-width: 135px;
     }
   }
 }

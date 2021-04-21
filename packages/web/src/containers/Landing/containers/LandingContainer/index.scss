@@ -3,25 +3,32 @@
 .landing-wrapper {
   text-align: center;
   margin: -$content-padding; // to ignore parent content padding
-  > div {
+  > section {
     padding: $content-padding;
   }
   .landing-top {
-    background: url("../../assets/images/sea.jpg") no-repeat;
-    background-size: cover;
+    background-image: url("../../assets/images/wave-top.svg"), url("../../assets/images/sea.jpg");
+    background-position: 50% 101%, 0% 50%;
+    background-size: 105%, cover;
+    background-repeat: no-repeat, repeat;
     display: flex;
     position: relative;
     .info {
       display: flex;
       flex-direction: column;
+      width: 100%;
+      margin-left: 50px;
+      margin-bottom: 100px;
       h1 {
         color: $white;
         text-align: left;
       }
-      .available-on-label {
-        color: white;
+      .mobile-apps-wrapper {
         text-align: left;
-        margin-bottom: 10px;
+        .available-on-label {
+          color: white;
+          margin-bottom: 10px;
+        }
       }
     }
     .iphone-full {
@@ -45,8 +52,10 @@
     align-items: center;
   }
   .landing-bottom {
-    background: url("../../assets/images/join.jpg") no-repeat;
-    background-size: cover;
+    background: url("../../assets/images/wave-bottom.svg"), url("../../assets/images/join.jpg");
+    background-position: 50% -1%,50% 0;
+    background-size: contain, cover;
+    background-repeat: no-repeat, repeat;
     color: $white;
     display: flex;
     flex-direction: column;
@@ -56,13 +65,18 @@
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .landing-wrapper {
-    > div {
-      padding: $content-padding-mobile;
-    }
     .landing-top {
-      .iphone-full {
-
+      .info {
+        margin-left: unset;
+        margin-bottom: unset;
+        .mobile-apps-wrapper {
+          align-self: center;
+          text-align: center;
+        }
       }
+    }
+    > section {
+      padding: $content-padding-mobile;
     }
     .illustrations-wrapper {
       flex-direction: column;
