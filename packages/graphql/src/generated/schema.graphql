@@ -3,19 +3,19 @@
 
 
 input ActOnReportInput {
-    action: ReportAction!
-    reportId: UUID!
+  action: ReportAction!
+  reportId: UUID!
 }
 
 interface BaseEntity {
-    """The date, at which the item was created"""
-    createdAt: DateTime!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
 
-    """The main identifier of the item"""
-    id: UUID!
+  """The main identifier of the item"""
+  id: UUID!
 
-    """The date, at which the item was last modified"""
-    updatedAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
 }
 
 input BillingDetailsInput {
@@ -54,7 +54,7 @@ type Common {
   """The name of the common as provided"""
   name: String!
   proposals(skip: Int = 0, take: Int = 10, where: ProposalWhereInput): [Proposal!]!
-  reports(where: ReportWhereInput): [Report!]!
+  reports(where: ReportWhereInput = {status: {in: [Active]}}): [Report!]!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
@@ -304,9 +304,9 @@ enum EventType {
   ProposalExpired
   ProposalMajorityReached
   ReportCreated
-    ReportDismissed
-    ReportRespected
-    UserCreated
+  ReportDismissed
+  ReportRespected
+  UserCreated
   UserNotificationTokenCreated
   UserNotificationTokenExpired
   UserNotificationTokenRefreshed
@@ -364,14 +364,14 @@ input LinkInput {
 }
 
 type Mutation {
-    actOnReport(input: ActOnReportInput!): Report
-    changeDiscussionSubscriptionType(
-        """The ID of the discussion subscription to change"""
-        id: ID!
+  actOnReport(input: ActOnReportInput!): Report
+  changeDiscussionSubscriptionType(
+    """The ID of the discussion subscription to change"""
+    id: ID!
 
-        """The new subscription type"""
-        type: DiscussionSubscriptionType!
-    ): DiscussionSubscription
+    """The new subscription type"""
+    type: DiscussionSubscriptionType!
+  ): DiscussionSubscription
   createCard(input: CreateCardInput!): Card!
   createCommon(input: CreateCommonInput!): Common!
   createDiscussion(input: CreateDiscussionInput!): Discussion!
@@ -538,30 +538,30 @@ type Report implements BaseEntity {
   reporter: User!
   reporterId: ID!
 
-    """The date on which the report was last reviewed if reviewed"""
-    reviewedOn: DateTime
+  """The date on which the report was last reviewed if reviewed"""
+  reviewedOn: DateTime
 
-    """The current status of the report"""
-    status: ReportStatus!
+  """The current status of the report"""
+  status: ReportStatus!
 
-    """The date, at which the item was last modified"""
-    updatedAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
 }
 
 enum ReportAction {
-    Dismissed
-    Respected
+  Dismissed
+  Respected
 }
 
 enum ReportAuditor {
-    CommonModerator
-    SystemAdmin
+  CommonModerator
+  SystemAdmin
 }
 
 input ReportDiscussionMessageInput {
-    for: ReportFor!
-    messageId: UUID!
-    note: String!
+  for: ReportFor!
+  messageId: UUID!
+  note: String!
 }
 
 enum ReportFor {
@@ -575,13 +575,18 @@ enum ReportFor {
 }
 
 enum ReportStatus {
-    Active
-    Clossed
+  Active
+  Clossed
+}
+
+input ReportStatusFilterInput {
+  in: [ReportStatus]
+  not: [ReportStatus]
 }
 
 input ReportWhereInput {
   for: ReportFor
-  status: ReportStatus
+  status: ReportStatusFilterInput
 }
 
 enum SortOrder {

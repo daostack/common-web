@@ -1,5 +1,6 @@
 import { extendType, arg } from 'nexus';
 import { authorizationService, prisma } from '@common/core';
+import { ReportStatus } from '@prisma/client';
 
 export const CommonReportsExtension = extendType({
   type: 'Common',
@@ -14,7 +15,14 @@ export const CommonReportsExtension = extendType({
       },
       args: {
         where: arg({
-          type: 'ReportWhereInput'
+          type: 'ReportWhereInput',
+          default: {
+            status: {
+              in: [
+                ReportStatus.Active
+              ]
+            }
+          }
         })
       },
       resolve: async (root, args) => {
@@ -25,7 +33,7 @@ export const CommonReportsExtension = extendType({
             }
           })
           .reports({
-            where: args.where
+            where: (args.where as any) || undefined
           });
       }
     });

@@ -4,11 +4,10 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
-import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
+import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -181,9 +180,13 @@ export interface NexusGenInputs {
     messageId: NexusGenScalars['UUID']; // UUID!
     note: string; // String!
   }
+  ReportStatusFilterInput: { // input type
+    in?: Array<NexusGenEnums['ReportStatus'] | null> | null; // [ReportStatus]
+    not?: Array<NexusGenEnums['ReportStatus'] | null> | null; // [ReportStatus]
+  }
   ReportWhereInput: { // input type
     for?: NexusGenEnums['ReportFor'] | null; // ReportFor
-    status?: NexusGenEnums['ReportStatus'] | null; // ReportStatus
+    status?: NexusGenInputs['ReportStatusFilterInput'] | null; // ReportStatusFilterInput
   }
   StringFilter: { // input type
     contains?: string | null; // String
@@ -204,18 +207,18 @@ export interface NexusGenEnums {
   DiscussionMessageFlag: "Clear" | "Hidden" | "Reported"
   DiscussionMessageType: "Message"
   DiscussionSubscriptionType: "AllNotifications" | "NoNotification" | "OnlyMentions"
-  DiscussionType: 'CommonDiscussion' | 'ProposalDiscussion'
-  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'DiscussionCreated' | 'DiscussionMessageCreated' | 'DiscussionSubscriptionCreated' | 'DiscussionSubscriptionTypeChanged' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'NotificationTemplateCreated' | 'NotificationTemplateUpdated' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'ProposalExpired' | 'ProposalMajorityReached' | 'ReportCreated' | 'ReportDismissed' | 'ReportRespected' | 'UserCreated' | 'UserNotificationTokenCreated' | 'UserNotificationTokenExpired' | 'UserNotificationTokenRefreshed' | 'UserNotificationTokenVoided' | 'VoteCreated'
-  FundingType: 'Monthly' | 'OneTime'
+  DiscussionType: "CommonDiscussion" | "ProposalDiscussion"
+  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "DiscussionCreated" | "DiscussionMessageCreated" | "DiscussionSubscriptionCreated" | "DiscussionSubscriptionTypeChanged" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "NotificationTemplateCreated" | "NotificationTemplateUpdated" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "ReportCreated" | "ReportDismissed" | "ReportRespected" | "UserCreated" | "UserNotificationTokenCreated" | "UserNotificationTokenExpired" | "UserNotificationTokenRefreshed" | "UserNotificationTokenVoided" | "VoteCreated"
+  FundingType: "Monthly" | "OneTime"
   NotificationSeenStatus: "Done" | "NotSeen" | "Seen"
   NotificationType: "FundingRequestAccepted" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestRejected"
   ProposalState: "Accepted" | "Countdown" | "Finalizing" | "Rejected"
-  ProposalType: 'FundingRequest' | 'JoinRequest'
-  ReportAction: 'Dismissed' | 'Respected'
-  ReportAuditor: 'CommonModerator' | 'SystemAdmin'
-  ReportFor: 'FalseNews' | 'Harassment' | 'Hate' | 'Nudity' | 'Other' | 'Spam' | 'Violance'
-  ReportStatus: 'Active' | 'Clossed'
-  SortOrder: 'asc' | 'desc'
+  ProposalType: "FundingRequest" | "JoinRequest"
+  ReportAction: "Dismissed" | "Respected"
+  ReportAuditor: "CommonModerator" | "SystemAdmin"
+  ReportFor: "FalseNews" | "Harassment" | "Hate" | "Nudity" | "Other" | "Spam" | "Violance"
+  ReportStatus: "Active" | "Clossed"
+  SortOrder: "asc" | "desc"
   UserNotificationTokenState: "Active" | "Expired" | "Voided"
   VoteOutcome: "Approve" | "Condemn"
 }
@@ -744,7 +747,7 @@ export interface NexusGenArgTypes {
       where?: NexusGenInputs['ProposalWhereInput'] | null; // ProposalWhereInput
     }
     reports: { // args
-      where?: NexusGenInputs['ReportWhereInput'] | null; // ReportWhereInput
+      where: NexusGenInputs['ReportWhereInput'] | null; // ReportWhereInput
     }
   }
   CommonMember: {
