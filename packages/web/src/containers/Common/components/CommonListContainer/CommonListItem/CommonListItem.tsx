@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Common } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
@@ -9,14 +9,20 @@ interface CommonListItemInterface {
 }
 
 export default function CommonListItem({ common }: CommonListItemInterface) {
+  const [imageError, setImageError] = useState(false);
+
   return (
     <div className="common-item">
       <Link to={`/commons/` + common.id}>
         <div className="image-wrapper">
-          <img src={common.image} alt={common.name} />
+          {!imageError ? (
+            <img src={common.image} alt={common.name} onError={() => setImageError(true)} />
+          ) : (
+            <img src="/icons/logo-white.svg" alt={common.name} />
+          )}
           <div className="common-information">
             <div className="name"> {common.name}</div>
-            {common.metadata?.description && <div className="description">{common.metadata?.description}</div>}
+            {common.metadata?.byline && <div className="description">{common.metadata?.byline}</div>}
           </div>
         </div>
         <div className="additional-information">

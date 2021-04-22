@@ -1,0 +1,71 @@
+.votes-wrapper {
+  width: 280px;
+  margin: 0 auto;
+  .top-votes-side {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .for,
+    .against {
+      display: flex;
+      align-items: center;
+      img {
+        width: 24px;
+        height: 24px;
+      }
+    }
+    .against {
+      font-family: NunitoSans;
+      font-size: 18px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.22;
+      letter-spacing: normal;
+      text-align: right;
+      color: #ff603e;
+      img {
+        width: 18px !important;
+        height: 18px !important;
+      }
+    }
+    .for {
+      font-family: NunitoSans;
+      font-size: 18px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.22;
+      letter-spacing: normal;
+      text-align: right;
+      color: #6ee569;
+    }
+    .count {
+      font-family: NunitoSans;
+      font-size: 14px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.43;
+      letter-spacing: normal;
+      text-align: center;
+      color: #001a36;
+    }
+  }
+  .progress {
+    border-radius: 100px;
+    .for,
+    .against {
+      height: 8px;
+      display: inline-block;
+    }
+    .for {
+      background-color: #6ee569;
+      border-radius: 100px;
+    }
+    .against {
+      background-color: #ff603e;
+      border-radius: 100px;
+    }
+  }
+}

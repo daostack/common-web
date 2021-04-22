@@ -1,7 +1,7 @@
 import { Time, User } from "../models";
 
 export const formatPrice = (price?: number) => {
-  if (price) return `$${price.toLocaleString("en")}`;
+  if (price) return `$${(price / 100).toLocaleString("en")}`;
   return "$0";
 };
 

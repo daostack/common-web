@@ -1,6 +1,7 @@
 import React from "react";
 import { Discussion } from "../../../../../shared/models";
 import { getDaysAgo, getUserName } from "../../../../../shared/utils";
+import { EmptyTabComponent } from "../EmptyTabContent";
 import "./index.scss";
 
 interface DiscussionsComponentProps {
@@ -12,36 +13,46 @@ export default function DiscussionsComponent({ discussions, loadDisscussionDetai
   const date = new Date();
   return (
     <div className="discussions-component-wrapper">
-      {discussions.map((d) => (
-        <div className="discussion-item-wrapper" key={d.id}>
-          <div className="discussion-top-bar">
-            <div className="img-wrapper">
-              <img src={d.owner?.photoURL} alt={getUserName(d.owner)} />
-            </div>
-            <div className="creator-information">
-              <div className="name">{getUserName(d.owner)}</div>
-              <div className="days-ago">{getDaysAgo(date, d.createTime)} </div>
-            </div>
-          </div>
-          <div className="discussion-content">
-            <div className="title">{d.title}</div>
-            <div className="description">{d.message}</div>
-            {/* <div className="read-more">Read More</div> */}
-            <div className="line"></div>
-          </div>
-          <div className="bottom-content">
-            <div className="discussion-count">
-              <img src="/icons/discussions.svg" alt="discussions" />
-              <div className="count">{d.discussionMessage?.length || 0}</div>
-            </div>
-            {(d?.discussionMessage?.length || 0) > 0 && (
-              <div className="view-all-discussions" onClick={() => loadDisscussionDetail(d)}>
-                View discussions
+      {discussions.length > 0 ? (
+        <>
+          {discussions.map((d) => (
+            <div className="discussion-item-wrapper" key={d.id}>
+              <div className="discussion-top-bar">
+                <div className="img-wrapper">
+                  <img src={d.owner?.photoURL} alt={getUserName(d.owner)} />
+                </div>
+                <div className="creator-information">
+                  <div className="name">{getUserName(d.owner)}</div>
+                  <div className="days-ago">{getDaysAgo(date, d.createTime)} </div>
+                </div>
               </div>
-            )}
-          </div>
-        </div>
-      ))}
+              <div className="discussion-content">
+                <div className="title">{d.title}</div>
+                <div className="description">{d.message}</div>
+                {/* <div className="read-more">Read More</div> */}
+                <div className="line"></div>
+              </div>
+              <div className="bottom-content">
+                <div className="discussion-count">
+                  <img src="/icons/discussions.svg" alt="discussions" />
+                  <div className="count">{d.discussionMessage?.length || 0}</div>
+                </div>
+                {(d?.discussionMessage?.length || 0) > 0 && (
+                  <div className="view-all-discussions" onClick={() => loadDisscussionDetail(d)}>
+                    View discussions
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </>
+      ) : (
+        <EmptyTabComponent
+          currentTab="discussions"
+          message="This is where members can discuss and share their thoughts and ideas."
+          title="No discussions yet"
+        />
+      )}
     </div>
   );
 }

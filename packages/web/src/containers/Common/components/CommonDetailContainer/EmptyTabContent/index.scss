@@ -1,0 +1,43 @@
+.empty-tab-component-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  .empty-tab-content-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    .title {
+      font-family: NunitoSans;
+      font-size: 24px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.33;
+      letter-spacing: normal;
+      text-align: center;
+      color: #001a36;
+    }
+    .message {
+      font-family: NunitoSans;
+      font-size: 16px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.25;
+      letter-spacing: normal;
+      text-align: center;
+      color: #001a36;
+      margin-top: 16px;
+      margin-bottom: 32px;
+    }
+    .button-blue {
+      display: flex;
+      width: 160px;
+      height: 40px;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}

@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { Loader } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
 import { useModal } from "../../../../shared/hooks";
-import { Discussion } from "../../../../shared/models";
+import { Discussion, Proposal } from "../../../../shared/models";
 import { getLoading } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
 import {
@@ -12,13 +12,19 @@ import {
   PreviewInformationList,
   DiscussionsComponent,
   DiscussionDetailModal,
+  ProposalsComponent,
+  ProposalsHistory,
+  AboutSidebarComponent,
 } from "../../components/CommonDetailContainer";
+import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
 import {
   clearCurrentDiscussion,
   closeCurrentCommon,
   getCommonDetail,
   loadCommonDiscussionList,
   loadDisscussionDetail,
+  loadProposalDetail,
+  loadProposalList,
 } from "../../store/actions";
 import {
   selectCommonDetail,
@@ -26,6 +32,8 @@ import {
   selectDiscussions,
   selectIsDiscussionsLoaded,
   selectCurrentDisscussion,
+  selectIsProposalLoaded,
+  selectCurrentProposal,
 } from "../../store/selectors";
 import "./index.scss";
 interface CommonDetailRouterParams {
@@ -54,12 +62,15 @@ const tabs = [
 export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
   const [tab, setTab] = useState("about");
+  const [imageError, setImageError] = useState(false);
   const loading = useSelector(getLoading());
   const common = useSelector(selectCommonDetail());
   const currentDisscussion = useSelector(selectCurrentDisscussion());
   const proposals = useSelector(selectProposals());
   const discussions = useSelector(selectDiscussions());
   const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
+  const isProposalsLoaded = useSelector(selectIsProposalLoaded());
+  const currentProposal = useSelector(selectCurrentProposal());
 
   const dispatch = useDispatch();
   const { isShowing, onOpen, onClose } = useModal(false);
@@ -86,6 +97,9 @@ export default function CommonDetail() {
     [discussions],
   );
 
+  const activeProposals = useMemo(() => [...proposals].filter((d) => d.state === "countdown"), [proposals]);
+  const historyProposals = useMemo(() => [...proposals].filter((d) => d.state !== "countdown"), [proposals]);
+
   const changeTabHandler = useCallback(
     (tab: string) => {
       switch (tab) {
@@ -94,13 +108,19 @@ export default function CommonDetail() {
             dispatch(loadCommonDiscussionList.request());
           }
           break;
+        case "history":
+        case "proposals":
+          if (!isProposalsLoaded) {
+            dispatch(loadProposalList.request());
+          }
+          break;
 
         default:
           break;
       }
       setTab(tab);
     },
-    [dispatch, isDiscussionsLoaded],
+    [dispatch, isDiscussionsLoaded, isProposalsLoaded],
   );
 
   const getDisscussionDetail = useCallback(
@@ -111,10 +131,64 @@ export default function CommonDetail() {
     [dispatch, onOpen],
   );
 
+  const getProposalDetail = useCallback(
+    (payload: Proposal) => {
+      dispatch(loadProposalDetail.request(payload));
+      onOpen();
+    },
+    [dispatch, onOpen],
+  );
+
   const closeModalHandler = useCallback(() => {
     onClose();
     dispatch(clearCurrentDiscussion());
   }, [onClose, dispatch]);
+
+  const renderSidebarContent = () => {
+    if (!common) return null;
+    switch (tab) {
+      case "about":
+        return (
+          <>
+            <PreviewInformationList
+              title="Latest Discussions"
+              data={latestDiscussions}
+              vievAllHandler={() => setTab("discussions")}
+            />
+            <PreviewInformationList
+              title="Latest Proposals"
+              data={lastestProposals}
+              vievAllHandler={() => setTab("proposals")}
+            />
+          </>
+        );
+
+      case "discussions":
+        return (
+          <>
+            <AboutSidebarComponent title="About" vievAllHandler={() => setTab("about")} common={common} />
+            <PreviewInformationList
+              title="Latest Proposals"
+              data={lastestProposals}
+              vievAllHandler={() => setTab("proposals")}
+            />
+          </>
+        );
+      case "proposals":
+        return (
+          <>
+            <AboutSidebarComponent title="About" vievAllHandler={() => setTab("about")} common={common} />
+            <PreviewInformationList
+              title="Latest Discussions"
+              data={latestDiscussions}
+              vievAllHandler={() => setTab("discussions")}
+            />
+          </>
+        );
+      case "history":
+        return <ProposalsHistory proposals={historyProposals} common={common} />;
+    }
+  };
 
   return loading && !common ? (
     <Loader />
@@ -122,13 +196,18 @@ export default function CommonDetail() {
     common && (
       <>
         <Modal isShowing={isShowing} onClose={closeModalHandler}>
-          <DiscussionDetailModal disscussion={currentDisscussion} common={common} />
+          {tab === "discussions" && <DiscussionDetailModal disscussion={currentDisscussion} common={common} />}
+          {tab === "proposals" && <ProposalDetailModal proposal={currentProposal} common={common} />}
         </Modal>
         <div className="common-detail-wrapper">
           <div className="main-information-block">
             <div className="main-information-wrapper">
               <div className="img-wrapper">
-                <img src={common?.image} alt={common?.name} />
+                {!imageError ? (
+                  <img src={common?.image} alt={common?.name} onError={() => setImageError(true)} />
+                ) : (
+                  <img src="/icons/logo-white.svg" alt={common.name} />
+                )}
               </div>
               <div className="text-information-wrapper">
                 <div className="text">
@@ -185,19 +264,30 @@ export default function CommonDetail() {
                   ) : (
                     <Loader />
                   ))}
+
+                {tab === "proposals" &&
+                  (isProposalsLoaded ? (
+                    <ProposalsComponent
+                      currentTab={tab}
+                      proposals={activeProposals}
+                      loadProposalDetail={getProposalDetail}
+                    />
+                  ) : (
+                    <Loader />
+                  ))}
+
+                {tab === "history" &&
+                  (isProposalsLoaded ? (
+                    <ProposalsComponent
+                      currentTab={tab}
+                      proposals={historyProposals}
+                      loadProposalDetail={getProposalDetail}
+                    />
+                  ) : (
+                    <Loader />
+                  ))}
               </div>
-              <div className="sidebar-wrapper">
-                <PreviewInformationList
-                  title="Latest Discussions"
-                  data={latestDiscussions}
-                  vievAllHandler={() => setTab("discussions")}
-                />
-                <PreviewInformationList
-                  title="Latest Proposals"
-                  data={lastestProposals}
-                  vievAllHandler={() => setTab("proposals")}
-                />
-              </div>
+              <div className="sidebar-wrapper">{renderSidebarContent()}</div>
             </div>
           </div>
         </div>
