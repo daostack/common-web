@@ -9,32 +9,36 @@ async function main() {
   await seedNotificationSystemSetting();
   await seedNotificationTemplated();
 
-  // Create templates
-  // await seeder.notificationTemplate.upsert({
-  //   where: {
-  //     forType_templateType_language: {
-  //       forType: NotificationType.FundingRequestAccepted,
-  //       templateType: NotificationTemplateType.EmailNotification,
-  //       language: 'EN'
-  //     }
-  //   },
-  //   update: {},
-  //   create: {
-  //     forType: NotificationType.FundingRequestAccepted,
-  //     templateType: NotificationTemplateType.EmailNotification,
-  //     language: 'EN',
-  //
-  //     subject: 'Good news {{user.firstName}} {{user.lastName}}',
-  //     content: 'Your Proposal {{proposal.title}} for {{proposal.funding.amount}} was accepted',
-  //
-  //     stubs: [
-  //       'user.firstName',
-  //       'user.lastName',
-  //       'proposal.title',
-  //       'proposal.funding.amount'
-  //     ]
-  //   }
-  // });
+  // See roles
+  await seeder.role.upsert({
+    where: {
+      name: 'admin'
+    },
+
+    create: {
+      name: 'admin',
+      displayName: 'Admin',
+      description: 'The ultimate role with all permissions'
+    },
+
+    update: {
+      permissions: [
+        'admin.report.read',
+        'admin.report.act',
+
+        'admin.roles.create',
+        'admin.roles.update',
+
+        'admin.roles.permissions.add',
+        'admin.roles.permissions.remove',
+
+        'admin.roles.assign',
+        'admin.roles.unassign',
+
+        'user.permissions.read'
+      ]
+    }
+  });
 }
 
 main()

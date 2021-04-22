@@ -4,6 +4,7 @@ import { makeSchema, queryComplexityPlugin, fieldAuthorizePlugin } from 'nexus';
 import { UserTypes } from './Types/Users';
 import { CardTypes } from './Types/Cards';
 import { VoteTypes } from './Types/Votes';
+import { RoleTypes } from './Types/Roles';
 import { EventTypes } from './Types/Events';
 import { CommonTypes } from './Types/Commons';
 import { ReportTypes } from './Types/Reports';
@@ -21,12 +22,15 @@ import { LinkType, LinkInputType } from './Shared/Types/Link.type';
 
 import { BaseEntityInterface } from './Shared/Interfaces/BaseEntity.interface';
 
-import { BillingDetailsInput } from './Shared/Inputs/BillingDetails.input';
+import { PaginateInput } from './Shared/Inputs/Paginate.input';
 import { StringFilterInput } from './Shared/Inputs/StringFilter.input';
+import { BillingDetailsInput } from './Shared/Inputs/BillingDetails.input';
+
 import { SortOrder } from './Shared/Enums/SortBy.enum';
 
 const types = [
   UserTypes,
+  RoleTypes,
   CardTypes,
   VoteTypes,
   EventTypes,
@@ -53,6 +57,7 @@ const types = [
   BaseEntityInterface,
 
   // Shared Input Types
+  PaginateInput,
   LinkInputType,
   StringFilterInput,
   BillingDetailsInput

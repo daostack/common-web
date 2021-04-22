@@ -1,4 +1,5 @@
 import { objectType } from 'nexus';
+import { authorizationService } from '@common/core';
 
 export const UserType = objectType({
   name: 'User',
@@ -27,6 +28,22 @@ export const UserType = objectType({
       description: 'The display name of the user',
       resolve: (root) => {
         return `${root.firstName[0].toUpperCase()}. ${root.lastName}`;
+      }
+    });
+
+    t.nonNull.list.nonNull.string('permissions', {
+      description: 'List of all the users permissions',
+      authorize: async (root, args, ctx) => {
+        const userId = await ctx.getUserId();
+
+        return (
+          // If the user is reading it's permissions
+          userId === root.id ||
+
+          // If the user can read other users permissions
+          await authorizationService.can(userId, 'user.permissions.read')
+        );
+
       }
     });
   }

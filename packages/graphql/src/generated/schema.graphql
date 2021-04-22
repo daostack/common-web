@@ -306,11 +306,17 @@ enum EventType {
   ReportCreated
   ReportDismissed
   ReportRespected
+  RoleCreated
+  RoleDeleted
+  RolePermissionAdded
+  RolePermissionRemoved
+  UserAddedToRole
   UserCreated
   UserNotificationTokenCreated
   UserNotificationTokenExpired
   UserNotificationTokenRefreshed
   UserNotificationTokenVoided
+  UserRemovedFromRole
   VoteCreated
 }
 
@@ -462,6 +468,11 @@ input NotificationWhereUniqueInput {
   id: UUID
 }
 
+input PaginateInput {
+  skip: Int = 0
+  take: Int!
+}
+
 type Proposal {
   """The date, at which the item was created"""
   createdAt: DateTime!
@@ -514,6 +525,7 @@ type Query {
   discussion(id: ID!): Discussion
   generateUserAuthToken(authId: String!): String!
   proposal(where: ProposalWhereUniqueInput!): Proposal
+  roles(paginate: PaginateInput): [Role]
 
   """
   Provide ID to fetch specific user or do not pass anything to get the currently authenticated user
@@ -589,6 +601,21 @@ input ReportWhereInput {
   status: ReportStatusFilterInput
 }
 
+type Role implements BaseEntity {
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  description: String!
+  displayName: String!
+
+  """The main identifier of the item"""
+  id: UUID!
+  name: String!
+  permissions: [String!]!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+}
+
 enum SortOrder {
   asc
   desc
@@ -650,6 +677,9 @@ type User {
   lastName: String!
   notificationTokens: [UserNotificationToken!]!
   notifications(cursor: NotificationWhereUniqueInput, orderBy: NotificationOrderByInput = {createdAt: desc}, skip: Int, take: Int = 10): [Notification!]!
+
+  """List of all the users permissions"""
+  permissions: [String!]!
   proposals(skip: Int = 0, take: Int = 10, where: ProposalWhereInput): [Proposal!]!
 
   """The date, at which the item was last modified"""
