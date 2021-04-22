@@ -4,14 +4,14 @@ import { FirebaseToolkit, SendgridToolkit } from '@toolkits';
 FirebaseToolkit.InitializeFirebase();
 SendgridToolkit.InitializeSendgrid();
 
-export { prisma, pubSub } from '@toolkits';
 export { logger } from '@logger';
+export { prisma, pubSub } from '@toolkits';
 
 // Domain
 export { CommonError } from '@errors';
 
-
 // Services
+export { roleService } from './services/roles';
 export { cardService } from './services/cards';
 export { voteService } from './services/votes';
 export { userService } from './services/users';

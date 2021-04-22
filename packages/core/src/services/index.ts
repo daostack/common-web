@@ -1,3 +1,4 @@
+export { roleService } from './roles';
 export { userService } from './users';
 export { voteService } from './votes';
 export { cardService } from './cards';

@@ -151,6 +151,22 @@ model CommonMember {
   @@unique([userId, commonId])
 }
 
+model Role {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name        String @unique
+  displayName String
+
+  description String
+
+  permissions String[]
+
+  users User[]
+}
+
 enum SubscriptionStatus {
   Pending
 
@@ -340,6 +356,9 @@ model User {
   notificationLanguage NotificationLanguage @default(EN)
 
   notificationTokens UserNotificationToken[]
+
+  roles       Role[]
+  permissions String[]
 }
 
 enum UserNotificationTokenState {
@@ -413,6 +432,14 @@ enum EventType {
 
   ReportRespected
   ReportDismissed
+
+  RoleCreated
+  RolePermissionAdded
+  RolePermissionRemoved
+  RoleDeleted
+
+  UserAddedToRole
+  UserRemovedFromRole
 }
 
 model Event {

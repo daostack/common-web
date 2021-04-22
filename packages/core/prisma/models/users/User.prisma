@@ -29,4 +29,7 @@ model User {
   notificationLanguage NotificationLanguage @default(EN)
 
   notificationTokens UserNotificationToken[]
+
+  roles       Role[]
+  permissions String[]
 }
