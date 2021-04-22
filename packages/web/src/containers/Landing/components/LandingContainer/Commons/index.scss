@@ -4,6 +4,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  .featured-commons {
+    display: grid;
+    grid-column-gap: 16px;
+    grid-row-gap: 16px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    //grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    margin: 40px 0;
+    padding: 10px;
+  }
   .explore-commons {
     width: fit-content;
     margin-top: 20px;
@@ -11,7 +20,20 @@
   }
 }
 
+@media only screen and (max-width: $small-screen) {
+  .commons-wrapper {
+    .featured-commons {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+}
+
 @media only screen and (max-width: $mobile-breakpoint) {
   .commons-wrapper {
+    .featured-commons {
+      grid-auto-flow: column;
+      overflow-x: auto;
+      width: 100vw;
+    }
   }
 }
