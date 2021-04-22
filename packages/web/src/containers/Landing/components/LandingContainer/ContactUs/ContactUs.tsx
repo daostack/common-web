@@ -11,7 +11,7 @@ export default function ContactUs() {
       <div className="title">
         <h1>Contact us</h1>
         <div className="email-wrapper">
-          <img src={require("../../../../../shared/assets/icons/email.svg")} alt="envelope" />
+          <img src={"/icons/email.svg"} alt="envelope" />
           <a href="mailto:hi@common.io">hi@common.io</a>
         </div>
       </div>

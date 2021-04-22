@@ -1,0 +1,17 @@
+@import "../../../../../constants.scss";
+
+.commons-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .explore-commons {
+    width: fit-content;
+    margin-top: 20px;
+    line-height: 40px;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .commons-wrapper {
+  }
+}

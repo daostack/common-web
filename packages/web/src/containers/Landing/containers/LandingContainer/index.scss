@@ -5,6 +5,9 @@
   margin: -$content-padding; // to ignore parent content padding
   > section {
     padding: $content-padding;
+    > span {
+      margin-bottom: 30px;
+    }
   }
   .landing-top {
     background-image: url("../../assets/images/wave-top.svg"), url("../../assets/images/sea.jpg");
@@ -22,6 +25,9 @@
       h1 {
         color: $white;
         text-align: left;
+        .pink-text {
+          color: $pink;
+        }
       }
       .mobile-apps-wrapper {
         text-align: left;
@@ -42,6 +48,7 @@
   .illustrations-wrapper {
     display: flex;
     justify-content: space-evenly;
+    margin-top: 30px;
   }
   .goal-wrapper {
     background: url("../../assets/images/goal-background.svg") no-repeat;

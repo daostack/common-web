@@ -1,9 +1,8 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { MobileLinks } from "../../../../shared/components/MobileLinks";
-import { ROUTE_PATHS } from "../../../../shared/constants";
 import { ContactUs } from "../../components/LandingContainer/ContactUs";
+import { Commons } from "../../components/LandingContainer/Commons";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import "./index.scss";
 import { ScreenSize } from "../../../App/constants";
@@ -18,7 +17,7 @@ const LandingContainer = () => {
           <img src="icons/logo-white.svg" alt="logo" width="150px" />
           <h1>
             Launch Collective Action. <br />
-            <span style={{ color: "#ff5e9d" }}>Catalyze a movement</span>
+            <span className="pink-text">Catalyze a movement</span>
             <br /> together.
           </h1>
           <div className="mobile-apps-wrapper">
@@ -42,27 +41,27 @@ const LandingContainer = () => {
           collectively making decisions. <br />
           <b>Anyone</b> can create a Common, invite thier friends, and work <br /> together to achieve a common goal.
         </p>
-      </section>
-      <section className="illustrations-wrapper">
-        <div>
-          <img src={require("../../assets/images/transparent.svg")} alt="transparent" />
-          <h3>Transparent</h3>
+        <div className="illustrations-wrapper">
           <div>
-            Commons are fully-transparent, <br /> including all decsions and funds.
+            <img src={require("../../assets/images/transparent.svg")} alt="transparent" />
+            <h3>Transparent</h3>
+            <div>
+              Commons are fully-transparent, <br /> including all decsions and funds.
+            </div>
           </div>
-        </div>
-        <div>
-          <img src={require("../../assets/images/collective.svg")} alt="collective" />
-          <h3>Collective</h3>
           <div>
-            Declare a goal, pool funds, vote <br /> on decisions and expenses.
+            <img src={require("../../assets/images/collective.svg")} alt="collective" />
+            <h3>Collective</h3>
+            <div>
+              Declare a goal, pool funds, vote <br /> on decisions and expenses.
+            </div>
           </div>
-        </div>
-        <div>
-          <img src={require("../../assets/images/action.svg")} alt="action" />
-          <h3>Action</h3>
           <div>
-            Any member can propose <br /> projects and use shared funds.
+            <img src={require("../../assets/images/action.svg")} alt="action" />
+            <h3>Action</h3>
+            <div>
+              Any member can propose <br /> projects and use shared funds.
+            </div>
           </div>
         </div>
       </section>
@@ -84,38 +83,34 @@ const LandingContainer = () => {
         </div>
       </section>
       <section>
-        <h1>Featured Commons</h1>
-        <div style={{ marginBottom: "30px" }}>Browse some of the emerging groups on the Common app</div>
-        <Link className="button-blue" to={ROUTE_PATHS.COMMON_LIST}>
-          Explore all commons
-        </Link>
+        <Commons />
       </section>
       <section>
         <h1>What's Calling You?</h1>
         <div>You can start a common for any shared agenda such as...</div>
-      </section>
-      <section className="illustrations-wrapper">
-        <div>
-          <img src={require("../../assets/images/movement.svg")} alt="movement" />
-          <h5>Catalyze a Movement</h5>
-        </div>
-        <div>
-          <img src={require("../../assets/images/raise-awareness.svg")} alt="awareness" />
-          <h5>Raise Awareness</h5>
-        </div>
-        <div>
-          <img src={require("../../assets/images/neighborhood.svg")} alt="neighborhood" />
-          <h5>Start a neighborhood project</h5>
-        </div>
-        <div>
-          <img src={require("../../assets/images/voluneteering.svg")} alt="voluneteering" />
-          <h5>Coordinate Voluneteering Work</h5>
+        <div className="illustrations-wrapper">
+          <div>
+            <img src={require("../../assets/images/movement.svg")} alt="movement" />
+            <h5>Catalyze a Movement</h5>
+          </div>
+          <div>
+            <img src={require("../../assets/images/raise-awareness.svg")} alt="awareness" />
+            <h5>Raise Awareness</h5>
+          </div>
+          <div>
+            <img src={require("../../assets/images/neighborhood.svg")} alt="neighborhood" />
+            <h5>Start a neighborhood project</h5>
+          </div>
+          <div>
+            <img src={require("../../assets/images/voluneteering.svg")} alt="voluneteering" />
+            <h5>Coordinate Voluneteering Work</h5>
+          </div>
         </div>
       </section>
       <ContactUs />
       <section className="landing-bottom">
         <h1>Join Common!</h1>
-        <span style={{ marginBottom: "30px" }}>
+        <span>
           Download the Common app and find <br /> countless opportunities to make a difference.
         </span>
         <MobileLinks color="white" />
