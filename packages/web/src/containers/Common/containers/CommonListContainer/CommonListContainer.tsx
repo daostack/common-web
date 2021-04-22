@@ -25,11 +25,10 @@ export default function CommonListContainer() {
   const loader = useRef(null);
 
   useEffect(() => {
-    dispatch(getCommonsList.request());
-    return () => {
-      dispatch(getCommonsList.success([]));
-    };
-  }, [dispatch]);
+    if (commons.length === 0) {
+      dispatch(getCommonsList.request());
+    }
+  }, [dispatch, commons]);
 
   const handleObserver = useCallback(
     (entities: any[]) => {
