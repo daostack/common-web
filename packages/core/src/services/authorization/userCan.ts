@@ -24,7 +24,7 @@ export const userCan = async (userId: string, permission: z.infer<typeof Permiss
 
   const can = user.permissions.includes(permission);
 
-  logger.debug(`User ${can ? 'has' : 'does not have'} ${permission} permission`);
+  logger.debug(`User ${can ? 'has' : 'does not have'} "${permission}" permission`);
 
   return can;
 };

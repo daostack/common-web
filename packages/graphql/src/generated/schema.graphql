@@ -145,6 +145,13 @@ input CreateJoinProposalInput {
   title: String!
 }
 
+input CreateRoleInput {
+  description: String!
+  displayName: String!
+  name: String!
+  permissions: [String!]!
+}
+
 input CreateUserInput {
   email: String!
   firstName: String!
@@ -371,6 +378,7 @@ input LinkInput {
 
 type Mutation {
   actOnReport(input: ActOnReportInput!): Report
+  assignRole(roleId: ID!, userId: ID!): Void
   changeDiscussionSubscriptionType(
     """The ID of the discussion subscription to change"""
     id: ID!
@@ -386,6 +394,7 @@ type Mutation {
 
   """Create new proposal of type JOIN."""
   createJoinProposal(input: CreateJoinProposalInput!): Proposal!
+  createRole(input: CreateRoleInput!): Role
 
   """Creates new user in the system"""
   createUser(input: CreateUserInput!): User!
@@ -707,6 +716,8 @@ enum UserNotificationTokenState {
   Expired
   Voided
 }
+
+scalar Void
 
 type Vote {
   """The date, at which the item was created"""

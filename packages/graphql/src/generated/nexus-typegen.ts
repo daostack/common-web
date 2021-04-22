@@ -4,10 +4,11 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -26,6 +27,7 @@ declare global {
      * A field whose value is a generic Universally Unique Identifier: https://en.wikipedia.org/wiki/Universally_unique_identifier.
      */
     uuid<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "UUID";
+    void<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Void";
   }
 }
 declare global {
@@ -46,6 +48,7 @@ declare global {
      * A field whose value is a generic Universally Unique Identifier: https://en.wikipedia.org/wiki/Universally_unique_identifier.
      */
     uuid<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "UUID";
+    void<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Void";
   }
 }
 
@@ -112,6 +115,12 @@ export interface NexusGenInputs {
     fundingAmount: number; // Int!
     links?: NexusGenInputs['LinkInput'][] | null; // [LinkInput!]
     title: string; // String!
+  }
+  CreateRoleInput: { // input type
+    description: string; // String!
+    displayName: string; // String!
+    name: string; // String!
+    permissions: string[]; // [String!]!
   }
   CreateUserInput: { // input type
     email: string; // String!
@@ -237,6 +246,7 @@ export interface NexusGenScalars {
   JSON: any
   URL: any
   UUID: any
+  Void: any
 }
 
 export interface NexusGenObjects {
@@ -463,6 +473,7 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     actOnReport: NexusGenRootTypes['Report'] | null; // Report
+    assignRole: NexusGenScalars['Void'] | null; // Void
     changeDiscussionSubscriptionType: NexusGenRootTypes['DiscussionSubscription'] | null; // DiscussionSubscription
     createCard: NexusGenRootTypes['Card']; // Card!
     createCommon: NexusGenRootTypes['Common']; // Common!
@@ -470,6 +481,7 @@ export interface NexusGenFieldTypes {
     createDiscussionMessage: NexusGenRootTypes['DiscussionMessage']; // DiscussionMessage!
     createFundingProposal: NexusGenRootTypes['Proposal']; // Proposal!
     createJoinProposal: NexusGenRootTypes['Proposal']; // Proposal!
+    createRole: NexusGenRootTypes['Role'] | null; // Role
     createUser: NexusGenRootTypes['User']; // User!
     createUserNotificationToken: NexusGenRootTypes['UserNotificationToken']; // UserNotificationToken!
     createVote: NexusGenRootTypes['Vote']; // Vote!
@@ -652,6 +664,7 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     actOnReport: 'Report'
+    assignRole: 'Void'
     changeDiscussionSubscriptionType: 'DiscussionSubscription'
     createCard: 'Card'
     createCommon: 'Common'
@@ -659,6 +672,7 @@ export interface NexusGenFieldTypeNames {
     createDiscussionMessage: 'DiscussionMessage'
     createFundingProposal: 'Proposal'
     createJoinProposal: 'Proposal'
+    createRole: 'Role'
     createUser: 'User'
     createUserNotificationToken: 'UserNotificationToken'
     createVote: 'Vote'
@@ -804,6 +818,10 @@ export interface NexusGenArgTypes {
     actOnReport: { // args
       input: NexusGenInputs['ActOnReportInput']; // ActOnReportInput!
     }
+    assignRole: { // args
+      roleId: string; // ID!
+      userId: string; // ID!
+    }
     changeDiscussionSubscriptionType: { // args
       id: string; // ID!
       type: NexusGenEnums['DiscussionSubscriptionType']; // DiscussionSubscriptionType!
@@ -825,6 +843,9 @@ export interface NexusGenArgTypes {
     }
     createJoinProposal: { // args
       input: NexusGenInputs['CreateJoinProposalInput']; // CreateJoinProposalInput!
+    }
+    createRole: { // args
+      input: NexusGenInputs['CreateRoleInput']; // CreateRoleInput!
     }
     createUser: { // args
       input: NexusGenInputs['CreateUserInput']; // CreateUserInput!
