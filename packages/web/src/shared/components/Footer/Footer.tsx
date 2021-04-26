@@ -8,15 +8,13 @@ const Footer = () => {
   return (
     <section className="footer-wrapper">
       <div className="footer-top">
-        <Link to="/">
-          <img src="/icons/logo-white.svg" alt="logo" width="120px" className="logo" />
-        </Link>
         <div className="links">
+          <Link to="/">
+            <img src="/icons/logo-white.svg" alt="logo" width="120px" className="logo" />
+          </Link>
           <span>About</span>
           <Link to={ROUTE_PATHS.COMMON_LIST}>Explore Commons</Link>
           <a href="mailto://support@common.io">Contact</a>
-          <span>Privacy Policy</span>
-          <span>Terms of Use</span>
           <a
             href="https://apps.apple.com/il/app/common-collaborative-action/id1512785740"
             target="_blank"

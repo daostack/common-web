@@ -11,5 +11,10 @@
   }
   .loading {
     text-align: center;
+    display: flex;
+    width: 155px;
+    align-items: center;
+    margin: 30px auto 0;
+    height: 32px;
   }
 }

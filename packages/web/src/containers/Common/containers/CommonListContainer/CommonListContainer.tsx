@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { Loader } from "../../../../shared/components";
@@ -48,11 +48,11 @@ export default function CommonListContainer() {
     }
   }, [handleObserver, commons]);
 
-  const currentCommons = useMemo(() => [...commons].splice(0, COMMON_PAGE_SIZE * page), [commons, page]);
+  const currentCommons = [...commons].splice(0, COMMON_PAGE_SIZE * page);
 
   return (
     <div className="common-list-wrapper">
-      <h1 className="page-title">Explore commons</h1>
+      <h2 className="page-title">Explore commons</h2>
 
       {loading ? (
         <Loader />
@@ -65,8 +65,8 @@ export default function CommonListContainer() {
       )}
 
       {commons.length !== currentCommons.length && (
-        <div className="loading" ref={loader}>
-          <span>Load More</span>
+        <div className="loading button-blue" ref={loader}>
+          Load More Commons
         </div>
       )}
     </div>
