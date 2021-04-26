@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { ROUTE_PATHS } from "../../../../../shared/constants";
 import { Common } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import "./index.scss";
@@ -13,7 +14,7 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
 
   return (
     <div className="common-item">
-      <Link to={`/commons/` + common.id}>
+      <Link to={`${ROUTE_PATHS.COMMON_LIST}/` + common.id}>
         <div className="image-wrapper">
           {!imageError ? (
             <img src={common.image} alt={common.name} onError={() => setImageError(true)} />

@@ -25,14 +25,15 @@ const LandingContainer = () => {
             <MobileLinks color="white" />
           </div>
         </div>
-        {screenSize === ScreenSize.Large && (
-          <img
-            src={require("../../assets/images/iphone-full.png")}
-            alt="iphone"
-            className="iphone-full"
-            width="300px"
-          />
-        )}
+        <img
+          src={require(`../../assets/images/${
+            screenSize === ScreenSize.Large ? "iphone-full.png" : "iphone-half.png"
+          }`)}
+          alt="iphone"
+          className="iphone-image"
+          width="300px"
+        />
+        <img src={require("../../assets/images/wave-top.svg")} alt="wave" className="wave-top" />
       </section>
       <section>
         <h1>What is Common?</h1>

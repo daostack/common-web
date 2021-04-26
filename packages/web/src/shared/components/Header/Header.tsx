@@ -16,7 +16,7 @@ const Header = () => {
         <img src="/icons/logo.svg" alt="logo" height="60px" />
       </Link>
       {screenSize === ScreenSize.Large ? (
-        <React.Fragment>
+        <>
           <div className="navigation-wrapper">
             <NavLink to="/" exact activeClassName="active">
               About Common
@@ -28,7 +28,7 @@ const Header = () => {
           <div style={{ marginLeft: "auto" }}>
             <MobileLinks color="black" />
           </div>
-        </React.Fragment>
+        </>
       ) : (
         <img src="/icons/menu.svg" alt="humburger menu" />
       )}

@@ -10,10 +10,10 @@
     }
   }
   .landing-top {
-    background-image: url("../../assets/images/wave-top.svg"), url("../../assets/images/sea.jpg");
-    background-position: 50% 101%, 0% 50%;
-    background-size: 105%, cover;
-    background-repeat: no-repeat, repeat;
+    background-image: url("../../assets/images/sea.jpg");
+    background-position: 0% 50%;
+    background-size: cover;
+    background-repeat: repeat;
     display: flex;
     position: relative;
     .info {
@@ -37,12 +37,12 @@
         }
       }
     }
-    .iphone-full {
-      background-image: url("../../assets/images/iphone-full.png");
-      background-repeat: no-repeat;
-      background-size: cover;
+    .wave-top {
       position: absolute;
-      right: 50px;
+      bottom: -1px;
+      left: 50%;
+      transform: translate(-50%);
+      width: 105%;
     }
   }
   .illustrations-wrapper {
@@ -73,6 +73,7 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .landing-wrapper {
     .landing-top {
+      flex-direction: column;
       .info {
         margin-left: unset;
         margin-bottom: unset;
@@ -80,6 +81,12 @@
           align-self: center;
           text-align: center;
         }
+      }
+      .iphone-image {
+        position: relative;
+        bottom: -27px;
+        left: 50%;
+        transform: translate(-50%);
       }
     }
     > section {
