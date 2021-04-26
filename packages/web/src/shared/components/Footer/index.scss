@@ -14,10 +14,11 @@
       display: grid;
       grid-auto-columns: 1fr;
       grid-column-gap: 15px;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 0.75fr 1fr 1fr 1fr 1fr 1fr;
       align-items: center;
       font-size: $xsmall;
       color: $purple;
+      grid-template-rows: auto;
       a {
         text-decoration: none;
         margin: 10px 0px;
