@@ -1,8 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { NavLink, Link } from "react-router-dom";
-import { ScreenSize } from "../../../containers/App/constants";
-import { ROUTE_PATHS } from "../../constants";
+import { ROUTE_PATHS, ScreenSize } from "../../constants";
 import { getScreenSize } from "../../store/selectors";
 import MobileLinks from "../MobileLinks/MobileLinks";
 import "./index.scss";

@@ -5,7 +5,7 @@ import { ContactUs } from "../../components/LandingContainer/ContactUs";
 import { Commons } from "../../components/LandingContainer/Commons";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import "./index.scss";
-import { ScreenSize } from "../../../App/constants";
+import { ScreenSize } from "../../../../shared/constants";
 
 const LandingContainer = () => {
   const screenSize = useSelector(getScreenSize());
