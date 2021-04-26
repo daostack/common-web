@@ -95,7 +95,7 @@ export const createFundingProposalCommand = async (command: z.infer<typeof schem
       description: command.description,
       type: ProposalType.FundingRequest,
 
-      link: command.links,
+      links: command.links,
       files: command.files,
       images: command.images,
 

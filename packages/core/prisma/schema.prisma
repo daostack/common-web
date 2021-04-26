@@ -107,6 +107,15 @@ model Common {
   balance Int @default(0)
   raised  Int @default(0)
 
+  image String
+
+  action      String?
+  byline      String?
+  description String?
+
+  links Json?
+  rules Json?
+
   whitelisted Boolean @default(false)
 
   fundingType          FundingType
@@ -652,7 +661,7 @@ model Proposal {
   title       String?
   description String?
 
-  link   Json?
+  links  Json?
   files  Json?
   images Json?
 

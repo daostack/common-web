@@ -1,11 +1,20 @@
 import { PrismaClient } from '@prisma/client';
 
+import { importUsers } from './firestore/importers/importUsers';
+import { importCommons } from './firestore/importers/importCommons';
+import { importFundingProposals } from './firestore/importers/importFundingProposals';
+
 export const seeder = new PrismaClient();
 
 async function main() {
   // Seed Notification Settings
   // await seedNotificationSystemSetting();
   // await seedNotificationTemplated();
+
+  // Import firestore
+  await importUsers();
+  await importCommons();
+  await importFundingProposals();
 
   // See roles
   await seeder.role.upsert({
