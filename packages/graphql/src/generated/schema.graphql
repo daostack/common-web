@@ -317,6 +317,7 @@ enum EventType {
   RoleDeleted
   RolePermissionAdded
   RolePermissionRemoved
+  RoleUpdated
   UserAddedToRole
   UserCreated
   UserNotificationTokenCreated
@@ -402,6 +403,7 @@ type Mutation {
   createVote(input: CreateVoteInput!): Vote!
   finalizeProposal(proposalId: ID!): Boolean!
   reportDiscussionMessage(input: ReportDiscussionMessageInput!): Report!
+  unassignRole(roleId: ID!, userId: ID!): Void
   voidUserNotificationToken(tokenId: ID!): UserNotificationToken!
 }
 
@@ -673,6 +675,9 @@ type User {
   """The display name of the user"""
   displayName: String!
 
+  """The email of the user"""
+  email: String!
+
   """List of events, that occurred and are related to this user"""
   events(orderBy: EventOrderByInput, skip: Int = 0, take: Int = 10): [Event!]!
 
@@ -689,6 +694,7 @@ type User {
 
   """List of all the users permissions"""
   permissions: [String!]!
+  photo: String!
   proposals(skip: Int = 0, take: Int = 10, where: ProposalWhereInput): [Proposal!]!
 
   """The date, at which the item was last modified"""

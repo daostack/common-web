@@ -334,6 +334,8 @@ model User {
   firstName String
   lastName  String
 
+  photo String
+
   email         String  @unique
   emailVerified Boolean @default(false)
 
@@ -434,6 +436,7 @@ enum EventType {
   ReportDismissed
 
   RoleCreated
+  RoleUpdated
   RolePermissionAdded
   RolePermissionRemoved
   RoleDeleted

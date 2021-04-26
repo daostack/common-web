@@ -48,6 +48,7 @@ enum EventType {
   ReportDismissed
 
   RoleCreated
+  RoleUpdated
   RolePermissionAdded
   RolePermissionRemoved
   RoleDeleted

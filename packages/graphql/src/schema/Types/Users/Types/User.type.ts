@@ -31,6 +31,12 @@ export const UserType = objectType({
       }
     });
 
+    t.nonNull.string('photo');
+
+    t.nonNull.string('email', {
+      description: 'The email of the user'
+    });
+
     t.nonNull.list.nonNull.string('permissions', {
       description: 'List of all the users permissions',
       authorize: async (root, args, ctx) => {

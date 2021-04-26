@@ -3,12 +3,18 @@ import { createRoleCommand } from './commands/createRoleCommand';
 import { addUserToRoleCommand } from './commands/users/addUserToRoleCommand';
 import { removeUserFromRoleCommand } from './commands/users/removeUserFromRoleCommand';
 import { rebuildUserPermissionsCommand } from './commands/users/rebuildUserPermissionsCommand';
+import { editRoleCommand } from './commands/editRoleCommand';
 
 export const roleService = {
   /**
    * Create new role
    */
   create: createRoleCommand,
+
+  /**
+   * Edit one role
+   */
+  edit: editRoleCommand,
 
   users: {
     /**

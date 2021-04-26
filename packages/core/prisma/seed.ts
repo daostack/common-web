@@ -1,13 +1,11 @@
 import { PrismaClient } from '@prisma/client';
-import { seedNotificationSystemSetting } from './seed/notificationSystemSettings';
-import { seedNotificationTemplated } from './seed/notificationTemplates';
 
 export const seeder = new PrismaClient();
 
 async function main() {
   // Seed Notification Settings
-  await seedNotificationSystemSetting();
-  await seedNotificationTemplated();
+  // await seedNotificationSystemSetting();
+  // await seedNotificationTemplated();
 
   // See roles
   await seeder.role.upsert({
@@ -26,6 +24,7 @@ async function main() {
         'admin.report.read',
         'admin.report.act',
 
+        'admin.roles.read',
         'admin.roles.create',
         'admin.roles.update',
 

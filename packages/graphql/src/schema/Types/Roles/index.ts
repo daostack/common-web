@@ -4,6 +4,7 @@ import { GetRolesQuery } from './Queries/GetRoles.query';
 
 import { CreateRoleMutation } from './Mutations/CreateRole.mutation';
 import { AssignRoleMutation } from './Mutations/AssignRole.mutation';
+import { UnassignRoleMutation } from './Mutations/UnassignRole.mutation';
 
 export const RoleTypes = [
   RoleType,
@@ -11,5 +12,6 @@ export const RoleTypes = [
   GetRolesQuery,
 
   CreateRoleMutation,
-  AssignRoleMutation
+  AssignRoleMutation,
+  UnassignRoleMutation
 ];
