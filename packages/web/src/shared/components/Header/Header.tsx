@@ -1,49 +1,39 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { NavLink, Link } from "react-router-dom";
+import { ScreenSize } from "../../../containers/App/constants";
 import { ROUTE_PATHS } from "../../constants";
+import { getScreenSize } from "../../store/selectors";
+import MobileLinks from "../MobileLinks/MobileLinks";
 import "./index.scss";
 
-const Header = () => (
-  <section className="header-wrapper">
-    <div className="inner-wrapper">
-      <Link to="/" className="logo-wrapper">
-        <img src="/icons/logo.svg" alt="logo" />
+const Header = () => {
+  const screenSize = useSelector(getScreenSize());
+
+  return (
+    <section className="header-wrapper">
+      <Link to="/">
+        <img src="/icons/logo.svg" alt="logo" height="60px" />
       </Link>
-      <div className="navigation-wrapper">
-        <ul className="header-navigation">
-          <li className="navigation-item">
-            <Link to="/">About Common</Link>
-          </li>
-          <li className="navigation-item">
+      {screenSize === ScreenSize.Large ? (
+        <>
+          <div className="navigation-wrapper">
+            <NavLink to="/" exact activeClassName="active">
+              About Common
+            </NavLink>
             <NavLink to={ROUTE_PATHS.COMMON_LIST} activeClassName="active">
               Explore Commons
             </NavLink>
-          </li>
-        </ul>
-      </div>
-      <div className="mobile-links-wrapper">
-        <ul className="mobile-links">
-          <li className="mobile-item">
-            <a
-              href="https://apps.apple.com/il/app/common-collaborative-action/id1512785740"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src="/icons/app-icons/app-store.svg" alt="app-store" />
-            </a>
-          </li>
-          <li className="mobile-item">
-            <a
-              href="https://play.google.com/store/apps/details?id=com.daostack.common"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src="/icons/app-icons/google-play.svg" alt="google-play" />
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
-);
+          </div>
+          <div style={{ marginLeft: "auto" }}>
+            <MobileLinks color="black" />
+          </div>
+        </>
+      ) : (
+        <img src="/icons/menu.svg" alt="humburger menu" />
+      )}
+    </section>
+  );
+};
+
 export default Header;

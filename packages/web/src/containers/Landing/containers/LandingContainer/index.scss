@@ -1,0 +1,102 @@
+@import "../../../../constants.scss";
+
+.landing-wrapper {
+  text-align: center;
+  margin: -$content-padding; // to ignore parent content padding
+  > section {
+    padding: $content-padding;
+    > span {
+      margin-bottom: 30px;
+    }
+  }
+  .landing-top {
+    background-image: url("../../assets/images/sea.jpg");
+    background-position: 0% 50%;
+    background-size: cover;
+    background-repeat: repeat;
+    display: flex;
+    position: relative;
+    .info {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      margin-left: 50px;
+      margin-bottom: 100px;
+      h1 {
+        color: $white;
+        text-align: left;
+        .pink-text {
+          color: $pink;
+        }
+      }
+      .mobile-apps-wrapper {
+        text-align: left;
+        .available-on-label {
+          color: white;
+          margin-bottom: 10px;
+        }
+      }
+    }
+    .wave-top {
+      position: absolute;
+      bottom: -1px;
+      left: 50%;
+      transform: translate(-50%);
+      width: 105%;
+    }
+  }
+  .illustrations-wrapper {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 30px;
+  }
+  .goal-wrapper {
+    background: url("../../assets/images/goal-background.svg") no-repeat;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .landing-bottom {
+    background: url("../../assets/images/wave-bottom.svg"), url("../../assets/images/join.jpg");
+    background-position: 50% -1%,50% 0;
+    background-size: contain, cover;
+    background-repeat: no-repeat, repeat;
+    color: $white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .landing-wrapper {
+    .landing-top {
+      flex-direction: column;
+      .info {
+        margin-left: unset;
+        margin-bottom: unset;
+        .mobile-apps-wrapper {
+          align-self: center;
+          text-align: center;
+        }
+      }
+      .iphone-image {
+        position: relative;
+        bottom: -27px;
+        left: 50%;
+        transform: translate(-50%);
+      }
+    }
+    > section {
+      padding: $content-padding-mobile;
+    }
+    .illustrations-wrapper {
+      flex-direction: column;
+    }
+    .goal-wrapper {
+      flex-direction: column-reverse;
+    }
+  }
+}

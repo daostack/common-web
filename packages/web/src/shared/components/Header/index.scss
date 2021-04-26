@@ -1,64 +1,40 @@
+@import "../../../constants.scss";
+
 .header-wrapper {
   height: 80px;
   margin: 0 0 72px;
-  padding: 10px 80px;
+  padding: 10px $content-padding;
   box-shadow: 0 3px 10px 0 #001a3614;
-  background-color: #ffffff;
+  background-color: $white;
   display: flex;
+  align-items: center;
 
-  .inner-wrapper {
-    align-items: center;
-    width: 100%;
+  .navigation-wrapper {
+    margin-left: 50px;
     display: flex;
-    justify-content: space-between;
-    .logo-wrapper {
-      flex: 20;
-      height: 65px;
-      img {
-        height: 100%;
+    a {
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.22;
+      letter-spacing: normal;
+      color: #001a36;
+      &.active {
+        font-weight: bold;
+      }
+      &:not(:last-child) {
+        margin-right: 50px;
       }
     }
+  }
+}
 
-    .navigation-wrapper {
-      flex: 50;
-      .header-navigation {
-        margin: 0;
-        padding: 0;
-        .navigation-item {
-          display: inline-block;
-          &:not(:last-child) {
-            margin-right: 50px;
-          }
-          a {
-            text-decoration: none;
-            font-family: NunitoSans;
-            font-size: 18px;
-            font-weight: normal;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: 1.22;
-            letter-spacing: normal;
-            color: #001a36;
-            &.active {
-              font-weight: bold;
-            }
-          }
-        }
-      }
-    }
-    .mobile-links-wrapper {
-      flex: 30;
-      text-align: right;
-      .mobile-links {
-        margin: 0;
-        padding: 0;
-        .mobile-item {
-          display: inline-block;
-          &:not(:last-child) {
-            margin-right: 16px;
-          }
-        }
-      }
-    }
+@media only screen and (max-width: $mobile-breakpoint) {
+  .header-wrapper {
+    padding: 10px $content-padding-mobile;
+    flex-direction: row-reverse;
+    justify-content: space-between;
   }
 }

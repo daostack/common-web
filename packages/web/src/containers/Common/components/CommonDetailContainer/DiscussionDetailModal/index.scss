@@ -27,7 +27,6 @@
             margin-right: 8px;
           }
           .text {
-            font-family: NunitoSans;
             font-size: 14px;
             font-weight: bold;
             font-stretch: normal;
@@ -60,7 +59,6 @@
           }
         }
         .owner-name {
-          font-family: NunitoSans;
           font-size: 16px;
           font-weight: normal;
           font-stretch: normal;
@@ -71,7 +69,6 @@
           color: #001a36;
         }
         .days-ago {
-          font-family: NunitoSans;
           font-size: 14px;
           font-weight: normal;
           font-stretch: normal;
@@ -89,7 +86,6 @@
         flex-direction: column;
 
         .discussion-name {
-          font-family: NunitoSans;
           font-size: 24px;
           font-weight: bold;
           font-stretch: normal;
@@ -115,7 +111,6 @@
           display: flex;
           margin-bottom: 24px;
           .amount {
-            font-family: NunitoSans;
             font-size: 18px;
             font-weight: bold;
             font-stretch: normal;
@@ -131,7 +126,6 @@
     .down-side {
       margin-top: 24px;
       .description {
-        font-family: NunitoSans;
         font-size: 16px;
         font-weight: normal;
         font-stretch: normal;
@@ -144,7 +138,91 @@
   }
   .right-side {
     flex: 60;
-    margin: -30px;
+    .chat-wrapper {
+      padding: 32px;
+      background-color: #f3f4ff;
+      height: calc(100% - 64px);
+      border-radius: 12px;
+      overflow: scroll;
+
+      .message-wrapper {
+        display: flex;
+        position: relative;
+        margin-bottom: 16px;
+        .icon-wrapper {
+          flex: 7.5;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          font-size: 14px;
+          font-weight: bold;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: 1.43;
+          letter-spacing: normal;
+          text-align: center;
+          color: #ffffff;
+          background-color: #4ce2f1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-right: 12px;
+          width: 32px;
+          height: 32px;
+          position: relative;
+          margin-bottom: 8px;
+          position: relative;
+          img {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+          }
+        }
+        .message-text {
+          flex: 90;
+          padding: 8px 16px;
+          border-radius: 14px;
+          background-color: #e0e3ff;
+          flex-direction: row;
+          .message-name {
+            font-size: 14px;
+            font-weight: bold;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.43;
+            letter-spacing: normal;
+            color: #001a36;
+            margin-bottom: 8px;
+          }
+          .message-content {
+            font-size: 16px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.5;
+            letter-spacing: normal;
+            color: #001a36;
+            margin-bottom: 16px;
+          }
+        }
+        .time-wrapper {
+          position: absolute;
+          font-size: 10px;
+          font-weight: bold;
+          font-stretch: normal;
+          line-height: 1.2;
+          letter-spacing: normal;
+          text-align: right;
+          color: #979bba;
+          right: 8px;
+          bottom: 8px;
+        }
+      }
+    }
   }
 
   .line {
