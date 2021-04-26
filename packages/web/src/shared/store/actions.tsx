@@ -1,5 +1,5 @@
 import { createStandardAction } from "typesafe-actions";
-import { ScreenSize } from "../../containers/App/constants";
+import { ScreenSize } from "../constants";
 import { Notification } from "../interfaces";
 import { SharedActionTypes } from "./constants";
 

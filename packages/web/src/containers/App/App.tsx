@@ -5,8 +5,7 @@ import PrivateRoute from "./PrivateRoute";
 import { Content, NotFound, Footer, Header } from "../../shared/components";
 import { CommonContainer } from "../Common";
 import { LandingContainer } from "../Landing";
-import { ROUTE_PATHS } from "../../shared/constants";
-import { ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants";
+import { ROUTE_PATHS, SMALL_SCREEN_BREAKPOINT, ScreenSize } from "../../shared/constants";
 import { useDispatch } from "react-redux";
 import { changeScreenSize } from "../../shared/store/actions";
 
