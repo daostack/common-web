@@ -27,7 +27,7 @@ const LandingContainer = () => {
         </div>
         <img
           src={require(`../../assets/images/${
-            screenSize === ScreenSize.Large ? "iphone-full.png" : "iphone-half.png"
+            screenSize === ScreenSize?.Large ? "iphone-full.png" : "iphone-half.png"
           }`)}
           alt="iphone"
           className="iphone-image"
