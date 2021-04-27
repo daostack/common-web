@@ -1,7 +1,7 @@
 FROM node:12 AS builder
 WORKDIR /usr/src/app-build
 COPY . .
-RUN npm install && npm run build
+RUN REACT_APP_ENV=production npm install && npm run build
 
 FROM nginx:latest
 WORKDIR /usr/share/nginx/html
