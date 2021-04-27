@@ -10,6 +10,8 @@ import { ScreenSize } from "../../../../shared/constants";
 const LandingContainer = () => {
   const screenSize = useSelector(getScreenSize());
 
+  const isLarge = screenSize === ScreenSize.Large;
+
   return (
     <div className="landing-wrapper">
       <section className="landing-top">
@@ -26,14 +28,12 @@ const LandingContainer = () => {
           </div>
         </div>
         <img
-          src={require(`../../assets/images/${
-            screenSize === ScreenSize?.Large ? "iphone-full.png" : "iphone-half.png"
-          }`)}
+          src={`assets/images/${isLarge ? "iphone-full.png" : "iphone-half.png"}`}
           alt="iphone"
           className="iphone-image"
           width="300px"
         />
-        <img src={require("../../assets/images/wave-top.svg")} alt="wave" className="wave-top" />
+        <img src="assets/images/wave-top.svg" alt="wave" className="wave-top" />
       </section>
       <section>
         <h1>What is Common?</h1>
@@ -44,21 +44,21 @@ const LandingContainer = () => {
         </p>
         <div className="illustrations-wrapper">
           <div>
-            <img src={require("../../assets/images/transparent.svg")} alt="transparent" />
+            <img src="assets/images/transparent.svg" alt="transparent" />
             <h3>Transparent</h3>
             <div>
               Commons are fully-transparent, <br /> including all decsions and funds.
             </div>
           </div>
           <div>
-            <img src={require("../../assets/images/collective.svg")} alt="collective" />
+            <img src="assets/images/collective.svg" alt="collective" />
             <h3>Collective</h3>
             <div>
               Declare a goal, pool funds, vote <br /> on decisions and expenses.
             </div>
           </div>
           <div>
-            <img src={require("../../assets/images/action.svg")} alt="action" />
+            <img src="../../assets/images/action.svg" alt="action" />
             <h3>Action</h3>
             <div>
               Any member can propose <br /> projects and use shared funds.
@@ -67,7 +67,7 @@ const LandingContainer = () => {
         </div>
       </section>
       <section className="goal-wrapper">
-        <img src={require("../../assets/images/iphone.png")} alt="iphone" width="500px" />
+        <img src="assets/images/iphone.png" alt="iphone" width="500px" />
         <div>
           <h1>
             Leverage trust and <br /> transparency to galvanize <br /> massive action.
@@ -91,19 +91,19 @@ const LandingContainer = () => {
         <div>You can start a common for any shared agenda such as...</div>
         <div className="illustrations-wrapper">
           <div>
-            <img src={require("../../assets/images/movement.svg")} alt="movement" />
+            <img src="assets/images/movement.svg" alt="movement" />
             <h5>Catalyze a Movement</h5>
           </div>
           <div>
-            <img src={require("../../assets/images/raise-awareness.svg")} alt="awareness" />
+            <img src="assets/images/raise-awareness.svg" alt="awareness" />
             <h5>Raise Awareness</h5>
           </div>
           <div>
-            <img src={require("../../assets/images/neighborhood.svg")} alt="neighborhood" />
+            <img src="assets/images/neighborhood.svg" alt="neighborhood" />
             <h5>Start a neighborhood project</h5>
           </div>
           <div>
-            <img src={require("../../assets/images/voluneteering.svg")} alt="voluneteering" />
+            <img src="assets/images/voluneteering.svg" alt="voluneteering" />
             <h5>Coordinate Voluneteering Work</h5>
           </div>
         </div>

@@ -10,7 +10,7 @@
     }
   }
   .landing-top {
-    background-image: url("../../assets/images/sea.jpg");
+    background-image: url("/assets/images/sea.jpg");
     background-position: 0% 50%;
     background-size: cover;
     background-repeat: repeat;
@@ -51,7 +51,7 @@
     margin-top: 30px;
   }
   .goal-wrapper {
-    background: url("../../assets/images/goal-background.svg") no-repeat;
+    background: url("/assets/images/goal-background.svg") no-repeat;
     background-size: cover;
     background-position: center;
     display: flex;
@@ -59,8 +59,8 @@
     align-items: center;
   }
   .landing-bottom {
-    background: url("../../assets/images/wave-bottom.svg"), url("../../assets/images/join.jpg");
-    background-position: 50% -1%,50% 0;
+    background: url("/assets/images/wave-bottom.svg"), url("/assets/images/join.jpg");
+    background-position: 50% -1%, 50% 0;
     background-size: contain, cover;
     background-repeat: no-repeat, repeat;
     color: $white;
