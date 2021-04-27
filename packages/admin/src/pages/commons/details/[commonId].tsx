@@ -26,7 +26,7 @@ import {
   Trash2 as Trash
 } from '@geist-ui/react-icons';
 
-import { useGetCommonDetailsQuery, GetCommonDetailsQueryResult } from '@graphql';
+import { useGetCommonDetailsQuery, GetCommonDetailsQueryResult } from '@core/graphql';
 import { Link } from 'components/Link';
 import { CommonSettings } from '@components/CommonSettings';
 

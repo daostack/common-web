@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import firebase from 'firebase/app';
 import React from 'react';
 import { gql } from '@apollo/client';
-import { useCreateIntentionMutation, IntentionType } from '@graphql';
+import { useCreateIntentionMutation, IntentionType } from '@core/graphql';
 
 const CreateIntentionMutation = gql`
   mutation createIntention($type: IntentionType!, $intention: String!) {

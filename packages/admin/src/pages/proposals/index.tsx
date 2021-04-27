@@ -7,7 +7,7 @@ import { gql } from '@apollo/client';
 import { Breadcrumbs, Card, Grid, Pagination, Spacer, Table, Text } from '@geist-ui/react';
 
 import { Link } from '@components/Link';
-import { useStatisticsQuery, useGetProposalsHomescreenQuery } from '@graphql';
+import { useStatisticsQuery, useGetProposalsHomescreenQuery } from '@core/graphql';
 import { useRouter } from 'next/router';
 import { ChevronLeftCircleFill, ChevronRightCircleFill } from '@geist-ui/react-icons';
 

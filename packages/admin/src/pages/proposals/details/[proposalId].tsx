@@ -5,7 +5,7 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { Link } from '../../../components/Link';
-import { useGetProposalDetailsQuery, GetProposalDetailsQueryResult } from '@graphql';
+import { useGetProposalDetailsQuery, GetProposalDetailsQueryResult } from '@core/graphql';
 import { Centered } from '../../../components/Centered';
 
 const GetProposalDetails = gql`

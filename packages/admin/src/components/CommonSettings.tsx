@@ -5,7 +5,7 @@ import { Tooltip, Row, useToasts, Spacer } from '@geist-ui/react';
 import { Settings, Award, RefreshCcw, Edit, Trash2 } from '@geist-ui/react-icons';
 
 import { Centered } from '@components/Centered';
-import { useWhitelistCommonMutation } from '@graphql';
+import { useWhitelistCommonMutation } from '@core/graphql';
 
 interface ICommonSettingsProps {
   commonId: string;

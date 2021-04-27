@@ -4,10 +4,14 @@ import { NextPage } from 'next';
 import Skeleton from 'react-loading-skeleton';
 import { gql } from '@apollo/client/core';
 import { Spacer, Text, Table, Pagination, Tag, useToasts, Breadcrumbs, Grid, Card } from '@geist-ui/react';
-import { ExternalLink, Edit, Trash2, ChevronRightCircleFill, ChevronLeftCircleFill, Home } from '@geist-ui/react-icons';
+import { ChevronRightCircleFill, ChevronLeftCircleFill, Home } from '@geist-ui/react-icons';
 
 import { Link } from '../../components/Link';
-import { useGetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryResult, useStatisticsQuery } from '@graphql';
+import {
+  useGetCommonsHomescreenDataQuery,
+  GetCommonsHomescreenDataQueryResult,
+  useStatisticsQuery
+} from '@core/graphql';
 import { withPermission } from '../../helpers/hoc/withPermission';
 import { useRouter } from 'next/router';
 import { Centered } from '@components/Centered';

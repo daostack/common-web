@@ -8,13 +8,7 @@ import { Avatar, Breadcrumbs, Card, Grid, Pagination, Spacer, Table, Text } from
 
 import { Link } from '@components/Link';
 import { Centered } from '@components/Centered';
-import {
-  useGetUsersHomepageDataQuery,
-  User,
-  useStatisticsQuery,
-  GetUsersHomepageDataQueryResult,
-  GetUsersHomepageDataQuery
-} from '@graphql';
+import { useGetUsersHomepageDataQuery, User, useStatisticsQuery, GetUsersHomepageDataQuery } from '@core/graphql';
 import Skeleton from 'react-loading-skeleton';
 
 const UsersHomepageData = gql`

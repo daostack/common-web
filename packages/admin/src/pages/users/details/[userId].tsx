@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useGetUserDetailsQueryQuery, GetUserDetailsQueryQueryResult } from '@graphql';
+import { useGetUserDetailsQueryQuery, GetUserDetailsQueryQueryResult } from '@core/graphql';
 import React from 'react';
 import { Link } from '../../../components/Link';
 import { Breadcrumbs, Text, Image, Grid, Card, Spacer, Table, Tag, Tooltip } from '@geist-ui/react';

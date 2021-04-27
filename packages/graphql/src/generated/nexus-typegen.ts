@@ -126,6 +126,7 @@ export interface NexusGenInputs {
     email: string; // String!
     firstName: string; // String!
     lastName: string; // String!
+    photo: string; // String!
   }
   CreateUserNotificationTokenInput: { // input type
     description: string; // String!
@@ -216,23 +217,23 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  CommonMemberRole: "Founder" | "Moderator"
-  DiscussionMessageFlag: "Clear" | "Hidden" | "Reported"
-  DiscussionMessageType: "Message"
-  DiscussionSubscriptionType: "AllNotifications" | "NoNotification" | "OnlyMentions"
+  CommonMemberRole: 'Founder' | 'Moderator'
+  DiscussionMessageFlag: 'Clear' | 'Hidden' | 'Reported'
+  DiscussionMessageType: 'Message'
+  DiscussionSubscriptionType: 'AllNotifications' | 'NoNotification' | 'OnlyMentions'
   DiscussionType: 'CommonDiscussion' | 'ProposalDiscussion'
   EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'DiscussionCreated' | 'DiscussionMessageCreated' | 'DiscussionSubscriptionCreated' | 'DiscussionSubscriptionTypeChanged' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'NotificationTemplateCreated' | 'NotificationTemplateUpdated' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'ProposalExpired' | 'ProposalMajorityReached' | 'ReportCreated' | 'ReportDismissed' | 'ReportRespected' | 'RoleCreated' | 'RoleDeleted' | 'RolePermissionAdded' | 'RolePermissionRemoved' | 'RoleUpdated' | 'UserAddedToRole' | 'UserCreated' | 'UserNotificationTokenCreated' | 'UserNotificationTokenExpired' | 'UserNotificationTokenRefreshed' | 'UserNotificationTokenVoided' | 'UserRemovedFromRole' | 'VoteCreated'
   FundingType: 'Monthly' | 'OneTime'
-  NotificationSeenStatus: "Done" | "NotSeen" | "Seen"
-  NotificationType: "FundingRequestAccepted" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestRejected"
-  ProposalState: "Accepted" | "Countdown" | "Finalizing" | "Rejected"
-  ProposalType: "FundingRequest" | "JoinRequest"
-  ReportAction: "Dismissed" | "Respected"
-  ReportAuditor: "CommonModerator" | "SystemAdmin"
-  ReportFor: "FalseNews" | "Harassment" | "Hate" | "Nudity" | "Other" | "Spam" | "Violance"
-  ReportStatus: "Active" | "Clossed"
-  SortOrder: "asc" | "desc"
-  UserNotificationTokenState: "Active" | "Expired" | "Voided"
+  NotificationSeenStatus: 'Done' | 'NotSeen' | 'Seen'
+  NotificationType: 'FundingRequestAccepted' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestRejected'
+  ProposalState: 'Accepted' | 'Countdown' | 'Finalizing' | 'Rejected'
+  ProposalType: 'FundingRequest' | 'JoinRequest'
+  ReportAction: 'Dismissed' | 'Respected'
+  ReportAuditor: 'CommonModerator' | 'SystemAdmin'
+  ReportFor: 'FalseNews' | 'Harassment' | 'Hate' | 'Nudity' | 'Other' | 'Spam' | 'Violance'
+  ReportStatus: 'Active' | 'Clossed'
+  SortOrder: 'asc' | 'desc'
+  UserNotificationTokenState: 'Active' | 'Expired' | 'Voided'
   VoteOutcome: "Approve" | "Condemn"
 }
 
