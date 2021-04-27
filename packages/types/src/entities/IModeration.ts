@@ -10,6 +10,7 @@ export interface IModeration {
   updatedAt: firestore.Timestamp;
   moderator: string;
   reporter: string;
+  countdownStart?: number,
 }
 
 export type ItemType = IDiscussionEntity | IDiscussionMessage | IProposalEntity;
