@@ -41,14 +41,21 @@ export const hideContent = async (hideContentPayload: HideContentPayload): Promi
   }
 
   const item = (await db.collection(type).doc(itemId).get()).data();
-
+  const updatedAt = firestore.Timestamp.now();
+  let countdownPeriod = null;
+  if (type === TYPES.proposals) {
+    countdownPeriod = item?.countdownPeriod - (updatedAt.seconds - item.createdAt.seconds);
+  }
+  
   const updatedItem = {
     ...item,
     moderation: {
       flag: FLAGS.hidden,
       reasons: item.moderation?.reasons || [],
       moderatorNote: item.moderation?.moderatorNote || '',
-      updatedAt: firestore.Timestamp.now(),
+      quietEnding: item.moderation?.countdownStart || null,
+      updatedAt,
+      countdownPeriod,
       reporter: userId,
       moderator: userId,
     } as IModeration,

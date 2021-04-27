@@ -42,9 +42,9 @@ export const showContent = async (showContentPayload: ShowContentPayload): Promi
   const item = (await db.collection(type).doc(itemId).get()).data();
   
   // if showing item when in quiet ending period, we need to reset countdown to quietEndingPeriod
-  let countdownStart = null;
+  let quietEnding = null;
   if (type === TYPES.proposals) {
-    countdownStart = getNewCountdown(
+    quietEnding = getNewCountdown(
       item.moderation?.updatedAt.seconds + item?.countdownPeriod,
       item.quietEndingPeriod
     );
@@ -56,7 +56,7 @@ export const showContent = async (showContentPayload: ShowContentPayload): Promi
       ...item.moderation,
       flag: FLAGS.visible,
       updatedAt: firestore.Timestamp.now(),
-      countdownStart,
+      quietEnding,
       moderator: userId,
     } as IModeration,
   }
