@@ -33,6 +33,7 @@
     .featured-commons {
       grid-auto-flow: column;
       overflow-x: auto;
+      overflow-y: hidden;
       width: 100vw;
     }
   }

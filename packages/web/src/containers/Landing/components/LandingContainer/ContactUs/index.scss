@@ -10,6 +10,7 @@
   align-items: center;
   padding: $content-padding;
   background-color: $light-purple;
+  padding-top: 200px;
   .title {
     display: flex;
     flex-direction: column;
@@ -18,6 +19,10 @@
     margin-bottom: 50px;
     .email-wrapper {
       display: flex;
+      a {
+        text-decoration: none;
+        margin-left: 10px;
+      }
     }
   }
   .form-wrapper {
@@ -39,7 +44,7 @@
       height: 150px;
     }
     .send {
-      width: fit-content;
+      width: 180px;
       margin-left: auto;
       margin-top: 20px;
     }
@@ -49,6 +54,7 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .contact-us-wrapper {
     flex-direction: column;
+    padding-top: 80px;
     .title {
       align-self: unset;
       align-items: center;

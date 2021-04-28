@@ -29,7 +29,7 @@ export default function Commons() {
   return (
     <div className="commons-wrapper">
       <h1>Featured Commons</h1>
-      <span>Browse some of the emerging groups on the Common app</span>
+      <b>Browse some of the emerging groups on the Common app</b>
       {loading ? <Loader /> : <div className="featured-commons">{featuredCommons}</div>}
       <Link className="button-blue explore-commons" to={ROUTE_PATHS.COMMON_LIST}>
         Explore all commons

@@ -16,7 +16,7 @@ const LandingContainer = () => {
     <div className="landing-wrapper">
       <section className="landing-top">
         <div className="info">
-          <img src="icons/logo-white.svg" alt="logo" width="150px" />
+          <img src="icons/logo-all-white.svg" alt="logo" width="170px" />
           <h1>
             Launch Collective Action. <br />
             <span className="pink-text">Catalyze a movement</span>
@@ -26,20 +26,19 @@ const LandingContainer = () => {
             <div className="available-on-label">Available on</div>
             <MobileLinks color="white" />
           </div>
+          <img
+            src={`assets/images/${isLarge ? "iphone-full.png" : "iphone-half.png"}`}
+            alt="iphone"
+            className="iphone-image"
+          />
         </div>
-        <img
-          src={`assets/images/${isLarge ? "iphone-full.png" : "iphone-half.png"}`}
-          alt="iphone"
-          className="iphone-image"
-          width="300px"
-        />
         <img src="assets/images/wave-top.svg" alt="wave" className="wave-top" />
       </section>
       <section>
         <h1>What is Common?</h1>
         <p>
           Common enables large groups of people to collaborate on shared <br /> agendas by pooling funds and
-          collectively making decisions. <br />
+          collectively making decisions. <br /> <br />
           <b>Anyone</b> can create a Common, invite thier friends, and work <br /> together to achieve a common goal.
         </p>
         <div className="illustrations-wrapper">
@@ -67,15 +66,16 @@ const LandingContainer = () => {
         </div>
       </section>
       <section className="goal-wrapper">
-        <img src="assets/images/iphone.png" alt="iphone" width="500px" />
+        <img src="assets/images/iphone.png" alt="iphone" width="400px" />
         <div>
           <h1>
-            Leverage trust and <br /> transparency to galvanize <br /> massive action.
+            Leverage <span className="purple-text">trust</span> and <br />{" "}
+            <span className="purple-text">transparency</span> to galvanize <br /> massive action.
           </h1>
-          <h5>
+          <b>
             The goal of Common is to support large communities that wish to <br /> collaborate on simple, and
             well-defined agendas.
-          </h5>
+          </b>
           <p>
             Humanity's greatest achievements were made by massive <br /> collaborations. Common empowers groups to
             collaborate with no <br /> single organizer. And when every member gets an equal part in <br /> every step
@@ -88,7 +88,7 @@ const LandingContainer = () => {
       </section>
       <section>
         <h1>What's Calling You?</h1>
-        <div>You can start a common for any shared agenda such as...</div>
+        <b>You can start a common for any shared agenda such as...</b>
         <div className="illustrations-wrapper">
           <div>
             <img src="assets/images/movement.svg" alt="movement" />
@@ -100,11 +100,15 @@ const LandingContainer = () => {
           </div>
           <div>
             <img src="assets/images/neighborhood.svg" alt="neighborhood" />
-            <h5>Start a neighborhood project</h5>
+            <h5>
+              Start a neighborhood <br /> project
+            </h5>
           </div>
           <div>
             <img src="assets/images/voluneteering.svg" alt="voluneteering" />
-            <h5>Coordinate Voluneteering Work</h5>
+            <h5>
+              Coordinate Voluneteering <br /> Work
+            </h5>
           </div>
         </div>
       </section>
