@@ -11,7 +11,7 @@ const Header = () => {
 
   return (
     <section className="header-wrapper">
-      <Link to="/">
+      <Link to="/" className="common-logo">
         <img src="/icons/logo.svg" alt="logo" height="60px" />
       </Link>
       {screenSize === ScreenSize.Large ? (
@@ -23,13 +23,16 @@ const Header = () => {
             <NavLink to={ROUTE_PATHS.COMMON_LIST} activeClassName="active">
               Explore Commons
             </NavLink>
+            <NavLink to={ROUTE_PATHS.CONTACT} activeClassName="active">
+              Contact
+            </NavLink>
           </div>
           <div style={{ marginLeft: "auto" }}>
             <MobileLinks color="black" />
           </div>
         </>
       ) : (
-        <img src="/icons/menu.svg" alt="humburger menu" />
+        <img src="/icons/menu.svg" alt="humburger menu" className="humburger-menu" />
       )}
     </section>
   );

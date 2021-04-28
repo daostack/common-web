@@ -61,11 +61,10 @@
     margin-top: 30px;
   }
   .goal-wrapper {
-    background: url("/assets/images/wave-top.svg"), url("/assets/images/contact-us-overlay-wave.svg");
-    background-position: 50% 110%, 50% 0;
-    background-size: 105%, contain;
+    background: url("/assets/images/goal-wave-top.svg"), url("/assets/images/goal-wave-bottom.svg");
+    background-position: 50% 0%, 50% 100%;
+    background-size: contain;
     background-repeat: no-repeat;
-
     background-color: $light-purple;
     display: flex;
     justify-content: center;
