@@ -542,6 +542,7 @@ type Query {
   discussion(id: ID!): Discussion
   events(paginate: PaginateInput): [Event]
   generateUserAuthToken(authId: String!): String!
+  getStatistics(where: StatisticsWhereInput): [Statistic]
   proposal(where: ProposalWhereUniqueInput!): Proposal
   roles(paginate: PaginateInput): [Role]
 
@@ -637,6 +638,33 @@ type Role implements BaseEntity {
 enum SortOrder {
   asc
   desc
+}
+
+type Statistic implements BaseEntity {
+  commons: Int!
+
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  fundingProposals: Int!
+
+  """The main identifier of the item"""
+  id: UUID!
+  joinProposals: Int!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  users: Int!
+}
+
+enum StatisticType {
+  AllTime
+  Daily
+  Hourly
+  Weekly
+}
+
+input StatisticsWhereInput {
+  type: StatisticType
 }
 
 input StringFilter {

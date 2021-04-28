@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, StatisticType } from '@prisma/client';
 
 export const seeder = new PrismaClient();
 
@@ -41,6 +41,21 @@ async function main() {
 
         'user.permissions.read'
       ]
+    }
+  });
+
+  await seeder.statistic.create({
+    data: {
+      type: StatisticType.AllTime,
+
+      users: 0,
+      commons: 0,
+      payments: 0,
+      paymentsAmount: 0,
+      discussions: 0,
+      discussionMessages: 0,
+      fundingProposals: 0,
+      joinProposals: 0
     }
   });
 }

@@ -9,6 +9,7 @@ import { EventTypes } from './Types/Events';
 import { CommonTypes } from './Types/Commons';
 import { ReportTypes } from './Types/Reports';
 import { ProposalTypes } from './Types/Proposals';
+import { StatisticTypes } from './Types/Statistics';
 import { DiscussionTypes } from './Types/Discussion';
 import { CommonMemberTypes } from './Types/CommonMember';
 import { NotificationTypes } from './Types/Notifications';
@@ -38,6 +39,7 @@ const types = [
   CommonTypes,
   ReportTypes,
   ProposalTypes,
+  StatisticTypes,
   DiscussionTypes,
   CommonMemberTypes,
   NotificationTypes,

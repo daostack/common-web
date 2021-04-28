@@ -204,6 +204,9 @@ export interface NexusGenInputs {
     for?: NexusGenEnums['ReportFor'] | null; // ReportFor
     status?: NexusGenInputs['ReportStatusFilterInput'] | null; // ReportStatusFilterInput
   }
+  StatisticsWhereInput: { // input type
+    type?: NexusGenEnums['StatisticType'] | null; // StatisticType
+  }
   StringFilter: { // input type
     contains?: string | null; // String
     endsWith?: string | null; // String
@@ -235,6 +238,7 @@ export interface NexusGenEnums {
   ReportFor: 'FalseNews' | 'Harassment' | 'Hate' | 'Nudity' | 'Other' | 'Spam' | 'Violance'
   ReportStatus: 'Active' | 'Clossed'
   SortOrder: 'asc' | 'desc'
+  StatisticType: 'AllTime' | 'Daily' | 'Hourly' | 'Weekly'
   UserNotificationTokenState: 'Active' | 'Expired' | 'Voided'
   VoteOutcome: 'Approve' | 'Condemn'
 }
@@ -360,6 +364,15 @@ export interface NexusGenObjects {
     permissions: string[]; // [String!]!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
+  Statistic: { // root type
+    commons: number; // Int!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    fundingProposals: number; // Int!
+    id: NexusGenScalars['UUID']; // UUID!
+    joinProposals: number; // Int!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    users: number; // Int!
+  }
   Subscription: {};
   User: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -388,7 +401,7 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  BaseEntity: NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['Report'] | NexusGenRootTypes['Role'] | NexusGenRootTypes['UserNotificationToken'];
+  BaseEntity: NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['Report'] | NexusGenRootTypes['Role'] | NexusGenRootTypes['Statistic'] | NexusGenRootTypes['UserNotificationToken'];
 }
 
 export interface NexusGenUnions {
@@ -525,6 +538,7 @@ export interface NexusGenFieldTypes {
     discussion: NexusGenRootTypes['Discussion'] | null; // Discussion
     events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     generateUserAuthToken: string; // String!
+    getStatistics: Array<NexusGenRootTypes['Statistic'] | null> | null; // [Statistic]
     proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
     roles: Array<NexusGenRootTypes['Role'] | null> | null; // [Role]
     user: NexusGenRootTypes['User'] | null; // User
@@ -550,6 +564,15 @@ export interface NexusGenFieldTypes {
     name: string; // String!
     permissions: string[]; // [String!]!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
+  Statistic: { // field return type
+    commons: number; // Int!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    fundingProposals: number; // Int!
+    id: NexusGenScalars['UUID']; // UUID!
+    joinProposals: number; // Int!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    users: number; // Int!
   }
   Subscription: { // field return type
     discussionMessageCreated: NexusGenRootTypes['DiscussionMessage'] | null; // DiscussionMessage
@@ -721,6 +744,7 @@ export interface NexusGenFieldTypeNames {
     discussion: 'Discussion'
     events: 'Event'
     generateUserAuthToken: 'String'
+    getStatistics: 'Statistic'
     proposal: 'Proposal'
     roles: 'Role'
     user: 'User'
@@ -746,6 +770,15 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     permissions: 'String'
     updatedAt: 'DateTime'
+  }
+  Statistic: { // field return type name
+    commons: 'Int'
+    createdAt: 'DateTime'
+    fundingProposals: 'Int'
+    id: 'UUID'
+    joinProposals: 'Int'
+    updatedAt: 'DateTime'
+    users: 'Int'
   }
   Subscription: { // field return type name
     discussionMessageCreated: 'DiscussionMessage'
@@ -904,6 +937,9 @@ export interface NexusGenArgTypes {
     generateUserAuthToken: { // args
       authId: string; // String!
     }
+    getStatistics: { // args
+      where?: NexusGenInputs['StatisticsWhereInput'] | null; // StatisticsWhereInput
+    }
     proposal: { // args
       where: NexusGenInputs['ProposalWhereUniqueInput']; // ProposalWhereUniqueInput!
     }
@@ -948,7 +984,7 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  BaseEntity: "Discussion" | "DiscussionMessage" | "DiscussionSubscription" | "Notification" | "Report" | "Role" | "UserNotificationToken"
+  BaseEntity: 'Discussion' | 'DiscussionMessage' | 'DiscussionSubscription' | 'Notification' | 'Report' | 'Role' | 'Statistic' | 'UserNotificationToken'
 }
 
 export interface NexusGenTypeInterfaces {
@@ -957,8 +993,9 @@ export interface NexusGenTypeInterfaces {
   DiscussionSubscription: "BaseEntity"
   Notification: "BaseEntity"
   Report: "BaseEntity"
-  Role: "BaseEntity"
-  UserNotificationToken: "BaseEntity"
+  Role: 'BaseEntity'
+  Statistic: 'BaseEntity'
+  UserNotificationToken: 'BaseEntity'
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
