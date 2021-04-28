@@ -20,11 +20,5 @@ Queues.EventQueue.process('create', async (job, done) => {
     event
   });
 
-  done();
-});
-
-Queues.EventQueue.process('process', async (job, done) => {
-  await eventService.process(job.data.process.event);
-
-  done();
+  done(null, event);
 });

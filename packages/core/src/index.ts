@@ -20,6 +20,7 @@ export { commonService } from './services/commons';
 export { reportService } from './services/reports';
 export { paymentService } from './services/payments';
 export { proposalService } from './services/proposals';
+export { statisticService } from './services/statistics';
 export { discussionService } from './services/discussions';
 export { notificationService } from './services/notifications';
 export { authorizationService } from './services/authorization';

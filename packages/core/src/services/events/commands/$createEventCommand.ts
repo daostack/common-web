@@ -2,7 +2,6 @@ import * as z from 'zod';
 
 import { Event, EventType } from '@prisma/client';
 import { prisma } from '@toolkits';
-import { worker } from '@common/queues';
 
 const schema = z.object({
   type: z.enum(Object.keys(EventType) as [(keyof typeof EventType)]),
@@ -35,14 +34,8 @@ const schema = z.object({
  *
  * @param payload - The payload to create the event
  */
-export const $createEventCommand = async (payload: z.infer<typeof schema>): Promise<Event> => {
-  const event = await prisma.event.create({
+export const $createEventCommand = (payload: z.infer<typeof schema>): Promise<Event> => {
+  return prisma.event.create({
     data: payload
   });
-
-  worker.addEventJob('process', {
-    event: event as any
-  });
-
-  return event;
 };
