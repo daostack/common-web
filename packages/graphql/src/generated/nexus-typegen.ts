@@ -4,10 +4,11 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -262,9 +263,17 @@ export interface NexusGenObjects {
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Common: { // root type
+    action?: string | null; // String
+    balance: number; // Int!
+    byline?: string | null; // String
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    description?: string | null; // String
+    fundingMinimumAmount: number; // Int!
+    fundingType: NexusGenEnums['FundingType']; // FundingType!
     id: string; // ID!
+    image: string; // String!
     name: string; // String!
+    raised: number; // Int!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     whitelisted: boolean; // Boolean!
   }
@@ -417,13 +426,21 @@ export interface NexusGenFieldTypes {
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Common: { // field return type
+    action: string | null; // String
+    balance: number; // Int!
+    byline: string | null; // String
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    description: string | null; // String
     discussions: NexusGenRootTypes['Discussion'][]; // [Discussion!]!
     events: NexusGenRootTypes['Event'][]; // [Event!]!
+    fundingMinimumAmount: number; // Int!
+    fundingType: NexusGenEnums['FundingType']; // FundingType!
     id: string; // ID!
+    image: string; // String!
     members: Array<NexusGenRootTypes['CommonMember'] | null>; // [CommonMember]!
     name: string; // String!
     proposals: NexusGenRootTypes['Proposal'][]; // [Proposal!]!
+    raised: number; // Int!
     reports: NexusGenRootTypes['Report'][]; // [Report!]!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     whitelisted: boolean; // Boolean!
@@ -534,6 +551,7 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     common: NexusGenRootTypes['Common'] | null; // Common
+    commons: Array<NexusGenRootTypes['Common'] | null> | null; // [Common]
     discussion: NexusGenRootTypes['Discussion'] | null; // Discussion
     events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     generateUserAuthToken: string; // String!
@@ -623,13 +641,21 @@ export interface NexusGenFieldTypeNames {
     updatedAt: 'DateTime'
   }
   Common: { // field return type name
+    action: 'String'
+    balance: 'Int'
+    byline: 'String'
     createdAt: 'DateTime'
+    description: 'String'
     discussions: 'Discussion'
     events: 'Event'
+    fundingMinimumAmount: 'Int'
+    fundingType: 'FundingType'
     id: 'ID'
+    image: 'String'
     members: 'CommonMember'
     name: 'String'
     proposals: 'Proposal'
+    raised: 'Int'
     reports: 'Report'
     updatedAt: 'DateTime'
     whitelisted: 'Boolean'
@@ -740,6 +766,7 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     common: 'Common'
+    commons: 'Common'
     discussion: 'Discussion'
     events: 'Event'
     generateUserAuthToken: 'String'
@@ -926,6 +953,9 @@ export interface NexusGenArgTypes {
   Query: {
     common: { // args
       where: NexusGenInputs['CommonWhereUniqueInput']; // CommonWhereUniqueInput!
+    }
+    commons: { // args
+      paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
     }
     discussion: { // args
       id: string; // ID!

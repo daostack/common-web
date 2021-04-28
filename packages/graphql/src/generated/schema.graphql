@@ -40,20 +40,35 @@ type Card {
 }
 
 type Common {
+  action: String
+
+  """The current available funds of the common. In cents"""
+  balance: Int!
+  byline: String
+
   """The date, at which the item was created"""
   createdAt: DateTime!
+  description: String
   discussions(skip: Int, take: Int): [Discussion!]!
 
   """List of events, that occurred in a common"""
   events(orderBy: EventOrderByInput, skip: Int = 0, take: Int = 10): [Event!]!
 
+  """The minimum amount that the join request should provide. In cents"""
+  fundingMinimumAmount: Int!
+  fundingType: FundingType!
+
   """The main identifier of the item"""
   id: ID!
+  image: String!
   members(orderBy: CommonMemberOrderByInput, skip: Int, take: Int): [CommonMember]!
 
   """The name of the common as provided"""
   name: String!
   proposals(skip: Int = 0, take: Int = 10, where: ProposalWhereInput): [Proposal!]!
+
+  """The total amount of money that the common has raised. In cents"""
+  raised: Int!
   reports(where: ReportWhereInput = {status: {in: [Active]}}): [Report!]!
 
   """The date, at which the item was last modified"""
@@ -539,6 +554,7 @@ input ProposalWhereUniqueInput {
 
 type Query {
   common(where: CommonWhereUniqueInput!): Common
+  commons(paginate: PaginateInput): [Common]
   discussion(id: ID!): Discussion
   events(paginate: PaginateInput): [Event]
   generateUserAuthToken(authId: String!): String!

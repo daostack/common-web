@@ -248,6 +248,17 @@ export type Common = {
   name: Scalars['String'];
   /** The whitelisting state of a common */
   whitelisted: Scalars['Boolean'];
+  /** The current available funds of the common. In cents */
+  balance: Scalars['Int'];
+  /** The total amount of money that the common has raised. In cents */
+  raised: Scalars['Int'];
+  image: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  action?: Maybe<Scalars['String']>;
+  byline?: Maybe<Scalars['String']>;
+  fundingType: FundingType;
+  /** The minimum amount that the join request should provide. In cents */
+  fundingMinimumAmount: Scalars['Int'];
   /** List of events, that occurred in a common */
   events: Array<Event>;
   reports: Array<Report>;
@@ -754,6 +765,7 @@ export type Query = {
   roles?: Maybe<Array<Maybe<Role>>>;
   events?: Maybe<Array<Maybe<Event>>>;
   common?: Maybe<Common>;
+  commons?: Maybe<Array<Maybe<Common>>>;
   proposal?: Maybe<Proposal>;
   getStatistics?: Maybe<Array<Maybe<Statistic>>>;
   discussion?: Maybe<Discussion>;
@@ -782,6 +794,11 @@ export type QueryEventsArgs = {
 
 export type QueryCommonArgs = {
   where: CommonWhereUniqueInput;
+};
+
+
+export type QueryCommonsArgs = {
+  paginate?: Maybe<PaginateInput>;
 };
 
 
@@ -962,6 +979,28 @@ export type GetLatestEventsQuery = (
 }
   );
 
+export type GetCommonsHomescreenDataQueryVariables = Exact<{
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetCommonsHomescreenDataQuery = (
+  { __typename?: 'Query' }
+  & {
+  commons?: Maybe<Array<Maybe<(
+    { __typename?: 'Common' }
+    & Pick<Common, 'id' | 'name' | 'raised' | 'balance' | 'createdAt' | 'updatedAt' | 'description' | 'byline' | 'fundingType' | 'fundingMinimumAmount'>
+    & {
+    members: Array<Maybe<(
+      { __typename?: 'CommonMember' }
+      & Pick<CommonMember, 'userId'>
+      )>>
+  }
+    )>>>
+}
+  );
+
 export type GetAllTimeStatistiscQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1057,6 +1096,54 @@ export function useGetLatestEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetLatestEventsQueryHookResult = ReturnType<typeof useGetLatestEventsQuery>;
 export type GetLatestEventsLazyQueryHookResult = ReturnType<typeof useGetLatestEventsLazyQuery>;
 export type GetLatestEventsQueryResult = Apollo.QueryResult<GetLatestEventsQuery, GetLatestEventsQueryVariables>;
+export const GetCommonsHomescreenDataDocument = gql`
+  query getCommonsHomescreenData($take: Int = 10, $skip: Int) {
+    commons(paginate: {take: $take, skip: $skip}) {
+      id
+      name
+      raised
+      balance
+      createdAt
+      updatedAt
+      members {
+        userId
+      }
+      description
+      byline
+      fundingType
+      fundingMinimumAmount
+    }
+  }
+`;
+
+/**
+ * __useGetCommonsHomescreenDataQuery__
+ *
+ * To run a query within a React component, call `useGetCommonsHomescreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommonsHomescreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCommonsHomescreenDataQuery({
+ *   variables: {
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useGetCommonsHomescreenDataQuery(baseOptions?: Apollo.QueryHookOptions<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>) {
+  return Apollo.useQuery<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>(GetCommonsHomescreenDataDocument, baseOptions);
+}
+
+export function useGetCommonsHomescreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>) {
+  return Apollo.useLazyQuery<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>(GetCommonsHomescreenDataDocument, baseOptions);
+}
+
+export type GetCommonsHomescreenDataQueryHookResult = ReturnType<typeof useGetCommonsHomescreenDataQuery>;
+export type GetCommonsHomescreenDataLazyQueryHookResult = ReturnType<typeof useGetCommonsHomescreenDataLazyQuery>;
+export type GetCommonsHomescreenDataQueryResult = Apollo.QueryResult<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>;
 export const GetAllTimeStatistiscDocument = gql`
   query getAllTimeStatistisc {
     getStatistics(where: {type: AllTime}) {
@@ -1086,11 +1173,9 @@ export const GetAllTimeStatistiscDocument = gql`
 export function useGetAllTimeStatistiscQuery(baseOptions?: Apollo.QueryHookOptions<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>) {
   return Apollo.useQuery<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>(GetAllTimeStatistiscDocument, baseOptions);
 }
-
 export function useGetAllTimeStatistiscLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>) {
   return Apollo.useLazyQuery<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>(GetAllTimeStatistiscDocument, baseOptions);
 }
-
 export type GetAllTimeStatistiscQueryHookResult = ReturnType<typeof useGetAllTimeStatistiscQuery>;
 export type GetAllTimeStatistiscLazyQueryHookResult = ReturnType<typeof useGetAllTimeStatistiscLazyQuery>;
 export type GetAllTimeStatistiscQueryResult = Apollo.QueryResult<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>;

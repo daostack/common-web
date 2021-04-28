@@ -185,6 +185,17 @@ type Common {
   name: String!
   """The whitelisting state of a common"""
   whitelisted: Boolean!
+  """The current available funds of the common. In cents"""
+  balance: Int!
+  """The total amount of money that the common has raised. In cents"""
+  raised: Int!
+  image: String!
+  description: String
+  action: String
+  byline: String
+  fundingType: FundingType!
+  """The minimum amount that the join request should provide. In cents"""
+  fundingMinimumAmount: Int!
   """List of events, that occurred in a common"""
   events(take: Int = 10, skip: Int = 0, orderBy: EventOrderByInput): [Event!]!
   reports(where: ReportWhereInput = {status: {in: [Active]}}): [Report!]!
@@ -571,6 +582,7 @@ type Query {
   roles(paginate: PaginateInput): [Role]
   events(paginate: PaginateInput): [Event]
   common(where: CommonWhereUniqueInput!): Common
+  commons(paginate: PaginateInput): [Common]
   proposal(where: ProposalWhereUniqueInput!): Proposal
   getStatistics(where: StatisticsWhereInput): [Statistic]
   discussion(id: ID!): Discussion

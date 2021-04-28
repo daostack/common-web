@@ -4,6 +4,7 @@ documents:
   - "src/core/**/*.tsx"
   - "src/components/tables/LatestEventsTable.tsx"
   - "src/pages/dashboard/index.tsx"
+  - "src/pages/commons/index.tsx"
 generates:
   ./src/core/graphql/index.ts:
     plugins:
