@@ -298,6 +298,8 @@ export type CreateCommonInput = {
   name: Scalars['String'];
   fundingMinimumAmount: Scalars['Int'];
   fundingType: FundingType;
+  image: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
 };
 
 export type CommonWhereUniqueInput = {
@@ -461,6 +463,31 @@ export enum ProposalState {
 
 export type ProposalWhereUniqueInput = {
   id: Scalars['UUID'];
+};
+
+export enum StatisticType {
+  AllTime = 'AllTime',
+  Hourly = 'Hourly',
+  Daily = 'Daily',
+  Weekly = 'Weekly'
+}
+
+export type Statistic = BaseEntity & {
+  __typename?: 'Statistic';
+  /** The main identifier of the item */
+  id: Scalars['UUID'];
+  /** The date, at which the item was created */
+  createdAt: Scalars['DateTime'];
+  /** The date, at which the item was last modified */
+  updatedAt: Scalars['DateTime'];
+  users: Scalars['Int'];
+  commons: Scalars['Int'];
+  fundingProposals: Scalars['Int'];
+  joinProposals: Scalars['Int'];
+};
+
+export type StatisticsWhereInput = {
+  type?: Maybe<StatisticType>;
 };
 
 export type Discussion = BaseEntity & {
@@ -728,6 +755,7 @@ export type Query = {
   events?: Maybe<Array<Maybe<Event>>>;
   common?: Maybe<Common>;
   proposal?: Maybe<Proposal>;
+  getStatistics?: Maybe<Array<Maybe<Statistic>>>;
   discussion?: Maybe<Discussion>;
 };
 
@@ -759,6 +787,11 @@ export type QueryCommonArgs = {
 
 export type QueryProposalArgs = {
   where: ProposalWhereUniqueInput;
+};
+
+
+export type QueryGetStatisticsArgs = {
+  where?: Maybe<StatisticsWhereInput>;
 };
 
 
@@ -929,6 +962,19 @@ export type GetLatestEventsQuery = (
 }
   );
 
+export type GetAllTimeStatistiscQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllTimeStatistiscQuery = (
+  { __typename?: 'Query' }
+  & {
+  getStatistics?: Maybe<Array<Maybe<(
+    { __typename?: 'Statistic' }
+    & Pick<Statistic, 'users' | 'commons' | 'joinProposals' | 'fundingProposals'>
+    )>>>
+}
+  );
+
 
 export const LoadUserContextDocument = gql`
   query loadUserContext {
@@ -962,11 +1008,9 @@ export const LoadUserContextDocument = gql`
 export function useLoadUserContextQuery(baseOptions?: Apollo.QueryHookOptions<LoadUserContextQuery, LoadUserContextQueryVariables>) {
   return Apollo.useQuery<LoadUserContextQuery, LoadUserContextQueryVariables>(LoadUserContextDocument, baseOptions);
 }
-
 export function useLoadUserContextLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LoadUserContextQuery, LoadUserContextQueryVariables>) {
   return Apollo.useLazyQuery<LoadUserContextQuery, LoadUserContextQueryVariables>(LoadUserContextDocument, baseOptions);
 }
-
 export type LoadUserContextQueryHookResult = ReturnType<typeof useLoadUserContextQuery>;
 export type LoadUserContextLazyQueryHookResult = ReturnType<typeof useLoadUserContextLazyQuery>;
 export type LoadUserContextQueryResult = Apollo.QueryResult<LoadUserContextQuery, LoadUserContextQueryVariables>;
@@ -1013,3 +1057,40 @@ export function useGetLatestEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetLatestEventsQueryHookResult = ReturnType<typeof useGetLatestEventsQuery>;
 export type GetLatestEventsLazyQueryHookResult = ReturnType<typeof useGetLatestEventsLazyQuery>;
 export type GetLatestEventsQueryResult = Apollo.QueryResult<GetLatestEventsQuery, GetLatestEventsQueryVariables>;
+export const GetAllTimeStatistiscDocument = gql`
+  query getAllTimeStatistisc {
+    getStatistics(where: {type: AllTime}) {
+      users
+      commons
+      joinProposals
+      fundingProposals
+    }
+  }
+`;
+
+/**
+ * __useGetAllTimeStatistiscQuery__
+ *
+ * To run a query within a React component, call `useGetAllTimeStatistiscQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllTimeStatistiscQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllTimeStatistiscQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllTimeStatistiscQuery(baseOptions?: Apollo.QueryHookOptions<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>) {
+  return Apollo.useQuery<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>(GetAllTimeStatistiscDocument, baseOptions);
+}
+
+export function useGetAllTimeStatistiscLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>) {
+  return Apollo.useLazyQuery<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>(GetAllTimeStatistiscDocument, baseOptions);
+}
+
+export type GetAllTimeStatistiscQueryHookResult = ReturnType<typeof useGetAllTimeStatistiscQuery>;
+export type GetAllTimeStatistiscLazyQueryHookResult = ReturnType<typeof useGetAllTimeStatistiscLazyQuery>;
+export type GetAllTimeStatistiscQueryResult = Apollo.QueryResult<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>;

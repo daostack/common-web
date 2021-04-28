@@ -201,6 +201,8 @@ input CreateCommonInput {
   name: String!
   fundingMinimumAmount: Int!
   fundingType: FundingType!
+  image: String!
+  description: String
 }
 input CommonWhereUniqueInput {
   id: ID!
@@ -332,6 +334,27 @@ enum ProposalState {
 }
 input ProposalWhereUniqueInput {
   id: UUID!
+}
+enum StatisticType {
+  AllTime
+  Hourly
+  Daily
+  Weekly
+}
+type Statistic implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  users: Int!
+  commons: Int!
+  fundingProposals: Int!
+  joinProposals: Int!
+}
+input StatisticsWhereInput {
+  type: StatisticType
 }
 type Discussion implements BaseEntity {
   """The main identifier of the item"""
@@ -549,6 +572,7 @@ type Query {
   events(paginate: PaginateInput): [Event]
   common(where: CommonWhereUniqueInput!): Common
   proposal(where: ProposalWhereUniqueInput!): Proposal
+  getStatistics(where: StatisticsWhereInput): [Statistic]
   discussion(id: ID!): Discussion
 }
 type Mutation {
