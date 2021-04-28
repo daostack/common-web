@@ -179,10 +179,12 @@ export type Event = {
   /** The type of the event in one of the predefined event types */
   type: EventType;
   payload?: Maybe<Scalars['JSON']>;
-  /** The ID of the event creator */
-  userId?: Maybe<Scalars['ID']>;
   /** The ID of the common, for whom the event was created */
   commonId?: Maybe<Scalars['ID']>;
+  /** The ID of the event creator */
+  userId?: Maybe<Scalars['ID']>;
+  /** The event creator */
+  user?: Maybe<User>;
 };
 
 export enum EventType {
@@ -723,6 +725,7 @@ export type Query = {
   user?: Maybe<User>;
   generateUserAuthToken: Scalars['String'];
   roles?: Maybe<Array<Maybe<Role>>>;
+  events?: Maybe<Array<Maybe<Event>>>;
   common?: Maybe<Common>;
   proposal?: Maybe<Proposal>;
   discussion?: Maybe<Discussion>;
@@ -740,6 +743,11 @@ export type QueryGenerateUserAuthTokenArgs = {
 
 
 export type QueryRolesArgs = {
+  paginate?: Maybe<PaginateInput>;
+};
+
+
+export type QueryEventsArgs = {
   paginate?: Maybe<PaginateInput>;
 };
 
@@ -899,6 +907,28 @@ export type LoadUserContextQuery = (
 }
   );
 
+export type GetLatestEventsQueryVariables = Exact<{
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetLatestEventsQuery = (
+  { __typename?: 'Query' }
+  & {
+  events?: Maybe<Array<Maybe<(
+    { __typename?: 'Event' }
+    & Pick<Event, 'id' | 'createdAt' | 'type'>
+    & {
+    user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'firstName' | 'lastName' | 'photo'>
+      )>
+  }
+    )>>>
+}
+  );
+
 
 export const LoadUserContextDocument = gql`
   query loadUserContext {
@@ -940,3 +970,46 @@ export function useLoadUserContextLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type LoadUserContextQueryHookResult = ReturnType<typeof useLoadUserContextQuery>;
 export type LoadUserContextLazyQueryHookResult = ReturnType<typeof useLoadUserContextLazyQuery>;
 export type LoadUserContextQueryResult = Apollo.QueryResult<LoadUserContextQuery, LoadUserContextQueryVariables>;
+export const GetLatestEventsDocument = gql`
+  query GetLatestEvents($take: Int = 10, $skip: Int = 0) {
+    events(paginate: {take: $take, skip: $skip}) {
+      id
+      createdAt
+      type
+      user {
+        firstName
+        lastName
+        photo
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetLatestEventsQuery__
+ *
+ * To run a query within a React component, call `useGetLatestEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLatestEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLatestEventsQuery({
+ *   variables: {
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useGetLatestEventsQuery(baseOptions?: Apollo.QueryHookOptions<GetLatestEventsQuery, GetLatestEventsQueryVariables>) {
+  return Apollo.useQuery<GetLatestEventsQuery, GetLatestEventsQueryVariables>(GetLatestEventsDocument, baseOptions);
+}
+
+export function useGetLatestEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLatestEventsQuery, GetLatestEventsQueryVariables>) {
+  return Apollo.useLazyQuery<GetLatestEventsQuery, GetLatestEventsQueryVariables>(GetLatestEventsDocument, baseOptions);
+}
+
+export type GetLatestEventsQueryHookResult = ReturnType<typeof useGetLatestEventsQuery>;
+export type GetLatestEventsLazyQueryHookResult = ReturnType<typeof useGetLatestEventsLazyQuery>;
+export type GetLatestEventsQueryResult = Apollo.QueryResult<GetLatestEventsQuery, GetLatestEventsQueryVariables>;

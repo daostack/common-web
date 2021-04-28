@@ -1,6 +1,8 @@
 overwrite: true
 schema: "http://localhost:4000/graphql"
-documents: "src/core/**/*.tsx"
+documents:
+  - "src/core/**/*.tsx"
+  - "src/components/tables/LatestEventsTable.tsx"
 generates:
   ./src/core/graphql/index.ts:
     plugins:

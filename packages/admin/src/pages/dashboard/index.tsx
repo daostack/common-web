@@ -89,11 +89,9 @@ const DashboardHomePage: NextPage = () => {
 
             <Spacer y={2}/>
 
-            <LatestEventsTable
-              refresh
-              notify
-            />
           </HasPermission>
+
+          <LatestEventsTable/>
         </React.Fragment>
       {/*)}*/}
 
@@ -101,6 +99,6 @@ const DashboardHomePage: NextPage = () => {
   );
 };
 
-export default withPermission('admin.dashboard.*', {
+export default withPermission('admin.*', {
   redirect: true
 })(DashboardHomePage);

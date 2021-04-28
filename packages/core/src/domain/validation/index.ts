@@ -19,5 +19,7 @@ export const PermissionValidator = z.enum([
   'admin.roles.assign',
   'admin.roles.unassign',
 
+  'admin.events.read',
+
   'user.permissions.read'
 ]);

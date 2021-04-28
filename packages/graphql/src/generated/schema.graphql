@@ -99,8 +99,10 @@ input CreateCardInput {
 }
 
 input CreateCommonInput {
+  description: String
   fundingMinimumAmount: Int!
   fundingType: FundingType!
+  image: String!
   name: String!
 }
 
@@ -275,6 +277,9 @@ type Event {
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+
+  """The event creator"""
+  user: User
 
   """The ID of the event creator"""
   userId: ID
@@ -535,6 +540,7 @@ input ProposalWhereUniqueInput {
 type Query {
   common(where: CommonWhereUniqueInput!): Common
   discussion(id: ID!): Discussion
+  events(paginate: PaginateInput): [Event]
   generateUserAuthToken(authId: String!): String!
   proposal(where: ProposalWhereUniqueInput!): Proposal
   roles(paginate: PaginateInput): [Role]

@@ -120,10 +120,12 @@ type Event {
   """The type of the event in one of the predefined event types"""
   type: EventType!
   payload: JSON
-  """The ID of the event creator"""
-  userId: ID
   """The ID of the common, for whom the event was created"""
   commonId: ID
+  """The ID of the event creator"""
+  userId: ID
+  """The event creator"""
+  user: User
 }
 enum EventType {
   CommonCreated
@@ -544,6 +546,7 @@ type Query {
   user(userId: ID): User
   generateUserAuthToken(authId: String!): String!
   roles(paginate: PaginateInput): [Role]
+  events(paginate: PaginateInput): [Event]
   common(where: CommonWhereUniqueInput!): Common
   proposal(where: ProposalWhereUniqueInput!): Proposal
   discussion(id: ID!): Discussion

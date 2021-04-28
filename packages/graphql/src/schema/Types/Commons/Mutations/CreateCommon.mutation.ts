@@ -12,6 +12,9 @@ export const CreateCommonInput = inputObjectType({
     t.nonNull.field('fundingType', {
       type: 'FundingType'
     });
+
+    t.nonNull.string('image');
+    t.string('description');
   }
 });
 

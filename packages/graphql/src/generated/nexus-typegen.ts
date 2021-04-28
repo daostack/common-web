@@ -85,8 +85,10 @@ export interface NexusGenInputs {
     keyId: string; // String!
   }
   CreateCommonInput: { // input type
+    description?: string | null; // String
     fundingMinimumAmount: number; // Int!
     fundingType: NexusGenEnums['FundingType']; // FundingType!
+    image: string; // String!
     name: string; // String!
   }
   CreateDiscussionInput: { // input type
@@ -234,7 +236,7 @@ export interface NexusGenEnums {
   ReportStatus: 'Active' | 'Clossed'
   SortOrder: 'asc' | 'desc'
   UserNotificationTokenState: 'Active' | 'Expired' | 'Voided'
-  VoteOutcome: "Approve" | "Condemn"
+  VoteOutcome: 'Approve' | 'Condemn'
 }
 
 export interface NexusGenScalars {
@@ -458,6 +460,7 @@ export interface NexusGenFieldTypes {
     payload: NexusGenScalars['JSON'] | null; // JSON
     type: NexusGenEnums['EventType']; // EventType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    user: NexusGenRootTypes['User'] | null; // User
     userId: string | null; // ID
   }
   FundingProposal: { // field return type
@@ -520,6 +523,7 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     common: NexusGenRootTypes['Common'] | null; // Common
     discussion: NexusGenRootTypes['Discussion'] | null; // Discussion
+    events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     generateUserAuthToken: string; // String!
     proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
     roles: Array<NexusGenRootTypes['Role'] | null> | null; // [Role]
@@ -652,6 +656,7 @@ export interface NexusGenFieldTypeNames {
     payload: 'JSON'
     type: 'EventType'
     updatedAt: 'DateTime'
+    user: 'User'
     userId: 'ID'
   }
   FundingProposal: { // field return type name
@@ -714,6 +719,7 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     common: 'Common'
     discussion: 'Discussion'
+    events: 'Event'
     generateUserAuthToken: 'String'
     proposal: 'Proposal'
     roles: 'Role'
@@ -891,6 +897,9 @@ export interface NexusGenArgTypes {
     }
     discussion: { // args
       id: string; // ID!
+    }
+    events: { // args
+      paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
     }
     generateUserAuthToken: { // args
       authId: string; // String!

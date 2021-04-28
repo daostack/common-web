@@ -7,9 +7,8 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 
 const IndexPage: NextPage = () => {
   const router = useRouter();
-  const [user, loading, error] = useAuthState(firebase.auth());
 
-console.log(user, loading, error);
+  const [user, loading, error] = useAuthState(firebase.auth());
 
   React.useEffect(() => {
     if(!loading) {

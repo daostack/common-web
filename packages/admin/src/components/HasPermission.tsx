@@ -16,8 +16,12 @@ export const HasPermission: React.FC<PropsWithChildren<IHasPermissionProps>> = (
   const hasPermission = (permission: string): boolean => {
     let hasPermission = false;
 
+    console.log(userContext);
+
     if (userContext.loaded) {
       const permissions = userContext.permissions;
+
+      console.log(permissions);
 
       if (permission.includes('*')) {
         hasPermission = permissions.some((userPermission) =>
@@ -67,7 +71,7 @@ export const HasPermission: React.FC<PropsWithChildren<IHasPermissionProps>> = (
   };
 
 
-  return (
+  return hasPermission(permission) && (
     <React.Fragment>
       {children}
     </React.Fragment>
