@@ -10,7 +10,7 @@ export interface IModeration {
   updatedAt: firestore.Timestamp;
   moderator: string;
   reporter: string;
-  countdownPeriod: number;
+  countdownPeriod?: number;
   quietEnding?: number;
 }
 
