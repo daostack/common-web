@@ -65,8 +65,24 @@ export default function CommonListContainer() {
       )}
 
       {commons.length !== currentCommons.length && (
-        <div className="loading button-blue" ref={loader}>
-          Load More Commons
+        <div className="loader-wrapper">
+          <div className="lds-spinner">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <div className="loading button-blue" ref={loader}>
+            Load More Commons
+          </div>
         </div>
       )}
     </div>
