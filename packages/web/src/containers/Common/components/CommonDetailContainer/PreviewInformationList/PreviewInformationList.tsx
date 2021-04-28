@@ -19,7 +19,7 @@ export default function PreviewInformationList(props: PreviewInformationListProp
         <div className="title">{title}</div>
         {data.length > 0 ? (
           <div className="view-all" onClick={vievAllHandler}>
-            View All
+            View all
           </div>
         ) : null}
       </div>
@@ -34,6 +34,11 @@ export default function PreviewInformationList(props: PreviewInformationListProp
         </div>
       ) : (
         <div className="empty-information-wrapper">
+          {title === "Latest Discussions" ? (
+            <img src="/icons/empty-discussion-preview.svg" alt="empty-disscussions" />
+          ) : (
+            <img src="/icons/empty-proposals-preview.svg" alt="empty-proposals" />
+          )}
           <div className="message">No {title} yet</div>
         </div>
       )}
