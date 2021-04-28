@@ -31,17 +31,19 @@
     input {
       border: none;
       border-radius: 5px;
-      padding: 5px;
+      padding: 10px;
       margin: 5px;
+      text-indent: 5px;
     }
     textarea {
       resize: none;
       border: none;
       border-radius: 5px;
-      padding: 5px;
+      padding: 10px;
       margin: 5px;
       width: 500px;
       height: 150px;
+      text-indent: 5px;
     }
     .send {
       width: 180px;

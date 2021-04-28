@@ -16,7 +16,7 @@ const LandingContainer = () => {
     <div className="landing-wrapper">
       <section className="landing-top">
         <div className="info">
-          <img src="icons/logo-all-white.svg" alt="logo" width="170px" />
+          {isLarge && <img src="icons/logo-all-white.svg" alt="logo" width="170px" />}
           <h1>
             Launch Collective Action. <br />
             <span className="pink-text">Catalyze a movement</span>
