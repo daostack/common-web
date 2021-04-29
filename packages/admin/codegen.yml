@@ -6,6 +6,7 @@ documents:
   - "src/components/CommonSettings.tsx"
   - "src/pages/dashboard/index.tsx"
   - "src/pages/commons/index.tsx"
+  - "src/pages/proposals/index.tsx"
   - "src/pages/commons/details/[commonId].tsx"
 generates:
   ./src/core/graphql/index.ts:

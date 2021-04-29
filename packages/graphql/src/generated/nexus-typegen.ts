@@ -4,10 +4,11 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -359,6 +360,7 @@ export interface NexusGenObjects {
     userId: NexusGenScalars['UUID']; // UUID!
   }
   Proposal: { // root type
+    commonId: NexusGenScalars['UUID']; // UUID!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description?: string | null; // String
     expiresAt: NexusGenScalars['DateTime']; // DateTime!
@@ -579,6 +581,8 @@ export interface NexusGenFieldTypes {
     userId: NexusGenScalars['UUID']; // UUID!
   }
   Proposal: { // field return type
+    common: NexusGenRootTypes['Common']; // Common!
+    commonId: NexusGenScalars['UUID']; // UUID!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description: string | null; // String
     discussions: NexusGenRootTypes['Discussion'][]; // [Discussion!]!
@@ -820,6 +824,8 @@ export interface NexusGenFieldTypeNames {
     userId: 'UUID'
   }
   Proposal: { // field return type name
+    common: 'Common'
+    commonId: 'UUID'
     createdAt: 'DateTime'
     description: 'String'
     discussions: 'Discussion'

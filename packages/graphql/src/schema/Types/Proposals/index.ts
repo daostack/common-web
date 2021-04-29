@@ -22,6 +22,7 @@ import { GetProposalQuery } from './Queries/GetProposal.query';
 
 import { ProposalDiscussionsExtension } from './Extensions/ProposalDiscussions.extension';
 import { ProposalFundingExtension } from './Extensions/ProposalFunding.extension';
+import { ProposalCommonExtension } from './Extensions/ProposalCommon.extension';
 import { ProposalJoinExtension } from './Extensions/ProposalJoin.extension';
 
 import { ProposalChangeSubscription } from './Subscriptions/ProposalChange.subscription';
@@ -57,6 +58,7 @@ export const ProposalTypes = [
 
   ProposalDiscussionsExtension,
   ProposalFundingExtension,
+  ProposalCommonExtension,
   ProposalJoinExtension,
 
   ProposalChangeSubscription

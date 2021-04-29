@@ -7,40 +7,45 @@ import { gql } from '@apollo/client';
 import { Breadcrumbs, Card, Grid, Pagination, Spacer, Table, Text } from '@geist-ui/react';
 
 import { Link } from '@components/Link';
-import { useStatisticsQuery, useGetProposalsHomescreenQuery } from '@core/graphql';
 import { useRouter } from 'next/router';
 import { ChevronLeftCircleFill, ChevronRightCircleFill } from '@geist-ui/react-icons';
+import { useGetProposalsHomescreenQuery, useGetAllTimeStatistiscQuery } from '@core/graphql';
 
 const ProposalsHomepageData = gql`
-  query getProposalsHomescreen($fundingPage: Int, $joinPage: Int) {
-    funding: proposals(type: fundingRequest, page: $fundingPage) {
+  query getProposalsHomescreen($fundingPaginate: PaginateInput!, $joinPaginate: PaginateInput!) {
+    funding: proposals(
+      where: {
+        type: FundingRequest
+      }
+      paginate: $fundingPaginate
+    ) {
       id
 
       commonId
 
-      votes { outcome }
       votesFor
       votesAgainst
 
-      description {
-        title
-        description
-      }
+      title
+      description
 
-      fundingRequest {
+      funding {
         amount
       }
     }
 
-    join: proposals(type: join, page: $joinPage) {
+    join: proposals(
+      where: {
+        type: JoinRequest
+      }
+      paginate: $joinPaginate
+    ) {
       id
 
       commonId
 
-      description {
-        title
-        description
-      }
+      title
+      description
 
       join {
         funding
@@ -59,11 +64,17 @@ const ProposalsHomepage: NextPage = () => {
 
   const router = useRouter();
 
-  const { data: statistics } = useStatisticsQuery();
+  const { data: statistics } = useGetAllTimeStatistiscQuery();
   const { data } = useGetProposalsHomescreenQuery({
     variables: {
-      joinPage,
-      fundingPage
+      joinPaginate: {
+        take: 10,
+        skip: 10 * (joinPage - 1)
+      },
+      fundingPaginate: {
+        take: 10,
+        skip: 10 * (fundingPage - 1)
+      }
     }
   });
 
@@ -117,7 +128,7 @@ const ProposalsHomepage: NextPage = () => {
               <Card hoverable>
                 <Text h1>
                   {statistics && (
-                    statistics.statistics.fundingRequests
+                    statistics.getStatistics[0].fundingProposals
                   )}
 
                   {!statistics && (
@@ -132,7 +143,7 @@ const ProposalsHomepage: NextPage = () => {
               <Card hoverable>
                 <Text h1>
                   {statistics && (
-                    statistics.statistics.joinRequests
+                    statistics.getStatistics[0].joinProposals
                   )}
 
                   {!statistics && (
@@ -147,8 +158,8 @@ const ProposalsHomepage: NextPage = () => {
               <Card hoverable>
                 <Text h1>
                   {statistics && (
-                    statistics.statistics.joinRequests +
-                    statistics.statistics.fundingRequests
+                    statistics.getStatistics[0].joinProposals +
+                    statistics.getStatistics[0].fundingProposals
                   )}
 
                   {!statistics && (
@@ -173,9 +184,9 @@ const ProposalsHomepage: NextPage = () => {
               <Table.Column prop="id"/>
             </Table>
 
-            {statistics && statistics.statistics.fundingRequests > 10 && (
+            {statistics && statistics.getStatistics[0].fundingProposals > 10 && (
               <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-                <Pagination count={Math.ceil(statistics.statistics.fundingRequests / 10)}
+                <Pagination count={Math.ceil(statistics.getStatistics[0].fundingProposals / 10)}
                             onChange={onFundingPageChange}>
                   <Pagination.Next>
                     <ChevronRightCircleFill/>
@@ -198,9 +209,10 @@ const ProposalsHomepage: NextPage = () => {
               <Table.Column prop="id"/>
             </Table>
 
-            {statistics && statistics.statistics.joinRequests > 10 && (
+            {statistics && statistics.getStatistics[0].joinProposals > 10 && (
               <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-                <Pagination count={Math.ceil(statistics.statistics.joinRequests / 10)} onChange={onJoinPageChange}>
+                <Pagination count={Math.ceil(statistics.getStatistics[0].joinProposals / 10)}
+                            onChange={onJoinPageChange}>
                   <Pagination.Next>
                     <ChevronRightCircleFill/>
                   </Pagination.Next>
