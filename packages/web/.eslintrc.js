@@ -39,21 +39,23 @@ module.exports = {
     "import/namespace": 2,
     "import/default": 2,
     "import/export": 2,
-    "import/order": [
-      "error",
-      {
-        groups: [
-          "builtin", // Built-in types are first
-          "external",
-          ["sibling", "parent"], // Then sibling and parent types. They can be mingled together
-          "index", // Then the index file
-          "object",
-          // Then the rest: internal and external type
-        ],
-        "newlines-between": "always",
-      },
-    ],
-  },
+  //   "import/order": [
+  //     "error",
+  //     {
+  //       groups: [
+  //         "builtin", // Built-in types are first
+  //         "external",
+  //         ["sibling", "parent"], // Then sibling and parent types. They can be mingled together
+  //         "index", // Then the index file
+  //         "object",
+  //         // Then the rest: internal and external type
+  //       ],
+  //       "newlines-between": "always",
+  //     },
+  //   ],
+  // },
+  "import/order": 0,
+  }
   settings: {
     react: {
       version: "latest",

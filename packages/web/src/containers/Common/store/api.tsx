@@ -22,6 +22,7 @@ export async function fetchCommonProposals(commonId: string) {
 
 export async function fetchCommonList(): Promise<Common[]> {
   const commons = await firebase.firestore().collection("daos").get();
+  console.log('commons',commons);
   const data = transformFirebaseDataList<Common>(commons);
   return data;
 }

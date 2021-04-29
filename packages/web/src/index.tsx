@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
+import { ApolloProvider } from './providers/ApolloProvider';
 
 import configureStore from "./store";
 import "./index.scss";
@@ -19,7 +20,9 @@ if (process.env.REACT_APP_ENV === "dev") {
 ReactDOM.render(
   <Router history={history}>
     <Provider store={store}>
-      <App />
+      <ApolloProvider>
+        <App />
+      </ApolloProvider>
     </Provider>
   </Router>,
   document.getElementById("root"),

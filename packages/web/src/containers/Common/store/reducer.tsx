@@ -18,6 +18,7 @@ type Action = ActionType<typeof actions>;
 const reducer = createReducer<CommonsStateType, Action>(initialState)
   .handleAction(actions.getCommonsList.success, (state, action) =>
     produce(state, (nextState) => {
+      console.log('action.payload',action.payload);
       nextState.commons = action.payload;
     }),
   )

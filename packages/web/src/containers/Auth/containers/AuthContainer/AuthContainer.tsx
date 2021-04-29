@@ -1,12 +1,11 @@
-import React, { useEffect } from "react";
+/* eslint-disable import/order */
 import { push } from "connected-react-router";
-import { useSelector, useDispatch } from "react-redux";
-
-import { authentificated } from "../../store/selectors";
-
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { SocialLoginButton } from "../../../../shared/components";
-import { AuthWrapper } from "./styles";
 import { socialLogin } from "../../store/actions";
+import { authentificated } from "../../store/selectors";
+import { AuthWrapper } from "./styles";
 
 const AuthContainer = () => {
   const isAuthorized = useSelector(authentificated());

@@ -61,6 +61,8 @@ export default function CommonDetail() {
   const discussions = useSelector(selectDiscussions());
   const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
 
+  console.log('proposals',proposals);
+
   const dispatch = useDispatch();
   const { isShowing, onOpen, onClose } = useModal(false);
 

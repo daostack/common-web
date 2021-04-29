@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Common } from "../../../../../shared/models";
+import { Common } from '../../../../../graphql';
 import { formatPrice } from "../../../../../shared/utils";
 import "./index.scss";
 
