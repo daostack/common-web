@@ -14,6 +14,9 @@ export const CreateCommonInput = inputObjectType({
     });
 
     t.nonNull.string('image');
+    t.nonNull.string('description');
+    t.string('action');
+    t.string('byline');
     t.string('description');
   }
 });

@@ -25,6 +25,7 @@ import { ProposalFundingExtension } from './Extensions/ProposalFunding.extension
 import { ProposalJoinExtension } from './Extensions/ProposalJoin.extension';
 
 import { ProposalChangeSubscription } from './Subscriptions/ProposalChange.subscription';
+import { GetProposalsQuery } from './Queries/GetProposals.query';
 
 export const ProposalTypes = [
   ProposalType,
@@ -50,6 +51,7 @@ export const ProposalTypes = [
   PaymentStateEnum,
 
   GetProposalQuery,
+  GetProposalsQuery,
 
   ProposalWhereUniqueInput,
 

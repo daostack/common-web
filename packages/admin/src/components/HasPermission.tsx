@@ -19,8 +19,6 @@ export const HasPermission: React.FC<PropsWithChildren<IHasPermissionProps>> = (
     if (userContext.loaded) {
       const permissions = userContext.permissions;
 
-      console.log(permissions);
-
       if (permission.includes('*')) {
         hasPermission = permissions.some((userPermission) =>
           matchRuleExpl(userPermission, permission));

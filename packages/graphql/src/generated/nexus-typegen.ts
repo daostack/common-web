@@ -4,11 +4,10 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
-import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
+import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -85,6 +84,8 @@ export interface NexusGenInputs {
     keyId: string; // String!
   }
   CreateCommonInput: { // input type
+    action?: string | null; // String
+    byline?: string | null; // String
     description?: string | null; // String
     fundingMinimumAmount: number; // Int!
     fundingType: NexusGenEnums['FundingType']; // FundingType!
@@ -186,7 +187,11 @@ export interface NexusGenInputs {
     url: string; // String!
   }
   ProposalWhereInput: { // input type
+    commonId?: NexusGenScalars['UUID'] | null; // UUID
+    commonMemberId?: NexusGenScalars['UUID'] | null; // UUID
+    state?: NexusGenEnums['ProposalState'] | null; // ProposalState
     type?: NexusGenEnums['ProposalType'] | null; // ProposalType
+    userId?: string | null; // ID
   }
   ProposalWhereUniqueInput: { // input type
     id: NexusGenScalars['UUID']; // UUID!
@@ -222,27 +227,27 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  CommonMemberRole: 'Founder' | 'Moderator'
-  DiscussionMessageFlag: 'Clear' | 'Hidden' | 'Reported'
-  DiscussionMessageType: 'Message'
-  DiscussionSubscriptionType: 'AllNotifications' | 'NoNotification' | 'OnlyMentions'
-  DiscussionType: 'CommonDiscussion' | 'ProposalDiscussion'
-  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonDelisted' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'CommonWhitelisted' | 'DiscussionCreated' | 'DiscussionMessageCreated' | 'DiscussionSubscriptionCreated' | 'DiscussionSubscriptionTypeChanged' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'NotificationTemplateCreated' | 'NotificationTemplateUpdated' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'ProposalExpired' | 'ProposalMajorityReached' | 'ReportCreated' | 'ReportDismissed' | 'ReportRespected' | 'RoleCreated' | 'RoleDeleted' | 'RolePermissionAdded' | 'RolePermissionRemoved' | 'RoleUpdated' | 'UserAddedToRole' | 'UserCreated' | 'UserNotificationTokenCreated' | 'UserNotificationTokenExpired' | 'UserNotificationTokenRefreshed' | 'UserNotificationTokenVoided' | 'UserRemovedFromRole' | 'VoteCreated'
-  FundingState: 'AwaitingApproval' | 'Completed' | 'Confirmed' | 'Eligible' | 'NotEligible' | 'Pending'
-  FundingType: 'Monthly' | 'OneTime'
-  NotificationSeenStatus: 'Done' | 'NotSeen' | 'Seen'
-  NotificationType: 'FundingRequestAccepted' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestRejected'
-  PaymentState: 'NotAttempted' | 'Pending' | 'Successful' | 'Unsuccessful'
-  ProposalState: 'Accepted' | 'Countdown' | 'Finalizing' | 'Rejected'
-  ProposalType: 'FundingRequest' | 'JoinRequest'
-  ReportAction: 'Dismissed' | 'Respected'
-  ReportAuditor: 'CommonModerator' | 'SystemAdmin'
-  ReportFor: 'FalseNews' | 'Harassment' | 'Hate' | 'Nudity' | 'Other' | 'Spam' | 'Violance'
-  ReportStatus: 'Active' | 'Clossed'
-  SortOrder: 'asc' | 'desc'
-  StatisticType: 'AllTime' | 'Daily' | 'Hourly' | 'Weekly'
-  UserNotificationTokenState: 'Active' | 'Expired' | 'Voided'
-  VoteOutcome: 'Approve' | 'Condemn'
+  CommonMemberRole: "Founder" | "Moderator"
+  DiscussionMessageFlag: "Clear" | "Hidden" | "Reported"
+  DiscussionMessageType: "Message"
+  DiscussionSubscriptionType: "AllNotifications" | "NoNotification" | "OnlyMentions"
+  DiscussionType: "CommonDiscussion" | "ProposalDiscussion"
+  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonDelisted" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "CommonWhitelisted" | "DiscussionCreated" | "DiscussionMessageCreated" | "DiscussionSubscriptionCreated" | "DiscussionSubscriptionTypeChanged" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "NotificationTemplateCreated" | "NotificationTemplateUpdated" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "ReportCreated" | "ReportDismissed" | "ReportRespected" | "RoleCreated" | "RoleDeleted" | "RolePermissionAdded" | "RolePermissionRemoved" | "RoleUpdated" | "UserAddedToRole" | "UserCreated" | "UserNotificationTokenCreated" | "UserNotificationTokenExpired" | "UserNotificationTokenRefreshed" | "UserNotificationTokenVoided" | "UserRemovedFromRole" | "VoteCreated"
+  FundingState: "AwaitingApproval" | "Completed" | "Confirmed" | "Eligible" | "NotEligible" | "Pending"
+  FundingType: "Monthly" | "OneTime"
+  NotificationSeenStatus: "Done" | "NotSeen" | "Seen"
+  NotificationType: "FundingRequestAccepted" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestRejected"
+  PaymentState: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
+  ProposalState: "Accepted" | "Countdown" | "Finalizing" | "Rejected"
+  ProposalType: "FundingRequest" | "JoinRequest"
+  ReportAction: "Dismissed" | "Respected"
+  ReportAuditor: "CommonModerator" | "SystemAdmin"
+  ReportFor: "FalseNews" | "Harassment" | "Hate" | "Nudity" | "Other" | "Spam" | "Violance"
+  ReportStatus: "Active" | "Clossed"
+  SortOrder: "asc" | "desc"
+  StatisticType: "AllTime" | "Daily" | "Hourly" | "Weekly"
+  UserNotificationTokenState: "Active" | "Expired" | "Voided"
+  VoteOutcome: "Approve" | "Condemn"
 }
 
 export interface NexusGenScalars {
@@ -602,6 +607,7 @@ export interface NexusGenFieldTypes {
     generateUserAuthToken: string; // String!
     getStatistics: Array<NexusGenRootTypes['Statistic'] | null> | null; // [Statistic]
     proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
+    proposals: Array<NexusGenRootTypes['Proposal'] | null> | null; // [Proposal]
     roles: Array<NexusGenRootTypes['Role'] | null> | null; // [Role]
     user: NexusGenRootTypes['User'] | null; // User
   }
@@ -842,6 +848,7 @@ export interface NexusGenFieldTypeNames {
     generateUserAuthToken: 'String'
     getStatistics: 'Statistic'
     proposal: 'Proposal'
+    proposals: 'Proposal'
     roles: 'Role'
     user: 'User'
   }
@@ -1047,6 +1054,10 @@ export interface NexusGenArgTypes {
     proposal: { // args
       where: NexusGenInputs['ProposalWhereUniqueInput']; // ProposalWhereUniqueInput!
     }
+    proposals: { // args
+      paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
+      where?: NexusGenInputs['ProposalWhereInput'] | null; // ProposalWhereInput
+    }
     roles: { // args
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
     }
@@ -1088,21 +1099,21 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  BaseEntity: 'CommonMember' | 'Discussion' | 'DiscussionMessage' | 'DiscussionSubscription' | 'FundingProposal' | 'JoinProposal' | 'Notification' | 'Report' | 'Role' | 'Statistic' | 'UserNotificationToken'
+  BaseEntity: "CommonMember" | "Discussion" | "DiscussionMessage" | "DiscussionSubscription" | "FundingProposal" | "JoinProposal" | "Notification" | "Report" | "Role" | "Statistic" | "UserNotificationToken"
 }
 
 export interface NexusGenTypeInterfaces {
-  CommonMember: 'BaseEntity'
-  Discussion: 'BaseEntity'
-  DiscussionMessage: 'BaseEntity'
-  DiscussionSubscription: 'BaseEntity'
-  FundingProposal: 'BaseEntity'
-  JoinProposal: 'BaseEntity'
-  Notification: 'BaseEntity'
-  Report: 'BaseEntity'
-  Role: 'BaseEntity'
-  Statistic: 'BaseEntity'
-  UserNotificationToken: 'BaseEntity'
+  CommonMember: "BaseEntity"
+  Discussion: "BaseEntity"
+  DiscussionMessage: "BaseEntity"
+  DiscussionSubscription: "BaseEntity"
+  FundingProposal: "BaseEntity"
+  JoinProposal: "BaseEntity"
+  Notification: "BaseEntity"
+  Report: "BaseEntity"
+  Role: "BaseEntity"
+  Statistic: "BaseEntity"
+  UserNotificationToken: "BaseEntity"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;

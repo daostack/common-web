@@ -63,7 +63,7 @@ export const UserContextProvider: React.FC<React.PropsWithChildren<any>> = ({ ch
         ...data.user
       });
 
-      console.log('Data loaded');
+      console.log('User data and permissions loaded!');
     }
   }, [data]);
 

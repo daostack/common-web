@@ -125,6 +125,8 @@ input CreateCardInput {
 }
 
 input CreateCommonInput {
+  action: String
+  byline: String
   description: String
   fundingMinimumAmount: Int!
   fundingType: FundingType!
@@ -602,7 +604,11 @@ enum ProposalType {
 }
 
 input ProposalWhereInput {
+  commonId: UUID
+  commonMemberId: UUID
+  state: ProposalState
   type: ProposalType
+  userId: ID
 }
 
 input ProposalWhereUniqueInput {
@@ -617,6 +623,7 @@ type Query {
   generateUserAuthToken(authId: String!): String!
   getStatistics(where: StatisticsWhereInput): [Statistic]
   proposal(where: ProposalWhereUniqueInput!): Proposal
+  proposals(paginate: PaginateInput, where: ProposalWhereInput): [Proposal]
   roles(paginate: PaginateInput): [Role]
 
   """
