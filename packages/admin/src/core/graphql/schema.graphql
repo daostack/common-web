@@ -199,9 +199,12 @@ type Common {
   """List of events, that occurred in a common"""
   events(take: Int = 10, skip: Int = 0, orderBy: EventOrderByInput): [Event!]!
   reports(where: ReportWhereInput = {status: {in: [Active]}}): [Report!]!
-  proposals(take: Int = 10, skip: Int = 0, where: ProposalWhereInput): [Proposal!]!
+  proposals(paginate: PaginateInput, where: ProposalWhereInput): [Proposal!]!
   discussions(take: Int, skip: Int): [Discussion!]!
   members(take: Int, skip: Int, orderBy: CommonMemberOrderByInput): [CommonMember]!
+  activeProposals: Int!
+  activeFundingProposals: Int!
+  activeJoinProposals: Int!
 }
 """The funding type of the common"""
 enum FundingType {
@@ -285,23 +288,44 @@ type Proposal {
   updatedAt: DateTime!
   type: ProposalType!
   state: ProposalState!
+  links: JSON
+  files: JSON
+  images: JSON
+  votesFor: Int!
+  votesAgainst: Int!
+  expiresAt: DateTime!
+  title: String
+  description: String
+  """The IP from which the proposal was created"""
+  ipAddress: String
   discussions(take: Int, skip: Int): [Discussion!]!
+  fundingId: UUID
+  funding: FundingProposal
+  joinId: UUID
+  join: JoinProposal
 }
-type JoinProposal {
+type JoinProposal implements BaseEntity {
   """The main identifier of the item"""
-  id: ID!
+  id: UUID!
   """The date, at which the item was created"""
   createdAt: DateTime!
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+  """The amount that this join proposal will contribute to the common. In cents"""
+  funding: Int!
+  fundingType: FundingType!
+  paymentState: PaymentState!
 }
-type FundingProposal {
+type FundingProposal implements BaseEntity {
   """The main identifier of the item"""
-  id: ID!
+  id: UUID!
   """The date, at which the item was created"""
   createdAt: DateTime!
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+  """The amount that the proposal has requested in cents"""
+  amount: Int!
+  fundingState: FundingState!
 }
 input ProposalWhereInput {
   type: ProposalType
@@ -342,6 +366,20 @@ enum ProposalState {
   Finalizing
   Rejected
   Accepted
+}
+enum FundingState {
+  NotEligible
+  Eligible
+  AwaitingApproval
+  Pending
+  Completed
+  Confirmed
+}
+enum PaymentState {
+  NotAttempted
+  Pending
+  Successful
+  Unsuccessful
 }
 input ProposalWhereUniqueInput {
   id: UUID!
@@ -448,8 +486,13 @@ input CreateDiscussionMessageInput {
   """The message itself"""
   message: String!
 }
-type CommonMember {
-  id: ID!
+type CommonMember implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
   userId: ID!
   commonId: ID!
   roles: [CommonMemberRole!]!

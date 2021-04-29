@@ -1,4 +1,5 @@
 import { objectType } from 'nexus';
+import { authorizationService } from '@common/core';
 
 export const ProposalType = objectType({
   name: 'Proposal',
@@ -21,6 +22,25 @@ export const ProposalType = objectType({
 
     t.nonNull.field('state', {
       type: 'ProposalState'
+    });
+
+    t.json('links');
+    t.json('files');
+    t.json('images');
+
+    t.nonNull.int('votesFor');
+    t.nonNull.int('votesAgainst');
+
+    t.nonNull.date('expiresAt');
+
+    t.string('title');
+    t.string('description');
+
+    t.string('ipAddress', {
+      authorize: async (root, args, ctx) => {
+        return authorizationService.can(await ctx.getUserId(), 'admin.proposals.read.ipAddress');
+      },
+      description: 'The IP from which the proposal was created'
     });
   }
 });

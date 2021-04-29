@@ -21,5 +21,8 @@ export const PermissionValidator = z.enum([
 
   'admin.events.read',
 
+  'admin.proposals.read',
+  'admin.proposals.read.ipAddress',
+
   'user.permissions.read'
 ]);

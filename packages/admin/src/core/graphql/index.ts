@@ -265,6 +265,9 @@ export type Common = {
   proposals: Array<Proposal>;
   discussions: Array<Discussion>;
   members: Array<Maybe<CommonMember>>;
+  activeProposals: Scalars['Int'];
+  activeFundingProposals: Scalars['Int'];
+  activeJoinProposals: Scalars['Int'];
 };
 
 
@@ -281,8 +284,7 @@ export type CommonReportsArgs = {
 
 
 export type CommonProposalsArgs = {
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
+  paginate?: Maybe<PaginateInput>;
   where?: Maybe<ProposalWhereInput>;
 };
 
@@ -395,7 +397,21 @@ export type Proposal = {
   updatedAt: Scalars['DateTime'];
   type: ProposalType;
   state: ProposalState;
+  links?: Maybe<Scalars['JSON']>;
+  files?: Maybe<Scalars['JSON']>;
+  images?: Maybe<Scalars['JSON']>;
+  votesFor: Scalars['Int'];
+  votesAgainst: Scalars['Int'];
+  expiresAt: Scalars['DateTime'];
+  title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  /** The IP from which the proposal was created */
+  ipAddress?: Maybe<Scalars['String']>;
   discussions: Array<Discussion>;
+  fundingId?: Maybe<Scalars['UUID']>;
+  funding?: Maybe<FundingProposal>;
+  joinId?: Maybe<Scalars['UUID']>;
+  join?: Maybe<JoinProposal>;
 };
 
 
@@ -404,24 +420,31 @@ export type ProposalDiscussionsArgs = {
   skip?: Maybe<Scalars['Int']>;
 };
 
-export type JoinProposal = {
+export type JoinProposal = BaseEntity & {
   __typename?: 'JoinProposal';
   /** The main identifier of the item */
-  id: Scalars['ID'];
+  id: Scalars['UUID'];
   /** The date, at which the item was created */
   createdAt: Scalars['DateTime'];
   /** The date, at which the item was last modified */
   updatedAt: Scalars['DateTime'];
+  /** The amount that this join proposal will contribute to the common. In cents */
+  funding: Scalars['Int'];
+  fundingType: FundingType;
+  paymentState: PaymentState;
 };
 
-export type FundingProposal = {
+export type FundingProposal = BaseEntity & {
   __typename?: 'FundingProposal';
   /** The main identifier of the item */
-  id: Scalars['ID'];
+  id: Scalars['UUID'];
   /** The date, at which the item was created */
   createdAt: Scalars['DateTime'];
   /** The date, at which the item was last modified */
   updatedAt: Scalars['DateTime'];
+  /** The amount that the proposal has requested in cents */
+  amount: Scalars['Int'];
+  fundingState: FundingState;
 };
 
 export type ProposalWhereInput = {
@@ -470,6 +493,22 @@ export enum ProposalState {
   Finalizing = 'Finalizing',
   Rejected = 'Rejected',
   Accepted = 'Accepted'
+}
+
+export enum FundingState {
+  NotEligible = 'NotEligible',
+  Eligible = 'Eligible',
+  AwaitingApproval = 'AwaitingApproval',
+  Pending = 'Pending',
+  Completed = 'Completed',
+  Confirmed = 'Confirmed'
+}
+
+export enum PaymentState {
+  NotAttempted = 'NotAttempted',
+  Pending = 'Pending',
+  Successful = 'Successful',
+  Unsuccessful = 'Unsuccessful'
 }
 
 export type ProposalWhereUniqueInput = {
@@ -603,9 +642,14 @@ export type CreateDiscussionMessageInput = {
   message: Scalars['String'];
 };
 
-export type CommonMember = {
+export type CommonMember = BaseEntity & {
   __typename?: 'CommonMember';
-  id: Scalars['ID'];
+  /** The main identifier of the item */
+  id: Scalars['UUID'];
+  /** The date, at which the item was created */
+  createdAt: Scalars['DateTime'];
+  /** The date, at which the item was last modified */
+  updatedAt: Scalars['DateTime'];
   userId: Scalars['ID'];
   commonId: Scalars['ID'];
   roles: Array<CommonMemberRole>;
@@ -957,6 +1001,46 @@ export type LoadUserContextQuery = (
 }
   );
 
+export type GetCommonDetailsQueryVariables = Exact<{
+  commonId: Scalars['ID'];
+  paginate: PaginateInput;
+}>;
+
+
+export type GetCommonDetailsQuery = (
+  { __typename?: 'Query' }
+  & {
+  common?: Maybe<(
+    { __typename?: 'Common' }
+    & Pick<Common, 'name' | 'createdAt' | 'updatedAt' | 'balance' | 'raised' | 'fundingType' | 'activeJoinProposals' | 'activeFundingProposals' | 'byline' | 'action' | 'description' | 'image'>
+    & {
+    members: Array<Maybe<(
+      { __typename?: 'CommonMember' }
+      & Pick<CommonMember, 'createdAt' | 'userId' | 'roles'>
+      & {
+      user?: Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'firstName' | 'lastName'>
+        )>
+    }
+      )>>, proposals: Array<(
+      { __typename?: 'Proposal' }
+      & Pick<Proposal, 'id' | 'type' | 'title' | 'description'>
+      & {
+      funding?: Maybe<(
+        { __typename?: 'FundingProposal' }
+        & Pick<FundingProposal, 'amount'>
+        )>, join?: Maybe<(
+        { __typename?: 'JoinProposal' }
+        & Pick<JoinProposal, 'fundingType' | 'funding'>
+        )>
+    }
+      )>
+  }
+    )>
+}
+  );
+
 export type GetLatestEventsQueryVariables = Exact<{
   take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
@@ -1047,12 +1131,83 @@ export const LoadUserContextDocument = gql`
 export function useLoadUserContextQuery(baseOptions?: Apollo.QueryHookOptions<LoadUserContextQuery, LoadUserContextQueryVariables>) {
   return Apollo.useQuery<LoadUserContextQuery, LoadUserContextQueryVariables>(LoadUserContextDocument, baseOptions);
 }
+
 export function useLoadUserContextLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LoadUserContextQuery, LoadUserContextQueryVariables>) {
   return Apollo.useLazyQuery<LoadUserContextQuery, LoadUserContextQueryVariables>(LoadUserContextDocument, baseOptions);
 }
+
 export type LoadUserContextQueryHookResult = ReturnType<typeof useLoadUserContextQuery>;
 export type LoadUserContextLazyQueryHookResult = ReturnType<typeof useLoadUserContextLazyQuery>;
 export type LoadUserContextQueryResult = Apollo.QueryResult<LoadUserContextQuery, LoadUserContextQueryVariables>;
+export const GetCommonDetailsDocument = gql`
+  query getCommonDetails($commonId: ID!, $paginate: PaginateInput!) {
+    common(where: {id: $commonId}) {
+      name
+      createdAt
+      updatedAt
+      balance
+      raised
+      fundingType
+      activeJoinProposals
+      activeFundingProposals
+      byline
+      action
+      description
+      image
+      members {
+        createdAt
+        userId
+        roles
+        user {
+          firstName
+          lastName
+        }
+      }
+      proposals(paginate: $paginate) {
+        id
+        type
+        title
+        description
+        funding {
+          amount
+        }
+        join {
+          fundingType
+          funding
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetCommonDetailsQuery__
+ *
+ * To run a query within a React component, call `useGetCommonDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommonDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCommonDetailsQuery({
+ *   variables: {
+ *      commonId: // value for 'commonId'
+ *      paginate: // value for 'paginate'
+ *   },
+ * });
+ */
+export function useGetCommonDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>) {
+  return Apollo.useQuery<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>(GetCommonDetailsDocument, baseOptions);
+}
+
+export function useGetCommonDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>) {
+  return Apollo.useLazyQuery<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>(GetCommonDetailsDocument, baseOptions);
+}
+
+export type GetCommonDetailsQueryHookResult = ReturnType<typeof useGetCommonDetailsQuery>;
+export type GetCommonDetailsLazyQueryHookResult = ReturnType<typeof useGetCommonDetailsLazyQuery>;
+export type GetCommonDetailsQueryResult = Apollo.QueryResult<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>;
 export const GetLatestEventsDocument = gql`
   query GetLatestEvents($take: Int = 10, $skip: Int = 0) {
     events(paginate: {take: $take, skip: $skip}) {
@@ -1088,11 +1243,9 @@ export const GetLatestEventsDocument = gql`
 export function useGetLatestEventsQuery(baseOptions?: Apollo.QueryHookOptions<GetLatestEventsQuery, GetLatestEventsQueryVariables>) {
   return Apollo.useQuery<GetLatestEventsQuery, GetLatestEventsQueryVariables>(GetLatestEventsDocument, baseOptions);
 }
-
 export function useGetLatestEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLatestEventsQuery, GetLatestEventsQueryVariables>) {
   return Apollo.useLazyQuery<GetLatestEventsQuery, GetLatestEventsQueryVariables>(GetLatestEventsDocument, baseOptions);
 }
-
 export type GetLatestEventsQueryHookResult = ReturnType<typeof useGetLatestEventsQuery>;
 export type GetLatestEventsLazyQueryHookResult = ReturnType<typeof useGetLatestEventsLazyQuery>;
 export type GetLatestEventsQueryResult = Apollo.QueryResult<GetLatestEventsQuery, GetLatestEventsQueryVariables>;
@@ -1136,11 +1289,9 @@ export const GetCommonsHomescreenDataDocument = gql`
 export function useGetCommonsHomescreenDataQuery(baseOptions?: Apollo.QueryHookOptions<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>) {
   return Apollo.useQuery<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>(GetCommonsHomescreenDataDocument, baseOptions);
 }
-
 export function useGetCommonsHomescreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>) {
   return Apollo.useLazyQuery<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>(GetCommonsHomescreenDataDocument, baseOptions);
 }
-
 export type GetCommonsHomescreenDataQueryHookResult = ReturnType<typeof useGetCommonsHomescreenDataQuery>;
 export type GetCommonsHomescreenDataLazyQueryHookResult = ReturnType<typeof useGetCommonsHomescreenDataLazyQuery>;
 export type GetCommonsHomescreenDataQueryResult = Apollo.QueryResult<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>;

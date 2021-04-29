@@ -41,6 +41,9 @@ type Card {
 
 type Common {
   action: String
+  activeFundingProposals: Int!
+  activeJoinProposals: Int!
+  activeProposals: Int!
 
   """The current available funds of the common. In cents"""
   balance: Int!
@@ -543,19 +546,30 @@ enum PaymentState {
 type Proposal {
   """The date, at which the item was created"""
   createdAt: DateTime!
+  description: String
   discussions(skip: Int, take: Int): [Discussion!]!
+  expiresAt: DateTime!
+  files: JSON
   funding: FundingProposal
   fundingId: UUID
 
   """The main identifier of the item"""
   id: ID!
+  images: JSON
+
+  """The IP from which the proposal was created"""
+  ipAddress: String
   join: JoinProposal
   joinId: UUID
+  links: JSON
   state: ProposalState!
+  title: String
   type: ProposalType!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+  votesAgainst: Int!
+  votesFor: Int!
 }
 
 input ProposalFileInput {

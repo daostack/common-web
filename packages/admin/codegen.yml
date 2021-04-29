@@ -5,6 +5,7 @@ documents:
   - "src/components/tables/LatestEventsTable.tsx"
   - "src/pages/dashboard/index.tsx"
   - "src/pages/commons/index.tsx"
+  - "src/pages/commons/details/[commonId].tsx"
 generates:
   ./src/core/graphql/index.ts:
     plugins:

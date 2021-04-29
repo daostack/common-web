@@ -28,9 +28,10 @@ import {
 
 import { Link } from 'components/Link';
 import { CommonSettings } from '@components/CommonSettings';
+import { useGetCommonDetailsQuery, GetCommonDetailsQueryResult } from '@core/graphql';
 
 const GetCommonDetailsQuery = gql`
-  query getCommonDetails($commonId: ID!, $page: Int!) {
+  query getCommonDetails($commonId: ID!, $paginate: PaginateInput!) {
     common(where: {
       id: $commonId
     }) {
@@ -42,9 +43,22 @@ const GetCommonDetailsQuery = gql`
       balance
       raised
 
+      fundingType
+
+      activeJoinProposals
+      activeFundingProposals
+
+      byline
+      action
+      description
+
+      image
+
       members {
         createdAt
         userId
+
+        roles
 
         user {
           firstName
@@ -52,23 +66,20 @@ const GetCommonDetailsQuery = gql`
         }
       }
 
-      proposals {
+      proposals(paginate: $paginate) {
         id
 
         type
+        title
+        description
 
-
-        fundingRequest {
+        funding {
           amount
         }
 
         join {
           fundingType
           funding
-        }
-
-        description {
-          description
         }
       }
     }
@@ -84,10 +95,15 @@ const CommonDetailsPage: NextPage = () => {
   const router = useRouter();
   const clipboard = useClipboard();
   const [_, setToast] = useToasts();
+
+  // Data fetching
   const data = useGetCommonDetailsQuery({
     variables: {
       commonId: router.query.commonId as string || '',
-      page: proposalsPage
+      paginate: {
+        take: 10,
+        skip: 10 * (proposalsPage - 1)
+      }
     }
   });
 
@@ -109,17 +125,17 @@ const CommonDetailsPage: NextPage = () => {
           </Tooltip>
         </div>
       ),
-      joinedAt: member.joinedAt
-        ? new Date(member.joinedAt).toLocaleDateString()
+      joinedAt: member.createdAt
+        ? new Date(member.createdAt).toLocaleDateString()
         : 'No data available',
       name: `${member.user.firstName} ${member.user.lastName[0]}.`,
       roles: (
         <React.Fragment>
-          {member.userId === common.metadata.founderId && (
+          {member.roles.map(r => (
             <Tag>
-              Founder
+              {r}
             </Tag>
-          )}
+          ))}
         </React.Fragment>
       ),
 
@@ -151,7 +167,7 @@ const CommonDetailsPage: NextPage = () => {
 
       description: proposal.description,
 
-      type: proposal.type === 'fundingRequest' ? (
+      type: proposal.type === 'FundingRequest' ? (
         <Tag type="success">Funding Request</Tag>
       ) : (
         <Tag type="warning">Join Request</Tag>
@@ -205,7 +221,7 @@ const CommonDetailsPage: NextPage = () => {
 
             <Spacer x={1}/>
 
-            <Tag>{data.data.common.metadata.contributionType}</Tag>
+            <Tag>{data.data.common.fundingType}</Tag>
 
             <div style={{ marginLeft: 'auto', cursor: 'pointer' }}>
               {router.query.commonId && (
@@ -239,7 +255,7 @@ const CommonDetailsPage: NextPage = () => {
               <Grid sm={24} md={8}>
                 <Card hoverable>
                   <Text h1>
-                    {data.data.common.openJoinRequests}
+                    {data.data.common.activeJoinProposals}
                   </Text>
                   <Text p>Open join request</Text>
                 </Card>
@@ -248,7 +264,7 @@ const CommonDetailsPage: NextPage = () => {
               <Grid sm={24} md={8}>
                 <Card hoverable>
                   <Text h1>
-                    {data.data.common.openFundingRequests}
+                    {data.data.common.activeFundingProposals}
                   </Text>
                   <Text p>Open funding request</Text>
                 </Card>
@@ -264,9 +280,9 @@ const CommonDetailsPage: NextPage = () => {
             <Table data={[
               { item: 'Created At', value: new Date(data.data.common.createdAt).toLocaleString() },
               { item: 'Updated At', value: new Date(data.data.common.updatedAt).toLocaleString() },
-              { item: 'Byline', value: data.data.common.metadata.byline },
-              { item: 'Description', value: data.data.common.metadata.description },
-              { item: 'Founder', value: data.data.common.metadata.founderId }
+              { item: 'Byline', value: data.data.common.byline },
+              { item: 'Action', value: data.data.common.action },
+              { item: 'Description', value: data.data.common.description }
             ]}>
               <Table.Column prop="item" label="Property" width={200}/>
               <Table.Column prop="value" label="Value"/>

@@ -9,6 +9,7 @@ import { CommonReportsExtension } from './Extensions/CommonReports.extension';
 import { CommonProposalsExtension } from './Extensions/CommonProposals.extension';
 import { CommonDiscussionsExtension } from './Extensions/CommonDiscussions.extension';
 import { CommonCommonMemberExtension } from './Extensions/CommonCommonMember.extension';
+import { CommonActiveProposalsExtension } from './Extensions/CommonActiveProposals.extension';
 
 import { CommonType } from './Types/Common.type';
 import { CommonWhereUniqueInput } from './Inputs/CommonWhereUnique.input';
@@ -30,5 +31,6 @@ export const CommonTypes = [
   CommonReportsExtension,
   CommonProposalsExtension,
   CommonDiscussionsExtension,
-  CommonCommonMemberExtension
+  CommonCommonMemberExtension,
+  CommonActiveProposalsExtension
 ];

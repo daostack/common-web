@@ -222,27 +222,27 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  CommonMemberRole: "Founder" | "Moderator"
-  DiscussionMessageFlag: "Clear" | "Hidden" | "Reported"
-  DiscussionMessageType: "Message"
-  DiscussionSubscriptionType: "AllNotifications" | "NoNotification" | "OnlyMentions"
-  DiscussionType: "CommonDiscussion" | "ProposalDiscussion"
+  CommonMemberRole: 'Founder' | 'Moderator'
+  DiscussionMessageFlag: 'Clear' | 'Hidden' | 'Reported'
+  DiscussionMessageType: 'Message'
+  DiscussionSubscriptionType: 'AllNotifications' | 'NoNotification' | 'OnlyMentions'
+  DiscussionType: 'CommonDiscussion' | 'ProposalDiscussion'
   EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'DiscussionCreated' | 'DiscussionMessageCreated' | 'DiscussionSubscriptionCreated' | 'DiscussionSubscriptionTypeChanged' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'NotificationTemplateCreated' | 'NotificationTemplateUpdated' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'ProposalExpired' | 'ProposalMajorityReached' | 'ReportCreated' | 'ReportDismissed' | 'ReportRespected' | 'RoleCreated' | 'RoleDeleted' | 'RolePermissionAdded' | 'RolePermissionRemoved' | 'RoleUpdated' | 'UserAddedToRole' | 'UserCreated' | 'UserNotificationTokenCreated' | 'UserNotificationTokenExpired' | 'UserNotificationTokenRefreshed' | 'UserNotificationTokenVoided' | 'UserRemovedFromRole' | 'VoteCreated'
   FundingState: 'AwaitingApproval' | 'Completed' | 'Confirmed' | 'Eligible' | 'NotEligible' | 'Pending'
   FundingType: 'Monthly' | 'OneTime'
-  NotificationSeenStatus: "Done" | "NotSeen" | "Seen"
+  NotificationSeenStatus: 'Done' | 'NotSeen' | 'Seen'
   NotificationType: 'FundingRequestAccepted' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestRejected'
   PaymentState: 'NotAttempted' | 'Pending' | 'Successful' | 'Unsuccessful'
   ProposalState: 'Accepted' | 'Countdown' | 'Finalizing' | 'Rejected'
-  ProposalType: "FundingRequest" | "JoinRequest"
-  ReportAction: "Dismissed" | "Respected"
-  ReportAuditor: "CommonModerator" | "SystemAdmin"
-  ReportFor: "FalseNews" | "Harassment" | "Hate" | "Nudity" | "Other" | "Spam" | "Violance"
-  ReportStatus: "Active" | "Clossed"
-  SortOrder: "asc" | "desc"
-  StatisticType: "AllTime" | "Daily" | "Hourly" | "Weekly"
-  UserNotificationTokenState: "Active" | "Expired" | "Voided"
-  VoteOutcome: "Approve" | "Condemn"
+  ProposalType: 'FundingRequest' | 'JoinRequest'
+  ReportAction: 'Dismissed' | 'Respected'
+  ReportAuditor: 'CommonModerator' | 'SystemAdmin'
+  ReportFor: 'FalseNews' | 'Harassment' | 'Hate' | 'Nudity' | 'Other' | 'Spam' | 'Violance'
+  ReportStatus: 'Active' | 'Clossed'
+  SortOrder: 'asc' | 'desc'
+  StatisticType: 'AllTime' | 'Daily' | 'Hourly' | 'Weekly'
+  UserNotificationTokenState: 'Active' | 'Expired' | 'Voided'
+  VoteOutcome: 'Approve' | 'Condemn'
 }
 
 export interface NexusGenScalars {
@@ -355,12 +355,21 @@ export interface NexusGenObjects {
   }
   Proposal: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    description?: string | null; // String
+    expiresAt: NexusGenScalars['DateTime']; // DateTime!
+    files?: NexusGenScalars['JSON'] | null; // JSON
     fundingId?: NexusGenScalars['UUID'] | null; // UUID
     id: string; // ID!
+    images?: NexusGenScalars['JSON'] | null; // JSON
+    ipAddress?: string | null; // String
     joinId?: NexusGenScalars['UUID'] | null; // UUID
+    links?: NexusGenScalars['JSON'] | null; // JSON
     state: NexusGenEnums['ProposalState']; // ProposalState!
+    title?: string | null; // String
     type: NexusGenEnums['ProposalType']; // ProposalType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    votesAgainst: number; // Int!
+    votesFor: number; // Int!
   }
   Query: {};
   Report: { // root type
@@ -438,6 +447,9 @@ export interface NexusGenFieldTypes {
   }
   Common: { // field return type
     action: string | null; // String
+    activeFundingProposals: number; // Int!
+    activeJoinProposals: number; // Int!
+    activeProposals: number; // Int!
     balance: number; // Int!
     byline: string | null; // String
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -561,15 +573,24 @@ export interface NexusGenFieldTypes {
   }
   Proposal: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    description: string | null; // String
     discussions: NexusGenRootTypes['Discussion'][]; // [Discussion!]!
+    expiresAt: NexusGenScalars['DateTime']; // DateTime!
+    files: NexusGenScalars['JSON'] | null; // JSON
     funding: NexusGenRootTypes['FundingProposal'] | null; // FundingProposal
     fundingId: NexusGenScalars['UUID'] | null; // UUID
     id: string; // ID!
+    images: NexusGenScalars['JSON'] | null; // JSON
+    ipAddress: string | null; // String
     join: NexusGenRootTypes['JoinProposal'] | null; // JoinProposal
     joinId: NexusGenScalars['UUID'] | null; // UUID
+    links: NexusGenScalars['JSON'] | null; // JSON
     state: NexusGenEnums['ProposalState']; // ProposalState!
+    title: string | null; // String
     type: NexusGenEnums['ProposalType']; // ProposalType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    votesAgainst: number; // Int!
+    votesFor: number; // Int!
   }
   Query: { // field return type
     common: NexusGenRootTypes['Common'] | null; // Common
@@ -664,6 +685,9 @@ export interface NexusGenFieldTypeNames {
   }
   Common: { // field return type name
     action: 'String'
+    activeFundingProposals: 'Int'
+    activeJoinProposals: 'Int'
+    activeProposals: 'Int'
     balance: 'Int'
     byline: 'String'
     createdAt: 'DateTime'
@@ -787,15 +811,24 @@ export interface NexusGenFieldTypeNames {
   }
   Proposal: { // field return type name
     createdAt: 'DateTime'
+    description: 'String'
     discussions: 'Discussion'
+    expiresAt: 'DateTime'
+    files: 'JSON'
     funding: 'FundingProposal'
     fundingId: 'UUID'
     id: 'ID'
+    images: 'JSON'
+    ipAddress: 'String'
     join: 'JoinProposal'
     joinId: 'UUID'
+    links: 'JSON'
     state: 'ProposalState'
+    title: 'String'
     type: 'ProposalType'
     updatedAt: 'DateTime'
+    votesAgainst: 'Int'
+    votesFor: 'Int'
   }
   Query: { // field return type name
     common: 'Common'
