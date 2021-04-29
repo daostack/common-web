@@ -3,6 +3,7 @@
 .landing-wrapper {
   text-align: center;
   margin: -$content-padding; // to ignore parent content padding
+  color: $blue-text;
   > section {
     padding: $content-padding;
     > span {
@@ -73,6 +74,10 @@
     .purple-text {
       color: $purple;
     }
+    .half-iphone {
+      width: 400px;
+      margin-right: 30px;
+    }
   }
   .landing-bottom {
     background: url("/assets/images/wave-bottom.svg"), url("/assets/images/join.jpg");
@@ -125,7 +130,18 @@
       flex-direction: column;
     }
     .goal-wrapper {
+      margin-top: 50px;
       flex-direction: column-reverse;
+      background: url("/assets/images/goal-wave-top.svg");
+      background-position: 50% 0%;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-color: $light-purple;
+      padding-bottom: 0;
+      .half-iphone {
+        margin-top: 30px;
+        width: 350px;
+      }
     }
   }
 }

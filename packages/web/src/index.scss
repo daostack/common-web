@@ -38,7 +38,6 @@ body {
 
     .button-blue {
       height: 40px;
-      padding: 8px 32px;
       border-radius: 30.5px;
       background-color: $purple;
       border: none;
@@ -72,6 +71,7 @@ body {
       outline: none;
     }
   }
+  h2,
   h1 {
     font-family: NotoSerifSC-Black;
   }

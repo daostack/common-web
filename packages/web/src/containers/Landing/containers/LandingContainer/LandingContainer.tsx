@@ -20,7 +20,7 @@ const LandingContainer = () => {
           <h1>
             Launch Collective Action. <br />
             <span className="pink-text">Catalyze a movement</span>
-            <br /> together.
+            <br /> Together.
           </h1>
           <div className="mobile-apps-wrapper">
             <div className="available-on-label">Available on</div>
@@ -44,21 +44,21 @@ const LandingContainer = () => {
         <div className="illustrations-wrapper">
           <div>
             <img src="assets/images/transparent.svg" alt="transparent" />
-            <h3>Transparent</h3>
+            <h2>Transparent</h2>
             <div>
               Commons are fully-transparent, <br /> including all decsions and funds.
             </div>
           </div>
           <div>
             <img src="assets/images/collective.svg" alt="collective" />
-            <h3>Collective</h3>
+            <h2>Collective</h2>
             <div>
               Declare a goal, pool funds, vote <br /> on decisions and expenses.
             </div>
           </div>
           <div>
             <img src="../../assets/images/action.svg" alt="action" />
-            <h3>Action</h3>
+            <h2>Action</h2>
             <div>
               Any member can propose <br /> projects and use shared funds.
             </div>
@@ -66,10 +66,10 @@ const LandingContainer = () => {
         </div>
       </section>
       <section className="goal-wrapper">
-        <img src="assets/images/iphone.png" alt="iphone" width="400px" />
+        <img src="assets/images/iphone.png" alt="iphone" className="half-iphone" />
         <div>
           <h1>
-            Leverage <span className="purple-text">trust</span> and <br />{" "}
+            Leverage <span className="purple-text">trust</span> and <br />
             <span className="purple-text">transparency</span> to galvanize <br /> massive action.
           </h1>
           <b>

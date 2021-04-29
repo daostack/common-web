@@ -14,9 +14,10 @@
     padding: 10px;
   }
   .explore-commons {
-    width: fit-content;
+    width: 250px;
     margin-top: 20px;
     line-height: 40px;
+    padding: 5px;
   }
 }
 
@@ -35,6 +36,9 @@
       overflow-x: auto;
       overflow-y: hidden;
       width: 100vw;
+    }
+    .explore-commons {
+      width: 100%;
     }
   }
 }

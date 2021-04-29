@@ -8,7 +8,7 @@ const Footer = () => {
   return (
     <section className="footer-wrapper">
       <div className="footer-top">
-        <img src="/icons/logo-all-white.svg" alt="logo" width="120px" className="logo" />
+        <img src="/icons/logo-all-white.svg" alt="logo" className="logo" />
         <div className="links">
           <span>About</span>
           <span>Privacy Policy</span>
