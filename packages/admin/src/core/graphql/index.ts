@@ -189,6 +189,8 @@ export type Event = {
 
 export enum EventType {
   CommonCreated = 'CommonCreated',
+  CommonDelisted = 'CommonDelisted',
+  CommonWhitelisted = 'CommonWhitelisted',
   CommonMemberCreated = 'CommonMemberCreated',
   CommonMemberRoleAdded = 'CommonMemberRoleAdded',
   CommonMemberRoleRemoved = 'CommonMemberRoleRemoved',
@@ -872,6 +874,7 @@ export type Mutation = {
   createCard: Card;
   createVote: Vote;
   createCommon: Common;
+  delistCommon?: Maybe<Scalars['Boolean']>;
   whitelistCommon?: Maybe<Scalars['Boolean']>;
   actOnReport?: Maybe<Report>;
   reportDiscussionMessage: Report;
@@ -929,6 +932,11 @@ export type MutationCreateVoteArgs = {
 
 export type MutationCreateCommonArgs = {
   input: CreateCommonInput;
+};
+
+
+export type MutationDelistCommonArgs = {
+  commonId: Scalars['String'];
 };
 
 
@@ -1055,6 +1063,16 @@ export type WhitelistCommonMutationVariables = Exact<{
 export type WhitelistCommonMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'whitelistCommon'>
+  );
+
+export type DelistCommonMutationVariables = Exact<{
+  commonId: Scalars['String'];
+}>;
+
+
+export type DelistCommonMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'delistCommon'>
   );
 
 export type GetLatestEventsQueryVariables = Exact<{
@@ -1215,11 +1233,9 @@ export const GetCommonDetailsDocument = gql`
 export function useGetCommonDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>) {
   return Apollo.useQuery<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>(GetCommonDetailsDocument, baseOptions);
 }
-
 export function useGetCommonDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>) {
   return Apollo.useLazyQuery<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>(GetCommonDetailsDocument, baseOptions);
 }
-
 export type GetCommonDetailsQueryHookResult = ReturnType<typeof useGetCommonDetailsQuery>;
 export type GetCommonDetailsLazyQueryHookResult = ReturnType<typeof useGetCommonDetailsLazyQuery>;
 export type GetCommonDetailsQueryResult = Apollo.QueryResult<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>;
@@ -1254,6 +1270,37 @@ export function useWhitelistCommonMutation(baseOptions?: Apollo.MutationHookOpti
 export type WhitelistCommonMutationHookResult = ReturnType<typeof useWhitelistCommonMutation>;
 export type WhitelistCommonMutationResult = Apollo.MutationResult<WhitelistCommonMutation>;
 export type WhitelistCommonMutationOptions = Apollo.BaseMutationOptions<WhitelistCommonMutation, WhitelistCommonMutationVariables>;
+export const DelistCommonDocument = gql`
+  mutation delistCommon($commonId: String!) {
+    delistCommon(commonId: $commonId)
+  }
+`;
+export type DelistCommonMutationFn = Apollo.MutationFunction<DelistCommonMutation, DelistCommonMutationVariables>;
+
+/**
+ * __useDelistCommonMutation__
+ *
+ * To run a mutation, you first call `useDelistCommonMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDelistCommonMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [delistCommonMutation, { data, loading, error }] = useDelistCommonMutation({
+ *   variables: {
+ *      commonId: // value for 'commonId'
+ *   },
+ * });
+ */
+export function useDelistCommonMutation(baseOptions?: Apollo.MutationHookOptions<DelistCommonMutation, DelistCommonMutationVariables>) {
+  return Apollo.useMutation<DelistCommonMutation, DelistCommonMutationVariables>(DelistCommonDocument, baseOptions);
+}
+
+export type DelistCommonMutationHookResult = ReturnType<typeof useDelistCommonMutation>;
+export type DelistCommonMutationResult = Apollo.MutationResult<DelistCommonMutation>;
+export type DelistCommonMutationOptions = Apollo.BaseMutationOptions<DelistCommonMutation, DelistCommonMutationVariables>;
 export const GetLatestEventsDocument = gql`
   query GetLatestEvents($take: Int = 10, $skip: Int = 0) {
     events(paginate: {take: $take, skip: $skip}) {

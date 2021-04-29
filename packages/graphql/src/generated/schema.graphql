@@ -322,6 +322,7 @@ enum EventType {
   CardCvvVerificationFailed
   CardCvvVerificationPassed
   CommonCreated
+  CommonDelisted
   CommonMemberCreated
   CommonMemberRoleAdded
   CommonMemberRoleRemoved
@@ -454,6 +455,7 @@ type Mutation {
   createUser(input: CreateUserInput!): User!
   createUserNotificationToken(input: CreateUserNotificationTokenInput!): UserNotificationToken!
   createVote(input: CreateVoteInput!): Vote!
+  delistCommon(commonId: String!): Boolean
   finalizeProposal(proposalId: ID!): Boolean!
   reportDiscussionMessage(input: ReportDiscussionMessageInput!): Report!
   unassignRole(roleId: ID!, userId: ID!): Void

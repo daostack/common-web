@@ -227,7 +227,7 @@ export interface NexusGenEnums {
   DiscussionMessageType: 'Message'
   DiscussionSubscriptionType: 'AllNotifications' | 'NoNotification' | 'OnlyMentions'
   DiscussionType: 'CommonDiscussion' | 'ProposalDiscussion'
-  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'CommonWhitelisted' | 'DiscussionCreated' | 'DiscussionMessageCreated' | 'DiscussionSubscriptionCreated' | 'DiscussionSubscriptionTypeChanged' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'NotificationTemplateCreated' | 'NotificationTemplateUpdated' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'ProposalExpired' | 'ProposalMajorityReached' | 'ReportCreated' | 'ReportDismissed' | 'ReportRespected' | 'RoleCreated' | 'RoleDeleted' | 'RolePermissionAdded' | 'RolePermissionRemoved' | 'RoleUpdated' | 'UserAddedToRole' | 'UserCreated' | 'UserNotificationTokenCreated' | 'UserNotificationTokenExpired' | 'UserNotificationTokenRefreshed' | 'UserNotificationTokenVoided' | 'UserRemovedFromRole' | 'VoteCreated'
+  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonDelisted' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'CommonWhitelisted' | 'DiscussionCreated' | 'DiscussionMessageCreated' | 'DiscussionSubscriptionCreated' | 'DiscussionSubscriptionTypeChanged' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'NotificationTemplateCreated' | 'NotificationTemplateUpdated' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'ProposalExpired' | 'ProposalMajorityReached' | 'ReportCreated' | 'ReportDismissed' | 'ReportRespected' | 'RoleCreated' | 'RoleDeleted' | 'RolePermissionAdded' | 'RolePermissionRemoved' | 'RoleUpdated' | 'UserAddedToRole' | 'UserCreated' | 'UserNotificationTokenCreated' | 'UserNotificationTokenExpired' | 'UserNotificationTokenRefreshed' | 'UserNotificationTokenVoided' | 'UserRemovedFromRole' | 'VoteCreated'
   FundingState: 'AwaitingApproval' | 'Completed' | 'Confirmed' | 'Eligible' | 'NotEligible' | 'Pending'
   FundingType: 'Monthly' | 'OneTime'
   NotificationSeenStatus: 'Done' | 'NotSeen' | 'Seen'
@@ -550,6 +550,7 @@ export interface NexusGenFieldTypes {
     createUser: NexusGenRootTypes['User']; // User!
     createUserNotificationToken: NexusGenRootTypes['UserNotificationToken']; // UserNotificationToken!
     createVote: NexusGenRootTypes['Vote']; // Vote!
+    delistCommon: boolean | null; // Boolean
     finalizeProposal: boolean; // Boolean!
     reportDiscussionMessage: NexusGenRootTypes['Report']; // Report!
     unassignRole: NexusGenScalars['Void'] | null; // Void
@@ -789,6 +790,7 @@ export interface NexusGenFieldTypeNames {
     createUser: 'User'
     createUserNotificationToken: 'UserNotificationToken'
     createVote: 'Vote'
+    delistCommon: 'Boolean'
     finalizeProposal: 'Boolean'
     reportDiscussionMessage: 'Report'
     unassignRole: 'Void'
@@ -996,6 +998,9 @@ export interface NexusGenArgTypes {
     }
     createVote: { // args
       input: NexusGenInputs['CreateVoteInput']; // CreateVoteInput!
+    }
+    delistCommon: { // args
+      commonId: string; // String!
     }
     finalizeProposal: { // args
       proposalId: string; // ID!

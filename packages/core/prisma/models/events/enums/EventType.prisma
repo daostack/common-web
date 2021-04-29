@@ -1,5 +1,6 @@
 enum EventType {
   CommonCreated
+  CommonDelisted
   CommonWhitelisted
 
   CommonMemberCreated
