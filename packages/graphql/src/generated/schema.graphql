@@ -325,6 +325,7 @@ enum EventType {
   CommonMemberCreated
   CommonMemberRoleAdded
   CommonMemberRoleRemoved
+  CommonWhitelisted
   DiscussionCreated
   DiscussionMessageCreated
   DiscussionSubscriptionCreated
@@ -457,6 +458,7 @@ type Mutation {
   reportDiscussionMessage(input: ReportDiscussionMessageInput!): Report!
   unassignRole(roleId: ID!, userId: ID!): Void
   voidUserNotificationToken(tokenId: ID!): UserNotificationToken!
+  whitelistCommon(commonId: String!): Boolean
 }
 
 type Notification implements BaseEntity {

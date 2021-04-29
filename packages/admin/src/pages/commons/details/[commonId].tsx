@@ -23,7 +23,8 @@ import {
   ExternalLink,
   User,
   Copy,
-  Trash2 as Trash
+  Trash2 as Trash,
+  CheckCircle
 } from '@geist-ui/react-icons';
 
 import { Link } from 'components/Link';
@@ -53,6 +54,8 @@ const GetCommonDetailsQuery = gql`
       description
 
       image
+
+      whitelisted
 
       members {
         createdAt
@@ -219,13 +222,28 @@ const CommonDetailsPage: NextPage = () => {
               {data.data.common.name}'s details
             </Text>
 
+            {data.data.common.whitelisted && (
+              <React.Fragment>
+
+                <Tooltip text="The common is whitelisted">
+                  <CheckCircle color="F5A623" strokeWidth={3} size={26}/>
+
+                  <Spacer y={2}/>
+                </Tooltip>
+              </React.Fragment>
+            )}
+
             <Spacer x={1}/>
 
-            <Tag>{data.data.common.fundingType}</Tag>
+            <Tag type="warning">{data.data.common.fundingType}</Tag>
 
             <div style={{ marginLeft: 'auto', cursor: 'pointer' }}>
               {router.query.commonId && (
-                <CommonSettings commonId={router.query.commonId as string}/>
+                <CommonSettings
+                  commonId={router.query.commonId as string}
+                  whitelisted={data.data.common.whitelisted}
+                  refetch={data.refetch}
+                />
               )}
             </div>
           </div>

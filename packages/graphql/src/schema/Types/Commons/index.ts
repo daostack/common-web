@@ -1,4 +1,6 @@
 import { FundingTypeEnum } from './Enums/FundingTypeEnum';
+
+import { WhitelistCommonMutation } from './Mutations/WhitelistCommon.mutation';
 import { CreateCommonInput, CreateCommonMutation } from './Mutations/CreateCommon.mutation';
 
 import { GetCommonQuery } from './Queries/GetCommon.query';
@@ -24,6 +26,7 @@ export const CommonTypes = [
 
   CreateCommonInput,
   CreateCommonMutation,
+  WhitelistCommonMutation,
 
   CommonWhereUniqueInput,
 

@@ -641,6 +641,7 @@ type Mutation {
   createCard(input: CreateCardInput!): Card!
   createVote(input: CreateVoteInput!): Vote!
   createCommon(input: CreateCommonInput!): Common!
+  whitelistCommon(commonId: String!): Boolean
   actOnReport(input: ActOnReportInput!): Report
   reportDiscussionMessage(input: ReportDiscussionMessageInput!): Report!
   finalizeProposal(proposalId: ID!): Boolean!

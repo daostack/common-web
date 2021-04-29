@@ -427,6 +427,7 @@ model UserNotificationToken {
 
 enum EventType {
   CommonCreated
+  CommonWhitelisted
 
   CommonMemberCreated
   CommonMemberRoleAdded

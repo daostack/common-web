@@ -872,6 +872,7 @@ export type Mutation = {
   createCard: Card;
   createVote: Vote;
   createCommon: Common;
+  whitelistCommon?: Maybe<Scalars['Boolean']>;
   actOnReport?: Maybe<Report>;
   reportDiscussionMessage: Report;
   finalizeProposal: Scalars['Boolean'];
@@ -928,6 +929,11 @@ export type MutationCreateVoteArgs = {
 
 export type MutationCreateCommonArgs = {
   input: CreateCommonInput;
+};
+
+
+export type MutationWhitelistCommonArgs = {
+  commonId: Scalars['String'];
 };
 
 
@@ -1012,7 +1018,7 @@ export type GetCommonDetailsQuery = (
   & {
   common?: Maybe<(
     { __typename?: 'Common' }
-    & Pick<Common, 'name' | 'createdAt' | 'updatedAt' | 'balance' | 'raised' | 'fundingType' | 'activeJoinProposals' | 'activeFundingProposals' | 'byline' | 'action' | 'description' | 'image'>
+    & Pick<Common, 'name' | 'createdAt' | 'updatedAt' | 'balance' | 'raised' | 'fundingType' | 'activeJoinProposals' | 'activeFundingProposals' | 'byline' | 'action' | 'description' | 'image' | 'whitelisted'>
     & {
     members: Array<Maybe<(
       { __typename?: 'CommonMember' }
@@ -1039,6 +1045,16 @@ export type GetCommonDetailsQuery = (
   }
     )>
 }
+  );
+
+export type WhitelistCommonMutationVariables = Exact<{
+  commonId: Scalars['String'];
+}>;
+
+
+export type WhitelistCommonMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'whitelistCommon'>
   );
 
 export type GetLatestEventsQueryVariables = Exact<{
@@ -1131,11 +1147,9 @@ export const LoadUserContextDocument = gql`
 export function useLoadUserContextQuery(baseOptions?: Apollo.QueryHookOptions<LoadUserContextQuery, LoadUserContextQueryVariables>) {
   return Apollo.useQuery<LoadUserContextQuery, LoadUserContextQueryVariables>(LoadUserContextDocument, baseOptions);
 }
-
 export function useLoadUserContextLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LoadUserContextQuery, LoadUserContextQueryVariables>) {
   return Apollo.useLazyQuery<LoadUserContextQuery, LoadUserContextQueryVariables>(LoadUserContextDocument, baseOptions);
 }
-
 export type LoadUserContextQueryHookResult = ReturnType<typeof useLoadUserContextQuery>;
 export type LoadUserContextLazyQueryHookResult = ReturnType<typeof useLoadUserContextLazyQuery>;
 export type LoadUserContextQueryResult = Apollo.QueryResult<LoadUserContextQuery, LoadUserContextQueryVariables>;
@@ -1154,6 +1168,7 @@ export const GetCommonDetailsDocument = gql`
       action
       description
       image
+      whitelisted
       members {
         createdAt
         userId
@@ -1208,6 +1223,37 @@ export function useGetCommonDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type GetCommonDetailsQueryHookResult = ReturnType<typeof useGetCommonDetailsQuery>;
 export type GetCommonDetailsLazyQueryHookResult = ReturnType<typeof useGetCommonDetailsLazyQuery>;
 export type GetCommonDetailsQueryResult = Apollo.QueryResult<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>;
+export const WhitelistCommonDocument = gql`
+  mutation whitelistCommon($commonId: String!) {
+    whitelistCommon(commonId: $commonId)
+  }
+`;
+export type WhitelistCommonMutationFn = Apollo.MutationFunction<WhitelistCommonMutation, WhitelistCommonMutationVariables>;
+
+/**
+ * __useWhitelistCommonMutation__
+ *
+ * To run a mutation, you first call `useWhitelistCommonMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useWhitelistCommonMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [whitelistCommonMutation, { data, loading, error }] = useWhitelistCommonMutation({
+ *   variables: {
+ *      commonId: // value for 'commonId'
+ *   },
+ * });
+ */
+export function useWhitelistCommonMutation(baseOptions?: Apollo.MutationHookOptions<WhitelistCommonMutation, WhitelistCommonMutationVariables>) {
+  return Apollo.useMutation<WhitelistCommonMutation, WhitelistCommonMutationVariables>(WhitelistCommonDocument, baseOptions);
+}
+
+export type WhitelistCommonMutationHookResult = ReturnType<typeof useWhitelistCommonMutation>;
+export type WhitelistCommonMutationResult = Apollo.MutationResult<WhitelistCommonMutation>;
+export type WhitelistCommonMutationOptions = Apollo.BaseMutationOptions<WhitelistCommonMutation, WhitelistCommonMutationVariables>;
 export const GetLatestEventsDocument = gql`
   query GetLatestEvents($take: Int = 10, $skip: Int = 0) {
     events(paginate: {take: $take, skip: $skip}) {
