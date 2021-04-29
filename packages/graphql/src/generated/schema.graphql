@@ -65,7 +65,7 @@ type Common {
 
   """The name of the common as provided"""
   name: String!
-  proposals(skip: Int = 0, take: Int = 10, where: ProposalWhereInput): [Proposal!]!
+  proposals(paginate: PaginateInput, where: ProposalWhereInput): [Proposal!]!
 
   """The total amount of money that the common has raised. In cents"""
   raised: Int!
@@ -78,12 +78,20 @@ type Common {
   whitelisted: Boolean!
 }
 
-type CommonMember {
+type CommonMember implements BaseEntity {
   common: Common
   commonId: ID!
-  id: ID!
+
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+
+  """The main identifier of the item"""
+  id: UUID!
   proposals(skip: Int = 0, take: Int = 10, where: ProposalWhereInput): [Proposal!]!
   roles: [CommonMemberRole!]!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
   user: User
   userId: ID!
 }
@@ -349,15 +357,28 @@ enum EventType {
   VoteCreated
 }
 
-type FundingProposal {
+type FundingProposal implements BaseEntity {
+  """The amount that the proposal has requested in cents"""
+  amount: Int!
+
   """The date, at which the item was created"""
   createdAt: DateTime!
+  fundingState: FundingState!
 
   """The main identifier of the item"""
-  id: ID!
+  id: UUID!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+}
+
+enum FundingState {
+  AwaitingApproval
+  Completed
+  Confirmed
+  Eligible
+  NotEligible
+  Pending
 }
 
 """The funding type of the common"""
@@ -371,12 +392,19 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 """
 scalar JSON
 
-type JoinProposal {
+type JoinProposal implements BaseEntity {
   """The date, at which the item was created"""
   createdAt: DateTime!
 
+  """
+  The amount that this join proposal will contribute to the common. In cents
+  """
+  funding: Int!
+  fundingType: FundingType!
+
   """The main identifier of the item"""
-  id: ID!
+  id: UUID!
+  paymentState: PaymentState!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
@@ -505,13 +533,24 @@ input PaginateInput {
   take: Int!
 }
 
+enum PaymentState {
+  NotAttempted
+  Pending
+  Successful
+  Unsuccessful
+}
+
 type Proposal {
   """The date, at which the item was created"""
   createdAt: DateTime!
   discussions(skip: Int, take: Int): [Discussion!]!
+  funding: FundingProposal
+  fundingId: UUID
 
   """The main identifier of the item"""
   id: ID!
+  join: JoinProposal
+  joinId: UUID
   state: ProposalState!
   type: ProposalType!
 

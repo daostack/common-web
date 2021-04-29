@@ -13,12 +13,16 @@ import { ProposalWhereUniqueInput } from './Inputs/ProposalWhereUnique.input';
 
 import { FinalizeProposalMutation } from './Mutations/FinalizeProposalMutation';
 
-import { ProposalTypeEnum } from './Enums/ProposalType.enum';
 import { ProposalStateEnum } from './Enums/ProposalState.enum';
+import { ProposalTypeEnum } from './Enums/ProposalType.enum';
+import { FundingStateEnum } from './Enums/FundingState.enum';
+import { PaymentStateEnum } from './Enums/PaymentState.enum';
 
 import { GetProposalQuery } from './Queries/GetProposal.query';
 
 import { ProposalDiscussionsExtension } from './Extensions/ProposalDiscussions.extension';
+import { ProposalFundingExtension } from './Extensions/ProposalFunding.extension';
+import { ProposalJoinExtension } from './Extensions/ProposalJoin.extension';
 
 import { ProposalChangeSubscription } from './Subscriptions/ProposalChange.subscription';
 
@@ -30,24 +34,28 @@ export const ProposalTypes = [
 
   ProposalWhereInput,
   CreateJoinProposalInput,
-  CreateFundingProposalInput,
 
+  CreateFundingProposalInput,
   FinalizeProposalMutation,
   CreateJoinProposalMutation,
-  CreateFundingProposalMutation,
 
+  CreateFundingProposalMutation,
   ProposalLinkInput,
   ProposalFileInput,
-  ProposalImageInput,
 
+  ProposalImageInput,
   ProposalTypeEnum,
   ProposalStateEnum,
+  FundingStateEnum,
+  PaymentStateEnum,
 
   GetProposalQuery,
 
   ProposalWhereUniqueInput,
 
   ProposalDiscussionsExtension,
+  ProposalFundingExtension,
+  ProposalJoinExtension,
 
   ProposalChangeSubscription
 ];

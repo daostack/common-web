@@ -3,16 +3,18 @@ import { objectType } from 'nexus';
 export const JoinProposalType = objectType({
   name: 'JoinProposal',
   definition(t) {
-    t.nonNull.id('id', {
-      description: 'The main identifier of the item'
+    t.implements('BaseEntity');
+
+    t.nonNull.int('funding', {
+      description: 'The amount that this join proposal will contribute to the common. In cents'
     });
 
-    t.nonNull.date('createdAt', {
-      description: 'The date, at which the item was created'
+    t.nonNull.field('fundingType', {
+      type: 'FundingType'
     });
 
-    t.nonNull.date('updatedAt', {
-      description: 'The date, at which the item was last modified'
+    t.nonNull.field('paymentState', {
+      type: 'PaymentState'
     });
   }
 });

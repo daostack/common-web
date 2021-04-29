@@ -26,13 +26,14 @@ import {
   Trash2 as Trash
 } from '@geist-ui/react-icons';
 
-import { useGetCommonDetailsQuery, GetCommonDetailsQueryResult } from '@core/graphql';
 import { Link } from 'components/Link';
 import { CommonSettings } from '@components/CommonSettings';
 
 const GetCommonDetailsQuery = gql`
   query getCommonDetails($commonId: ID!, $page: Int!) {
-    common(commonId: $commonId) {
+    common(where: {
+      id: $commonId
+    }) {
       name
 
       createdAt
@@ -41,20 +42,9 @@ const GetCommonDetailsQuery = gql`
       balance
       raised
 
-      openFundingRequests
-      openJoinRequests
-
-      metadata {
-        byline
-        description
-
-        founderId
-        contributionType
-      }
-
       members {
+        createdAt
         userId
-        joinedAt
 
         user {
           firstName
@@ -62,10 +52,11 @@ const GetCommonDetailsQuery = gql`
         }
       }
 
-      proposals(page: $page) {
+      proposals {
         id
 
         type
+
 
         fundingRequest {
           amount

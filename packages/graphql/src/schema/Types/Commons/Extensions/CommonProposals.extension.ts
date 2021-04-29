@@ -1,4 +1,4 @@
-import { extendType, arg, intArg } from 'nexus';
+import { extendType, arg } from 'nexus';
 import { prisma } from '@common/core';
 
 export const CommonProposalsExtension = extendType({
@@ -7,12 +7,8 @@ export const CommonProposalsExtension = extendType({
     t.nonNull.list.nonNull.field('proposals', {
       type: 'Proposal',
       args: {
-        take: intArg({
-          default: 10
-        }),
-
-        skip: intArg({
-          default: 0
+        paginate: arg({
+          type: 'PaginateInput'
         }),
 
         where: arg({
@@ -27,8 +23,8 @@ export const CommonProposalsExtension = extendType({
             }
           })
           .proposals({
-            take: args.take || undefined,
-            skip: args.skip || undefined,
+            skip: args.paginate?.skip || undefined,
+            take: args.paginate?.take || undefined,
             where: (args.where as any) || undefined
           });
       }
