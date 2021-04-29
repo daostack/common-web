@@ -85,7 +85,7 @@ export default function CommonDetail() {
   const lastestProposals = useMemo(
     () =>
       [...proposals].splice(0, 5).map((p) => {
-        return { id: p.id, value: p.description.title };
+        return { id: p.id, value: p.description.title || p.description.description };
       }),
     [proposals],
   );

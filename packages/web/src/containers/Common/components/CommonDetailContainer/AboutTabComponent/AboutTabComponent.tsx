@@ -8,6 +8,9 @@ interface AboutTabComponentProps {
 }
 
 export default function AboutTabComponent({ common }: AboutTabComponentProps) {
+  const renderContributionType = (type: string) => {
+    return <b>{type}</b>;
+  };
   return (
     <div className="about-name-wrapper">
       <div className="description">{common.metadata.description}</div>
@@ -27,7 +30,8 @@ export default function AboutTabComponent({ common }: AboutTabComponentProps) {
         <div className="contribution">
           Minimum contribution for new members:
           <br />
-          {formatPrice(common.metadata.minFeeToJoin) + " " + common.metadata.contributionType + " contribution"}
+          {formatPrice(common.metadata.minFeeToJoin) + " "}
+          {renderContributionType(common.metadata.contributionType || "")} contribution
         </div>
         <div className="button-blue">Join the effort</div>
       </div>
