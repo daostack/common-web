@@ -219,6 +219,8 @@ input CreateCommonInput {
   fundingType: FundingType!
   image: String!
   description: String
+  action: String
+  byline: String
 }
 input CommonWhereUniqueInput {
   id: ID!
@@ -303,6 +305,8 @@ type Proposal {
   discussions(take: Int, skip: Int): [Discussion!]!
   fundingId: UUID
   funding: FundingProposal
+  commonId: UUID!
+  common: Common!
   joinId: UUID
   join: JoinProposal
 }
@@ -331,6 +335,10 @@ type FundingProposal implements BaseEntity {
 }
 input ProposalWhereInput {
   type: ProposalType
+  state: ProposalState
+  commonId: UUID
+  commonMemberId: UUID
+  userId: ID
 }
 input CreateJoinProposalInput {
   title: String!
@@ -629,6 +637,7 @@ type Query {
   common(where: CommonWhereUniqueInput!): Common
   commons(paginate: PaginateInput): [Common]
   proposal(where: ProposalWhereUniqueInput!): Proposal
+  proposals(where: ProposalWhereInput, paginate: PaginateInput): [Proposal]
   getStatistics(where: StatisticsWhereInput): [Statistic]
   discussion(id: ID!): Discussion
 }

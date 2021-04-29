@@ -14,10 +14,8 @@ export const GetProposalsQuery = queryField('proposals', {
   resolve: (root, args) => {
     return prisma.proposal
       .findMany({
-        where: {
-          ...args.where,
-          ...args.paginate
-        }
+        where: args.where as any,
+        ...args.paginate
       });
   }
 });
