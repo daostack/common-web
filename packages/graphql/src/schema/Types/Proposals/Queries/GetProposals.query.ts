@@ -1,26 +1,23 @@
-import { extendType, nonNull, idArg } from 'nexus';
+import { queryField, list, arg } from 'nexus';
 import { prisma } from '@common/core';
 
-export const GetProposalsQuery = extendType({
-  type: 'Query',
-  definition(t) {
-    t.nonNull.list.field('proposals', {
-      type: 'Proposal',
-      args: {
-            id: nonNull(idArg())
-      },
-      resolve: async (root, args) => {
-       return await prisma.common
-          .findUnique({
-            where: {
-              id: args.id
-            }
-          });
-
-          // eslint-disable-next-line no-console
-          // console.log('commin', common);
-          // return common;
-      }
-    });
+export const GetProposalsQuery = queryField('proposals', {
+  type: list('Proposal'),
+  args: {
+    where: arg({
+      type: 'ProposalWhereInput'
+    }),
+    paginate: arg({
+      type: 'PaginateInput'
+    })
+  },
+  resolve: (root, args) => {
+    return prisma.proposal
+      .findMany({
+        where: {
+          ...args.where,
+          ...args.paginate
+        }
+      });
   }
 });

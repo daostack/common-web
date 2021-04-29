@@ -125,6 +125,8 @@ input CreateCardInput {
 }
 
 input CreateCommonInput {
+  action: String
+  byline: String
   description: String
   fundingMinimumAmount: Int!
   fundingType: FundingType!
@@ -322,6 +324,7 @@ enum EventType {
   CardCvvVerificationFailed
   CardCvvVerificationPassed
   CommonCreated
+  CommonDelisted
   CommonMemberCreated
   CommonMemberRoleAdded
   CommonMemberRoleRemoved
@@ -454,6 +457,7 @@ type Mutation {
   createUser(input: CreateUserInput!): User!
   createUserNotificationToken(input: CreateUserNotificationTokenInput!): UserNotificationToken!
   createVote(input: CreateVoteInput!): Vote!
+  delistCommon(commonId: String!): Boolean
   finalizeProposal(proposalId: ID!): Boolean!
   reportDiscussionMessage(input: ReportDiscussionMessageInput!): Report!
   unassignRole(roleId: ID!, userId: ID!): Void
@@ -600,7 +604,11 @@ enum ProposalType {
 }
 
 input ProposalWhereInput {
+  commonId: UUID
+  commonMemberId: UUID
+  state: ProposalState
   type: ProposalType
+  userId: ID
 }
 
 input ProposalWhereUniqueInput {
@@ -615,6 +623,7 @@ type Query {
   generateUserAuthToken(authId: String!): String!
   getStatistics(where: StatisticsWhereInput): [Statistic]
   proposal(where: ProposalWhereUniqueInput!): Proposal
+  proposals(paginate: PaginateInput, where: ProposalWhereInput): [Proposal]
   roles(paginate: PaginateInput): [Role]
 
   """

@@ -25,6 +25,7 @@ export const PermissionValidator = z.enum([
   'admin.proposals.read.ipAddress',
 
   'admin.commons.update',
+  'admin.commons.delist',
   'admin.commons.whitelist',
 
   'user.permissions.read'

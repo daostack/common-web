@@ -134,8 +134,8 @@ const CommonDetailsPage: NextPage = () => {
       name: `${member.user.firstName} ${member.user.lastName[0]}.`,
       roles: (
         <React.Fragment>
-          {member.roles.map(r => (
-            <Tag>
+          {member.roles.map((r, i) => (
+            <Tag key={i}>
               {r}
             </Tag>
           ))}

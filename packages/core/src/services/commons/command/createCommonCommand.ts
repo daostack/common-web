@@ -16,6 +16,15 @@ const schema = z.object({
   image: z.string()
     .nonempty(),
 
+  description: z.string()
+    .nonempty(),
+
+  action: z.string()
+    .optional(),
+
+  byline: z.string()
+    .optional(),
+
   fundingType: z.enum(Object.keys(FundingType) as [(keyof typeof FundingType)]),
 
   fundingMinimumAmount: z.number()

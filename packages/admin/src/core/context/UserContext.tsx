@@ -2,6 +2,7 @@ import React from 'react';
 import { gql } from '@apollo/client';
 
 import { useLoadUserContextQuery } from '@core/graphql';
+import { Loading } from '@geist-ui/react';
 
 interface UserContext {
   loaded: boolean;
@@ -56,20 +57,26 @@ export const UserContextProvider: React.FC<React.PropsWithChildren<any>> = ({ ch
 
   // Effects
   React.useEffect(() => {
-    console.log(data);
-
-    if (data) {
+    if (data?.user) {
       setContext({
         loaded: true,
         ...data.user
       });
+
+      console.log('User data and permissions loaded!');
     }
   }, [data]);
 
   // Render
   return (
     <UserContext.Provider value={context}>
-      {children}
+      {context.loaded ? (
+        <React.Fragment>
+          {children}
+        </React.Fragment>
+      ) : (
+        <Loading/>
+      )}
     </UserContext.Provider>
   );
 };

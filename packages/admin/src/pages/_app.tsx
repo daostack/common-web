@@ -9,6 +9,8 @@ import { UserContextProvider } from '@core/context';
 import { AuthenticatedLayout } from '@components/layout/AuthenticatedLayout';
 import { CommonApolloProvider, AuthenticationProvider } from '@components/providers';
 
+import './../../public/style.css';
+
 
 const CommonAdmin = ({ Component, pageProps }: AppProps): React.ReactElement => {
   return (
