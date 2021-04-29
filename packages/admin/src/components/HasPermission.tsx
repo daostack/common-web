@@ -16,8 +16,6 @@ export const HasPermission: React.FC<PropsWithChildren<IHasPermissionProps>> = (
   const hasPermission = (permission: string): boolean => {
     let hasPermission = false;
 
-    console.log(userContext);
-
     if (userContext.loaded) {
       const permissions = userContext.permissions;
 
@@ -33,7 +31,7 @@ export const HasPermission: React.FC<PropsWithChildren<IHasPermissionProps>> = (
 
     console.debug(`Permission check for [${permission}]: ${hasPermission}`);
 
-    if (!hasPermission && redirect) {
+    if (!hasPermission && userContext.loaded && redirect) {
       router
         .push({
           pathname: '/error/unauthorized',
