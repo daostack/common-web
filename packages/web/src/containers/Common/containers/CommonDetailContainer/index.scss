@@ -1,6 +1,7 @@
+@import "../../../../constants.scss";
+
 .common-detail-wrapper {
   .main-information-block {
-    box-shadow: 0 3px 8px 0 #001a3614;
     background-color: #ffffff;
     height: 585px;
     margin: -70px -80px 80px;
@@ -21,7 +22,9 @@
       }
       .text-information-wrapper {
         display: flex;
-        margin: 32px 0;
+        margin-top: 32px;
+        border-bottom: 1px solid $light-gray;
+        padding-bottom: 30px;
         .text,
         .numbers {
           flex: 50%;
@@ -79,40 +82,30 @@
       }
 
       .common-content-selector {
-        height: 72px;
         display: flex;
+        box-shadow: 0 3px 8px 0 #001a3614;
+        margin: 0px -#{$content-padding};
+        padding: 0px $content-padding;
         .tabs-wrapper {
           display: flex;
-          flex: 50;
-          align-items: center;
-          height: 72px;
+          align-items: flex-end;
+          padding-top: 30px;
           .tab-item {
-            font-size: 16px;
             font-weight: bold;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: 1.5;
-            letter-spacing: normal;
-            color: #001a36;
-            margin-right: 24px;
+            color: $deep-blue;
             cursor: pointer;
-            position: relative;
-            span {
-              width: 100%;
-              height: 4px;
-              background: #7786ff;
-              position: absolute;
-              right: 0;
-              bottom: -32px;
-            }
+            border-bottom: 4px solid;
+            border-bottom-color: transparent;
+            padding-bottom: 20px;
+            margin-right: 25px;
             &.active {
-              color: #7786ff;
+              border-bottom-color: $purple;
             }
           }
         }
         .social-wrapper {
+          width: 100%;
           display: flex;
-          flex: 50;
           justify-content: flex-end;
           align-items: center;
         }
@@ -124,21 +117,53 @@
     .tab-title {
       font-size: 24px;
       font-weight: bold;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: 1.17;
-      letter-spacing: normal;
-      color: #001a36;
+      color: $deep-blue;
       text-transform: capitalize;
       margin-bottom: 24px;
     }
     .inner-main-content-wrapper {
       display: flex;
-      align-items: flex-start;
       .tab-content-wrapper {
-        flex: 60;
+        width: 60%;
       }
       .sidebar-wrapper {
+        width: 40%;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .common-detail-wrapper {
+    .main-information-block {
+      .main-information-wrapper {
+        .text-information-wrapper {
+          border-bottom: none;
+        }
+        .common-content-selector {
+          flex-direction: column-reverse;
+          align-items: center;
+          margin: 0px -#{$content-padding-mobile};
+          padding: 0px #{$content-padding-mobile};
+          .tabs-wrapper {
+            justify-content: space-between;
+            width: 100%;
+            .tab-item {
+              margin-right: unset;
+            }
+          }
+        }
+      }
+    }
+    .main-content-container {
+      .inner-main-content-wrapper {
+        flex-direction: column;
+        .tab-content-wrapper {
+          width: unset;
+        }
+        .sidebar-wrapper {
+          width: unset;
+        }
       }
     }
   }

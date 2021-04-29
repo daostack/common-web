@@ -90,19 +90,11 @@
     align-items: center;
     padding: 150px 0; // to make the background more visible
   }
-  h1 {
-    font-size: $large;
-  }
-  p {
-    font-size: $moderate;
-  }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .landing-wrapper {
-    h1 {
-      font-size: $medium;
-    }
+    margin: -$content-padding-mobile; // to ignore parent content padding
     .landing-top {
       flex-direction: column;
       .info {

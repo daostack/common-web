@@ -1,5 +1,6 @@
+@import "../../../../../constants.scss";
+
 .preview-information-wrapper {
-  width: 380px;
   margin-left: 80px;
   margin-bottom: 48px;
   .title-wrapper {
@@ -87,5 +88,11 @@
     img {
       width: 130px;
     }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .preview-information-wrapper{
+    margin-left: unset;
   }
 }

@@ -27,7 +27,7 @@ const Header = () => {
               Contact
             </NavLink>
           </div>
-          <div style={{ marginLeft: "auto" }}>
+          <div className="mobile-links-container">
             <MobileLinks color="black" />
           </div>
         </>

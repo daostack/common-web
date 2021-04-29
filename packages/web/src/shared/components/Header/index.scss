@@ -30,6 +30,17 @@
       }
     }
   }
+  .mobile-links-container {
+    margin-left: auto;
+  }
+}
+
+@media only screen and (max-width: $small-screen) {
+  .header-wrapper {
+    .mobile-links-container {
+      display: none;
+    }
+  }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {

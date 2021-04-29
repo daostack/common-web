@@ -233,7 +233,6 @@ export default function CommonDetail() {
                   </div>
                 </div>
               </div>
-              <div className="line"></div>
               <div className="common-content-selector">
                 <div className="tabs-wrapper">
                   {tabs.map((t) => (
@@ -243,7 +242,6 @@ export default function CommonDetail() {
                       onClick={() => changeTabHandler(t.key)}
                     >
                       {t.name}
-                      {tab === t.key && <span></span>}
                     </div>
                   ))}
                 </div>
