@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { ROUTE_PATHS } from "../../constants";
 import "./index.scss";
 
 const Footer = () => {
@@ -13,21 +12,21 @@ const Footer = () => {
             <img src="/icons/logo-white.svg" alt="logo" width="120px" className="logo" />
           </Link>
           <span>About</span>
-          <Link to={ROUTE_PATHS.COMMON_LIST}>Explore Commons</Link>
+          <span>Careers</span>
           <a href="mailto://support@common.io">Contact</a>
           <a
             href="https://apps.apple.com/il/app/common-collaborative-action/id1512785740"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Download IOS app
+            Download IOS
           </a>
           <a
             href="https://play.google.com/store/apps/details?id=com.daostack.common"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Download Android app
+            Download Android
           </a>
         </div>
       </div>

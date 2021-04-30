@@ -39,7 +39,11 @@ export default function PreviewInformationList(props: PreviewInformationListProp
           ) : (
             <img src="/icons/empty-proposals-preview.svg" alt="empty-proposals" />
           )}
-          <div className="message">No {title} yet</div>
+          <div className="message">
+            No
+            {title === "Latest Discussions" ? "discussions" : "proposals"}
+            yet
+          </div>
         </div>
       )}
     </div>
