@@ -69,10 +69,14 @@
         text-align: center;
         color: #001a36;
         margin-bottom: 24px;
+        cursor: pointer;
+        &:hover {
+          color: #7786ff;
+        }
       }
 
       .requested-amount {
-        padding: 11px 74px 11px 73px;
+        padding: 12px;
         border-radius: 20px;
         background-color: #f1f5ff;
         font-size: 14px;
@@ -181,6 +185,10 @@
         color: #7786ff;
         cursor: pointer;
         margin-bottom: 16px;
+        color: #001a36;
+        &:hover {
+          color: #7786ff;
+        }
       }
       .line {
         margin: 0 -40px;

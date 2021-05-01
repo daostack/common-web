@@ -27,9 +27,13 @@ export default function DiscussionsComponent({ discussions, loadDisscussionDetai
                 </div>
               </div>
               <div className="discussion-content">
-                <div className="title">{d.title}</div>
+                <div className="title" onClick={() => loadDisscussionDetail(d)}>
+                  {d.title}
+                </div>
                 <div className="description">{d.message}</div>
-                {/* <div className="read-more">Read More</div> */}
+                <div className="read-more" onClick={() => loadDisscussionDetail(d)}>
+                  Read More
+                </div>
                 <div className="line"></div>
               </div>
               <div className="bottom-content">
@@ -39,7 +43,7 @@ export default function DiscussionsComponent({ discussions, loadDisscussionDetai
                 </div>
                 {(d?.discussionMessage?.length || 0) > 0 && (
                   <div className="view-all-discussions" onClick={() => loadDisscussionDetail(d)}>
-                    View discussions
+                    View discussion
                   </div>
                 )}
               </div>
@@ -49,7 +53,7 @@ export default function DiscussionsComponent({ discussions, loadDisscussionDetai
       ) : (
         <EmptyTabComponent
           currentTab="discussions"
-          message="This is where members can discuss and share their thoughts and ideas."
+          message={"This is where members can discuss and share their thoughts and ideas."}
           title="No discussions yet"
         />
       )}
