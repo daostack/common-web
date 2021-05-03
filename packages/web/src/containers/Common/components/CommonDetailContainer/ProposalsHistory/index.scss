@@ -1,18 +1,14 @@
+@import "../../../../../constants.scss";
+
 .proposals-history-wrapper {
-  width: 380px;
-  margin-left: 80px;
-  margin-bottom: 48px;
   .history-header {
+    border-top: 1px solid $light-gray;
+    border-bottom: 1px solid $light-gray;
+    padding: 15px 0px;
     .title {
-      height: 76px;
-      font-family: NunitoSans;
       font-size: 24px;
       font-weight: bold;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: 1.17;
-      letter-spacing: normal;
-      color: #001a36;
+      color: $deep-blue;
       align-items: center;
       justify-content: center;
       display: flex;
@@ -26,28 +22,32 @@
       margin: 36px 0;
       flex-direction: column;
       .value {
-        font-family: NunitoSans;
-        font-size: 36px;
+        font-size: $medium;
         font-weight: bold;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.11;
-        letter-spacing: normal;
         text-align: center;
-        color: #001a36;
+        color: $deep-blue;
       }
       .title {
         margin-top: 8px;
-        font-family: NunitoSans;
         font-size: 18px;
         font-weight: 300;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 0.93;
-        letter-spacing: normal;
         text-align: center;
         color: #001a36;
       }
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .proposals-history-wrapper {
+    .history-header {
+      border-top: unset;
+      border-bottom: unset;
+      padding: unset;
+    }
+    .history-content {
+      display: flex;
+      justify-content: space-between;
     }
   }
 }

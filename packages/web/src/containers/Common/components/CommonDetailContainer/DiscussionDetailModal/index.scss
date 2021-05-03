@@ -1,3 +1,5 @@
+@import "../../../../../constants.scss";
+
 .discussion-detail-modal-wrapper {
   width: 75wh;
   height: 80vh;
@@ -142,7 +144,7 @@
 
   .line {
     height: 1px;
-    background-color: #eeeeee;
+    background-color: $light-gray;
     width: 100%;
   }
 }

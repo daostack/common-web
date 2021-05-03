@@ -1,9 +1,11 @@
+@import "../../../../../constants.scss";
+
 .proposals-component-wrapper {
   .discussion-item-wrapper {
     padding: 40px;
     border-radius: 14px;
     box-shadow: 0 3px 8px 0 #001a3614;
-    background-color: #ffffff;
+    background-color: $white;
     margin-bottom: 24px;
     .state-wrapper {
       margin: -40px -40px 24px -40px;
@@ -78,20 +80,10 @@
       .requested-amount {
         padding: 12px;
         border-radius: 20px;
-        background-color: #f1f5ff;
-        font-size: 14px;
-        font-weight: normal;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.43;
-        letter-spacing: normal;
-        text-align: right;
-        color: #001a36;
-        display: flex;
-        width: 395px;
+        background-color: $light-purple;
+        font-size: $xsmall;
         display: flex;
         justify-content: center;
-        margin: 0 auto;
         .amount {
           font-family: NunitoSans;
           font-size: 18px;

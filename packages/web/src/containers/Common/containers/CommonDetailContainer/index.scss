@@ -2,14 +2,12 @@
 
 .common-detail-wrapper {
   .main-information-block {
-    background-color: #ffffff;
-    height: 585px;
-    margin: -70px -80px 80px;
+    background-color: $white;
     .main-information-wrapper {
-      padding: 0 80px;
       .img-wrapper {
         height: 370px;
         position: relative;
+        margin: 0px -#{$content-padding};
         img {
           position: absolute;
           right: 0;
@@ -31,13 +29,10 @@
         }
         .text {
           .name {
-            font-size: 36px;
+            font-size: $large;
             font-weight: 600;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: 1.33;
-            letter-spacing: normal;
             color: #001a36;
+            font-family: NotoSerifSC-Black;
           }
           .tagline {
             font-size: 16px;
@@ -126,6 +121,7 @@
   }
 
   .main-content-container {
+    margin-top: 50px;
     .tab-title {
       font-size: 24px;
       font-weight: bold;
@@ -140,6 +136,7 @@
       }
       .sidebar-wrapper {
         width: 40%;
+        padding-left: 80px;
       }
     }
   }
@@ -149,8 +146,12 @@
   .common-detail-wrapper {
     .main-information-block {
       .main-information-wrapper {
+        .img-wrapper {
+          margin: 0px -#{$content-padding-mobile};
+        }
         .text-information-wrapper {
           border-bottom: none;
+          flex-direction: column;
         }
         .common-content-selector {
           flex-direction: column-reverse;
@@ -169,12 +170,13 @@
     }
     .main-content-container {
       .inner-main-content-wrapper {
-        flex-direction: column;
+        flex-direction: column-reverse;
         .tab-content-wrapper {
           width: unset;
         }
         .sidebar-wrapper {
           width: unset;
+          padding-left: unset;
         }
       }
     }
