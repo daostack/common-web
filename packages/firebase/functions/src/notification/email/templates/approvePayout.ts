@@ -21,7 +21,7 @@ const template = `
   <br /><br />
   Have a nice day,
   <br>
-  Common
+  Common Payouts ({{fromEmail}})
 </div>
 `;
 
@@ -52,7 +52,10 @@ const emailStubs = {
   },
   bank: {
     required: true
-  }
+  },
+  fromEmail: {
+    required: true
+  },
 };
 
 export const approvePayout = {
