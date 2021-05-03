@@ -11,7 +11,7 @@
     }
   }
   .landing-top {
-    background-image: url("/assets/images/sea.jpg");
+    animation: change-main-image $landing-page-animation-delay infinite;
     background-position: 0% 50%;
     background-size: cover;
     background-repeat: repeat;
@@ -29,8 +29,24 @@
       h1 {
         color: $white;
         text-align: left;
-        .pink-text {
-          color: $pink;
+        .dynamic-text::before {
+          content: "Catalyze a movement";
+          animation: change-text $landing-page-animation-delay infinite;
+          @keyframes change-text {
+            0%,
+            100% {
+              content: "Catalyze a movement";
+              color: $pink;
+            }
+            33% {
+              content: "Fund Independent Journalism";
+              color: $green;
+            }
+            66% {
+              content: "Start a Neighborhood Project";
+              $color: $purple;
+            }
+          }
         }
       }
       .mobile-apps-wrapper {
@@ -46,6 +62,44 @@
         bottom: -250px;
         z-index: 1;
         width: 320px;
+        height: 600px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        &.full {
+          animation: change-iphone-full-image $landing-page-animation-delay infinite;
+          -webkit-animation: change-iphone-full-image $landing-page-animation-delay infinite;
+          //-ms-animation
+        }
+        &.half {
+          height: 300px;
+          animation: change-iphone-half-image $landing-page-animation-delay infinite;
+          -webkit-animation: change-iphone-half-image $landing-page-animation-delay infinite;
+          //-ms-animation
+        }
+        @keyframes change-iphone-full-image {
+          0%,
+          100% {
+            background-image: url("/assets/images/iphone-full-1.png");
+          }
+          33% {
+            background-image: url("/assets/images/iphone-full-2.png");
+          }
+          66% {
+            background-image: url("/assets/images/iphone-full-3.png");
+          }
+        }
+        @keyframes change-iphone-half-image {
+          0%,
+          100% {
+            background-image: url("/assets/images/iphone-half-1.png");
+          }
+          33% {
+            background-image: url("/assets/images/iphone-half-2.png");
+          }
+          66% {
+            background-image: url("/assets/images/iphone-half-3.png");
+          }
+        }
       }
     }
     .wave-top {
@@ -54,6 +108,18 @@
       left: 50%;
       transform: translate(-50%);
       width: 105%;
+    }
+    @keyframes change-main-image {
+      0%,
+      100% {
+        background-image: url("/assets/images/main-landing-image-1.jpg");
+      }
+      33% {
+        background-image: url("/assets/images/main-landing-image-2.jpg");
+      }
+      66% {
+        background-image: url("/assets/images/main-landing-image-3.jpg");
+      }
     }
   }
   .illustrations-wrapper {

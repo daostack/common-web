@@ -19,18 +19,14 @@ const LandingContainer = () => {
           {isLarge && <img src="icons/logo-all-white.svg" alt="logo" width="170px" />}
           <h1>
             Launch Collective Action. <br />
-            <span className="pink-text">Catalyze a movement</span>
+            <span className="dynamic-text" />
             <br /> Together.
           </h1>
           <div className="mobile-apps-wrapper">
             <div className="available-on-label">Available on</div>
             <MobileLinks color="white" />
           </div>
-          <img
-            src={`assets/images/${isLarge ? "iphone-full.png" : "iphone-half.png"}`}
-            alt="iphone"
-            className="iphone-image"
-          />
+          <div className={isLarge ? "iphone-image full" : "iphone-image half"} />
         </div>
         <img src="assets/images/wave-top.svg" alt="wave" className="wave-top" />
       </section>
