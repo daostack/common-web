@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { Loader } from "../../../../shared/components";
@@ -23,6 +23,7 @@ export default function CommonListContainer() {
   const loading = useSelector(getLoading());
   const dispatch = useDispatch();
   const loader = useRef(null);
+  const [loaderHack, setLoaderHack] = useState(false);
 
   useEffect(() => {
     if (commons.length === 0) {
@@ -34,7 +35,7 @@ export default function CommonListContainer() {
     (entities: any[]) => {
       const target = entities[0];
 
-      if (target.isIntersecting) {
+      if (target.isIntersecting && page < 2) {
         dispatch(updatePage(page + 1));
       }
     },
@@ -49,6 +50,14 @@ export default function CommonListContainer() {
   }, [handleObserver, commons]);
 
   const currentCommons = [...commons].splice(0, COMMON_PAGE_SIZE * page);
+
+  const loadHack = () => {
+    setLoaderHack(true);
+    setTimeout(() => {
+      dispatch(updatePage(page + 1));
+      setLoaderHack(false);
+    }, 500);
+  };
 
   return (
     <div className="common-list-wrapper">
@@ -65,24 +74,13 @@ export default function CommonListContainer() {
       )}
 
       {commons.length !== currentCommons.length && (
-        <div className="loader-wrapper">
-          <div className="lds-spinner">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-          <div className="loading button-blue" ref={loader}>
-            Load More Commons
-          </div>
+        <div className="loader-wrapper" ref={loader}>
+          {loaderHack ? <div className="loader">Loading...</div> : null}
+          {page >= 2 && !loaderHack ? (
+            <div className="loading button-blue" onClick={() => loadHack()}>
+              Load More Commons
+            </div>
+          ) : null}
         </div>
       )}
     </div>

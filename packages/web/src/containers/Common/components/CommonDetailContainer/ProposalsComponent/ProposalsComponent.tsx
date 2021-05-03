@@ -33,9 +33,11 @@ export default function ProposalsComponent({ proposals, loadProposalDetail, curr
                 </div>
               )}
               <div className="proposal-charts-wrapper">
-                <div className="proposal-title">{d.description.title}</div>
+                <div className="proposal-title" onClick={() => loadProposalDetail(d)}>
+                  {d.description.title}
+                </div>
                 <div className="requested-amount">
-                  Requested amount{" "}
+                  Requested amount
                   <div className="amount">{formatPrice(d.fundingRequest?.amount || d.join?.funding)}</div>
                 </div>
                 <div className="votes">
@@ -54,7 +56,9 @@ export default function ProposalsComponent({ proposals, loadProposalDetail, curr
               </div>
               <div className="discussion-content">
                 <div className="description">{d.description.description}</div>
-                {/* <div className="read-more">Read More</div> */}
+                <div className="read-more" onClick={() => loadProposalDetail(d)}>
+                  Read More
+                </div>
                 <div className="line"></div>
               </div>
               <div className="bottom-content">
@@ -64,7 +68,7 @@ export default function ProposalsComponent({ proposals, loadProposalDetail, curr
                 </div>
                 {(d?.discussionMessage?.length || 0) > 0 && (
                   <div className="view-all-discussions" onClick={() => loadProposalDetail(d)}>
-                    View proposals
+                    View proposal
                   </div>
                 )}
               </div>

@@ -197,7 +197,8 @@ export default function CommonDetail() {
       <>
         <Modal isShowing={isShowing} onClose={closeModalHandler}>
           {tab === "discussions" && <DiscussionDetailModal disscussion={currentDisscussion} common={common} />}
-          {tab === "proposals" && <ProposalDetailModal proposal={currentProposal} common={common} />}
+          {tab === "proposals" ||
+            (tab === "history" && <ProposalDetailModal proposal={currentProposal} common={common} />)}
         </Modal>
         <div className="common-detail-wrapper">
           <div className="main-information-block">
@@ -228,7 +229,7 @@ export default function CommonDetail() {
                     <div className="name">Members</div>
                   </div>
                   <div className="item">
-                    <div className="value">0</div>
+                    <div className="value">{activeProposals.length}</div>
                     <div className="name">Active Proposals</div>
                   </div>
                 </div>
@@ -247,12 +248,13 @@ export default function CommonDetail() {
                 </div>
                 <div className="social-wrapper">
                   <button className="button-blue">Join the effort</button>
+                  <button className="social-button"></button>
                 </div>
               </div>
             </div>
           </div>
           <div className="main-content-container">
-            <div className="tab-title">{tab}</div>
+            {tab === "about" ? <div className="tab-title">{tab}</div> : null}
             <div className="inner-main-content-wrapper">
               <div className="tab-content-wrapper">
                 {tab === "about" && <AboutTabComponent common={common} />}
