@@ -14,9 +14,7 @@ export default function ProposalsHistory({ proposals, common }: ProposalsHistory
   return (
     <div className="proposals-history-wrapper">
       <div className="history-header">
-        <div className="line"></div>
         <div className="title">Proposals History</div>
-        <div className="line"></div>
       </div>
       <div className="history-content">
         <div className="block-item">

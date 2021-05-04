@@ -14,9 +14,9 @@
     padding: 10px;
   }
   .explore-commons {
-    width: fit-content;
     margin-top: 20px;
     line-height: 40px;
+    padding: 5px;
   }
 }
 
@@ -33,6 +33,7 @@
     .featured-commons {
       grid-auto-flow: column;
       overflow-x: auto;
+      overflow-y: hidden;
       width: 100vw;
     }
   }

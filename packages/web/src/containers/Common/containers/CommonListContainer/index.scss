@@ -1,15 +1,12 @@
+@import "../../../../constants.scss";
+
 .common-list-wrapper {
-  margin-top: -80px;
-  padding-top: 80px;
   .common-list {
     display: grid;
     justify-items: center;
-    align-items: center;
-    grid-auto-columns: 1fr;
     grid-column-gap: 16px;
     grid-row-gap: 16px;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: auto;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   }
   .loader-wrapper {
     padding-top: 24px;
@@ -62,6 +59,15 @@
       align-items: center;
       margin: 0 auto;
       height: 32px;
+      padding: 5px 10px;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .common-list-wrapper {
+    .common-list {
+
     }
   }
 }

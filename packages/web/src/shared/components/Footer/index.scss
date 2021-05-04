@@ -8,17 +8,20 @@
     background-color: $blue;
     justify-content: center;
     .logo {
-      margin-right: 100px;
+      margin-right: auto;
+      margin-bottom: auto;
+      width: 120px;
     }
     .links {
       display: grid;
       grid-auto-columns: 1fr;
-      grid-column-gap: 15px;
-      grid-template-columns: 0.75fr 1fr 1fr 1fr 1fr 1fr;
+      grid-column-gap: 100px;
+      grid-template-columns: 1fr 1fr 1fr;
       align-items: center;
       font-size: $xsmall;
       color: $purple;
       grid-template-rows: auto;
+      margin-right: auto;
       a {
         text-decoration: none;
         margin: 10px 0px;
@@ -75,6 +78,7 @@
         text-align: center;
         justify-items: center;
         margin-top: 20px;
+        margin-right: unset;
       }
     }
   }

@@ -18,7 +18,7 @@ export default function ContactUs() {
       <div className="form-wrapper">
         <input type="text" placeholder="Your Name" onChange={(e) => setName(e.target.value)} />
         <input type="email" placeholder="Your Email" onChange={(e) => setEmail(e.target.value)} />
-        <textarea placeholder="What's on your mind?" onChange={(e) => setDescription(e.target.value)} />
+        <textarea placeholder="Notes" onChange={(e) => setDescription(e.target.value)} />
         <button className="button-blue send" disabled={!name || !email || !description}>
           Send
         </button>

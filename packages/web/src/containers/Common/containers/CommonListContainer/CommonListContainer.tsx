@@ -61,7 +61,7 @@ export default function CommonListContainer() {
 
   return (
     <div className="common-list-wrapper">
-      <h2 className="page-title">Explore commons</h2>
+      <h1 className="page-title">Explore commons</h1>
 
       {loading ? (
         <Loader />

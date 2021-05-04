@@ -18,15 +18,10 @@
         width: 32px;
         height: 32px;
         border-radius: 50%;
-        font-family: NunitoSans;
         font-size: 14px;
         font-weight: bold;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.43;
-        letter-spacing: normal;
         text-align: center;
-        color: #ffffff;
+        color: $white;
         background-color: #4ce2f1;
         display: flex;
         justify-content: center;
@@ -54,37 +49,21 @@
         background-color: #e0e3ff;
         flex-direction: row;
         .message-name {
-          font-family: NunitoSans;
           font-size: 14px;
           font-weight: bold;
-          font-stretch: normal;
-          font-style: normal;
-          line-height: 1.43;
-          letter-spacing: normal;
           color: #001a36;
           margin-bottom: 8px;
         }
         .message-content {
-          font-family: NunitoSans;
           font-size: 16px;
-          font-weight: normal;
-          font-stretch: normal;
-          font-style: normal;
-          line-height: 1.5;
-          letter-spacing: normal;
           color: #001a36;
           margin-bottom: 16px;
         }
       }
       .time-wrapper {
         position: absolute;
-        font-family: NunitoSans;
         font-size: 10px;
         font-weight: bold;
-        font-stretch: normal;
-        line-height: 1.2;
-        letter-spacing: normal;
-        text-align: right;
         color: #979bba;
         right: 8px;
         bottom: 8px;
@@ -100,19 +79,13 @@
     position: absolute;
     bottom: 0px;
     height: 50px;
-    border-left: 1px solid #eeeeee;
+    border-left: 1px solid $light-gray;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-radius: 0 0 12px 0;
     .text {
-      font-family: NunitoSans;
       font-size: 14px;
-      font-weight: normal;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: 1.43;
-      letter-spacing: normal;
       color: #979bba;
     }
     .button-blue {

@@ -3,6 +3,7 @@
 .landing-wrapper {
   text-align: center;
   margin: -$content-padding; // to ignore parent content padding
+  color: $blue-text;
   > section {
     padding: $content-padding;
     > span {
@@ -10,30 +11,142 @@
     }
   }
   .landing-top {
-    background-image: url("/assets/images/sea.jpg");
+    animation: change-main-image $landing-page-animation-duration infinite;
     background-position: 0% 50%;
     background-size: cover;
     background-repeat: repeat;
     display: flex;
     position: relative;
+    justify-content: center;
     .info {
       display: flex;
       flex-direction: column;
       width: 100%;
       margin-left: 50px;
       margin-bottom: 100px;
-      h1 {
+      position: relative;
+      max-width: 80%;
+      .logo {
+        margin-bottom: 50px;
+        width: 170px;
+      }
+      .main-title {
         color: $white;
         text-align: left;
-        .pink-text {
-          color: $pink;
+        font-size: $large;
+        font-family: NotoSerifSC-Black;
+      }
+      .dynamic-text-wrapper {
+        position: relative;
+        align-self: flex-start;
+        text-align: left;
+        width: 100%;
+        height: 50px;
+        .dynamic-text {
+          position: absolute;
+          font-family: NotoSerifSC-Black;
+          font-size: $large;
+          &.one {
+            animation: one $landing-page-animation-duration infinite;
+            color: $pink;
+          }
+          &.two {
+            animation: two $landing-page-animation-duration infinite;
+            color: $green;
+          }
+          &.three {
+            animation: three $landing-page-animation-duration infinite;
+            color: $purple;
+          }
+          @keyframes one {
+            0%,
+            100% {
+              opacity: 1;
+            }
+            33% {
+              opacity: 0;
+            }
+            66% {
+              opacity: 0;
+            }
+          }
+          @keyframes two {
+            0%,
+            100% {
+              opacity: 0;
+            }
+            33% {
+              opacity: 1;
+            }
+            66% {
+              opacity: 0;
+            }
+          }
+          @keyframes three {
+            0%,
+            100% {
+              opacity: 0;
+            }
+            33% {
+              opacity: 0;
+            }
+            66% {
+              opacity: 1;
+            }
+          }
         }
       }
       .mobile-apps-wrapper {
         text-align: left;
+        margin-top: 50px;
         .available-on-label {
           color: white;
           margin-bottom: 10px;
+        }
+      }
+      .iphone-image {
+        position: absolute;
+        right: 0;
+        bottom: -250px;
+        z-index: 1;
+        width: 320px;
+        height: 600px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        &.full {
+          animation: change-iphone-full-image $landing-page-animation-duration infinite;
+          -webkit-animation: change-iphone-full-image $landing-page-animation-duration infinite;
+          //-ms-animation
+        }
+        &.half {
+          height: 300px;
+          animation: change-iphone-half-image $landing-page-animation-duration infinite;
+          -webkit-animation: change-iphone-half-image $landing-page-animation-duration infinite;
+          //-ms-animation
+        }
+        @keyframes change-iphone-full-image {
+          0%,
+          100% {
+            background-image: url("/assets/images/iphone-full-1.png");
+          }
+          33% {
+            background-image: url("/assets/images/iphone-full-2.png");
+          }
+          66% {
+            background-image: url("/assets/images/iphone-full-3.png");
+          }
+        }
+        @keyframes change-iphone-half-image {
+          0%,
+          100% {
+            background-image: url("/assets/images/iphone-half-1.png");
+          }
+          33% {
+            background-image: url("/assets/images/iphone-half-2.png");
+          }
+          66% {
+            background-image: url("/assets/images/iphone-half-3.png");
+          }
         }
       }
     }
@@ -44,19 +157,42 @@
       transform: translate(-50%);
       width: 105%;
     }
+    @keyframes change-main-image {
+      0%,
+      100% {
+        background-image: url("/assets/images/main-landing-image-1.jpg");
+      }
+      33% {
+        background-image: url("/assets/images/main-landing-image-2.jpg");
+      }
+      66% {
+        background-image: url("/assets/images/main-landing-image-3.jpg");
+      }
+    }
   }
-  .illustrations-wrapper {
+  .illustrations-wrapper-1,
+  .illustrations-wrapper-2 {
     display: flex;
     justify-content: space-evenly;
     margin-top: 30px;
   }
   .goal-wrapper {
-    background: url("/assets/images/goal-background.svg") no-repeat;
-    background-size: cover;
-    background-position: center;
+    background: url("/assets/images/goal-wave-top.svg"), url("/assets/images/goal-wave-bottom.svg");
+    background-position: 50% 0%, 50% 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: $light-purple;
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: left;
+    .purple-text {
+      color: $purple;
+    }
+    .half-iphone {
+      width: 400px;
+      margin-right: 30px;
+    }
   }
   .landing-bottom {
     background: url("/assets/images/wave-bottom.svg"), url("/assets/images/join.jpg");
@@ -67,36 +203,70 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 150px 0; // to make the background more visible
   }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .landing-wrapper {
+    margin: -$content-padding-mobile; // to ignore parent content padding
     .landing-top {
       flex-direction: column;
       .info {
         margin-left: unset;
         margin-bottom: unset;
+        max-width: unset;
         .mobile-apps-wrapper {
           align-self: center;
           text-align: center;
         }
-      }
-      .iphone-image {
-        position: relative;
-        bottom: -27px;
-        left: 50%;
-        transform: translate(-50%);
+        .iphone-image {
+          position: relative;
+          bottom: -27px;
+          left: 50%;
+          transform: translate(-50%);
+          width: 300px;
+          z-index: 0;
+        }
+        .main-title {
+          font-size: $medium;
+        }
+        .dynamic-text-wrapper {
+          height: 70px;
+          .dynamic-text {
+            font-size: $medium;
+          }
+        }
       }
     }
     > section {
       padding: $content-padding-mobile;
     }
-    .illustrations-wrapper {
+    .illustrations-wrapper-1 {
       flex-direction: column;
     }
+    .illustrations-wrapper-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-column-gap: 15px;
+      grid-row-gap: 15px;
+      img {
+        width: 150px;
+      }
+    }
     .goal-wrapper {
+      margin-top: 50px;
       flex-direction: column-reverse;
+      background: url("/assets/images/goal-wave-top.svg");
+      background-position: 50% 0%;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-color: $light-purple;
+      padding-bottom: 0;
+      .half-iphone {
+        margin-top: 30px;
+        width: 350px;
+      }
     }
   }
 }

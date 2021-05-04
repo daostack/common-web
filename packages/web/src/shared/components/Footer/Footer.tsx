@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { ROUTE_PATHS } from "../../constants";
 import "./index.scss";
 
 const Footer = () => {
@@ -7,11 +8,12 @@ const Footer = () => {
   return (
     <section className="footer-wrapper">
       <div className="footer-top">
+        <img src="/icons/logo-all-white.svg" alt="logo" className="logo" />
         <div className="links">
-          <Link to="/">
-            <img src="/icons/logo-white.svg" alt="logo" width="120px" className="logo" />
-          </Link>
           <span>About</span>
+          <span>Privacy Policy</span>
+          <span>Terms of Use</span>
+          <Link to={ROUTE_PATHS.COMMON_LIST}>Explore Commons</Link>
           <span>Careers</span>
           <a href="mailto://support@common.io">Contact</a>
           <a

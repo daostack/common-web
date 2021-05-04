@@ -1,13 +1,16 @@
 @import "../../../constants.scss";
 
 .header-wrapper {
-  height: 80px;
-  margin: 0 0 72px;
   padding: 10px $content-padding;
   box-shadow: 0 3px 10px 0 #001a3614;
   background-color: $white;
   display: flex;
   align-items: center;
+  position: fixed;
+  top: 0;
+  z-index: 10;
+  box-sizing: border-box;
+  width: 100%;
 
   .navigation-wrapper {
     margin-left: 50px;
@@ -21,20 +24,32 @@
       line-height: 1.22;
       letter-spacing: normal;
       color: #001a36;
+      margin-right: 50px;
       &.active {
         font-weight: bold;
       }
-      &:not(:last-child) {
-        margin-right: 50px;
-      }
+    }
+  }
+  .mobile-links-container {
+    margin-left: auto;
+  }
+}
+
+@media only screen and (max-width: $small-screen) {
+  .header-wrapper {
+    .mobile-links-container {
+      display: none;
     }
   }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .header-wrapper {
+    .humburger-menu,
+    .common-logo {
+      margin-right: auto;
+    }
     padding: 10px $content-padding-mobile;
     flex-direction: row-reverse;
-    justify-content: space-between;
   }
 }
