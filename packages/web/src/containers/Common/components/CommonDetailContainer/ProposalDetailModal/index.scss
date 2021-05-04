@@ -34,18 +34,11 @@
           }
         }
         .owner-name {
-          font-family: NunitoSans;
           font-size: 16px;
-          font-weight: normal;
-          font-stretch: normal;
-          font-style: normal;
-          line-height: 1.5;
-          letter-spacing: normal;
           text-align: center;
           color: #001a36;
         }
         .days-ago {
-          font-family: NunitoSans;
           font-size: 14px;
           font-weight: normal;
           font-stretch: normal;
@@ -63,13 +56,8 @@
         flex-direction: column;
 
         .discussion-name {
-          font-family: NunitoSans;
           font-size: 24px;
           font-weight: bold;
-          font-stretch: normal;
-          font-style: normal;
-          line-height: 1.33;
-          letter-spacing: normal;
           text-align: center;
           color: #001a36;
           margin-bottom: 24px;
@@ -79,24 +67,14 @@
           border-radius: 20px;
           background-color: #f1f5ff;
           font-size: 14px;
-          font-weight: normal;
-          font-stretch: normal;
-          font-style: normal;
-          line-height: 1.43;
-          letter-spacing: normal;
           text-align: right;
           color: #001a36;
           display: flex;
           margin-bottom: 24px;
           margin-top: 24px;
           .amount {
-            font-family: NunitoSans;
             font-size: 18px;
             font-weight: bold;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: 1.22;
-            letter-spacing: normal;
             color: #001a36;
             margin-left: 4px;
           }
@@ -106,13 +84,7 @@
     .down-side {
       margin-top: 24px;
       .description {
-        font-family: NunitoSans;
         font-size: 16px;
-        font-weight: normal;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.5;
-        letter-spacing: normal;
         color: #001a36;
       }
     }

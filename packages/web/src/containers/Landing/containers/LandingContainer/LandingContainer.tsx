@@ -16,12 +16,14 @@ const LandingContainer = () => {
     <div className="landing-wrapper">
       <section className="landing-top">
         <div className="info">
-          {isLarge && <img src="icons/logo-all-white.svg" alt="logo" width="170px" />}
-          <h1>
-            Launch Collective Action. <br />
-            <span className="dynamic-text" />
-            <br /> Together.
-          </h1>
+          <img src="icons/logo-all-white.svg" alt="common logo" className="logo" />
+          <span className="main-title">Launch Collective Action.</span>
+          <div className="dynamic-text-wrapper">
+            <span className="dynamic-text one">Catalyze a movement</span>
+            <span className="dynamic-text two">Fund Independent Journalism</span>
+            <span className="dynamic-text three">Start a Neighborhood Project</span>
+          </div>
+          <span className="main-title">Together.</span>
           <div className="mobile-apps-wrapper">
             <div className="available-on-label">Available on</div>
             <MobileLinks color="white" />
@@ -37,7 +39,7 @@ const LandingContainer = () => {
           collectively making decisions. <br /> <br />
           <b>Anyone</b> can create a Common, invite thier friends, and work <br /> together to achieve a common goal.
         </p>
-        <div className="illustrations-wrapper">
+        <div className="illustrations-wrapper-1">
           <div>
             <img src="assets/images/transparent.svg" alt="transparent" />
             <h2>Transparent</h2>
@@ -85,7 +87,7 @@ const LandingContainer = () => {
       <section>
         <h1>What's Calling You?</h1>
         <b>You can start a common for any shared agenda such as...</b>
-        <div className="illustrations-wrapper">
+        <div className="illustrations-wrapper-2">
           <div>
             <img src="assets/images/movement.svg" alt="movement" />
             <h5>Catalyze a Movement</h5>

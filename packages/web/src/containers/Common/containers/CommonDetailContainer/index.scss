@@ -7,7 +7,6 @@
       .img-wrapper {
         height: 370px;
         position: relative;
-        margin: 0px -#{$content-padding};
         img {
           position: absolute;
           right: 0;
@@ -170,9 +169,10 @@
     }
     .main-content-container {
       .inner-main-content-wrapper {
-        flex-direction: column-reverse;
+        flex-direction: column;
         .tab-content-wrapper {
           width: unset;
+          margin-bottom: 30px;
         }
         .sidebar-wrapper {
           width: unset;

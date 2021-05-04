@@ -11,7 +11,7 @@
     }
   }
   .landing-top {
-    animation: change-main-image $landing-page-animation-delay infinite;
+    animation: change-main-image $landing-page-animation-duration infinite;
     background-position: 0% 50%;
     background-size: cover;
     background-repeat: repeat;
@@ -26,31 +26,79 @@
       margin-bottom: 100px;
       position: relative;
       max-width: 80%;
-      h1 {
+      .logo {
+        margin-bottom: 50px;
+        width: 170px;
+      }
+      .main-title {
         color: $white;
         text-align: left;
-        .dynamic-text::before {
-          content: "Catalyze a movement";
-          animation: change-text $landing-page-animation-delay infinite;
-          @keyframes change-text {
+        font-size: $large;
+        font-family: NotoSerifSC-Black;
+      }
+      .dynamic-text-wrapper {
+        position: relative;
+        align-self: flex-start;
+        text-align: left;
+        width: 100%;
+        height: 50px;
+        .dynamic-text {
+          position: absolute;
+          font-family: NotoSerifSC-Black;
+          font-size: $large;
+          &.one {
+            animation: one $landing-page-animation-duration infinite;
+            color: $pink;
+          }
+          &.two {
+            animation: two $landing-page-animation-duration infinite;
+            color: $green;
+          }
+          &.three {
+            animation: three $landing-page-animation-duration infinite;
+            color: $purple;
+          }
+          @keyframes one {
             0%,
             100% {
-              content: "Catalyze a movement";
-              color: $pink;
+              opacity: 1;
             }
             33% {
-              content: "Fund Independent Journalism";
-              color: $green;
+              opacity: 0;
             }
             66% {
-              content: "Start a Neighborhood Project";
-              $color: $purple;
+              opacity: 0;
+            }
+          }
+          @keyframes two {
+            0%,
+            100% {
+              opacity: 0;
+            }
+            33% {
+              opacity: 1;
+            }
+            66% {
+              opacity: 0;
+            }
+          }
+          @keyframes three {
+            0%,
+            100% {
+              opacity: 0;
+            }
+            33% {
+              opacity: 0;
+            }
+            66% {
+              opacity: 1;
             }
           }
         }
       }
       .mobile-apps-wrapper {
         text-align: left;
+        margin-top: 50px;
         .available-on-label {
           color: white;
           margin-bottom: 10px;
@@ -66,14 +114,14 @@
         background-size: cover;
         background-repeat: no-repeat;
         &.full {
-          animation: change-iphone-full-image $landing-page-animation-delay infinite;
-          -webkit-animation: change-iphone-full-image $landing-page-animation-delay infinite;
+          animation: change-iphone-full-image $landing-page-animation-duration infinite;
+          -webkit-animation: change-iphone-full-image $landing-page-animation-duration infinite;
           //-ms-animation
         }
         &.half {
           height: 300px;
-          animation: change-iphone-half-image $landing-page-animation-delay infinite;
-          -webkit-animation: change-iphone-half-image $landing-page-animation-delay infinite;
+          animation: change-iphone-half-image $landing-page-animation-duration infinite;
+          -webkit-animation: change-iphone-half-image $landing-page-animation-duration infinite;
           //-ms-animation
         }
         @keyframes change-iphone-full-image {
@@ -122,7 +170,8 @@
       }
     }
   }
-  .illustrations-wrapper {
+  .illustrations-wrapper-1,
+  .illustrations-wrapper-2 {
     display: flex;
     justify-content: space-evenly;
     margin-top: 30px;
@@ -179,13 +228,31 @@
           width: 300px;
           z-index: 0;
         }
+        .main-title {
+          font-size: $medium;
+        }
+        .dynamic-text-wrapper {
+          height: 70px;
+          .dynamic-text {
+            font-size: $medium;
+          }
+        }
       }
     }
     > section {
       padding: $content-padding-mobile;
     }
-    .illustrations-wrapper {
+    .illustrations-wrapper-1 {
       flex-direction: column;
+    }
+    .illustrations-wrapper-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-column-gap: 15px;
+      grid-row-gap: 15px;
+      img {
+        width: 150px;
+      }
     }
     .goal-wrapper {
       margin-top: 50px;
