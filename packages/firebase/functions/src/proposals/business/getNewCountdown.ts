@@ -1,4 +1,4 @@
-
+import { firestore } from 'firebase-admin';
 /**
  * In case the proposal was hidden during the quiet ending period,
  * if the proposal is getting un-hidden, we want the countdown to start from the
@@ -9,9 +9,9 @@
  */
 export const getNewCountdown = (currCountdown: number, quietEndingPeriod: number) : number => {
 	
-  const now = new Date();
+  const now = firestore.Timestamp.now();
   const countdownHour = (new Date(currCountdown * 1000)).getHours();
-  const diff = (Math.abs(now.getHours() - countdownHour)) % 24;
+  const diff = (Math.abs((now.toDate()).getHours() - countdownHour)) % 24;
   
   if (diff > 0 && diff < quietEndingPeriod / 3600) 
   {

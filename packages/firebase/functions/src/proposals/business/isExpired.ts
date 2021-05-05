@@ -1,6 +1,7 @@
 import { IProposalEntity } from '@common/types';
 import { ArgumentError } from '../../util/errors';
 import { FLAGS } from '../../moderation/constants';
+import { firestore } from 'firebase-admin';
 
 /**
  * Returns whether the passed proposal has expired or
@@ -24,7 +25,7 @@ export const isExpired = async (proposal: IProposalEntity): Promise<boolean> => 
     return true;
   }
 
-  const now = new Date();
+  const now = (firestore.Timestamp.now()).toDate();
   // If the proposal changed from hidden to visible, we start the countdown from the time it was changed to visible and not 
   const startTime = moderation?.flag && moderation?.flag !== FLAGS.reported
     ? moderation?.updatedAt?.toDate().getTime()
