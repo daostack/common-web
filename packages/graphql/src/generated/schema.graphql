@@ -858,9 +858,12 @@ type Vote {
 
   """The main identifier of the item"""
   id: ID!
+  outcome: VoteOutcome!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+  voter: CommonMember!
+  voterId: ID!
 }
 
 enum VoteOutcome {

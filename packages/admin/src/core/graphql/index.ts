@@ -155,6 +155,9 @@ export type Vote = {
   createdAt: Scalars['DateTime'];
   /** The date, at which the item was last modified */
   updatedAt: Scalars['DateTime'];
+  outcome: VoteOutcome;
+  voterId: Scalars['ID'];
+  voter: CommonMember;
 };
 
 export enum VoteOutcome {
@@ -1108,7 +1111,18 @@ export type GetProposalDetailsQuery = (
     }
       ), votes: Array<(
       { __typename?: 'Vote' }
-      & Pick<Vote, 'id'>
+      & Pick<Vote, 'id' | 'outcome'>
+      & {
+      voter: (
+        { __typename?: 'CommonMember' }
+        & {
+        user?: Maybe<(
+          { __typename?: 'User' }
+          & Pick<User, 'id' | 'firstName' | 'lastName'>
+          )>
+      }
+        )
+    }
       )>
   }
     )>
@@ -1324,11 +1338,9 @@ export const GetCommonDetailsDocument = gql`
 export function useGetCommonDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>) {
   return Apollo.useQuery<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>(GetCommonDetailsDocument, baseOptions);
 }
-
 export function useGetCommonDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>) {
   return Apollo.useLazyQuery<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>(GetCommonDetailsDocument, baseOptions);
 }
-
 export type GetCommonDetailsQueryHookResult = ReturnType<typeof useGetCommonDetailsQuery>;
 export type GetCommonDetailsLazyQueryHookResult = ReturnType<typeof useGetCommonDetailsLazyQuery>;
 export type GetCommonDetailsQueryResult = Apollo.QueryResult<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>;
@@ -1364,6 +1376,14 @@ export const GetProposalDetailsDocument = gql`
       description
       votes {
         id
+        outcome
+        voter {
+          user {
+            id
+            firstName
+            lastName
+          }
+        }
       }
     }
   }
@@ -1388,11 +1408,9 @@ export const GetProposalDetailsDocument = gql`
 export function useGetProposalDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>) {
   return Apollo.useQuery<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>(GetProposalDetailsDocument, baseOptions);
 }
-
 export function useGetProposalDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>) {
   return Apollo.useLazyQuery<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>(GetProposalDetailsDocument, baseOptions);
 }
-
 export type GetProposalDetailsQueryHookResult = ReturnType<typeof useGetProposalDetailsQuery>;
 export type GetProposalDetailsLazyQueryHookResult = ReturnType<typeof useGetProposalDetailsLazyQuery>;
 export type GetProposalDetailsQueryResult = Apollo.QueryResult<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>;

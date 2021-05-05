@@ -433,6 +433,7 @@ export interface NexusGenObjects {
   Vote: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
+    outcome: NexusGenEnums['VoteOutcome']; // VoteOutcome!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
 }
@@ -687,7 +688,10 @@ export interface NexusGenFieldTypes {
   Vote: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
+    outcome: NexusGenEnums['VoteOutcome']; // VoteOutcome!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    voter: NexusGenRootTypes['CommonMember']; // CommonMember!
+    voterId: string; // ID!
   }
   BaseEntity: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -935,7 +939,10 @@ export interface NexusGenFieldTypeNames {
   Vote: { // field return type name
     createdAt: 'DateTime'
     id: 'ID'
+    outcome: 'VoteOutcome'
     updatedAt: 'DateTime'
+    voter: 'CommonMember'
+    voterId: 'ID'
   }
   BaseEntity: { // field return type name
     createdAt: 'DateTime'

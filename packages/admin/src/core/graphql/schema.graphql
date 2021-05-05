@@ -100,6 +100,9 @@ type Vote {
   createdAt: DateTime!
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+  outcome: VoteOutcome!
+  voterId: ID!
+  voter: CommonMember!
 }
 enum VoteOutcome {
   Approve

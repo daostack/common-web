@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 
 import { gql } from '@apollo/client';
 import { Breadcrumbs, Card, Grid, Spacer, Table, Tag, Text, useTheme } from '@geist-ui/react';
-import { DollarSign, Trello as Vote, Type, User } from '@geist-ui/react-icons';
+import { DollarSign, Trello as Vote, Type, User, CheckInCircle, XCircle } from '@geist-ui/react-icons';
 
 import { Link } from '@components/Link';
 import { Centered } from '@components/Centered';
@@ -53,17 +53,18 @@ const GetProposalDetails = gql`
 
       votes {
         id
-      }
 
-      #      votes {
-      #        outcome
-      #        voter {
-      #          id
-      #
-      #          firstName
-      #          lastName
-      #        }
-      #      }
+        outcome
+
+        voter {
+          user {
+            id
+
+            firstName
+            lastName
+          }
+        }
+      }
     }
   }
 `;
@@ -126,24 +127,21 @@ const ProposalDetailsPage: NextPage = () => {
         ),
 
         voter: (
-          // <Link to={`/users/details/${vote.voter.id}`}>
-          //   {vote.voter.firstName} {vote.voter.lastName}
-          // </Link>
-
-          <p>-</p>
+          <Link to={`/users/details/${vote.voter.user.id}`}>
+            {vote.voter.user.firstName} {vote.voter.user.lastName}
+          </Link>
         ),
 
         outcome: (
-          // <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-          //   {vote.outcome === 'rejected' && (
-          //     <XCircle color={theme.palette.error}/>
-          //   )}
-          //
-          //   {vote.outcome === 'approved' && (
-          //     <CheckInCircle color={theme.palette.success}/>
-          //   )}
-          // </div>
-          <p>-</p>
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+            {vote.outcome === 'Condemn' && (
+              <XCircle color={theme.palette.error}/>
+            )}
+
+            {vote.outcome === 'Approve' && (
+              <CheckInCircle color={theme.palette.success}/>
+            )}
+          </div>
         )
       };
     });
