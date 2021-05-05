@@ -661,6 +661,7 @@ type Query {
   Provide ID to fetch specific user or do not pass anything to get the currently authenticated user
   """
   user(where: UserWhereUniqueInput): User
+  users(paginate: PaginateInput, where: UserWhereInput): [User]
 }
 
 type Report implements BaseEntity {
@@ -883,6 +884,12 @@ enum UserNotificationTokenState {
   Active
   Expired
   Voided
+}
+
+input UserWhereInput {
+  email: StringFilter
+  firstName: StringFilter
+  lastName: StringFilter
 }
 
 input UserWhereUniqueInput {

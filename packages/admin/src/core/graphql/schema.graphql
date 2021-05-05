@@ -53,6 +53,11 @@ type UserNotificationToken implements BaseEntity {
 input UserWhereUniqueInput {
   userId: ID!
 }
+input UserWhereInput {
+  firstName: StringFilter
+  lastName: StringFilter
+  email: StringFilter
+}
 input CreateUserInput {
   firstName: String!
   lastName: String!
@@ -673,6 +678,7 @@ input CreateRoleInput {
 type Query {
   """Provide ID to fetch specific user or do not pass anything to get the currently authenticated user"""
   user(where: UserWhereUniqueInput): User
+  users(where: UserWhereInput, paginate: PaginateInput): [User]
   generateUserAuthToken(authId: String!): String!
   roles(paginate: PaginateInput): [Role]
   events(paginate: PaginateInput): [Event]

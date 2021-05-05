@@ -224,6 +224,11 @@ export interface NexusGenInputs {
     notIn?: string[] | null; // [String!]
     startsWith?: string | null; // String
   }
+  UserWhereInput: { // input type
+    email?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    firstName?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    lastName?: NexusGenInputs['StringFilter'] | null; // StringFilter
+  }
   UserWhereUniqueInput: { // input type
     userId: string; // ID!
   }
@@ -649,6 +654,7 @@ export interface NexusGenFieldTypes {
     proposals: Array<NexusGenRootTypes['Proposal'] | null> | null; // [Proposal]
     roles: Array<NexusGenRootTypes['Role'] | null> | null; // [Role]
     user: NexusGenRootTypes['User'] | null; // User
+    users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
   }
   Report: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -913,6 +919,7 @@ export interface NexusGenFieldTypeNames {
     proposals: 'Proposal'
     roles: 'Role'
     user: 'User'
+    users: 'User'
   }
   Report: { // field return type name
     createdAt: 'DateTime'
@@ -1129,6 +1136,10 @@ export interface NexusGenArgTypes {
     }
     user: { // args
       where?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
+    }
+    users: { // args
+      paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
+      where?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
     }
   }
   Subscription: {

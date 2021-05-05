@@ -100,6 +100,12 @@ export type UserWhereUniqueInput = {
   userId: Scalars['ID'];
 };
 
+export type UserWhereInput = {
+  firstName?: Maybe<StringFilter>;
+  lastName?: Maybe<StringFilter>;
+  email?: Maybe<StringFilter>;
+};
+
 export type CreateUserInput = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
@@ -862,6 +868,7 @@ export type Query = {
   __typename?: 'Query';
   /** Provide ID to fetch specific user or do not pass anything to get the currently authenticated user */
   user?: Maybe<User>;
+  users?: Maybe<Array<Maybe<User>>>;
   generateUserAuthToken: Scalars['String'];
   roles?: Maybe<Array<Maybe<Role>>>;
   events?: Maybe<Array<Maybe<Event>>>;
@@ -876,6 +883,12 @@ export type Query = {
 
 export type QueryUserArgs = {
   where?: Maybe<UserWhereUniqueInput>;
+};
+
+
+export type QueryUsersArgs = {
+  where?: Maybe<UserWhereInput>;
+  paginate?: Maybe<PaginateInput>;
 };
 
 
@@ -1310,6 +1323,22 @@ export type GetProposalsHomescreenQuery = (
 }
   );
 
+export type GetUsersHomepageDataQueryVariables = Exact<{
+  paginate: PaginateInput;
+  where?: Maybe<UserWhereInput>;
+}>;
+
+
+export type GetUsersHomepageDataQuery = (
+  { __typename?: 'Query' }
+  & {
+  users?: Maybe<Array<Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'photo' | 'email' | 'firstName' | 'lastName' | 'createdAt'>
+    )>>>
+}
+  );
+
 
 export const LoadUserContextDocument = gql`
   query loadUserContext {
@@ -1481,11 +1510,9 @@ export const GetProposalDetailsDocument = gql`
 export function useGetProposalDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>) {
   return Apollo.useQuery<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>(GetProposalDetailsDocument, baseOptions);
 }
-
 export function useGetProposalDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>) {
   return Apollo.useLazyQuery<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>(GetProposalDetailsDocument, baseOptions);
 }
-
 export type GetProposalDetailsQueryHookResult = ReturnType<typeof useGetProposalDetailsQuery>;
 export type GetProposalDetailsLazyQueryHookResult = ReturnType<typeof useGetProposalDetailsLazyQuery>;
 export type GetProposalDetailsQueryResult = Apollo.QueryResult<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>;
@@ -1544,11 +1571,9 @@ export const GetUserDetailsQueryDocument = gql`
 export function useGetUserDetailsQueryQuery(baseOptions: Apollo.QueryHookOptions<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>) {
   return Apollo.useQuery<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>(GetUserDetailsQueryDocument, baseOptions);
 }
-
 export function useGetUserDetailsQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>) {
   return Apollo.useLazyQuery<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>(GetUserDetailsQueryDocument, baseOptions);
 }
-
 export type GetUserDetailsQueryQueryHookResult = ReturnType<typeof useGetUserDetailsQueryQuery>;
 export type GetUserDetailsQueryLazyQueryHookResult = ReturnType<typeof useGetUserDetailsQueryLazyQuery>;
 export type GetUserDetailsQueryQueryResult = Apollo.QueryResult<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>;
@@ -1780,9 +1805,52 @@ export const GetProposalsHomescreenDocument = gql`
 export function useGetProposalsHomescreenQuery(baseOptions: Apollo.QueryHookOptions<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>) {
   return Apollo.useQuery<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>(GetProposalsHomescreenDocument, baseOptions);
 }
+
 export function useGetProposalsHomescreenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>) {
   return Apollo.useLazyQuery<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>(GetProposalsHomescreenDocument, baseOptions);
 }
+
 export type GetProposalsHomescreenQueryHookResult = ReturnType<typeof useGetProposalsHomescreenQuery>;
 export type GetProposalsHomescreenLazyQueryHookResult = ReturnType<typeof useGetProposalsHomescreenLazyQuery>;
 export type GetProposalsHomescreenQueryResult = Apollo.QueryResult<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>;
+export const GetUsersHomepageDataDocument = gql`
+  query getUsersHomepageData($paginate: PaginateInput!, $where: UserWhereInput) {
+    users(paginate: $paginate, where: $where) {
+      id
+      photo
+      email
+      firstName
+      lastName
+      createdAt
+    }
+  }
+`;
+
+/**
+ * __useGetUsersHomepageDataQuery__
+ *
+ * To run a query within a React component, call `useGetUsersHomepageDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUsersHomepageDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUsersHomepageDataQuery({
+ *   variables: {
+ *      paginate: // value for 'paginate'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetUsersHomepageDataQuery(baseOptions: Apollo.QueryHookOptions<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>) {
+  return Apollo.useQuery<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>(GetUsersHomepageDataDocument, baseOptions);
+}
+
+export function useGetUsersHomepageDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>) {
+  return Apollo.useLazyQuery<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>(GetUsersHomepageDataDocument, baseOptions);
+}
+
+export type GetUsersHomepageDataQueryHookResult = ReturnType<typeof useGetUsersHomepageDataQuery>;
+export type GetUsersHomepageDataLazyQueryHookResult = ReturnType<typeof useGetUsersHomepageDataLazyQuery>;
+export type GetUsersHomepageDataQueryResult = Apollo.QueryResult<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>;

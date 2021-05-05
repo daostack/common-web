@@ -22,14 +22,18 @@ import { CreateUserInput, CreateUserMutation } from './Mutations/CreateUser.muta
 import { VoidUserNotificationTokenMutation } from './Mutations/VoidUserNotificationToken.mutation';
 import { UserWhereUniqueInput } from './Inputs/UserWhereUnique.input';
 import { UserSubscriptionsExtension } from './Extensions/UserSubscriptions.extension';
+import { UserWhereInput } from './Inputs/UserWhere.input';
+import { GetUsersQuery } from './Queries/GetUsers.query';
 
 export const UserTypes = [
   UserType,
   UserNotificationTokenType,
 
   GetUserQuery,
+  GetUsersQuery,
 
   UserWhereUniqueInput,
+  UserWhereInput,
 
   CreateUserInput,
   CreateUserMutation,
