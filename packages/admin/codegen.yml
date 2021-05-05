@@ -8,6 +8,7 @@ documents:
   - "src/pages/commons/index.tsx"
   - "src/pages/proposals/index.tsx"
   - "src/pages/commons/details/[commonId].tsx"
+  - "src/pages/proposals/details/[proposalId].tsx"
 generates:
   ./src/core/graphql/index.ts:
     plugins:

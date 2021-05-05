@@ -361,6 +361,7 @@ export interface NexusGenObjects {
   }
   Proposal: { // root type
     commonId: NexusGenScalars['UUID']; // UUID!
+    commonMemberId: NexusGenScalars['UUID']; // UUID!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description?: string | null; // String
     expiresAt: NexusGenScalars['DateTime']; // DateTime!
@@ -375,6 +376,7 @@ export interface NexusGenObjects {
     title?: string | null; // String
     type: NexusGenEnums['ProposalType']; // ProposalType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    userId: string; // ID!
     votesAgainst: number; // Int!
     votesFor: number; // Int!
   }
@@ -583,6 +585,7 @@ export interface NexusGenFieldTypes {
   Proposal: { // field return type
     common: NexusGenRootTypes['Common']; // Common!
     commonId: NexusGenScalars['UUID']; // UUID!
+    commonMemberId: NexusGenScalars['UUID']; // UUID!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description: string | null; // String
     discussions: NexusGenRootTypes['Discussion'][]; // [Discussion!]!
@@ -596,10 +599,14 @@ export interface NexusGenFieldTypes {
     join: NexusGenRootTypes['JoinProposal'] | null; // JoinProposal
     joinId: NexusGenScalars['UUID'] | null; // UUID
     links: NexusGenScalars['JSON'] | null; // JSON
+    member: NexusGenRootTypes['CommonMember']; // CommonMember!
     state: NexusGenEnums['ProposalState']; // ProposalState!
     title: string | null; // String
     type: NexusGenEnums['ProposalType']; // ProposalType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    user: NexusGenRootTypes['User']; // User!
+    userId: string; // ID!
+    votes: NexusGenRootTypes['Vote'][]; // [Vote!]!
     votesAgainst: number; // Int!
     votesFor: number; // Int!
   }
@@ -826,6 +833,7 @@ export interface NexusGenFieldTypeNames {
   Proposal: { // field return type name
     common: 'Common'
     commonId: 'UUID'
+    commonMemberId: 'UUID'
     createdAt: 'DateTime'
     description: 'String'
     discussions: 'Discussion'
@@ -839,10 +847,14 @@ export interface NexusGenFieldTypeNames {
     join: 'JoinProposal'
     joinId: 'UUID'
     links: 'JSON'
+    member: 'CommonMember'
     state: 'ProposalState'
     title: 'String'
     type: 'ProposalType'
     updatedAt: 'DateTime'
+    user: 'User'
+    userId: 'ID'
+    votes: 'Vote'
     votesAgainst: 'Int'
     votesFor: 'Int'
   }

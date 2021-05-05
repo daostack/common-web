@@ -27,6 +27,8 @@ import { ProposalJoinExtension } from './Extensions/ProposalJoin.extension';
 
 import { ProposalChangeSubscription } from './Subscriptions/ProposalChange.subscription';
 import { GetProposalsQuery } from './Queries/GetProposals.query';
+import { ProposalProposerExtension } from './Enums/ProposalProposer.extension';
+import { ProposalVotesExtension } from './Enums/ProposalVotes.extension';
 
 export const ProposalTypes = [
   ProposalType,
@@ -57,8 +59,10 @@ export const ProposalTypes = [
   ProposalWhereUniqueInput,
 
   ProposalDiscussionsExtension,
+  ProposalProposerExtension,
   ProposalFundingExtension,
   ProposalCommonExtension,
+  ProposalVotesExtension,
   ProposalJoinExtension,
 
   ProposalChangeSubscription

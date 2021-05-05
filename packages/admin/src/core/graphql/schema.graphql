@@ -303,10 +303,17 @@ type Proposal {
   """The IP from which the proposal was created"""
   ipAddress: String
   discussions(take: Int, skip: Int): [Discussion!]!
+  """The ID of the user who created the proposal"""
+  userId: ID!
+  """The ID of the membership of the user who created the proposal"""
+  commonMemberId: UUID!
+  user: User!
+  member: CommonMember!
   fundingId: UUID
   funding: FundingProposal
   commonId: UUID!
   common: Common!
+  votes: [Vote!]!
   joinId: UUID
   join: JoinProposal
 }

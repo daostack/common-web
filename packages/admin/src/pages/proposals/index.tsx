@@ -187,7 +187,7 @@ const ProposalsHomepage: NextPage = () => {
             {statistics && statistics.getStatistics[0].fundingProposals > 10 && (
               <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
                 <Pagination count={Math.ceil(statistics.getStatistics[0].fundingProposals / 10)}
-                            onChange={onFundingPageChange}>
+                            onChange={onFundingPageChange} w>
                   <Pagination.Next>
                     <ChevronRightCircleFill/>
                   </Pagination.Next>
