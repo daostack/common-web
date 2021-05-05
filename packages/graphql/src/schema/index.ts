@@ -6,13 +6,14 @@ import { CardTypes } from './Types/Cards';
 import { VoteTypes } from './Types/Votes';
 import { RoleTypes } from './Types/Roles';
 import { EventTypes } from './Types/Events';
-import { CommonTypes } from './Types/Commons';
+import { CommonTypes } from './Types/Common';
 import { ReportTypes } from './Types/Reports';
 import { ProposalTypes } from './Types/Proposals';
 import { StatisticTypes } from './Types/Statistics';
 import { DiscussionTypes } from './Types/Discussion';
 import { CommonMemberTypes } from './Types/CommonMember';
 import { NotificationTypes } from './Types/Notifications';
+import { CommonSubscriptionTypes } from './Types/CommonSubscriptions';
 
 import { UrlScalar } from './Shared/Scalars/Url.scalar';
 import { VoidScalar } from './Shared/Scalars/Void.scalar';
@@ -43,6 +44,7 @@ const types = [
   DiscussionTypes,
   CommonMemberTypes,
   NotificationTypes,
+  CommonSubscriptionTypes,
 
   // Scalars
   UrlScalar,

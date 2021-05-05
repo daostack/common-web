@@ -20,12 +20,16 @@ import {
 } from './Mutations/CreateUserNotificationToken.mutation';
 import { CreateUserInput, CreateUserMutation } from './Mutations/CreateUser.mutation';
 import { VoidUserNotificationTokenMutation } from './Mutations/VoidUserNotificationToken.mutation';
+import { UserWhereUniqueInput } from './Inputs/UserWhereUnique.input';
+import { UserSubscriptionsExtension } from './Extensions/UserSubscriptions.extension';
 
 export const UserTypes = [
   UserType,
   UserNotificationTokenType,
 
   GetUserQuery,
+
+  UserWhereUniqueInput,
 
   CreateUserInput,
   CreateUserMutation,
@@ -39,6 +43,7 @@ export const UserTypes = [
 
   UserEventsExtension,
   UserProposalsExtension,
+  UserSubscriptionsExtension,
   UserNotificationsExtension,
   UserNotificationTokensExtension,
   UserDiscussionSubscriptionsExtension,

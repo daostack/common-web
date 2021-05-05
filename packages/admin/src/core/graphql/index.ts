@@ -46,6 +46,7 @@ export type User = {
   /** List of events, that occurred and are related to this user */
   events: Array<Event>;
   proposals: Array<Proposal>;
+  subscriptions: Array<CommonSubscription>;
   notifications: Array<Notification>;
   notificationTokens: Array<UserNotificationToken>;
   discussionSubscriptions: Array<DiscussionSubscription>;
@@ -93,6 +94,10 @@ export type UserNotificationToken = BaseEntity & {
   description: Scalars['String'];
   lastUsed: Scalars['DateTime'];
   lastVerified: Scalars['DateTime'];
+};
+
+export type UserWhereUniqueInput = {
+  userId: Scalars['ID'];
 };
 
 export type CreateUserInput = {
@@ -756,6 +761,38 @@ export type NotificationOrderByInput = {
   status?: Maybe<SortOrder>;
 };
 
+export type CommonSubscription = BaseEntity & {
+  __typename?: 'CommonSubscription';
+  /** The main identifier of the item */
+  id: Scalars['UUID'];
+  /** The date, at which the item was created */
+  createdAt: Scalars['DateTime'];
+  /** The date, at which the item was last modified */
+  updatedAt: Scalars['DateTime'];
+  paymentStatus: SubscriptionPaymentStatus;
+  status: SubscriptionStatus;
+  dueDate: Scalars['DateTime'];
+  chargedAt: Scalars['DateTime'];
+  voided: Scalars['Boolean'];
+  amount: Scalars['Int'];
+  common: Common;
+};
+
+export enum SubscriptionPaymentStatus {
+  AwaitingInitialPayment = 'AwaitingInitialPayment',
+  Pending = 'Pending',
+  Successful = 'Successful',
+  Unsuccessful = 'Unsuccessful'
+}
+
+export enum SubscriptionStatus {
+  Pending = 'Pending',
+  Active = 'Active',
+  PaymentFailed = 'PaymentFailed',
+  CanceledByUser = 'CanceledByUser',
+  CanceledByPaymentFailure = 'CanceledByPaymentFailure'
+}
+
 
 export enum SortOrder {
   Asc = 'asc',
@@ -838,7 +875,7 @@ export type Query = {
 
 
 export type QueryUserArgs = {
-  userId?: Maybe<Scalars['ID']>;
+  where?: Maybe<UserWhereUniqueInput>;
 };
 
 
@@ -1129,6 +1166,42 @@ export type GetProposalDetailsQuery = (
 }
   );
 
+export type GetUserDetailsQueryQueryVariables = Exact<{
+  where: UserWhereUniqueInput;
+}>;
+
+
+export type GetUserDetailsQueryQuery = (
+  { __typename?: 'Query' }
+  & {
+  user?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'firstName' | 'lastName' | 'email' | 'createdAt' | 'photo'>
+    & {
+    proposals: Array<(
+      { __typename?: 'Proposal' }
+      & Pick<Proposal, 'id' | 'type' | 'state' | 'title'>
+      & {
+      join?: Maybe<(
+        { __typename?: 'JoinProposal' }
+        & Pick<JoinProposal, 'paymentState'>
+        )>
+    }
+      )>, subscriptions: Array<(
+      { __typename?: 'CommonSubscription' }
+      & Pick<CommonSubscription, 'id' | 'amount' | 'status' | 'voided' | 'createdAt' | 'updatedAt' | 'chargedAt' | 'dueDate'>
+      & {
+      common: (
+        { __typename?: 'Common' }
+        & Pick<Common, 'id' | 'name'>
+        )
+    }
+      )>
+  }
+    )>
+}
+  );
+
 export type WhitelistCommonMutationVariables = Exact<{
   commonId: Scalars['String'];
 }>;
@@ -1408,12 +1481,77 @@ export const GetProposalDetailsDocument = gql`
 export function useGetProposalDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>) {
   return Apollo.useQuery<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>(GetProposalDetailsDocument, baseOptions);
 }
+
 export function useGetProposalDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>) {
   return Apollo.useLazyQuery<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>(GetProposalDetailsDocument, baseOptions);
 }
+
 export type GetProposalDetailsQueryHookResult = ReturnType<typeof useGetProposalDetailsQuery>;
 export type GetProposalDetailsLazyQueryHookResult = ReturnType<typeof useGetProposalDetailsLazyQuery>;
 export type GetProposalDetailsQueryResult = Apollo.QueryResult<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>;
+export const GetUserDetailsQueryDocument = gql`
+  query getUserDetailsQuery($where: UserWhereUniqueInput!) {
+    user(where: $where) {
+      id
+      firstName
+      lastName
+      email
+      createdAt
+      photo
+      proposals {
+        id
+        type
+        state
+        join {
+          paymentState
+        }
+        title
+      }
+      subscriptions {
+        id
+        amount
+        common {
+          id
+          name
+        }
+        status
+        voided
+        createdAt
+        updatedAt
+        chargedAt
+        dueDate
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetUserDetailsQueryQuery__
+ *
+ * To run a query within a React component, call `useGetUserDetailsQueryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserDetailsQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserDetailsQueryQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetUserDetailsQueryQuery(baseOptions: Apollo.QueryHookOptions<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>) {
+  return Apollo.useQuery<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>(GetUserDetailsQueryDocument, baseOptions);
+}
+
+export function useGetUserDetailsQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>) {
+  return Apollo.useLazyQuery<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>(GetUserDetailsQueryDocument, baseOptions);
+}
+
+export type GetUserDetailsQueryQueryHookResult = ReturnType<typeof useGetUserDetailsQueryQuery>;
+export type GetUserDetailsQueryLazyQueryHookResult = ReturnType<typeof useGetUserDetailsQueryLazyQuery>;
+export type GetUserDetailsQueryQueryResult = Apollo.QueryResult<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>;
 export const WhitelistCommonDocument = gql`
   mutation whitelistCommon($commonId: String!) {
     whitelistCommon(commonId: $commonId)

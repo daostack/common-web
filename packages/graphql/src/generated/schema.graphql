@@ -108,6 +108,25 @@ enum CommonMemberRole {
   Moderator
 }
 
+type CommonSubscription implements BaseEntity {
+  amount: Int!
+  chargedAt: DateTime!
+  common: Common!
+
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  dueDate: DateTime!
+
+  """The main identifier of the item"""
+  id: UUID!
+  paymentStatus: SubscriptionPaymentStatus!
+  status: SubscriptionStatus!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  voided: Boolean!
+}
+
 input CommonWhereUniqueInput {
   id: ID!
 }
@@ -641,7 +660,7 @@ type Query {
   """
   Provide ID to fetch specific user or do not pass anything to get the currently authenticated user
   """
-  user(userId: ID): User
+  user(where: UserWhereUniqueInput): User
 }
 
 type Report implements BaseEntity {
@@ -784,6 +803,21 @@ type Subscription {
   ): Proposal
 }
 
+enum SubscriptionPaymentStatus {
+  AwaitingInitialPayment
+  Pending
+  Successful
+  Unsuccessful
+}
+
+enum SubscriptionStatus {
+  Active
+  CanceledByPaymentFailure
+  CanceledByUser
+  PaymentFailed
+  Pending
+}
+
 """
 A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt.
 """
@@ -823,6 +857,7 @@ type User {
   permissions: [String!]!
   photo: String!
   proposals(skip: Int = 0, take: Int = 10, where: ProposalWhereInput): [Proposal!]!
+  subscriptions: [CommonSubscription!]!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
@@ -848,6 +883,10 @@ enum UserNotificationTokenState {
   Active
   Expired
   Voided
+}
+
+input UserWhereUniqueInput {
+  userId: ID!
 }
 
 scalar Void

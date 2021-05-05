@@ -4,11 +4,10 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
-import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
+import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -225,6 +224,9 @@ export interface NexusGenInputs {
     notIn?: string[] | null; // [String!]
     startsWith?: string | null; // String
   }
+  UserWhereUniqueInput: { // input type
+    userId: string; // ID!
+  }
 }
 
 export interface NexusGenEnums {
@@ -247,6 +249,8 @@ export interface NexusGenEnums {
   ReportStatus: "Active" | "Clossed"
   SortOrder: "asc" | "desc"
   StatisticType: "AllTime" | "Daily" | "Hourly" | "Weekly"
+  SubscriptionPaymentStatus: "AwaitingInitialPayment" | "Pending" | "Successful" | "Unsuccessful"
+  SubscriptionStatus: "Active" | "CanceledByPaymentFailure" | "CanceledByUser" | "PaymentFailed" | "Pending"
   UserNotificationTokenState: "Active" | "Expired" | "Voided"
   VoteOutcome: "Approve" | "Condemn"
 }
@@ -292,6 +296,17 @@ export interface NexusGenObjects {
     roles: NexusGenEnums['CommonMemberRole'][]; // [CommonMemberRole!]!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     userId: string; // ID!
+  }
+  CommonSubscription: { // root type
+    amount: number; // Int!
+    chargedAt: NexusGenScalars['DateTime']; // DateTime!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    dueDate: NexusGenScalars['DateTime']; // DateTime!
+    id: NexusGenScalars['UUID']; // UUID!
+    paymentStatus: NexusGenEnums['SubscriptionPaymentStatus']; // SubscriptionPaymentStatus!
+    status: NexusGenEnums['SubscriptionStatus']; // SubscriptionStatus!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    voided: boolean; // Boolean!
   }
   Discussion: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -439,7 +454,7 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  BaseEntity: NexusGenRootTypes['CommonMember'] | NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['FundingProposal'] | NexusGenRootTypes['JoinProposal'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['Report'] | NexusGenRootTypes['Role'] | NexusGenRootTypes['Statistic'] | NexusGenRootTypes['UserNotificationToken'];
+  BaseEntity: NexusGenRootTypes['CommonMember'] | NexusGenRootTypes['CommonSubscription'] | NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['FundingProposal'] | NexusGenRootTypes['JoinProposal'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['Report'] | NexusGenRootTypes['Role'] | NexusGenRootTypes['Statistic'] | NexusGenRootTypes['UserNotificationToken'];
 }
 
 export interface NexusGenUnions {
@@ -488,6 +503,18 @@ export interface NexusGenFieldTypes {
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     user: NexusGenRootTypes['User'] | null; // User
     userId: string; // ID!
+  }
+  CommonSubscription: { // field return type
+    amount: number; // Int!
+    chargedAt: NexusGenScalars['DateTime']; // DateTime!
+    common: NexusGenRootTypes['Common']; // Common!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    dueDate: NexusGenScalars['DateTime']; // DateTime!
+    id: NexusGenScalars['UUID']; // UUID!
+    paymentStatus: NexusGenEnums['SubscriptionPaymentStatus']; // SubscriptionPaymentStatus!
+    status: NexusGenEnums['SubscriptionStatus']; // SubscriptionStatus!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    voided: boolean; // Boolean!
   }
   Discussion: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -673,6 +700,7 @@ export interface NexusGenFieldTypes {
     permissions: string[]; // [String!]!
     photo: string; // String!
     proposals: NexusGenRootTypes['Proposal'][]; // [Proposal!]!
+    subscriptions: NexusGenRootTypes['CommonSubscription'][]; // [CommonSubscription!]!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   UserNotificationToken: { // field return type
@@ -739,6 +767,18 @@ export interface NexusGenFieldTypeNames {
     updatedAt: 'DateTime'
     user: 'User'
     userId: 'ID'
+  }
+  CommonSubscription: { // field return type name
+    amount: 'Int'
+    chargedAt: 'DateTime'
+    common: 'Common'
+    createdAt: 'DateTime'
+    dueDate: 'DateTime'
+    id: 'UUID'
+    paymentStatus: 'SubscriptionPaymentStatus'
+    status: 'SubscriptionStatus'
+    updatedAt: 'DateTime'
+    voided: 'Boolean'
   }
   Discussion: { // field return type name
     createdAt: 'DateTime'
@@ -924,6 +964,7 @@ export interface NexusGenFieldTypeNames {
     permissions: 'String'
     photo: 'String'
     proposals: 'Proposal'
+    subscriptions: 'CommonSubscription'
     updatedAt: 'DateTime'
   }
   UserNotificationToken: { // field return type name
@@ -1087,7 +1128,7 @@ export interface NexusGenArgTypes {
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
     }
     user: { // args
-      userId?: string | null; // ID
+      where?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
     }
   }
   Subscription: {
@@ -1124,11 +1165,12 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  BaseEntity: "CommonMember" | "Discussion" | "DiscussionMessage" | "DiscussionSubscription" | "FundingProposal" | "JoinProposal" | "Notification" | "Report" | "Role" | "Statistic" | "UserNotificationToken"
+  BaseEntity: "CommonMember" | "CommonSubscription" | "Discussion" | "DiscussionMessage" | "DiscussionSubscription" | "FundingProposal" | "JoinProposal" | "Notification" | "Report" | "Role" | "Statistic" | "UserNotificationToken"
 }
 
 export interface NexusGenTypeInterfaces {
   CommonMember: "BaseEntity"
+  CommonSubscription: "BaseEntity"
   Discussion: "BaseEntity"
   DiscussionMessage: "BaseEntity"
   DiscussionSubscription: "BaseEntity"

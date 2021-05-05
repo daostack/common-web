@@ -32,6 +32,7 @@ type User {
   """List of events, that occurred and are related to this user"""
   events(take: Int = 10, skip: Int = 0, orderBy: EventOrderByInput): [Event!]!
   proposals(take: Int = 10, skip: Int = 0, where: ProposalWhereInput): [Proposal!]!
+  subscriptions: [CommonSubscription!]!
   notifications(orderBy: NotificationOrderByInput = {createdAt: desc}, cursor: NotificationWhereUniqueInput, take: Int = 10, skip: Int): [Notification!]!
   notificationTokens: [UserNotificationToken!]!
   discussionSubscriptions(take: Int = 10, skip: Int = 0, orderBy: DiscussionSubscriptionOrderByInput): [DiscussionSubscription!]!
@@ -48,6 +49,9 @@ type UserNotificationToken implements BaseEntity {
   description: String!
   lastUsed: DateTime!
   lastVerified: DateTime!
+}
+input UserWhereUniqueInput {
+  userId: ID!
 }
 input CreateUserInput {
   firstName: String!
@@ -582,6 +586,34 @@ input NotificationOrderByInput {
   updatedAt: SortOrder
   status: SortOrder
 }
+type CommonSubscription implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  paymentStatus: SubscriptionPaymentStatus!
+  status: SubscriptionStatus!
+  dueDate: DateTime!
+  chargedAt: DateTime!
+  voided: Boolean!
+  amount: Int!
+  common: Common!
+}
+enum SubscriptionPaymentStatus {
+  AwaitingInitialPayment
+  Pending
+  Successful
+  Unsuccessful
+}
+enum SubscriptionStatus {
+  Pending
+  Active
+  PaymentFailed
+  CanceledByUser
+  CanceledByPaymentFailure
+}
 scalar Void
 enum SortOrder {
   asc
@@ -640,7 +672,7 @@ input CreateRoleInput {
 }
 type Query {
   """Provide ID to fetch specific user or do not pass anything to get the currently authenticated user"""
-  user(userId: ID): User
+  user(where: UserWhereUniqueInput): User
   generateUserAuthToken(authId: String!): String!
   roles(paginate: PaginateInput): [Role]
   events(paginate: PaginateInput): [Event]
