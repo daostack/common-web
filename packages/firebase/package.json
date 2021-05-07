@@ -1,7 +1,7 @@
 {
   "name": "@common/firebase",
   "description": "Cloud Functions for Firebase",
-  "version": "1.9.11-rc.2",
+  "version": "1.9.12-rc.0",
   "scripts": {
     "build": "yarn compile",
     "build:watch": "yarn compile:watch",
@@ -12,7 +12,7 @@
     "tab:compile:types:watch": "ttab -t 'Types Compilation' yarn compile:types",
     "tab:start": "ttab -t 'Firebase Runtime' yarn start",
     "dev": "yarn tab:compile:types:watch && yarn tab:compile:watch && yarn tab:start",
-    "typecheck": "tsc -p tsconfig.json --noEmit", 
+    "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint ./",
     "clean": "find ./ -name '*.log' -delete",
     "logs": "firebase functions:log",
