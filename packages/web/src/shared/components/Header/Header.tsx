@@ -12,7 +12,7 @@ const Header = () => {
   return (
     <section className="header-wrapper">
       <Link to="/" className="common-logo">
-        <img src="/icons/logo.svg" alt="logo" height="60px" />
+        <img src="/icons/logo.svg" alt="logo" className="logo" />
       </Link>
       {screenSize === ScreenSize.Large ? (
         <>

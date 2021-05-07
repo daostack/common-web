@@ -21,7 +21,7 @@ body {
   .content-wrapper {
     padding: 0 $content-padding;
     min-height: 350px;
-    margin-top: 115px;
+    margin-top: 110px;
 
     .page-title {
       color: $deep-blue;
@@ -89,6 +89,7 @@ body {
     }
     .content-wrapper {
       padding: 0 $content-padding-mobile;
+      margin-top: 90px;
       .page-title {
         text-align: center;
       }

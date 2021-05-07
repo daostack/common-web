@@ -1,4 +1,5 @@
 import React from "react";
+import { COMMON_APP_APP_STORE_LINK, COMMON_APP_GOOGLE_PLAY_LINK } from "../../constants";
 import "./index.scss";
 
 type IconsColor = "white" | "black";
@@ -13,12 +14,12 @@ export default function MobileLinks(props: IProps) {
       <img
         src={`/icons/app-icons/${props.color === "black" ? "app-store.svg" : "app-store-white.svg"}`}
         alt="app-store"
-        onClick={() => window.open("https://apps.apple.com/il/app/common-collaborative-action/id1512785740")}
+        onClick={() => window.open(COMMON_APP_APP_STORE_LINK)}
       />
       <img
         src={`/icons/app-icons/${props.color === "black" ? "google-play.svg" : "google-play-white.svg"}`}
         alt="google-play"
-        onClick={() => window.open("https://play.google.com/store/apps/details?id=com.daostack.common")}
+        onClick={() => window.open(COMMON_APP_GOOGLE_PLAY_LINK)}
       />
     </div>
   );

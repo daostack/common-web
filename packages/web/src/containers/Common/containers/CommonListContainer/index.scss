@@ -54,11 +54,10 @@
 
     .loading {
       text-align: center;
-      display: flex;
-      width: 155px;
-      align-items: center;
+      width: 150px;
       margin: 0 auto;
-      height: 32px;
+      height: 30px;
+      line-height: 30px;
       padding: 5px 10px;
     }
   }

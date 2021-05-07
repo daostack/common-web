@@ -9,12 +9,10 @@
     grid-column-gap: 16px;
     grid-row-gap: 16px;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    //grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     margin: 40px 0;
     padding: 10px;
   }
   .explore-commons {
-    margin-top: 20px;
     line-height: 40px;
     padding: 5px;
   }
@@ -30,11 +28,12 @@
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .commons-wrapper {
-    .featured-commons {
-      grid-auto-flow: column;
-      overflow-x: auto;
-      overflow-y: hidden;
-      width: 100vw;
+    .swiper-container {
+      margin: 30px 0px;
+      height: 270px;
+      .swiper-slide {
+        max-width: 300px;
+      }
     }
   }
 }

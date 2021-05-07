@@ -152,7 +152,7 @@
     }
     .wave-top {
       position: absolute;
-      bottom: -1px;
+      bottom: -10px;
       left: 50%;
       transform: translate(-50%);
       width: 105%;
@@ -240,7 +240,7 @@
       }
     }
     > section {
-      padding: $content-padding-mobile;
+      padding: $content-padding-mobile + 10;
     }
     .illustrations-wrapper-1 {
       flex-direction: column;
