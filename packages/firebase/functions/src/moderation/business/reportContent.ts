@@ -13,7 +13,7 @@ import { db } from '../../util';
 const reportContentDataValidationScheme = yup.object({
   moderationData: yup.object({
     reasons: yup.string().required(),
-    moderatorNote: yup.string(),
+    moderatorNote: yup.string().required(),
     itemId: yup.string().required(),
   }).required(),
   commonId: yup.string().required(),
