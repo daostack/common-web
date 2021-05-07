@@ -38,11 +38,5 @@ export const addEventJob = (job: EventsQueueJob, payload: IEventsQueueJob['creat
     EventQueue.add(job, {
       create: payload
     });
-  } else if (job === 'process') {
-    logger.silly('New process event job was added');
-
-    EventQueue.add(job, {
-      process: payload
-    });
   }
 };

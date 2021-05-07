@@ -5,7 +5,7 @@ import { Link } from '@components/Link';
 import { Card, Row, Col, Text, Spacer, Tag, User, Divider, useTheme } from '@geist-ui/react';
 import { ChevronLeftCircle, ChevronRightCircle, ChevronDownCircle, ChevronUpCircle } from '@geist-ui/react-icons';
 import { gql } from '@apollo/client';
-import { useGetPaymentDetailsLazyQuery, useGetPaymentsQuery } from '@graphql';
+import { useGetPaymentDetailsLazyQuery, useGetPaymentsQuery } from '@core/graphql';
 import { useRouter } from 'next/router';
 
 

@@ -9,6 +9,9 @@ import './processors/PaymentsWorker';
 import './processors/ProposalsWorker';
 import './processors/NotificationsWorker';
 
+import './events/onUserCreated';
+import './events/onCommonCreated';
+
 import { Queues } from '@common/queues';
 
 const app = express();

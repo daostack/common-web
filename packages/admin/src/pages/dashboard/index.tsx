@@ -1,37 +1,26 @@
 import React from 'react';
 import { NextPage } from 'next';
-
-import Skeleton from 'react-loading-skeleton';
-import { gql } from '@apollo/client/core';
 import { Breadcrumbs, Card, Grid, Spacer, Text } from '@geist-ui/react';
 
-import { useGetDashboardDataQuery, useStatisticsQuery } from '@graphql';
 import { HasPermission } from '@components/HasPermission';
 import { withPermission } from '../../helpers/hoc/withPermission';
 import { LatestEventsTable } from '@components/tables/LatestEventsTable';
 import { useRouter } from 'next/router';
 import { Link } from '@components/Link';
+import { gql } from '@apollo/client';
+import { useGetAllTimeStatistiscQuery } from '@core/graphql';
+import Skeleton from 'react-loading-skeleton';
 
-const GetDashboardDataQuery = gql`
-  query getDashboardData {
-    statistics {
-      newCommons
-      newJoinRequests
-      newFundingRequests
 
-      newDiscussions
-      newDiscussionMessages
-    }
-  }
-`;
-
-const GetStatisticsQuery = gql`
-  query Statistics {
-    statistics {
+const GetAllTimeStatistics = gql`
+  query getAllTimeStatistisc {
+    getStatistics(where: {
+      type: AllTime
+    }) {
       users
       commons
-      joinRequests
-      fundingRequests
+      joinProposals
+      fundingProposals
     }
   }
 `;
@@ -39,8 +28,7 @@ const GetStatisticsQuery = gql`
 const DashboardHomePage: NextPage = () => {
   const router = useRouter();
 
-  const data = useGetDashboardDataQuery();
-  const statistics = useStatisticsQuery();
+  const statistics = useGetAllTimeStatistiscQuery();
 
   const onCardClick = (url: string) => {
     return () => {
@@ -61,73 +49,70 @@ const DashboardHomePage: NextPage = () => {
 
       <Spacer y={2}/>
 
-      {data.data && (
-        <React.Fragment>
-          <HasPermission permission="admin.dashboard.read.overview">
-            <Text h3>Application's overview</Text>
 
-            <Grid.Container gap={2} alignItems="stretch" style={{ display: 'flex' }}>
-              <Grid sm={24} md={8} onClick={onCardClick('/commons')} style={{ cursor: 'pointer' }}>
-                <Card hoverable>
-                  <Text h1>
-                    {statistics.data && (
-                      statistics.data.statistics.commons
-                    )}
+      {/* --- Overview --- */}
+      <HasPermission permission="admin.dashboard.read.overview">
+        <Text h3>Application's overview</Text>
 
-                    {!statistics.data && (
-                      <Skeleton/>
-                    )}
-                  </Text>
-                  <Text p>Total commons created</Text>
-                </Card>
-              </Grid>
+        <Grid.Container gap={2} alignItems="stretch" style={{ display: 'flex' }}>
+          <Grid xs={24} md={8} onClick={onCardClick('/commons')} style={{ cursor: 'pointer' }}>
+            <Card hoverable>
+              <Text h1>
+                {statistics.data && (
+                  statistics.data.getStatistics[0].commons
+                )}
 
-              <Grid sm={24} md={8} onClick={onCardClick('/proposals')} style={{ cursor: 'pointer' }}>
-                <Card hoverable>
-                  <Text h1>
-                    {statistics.data && (
-                      statistics.data.statistics.joinRequests +
-                      statistics.data.statistics.fundingRequests
-                    )}
+                {!statistics.data && (
+                  <Skeleton/>
+                )}
+              </Text>
+              <Text p>Total commons created</Text>
+            </Card>
+          </Grid>
 
-                    {!statistics.data && (
-                      <Skeleton/>
-                    )}
-                  </Text>
-                  <Text p>Proposals created</Text>
-                </Card>
-              </Grid>
+          <Grid xs={24} md={8} onClick={onCardClick('/proposals')} style={{ cursor: 'pointer' }}>
+            <Card hoverable>
+              <Text h1>
+                {statistics.data && (
+                  statistics.data.getStatistics[0].joinProposals +
+                  statistics.data.getStatistics[0].fundingProposals
+                )}
 
-              <Grid sm={24} md={8} onClick={onCardClick('/users')} style={{ cursor: 'pointer' }}>
-                <Card hoverable>
-                  <Text h1>
-                    {statistics.data && (
-                      statistics.data.statistics.users
-                    )}
+                {!statistics.data && (
+                  <Skeleton/>
+                )}
+              </Text>
+              <Text p>Proposals created</Text>
+            </Card>
+          </Grid>
 
-                    {!statistics.data && (
-                      <Skeleton/>
-                    )}
-                  </Text>
-                  <Text p>User on common</Text>
-                </Card>
-              </Grid>
-            </Grid.Container>
+          <Grid xs={24} md={8} onClick={onCardClick('/users')} style={{ cursor: 'pointer' }}>
+            <Card hoverable>
+              <Text h1>
+                {statistics.data && (
+                  statistics.data.getStatistics[0].users
+                )}
 
-            <Spacer y={2}/>
+                {!statistics.data && (
+                  <Skeleton/>
+                )}
+              </Text>
+              <Text p>User on common</Text>
+            </Card>
+          </Grid>
+        </Grid.Container>
 
-            <LatestEventsTable
-              refresh
-              notify
-            />
-          </HasPermission>
-        </React.Fragment>
-      )}
+        <Spacer y={2}/>
+      </HasPermission>
+
+
+      {/* --- Events table --- */}
+      <LatestEventsTable/>
 
     </React.Fragment>
   );
 };
 
-export default withPermission('admin.dashboard.*', {
+export default withPermission('admin.*', {
   redirect: true
 })(DashboardHomePage);

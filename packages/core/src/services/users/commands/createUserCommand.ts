@@ -21,6 +21,9 @@ const schema = z.object({
   lastName: z.string()
     .nonempty(),
 
+  photo: z.string()
+    .nonempty(),
+
   email: z.string()
     .nonempty()
     .email()

@@ -13,6 +13,18 @@ const schema = z.object({
     .min(2)
     .max(255),
 
+  image: z.string()
+    .nonempty(),
+
+  description: z.string()
+    .nonempty(),
+
+  action: z.string()
+    .optional(),
+
+  byline: z.string()
+    .optional(),
+
   fundingType: z.enum(Object.keys(FundingType) as [(keyof typeof FundingType)]),
 
   fundingMinimumAmount: z.number()
@@ -30,6 +42,8 @@ export const createCommonCommand = async (command: z.infer<typeof schema>): Prom
   const common = await prisma.common.create({
     data: {
       name: command.name,
+
+      image: command.image,
 
       fundingType: command.fundingType,
       fundingMinimumAmount: command.fundingMinimumAmount

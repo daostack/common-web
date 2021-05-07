@@ -16,7 +16,7 @@ import {
 import { Link } from '@components/Link';
 import { withPermission } from '../../../helpers/hoc/withPermission';
 import { gql } from '@apollo/client';
-import { useGetPayoutsPageDataQuery, ProposalFundingState, GetPayoutsPageDataQueryResult } from '@graphql';
+import { useGetPayoutsPageDataQuery, ProposalFundingState, GetPayoutsPageDataQueryResult } from '@core/graphql';
 import { HasPermission } from '@components/HasPermission';
 import { useRouter } from 'next/router';
 import { Centered } from '@components/Centered';

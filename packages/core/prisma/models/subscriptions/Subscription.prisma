@@ -7,7 +7,6 @@ model Subscription {
   card Card          @relation(fields: [cardId], references: [id])
   join JoinProposal?
 
-
   user   User   @relation(fields: [userId], references: [id])
   common Common @relation(fields: [commonId], references: [id])
 

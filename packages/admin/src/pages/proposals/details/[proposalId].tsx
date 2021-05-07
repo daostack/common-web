@@ -1,29 +1,33 @@
-import { gql } from '@apollo/client';
-import { Breadcrumbs, Card, Grid, Spacer, Table, Tag, Text, useTheme } from '@geist-ui/react';
-import { CheckInCircle, DollarSign, Trello as Vote, Type, User, XCircle } from '@geist-ui/react-icons';
+import React from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import React from 'react';
-import { Link } from '../../../components/Link';
-import { useGetProposalDetailsQuery, GetProposalDetailsQueryResult } from '@graphql';
-import { Centered } from '../../../components/Centered';
+
+import { gql } from '@apollo/client';
+import { Breadcrumbs, Card, Grid, Spacer, Table, Tag, Text, useTheme } from '@geist-ui/react';
+import { DollarSign, Trello as Vote, Type, User, CheckInCircle, XCircle } from '@geist-ui/react-icons';
+
+import { Link } from '@components/Link';
+import { Centered } from '@components/Centered';
+import { useGetProposalDetailsQuery, GetProposalDetailsQueryResult } from '@core/graphql';
 
 const GetProposalDetails = gql`
-  query getProposalDetails($proposalId: ID!) {
-    proposal(id: $proposalId) {
+  query getProposalDetails($where: ProposalWhereUniqueInput!) {
+    proposal(where: $where) {
       id
 
       join {
         funding
         fundingType
+        paymentState
       }
-      
-      fundingRequest {
+
+      funding {
         amount
+        fundingState
       }
-      
+
       type
-      
+
       createdAt
       updatedAt
 
@@ -31,11 +35,10 @@ const GetProposalDetails = gql`
       votesAgainst
 
       state
-      paymentState
-      
-      proposer {
+
+      user {
         id
-        
+
         firstName
         lastName
       }
@@ -45,18 +48,21 @@ const GetProposalDetails = gql`
           userId
         }
       }
-      
-      description {
-        description
-      }
+
+      description
 
       votes {
-        outcome
-        voter {
-          id
+        id
 
-          firstName
-          lastName
+        outcome
+
+        voter {
+          user {
+            id
+
+            firstName
+            lastName
+          }
         }
       }
     }
@@ -70,16 +76,18 @@ const ProposalDetailsPage: NextPage = () => {
 
   const data = useGetProposalDetailsQuery({
     variables: {
-      proposalId: router.query.proposalId as string
+      where: {
+        id: router.query.proposalId as string
+      }
     }
   });
 
   const transformProposalForDetailsTable = (data) => {
     const { proposal } = data.data;
-    const { proposer } = proposal;
+    const { user: proposer } = proposal;
 
     return [{
-      icon: <Centered content={<User />} />,
+      icon: <Centered content={<User/>}/>,
       item: 'Proposer',
       value: (
         <Link to={`/users/details/${proposer.id}`}>
@@ -87,11 +95,11 @@ const ProposalDetailsPage: NextPage = () => {
         </Link>
       )
     }, {
-      icon: <Centered content={<Type />} />,
+      icon: <Centered content={<Type/>}/>,
       item: 'Proposal Type',
       value: proposal.type
     }, ...(proposal.type === 'fundingRequest' ? [{
-      icon: <Centered content={<DollarSign />} />,
+      icon: <Centered content={<DollarSign/>}/>,
       item: 'Requested amount',
       value: (
         <React.Fragment>
@@ -99,14 +107,14 @@ const ProposalDetailsPage: NextPage = () => {
         </React.Fragment>
       )
     }] : []), ...(proposal.type === 'join' ? [{
-      icon: <Centered content={<DollarSign />} />,
+      icon: <Centered content={<DollarSign/>}/>,
       item: 'Proposed amount',
       value: (
         <React.Fragment>
           {proposal.join.funding.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
         </React.Fragment>
       )
-    }] : [])]
+    }] : [])];
   };
 
   const transformDataForVotesTable = (data: GetProposalDetailsQueryResult) => {
@@ -119,18 +127,18 @@ const ProposalDetailsPage: NextPage = () => {
         ),
 
         voter: (
-          <Link to={`/users/details/${vote.voter.id}`}>
-            {vote.voter.firstName} {vote.voter.lastName}
+          <Link to={`/users/details/${vote.voter.user.id}`}>
+            {vote.voter.user.firstName} {vote.voter.user.lastName}
           </Link>
         ),
 
         outcome: (
           <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-            {vote.outcome === 'rejected' && (
+            {vote.outcome === 'Condemn' && (
               <XCircle color={theme.palette.error}/>
             )}
 
-            {vote.outcome === 'approved' && (
+            {vote.outcome === 'Approve' && (
               <CheckInCircle color={theme.palette.success}/>
             )}
           </div>
@@ -147,12 +155,12 @@ const ProposalDetailsPage: NextPage = () => {
           <React.Fragment>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <Text h1>
-                {data.data.proposal.description.description}'s details
+                {data.data.proposal.description}'s details
               </Text>
 
               <Spacer x={1}/>
 
-              <Tag type={data.data.proposal.state === 'passed' ? 'success' : 'error'}>
+              <Tag type={data.data.proposal.state === 'Accepted' ? 'success' : 'error'}>
                 {data.data.proposal.state}
               </Tag>
             </div>
@@ -161,7 +169,7 @@ const ProposalDetailsPage: NextPage = () => {
               <Breadcrumbs.Item>
                 <Link to="/proposals">Proposals</Link>
               </Breadcrumbs.Item>
-              <Breadcrumbs.Item>{data.data.proposal.description.description}</Breadcrumbs.Item>
+              <Breadcrumbs.Item>{data.data.proposal.description}</Breadcrumbs.Item>
             </Breadcrumbs>
 
             <Spacer y={3}/>
@@ -186,7 +194,7 @@ const ProposalDetailsPage: NextPage = () => {
                   <Text h1>
                     {data.data.proposal.votesAgainst}
                   </Text>
-                  <Text p>Votes agains</Text>
+                  <Text p>Votes against</Text>
                 </Card>
               </Grid>
 
@@ -208,7 +216,7 @@ const ProposalDetailsPage: NextPage = () => {
             <Text h3>Proposal Details</Text>
 
             <Table data={transformProposalForDetailsTable(data)}>
-              <Table.Column prop="icon" width={70} label="" />
+              <Table.Column prop="icon" width={70} label=""/>
               <Table.Column prop="item" label="Property" width={200}/>
               <Table.Column prop="value" label="Value"/>
             </Table>
