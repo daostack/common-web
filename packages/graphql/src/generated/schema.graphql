@@ -194,6 +194,15 @@ input CreateJoinProposalInput {
   title: String!
 }
 
+input CreateNotificationEventSettingsInput {
+  description: String!
+  onEvent: EventType!
+  sendNotificationType: NotificationType!
+  sendToCommon: Boolean!
+  sendToEveryone: Boolean!
+  sendToUser: Boolean!
+}
+
 input CreateRoleInput {
   description: String!
   displayName: String!
@@ -470,6 +479,7 @@ type Mutation {
 
   """Create new proposal of type JOIN."""
   createJoinProposal(input: CreateJoinProposalInput!): Proposal!
+  createNotificationEventSettings(input: CreateNotificationEventSettingsInput!): NotificationEventSettings
   createRole(input: CreateRoleInput!): Role
 
   """Creates new user in the system"""
@@ -524,6 +534,25 @@ type Notification implements BaseEntity {
   userId: UUID!
 }
 
+type NotificationEventSettings implements BaseEntity {
+  active: Boolean!
+
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  description: String!
+
+  """The main identifier of the item"""
+  id: UUID!
+  onEvent: EventType!
+  sendNotificationType: NotificationType!
+  sendToCommon: Boolean!
+  sendToEveryone: Boolean!
+  sendToUser: Boolean!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+}
+
 input NotificationOrderByInput {
   createdAt: SortOrder
   status: SortOrder
@@ -539,6 +568,7 @@ enum NotificationSeenStatus {
 enum NotificationType {
   FundingRequestAccepted
   FundingRequestRejected
+  General
   JoinRequestAccepted
   JoinRequestRejected
 }

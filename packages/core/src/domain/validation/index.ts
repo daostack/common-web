@@ -28,5 +28,17 @@ export const PermissionValidator = z.enum([
   'admin.commons.delist',
   'admin.commons.whitelist',
 
+  'admin.notification.setting.event.create',
+  'admin.notification.setting.event.update',
+  'admin.notification.setting.event.delete',
+
+  'admin.notification.setting.create',
+  'admin.notification.setting.update',
+  'admin.notification.setting.delete',
+
+  'admin.notification.setting.template.create',
+  'admin.notification.setting.template.update',
+  'admin.notification.setting.template.delete',
+
   'user.permissions.read'
 ]);

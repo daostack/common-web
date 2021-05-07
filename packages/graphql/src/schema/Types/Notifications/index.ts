@@ -2,6 +2,7 @@ import { NotificationTypeEnum } from './Enums/NotificationType.enum';
 import { NotificationSeenStatusEnum } from './Enums/NotificationSeenStatus.enum';
 
 import { NotificationType } from './Types/Notification.type';
+import { NotificationEventSettingsType } from './Types/NotificationEventSettings.type';
 
 import { NotificationUserExtension } from './Extensions/NotificationUser.extension';
 import { NotificationCommonExtension } from './Extensions/NotificationCommon.extension';
@@ -14,12 +15,14 @@ import { NotificationWhereUniqueInput } from './Inputs/NotificationWhereUnique.i
 import { NotificationOrderByInput } from './Inputs/NotificationOrderBy.input';
 
 import { NotificationCreatedSubscription } from './Subscriptions/NotificationCreated.subscription';
+import { CreateNotificationEventSettingsMutation } from './Mutations/CreateNotificationEventSettings.mutation';
 
 export const NotificationTypes = [
   NotificationTypeEnum,
   NotificationSeenStatusEnum,
 
   NotificationType,
+  NotificationEventSettingsType,
 
   NotificationUserExtension,
   NotificationCommonExtension,
@@ -31,5 +34,7 @@ export const NotificationTypes = [
 
   NotificationOrderByInput,
 
-  NotificationCreatedSubscription
+  NotificationCreatedSubscription,
+
+  CreateNotificationEventSettingsMutation
 ];
