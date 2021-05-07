@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { withPermission } from '../../../../helpers/hoc/withPermission';
-import { useGetProposalsSelectedForBatchQuery, Wire, useExecutePayoutMutation } from '@graphql';
+import { useGetProposalsSelectedForBatchQuery, Wire, useExecutePayoutMutation } from '@core/graphql';
 import { Link } from '@components/Link';
 import React from 'react';
 import {

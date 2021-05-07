@@ -1,0 +1,17 @@
+model NotificationEventSettings {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sendNotificationType NotificationType
+
+  onEvent EventType @unique
+
+  sendToEveryone Boolean @default(false)
+  sendToCommon   Boolean @default(false)
+  sendToUser     Boolean @default(false)
+
+  description String
+  active      Boolean @default(true)
+}

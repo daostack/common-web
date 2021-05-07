@@ -1,16 +1,18 @@
-import { gql } from '@apollo/client';
+import React from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useGetUserDetailsQueryQuery, GetUserDetailsQueryQueryResult } from '@graphql';
-import React from 'react';
-import { Link } from '../../../components/Link';
+import DefaultErrorPage from 'next/error';
+
+import { gql } from '@apollo/client';
 import { Breadcrumbs, Text, Image, Grid, Card, Spacer, Table, Tag, Tooltip } from '@geist-ui/react';
 import { XCircle as Cancel, Function, Clock, CheckCircle, ExternalLink } from '@geist-ui/react-icons';
 
+import { useGetUserDetailsQueryQuery, GetUserDetailsQueryQueryResult } from '@core/graphql';
+import { Link } from '@components/Link';
 
 const UserDetailsDataQuery = gql`
-  query getUserDetailsQuery($userId: ID!) {
-    user(id: $userId) {
+  query getUserDetailsQuery($where: UserWhereUniqueInput!) {
+    user(where: $where) {
       id
 
       firstName
@@ -20,20 +22,20 @@ const UserDetailsDataQuery = gql`
 
       createdAt
 
-      photoURL
+      photo
 
       proposals {
         id
 
         type
-        
+
         state
-        paymentState
 
-        description {
-          title
-
+        join {
+          paymentState
         }
+
+        title
       }
 
       subscriptions {
@@ -41,20 +43,18 @@ const UserDetailsDataQuery = gql`
 
         amount
 
-        metadata {
-          common {
-            id
-            name
-          }
+        common {
+          id
+          name
         }
 
         status
-        revoked
+        voided
 
         createdAt
         updatedAt
 
-        lastChargedAt
+        chargedAt
         dueDate
       }
     }
@@ -65,7 +65,9 @@ const UserDetailsPage: NextPage = () => {
   const router = useRouter();
   const data = useGetUserDetailsQueryQuery({
     variables: {
-      userId: router.query.userId as string
+      where: {
+        userId: router.query.userId as string
+      }
     }
   });
 
@@ -74,8 +76,8 @@ const UserDetailsPage: NextPage = () => {
     return data.data
       ? data.data.user.subscriptions
         .filter((subscription) =>
-          subscription.status === 'active' ||
-          subscription.status === 'paymentFailed').length
+          subscription.status === 'Active' ||
+          subscription.status === 'PaymentFailed').length
       : 'Loading';
   };
 
@@ -83,7 +85,7 @@ const UserDetailsPage: NextPage = () => {
     return data.data
       ? data.data.user.subscriptions
         .filter((subscription) =>
-          subscription.status === 'paymentFailed').length
+          subscription.status === 'PaymentFailed').length
       : 'Loading';
   };
 
@@ -91,7 +93,7 @@ const UserDetailsPage: NextPage = () => {
     const subscriptions = data.data.user.subscriptions;
 
     return subscriptions.map((subscription) => {
-      const { common } = subscription.metadata;
+      const { common } = subscription;
 
       return {
         status: (
@@ -107,7 +109,7 @@ const UserDetailsPage: NextPage = () => {
 
         actions: (
           <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}>
-            {(subscription.status === 'active' || subscription.status === 'paymentFailed') && (
+            {(subscription.status === 'Active' || subscription.status === 'PaymentFailed') && (
               <Tooltip text="Cancel user's subscription">
                 <Cancel/>
               </Tooltip>
@@ -141,7 +143,7 @@ const UserDetailsPage: NextPage = () => {
           </div>
         ),
 
-        type: proposal.type === 'fundingRequest' ? (
+        type: proposal.type === 'FundingRequest' ? (
           <Tag type="success">Funding Request</Tag>
         ) : (
           <Tag type="warning">Join Request</Tag>
@@ -151,29 +153,29 @@ const UserDetailsPage: NextPage = () => {
 
         paymentStatus: (
           <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-            {(proposal.paymentState === 'notAttempted' || proposal.paymentState === 'notRelevant') && (
+            {(proposal.join?.paymentState === 'NotAttempted' || proposal.type === 'FundingRequest') && (
               <Tooltip text="The payment is either not relevant for this proposal or was not attempted">
                 <div style={{ cursor: 'default' }}>
-                  {"-"}
+                  {'-'}
                 </div>
               </Tooltip>
             )}
 
-            {proposal.paymentState === 'pending' && (
+            {proposal.join?.paymentState === 'Pending' && (
               <Tooltip text="The payment on this proposal is still pending">
-                <Clock />
+                <Clock/>
               </Tooltip>
             )}
 
-            {proposal.paymentState === 'failed' && (
+            {proposal.join?.paymentState === 'Unsuccessful' && (
               <Tooltip text="The payment on this proposal is failed">
-                <Cancel />
+                <Cancel/>
               </Tooltip>
             )}
 
-            {proposal.paymentState === 'confirmed' && (
+            {proposal.join?.paymentState === 'Successful' && (
               <Tooltip text="The payment on this proposal was successful">
-                <CheckCircle />
+                <CheckCircle/>
               </Tooltip>
             )}
           </div>
@@ -192,7 +194,10 @@ const UserDetailsPage: NextPage = () => {
 
   return (
     <React.Fragment>
-      {data.data && (
+      {(data.data && data.data.user === null) && (
+        <DefaultErrorPage statusCode={404} title="The requested user was not found"/>
+      )}
+      {(data.data && data.data.user !== null) && (
         <React.Fragment>
           <React.Fragment>
             <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -202,7 +207,7 @@ const UserDetailsPage: NextPage = () => {
 
               <div>
                 <Image
-                  src={data.data.user.photoURL}
+                  src={data.data.user.photo}
                   width={100}
                   height={100}
                   style={{
@@ -339,10 +344,10 @@ const UserDetailsPage: NextPage = () => {
 
             <Table data={transformProposalsForTable(data)}>
               <Table.Column prop="icon" label="" width={70}/>
-              <Table.Column prop="type" label="Type" />
+              <Table.Column prop="type" label="Type"/>
 
-              <Table.Column prop="status" label="Status" />
-              <Table.Column prop="paymentStatus" label="Payment Status" width={130} />
+              <Table.Column prop="status" label="Status"/>
+              <Table.Column prop="paymentStatus" label="Payment Status" width={130}/>
 
               <Table.Column prop="actions">
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>

@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import { withPermission } from '../../helpers/hoc/withPermission';
-import { useCreateIntentionMutation, IntentionType } from '@graphql';
+import { useCreateIntentionMutation, IntentionType } from '@core/graphql';
 import React from 'react';
 
 export const EventsHomePage: NextPage = () => {

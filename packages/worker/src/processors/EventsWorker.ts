@@ -13,18 +13,20 @@ Queues.EventQueue.process('create', async (job, done) => {
   // @todo Create log about the processing result
   logger.debug('Starting create event job', { job });
 
-  const event = eventService.$create(job.data.create);
+  const event = await eventService.$create(job.data.create);
 
-  logger.debug('Successfully created event', {
+  logger.debug('Successfully created event. Starting processing', {
     job,
     event
   });
 
-  done();
-});
+  // Process the event
+  await eventService.process(event);
 
-Queues.EventQueue.process('process', async (job, done) => {
-  await eventService.process(job.data.process.event);
+  logger.debug('Successfully processed event.', {
+    job,
+    event
+  });
 
-  done();
+  done(null, event);
 });

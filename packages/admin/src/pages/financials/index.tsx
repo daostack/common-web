@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from '@components/Link';
 import { Breadcrumbs, Card, Grid, Note, Spacer, Text } from '@geist-ui/react';
 import { gql } from '@apollo/client';
-import { useGetFinancialsDataQuery } from '@graphql';
+import { useGetFinancialsDataQuery } from '@core/graphql';
 import { Centered } from '@components/Centered';
 import { ExternalLink } from '@geist-ui/react-icons';
 import Skeleton from 'react-loading-skeleton';

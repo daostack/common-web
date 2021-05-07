@@ -36,7 +36,8 @@ export const hideContent = async (hideContentPayload: HideContentPayload): Promi
 
 	//Only users with permissions can hide content
   const { itemId, commonId, userId, type } = hideContentPayload;
-  if (!hasPermission(userId, commonId)) {
+  const isModerator = await hasPermission(userId, commonId);
+  if (!isModerator) {
     throw new UnauthorizedError();
   }
 

@@ -1,3 +1,33 @@
+model Statistic {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type StatisticType
+
+  users Int
+
+  commons Int
+
+  joinProposals    Int
+  fundingProposals Int
+
+  discussions        Int
+  discussionMessages Int
+
+  payments       Int
+  paymentsAmount Int
+}
+
+enum StatisticType {
+  AllTime
+
+  Hourly
+  Daily
+  Weekly
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("Database.Url")
@@ -107,6 +137,15 @@ model Common {
   balance Int @default(0)
   raised  Int @default(0)
 
+  image String
+
+  action      String?
+  byline      String?
+  description String?
+
+  links Json?
+  rules Json?
+
   whitelisted Boolean @default(false)
 
   fundingType          FundingType
@@ -151,6 +190,22 @@ model CommonMember {
   @@unique([userId, commonId])
 }
 
+model Role {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name        String @unique
+  displayName String
+
+  description String
+
+  permissions String[]
+
+  users User[]
+}
+
 enum SubscriptionStatus {
   Pending
 
@@ -179,7 +234,6 @@ model Subscription {
 
   card Card          @relation(fields: [cardId], references: [id])
   join JoinProposal?
-
 
   user   User   @relation(fields: [userId], references: [id])
   common Common @relation(fields: [commonId], references: [id])
@@ -318,6 +372,8 @@ model User {
   firstName String
   lastName  String
 
+  photo String
+
   email         String  @unique
   emailVerified Boolean @default(false)
 
@@ -340,6 +396,9 @@ model User {
   notificationLanguage NotificationLanguage @default(EN)
 
   notificationTokens UserNotificationToken[]
+
+  roles       Role[]
+  permissions String[]
 }
 
 enum UserNotificationTokenState {
@@ -367,6 +426,8 @@ model UserNotificationToken {
 
 enum EventType {
   CommonCreated
+  CommonDelisted
+  CommonWhitelisted
 
   CommonMemberCreated
   CommonMemberRoleAdded
@@ -413,6 +474,15 @@ enum EventType {
 
   ReportRespected
   ReportDismissed
+
+  RoleCreated
+  RoleUpdated
+  RolePermissionAdded
+  RolePermissionRemoved
+  RoleDeleted
+
+  UserAddedToRole
+  UserRemovedFromRole
 }
 
 model Event {
@@ -434,6 +504,24 @@ model Event {
   proposal   Proposal?   @relation(fields: [proposalId], references: [id])
   common     Common?     @relation(fields: [commonId], references: [id])
   user       User?       @relation(fields: [userId], references: [id])
+}
+
+model NotificationEventSettings {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sendNotificationType NotificationType
+
+  onEvent EventType @unique
+
+  sendToEveryone Boolean @default(false)
+  sendToCommon   Boolean @default(false)
+  sendToUser     Boolean @default(false)
+
+  description String
+  active      Boolean @default(true)
 }
 
 model NotificationSystemSettings {
@@ -479,6 +567,8 @@ enum NotificationType {
 
   FundingRequestAccepted
   FundingRequestRejected
+
+  General
 }
 
 enum NotificationSeenStatus {
@@ -622,7 +712,7 @@ model Proposal {
   title       String?
   description String?
 
-  link   Json?
+  links  Json?
   files  Json?
   images Json?
 

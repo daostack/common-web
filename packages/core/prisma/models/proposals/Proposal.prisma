@@ -9,7 +9,7 @@ model Proposal {
   title       String?
   description String?
 
-  link   Json?
+  links   Json?
   files  Json?
   images Json?
 
