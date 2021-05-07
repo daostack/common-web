@@ -6,7 +6,7 @@ import "./index.scss";
 
 interface DiscussionDetailModalProps {
   disscussion: Discussion | null;
-  common: Common;
+  common: any;
 }
 
 export default function DiscussionDetailModal({ disscussion, common }: DiscussionDetailModalProps) {

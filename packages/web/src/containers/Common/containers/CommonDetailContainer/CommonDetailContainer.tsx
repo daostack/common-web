@@ -27,6 +27,8 @@ import {
   selectIsDiscussionsLoaded,
   selectCurrentDisscussion,
 } from "../../store/selectors";
+import { useGetCommonProposals, useGetCommonDiscussions, useGetCommonById } from '../../../../graphql';
+
 import "./index.scss";
 interface CommonDetailRouterParams {
   id: string;
@@ -55,13 +57,32 @@ export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
   const [tab, setTab] = useState("about");
   const loading = useSelector(getLoading());
-  const common = useSelector(selectCommonDetail());
+  // const common = useSelector(selectCommonDetail());
   const currentDisscussion = useSelector(selectCurrentDisscussion());
   const proposals = useSelector(selectProposals());
-  const discussions = useSelector(selectDiscussions());
   const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
 
-  console.log('proposals',proposals);
+  const {data} = useGetCommonProposals({variables: {
+    where: {
+      commonId: id
+    },
+  }});
+
+  const {data: discussionsData} = useGetCommonDiscussions({variables: {
+    where: {
+      commonId: id
+    },
+  }})
+
+  const {data: commonData, error} = useGetCommonById({variables: {
+    where: {
+      id,
+    },
+  }})
+
+  const common = commonData?.common;
+  console.log('proposals',data, discussionsData?.discussions, commonData);
+  console.log('error',error)
 
   const dispatch = useDispatch();
   const { isShowing, onOpen, onClose } = useModal(false);
@@ -82,10 +103,10 @@ export default function CommonDetail() {
   );
   const latestDiscussions = useMemo(
     () =>
-      [...discussions].splice(0, 5).map((d) => {
+      [...(discussionsData?.discussions || [])].splice(0, 5).map((d) => {
         return { id: d.id, value: d.title };
       }),
-    [discussions],
+    [discussionsData?.discussions],
   );
 
   const changeTabHandler = useCallback(
@@ -117,6 +138,8 @@ export default function CommonDetail() {
     onClose();
     dispatch(clearCurrentDiscussion());
   }, [onClose, dispatch]);
+
+  console.log('common',common)
 
   return loading && !common ? (
     <Loader />
@@ -183,7 +206,7 @@ export default function CommonDetail() {
                 {tab === "about" && <AboutTabComponent common={common} />}
                 {tab === "discussions" &&
                   (isDiscussionsLoaded ? (
-                    <DiscussionsComponent discussions={discussions} loadDisscussionDetail={getDisscussionDetail} />
+                    <DiscussionsComponent discussions={discussionsData?.discussions as any} loadDisscussionDetail={getDisscussionDetail} />
                   ) : (
                     <Loader />
                   ))}

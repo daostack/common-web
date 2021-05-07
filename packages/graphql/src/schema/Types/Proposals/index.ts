@@ -27,7 +27,6 @@ import { ProposalCommonExtension } from './Extensions/ProposalCommon.extension';
 import { ProposalJoinExtension } from './Extensions/ProposalJoin.extension';
 
 import { ProposalChangeSubscription } from './Subscriptions/ProposalChange.subscription';
-import { GetProposalsQuery } from './Queries/GetProposals.query';
 
 export const ProposalTypes = [
   ProposalType,
