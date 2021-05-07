@@ -22,10 +22,6 @@ export const EventType = objectType({
 
     t.json('payload');
 
-    t.id('userId', {
-      description: 'The ID of the event creator'
-    });
-
     t.id('commonId', {
       description: 'The ID of the common, for whom the event was created'
     });

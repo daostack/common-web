@@ -1,0 +1,21 @@
+model Statistic {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type StatisticType
+
+  users Int
+
+  commons  Int
+
+  joinProposals     Int
+  fundingProposals Int
+
+  discussions        Int
+  discussionMessages Int
+
+  payments       Int
+  paymentsAmount Int
+}

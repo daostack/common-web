@@ -1,16 +1,15 @@
 import React from 'react';
+import firebase from 'firebase/app';
+import { useRouter } from 'next/router';
+
 import { Avatar, Divider, Link, Page, Tabs, Tooltip, Text } from '@geist-ui/react';
 import { HasPermission } from '@components/HasPermission';
-import { useCreateIntentionMutation, IntentionType } from '@graphql';
-import { useAuthContext } from '@context';
-import { useRouter } from 'next/router';
-import firebase from 'firebase/app';
+import { useUserContext } from '@core/context';
+import { SearchEverywhere } from '@components/modals/SearchEverywhere';
 
 export const Header: React.FC = () => {
-  const [createIntention] = useCreateIntentionMutation();
-
+  const userContext = useUserContext();
   const [currentTab, setCurrentTab] = React.useState<string>('dashboard');
-  const authContext = useAuthContext();
 
 
   // Hooks
@@ -20,14 +19,6 @@ export const Header: React.FC = () => {
   React.useEffect(() => {
     setCurrentTab(router.pathname.split('/')[1]);
   });
-
-  React.useEffect(() => {
-    if (authContext.loaded) {
-      if (!authContext.authenticated && router.pathname !== '/auth') {
-        router.push('/auth');
-      }
-    }
-  }, [authContext]);
 
   // Actions
   const onTabChange = (value: string): void => {
@@ -42,17 +33,6 @@ export const Header: React.FC = () => {
     router.push('/');
   };
 
-  const commitIntention = (intention: string) => {
-    return () => {
-      createIntention({
-        variables: {
-          type: IntentionType.Request,
-          intention
-        }
-      });
-    };
-  };
-
 
   return (
     <Page.Header>
@@ -60,35 +40,40 @@ export const Header: React.FC = () => {
         style={{
           width: '100%',
           display: 'flex',
-          justifyContent: 'flex-end',
+          justifyContent: 'space-between',
           alignItems: 'center',
-          marginTop: '2.5vh'
+          marginTop: '2.5vh',
+          marginBottom: '1.5vh'
         }}
       >
-        <Text p style={{ margin: 0 }}>{authContext.userInfo.displayName}</Text>
-        <Tooltip
-          trigger="click"
-          placement="bottomEnd"
-          text={(
-            <div style={{ minWidth: '10vw' }}>
-              <b onClick={commitIntention('admin.theme.toggle')}>Theme </b> <br/>
-              <b onClick={commitIntention('admin.notification.toggle')}>Notifications </b>
+        <SearchEverywhere/>
 
-              <Divider y={0.5}/>
+        <div style={{ display: 'flex' }}>
+          <Text p style={{ margin: 0 }}>{userContext.displayName}</Text>
+          <Tooltip
+            trigger="click"
+            placement="bottomEnd"
+            text={(
+              <div style={{ minWidth: '10vw' }}>
+                {/*<b onClick={commitIntention('admin.theme.toggle')}>Theme </b> <br/>*/}
+                {/*<b onClick={commitIntention('admin.notification.toggle')}>Notifications </b>*/}
 
-              <Link onClick={onSignOut}>
-                <b>Sign Out</b>
-              </Link>
+                <Divider y={0.5}/>
+
+                <Link onClick={onSignOut}>
+                  <b>Sign Out</b>
+                </Link>
+              </div>
+            )}
+            style={{
+              marginLeft: 10
+            }}
+          >
+            <div style={{ cursor: 'pointer' }}>
+              <Avatar src={userContext.photo}/>
             </div>
-          )}
-          style={{
-            marginLeft: 10
-          }}
-        >
-          <div style={{ cursor: 'pointer' }}>
-            <Avatar src={authContext.userInfo.photoURL}/>
-          </div>
-        </Tooltip>
+          </Tooltip>
+        </div>
       </div>
 
       <HasPermission permission="admin.*">
@@ -99,6 +84,10 @@ export const Header: React.FC = () => {
           <Tabs.Item value="users" label="Users"/>
           <Tabs.Item value="financials" label="Financials"/>
           <Tabs.Item value="events" label="Events"/>
+
+          <HasPermission permission="admin.notification.*">
+            <Tabs.Item value="notifications" label="Notifications"/>
+          </HasPermission>
           {/*<Tabs.Item value="development/playground" label="Playground"/>*/}
         </Tabs>
       </HasPermission>

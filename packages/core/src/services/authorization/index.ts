@@ -3,6 +3,8 @@ import { canSeeCommonReports } from './reports/canSeeCommonReports';
 import { canSeeMessageReports } from './reports/canSeeMessageReports';
 import { canActOnReport } from './reports/canActOnReport';
 
+import { userCan } from './userCan';
+
 export const authorizationService = {
   discussions: {
     canChangeSubscription: canChangeDiscussionSubscription
@@ -11,5 +13,7 @@ export const authorizationService = {
     canActOnReport: canActOnReport,
     canSeeCommonReports: canSeeCommonReports,
     canSeeMessageReports: canSeeMessageReports
-  }
+  },
+
+  can: userCan
 };

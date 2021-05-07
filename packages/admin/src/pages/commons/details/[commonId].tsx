@@ -23,16 +23,19 @@ import {
   ExternalLink,
   User,
   Copy,
-  Trash2 as Trash
+  Trash2 as Trash,
+  CheckCircle
 } from '@geist-ui/react-icons';
 
-import { useGetCommonDetailsQuery, GetCommonDetailsQueryResult } from '@graphql';
 import { Link } from 'components/Link';
 import { CommonSettings } from '@components/CommonSettings';
+import { useGetCommonDetailsQuery, GetCommonDetailsQueryResult } from '@core/graphql';
 
 const GetCommonDetailsQuery = gql`
-  query getCommonDetails($commonId: ID!, $page: Int!) {
-    common(commonId: $commonId) {
+  query getCommonDetails($commonId: ID!, $paginate: PaginateInput!) {
+    common(where: {
+      id: $commonId
+    }) {
       name
 
       createdAt
@@ -41,20 +44,24 @@ const GetCommonDetailsQuery = gql`
       balance
       raised
 
-      openFundingRequests
-      openJoinRequests
+      fundingType
 
-      metadata {
-        byline
-        description
+      activeJoinProposals
+      activeFundingProposals
 
-        founderId
-        contributionType
-      }
+      byline
+      action
+      description
+
+      image
+
+      whitelisted
 
       members {
+        createdAt
         userId
-        joinedAt
+
+        roles
 
         user {
           firstName
@@ -62,22 +69,20 @@ const GetCommonDetailsQuery = gql`
         }
       }
 
-      proposals(page: $page) {
+      proposals(paginate: $paginate) {
         id
 
         type
+        title
+        description
 
-        fundingRequest {
+        funding {
           amount
         }
 
         join {
           fundingType
           funding
-        }
-
-        description {
-          description
         }
       }
     }
@@ -93,10 +98,15 @@ const CommonDetailsPage: NextPage = () => {
   const router = useRouter();
   const clipboard = useClipboard();
   const [_, setToast] = useToasts();
+
+  // Data fetching
   const data = useGetCommonDetailsQuery({
     variables: {
       commonId: router.query.commonId as string || '',
-      page: proposalsPage
+      paginate: {
+        take: 10,
+        skip: 10 * (proposalsPage - 1)
+      }
     }
   });
 
@@ -118,17 +128,17 @@ const CommonDetailsPage: NextPage = () => {
           </Tooltip>
         </div>
       ),
-      joinedAt: member.joinedAt
-        ? new Date(member.joinedAt).toLocaleDateString()
+      joinedAt: member.createdAt
+        ? new Date(member.createdAt).toLocaleDateString()
         : 'No data available',
       name: `${member.user.firstName} ${member.user.lastName[0]}.`,
       roles: (
         <React.Fragment>
-          {member.userId === common.metadata.founderId && (
-            <Tag>
-              Founder
+          {member.roles.map((r, i) => (
+            <Tag key={i}>
+              {r}
             </Tag>
-          )}
+          ))}
         </React.Fragment>
       ),
 
@@ -160,7 +170,7 @@ const CommonDetailsPage: NextPage = () => {
 
       description: proposal.description,
 
-      type: proposal.type === 'fundingRequest' ? (
+      type: proposal.type === 'FundingRequest' ? (
         <Tag type="success">Funding Request</Tag>
       ) : (
         <Tag type="warning">Join Request</Tag>
@@ -212,13 +222,28 @@ const CommonDetailsPage: NextPage = () => {
               {data.data.common.name}'s details
             </Text>
 
+            {data.data.common.whitelisted && (
+              <React.Fragment>
+
+                <Tooltip text="The common is whitelisted">
+                  <CheckCircle color="F5A623" strokeWidth={3} size={26}/>
+
+                  <Spacer y={2}/>
+                </Tooltip>
+              </React.Fragment>
+            )}
+
             <Spacer x={1}/>
 
-            <Tag>{data.data.common.metadata.contributionType}</Tag>
+            <Tag type="warning">{data.data.common.fundingType}</Tag>
 
             <div style={{ marginLeft: 'auto', cursor: 'pointer' }}>
               {router.query.commonId && (
-                <CommonSettings commonId={router.query.commonId as string}/>
+                <CommonSettings
+                  commonId={router.query.commonId as string}
+                  whitelisted={data.data.common.whitelisted}
+                  refetch={data.refetch}
+                />
               )}
             </div>
           </div>
@@ -248,7 +273,7 @@ const CommonDetailsPage: NextPage = () => {
               <Grid sm={24} md={8}>
                 <Card hoverable>
                   <Text h1>
-                    {data.data.common.openJoinRequests}
+                    {data.data.common.activeJoinProposals}
                   </Text>
                   <Text p>Open join request</Text>
                 </Card>
@@ -257,7 +282,7 @@ const CommonDetailsPage: NextPage = () => {
               <Grid sm={24} md={8}>
                 <Card hoverable>
                   <Text h1>
-                    {data.data.common.openFundingRequests}
+                    {data.data.common.activeFundingProposals}
                   </Text>
                   <Text p>Open funding request</Text>
                 </Card>
@@ -273,9 +298,9 @@ const CommonDetailsPage: NextPage = () => {
             <Table data={[
               { item: 'Created At', value: new Date(data.data.common.createdAt).toLocaleString() },
               { item: 'Updated At', value: new Date(data.data.common.updatedAt).toLocaleString() },
-              { item: 'Byline', value: data.data.common.metadata.byline },
-              { item: 'Description', value: data.data.common.metadata.description },
-              { item: 'Founder', value: data.data.common.metadata.founderId }
+              { item: 'Byline', value: data.data.common.byline },
+              { item: 'Action', value: data.data.common.action },
+              { item: 'Description', value: data.data.common.description }
             ]}>
               <Table.Column prop="item" label="Property" width={200}/>
               <Table.Column prop="value" label="Value"/>

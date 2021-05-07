@@ -1,9 +1,9 @@
 import { gql } from '@apollo/client';
 import { useRouter } from 'next/router';
-import { useGetConfirmPayoutDataLazyQuery, useApprovePayoutMutation } from '@graphql';
+import { useGetConfirmPayoutDataLazyQuery, useApprovePayoutMutation } from '@core/graphql';
 import React from 'react';
 import { Link } from '@components/Link';
-import { Breadcrumbs, Button, Spacer, Text, useToasts } from '@geist-ui/react';
+import { Breadcrumbs, Button, Text, useToasts } from '@geist-ui/react';
 import Skeleton from 'react-loading-skeleton';
 
 const ConfirmPayoutPageData = gql`

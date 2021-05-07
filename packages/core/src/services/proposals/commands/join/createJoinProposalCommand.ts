@@ -109,7 +109,7 @@ export const createJoinProposalCommand = async (command: z.infer<typeof schema>)
     data: {
       type: ProposalType.JoinRequest,
 
-      link: command.links,
+      links: command.links,
       title: command.title,
       description: command.description,
 

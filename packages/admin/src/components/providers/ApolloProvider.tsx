@@ -1,16 +1,49 @@
-import React, { PropsWithChildren } from 'react';
+import React from 'react';
 
-import { ApolloProvider as BareApolloProvider } from '@apollo/client';
-import { useApollo } from '@hooks';
-import { useAuthContext } from '@context';
+import { setContext } from '@apollo/client/link/context';
+import { ApolloClient, InMemoryCache, ApolloProvider, ApolloLink, HttpLink } from '@apollo/client';
 
-export const ApolloProvider: React.FC<PropsWithChildren<any>> = ({ children, ...rest }) => {
-  const authContext = useAuthContext();
-  const apollo = useApollo(process.env.NEXT_PUBLIC_ADMIN_GRAPH_ENDPOINT, authContext.token);
+import firebase from 'firebase/app';
 
+const cache = new InMemoryCache();
+
+const authLink = setContext(async (_, { headers }) => {
+  const token = await firebase.auth()
+    .currentUser
+    .getIdToken();
+
+  return {
+    headers: {
+      ...headers,
+      authorization: token
+    }
+  };
+});
+
+const generateClient = () => {
+  const links: any[] = [
+    authLink
+  ];
+
+  console.log('Creating GraphQL Client');
+
+  return new ApolloClient({
+    cache,
+    link: ApolloLink.from([
+      ...links,
+      new HttpLink({
+        uri: process.env['NEXT_PUBLIC_GraphQl.Endpoint'] as string
+      })
+    ])
+  });
+};
+
+const client = generateClient();
+
+export const CommonApolloProvider: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
   return (
-    <BareApolloProvider client={apollo}>
-      {React.isValidElement(children) && React.cloneElement(children, { ...rest })}
-    </BareApolloProvider>
+    <ApolloProvider client={client}>
+      {children}
+    </ApolloProvider>
   );
 };

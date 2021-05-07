@@ -11,18 +11,20 @@ import { Centered } from '@components/Centered';
 import {
   useGetUsersHomepageDataQuery,
   User,
-  useStatisticsQuery,
-  GetUsersHomepageDataQueryResult,
+  useGetAllTimeStatistiscQuery,
   GetUsersHomepageDataQuery
-} from '@graphql';
+} from '@core/graphql';
 import Skeleton from 'react-loading-skeleton';
 
 const UsersHomepageData = gql`
-  query getUsersHomepageData($page: Int = 1, $perPage: Int = 15) {
-    users(page: $page, perPage: $perPage) {
+  query getUsersHomepageData($paginate: PaginateInput!, $where: UserWhereInput) {
+    users(
+      paginate: $paginate,
+      where: $where
+    ) {
       id
 
-      photoURL
+      photo
       email
 
       firstName
@@ -40,11 +42,13 @@ const UsersHomepage: NextPage = () => {
   const [page, setPage] = React.useState<number>(1);
   const [perPage, setPerPage] = React.useState<number>(10);
 
-  const statistics = useStatisticsQuery();
+  const statistics = useGetAllTimeStatistiscQuery();
   const { data, loading } = useGetUsersHomepageDataQuery({
     variables: {
-      page,
-      perPage
+      paginate: {
+        skip: (page - 1) * perPage,
+        take: perPage
+      }
     }
   });
 
@@ -86,7 +90,7 @@ const UsersHomepage: NextPage = () => {
       avatar: (
         <Centered>
           <div style={{ cursor: 'pointer' }}>
-            <Avatar src={user.photoURL}/>
+            <Avatar src={user.photo}/>
           </div>
         </Centered>
       ),
@@ -133,7 +137,7 @@ const UsersHomepage: NextPage = () => {
                 <Card hoverable>
                   <Text h1>
                     {statistics.data && (
-                      statistics.data.statistics.users
+                      statistics.data.getStatistics[0].users
                     )}
 
                     {!statistics.data && (
@@ -183,7 +187,7 @@ const UsersHomepage: NextPage = () => {
             <Centered>
               <div style={{ margin: '20px 0' }}>
                 <Pagination
-                  count={Math.ceil(statistics.data.statistics.users / 10)}
+                  count={Math.ceil(statistics.data.getStatistics[0].users / 10)}
                   onChange={onPageChange}
                 >
                   <Pagination.Next>

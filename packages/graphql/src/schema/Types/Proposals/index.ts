@@ -13,14 +13,22 @@ import { ProposalWhereUniqueInput } from './Inputs/ProposalWhereUnique.input';
 
 import { FinalizeProposalMutation } from './Mutations/FinalizeProposalMutation';
 
-import { ProposalTypeEnum } from './Enums/ProposalType.enum';
 import { ProposalStateEnum } from './Enums/ProposalState.enum';
+import { ProposalTypeEnum } from './Enums/ProposalType.enum';
+import { FundingStateEnum } from './Enums/FundingState.enum';
+import { PaymentStateEnum } from './Enums/PaymentState.enum';
 
 import { GetProposalQuery } from './Queries/GetProposal.query';
 
 import { ProposalDiscussionsExtension } from './Extensions/ProposalDiscussions.extension';
+import { ProposalFundingExtension } from './Extensions/ProposalFunding.extension';
+import { ProposalCommonExtension } from './Extensions/ProposalCommon.extension';
+import { ProposalJoinExtension } from './Extensions/ProposalJoin.extension';
 
 import { ProposalChangeSubscription } from './Subscriptions/ProposalChange.subscription';
+import { GetProposalsQuery } from './Queries/GetProposals.query';
+import { ProposalProposerExtension } from './Enums/ProposalProposer.extension';
+import { ProposalVotesExtension } from './Enums/ProposalVotes.extension';
 
 export const ProposalTypes = [
   ProposalType,
@@ -30,24 +38,32 @@ export const ProposalTypes = [
 
   ProposalWhereInput,
   CreateJoinProposalInput,
-  CreateFundingProposalInput,
 
+  CreateFundingProposalInput,
   FinalizeProposalMutation,
   CreateJoinProposalMutation,
-  CreateFundingProposalMutation,
 
+  CreateFundingProposalMutation,
   ProposalLinkInput,
   ProposalFileInput,
-  ProposalImageInput,
 
+  ProposalImageInput,
   ProposalTypeEnum,
   ProposalStateEnum,
+  FundingStateEnum,
+  PaymentStateEnum,
 
   GetProposalQuery,
+  GetProposalsQuery,
 
   ProposalWhereUniqueInput,
 
   ProposalDiscussionsExtension,
+  ProposalProposerExtension,
+  ProposalFundingExtension,
+  ProposalCommonExtension,
+  ProposalVotesExtension,
+  ProposalJoinExtension,
 
   ProposalChangeSubscription
 ];
