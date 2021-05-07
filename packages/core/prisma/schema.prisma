@@ -235,7 +235,6 @@ model Subscription {
   card Card          @relation(fields: [cardId], references: [id])
   join JoinProposal?
 
-
   user   User   @relation(fields: [userId], references: [id])
   common Common @relation(fields: [commonId], references: [id])
 
@@ -507,6 +506,24 @@ model Event {
   user       User?       @relation(fields: [userId], references: [id])
 }
 
+model NotificationEventSettings {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sendNotificationType NotificationType
+
+  onEvent EventType @unique
+
+  sendToEveryone Boolean @default(false)
+  sendToCommon   Boolean @default(false)
+  sendToUser     Boolean @default(false)
+
+  description String
+  active      Boolean @default(true)
+}
+
 model NotificationSystemSettings {
   id String @id @default(uuid())
 
@@ -550,6 +567,8 @@ enum NotificationType {
 
   FundingRequestAccepted
   FundingRequestRejected
+
+  General
 }
 
 enum NotificationSeenStatus {

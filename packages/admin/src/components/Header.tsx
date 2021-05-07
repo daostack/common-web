@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { Avatar, Divider, Link, Page, Tabs, Tooltip, Text } from '@geist-ui/react';
 import { HasPermission } from '@components/HasPermission';
 import { useUserContext } from '@core/context';
+import { SearchEverywhere } from '@components/modals/SearchEverywhere';
 
 export const Header: React.FC = () => {
   const userContext = useUserContext();
@@ -39,35 +40,40 @@ export const Header: React.FC = () => {
         style={{
           width: '100%',
           display: 'flex',
-          justifyContent: 'flex-end',
+          justifyContent: 'space-between',
           alignItems: 'center',
-          marginTop: '2.5vh'
+          marginTop: '2.5vh',
+          marginBottom: '1.5vh'
         }}
       >
-        <Text p style={{ margin: 0 }}>{userContext.displayName}</Text>
-        <Tooltip
-          trigger="click"
-          placement="bottomEnd"
-          text={(
-            <div style={{ minWidth: '10vw' }}>
-              {/*<b onClick={commitIntention('admin.theme.toggle')}>Theme </b> <br/>*/}
-              {/*<b onClick={commitIntention('admin.notification.toggle')}>Notifications </b>*/}
+        <SearchEverywhere/>
 
-              <Divider y={0.5}/>
+        <div style={{ display: 'flex' }}>
+          <Text p style={{ margin: 0 }}>{userContext.displayName}</Text>
+          <Tooltip
+            trigger="click"
+            placement="bottomEnd"
+            text={(
+              <div style={{ minWidth: '10vw' }}>
+                {/*<b onClick={commitIntention('admin.theme.toggle')}>Theme </b> <br/>*/}
+                {/*<b onClick={commitIntention('admin.notification.toggle')}>Notifications </b>*/}
 
-              <Link onClick={onSignOut}>
-                <b>Sign Out</b>
-              </Link>
+                <Divider y={0.5}/>
+
+                <Link onClick={onSignOut}>
+                  <b>Sign Out</b>
+                </Link>
+              </div>
+            )}
+            style={{
+              marginLeft: 10
+            }}
+          >
+            <div style={{ cursor: 'pointer' }}>
+              <Avatar src={userContext.photo}/>
             </div>
-          )}
-          style={{
-            marginLeft: 10
-          }}
-        >
-          <div style={{ cursor: 'pointer' }}>
-            <Avatar src={userContext.photo}/>
-          </div>
-        </Tooltip>
+          </Tooltip>
+        </div>
       </div>
 
       <HasPermission permission="admin.*">
