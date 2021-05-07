@@ -12,17 +12,16 @@
   box-sizing: border-box;
   width: 100%;
 
+  .logo {
+    height: 60px;
+  }
+
   .navigation-wrapper {
     margin-left: 50px;
     display: flex;
     a {
       text-decoration: none;
       font-size: 18px;
-      font-weight: normal;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: 1.22;
-      letter-spacing: normal;
       color: #001a36;
       margin-right: 50px;
       &.active {
@@ -45,9 +44,14 @@
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .header-wrapper {
+    .logo {
+      height: 40px;
+    }
     .humburger-menu,
     .common-logo {
       margin-right: auto;
+      align-items: center;
+      display: flex;
     }
     padding: 10px $content-padding-mobile;
     flex-direction: row-reverse;

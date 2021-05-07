@@ -4,7 +4,7 @@
   margin-top: $footer-margin-top;
   .footer-top {
     display: flex;
-    padding: 10px 80px;
+    padding: 30px 80px;
     background-color: $blue;
     justify-content: center;
     .logo {
@@ -35,7 +35,7 @@
   .footer-bottom {
     height: 80px;
     background-color: $deep-blue;
-    padding: 10px 80px;
+    padding: 10px;
     .powered-by {
       color: $white;
       font-size: 12px;

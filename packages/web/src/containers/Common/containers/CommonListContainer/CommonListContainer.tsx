@@ -2,7 +2,9 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { Loader } from "../../../../shared/components";
+import DownloadCommonApp from "../../../../shared/components/DownloadCommonApp/DownloadCommonApp";
 import { getLoading } from "../../../../shared/store/selectors";
+import { isMobile } from "../../../../shared/utils";
 
 import { CommonListItem } from "../../components";
 import { COMMON_PAGE_SIZE } from "../../constants";
@@ -24,6 +26,7 @@ export default function CommonListContainer() {
   const dispatch = useDispatch();
   const loader = useRef(null);
   const [loaderHack, setLoaderHack] = useState(false);
+  const [hasClosedPopup, setHasClosedPopup] = useState(sessionStorage.getItem("hasClosedPopup"));
 
   useEffect(() => {
     if (commons.length === 0) {
@@ -61,6 +64,7 @@ export default function CommonListContainer() {
 
   return (
     <div className="common-list-wrapper">
+      {isMobile() && !hasClosedPopup && <DownloadCommonApp setHasClosedPopup={setHasClosedPopup} />}
       <h1 className="page-title">Explore commons</h1>
 
       {loading ? (
@@ -78,7 +82,7 @@ export default function CommonListContainer() {
           {loaderHack ? <div className="loader">Loading...</div> : null}
           {page >= 2 && !loaderHack ? (
             <div className="loading button-blue" onClick={() => loadHack()}>
-              Load More Commons
+              Load more Commons
             </div>
           ) : null}
         </div>
