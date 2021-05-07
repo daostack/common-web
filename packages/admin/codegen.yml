@@ -11,6 +11,7 @@ documents:
   - "src/pages/commons/details/[commonId].tsx"
   - "src/pages/proposals/details/[proposalId].tsx"
   - "src/pages/users/details/[userId].tsx"
+  - "src/pages/notifications/**/*.tsx"
 generates:
   ./src/core/graphql/index.ts:
     plugins:

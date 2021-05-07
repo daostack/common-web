@@ -553,6 +553,15 @@ type NotificationEventSettings implements BaseEntity {
   updatedAt: DateTime!
 }
 
+enum NotificationLanguage {
+  BG
+  EN
+  HE
+  JP
+  KO
+  RU
+}
+
 input NotificationOrderByInput {
   createdAt: SortOrder
   status: SortOrder
@@ -563,6 +572,38 @@ enum NotificationSeenStatus {
   Done
   NotSeen
   Seen
+}
+
+type NotificationTemplate implements BaseEntity {
+  bcc: String
+  bccName: String
+  content: String!
+
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  forType: NotificationType!
+  from: String
+  fromName: String
+
+  """The main identifier of the item"""
+  id: UUID!
+  language: NotificationLanguage!
+  subject: String!
+  templateType: NotificationTemplateType!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+}
+
+enum NotificationTemplateType {
+  EmailNotification
+  PushNotification
+}
+
+input NotificationTemplateWhereInput {
+  forType: NotificationType
+  language: NotificationLanguage
+  type: NotificationTemplateType
 }
 
 enum NotificationType {
@@ -683,6 +724,11 @@ type Query {
   events(paginate: PaginateInput): [Event]
   generateUserAuthToken(authId: String!): String!
   getStatistics(where: StatisticsWhereInput): [Statistic]
+  notificationEventSettings(paginate: PaginateInput!): [NotificationEventSettings]
+  notificationTemplates(paginate: PaginateInput, where: NotificationTemplateWhereInput): [NotificationTemplate]
+
+  """List of all notifications, readable only by the admin"""
+  notifications(paginate: PaginateInput!): [Notification]
   proposal(where: ProposalWhereUniqueInput!): Proposal
   proposals(paginate: PaginateInput, where: ProposalWhereInput): [Proposal]
   roles(paginate: PaginateInput): [Role]

@@ -84,6 +84,10 @@ export const Header: React.FC = () => {
           <Tabs.Item value="users" label="Users"/>
           <Tabs.Item value="financials" label="Financials"/>
           <Tabs.Item value="events" label="Events"/>
+
+          <HasPermission permission="admin.notification.*">
+            <Tabs.Item value="notifications" label="Notifications"/>
+          </HasPermission>
           {/*<Tabs.Item value="development/playground" label="Playground"/>*/}
         </Tabs>
       </HasPermission>

@@ -709,13 +709,28 @@ export enum NotificationType {
   JoinRequestAccepted = 'JoinRequestAccepted',
   JoinRequestRejected = 'JoinRequestRejected',
   FundingRequestAccepted = 'FundingRequestAccepted',
-  FundingRequestRejected = 'FundingRequestRejected'
+  FundingRequestRejected = 'FundingRequestRejected',
+  General = 'General'
 }
 
 export enum NotificationSeenStatus {
   NotSeen = 'NotSeen',
   Seen = 'Seen',
   Done = 'Done'
+}
+
+export enum NotificationLanguage {
+  En = 'EN',
+  Ru = 'RU',
+  Bg = 'BG',
+  He = 'HE',
+  Jp = 'JP',
+  Ko = 'KO'
+}
+
+export enum NotificationTemplateType {
+  PushNotification = 'PushNotification',
+  EmailNotification = 'EmailNotification'
 }
 
 export type Notification = BaseEntity & {
@@ -748,6 +763,42 @@ export type Notification = BaseEntity & {
   discussion?: Maybe<Discussion>;
 };
 
+export type NotificationTemplate = BaseEntity & {
+  __typename?: 'NotificationTemplate';
+  /** The main identifier of the item */
+  id: Scalars['UUID'];
+  /** The date, at which the item was created */
+  createdAt: Scalars['DateTime'];
+  /** The date, at which the item was last modified */
+  updatedAt: Scalars['DateTime'];
+  forType: NotificationType;
+  templateType: NotificationTemplateType;
+  language: NotificationLanguage;
+  subject: Scalars['String'];
+  content: Scalars['String'];
+  from?: Maybe<Scalars['String']>;
+  fromName?: Maybe<Scalars['String']>;
+  bcc?: Maybe<Scalars['String']>;
+  bccName?: Maybe<Scalars['String']>;
+};
+
+export type NotificationEventSettings = BaseEntity & {
+  __typename?: 'NotificationEventSettings';
+  /** The main identifier of the item */
+  id: Scalars['UUID'];
+  /** The date, at which the item was created */
+  createdAt: Scalars['DateTime'];
+  /** The date, at which the item was last modified */
+  updatedAt: Scalars['DateTime'];
+  active: Scalars['Boolean'];
+  sendToEveryone: Scalars['Boolean'];
+  sendToCommon: Scalars['Boolean'];
+  sendToUser: Scalars['Boolean'];
+  description: Scalars['String'];
+  sendNotificationType: NotificationType;
+  onEvent: EventType;
+};
+
 export type NotificationWhereInput = {
   seenStatus?: Maybe<NotificationSeenStatus>;
   type?: Maybe<NotificationType>;
@@ -759,6 +810,12 @@ export type NotificationWhereInput = {
 
 export type NotificationWhereUniqueInput = {
   id?: Maybe<Scalars['UUID']>;
+};
+
+export type NotificationTemplateWhereInput = {
+  language?: Maybe<NotificationLanguage>;
+  forType?: Maybe<NotificationType>;
+  type?: Maybe<NotificationTemplateType>;
 };
 
 export type NotificationOrderByInput = {
@@ -864,6 +921,15 @@ export type CreateRoleInput = {
   permissions: Array<Scalars['String']>;
 };
 
+export type CreateNotificationEventSettingsInput = {
+  sendToEveryone: Scalars['Boolean'];
+  sendToCommon: Scalars['Boolean'];
+  sendToUser: Scalars['Boolean'];
+  description: Scalars['String'];
+  sendNotificationType: NotificationType;
+  onEvent: EventType;
+};
+
 export type Query = {
   __typename?: 'Query';
   /** Provide ID to fetch specific user or do not pass anything to get the currently authenticated user */
@@ -878,6 +944,10 @@ export type Query = {
   proposals?: Maybe<Array<Maybe<Proposal>>>;
   getStatistics?: Maybe<Array<Maybe<Statistic>>>;
   discussion?: Maybe<Discussion>;
+  notificationEventSettings?: Maybe<Array<Maybe<NotificationEventSettings>>>;
+  notificationTemplates?: Maybe<Array<Maybe<NotificationTemplate>>>;
+  /** List of all notifications, readable only by the admin */
+  notifications?: Maybe<Array<Maybe<Notification>>>;
 };
 
 
@@ -937,6 +1007,22 @@ export type QueryDiscussionArgs = {
   id: Scalars['ID'];
 };
 
+
+export type QueryNotificationEventSettingsArgs = {
+  paginate: PaginateInput;
+};
+
+
+export type QueryNotificationTemplatesArgs = {
+  where?: Maybe<NotificationTemplateWhereInput>;
+  paginate?: Maybe<PaginateInput>;
+};
+
+
+export type QueryNotificationsArgs = {
+  paginate: PaginateInput;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   /** Creates new user in the system */
@@ -960,6 +1046,7 @@ export type Mutation = {
   createDiscussion: Discussion;
   createDiscussionMessage: DiscussionMessage;
   changeDiscussionSubscriptionType?: Maybe<DiscussionSubscription>;
+  createNotificationEventSettings?: Maybe<NotificationEventSettings>;
 };
 
 
@@ -1060,6 +1147,11 @@ export type MutationChangeDiscussionSubscriptionTypeArgs = {
   type: DiscussionSubscriptionType;
 };
 
+
+export type MutationCreateNotificationEventSettingsArgs = {
+  input: CreateNotificationEventSettingsInput;
+};
+
 export type Subscription = {
   __typename?: 'Subscription';
   onProposalChange?: Maybe<Proposal>;
@@ -1127,6 +1219,27 @@ export type GetCommonDetailsQuery = (
       )>
   }
     )>
+}
+  );
+
+export type GetAllUsersNotificationsQueryVariables = Exact<{
+  paginate: PaginateInput;
+}>;
+
+
+export type GetAllUsersNotificationsQuery = (
+  { __typename?: 'Query' }
+  & {
+  notifications?: Maybe<Array<Maybe<(
+    { __typename?: 'Notification' }
+    & Pick<Notification, 'id' | 'type' | 'createdAt' | 'seenStatus'>
+    & {
+    user: (
+      { __typename?: 'User' }
+      & Pick<User, 'photo' | 'displayName'>
+      )
+  }
+    )>>>
 }
   );
 
@@ -1440,12 +1553,56 @@ export const GetCommonDetailsDocument = gql`
 export function useGetCommonDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>) {
   return Apollo.useQuery<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>(GetCommonDetailsDocument, baseOptions);
 }
+
 export function useGetCommonDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>) {
   return Apollo.useLazyQuery<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>(GetCommonDetailsDocument, baseOptions);
 }
+
 export type GetCommonDetailsQueryHookResult = ReturnType<typeof useGetCommonDetailsQuery>;
 export type GetCommonDetailsLazyQueryHookResult = ReturnType<typeof useGetCommonDetailsLazyQuery>;
 export type GetCommonDetailsQueryResult = Apollo.QueryResult<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>;
+export const GetAllUsersNotificationsDocument = gql`
+  query getAllUsersNotifications($paginate: PaginateInput!) {
+    notifications(paginate: $paginate) {
+      id
+      type
+      createdAt
+      seenStatus
+      user {
+        photo
+        displayName
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetAllUsersNotificationsQuery__
+ *
+ * To run a query within a React component, call `useGetAllUsersNotificationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllUsersNotificationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllUsersNotificationsQuery({
+ *   variables: {
+ *      paginate: // value for 'paginate'
+ *   },
+ * });
+ */
+export function useGetAllUsersNotificationsQuery(baseOptions: Apollo.QueryHookOptions<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>) {
+  return Apollo.useQuery<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>(GetAllUsersNotificationsDocument, baseOptions);
+}
+
+export function useGetAllUsersNotificationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>) {
+  return Apollo.useLazyQuery<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>(GetAllUsersNotificationsDocument, baseOptions);
+}
+
+export type GetAllUsersNotificationsQueryHookResult = ReturnType<typeof useGetAllUsersNotificationsQuery>;
+export type GetAllUsersNotificationsLazyQueryHookResult = ReturnType<typeof useGetAllUsersNotificationsLazyQuery>;
+export type GetAllUsersNotificationsQueryResult = Apollo.QueryResult<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>;
 export const GetProposalDetailsDocument = gql`
   query getProposalDetails($where: ProposalWhereUniqueInput!) {
     proposal(where: $where) {
@@ -1805,11 +1962,9 @@ export const GetProposalsHomescreenDocument = gql`
 export function useGetProposalsHomescreenQuery(baseOptions: Apollo.QueryHookOptions<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>) {
   return Apollo.useQuery<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>(GetProposalsHomescreenDocument, baseOptions);
 }
-
 export function useGetProposalsHomescreenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>) {
   return Apollo.useLazyQuery<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>(GetProposalsHomescreenDocument, baseOptions);
 }
-
 export type GetProposalsHomescreenQueryHookResult = ReturnType<typeof useGetProposalsHomescreenQuery>;
 export type GetProposalsHomescreenLazyQueryHookResult = ReturnType<typeof useGetProposalsHomescreenLazyQuery>;
 export type GetProposalsHomescreenQueryResult = Apollo.QueryResult<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>;
@@ -1846,11 +2001,9 @@ export const GetUsersHomepageDataDocument = gql`
 export function useGetUsersHomepageDataQuery(baseOptions: Apollo.QueryHookOptions<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>) {
   return Apollo.useQuery<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>(GetUsersHomepageDataDocument, baseOptions);
 }
-
 export function useGetUsersHomepageDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>) {
   return Apollo.useLazyQuery<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>(GetUsersHomepageDataDocument, baseOptions);
 }
-
 export type GetUsersHomepageDataQueryHookResult = ReturnType<typeof useGetUsersHomepageDataQuery>;
 export type GetUsersHomepageDataLazyQueryHookResult = ReturnType<typeof useGetUsersHomepageDataLazyQuery>;
 export type GetUsersHomepageDataQueryResult = Apollo.QueryResult<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>;

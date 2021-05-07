@@ -541,11 +541,24 @@ enum NotificationType {
   JoinRequestRejected
   FundingRequestAccepted
   FundingRequestRejected
+  General
 }
 enum NotificationSeenStatus {
   NotSeen
   Seen
   Done
+}
+enum NotificationLanguage {
+  EN
+  RU
+  BG
+  HE
+  JP
+  KO
+}
+enum NotificationTemplateType {
+  PushNotification
+  EmailNotification
 }
 type Notification implements BaseEntity {
   """The main identifier of the item"""
@@ -575,6 +588,38 @@ type Notification implements BaseEntity {
   """The linked discussion. Expensive operation that may return null"""
   discussion: Discussion
 }
+type NotificationTemplate implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  forType: NotificationType!
+  templateType: NotificationTemplateType!
+  language: NotificationLanguage!
+  subject: String!
+  content: String!
+  from: String
+  fromName: String
+  bcc: String
+  bccName: String
+}
+type NotificationEventSettings implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  active: Boolean!
+  sendToEveryone: Boolean!
+  sendToCommon: Boolean!
+  sendToUser: Boolean!
+  description: String!
+  sendNotificationType: NotificationType!
+  onEvent: EventType!
+}
 input NotificationWhereInput {
   seenStatus: NotificationSeenStatus
   type: NotificationType
@@ -585,6 +630,11 @@ input NotificationWhereInput {
 }
 input NotificationWhereUniqueInput {
   id: UUID
+}
+input NotificationTemplateWhereInput {
+  language: NotificationLanguage
+  forType: NotificationType
+  type: NotificationTemplateType
 }
 input NotificationOrderByInput {
   createdAt: SortOrder
@@ -675,6 +725,14 @@ input CreateRoleInput {
   description: String!
   permissions: [String!]!
 }
+input CreateNotificationEventSettingsInput {
+  sendToEveryone: Boolean!
+  sendToCommon: Boolean!
+  sendToUser: Boolean!
+  description: String!
+  sendNotificationType: NotificationType!
+  onEvent: EventType!
+}
 type Query {
   """Provide ID to fetch specific user or do not pass anything to get the currently authenticated user"""
   user(where: UserWhereUniqueInput): User
@@ -688,6 +746,10 @@ type Query {
   proposals(where: ProposalWhereInput, paginate: PaginateInput): [Proposal]
   getStatistics(where: StatisticsWhereInput): [Statistic]
   discussion(id: ID!): Discussion
+  notificationEventSettings(paginate: PaginateInput!): [NotificationEventSettings]
+  notificationTemplates(where: NotificationTemplateWhereInput, paginate: PaginateInput): [NotificationTemplate]
+  """List of all notifications, readable only by the admin"""
+  notifications(paginate: PaginateInput!): [Notification]
 }
 type Mutation {
   """Creates new user in the system"""
@@ -716,6 +778,7 @@ type Mutation {
     """The new subscription type"""
     type: DiscussionSubscriptionType!
   ): DiscussionSubscription
+  createNotificationEventSettings(input: CreateNotificationEventSettingsInput!): NotificationEventSettings
 }
 type Subscription {
   onProposalChange(

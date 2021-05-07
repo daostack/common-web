@@ -15,13 +15,25 @@ import { NotificationWhereUniqueInput } from './Inputs/NotificationWhereUnique.i
 import { NotificationOrderByInput } from './Inputs/NotificationOrderBy.input';
 
 import { NotificationCreatedSubscription } from './Subscriptions/NotificationCreated.subscription';
+
 import { CreateNotificationEventSettingsMutation } from './Mutations/CreateNotificationEventSettings.mutation';
+
+import { GetNotificationEventSettingsQuery } from './Queries/GetNotificationEventSettings.query';
+import { GetNotificationsQuery } from './Queries/GetNotifications.query';
+import { NotificationLanguageEnum } from './Enums/NotificationLanguage.enum';
+import { NotificationTemplateType } from './Types/NotificationTemplate.type';
+import { NotificationTemplateTypeEnum } from './Enums/NotificationTemplateType.enum';
+import { NotificationTemplateWhereInput } from './Inputs/NotificationTemplateWhere.input';
+import { GetNotificationTemplatesQuery } from './Queries/GetNotificationTemplates.query';
 
 export const NotificationTypes = [
   NotificationTypeEnum,
   NotificationSeenStatusEnum,
+  NotificationLanguageEnum,
+  NotificationTemplateTypeEnum,
 
   NotificationType,
+  NotificationTemplateType,
   NotificationEventSettingsType,
 
   NotificationUserExtension,
@@ -31,10 +43,15 @@ export const NotificationTypes = [
 
   NotificationWhereInput,
   NotificationWhereUniqueInput,
+  NotificationTemplateWhereInput,
 
   NotificationOrderByInput,
 
   NotificationCreatedSubscription,
 
-  CreateNotificationEventSettingsMutation
+  CreateNotificationEventSettingsMutation,
+
+  GetNotificationEventSettingsQuery,
+  GetNotificationTemplatesQuery,
+  GetNotificationsQuery
 ];

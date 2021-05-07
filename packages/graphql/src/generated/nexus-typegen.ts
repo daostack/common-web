@@ -4,11 +4,10 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
-import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
+import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -170,6 +169,11 @@ export interface NexusGenInputs {
     status?: NexusGenEnums['SortOrder'] | null; // SortOrder
     updatedAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
   }
+  NotificationTemplateWhereInput: { // input type
+    forType?: NexusGenEnums['NotificationType'] | null; // NotificationType
+    language?: NexusGenEnums['NotificationLanguage'] | null; // NotificationLanguage
+    type?: NexusGenEnums['NotificationTemplateType'] | null; // NotificationTemplateType
+  }
   NotificationWhereInput: { // input type
     commonId?: NexusGenScalars['UUID'] | null; // UUID
     discussionId?: NexusGenScalars['UUID'] | null; // UUID
@@ -252,9 +256,11 @@ export interface NexusGenEnums {
   EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonDelisted" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "CommonWhitelisted" | "DiscussionCreated" | "DiscussionMessageCreated" | "DiscussionSubscriptionCreated" | "DiscussionSubscriptionTypeChanged" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "NotificationTemplateCreated" | "NotificationTemplateUpdated" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "ReportCreated" | "ReportDismissed" | "ReportRespected" | "RoleCreated" | "RoleDeleted" | "RolePermissionAdded" | "RolePermissionRemoved" | "RoleUpdated" | "UserAddedToRole" | "UserCreated" | "UserNotificationTokenCreated" | "UserNotificationTokenExpired" | "UserNotificationTokenRefreshed" | "UserNotificationTokenVoided" | "UserRemovedFromRole" | "VoteCreated"
   FundingState: "AwaitingApproval" | "Completed" | "Confirmed" | "Eligible" | "NotEligible" | "Pending"
   FundingType: "Monthly" | "OneTime"
-  NotificationSeenStatus: 'Done' | 'NotSeen' | 'Seen'
-  NotificationType: 'FundingRequestAccepted' | 'FundingRequestRejected' | 'General' | 'JoinRequestAccepted' | 'JoinRequestRejected'
-  PaymentState: 'NotAttempted' | 'Pending' | 'Successful' | 'Unsuccessful'
+  NotificationLanguage: "BG" | "EN" | "HE" | "JP" | "KO" | "RU"
+  NotificationSeenStatus: "Done" | "NotSeen" | "Seen"
+  NotificationTemplateType: "EmailNotification" | "PushNotification"
+  NotificationType: "FundingRequestAccepted" | "FundingRequestRejected" | "General" | "JoinRequestAccepted" | "JoinRequestRejected"
+  PaymentState: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
   ProposalState: "Accepted" | "Countdown" | "Finalizing" | "Rejected"
   ProposalType: "FundingRequest" | "JoinRequest"
   ReportAction: "Dismissed" | "Respected"
@@ -400,6 +406,20 @@ export interface NexusGenObjects {
     sendToUser: boolean; // Boolean!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
+  NotificationTemplate: { // root type
+    bcc?: string | null; // String
+    bccName?: string | null; // String
+    content: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    forType: NexusGenEnums['NotificationType']; // NotificationType!
+    from?: string | null; // String
+    fromName?: string | null; // String
+    id: NexusGenScalars['UUID']; // UUID!
+    language: NexusGenEnums['NotificationLanguage']; // NotificationLanguage!
+    subject: string; // String!
+    templateType: NexusGenEnums['NotificationTemplateType']; // NotificationTemplateType!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   Proposal: { // root type
     commonId: NexusGenScalars['UUID']; // UUID!
     commonMemberId: NexusGenScalars['UUID']; // UUID!
@@ -480,7 +500,7 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  BaseEntity: NexusGenRootTypes['CommonMember'] | NexusGenRootTypes['CommonSubscription'] | NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['FundingProposal'] | NexusGenRootTypes['JoinProposal'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['NotificationEventSettings'] | NexusGenRootTypes['Report'] | NexusGenRootTypes['Role'] | NexusGenRootTypes['Statistic'] | NexusGenRootTypes['UserNotificationToken'];
+  BaseEntity: NexusGenRootTypes['CommonMember'] | NexusGenRootTypes['CommonSubscription'] | NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['FundingProposal'] | NexusGenRootTypes['JoinProposal'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['NotificationEventSettings'] | NexusGenRootTypes['NotificationTemplate'] | NexusGenRootTypes['Report'] | NexusGenRootTypes['Role'] | NexusGenRootTypes['Statistic'] | NexusGenRootTypes['UserNotificationToken'];
 }
 
 export interface NexusGenUnions {
@@ -649,6 +669,20 @@ export interface NexusGenFieldTypes {
     sendToUser: boolean; // Boolean!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
+  NotificationTemplate: { // field return type
+    bcc: string | null; // String
+    bccName: string | null; // String
+    content: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    forType: NexusGenEnums['NotificationType']; // NotificationType!
+    from: string | null; // String
+    fromName: string | null; // String
+    id: NexusGenScalars['UUID']; // UUID!
+    language: NexusGenEnums['NotificationLanguage']; // NotificationLanguage!
+    subject: string; // String!
+    templateType: NexusGenEnums['NotificationTemplateType']; // NotificationTemplateType!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   Proposal: { // field return type
     common: NexusGenRootTypes['Common']; // Common!
     commonId: NexusGenScalars['UUID']; // UUID!
@@ -684,6 +718,9 @@ export interface NexusGenFieldTypes {
     events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     generateUserAuthToken: string; // String!
     getStatistics: Array<NexusGenRootTypes['Statistic'] | null> | null; // [Statistic]
+    notificationEventSettings: Array<NexusGenRootTypes['NotificationEventSettings'] | null> | null; // [NotificationEventSettings]
+    notificationTemplates: Array<NexusGenRootTypes['NotificationTemplate'] | null> | null; // [NotificationTemplate]
+    notifications: Array<NexusGenRootTypes['Notification'] | null> | null; // [Notification]
     proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
     proposals: Array<NexusGenRootTypes['Proposal'] | null> | null; // [Proposal]
     roles: Array<NexusGenRootTypes['Role'] | null> | null; // [Role]
@@ -927,6 +964,20 @@ export interface NexusGenFieldTypeNames {
     sendToUser: 'Boolean'
     updatedAt: 'DateTime'
   }
+  NotificationTemplate: { // field return type name
+    bcc: 'String'
+    bccName: 'String'
+    content: 'String'
+    createdAt: 'DateTime'
+    forType: 'NotificationType'
+    from: 'String'
+    fromName: 'String'
+    id: 'UUID'
+    language: 'NotificationLanguage'
+    subject: 'String'
+    templateType: 'NotificationTemplateType'
+    updatedAt: 'DateTime'
+  }
   Proposal: { // field return type name
     common: 'Common'
     commonId: 'UUID'
@@ -962,6 +1013,9 @@ export interface NexusGenFieldTypeNames {
     events: 'Event'
     generateUserAuthToken: 'String'
     getStatistics: 'Statistic'
+    notificationEventSettings: 'NotificationEventSettings'
+    notificationTemplates: 'NotificationTemplate'
+    notifications: 'Notification'
     proposal: 'Proposal'
     proposals: 'Proposal'
     roles: 'Role'
@@ -1174,6 +1228,16 @@ export interface NexusGenArgTypes {
     getStatistics: { // args
       where?: NexusGenInputs['StatisticsWhereInput'] | null; // StatisticsWhereInput
     }
+    notificationEventSettings: { // args
+      paginate: NexusGenInputs['PaginateInput']; // PaginateInput!
+    }
+    notificationTemplates: { // args
+      paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
+      where?: NexusGenInputs['NotificationTemplateWhereInput'] | null; // NotificationTemplateWhereInput
+    }
+    notifications: { // args
+      paginate: NexusGenInputs['PaginateInput']; // PaginateInput!
+    }
     proposal: { // args
       where: NexusGenInputs['ProposalWhereUniqueInput']; // ProposalWhereUniqueInput!
     }
@@ -1226,7 +1290,7 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  BaseEntity: 'CommonMember' | 'CommonSubscription' | 'Discussion' | 'DiscussionMessage' | 'DiscussionSubscription' | 'FundingProposal' | 'JoinProposal' | 'Notification' | 'NotificationEventSettings' | 'Report' | 'Role' | 'Statistic' | 'UserNotificationToken'
+  BaseEntity: "CommonMember" | "CommonSubscription" | "Discussion" | "DiscussionMessage" | "DiscussionSubscription" | "FundingProposal" | "JoinProposal" | "Notification" | "NotificationEventSettings" | "NotificationTemplate" | "Report" | "Role" | "Statistic" | "UserNotificationToken"
 }
 
 export interface NexusGenTypeInterfaces {
@@ -1237,9 +1301,10 @@ export interface NexusGenTypeInterfaces {
   DiscussionSubscription: "BaseEntity"
   FundingProposal: "BaseEntity"
   JoinProposal: "BaseEntity"
-  Notification: 'BaseEntity'
-  NotificationEventSettings: 'BaseEntity'
-  Report: 'BaseEntity'
+  Notification: "BaseEntity"
+  NotificationEventSettings: "BaseEntity"
+  NotificationTemplate: "BaseEntity"
+  Report: "BaseEntity"
   Role: "BaseEntity"
   Statistic: "BaseEntity"
   UserNotificationToken: "BaseEntity"
