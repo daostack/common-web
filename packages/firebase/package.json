@@ -1,7 +1,7 @@
 {
   "name": "@common/firebase",
   "description": "Cloud Functions for Firebase",
-  "version": "1.9.12-rc.0",
+  "version": "1.9.12-rc.1",
   "scripts": {
     "build": "yarn compile",
     "build:watch": "yarn compile:watch",
@@ -76,7 +76,7 @@
   },
   "private": true,
   "dependencies": {
-    "@common/types": "^1.9.11-rc.1",
+    "@common/types": "^1.9.12-rc.1",
     "apollo-server": "^2.19.2",
     "crossenv": "^0.0.2-security",
     "graphql": "^15.5.0",
