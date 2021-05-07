@@ -55,7 +55,7 @@ const DashboardHomePage: NextPage = () => {
         <Text h3>Application's overview</Text>
 
         <Grid.Container gap={2} alignItems="stretch" style={{ display: 'flex' }}>
-          <Grid sm={24} md={8} onClick={onCardClick('/commons')} style={{ cursor: 'pointer' }}>
+          <Grid xs={24} md={8} onClick={onCardClick('/commons')} style={{ cursor: 'pointer' }}>
             <Card hoverable>
               <Text h1>
                 {statistics.data && (
@@ -70,7 +70,7 @@ const DashboardHomePage: NextPage = () => {
             </Card>
           </Grid>
 
-          <Grid sm={24} md={8} onClick={onCardClick('/proposals')} style={{ cursor: 'pointer' }}>
+          <Grid xs={24} md={8} onClick={onCardClick('/proposals')} style={{ cursor: 'pointer' }}>
             <Card hoverable>
               <Text h1>
                 {statistics.data && (
@@ -86,7 +86,7 @@ const DashboardHomePage: NextPage = () => {
             </Card>
           </Grid>
 
-          <Grid sm={24} md={8} onClick={onCardClick('/users')} style={{ cursor: 'pointer' }}>
+          <Grid xs={24} md={8} onClick={onCardClick('/users')} style={{ cursor: 'pointer' }}>
             <Card hoverable>
               <Text h1>
                 {statistics.data && (
