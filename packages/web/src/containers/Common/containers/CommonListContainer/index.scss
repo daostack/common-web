@@ -1,6 +1,7 @@
 @import "../../../../constants.scss";
 
 .common-list-wrapper {
+  padding-top: 20px;
   .common-list {
     display: grid;
     justify-items: center;
@@ -64,9 +65,5 @@
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
-  .common-list-wrapper {
-    .common-list {
 
-    }
-  }
 }

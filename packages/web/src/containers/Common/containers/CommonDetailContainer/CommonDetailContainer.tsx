@@ -5,8 +5,9 @@ import { Loader } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
 import { useModal } from "../../../../shared/hooks";
 import { Discussion, Proposal } from "../../../../shared/models";
-import { getLoading } from "../../../../shared/store/selectors";
+import { getLoading, getScreenSize } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
+
 import {
   AboutTabComponent,
   PreviewInformationList,
@@ -36,6 +37,8 @@ import {
   selectCurrentProposal,
 } from "../../store/selectors";
 import "./index.scss";
+import { Colors, ScreenSize } from "../../../../shared/constants";
+import { MobileLinks } from "../../../../shared/components/MobileLinks";
 interface CommonDetailRouterParams {
   id: string;
 }
@@ -71,6 +74,7 @@ export default function CommonDetail() {
   const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
   const isProposalsLoaded = useSelector(selectIsProposalLoaded());
   const currentProposal = useSelector(selectCurrentProposal());
+  const screenSize = useSelector(getScreenSize());
 
   const dispatch = useDispatch();
   const { isShowing, onOpen, onClose } = useModal(false);
@@ -195,10 +199,25 @@ export default function CommonDetail() {
   ) : (
     common && (
       <>
-        <Modal isShowing={isShowing} onClose={closeModalHandler}>
-          {tab === "discussions" && <DiscussionDetailModal disscussion={currentDisscussion} common={common} />}
+        <Modal
+          isShowing={isShowing}
+          onClose={closeModalHandler}
+          closeColor={screenSize === ScreenSize.Small ? Colors.white : Colors.gray}
+        >
+          {screenSize === ScreenSize.Large && tab === "discussions" && (
+            <DiscussionDetailModal disscussion={currentDisscussion} common={common} />
+          )}
           {tab === "proposals" ||
-            (tab === "history" && <ProposalDetailModal proposal={currentProposal} common={common} />)}
+            (tab === "history" && screenSize === ScreenSize.Large && (
+              <ProposalDetailModal proposal={currentProposal} common={common} />
+            ))}
+          {screenSize === ScreenSize.Small && (
+            <div className="get-common-app-wrapper">
+              <img src="/icons/logo-all-white.svg" alt="logo" className="logo" />
+              <span className="text">Download the Common app to participate in discussions and join the community</span>
+              <MobileLinks color={Colors.black} detectOS={true} />
+            </div>
+          )}
         </Modal>
         <div className="common-detail-wrapper">
           <div className="main-information-block">
@@ -212,17 +231,20 @@ export default function CommonDetail() {
               </div>
               <div className="text-information-wrapper">
                 <div className="text">
-                  <div className="name">{common?.name}</div>
-                  <div className="tagline">{common?.metadata.byline}</div>
+                  <div>
+                    <div className="name">{common?.name}</div>
+                    <div className="tagline">{common?.metadata.byline}</div>
+                  </div>
+                  {screenSize === ScreenSize.Small && <button className="social-button"></button>}
                 </div>
                 <div className="numbers">
                   <div className="item" onClick={onOpen}>
                     <div className="value">{formatPrice(common?.balance)}</div>
-                    <div className="name">Available Funds</div>
+                    <div className="name">{`Available ${screenSize === ScreenSize.Large ? "Funds" : ""}`}</div>
                   </div>
                   <div className="item">
                     <div className="value">{formatPrice(common?.raised)}</div>
-                    <div className="name">Total Raised</div>
+                    <div className="name">{`${screenSize === ScreenSize.Large ? "Total" : ""} Raised`}</div>
                   </div>
                   <div className="item">
                     <div className="value">{common?.members.length}</div>
@@ -230,7 +252,7 @@ export default function CommonDetail() {
                   </div>
                   <div className="item">
                     <div className="value">{activeProposals.length}</div>
-                    <div className="name">Active Proposals</div>
+                    <div className="name">{`${screenSize === ScreenSize.Large ? "Active" : ""} Proposals`}</div>
                   </div>
                 </div>
               </div>
@@ -248,14 +270,14 @@ export default function CommonDetail() {
                 </div>
                 <div className="social-wrapper">
                   <button className="button-blue">Join the effort</button>
-                  <button className="social-button"></button>
+                  {screenSize === ScreenSize.Large && <button className="social-button"></button>}
                 </div>
               </div>
             </div>
           </div>
           <div className="main-content-container">
             {tab === "about" ? <div className="tab-title">{tab}</div> : null}
-            <div className="inner-main-content-wrapper">
+            <div className={tab === "history" ? "inner-main-content-wrapper history" : "inner-main-content-wrapper"}>
               <div className="tab-content-wrapper">
                 {tab === "about" && <AboutTabComponent common={common} />}
                 {tab === "discussions" &&

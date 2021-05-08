@@ -1,6 +1,6 @@
 import React from "react";
 import { COMMON_APP_APP_STORE_LINK, COMMON_APP_GOOGLE_PLAY_LINK, MobileOperatingSystem } from "../../constants";
-import ArrowIcon from "../../icons/close.icon";
+import CloseIcon from "../../icons/close.icon";
 import { getMobileOperatingSystem } from "../../utils";
 import "./index.scss";
 
@@ -44,7 +44,7 @@ export default function DownloadCommonApp(props: IProps) {
               sessionStorage.setItem("hasClosedPopup", "true");
             }}
           >
-            <ArrowIcon />
+            <CloseIcon />
           </div>
         )}
       </div>

@@ -1,8 +1,9 @@
 import { MobileOperatingSystem } from "../constants";
 import { Time, User } from "../models";
+import millify from "millify";
 
 export const formatPrice = (price?: number) => {
-  if (price) return `$${(price / 100).toLocaleString("en")}`;
+  if (price) return `$${millify(price / 100)}`;
   return "$0";
 };
 

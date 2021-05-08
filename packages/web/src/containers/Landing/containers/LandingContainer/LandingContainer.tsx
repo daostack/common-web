@@ -5,12 +5,10 @@ import { ContactUs } from "../../components/LandingContainer/ContactUs";
 import { Commons } from "../../components/LandingContainer/Commons";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import "./index.scss";
-import { ScreenSize } from "../../../../shared/constants";
+import { Colors, ScreenSize } from "../../../../shared/constants";
 
 const LandingContainer = () => {
   const screenSize = useSelector(getScreenSize());
-
-  const isLarge = screenSize === ScreenSize.Large;
 
   return (
     <div className="landing-wrapper">
@@ -26,9 +24,9 @@ const LandingContainer = () => {
           <span className="main-title">Together.</span>
           <div className="mobile-apps-wrapper">
             <div className="available-on-label">Available on</div>
-            <MobileLinks color="white" />
+            <MobileLinks color={Colors.white} />
           </div>
-          <div className={isLarge ? "iphone-image full" : "iphone-image half"} />
+          <div className={screenSize === ScreenSize.Large ? "iphone-image full" : "iphone-image half"} />
         </div>
         <img src="assets/images/wave-top.svg" alt="wave" className="wave-top" />
       </section>
@@ -116,7 +114,7 @@ const LandingContainer = () => {
         <span>
           Download the Common app and find <br /> countless opportunities to make a difference.
         </span>
-        <MobileLinks color="white" />
+        <MobileLinks color={Colors.white} />
       </section>
     </div>
   );

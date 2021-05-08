@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { NavLink, Link } from "react-router-dom";
-import { ROUTE_PATHS, ScreenSize } from "../../constants";
+import { Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import { getScreenSize } from "../../store/selectors";
 import MobileLinks from "../MobileLinks/MobileLinks";
 import "./index.scss";
@@ -28,7 +28,7 @@ const Header = () => {
             </NavLink>
           </div>
           <div className="mobile-links-container">
-            <MobileLinks color="black" />
+            <MobileLinks color={Colors.black} />
           </div>
         </>
       ) : (
