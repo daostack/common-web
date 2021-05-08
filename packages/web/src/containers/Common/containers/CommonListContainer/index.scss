@@ -1,15 +1,13 @@
+@import "../../../../constants.scss";
+
 .common-list-wrapper {
-  margin-top: -80px;
-  padding-top: 80px;
+  padding-top: 20px;
   .common-list {
     display: grid;
     justify-items: center;
-    align-items: center;
-    grid-auto-columns: 1fr;
     grid-column-gap: 16px;
     grid-row-gap: 16px;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: auto;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   }
   .loader-wrapper {
     padding-top: 24px;
@@ -57,11 +55,15 @@
 
     .loading {
       text-align: center;
-      display: flex;
-      width: 155px;
-      align-items: center;
+      width: 150px;
       margin: 0 auto;
-      height: 32px;
+      height: 30px;
+      line-height: 30px;
+      padding: 5px 10px;
     }
   }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+
 }

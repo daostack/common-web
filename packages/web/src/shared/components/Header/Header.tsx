@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { NavLink, Link } from "react-router-dom";
-import { ROUTE_PATHS, ScreenSize } from "../../constants";
+import { Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import { getScreenSize } from "../../store/selectors";
 import MobileLinks from "../MobileLinks/MobileLinks";
 import "./index.scss";
@@ -11,8 +11,8 @@ const Header = () => {
 
   return (
     <section className="header-wrapper">
-      <Link to="/">
-        <img src="/icons/logo.svg" alt="logo" height="60px" />
+      <Link to="/" className="common-logo">
+        <img src="/icons/logo.svg" alt="logo" className="logo" />
       </Link>
       {screenSize === ScreenSize.Large ? (
         <>
@@ -23,13 +23,16 @@ const Header = () => {
             <NavLink to={ROUTE_PATHS.COMMON_LIST} activeClassName="active">
               Explore Commons
             </NavLink>
+            <NavLink to={ROUTE_PATHS.CONTACT} activeClassName="active">
+              Contact
+            </NavLink>
           </div>
-          <div style={{ marginLeft: "auto" }}>
-            <MobileLinks color="black" />
+          <div className="mobile-links-container">
+            <MobileLinks color={Colors.black} />
           </div>
         </>
       ) : (
-        <img src="/icons/menu.svg" alt="humburger menu" />
+        <img src="/icons/menu.svg" alt="humburger menu" className="humburger-menu" />
       )}
     </section>
   );

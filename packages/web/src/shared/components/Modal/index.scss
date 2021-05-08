@@ -1,3 +1,5 @@
+@import "../../../constants.scss";
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -5,7 +7,7 @@
   z-index: 998;
   width: 100vw;
   height: 100vh;
-  background-color: #000;
+  background-color: $black;
   opacity: 0.5;
 }
 
@@ -22,30 +24,38 @@
 }
 
 .modal {
-  background: white;
+  background: $white;
   z-index: 100;
   position: relative;
   margin: 1.75rem auto;
   max-width: 1000px;
   border-radius: 12px;
 
-  .close-modal {
+  .close-wrapper {
     position: absolute;
-    right: 16px;
-    top: 0;
+    right: 20px;
+    top: 20px;
     z-index: 1;
+  }
+
+  .close-wrapper:hover {
+    opacity: 0.9;
     cursor: pointer;
-    outline: none;
-    border: none;
-    width: 18px;
-    height: 18px;
-    color: #92a2b5;
-    background: none;
-    font-size: 45px;
-    transform: rotate(45deg);
   }
 
   &.box {
-    padding: 30px 30px 20px 30px;
+    padding: 30px;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .modal {
+    top: 50%;
+    transform: translateY(-50%);
+    margin: $content-padding-mobile;
+    .close-wrapper {
+      right: 15px;
+      top: 15px;
+    }
   }
 }

@@ -1,13 +1,12 @@
+@import "../../../../constants.scss";
+
 .common-detail-wrapper {
   margin-bottom: -100px;
   padding-bottom: 50px;
   .main-information-block {
-    box-shadow: 0 3px 8px 0 #001a3614;
-    background-color: #ffffff;
-    height: 585px;
-    margin: -70px -80px 80px;
+    background-color: $white;
+    margin-bottom: 7px;
     .main-information-wrapper {
-      padding: 0 80px;
       .img-wrapper {
         height: 370px;
         position: relative;
@@ -23,52 +22,37 @@
       }
       .text-information-wrapper {
         display: flex;
-        margin: 32px 0;
-        .text,
-        .numbers {
-          flex: 50%;
-        }
+        margin-top: 32px;
+        border-bottom: 1px solid $light-gray;
+        padding-bottom: 30px;
+        justify-content: space-between;
         .text {
+          display: flex;
+          justify-content: space-between;
           .name {
-            font-size: 36px;
+            font-size: $large;
             font-weight: 600;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: 1.33;
-            letter-spacing: normal;
             color: #001a36;
+            font-family: NotoSerifSC-Black;
           }
           .tagline {
             font-size: 16px;
-            font-weight: normal;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: 1.5;
-            letter-spacing: normal;
             color: #001a36;
           }
         }
         .numbers {
           display: flex;
+          width: 50%;
           .item {
             flex: 25%;
             .name {
               font-size: 16px;
-              font-weight: normal;
-              font-stretch: normal;
-              font-style: normal;
-              line-height: 1.5;
-              letter-spacing: normal;
               text-align: center;
               color: #001a36;
             }
             .value {
               font-size: 23px;
               font-weight: bold;
-              font-stretch: normal;
-              font-style: normal;
-              line-height: 1;
-              letter-spacing: normal;
               color: #001a36;
               height: 47px;
               justify-content: center;
@@ -81,40 +65,31 @@
       }
 
       .common-content-selector {
-        height: 72px;
         display: flex;
+        box-shadow: 0 3px 8px 0 #001a3614;
+        margin: 0px -#{$content-padding};
+        padding: 0px $content-padding;
         .tabs-wrapper {
           display: flex;
-          flex: 50;
-          align-items: center;
-          height: 72px;
+          align-items: flex-end;
+          padding-top: 30px;
           .tab-item {
-            font-size: 16px;
             font-weight: bold;
-            font-stretch: normal;
-            font-style: normal;
-            line-height: 1.5;
-            letter-spacing: normal;
-            color: #001a36;
-            margin-right: 24px;
+            color: $deep-blue;
             cursor: pointer;
-            position: relative;
-            span {
-              width: 100%;
-              height: 4px;
-              background: #7786ff;
-              position: absolute;
-              right: 0;
-              bottom: -32px;
-            }
+            border-bottom: 4px solid;
+            border-bottom-color: transparent;
+            padding-bottom: 20px;
+            margin-right: 25px;
             &.active {
-              color: #7786ff;
+              border-bottom-color: $purple;
+              color: $purple;
             }
           }
         }
         .social-wrapper {
+          width: 100%;
           display: flex;
-          flex: 50;
           justify-content: flex-end;
           align-items: center;
         }
@@ -123,25 +98,114 @@
   }
 
   .main-content-container {
+    margin-top: 50px;
+    margin: 0px -#{$content-padding};
+    background-color: $light-purple-background;
+    padding-top: 20px;
     .tab-title {
+      padding: 0px $content-padding;
       font-size: 24px;
       font-weight: bold;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: 1.17;
-      letter-spacing: normal;
-      color: #001a36;
+      color: $deep-blue;
       text-transform: capitalize;
       margin-bottom: 24px;
     }
     .inner-main-content-wrapper {
       display: flex;
-      align-items: flex-start;
+      padding: 0px $content-padding;
       .tab-content-wrapper {
-        flex: 60;
+        width: 60%;
       }
       .sidebar-wrapper {
+        width: 40%;
+        padding-left: 80px;
       }
     }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .common-detail-wrapper {
+    .main-information-block {
+      .main-information-wrapper {
+        .img-wrapper {
+          margin: 0px -#{$content-padding-mobile};
+        }
+        .text-information-wrapper {
+          border-bottom: none;
+          flex-direction: column;
+          .text {
+            .name {
+              font-size: $medium;
+            }
+          }
+          .numbers {
+            width: 100%;
+            .item {
+              .value {
+                font-size: $small;
+              }
+            }
+          }
+        }
+        .common-content-selector {
+          flex-direction: column-reverse;
+          align-items: center;
+          margin: 0px -#{$content-padding-mobile};
+          padding: 0px #{$content-padding-mobile};
+          .tabs-wrapper {
+            justify-content: space-between;
+            width: 100%;
+            .tab-item {
+              margin-right: unset;
+            }
+          }
+        }
+      }
+    }
+    .main-content-container {
+      margin: 0px -#{$content-padding-mobile};
+      background-color: $light-purple-background;
+      padding-top: 20px;
+      .tab-title {
+        padding: 0px $content-padding-mobile;
+      }
+      .inner-main-content-wrapper {
+        flex-direction: column;
+        padding: 0px $content-padding-mobile;
+        &.history {
+          flex-direction: column-reverse;
+        }
+        .tab-content-wrapper {
+          width: unset;
+          margin-bottom: 30px;
+        }
+        .sidebar-wrapper {
+          width: unset;
+          padding-left: unset;
+        }
+      }
+    }
+  }
+}
+
+.get-common-app-wrapper {
+  background: url("/assets/images/purple-stains.svg") no-repeat center;
+  background-size: cover;
+  margin: -30px; // to compensate the modal padding
+  display: flex;
+  flex-direction: column;
+  color: white;
+  align-items: center;
+  text-align: center;
+  border-radius: 12px;
+  height: 30vh;
+  padding: 20px 15px;
+  .logo {
+    width: 100px;
+    margin-bottom: 20px;
+  }
+  .text {
+    margin-bottom: auto;
   }
 }

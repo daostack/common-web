@@ -1,9 +1,11 @@
+@import "../../../../../constants.scss";
+
 .proposals-component-wrapper {
   .discussion-item-wrapper {
     padding: 40px;
     border-radius: 14px;
     box-shadow: 0 3px 8px 0 #001a3614;
-    background-color: #ffffff;
+    background-color: $white;
     margin-bottom: 24px;
     .state-wrapper {
       margin: -40px -40px 24px -40px;
@@ -23,7 +25,6 @@
           margin-right: 4px;
         }
         .state-name {
-          font-family: NunitoSans;
           font-size: 14px;
           font-weight: bold;
           font-stretch: normal;
@@ -59,13 +60,8 @@
     .proposal-charts-wrapper {
       margin-bottom: 24px;
       .proposal-title {
-        font-family: NunitoSans;
         font-size: 18px;
         font-weight: bold;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.22;
-        letter-spacing: normal;
         text-align: center;
         color: #001a36;
         margin-bottom: 24px;
@@ -78,28 +74,14 @@
       .requested-amount {
         padding: 12px;
         border-radius: 20px;
-        background-color: #f1f5ff;
-        font-size: 14px;
-        font-weight: normal;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.43;
-        letter-spacing: normal;
-        text-align: right;
-        color: #001a36;
-        display: flex;
-        width: 395px;
+        background-color: $light-purple;
+        font-size: $xsmall;
         display: flex;
         justify-content: center;
-        margin: 0 auto;
+        align-items: center;
         .amount {
-          font-family: NunitoSans;
           font-size: 18px;
           font-weight: bold;
-          font-stretch: normal;
-          font-style: normal;
-          line-height: 1.22;
-          letter-spacing: normal;
           color: #001a36;
           margin-left: 4px;
         }
@@ -130,58 +112,30 @@
       }
       .creator-information {
         .name {
-          font-family: NunitoSans;
           font-size: 16px;
-          font-weight: normal;
-          font-stretch: normal;
-          font-style: normal;
-          line-height: 1.5;
-          letter-spacing: normal;
           color: #001a36;
         }
         .days-ago {
-          font-family: NunitoSans;
           font-size: 14px;
-          font-weight: normal;
-          font-stretch: normal;
-          font-style: normal;
-          line-height: 1.43;
-          letter-spacing: normal;
           color: #979bba;
         }
       }
     }
     .discussion-content {
       .title {
-        font-family: NunitoSans;
         font-size: 18px;
         font-weight: bold;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.22;
-        letter-spacing: normal;
         color: #7786ff;
         margin-bottom: 16px;
       }
       .description {
-        font-family: NunitoSans;
         font-size: 16px;
-        font-weight: normal;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.5;
-        letter-spacing: normal;
         color: #001a36;
         margin-bottom: 16px;
       }
       .read-more {
-        font-family: NunitoSans;
         font-size: 16px;
         font-weight: bold;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.5;
-        letter-spacing: normal;
         color: #7786ff;
         cursor: pointer;
         margin-bottom: 16px;
@@ -204,7 +158,6 @@
         display: flex;
         .count {
           margin-left: 8px;
-          font-family: NunitoSans;
           font-size: 16px;
           font-weight: bold;
           font-stretch: normal;
@@ -216,7 +169,6 @@
         }
       }
       .view-all-discussions {
-        font-family: NunitoSans;
         font-size: 16px;
         font-weight: bold;
         font-stretch: normal;
