@@ -11,6 +11,7 @@
   z-index: 10;
   box-sizing: border-box;
   width: 100%;
+  height: $header-height;
 
   .logo {
     height: 60px;
@@ -44,6 +45,7 @@
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .header-wrapper {
+    height: $header-height-mobile;
     .logo {
       height: 40px;
     }

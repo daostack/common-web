@@ -7,7 +7,7 @@
     opacity: 0.9;
   }
   img:first-child {
-    margin-right: 10px;
+    margin-right: var(--link-margin-left);
   }
 }
 

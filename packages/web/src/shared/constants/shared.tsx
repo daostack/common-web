@@ -15,3 +15,10 @@ export enum MobileOperatingSystem {
   iOS = "iOS",
   unknown = "unknown",
 }
+
+/** This is used when we need to set colors via the JavaScript */
+export enum Colors {
+  gray = "#92a2b5",
+  white = "#FFFFFF",
+  black = "#000000",
+}

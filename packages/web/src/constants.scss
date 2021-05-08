@@ -2,7 +2,8 @@
 /* */
 $content-padding: 80px;
 $content-padding-mobile: 20px;
-$footer-margin-top: 20px;
+$header-height: 90px;
+$header-height-mobile: 60px;
 
 /* font sizes */
 $xlarge: 46px;
@@ -15,6 +16,7 @@ $xsmall: 14px;
 /* colors */
 $purple: #7786ff;
 $light-purple: rgba(117, 133, 255, 0.1);
+$light-purple-background: #fbfcfc; 
 $white: #ffffff;
 $pink: #ff5e9d;
 $blue: #0b2046;
@@ -23,6 +25,7 @@ $blue-text: #0a2149;
 $light-gray: #eeeeee;
 $green: #6ee569;
 $shadow: rgba(119, 134, 255, 0.2);
+$black: #000000;
 
 /* breakpoints */
 $small-screen: 1240px;
