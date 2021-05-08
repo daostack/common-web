@@ -9,6 +9,7 @@ interface PreviewInformationListProps {
   title: string;
   data: PreviedData[];
   vievAllHandler: () => void;
+  onClickItem: (id: string) => void;
 }
 
 export default function PreviewInformationList(props: PreviewInformationListProps) {
@@ -27,7 +28,7 @@ export default function PreviewInformationList(props: PreviewInformationListProp
       {data.length > 0 ? (
         <div className="information-content">
           {data.map((d) => (
-            <div className="item" key={d.id}>
+            <div className="item" key={d.id} onClick={() => props.onClickItem(d.id)}>
               {d.value}
             </div>
           ))}
@@ -41,7 +42,7 @@ export default function PreviewInformationList(props: PreviewInformationListProp
           )}
           <div className="message">
             No
-            {title === "Latest Discussions" ? "discussions" : "proposals"}
+            {title === "Latest Discussions" ? " discussions " : " proposals "}
             yet
           </div>
         </div>

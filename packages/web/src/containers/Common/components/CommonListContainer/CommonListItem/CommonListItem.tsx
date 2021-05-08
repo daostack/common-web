@@ -19,7 +19,7 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
           {!imageError ? (
             <img src={common.image} alt={common.name} onError={() => setImageError(true)} />
           ) : (
-            <img src="/icons/logo-white.svg" alt={common.name} />
+            <img src="/icons/default-image.svg" alt={common.name} />
           )}
           <div className="common-information">
             <div className="name"> {common.name}</div>

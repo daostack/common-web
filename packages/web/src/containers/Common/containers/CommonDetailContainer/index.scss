@@ -1,6 +1,8 @@
 @import "../../../../constants.scss";
 
 .common-detail-wrapper {
+  margin-bottom: -100px;
+  padding-bottom: 50px;
   .main-information-block {
     background-color: $white;
     margin-bottom: 7px;
@@ -91,27 +93,6 @@
           justify-content: flex-end;
           align-items: center;
         }
-      }
-    }
-    .social-button {
-      width: 40px;
-      height: 40px;
-      background-color: #d7e6fe;
-      border-radius: 50%;
-      border: none;
-      margin-left: 16px;
-      cursor: pointer;
-      position: relative;
-      &::after {
-        background-image: url("/icons/icons-share.svg");
-        display: inline-block;
-        content: " ";
-        background-size: 16px 16px;
-        height: 16px;
-        width: 16px;
-        top: calc(50% - 8px);
-        position: absolute;
-        right: calc(50% - 8px);
       }
     }
   }
@@ -211,7 +192,7 @@
 .get-common-app-wrapper {
   background: url("/assets/images/purple-stains.svg") no-repeat center;
   background-size: cover;
-  margin: -30px; // to compensate the modal padding 
+  margin: -30px; // to compensate the modal padding
   display: flex;
   flex-direction: column;
   color: white;

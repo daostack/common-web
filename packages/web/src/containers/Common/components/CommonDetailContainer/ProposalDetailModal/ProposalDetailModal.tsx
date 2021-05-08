@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Loader } from "../../../../../shared/components";
 import { Common, Proposal } from "../../../../../shared/models";
 import { formatPrice, getDaysAgo, getUserName } from "../../../../../shared/utils";
@@ -14,6 +14,7 @@ interface DiscussionDetailModalProps {
 
 export default function ProposalDetailModal({ proposal, common }: DiscussionDetailModalProps) {
   const date = new Date();
+  const [imageError, setImageError] = useState(false);
   return !proposal ? (
     <Loader />
   ) : (
@@ -23,7 +24,15 @@ export default function ProposalDetailModal({ proposal, common }: DiscussionDeta
           <ProposalCountDown date={new Date((proposal?.createdAt.seconds + proposal.countdownPeriod) * 1000)} />
           <div className="owner-wrapper">
             <div className="owner-icon-wrapper">
-              <img src={proposal.proposer?.photoURL} alt={getUserName(proposal.proposer)} />
+              {!imageError ? (
+                <img
+                  src={proposal.proposer?.photoURL}
+                  alt={getUserName(proposal.proposer)}
+                  onError={() => setImageError(true)}
+                />
+              ) : (
+                <img src="/icons/default_user.svg" alt={getUserName(proposal.proposer)} />
+              )}
             </div>
             <div className="owner-name">{getUserName(proposal.proposer)}</div>
             <div className="days-ago">{getDaysAgo(date, proposal.createdAt)} </div>

@@ -1,4 +1,5 @@
 import React from "react";
+import { Share } from "../../../../../shared/components";
 import { Common } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import "./index.scss";
@@ -33,7 +34,7 @@ export default function AboutTabComponent({ common }: AboutTabComponentProps) {
           {formatPrice(common.metadata.minFeeToJoin) + " "}
           {renderContributionType(common.metadata.contributionType || "")} contribution
         </div>
-        <div className="button-blue">Join the effort</div>
+        <Share />
       </div>
     </div>
   );
