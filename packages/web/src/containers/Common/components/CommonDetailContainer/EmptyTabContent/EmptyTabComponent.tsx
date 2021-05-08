@@ -13,7 +13,7 @@ export default function EmptyTabComponent({ currentTab, message, title }: EmptyT
       <div className="img-wrapper">
         {currentTab === "proposals" && <img alt={currentTab} src="/icons/proposals-empty.svg" />}
         {currentTab === "history" && <img alt={currentTab} src="/icons/proposals-empty.svg" />}
-        {currentTab === "discussions" && <img alt={currentTab} src="/icons/discussions-empty.s  vg" />}
+        {currentTab === "discussions" && <img alt={currentTab} src="/icons/discussions-empty.svg" />}
       </div>
       <div className="empty-tab-content-wrapper ">
         <div className="title">{title}</div>

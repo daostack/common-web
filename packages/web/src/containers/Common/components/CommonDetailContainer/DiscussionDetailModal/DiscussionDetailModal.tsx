@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Loader } from "../../../../../shared/components";
 import { Common, Discussion } from "../../../../../shared/models";
 import { getDaysAgo, getUserName } from "../../../../../shared/utils";
@@ -12,6 +12,7 @@ interface DiscussionDetailModalProps {
 
 export default function DiscussionDetailModal({ disscussion, common }: DiscussionDetailModalProps) {
   const date = new Date();
+  const [imageError, setImageError] = useState(false);
   return !disscussion ? (
     <Loader />
   ) : (
@@ -20,7 +21,15 @@ export default function DiscussionDetailModal({ disscussion, common }: Discussio
         <div className="top-side">
           <div className="owner-wrapper">
             <div className="owner-icon-wrapper">
-              <img src={disscussion.owner?.photoURL} alt={getUserName(disscussion.owner)} />
+              {!imageError ? (
+                <img
+                  src={disscussion.owner?.photoURL}
+                  alt={getUserName(disscussion.owner)}
+                  onError={() => setImageError(true)}
+                />
+              ) : (
+                <img src="/icons/default_user.svg" alt={getUserName(disscussion.owner)} />
+              )}
             </div>
             <div className="owner-name">{getUserName(disscussion.owner)}</div>
             <div className="days-ago">{getDaysAgo(date, disscussion.createTime)} </div>

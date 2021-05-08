@@ -1,4 +1,6 @@
 .common-detail-wrapper {
+  margin-bottom: -100px;
+  padding-bottom: 50px;
   .main-information-block {
     box-shadow: 0 3px 8px 0 #001a3614;
     background-color: #ffffff;
@@ -115,29 +117,6 @@
           flex: 50;
           justify-content: flex-end;
           align-items: center;
-          .social-button {
-            width: 40px;
-            height: 40px;
-            padding: 8px;
-            background-color: #d7e6fe;
-            border-radius: 50%;
-            border: none;
-            outline: none;
-            margin-left: 16px;
-            cursor: pointer;
-            position: relative;
-            &::after {
-              background-image: url("/icons/icons-share.svg");
-              display: inline-block;
-              content: " ";
-              background-size: 16px 16px;
-              height: 16px;
-              width: 16px;
-              top: calc(50% - 8px);
-              position: absolute;
-              right: calc(50% - 8px);
-            }
-          }
         }
       }
     }

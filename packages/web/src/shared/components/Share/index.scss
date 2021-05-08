@@ -1,0 +1,77 @@
+.social-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  .social-button {
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    background-color: #d7e6fe;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    margin-left: 16px;
+    cursor: pointer;
+    position: relative;
+    &::after {
+      background-image: url("/icons/icons-share.svg");
+      display: inline-block;
+      content: " ";
+      background-size: 16px 16px;
+      height: 16px;
+      width: 16px;
+      top: calc(50% - 8px);
+      position: absolute;
+      right: calc(50% - 8px);
+    }
+  }
+  .social-buttons-wrapper {
+    position: absolute;
+    width: 248px;
+    height: 90px;
+    padding: 12px;
+    border-radius: 30px;
+    box-shadow: 0 4px 15px 0 #00000027;
+    background-color: #ffffff;
+    top: 64px;
+    right: -32px;
+    .title {
+      height: 22px;
+      font-family: Roboto;
+      font-size: 14px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.57;
+      letter-spacing: normal;
+      text-align: center;
+      color: #001a36;
+      margin-bottom: 16px;
+    }
+    .social-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      button {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        outline: none;
+        border: none;
+        cursor: pointer;
+        &.facebook {
+          background-image: url("/icons/social-share/facebook.svg");
+        }
+        &.linkedin {
+          background-image: url("/icons/social-share/linkedin.svg");
+        }
+        &.telegram {
+          background-image: url("/icons/social-share/telegram.svg");
+        }
+        &.twitter {
+          background-image: url("/icons/social-share/twitter.svg");
+        }
+      }
+    }
+  }
+}

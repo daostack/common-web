@@ -29,6 +29,22 @@
   max-width: 1000px;
   border-radius: 12px;
 
+  .close-modal {
+    position: absolute;
+    right: 16px;
+    top: 0;
+    z-index: 1;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    width: 18px;
+    height: 18px;
+    color: #92a2b5;
+    background: none;
+    font-size: 45px;
+    transform: rotate(45deg);
+  }
+
   &.box {
     padding: 30px 30px 20px 30px;
   }

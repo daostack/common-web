@@ -33,7 +33,14 @@ const Modal = (props: ModalProps) => {
           <div className="modal-overlay" />
           <div className="modal-wrapper">
             <div className="modal box" ref={wrapperRef}>
-              {children}
+              <>
+                {children ? (
+                  <button className="close-modal" onClick={onClose}>
+                    +
+                  </button>
+                ) : null}
+                {children}
+              </>
             </div>
           </div>
         </div>,

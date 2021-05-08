@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { Loader } from "../../../../shared/components";
+import { Loader, Share } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
 import { useModal } from "../../../../shared/hooks";
 import { Discussion, Proposal } from "../../../../shared/models";
@@ -82,13 +82,6 @@ export default function CommonDetail() {
     };
   }, [dispatch, id]);
 
-  const lastestProposals = useMemo(
-    () =>
-      [...proposals].splice(0, 5).map((p) => {
-        return { id: p.id, value: p.description.title || p.description.description };
-      }),
-    [proposals],
-  );
   const latestDiscussions = useMemo(
     () =>
       [...discussions].splice(0, 5).map((d) => {
@@ -98,6 +91,13 @@ export default function CommonDetail() {
   );
 
   const activeProposals = useMemo(() => [...proposals].filter((d) => d.state === "countdown"), [proposals]);
+  const lastestProposals = useMemo(
+    () =>
+      [...activeProposals].splice(0, 5).map((p) => {
+        return { id: p.id, value: p.description.title || p.description.description };
+      }),
+    [activeProposals],
+  );
   const historyProposals = useMemo(() => [...proposals].filter((d) => d.state !== "countdown"), [proposals]);
 
   const changeTabHandler = useCallback(
@@ -144,6 +144,28 @@ export default function CommonDetail() {
     dispatch(clearCurrentDiscussion());
   }, [onClose, dispatch]);
 
+  const clickPreviewDisscusionHandler = useCallback(
+    (id: string) => {
+      changeTabHandler("discussions");
+      const disscussion = discussions.find((f) => f.id === id);
+      if (disscussion) {
+        getDisscussionDetail(disscussion);
+      }
+    },
+    [discussions, changeTabHandler, getDisscussionDetail],
+  );
+
+  const clickPreviewProposalHandler = useCallback(
+    (id: string) => {
+      changeTabHandler("proposals");
+      const proposal = proposals.find((f) => f.id === id);
+      if (proposal) {
+        getProposalDetail(proposal);
+      }
+    },
+    [proposals, changeTabHandler, getProposalDetail],
+  );
+
   const renderSidebarContent = () => {
     if (!common) return null;
     switch (tab) {
@@ -153,12 +175,14 @@ export default function CommonDetail() {
             <PreviewInformationList
               title="Latest Discussions"
               data={latestDiscussions}
-              vievAllHandler={() => setTab("discussions")}
+              vievAllHandler={() => changeTabHandler("discussions")}
+              onClickItem={clickPreviewDisscusionHandler}
             />
             <PreviewInformationList
               title="Latest Proposals"
               data={lastestProposals}
-              vievAllHandler={() => setTab("proposals")}
+              vievAllHandler={() => changeTabHandler("proposals")}
+              onClickItem={clickPreviewProposalHandler}
             />
           </>
         );
@@ -166,22 +190,24 @@ export default function CommonDetail() {
       case "discussions":
         return (
           <>
-            <AboutSidebarComponent title="About" vievAllHandler={() => setTab("about")} common={common} />
+            <AboutSidebarComponent title="About" vievAllHandler={() => changeTabHandler("about")} common={common} />
             <PreviewInformationList
               title="Latest Proposals"
               data={lastestProposals}
-              vievAllHandler={() => setTab("proposals")}
+              vievAllHandler={() => changeTabHandler("proposals")}
+              onClickItem={clickPreviewProposalHandler}
             />
           </>
         );
       case "proposals":
         return (
           <>
-            <AboutSidebarComponent title="About" vievAllHandler={() => setTab("about")} common={common} />
+            <AboutSidebarComponent title="About" vievAllHandler={() => changeTabHandler("about")} common={common} />
             <PreviewInformationList
               title="Latest Discussions"
               data={latestDiscussions}
-              vievAllHandler={() => setTab("discussions")}
+              vievAllHandler={() => changeTabHandler("discussions")}
+              onClickItem={clickPreviewDisscusionHandler}
             />
           </>
         );
@@ -248,10 +274,7 @@ export default function CommonDetail() {
                     </div>
                   ))}
                 </div>
-                <div className="social-wrapper">
-                  <button className="button-blue">Join the effort</button>
-                  <button className="social-button"></button>
-                </div>
+                <Share />
               </div>
             </div>
           </div>
