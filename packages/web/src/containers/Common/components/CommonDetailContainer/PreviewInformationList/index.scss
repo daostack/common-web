@@ -64,7 +64,7 @@
       align-items: center;
       position: relative;
       &:hover {
-        background-color: #dbeafb;
+        background-color: $light-purple;
         &::after {
           content: "";
           width: 24px;

@@ -20,7 +20,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   .content-wrapper {
     padding: 0px $content-padding;
-    padding-bottom: 50px;
+    padding-bottom: 20px;
     min-height: 350px;
     margin-top: $header-height;
 
@@ -90,7 +90,7 @@ body {
     }
     .content-wrapper {
       padding: 0px $content-padding-mobile;
-      padding-bottom: 50px;
+      padding-bottom: 20px;
       margin-top: $header-height-mobile;
       .page-title {
         text-align: center;
