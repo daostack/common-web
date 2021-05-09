@@ -1,3 +1,5 @@
+@import "../../../constants.scss";
+
 .social-wrapper {
   display: flex;
   align-items: center;
@@ -5,11 +7,9 @@
   .social-button {
     width: 40px;
     height: 40px;
-    padding: 8px;
-    background-color: #d7e6fe;
+    background-color: $light-purple;
     border-radius: 50%;
     border: none;
-    outline: none;
     margin-left: 16px;
     cursor: pointer;
     position: relative;
@@ -25,40 +25,34 @@
       right: calc(50% - 8px);
     }
   }
+  .social-button:hover {
+    opacity: 0.9;
+  }
   .social-buttons-wrapper {
+    z-index: 2;
     position: absolute;
-    width: 248px;
-    height: 90px;
     padding: 12px;
     border-radius: 30px;
-    box-shadow: 0 4px 15px 0 #00000027;
-    background-color: #ffffff;
+    box-shadow: 0 4px 15px 0 $shadow;
+    background-color: $white;
     top: 64px;
-    right: -32px;
+    right: 10%;
     .title {
-      height: 22px;
-      font-family: Roboto;
-      font-size: 14px;
+      font-size: $xsmall;
       font-weight: bold;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: 1.57;
-      letter-spacing: normal;
       text-align: center;
-      color: #001a36;
+      color: $blue;
       margin-bottom: 16px;
     }
     .social-buttons {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
       button {
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        outline: none;
         border: none;
         cursor: pointer;
+        margin: 0 10px;
         &.facebook {
           background-image: url("/icons/social-share/facebook.svg");
         }
@@ -71,6 +65,9 @@
         &.twitter {
           background-image: url("/icons/social-share/twitter.svg");
         }
+      }
+      button:hover {
+        opacity: 0.9;
       }
     }
   }

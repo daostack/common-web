@@ -69,6 +69,7 @@
         box-shadow: 0 3px 8px 0 #001a3614;
         margin: 0px -#{$content-padding};
         padding: 0px $content-padding;
+        justify-content: space-between;
         .tabs-wrapper {
           display: flex;
           align-items: flex-end;
@@ -88,9 +89,7 @@
           }
         }
         .social-wrapper {
-          width: 100%;
           display: flex;
-          justify-content: flex-end;
           align-items: center;
         }
       }
@@ -159,6 +158,9 @@
             .tab-item {
               margin-right: unset;
             }
+          }
+          .social-wrapper {
+            width: 100%;
           }
         }
       }

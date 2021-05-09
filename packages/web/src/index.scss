@@ -19,7 +19,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   .content-wrapper {
-    padding: 0 $content-padding;
+    padding: 0px $content-padding;
+    padding-bottom: 50px;
     min-height: 350px;
     margin-top: $header-height;
 
@@ -88,7 +89,8 @@ body {
       font-size: $medium;
     }
     .content-wrapper {
-      padding: 0 $content-padding-mobile;
+      padding: 0px $content-padding-mobile;
+      padding-bottom: 50px;
       margin-top: $header-height-mobile;
       .page-title {
         text-align: center;

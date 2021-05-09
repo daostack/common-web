@@ -261,7 +261,7 @@ export default function CommonDetail() {
                     <div className="name">{common?.name}</div>
                     <div className="tagline">{common?.metadata.byline}</div>
                   </div>
-                  {screenSize === ScreenSize.Small && <button className="social-button"></button>}
+                  {screenSize === ScreenSize.Small && <Share />}
                 </div>
                 <div className="numbers">
                   <div className="item" onClick={onOpen}>
@@ -294,7 +294,10 @@ export default function CommonDetail() {
                     </div>
                   ))}
                 </div>
-                <Share />
+                <div className="social-wrapper">
+                  <button className="button-blue">Join the effort</button>
+                  {screenSize === ScreenSize.Large && <Share />}
+                </div>
               </div>
             </div>
           </div>
