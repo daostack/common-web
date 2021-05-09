@@ -21,7 +21,7 @@ export default function DownloadCommonApp(props: IProps) {
             <b>Common app</b>
           </span>
         ) : (
-          <span>Download Common app</span>
+          <span className="text">Download Common app</span>
         )}
       </div>
       <div className="download-close-buttons">
