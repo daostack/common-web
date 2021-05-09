@@ -16,8 +16,7 @@ export default function Share() {
 
   return (
     <div className="social-wrapper" ref={wrapperRef}>
-      <button className="button-blue">Join the effort</button>
-      <button className="social-button" onClick={() => setShown(true)}></button>
+      <button className="social-button" onClick={() => setShown(true)} />
       {isShown ? (
         <div className="social-buttons-wrapper">
           <div className="title">Share with</div>
