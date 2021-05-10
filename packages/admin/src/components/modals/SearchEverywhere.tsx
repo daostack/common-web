@@ -37,7 +37,11 @@ export const SearchEverywhere = () => {
 
   return (
     <React.Fragment>
-      <Modal open={open} onClose={onClose}>
+      <Modal
+        open={open}
+        onClose={onClose}
+        width="800px"
+      >
         <Modal.Content
           style={{
             padding: '0 2rem'

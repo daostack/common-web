@@ -1243,6 +1243,22 @@ export type GetAllUsersNotificationsQuery = (
 }
   );
 
+export type GetNotificaitonTemplatesQueryVariables = Exact<{
+  paginate: PaginateInput;
+  where?: Maybe<NotificationTemplateWhereInput>;
+}>;
+
+
+export type GetNotificaitonTemplatesQuery = (
+  { __typename?: 'Query' }
+  & {
+  notificationTemplates?: Maybe<Array<Maybe<(
+    { __typename?: 'NotificationTemplate' }
+    & Pick<NotificationTemplate, 'id' | 'createdAt' | 'updatedAt' | 'subject' | 'forType' | 'language' | 'templateType'>
+    )>>>
+}
+  );
+
 export type GetProposalDetailsQueryVariables = Exact<{
   where: ProposalWhereUniqueInput;
 }>;
@@ -1553,11 +1569,9 @@ export const GetCommonDetailsDocument = gql`
 export function useGetCommonDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>) {
   return Apollo.useQuery<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>(GetCommonDetailsDocument, baseOptions);
 }
-
 export function useGetCommonDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>) {
   return Apollo.useLazyQuery<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>(GetCommonDetailsDocument, baseOptions);
 }
-
 export type GetCommonDetailsQueryHookResult = ReturnType<typeof useGetCommonDetailsQuery>;
 export type GetCommonDetailsLazyQueryHookResult = ReturnType<typeof useGetCommonDetailsLazyQuery>;
 export type GetCommonDetailsQueryResult = Apollo.QueryResult<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>;
@@ -1603,6 +1617,48 @@ export function useGetAllUsersNotificationsLazyQuery(baseOptions?: Apollo.LazyQu
 export type GetAllUsersNotificationsQueryHookResult = ReturnType<typeof useGetAllUsersNotificationsQuery>;
 export type GetAllUsersNotificationsLazyQueryHookResult = ReturnType<typeof useGetAllUsersNotificationsLazyQuery>;
 export type GetAllUsersNotificationsQueryResult = Apollo.QueryResult<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>;
+export const GetNotificaitonTemplatesDocument = gql`
+  query getNotificaitonTemplates($paginate: PaginateInput!, $where: NotificationTemplateWhereInput) {
+    notificationTemplates(paginate: $paginate, where: $where) {
+      id
+      createdAt
+      updatedAt
+      subject
+      forType
+      language
+      templateType
+    }
+  }
+`;
+
+/**
+ * __useGetNotificaitonTemplatesQuery__
+ *
+ * To run a query within a React component, call `useGetNotificaitonTemplatesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNotificaitonTemplatesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetNotificaitonTemplatesQuery({
+ *   variables: {
+ *      paginate: // value for 'paginate'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetNotificaitonTemplatesQuery(baseOptions: Apollo.QueryHookOptions<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>) {
+  return Apollo.useQuery<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>(GetNotificaitonTemplatesDocument, baseOptions);
+}
+
+export function useGetNotificaitonTemplatesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>) {
+  return Apollo.useLazyQuery<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>(GetNotificaitonTemplatesDocument, baseOptions);
+}
+
+export type GetNotificaitonTemplatesQueryHookResult = ReturnType<typeof useGetNotificaitonTemplatesQuery>;
+export type GetNotificaitonTemplatesLazyQueryHookResult = ReturnType<typeof useGetNotificaitonTemplatesLazyQuery>;
+export type GetNotificaitonTemplatesQueryResult = Apollo.QueryResult<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>;
 export const GetProposalDetailsDocument = gql`
   query getProposalDetails($where: ProposalWhereUniqueInput!) {
     proposal(where: $where) {
