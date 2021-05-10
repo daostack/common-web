@@ -4,6 +4,7 @@
   text-align: center;
   margin: -$content-padding; // to ignore parent content padding
   color: $blue-text;
+  margin-top: -$header-height; // to compensate the hidden header
   > section {
     padding: $content-padding;
     > span {
@@ -211,6 +212,7 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .landing-wrapper {
     margin: -$content-padding-mobile; // to ignore parent content padding
+    margin-top: -$header-height-mobile; // to compensate the hidden header
     .landing-top {
       flex-direction: column;
       .info {

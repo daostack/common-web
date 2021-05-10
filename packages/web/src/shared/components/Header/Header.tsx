@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useLocation } from "react-router-dom";
 import { Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
@@ -8,10 +8,19 @@ import { getScreenSize } from "../../store/selectors";
 import DownloadCommonApp from "../DownloadCommonApp/DownloadCommonApp";
 import MobileLinks from "../MobileLinks/MobileLinks";
 import "./index.scss";
+import classNames from "classnames";
 
 const Header = () => {
+  const location = useLocation();
   const screenSize = useSelector(getScreenSize());
   const [showMenu, setShowMenu] = useState(false);
+  const [isTop, setIsTop] = useState<boolean | undefined>(undefined);
+
+  React.useEffect(() => {
+    window.addEventListener("scroll", () => {
+      setIsTop(window.scrollY === 0 ? true : false);
+    });
+  }, [isTop]);
 
   const handleNavLinkClick = () => {
     if (showMenu) {
@@ -33,8 +42,15 @@ const Header = () => {
     </div>
   );
 
+  const headerWrapperClassName = classNames({
+    "header-wrapper": true,
+    init: location.pathname === "/" && isTop === undefined,
+    hide: location.pathname === "/" && isTop,
+    show: location.pathname === "/" && isTop === false,
+  });
+
   return (
-    <section className="header-wrapper">
+    <section className={headerWrapperClassName}>
       <Link to="/" className="common-logo">
         <img src="/icons/logo.svg" alt="logo" className="logo" />
       </Link>
