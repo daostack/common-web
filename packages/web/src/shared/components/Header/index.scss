@@ -33,6 +33,28 @@
   .mobile-links-container {
     margin-left: auto;
   }
+  &.init {
+    top: -$header-height;
+  }
+  &.hide {
+    animation: hideHeader .5s forwards;
+  }
+  &.show {
+    animation: showHeader .5s forwards;
+  }
+  @keyframes showHeader {
+    from {
+      top: -$header-height;
+    }
+    to {
+      top: 0;
+    }
+  }
+  @keyframes hideHeader {
+    to {
+      top: -$header-height;
+    }
+  }
 }
 
 @media only screen and (max-width: $small-screen) {
