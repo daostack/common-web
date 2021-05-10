@@ -4,10 +4,11 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -126,6 +127,15 @@ export interface NexusGenInputs {
     sendToCommon: boolean; // Boolean!
     sendToEveryone: boolean; // Boolean!
     sendToUser: boolean; // Boolean!
+  }
+  CreateNotificationTemplateInput: { // input type
+    content: string; // String!
+    forType: NexusGenEnums['NotificationType']; // NotificationType!
+    fromEmail?: string | null; // String
+    fromName?: string | null; // String
+    language: NexusGenEnums['NotificationLanguage']; // NotificationLanguage!
+    subject: string; // String!
+    templateType: NexusGenEnums['NotificationTemplateType']; // NotificationTemplateType!
   }
   CreateRoleInput: { // input type
     description: string; // String!
@@ -420,6 +430,7 @@ export interface NexusGenObjects {
     templateType: NexusGenEnums['NotificationTemplateType']; // NotificationTemplateType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
+  NotificationTemplateOptions: {};
   Proposal: { // root type
     commonId: NexusGenScalars['UUID']; // UUID!
     commonMemberId: NexusGenScalars['UUID']; // UUID!
@@ -630,6 +641,7 @@ export interface NexusGenFieldTypes {
     createFundingProposal: NexusGenRootTypes['Proposal']; // Proposal!
     createJoinProposal: NexusGenRootTypes['Proposal']; // Proposal!
     createNotificationEventSettings: NexusGenRootTypes['NotificationEventSettings'] | null; // NotificationEventSettings
+    createNotificationTemplate: NexusGenRootTypes['NotificationTemplate'] | null; // NotificationTemplate
     createRole: NexusGenRootTypes['Role'] | null; // Role
     createUser: NexusGenRootTypes['User']; // User!
     createUserNotificationToken: NexusGenRootTypes['UserNotificationToken']; // UserNotificationToken!
@@ -683,6 +695,11 @@ export interface NexusGenFieldTypes {
     templateType: NexusGenEnums['NotificationTemplateType']; // NotificationTemplateType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
+  NotificationTemplateOptions: { // field return type
+    languages: Array<NexusGenEnums['NotificationLanguage'] | null>; // [NotificationLanguage]!
+    notificationTypes: Array<NexusGenEnums['NotificationType'] | null>; // [NotificationType]!
+    templateTypes: Array<NexusGenEnums['NotificationTemplateType'] | null>; // [NotificationTemplateType]!
+  }
   Proposal: { // field return type
     common: NexusGenRootTypes['Common']; // Common!
     commonId: NexusGenScalars['UUID']; // UUID!
@@ -719,6 +736,7 @@ export interface NexusGenFieldTypes {
     generateUserAuthToken: string; // String!
     getStatistics: Array<NexusGenRootTypes['Statistic'] | null> | null; // [Statistic]
     notificationEventSettings: Array<NexusGenRootTypes['NotificationEventSettings'] | null> | null; // [NotificationEventSettings]
+    notificationTemplateOptions: NexusGenRootTypes['NotificationTemplateOptions'] | null; // NotificationTemplateOptions
     notificationTemplates: Array<NexusGenRootTypes['NotificationTemplate'] | null> | null; // [NotificationTemplate]
     notifications: Array<NexusGenRootTypes['Notification'] | null> | null; // [Notification]
     proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
@@ -925,6 +943,7 @@ export interface NexusGenFieldTypeNames {
     createFundingProposal: 'Proposal'
     createJoinProposal: 'Proposal'
     createNotificationEventSettings: 'NotificationEventSettings'
+    createNotificationTemplate: 'NotificationTemplate'
     createRole: 'Role'
     createUser: 'User'
     createUserNotificationToken: 'UserNotificationToken'
@@ -978,6 +997,11 @@ export interface NexusGenFieldTypeNames {
     templateType: 'NotificationTemplateType'
     updatedAt: 'DateTime'
   }
+  NotificationTemplateOptions: { // field return type name
+    languages: 'NotificationLanguage'
+    notificationTypes: 'NotificationType'
+    templateTypes: 'NotificationTemplateType'
+  }
   Proposal: { // field return type name
     common: 'Common'
     commonId: 'UUID'
@@ -1014,6 +1038,7 @@ export interface NexusGenFieldTypeNames {
     generateUserAuthToken: 'String'
     getStatistics: 'Statistic'
     notificationEventSettings: 'NotificationEventSettings'
+    notificationTemplateOptions: 'NotificationTemplateOptions'
     notificationTemplates: 'NotificationTemplate'
     notifications: 'Notification'
     proposal: 'Proposal'
@@ -1170,6 +1195,9 @@ export interface NexusGenArgTypes {
     }
     createNotificationEventSettings: { // args
       input: NexusGenInputs['CreateNotificationEventSettingsInput']; // CreateNotificationEventSettingsInput!
+    }
+    createNotificationTemplate: { // args
+      input: NexusGenInputs['CreateNotificationTemplateInput']; // CreateNotificationTemplateInput!
     }
     createRole: { // args
       input: NexusGenInputs['CreateRoleInput']; // CreateRoleInput!

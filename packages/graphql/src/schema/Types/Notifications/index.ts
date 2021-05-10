@@ -25,6 +25,9 @@ import { NotificationTemplateType } from './Types/NotificationTemplate.type';
 import { NotificationTemplateTypeEnum } from './Enums/NotificationTemplateType.enum';
 import { NotificationTemplateWhereInput } from './Inputs/NotificationTemplateWhere.input';
 import { GetNotificationTemplatesQuery } from './Queries/GetNotificationTemplates.query';
+import { NotificationTemplateOptionsType } from './Types/NotificationTemplateOptions.type';
+import { GetNotificationTemplateOptionsQuery } from './Queries/GetNotificationTemplateOptions.query';
+import { CreateNotificationTemplateMutation } from './Mutations/CreateNotificationTemplate.mutation';
 
 export const NotificationTypes = [
   NotificationTypeEnum,
@@ -35,6 +38,7 @@ export const NotificationTypes = [
   NotificationType,
   NotificationTemplateType,
   NotificationEventSettingsType,
+  NotificationTemplateOptionsType,
 
   NotificationUserExtension,
   NotificationCommonExtension,
@@ -50,7 +54,9 @@ export const NotificationTypes = [
   NotificationCreatedSubscription,
 
   CreateNotificationEventSettingsMutation,
+  CreateNotificationTemplateMutation,
 
+  GetNotificationTemplateOptionsQuery,
   GetNotificationEventSettingsQuery,
   GetNotificationTemplatesQuery,
   GetNotificationsQuery

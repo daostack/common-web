@@ -799,6 +799,13 @@ export type NotificationEventSettings = BaseEntity & {
   onEvent: EventType;
 };
 
+export type NotificationTemplateOptions = {
+  __typename?: 'NotificationTemplateOptions';
+  languages: Array<Maybe<NotificationLanguage>>;
+  templateTypes: Array<Maybe<NotificationTemplateType>>;
+  notificationTypes: Array<Maybe<NotificationType>>;
+};
+
 export type NotificationWhereInput = {
   seenStatus?: Maybe<NotificationSeenStatus>;
   type?: Maybe<NotificationType>;
@@ -930,6 +937,16 @@ export type CreateNotificationEventSettingsInput = {
   onEvent: EventType;
 };
 
+export type CreateNotificationTemplateInput = {
+  forType: NotificationType;
+  language: NotificationLanguage;
+  templateType: NotificationTemplateType;
+  subject: Scalars['String'];
+  content: Scalars['String'];
+  fromEmail?: Maybe<Scalars['String']>;
+  fromName?: Maybe<Scalars['String']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   /** Provide ID to fetch specific user or do not pass anything to get the currently authenticated user */
@@ -944,6 +961,7 @@ export type Query = {
   proposals?: Maybe<Array<Maybe<Proposal>>>;
   getStatistics?: Maybe<Array<Maybe<Statistic>>>;
   discussion?: Maybe<Discussion>;
+  notificationTemplateOptions?: Maybe<NotificationTemplateOptions>;
   notificationEventSettings?: Maybe<Array<Maybe<NotificationEventSettings>>>;
   notificationTemplates?: Maybe<Array<Maybe<NotificationTemplate>>>;
   /** List of all notifications, readable only by the admin */
@@ -1047,6 +1065,7 @@ export type Mutation = {
   createDiscussionMessage: DiscussionMessage;
   changeDiscussionSubscriptionType?: Maybe<DiscussionSubscription>;
   createNotificationEventSettings?: Maybe<NotificationEventSettings>;
+  createNotificationTemplate?: Maybe<NotificationTemplate>;
 };
 
 
@@ -1152,6 +1171,11 @@ export type MutationCreateNotificationEventSettingsArgs = {
   input: CreateNotificationEventSettingsInput;
 };
 
+
+export type MutationCreateNotificationTemplateArgs = {
+  input: CreateNotificationTemplateInput;
+};
+
 export type Subscription = {
   __typename?: 'Subscription';
   onProposalChange?: Maybe<Proposal>;
@@ -1240,6 +1264,34 @@ export type GetAllUsersNotificationsQuery = (
       )
   }
     )>>>
+}
+  );
+
+export type NotificationOptionsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NotificationOptionsQuery = (
+  { __typename?: 'Query' }
+  & {
+  notificationTemplate?: Maybe<(
+    { __typename?: 'NotificationTemplateOptions' }
+    & Pick<NotificationTemplateOptions, 'languages' | 'templateTypes' | 'notificationTypes'>
+    )>
+}
+  );
+
+export type CreateNotificationTemplateMutationVariables = Exact<{
+  input: CreateNotificationTemplateInput;
+}>;
+
+
+export type CreateNotificationTemplateMutation = (
+  { __typename?: 'Mutation' }
+  & {
+  createNotificationTemplate?: Maybe<(
+    { __typename?: 'NotificationTemplate' }
+    & Pick<NotificationTemplate, 'id'>
+    )>
 }
   );
 
@@ -1617,6 +1669,75 @@ export function useGetAllUsersNotificationsLazyQuery(baseOptions?: Apollo.LazyQu
 export type GetAllUsersNotificationsQueryHookResult = ReturnType<typeof useGetAllUsersNotificationsQuery>;
 export type GetAllUsersNotificationsLazyQueryHookResult = ReturnType<typeof useGetAllUsersNotificationsLazyQuery>;
 export type GetAllUsersNotificationsQueryResult = Apollo.QueryResult<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>;
+export const NotificationOptionsDocument = gql`
+  query NotificationOptions {
+    notificationTemplate: notificationTemplateOptions {
+      languages
+      templateTypes
+      notificationTypes
+    }
+  }
+`;
+
+/**
+ * __useNotificationOptionsQuery__
+ *
+ * To run a query within a React component, call `useNotificationOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNotificationOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNotificationOptionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useNotificationOptionsQuery(baseOptions?: Apollo.QueryHookOptions<NotificationOptionsQuery, NotificationOptionsQueryVariables>) {
+  return Apollo.useQuery<NotificationOptionsQuery, NotificationOptionsQueryVariables>(NotificationOptionsDocument, baseOptions);
+}
+
+export function useNotificationOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NotificationOptionsQuery, NotificationOptionsQueryVariables>) {
+  return Apollo.useLazyQuery<NotificationOptionsQuery, NotificationOptionsQueryVariables>(NotificationOptionsDocument, baseOptions);
+}
+
+export type NotificationOptionsQueryHookResult = ReturnType<typeof useNotificationOptionsQuery>;
+export type NotificationOptionsLazyQueryHookResult = ReturnType<typeof useNotificationOptionsLazyQuery>;
+export type NotificationOptionsQueryResult = Apollo.QueryResult<NotificationOptionsQuery, NotificationOptionsQueryVariables>;
+export const CreateNotificationTemplateDocument = gql`
+  mutation CreateNotificationTemplate($input: CreateNotificationTemplateInput!) {
+    createNotificationTemplate(input: $input) {
+      id
+    }
+  }
+`;
+export type CreateNotificationTemplateMutationFn = Apollo.MutationFunction<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>;
+
+/**
+ * __useCreateNotificationTemplateMutation__
+ *
+ * To run a mutation, you first call `useCreateNotificationTemplateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateNotificationTemplateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createNotificationTemplateMutation, { data, loading, error }] = useCreateNotificationTemplateMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateNotificationTemplateMutation(baseOptions?: Apollo.MutationHookOptions<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>) {
+  return Apollo.useMutation<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>(CreateNotificationTemplateDocument, baseOptions);
+}
+
+export type CreateNotificationTemplateMutationHookResult = ReturnType<typeof useCreateNotificationTemplateMutation>;
+export type CreateNotificationTemplateMutationResult = Apollo.MutationResult<CreateNotificationTemplateMutation>;
+export type CreateNotificationTemplateMutationOptions = Apollo.BaseMutationOptions<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>;
 export const GetNotificaitonTemplatesDocument = gql`
   query getNotificaitonTemplates($paginate: PaginateInput!, $where: NotificationTemplateWhereInput) {
     notificationTemplates(paginate: $paginate, where: $where) {
@@ -1651,11 +1772,9 @@ export const GetNotificaitonTemplatesDocument = gql`
 export function useGetNotificaitonTemplatesQuery(baseOptions: Apollo.QueryHookOptions<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>) {
   return Apollo.useQuery<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>(GetNotificaitonTemplatesDocument, baseOptions);
 }
-
 export function useGetNotificaitonTemplatesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>) {
   return Apollo.useLazyQuery<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>(GetNotificaitonTemplatesDocument, baseOptions);
 }
-
 export type GetNotificaitonTemplatesQueryHookResult = ReturnType<typeof useGetNotificaitonTemplatesQuery>;
 export type GetNotificaitonTemplatesLazyQueryHookResult = ReturnType<typeof useGetNotificaitonTemplatesLazyQuery>;
 export type GetNotificaitonTemplatesQueryResult = Apollo.QueryResult<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>;

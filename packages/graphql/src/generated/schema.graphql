@@ -203,6 +203,16 @@ input CreateNotificationEventSettingsInput {
   sendToUser: Boolean!
 }
 
+input CreateNotificationTemplateInput {
+  content: String!
+  forType: NotificationType!
+  fromEmail: String
+  fromName: String
+  language: NotificationLanguage!
+  subject: String!
+  templateType: NotificationTemplateType!
+}
+
 input CreateRoleInput {
   description: String!
   displayName: String!
@@ -480,6 +490,7 @@ type Mutation {
   """Create new proposal of type JOIN."""
   createJoinProposal(input: CreateJoinProposalInput!): Proposal!
   createNotificationEventSettings(input: CreateNotificationEventSettingsInput!): NotificationEventSettings
+  createNotificationTemplate(input: CreateNotificationTemplateInput!): NotificationTemplate
   createRole(input: CreateRoleInput!): Role
 
   """Creates new user in the system"""
@@ -593,6 +604,12 @@ type NotificationTemplate implements BaseEntity {
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+}
+
+type NotificationTemplateOptions {
+  languages: [NotificationLanguage]!
+  notificationTypes: [NotificationType]!
+  templateTypes: [NotificationTemplateType]!
 }
 
 enum NotificationTemplateType {
@@ -725,6 +742,7 @@ type Query {
   generateUserAuthToken(authId: String!): String!
   getStatistics(where: StatisticsWhereInput): [Statistic]
   notificationEventSettings(paginate: PaginateInput!): [NotificationEventSettings]
+  notificationTemplateOptions: NotificationTemplateOptions
   notificationTemplates(paginate: PaginateInput, where: NotificationTemplateWhereInput): [NotificationTemplate]
 
   """List of all notifications, readable only by the admin"""

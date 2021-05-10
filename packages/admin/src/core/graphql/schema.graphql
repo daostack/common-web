@@ -620,6 +620,11 @@ type NotificationEventSettings implements BaseEntity {
   sendNotificationType: NotificationType!
   onEvent: EventType!
 }
+type NotificationTemplateOptions {
+  languages: [NotificationLanguage]!
+  templateTypes: [NotificationTemplateType]!
+  notificationTypes: [NotificationType]!
+}
 input NotificationWhereInput {
   seenStatus: NotificationSeenStatus
   type: NotificationType
@@ -733,6 +738,15 @@ input CreateNotificationEventSettingsInput {
   sendNotificationType: NotificationType!
   onEvent: EventType!
 }
+input CreateNotificationTemplateInput {
+  forType: NotificationType!
+  language: NotificationLanguage!
+  templateType: NotificationTemplateType!
+  subject: String!
+  content: String!
+  fromEmail: String
+  fromName: String
+}
 type Query {
   """Provide ID to fetch specific user or do not pass anything to get the currently authenticated user"""
   user(where: UserWhereUniqueInput): User
@@ -746,6 +760,7 @@ type Query {
   proposals(where: ProposalWhereInput, paginate: PaginateInput): [Proposal]
   getStatistics(where: StatisticsWhereInput): [Statistic]
   discussion(id: ID!): Discussion
+  notificationTemplateOptions: NotificationTemplateOptions
   notificationEventSettings(paginate: PaginateInput!): [NotificationEventSettings]
   notificationTemplates(where: NotificationTemplateWhereInput, paginate: PaginateInput): [NotificationTemplate]
   """List of all notifications, readable only by the admin"""
@@ -779,6 +794,7 @@ type Mutation {
     type: DiscussionSubscriptionType!
   ): DiscussionSubscription
   createNotificationEventSettings(input: CreateNotificationEventSettingsInput!): NotificationEventSettings
+  createNotificationTemplate(input: CreateNotificationTemplateInput!): NotificationTemplate
 }
 type Subscription {
   onProposalChange(
