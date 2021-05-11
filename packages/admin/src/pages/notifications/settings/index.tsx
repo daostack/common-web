@@ -1,22 +1,29 @@
 import React from 'react';
 import { NextPage } from 'next';
 
+import lodash from 'lodash';
 import { gql } from '@apollo/client';
-import { Text, Breadcrumbs, Spacer, Table } from '@geist-ui/react';
+import { Edit } from '@geist-ui/react-icons';
+import { Text, Breadcrumbs, Spacer, Table, Modal, Checkbox, Note, Button } from '@geist-ui/react';
 
 import { Link } from '@components/Link';
-import { useLoadNotificationSettignsQuery } from '@core/graphql';
-import { StatusIcon } from '@components/helpers';
-import { FullWidthLoader } from '@components/FullWidthLoader';
-import lodash from 'lodash';
-import { HasPermission } from '@components/HasPermission';
-import { Edit } from '@geist-ui/react-icons';
 import { Centered } from '@components/Centered';
+import { StatusIcon } from '@components/helpers';
+import { HasPermission } from '@components/HasPermission';
+import { FullWidthLoader } from '@components/FullWidthLoader';
+import {
+  useLoadNotificationSettignsQuery,
+  NotificationSystemSettings,
+  useUpdateNotificationSettingsMutation
+} from '@core/graphql';
 
 const LoadNotificationSettings = gql`
   query LoadNotificationSettigns {
     notificationSettings {
       id
+
+      createdAt
+      updatedAt
 
       type
 
@@ -28,9 +35,20 @@ const LoadNotificationSettings = gql`
   }
 `;
 
+const UpdateNotificationSettings = gql`
+  mutation UpdateNotificationSettings($input: UpdateNotificationSettingsInput!) {
+    updateNotificationSettings(input: $input) {
+      id
+    }
+  }
+`;
+
 
 export const NotificationSettingsPage: NextPage = () => {
-  const { data, loading } = useLoadNotificationSettignsQuery();
+  const { data, loading, refetch } = useLoadNotificationSettignsQuery();
+  const [updateSettings, { loading: updatingSettings }] = useUpdateNotificationSettingsMutation();
+
+  const [update, setUpdate] = React.useState<NotificationSystemSettings>();
 
   // Transformers
   const getNotificationSettingsForTable = () => {
@@ -67,24 +85,115 @@ export const NotificationSettingsPage: NextPage = () => {
 
   const onEdit = (id: string) => {
     return () => {
-
+      setUpdate(data.notificationSettings.find(x => x.id === id));
     };
   };
 
+  const onSave = async () => {
+    try {
+      await updateSettings({
+        variables: {
+          input: {
+            id: update.id,
+            showInUserFeed: update.showInUserFeed,
+            sendPush: update.sendPush,
+            sendEmail: update.sendEmail
+          }
+        }
+      });
+
+      await refetch();
+
+      onClose();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const onClose = () => {
+    setUpdate(null);
+  };
+
+  const onUpdateValue = (key: keyof NotificationSystemSettings, value: boolean) => {
+    setUpdate((u) => ({
+      ...u,
+      [key]: value
+    }));
+  };
+
+
   return (
     <React.Fragment>
-      <Text h1>Notifications Settings</Text>
-      <Breadcrumbs>
-        <Breadcrumbs.Item>Home</Breadcrumbs.Item>
+      <Modal open={!!update} onClose={onClose} width="30vw">
+        <Modal.Content>
+          <Text h4>Edit notification settings for {update?.type}</Text>
 
-        <Breadcrumbs.Item>
-          <Link to="/notifications">Notifications</Link>
-        </Breadcrumbs.Item>
+          <Spacer y={1.5}/>
 
-        <Breadcrumbs.Item>
-          <Link to="/notifications/settings">Settings</Link>
-        </Breadcrumbs.Item>
-      </Breadcrumbs>
+          <Checkbox
+            size="large"
+            checked={update?.sendPush}
+            onChange={() => onUpdateValue('sendPush', !update.sendPush)}
+          >
+            Send via push notification
+          </Checkbox>
+
+          <Spacer y={.5}/>
+
+          <Checkbox
+            size="large"
+            checked={update?.sendEmail}
+            onChange={() => onUpdateValue('sendEmail', !update.sendEmail)}
+          >
+            Send via email
+          </Checkbox>
+
+          <Spacer y={.5}/>
+
+          <Checkbox
+            size="large"
+            checked={update?.showInUserFeed}
+            onChange={() => onUpdateValue('showInUserFeed', !update.showInUserFeed)}
+          >
+            Show in user's notification feed
+          </Checkbox>
+
+          <Spacer y={1}/>
+
+          <Note type="warning">
+            Depending of whether there is a template for the selected{' '}
+            notification type email or push notification may not be{' '}
+            send regardless of the chosen value here
+          </Note>
+
+          <Spacer y={1}/>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Button
+              loading={updatingSettings}
+              onClick={onSave}
+            >
+              Update
+            </Button>
+          </div>
+        </Modal.Content>
+      </Modal>
+
+
+      <React.Fragment>
+        <Text h1>Notifications Settings</Text>
+        <Breadcrumbs>
+          <Breadcrumbs.Item>Home</Breadcrumbs.Item>
+
+          <Breadcrumbs.Item>
+            <Link to="/notifications">Notifications</Link>
+          </Breadcrumbs.Item>
+
+          <Breadcrumbs.Item>
+            <Link to="/notifications/settings">Settings</Link>
+          </Breadcrumbs.Item>
+        </Breadcrumbs>
+      </React.Fragment>
 
       <Spacer/>
 

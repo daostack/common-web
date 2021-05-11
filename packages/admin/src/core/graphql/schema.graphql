@@ -754,6 +754,12 @@ input CreateNotificationEventSettingsInput {
   sendNotificationType: NotificationType!
   onEvent: EventType!
 }
+input UpdateNotificationSettingsInput {
+  id: String!
+  showInUserFeed: Boolean
+  sendPush: Boolean
+  sendEmail: Boolean
+}
 input CreateNotificationTemplateInput {
   forType: NotificationType!
   language: NotificationLanguage!
@@ -812,6 +818,7 @@ type Mutation {
     type: DiscussionSubscriptionType!
   ): DiscussionSubscription
   createNotificationEventSettings(input: CreateNotificationEventSettingsInput!): NotificationEventSettings
+  updateNotificationSettings(input: UpdateNotificationSettingsInput!): NotificationSystemSettings
   createNotificationTemplate(input: CreateNotificationTemplateInput!): NotificationTemplate
 }
 type Subscription {

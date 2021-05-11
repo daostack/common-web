@@ -8,6 +8,10 @@ export const GetNotificationSettingsQuery = queryField('notificationSettings', {
   },
   resolve: () => {
     return prisma.notificationSystemSettings
-      .findMany();
+      .findMany({
+        orderBy: {
+          createdAt: 'asc'
+        }
+      });
   }
 });

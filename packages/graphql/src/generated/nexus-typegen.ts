@@ -247,6 +247,12 @@ export interface NexusGenInputs {
     notIn?: string[] | null; // [String!]
     startsWith?: string | null; // String
   }
+  UpdateNotificationSettingsInput: { // input type
+    id: string; // String!
+    sendEmail?: boolean | null; // Boolean
+    sendPush?: boolean | null; // Boolean
+    showInUserFeed?: boolean | null; // Boolean
+  }
   UserWhereInput: { // input type
     email?: NexusGenInputs['StringFilter'] | null; // StringFilter
     firstName?: NexusGenInputs['StringFilter'] | null; // StringFilter
@@ -660,6 +666,7 @@ export interface NexusGenFieldTypes {
     finalizeProposal: boolean; // Boolean!
     reportDiscussionMessage: NexusGenRootTypes['Report']; // Report!
     unassignRole: NexusGenScalars['Void'] | null; // Void
+    updateNotificationSettings: NexusGenRootTypes['NotificationSystemSettings'] | null; // NotificationSystemSettings
     voidUserNotificationToken: NexusGenRootTypes['UserNotificationToken']; // UserNotificationToken!
     whitelistCommon: boolean | null; // Boolean
   }
@@ -977,6 +984,7 @@ export interface NexusGenFieldTypeNames {
     finalizeProposal: 'Boolean'
     reportDiscussionMessage: 'Report'
     unassignRole: 'Void'
+    updateNotificationSettings: 'NotificationSystemSettings'
     voidUserNotificationToken: 'UserNotificationToken'
     whitelistCommon: 'Boolean'
   }
@@ -1264,6 +1272,9 @@ export interface NexusGenArgTypes {
       roleId: string; // ID!
       userId: string; // ID!
     }
+    updateNotificationSettings: { // args
+      input: NexusGenInputs['UpdateNotificationSettingsInput']; // UpdateNotificationSettingsInput!
+    }
     voidUserNotificationToken: { // args
       tokenId: string; // ID!
     }
@@ -1362,21 +1373,21 @@ export interface NexusGenAbstractTypeMembers {
 }
 
 export interface NexusGenTypeInterfaces {
-  CommonMember: "BaseEntity"
-  CommonSubscription: "BaseEntity"
-  Discussion: "BaseEntity"
-  DiscussionMessage: "BaseEntity"
-  DiscussionSubscription: "BaseEntity"
-  FundingProposal: "BaseEntity"
-  JoinProposal: "BaseEntity"
-  Notification: "BaseEntity"
+  CommonMember: 'BaseEntity'
+  CommonSubscription: 'BaseEntity'
+  Discussion: 'BaseEntity'
+  DiscussionMessage: 'BaseEntity'
+  DiscussionSubscription: 'BaseEntity'
+  FundingProposal: 'BaseEntity'
+  JoinProposal: 'BaseEntity'
+  Notification: 'BaseEntity'
   NotificationEventSettings: 'BaseEntity'
   NotificationSystemSettings: 'BaseEntity'
   NotificationTemplate: 'BaseEntity'
-  Report: "BaseEntity"
-  Role: "BaseEntity"
-  Statistic: "BaseEntity"
-  UserNotificationToken: "BaseEntity"
+  Report: 'BaseEntity'
+  Role: 'BaseEntity'
+  Statistic: 'BaseEntity'
+  UserNotificationToken: 'BaseEntity'
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;

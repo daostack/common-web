@@ -957,6 +957,13 @@ export type CreateNotificationEventSettingsInput = {
   onEvent: EventType;
 };
 
+export type UpdateNotificationSettingsInput = {
+  id: Scalars['String'];
+  showInUserFeed?: Maybe<Scalars['Boolean']>;
+  sendPush?: Maybe<Scalars['Boolean']>;
+  sendEmail?: Maybe<Scalars['Boolean']>;
+};
+
 export type CreateNotificationTemplateInput = {
   forType: NotificationType;
   language: NotificationLanguage;
@@ -1087,6 +1094,7 @@ export type Mutation = {
   createDiscussionMessage: DiscussionMessage;
   changeDiscussionSubscriptionType?: Maybe<DiscussionSubscription>;
   createNotificationEventSettings?: Maybe<NotificationEventSettings>;
+  updateNotificationSettings?: Maybe<NotificationSystemSettings>;
   createNotificationTemplate?: Maybe<NotificationTemplate>;
 };
 
@@ -1191,6 +1199,11 @@ export type MutationChangeDiscussionSubscriptionTypeArgs = {
 
 export type MutationCreateNotificationEventSettingsArgs = {
   input: CreateNotificationEventSettingsInput;
+};
+
+
+export type MutationUpdateNotificationSettingsArgs = {
+  input: UpdateNotificationSettingsInput;
 };
 
 
@@ -1340,8 +1353,23 @@ export type LoadNotificationSettignsQuery = (
   & {
   notificationSettings?: Maybe<Array<Maybe<(
     { __typename?: 'NotificationSystemSettings' }
-    & Pick<NotificationSystemSettings, 'id' | 'type' | 'sendEmail' | 'sendPush' | 'showInUserFeed'>
+    & Pick<NotificationSystemSettings, 'id' | 'createdAt' | 'updatedAt' | 'type' | 'sendEmail' | 'sendPush' | 'showInUserFeed'>
     )>>>
+}
+  );
+
+export type UpdateNotificationSettingsMutationVariables = Exact<{
+  input: UpdateNotificationSettingsInput;
+}>;
+
+
+export type UpdateNotificationSettingsMutation = (
+  { __typename?: 'Mutation' }
+  & {
+  updateNotificationSettings?: Maybe<(
+    { __typename?: 'NotificationSystemSettings' }
+    & Pick<NotificationSystemSettings, 'id'>
+    )>
 }
   );
 
@@ -1843,11 +1871,9 @@ export const GetAllUsersNotificationsDocument = gql`
 export function useGetAllUsersNotificationsQuery(baseOptions: Apollo.QueryHookOptions<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>) {
   return Apollo.useQuery<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>(GetAllUsersNotificationsDocument, baseOptions);
 }
-
 export function useGetAllUsersNotificationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>) {
   return Apollo.useLazyQuery<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>(GetAllUsersNotificationsDocument, baseOptions);
 }
-
 export type GetAllUsersNotificationsQueryHookResult = ReturnType<typeof useGetAllUsersNotificationsQuery>;
 export type GetAllUsersNotificationsLazyQueryHookResult = ReturnType<typeof useGetAllUsersNotificationsLazyQuery>;
 export type GetAllUsersNotificationsQueryResult = Apollo.QueryResult<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>;
@@ -1855,6 +1881,8 @@ export const LoadNotificationSettignsDocument = gql`
   query LoadNotificationSettigns {
     notificationSettings {
       id
+      createdAt
+      updatedAt
       type
       sendEmail
       sendPush
@@ -1889,6 +1917,39 @@ export function useLoadNotificationSettignsLazyQuery(baseOptions?: Apollo.LazyQu
 export type LoadNotificationSettignsQueryHookResult = ReturnType<typeof useLoadNotificationSettignsQuery>;
 export type LoadNotificationSettignsLazyQueryHookResult = ReturnType<typeof useLoadNotificationSettignsLazyQuery>;
 export type LoadNotificationSettignsQueryResult = Apollo.QueryResult<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>;
+export const UpdateNotificationSettingsDocument = gql`
+  mutation UpdateNotificationSettings($input: UpdateNotificationSettingsInput!) {
+    updateNotificationSettings(input: $input) {
+      id
+    }
+  }
+`;
+export type UpdateNotificationSettingsMutationFn = Apollo.MutationFunction<UpdateNotificationSettingsMutation, UpdateNotificationSettingsMutationVariables>;
+
+/**
+ * __useUpdateNotificationSettingsMutation__
+ *
+ * To run a mutation, you first call `useUpdateNotificationSettingsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateNotificationSettingsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateNotificationSettingsMutation, { data, loading, error }] = useUpdateNotificationSettingsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateNotificationSettingsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateNotificationSettingsMutation, UpdateNotificationSettingsMutationVariables>) {
+  return Apollo.useMutation<UpdateNotificationSettingsMutation, UpdateNotificationSettingsMutationVariables>(UpdateNotificationSettingsDocument, baseOptions);
+}
+
+export type UpdateNotificationSettingsMutationHookResult = ReturnType<typeof useUpdateNotificationSettingsMutation>;
+export type UpdateNotificationSettingsMutationResult = Apollo.MutationResult<UpdateNotificationSettingsMutation>;
+export type UpdateNotificationSettingsMutationOptions = Apollo.BaseMutationOptions<UpdateNotificationSettingsMutation, UpdateNotificationSettingsMutationVariables>;
 export const NotificationOptionsDocument = gql`
   query NotificationOptions {
     notificationTemplate: notificationTemplateOptions {

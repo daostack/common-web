@@ -501,6 +501,7 @@ type Mutation {
   finalizeProposal(proposalId: ID!): Boolean!
   reportDiscussionMessage(input: ReportDiscussionMessageInput!): Report!
   unassignRole(roleId: ID!, userId: ID!): Void
+  updateNotificationSettings(input: UpdateNotificationSettingsInput!): NotificationSystemSettings
   voidUserNotificationToken(tokenId: ID!): UserNotificationToken!
   whitelistCommon(commonId: String!): Boolean
 }
@@ -944,6 +945,13 @@ scalar URL
 A field whose value is a generic Universally Unique Identifier: https://en.wikipedia.org/wiki/Universally_unique_identifier.
 """
 scalar UUID
+
+input UpdateNotificationSettingsInput {
+  id: String!
+  sendEmail: Boolean
+  sendPush: Boolean
+  showInUserFeed: Boolean
+}
 
 type User {
   """The date, at which the item was created"""
