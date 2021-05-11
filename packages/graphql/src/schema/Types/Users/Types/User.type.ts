@@ -5,7 +5,7 @@ export const UserType = objectType({
   name: 'User',
   definition(t) {
     t.nonNull.id('id', {
-      description: 'The system Id of the user'
+      description: 'The settings Id of the user'
     });
 
     t.nonNull.date('createdAt', {

@@ -12,7 +12,7 @@ scalar JSON
 """A field whose value is a generic Universally Unique Identifier: https://en.wikipedia.org/wiki/Universally_unique_identifier."""
 scalar UUID
 type User {
-  """The system Id of the user"""
+  """The settings Id of the user"""
   id: ID!
   """The date, at which the item was created"""
   createdAt: DateTime!
@@ -605,6 +605,10 @@ type NotificationTemplate implements BaseEntity {
   bcc: String
   bccName: String
 }
+type NotificationEventOptions {
+  availableNotifications: [NotificationType!]!
+  availableEvents: [EventType!]!
+}
 type NotificationEventSettings implements BaseEntity {
   """The main identifier of the item"""
   id: UUID!
@@ -620,9 +624,17 @@ type NotificationEventSettings implements BaseEntity {
   sendNotificationType: NotificationType!
   onEvent: EventType!
 }
-type NotificationEventOptions {
-  availableNotifications: [NotificationType!]!
-  availableEvents: [EventType!]!
+type NotificationSystemSettings implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  type: NotificationType!
+  sendEmail: Boolean!
+  sendPush: Boolean!
+  showInUserFeed: Boolean!
 }
 type NotificationTemplateOptions {
   languages: [NotificationLanguage]!
@@ -768,11 +780,12 @@ type Query {
   notificationEventOptions: NotificationEventOptions
   notificationEventSettings(paginate: PaginateInput!): [NotificationEventSettings]
   notificationTemplates(where: NotificationTemplateWhereInput, paginate: PaginateInput): [NotificationTemplate]
+  notificationSettings: [NotificationSystemSettings]
   """List of all notifications, readable only by the admin"""
   notifications(paginate: PaginateInput!): [Notification]
 }
 type Mutation {
-  """Creates new user in the system"""
+  """Creates new user in the settings"""
   createUser(input: CreateUserInput!): User!
   createUserNotificationToken(input: CreateUserNotificationTokenInput!): UserNotificationToken!
   voidUserNotificationToken(tokenId: ID!): UserNotificationToken!

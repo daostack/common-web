@@ -26,7 +26,7 @@ export type Scalars = {
 
 export type User = {
   __typename?: 'User';
-  /** The system Id of the user */
+  /** The settings Id of the user */
   id: Scalars['ID'];
   /** The date, at which the item was created */
   createdAt: Scalars['DateTime'];
@@ -782,6 +782,12 @@ export type NotificationTemplate = BaseEntity & {
   bccName?: Maybe<Scalars['String']>;
 };
 
+export type NotificationEventOptions = {
+  __typename?: 'NotificationEventOptions';
+  availableNotifications: Array<NotificationType>;
+  availableEvents: Array<EventType>;
+};
+
 export type NotificationEventSettings = BaseEntity & {
   __typename?: 'NotificationEventSettings';
   /** The main identifier of the item */
@@ -799,10 +805,18 @@ export type NotificationEventSettings = BaseEntity & {
   onEvent: EventType;
 };
 
-export type NotificationEventOptions = {
-  __typename?: 'NotificationEventOptions';
-  availableNotifications: Array<NotificationType>;
-  availableEvents: Array<EventType>;
+export type NotificationSystemSettings = BaseEntity & {
+  __typename?: 'NotificationSystemSettings';
+  /** The main identifier of the item */
+  id: Scalars['UUID'];
+  /** The date, at which the item was created */
+  createdAt: Scalars['DateTime'];
+  /** The date, at which the item was last modified */
+  updatedAt: Scalars['DateTime'];
+  type: NotificationType;
+  sendEmail: Scalars['Boolean'];
+  sendPush: Scalars['Boolean'];
+  showInUserFeed: Scalars['Boolean'];
 };
 
 export type NotificationTemplateOptions = {
@@ -971,6 +985,7 @@ export type Query = {
   notificationEventOptions?: Maybe<NotificationEventOptions>;
   notificationEventSettings?: Maybe<Array<Maybe<NotificationEventSettings>>>;
   notificationTemplates?: Maybe<Array<Maybe<NotificationTemplate>>>;
+  notificationSettings?: Maybe<Array<Maybe<NotificationSystemSettings>>>;
   /** List of all notifications, readable only by the admin */
   notifications?: Maybe<Array<Maybe<Notification>>>;
 };
@@ -1050,7 +1065,7 @@ export type QueryNotificationsArgs = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  /** Creates new user in the system */
+  /** Creates new user in the settings */
   createUser: User;
   createUserNotificationToken: UserNotificationToken;
   voidUserNotificationToken: UserNotificationToken;
@@ -1313,6 +1328,19 @@ export type GetAllUsersNotificationsQuery = (
       & Pick<User, 'photo' | 'displayName'>
       )
   }
+    )>>>
+}
+  );
+
+export type LoadNotificationSettignsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LoadNotificationSettignsQuery = (
+  { __typename?: 'Query' }
+  & {
+  notificationSettings?: Maybe<Array<Maybe<(
+    { __typename?: 'NotificationSystemSettings' }
+    & Pick<NotificationSystemSettings, 'id' | 'type' | 'sendEmail' | 'sendPush' | 'showInUserFeed'>
     )>>>
 }
   );
@@ -1671,11 +1699,9 @@ export const GetCommonDetailsDocument = gql`
 export function useGetCommonDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>) {
   return Apollo.useQuery<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>(GetCommonDetailsDocument, baseOptions);
 }
-
 export function useGetCommonDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>) {
   return Apollo.useLazyQuery<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>(GetCommonDetailsDocument, baseOptions);
 }
-
 export type GetCommonDetailsQueryHookResult = ReturnType<typeof useGetCommonDetailsQuery>;
 export type GetCommonDetailsLazyQueryHookResult = ReturnType<typeof useGetCommonDetailsLazyQuery>;
 export type GetCommonDetailsQueryResult = Apollo.QueryResult<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>;
@@ -1712,11 +1738,9 @@ export const GetNotificationEventsDocument = gql`
 export function useGetNotificationEventsQuery(baseOptions: Apollo.QueryHookOptions<GetNotificationEventsQuery, GetNotificationEventsQueryVariables>) {
   return Apollo.useQuery<GetNotificationEventsQuery, GetNotificationEventsQueryVariables>(GetNotificationEventsDocument, baseOptions);
 }
-
 export function useGetNotificationEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetNotificationEventsQuery, GetNotificationEventsQueryVariables>) {
   return Apollo.useLazyQuery<GetNotificationEventsQuery, GetNotificationEventsQueryVariables>(GetNotificationEventsDocument, baseOptions);
 }
-
 export type GetNotificationEventsQueryHookResult = ReturnType<typeof useGetNotificationEventsQuery>;
 export type GetNotificationEventsLazyQueryHookResult = ReturnType<typeof useGetNotificationEventsLazyQuery>;
 export type GetNotificationEventsQueryResult = Apollo.QueryResult<GetNotificationEventsQuery, GetNotificationEventsQueryVariables>;
@@ -1747,11 +1771,9 @@ export const GetCreateNotificationEventOptionsDocument = gql`
 export function useGetCreateNotificationEventOptionsQuery(baseOptions?: Apollo.QueryHookOptions<GetCreateNotificationEventOptionsQuery, GetCreateNotificationEventOptionsQueryVariables>) {
   return Apollo.useQuery<GetCreateNotificationEventOptionsQuery, GetCreateNotificationEventOptionsQueryVariables>(GetCreateNotificationEventOptionsDocument, baseOptions);
 }
-
 export function useGetCreateNotificationEventOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCreateNotificationEventOptionsQuery, GetCreateNotificationEventOptionsQueryVariables>) {
   return Apollo.useLazyQuery<GetCreateNotificationEventOptionsQuery, GetCreateNotificationEventOptionsQueryVariables>(GetCreateNotificationEventOptionsDocument, baseOptions);
 }
-
 export type GetCreateNotificationEventOptionsQueryHookResult = ReturnType<typeof useGetCreateNotificationEventOptionsQuery>;
 export type GetCreateNotificationEventOptionsLazyQueryHookResult = ReturnType<typeof useGetCreateNotificationEventOptionsLazyQuery>;
 export type GetCreateNotificationEventOptionsQueryResult = Apollo.QueryResult<GetCreateNotificationEventOptionsQuery, GetCreateNotificationEventOptionsQueryVariables>;
@@ -1784,7 +1806,6 @@ export type CreateNotificationEventIntegrationMutationFn = Apollo.MutationFuncti
 export function useCreateNotificationEventIntegrationMutation(baseOptions?: Apollo.MutationHookOptions<CreateNotificationEventIntegrationMutation, CreateNotificationEventIntegrationMutationVariables>) {
   return Apollo.useMutation<CreateNotificationEventIntegrationMutation, CreateNotificationEventIntegrationMutationVariables>(CreateNotificationEventIntegrationDocument, baseOptions);
 }
-
 export type CreateNotificationEventIntegrationMutationHookResult = ReturnType<typeof useCreateNotificationEventIntegrationMutation>;
 export type CreateNotificationEventIntegrationMutationResult = Apollo.MutationResult<CreateNotificationEventIntegrationMutation>;
 export type CreateNotificationEventIntegrationMutationOptions = Apollo.BaseMutationOptions<CreateNotificationEventIntegrationMutation, CreateNotificationEventIntegrationMutationVariables>;
@@ -1822,12 +1843,52 @@ export const GetAllUsersNotificationsDocument = gql`
 export function useGetAllUsersNotificationsQuery(baseOptions: Apollo.QueryHookOptions<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>) {
   return Apollo.useQuery<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>(GetAllUsersNotificationsDocument, baseOptions);
 }
+
 export function useGetAllUsersNotificationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>) {
   return Apollo.useLazyQuery<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>(GetAllUsersNotificationsDocument, baseOptions);
 }
+
 export type GetAllUsersNotificationsQueryHookResult = ReturnType<typeof useGetAllUsersNotificationsQuery>;
 export type GetAllUsersNotificationsLazyQueryHookResult = ReturnType<typeof useGetAllUsersNotificationsLazyQuery>;
 export type GetAllUsersNotificationsQueryResult = Apollo.QueryResult<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>;
+export const LoadNotificationSettignsDocument = gql`
+  query LoadNotificationSettigns {
+    notificationSettings {
+      id
+      type
+      sendEmail
+      sendPush
+      showInUserFeed
+    }
+  }
+`;
+
+/**
+ * __useLoadNotificationSettignsQuery__
+ *
+ * To run a query within a React component, call `useLoadNotificationSettignsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLoadNotificationSettignsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLoadNotificationSettignsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLoadNotificationSettignsQuery(baseOptions?: Apollo.QueryHookOptions<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>) {
+  return Apollo.useQuery<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>(LoadNotificationSettignsDocument, baseOptions);
+}
+
+export function useLoadNotificationSettignsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>) {
+  return Apollo.useLazyQuery<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>(LoadNotificationSettignsDocument, baseOptions);
+}
+
+export type LoadNotificationSettignsQueryHookResult = ReturnType<typeof useLoadNotificationSettignsQuery>;
+export type LoadNotificationSettignsLazyQueryHookResult = ReturnType<typeof useLoadNotificationSettignsLazyQuery>;
+export type LoadNotificationSettignsQueryResult = Apollo.QueryResult<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>;
 export const NotificationOptionsDocument = gql`
   query NotificationOptions {
     notificationTemplate: notificationTemplateOptions {

@@ -17,7 +17,7 @@ export const CreateUserMutation = extendType({
   definition(t) {
     // @ts-ignore
     t.nonNull.field('createUser', {
-      description: 'Creates new user in the system',
+      description: 'Creates new user in the settings',
       type: 'User',
       args: {
         input: nonNull(

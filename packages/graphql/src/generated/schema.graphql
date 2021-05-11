@@ -493,7 +493,7 @@ type Mutation {
   createNotificationTemplate(input: CreateNotificationTemplateInput!): NotificationTemplate
   createRole(input: CreateRoleInput!): Role
 
-  """Creates new user in the system"""
+  """Creates new user in the settings"""
   createUser(input: CreateUserInput!): User!
   createUserNotificationToken(input: CreateUserNotificationTokenInput!): UserNotificationToken!
   createVote(input: CreateVoteInput!): Vote!
@@ -588,6 +588,21 @@ enum NotificationSeenStatus {
   Done
   NotSeen
   Seen
+}
+
+type NotificationSystemSettings implements BaseEntity {
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+
+  """The main identifier of the item"""
+  id: UUID!
+  sendEmail: Boolean!
+  sendPush: Boolean!
+  showInUserFeed: Boolean!
+  type: NotificationType!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
 }
 
 type NotificationTemplate implements BaseEntity {
@@ -748,6 +763,7 @@ type Query {
   getStatistics(where: StatisticsWhereInput): [Statistic]
   notificationEventOptions: NotificationEventOptions
   notificationEventSettings(paginate: PaginateInput!): [NotificationEventSettings]
+  notificationSettings: [NotificationSystemSettings]
   notificationTemplateOptions: NotificationTemplateOptions
   notificationTemplates(paginate: PaginateInput, where: NotificationTemplateWhereInput): [NotificationTemplate]
 
@@ -946,7 +962,7 @@ type User {
   """The first name of the user"""
   firstName: String!
 
-  """The system Id of the user"""
+  """The settings Id of the user"""
   id: ID!
 
   """The last name of the user"""

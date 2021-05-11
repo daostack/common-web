@@ -417,6 +417,15 @@ export interface NexusGenObjects {
     sendToUser: boolean; // Boolean!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
+  NotificationSystemSettings: { // root type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: NexusGenScalars['UUID']; // UUID!
+    sendEmail: boolean; // Boolean!
+    sendPush: boolean; // Boolean!
+    showInUserFeed: boolean; // Boolean!
+    type: NexusGenEnums['NotificationType']; // NotificationType!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   NotificationTemplate: { // root type
     bcc?: string | null; // String
     bccName?: string | null; // String
@@ -512,7 +521,7 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  BaseEntity: NexusGenRootTypes['CommonMember'] | NexusGenRootTypes['CommonSubscription'] | NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['FundingProposal'] | NexusGenRootTypes['JoinProposal'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['NotificationEventSettings'] | NexusGenRootTypes['NotificationTemplate'] | NexusGenRootTypes['Report'] | NexusGenRootTypes['Role'] | NexusGenRootTypes['Statistic'] | NexusGenRootTypes['UserNotificationToken'];
+  BaseEntity: NexusGenRootTypes['CommonMember'] | NexusGenRootTypes['CommonSubscription'] | NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['FundingProposal'] | NexusGenRootTypes['JoinProposal'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['NotificationEventSettings'] | NexusGenRootTypes['NotificationSystemSettings'] | NexusGenRootTypes['NotificationTemplate'] | NexusGenRootTypes['Report'] | NexusGenRootTypes['Role'] | NexusGenRootTypes['Statistic'] | NexusGenRootTypes['UserNotificationToken'];
 }
 
 export interface NexusGenUnions {
@@ -686,6 +695,15 @@ export interface NexusGenFieldTypes {
     sendToUser: boolean; // Boolean!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
+  NotificationSystemSettings: { // field return type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: NexusGenScalars['UUID']; // UUID!
+    sendEmail: boolean; // Boolean!
+    sendPush: boolean; // Boolean!
+    showInUserFeed: boolean; // Boolean!
+    type: NexusGenEnums['NotificationType']; // NotificationType!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   NotificationTemplate: { // field return type
     bcc: string | null; // String
     bccName: string | null; // String
@@ -742,6 +760,7 @@ export interface NexusGenFieldTypes {
     getStatistics: Array<NexusGenRootTypes['Statistic'] | null> | null; // [Statistic]
     notificationEventOptions: NexusGenRootTypes['NotificationEventOptions'] | null; // NotificationEventOptions
     notificationEventSettings: Array<NexusGenRootTypes['NotificationEventSettings'] | null> | null; // [NotificationEventSettings]
+    notificationSettings: Array<NexusGenRootTypes['NotificationSystemSettings'] | null> | null; // [NotificationSystemSettings]
     notificationTemplateOptions: NexusGenRootTypes['NotificationTemplateOptions'] | null; // NotificationTemplateOptions
     notificationTemplates: Array<NexusGenRootTypes['NotificationTemplate'] | null> | null; // [NotificationTemplate]
     notifications: Array<NexusGenRootTypes['Notification'] | null> | null; // [Notification]
@@ -993,6 +1012,15 @@ export interface NexusGenFieldTypeNames {
     sendToUser: 'Boolean'
     updatedAt: 'DateTime'
   }
+  NotificationSystemSettings: { // field return type name
+    createdAt: 'DateTime'
+    id: 'UUID'
+    sendEmail: 'Boolean'
+    sendPush: 'Boolean'
+    showInUserFeed: 'Boolean'
+    type: 'NotificationType'
+    updatedAt: 'DateTime'
+  }
   NotificationTemplate: { // field return type name
     bcc: 'String'
     bccName: 'String'
@@ -1049,6 +1077,7 @@ export interface NexusGenFieldTypeNames {
     getStatistics: 'Statistic'
     notificationEventOptions: 'NotificationEventOptions'
     notificationEventSettings: 'NotificationEventSettings'
+    notificationSettings: 'NotificationSystemSettings'
     notificationTemplateOptions: 'NotificationTemplateOptions'
     notificationTemplates: 'NotificationTemplate'
     notifications: 'Notification'
@@ -1329,7 +1358,7 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  BaseEntity: "CommonMember" | "CommonSubscription" | "Discussion" | "DiscussionMessage" | "DiscussionSubscription" | "FundingProposal" | "JoinProposal" | "Notification" | "NotificationEventSettings" | "NotificationTemplate" | "Report" | "Role" | "Statistic" | "UserNotificationToken"
+  BaseEntity: 'CommonMember' | 'CommonSubscription' | 'Discussion' | 'DiscussionMessage' | 'DiscussionSubscription' | 'FundingProposal' | 'JoinProposal' | 'Notification' | 'NotificationEventSettings' | 'NotificationSystemSettings' | 'NotificationTemplate' | 'Report' | 'Role' | 'Statistic' | 'UserNotificationToken'
 }
 
 export interface NexusGenTypeInterfaces {
@@ -1341,8 +1370,9 @@ export interface NexusGenTypeInterfaces {
   FundingProposal: "BaseEntity"
   JoinProposal: "BaseEntity"
   Notification: "BaseEntity"
-  NotificationEventSettings: "BaseEntity"
-  NotificationTemplate: "BaseEntity"
+  NotificationEventSettings: 'BaseEntity'
+  NotificationSystemSettings: 'BaseEntity'
+  NotificationTemplate: 'BaseEntity'
   Report: "BaseEntity"
   Role: "BaseEntity"
   Statistic: "BaseEntity"
