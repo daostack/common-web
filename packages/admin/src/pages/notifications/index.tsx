@@ -65,6 +65,10 @@ const NotificationsPage: NextPage = () => {
         </Breadcrumbs.Item>
       </Breadcrumbs>
 
+      <Link to="notifications/events">Notification event integrations</Link> <br/>
+      <Link to="notifications/settings">Notification settings</Link> <br/>
+      <Link to="notifications/templates">Notification templates</Link> <br/>
+
       {/* Notifications list  */}
       <HasPermission permission="admin.features.preview">
         <React.Fragment>

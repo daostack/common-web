@@ -620,6 +620,10 @@ type NotificationEventSettings implements BaseEntity {
   sendNotificationType: NotificationType!
   onEvent: EventType!
 }
+type NotificationEventOptions {
+  availableNotifications: [NotificationType!]!
+  availableEvents: [EventType!]!
+}
 type NotificationTemplateOptions {
   languages: [NotificationLanguage]!
   templateTypes: [NotificationTemplateType]!
@@ -761,6 +765,7 @@ type Query {
   getStatistics(where: StatisticsWhereInput): [Statistic]
   discussion(id: ID!): Discussion
   notificationTemplateOptions: NotificationTemplateOptions
+  notificationEventOptions: NotificationEventOptions
   notificationEventSettings(paginate: PaginateInput!): [NotificationEventSettings]
   notificationTemplates(where: NotificationTemplateWhereInput, paginate: PaginateInput): [NotificationTemplate]
   """List of all notifications, readable only by the admin"""

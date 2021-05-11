@@ -404,6 +404,7 @@ export interface NexusGenObjects {
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     userId: NexusGenScalars['UUID']; // UUID!
   }
+  NotificationEventOptions: {};
   NotificationEventSettings: { // root type
     active: boolean; // Boolean!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -669,6 +670,10 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User']; // User!
     userId: NexusGenScalars['UUID']; // UUID!
   }
+  NotificationEventOptions: { // field return type
+    availableEvents: NexusGenEnums['EventType'][]; // [EventType!]!
+    availableNotifications: NexusGenEnums['NotificationType'][]; // [NotificationType!]!
+  }
   NotificationEventSettings: { // field return type
     active: boolean; // Boolean!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -735,6 +740,7 @@ export interface NexusGenFieldTypes {
     events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     generateUserAuthToken: string; // String!
     getStatistics: Array<NexusGenRootTypes['Statistic'] | null> | null; // [Statistic]
+    notificationEventOptions: NexusGenRootTypes['NotificationEventOptions'] | null; // NotificationEventOptions
     notificationEventSettings: Array<NexusGenRootTypes['NotificationEventSettings'] | null> | null; // [NotificationEventSettings]
     notificationTemplateOptions: NexusGenRootTypes['NotificationTemplateOptions'] | null; // NotificationTemplateOptions
     notificationTemplates: Array<NexusGenRootTypes['NotificationTemplate'] | null> | null; // [NotificationTemplate]
@@ -971,6 +977,10 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
     userId: 'UUID'
   }
+  NotificationEventOptions: { // field return type name
+    availableEvents: 'EventType'
+    availableNotifications: 'NotificationType'
+  }
   NotificationEventSettings: { // field return type name
     active: 'Boolean'
     createdAt: 'DateTime'
@@ -1037,6 +1047,7 @@ export interface NexusGenFieldTypeNames {
     events: 'Event'
     generateUserAuthToken: 'String'
     getStatistics: 'Statistic'
+    notificationEventOptions: 'NotificationEventOptions'
     notificationEventSettings: 'NotificationEventSettings'
     notificationTemplateOptions: 'NotificationTemplateOptions'
     notificationTemplates: 'NotificationTemplate'

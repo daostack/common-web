@@ -28,6 +28,8 @@ import { GetNotificationTemplatesQuery } from './Queries/GetNotificationTemplate
 import { NotificationTemplateOptionsType } from './Types/NotificationTemplateOptions.type';
 import { GetNotificationTemplateOptionsQuery } from './Queries/GetNotificationTemplateOptions.query';
 import { CreateNotificationTemplateMutation } from './Mutations/CreateNotificationTemplate.mutation';
+import { NotificationEventOptionsType } from './Types/NotificationEventOptions.type';
+import { GetNotificationEventOptionsQuery } from './Queries/GetNotificationEventOptions.query';
 
 export const NotificationTypes = [
   NotificationTypeEnum,
@@ -38,6 +40,7 @@ export const NotificationTypes = [
   NotificationType,
   NotificationTemplateType,
   NotificationEventSettingsType,
+  NotificationEventOptionsType,
   NotificationTemplateOptionsType,
 
   NotificationUserExtension,
@@ -57,6 +60,7 @@ export const NotificationTypes = [
   CreateNotificationTemplateMutation,
 
   GetNotificationTemplateOptionsQuery,
+  GetNotificationEventOptionsQuery,
   GetNotificationEventSettingsQuery,
   GetNotificationTemplatesQuery,
   GetNotificationsQuery

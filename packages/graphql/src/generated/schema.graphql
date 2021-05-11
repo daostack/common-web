@@ -545,6 +545,11 @@ type Notification implements BaseEntity {
   userId: UUID!
 }
 
+type NotificationEventOptions {
+  availableEvents: [EventType!]!
+  availableNotifications: [NotificationType!]!
+}
+
 type NotificationEventSettings implements BaseEntity {
   active: Boolean!
 
@@ -741,6 +746,7 @@ type Query {
   events(paginate: PaginateInput): [Event]
   generateUserAuthToken(authId: String!): String!
   getStatistics(where: StatisticsWhereInput): [Statistic]
+  notificationEventOptions: NotificationEventOptions
   notificationEventSettings(paginate: PaginateInput!): [NotificationEventSettings]
   notificationTemplateOptions: NotificationTemplateOptions
   notificationTemplates(paginate: PaginateInput, where: NotificationTemplateWhereInput): [NotificationTemplate]
