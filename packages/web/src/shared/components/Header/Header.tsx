@@ -31,7 +31,7 @@ const Header = () => {
   const links = (
     <div className="navigation-wrapper" onClick={handleNavLinkClick}>
       <NavLink to="/" exact activeClassName="active">
-        About Common
+        About
       </NavLink>
       <NavLink to={ROUTE_PATHS.COMMON_LIST} activeClassName="active">
         Explore Commons
@@ -54,7 +54,7 @@ const Header = () => {
       <Link to="/" className="common-logo">
         <img src="/icons/logo.svg" alt="logo" className="logo" />
       </Link>
-      {screenSize === ScreenSize.Large ? (
+      {screenSize === ScreenSize.Desktop ? (
         <>
           {links}
           <div className="mobile-links-container">

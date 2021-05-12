@@ -31,7 +31,7 @@ export default function Commons() {
 
   // TODO: for now we show the first 8 commons. Need to filter 8 featured commons.
   const featuredCommons = commons.slice(0, 8).map((common: Common) => {
-    if (screenSize === ScreenSize.Large) {
+    if (screenSize === ScreenSize.Desktop) {
       return <CommonListItem common={common} key={common.id} />;
     }
     return (
@@ -48,7 +48,7 @@ export default function Commons() {
 
       {loading ? (
         <Loader />
-      ) : screenSize === ScreenSize.Large ? (
+      ) : screenSize === ScreenSize.Desktop ? (
         <div className="featured-commons">{featuredCommons}</div>
       ) : (
         <div>
