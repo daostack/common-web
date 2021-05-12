@@ -1401,6 +1401,21 @@ export type CreateNotificationTemplateMutation = (
 }
   );
 
+export type AllTemplatesForTypeQueryVariables = Exact<{
+  forType: NotificationType;
+}>;
+
+
+export type AllTemplatesForTypeQuery = (
+  { __typename?: 'Query' }
+  & {
+  notificationTemplates?: Maybe<Array<Maybe<(
+    { __typename?: 'NotificationTemplate' }
+    & Pick<NotificationTemplate, 'templateType' | 'language' | 'subject' | 'content' | 'from' | 'fromName'>
+    )>>>
+}
+  );
+
 export type GetNotificaitonTemplatesQueryVariables = Exact<{
   paginate: PaginateInput;
   where?: Maybe<NotificationTemplateWhereInput>;
@@ -1909,11 +1924,9 @@ export const LoadNotificationSettignsDocument = gql`
 export function useLoadNotificationSettignsQuery(baseOptions?: Apollo.QueryHookOptions<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>) {
   return Apollo.useQuery<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>(LoadNotificationSettignsDocument, baseOptions);
 }
-
 export function useLoadNotificationSettignsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>) {
   return Apollo.useLazyQuery<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>(LoadNotificationSettignsDocument, baseOptions);
 }
-
 export type LoadNotificationSettignsQueryHookResult = ReturnType<typeof useLoadNotificationSettignsQuery>;
 export type LoadNotificationSettignsLazyQueryHookResult = ReturnType<typeof useLoadNotificationSettignsLazyQuery>;
 export type LoadNotificationSettignsQueryResult = Apollo.QueryResult<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>;
@@ -1946,7 +1959,6 @@ export type UpdateNotificationSettingsMutationFn = Apollo.MutationFunction<Updat
 export function useUpdateNotificationSettingsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateNotificationSettingsMutation, UpdateNotificationSettingsMutationVariables>) {
   return Apollo.useMutation<UpdateNotificationSettingsMutation, UpdateNotificationSettingsMutationVariables>(UpdateNotificationSettingsDocument, baseOptions);
 }
-
 export type UpdateNotificationSettingsMutationHookResult = ReturnType<typeof useUpdateNotificationSettingsMutation>;
 export type UpdateNotificationSettingsMutationResult = Apollo.MutationResult<UpdateNotificationSettingsMutation>;
 export type UpdateNotificationSettingsMutationOptions = Apollo.BaseMutationOptions<UpdateNotificationSettingsMutation, UpdateNotificationSettingsMutationVariables>;
@@ -2013,9 +2025,50 @@ export type CreateNotificationTemplateMutationFn = Apollo.MutationFunction<Creat
 export function useCreateNotificationTemplateMutation(baseOptions?: Apollo.MutationHookOptions<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>) {
   return Apollo.useMutation<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>(CreateNotificationTemplateDocument, baseOptions);
 }
+
 export type CreateNotificationTemplateMutationHookResult = ReturnType<typeof useCreateNotificationTemplateMutation>;
 export type CreateNotificationTemplateMutationResult = Apollo.MutationResult<CreateNotificationTemplateMutation>;
 export type CreateNotificationTemplateMutationOptions = Apollo.BaseMutationOptions<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>;
+export const AllTemplatesForTypeDocument = gql`
+  query allTemplatesForType($forType: NotificationType!) {
+    notificationTemplates(where: {forType: $forType}) {
+      templateType
+      language
+      subject
+      content
+      from
+      fromName
+    }
+  }
+`;
+
+/**
+ * __useAllTemplatesForTypeQuery__
+ *
+ * To run a query within a React component, call `useAllTemplatesForTypeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllTemplatesForTypeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllTemplatesForTypeQuery({
+ *   variables: {
+ *      forType: // value for 'forType'
+ *   },
+ * });
+ */
+export function useAllTemplatesForTypeQuery(baseOptions: Apollo.QueryHookOptions<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>) {
+  return Apollo.useQuery<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>(AllTemplatesForTypeDocument, baseOptions);
+}
+
+export function useAllTemplatesForTypeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>) {
+  return Apollo.useLazyQuery<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>(AllTemplatesForTypeDocument, baseOptions);
+}
+
+export type AllTemplatesForTypeQueryHookResult = ReturnType<typeof useAllTemplatesForTypeQuery>;
+export type AllTemplatesForTypeLazyQueryHookResult = ReturnType<typeof useAllTemplatesForTypeLazyQuery>;
+export type AllTemplatesForTypeQueryResult = Apollo.QueryResult<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>;
 export const GetNotificaitonTemplatesDocument = gql`
   query getNotificaitonTemplates($paginate: PaginateInput!, $where: NotificationTemplateWhereInput) {
     notificationTemplates(paginate: $paginate, where: $where) {

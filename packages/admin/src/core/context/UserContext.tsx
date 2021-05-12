@@ -53,7 +53,9 @@ export const UserContextProvider: React.FC<React.PropsWithChildren<any>> = ({ ch
   const [context, setContext] = React.useState<UserContext>(defaultUserContext);
 
   // Data Fetching
-  const { data } = useLoadUserContextQuery();
+  const { data } = useLoadUserContextQuery({
+    pollInterval: 5 * 60 * 1000 // Check every 5 minutes for update
+  });
 
   // Effects
   React.useEffect(() => {

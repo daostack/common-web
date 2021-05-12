@@ -4,7 +4,7 @@ import { NextPage } from 'next';
 import lodash from 'lodash';
 import { gql } from '@apollo/client';
 import { Edit } from '@geist-ui/react-icons';
-import { Text, Breadcrumbs, Spacer, Table, Modal, Checkbox, Note, Button } from '@geist-ui/react';
+import { Text, Breadcrumbs, Spacer, Table, Modal, Checkbox, Note, Button, useToasts } from '@geist-ui/react';
 
 import { Link } from '@components/Link';
 import { Centered } from '@components/Centered';
@@ -45,6 +45,8 @@ const UpdateNotificationSettings = gql`
 
 
 export const NotificationSettingsPage: NextPage = () => {
+  const [, setToast] = useToasts();
+
   const { data, loading, refetch } = useLoadNotificationSettignsQuery();
   const [updateSettings, { loading: updatingSettings }] = useUpdateNotificationSettingsMutation();
 
@@ -54,7 +56,7 @@ export const NotificationSettingsPage: NextPage = () => {
   const getNotificationSettingsForTable = () => {
     if (data) {
       return data.notificationSettings.map((s) => ({
-        forEvent: lodash.startCase(s.type),
+        forNotificationType: lodash.startCase(s.type),
         sendPush: (<StatusIcon valid={s.sendPush}/>),
         sendEmail: (<StatusIcon valid={s.sendEmail}/>),
         show: (<StatusIcon valid={s.showInUserFeed}/>),
@@ -73,7 +75,7 @@ export const NotificationSettingsPage: NextPage = () => {
       }));
     } else if (loading) {
       return Array(10).fill({
-        forEvent: FullWidthLoader,
+        forNotificationType: FullWidthLoader,
         sendPush: FullWidthLoader,
         sendEmail: FullWidthLoader,
         show: FullWidthLoader
@@ -105,6 +107,8 @@ export const NotificationSettingsPage: NextPage = () => {
       await refetch();
 
       onClose();
+
+
     } catch (e) {
       console.error(e);
     }
@@ -198,8 +202,8 @@ export const NotificationSettingsPage: NextPage = () => {
       <Spacer/>
 
       <Table data={getNotificationSettingsForTable()}>
-        <Table.Column prop="forEvent">
-          For Event
+        <Table.Column prop="forNotificationType">
+          For Notification Type
         </Table.Column>
 
         <Table.Column prop="sendPush" label="Send Push" width={150}>
