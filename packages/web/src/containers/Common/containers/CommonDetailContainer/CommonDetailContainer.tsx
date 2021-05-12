@@ -16,6 +16,7 @@ import {
   ProposalsComponent,
   ProposalsHistory,
   AboutSidebarComponent,
+  JoinTheEffortModal,
 } from "../../components/CommonDetailContainer";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
 import {
@@ -78,6 +79,7 @@ export default function CommonDetail() {
 
   const dispatch = useDispatch();
   const { isShowing, onOpen, onClose } = useModal(false);
+  const { isShowing: showJoinModal, onOpen: onOpenJoinModal, onClose: onCloseJoinModal } = useModal(false);
 
   useEffect(() => {
     dispatch(getCommonDetail.request(id));
@@ -147,6 +149,10 @@ export default function CommonDetail() {
     onClose();
     dispatch(clearCurrentDiscussion());
   }, [onClose, dispatch]);
+
+  const closeJoinModalHandler = useCallback(() => {
+    onCloseJoinModal();
+  }, [onCloseJoinModal]);
 
   const clickPreviewDisscusionHandler = useCallback(
     (id: string) => {
@@ -228,22 +234,25 @@ export default function CommonDetail() {
         <Modal
           isShowing={isShowing}
           onClose={closeModalHandler}
-          closeColor={screenSize === ScreenSize.Small ? Colors.white : Colors.gray}
+          closeColor={screenSize === ScreenSize.Mobile ? Colors.white : Colors.gray}
         >
-          {screenSize === ScreenSize.Large && tab === "discussions" && (
+          {screenSize === ScreenSize.Desktop && tab === "discussions" && (
             <DiscussionDetailModal disscussion={currentDisscussion} common={common} />
           )}
           {tab === "proposals" ||
-            (tab === "history" && screenSize === ScreenSize.Large && (
+            (tab === "history" && screenSize === ScreenSize.Desktop && (
               <ProposalDetailModal proposal={currentProposal} common={common} />
             ))}
-          {screenSize === ScreenSize.Small && (
+          {screenSize === ScreenSize.Mobile && (
             <div className="get-common-app-wrapper">
               <img src="/icons/logo-all-white.svg" alt="logo" className="logo" />
               <span className="text">Download the Common app to participate in discussions and join the community</span>
               <MobileLinks color={Colors.black} detectOS={true} />
             </div>
           )}
+        </Modal>
+        <Modal isShowing={showJoinModal} onClose={closeJoinModalHandler} closeColor={Colors.white}>
+          <JoinTheEffortModal />
         </Modal>
         <div className="common-detail-wrapper">
           <div className="main-information-block">
@@ -261,16 +270,16 @@ export default function CommonDetail() {
                     <div className="name">{common?.name}</div>
                     <div className="tagline">{common?.metadata.byline}</div>
                   </div>
-                  {screenSize === ScreenSize.Small && <Share />}
+                  {screenSize === ScreenSize.Mobile && <Share />}
                 </div>
                 <div className="numbers">
                   <div className="item" onClick={onOpen}>
                     <div className="value">{formatPrice(common?.balance)}</div>
-                    <div className="name">{`Available ${screenSize === ScreenSize.Large ? "Funds" : ""}`}</div>
+                    <div className="name">{`Available ${screenSize === ScreenSize.Desktop ? "Funds" : ""}`}</div>
                   </div>
                   <div className="item">
                     <div className="value">{formatPrice(common?.raised)}</div>
-                    <div className="name">{`${screenSize === ScreenSize.Large ? "Total" : ""} Raised`}</div>
+                    <div className="name">{`${screenSize === ScreenSize.Desktop ? "Total" : ""} Raised`}</div>
                   </div>
                   <div className="item">
                     <div className="value">{common?.members.length}</div>
@@ -278,7 +287,7 @@ export default function CommonDetail() {
                   </div>
                   <div className="item">
                     <div className="value">{activeProposals.length}</div>
-                    <div className="name">{`${screenSize === ScreenSize.Large ? "Active" : ""} Proposals`}</div>
+                    <div className="name">{`${screenSize === ScreenSize.Desktop ? "Active" : ""} Proposals`}</div>
                   </div>
                 </div>
               </div>
@@ -295,8 +304,10 @@ export default function CommonDetail() {
                   ))}
                 </div>
                 <div className="social-wrapper">
-                  <button className="button-blue">Join the effort</button>
-                  {screenSize === ScreenSize.Large && <Share />}
+                  <button className="button-blue" onClick={onOpenJoinModal}>
+                    Join the effort
+                  </button>
+                  {screenSize === ScreenSize.Desktop && <Share />}
                 </div>
               </div>
             </div>

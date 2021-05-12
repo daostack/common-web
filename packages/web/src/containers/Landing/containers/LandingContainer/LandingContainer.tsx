@@ -26,7 +26,7 @@ const LandingContainer = () => {
             <div className="available-on-label">Available on</div>
             <MobileLinks color={Colors.white} />
           </div>
-          <div className={screenSize === ScreenSize.Large ? "iphone-image full" : "iphone-image half"} />
+          <div className={screenSize === ScreenSize.Desktop ? "iphone-image full" : "iphone-image half"} />
         </div>
         <img src="assets/images/wave-top.svg" alt="wave" className="wave-top" />
       </section>

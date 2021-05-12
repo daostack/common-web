@@ -1,0 +1,48 @@
+@import "../../../../../constants.scss";
+
+.join-the-effort-wrapper {
+  background: url("/assets/images/purple-stains.svg") no-repeat center;
+  background-size: cover;
+  margin: -30px; // to compensate the modal padding
+  padding-bottom: $content-padding;
+  background-position-y: -35vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: $white;
+  border-radius: 12px;
+  > span {
+    padding: 0px 30px;
+  }
+  .logo {
+    width: 100px;
+    margin-bottom: 10px;
+    margin-top: 30px;
+  }
+  .qr-code-wrapper {
+    margin-bottom: 100px;
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    span {
+      color: $deep-blue;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .join-the-effort-wrapper {
+    padding-bottom: $content-padding-mobile;
+    background-position-y: unset;
+    > span {
+      padding: 30px;
+    }
+    .qr-code-wrapper {
+      margin-bottom: 50px;
+      margin-top: 50px;
+    }
+  }
+}

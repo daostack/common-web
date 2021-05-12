@@ -13,7 +13,7 @@ const App = () => {
   const dispatch = useDispatch();
   const screenSize = window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`);
   screenSize.addEventListener("change", (screenSize) => {
-    dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Large : ScreenSize.Small));
+    dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile));
   });
 
   return (

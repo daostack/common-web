@@ -2,8 +2,8 @@ export const LOGIN_REDIRECT_LINK = "/auth/";
 export const SMALL_SCREEN_BREAKPOINT = "770px";
 
 export enum ScreenSize {
-  Small = "SMALL",
-  Large = "LARGE",
+  Mobile = "MOBILE",
+  Desktop = "DESKTOP",
 }
 
 export const COMMON_APP_APP_STORE_LINK = "https://apps.apple.com/il/app/common-collaborative-action/id1512785740";

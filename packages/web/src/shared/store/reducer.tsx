@@ -11,8 +11,8 @@ const initialState: SharedStateType = {
   loading: false,
   notification: null,
   screenSize: window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`).matches
-    ? ScreenSize.Large
-    : ScreenSize.Small,
+    ? ScreenSize.Desktop
+    : ScreenSize.Mobile,
 };
 
 const reducer = createReducer<SharedStateType, Action>(initialState)
