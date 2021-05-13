@@ -345,7 +345,9 @@ export default function CommonDetail() {
                     <Loader />
                   ))}
               </div>
-              <div className="sidebar-wrapper">{renderSidebarContent()}</div>
+              {(screenSize === ScreenSize.Desktop || tab !== "about") && (
+                <div className="sidebar-wrapper">{renderSidebarContent()}</div>
+              )}
             </div>
           </div>
         </div>

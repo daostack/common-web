@@ -3,6 +3,7 @@ import { Share } from "../../../../../shared/components";
 import { DiscussionMessage } from "../../../../../shared/models";
 import ChatMessage from "./ChatMessage";
 import "./index.scss";
+import { formatDate } from "../../../../../shared/utils";
 
 interface ChatComponentInterface {
   discussionMessage: DiscussionMessage[];
@@ -42,7 +43,7 @@ export default function ChatComponent({ discussionMessage }: ChatComponentInterf
           const date = new Date(Number(day));
           return (
             <div className="date" key={day}>
-              <div className="title">{isToday(date) ? "Today" : date.toDateString()}</div>
+              <div className="title">{isToday(date) ? "Today" : formatDate(date)}</div>
               <div className="message-list">
                 {messages[Number(day)].map((m) => {
                   return <ChatMessage key={m.id} disscussionMessage={m} />;

@@ -54,13 +54,10 @@ export default function ProposalCountDown({ date }: ProposalCountDownInterface) 
         <div className="text">
           {state.difference > 0 ? (
             <>
-              Countdown
-              {" " +
-                state.daysDifference +
-                " days " +
-                `${formatCountDown(state.hoursDifference)}:${formatCountDown(
-                  state.minutesDifference,
-                )}:${formatCountDown(state.secondsDifference)}`}
+              {`Countdown ${formatCountDown(state.daysDifference)}:
+              ${formatCountDown(state.hoursDifference)}:
+              ${formatCountDown(state.minutesDifference)}:
+              ${formatCountDown(state.secondsDifference)}`}
             </>
           ) : (
             "Time's up!"

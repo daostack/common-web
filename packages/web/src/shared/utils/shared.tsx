@@ -1,10 +1,15 @@
 import { MobileOperatingSystem } from "../constants";
 import { Time, User } from "../models";
 import millify from "millify";
+import moment from "moment";
 
 export const formatPrice = (price?: number) => {
   if (price) return `$${millify(price / 100)}`;
   return "$0";
+};
+
+export const formatDate = (date: string | Date) => {
+  return moment(date).format("YYYY-MM-DD");
 };
 
 export const getUserName = (user: User | undefined) => {

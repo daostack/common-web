@@ -1,18 +1,13 @@
+@import "../../../../../constants.scss";
+
 .about-name-wrapper {
   padding: 40px;
   border-radius: 14px;
   box-shadow: 0 3px 8px 0 #001a3614;
-  background-color: #ffffff;
-  .line {
-    margin: 24px 0;
-  }
+  background-color: $white;
   .title {
     font-size: 18px;
     font-weight: bold;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 1.22;
-    letter-spacing: normal;
     color: #001a36;
     margin-top: 24px;
     margin-bottom: 20px;
@@ -23,10 +18,6 @@
     a {
       font-size: 16px;
       font-weight: bold;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: 1.5;
-      letter-spacing: normal;
       color: #001a36;
       margin-bottom: 16px;
       vertical-align: middle;
@@ -41,18 +32,16 @@
         margin-right: 8px;
       }
       &:hover {
-        color: #7786ff;
+        color: $purple;
       }
     }
+  }
+  .description {
+    margin-bottom: 25px;
   }
   .join-wrapper {
     .contribution {
       font-size: 18px;
-      font-weight: normal;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: 1.61;
-      letter-spacing: normal;
       color: #051c3f;
       margin-bottom: 32px;
     }
@@ -65,5 +54,11 @@
     .social-wrapper {
       width: 270px;
     }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .about-name-wrapper {
+    padding: 20px;
   }
 }
