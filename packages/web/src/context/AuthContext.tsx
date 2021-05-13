@@ -1,5 +1,5 @@
-import firebase from 'firebase/app';
-import React, { PropsWithChildren } from 'react';
+import firebase from "firebase/app";
+import React, { PropsWithChildren } from "react";
 
 interface IAuthContext {
   token?: string | null;
@@ -9,7 +9,7 @@ interface IAuthContext {
 }
 
 const defaultAppContext: IAuthContext = {
-  loaded: false
+  loaded: false,
 };
 
 const AuthContext = React.createContext<IAuthContext>(defaultAppContext);
@@ -32,7 +32,7 @@ export const AuthContextProvider: React.FC<PropsWithChildren<any>> = ({ children
           token,
           loaded: true,
           userInfo: user,
-          authenticated: true
+          authenticated: true,
         }));
       } else {
         setContext((prevContext) => ({
@@ -41,16 +41,11 @@ export const AuthContextProvider: React.FC<PropsWithChildren<any>> = ({ children
           token: null,
           loaded: true,
           userInfo: null,
-          authenticated: false
+          authenticated: false,
         }));
       }
     });
   }, []);
 
-
-  return (
-    <AuthContext.Provider value={context}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={context}>{children}</AuthContext.Provider>;
 };

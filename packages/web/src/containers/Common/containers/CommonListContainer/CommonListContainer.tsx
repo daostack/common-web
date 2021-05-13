@@ -1,14 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { useDispatch, useSelector } from "react-redux";
 import { Loader } from "../../../../shared/components";
-import { getLoading } from "../../../../shared/store/selectors";
 
 import { CommonListItem } from "../../components";
 import { COMMON_PAGE_SIZE } from "../../constants";
-import { getCommonsList, updatePage } from "../../store/actions";
-import { useGetCommonDataQuery} from '../../../../graphql';
-import { selectCurrentPage, selectCommonList } from "../../store/selectors";
+import { useGetCommonDataQuery } from "../../../../graphql";
 
 import "./index.scss";
 
@@ -18,10 +14,19 @@ const options = {
   threshold: 1.0,
 };
 
+const TAKE_AMOUNT = 10; // TODO: Change as needed
+
 export default function CommonListContainer() {
-  const {loading, data} = useGetCommonDataQuery();
-  const page = useSelector(selectCurrentPage());
-  const dispatch = useDispatch();
+  const [page, setPage] = useState(0);
+  const { loading, data } = useGetCommonDataQuery({
+    variables: {
+      paginate: {
+        take: TAKE_AMOUNT,
+        skip: 0 + page * TAKE_AMOUNT,
+      },
+    },
+  });
+
   const loader = useRef(null);
 
   const handleObserver = useCallback(
@@ -29,21 +34,20 @@ export default function CommonListContainer() {
       const target = entities[0];
 
       if (target.isIntersecting) {
-        dispatch(updatePage(page + 1));
+        setPage(page + 1);
       }
     },
-    [dispatch, page],
+    [page],
   );
-
 
   useEffect(() => {
     const observer = new IntersectionObserver(handleObserver, options);
     if (loader.current) {
       observer.observe(loader.current as any);
     }
-  }, [handleObserver, data?.commons]);
+  }, [handleObserver, data, loader]);
 
-  const currentCommons = useMemo(() => [...(data?.commons ?? [])].splice(0, COMMON_PAGE_SIZE * page), [data?.commons, page]);
+  const currentCommons = useMemo(() => [...(data?.commons ?? [])].splice(0, COMMON_PAGE_SIZE * page), [data, page]);
 
   return (
     <div className="common-list-wrapper">

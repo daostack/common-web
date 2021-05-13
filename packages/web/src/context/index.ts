@@ -1,2 +1,2 @@
-export * from './AuthContext';
-export * from './PermissionsContext';
+export * from "./AuthContext";
+export * from "./PermissionsContext";

@@ -249,11 +249,13 @@ type DiscussionMessage implements BaseEntity {
   """The main identifier of the item"""
   id: UUID!
   message: String!
+  owner: User!
   reports: [Report!]!
   type: DiscussionMessageType!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+  userId: String!
 }
 
 enum DiscussionMessageFlag {

@@ -1,15 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
+import { IfFirebaseAuthed, IfFirebaseUnAuthed } from '@react-firebase/auth';
 import { Router } from "react-router-dom";
 import { ApolloProvider } from './providers/ApolloProvider';
+import { AuthenticationProvider } from './providers/AuthenticationProvider';
+import { UserContextProvider } from './context/UserContext';
 
-import configureStore from "./store";
 import "./index.scss";
 import App from "./containers/App/App";
 import history from "./shared/history";
-
-const { store } = configureStore(history);
 
 if (process.env.REACT_APP_ENV === "dev") {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -19,13 +18,22 @@ if (process.env.REACT_APP_ENV === "dev") {
 
 ReactDOM.render(
   <Router history={history}>
-    <Provider store={store}>
+    <AuthenticationProvider>
       <ApolloProvider>
-        <App />
+      <IfFirebaseAuthed>
+              {() => (
+                <UserContextProvider>
+                    <App />
+                </UserContextProvider>
+              )}
+            </IfFirebaseAuthed>
+
+            <IfFirebaseUnAuthed>
+              {() => <App />}
+            </IfFirebaseUnAuthed>
+
       </ApolloProvider>
-    </Provider>
+    </AuthenticationProvider>
   </Router>,
   document.getElementById("root"),
 );
-
-export default store;

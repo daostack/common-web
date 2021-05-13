@@ -1,6 +1,6 @@
 import React from "react";
-import { Common } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
+import { Common } from "../../../../../graphql";
 import "./index.scss";
 
 interface AboutTabComponentProps {
@@ -10,12 +10,12 @@ interface AboutTabComponentProps {
 export default function AboutTabComponent({ common }: AboutTabComponentProps) {
   return (
     <div className="about-name-wrapper">
-      <div className="description">{common.metadata.description}</div>
+      <div className="description">{common.description}</div>
       {common?.links?.length > 0 && (
         <div className="links">
           <div className="title">Links</div>
           {common.links.map((link) => (
-            <a href={link.value} target="_blank" rel="noopener noreferrer">
+            <a key={link.url} href={link.url} target="_blank" rel="noopener noreferrer">
               {link.title}
             </a>
           ))}
@@ -27,7 +27,7 @@ export default function AboutTabComponent({ common }: AboutTabComponentProps) {
         <div className="contribution">
           Minimum contribution for new members:
           <br />
-          {formatPrice(common.metadata.minFeeToJoin) + " " + common.metadata.contributionType + " contribution"}
+          {formatPrice(common.fundingMinimumAmount) + " " + common.fundingType + " contribution"}
         </div>
         <div className="button-blue">Join the effort</div>
       </div>

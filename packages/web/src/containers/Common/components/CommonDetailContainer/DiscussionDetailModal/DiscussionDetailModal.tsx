@@ -1,17 +1,17 @@
 import React from "react";
 import { Loader } from "../../../../../shared/components";
-import { Common, Discussion } from "../../../../../shared/models";
+import { Common, Discussion } from "../../../../../graphql";
 import { formatPrice, getDaysAgo, getUserInitials, getUserName } from "../../../../../shared/utils";
 import "./index.scss";
 
 interface DiscussionDetailModalProps {
-  disscussion: Discussion | null;
-  common: any;
+  discussion?: Discussion | null;
+  common: Common;
 }
 
-export default function DiscussionDetailModal({ disscussion, common }: DiscussionDetailModalProps) {
+export default function DiscussionDetailModal({ discussion, common }: DiscussionDetailModalProps) {
   const date = new Date();
-  return !disscussion ? (
+  return !discussion ? (
     <Loader />
   ) : (
     <div className="discussion-detail-modal-wrapper">
@@ -25,13 +25,13 @@ export default function DiscussionDetailModal({ disscussion, common }: Discussio
           </div>
           <div className="owner-wrapper">
             <div className="owner-icon-wrapper">
-              <img src={disscussion.owner?.photoURL} alt={getUserName(disscussion.owner)} />
+              <img src={discussion.owner?.photo} alt={getUserName(discussion.owner)} />
             </div>
-            <div className="owner-name">{getUserName(disscussion.owner)}</div>
-            <div className="days-ago">{getDaysAgo(date, disscussion.createTime)} </div>
+            <div className="owner-name">{getUserName(discussion.owner)}</div>
+            <div className="days-ago">{getDaysAgo(date, discussion.createdAt)} </div>
           </div>
           <div className="discussion-information-wrapper">
-            <div className="discussion-name">{disscussion.title}</div>
+            <div className="discussion-name">{discussion.title}</div>
             <div className="requested-amount">
               Requested amount <div className="amount">{formatPrice(common.balance)}</div>
             </div>
@@ -39,18 +39,18 @@ export default function DiscussionDetailModal({ disscussion, common }: Discussio
           <div className="line"></div>
         </div>
         <div className="down-side">
-          <p className="description">{disscussion.message}</p>
+          <p className="description">{discussion.description}</p>
         </div>
       </div>
       <div className="right-side">
         <div className="chat-wrapper">
-          {disscussion.discussionMessage?.map((m) => {
-            const mDate = new Date(m.createTime.seconds * 1000);
+          {discussion.messages?.map((m: any) => {
+            const mDate = new Date(m.createdAt);
             return (
-              <div className="message-wrapper">
+              <div key={m.id} className="message-wrapper">
                 <div className="icon-wrapper">
-                  {disscussion.owner?.photoURL ? (
-                    <img src={m.owner?.photoURL} alt={getUserName(m.owner)} />
+                  {discussion.owner?.photo ? (
+                    <img src={m.owner?.photo} alt={getUserName(m.owner)} />
                   ) : (
                     <span
                       className="initials"
@@ -62,7 +62,7 @@ export default function DiscussionDetailModal({ disscussion, common }: Discussio
                 </div>
                 <div className="message-text">
                   <div className="message-name">{getUserName(m.owner)}</div>
-                  <div className="message-content">{m.text}</div>
+                  <div className="message-content">{m.message}</div>
                 </div>
                 <div className="time-wrapper">{mDate.toLocaleDateString() + "," + mDate.toLocaleTimeString()}</div>
               </div>

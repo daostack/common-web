@@ -18,6 +18,7 @@ import { DiscussionMessagesExtension } from './Extensions/DiscussionMessages.ext
 import { DiscussionMessageReportsExtension } from './Extensions/DiscussionMessageReports.extension';
 import { DiscussionSubscriptionDiscussionExtension } from './Extensions/DiscussionSubscriptionDiscussion.extension';
 import { DiscussionOwnerExtension } from './Extensions/DiscussionOwner.extension';
+import { DiscussionMessageOwnerExtension } from './Extensions/DiscussionMessagesOwner.extension';
 
 import { DiscussionMessageCreatedSubscription } from './Subscriptions/DiscussionMessageCreated.subscription';
 
@@ -51,6 +52,7 @@ export const DiscussionTypes = [
   DiscussionMessageReportsExtension,
   DiscussionSubscriptionDiscussionExtension,
   DiscussionOwnerExtension,
+  DiscussionMessageOwnerExtension,
 
   CreateDiscussionInput,
   CreateDiscussionMutation,

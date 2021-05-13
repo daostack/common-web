@@ -322,6 +322,7 @@ export interface NexusGenObjects {
     message: string; // String!
     type: NexusGenEnums['DiscussionMessageType']; // DiscussionMessageType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    userId: string; // String!
   }
   DiscussionSubscription: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -518,9 +519,11 @@ export interface NexusGenFieldTypes {
     flag: NexusGenEnums['DiscussionMessageFlag']; // DiscussionMessageFlag!
     id: NexusGenScalars['UUID']; // UUID!
     message: string; // String!
+    owner: NexusGenRootTypes['User']; // User!
     reports: NexusGenRootTypes['Report'][]; // [Report!]!
     type: NexusGenEnums['DiscussionMessageType']; // DiscussionMessageType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    userId: string; // String!
   }
   DiscussionSubscription: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -766,9 +769,11 @@ export interface NexusGenFieldTypeNames {
     flag: 'DiscussionMessageFlag'
     id: 'UUID'
     message: 'String'
+    owner: 'User'
     reports: 'Report'
     type: 'DiscussionMessageType'
     updatedAt: 'DateTime'
+    userId: 'String'
   }
   DiscussionSubscription: { // field return type name
     createdAt: 'DateTime'
