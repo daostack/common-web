@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Loader } from "../../../../shared/components";
-
 import { CommonListItem } from "../../components";
 import { COMMON_PAGE_SIZE } from "../../constants";
 import { useGetCommonDataQuery } from "../../../../graphql";

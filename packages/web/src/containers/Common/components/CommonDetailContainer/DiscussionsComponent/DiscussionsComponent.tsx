@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Discussion } from "../../../../../graphql";
 import { getDaysAgo, getUserName } from "../../../../../shared/utils";
 import "./index.scss";

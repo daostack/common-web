@@ -3,7 +3,6 @@ import "firebase/auth";
 import React from "react";
 import firebase from "firebase/app";
 import { FirebaseAuthProvider, IfFirebaseUnAuthed, IfFirebaseAuthed } from "@react-firebase/auth";
-
 import { useAuthState } from "react-firebase-hooks/auth";
 
 // TODO: Replace with actual firebase creds

@@ -42,26 +42,24 @@ module.exports = {
     "eslint@typescript-eslint/no-explicit-any": 0,
     "@typescript-eslint/no-explicit-any": 0,
     "no-console": 1,
-    //   "import/order": [
-    //     "error",
-    //     {
-    //       groups: [
-    //         "builtin", // Built-in types are first
-    //         "external",
-    //         ["sibling", "parent"], // Then sibling and parent types. They can be mingled together
-    //         "index", // Then the index file
-    //         "object",
-    //         // Then the rest: internal and external type
-    //       ],
-    //       "newlines-between": "always",
-    //     },
-    //   ],
-    // },
-    "import/order": 0,
+    "import/order": [
+      "error",
+      {
+        groups: [
+          "builtin", // Built-in types are first
+          "external",
+          ["sibling", "parent"], // Then sibling and parent types. They can be mingled together
+          "index", // Then the index file
+          "object",
+          // Then the rest: internal and external type
+        ],
+        "newlines-between": "always",
+      },
+    ],
   },
-  // settings: {
-  //   react: {
-  //     version: "latest",
-  //   },
-  // },
+  settings: {
+    react: {
+      version: "latest",
+    },
+  },
 };
