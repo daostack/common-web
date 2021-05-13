@@ -18,7 +18,8 @@
         .inner-wrapper {
           width: 315px;
           height: 32px;
-          border-radius: 6px;
+          border-top-right-radius: 6px;
+          border-top-left-radius: 6px;
           background-color: #fff3d8;
           display: flex;
           margin-bottom: 24px;
@@ -127,11 +128,5 @@
   }
   .right-side {
     flex: 60;
-  }
-
-  .line {
-    height: 1px;
-    background-color: $light-gray;
-    width: 100%;
   }
 }

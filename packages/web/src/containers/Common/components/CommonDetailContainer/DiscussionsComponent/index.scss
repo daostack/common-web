@@ -1,10 +1,13 @@
+@import "../../../../../constants.scss";
+
 .discussions-component-wrapper {
   .discussion-item-wrapper {
     padding: 40px;
     border-radius: 14px;
     box-shadow: 0 3px 8px 0 #001a3614;
-    background-color: #ffffff;
+    background-color: $white;
     margin-bottom: 24px;
+    padding-bottom: 20px;
     .discussion-top-bar {
       display: flex;
       margin-bottom: 24px;
@@ -38,24 +41,15 @@
       .title {
         font-size: 18px;
         font-weight: bold;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.22;
-        letter-spacing: normal;
         color: #001a36;
         margin-bottom: 16px;
         cursor: pointer;
         &:hover {
-          color: #7786ff;
+          color: $purple;
         }
       }
       .description {
         font-size: 16px;
-        font-weight: normal;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.5;
-        letter-spacing: normal;
         color: #001a36;
         margin-bottom: 16px;
       }
@@ -66,17 +60,12 @@
         margin-bottom: 16px;
         color: #001a36;
         &:hover {
-          color: #7786ff;
+          color: $purple;
         }
-      }
-      .line {
-        margin: 0 -40px;
-        width: auto;
       }
     }
     .bottom-content {
       margin-top: 20px;
-      margin-bottom: -15px;
       display: flex;
       justify-content: space-between;
 
@@ -86,10 +75,6 @@
           margin-left: 8px;
           font-size: 16px;
           font-weight: bold;
-          font-stretch: normal;
-          font-style: normal;
-          line-height: 1.5;
-          letter-spacing: normal;
           color: #979bba;
           display: inline-block;
         }
@@ -97,10 +82,6 @@
       .view-all-discussions {
         font-size: 16px;
         font-weight: bold;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.5;
-        letter-spacing: normal;
         text-align: right;
         color: #7786ff;
         position: relative;
@@ -118,6 +99,14 @@
           right: -4px;
         }
       }
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .discussions-component-wrapper {
+    .discussion-item-wrapper {
+      padding: 20px;
     }
   }
 }

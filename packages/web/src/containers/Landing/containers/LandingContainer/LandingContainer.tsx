@@ -17,9 +17,9 @@ const LandingContainer = () => {
           <img src="icons/logo-all-white.svg" alt="common logo" className="logo" />
           <span className="main-title">Launch Collective Action.</span>
           <div className="dynamic-text-wrapper">
-            <span className="dynamic-text one">Catalyze a movement</span>
-            <span className="dynamic-text two">Fund Independent Journalism</span>
-            <span className="dynamic-text three">Start a Neighborhood Project</span>
+            <span className="dynamic-text one">Catalyze a movement,</span>
+            <span className="dynamic-text two">Fund Independent Journalism,</span>
+            <span className="dynamic-text three">Start a Neighborhood Project,</span>
           </div>
           <span className="main-title">Together.</span>
           <div className="mobile-apps-wrapper">

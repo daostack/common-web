@@ -3,12 +3,14 @@
 .proposals-component-wrapper {
   .discussion-item-wrapper {
     padding: 40px;
+    padding-top: 0;
     border-radius: 14px;
     box-shadow: 0 3px 8px 0 #001a3614;
     background-color: $white;
     margin-bottom: 24px;
+    padding-bottom: 20px;
     .state-wrapper {
-      margin: -40px -40px 24px -40px;
+      margin: 0 -40px;
       margin-bottom: 24px;
       .state-inner-wrapper {
         width: 100%;
@@ -50,7 +52,7 @@
       }
     }
     .countdown-wrapper {
-      margin: -40px -40px 24px -40px;
+      margin: 0 -40px;
       margin-bottom: 24px;
       .inner-wrapper {
         width: 100%;
@@ -144,14 +146,9 @@
           color: #7786ff;
         }
       }
-      .line {
-        margin: 0 -40px;
-        width: auto;
-      }
     }
     .bottom-content {
       margin-top: 20px;
-      margin-bottom: -15px;
       display: flex;
       justify-content: space-between;
       .discussion-count {
@@ -191,6 +188,22 @@
           position: absolute;
           right: -4px;
         }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .proposals-component-wrapper {
+    .discussion-item-wrapper {
+      padding: 20px;
+      padding-top: 0;
+      .state-wrapper {
+        margin: 0 -20px;
+      }
+      .countdown-wrapper {
+        margin-right: -20px;
+        margin-left: -20px;
       }
     }
   }

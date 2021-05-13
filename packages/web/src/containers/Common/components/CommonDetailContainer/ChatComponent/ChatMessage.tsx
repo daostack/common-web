@@ -28,7 +28,9 @@ export default function ChatMessage({ disscussionMessage }: ChatMessageProps) {
         <div className="message-name">{getUserName(disscussionMessage.owner)}</div>
         <div className="message-content">{disscussionMessage.text}</div>
       </div>
-      <div className="time-wrapper">{mDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</div>
+      <div className="time-wrapper">
+        {mDate.toLocaleTimeString([], { hour12: false, hour: "2-digit", minute: "2-digit" })}
+      </div>
     </div>
   );
 }

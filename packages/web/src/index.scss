@@ -52,9 +52,9 @@ body {
     }
 
     .line {
+      margin: 0 -40px;
       height: 1px;
       background-color: $light-gray;
-      width: 100%;
     }
 
     /* Remove inputs border highlight */
@@ -97,6 +97,9 @@ body {
       }
       .button-blue {
         width: 100%;
+      }
+      .line {
+        margin: 0 -20px
       }
     }
   }
