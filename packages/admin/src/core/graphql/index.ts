@@ -845,6 +845,11 @@ export type NotificationTemplateWhereInput = {
   type?: Maybe<NotificationTemplateType>;
 };
 
+export type NotificationSettingsWhereInput = {
+  /** The type of the notification */
+  type?: Maybe<NotificationType>;
+};
+
 export type NotificationOrderByInput = {
   createdAt?: Maybe<SortOrder>;
   updatedAt?: Maybe<SortOrder>;
@@ -946,6 +951,16 @@ export type CreateRoleInput = {
   displayName: Scalars['String'];
   description: Scalars['String'];
   permissions: Array<Scalars['String']>;
+};
+
+export type UpdateNotificationTemplateInput = {
+  id: Scalars['String'];
+  subject?: Maybe<Scalars['String']>;
+  content?: Maybe<Scalars['String']>;
+  fromEmail?: Maybe<Scalars['String']>;
+  fromName?: Maybe<Scalars['String']>;
+  bcc?: Maybe<Scalars['String']>;
+  bccName?: Maybe<Scalars['String']>;
 };
 
 export type CreateNotificationEventSettingsInput = {
@@ -1066,6 +1081,11 @@ export type QueryNotificationTemplatesArgs = {
 };
 
 
+export type QueryNotificationSettingsArgs = {
+  where?: Maybe<NotificationSettingsWhereInput>;
+};
+
+
 export type QueryNotificationsArgs = {
   paginate: PaginateInput;
 };
@@ -1093,6 +1113,7 @@ export type Mutation = {
   createDiscussion: Discussion;
   createDiscussionMessage: DiscussionMessage;
   changeDiscussionSubscriptionType?: Maybe<DiscussionSubscription>;
+  updateNotificationTemplate?: Maybe<NotificationTemplate>;
   createNotificationEventSettings?: Maybe<NotificationEventSettings>;
   updateNotificationSettings?: Maybe<NotificationSystemSettings>;
   createNotificationTemplate?: Maybe<NotificationTemplate>;
@@ -1194,6 +1215,11 @@ export type MutationCreateDiscussionMessageArgs = {
 export type MutationChangeDiscussionSubscriptionTypeArgs = {
   id: Scalars['ID'];
   type: DiscussionSubscriptionType;
+};
+
+
+export type MutationUpdateNotificationTemplateArgs = {
+  input: UpdateNotificationTemplateInput;
 };
 
 
@@ -1409,10 +1435,28 @@ export type AllTemplatesForTypeQueryVariables = Exact<{
 export type AllTemplatesForTypeQuery = (
   { __typename?: 'Query' }
   & {
-  notificationTemplates?: Maybe<Array<Maybe<(
+  notificationSettings?: Maybe<Array<Maybe<(
+    { __typename?: 'NotificationSystemSettings' }
+    & Pick<NotificationSystemSettings, 'sendEmail' | 'sendPush' | 'showInUserFeed'>
+    )>>>, notificationTemplates?: Maybe<Array<Maybe<(
     { __typename?: 'NotificationTemplate' }
-    & Pick<NotificationTemplate, 'templateType' | 'language' | 'subject' | 'content' | 'from' | 'fromName'>
+    & Pick<NotificationTemplate, 'id' | 'templateType' | 'language' | 'subject' | 'content' | 'from' | 'fromName'>
     )>>>
+}
+  );
+
+export type UpdateTemplateMutationVariables = Exact<{
+  input: UpdateNotificationTemplateInput;
+}>;
+
+
+export type UpdateTemplateMutation = (
+  { __typename?: 'Mutation' }
+  & {
+  updateNotificationTemplate?: Maybe<(
+    { __typename?: 'NotificationTemplate' }
+    & Pick<NotificationTemplate, 'id'>
+    )>
 }
   );
 
@@ -2025,13 +2069,18 @@ export type CreateNotificationTemplateMutationFn = Apollo.MutationFunction<Creat
 export function useCreateNotificationTemplateMutation(baseOptions?: Apollo.MutationHookOptions<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>) {
   return Apollo.useMutation<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>(CreateNotificationTemplateDocument, baseOptions);
 }
-
 export type CreateNotificationTemplateMutationHookResult = ReturnType<typeof useCreateNotificationTemplateMutation>;
 export type CreateNotificationTemplateMutationResult = Apollo.MutationResult<CreateNotificationTemplateMutation>;
 export type CreateNotificationTemplateMutationOptions = Apollo.BaseMutationOptions<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>;
 export const AllTemplatesForTypeDocument = gql`
   query allTemplatesForType($forType: NotificationType!) {
+    notificationSettings(where: {type: $forType}) {
+      sendEmail
+      sendPush
+      showInUserFeed
+    }
     notificationTemplates(where: {forType: $forType}) {
+      id
       templateType
       language
       subject
@@ -2069,6 +2118,39 @@ export function useAllTemplatesForTypeLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type AllTemplatesForTypeQueryHookResult = ReturnType<typeof useAllTemplatesForTypeQuery>;
 export type AllTemplatesForTypeLazyQueryHookResult = ReturnType<typeof useAllTemplatesForTypeLazyQuery>;
 export type AllTemplatesForTypeQueryResult = Apollo.QueryResult<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>;
+export const UpdateTemplateDocument = gql`
+  mutation UpdateTemplate($input: UpdateNotificationTemplateInput!) {
+    updateNotificationTemplate(input: $input) {
+      id
+    }
+  }
+`;
+export type UpdateTemplateMutationFn = Apollo.MutationFunction<UpdateTemplateMutation, UpdateTemplateMutationVariables>;
+
+/**
+ * __useUpdateTemplateMutation__
+ *
+ * To run a mutation, you first call `useUpdateTemplateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTemplateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTemplateMutation, { data, loading, error }] = useUpdateTemplateMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateTemplateMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTemplateMutation, UpdateTemplateMutationVariables>) {
+  return Apollo.useMutation<UpdateTemplateMutation, UpdateTemplateMutationVariables>(UpdateTemplateDocument, baseOptions);
+}
+
+export type UpdateTemplateMutationHookResult = ReturnType<typeof useUpdateTemplateMutation>;
+export type UpdateTemplateMutationResult = Apollo.MutationResult<UpdateTemplateMutation>;
+export type UpdateTemplateMutationOptions = Apollo.BaseMutationOptions<UpdateTemplateMutation, UpdateTemplateMutationVariables>;
 export const GetNotificaitonTemplatesDocument = gql`
   query getNotificaitonTemplates($paginate: PaginateInput!, $where: NotificationTemplateWhereInput) {
     notificationTemplates(paginate: $paginate, where: $where) {

@@ -69,7 +69,7 @@ const NotificationTemplatesPage: NextPage = () => {
 
           localizations: (
             <React.Fragment>
-              {related.map(x => (
+              {lodash.uniqBy(related, 'language').map(x => (
                 <Tag type="success" style={{ marginRight: '1rem' }}>
                   {x.language}
                 </Tag>

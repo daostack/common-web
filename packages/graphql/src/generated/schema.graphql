@@ -502,6 +502,7 @@ type Mutation {
   reportDiscussionMessage(input: ReportDiscussionMessageInput!): Report!
   unassignRole(roleId: ID!, userId: ID!): Void
   updateNotificationSettings(input: UpdateNotificationSettingsInput!): NotificationSystemSettings
+  updateNotificationTemplate(input: UpdateNotificationTemplateInput!): NotificationTemplate
   voidUserNotificationToken(tokenId: ID!): UserNotificationToken!
   whitelistCommon(commonId: String!): Boolean
 }
@@ -589,6 +590,11 @@ enum NotificationSeenStatus {
   Done
   NotSeen
   Seen
+}
+
+input NotificationSettingsWhereInput {
+  """The type of the notification"""
+  type: NotificationType
 }
 
 type NotificationSystemSettings implements BaseEntity {
@@ -764,7 +770,7 @@ type Query {
   getStatistics(where: StatisticsWhereInput): [Statistic]
   notificationEventOptions: NotificationEventOptions
   notificationEventSettings(paginate: PaginateInput!): [NotificationEventSettings]
-  notificationSettings: [NotificationSystemSettings]
+  notificationSettings(where: NotificationSettingsWhereInput): [NotificationSystemSettings]
   notificationTemplateOptions: NotificationTemplateOptions
   notificationTemplates(paginate: PaginateInput, where: NotificationTemplateWhereInput): [NotificationTemplate]
 
@@ -951,6 +957,16 @@ input UpdateNotificationSettingsInput {
   sendEmail: Boolean
   sendPush: Boolean
   showInUserFeed: Boolean
+}
+
+input UpdateNotificationTemplateInput {
+  bcc: String
+  bccName: String
+  content: String
+  fromEmail: String
+  fromName: String
+  id: String!
+  subject: String
 }
 
 type User {

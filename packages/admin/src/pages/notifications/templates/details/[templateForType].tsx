@@ -1,18 +1,41 @@
 import { NextPage } from 'next';
 import { gql } from '@apollo/client';
-import { Breadcrumbs, Text, Loading, Spacer, Description, Divider, Table } from '@geist-ui/react';
+import {
+  Breadcrumbs,
+  Text,
+  Loading,
+  Spacer,
+  Divider,
+  Table,
+  Note,
+  Modal,
+  Button,
+  Input,
+  Textarea
+} from '@geist-ui/react';
 import { Link } from '@components/Link';
 import React from 'react';
 import { useRouter } from 'next/router';
-import { useAllTemplatesForTypeQuery } from '@core/graphql';
+import { useAllTemplatesForTypeQuery, NotificationTemplate, useUpdateTemplateMutation } from '@core/graphql';
 import { HasPermission } from '@components/HasPermission';
-import { PlusCircle } from '@geist-ui/react-icons';
+import { PlusCircle, Edit3 } from '@geist-ui/react-icons';
 
 const GetAllTemplatedForType = gql`
   query allTemplatesForType($forType: NotificationType!) {
+    notificationSettings(where: {
+      type: $forType
+    }) {
+      sendEmail
+      sendPush
+
+      showInUserFeed
+    }
+
     notificationTemplates(where: {
       forType: $forType
     }) {
+      id
+
       templateType
 
       language
@@ -26,18 +49,69 @@ const GetAllTemplatedForType = gql`
   }
 `;
 
+const UpdateTemplate = gql`
+  mutation UpdateTemplate($input: UpdateNotificationTemplateInput!) {
+    updateNotificationTemplate(input: $input) {
+      id
+    }
+  }
+`;
+
 const TemplateDetailsPage: NextPage = () => {
   const router = useRouter();
 
   // State
-  const [editMode, setEditMode] = React.useState();
+  const [editMode, setEditMode] = React.useState<NotificationTemplate>();
 
-  // Data fetching
-  const { data, loading } = useAllTemplatesForTypeQuery({
+  // API access
+  const { data, loading, refetch } = useAllTemplatesForTypeQuery({
     variables: {
       forType: router.query['templateForType'] as any
     }
   });
+
+  const [update, { loading: updating }] = useUpdateTemplateMutation();
+
+  // Action
+
+  const onOpenEdit = (templateId: string) => {
+    return () => {
+      setEditMode(
+        data.notificationTemplates
+          .find(x => x.id === templateId) as any
+      );
+    };
+  };
+
+  const onCloseEdit = () => {
+    setEditMode(null);
+  };
+
+  const onEditValueChange = (key: 'subject' | 'content') => {
+    return (value) => {
+      setEditMode(e => ({
+        ...e,
+        [key]: value?.target?.value
+      }));
+    };
+  };
+
+  const onSaveUpdate = async () => {
+    await update({
+      variables: {
+        input: {
+          id: editMode.id,
+
+          subject: editMode.subject,
+          content: editMode.content
+        }
+      }
+    });
+
+    await refetch();
+
+    onCloseEdit();
+  };
 
   return (
     <React.Fragment>
@@ -66,6 +140,57 @@ const TemplateDetailsPage: NextPage = () => {
 
       {data && (
         <React.Fragment>
+          <Modal open={!!editMode} onClose={onCloseEdit} width="40vw">
+            <Modal.Content>
+              <Text h4>Edit localized {editMode?.templateType} in {editMode?.language}</Text>
+
+
+              <Text b>Subject</Text>
+              <Input
+                width="100%"
+                onChange={onEditValueChange('subject')}
+                value={editMode?.subject}
+              />
+
+              <Spacer y={.7}/>
+
+              <Text b>Content</Text>
+              <Textarea
+                width="100%"
+                onChange={onEditValueChange('content')}
+                value={editMode?.content}
+              />
+
+              <Spacer y={1}/>
+
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-end'
+                }}
+              >
+                <Button
+                  onClick={onSaveUpdate}
+                  loading={updating}
+                >
+                  Save Changes
+                </Button>
+              </div>
+            </Modal.Content>
+          </Modal>
+
+          {data.notificationSettings[0]?.sendEmail && (!data.notificationTemplates.some(x => x.templateType === 'EmailNotification')) && (
+            <Note type="error">
+              The notification is configured to send email notifications, but there is no template for that
+            </Note>
+          )}
+
+          {data.notificationSettings[0]?.sendPush && (!data.notificationTemplates.some(x => x.templateType === 'PushNotification')) && (
+            <Note type="error" style={{ margin: '1rem 0' }}>
+              The notification is configured to send push notifications, but there is no template for that
+            </Note>
+          )}
+
           <Text h2>General template configuration</Text>
 
           <Table data={[{
@@ -110,17 +235,44 @@ const TemplateDetailsPage: NextPage = () => {
 
 
             {data.notificationTemplates.filter(x => x.templateType === 'PushNotification').map(n => (
-              <React.Fragment>
-                <Text h6>Localized push notification in {n.language}</Text>
+              <div style={{ marginBottom: '2rem' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: '1rem'
+                  }}
+                >
+                  <Text
+                    h3
+                    style={{ margin: '0 1rem 0 0' }}
+                  >
+                    Localized push notification in {n.language}
+                  </Text>
 
-                <Description
-                  title={n.subject}
-                  content={n.content}
+                  <div
+                    onClick={onOpenEdit(n.id)}
+                    style={{
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <Edit3/>
+                  </div>
+                </div>
+
+
+                <Text h5>{n.subject}</Text>
+                <Text
+                  p
+                  dangerouslySetInnerHTML={{
+                    __html: n.content
+                  }}
                 />
 
                 <Spacer/>
-              </React.Fragment>
-            ))}</React.Fragment>
+              </div>
+            ))}
+          </React.Fragment>
 
           <React.Fragment>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -158,15 +310,15 @@ const TemplateDetailsPage: NextPage = () => {
 
             {data.notificationTemplates.filter(x => x.templateType === 'EmailNotification').map(n => (
               <React.Fragment>
-                <Text>Localized email in {n.language}</Text>
+                <Text h3>Localized email in {n.language}</Text>
 
-                <Description
-                  title={n.subject}
-                  content={(
-                    <div dangerouslySetInnerHTML={{
-                      __html: n.content
-                    }}/>
-                  )}
+
+                <Text h5>{n.subject}</Text>
+                <Text
+                  p
+                  dangerouslySetInnerHTML={{
+                    __html: n.content
+                  }}
                 />
 
                 <Spacer/>

@@ -179,6 +179,9 @@ export interface NexusGenInputs {
     status?: NexusGenEnums['SortOrder'] | null; // SortOrder
     updatedAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
   }
+  NotificationSettingsWhereInput: { // input type
+    type?: NexusGenEnums['NotificationType'] | null; // NotificationType
+  }
   NotificationTemplateWhereInput: { // input type
     forType?: NexusGenEnums['NotificationType'] | null; // NotificationType
     language?: NexusGenEnums['NotificationLanguage'] | null; // NotificationLanguage
@@ -252,6 +255,15 @@ export interface NexusGenInputs {
     sendEmail?: boolean | null; // Boolean
     sendPush?: boolean | null; // Boolean
     showInUserFeed?: boolean | null; // Boolean
+  }
+  UpdateNotificationTemplateInput: { // input type
+    bcc?: string | null; // String
+    bccName?: string | null; // String
+    content?: string | null; // String
+    fromEmail?: string | null; // String
+    fromName?: string | null; // String
+    id: string; // String!
+    subject?: string | null; // String
   }
   UserWhereInput: { // input type
     email?: NexusGenInputs['StringFilter'] | null; // StringFilter
@@ -667,6 +679,7 @@ export interface NexusGenFieldTypes {
     reportDiscussionMessage: NexusGenRootTypes['Report']; // Report!
     unassignRole: NexusGenScalars['Void'] | null; // Void
     updateNotificationSettings: NexusGenRootTypes['NotificationSystemSettings'] | null; // NotificationSystemSettings
+    updateNotificationTemplate: NexusGenRootTypes['NotificationTemplate'] | null; // NotificationTemplate
     voidUserNotificationToken: NexusGenRootTypes['UserNotificationToken']; // UserNotificationToken!
     whitelistCommon: boolean | null; // Boolean
   }
@@ -985,6 +998,7 @@ export interface NexusGenFieldTypeNames {
     reportDiscussionMessage: 'Report'
     unassignRole: 'Void'
     updateNotificationSettings: 'NotificationSystemSettings'
+    updateNotificationTemplate: 'NotificationTemplate'
     voidUserNotificationToken: 'UserNotificationToken'
     whitelistCommon: 'Boolean'
   }
@@ -1275,6 +1289,9 @@ export interface NexusGenArgTypes {
     updateNotificationSettings: { // args
       input: NexusGenInputs['UpdateNotificationSettingsInput']; // UpdateNotificationSettingsInput!
     }
+    updateNotificationTemplate: { // args
+      input: NexusGenInputs['UpdateNotificationTemplateInput']; // UpdateNotificationTemplateInput!
+    }
     voidUserNotificationToken: { // args
       tokenId: string; // ID!
     }
@@ -1309,6 +1326,9 @@ export interface NexusGenArgTypes {
     }
     notificationEventSettings: { // args
       paginate: NexusGenInputs['PaginateInput']; // PaginateInput!
+    }
+    notificationSettings: { // args
+      where?: NexusGenInputs['NotificationSettingsWhereInput'] | null; // NotificationSettingsWhereInput
     }
     notificationTemplates: { // args
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
