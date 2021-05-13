@@ -239,10 +239,9 @@ export default function CommonDetail() {
           {screenSize === ScreenSize.Desktop && tab === "discussions" && (
             <DiscussionDetailModal disscussion={currentDisscussion} common={common} />
           )}
-          {tab === "proposals" ||
-            (tab === "history" && screenSize === ScreenSize.Desktop && (
-              <ProposalDetailModal proposal={currentProposal} common={common} />
-            ))}
+          {screenSize === ScreenSize.Desktop && (tab === "proposals" || tab === "history") && (
+            <ProposalDetailModal proposal={currentProposal} common={common} />
+          )}
           {screenSize === ScreenSize.Mobile && (
             <div className="get-common-app-wrapper">
               <img src="/icons/logo-all-white.svg" alt="logo" className="logo" />
