@@ -20,5 +20,13 @@ export const DiscussionType = objectType({
     t.nonNull.field('type', {
       type: 'DiscussionType'
     });
+
+    t.nonNull.string('userId');
+    
+    t.nonNull.field('owner', {
+      type: 'User'
+    });
+
+    
   }
 });

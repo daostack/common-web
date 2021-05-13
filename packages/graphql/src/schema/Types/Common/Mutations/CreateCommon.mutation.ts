@@ -18,6 +18,12 @@ export const CreateCommonInput = inputObjectType({
     t.string('action');
     t.string('byline');
     t.string('description');
+    t.list.nonNull.field('links', {
+      type: 'CommonLinkInput'
+    });
+    t.list.nonNull.field('rules', {
+      type: 'CommonLinkInput'
+    });
   }
 });
 

@@ -1,6 +1,7 @@
 import * as z from 'zod';
 
 export { ProposalLinkSchema } from './schemas/ProposalLink.schema';
+export { LinkSchema } from './schemas/Link.schema';
 export { BillingDetailsSchema } from './schemas/BillingDetails.schema';
 export { ProposalImageSchema } from './schemas/ProposalImage.schema';
 export { ProposalFileSchema } from './schemas/ProposalFile.schema';

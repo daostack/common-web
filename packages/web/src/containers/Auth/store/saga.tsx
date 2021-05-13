@@ -7,9 +7,10 @@ import * as actions from "./actions";
 import firebase from "../../../shared/utils/firebase";
 
 import { startLoading, stopLoading } from "../../../shared/store/actions";
-import store from "../../../index";
 import { User } from "../../../shared/models";
 import { GoogleAuthResultInterface } from "../interface";
+
+
 
 function* socialLoginSaga({ payload }: AnyAction & { payload: string }) {
   try {
@@ -27,7 +28,6 @@ function* socialLoginSaga({ payload }: AnyAction & { payload: string }) {
           tokenHandler.set(credentials.oauthAccessToken);
           tokenHandler.setUser(user);
           history.push("/");
-          store.dispatch(actions.socialLogin.success());
         }
       });
   } catch (error) {

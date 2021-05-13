@@ -70,6 +70,10 @@ export interface NexusGenInputs {
     name: string; // String!
     postalCode: string; // String!
   }
+  CommonLinkInput: { // input type
+    title: string; // String!
+    url: string; // String!
+  }
   CommonMemberOrderByInput: { // input type
     createdAt: NexusGenEnums['SortOrder']; // SortOrder!
   }
@@ -90,7 +94,9 @@ export interface NexusGenInputs {
     fundingMinimumAmount: number; // Int!
     fundingType: NexusGenEnums['FundingType']; // FundingType!
     image: string; // String!
+    links?: NexusGenInputs['CommonLinkInput'][] | null; // [CommonLinkInput!]
     name: string; // String!
+    rules?: NexusGenInputs['CommonLinkInput'][] | null; // [CommonLinkInput!]
   }
   CreateDiscussionInput: { // input type
     commonId: string; // ID!
@@ -154,6 +160,11 @@ export interface NexusGenInputs {
   DiscussionSubscriptionOrderByInput: { // input type
     createdAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
     updatedAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
+  DiscussionWhereInput: { // input type
+    commonId?: NexusGenScalars['UUID'] | null; // UUID
+    commonMemberId?: NexusGenScalars['UUID'] | null; // UUID
+    userId?: string | null; // ID
   }
   EventOrderByInput: { // input type
     createdAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -304,8 +315,10 @@ export interface NexusGenObjects {
     fundingType: NexusGenEnums['FundingType']; // FundingType!
     id: string; // ID!
     image: string; // String!
+    links?: NexusGenScalars['JSON'] | null; // JSON
     name: string; // String!
     raised: number; // Int!
+    rules?: NexusGenScalars['JSON'] | null; // JSON
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     whitelisted: boolean; // Boolean!
   }
@@ -336,6 +349,7 @@ export interface NexusGenObjects {
     topic: string; // String!
     type: NexusGenEnums['DiscussionType']; // DiscussionType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    userId: string; // String!
   }
   DiscussionMessage: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -344,6 +358,7 @@ export interface NexusGenObjects {
     message: string; // String!
     type: NexusGenEnums['DiscussionMessageType']; // DiscussionMessageType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    userId: string; // String!
   }
   DiscussionSubscription: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -531,11 +546,13 @@ export interface NexusGenFieldTypes {
     fundingType: NexusGenEnums['FundingType']; // FundingType!
     id: string; // ID!
     image: string; // String!
+    links: NexusGenScalars['JSON'] | null; // JSON
     members: Array<NexusGenRootTypes['CommonMember'] | null>; // [CommonMember]!
     name: string; // String!
     proposals: NexusGenRootTypes['Proposal'][]; // [Proposal!]!
     raised: number; // Int!
     reports: NexusGenRootTypes['Report'][]; // [Report!]!
+    rules: NexusGenScalars['JSON'] | null; // JSON
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     whitelisted: boolean; // Boolean!
   }
@@ -568,18 +585,22 @@ export interface NexusGenFieldTypes {
     id: NexusGenScalars['UUID']; // UUID!
     latestMessage: NexusGenScalars['DateTime']; // DateTime!
     messages: NexusGenRootTypes['DiscussionMessage'][]; // [DiscussionMessage!]!
+    owner: NexusGenRootTypes['User'] | null; // User
     topic: string; // String!
     type: NexusGenEnums['DiscussionType']; // DiscussionType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    userId: string; // String!
   }
   DiscussionMessage: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     flag: NexusGenEnums['DiscussionMessageFlag']; // DiscussionMessageFlag!
     id: NexusGenScalars['UUID']; // UUID!
     message: string; // String!
+    owner: NexusGenRootTypes['User']; // User!
     reports: NexusGenRootTypes['Report'][]; // [Report!]!
     type: NexusGenEnums['DiscussionMessageType']; // DiscussionMessageType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    userId: string; // String!
   }
   DiscussionSubscription: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -715,6 +736,7 @@ export interface NexusGenFieldTypes {
     common: NexusGenRootTypes['Common'] | null; // Common
     commons: Array<NexusGenRootTypes['Common'] | null> | null; // [Common]
     discussion: NexusGenRootTypes['Discussion'] | null; // Discussion
+    discussions: Array<NexusGenRootTypes['Discussion'] | null> | null; // [Discussion]
     events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     generateUserAuthToken: string; // String!
     getStatistics: Array<NexusGenRootTypes['Statistic'] | null> | null; // [Statistic]
@@ -826,11 +848,13 @@ export interface NexusGenFieldTypeNames {
     fundingType: 'FundingType'
     id: 'ID'
     image: 'String'
+    links: 'JSON'
     members: 'CommonMember'
     name: 'String'
     proposals: 'Proposal'
     raised: 'Int'
     reports: 'Report'
+    rules: 'JSON'
     updatedAt: 'DateTime'
     whitelisted: 'Boolean'
   }
@@ -863,18 +887,22 @@ export interface NexusGenFieldTypeNames {
     id: 'UUID'
     latestMessage: 'DateTime'
     messages: 'DiscussionMessage'
+    owner: 'User'
     topic: 'String'
     type: 'DiscussionType'
     updatedAt: 'DateTime'
+    userId: 'String'
   }
   DiscussionMessage: { // field return type name
     createdAt: 'DateTime'
     flag: 'DiscussionMessageFlag'
     id: 'UUID'
     message: 'String'
+    owner: 'User'
     reports: 'Report'
     type: 'DiscussionMessageType'
     updatedAt: 'DateTime'
+    userId: 'String'
   }
   DiscussionSubscription: { // field return type name
     createdAt: 'DateTime'
@@ -1010,6 +1038,7 @@ export interface NexusGenFieldTypeNames {
     common: 'Common'
     commons: 'Common'
     discussion: 'Discussion'
+    discussions: 'Discussion'
     events: 'Event'
     generateUserAuthToken: 'String'
     getStatistics: 'Statistic'
@@ -1218,6 +1247,10 @@ export interface NexusGenArgTypes {
     }
     discussion: { // args
       id: string; // ID!
+    }
+    discussions: { // args
+      paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
+      where?: NexusGenInputs['DiscussionWhereInput'] | null; // DiscussionWhereInput
     }
     events: { // args
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput

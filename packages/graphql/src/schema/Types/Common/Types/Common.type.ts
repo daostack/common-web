@@ -31,6 +31,9 @@ export const CommonType = objectType({
       description: 'The total amount of money that the common has raised. In cents'
     });
 
+    t.json('links');
+    t.json('rules');
+
     t.nonNull.string('image');
     t.string('description');
     t.string('action');

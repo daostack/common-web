@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Common } from "../../../../../shared/models";
+import { Common } from "../../../../../graphql";
 import { formatPrice } from "../../../../../shared/utils";
 import "./index.scss";
 
@@ -16,7 +16,7 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
           <img src={common.image} alt={common.name} />
           <div className="common-information">
             <div className="name"> {common.name}</div>
-            {common.metadata?.description && <div className="description">{common.metadata?.description}</div>}
+            <div className="description">{common?.description}</div>
           </div>
         </div>
         <div className="additional-information">
