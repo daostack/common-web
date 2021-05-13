@@ -206,6 +206,7 @@
     flex-direction: column;
     align-items: center;
     padding: 150px 0; // to make the background more visible
+    margin-bottom: 60px;
   }
 }
 
@@ -270,6 +271,9 @@
         margin-top: 30px;
         width: 350px;
       }
+    }
+    .landing-bottom {
+      margin-bottom: unset;
     }
   }
 }

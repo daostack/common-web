@@ -69,7 +69,7 @@ export default function ProposalItemComponent({ proposal, loadProposalDetail }: 
           <img src="/icons/discussions.svg" alt="discussions" />
           <div className="count">{proposal.discussionMessage?.length || 0}</div>
         </div>
-        {(proposal?.discussionMessage?.length || 0) > 0 && (
+        {proposal && (
           <div className="view-all-discussions" onClick={() => loadProposalDetail(proposal)}>
             View proposal
           </div>
