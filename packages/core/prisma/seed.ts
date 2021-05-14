@@ -1,10 +1,12 @@
 import { PrismaClient, StatisticType } from '@prisma/client';
+import { allPermissions } from '../src/domain/validation/permissions';
+import { seedNotificationSystemSetting } from './seed/notificationSystemSettings';
 
 export const seeder = new PrismaClient();
 
 async function main() {
   // Seed Notification Settings
-  // await seedNotificationSystemSetting();
+  await seedNotificationSystemSetting();
   // await seedNotificationTemplated();
 
   // Import firestore
@@ -21,29 +23,16 @@ async function main() {
     create: {
       name: 'admin',
       displayName: 'Admin',
-      description: 'The ultimate role with all permissions'
+      description: 'The ultimate role with all permissions',
+      permissions: allPermissions
     },
 
     update: {
-      permissions: [
-        'admin.report.read',
-        'admin.report.act',
-
-        'admin.roles.read',
-        'admin.roles.create',
-        'admin.roles.update',
-
-        'admin.roles.permissions.add',
-        'admin.roles.permissions.remove',
-
-        'admin.roles.assign',
-        'admin.roles.unassign',
-
-        'user.permissions.read'
-      ]
+      permissions: allPermissions
     }
   });
 
+  // Create the global statistics
   await seeder.statistic.create({
     data: {
       type: StatisticType.AllTime,

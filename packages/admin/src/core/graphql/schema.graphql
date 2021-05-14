@@ -12,7 +12,7 @@ scalar JSON
 """A field whose value is a generic Universally Unique Identifier: https://en.wikipedia.org/wiki/Universally_unique_identifier."""
 scalar UUID
 type User {
-  """The system Id of the user"""
+  """The settings Id of the user"""
   id: ID!
   """The date, at which the item was created"""
   createdAt: DateTime!
@@ -605,6 +605,10 @@ type NotificationTemplate implements BaseEntity {
   bcc: String
   bccName: String
 }
+type NotificationEventOptions {
+  availableNotifications: [NotificationType!]!
+  availableEvents: [EventType!]!
+}
 type NotificationEventSettings implements BaseEntity {
   """The main identifier of the item"""
   id: UUID!
@@ -619,6 +623,23 @@ type NotificationEventSettings implements BaseEntity {
   description: String!
   sendNotificationType: NotificationType!
   onEvent: EventType!
+}
+type NotificationSystemSettings implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  type: NotificationType!
+  sendEmail: Boolean!
+  sendPush: Boolean!
+  showInUserFeed: Boolean!
+}
+type NotificationTemplateOptions {
+  languages: [NotificationLanguage]!
+  templateTypes: [NotificationTemplateType]!
+  notificationTypes: [NotificationType]!
 }
 input NotificationWhereInput {
   seenStatus: NotificationSeenStatus
@@ -635,6 +656,10 @@ input NotificationTemplateWhereInput {
   language: NotificationLanguage
   forType: NotificationType
   type: NotificationTemplateType
+}
+input NotificationSettingsWhereInput {
+  """The type of the notification"""
+  type: NotificationType
 }
 input NotificationOrderByInput {
   createdAt: SortOrder
@@ -725,6 +750,15 @@ input CreateRoleInput {
   description: String!
   permissions: [String!]!
 }
+input UpdateNotificationTemplateInput {
+  id: String!
+  subject: String
+  content: String
+  fromEmail: String
+  fromName: String
+  bcc: String
+  bccName: String
+}
 input CreateNotificationEventSettingsInput {
   sendToEveryone: Boolean!
   sendToCommon: Boolean!
@@ -732,6 +766,21 @@ input CreateNotificationEventSettingsInput {
   description: String!
   sendNotificationType: NotificationType!
   onEvent: EventType!
+}
+input UpdateNotificationSettingsInput {
+  id: String!
+  showInUserFeed: Boolean
+  sendPush: Boolean
+  sendEmail: Boolean
+}
+input CreateNotificationTemplateInput {
+  forType: NotificationType!
+  language: NotificationLanguage!
+  templateType: NotificationTemplateType!
+  subject: String!
+  content: String!
+  fromEmail: String
+  fromName: String
 }
 type Query {
   """Provide ID to fetch specific user or do not pass anything to get the currently authenticated user"""
@@ -746,13 +795,16 @@ type Query {
   proposals(where: ProposalWhereInput, paginate: PaginateInput): [Proposal]
   getStatistics(where: StatisticsWhereInput): [Statistic]
   discussion(id: ID!): Discussion
+  notificationTemplateOptions: NotificationTemplateOptions
+  notificationEventOptions: NotificationEventOptions
   notificationEventSettings(paginate: PaginateInput!): [NotificationEventSettings]
   notificationTemplates(where: NotificationTemplateWhereInput, paginate: PaginateInput): [NotificationTemplate]
+  notificationSettings(where: NotificationSettingsWhereInput): [NotificationSystemSettings]
   """List of all notifications, readable only by the admin"""
   notifications(paginate: PaginateInput!): [Notification]
 }
 type Mutation {
-  """Creates new user in the system"""
+  """Creates new user in the settings"""
   createUser(input: CreateUserInput!): User!
   createUserNotificationToken(input: CreateUserNotificationTokenInput!): UserNotificationToken!
   voidUserNotificationToken(tokenId: ID!): UserNotificationToken!
@@ -778,7 +830,10 @@ type Mutation {
     """The new subscription type"""
     type: DiscussionSubscriptionType!
   ): DiscussionSubscription
+  updateNotificationTemplate(input: UpdateNotificationTemplateInput!): NotificationTemplate
   createNotificationEventSettings(input: CreateNotificationEventSettingsInput!): NotificationEventSettings
+  updateNotificationSettings(input: UpdateNotificationSettingsInput!): NotificationSystemSettings
+  createNotificationTemplate(input: CreateNotificationTemplateInput!): NotificationTemplate
 }
 type Subscription {
   onProposalChange(

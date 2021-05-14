@@ -25,6 +25,16 @@ import { NotificationTemplateType } from './Types/NotificationTemplate.type';
 import { NotificationTemplateTypeEnum } from './Enums/NotificationTemplateType.enum';
 import { NotificationTemplateWhereInput } from './Inputs/NotificationTemplateWhere.input';
 import { GetNotificationTemplatesQuery } from './Queries/GetNotificationTemplates.query';
+import { NotificationTemplateOptionsType } from './Types/NotificationTemplateOptions.type';
+import { GetNotificationTemplateOptionsQuery } from './Queries/GetNotificationTemplateOptions.query';
+import { CreateNotificationTemplateMutation } from './Mutations/CreateNotificationTemplate.mutation';
+import { NotificationEventOptionsType } from './Types/NotificationEventOptions.type';
+import { GetNotificationEventOptionsQuery } from './Queries/GetNotificationEventOptions.query';
+import { NotificationSystemSettingsType } from './Types/NotificationSystemSettings.type';
+import { GetNotificationSettingsQuery } from './Queries/GetNotificationSettings.query';
+import { UpdateNotificationSettingsMutation } from './Mutations/UpdateNotificationSettings.mutation';
+import { NotificationSettingsWhereInput } from './Inputs/NotificationSettingsWhere.input';
+import { UpdateNotificationTemplateMutation } from './Mutations/UpdateNotificationTemplate.mutation';
 
 export const NotificationTypes = [
   NotificationTypeEnum,
@@ -34,7 +44,10 @@ export const NotificationTypes = [
 
   NotificationType,
   NotificationTemplateType,
+  NotificationEventOptionsType,
   NotificationEventSettingsType,
+  NotificationSystemSettingsType,
+  NotificationTemplateOptionsType,
 
   NotificationUserExtension,
   NotificationCommonExtension,
@@ -44,14 +57,21 @@ export const NotificationTypes = [
   NotificationWhereInput,
   NotificationWhereUniqueInput,
   NotificationTemplateWhereInput,
+  NotificationSettingsWhereInput,
+  UpdateNotificationTemplateMutation,
 
   NotificationOrderByInput,
 
   NotificationCreatedSubscription,
 
   CreateNotificationEventSettingsMutation,
+  UpdateNotificationSettingsMutation,
+  CreateNotificationTemplateMutation,
 
+  GetNotificationTemplateOptionsQuery,
+  GetNotificationEventOptionsQuery,
   GetNotificationEventSettingsQuery,
   GetNotificationTemplatesQuery,
+  GetNotificationSettingsQuery,
   GetNotificationsQuery
 ];

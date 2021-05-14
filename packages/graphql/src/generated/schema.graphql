@@ -203,6 +203,16 @@ input CreateNotificationEventSettingsInput {
   sendToUser: Boolean!
 }
 
+input CreateNotificationTemplateInput {
+  content: String!
+  forType: NotificationType!
+  fromEmail: String
+  fromName: String
+  language: NotificationLanguage!
+  subject: String!
+  templateType: NotificationTemplateType!
+}
+
 input CreateRoleInput {
   description: String!
   displayName: String!
@@ -480,9 +490,10 @@ type Mutation {
   """Create new proposal of type JOIN."""
   createJoinProposal(input: CreateJoinProposalInput!): Proposal!
   createNotificationEventSettings(input: CreateNotificationEventSettingsInput!): NotificationEventSettings
+  createNotificationTemplate(input: CreateNotificationTemplateInput!): NotificationTemplate
   createRole(input: CreateRoleInput!): Role
 
-  """Creates new user in the system"""
+  """Creates new user in the settings"""
   createUser(input: CreateUserInput!): User!
   createUserNotificationToken(input: CreateUserNotificationTokenInput!): UserNotificationToken!
   createVote(input: CreateVoteInput!): Vote!
@@ -490,6 +501,8 @@ type Mutation {
   finalizeProposal(proposalId: ID!): Boolean!
   reportDiscussionMessage(input: ReportDiscussionMessageInput!): Report!
   unassignRole(roleId: ID!, userId: ID!): Void
+  updateNotificationSettings(input: UpdateNotificationSettingsInput!): NotificationSystemSettings
+  updateNotificationTemplate(input: UpdateNotificationTemplateInput!): NotificationTemplate
   voidUserNotificationToken(tokenId: ID!): UserNotificationToken!
   whitelistCommon(commonId: String!): Boolean
 }
@@ -534,6 +547,11 @@ type Notification implements BaseEntity {
   userId: UUID!
 }
 
+type NotificationEventOptions {
+  availableEvents: [EventType!]!
+  availableNotifications: [NotificationType!]!
+}
+
 type NotificationEventSettings implements BaseEntity {
   active: Boolean!
 
@@ -574,6 +592,26 @@ enum NotificationSeenStatus {
   Seen
 }
 
+input NotificationSettingsWhereInput {
+  """The type of the notification"""
+  type: NotificationType
+}
+
+type NotificationSystemSettings implements BaseEntity {
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+
+  """The main identifier of the item"""
+  id: UUID!
+  sendEmail: Boolean!
+  sendPush: Boolean!
+  showInUserFeed: Boolean!
+  type: NotificationType!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+}
+
 type NotificationTemplate implements BaseEntity {
   bcc: String
   bccName: String
@@ -593,6 +631,12 @@ type NotificationTemplate implements BaseEntity {
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+}
+
+type NotificationTemplateOptions {
+  languages: [NotificationLanguage]!
+  notificationTypes: [NotificationType]!
+  templateTypes: [NotificationTemplateType]!
 }
 
 enum NotificationTemplateType {
@@ -724,7 +768,10 @@ type Query {
   events(paginate: PaginateInput): [Event]
   generateUserAuthToken(authId: String!): String!
   getStatistics(where: StatisticsWhereInput): [Statistic]
+  notificationEventOptions: NotificationEventOptions
   notificationEventSettings(paginate: PaginateInput!): [NotificationEventSettings]
+  notificationSettings(where: NotificationSettingsWhereInput): [NotificationSystemSettings]
+  notificationTemplateOptions: NotificationTemplateOptions
   notificationTemplates(paginate: PaginateInput, where: NotificationTemplateWhereInput): [NotificationTemplate]
 
   """List of all notifications, readable only by the admin"""
@@ -905,6 +952,23 @@ A field whose value is a generic Universally Unique Identifier: https://en.wikip
 """
 scalar UUID
 
+input UpdateNotificationSettingsInput {
+  id: String!
+  sendEmail: Boolean
+  sendPush: Boolean
+  showInUserFeed: Boolean
+}
+
+input UpdateNotificationTemplateInput {
+  bcc: String
+  bccName: String
+  content: String
+  fromEmail: String
+  fromName: String
+  id: String!
+  subject: String
+}
+
 type User {
   """The date, at which the item was created"""
   createdAt: DateTime!
@@ -922,7 +986,7 @@ type User {
   """The first name of the user"""
   firstName: String!
 
-  """The system Id of the user"""
+  """The settings Id of the user"""
   id: ID!
 
   """The last name of the user"""

@@ -23,7 +23,7 @@
         "hoc/index"
       ],
       "@graphql": [
-        "graphql"
+        "graphql/index"
       ],
       "@context": [
         "context/index"

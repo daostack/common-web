@@ -14,7 +14,7 @@ export const canSeeCommonReports = async (userId: string, commonId: string): Pro
     return true;
   }
 
-  // @todo The user can if they are system admin
+  // @todo The user can if they are settings admin
 
   // The user cannot in all other situations
   return false;

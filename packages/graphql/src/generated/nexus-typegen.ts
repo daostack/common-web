@@ -4,10 +4,11 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -127,6 +128,15 @@ export interface NexusGenInputs {
     sendToEveryone: boolean; // Boolean!
     sendToUser: boolean; // Boolean!
   }
+  CreateNotificationTemplateInput: { // input type
+    content: string; // String!
+    forType: NexusGenEnums['NotificationType']; // NotificationType!
+    fromEmail?: string | null; // String
+    fromName?: string | null; // String
+    language: NexusGenEnums['NotificationLanguage']; // NotificationLanguage!
+    subject: string; // String!
+    templateType: NexusGenEnums['NotificationTemplateType']; // NotificationTemplateType!
+  }
   CreateRoleInput: { // input type
     description: string; // String!
     displayName: string; // String!
@@ -168,6 +178,9 @@ export interface NexusGenInputs {
     createdAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
     status?: NexusGenEnums['SortOrder'] | null; // SortOrder
     updatedAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
+  NotificationSettingsWhereInput: { // input type
+    type?: NexusGenEnums['NotificationType'] | null; // NotificationType
   }
   NotificationTemplateWhereInput: { // input type
     forType?: NexusGenEnums['NotificationType'] | null; // NotificationType
@@ -236,6 +249,21 @@ export interface NexusGenInputs {
     lte?: string | null; // String
     notIn?: string[] | null; // [String!]
     startsWith?: string | null; // String
+  }
+  UpdateNotificationSettingsInput: { // input type
+    id: string; // String!
+    sendEmail?: boolean | null; // Boolean
+    sendPush?: boolean | null; // Boolean
+    showInUserFeed?: boolean | null; // Boolean
+  }
+  UpdateNotificationTemplateInput: { // input type
+    bcc?: string | null; // String
+    bccName?: string | null; // String
+    content?: string | null; // String
+    fromEmail?: string | null; // String
+    fromName?: string | null; // String
+    id: string; // String!
+    subject?: string | null; // String
   }
   UserWhereInput: { // input type
     email?: NexusGenInputs['StringFilter'] | null; // StringFilter
@@ -394,6 +422,7 @@ export interface NexusGenObjects {
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     userId: NexusGenScalars['UUID']; // UUID!
   }
+  NotificationEventOptions: {};
   NotificationEventSettings: { // root type
     active: boolean; // Boolean!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -404,6 +433,15 @@ export interface NexusGenObjects {
     sendToCommon: boolean; // Boolean!
     sendToEveryone: boolean; // Boolean!
     sendToUser: boolean; // Boolean!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
+  NotificationSystemSettings: { // root type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: NexusGenScalars['UUID']; // UUID!
+    sendEmail: boolean; // Boolean!
+    sendPush: boolean; // Boolean!
+    showInUserFeed: boolean; // Boolean!
+    type: NexusGenEnums['NotificationType']; // NotificationType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   NotificationTemplate: { // root type
@@ -420,6 +458,7 @@ export interface NexusGenObjects {
     templateType: NexusGenEnums['NotificationTemplateType']; // NotificationTemplateType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
+  NotificationTemplateOptions: {};
   Proposal: { // root type
     commonId: NexusGenScalars['UUID']; // UUID!
     commonMemberId: NexusGenScalars['UUID']; // UUID!
@@ -500,7 +539,7 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  BaseEntity: NexusGenRootTypes['CommonMember'] | NexusGenRootTypes['CommonSubscription'] | NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['FundingProposal'] | NexusGenRootTypes['JoinProposal'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['NotificationEventSettings'] | NexusGenRootTypes['NotificationTemplate'] | NexusGenRootTypes['Report'] | NexusGenRootTypes['Role'] | NexusGenRootTypes['Statistic'] | NexusGenRootTypes['UserNotificationToken'];
+  BaseEntity: NexusGenRootTypes['CommonMember'] | NexusGenRootTypes['CommonSubscription'] | NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['FundingProposal'] | NexusGenRootTypes['JoinProposal'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['NotificationEventSettings'] | NexusGenRootTypes['NotificationSystemSettings'] | NexusGenRootTypes['NotificationTemplate'] | NexusGenRootTypes['Report'] | NexusGenRootTypes['Role'] | NexusGenRootTypes['Statistic'] | NexusGenRootTypes['UserNotificationToken'];
 }
 
 export interface NexusGenUnions {
@@ -630,6 +669,7 @@ export interface NexusGenFieldTypes {
     createFundingProposal: NexusGenRootTypes['Proposal']; // Proposal!
     createJoinProposal: NexusGenRootTypes['Proposal']; // Proposal!
     createNotificationEventSettings: NexusGenRootTypes['NotificationEventSettings'] | null; // NotificationEventSettings
+    createNotificationTemplate: NexusGenRootTypes['NotificationTemplate'] | null; // NotificationTemplate
     createRole: NexusGenRootTypes['Role'] | null; // Role
     createUser: NexusGenRootTypes['User']; // User!
     createUserNotificationToken: NexusGenRootTypes['UserNotificationToken']; // UserNotificationToken!
@@ -638,6 +678,8 @@ export interface NexusGenFieldTypes {
     finalizeProposal: boolean; // Boolean!
     reportDiscussionMessage: NexusGenRootTypes['Report']; // Report!
     unassignRole: NexusGenScalars['Void'] | null; // Void
+    updateNotificationSettings: NexusGenRootTypes['NotificationSystemSettings'] | null; // NotificationSystemSettings
+    updateNotificationTemplate: NexusGenRootTypes['NotificationTemplate'] | null; // NotificationTemplate
     voidUserNotificationToken: NexusGenRootTypes['UserNotificationToken']; // UserNotificationToken!
     whitelistCommon: boolean | null; // Boolean
   }
@@ -657,6 +699,10 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User']; // User!
     userId: NexusGenScalars['UUID']; // UUID!
   }
+  NotificationEventOptions: { // field return type
+    availableEvents: NexusGenEnums['EventType'][]; // [EventType!]!
+    availableNotifications: NexusGenEnums['NotificationType'][]; // [NotificationType!]!
+  }
   NotificationEventSettings: { // field return type
     active: boolean; // Boolean!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -667,6 +713,15 @@ export interface NexusGenFieldTypes {
     sendToCommon: boolean; // Boolean!
     sendToEveryone: boolean; // Boolean!
     sendToUser: boolean; // Boolean!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
+  NotificationSystemSettings: { // field return type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: NexusGenScalars['UUID']; // UUID!
+    sendEmail: boolean; // Boolean!
+    sendPush: boolean; // Boolean!
+    showInUserFeed: boolean; // Boolean!
+    type: NexusGenEnums['NotificationType']; // NotificationType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   NotificationTemplate: { // field return type
@@ -682,6 +737,11 @@ export interface NexusGenFieldTypes {
     subject: string; // String!
     templateType: NexusGenEnums['NotificationTemplateType']; // NotificationTemplateType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
+  NotificationTemplateOptions: { // field return type
+    languages: Array<NexusGenEnums['NotificationLanguage'] | null>; // [NotificationLanguage]!
+    notificationTypes: Array<NexusGenEnums['NotificationType'] | null>; // [NotificationType]!
+    templateTypes: Array<NexusGenEnums['NotificationTemplateType'] | null>; // [NotificationTemplateType]!
   }
   Proposal: { // field return type
     common: NexusGenRootTypes['Common']; // Common!
@@ -718,7 +778,10 @@ export interface NexusGenFieldTypes {
     events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     generateUserAuthToken: string; // String!
     getStatistics: Array<NexusGenRootTypes['Statistic'] | null> | null; // [Statistic]
+    notificationEventOptions: NexusGenRootTypes['NotificationEventOptions'] | null; // NotificationEventOptions
     notificationEventSettings: Array<NexusGenRootTypes['NotificationEventSettings'] | null> | null; // [NotificationEventSettings]
+    notificationSettings: Array<NexusGenRootTypes['NotificationSystemSettings'] | null> | null; // [NotificationSystemSettings]
+    notificationTemplateOptions: NexusGenRootTypes['NotificationTemplateOptions'] | null; // NotificationTemplateOptions
     notificationTemplates: Array<NexusGenRootTypes['NotificationTemplate'] | null> | null; // [NotificationTemplate]
     notifications: Array<NexusGenRootTypes['Notification'] | null> | null; // [Notification]
     proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
@@ -925,6 +988,7 @@ export interface NexusGenFieldTypeNames {
     createFundingProposal: 'Proposal'
     createJoinProposal: 'Proposal'
     createNotificationEventSettings: 'NotificationEventSettings'
+    createNotificationTemplate: 'NotificationTemplate'
     createRole: 'Role'
     createUser: 'User'
     createUserNotificationToken: 'UserNotificationToken'
@@ -933,6 +997,8 @@ export interface NexusGenFieldTypeNames {
     finalizeProposal: 'Boolean'
     reportDiscussionMessage: 'Report'
     unassignRole: 'Void'
+    updateNotificationSettings: 'NotificationSystemSettings'
+    updateNotificationTemplate: 'NotificationTemplate'
     voidUserNotificationToken: 'UserNotificationToken'
     whitelistCommon: 'Boolean'
   }
@@ -952,6 +1018,10 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
     userId: 'UUID'
   }
+  NotificationEventOptions: { // field return type name
+    availableEvents: 'EventType'
+    availableNotifications: 'NotificationType'
+  }
   NotificationEventSettings: { // field return type name
     active: 'Boolean'
     createdAt: 'DateTime'
@@ -962,6 +1032,15 @@ export interface NexusGenFieldTypeNames {
     sendToCommon: 'Boolean'
     sendToEveryone: 'Boolean'
     sendToUser: 'Boolean'
+    updatedAt: 'DateTime'
+  }
+  NotificationSystemSettings: { // field return type name
+    createdAt: 'DateTime'
+    id: 'UUID'
+    sendEmail: 'Boolean'
+    sendPush: 'Boolean'
+    showInUserFeed: 'Boolean'
+    type: 'NotificationType'
     updatedAt: 'DateTime'
   }
   NotificationTemplate: { // field return type name
@@ -977,6 +1056,11 @@ export interface NexusGenFieldTypeNames {
     subject: 'String'
     templateType: 'NotificationTemplateType'
     updatedAt: 'DateTime'
+  }
+  NotificationTemplateOptions: { // field return type name
+    languages: 'NotificationLanguage'
+    notificationTypes: 'NotificationType'
+    templateTypes: 'NotificationTemplateType'
   }
   Proposal: { // field return type name
     common: 'Common'
@@ -1013,7 +1097,10 @@ export interface NexusGenFieldTypeNames {
     events: 'Event'
     generateUserAuthToken: 'String'
     getStatistics: 'Statistic'
+    notificationEventOptions: 'NotificationEventOptions'
     notificationEventSettings: 'NotificationEventSettings'
+    notificationSettings: 'NotificationSystemSettings'
+    notificationTemplateOptions: 'NotificationTemplateOptions'
     notificationTemplates: 'NotificationTemplate'
     notifications: 'Notification'
     proposal: 'Proposal'
@@ -1171,6 +1258,9 @@ export interface NexusGenArgTypes {
     createNotificationEventSettings: { // args
       input: NexusGenInputs['CreateNotificationEventSettingsInput']; // CreateNotificationEventSettingsInput!
     }
+    createNotificationTemplate: { // args
+      input: NexusGenInputs['CreateNotificationTemplateInput']; // CreateNotificationTemplateInput!
+    }
     createRole: { // args
       input: NexusGenInputs['CreateRoleInput']; // CreateRoleInput!
     }
@@ -1195,6 +1285,12 @@ export interface NexusGenArgTypes {
     unassignRole: { // args
       roleId: string; // ID!
       userId: string; // ID!
+    }
+    updateNotificationSettings: { // args
+      input: NexusGenInputs['UpdateNotificationSettingsInput']; // UpdateNotificationSettingsInput!
+    }
+    updateNotificationTemplate: { // args
+      input: NexusGenInputs['UpdateNotificationTemplateInput']; // UpdateNotificationTemplateInput!
     }
     voidUserNotificationToken: { // args
       tokenId: string; // ID!
@@ -1230,6 +1326,9 @@ export interface NexusGenArgTypes {
     }
     notificationEventSettings: { // args
       paginate: NexusGenInputs['PaginateInput']; // PaginateInput!
+    }
+    notificationSettings: { // args
+      where?: NexusGenInputs['NotificationSettingsWhereInput'] | null; // NotificationSettingsWhereInput
     }
     notificationTemplates: { // args
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
@@ -1290,24 +1389,25 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  BaseEntity: "CommonMember" | "CommonSubscription" | "Discussion" | "DiscussionMessage" | "DiscussionSubscription" | "FundingProposal" | "JoinProposal" | "Notification" | "NotificationEventSettings" | "NotificationTemplate" | "Report" | "Role" | "Statistic" | "UserNotificationToken"
+  BaseEntity: 'CommonMember' | 'CommonSubscription' | 'Discussion' | 'DiscussionMessage' | 'DiscussionSubscription' | 'FundingProposal' | 'JoinProposal' | 'Notification' | 'NotificationEventSettings' | 'NotificationSystemSettings' | 'NotificationTemplate' | 'Report' | 'Role' | 'Statistic' | 'UserNotificationToken'
 }
 
 export interface NexusGenTypeInterfaces {
-  CommonMember: "BaseEntity"
-  CommonSubscription: "BaseEntity"
-  Discussion: "BaseEntity"
-  DiscussionMessage: "BaseEntity"
-  DiscussionSubscription: "BaseEntity"
-  FundingProposal: "BaseEntity"
-  JoinProposal: "BaseEntity"
-  Notification: "BaseEntity"
-  NotificationEventSettings: "BaseEntity"
-  NotificationTemplate: "BaseEntity"
-  Report: "BaseEntity"
-  Role: "BaseEntity"
-  Statistic: "BaseEntity"
-  UserNotificationToken: "BaseEntity"
+  CommonMember: 'BaseEntity'
+  CommonSubscription: 'BaseEntity'
+  Discussion: 'BaseEntity'
+  DiscussionMessage: 'BaseEntity'
+  DiscussionSubscription: 'BaseEntity'
+  FundingProposal: 'BaseEntity'
+  JoinProposal: 'BaseEntity'
+  Notification: 'BaseEntity'
+  NotificationEventSettings: 'BaseEntity'
+  NotificationSystemSettings: 'BaseEntity'
+  NotificationTemplate: 'BaseEntity'
+  Report: 'BaseEntity'
+  Role: 'BaseEntity'
+  Statistic: 'BaseEntity'
+  UserNotificationToken: 'BaseEntity'
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;

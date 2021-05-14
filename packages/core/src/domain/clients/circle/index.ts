@@ -7,13 +7,13 @@ import { _getPayment } from './payment/_getPayment';
 export const circleClient = {
   cards: {
     /**
-     * Create card in the circle system. This does not
+     * Create card in the circle settings. This does not
      * create card in our database
      */
     create: _createCircleCard,
 
     /**
-     * Get card from the circle system. There may be
+     * Get card from the circle settings. There may be
      * differences in the card provided by them from
      * what we currently have in our database
      */
@@ -22,14 +22,14 @@ export const circleClient = {
 
   payments: {
     /**
-     * Create payment in the circle system. This does not
+     * Create payment in the circle settings. This does not
      * create payment in our database. Please make sure that the amount
      * is correct as Circle uses full dollar amount and not cents
      */
     create: _createCirclePayment,
 
     /**
-     * Get payment from the circle system. There may be
+     * Get payment from the circle settings. There may be
      * differences in the payment provided by them from
      * what we currently have in our database
      */
