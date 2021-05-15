@@ -55,7 +55,7 @@ export default function Commons() {
           <Swiper
             slidesPerView={"auto"}
             centeredSlides={true}
-            spaceBetween={30}
+            spaceBetween={20}
             pagination={{ clickable: true }}
             className="mySwiper"
           >

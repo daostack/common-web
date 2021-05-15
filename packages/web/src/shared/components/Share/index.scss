@@ -28,47 +28,56 @@
   .social-button:hover {
     opacity: 0.9;
   }
+
+}
+.social-buttons-wrapper {
+  z-index: 2;
+  position: absolute;
+  padding: 12px;
+  border-radius: 30px;
+  box-shadow: 0 4px 15px 0 $shadow;
+  background-color: $white;
+  top: 64px;
+  right: 10%;
+  .title {
+    font-size: $xsmall;
+    font-weight: bold;
+    text-align: center;
+    color: $blue;
+    margin-bottom: 16px;
+  }
+}
+
+.social-buttons {
+  display: flex;
+  button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    margin: 0 10px;
+    &.facebook {
+      background-image: url("/icons/social-share/facebook.svg");
+    }
+    &.linkedin {
+      background-image: url("/icons/social-share/linkedin.svg");
+    }
+    &.telegram {
+      background-image: url("/icons/social-share/telegram.svg");
+    }
+    &.twitter {
+      background-image: url("/icons/social-share/twitter.svg");
+    }
+  }
+  button:hover {
+    opacity: 0.9;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
   .social-buttons-wrapper {
-    z-index: 2;
-    position: absolute;
-    padding: 12px;
-    border-radius: 30px;
-    box-shadow: 0 4px 15px 0 $shadow;
-    background-color: $white;
-    top: 64px;
-    right: 10%;
-    .title {
-      font-size: $xsmall;
-      font-weight: bold;
-      text-align: center;
-      color: $blue;
-      margin-bottom: 16px;
-    }
-    .social-buttons {
-      display: flex;
-      button {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        border: none;
-        cursor: pointer;
-        margin: 0 10px;
-        &.facebook {
-          background-image: url("/icons/social-share/facebook.svg");
-        }
-        &.linkedin {
-          background-image: url("/icons/social-share/linkedin.svg");
-        }
-        &.telegram {
-          background-image: url("/icons/social-share/telegram.svg");
-        }
-        &.twitter {
-          background-image: url("/icons/social-share/twitter.svg");
-        }
-      }
-      button:hover {
-        opacity: 0.9;
-      }
-    }
+    position: unset;
+    box-shadow: unset;
   }
 }

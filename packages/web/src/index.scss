@@ -80,8 +80,19 @@ body {
   }
 }
 
+// Use with <br /> tags
+@media screen and (min-width: $mobile-breakpoint) {
+  .mobile-break {
+    display: none;
+  }
+}
+
 @media only screen and (max-width: $mobile-breakpoint) {
   body {
+    // Use with <br /> tags
+    .desktop-break {
+      display: none;
+    }
     h1 {
       font-size: $medium;
     }
@@ -99,7 +110,7 @@ body {
         width: 100%;
       }
       .line {
-        margin: 0 -20px
+        margin: 0 -20px;
       }
     }
   }
