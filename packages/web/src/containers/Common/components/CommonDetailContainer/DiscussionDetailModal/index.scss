@@ -87,6 +87,7 @@
         justify-content: center;
         display: flex;
         flex-direction: column;
+        padding: 0 30px;
 
         .discussion-name {
           font-size: 24px;
@@ -96,14 +97,8 @@
           margin-bottom: 24px;
         }
         .requested-amount {
-          padding: 11px 74px 11px 73px;
-          border-radius: 20px;
-          background-color: #f1f5ff;
-          font-size: 14px;
-          text-align: right;
-          color: #001a36;
-          display: flex;
           margin-bottom: 24px;
+          align-items: center;
           .amount {
             font-size: 18px;
             font-weight: bold;

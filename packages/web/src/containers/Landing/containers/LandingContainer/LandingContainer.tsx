@@ -17,11 +17,16 @@ const LandingContainer = () => {
           <img src="icons/logo-all-white.svg" alt="common logo" className="logo" />
           <span className="main-title">Launch Collective Action.</span>
           <div className="dynamic-text-wrapper">
-            <span className="dynamic-text one">Catalyze a movement,</span>
-            <span className="dynamic-text two">Fund Independent Journalism,</span>
-            <span className="dynamic-text three">Start a Neighborhood Project,</span>
+            <span className="dynamic-text one">
+              Catalyze a movement, <br /> <span className="main-title">Together.</span>
+            </span>
+            <span className="dynamic-text two">
+              Fund Independent Journalism, <br /> <span className="main-title">Together.</span>
+            </span>
+            <span className="dynamic-text three">
+              Start a Neighborhood Project, <br /> <span className="main-title">Together.</span>
+            </span>
           </div>
-          <span className="main-title">Together.</span>
           <div className="mobile-apps-wrapper">
             <div className="available-on-label">Available on</div>
             <MobileLinks color={Colors.white} />
@@ -35,7 +40,8 @@ const LandingContainer = () => {
         <p>
           Common enables large groups of people to collaborate on shared <br /> agendas by pooling funds and
           collectively making decisions. <br /> <br />
-          <b>Anyone</b> can create a Common, invite thier friends, and work <br /> together to achieve a common goal.
+          <b>Anyone</b> can create a Common, invite <br className="mobile-break" /> thier friends, and work{" "}
+          <br className="desktop-break" /> together to achieve a common goal.
         </p>
         <div className="illustrations-wrapper-1">
           <div>
