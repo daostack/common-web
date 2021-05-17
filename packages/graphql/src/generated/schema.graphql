@@ -64,6 +64,7 @@ type Common {
   """The main identifier of the item"""
   id: ID!
   image: String!
+  links: JSON
   members(orderBy: CommonMemberOrderByInput, skip: Int, take: Int): [CommonMember]!
 
   """The name of the common as provided"""
@@ -73,12 +74,18 @@ type Common {
   """The total amount of money that the common has raised. In cents"""
   raised: Int!
   reports(where: ReportWhereInput = {status: {in: [Active]}}): [Report!]!
+  rules: JSON
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
 
   """The whitelisting state of a common"""
   whitelisted: Boolean!
+}
+
+input CommonLinkInput {
+  title: String!
+  url: String!
 }
 
 type CommonMember implements BaseEntity {
@@ -150,7 +157,9 @@ input CreateCommonInput {
   fundingMinimumAmount: Int!
   fundingType: FundingType!
   image: String!
+  links: [CommonLinkInput!]
   name: String!
+  rules: [CommonLinkInput!]
 }
 
 input CreateDiscussionInput {
@@ -258,12 +267,16 @@ type Discussion implements BaseEntity {
   latestMessage: DateTime!
   messages(orderBy: DiscussionMessagesOrderByInput = {createdAt: asc}, skip: Int = 0, take: Int = 10): [DiscussionMessage!]!
 
+  """The discussion creator"""
+  owner: User
+
   """What this discussion is about"""
   topic: String!
   type: DiscussionType!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+  userId: String!
 }
 
 type DiscussionMessage implements BaseEntity {
@@ -274,11 +287,13 @@ type DiscussionMessage implements BaseEntity {
   """The main identifier of the item"""
   id: UUID!
   message: String!
+  owner: User!
   reports: [Report!]!
   type: DiscussionMessageType!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+  userId: String!
 }
 
 enum DiscussionMessageFlag {
@@ -325,6 +340,12 @@ enum DiscussionSubscriptionType {
 enum DiscussionType {
   CommonDiscussion
   ProposalDiscussion
+}
+
+input DiscussionWhereInput {
+  commonId: UUID
+  commonMemberId: UUID
+  userId: ID
 }
 
 type Event {
@@ -765,6 +786,7 @@ type Query {
   common(where: CommonWhereUniqueInput!): Common
   commons(paginate: PaginateInput): [Common]
   discussion(id: ID!): Discussion
+  discussions(paginate: PaginateInput, where: DiscussionWhereInput): [Discussion]
   events(paginate: PaginateInput): [Event]
   generateUserAuthToken(authId: String!): String!
   getStatistics(where: StatisticsWhereInput): [Statistic]
