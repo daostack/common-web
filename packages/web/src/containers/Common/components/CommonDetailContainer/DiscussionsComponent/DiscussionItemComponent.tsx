@@ -44,11 +44,9 @@ export default function DiscussionItemComponent({ discussion, loadDisscussionDet
           <img src="/icons/discussions.svg" alt="discussions" />
           <div className="count">{discussion.discussionMessage?.length || 0}</div>
         </div>
-        {(discussion?.discussionMessage?.length || 0) > 0 && (
-          <div className="view-all-discussions" onClick={() => loadDisscussionDetail(discussion)}>
-            View discussion
-          </div>
-        )}
+        <div className="view-all-discussions" onClick={() => loadDisscussionDetail(discussion)}>
+          View discussion
+        </div>
       </div>
     </div>
   );

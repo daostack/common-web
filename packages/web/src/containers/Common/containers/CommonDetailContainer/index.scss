@@ -101,14 +101,6 @@
     margin: 0px -#{$content-padding};
     background-color: $light-purple-background;
     padding-top: 20px;
-    .tab-title {
-      padding: 0px $content-padding;
-      font-size: 24px;
-      font-weight: bold;
-      color: $deep-blue;
-      text-transform: capitalize;
-      margin-bottom: 24px;
-    }
     .inner-main-content-wrapper {
       display: flex;
       padding: 0px $content-padding;
@@ -171,9 +163,6 @@
       margin: 0px -#{$content-padding-mobile};
       background-color: $light-purple-background;
       padding-top: 20px;
-      .tab-title {
-        padding: 0px $content-padding-mobile;
-      }
       .inner-main-content-wrapper {
         flex-direction: column;
         padding: 0px $content-padding-mobile;

@@ -52,16 +52,13 @@ export default function ProposalCountDown({ date }: ProposalCountDownInterface) 
       <div className="inner-wrapper">
         <img className="clock-icon" src="/icons/alarm-clock.svg" alt="alarm-clock" />
         <div className="text">
-          {state.difference > 0 ? (
-            <>
-              {`Countdown ${formatCountDown(state.daysDifference)}:
-              ${formatCountDown(state.hoursDifference)}:
-              ${formatCountDown(state.minutesDifference)}:
-              ${formatCountDown(state.secondsDifference)}`}
-            </>
-          ) : (
-            "Time's up!"
-          )}
+          <span>
+            {state.difference > 0
+              ? `Countdown ${formatCountDown(state.daysDifference)}:${formatCountDown(
+                  state.hoursDifference,
+                )}:${formatCountDown(state.minutesDifference)}:${formatCountDown(state.secondsDifference)}`
+              : "Time's up!"}
+          </span>
         </div>
       </div>
     </div>

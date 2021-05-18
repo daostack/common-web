@@ -15,7 +15,7 @@ export default function VotesComponent({ proposal }: VotesComponentProps) {
           <img src="/icons/user-for.svg" alt="vote-for" />
           <span>{proposal.votesFor}</span>
         </div>
-        <div className="count">{votes} votes</div>
+        <div className="count">{`${votes} ${votes === 1 ? "vote" : "votes"}`}</div>
         <div className="against">
           <span>{proposal.votesAgainst}</span>
           <img src="/icons/user-rejected.svg" alt="vote-against" />

@@ -13,12 +13,6 @@ const Modal = (props: ModalProps) => {
   const { isShowing, onClose, children, closeColor } = props;
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
 
-  if (isShowing) {
-    document.body.style.overflow = "hidden";
-  } else {
-    document.body.style.overflow = "initial";
-  }
-
   useEffect(() => {
     if (isOutside) {
       onClose();
@@ -29,9 +23,12 @@ const Modal = (props: ModalProps) => {
   useEffect(() => {
     if (!isShowing) {
       const modalRoot = document.getElementById("modal");
+      document.body.style.overflow = "initial";
       if (modalRoot) {
         document.body.removeChild(modalRoot);
       }
+    } else {
+      document.body.style.overflow = "hidden";
     }
   }, [isShowing]);
 

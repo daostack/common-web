@@ -15,6 +15,7 @@ interface DiscussionDetailModalProps {
 export default function ProposalDetailModal({ proposal, common }: DiscussionDetailModalProps) {
   const date = new Date();
   const [imageError, setImageError] = useState(false);
+  const requestedAmount = formatPrice(common.balance);
   return !proposal ? (
     <Loader />
   ) : (
@@ -40,7 +41,13 @@ export default function ProposalDetailModal({ proposal, common }: DiscussionDeta
           <div className="discussion-information-wrapper">
             <div className="discussion-name">{proposal.description.title}</div>
             <div className="requested-amount">
-              Requested amount <div className="amount">{formatPrice(common.balance)}</div>
+              {requestedAmount === "$0" ? (
+                "No funding requested"
+              ) : (
+                <>
+                  Requested amount <span className="amount">{requestedAmount}</span>
+                </>
+              )}
             </div>
             <VotesComponent proposal={proposal} />
           </div>

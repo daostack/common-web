@@ -253,6 +253,10 @@ export default function CommonDetail() {
         <Modal isShowing={showJoinModal} onClose={closeJoinModalHandler} closeColor={Colors.white}>
           <JoinTheEffortModal />
         </Modal>
+        {/* {screenSize === ScreenSize.Mobile &&
+          <Modal isShowing={showShareModal} onClose={closeShareModalHandler} closeColor={Colors.black}>
+            <Share />
+          </Modal>} */}
         <div className="common-detail-wrapper">
           <div className="main-information-block">
             <div className="main-information-wrapper">
@@ -312,7 +316,6 @@ export default function CommonDetail() {
             </div>
           </div>
           <div className="main-content-container">
-            {tab === "about" ? <div className="tab-title">{tab}</div> : null}
             <div className={tab === "history" ? "inner-main-content-wrapper history" : "inner-main-content-wrapper"}>
               <div className="tab-content-wrapper">
                 {tab === "about" && <AboutTabComponent common={common} />}
