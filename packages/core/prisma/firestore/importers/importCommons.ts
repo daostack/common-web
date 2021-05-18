@@ -28,8 +28,8 @@ export const importCommons = async () => {
           name: common.name,
           image: common.image,
 
-          balance: common.balance,
-          raised: common.raised,
+          balance: Math.round(common.balance),
+          raised: Math.round(common.raised),
 
           byline: common.metadata.byline,
           description: common.metadata.description,
@@ -81,6 +81,5 @@ export const importCommons = async () => {
     }
   }
 
-  console.log(failedCommons);
-  console.log(createdCommons);
+  console.log('[LogTag: 1333]', failedCommons);
 };

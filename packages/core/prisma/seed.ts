@@ -1,10 +1,10 @@
 import { PrismaClient, StatisticType } from '@prisma/client';
-import { allPermissions } from '../src/domain/validation/permissions';
 import { seedNotificationSystemSetting } from './seed/notificationSystemSettings';
 import { seedNotificationTemplated } from './seed/notificationTemplates';
 import { importUsers } from './firestore/importers/importUsers';
 import { importCommons } from './firestore/importers/importCommons';
 import { importFundingProposals } from './firestore/importers/importFundingProposals';
+import { seedRoles } from './seed/roles';
 
 export const seeder = new PrismaClient();
 
@@ -18,23 +18,8 @@ async function main() {
   await importCommons();
   await importFundingProposals();
 
-  // See roles
-  await seeder.role.upsert({
-    where: {
-      name: 'admin'
-    },
-
-    create: {
-      name: 'admin',
-      displayName: 'Admin',
-      description: 'The ultimate role with all permissions',
-      permissions: allPermissions
-    },
-
-    update: {
-      permissions: allPermissions
-    }
-  });
+  // Seed roles and permissions
+  await seedRoles();
 
   // Create the global statistics
   await seeder.statistic.create({
@@ -54,13 +39,14 @@ async function main() {
 }
 
 main()
-  .then(() => {
-    console.log('🌱  Your database has been seeded.');
-  })
   .catch(e => {
     console.error(e);
     process.exit(1);
   })
   .finally(async () => {
+    console.log('🌱  Your database has been seeded.');
+
     await seeder.$disconnect();
+
+    process.exit(0);
   });

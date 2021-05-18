@@ -742,8 +742,10 @@ model Proposal {
   userId         String
   commonId       String
   commonMemberId String?
-  Event          Event[]
-  Notification   Notification[]
+
+  importedFrom Json?
+  Event        Event[]
+  Notification Notification[]
 }
 
 model JoinProposal {
