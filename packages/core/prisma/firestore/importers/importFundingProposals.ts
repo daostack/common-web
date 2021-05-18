@@ -1,10 +1,10 @@
-import { db } from '../firestore';
+import { ProposalsCollection } from '../firestore';
 import { seeder } from '../../seed';
 import { IFundingRequestProposal, FundingRequestState } from '@common/types';
 import { FundingState, ProposalState, ProposalType } from '@prisma/client';
 import { getEmail } from '../helpers/getEmail';
 
-const transformState = (state: FundingRequestState): ProposalState => {
+export const transformState = (state: FundingRequestState): ProposalState => {
   switch (state) {
     case 'failed':
       return ProposalState.Rejected;
@@ -17,8 +17,6 @@ const transformState = (state: FundingRequestState): ProposalState => {
 };
 
 export const importFundingProposals = async () => {
-  const ProposalsCollection = db.collection('proposals');
-
   const firebaseFundingProposals = (await ProposalsCollection
     .where('type', '==', 'fundingRequest').get())
     .docs.map(e => e.data());
@@ -50,6 +48,8 @@ export const importFundingProposals = async () => {
         const ifp = await seeder.proposal
           .create({
             data: {
+              id: fp.id,
+
               common: {
                 connect: {
                   id: fp.commonId
@@ -106,6 +106,8 @@ export const importFundingProposals = async () => {
 
               funding: {
                 create: {
+                  id: fp.id,
+
                   fundingState: FundingState.NotEligible,
                   amount: Math.round(fp.fundingRequest.amount)
                 }

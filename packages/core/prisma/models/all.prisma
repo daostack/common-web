@@ -17,17 +17,17 @@ model Payment {
 
   card Card @relation(fields: [cardId], references: [id])
 
-  user   User   @relation(fields: [userId], references: [id])
-  common Common @relation(fields: [commonId], references: [id])
+  user   User    @relation(fields: [userId], references: [id])
+  common Common? @relation(fields: [commonId], references: [id])
 
-  join         JoinProposal  @relation(fields: [joinId], references: [id])
+  join         JoinProposal?  @relation(fields: [joinId], references: [id])
   subscription Subscription? @relation(fields: [subscriptionId], references: [id])
 
   subscriptionId String?
-  joinId         String
+  joinId         String?
 
   userId   String
-  commonId String
+  commonId String?
 
   cardId String
 }
@@ -37,6 +37,8 @@ enum PaymentType {
 
   SubscriptionInitialPayment
   SubscriptionSequentialPayment
+
+  ImportedPayment
 }
 
 enum PaymentCircleStatus {
@@ -66,7 +68,6 @@ model Card {
 
   cvvCheck String
   avsCheck String
-
 
   user     User      @relation(fields: [userId], references: [id])
   payments Payment[]
