@@ -14,7 +14,7 @@ export const GetDiscussionsQuery = queryField('discussions', {
   resolve: (root, args) => {
     return prisma.discussion.findMany({
         where: args.where as any,
-          ...args.paginate
+          ...args.paginate as any
     });
   }
 });

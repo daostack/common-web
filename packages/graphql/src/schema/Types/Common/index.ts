@@ -16,7 +16,7 @@ import { CommonActiveProposalsExtension } from './Extensions/CommonActiveProposa
 
 import { CommonType } from './Types/Common.type';
 import { CommonWhereUniqueInput } from './Inputs/CommonWhereUnique.input';
-import { CommonLinkInput } from './Inputs/CommonLink.input';
+import { CommonLinkInput } from '../Commons/Inputs/CommonLink.input';
 
 
 export const CommonTypes = [

@@ -6,6 +6,7 @@ import { GetUserQuery } from './Queries/GetUser.query';
 import { GenerateUserAuthTokenQuery } from './Queries/GenerateUserAuthToken.query';
 
 import { UserNotificationTokenStateEnum } from './Enums/UserNotificationTokenState.enum';
+import { UserCountryEnum } from './Enums/UserCountry.enum';
 
 
 import { UserEventsExtension } from './Extensions/UserEvents.extension';
@@ -44,6 +45,7 @@ export const UserTypes = [
   VoidUserNotificationTokenMutation,
 
   UserNotificationTokenStateEnum,
+  UserCountryEnum,
 
   UserEventsExtension,
   UserProposalsExtension,

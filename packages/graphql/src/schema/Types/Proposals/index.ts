@@ -19,7 +19,6 @@ import { FundingStateEnum } from './Enums/FundingState.enum';
 import { PaymentStateEnum } from './Enums/PaymentState.enum';
 
 import { GetProposalQuery } from './Queries/GetProposal.query';
-import { GetProposalsQuery } from './Queries/GetProposals.query';
 
 import { ProposalDiscussionsExtension } from './Extensions/ProposalDiscussions.extension';
 import { ProposalFundingExtension } from './Extensions/ProposalFunding.extension';

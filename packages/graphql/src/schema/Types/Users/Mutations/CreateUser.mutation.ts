@@ -9,6 +9,11 @@ export const CreateUserInput = inputObjectType({
     t.nonNull.string('lastName');
     t.nonNull.string('email');
     t.nonNull.string('photo');
+    t.nonNull.field('country', {
+      type: 'UserCountry'
+    });
+
+    t.string('intro');
   }
 });
 
@@ -30,7 +35,7 @@ export const CreateUserMutation = extendType({
         const userDecodedToken = await ctx.getUserDecodedToken();
 
         return userService.create({
-          ...args.input,
+          ...args.input as any,
           id: userDecodedToken.uid,
           emailVerified: userDecodedToken.email === args.input.email && userDecodedToken.email_verified
         });

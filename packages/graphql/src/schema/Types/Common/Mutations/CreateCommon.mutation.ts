@@ -44,7 +44,7 @@ export const CreateCommonMutation = extendType({
         const founderId = await ctx.getUserId();
 
         return commonService.create({
-          ...input,
+          ...input as any,
           founderId
         });
       }

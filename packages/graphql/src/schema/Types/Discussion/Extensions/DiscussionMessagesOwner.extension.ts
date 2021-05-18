@@ -6,12 +6,12 @@ export const DiscussionMessageOwnerExtension = extendType({
   definition(t) {
     t.nonNull.field('owner', {
       type: 'User',
-      resolve: (root) => {
-        return prisma.user.findUnique({
-            where: {
-              id: root.userId
-            }
-          });
+      resolve: async (root) => {
+        return (await prisma.user.findUnique({
+          where: {
+            id: root.userId
+          }
+        }))!;
       }
     });
   }

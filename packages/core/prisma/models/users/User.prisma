@@ -7,6 +7,10 @@ model User {
   firstName String
   lastName  String
 
+  country UserCountry @default(Unknown)
+
+  intro String?
+
   photo String
 
   email         String  @unique
