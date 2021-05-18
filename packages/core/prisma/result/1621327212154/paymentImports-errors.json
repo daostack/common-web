@@ -1,0 +1,868 @@
+[
+  {
+    "reason": "No user ID",
+    "payment": {
+      "refunds": [],
+      "updateDate": "2020-12-09T20:12:33.369Z",
+      "source": {
+        "type": "card",
+        "id": "daa181fc-5581-4d2a-bd0a-0b49894310ea"
+      },
+      "createDate": "2020-12-09T20:12:33.369Z",
+      "status": "pending",
+      "id": "a8c567a2-3819-44d1-b636-96df60e66cbe",
+      "subscriptionId": "ec051bc0-0adc-4983-89da-bb411dfc2289",
+      "amount": {
+        "currency": "USD",
+        "amount": "12500.00"
+      },
+      "type": "SubscriptionPayment"
+    }
+  },
+  {
+    "reason": "No user ID",
+    "payment": {
+      "amount": {
+        "amount": "50000.00",
+        "currency": "USD"
+      },
+      "type": "SubscriptionPayment",
+      "refunds": [],
+      "status": "pending",
+      "createDate": "2020-12-10T07:55:55.881Z",
+      "id": "e9997bb7-0d3e-443b-8cc4-047dd2e8b3bc",
+      "updateDate": "2020-12-10T07:55:55.881Z",
+      "subscriptionId": "3c2dd6b4-8ea0-4ec1-b3c0-8c8a67cfd32f",
+      "source": {
+        "type": "card",
+        "id": "03ec81b7-d29e-410c-a0d6-ce516a9a4cc7"
+      }
+    }
+  },
+  {
+    "reason": "No user ID",
+    "payment": {
+      "refunds": [],
+      "id": "f9f767e7-4516-49bc-8257-32c6c2af42b6",
+      "type": "SubscriptionPayment",
+      "createDate": "2020-12-10T07:55:55.850Z",
+      "subscriptionId": "f498688c-1835-466b-a7e2-3c2a0e8a595e",
+      "status": "pending",
+      "amount": {
+        "currency": "USD",
+        "amount": "50000.00"
+      },
+      "source": {
+        "type": "card",
+        "id": "03ec81b7-d29e-410c-a0d6-ce516a9a4cc7"
+      },
+      "updateDate": "2020-12-10T07:55:55.850Z"
+    }
+  },
+  {
+    "payment": {
+      "refunds": [],
+      "updateDate": "2020-12-09T20:12:33.369Z",
+      "source": {
+        "type": "card",
+        "id": "daa181fc-5581-4d2a-bd0a-0b49894310ea"
+      },
+      "createDate": "2020-12-09T20:12:33.369Z",
+      "status": "pending",
+      "id": "a8c567a2-3819-44d1-b636-96df60e66cbe",
+      "subscriptionId": "ec051bc0-0adc-4983-89da-bb411dfc2289",
+      "amount": {
+        "currency": "USD",
+        "amount": "12500.00"
+      },
+      "type": "SubscriptionPayment"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'a8c567a2-3819-44d1-b636-96df60e66cbe',\n    type: 'ImportedPayment',\n    status: 'Pending',\n    amount: 12500,\n    circlePaymentStatus: 'pending',\n    circlePaymentId: undefined,\n    user: {\n      connect: {\n?       id?: String,\n?       email?: String\n      },\n?     create?: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: {\n?       where: UserWhereUniqueInput,\n?       create: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput\n?     }\n    },\n    card: {\n      connect: {\n        id: 'daa181fc-5581-4d2a-bd0a-0b49894310ea'\n      }\n    }\n  }\n}\n\nArgument data.user.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.\n\nNote: Lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'a8c567a2-3819-44d1-b636-96df60e66cbe',\n    type: 'ImportedPayment',\n    status: 'Pending',\n    amount: 12500,\n    circlePaymentStatus: 'pending',\n    circlePaymentId: undefined,\n    user: {\n      connect: {\n?       id?: String,\n?       email?: String\n      },\n?     create?: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: {\n?       where: UserWhereUniqueInput,\n?       create: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput\n?     }\n    },\n    card: {\n      connect: {\n        id: 'daa181fc-5581-4d2a-bd0a-0b49894310ea'\n      }\n    }\n  }\n}\n\nArgument data.user.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.\n\nNote: Lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:197:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "amount": {
+        "amount": "50000.00",
+        "currency": "USD"
+      },
+      "type": "SubscriptionPayment",
+      "refunds": [],
+      "status": "pending",
+      "createDate": "2020-12-10T07:55:55.881Z",
+      "id": "e9997bb7-0d3e-443b-8cc4-047dd2e8b3bc",
+      "updateDate": "2020-12-10T07:55:55.881Z",
+      "subscriptionId": "3c2dd6b4-8ea0-4ec1-b3c0-8c8a67cfd32f",
+      "source": {
+        "type": "card",
+        "id": "03ec81b7-d29e-410c-a0d6-ce516a9a4cc7"
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'e9997bb7-0d3e-443b-8cc4-047dd2e8b3bc',\n    type: 'ImportedPayment',\n    status: 'Pending',\n    amount: 50000,\n    circlePaymentStatus: 'pending',\n    circlePaymentId: undefined,\n    user: {\n      connect: {\n?       id?: String,\n?       email?: String\n      },\n?     create?: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: {\n?       where: UserWhereUniqueInput,\n?       create: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput\n?     }\n    },\n    card: {\n      connect: {\n        id: '03ec81b7-d29e-410c-a0d6-ce516a9a4cc7'\n      }\n    }\n  }\n}\n\nArgument data.user.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.\n\nNote: Lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'e9997bb7-0d3e-443b-8cc4-047dd2e8b3bc',\n    type: 'ImportedPayment',\n    status: 'Pending',\n    amount: 50000,\n    circlePaymentStatus: 'pending',\n    circlePaymentId: undefined,\n    user: {\n      connect: {\n?       id?: String,\n?       email?: String\n      },\n?     create?: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: {\n?       where: UserWhereUniqueInput,\n?       create: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput\n?     }\n    },\n    card: {\n      connect: {\n        id: '03ec81b7-d29e-410c-a0d6-ce516a9a4cc7'\n      }\n    }\n  }\n}\n\nArgument data.user.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.\n\nNote: Lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:197:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "refunds": [],
+      "id": "f9f767e7-4516-49bc-8257-32c6c2af42b6",
+      "type": "SubscriptionPayment",
+      "createDate": "2020-12-10T07:55:55.850Z",
+      "subscriptionId": "f498688c-1835-466b-a7e2-3c2a0e8a595e",
+      "status": "pending",
+      "amount": {
+        "currency": "USD",
+        "amount": "50000.00"
+      },
+      "source": {
+        "type": "card",
+        "id": "03ec81b7-d29e-410c-a0d6-ce516a9a4cc7"
+      },
+      "updateDate": "2020-12-10T07:55:55.850Z"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'f9f767e7-4516-49bc-8257-32c6c2af42b6',\n    type: 'ImportedPayment',\n    status: 'Pending',\n    amount: 50000,\n    circlePaymentStatus: 'pending',\n    circlePaymentId: undefined,\n    user: {\n      connect: {\n?       id?: String,\n?       email?: String\n      },\n?     create?: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: {\n?       where: UserWhereUniqueInput,\n?       create: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput\n?     }\n    },\n    card: {\n      connect: {\n        id: '03ec81b7-d29e-410c-a0d6-ce516a9a4cc7'\n      }\n    }\n  }\n}\n\nArgument data.user.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.\n\nNote: Lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'f9f767e7-4516-49bc-8257-32c6c2af42b6',\n    type: 'ImportedPayment',\n    status: 'Pending',\n    amount: 50000,\n    circlePaymentStatus: 'pending',\n    circlePaymentId: undefined,\n    user: {\n      connect: {\n?       id?: String,\n?       email?: String\n      },\n?     create?: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: {\n?       where: UserWhereUniqueInput,\n?       create: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput\n?     }\n    },\n    card: {\n      connect: {\n        id: '03ec81b7-d29e-410c-a0d6-ce516a9a4cc7'\n      }\n    }\n  }\n}\n\nArgument data.user.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.\n\nNote: Lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:197:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "circlePaymentId": "c639397a-949b-4c3a-8f71-5fba2e01b078",
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "source": {
+        "type": "card",
+        "id": "fc0112f9-653f-42c4-83af-3b4caff2ed86"
+      },
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "status": "paid",
+      "createdAt": {
+        "_seconds": 1609423644,
+        "_nanoseconds": 690000000
+      },
+      "fees": {
+        "currency": "USD",
+        "amount": 51
+      },
+      "id": "1e4deece-422f-4e8c-8c6f-d7a92d814358",
+      "amount": {
+        "currency": "USD",
+        "amount": 500
+      },
+      "type": "one-time",
+      "updatedAt": {
+        "_seconds": 1609942813,
+        "_nanoseconds": 94000000
+      },
+      "proposalId": "7954d1ca-70e1-4f5e-9819-979264b6a310"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.\n    at cb (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:35098:17)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "type": "one-time",
+      "userId": "Xlun3Ux94Zfc73axkiuVdkktOWf1",
+      "amount": {
+        "currency": "USD",
+        "amount": 500
+      },
+      "updatedAt": {
+        "_seconds": 1614692356,
+        "_nanoseconds": 56000000
+      },
+      "createdAt": {
+        "_seconds": 1614692355,
+        "_nanoseconds": 136000000
+      },
+      "circlePaymentId": "632214b7-9367-4a7d-8931-853bad17270a",
+      "id": "2c9313de-d933-4571-ae1b-6a694d2a5e76",
+      "status": "confirmed",
+      "source": {
+        "type": "card",
+        "id": "93eb4c4d-9652-4a85-b951-79590276c3f2"
+      },
+      "fees": {
+        "currency": "USD",
+        "amount": 51
+      },
+      "proposalId": "638206be-e759-41d2-a5a6-2de3c955112d"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.\n    at cb (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:35098:17)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "subscriptionId": "Payment for deleted subscription",
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "createdAt": {
+        "_seconds": 1607860105,
+        "_nanoseconds": 845000000
+      },
+      "updatedAt": {
+        "_seconds": 1609942813,
+        "_nanoseconds": 449000000
+      },
+      "type": "subscription",
+      "status": "paid",
+      "source": {
+        "id": "58545097-65aa-4510-9a4a-21bdd9b2802f",
+        "type": "card"
+      },
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "circlePaymentId": "15ebaca8-7e45-46d6-bf95-34c3a18219a0",
+      "proposalId": "Payment for deleted subscription",
+      "id": "62e89b21-f406-4a3b-9157-60494f22d92b",
+      "amount": {
+        "amount": 250000,
+        "currency": "USD"
+      },
+      "fees": {
+        "currency": "USD",
+        "amount": 10655
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.\n    at cb (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:35098:17)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "fees": {
+        "currency": "USD",
+        "amount": 83
+      },
+      "source": {
+        "id": "f1180d0a-f5c5-4ba1-b021-228e7481f42b",
+        "type": "card"
+      },
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "amount": {
+        "currency": "USD",
+        "amount": 1250
+      },
+      "createdAt": {
+        "_seconds": 1609423983,
+        "_nanoseconds": 268000000
+      },
+      "status": "paid",
+      "subscriptionId": "c3710950-1ba7-4b07-8de1-6e4f15002043",
+      "circlePaymentId": "8b4736d5-5151-4013-8400-a1018f9461f5",
+      "id": "7d24b7bf-2ec8-4c05-96dc-ffae32e0e5ed",
+      "type": "subscription",
+      "proposalId": "232a7fb7-c16c-46a1-a5db-d48698cef2a7",
+      "updatedAt": {
+        "_seconds": 1609942813,
+        "_nanoseconds": 355000000
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.\n    at cb (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:35098:17)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "proposalId": "3b006f72-5ba3-4ff6-b429-7384af40bc65",
+      "commonId": "15c15871-d513-4a06-9e24-7d2c92cbd571",
+      "source": {
+        "type": "card",
+        "id": "8a9fef18-f80e-4883-8c39-db3cd1dc9e90"
+      },
+      "id": "91985cf3-7fea-4dae-85e6-49244f6f69df",
+      "createdAt": {
+        "_seconds": 1617233105,
+        "_nanoseconds": 882000000
+      },
+      "updatedAt": {
+        "_seconds": 1617233106,
+        "_nanoseconds": 531000000
+      },
+      "userId": "RoUaatJIeccpYxcDD7v1fqJrHZx2",
+      "status": "confirmed",
+      "circlePaymentId": "7e942628-d3dc-4d85-9499-15f47e85e67f",
+      "amount": {
+        "currency": "USD",
+        "amount": 700
+      },
+      "type": "one-time",
+      "fees": {
+        "currency": "USD",
+        "amount": 60
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.\n    at cb (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:35098:17)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "status": "confirmed",
+      "source": {
+        "id": "e5ff0c5f-f33a-4f89-9846-8a59347ab115",
+        "type": "card"
+      },
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "updatedAt": {
+        "_seconds": 1612425346,
+        "_nanoseconds": 406000000
+      },
+      "circlePaymentId": "e5e3fd8e-3041-436b-b708-6510299c3725",
+      "id": "a291e365-0196-461e-9847-7999b2df7435",
+      "amount": {
+        "currency": "USD",
+        "amount": 60000
+      },
+      "createdAt": {
+        "_seconds": 1612425346,
+        "_nanoseconds": 6000000
+      },
+      "fees": {
+        "amount": 0,
+        "currency": "USD"
+      },
+      "proposalId": "88766208-c258-48c7-9b01-f0a3f665982e",
+      "type": "subscription",
+      "subscriptionId": "b4eee44c-8ddc-4f13-a76c-6cd7961d82a9"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.\n    at cb (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:35098:17)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "circlePaymentId": "2b667821-5123-4533-8dbc-927af009ec7b",
+      "source": {
+        "id": "bca3559c-2f4b-4f89-853c-4e0425f88f6f",
+        "type": "card"
+      },
+      "failure": {
+        "errorCode": "payment_failed",
+        "errorDescription": "Payment failed due to unspecified error"
+      },
+      "createdAt": {
+        "_seconds": 1608193179,
+        "_nanoseconds": 311000000
+      },
+      "amount": {
+        "currency": "USD",
+        "amount": 501
+      },
+      "proposalId": "65cd97e2-13cb-4639-a349-a8a23e1ea016",
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "type": "one-time",
+      "id": "a50e2db6-e24f-4b5e-99e3-f86e6f60a43e",
+      "updatedAt": {
+        "_seconds": 1609942813,
+        "_nanoseconds": 156000000
+      },
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "status": "failed"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.\n    at cb (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:35098:17)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "circlePaymentId": "4897b725-0c48-488a-bc12-550f37af2582",
+      "status": "confirmed",
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "proposalId": "1e24babc-b09d-4a76-a71f-d99d0b6a61d8",
+      "createdAt": {
+        "_seconds": 1611839484,
+        "_nanoseconds": 981000000
+      },
+      "type": "subscription",
+      "amount": {
+        "amount": 30000,
+        "currency": "USD"
+      },
+      "fees": {
+        "currency": "USD",
+        "amount": 0
+      },
+      "updatedAt": {
+        "_seconds": 1611839485,
+        "_nanoseconds": 381000000
+      },
+      "source": {
+        "id": "2723c4ad-8f5f-4e08-923a-adc26bad8ad5",
+        "type": "card"
+      },
+      "id": "43d1aeb1-24e5-4f38-b888-ba4fc67d2f6e",
+      "subscriptionId": "5731b2ca-3704-4da3-b796-352943b39656"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.\n    at cb (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:35098:17)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "circlePaymentId": "dc1a04d0-cf63-46a1-ad6b-5594b99a8b69",
+      "proposalId": "7cf90135-7b98-410c-a1a2-731cf42996e6",
+      "amount": {
+        "currency": "USD",
+        "amount": 1250
+      },
+      "type": "one-time",
+      "id": "65aba813-b00a-4156-9036-6bb65c9dfa48",
+      "status": "paid",
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "updatedAt": {
+        "_seconds": 1609942813,
+        "_nanoseconds": 251000000
+      },
+      "source": {
+        "id": "949b3114-f29f-4ae5-84bd-5fce9bb38888",
+        "type": "card"
+      },
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "fees": {
+        "currency": "USD",
+        "amount": 83
+      },
+      "createdAt": {
+        "_seconds": 1608456381,
+        "_nanoseconds": 694000000
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.\n    at cb (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:35098:17)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "updatedAt": {
+        "_seconds": 1612858935,
+        "_nanoseconds": 545000000
+      },
+      "fees": {
+        "currency": "USD",
+        "amount": 1305
+      },
+      "subscriptionId": "60632fae-50b5-4845-a04a-a5be88dae60c",
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "createdAt": {
+        "_seconds": 1612858934,
+        "_nanoseconds": 719000000
+      },
+      "status": "confirmed",
+      "id": "747ea196-13a0-4d24-925e-ff13d16e8a3f",
+      "proposalId": "2fc72a59-5015-4cd3-a89a-d6ec30712cd9",
+      "type": "subscription",
+      "amount": {
+        "currency": "USD",
+        "amount": 30000
+      },
+      "circlePaymentId": "76472a62-0b3c-4a05-bb75-8496b14a4b35",
+      "source": {
+        "id": "d83e3944-985e-46cb-85fa-2ac249a51ab0",
+        "type": "card"
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.\n    at cb (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:35098:17)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "proposalId": "2ae71d1e-1006-4160-a313-b76dbebd07bd",
+      "type": "subscription",
+      "createdAt": {
+        "_seconds": 1610269613,
+        "_nanoseconds": 809000000
+      },
+      "id": "8b1813ba-01a2-477c-8922-bc34e8e968ca",
+      "circlePaymentId": "e6f348ef-effc-480a-94ea-c9ae42dab6a8",
+      "amount": {
+        "currency": "USD",
+        "amount": 200000
+      },
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "subscriptionId": "e3cbb228-efc6-4622-9c17-07f8999a3dc5",
+      "updatedAt": {
+        "_seconds": 1610269614,
+        "_nanoseconds": 323000000
+      },
+      "status": "confirmed",
+      "source": {
+        "id": "a37a64f1-e7be-4a71-90d7-59936423b864",
+        "type": "card"
+      },
+      "fees": {
+        "currency": "USD",
+        "amount": 0
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.\n    at cb (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:35098:17)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "amount": {
+        "currency": "USD",
+        "amount": 1500
+      },
+      "proposalId": "77995a37-ff4b-4438-ac79-822a37f4fc8b",
+      "updatedAt": {
+        "_seconds": 1618371006,
+        "_nanoseconds": 873999000
+      },
+      "commonId": "162374ec-7e92-47fa-b0a5-21f342fbc023",
+      "userId": "RoUaatJIeccpYxcDD7v1fqJrHZx2",
+      "fees": {
+        "amount": 94,
+        "currency": "USD"
+      },
+      "status": "confirmed",
+      "circlePaymentId": "3889e8e7-1f56-413e-824d-2c93d43b1d2a",
+      "source": {
+        "type": "card",
+        "id": "5faed414-e41f-4f4d-b5b3-143b8fb8a983"
+      },
+      "type": "one-time",
+      "createdAt": {
+        "_seconds": 1618371006,
+        "_nanoseconds": 195000000
+      },
+      "id": "984f5989-2eff-40e3-ac1a-7f14e630147c"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.\n    at cb (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:35098:17)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "amount": {
+        "amount": 25600,
+        "currency": "USD"
+      },
+      "circlePaymentId": "5e0c14fa-16d1-498d-bc5d-28ae2b020938",
+      "updatedAt": {
+        "_seconds": 1609942813,
+        "_nanoseconds": 151000000
+      },
+      "id": "a4567dda-0d32-45dc-ba8c-df6e4a9060f0",
+      "type": "subscription",
+      "subscriptionId": "395abd6a-6a83-4488-9d1a-68d49919a939",
+      "status": "confirmed",
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "source": {
+        "type": "card",
+        "id": "627a517e-4b23-487b-aef2-79ea3385e987"
+      },
+      "proposalId": "e8ec8925-3275-4b0c-ad50-c0705fb192c7",
+      "fees": {
+        "currency": "USD",
+        "amount": 1118
+      },
+      "createdAt": {
+        "_seconds": 1608127342,
+        "_nanoseconds": 434000000
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.\n    at cb (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:35098:17)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "failure": {
+        "errorDescription": "Payment failed due to unspecified error",
+        "errorCode": "payment_failed"
+      },
+      "status": "failed",
+      "createdAt": {
+        "_seconds": 1608132307,
+        "_nanoseconds": 161000000
+      },
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "circlePaymentId": "5dae3db7-2902-4608-a32b-782b905148c7",
+      "type": "one-time",
+      "amount": {
+        "amount": 501,
+        "currency": "USD"
+      },
+      "source": {
+        "type": "card",
+        "id": "97d16bcf-df1b-4814-865b-041be22e4d18"
+      },
+      "id": "9d606897-2874-4c47-82cb-07debf1941da",
+      "updatedAt": {
+        "_seconds": 1609942812,
+        "_nanoseconds": 562000000
+      },
+      "proposalId": "5800be22-1ad6-4aa5-ad7d-eaf60faeee49",
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.\n    at cb (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:35098:17)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "status": "confirmed",
+      "circlePaymentId": "fbebf640-7bf6-4d72-ad0a-901231b86425",
+      "fees": {
+        "amount": 5343,
+        "currency": "USD"
+      },
+      "source": {
+        "type": "card",
+        "id": "434966d9-4e13-4c7b-998f-d7e447cadfbb"
+      },
+      "id": "c5cd56fa-ea02-49ed-bfd8-936c3dcedaf0",
+      "type": "one-time",
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "updatedAt": {
+        "_seconds": 1610442276,
+        "_nanoseconds": 348000000
+      },
+      "createdAt": {
+        "_seconds": 1610442275,
+        "_nanoseconds": 848000000
+      },
+      "proposalId": "0b186271-376c-46f7-9df2-4da887653863",
+      "amount": {
+        "amount": 125000,
+        "currency": "USD"
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.\n    at cb (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:35098:17)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "amount": {
+        "currency": "USD",
+        "amount": 1250
+      },
+      "source": {
+        "id": "7ec73788-1c33-4e60-86be-e524d495610c",
+        "type": "card"
+      },
+      "type": "one-time",
+      "updatedAt": {
+        "_seconds": 1610990066,
+        "_nanoseconds": 967000000
+      },
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "circlePaymentId": "32edffa3-9691-4f6a-9773-2af184ce865d",
+      "fees": {
+        "amount": 0,
+        "currency": "USD"
+      },
+      "id": "c85b045e-1e31-43bc-aa8c-fc80c4e60218",
+      "createdAt": {
+        "_seconds": 1610990066,
+        "_nanoseconds": 280000000
+      },
+      "status": "confirmed",
+      "proposalId": "4548189d-c519-4eb6-96c5-a909c73aaeb4"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.\n    at cb (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:35098:17)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "subscriptionId": "e796747f-339e-44d2-b5c6-9784411178d1",
+      "id": "dce6af32-89d8-43df-af1b-4a39225ed474",
+      "circlePaymentId": "57bd4735-5d31-42aa-bc38-52c0b900715d",
+      "updatedAt": {
+        "_seconds": 1609942812,
+        "_nanoseconds": 570000000
+      },
+      "source": {
+        "type": "card",
+        "id": "f8fdaba3-878c-498a-a97a-ab7a08d5b5c0"
+      },
+      "type": "subscription",
+      "fees": {
+        "amount": 252.99999999999997,
+        "currency": "USD"
+      },
+      "proposalId": "5b0fe9c9-c271-40a3-bd97-86324ee2561b",
+      "amount": {
+        "currency": "USD",
+        "amount": 5250
+      },
+      "createdAt": {
+        "_seconds": 1608557950,
+        "_nanoseconds": 371000000
+      },
+      "status": "paid",
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ]
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.\n    at cb (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:35098:17)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "proposalId": "0dcaddac-3908-47b5-8e88-06c5afbf254c",
+      "type": "subscription",
+      "subscriptionId": "6b52e166-665b-44af-9fc5-bf097d58e254",
+      "fees": {
+        "currency": "USD",
+        "amount": 1623.9999999999998
+      },
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "status": "paid",
+      "amount": {
+        "currency": "USD",
+        "amount": 37500
+      },
+      "id": "d675d42a-55f1-4964-88ce-0d66e663f159",
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "source": {
+        "id": "9ade2732-2d2f-41d8-9267-2f80337bc304",
+        "type": "card"
+      },
+      "createdAt": {
+        "_seconds": 1609411035,
+        "_nanoseconds": 422000000
+      },
+      "updatedAt": {
+        "_seconds": 1609942813,
+        "_nanoseconds": 149000000
+      },
+      "circlePaymentId": "1abcc1c0-4388-4b3f-845c-9df166e100f5"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.\n    at cb (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:35098:17)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "subscriptionId": "Payment for deleted subscription",
+      "createdAt": {
+        "_seconds": 1607873503,
+        "_nanoseconds": 882000000
+      },
+      "source": {
+        "type": "card",
+        "id": "c1780060-74f1-4a7c-b32c-d421580cd176"
+      },
+      "id": "f2363bd5-9a52-411f-a20c-6ce665b2d6e6",
+      "status": "failed",
+      "updatedAt": {
+        "_seconds": 1609942812,
+        "_nanoseconds": 463000000
+      },
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "circlePaymentId": "0e9e6b7d-b3e5-4906-a472-15d664bb3ecb",
+      "type": "subscription",
+      "failure": {
+        "errorDescription": "Contact card issuer to query why payment failed",
+        "errorCode": "card_not_honored"
+      },
+      "proposalId": "Payment for deleted subscription",
+      "amount": {
+        "amount": 504,
+        "currency": "USD"
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.\n    at cb (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:35098:17)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  },
+  {
+    "payment": {
+      "createdAt": {
+        "_seconds": 1609147777,
+        "_nanoseconds": 556000000
+      },
+      "subscriptionId": "76bf64d2-40b5-453b-919e-b7b6f0340797",
+      "proposalId": "8b60d46d-31c2-4a6f-8946-504242577815",
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "type": "subscription",
+      "fees": {
+        "amount": 2155,
+        "currency": "USD"
+      },
+      "source": {
+        "id": "0eff7b34-fea4-497b-85b8-868c51b6eb9f",
+        "type": "card"
+      },
+      "status": "paid",
+      "id": "9ed156f5-2ccd-4393-b31e-5e4d2823fd66",
+      "circlePaymentId": "b3e508de-cf31-44ce-8048-4a2c82e183fb",
+      "updatedAt": {
+        "_seconds": 1609942812,
+        "_nanoseconds": 361000000
+      },
+      "amount": {
+        "currency": "USD",
+        "amount": 50000
+      },
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ]
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n\n  An operation failed because it depends on one or more records that were required but not found. No 'User' record(s) (needed to inline the relation on 'Payment' record(s)) was found for a nested connect on one-to-many relation 'PaymentToUser'.\n    at cb (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:35098:17)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"
+    }
+  }
+]

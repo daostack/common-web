@@ -8,8 +8,8 @@
     "compile": "tsc -p tsconfig.json && yarn fix:paths",
     "compile:watch": "tsc-watch --onSuccess \"yarn fix:paths\"",
     "fix:paths": "tscpaths -p tsconfig.json -s ./src -o ./dist",
-    "seed": "ts-node -r dotenv/config  prisma/seed.ts",
     "studio": "prisma studio",
+    "seed": "prisma migrate reset --force && ts-node --transpile -r dotenv/config  prisma/seed.ts",
     "db:sync": "prisma migrate deploy",
     "create:schema": "find prisma -name '*.prisma' -not -name \"schema.prisma\" -exec cat {} + > prisma/schema.prisma  && prisma format",
     "create:migration": "yarn create:schema && prisma migrate dev"
