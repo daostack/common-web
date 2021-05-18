@@ -12,6 +12,7 @@ interface ProposalItemComponentProps {
 export default function ProposalItemComponent({ proposal, loadProposalDetail }: ProposalItemComponentProps) {
   const [imageError, setImageError] = useState(false);
   const date = new Date();
+  const requestedAmount = formatPrice(proposal.fundingRequest?.amount || proposal.join?.funding);
   return (
     <div className="discussion-item-wrapper">
       {proposal.state === "countdown" ? (
@@ -32,8 +33,13 @@ export default function ProposalItemComponent({ proposal, loadProposalDetail }: 
           {proposal.description.title}
         </div>
         <div className="requested-amount">
-          Requested amount
-          <div className="amount">{formatPrice(proposal.fundingRequest?.amount || proposal.join?.funding)}</div>
+          {requestedAmount === "$0" ? (
+            "No funding requested"
+          ) : (
+            <>
+              Requested amount <span className="amount">{requestedAmount}</span>
+            </>
+          )}
         </div>
         <div className="votes">
           <VotesComponent proposal={proposal} />

@@ -60,5 +60,7 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .about-name-wrapper {
     padding: 20px;
+    box-shadow: none;
+    background-color: transparent;
   }
 }
