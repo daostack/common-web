@@ -4,11 +4,10 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
-import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
+import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -301,7 +300,10 @@ export interface NexusGenEnums {
   NotificationSeenStatus: "Done" | "NotSeen" | "Seen"
   NotificationTemplateType: "EmailNotification" | "PushNotification"
   NotificationType: "FundingRequestAccepted" | "FundingRequestRejected" | "General" | "JoinRequestAccepted" | "JoinRequestRejected"
+  PaymentCircleStatus: "confirmed" | "failed" | "paid" | "pending"
   PaymentState: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
+  PaymentStatus: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
+  PaymentType: "ImportedPayment" | "OneTimePayment" | "SubscriptionInitialPayment" | "SubscriptionSequentialPayment"
   ProposalState: "Accepted" | "Countdown" | "Finalizing" | "Rejected"
   ProposalType: "FundingRequest" | "JoinRequest"
   ReportAction: "Dismissed" | "Respected"
@@ -311,9 +313,9 @@ export interface NexusGenEnums {
   SortOrder: "asc" | "desc"
   StatisticType: "AllTime" | "Daily" | "Hourly" | "Weekly"
   SubscriptionPaymentStatus: "AwaitingInitialPayment" | "Pending" | "Successful" | "Unsuccessful"
-  SubscriptionStatus: 'Active' | 'CanceledByPaymentFailure' | 'CanceledByUser' | 'PaymentFailed' | 'Pending'
-  UserCountry: 'AD' | 'AE' | 'AF' | 'AG' | 'AI' | 'AL' | 'AM' | 'AO' | 'AQ' | 'AR' | 'AS' | 'AT' | 'AU' | 'AW' | 'AX' | 'AZ' | 'BA' | 'BB' | 'BD' | 'BE' | 'BF' | 'BG' | 'BH' | 'BI' | 'BJ' | 'BL' | 'BM' | 'BN' | 'BO' | 'BQ' | 'BR' | 'BS' | 'BT' | 'BV' | 'BW' | 'BY' | 'BZ' | 'CA' | 'CC' | 'CD' | 'CF' | 'CG' | 'CH' | 'CI' | 'CK' | 'CL' | 'CM' | 'CN' | 'CO' | 'CR' | 'CU' | 'CV' | 'CW' | 'CX' | 'CY' | 'CZ' | 'DE' | 'DJ' | 'DK' | 'DM' | 'DO' | 'DZ' | 'EC' | 'EE' | 'EG' | 'EH' | 'ER' | 'ES' | 'ET' | 'FI' | 'FJ' | 'FK' | 'FM' | 'FO' | 'FR' | 'GA' | 'GB' | 'GD' | 'GE' | 'GF' | 'GG' | 'GH' | 'GI' | 'GL' | 'GM' | 'GN' | 'GP' | 'GQ' | 'GR' | 'GS' | 'GT' | 'GU' | 'GW' | 'GY' | 'HK' | 'HM' | 'HN' | 'HR' | 'HT' | 'HU' | 'ID' | 'IE' | 'IL' | 'IM' | 'IN' | 'IO' | 'IQ' | 'IR' | 'IS' | 'IT' | 'JE' | 'JM' | 'JO' | 'JP' | 'KE' | 'KG' | 'KH' | 'KI' | 'KM' | 'KN' | 'KP' | 'KR' | 'KW' | 'KY' | 'KZ' | 'LA' | 'LB' | 'LC' | 'LI' | 'LK' | 'LR' | 'LS' | 'LT' | 'LU' | 'LV' | 'LY' | 'MA' | 'MC' | 'MD' | 'ME' | 'MF' | 'MG' | 'MH' | 'MK' | 'ML' | 'MM' | 'MN' | 'MO' | 'MP' | 'MQ' | 'MR' | 'MS' | 'MT' | 'MU' | 'MV' | 'MW' | 'MX' | 'MY' | 'MZ' | 'NA' | 'NC' | 'NE' | 'NF' | 'NG' | 'NI' | 'NL' | 'NO' | 'NP' | 'NR' | 'NU' | 'NZ' | 'OM' | 'PA' | 'PE' | 'PF' | 'PG' | 'PH' | 'PK' | 'PL' | 'PM' | 'PN' | 'PR' | 'PS' | 'PT' | 'PW' | 'PY' | 'QA' | 'RE' | 'RO' | 'RS' | 'RU' | 'RW' | 'SA' | 'SB' | 'SC' | 'SD' | 'SE' | 'SG' | 'SH' | 'SI' | 'SJ' | 'SK' | 'SL' | 'SM' | 'SN' | 'SO' | 'SR' | 'SS' | 'ST' | 'SV' | 'SX' | 'SY' | 'SZ' | 'TC' | 'TD' | 'TF' | 'TG' | 'TH' | 'TJ' | 'TK' | 'TL' | 'TM' | 'TN' | 'TO' | 'TR' | 'TT' | 'TV' | 'TW' | 'TZ' | 'UA' | 'UG' | 'UM' | 'US' | 'UY' | 'UZ' | 'Unknown' | 'VA' | 'VC' | 'VE' | 'VG' | 'VI' | 'VN' | 'VU' | 'WF' | 'WS' | 'YE' | 'YT' | 'ZA' | 'ZM' | 'ZW'
-  UserNotificationTokenState: 'Active' | 'Expired' | 'Voided'
+  SubscriptionStatus: "Active" | "CanceledByPaymentFailure" | "CanceledByUser" | "PaymentFailed" | "Pending"
+  UserCountry: "AD" | "AE" | "AF" | "AG" | "AI" | "AL" | "AM" | "AO" | "AQ" | "AR" | "AS" | "AT" | "AU" | "AW" | "AX" | "AZ" | "BA" | "BB" | "BD" | "BE" | "BF" | "BG" | "BH" | "BI" | "BJ" | "BL" | "BM" | "BN" | "BO" | "BQ" | "BR" | "BS" | "BT" | "BV" | "BW" | "BY" | "BZ" | "CA" | "CC" | "CD" | "CF" | "CG" | "CH" | "CI" | "CK" | "CL" | "CM" | "CN" | "CO" | "CR" | "CU" | "CV" | "CW" | "CX" | "CY" | "CZ" | "DE" | "DJ" | "DK" | "DM" | "DO" | "DZ" | "EC" | "EE" | "EG" | "EH" | "ER" | "ES" | "ET" | "FI" | "FJ" | "FK" | "FM" | "FO" | "FR" | "GA" | "GB" | "GD" | "GE" | "GF" | "GG" | "GH" | "GI" | "GL" | "GM" | "GN" | "GP" | "GQ" | "GR" | "GS" | "GT" | "GU" | "GW" | "GY" | "HK" | "HM" | "HN" | "HR" | "HT" | "HU" | "ID" | "IE" | "IL" | "IM" | "IN" | "IO" | "IQ" | "IR" | "IS" | "IT" | "JE" | "JM" | "JO" | "JP" | "KE" | "KG" | "KH" | "KI" | "KM" | "KN" | "KP" | "KR" | "KW" | "KY" | "KZ" | "LA" | "LB" | "LC" | "LI" | "LK" | "LR" | "LS" | "LT" | "LU" | "LV" | "LY" | "MA" | "MC" | "MD" | "ME" | "MF" | "MG" | "MH" | "MK" | "ML" | "MM" | "MN" | "MO" | "MP" | "MQ" | "MR" | "MS" | "MT" | "MU" | "MV" | "MW" | "MX" | "MY" | "MZ" | "NA" | "NC" | "NE" | "NF" | "NG" | "NI" | "NL" | "NO" | "NP" | "NR" | "NU" | "NZ" | "OM" | "PA" | "PE" | "PF" | "PG" | "PH" | "PK" | "PL" | "PM" | "PN" | "PR" | "PS" | "PT" | "PW" | "PY" | "QA" | "RE" | "RO" | "RS" | "RU" | "RW" | "SA" | "SB" | "SC" | "SD" | "SE" | "SG" | "SH" | "SI" | "SJ" | "SK" | "SL" | "SM" | "SN" | "SO" | "SR" | "SS" | "ST" | "SV" | "SX" | "SY" | "SZ" | "TC" | "TD" | "TF" | "TG" | "TH" | "TJ" | "TK" | "TL" | "TM" | "TN" | "TO" | "TR" | "TT" | "TV" | "TW" | "TZ" | "UA" | "UG" | "UM" | "US" | "UY" | "UZ" | "Unknown" | "VA" | "VC" | "VE" | "VG" | "VI" | "VN" | "VU" | "WF" | "WS" | "YE" | "YT" | "ZA" | "ZM" | "ZW"
+  UserNotificationTokenState: "Active" | "Expired" | "Voided"
   VoteOutcome: "Approve" | "Condemn"
 }
 
@@ -477,6 +479,18 @@ export interface NexusGenObjects {
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   NotificationTemplateOptions: {};
+  Payment: { // root type
+    amount?: number | null; // Int
+    circlePaymentId?: string | null; // String
+    circlePaymentStatus?: NexusGenEnums['PaymentCircleStatus'] | null; // PaymentCircleStatus
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: NexusGenScalars['UUID']; // UUID!
+    processed: boolean; // Boolean!
+    processedError: boolean; // Boolean!
+    status: NexusGenEnums['PaymentStatus']; // PaymentStatus!
+    type: NexusGenEnums['PaymentType']; // PaymentType!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   Proposal: { // root type
     commonId: NexusGenScalars['UUID']; // UUID!
     commonMemberId: NexusGenScalars['UUID']; // UUID!
@@ -559,7 +573,7 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  BaseEntity: NexusGenRootTypes['CommonMember'] | NexusGenRootTypes['CommonSubscription'] | NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['FundingProposal'] | NexusGenRootTypes['JoinProposal'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['NotificationEventSettings'] | NexusGenRootTypes['NotificationSystemSettings'] | NexusGenRootTypes['NotificationTemplate'] | NexusGenRootTypes['Report'] | NexusGenRootTypes['Role'] | NexusGenRootTypes['Statistic'] | NexusGenRootTypes['UserNotificationToken'];
+  BaseEntity: NexusGenRootTypes['CommonMember'] | NexusGenRootTypes['CommonSubscription'] | NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['FundingProposal'] | NexusGenRootTypes['JoinProposal'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['NotificationEventSettings'] | NexusGenRootTypes['NotificationSystemSettings'] | NexusGenRootTypes['NotificationTemplate'] | NexusGenRootTypes['Payment'] | NexusGenRootTypes['Report'] | NexusGenRootTypes['Role'] | NexusGenRootTypes['Statistic'] | NexusGenRootTypes['UserNotificationToken'];
 }
 
 export interface NexusGenUnions {
@@ -769,6 +783,18 @@ export interface NexusGenFieldTypes {
     notificationTypes: Array<NexusGenEnums['NotificationType'] | null>; // [NotificationType]!
     templateTypes: Array<NexusGenEnums['NotificationTemplateType'] | null>; // [NotificationTemplateType]!
   }
+  Payment: { // field return type
+    amount: number | null; // Int
+    circlePaymentId: string | null; // String
+    circlePaymentStatus: NexusGenEnums['PaymentCircleStatus'] | null; // PaymentCircleStatus
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: NexusGenScalars['UUID']; // UUID!
+    processed: boolean; // Boolean!
+    processedError: boolean; // Boolean!
+    status: NexusGenEnums['PaymentStatus']; // PaymentStatus!
+    type: NexusGenEnums['PaymentType']; // PaymentType!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   Proposal: { // field return type
     common: NexusGenRootTypes['Common']; // Common!
     commonId: NexusGenScalars['UUID']; // UUID!
@@ -811,6 +837,7 @@ export interface NexusGenFieldTypes {
     notificationTemplateOptions: NexusGenRootTypes['NotificationTemplateOptions'] | null; // NotificationTemplateOptions
     notificationTemplates: Array<NexusGenRootTypes['NotificationTemplate'] | null> | null; // [NotificationTemplate]
     notifications: Array<NexusGenRootTypes['Notification'] | null> | null; // [Notification]
+    payments: Array<NexusGenRootTypes['Payment'] | null> | null; // [Payment]
     proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
     proposals: Array<NexusGenRootTypes['Proposal'] | null> | null; // [Proposal]
     roles: Array<NexusGenRootTypes['Role'] | null> | null; // [Role]
@@ -1097,6 +1124,18 @@ export interface NexusGenFieldTypeNames {
     notificationTypes: 'NotificationType'
     templateTypes: 'NotificationTemplateType'
   }
+  Payment: { // field return type name
+    amount: 'Int'
+    circlePaymentId: 'String'
+    circlePaymentStatus: 'PaymentCircleStatus'
+    createdAt: 'DateTime'
+    id: 'UUID'
+    processed: 'Boolean'
+    processedError: 'Boolean'
+    status: 'PaymentStatus'
+    type: 'PaymentType'
+    updatedAt: 'DateTime'
+  }
   Proposal: { // field return type name
     common: 'Common'
     commonId: 'UUID'
@@ -1139,6 +1178,7 @@ export interface NexusGenFieldTypeNames {
     notificationTemplateOptions: 'NotificationTemplateOptions'
     notificationTemplates: 'NotificationTemplate'
     notifications: 'Notification'
+    payments: 'Payment'
     proposal: 'Proposal'
     proposals: 'Proposal'
     roles: 'Role'
@@ -1379,6 +1419,9 @@ export interface NexusGenArgTypes {
     notifications: { // args
       paginate: NexusGenInputs['PaginateInput']; // PaginateInput!
     }
+    payments: { // args
+      paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
+    }
     proposal: { // args
       where: NexusGenInputs['ProposalWhereUniqueInput']; // ProposalWhereUniqueInput!
     }
@@ -1431,25 +1474,26 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  BaseEntity: 'CommonMember' | 'CommonSubscription' | 'Discussion' | 'DiscussionMessage' | 'DiscussionSubscription' | 'FundingProposal' | 'JoinProposal' | 'Notification' | 'NotificationEventSettings' | 'NotificationSystemSettings' | 'NotificationTemplate' | 'Report' | 'Role' | 'Statistic' | 'UserNotificationToken'
+  BaseEntity: "CommonMember" | "CommonSubscription" | "Discussion" | "DiscussionMessage" | "DiscussionSubscription" | "FundingProposal" | "JoinProposal" | "Notification" | "NotificationEventSettings" | "NotificationSystemSettings" | "NotificationTemplate" | "Payment" | "Report" | "Role" | "Statistic" | "UserNotificationToken"
 }
 
 export interface NexusGenTypeInterfaces {
-  CommonMember: 'BaseEntity'
-  CommonSubscription: 'BaseEntity'
-  Discussion: 'BaseEntity'
-  DiscussionMessage: 'BaseEntity'
-  DiscussionSubscription: 'BaseEntity'
-  FundingProposal: 'BaseEntity'
-  JoinProposal: 'BaseEntity'
-  Notification: 'BaseEntity'
-  NotificationEventSettings: 'BaseEntity'
-  NotificationSystemSettings: 'BaseEntity'
-  NotificationTemplate: 'BaseEntity'
-  Report: 'BaseEntity'
-  Role: 'BaseEntity'
-  Statistic: 'BaseEntity'
-  UserNotificationToken: 'BaseEntity'
+  CommonMember: "BaseEntity"
+  CommonSubscription: "BaseEntity"
+  Discussion: "BaseEntity"
+  DiscussionMessage: "BaseEntity"
+  DiscussionSubscription: "BaseEntity"
+  FundingProposal: "BaseEntity"
+  JoinProposal: "BaseEntity"
+  Notification: "BaseEntity"
+  NotificationEventSettings: "BaseEntity"
+  NotificationSystemSettings: "BaseEntity"
+  NotificationTemplate: "BaseEntity"
+  Payment: "BaseEntity"
+  Report: "BaseEntity"
+  Role: "BaseEntity"
+  Statistic: "BaseEntity"
+  UserNotificationToken: "BaseEntity"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;

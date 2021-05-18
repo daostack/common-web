@@ -30,12 +30,14 @@ import { StringFilterInput } from './Shared/Inputs/StringFilter.input';
 import { BillingDetailsInput } from './Shared/Inputs/BillingDetails.input';
 
 import { SortOrder } from './Shared/Enums/SortBy.enum';
+import { PaymentTypes } from './Types/Payments';
 
 const types = [
   UserTypes,
   RoleTypes,
   CardTypes,
   VoteTypes,
+  PaymentTypes,
   EventTypes,
   CommonTypes,
   ReportTypes,

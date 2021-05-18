@@ -61,6 +61,7 @@ export const importPayments = async (date: Date) => {
 
         const payment = await seeder.payment
           .create({
+            // @ts-ignore
             data: {
               id: fp.id,
 

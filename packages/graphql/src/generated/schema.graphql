@@ -699,11 +699,51 @@ input PaginateInput {
   take: Int!
 }
 
+type Payment implements BaseEntity {
+  amount: Int
+  circlePaymentId: String
+  circlePaymentStatus: PaymentCircleStatus
+
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+
+  """The main identifier of the item"""
+  id: UUID!
+  processed: Boolean!
+  processedError: Boolean!
+  status: PaymentStatus!
+  type: PaymentType!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+}
+
+enum PaymentCircleStatus {
+  confirmed
+  failed
+  paid
+  pending
+}
+
 enum PaymentState {
   NotAttempted
   Pending
   Successful
   Unsuccessful
+}
+
+enum PaymentStatus {
+  NotAttempted
+  Pending
+  Successful
+  Unsuccessful
+}
+
+enum PaymentType {
+  ImportedPayment
+  OneTimePayment
+  SubscriptionInitialPayment
+  SubscriptionSequentialPayment
 }
 
 type Proposal {
@@ -800,6 +840,7 @@ type Query {
 
   """List of all notifications, readable only by the admin"""
   notifications(paginate: PaginateInput!): [Notification]
+  payments(paginate: PaginateInput): [Payment]
   proposal(where: ProposalWhereUniqueInput!): Proposal
   proposals(paginate: PaginateInput, where: ProposalWhereInput): [Proposal]
   roles(paginate: PaginateInput): [Role]

@@ -14,6 +14,8 @@ export const allPermissions = [
 
   'admin.events.read',
 
+  'admin.payments.read',
+
   'admin.proposals.read',
   'admin.proposals.read.ipAddress',
 

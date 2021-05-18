@@ -6,12 +6,11 @@ import { Card, Row, Col, Text, Spacer, Tag, User, Divider, useTheme } from '@gei
 import { ChevronLeftCircle, ChevronRightCircle, ChevronDownCircle, ChevronUpCircle } from '@geist-ui/react-icons';
 import { gql } from '@apollo/client';
 import { useGetPaymentDetailsLazyQuery, useGetPaymentsQuery } from '@core/graphql';
-import { useRouter } from 'next/router';
 
 
 export const PaymentsTableQuery = gql`
   query GetPayments($page: Int = 1) {
-    payments: payments(page: $page) {
+    payments(page: $page) {
       id
 
       type
@@ -74,7 +73,6 @@ interface IPaymentTableProps {
 }
 
 export const PaymentsTable: React.FC<IPaymentTableProps> = ({ hideNavigation }) => {
-  const router = useRouter();
   const theme = useTheme();
 
   // --- State

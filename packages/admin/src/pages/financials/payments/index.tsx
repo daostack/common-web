@@ -1,34 +1,12 @@
 import React from 'react';
 import { NextPage } from 'next';
+import { Breadcrumbs, Spacer, Text, useToasts } from '@geist-ui/react';
 
-import { gql } from '@apollo/client';
-import { Breadcrumbs, Card, Note, Spacer, Spinner, Text, useToasts } from '@geist-ui/react';
-
-import { withPermission } from '../../../helpers/hoc/withPermission';
-import { useGetPaymentsHomeScreenDataQuery, useUpdatePaymentDataMutation } from '@core/graphql';
 import { Link } from '@components/Link';
-import { Centered } from '@components/Centered';
-import { Zap } from '@geist-ui/react-icons';
 import { PaymentsTable } from '@components/tables/PaymentsTable';
 
-const GetPaymentsHomepageData = gql`
-  query GetPaymentsHomeScreenData {
-    hangingPayments: payments(hanging: true) {
-      id
+import { withPermission } from '../../../helpers/hoc/withPermission';
 
-      createdAt
-      updatedAt
-
-      status
-    }
-  }
-`;
-
-const UpdatePaymentDataMutation = gql`
-  mutation UpdatePaymentData($paymentId: ID!) {
-    updatePaymentData(id: $paymentId)
-  }
-`;
 
 export const PaymentsHomepage: NextPage = () => {
 
@@ -38,40 +16,6 @@ export const PaymentsHomepage: NextPage = () => {
 
 
   // --- Data fetching
-  const { data: payments } = useGetPaymentsHomeScreenDataQuery();
-
-  const [updatePayment] = useUpdatePaymentDataMutation();
-
-
-
-  const onUpdatePaymentClick = (paymentId: string): () => Promise<void> => {
-    return async () => {
-      setUpdatingPayment(paymentId);
-
-      const result = await updatePayment({
-        variables: {
-          paymentId
-        }
-      });
-
-      if (result.data) {
-        await updatePayment();
-
-        setToast({
-          type: 'success',
-          text: 'Payment updated!'
-        });
-      } else {
-        setToast({
-          type: 'error',
-          text: 'An error occurred while updating the payment!'
-        });
-      }
-
-      setUpdatingPayment(null);
-    };
-  };
-
   return (
     <React.Fragment>
       <Text h1>Payments</Text>
@@ -88,62 +32,11 @@ export const PaymentsHomepage: NextPage = () => {
       <Spacer y={2}/>
 
       <React.Fragment>
-        {(!!payments?.hangingPayments?.length) && (
-          <React.Fragment>
-            <Note type="error">There are hanging payments. Please, take a look!</Note>
-
-            <Spacer/>
-
-            <Text h3>Hanging payments ({payments?.hangingPayments.length})</Text>
-
-            {(payments?.hangingPayments).map((payment) => (
-              <React.Fragment key={payment.id}>
-                <Card>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <div>
-                      <Centered vertical>
-                        <Text h5>Payment #{payment.id}</Text>
-                      </Centered>
-                    </div>
-
-                    <div>
-                      <Centered horizontal>
-                        {(updatingPayment !== payment.id) ? (
-                          <div
-                            onClick={onUpdatePaymentClick(payment.id)}
-                            style={{
-                              cursor: updatingPayment
-                                ? 'not-allowed'
-                                : 'pointer'
-                            }}
-                          >
-                            <Zap/>
-                          </div>
-                        ) : (
-                          <div style={{ cursor: 'not-allowed' }}>
-                            <Spinner/>
-                          </div>
-                        )}
-                      </Centered>
-                    </div>
-                  </div>
-
-                </Card>
-
-                <Spacer/>
-              </React.Fragment>
-            ))}
-          </React.Fragment>
-        )}
-
-
         <Text h3>Payments</Text>
 
         <Spacer y={.5}/>
 
         <PaymentsTable />
-
-
       </React.Fragment>
     </React.Fragment>
   );
