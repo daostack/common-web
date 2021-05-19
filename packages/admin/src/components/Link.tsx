@@ -11,12 +11,17 @@ interface ILinkProps {
   Icon?: React.FC;
 }
 
-export const Link: React.FC<React.PropsWithChildren<ILinkProps>> = ({ to, Icon, children, ...props }) => {
+export const Link: React.FC<React.PropsWithChildren<ILinkProps & React.HTMLProps<HTMLSpanElement>>> = ({
+                                                                                                         to,
+                                                                                                         Icon,
+                                                                                                         children,
+                                                                                                         ...props
+                                                                                                       }) => {
   return (
     <NextLink href={to}>
       <GeistLink>
-        <span style={{ display: 'flex', justifyContent: 'center', ...props.containerStyles }}>
-          {Icon && <Icon />}
+        <span style={{ display: 'flex', justifyContent: 'center', ...props.containerStyles }} {...props}>
+          {Icon && <Icon/>}
 
           <span style={{ ...props.textStyles }}>
             {children}

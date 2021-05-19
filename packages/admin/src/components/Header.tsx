@@ -2,10 +2,11 @@ import React from 'react';
 import firebase from 'firebase/app';
 import { useRouter } from 'next/router';
 
-import { Avatar, Divider, Link, Page, Tabs, Tooltip, Text } from '@geist-ui/react';
+import { Avatar, Divider, Page, Tooltip, Text, Popover } from '@geist-ui/react';
 import { HasPermission } from '@components/HasPermission';
 import { useUserContext } from '@core/context';
 import { SearchEverywhere } from '@components/modals/SearchEverywhere';
+import { Link } from './Link';
 
 export const Header: React.FC = () => {
   const userContext = useUserContext();
@@ -29,8 +30,7 @@ export const Header: React.FC = () => {
 
   const onSignOut = async (): Promise<void> => {
     await firebase.auth().signOut();
-
-    router.push('/');
+    await router.push('/');
   };
 
 
@@ -77,19 +77,116 @@ export const Header: React.FC = () => {
       </div>
 
       <HasPermission permission="admin.*">
-        <Tabs value={currentTab} onChange={onTabChange} hideDivider>
-          <Tabs.Item value="dashboard" label="Dashboard"/>
-          <Tabs.Item value="commons" label="Commons"/>
-          <Tabs.Item value="proposals" label="Proposals"/>
-          <Tabs.Item value="users" label="Users"/>
-          <Tabs.Item value="financials" label="Financials"/>
-          <Tabs.Item value="events" label="Events"/>
+        <div
+          style={{
+            display: 'flex'
+          }}
+        >
+          <Link
+            to="/"
+            style={{
+              margin: '0 .5em',
+              marginLeft: '0'
+            }}
+          >
+            Dashboard
+          </Link>
 
-          <HasPermission permission="admin.notification.*">
-            <Tabs.Item value="notifications" label="Notifications"/>
+          <HasPermission permission="admin.common.*">
+            <Link
+              to="/commons"
+              style={{
+                margin: '0 .5em'
+              }}
+            >
+              Commons
+            </Link>
           </HasPermission>
-          {/*<Tabs.Item value="development/playground" label="Playground"/>*/}
-        </Tabs>
+
+          <HasPermission permission="admin.proposals.*">
+            <Link
+              to="/proposals"
+              style={{
+                margin: '0 .5em'
+              }}
+            >
+              Proposals
+            </Link>
+          </HasPermission>
+
+          <HasPermission permission="admin.users.*">
+            <Link
+              to="/users"
+              style={{
+                margin: '0 .5em'
+              }}
+            >
+              Users
+            </Link>
+          </HasPermission>
+
+          <HasPermission permission="admin.payment.*">
+            <Popover
+              trigger="hover"
+              content={(
+                <React.Fragment>
+                  <Popover.Item>
+                    <Link to="/financials/payments">Payments</Link>
+                  </Popover.Item>
+
+                  <Popover.Item>
+                    <Link to="/notifications/templates">Payouts</Link>
+                  </Popover.Item>
+                </React.Fragment>
+              )}
+            >
+              <Text
+                p
+                style={{
+                  margin: '0 .5em',
+                  cursor: 'pointer'
+                }}
+              >
+                Financials
+              </Text>
+            </Popover>
+
+          </HasPermission>
+
+
+          <HasPermission permission="admin.notifications.*">
+            <Popover
+              trigger="hover"
+              content={(
+                <React.Fragment>
+                  <Popover.Item>
+                    <Link to="/notifications/templates">Templates</Link>
+                  </Popover.Item>
+
+                  <Popover.Item>
+                    <Link to="/notifications/settings">Settings</Link>
+                  </Popover.Item>
+
+                  <Popover.Item>
+                    <Link to="/notifications/events">Event integrations</Link>
+                  </Popover.Item>
+                </React.Fragment>
+              )}
+            >
+              <Text
+                p
+                style={{
+                  margin: '0 .5em',
+                  cursor: 'pointer'
+                }}
+              >
+                Notifications
+              </Text>
+            </Popover>
+
+          </HasPermission>
+
+        </div>
       </HasPermission>
     </Page.Header>
   );
