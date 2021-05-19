@@ -4,31 +4,19 @@
   display: flex;
   align-items: center;
   position: relative;
-  .social-button {
+  .share-button {
     width: 40px;
     height: 40px;
-    background-color: $light-purple;
-    border-radius: 50%;
-    border: none;
-    margin-left: 16px;
+    border-radius: 40px;
+    background-color: var(--share-button-bg);
+    background-image: url("/icons/icons-share.svg");
+    background-repeat: no-repeat;
+    background-position: center;
     cursor: pointer;
-    position: relative;
-    &::after {
-      background-image: url("/icons/icons-share.svg");
-      display: inline-block;
-      content: " ";
-      background-size: 16px 16px;
-      height: 16px;
-      width: 16px;
-      top: calc(50% - 8px);
-      position: absolute;
-      right: calc(50% - 8px);
-    }
   }
-  .social-button:hover {
+  .share-button:hover {
     opacity: 0.9;
   }
-
 }
 .social-buttons-wrapper {
   z-index: 2;
@@ -50,6 +38,7 @@
 
 .social-buttons {
   display: flex;
+  justify-content: center;
   button {
     width: 40px;
     height: 40px;
@@ -76,5 +65,8 @@
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
-
+  .social-buttons-wrapper {
+    position: unset;
+    box-shadow: unset;
+  }
 }

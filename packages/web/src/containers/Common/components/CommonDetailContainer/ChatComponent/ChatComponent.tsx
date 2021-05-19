@@ -4,6 +4,7 @@ import { DiscussionMessage } from "../../../../../shared/models";
 import ChatMessage from "./ChatMessage";
 import "./index.scss";
 import { formatDate } from "../../../../../shared/utils";
+import { Colors } from "../../../../../shared/constants";
 
 interface ChatComponentInterface {
   discussionMessage: DiscussionMessage[];
@@ -56,7 +57,7 @@ export default function ChatComponent({ discussionMessage }: ChatComponentInterf
       <div className="bottom-chat-wrapper">
         <div className="text">Download the Common app to join the discussion</div>
         <div className="button-wrapper">
-          <Share />
+          <Share type="popup" color={Colors.lightPurple} />
         </div>
       </div>
     </div>

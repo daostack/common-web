@@ -253,10 +253,6 @@ export default function CommonDetail() {
         <Modal isShowing={showJoinModal} onClose={closeJoinModalHandler} closeColor={Colors.white}>
           <JoinTheEffortModal />
         </Modal>
-        {/* {screenSize === ScreenSize.Mobile &&
-          <Modal isShowing={showShareModal} onClose={closeShareModalHandler} closeColor={Colors.black}>
-            <Share />
-          </Modal>} */}
         <div className="common-detail-wrapper">
           <div className="main-information-block">
             <div className="main-information-wrapper">
@@ -273,7 +269,7 @@ export default function CommonDetail() {
                     <div className="name">{common?.name}</div>
                     <div className="tagline">{common?.metadata.byline}</div>
                   </div>
-                  {screenSize === ScreenSize.Mobile && <Share />}
+                  {screenSize === ScreenSize.Mobile && <Share type="modal" color={Colors.transparent} />}
                 </div>
                 <div className="numbers">
                   <div className="item" onClick={onOpen}>
@@ -307,10 +303,10 @@ export default function CommonDetail() {
                   ))}
                 </div>
                 <div className="social-wrapper">
-                  <button className="button-blue" onClick={onOpenJoinModal}>
+                  <button className="button-blue" onClick={onOpenJoinModal} style={{ marginRight: "10px" }}>
                     Join the effort
                   </button>
-                  {screenSize === ScreenSize.Desktop && <Share />}
+                  {screenSize === ScreenSize.Desktop && <Share type="popup" color={Colors.lightPurple} />}
                 </div>
               </div>
             </div>
