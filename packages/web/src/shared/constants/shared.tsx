@@ -21,4 +21,7 @@ export enum Colors {
   gray = "#92a2b5",
   white = "#FFFFFF",
   black = "#000000",
+  purple = "#7786ff",
+  lightPurple = "#f1f5ff",
+  transparent = "transparent",
 }

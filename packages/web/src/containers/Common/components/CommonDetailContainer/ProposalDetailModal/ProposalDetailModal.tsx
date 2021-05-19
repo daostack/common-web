@@ -12,10 +12,10 @@ interface DiscussionDetailModalProps {
   common: Common;
 }
 
-export default function ProposalDetailModal({ proposal, common }: DiscussionDetailModalProps) {
+export default function ProposalDetailModal({ proposal }: DiscussionDetailModalProps) {
   const date = new Date();
   const [imageError, setImageError] = useState(false);
-  const requestedAmount = formatPrice(common.balance);
+  const requestedAmount = formatPrice(proposal?.fundingRequest?.amount || proposal?.join?.funding);
   return !proposal ? (
     <Loader />
   ) : (
