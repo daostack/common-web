@@ -1,6 +1,6 @@
 {
   "name": "@common/worker",
-  "version": "1.9.12-rc.0",
+  "version": "1.9.12-rc.2",
   "author": "Alexander Ivanov @alexander2001i",
   "main": "dist/index.js",
   "scripts": {
@@ -9,8 +9,8 @@
     "start": "node -r dotenv/config dist/index.js"
   },
   "dependencies": {
-    "@common/core": "^1.9.12-rc.0",
-    "@common/queues": "^1.9.12-rc.0",
+    "@common/core": "^1.9.12-rc.2",
+    "@common/queues": "^1.9.12-rc.2",
     "bull": "^3.22.0",
     "bull-board": "^1.5.1",
     "express": "^4.17.1"

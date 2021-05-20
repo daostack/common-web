@@ -1,6 +1,6 @@
 {
   "name": "@common/queues",
-  "version": "1.9.12-rc.0",
+  "version": "1.9.12-rc.2",
   "author": "Alexander Ivanov @alexander2001i",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,7 +10,7 @@
     "fix:paths": "tscpaths -p tsconfig.json -s ./src -o ./dist"
   },
   "dependencies": {
-    "@common/core": "^1.9.12-rc.0",
+    "@common/core": "^1.9.12-rc.2",
     "@prisma/client": "^2.20.1",
     "bull": "^3.22.0"
   },
