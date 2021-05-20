@@ -54,7 +54,7 @@ export const hideContent = async (hideContentPayload: HideContentPayload): Promi
       flag: FLAGS.hidden,
       reasons: item.moderation?.reasons || [],
       moderatorNote: item.moderation?.moderatorNote || '',
-      quietEnding: item.moderation?.countdownStart || null,
+      quietEnding: item.moderation?.quietEnding || null,
       updatedAt,
       countdownPeriod,
       reporter: userId,
