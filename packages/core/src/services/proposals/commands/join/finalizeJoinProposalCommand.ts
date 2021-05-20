@@ -39,7 +39,7 @@ export const finalizeJoinProposalCommand = async (proposalId: string): Promise<v
     throw new NotFoundError('proposal', proposalId);
   }
 
-  // Check the type of the proposal
+  // Check the Types of the proposal
   if (proposal.type !== ProposalType.JoinRequest || !proposal.join) {
     throw new CommonError('Cannot finalize non join proposal in `finalizeJoinProposalCommand`', {
       proposal

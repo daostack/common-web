@@ -489,6 +489,7 @@ export interface NexusGenObjects {
     circlePaymentStatus?: NexusGenEnums['PaymentCircleStatus'] | null; // PaymentCircleStatus
     commonId: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    fees?: number | null; // Int
     id: NexusGenScalars['UUID']; // UUID!
     processed: boolean; // Boolean!
     processedError: boolean; // Boolean!
@@ -796,6 +797,7 @@ export interface NexusGenFieldTypes {
     common: NexusGenRootTypes['Common']; // Common!
     commonId: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    fees: number | null; // Int
     id: NexusGenScalars['UUID']; // UUID!
     processed: boolean; // Boolean!
     processedError: boolean; // Boolean!
@@ -847,6 +849,7 @@ export interface NexusGenFieldTypes {
     notificationTemplateOptions: NexusGenRootTypes['NotificationTemplateOptions'] | null; // NotificationTemplateOptions
     notificationTemplates: Array<NexusGenRootTypes['NotificationTemplate'] | null> | null; // [NotificationTemplate]
     notifications: Array<NexusGenRootTypes['Notification'] | null> | null; // [Notification]
+    payment: NexusGenRootTypes['Payment'] | null; // Payment
     payments: Array<NexusGenRootTypes['Payment'] | null> | null; // [Payment]
     proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
     proposals: Array<NexusGenRootTypes['Proposal'] | null> | null; // [Proposal]
@@ -1141,6 +1144,7 @@ export interface NexusGenFieldTypeNames {
     common: 'Common'
     commonId: 'String'
     createdAt: 'DateTime'
+    fees: 'Int'
     id: 'UUID'
     processed: 'Boolean'
     processedError: 'Boolean'
@@ -1192,6 +1196,7 @@ export interface NexusGenFieldTypeNames {
     notificationTemplateOptions: 'NotificationTemplateOptions'
     notificationTemplates: 'NotificationTemplate'
     notifications: 'Notification'
+    payment: 'Payment'
     payments: 'Payment'
     proposal: 'Proposal'
     proposals: 'Proposal'
@@ -1432,6 +1437,9 @@ export interface NexusGenArgTypes {
     }
     notifications: { // args
       paginate: NexusGenInputs['PaginateInput']; // PaginateInput!
+    }
+    payment: { // args
+      id?: string | null; // ID
     }
     payments: { // args
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput

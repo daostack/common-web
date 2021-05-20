@@ -32,7 +32,7 @@ export const addEventJob = (job: EventsQueueJob, payload: IEventsQueueJob['creat
     logger.silly('New create event job was added');
 
     if (!(payload as IEventsQueueJob['create'])!.type) {
-      throw new CommonError('Unsupported payload type!');
+      throw new CommonError('Unsupported payload Types!');
     }
 
     EventQueue.add(job, {

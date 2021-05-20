@@ -115,7 +115,7 @@ enum EventType {
 type Event {
   """The unique identifier of the event"""
   id: ID!
-  """The type of the event"""
+  """The Types of the event"""
   type: EventType!
   """The date, at which the event was created"""
   createdAt: Date!
@@ -261,7 +261,7 @@ enum ProposalFundingState {
   available
   funded
 }
-"""The proposals type"""
+"""The proposals Types"""
 type Proposal {
   id: ID!
   createdAt: Date!
@@ -348,9 +348,9 @@ type SubscriptionMetadataCommon {
 type Statistics {
   """Commons, created on that date"""
   newCommons: Int
-  """The amount of proposals with join type, created on that date"""
+  """The amount of proposals with join Types, created on that date"""
   newJoinRequests: Int
-  """The amount of proposals with funding type, created on that date"""
+  """The amount of proposals with funding Types, created on that date"""
   newFundingRequests: Int
   """The amount of discussions, started on that date"""
   newDiscussions: Int
@@ -361,7 +361,7 @@ type Statistics {
   fundingRequests(onlyOpen: Boolean = false): Int
   users: Int
 }
-"""The common type"""
+"""The common Types"""
 type Common {
   """The unique identifier of the common"""
   id: ID!

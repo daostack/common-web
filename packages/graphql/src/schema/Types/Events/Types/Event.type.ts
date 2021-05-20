@@ -17,7 +17,7 @@ export const EventType = objectType({
 
     t.nonNull.field('type', {
       type: 'EventType',
-      description: 'The type of the event in one of the predefined event types'
+      description: 'The Types of the event in one of the predefined event types'
     });
 
     t.json('payload');

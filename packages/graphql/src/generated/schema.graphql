@@ -361,7 +361,7 @@ type Event {
   id: ID!
   payload: JSON
 
-  """The type of the event in one of the predefined event types"""
+  """The Types of the event in one of the predefined event types"""
   type: EventType!
 
   """The date, at which the item was last modified"""
@@ -449,7 +449,7 @@ enum FundingState {
   Pending
 }
 
-"""The funding type of the common"""
+"""The funding Types of the common"""
 enum FundingType {
   Monthly
   OneTime
@@ -501,7 +501,7 @@ type Mutation {
     """The ID of the discussion subscription to change"""
     id: ID!
 
-    """The new subscription type"""
+    """The new subscription Types"""
     type: DiscussionSubscriptionType!
   ): DiscussionSubscription
   createCard(input: CreateCardInput!): Card!
@@ -510,7 +510,7 @@ type Mutation {
   createDiscussionMessage(input: CreateDiscussionMessageInput!): DiscussionMessage!
   createFundingProposal(input: CreateFundingProposalInput!): Proposal!
 
-  """Create new proposal of type JOIN."""
+  """Create new proposal of Types JOIN."""
   createJoinProposal(input: CreateJoinProposalInput!): Proposal!
   createNotificationEventSettings(input: CreateNotificationEventSettingsInput!): NotificationEventSettings
   createNotificationTemplate(input: CreateNotificationTemplateInput!): NotificationTemplate
@@ -616,7 +616,7 @@ enum NotificationSeenStatus {
 }
 
 input NotificationSettingsWhereInput {
-  """The type of the notification"""
+  """The Types of the notification"""
   type: NotificationType
 }
 
@@ -700,6 +700,7 @@ input PaginateInput {
 }
 
 type Payment implements BaseEntity {
+  """The amount of the payment in US dollar cents"""
   amount: Int
   circlePaymentId: String
   circlePaymentStatus: PaymentCircleStatus
@@ -708,6 +709,9 @@ type Payment implements BaseEntity {
 
   """The date, at which the item was created"""
   createdAt: DateTime!
+
+  """The payment fees in US dollar cents"""
+  fees: Int
 
   """The main identifier of the item"""
   id: UUID!
@@ -849,6 +853,7 @@ type Query {
 
   """List of all notifications, readable only by the admin"""
   notifications(paginate: PaginateInput!): [Notification]
+  payment(id: ID): Payment
   payments(paginate: PaginateInput, where: PaymentsWhereInput): [Payment]
   proposal(where: ProposalWhereUniqueInput!): Proposal
   proposals(paginate: PaginateInput, where: ProposalWhereInput): [Proposal]
@@ -865,7 +870,7 @@ type Report implements BaseEntity {
   """The date, at which the item was created"""
   createdAt: DateTime!
 
-  """The type of violation that this report is for"""
+  """The Types of violation that this report is for"""
   for: ReportFor!
 
   """The main identifier of the item"""

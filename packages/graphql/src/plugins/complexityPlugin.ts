@@ -5,7 +5,7 @@
 //   requestDidStart: () => ({
 //     didResolveOperation({ request, document }) {
 //       /**
-//        * This provides GraphQL query analysis to be able to react on complex queries to your GraphQL server.
+//        * This provides GraphQL query analysis to be able to react on complex Queries to your GraphQL server.
 //        * This can be used to protect your GraphQL servers against resource exhaustion and DoS attacks.
 //        */
 //       const complexity = getComplexity({

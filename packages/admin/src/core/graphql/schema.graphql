@@ -410,7 +410,10 @@ type Payment implements BaseEntity {
   status: PaymentStatus!
   circlePaymentStatus: PaymentCircleStatus
   circlePaymentId: String
+  """The amount of the payment in US dollar cents"""
   amount: Int
+  """The payment fees in US dollar cents"""
+  fees: Int
   userId: String!
   user: User!
   commonId: String!
@@ -427,7 +430,7 @@ type Event {
   createdAt: DateTime!
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
-  """The type of the event in one of the predefined event types"""
+  """The Types of the event in one of the predefined event types"""
   type: EventType!
   payload: JSON
   """The ID of the common, for whom the event was created"""
@@ -520,7 +523,7 @@ type Common {
   activeFundingProposals: Int!
   activeJoinProposals: Int!
 }
-"""The funding type of the common"""
+"""The funding Types of the common"""
 enum FundingType {
   OneTime
   Monthly
@@ -552,7 +555,7 @@ type Report implements BaseEntity {
   updatedAt: DateTime!
   """The current status of the report"""
   status: ReportStatus!
-  """The type of violation that this report is for"""
+  """The Types of violation that this report is for"""
   for: ReportFor!
   """The note that the report has left for the content"""
   note: String!
@@ -974,7 +977,7 @@ input NotificationTemplateWhereInput {
   type: NotificationTemplateType
 }
 input NotificationSettingsWhereInput {
-  """The type of the notification"""
+  """The Types of the notification"""
   type: NotificationType
 }
 input NotificationOrderByInput {
@@ -1104,6 +1107,7 @@ type Query {
   users(where: UserWhereInput, paginate: PaginateInput): [User]
   generateUserAuthToken(authId: String!): String!
   roles(paginate: PaginateInput): [Role]
+  payment(id: ID): Payment
   payments(paginate: PaginateInput, where: PaymentsWhereInput): [Payment]
   events(paginate: PaginateInput): [Event]
   common(where: CommonWhereUniqueInput!): Common
@@ -1137,7 +1141,7 @@ type Mutation {
   actOnReport(input: ActOnReportInput!): Report
   reportDiscussionMessage(input: ReportDiscussionMessageInput!): Report!
   finalizeProposal(proposalId: ID!): Boolean!
-  """Create new proposal of type JOIN."""
+  """Create new proposal of Types JOIN."""
   createJoinProposal(input: CreateJoinProposalInput!): Proposal!
   createFundingProposal(input: CreateFundingProposalInput!): Proposal!
   createDiscussion(input: CreateDiscussionInput!): Discussion!
@@ -1145,7 +1149,7 @@ type Mutation {
   changeDiscussionSubscriptionType(
     """The ID of the discussion subscription to change"""
     id: ID!
-    """The new subscription type"""
+    """The new subscription Types"""
     type: DiscussionSubscriptionType!
   ): DiscussionSubscription
   updateNotificationTemplate(input: UpdateNotificationTemplateInput!): NotificationTemplate

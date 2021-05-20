@@ -1,13 +1,14 @@
-import { PaymentTypeEnum } from './enums/PaymentType.enum';
-import { PaymentCircleStatusEnum } from './enums/CirclePaymentStatus.enum';
-import { PaymentStatusEnum } from './enums/PaymentStatus.enum';
+import { PaymentTypeEnum } from './Enums/PaymentType.enum';
+import { PaymentCircleStatusEnum } from './Enums/CirclePaymentStatus.enum';
+import { PaymentStatusEnum } from './Enums/PaymentStatus.enum';
 
-import { PaymentType } from './type/Payment.type';
+import { PaymentType } from './Types/Payment.type';
 
-import { GetPaymentsQuery } from './queries/GetPayments.Query';
+import { GetPaymentsQuery } from './Queries/GetPayments.query';
 import { PaymentsWhereInput } from './Inputs/PaymentWhere.input';
 import { PaymentUserExtension } from './Extensions/PaymentUser.extension';
 import { PaymentCommonExtension } from './Extensions/PaymentCommon.extension';
+import { GetPaymentQuery } from './Queries/GetPayment.query';
 
 export const PaymentTypes = [
   PaymentTypeEnum,
@@ -16,6 +17,7 @@ export const PaymentTypes = [
 
   PaymentType,
 
+  GetPaymentQuery,
   GetPaymentsQuery,
 
   PaymentsWhereInput,

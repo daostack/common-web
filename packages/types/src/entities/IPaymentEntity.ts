@@ -105,7 +105,7 @@ export interface IPaymentSource {
   id: string;
 
   /**
-   * The type of the payment source
+   * The Types of the payment source
    */
   type: PaymentSource;
 }
@@ -123,7 +123,7 @@ export interface IPaymentFailureReason {
   errorDescription: string;
 }
 
-// Payment divided by their type
+// Payment divided by their Types
 
 export interface IPendingPayment extends IPaymentEntityBase {
   status: 'pending';

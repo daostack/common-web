@@ -1,5 +1,6 @@
-import { gql } from "@apollo/client";
-import * as Apollo from "@apollo/client";
+import * as Apollo from '@apollo/client';
+import { gql } from '@apollo/client';
+
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type Scalars = {
@@ -108,7 +109,7 @@ export enum ProposalFundingState {
   Funded = "funded",
 }
 
-/** The proposals type */
+/** The proposals Types */
 export type Proposal = {
   __typename?: "Proposal";
   id: Scalars["ID"];
@@ -144,7 +145,7 @@ export type Proposal = {
 // proposerId: string;
 // quietEndingPeriod: 10800;
 // state: string;
-// type: string;
+// Types: string;
 // updatedAt: Time;
 
 export type ProposalDescription = {
@@ -252,7 +253,7 @@ export type Link = {
   url: Scalars["String"];
 };
 
-/** The common type */
+/** The common Types */
 export type Common = {
   __typename?: "Common";
   /** The unique identifier of the common */

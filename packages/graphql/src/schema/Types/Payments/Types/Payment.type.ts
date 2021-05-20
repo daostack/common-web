@@ -22,6 +22,12 @@ export const PaymentType = objectType({
 
     t.string('circlePaymentId');
 
-    t.int('amount');
+    t.int('amount', {
+      description: 'The amount of the payment in US dollar cents'
+    });
+
+    t.int('fees', {
+      description: 'The payment fees in US dollar cents'
+    });
   }
 });

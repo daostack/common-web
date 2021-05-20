@@ -475,7 +475,10 @@ export type Payment = BaseEntity & {
   status: PaymentStatus;
   circlePaymentStatus?: Maybe<PaymentCircleStatus>;
   circlePaymentId?: Maybe<Scalars['String']>;
+  /** The amount of the payment in US dollar cents */
   amount?: Maybe<Scalars['Int']>;
+  /** The payment fees in US dollar cents */
+  fees?: Maybe<Scalars['Int']>;
   userId: Scalars['String'];
   user: User;
   commonId: Scalars['String'];
@@ -495,7 +498,7 @@ export type Event = {
   createdAt: Scalars['DateTime'];
   /** The date, at which the item was last modified */
   updatedAt: Scalars['DateTime'];
-  /** The type of the event in one of the predefined event types */
+  /** The Types of the event in one of the predefined event types */
   type: EventType;
   payload?: Maybe<Scalars['JSON']>;
   /** The ID of the common, for whom the event was created */
@@ -624,7 +627,7 @@ export type CommonMembersArgs = {
   orderBy?: Maybe<CommonMemberOrderByInput>;
 };
 
-/** The funding type of the common */
+/** The funding Types of the common */
 export enum FundingType {
   OneTime = 'OneTime',
   Monthly = 'Monthly'
@@ -661,7 +664,7 @@ export type Report = BaseEntity & {
   updatedAt: Scalars['DateTime'];
   /** The current status of the report */
   status: ReportStatus;
-  /** The type of violation that this report is for */
+  /** The Types of violation that this report is for */
   for: ReportFor;
   /** The note that the report has left for the content */
   note: Scalars['String'];
@@ -1171,7 +1174,7 @@ export type NotificationTemplateWhereInput = {
 };
 
 export type NotificationSettingsWhereInput = {
-  /** The type of the notification */
+  /** The Types of the notification */
   type?: Maybe<NotificationType>;
 };
 
@@ -1321,6 +1324,7 @@ export type Query = {
   users?: Maybe<Array<Maybe<User>>>;
   generateUserAuthToken: Scalars['String'];
   roles?: Maybe<Array<Maybe<Role>>>;
+  payment?: Maybe<Payment>;
   payments?: Maybe<Array<Maybe<Payment>>>;
   events?: Maybe<Array<Maybe<Event>>>;
   common?: Maybe<Common>;
@@ -1358,6 +1362,11 @@ export type QueryGenerateUserAuthTokenArgs = {
 
 export type QueryRolesArgs = {
   paginate?: Maybe<PaginateInput>;
+};
+
+
+export type QueryPaymentArgs = {
+  id?: Maybe<Scalars['ID']>;
 };
 
 
@@ -1446,7 +1455,7 @@ export type Mutation = {
   actOnReport?: Maybe<Report>;
   reportDiscussionMessage: Report;
   finalizeProposal: Scalars['Boolean'];
-  /** Create new proposal of type JOIN. */
+  /** Create new proposal of Types JOIN. */
   createJoinProposal: Proposal;
   createFundingProposal: Proposal;
   createDiscussion: Discussion;
@@ -1645,7 +1654,7 @@ export type GetPaymentsQuery = (
   & {
   payments?: Maybe<Array<Maybe<(
     { __typename?: 'Payment' }
-    & Pick<Payment, 'id' | 'type' | 'status' | 'amount'>
+    & Pick<Payment, 'id' | 'type' | 'status' | 'amount' | 'commonId' | 'fees'>
     & {
     user: (
       { __typename?: 'User' }
@@ -2073,7 +2082,6 @@ export type WhitelistCommonMutationFn = Apollo.MutationFunction<WhitelistCommonM
 export function useWhitelistCommonMutation(baseOptions?: Apollo.MutationHookOptions<WhitelistCommonMutation, WhitelistCommonMutationVariables>) {
   return Apollo.useMutation<WhitelistCommonMutation, WhitelistCommonMutationVariables>(WhitelistCommonDocument, baseOptions);
 }
-
 export type WhitelistCommonMutationHookResult = ReturnType<typeof useWhitelistCommonMutation>;
 export type WhitelistCommonMutationResult = Apollo.MutationResult<WhitelistCommonMutation>;
 export type WhitelistCommonMutationOptions = Apollo.BaseMutationOptions<WhitelistCommonMutation, WhitelistCommonMutationVariables>;
@@ -2104,7 +2112,6 @@ export type DelistCommonMutationFn = Apollo.MutationFunction<DelistCommonMutatio
 export function useDelistCommonMutation(baseOptions?: Apollo.MutationHookOptions<DelistCommonMutation, DelistCommonMutationVariables>) {
   return Apollo.useMutation<DelistCommonMutation, DelistCommonMutationVariables>(DelistCommonDocument, baseOptions);
 }
-
 export type DelistCommonMutationHookResult = ReturnType<typeof useDelistCommonMutation>;
 export type DelistCommonMutationResult = Apollo.MutationResult<DelistCommonMutation>;
 export type DelistCommonMutationOptions = Apollo.BaseMutationOptions<DelistCommonMutation, DelistCommonMutationVariables>;
@@ -2143,11 +2150,9 @@ export const GetLatestEventsDocument = gql`
 export function useGetLatestEventsQuery(baseOptions?: Apollo.QueryHookOptions<GetLatestEventsQuery, GetLatestEventsQueryVariables>) {
   return Apollo.useQuery<GetLatestEventsQuery, GetLatestEventsQueryVariables>(GetLatestEventsDocument, baseOptions);
 }
-
 export function useGetLatestEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLatestEventsQuery, GetLatestEventsQueryVariables>) {
   return Apollo.useLazyQuery<GetLatestEventsQuery, GetLatestEventsQueryVariables>(GetLatestEventsDocument, baseOptions);
 }
-
 export type GetLatestEventsQueryHookResult = ReturnType<typeof useGetLatestEventsQuery>;
 export type GetLatestEventsLazyQueryHookResult = ReturnType<typeof useGetLatestEventsLazyQuery>;
 export type GetLatestEventsQueryResult = Apollo.QueryResult<GetLatestEventsQuery, GetLatestEventsQueryVariables>;
@@ -2158,6 +2163,9 @@ export const GetPaymentsDocument = gql`
       type
       status
       amount
+      type
+      commonId
+      fees
       user {
         id
         firstName
@@ -2188,11 +2196,9 @@ export const GetPaymentsDocument = gql`
 export function useGetPaymentsQuery(baseOptions?: Apollo.QueryHookOptions<GetPaymentsQuery, GetPaymentsQueryVariables>) {
   return Apollo.useQuery<GetPaymentsQuery, GetPaymentsQueryVariables>(GetPaymentsDocument, baseOptions);
 }
-
 export function useGetPaymentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPaymentsQuery, GetPaymentsQueryVariables>) {
   return Apollo.useLazyQuery<GetPaymentsQuery, GetPaymentsQueryVariables>(GetPaymentsDocument, baseOptions);
 }
-
 export type GetPaymentsQueryHookResult = ReturnType<typeof useGetPaymentsQuery>;
 export type GetPaymentsLazyQueryHookResult = ReturnType<typeof useGetPaymentsLazyQuery>;
 export type GetPaymentsQueryResult = Apollo.QueryResult<GetPaymentsQuery, GetPaymentsQueryVariables>;

@@ -14,7 +14,7 @@ const UnauthorizedPage: NextPage = () => {
       if (router.query.failedPermission) {
         // const { data } = await createIntention({
         //   variables: {
-        //     type: IntentionType.Access,
+        //     Types: IntentionType.Access,
         //     intention: router.query.failedPermission as string
         //   }
         // });

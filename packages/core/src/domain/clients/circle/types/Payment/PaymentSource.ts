@@ -7,7 +7,7 @@ export interface IPaymentSource {
   id: string;
 
   /**
-   * The type of the payment source
+   * The Types of the payment source
    */
   type: PaymentSourceType;
 }

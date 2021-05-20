@@ -41,7 +41,7 @@
     "no-alert": 2,
     // Disallow the use of arguments.caller or arguments.callee
     "no-caller": 2,
-    // Disallow null comparisons without type-checking operators
+    // Disallow null comparisons without Types-checking operators
     "no-eq-null": 2,
     // Disallow the use of eval()
     "no-eval": 2,
@@ -53,7 +53,7 @@
     "no-extra-label": 1,
     // Disallow leading or trailing decimal points in numeric literals
     "no-floating-decimal": 2,
-    // Warn against shorthand type conversions
+    // Warn against shorthand Types conversions
     "no-implicit-coercion": 1,
     // Warn against function declarations and expressions inside loop statements
     "no-loop-func": 1,

@@ -14,6 +14,7 @@ model Payment {
   circlePaymentId     String?
 
   amount Int
+  fees Int?
 
   card Card @relation(fields: [cardId], references: [id])
 

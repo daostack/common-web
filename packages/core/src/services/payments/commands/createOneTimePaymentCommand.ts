@@ -38,11 +38,11 @@ export const createOneTimePaymentCommand = async (proposalId: string): Promise<P
   }
 
   if (!proposal.join) {
-    throw new CommonError('Invalid proposal type');
+    throw new CommonError('Invalid proposal Types');
   }
 
   if (proposal.join.fundingType !== FundingType.OneTime) {
-    throw new CommonError('Invalid funding type');
+    throw new CommonError('Invalid funding Types');
   }
 
   if (proposal.join.payment.length) {

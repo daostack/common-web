@@ -3188,7 +3188,19 @@
           },
           {
             "name": "amount",
-            "description": null,
+            "description": "The amount of the payment in US dollar cents",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "fees",
+            "description": "The payment fees in US dollar cents",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -3374,7 +3386,7 @@
           },
           {
             "name": "type",
-            "description": "The type of the event in one of the predefined event types",
+            "description": "The Types of the event in one of the predefined event types",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -4287,7 +4299,7 @@
       {
         "kind": "ENUM",
         "name": "FundingType",
-        "description": "The funding type of the common",
+        "description": "The funding Types of the common",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -4599,7 +4611,7 @@
           },
           {
             "name": "for",
-            "description": "The type of violation that this report is for",
+            "description": "The Types of violation that this report is for",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -8673,7 +8685,7 @@
         "inputFields": [
           {
             "name": "type",
-            "description": "The type of the notification",
+            "description": "The Types of the notification",
             "type": {
               "kind": "ENUM",
               "name": "NotificationType",
@@ -10149,6 +10161,31 @@
             "deprecationReason": null
           },
           {
+            "name": "payment",
+            "description": null,
+            "args": [
+              {
+                "name": "id",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Payment",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "payments",
             "description": null,
             "args": [
@@ -11088,7 +11125,7 @@
           },
           {
             "name": "createJoinProposal",
-            "description": "Create new proposal of type JOIN.",
+            "description": "Create new proposal of Types JOIN.",
             "args": [
               {
                 "name": "input",
@@ -11240,7 +11277,7 @@
               },
               {
                 "name": "type",
-                "description": "The new subscription type",
+                "description": "The new subscription Types",
                 "type": {
                   "kind": "NON_NULL",
                   "name": null,
