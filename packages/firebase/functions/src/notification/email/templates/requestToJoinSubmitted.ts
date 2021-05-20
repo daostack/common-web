@@ -7,7 +7,7 @@ const template = `
   <br /><br />
   For more information you can contact us any time using our <a href="{{supportChatLink}}">support chat</a>
   <br />
-  Common,<br />
+  Common Team ({{fromEmail}}),<br />
   Collaborative Social Action.
 `;
 
@@ -23,7 +23,10 @@ const emailStubs = {
   },
   supportChatLink: {
     required: true
-  }
+  },
+  fromEmail: {
+    required: true
+  },
 };
 
 export const requestToJoinSubmitted = {

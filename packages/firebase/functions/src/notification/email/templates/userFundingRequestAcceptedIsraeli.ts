@@ -31,6 +31,8 @@ const template = `<div dir="auto">
 תודה,
 <br />
 צוות Common
+<br />
+({{fromEmail}})
 </div>
 `;
 
@@ -52,7 +54,10 @@ const emailStubs = {
   },
   proposalId: {
     required: true
-  }
+  },
+  fromEmail: {
+    required: true
+  },
 };
 
 export const userFundingRequestAcceptedIsraeli = {

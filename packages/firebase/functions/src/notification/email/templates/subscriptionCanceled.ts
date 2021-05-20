@@ -12,7 +12,7 @@ const template = `
     For more information you can contact us any time using our <a href="{{supportChatLink}}">support chat</a>
     </br>
     </br>
-    Common,
+    Common Payouts ({{fromEmail}}),
     </br>
     Collaborative Social Action.
   </div>
@@ -36,6 +36,9 @@ export const subscriptionCanceled: IEmailTemplate = {
     },
     supportChatLink: {
       required: true
-    }
+    },
+    fromEmail: {
+      required: true
+    },
   }
 };

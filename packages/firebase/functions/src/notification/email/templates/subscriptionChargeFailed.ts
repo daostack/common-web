@@ -9,7 +9,7 @@ const template = `
     Please make sure the payment information you provided is correct and that your credit card isn't limited or blocked, then resubmit your request. 
     For more information you can contact us any time using our <a href="{{supportChatLink}}">support chat</a>
     <br /><br />
-    Common,<br/>
+    Common Payouts ({{fromEmail}}),<br/>
     Collaborative Social Action.
   </div>
 `
@@ -26,6 +26,9 @@ export const subscriptionChargeFailed: IEmailTemplate = {
     },
     commonName: {
       required: true
-    }
+    },
+    fromEmail: {
+      required: true
+    },
   }
 }

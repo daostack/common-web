@@ -6,7 +6,7 @@ Your request to join <a href="{{commonLink}}">{{commonName}}</a> has been approv
 <br /><br />
 For more information you can contact us any time using our <a href="{{supportChatLink}}">support chat</a>
 <br /><br />
-Common,<br />
+Common Team ({{fromEmail}}),<br />
 Collaborative Social Action.
 `;
 
@@ -22,7 +22,10 @@ const emailStubs = {
   },
   supportChatLink: {
     required: true
-  }
+  },
+  fromEmail: {
+    required: true
+  },
 };
 
 export const userJoinedSuccess = {
