@@ -9,9 +9,10 @@ import { firestore } from 'firebase-admin';
  */
 export const getNewCountdown = (currCountdown: number, quietEndingPeriod: number) : number => {
 	
-  const now = firestore.Timestamp.now();
-  const countdownHour = (new Date(currCountdown * 1000)).getHours();
-  const diff = (Math.abs((now.toDate()).getHours() - countdownHour)) % 24;
+  const nowMillis = (firestore.Timestamp.now()).toMillis();  
+  const countdownMillis = currCountdown * 1000;
+  
+  const diff = (countdownMillis - nowMillis) / 1000 / 60 / 60;
   
   if (diff > 0 && diff < quietEndingPeriod / 3600) 
   {
