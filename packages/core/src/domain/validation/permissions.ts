@@ -44,5 +44,8 @@ export const allPermissions = [
   'admin.notification.setting.template.update',
   'admin.notification.setting.template.delete',
 
+  'admin.users.read',
+  'admin.users.update',
+
   'user.permissions.read'
 ];

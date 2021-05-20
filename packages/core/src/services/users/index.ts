@@ -5,6 +5,7 @@ import { userExistsQuery } from './queries/userExistsQuery';
 import { getUserIdQuery } from './queries/getUserIdQuery';
 import { createUserNotificationTokenCommand } from './commands/createUserNotificationTokenCommand';
 import { voidUserNotificationTokenCommand } from './commands/voidUserNotificationTokenCommand';
+import { updateUserCommand } from './commands/updateUserCommand';
 
 export const userService = {
   commands: {
@@ -22,6 +23,12 @@ export const userService = {
    * token because no authentication token is being verified here!
    */
   create: createUserCommand,
+
+  /**
+   * Updates one user in the database. The authorization checks are not being
+   * done here
+   */
+  update: updateUserCommand,
 
   /**
    * Create authentication token for  user in the database and

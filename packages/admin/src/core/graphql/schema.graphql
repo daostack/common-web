@@ -539,6 +539,9 @@ input CreateCommonInput {
   links: [CommonLinkInput!]
   rules: [CommonLinkInput!]
 }
+input CommonWhereInput {
+  name: StringFilter
+}
 input CommonWhereUniqueInput {
   id: ID!
 }
@@ -1111,7 +1114,7 @@ type Query {
   payments(paginate: PaginateInput, where: PaymentsWhereInput): [Payment]
   events(paginate: PaginateInput): [Event]
   common(where: CommonWhereUniqueInput!): Common
-  commons(paginate: PaginateInput): [Common]
+  commons(paginate: PaginateInput, where: CommonWhereInput): [Common]
   proposal(where: ProposalWhereUniqueInput!): Proposal
   proposals(where: ProposalWhereInput, paginate: PaginateInput): [Proposal]
   getStatistics(where: StatisticsWhereInput): [Statistic]

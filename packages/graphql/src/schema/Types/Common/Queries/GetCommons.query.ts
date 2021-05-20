@@ -6,13 +6,18 @@ export const GetCommonsQuery = queryField('commons', {
   args: {
     paginate: arg({
       type: 'PaginateInput'
+    }),
+
+    where: arg({
+      type: 'CommonWhereInput'
     })
   },
   resolve: (root, args) => {
     return prisma.common
       .findMany({
         skip: args.paginate?.skip || undefined,
-        take: args.paginate?.take || undefined
+        take: args.paginate?.take || undefined,
+        where: args.where as any || undefined
       });
   }
 });

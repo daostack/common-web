@@ -715,6 +715,7 @@ enum EventType {
   VoteCreated
 
   UserCreated
+  UserUpdated
 
   DiscussionCreated
   DiscussionMessageCreated

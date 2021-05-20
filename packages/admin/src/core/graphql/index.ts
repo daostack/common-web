@@ -645,6 +645,10 @@ export type CreateCommonInput = {
   rules?: Maybe<Array<CommonLinkInput>>;
 };
 
+export type CommonWhereInput = {
+  name?: Maybe<StringFilter>;
+};
+
 export type CommonWhereUniqueInput = {
   id: Scalars['ID'];
 };
@@ -1388,6 +1392,7 @@ export type QueryCommonArgs = {
 
 export type QueryCommonsArgs = {
   paginate?: Maybe<PaginateInput>;
+  where?: Maybe<CommonWhereInput>;
 };
 
 
@@ -1620,6 +1625,21 @@ export type DelistCommonMutationVariables = Exact<{
 export type DelistCommonMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'delistCommon'>
+  );
+
+export type CommonSearchQueryVariables = Exact<{
+  where?: Maybe<CommonWhereInput>;
+}>;
+
+
+export type CommonSearchQuery = (
+  { __typename?: 'Query' }
+  & {
+  commons?: Maybe<Array<Maybe<(
+    { __typename?: 'Common' }
+    & Pick<Common, 'id' | 'name' | 'description'>
+    )>>>
+}
   );
 
 export type GetLatestEventsQueryVariables = Exact<{
@@ -2112,9 +2132,47 @@ export type DelistCommonMutationFn = Apollo.MutationFunction<DelistCommonMutatio
 export function useDelistCommonMutation(baseOptions?: Apollo.MutationHookOptions<DelistCommonMutation, DelistCommonMutationVariables>) {
   return Apollo.useMutation<DelistCommonMutation, DelistCommonMutationVariables>(DelistCommonDocument, baseOptions);
 }
+
 export type DelistCommonMutationHookResult = ReturnType<typeof useDelistCommonMutation>;
 export type DelistCommonMutationResult = Apollo.MutationResult<DelistCommonMutation>;
 export type DelistCommonMutationOptions = Apollo.BaseMutationOptions<DelistCommonMutation, DelistCommonMutationVariables>;
+export const CommonSearchDocument = gql`
+  query commonSearch($where: CommonWhereInput) {
+    commons(where: $where) {
+      id
+      name
+      description
+    }
+  }
+`;
+
+/**
+ * __useCommonSearchQuery__
+ *
+ * To run a query within a React component, call `useCommonSearchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCommonSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommonSearchQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useCommonSearchQuery(baseOptions?: Apollo.QueryHookOptions<CommonSearchQuery, CommonSearchQueryVariables>) {
+  return Apollo.useQuery<CommonSearchQuery, CommonSearchQueryVariables>(CommonSearchDocument, baseOptions);
+}
+
+export function useCommonSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommonSearchQuery, CommonSearchQueryVariables>) {
+  return Apollo.useLazyQuery<CommonSearchQuery, CommonSearchQueryVariables>(CommonSearchDocument, baseOptions);
+}
+
+export type CommonSearchQueryHookResult = ReturnType<typeof useCommonSearchQuery>;
+export type CommonSearchLazyQueryHookResult = ReturnType<typeof useCommonSearchLazyQuery>;
+export type CommonSearchQueryResult = Apollo.QueryResult<CommonSearchQuery, CommonSearchQueryVariables>;
 export const GetLatestEventsDocument = gql`
   query GetLatestEvents($take: Int = 10, $skip: Int = 0) {
     events(paginate: {take: $take, skip: $skip}) {

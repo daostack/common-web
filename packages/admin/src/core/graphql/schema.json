@@ -4472,6 +4472,29 @@
       },
       {
         "kind": "INPUT_OBJECT",
+        "name": "CommonWhereInput",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "name",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "StringFilter",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
         "name": "CommonWhereUniqueInput",
         "description": null,
         "fields": null,
@@ -10294,6 +10317,18 @@
                 "type": {
                   "kind": "INPUT_OBJECT",
                   "name": "PaginateInput",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "where",
+                "description": null,
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "CommonWhereInput",
                   "ofType": null
                 },
                 "defaultValue": null,

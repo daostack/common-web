@@ -134,6 +134,10 @@ type CommonSubscription implements BaseEntity {
   voided: Boolean!
 }
 
+input CommonWhereInput {
+  name: StringFilter
+}
+
 input CommonWhereUniqueInput {
   id: ID!
 }
@@ -422,6 +426,7 @@ enum EventType {
   UserNotificationTokenRefreshed
   UserNotificationTokenVoided
   UserRemovedFromRole
+  UserUpdated
   VoteCreated
 }
 
@@ -526,6 +531,7 @@ type Mutation {
   unassignRole(roleId: ID!, userId: ID!): Void
   updateNotificationSettings(input: UpdateNotificationSettingsInput!): NotificationSystemSettings
   updateNotificationTemplate(input: UpdateNotificationTemplateInput!): NotificationTemplate
+  updateUser(input: UpdateUserInput!): User
   voidUserNotificationToken(tokenId: ID!): UserNotificationToken!
   whitelistCommon(commonId: String!): Boolean
 }
@@ -839,7 +845,7 @@ input ProposalWhereUniqueInput {
 
 type Query {
   common(where: CommonWhereUniqueInput!): Common
-  commons(paginate: PaginateInput): [Common]
+  commons(paginate: PaginateInput, where: CommonWhereInput): [Common]
   discussion(id: ID!): Discussion
   discussions(paginate: PaginateInput, where: DiscussionWhereInput): [Discussion]
   events(paginate: PaginateInput): [Event]
@@ -1046,6 +1052,18 @@ input UpdateNotificationTemplateInput {
   fromName: String
   id: String!
   subject: String
+}
+
+input UpdateUserInput {
+  country: UserCountry
+  firstName: String
+
+  """The ID of the user to be updated"""
+  id: String!
+  intro: String
+  lastName: String
+  notificationLanguage: NotificationLanguage
+  photo: String
 }
 
 type User {

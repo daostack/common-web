@@ -25,6 +25,7 @@ import { UserWhereUniqueInput } from './Inputs/UserWhereUnique.input';
 import { UserSubscriptionsExtension } from './Extensions/UserSubscriptions.extension';
 import { UserWhereInput } from './Inputs/UserWhere.input';
 import { GetUsersQuery } from './Queries/GetUsers.query';
+import { UpdateUserMutation } from './Mutations/UpdateUser.mutation';
 
 export const UserTypes = [
   UserType,
@@ -46,6 +47,7 @@ export const UserTypes = [
 
   UserNotificationTokenStateEnum,
   UserCountryEnum,
+  UpdateUserMutation,
 
   UserEventsExtension,
   UserProposalsExtension,

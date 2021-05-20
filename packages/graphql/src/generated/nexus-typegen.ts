@@ -77,6 +77,9 @@ export interface NexusGenInputs {
   CommonMemberOrderByInput: { // input type
     createdAt: NexusGenEnums['SortOrder']; // SortOrder!
   }
+  CommonWhereInput: { // input type
+    name?: NexusGenInputs['StringFilter'] | null; // StringFilter
+  }
   CommonWhereUniqueInput: { // input type
     id: string; // ID!
   }
@@ -281,6 +284,15 @@ export interface NexusGenInputs {
     id: string; // String!
     subject?: string | null; // String
   }
+  UpdateUserInput: { // input type
+    country?: NexusGenEnums['UserCountry'] | null; // UserCountry
+    firstName?: string | null; // String
+    id: string; // String!
+    intro?: string | null; // String
+    lastName?: string | null; // String
+    notificationLanguage?: NexusGenEnums['NotificationLanguage'] | null; // NotificationLanguage
+    photo?: string | null; // String
+  }
   UserWhereInput: { // input type
     email?: NexusGenInputs['StringFilter'] | null; // StringFilter
     firstName?: NexusGenInputs['StringFilter'] | null; // StringFilter
@@ -297,7 +309,7 @@ export interface NexusGenEnums {
   DiscussionMessageType: "Message"
   DiscussionSubscriptionType: "AllNotifications" | "NoNotification" | "OnlyMentions"
   DiscussionType: "CommonDiscussion" | "ProposalDiscussion"
-  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonDelisted" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "CommonWhitelisted" | "DiscussionCreated" | "DiscussionMessageCreated" | "DiscussionSubscriptionCreated" | "DiscussionSubscriptionTypeChanged" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "NotificationTemplateCreated" | "NotificationTemplateUpdated" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "ReportCreated" | "ReportDismissed" | "ReportRespected" | "RoleCreated" | "RoleDeleted" | "RolePermissionAdded" | "RolePermissionRemoved" | "RoleUpdated" | "UserAddedToRole" | "UserCreated" | "UserNotificationTokenCreated" | "UserNotificationTokenExpired" | "UserNotificationTokenRefreshed" | "UserNotificationTokenVoided" | "UserRemovedFromRole" | "VoteCreated"
+  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonDelisted" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "CommonWhitelisted" | "DiscussionCreated" | "DiscussionMessageCreated" | "DiscussionSubscriptionCreated" | "DiscussionSubscriptionTypeChanged" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "NotificationTemplateCreated" | "NotificationTemplateUpdated" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "ReportCreated" | "ReportDismissed" | "ReportRespected" | "RoleCreated" | "RoleDeleted" | "RolePermissionAdded" | "RolePermissionRemoved" | "RoleUpdated" | "UserAddedToRole" | "UserCreated" | "UserNotificationTokenCreated" | "UserNotificationTokenExpired" | "UserNotificationTokenRefreshed" | "UserNotificationTokenVoided" | "UserRemovedFromRole" | "UserUpdated" | "VoteCreated"
   FundingState: "AwaitingApproval" | "Completed" | "Confirmed" | "Eligible" | "NotEligible" | "Pending"
   FundingType: "Monthly" | "OneTime"
   NotificationLanguage: "BG" | "EN" | "HE" | "JP" | "KO" | "RU"
@@ -727,6 +739,7 @@ export interface NexusGenFieldTypes {
     unassignRole: NexusGenScalars['Void'] | null; // Void
     updateNotificationSettings: NexusGenRootTypes['NotificationSystemSettings'] | null; // NotificationSystemSettings
     updateNotificationTemplate: NexusGenRootTypes['NotificationTemplate'] | null; // NotificationTemplate
+    updateUser: NexusGenRootTypes['User'] | null; // User
     voidUserNotificationToken: NexusGenRootTypes['UserNotificationToken']; // UserNotificationToken!
     whitelistCommon: boolean | null; // Boolean
   }
@@ -1074,6 +1087,7 @@ export interface NexusGenFieldTypeNames {
     unassignRole: 'Void'
     updateNotificationSettings: 'NotificationSystemSettings'
     updateNotificationTemplate: 'NotificationTemplate'
+    updateUser: 'User'
     voidUserNotificationToken: 'UserNotificationToken'
     whitelistCommon: 'Boolean'
   }
@@ -1389,6 +1403,9 @@ export interface NexusGenArgTypes {
     updateNotificationTemplate: { // args
       input: NexusGenInputs['UpdateNotificationTemplateInput']; // UpdateNotificationTemplateInput!
     }
+    updateUser: { // args
+      input: NexusGenInputs['UpdateUserInput']; // UpdateUserInput!
+    }
     voidUserNotificationToken: { // args
       tokenId: string; // ID!
     }
@@ -1408,6 +1425,7 @@ export interface NexusGenArgTypes {
     }
     commons: { // args
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
+      where?: NexusGenInputs['CommonWhereInput'] | null; // CommonWhereInput
     }
     discussion: { // args
       id: string; // ID!

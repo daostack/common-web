@@ -9,13 +9,13 @@ export const GetPaymentQuery = queryField('payment', {
   authorize: async (root, args, ctx) => {
     const userId = await ctx.getUserId();
 
-    return root.userId === userId || authorizationService.can(userId, '');
+    return (root as any).userId === userId || authorizationService.can(userId, 'admin.payments.read');
   },
   resolve: (root, args) => {
     return prisma.payment
       .findUnique({
         where: {
-          id: args.id
+          id: args.id || undefined
         }
       });
   }
