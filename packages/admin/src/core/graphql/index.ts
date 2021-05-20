@@ -36,6 +36,9 @@ export type User = {
   firstName: Scalars['String'];
   /** The last name of the user */
   lastName: Scalars['String'];
+  /** The last name of the user */
+  country: UserCountry;
+  intro?: Maybe<Scalars['String']>;
   /** The display name of the user */
   displayName: Scalars['String'];
   photo: Scalars['String'];
@@ -111,6 +114,8 @@ export type CreateUserInput = {
   lastName: Scalars['String'];
   email: Scalars['String'];
   photo: Scalars['String'];
+  country: UserCountry;
+  intro?: Maybe<Scalars['String']>;
 };
 
 export type CreateUserNotificationTokenInput = {
@@ -122,6 +127,259 @@ export enum UserNotificationTokenState {
   Active = 'Active',
   Expired = 'Expired',
   Voided = 'Voided'
+}
+
+export enum UserCountry {
+  Unknown = 'Unknown',
+  Af = 'AF',
+  Ax = 'AX',
+  Al = 'AL',
+  Dz = 'DZ',
+  As = 'AS',
+  Ad = 'AD',
+  Ao = 'AO',
+  Ai = 'AI',
+  Aq = 'AQ',
+  Ag = 'AG',
+  Ar = 'AR',
+  Am = 'AM',
+  Aw = 'AW',
+  Au = 'AU',
+  At = 'AT',
+  Az = 'AZ',
+  Bs = 'BS',
+  Bh = 'BH',
+  Bd = 'BD',
+  Bb = 'BB',
+  By = 'BY',
+  Be = 'BE',
+  Bz = 'BZ',
+  Bj = 'BJ',
+  Bm = 'BM',
+  Bt = 'BT',
+  Bo = 'BO',
+  Bq = 'BQ',
+  Ba = 'BA',
+  Bw = 'BW',
+  Bv = 'BV',
+  Br = 'BR',
+  Io = 'IO',
+  Bn = 'BN',
+  Bg = 'BG',
+  Bf = 'BF',
+  Bi = 'BI',
+  Kh = 'KH',
+  Cm = 'CM',
+  Ca = 'CA',
+  Cv = 'CV',
+  Ky = 'KY',
+  Cf = 'CF',
+  Td = 'TD',
+  Cl = 'CL',
+  Cn = 'CN',
+  Cx = 'CX',
+  Cc = 'CC',
+  Co = 'CO',
+  Km = 'KM',
+  Cg = 'CG',
+  Cd = 'CD',
+  Ck = 'CK',
+  Cr = 'CR',
+  Ci = 'CI',
+  Hr = 'HR',
+  Cu = 'CU',
+  Cw = 'CW',
+  Cy = 'CY',
+  Cz = 'CZ',
+  Dk = 'DK',
+  Dj = 'DJ',
+  Dm = 'DM',
+  Do = 'DO',
+  Ec = 'EC',
+  Eg = 'EG',
+  Sv = 'SV',
+  Gq = 'GQ',
+  Er = 'ER',
+  Ee = 'EE',
+  Et = 'ET',
+  Fk = 'FK',
+  Fo = 'FO',
+  Fj = 'FJ',
+  Fi = 'FI',
+  Fr = 'FR',
+  Gf = 'GF',
+  Pf = 'PF',
+  Tf = 'TF',
+  Ga = 'GA',
+  Gm = 'GM',
+  Ge = 'GE',
+  De = 'DE',
+  Gh = 'GH',
+  Gi = 'GI',
+  Gr = 'GR',
+  Gl = 'GL',
+  Gd = 'GD',
+  Gp = 'GP',
+  Gu = 'GU',
+  Gt = 'GT',
+  Gg = 'GG',
+  Gn = 'GN',
+  Gw = 'GW',
+  Gy = 'GY',
+  Ht = 'HT',
+  Hm = 'HM',
+  Va = 'VA',
+  Hn = 'HN',
+  Hk = 'HK',
+  Hu = 'HU',
+  Is = 'IS',
+  In = 'IN',
+  Id = 'ID',
+  Ir = 'IR',
+  Iq = 'IQ',
+  Ie = 'IE',
+  Im = 'IM',
+  Il = 'IL',
+  It = 'IT',
+  Jm = 'JM',
+  Jp = 'JP',
+  Je = 'JE',
+  Jo = 'JO',
+  Kz = 'KZ',
+  Ke = 'KE',
+  Ki = 'KI',
+  Kp = 'KP',
+  Kr = 'KR',
+  Kw = 'KW',
+  Kg = 'KG',
+  La = 'LA',
+  Lv = 'LV',
+  Lb = 'LB',
+  Ls = 'LS',
+  Lr = 'LR',
+  Ly = 'LY',
+  Li = 'LI',
+  Lt = 'LT',
+  Lu = 'LU',
+  Mo = 'MO',
+  Mk = 'MK',
+  Mg = 'MG',
+  Mw = 'MW',
+  My = 'MY',
+  Mv = 'MV',
+  Ml = 'ML',
+  Mt = 'MT',
+  Mh = 'MH',
+  Mq = 'MQ',
+  Mr = 'MR',
+  Mu = 'MU',
+  Yt = 'YT',
+  Mx = 'MX',
+  Fm = 'FM',
+  Md = 'MD',
+  Mc = 'MC',
+  Mn = 'MN',
+  Me = 'ME',
+  Ms = 'MS',
+  Ma = 'MA',
+  Mz = 'MZ',
+  Mm = 'MM',
+  Na = 'NA',
+  Nr = 'NR',
+  Np = 'NP',
+  Nl = 'NL',
+  Nc = 'NC',
+  Nz = 'NZ',
+  Ni = 'NI',
+  Ne = 'NE',
+  Ng = 'NG',
+  Nu = 'NU',
+  Nf = 'NF',
+  Mp = 'MP',
+  No = 'NO',
+  Om = 'OM',
+  Pk = 'PK',
+  Pw = 'PW',
+  Ps = 'PS',
+  Pa = 'PA',
+  Pg = 'PG',
+  Py = 'PY',
+  Pe = 'PE',
+  Ph = 'PH',
+  Pn = 'PN',
+  Pl = 'PL',
+  Pt = 'PT',
+  Pr = 'PR',
+  Qa = 'QA',
+  Re = 'RE',
+  Ro = 'RO',
+  Ru = 'RU',
+  Rw = 'RW',
+  Bl = 'BL',
+  Sh = 'SH',
+  Kn = 'KN',
+  Lc = 'LC',
+  Mf = 'MF',
+  Pm = 'PM',
+  Vc = 'VC',
+  Ws = 'WS',
+  Sm = 'SM',
+  St = 'ST',
+  Sa = 'SA',
+  Sn = 'SN',
+  Rs = 'RS',
+  Sc = 'SC',
+  Sl = 'SL',
+  Sg = 'SG',
+  Sx = 'SX',
+  Sk = 'SK',
+  Si = 'SI',
+  Sb = 'SB',
+  So = 'SO',
+  Za = 'ZA',
+  Gs = 'GS',
+  Ss = 'SS',
+  Es = 'ES',
+  Lk = 'LK',
+  Sd = 'SD',
+  Sr = 'SR',
+  Sj = 'SJ',
+  Sz = 'SZ',
+  Se = 'SE',
+  Ch = 'CH',
+  Sy = 'SY',
+  Tw = 'TW',
+  Tj = 'TJ',
+  Tz = 'TZ',
+  Th = 'TH',
+  Tl = 'TL',
+  Tg = 'TG',
+  Tk = 'TK',
+  To = 'TO',
+  Tt = 'TT',
+  Tn = 'TN',
+  Tr = 'TR',
+  Tm = 'TM',
+  Tc = 'TC',
+  Tv = 'TV',
+  Ug = 'UG',
+  Ua = 'UA',
+  Ae = 'AE',
+  Gb = 'GB',
+  Us = 'US',
+  Um = 'UM',
+  Uy = 'UY',
+  Uz = 'UZ',
+  Vu = 'VU',
+  Ve = 'VE',
+  Vn = 'VN',
+  Vg = 'VG',
+  Vi = 'VI',
+  Wf = 'WF',
+  Eh = 'EH',
+  Ye = 'YE',
+  Zm = 'ZM',
+  Zw = 'ZW'
 }
 
 export type Role = BaseEntity & {
@@ -180,6 +438,53 @@ export type CreateVoteInput = {
   outcome: VoteOutcome;
   /** The ID of the root of the proposal whether it is funding one or join */
   proposalId: Scalars['ID'];
+};
+
+export enum PaymentType {
+  OneTimePayment = 'OneTimePayment',
+  SubscriptionInitialPayment = 'SubscriptionInitialPayment',
+  SubscriptionSequentialPayment = 'SubscriptionSequentialPayment',
+  ImportedPayment = 'ImportedPayment'
+}
+
+export enum PaymentStatus {
+  NotAttempted = 'NotAttempted',
+  Pending = 'Pending',
+  Successful = 'Successful',
+  Unsuccessful = 'Unsuccessful'
+}
+
+export enum PaymentCircleStatus {
+  Pending = 'pending',
+  Failed = 'failed',
+  Confirmed = 'confirmed',
+  Paid = 'paid'
+}
+
+export type Payment = BaseEntity & {
+  __typename?: 'Payment';
+  /** The main identifier of the item */
+  id: Scalars['UUID'];
+  /** The date, at which the item was created */
+  createdAt: Scalars['DateTime'];
+  /** The date, at which the item was last modified */
+  updatedAt: Scalars['DateTime'];
+  processed: Scalars['Boolean'];
+  processedError: Scalars['Boolean'];
+  type: PaymentType;
+  status: PaymentStatus;
+  circlePaymentStatus?: Maybe<PaymentCircleStatus>;
+  circlePaymentId?: Maybe<Scalars['String']>;
+  amount?: Maybe<Scalars['Int']>;
+  userId: Scalars['String'];
+  user: User;
+  commonId: Scalars['String'];
+  common: Common;
+};
+
+export type PaymentsWhereInput = {
+  commonId?: Maybe<Scalars['UUID']>;
+  userId?: Maybe<Scalars['UUID']>;
 };
 
 export type Event = {
@@ -268,6 +573,8 @@ export type Common = {
   balance: Scalars['Int'];
   /** The total amount of money that the common has raised. In cents */
   raised: Scalars['Int'];
+  links?: Maybe<Scalars['JSON']>;
+  rules?: Maybe<Scalars['JSON']>;
   image: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   action?: Maybe<Scalars['String']>;
@@ -331,10 +638,17 @@ export type CreateCommonInput = {
   description?: Maybe<Scalars['String']>;
   action?: Maybe<Scalars['String']>;
   byline?: Maybe<Scalars['String']>;
+  links?: Maybe<Array<CommonLinkInput>>;
+  rules?: Maybe<Array<CommonLinkInput>>;
 };
 
 export type CommonWhereUniqueInput = {
   id: Scalars['ID'];
+};
+
+export type CommonLinkInput = {
+  title: Scalars['String'];
+  url: Scalars['String'];
 };
 
 export type Report = BaseEntity & {
@@ -586,6 +900,9 @@ export type Discussion = BaseEntity & {
   /** The date at which the last message on the discussion was added */
   latestMessage: Scalars['DateTime'];
   type: DiscussionType;
+  userId: Scalars['String'];
+  /** The discussion creator */
+  owner?: Maybe<User>;
   messages: Array<DiscussionMessage>;
 };
 
@@ -607,7 +924,9 @@ export type DiscussionMessage = BaseEntity & {
   message: Scalars['String'];
   type: DiscussionMessageType;
   flag: DiscussionMessageFlag;
+  userId: Scalars['String'];
   reports: Array<Report>;
+  owner: User;
 };
 
 export type DiscussionSubscription = BaseEntity & {
@@ -653,6 +972,12 @@ export type DiscussionMessagesOrderByInput = {
 export type DiscussionSubscriptionOrderByInput = {
   createdAt?: Maybe<SortOrder>;
   updatedAt?: Maybe<SortOrder>;
+};
+
+export type DiscussionWhereInput = {
+  commonId?: Maybe<Scalars['UUID']>;
+  commonMemberId?: Maybe<Scalars['UUID']>;
+  userId?: Maybe<Scalars['ID']>;
 };
 
 export type CreateDiscussionInput = {
@@ -996,6 +1321,7 @@ export type Query = {
   users?: Maybe<Array<Maybe<User>>>;
   generateUserAuthToken: Scalars['String'];
   roles?: Maybe<Array<Maybe<Role>>>;
+  payments?: Maybe<Array<Maybe<Payment>>>;
   events?: Maybe<Array<Maybe<Event>>>;
   common?: Maybe<Common>;
   commons?: Maybe<Array<Maybe<Common>>>;
@@ -1003,6 +1329,7 @@ export type Query = {
   proposals?: Maybe<Array<Maybe<Proposal>>>;
   getStatistics?: Maybe<Array<Maybe<Statistic>>>;
   discussion?: Maybe<Discussion>;
+  discussions?: Maybe<Array<Maybe<Discussion>>>;
   notificationTemplateOptions?: Maybe<NotificationTemplateOptions>;
   notificationEventOptions?: Maybe<NotificationEventOptions>;
   notificationEventSettings?: Maybe<Array<Maybe<NotificationEventSettings>>>;
@@ -1031,6 +1358,12 @@ export type QueryGenerateUserAuthTokenArgs = {
 
 export type QueryRolesArgs = {
   paginate?: Maybe<PaginateInput>;
+};
+
+
+export type QueryPaymentsArgs = {
+  paginate?: Maybe<PaginateInput>;
+  where?: Maybe<PaymentsWhereInput>;
 };
 
 
@@ -1067,6 +1400,12 @@ export type QueryGetStatisticsArgs = {
 
 export type QueryDiscussionArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryDiscussionsArgs = {
+  where?: Maybe<DiscussionWhereInput>;
+  paginate?: Maybe<PaginateInput>;
 };
 
 
@@ -1253,6 +1592,69 @@ export type SubscriptionOnProposalChangeArgs = {
 export type SubscriptionDiscussionMessageCreatedArgs = {
   discussionId: Scalars['ID'];
 };
+
+export type WhitelistCommonMutationVariables = Exact<{
+  commonId: Scalars['String'];
+}>;
+
+
+export type WhitelistCommonMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'whitelistCommon'>
+  );
+
+export type DelistCommonMutationVariables = Exact<{
+  commonId: Scalars['String'];
+}>;
+
+
+export type DelistCommonMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'delistCommon'>
+  );
+
+export type GetLatestEventsQueryVariables = Exact<{
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetLatestEventsQuery = (
+  { __typename?: 'Query' }
+  & {
+  events?: Maybe<Array<Maybe<(
+    { __typename?: 'Event' }
+    & Pick<Event, 'id' | 'createdAt' | 'type'>
+    & {
+    user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'firstName' | 'lastName' | 'photo'>
+      )>
+  }
+    )>>>
+}
+  );
+
+export type GetPaymentsQueryVariables = Exact<{
+  paginate?: Maybe<PaginateInput>;
+}>;
+
+
+export type GetPaymentsQuery = (
+  { __typename?: 'Query' }
+  & {
+  payments?: Maybe<Array<Maybe<(
+    { __typename?: 'Payment' }
+    & Pick<Payment, 'id' | 'type' | 'status' | 'amount'>
+    & {
+    user: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstName' | 'lastName' | 'photo' | 'email'>
+      )
+  }
+    )>>>
+}
+  );
 
 export type LoadUserContextQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1561,48 +1963,6 @@ export type GetUserDetailsQueryQuery = (
 }
   );
 
-export type WhitelistCommonMutationVariables = Exact<{
-  commonId: Scalars['String'];
-}>;
-
-
-export type WhitelistCommonMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'whitelistCommon'>
-  );
-
-export type DelistCommonMutationVariables = Exact<{
-  commonId: Scalars['String'];
-}>;
-
-
-export type DelistCommonMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'delistCommon'>
-  );
-
-export type GetLatestEventsQueryVariables = Exact<{
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-}>;
-
-
-export type GetLatestEventsQuery = (
-  { __typename?: 'Query' }
-  & {
-  events?: Maybe<Array<Maybe<(
-    { __typename?: 'Event' }
-    & Pick<Event, 'id' | 'createdAt' | 'type'>
-    & {
-    user?: Maybe<(
-      { __typename?: 'User' }
-      & Pick<User, 'firstName' | 'lastName' | 'photo'>
-      )>
-  }
-    )>>>
-}
-  );
-
 export type GetCommonsHomescreenDataQueryVariables = Exact<{
   take?: Maybe<Scalars['Int']>;
   skip?: Maybe<Scalars['Int']>;
@@ -1686,6 +2046,156 @@ export type GetUsersHomepageDataQuery = (
   );
 
 
+export const WhitelistCommonDocument = gql`
+  mutation whitelistCommon($commonId: String!) {
+    whitelistCommon(commonId: $commonId)
+  }
+`;
+export type WhitelistCommonMutationFn = Apollo.MutationFunction<WhitelistCommonMutation, WhitelistCommonMutationVariables>;
+
+/**
+ * __useWhitelistCommonMutation__
+ *
+ * To run a mutation, you first call `useWhitelistCommonMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useWhitelistCommonMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [whitelistCommonMutation, { data, loading, error }] = useWhitelistCommonMutation({
+ *   variables: {
+ *      commonId: // value for 'commonId'
+ *   },
+ * });
+ */
+export function useWhitelistCommonMutation(baseOptions?: Apollo.MutationHookOptions<WhitelistCommonMutation, WhitelistCommonMutationVariables>) {
+  return Apollo.useMutation<WhitelistCommonMutation, WhitelistCommonMutationVariables>(WhitelistCommonDocument, baseOptions);
+}
+
+export type WhitelistCommonMutationHookResult = ReturnType<typeof useWhitelistCommonMutation>;
+export type WhitelistCommonMutationResult = Apollo.MutationResult<WhitelistCommonMutation>;
+export type WhitelistCommonMutationOptions = Apollo.BaseMutationOptions<WhitelistCommonMutation, WhitelistCommonMutationVariables>;
+export const DelistCommonDocument = gql`
+  mutation delistCommon($commonId: String!) {
+    delistCommon(commonId: $commonId)
+  }
+`;
+export type DelistCommonMutationFn = Apollo.MutationFunction<DelistCommonMutation, DelistCommonMutationVariables>;
+
+/**
+ * __useDelistCommonMutation__
+ *
+ * To run a mutation, you first call `useDelistCommonMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDelistCommonMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [delistCommonMutation, { data, loading, error }] = useDelistCommonMutation({
+ *   variables: {
+ *      commonId: // value for 'commonId'
+ *   },
+ * });
+ */
+export function useDelistCommonMutation(baseOptions?: Apollo.MutationHookOptions<DelistCommonMutation, DelistCommonMutationVariables>) {
+  return Apollo.useMutation<DelistCommonMutation, DelistCommonMutationVariables>(DelistCommonDocument, baseOptions);
+}
+
+export type DelistCommonMutationHookResult = ReturnType<typeof useDelistCommonMutation>;
+export type DelistCommonMutationResult = Apollo.MutationResult<DelistCommonMutation>;
+export type DelistCommonMutationOptions = Apollo.BaseMutationOptions<DelistCommonMutation, DelistCommonMutationVariables>;
+export const GetLatestEventsDocument = gql`
+  query GetLatestEvents($take: Int = 10, $skip: Int = 0) {
+    events(paginate: {take: $take, skip: $skip}) {
+      id
+      createdAt
+      type
+      user {
+        firstName
+        lastName
+        photo
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetLatestEventsQuery__
+ *
+ * To run a query within a React component, call `useGetLatestEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLatestEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLatestEventsQuery({
+ *   variables: {
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useGetLatestEventsQuery(baseOptions?: Apollo.QueryHookOptions<GetLatestEventsQuery, GetLatestEventsQueryVariables>) {
+  return Apollo.useQuery<GetLatestEventsQuery, GetLatestEventsQueryVariables>(GetLatestEventsDocument, baseOptions);
+}
+
+export function useGetLatestEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLatestEventsQuery, GetLatestEventsQueryVariables>) {
+  return Apollo.useLazyQuery<GetLatestEventsQuery, GetLatestEventsQueryVariables>(GetLatestEventsDocument, baseOptions);
+}
+
+export type GetLatestEventsQueryHookResult = ReturnType<typeof useGetLatestEventsQuery>;
+export type GetLatestEventsLazyQueryHookResult = ReturnType<typeof useGetLatestEventsLazyQuery>;
+export type GetLatestEventsQueryResult = Apollo.QueryResult<GetLatestEventsQuery, GetLatestEventsQueryVariables>;
+export const GetPaymentsDocument = gql`
+  query GetPayments($paginate: PaginateInput) {
+    payments(paginate: $paginate) {
+      id
+      type
+      status
+      amount
+      user {
+        id
+        firstName
+        lastName
+        photo
+        email
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPaymentsQuery__
+ *
+ * To run a query within a React component, call `useGetPaymentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPaymentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPaymentsQuery({
+ *   variables: {
+ *      paginate: // value for 'paginate'
+ *   },
+ * });
+ */
+export function useGetPaymentsQuery(baseOptions?: Apollo.QueryHookOptions<GetPaymentsQuery, GetPaymentsQueryVariables>) {
+  return Apollo.useQuery<GetPaymentsQuery, GetPaymentsQueryVariables>(GetPaymentsDocument, baseOptions);
+}
+
+export function useGetPaymentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPaymentsQuery, GetPaymentsQueryVariables>) {
+  return Apollo.useLazyQuery<GetPaymentsQuery, GetPaymentsQueryVariables>(GetPaymentsDocument, baseOptions);
+}
+
+export type GetPaymentsQueryHookResult = ReturnType<typeof useGetPaymentsQuery>;
+export type GetPaymentsLazyQueryHookResult = ReturnType<typeof useGetPaymentsLazyQuery>;
+export type GetPaymentsQueryResult = Apollo.QueryResult<GetPaymentsQuery, GetPaymentsQueryVariables>;
 export const LoadUserContextDocument = gql`
   query loadUserContext {
     user {
@@ -2110,11 +2620,9 @@ export const AllTemplatesForTypeDocument = gql`
 export function useAllTemplatesForTypeQuery(baseOptions: Apollo.QueryHookOptions<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>) {
   return Apollo.useQuery<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>(AllTemplatesForTypeDocument, baseOptions);
 }
-
 export function useAllTemplatesForTypeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>) {
   return Apollo.useLazyQuery<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>(AllTemplatesForTypeDocument, baseOptions);
 }
-
 export type AllTemplatesForTypeQueryHookResult = ReturnType<typeof useAllTemplatesForTypeQuery>;
 export type AllTemplatesForTypeLazyQueryHookResult = ReturnType<typeof useAllTemplatesForTypeLazyQuery>;
 export type AllTemplatesForTypeQueryResult = Apollo.QueryResult<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>;
@@ -2147,7 +2655,6 @@ export type UpdateTemplateMutationFn = Apollo.MutationFunction<UpdateTemplateMut
 export function useUpdateTemplateMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTemplateMutation, UpdateTemplateMutationVariables>) {
   return Apollo.useMutation<UpdateTemplateMutation, UpdateTemplateMutationVariables>(UpdateTemplateDocument, baseOptions);
 }
-
 export type UpdateTemplateMutationHookResult = ReturnType<typeof useUpdateTemplateMutation>;
 export type UpdateTemplateMutationResult = Apollo.MutationResult<UpdateTemplateMutation>;
 export type UpdateTemplateMutationOptions = Apollo.BaseMutationOptions<UpdateTemplateMutation, UpdateTemplateMutationVariables>;
@@ -2322,107 +2829,6 @@ export function useGetUserDetailsQueryLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type GetUserDetailsQueryQueryHookResult = ReturnType<typeof useGetUserDetailsQueryQuery>;
 export type GetUserDetailsQueryLazyQueryHookResult = ReturnType<typeof useGetUserDetailsQueryLazyQuery>;
 export type GetUserDetailsQueryQueryResult = Apollo.QueryResult<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>;
-export const WhitelistCommonDocument = gql`
-  mutation whitelistCommon($commonId: String!) {
-    whitelistCommon(commonId: $commonId)
-  }
-`;
-export type WhitelistCommonMutationFn = Apollo.MutationFunction<WhitelistCommonMutation, WhitelistCommonMutationVariables>;
-
-/**
- * __useWhitelistCommonMutation__
- *
- * To run a mutation, you first call `useWhitelistCommonMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useWhitelistCommonMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [whitelistCommonMutation, { data, loading, error }] = useWhitelistCommonMutation({
- *   variables: {
- *      commonId: // value for 'commonId'
- *   },
- * });
- */
-export function useWhitelistCommonMutation(baseOptions?: Apollo.MutationHookOptions<WhitelistCommonMutation, WhitelistCommonMutationVariables>) {
-  return Apollo.useMutation<WhitelistCommonMutation, WhitelistCommonMutationVariables>(WhitelistCommonDocument, baseOptions);
-}
-export type WhitelistCommonMutationHookResult = ReturnType<typeof useWhitelistCommonMutation>;
-export type WhitelistCommonMutationResult = Apollo.MutationResult<WhitelistCommonMutation>;
-export type WhitelistCommonMutationOptions = Apollo.BaseMutationOptions<WhitelistCommonMutation, WhitelistCommonMutationVariables>;
-export const DelistCommonDocument = gql`
-  mutation delistCommon($commonId: String!) {
-    delistCommon(commonId: $commonId)
-  }
-`;
-export type DelistCommonMutationFn = Apollo.MutationFunction<DelistCommonMutation, DelistCommonMutationVariables>;
-
-/**
- * __useDelistCommonMutation__
- *
- * To run a mutation, you first call `useDelistCommonMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDelistCommonMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [delistCommonMutation, { data, loading, error }] = useDelistCommonMutation({
- *   variables: {
- *      commonId: // value for 'commonId'
- *   },
- * });
- */
-export function useDelistCommonMutation(baseOptions?: Apollo.MutationHookOptions<DelistCommonMutation, DelistCommonMutationVariables>) {
-  return Apollo.useMutation<DelistCommonMutation, DelistCommonMutationVariables>(DelistCommonDocument, baseOptions);
-}
-export type DelistCommonMutationHookResult = ReturnType<typeof useDelistCommonMutation>;
-export type DelistCommonMutationResult = Apollo.MutationResult<DelistCommonMutation>;
-export type DelistCommonMutationOptions = Apollo.BaseMutationOptions<DelistCommonMutation, DelistCommonMutationVariables>;
-export const GetLatestEventsDocument = gql`
-  query GetLatestEvents($take: Int = 10, $skip: Int = 0) {
-    events(paginate: {take: $take, skip: $skip}) {
-      id
-      createdAt
-      type
-      user {
-        firstName
-        lastName
-        photo
-      }
-    }
-  }
-`;
-
-/**
- * __useGetLatestEventsQuery__
- *
- * To run a query within a React component, call `useGetLatestEventsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetLatestEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetLatestEventsQuery({
- *   variables: {
- *      take: // value for 'take'
- *      skip: // value for 'skip'
- *   },
- * });
- */
-export function useGetLatestEventsQuery(baseOptions?: Apollo.QueryHookOptions<GetLatestEventsQuery, GetLatestEventsQueryVariables>) {
-  return Apollo.useQuery<GetLatestEventsQuery, GetLatestEventsQueryVariables>(GetLatestEventsDocument, baseOptions);
-}
-export function useGetLatestEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLatestEventsQuery, GetLatestEventsQueryVariables>) {
-  return Apollo.useLazyQuery<GetLatestEventsQuery, GetLatestEventsQueryVariables>(GetLatestEventsDocument, baseOptions);
-}
-export type GetLatestEventsQueryHookResult = ReturnType<typeof useGetLatestEventsQuery>;
-export type GetLatestEventsLazyQueryHookResult = ReturnType<typeof useGetLatestEventsLazyQuery>;
-export type GetLatestEventsQueryResult = Apollo.QueryResult<GetLatestEventsQuery, GetLatestEventsQueryVariables>;
 export const GetCommonsHomescreenDataDocument = gql`
   query getCommonsHomescreenData($take: Int = 10, $skip: Int) {
     commons(paginate: {take: $take, skip: $skip}) {

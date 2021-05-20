@@ -14,7 +14,11 @@ export const allPermissions = [
 
   'admin.events.read',
 
-  'admin.payments.read',
+  'admin.financials.payments.read',
+
+  'admin.financials.payouts.read',
+  'admin.financials.payouts.create',
+  'admin.financials.payouts.confirm',
 
   'admin.proposals.read',
   'admin.proposals.read.ipAddress',

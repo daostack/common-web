@@ -2,7 +2,7 @@ overwrite: true
 schema: "http://localhost:4000/graphql"
 documents:
   - "src/core/**/*.tsx"
-  - "src/components/tables/LatestEventsTable.tsx"
+  - "src/components/**/*.tsx"
   - "src/components/CommonSettings.tsx"
   - "src/pages/dashboard/index.tsx"
   - "src/pages/commons/index.tsx"
@@ -12,6 +12,7 @@ documents:
   - "src/pages/proposals/details/[proposalId].tsx"
   - "src/pages/users/details/[userId].tsx"
   - "src/pages/notifications/**/*.tsx"
+  - "src/pages/financials/payments/**/*.tsx"
 generates:
   ./src/core/graphql/index.ts:
     plugins:

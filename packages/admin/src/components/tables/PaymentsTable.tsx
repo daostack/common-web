@@ -1,20 +1,21 @@
 import React from 'react';
 
 import { Centered } from '@components/Centered';
-import { Link } from '@components/Link';
 import { Card, Row, Col, Text, Spacer, Tag, User, Divider, useTheme } from '@geist-ui/react';
 import { ChevronLeftCircle, ChevronRightCircle, ChevronDownCircle, ChevronUpCircle } from '@geist-ui/react-icons';
 import { gql } from '@apollo/client';
-import { useGetPaymentDetailsLazyQuery, useGetPaymentsQuery } from '@core/graphql';
+import { useGetPaymentsQuery } from '@core/graphql';
 
 
 export const PaymentsTableQuery = gql`
-  query GetPayments($page: Int = 1) {
-    payments(page: $page) {
+  query GetPayments($paginate: PaginateInput) {
+    payments(paginate: $paginate) {
       id
 
       type
       status
+
+      amount
 
       user {
         id
@@ -22,47 +23,9 @@ export const PaymentsTableQuery = gql`
         firstName
         lastName
 
-        photoURL
+        photo
 
         email
-      }
-
-      amount {
-        amount
-        currency
-      }
-    }
-  }
-`;
-
-const GetPaymentDetailsQuery = gql`
-  query GetPaymentDetails($paymentId: ID!) {
-    payment(id: $paymentId) {
-      type
-
-      common {
-        id
-
-        name
-      }
-
-      amount {
-        amount
-        currency
-      }
-
-      fees {
-        amount
-        currency
-      }
-
-      card {
-        id
-
-        metadata {
-          digits
-          network
-        }
       }
     }
   }
@@ -80,7 +43,7 @@ export const PaymentsTable: React.FC<IPaymentTableProps> = ({ hideNavigation }) 
   const [selectedPayment, setSelectedPayment] = React.useState<string>();
 
 
-  const [getPayment, { data: payment, loading: paymentLoading }] = useGetPaymentDetailsLazyQuery();
+  // const [getPayment, { data: payment, loading: paymentLoading }] = useGetPaymentDetailsLazyQuery();
   const { data: payments } = useGetPaymentsQuery({
     variables: {
       page
@@ -90,11 +53,11 @@ export const PaymentsTable: React.FC<IPaymentTableProps> = ({ hideNavigation }) 
   // Effects
   React.useEffect(() => {
     if (selectedPayment) {
-      getPayment({
-        variables: {
-          paymentId: selectedPayment
-        }
-      });
+      // getPayment({
+      //   variables: {
+      //     paymentId: selectedPayment
+      //   }
+      // });
     }
   }, [selectedPayment]);
 
@@ -160,9 +123,9 @@ export const PaymentsTable: React.FC<IPaymentTableProps> = ({ hideNavigation }) 
                   <Col span={3}>
                     <Centered vertical>
                       <Text b>
-                        {(p.amount.amount / 100).toLocaleString('en-US', {
+                        {(p.amount / 100).toLocaleString('en-US', {
                           style: 'currency',
-                          currency: p.amount.currency
+                          currency: 'USD'
                         })}
                       </Text>
                     </Centered>
@@ -170,19 +133,19 @@ export const PaymentsTable: React.FC<IPaymentTableProps> = ({ hideNavigation }) 
 
                   <Col span={4}>
                     <Centered vertical>
-                      {p.status === 'pending' && (
+                      {p.status === 'Pending' && (
                         <Tag type="warning" invert>
                           Pending
                         </Tag>
                       )}
 
-                      {(p.status === 'confirmed' || p.status === 'paid') && (
+                      {(p.status === 'Successful') && (
                         <Tag type="success" invert>
                           Successful
                         </Tag>
                       )}
 
-                      {(p.status === 'failed') && (
+                      {(p.status === 'Unsuccessful') && (
                         <Tag type="error" invert>
                           Failed
                         </Tag>
@@ -192,7 +155,7 @@ export const PaymentsTable: React.FC<IPaymentTableProps> = ({ hideNavigation }) 
 
                   <Col span={6}>
                     <User
-                      src={p.user.photoURL}
+                      src={p.user.photo}
                       name={`${p.user.firstName} ${p.user.lastName}`}
                     >
                       <User.Link href={`mailto:${p.user.email}`}>{p.user.email}</User.Link>
@@ -221,80 +184,7 @@ export const PaymentsTable: React.FC<IPaymentTableProps> = ({ hideNavigation }) 
 
                   <Card.Content>
                     <Row>
-                      {paymentLoading && (
-                        <div/>
-                      )}
 
-                      {payment && (
-                        <React.Fragment>
-                          <Col span={12}>
-                            <Text h4 style={{ margin: 0 }}>Billing Plan</Text>
-                            <Text
-                              h2
-                              style={{ margin: 0 }}
-                            >
-                              {payment.payment.type === 'oneTime' ? 'One Time' : 'Subscription'} Payment
-                            </Text>
-
-                            <Text style={{ margin: 0 }}>
-                              For {payment.payment.type === 'oneTime' ? 'joining' : 'participating in'}{' '}
-
-                              <Link to={`/commons/details/${payment.payment.common.id}`}>
-                                {payment.payment.common.name}
-                              </Link>
-                            </Text>
-
-                            <div style={{ display: 'flex', marginTop: 15 }}>
-                              <div>
-                                <Text h6>Fees</Text>
-                                <Text h4>
-                                  {(payment.payment.fees.amount / 100).toLocaleString('en-US', {
-                                    style: 'currency',
-                                    currency: payment.payment.fees.currency
-                                  })}
-                                </Text>
-                              </div>
-
-                              <Spacer x={1}/>
-
-                              <div>
-                                <Text h6>Money left</Text>
-                                <Text h4>
-                                  {((payment.payment.amount.amount - payment.payment.fees.amount) / 100).toLocaleString('en-US', {
-                                    style: 'currency',
-                                    currency: payment.payment.fees.currency
-                                  })}
-                                </Text>
-                              </div>
-                            </div>
-                          </Col>
-
-                          <Col span={12}>
-                            <Row>
-                              <Col span={16}>
-                                {/*<Row>*/}
-                                {/*  <Col span={24}>*/}
-                                {/*    <Text h6>Payment Instrument</Text>*/}
-                                {/*    <Text h4>{payment.payment.card.metadata.network} {payment.payment.card.metadata.digits}</Text>*/}
-                                {/*  </Col>*/}
-                                {/*</Row>*/}
-                              </Col>
-
-                              <Col span={8}>
-                                <div style={{ display: 'flex', flexFlow: 'column', alignItems: 'flex-end' }}>
-                                  <Text h4>Amount due</Text>
-                                  <Text h2>
-                                    {(payment.payment.amount.amount / 100).toLocaleString('en-US', {
-                                      style: 'currency',
-                                      currency: payment.payment.amount.currency
-                                    })}
-                                  </Text>
-                                </div>
-                              </Col>
-                            </Row>
-                          </Col>
-                        </React.Fragment>
-                      )}
                     </Row>
                   </Card.Content>
                 </React.Fragment>

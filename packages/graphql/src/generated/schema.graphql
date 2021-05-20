@@ -703,6 +703,8 @@ type Payment implements BaseEntity {
   amount: Int
   circlePaymentId: String
   circlePaymentStatus: PaymentCircleStatus
+  common: Common!
+  commonId: String!
 
   """The date, at which the item was created"""
   createdAt: DateTime!
@@ -716,6 +718,8 @@ type Payment implements BaseEntity {
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+  user: User!
+  userId: String!
 }
 
 enum PaymentCircleStatus {
@@ -744,6 +748,11 @@ enum PaymentType {
   OneTimePayment
   SubscriptionInitialPayment
   SubscriptionSequentialPayment
+}
+
+input PaymentsWhereInput {
+  commonId: UUID
+  userId: UUID
 }
 
 type Proposal {
@@ -840,7 +849,7 @@ type Query {
 
   """List of all notifications, readable only by the admin"""
   notifications(paginate: PaginateInput!): [Notification]
-  payments(paginate: PaginateInput): [Payment]
+  payments(paginate: PaginateInput, where: PaymentsWhereInput): [Payment]
   proposal(where: ProposalWhereUniqueInput!): Proposal
   proposals(paginate: PaginateInput, where: ProposalWhereInput): [Proposal]
   roles(paginate: PaginateInput): [Role]

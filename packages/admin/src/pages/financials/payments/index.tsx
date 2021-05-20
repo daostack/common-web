@@ -22,7 +22,7 @@ export const PaymentsHomepage: NextPage = () => {
       <Breadcrumbs>
         <Breadcrumbs.Item>Home</Breadcrumbs.Item>
         <Breadcrumbs.Item>
-          <Link to="/financials">Financials</Link>
+          <Link to="/financials/payments">Financials</Link>
         </Breadcrumbs.Item>
         <Breadcrumbs.Item>
           <Link to="/financials/payments">Payments</Link>
@@ -42,6 +42,6 @@ export const PaymentsHomepage: NextPage = () => {
   );
 };
 
-export default withPermission('admin.payments.*', {
+export default withPermission('admin.financials.payments.*', {
   redirect: true
 })(PaymentsHomepage);

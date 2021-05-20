@@ -214,6 +214,10 @@ export interface NexusGenInputs {
     skip?: number | null; // Int
     take: number; // Int!
   }
+  PaymentsWhereInput: { // input type
+    commonId?: NexusGenScalars['UUID'] | null; // UUID
+    userId?: NexusGenScalars['UUID'] | null; // UUID
+  }
   ProposalFileInput: { // input type
     value: string; // String!
   }
@@ -483,6 +487,7 @@ export interface NexusGenObjects {
     amount?: number | null; // Int
     circlePaymentId?: string | null; // String
     circlePaymentStatus?: NexusGenEnums['PaymentCircleStatus'] | null; // PaymentCircleStatus
+    commonId: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: NexusGenScalars['UUID']; // UUID!
     processed: boolean; // Boolean!
@@ -490,6 +495,7 @@ export interface NexusGenObjects {
     status: NexusGenEnums['PaymentStatus']; // PaymentStatus!
     type: NexusGenEnums['PaymentType']; // PaymentType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    userId: string; // String!
   }
   Proposal: { // root type
     commonId: NexusGenScalars['UUID']; // UUID!
@@ -787,6 +793,8 @@ export interface NexusGenFieldTypes {
     amount: number | null; // Int
     circlePaymentId: string | null; // String
     circlePaymentStatus: NexusGenEnums['PaymentCircleStatus'] | null; // PaymentCircleStatus
+    common: NexusGenRootTypes['Common']; // Common!
+    commonId: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: NexusGenScalars['UUID']; // UUID!
     processed: boolean; // Boolean!
@@ -794,6 +802,8 @@ export interface NexusGenFieldTypes {
     status: NexusGenEnums['PaymentStatus']; // PaymentStatus!
     type: NexusGenEnums['PaymentType']; // PaymentType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    user: NexusGenRootTypes['User']; // User!
+    userId: string; // String!
   }
   Proposal: { // field return type
     common: NexusGenRootTypes['Common']; // Common!
@@ -1128,6 +1138,8 @@ export interface NexusGenFieldTypeNames {
     amount: 'Int'
     circlePaymentId: 'String'
     circlePaymentStatus: 'PaymentCircleStatus'
+    common: 'Common'
+    commonId: 'String'
     createdAt: 'DateTime'
     id: 'UUID'
     processed: 'Boolean'
@@ -1135,6 +1147,8 @@ export interface NexusGenFieldTypeNames {
     status: 'PaymentStatus'
     type: 'PaymentType'
     updatedAt: 'DateTime'
+    user: 'User'
+    userId: 'String'
   }
   Proposal: { // field return type name
     common: 'Common'
@@ -1421,6 +1435,7 @@ export interface NexusGenArgTypes {
     }
     payments: { // args
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
+      where?: NexusGenInputs['PaymentsWhereInput'] | null; // PaymentsWhereInput
     }
     proposal: { // args
       where: NexusGenInputs['ProposalWhereUniqueInput']; // ProposalWhereUniqueInput!
