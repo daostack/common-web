@@ -4,10 +4,11 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -294,6 +295,8 @@ export interface NexusGenInputs {
     photo?: string | null; // String
   }
   UserWhereInput: { // input type
+    AND?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
+    OR?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
     email?: NexusGenInputs['StringFilter'] | null; // StringFilter
     firstName?: NexusGenInputs['StringFilter'] | null; // StringFilter
     lastName?: NexusGenInputs['StringFilter'] | null; // StringFilter

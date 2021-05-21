@@ -532,6 +532,7 @@ export enum EventType {
   ProposalExpired = 'ProposalExpired',
   VoteCreated = 'VoteCreated',
   UserCreated = 'UserCreated',
+  UserUpdated = 'UserUpdated',
   DiscussionCreated = 'DiscussionCreated',
   DiscussionMessageCreated = 'DiscussionMessageCreated',
   DiscussionSubscriptionCreated = 'DiscussionSubscriptionCreated',
@@ -1278,6 +1279,17 @@ export type BillingDetailsInput = {
   district?: Maybe<Scalars['String']>;
 };
 
+export type UpdateUserInput = {
+  /** The ID of the user to be updated */
+  id: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  photo?: Maybe<Scalars['String']>;
+  intro?: Maybe<Scalars['String']>;
+  country?: Maybe<UserCountry>;
+  notificationLanguage?: Maybe<NotificationLanguage>;
+};
+
 export type CreateRoleInput = {
   name: Scalars['String'];
   displayName: Scalars['String'];
@@ -1449,6 +1461,7 @@ export type Mutation = {
   createUser: User;
   createUserNotificationToken: UserNotificationToken;
   voidUserNotificationToken: UserNotificationToken;
+  updateUser?: Maybe<User>;
   createRole?: Maybe<Role>;
   assignRole?: Maybe<Scalars['Void']>;
   unassignRole?: Maybe<Scalars['Void']>;
@@ -1485,6 +1498,11 @@ export type MutationCreateUserNotificationTokenArgs = {
 
 export type MutationVoidUserNotificationTokenArgs = {
   tokenId: Scalars['ID'];
+};
+
+
+export type MutationUpdateUserArgs = {
+  input: UpdateUserInput;
 };
 
 
@@ -1638,6 +1656,36 @@ export type CommonSearchQuery = (
   commons?: Maybe<Array<Maybe<(
     { __typename?: 'Common' }
     & Pick<Common, 'id' | 'name' | 'description'>
+    )>>>
+}
+  );
+
+export type UserSearchQueryVariables = Exact<{
+  where?: Maybe<UserWhereInput>;
+}>;
+
+
+export type UserSearchQuery = (
+  { __typename?: 'Query' }
+  & {
+  users?: Maybe<Array<Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'photo' | 'firstName' | 'lastName'>
+    )>>>
+}
+  );
+
+export type ProposalSeachQueryVariables = Exact<{
+  where?: Maybe<ProposalWhereInput>;
+}>;
+
+
+export type ProposalSeachQuery = (
+  { __typename?: 'Query' }
+  & {
+  proposals?: Maybe<Array<Maybe<(
+    { __typename?: 'Proposal' }
+    & Pick<Proposal, 'id' | 'title' | 'type'>
     )>>>
 }
   );
@@ -2132,7 +2180,6 @@ export type DelistCommonMutationFn = Apollo.MutationFunction<DelistCommonMutatio
 export function useDelistCommonMutation(baseOptions?: Apollo.MutationHookOptions<DelistCommonMutation, DelistCommonMutationVariables>) {
   return Apollo.useMutation<DelistCommonMutation, DelistCommonMutationVariables>(DelistCommonDocument, baseOptions);
 }
-
 export type DelistCommonMutationHookResult = ReturnType<typeof useDelistCommonMutation>;
 export type DelistCommonMutationResult = Apollo.MutationResult<DelistCommonMutation>;
 export type DelistCommonMutationOptions = Apollo.BaseMutationOptions<DelistCommonMutation, DelistCommonMutationVariables>;
@@ -2173,6 +2220,81 @@ export function useCommonSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type CommonSearchQueryHookResult = ReturnType<typeof useCommonSearchQuery>;
 export type CommonSearchLazyQueryHookResult = ReturnType<typeof useCommonSearchLazyQuery>;
 export type CommonSearchQueryResult = Apollo.QueryResult<CommonSearchQuery, CommonSearchQueryVariables>;
+export const UserSearchDocument = gql`
+  query userSearch($where: UserWhereInput) {
+    users(where: $where) {
+      id
+      photo
+      firstName
+      lastName
+    }
+  }
+`;
+
+/**
+ * __useUserSearchQuery__
+ *
+ * To run a query within a React component, call `useUserSearchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserSearchQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useUserSearchQuery(baseOptions?: Apollo.QueryHookOptions<UserSearchQuery, UserSearchQueryVariables>) {
+  return Apollo.useQuery<UserSearchQuery, UserSearchQueryVariables>(UserSearchDocument, baseOptions);
+}
+
+export function useUserSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserSearchQuery, UserSearchQueryVariables>) {
+  return Apollo.useLazyQuery<UserSearchQuery, UserSearchQueryVariables>(UserSearchDocument, baseOptions);
+}
+
+export type UserSearchQueryHookResult = ReturnType<typeof useUserSearchQuery>;
+export type UserSearchLazyQueryHookResult = ReturnType<typeof useUserSearchLazyQuery>;
+export type UserSearchQueryResult = Apollo.QueryResult<UserSearchQuery, UserSearchQueryVariables>;
+export const ProposalSeachDocument = gql`
+  query proposalSeach($where: ProposalWhereInput) {
+    proposals(where: $where) {
+      id
+      title
+      type
+    }
+  }
+`;
+
+/**
+ * __useProposalSeachQuery__
+ *
+ * To run a query within a React component, call `useProposalSeachQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProposalSeachQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProposalSeachQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useProposalSeachQuery(baseOptions?: Apollo.QueryHookOptions<ProposalSeachQuery, ProposalSeachQueryVariables>) {
+  return Apollo.useQuery<ProposalSeachQuery, ProposalSeachQueryVariables>(ProposalSeachDocument, baseOptions);
+}
+
+export function useProposalSeachLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProposalSeachQuery, ProposalSeachQueryVariables>) {
+  return Apollo.useLazyQuery<ProposalSeachQuery, ProposalSeachQueryVariables>(ProposalSeachDocument, baseOptions);
+}
+
+export type ProposalSeachQueryHookResult = ReturnType<typeof useProposalSeachQuery>;
+export type ProposalSeachLazyQueryHookResult = ReturnType<typeof useProposalSeachLazyQuery>;
+export type ProposalSeachQueryResult = Apollo.QueryResult<ProposalSeachQuery, ProposalSeachQueryVariables>;
 export const GetLatestEventsDocument = gql`
   query GetLatestEvents($take: Int = 10, $skip: Int = 0) {
     events(paginate: {take: $take, skip: $skip}) {

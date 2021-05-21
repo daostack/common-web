@@ -55,14 +55,16 @@ export const Header: React.FC = () => {
             placement="bottomEnd"
             text={(
               <div style={{ minWidth: '10vw' }}>
-                {/*<b onClick={commitIntention('admin.theme.toggle')}>Theme </b> <br/>*/}
-                {/*<b onClick={commitIntention('admin.notification.toggle')}>Notifications </b>*/}
-
                 <Divider y={0.5}/>
 
-                <Link onClick={onSignOut}>
+                <div
+                  style={{
+                    cursor: 'pointer'
+                  }}
+                  onClick={onSignOut}
+                >
                   <b>Sign Out</b>
-                </Link>
+                </div>
               </div>
             )}
             style={{

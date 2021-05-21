@@ -1381,6 +1381,8 @@ enum UserNotificationTokenState {
 }
 
 input UserWhereInput {
+  AND: [UserWhereInput!]
+  OR: [UserWhereInput!]
   email: StringFilter
   firstName: StringFilter
   lastName: StringFilter

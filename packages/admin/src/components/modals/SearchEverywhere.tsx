@@ -1,8 +1,9 @@
 import React from 'react';
-import { Text, Keyboard, Modal, Spacer, useTheme, Input, Tabs, Spinner } from '@geist-ui/react';
-import { Search } from '@geist-ui/react-icons';
+import { Text, Keyboard, Modal, Spacer, useTheme, Input, Tabs, Spinner, Card } from '@geist-ui/react';
+import { Search, Home, User } from '@geist-ui/react-icons';
 import { gql } from '@apollo/client';
-import { useCommonSearchLazyQuery } from '@core/graphql';
+import { useCommonSearchLazyQuery, useUserSearchLazyQuery, useProposalSeachLazyQuery } from '@core/graphql';
+import { useRouter } from 'next/router';
 
 const CommonSearch = gql`
   query commonSearch($where: CommonWhereInput) {
@@ -15,10 +16,37 @@ const CommonSearch = gql`
   }
 `;
 
+const UserSearch = gql`
+  query userSearch($where: UserWhereInput) {
+    users(where: $where) {
+      id
+
+      photo
+
+      firstName
+      lastName
+    }
+  }
+`;
+
+const ProposalSearch = gql`
+  query proposalSeach($where: ProposalWhereInput) {
+    proposals(where: $where) {
+      id
+
+      title
+      type
+    }
+  }
+`;
+
 export const SearchEverywhere = () => {
   const { palette } = useTheme();
+  const router = useRouter();
 
+  const [searchUsers, { data: users, loading: usersLoading }] = useUserSearchLazyQuery();
   const [searchCommons, { data: commons, loading: commonsLoading }] = useCommonSearchLazyQuery();
+  const [searchProposals, { data: proposals, loading: proposalsLoading }] = useProposalSeachLazyQuery();
 
   const [scope, setScope] = React.useState<string>('all');
   const [query, setQuery] = React.useState<string>();
@@ -31,6 +59,30 @@ export const SearchEverywhere = () => {
           variables: {
             where: {
               name: {
+                contains: query
+              }
+            }
+          }
+        });
+      }
+
+      if (scope === 'proposals' || scope === 'all') {
+        searchProposals({
+          variables: {
+            where: {
+              title: {
+                contains: query
+              }
+            }
+          }
+        });
+      }
+
+      if (scope === 'users' || scope === 'all') {
+        searchUsers({
+          variables: {
+            where: {
+              firstName: {
                 contains: query
               }
             }
@@ -69,6 +121,15 @@ export const SearchEverywhere = () => {
     setOpen(false);
   };
 
+  const onGoTo = (where: string) => {
+    return () => {
+      router.push(where)
+        .then(() => {
+          onClose();
+        });
+    };
+  };
+
   return (
     <React.Fragment>
       <Modal
@@ -97,7 +158,9 @@ export const SearchEverywhere = () => {
 
           <div
             style={{
-              minHeight: '50vh'
+              marginTop: '1rem',
+              height: '50vh',
+              overflow: 'auto'
             }}
           >
             <Tabs
@@ -141,10 +204,33 @@ export const SearchEverywhere = () => {
 
             {query && (scope === 'commons' || scope === 'all') && (
               <React.Fragment>
-                {commons?.commons?.map((c) => (
-                  <div>
-                    {c.name}
-                  </div>
+                {[...(commons?.commons) || [], ...(users?.users || [])]?.map((c) => (
+                  <Card
+                    onClick={onGoTo(`/commons/details/${c.id}`)}
+                    style={{
+                      margin: '1rem 0',
+                      display: 'flex'
+                    }}
+                  >
+                    {c.__typename === 'Common' && (<Home/>)}
+                    {c.__typename === 'User' && (<User/>)}
+
+                    <div>
+                      <Text h5>
+                        {c.__typename === 'Common' && (
+                          <>Common {c.name}</>
+                        )}
+
+                        {c.__typename === 'User' && (
+                          <>User {c.firstName} {c.lastName}</>
+                        )}
+                      </Text>
+
+                      <Text>
+                        {c.description || 'No description'}
+                      </Text>
+                    </div>
+                  </Card>
                 ))}
               </React.Fragment>
             )}

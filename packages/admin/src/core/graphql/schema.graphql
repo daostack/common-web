@@ -463,6 +463,7 @@ enum EventType {
   ProposalExpired
   VoteCreated
   UserCreated
+  UserUpdated
   DiscussionCreated
   DiscussionMessageCreated
   DiscussionSubscriptionCreated
@@ -1066,6 +1067,16 @@ input BillingDetailsInput {
   line2: String
   district: String
 }
+input UpdateUserInput {
+  """The ID of the user to be updated"""
+  id: String!
+  firstName: String
+  lastName: String
+  photo: String
+  intro: String
+  country: UserCountry
+  notificationLanguage: NotificationLanguage
+}
 input CreateRoleInput {
   name: String!
   displayName: String!
@@ -1133,6 +1144,7 @@ type Mutation {
   createUser(input: CreateUserInput!): User!
   createUserNotificationToken(input: CreateUserNotificationTokenInput!): UserNotificationToken!
   voidUserNotificationToken(tokenId: ID!): UserNotificationToken!
+  updateUser(input: UpdateUserInput!): User
   createRole(input: CreateRoleInput!): Role
   assignRole(userId: ID!, roleId: ID!): Void
   unassignRole(userId: ID!, roleId: ID!): Void
