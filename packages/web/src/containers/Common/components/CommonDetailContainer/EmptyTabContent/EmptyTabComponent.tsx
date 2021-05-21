@@ -33,7 +33,7 @@ export default function EmptyTabComponent({ currentTab, message, title }: EmptyT
           <div className="title">{title}</div>
           <div className="message">{message}</div>
           {currentTab !== "history" && (
-            <div className="button-blue" onClick={onOpenJoinModal}>
+            <div className="button-blue join-the-effort-btn" onClick={onOpenJoinModal}>
               Join the effort
             </div>
           )}

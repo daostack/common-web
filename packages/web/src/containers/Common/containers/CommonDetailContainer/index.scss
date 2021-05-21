@@ -91,6 +91,9 @@
         .social-wrapper {
           display: flex;
           align-items: center;
+          .join-the-effort-btn {
+            margin-right: 10px;
+          }
         }
       }
     }
@@ -155,6 +158,9 @@
           }
           .social-wrapper {
             width: 100%;
+            .join-the-effort-btn {
+              height: 56px;
+            }
           }
         }
       }

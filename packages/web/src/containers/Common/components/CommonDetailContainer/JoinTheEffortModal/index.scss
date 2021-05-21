@@ -1,7 +1,9 @@
 @import "../../../../../constants.scss";
 
 .join-the-effort-wrapper {
-  background: url("/assets/images/purple-stains.svg") no-repeat center;
+  background-image: url("/assets/images/purple-stains-join-the-effort-desktop.svg");
+  background-repeat: no-repeat;
+  background-position: center;
   background-size: cover;
   margin: -30px; // to compensate the modal padding
   padding-bottom: $content-padding;
@@ -35,6 +37,7 @@
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .join-the-effort-wrapper {
+    background-image: url("/assets/images/purple-stains-join-the-effort-mobile.svg");
     padding-bottom: $content-padding-mobile;
     background-position-y: unset;
     > span {

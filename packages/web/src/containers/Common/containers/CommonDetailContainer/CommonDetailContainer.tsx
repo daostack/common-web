@@ -303,7 +303,7 @@ export default function CommonDetail() {
                   ))}
                 </div>
                 <div className="social-wrapper">
-                  <button className="button-blue" onClick={onOpenJoinModal} style={{ marginRight: "10px" }}>
+                  <button className="button-blue join-the-effort-btn" onClick={onOpenJoinModal}>
                     Join the effort
                   </button>
                   {screenSize === ScreenSize.Desktop && <Share type="popup" color={Colors.lightPurple} />}

@@ -1,3 +1,5 @@
+@import "../../../../../constants.scss";
+
 .empty-tab-component-wrapper {
   display: flex;
   justify-content: center;
@@ -25,6 +27,16 @@
       display: flex;
       justify-content: center;
       align-items: center;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .empty-tab-component-wrapper {
+    .empty-tab-content-wrapper {
+      .join-the-effort-btn {
+        height: 56px;
+      }
     }
   }
 }
