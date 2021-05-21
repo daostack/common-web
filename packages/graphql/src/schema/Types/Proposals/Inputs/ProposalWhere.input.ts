@@ -14,5 +14,21 @@ export const ProposalWhereInput = inputObjectType({
     t.uuid('commonId');
     t.uuid('commonMemberId');
     t.id('userId');
+
+    t.field('title', {
+      type: 'StringFilter'
+    });
+
+    t.field('description', {
+      type: 'StringFilter'
+    });
+
+    t.list.nonNull.field('AND', {
+      type: 'ProposalWhereInput'
+    });
+
+    t.list.nonNull.field('OR', {
+      type: 'ProposalWhereInput'
+    });
   }
 });

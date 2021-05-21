@@ -60,6 +60,8 @@ input UserWhereInput {
   firstName: StringFilter
   lastName: StringFilter
   email: StringFilter
+  OR: [UserWhereInput!]
+  AND: [UserWhereInput!]
 }
 input CreateUserInput {
   firstName: String!
@@ -671,6 +673,10 @@ input ProposalWhereInput {
   commonId: UUID
   commonMemberId: UUID
   userId: ID
+  title: StringFilter
+  description: StringFilter
+  AND: [ProposalWhereInput!]
+  OR: [ProposalWhereInput!]
 }
 input CreateJoinProposalInput {
   title: String!

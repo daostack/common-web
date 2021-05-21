@@ -1,9 +1,10 @@
 import React from 'react';
-import { Text, Keyboard, Modal, Spacer, useTheme, Input, Tabs, Spinner, Card } from '@geist-ui/react';
-import { Search, Home, User } from '@geist-ui/react-icons';
+import { Text, Keyboard, Modal, Spacer, useTheme, Input, Tabs, Spinner, useInput } from '@geist-ui/react';
+import { Search } from '@geist-ui/react-icons';
 import { gql } from '@apollo/client';
 import { useCommonSearchLazyQuery, useUserSearchLazyQuery, useProposalSeachLazyQuery } from '@core/graphql';
 import { useRouter } from 'next/router';
+import { SearchResultProps, SearchResult } from '@components/SearchResult';
 
 const CommonSearch = gql`
   query commonSearch($where: CommonWhereInput) {
@@ -21,7 +22,7 @@ const UserSearch = gql`
     users(where: $where) {
       id
 
-      photo
+      email
 
       firstName
       lastName
@@ -35,6 +36,8 @@ const ProposalSearch = gql`
       id
 
       title
+      description
+
       type
     }
   }
@@ -44,56 +47,174 @@ export const SearchEverywhere = () => {
   const { palette } = useTheme();
   const router = useRouter();
 
+  const { state: query, setState: setQuery, bindings } = useInput('');
+
+
   const [searchUsers, { data: users, loading: usersLoading }] = useUserSearchLazyQuery();
   const [searchCommons, { data: commons, loading: commonsLoading }] = useCommonSearchLazyQuery();
   const [searchProposals, { data: proposals, loading: proposalsLoading }] = useProposalSeachLazyQuery();
 
+  const [results, setResults] = React.useState<SearchResultProps[]>([]);
   const [scope, setScope] = React.useState<string>('all');
-  const [query, setQuery] = React.useState<string>();
   const [open, setOpen] = React.useState<boolean>();
+  const [selected, setSelected] = React.useState<number>(0);
+
+  const [loading, setLoading] = React.useState<boolean>(true);
 
   React.useEffect(() => {
-    if (query) {
-      if (scope === 'commons' || scope === 'all') {
-        searchCommons({
-          variables: {
-            where: {
-              name: {
-                contains: query
+    let timer = setTimeout(() => {
+      if (query && !query.startsWith('/')) {
+        if (scope === 'commons' || scope === 'all') {
+          searchCommons({
+            variables: {
+              where: {
+                name: {
+                  contains: query
+                }
               }
             }
-          }
-        });
-      }
+          });
+        }
 
-      if (scope === 'proposals' || scope === 'all') {
-        searchProposals({
-          variables: {
-            where: {
-              title: {
-                contains: query
+        if (scope === 'proposals' || scope === 'all') {
+          searchProposals({
+            variables: {
+              where: {
+                OR: [{
+                  title: {
+                    contains: query
+                  }
+                }, {
+                  description: {
+                    contains: query
+                  }
+                }]
               }
             }
-          }
-        });
-      }
+          });
+        }
 
-      if (scope === 'users' || scope === 'all') {
-        searchUsers({
-          variables: {
-            where: {
-              firstName: {
-                contains: query
+        if (scope === 'users' || scope === 'all') {
+          searchUsers({
+            variables: {
+              where: {
+                OR: [{
+                  firstName: {
+                    contains: query
+                  }
+                }, {
+                  lastName: {
+                    contains: query
+                  }
+                }, {
+                  email: {
+                    contains: query
+                  }
+                }]
               }
             }
-          }
-        });
+          });
+        }
       }
-    }
+    }, 500);
+
+    // this will clear Timeout
+    // when component unmount like in willComponentUnmount
+    // and show will not change to true
+    return () => {
+      clearTimeout(timer);
+    };
   }, [query, scope]);
 
   React.useEffect(() => {
+    const res: SearchResultProps[] = [];
+
+    if (!query.startsWith('/')) {
+      if (scope === 'all' || scope === 'commons') {
+        commons?.commons?.map(c => {
+          res.push({
+            type: 'common',
+            data: {
+              id: c.id,
+
+              title: `Common ${c.name}`,
+              subtitle: c.description || 'This common has no description'
+            }
+          });
+        });
+      }
+
+      if (scope === 'all' || scope === 'users') {
+        users?.users?.map(u => {
+          res.push({
+            type: 'user',
+            data: {
+              id: u.id,
+
+              title: `User ${u.firstName} ${u.lastName}`,
+              subtitle: u.email
+            }
+          });
+        });
+      }
+
+      if (scope === 'all' || scope === 'proposals') {
+        proposals?.proposals?.map(p => {
+          res.push({
+            type: 'proposal',
+            data: {
+              id: p.id,
+
+              title: p.title,
+              subtitle: `Proposal of type ${p.type}`
+            }
+          });
+        });
+      }
+    }
+
+    setResults(res.sort(() => (Math.random() > .5) ? 1 : -1));
+  }, [commons, users, proposals, scope]);
+
+  React.useEffect(() => {
+    setLoading(
+      commonsLoading ||
+      proposalsLoading ||
+      usersLoading
+    );
+  });
+
+  React.useEffect(() => {
+    setSelected(0);
+  }, [query]);
+
+
+  React.useEffect(() => {
     const handleKeyboardEvent = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+
+        setSelected((ps) => {
+          if (ps === 0) {
+            return results.length - 1;
+          } else {
+            return ps - 1;
+          }
+        });
+      }
+
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+
+        setSelected((ps) => {
+          if (ps === (results.length - 1)) {
+            return 0;
+          } else {
+            return ps + 1;
+          }
+        });
+      }
+
       if ((event.metaKey || event.ctrlKey) && event.code === 'KeyK') {
         event.preventDefault();
 
@@ -112,6 +233,42 @@ export const SearchEverywhere = () => {
     };
   }, []);
 
+  React.useEffect(() => {
+    const handleKeyboardEvent = (event: KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        if (query.startsWith('/')) {
+          event.preventDefault();
+
+          if (query.startsWith('/c')) {
+            setScope('commons');
+            setQuery('');
+          }
+
+          if (query.startsWith('/u')) {
+            setScope('users');
+            setQuery('');
+          }
+
+          if (query.startsWith('/p')) {
+            setScope('proposals');
+            setQuery('');
+          }
+
+          if (query.startsWith('/a')) {
+            setScope('all');
+            setQuery('');
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyboardEvent);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyboardEvent);
+    };
+  }, [query]);
+
 
   const onOpen = () => {
     setOpen(true);
@@ -119,15 +276,9 @@ export const SearchEverywhere = () => {
 
   const onClose = () => {
     setOpen(false);
-  };
-
-  const onGoTo = (where: string) => {
-    return () => {
-      router.push(where)
-        .then(() => {
-          onClose();
-        });
-    };
+    setQuery('');
+    setResults([]);
+    setSelected(0);
   };
 
   return (
@@ -143,17 +294,16 @@ export const SearchEverywhere = () => {
           }}
         >
           <Input
+            autoFocus
             width="100%"
             icon={<Search/>}
             iconRight={
-              commonsLoading && (
+              (loading && query) && (
                 <Spinner/>
               )
             }
             placeholder="Write your query"
-            onChange={(e) => {
-              setQuery(e.target.value);
-            }}
+            {...bindings}
           />
 
           <div
@@ -189,51 +339,10 @@ export const SearchEverywhere = () => {
               </div>
             )}
 
-            {query && commonsLoading && (
-              <div
-                style={{
-                  height: '80%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
-                <Text>Searching {scope} for {query}...</Text>
-              </div>
-            )}
-
-            {query && (scope === 'commons' || scope === 'all') && (
-              <React.Fragment>
-                {[...(commons?.commons) || [], ...(users?.users || [])]?.map((c) => (
-                  <Card
-                    onClick={onGoTo(`/commons/details/${c.id}`)}
-                    style={{
-                      margin: '1rem 0',
-                      display: 'flex'
-                    }}
-                  >
-                    {c.__typename === 'Common' && (<Home/>)}
-                    {c.__typename === 'User' && (<User/>)}
-
-                    <div>
-                      <Text h5>
-                        {c.__typename === 'Common' && (
-                          <>Common {c.name}</>
-                        )}
-
-                        {c.__typename === 'User' && (
-                          <>User {c.firstName} {c.lastName}</>
-                        )}
-                      </Text>
-
-                      <Text>
-                        {c.description || 'No description'}
-                      </Text>
-                    </div>
-                  </Card>
-                ))}
-              </React.Fragment>
-            )}
+            {query && results && results
+              .map((r, i) => (
+                <SearchResult {...r} selected={i === selected} onNavigate={onClose} key={r.data.id}/>
+              ))}
           </div>
         </Modal.Content>
       </Modal>
@@ -254,7 +363,9 @@ export const SearchEverywhere = () => {
             margin: '0 10px',
             color: palette.accents_4
           }}
-        >Search</Text>
+        >
+          Search
+        </Text>
 
         <Spacer x={7}/>
 

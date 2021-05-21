@@ -107,6 +107,8 @@ export type UserWhereInput = {
   firstName?: Maybe<StringFilter>;
   lastName?: Maybe<StringFilter>;
   email?: Maybe<StringFilter>;
+  OR?: Maybe<Array<UserWhereInput>>;
+  AND?: Maybe<Array<UserWhereInput>>;
 };
 
 export type CreateUserInput = {
@@ -802,6 +804,10 @@ export type ProposalWhereInput = {
   commonId?: Maybe<Scalars['UUID']>;
   commonMemberId?: Maybe<Scalars['UUID']>;
   userId?: Maybe<Scalars['ID']>;
+  title?: Maybe<StringFilter>;
+  description?: Maybe<StringFilter>;
+  AND?: Maybe<Array<ProposalWhereInput>>;
+  OR?: Maybe<Array<ProposalWhereInput>>;
 };
 
 export type CreateJoinProposalInput = {
@@ -1670,7 +1676,7 @@ export type UserSearchQuery = (
   & {
   users?: Maybe<Array<Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'photo' | 'firstName' | 'lastName'>
+    & Pick<User, 'id' | 'email' | 'firstName' | 'lastName'>
     )>>>
 }
   );
@@ -1685,7 +1691,7 @@ export type ProposalSeachQuery = (
   & {
   proposals?: Maybe<Array<Maybe<(
     { __typename?: 'Proposal' }
-    & Pick<Proposal, 'id' | 'title' | 'type'>
+    & Pick<Proposal, 'id' | 'title' | 'description' | 'type'>
     )>>>
 }
   );
@@ -2212,11 +2218,9 @@ export const CommonSearchDocument = gql`
 export function useCommonSearchQuery(baseOptions?: Apollo.QueryHookOptions<CommonSearchQuery, CommonSearchQueryVariables>) {
   return Apollo.useQuery<CommonSearchQuery, CommonSearchQueryVariables>(CommonSearchDocument, baseOptions);
 }
-
 export function useCommonSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommonSearchQuery, CommonSearchQueryVariables>) {
   return Apollo.useLazyQuery<CommonSearchQuery, CommonSearchQueryVariables>(CommonSearchDocument, baseOptions);
 }
-
 export type CommonSearchQueryHookResult = ReturnType<typeof useCommonSearchQuery>;
 export type CommonSearchLazyQueryHookResult = ReturnType<typeof useCommonSearchLazyQuery>;
 export type CommonSearchQueryResult = Apollo.QueryResult<CommonSearchQuery, CommonSearchQueryVariables>;
@@ -2224,7 +2228,7 @@ export const UserSearchDocument = gql`
   query userSearch($where: UserWhereInput) {
     users(where: $where) {
       id
-      photo
+      email
       firstName
       lastName
     }
@@ -2250,11 +2254,9 @@ export const UserSearchDocument = gql`
 export function useUserSearchQuery(baseOptions?: Apollo.QueryHookOptions<UserSearchQuery, UserSearchQueryVariables>) {
   return Apollo.useQuery<UserSearchQuery, UserSearchQueryVariables>(UserSearchDocument, baseOptions);
 }
-
 export function useUserSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserSearchQuery, UserSearchQueryVariables>) {
   return Apollo.useLazyQuery<UserSearchQuery, UserSearchQueryVariables>(UserSearchDocument, baseOptions);
 }
-
 export type UserSearchQueryHookResult = ReturnType<typeof useUserSearchQuery>;
 export type UserSearchLazyQueryHookResult = ReturnType<typeof useUserSearchLazyQuery>;
 export type UserSearchQueryResult = Apollo.QueryResult<UserSearchQuery, UserSearchQueryVariables>;
@@ -2263,6 +2265,7 @@ export const ProposalSeachDocument = gql`
     proposals(where: $where) {
       id
       title
+      description
       type
     }
   }
@@ -2287,11 +2290,9 @@ export const ProposalSeachDocument = gql`
 export function useProposalSeachQuery(baseOptions?: Apollo.QueryHookOptions<ProposalSeachQuery, ProposalSeachQueryVariables>) {
   return Apollo.useQuery<ProposalSeachQuery, ProposalSeachQueryVariables>(ProposalSeachDocument, baseOptions);
 }
-
 export function useProposalSeachLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProposalSeachQuery, ProposalSeachQueryVariables>) {
   return Apollo.useLazyQuery<ProposalSeachQuery, ProposalSeachQueryVariables>(ProposalSeachDocument, baseOptions);
 }
-
 export type ProposalSeachQueryHookResult = ReturnType<typeof useProposalSeachQuery>;
 export type ProposalSeachLazyQueryHookResult = ReturnType<typeof useProposalSeachLazyQuery>;
 export type ProposalSeachQueryResult = Apollo.QueryResult<ProposalSeachQuery, ProposalSeachQueryVariables>;

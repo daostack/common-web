@@ -4,11 +4,10 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
-import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
+import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -233,9 +232,13 @@ export interface NexusGenInputs {
     url: string; // String!
   }
   ProposalWhereInput: { // input type
+    AND?: NexusGenInputs['ProposalWhereInput'][] | null; // [ProposalWhereInput!]
+    OR?: NexusGenInputs['ProposalWhereInput'][] | null; // [ProposalWhereInput!]
     commonId?: NexusGenScalars['UUID'] | null; // UUID
     commonMemberId?: NexusGenScalars['UUID'] | null; // UUID
+    description?: NexusGenInputs['StringFilter'] | null; // StringFilter
     state?: NexusGenEnums['ProposalState'] | null; // ProposalState
+    title?: NexusGenInputs['StringFilter'] | null; // StringFilter
     type?: NexusGenEnums['ProposalType'] | null; // ProposalType
     userId?: string | null; // ID
   }

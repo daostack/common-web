@@ -832,9 +832,13 @@ enum ProposalType {
 }
 
 input ProposalWhereInput {
+  AND: [ProposalWhereInput!]
+  OR: [ProposalWhereInput!]
   commonId: UUID
   commonMemberId: UUID
+  description: StringFilter
   state: ProposalState
+  title: StringFilter
   type: ProposalType
   userId: ID
 }
