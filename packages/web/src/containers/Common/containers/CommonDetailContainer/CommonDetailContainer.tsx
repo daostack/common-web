@@ -21,6 +21,7 @@ import {
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
 import {
   clearCurrentDiscussion,
+  clearCurrentProposal,
   closeCurrentCommon,
   getCommonDetail,
   loadCommonDiscussionList,
@@ -148,6 +149,7 @@ export default function CommonDetail() {
   const closeModalHandler = useCallback(() => {
     onClose();
     dispatch(clearCurrentDiscussion());
+    dispatch(clearCurrentProposal());
   }, [onClose, dispatch]);
 
   const closeJoinModalHandler = useCallback(() => {

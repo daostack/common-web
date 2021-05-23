@@ -71,6 +71,11 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       nextState.currentDiscussion = null;
     }),
   )
+  .handleAction(actions.clearCurrentProposal, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.currentProposal = null;
+    }),
+  )
   .handleAction(actions.closeCurrentCommon, (state, action) =>
     produce(state, (nextState) => {
       nextState.currentDiscussion = null;
