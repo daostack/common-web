@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { NavLink, Link, useLocation } from "react-router-dom";
+import { NavLink, Link, useLocation, useHistory } from "react-router-dom";
 import { Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
@@ -12,6 +12,7 @@ import classNames from "classnames";
 
 const Header = () => {
   const location = useLocation();
+  const history = useHistory();
   const screenSize = useSelector(getScreenSize());
   const [showMenu, setShowMenu] = useState(false);
   const [isTop, setIsTop] = useState<boolean | undefined>(undefined);
@@ -21,6 +22,15 @@ const Header = () => {
       setIsTop(window.scrollY === 0 ? true : false);
     });
   }, [isTop]);
+
+  React.useEffect(() => {
+    const unlisten = history.listen(() => {
+      window.scrollTo(0, 0);
+    });
+    return () => {
+      unlisten();
+    };
+  }, [history]);
 
   const handleNavLinkClick = () => {
     if (showMenu) {
