@@ -38,11 +38,11 @@ export default function CommonListContainer() {
     (entities: any[]) => {
       const target = entities[0];
 
-      if (target.isIntersecting && page < 2) {
+      if (target.isIntersecting && page < 3 && !loaderHack) {
         dispatch(updatePage(page + 1));
       }
     },
-    [dispatch, page],
+    [dispatch, loaderHack, page],
   );
 
   useEffect(() => {
@@ -78,9 +78,10 @@ export default function CommonListContainer() {
       )}
 
       {commons.length !== currentCommons.length && (
-        <div className="loader-wrapper" ref={loader}>
+        <div className="loader-wrapper">
+          {page < 3 && !loaderHack ? <div className="auto-load" ref={loader}></div> : null}
           {loaderHack ? <div className="loader">Loading...</div> : null}
-          {page >= 2 && !loaderHack ? (
+          {page >= 3 && !loaderHack ? (
             <div className="loading button-blue" onClick={() => loadHack()}>
               Load more Commons
             </div>
