@@ -46,9 +46,7 @@ const Header = () => {
       <NavLink to={ROUTE_PATHS.COMMON_LIST} activeClassName="active">
         Explore Commons
       </NavLink>
-      <NavLink to={ROUTE_PATHS.CONTACT} activeClassName="active">
-        Contact
-      </NavLink>
+      <a href="mailto:hi@common.io">Contact</a>
     </div>
   );
 
