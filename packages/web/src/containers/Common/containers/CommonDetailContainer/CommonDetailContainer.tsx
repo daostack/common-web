@@ -89,22 +89,8 @@ export default function CommonDetail() {
     };
   }, [dispatch, id]);
 
-  const latestDiscussions = useMemo(
-    () =>
-      [...discussions].splice(0, 5).map((d) => {
-        return { id: d.id, value: d.title };
-      }),
-    [discussions],
-  );
-
   const activeProposals = useMemo(() => [...proposals].filter((d) => d.state === "countdown"), [proposals]);
-  const lastestProposals = useMemo(
-    () =>
-      [...activeProposals].splice(0, 5).map((p) => {
-        return { id: p.id, value: p.description.title || p.description.description };
-      }),
-    [activeProposals],
-  );
+
   const historyProposals = useMemo(() => [...proposals].filter((d) => d.state !== "countdown"), [proposals]);
 
   const changeTabHandler = useCallback(
@@ -186,15 +172,17 @@ export default function CommonDetail() {
           <>
             <PreviewInformationList
               title="Latest Discussions"
-              data={latestDiscussions}
+              discussions={discussions}
               vievAllHandler={() => changeTabHandler("discussions")}
               onClickItem={clickPreviewDisscusionHandler}
+              type="discussions"
             />
             <PreviewInformationList
               title="Latest Proposals"
-              data={lastestProposals}
+              proposals={activeProposals}
               vievAllHandler={() => changeTabHandler("proposals")}
               onClickItem={clickPreviewProposalHandler}
+              type="proposals"
             />
           </>
         );
@@ -205,9 +193,10 @@ export default function CommonDetail() {
             <AboutSidebarComponent title="About" vievAllHandler={() => changeTabHandler("about")} common={common} />
             <PreviewInformationList
               title="Latest Proposals"
-              data={lastestProposals}
+              proposals={activeProposals}
               vievAllHandler={() => changeTabHandler("proposals")}
               onClickItem={clickPreviewProposalHandler}
+              type="proposals"
             />
           </>
         );
@@ -217,9 +206,10 @@ export default function CommonDetail() {
             <AboutSidebarComponent title="About" vievAllHandler={() => changeTabHandler("about")} common={common} />
             <PreviewInformationList
               title="Latest Discussions"
-              data={latestDiscussions}
+              discussions={discussions}
               vievAllHandler={() => changeTabHandler("discussions")}
               onClickItem={clickPreviewDisscusionHandler}
+              type="discussions"
             />
           </>
         );

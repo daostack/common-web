@@ -61,8 +61,9 @@
       border-bottom: 1px solid $light-gray;
       cursor: pointer;
       display: flex;
-      align-items: center;
       position: relative;
+      flex-direction: column;
+      justify-content: center;
       &:hover {
         background-color: $light-purple;
         &::after {
@@ -74,6 +75,85 @@
           position: absolute;
           right: 5px;
           background-size: contain;
+        }
+      }
+      .item-title {
+        display: flex;
+      }
+      .item-bottom {
+        display: flex;
+        align-items: center;
+        padding-top: 24px;
+        .votes {
+          .votes-wrapper {
+            .progress {
+              display: none;
+            }
+            img {
+              width: 16px;
+              height: 16px;
+              margin-right: 4px;
+              margin-left: 4px;
+            }
+            .top-votes-side {
+              .for {
+                font-size: 12px;
+                margin-right: 16px;
+              }
+              .against {
+                font-size: 12px;
+                margin-right: 16px;
+              }
+            }
+          }
+          .count {
+            display: none;
+          }
+        }
+      }
+      .discussion-count {
+        display: flex;
+        align-items: center;
+        img {
+          width: 16px;
+          height: 16px;
+          margin-right: 4px;
+          margin-left: 4px;
+        }
+        .count {
+          font-family: NunitoSans;
+          font-size: 12px;
+          color: $gray;
+        }
+      }
+      .countdown {
+        flex: 70;
+        align-items: flex-end;
+        .countdown-wrapper {
+          justify-content: flex-end;
+          .inner-wrapper {
+            height: auto;
+            width: auto;
+            margin: 0;
+            background: none;
+            display: flex;
+            align-items: center;
+            img {
+              width: 16px;
+              height: 16px;
+              margin-right: 4px;
+              margin-left: 4px;
+            }
+            .text {
+              span {
+                font-family: NunitoSans;
+                font-size: 12px;
+                font-weight: bold;
+                line-height: 1.33;
+                color: $gray;
+              }
+            }
+          }
         }
       }
     }
@@ -99,7 +179,7 @@
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
-  .preview-information-wrapper{
-
+  .preview-information-wrapper {
+    display: none;
   }
 }
