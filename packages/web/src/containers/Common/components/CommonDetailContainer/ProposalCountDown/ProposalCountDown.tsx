@@ -3,6 +3,7 @@ import "./index.scss";
 
 interface ProposalCountDownInterface {
   date: Date;
+  type?: string;
 }
 
 const countDownCount = (date: Date) => {
@@ -34,7 +35,7 @@ const formatCountDown = (step: number) => {
   return string.length === 1 ? `0${string}` : string;
 };
 
-export default function ProposalCountDown({ date }: ProposalCountDownInterface) {
+export default function ProposalCountDown({ date, type }: ProposalCountDownInterface) {
   const [state, setState] = useState(countDownCount(date));
 
   useEffect(() => {
@@ -50,7 +51,11 @@ export default function ProposalCountDown({ date }: ProposalCountDownInterface) 
   return (
     <div className="countdown-wrapper">
       <div className="inner-wrapper">
-        <img className="clock-icon" src="/icons/alarm-clock.svg" alt="alarm-clock" />
+        {!type ? (
+          <img className="clock-icon" src="/icons/alarm-clock.svg" alt="alarm-clock" />
+        ) : (
+          <img className="clock-icon" src="/icons/alarm-clock-gray.svg" alt="alarm-clock" />
+        )}
         <div className="text">
           <span>
             {state.difference > 0
