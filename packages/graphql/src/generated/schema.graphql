@@ -1089,6 +1089,9 @@ input UpdateUserInput {
 }
 
 type User {
+  """List of all commons, that the user is currently part of"""
+  commons: [Common!]!
+
   """The last name of the user"""
   country: UserCountry!
 
