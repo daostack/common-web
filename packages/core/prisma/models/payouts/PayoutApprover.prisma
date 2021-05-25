@@ -1,0 +1,11 @@
+model PayoutApprover {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User
+  payout Payout
+
+  resonse PayoutApproverResponse @default(Pending)
+}

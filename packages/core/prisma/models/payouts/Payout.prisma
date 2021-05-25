@@ -1,0 +1,13 @@
+model Payout {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  status PayoutStatus @default(PendingApproval)
+
+  amount Int
+
+  approvers PayoutApprover[]
+  proposals Proposal[]
+}
