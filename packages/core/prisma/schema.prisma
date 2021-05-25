@@ -44,6 +44,13 @@ enum FundingType {
   Monthly
 }
 
+model Wire {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Discussion {
   id String @id @default(uuid())
 
@@ -161,12 +168,28 @@ model Common {
   discussions Discussion[]
 
   reports      Report[]
+  updates      CommonUpdate[]
   Notification Notification[]
 }
 
 enum CommonMemberRole {
   Founder
   Moderator
+}
+
+model CommonUpdate {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  common Common @relation(fields: [commonId], references: [id])
+
+  commonBefore Json
+  commonAfter  Json
+
+  change   Json?
+  commonId String
 }
 
 model CommonMember {
@@ -403,8 +426,9 @@ model User {
 
   notificationTokens UserNotificationToken[]
 
-  roles       Role[]
-  permissions String[]
+  roles          Role[]
+  permissions    String[]
+  PayoutApprover PayoutApprover[]
 }
 
 enum UserCountry {
@@ -686,6 +710,7 @@ model UserNotificationToken {
 
 enum EventType {
   CommonCreated
+  CommonUpdated
   CommonDelisted
   CommonWhitelisted
 
@@ -893,6 +918,51 @@ model NotificationTemplate {
   @@unique([forType, templateType, language])
 }
 
+enum PayoutStatus {
+  PendingApproval
+
+  CirclePending
+  CircleComplete
+  CircleFailed
+
+  Failed
+}
+
+enum PayoutApproverResponse {
+  Pending
+
+  Approved
+  Declined
+}
+
+model Payout {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  status PayoutStatus @default(PendingApproval)
+
+  amount Int
+
+  approvers PayoutApprover[]
+  proposals Proposal[]
+}
+
+model PayoutApprover {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  payout Payout @relation(fields: [payoutId], references: [id])
+
+  resonse  PayoutApproverResponse @default(Pending)
+  userId   String
+  payoutId String
+}
+
 model Vote {
   id String @id @default(uuid())
 
@@ -1007,6 +1077,8 @@ model Proposal {
   importedFrom Json?
   Event        Event[]
   Notification Notification[]
+  Payout       Payout?        @relation(fields: [payoutId], references: [id])
+  payoutId     String?
 }
 
 model JoinProposal {

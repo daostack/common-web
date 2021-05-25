@@ -18,6 +18,7 @@ import { CommonType } from './Types/Common.type';
 import { CommonWhereUniqueInput } from './Inputs/CommonWhereUnique.input';
 import { CommonLinkInput } from './Inputs/CommonLink.input';
 import { CommonWhereInput } from './Inputs/CommonWhere.input';
+import { UpdateCommonMutation } from './Mutations/UpdateCommon.mutation';
 
 
 export const CommonTypes = [
@@ -30,6 +31,7 @@ export const CommonTypes = [
 
   CreateCommonInput,
   CreateCommonMutation,
+  UpdateCommonMutation,
   DelistCommonMutation,
   WhitelistCommonMutation,
 

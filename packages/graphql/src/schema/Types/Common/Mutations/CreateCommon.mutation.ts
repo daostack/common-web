@@ -13,11 +13,11 @@ export const CreateCommonInput = inputObjectType({
       type: 'FundingType'
     });
 
-    t.nonNull.string('image');
-    t.nonNull.string('description');
     t.string('action');
     t.string('byline');
     t.string('description');
+    t.nonNull.string('image');
+
     t.list.nonNull.field('links', {
       type: 'CommonLinkInput'
     });

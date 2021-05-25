@@ -393,6 +393,7 @@ enum EventType {
   CommonMemberCreated
   CommonMemberRoleAdded
   CommonMemberRoleRemoved
+  CommonUpdated
   CommonWhitelisted
   DiscussionCreated
   DiscussionMessageCreated
@@ -529,6 +530,7 @@ type Mutation {
   finalizeProposal(proposalId: ID!): Boolean!
   reportDiscussionMessage(input: ReportDiscussionMessageInput!): Report!
   unassignRole(roleId: ID!, userId: ID!): Void
+  updateCommon(input: UpdateCommonInput!): Common
   updateNotificationSettings(input: UpdateNotificationSettingsInput!): NotificationSystemSettings
   updateNotificationTemplate(input: UpdateNotificationTemplateInput!): NotificationTemplate
   updateUser(input: UpdateUserInput!): User
@@ -1040,6 +1042,17 @@ scalar URL
 A field whose value is a generic Universally Unique Identifier: https://en.wikipedia.org/wiki/Universally_unique_identifier.
 """
 scalar UUID
+
+input UpdateCommonInput {
+  action: String
+  byline: String
+  commonId: ID!
+  description: String
+  image: String
+  links: [CommonLinkInput!]
+  name: String
+  rules: [CommonLinkInput!]
+}
 
 input UpdateNotificationSettingsInput {
   id: String!

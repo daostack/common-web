@@ -33,6 +33,7 @@ model Common {
   discussions Discussion[]
 
   reports Report[]
+  updates CommonUpdate[]
 }
 
 

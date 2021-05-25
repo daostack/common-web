@@ -4,10 +4,11 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -273,6 +274,16 @@ export interface NexusGenInputs {
     notIn?: string[] | null; // [String!]
     startsWith?: string | null; // String
   }
+  UpdateCommonInput: { // input type
+    action?: string | null; // String
+    byline?: string | null; // String
+    commonId: string; // ID!
+    description?: string | null; // String
+    image?: string | null; // String
+    links?: NexusGenInputs['CommonLinkInput'][] | null; // [CommonLinkInput!]
+    name?: string | null; // String
+    rules?: NexusGenInputs['CommonLinkInput'][] | null; // [CommonLinkInput!]
+  }
   UpdateNotificationSettingsInput: { // input type
     id: string; // String!
     sendEmail?: boolean | null; // Boolean
@@ -314,9 +325,9 @@ export interface NexusGenEnums {
   DiscussionMessageFlag: "Clear" | "Hidden" | "Reported"
   DiscussionMessageType: "Message"
   DiscussionSubscriptionType: "AllNotifications" | "NoNotification" | "OnlyMentions"
-  DiscussionType: "CommonDiscussion" | "ProposalDiscussion"
-  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonDelisted" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "CommonWhitelisted" | "DiscussionCreated" | "DiscussionMessageCreated" | "DiscussionSubscriptionCreated" | "DiscussionSubscriptionTypeChanged" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "NotificationTemplateCreated" | "NotificationTemplateUpdated" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "ReportCreated" | "ReportDismissed" | "ReportRespected" | "RoleCreated" | "RoleDeleted" | "RolePermissionAdded" | "RolePermissionRemoved" | "RoleUpdated" | "UserAddedToRole" | "UserCreated" | "UserNotificationTokenCreated" | "UserNotificationTokenExpired" | "UserNotificationTokenRefreshed" | "UserNotificationTokenVoided" | "UserRemovedFromRole" | "UserUpdated" | "VoteCreated"
-  FundingState: "AwaitingApproval" | "Completed" | "Confirmed" | "Eligible" | "NotEligible" | "Pending"
+  DiscussionType: 'CommonDiscussion' | 'ProposalDiscussion'
+  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonDelisted' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'CommonUpdated' | 'CommonWhitelisted' | 'DiscussionCreated' | 'DiscussionMessageCreated' | 'DiscussionSubscriptionCreated' | 'DiscussionSubscriptionTypeChanged' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'NotificationTemplateCreated' | 'NotificationTemplateUpdated' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'ProposalExpired' | 'ProposalMajorityReached' | 'ReportCreated' | 'ReportDismissed' | 'ReportRespected' | 'RoleCreated' | 'RoleDeleted' | 'RolePermissionAdded' | 'RolePermissionRemoved' | 'RoleUpdated' | 'UserAddedToRole' | 'UserCreated' | 'UserNotificationTokenCreated' | 'UserNotificationTokenExpired' | 'UserNotificationTokenRefreshed' | 'UserNotificationTokenVoided' | 'UserRemovedFromRole' | 'UserUpdated' | 'VoteCreated'
+  FundingState: 'AwaitingApproval' | 'Completed' | 'Confirmed' | 'Eligible' | 'NotEligible' | 'Pending'
   FundingType: "Monthly" | "OneTime"
   NotificationLanguage: "BG" | "EN" | "HE" | "JP" | "KO" | "RU"
   NotificationSeenStatus: "Done" | "NotSeen" | "Seen"
@@ -743,6 +754,7 @@ export interface NexusGenFieldTypes {
     finalizeProposal: boolean; // Boolean!
     reportDiscussionMessage: NexusGenRootTypes['Report']; // Report!
     unassignRole: NexusGenScalars['Void'] | null; // Void
+    updateCommon: NexusGenRootTypes['Common'] | null; // Common
     updateNotificationSettings: NexusGenRootTypes['NotificationSystemSettings'] | null; // NotificationSystemSettings
     updateNotificationTemplate: NexusGenRootTypes['NotificationTemplate'] | null; // NotificationTemplate
     updateUser: NexusGenRootTypes['User'] | null; // User
@@ -1091,6 +1103,7 @@ export interface NexusGenFieldTypeNames {
     finalizeProposal: 'Boolean'
     reportDiscussionMessage: 'Report'
     unassignRole: 'Void'
+    updateCommon: 'Common'
     updateNotificationSettings: 'NotificationSystemSettings'
     updateNotificationTemplate: 'NotificationTemplate'
     updateUser: 'User'
@@ -1402,6 +1415,9 @@ export interface NexusGenArgTypes {
     unassignRole: { // args
       roleId: string; // ID!
       userId: string; // ID!
+    }
+    updateCommon: { // args
+      input: NexusGenInputs['UpdateCommonInput']; // UpdateCommonInput!
     }
     updateNotificationSettings: { // args
       input: NexusGenInputs['UpdateNotificationSettingsInput']; // UpdateNotificationSettingsInput!
