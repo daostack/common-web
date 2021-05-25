@@ -45,7 +45,10 @@ export const hideContent = async (hideContentPayload: HideContentPayload): Promi
   const updatedAt = firestore.Timestamp.now();
   let countdownPeriod = null;
   if (type === TYPES.proposals) {
-    countdownPeriod = item?.countdownPeriod - (updatedAt.seconds - item.createdAt.seconds);
+
+    countdownPeriod = item?.moderation?.countdownPeriod < item.quietEndingPeriod
+      ? item.quietEndingPeriod
+      : item?.countdownPeriod - (updatedAt.seconds - item.createdAt.seconds);
   }
   
   const updatedItem = {
@@ -54,7 +57,6 @@ export const hideContent = async (hideContentPayload: HideContentPayload): Promi
       flag: FLAGS.hidden,
       reasons: item.moderation?.reasons || [],
       moderatorNote: item.moderation?.moderatorNote || '',
-      quietEnding: item.moderation?.quietEnding || null,
       updatedAt,
       countdownPeriod,
       reporter: userId,
