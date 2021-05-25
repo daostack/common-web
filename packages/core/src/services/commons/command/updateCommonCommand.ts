@@ -2,9 +2,9 @@ import * as z from 'zod';
 import { Common, EventType } from '@prisma/client';
 
 import { prisma } from '@toolkits';
-import { eventService } from '@services';
-import { LinkSchema } from '@validation';
 import { NotFoundError } from '@errors';
+import { eventService } from '@services';
+import { LinkSchema, RuleSchema } from '@validation';
 
 const schema = z.object({
   commonId: z.string()
@@ -31,7 +31,7 @@ const schema = z.object({
     .nullable()
     .optional(),
 
-  rules: z.array(LinkSchema)
+  rules: z.array(RuleSchema)
     .nullable()
     .optional()
 });

@@ -3,7 +3,7 @@ import { FundingType, Common, CommonMemberRole, EventType } from '@prisma/client
 
 import { prisma } from '@toolkits';
 import { eventService } from '@services';
-import { LinkSchema } from '@validation';
+import { LinkSchema, RuleSchema } from '@validation';
 
 import { createCommonMemberCommand } from './createCommonMemberCommand';
 import { addCommonMemberRoleCommand } from './addCommonMemberRoleCommand';
@@ -39,9 +39,9 @@ const schema = z.object({
     .nullable()
     .optional(),
 
-  rules: z.array(LinkSchema)
+  rules: z.array(RuleSchema)
     .nullable()
-    .optional(),
+    .optional()
 });
 
 export const createCommonCommand = async (command: z.infer<typeof schema>): Promise<Common> => {
@@ -56,9 +56,9 @@ export const createCommonCommand = async (command: z.infer<typeof schema>): Prom
 
       fundingType: command.fundingType,
       fundingMinimumAmount: command.fundingMinimumAmount,
-      links: command.links,
-      rules: command.rules,
       byline: command.byline,
+      links: command.links,
+      rules: command.rules
     }
   });
 

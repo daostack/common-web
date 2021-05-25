@@ -48,4 +48,7 @@ export const allPermissions = [
   'admin.users.update',
 
   'user.permissions.read'
-];
+] as const;
+
+
+export type AllPermission = (typeof allPermissions[number]);

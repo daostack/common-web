@@ -115,6 +115,11 @@ enum CommonMemberRole {
   Moderator
 }
 
+input CommonRuleInput {
+  description: String
+  title: String!
+}
+
 type CommonSubscription implements BaseEntity {
   amount: Int!
   chargedAt: DateTime!
@@ -163,7 +168,7 @@ input CreateCommonInput {
   image: String!
   links: [CommonLinkInput!]
   name: String!
-  rules: [CommonLinkInput!]
+  rules: [CommonRuleInput!]
 }
 
 input CreateDiscussionInput {
@@ -1051,7 +1056,7 @@ input UpdateCommonInput {
   image: String
   links: [CommonLinkInput!]
   name: String
-  rules: [CommonLinkInput!]
+  rules: [CommonRuleInput!]
 }
 
 input UpdateNotificationSettingsInput {

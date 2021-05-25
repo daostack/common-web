@@ -18,7 +18,7 @@ const UpdateCommonInput = inputObjectType({
     });
 
     t.list.nonNull.field('rules', {
-      type: 'CommonLinkInput'
+      type: 'CommonRuleInput'
     });
   }
 });

@@ -1,5 +1,6 @@
 import { FundingTypeEnum } from './Enums/FundingTypeEnum';
 
+import { UpdateCommonMutation } from './Mutations/UpdateCommon.mutation';
 import { DelistCommonMutation } from './Mutations/DelistCommon.mutation';
 import { WhitelistCommonMutation } from './Mutations/WhitelistCommon.mutation';
 import { CreateCommonInput, CreateCommonMutation } from './Mutations/CreateCommon.mutation';
@@ -15,10 +16,10 @@ import { CommonCommonMemberExtension } from './Extensions/CommonCommonMember.ext
 import { CommonActiveProposalsExtension } from './Extensions/CommonActiveProposals.extension';
 
 import { CommonType } from './Types/Common.type';
-import { CommonWhereUniqueInput } from './Inputs/CommonWhereUnique.input';
+import { CommonRuleInput } from './Inputs/CommonRule.input';
 import { CommonLinkInput } from './Inputs/CommonLink.input';
 import { CommonWhereInput } from './Inputs/CommonWhere.input';
-import { UpdateCommonMutation } from './Mutations/UpdateCommon.mutation';
+import { CommonWhereUniqueInput } from './Inputs/CommonWhereUnique.input';
 
 
 export const CommonTypes = [
@@ -35,9 +36,10 @@ export const CommonTypes = [
   DelistCommonMutation,
   WhitelistCommonMutation,
 
+  CommonLinkInput,
+  CommonRuleInput,
   CommonWhereInput,
   CommonWhereUniqueInput,
-  CommonLinkInput,
 
   CommonEventsExtension,
   CommonReportsExtension,

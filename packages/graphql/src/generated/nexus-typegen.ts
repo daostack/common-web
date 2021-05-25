@@ -78,6 +78,10 @@ export interface NexusGenInputs {
   CommonMemberOrderByInput: { // input type
     createdAt: NexusGenEnums['SortOrder']; // SortOrder!
   }
+  CommonRuleInput: { // input type
+    description?: string | null; // String
+    title: string; // String!
+  }
   CommonWhereInput: { // input type
     name?: NexusGenInputs['StringFilter'] | null; // StringFilter
   }
@@ -100,7 +104,7 @@ export interface NexusGenInputs {
     image: string; // String!
     links?: NexusGenInputs['CommonLinkInput'][] | null; // [CommonLinkInput!]
     name: string; // String!
-    rules?: NexusGenInputs['CommonLinkInput'][] | null; // [CommonLinkInput!]
+    rules?: NexusGenInputs['CommonRuleInput'][] | null; // [CommonRuleInput!]
   }
   CreateDiscussionInput: { // input type
     commonId: string; // ID!
@@ -282,7 +286,7 @@ export interface NexusGenInputs {
     image?: string | null; // String
     links?: NexusGenInputs['CommonLinkInput'][] | null; // [CommonLinkInput!]
     name?: string | null; // String
-    rules?: NexusGenInputs['CommonLinkInput'][] | null; // [CommonLinkInput!]
+    rules?: NexusGenInputs['CommonRuleInput'][] | null; // [CommonRuleInput!]
   }
   UpdateNotificationSettingsInput: { // input type
     id: string; // String!
@@ -321,23 +325,23 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  CommonMemberRole: "Founder" | "Moderator"
-  DiscussionMessageFlag: "Clear" | "Hidden" | "Reported"
-  DiscussionMessageType: "Message"
-  DiscussionSubscriptionType: "AllNotifications" | "NoNotification" | "OnlyMentions"
+  CommonMemberRole: 'Founder' | 'Moderator'
+  DiscussionMessageFlag: 'Clear' | 'Hidden' | 'Reported'
+  DiscussionMessageType: 'Message'
+  DiscussionSubscriptionType: 'AllNotifications' | 'NoNotification' | 'OnlyMentions'
   DiscussionType: 'CommonDiscussion' | 'ProposalDiscussion'
   EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonDelisted' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'CommonUpdated' | 'CommonWhitelisted' | 'DiscussionCreated' | 'DiscussionMessageCreated' | 'DiscussionSubscriptionCreated' | 'DiscussionSubscriptionTypeChanged' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'NotificationTemplateCreated' | 'NotificationTemplateUpdated' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'ProposalExpired' | 'ProposalMajorityReached' | 'ReportCreated' | 'ReportDismissed' | 'ReportRespected' | 'RoleCreated' | 'RoleDeleted' | 'RolePermissionAdded' | 'RolePermissionRemoved' | 'RoleUpdated' | 'UserAddedToRole' | 'UserCreated' | 'UserNotificationTokenCreated' | 'UserNotificationTokenExpired' | 'UserNotificationTokenRefreshed' | 'UserNotificationTokenVoided' | 'UserRemovedFromRole' | 'UserUpdated' | 'VoteCreated'
   FundingState: 'AwaitingApproval' | 'Completed' | 'Confirmed' | 'Eligible' | 'NotEligible' | 'Pending'
-  FundingType: "Monthly" | "OneTime"
-  NotificationLanguage: "BG" | "EN" | "HE" | "JP" | "KO" | "RU"
-  NotificationSeenStatus: "Done" | "NotSeen" | "Seen"
-  NotificationTemplateType: "EmailNotification" | "PushNotification"
-  NotificationType: "FundingRequestAccepted" | "FundingRequestRejected" | "General" | "JoinRequestAccepted" | "JoinRequestRejected"
-  PaymentCircleStatus: "confirmed" | "failed" | "paid" | "pending"
-  PaymentState: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
-  PaymentStatus: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
-  PaymentType: "ImportedPayment" | "OneTimePayment" | "SubscriptionInitialPayment" | "SubscriptionSequentialPayment"
-  ProposalState: "Accepted" | "Countdown" | "Finalizing" | "Rejected"
+  FundingType: 'Monthly' | 'OneTime'
+  NotificationLanguage: 'BG' | 'EN' | 'HE' | 'JP' | 'KO' | 'RU'
+  NotificationSeenStatus: 'Done' | 'NotSeen' | 'Seen'
+  NotificationTemplateType: 'EmailNotification' | 'PushNotification'
+  NotificationType: 'FundingRequestAccepted' | 'FundingRequestRejected' | 'General' | 'JoinRequestAccepted' | 'JoinRequestRejected'
+  PaymentCircleStatus: 'confirmed' | 'failed' | 'paid' | 'pending'
+  PaymentState: 'NotAttempted' | 'Pending' | 'Successful' | 'Unsuccessful'
+  PaymentStatus: 'NotAttempted' | 'Pending' | 'Successful' | 'Unsuccessful'
+  PaymentType: 'ImportedPayment' | 'OneTimePayment' | 'SubscriptionInitialPayment' | 'SubscriptionSequentialPayment'
+  ProposalState: 'Accepted' | 'Countdown' | 'Finalizing' | 'Rejected'
   ProposalType: "FundingRequest" | "JoinRequest"
   ReportAction: "Dismissed" | "Respected"
   ReportAuditor: "CommonModerator" | "SystemAdmin"
