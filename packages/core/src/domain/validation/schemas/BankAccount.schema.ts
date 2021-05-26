@@ -3,9 +3,9 @@ import * as z from 'zod';
 const isDistrictRequired = (country: string): boolean =>
   country === 'US' || country === 'CA';
 
-export const BillingDetailsSchema = z
+export const BankAccountSchema = z
   .object({
-    name: z.string()
+    bankName: z.string()
       .nonempty(),
 
     city: z.string()
