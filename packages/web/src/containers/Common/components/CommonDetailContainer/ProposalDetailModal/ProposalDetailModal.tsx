@@ -22,7 +22,19 @@ export default function ProposalDetailModal({ proposal }: DiscussionDetailModalP
     <div className="discussion-detail-modal-wrapper">
       <div className="left-side">
         <div className="top-side">
-          <ProposalCountDown date={new Date((proposal?.createdAt.seconds + proposal.countdownPeriod) * 1000)} />
+          {proposal.state === "countdown" ? (
+            <ProposalCountDown date={new Date((proposal?.createdAt.seconds + proposal.countdownPeriod) * 1000)} />
+          ) : (
+            <div className={`state-wrapper ${proposal.state}`}>
+              <div className="state-inner-wrapper">
+                <img
+                  src={proposal.state === "failed" ? "/icons/declined.svg" : "/icons/approved.svg"}
+                  alt="state-wrapper"
+                />
+                <span className="state-name">{proposal.state === "failed" ? "Rejected" : "Approved"}</span>
+              </div>
+            </div>
+          )}
           <div className="owner-wrapper">
             <div className="owner-icon-wrapper">
               {!imageError ? (
