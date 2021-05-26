@@ -10,7 +10,7 @@ model Payout {
   description String
 
   approvers PayoutApprover[]
-  proposals Proposal[]
+  proposals FundingProposal[]
 
   wire Wire
 }

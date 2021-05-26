@@ -10,5 +10,5 @@ model FundingProposal {
 
   fundingState FundingState @default(NotEligible)
 
-  // @todo Payout
+  payout Payout?
 }

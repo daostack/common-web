@@ -59,4 +59,7 @@ enum EventType {
 
   UserAddedToRole
   UserRemovedFromRole
+
+  WireCreated
+  WireUpdated
 }

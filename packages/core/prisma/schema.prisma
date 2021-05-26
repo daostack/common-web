@@ -102,6 +102,25 @@ enum PaymentCircleStatus {
   paid
 }
 
+model WireBankDetail {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  bankName String
+
+  line1 String?
+  line2 String?
+
+  city       String
+  country    String
+  district   String?
+  postalCode String
+
+  wires Wire[]
+}
+
 model Wire {
   id String @id @default(uuid())
 
@@ -109,26 +128,19 @@ model Wire {
   updatedAt DateTime @updatedAt
 
   circleId          String @unique
-  citcleFingerpring String
+  circleFingerprint String
 
-  bankName    String
   description String
 
-  line1 String
-  line2 String
+  user User @relation(fields: [userId], references: [id])
 
-  city       String
-  country    String
-  district   String?
-  postalCode String
+  bank    WireBankDetail @relation(fields: [wireBankDetailId], references: [id])
+  billing BillingDetail  @relation(fields: [billingDetailId], references: [id])
 
-
-  user    User          @relation(fields: [userId], references: [id])
-  billing BillingDetail @relation(fields: [billingDetailId], references: [id])
-
-  payouts         Payout[]
-  userId          String
-  billingDetailId String
+  payouts          Payout[]
+  userId           String
+  wireBankDetailId String
+  billingDetailId  String
 }
 
 model Discussion {
@@ -773,6 +785,9 @@ enum EventType {
 
   UserAddedToRole
   UserRemovedFromRole
+
+  WireCreated
+  WireUpdated
 }
 
 model Event {
@@ -951,7 +966,7 @@ model Payout {
   description String
 
   approvers PayoutApprover[]
-  proposals Proposal[]
+  proposals FundingProposal[]
 
   wire   Wire   @relation(fields: [wireId], references: [id])
   wireId String
@@ -1021,7 +1036,8 @@ model FundingProposal {
 
   fundingState FundingState @default(NotEligible)
 
-  // @todo Payout
+  payout   Payout? @relation(fields: [payoutId], references: [id])
+  payoutId String?
 }
 
 enum FundingState {
@@ -1106,8 +1122,6 @@ model Proposal {
   importedFrom Json?
   Event        Event[]
   Notification Notification[]
-  Payout       Payout?        @relation(fields: [payoutId], references: [id])
-  payoutId     String?
 }
 
 model JoinProposal {

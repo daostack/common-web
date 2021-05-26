@@ -3,6 +3,7 @@ import { _getCircleCard } from './cards/_getCard';
 
 import { _createCirclePayment } from './payment/_createPayment';
 import { _getPayment } from './payment/_getPayment';
+import { _createWire } from '@circle/wires/_createWire';
 
 export const circleClient = {
   cards: {
@@ -34,5 +35,14 @@ export const circleClient = {
      * what we currently have in our database
      */
     get: _getPayment
+  },
+
+  wires: {
+    /**
+     * Creates new wire account in the circle system. This also
+     * should make sure that the details provided are valid and
+     * up to standard
+     */
+    create: _createWire
   }
 };
