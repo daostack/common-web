@@ -85,6 +85,7 @@
         align-items: center;
         padding-top: 24px;
         .votes {
+          min-width: 100px;
           .votes-wrapper {
             .progress {
               display: none;
@@ -146,7 +147,6 @@
             }
             .text {
               span {
-                font-family: NunitoSans;
                 font-size: 12px;
                 font-weight: bold;
                 line-height: 1.33;
