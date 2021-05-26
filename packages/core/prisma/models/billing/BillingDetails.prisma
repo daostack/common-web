@@ -1,26 +1,17 @@
-model Wire {
+model BillingDetail {
   id String @id @default(uuid())
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  circleId          String @unique
-  citcleFingerpring String
-
-  bankName    String
-  description String
+  name String
 
   line1 String
-  line2 String
+  line2 String?
 
   city       String
   country    String
   district   String?
   postalCode String
-
-
-  user    User
-  billing BillingDetail
-
-  payouts Payout[]
 }
+

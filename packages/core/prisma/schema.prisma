@@ -44,11 +44,91 @@ enum FundingType {
   Monthly
 }
 
+model Payment {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  processed      Boolean @default(false)
+  processedError Boolean @default(false)
+
+  type   PaymentType
+  status PaymentStatus @default(NotAttempted)
+
+  circlePaymentStatus PaymentCircleStatus?
+  circlePaymentId     String?
+
+  amount Int
+  fees   Int?
+
+  card Card @relation(fields: [cardId], references: [id])
+
+  user   User   @relation(fields: [userId], references: [id])
+  common Common @relation(fields: [commonId], references: [id])
+
+  join         JoinProposal  @relation(fields: [joinId], references: [id])
+  subscription Subscription? @relation(fields: [subscriptionId], references: [id])
+
+  subscriptionId String?
+  joinId         String
+
+  userId   String
+  commonId String
+
+  cardId String
+}
+
+enum PaymentStatus {
+  NotAttempted
+  Pending
+  Successful
+  Unsuccessful
+}
+
+enum PaymentType {
+  OneTimePayment
+
+  SubscriptionInitialPayment
+  SubscriptionSequentialPayment
+
+  ImportedPayment
+}
+
+enum PaymentCircleStatus {
+  pending
+  failed
+  confirmed
+  paid
+}
+
 model Wire {
   id String @id @default(uuid())
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  circleId          String @unique
+  citcleFingerpring String
+
+  bankName    String
+  description String
+
+  line1 String
+  line2 String
+
+  city       String
+  country    String
+  district   String?
+  postalCode String
+
+
+  user    User          @relation(fields: [userId], references: [id])
+  billing BillingDetail @relation(fields: [billingDetailId], references: [id])
+
+  payouts         Payout[]
+  userId          String
+  billingDetailId String
 }
 
 model Discussion {
@@ -213,6 +293,37 @@ model CommonMember {
   @@unique([userId, commonId])
 }
 
+enum CardNetwork {
+  VISA
+  MASTERCARD
+}
+
+model Card {
+  id String @id @default(uuid())
+
+  circleCardId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  digits  String
+  network CardNetwork
+
+  cvvCheck String
+  avsCheck String
+
+  user     User      @relation(fields: [userId], references: [id])
+  payments Payment[]
+
+  proposal      JoinProposal[]
+  subscriptions Subscription[]
+
+  billingDetails BillingDetail? @relation(fields: [billingDetailId], references: [id])
+
+  userId          String
+  billingDetailId String?
+}
+
 model Role {
   id String @id @default(uuid())
 
@@ -279,115 +390,6 @@ model Subscription {
   commonId String
 }
 
-model Payment {
-  id String @id @default(uuid())
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  processed      Boolean @default(false)
-  processedError Boolean @default(false)
-
-  type   PaymentType
-  status PaymentStatus @default(NotAttempted)
-
-  circlePaymentStatus PaymentCircleStatus?
-  circlePaymentId     String?
-
-  amount Int
-  fees   Int?
-
-  card Card @relation(fields: [cardId], references: [id])
-
-  user   User   @relation(fields: [userId], references: [id])
-  common Common @relation(fields: [commonId], references: [id])
-
-  join         JoinProposal  @relation(fields: [joinId], references: [id])
-  subscription Subscription? @relation(fields: [subscriptionId], references: [id])
-
-  subscriptionId String?
-  joinId         String
-
-  userId   String
-  commonId String
-
-  cardId String
-}
-
-enum PaymentType {
-  OneTimePayment
-
-  SubscriptionInitialPayment
-  SubscriptionSequentialPayment
-
-  ImportedPayment
-}
-
-enum PaymentCircleStatus {
-  pending
-  failed
-  confirmed
-  paid
-}
-
-enum PaymentStatus {
-  NotAttempted
-  Pending
-  Successful
-  Unsuccessful
-}
-
-model Card {
-  id String @id @default(uuid())
-
-  circleCardId String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  digits  String
-  network CardNetwork
-
-  cvvCheck String
-  avsCheck String
-
-  user     User      @relation(fields: [userId], references: [id])
-  payments Payment[]
-
-  proposal      JoinProposal[]
-  subscriptions Subscription[]
-
-  billingDetails CardBillingDetail?
-
-  userId String
-}
-
-enum CardNetwork {
-  VISA
-  MASTERCARD
-}
-
-model CardBillingDetail {
-  id String @id @default(uuid())
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  name String
-
-  line1 String
-  line2 String?
-
-  city       String
-  country    String
-  district   String?
-  postalCode String
-
-  card Card @relation(fields: [cardId], references: [id])
-
-  cardId String
-}
-
 model User {
   id String @id
 
@@ -406,9 +408,11 @@ model User {
   email         String  @unique
   emailVerified Boolean @default(false)
 
-  cards       Card[]
-  events      Event[]
-  memberships CommonMember[]
+  cards         Card[]
+  wires         Wire[]
+  events        Event[]
+  memberships   CommonMember[]
+  billinDetails BillingDetail[]
 
   reportsCreated  Report[] @relation(name: "CreatedReports")
   reportsReviewed Report[] @relation(name: "ReviewedReports")
@@ -943,10 +947,14 @@ model Payout {
 
   status PayoutStatus @default(PendingApproval)
 
-  amount Int
+  amount      Int
+  description String
 
   approvers PayoutApprover[]
   proposals Proposal[]
+
+  wire   Wire   @relation(fields: [wireId], references: [id])
+  wireId String
 }
 
 model PayoutApprover {
@@ -961,6 +969,27 @@ model PayoutApprover {
   resonse  PayoutApproverResponse @default(Pending)
   userId   String
   payoutId String
+}
+
+model BillingDetail {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+
+  line1 String
+  line2 String?
+
+  city       String
+  country    String
+  district   String?
+  postalCode String
+  Wire       Wire[]
+  Card       Card[]
+  User       User?   @relation(fields: [userId], references: [id])
+  userId     String?
 }
 
 model Vote {

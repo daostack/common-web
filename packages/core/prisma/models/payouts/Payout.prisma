@@ -6,8 +6,11 @@ model Payout {
 
   status PayoutStatus @default(PendingApproval)
 
-  amount Int
+  amount      Int
+  description String
 
   approvers PayoutApprover[]
   proposals Proposal[]
+
+  wire Wire
 }

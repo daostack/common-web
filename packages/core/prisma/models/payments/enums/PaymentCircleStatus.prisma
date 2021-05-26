@@ -1,0 +1,6 @@
+enum PaymentCircleStatus {
+  pending
+  failed
+  confirmed
+  paid
+}
