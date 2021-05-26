@@ -78,6 +78,7 @@ type Common {
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+  updates: [CommonUpdate!]!
 
   """The whitelisting state of a common"""
   whitelisted: Boolean!
@@ -137,6 +138,21 @@ type CommonSubscription implements BaseEntity {
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
   voided: Boolean!
+}
+
+type CommonUpdate implements BaseEntity {
+  change: JSON
+  commonAfter: Common!
+  commonBefore: Common!
+
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+
+  """The main identifier of the item"""
+  id: UUID!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
 }
 
 input CommonWhereInput {
