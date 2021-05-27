@@ -1,6 +1,6 @@
 {
   "name": "@common/graphql",
-  "version": "1.9.12-rc.2",
+  "version": "1.9.12",
   "author": "Alexander Ivanov @alexander2001i",
   "main": "dist/index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "start": "node -r dotenv/config dist/index.js"
   },
   "dependencies": {
-    "@common/core": "^1.9.12-rc.2",
+    "@common/core": "^1.9.12",
     "@prisma/client": "^2.20.1",
     "firebase-admin": "9.5.0",
     "graphql-middleware": "^6.0.7",
