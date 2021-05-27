@@ -1725,14 +1725,14 @@ export interface NexusGenAbstractTypeMembers {
 }
 
 export interface NexusGenTypeInterfaces {
-  CommonMember: "BaseEntity"
-  CommonSubscription: "BaseEntity"
-  CommonUpdate: "BaseEntity"
-  Discussion: "BaseEntity"
-  DiscussionMessage: "BaseEntity"
-  DiscussionSubscription: "BaseEntity"
-  FundingProposal: "BaseEntity"
-  JoinProposal: "BaseEntity"
+  CommonMember: 'BaseEntity'
+  CommonSubscription: 'BaseEntity'
+  CommonUpdate: 'BaseEntity'
+  Discussion: 'BaseEntity'
+  DiscussionMessage: 'BaseEntity'
+  DiscussionSubscription: 'BaseEntity'
+  FundingProposal: 'BaseEntity'
+  JoinProposal: 'BaseEntity'
   Notification: 'BaseEntity'
   NotificationEventSettings: 'BaseEntity'
   NotificationSystemSettings: 'BaseEntity'

@@ -4,9 +4,9 @@ import { $circleClient } from '@circle/client';
 export interface ICircleCreateBankAccountPayload {
   idempotencyKey: string;
 
-  iban?: string;
-  routingNumber?: string;
-  accountNumber?: string;
+  iban?: string | null;
+  routingNumber?: string | null;
+  accountNumber?: string | null;
 
   billingDetails: ICircleBillingDetails;
 

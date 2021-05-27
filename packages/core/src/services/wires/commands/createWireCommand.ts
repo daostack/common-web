@@ -10,13 +10,16 @@ import { eventService } from '@services';
 
 const schema = z.object({
   iban: z.string()
-    .optional(),
+    .optional()
+    .nullable(),
 
   accountNumber: z.string()
-    .optional(),
+    .optional()
+    .nullable(),
 
   routingNumber: z.string()
-    .optional(),
+    .optional()
+    .nullable(),
 
   billingDetailsId: z.string()
     .nonempty(),
