@@ -58,7 +58,7 @@ export const hideContent = async (hideContentPayload: HideContentPayload): Promi
       reasons: item.moderation?.reasons || [],
       moderatorNote: item.moderation?.moderatorNote || '',
       updatedAt,
-      countdownPeriod,
+      countdownPeriod: countdownPeriod < item.quietEndingPeriod ? item.quietEndingPeriod : countdownPeriod,
       reporter: userId,
       moderator: userId,
     } as IModeration,
