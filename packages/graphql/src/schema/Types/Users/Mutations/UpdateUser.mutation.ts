@@ -15,7 +15,7 @@ const UpdateUserInput = inputObjectType({
     t.string('intro');
 
     t.field('country', {
-      type: 'UserCountry'
+      type: 'Country'
     });
 
     t.field('notificationLanguage', {

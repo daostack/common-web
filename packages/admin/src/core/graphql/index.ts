@@ -37,7 +37,7 @@ export type User = {
   /** The last name of the user */
   lastName: Scalars['String'];
   /** The last name of the user */
-  country: UserCountry;
+  country: Country;
   intro?: Maybe<Scalars['String']>;
   /** The display name of the user */
   displayName: Scalars['String'];
@@ -116,7 +116,7 @@ export type CreateUserInput = {
   lastName: Scalars['String'];
   email: Scalars['String'];
   photo: Scalars['String'];
-  country: UserCountry;
+  country: Country;
   intro?: Maybe<Scalars['String']>;
 };
 
@@ -131,7 +131,7 @@ export enum UserNotificationTokenState {
   Voided = 'Voided'
 }
 
-export enum UserCountry {
+export enum Country {
   Unknown = 'Unknown',
   Af = 'AF',
   Ax = 'AX',
@@ -1292,7 +1292,7 @@ export type UpdateUserInput = {
   lastName?: Maybe<Scalars['String']>;
   photo?: Maybe<Scalars['String']>;
   intro?: Maybe<Scalars['String']>;
-  country?: Maybe<UserCountry>;
+  country?: Maybe<Country>;
   notificationLanguage?: Maybe<NotificationLanguage>;
 };
 

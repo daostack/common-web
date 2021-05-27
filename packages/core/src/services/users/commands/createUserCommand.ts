@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { UserCountry, EventType, User } from '@prisma/client';
+import { Country, EventType, User } from '@prisma/client';
 
 import { userService, eventService } from '@services';
 import { prisma } from '@toolkits';
@@ -24,7 +24,7 @@ const schema = z.object({
   photo: z.string()
     .nonempty(),
 
-  country: z.enum(Object.keys(UserCountry) as [(keyof typeof UserCountry)]),
+  country: z.enum(Object.keys(Country) as [(keyof typeof Country)]),
 
   intro: z.string()
     .optional(),

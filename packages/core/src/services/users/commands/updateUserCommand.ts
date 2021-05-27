@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { UserCountry, NotificationLanguage, EventType, User } from '@prisma/client';
+import { Country, NotificationLanguage, EventType, User } from '@prisma/client';
 
 import { prisma } from '@toolkits';
 import { eventService } from '@services';
@@ -17,7 +17,7 @@ const schema = z.object({
   photo: z.string()
     .optional(),
 
-  country: z.enum(Object.keys(UserCountry) as [(keyof typeof UserCountry)])
+  country: z.enum(Object.keys(Country) as [(keyof typeof Country)])
     .optional(),
 
   notificationLanguage: z.enum(Object.keys(NotificationLanguage) as [(keyof typeof NotificationLanguage)])

@@ -144,7 +144,7 @@
               "name": null,
               "ofType": {
                 "kind": "ENUM",
-                "name": "UserCountry",
+                "name": "Country",
                 "ofType": null
               }
             },
@@ -912,7 +912,7 @@
               "name": null,
               "ofType": {
                 "kind": "ENUM",
-                "name": "UserCountry",
+                "name": "Country",
                 "ofType": null
               }
             },
@@ -1011,7 +1011,7 @@
       },
       {
         "kind": "ENUM",
-        "name": "UserCountry",
+        "name": "Country",
         "description": null,
         "fields": null,
         "inputFields": null,
@@ -9768,7 +9768,7 @@
             "description": null,
             "type": {
               "kind": "ENUM",
-              "name": "UserCountry",
+              "name": "Country",
               "ofType": null
             },
             "defaultValue": null,

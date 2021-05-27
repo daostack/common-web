@@ -7,7 +7,7 @@ model User {
   firstName String
   lastName  String
 
-  country UserCountry @default(Unknown)
+  country Country @default(Unknown)
 
   intro String?
 

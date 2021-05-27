@@ -1,4 +1,4 @@
-enum UserCountry {
+enum Country {
   Unknown
 
   AF

@@ -11,8 +11,11 @@ const CreateUserBillingDetailsInput = inputObjectType({
 
     t.string('district');
     t.nonNull.string('city');
-    t.nonNull.string('country');
     t.nonNull.string('postalCode');
+
+    t.nonNull.field('country', {
+      type: 'Country'
+    });
   }
 });
 

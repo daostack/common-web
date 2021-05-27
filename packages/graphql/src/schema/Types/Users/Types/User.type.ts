@@ -25,7 +25,7 @@ export const UserType = objectType({
     });
 
     t.nonNull.field('country', {
-      type: 'UserCountry',
+      type: 'Country',
       description: 'The last name of the user',
       authorize: async (root, args, ctx) => {
         const userId = await ctx.getUserId();

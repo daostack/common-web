@@ -23,7 +23,7 @@ type User {
   """The last name of the user"""
   lastName: String!
   """The last name of the user"""
-  country: UserCountry!
+  country: Country!
   intro: String
   """The display name of the user"""
   displayName: String!
@@ -68,7 +68,7 @@ input CreateUserInput {
   lastName: String!
   email: String!
   photo: String!
-  country: UserCountry!
+  country: Country!
   intro: String
 }
 input CreateUserNotificationTokenInput {
@@ -80,7 +80,7 @@ enum UserNotificationTokenState {
   Expired
   Voided
 }
-enum UserCountry {
+enum Country {
   Unknown
   AF
   AX
@@ -1080,7 +1080,7 @@ input UpdateUserInput {
   lastName: String
   photo: String
   intro: String
-  country: UserCountry
+  country: Country
   notificationLanguage: NotificationLanguage
 }
 input CreateRoleInput {

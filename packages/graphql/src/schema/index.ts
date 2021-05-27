@@ -32,6 +32,7 @@ import { StringFilterInput } from './Shared/Inputs/StringFilter.input';
 import { BillingDetailsInput } from './Shared/Inputs/BillingDetails.input';
 
 import { SortOrder } from './Shared/Enums/SortBy.enum';
+import { CountryEnum } from './Shared/Enums/Country.enum';
 import { PaymentTypes } from './Types/Payments';
 
 const types = [
@@ -60,6 +61,7 @@ const types = [
 
   // Shared Enums
   SortOrder,
+  CountryEnum,
 
   // Shared Types
   LinkType,

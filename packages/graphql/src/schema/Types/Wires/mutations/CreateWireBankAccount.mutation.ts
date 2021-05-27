@@ -9,9 +9,13 @@ const CreateWireBankAccountInput = inputObjectType({
     t.string('line1');
     t.string('line2');
 
-e;
-    t.nonNull.string('postalCode');
     t.string('district');
+    t.nonNull.string('city');
+    t.nonNull.string('postalCode');
+
+    t.nonNull.field('country', {
+      type: 'Country'
+    });
   }
 });
 

@@ -10,7 +10,7 @@ export const CreateUserInput = inputObjectType({
     t.nonNull.string('email');
     t.nonNull.string('photo');
     t.nonNull.field('country', {
-      type: 'UserCountry'
+      type: 'Country'
     });
 
     t.string('intro');
