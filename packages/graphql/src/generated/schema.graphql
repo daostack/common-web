@@ -254,6 +254,16 @@ input CreateRoleInput {
   permissions: [String!]!
 }
 
+input CreateUserBillingDetailsInput {
+  city: String!
+  country: String!
+  district: String
+  line1: String!
+  line2: String
+  name: String!
+  postalCode: String!
+}
+
 input CreateUserInput {
   country: UserCountry!
   email: String!
@@ -547,6 +557,7 @@ type Mutation {
 
   """Creates new user in the settings"""
   createUser(input: CreateUserInput!): User!
+  createUserBillingDetails(input: CreateUserBillingDetailsInput!): UserBillingDetails
   createUserNotificationToken(input: CreateUserNotificationTokenInput!): UserNotificationToken!
   createVote(input: CreateVoteInput!): Vote!
   delistCommon(commonId: String!): Boolean
@@ -1143,6 +1154,25 @@ type User {
   photo: String!
   proposals(skip: Int = 0, take: Int = 10, where: ProposalWhereInput): [Proposal!]!
   subscriptions: [CommonSubscription!]!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+}
+
+type UserBillingDetails implements BaseEntity {
+  city: String!
+  country: String!
+
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  district: String
+
+  """The main identifier of the item"""
+  id: UUID!
+  line1: String!
+  line2: String
+  name: String!
+  postalCode: String!
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!

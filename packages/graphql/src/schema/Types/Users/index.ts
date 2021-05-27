@@ -1,4 +1,5 @@
 import { UserType } from './Types/User.type';
+import { UserBillingDetailsType } from './Types/UserBillingDetails.type';
 import { UserNotificationTokenType } from './Types/UserNotificationToken.type';
 
 import { GetUserQuery } from './Queries/GetUser.query';
@@ -19,6 +20,7 @@ import { UserDiscussionSubscriptionsExtension } from './Extensions/UserDiscussio
 
 import { UpdateUserMutation } from './Mutations/UpdateUser.mutation';
 import { CreateUserMutation } from './Mutations/CreateUser.mutation';
+import { CreateUserBillingDetailsMutation } from './Mutations/CreateUserBillingDetails.mutation';
 import { VoidUserNotificationTokenMutation } from './Mutations/VoidUserNotificationToken.mutation';
 import { CreateUserNotificationTokenMutation } from './Mutations/CreateUserNotificationToken.mutation';
 
@@ -27,6 +29,7 @@ import { UserWhereUniqueInput } from './Inputs/UserWhereUnique.input';
 
 export const UserTypes = [
   UserType,
+  UserBillingDetailsType,
   UserNotificationTokenType,
 
   GetUserQuery,
@@ -36,6 +39,7 @@ export const UserTypes = [
   UserWhereInput,
 
   CreateUserMutation,
+  CreateUserBillingDetailsMutation,
   VoidUserNotificationTokenMutation,
   CreateUserNotificationTokenMutation,
 

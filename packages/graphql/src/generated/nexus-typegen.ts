@@ -4,11 +4,10 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
-import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
+import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -155,6 +154,15 @@ export interface NexusGenInputs {
     displayName: string; // String!
     name: string; // String!
     permissions: string[]; // [String!]!
+  }
+  CreateUserBillingDetailsInput: { // input type
+    city: string; // String!
+    country: string; // String!
+    district?: string | null; // String
+    line1: string; // String!
+    line2?: string | null; // String
+    name: string; // String!
+    postalCode: string; // String!
   }
   CreateUserInput: { // input type
     country: NexusGenEnums['UserCountry']; // UserCountry!
@@ -329,9 +337,9 @@ export interface NexusGenEnums {
   DiscussionMessageFlag: "Clear" | "Hidden" | "Reported"
   DiscussionMessageType: "Message"
   DiscussionSubscriptionType: "AllNotifications" | "NoNotification" | "OnlyMentions"
-  DiscussionType: 'CommonDiscussion' | 'ProposalDiscussion'
-  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonDelisted' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'CommonUpdated' | 'CommonWhitelisted' | 'DiscussionCreated' | 'DiscussionMessageCreated' | 'DiscussionSubscriptionCreated' | 'DiscussionSubscriptionTypeChanged' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'NotificationTemplateCreated' | 'NotificationTemplateUpdated' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'ProposalExpired' | 'ProposalMajorityReached' | 'ReportCreated' | 'ReportDismissed' | 'ReportRespected' | 'RoleCreated' | 'RoleDeleted' | 'RolePermissionAdded' | 'RolePermissionRemoved' | 'RoleUpdated' | 'UserAddedToRole' | 'UserCreated' | 'UserNotificationTokenCreated' | 'UserNotificationTokenExpired' | 'UserNotificationTokenRefreshed' | 'UserNotificationTokenVoided' | 'UserRemovedFromRole' | 'UserUpdated' | 'VoteCreated' | 'WireCreated' | 'WireUpdated'
-  FundingState: 'AwaitingApproval' | 'Completed' | 'Confirmed' | 'Eligible' | 'NotEligible' | 'Pending'
+  DiscussionType: "CommonDiscussion" | "ProposalDiscussion"
+  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonDelisted" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "CommonUpdated" | "CommonWhitelisted" | "DiscussionCreated" | "DiscussionMessageCreated" | "DiscussionSubscriptionCreated" | "DiscussionSubscriptionTypeChanged" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "NotificationTemplateCreated" | "NotificationTemplateUpdated" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "ReportCreated" | "ReportDismissed" | "ReportRespected" | "RoleCreated" | "RoleDeleted" | "RolePermissionAdded" | "RolePermissionRemoved" | "RoleUpdated" | "UserAddedToRole" | "UserCreated" | "UserNotificationTokenCreated" | "UserNotificationTokenExpired" | "UserNotificationTokenRefreshed" | "UserNotificationTokenVoided" | "UserRemovedFromRole" | "UserUpdated" | "VoteCreated" | "WireCreated" | "WireUpdated"
+  FundingState: "AwaitingApproval" | "Completed" | "Confirmed" | "Eligible" | "NotEligible" | "Pending"
   FundingType: "Monthly" | "OneTime"
   NotificationLanguage: "BG" | "EN" | "HE" | "JP" | "KO" | "RU"
   NotificationSeenStatus: "Done" | "NotSeen" | "Seen"
@@ -600,6 +608,18 @@ export interface NexusGenObjects {
     photo: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
+  UserBillingDetails: { // root type
+    city: string; // String!
+    country: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    district?: string | null; // String
+    id: NexusGenScalars['UUID']; // UUID!
+    line1: string; // String!
+    line2?: string | null; // String
+    name: string; // String!
+    postalCode: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   UserNotificationToken: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description: string; // String!
@@ -618,7 +638,7 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  BaseEntity: NexusGenRootTypes['CommonMember'] | NexusGenRootTypes['CommonSubscription'] | NexusGenRootTypes['CommonUpdate'] | NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['FundingProposal'] | NexusGenRootTypes['JoinProposal'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['NotificationEventSettings'] | NexusGenRootTypes['NotificationSystemSettings'] | NexusGenRootTypes['NotificationTemplate'] | NexusGenRootTypes['Payment'] | NexusGenRootTypes['Report'] | NexusGenRootTypes['Role'] | NexusGenRootTypes['Statistic'] | NexusGenRootTypes['UserNotificationToken'];
+  BaseEntity: NexusGenRootTypes['CommonMember'] | NexusGenRootTypes['CommonSubscription'] | NexusGenRootTypes['CommonUpdate'] | NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['FundingProposal'] | NexusGenRootTypes['JoinProposal'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['NotificationEventSettings'] | NexusGenRootTypes['NotificationSystemSettings'] | NexusGenRootTypes['NotificationTemplate'] | NexusGenRootTypes['Payment'] | NexusGenRootTypes['Report'] | NexusGenRootTypes['Role'] | NexusGenRootTypes['Statistic'] | NexusGenRootTypes['UserBillingDetails'] | NexusGenRootTypes['UserNotificationToken'];
 }
 
 export interface NexusGenUnions {
@@ -766,6 +786,7 @@ export interface NexusGenFieldTypes {
     createNotificationTemplate: NexusGenRootTypes['NotificationTemplate'] | null; // NotificationTemplate
     createRole: NexusGenRootTypes['Role'] | null; // Role
     createUser: NexusGenRootTypes['User']; // User!
+    createUserBillingDetails: NexusGenRootTypes['UserBillingDetails'] | null; // UserBillingDetails
     createUserNotificationToken: NexusGenRootTypes['UserNotificationToken']; // UserNotificationToken!
     createVote: NexusGenRootTypes['Vote']; // Vote!
     delistCommon: boolean | null; // Boolean
@@ -962,6 +983,18 @@ export interface NexusGenFieldTypes {
     subscriptions: NexusGenRootTypes['CommonSubscription'][]; // [CommonSubscription!]!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
+  UserBillingDetails: { // field return type
+    city: string; // String!
+    country: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    district: string | null; // String
+    id: NexusGenScalars['UUID']; // UUID!
+    line1: string; // String!
+    line2: string | null; // String
+    name: string; // String!
+    postalCode: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   UserNotificationToken: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description: string; // String!
@@ -1125,6 +1158,7 @@ export interface NexusGenFieldTypeNames {
     createNotificationTemplate: 'NotificationTemplate'
     createRole: 'Role'
     createUser: 'User'
+    createUserBillingDetails: 'UserBillingDetails'
     createUserNotificationToken: 'UserNotificationToken'
     createVote: 'Vote'
     delistCommon: 'Boolean'
@@ -1321,6 +1355,18 @@ export interface NexusGenFieldTypeNames {
     subscriptions: 'CommonSubscription'
     updatedAt: 'DateTime'
   }
+  UserBillingDetails: { // field return type name
+    city: 'String'
+    country: 'String'
+    createdAt: 'DateTime'
+    district: 'String'
+    id: 'UUID'
+    line1: 'String'
+    line2: 'String'
+    name: 'String'
+    postalCode: 'String'
+    updatedAt: 'DateTime'
+  }
   UserNotificationToken: { // field return type name
     createdAt: 'DateTime'
     description: 'String'
@@ -1425,6 +1471,9 @@ export interface NexusGenArgTypes {
     }
     createUser: { // args
       input: NexusGenInputs['CreateUserInput']; // CreateUserInput!
+    }
+    createUserBillingDetails: { // args
+      input: NexusGenInputs['CreateUserBillingDetailsInput']; // CreateUserBillingDetailsInput!
     }
     createUserNotificationToken: { // args
       input: NexusGenInputs['CreateUserNotificationTokenInput']; // CreateUserNotificationTokenInput!
@@ -1566,7 +1615,7 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  BaseEntity: "CommonMember" | "CommonSubscription" | "CommonUpdate" | "Discussion" | "DiscussionMessage" | "DiscussionSubscription" | "FundingProposal" | "JoinProposal" | "Notification" | "NotificationEventSettings" | "NotificationSystemSettings" | "NotificationTemplate" | "Payment" | "Report" | "Role" | "Statistic" | "UserNotificationToken"
+  BaseEntity: "CommonMember" | "CommonSubscription" | "CommonUpdate" | "Discussion" | "DiscussionMessage" | "DiscussionSubscription" | "FundingProposal" | "JoinProposal" | "Notification" | "NotificationEventSettings" | "NotificationSystemSettings" | "NotificationTemplate" | "Payment" | "Report" | "Role" | "Statistic" | "UserBillingDetails" | "UserNotificationToken"
 }
 
 export interface NexusGenTypeInterfaces {
@@ -1586,6 +1635,7 @@ export interface NexusGenTypeInterfaces {
   Report: "BaseEntity"
   Role: "BaseEntity"
   Statistic: "BaseEntity"
+  UserBillingDetails: "BaseEntity"
   UserNotificationToken: "BaseEntity"
 }
 
