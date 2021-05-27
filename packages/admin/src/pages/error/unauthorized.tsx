@@ -6,6 +6,7 @@ import firebase from 'firebase/app';
 import React from 'react';
 import { gql } from '@apollo/client';
 import { useCreateIntentionMutation, IntentionType } from '@graphql';
+import { usePermissionsContext, useAuthContext } from '@context';
 
 const CreateIntentionMutation = gql`
   mutation createIntention($type: IntentionType!, $intention: String!) {
@@ -22,6 +23,9 @@ const CreateIntentionMutation = gql`
 
 const UnauthorizedPage: NextPage = () => {
   const router = useRouter();
+  const permissionsContext = usePermissionsContext();
+  const authContext = useAuthContext();
+
   const [createIntention] = useCreateIntentionMutation();
 
   React.useEffect(() => {
@@ -39,6 +43,13 @@ const UnauthorizedPage: NextPage = () => {
           `You can request it by asking to look up intention with ID ${data.createIntention.id}`
         );
       }
+
+      const { data } = await createIntention({
+        variables: {
+          type: IntentionType.Access,
+          intention: JSON.stringify({ permissionsContext, authContext })
+        }
+      });
     })();
   }, [router.query]);
 
