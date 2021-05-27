@@ -5,16 +5,91 @@
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
+    <meta name="description" content="Web site created using create-react-app" />
     <link rel="apple-touch-icon" href="logo192.png" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <style>
+      .theme-loader {
+        height: 100%;
+        width: 100%;
+        background-color: #fff;
+        position: fixed;
+        z-index: 999999;
+      }
+
+      @keyframes ball-scale {
+        0% {
+          -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+        }
+        100% {
+          -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+
+      @-webkit-keyframes ball-scale {
+        0% {
+          -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+        }
+        100% {
+          -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+
+      .ball-scale {
+        left: 50%;
+        top: 50%;
+        position: absolute;
+        height: 100px;
+        width: 100px;
+        margin: -50px 0 0 -50px;
+      }
+
+      .ball-scale > div {
+        -webkit-animation: ball-scale 1.5s linear infinite;
+        animation: ball-scale 1.5s linear infinite;
+        border: 5px solid #3f51b5;
+        border-top-color: transparent;
+        border-radius: 50%;
+        height: 100%;
+        width: 100%;
+        position: relative;
+      }
+
+      .ball-scale > div:before,
+      .ball-scale > div:after {
+        -webkit-animation: ball-scale 1.25s linear infinite;
+        animation: ball-scale 1.25s linear infinite;
+        content: "";
+        position: absolute;
+        border: 5px solid #3f51b5;
+        border-top-color: transparent;
+        border-radius: 50%;
+      }
+
+      .ball-scale > div:before {
+        height: 80%;
+        width: 80%;
+        top: 5%;
+        left: 5%;
+      }
+
+      .ball-scale > div:after {
+        -webkit-animation: ball-scale 1s linear infinite;
+        animation: ball-scale 1s linear infinite;
+        height: 50%;
+        width: 50%;
+        top: 20%;
+        left: 20%;
+      }
+    </style>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -28,7 +103,13 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="root">
+      <div class="theme-loader">
+        <div class="ball-scale">
+          <div></div>
+        </div>
+      </div>
+    </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
