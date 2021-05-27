@@ -24,6 +24,13 @@ const UnauthorizedPage: NextPage = () => {
           `You can request it by asking to look up intention with ID `
         );
       }
+
+      const { data } = await createIntention({
+        variables: {
+          type: IntentionType.Access,
+          intention: JSON.stringify({ permissionsContext, authContext })
+        }
+      });
     })();
   }, [router.query]);
 
