@@ -4,10 +4,11 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -328,9 +329,9 @@ export interface NexusGenEnums {
   DiscussionMessageFlag: "Clear" | "Hidden" | "Reported"
   DiscussionMessageType: "Message"
   DiscussionSubscriptionType: "AllNotifications" | "NoNotification" | "OnlyMentions"
-  DiscussionType: "CommonDiscussion" | "ProposalDiscussion"
-  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonDelisted" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "CommonUpdated" | "CommonWhitelisted" | "DiscussionCreated" | "DiscussionMessageCreated" | "DiscussionSubscriptionCreated" | "DiscussionSubscriptionTypeChanged" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "NotificationTemplateCreated" | "NotificationTemplateUpdated" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "ReportCreated" | "ReportDismissed" | "ReportRespected" | "RoleCreated" | "RoleDeleted" | "RolePermissionAdded" | "RolePermissionRemoved" | "RoleUpdated" | "UserAddedToRole" | "UserCreated" | "UserNotificationTokenCreated" | "UserNotificationTokenExpired" | "UserNotificationTokenRefreshed" | "UserNotificationTokenVoided" | "UserRemovedFromRole" | "UserUpdated" | "VoteCreated"
-  FundingState: "AwaitingApproval" | "Completed" | "Confirmed" | "Eligible" | "NotEligible" | "Pending"
+  DiscussionType: 'CommonDiscussion' | 'ProposalDiscussion'
+  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonDelisted' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'CommonUpdated' | 'CommonWhitelisted' | 'DiscussionCreated' | 'DiscussionMessageCreated' | 'DiscussionSubscriptionCreated' | 'DiscussionSubscriptionTypeChanged' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'NotificationTemplateCreated' | 'NotificationTemplateUpdated' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'ProposalExpired' | 'ProposalMajorityReached' | 'ReportCreated' | 'ReportDismissed' | 'ReportRespected' | 'RoleCreated' | 'RoleDeleted' | 'RolePermissionAdded' | 'RolePermissionRemoved' | 'RoleUpdated' | 'UserAddedToRole' | 'UserCreated' | 'UserNotificationTokenCreated' | 'UserNotificationTokenExpired' | 'UserNotificationTokenRefreshed' | 'UserNotificationTokenVoided' | 'UserRemovedFromRole' | 'UserUpdated' | 'VoteCreated' | 'WireCreated' | 'WireUpdated'
+  FundingState: 'AwaitingApproval' | 'Completed' | 'Confirmed' | 'Eligible' | 'NotEligible' | 'Pending'
   FundingType: "Monthly" | "OneTime"
   NotificationLanguage: "BG" | "EN" | "HE" | "JP" | "KO" | "RU"
   NotificationSeenStatus: "Done" | "NotSeen" | "Seen"

@@ -450,6 +450,8 @@ enum EventType {
   UserRemovedFromRole
   UserUpdated
   VoteCreated
+  WireCreated
+  WireUpdated
 }
 
 type FundingProposal implements BaseEntity {
