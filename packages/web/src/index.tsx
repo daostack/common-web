@@ -16,8 +16,6 @@ if (process.env.REACT_APP_ENV === "dev") {
   whyDidYouRender(React, { trackHooks: true });
 }
 
-debugger; // TO INSPECT THE PAGE BEFORE 1ST RENDER
-
 ReactDOM.render(
   <Router history={history}>
     <Provider store={store}>
