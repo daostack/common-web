@@ -1,6 +1,6 @@
 {
   "name": "@common/core",
-  "version": "1.9.12-rc.0",
+  "version": "1.9.12-rc.2",
   "author": "Alexander Ivanov @alexander2001i",
   "main": "dist/index.js",
   "scripts": {
@@ -24,7 +24,7 @@
     "typescript": "^4.2.3"
   },
   "dependencies": {
-    "@common/queues": "^1.9.12-rc.0",
+    "@common/queues": "^1.9.12-rc.2",
     "@prisma/client": "^2.20.1",
     "@sendgrid/mail": "^7.4.2",
     "axios": "^0.21.1",
