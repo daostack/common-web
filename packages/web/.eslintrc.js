@@ -39,6 +39,9 @@ module.exports = {
     "import/namespace": 2,
     "import/default": 2,
     "import/export": 2,
+    "eslint@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "no-console": 1,
     "import/order": [
       "error",
       {

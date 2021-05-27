@@ -5,7 +5,7 @@ import React from 'react';
 import { Breadcrumbs, Card, Divider, Grid, Spacer, Text, Tag, useToasts } from '@geist-ui/react';
 import { useRouter } from 'next/router';
 import { gql } from '@apollo/client';
-import { useGetPayoutDetailsQuery } from '@graphql';
+import { useGetPayoutDetailsQuery } from '@core/graphql';
 
 const PayoutDetailsData = gql`
   query GetPayoutDetails($payoutId: ID!) {

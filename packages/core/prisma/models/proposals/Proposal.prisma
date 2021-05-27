@@ -9,7 +9,7 @@ model Proposal {
   title       String?
   description String?
 
-  link   Json?
+  links   Json?
   files  Json?
   images Json?
 
@@ -39,4 +39,6 @@ model Proposal {
   userId         String
   commonId       String
   commonMemberId String?
+
+  importedFrom Json?
 }

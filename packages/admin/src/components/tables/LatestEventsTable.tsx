@@ -1,32 +1,27 @@
 import React from 'react';
-
-import { gql } from '@apollo/client';
-import { Avatar, Table, Tag, Text, useToasts } from '@geist-ui/react';
+import { Table, Text, Tag, Avatar } from '@geist-ui/react';
 
 import { HasPermission } from '@components/HasPermission';
-import { useGetLatestEventsQuery } from '@graphql';
-import useSound from 'use-sound';
 import { useRouter } from 'next/router';
+import { gql } from '@apollo/client';
+import { useGetLatestEventsQuery } from '@core/graphql';
 
 const GetLatestEventsQuery = gql`
-  query GetLatestEvents($last: Int = 10, $after: Int = 0) {
-    events(
-      last: $last,
-      after: $after
-    ) {
+  query GetLatestEvents($take: Int = 10, $skip: Int = 0) {
+    events(paginate: {
+      take: $take,
+      skip: $skip
+    }) {
       id
 
       createdAt
-
       type
 
       user {
-        id
-
         firstName
         lastName
 
-        photoURL
+        photo
       }
     }
   }
@@ -41,36 +36,8 @@ interface ILatestEventsTableProps {
 export const LatestEventsTable: React.FC<ILatestEventsTableProps> = ({ pagination, refresh, notify }) => {
   const router = useRouter();
 
-  const [toasts, setToast] = useToasts();
-  const [play] = useSound('assets/sounds/notification.mp3');
+  const { data } = useGetLatestEventsQuery();
 
-
-  const { data, previousData } = useGetLatestEventsQuery({
-    pollInterval: 5 * 1000
-  });
-
-  React.useEffect(() => {
-    if (notify && !refresh) {
-      console.warn('No notification will be sent when refresh is falsy!');
-    }
-  }, [refresh, notify]);
-
-  React.useEffect(() => {
-    if (previousData?.events?.length && notify) {
-      const newEvents = data.events.filter(e => !previousData.events.includes(e));
-
-      if (newEvents) {
-        play();
-
-        newEvents.forEach((e) => {
-          setToast({
-            text: `New event: ${e.type}`,
-            delay: 2000
-          });
-        });
-      }
-    }
-  }, [data, previousData]);
 
   const transformDataForTable = () => {
     return data.events.map((e) => ({
@@ -88,7 +55,7 @@ export const LatestEventsTable: React.FC<ILatestEventsTableProps> = ({ paginatio
         <React.Fragment>
           {e.user ? (
             <React.Fragment>
-              <Avatar src={e.user.photoURL} />
+              <Avatar src={e.user.photo}/>
               <Text b style={{ marginLeft: 10 }}>
                 {e.user.firstName} {e.user.lastName}
               </Text>
@@ -108,8 +75,7 @@ export const LatestEventsTable: React.FC<ILatestEventsTableProps> = ({ paginatio
   };
 
   return (
-    <HasPermission permission="admin.events.read.list">
-      {console.log('data', data)}
+    <HasPermission permission="admin.events.read" redirect={false}>
       {data && (
         <React.Fragment>
           <Text h3>Latest events</Text>

@@ -1,4 +1,4 @@
-import { Common, Proposal, Discussion } from "../../../shared/models";
+import { Common, Proposal, Discussion } from "../../../graphql";
 
 export interface CommonsStateType {
   commons: Common[];

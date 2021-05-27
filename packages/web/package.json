@@ -1,8 +1,11 @@
 {
   "name": "@common/web",
-  "version": "1.9.11",
+  "version": "1.9.12-rc.2",
   "private": true,
   "dependencies": {
+    "@apollo/client": "^3.3.15",
+    "@react-firebase/auth": "^0.2.10",
+    "apollo-link-context": "^1.0.20",
     "axios": "^0.21.0",
     "connected-react-router": "^6.8.0",
     "firebase": "^8.3.2",

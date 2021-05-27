@@ -14,5 +14,9 @@ export const VoteType = objectType({
     t.nonNull.date('updatedAt', {
       description: 'The date, at which the item was last modified'
     });
+
+    t.nonNull.field('outcome', {
+      type: 'VoteOutcome'
+    });
   }
 });

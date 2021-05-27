@@ -2,32 +2,13 @@ import React from 'react';
 import { NextPage } from 'next';
 
 import { gql } from '@apollo/client';
-import {
-  Breadcrumbs,
-  Card,
-  Col,
-  Divider,
-  Note,
-  Row,
-  Spacer,
-  Spinner,
-  Tag,
-  Text,
-  User,
-  useTheme,
-  useToasts
-} from '@geist-ui/react';
+import { Breadcrumbs, Card, Note, Spacer, Spinner, Text, useToasts } from '@geist-ui/react';
 
 import { withPermission } from '../../../helpers/hoc/withPermission';
-import {
-  useGetPaymentsHomeScreenDataQuery,
-  useGetPaymentDetailsLazyQuery,
-  useUpdatePaymentDataMutation
-} from '@graphql';
+import { useGetPaymentsHomeScreenDataQuery, useUpdatePaymentDataMutation } from '@core/graphql';
 import { Link } from '@components/Link';
 import { Centered } from '@components/Centered';
-import { ChevronDownCircle, ChevronLeftCircle, ChevronRightCircle, ChevronUpCircle, Zap } from '@geist-ui/react-icons';
-import { useRouter } from 'next/router';
+import { Zap } from '@geist-ui/react-icons';
 import { PaymentsTable } from '@components/tables/PaymentsTable';
 
 const GetPaymentsHomepageData = gql`

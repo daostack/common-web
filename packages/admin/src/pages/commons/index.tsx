@@ -4,21 +4,25 @@ import { NextPage } from 'next';
 import Skeleton from 'react-loading-skeleton';
 import { gql } from '@apollo/client/core';
 import { Spacer, Text, Table, Pagination, Tag, useToasts, Breadcrumbs, Grid, Card } from '@geist-ui/react';
-import { ExternalLink, Edit, Trash2, ChevronRightCircleFill, ChevronLeftCircleFill, Home } from '@geist-ui/react-icons';
+import { ChevronRightCircleFill, ChevronLeftCircleFill, Home } from '@geist-ui/react-icons';
 
 import { Link } from '../../components/Link';
-import { useGetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryResult, useStatisticsQuery } from '@graphql';
 import { withPermission } from '../../helpers/hoc/withPermission';
 import { useRouter } from 'next/router';
 import { Centered } from '@components/Centered';
 import { FullWidthLoader } from '@components/FullWidthLoader';
+import {
+  useGetAllTimeStatistiscQuery,
+  useGetCommonsHomescreenDataQuery,
+  GetCommonsHomescreenDataQueryResult
+} from '@core/graphql';
 
 const GetCommonsHomescreenData = gql`
-  query getCommonsHomescreenData($last: Int, $after: Int) {
-    commons(
-      last: $last,
-      after: $after
-    ) {
+  query getCommonsHomescreenData($take: Int = 10, $skip: Int) {
+    commons(paginate: {
+      take: $take,
+      skip: $skip
+    }) {
       id
 
       name
@@ -28,16 +32,16 @@ const GetCommonsHomescreenData = gql`
 
       createdAt
       updatedAt
-      
-      members { 
+
+      members {
         userId
       }
 
-      metadata {
-        byline
-        description
-        contributionType
-      }
+      description
+      byline
+
+      fundingType
+      fundingMinimumAmount
     }
   }
 `;
@@ -49,11 +53,11 @@ const CommonsHomepage: NextPage = () => {
   // Data fetching and custom hooks
   const [toasts, setToast] = useToasts();
   const router = useRouter();
-  const statistics = useStatisticsQuery();
+  const statistics = useGetAllTimeStatistiscQuery();
   const data = useGetCommonsHomescreenDataQuery({
     variables: {
-      last: 10,
-      after: (page - 1) * 10
+      take: 10,
+      skip: (page - 1) * 10
     }
   });
 
@@ -93,7 +97,7 @@ const CommonsHomepage: NextPage = () => {
 
       icon: (
         <Centered>
-          <Home />
+          <Home/>
         </Centered>
       ),
 
@@ -112,7 +116,7 @@ const CommonsHomepage: NextPage = () => {
 
       type: (
         <React.Fragment>
-          {common.metadata.contributionType === 'oneTime' ? (
+          {common.fundingType === 'OneTime' ? (
             <Tag type="success">One Time</Tag>
           ) : (
             <Tag type="secondary">Monthly</Tag>
@@ -125,8 +129,8 @@ const CommonsHomepage: NextPage = () => {
   const onCommonTableRow = (data: { id: string }) => {
     router.push({
       pathname: `/commons/details/${data.id}`
-    })
-  }
+    });
+  };
 
   return (
     <React.Fragment>
@@ -148,7 +152,7 @@ const CommonsHomepage: NextPage = () => {
             <Card hoverable>
               <Text h1>
                 {statistics.data && (
-                  statistics.data.statistics.commons
+                  statistics.data.getStatistics[0].commons
                 )}
 
                 {!statistics.data && (
@@ -184,8 +188,8 @@ const CommonsHomepage: NextPage = () => {
       <Text h3>All commons</Text>
 
       <Table data={transformCommonsArray(data)} onRow={onCommonTableRow}>
-        <Table.Column prop="icon" width={70} />
-        <Table.Column prop="name" label="Display Name" />
+        <Table.Column prop="icon" width={70}/>
+        <Table.Column prop="name" label="Display Name"/>
 
         <Table.Column
           prop="raised"
@@ -212,9 +216,9 @@ const CommonsHomepage: NextPage = () => {
         />
       </Table>
 
-      {statistics.data && statistics.data.statistics.commons > 10 && (
+      {statistics.data && statistics.data.getStatistics[0].commons > 10 && (
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-          <Pagination count={Math.ceil(statistics.data.statistics.commons / 10)} onChange={onPageChange}>
+          <Pagination count={Math.ceil(statistics.data.getStatistics[0].commons / 10)} onChange={onPageChange}>
             <Pagination.Next><ChevronRightCircleFill/></Pagination.Next>
             <Pagination.Previous><ChevronLeftCircleFill/></Pagination.Previous>
           </Pagination>

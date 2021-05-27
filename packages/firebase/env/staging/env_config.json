@@ -11,7 +11,7 @@
     }
   },
   "mail": {
-    "sender": "staging@common.io",
+    "sender": "team@common.io",
     "payoutEmail": "payout@common.io",
     "adminMail": "support@common.io"
   },

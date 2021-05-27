@@ -14,5 +14,7 @@ export const DiscussionMessageType = objectType({
     t.nonNull.field('flag', {
       type: 'DiscussionMessageFlag'
     });
+
+    t.nonNull.string('userId');
   }
 });

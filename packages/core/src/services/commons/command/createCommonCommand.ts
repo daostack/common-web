@@ -3,6 +3,7 @@ import { FundingType, Common, CommonMemberRole, EventType } from '@prisma/client
 
 import { prisma } from '@toolkits';
 import { eventService } from '@services';
+import { LinkSchema } from '@validation';
 
 import { createCommonMemberCommand } from './createCommonMemberCommand';
 import { addCommonMemberRoleCommand } from './addCommonMemberRoleCommand';
@@ -13,6 +14,18 @@ const schema = z.object({
     .min(2)
     .max(255),
 
+  image: z.string()
+    .nonempty(),
+
+  description: z.string()
+    .nonempty(),
+
+  action: z.string()
+    .optional(),
+
+  byline: z.string()
+    .optional(),
+
   fundingType: z.enum(Object.keys(FundingType) as [(keyof typeof FundingType)]),
 
   fundingMinimumAmount: z.number()
@@ -20,7 +33,15 @@ const schema = z.object({
     .max(100000),
 
   founderId: z.string()
-    .nonempty()
+    .nonempty(),
+
+  links: z.array(LinkSchema)
+    .nullable()
+    .optional(),
+
+  rules: z.array(LinkSchema)
+    .nullable()
+    .optional(),
 });
 
 export const createCommonCommand = async (command: z.infer<typeof schema>): Promise<Common> => {
@@ -31,8 +52,13 @@ export const createCommonCommand = async (command: z.infer<typeof schema>): Prom
     data: {
       name: command.name,
 
+      image: command.image,
+
       fundingType: command.fundingType,
-      fundingMinimumAmount: command.fundingMinimumAmount
+      fundingMinimumAmount: command.fundingMinimumAmount,
+      links: command.links,
+      rules: command.rules,
+      byline: command.byline,
     }
   });
 

@@ -1,3 +1,33 @@
+model Statistic {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type StatisticType
+
+  users Int @default(0)
+
+  commons Int @default(0)
+
+  joinProposals    Int @default(0)
+  fundingProposals Int @default(0)
+
+  discussions        Int @default(0)
+  discussionMessages Int @default(0)
+
+  payments       Int @default(0)
+  paymentsAmount Int @default(0)
+}
+
+enum StatisticType {
+  AllTime
+
+  Hourly
+  Daily
+  Weekly
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("Database.Url")
@@ -107,6 +137,15 @@ model Common {
   balance Int @default(0)
   raised  Int @default(0)
 
+  image String
+
+  action      String?
+  byline      String?
+  description String?
+
+  links Json?
+  rules Json?
+
   whitelisted Boolean @default(false)
 
   fundingType          FundingType
@@ -151,6 +190,22 @@ model CommonMember {
   @@unique([userId, commonId])
 }
 
+model Role {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name        String @unique
+  displayName String
+
+  description String
+
+  permissions String[]
+
+  users User[]
+}
+
 enum SubscriptionStatus {
   Pending
 
@@ -179,7 +234,6 @@ model Subscription {
 
   card Card          @relation(fields: [cardId], references: [id])
   join JoinProposal?
-
 
   user   User   @relation(fields: [userId], references: [id])
   common Common @relation(fields: [commonId], references: [id])
@@ -221,17 +275,17 @@ model Payment {
 
   card Card @relation(fields: [cardId], references: [id])
 
-  user   User   @relation(fields: [userId], references: [id])
-  common Common @relation(fields: [commonId], references: [id])
+  user   User    @relation(fields: [userId], references: [id])
+  common Common? @relation(fields: [commonId], references: [id])
 
-  join         JoinProposal  @relation(fields: [joinId], references: [id])
+  join         JoinProposal? @relation(fields: [joinId], references: [id])
   subscription Subscription? @relation(fields: [subscriptionId], references: [id])
 
   subscriptionId String?
-  joinId         String
+  joinId         String?
 
   userId   String
-  commonId String
+  commonId String?
 
   cardId String
 }
@@ -241,6 +295,8 @@ enum PaymentType {
 
   SubscriptionInitialPayment
   SubscriptionSequentialPayment
+
+  ImportedPayment
 }
 
 enum PaymentCircleStatus {
@@ -270,7 +326,6 @@ model Card {
 
   cvvCheck String
   avsCheck String
-
 
   user     User      @relation(fields: [userId], references: [id])
   payments Payment[]
@@ -318,6 +373,8 @@ model User {
   firstName String
   lastName  String
 
+  photo String
+
   email         String  @unique
   emailVerified Boolean @default(false)
 
@@ -340,6 +397,9 @@ model User {
   notificationLanguage NotificationLanguage @default(EN)
 
   notificationTokens UserNotificationToken[]
+
+  roles       Role[]
+  permissions String[]
 }
 
 enum UserNotificationTokenState {
@@ -367,6 +427,8 @@ model UserNotificationToken {
 
 enum EventType {
   CommonCreated
+  CommonDelisted
+  CommonWhitelisted
 
   CommonMemberCreated
   CommonMemberRoleAdded
@@ -413,6 +475,15 @@ enum EventType {
 
   ReportRespected
   ReportDismissed
+
+  RoleCreated
+  RoleUpdated
+  RolePermissionAdded
+  RolePermissionRemoved
+  RoleDeleted
+
+  UserAddedToRole
+  UserRemovedFromRole
 }
 
 model Event {
@@ -434,6 +505,24 @@ model Event {
   proposal   Proposal?   @relation(fields: [proposalId], references: [id])
   common     Common?     @relation(fields: [commonId], references: [id])
   user       User?       @relation(fields: [userId], references: [id])
+}
+
+model NotificationEventSettings {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sendNotificationType NotificationType
+
+  onEvent EventType @unique
+
+  sendToEveryone Boolean @default(false)
+  sendToCommon   Boolean @default(false)
+  sendToUser     Boolean @default(false)
+
+  description String
+  active      Boolean @default(true)
 }
 
 model NotificationSystemSettings {
@@ -479,6 +568,8 @@ enum NotificationType {
 
   FundingRequestAccepted
   FundingRequestRejected
+
+  General
 }
 
 enum NotificationSeenStatus {
@@ -622,7 +713,7 @@ model Proposal {
   title       String?
   description String?
 
-  link   Json?
+  links  Json?
   files  Json?
   images Json?
 
@@ -652,8 +743,10 @@ model Proposal {
   userId         String
   commonId       String
   commonMemberId String?
-  Event          Event[]
-  Notification   Notification[]
+
+  importedFrom Json?
+  Event        Event[]
+  Notification Notification[]
 }
 
 model JoinProposal {

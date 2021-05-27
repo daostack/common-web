@@ -1,6 +1,6 @@
 {
   "name": "admin",
-  "version": "1.9.11",
+  "version": "1.9.12-rc.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.3.8",
-    "@geist-ui/react": "^2.1.0-canary.2",
+    "@geist-ui/react": "2.1.5",
     "@geist-ui/react-icons": "^1.0.1",
     "@react-firebase/auth": "^0.2.10",
     "apollo-link": "^1.2.14",

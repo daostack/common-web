@@ -1,5 +1,7 @@
 enum EventType {
   CommonCreated
+  CommonDelisted
+  CommonWhitelisted
 
   CommonMemberCreated
   CommonMemberRoleAdded
@@ -46,4 +48,13 @@ enum EventType {
 
   ReportRespected
   ReportDismissed
+
+  RoleCreated
+  RoleUpdated
+  RolePermissionAdded
+  RolePermissionRemoved
+  RoleDeleted
+
+  UserAddedToRole
+  UserRemovedFromRole
 }

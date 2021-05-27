@@ -7,6 +7,8 @@ model User {
   firstName String
   lastName  String
 
+  photo String
+
   email         String  @unique
   emailVerified Boolean @default(false)
 
@@ -29,4 +31,7 @@ model User {
   notificationLanguage NotificationLanguage @default(EN)
 
   notificationTokens UserNotificationToken[]
+
+  roles       Role[]
+  permissions String[]
 }

@@ -4,12 +4,13 @@ import { ICommonUpdate } from '@common/types';
 import { IUpdatableCommonEntity } from '../database/updateCommon';
 import { commonDb } from '../database';
 import { createCommonHistory } from '../../commonEditHistory/business';
-import { CommonError } from '../../util/errors';
+import { UnauthorizedError } from '../../util/errors';
 import { createEvent } from '../../util/db/eventDbService';
 import { EVENT_TYPES } from '../../event/event';
 import { commonRuleValidationSchema } from '../../util/schemas';
 import { validate } from '../../util/validate';
 import { urlRegex } from '../../util/regex';
+import { hasPermission } from '../../core/domain/users/business';
 
 
 const updateCommonDataValidationScheme = yup.object({
@@ -48,10 +49,11 @@ export const updateCommon = async (payload: UpdateCommonPayload): Promise<IUpdat
 
   await validate<UpdateCommonPayload>(payload, updateCommonDataValidationScheme);
   const currCommon = await commonDb.get(payload.commonId);
-  // TODO check if user has permission to edit this common when permissions pr is merged
 
-  if (currCommon.metadata.founderId !== payload.userId) {
-    throw new CommonError('Try again when you created the common');
+  const canEditCommon = await hasPermission(payload.userId, payload.commonId);
+
+  if (!canEditCommon) {
+    throw new UnauthorizedError();
   }
 
   // the doc that was saved in the commonEditHistory collection

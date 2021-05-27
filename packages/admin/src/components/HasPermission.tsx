@@ -1,7 +1,7 @@
 import React, { PropsWithChildren } from 'react';
 
-import { usePermissionsContext, useAuthContext } from '@context';
 import { useRouter } from 'next/router';
+import { useUserContext } from '@core/context';
 
 interface IHasPermissionProps {
   permission: string;
@@ -10,43 +10,40 @@ interface IHasPermissionProps {
 }
 
 export const HasPermission: React.FC<PropsWithChildren<IHasPermissionProps>> = ({ children, permission, redirect }) => {
-  const permissionsContext = usePermissionsContext();
-  const authContext = useAuthContext();
   const router = useRouter();
+  const userContext = useUserContext();
 
   const hasPermission = (permission: string): boolean => {
     let hasPermission = false;
 
-    if (permissionsContext.loaded) {
+    if (userContext.loaded) {
+      const permissions = userContext.permissions;
+
+      console.log(permissions);
+
       if (permission.includes('*')) {
-        hasPermission = permissionsContext.permissions
-          .some((userPermission) => matchRuleExpl(userPermission, permission));
+        hasPermission = permissions.some((userPermission) =>
+          matchRuleExpl(userPermission, permission));
       } else {
-        hasPermission = permissionsContext.permissions.includes(permission);
+        hasPermission = permissions.includes(permission);
       }
     }
 
     console.debug(`Permission check for [${permission}]: ${hasPermission}`);
 
-    if (!hasPermission && redirect) {
-      if (authContext.authenticated) {
-        router.push({
+    if (!hasPermission && userContext.loaded && redirect) {
+      router
+        .push({
           pathname: '/error/unauthorized',
           query: {
             redirected: true,
             redirectedFrom: router.pathname,
             failedPermission: permission
           }
+        })
+        .then(() => {
+          console.log('Redirected unauthorized request');
         });
-      } else {
-        router.push({
-          pathname: '/auth',
-          query: {
-            redirected: true,
-            redirectedFrom: router.pathname
-          }
-        });
-      }
     }
 
     return true;
@@ -72,13 +69,9 @@ export const HasPermission: React.FC<PropsWithChildren<IHasPermissionProps>> = (
   };
 
 
-  return (
+  return hasPermission(permission) && (
     <React.Fragment>
-      {permissionsContext.loaded && hasPermission(permission) && (
-        <React.Fragment>
-          {children}
-        </React.Fragment>
-      )}
+      {children}
     </React.Fragment>
   );
 };

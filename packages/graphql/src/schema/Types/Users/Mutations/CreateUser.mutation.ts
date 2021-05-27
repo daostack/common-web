@@ -8,6 +8,7 @@ export const CreateUserInput = inputObjectType({
     t.nonNull.string('firstName');
     t.nonNull.string('lastName');
     t.nonNull.string('email');
+    t.nonNull.string('photo');
   }
 });
 
@@ -16,7 +17,7 @@ export const CreateUserMutation = extendType({
   definition(t) {
     // @ts-ignore
     t.nonNull.field('createUser', {
-      description: 'Creates new user in the system',
+      description: 'Creates new user in the settings',
       type: 'User',
       args: {
         input: nonNull(
@@ -28,7 +29,7 @@ export const CreateUserMutation = extendType({
       resolve: async (root, args, ctx) => {
         const userDecodedToken = await ctx.getUserDecodedToken();
 
-        return userService.commands.create({
+        return userService.create({
           ...args.input,
           id: userDecodedToken.uid,
           emailVerified: userDecodedToken.email === args.input.email && userDecodedToken.email_verified

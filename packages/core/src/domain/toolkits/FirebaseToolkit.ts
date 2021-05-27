@@ -27,3 +27,10 @@ export const messaging = (() => {
 
   return admin.messaging();
 })();
+
+/**
+ * @deprecated
+ *
+ * @todo Delete this :(
+ */
+export const getDb = () => admin.firestore();
