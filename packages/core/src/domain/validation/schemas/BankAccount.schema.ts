@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import { UserCountry } from '@prisma/client';
 
 const isDistrictRequired = (country: string): boolean =>
   country === 'US' || country === 'CA';
@@ -11,11 +12,11 @@ export const BankAccountSchema = z
     city: z.string()
       .nonempty(),
 
-    country: z.string()
-      .nonempty(),
+    country: z.enum(Object.keys(UserCountry) as [(keyof typeof UserCountry)]),
 
     line1: z.string()
-      .nonempty(),
+      .optional()
+      .nullable(),
 
     line2: z.string()
       .optional()

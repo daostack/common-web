@@ -15,6 +15,7 @@ export { roleService } from './services/roles';
 export { cardService } from './services/cards';
 export { voteService } from './services/votes';
 export { userService } from './services/users';
+export { wireService } from './services/wires';
 export { eventService } from './services/events';
 export { commonService } from './services/commons';
 export { reportService } from './services/reports';

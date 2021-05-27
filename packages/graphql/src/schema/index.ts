@@ -2,6 +2,7 @@ import path from 'path';
 import { makeSchema, queryComplexityPlugin, fieldAuthorizePlugin } from 'nexus';
 
 import { UserTypes } from './Types/Users';
+import { WireTypes } from './Types/Wires';
 import { CardTypes } from './Types/Cards';
 import { VoteTypes } from './Types/Votes';
 import { RoleTypes } from './Types/Roles';
@@ -23,6 +24,7 @@ import { UuidScalar } from './Shared/Scalars/Uuid.scalar';
 
 import { LinkType, LinkInputType } from './Shared/Types/Link.type';
 
+import { AddressInterface } from './Shared/Interfaces/Address.interface';
 import { BaseEntityInterface } from './Shared/Interfaces/BaseEntity.interface';
 
 import { PaginateInput } from './Shared/Inputs/Paginate.input';
@@ -34,6 +36,7 @@ import { PaymentTypes } from './Types/Payments';
 
 const types = [
   UserTypes,
+  WireTypes,
   RoleTypes,
   CardTypes,
   VoteTypes,
@@ -63,6 +66,7 @@ const types = [
 
   // Shared Interfaces
   BaseEntityInterface,
+  AddressInterface,
 
   // Shared Input Types
   PaginateInput,

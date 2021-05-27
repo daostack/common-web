@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { BillingDetail } from '@prisma/client';
+import { BillingDetail, UserCountry } from '@prisma/client';
 
 import { logger } from '@logger';
 import { prisma } from '@toolkits';
@@ -15,8 +15,7 @@ const schema = z.object({
   city: z.string()
     .nonempty(),
 
-  country: z.string()
-    .nonempty(),
+  country: z.enum(Object.keys(UserCountry) as [(keyof typeof UserCountry)]),
 
   line1: z.string()
     .nonempty(),

@@ -34,7 +34,7 @@ const schema = z.object({
 export const createWireCommand = async (command: z.infer<typeof schema>): Promise<Wire> => {
   schema.parse(command);
 
-  logger.info('Creating new wire');
+  logger.info('Creating new wires');
 
   const { wireBankDetailsId, billingDetailsId, userId, ...accountData } = command;
 
@@ -55,12 +55,12 @@ export const createWireCommand = async (command: z.infer<typeof schema>): Promis
 
   if (!wireBankDetails || !billing) {
     throw new NotFoundError(
-      'Unable to found either the wire details or the billing details',
+      'Unable to found either the wires details or the billing details',
       `billing:${billingDetailsId},wire:${wireBankDetailsId}`
     );
   }
 
-  // Create the wire with circle
+  // Create the wires with circle
   const { data: circleResponse } = await circleClient.wires.create({
     idempotencyKey: v4(),
     billingDetails: billing,
@@ -68,7 +68,7 @@ export const createWireCommand = async (command: z.infer<typeof schema>): Promis
     ...accountData
   });
 
-  // Create the wire in the database
+  // Create the wires in the database
   const wire = await prisma.wire
     .create({
       data: {

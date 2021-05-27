@@ -39,7 +39,7 @@ export const circleClient = {
 
   wires: {
     /**
-     * Creates new wire account in the circle system. This also
+     * Creates new wires account in the circle system. This also
      * should make sure that the details provided are valid and
      * up to standard
      */

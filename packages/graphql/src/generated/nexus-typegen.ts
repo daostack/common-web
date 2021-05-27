@@ -4,10 +4,11 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -179,6 +180,23 @@ export interface NexusGenInputs {
   CreateVoteInput: { // input type
     outcome: NexusGenEnums['VoteOutcome']; // VoteOutcome!
     proposalId: string; // ID!
+  }
+  CreateWireBankAccountInput: { // input type
+    bankName: string; // String!
+    city: string; // String!
+    country: string; // String!
+    district?: string | null; // String
+    line1?: string | null; // String
+    line2?: string | null; // String
+    postalCode: string; // String!
+  }
+  CreateWireInput: { // input type
+    accountNumber?: string | null; // String
+    billingDetailsId: string; // String!
+    iban?: string | null; // String
+    routingNumber?: string | null; // String
+    userId: string; // String!
+    wireBankDetailsId: string; // String!
   }
   DiscussionMessagesOrderByInput: { // input type
     createdAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -614,7 +632,7 @@ export interface NexusGenObjects {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     district?: string | null; // String
     id: NexusGenScalars['UUID']; // UUID!
-    line1: string; // String!
+    line1?: string | null; // String
     line2?: string | null; // String
     name: string; // String!
     postalCode: string; // String!
@@ -635,10 +653,31 @@ export interface NexusGenObjects {
     outcome: NexusGenEnums['VoteOutcome']; // VoteOutcome!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
+  Wire: { // root type
+    circleFingerprint?: string | null; // String
+    circleId?: string | null; // String
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    description?: string | null; // String
+    id: NexusGenScalars['UUID']; // UUID!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
+  WireBankAccount: { // root type
+    bankName: string; // String!
+    city: string; // String!
+    country: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    district?: string | null; // String
+    id: NexusGenScalars['UUID']; // UUID!
+    line1?: string | null; // String
+    line2?: string | null; // String
+    postalCode: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
 }
 
 export interface NexusGenInterfaces {
-  BaseEntity: NexusGenRootTypes['CommonMember'] | NexusGenRootTypes['CommonSubscription'] | NexusGenRootTypes['CommonUpdate'] | NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['FundingProposal'] | NexusGenRootTypes['JoinProposal'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['NotificationEventSettings'] | NexusGenRootTypes['NotificationSystemSettings'] | NexusGenRootTypes['NotificationTemplate'] | NexusGenRootTypes['Payment'] | NexusGenRootTypes['Report'] | NexusGenRootTypes['Role'] | NexusGenRootTypes['Statistic'] | NexusGenRootTypes['UserBillingDetails'] | NexusGenRootTypes['UserNotificationToken'];
+  Address: NexusGenRootTypes['UserBillingDetails'] | NexusGenRootTypes['WireBankAccount'];
+  BaseEntity: NexusGenRootTypes['CommonMember'] | NexusGenRootTypes['CommonSubscription'] | NexusGenRootTypes['CommonUpdate'] | NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['FundingProposal'] | NexusGenRootTypes['JoinProposal'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['NotificationEventSettings'] | NexusGenRootTypes['NotificationSystemSettings'] | NexusGenRootTypes['NotificationTemplate'] | NexusGenRootTypes['Payment'] | NexusGenRootTypes['Report'] | NexusGenRootTypes['Role'] | NexusGenRootTypes['Statistic'] | NexusGenRootTypes['UserBillingDetails'] | NexusGenRootTypes['UserNotificationToken'] | NexusGenRootTypes['Wire'] | NexusGenRootTypes['WireBankAccount'];
 }
 
 export interface NexusGenUnions {
@@ -789,6 +828,8 @@ export interface NexusGenFieldTypes {
     createUserBillingDetails: NexusGenRootTypes['UserBillingDetails'] | null; // UserBillingDetails
     createUserNotificationToken: NexusGenRootTypes['UserNotificationToken']; // UserNotificationToken!
     createVote: NexusGenRootTypes['Vote']; // Vote!
+    createWire: NexusGenRootTypes['Wire'] | null; // Wire
+    createWireBankAccount: NexusGenRootTypes['WireBankAccount'] | null; // WireBankAccount
     delistCommon: boolean | null; // Boolean
     finalizeProposal: boolean; // Boolean!
     reportDiscussionMessage: NexusGenRootTypes['Report']; // Report!
@@ -989,7 +1030,7 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     district: string | null; // String
     id: NexusGenScalars['UUID']; // UUID!
-    line1: string; // String!
+    line1: string | null; // String
     line2: string | null; // String
     name: string; // String!
     postalCode: string; // String!
@@ -1012,6 +1053,34 @@ export interface NexusGenFieldTypes {
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     voter: NexusGenRootTypes['CommonMember']; // CommonMember!
     voterId: string; // ID!
+  }
+  Wire: { // field return type
+    circleFingerprint: string | null; // String
+    circleId: string | null; // String
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    description: string | null; // String
+    id: NexusGenScalars['UUID']; // UUID!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
+  WireBankAccount: { // field return type
+    bankName: string; // String!
+    city: string; // String!
+    country: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    district: string | null; // String
+    id: NexusGenScalars['UUID']; // UUID!
+    line1: string | null; // String
+    line2: string | null; // String
+    postalCode: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
+  Address: { // field return type
+    city: string; // String!
+    country: string; // String!
+    district: string | null; // String
+    line1: string | null; // String
+    line2: string | null; // String
+    postalCode: string; // String!
   }
   BaseEntity: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -1161,6 +1230,8 @@ export interface NexusGenFieldTypeNames {
     createUserBillingDetails: 'UserBillingDetails'
     createUserNotificationToken: 'UserNotificationToken'
     createVote: 'Vote'
+    createWire: 'Wire'
+    createWireBankAccount: 'WireBankAccount'
     delistCommon: 'Boolean'
     finalizeProposal: 'Boolean'
     reportDiscussionMessage: 'Report'
@@ -1385,6 +1456,34 @@ export interface NexusGenFieldTypeNames {
     voter: 'CommonMember'
     voterId: 'ID'
   }
+  Wire: { // field return type name
+    circleFingerprint: 'String'
+    circleId: 'String'
+    createdAt: 'DateTime'
+    description: 'String'
+    id: 'UUID'
+    updatedAt: 'DateTime'
+  }
+  WireBankAccount: { // field return type name
+    bankName: 'String'
+    city: 'String'
+    country: 'String'
+    createdAt: 'DateTime'
+    district: 'String'
+    id: 'UUID'
+    line1: 'String'
+    line2: 'String'
+    postalCode: 'String'
+    updatedAt: 'DateTime'
+  }
+  Address: { // field return type name
+    city: 'String'
+    country: 'String'
+    district: 'String'
+    line1: 'String'
+    line2: 'String'
+    postalCode: 'String'
+  }
   BaseEntity: { // field return type name
     createdAt: 'DateTime'
     id: 'UUID'
@@ -1480,6 +1579,12 @@ export interface NexusGenArgTypes {
     }
     createVote: { // args
       input: NexusGenInputs['CreateVoteInput']; // CreateVoteInput!
+    }
+    createWire: { // args
+      input: NexusGenInputs['CreateWireInput']; // CreateWireInput!
+    }
+    createWireBankAccount: { // args
+      input: NexusGenInputs['CreateWireBankAccountInput']; // CreateWireBankAccountInput!
     }
     delistCommon: { // args
       commonId: string; // String!
@@ -1615,7 +1720,8 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  BaseEntity: "CommonMember" | "CommonSubscription" | "CommonUpdate" | "Discussion" | "DiscussionMessage" | "DiscussionSubscription" | "FundingProposal" | "JoinProposal" | "Notification" | "NotificationEventSettings" | "NotificationSystemSettings" | "NotificationTemplate" | "Payment" | "Report" | "Role" | "Statistic" | "UserBillingDetails" | "UserNotificationToken"
+  Address: 'UserBillingDetails' | 'WireBankAccount'
+  BaseEntity: 'CommonMember' | 'CommonSubscription' | 'CommonUpdate' | 'Discussion' | 'DiscussionMessage' | 'DiscussionSubscription' | 'FundingProposal' | 'JoinProposal' | 'Notification' | 'NotificationEventSettings' | 'NotificationSystemSettings' | 'NotificationTemplate' | 'Payment' | 'Report' | 'Role' | 'Statistic' | 'UserBillingDetails' | 'UserNotificationToken' | 'Wire' | 'WireBankAccount'
 }
 
 export interface NexusGenTypeInterfaces {
@@ -1627,16 +1733,18 @@ export interface NexusGenTypeInterfaces {
   DiscussionSubscription: "BaseEntity"
   FundingProposal: "BaseEntity"
   JoinProposal: "BaseEntity"
-  Notification: "BaseEntity"
-  NotificationEventSettings: "BaseEntity"
-  NotificationSystemSettings: "BaseEntity"
-  NotificationTemplate: "BaseEntity"
-  Payment: "BaseEntity"
-  Report: "BaseEntity"
-  Role: "BaseEntity"
-  Statistic: "BaseEntity"
-  UserBillingDetails: "BaseEntity"
-  UserNotificationToken: "BaseEntity"
+  Notification: 'BaseEntity'
+  NotificationEventSettings: 'BaseEntity'
+  NotificationSystemSettings: 'BaseEntity'
+  NotificationTemplate: 'BaseEntity'
+  Payment: 'BaseEntity'
+  Report: 'BaseEntity'
+  Role: 'BaseEntity'
+  Statistic: 'BaseEntity'
+  UserBillingDetails: 'Address' | 'BaseEntity'
+  UserNotificationToken: 'BaseEntity'
+  Wire: 'BaseEntity'
+  WireBankAccount: 'Address' | 'BaseEntity'
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
@@ -1653,7 +1761,7 @@ export type NexusGenUnionNames = never;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = "BaseEntity";
+export type NexusGenAbstractsUsingStrategyResolveType = 'Address' | 'BaseEntity';
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {

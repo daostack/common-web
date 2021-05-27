@@ -169,7 +169,7 @@ enum PayoutStatus {
   failed
 }
 input ExecutePayoutInput {
-  """The ID of the the wire to witch the payout will be made"""
+  """The ID of the the wires to witch the payout will be made"""
   wireId: ID!
   """List of the all proposals IDs that are in this batch"""
   proposalIds: [ID!]!

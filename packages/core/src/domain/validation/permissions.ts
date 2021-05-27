@@ -47,7 +47,16 @@ export const allPermissions = [
   'admin.users.read',
   'admin.users.update',
 
-  'user.permissions.read'
+  'user.permissions.read',
+
+
+  'admin.wire.read',
+  'admin.wire.create',
+  'admin.wire.update',
+
+  'admin.wire.bank.read',
+  'admin.wire.bank.create',
+  'admin.wire.bank.update'
 ] as const;
 
 

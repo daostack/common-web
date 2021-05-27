@@ -7,6 +7,15 @@ input ActOnReportInput {
   reportId: UUID!
 }
 
+interface Address {
+  city: String!
+  country: String!
+  district: String
+  line1: String
+  line2: String
+  postalCode: String!
+}
+
 interface BaseEntity {
   """The date, at which the item was created"""
   createdAt: DateTime!
@@ -285,6 +294,25 @@ input CreateVoteInput {
   proposalId: ID!
 }
 
+input CreateWireBankAccountInput {
+  bankName: String!
+  city: String!
+  country: String!
+  district: String
+  line1: String
+  line2: String
+  postalCode: String!
+}
+
+input CreateWireInput {
+  accountNumber: String
+  billingDetailsId: String!
+  iban: String
+  routingNumber: String
+  userId: String!
+  wireBankDetailsId: String!
+}
+
 """
 A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
@@ -560,6 +588,8 @@ type Mutation {
   createUserBillingDetails(input: CreateUserBillingDetailsInput!): UserBillingDetails
   createUserNotificationToken(input: CreateUserNotificationTokenInput!): UserNotificationToken!
   createVote(input: CreateVoteInput!): Vote!
+  createWire(input: CreateWireInput!): Wire
+  createWireBankAccount(input: CreateWireBankAccountInput!): WireBankAccount
   delistCommon(commonId: String!): Boolean
   finalizeProposal(proposalId: ID!): Boolean!
   reportDiscussionMessage(input: ReportDiscussionMessageInput!): Report!
@@ -1159,7 +1189,7 @@ type User {
   updatedAt: DateTime!
 }
 
-type UserBillingDetails implements BaseEntity {
+type UserBillingDetails implements Address & BaseEntity {
   city: String!
   country: String!
 
@@ -1169,7 +1199,7 @@ type UserBillingDetails implements BaseEntity {
 
   """The main identifier of the item"""
   id: UUID!
-  line1: String!
+  line1: String
   line2: String
   name: String!
   postalCode: String!
@@ -1484,4 +1514,38 @@ type Vote {
 enum VoteOutcome {
   Approve
   Condemn
+}
+
+type Wire implements BaseEntity {
+  circleFingerprint: String
+  circleId: String
+
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  description: String
+
+  """The main identifier of the item"""
+  id: UUID!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+}
+
+type WireBankAccount implements Address & BaseEntity {
+  bankName: String!
+  city: String!
+  country: String!
+
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  district: String
+
+  """The main identifier of the item"""
+  id: UUID!
+  line1: String
+  line2: String
+  postalCode: String!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
 }
