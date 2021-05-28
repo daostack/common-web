@@ -23,6 +23,7 @@ export const allPermissions = [
   'admin.proposals.read',
   'admin.proposals.read.ipAddress',
 
+  'admin.commons.read',
   'admin.commons.update',
   'admin.commons.delist',
   'admin.commons.whitelist',

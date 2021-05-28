@@ -1088,6 +1088,29 @@ input PaymentsWhereInput {
   userId: UUID
 }
 
+type Payout implements BaseEntity {
+  amount: Int!
+
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  description: String!
+
+  """The main identifier of the item"""
+  id: UUID!
+  status: PayoutStatus!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+}
+
+enum PayoutStatus {
+  CircleComplete
+  CircleFailed
+  CirclePending
+  Failed
+  PendingApproval
+}
+
 type Proposal {
   common: Common!
   commonId: UUID!
@@ -1188,6 +1211,7 @@ type Query {
   notifications(paginate: PaginateInput!): [Notification]
   payment(id: ID): Payment
   payments(paginate: PaginateInput, where: PaymentsWhereInput): [Payment]
+  payouts(paginate: PaginateInput): [Payout]
   proposal(where: ProposalWhereUniqueInput!): Proposal
   proposals(fundingWhere: FundingProposalWhereInput, paginate: PaginateInput, where: ProposalWhereInput): [Proposal]
   roles(paginate: PaginateInput): [Role]

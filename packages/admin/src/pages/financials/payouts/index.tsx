@@ -209,7 +209,7 @@ const PayoutsPage: NextPage = () => {
         <Text h3>Funding request ready for payout</Text>
 
         <Table data={transformFundingRequestForTable(data)}>
-          <HasPermission permission="admin.payouts.create">
+          <HasPermission permission="admin.financials.payouts.create">
             <Table.Column prop="checkbox" width={70}/>
           </HasPermission>
 
@@ -225,7 +225,7 @@ const PayoutsPage: NextPage = () => {
 
 
         {data?.proposals?.length ? (
-          <HasPermission permission="admin.payouts.create">
+          <HasPermission permission="admin.financials.payouts.create">
             <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
               <Text p style={{ marginRight: 10 }}>
                 {selectedProposals.length} selected ({calculateSelectedProposalsSum()})

@@ -4,10 +4,11 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -369,8 +370,9 @@ export interface NexusGenEnums {
   PaymentCircleStatus: "confirmed" | "failed" | "paid" | "pending"
   PaymentState: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
   PaymentStatus: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
-  PaymentType: "ImportedPayment" | "OneTimePayment" | "SubscriptionInitialPayment" | "SubscriptionSequentialPayment"
-  ProposalState: "Accepted" | "Countdown" | "Finalizing" | "Rejected"
+  PaymentType: 'ImportedPayment' | 'OneTimePayment' | 'SubscriptionInitialPayment' | 'SubscriptionSequentialPayment'
+  PayoutStatus: 'CircleComplete' | 'CircleFailed' | 'CirclePending' | 'Failed' | 'PendingApproval'
+  ProposalState: 'Accepted' | 'Countdown' | 'Finalizing' | 'Rejected'
   ProposalType: "FundingRequest" | "JoinRequest"
   ReportAction: "Dismissed" | "Respected"
   ReportAuditor: "CommonModerator" | "SystemAdmin"
@@ -564,6 +566,14 @@ export interface NexusGenObjects {
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     userId: string; // String!
   }
+  Payout: { // root type
+    amount: number; // Int!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    description: string; // String!
+    id: NexusGenScalars['UUID']; // UUID!
+    status: NexusGenEnums['PayoutStatus']; // PayoutStatus!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   Proposal: { // root type
     commonId: NexusGenScalars['UUID']; // UUID!
     commonMemberId: NexusGenScalars['UUID']; // UUID!
@@ -679,7 +689,7 @@ export interface NexusGenObjects {
 
 export interface NexusGenInterfaces {
   Address: NexusGenRootTypes['UserBillingDetails'] | NexusGenRootTypes['WireBankAccount'];
-  BaseEntity: NexusGenRootTypes['CommonMember'] | NexusGenRootTypes['CommonSubscription'] | NexusGenRootTypes['CommonUpdate'] | NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['FundingProposal'] | NexusGenRootTypes['JoinProposal'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['NotificationEventSettings'] | NexusGenRootTypes['NotificationSystemSettings'] | NexusGenRootTypes['NotificationTemplate'] | NexusGenRootTypes['Payment'] | NexusGenRootTypes['Report'] | NexusGenRootTypes['Role'] | NexusGenRootTypes['Statistic'] | NexusGenRootTypes['UserBillingDetails'] | NexusGenRootTypes['UserNotificationToken'] | NexusGenRootTypes['Wire'] | NexusGenRootTypes['WireBankAccount'];
+  BaseEntity: NexusGenRootTypes['CommonMember'] | NexusGenRootTypes['CommonSubscription'] | NexusGenRootTypes['CommonUpdate'] | NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['FundingProposal'] | NexusGenRootTypes['JoinProposal'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['NotificationEventSettings'] | NexusGenRootTypes['NotificationSystemSettings'] | NexusGenRootTypes['NotificationTemplate'] | NexusGenRootTypes['Payment'] | NexusGenRootTypes['Payout'] | NexusGenRootTypes['Report'] | NexusGenRootTypes['Role'] | NexusGenRootTypes['Statistic'] | NexusGenRootTypes['UserBillingDetails'] | NexusGenRootTypes['UserNotificationToken'] | NexusGenRootTypes['Wire'] | NexusGenRootTypes['WireBankAccount'];
 }
 
 export interface NexusGenUnions {
@@ -920,6 +930,14 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User']; // User!
     userId: string; // String!
   }
+  Payout: { // field return type
+    amount: number; // Int!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    description: string; // String!
+    id: NexusGenScalars['UUID']; // UUID!
+    status: NexusGenEnums['PayoutStatus']; // PayoutStatus!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   Proposal: { // field return type
     common: NexusGenRootTypes['Common']; // Common!
     commonId: NexusGenScalars['UUID']; // UUID!
@@ -964,6 +982,7 @@ export interface NexusGenFieldTypes {
     notifications: Array<NexusGenRootTypes['Notification'] | null> | null; // [Notification]
     payment: NexusGenRootTypes['Payment'] | null; // Payment
     payments: Array<NexusGenRootTypes['Payment'] | null> | null; // [Payment]
+    payouts: Array<NexusGenRootTypes['Payout'] | null> | null; // [Payout]
     proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
     proposals: Array<NexusGenRootTypes['Proposal'] | null> | null; // [Proposal]
     roles: Array<NexusGenRootTypes['Role'] | null> | null; // [Role]
@@ -1322,6 +1341,14 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
     userId: 'String'
   }
+  Payout: { // field return type name
+    amount: 'Int'
+    createdAt: 'DateTime'
+    description: 'String'
+    id: 'UUID'
+    status: 'PayoutStatus'
+    updatedAt: 'DateTime'
+  }
   Proposal: { // field return type name
     common: 'Common'
     commonId: 'UUID'
@@ -1366,6 +1393,7 @@ export interface NexusGenFieldTypeNames {
     notifications: 'Notification'
     payment: 'Payment'
     payments: 'Payment'
+    payouts: 'Payout'
     proposal: 'Proposal'
     proposals: 'Proposal'
     roles: 'Role'
@@ -1670,6 +1698,9 @@ export interface NexusGenArgTypes {
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
       where?: NexusGenInputs['PaymentsWhereInput'] | null; // PaymentsWhereInput
     }
+    payouts: { // args
+      paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
+    }
     proposal: { // args
       where: NexusGenInputs['ProposalWhereUniqueInput']; // ProposalWhereUniqueInput!
     }
@@ -1723,8 +1754,8 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  Address: "UserBillingDetails" | "WireBankAccount"
-  BaseEntity: "CommonMember" | "CommonSubscription" | "CommonUpdate" | "Discussion" | "DiscussionMessage" | "DiscussionSubscription" | "FundingProposal" | "JoinProposal" | "Notification" | "NotificationEventSettings" | "NotificationSystemSettings" | "NotificationTemplate" | "Payment" | "Report" | "Role" | "Statistic" | "UserBillingDetails" | "UserNotificationToken" | "Wire" | "WireBankAccount"
+  Address: 'UserBillingDetails' | 'WireBankAccount'
+  BaseEntity: 'CommonMember' | 'CommonSubscription' | 'CommonUpdate' | 'Discussion' | 'DiscussionMessage' | 'DiscussionSubscription' | 'FundingProposal' | 'JoinProposal' | 'Notification' | 'NotificationEventSettings' | 'NotificationSystemSettings' | 'NotificationTemplate' | 'Payment' | 'Payout' | 'Report' | 'Role' | 'Statistic' | 'UserBillingDetails' | 'UserNotificationToken' | 'Wire' | 'WireBankAccount'
 }
 
 export interface NexusGenTypeInterfaces {
@@ -1740,8 +1771,9 @@ export interface NexusGenTypeInterfaces {
   NotificationEventSettings: "BaseEntity"
   NotificationSystemSettings: "BaseEntity"
   NotificationTemplate: "BaseEntity"
-  Payment: "BaseEntity"
-  Report: "BaseEntity"
+  Payment: 'BaseEntity'
+  Payout: 'BaseEntity'
+  Report: 'BaseEntity'
   Role: "BaseEntity"
   Statistic: "BaseEntity"
   UserBillingDetails: "Address" | "BaseEntity"

@@ -94,7 +94,7 @@ export const Header: React.FC = () => {
             Dashboard
           </Link>
 
-          <HasPermission permission="admin.common.*">
+          <HasPermission permission="admin.commons.*">
             <Link
               to="/commons"
               style={{
@@ -127,18 +127,22 @@ export const Header: React.FC = () => {
             </Link>
           </HasPermission>
 
-          <HasPermission permission="admin.payment.*">
+          <HasPermission permission="admin.financials.*">
             <Popover
               trigger="hover"
               content={(
                 <React.Fragment>
-                  <Popover.Item>
-                    <Link to="/financials/payments">Payments</Link>
-                  </Popover.Item>
+                  <HasPermission permission="admin.financials.payments.*">
+                    <Popover.Item>
+                      <Link to="/financials/payments">Payments</Link>
+                    </Popover.Item>
+                  </HasPermission>
 
-                  <Popover.Item>
-                    <Link to="/financials/payouts">Payouts</Link>
-                  </Popover.Item>
+                  <HasPermission permission="admin.financials.payouts.*">
+                    <Popover.Item>
+                      <Link to="/financials/payouts">Payouts</Link>
+                    </Popover.Item>
+                  </HasPermission>
                 </React.Fragment>
               )}
             >
@@ -156,7 +160,7 @@ export const Header: React.FC = () => {
           </HasPermission>
 
 
-          <HasPermission permission="admin.notifications.*">
+          <HasPermission permission="admin.notification.*">
             <Popover
               trigger="hover"
               content={(

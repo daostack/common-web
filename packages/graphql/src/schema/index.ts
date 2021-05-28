@@ -9,6 +9,8 @@ import { RoleTypes } from './Types/Roles';
 import { EventTypes } from './Types/Events';
 import { CommonTypes } from './Types/Common';
 import { ReportTypes } from './Types/Reports';
+import { PayoutTypes } from './Types/Payouts';
+import { PaymentTypes } from './Types/Payments';
 import { ProposalTypes } from './Types/Proposals';
 import { StatisticTypes } from './Types/Statistics';
 import { DiscussionTypes } from './Types/Discussion';
@@ -33,7 +35,6 @@ import { BillingDetailsInput } from './Shared/Inputs/BillingDetails.input';
 
 import { SortOrder } from './Shared/Enums/SortBy.enum';
 import { CountryEnum } from './Shared/Enums/Country.enum';
-import { PaymentTypes } from './Types/Payments';
 
 const types = [
   UserTypes,
@@ -41,10 +42,11 @@ const types = [
   RoleTypes,
   CardTypes,
   VoteTypes,
-  PaymentTypes,
   EventTypes,
   CommonTypes,
   ReportTypes,
+  PayoutTypes,
+  PaymentTypes,
   ProposalTypes,
   StatisticTypes,
   DiscussionTypes,
