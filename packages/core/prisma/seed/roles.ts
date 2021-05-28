@@ -12,11 +12,11 @@ export const seedRoles = async () => {
       name: 'admin',
       displayName: 'Admin',
       description: 'The ultimate role with all permissions',
-      permissions: allPermissions
+      permissions: allPermissions as any
     },
 
     update: {
-      permissions: allPermissions
+      permissions: allPermissions as any
     }
   });
 };

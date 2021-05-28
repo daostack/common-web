@@ -1,66 +1,37 @@
 import React from 'react';
-import { NextPage } from 'next';
 
-import { Breadcrumbs, Text, Spacer, Grid, Card, Table, Tooltip, useTheme, Button } from '@geist-ui/react';
-import {
-  Circle,
-  Home,
-  User,
-  ExternalLink,
-  CheckInCircleFill,
-  CheckCircle,
-  XCircle,
-  QuestionCircle
-} from '@geist-ui/react-icons';
+import { NextPage } from 'next';
+import { useRouter } from 'next/router';
+
+import { Breadcrumbs, Text, Spacer, Table, Tooltip, Button, useTheme } from '@geist-ui/react';
+import { Circle, Home, User, ExternalLink, CheckInCircleFill, CheckCircle, XCircle } from '@geist-ui/react-icons';
 
 import { Link } from '@components/Link';
+import { Centered } from '@components/Centered';
+import { HasPermission } from '@components/HasPermission';
 import { withPermission } from '../../../helpers/hoc/withPermission';
 import { gql } from '@apollo/client';
-import { useGetPayoutsPageDataQuery, ProposalFundingState, GetPayoutsPageDataQueryResult } from '@core/graphql';
-import { HasPermission } from '@components/HasPermission';
-import { useRouter } from 'next/router';
-import { Centered } from '@components/Centered';
+import { usePayoutsPageDataQuery, PayoutsPageDataQueryResult } from '@core/graphql';
 
-const PayoutsQuery = gql`
-  query getPayoutsPageData($fundingState: ProposalFundingState, $fundingRequestPage: Int) {
+
+const PayoutDueProposals = gql`
+  query PayoutsPageData {
     proposals(
-      type: fundingRequest
-      page: $fundingRequestPage
-      fundingState: $fundingState
+      fundingWhere: {
+        fundingState: Eligible
+      }
     ) {
       id
 
+      userId
       commonId
-      proposerId
 
-      type
+      title
+      description
 
-      description {
-        title
-      }
-
-      fundingRequest {
+      funding {
         amount
       }
-
-      createdAt
-      updatedAt
-
-      state
-      fundingState
-    }
-
-    payouts {
-      id
-
-      amount
-
-      voided
-      executed
-
-      status
-
-      proposalIds
     }
   }
 `;
@@ -69,11 +40,13 @@ const PayoutsPage: NextPage = () => {
   const theme = useTheme();
   const router = useRouter();
 
-  const data = useGetPayoutsPageDataQuery({
-    variables: {
-      fundingState: ProposalFundingState.Available
-    }
-  });
+  const { data } = usePayoutsPageDataQuery();
+
+  // const data = useGetPayoutsPageDataQuery({
+  //   variables: {
+  //     fundingState: ProposalFundingState.Available
+  //   }
+  // });
 
   // --- State
   const [selectedProposals, setSelectedProposals] = React.useState<string[]>([]);
@@ -88,19 +61,20 @@ const PayoutsPage: NextPage = () => {
   };
 
   const calculateSelectedProposalsSum = (): string => {
-    const proposals = data.data.proposals;
+    const proposals = data?.proposals || [];
+
     let sum = 0;
 
     proposals.forEach((proposal) => {
       if (selectedProposals.includes(proposal.id)) {
-        sum += proposal.fundingRequest.amount;
+        sum += proposal?.funding?.amount;
       }
     });
 
     return (sum ? sum / 100 : 0).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
   };
 
-  const toggleSelectedProposal = (proposalId: string): void => {
+  const toggleSelectedProposal = (proposalId: string, showUserMismatch: boolean = false): void => {
     if (isSelectedProposal(proposalId)) {
       setSelectedProposals(
         selectedProposals.filter((p) => p !== proposalId)
@@ -131,11 +105,15 @@ const PayoutsPage: NextPage = () => {
 
   // --- Transformers
 
-  const transformFundingRequestForTable = (data: GetPayoutsPageDataQueryResult) => {
-    const { proposals, payouts } = data.data;
+  const transformFundingRequestForTable = (data: PayoutsPageDataQueryResult['data']) => {
+    if (!data) {
+      return [];
+    }
+
+    const { proposals } = data;
 
     return proposals.map((proposal) => ({
-      checkbox: !(payouts.some(p => p.proposalIds.includes(proposal.id))) ? (
+      checkbox: (
         <Centered onClick={onProposalCheckboxClick(proposal.id)}>
           {isSelectedProposal(proposal.id) ? (
             <CheckInCircleFill size={20} color={theme.palette.success}/>
@@ -143,23 +121,17 @@ const PayoutsPage: NextPage = () => {
             <Circle size={20}/>
           )}
         </Centered>
-      ) : (
-        <Centered>
-          <Tooltip text="The proposal is currently part of payout and cannot be added to new one">
-            <QuestionCircle size={20}/>
-          </Tooltip>
-        </Centered>
       ),
 
-      title: proposal.description.title,
+      title: proposal.title,
 
-      funding: (proposal.fundingRequest.amount / 100)
+      funding: (proposal.funding.amount / 100)
         .toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
 
       actions: (
         <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}>
           <Tooltip text="See user's profile" enterDelay={1000}>
-            <Link to={`/users/details/${proposal.proposerId}`} Icon={User}/>
+            <Link to={`/users/details/${proposal.userId}`} Icon={User}/>
           </Tooltip>
 
           <Tooltip text="See commons's profile" enterDelay={1000}>
@@ -174,7 +146,7 @@ const PayoutsPage: NextPage = () => {
     }));
   };
 
-  const transformPayoutsForTable = (data: GetPayoutsPageDataQueryResult) => {
+  const transformPayoutsForTable = (data: PayoutsPageDataQueryResult) => {
     const { payouts } = data.data;
 
     return payouts.map((p) => ({
@@ -233,107 +205,152 @@ const PayoutsPage: NextPage = () => {
         <Spacer y={2}/>
       </React.Fragment>
 
-      {data.data && (
-        <React.Fragment>
-          <React.Fragment>
-            <Text h3>Payouts in a nutshell</Text>
+      <React.Fragment>
+        <Text h3>Funding request ready for payout</Text>
 
-            <Grid.Container gap={2} alignItems="stretch" style={{ display: 'flex' }}>
-              <Grid sm={24} md={12}>
-                <Card hoverable>
-                  <Text h1>
-                    {data.data.payouts.filter(p => !p.voided && p.status === 'pending').length}
-                  </Text>
-                  <Text p>Pending payouts</Text>
-                </Card>
-              </Grid>
+        <Table data={transformFundingRequestForTable(data)}>
+          <HasPermission permission="admin.payouts.create">
+            <Table.Column prop="checkbox" width={70}/>
+          </HasPermission>
 
-              <Grid sm={24} md={12}>
-                <Card hoverable>
-                  <Text h1>
-                    {data.data.proposals.length}
-                  </Text>
-                  <Text p>Funding request for payout</Text>
-                </Card>
-              </Grid>
-            </Grid.Container>
+          <Table.Column prop="title" label="Title"/>
+          <Table.Column prop="funding" label="Requested funding"/>
 
-            <Spacer y={2}/>
-          </React.Fragment>
-
-          <React.Fragment>
-            <Text h3>Funding request ready for payout</Text>
-
-            <Table data={transformFundingRequestForTable(data)}>
-              <HasPermission permission="admin.payouts.create">
-                <Table.Column prop="checkbox" width={70}/>
-              </HasPermission>
-
-              <Table.Column prop="title" label="Title"/>
-              <Table.Column prop="funding" label="Requested funding"/>
-
-              <Table.Column prop="actions" width={100}>
-                <Centered>
-                  <Text>Actions</Text>
-                </Centered>
-              </Table.Column>
-            </Table>
-
-            {data.data.proposals.length ? (
-              <HasPermission permission="admin.payouts.create">
-                <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                  <Text p style={{ marginRight: 10 }}>
-                    {selectedProposals.length} selected ({calculateSelectedProposalsSum()})
-                  </Text>
-
-                  <Button
-                    disabled={isCreatePayoutBatchButtonDisabled()}
-                    onClick={onCreateBatchPayout}
-                    type="success"
-                    size="small"
-                  >
-                    Create payout
-                  </Button>
-                </div>
-              </HasPermission>
-            ) : (
-              <Centered>
-                <Text>No funding proposals need funding</Text>
-
-                <Spacer y={5}/>
-              </Centered>
-            )}
-          </React.Fragment>
+          <Table.Column prop="actions" width={100}>
+            <Centered>
+              <Text>Actions</Text>
+            </Centered>
+          </Table.Column>
+        </Table>
 
 
-          <React.Fragment>
-            <Text h3>Payouts</Text>
+        {data?.proposals?.length ? (
+          <HasPermission permission="admin.payouts.create">
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+              <Text p style={{ marginRight: 10 }}>
+                {selectedProposals.length} selected ({calculateSelectedProposalsSum()})
+              </Text>
 
-            <Table data={transformPayoutsForTable(data)}>
-              <Table.Column prop="id" label="Payout ID" width={350}/>
-              <Table.Column prop="amount" label="Payout amount"/>
-              <Table.Column prop="status" label="Status"/>
-              <Table.Column prop="executed" label="Executed" width={70}/>
-              <Table.Column prop="voided" label="Voided" width={70}/>
-              <Table.Column prop="actions" width={100}>
-                <Centered>
-                  <Text>Actions</Text>
-                </Centered>
-              </Table.Column>
-            </Table>
+              <Button
+                disabled={isCreatePayoutBatchButtonDisabled()}
+                onClick={onCreateBatchPayout}
+                type="success"
+                size="small"
+              >
+                Create payout
+              </Button>
+            </div>
+          </HasPermission>
+        ) : (
+          <Centered>
+            <Text>No funding proposals need funding</Text>
 
-            {(!data.data.payouts.length) && (
-              <Centered>
-                <Text>No payouts found</Text>
-              </Centered>
-            )}
-          </React.Fragment>
-        </React.Fragment>
-      )}
+            <Spacer y={5}/>
+          </Centered>
+        )}
+      </React.Fragment>
+
+      {/*{data.data && (*/}
+      {/*  <React.Fragment>*/}
+      {/*    <React.Fragment>*/}
+      {/*      <Text h3>Payouts in a nutshell</Text>*/}
+
+      {/*      <Grid.Container gap={2} alignItems="stretch" style={{ display: 'flex' }}>*/}
+      {/*        <Grid sm={24} md={12}>*/}
+      {/*          <Card hoverable>*/}
+      {/*            <Text h1>*/}
+      {/*              {data.data.payouts.filter(p => !p.voided && p.status === 'pending').length}*/}
+      {/*            </Text>*/}
+      {/*            <Text p>Pending payouts</Text>*/}
+      {/*          </Card>*/}
+      {/*        </Grid>*/}
+
+      {/*        <Grid sm={24} md={12}>*/}
+      {/*          <Card hoverable>*/}
+      {/*            <Text h1>*/}
+      {/*              {data.data.proposals.length}*/}
+      {/*            </Text>*/}
+      {/*            <Text p>Funding request for payout</Text>*/}
+      {/*          </Card>*/}
+      {/*        </Grid>*/}
+      {/*      </Grid.Container>*/}
+
+      {/*      <Spacer y={2}/>*/}
+      {/*    </React.Fragment>*/}
+
+      {/*    <React.Fragment>*/}
+      {/*      <Text h3>Funding request ready for payout</Text>*/}
+
+      {/*      <Table data={transformFundingRequestForTable(data)}>*/}
+      {/*        <HasPermission permission="admin.payouts.create">*/}
+      {/*          <Table.Column prop="checkbox" width={70}/>*/}
+      {/*        </HasPermission>*/}
+
+      {/*        <Table.Column prop="title" label="Title"/>*/}
+      {/*        <Table.Column prop="funding" label="Requested funding"/>*/}
+
+      {/*        <Table.Column prop="actions" width={100}>*/}
+      {/*          <Centered>*/}
+      {/*            <Text>Actions</Text>*/}
+      {/*          </Centered>*/}
+      {/*        </Table.Column>*/}
+      {/*      </Table>*/}
+
+      {/*      {data.data.proposals.length ? (*/}
+      {/*        <HasPermission permission="admin.payouts.create">*/}
+      {/*          <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>*/}
+      {/*            <Text p style={{ marginRight: 10 }}>*/}
+      {/*              {selectedProposals.length} selected ({calculateSelectedProposalsSum()})*/}
+      {/*            </Text>*/}
+
+      {/*            <Button*/}
+      {/*              disabled={isCreatePayoutBatchButtonDisabled()}*/}
+      {/*              onClick={onCreateBatchPayout}*/}
+      {/*              type="success"*/}
+      {/*              size="small"*/}
+      {/*            >*/}
+      {/*              Create payout*/}
+      {/*            </Button>*/}
+      {/*          </div>*/}
+      {/*        </HasPermission>*/}
+      {/*      ) : (*/}
+      {/*        <Centered>*/}
+      {/*          <Text>No funding proposals need funding</Text>*/}
+
+      {/*          <Spacer y={5}/>*/}
+      {/*        </Centered>*/}
+      {/*      )}*/}
+      {/*    </React.Fragment>*/}
+
+
+      {/*    <React.Fragment>*/}
+      {/*      <Text h3>Payouts</Text>*/}
+
+      {/*      <Table data={transformPayoutsForTable(data)}>*/}
+      {/*        <Table.Column prop="id" label="Payout ID" width={350}/>*/}
+      {/*        <Table.Column prop="amount" label="Payout amount"/>*/}
+      {/*        <Table.Column prop="status" label="Status"/>*/}
+      {/*        <Table.Column prop="executed" label="Executed" width={70}/>*/}
+      {/*        <Table.Column prop="voided" label="Voided" width={70}/>*/}
+      {/*        <Table.Column prop="actions" width={100}>*/}
+      {/*          <Centered>*/}
+      {/*            <Text>Actions</Text>*/}
+      {/*          </Centered>*/}
+      {/*        </Table.Column>*/}
+      {/*      </Table>*/}
+
+      {/*      {(!data.data.payouts.length) && (*/}
+      {/*        <Centered>*/}
+      {/*          <Text>No payouts found</Text>*/}
+      {/*        </Centered>*/}
+      {/*      )}*/}
+      {/*    </React.Fragment>*/}
+      {/*  </React.Fragment>*/}
+      {/*)}*/}
     </React.Fragment>
   );
 };
 
-export default withPermission('admin.payouts.*', {
+export default withPermission('admin.financials.payouts.*', {
   redirect: true
 })(PayoutsPage);

@@ -7,6 +7,9 @@ export const GetProposalsQuery = queryField('proposals', {
     where: arg({
       type: 'ProposalWhereInput'
     }),
+    fundingWhere: arg({
+      type: 'FundingProposalWhereInput'
+    }),
     paginate: arg({
       type: 'PaginateInput'
     })
@@ -14,7 +17,13 @@ export const GetProposalsQuery = queryField('proposals', {
   resolve: (root, args) => {
     return prisma.proposal
       .findMany({
-        where: args.where as any,
+        where: {
+          ...args.where,
+
+          ...(args.fundingWhere && ({
+            funding: args.fundingWhere
+          }))
+        },
         ...args.paginate as any
       });
   }

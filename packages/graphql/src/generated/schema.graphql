@@ -760,6 +760,10 @@ type FundingProposal implements BaseEntity {
   updatedAt: DateTime!
 }
 
+input FundingProposalWhereInput {
+  fundingState: FundingState
+}
+
 enum FundingState {
   AwaitingApproval
   Completed
@@ -1185,7 +1189,7 @@ type Query {
   payment(id: ID): Payment
   payments(paginate: PaginateInput, where: PaymentsWhereInput): [Payment]
   proposal(where: ProposalWhereUniqueInput!): Proposal
-  proposals(paginate: PaginateInput, where: ProposalWhereInput): [Proposal]
+  proposals(fundingWhere: FundingProposalWhereInput, paginate: PaginateInput, where: ProposalWhereInput): [Proposal]
   roles(paginate: PaginateInput): [Role]
 
   """

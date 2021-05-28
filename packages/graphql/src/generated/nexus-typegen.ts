@@ -4,11 +4,10 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
-import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
+import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -216,6 +215,9 @@ export interface NexusGenInputs {
     type?: NexusGenEnums['SortOrder'] | null; // SortOrder
     updatedAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
   }
+  FundingProposalWhereInput: { // input type
+    fundingState?: NexusGenEnums['FundingState'] | null; // FundingState
+  }
   LinkInput: { // input type
     title: string; // String!
     url: string; // String!
@@ -351,9 +353,9 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  CommonMemberRole: 'Founder' | 'Moderator'
-  Country: 'AD' | 'AE' | 'AF' | 'AG' | 'AI' | 'AL' | 'AM' | 'AO' | 'AQ' | 'AR' | 'AS' | 'AT' | 'AU' | 'AW' | 'AX' | 'AZ' | 'BA' | 'BB' | 'BD' | 'BE' | 'BF' | 'BG' | 'BH' | 'BI' | 'BJ' | 'BL' | 'BM' | 'BN' | 'BO' | 'BQ' | 'BR' | 'BS' | 'BT' | 'BV' | 'BW' | 'BY' | 'BZ' | 'CA' | 'CC' | 'CD' | 'CF' | 'CG' | 'CH' | 'CI' | 'CK' | 'CL' | 'CM' | 'CN' | 'CO' | 'CR' | 'CU' | 'CV' | 'CW' | 'CX' | 'CY' | 'CZ' | 'DE' | 'DJ' | 'DK' | 'DM' | 'DO' | 'DZ' | 'EC' | 'EE' | 'EG' | 'EH' | 'ER' | 'ES' | 'ET' | 'FI' | 'FJ' | 'FK' | 'FM' | 'FO' | 'FR' | 'GA' | 'GB' | 'GD' | 'GE' | 'GF' | 'GG' | 'GH' | 'GI' | 'GL' | 'GM' | 'GN' | 'GP' | 'GQ' | 'GR' | 'GS' | 'GT' | 'GU' | 'GW' | 'GY' | 'HK' | 'HM' | 'HN' | 'HR' | 'HT' | 'HU' | 'ID' | 'IE' | 'IL' | 'IM' | 'IN' | 'IO' | 'IQ' | 'IR' | 'IS' | 'IT' | 'JE' | 'JM' | 'JO' | 'JP' | 'KE' | 'KG' | 'KH' | 'KI' | 'KM' | 'KN' | 'KP' | 'KR' | 'KW' | 'KY' | 'KZ' | 'LA' | 'LB' | 'LC' | 'LI' | 'LK' | 'LR' | 'LS' | 'LT' | 'LU' | 'LV' | 'LY' | 'MA' | 'MC' | 'MD' | 'ME' | 'MF' | 'MG' | 'MH' | 'MK' | 'ML' | 'MM' | 'MN' | 'MO' | 'MP' | 'MQ' | 'MR' | 'MS' | 'MT' | 'MU' | 'MV' | 'MW' | 'MX' | 'MY' | 'MZ' | 'NA' | 'NC' | 'NE' | 'NF' | 'NG' | 'NI' | 'NL' | 'NO' | 'NP' | 'NR' | 'NU' | 'NZ' | 'OM' | 'PA' | 'PE' | 'PF' | 'PG' | 'PH' | 'PK' | 'PL' | 'PM' | 'PN' | 'PR' | 'PS' | 'PT' | 'PW' | 'PY' | 'QA' | 'RE' | 'RO' | 'RS' | 'RU' | 'RW' | 'SA' | 'SB' | 'SC' | 'SD' | 'SE' | 'SG' | 'SH' | 'SI' | 'SJ' | 'SK' | 'SL' | 'SM' | 'SN' | 'SO' | 'SR' | 'SS' | 'ST' | 'SV' | 'SX' | 'SY' | 'SZ' | 'TC' | 'TD' | 'TF' | 'TG' | 'TH' | 'TJ' | 'TK' | 'TL' | 'TM' | 'TN' | 'TO' | 'TR' | 'TT' | 'TV' | 'TW' | 'TZ' | 'UA' | 'UG' | 'UM' | 'US' | 'UY' | 'UZ' | 'Unknown' | 'VA' | 'VC' | 'VE' | 'VG' | 'VI' | 'VN' | 'VU' | 'WF' | 'WS' | 'YE' | 'YT' | 'ZA' | 'ZM' | 'ZW'
-  DiscussionMessageFlag: 'Clear' | 'Hidden' | 'Reported'
+  CommonMemberRole: "Founder" | "Moderator"
+  Country: "AD" | "AE" | "AF" | "AG" | "AI" | "AL" | "AM" | "AO" | "AQ" | "AR" | "AS" | "AT" | "AU" | "AW" | "AX" | "AZ" | "BA" | "BB" | "BD" | "BE" | "BF" | "BG" | "BH" | "BI" | "BJ" | "BL" | "BM" | "BN" | "BO" | "BQ" | "BR" | "BS" | "BT" | "BV" | "BW" | "BY" | "BZ" | "CA" | "CC" | "CD" | "CF" | "CG" | "CH" | "CI" | "CK" | "CL" | "CM" | "CN" | "CO" | "CR" | "CU" | "CV" | "CW" | "CX" | "CY" | "CZ" | "DE" | "DJ" | "DK" | "DM" | "DO" | "DZ" | "EC" | "EE" | "EG" | "EH" | "ER" | "ES" | "ET" | "FI" | "FJ" | "FK" | "FM" | "FO" | "FR" | "GA" | "GB" | "GD" | "GE" | "GF" | "GG" | "GH" | "GI" | "GL" | "GM" | "GN" | "GP" | "GQ" | "GR" | "GS" | "GT" | "GU" | "GW" | "GY" | "HK" | "HM" | "HN" | "HR" | "HT" | "HU" | "ID" | "IE" | "IL" | "IM" | "IN" | "IO" | "IQ" | "IR" | "IS" | "IT" | "JE" | "JM" | "JO" | "JP" | "KE" | "KG" | "KH" | "KI" | "KM" | "KN" | "KP" | "KR" | "KW" | "KY" | "KZ" | "LA" | "LB" | "LC" | "LI" | "LK" | "LR" | "LS" | "LT" | "LU" | "LV" | "LY" | "MA" | "MC" | "MD" | "ME" | "MF" | "MG" | "MH" | "MK" | "ML" | "MM" | "MN" | "MO" | "MP" | "MQ" | "MR" | "MS" | "MT" | "MU" | "MV" | "MW" | "MX" | "MY" | "MZ" | "NA" | "NC" | "NE" | "NF" | "NG" | "NI" | "NL" | "NO" | "NP" | "NR" | "NU" | "NZ" | "OM" | "PA" | "PE" | "PF" | "PG" | "PH" | "PK" | "PL" | "PM" | "PN" | "PR" | "PS" | "PT" | "PW" | "PY" | "QA" | "RE" | "RO" | "RS" | "RU" | "RW" | "SA" | "SB" | "SC" | "SD" | "SE" | "SG" | "SH" | "SI" | "SJ" | "SK" | "SL" | "SM" | "SN" | "SO" | "SR" | "SS" | "ST" | "SV" | "SX" | "SY" | "SZ" | "TC" | "TD" | "TF" | "TG" | "TH" | "TJ" | "TK" | "TL" | "TM" | "TN" | "TO" | "TR" | "TT" | "TV" | "TW" | "TZ" | "UA" | "UG" | "UM" | "US" | "UY" | "UZ" | "Unknown" | "VA" | "VC" | "VE" | "VG" | "VI" | "VN" | "VU" | "WF" | "WS" | "YE" | "YT" | "ZA" | "ZM" | "ZW"
+  DiscussionMessageFlag: "Clear" | "Hidden" | "Reported"
   DiscussionMessageType: "Message"
   DiscussionSubscriptionType: "AllNotifications" | "NoNotification" | "OnlyMentions"
   DiscussionType: "CommonDiscussion" | "ProposalDiscussion"
@@ -1672,6 +1674,7 @@ export interface NexusGenArgTypes {
       where: NexusGenInputs['ProposalWhereUniqueInput']; // ProposalWhereUniqueInput!
     }
     proposals: { // args
+      fundingWhere?: NexusGenInputs['FundingProposalWhereInput'] | null; // FundingProposalWhereInput
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
       where?: NexusGenInputs['ProposalWhereInput'] | null; // ProposalWhereInput
     }
@@ -1720,31 +1723,31 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  Address: 'UserBillingDetails' | 'WireBankAccount'
-  BaseEntity: 'CommonMember' | 'CommonSubscription' | 'CommonUpdate' | 'Discussion' | 'DiscussionMessage' | 'DiscussionSubscription' | 'FundingProposal' | 'JoinProposal' | 'Notification' | 'NotificationEventSettings' | 'NotificationSystemSettings' | 'NotificationTemplate' | 'Payment' | 'Report' | 'Role' | 'Statistic' | 'UserBillingDetails' | 'UserNotificationToken' | 'Wire' | 'WireBankAccount'
+  Address: "UserBillingDetails" | "WireBankAccount"
+  BaseEntity: "CommonMember" | "CommonSubscription" | "CommonUpdate" | "Discussion" | "DiscussionMessage" | "DiscussionSubscription" | "FundingProposal" | "JoinProposal" | "Notification" | "NotificationEventSettings" | "NotificationSystemSettings" | "NotificationTemplate" | "Payment" | "Report" | "Role" | "Statistic" | "UserBillingDetails" | "UserNotificationToken" | "Wire" | "WireBankAccount"
 }
 
 export interface NexusGenTypeInterfaces {
-  CommonMember: 'BaseEntity'
-  CommonSubscription: 'BaseEntity'
-  CommonUpdate: 'BaseEntity'
-  Discussion: 'BaseEntity'
-  DiscussionMessage: 'BaseEntity'
-  DiscussionSubscription: 'BaseEntity'
-  FundingProposal: 'BaseEntity'
-  JoinProposal: 'BaseEntity'
-  Notification: 'BaseEntity'
-  NotificationEventSettings: 'BaseEntity'
-  NotificationSystemSettings: 'BaseEntity'
-  NotificationTemplate: 'BaseEntity'
-  Payment: 'BaseEntity'
-  Report: 'BaseEntity'
-  Role: 'BaseEntity'
-  Statistic: 'BaseEntity'
-  UserBillingDetails: 'Address' | 'BaseEntity'
-  UserNotificationToken: 'BaseEntity'
-  Wire: 'BaseEntity'
-  WireBankAccount: 'Address' | 'BaseEntity'
+  CommonMember: "BaseEntity"
+  CommonSubscription: "BaseEntity"
+  CommonUpdate: "BaseEntity"
+  Discussion: "BaseEntity"
+  DiscussionMessage: "BaseEntity"
+  DiscussionSubscription: "BaseEntity"
+  FundingProposal: "BaseEntity"
+  JoinProposal: "BaseEntity"
+  Notification: "BaseEntity"
+  NotificationEventSettings: "BaseEntity"
+  NotificationSystemSettings: "BaseEntity"
+  NotificationTemplate: "BaseEntity"
+  Payment: "BaseEntity"
+  Report: "BaseEntity"
+  Role: "BaseEntity"
+  Statistic: "BaseEntity"
+  UserBillingDetails: "Address" | "BaseEntity"
+  UserNotificationToken: "BaseEntity"
+  Wire: "BaseEntity"
+  WireBankAccount: "Address" | "BaseEntity"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
@@ -1761,7 +1764,7 @@ export type NexusGenUnionNames = never;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = 'Address' | 'BaseEntity';
+export type NexusGenAbstractsUsingStrategyResolveType = "Address" | "BaseEntity";
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {

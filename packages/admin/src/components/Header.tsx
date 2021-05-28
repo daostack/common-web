@@ -137,7 +137,7 @@ export const Header: React.FC = () => {
                   </Popover.Item>
 
                   <Popover.Item>
-                    <Link to="/notifications/templates">Payouts</Link>
+                    <Link to="/financials/payouts">Payouts</Link>
                   </Popover.Item>
                 </React.Fragment>
               )}

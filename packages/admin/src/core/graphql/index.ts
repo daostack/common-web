@@ -48,6 +48,8 @@ export type User = {
   permissions: Array<Scalars['String']>;
   /** List of events, that occurred and are related to this user */
   events: Array<Event>;
+  /** List of all commons, that the user is currently part of */
+  commons: Array<Common>;
   proposals: Array<Proposal>;
   subscriptions: Array<CommonSubscription>;
   notifications: Array<Notification>;
@@ -84,6 +86,23 @@ export type UserDiscussionSubscriptionsArgs = {
   orderBy?: Maybe<DiscussionSubscriptionOrderByInput>;
 };
 
+export type UserBillingDetails = BaseEntity & Address & {
+  __typename?: 'UserBillingDetails';
+  /** The main identifier of the item */
+  id: Scalars['UUID'];
+  /** The date, at which the item was created */
+  createdAt: Scalars['DateTime'];
+  /** The date, at which the item was last modified */
+  updatedAt: Scalars['DateTime'];
+  line1?: Maybe<Scalars['String']>;
+  line2?: Maybe<Scalars['String']>;
+  city: Scalars['String'];
+  country: Scalars['String'];
+  postalCode: Scalars['String'];
+  district?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
 export type UserNotificationToken = BaseEntity & {
   __typename?: 'UserNotificationToken';
   /** The main identifier of the item */
@@ -111,278 +130,41 @@ export type UserWhereInput = {
   AND?: Maybe<Array<UserWhereInput>>;
 };
 
-export type CreateUserInput = {
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-  email: Scalars['String'];
-  photo: Scalars['String'];
-  country: Country;
-  intro?: Maybe<Scalars['String']>;
-};
-
-export type CreateUserNotificationTokenInput = {
-  token: Scalars['String'];
-  description: Scalars['String'];
-};
-
 export enum UserNotificationTokenState {
   Active = 'Active',
   Expired = 'Expired',
   Voided = 'Voided'
 }
 
-export enum Country {
-  Unknown = 'Unknown',
-  Af = 'AF',
-  Ax = 'AX',
-  Al = 'AL',
-  Dz = 'DZ',
-  As = 'AS',
-  Ad = 'AD',
-  Ao = 'AO',
-  Ai = 'AI',
-  Aq = 'AQ',
-  Ag = 'AG',
-  Ar = 'AR',
-  Am = 'AM',
-  Aw = 'AW',
-  Au = 'AU',
-  At = 'AT',
-  Az = 'AZ',
-  Bs = 'BS',
-  Bh = 'BH',
-  Bd = 'BD',
-  Bb = 'BB',
-  By = 'BY',
-  Be = 'BE',
-  Bz = 'BZ',
-  Bj = 'BJ',
-  Bm = 'BM',
-  Bt = 'BT',
-  Bo = 'BO',
-  Bq = 'BQ',
-  Ba = 'BA',
-  Bw = 'BW',
-  Bv = 'BV',
-  Br = 'BR',
-  Io = 'IO',
-  Bn = 'BN',
-  Bg = 'BG',
-  Bf = 'BF',
-  Bi = 'BI',
-  Kh = 'KH',
-  Cm = 'CM',
-  Ca = 'CA',
-  Cv = 'CV',
-  Ky = 'KY',
-  Cf = 'CF',
-  Td = 'TD',
-  Cl = 'CL',
-  Cn = 'CN',
-  Cx = 'CX',
-  Cc = 'CC',
-  Co = 'CO',
-  Km = 'KM',
-  Cg = 'CG',
-  Cd = 'CD',
-  Ck = 'CK',
-  Cr = 'CR',
-  Ci = 'CI',
-  Hr = 'HR',
-  Cu = 'CU',
-  Cw = 'CW',
-  Cy = 'CY',
-  Cz = 'CZ',
-  Dk = 'DK',
-  Dj = 'DJ',
-  Dm = 'DM',
-  Do = 'DO',
-  Ec = 'EC',
-  Eg = 'EG',
-  Sv = 'SV',
-  Gq = 'GQ',
-  Er = 'ER',
-  Ee = 'EE',
-  Et = 'ET',
-  Fk = 'FK',
-  Fo = 'FO',
-  Fj = 'FJ',
-  Fi = 'FI',
-  Fr = 'FR',
-  Gf = 'GF',
-  Pf = 'PF',
-  Tf = 'TF',
-  Ga = 'GA',
-  Gm = 'GM',
-  Ge = 'GE',
-  De = 'DE',
-  Gh = 'GH',
-  Gi = 'GI',
-  Gr = 'GR',
-  Gl = 'GL',
-  Gd = 'GD',
-  Gp = 'GP',
-  Gu = 'GU',
-  Gt = 'GT',
-  Gg = 'GG',
-  Gn = 'GN',
-  Gw = 'GW',
-  Gy = 'GY',
-  Ht = 'HT',
-  Hm = 'HM',
-  Va = 'VA',
-  Hn = 'HN',
-  Hk = 'HK',
-  Hu = 'HU',
-  Is = 'IS',
-  In = 'IN',
-  Id = 'ID',
-  Ir = 'IR',
-  Iq = 'IQ',
-  Ie = 'IE',
-  Im = 'IM',
-  Il = 'IL',
-  It = 'IT',
-  Jm = 'JM',
-  Jp = 'JP',
-  Je = 'JE',
-  Jo = 'JO',
-  Kz = 'KZ',
-  Ke = 'KE',
-  Ki = 'KI',
-  Kp = 'KP',
-  Kr = 'KR',
-  Kw = 'KW',
-  Kg = 'KG',
-  La = 'LA',
-  Lv = 'LV',
-  Lb = 'LB',
-  Ls = 'LS',
-  Lr = 'LR',
-  Ly = 'LY',
-  Li = 'LI',
-  Lt = 'LT',
-  Lu = 'LU',
-  Mo = 'MO',
-  Mk = 'MK',
-  Mg = 'MG',
-  Mw = 'MW',
-  My = 'MY',
-  Mv = 'MV',
-  Ml = 'ML',
-  Mt = 'MT',
-  Mh = 'MH',
-  Mq = 'MQ',
-  Mr = 'MR',
-  Mu = 'MU',
-  Yt = 'YT',
-  Mx = 'MX',
-  Fm = 'FM',
-  Md = 'MD',
-  Mc = 'MC',
-  Mn = 'MN',
-  Me = 'ME',
-  Ms = 'MS',
-  Ma = 'MA',
-  Mz = 'MZ',
-  Mm = 'MM',
-  Na = 'NA',
-  Nr = 'NR',
-  Np = 'NP',
-  Nl = 'NL',
-  Nc = 'NC',
-  Nz = 'NZ',
-  Ni = 'NI',
-  Ne = 'NE',
-  Ng = 'NG',
-  Nu = 'NU',
-  Nf = 'NF',
-  Mp = 'MP',
-  No = 'NO',
-  Om = 'OM',
-  Pk = 'PK',
-  Pw = 'PW',
-  Ps = 'PS',
-  Pa = 'PA',
-  Pg = 'PG',
-  Py = 'PY',
-  Pe = 'PE',
-  Ph = 'PH',
-  Pn = 'PN',
-  Pl = 'PL',
-  Pt = 'PT',
-  Pr = 'PR',
-  Qa = 'QA',
-  Re = 'RE',
-  Ro = 'RO',
-  Ru = 'RU',
-  Rw = 'RW',
-  Bl = 'BL',
-  Sh = 'SH',
-  Kn = 'KN',
-  Lc = 'LC',
-  Mf = 'MF',
-  Pm = 'PM',
-  Vc = 'VC',
-  Ws = 'WS',
-  Sm = 'SM',
-  St = 'ST',
-  Sa = 'SA',
-  Sn = 'SN',
-  Rs = 'RS',
-  Sc = 'SC',
-  Sl = 'SL',
-  Sg = 'SG',
-  Sx = 'SX',
-  Sk = 'SK',
-  Si = 'SI',
-  Sb = 'SB',
-  So = 'SO',
-  Za = 'ZA',
-  Gs = 'GS',
-  Ss = 'SS',
-  Es = 'ES',
-  Lk = 'LK',
-  Sd = 'SD',
-  Sr = 'SR',
-  Sj = 'SJ',
-  Sz = 'SZ',
-  Se = 'SE',
-  Ch = 'CH',
-  Sy = 'SY',
-  Tw = 'TW',
-  Tj = 'TJ',
-  Tz = 'TZ',
-  Th = 'TH',
-  Tl = 'TL',
-  Tg = 'TG',
-  Tk = 'TK',
-  To = 'TO',
-  Tt = 'TT',
-  Tn = 'TN',
-  Tr = 'TR',
-  Tm = 'TM',
-  Tc = 'TC',
-  Tv = 'TV',
-  Ug = 'UG',
-  Ua = 'UA',
-  Ae = 'AE',
-  Gb = 'GB',
-  Us = 'US',
-  Um = 'UM',
-  Uy = 'UY',
-  Uz = 'UZ',
-  Vu = 'VU',
-  Ve = 'VE',
-  Vn = 'VN',
-  Vg = 'VG',
-  Vi = 'VI',
-  Wf = 'WF',
-  Eh = 'EH',
-  Ye = 'YE',
-  Zm = 'ZM',
-  Zw = 'ZW'
-}
+export type Wire = BaseEntity & {
+  __typename?: 'Wire';
+  /** The main identifier of the item */
+  id: Scalars['UUID'];
+  /** The date, at which the item was created */
+  createdAt: Scalars['DateTime'];
+  /** The date, at which the item was last modified */
+  updatedAt: Scalars['DateTime'];
+  circleId?: Maybe<Scalars['String']>;
+  circleFingerprint?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+};
+
+export type WireBankAccount = BaseEntity & Address & {
+  __typename?: 'WireBankAccount';
+  /** The main identifier of the item */
+  id: Scalars['UUID'];
+  /** The date, at which the item was created */
+  createdAt: Scalars['DateTime'];
+  /** The date, at which the item was last modified */
+  updatedAt: Scalars['DateTime'];
+  line1?: Maybe<Scalars['String']>;
+  line2?: Maybe<Scalars['String']>;
+  city: Scalars['String'];
+  country: Scalars['String'];
+  postalCode: Scalars['String'];
+  district?: Maybe<Scalars['String']>;
+  bankName: Scalars['String'];
+};
 
 export type Role = BaseEntity & {
   __typename?: 'Role';
@@ -513,6 +295,7 @@ export type Event = {
 
 export enum EventType {
   CommonCreated = 'CommonCreated',
+  CommonUpdated = 'CommonUpdated',
   CommonDelisted = 'CommonDelisted',
   CommonWhitelisted = 'CommonWhitelisted',
   CommonMemberCreated = 'CommonMemberCreated',
@@ -554,7 +337,9 @@ export enum EventType {
   RolePermissionRemoved = 'RolePermissionRemoved',
   RoleDeleted = 'RoleDeleted',
   UserAddedToRole = 'UserAddedToRole',
-  UserRemovedFromRole = 'UserRemovedFromRole'
+  UserRemovedFromRole = 'UserRemovedFromRole',
+  WireCreated = 'WireCreated',
+  WireUpdated = 'WireUpdated'
 }
 
 export type EventOrderByInput = {
@@ -591,6 +376,7 @@ export type Common = {
   /** List of events, that occurred in a common */
   events: Array<Event>;
   reports: Array<Report>;
+  updates: Array<CommonUpdate>;
   proposals: Array<Proposal>;
   discussions: Array<Discussion>;
   members: Array<Maybe<CommonMember>>;
@@ -630,6 +416,19 @@ export type CommonMembersArgs = {
   orderBy?: Maybe<CommonMemberOrderByInput>;
 };
 
+export type CommonUpdate = BaseEntity & {
+  __typename?: 'CommonUpdate';
+  /** The main identifier of the item */
+  id: Scalars['UUID'];
+  /** The date, at which the item was created */
+  createdAt: Scalars['DateTime'];
+  /** The date, at which the item was last modified */
+  updatedAt: Scalars['DateTime'];
+  commonBefore: Common;
+  commonAfter: Common;
+  change?: Maybe<Scalars['JSON']>;
+};
+
 /** The funding Types of the common */
 export enum FundingType {
   OneTime = 'OneTime',
@@ -640,12 +439,22 @@ export type CreateCommonInput = {
   name: Scalars['String'];
   fundingMinimumAmount: Scalars['Int'];
   fundingType: FundingType;
-  image: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
   action?: Maybe<Scalars['String']>;
   byline?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  image: Scalars['String'];
   links?: Maybe<Array<CommonLinkInput>>;
-  rules?: Maybe<Array<CommonLinkInput>>;
+  rules?: Maybe<Array<CommonRuleInput>>;
+};
+
+export type CommonLinkInput = {
+  title: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type CommonRuleInput = {
+  title: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
 };
 
 export type CommonWhereInput = {
@@ -654,11 +463,6 @@ export type CommonWhereInput = {
 
 export type CommonWhereUniqueInput = {
   id: Scalars['ID'];
-};
-
-export type CommonLinkInput = {
-  title: Scalars['String'];
-  url: Scalars['String'];
 };
 
 export type Report = BaseEntity & {
@@ -808,6 +612,10 @@ export type ProposalWhereInput = {
   description?: Maybe<StringFilter>;
   AND?: Maybe<Array<ProposalWhereInput>>;
   OR?: Maybe<Array<ProposalWhereInput>>;
+};
+
+export type FundingProposalWhereInput = {
+  fundingState?: Maybe<FundingState>;
 };
 
 export type CreateJoinProposalInput = {
@@ -1233,6 +1041,259 @@ export enum SortOrder {
   Desc = 'desc'
 }
 
+export enum Country {
+  Unknown = 'Unknown',
+  Af = 'AF',
+  Ax = 'AX',
+  Al = 'AL',
+  Dz = 'DZ',
+  As = 'AS',
+  Ad = 'AD',
+  Ao = 'AO',
+  Ai = 'AI',
+  Aq = 'AQ',
+  Ag = 'AG',
+  Ar = 'AR',
+  Am = 'AM',
+  Aw = 'AW',
+  Au = 'AU',
+  At = 'AT',
+  Az = 'AZ',
+  Bs = 'BS',
+  Bh = 'BH',
+  Bd = 'BD',
+  Bb = 'BB',
+  By = 'BY',
+  Be = 'BE',
+  Bz = 'BZ',
+  Bj = 'BJ',
+  Bm = 'BM',
+  Bt = 'BT',
+  Bo = 'BO',
+  Bq = 'BQ',
+  Ba = 'BA',
+  Bw = 'BW',
+  Bv = 'BV',
+  Br = 'BR',
+  Io = 'IO',
+  Bn = 'BN',
+  Bg = 'BG',
+  Bf = 'BF',
+  Bi = 'BI',
+  Kh = 'KH',
+  Cm = 'CM',
+  Ca = 'CA',
+  Cv = 'CV',
+  Ky = 'KY',
+  Cf = 'CF',
+  Td = 'TD',
+  Cl = 'CL',
+  Cn = 'CN',
+  Cx = 'CX',
+  Cc = 'CC',
+  Co = 'CO',
+  Km = 'KM',
+  Cg = 'CG',
+  Cd = 'CD',
+  Ck = 'CK',
+  Cr = 'CR',
+  Ci = 'CI',
+  Hr = 'HR',
+  Cu = 'CU',
+  Cw = 'CW',
+  Cy = 'CY',
+  Cz = 'CZ',
+  Dk = 'DK',
+  Dj = 'DJ',
+  Dm = 'DM',
+  Do = 'DO',
+  Ec = 'EC',
+  Eg = 'EG',
+  Sv = 'SV',
+  Gq = 'GQ',
+  Er = 'ER',
+  Ee = 'EE',
+  Et = 'ET',
+  Fk = 'FK',
+  Fo = 'FO',
+  Fj = 'FJ',
+  Fi = 'FI',
+  Fr = 'FR',
+  Gf = 'GF',
+  Pf = 'PF',
+  Tf = 'TF',
+  Ga = 'GA',
+  Gm = 'GM',
+  Ge = 'GE',
+  De = 'DE',
+  Gh = 'GH',
+  Gi = 'GI',
+  Gr = 'GR',
+  Gl = 'GL',
+  Gd = 'GD',
+  Gp = 'GP',
+  Gu = 'GU',
+  Gt = 'GT',
+  Gg = 'GG',
+  Gn = 'GN',
+  Gw = 'GW',
+  Gy = 'GY',
+  Ht = 'HT',
+  Hm = 'HM',
+  Va = 'VA',
+  Hn = 'HN',
+  Hk = 'HK',
+  Hu = 'HU',
+  Is = 'IS',
+  In = 'IN',
+  Id = 'ID',
+  Ir = 'IR',
+  Iq = 'IQ',
+  Ie = 'IE',
+  Im = 'IM',
+  Il = 'IL',
+  It = 'IT',
+  Jm = 'JM',
+  Jp = 'JP',
+  Je = 'JE',
+  Jo = 'JO',
+  Kz = 'KZ',
+  Ke = 'KE',
+  Ki = 'KI',
+  Kp = 'KP',
+  Kr = 'KR',
+  Kw = 'KW',
+  Kg = 'KG',
+  La = 'LA',
+  Lv = 'LV',
+  Lb = 'LB',
+  Ls = 'LS',
+  Lr = 'LR',
+  Ly = 'LY',
+  Li = 'LI',
+  Lt = 'LT',
+  Lu = 'LU',
+  Mo = 'MO',
+  Mk = 'MK',
+  Mg = 'MG',
+  Mw = 'MW',
+  My = 'MY',
+  Mv = 'MV',
+  Ml = 'ML',
+  Mt = 'MT',
+  Mh = 'MH',
+  Mq = 'MQ',
+  Mr = 'MR',
+  Mu = 'MU',
+  Yt = 'YT',
+  Mx = 'MX',
+  Fm = 'FM',
+  Md = 'MD',
+  Mc = 'MC',
+  Mn = 'MN',
+  Me = 'ME',
+  Ms = 'MS',
+  Ma = 'MA',
+  Mz = 'MZ',
+  Mm = 'MM',
+  Na = 'NA',
+  Nr = 'NR',
+  Np = 'NP',
+  Nl = 'NL',
+  Nc = 'NC',
+  Nz = 'NZ',
+  Ni = 'NI',
+  Ne = 'NE',
+  Ng = 'NG',
+  Nu = 'NU',
+  Nf = 'NF',
+  Mp = 'MP',
+  No = 'NO',
+  Om = 'OM',
+  Pk = 'PK',
+  Pw = 'PW',
+  Ps = 'PS',
+  Pa = 'PA',
+  Pg = 'PG',
+  Py = 'PY',
+  Pe = 'PE',
+  Ph = 'PH',
+  Pn = 'PN',
+  Pl = 'PL',
+  Pt = 'PT',
+  Pr = 'PR',
+  Qa = 'QA',
+  Re = 'RE',
+  Ro = 'RO',
+  Ru = 'RU',
+  Rw = 'RW',
+  Bl = 'BL',
+  Sh = 'SH',
+  Kn = 'KN',
+  Lc = 'LC',
+  Mf = 'MF',
+  Pm = 'PM',
+  Vc = 'VC',
+  Ws = 'WS',
+  Sm = 'SM',
+  St = 'ST',
+  Sa = 'SA',
+  Sn = 'SN',
+  Rs = 'RS',
+  Sc = 'SC',
+  Sl = 'SL',
+  Sg = 'SG',
+  Sx = 'SX',
+  Sk = 'SK',
+  Si = 'SI',
+  Sb = 'SB',
+  So = 'SO',
+  Za = 'ZA',
+  Gs = 'GS',
+  Ss = 'SS',
+  Es = 'ES',
+  Lk = 'LK',
+  Sd = 'SD',
+  Sr = 'SR',
+  Sj = 'SJ',
+  Sz = 'SZ',
+  Se = 'SE',
+  Ch = 'CH',
+  Sy = 'SY',
+  Tw = 'TW',
+  Tj = 'TJ',
+  Tz = 'TZ',
+  Th = 'TH',
+  Tl = 'TL',
+  Tg = 'TG',
+  Tk = 'TK',
+  To = 'TO',
+  Tt = 'TT',
+  Tn = 'TN',
+  Tr = 'TR',
+  Tm = 'TM',
+  Tc = 'TC',
+  Tv = 'TV',
+  Ug = 'UG',
+  Ua = 'UA',
+  Ae = 'AE',
+  Gb = 'GB',
+  Us = 'US',
+  Um = 'UM',
+  Uy = 'UY',
+  Uz = 'UZ',
+  Vu = 'VU',
+  Ve = 'VE',
+  Vn = 'VN',
+  Vg = 'VG',
+  Vi = 'VI',
+  Wf = 'WF',
+  Eh = 'EH',
+  Ye = 'YE',
+  Zm = 'ZM',
+  Zw = 'ZW'
+}
+
 export type Link = {
   __typename?: 'Link';
   /** The display title of the link */
@@ -1248,6 +1309,15 @@ export type BaseEntity = {
   createdAt: Scalars['DateTime'];
   /** The date, at which the item was last modified */
   updatedAt: Scalars['DateTime'];
+};
+
+export type Address = {
+  line1?: Maybe<Scalars['String']>;
+  line2?: Maybe<Scalars['String']>;
+  city: Scalars['String'];
+  country: Scalars['String'];
+  postalCode: Scalars['String'];
+  district?: Maybe<Scalars['String']>;
 };
 
 export type PaginateInput = {
@@ -1285,6 +1355,30 @@ export type BillingDetailsInput = {
   district?: Maybe<Scalars['String']>;
 };
 
+export type CreateUserInput = {
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  email: Scalars['String'];
+  photo: Scalars['String'];
+  country: Country;
+  intro?: Maybe<Scalars['String']>;
+};
+
+export type CreateUserBillingDetailsInput = {
+  name: Scalars['String'];
+  line2?: Maybe<Scalars['String']>;
+  line1: Scalars['String'];
+  district?: Maybe<Scalars['String']>;
+  city: Scalars['String'];
+  postalCode: Scalars['String'];
+  country: Country;
+};
+
+export type CreateUserNotificationTokenInput = {
+  token: Scalars['String'];
+  description: Scalars['String'];
+};
+
 export type UpdateUserInput = {
   /** The ID of the user to be updated */
   id: Scalars['String'];
@@ -1296,11 +1390,41 @@ export type UpdateUserInput = {
   notificationLanguage?: Maybe<NotificationLanguage>;
 };
 
+export type CreateWireInput = {
+  iban?: Maybe<Scalars['String']>;
+  accountNumber?: Maybe<Scalars['String']>;
+  routingNumber?: Maybe<Scalars['String']>;
+  userId: Scalars['String'];
+  billingDetailsId: Scalars['String'];
+  wireBankDetailsId: Scalars['String'];
+};
+
+export type CreateWireBankAccountInput = {
+  bankName: Scalars['String'];
+  line1?: Maybe<Scalars['String']>;
+  line2?: Maybe<Scalars['String']>;
+  district?: Maybe<Scalars['String']>;
+  city: Scalars['String'];
+  postalCode: Scalars['String'];
+  country: Country;
+};
+
 export type CreateRoleInput = {
   name: Scalars['String'];
   displayName: Scalars['String'];
   description: Scalars['String'];
   permissions: Array<Scalars['String']>;
+};
+
+export type UpdateCommonInput = {
+  commonId: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
+  action?: Maybe<Scalars['String']>;
+  byline?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  links?: Maybe<Array<CommonLinkInput>>;
+  rules?: Maybe<Array<CommonRuleInput>>;
 };
 
 export type UpdateNotificationTemplateInput = {
@@ -1421,6 +1545,7 @@ export type QueryProposalArgs = {
 
 export type QueryProposalsArgs = {
   where?: Maybe<ProposalWhereInput>;
+  fundingWhere?: Maybe<FundingProposalWhereInput>;
   paginate?: Maybe<PaginateInput>;
 };
 
@@ -1465,15 +1590,19 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** Creates new user in the settings */
   createUser: User;
-  createUserNotificationToken: UserNotificationToken;
+  createUserBillingDetails?: Maybe<UserBillingDetails>;
   voidUserNotificationToken: UserNotificationToken;
+  createUserNotificationToken: UserNotificationToken;
   updateUser?: Maybe<User>;
+  createWire?: Maybe<Wire>;
+  createWireBankAccount?: Maybe<WireBankAccount>;
   createRole?: Maybe<Role>;
   assignRole?: Maybe<Scalars['Void']>;
   unassignRole?: Maybe<Scalars['Void']>;
   createCard: Card;
   createVote: Vote;
   createCommon: Common;
+  updateCommon?: Maybe<Common>;
   delistCommon?: Maybe<Scalars['Boolean']>;
   whitelistCommon?: Maybe<Scalars['Boolean']>;
   actOnReport?: Maybe<Report>;
@@ -1497,8 +1626,8 @@ export type MutationCreateUserArgs = {
 };
 
 
-export type MutationCreateUserNotificationTokenArgs = {
-  input: CreateUserNotificationTokenInput;
+export type MutationCreateUserBillingDetailsArgs = {
+  input: CreateUserBillingDetailsInput;
 };
 
 
@@ -1507,8 +1636,23 @@ export type MutationVoidUserNotificationTokenArgs = {
 };
 
 
+export type MutationCreateUserNotificationTokenArgs = {
+  input: CreateUserNotificationTokenInput;
+};
+
+
 export type MutationUpdateUserArgs = {
   input: UpdateUserInput;
+};
+
+
+export type MutationCreateWireArgs = {
+  input: CreateWireInput;
+};
+
+
+export type MutationCreateWireBankAccountArgs = {
+  input: CreateWireBankAccountInput;
 };
 
 
@@ -1541,6 +1685,11 @@ export type MutationCreateVoteArgs = {
 
 export type MutationCreateCommonArgs = {
   input: CreateCommonInput;
+};
+
+
+export type MutationUpdateCommonArgs = {
+  input: UpdateCommonInput;
 };
 
 
@@ -2077,6 +2226,25 @@ export type GetAllTimeStatistiscQuery = (
   getStatistics?: Maybe<Array<Maybe<(
     { __typename?: 'Statistic' }
     & Pick<Statistic, 'users' | 'commons' | 'joinProposals' | 'fundingProposals'>
+    )>>>
+}
+  );
+
+export type PayoutsPageDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PayoutsPageDataQuery = (
+  { __typename?: 'Query' }
+  & {
+  proposals?: Maybe<Array<Maybe<(
+    { __typename?: 'Proposal' }
+    & Pick<Proposal, 'id' | 'userId' | 'commonId' | 'title' | 'description'>
+    & {
+    funding?: Maybe<(
+      { __typename?: 'FundingProposal' }
+      & Pick<FundingProposal, 'amount'>
+      )>
+  }
     )>>>
 }
   );
@@ -3091,12 +3259,55 @@ export const GetAllTimeStatistiscDocument = gql`
 export function useGetAllTimeStatistiscQuery(baseOptions?: Apollo.QueryHookOptions<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>) {
   return Apollo.useQuery<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>(GetAllTimeStatistiscDocument, baseOptions);
 }
+
 export function useGetAllTimeStatistiscLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>) {
   return Apollo.useLazyQuery<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>(GetAllTimeStatistiscDocument, baseOptions);
 }
+
 export type GetAllTimeStatistiscQueryHookResult = ReturnType<typeof useGetAllTimeStatistiscQuery>;
 export type GetAllTimeStatistiscLazyQueryHookResult = ReturnType<typeof useGetAllTimeStatistiscLazyQuery>;
 export type GetAllTimeStatistiscQueryResult = Apollo.QueryResult<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>;
+export const PayoutsPageDataDocument = gql`
+  query PayoutsPageData {
+    proposals(fundingWhere: {fundingState: Eligible}) {
+      id
+      userId
+      commonId
+      title
+      description
+      funding {
+        amount
+      }
+    }
+  }
+`;
+
+/**
+ * __usePayoutsPageDataQuery__
+ *
+ * To run a query within a React component, call `usePayoutsPageDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePayoutsPageDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePayoutsPageDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function usePayoutsPageDataQuery(baseOptions?: Apollo.QueryHookOptions<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>) {
+  return Apollo.useQuery<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>(PayoutsPageDataDocument, baseOptions);
+}
+
+export function usePayoutsPageDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>) {
+  return Apollo.useLazyQuery<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>(PayoutsPageDataDocument, baseOptions);
+}
+
+export type PayoutsPageDataQueryHookResult = ReturnType<typeof usePayoutsPageDataQuery>;
+export type PayoutsPageDataLazyQueryHookResult = ReturnType<typeof usePayoutsPageDataLazyQuery>;
+export type PayoutsPageDataQueryResult = Apollo.QueryResult<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>;
 export const GetProposalsHomescreenDocument = gql`
   query getProposalsHomescreen($fundingPaginate: PaginateInput!, $joinPaginate: PaginateInput!) {
     funding: proposals(where: {type: FundingRequest}, paginate: $fundingPaginate) {
