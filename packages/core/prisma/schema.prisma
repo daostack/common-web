@@ -429,6 +429,7 @@ model User {
   reportsCreated  Report[] @relation(name: "CreatedReports")
   reportsReviewed Report[] @relation(name: "ReviewedReports")
 
+  payouts       Payout[]
   payments      Payment[]
   proposals     Proposal[]
   subscriptions Subscription[]
@@ -788,6 +789,14 @@ enum EventType {
 
   WireCreated
   WireUpdated
+
+  PayoutCreated
+  PayoutApprovalGiven
+  PayoutRejectionGiven
+  PayoutApproved
+  PayoutRejected
+  PayoutExecuted
+  PayoutCompleted
 }
 
 model Event {
@@ -965,6 +974,8 @@ model Payout {
   amount      Int
   description String
 
+  users User[]
+
   approvers PayoutApprover[]
   proposals FundingProposal[]
 
@@ -981,9 +992,12 @@ model PayoutApprover {
   user   User   @relation(fields: [userId], references: [id])
   payout Payout @relation(fields: [payoutId], references: [id])
 
-  resonse  PayoutApproverResponse @default(Pending)
   userId   String
   payoutId String
+
+  resonse PayoutApproverResponse @default(Pending)
+
+  @@unique([userId, payoutId])
 }
 
 model BillingDetail {
@@ -1043,11 +1057,7 @@ model FundingProposal {
 enum FundingState {
   NotEligible
   Eligible
-
-  AwaitingApproval
-  Pending
-  Completed
-  Confirmed
+  Redeemed
 }
 
 enum ProposalState {

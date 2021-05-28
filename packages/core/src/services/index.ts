@@ -5,6 +5,7 @@ export { cardService } from './cards';
 export { eventService } from './events';
 export { commonService } from './commons';
 export { reportService } from './reports';
+export { payoutsService } from './payouts';
 export { paymentService } from './payments';
 export { statisticService } from './statistics';
 export { discussionService } from './discussions';

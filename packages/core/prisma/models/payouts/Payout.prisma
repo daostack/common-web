@@ -9,6 +9,8 @@ model Payout {
   amount      Int
   description String
 
+  users User[]
+
   approvers PayoutApprover[]
   proposals FundingProposal[]
 

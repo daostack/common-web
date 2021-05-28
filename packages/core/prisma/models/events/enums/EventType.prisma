@@ -62,4 +62,12 @@ enum EventType {
 
   WireCreated
   WireUpdated
+
+  PayoutCreated
+  PayoutApprovalGiven
+  PayoutRejectionGiven
+  PayoutApproved
+  PayoutRejected
+  PayoutExecuted
+  PayoutCompleted
 }

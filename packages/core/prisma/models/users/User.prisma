@@ -25,6 +25,7 @@ model User {
   reportsCreated  Report[] @relation(name: "CreatedReports")
   reportsReviewed Report[] @relation(name: "ReviewedReports")
 
+  payouts                 Payout[]
   payments                Payment[]
   proposals               Proposal[]
   subscriptions           Subscription[]

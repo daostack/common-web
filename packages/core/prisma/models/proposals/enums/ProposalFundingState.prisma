@@ -1,11 +1,7 @@
 enum FundingState {
   NotEligible
   Eligible
-
-  AwaitingApproval
-  Pending
-  Completed
-  Confirmed
+  Redeemed
 }
 
 

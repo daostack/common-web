@@ -509,6 +509,12 @@ input CreateNotificationTemplateInput {
   templateType: NotificationTemplateType!
 }
 
+input CreatePayoutInput {
+  description: String
+  proposalIds: [ID!]!
+  wireId: ID!
+}
+
 input CreateRoleInput {
   description: String!
   displayName: String!
@@ -722,6 +728,13 @@ enum EventType {
   PaymentCreated
   PaymentFailed
   PaymentSucceeded
+  PayoutApprovalGiven
+  PayoutApproved
+  PayoutCompleted
+  PayoutCreated
+  PayoutExecuted
+  PayoutRejected
+  PayoutRejectionGiven
   ProposalExpired
   ProposalMajorityReached
   ReportCreated
@@ -765,12 +778,9 @@ input FundingProposalWhereInput {
 }
 
 enum FundingState {
-  AwaitingApproval
-  Completed
-  Confirmed
   Eligible
   NotEligible
-  Pending
+  Redeemed
 }
 
 """The funding Types of the common"""
@@ -838,6 +848,7 @@ type Mutation {
   createJoinProposal(input: CreateJoinProposalInput!): Proposal!
   createNotificationEventSettings(input: CreateNotificationEventSettingsInput!): NotificationEventSettings
   createNotificationTemplate(input: CreateNotificationTemplateInput!): NotificationTemplate
+  createPayout(input: CreatePayoutInput!): Payout
   createRole(input: CreateRoleInput!): Role
 
   """Creates new user in the settings"""

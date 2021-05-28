@@ -19,6 +19,7 @@ export { wireService } from './services/wires';
 export { eventService } from './services/events';
 export { commonService } from './services/commons';
 export { reportService } from './services/reports';
+export { payoutsService } from './services/payouts';
 export { paymentService } from './services/payments';
 export { proposalService } from './services/proposals';
 export { statisticService } from './services/statistics';

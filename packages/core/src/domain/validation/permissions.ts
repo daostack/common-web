@@ -18,6 +18,7 @@ export const allPermissions = [
 
   'admin.financials.payouts.read',
   'admin.financials.payouts.create',
+  'admin.financials.payouts.approve',
   'admin.financials.payouts.confirm',
 
   'admin.proposals.read',
