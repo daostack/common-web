@@ -830,6 +830,7 @@ input LinkInput {
 
 type Mutation {
   actOnReport(input: ActOnReportInput!): Report
+  approvePayout(outcome: PayoutApproverResponse!, payoutId: ID!): PayoutApprover
   assignRole(roleId: ID!, userId: ID!): Void
   changeDiscussionSubscriptionType(
     """The ID of the discussion subscription to change"""
@@ -1112,6 +1113,24 @@ type Payout implements BaseEntity {
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+}
+
+type PayoutApprover implements BaseEntity {
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+
+  """The main identifier of the item"""
+  id: UUID!
+  outcome: PayoutApproverResponse!
+
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  userId: ID!
+}
+
+enum PayoutApproverResponse {
+  Approved
+  Declined
 }
 
 enum PayoutStatus {

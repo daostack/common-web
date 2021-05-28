@@ -995,7 +995,7 @@ model PayoutApprover {
   userId   String
   payoutId String
 
-  resonse PayoutApproverResponse @default(Pending)
+  outcome PayoutApproverResponse @default(Pending)
 
   @@unique([userId, payoutId])
 }

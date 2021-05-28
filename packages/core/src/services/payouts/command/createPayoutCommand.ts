@@ -117,16 +117,6 @@ export const createPayoutCommand = async (command: z.infer<typeof schema>): Prom
 
   logger.info(`Payout (${payout.id}) successfully created`);
 
-  // Create event
-  eventService.create({
-    type: EventType.PayoutCreated,
-    payload: {
-      proposalIds: command.proposalIds,
-      payoutId: payout.id,
-      userIds: userIds
-    }
-  });
-
   // Find all users, able to approve the proposal
   const userWithApproverPermission = await prisma.user
     .findMany({
@@ -140,6 +130,8 @@ export const createPayoutCommand = async (command: z.infer<typeof schema>): Prom
       }
     });
 
+  logger.info(`Creating proposal approvers for ${userWithApproverPermission.length} users`);
+
   // Create the approvers
   await prisma.payoutApprover
     .createMany({
@@ -148,6 +140,19 @@ export const createPayoutCommand = async (command: z.infer<typeof schema>): Prom
         payoutId: payout.id
       }))
     });
+
+  logger.info(`Created proposal approvers for ${userWithApproverPermission.length} users`);
+
+
+  // Create event
+  eventService.create({
+    type: EventType.PayoutCreated,
+    payload: {
+      proposalIds: command.proposalIds,
+      payoutId: payout.id,
+      userIds: userIds
+    }
+  });
 
 
   // Return the created payout
