@@ -3,6 +3,10 @@ import { inputObjectType } from 'nexus';
 export const ProposalWhereInput = inputObjectType({
   name: 'ProposalWhereInput',
   definition(t) {
+    t.field('id', {
+      type: 'StringFilter'
+    });
+
     t.field('type', {
       type: 'ProposalType'
     });

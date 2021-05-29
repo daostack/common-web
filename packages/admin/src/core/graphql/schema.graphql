@@ -160,50 +160,6 @@ input CreateVoteInput {
   """The ID of the root of the proposal whether it is funding one or join"""
   proposalId: ID!
 }
-enum PaymentType {
-  OneTimePayment
-  SubscriptionInitialPayment
-  SubscriptionSequentialPayment
-  ImportedPayment
-}
-enum PaymentStatus {
-  NotAttempted
-  Pending
-  Successful
-  Unsuccessful
-}
-enum PaymentCircleStatus {
-  pending
-  failed
-  confirmed
-  paid
-}
-type Payment implements BaseEntity {
-  """The main identifier of the item"""
-  id: UUID!
-  """The date, at which the item was created"""
-  createdAt: DateTime!
-  """The date, at which the item was last modified"""
-  updatedAt: DateTime!
-  processed: Boolean!
-  processedError: Boolean!
-  type: PaymentType!
-  status: PaymentStatus!
-  circlePaymentStatus: PaymentCircleStatus
-  circlePaymentId: String
-  """The amount of the payment in US dollar cents"""
-  amount: Int
-  """The payment fees in US dollar cents"""
-  fees: Int
-  userId: String!
-  user: User!
-  commonId: String!
-  common: Common!
-}
-input PaymentsWhereInput {
-  commonId: UUID
-  userId: UUID
-}
 type Event {
   """The main identifier of the item"""
   id: ID!
@@ -268,6 +224,13 @@ enum EventType {
   UserRemovedFromRole
   WireCreated
   WireUpdated
+  PayoutCreated
+  PayoutApprovalGiven
+  PayoutRejectionGiven
+  PayoutApproved
+  PayoutRejected
+  PayoutExecuted
+  PayoutCompleted
 }
 input EventOrderByInput {
   createdAt: SortOrder
@@ -408,6 +371,82 @@ input ReportDiscussionMessageInput {
   note: String!
   for: ReportFor!
 }
+type Payout implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  status: PayoutStatus!
+  amount: Int!
+  description: String!
+}
+type PayoutApprover implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  outcome: PayoutApproverResponse!
+  userId: ID!
+}
+enum PayoutStatus {
+  PendingApproval
+  CirclePending
+  CircleComplete
+  CircleFailed
+  Failed
+}
+enum PayoutApproverResponse {
+  Approved
+  Declined
+}
+enum PaymentType {
+  OneTimePayment
+  SubscriptionInitialPayment
+  SubscriptionSequentialPayment
+  ImportedPayment
+}
+enum PaymentStatus {
+  NotAttempted
+  Pending
+  Successful
+  Unsuccessful
+}
+enum PaymentCircleStatus {
+  pending
+  failed
+  confirmed
+  paid
+}
+type Payment implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  processed: Boolean!
+  processedError: Boolean!
+  type: PaymentType!
+  status: PaymentStatus!
+  circlePaymentStatus: PaymentCircleStatus
+  circlePaymentId: String
+  """The amount of the payment in US dollar cents"""
+  amount: Int
+  """The payment fees in US dollar cents"""
+  fees: Int
+  userId: String!
+  user: User!
+  commonId: String!
+  common: Common!
+}
+input PaymentsWhereInput {
+  commonId: UUID
+  userId: UUID
+}
 type Proposal {
   """The main identifier of the item"""
   id: ID!
@@ -466,6 +505,7 @@ type FundingProposal implements BaseEntity {
   fundingState: FundingState!
 }
 input ProposalWhereInput {
+  id: StringFilter
   type: ProposalType
   state: ProposalState
   commonId: UUID
@@ -519,10 +559,7 @@ enum ProposalState {
 enum FundingState {
   NotEligible
   Eligible
-  AwaitingApproval
-  Pending
-  Completed
-  Confirmed
+  Redeemed
 }
 enum PaymentState {
   NotAttempted
@@ -1198,6 +1235,11 @@ input UpdateCommonInput {
   links: [CommonLinkInput!]
   rules: [CommonRuleInput!]
 }
+input CreatePayoutInput {
+  wireId: ID!
+  proposalIds: [ID!]!
+  description: String
+}
 input UpdateNotificationTemplateInput {
   id: String!
   subject: String
@@ -1236,11 +1278,12 @@ type Query {
   users(where: UserWhereInput, paginate: PaginateInput): [User]
   generateUserAuthToken(authId: String!): String!
   roles(paginate: PaginateInput): [Role]
-  payment(id: ID): Payment
-  payments(paginate: PaginateInput, where: PaymentsWhereInput): [Payment]
   events(paginate: PaginateInput): [Event]
   common(where: CommonWhereUniqueInput!): Common
   commons(paginate: PaginateInput, where: CommonWhereInput): [Common]
+  payouts(paginate: PaginateInput): [Payout]
+  payment(id: ID): Payment
+  payments(paginate: PaginateInput, where: PaymentsWhereInput): [Payment]
   proposal(where: ProposalWhereUniqueInput!): Proposal
   proposals(where: ProposalWhereInput, fundingWhere: FundingProposalWhereInput, paginate: PaginateInput): [Proposal]
   getStatistics(where: StatisticsWhereInput): [Statistic]
@@ -1274,6 +1317,8 @@ type Mutation {
   whitelistCommon(commonId: String!): Boolean
   actOnReport(input: ActOnReportInput!): Report
   reportDiscussionMessage(input: ReportDiscussionMessageInput!): Report!
+  createPayout(input: CreatePayoutInput!): Payout
+  approvePayout(payoutId: ID!, outcome: PayoutApproverResponse!): PayoutApprover
   finalizeProposal(proposalId: ID!): Boolean!
   """Create new proposal of Types JOIN."""
   createJoinProposal(input: CreateJoinProposalInput!): Proposal!

@@ -224,56 +224,6 @@ export type CreateVoteInput = {
   proposalId: Scalars['ID'];
 };
 
-export enum PaymentType {
-  OneTimePayment = 'OneTimePayment',
-  SubscriptionInitialPayment = 'SubscriptionInitialPayment',
-  SubscriptionSequentialPayment = 'SubscriptionSequentialPayment',
-  ImportedPayment = 'ImportedPayment'
-}
-
-export enum PaymentStatus {
-  NotAttempted = 'NotAttempted',
-  Pending = 'Pending',
-  Successful = 'Successful',
-  Unsuccessful = 'Unsuccessful'
-}
-
-export enum PaymentCircleStatus {
-  Pending = 'pending',
-  Failed = 'failed',
-  Confirmed = 'confirmed',
-  Paid = 'paid'
-}
-
-export type Payment = BaseEntity & {
-  __typename?: 'Payment';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  processed: Scalars['Boolean'];
-  processedError: Scalars['Boolean'];
-  type: PaymentType;
-  status: PaymentStatus;
-  circlePaymentStatus?: Maybe<PaymentCircleStatus>;
-  circlePaymentId?: Maybe<Scalars['String']>;
-  /** The amount of the payment in US dollar cents */
-  amount?: Maybe<Scalars['Int']>;
-  /** The payment fees in US dollar cents */
-  fees?: Maybe<Scalars['Int']>;
-  userId: Scalars['String'];
-  user: User;
-  commonId: Scalars['String'];
-  common: Common;
-};
-
-export type PaymentsWhereInput = {
-  commonId?: Maybe<Scalars['UUID']>;
-  userId?: Maybe<Scalars['UUID']>;
-};
-
 export type Event = {
   __typename?: 'Event';
   /** The main identifier of the item */
@@ -339,7 +289,14 @@ export enum EventType {
   UserAddedToRole = 'UserAddedToRole',
   UserRemovedFromRole = 'UserRemovedFromRole',
   WireCreated = 'WireCreated',
-  WireUpdated = 'WireUpdated'
+  WireUpdated = 'WireUpdated',
+  PayoutCreated = 'PayoutCreated',
+  PayoutApprovalGiven = 'PayoutApprovalGiven',
+  PayoutRejectionGiven = 'PayoutRejectionGiven',
+  PayoutApproved = 'PayoutApproved',
+  PayoutRejected = 'PayoutRejected',
+  PayoutExecuted = 'PayoutExecuted',
+  PayoutCompleted = 'PayoutCompleted'
 }
 
 export type EventOrderByInput = {
@@ -533,6 +490,94 @@ export type ReportDiscussionMessageInput = {
   for: ReportFor;
 };
 
+export type Payout = BaseEntity & {
+  __typename?: 'Payout';
+  /** The main identifier of the item */
+  id: Scalars['UUID'];
+  /** The date, at which the item was created */
+  createdAt: Scalars['DateTime'];
+  /** The date, at which the item was last modified */
+  updatedAt: Scalars['DateTime'];
+  status: PayoutStatus;
+  amount: Scalars['Int'];
+  description: Scalars['String'];
+};
+
+export type PayoutApprover = BaseEntity & {
+  __typename?: 'PayoutApprover';
+  /** The main identifier of the item */
+  id: Scalars['UUID'];
+  /** The date, at which the item was created */
+  createdAt: Scalars['DateTime'];
+  /** The date, at which the item was last modified */
+  updatedAt: Scalars['DateTime'];
+  outcome: PayoutApproverResponse;
+  userId: Scalars['ID'];
+};
+
+export enum PayoutStatus {
+  PendingApproval = 'PendingApproval',
+  CirclePending = 'CirclePending',
+  CircleComplete = 'CircleComplete',
+  CircleFailed = 'CircleFailed',
+  Failed = 'Failed'
+}
+
+export enum PayoutApproverResponse {
+  Approved = 'Approved',
+  Declined = 'Declined'
+}
+
+export enum PaymentType {
+  OneTimePayment = 'OneTimePayment',
+  SubscriptionInitialPayment = 'SubscriptionInitialPayment',
+  SubscriptionSequentialPayment = 'SubscriptionSequentialPayment',
+  ImportedPayment = 'ImportedPayment'
+}
+
+export enum PaymentStatus {
+  NotAttempted = 'NotAttempted',
+  Pending = 'Pending',
+  Successful = 'Successful',
+  Unsuccessful = 'Unsuccessful'
+}
+
+export enum PaymentCircleStatus {
+  Pending = 'pending',
+  Failed = 'failed',
+  Confirmed = 'confirmed',
+  Paid = 'paid'
+}
+
+export type Payment = BaseEntity & {
+  __typename?: 'Payment';
+  /** The main identifier of the item */
+  id: Scalars['UUID'];
+  /** The date, at which the item was created */
+  createdAt: Scalars['DateTime'];
+  /** The date, at which the item was last modified */
+  updatedAt: Scalars['DateTime'];
+  processed: Scalars['Boolean'];
+  processedError: Scalars['Boolean'];
+  type: PaymentType;
+  status: PaymentStatus;
+  circlePaymentStatus?: Maybe<PaymentCircleStatus>;
+  circlePaymentId?: Maybe<Scalars['String']>;
+  /** The amount of the payment in US dollar cents */
+  amount?: Maybe<Scalars['Int']>;
+  /** The payment fees in US dollar cents */
+  fees?: Maybe<Scalars['Int']>;
+  userId: Scalars['String'];
+  user: User;
+  commonId: Scalars['String'];
+  common: Common;
+};
+
+export type PaymentsWhereInput = {
+  commonId?: Maybe<Scalars['UUID']>;
+  userId?: Maybe<Scalars['UUID']>;
+};
+
 export type Proposal = {
   __typename?: 'Proposal';
   /** The main identifier of the item */
@@ -603,6 +648,7 @@ export type FundingProposal = BaseEntity & {
 };
 
 export type ProposalWhereInput = {
+  id?: Maybe<StringFilter>;
   type?: Maybe<ProposalType>;
   state?: Maybe<ProposalState>;
   commonId?: Maybe<Scalars['UUID']>;
@@ -665,10 +711,7 @@ export enum ProposalState {
 export enum FundingState {
   NotEligible = 'NotEligible',
   Eligible = 'Eligible',
-  AwaitingApproval = 'AwaitingApproval',
-  Pending = 'Pending',
-  Completed = 'Completed',
-  Confirmed = 'Confirmed'
+  Redeemed = 'Redeemed'
 }
 
 export enum PaymentState {
@@ -1427,6 +1470,12 @@ export type UpdateCommonInput = {
   rules?: Maybe<Array<CommonRuleInput>>;
 };
 
+export type CreatePayoutInput = {
+  wireId: Scalars['ID'];
+  proposalIds: Array<Scalars['ID']>;
+  description?: Maybe<Scalars['String']>;
+};
+
 export type UpdateNotificationTemplateInput = {
   id: Scalars['String'];
   subject?: Maybe<Scalars['String']>;
@@ -1470,11 +1519,12 @@ export type Query = {
   users?: Maybe<Array<Maybe<User>>>;
   generateUserAuthToken: Scalars['String'];
   roles?: Maybe<Array<Maybe<Role>>>;
-  payment?: Maybe<Payment>;
-  payments?: Maybe<Array<Maybe<Payment>>>;
   events?: Maybe<Array<Maybe<Event>>>;
   common?: Maybe<Common>;
   commons?: Maybe<Array<Maybe<Common>>>;
+  payouts?: Maybe<Array<Maybe<Payout>>>;
+  payment?: Maybe<Payment>;
+  payments?: Maybe<Array<Maybe<Payment>>>;
   proposal?: Maybe<Proposal>;
   proposals?: Maybe<Array<Maybe<Proposal>>>;
   getStatistics?: Maybe<Array<Maybe<Statistic>>>;
@@ -1511,17 +1561,6 @@ export type QueryRolesArgs = {
 };
 
 
-export type QueryPaymentArgs = {
-  id?: Maybe<Scalars['ID']>;
-};
-
-
-export type QueryPaymentsArgs = {
-  paginate?: Maybe<PaginateInput>;
-  where?: Maybe<PaymentsWhereInput>;
-};
-
-
 export type QueryEventsArgs = {
   paginate?: Maybe<PaginateInput>;
 };
@@ -1535,6 +1574,22 @@ export type QueryCommonArgs = {
 export type QueryCommonsArgs = {
   paginate?: Maybe<PaginateInput>;
   where?: Maybe<CommonWhereInput>;
+};
+
+
+export type QueryPayoutsArgs = {
+  paginate?: Maybe<PaginateInput>;
+};
+
+
+export type QueryPaymentArgs = {
+  id?: Maybe<Scalars['ID']>;
+};
+
+
+export type QueryPaymentsArgs = {
+  paginate?: Maybe<PaginateInput>;
+  where?: Maybe<PaymentsWhereInput>;
 };
 
 
@@ -1607,6 +1662,8 @@ export type Mutation = {
   whitelistCommon?: Maybe<Scalars['Boolean']>;
   actOnReport?: Maybe<Report>;
   reportDiscussionMessage: Report;
+  createPayout?: Maybe<Payout>;
+  approvePayout?: Maybe<PayoutApprover>;
   finalizeProposal: Scalars['Boolean'];
   /** Create new proposal of Types JOIN. */
   createJoinProposal: Proposal;
@@ -1710,6 +1767,17 @@ export type MutationActOnReportArgs = {
 
 export type MutationReportDiscussionMessageArgs = {
   input: ReportDiscussionMessageInput;
+};
+
+
+export type MutationCreatePayoutArgs = {
+  input: CreatePayoutInput;
+};
+
+
+export type MutationApprovePayoutArgs = {
+  payoutId: Scalars['ID'];
+  outcome: PayoutApproverResponse;
 };
 
 
@@ -2226,6 +2294,33 @@ export type GetAllTimeStatistiscQuery = (
   getStatistics?: Maybe<Array<Maybe<(
     { __typename?: 'Statistic' }
     & Pick<Statistic, 'users' | 'commons' | 'joinProposals' | 'fundingProposals'>
+    )>>>
+}
+  );
+
+export type GetProposalsSelectedForBatchQueryVariables = Exact<{
+  where: ProposalWhereInput;
+}>;
+
+
+export type GetProposalsSelectedForBatchQuery = (
+  { __typename?: 'Query' }
+  & {
+  proposals?: Maybe<Array<Maybe<(
+    { __typename?: 'Proposal' }
+    & Pick<Proposal, 'id' | 'state' | 'title' | 'description'>
+    & {
+    user: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstName' | 'lastName'>
+      ), common: (
+      { __typename?: 'Common' }
+      & Pick<Common, 'name'>
+      ), funding?: Maybe<(
+      { __typename?: 'FundingProposal' }
+      & Pick<FundingProposal, 'fundingState' | 'amount'>
+      )>
+  }
     )>>>
 }
   );
@@ -3267,6 +3362,56 @@ export function useGetAllTimeStatistiscLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetAllTimeStatistiscQueryHookResult = ReturnType<typeof useGetAllTimeStatistiscQuery>;
 export type GetAllTimeStatistiscLazyQueryHookResult = ReturnType<typeof useGetAllTimeStatistiscLazyQuery>;
 export type GetAllTimeStatistiscQueryResult = Apollo.QueryResult<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>;
+export const GetProposalsSelectedForBatchDocument = gql`
+  query getProposalsSelectedForBatch($where: ProposalWhereInput!) {
+    proposals(where: $where) {
+      id
+      state
+      user {
+        id
+        firstName
+        lastName
+      }
+      title
+      description
+      common {
+        name
+      }
+      funding {
+        fundingState
+        amount
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetProposalsSelectedForBatchQuery__
+ *
+ * To run a query within a React component, call `useGetProposalsSelectedForBatchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProposalsSelectedForBatchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProposalsSelectedForBatchQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetProposalsSelectedForBatchQuery(baseOptions: Apollo.QueryHookOptions<GetProposalsSelectedForBatchQuery, GetProposalsSelectedForBatchQueryVariables>) {
+  return Apollo.useQuery<GetProposalsSelectedForBatchQuery, GetProposalsSelectedForBatchQueryVariables>(GetProposalsSelectedForBatchDocument, baseOptions);
+}
+
+export function useGetProposalsSelectedForBatchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalsSelectedForBatchQuery, GetProposalsSelectedForBatchQueryVariables>) {
+  return Apollo.useLazyQuery<GetProposalsSelectedForBatchQuery, GetProposalsSelectedForBatchQueryVariables>(GetProposalsSelectedForBatchDocument, baseOptions);
+}
+
+export type GetProposalsSelectedForBatchQueryHookResult = ReturnType<typeof useGetProposalsSelectedForBatchQuery>;
+export type GetProposalsSelectedForBatchLazyQueryHookResult = ReturnType<typeof useGetProposalsSelectedForBatchLazyQuery>;
+export type GetProposalsSelectedForBatchQueryResult = Apollo.QueryResult<GetProposalsSelectedForBatchQuery, GetProposalsSelectedForBatchQueryVariables>;
 export const PayoutsPageDataDocument = gql`
   query PayoutsPageData {
     proposals(fundingWhere: {fundingState: Eligible}) {
@@ -3300,11 +3445,9 @@ export const PayoutsPageDataDocument = gql`
 export function usePayoutsPageDataQuery(baseOptions?: Apollo.QueryHookOptions<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>) {
   return Apollo.useQuery<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>(PayoutsPageDataDocument, baseOptions);
 }
-
 export function usePayoutsPageDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>) {
   return Apollo.useLazyQuery<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>(PayoutsPageDataDocument, baseOptions);
 }
-
 export type PayoutsPageDataQueryHookResult = ReturnType<typeof usePayoutsPageDataQuery>;
 export type PayoutsPageDataLazyQueryHookResult = ReturnType<typeof usePayoutsPageDataLazyQuery>;
 export type PayoutsPageDataQueryResult = Apollo.QueryResult<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>;

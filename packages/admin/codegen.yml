@@ -14,6 +14,7 @@ documents:
   - "src/pages/notifications/**/*.tsx"
   - "src/pages/financials/payments/**/*.tsx"
   - "src/pages/financials/payouts/index.tsx"
+  - "src/pages/financials/payouts/create/batch.tsx"
 generates:
   ./src/core/graphql/index.ts:
     plugins:

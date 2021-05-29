@@ -1213,6 +1213,7 @@ input ProposalWhereInput {
   commonId: UUID
   commonMemberId: UUID
   description: StringFilter
+  id: StringFilter
   state: ProposalState
   title: StringFilter
   type: ProposalType
