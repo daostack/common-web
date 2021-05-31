@@ -21,7 +21,11 @@ import {
 import { Link } from '@components/Link';
 import { withPermission } from '../../../../helpers/hoc/withPermission';
 import { CreateBankAccount } from '@components/modals/CreateBankAccountModal';
-import { useGetProposalsSelectedForBatchQuery, Wire } from '@core/graphql';
+import {
+  useGetProposalsSelectedForBatchQuery,
+  useAvailableWiresLazyQuery,
+  useCreatePayoutMutation
+} from '@core/graphql';
 
 const BatchQuery = gql`
   query getProposalsSelectedForBatch($where: ProposalWhereInput!) {
@@ -57,8 +61,15 @@ const AvailableWiresQuery = gql`
   query availableWires($where: WireWhereInput!) {
     wires(where: $where) {
       id
+      description
+    }
+  }
+`;
 
-      userId
+const CreatePayout = gql`
+  mutation createPayout($input: CreatePayoutInput!) {
+    createPayout(input: $input) {
+      id
     }
   }
 `;
@@ -68,6 +79,9 @@ const CreateBatchPayoutPage: NextPage = () => {
   const theme = useTheme();
 
   const [toasts, setToast] = useToasts();
+
+  const [createPayout, { loading: creatingPayout }] = useCreatePayoutMutation();
+  const [getWires, { data: wires }] = useAvailableWiresLazyQuery();
   const data = useGetProposalsSelectedForBatchQuery({
     pollInterval: 5 * 1000,
     variables: {
@@ -91,22 +105,8 @@ const CreateBatchPayoutPage: NextPage = () => {
   };
 
   // --- Helper
-  const getSelectedWire = (): Wire => {
-    return data.data.wires.find((wire) => wire.id === selectedWire);
-  };
-
   const getSelectedProposals = () => {
     return data?.data?.proposals?.filter(p => !removedProposals.includes(p.id)) || [];
-  };
-
-  const getTotalPayoutAmount = (): string => {
-    let sum = 0;
-
-    getSelectedProposals().forEach((proposal) => {
-      sum += proposal.funding.amount;
-    });
-
-    return (sum ? sum / 100 : 0).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
   };
 
   const isExecuteDisabled = (): boolean => {
@@ -123,6 +123,20 @@ const CreateBatchPayoutPage: NextPage = () => {
       setUserIds(Array.from(new Set(temp)));
     }
   }, [data]);
+
+  React.useEffect(() => {
+    if (userIds.length) {
+      getWires({
+        variables: {
+          where: {
+            userId: {
+              in: userIds
+            }
+          }
+        }
+      });
+    }
+  }, [userIds]);
 
   // --- Actions
 
@@ -151,7 +165,7 @@ const CreateBatchPayoutPage: NextPage = () => {
 
   const onExecute = async () => {
     try {
-      const res = await executePayout({
+      const res = await createPayout({
         variables: {
           input: {
             wireId: selectedWire,
@@ -165,8 +179,8 @@ const CreateBatchPayoutPage: NextPage = () => {
         delay: 4000
       });
 
-      router.push({
-        pathname: `/financials/payouts/details/${res.data.executePayouts.id}`
+      await router.push({
+        pathname: `/financials/payouts/details/${res.data.createPayout.id}`
       });
     } catch (e) {
       setToast({
@@ -220,15 +234,21 @@ const CreateBatchPayoutPage: NextPage = () => {
               onChange={onWireSelected}
               placeholder="Please, select bank account"
             >
-              <Select.Option value="create">
-                Create new bank account
-              </Select.Option>
+              {wires ? (
+                <Select.Option value="create">
+                  Create new bank account
+                </Select.Option>
+              ) : (
+                <Select.Option disabled>
+                  Loading...
+                </Select.Option>
+              )}
 
-              {/*{data.data.wires.map((wire) => (*/}
-              {/*  <Select.Option value={wire.id} key={wire.id}>*/}
-              {/*    {wire.description}*/}
-              {/*  </Select.Option>*/}
-              {/*))}*/}
+              {wires && wires.wires.map((wire) => (
+                <Select.Option value={wire.id} key={wire.id}>
+                  {wire.description}
+                </Select.Option>
+              ))}
             </Select>
 
             <Spacer y={2}/>
@@ -290,7 +310,12 @@ const CreateBatchPayoutPage: NextPage = () => {
           <Spacer y={.5}/>
 
           <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
-            <Button size="small" disabled={isExecuteDisabled()} loading={false} onClick={onExecute}>
+            <Button
+              size="small"
+              onClick={onExecute}
+              loading={creatingPayout}
+              disabled={isExecuteDisabled()}
+            >
               Create payout
             </Button>
           </div>

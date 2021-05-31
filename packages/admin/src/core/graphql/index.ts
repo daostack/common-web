@@ -2350,8 +2350,23 @@ export type AvailableWiresQuery = (
   & {
   wires?: Maybe<Array<Maybe<(
     { __typename?: 'Wire' }
-    & Pick<Wire, 'id' | 'userId'>
+    & Pick<Wire, 'id' | 'description'>
     )>>>
+}
+  );
+
+export type CreatePayoutMutationVariables = Exact<{
+  input: CreatePayoutInput;
+}>;
+
+
+export type CreatePayoutMutation = (
+  { __typename?: 'Mutation' }
+  & {
+  createPayout?: Maybe<(
+    { __typename?: 'Payout' }
+    & Pick<Payout, 'id'>
+    )>
 }
   );
 
@@ -2449,6 +2464,7 @@ export type WhitelistCommonMutationFn = Apollo.MutationFunction<WhitelistCommonM
 export function useWhitelistCommonMutation(baseOptions?: Apollo.MutationHookOptions<WhitelistCommonMutation, WhitelistCommonMutationVariables>) {
   return Apollo.useMutation<WhitelistCommonMutation, WhitelistCommonMutationVariables>(WhitelistCommonDocument, baseOptions);
 }
+
 export type WhitelistCommonMutationHookResult = ReturnType<typeof useWhitelistCommonMutation>;
 export type WhitelistCommonMutationResult = Apollo.MutationResult<WhitelistCommonMutation>;
 export type WhitelistCommonMutationOptions = Apollo.BaseMutationOptions<WhitelistCommonMutation, WhitelistCommonMutationVariables>;
@@ -2479,6 +2495,7 @@ export type DelistCommonMutationFn = Apollo.MutationFunction<DelistCommonMutatio
 export function useDelistCommonMutation(baseOptions?: Apollo.MutationHookOptions<DelistCommonMutation, DelistCommonMutationVariables>) {
   return Apollo.useMutation<DelistCommonMutation, DelistCommonMutationVariables>(DelistCommonDocument, baseOptions);
 }
+
 export type DelistCommonMutationHookResult = ReturnType<typeof useDelistCommonMutation>;
 export type DelistCommonMutationResult = Apollo.MutationResult<DelistCommonMutation>;
 export type DelistCommonMutationOptions = Apollo.BaseMutationOptions<DelistCommonMutation, DelistCommonMutationVariables>;
@@ -2511,9 +2528,11 @@ export const CommonSearchDocument = gql`
 export function useCommonSearchQuery(baseOptions?: Apollo.QueryHookOptions<CommonSearchQuery, CommonSearchQueryVariables>) {
   return Apollo.useQuery<CommonSearchQuery, CommonSearchQueryVariables>(CommonSearchDocument, baseOptions);
 }
+
 export function useCommonSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommonSearchQuery, CommonSearchQueryVariables>) {
   return Apollo.useLazyQuery<CommonSearchQuery, CommonSearchQueryVariables>(CommonSearchDocument, baseOptions);
 }
+
 export type CommonSearchQueryHookResult = ReturnType<typeof useCommonSearchQuery>;
 export type CommonSearchLazyQueryHookResult = ReturnType<typeof useCommonSearchLazyQuery>;
 export type CommonSearchQueryResult = Apollo.QueryResult<CommonSearchQuery, CommonSearchQueryVariables>;
@@ -2547,9 +2566,11 @@ export const UserSearchDocument = gql`
 export function useUserSearchQuery(baseOptions?: Apollo.QueryHookOptions<UserSearchQuery, UserSearchQueryVariables>) {
   return Apollo.useQuery<UserSearchQuery, UserSearchQueryVariables>(UserSearchDocument, baseOptions);
 }
+
 export function useUserSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserSearchQuery, UserSearchQueryVariables>) {
   return Apollo.useLazyQuery<UserSearchQuery, UserSearchQueryVariables>(UserSearchDocument, baseOptions);
 }
+
 export type UserSearchQueryHookResult = ReturnType<typeof useUserSearchQuery>;
 export type UserSearchLazyQueryHookResult = ReturnType<typeof useUserSearchLazyQuery>;
 export type UserSearchQueryResult = Apollo.QueryResult<UserSearchQuery, UserSearchQueryVariables>;
@@ -2583,9 +2604,11 @@ export const ProposalSeachDocument = gql`
 export function useProposalSeachQuery(baseOptions?: Apollo.QueryHookOptions<ProposalSeachQuery, ProposalSeachQueryVariables>) {
   return Apollo.useQuery<ProposalSeachQuery, ProposalSeachQueryVariables>(ProposalSeachDocument, baseOptions);
 }
+
 export function useProposalSeachLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProposalSeachQuery, ProposalSeachQueryVariables>) {
   return Apollo.useLazyQuery<ProposalSeachQuery, ProposalSeachQueryVariables>(ProposalSeachDocument, baseOptions);
 }
+
 export type ProposalSeachQueryHookResult = ReturnType<typeof useProposalSeachQuery>;
 export type ProposalSeachLazyQueryHookResult = ReturnType<typeof useProposalSeachLazyQuery>;
 export type ProposalSeachQueryResult = Apollo.QueryResult<ProposalSeachQuery, ProposalSeachQueryVariables>;
@@ -2624,9 +2647,11 @@ export const GetLatestEventsDocument = gql`
 export function useGetLatestEventsQuery(baseOptions?: Apollo.QueryHookOptions<GetLatestEventsQuery, GetLatestEventsQueryVariables>) {
   return Apollo.useQuery<GetLatestEventsQuery, GetLatestEventsQueryVariables>(GetLatestEventsDocument, baseOptions);
 }
+
 export function useGetLatestEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLatestEventsQuery, GetLatestEventsQueryVariables>) {
   return Apollo.useLazyQuery<GetLatestEventsQuery, GetLatestEventsQueryVariables>(GetLatestEventsDocument, baseOptions);
 }
+
 export type GetLatestEventsQueryHookResult = ReturnType<typeof useGetLatestEventsQuery>;
 export type GetLatestEventsLazyQueryHookResult = ReturnType<typeof useGetLatestEventsLazyQuery>;
 export type GetLatestEventsQueryResult = Apollo.QueryResult<GetLatestEventsQuery, GetLatestEventsQueryVariables>;
@@ -2670,9 +2695,11 @@ export const GetPaymentsDocument = gql`
 export function useGetPaymentsQuery(baseOptions?: Apollo.QueryHookOptions<GetPaymentsQuery, GetPaymentsQueryVariables>) {
   return Apollo.useQuery<GetPaymentsQuery, GetPaymentsQueryVariables>(GetPaymentsDocument, baseOptions);
 }
+
 export function useGetPaymentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPaymentsQuery, GetPaymentsQueryVariables>) {
   return Apollo.useLazyQuery<GetPaymentsQuery, GetPaymentsQueryVariables>(GetPaymentsDocument, baseOptions);
 }
+
 export type GetPaymentsQueryHookResult = ReturnType<typeof useGetPaymentsQuery>;
 export type GetPaymentsLazyQueryHookResult = ReturnType<typeof useGetPaymentsLazyQuery>;
 export type GetPaymentsQueryResult = Apollo.QueryResult<GetPaymentsQuery, GetPaymentsQueryVariables>;
@@ -2708,9 +2735,11 @@ export const LoadUserContextDocument = gql`
 export function useLoadUserContextQuery(baseOptions?: Apollo.QueryHookOptions<LoadUserContextQuery, LoadUserContextQueryVariables>) {
   return Apollo.useQuery<LoadUserContextQuery, LoadUserContextQueryVariables>(LoadUserContextDocument, baseOptions);
 }
+
 export function useLoadUserContextLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LoadUserContextQuery, LoadUserContextQueryVariables>) {
   return Apollo.useLazyQuery<LoadUserContextQuery, LoadUserContextQueryVariables>(LoadUserContextDocument, baseOptions);
 }
+
 export type LoadUserContextQueryHookResult = ReturnType<typeof useLoadUserContextQuery>;
 export type LoadUserContextLazyQueryHookResult = ReturnType<typeof useLoadUserContextLazyQuery>;
 export type LoadUserContextQueryResult = Apollo.QueryResult<LoadUserContextQuery, LoadUserContextQueryVariables>;
@@ -2776,9 +2805,11 @@ export const GetCommonDetailsDocument = gql`
 export function useGetCommonDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>) {
   return Apollo.useQuery<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>(GetCommonDetailsDocument, baseOptions);
 }
+
 export function useGetCommonDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>) {
   return Apollo.useLazyQuery<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>(GetCommonDetailsDocument, baseOptions);
 }
+
 export type GetCommonDetailsQueryHookResult = ReturnType<typeof useGetCommonDetailsQuery>;
 export type GetCommonDetailsLazyQueryHookResult = ReturnType<typeof useGetCommonDetailsLazyQuery>;
 export type GetCommonDetailsQueryResult = Apollo.QueryResult<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>;
@@ -2815,9 +2846,11 @@ export const GetNotificationEventsDocument = gql`
 export function useGetNotificationEventsQuery(baseOptions: Apollo.QueryHookOptions<GetNotificationEventsQuery, GetNotificationEventsQueryVariables>) {
   return Apollo.useQuery<GetNotificationEventsQuery, GetNotificationEventsQueryVariables>(GetNotificationEventsDocument, baseOptions);
 }
+
 export function useGetNotificationEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetNotificationEventsQuery, GetNotificationEventsQueryVariables>) {
   return Apollo.useLazyQuery<GetNotificationEventsQuery, GetNotificationEventsQueryVariables>(GetNotificationEventsDocument, baseOptions);
 }
+
 export type GetNotificationEventsQueryHookResult = ReturnType<typeof useGetNotificationEventsQuery>;
 export type GetNotificationEventsLazyQueryHookResult = ReturnType<typeof useGetNotificationEventsLazyQuery>;
 export type GetNotificationEventsQueryResult = Apollo.QueryResult<GetNotificationEventsQuery, GetNotificationEventsQueryVariables>;
@@ -2848,9 +2881,11 @@ export const GetCreateNotificationEventOptionsDocument = gql`
 export function useGetCreateNotificationEventOptionsQuery(baseOptions?: Apollo.QueryHookOptions<GetCreateNotificationEventOptionsQuery, GetCreateNotificationEventOptionsQueryVariables>) {
   return Apollo.useQuery<GetCreateNotificationEventOptionsQuery, GetCreateNotificationEventOptionsQueryVariables>(GetCreateNotificationEventOptionsDocument, baseOptions);
 }
+
 export function useGetCreateNotificationEventOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCreateNotificationEventOptionsQuery, GetCreateNotificationEventOptionsQueryVariables>) {
   return Apollo.useLazyQuery<GetCreateNotificationEventOptionsQuery, GetCreateNotificationEventOptionsQueryVariables>(GetCreateNotificationEventOptionsDocument, baseOptions);
 }
+
 export type GetCreateNotificationEventOptionsQueryHookResult = ReturnType<typeof useGetCreateNotificationEventOptionsQuery>;
 export type GetCreateNotificationEventOptionsLazyQueryHookResult = ReturnType<typeof useGetCreateNotificationEventOptionsLazyQuery>;
 export type GetCreateNotificationEventOptionsQueryResult = Apollo.QueryResult<GetCreateNotificationEventOptionsQuery, GetCreateNotificationEventOptionsQueryVariables>;
@@ -2883,6 +2918,7 @@ export type CreateNotificationEventIntegrationMutationFn = Apollo.MutationFuncti
 export function useCreateNotificationEventIntegrationMutation(baseOptions?: Apollo.MutationHookOptions<CreateNotificationEventIntegrationMutation, CreateNotificationEventIntegrationMutationVariables>) {
   return Apollo.useMutation<CreateNotificationEventIntegrationMutation, CreateNotificationEventIntegrationMutationVariables>(CreateNotificationEventIntegrationDocument, baseOptions);
 }
+
 export type CreateNotificationEventIntegrationMutationHookResult = ReturnType<typeof useCreateNotificationEventIntegrationMutation>;
 export type CreateNotificationEventIntegrationMutationResult = Apollo.MutationResult<CreateNotificationEventIntegrationMutation>;
 export type CreateNotificationEventIntegrationMutationOptions = Apollo.BaseMutationOptions<CreateNotificationEventIntegrationMutation, CreateNotificationEventIntegrationMutationVariables>;
@@ -2920,9 +2956,11 @@ export const GetAllUsersNotificationsDocument = gql`
 export function useGetAllUsersNotificationsQuery(baseOptions: Apollo.QueryHookOptions<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>) {
   return Apollo.useQuery<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>(GetAllUsersNotificationsDocument, baseOptions);
 }
+
 export function useGetAllUsersNotificationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>) {
   return Apollo.useLazyQuery<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>(GetAllUsersNotificationsDocument, baseOptions);
 }
+
 export type GetAllUsersNotificationsQueryHookResult = ReturnType<typeof useGetAllUsersNotificationsQuery>;
 export type GetAllUsersNotificationsLazyQueryHookResult = ReturnType<typeof useGetAllUsersNotificationsLazyQuery>;
 export type GetAllUsersNotificationsQueryResult = Apollo.QueryResult<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>;
@@ -2958,9 +2996,11 @@ export const LoadNotificationSettignsDocument = gql`
 export function useLoadNotificationSettignsQuery(baseOptions?: Apollo.QueryHookOptions<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>) {
   return Apollo.useQuery<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>(LoadNotificationSettignsDocument, baseOptions);
 }
+
 export function useLoadNotificationSettignsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>) {
   return Apollo.useLazyQuery<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>(LoadNotificationSettignsDocument, baseOptions);
 }
+
 export type LoadNotificationSettignsQueryHookResult = ReturnType<typeof useLoadNotificationSettignsQuery>;
 export type LoadNotificationSettignsLazyQueryHookResult = ReturnType<typeof useLoadNotificationSettignsLazyQuery>;
 export type LoadNotificationSettignsQueryResult = Apollo.QueryResult<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>;
@@ -2993,6 +3033,7 @@ export type UpdateNotificationSettingsMutationFn = Apollo.MutationFunction<Updat
 export function useUpdateNotificationSettingsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateNotificationSettingsMutation, UpdateNotificationSettingsMutationVariables>) {
   return Apollo.useMutation<UpdateNotificationSettingsMutation, UpdateNotificationSettingsMutationVariables>(UpdateNotificationSettingsDocument, baseOptions);
 }
+
 export type UpdateNotificationSettingsMutationHookResult = ReturnType<typeof useUpdateNotificationSettingsMutation>;
 export type UpdateNotificationSettingsMutationResult = Apollo.MutationResult<UpdateNotificationSettingsMutation>;
 export type UpdateNotificationSettingsMutationOptions = Apollo.BaseMutationOptions<UpdateNotificationSettingsMutation, UpdateNotificationSettingsMutationVariables>;
@@ -3024,9 +3065,11 @@ export const NotificationOptionsDocument = gql`
 export function useNotificationOptionsQuery(baseOptions?: Apollo.QueryHookOptions<NotificationOptionsQuery, NotificationOptionsQueryVariables>) {
   return Apollo.useQuery<NotificationOptionsQuery, NotificationOptionsQueryVariables>(NotificationOptionsDocument, baseOptions);
 }
+
 export function useNotificationOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NotificationOptionsQuery, NotificationOptionsQueryVariables>) {
   return Apollo.useLazyQuery<NotificationOptionsQuery, NotificationOptionsQueryVariables>(NotificationOptionsDocument, baseOptions);
 }
+
 export type NotificationOptionsQueryHookResult = ReturnType<typeof useNotificationOptionsQuery>;
 export type NotificationOptionsLazyQueryHookResult = ReturnType<typeof useNotificationOptionsLazyQuery>;
 export type NotificationOptionsQueryResult = Apollo.QueryResult<NotificationOptionsQuery, NotificationOptionsQueryVariables>;
@@ -3059,6 +3102,7 @@ export type CreateNotificationTemplateMutationFn = Apollo.MutationFunction<Creat
 export function useCreateNotificationTemplateMutation(baseOptions?: Apollo.MutationHookOptions<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>) {
   return Apollo.useMutation<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>(CreateNotificationTemplateDocument, baseOptions);
 }
+
 export type CreateNotificationTemplateMutationHookResult = ReturnType<typeof useCreateNotificationTemplateMutation>;
 export type CreateNotificationTemplateMutationResult = Apollo.MutationResult<CreateNotificationTemplateMutation>;
 export type CreateNotificationTemplateMutationOptions = Apollo.BaseMutationOptions<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>;
@@ -3100,9 +3144,11 @@ export const AllTemplatesForTypeDocument = gql`
 export function useAllTemplatesForTypeQuery(baseOptions: Apollo.QueryHookOptions<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>) {
   return Apollo.useQuery<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>(AllTemplatesForTypeDocument, baseOptions);
 }
+
 export function useAllTemplatesForTypeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>) {
   return Apollo.useLazyQuery<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>(AllTemplatesForTypeDocument, baseOptions);
 }
+
 export type AllTemplatesForTypeQueryHookResult = ReturnType<typeof useAllTemplatesForTypeQuery>;
 export type AllTemplatesForTypeLazyQueryHookResult = ReturnType<typeof useAllTemplatesForTypeLazyQuery>;
 export type AllTemplatesForTypeQueryResult = Apollo.QueryResult<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>;
@@ -3135,6 +3181,7 @@ export type UpdateTemplateMutationFn = Apollo.MutationFunction<UpdateTemplateMut
 export function useUpdateTemplateMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTemplateMutation, UpdateTemplateMutationVariables>) {
   return Apollo.useMutation<UpdateTemplateMutation, UpdateTemplateMutationVariables>(UpdateTemplateDocument, baseOptions);
 }
+
 export type UpdateTemplateMutationHookResult = ReturnType<typeof useUpdateTemplateMutation>;
 export type UpdateTemplateMutationResult = Apollo.MutationResult<UpdateTemplateMutation>;
 export type UpdateTemplateMutationOptions = Apollo.BaseMutationOptions<UpdateTemplateMutation, UpdateTemplateMutationVariables>;
@@ -3172,9 +3219,11 @@ export const GetNotificaitonTemplatesDocument = gql`
 export function useGetNotificaitonTemplatesQuery(baseOptions: Apollo.QueryHookOptions<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>) {
   return Apollo.useQuery<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>(GetNotificaitonTemplatesDocument, baseOptions);
 }
+
 export function useGetNotificaitonTemplatesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>) {
   return Apollo.useLazyQuery<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>(GetNotificaitonTemplatesDocument, baseOptions);
 }
+
 export type GetNotificaitonTemplatesQueryHookResult = ReturnType<typeof useGetNotificaitonTemplatesQuery>;
 export type GetNotificaitonTemplatesLazyQueryHookResult = ReturnType<typeof useGetNotificaitonTemplatesLazyQuery>;
 export type GetNotificaitonTemplatesQueryResult = Apollo.QueryResult<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>;
@@ -3242,9 +3291,11 @@ export const GetProposalDetailsDocument = gql`
 export function useGetProposalDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>) {
   return Apollo.useQuery<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>(GetProposalDetailsDocument, baseOptions);
 }
+
 export function useGetProposalDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>) {
   return Apollo.useLazyQuery<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>(GetProposalDetailsDocument, baseOptions);
 }
+
 export type GetProposalDetailsQueryHookResult = ReturnType<typeof useGetProposalDetailsQuery>;
 export type GetProposalDetailsLazyQueryHookResult = ReturnType<typeof useGetProposalDetailsLazyQuery>;
 export type GetProposalDetailsQueryResult = Apollo.QueryResult<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>;
@@ -3303,9 +3354,11 @@ export const GetUserDetailsQueryDocument = gql`
 export function useGetUserDetailsQueryQuery(baseOptions: Apollo.QueryHookOptions<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>) {
   return Apollo.useQuery<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>(GetUserDetailsQueryDocument, baseOptions);
 }
+
 export function useGetUserDetailsQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>) {
   return Apollo.useLazyQuery<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>(GetUserDetailsQueryDocument, baseOptions);
 }
+
 export type GetUserDetailsQueryQueryHookResult = ReturnType<typeof useGetUserDetailsQueryQuery>;
 export type GetUserDetailsQueryLazyQueryHookResult = ReturnType<typeof useGetUserDetailsQueryLazyQuery>;
 export type GetUserDetailsQueryQueryResult = Apollo.QueryResult<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>;
@@ -3349,9 +3402,11 @@ export const GetCommonsHomescreenDataDocument = gql`
 export function useGetCommonsHomescreenDataQuery(baseOptions?: Apollo.QueryHookOptions<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>) {
   return Apollo.useQuery<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>(GetCommonsHomescreenDataDocument, baseOptions);
 }
+
 export function useGetCommonsHomescreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>) {
   return Apollo.useLazyQuery<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>(GetCommonsHomescreenDataDocument, baseOptions);
 }
+
 export type GetCommonsHomescreenDataQueryHookResult = ReturnType<typeof useGetCommonsHomescreenDataQuery>;
 export type GetCommonsHomescreenDataLazyQueryHookResult = ReturnType<typeof useGetCommonsHomescreenDataLazyQuery>;
 export type GetCommonsHomescreenDataQueryResult = Apollo.QueryResult<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>;
@@ -3384,9 +3439,11 @@ export const GetAllTimeStatistiscDocument = gql`
 export function useGetAllTimeStatistiscQuery(baseOptions?: Apollo.QueryHookOptions<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>) {
   return Apollo.useQuery<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>(GetAllTimeStatistiscDocument, baseOptions);
 }
+
 export function useGetAllTimeStatistiscLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>) {
   return Apollo.useLazyQuery<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>(GetAllTimeStatistiscDocument, baseOptions);
 }
+
 export type GetAllTimeStatistiscQueryHookResult = ReturnType<typeof useGetAllTimeStatistiscQuery>;
 export type GetAllTimeStatistiscLazyQueryHookResult = ReturnType<typeof useGetAllTimeStatistiscLazyQuery>;
 export type GetAllTimeStatistiscQueryResult = Apollo.QueryResult<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>;
@@ -3444,7 +3501,7 @@ export const AvailableWiresDocument = gql`
   query availableWires($where: WireWhereInput!) {
     wires(where: $where) {
       id
-      userId
+      description
     }
   }
 `;
@@ -3476,6 +3533,39 @@ export function useAvailableWiresLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type AvailableWiresQueryHookResult = ReturnType<typeof useAvailableWiresQuery>;
 export type AvailableWiresLazyQueryHookResult = ReturnType<typeof useAvailableWiresLazyQuery>;
 export type AvailableWiresQueryResult = Apollo.QueryResult<AvailableWiresQuery, AvailableWiresQueryVariables>;
+export const CreatePayoutDocument = gql`
+  mutation createPayout($input: CreatePayoutInput!) {
+    createPayout(input: $input) {
+      id
+    }
+  }
+`;
+export type CreatePayoutMutationFn = Apollo.MutationFunction<CreatePayoutMutation, CreatePayoutMutationVariables>;
+
+/**
+ * __useCreatePayoutMutation__
+ *
+ * To run a mutation, you first call `useCreatePayoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePayoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPayoutMutation, { data, loading, error }] = useCreatePayoutMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreatePayoutMutation(baseOptions?: Apollo.MutationHookOptions<CreatePayoutMutation, CreatePayoutMutationVariables>) {
+  return Apollo.useMutation<CreatePayoutMutation, CreatePayoutMutationVariables>(CreatePayoutDocument, baseOptions);
+}
+
+export type CreatePayoutMutationHookResult = ReturnType<typeof useCreatePayoutMutation>;
+export type CreatePayoutMutationResult = Apollo.MutationResult<CreatePayoutMutation>;
+export type CreatePayoutMutationOptions = Apollo.BaseMutationOptions<CreatePayoutMutation, CreatePayoutMutationVariables>;
 export const PayoutsPageDataDocument = gql`
   query PayoutsPageData {
     proposals(fundingWhere: {fundingState: Eligible}) {
@@ -3509,9 +3599,11 @@ export const PayoutsPageDataDocument = gql`
 export function usePayoutsPageDataQuery(baseOptions?: Apollo.QueryHookOptions<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>) {
   return Apollo.useQuery<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>(PayoutsPageDataDocument, baseOptions);
 }
+
 export function usePayoutsPageDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>) {
   return Apollo.useLazyQuery<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>(PayoutsPageDataDocument, baseOptions);
 }
+
 export type PayoutsPageDataQueryHookResult = ReturnType<typeof usePayoutsPageDataQuery>;
 export type PayoutsPageDataLazyQueryHookResult = ReturnType<typeof usePayoutsPageDataLazyQuery>;
 export type PayoutsPageDataQueryResult = Apollo.QueryResult<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>;
@@ -3561,9 +3653,11 @@ export const GetProposalsHomescreenDocument = gql`
 export function useGetProposalsHomescreenQuery(baseOptions: Apollo.QueryHookOptions<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>) {
   return Apollo.useQuery<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>(GetProposalsHomescreenDocument, baseOptions);
 }
+
 export function useGetProposalsHomescreenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>) {
   return Apollo.useLazyQuery<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>(GetProposalsHomescreenDocument, baseOptions);
 }
+
 export type GetProposalsHomescreenQueryHookResult = ReturnType<typeof useGetProposalsHomescreenQuery>;
 export type GetProposalsHomescreenLazyQueryHookResult = ReturnType<typeof useGetProposalsHomescreenLazyQuery>;
 export type GetProposalsHomescreenQueryResult = Apollo.QueryResult<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>;
@@ -3600,9 +3694,11 @@ export const GetUsersHomepageDataDocument = gql`
 export function useGetUsersHomepageDataQuery(baseOptions: Apollo.QueryHookOptions<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>) {
   return Apollo.useQuery<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>(GetUsersHomepageDataDocument, baseOptions);
 }
+
 export function useGetUsersHomepageDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>) {
   return Apollo.useLazyQuery<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>(GetUsersHomepageDataDocument, baseOptions);
 }
+
 export type GetUsersHomepageDataQueryHookResult = ReturnType<typeof useGetUsersHomepageDataQuery>;
 export type GetUsersHomepageDataLazyQueryHookResult = ReturnType<typeof useGetUsersHomepageDataLazyQuery>;
 export type GetUsersHomepageDataQueryResult = Apollo.QueryResult<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>;
