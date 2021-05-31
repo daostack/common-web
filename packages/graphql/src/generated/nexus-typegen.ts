@@ -4,11 +4,10 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
-import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
+import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -261,6 +260,15 @@ export interface NexusGenInputs {
   PaymentsWhereInput: { // input type
     commonId?: NexusGenScalars['UUID'] | null; // UUID
     userId?: NexusGenScalars['UUID'] | null; // UUID
+  }
+  PayoutStatusFilter: { // input type
+    equals?: NexusGenEnums['PayoutStatus'] | null; // PayoutStatus
+    in?: Array<NexusGenEnums['PayoutStatus'] | null> | null; // [PayoutStatus]
+    not?: NexusGenEnums['PayoutStatus'] | null; // PayoutStatus
+    notIn?: Array<NexusGenEnums['PayoutStatus'] | null> | null; // [PayoutStatus]
+  }
+  PayoutWhereInput: { // input type
+    status?: NexusGenInputs['PayoutStatusFilter'] | null; // PayoutStatusFilter
   }
   ProposalFileInput: { // input type
     value: string; // String!
@@ -957,6 +965,7 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description: string; // String!
     id: NexusGenScalars['UUID']; // UUID!
+    proposals: NexusGenRootTypes['Proposal'][]; // [Proposal!]!
     status: NexusGenEnums['PayoutStatus']; // PayoutStatus!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
@@ -1011,6 +1020,7 @@ export interface NexusGenFieldTypes {
     notifications: Array<NexusGenRootTypes['Notification'] | null> | null; // [Notification]
     payment: NexusGenRootTypes['Payment'] | null; // Payment
     payments: Array<NexusGenRootTypes['Payment'] | null> | null; // [Payment]
+    payout: NexusGenRootTypes['Payout'] | null; // Payout
     payouts: Array<NexusGenRootTypes['Payout'] | null> | null; // [Payout]
     proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
     proposals: Array<NexusGenRootTypes['Proposal'] | null> | null; // [Proposal]
@@ -1381,6 +1391,7 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'DateTime'
     description: 'String'
     id: 'UUID'
+    proposals: 'Proposal'
     status: 'PayoutStatus'
     updatedAt: 'DateTime'
   }
@@ -1435,6 +1446,7 @@ export interface NexusGenFieldTypeNames {
     notifications: 'Notification'
     payment: 'Payment'
     payments: 'Payment'
+    payout: 'Payout'
     payouts: 'Payout'
     proposal: 'Proposal'
     proposals: 'Proposal'
@@ -1751,8 +1763,12 @@ export interface NexusGenArgTypes {
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
       where?: NexusGenInputs['PaymentsWhereInput'] | null; // PaymentsWhereInput
     }
+    payout: { // args
+      id: string; // ID!
+    }
     payouts: { // args
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
+      where?: NexusGenInputs['PayoutWhereInput'] | null; // PayoutWhereInput
     }
     proposal: { // args
       where: NexusGenInputs['ProposalWhereUniqueInput']; // ProposalWhereUniqueInput!

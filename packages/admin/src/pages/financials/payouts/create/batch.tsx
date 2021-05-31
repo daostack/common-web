@@ -208,7 +208,7 @@ const CreateBatchPayoutPage: NextPage = () => {
           </Breadcrumbs.Item>
 
           <Breadcrumbs.Item>
-            <Link to="/payouts">Payouts</Link>
+            <Link to="/financials/payouts">Payouts</Link>
           </Breadcrumbs.Item>
 
           <Breadcrumbs.Item>
@@ -261,7 +261,7 @@ const CreateBatchPayoutPage: NextPage = () => {
               <Card key={proposal.id} style={{ margin: '20px 0' }}>
                 <Grid.Container>
                   <Grid xs={20}>
-                    <Text h3 style={{ marginBottom: 0 }}>{proposal.description.title}</Text>
+                    <Text h3 style={{ marginBottom: 0 }}>{proposal.title}</Text>
                     <Text b>
                       {(proposal.funding.amount / 100).toLocaleString('en-US', {
                         style: 'currency',

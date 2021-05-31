@@ -6,6 +6,9 @@ export const GetPayoutsQuery = queryField('payouts', {
   args: {
     paginate: arg({
       type: 'PaginateInput'
+    }),
+    where: arg({
+      type: 'PayoutWhereInput'
     })
   },
   authorize: async (root, args, ctx) => {
@@ -14,7 +17,8 @@ export const GetPayoutsQuery = queryField('payouts', {
   resolve: (root, args) => {
     return prisma.payout
       .findMany({
-        ...args.paginate as any
+        ...args.paginate as any,
+        where: args.where as any
       });
   }
 });

@@ -387,6 +387,7 @@ type Payout implements BaseEntity {
   status: PayoutStatus!
   amount: Int!
   description: String!
+  proposals: [Proposal!]!
 }
 type PayoutApprover implements BaseEntity {
   """The main identifier of the item"""
@@ -408,6 +409,15 @@ enum PayoutStatus {
 enum PayoutApproverResponse {
   Approved
   Declined
+}
+input PayoutStatusFilter {
+  in: [PayoutStatus]
+  notIn: [PayoutStatus]
+  equals: PayoutStatus
+  not: PayoutStatus
+}
+input PayoutWhereInput {
+  status: PayoutStatusFilter
 }
 enum PaymentType {
   OneTimePayment
@@ -1290,7 +1300,8 @@ type Query {
   events(paginate: PaginateInput): [Event]
   common(where: CommonWhereUniqueInput!): Common
   commons(paginate: PaginateInput, where: CommonWhereInput): [Common]
-  payouts(paginate: PaginateInput): [Payout]
+  payout(id: ID!): Payout
+  payouts(paginate: PaginateInput, where: PayoutWhereInput): [Payout]
   payment(id: ID): Payment
   payments(paginate: PaginateInput, where: PaymentsWhereInput): [Payment]
   proposal(where: ProposalWhereUniqueInput!): Proposal

@@ -508,6 +508,7 @@ export type Payout = BaseEntity & {
   status: PayoutStatus;
   amount: Scalars['Int'];
   description: Scalars['String'];
+  proposals: Array<Proposal>;
 };
 
 export type PayoutApprover = BaseEntity & {
@@ -534,6 +535,17 @@ export enum PayoutApproverResponse {
   Approved = 'Approved',
   Declined = 'Declined'
 }
+
+export type PayoutStatusFilter = {
+  in?: Maybe<Array<Maybe<PayoutStatus>>>;
+  notIn?: Maybe<Array<Maybe<PayoutStatus>>>;
+  equals?: Maybe<PayoutStatus>;
+  not?: Maybe<PayoutStatus>;
+};
+
+export type PayoutWhereInput = {
+  status?: Maybe<PayoutStatusFilter>;
+};
 
 export enum PaymentType {
   OneTimePayment = 'OneTimePayment',
@@ -1532,6 +1544,7 @@ export type Query = {
   events?: Maybe<Array<Maybe<Event>>>;
   common?: Maybe<Common>;
   commons?: Maybe<Array<Maybe<Common>>>;
+  payout?: Maybe<Payout>;
   payouts?: Maybe<Array<Maybe<Payout>>>;
   payment?: Maybe<Payment>;
   payments?: Maybe<Array<Maybe<Payment>>>;
@@ -1592,8 +1605,14 @@ export type QueryCommonsArgs = {
 };
 
 
+export type QueryPayoutArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type QueryPayoutsArgs = {
   paginate?: Maybe<PaginateInput>;
+  where?: Maybe<PayoutWhereInput>;
 };
 
 
@@ -2024,6 +2043,147 @@ export type GetCommonDetailsQuery = (
 }
   );
 
+export type GetCommonsHomescreenDataQueryVariables = Exact<{
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type GetCommonsHomescreenDataQuery = (
+  { __typename?: 'Query' }
+  & {
+  commons?: Maybe<Array<Maybe<(
+    { __typename?: 'Common' }
+    & Pick<Common, 'id' | 'name' | 'raised' | 'balance' | 'createdAt' | 'updatedAt' | 'description' | 'byline' | 'fundingType' | 'fundingMinimumAmount'>
+    & {
+    members: Array<Maybe<(
+      { __typename?: 'CommonMember' }
+      & Pick<CommonMember, 'userId'>
+      )>>
+  }
+    )>>>
+}
+  );
+
+export type GetAllTimeStatistiscQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllTimeStatistiscQuery = (
+  { __typename?: 'Query' }
+  & {
+  getStatistics?: Maybe<Array<Maybe<(
+    { __typename?: 'Statistic' }
+    & Pick<Statistic, 'users' | 'commons' | 'joinProposals' | 'fundingProposals'>
+    )>>>
+}
+  );
+
+export type GetProposalsSelectedForBatchQueryVariables = Exact<{
+  where: ProposalWhereInput;
+}>;
+
+
+export type GetProposalsSelectedForBatchQuery = (
+  { __typename?: 'Query' }
+  & {
+  proposals?: Maybe<Array<Maybe<(
+    { __typename?: 'Proposal' }
+    & Pick<Proposal, 'id' | 'state' | 'title' | 'description'>
+    & {
+    user: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'firstName' | 'lastName'>
+      ), common: (
+      { __typename?: 'Common' }
+      & Pick<Common, 'name'>
+      ), funding?: Maybe<(
+      { __typename?: 'FundingProposal' }
+      & Pick<FundingProposal, 'fundingState' | 'amount'>
+      )>
+  }
+    )>>>
+}
+  );
+
+export type AvailableWiresQueryVariables = Exact<{
+  where: WireWhereInput;
+}>;
+
+
+export type AvailableWiresQuery = (
+  { __typename?: 'Query' }
+  & {
+  wires?: Maybe<Array<Maybe<(
+    { __typename?: 'Wire' }
+    & Pick<Wire, 'id' | 'description'>
+    )>>>
+}
+  );
+
+export type CreatePayoutMutationVariables = Exact<{
+  input: CreatePayoutInput;
+}>;
+
+
+export type CreatePayoutMutation = (
+  { __typename?: 'Mutation' }
+  & {
+  createPayout?: Maybe<(
+    { __typename?: 'Payout' }
+    & Pick<Payout, 'id'>
+    )>
+}
+  );
+
+export type GetPayoutDetailsQueryVariables = Exact<{
+  payoutId: Scalars['ID'];
+}>;
+
+
+export type GetPayoutDetailsQuery = (
+  { __typename?: 'Query' }
+  & {
+  payout?: Maybe<(
+    { __typename?: 'Payout' }
+    & Pick<Payout, 'status'>
+    & {
+    proposals: Array<(
+      { __typename?: 'Proposal' }
+      & Pick<Proposal, 'id' | 'title' | 'description'>
+      & {
+      funding?: Maybe<(
+        { __typename?: 'FundingProposal' }
+        & Pick<FundingProposal, 'amount'>
+        )>
+    }
+      )>
+  }
+    )>
+}
+  );
+
+export type PayoutsPageDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PayoutsPageDataQuery = (
+  { __typename?: 'Query' }
+  & {
+  proposals?: Maybe<Array<Maybe<(
+    { __typename?: 'Proposal' }
+    & Pick<Proposal, 'id' | 'userId' | 'commonId' | 'title' | 'description'>
+    & {
+    funding?: Maybe<(
+      { __typename?: 'FundingProposal' }
+      & Pick<FundingProposal, 'amount'>
+      )>
+  }
+    )>>>, payouts?: Maybe<Array<Maybe<(
+    { __typename?: 'Payout' }
+    & Pick<Payout, 'id' | 'amount' | 'createdAt' | 'updatedAt' | 'description'>
+    )>>>
+}
+  );
+
 export type GetNotificationEventsQueryVariables = Exact<{
   paginate: PaginateInput;
 }>;
@@ -2242,6 +2402,37 @@ export type GetProposalDetailsQuery = (
 }
   );
 
+export type GetProposalsHomescreenQueryVariables = Exact<{
+  fundingPaginate: PaginateInput;
+  joinPaginate: PaginateInput;
+}>;
+
+
+export type GetProposalsHomescreenQuery = (
+  { __typename?: 'Query' }
+  & {
+  funding?: Maybe<Array<Maybe<(
+    { __typename?: 'Proposal' }
+    & Pick<Proposal, 'id' | 'commonId' | 'votesFor' | 'votesAgainst' | 'title' | 'description'>
+    & {
+    funding?: Maybe<(
+      { __typename?: 'FundingProposal' }
+      & Pick<FundingProposal, 'amount'>
+      )>
+  }
+    )>>>, join?: Maybe<Array<Maybe<(
+    { __typename?: 'Proposal' }
+    & Pick<Proposal, 'id' | 'commonId' | 'title' | 'description'>
+    & {
+    join?: Maybe<(
+      { __typename?: 'JoinProposal' }
+      & Pick<JoinProposal, 'funding' | 'fundingType'>
+      )>
+  }
+    )>>>
+}
+  );
+
 export type GetUserDetailsQueryQueryVariables = Exact<{
   where: UserWhereUniqueInput;
 }>;
@@ -2275,148 +2466,6 @@ export type GetUserDetailsQueryQuery = (
       )>
   }
     )>
-}
-  );
-
-export type GetCommonsHomescreenDataQueryVariables = Exact<{
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-}>;
-
-
-export type GetCommonsHomescreenDataQuery = (
-  { __typename?: 'Query' }
-  & {
-  commons?: Maybe<Array<Maybe<(
-    { __typename?: 'Common' }
-    & Pick<Common, 'id' | 'name' | 'raised' | 'balance' | 'createdAt' | 'updatedAt' | 'description' | 'byline' | 'fundingType' | 'fundingMinimumAmount'>
-    & {
-    members: Array<Maybe<(
-      { __typename?: 'CommonMember' }
-      & Pick<CommonMember, 'userId'>
-      )>>
-  }
-    )>>>
-}
-  );
-
-export type GetAllTimeStatistiscQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetAllTimeStatistiscQuery = (
-  { __typename?: 'Query' }
-  & {
-  getStatistics?: Maybe<Array<Maybe<(
-    { __typename?: 'Statistic' }
-    & Pick<Statistic, 'users' | 'commons' | 'joinProposals' | 'fundingProposals'>
-    )>>>
-}
-  );
-
-export type GetProposalsSelectedForBatchQueryVariables = Exact<{
-  where: ProposalWhereInput;
-}>;
-
-
-export type GetProposalsSelectedForBatchQuery = (
-  { __typename?: 'Query' }
-  & {
-  proposals?: Maybe<Array<Maybe<(
-    { __typename?: 'Proposal' }
-    & Pick<Proposal, 'id' | 'state' | 'title' | 'description'>
-    & {
-    user: (
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'firstName' | 'lastName'>
-      ), common: (
-      { __typename?: 'Common' }
-      & Pick<Common, 'name'>
-      ), funding?: Maybe<(
-      { __typename?: 'FundingProposal' }
-      & Pick<FundingProposal, 'fundingState' | 'amount'>
-      )>
-  }
-    )>>>
-}
-  );
-
-export type AvailableWiresQueryVariables = Exact<{
-  where: WireWhereInput;
-}>;
-
-
-export type AvailableWiresQuery = (
-  { __typename?: 'Query' }
-  & {
-  wires?: Maybe<Array<Maybe<(
-    { __typename?: 'Wire' }
-    & Pick<Wire, 'id' | 'description'>
-    )>>>
-}
-  );
-
-export type CreatePayoutMutationVariables = Exact<{
-  input: CreatePayoutInput;
-}>;
-
-
-export type CreatePayoutMutation = (
-  { __typename?: 'Mutation' }
-  & {
-  createPayout?: Maybe<(
-    { __typename?: 'Payout' }
-    & Pick<Payout, 'id'>
-    )>
-}
-  );
-
-export type PayoutsPageDataQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type PayoutsPageDataQuery = (
-  { __typename?: 'Query' }
-  & {
-  proposals?: Maybe<Array<Maybe<(
-    { __typename?: 'Proposal' }
-    & Pick<Proposal, 'id' | 'userId' | 'commonId' | 'title' | 'description'>
-    & {
-    funding?: Maybe<(
-      { __typename?: 'FundingProposal' }
-      & Pick<FundingProposal, 'amount'>
-      )>
-  }
-    )>>>
-}
-  );
-
-export type GetProposalsHomescreenQueryVariables = Exact<{
-  fundingPaginate: PaginateInput;
-  joinPaginate: PaginateInput;
-}>;
-
-
-export type GetProposalsHomescreenQuery = (
-  { __typename?: 'Query' }
-  & {
-  funding?: Maybe<Array<Maybe<(
-    { __typename?: 'Proposal' }
-    & Pick<Proposal, 'id' | 'commonId' | 'votesFor' | 'votesAgainst' | 'title' | 'description'>
-    & {
-    funding?: Maybe<(
-      { __typename?: 'FundingProposal' }
-      & Pick<FundingProposal, 'amount'>
-      )>
-  }
-    )>>>, join?: Maybe<Array<Maybe<(
-    { __typename?: 'Proposal' }
-    & Pick<Proposal, 'id' | 'commonId' | 'title' | 'description'>
-    & {
-    join?: Maybe<(
-      { __typename?: 'JoinProposal' }
-      & Pick<JoinProposal, 'funding' | 'fundingType'>
-      )>
-  }
-    )>>>
 }
   );
 
@@ -2464,7 +2513,6 @@ export type WhitelistCommonMutationFn = Apollo.MutationFunction<WhitelistCommonM
 export function useWhitelistCommonMutation(baseOptions?: Apollo.MutationHookOptions<WhitelistCommonMutation, WhitelistCommonMutationVariables>) {
   return Apollo.useMutation<WhitelistCommonMutation, WhitelistCommonMutationVariables>(WhitelistCommonDocument, baseOptions);
 }
-
 export type WhitelistCommonMutationHookResult = ReturnType<typeof useWhitelistCommonMutation>;
 export type WhitelistCommonMutationResult = Apollo.MutationResult<WhitelistCommonMutation>;
 export type WhitelistCommonMutationOptions = Apollo.BaseMutationOptions<WhitelistCommonMutation, WhitelistCommonMutationVariables>;
@@ -2495,7 +2543,6 @@ export type DelistCommonMutationFn = Apollo.MutationFunction<DelistCommonMutatio
 export function useDelistCommonMutation(baseOptions?: Apollo.MutationHookOptions<DelistCommonMutation, DelistCommonMutationVariables>) {
   return Apollo.useMutation<DelistCommonMutation, DelistCommonMutationVariables>(DelistCommonDocument, baseOptions);
 }
-
 export type DelistCommonMutationHookResult = ReturnType<typeof useDelistCommonMutation>;
 export type DelistCommonMutationResult = Apollo.MutationResult<DelistCommonMutation>;
 export type DelistCommonMutationOptions = Apollo.BaseMutationOptions<DelistCommonMutation, DelistCommonMutationVariables>;
@@ -2528,11 +2575,9 @@ export const CommonSearchDocument = gql`
 export function useCommonSearchQuery(baseOptions?: Apollo.QueryHookOptions<CommonSearchQuery, CommonSearchQueryVariables>) {
   return Apollo.useQuery<CommonSearchQuery, CommonSearchQueryVariables>(CommonSearchDocument, baseOptions);
 }
-
 export function useCommonSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommonSearchQuery, CommonSearchQueryVariables>) {
   return Apollo.useLazyQuery<CommonSearchQuery, CommonSearchQueryVariables>(CommonSearchDocument, baseOptions);
 }
-
 export type CommonSearchQueryHookResult = ReturnType<typeof useCommonSearchQuery>;
 export type CommonSearchLazyQueryHookResult = ReturnType<typeof useCommonSearchLazyQuery>;
 export type CommonSearchQueryResult = Apollo.QueryResult<CommonSearchQuery, CommonSearchQueryVariables>;
@@ -2566,11 +2611,9 @@ export const UserSearchDocument = gql`
 export function useUserSearchQuery(baseOptions?: Apollo.QueryHookOptions<UserSearchQuery, UserSearchQueryVariables>) {
   return Apollo.useQuery<UserSearchQuery, UserSearchQueryVariables>(UserSearchDocument, baseOptions);
 }
-
 export function useUserSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserSearchQuery, UserSearchQueryVariables>) {
   return Apollo.useLazyQuery<UserSearchQuery, UserSearchQueryVariables>(UserSearchDocument, baseOptions);
 }
-
 export type UserSearchQueryHookResult = ReturnType<typeof useUserSearchQuery>;
 export type UserSearchLazyQueryHookResult = ReturnType<typeof useUserSearchLazyQuery>;
 export type UserSearchQueryResult = Apollo.QueryResult<UserSearchQuery, UserSearchQueryVariables>;
@@ -2604,11 +2647,9 @@ export const ProposalSeachDocument = gql`
 export function useProposalSeachQuery(baseOptions?: Apollo.QueryHookOptions<ProposalSeachQuery, ProposalSeachQueryVariables>) {
   return Apollo.useQuery<ProposalSeachQuery, ProposalSeachQueryVariables>(ProposalSeachDocument, baseOptions);
 }
-
 export function useProposalSeachLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProposalSeachQuery, ProposalSeachQueryVariables>) {
   return Apollo.useLazyQuery<ProposalSeachQuery, ProposalSeachQueryVariables>(ProposalSeachDocument, baseOptions);
 }
-
 export type ProposalSeachQueryHookResult = ReturnType<typeof useProposalSeachQuery>;
 export type ProposalSeachLazyQueryHookResult = ReturnType<typeof useProposalSeachLazyQuery>;
 export type ProposalSeachQueryResult = Apollo.QueryResult<ProposalSeachQuery, ProposalSeachQueryVariables>;
@@ -2647,11 +2688,9 @@ export const GetLatestEventsDocument = gql`
 export function useGetLatestEventsQuery(baseOptions?: Apollo.QueryHookOptions<GetLatestEventsQuery, GetLatestEventsQueryVariables>) {
   return Apollo.useQuery<GetLatestEventsQuery, GetLatestEventsQueryVariables>(GetLatestEventsDocument, baseOptions);
 }
-
 export function useGetLatestEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLatestEventsQuery, GetLatestEventsQueryVariables>) {
   return Apollo.useLazyQuery<GetLatestEventsQuery, GetLatestEventsQueryVariables>(GetLatestEventsDocument, baseOptions);
 }
-
 export type GetLatestEventsQueryHookResult = ReturnType<typeof useGetLatestEventsQuery>;
 export type GetLatestEventsLazyQueryHookResult = ReturnType<typeof useGetLatestEventsLazyQuery>;
 export type GetLatestEventsQueryResult = Apollo.QueryResult<GetLatestEventsQuery, GetLatestEventsQueryVariables>;
@@ -2695,11 +2734,9 @@ export const GetPaymentsDocument = gql`
 export function useGetPaymentsQuery(baseOptions?: Apollo.QueryHookOptions<GetPaymentsQuery, GetPaymentsQueryVariables>) {
   return Apollo.useQuery<GetPaymentsQuery, GetPaymentsQueryVariables>(GetPaymentsDocument, baseOptions);
 }
-
 export function useGetPaymentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPaymentsQuery, GetPaymentsQueryVariables>) {
   return Apollo.useLazyQuery<GetPaymentsQuery, GetPaymentsQueryVariables>(GetPaymentsDocument, baseOptions);
 }
-
 export type GetPaymentsQueryHookResult = ReturnType<typeof useGetPaymentsQuery>;
 export type GetPaymentsLazyQueryHookResult = ReturnType<typeof useGetPaymentsLazyQuery>;
 export type GetPaymentsQueryResult = Apollo.QueryResult<GetPaymentsQuery, GetPaymentsQueryVariables>;
@@ -2735,11 +2772,9 @@ export const LoadUserContextDocument = gql`
 export function useLoadUserContextQuery(baseOptions?: Apollo.QueryHookOptions<LoadUserContextQuery, LoadUserContextQueryVariables>) {
   return Apollo.useQuery<LoadUserContextQuery, LoadUserContextQueryVariables>(LoadUserContextDocument, baseOptions);
 }
-
 export function useLoadUserContextLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LoadUserContextQuery, LoadUserContextQueryVariables>) {
   return Apollo.useLazyQuery<LoadUserContextQuery, LoadUserContextQueryVariables>(LoadUserContextDocument, baseOptions);
 }
-
 export type LoadUserContextQueryHookResult = ReturnType<typeof useLoadUserContextQuery>;
 export type LoadUserContextLazyQueryHookResult = ReturnType<typeof useLoadUserContextLazyQuery>;
 export type LoadUserContextQueryResult = Apollo.QueryResult<LoadUserContextQuery, LoadUserContextQueryVariables>;
@@ -2813,555 +2848,6 @@ export function useGetCommonDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type GetCommonDetailsQueryHookResult = ReturnType<typeof useGetCommonDetailsQuery>;
 export type GetCommonDetailsLazyQueryHookResult = ReturnType<typeof useGetCommonDetailsLazyQuery>;
 export type GetCommonDetailsQueryResult = Apollo.QueryResult<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>;
-export const GetNotificationEventsDocument = gql`
-  query GetNotificationEvents($paginate: PaginateInput!) {
-    notificationEventSettings(paginate: $paginate) {
-      id
-      sendToEveryone
-      sendToCommon
-      sendToUser
-      description
-      sendNotificationType
-      onEvent
-    }
-  }
-`;
-
-/**
- * __useGetNotificationEventsQuery__
- *
- * To run a query within a React component, call `useGetNotificationEventsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetNotificationEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetNotificationEventsQuery({
- *   variables: {
- *      paginate: // value for 'paginate'
- *   },
- * });
- */
-export function useGetNotificationEventsQuery(baseOptions: Apollo.QueryHookOptions<GetNotificationEventsQuery, GetNotificationEventsQueryVariables>) {
-  return Apollo.useQuery<GetNotificationEventsQuery, GetNotificationEventsQueryVariables>(GetNotificationEventsDocument, baseOptions);
-}
-
-export function useGetNotificationEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetNotificationEventsQuery, GetNotificationEventsQueryVariables>) {
-  return Apollo.useLazyQuery<GetNotificationEventsQuery, GetNotificationEventsQueryVariables>(GetNotificationEventsDocument, baseOptions);
-}
-
-export type GetNotificationEventsQueryHookResult = ReturnType<typeof useGetNotificationEventsQuery>;
-export type GetNotificationEventsLazyQueryHookResult = ReturnType<typeof useGetNotificationEventsLazyQuery>;
-export type GetNotificationEventsQueryResult = Apollo.QueryResult<GetNotificationEventsQuery, GetNotificationEventsQueryVariables>;
-export const GetCreateNotificationEventOptionsDocument = gql`
-  query GetCreateNotificationEventOptions {
-    notificationEventOptions {
-      availableEvents
-      availableNotifications
-    }
-  }
-`;
-
-/**
- * __useGetCreateNotificationEventOptionsQuery__
- *
- * To run a query within a React component, call `useGetCreateNotificationEventOptionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetCreateNotificationEventOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetCreateNotificationEventOptionsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetCreateNotificationEventOptionsQuery(baseOptions?: Apollo.QueryHookOptions<GetCreateNotificationEventOptionsQuery, GetCreateNotificationEventOptionsQueryVariables>) {
-  return Apollo.useQuery<GetCreateNotificationEventOptionsQuery, GetCreateNotificationEventOptionsQueryVariables>(GetCreateNotificationEventOptionsDocument, baseOptions);
-}
-
-export function useGetCreateNotificationEventOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCreateNotificationEventOptionsQuery, GetCreateNotificationEventOptionsQueryVariables>) {
-  return Apollo.useLazyQuery<GetCreateNotificationEventOptionsQuery, GetCreateNotificationEventOptionsQueryVariables>(GetCreateNotificationEventOptionsDocument, baseOptions);
-}
-
-export type GetCreateNotificationEventOptionsQueryHookResult = ReturnType<typeof useGetCreateNotificationEventOptionsQuery>;
-export type GetCreateNotificationEventOptionsLazyQueryHookResult = ReturnType<typeof useGetCreateNotificationEventOptionsLazyQuery>;
-export type GetCreateNotificationEventOptionsQueryResult = Apollo.QueryResult<GetCreateNotificationEventOptionsQuery, GetCreateNotificationEventOptionsQueryVariables>;
-export const CreateNotificationEventIntegrationDocument = gql`
-  mutation CreateNotificationEventIntegration($input: CreateNotificationEventSettingsInput!) {
-    createNotificationEventSettings(input: $input) {
-      id
-    }
-  }
-`;
-export type CreateNotificationEventIntegrationMutationFn = Apollo.MutationFunction<CreateNotificationEventIntegrationMutation, CreateNotificationEventIntegrationMutationVariables>;
-
-/**
- * __useCreateNotificationEventIntegrationMutation__
- *
- * To run a mutation, you first call `useCreateNotificationEventIntegrationMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateNotificationEventIntegrationMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createNotificationEventIntegrationMutation, { data, loading, error }] = useCreateNotificationEventIntegrationMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useCreateNotificationEventIntegrationMutation(baseOptions?: Apollo.MutationHookOptions<CreateNotificationEventIntegrationMutation, CreateNotificationEventIntegrationMutationVariables>) {
-  return Apollo.useMutation<CreateNotificationEventIntegrationMutation, CreateNotificationEventIntegrationMutationVariables>(CreateNotificationEventIntegrationDocument, baseOptions);
-}
-
-export type CreateNotificationEventIntegrationMutationHookResult = ReturnType<typeof useCreateNotificationEventIntegrationMutation>;
-export type CreateNotificationEventIntegrationMutationResult = Apollo.MutationResult<CreateNotificationEventIntegrationMutation>;
-export type CreateNotificationEventIntegrationMutationOptions = Apollo.BaseMutationOptions<CreateNotificationEventIntegrationMutation, CreateNotificationEventIntegrationMutationVariables>;
-export const GetAllUsersNotificationsDocument = gql`
-  query getAllUsersNotifications($paginate: PaginateInput!) {
-    notifications(paginate: $paginate) {
-      id
-      type
-      createdAt
-      seenStatus
-      user {
-        photo
-        displayName
-      }
-    }
-  }
-`;
-
-/**
- * __useGetAllUsersNotificationsQuery__
- *
- * To run a query within a React component, call `useGetAllUsersNotificationsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllUsersNotificationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAllUsersNotificationsQuery({
- *   variables: {
- *      paginate: // value for 'paginate'
- *   },
- * });
- */
-export function useGetAllUsersNotificationsQuery(baseOptions: Apollo.QueryHookOptions<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>) {
-  return Apollo.useQuery<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>(GetAllUsersNotificationsDocument, baseOptions);
-}
-
-export function useGetAllUsersNotificationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>) {
-  return Apollo.useLazyQuery<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>(GetAllUsersNotificationsDocument, baseOptions);
-}
-
-export type GetAllUsersNotificationsQueryHookResult = ReturnType<typeof useGetAllUsersNotificationsQuery>;
-export type GetAllUsersNotificationsLazyQueryHookResult = ReturnType<typeof useGetAllUsersNotificationsLazyQuery>;
-export type GetAllUsersNotificationsQueryResult = Apollo.QueryResult<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>;
-export const LoadNotificationSettignsDocument = gql`
-  query LoadNotificationSettigns {
-    notificationSettings {
-      id
-      createdAt
-      updatedAt
-      type
-      sendEmail
-      sendPush
-      showInUserFeed
-    }
-  }
-`;
-
-/**
- * __useLoadNotificationSettignsQuery__
- *
- * To run a query within a React component, call `useLoadNotificationSettignsQuery` and pass it any options that fit your needs.
- * When your component renders, `useLoadNotificationSettignsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useLoadNotificationSettignsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useLoadNotificationSettignsQuery(baseOptions?: Apollo.QueryHookOptions<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>) {
-  return Apollo.useQuery<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>(LoadNotificationSettignsDocument, baseOptions);
-}
-
-export function useLoadNotificationSettignsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>) {
-  return Apollo.useLazyQuery<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>(LoadNotificationSettignsDocument, baseOptions);
-}
-
-export type LoadNotificationSettignsQueryHookResult = ReturnType<typeof useLoadNotificationSettignsQuery>;
-export type LoadNotificationSettignsLazyQueryHookResult = ReturnType<typeof useLoadNotificationSettignsLazyQuery>;
-export type LoadNotificationSettignsQueryResult = Apollo.QueryResult<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>;
-export const UpdateNotificationSettingsDocument = gql`
-  mutation UpdateNotificationSettings($input: UpdateNotificationSettingsInput!) {
-    updateNotificationSettings(input: $input) {
-      id
-    }
-  }
-`;
-export type UpdateNotificationSettingsMutationFn = Apollo.MutationFunction<UpdateNotificationSettingsMutation, UpdateNotificationSettingsMutationVariables>;
-
-/**
- * __useUpdateNotificationSettingsMutation__
- *
- * To run a mutation, you first call `useUpdateNotificationSettingsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateNotificationSettingsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateNotificationSettingsMutation, { data, loading, error }] = useUpdateNotificationSettingsMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateNotificationSettingsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateNotificationSettingsMutation, UpdateNotificationSettingsMutationVariables>) {
-  return Apollo.useMutation<UpdateNotificationSettingsMutation, UpdateNotificationSettingsMutationVariables>(UpdateNotificationSettingsDocument, baseOptions);
-}
-
-export type UpdateNotificationSettingsMutationHookResult = ReturnType<typeof useUpdateNotificationSettingsMutation>;
-export type UpdateNotificationSettingsMutationResult = Apollo.MutationResult<UpdateNotificationSettingsMutation>;
-export type UpdateNotificationSettingsMutationOptions = Apollo.BaseMutationOptions<UpdateNotificationSettingsMutation, UpdateNotificationSettingsMutationVariables>;
-export const NotificationOptionsDocument = gql`
-  query NotificationOptions {
-    notificationTemplate: notificationTemplateOptions {
-      languages
-      templateTypes
-      notificationTypes
-    }
-  }
-`;
-
-/**
- * __useNotificationOptionsQuery__
- *
- * To run a query within a React component, call `useNotificationOptionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useNotificationOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useNotificationOptionsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useNotificationOptionsQuery(baseOptions?: Apollo.QueryHookOptions<NotificationOptionsQuery, NotificationOptionsQueryVariables>) {
-  return Apollo.useQuery<NotificationOptionsQuery, NotificationOptionsQueryVariables>(NotificationOptionsDocument, baseOptions);
-}
-
-export function useNotificationOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NotificationOptionsQuery, NotificationOptionsQueryVariables>) {
-  return Apollo.useLazyQuery<NotificationOptionsQuery, NotificationOptionsQueryVariables>(NotificationOptionsDocument, baseOptions);
-}
-
-export type NotificationOptionsQueryHookResult = ReturnType<typeof useNotificationOptionsQuery>;
-export type NotificationOptionsLazyQueryHookResult = ReturnType<typeof useNotificationOptionsLazyQuery>;
-export type NotificationOptionsQueryResult = Apollo.QueryResult<NotificationOptionsQuery, NotificationOptionsQueryVariables>;
-export const CreateNotificationTemplateDocument = gql`
-  mutation CreateNotificationTemplate($input: CreateNotificationTemplateInput!) {
-    createNotificationTemplate(input: $input) {
-      id
-    }
-  }
-`;
-export type CreateNotificationTemplateMutationFn = Apollo.MutationFunction<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>;
-
-/**
- * __useCreateNotificationTemplateMutation__
- *
- * To run a mutation, you first call `useCreateNotificationTemplateMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateNotificationTemplateMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createNotificationTemplateMutation, { data, loading, error }] = useCreateNotificationTemplateMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useCreateNotificationTemplateMutation(baseOptions?: Apollo.MutationHookOptions<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>) {
-  return Apollo.useMutation<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>(CreateNotificationTemplateDocument, baseOptions);
-}
-
-export type CreateNotificationTemplateMutationHookResult = ReturnType<typeof useCreateNotificationTemplateMutation>;
-export type CreateNotificationTemplateMutationResult = Apollo.MutationResult<CreateNotificationTemplateMutation>;
-export type CreateNotificationTemplateMutationOptions = Apollo.BaseMutationOptions<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>;
-export const AllTemplatesForTypeDocument = gql`
-  query allTemplatesForType($forType: NotificationType!) {
-    notificationSettings(where: {type: $forType}) {
-      sendEmail
-      sendPush
-      showInUserFeed
-    }
-    notificationTemplates(where: {forType: $forType}) {
-      id
-      templateType
-      language
-      subject
-      content
-      from
-      fromName
-    }
-  }
-`;
-
-/**
- * __useAllTemplatesForTypeQuery__
- *
- * To run a query within a React component, call `useAllTemplatesForTypeQuery` and pass it any options that fit your needs.
- * When your component renders, `useAllTemplatesForTypeQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useAllTemplatesForTypeQuery({
- *   variables: {
- *      forType: // value for 'forType'
- *   },
- * });
- */
-export function useAllTemplatesForTypeQuery(baseOptions: Apollo.QueryHookOptions<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>) {
-  return Apollo.useQuery<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>(AllTemplatesForTypeDocument, baseOptions);
-}
-
-export function useAllTemplatesForTypeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>) {
-  return Apollo.useLazyQuery<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>(AllTemplatesForTypeDocument, baseOptions);
-}
-
-export type AllTemplatesForTypeQueryHookResult = ReturnType<typeof useAllTemplatesForTypeQuery>;
-export type AllTemplatesForTypeLazyQueryHookResult = ReturnType<typeof useAllTemplatesForTypeLazyQuery>;
-export type AllTemplatesForTypeQueryResult = Apollo.QueryResult<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>;
-export const UpdateTemplateDocument = gql`
-  mutation UpdateTemplate($input: UpdateNotificationTemplateInput!) {
-    updateNotificationTemplate(input: $input) {
-      id
-    }
-  }
-`;
-export type UpdateTemplateMutationFn = Apollo.MutationFunction<UpdateTemplateMutation, UpdateTemplateMutationVariables>;
-
-/**
- * __useUpdateTemplateMutation__
- *
- * To run a mutation, you first call `useUpdateTemplateMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateTemplateMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateTemplateMutation, { data, loading, error }] = useUpdateTemplateMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useUpdateTemplateMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTemplateMutation, UpdateTemplateMutationVariables>) {
-  return Apollo.useMutation<UpdateTemplateMutation, UpdateTemplateMutationVariables>(UpdateTemplateDocument, baseOptions);
-}
-
-export type UpdateTemplateMutationHookResult = ReturnType<typeof useUpdateTemplateMutation>;
-export type UpdateTemplateMutationResult = Apollo.MutationResult<UpdateTemplateMutation>;
-export type UpdateTemplateMutationOptions = Apollo.BaseMutationOptions<UpdateTemplateMutation, UpdateTemplateMutationVariables>;
-export const GetNotificaitonTemplatesDocument = gql`
-  query getNotificaitonTemplates($paginate: PaginateInput!, $where: NotificationTemplateWhereInput) {
-    notificationTemplates(paginate: $paginate, where: $where) {
-      id
-      createdAt
-      updatedAt
-      subject
-      forType
-      language
-      templateType
-    }
-  }
-`;
-
-/**
- * __useGetNotificaitonTemplatesQuery__
- *
- * To run a query within a React component, call `useGetNotificaitonTemplatesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetNotificaitonTemplatesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetNotificaitonTemplatesQuery({
- *   variables: {
- *      paginate: // value for 'paginate'
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useGetNotificaitonTemplatesQuery(baseOptions: Apollo.QueryHookOptions<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>) {
-  return Apollo.useQuery<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>(GetNotificaitonTemplatesDocument, baseOptions);
-}
-
-export function useGetNotificaitonTemplatesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>) {
-  return Apollo.useLazyQuery<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>(GetNotificaitonTemplatesDocument, baseOptions);
-}
-
-export type GetNotificaitonTemplatesQueryHookResult = ReturnType<typeof useGetNotificaitonTemplatesQuery>;
-export type GetNotificaitonTemplatesLazyQueryHookResult = ReturnType<typeof useGetNotificaitonTemplatesLazyQuery>;
-export type GetNotificaitonTemplatesQueryResult = Apollo.QueryResult<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>;
-export const GetProposalDetailsDocument = gql`
-  query getProposalDetails($where: ProposalWhereUniqueInput!) {
-    proposal(where: $where) {
-      id
-      join {
-        funding
-        fundingType
-        paymentState
-      }
-      funding {
-        amount
-        fundingState
-      }
-      type
-      createdAt
-      updatedAt
-      votesFor
-      votesAgainst
-      state
-      user {
-        id
-        firstName
-        lastName
-      }
-      common {
-        members {
-          userId
-        }
-      }
-      description
-      votes {
-        id
-        outcome
-        voter {
-          user {
-            id
-            firstName
-            lastName
-          }
-        }
-      }
-    }
-  }
-`;
-
-/**
- * __useGetProposalDetailsQuery__
- *
- * To run a query within a React component, call `useGetProposalDetailsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetProposalDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetProposalDetailsQuery({
- *   variables: {
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useGetProposalDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>) {
-  return Apollo.useQuery<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>(GetProposalDetailsDocument, baseOptions);
-}
-
-export function useGetProposalDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>) {
-  return Apollo.useLazyQuery<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>(GetProposalDetailsDocument, baseOptions);
-}
-
-export type GetProposalDetailsQueryHookResult = ReturnType<typeof useGetProposalDetailsQuery>;
-export type GetProposalDetailsLazyQueryHookResult = ReturnType<typeof useGetProposalDetailsLazyQuery>;
-export type GetProposalDetailsQueryResult = Apollo.QueryResult<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>;
-export const GetUserDetailsQueryDocument = gql`
-  query getUserDetailsQuery($where: UserWhereUniqueInput!) {
-    user(where: $where) {
-      id
-      firstName
-      lastName
-      email
-      createdAt
-      photo
-      proposals {
-        id
-        type
-        state
-        join {
-          paymentState
-        }
-        title
-      }
-      subscriptions {
-        id
-        amount
-        common {
-          id
-          name
-        }
-        status
-        voided
-        createdAt
-        updatedAt
-        chargedAt
-        dueDate
-      }
-    }
-  }
-`;
-
-/**
- * __useGetUserDetailsQueryQuery__
- *
- * To run a query within a React component, call `useGetUserDetailsQueryQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUserDetailsQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetUserDetailsQueryQuery({
- *   variables: {
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useGetUserDetailsQueryQuery(baseOptions: Apollo.QueryHookOptions<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>) {
-  return Apollo.useQuery<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>(GetUserDetailsQueryDocument, baseOptions);
-}
-
-export function useGetUserDetailsQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>) {
-  return Apollo.useLazyQuery<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>(GetUserDetailsQueryDocument, baseOptions);
-}
-
-export type GetUserDetailsQueryQueryHookResult = ReturnType<typeof useGetUserDetailsQueryQuery>;
-export type GetUserDetailsQueryLazyQueryHookResult = ReturnType<typeof useGetUserDetailsQueryLazyQuery>;
-export type GetUserDetailsQueryQueryResult = Apollo.QueryResult<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>;
 export const GetCommonsHomescreenDataDocument = gql`
   query getCommonsHomescreenData($take: Int = 10, $skip: Int) {
     commons(paginate: {take: $take, skip: $skip}) {
@@ -3566,6 +3052,49 @@ export function useCreatePayoutMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreatePayoutMutationHookResult = ReturnType<typeof useCreatePayoutMutation>;
 export type CreatePayoutMutationResult = Apollo.MutationResult<CreatePayoutMutation>;
 export type CreatePayoutMutationOptions = Apollo.BaseMutationOptions<CreatePayoutMutation, CreatePayoutMutationVariables>;
+export const GetPayoutDetailsDocument = gql`
+  query GetPayoutDetails($payoutId: ID!) {
+    payout(id: $payoutId) {
+      status
+      proposals {
+        id
+        funding {
+          amount
+        }
+        title
+        description
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetPayoutDetailsQuery__
+ *
+ * To run a query within a React component, call `useGetPayoutDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPayoutDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPayoutDetailsQuery({
+ *   variables: {
+ *      payoutId: // value for 'payoutId'
+ *   },
+ * });
+ */
+export function useGetPayoutDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetPayoutDetailsQuery, GetPayoutDetailsQueryVariables>) {
+  return Apollo.useQuery<GetPayoutDetailsQuery, GetPayoutDetailsQueryVariables>(GetPayoutDetailsDocument, baseOptions);
+}
+
+export function useGetPayoutDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPayoutDetailsQuery, GetPayoutDetailsQueryVariables>) {
+  return Apollo.useLazyQuery<GetPayoutDetailsQuery, GetPayoutDetailsQueryVariables>(GetPayoutDetailsDocument, baseOptions);
+}
+
+export type GetPayoutDetailsQueryHookResult = ReturnType<typeof useGetPayoutDetailsQuery>;
+export type GetPayoutDetailsLazyQueryHookResult = ReturnType<typeof useGetPayoutDetailsLazyQuery>;
+export type GetPayoutDetailsQueryResult = Apollo.QueryResult<GetPayoutDetailsQuery, GetPayoutDetailsQueryVariables>;
 export const PayoutsPageDataDocument = gql`
   query PayoutsPageData {
     proposals(fundingWhere: {fundingState: Eligible}) {
@@ -3577,6 +3106,13 @@ export const PayoutsPageDataDocument = gql`
       funding {
         amount
       }
+    }
+    payouts(where: {status: {in: [PendingApproval, CirclePending]}}) {
+      id
+      amount
+      createdAt
+      updatedAt
+      description
     }
   }
 `;
@@ -3607,6 +3143,474 @@ export function usePayoutsPageDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type PayoutsPageDataQueryHookResult = ReturnType<typeof usePayoutsPageDataQuery>;
 export type PayoutsPageDataLazyQueryHookResult = ReturnType<typeof usePayoutsPageDataLazyQuery>;
 export type PayoutsPageDataQueryResult = Apollo.QueryResult<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>;
+export const GetNotificationEventsDocument = gql`
+  query GetNotificationEvents($paginate: PaginateInput!) {
+    notificationEventSettings(paginate: $paginate) {
+      id
+      sendToEveryone
+      sendToCommon
+      sendToUser
+      description
+      sendNotificationType
+      onEvent
+    }
+  }
+`;
+
+/**
+ * __useGetNotificationEventsQuery__
+ *
+ * To run a query within a React component, call `useGetNotificationEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNotificationEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetNotificationEventsQuery({
+ *   variables: {
+ *      paginate: // value for 'paginate'
+ *   },
+ * });
+ */
+export function useGetNotificationEventsQuery(baseOptions: Apollo.QueryHookOptions<GetNotificationEventsQuery, GetNotificationEventsQueryVariables>) {
+  return Apollo.useQuery<GetNotificationEventsQuery, GetNotificationEventsQueryVariables>(GetNotificationEventsDocument, baseOptions);
+}
+export function useGetNotificationEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetNotificationEventsQuery, GetNotificationEventsQueryVariables>) {
+  return Apollo.useLazyQuery<GetNotificationEventsQuery, GetNotificationEventsQueryVariables>(GetNotificationEventsDocument, baseOptions);
+}
+export type GetNotificationEventsQueryHookResult = ReturnType<typeof useGetNotificationEventsQuery>;
+export type GetNotificationEventsLazyQueryHookResult = ReturnType<typeof useGetNotificationEventsLazyQuery>;
+export type GetNotificationEventsQueryResult = Apollo.QueryResult<GetNotificationEventsQuery, GetNotificationEventsQueryVariables>;
+export const GetCreateNotificationEventOptionsDocument = gql`
+  query GetCreateNotificationEventOptions {
+    notificationEventOptions {
+      availableEvents
+      availableNotifications
+    }
+  }
+`;
+
+/**
+ * __useGetCreateNotificationEventOptionsQuery__
+ *
+ * To run a query within a React component, call `useGetCreateNotificationEventOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCreateNotificationEventOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCreateNotificationEventOptionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCreateNotificationEventOptionsQuery(baseOptions?: Apollo.QueryHookOptions<GetCreateNotificationEventOptionsQuery, GetCreateNotificationEventOptionsQueryVariables>) {
+  return Apollo.useQuery<GetCreateNotificationEventOptionsQuery, GetCreateNotificationEventOptionsQueryVariables>(GetCreateNotificationEventOptionsDocument, baseOptions);
+}
+export function useGetCreateNotificationEventOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCreateNotificationEventOptionsQuery, GetCreateNotificationEventOptionsQueryVariables>) {
+  return Apollo.useLazyQuery<GetCreateNotificationEventOptionsQuery, GetCreateNotificationEventOptionsQueryVariables>(GetCreateNotificationEventOptionsDocument, baseOptions);
+}
+export type GetCreateNotificationEventOptionsQueryHookResult = ReturnType<typeof useGetCreateNotificationEventOptionsQuery>;
+export type GetCreateNotificationEventOptionsLazyQueryHookResult = ReturnType<typeof useGetCreateNotificationEventOptionsLazyQuery>;
+export type GetCreateNotificationEventOptionsQueryResult = Apollo.QueryResult<GetCreateNotificationEventOptionsQuery, GetCreateNotificationEventOptionsQueryVariables>;
+export const CreateNotificationEventIntegrationDocument = gql`
+  mutation CreateNotificationEventIntegration($input: CreateNotificationEventSettingsInput!) {
+    createNotificationEventSettings(input: $input) {
+      id
+    }
+  }
+`;
+export type CreateNotificationEventIntegrationMutationFn = Apollo.MutationFunction<CreateNotificationEventIntegrationMutation, CreateNotificationEventIntegrationMutationVariables>;
+
+/**
+ * __useCreateNotificationEventIntegrationMutation__
+ *
+ * To run a mutation, you first call `useCreateNotificationEventIntegrationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateNotificationEventIntegrationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createNotificationEventIntegrationMutation, { data, loading, error }] = useCreateNotificationEventIntegrationMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateNotificationEventIntegrationMutation(baseOptions?: Apollo.MutationHookOptions<CreateNotificationEventIntegrationMutation, CreateNotificationEventIntegrationMutationVariables>) {
+  return Apollo.useMutation<CreateNotificationEventIntegrationMutation, CreateNotificationEventIntegrationMutationVariables>(CreateNotificationEventIntegrationDocument, baseOptions);
+}
+export type CreateNotificationEventIntegrationMutationHookResult = ReturnType<typeof useCreateNotificationEventIntegrationMutation>;
+export type CreateNotificationEventIntegrationMutationResult = Apollo.MutationResult<CreateNotificationEventIntegrationMutation>;
+export type CreateNotificationEventIntegrationMutationOptions = Apollo.BaseMutationOptions<CreateNotificationEventIntegrationMutation, CreateNotificationEventIntegrationMutationVariables>;
+export const GetAllUsersNotificationsDocument = gql`
+  query getAllUsersNotifications($paginate: PaginateInput!) {
+    notifications(paginate: $paginate) {
+      id
+      type
+      createdAt
+      seenStatus
+      user {
+        photo
+        displayName
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetAllUsersNotificationsQuery__
+ *
+ * To run a query within a React component, call `useGetAllUsersNotificationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllUsersNotificationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllUsersNotificationsQuery({
+ *   variables: {
+ *      paginate: // value for 'paginate'
+ *   },
+ * });
+ */
+export function useGetAllUsersNotificationsQuery(baseOptions: Apollo.QueryHookOptions<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>) {
+  return Apollo.useQuery<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>(GetAllUsersNotificationsDocument, baseOptions);
+}
+export function useGetAllUsersNotificationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>) {
+  return Apollo.useLazyQuery<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>(GetAllUsersNotificationsDocument, baseOptions);
+}
+export type GetAllUsersNotificationsQueryHookResult = ReturnType<typeof useGetAllUsersNotificationsQuery>;
+export type GetAllUsersNotificationsLazyQueryHookResult = ReturnType<typeof useGetAllUsersNotificationsLazyQuery>;
+export type GetAllUsersNotificationsQueryResult = Apollo.QueryResult<GetAllUsersNotificationsQuery, GetAllUsersNotificationsQueryVariables>;
+export const LoadNotificationSettignsDocument = gql`
+  query LoadNotificationSettigns {
+    notificationSettings {
+      id
+      createdAt
+      updatedAt
+      type
+      sendEmail
+      sendPush
+      showInUserFeed
+    }
+  }
+`;
+
+/**
+ * __useLoadNotificationSettignsQuery__
+ *
+ * To run a query within a React component, call `useLoadNotificationSettignsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLoadNotificationSettignsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLoadNotificationSettignsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLoadNotificationSettignsQuery(baseOptions?: Apollo.QueryHookOptions<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>) {
+  return Apollo.useQuery<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>(LoadNotificationSettignsDocument, baseOptions);
+}
+export function useLoadNotificationSettignsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>) {
+  return Apollo.useLazyQuery<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>(LoadNotificationSettignsDocument, baseOptions);
+}
+export type LoadNotificationSettignsQueryHookResult = ReturnType<typeof useLoadNotificationSettignsQuery>;
+export type LoadNotificationSettignsLazyQueryHookResult = ReturnType<typeof useLoadNotificationSettignsLazyQuery>;
+export type LoadNotificationSettignsQueryResult = Apollo.QueryResult<LoadNotificationSettignsQuery, LoadNotificationSettignsQueryVariables>;
+export const UpdateNotificationSettingsDocument = gql`
+  mutation UpdateNotificationSettings($input: UpdateNotificationSettingsInput!) {
+    updateNotificationSettings(input: $input) {
+      id
+    }
+  }
+`;
+export type UpdateNotificationSettingsMutationFn = Apollo.MutationFunction<UpdateNotificationSettingsMutation, UpdateNotificationSettingsMutationVariables>;
+
+/**
+ * __useUpdateNotificationSettingsMutation__
+ *
+ * To run a mutation, you first call `useUpdateNotificationSettingsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateNotificationSettingsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateNotificationSettingsMutation, { data, loading, error }] = useUpdateNotificationSettingsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateNotificationSettingsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateNotificationSettingsMutation, UpdateNotificationSettingsMutationVariables>) {
+  return Apollo.useMutation<UpdateNotificationSettingsMutation, UpdateNotificationSettingsMutationVariables>(UpdateNotificationSettingsDocument, baseOptions);
+}
+export type UpdateNotificationSettingsMutationHookResult = ReturnType<typeof useUpdateNotificationSettingsMutation>;
+export type UpdateNotificationSettingsMutationResult = Apollo.MutationResult<UpdateNotificationSettingsMutation>;
+export type UpdateNotificationSettingsMutationOptions = Apollo.BaseMutationOptions<UpdateNotificationSettingsMutation, UpdateNotificationSettingsMutationVariables>;
+export const NotificationOptionsDocument = gql`
+  query NotificationOptions {
+    notificationTemplate: notificationTemplateOptions {
+      languages
+      templateTypes
+      notificationTypes
+    }
+  }
+`;
+
+/**
+ * __useNotificationOptionsQuery__
+ *
+ * To run a query within a React component, call `useNotificationOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNotificationOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNotificationOptionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useNotificationOptionsQuery(baseOptions?: Apollo.QueryHookOptions<NotificationOptionsQuery, NotificationOptionsQueryVariables>) {
+  return Apollo.useQuery<NotificationOptionsQuery, NotificationOptionsQueryVariables>(NotificationOptionsDocument, baseOptions);
+}
+export function useNotificationOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NotificationOptionsQuery, NotificationOptionsQueryVariables>) {
+  return Apollo.useLazyQuery<NotificationOptionsQuery, NotificationOptionsQueryVariables>(NotificationOptionsDocument, baseOptions);
+}
+export type NotificationOptionsQueryHookResult = ReturnType<typeof useNotificationOptionsQuery>;
+export type NotificationOptionsLazyQueryHookResult = ReturnType<typeof useNotificationOptionsLazyQuery>;
+export type NotificationOptionsQueryResult = Apollo.QueryResult<NotificationOptionsQuery, NotificationOptionsQueryVariables>;
+export const CreateNotificationTemplateDocument = gql`
+  mutation CreateNotificationTemplate($input: CreateNotificationTemplateInput!) {
+    createNotificationTemplate(input: $input) {
+      id
+    }
+  }
+`;
+export type CreateNotificationTemplateMutationFn = Apollo.MutationFunction<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>;
+
+/**
+ * __useCreateNotificationTemplateMutation__
+ *
+ * To run a mutation, you first call `useCreateNotificationTemplateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateNotificationTemplateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createNotificationTemplateMutation, { data, loading, error }] = useCreateNotificationTemplateMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateNotificationTemplateMutation(baseOptions?: Apollo.MutationHookOptions<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>) {
+  return Apollo.useMutation<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>(CreateNotificationTemplateDocument, baseOptions);
+}
+export type CreateNotificationTemplateMutationHookResult = ReturnType<typeof useCreateNotificationTemplateMutation>;
+export type CreateNotificationTemplateMutationResult = Apollo.MutationResult<CreateNotificationTemplateMutation>;
+export type CreateNotificationTemplateMutationOptions = Apollo.BaseMutationOptions<CreateNotificationTemplateMutation, CreateNotificationTemplateMutationVariables>;
+export const AllTemplatesForTypeDocument = gql`
+  query allTemplatesForType($forType: NotificationType!) {
+    notificationSettings(where: {type: $forType}) {
+      sendEmail
+      sendPush
+      showInUserFeed
+    }
+    notificationTemplates(where: {forType: $forType}) {
+      id
+      templateType
+      language
+      subject
+      content
+      from
+      fromName
+    }
+  }
+`;
+
+/**
+ * __useAllTemplatesForTypeQuery__
+ *
+ * To run a query within a React component, call `useAllTemplatesForTypeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllTemplatesForTypeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllTemplatesForTypeQuery({
+ *   variables: {
+ *      forType: // value for 'forType'
+ *   },
+ * });
+ */
+export function useAllTemplatesForTypeQuery(baseOptions: Apollo.QueryHookOptions<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>) {
+  return Apollo.useQuery<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>(AllTemplatesForTypeDocument, baseOptions);
+}
+export function useAllTemplatesForTypeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>) {
+  return Apollo.useLazyQuery<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>(AllTemplatesForTypeDocument, baseOptions);
+}
+export type AllTemplatesForTypeQueryHookResult = ReturnType<typeof useAllTemplatesForTypeQuery>;
+export type AllTemplatesForTypeLazyQueryHookResult = ReturnType<typeof useAllTemplatesForTypeLazyQuery>;
+export type AllTemplatesForTypeQueryResult = Apollo.QueryResult<AllTemplatesForTypeQuery, AllTemplatesForTypeQueryVariables>;
+export const UpdateTemplateDocument = gql`
+  mutation UpdateTemplate($input: UpdateNotificationTemplateInput!) {
+    updateNotificationTemplate(input: $input) {
+      id
+    }
+  }
+`;
+export type UpdateTemplateMutationFn = Apollo.MutationFunction<UpdateTemplateMutation, UpdateTemplateMutationVariables>;
+
+/**
+ * __useUpdateTemplateMutation__
+ *
+ * To run a mutation, you first call `useUpdateTemplateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTemplateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTemplateMutation, { data, loading, error }] = useUpdateTemplateMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateTemplateMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTemplateMutation, UpdateTemplateMutationVariables>) {
+  return Apollo.useMutation<UpdateTemplateMutation, UpdateTemplateMutationVariables>(UpdateTemplateDocument, baseOptions);
+}
+export type UpdateTemplateMutationHookResult = ReturnType<typeof useUpdateTemplateMutation>;
+export type UpdateTemplateMutationResult = Apollo.MutationResult<UpdateTemplateMutation>;
+export type UpdateTemplateMutationOptions = Apollo.BaseMutationOptions<UpdateTemplateMutation, UpdateTemplateMutationVariables>;
+export const GetNotificaitonTemplatesDocument = gql`
+  query getNotificaitonTemplates($paginate: PaginateInput!, $where: NotificationTemplateWhereInput) {
+    notificationTemplates(paginate: $paginate, where: $where) {
+      id
+      createdAt
+      updatedAt
+      subject
+      forType
+      language
+      templateType
+    }
+  }
+`;
+
+/**
+ * __useGetNotificaitonTemplatesQuery__
+ *
+ * To run a query within a React component, call `useGetNotificaitonTemplatesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNotificaitonTemplatesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetNotificaitonTemplatesQuery({
+ *   variables: {
+ *      paginate: // value for 'paginate'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetNotificaitonTemplatesQuery(baseOptions: Apollo.QueryHookOptions<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>) {
+  return Apollo.useQuery<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>(GetNotificaitonTemplatesDocument, baseOptions);
+}
+export function useGetNotificaitonTemplatesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>) {
+  return Apollo.useLazyQuery<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>(GetNotificaitonTemplatesDocument, baseOptions);
+}
+export type GetNotificaitonTemplatesQueryHookResult = ReturnType<typeof useGetNotificaitonTemplatesQuery>;
+export type GetNotificaitonTemplatesLazyQueryHookResult = ReturnType<typeof useGetNotificaitonTemplatesLazyQuery>;
+export type GetNotificaitonTemplatesQueryResult = Apollo.QueryResult<GetNotificaitonTemplatesQuery, GetNotificaitonTemplatesQueryVariables>;
+export const GetProposalDetailsDocument = gql`
+  query getProposalDetails($where: ProposalWhereUniqueInput!) {
+    proposal(where: $where) {
+      id
+      join {
+        funding
+        fundingType
+        paymentState
+      }
+      funding {
+        amount
+        fundingState
+      }
+      type
+      createdAt
+      updatedAt
+      votesFor
+      votesAgainst
+      state
+      user {
+        id
+        firstName
+        lastName
+      }
+      common {
+        members {
+          userId
+        }
+      }
+      description
+      votes {
+        id
+        outcome
+        voter {
+          user {
+            id
+            firstName
+            lastName
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetProposalDetailsQuery__
+ *
+ * To run a query within a React component, call `useGetProposalDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProposalDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProposalDetailsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetProposalDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>) {
+  return Apollo.useQuery<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>(GetProposalDetailsDocument, baseOptions);
+}
+
+export function useGetProposalDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>) {
+  return Apollo.useLazyQuery<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>(GetProposalDetailsDocument, baseOptions);
+}
+
+export type GetProposalDetailsQueryHookResult = ReturnType<typeof useGetProposalDetailsQuery>;
+export type GetProposalDetailsLazyQueryHookResult = ReturnType<typeof useGetProposalDetailsLazyQuery>;
+export type GetProposalDetailsQueryResult = Apollo.QueryResult<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>;
 export const GetProposalsHomescreenDocument = gql`
   query getProposalsHomescreen($fundingPaginate: PaginateInput!, $joinPaginate: PaginateInput!) {
     funding: proposals(where: {type: FundingRequest}, paginate: $fundingPaginate) {
@@ -3661,6 +3665,67 @@ export function useGetProposalsHomescreenLazyQuery(baseOptions?: Apollo.LazyQuer
 export type GetProposalsHomescreenQueryHookResult = ReturnType<typeof useGetProposalsHomescreenQuery>;
 export type GetProposalsHomescreenLazyQueryHookResult = ReturnType<typeof useGetProposalsHomescreenLazyQuery>;
 export type GetProposalsHomescreenQueryResult = Apollo.QueryResult<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>;
+export const GetUserDetailsQueryDocument = gql`
+  query getUserDetailsQuery($where: UserWhereUniqueInput!) {
+    user(where: $where) {
+      id
+      firstName
+      lastName
+      email
+      createdAt
+      photo
+      proposals {
+        id
+        type
+        state
+        join {
+          paymentState
+        }
+        title
+      }
+      subscriptions {
+        id
+        amount
+        common {
+          id
+          name
+        }
+        status
+        voided
+        createdAt
+        updatedAt
+        chargedAt
+        dueDate
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetUserDetailsQueryQuery__
+ *
+ * To run a query within a React component, call `useGetUserDetailsQueryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserDetailsQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserDetailsQueryQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetUserDetailsQueryQuery(baseOptions: Apollo.QueryHookOptions<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>) {
+  return Apollo.useQuery<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>(GetUserDetailsQueryDocument, baseOptions);
+}
+export function useGetUserDetailsQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>) {
+  return Apollo.useLazyQuery<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>(GetUserDetailsQueryDocument, baseOptions);
+}
+export type GetUserDetailsQueryQueryHookResult = ReturnType<typeof useGetUserDetailsQueryQuery>;
+export type GetUserDetailsQueryLazyQueryHookResult = ReturnType<typeof useGetUserDetailsQueryLazyQuery>;
+export type GetUserDetailsQueryQueryResult = Apollo.QueryResult<GetUserDetailsQueryQuery, GetUserDetailsQueryQueryVariables>;
 export const GetUsersHomepageDataDocument = gql`
   query getUsersHomepageData($paginate: PaginateInput!, $where: UserWhereInput) {
     users(paginate: $paginate, where: $where) {
@@ -3694,11 +3759,9 @@ export const GetUsersHomepageDataDocument = gql`
 export function useGetUsersHomepageDataQuery(baseOptions: Apollo.QueryHookOptions<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>) {
   return Apollo.useQuery<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>(GetUsersHomepageDataDocument, baseOptions);
 }
-
 export function useGetUsersHomepageDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>) {
   return Apollo.useLazyQuery<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>(GetUsersHomepageDataDocument, baseOptions);
 }
-
 export type GetUsersHomepageDataQueryHookResult = ReturnType<typeof useGetUsersHomepageDataQuery>;
 export type GetUsersHomepageDataLazyQueryHookResult = ReturnType<typeof useGetUsersHomepageDataLazyQuery>;
 export type GetUsersHomepageDataQueryResult = Apollo.QueryResult<GetUsersHomepageDataQuery, GetUsersHomepageDataQueryVariables>;
