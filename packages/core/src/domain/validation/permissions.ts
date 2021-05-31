@@ -49,8 +49,11 @@ export const allPermissions = [
   'admin.users.read',
   'admin.users.update',
 
-  'user.permissions.read',
+  'admin.users.billingDetails.read',
+  'admin.users.billingDetails.update',
+  'admin.users.billingDetails.delete',
 
+  'user.permissions.read',
 
   'admin.wire.read',
   'admin.wire.create',

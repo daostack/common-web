@@ -1460,6 +1460,8 @@ input UpdateUserInput {
 }
 
 type User {
+  billingDetails: [UserBillingDetails!]!
+
   """List of all commons, that the user is currently part of"""
   commons: [Common!]!
 
@@ -1499,6 +1501,7 @@ type User {
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+  wires: [Wire!]!
 }
 
 type UserBillingDetails implements Address & BaseEntity {

@@ -4,11 +4,10 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
-import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
+import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -1049,6 +1048,7 @@ export interface NexusGenFieldTypes {
     onProposalChange: NexusGenRootTypes['Proposal'] | null; // Proposal
   }
   User: { // field return type
+    billingDetails: NexusGenRootTypes['UserBillingDetails'][]; // [UserBillingDetails!]!
     commons: NexusGenRootTypes['Common'][]; // [Common!]!
     country: NexusGenEnums['Country']; // Country!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -1067,6 +1067,7 @@ export interface NexusGenFieldTypes {
     proposals: NexusGenRootTypes['Proposal'][]; // [Proposal!]!
     subscriptions: NexusGenRootTypes['CommonSubscription'][]; // [CommonSubscription!]!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    wires: NexusGenRootTypes['Wire'][]; // [Wire!]!
   }
   UserBillingDetails: { // field return type
     city: string; // String!
@@ -1469,6 +1470,7 @@ export interface NexusGenFieldTypeNames {
     onProposalChange: 'Proposal'
   }
   User: { // field return type name
+    billingDetails: 'UserBillingDetails'
     commons: 'Common'
     country: 'Country'
     createdAt: 'DateTime'
@@ -1487,6 +1489,7 @@ export interface NexusGenFieldTypeNames {
     proposals: 'Proposal'
     subscriptions: 'CommonSubscription'
     updatedAt: 'DateTime'
+    wires: 'Wire'
   }
   UserBillingDetails: { // field return type name
     city: 'String'
