@@ -32,6 +32,7 @@ type User {
   email: String!
   """List of all the users permissions"""
   permissions: [String!]!
+  wires: [Wire!]!
   """List of events, that occurred and are related to this user"""
   events(take: Int = 10, skip: Int = 0, orderBy: EventOrderByInput): [Event!]!
   """List of all commons, that the user is currently part of"""
@@ -39,6 +40,7 @@ type User {
   proposals(take: Int = 10, skip: Int = 0, where: ProposalWhereInput): [Proposal!]!
   subscriptions: [CommonSubscription!]!
   notifications(orderBy: NotificationOrderByInput = {createdAt: desc}, cursor: NotificationWhereUniqueInput, take: Int = 10, skip: Int): [Notification!]!
+  billingDetails: [UserBillingDetails!]!
   notificationTokens: [UserNotificationToken!]!
   discussionSubscriptions(take: Int = 10, skip: Int = 0, orderBy: DiscussionSubscriptionOrderByInput): [DiscussionSubscription!]!
 }
@@ -95,6 +97,7 @@ type Wire implements BaseEntity {
   circleId: String
   circleFingerprint: String
   description: String
+  userId: String!
 }
 type WireBankAccount implements BaseEntity & Address {
   """The main identifier of the item"""
@@ -110,6 +113,9 @@ type WireBankAccount implements BaseEntity & Address {
   postalCode: String!
   district: String
   bankName: String!
+}
+input WireWhereInput {
+  userId: StringFilter
 }
 type Role implements BaseEntity {
   """The main identifier of the item"""
@@ -1207,8 +1213,10 @@ input CreateWireInput {
   accountNumber: String
   routingNumber: String
   userId: String!
-  billingDetailsId: String!
-  wireBankDetailsId: String!
+  billingDetailsId: String
+  createBillingDetails: CreateUserBillingDetailsInput
+  wireBankDetailsId: String
+  createWireBankDetails: CreateWireBankAccountInput
 }
 input CreateWireBankAccountInput {
   bankName: String!
@@ -1277,6 +1285,7 @@ type Query {
   user(where: UserWhereUniqueInput): User
   users(where: UserWhereInput, paginate: PaginateInput): [User]
   generateUserAuthToken(authId: String!): String!
+  wires(where: WireWhereInput): [Wire]
   roles(paginate: PaginateInput): [Role]
   events(paginate: PaginateInput): [Event]
   common(where: CommonWhereUniqueInput!): Common

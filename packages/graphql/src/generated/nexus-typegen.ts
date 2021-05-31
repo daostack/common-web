@@ -4,10 +4,11 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -196,11 +197,13 @@ export interface NexusGenInputs {
   }
   CreateWireInput: { // input type
     accountNumber?: string | null; // String
-    billingDetailsId: string; // String!
+    billingDetailsId?: string | null; // String
+    createBillingDetails?: NexusGenInputs['CreateUserBillingDetailsInput'] | null; // CreateUserBillingDetailsInput
+    createWireBankDetails?: NexusGenInputs['CreateWireBankAccountInput'] | null; // CreateWireBankAccountInput
     iban?: string | null; // String
     routingNumber?: string | null; // String
     userId: string; // String!
-    wireBankDetailsId: string; // String!
+    wireBankDetailsId?: string | null; // String
   }
   DiscussionMessagesOrderByInput: { // input type
     createdAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -355,6 +358,9 @@ export interface NexusGenInputs {
   }
   UserWhereUniqueInput: { // input type
     userId: string; // ID!
+  }
+  WireWhereInput: { // input type
+    userId?: NexusGenInputs['StringFilter'] | null; // StringFilter
   }
 }
 
@@ -685,6 +691,7 @@ export interface NexusGenObjects {
     description?: string | null; // String
     id: NexusGenScalars['UUID']; // UUID!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    userId: string; // String!
   }
   WireBankAccount: { // root type
     bankName: string; // String!
@@ -1010,6 +1017,7 @@ export interface NexusGenFieldTypes {
     roles: Array<NexusGenRootTypes['Role'] | null> | null; // [Role]
     user: NexusGenRootTypes['User'] | null; // User
     users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+    wires: Array<NexusGenRootTypes['Wire'] | null> | null; // [Wire]
   }
   Report: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -1106,6 +1114,7 @@ export interface NexusGenFieldTypes {
     description: string | null; // String
     id: NexusGenScalars['UUID']; // UUID!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    userId: string; // String!
   }
   WireBankAccount: { // field return type
     bankName: string; // String!
@@ -1432,6 +1441,7 @@ export interface NexusGenFieldTypeNames {
     roles: 'Role'
     user: 'User'
     users: 'User'
+    wires: 'Wire'
   }
   Report: { // field return type name
     createdAt: 'DateTime'
@@ -1528,6 +1538,7 @@ export interface NexusGenFieldTypeNames {
     description: 'String'
     id: 'UUID'
     updatedAt: 'DateTime'
+    userId: 'String'
   }
   WireBankAccount: { // field return type name
     bankName: 'String'
@@ -1760,6 +1771,9 @@ export interface NexusGenArgTypes {
     users: { // args
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
       where?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+    }
+    wires: { // args
+      where?: NexusGenInputs['WireWhereInput'] | null; // WireWhereInput
     }
   }
   Subscription: {

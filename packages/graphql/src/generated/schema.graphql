@@ -565,11 +565,13 @@ input CreateWireBankAccountInput {
 
 input CreateWireInput {
   accountNumber: String
-  billingDetailsId: String!
+  billingDetailsId: String
+  createBillingDetails: CreateUserBillingDetailsInput
+  createWireBankDetails: CreateWireBankAccountInput
   iban: String
   routingNumber: String
   userId: String!
-  wireBankDetailsId: String!
+  wireBankDetailsId: String
 }
 
 """
@@ -1252,6 +1254,7 @@ type Query {
   """
   user(where: UserWhereUniqueInput): User
   users(paginate: PaginateInput, where: UserWhereInput): [User]
+  wires(where: WireWhereInput): [Wire]
 }
 
 type Report implements BaseEntity {
@@ -1591,6 +1594,7 @@ type Wire implements BaseEntity {
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+  userId: String!
 }
 
 type WireBankAccount implements Address & BaseEntity {
@@ -1610,4 +1614,8 @@ type WireBankAccount implements Address & BaseEntity {
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+}
+
+input WireWhereInput {
+  userId: StringFilter
 }

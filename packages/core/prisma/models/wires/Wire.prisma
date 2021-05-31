@@ -9,10 +9,14 @@ model Wire {
 
   description String
 
-  user    User
+  userId           String
+  bankDetailsId    String
+  billingDetailsId String
 
-  bank    WireBankDetail
-  billing BillingDetail
+  user    User @relation(fields: [userId], references: [id])
+
+  bank    WireBankDetail @relation(fields: [bankDetailsId], references: [id])
+  billing BillingDetail  @relation(fields: [billingDetailsId], references: [id])
 
   payouts Payout[]
 }

@@ -132,15 +132,16 @@ model Wire {
 
   description String
 
+  userId           String
+  bankDetailsId    String
+  billingDetailsId String
+
   user User @relation(fields: [userId], references: [id])
 
-  bank    WireBankDetail @relation(fields: [wireBankDetailId], references: [id])
-  billing BillingDetail  @relation(fields: [billingDetailId], references: [id])
+  bank    WireBankDetail @relation(fields: [bankDetailsId], references: [id])
+  billing BillingDetail  @relation(fields: [billingDetailsId], references: [id])
 
-  payouts          Payout[]
-  userId           String
-  wireBankDetailId String
-  billingDetailId  String
+  payouts Payout[]
 }
 
 model Discussion {
@@ -1008,6 +1009,9 @@ model BillingDetail {
 
   name String
 
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
   line1 String
   line2 String?
 
@@ -1017,8 +1021,6 @@ model BillingDetail {
   postalCode String
   Wire       Wire[]
   Card       Card[]
-  User       User?   @relation(fields: [userId], references: [id])
-  userId     String?
 }
 
 model Vote {

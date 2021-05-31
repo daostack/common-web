@@ -53,6 +53,16 @@ const BatchQuery = gql`
   }
 `;
 
+const AvailableWiresQuery = gql`
+  query availableWires($where: WireWhereInput!) {
+    wires(where: $where) {
+      id
+
+      userId
+    }
+  }
+`;
+
 const CreateBatchPayoutPage: NextPage = () => {
   const router = useRouter();
   const theme = useTheme();
@@ -71,6 +81,7 @@ const CreateBatchPayoutPage: NextPage = () => {
 
 
   // --- State
+  const [userIds, setUserIds] = React.useState<string[]>([]);
   const [selectedWire, setSelectedWire] = React.useState<string>();
   const [removedProposals, setRemovedProposals] = React.useState<string[]>([]);
 
@@ -99,8 +110,19 @@ const CreateBatchPayoutPage: NextPage = () => {
   };
 
   const isExecuteDisabled = (): boolean => {
-    return (!selectedWire || selectedWire === 'create') || data.data.proposals.some(p => p.fundingState !== 'available');
+    return (!selectedWire || selectedWire === 'create') || data.data.proposals.some(p => p.funding.fundingState !== 'Eligible');
   };
+
+  // --- Effects
+  React.useEffect(() => {
+    if (data.data) {
+      const temp: string[] = [];
+
+      data.data.proposals.map(x => temp.push(x.user?.id));
+
+      setUserIds(Array.from(new Set(temp)));
+    }
+  }, [data]);
 
   // --- Actions
 
@@ -259,12 +281,13 @@ const CreateBatchPayoutPage: NextPage = () => {
             <Spacer y={2}/>
           </React.Fragment>
 
-          <Note type="warning">
-            When clicking execute the payout is no longer reversible. Though if not approved in timely manner it will
-            be aborted
-          </Note>
+          {userIds.length > 1 && (
+            <Note type="warning">
+              There are proposals from more than one user in the current payout!
+            </Note>
+          )}
 
-          <Spacer y={1}/>
+          <Spacer y={.5}/>
 
           <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
             <Button size="small" disabled={isExecuteDisabled()} loading={false} onClick={onExecute}>

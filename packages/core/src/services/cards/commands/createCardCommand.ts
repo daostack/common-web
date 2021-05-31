@@ -76,7 +76,14 @@ export const createCardCommand = async (command: z.infer<typeof schema>): Promis
       cvvCheck: circleResponse.verification.cvv,
 
       billingDetails: {
-        create: circleResponse.billingDetails
+        create: {
+          ...circleResponse.billingDetails,
+          user: {
+            connect: {
+              id: userId
+            }
+          }
+        }
       },
 
       user: {

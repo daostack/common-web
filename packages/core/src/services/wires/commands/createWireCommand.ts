@@ -46,6 +46,14 @@ export const createWireCommand = async (command: z.infer<typeof schema>): Promis
     .findUnique({
       where: {
         id: billingDetailsId
+      },
+      include: {
+        user: {
+          select: {
+            firstName: true,
+            lastName: true
+          }
+        }
       }
     });
 
@@ -55,6 +63,7 @@ export const createWireCommand = async (command: z.infer<typeof schema>): Promis
         id: wireBankDetailsId
       }
     });
+
 
   if (!wireBankDetails || !billing) {
     throw new NotFoundError(
@@ -77,11 +86,11 @@ export const createWireCommand = async (command: z.infer<typeof schema>): Promis
       data: {
         circleId: circleResponse.id,
         circleFingerprint: circleResponse.fingerprint,
-        description: circleResponse.description,
+        description: `${billing.user.firstName} ${billing.user.lastName}'s ${circleResponse.description}`,
 
         userId,
-        wireBankDetailId: wireBankDetailsId,
-        billingDetailId: billingDetailsId
+        bankDetailsId: wireBankDetailsId,
+        billingDetailsId: billingDetailsId
       }
     });
 

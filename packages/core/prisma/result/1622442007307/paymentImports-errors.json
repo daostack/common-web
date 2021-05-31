@@ -1,0 +1,1159 @@
+[
+  {
+    "reason": "No user ID",
+    "payment": {
+      "id": "a8c567a2-3819-44d1-b636-96df60e66cbe",
+      "amount": {
+        "currency": "USD",
+        "amount": "12500.00"
+      },
+      "createDate": "2020-12-09T20:12:33.369Z",
+      "type": "SubscriptionPayment",
+      "refunds": [],
+      "updateDate": "2020-12-09T20:12:33.369Z",
+      "source": {
+        "type": "card",
+        "id": "daa181fc-5581-4d2a-bd0a-0b49894310ea"
+      },
+      "subscriptionId": "ec051bc0-0adc-4983-89da-bb411dfc2289",
+      "status": "pending"
+    }
+  },
+  {
+    "reason": "No user ID",
+    "payment": {
+      "id": "e9997bb7-0d3e-443b-8cc4-047dd2e8b3bc",
+      "createDate": "2020-12-10T07:55:55.881Z",
+      "type": "SubscriptionPayment",
+      "updateDate": "2020-12-10T07:55:55.881Z",
+      "source": {
+        "id": "03ec81b7-d29e-410c-a0d6-ce516a9a4cc7",
+        "type": "card"
+      },
+      "subscriptionId": "3c2dd6b4-8ea0-4ec1-b3c0-8c8a67cfd32f",
+      "amount": {
+        "currency": "USD",
+        "amount": "50000.00"
+      },
+      "status": "pending",
+      "refunds": []
+    }
+  },
+  {
+    "reason": "No user ID",
+    "payment": {
+      "createDate": "2020-12-10T07:55:55.850Z",
+      "subscriptionId": "f498688c-1835-466b-a7e2-3c2a0e8a595e",
+      "type": "SubscriptionPayment",
+      "refunds": [],
+      "updateDate": "2020-12-10T07:55:55.850Z",
+      "status": "pending",
+      "amount": {
+        "currency": "USD",
+        "amount": "50000.00"
+      },
+      "id": "f9f767e7-4516-49bc-8257-32c6c2af42b6",
+      "source": {
+        "id": "03ec81b7-d29e-410c-a0d6-ce516a9a4cc7",
+        "type": "card"
+      }
+    }
+  },
+  {
+    "payment": {
+      "type": "subscription",
+      "createdAt": {
+        "_seconds": 1607860234,
+        "_nanoseconds": 269000000
+      },
+      "amount": {
+        "currency": "USD",
+        "amount": 125000
+      },
+      "circlePaymentId": "eee09267-5668-4b8d-a90b-0d14e78bb9a6",
+      "proposalId": "Payment for deleted subscription",
+      "updatedAt": {
+        "_seconds": 1609942812,
+        "_nanoseconds": 460000000
+      },
+      "fees": {
+        "amount": 5343,
+        "currency": "USD"
+      },
+      "id": "1dc10aad-b62e-4593-8d4d-a7314c82bc45",
+      "subscriptionId": "Payment for deleted subscription",
+      "status": "paid",
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "source": {
+        "id": "290e2649-8ae7-4e66-b4ba-044817358361",
+        "type": "card"
+      },
+      "userId": "97d5y9WXk1fEZv767j1ejKuHevi1"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '1dc10aad-b62e-4593-8d4d-a7314c82bc45',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 125000,\n    circlePaymentStatus: 'paid',\n    circlePaymentId: 'eee09267-5668-4b8d-a90b-0d14e78bb9a6',\n    user: {\n      connect: {\n        id: '97d5y9WXk1fEZv767j1ejKuHevi1'\n      }\n    },\n    card: {\n      connect: {\n        id: '290e2649-8ae7-4e66-b4ba-044817358361'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '1dc10aad-b62e-4593-8d4d-a7314c82bc45',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 125000,\n    circlePaymentStatus: 'paid',\n    circlePaymentId: 'eee09267-5668-4b8d-a90b-0d14e78bb9a6',\n    user: {\n      connect: {\n        id: '97d5y9WXk1fEZv767j1ejKuHevi1'\n      }\n    },\n    card: {\n      connect: {\n        id: '290e2649-8ae7-4e66-b4ba-044817358361'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "createdAt": {
+        "_seconds": 1609423644,
+        "_nanoseconds": 690000000
+      },
+      "status": "paid",
+      "id": "1e4deece-422f-4e8c-8c6f-d7a92d814358",
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "fees": {
+        "currency": "USD",
+        "amount": 51
+      },
+      "source": {
+        "id": "fc0112f9-653f-42c4-83af-3b4caff2ed86",
+        "type": "card"
+      },
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "amount": {
+        "currency": "USD",
+        "amount": 500
+      },
+      "type": "one-time",
+      "proposalId": "7954d1ca-70e1-4f5e-9819-979264b6a310",
+      "circlePaymentId": "c639397a-949b-4c3a-8f71-5fba2e01b078",
+      "updatedAt": {
+        "_seconds": 1609942813,
+        "_nanoseconds": 94000000
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '1e4deece-422f-4e8c-8c6f-d7a92d814358',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 500,\n    circlePaymentStatus: 'paid',\n    circlePaymentId: 'c639397a-949b-4c3a-8f71-5fba2e01b078',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'fc0112f9-653f-42c4-83af-3b4caff2ed86'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '1e4deece-422f-4e8c-8c6f-d7a92d814358',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 500,\n    circlePaymentStatus: 'paid',\n    circlePaymentId: 'c639397a-949b-4c3a-8f71-5fba2e01b078',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'fc0112f9-653f-42c4-83af-3b4caff2ed86'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "proposalId": "638206be-e759-41d2-a5a6-2de3c955112d",
+      "createdAt": {
+        "_seconds": 1614692355,
+        "_nanoseconds": 136000000
+      },
+      "source": {
+        "type": "card",
+        "id": "93eb4c4d-9652-4a85-b951-79590276c3f2"
+      },
+      "status": "confirmed",
+      "fees": {
+        "currency": "USD",
+        "amount": 51
+      },
+      "id": "2c9313de-d933-4571-ae1b-6a694d2a5e76",
+      "updatedAt": {
+        "_seconds": 1614692356,
+        "_nanoseconds": 56000000
+      },
+      "userId": "Xlun3Ux94Zfc73axkiuVdkktOWf1",
+      "circlePaymentId": "632214b7-9367-4a7d-8931-853bad17270a",
+      "amount": {
+        "amount": 500,
+        "currency": "USD"
+      },
+      "type": "one-time"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '2c9313de-d933-4571-ae1b-6a694d2a5e76',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 500,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '632214b7-9367-4a7d-8931-853bad17270a',\n    user: {\n      connect: {\n        id: 'Xlun3Ux94Zfc73axkiuVdkktOWf1'\n      }\n    },\n    card: {\n      connect: {\n        id: '93eb4c4d-9652-4a85-b951-79590276c3f2'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '2c9313de-d933-4571-ae1b-6a694d2a5e76',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 500,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '632214b7-9367-4a7d-8931-853bad17270a',\n    user: {\n      connect: {\n        id: 'Xlun3Ux94Zfc73axkiuVdkktOWf1'\n      }\n    },\n    card: {\n      connect: {\n        id: '93eb4c4d-9652-4a85-b951-79590276c3f2'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "id": "43d1aeb1-24e5-4f38-b888-ba4fc67d2f6e",
+      "circlePaymentId": "4897b725-0c48-488a-bc12-550f37af2582",
+      "amount": {
+        "currency": "USD",
+        "amount": 30000
+      },
+      "source": {
+        "id": "2723c4ad-8f5f-4e08-923a-adc26bad8ad5",
+        "type": "card"
+      },
+      "subscriptionId": "5731b2ca-3704-4da3-b796-352943b39656",
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "proposalId": "1e24babc-b09d-4a76-a71f-d99d0b6a61d8",
+      "status": "confirmed",
+      "type": "subscription",
+      "updatedAt": {
+        "_seconds": 1611839485,
+        "_nanoseconds": 381000000
+      },
+      "fees": {
+        "currency": "USD",
+        "amount": 0
+      },
+      "createdAt": {
+        "_seconds": 1611839484,
+        "_nanoseconds": 981000000
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '43d1aeb1-24e5-4f38-b888-ba4fc67d2f6e',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 30000,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '4897b725-0c48-488a-bc12-550f37af2582',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: '2723c4ad-8f5f-4e08-923a-adc26bad8ad5'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '43d1aeb1-24e5-4f38-b888-ba4fc67d2f6e',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 30000,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '4897b725-0c48-488a-bc12-550f37af2582',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: '2723c4ad-8f5f-4e08-923a-adc26bad8ad5'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "fees": {
+        "currency": "USD",
+        "amount": 52
+      },
+      "id": "49e85e26-fb51-47b1-922d-2a0999ab7829",
+      "proposalId": "05aa208a-f249-4a18-b6c3-bed8d7b7c177",
+      "amount": {
+        "currency": "USD",
+        "amount": 505.99999999999994
+      },
+      "updatedAt": {
+        "_seconds": 1609942812,
+        "_nanoseconds": 565000000
+      },
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "circlePaymentId": "ec4c2283-d4c0-4dfa-8439-342a881c2a6c",
+      "userId": "2Ti3LkP23KUJVp2AZY3wVHYWRxm2",
+      "createdAt": {
+        "_seconds": 1609066371,
+        "_nanoseconds": 943000000
+      },
+      "status": "paid",
+      "type": "one-time",
+      "source": {
+        "id": "dd6a5275-3d66-4e43-8e24-21b928fbb5f4",
+        "type": "card"
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '49e85e26-fb51-47b1-922d-2a0999ab7829',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 506,\n    circlePaymentStatus: 'paid',\n    circlePaymentId: 'ec4c2283-d4c0-4dfa-8439-342a881c2a6c',\n    user: {\n      connect: {\n        id: '2Ti3LkP23KUJVp2AZY3wVHYWRxm2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'dd6a5275-3d66-4e43-8e24-21b928fbb5f4'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '49e85e26-fb51-47b1-922d-2a0999ab7829',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 506,\n    circlePaymentStatus: 'paid',\n    circlePaymentId: 'ec4c2283-d4c0-4dfa-8439-342a881c2a6c',\n    user: {\n      connect: {\n        id: '2Ti3LkP23KUJVp2AZY3wVHYWRxm2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'dd6a5275-3d66-4e43-8e24-21b928fbb5f4'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "updatedAt": {
+        "_seconds": 1609942812,
+        "_nanoseconds": 454000000
+      },
+      "type": "subscription",
+      "id": "5c91b494-6589-46b8-ab45-ab695c7db825",
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "source": {
+        "type": "card",
+        "id": "2a888024-7c50-4324-a1f7-7b0b6ee47c18"
+      },
+      "status": "failed",
+      "circlePaymentId": "eb0eb46b-da58-4c24-af16-b52ceffdf78f",
+      "proposalId": "Payment for deleted subscription",
+      "userId": "2Ti3LkP23KUJVp2AZY3wVHYWRxm2",
+      "amount": {
+        "amount": 501,
+        "currency": "USD"
+      },
+      "subscriptionId": "Payment for deleted subscription",
+      "createdAt": {
+        "_seconds": 1607871075,
+        "_nanoseconds": 447000000
+      },
+      "failure": {
+        "errorDescription": "Payment failed due to unspecified error",
+        "errorCode": "payment_failed"
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '5c91b494-6589-46b8-ab45-ab695c7db825',\n    type: 'ImportedPayment',\n    status: 'Unsuccessful',\n    amount: 501,\n    circlePaymentStatus: 'failed',\n    circlePaymentId: 'eb0eb46b-da58-4c24-af16-b52ceffdf78f',\n    user: {\n      connect: {\n        id: '2Ti3LkP23KUJVp2AZY3wVHYWRxm2'\n      }\n    },\n    card: {\n      connect: {\n        id: '2a888024-7c50-4324-a1f7-7b0b6ee47c18'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '5c91b494-6589-46b8-ab45-ab695c7db825',\n    type: 'ImportedPayment',\n    status: 'Unsuccessful',\n    amount: 501,\n    circlePaymentStatus: 'failed',\n    circlePaymentId: 'eb0eb46b-da58-4c24-af16-b52ceffdf78f',\n    user: {\n      connect: {\n        id: '2Ti3LkP23KUJVp2AZY3wVHYWRxm2'\n      }\n    },\n    card: {\n      connect: {\n        id: '2a888024-7c50-4324-a1f7-7b0b6ee47c18'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "fees": {
+        "amount": 0,
+        "currency": "USD"
+      },
+      "proposalId": "94ae8447-bb6a-4ef8-963a-ad59d29aa7e0",
+      "status": "confirmed",
+      "id": "5f6c2e61-ac2a-4ba7-9678-05d1d880501c",
+      "createdAt": {
+        "_seconds": 1612272304,
+        "_nanoseconds": 409000000
+      },
+      "updatedAt": {
+        "_seconds": 1612272304,
+        "_nanoseconds": 927000000
+      },
+      "source": {
+        "id": "12a07ec9-f9aa-4715-bf67-b27564eab32a",
+        "type": "card"
+      },
+      "amount": {
+        "currency": "USD",
+        "amount": 700
+      },
+      "type": "one-time",
+      "userId": "skBkfQh8E1f4eOGBSVLaiuJ097v1",
+      "circlePaymentId": "4b5e5e29-c370-40ee-adda-2c23151a5002"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '5f6c2e61-ac2a-4ba7-9678-05d1d880501c',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 700,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '4b5e5e29-c370-40ee-adda-2c23151a5002',\n    user: {\n      connect: {\n        id: 'skBkfQh8E1f4eOGBSVLaiuJ097v1'\n      }\n    },\n    card: {\n      connect: {\n        id: '12a07ec9-f9aa-4715-bf67-b27564eab32a'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '5f6c2e61-ac2a-4ba7-9678-05d1d880501c',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 700,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '4b5e5e29-c370-40ee-adda-2c23151a5002',\n    user: {\n      connect: {\n        id: 'skBkfQh8E1f4eOGBSVLaiuJ097v1'\n      }\n    },\n    card: {\n      connect: {\n        id: '12a07ec9-f9aa-4715-bf67-b27564eab32a'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "source": {
+        "id": "58545097-65aa-4510-9a4a-21bdd9b2802f",
+        "type": "card"
+      },
+      "circlePaymentId": "15ebaca8-7e45-46d6-bf95-34c3a18219a0",
+      "fees": {
+        "amount": 10655,
+        "currency": "USD"
+      },
+      "proposalId": "Payment for deleted subscription",
+      "type": "subscription",
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "subscriptionId": "Payment for deleted subscription",
+      "amount": {
+        "amount": 250000,
+        "currency": "USD"
+      },
+      "updatedAt": {
+        "_seconds": 1609942813,
+        "_nanoseconds": 449000000
+      },
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "createdAt": {
+        "_seconds": 1607860105,
+        "_nanoseconds": 845000000
+      },
+      "id": "62e89b21-f406-4a3b-9157-60494f22d92b",
+      "status": "paid"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '62e89b21-f406-4a3b-9157-60494f22d92b',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 250000,\n    circlePaymentStatus: 'paid',\n    circlePaymentId: '15ebaca8-7e45-46d6-bf95-34c3a18219a0',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: '58545097-65aa-4510-9a4a-21bdd9b2802f'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '62e89b21-f406-4a3b-9157-60494f22d92b',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 250000,\n    circlePaymentStatus: 'paid',\n    circlePaymentId: '15ebaca8-7e45-46d6-bf95-34c3a18219a0',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: '58545097-65aa-4510-9a4a-21bdd9b2802f'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "status": "paid",
+      "id": "65aba813-b00a-4156-9036-6bb65c9dfa48",
+      "proposalId": "7cf90135-7b98-410c-a1a2-731cf42996e6",
+      "amount": {
+        "amount": 1250,
+        "currency": "USD"
+      },
+      "source": {
+        "id": "949b3114-f29f-4ae5-84bd-5fce9bb38888",
+        "type": "card"
+      },
+      "createdAt": {
+        "_seconds": 1608456381,
+        "_nanoseconds": 694000000
+      },
+      "type": "one-time",
+      "circlePaymentId": "dc1a04d0-cf63-46a1-ad6b-5594b99a8b69",
+      "fees": {
+        "amount": 83,
+        "currency": "USD"
+      },
+      "updatedAt": {
+        "_seconds": 1609942813,
+        "_nanoseconds": 251000000
+      },
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '65aba813-b00a-4156-9036-6bb65c9dfa48',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 1250,\n    circlePaymentStatus: 'paid',\n    circlePaymentId: 'dc1a04d0-cf63-46a1-ad6b-5594b99a8b69',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: '949b3114-f29f-4ae5-84bd-5fce9bb38888'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '65aba813-b00a-4156-9036-6bb65c9dfa48',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 1250,\n    circlePaymentStatus: 'paid',\n    circlePaymentId: 'dc1a04d0-cf63-46a1-ad6b-5594b99a8b69',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: '949b3114-f29f-4ae5-84bd-5fce9bb38888'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "circlePaymentId": "76472a62-0b3c-4a05-bb75-8496b14a4b35",
+      "proposalId": "2fc72a59-5015-4cd3-a89a-d6ec30712cd9",
+      "source": {
+        "type": "card",
+        "id": "d83e3944-985e-46cb-85fa-2ac249a51ab0"
+      },
+      "subscriptionId": "60632fae-50b5-4845-a04a-a5be88dae60c",
+      "amount": {
+        "amount": 30000,
+        "currency": "USD"
+      },
+      "id": "747ea196-13a0-4d24-925e-ff13d16e8a3f",
+      "updatedAt": {
+        "_seconds": 1612858935,
+        "_nanoseconds": 545000000
+      },
+      "fees": {
+        "currency": "USD",
+        "amount": 1305
+      },
+      "status": "confirmed",
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "createdAt": {
+        "_seconds": 1612858934,
+        "_nanoseconds": 719000000
+      },
+      "type": "subscription"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '747ea196-13a0-4d24-925e-ff13d16e8a3f',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 30000,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '76472a62-0b3c-4a05-bb75-8496b14a4b35',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'd83e3944-985e-46cb-85fa-2ac249a51ab0'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '747ea196-13a0-4d24-925e-ff13d16e8a3f',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 30000,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '76472a62-0b3c-4a05-bb75-8496b14a4b35',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'd83e3944-985e-46cb-85fa-2ac249a51ab0'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "createdAt": {
+        "_seconds": 1609423983,
+        "_nanoseconds": 268000000
+      },
+      "updatedAt": {
+        "_seconds": 1609942813,
+        "_nanoseconds": 355000000
+      },
+      "id": "7d24b7bf-2ec8-4c05-96dc-ffae32e0e5ed",
+      "fees": {
+        "amount": 83,
+        "currency": "USD"
+      },
+      "type": "subscription",
+      "subscriptionId": "c3710950-1ba7-4b07-8de1-6e4f15002043",
+      "amount": {
+        "currency": "USD",
+        "amount": 1250
+      },
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "source": {
+        "id": "f1180d0a-f5c5-4ba1-b021-228e7481f42b",
+        "type": "card"
+      },
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "circlePaymentId": "8b4736d5-5151-4013-8400-a1018f9461f5",
+      "proposalId": "232a7fb7-c16c-46a1-a5db-d48698cef2a7",
+      "status": "paid"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '7d24b7bf-2ec8-4c05-96dc-ffae32e0e5ed',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 1250,\n    circlePaymentStatus: 'paid',\n    circlePaymentId: '8b4736d5-5151-4013-8400-a1018f9461f5',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'f1180d0a-f5c5-4ba1-b021-228e7481f42b'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '7d24b7bf-2ec8-4c05-96dc-ffae32e0e5ed',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 1250,\n    circlePaymentStatus: 'paid',\n    circlePaymentId: '8b4736d5-5151-4013-8400-a1018f9461f5',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'f1180d0a-f5c5-4ba1-b021-228e7481f42b'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "id": "8b1813ba-01a2-477c-8922-bc34e8e968ca",
+      "type": "subscription",
+      "circlePaymentId": "e6f348ef-effc-480a-94ea-c9ae42dab6a8",
+      "updatedAt": {
+        "_seconds": 1610269614,
+        "_nanoseconds": 323000000
+      },
+      "fees": {
+        "amount": 0,
+        "currency": "USD"
+      },
+      "proposalId": "2ae71d1e-1006-4160-a313-b76dbebd07bd",
+      "subscriptionId": "e3cbb228-efc6-4622-9c17-07f8999a3dc5",
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "createdAt": {
+        "_seconds": 1610269613,
+        "_nanoseconds": 809000000
+      },
+      "amount": {
+        "amount": 200000,
+        "currency": "USD"
+      },
+      "status": "confirmed",
+      "source": {
+        "type": "card",
+        "id": "a37a64f1-e7be-4a71-90d7-59936423b864"
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '8b1813ba-01a2-477c-8922-bc34e8e968ca',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 200000,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: 'e6f348ef-effc-480a-94ea-c9ae42dab6a8',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'a37a64f1-e7be-4a71-90d7-59936423b864'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '8b1813ba-01a2-477c-8922-bc34e8e968ca',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 200000,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: 'e6f348ef-effc-480a-94ea-c9ae42dab6a8',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'a37a64f1-e7be-4a71-90d7-59936423b864'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "updatedAt": {
+        "_seconds": 1617233106,
+        "_nanoseconds": 531000000
+      },
+      "type": "one-time",
+      "userId": "RoUaatJIeccpYxcDD7v1fqJrHZx2",
+      "circlePaymentId": "7e942628-d3dc-4d85-9499-15f47e85e67f",
+      "source": {
+        "id": "8a9fef18-f80e-4883-8c39-db3cd1dc9e90",
+        "type": "card"
+      },
+      "proposalId": "3b006f72-5ba3-4ff6-b429-7384af40bc65",
+      "status": "confirmed",
+      "amount": {
+        "currency": "USD",
+        "amount": 700
+      },
+      "createdAt": {
+        "_seconds": 1617233105,
+        "_nanoseconds": 882000000
+      },
+      "id": "91985cf3-7fea-4dae-85e6-49244f6f69df",
+      "fees": {
+        "currency": "USD",
+        "amount": 60
+      },
+      "commonId": "15c15871-d513-4a06-9e24-7d2c92cbd571"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '91985cf3-7fea-4dae-85e6-49244f6f69df',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 700,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '7e942628-d3dc-4d85-9499-15f47e85e67f',\n    user: {\n      connect: {\n        id: 'RoUaatJIeccpYxcDD7v1fqJrHZx2'\n      }\n    },\n    card: {\n      connect: {\n        id: '8a9fef18-f80e-4883-8c39-db3cd1dc9e90'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '91985cf3-7fea-4dae-85e6-49244f6f69df',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 700,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '7e942628-d3dc-4d85-9499-15f47e85e67f',\n    user: {\n      connect: {\n        id: 'RoUaatJIeccpYxcDD7v1fqJrHZx2'\n      }\n    },\n    card: {\n      connect: {\n        id: '8a9fef18-f80e-4883-8c39-db3cd1dc9e90'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "updatedAt": {
+        "_seconds": 1618371006,
+        "_nanoseconds": 873999000
+      },
+      "fees": {
+        "currency": "USD",
+        "amount": 94
+      },
+      "commonId": "162374ec-7e92-47fa-b0a5-21f342fbc023",
+      "status": "confirmed",
+      "type": "one-time",
+      "createdAt": {
+        "_seconds": 1618371006,
+        "_nanoseconds": 195000000
+      },
+      "id": "984f5989-2eff-40e3-ac1a-7f14e630147c",
+      "amount": {
+        "currency": "USD",
+        "amount": 1500
+      },
+      "proposalId": "77995a37-ff4b-4438-ac79-822a37f4fc8b",
+      "userId": "RoUaatJIeccpYxcDD7v1fqJrHZx2",
+      "source": {
+        "type": "card",
+        "id": "5faed414-e41f-4f4d-b5b3-143b8fb8a983"
+      },
+      "circlePaymentId": "3889e8e7-1f56-413e-824d-2c93d43b1d2a"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '984f5989-2eff-40e3-ac1a-7f14e630147c',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 1500,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '3889e8e7-1f56-413e-824d-2c93d43b1d2a',\n    user: {\n      connect: {\n        id: 'RoUaatJIeccpYxcDD7v1fqJrHZx2'\n      }\n    },\n    card: {\n      connect: {\n        id: '5faed414-e41f-4f4d-b5b3-143b8fb8a983'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '984f5989-2eff-40e3-ac1a-7f14e630147c',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 1500,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '3889e8e7-1f56-413e-824d-2c93d43b1d2a',\n    user: {\n      connect: {\n        id: 'RoUaatJIeccpYxcDD7v1fqJrHZx2'\n      }\n    },\n    card: {\n      connect: {\n        id: '5faed414-e41f-4f4d-b5b3-143b8fb8a983'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "type": "one-time",
+      "source": {
+        "type": "card",
+        "id": "97d16bcf-df1b-4814-865b-041be22e4d18"
+      },
+      "proposalId": "5800be22-1ad6-4aa5-ad7d-eaf60faeee49",
+      "failure": {
+        "errorCode": "payment_failed",
+        "errorDescription": "Payment failed due to unspecified error"
+      },
+      "updatedAt": {
+        "_seconds": 1609942812,
+        "_nanoseconds": 562000000
+      },
+      "id": "9d606897-2874-4c47-82cb-07debf1941da",
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "status": "failed",
+      "createdAt": {
+        "_seconds": 1608132307,
+        "_nanoseconds": 161000000
+      },
+      "amount": {
+        "currency": "USD",
+        "amount": 501
+      },
+      "circlePaymentId": "5dae3db7-2902-4608-a32b-782b905148c7"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '9d606897-2874-4c47-82cb-07debf1941da',\n    type: 'ImportedPayment',\n    status: 'Unsuccessful',\n    amount: 501,\n    circlePaymentStatus: 'failed',\n    circlePaymentId: '5dae3db7-2902-4608-a32b-782b905148c7',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: '97d16bcf-df1b-4814-865b-041be22e4d18'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '9d606897-2874-4c47-82cb-07debf1941da',\n    type: 'ImportedPayment',\n    status: 'Unsuccessful',\n    amount: 501,\n    circlePaymentStatus: 'failed',\n    circlePaymentId: '5dae3db7-2902-4608-a32b-782b905148c7',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: '97d16bcf-df1b-4814-865b-041be22e4d18'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "userId": "skBkfQh8E1f4eOGBSVLaiuJ097v1",
+      "id": "9dc93f31-6c67-481f-988c-2449b8f2c18a",
+      "type": "subscription",
+      "source": {
+        "id": "f3ed9074-797c-4f43-bc91-4ae4c56a1325",
+        "type": "card"
+      },
+      "amount": {
+        "amount": 700,
+        "currency": "USD"
+      },
+      "subscriptionId": "cd05ab38-d2cc-4235-8ed7-1b903936ffc4",
+      "commonId": "d30cb234-01ac-483c-b137-47961ed0cfec",
+      "updatedAt": {
+        "_seconds": 1615958707,
+        "_nanoseconds": 65000000
+      },
+      "status": "confirmed",
+      "proposalId": "eb19df17-92da-44a2-ae26-c1dd72fc0ec3",
+      "circlePaymentId": "2fb44d95-e836-4a12-969a-138e6f7f0ea0",
+      "createdAt": {
+        "_seconds": 1615958706,
+        "_nanoseconds": 312000000
+      },
+      "fees": {
+        "amount": 60,
+        "currency": "USD"
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '9dc93f31-6c67-481f-988c-2449b8f2c18a',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 700,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '2fb44d95-e836-4a12-969a-138e6f7f0ea0',\n    user: {\n      connect: {\n        id: 'skBkfQh8E1f4eOGBSVLaiuJ097v1'\n      }\n    },\n    card: {\n      connect: {\n        id: 'f3ed9074-797c-4f43-bc91-4ae4c56a1325'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '9dc93f31-6c67-481f-988c-2449b8f2c18a',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 700,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '2fb44d95-e836-4a12-969a-138e6f7f0ea0',\n    user: {\n      connect: {\n        id: 'skBkfQh8E1f4eOGBSVLaiuJ097v1'\n      }\n    },\n    card: {\n      connect: {\n        id: 'f3ed9074-797c-4f43-bc91-4ae4c56a1325'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "subscriptionId": "76bf64d2-40b5-453b-919e-b7b6f0340797",
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "status": "paid",
+      "source": {
+        "id": "0eff7b34-fea4-497b-85b8-868c51b6eb9f",
+        "type": "card"
+      },
+      "circlePaymentId": "b3e508de-cf31-44ce-8048-4a2c82e183fb",
+      "amount": {
+        "currency": "USD",
+        "amount": 50000
+      },
+      "id": "9ed156f5-2ccd-4393-b31e-5e4d2823fd66",
+      "createdAt": {
+        "_seconds": 1609147777,
+        "_nanoseconds": 556000000
+      },
+      "updatedAt": {
+        "_seconds": 1609942812,
+        "_nanoseconds": 361000000
+      },
+      "type": "subscription",
+      "fees": {
+        "amount": 2155,
+        "currency": "USD"
+      },
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "proposalId": "8b60d46d-31c2-4a6f-8946-504242577815"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '9ed156f5-2ccd-4393-b31e-5e4d2823fd66',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 50000,\n    circlePaymentStatus: 'paid',\n    circlePaymentId: 'b3e508de-cf31-44ce-8048-4a2c82e183fb',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: '0eff7b34-fea4-497b-85b8-868c51b6eb9f'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: '9ed156f5-2ccd-4393-b31e-5e4d2823fd66',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 50000,\n    circlePaymentStatus: 'paid',\n    circlePaymentId: 'b3e508de-cf31-44ce-8048-4a2c82e183fb',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: '0eff7b34-fea4-497b-85b8-868c51b6eb9f'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "type": "subscription",
+      "amount": {
+        "currency": "USD",
+        "amount": 60000
+      },
+      "circlePaymentId": "e5e3fd8e-3041-436b-b708-6510299c3725",
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "subscriptionId": "b4eee44c-8ddc-4f13-a76c-6cd7961d82a9",
+      "proposalId": "88766208-c258-48c7-9b01-f0a3f665982e",
+      "id": "a291e365-0196-461e-9847-7999b2df7435",
+      "status": "confirmed",
+      "updatedAt": {
+        "_seconds": 1612425346,
+        "_nanoseconds": 406000000
+      },
+      "fees": {
+        "amount": 0,
+        "currency": "USD"
+      },
+      "source": {
+        "type": "card",
+        "id": "e5ff0c5f-f33a-4f89-9846-8a59347ab115"
+      },
+      "createdAt": {
+        "_seconds": 1612425346,
+        "_nanoseconds": 6000000
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'a291e365-0196-461e-9847-7999b2df7435',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 60000,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: 'e5e3fd8e-3041-436b-b708-6510299c3725',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'e5ff0c5f-f33a-4f89-9846-8a59347ab115'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'a291e365-0196-461e-9847-7999b2df7435',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 60000,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: 'e5e3fd8e-3041-436b-b708-6510299c3725',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'e5ff0c5f-f33a-4f89-9846-8a59347ab115'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "updatedAt": {
+        "_seconds": 1609942813,
+        "_nanoseconds": 151000000
+      },
+      "fees": {
+        "currency": "USD",
+        "amount": 1118
+      },
+      "id": "a4567dda-0d32-45dc-ba8c-df6e4a9060f0",
+      "proposalId": "e8ec8925-3275-4b0c-ad50-c0705fb192c7",
+      "createdAt": {
+        "_seconds": 1608127342,
+        "_nanoseconds": 434000000
+      },
+      "status": "confirmed",
+      "subscriptionId": "395abd6a-6a83-4488-9d1a-68d49919a939",
+      "circlePaymentId": "5e0c14fa-16d1-498d-bc5d-28ae2b020938",
+      "type": "subscription",
+      "source": {
+        "type": "card",
+        "id": "627a517e-4b23-487b-aef2-79ea3385e987"
+      },
+      "amount": {
+        "amount": 25600,
+        "currency": "USD"
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'a4567dda-0d32-45dc-ba8c-df6e4a9060f0',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 25600,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '5e0c14fa-16d1-498d-bc5d-28ae2b020938',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: '627a517e-4b23-487b-aef2-79ea3385e987'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'a4567dda-0d32-45dc-ba8c-df6e4a9060f0',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 25600,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '5e0c14fa-16d1-498d-bc5d-28ae2b020938',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: '627a517e-4b23-487b-aef2-79ea3385e987'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "updatedAt": {
+        "_seconds": 1609942813,
+        "_nanoseconds": 156000000
+      },
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "source": {
+        "id": "bca3559c-2f4b-4f89-853c-4e0425f88f6f",
+        "type": "card"
+      },
+      "createdAt": {
+        "_seconds": 1608193179,
+        "_nanoseconds": 311000000
+      },
+      "proposalId": "65cd97e2-13cb-4639-a349-a8a23e1ea016",
+      "id": "a50e2db6-e24f-4b5e-99e3-f86e6f60a43e",
+      "circlePaymentId": "2b667821-5123-4533-8dbc-927af009ec7b",
+      "status": "failed",
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "type": "one-time",
+      "amount": {
+        "amount": 501,
+        "currency": "USD"
+      },
+      "failure": {
+        "errorCode": "payment_failed",
+        "errorDescription": "Payment failed due to unspecified error"
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'a50e2db6-e24f-4b5e-99e3-f86e6f60a43e',\n    type: 'ImportedPayment',\n    status: 'Unsuccessful',\n    amount: 501,\n    circlePaymentStatus: 'failed',\n    circlePaymentId: '2b667821-5123-4533-8dbc-927af009ec7b',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'bca3559c-2f4b-4f89-853c-4e0425f88f6f'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'a50e2db6-e24f-4b5e-99e3-f86e6f60a43e',\n    type: 'ImportedPayment',\n    status: 'Unsuccessful',\n    amount: 501,\n    circlePaymentStatus: 'failed',\n    circlePaymentId: '2b667821-5123-4533-8dbc-927af009ec7b',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'bca3559c-2f4b-4f89-853c-4e0425f88f6f'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "id": "a8c567a2-3819-44d1-b636-96df60e66cbe",
+      "amount": {
+        "currency": "USD",
+        "amount": "12500.00"
+      },
+      "createDate": "2020-12-09T20:12:33.369Z",
+      "type": "SubscriptionPayment",
+      "refunds": [],
+      "updateDate": "2020-12-09T20:12:33.369Z",
+      "source": {
+        "type": "card",
+        "id": "daa181fc-5581-4d2a-bd0a-0b49894310ea"
+      },
+      "subscriptionId": "ec051bc0-0adc-4983-89da-bb411dfc2289",
+      "status": "pending"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'a8c567a2-3819-44d1-b636-96df60e66cbe',\n    type: 'ImportedPayment',\n    status: 'Pending',\n    amount: 12500,\n    circlePaymentStatus: 'pending',\n?   circlePaymentId?: String | null,\n    user: {\n      connect: {\n?       id?: String,\n?       email?: String\n      },\n?     create?: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: {\n?       where: UserWhereUniqueInput,\n?       create: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput\n?     }\n    },\n    card: {\n      connect: {\n        id: 'daa181fc-5581-4d2a-bd0a-0b49894310ea'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument data.user.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'a8c567a2-3819-44d1-b636-96df60e66cbe',\n    type: 'ImportedPayment',\n    status: 'Pending',\n    amount: 12500,\n    circlePaymentStatus: 'pending',\n?   circlePaymentId?: String | null,\n    user: {\n      connect: {\n?       id?: String,\n?       email?: String\n      },\n?     create?: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: {\n?       where: UserWhereUniqueInput,\n?       create: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput\n?     }\n    },\n    card: {\n      connect: {\n        id: 'daa181fc-5581-4d2a-bd0a-0b49894310ea'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument data.user.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "proposalId": "6ef0cdc4-9823-439d-a160-75501dba20a2",
+      "createdAt": {
+        "_seconds": 1610984104,
+        "_nanoseconds": 717000000
+      },
+      "amount": {
+        "amount": 3000,
+        "currency": "USD"
+      },
+      "status": "confirmed",
+      "userId": "d3jPxOeMtnVqHTjJ5ILfuOHQQPQ2",
+      "fees": {
+        "currency": "USD",
+        "amount": 0
+      },
+      "type": "one-time",
+      "source": {
+        "type": "card",
+        "id": "ebc19a40-2e32-401e-b7d5-d0027c6d8bd2"
+      },
+      "updatedAt": {
+        "_seconds": 1610984105,
+        "_nanoseconds": 174000000
+      },
+      "id": "ae789e32-235f-428d-b4f1-b338cb4afa4d",
+      "circlePaymentId": "7936f8fc-411e-4a92-8d0e-61581350aec8"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'ae789e32-235f-428d-b4f1-b338cb4afa4d',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 3000,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '7936f8fc-411e-4a92-8d0e-61581350aec8',\n    user: {\n      connect: {\n        id: 'd3jPxOeMtnVqHTjJ5ILfuOHQQPQ2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'ebc19a40-2e32-401e-b7d5-d0027c6d8bd2'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'ae789e32-235f-428d-b4f1-b338cb4afa4d',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 3000,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '7936f8fc-411e-4a92-8d0e-61581350aec8',\n    user: {\n      connect: {\n        id: 'd3jPxOeMtnVqHTjJ5ILfuOHQQPQ2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'ebc19a40-2e32-401e-b7d5-d0027c6d8bd2'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "amount": {
+        "amount": 125000,
+        "currency": "USD"
+      },
+      "proposalId": "0b186271-376c-46f7-9df2-4da887653863",
+      "createdAt": {
+        "_seconds": 1610442275,
+        "_nanoseconds": 848000000
+      },
+      "updatedAt": {
+        "_seconds": 1610442276,
+        "_nanoseconds": 348000000
+      },
+      "status": "confirmed",
+      "type": "one-time",
+      "fees": {
+        "currency": "USD",
+        "amount": 5343
+      },
+      "source": {
+        "id": "434966d9-4e13-4c7b-998f-d7e447cadfbb",
+        "type": "card"
+      },
+      "circlePaymentId": "fbebf640-7bf6-4d72-ad0a-901231b86425",
+      "id": "c5cd56fa-ea02-49ed-bfd8-936c3dcedaf0",
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'c5cd56fa-ea02-49ed-bfd8-936c3dcedaf0',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 125000,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: 'fbebf640-7bf6-4d72-ad0a-901231b86425',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: '434966d9-4e13-4c7b-998f-d7e447cadfbb'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'c5cd56fa-ea02-49ed-bfd8-936c3dcedaf0',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 125000,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: 'fbebf640-7bf6-4d72-ad0a-901231b86425',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: '434966d9-4e13-4c7b-998f-d7e447cadfbb'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "updatedAt": {
+        "_seconds": 1610990066,
+        "_nanoseconds": 967000000
+      },
+      "source": {
+        "type": "card",
+        "id": "7ec73788-1c33-4e60-86be-e524d495610c"
+      },
+      "type": "one-time",
+      "circlePaymentId": "32edffa3-9691-4f6a-9773-2af184ce865d",
+      "amount": {
+        "currency": "USD",
+        "amount": 1250
+      },
+      "proposalId": "4548189d-c519-4eb6-96c5-a909c73aaeb4",
+      "status": "confirmed",
+      "createdAt": {
+        "_seconds": 1610990066,
+        "_nanoseconds": 280000000
+      },
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "fees": {
+        "currency": "USD",
+        "amount": 0
+      },
+      "id": "c85b045e-1e31-43bc-aa8c-fc80c4e60218"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'c85b045e-1e31-43bc-aa8c-fc80c4e60218',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 1250,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '32edffa3-9691-4f6a-9773-2af184ce865d',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: '7ec73788-1c33-4e60-86be-e524d495610c'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'c85b045e-1e31-43bc-aa8c-fc80c4e60218',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 1250,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '32edffa3-9691-4f6a-9773-2af184ce865d',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: '7ec73788-1c33-4e60-86be-e524d495610c'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "status": "paid",
+      "proposalId": "0dcaddac-3908-47b5-8e88-06c5afbf254c",
+      "type": "subscription",
+      "subscriptionId": "6b52e166-665b-44af-9fc5-bf097d58e254",
+      "createdAt": {
+        "_seconds": 1609411035,
+        "_nanoseconds": 422000000
+      },
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "fees": {
+        "currency": "USD",
+        "amount": 1623.9999999999998
+      },
+      "circlePaymentId": "1abcc1c0-4388-4b3f-845c-9df166e100f5",
+      "source": {
+        "type": "card",
+        "id": "9ade2732-2d2f-41d8-9267-2f80337bc304"
+      },
+      "updatedAt": {
+        "_seconds": 1609942813,
+        "_nanoseconds": 149000000
+      },
+      "amount": {
+        "currency": "USD",
+        "amount": 37500
+      },
+      "id": "d675d42a-55f1-4964-88ce-0d66e663f159"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'd675d42a-55f1-4964-88ce-0d66e663f159',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 37500,\n    circlePaymentStatus: 'paid',\n    circlePaymentId: '1abcc1c0-4388-4b3f-845c-9df166e100f5',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: '9ade2732-2d2f-41d8-9267-2f80337bc304'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'd675d42a-55f1-4964-88ce-0d66e663f159',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 37500,\n    circlePaymentStatus: 'paid',\n    circlePaymentId: '1abcc1c0-4388-4b3f-845c-9df166e100f5',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: '9ade2732-2d2f-41d8-9267-2f80337bc304'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "type": "subscription",
+      "updatedAt": {
+        "_seconds": 1609942812,
+        "_nanoseconds": 570000000
+      },
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "proposalId": "5b0fe9c9-c271-40a3-bd97-86324ee2561b",
+      "subscriptionId": "e796747f-339e-44d2-b5c6-9784411178d1",
+      "amount": {
+        "amount": 5250,
+        "currency": "USD"
+      },
+      "circlePaymentId": "57bd4735-5d31-42aa-bc38-52c0b900715d",
+      "id": "dce6af32-89d8-43df-af1b-4a39225ed474",
+      "status": "paid",
+      "source": {
+        "id": "f8fdaba3-878c-498a-a97a-ab7a08d5b5c0",
+        "type": "card"
+      },
+      "fees": {
+        "amount": 252.99999999999997,
+        "currency": "USD"
+      },
+      "createdAt": {
+        "_seconds": 1608557950,
+        "_nanoseconds": 371000000
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'dce6af32-89d8-43df-af1b-4a39225ed474',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 5250,\n    circlePaymentStatus: 'paid',\n    circlePaymentId: '57bd4735-5d31-42aa-bc38-52c0b900715d',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'f8fdaba3-878c-498a-a97a-ab7a08d5b5c0'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'dce6af32-89d8-43df-af1b-4a39225ed474',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 5250,\n    circlePaymentStatus: 'paid',\n    circlePaymentId: '57bd4735-5d31-42aa-bc38-52c0b900715d',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'f8fdaba3-878c-498a-a97a-ab7a08d5b5c0'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "source": {
+        "id": "d1dcc323-6652-4afd-b79b-aedc1bf53ee7",
+        "type": "card"
+      },
+      "type": "subscription",
+      "status": "confirmed",
+      "fees": {
+        "amount": 103,
+        "currency": "USD"
+      },
+      "id": "dd37a893-0246-439d-8eb4-505fbb648660",
+      "commonId": "2a5bfc7d-9f50-4ff8-8c00-835e4b5f7b67",
+      "proposalId": "c8cecfe4-eba1-4fe9-a9cb-a5b99672ba63",
+      "circlePaymentId": "8dfc2713-d7fb-4736-b25e-74b69910509e",
+      "updatedAt": {
+        "_seconds": 1621946169,
+        "_nanoseconds": 684000000
+      },
+      "subscriptionId": "1db8950b-53b5-44a2-8e9b-bb12505b929f",
+      "amount": {
+        "currency": "USD",
+        "amount": 2500
+      },
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "createdAt": {
+        "_seconds": 1621946168,
+        "_nanoseconds": 960000000
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'dd37a893-0246-439d-8eb4-505fbb648660',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 2500,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '8dfc2713-d7fb-4736-b25e-74b69910509e',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'd1dcc323-6652-4afd-b79b-aedc1bf53ee7'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'dd37a893-0246-439d-8eb4-505fbb648660',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 2500,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '8dfc2713-d7fb-4736-b25e-74b69910509e',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'd1dcc323-6652-4afd-b79b-aedc1bf53ee7'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "type": "one-time",
+      "circlePaymentId": "7278d3d4-8e1b-49b9-bd4e-5d6566ad82d2",
+      "proposalId": "9c759ac6-4c91-4629-ad24-999325a810ff",
+      "source": {
+        "type": "card",
+        "id": "1c5507d7-d7a7-4df3-98a3-0adb684b9c8b"
+      },
+      "createdAt": {
+        "_seconds": 1621947893,
+        "_nanoseconds": 993000000
+      },
+      "amount": {
+        "amount": 2500,
+        "currency": "USD"
+      },
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "fees": {
+        "currency": "USD",
+        "amount": 103
+      },
+      "updatedAt": {
+        "_seconds": 1621947894,
+        "_nanoseconds": 810000000
+      },
+      "commonId": "0f932979-eb1f-47d2-a6ac-7ba63a60019a",
+      "status": "confirmed",
+      "id": "e4f728ed-09a9-4c6a-b320-d2e1e2b3412b"
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'e4f728ed-09a9-4c6a-b320-d2e1e2b3412b',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 2500,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '7278d3d4-8e1b-49b9-bd4e-5d6566ad82d2',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: '1c5507d7-d7a7-4df3-98a3-0adb684b9c8b'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'e4f728ed-09a9-4c6a-b320-d2e1e2b3412b',\n    type: 'ImportedPayment',\n    status: 'Successful',\n    amount: 2500,\n    circlePaymentStatus: 'confirmed',\n    circlePaymentId: '7278d3d4-8e1b-49b9-bd4e-5d6566ad82d2',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: '1c5507d7-d7a7-4df3-98a3-0adb684b9c8b'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "id": "e9997bb7-0d3e-443b-8cc4-047dd2e8b3bc",
+      "createDate": "2020-12-10T07:55:55.881Z",
+      "type": "SubscriptionPayment",
+      "updateDate": "2020-12-10T07:55:55.881Z",
+      "source": {
+        "id": "03ec81b7-d29e-410c-a0d6-ce516a9a4cc7",
+        "type": "card"
+      },
+      "subscriptionId": "3c2dd6b4-8ea0-4ec1-b3c0-8c8a67cfd32f",
+      "amount": {
+        "currency": "USD",
+        "amount": "50000.00"
+      },
+      "status": "pending",
+      "refunds": []
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'e9997bb7-0d3e-443b-8cc4-047dd2e8b3bc',\n    type: 'ImportedPayment',\n    status: 'Pending',\n    amount: 50000,\n    circlePaymentStatus: 'pending',\n?   circlePaymentId?: String | null,\n    user: {\n      connect: {\n?       id?: String,\n?       email?: String\n      },\n?     create?: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: {\n?       where: UserWhereUniqueInput,\n?       create: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput\n?     }\n    },\n    card: {\n      connect: {\n        id: '03ec81b7-d29e-410c-a0d6-ce516a9a4cc7'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument data.user.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'e9997bb7-0d3e-443b-8cc4-047dd2e8b3bc',\n    type: 'ImportedPayment',\n    status: 'Pending',\n    amount: 50000,\n    circlePaymentStatus: 'pending',\n?   circlePaymentId?: String | null,\n    user: {\n      connect: {\n?       id?: String,\n?       email?: String\n      },\n?     create?: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: {\n?       where: UserWhereUniqueInput,\n?       create: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput\n?     }\n    },\n    card: {\n      connect: {\n        id: '03ec81b7-d29e-410c-a0d6-ce516a9a4cc7'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument data.user.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "proposalId": "Payment for deleted subscription",
+      "createdAt": {
+        "_seconds": 1607873503,
+        "_nanoseconds": 882000000
+      },
+      "circlePaymentId": "0e9e6b7d-b3e5-4906-a472-15d664bb3ecb",
+      "status": "failed",
+      "failure": {
+        "errorCode": "card_not_honored",
+        "errorDescription": "Contact card issuer to query why payment failed"
+      },
+      "amount": {
+        "amount": 504,
+        "currency": "USD"
+      },
+      "subscriptionId": "Payment for deleted subscription",
+      "trackIds": [
+        "e1124322-cf28-43ad-b869-5c91471c5624",
+        "a893ea3e-d5b4-4863-bc1f-0df32fff4623"
+      ],
+      "userId": "Xh4xoIGHhgOhxz1S5AJkaXCBT8K2",
+      "id": "f2363bd5-9a52-411f-a20c-6ce665b2d6e6",
+      "source": {
+        "id": "c1780060-74f1-4a7c-b32c-d421580cd176",
+        "type": "card"
+      },
+      "type": "subscription",
+      "updatedAt": {
+        "_seconds": 1609942812,
+        "_nanoseconds": 463000000
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'f2363bd5-9a52-411f-a20c-6ce665b2d6e6',\n    type: 'ImportedPayment',\n    status: 'Unsuccessful',\n    amount: 504,\n    circlePaymentStatus: 'failed',\n    circlePaymentId: '0e9e6b7d-b3e5-4906-a472-15d664bb3ecb',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'c1780060-74f1-4a7c-b32c-d421580cd176'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'f2363bd5-9a52-411f-a20c-6ce665b2d6e6',\n    type: 'ImportedPayment',\n    status: 'Unsuccessful',\n    amount: 504,\n    circlePaymentStatus: 'failed',\n    circlePaymentId: '0e9e6b7d-b3e5-4906-a472-15d664bb3ecb',\n    user: {\n      connect: {\n        id: 'Xh4xoIGHhgOhxz1S5AJkaXCBT8K2'\n      }\n    },\n    card: {\n      connect: {\n        id: 'c1780060-74f1-4a7c-b32c-d421580cd176'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  },
+  {
+    "payment": {
+      "createDate": "2020-12-10T07:55:55.850Z",
+      "subscriptionId": "f498688c-1835-466b-a7e2-3c2a0e8a595e",
+      "type": "SubscriptionPayment",
+      "refunds": [],
+      "updateDate": "2020-12-10T07:55:55.850Z",
+      "status": "pending",
+      "amount": {
+        "currency": "USD",
+        "amount": "50000.00"
+      },
+      "id": "f9f767e7-4516-49bc-8257-32c6c2af42b6",
+      "source": {
+        "id": "03ec81b7-d29e-410c-a0d6-ce516a9a4cc7",
+        "type": "card"
+      }
+    },
+    "error": {
+      "message": "\nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'f9f767e7-4516-49bc-8257-32c6c2af42b6',\n    type: 'ImportedPayment',\n    status: 'Pending',\n    amount: 50000,\n    circlePaymentStatus: 'pending',\n?   circlePaymentId?: String | null,\n    user: {\n      connect: {\n?       id?: String,\n?       email?: String\n      },\n?     create?: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: {\n?       where: UserWhereUniqueInput,\n?       create: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput\n?     }\n    },\n    card: {\n      connect: {\n        id: '03ec81b7-d29e-410c-a0d6-ce516a9a4cc7'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument data.user.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n",
+      "stack": "Error: \nInvalid `prisma.payment.create()` invocation:\n\n{\n  data: {\n    id: 'f9f767e7-4516-49bc-8257-32c6c2af42b6',\n    type: 'ImportedPayment',\n    status: 'Pending',\n    amount: 50000,\n    circlePaymentStatus: 'pending',\n?   circlePaymentId?: String | null,\n    user: {\n      connect: {\n?       id?: String,\n?       email?: String\n      },\n?     create?: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: {\n?       where: UserWhereUniqueInput,\n?       create: UserCreateWithoutPaymentsInput | UserUncheckedCreateWithoutPaymentsInput\n?     }\n    },\n    card: {\n      connect: {\n        id: '03ec81b7-d29e-410c-a0d6-ce516a9a4cc7'\n      }\n    },\n+   common: {\n+     create?: CommonCreateWithoutPaymentsInput | CommonUncheckedCreateWithoutPaymentsInput,\n+     connectOrCreate?: CommonCreateOrConnectWithoutPaymentsInput,\n+     connect?: CommonWhereUniqueInput\n+   },\n+   join: {\n+     create?: JoinProposalCreateWithoutPaymentInput | JoinProposalUncheckedCreateWithoutPaymentInput,\n+     connectOrCreate?: JoinProposalCreateOrConnectWithoutPaymentInput,\n+     connect?: JoinProposalWhereUniqueInput\n+   },\n?   createdAt?: DateTime,\n?   updatedAt?: DateTime,\n?   processed?: Boolean,\n?   processedError?: Boolean,\n?   fees?: Int | null,\n?   subscription?: {\n?     create?: SubscriptionCreateWithoutPaymentsInput | SubscriptionUncheckedCreateWithoutPaymentsInput,\n?     connectOrCreate?: SubscriptionCreateOrConnectWithoutPaymentsInput,\n?     connect?: SubscriptionWhereUniqueInput\n?   }\n  }\n}\n\nArgument data.user.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.\nArgument common for data.common is missing.\nArgument join for data.join is missing.\n\nNote: Lines with + are required, lines with ? are optional.\n\n    at Document.validate (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:32780:19)\n    at NewPrismaClient._executeRequest (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34717:17)\n    at /Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:52\n    at AsyncResource.runInAsyncScope (async_hooks.js:189:9)\n    at NewPrismaClient._request (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34652:25)\n    at Object.then (/Users/alexa/Projects/Common/node_modules/@prisma/client/runtime/index.js:34772:39)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+    }
+  }
+]

@@ -6,6 +6,9 @@ model BillingDetail {
 
   name String
 
+  user   User @relation(fields: [userId], references: [id])
+  userId String
+
   line1 String
   line2 String?
 

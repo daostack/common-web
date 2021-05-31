@@ -8,11 +8,13 @@ import { GenerateUserAuthTokenQuery } from './Queries/GenerateUserAuthToken.quer
 
 import { UserNotificationTokenStateEnum } from './Enums/UserNotificationTokenState.enum';
 
+import { UserWiresExtension } from './Extensions/UserWires.extension';
 import { UserEventsExtension } from './Extensions/UserEvents.extension';
 import { UserCommonsExtension } from './Extensions/UserCommons.extension';
 import { UserProposalsExtension } from './Extensions/UserProposals.extension';
 import { UserNotificationsExtension } from './Extensions/UserNotifications.extension';
 import { UserSubscriptionsExtension } from './Extensions/UserSubscriptions.extension';
+import { UserBillingDetailsExtension } from './Extensions/UserBillingDetails.extension';
 import { UserNotificationTokensExtension } from './Extensions/UserNotificationTokens.extension';
 import { UserDiscussionSubscriptionsExtension } from './Extensions/UserDiscussionSubscriptions.extension';
 
@@ -44,11 +46,13 @@ export const UserTypes = [
   UserNotificationTokenStateEnum,
   UpdateUserMutation,
 
+  UserWiresExtension,
   UserEventsExtension,
   UserCommonsExtension,
   UserProposalsExtension,
   UserSubscriptionsExtension,
   UserNotificationsExtension,
+  UserBillingDetailsExtension,
   UserNotificationTokensExtension,
   UserDiscussionSubscriptionsExtension,
 

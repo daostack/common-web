@@ -46,6 +46,7 @@ export type User = {
   email: Scalars['String'];
   /** List of all the users permissions */
   permissions: Array<Scalars['String']>;
+  wires: Array<Wire>;
   /** List of events, that occurred and are related to this user */
   events: Array<Event>;
   /** List of all commons, that the user is currently part of */
@@ -53,6 +54,7 @@ export type User = {
   proposals: Array<Proposal>;
   subscriptions: Array<CommonSubscription>;
   notifications: Array<Notification>;
+  billingDetails: Array<UserBillingDetails>;
   notificationTokens: Array<UserNotificationToken>;
   discussionSubscriptions: Array<DiscussionSubscription>;
 };
@@ -147,6 +149,7 @@ export type Wire = BaseEntity & {
   circleId?: Maybe<Scalars['String']>;
   circleFingerprint?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  userId: Scalars['String'];
 };
 
 export type WireBankAccount = BaseEntity & Address & {
@@ -164,6 +167,10 @@ export type WireBankAccount = BaseEntity & Address & {
   postalCode: Scalars['String'];
   district?: Maybe<Scalars['String']>;
   bankName: Scalars['String'];
+};
+
+export type WireWhereInput = {
+  userId?: Maybe<StringFilter>;
 };
 
 export type Role = BaseEntity & {
@@ -1438,8 +1445,10 @@ export type CreateWireInput = {
   accountNumber?: Maybe<Scalars['String']>;
   routingNumber?: Maybe<Scalars['String']>;
   userId: Scalars['String'];
-  billingDetailsId: Scalars['String'];
-  wireBankDetailsId: Scalars['String'];
+  billingDetailsId?: Maybe<Scalars['String']>;
+  createBillingDetails?: Maybe<CreateUserBillingDetailsInput>;
+  wireBankDetailsId?: Maybe<Scalars['String']>;
+  createWireBankDetails?: Maybe<CreateWireBankAccountInput>;
 };
 
 export type CreateWireBankAccountInput = {
@@ -1518,6 +1527,7 @@ export type Query = {
   user?: Maybe<User>;
   users?: Maybe<Array<Maybe<User>>>;
   generateUserAuthToken: Scalars['String'];
+  wires?: Maybe<Array<Maybe<Wire>>>;
   roles?: Maybe<Array<Maybe<Role>>>;
   events?: Maybe<Array<Maybe<Event>>>;
   common?: Maybe<Common>;
@@ -1553,6 +1563,11 @@ export type QueryUsersArgs = {
 
 export type QueryGenerateUserAuthTokenArgs = {
   authId: Scalars['String'];
+};
+
+
+export type QueryWiresArgs = {
+  where?: Maybe<WireWhereInput>;
 };
 
 
@@ -2321,6 +2336,21 @@ export type GetProposalsSelectedForBatchQuery = (
       & Pick<FundingProposal, 'fundingState' | 'amount'>
       )>
   }
+    )>>>
+}
+  );
+
+export type AvailableWiresQueryVariables = Exact<{
+  where: WireWhereInput;
+}>;
+
+
+export type AvailableWiresQuery = (
+  { __typename?: 'Query' }
+  & {
+  wires?: Maybe<Array<Maybe<(
+    { __typename?: 'Wire' }
+    & Pick<Wire, 'id' | 'userId'>
     )>>>
 }
   );
@@ -3354,11 +3384,9 @@ export const GetAllTimeStatistiscDocument = gql`
 export function useGetAllTimeStatistiscQuery(baseOptions?: Apollo.QueryHookOptions<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>) {
   return Apollo.useQuery<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>(GetAllTimeStatistiscDocument, baseOptions);
 }
-
 export function useGetAllTimeStatistiscLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>) {
   return Apollo.useLazyQuery<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>(GetAllTimeStatistiscDocument, baseOptions);
 }
-
 export type GetAllTimeStatistiscQueryHookResult = ReturnType<typeof useGetAllTimeStatistiscQuery>;
 export type GetAllTimeStatistiscLazyQueryHookResult = ReturnType<typeof useGetAllTimeStatistiscLazyQuery>;
 export type GetAllTimeStatistiscQueryResult = Apollo.QueryResult<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>;
@@ -3412,6 +3440,42 @@ export function useGetProposalsSelectedForBatchLazyQuery(baseOptions?: Apollo.La
 export type GetProposalsSelectedForBatchQueryHookResult = ReturnType<typeof useGetProposalsSelectedForBatchQuery>;
 export type GetProposalsSelectedForBatchLazyQueryHookResult = ReturnType<typeof useGetProposalsSelectedForBatchLazyQuery>;
 export type GetProposalsSelectedForBatchQueryResult = Apollo.QueryResult<GetProposalsSelectedForBatchQuery, GetProposalsSelectedForBatchQueryVariables>;
+export const AvailableWiresDocument = gql`
+  query availableWires($where: WireWhereInput!) {
+    wires(where: $where) {
+      id
+      userId
+    }
+  }
+`;
+
+/**
+ * __useAvailableWiresQuery__
+ *
+ * To run a query within a React component, call `useAvailableWiresQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAvailableWiresQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAvailableWiresQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useAvailableWiresQuery(baseOptions: Apollo.QueryHookOptions<AvailableWiresQuery, AvailableWiresQueryVariables>) {
+  return Apollo.useQuery<AvailableWiresQuery, AvailableWiresQueryVariables>(AvailableWiresDocument, baseOptions);
+}
+
+export function useAvailableWiresLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AvailableWiresQuery, AvailableWiresQueryVariables>) {
+  return Apollo.useLazyQuery<AvailableWiresQuery, AvailableWiresQueryVariables>(AvailableWiresDocument, baseOptions);
+}
+
+export type AvailableWiresQueryHookResult = ReturnType<typeof useAvailableWiresQuery>;
+export type AvailableWiresLazyQueryHookResult = ReturnType<typeof useAvailableWiresLazyQuery>;
+export type AvailableWiresQueryResult = Apollo.QueryResult<AvailableWiresQuery, AvailableWiresQueryVariables>;
 export const PayoutsPageDataDocument = gql`
   query PayoutsPageData {
     proposals(fundingWhere: {fundingState: Eligible}) {
