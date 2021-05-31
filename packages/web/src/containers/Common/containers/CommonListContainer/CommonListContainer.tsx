@@ -78,11 +78,11 @@ export default function CommonListContainer() {
       )}
 
       {commons.length !== currentCommons.length && (
-        <div className="loader-wrapper">
-          {page < 3 && !loaderHack ? <div className="auto-load" ref={loader}></div> : null}
-          {loaderHack ? <div className="loader">Loading...</div> : null}
+        <div className="loader-container">
+          {page < 3 && !loaderHack ? <div ref={loader} /> : null}
+          {loaderHack ? <Loader /> : null}
           {page >= 3 && !loaderHack ? (
-            <div className="loading button-blue" onClick={() => loadHack()}>
+            <div className="loading-btn button-blue" onClick={() => loadHack()}>
               Load more Commons
             </div>
           ) : null}
