@@ -3,5 +3,5 @@ import { enumType } from 'nexus';
 
 export const PayoutApproverResponseEnum = enumType({
   name: 'PayoutApproverResponse',
-  members: Object.keys(PayoutApproverResponse).filter(x => x !== PayoutApproverResponse.Pending)
+  members: Object.keys(PayoutApproverResponse)
 });

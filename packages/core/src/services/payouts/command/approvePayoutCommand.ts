@@ -3,6 +3,7 @@ import * as z from 'zod';
 import { logger } from '@logger';
 import { prisma } from '@toolkits';
 import { eventService } from '@services';
+import { worker } from '@common/queues';
 
 const schema = z.object({
   userId: z.string(),
@@ -56,7 +57,8 @@ export const approvePayoutCommand = async (command: z.infer<typeof schema>): Pro
 
 
     if (approvals >= Number(process.env['Payout.RequiredApprovals'] || 2)) {
-      // @todo Execute the payout
+      // Schedule payout execution
+      worker.addPayoutJob('execute', command.payoutId);
     }
   }
 

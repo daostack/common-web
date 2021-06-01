@@ -1134,6 +1134,7 @@ type PayoutApprover implements BaseEntity {
 enum PayoutApproverResponse {
   Approved
   Declined
+  Pending
 }
 
 enum PayoutStatus {

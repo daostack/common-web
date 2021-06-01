@@ -390,7 +390,7 @@ export interface NexusGenEnums {
   PaymentState: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
   PaymentStatus: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
   PaymentType: "ImportedPayment" | "OneTimePayment" | "SubscriptionInitialPayment" | "SubscriptionSequentialPayment"
-  PayoutApproverResponse: "Approved" | "Declined"
+  PayoutApproverResponse: "Approved" | "Declined" | "Pending"
   PayoutStatus: "CircleComplete" | "CircleFailed" | "CirclePending" | "Failed" | "PendingApproval"
   ProposalState: "Accepted" | "Countdown" | "Finalizing" | "Rejected"
   ProposalType: "FundingRequest" | "JoinRequest"

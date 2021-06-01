@@ -4,6 +4,8 @@ model Payout {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  circlePayoutId String? @unique
+
   status PayoutStatus @default(PendingApproval)
 
   amount      Int

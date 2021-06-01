@@ -1,8 +1,11 @@
 import { createPayoutCommand } from './command/createPayoutCommand';
+import { executePayoutCommand } from './command/executePayoutCommand';
 import { approvePayoutCommand } from './command/approvePayoutCommand';
+import { updatePayoutStatusCommand } from './command/updatePayoutStatusCommand';
 
 export const payoutsService = {
   create: createPayoutCommand,
-
-  approve: approvePayoutCommand
+  execute: executePayoutCommand,
+  approve: approvePayoutCommand,
+  updateStatus: updatePayoutStatusCommand
 };

@@ -5,6 +5,7 @@ import { logger } from '@common/core';
 
 import './processors/VotesWorker';
 import './processors/EventsWorker';
+import './processors/PayoutsWorker';
 import './processors/PaymentsWorker';
 import './processors/ProposalsWorker';
 import './processors/NotificationsWorker';
