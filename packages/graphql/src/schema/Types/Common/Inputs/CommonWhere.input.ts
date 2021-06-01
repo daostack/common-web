@@ -6,5 +6,9 @@ export const CommonWhereInput = inputObjectType({
     t.field('name', {
       type: 'StringFilter'
     });
+
+    t.field('id', {
+      type: 'StringFilter'
+    });
   }
 });
