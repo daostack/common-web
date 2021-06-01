@@ -1,4 +1,5 @@
 import { IEmailTemplate } from '..';
+import { testFlag } from '../../helpers';
 
 const template = `
   <div>
@@ -29,7 +30,7 @@ const template = `
 `;
 
 export const userFundingRequestAcceptedInsufficientFunds: IEmailTemplate = {
-  subject: 'Your proposal was canceled due to insufficient funds',
+  subject: `${testFlag()} Your proposal was canceled due to insufficient funds`,
   template: template,
   emailStubs: {
     firstName: {

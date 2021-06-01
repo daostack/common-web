@@ -12,4 +12,4 @@ export const getFundingRequestAcceptedTemplate = (country: string, amount: numbe
 };
 
 //indication the email was sent from staging
-export const testFlag = (): string => env.environment === 'staging' ? '[TEST]' : ''
+export const testFlag = (): string => env.environment === 'staging' || env.environment === 'dev' ? '[TEST]' : '';
