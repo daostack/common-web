@@ -48,6 +48,12 @@
     .history-content {
       display: flex;
       justify-content: space-between;
+      padding: 0 10px;
+      .block-item {
+        .value {
+          font-size: $moderate;
+        }
+      }
     }
   }
 }
