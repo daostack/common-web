@@ -8,8 +8,8 @@ export const removeUserFromRoleCommand = async (userId: string, roleId: string):
     roleId
   });
 
-  // Unlink the user from the role
-  logger.debug('Removing user from role');
+  // Unlink the user from the roles
+  logger.debug('Removing user from roles');
 
   await prisma.user.update({
     where: {
@@ -24,7 +24,7 @@ export const removeUserFromRoleCommand = async (userId: string, roleId: string):
     }
   });
 
-  logger.info('User removed from role');
+  logger.info('User removed from roles');
 
   // Rebuild the user permissions
   await rebuildUserPermissionsCommand(userId);

@@ -6,9 +6,6 @@ export const allPermissions = [
   'admin.roles.create',
   'admin.roles.update',
 
-  'admin.roles.permissions.add',
-  'admin.roles.permissions.remove',
-
   'admin.roles.assign',
   'admin.roles.unassign',
 
@@ -62,7 +59,7 @@ export const allPermissions = [
   'admin.wire.bank.read',
   'admin.wire.bank.create',
   'admin.wire.bank.update'
-] as const;
+];
 
 
 export type AllPermission = (typeof allPermissions[number]);

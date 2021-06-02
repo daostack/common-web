@@ -11,6 +11,7 @@ import { CommonTypes } from './Types/Common';
 import { ReportTypes } from './Types/Reports';
 import { PayoutTypes } from './Types/Payouts';
 import { PaymentTypes } from './Types/Payments';
+import { SettingsTypes } from './Types/Settings';
 import { ProposalTypes } from './Types/Proposals';
 import { StatisticTypes } from './Types/Statistics';
 import { DiscussionTypes } from './Types/Discussion';
@@ -48,6 +49,7 @@ const types = [
   PayoutTypes,
   PaymentTypes,
   ProposalTypes,
+  SettingsTypes,
   StatisticTypes,
   DiscussionTypes,
   CommonMemberTypes,

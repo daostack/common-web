@@ -1262,7 +1262,9 @@ type Query {
   payouts(paginate: PaginateInput, where: PayoutWhereInput): [Payout]
   proposal(where: ProposalWhereUniqueInput!): Proposal
   proposals(fundingWhere: FundingProposalWhereInput, paginate: PaginateInput, where: ProposalWhereInput): [Proposal]
+  role(where: RoleWhereUniqueInput!): Role
   roles(paginate: PaginateInput): [Role]
+  settings: Settings!
 
   """
   Provide ID to fetch specific user or do not pass anything to get the currently authenticated user
@@ -1353,6 +1355,20 @@ type Role implements BaseEntity {
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+
+  """All the users that bear that role"""
+  users: [User!]!
+}
+
+input RoleWhereUniqueInput {
+  id: ID
+  name: String
+}
+
+"""Setting description about the common application"""
+type Settings {
+  """List of all available permission for roles"""
+  permissions: [String]!
 }
 
 enum SortOrder {

@@ -7,23 +7,23 @@ import { editRoleCommand } from './commands/editRoleCommand';
 
 export const roleService = {
   /**
-   * Create new role
+   * Create new roles
    */
   create: createRoleCommand,
 
   /**
-   * Edit one role
+   * Edit one roles
    */
   edit: editRoleCommand,
 
   users: {
     /**
-     * Add one user to one role
+     * Add one user to one roles
      */
     addToRole: addUserToRoleCommand,
 
     /**
-     * Remove one role from one user
+     * Remove one roles from one user
      */
     removeFromRole: removeUserFromRoleCommand,
 

@@ -9,7 +9,7 @@ export const addUserToRoleCommand = async (userId: string, roleId: string): Prom
     roleId
   });
 
-  // Find the user and check if they are already in that role
+  // Find the user and check if they are already in that roles
   const userRoles = await prisma.user
     .findUnique({
       where: {
@@ -23,14 +23,14 @@ export const addUserToRoleCommand = async (userId: string, roleId: string): Prom
     });
 
   if (userRoles.length) {
-    throw new CommonError('Cannot add the user twice to the same role', {
+    throw new CommonError('Cannot add the user twice to the same roles', {
       userId,
       roleId
     });
   }
 
-  // Link the user to the role if they are not
-  logger.debug('Linking user to role');
+  // Link the user to the roles if they are not
+  logger.debug('Linking user to roles');
 
   await prisma.user.update({
     where: {
@@ -48,7 +48,7 @@ export const addUserToRoleCommand = async (userId: string, roleId: string): Prom
     }
   });
 
-  logger.info('User linked to role');
+  logger.info('User linked to roles');
 
   // Rebuild the permissions
   await rebuildUserPermissionsCommand(userId);

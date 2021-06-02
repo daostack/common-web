@@ -4,11 +4,10 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
-import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
+import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -309,6 +308,10 @@ export interface NexusGenInputs {
   ReportWhereInput: { // input type
     for?: NexusGenEnums['ReportFor'] | null; // ReportFor
     status?: NexusGenInputs['ReportStatusFilterInput'] | null; // ReportStatusFilterInput
+  }
+  RoleWhereUniqueInput: { // input type
+    id?: string | null; // ID
+    name?: string | null; // String
   }
   StatisticsWhereInput: { // input type
     type?: NexusGenEnums['StatisticType'] | null; // StatisticType
@@ -645,6 +648,7 @@ export interface NexusGenObjects {
     permissions: string[]; // [String!]!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
+  Settings: {};
   Statistic: { // root type
     commons: number; // Int!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -1026,7 +1030,9 @@ export interface NexusGenFieldTypes {
     payouts: Array<NexusGenRootTypes['Payout'] | null> | null; // [Payout]
     proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
     proposals: Array<NexusGenRootTypes['Proposal'] | null> | null; // [Proposal]
+    role: NexusGenRootTypes['Role'] | null; // Role
     roles: Array<NexusGenRootTypes['Role'] | null> | null; // [Role]
+    settings: NexusGenRootTypes['Settings']; // Settings!
     user: NexusGenRootTypes['User'] | null; // User
     users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
     wires: Array<NexusGenRootTypes['Wire'] | null> | null; // [Wire]
@@ -1052,6 +1058,10 @@ export interface NexusGenFieldTypes {
     name: string; // String!
     permissions: string[]; // [String!]!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    users: NexusGenRootTypes['User'][]; // [User!]!
+  }
+  Settings: { // field return type
+    permissions: Array<string | null>; // [String]!
   }
   Statistic: { // field return type
     commons: number; // Int!
@@ -1452,7 +1462,9 @@ export interface NexusGenFieldTypeNames {
     payouts: 'Payout'
     proposal: 'Proposal'
     proposals: 'Proposal'
+    role: 'Role'
     roles: 'Role'
+    settings: 'Settings'
     user: 'User'
     users: 'User'
     wires: 'Wire'
@@ -1478,6 +1490,10 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     permissions: 'String'
     updatedAt: 'DateTime'
+    users: 'User'
+  }
+  Settings: { // field return type name
+    permissions: 'String'
   }
   Statistic: { // field return type name
     commons: 'Int'
@@ -1779,6 +1795,9 @@ export interface NexusGenArgTypes {
       fundingWhere?: NexusGenInputs['FundingProposalWhereInput'] | null; // FundingProposalWhereInput
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
       where?: NexusGenInputs['ProposalWhereInput'] | null; // ProposalWhereInput
+    }
+    role: { // args
+      where: NexusGenInputs['RoleWhereUniqueInput']; // RoleWhereUniqueInput!
     }
     roles: { // args
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput

@@ -75,7 +75,7 @@ export const createCommonCommand = async (command: z.infer<typeof schema>): Prom
     userId: command.founderId
   });
 
-  // Add the founder role to the creator
+  // Add the founder roles to the creator
   await addCommonMemberRoleCommand({
     memberId: founder.id,
     roles: [

@@ -12,321 +12,58 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt. */
-  URL: any;
-  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
-  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
-  /** A field whose value is a generic Universally Unique Identifier: https://en.wikipedia.org/wiki/Universally_unique_identifier. */
+  URL: any;
   UUID: any;
   Void: any;
 };
 
-
-export type User = {
-  __typename?: 'User';
-  /** The settings Id of the user */
-  id: Scalars['ID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  /** The first name of the user */
-  firstName: Scalars['String'];
-  /** The last name of the user */
-  lastName: Scalars['String'];
-  /** The last name of the user */
-  country: Country;
-  intro?: Maybe<Scalars['String']>;
-  /** The display name of the user */
-  displayName: Scalars['String'];
-  photo: Scalars['String'];
-  /** The email of the user */
-  email: Scalars['String'];
-  /** List of all the users permissions */
-  permissions: Array<Scalars['String']>;
-  wires: Array<Wire>;
-  /** List of events, that occurred and are related to this user */
-  events: Array<Event>;
-  /** List of all commons, that the user is currently part of */
-  commons: Array<Common>;
-  proposals: Array<Proposal>;
-  subscriptions: Array<CommonSubscription>;
-  notifications: Array<Notification>;
-  billingDetails: Array<UserBillingDetails>;
-  notificationTokens: Array<UserNotificationToken>;
-  discussionSubscriptions: Array<DiscussionSubscription>;
+export type ActOnReportInput = {
+  reportId: Scalars['UUID'];
+  action: ReportAction;
 };
 
-
-export type UserEventsArgs = {
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<EventOrderByInput>;
-};
-
-
-export type UserProposalsArgs = {
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  where?: Maybe<ProposalWhereInput>;
-};
-
-
-export type UserNotificationsArgs = {
-  orderBy?: Maybe<NotificationOrderByInput>;
-  cursor?: Maybe<NotificationWhereUniqueInput>;
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-};
-
-
-export type UserDiscussionSubscriptionsArgs = {
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<DiscussionSubscriptionOrderByInput>;
-};
-
-export type UserBillingDetails = BaseEntity & Address & {
-  __typename?: 'UserBillingDetails';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
+export type Address = {
   line1?: Maybe<Scalars['String']>;
   line2?: Maybe<Scalars['String']>;
   city: Scalars['String'];
   country: Scalars['String'];
   postalCode: Scalars['String'];
   district?: Maybe<Scalars['String']>;
+};
+
+export type BaseEntity = {
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type BillingDetailsInput = {
   name: Scalars['String'];
-};
-
-export type UserNotificationToken = BaseEntity & {
-  __typename?: 'UserNotificationToken';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  state: UserNotificationTokenState;
-  token: Scalars['String'];
-  description: Scalars['String'];
-  lastUsed: Scalars['DateTime'];
-  lastVerified: Scalars['DateTime'];
-};
-
-export type UserWhereUniqueInput = {
-  userId: Scalars['ID'];
-};
-
-export type UserWhereInput = {
-  firstName?: Maybe<StringFilter>;
-  lastName?: Maybe<StringFilter>;
-  email?: Maybe<StringFilter>;
-  OR?: Maybe<Array<UserWhereInput>>;
-  AND?: Maybe<Array<UserWhereInput>>;
-};
-
-export enum UserNotificationTokenState {
-  Active = 'Active',
-  Expired = 'Expired',
-  Voided = 'Voided'
-}
-
-export type Wire = BaseEntity & {
-  __typename?: 'Wire';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  circleId?: Maybe<Scalars['String']>;
-  circleFingerprint?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  userId: Scalars['String'];
-};
-
-export type WireBankAccount = BaseEntity & Address & {
-  __typename?: 'WireBankAccount';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  line1?: Maybe<Scalars['String']>;
-  line2?: Maybe<Scalars['String']>;
   city: Scalars['String'];
   country: Scalars['String'];
+  line1: Scalars['String'];
   postalCode: Scalars['String'];
+  line2?: Maybe<Scalars['String']>;
   district?: Maybe<Scalars['String']>;
-  bankName: Scalars['String'];
-};
-
-export type WireWhereInput = {
-  userId?: Maybe<StringFilter>;
-};
-
-export type Role = BaseEntity & {
-  __typename?: 'Role';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  name: Scalars['String'];
-  displayName: Scalars['String'];
-  description: Scalars['String'];
-  permissions: Array<Scalars['String']>;
 };
 
 export type Card = {
   __typename?: 'Card';
-  /** The main identifier of the item */
   id: Scalars['ID'];
-  /** The date, at which the item was created */
   createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
   updatedAt: Scalars['DateTime'];
-};
-
-export type CreateCardInput = {
-  /** The ID of the key used for the encryption of the sensitive data */
-  keyId: Scalars['String'];
-  /** The sensitive part of the card as encrypted card */
-  encryptedData: Scalars['String'];
-  expYear: Scalars['Int'];
-  expMonth: Scalars['Int'];
-  billingDetails: BillingDetailsInput;
-};
-
-export type Vote = {
-  __typename?: 'Vote';
-  /** The main identifier of the item */
-  id: Scalars['ID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  outcome: VoteOutcome;
-  voterId: Scalars['ID'];
-  voter: CommonMember;
-};
-
-export enum VoteOutcome {
-  Approve = 'Approve',
-  Condemn = 'Condemn'
-}
-
-export type CreateVoteInput = {
-  outcome: VoteOutcome;
-  /** The ID of the root of the proposal whether it is funding one or join */
-  proposalId: Scalars['ID'];
-};
-
-export type Event = {
-  __typename?: 'Event';
-  /** The main identifier of the item */
-  id: Scalars['ID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  /** The Types of the event in one of the predefined event types */
-  type: EventType;
-  payload?: Maybe<Scalars['JSON']>;
-  /** The ID of the common, for whom the event was created */
-  commonId?: Maybe<Scalars['ID']>;
-  /** The ID of the event creator */
-  userId?: Maybe<Scalars['ID']>;
-  /** The event creator */
-  user?: Maybe<User>;
-};
-
-export enum EventType {
-  CommonCreated = 'CommonCreated',
-  CommonUpdated = 'CommonUpdated',
-  CommonDelisted = 'CommonDelisted',
-  CommonWhitelisted = 'CommonWhitelisted',
-  CommonMemberCreated = 'CommonMemberCreated',
-  CommonMemberRoleAdded = 'CommonMemberRoleAdded',
-  CommonMemberRoleRemoved = 'CommonMemberRoleRemoved',
-  JoinRequestCreated = 'JoinRequestCreated',
-  JoinRequestAccepted = 'JoinRequestAccepted',
-  JoinRequestRejected = 'JoinRequestRejected',
-  FundingRequestCreated = 'FundingRequestCreated',
-  FundingRequestAccepted = 'FundingRequestAccepted',
-  FundingRequestRejected = 'FundingRequestRejected',
-  CardCreated = 'CardCreated',
-  CardCvvVerificationPassed = 'CardCvvVerificationPassed',
-  CardCvvVerificationFailed = 'CardCvvVerificationFailed',
-  PaymentCreated = 'PaymentCreated',
-  PaymentSucceeded = 'PaymentSucceeded',
-  PaymentFailed = 'PaymentFailed',
-  ProposalMajorityReached = 'ProposalMajorityReached',
-  ProposalExpired = 'ProposalExpired',
-  VoteCreated = 'VoteCreated',
-  UserCreated = 'UserCreated',
-  UserUpdated = 'UserUpdated',
-  DiscussionCreated = 'DiscussionCreated',
-  DiscussionMessageCreated = 'DiscussionMessageCreated',
-  DiscussionSubscriptionCreated = 'DiscussionSubscriptionCreated',
-  DiscussionSubscriptionTypeChanged = 'DiscussionSubscriptionTypeChanged',
-  NotificationTemplateCreated = 'NotificationTemplateCreated',
-  NotificationTemplateUpdated = 'NotificationTemplateUpdated',
-  UserNotificationTokenVoided = 'UserNotificationTokenVoided',
-  UserNotificationTokenExpired = 'UserNotificationTokenExpired',
-  UserNotificationTokenCreated = 'UserNotificationTokenCreated',
-  UserNotificationTokenRefreshed = 'UserNotificationTokenRefreshed',
-  ReportCreated = 'ReportCreated',
-  ReportRespected = 'ReportRespected',
-  ReportDismissed = 'ReportDismissed',
-  RoleCreated = 'RoleCreated',
-  RoleUpdated = 'RoleUpdated',
-  RolePermissionAdded = 'RolePermissionAdded',
-  RolePermissionRemoved = 'RolePermissionRemoved',
-  RoleDeleted = 'RoleDeleted',
-  UserAddedToRole = 'UserAddedToRole',
-  UserRemovedFromRole = 'UserRemovedFromRole',
-  WireCreated = 'WireCreated',
-  WireUpdated = 'WireUpdated',
-  PayoutCreated = 'PayoutCreated',
-  PayoutApprovalGiven = 'PayoutApprovalGiven',
-  PayoutRejectionGiven = 'PayoutRejectionGiven',
-  PayoutApproved = 'PayoutApproved',
-  PayoutRejected = 'PayoutRejected',
-  PayoutExecuted = 'PayoutExecuted',
-  PayoutCompleted = 'PayoutCompleted'
-}
-
-export type EventOrderByInput = {
-  createdAt?: Maybe<SortOrder>;
-  updatedAt?: Maybe<SortOrder>;
-  type?: Maybe<SortOrder>;
 };
 
 export type Common = {
   __typename?: 'Common';
-  /** The main identifier of the item */
   id: Scalars['ID'];
-  /** The date, at which the item was created */
   createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
   updatedAt: Scalars['DateTime'];
-  /** The name of the common as provided */
   name: Scalars['String'];
-  /** The whitelisting state of a common */
   whitelisted: Scalars['Boolean'];
-  /** The current available funds of the common. In cents */
   balance: Scalars['Int'];
-  /** The total amount of money that the common has raised. In cents */
   raised: Scalars['Int'];
   links?: Maybe<Scalars['JSON']>;
   rules?: Maybe<Scalars['JSON']>;
@@ -335,9 +72,7 @@ export type Common = {
   action?: Maybe<Scalars['String']>;
   byline?: Maybe<Scalars['String']>;
   fundingType: FundingType;
-  /** The minimum amount that the join request should provide. In cents */
   fundingMinimumAmount: Scalars['Int'];
-  /** List of events, that occurred in a common */
   events: Array<Event>;
   reports: Array<Report>;
   updates: Array<CommonUpdate>;
@@ -380,515 +115,15 @@ export type CommonMembersArgs = {
   orderBy?: Maybe<CommonMemberOrderByInput>;
 };
 
-export type CommonUpdate = BaseEntity & {
-  __typename?: 'CommonUpdate';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  commonBefore: Common;
-  commonAfter: Common;
-  change?: Maybe<Scalars['JSON']>;
-};
-
-/** The funding Types of the common */
-export enum FundingType {
-  OneTime = 'OneTime',
-  Monthly = 'Monthly'
-}
-
-export type CreateCommonInput = {
-  name: Scalars['String'];
-  fundingMinimumAmount: Scalars['Int'];
-  fundingType: FundingType;
-  action?: Maybe<Scalars['String']>;
-  byline?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  image: Scalars['String'];
-  links?: Maybe<Array<CommonLinkInput>>;
-  rules?: Maybe<Array<CommonRuleInput>>;
-};
-
 export type CommonLinkInput = {
   title: Scalars['String'];
   url: Scalars['String'];
 };
 
-export type CommonRuleInput = {
-  title: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-};
-
-export type CommonWhereInput = {
-  name?: Maybe<StringFilter>;
-};
-
-export type CommonWhereUniqueInput = {
-  id: Scalars['ID'];
-};
-
-export type Report = BaseEntity & {
-  __typename?: 'Report';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  /** The current status of the report */
-  status: ReportStatus;
-  /** The Types of violation that this report is for */
-  for: ReportFor;
-  /** The note that the report has left for the content */
-  note: Scalars['String'];
-  /** The date on which the report was last reviewed if reviewed */
-  reviewedOn?: Maybe<Scalars['DateTime']>;
-  reporterId: Scalars['ID'];
-  reporter: User;
-  messageId: Scalars['UUID'];
-  message: DiscussionMessage;
-};
-
-export enum ReportFor {
-  Nudity = 'Nudity',
-  Violance = 'Violance',
-  Harassment = 'Harassment',
-  FalseNews = 'FalseNews',
-  Spam = 'Spam',
-  Hate = 'Hate',
-  Other = 'Other'
-}
-
-export enum ReportAction {
-  Respected = 'Respected',
-  Dismissed = 'Dismissed'
-}
-
-export enum ReportStatus {
-  Active = 'Active',
-  Clossed = 'Clossed'
-}
-
-export enum ReportAuditor {
-  CommonModerator = 'CommonModerator',
-  SystemAdmin = 'SystemAdmin'
-}
-
-export type ReportWhereInput = {
-  status?: Maybe<ReportStatusFilterInput>;
-  for?: Maybe<ReportFor>;
-};
-
-export type ReportStatusFilterInput = {
-  in?: Maybe<Array<Maybe<ReportStatus>>>;
-  not?: Maybe<Array<Maybe<ReportStatus>>>;
-};
-
-export type ActOnReportInput = {
-  reportId: Scalars['UUID'];
-  action: ReportAction;
-};
-
-export type ReportDiscussionMessageInput = {
-  messageId: Scalars['UUID'];
-  note: Scalars['String'];
-  for: ReportFor;
-};
-
-export type Payout = BaseEntity & {
-  __typename?: 'Payout';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  status: PayoutStatus;
-  amount: Scalars['Int'];
-  description: Scalars['String'];
-  proposals: Array<Proposal>;
-};
-
-export type PayoutApprover = BaseEntity & {
-  __typename?: 'PayoutApprover';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  outcome: PayoutApproverResponse;
-  userId: Scalars['ID'];
-};
-
-export enum PayoutStatus {
-  PendingApproval = 'PendingApproval',
-  CirclePending = 'CirclePending',
-  CircleComplete = 'CircleComplete',
-  CircleFailed = 'CircleFailed',
-  Failed = 'Failed'
-}
-
-export enum PayoutApproverResponse {
-  Approved = 'Approved',
-  Declined = 'Declined'
-}
-
-export type PayoutStatusFilter = {
-  in?: Maybe<Array<Maybe<PayoutStatus>>>;
-  notIn?: Maybe<Array<Maybe<PayoutStatus>>>;
-  equals?: Maybe<PayoutStatus>;
-  not?: Maybe<PayoutStatus>;
-};
-
-export type PayoutWhereInput = {
-  status?: Maybe<PayoutStatusFilter>;
-};
-
-export enum PaymentType {
-  OneTimePayment = 'OneTimePayment',
-  SubscriptionInitialPayment = 'SubscriptionInitialPayment',
-  SubscriptionSequentialPayment = 'SubscriptionSequentialPayment',
-  ImportedPayment = 'ImportedPayment'
-}
-
-export enum PaymentStatus {
-  NotAttempted = 'NotAttempted',
-  Pending = 'Pending',
-  Successful = 'Successful',
-  Unsuccessful = 'Unsuccessful'
-}
-
-export enum PaymentCircleStatus {
-  Pending = 'pending',
-  Failed = 'failed',
-  Confirmed = 'confirmed',
-  Paid = 'paid'
-}
-
-export type Payment = BaseEntity & {
-  __typename?: 'Payment';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  processed: Scalars['Boolean'];
-  processedError: Scalars['Boolean'];
-  type: PaymentType;
-  status: PaymentStatus;
-  circlePaymentStatus?: Maybe<PaymentCircleStatus>;
-  circlePaymentId?: Maybe<Scalars['String']>;
-  /** The amount of the payment in US dollar cents */
-  amount?: Maybe<Scalars['Int']>;
-  /** The payment fees in US dollar cents */
-  fees?: Maybe<Scalars['Int']>;
-  userId: Scalars['String'];
-  user: User;
-  commonId: Scalars['String'];
-  common: Common;
-};
-
-export type PaymentsWhereInput = {
-  commonId?: Maybe<Scalars['UUID']>;
-  userId?: Maybe<Scalars['UUID']>;
-};
-
-export type Proposal = {
-  __typename?: 'Proposal';
-  /** The main identifier of the item */
-  id: Scalars['ID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  type: ProposalType;
-  state: ProposalState;
-  links?: Maybe<Scalars['JSON']>;
-  files?: Maybe<Scalars['JSON']>;
-  images?: Maybe<Scalars['JSON']>;
-  votesFor: Scalars['Int'];
-  votesAgainst: Scalars['Int'];
-  expiresAt: Scalars['DateTime'];
-  title?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  /** The IP from which the proposal was created */
-  ipAddress?: Maybe<Scalars['String']>;
-  discussions: Array<Discussion>;
-  /** The ID of the user who created the proposal */
-  userId: Scalars['ID'];
-  /** The ID of the membership of the user who created the proposal */
-  commonMemberId: Scalars['UUID'];
-  user: User;
-  member: CommonMember;
-  fundingId?: Maybe<Scalars['UUID']>;
-  funding?: Maybe<FundingProposal>;
-  commonId: Scalars['UUID'];
-  common: Common;
-  votes: Array<Vote>;
-  joinId?: Maybe<Scalars['UUID']>;
-  join?: Maybe<JoinProposal>;
-};
-
-
-export type ProposalDiscussionsArgs = {
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-};
-
-export type JoinProposal = BaseEntity & {
-  __typename?: 'JoinProposal';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  /** The amount that this join proposal will contribute to the common. In cents */
-  funding: Scalars['Int'];
-  fundingType: FundingType;
-  paymentState: PaymentState;
-};
-
-export type FundingProposal = BaseEntity & {
-  __typename?: 'FundingProposal';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  /** The amount that the proposal has requested in cents */
-  amount: Scalars['Int'];
-  fundingState: FundingState;
-};
-
-export type ProposalWhereInput = {
-  id?: Maybe<StringFilter>;
-  type?: Maybe<ProposalType>;
-  state?: Maybe<ProposalState>;
-  commonId?: Maybe<Scalars['UUID']>;
-  commonMemberId?: Maybe<Scalars['UUID']>;
-  userId?: Maybe<Scalars['ID']>;
-  title?: Maybe<StringFilter>;
-  description?: Maybe<StringFilter>;
-  AND?: Maybe<Array<ProposalWhereInput>>;
-  OR?: Maybe<Array<ProposalWhereInput>>;
-};
-
-export type FundingProposalWhereInput = {
-  fundingState?: Maybe<FundingState>;
-};
-
-export type CreateJoinProposalInput = {
-  title: Scalars['String'];
-  description: Scalars['String'];
-  fundingAmount: Scalars['Int'];
-  cardId: Scalars['String'];
-  commonId: Scalars['String'];
-  links?: Maybe<Array<LinkInput>>;
-};
-
-export type CreateFundingProposalInput = {
-  commonId: Scalars['ID'];
-  amount: Scalars['Int'];
-  title: Scalars['String'];
-  description: Scalars['String'];
-  links?: Maybe<Array<ProposalLinkInput>>;
-  files?: Maybe<Array<ProposalFileInput>>;
-  images?: Maybe<Array<ProposalImageInput>>;
-};
-
-export type ProposalLinkInput = {
-  title: Scalars['String'];
-  url: Scalars['String'];
-};
-
-export type ProposalFileInput = {
-  value: Scalars['String'];
-};
-
-export type ProposalImageInput = {
-  value: Scalars['String'];
-};
-
-export enum ProposalType {
-  FundingRequest = 'FundingRequest',
-  JoinRequest = 'JoinRequest'
-}
-
-export enum ProposalState {
-  Countdown = 'Countdown',
-  Finalizing = 'Finalizing',
-  Rejected = 'Rejected',
-  Accepted = 'Accepted'
-}
-
-export enum FundingState {
-  NotEligible = 'NotEligible',
-  Eligible = 'Eligible',
-  Redeemed = 'Redeemed'
-}
-
-export enum PaymentState {
-  NotAttempted = 'NotAttempted',
-  Pending = 'Pending',
-  Successful = 'Successful',
-  Unsuccessful = 'Unsuccessful'
-}
-
-export type ProposalWhereUniqueInput = {
-  id: Scalars['UUID'];
-};
-
-export enum StatisticType {
-  AllTime = 'AllTime',
-  Hourly = 'Hourly',
-  Daily = 'Daily',
-  Weekly = 'Weekly'
-}
-
-export type Statistic = BaseEntity & {
-  __typename?: 'Statistic';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  users: Scalars['Int'];
-  commons: Scalars['Int'];
-  fundingProposals: Scalars['Int'];
-  joinProposals: Scalars['Int'];
-};
-
-export type StatisticsWhereInput = {
-  type?: Maybe<StatisticType>;
-};
-
-export type Discussion = BaseEntity & {
-  __typename?: 'Discussion';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  /** What this discussion is about */
-  topic: Scalars['String'];
-  /** Short description of the topic */
-  description: Scalars['String'];
-  /** The date at which the last message on the discussion was added */
-  latestMessage: Scalars['DateTime'];
-  type: DiscussionType;
-  userId: Scalars['String'];
-  /** The discussion creator */
-  owner?: Maybe<User>;
-  messages: Array<DiscussionMessage>;
-};
-
-
-export type DiscussionMessagesArgs = {
-  take?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<DiscussionMessagesOrderByInput>;
-};
-
-export type DiscussionMessage = BaseEntity & {
-  __typename?: 'DiscussionMessage';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  message: Scalars['String'];
-  type: DiscussionMessageType;
-  flag: DiscussionMessageFlag;
-  userId: Scalars['String'];
-  reports: Array<Report>;
-  owner: User;
-};
-
-export type DiscussionSubscription = BaseEntity & {
-  __typename?: 'DiscussionSubscription';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  type: DiscussionSubscriptionType;
-  userId: Scalars['String'];
-  discussionId: Scalars['UUID'];
-  discussion: Discussion;
-};
-
-export enum DiscussionType {
-  ProposalDiscussion = 'ProposalDiscussion',
-  CommonDiscussion = 'CommonDiscussion'
-}
-
-export enum DiscussionMessageType {
-  Message = 'Message'
-}
-
-export enum DiscussionMessageFlag {
-  Clear = 'Clear',
-  Reported = 'Reported',
-  Hidden = 'Hidden'
-}
-
-export enum DiscussionSubscriptionType {
-  AllNotifications = 'AllNotifications',
-  OnlyMentions = 'OnlyMentions',
-  NoNotification = 'NoNotification'
-}
-
-export type DiscussionMessagesOrderByInput = {
-  createdAt?: Maybe<SortOrder>;
-  updatedAt?: Maybe<SortOrder>;
-};
-
-export type DiscussionSubscriptionOrderByInput = {
-  createdAt?: Maybe<SortOrder>;
-  updatedAt?: Maybe<SortOrder>;
-};
-
-export type DiscussionWhereInput = {
-  commonId?: Maybe<Scalars['UUID']>;
-  commonMemberId?: Maybe<Scalars['UUID']>;
-  userId?: Maybe<Scalars['ID']>;
-};
-
-export type CreateDiscussionInput = {
-  /** The topic of the discussion to be created */
-  topic: Scalars['String'];
-  /** Short description about the topic */
-  description: Scalars['String'];
-  /** The ID of the common, for which we are creating the discussion */
-  commonId: Scalars['ID'];
-  /** The ID of the proposal, if this is proposal discussion */
-  proposalId?: Maybe<Scalars['ID']>;
-};
-
-export type CreateDiscussionMessageInput = {
-  /** The ID of the discussion, for which we are creating the message */
-  discussionId: Scalars['ID'];
-  /** The message itself */
-  message: Scalars['String'];
-};
-
 export type CommonMember = BaseEntity & {
   __typename?: 'CommonMember';
-  /** The main identifier of the item */
   id: Scalars['UUID'];
-  /** The date, at which the item was created */
   createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
   updatedAt: Scalars['DateTime'];
   userId: Scalars['ID'];
   commonId: Scalars['ID'];
@@ -914,164 +149,15 @@ export enum CommonMemberRole {
   Moderator = 'Moderator'
 }
 
-export enum NotificationType {
-  JoinRequestAccepted = 'JoinRequestAccepted',
-  JoinRequestRejected = 'JoinRequestRejected',
-  FundingRequestAccepted = 'FundingRequestAccepted',
-  FundingRequestRejected = 'FundingRequestRejected',
-  General = 'General'
-}
-
-export enum NotificationSeenStatus {
-  NotSeen = 'NotSeen',
-  Seen = 'Seen',
-  Done = 'Done'
-}
-
-export enum NotificationLanguage {
-  En = 'EN',
-  Ru = 'RU',
-  Bg = 'BG',
-  He = 'HE',
-  Jp = 'JP',
-  Ko = 'KO'
-}
-
-export enum NotificationTemplateType {
-  PushNotification = 'PushNotification',
-  EmailNotification = 'EmailNotification'
-}
-
-export type Notification = BaseEntity & {
-  __typename?: 'Notification';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  /** Whether the notification should be shown in the user notification feed */
-  show: Scalars['Boolean'];
-  type: NotificationType;
-  seenStatus: NotificationSeenStatus;
-  /** The ID of the linked user */
-  userId: Scalars['UUID'];
-  /** The linked user. Expensive operation */
-  user: User;
-  /** The ID of the linked common. May be null */
-  commonId?: Maybe<Scalars['UUID']>;
-  /** The linked common. Expensive operation that may return null */
-  common?: Maybe<Common>;
-  /** The ID of the linked proposal. May be null */
-  proposalId?: Maybe<Scalars['UUID']>;
-  /** The linked proposal. Expensive operation that may return null */
-  proposal?: Maybe<Proposal>;
-  /** The ID of the linked discussion. May be null */
-  discussionId?: Maybe<Scalars['UUID']>;
-  /** The linked discussion. Expensive operation that may return null */
-  discussion?: Maybe<Discussion>;
-};
-
-export type NotificationTemplate = BaseEntity & {
-  __typename?: 'NotificationTemplate';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  forType: NotificationType;
-  templateType: NotificationTemplateType;
-  language: NotificationLanguage;
-  subject: Scalars['String'];
-  content: Scalars['String'];
-  from?: Maybe<Scalars['String']>;
-  fromName?: Maybe<Scalars['String']>;
-  bcc?: Maybe<Scalars['String']>;
-  bccName?: Maybe<Scalars['String']>;
-};
-
-export type NotificationEventOptions = {
-  __typename?: 'NotificationEventOptions';
-  availableNotifications: Array<NotificationType>;
-  availableEvents: Array<EventType>;
-};
-
-export type NotificationEventSettings = BaseEntity & {
-  __typename?: 'NotificationEventSettings';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  active: Scalars['Boolean'];
-  sendToEveryone: Scalars['Boolean'];
-  sendToCommon: Scalars['Boolean'];
-  sendToUser: Scalars['Boolean'];
-  description: Scalars['String'];
-  sendNotificationType: NotificationType;
-  onEvent: EventType;
-};
-
-export type NotificationSystemSettings = BaseEntity & {
-  __typename?: 'NotificationSystemSettings';
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-  type: NotificationType;
-  sendEmail: Scalars['Boolean'];
-  sendPush: Scalars['Boolean'];
-  showInUserFeed: Scalars['Boolean'];
-};
-
-export type NotificationTemplateOptions = {
-  __typename?: 'NotificationTemplateOptions';
-  languages: Array<Maybe<NotificationLanguage>>;
-  templateTypes: Array<Maybe<NotificationTemplateType>>;
-  notificationTypes: Array<Maybe<NotificationType>>;
-};
-
-export type NotificationWhereInput = {
-  seenStatus?: Maybe<NotificationSeenStatus>;
-  type?: Maybe<NotificationType>;
-  userId?: Maybe<Scalars['ID']>;
-  commonId?: Maybe<Scalars['UUID']>;
-  proposalId?: Maybe<Scalars['UUID']>;
-  discussionId?: Maybe<Scalars['UUID']>;
-};
-
-export type NotificationWhereUniqueInput = {
-  id?: Maybe<Scalars['UUID']>;
-};
-
-export type NotificationTemplateWhereInput = {
-  language?: Maybe<NotificationLanguage>;
-  forType?: Maybe<NotificationType>;
-  type?: Maybe<NotificationTemplateType>;
-};
-
-export type NotificationSettingsWhereInput = {
-  /** The Types of the notification */
-  type?: Maybe<NotificationType>;
-};
-
-export type NotificationOrderByInput = {
-  createdAt?: Maybe<SortOrder>;
-  updatedAt?: Maybe<SortOrder>;
-  status?: Maybe<SortOrder>;
+export type CommonRuleInput = {
+  title: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
 };
 
 export type CommonSubscription = BaseEntity & {
   __typename?: 'CommonSubscription';
-  /** The main identifier of the item */
   id: Scalars['UUID'];
-  /** The date, at which the item was created */
   createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
   updatedAt: Scalars['DateTime'];
   paymentStatus: SubscriptionPaymentStatus;
   status: SubscriptionStatus;
@@ -1082,26 +168,24 @@ export type CommonSubscription = BaseEntity & {
   common: Common;
 };
 
-export enum SubscriptionPaymentStatus {
-  AwaitingInitialPayment = 'AwaitingInitialPayment',
-  Pending = 'Pending',
-  Successful = 'Successful',
-  Unsuccessful = 'Unsuccessful'
-}
+export type CommonUpdate = BaseEntity & {
+  __typename?: 'CommonUpdate';
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  commonBefore: Common;
+  commonAfter: Common;
+  change?: Maybe<Scalars['JSON']>;
+};
 
-export enum SubscriptionStatus {
-  Pending = 'Pending',
-  Active = 'Active',
-  PaymentFailed = 'PaymentFailed',
-  CanceledByUser = 'CanceledByUser',
-  CanceledByPaymentFailure = 'CanceledByPaymentFailure'
-}
+export type CommonWhereInput = {
+  name?: Maybe<StringFilter>;
+  id?: Maybe<StringFilter>;
+};
 
-
-export enum SortOrder {
-  Asc = 'asc',
-  Desc = 'desc'
-}
+export type CommonWhereUniqueInput = {
+  id: Scalars['ID'];
+};
 
 export enum Country {
   Unknown = 'Unknown',
@@ -1356,74 +440,87 @@ export enum Country {
   Zw = 'ZW'
 }
 
-export type Link = {
-  __typename?: 'Link';
-  /** The display title of the link */
-  title: Scalars['String'];
-  /** The actual link part of the link */
-  url: Scalars['String'];
+export type CreateCardInput = {
+  keyId: Scalars['String'];
+  encryptedData: Scalars['String'];
+  expYear: Scalars['Int'];
+  expMonth: Scalars['Int'];
+  billingDetails: BillingDetailsInput;
 };
 
-export type BaseEntity = {
-  /** The main identifier of the item */
-  id: Scalars['UUID'];
-  /** The date, at which the item was created */
-  createdAt: Scalars['DateTime'];
-  /** The date, at which the item was last modified */
-  updatedAt: Scalars['DateTime'];
-};
-
-export type Address = {
-  line1?: Maybe<Scalars['String']>;
-  line2?: Maybe<Scalars['String']>;
-  city: Scalars['String'];
-  country: Scalars['String'];
-  postalCode: Scalars['String'];
-  district?: Maybe<Scalars['String']>;
-};
-
-export type PaginateInput = {
-  take: Scalars['Int'];
-  skip?: Maybe<Scalars['Int']>;
-};
-
-export type LinkInput = {
-  /** The display title of the link */
-  title: Scalars['String'];
-  /** The actual link part of the link */
-  url: Scalars['String'];
-};
-
-export type StringFilter = {
-  contains?: Maybe<Scalars['String']>;
-  endsWith?: Maybe<Scalars['String']>;
-  equals?: Maybe<Scalars['String']>;
-  gt?: Maybe<Scalars['String']>;
-  gte?: Maybe<Scalars['String']>;
-  lt?: Maybe<Scalars['String']>;
-  lte?: Maybe<Scalars['String']>;
-  startsWith?: Maybe<Scalars['String']>;
-  in?: Maybe<Array<Scalars['String']>>;
-  notIn?: Maybe<Array<Scalars['String']>>;
-};
-
-export type BillingDetailsInput = {
+export type CreateCommonInput = {
   name: Scalars['String'];
-  city: Scalars['String'];
-  country: Scalars['String'];
-  line1: Scalars['String'];
-  postalCode: Scalars['String'];
-  line2?: Maybe<Scalars['String']>;
-  district?: Maybe<Scalars['String']>;
+  fundingMinimumAmount: Scalars['Int'];
+  fundingType: FundingType;
+  action?: Maybe<Scalars['String']>;
+  byline?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  image: Scalars['String'];
+  links?: Maybe<Array<CommonLinkInput>>;
+  rules?: Maybe<Array<CommonRuleInput>>;
 };
 
-export type CreateUserInput = {
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-  email: Scalars['String'];
-  photo: Scalars['String'];
-  country: Country;
-  intro?: Maybe<Scalars['String']>;
+export type CreateDiscussionInput = {
+  topic: Scalars['String'];
+  description: Scalars['String'];
+  commonId: Scalars['ID'];
+  proposalId?: Maybe<Scalars['ID']>;
+};
+
+export type CreateDiscussionMessageInput = {
+  discussionId: Scalars['ID'];
+  message: Scalars['String'];
+};
+
+export type CreateFundingProposalInput = {
+  commonId: Scalars['ID'];
+  amount: Scalars['Int'];
+  title: Scalars['String'];
+  description: Scalars['String'];
+  links?: Maybe<Array<ProposalLinkInput>>;
+  files?: Maybe<Array<ProposalFileInput>>;
+  images?: Maybe<Array<ProposalImageInput>>;
+};
+
+export type CreateJoinProposalInput = {
+  title: Scalars['String'];
+  description: Scalars['String'];
+  fundingAmount: Scalars['Int'];
+  cardId: Scalars['String'];
+  commonId: Scalars['String'];
+  links?: Maybe<Array<LinkInput>>;
+};
+
+export type CreateNotificationEventSettingsInput = {
+  sendToEveryone: Scalars['Boolean'];
+  sendToCommon: Scalars['Boolean'];
+  sendToUser: Scalars['Boolean'];
+  description: Scalars['String'];
+  sendNotificationType: NotificationType;
+  onEvent: EventType;
+};
+
+export type CreateNotificationTemplateInput = {
+  forType: NotificationType;
+  language: NotificationLanguage;
+  templateType: NotificationTemplateType;
+  subject: Scalars['String'];
+  content: Scalars['String'];
+  fromEmail?: Maybe<Scalars['String']>;
+  fromName?: Maybe<Scalars['String']>;
+};
+
+export type CreatePayoutInput = {
+  wireId: Scalars['ID'];
+  proposalIds: Array<Scalars['ID']>;
+  description?: Maybe<Scalars['String']>;
+};
+
+export type CreateRoleInput = {
+  name: Scalars['String'];
+  displayName: Scalars['String'];
+  description: Scalars['String'];
+  permissions: Array<Scalars['String']>;
 };
 
 export type CreateUserBillingDetailsInput = {
@@ -1436,20 +533,33 @@ export type CreateUserBillingDetailsInput = {
   country: Country;
 };
 
+export type CreateUserInput = {
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  email: Scalars['String'];
+  photo: Scalars['String'];
+  country: Country;
+  intro?: Maybe<Scalars['String']>;
+};
+
 export type CreateUserNotificationTokenInput = {
   token: Scalars['String'];
   description: Scalars['String'];
 };
 
-export type UpdateUserInput = {
-  /** The ID of the user to be updated */
-  id: Scalars['String'];
-  firstName?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
-  photo?: Maybe<Scalars['String']>;
-  intro?: Maybe<Scalars['String']>;
-  country?: Maybe<Country>;
-  notificationLanguage?: Maybe<NotificationLanguage>;
+export type CreateVoteInput = {
+  outcome: VoteOutcome;
+  proposalId: Scalars['ID'];
+};
+
+export type CreateWireBankAccountInput = {
+  bankName: Scalars['String'];
+  line1?: Maybe<Scalars['String']>;
+  line2?: Maybe<Scalars['String']>;
+  district?: Maybe<Scalars['String']>;
+  city: Scalars['String'];
+  postalCode: Scalars['String'];
+  country: Country;
 };
 
 export type CreateWireInput = {
@@ -1463,221 +573,211 @@ export type CreateWireInput = {
   createWireBankDetails?: Maybe<CreateWireBankAccountInput>;
 };
 
-export type CreateWireBankAccountInput = {
-  bankName: Scalars['String'];
-  line1?: Maybe<Scalars['String']>;
-  line2?: Maybe<Scalars['String']>;
-  district?: Maybe<Scalars['String']>;
-  city: Scalars['String'];
-  postalCode: Scalars['String'];
-  country: Country;
-};
 
-export type CreateRoleInput = {
-  name: Scalars['String'];
-  displayName: Scalars['String'];
+export type Discussion = BaseEntity & {
+  __typename?: 'Discussion';
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  topic: Scalars['String'];
   description: Scalars['String'];
-  permissions: Array<Scalars['String']>;
+  latestMessage: Scalars['DateTime'];
+  type: DiscussionType;
+  userId: Scalars['String'];
+  owner?: Maybe<User>;
+  messages: Array<DiscussionMessage>;
 };
 
-export type UpdateCommonInput = {
-  commonId: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-  image?: Maybe<Scalars['String']>;
-  action?: Maybe<Scalars['String']>;
-  byline?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  links?: Maybe<Array<CommonLinkInput>>;
-  rules?: Maybe<Array<CommonRuleInput>>;
+
+export type DiscussionMessagesArgs = {
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<DiscussionMessagesOrderByInput>;
 };
 
-export type CreatePayoutInput = {
-  wireId: Scalars['ID'];
-  proposalIds: Array<Scalars['ID']>;
-  description?: Maybe<Scalars['String']>;
+export type DiscussionMessage = BaseEntity & {
+  __typename?: 'DiscussionMessage';
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  message: Scalars['String'];
+  type: DiscussionMessageType;
+  flag: DiscussionMessageFlag;
+  userId: Scalars['String'];
+  reports: Array<Report>;
+  owner: User;
 };
 
-export type UpdateNotificationTemplateInput = {
-  id: Scalars['String'];
-  subject?: Maybe<Scalars['String']>;
-  content?: Maybe<Scalars['String']>;
-  fromEmail?: Maybe<Scalars['String']>;
-  fromName?: Maybe<Scalars['String']>;
-  bcc?: Maybe<Scalars['String']>;
-  bccName?: Maybe<Scalars['String']>;
+export enum DiscussionMessageFlag {
+  Clear = 'Clear',
+  Reported = 'Reported',
+  Hidden = 'Hidden'
+}
+
+export type DiscussionMessagesOrderByInput = {
+  createdAt?: Maybe<SortOrder>;
+  updatedAt?: Maybe<SortOrder>;
 };
 
-export type CreateNotificationEventSettingsInput = {
-  sendToEveryone: Scalars['Boolean'];
-  sendToCommon: Scalars['Boolean'];
-  sendToUser: Scalars['Boolean'];
-  description: Scalars['String'];
-  sendNotificationType: NotificationType;
-  onEvent: EventType;
+export enum DiscussionMessageType {
+  Message = 'Message'
+}
+
+export type DiscussionSubscription = BaseEntity & {
+  __typename?: 'DiscussionSubscription';
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  type: DiscussionSubscriptionType;
+  userId: Scalars['String'];
+  discussionId: Scalars['UUID'];
+  discussion: Discussion;
 };
 
-export type UpdateNotificationSettingsInput = {
-  id: Scalars['String'];
-  showInUserFeed?: Maybe<Scalars['Boolean']>;
-  sendPush?: Maybe<Scalars['Boolean']>;
-  sendEmail?: Maybe<Scalars['Boolean']>;
+export type DiscussionSubscriptionOrderByInput = {
+  createdAt?: Maybe<SortOrder>;
+  updatedAt?: Maybe<SortOrder>;
 };
 
-export type CreateNotificationTemplateInput = {
-  forType: NotificationType;
-  language: NotificationLanguage;
-  templateType: NotificationTemplateType;
-  subject: Scalars['String'];
-  content: Scalars['String'];
-  fromEmail?: Maybe<Scalars['String']>;
-  fromName?: Maybe<Scalars['String']>;
+export enum DiscussionSubscriptionType {
+  AllNotifications = 'AllNotifications',
+  OnlyMentions = 'OnlyMentions',
+  NoNotification = 'NoNotification'
+}
+
+export enum DiscussionType {
+  ProposalDiscussion = 'ProposalDiscussion',
+  CommonDiscussion = 'CommonDiscussion'
+}
+
+export type DiscussionWhereInput = {
+  commonId?: Maybe<Scalars['UUID']>;
+  commonMemberId?: Maybe<Scalars['UUID']>;
+  userId?: Maybe<Scalars['ID']>;
 };
 
-export type Query = {
-  __typename?: 'Query';
-  /** Provide ID to fetch specific user or do not pass anything to get the currently authenticated user */
+export type Event = {
+  __typename?: 'Event';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  type: EventType;
+  payload?: Maybe<Scalars['JSON']>;
+  commonId?: Maybe<Scalars['ID']>;
+  userId?: Maybe<Scalars['ID']>;
   user?: Maybe<User>;
-  users?: Maybe<Array<Maybe<User>>>;
-  generateUserAuthToken: Scalars['String'];
-  wires?: Maybe<Array<Maybe<Wire>>>;
-  roles?: Maybe<Array<Maybe<Role>>>;
-  events?: Maybe<Array<Maybe<Event>>>;
-  common?: Maybe<Common>;
-  commons?: Maybe<Array<Maybe<Common>>>;
-  payout?: Maybe<Payout>;
-  payouts?: Maybe<Array<Maybe<Payout>>>;
-  payment?: Maybe<Payment>;
-  payments?: Maybe<Array<Maybe<Payment>>>;
-  proposal?: Maybe<Proposal>;
-  proposals?: Maybe<Array<Maybe<Proposal>>>;
-  getStatistics?: Maybe<Array<Maybe<Statistic>>>;
-  discussion?: Maybe<Discussion>;
-  discussions?: Maybe<Array<Maybe<Discussion>>>;
-  notificationTemplateOptions?: Maybe<NotificationTemplateOptions>;
-  notificationEventOptions?: Maybe<NotificationEventOptions>;
-  notificationEventSettings?: Maybe<Array<Maybe<NotificationEventSettings>>>;
-  notificationTemplates?: Maybe<Array<Maybe<NotificationTemplate>>>;
-  notificationSettings?: Maybe<Array<Maybe<NotificationSystemSettings>>>;
-  /** List of all notifications, readable only by the admin */
-  notifications?: Maybe<Array<Maybe<Notification>>>;
+};
+
+export type EventOrderByInput = {
+  createdAt?: Maybe<SortOrder>;
+  updatedAt?: Maybe<SortOrder>;
+  type?: Maybe<SortOrder>;
+};
+
+export enum EventType {
+  CommonCreated = 'CommonCreated',
+  CommonUpdated = 'CommonUpdated',
+  CommonDelisted = 'CommonDelisted',
+  CommonWhitelisted = 'CommonWhitelisted',
+  CommonMemberCreated = 'CommonMemberCreated',
+  CommonMemberRoleAdded = 'CommonMemberRoleAdded',
+  CommonMemberRoleRemoved = 'CommonMemberRoleRemoved',
+  JoinRequestCreated = 'JoinRequestCreated',
+  JoinRequestAccepted = 'JoinRequestAccepted',
+  JoinRequestRejected = 'JoinRequestRejected',
+  FundingRequestCreated = 'FundingRequestCreated',
+  FundingRequestAccepted = 'FundingRequestAccepted',
+  FundingRequestRejected = 'FundingRequestRejected',
+  CardCreated = 'CardCreated',
+  CardCvvVerificationPassed = 'CardCvvVerificationPassed',
+  CardCvvVerificationFailed = 'CardCvvVerificationFailed',
+  PaymentCreated = 'PaymentCreated',
+  PaymentSucceeded = 'PaymentSucceeded',
+  PaymentFailed = 'PaymentFailed',
+  ProposalMajorityReached = 'ProposalMajorityReached',
+  ProposalExpired = 'ProposalExpired',
+  VoteCreated = 'VoteCreated',
+  UserCreated = 'UserCreated',
+  UserUpdated = 'UserUpdated',
+  DiscussionCreated = 'DiscussionCreated',
+  DiscussionMessageCreated = 'DiscussionMessageCreated',
+  DiscussionSubscriptionCreated = 'DiscussionSubscriptionCreated',
+  DiscussionSubscriptionTypeChanged = 'DiscussionSubscriptionTypeChanged',
+  NotificationTemplateCreated = 'NotificationTemplateCreated',
+  NotificationTemplateUpdated = 'NotificationTemplateUpdated',
+  UserNotificationTokenVoided = 'UserNotificationTokenVoided',
+  UserNotificationTokenExpired = 'UserNotificationTokenExpired',
+  UserNotificationTokenCreated = 'UserNotificationTokenCreated',
+  UserNotificationTokenRefreshed = 'UserNotificationTokenRefreshed',
+  ReportCreated = 'ReportCreated',
+  ReportRespected = 'ReportRespected',
+  ReportDismissed = 'ReportDismissed',
+  RoleCreated = 'RoleCreated',
+  RoleUpdated = 'RoleUpdated',
+  RolePermissionAdded = 'RolePermissionAdded',
+  RolePermissionRemoved = 'RolePermissionRemoved',
+  RoleDeleted = 'RoleDeleted',
+  UserAddedToRole = 'UserAddedToRole',
+  UserRemovedFromRole = 'UserRemovedFromRole',
+  WireCreated = 'WireCreated',
+  WireUpdated = 'WireUpdated',
+  PayoutCreated = 'PayoutCreated',
+  PayoutApprovalGiven = 'PayoutApprovalGiven',
+  PayoutRejectionGiven = 'PayoutRejectionGiven',
+  PayoutApproved = 'PayoutApproved',
+  PayoutRejected = 'PayoutRejected',
+  PayoutExecuted = 'PayoutExecuted',
+  PayoutCompleted = 'PayoutCompleted'
+}
+
+export type FundingProposal = BaseEntity & {
+  __typename?: 'FundingProposal';
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  amount: Scalars['Int'];
+  fundingState: FundingState;
+};
+
+export type FundingProposalWhereInput = {
+  fundingState?: Maybe<FundingState>;
+};
+
+export enum FundingState {
+  NotEligible = 'NotEligible',
+  Eligible = 'Eligible',
+  Redeemed = 'Redeemed'
+}
+
+export enum FundingType {
+  OneTime = 'OneTime',
+  Monthly = 'Monthly'
+}
+
+export type JoinProposal = BaseEntity & {
+  __typename?: 'JoinProposal';
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  funding: Scalars['Int'];
+  fundingType: FundingType;
+  paymentState: PaymentState;
 };
 
 
-export type QueryUserArgs = {
-  where?: Maybe<UserWhereUniqueInput>;
+export type Link = {
+  __typename?: 'Link';
+  title: Scalars['String'];
+  url: Scalars['String'];
 };
 
-
-export type QueryUsersArgs = {
-  where?: Maybe<UserWhereInput>;
-  paginate?: Maybe<PaginateInput>;
-};
-
-
-export type QueryGenerateUserAuthTokenArgs = {
-  authId: Scalars['String'];
-};
-
-
-export type QueryWiresArgs = {
-  where?: Maybe<WireWhereInput>;
-};
-
-
-export type QueryRolesArgs = {
-  paginate?: Maybe<PaginateInput>;
-};
-
-
-export type QueryEventsArgs = {
-  paginate?: Maybe<PaginateInput>;
-};
-
-
-export type QueryCommonArgs = {
-  where: CommonWhereUniqueInput;
-};
-
-
-export type QueryCommonsArgs = {
-  paginate?: Maybe<PaginateInput>;
-  where?: Maybe<CommonWhereInput>;
-};
-
-
-export type QueryPayoutArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryPayoutsArgs = {
-  paginate?: Maybe<PaginateInput>;
-  where?: Maybe<PayoutWhereInput>;
-};
-
-
-export type QueryPaymentArgs = {
-  id?: Maybe<Scalars['ID']>;
-};
-
-
-export type QueryPaymentsArgs = {
-  paginate?: Maybe<PaginateInput>;
-  where?: Maybe<PaymentsWhereInput>;
-};
-
-
-export type QueryProposalArgs = {
-  where: ProposalWhereUniqueInput;
-};
-
-
-export type QueryProposalsArgs = {
-  where?: Maybe<ProposalWhereInput>;
-  fundingWhere?: Maybe<FundingProposalWhereInput>;
-  paginate?: Maybe<PaginateInput>;
-};
-
-
-export type QueryGetStatisticsArgs = {
-  where?: Maybe<StatisticsWhereInput>;
-};
-
-
-export type QueryDiscussionArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryDiscussionsArgs = {
-  where?: Maybe<DiscussionWhereInput>;
-  paginate?: Maybe<PaginateInput>;
-};
-
-
-export type QueryNotificationEventSettingsArgs = {
-  paginate: PaginateInput;
-};
-
-
-export type QueryNotificationTemplatesArgs = {
-  where?: Maybe<NotificationTemplateWhereInput>;
-  paginate?: Maybe<PaginateInput>;
-};
-
-
-export type QueryNotificationSettingsArgs = {
-  where?: Maybe<NotificationSettingsWhereInput>;
-};
-
-
-export type QueryNotificationsArgs = {
-  paginate: PaginateInput;
+export type LinkInput = {
+  title: Scalars['String'];
+  url: Scalars['String'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  /** Creates new user in the settings */
   createUser: User;
   createUserBillingDetails?: Maybe<UserBillingDetails>;
   voidUserNotificationToken: UserNotificationToken;
@@ -1699,7 +799,6 @@ export type Mutation = {
   createPayout?: Maybe<Payout>;
   approvePayout?: Maybe<PayoutApprover>;
   finalizeProposal: Scalars['Boolean'];
-  /** Create new proposal of Types JOIN. */
   createJoinProposal: Proposal;
   createFundingProposal: Proposal;
   createDiscussion: Discussion;
@@ -1865,6 +964,580 @@ export type MutationCreateNotificationTemplateArgs = {
   input: CreateNotificationTemplateInput;
 };
 
+export type Notification = BaseEntity & {
+  __typename?: 'Notification';
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  show: Scalars['Boolean'];
+  type: NotificationType;
+  seenStatus: NotificationSeenStatus;
+  userId: Scalars['UUID'];
+  user: User;
+  commonId?: Maybe<Scalars['UUID']>;
+  common?: Maybe<Common>;
+  proposalId?: Maybe<Scalars['UUID']>;
+  proposal?: Maybe<Proposal>;
+  discussionId?: Maybe<Scalars['UUID']>;
+  discussion?: Maybe<Discussion>;
+};
+
+export type NotificationEventOptions = {
+  __typename?: 'NotificationEventOptions';
+  availableNotifications: Array<NotificationType>;
+  availableEvents: Array<EventType>;
+};
+
+export type NotificationEventSettings = BaseEntity & {
+  __typename?: 'NotificationEventSettings';
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  active: Scalars['Boolean'];
+  sendToEveryone: Scalars['Boolean'];
+  sendToCommon: Scalars['Boolean'];
+  sendToUser: Scalars['Boolean'];
+  description: Scalars['String'];
+  sendNotificationType: NotificationType;
+  onEvent: EventType;
+};
+
+export enum NotificationLanguage {
+  En = 'EN',
+  Ru = 'RU',
+  Bg = 'BG',
+  He = 'HE',
+  Jp = 'JP',
+  Ko = 'KO'
+}
+
+export type NotificationOrderByInput = {
+  createdAt?: Maybe<SortOrder>;
+  updatedAt?: Maybe<SortOrder>;
+  status?: Maybe<SortOrder>;
+};
+
+export enum NotificationSeenStatus {
+  NotSeen = 'NotSeen',
+  Seen = 'Seen',
+  Done = 'Done'
+}
+
+export type NotificationSettingsWhereInput = {
+  type?: Maybe<NotificationType>;
+};
+
+export type NotificationSystemSettings = BaseEntity & {
+  __typename?: 'NotificationSystemSettings';
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  type: NotificationType;
+  sendEmail: Scalars['Boolean'];
+  sendPush: Scalars['Boolean'];
+  showInUserFeed: Scalars['Boolean'];
+};
+
+export type NotificationTemplate = BaseEntity & {
+  __typename?: 'NotificationTemplate';
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  forType: NotificationType;
+  templateType: NotificationTemplateType;
+  language: NotificationLanguage;
+  subject: Scalars['String'];
+  content: Scalars['String'];
+  from?: Maybe<Scalars['String']>;
+  fromName?: Maybe<Scalars['String']>;
+  bcc?: Maybe<Scalars['String']>;
+  bccName?: Maybe<Scalars['String']>;
+};
+
+export type NotificationTemplateOptions = {
+  __typename?: 'NotificationTemplateOptions';
+  languages: Array<Maybe<NotificationLanguage>>;
+  templateTypes: Array<Maybe<NotificationTemplateType>>;
+  notificationTypes: Array<Maybe<NotificationType>>;
+};
+
+export enum NotificationTemplateType {
+  PushNotification = 'PushNotification',
+  EmailNotification = 'EmailNotification'
+}
+
+export type NotificationTemplateWhereInput = {
+  language?: Maybe<NotificationLanguage>;
+  forType?: Maybe<NotificationType>;
+  type?: Maybe<NotificationTemplateType>;
+};
+
+export enum NotificationType {
+  JoinRequestAccepted = 'JoinRequestAccepted',
+  JoinRequestRejected = 'JoinRequestRejected',
+  FundingRequestAccepted = 'FundingRequestAccepted',
+  FundingRequestRejected = 'FundingRequestRejected',
+  General = 'General'
+}
+
+export type NotificationWhereInput = {
+  seenStatus?: Maybe<NotificationSeenStatus>;
+  type?: Maybe<NotificationType>;
+  userId?: Maybe<Scalars['ID']>;
+  commonId?: Maybe<Scalars['UUID']>;
+  proposalId?: Maybe<Scalars['UUID']>;
+  discussionId?: Maybe<Scalars['UUID']>;
+};
+
+export type NotificationWhereUniqueInput = {
+  id?: Maybe<Scalars['UUID']>;
+};
+
+export type PaginateInput = {
+  take: Scalars['Int'];
+  skip?: Maybe<Scalars['Int']>;
+};
+
+export type Payment = BaseEntity & {
+  __typename?: 'Payment';
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  processed: Scalars['Boolean'];
+  processedError: Scalars['Boolean'];
+  type: PaymentType;
+  status: PaymentStatus;
+  circlePaymentStatus?: Maybe<PaymentCircleStatus>;
+  circlePaymentId?: Maybe<Scalars['String']>;
+  amount?: Maybe<Scalars['Int']>;
+  fees?: Maybe<Scalars['Int']>;
+  userId: Scalars['String'];
+  user: User;
+  commonId: Scalars['String'];
+  common: Common;
+};
+
+export enum PaymentCircleStatus {
+  Pending = 'pending',
+  Failed = 'failed',
+  Confirmed = 'confirmed',
+  Paid = 'paid'
+}
+
+export type PaymentsWhereInput = {
+  commonId?: Maybe<Scalars['UUID']>;
+  userId?: Maybe<Scalars['UUID']>;
+};
+
+export enum PaymentState {
+  NotAttempted = 'NotAttempted',
+  Pending = 'Pending',
+  Successful = 'Successful',
+  Unsuccessful = 'Unsuccessful'
+}
+
+export enum PaymentStatus {
+  NotAttempted = 'NotAttempted',
+  Pending = 'Pending',
+  Successful = 'Successful',
+  Unsuccessful = 'Unsuccessful'
+}
+
+export enum PaymentType {
+  OneTimePayment = 'OneTimePayment',
+  SubscriptionInitialPayment = 'SubscriptionInitialPayment',
+  SubscriptionSequentialPayment = 'SubscriptionSequentialPayment',
+  ImportedPayment = 'ImportedPayment'
+}
+
+export type Payout = BaseEntity & {
+  __typename?: 'Payout';
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  status: PayoutStatus;
+  amount: Scalars['Int'];
+  description: Scalars['String'];
+  proposals: Array<Proposal>;
+};
+
+export type PayoutApprover = BaseEntity & {
+  __typename?: 'PayoutApprover';
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  outcome: PayoutApproverResponse;
+  userId: Scalars['ID'];
+};
+
+export enum PayoutApproverResponse {
+  Pending = 'Pending',
+  Approved = 'Approved',
+  Declined = 'Declined'
+}
+
+export enum PayoutStatus {
+  PendingApproval = 'PendingApproval',
+  CirclePending = 'CirclePending',
+  CircleComplete = 'CircleComplete',
+  CircleFailed = 'CircleFailed',
+  Failed = 'Failed'
+}
+
+export type PayoutStatusFilter = {
+  in?: Maybe<Array<Maybe<PayoutStatus>>>;
+  notIn?: Maybe<Array<Maybe<PayoutStatus>>>;
+  equals?: Maybe<PayoutStatus>;
+  not?: Maybe<PayoutStatus>;
+};
+
+export type PayoutWhereInput = {
+  status?: Maybe<PayoutStatusFilter>;
+};
+
+export type Proposal = {
+  __typename?: 'Proposal';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  type: ProposalType;
+  state: ProposalState;
+  links?: Maybe<Scalars['JSON']>;
+  files?: Maybe<Scalars['JSON']>;
+  images?: Maybe<Scalars['JSON']>;
+  votesFor: Scalars['Int'];
+  votesAgainst: Scalars['Int'];
+  expiresAt: Scalars['DateTime'];
+  title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  ipAddress?: Maybe<Scalars['String']>;
+  discussions: Array<Discussion>;
+  userId: Scalars['ID'];
+  commonMemberId: Scalars['UUID'];
+  user: User;
+  member: CommonMember;
+  fundingId?: Maybe<Scalars['UUID']>;
+  funding?: Maybe<FundingProposal>;
+  commonId: Scalars['UUID'];
+  common: Common;
+  votes: Array<Vote>;
+  joinId?: Maybe<Scalars['UUID']>;
+  join?: Maybe<JoinProposal>;
+};
+
+
+export type ProposalDiscussionsArgs = {
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+};
+
+export type ProposalFileInput = {
+  value: Scalars['String'];
+};
+
+export type ProposalImageInput = {
+  value: Scalars['String'];
+};
+
+export type ProposalLinkInput = {
+  title: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export enum ProposalState {
+  Countdown = 'Countdown',
+  Finalizing = 'Finalizing',
+  Rejected = 'Rejected',
+  Accepted = 'Accepted'
+}
+
+export enum ProposalType {
+  FundingRequest = 'FundingRequest',
+  JoinRequest = 'JoinRequest'
+}
+
+export type ProposalWhereInput = {
+  id?: Maybe<StringFilter>;
+  type?: Maybe<ProposalType>;
+  state?: Maybe<ProposalState>;
+  commonId?: Maybe<Scalars['UUID']>;
+  commonMemberId?: Maybe<Scalars['UUID']>;
+  userId?: Maybe<Scalars['ID']>;
+  title?: Maybe<StringFilter>;
+  description?: Maybe<StringFilter>;
+  AND?: Maybe<Array<ProposalWhereInput>>;
+  OR?: Maybe<Array<ProposalWhereInput>>;
+};
+
+export type ProposalWhereUniqueInput = {
+  id: Scalars['UUID'];
+};
+
+export type Query = {
+  __typename?: 'Query';
+  user?: Maybe<User>;
+  users?: Maybe<Array<Maybe<User>>>;
+  generateUserAuthToken: Scalars['String'];
+  wires?: Maybe<Array<Maybe<Wire>>>;
+  role?: Maybe<Role>;
+  roles?: Maybe<Array<Maybe<Role>>>;
+  events?: Maybe<Array<Maybe<Event>>>;
+  common?: Maybe<Common>;
+  commons?: Maybe<Array<Maybe<Common>>>;
+  payout?: Maybe<Payout>;
+  payouts?: Maybe<Array<Maybe<Payout>>>;
+  payment?: Maybe<Payment>;
+  payments?: Maybe<Array<Maybe<Payment>>>;
+  proposal?: Maybe<Proposal>;
+  proposals?: Maybe<Array<Maybe<Proposal>>>;
+  settings: Settings;
+  getStatistics?: Maybe<Array<Maybe<Statistic>>>;
+  discussion?: Maybe<Discussion>;
+  discussions?: Maybe<Array<Maybe<Discussion>>>;
+  notificationTemplateOptions?: Maybe<NotificationTemplateOptions>;
+  notificationEventOptions?: Maybe<NotificationEventOptions>;
+  notificationEventSettings?: Maybe<Array<Maybe<NotificationEventSettings>>>;
+  notificationTemplates?: Maybe<Array<Maybe<NotificationTemplate>>>;
+  notificationSettings?: Maybe<Array<Maybe<NotificationSystemSettings>>>;
+  notifications?: Maybe<Array<Maybe<Notification>>>;
+};
+
+
+export type QueryUserArgs = {
+  where?: Maybe<UserWhereUniqueInput>;
+};
+
+
+export type QueryUsersArgs = {
+  where?: Maybe<UserWhereInput>;
+  paginate?: Maybe<PaginateInput>;
+};
+
+
+export type QueryGenerateUserAuthTokenArgs = {
+  authId: Scalars['String'];
+};
+
+
+export type QueryWiresArgs = {
+  where?: Maybe<WireWhereInput>;
+};
+
+
+export type QueryRoleArgs = {
+  where: RoleWhereUniqueInput;
+};
+
+
+export type QueryRolesArgs = {
+  paginate?: Maybe<PaginateInput>;
+};
+
+
+export type QueryEventsArgs = {
+  paginate?: Maybe<PaginateInput>;
+};
+
+
+export type QueryCommonArgs = {
+  where: CommonWhereUniqueInput;
+};
+
+
+export type QueryCommonsArgs = {
+  paginate?: Maybe<PaginateInput>;
+  where?: Maybe<CommonWhereInput>;
+};
+
+
+export type QueryPayoutArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryPayoutsArgs = {
+  paginate?: Maybe<PaginateInput>;
+  where?: Maybe<PayoutWhereInput>;
+};
+
+
+export type QueryPaymentArgs = {
+  id?: Maybe<Scalars['ID']>;
+};
+
+
+export type QueryPaymentsArgs = {
+  paginate?: Maybe<PaginateInput>;
+  where?: Maybe<PaymentsWhereInput>;
+};
+
+
+export type QueryProposalArgs = {
+  where: ProposalWhereUniqueInput;
+};
+
+
+export type QueryProposalsArgs = {
+  where?: Maybe<ProposalWhereInput>;
+  fundingWhere?: Maybe<FundingProposalWhereInput>;
+  paginate?: Maybe<PaginateInput>;
+};
+
+
+export type QueryGetStatisticsArgs = {
+  where?: Maybe<StatisticsWhereInput>;
+};
+
+
+export type QueryDiscussionArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryDiscussionsArgs = {
+  where?: Maybe<DiscussionWhereInput>;
+  paginate?: Maybe<PaginateInput>;
+};
+
+
+export type QueryNotificationEventSettingsArgs = {
+  paginate: PaginateInput;
+};
+
+
+export type QueryNotificationTemplatesArgs = {
+  where?: Maybe<NotificationTemplateWhereInput>;
+  paginate?: Maybe<PaginateInput>;
+};
+
+
+export type QueryNotificationSettingsArgs = {
+  where?: Maybe<NotificationSettingsWhereInput>;
+};
+
+
+export type QueryNotificationsArgs = {
+  paginate: PaginateInput;
+};
+
+export type Report = BaseEntity & {
+  __typename?: 'Report';
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  status: ReportStatus;
+  for: ReportFor;
+  note: Scalars['String'];
+  reviewedOn?: Maybe<Scalars['DateTime']>;
+  reporterId: Scalars['ID'];
+  reporter: User;
+  messageId: Scalars['UUID'];
+  message: DiscussionMessage;
+};
+
+export enum ReportAction {
+  Respected = 'Respected',
+  Dismissed = 'Dismissed'
+}
+
+export enum ReportAuditor {
+  CommonModerator = 'CommonModerator',
+  SystemAdmin = 'SystemAdmin'
+}
+
+export type ReportDiscussionMessageInput = {
+  messageId: Scalars['UUID'];
+  note: Scalars['String'];
+  for: ReportFor;
+};
+
+export enum ReportFor {
+  Nudity = 'Nudity',
+  Violance = 'Violance',
+  Harassment = 'Harassment',
+  FalseNews = 'FalseNews',
+  Spam = 'Spam',
+  Hate = 'Hate',
+  Other = 'Other'
+}
+
+export enum ReportStatus {
+  Active = 'Active',
+  Clossed = 'Clossed'
+}
+
+export type ReportStatusFilterInput = {
+  in?: Maybe<Array<Maybe<ReportStatus>>>;
+  not?: Maybe<Array<Maybe<ReportStatus>>>;
+};
+
+export type ReportWhereInput = {
+  status?: Maybe<ReportStatusFilterInput>;
+  for?: Maybe<ReportFor>;
+};
+
+export type Role = BaseEntity & {
+  __typename?: 'Role';
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  displayName: Scalars['String'];
+  description: Scalars['String'];
+  permissions: Array<Scalars['String']>;
+  users: Array<User>;
+};
+
+export type RoleWhereUniqueInput = {
+  id?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type Settings = {
+  __typename?: 'Settings';
+  permissions: Array<Maybe<Scalars['String']>>;
+};
+
+export enum SortOrder {
+  Asc = 'asc',
+  Desc = 'desc'
+}
+
+export type Statistic = BaseEntity & {
+  __typename?: 'Statistic';
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  users: Scalars['Int'];
+  commons: Scalars['Int'];
+  fundingProposals: Scalars['Int'];
+  joinProposals: Scalars['Int'];
+};
+
+export type StatisticsWhereInput = {
+  type?: Maybe<StatisticType>;
+};
+
+export enum StatisticType {
+  AllTime = 'AllTime',
+  Hourly = 'Hourly',
+  Daily = 'Daily',
+  Weekly = 'Weekly'
+}
+
+export type StringFilter = {
+  contains?: Maybe<Scalars['String']>;
+  endsWith?: Maybe<Scalars['String']>;
+  equals?: Maybe<Scalars['String']>;
+  gt?: Maybe<Scalars['String']>;
+  gte?: Maybe<Scalars['String']>;
+  lt?: Maybe<Scalars['String']>;
+  lte?: Maybe<Scalars['String']>;
+  startsWith?: Maybe<Scalars['String']>;
+  in?: Maybe<Array<Scalars['String']>>;
+  notIn?: Maybe<Array<Scalars['String']>>;
+};
+
 export type Subscription = {
   __typename?: 'Subscription';
   onProposalChange?: Maybe<Proposal>;
@@ -1880,6 +1553,202 @@ export type SubscriptionOnProposalChangeArgs = {
 
 export type SubscriptionDiscussionMessageCreatedArgs = {
   discussionId: Scalars['ID'];
+};
+
+export enum SubscriptionPaymentStatus {
+  AwaitingInitialPayment = 'AwaitingInitialPayment',
+  Pending = 'Pending',
+  Successful = 'Successful',
+  Unsuccessful = 'Unsuccessful'
+}
+
+export enum SubscriptionStatus {
+  Pending = 'Pending',
+  Active = 'Active',
+  PaymentFailed = 'PaymentFailed',
+  CanceledByUser = 'CanceledByUser',
+  CanceledByPaymentFailure = 'CanceledByPaymentFailure'
+}
+
+export type UpdateCommonInput = {
+  commonId: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
+  action?: Maybe<Scalars['String']>;
+  byline?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  links?: Maybe<Array<CommonLinkInput>>;
+  rules?: Maybe<Array<CommonRuleInput>>;
+};
+
+export type UpdateNotificationSettingsInput = {
+  id: Scalars['String'];
+  showInUserFeed?: Maybe<Scalars['Boolean']>;
+  sendPush?: Maybe<Scalars['Boolean']>;
+  sendEmail?: Maybe<Scalars['Boolean']>;
+};
+
+export type UpdateNotificationTemplateInput = {
+  id: Scalars['String'];
+  subject?: Maybe<Scalars['String']>;
+  content?: Maybe<Scalars['String']>;
+  fromEmail?: Maybe<Scalars['String']>;
+  fromName?: Maybe<Scalars['String']>;
+  bcc?: Maybe<Scalars['String']>;
+  bccName?: Maybe<Scalars['String']>;
+};
+
+export type UpdateUserInput = {
+  id: Scalars['String'];
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  photo?: Maybe<Scalars['String']>;
+  intro?: Maybe<Scalars['String']>;
+  country?: Maybe<Country>;
+  notificationLanguage?: Maybe<NotificationLanguage>;
+};
+
+
+export type User = {
+  __typename?: 'User';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  country: Country;
+  intro?: Maybe<Scalars['String']>;
+  displayName: Scalars['String'];
+  photo: Scalars['String'];
+  email: Scalars['String'];
+  permissions: Array<Scalars['String']>;
+  wires: Array<Wire>;
+  events: Array<Event>;
+  commons: Array<Common>;
+  proposals: Array<Proposal>;
+  subscriptions: Array<CommonSubscription>;
+  notifications: Array<Notification>;
+  billingDetails: Array<UserBillingDetails>;
+  notificationTokens: Array<UserNotificationToken>;
+  discussionSubscriptions: Array<DiscussionSubscription>;
+};
+
+
+export type UserEventsArgs = {
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<EventOrderByInput>;
+};
+
+
+export type UserProposalsArgs = {
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  where?: Maybe<ProposalWhereInput>;
+};
+
+
+export type UserNotificationsArgs = {
+  orderBy?: Maybe<NotificationOrderByInput>;
+  cursor?: Maybe<NotificationWhereUniqueInput>;
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+};
+
+
+export type UserDiscussionSubscriptionsArgs = {
+  take?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<DiscussionSubscriptionOrderByInput>;
+};
+
+export type UserBillingDetails = BaseEntity & Address & {
+  __typename?: 'UserBillingDetails';
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  line1?: Maybe<Scalars['String']>;
+  line2?: Maybe<Scalars['String']>;
+  city: Scalars['String'];
+  country: Scalars['String'];
+  postalCode: Scalars['String'];
+  district?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+export type UserNotificationToken = BaseEntity & {
+  __typename?: 'UserNotificationToken';
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  state: UserNotificationTokenState;
+  token: Scalars['String'];
+  description: Scalars['String'];
+  lastUsed: Scalars['DateTime'];
+  lastVerified: Scalars['DateTime'];
+};
+
+export enum UserNotificationTokenState {
+  Active = 'Active',
+  Expired = 'Expired',
+  Voided = 'Voided'
+}
+
+export type UserWhereInput = {
+  firstName?: Maybe<StringFilter>;
+  lastName?: Maybe<StringFilter>;
+  email?: Maybe<StringFilter>;
+  OR?: Maybe<Array<UserWhereInput>>;
+  AND?: Maybe<Array<UserWhereInput>>;
+};
+
+export type UserWhereUniqueInput = {
+  userId: Scalars['ID'];
+};
+
+
+export type Vote = {
+  __typename?: 'Vote';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  outcome: VoteOutcome;
+  voterId: Scalars['ID'];
+  voter: CommonMember;
+};
+
+export enum VoteOutcome {
+  Approve = 'Approve',
+  Condemn = 'Condemn'
+}
+
+export type Wire = BaseEntity & {
+  __typename?: 'Wire';
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  circleId?: Maybe<Scalars['String']>;
+  circleFingerprint?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  userId: Scalars['String'];
+};
+
+export type WireBankAccount = BaseEntity & Address & {
+  __typename?: 'WireBankAccount';
+  id: Scalars['UUID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  line1?: Maybe<Scalars['String']>;
+  line2?: Maybe<Scalars['String']>;
+  city: Scalars['String'];
+  country: Scalars['String'];
+  postalCode: Scalars['String'];
+  district?: Maybe<Scalars['String']>;
+  bankName: Scalars['String'];
+};
+
+export type WireWhereInput = {
+  userId?: Maybe<StringFilter>;
 };
 
 export type WhitelistCommonMutationVariables = Exact<{
@@ -2433,6 +2302,40 @@ export type GetProposalsHomescreenQuery = (
 }
   );
 
+export type RoleDetailsQueryVariables = Exact<{
+  roleName: Scalars['String'];
+}>;
+
+
+export type RoleDetailsQuery = (
+  { __typename?: 'Query' }
+  & {
+  role?: Maybe<(
+    { __typename?: 'Role' }
+    & Pick<Role, 'id' | 'name' | 'displayName' | 'description' | 'permissions'>
+    & {
+    users: Array<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'photo' | 'displayName' | 'email'>
+      )>
+  }
+    )>
+}
+  );
+
+export type RolesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RolesQuery = (
+  { __typename?: 'Query' }
+  & {
+  roles?: Maybe<Array<Maybe<(
+    { __typename?: 'Role' }
+    & Pick<Role, 'id' | 'name' | 'displayName' | 'description'>
+    )>>>
+}
+  );
+
 export type GetUserDetailsQueryQueryVariables = Exact<{
   where: UserWhereUniqueInput;
 }>;
@@ -2840,11 +2743,9 @@ export const GetCommonDetailsDocument = gql`
 export function useGetCommonDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>) {
   return Apollo.useQuery<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>(GetCommonDetailsDocument, baseOptions);
 }
-
 export function useGetCommonDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>) {
   return Apollo.useLazyQuery<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>(GetCommonDetailsDocument, baseOptions);
 }
-
 export type GetCommonDetailsQueryHookResult = ReturnType<typeof useGetCommonDetailsQuery>;
 export type GetCommonDetailsLazyQueryHookResult = ReturnType<typeof useGetCommonDetailsLazyQuery>;
 export type GetCommonDetailsQueryResult = Apollo.QueryResult<GetCommonDetailsQuery, GetCommonDetailsQueryVariables>;
@@ -2888,11 +2789,9 @@ export const GetCommonsHomescreenDataDocument = gql`
 export function useGetCommonsHomescreenDataQuery(baseOptions?: Apollo.QueryHookOptions<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>) {
   return Apollo.useQuery<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>(GetCommonsHomescreenDataDocument, baseOptions);
 }
-
 export function useGetCommonsHomescreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>) {
   return Apollo.useLazyQuery<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>(GetCommonsHomescreenDataDocument, baseOptions);
 }
-
 export type GetCommonsHomescreenDataQueryHookResult = ReturnType<typeof useGetCommonsHomescreenDataQuery>;
 export type GetCommonsHomescreenDataLazyQueryHookResult = ReturnType<typeof useGetCommonsHomescreenDataLazyQuery>;
 export type GetCommonsHomescreenDataQueryResult = Apollo.QueryResult<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>;
@@ -2925,11 +2824,9 @@ export const GetAllTimeStatistiscDocument = gql`
 export function useGetAllTimeStatistiscQuery(baseOptions?: Apollo.QueryHookOptions<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>) {
   return Apollo.useQuery<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>(GetAllTimeStatistiscDocument, baseOptions);
 }
-
 export function useGetAllTimeStatistiscLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>) {
   return Apollo.useLazyQuery<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>(GetAllTimeStatistiscDocument, baseOptions);
 }
-
 export type GetAllTimeStatistiscQueryHookResult = ReturnType<typeof useGetAllTimeStatistiscQuery>;
 export type GetAllTimeStatistiscLazyQueryHookResult = ReturnType<typeof useGetAllTimeStatistiscLazyQuery>;
 export type GetAllTimeStatistiscQueryResult = Apollo.QueryResult<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>;
@@ -2975,11 +2872,9 @@ export const GetProposalsSelectedForBatchDocument = gql`
 export function useGetProposalsSelectedForBatchQuery(baseOptions: Apollo.QueryHookOptions<GetProposalsSelectedForBatchQuery, GetProposalsSelectedForBatchQueryVariables>) {
   return Apollo.useQuery<GetProposalsSelectedForBatchQuery, GetProposalsSelectedForBatchQueryVariables>(GetProposalsSelectedForBatchDocument, baseOptions);
 }
-
 export function useGetProposalsSelectedForBatchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalsSelectedForBatchQuery, GetProposalsSelectedForBatchQueryVariables>) {
   return Apollo.useLazyQuery<GetProposalsSelectedForBatchQuery, GetProposalsSelectedForBatchQueryVariables>(GetProposalsSelectedForBatchDocument, baseOptions);
 }
-
 export type GetProposalsSelectedForBatchQueryHookResult = ReturnType<typeof useGetProposalsSelectedForBatchQuery>;
 export type GetProposalsSelectedForBatchLazyQueryHookResult = ReturnType<typeof useGetProposalsSelectedForBatchLazyQuery>;
 export type GetProposalsSelectedForBatchQueryResult = Apollo.QueryResult<GetProposalsSelectedForBatchQuery, GetProposalsSelectedForBatchQueryVariables>;
@@ -3011,11 +2906,9 @@ export const AvailableWiresDocument = gql`
 export function useAvailableWiresQuery(baseOptions: Apollo.QueryHookOptions<AvailableWiresQuery, AvailableWiresQueryVariables>) {
   return Apollo.useQuery<AvailableWiresQuery, AvailableWiresQueryVariables>(AvailableWiresDocument, baseOptions);
 }
-
 export function useAvailableWiresLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AvailableWiresQuery, AvailableWiresQueryVariables>) {
   return Apollo.useLazyQuery<AvailableWiresQuery, AvailableWiresQueryVariables>(AvailableWiresDocument, baseOptions);
 }
-
 export type AvailableWiresQueryHookResult = ReturnType<typeof useAvailableWiresQuery>;
 export type AvailableWiresLazyQueryHookResult = ReturnType<typeof useAvailableWiresLazyQuery>;
 export type AvailableWiresQueryResult = Apollo.QueryResult<AvailableWiresQuery, AvailableWiresQueryVariables>;
@@ -3048,7 +2941,6 @@ export type CreatePayoutMutationFn = Apollo.MutationFunction<CreatePayoutMutatio
 export function useCreatePayoutMutation(baseOptions?: Apollo.MutationHookOptions<CreatePayoutMutation, CreatePayoutMutationVariables>) {
   return Apollo.useMutation<CreatePayoutMutation, CreatePayoutMutationVariables>(CreatePayoutDocument, baseOptions);
 }
-
 export type CreatePayoutMutationHookResult = ReturnType<typeof useCreatePayoutMutation>;
 export type CreatePayoutMutationResult = Apollo.MutationResult<CreatePayoutMutation>;
 export type CreatePayoutMutationOptions = Apollo.BaseMutationOptions<CreatePayoutMutation, CreatePayoutMutationVariables>;
@@ -3087,11 +2979,9 @@ export const GetPayoutDetailsDocument = gql`
 export function useGetPayoutDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetPayoutDetailsQuery, GetPayoutDetailsQueryVariables>) {
   return Apollo.useQuery<GetPayoutDetailsQuery, GetPayoutDetailsQueryVariables>(GetPayoutDetailsDocument, baseOptions);
 }
-
 export function useGetPayoutDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPayoutDetailsQuery, GetPayoutDetailsQueryVariables>) {
   return Apollo.useLazyQuery<GetPayoutDetailsQuery, GetPayoutDetailsQueryVariables>(GetPayoutDetailsDocument, baseOptions);
 }
-
 export type GetPayoutDetailsQueryHookResult = ReturnType<typeof useGetPayoutDetailsQuery>;
 export type GetPayoutDetailsLazyQueryHookResult = ReturnType<typeof useGetPayoutDetailsLazyQuery>;
 export type GetPayoutDetailsQueryResult = Apollo.QueryResult<GetPayoutDetailsQuery, GetPayoutDetailsQueryVariables>;
@@ -3135,11 +3025,9 @@ export const PayoutsPageDataDocument = gql`
 export function usePayoutsPageDataQuery(baseOptions?: Apollo.QueryHookOptions<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>) {
   return Apollo.useQuery<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>(PayoutsPageDataDocument, baseOptions);
 }
-
 export function usePayoutsPageDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>) {
   return Apollo.useLazyQuery<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>(PayoutsPageDataDocument, baseOptions);
 }
-
 export type PayoutsPageDataQueryHookResult = ReturnType<typeof usePayoutsPageDataQuery>;
 export type PayoutsPageDataLazyQueryHookResult = ReturnType<typeof usePayoutsPageDataLazyQuery>;
 export type PayoutsPageDataQueryResult = Apollo.QueryResult<PayoutsPageDataQuery, PayoutsPageDataQueryVariables>;
@@ -3603,11 +3491,9 @@ export const GetProposalDetailsDocument = gql`
 export function useGetProposalDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>) {
   return Apollo.useQuery<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>(GetProposalDetailsDocument, baseOptions);
 }
-
 export function useGetProposalDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>) {
   return Apollo.useLazyQuery<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>(GetProposalDetailsDocument, baseOptions);
 }
-
 export type GetProposalDetailsQueryHookResult = ReturnType<typeof useGetProposalDetailsQuery>;
 export type GetProposalDetailsLazyQueryHookResult = ReturnType<typeof useGetProposalDetailsLazyQuery>;
 export type GetProposalDetailsQueryResult = Apollo.QueryResult<GetProposalDetailsQuery, GetProposalDetailsQueryVariables>;
@@ -3665,6 +3551,88 @@ export function useGetProposalsHomescreenLazyQuery(baseOptions?: Apollo.LazyQuer
 export type GetProposalsHomescreenQueryHookResult = ReturnType<typeof useGetProposalsHomescreenQuery>;
 export type GetProposalsHomescreenLazyQueryHookResult = ReturnType<typeof useGetProposalsHomescreenLazyQuery>;
 export type GetProposalsHomescreenQueryResult = Apollo.QueryResult<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>;
+export const RoleDetailsDocument = gql`
+  query roleDetails($roleName: String!) {
+    role(where: {name: $roleName}) {
+      id
+      name
+      displayName
+      description
+      permissions
+      users {
+        id
+        photo
+        displayName
+        email
+      }
+    }
+  }
+`;
+
+/**
+ * __useRoleDetailsQuery__
+ *
+ * To run a query within a React component, call `useRoleDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRoleDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRoleDetailsQuery({
+ *   variables: {
+ *      roleName: // value for 'roleName'
+ *   },
+ * });
+ */
+export function useRoleDetailsQuery(baseOptions: Apollo.QueryHookOptions<RoleDetailsQuery, RoleDetailsQueryVariables>) {
+  return Apollo.useQuery<RoleDetailsQuery, RoleDetailsQueryVariables>(RoleDetailsDocument, baseOptions);
+}
+
+export function useRoleDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RoleDetailsQuery, RoleDetailsQueryVariables>) {
+  return Apollo.useLazyQuery<RoleDetailsQuery, RoleDetailsQueryVariables>(RoleDetailsDocument, baseOptions);
+}
+
+export type RoleDetailsQueryHookResult = ReturnType<typeof useRoleDetailsQuery>;
+export type RoleDetailsLazyQueryHookResult = ReturnType<typeof useRoleDetailsLazyQuery>;
+export type RoleDetailsQueryResult = Apollo.QueryResult<RoleDetailsQuery, RoleDetailsQueryVariables>;
+export const RolesDocument = gql`
+  query roles {
+    roles {
+      id
+      name
+      displayName
+      description
+    }
+  }
+`;
+
+/**
+ * __useRolesQuery__
+ *
+ * To run a query within a React component, call `useRolesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRolesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRolesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRolesQuery(baseOptions?: Apollo.QueryHookOptions<RolesQuery, RolesQueryVariables>) {
+  return Apollo.useQuery<RolesQuery, RolesQueryVariables>(RolesDocument, baseOptions);
+}
+
+export function useRolesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RolesQuery, RolesQueryVariables>) {
+  return Apollo.useLazyQuery<RolesQuery, RolesQueryVariables>(RolesDocument, baseOptions);
+}
+
+export type RolesQueryHookResult = ReturnType<typeof useRolesQuery>;
+export type RolesLazyQueryHookResult = ReturnType<typeof useRolesLazyQuery>;
+export type RolesQueryResult = Apollo.QueryResult<RolesQuery, RolesQueryVariables>;
 export const GetUserDetailsQueryDocument = gql`
   query getUserDetailsQuery($where: UserWhereUniqueInput!) {
     user(where: $where) {

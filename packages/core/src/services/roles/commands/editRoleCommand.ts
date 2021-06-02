@@ -27,7 +27,7 @@ export const editRoleCommand = async (payload: z.infer<typeof schema>): Promise<
 
   const { id, ...updateData } = payload;
 
-  // Update the role
+  // Update the roles
   const role = await prisma.role
     .update({
       where: {
@@ -45,6 +45,6 @@ export const editRoleCommand = async (payload: z.infer<typeof schema>): Promise<
     }
   });
 
-  // Return the updated role
+  // Return the updated roles
   return role;
 };

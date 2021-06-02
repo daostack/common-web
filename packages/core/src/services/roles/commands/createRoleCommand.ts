@@ -23,7 +23,7 @@ export const createRoleCommand = async (payload: z.infer<typeof schema>): Promis
   // Validate the payload
   schema.parse(payload);
 
-  // Create the role
+  // Create the roles
   const role = await prisma.role.create({
     data: payload
   });
@@ -37,6 +37,6 @@ export const createRoleCommand = async (payload: z.infer<typeof schema>): Promis
     }
   });
 
-  // Return the created role
+  // Return the created roles
   return role;
 };

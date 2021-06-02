@@ -6,6 +6,7 @@ SendgridToolkit.InitializeSendgrid();
 
 export { logger } from '@logger';
 export { prisma, pubSub } from '@toolkits';
+export { allPermissions } from './domain/validation/permissions';
 
 // Domain
 export { CommonError } from '@errors';

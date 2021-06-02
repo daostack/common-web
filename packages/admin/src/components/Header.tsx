@@ -192,6 +192,18 @@ export const Header: React.FC = () => {
 
           </HasPermission>
 
+          <HasPermission permission="admin.roles.*">
+            <Link
+              to="/roles"
+              style={{
+                margin: '0 .5em'
+              }}
+            >
+              Roles
+            </Link>
+          </HasPermission>
+
+
         </div>
       </HasPermission>
     </Page.Header>
