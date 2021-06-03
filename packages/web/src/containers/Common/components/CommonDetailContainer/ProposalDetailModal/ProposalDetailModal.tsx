@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Loader } from "../../../../../shared/components";
-import { Common, Proposal } from "../../../../../shared/models";
+import { Proposal } from "../../../../../shared/models";
 import { formatPrice, getDaysAgo, getUserName } from "../../../../../shared/utils";
 import { ChatComponent } from "../ChatComponent";
 import { ProposalCountDown } from "../ProposalCountDown";
@@ -9,10 +9,10 @@ import "./index.scss";
 
 interface DiscussionDetailModalProps {
   proposal: Proposal | null;
-  common: Common;
+  onOpenJoinModal: () => void;
 }
 
-export default function ProposalDetailModal({ proposal }: DiscussionDetailModalProps) {
+export default function ProposalDetailModal({ proposal, onOpenJoinModal }: DiscussionDetailModalProps) {
   const date = new Date();
   const [imageError, setImageError] = useState(false);
   const requestedAmount = formatPrice(proposal?.fundingRequest?.amount || proposal?.join?.funding);
@@ -70,7 +70,7 @@ export default function ProposalDetailModal({ proposal }: DiscussionDetailModalP
         </div>
       </div>
       <div className="right-side">
-        <ChatComponent discussionMessage={proposal.discussionMessage || []} />
+        <ChatComponent discussionMessage={proposal.discussionMessage || []} onOpenJoinModal={onOpenJoinModal} />
       </div>
     </div>
   );

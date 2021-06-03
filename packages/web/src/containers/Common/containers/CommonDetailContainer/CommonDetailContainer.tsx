@@ -164,6 +164,11 @@ export default function CommonDetail() {
     [proposals, changeTabHandler, getProposalDetail],
   );
 
+  const openJoinModal = useCallback(() => {
+    closeModalHandler();
+    setTimeout(onOpenJoinModal, 0);
+  }, [onOpenJoinModal, closeModalHandler]);
+
   const renderSidebarContent = () => {
     if (!common) return null;
     switch (tab) {
@@ -229,10 +234,10 @@ export default function CommonDetail() {
           closeColor={screenSize === ScreenSize.Mobile ? Colors.white : Colors.gray}
         >
           {screenSize === ScreenSize.Desktop && tab === "discussions" && (
-            <DiscussionDetailModal disscussion={currentDisscussion} common={common} />
+            <DiscussionDetailModal disscussion={currentDisscussion} onOpenJoinModal={openJoinModal} />
           )}
           {screenSize === ScreenSize.Desktop && (tab === "proposals" || tab === "history") && (
-            <ProposalDetailModal proposal={currentProposal} common={common} />
+            <ProposalDetailModal proposal={currentProposal} onOpenJoinModal={openJoinModal} />
           )}
           {screenSize === ScreenSize.Mobile && (
             <div className="get-common-app-wrapper">
