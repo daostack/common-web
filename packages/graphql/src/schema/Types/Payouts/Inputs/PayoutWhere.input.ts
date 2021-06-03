@@ -6,5 +6,9 @@ export const PayoutWhereInput = inputObjectType({
     t.field('status', {
       type: 'PayoutStatusFilter'
     });
+
+    t.field('approvers', {
+      type: 'PayoutApproverFilter'
+    });
   }
 });

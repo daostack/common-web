@@ -1039,7 +1039,7 @@ input NotificationWhereUniqueInput {
 }
 
 input PaginateInput {
-  skip: Int = 0
+  skip: Int! = 0
   take: Int!
 }
 
@@ -1132,10 +1132,22 @@ type PayoutApprover implements BaseEntity {
   userId: ID!
 }
 
+input PayoutApproverFilter {
+  every: PayoutApproversWhereInput
+  none: PayoutApproversWhereInput
+  some: PayoutApproversWhereInput
+}
+
 enum PayoutApproverResponse {
   Approved
   Declined
   Pending
+}
+
+input PayoutApproversWhereInput {
+  id: StringFilter
+  outcome: PayoutApproverResponse
+  userId: StringFilter
 }
 
 enum PayoutStatus {
@@ -1154,6 +1166,7 @@ input PayoutStatusFilter {
 }
 
 input PayoutWhereInput {
+  approvers: PayoutApproverFilter
   status: PayoutStatusFilter
 }
 
@@ -1259,7 +1272,7 @@ type Query {
   payment(id: ID): Payment
   payments(paginate: PaginateInput, where: PaymentsWhereInput): [Payment]
   payout(id: ID!): Payout
-  payouts(paginate: PaginateInput, where: PayoutWhereInput): [Payout]
+  payouts(paginate: PaginateInput = {skip: 0, take: 10}, where: PayoutWhereInput): [Payout]
   proposal(where: ProposalWhereUniqueInput!): Proposal
   proposals(fundingWhere: FundingProposalWhereInput, paginate: PaginateInput, where: ProposalWhereInput): [Proposal]
   role(where: RoleWhereUniqueInput!): Role

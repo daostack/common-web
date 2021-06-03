@@ -11,6 +11,8 @@ import { ApprovePayoutMutation } from './Mutations/ApprovePayout.mutation';
 
 import { PayoutWhereInput } from './Inputs/PayoutWhere.input';
 import { PayoutStatusFilterInput } from './Inputs/PayoutStatusFilter.input';
+import { PayoutApproversWhereInput } from './Inputs/PayoutApproversWhere.input';
+import { PayoutApproverFilterInput } from './Inputs/PayoutApproverFilter.input';
 
 import { PayoutProposalsExtension } from './Extensions/PayoutProposals.extension';
 
@@ -26,6 +28,8 @@ export const PayoutTypes = [
   CreatePayoutMutation,
   ApprovePayoutMutation,
 
+  PayoutApproverFilterInput,
+  PayoutApproversWhereInput,
   PayoutStatusFilterInput,
   PayoutWhereInput,
 

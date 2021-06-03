@@ -255,12 +255,22 @@ export interface NexusGenInputs {
     id?: NexusGenScalars['UUID'] | null; // UUID
   }
   PaginateInput: { // input type
-    skip?: number | null; // Int
+    skip: number; // Int!
     take: number; // Int!
   }
   PaymentsWhereInput: { // input type
     commonId?: NexusGenScalars['UUID'] | null; // UUID
     userId?: NexusGenScalars['UUID'] | null; // UUID
+  }
+  PayoutApproverFilter: { // input type
+    every?: NexusGenInputs['PayoutApproversWhereInput'] | null; // PayoutApproversWhereInput
+    none?: NexusGenInputs['PayoutApproversWhereInput'] | null; // PayoutApproversWhereInput
+    some?: NexusGenInputs['PayoutApproversWhereInput'] | null; // PayoutApproversWhereInput
+  }
+  PayoutApproversWhereInput: { // input type
+    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    outcome?: NexusGenEnums['PayoutApproverResponse'] | null; // PayoutApproverResponse
+    userId?: NexusGenInputs['StringFilter'] | null; // StringFilter
   }
   PayoutStatusFilter: { // input type
     equals?: NexusGenEnums['PayoutStatus'] | null; // PayoutStatus
@@ -269,6 +279,7 @@ export interface NexusGenInputs {
     notIn?: Array<NexusGenEnums['PayoutStatus'] | null> | null; // [PayoutStatus]
   }
   PayoutWhereInput: { // input type
+    approvers?: NexusGenInputs['PayoutApproverFilter'] | null; // PayoutApproverFilter
     status?: NexusGenInputs['PayoutStatusFilter'] | null; // PayoutStatusFilter
   }
   ProposalFileInput: { // input type
@@ -1785,7 +1796,7 @@ export interface NexusGenArgTypes {
       id: string; // ID!
     }
     payouts: { // args
-      paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
+      paginate: NexusGenInputs['PaginateInput'] | null; // PaginateInput
       where?: NexusGenInputs['PayoutWhereInput'] | null; // PayoutWhereInput
     }
     proposal: { // args

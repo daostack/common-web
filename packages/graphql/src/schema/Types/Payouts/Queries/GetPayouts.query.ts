@@ -5,7 +5,11 @@ export const GetPayoutsQuery = queryField('payouts', {
   type: list('Payout'),
   args: {
     paginate: arg({
-      type: 'PaginateInput'
+      type: 'PaginateInput',
+      default: {
+        take: 10,
+        skip: 0
+      }
     }),
     where: arg({
       type: 'PayoutWhereInput'
@@ -17,7 +21,7 @@ export const GetPayoutsQuery = queryField('payouts', {
   resolve: (root, args) => {
     return prisma.payout
       .findMany({
-        ...args.paginate as any,
+        ...(args.paginate!),
         where: args.where as any
       });
   }

@@ -5,7 +5,7 @@ export const PaginateInput = inputObjectType({
   definition(t) {
     t.nonNull.int('take');
 
-    t.int('skip', {
+    t.nonNull.int('skip', {
       default: 0
     });
   }
