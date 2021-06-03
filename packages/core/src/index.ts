@@ -26,6 +26,7 @@ export { proposalService } from './services/proposals';
 export { statisticService } from './services/statistics';
 export { discussionService } from './services/discussions';
 export { notificationService } from './services/notifications';
+export { subscriptionService } from './services/subscriptions';
 export { authorizationService } from './services/authorization';
 
 export { FirebaseToolkit };

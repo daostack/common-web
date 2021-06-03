@@ -13,7 +13,7 @@ import './processors/NotificationsWorker';
 import './events/onUserCreated';
 import './events/onCommonCreated';
 
-import { Queues } from '@common/queues';
+import { Queues } from './queues';
 
 const app = express();
 

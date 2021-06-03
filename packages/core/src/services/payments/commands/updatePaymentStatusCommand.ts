@@ -4,7 +4,7 @@ import { prisma } from '@toolkits';
 import { circleClient } from '@clients';
 import { logger as $logger } from '@logger';
 import { convertCirclePaymentStatus } from '../helpers';
-import { worker } from '@common/queues';
+import { worker } from '@jobs';
 
 export interface IUpdatePaymentStatusResult {
   initialPayment: Payment;

@@ -1,12 +1,12 @@
-import { voteService, logger } from '@common/core';
+import { logger, subscriptionService } from '@common/core';
 import { Queues } from '../queues';
 
 
 // Process the queue jobs
-Queues.VotesQueue.process('processVote', async (job, done) => {
+Queues.SubscriptionsQueue.process('charge', async (job, done) => {
   logger.debug('Starting vote processing job', { job });
 
-  await voteService.process(job.data.voteId);
+  await subscriptionService.createPayment(job.data.subscriptionId);
 
   logger.debug('Processed vote processing job', { job });
 

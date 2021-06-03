@@ -1,7 +1,7 @@
 import { Event } from '@prisma/client';
 
-import { Queues } from '@common/queues';
 import { statisticService, logger } from '@common/core';
+import { Queues } from '../queues';
 
 Queues.EventQueue.on('completed', async (job, result: Event) => {
   if (result.type === 'CommonCreated') {

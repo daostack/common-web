@@ -1,12 +1,5 @@
-import { setQueues, BullAdapter } from 'bull-board';
-
-import { Queues } from '@common/queues';
 import { logger, payoutsService } from '@common/core';
-
-// Setup the queue UI
-setQueues([
-  new BullAdapter(Queues.PayoutsQueue)
-]);
+import { Queues } from '../queues';
 
 // Process the jobs
 Queues.PayoutsQueue.process('execute', async (job, done) => {

@@ -1,8 +1,8 @@
 import Queue, { JobOptions } from 'bull';
 
-import { logger } from '@common/core';
+import { Queues } from '@constants';
+import { logger } from '@logger';
 
-import { Queues } from '../constants/Queues';
 
 // Create the job spec
 export interface IVotesQueueJob {

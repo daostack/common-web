@@ -5,7 +5,7 @@ import { addPayoutJob } from './PayoutsQueue';
 import { addEventJob } from './EventsQueue';
 import { addVotesJob } from './VotesQueue';
 
-export const jobs = {
+export const worker = {
   addNotificationJob,
   addProposalsJob,
   addPaymentJob,

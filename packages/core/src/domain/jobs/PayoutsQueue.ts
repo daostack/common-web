@@ -1,7 +1,7 @@
 import Queue, { JobOptions } from 'bull';
 
-import { logger } from '@common/core';
-import { Queues } from '../constants/Queues';
+import { Queues } from '@constants';
+import { logger } from '@logger';
 
 // Create the job speck
 export interface IPayoutsQueueJob {

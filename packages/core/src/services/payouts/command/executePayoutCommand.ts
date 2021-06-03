@@ -1,6 +1,6 @@
 import { Payout, PayoutApproverResponse, PayoutStatus, EventType } from '@prisma/client';
 
-import { worker } from '@common/queues';
+import { worker } from '@jobs';
 
 import { NotFoundError, CommonError } from '@errors';
 import { eventService } from '@services';

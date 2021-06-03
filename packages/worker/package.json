@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@common/core": "^1.9.12-rc.0",
-    "@common/queues": "^1.9.12-rc.0",
     "bull": "^3.22.0",
     "bull-board": "^1.5.1",
     "express": "^4.17.1"

@@ -1,9 +1,7 @@
 import Queue, { JobOptions } from 'bull';
-import { setQueues, BullAdapter } from 'bull-board';
 
-import { Queues } from '../constants/Queues';
-
-import { logger, paymentService } from '@common/core';
+import { Queues } from '@constants';
+import { logger } from '@logger';
 
 
 // Create the job speck

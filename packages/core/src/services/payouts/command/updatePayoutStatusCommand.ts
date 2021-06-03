@@ -5,7 +5,7 @@ import { NotFoundError } from '@errors';
 import { circleClient } from '@clients';
 import { prisma } from '@toolkits';
 import { logger } from '@logger';
-import { worker } from '@common/queues';
+import { worker } from '@jobs';
 
 
 export const updatePayoutStatusCommand = async (payoutId: string): Promise<Payout> => {

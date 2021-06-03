@@ -1,7 +1,8 @@
 import Queue, { JobOptions } from 'bull';
-import { Notification } from '@prisma/client';
 
-import { Queues } from '../constants/Queues';
+import { Notification } from '@prisma/client';
+import { Queues } from '@constants';
+
 
 // Create the job spec
 

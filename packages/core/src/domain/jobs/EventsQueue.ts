@@ -1,8 +1,9 @@
 import Queue, { JobOptions } from 'bull';
 import { Event, EventType } from '@prisma/client';
 
-import { Queues } from '../constants/Queues';
-import { CommonError, logger } from '@common/core';
+import { Queues } from '@constants';
+import { logger } from '@logger';
+import { CommonError } from '@errors';
 
 // Create the job spec
 

@@ -1,12 +1,5 @@
-import { setQueues, BullAdapter } from 'bull-board';
-
-import { Queues } from '@common/queues';
 import { eventService, logger } from '@common/core';
-
-// Setup the queue UI
-setQueues([
-  new BullAdapter(Queues.EventQueue)
-]);
+import { Queues } from '../queues';
 
 // Process the jobs
 Queues.EventQueue.process('create', async (job, done) => {

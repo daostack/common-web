@@ -3,7 +3,7 @@ import * as z from 'zod';
 import { logger } from '@logger';
 import { prisma } from '@toolkits';
 import { eventService } from '@services';
-import { worker } from '@common/queues';
+import { worker } from '@jobs';
 
 const schema = z.object({
   userId: z.string(),

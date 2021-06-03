@@ -1,7 +1,7 @@
 import * as z from 'zod';
 import { NotificationType, Notification } from '@prisma/client';
 import { prisma } from '@toolkits';
-import { worker } from '@common/queues';
+import { worker } from '@jobs';
 import { CommonError } from '@errors';
 
 const schema = z.object({
