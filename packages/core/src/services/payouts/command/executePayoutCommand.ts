@@ -45,7 +45,7 @@ export const executePayoutCommand = async (payoutId: string): Promise<Payout> =>
       amount: (payoutWithApprovers.amount / 100)
     },
     destination: {
-      id: wire.id,
+      id: wire.circleId,
       type: 'wire'
     },
     metadata: {
