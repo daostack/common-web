@@ -1,19 +1,19 @@
 import Queue from 'bull';
 import { SubscriptionStatus } from '@prisma/client';
 
-import { Queues } from '@constants';
-import { prisma } from '@toolkits';
 import { logger } from '@logger';
+import { prisma } from '@toolkits';
+import { Queues } from '@constants';
 
-import { createSubscriptionPaymentCommand } from '../../payments/commands/createSubscriptionPaymentCommand';
-
-interface IChargeSubscriptionQueue {
+export interface ISubscriptionQueueJob {
   subscriptionId: string;
 }
 
-export const chargeSubscriptionQueue = Queue<IChargeSubscriptionQueue>(Queues.ChargeSubscriptionQueue);
+export type SubscriptionsQueueJob = 'charge';
 
-export const scheduleSubscriptionCharge = async (subscriptionId: string) => {
+const SubscriptionsQueue = Queue<ISubscriptionQueueJob>(Queues.SubscriptionsQueue);
+
+export const addSubscriptionsJob = async (job: SubscriptionsQueueJob, subscriptionId: string) => {
   const subscription = (await prisma.subscription.findUnique({
     where: {
       id: subscriptionId
@@ -30,15 +30,9 @@ export const scheduleSubscriptionCharge = async (subscriptionId: string) => {
     delay = new Date().getTime() + (24 * 60 * 60 * 1000); // Retry after one day
   }
 
-  chargeSubscriptionQueue.add({
+  SubscriptionsQueue.add(job, {
     subscriptionId
   }, {
     delay
   });
 };
-
-chargeSubscriptionQueue.process(async (job, done) => {
-  await createSubscriptionPaymentCommand(job.data.subscriptionId);
-
-  done();
-});
