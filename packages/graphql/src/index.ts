@@ -40,6 +40,6 @@ app.use('*', (req, res, next) => {
   return next();
 });
 
-http.listen({ port: 5000 }, () => {
+http.listen({ port: 4000 }, () => {
   logger.info(`🚀 Server ready`);
 });
