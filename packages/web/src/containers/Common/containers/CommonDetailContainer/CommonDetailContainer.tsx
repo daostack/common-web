@@ -138,10 +138,6 @@ export default function CommonDetail() {
     dispatch(clearCurrentProposal());
   }, [onClose, dispatch]);
 
-  const closeJoinModalHandler = useCallback(() => {
-    onCloseJoinModal();
-  }, [onCloseJoinModal]);
-
   const clickPreviewDisscusionHandler = useCallback(
     (id: string) => {
       changeTabHandler("discussions");
@@ -165,9 +161,16 @@ export default function CommonDetail() {
   );
 
   const openJoinModal = useCallback(() => {
-    closeModalHandler();
+    onClose();
     setTimeout(onOpenJoinModal, 0);
-  }, [onOpenJoinModal, closeModalHandler]);
+  }, [onOpenJoinModal, onClose]);
+
+  const closeJoinModal = useCallback(() => {
+    onCloseJoinModal();
+    if (currentDisscussion || currentProposal) {
+      setTimeout(onOpen, 0);
+    }
+  }, [onOpen, currentProposal, currentDisscussion, onCloseJoinModal]);
 
   const renderSidebarContent = () => {
     if (!common) return null;
@@ -247,7 +250,7 @@ export default function CommonDetail() {
             </div>
           )}
         </Modal>
-        <Modal isShowing={showJoinModal} onClose={closeJoinModalHandler} closeColor={Colors.white}>
+        <Modal isShowing={showJoinModal} onClose={closeJoinModal} closeColor={Colors.white}>
           <JoinTheEffortModal />
         </Modal>
         <div className="common-detail-wrapper">
