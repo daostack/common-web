@@ -4,49 +4,289 @@ schema {
   subscription: Subscription
 }
 
-input ActOnReportInput {
-  reportId: UUID!
-  action: ReportAction!
+"""A field whose value conforms to the standard URL format as specified in RFC3986: https://www.ietf.org/rfc/rfc3986.txt."""
+scalar URL
+
+"""A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar."""
+scalar DateTime
+
+"""The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)."""
+scalar JSON
+
+"""A field whose value is a generic Universally Unique Identifier: https://en.wikipedia.org/wiki/Universally_unique_identifier."""
+scalar UUID
+
+type User {
+  """The settings Id of the user"""
+  id: ID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  """The first name of the user"""
+  firstName: String!
+  """The last name of the user"""
+  lastName: String!
+  """The last name of the user"""
+  country: Country!
+  intro: String
+  """The display name of the user"""
+  displayName: String!
+  photo: String!
+  """The email of the user"""
+  email: String!
+  """List of all the users permissions"""
+  permissions: [String!]!
+  wires: [Wire!]!
+  """List of events, that occurred and are related to this user"""
+  events(take: Int = 10, skip: Int = 0, orderBy: EventOrderByInput): [Event!]!
+  """List of all commons, that the user is currently part of"""
+  commons: [Common!]!
+  proposals(take: Int = 10, skip: Int = 0, where: ProposalWhereInput): [Proposal!]!
+  subscriptions: [CommonSubscription!]!
+  notifications(orderBy: NotificationOrderByInput = {createdAt: desc}, cursor: NotificationWhereUniqueInput, take: Int = 10, skip: Int): [Notification!]!
+  billingDetails: [UserBillingDetails!]!
+  notificationTokens: [UserNotificationToken!]!
+  discussionSubscriptions(take: Int = 10, skip: Int = 0, orderBy: DiscussionSubscriptionOrderByInput): [DiscussionSubscription!]!
 }
 
-interface Address {
+type UserBillingDetails implements BaseEntity & Address {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
   line1: String
   line2: String
   city: String!
   country: String!
   postalCode: String!
   district: String
-}
-
-interface BaseEntity {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-input BillingDetailsInput {
   name: String!
+}
+
+type UserNotificationToken implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  state: UserNotificationTokenState!
+  token: String!
+  description: String!
+  lastUsed: DateTime!
+  lastVerified: DateTime!
+}
+
+input UserWhereUniqueInput {
+  userId: ID!
+}
+
+input UserWhereInput {
+  firstName: StringFilter
+  lastName: StringFilter
+  email: StringFilter
+  OR: [UserWhereInput!]
+  AND: [UserWhereInput!]
+}
+
+enum UserNotificationTokenState {
+  Active
+  Expired
+  Voided
+}
+
+type Wire implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  circleId: String
+  circleFingerprint: String
+  description: String
+  userId: String!
+}
+
+type WireBankAccount implements BaseEntity & Address {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  line1: String
+  line2: String
   city: String!
   country: String!
-  line1: String!
   postalCode: String!
-  line2: String
   district: String
+  bankName: String!
+}
+
+input WireWhereInput {
+  userId: StringFilter
+}
+
+type Role implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  name: String!
+  displayName: String!
+  description: String!
+  permissions: [String!]!
+  """All the users that bear that role"""
+  users: [User!]!
+}
+
+input RoleWhereUniqueInput {
+  id: ID
+  name: String
 }
 
 type Card {
+  """The main identifier of the item"""
   id: ID!
+  """The date, at which the item was created"""
   createdAt: DateTime!
+  """The date, at which the item was last modified"""
   updatedAt: DateTime!
 }
 
-type Common {
+input CreateCardInput {
+  """The ID of the key used for the encryption of the sensitive data"""
+  keyId: String!
+  """The sensitive part of the card as encrypted card"""
+  encryptedData: String!
+  expYear: Int!
+  expMonth: Int!
+  billingDetails: BillingDetailsInput!
+}
+
+type Vote {
+  """The main identifier of the item"""
   id: ID!
+  """The date, at which the item was created"""
   createdAt: DateTime!
+  """The date, at which the item was last modified"""
   updatedAt: DateTime!
+  outcome: VoteOutcome!
+  voterId: ID!
+  voter: CommonMember!
+}
+
+enum VoteOutcome {
+  Approve
+  Condemn
+}
+
+input CreateVoteInput {
+  outcome: VoteOutcome!
+  """The ID of the root of the proposal whether it is funding one or join"""
+  proposalId: ID!
+}
+
+type Event {
+  """The main identifier of the item"""
+  id: ID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  """The Types of the event in one of the predefined event types"""
+  type: EventType!
+  payload: JSON
+  """The ID of the common, for whom the event was created"""
+  commonId: ID
+  """The ID of the event creator"""
+  userId: ID
+  """The event creator"""
+  user: User
+}
+
+enum EventType {
+  CommonCreated
+  CommonUpdated
+  CommonDelisted
+  CommonWhitelisted
+  CommonMemberCreated
+  CommonMemberRoleAdded
+  CommonMemberRoleRemoved
+  JoinRequestCreated
+  JoinRequestAccepted
+  JoinRequestRejected
+  FundingRequestCreated
+  FundingRequestAccepted
+  FundingRequestRejected
+  CardCreated
+  CardCvvVerificationPassed
+  CardCvvVerificationFailed
+  PaymentCreated
+  PaymentSucceeded
+  PaymentFailed
+  ProposalMajorityReached
+  ProposalExpired
+  VoteCreated
+  UserCreated
+  UserUpdated
+  DiscussionCreated
+  DiscussionMessageCreated
+  DiscussionSubscriptionCreated
+  DiscussionSubscriptionTypeChanged
+  NotificationTemplateCreated
+  NotificationTemplateUpdated
+  UserNotificationTokenVoided
+  UserNotificationTokenExpired
+  UserNotificationTokenCreated
+  UserNotificationTokenRefreshed
+  ReportCreated
+  ReportRespected
+  ReportDismissed
+  RoleCreated
+  RoleUpdated
+  RolePermissionAdded
+  RolePermissionRemoved
+  RoleDeleted
+  UserAddedToRole
+  UserRemovedFromRole
+  WireCreated
+  WireUpdated
+  PayoutCreated
+  PayoutApprovalGiven
+  PayoutRejectionGiven
+  PayoutApproved
+  PayoutRejected
+  PayoutExecuted
+  PayoutCompleted
+}
+
+input EventOrderByInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  type: SortOrder
+}
+
+type Common {
+  """The main identifier of the item"""
+  id: ID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  """The name of the common as provided"""
   name: String!
+  """The whitelisting state of a common"""
   whitelisted: Boolean!
+  """The current available funds of the common. In cents"""
   balance: Int!
+  """The total amount of money that the common has raised. In cents"""
   raised: Int!
   links: JSON
   rules: JSON
@@ -55,7 +295,9 @@ type Common {
   action: String
   byline: String
   fundingType: FundingType!
+  """The minimum amount that the join request should provide. In cents"""
   fundingMinimumAmount: Int!
+  """List of events, that occurred in a common"""
   events(take: Int = 10, skip: Int = 0, orderBy: EventOrderByInput): [Event!]!
   reports(where: ReportWhereInput = {status: {in: [Active]}}): [Report!]!
   updates: [CommonUpdate!]!
@@ -67,14 +309,510 @@ type Common {
   activeJoinProposals: Int!
 }
 
+type CommonUpdate implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  commonBefore: Common!
+  commonAfter: Common!
+  change: JSON
+}
+
+"""The funding Types of the common"""
+enum FundingType {
+  OneTime
+  Monthly
+}
+
+input CreateCommonInput {
+  name: String!
+  fundingMinimumAmount: Int!
+  fundingType: FundingType!
+  action: String
+  byline: String
+  description: String
+  image: String!
+  links: [CommonLinkInput!]
+  rules: [CommonRuleInput!]
+}
+
 input CommonLinkInput {
   title: String!
   url: String!
 }
 
-type CommonMember implements BaseEntity {
+input CommonRuleInput {
+  title: String!
+  description: String
+}
+
+input CommonWhereInput {
+  name: StringFilter
+  id: StringFilter
+}
+
+input CommonWhereUniqueInput {
+  id: ID!
+}
+
+type Report implements BaseEntity {
+  """The main identifier of the item"""
   id: UUID!
+  """The date, at which the item was created"""
   createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  """The current status of the report"""
+  status: ReportStatus!
+  """The Types of violation that this report is for"""
+  for: ReportFor!
+  """The note that the report has left for the content"""
+  note: String!
+  """The date on which the report was last reviewed if reviewed"""
+  reviewedOn: DateTime
+  reporterId: ID!
+  reporter: User!
+  messageId: UUID!
+  message: DiscussionMessage!
+}
+
+enum ReportFor {
+  Nudity
+  Violance
+  Harassment
+  FalseNews
+  Spam
+  Hate
+  Other
+}
+
+enum ReportAction {
+  Respected
+  Dismissed
+}
+
+enum ReportStatus {
+  Active
+  Clossed
+}
+
+enum ReportAuditor {
+  CommonModerator
+  SystemAdmin
+}
+
+input ReportWhereInput {
+  status: ReportStatusFilterInput
+  for: ReportFor
+}
+
+input ReportStatusFilterInput {
+  in: [ReportStatus]
+  not: [ReportStatus]
+}
+
+input ActOnReportInput {
+  reportId: UUID!
+  action: ReportAction!
+}
+
+input ReportDiscussionMessageInput {
+  messageId: UUID!
+  note: String!
+  for: ReportFor!
+}
+
+type Payout implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  status: PayoutStatus!
+  amount: Int!
+  description: String!
+  proposals: [Proposal!]!
+}
+
+type PayoutApprover implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  outcome: PayoutApproverResponse!
+  userId: ID!
+}
+
+enum PayoutStatus {
+  PendingApproval
+  CirclePending
+  CircleComplete
+  CircleFailed
+  Failed
+}
+
+enum PayoutApproverResponse {
+  Pending
+  Approved
+  Declined
+}
+
+input PayoutApproverFilter {
+  some: PayoutApproversWhereInput
+  every: PayoutApproversWhereInput
+  none: PayoutApproversWhereInput
+}
+
+input PayoutApproversWhereInput {
+  id: StringFilter
+  userId: StringFilter
+  outcome: PayoutApproverResponse
+}
+
+input PayoutStatusFilter {
+  in: [PayoutStatus]
+  notIn: [PayoutStatus]
+  equals: PayoutStatus
+  not: PayoutStatus
+}
+
+input PayoutWhereInput {
+  status: PayoutStatusFilter
+  approvers: PayoutApproverFilter
+}
+
+enum PaymentType {
+  OneTimePayment
+  SubscriptionInitialPayment
+  SubscriptionSequentialPayment
+  ImportedPayment
+}
+
+enum PaymentStatus {
+  NotAttempted
+  Pending
+  Successful
+  Unsuccessful
+}
+
+enum PaymentCircleStatus {
+  pending
+  failed
+  confirmed
+  paid
+}
+
+type Payment implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  processed: Boolean!
+  processedError: Boolean!
+  type: PaymentType!
+  status: PaymentStatus!
+  circlePaymentStatus: PaymentCircleStatus
+  circlePaymentId: String
+  """The amount of the payment in US dollar cents"""
+  amount: Int
+  """The payment fees in US dollar cents"""
+  fees: Int
+  userId: String!
+  user: User!
+  commonId: String!
+  common: Common!
+}
+
+input PaymentsWhereInput {
+  commonId: UUID
+  userId: UUID
+}
+
+type Proposal {
+  """The main identifier of the item"""
+  id: ID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  type: ProposalType!
+  state: ProposalState!
+  links: JSON
+  files: JSON
+  images: JSON
+  votesFor: Int!
+  votesAgainst: Int!
+  expiresAt: DateTime!
+  title: String
+  description: String
+  """The IP from which the proposal was created"""
+  ipAddress: String
+  discussions(take: Int, skip: Int): [Discussion!]!
+  """The ID of the user who created the proposal"""
+  userId: ID!
+  """The ID of the membership of the user who created the proposal"""
+  commonMemberId: UUID!
+  user: User!
+  member: CommonMember!
+  fundingId: UUID
+  funding: FundingProposal
+  commonId: UUID!
+  common: Common!
+  votes: [Vote!]!
+  joinId: UUID
+  join: JoinProposal
+}
+
+type JoinProposal implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  """The amount that this join proposal will contribute to the common. In cents"""
+  funding: Int!
+  fundingType: FundingType!
+  paymentState: PaymentState!
+}
+
+type FundingProposal implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  """The amount that the proposal has requested in cents"""
+  amount: Int!
+  fundingState: FundingState!
+}
+
+input ProposalWhereInput {
+  id: StringFilter
+  type: ProposalType
+  state: ProposalState
+  commonId: UUID
+  commonMemberId: UUID
+  userId: ID
+  title: StringFilter
+  description: StringFilter
+  AND: [ProposalWhereInput!]
+  OR: [ProposalWhereInput!]
+}
+
+input FundingProposalWhereInput {
+  fundingState: FundingState
+}
+
+input CreateJoinProposalInput {
+  title: String!
+  description: String!
+  fundingAmount: Int!
+  cardId: String!
+  commonId: String!
+  links: [LinkInput!]
+}
+
+input CreateFundingProposalInput {
+  commonId: ID!
+  amount: Int!
+  title: String!
+  description: String!
+  links: [ProposalLinkInput!]
+  files: [ProposalFileInput!]
+  images: [ProposalImageInput!]
+}
+
+input ProposalLinkInput {
+  title: String!
+  url: String!
+}
+
+input ProposalFileInput {
+  value: String!
+}
+
+input ProposalImageInput {
+  value: String!
+}
+
+enum ProposalType {
+  FundingRequest
+  JoinRequest
+}
+
+enum ProposalState {
+  Countdown
+  Finalizing
+  Rejected
+  Accepted
+}
+
+enum FundingState {
+  NotEligible
+  Eligible
+  Redeemed
+}
+
+enum PaymentState {
+  NotAttempted
+  Pending
+  Successful
+  Unsuccessful
+}
+
+input ProposalWhereUniqueInput {
+  id: UUID!
+}
+
+"""Setting description about the common application"""
+type Settings {
+  """List of all available permission for roles"""
+  permissions: [String]!
+}
+
+enum StatisticType {
+  AllTime
+  Hourly
+  Daily
+  Weekly
+}
+
+type Statistic implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  users: Int!
+  commons: Int!
+  fundingProposals: Int!
+  joinProposals: Int!
+}
+
+input StatisticsWhereInput {
+  type: StatisticType
+}
+
+type Discussion implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  """What this discussion is about"""
+  topic: String!
+  """Short description of the topic"""
+  description: String!
+  """The date at which the last message on the discussion was added"""
+  latestMessage: DateTime!
+  type: DiscussionType!
+  userId: String!
+  """The discussion creator"""
+  owner: User
+  messages(take: Int = 10, skip: Int = 0, orderBy: DiscussionMessagesOrderByInput = {createdAt: asc}): [DiscussionMessage!]!
+}
+
+type DiscussionMessage implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  message: String!
+  type: DiscussionMessageType!
+  flag: DiscussionMessageFlag!
+  userId: String!
+  reports: [Report!]!
+  owner: User!
+}
+
+type DiscussionSubscription implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  type: DiscussionSubscriptionType!
+  userId: String!
+  discussionId: UUID!
+  discussion: Discussion!
+}
+
+enum DiscussionType {
+  ProposalDiscussion
+  CommonDiscussion
+}
+
+enum DiscussionMessageType {
+  Message
+}
+
+enum DiscussionMessageFlag {
+  Clear
+  Reported
+  Hidden
+}
+
+enum DiscussionSubscriptionType {
+  AllNotifications
+  OnlyMentions
+  NoNotification
+}
+
+input DiscussionMessagesOrderByInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+}
+
+input DiscussionSubscriptionOrderByInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+}
+
+input DiscussionWhereInput {
+  commonId: UUID
+  commonMemberId: UUID
+  userId: ID
+}
+
+input CreateDiscussionInput {
+  """The topic of the discussion to be created"""
+  topic: String!
+  """Short description about the topic"""
+  description: String!
+  """The ID of the common, for which we are creating the discussion"""
+  commonId: ID!
+  """The ID of the proposal, if this is proposal discussion"""
+  proposalId: ID
+}
+
+input CreateDiscussionMessageInput {
+  """The ID of the discussion, for which we are creating the message"""
+  discussionId: ID!
+  """The message itself"""
+  message: String!
+}
+
+type CommonMember implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
   updatedAt: DateTime!
   userId: ID!
   commonId: ID!
@@ -93,14 +831,157 @@ enum CommonMemberRole {
   Moderator
 }
 
-input CommonRuleInput {
-  title: String!
-  description: String
+enum NotificationType {
+  JoinRequestAccepted
+  JoinRequestRejected
+  FundingRequestAccepted
+  FundingRequestRejected
+  General
+}
+
+enum NotificationSeenStatus {
+  NotSeen
+  Seen
+  Done
+}
+
+enum NotificationLanguage {
+  EN
+  RU
+  BG
+  HE
+  JP
+  KO
+}
+
+enum NotificationTemplateType {
+  PushNotification
+  EmailNotification
+}
+
+type Notification implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  """Whether the notification should be shown in the user notification feed"""
+  show: Boolean!
+  type: NotificationType!
+  seenStatus: NotificationSeenStatus!
+  """The ID of the linked user"""
+  userId: UUID!
+  """The linked user. Expensive operation"""
+  user: User!
+  """The ID of the linked common. May be null"""
+  commonId: UUID
+  """The linked common. Expensive operation that may return null"""
+  common: Common
+  """The ID of the linked proposal. May be null"""
+  proposalId: UUID
+  """The linked proposal. Expensive operation that may return null"""
+  proposal: Proposal
+  """The ID of the linked discussion. May be null"""
+  discussionId: UUID
+  """The linked discussion. Expensive operation that may return null"""
+  discussion: Discussion
+}
+
+type NotificationTemplate implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  forType: NotificationType!
+  templateType: NotificationTemplateType!
+  language: NotificationLanguage!
+  subject: String!
+  content: String!
+  from: String
+  fromName: String
+  bcc: String
+  bccName: String
+}
+
+type NotificationEventOptions {
+  availableNotifications: [NotificationType!]!
+  availableEvents: [EventType!]!
+}
+
+type NotificationEventSettings implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  active: Boolean!
+  sendToEveryone: Boolean!
+  sendToCommon: Boolean!
+  sendToUser: Boolean!
+  description: String!
+  sendNotificationType: NotificationType!
+  onEvent: EventType!
+}
+
+type NotificationSystemSettings implements BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+  type: NotificationType!
+  sendEmail: Boolean!
+  sendPush: Boolean!
+  showInUserFeed: Boolean!
+}
+
+type NotificationTemplateOptions {
+  languages: [NotificationLanguage]!
+  templateTypes: [NotificationTemplateType]!
+  notificationTypes: [NotificationType]!
+}
+
+input NotificationWhereInput {
+  seenStatus: NotificationSeenStatus
+  type: NotificationType
+  userId: ID
+  commonId: UUID
+  proposalId: UUID
+  discussionId: UUID
+}
+
+input NotificationWhereUniqueInput {
+  id: UUID
+}
+
+input NotificationTemplateWhereInput {
+  language: NotificationLanguage
+  forType: NotificationType
+  type: NotificationTemplateType
+}
+
+input NotificationSettingsWhereInput {
+  """The Types of the notification"""
+  type: NotificationType
+}
+
+input NotificationOrderByInput {
+  createdAt: SortOrder
+  updatedAt: SortOrder
+  status: SortOrder
 }
 
 type CommonSubscription implements BaseEntity {
+  """The main identifier of the item"""
   id: UUID!
+  """The date, at which the item was created"""
   createdAt: DateTime!
+  """The date, at which the item was last modified"""
   updatedAt: DateTime!
   paymentStatus: SubscriptionPaymentStatus!
   status: SubscriptionStatus!
@@ -111,22 +992,26 @@ type CommonSubscription implements BaseEntity {
   common: Common!
 }
 
-type CommonUpdate implements BaseEntity {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  commonBefore: Common!
-  commonAfter: Common!
-  change: JSON
+enum SubscriptionPaymentStatus {
+  AwaitingInitialPayment
+  Pending
+  Successful
+  Unsuccessful
 }
 
-input CommonWhereInput {
-  name: StringFilter
-  id: StringFilter
+enum SubscriptionStatus {
+  Pending
+  Active
+  PaymentFailed
+  CanceledByUser
+  CanceledByPaymentFailure
 }
 
-input CommonWhereUniqueInput {
-  id: ID!
+scalar Void
+
+enum SortOrder {
+  asc
+  desc
 }
 
 enum Country {
@@ -382,87 +1267,73 @@ enum Country {
   ZW
 }
 
-input CreateCardInput {
-  keyId: String!
-  encryptedData: String!
-  expYear: Int!
-  expMonth: Int!
-  billingDetails: BillingDetailsInput!
-}
-
-input CreateCommonInput {
-  name: String!
-  fundingMinimumAmount: Int!
-  fundingType: FundingType!
-  action: String
-  byline: String
-  description: String
-  image: String!
-  links: [CommonLinkInput!]
-  rules: [CommonRuleInput!]
-}
-
-input CreateDiscussionInput {
-  topic: String!
-  description: String!
-  commonId: ID!
-  proposalId: ID
-}
-
-input CreateDiscussionMessageInput {
-  discussionId: ID!
-  message: String!
-}
-
-input CreateFundingProposalInput {
-  commonId: ID!
-  amount: Int!
+type Link {
+  """The display title of the link"""
   title: String!
-  description: String!
-  links: [ProposalLinkInput!]
-  files: [ProposalFileInput!]
-  images: [ProposalImageInput!]
+  """The actual link part of the link"""
+  url: String!
 }
 
-input CreateJoinProposalInput {
+interface BaseEntity {
+  """The main identifier of the item"""
+  id: UUID!
+  """The date, at which the item was created"""
+  createdAt: DateTime!
+  """The date, at which the item was last modified"""
+  updatedAt: DateTime!
+}
+
+interface Address {
+  line1: String
+  line2: String
+  city: String!
+  country: String!
+  postalCode: String!
+  district: String
+}
+
+input PaginateInput {
+  take: Int!
+  skip: Int! = 0
+}
+
+input LinkInput {
+  """The display title of the link"""
   title: String!
-  description: String!
-  fundingAmount: Int!
-  cardId: String!
-  commonId: String!
-  links: [LinkInput!]
+  """The actual link part of the link"""
+  url: String!
 }
 
-input CreateNotificationEventSettingsInput {
-  sendToEveryone: Boolean!
-  sendToCommon: Boolean!
-  sendToUser: Boolean!
-  description: String!
-  sendNotificationType: NotificationType!
-  onEvent: EventType!
+input StringFilter {
+  contains: String
+  endsWith: String
+  equals: String
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  startsWith: String
+  in: [String!]
+  notIn: [String!]
 }
 
-input CreateNotificationTemplateInput {
-  forType: NotificationType!
-  language: NotificationLanguage!
-  templateType: NotificationTemplateType!
-  subject: String!
-  content: String!
-  fromEmail: String
-  fromName: String
-}
-
-input CreatePayoutInput {
-  wireId: ID!
-  proposalIds: [ID!]!
-  description: String
-}
-
-input CreateRoleInput {
+input BillingDetailsInput {
   name: String!
-  displayName: String!
-  description: String!
-  permissions: [String!]!
+  city: String!
+  country: String!
+  line1: String!
+  postalCode: String!
+  line2: String
+  district: String
+}
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  photo: String!
+  country: Country!
+  intro: String
 }
 
 input CreateUserBillingDetailsInput {
@@ -475,33 +1346,20 @@ input CreateUserBillingDetailsInput {
   country: Country!
 }
 
-input CreateUserInput {
-  firstName: String!
-  lastName: String!
-  email: String!
-  photo: String!
-  country: Country!
-  intro: String
-}
-
 input CreateUserNotificationTokenInput {
   token: String!
   description: String!
 }
 
-input CreateVoteInput {
-  outcome: VoteOutcome!
-  proposalId: ID!
-}
-
-input CreateWireBankAccountInput {
-  bankName: String!
-  line1: String
-  line2: String
-  district: String
-  city: String!
-  postalCode: String!
-  country: Country!
+input UpdateUserInput {
+  """The ID of the user to be updated"""
+  id: String!
+  firstName: String
+  lastName: String
+  photo: String
+  intro: String
+  country: Country
+  notificationLanguage: NotificationLanguage
 }
 
 input CreateWireInput {
@@ -515,198 +1373,108 @@ input CreateWireInput {
   createWireBankDetails: CreateWireBankAccountInput
 }
 
-scalar DateTime
+input CreateWireBankAccountInput {
+  bankName: String!
+  line1: String
+  line2: String
+  district: String
+  city: String!
+  postalCode: String!
+  country: Country!
+}
 
-type Discussion implements BaseEntity {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  topic: String!
+input CreateRoleInput {
+  name: String!
+  displayName: String!
   description: String!
-  latestMessage: DateTime!
-  type: DiscussionType!
-  userId: String!
-  owner: User
-  messages(take: Int = 10, skip: Int = 0, orderBy: DiscussionMessagesOrderByInput = {createdAt: asc}): [DiscussionMessage!]!
+  permissions: [String!]!
 }
 
-type DiscussionMessage implements BaseEntity {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  message: String!
-  type: DiscussionMessageType!
-  flag: DiscussionMessageFlag!
-  userId: String!
-  reports: [Report!]!
-  owner: User!
+input UpdateCommonInput {
+  commonId: ID!
+  name: String
+  image: String
+  action: String
+  byline: String
+  description: String
+  links: [CommonLinkInput!]
+  rules: [CommonRuleInput!]
 }
 
-enum DiscussionMessageFlag {
-  Clear
-  Reported
-  Hidden
+input CreatePayoutInput {
+  wireId: ID!
+  proposalIds: [ID!]!
+  description: String
 }
 
-input DiscussionMessagesOrderByInput {
-  createdAt: SortOrder
-  updatedAt: SortOrder
+input UpdateNotificationTemplateInput {
+  id: String!
+  subject: String
+  content: String
+  fromEmail: String
+  fromName: String
+  bcc: String
+  bccName: String
 }
 
-enum DiscussionMessageType {
-  Message
+input CreateNotificationEventSettingsInput {
+  sendToEveryone: Boolean!
+  sendToCommon: Boolean!
+  sendToUser: Boolean!
+  description: String!
+  sendNotificationType: NotificationType!
+  onEvent: EventType!
 }
 
-type DiscussionSubscription implements BaseEntity {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  type: DiscussionSubscriptionType!
-  userId: String!
-  discussionId: UUID!
-  discussion: Discussion!
+input UpdateNotificationSettingsInput {
+  id: String!
+  showInUserFeed: Boolean
+  sendPush: Boolean
+  sendEmail: Boolean
 }
 
-input DiscussionSubscriptionOrderByInput {
-  createdAt: SortOrder
-  updatedAt: SortOrder
+input CreateNotificationTemplateInput {
+  forType: NotificationType!
+  language: NotificationLanguage!
+  templateType: NotificationTemplateType!
+  subject: String!
+  content: String!
+  fromEmail: String
+  fromName: String
 }
 
-enum DiscussionSubscriptionType {
-  AllNotifications
-  OnlyMentions
-  NoNotification
-}
-
-enum DiscussionType {
-  ProposalDiscussion
-  CommonDiscussion
-}
-
-input DiscussionWhereInput {
-  commonId: UUID
-  commonMemberId: UUID
-  userId: ID
-}
-
-type Event {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  type: EventType!
-  payload: JSON
-  commonId: ID
-  userId: ID
-  user: User
-}
-
-input EventOrderByInput {
-  createdAt: SortOrder
-  updatedAt: SortOrder
-  type: SortOrder
-}
-
-enum EventType {
-  CommonCreated
-  CommonUpdated
-  CommonDelisted
-  CommonWhitelisted
-  CommonMemberCreated
-  CommonMemberRoleAdded
-  CommonMemberRoleRemoved
-  JoinRequestCreated
-  JoinRequestAccepted
-  JoinRequestRejected
-  FundingRequestCreated
-  FundingRequestAccepted
-  FundingRequestRejected
-  CardCreated
-  CardCvvVerificationPassed
-  CardCvvVerificationFailed
-  PaymentCreated
-  PaymentSucceeded
-  PaymentFailed
-  ProposalMajorityReached
-  ProposalExpired
-  VoteCreated
-  UserCreated
-  UserUpdated
-  DiscussionCreated
-  DiscussionMessageCreated
-  DiscussionSubscriptionCreated
-  DiscussionSubscriptionTypeChanged
-  NotificationTemplateCreated
-  NotificationTemplateUpdated
-  UserNotificationTokenVoided
-  UserNotificationTokenExpired
-  UserNotificationTokenCreated
-  UserNotificationTokenRefreshed
-  ReportCreated
-  ReportRespected
-  ReportDismissed
-  RoleCreated
-  RoleUpdated
-  RolePermissionAdded
-  RolePermissionRemoved
-  RoleDeleted
-  UserAddedToRole
-  UserRemovedFromRole
-  WireCreated
-  WireUpdated
-  PayoutCreated
-  PayoutApprovalGiven
-  PayoutRejectionGiven
-  PayoutApproved
-  PayoutRejected
-  PayoutExecuted
-  PayoutCompleted
-}
-
-type FundingProposal implements BaseEntity {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  amount: Int!
-  fundingState: FundingState!
-}
-
-input FundingProposalWhereInput {
-  fundingState: FundingState
-}
-
-enum FundingState {
-  NotEligible
-  Eligible
-  Redeemed
-}
-
-enum FundingType {
-  OneTime
-  Monthly
-}
-
-type JoinProposal implements BaseEntity {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  funding: Int!
-  fundingType: FundingType!
-  paymentState: PaymentState!
-}
-
-scalar JSON
-
-type Link {
-  title: String!
-  url: String!
-}
-
-input LinkInput {
-  title: String!
-  url: String!
+type Query {
+  """Provide ID to fetch specific user or do not pass anything to get the currently authenticated user"""
+  user(where: UserWhereUniqueInput): User
+  users(where: UserWhereInput, paginate: PaginateInput): [User]
+  generateUserAuthToken(authId: String!): String!
+  wires(where: WireWhereInput): [Wire]
+  role(where: RoleWhereUniqueInput!): Role
+  roles(paginate: PaginateInput): [Role]
+  events(paginate: PaginateInput): [Event]
+  common(where: CommonWhereUniqueInput!): Common
+  commons(paginate: PaginateInput, where: CommonWhereInput): [Common]
+  payout(id: ID!): Payout
+  payouts(paginate: PaginateInput = {take: 10, skip: 0}, where: PayoutWhereInput): [Payout]
+  payment(id: ID): Payment
+  payments(paginate: PaginateInput, where: PaymentsWhereInput): [Payment]
+  proposal(where: ProposalWhereUniqueInput!): Proposal
+  proposals(where: ProposalWhereInput, fundingWhere: FundingProposalWhereInput, paginate: PaginateInput): [Proposal]
+  settings: Settings!
+  getStatistics(where: StatisticsWhereInput): [Statistic]
+  discussion(id: ID!): Discussion
+  discussions(where: DiscussionWhereInput, paginate: PaginateInput): [Discussion]
+  notificationTemplateOptions: NotificationTemplateOptions
+  notificationEventOptions: NotificationEventOptions
+  notificationEventSettings(paginate: PaginateInput!): [NotificationEventSettings]
+  notificationTemplates(where: NotificationTemplateWhereInput, paginate: PaginateInput): [NotificationTemplate]
+  notificationSettings(where: NotificationSettingsWhereInput): [NotificationSystemSettings]
+  """List of all notifications, readable only by the admin"""
+  notifications(paginate: PaginateInput!): [Notification]
 }
 
 type Mutation {
+  """Creates new user in the settings"""
   createUser(input: CreateUserInput!): User!
   createUserBillingDetails(input: CreateUserBillingDetailsInput!): UserBillingDetails
   voidUserNotificationToken(tokenId: ID!): UserNotificationToken!
@@ -728,619 +1496,31 @@ type Mutation {
   createPayout(input: CreatePayoutInput!): Payout
   approvePayout(payoutId: ID!, outcome: PayoutApproverResponse!): PayoutApprover
   finalizeProposal(proposalId: ID!): Boolean!
+  """Create new proposal of Types JOIN."""
   createJoinProposal(input: CreateJoinProposalInput!): Proposal!
   createFundingProposal(input: CreateFundingProposalInput!): Proposal!
   createDiscussion(input: CreateDiscussionInput!): Discussion!
   createDiscussionMessage(input: CreateDiscussionMessageInput!): DiscussionMessage!
-  changeDiscussionSubscriptionType(id: ID!, type: DiscussionSubscriptionType!): DiscussionSubscription
+  changeDiscussionSubscriptionType(
+    """The ID of the discussion subscription to change"""
+    id: ID!
+    """The new subscription Types"""
+    type: DiscussionSubscriptionType!
+  ): DiscussionSubscription
   updateNotificationTemplate(input: UpdateNotificationTemplateInput!): NotificationTemplate
   createNotificationEventSettings(input: CreateNotificationEventSettingsInput!): NotificationEventSettings
   updateNotificationSettings(input: UpdateNotificationSettingsInput!): NotificationSystemSettings
   createNotificationTemplate(input: CreateNotificationTemplateInput!): NotificationTemplate
 }
 
-type Notification implements BaseEntity {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  show: Boolean!
-  type: NotificationType!
-  seenStatus: NotificationSeenStatus!
-  userId: UUID!
-  user: User!
-  commonId: UUID
-  common: Common
-  proposalId: UUID
-  proposal: Proposal
-  discussionId: UUID
-  discussion: Discussion
-}
-
-type NotificationEventOptions {
-  availableNotifications: [NotificationType!]!
-  availableEvents: [EventType!]!
-}
-
-type NotificationEventSettings implements BaseEntity {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  active: Boolean!
-  sendToEveryone: Boolean!
-  sendToCommon: Boolean!
-  sendToUser: Boolean!
-  description: String!
-  sendNotificationType: NotificationType!
-  onEvent: EventType!
-}
-
-enum NotificationLanguage {
-  EN
-  RU
-  BG
-  HE
-  JP
-  KO
-}
-
-input NotificationOrderByInput {
-  createdAt: SortOrder
-  updatedAt: SortOrder
-  status: SortOrder
-}
-
-enum NotificationSeenStatus {
-  NotSeen
-  Seen
-  Done
-}
-
-input NotificationSettingsWhereInput {
-  type: NotificationType
-}
-
-type NotificationSystemSettings implements BaseEntity {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  type: NotificationType!
-  sendEmail: Boolean!
-  sendPush: Boolean!
-  showInUserFeed: Boolean!
-}
-
-type NotificationTemplate implements BaseEntity {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  forType: NotificationType!
-  templateType: NotificationTemplateType!
-  language: NotificationLanguage!
-  subject: String!
-  content: String!
-  from: String
-  fromName: String
-  bcc: String
-  bccName: String
-}
-
-type NotificationTemplateOptions {
-  languages: [NotificationLanguage]!
-  templateTypes: [NotificationTemplateType]!
-  notificationTypes: [NotificationType]!
-}
-
-enum NotificationTemplateType {
-  PushNotification
-  EmailNotification
-}
-
-input NotificationTemplateWhereInput {
-  language: NotificationLanguage
-  forType: NotificationType
-  type: NotificationTemplateType
-}
-
-enum NotificationType {
-  JoinRequestAccepted
-  JoinRequestRejected
-  FundingRequestAccepted
-  FundingRequestRejected
-  General
-}
-
-input NotificationWhereInput {
-  seenStatus: NotificationSeenStatus
-  type: NotificationType
-  userId: ID
-  commonId: UUID
-  proposalId: UUID
-  discussionId: UUID
-}
-
-input NotificationWhereUniqueInput {
-  id: UUID
-}
-
-input PaginateInput {
-  take: Int!
-  skip: Int = 0
-}
-
-type Payment implements BaseEntity {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  processed: Boolean!
-  processedError: Boolean!
-  type: PaymentType!
-  status: PaymentStatus!
-  circlePaymentStatus: PaymentCircleStatus
-  circlePaymentId: String
-  amount: Int
-  fees: Int
-  userId: String!
-  user: User!
-  commonId: String!
-  common: Common!
-}
-
-enum PaymentCircleStatus {
-  pending
-  failed
-  confirmed
-  paid
-}
-
-input PaymentsWhereInput {
-  commonId: UUID
-  userId: UUID
-}
-
-enum PaymentState {
-  NotAttempted
-  Pending
-  Successful
-  Unsuccessful
-}
-
-enum PaymentStatus {
-  NotAttempted
-  Pending
-  Successful
-  Unsuccessful
-}
-
-enum PaymentType {
-  OneTimePayment
-  SubscriptionInitialPayment
-  SubscriptionSequentialPayment
-  ImportedPayment
-}
-
-type Payout implements BaseEntity {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  status: PayoutStatus!
-  amount: Int!
-  description: String!
-  proposals: [Proposal!]!
-}
-
-type PayoutApprover implements BaseEntity {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  outcome: PayoutApproverResponse!
-  userId: ID!
-}
-
-enum PayoutApproverResponse {
-  Pending
-  Approved
-  Declined
-}
-
-enum PayoutStatus {
-  PendingApproval
-  CirclePending
-  CircleComplete
-  CircleFailed
-  Failed
-}
-
-input PayoutStatusFilter {
-  in: [PayoutStatus]
-  notIn: [PayoutStatus]
-  equals: PayoutStatus
-  not: PayoutStatus
-}
-
-input PayoutWhereInput {
-  status: PayoutStatusFilter
-}
-
-type Proposal {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  type: ProposalType!
-  state: ProposalState!
-  links: JSON
-  files: JSON
-  images: JSON
-  votesFor: Int!
-  votesAgainst: Int!
-  expiresAt: DateTime!
-  title: String
-  description: String
-  ipAddress: String
-  discussions(take: Int, skip: Int): [Discussion!]!
-  userId: ID!
-  commonMemberId: UUID!
-  user: User!
-  member: CommonMember!
-  fundingId: UUID
-  funding: FundingProposal
-  commonId: UUID!
-  common: Common!
-  votes: [Vote!]!
-  joinId: UUID
-  join: JoinProposal
-}
-
-input ProposalFileInput {
-  value: String!
-}
-
-input ProposalImageInput {
-  value: String!
-}
-
-input ProposalLinkInput {
-  title: String!
-  url: String!
-}
-
-enum ProposalState {
-  Countdown
-  Finalizing
-  Rejected
-  Accepted
-}
-
-enum ProposalType {
-  FundingRequest
-  JoinRequest
-}
-
-input ProposalWhereInput {
-  id: StringFilter
-  type: ProposalType
-  state: ProposalState
-  commonId: UUID
-  commonMemberId: UUID
-  userId: ID
-  title: StringFilter
-  description: StringFilter
-  AND: [ProposalWhereInput!]
-  OR: [ProposalWhereInput!]
-}
-
-input ProposalWhereUniqueInput {
-  id: UUID!
-}
-
-type Query {
-  user(where: UserWhereUniqueInput): User
-  users(where: UserWhereInput, paginate: PaginateInput): [User]
-  generateUserAuthToken(authId: String!): String!
-  wires(where: WireWhereInput): [Wire]
-  role(where: RoleWhereUniqueInput!): Role
-  roles(paginate: PaginateInput): [Role]
-  events(paginate: PaginateInput): [Event]
-  common(where: CommonWhereUniqueInput!): Common
-  commons(paginate: PaginateInput, where: CommonWhereInput): [Common]
-  payout(id: ID!): Payout
-  payouts(paginate: PaginateInput, where: PayoutWhereInput): [Payout]
-  payment(id: ID): Payment
-  payments(paginate: PaginateInput, where: PaymentsWhereInput): [Payment]
-  proposal(where: ProposalWhereUniqueInput!): Proposal
-  proposals(where: ProposalWhereInput, fundingWhere: FundingProposalWhereInput, paginate: PaginateInput): [Proposal]
-  settings: Settings!
-  getStatistics(where: StatisticsWhereInput): [Statistic]
-  discussion(id: ID!): Discussion
-  discussions(where: DiscussionWhereInput, paginate: PaginateInput): [Discussion]
-  notificationTemplateOptions: NotificationTemplateOptions
-  notificationEventOptions: NotificationEventOptions
-  notificationEventSettings(paginate: PaginateInput!): [NotificationEventSettings]
-  notificationTemplates(where: NotificationTemplateWhereInput, paginate: PaginateInput): [NotificationTemplate]
-  notificationSettings(where: NotificationSettingsWhereInput): [NotificationSystemSettings]
-  notifications(paginate: PaginateInput!): [Notification]
-}
-
-type Report implements BaseEntity {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  status: ReportStatus!
-  for: ReportFor!
-  note: String!
-  reviewedOn: DateTime
-  reporterId: ID!
-  reporter: User!
-  messageId: UUID!
-  message: DiscussionMessage!
-}
-
-enum ReportAction {
-  Respected
-  Dismissed
-}
-
-enum ReportAuditor {
-  CommonModerator
-  SystemAdmin
-}
-
-input ReportDiscussionMessageInput {
-  messageId: UUID!
-  note: String!
-  for: ReportFor!
-}
-
-enum ReportFor {
-  Nudity
-  Violance
-  Harassment
-  FalseNews
-  Spam
-  Hate
-  Other
-}
-
-enum ReportStatus {
-  Active
-  Clossed
-}
-
-input ReportStatusFilterInput {
-  in: [ReportStatus]
-  not: [ReportStatus]
-}
-
-input ReportWhereInput {
-  status: ReportStatusFilterInput
-  for: ReportFor
-}
-
-type Role implements BaseEntity {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  name: String!
-  displayName: String!
-  description: String!
-  permissions: [String!]!
-  users: [User!]!
-}
-
-input RoleWhereUniqueInput {
-  id: ID
-  name: String
-}
-
-type Settings {
-  permissions: [String]!
-}
-
-enum SortOrder {
-  asc
-  desc
-}
-
-type Statistic implements BaseEntity {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  users: Int!
-  commons: Int!
-  fundingProposals: Int!
-  joinProposals: Int!
-}
-
-input StatisticsWhereInput {
-  type: StatisticType
-}
-
-enum StatisticType {
-  AllTime
-  Hourly
-  Daily
-  Weekly
-}
-
-input StringFilter {
-  contains: String
-  endsWith: String
-  equals: String
-  gt: String
-  gte: String
-  lt: String
-  lte: String
-  startsWith: String
-  in: [String!]
-  notIn: [String!]
-}
-
 type Subscription {
-  onProposalChange(proposalId: ID!): Proposal
-  discussionMessageCreated(discussionId: ID!): DiscussionMessage
+  onProposalChange(
+    """The ID of the proposal that you wish to subscribe to"""
+    proposalId: ID!
+  ): Proposal
+  discussionMessageCreated(
+    """The ID of the discussion, for which messages you want to subscribe"""
+    discussionId: ID!
+  ): DiscussionMessage
   notificationCreated: Notification
-}
-
-enum SubscriptionPaymentStatus {
-  AwaitingInitialPayment
-  Pending
-  Successful
-  Unsuccessful
-}
-
-enum SubscriptionStatus {
-  Pending
-  Active
-  PaymentFailed
-  CanceledByUser
-  CanceledByPaymentFailure
-}
-
-input UpdateCommonInput {
-  commonId: ID!
-  name: String
-  image: String
-  action: String
-  byline: String
-  description: String
-  links: [CommonLinkInput!]
-  rules: [CommonRuleInput!]
-}
-
-input UpdateNotificationSettingsInput {
-  id: String!
-  showInUserFeed: Boolean
-  sendPush: Boolean
-  sendEmail: Boolean
-}
-
-input UpdateNotificationTemplateInput {
-  id: String!
-  subject: String
-  content: String
-  fromEmail: String
-  fromName: String
-  bcc: String
-  bccName: String
-}
-
-input UpdateUserInput {
-  id: String!
-  firstName: String
-  lastName: String
-  photo: String
-  intro: String
-  country: Country
-  notificationLanguage: NotificationLanguage
-}
-
-scalar URL
-
-type User {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  firstName: String!
-  lastName: String!
-  country: Country!
-  intro: String
-  displayName: String!
-  photo: String!
-  email: String!
-  permissions: [String!]!
-  wires: [Wire!]!
-  events(take: Int = 10, skip: Int = 0, orderBy: EventOrderByInput): [Event!]!
-  commons: [Common!]!
-  proposals(take: Int = 10, skip: Int = 0, where: ProposalWhereInput): [Proposal!]!
-  subscriptions: [CommonSubscription!]!
-  notifications(orderBy: NotificationOrderByInput = {createdAt: desc}, cursor: NotificationWhereUniqueInput, take: Int = 10, skip: Int): [Notification!]!
-  billingDetails: [UserBillingDetails!]!
-  notificationTokens: [UserNotificationToken!]!
-  discussionSubscriptions(take: Int = 10, skip: Int = 0, orderBy: DiscussionSubscriptionOrderByInput): [DiscussionSubscription!]!
-}
-
-type UserBillingDetails implements BaseEntity & Address {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  line1: String
-  line2: String
-  city: String!
-  country: String!
-  postalCode: String!
-  district: String
-  name: String!
-}
-
-type UserNotificationToken implements BaseEntity {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  state: UserNotificationTokenState!
-  token: String!
-  description: String!
-  lastUsed: DateTime!
-  lastVerified: DateTime!
-}
-
-enum UserNotificationTokenState {
-  Active
-  Expired
-  Voided
-}
-
-input UserWhereInput {
-  firstName: StringFilter
-  lastName: StringFilter
-  email: StringFilter
-  OR: [UserWhereInput!]
-  AND: [UserWhereInput!]
-}
-
-input UserWhereUniqueInput {
-  userId: ID!
-}
-
-scalar UUID
-
-scalar Void
-
-type Vote {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  outcome: VoteOutcome!
-  voterId: ID!
-  voter: CommonMember!
-}
-
-enum VoteOutcome {
-  Approve
-  Condemn
-}
-
-type Wire implements BaseEntity {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  circleId: String
-  circleFingerprint: String
-  description: String
-  userId: String!
-}
-
-type WireBankAccount implements BaseEntity & Address {
-  id: UUID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  line1: String
-  line2: String
-  city: String!
-  country: String!
-  postalCode: String!
-  district: String
-  bankName: String!
-}
-
-input WireWhereInput {
-  userId: StringFilter
 }

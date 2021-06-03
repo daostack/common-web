@@ -34,6 +34,12 @@ app.use(ipAddress.mw());
 apollo.applyMiddleware({ app });
 apollo.installSubscriptionHandlers(http);
 
-http.listen({ port: 4000 }, () => {
+app.use('*', (req, res, next) => {
+  console.log(req, res);
+
+  return next();
+});
+
+http.listen({ port: 5000 }, () => {
   logger.info(`🚀 Server ready`);
 });

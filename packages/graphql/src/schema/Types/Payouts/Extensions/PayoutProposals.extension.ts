@@ -7,17 +7,17 @@ export const PayoutProposalsExtension = extendType({
     t.nonNull.list.nonNull.field('proposals', {
       type: 'Proposal',
       resolve: async (root) => {
-        return (await prisma.payout
+        const { proposals } = (await prisma.payout
           .findUnique({
             where: {
               id: root.id
-            }
-          })
-          .proposals({
+            },
             select: {
-              proposal: true
+              proposals: true
             }
-          })).map(p => p.proposal);
+          }) || { proposals: [] });
+
+        return proposals as any;
       }
     });
   }
