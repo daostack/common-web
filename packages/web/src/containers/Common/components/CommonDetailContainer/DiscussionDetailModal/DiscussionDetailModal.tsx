@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { Loader } from "../../../../../shared/components";
-import { Common, Discussion } from "../../../../../shared/models";
+import { Discussion } from "../../../../../shared/models";
 import { getDaysAgo, getUserName } from "../../../../../shared/utils";
 import { ChatComponent } from "../ChatComponent";
 import "./index.scss";
 
 interface DiscussionDetailModalProps {
   disscussion: Discussion | null;
-  common: Common;
+  onOpenJoinModal: () => void;
 }
 
-export default function DiscussionDetailModal({ disscussion, common }: DiscussionDetailModalProps) {
+export default function DiscussionDetailModal({ disscussion, onOpenJoinModal }: DiscussionDetailModalProps) {
   const date = new Date();
   const [imageError, setImageError] = useState(false);
   return !disscussion ? (
@@ -44,7 +44,7 @@ export default function DiscussionDetailModal({ disscussion, common }: Discussio
         </div>
       </div>
       <div className="right-side">
-        <ChatComponent discussionMessage={disscussion.discussionMessage || []} />
+        <ChatComponent discussionMessage={disscussion.discussionMessage || []} onOpenJoinModal={onOpenJoinModal} />
       </div>
     </div>
   );

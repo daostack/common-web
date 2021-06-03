@@ -8,6 +8,7 @@ import { Colors } from "../../../../../shared/constants";
 
 interface ChatComponentInterface {
   discussionMessage: DiscussionMessage[];
+  onOpenJoinModal: () => void;
 }
 
 function groupday(acc: any, currentValue: DiscussionMessage): Messages {
@@ -32,7 +33,7 @@ interface Messages {
   [key: number]: DiscussionMessage[];
 }
 
-export default function ChatComponent({ discussionMessage }: ChatComponentInterface) {
+export default function ChatComponent({ discussionMessage, onOpenJoinModal }: ChatComponentInterface) {
   const messages = discussionMessage.reduce(groupday, {});
 
   const dateList = Object.keys(messages);
@@ -57,6 +58,9 @@ export default function ChatComponent({ discussionMessage }: ChatComponentInterf
       <div className="bottom-chat-wrapper">
         <div className="text">Download the Common app to join the discussion</div>
         <div className="button-wrapper">
+          <button className="button-blue join-the-effort-btn" onClick={onOpenJoinModal}>
+            Join the effort
+          </button>
           <Share type="popup" color={Colors.lightPurple} />
         </div>
       </div>

@@ -138,10 +138,6 @@ export default function CommonDetail() {
     dispatch(clearCurrentProposal());
   }, [onClose, dispatch]);
 
-  const closeJoinModalHandler = useCallback(() => {
-    onCloseJoinModal();
-  }, [onCloseJoinModal]);
-
   const clickPreviewDisscusionHandler = useCallback(
     (id: string) => {
       changeTabHandler("discussions");
@@ -163,6 +159,18 @@ export default function CommonDetail() {
     },
     [proposals, changeTabHandler, getProposalDetail],
   );
+
+  const openJoinModal = useCallback(() => {
+    onClose();
+    setTimeout(onOpenJoinModal, 0);
+  }, [onOpenJoinModal, onClose]);
+
+  const closeJoinModal = useCallback(() => {
+    onCloseJoinModal();
+    if (currentDisscussion || currentProposal) {
+      setTimeout(onOpen, 0);
+    }
+  }, [onOpen, currentProposal, currentDisscussion, onCloseJoinModal]);
 
   const renderSidebarContent = () => {
     if (!common) return null;
@@ -229,10 +237,10 @@ export default function CommonDetail() {
           closeColor={screenSize === ScreenSize.Mobile ? Colors.white : Colors.gray}
         >
           {screenSize === ScreenSize.Desktop && tab === "discussions" && (
-            <DiscussionDetailModal disscussion={currentDisscussion} common={common} />
+            <DiscussionDetailModal disscussion={currentDisscussion} onOpenJoinModal={openJoinModal} />
           )}
           {screenSize === ScreenSize.Desktop && (tab === "proposals" || tab === "history") && (
-            <ProposalDetailModal proposal={currentProposal} common={common} />
+            <ProposalDetailModal proposal={currentProposal} onOpenJoinModal={openJoinModal} />
           )}
           {screenSize === ScreenSize.Mobile && (
             <div className="get-common-app-wrapper">
@@ -242,7 +250,7 @@ export default function CommonDetail() {
             </div>
           )}
         </Modal>
-        <Modal isShowing={showJoinModal} onClose={closeJoinModalHandler} closeColor={Colors.white}>
+        <Modal isShowing={showJoinModal} onClose={closeJoinModal} closeColor={Colors.white}>
           <JoinTheEffortModal />
         </Modal>
         <div className="common-detail-wrapper">
