@@ -61,7 +61,9 @@ export const updatePayoutStatusCommand = async (payoutId: string): Promise<Payou
   } else {
     logger.debug('Payout is still pending. Creating new update status job');
 
-    worker.addPayoutJob('update', payoutId);
+    worker.addPayoutJob('update', payoutId, {
+      delay: 1000 * 60 * 60
+    });
   }
 
   return payout;

@@ -1,5 +1,7 @@
 import { Payout, PayoutApproverResponse, PayoutStatus, EventType } from '@prisma/client';
 
+import { worker } from '@common/queues';
+
 import { NotFoundError, CommonError } from '@errors';
 import { eventService } from '@services';
 import { circleClient } from '@clients';
@@ -65,7 +67,9 @@ export const executePayoutCommand = async (payoutId: string): Promise<Payout> =>
       }
     });
 
-  // @todo Schedule cron job to check for payout details update
+  // Schedule cron job to check for payout details update
+  worker.addPayoutJob('update', payoutId);
+
   // Create event
   eventService.create({
     type: EventType.PayoutExecuted,
