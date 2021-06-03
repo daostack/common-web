@@ -45,7 +45,7 @@ const emailStubs = {
 };
 
 export const adminJoinedButPaymentFailed = {
-  subject: `${testFlag()} Payment could not be processed`,
+  subject: `${testFlag()}Payment could not be processed`,
   emailStubs,
   template
 };

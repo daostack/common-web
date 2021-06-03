@@ -61,7 +61,7 @@ const emailStubs = {
 };
 
 export const approvePayout = {
-  subject: `${testFlag()} Approve payout`,
+  subject: `${testFlag()}Approve payout`,
   emailStubs,
   template
 };

@@ -42,7 +42,7 @@ const emailStubs = {
 };
 
 export const userFundingRequestAcceptedUnknown = {
-  subject: `${testFlag()} Proposal approved - Missing information`,
+  subject: `${testFlag()}Proposal approved - Missing information`,
   emailStubs,
   template
 };

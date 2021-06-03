@@ -62,7 +62,7 @@ const emailStubs = {
 };
 
 export const adminFundingRequestAccepted = {
-  subject: `${testFlag()} Funding proposal was approved`,
+  subject: `${testFlag()}Funding proposal was approved`,
   emailStubs,
   template
 };

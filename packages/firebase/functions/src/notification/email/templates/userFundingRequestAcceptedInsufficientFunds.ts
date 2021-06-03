@@ -30,7 +30,7 @@ const template = `
 `;
 
 export const userFundingRequestAcceptedInsufficientFunds: IEmailTemplate = {
-  subject: `${testFlag()} Your proposal was canceled due to insufficient funds`,
+  subject: `${testFlag()}Your proposal was canceled due to insufficient funds`,
   template: template,
   emailStubs: {
     firstName: {

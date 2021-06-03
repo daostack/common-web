@@ -63,7 +63,7 @@ const emailStubs = {
 };
 
 export const userFundingRequestAcceptedIsraeli = {
-  subject: `${testFlag()} ההצעה שלך ב- Common אושרה!`,
+  subject: `${testFlag()}ההצעה שלך ב- Common אושרה!`,
   emailStubs,
   template
 };
