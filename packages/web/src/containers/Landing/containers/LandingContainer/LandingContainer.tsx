@@ -35,7 +35,7 @@ const LandingContainer = () => {
         </div>
         <img src="assets/images/wave-top.svg" alt="wave" className="wave-top" />
       </section>
-      <section>
+      <section id="about_section">
         <h1>What is Common?</h1>
         <p>
           Common enables large groups of people to collaborate on shared <br /> agendas by pooling funds and

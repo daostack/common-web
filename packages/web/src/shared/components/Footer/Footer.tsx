@@ -10,7 +10,7 @@ const Footer = () => {
       <div className="footer-top">
         <img src="/icons/logo-all-white.svg" alt="logo" className="logo" />
         <div className="links">
-          <span>About</span>
+          <a href="/#about_section">About</a>
           <Link to={ROUTE_PATHS.COMMON_LIST}>Explore Commons</Link>
           <a href={COMMON_APP_APP_STORE_LINK} target="_blank" rel="noopener noreferrer">
             Download IOS
@@ -18,8 +18,12 @@ const Footer = () => {
           <a href={COMMON_APP_GOOGLE_PLAY_LINK} target="_blank" rel="noopener noreferrer">
             Download Android
           </a>
-          <span>Terms of Use</span>
-          <span>Privacy Policy</span>
+          <a href={require("../../assets/terms_and_conditions.pdf")} target="_blank" rel="noopener noreferrer">
+            Terms of Use
+          </a>
+          <a href={require("../../assets/privacy_policy.pdf")} target="_blank" rel="noopener noreferrer">
+            Privacy Policy
+          </a>
           <a href="mailto://support@common.io">Contact</a>
         </div>
       </div>
