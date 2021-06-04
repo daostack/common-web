@@ -1,4 +1,5 @@
 import React from 'react';
+import Head from 'next/head';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 
@@ -107,10 +108,13 @@ const ApprovePayoutPage: NextPage = () => {
   return (
     <div
       style={{
-        position: 'absolute',
         width: '100%'
       }}
     >
+      <Head>
+        <title>Approve payout</title>
+      </Head>
+
       {/* --- Header --- */}
       <React.Fragment>
         <Text h1 style={{ display: 'flex', alignItems: 'center' }}>Approve Payout</Text>
@@ -170,23 +174,25 @@ const ApprovePayoutPage: NextPage = () => {
         </Button>
       </div>
 
-      {/*<div*/}
-      {/*  style={{*/}
-      {/*    width: '100vw',*/}
-      {/*  }}*/}
-      {/*>*/}
-      {/*  <img*/}
-      {/*    src="/assets/img/approve.png"*/}
-      {/*    alt="Approve"*/}
-      {/*    style={{*/}
-      {/*      maxHeight: '40vh',*/}
-      {/*      display: 'block',*/}
-      {/*      position: 'relative',*/}
-      {/*      bottom: 0,*/}
-      {/*      right: 0*/}
-      {/*    }}*/}
-      {/*  />*/}
-      {/*</div>*/}
+
+      <div
+        style={{
+          display: 'relative'
+        }}
+      >
+        <img
+          src="/assets/img/approve.png"
+          alt="Approve"
+          style={{
+            height: '50vh',
+            maxHeight: '400px',
+            display: 'block',
+            position: 'absolute',
+            bottom: 0,
+            right: -150
+          }}
+        />
+      </div>
     </div>
   );
 };
