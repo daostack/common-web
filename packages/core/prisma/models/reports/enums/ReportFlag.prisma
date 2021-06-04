@@ -1,4 +1,4 @@
-enum DiscussionMessageFlag {
+enum ReportFlag {
   Clear
   Reported
   Hidden

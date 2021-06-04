@@ -516,6 +516,14 @@ input CreatePayoutInput {
   wireId: ID!
 }
 
+input CreateReportInput {
+  for: ReportFor!
+  messageId: UUID
+  note: String!
+  proposalId: UUID
+  type: ReportType!
+}
+
 input CreateRoleInput {
   description: String!
   displayName: String!
@@ -609,7 +617,7 @@ type Discussion implements BaseEntity {
 type DiscussionMessage implements BaseEntity {
   """The date, at which the item was created"""
   createdAt: DateTime!
-  flag: DiscussionMessageFlag!
+  flag: ReportFlag!
 
   """The main identifier of the item"""
   id: UUID!
@@ -621,12 +629,6 @@ type DiscussionMessage implements BaseEntity {
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
   userId: String!
-}
-
-enum DiscussionMessageFlag {
-  Clear
-  Hidden
-  Reported
 }
 
 enum DiscussionMessageType {
@@ -854,6 +856,7 @@ type Mutation {
   createNotificationEventSettings(input: CreateNotificationEventSettingsInput!): NotificationEventSettings
   createNotificationTemplate(input: CreateNotificationTemplateInput!): NotificationTemplate
   createPayout(input: CreatePayoutInput!): Payout
+  createReport(input: CreateReportInput!): Report!
   createRole(input: CreateRoleInput!): Role
 
   """Creates new user in the settings"""
@@ -865,7 +868,6 @@ type Mutation {
   createWireBankAccount(input: CreateWireBankAccountInput!): WireBankAccount
   delistCommon(commonId: String!): Boolean
   finalizeProposal(proposalId: ID!): Boolean!
-  reportDiscussionMessage(input: ReportDiscussionMessageInput!): Report!
   unassignRole(roleId: ID!, userId: ID!): Void
   updateCommon(input: UpdateCommonInput!): Common
   updateNotificationSettings(input: UpdateNotificationSettingsInput!): NotificationSystemSettings
@@ -1190,6 +1192,7 @@ type Proposal {
   discussions(skip: Int, take: Int): [Discussion!]!
   expiresAt: DateTime!
   files: JSON
+  flag: ReportFlag!
   funding: FundingProposal
   fundingId: UUID
 
@@ -1317,6 +1320,9 @@ type Report implements BaseEntity {
   """The current status of the report"""
   status: ReportStatus!
 
+  """The type of the report"""
+  type: ReportType!
+
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
 }
@@ -1331,10 +1337,10 @@ enum ReportAuditor {
   SystemAdmin
 }
 
-input ReportDiscussionMessageInput {
-  for: ReportFor!
-  messageId: UUID!
-  note: String!
+enum ReportFlag {
+  Clear
+  Hidden
+  Reported
 }
 
 enum ReportFor {
@@ -1355,6 +1361,11 @@ enum ReportStatus {
 input ReportStatusFilterInput {
   in: [ReportStatus]
   not: [ReportStatus]
+}
+
+enum ReportType {
+  MessageReport
+  ProposalReport
 }
 
 input ReportWhereInput {

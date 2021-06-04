@@ -185,19 +185,13 @@ enum DiscussionType {
   CommonDiscussion
 }
 
-enum DiscussionMessageFlag {
-  Clear
-  Reported
-  Hidden
-}
-
 model DiscussionMessage {
   id String @id @default(uuid())
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  flag DiscussionMessageFlag @default(Clear)
+  flag ReportFlag @default(Clear)
 
   type    DiscussionMessageType @default(Message)
   message String
@@ -1098,6 +1092,8 @@ model Proposal {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  flag ReportFlag @default(Clear)
+
   expiresAt DateTime
 
   title       String?
@@ -1109,7 +1105,8 @@ model Proposal {
 
   ipAddress String?
 
-  votes Vote[]
+  votes  Vote[]
+  report Report[]
 
   type  ProposalType
   state ProposalState @default(Countdown)
@@ -1158,6 +1155,11 @@ model JoinProposal {
   subscriptionId String?
 }
 
+enum ReportType {
+  ProposalReport
+  MessageReport
+}
+
 enum ReportStatus {
   Active
   Clossed
@@ -1184,6 +1186,12 @@ enum ReportAuditor {
   SystemAdmin
 }
 
+enum ReportFlag {
+  Clear
+  Reported
+  Hidden
+}
+
 model Report {
   id String @id @default(uuid())
 
@@ -1191,6 +1199,7 @@ model Report {
   updatedAt DateTime @updatedAt
 
   status ReportStatus @default(Active)
+  type   ReportType
 
   for  ReportFor
   note String
@@ -1199,7 +1208,9 @@ model Report {
 
   reporter User @relation(name: "CreatedReports", fields: [reporterId], references: [id])
 
-  message         DiscussionMessage @relation(fields: [messageId], references: [id])
+  message  DiscussionMessage? @relation(fields: [messageId], references: [id])
+  proposal Proposal?          @relation(fields: [proposalId], references: [id])
+
   reviewAuthority ReportAuditor?
 
   action ReportAction?
@@ -1208,7 +1219,9 @@ model Report {
 
   reviewedBy User? @relation(name: "ReviewedReports", fields: [reviewerId], references: [id])
 
-  messageId  String
+  messageId  String?
+  proposalId String?
+
   reporterId String
   reviewerId String?
   commonId   String

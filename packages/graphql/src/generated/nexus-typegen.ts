@@ -4,11 +4,10 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
-import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
+import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -155,6 +154,13 @@ export interface NexusGenInputs {
     description?: string | null; // String
     proposalIds: string[]; // [ID!]!
     wireId: string; // ID!
+  }
+  CreateReportInput: { // input type
+    for: NexusGenEnums['ReportFor']; // ReportFor!
+    messageId?: NexusGenScalars['UUID'] | null; // UUID
+    note: string; // String!
+    proposalId?: NexusGenScalars['UUID'] | null; // UUID
+    type: NexusGenEnums['ReportType']; // ReportType!
   }
   CreateRoleInput: { // input type
     description: string; // String!
@@ -309,11 +315,6 @@ export interface NexusGenInputs {
   ProposalWhereUniqueInput: { // input type
     id: NexusGenScalars['UUID']; // UUID!
   }
-  ReportDiscussionMessageInput: { // input type
-    for: NexusGenEnums['ReportFor']; // ReportFor!
-    messageId: NexusGenScalars['UUID']; // UUID!
-    note: string; // String!
-  }
   ReportStatusFilterInput: { // input type
     in?: Array<NexusGenEnums['ReportStatus'] | null> | null; // [ReportStatus]
     not?: Array<NexusGenEnums['ReportStatus'] | null> | null; // [ReportStatus]
@@ -393,12 +394,11 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
   CommonMemberRole: "Founder" | "Moderator"
   Country: "AD" | "AE" | "AF" | "AG" | "AI" | "AL" | "AM" | "AO" | "AQ" | "AR" | "AS" | "AT" | "AU" | "AW" | "AX" | "AZ" | "BA" | "BB" | "BD" | "BE" | "BF" | "BG" | "BH" | "BI" | "BJ" | "BL" | "BM" | "BN" | "BO" | "BQ" | "BR" | "BS" | "BT" | "BV" | "BW" | "BY" | "BZ" | "CA" | "CC" | "CD" | "CF" | "CG" | "CH" | "CI" | "CK" | "CL" | "CM" | "CN" | "CO" | "CR" | "CU" | "CV" | "CW" | "CX" | "CY" | "CZ" | "DE" | "DJ" | "DK" | "DM" | "DO" | "DZ" | "EC" | "EE" | "EG" | "EH" | "ER" | "ES" | "ET" | "FI" | "FJ" | "FK" | "FM" | "FO" | "FR" | "GA" | "GB" | "GD" | "GE" | "GF" | "GG" | "GH" | "GI" | "GL" | "GM" | "GN" | "GP" | "GQ" | "GR" | "GS" | "GT" | "GU" | "GW" | "GY" | "HK" | "HM" | "HN" | "HR" | "HT" | "HU" | "ID" | "IE" | "IL" | "IM" | "IN" | "IO" | "IQ" | "IR" | "IS" | "IT" | "JE" | "JM" | "JO" | "JP" | "KE" | "KG" | "KH" | "KI" | "KM" | "KN" | "KP" | "KR" | "KW" | "KY" | "KZ" | "LA" | "LB" | "LC" | "LI" | "LK" | "LR" | "LS" | "LT" | "LU" | "LV" | "LY" | "MA" | "MC" | "MD" | "ME" | "MF" | "MG" | "MH" | "MK" | "ML" | "MM" | "MN" | "MO" | "MP" | "MQ" | "MR" | "MS" | "MT" | "MU" | "MV" | "MW" | "MX" | "MY" | "MZ" | "NA" | "NC" | "NE" | "NF" | "NG" | "NI" | "NL" | "NO" | "NP" | "NR" | "NU" | "NZ" | "OM" | "PA" | "PE" | "PF" | "PG" | "PH" | "PK" | "PL" | "PM" | "PN" | "PR" | "PS" | "PT" | "PW" | "PY" | "QA" | "RE" | "RO" | "RS" | "RU" | "RW" | "SA" | "SB" | "SC" | "SD" | "SE" | "SG" | "SH" | "SI" | "SJ" | "SK" | "SL" | "SM" | "SN" | "SO" | "SR" | "SS" | "ST" | "SV" | "SX" | "SY" | "SZ" | "TC" | "TD" | "TF" | "TG" | "TH" | "TJ" | "TK" | "TL" | "TM" | "TN" | "TO" | "TR" | "TT" | "TV" | "TW" | "TZ" | "UA" | "UG" | "UM" | "US" | "UY" | "UZ" | "Unknown" | "VA" | "VC" | "VE" | "VG" | "VI" | "VN" | "VU" | "WF" | "WS" | "YE" | "YT" | "ZA" | "ZM" | "ZW"
-  DiscussionMessageFlag: "Clear" | "Hidden" | "Reported"
   DiscussionMessageType: "Message"
   DiscussionSubscriptionType: "AllNotifications" | "NoNotification" | "OnlyMentions"
-  DiscussionType: 'CommonDiscussion' | 'ProposalDiscussion'
-  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonDelisted' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'CommonUpdated' | 'CommonWhitelisted' | 'DiscussionCreated' | 'DiscussionMessageCreated' | 'DiscussionSubscriptionCreated' | 'DiscussionSubscriptionTypeChanged' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'NotificationTemplateCreated' | 'NotificationTemplateUpdated' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'PayoutApprovalGiven' | 'PayoutApproved' | 'PayoutApproverCreated' | 'PayoutCompleted' | 'PayoutCreated' | 'PayoutExecuted' | 'PayoutRejected' | 'PayoutRejectionGiven' | 'ProposalExpired' | 'ProposalMajorityReached' | 'ReportCreated' | 'ReportDismissed' | 'ReportRespected' | 'RoleCreated' | 'RoleDeleted' | 'RolePermissionAdded' | 'RolePermissionRemoved' | 'RoleUpdated' | 'UserAddedToRole' | 'UserCreated' | 'UserNotificationTokenCreated' | 'UserNotificationTokenExpired' | 'UserNotificationTokenRefreshed' | 'UserNotificationTokenVoided' | 'UserRemovedFromRole' | 'UserUpdated' | 'VoteCreated' | 'WireCreated' | 'WireUpdated'
-  FundingState: 'Eligible' | 'NotEligible' | 'Redeemed'
+  DiscussionType: "CommonDiscussion" | "ProposalDiscussion"
+  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonDelisted" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "CommonUpdated" | "CommonWhitelisted" | "DiscussionCreated" | "DiscussionMessageCreated" | "DiscussionSubscriptionCreated" | "DiscussionSubscriptionTypeChanged" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "NotificationTemplateCreated" | "NotificationTemplateUpdated" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "PayoutApprovalGiven" | "PayoutApproved" | "PayoutApproverCreated" | "PayoutCompleted" | "PayoutCreated" | "PayoutExecuted" | "PayoutRejected" | "PayoutRejectionGiven" | "ProposalExpired" | "ProposalMajorityReached" | "ReportCreated" | "ReportDismissed" | "ReportRespected" | "RoleCreated" | "RoleDeleted" | "RolePermissionAdded" | "RolePermissionRemoved" | "RoleUpdated" | "UserAddedToRole" | "UserCreated" | "UserNotificationTokenCreated" | "UserNotificationTokenExpired" | "UserNotificationTokenRefreshed" | "UserNotificationTokenVoided" | "UserRemovedFromRole" | "UserUpdated" | "VoteCreated" | "WireCreated" | "WireUpdated"
+  FundingState: "Eligible" | "NotEligible" | "Redeemed"
   FundingType: "Monthly" | "OneTime"
   NotificationLanguage: "BG" | "EN" | "HE" | "JP" | "KO" | "RU"
   NotificationSeenStatus: "Done" | "NotSeen" | "Seen"
@@ -414,8 +414,10 @@ export interface NexusGenEnums {
   ProposalType: "FundingRequest" | "JoinRequest"
   ReportAction: "Dismissed" | "Respected"
   ReportAuditor: "CommonModerator" | "SystemAdmin"
+  ReportFlag: "Clear" | "Hidden" | "Reported"
   ReportFor: "FalseNews" | "Harassment" | "Hate" | "Nudity" | "Other" | "Spam" | "Violance"
   ReportStatus: "Active" | "Clossed"
+  ReportType: "MessageReport" | "ProposalReport"
   SortOrder: "asc" | "desc"
   StatisticType: "AllTime" | "Daily" | "Hourly" | "Weekly"
   SubscriptionPaymentStatus: "AwaitingInitialPayment" | "Pending" | "Successful" | "Unsuccessful"
@@ -496,7 +498,7 @@ export interface NexusGenObjects {
   }
   DiscussionMessage: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    flag: NexusGenEnums['DiscussionMessageFlag']; // DiscussionMessageFlag!
+    flag: NexusGenEnums['ReportFlag']; // ReportFlag!
     id: NexusGenScalars['UUID']; // UUID!
     message: string; // String!
     type: NexusGenEnums['DiscussionMessageType']; // DiscussionMessageType!
@@ -626,6 +628,7 @@ export interface NexusGenObjects {
     description?: string | null; // String
     expiresAt: NexusGenScalars['DateTime']; // DateTime!
     files?: NexusGenScalars['JSON'] | null; // JSON
+    flag: NexusGenEnums['ReportFlag']; // ReportFlag!
     fundingId?: NexusGenScalars['UUID'] | null; // UUID
     id: string; // ID!
     images?: NexusGenScalars['JSON'] | null; // JSON
@@ -650,6 +653,7 @@ export interface NexusGenObjects {
     reporterId: string; // ID!
     reviewedOn?: NexusGenScalars['DateTime'] | null; // DateTime
     status: NexusGenEnums['ReportStatus']; // ReportStatus!
+    type: NexusGenEnums['ReportType']; // ReportType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Role: { // root type
@@ -823,7 +827,7 @@ export interface NexusGenFieldTypes {
   }
   DiscussionMessage: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    flag: NexusGenEnums['DiscussionMessageFlag']; // DiscussionMessageFlag!
+    flag: NexusGenEnums['ReportFlag']; // ReportFlag!
     id: NexusGenScalars['UUID']; // UUID!
     message: string; // String!
     owner: NexusGenRootTypes['User']; // User!
@@ -884,6 +888,7 @@ export interface NexusGenFieldTypes {
     createNotificationEventSettings: NexusGenRootTypes['NotificationEventSettings'] | null; // NotificationEventSettings
     createNotificationTemplate: NexusGenRootTypes['NotificationTemplate'] | null; // NotificationTemplate
     createPayout: NexusGenRootTypes['Payout'] | null; // Payout
+    createReport: NexusGenRootTypes['Report']; // Report!
     createRole: NexusGenRootTypes['Role'] | null; // Role
     createUser: NexusGenRootTypes['User']; // User!
     createUserBillingDetails: NexusGenRootTypes['UserBillingDetails'] | null; // UserBillingDetails
@@ -893,7 +898,6 @@ export interface NexusGenFieldTypes {
     createWireBankAccount: NexusGenRootTypes['WireBankAccount'] | null; // WireBankAccount
     delistCommon: boolean | null; // Boolean
     finalizeProposal: boolean; // Boolean!
-    reportDiscussionMessage: NexusGenRootTypes['Report']; // Report!
     unassignRole: NexusGenScalars['Void'] | null; // Void
     updateCommon: NexusGenRootTypes['Common'] | null; // Common
     updateNotificationSettings: NexusGenRootTypes['NotificationSystemSettings'] | null; // NotificationSystemSettings
@@ -1005,6 +1009,7 @@ export interface NexusGenFieldTypes {
     discussions: NexusGenRootTypes['Discussion'][]; // [Discussion!]!
     expiresAt: NexusGenScalars['DateTime']; // DateTime!
     files: NexusGenScalars['JSON'] | null; // JSON
+    flag: NexusGenEnums['ReportFlag']; // ReportFlag!
     funding: NexusGenRootTypes['FundingProposal'] | null; // FundingProposal
     fundingId: NexusGenScalars['UUID'] | null; // UUID
     id: string; // ID!
@@ -1062,6 +1067,7 @@ export interface NexusGenFieldTypes {
     reporterId: string; // ID!
     reviewedOn: NexusGenScalars['DateTime'] | null; // DateTime
     status: NexusGenEnums['ReportStatus']; // ReportStatus!
+    type: NexusGenEnums['ReportType']; // ReportType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Role: { // field return type
@@ -1256,7 +1262,7 @@ export interface NexusGenFieldTypeNames {
   }
   DiscussionMessage: { // field return type name
     createdAt: 'DateTime'
-    flag: 'DiscussionMessageFlag'
+    flag: 'ReportFlag'
     id: 'UUID'
     message: 'String'
     owner: 'User'
@@ -1317,6 +1323,7 @@ export interface NexusGenFieldTypeNames {
     createNotificationEventSettings: 'NotificationEventSettings'
     createNotificationTemplate: 'NotificationTemplate'
     createPayout: 'Payout'
+    createReport: 'Report'
     createRole: 'Role'
     createUser: 'User'
     createUserBillingDetails: 'UserBillingDetails'
@@ -1326,7 +1333,6 @@ export interface NexusGenFieldTypeNames {
     createWireBankAccount: 'WireBankAccount'
     delistCommon: 'Boolean'
     finalizeProposal: 'Boolean'
-    reportDiscussionMessage: 'Report'
     unassignRole: 'Void'
     updateCommon: 'Common'
     updateNotificationSettings: 'NotificationSystemSettings'
@@ -1438,6 +1444,7 @@ export interface NexusGenFieldTypeNames {
     discussions: 'Discussion'
     expiresAt: 'DateTime'
     files: 'JSON'
+    flag: 'ReportFlag'
     funding: 'FundingProposal'
     fundingId: 'UUID'
     id: 'ID'
@@ -1495,6 +1502,7 @@ export interface NexusGenFieldTypeNames {
     reporterId: 'ID'
     reviewedOn: 'DateTime'
     status: 'ReportStatus'
+    type: 'ReportType'
     updatedAt: 'DateTime'
   }
   Role: { // field return type name
@@ -1693,6 +1701,9 @@ export interface NexusGenArgTypes {
     createPayout: { // args
       input: NexusGenInputs['CreatePayoutInput']; // CreatePayoutInput!
     }
+    createReport: { // args
+      input: NexusGenInputs['CreateReportInput']; // CreateReportInput!
+    }
     createRole: { // args
       input: NexusGenInputs['CreateRoleInput']; // CreateRoleInput!
     }
@@ -1719,9 +1730,6 @@ export interface NexusGenArgTypes {
     }
     finalizeProposal: { // args
       proposalId: string; // ID!
-    }
-    reportDiscussionMessage: { // args
-      input: NexusGenInputs['ReportDiscussionMessageInput']; // ReportDiscussionMessageInput!
     }
     unassignRole: { // args
       roleId: string; // ID!

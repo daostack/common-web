@@ -24,6 +24,10 @@ export const ProposalType = objectType({
       type: 'ProposalState'
     });
 
+    t.nonNull.field('flag', {
+      type: 'ReportFlag'
+    });
+
     t.json('links');
     t.json('files');
     t.json('images');

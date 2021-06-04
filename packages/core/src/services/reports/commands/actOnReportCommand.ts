@@ -1,10 +1,11 @@
 import * as z from 'zod';
-import { ReportAction, ReportStatus, DiscussionMessageFlag, EventType, Report } from '@prisma/client';
+import { ReportAction, ReportStatus, ReportFlag, EventType, Report } from '@prisma/client';
 
 import { logger } from '@logger';
 import { prisma } from '@toolkits';
 import { eventService } from '@services';
 import { getUserReportActingAuthority } from '../queries/getUserReportActingAuthority';
+import { NotFoundError } from '@errors';
 
 const schema = z.object({
   reportId: z.string()
@@ -31,14 +32,19 @@ export const actOnReportCommand = async (payload: z.infer<typeof schema>): Promi
       },
       select: {
         commonId: true,
-        messageId: true
+        messageId: true,
+        proposalId: true
       }
     });
 
   logger.debug('Acting on report with {authority} authority', authority);
 
+  if (!reportWithDiscussionAndCommonIds) {
+    throw new NotFoundError('actOnReport.report.id', payload.reportId);
+  }
+
   // Update the message and report accordingly
-  const [report, message] = await prisma.$transaction([
+  const [report, item] = await prisma.$transaction([
     prisma.report.update({
       where: {
         id: payload.reportId
@@ -52,17 +58,29 @@ export const actOnReportCommand = async (payload: z.infer<typeof schema>): Promi
         action: payload.action
       }
     }),
-    prisma.discussionMessage
-      .update({
-        where: {
-          id: reportWithDiscussionAndCommonIds!.messageId
-        },
-        data: {
-          flag: payload.action === ReportAction.Respected
-            ? DiscussionMessageFlag.Hidden
-            : DiscussionMessageFlag.Clear
-        }
-      })
+    reportWithDiscussionAndCommonIds.messageId
+      ? prisma.discussionMessage
+        .update({
+          where: {
+            id: reportWithDiscussionAndCommonIds.messageId!
+          },
+          data: {
+            flag: payload.action === ReportAction.Respected
+              ? ReportFlag.Hidden
+              : ReportFlag.Clear
+          }
+        })
+      : prisma.proposal
+        .update({
+          where: {
+            id: reportWithDiscussionAndCommonIds.proposalId!
+          },
+          data: {
+            flag: payload.action === ReportAction.Respected
+              ? ReportFlag.Hidden
+              : ReportFlag.Clear
+          }
+        })
   ]);
 
   logger.debug('Successfully acted on report');
@@ -75,7 +93,7 @@ export const actOnReportCommand = async (payload: z.infer<typeof schema>): Promi
     commonId: reportWithDiscussionAndCommonIds!.commonId,
     payload: {
       reportId: report.id,
-      messageId: message.id,
+      itemId: item.id,
       actionTaken: payload.action,
       authority
     }
