@@ -101,6 +101,14 @@ export const createPayoutCommand = async (command: z.infer<typeof schema>): Prom
         description: command.description || `Payout for $${amount / 100}`,
 
 
+        proposals: {
+          connect: command.proposalIds
+            .map((pid) => ({
+                id: pid
+              })
+            )
+        },
+
         wire: {
           connect: {
             id: command.wireId
