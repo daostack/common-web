@@ -4,10 +4,11 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -280,6 +281,7 @@ export interface NexusGenInputs {
   }
   PayoutWhereInput: { // input type
     approvers?: NexusGenInputs['PayoutApproverFilter'] | null; // PayoutApproverFilter
+    isPendingApprover?: boolean | null; // Boolean
     status?: NexusGenInputs['PayoutStatusFilter'] | null; // PayoutStatusFilter
   }
   ProposalFileInput: { // input type
@@ -394,9 +396,9 @@ export interface NexusGenEnums {
   DiscussionMessageFlag: "Clear" | "Hidden" | "Reported"
   DiscussionMessageType: "Message"
   DiscussionSubscriptionType: "AllNotifications" | "NoNotification" | "OnlyMentions"
-  DiscussionType: "CommonDiscussion" | "ProposalDiscussion"
-  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonDelisted" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "CommonUpdated" | "CommonWhitelisted" | "DiscussionCreated" | "DiscussionMessageCreated" | "DiscussionSubscriptionCreated" | "DiscussionSubscriptionTypeChanged" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "NotificationTemplateCreated" | "NotificationTemplateUpdated" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "PayoutApprovalGiven" | "PayoutApproved" | "PayoutCompleted" | "PayoutCreated" | "PayoutExecuted" | "PayoutRejected" | "PayoutRejectionGiven" | "ProposalExpired" | "ProposalMajorityReached" | "ReportCreated" | "ReportDismissed" | "ReportRespected" | "RoleCreated" | "RoleDeleted" | "RolePermissionAdded" | "RolePermissionRemoved" | "RoleUpdated" | "UserAddedToRole" | "UserCreated" | "UserNotificationTokenCreated" | "UserNotificationTokenExpired" | "UserNotificationTokenRefreshed" | "UserNotificationTokenVoided" | "UserRemovedFromRole" | "UserUpdated" | "VoteCreated" | "WireCreated" | "WireUpdated"
-  FundingState: "Eligible" | "NotEligible" | "Redeemed"
+  DiscussionType: 'CommonDiscussion' | 'ProposalDiscussion'
+  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonCreated' | 'CommonDelisted' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'CommonUpdated' | 'CommonWhitelisted' | 'DiscussionCreated' | 'DiscussionMessageCreated' | 'DiscussionSubscriptionCreated' | 'DiscussionSubscriptionTypeChanged' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'NotificationTemplateCreated' | 'NotificationTemplateUpdated' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'PayoutApprovalGiven' | 'PayoutApproved' | 'PayoutApproverCreated' | 'PayoutCompleted' | 'PayoutCreated' | 'PayoutExecuted' | 'PayoutRejected' | 'PayoutRejectionGiven' | 'ProposalExpired' | 'ProposalMajorityReached' | 'ReportCreated' | 'ReportDismissed' | 'ReportRespected' | 'RoleCreated' | 'RoleDeleted' | 'RolePermissionAdded' | 'RolePermissionRemoved' | 'RoleUpdated' | 'UserAddedToRole' | 'UserCreated' | 'UserNotificationTokenCreated' | 'UserNotificationTokenExpired' | 'UserNotificationTokenRefreshed' | 'UserNotificationTokenVoided' | 'UserRemovedFromRole' | 'UserUpdated' | 'VoteCreated' | 'WireCreated' | 'WireUpdated'
+  FundingState: 'Eligible' | 'NotEligible' | 'Redeemed'
   FundingType: "Monthly" | "OneTime"
   NotificationLanguage: "BG" | "EN" | "HE" | "JP" | "KO" | "RU"
   NotificationSeenStatus: "Done" | "NotSeen" | "Seen"
@@ -985,6 +987,7 @@ export interface NexusGenFieldTypes {
     proposals: NexusGenRootTypes['Proposal'][]; // [Proposal!]!
     status: NexusGenEnums['PayoutStatus']; // PayoutStatus!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    wire: NexusGenRootTypes['Wire']; // Wire!
   }
   PayoutApprover: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -1417,6 +1420,7 @@ export interface NexusGenFieldTypeNames {
     proposals: 'Proposal'
     status: 'PayoutStatus'
     updatedAt: 'DateTime'
+    wire: 'Wire'
   }
   PayoutApprover: { // field return type name
     createdAt: 'DateTime'

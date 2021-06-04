@@ -305,6 +305,7 @@ export enum EventType {
   WireCreated = 'WireCreated',
   WireUpdated = 'WireUpdated',
   PayoutCreated = 'PayoutCreated',
+  PayoutApproverCreated = 'PayoutApproverCreated',
   PayoutApprovalGiven = 'PayoutApprovalGiven',
   PayoutRejectionGiven = 'PayoutRejectionGiven',
   PayoutApproved = 'PayoutApproved',
@@ -517,6 +518,7 @@ export type Payout = BaseEntity & {
   amount: Scalars['Int'];
   description: Scalars['String'];
   proposals: Array<Proposal>;
+  wire: Wire;
 };
 
 export type PayoutApprover = BaseEntity & {
@@ -567,6 +569,8 @@ export type PayoutStatusFilter = {
 export type PayoutWhereInput = {
   status?: Maybe<PayoutStatusFilter>;
   approvers?: Maybe<PayoutApproverFilter>;
+  /** Find all pending payouts where the currently sign in user has to give approval */
+  isPendingApprover?: Maybe<Scalars['Boolean']>;
 };
 
 export enum PaymentType {
@@ -2101,16 +2105,74 @@ export type GetCommonsHomescreenDataQuery = (
 }
   );
 
-export type GetAllTimeStatistiscQueryVariables = Exact<{ [key: string]: never; }>;
+export type DashboardDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllTimeStatistiscQuery = (
+export type DashboardDataQuery = (
   { __typename?: 'Query' }
   & {
   getStatistics?: Maybe<Array<Maybe<(
     { __typename?: 'Statistic' }
     & Pick<Statistic, 'users' | 'commons' | 'joinProposals' | 'fundingProposals'>
+    )>>>, payouts?: Maybe<Array<Maybe<(
+    { __typename?: 'Payout' }
+    & Pick<Payout, 'id' | 'status' | 'description'>
+    & {
+    proposals: Array<(
+      { __typename?: 'Proposal' }
+      & Pick<Proposal, 'id'>
+      )>
+  }
     )>>>
+}
+  );
+
+export type GetApprovePayoutDataQueryVariables = Exact<{
+  payoutId: Scalars['ID'];
+}>;
+
+
+export type GetApprovePayoutDataQuery = (
+  { __typename?: 'Query' }
+  & {
+  payout?: Maybe<(
+    { __typename?: 'Payout' }
+    & Pick<Payout, 'amount' | 'description'>
+    & {
+    wire: (
+      { __typename?: 'Wire' }
+      & Pick<Wire, 'description'>
+      ), proposals: Array<(
+      { __typename?: 'Proposal' }
+      & Pick<Proposal, 'title' | 'description'>
+      & {
+      user: (
+        { __typename?: 'User' }
+        & Pick<User, 'firstName' | 'lastName'>
+        ), funding?: Maybe<(
+        { __typename?: 'FundingProposal' }
+        & Pick<FundingProposal, 'amount' | 'fundingState'>
+        )>
+    }
+      )>
+  }
+    )>
+}
+  );
+
+export type ApprovePayoutMutationVariables = Exact<{
+  payoutId: Scalars['ID'];
+  outcome: PayoutApproverResponse;
+}>;
+
+
+export type ApprovePayoutMutation = (
+  { __typename?: 'Mutation' }
+  & {
+  approvePayout?: Maybe<(
+    { __typename?: 'PayoutApprover' }
+    & Pick<PayoutApprover, 'id'>
+    )>
 }
   );
 
@@ -2962,41 +3024,136 @@ export function useGetCommonsHomescreenDataLazyQuery(baseOptions?: Apollo.LazyQu
 export type GetCommonsHomescreenDataQueryHookResult = ReturnType<typeof useGetCommonsHomescreenDataQuery>;
 export type GetCommonsHomescreenDataLazyQueryHookResult = ReturnType<typeof useGetCommonsHomescreenDataLazyQuery>;
 export type GetCommonsHomescreenDataQueryResult = Apollo.QueryResult<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>;
-export const GetAllTimeStatistiscDocument = gql`
-  query getAllTimeStatistisc {
+export const DashboardDataDocument = gql`
+  query dashboardData {
     getStatistics(where: {type: AllTime}) {
       users
       commons
       joinProposals
       fundingProposals
     }
+    payouts(where: {isPendingApprover: true}) {
+      id
+      status
+      description
+      proposals {
+        id
+      }
+    }
   }
 `;
 
 /**
- * __useGetAllTimeStatistiscQuery__
+ * __useDashboardDataQuery__
  *
- * To run a query within a React component, call `useGetAllTimeStatistiscQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllTimeStatistiscQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useDashboardDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDashboardDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetAllTimeStatistiscQuery({
+ * const { data, loading, error } = useDashboardDataQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetAllTimeStatistiscQuery(baseOptions?: Apollo.QueryHookOptions<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>) {
-  return Apollo.useQuery<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>(GetAllTimeStatistiscDocument, baseOptions);
+export function useDashboardDataQuery(baseOptions?: Apollo.QueryHookOptions<DashboardDataQuery, DashboardDataQueryVariables>) {
+  return Apollo.useQuery<DashboardDataQuery, DashboardDataQueryVariables>(DashboardDataDocument, baseOptions);
 }
-export function useGetAllTimeStatistiscLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>) {
-  return Apollo.useLazyQuery<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>(GetAllTimeStatistiscDocument, baseOptions);
+
+export function useDashboardDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DashboardDataQuery, DashboardDataQueryVariables>) {
+  return Apollo.useLazyQuery<DashboardDataQuery, DashboardDataQueryVariables>(DashboardDataDocument, baseOptions);
 }
-export type GetAllTimeStatistiscQueryHookResult = ReturnType<typeof useGetAllTimeStatistiscQuery>;
-export type GetAllTimeStatistiscLazyQueryHookResult = ReturnType<typeof useGetAllTimeStatistiscLazyQuery>;
-export type GetAllTimeStatistiscQueryResult = Apollo.QueryResult<GetAllTimeStatistiscQuery, GetAllTimeStatistiscQueryVariables>;
+
+export type DashboardDataQueryHookResult = ReturnType<typeof useDashboardDataQuery>;
+export type DashboardDataLazyQueryHookResult = ReturnType<typeof useDashboardDataLazyQuery>;
+export type DashboardDataQueryResult = Apollo.QueryResult<DashboardDataQuery, DashboardDataQueryVariables>;
+export const GetApprovePayoutDataDocument = gql`
+  query GetApprovePayoutData($payoutId: ID!) {
+    payout(id: $payoutId) {
+      amount
+      description
+      wire {
+        description
+      }
+      proposals {
+        title
+        description
+        user {
+          firstName
+          lastName
+        }
+        funding {
+          amount
+          fundingState
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useGetApprovePayoutDataQuery__
+ *
+ * To run a query within a React component, call `useGetApprovePayoutDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetApprovePayoutDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetApprovePayoutDataQuery({
+ *   variables: {
+ *      payoutId: // value for 'payoutId'
+ *   },
+ * });
+ */
+export function useGetApprovePayoutDataQuery(baseOptions: Apollo.QueryHookOptions<GetApprovePayoutDataQuery, GetApprovePayoutDataQueryVariables>) {
+  return Apollo.useQuery<GetApprovePayoutDataQuery, GetApprovePayoutDataQueryVariables>(GetApprovePayoutDataDocument, baseOptions);
+}
+
+export function useGetApprovePayoutDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetApprovePayoutDataQuery, GetApprovePayoutDataQueryVariables>) {
+  return Apollo.useLazyQuery<GetApprovePayoutDataQuery, GetApprovePayoutDataQueryVariables>(GetApprovePayoutDataDocument, baseOptions);
+}
+
+export type GetApprovePayoutDataQueryHookResult = ReturnType<typeof useGetApprovePayoutDataQuery>;
+export type GetApprovePayoutDataLazyQueryHookResult = ReturnType<typeof useGetApprovePayoutDataLazyQuery>;
+export type GetApprovePayoutDataQueryResult = Apollo.QueryResult<GetApprovePayoutDataQuery, GetApprovePayoutDataQueryVariables>;
+export const ApprovePayoutDocument = gql`
+  mutation ApprovePayout($payoutId: ID!, $outcome: PayoutApproverResponse!) {
+    approvePayout(payoutId: $payoutId, outcome: $outcome) {
+      id
+    }
+  }
+`;
+export type ApprovePayoutMutationFn = Apollo.MutationFunction<ApprovePayoutMutation, ApprovePayoutMutationVariables>;
+
+/**
+ * __useApprovePayoutMutation__
+ *
+ * To run a mutation, you first call `useApprovePayoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useApprovePayoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [approvePayoutMutation, { data, loading, error }] = useApprovePayoutMutation({
+ *   variables: {
+ *      payoutId: // value for 'payoutId'
+ *      outcome: // value for 'outcome'
+ *   },
+ * });
+ */
+export function useApprovePayoutMutation(baseOptions?: Apollo.MutationHookOptions<ApprovePayoutMutation, ApprovePayoutMutationVariables>) {
+  return Apollo.useMutation<ApprovePayoutMutation, ApprovePayoutMutationVariables>(ApprovePayoutDocument, baseOptions);
+}
+
+export type ApprovePayoutMutationHookResult = ReturnType<typeof useApprovePayoutMutation>;
+export type ApprovePayoutMutationResult = Apollo.MutationResult<ApprovePayoutMutation>;
+export type ApprovePayoutMutationOptions = Apollo.BaseMutationOptions<ApprovePayoutMutation, ApprovePayoutMutationVariables>;
 export const GetProposalsSelectedForBatchDocument = gql`
   query getProposalsSelectedForBatch($where: ProposalWhereInput!) {
     proposals(where: $where) {

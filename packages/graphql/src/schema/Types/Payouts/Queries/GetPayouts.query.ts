@@ -1,4 +1,7 @@
+import { PayoutStatus } from '@prisma/client';
 import { queryField, list, arg } from 'nexus';
+
+
 import { authorizationService, prisma } from '@common/core';
 
 export const GetPayoutsQuery = queryField('payouts', {
@@ -18,11 +21,25 @@ export const GetPayoutsQuery = queryField('payouts', {
   authorize: async (root, args, ctx) => {
     return authorizationService.can(await ctx.getUserId(), 'admin.financials.payouts.read');
   },
-  resolve: (root, args) => {
+  resolve: async (root, args, ctx) => {
+    const userId = await ctx.getUserId();
+
+    const { isPendingApprover, ...where } = args.where || {};
+
     return prisma.payout
       .findMany({
         ...(args.paginate!),
-        where: args.where as any
+        where: {
+          ...where as any,
+          ...(isPendingApprover && ({
+            status: PayoutStatus.PendingApproval,
+            approvers: {
+              some: {
+                userId
+              }
+            }
+          }))
+        }
       });
   }
 });

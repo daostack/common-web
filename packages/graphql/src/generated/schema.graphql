@@ -733,6 +733,7 @@ enum EventType {
   PaymentSucceeded
   PayoutApprovalGiven
   PayoutApproved
+  PayoutApproverCreated
   PayoutCompleted
   PayoutCreated
   PayoutExecuted
@@ -1117,6 +1118,7 @@ type Payout implements BaseEntity {
 
   """The date, at which the item was last modified"""
   updatedAt: DateTime!
+  wire: Wire!
 }
 
 type PayoutApprover implements BaseEntity {
@@ -1167,6 +1169,11 @@ input PayoutStatusFilter {
 
 input PayoutWhereInput {
   approvers: PayoutApproverFilter
+
+  """
+  Find all pending payouts where the currently sign in user has to give approval
+  """
+  isPendingApprover: Boolean
   status: PayoutStatusFilter
 }
 

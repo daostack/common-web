@@ -15,6 +15,7 @@ import { PayoutApproversWhereInput } from './Inputs/PayoutApproversWhere.input';
 import { PayoutApproverFilterInput } from './Inputs/PayoutApproverFilter.input';
 
 import { PayoutProposalsExtension } from './Extensions/PayoutProposals.extension';
+import { PayoutWireExtension } from './Extensions/PayoutWire.extension';
 
 export const PayoutTypes = [
   PayoutType,
@@ -33,5 +34,6 @@ export const PayoutTypes = [
   PayoutStatusFilterInput,
   PayoutWhereInput,
 
-  PayoutProposalsExtension
+  PayoutProposalsExtension,
+  PayoutWireExtension
 ];

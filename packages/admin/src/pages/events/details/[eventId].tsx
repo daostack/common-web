@@ -1,25 +1,14 @@
-import { NextPage } from 'next';
-import { withPermission } from '../../../helpers/hoc/withPermission';
-import { useCreateIntentionMutation, IntentionType } from '@core/graphql';
 import React from 'react';
+import { NextPage } from 'next';
+
+import { withPermission } from '../../../helpers/hoc/withPermission';
 
 export const EventDetailsPage: NextPage = () => {
-  const [createIntention, { data }] = useCreateIntentionMutation({
-    variables: {
-      type: IntentionType.Request,
-      intention: 'common.admin.events.details'
-    }
-  });
-
-  React.useEffect(() => {
-    createIntention();
-  }, [])
-
   return (
     <div>Not Implemented</div>
   );
 };
 
-export default withPermission('admin.events.read.details', {
+export default withPermission('admin.*', {
   redirect: true
 })(EventDetailsPage);

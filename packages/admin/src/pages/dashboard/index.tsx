@@ -1,19 +1,18 @@
 import React from 'react';
 import { NextPage } from 'next';
-import { Breadcrumbs, Card, Grid, Spacer, Text } from '@geist-ui/react';
-
-import { HasPermission } from '@components/HasPermission';
+import { Breadcrumbs, Card, Grid, Spacer, Text, Table } from '@geist-ui/react';
 import { withPermission } from '../../helpers/hoc/withPermission';
 import { LatestEventsTable } from '@components/tables/LatestEventsTable';
 import { useRouter } from 'next/router';
 import { Link } from '@components/Link';
 import { gql } from '@apollo/client';
-import { useGetAllTimeStatistiscQuery } from '@core/graphql';
 import Skeleton from 'react-loading-skeleton';
+import { useDashboardDataQuery } from '@core/graphql';
+import { ArrowUpCircle } from '@geist-ui/react-icons';
 
 
 const GetAllTimeStatistics = gql`
-  query getAllTimeStatistisc {
+  query dashboardData {
     getStatistics(where: {
       type: AllTime
     }) {
@@ -22,18 +21,54 @@ const GetAllTimeStatistics = gql`
       joinProposals
       fundingProposals
     }
+
+    payouts(
+      where: {
+        isPendingApprover: true
+      }
+    ) {
+      id
+
+      status
+      description
+      proposals {
+        id
+      }
+    }
   }
 `;
 
 const DashboardHomePage: NextPage = () => {
   const router = useRouter();
 
-  const statistics = useGetAllTimeStatistiscQuery();
+  const { data } = useDashboardDataQuery();
 
   const onCardClick = (url: string) => {
     return () => {
       router.push(url);
     };
+  };
+
+  const transformPayoutsTable = () => {
+    if (!data) {
+      return [];
+    }
+
+    return data.payouts.map((p) => ({
+      status: p.status,
+      description: p.description,
+      proposals: (
+        <Text>
+          {p.proposals.length}
+        </Text>
+      ),
+
+      approve: (
+        <Link to={`/financials/payouts/${p.id}/approve`}>
+          <ArrowUpCircle/>
+        </Link>
+      )
+    }));
   };
 
   return (
@@ -50,19 +85,19 @@ const DashboardHomePage: NextPage = () => {
       <Spacer y={2}/>
 
 
-      {/* --- Overview --- */}
-      <HasPermission permission="admin.dashboard.read.overview">
+      <React.Fragment>
+        {/* --- Overview --- */}
         <Text h3>Application's overview</Text>
 
         <Grid.Container gap={2} alignItems="stretch" style={{ display: 'flex' }}>
           <Grid xs={24} md={8} onClick={onCardClick('/commons')} style={{ cursor: 'pointer' }}>
             <Card hoverable>
               <Text h1>
-                {statistics.data && (
-                  statistics.data.getStatistics[0].commons
+                {data && (
+                  data.getStatistics[0].commons
                 )}
 
-                {!statistics.data && (
+                {!data && (
                   <Skeleton/>
                 )}
               </Text>
@@ -73,12 +108,12 @@ const DashboardHomePage: NextPage = () => {
           <Grid xs={24} md={8} onClick={onCardClick('/proposals')} style={{ cursor: 'pointer' }}>
             <Card hoverable>
               <Text h1>
-                {statistics.data && (
-                  statistics.data.getStatistics[0].joinProposals +
-                  statistics.data.getStatistics[0].fundingProposals
+                {data && (
+                  data.getStatistics[0].joinProposals +
+                  data.getStatistics[0].fundingProposals
                 )}
 
-                {!statistics.data && (
+                {!data && (
                   <Skeleton/>
                 )}
               </Text>
@@ -89,11 +124,11 @@ const DashboardHomePage: NextPage = () => {
           <Grid xs={24} md={8} onClick={onCardClick('/users')} style={{ cursor: 'pointer' }}>
             <Card hoverable>
               <Text h1>
-                {statistics.data && (
-                  statistics.data.getStatistics[0].users
+                {data && (
+                  data.getStatistics[0].users
                 )}
 
-                {!statistics.data && (
+                {!data && (
                   <Skeleton/>
                 )}
               </Text>
@@ -101,9 +136,24 @@ const DashboardHomePage: NextPage = () => {
             </Card>
           </Grid>
         </Grid.Container>
+      </React.Fragment>
 
-        <Spacer y={2}/>
-      </HasPermission>
+      <Spacer y={2}/>
+
+      {!!data?.payouts?.length && (
+        <React.Fragment>
+          <Text h3>Your payout pending approvals</Text>
+
+          <Table data={transformPayoutsTable()}>
+            <Table.Column prop="status" label="Payout Status"/>
+            <Table.Column prop="description" label="Description"/>
+            <Table.Column prop="proposals" label="Count of proposals"/>
+            <Table.Column prop="approve" label="Approve"/>
+          </Table>
+
+          <Spacer y={2}/>
+        </React.Fragment>
+      )}
 
 
       {/* --- Events table --- */}

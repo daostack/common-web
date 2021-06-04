@@ -10,5 +10,9 @@ export const PayoutWhereInput = inputObjectType({
     t.field('approvers', {
       type: 'PayoutApproverFilter'
     });
+
+    t.boolean('isPendingApprover', {
+      description: 'Find all pending payouts where the currently sign in user has to give approval'
+    });
   }
 });

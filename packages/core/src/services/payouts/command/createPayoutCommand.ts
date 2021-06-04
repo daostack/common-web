@@ -141,6 +141,16 @@ export const createPayoutCommand = async (command: z.infer<typeof schema>): Prom
       }))
     });
 
+  for (const approver of userWithApproverPermission) {
+    eventService.create({
+      type: EventType.PayoutApproverCreated,
+      userId: approver.id,
+      payload: {
+        payoutId: payout.id
+      }
+    });
+  }
+
   logger.info(`Created proposal approvers for ${userWithApproverPermission.length} users`);
 
 

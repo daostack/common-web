@@ -64,6 +64,7 @@ enum EventType {
   WireUpdated
 
   PayoutCreated
+  PayoutApproverCreated
   PayoutApprovalGiven
   PayoutRejectionGiven
   PayoutApproved
