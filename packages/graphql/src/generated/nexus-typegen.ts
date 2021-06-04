@@ -4,10 +4,11 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -896,6 +897,7 @@ export interface NexusGenFieldTypes {
     createVote: NexusGenRootTypes['Vote']; // Vote!
     createWire: NexusGenRootTypes['Wire'] | null; // Wire
     createWireBankAccount: NexusGenRootTypes['WireBankAccount'] | null; // WireBankAccount
+    deleteEventNotificationSetting: boolean | null; // Boolean
     delistCommon: boolean | null; // Boolean
     finalizeProposal: boolean; // Boolean!
     unassignRole: NexusGenScalars['Void'] | null; // Void
@@ -1331,6 +1333,7 @@ export interface NexusGenFieldTypeNames {
     createVote: 'Vote'
     createWire: 'Wire'
     createWireBankAccount: 'WireBankAccount'
+    deleteEventNotificationSetting: 'Boolean'
     delistCommon: 'Boolean'
     finalizeProposal: 'Boolean'
     unassignRole: 'Void'
@@ -1724,6 +1727,9 @@ export interface NexusGenArgTypes {
     }
     createWireBankAccount: { // args
       input: NexusGenInputs['CreateWireBankAccountInput']; // CreateWireBankAccountInput!
+    }
+    deleteEventNotificationSetting: { // args
+      id: string; // ID!
     }
     delistCommon: { // args
       commonId: string; // String!

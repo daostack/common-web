@@ -450,6 +450,8 @@ export type Report = BaseEntity & {
   status: ReportStatus;
   /** The Types of violation that this report is for */
   for: ReportFor;
+  /** The type of the report */
+  type: ReportType;
   /** The note that the report has left for the content */
   note: Scalars['String'];
   /** The date on which the report was last reviewed if reviewed */
@@ -470,6 +472,12 @@ export enum ReportFor {
   Other = 'Other'
 }
 
+export enum ReportFlag {
+  Clear = 'Clear',
+  Reported = 'Reported',
+  Hidden = 'Hidden'
+}
+
 export enum ReportAction {
   Respected = 'Respected',
   Dismissed = 'Dismissed'
@@ -485,6 +493,11 @@ export enum ReportAuditor {
   SystemAdmin = 'SystemAdmin'
 }
 
+export enum ReportType {
+  ProposalReport = 'ProposalReport',
+  MessageReport = 'MessageReport'
+}
+
 export type ReportWhereInput = {
   status?: Maybe<ReportStatusFilterInput>;
   for?: Maybe<ReportFor>;
@@ -498,12 +511,6 @@ export type ReportStatusFilterInput = {
 export type ActOnReportInput = {
   reportId: Scalars['UUID'];
   action: ReportAction;
-};
-
-export type ReportDiscussionMessageInput = {
-  messageId: Scalars['UUID'];
-  note: Scalars['String'];
-  for: ReportFor;
 };
 
 export type Payout = BaseEntity & {
@@ -633,6 +640,7 @@ export type Proposal = {
   updatedAt: Scalars['DateTime'];
   type: ProposalType;
   state: ProposalState;
+  flag: ReportFlag;
   links?: Maybe<Scalars['JSON']>;
   files?: Maybe<Scalars['JSON']>;
   images?: Maybe<Scalars['JSON']>;
@@ -840,7 +848,7 @@ export type DiscussionMessage = BaseEntity & {
   updatedAt: Scalars['DateTime'];
   message: Scalars['String'];
   type: DiscussionMessageType;
-  flag: DiscussionMessageFlag;
+  flag: ReportFlag;
   userId: Scalars['String'];
   reports: Array<Report>;
   owner: User;
@@ -867,12 +875,6 @@ export enum DiscussionType {
 
 export enum DiscussionMessageType {
   Message = 'Message'
-}
-
-export enum DiscussionMessageFlag {
-  Clear = 'Clear',
-  Reported = 'Reported',
-  Hidden = 'Hidden'
 }
 
 export enum DiscussionSubscriptionType {
@@ -1524,6 +1526,14 @@ export type UpdateCommonInput = {
   rules?: Maybe<Array<CommonRuleInput>>;
 };
 
+export type CreateReportInput = {
+  messageId?: Maybe<Scalars['UUID']>;
+  proposalId?: Maybe<Scalars['UUID']>;
+  note: Scalars['String'];
+  type: ReportType;
+  for: ReportFor;
+};
+
 export type CreatePayoutInput = {
   wireId: Scalars['ID'];
   proposalIds: Array<Scalars['ID']>;
@@ -1735,7 +1745,7 @@ export type Mutation = {
   delistCommon?: Maybe<Scalars['Boolean']>;
   whitelistCommon?: Maybe<Scalars['Boolean']>;
   actOnReport?: Maybe<Report>;
-  reportDiscussionMessage: Report;
+  createReport: Report;
   createPayout?: Maybe<Payout>;
   approvePayout?: Maybe<PayoutApprover>;
   finalizeProposal: Scalars['Boolean'];
@@ -1746,6 +1756,7 @@ export type Mutation = {
   createDiscussionMessage: DiscussionMessage;
   changeDiscussionSubscriptionType?: Maybe<DiscussionSubscription>;
   updateNotificationTemplate?: Maybe<NotificationTemplate>;
+  deleteEventNotificationSetting?: Maybe<Scalars['Boolean']>;
   createNotificationEventSettings?: Maybe<NotificationEventSettings>;
   updateNotificationSettings?: Maybe<NotificationSystemSettings>;
   createNotificationTemplate?: Maybe<NotificationTemplate>;
@@ -1839,8 +1850,8 @@ export type MutationActOnReportArgs = {
 };
 
 
-export type MutationReportDiscussionMessageArgs = {
-  input: ReportDiscussionMessageInput;
+export type MutationCreateReportArgs = {
+  input: CreateReportInput;
 };
 
 
@@ -1888,6 +1899,11 @@ export type MutationChangeDiscussionSubscriptionTypeArgs = {
 
 export type MutationUpdateNotificationTemplateArgs = {
   input: UpdateNotificationTemplateInput;
+};
+
+
+export type MutationDeleteEventNotificationSettingArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -2323,6 +2339,16 @@ export type CreateNotificationEventIntegrationMutation = (
     & Pick<NotificationEventSettings, 'id'>
     )>
 }
+  );
+
+export type DeleteNotificationEventIntegrationMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteNotificationEventIntegrationMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteEventNotificationSetting'>
   );
 
 export type GetAllUsersNotificationsQueryVariables = Exact<{
@@ -3061,11 +3087,9 @@ export const DashboardDataDocument = gql`
 export function useDashboardDataQuery(baseOptions?: Apollo.QueryHookOptions<DashboardDataQuery, DashboardDataQueryVariables>) {
   return Apollo.useQuery<DashboardDataQuery, DashboardDataQueryVariables>(DashboardDataDocument, baseOptions);
 }
-
 export function useDashboardDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DashboardDataQuery, DashboardDataQueryVariables>) {
   return Apollo.useLazyQuery<DashboardDataQuery, DashboardDataQueryVariables>(DashboardDataDocument, baseOptions);
 }
-
 export type DashboardDataQueryHookResult = ReturnType<typeof useDashboardDataQuery>;
 export type DashboardDataLazyQueryHookResult = ReturnType<typeof useDashboardDataLazyQuery>;
 export type DashboardDataQueryResult = Apollo.QueryResult<DashboardDataQuery, DashboardDataQueryVariables>;
@@ -3112,11 +3136,9 @@ export const GetApprovePayoutDataDocument = gql`
 export function useGetApprovePayoutDataQuery(baseOptions: Apollo.QueryHookOptions<GetApprovePayoutDataQuery, GetApprovePayoutDataQueryVariables>) {
   return Apollo.useQuery<GetApprovePayoutDataQuery, GetApprovePayoutDataQueryVariables>(GetApprovePayoutDataDocument, baseOptions);
 }
-
 export function useGetApprovePayoutDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetApprovePayoutDataQuery, GetApprovePayoutDataQueryVariables>) {
   return Apollo.useLazyQuery<GetApprovePayoutDataQuery, GetApprovePayoutDataQueryVariables>(GetApprovePayoutDataDocument, baseOptions);
 }
-
 export type GetApprovePayoutDataQueryHookResult = ReturnType<typeof useGetApprovePayoutDataQuery>;
 export type GetApprovePayoutDataLazyQueryHookResult = ReturnType<typeof useGetApprovePayoutDataLazyQuery>;
 export type GetApprovePayoutDataQueryResult = Apollo.QueryResult<GetApprovePayoutDataQuery, GetApprovePayoutDataQueryVariables>;
@@ -3150,7 +3172,6 @@ export type ApprovePayoutMutationFn = Apollo.MutationFunction<ApprovePayoutMutat
 export function useApprovePayoutMutation(baseOptions?: Apollo.MutationHookOptions<ApprovePayoutMutation, ApprovePayoutMutationVariables>) {
   return Apollo.useMutation<ApprovePayoutMutation, ApprovePayoutMutationVariables>(ApprovePayoutDocument, baseOptions);
 }
-
 export type ApprovePayoutMutationHookResult = ReturnType<typeof useApprovePayoutMutation>;
 export type ApprovePayoutMutationResult = Apollo.MutationResult<ApprovePayoutMutation>;
 export type ApprovePayoutMutationOptions = Apollo.BaseMutationOptions<ApprovePayoutMutation, ApprovePayoutMutationVariables>;
@@ -3456,9 +3477,41 @@ export type CreateNotificationEventIntegrationMutationFn = Apollo.MutationFuncti
 export function useCreateNotificationEventIntegrationMutation(baseOptions?: Apollo.MutationHookOptions<CreateNotificationEventIntegrationMutation, CreateNotificationEventIntegrationMutationVariables>) {
   return Apollo.useMutation<CreateNotificationEventIntegrationMutation, CreateNotificationEventIntegrationMutationVariables>(CreateNotificationEventIntegrationDocument, baseOptions);
 }
+
 export type CreateNotificationEventIntegrationMutationHookResult = ReturnType<typeof useCreateNotificationEventIntegrationMutation>;
 export type CreateNotificationEventIntegrationMutationResult = Apollo.MutationResult<CreateNotificationEventIntegrationMutation>;
 export type CreateNotificationEventIntegrationMutationOptions = Apollo.BaseMutationOptions<CreateNotificationEventIntegrationMutation, CreateNotificationEventIntegrationMutationVariables>;
+export const DeleteNotificationEventIntegrationDocument = gql`
+  mutation DeleteNotificationEventIntegration($id: ID!) {
+    deleteEventNotificationSetting(id: $id)
+  }
+`;
+export type DeleteNotificationEventIntegrationMutationFn = Apollo.MutationFunction<DeleteNotificationEventIntegrationMutation, DeleteNotificationEventIntegrationMutationVariables>;
+
+/**
+ * __useDeleteNotificationEventIntegrationMutation__
+ *
+ * To run a mutation, you first call `useDeleteNotificationEventIntegrationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteNotificationEventIntegrationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteNotificationEventIntegrationMutation, { data, loading, error }] = useDeleteNotificationEventIntegrationMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteNotificationEventIntegrationMutation(baseOptions?: Apollo.MutationHookOptions<DeleteNotificationEventIntegrationMutation, DeleteNotificationEventIntegrationMutationVariables>) {
+  return Apollo.useMutation<DeleteNotificationEventIntegrationMutation, DeleteNotificationEventIntegrationMutationVariables>(DeleteNotificationEventIntegrationDocument, baseOptions);
+}
+
+export type DeleteNotificationEventIntegrationMutationHookResult = ReturnType<typeof useDeleteNotificationEventIntegrationMutation>;
+export type DeleteNotificationEventIntegrationMutationResult = Apollo.MutationResult<DeleteNotificationEventIntegrationMutation>;
+export type DeleteNotificationEventIntegrationMutationOptions = Apollo.BaseMutationOptions<DeleteNotificationEventIntegrationMutation, DeleteNotificationEventIntegrationMutationVariables>;
 export const GetAllUsersNotificationsDocument = gql`
   query getAllUsersNotifications($paginate: PaginateInput!) {
     notifications(paginate: $paginate) {

@@ -35,6 +35,7 @@ import { GetNotificationSettingsQuery } from './Queries/GetNotificationSettings.
 import { UpdateNotificationSettingsMutation } from './Mutations/UpdateNotificationSettings.mutation';
 import { NotificationSettingsWhereInput } from './Inputs/NotificationSettingsWhere.input';
 import { UpdateNotificationTemplateMutation } from './Mutations/UpdateNotificationTemplate.mutation';
+import { DeleteEventNotificationSettingMutation } from './Mutations/DeleteEventNotificationSetting.mutation';
 
 export const NotificationTypes = [
   NotificationTypeEnum,
@@ -59,6 +60,7 @@ export const NotificationTypes = [
   NotificationTemplateWhereInput,
   NotificationSettingsWhereInput,
   UpdateNotificationTemplateMutation,
+  DeleteEventNotificationSettingMutation,
 
   NotificationOrderByInput,
 

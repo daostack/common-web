@@ -866,6 +866,7 @@ type Mutation {
   createVote(input: CreateVoteInput!): Vote!
   createWire(input: CreateWireInput!): Wire
   createWireBankAccount(input: CreateWireBankAccountInput!): WireBankAccount
+  deleteEventNotificationSetting(id: ID!): Boolean
   delistCommon(commonId: String!): Boolean
   finalizeProposal(proposalId: ID!): Boolean!
   unassignRole(roleId: ID!, userId: ID!): Void
