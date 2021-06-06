@@ -5,8 +5,8 @@
   .common-list {
     display: grid;
     justify-items: center;
-    grid-column-gap: 16px;
-    grid-row-gap: 16px;
+    grid-column-gap: 2rem;
+    grid-row-gap: 2rem;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   }
   .loader-container {

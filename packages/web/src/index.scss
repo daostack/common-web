@@ -10,6 +10,16 @@
   src: url(./shared/assets/fonts/NunitoSans-Regular.ttf);
 }
 
+@font-face {
+  font-family: NotoSerifSC-Bold;
+  src: url(./shared/assets/fonts/NotoSerifSC-Bold.otf);
+}
+
+@font-face {
+  font-family: NotoSerifSC-SemiBold;
+  src: url(./shared/assets/fonts/NotoSerifSC-SemiBold.otf);
+}
+
 body {
   #root {
     overflow-x: hidden;
@@ -72,7 +82,7 @@ body {
   }
   h2,
   h1 {
-    font-family: NotoSerifSC-Black;
+    font-family: NotoSerifSC-SemiBold;
   }
   p {
     font-size: $moderate;
