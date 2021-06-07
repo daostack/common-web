@@ -11,7 +11,6 @@ export interface IModeration {
   moderator: string;
   reporter: string;
   countdownPeriod?: number;
-  quietEnding?: number;
 }
 
 export type ItemType = IDiscussionEntity | IDiscussionMessage | IProposalEntity;
