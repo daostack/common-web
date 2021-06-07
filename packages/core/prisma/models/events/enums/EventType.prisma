@@ -4,6 +4,8 @@ enum EventType {
   CommonDelisted
   CommonWhitelisted
 
+  CommonBalanceUpdated
+
   CommonMemberCreated
   CommonMemberRoleAdded
   CommonMemberRoleRemoved

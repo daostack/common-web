@@ -711,6 +711,7 @@ enum EventType {
   CardCreated
   CardCvvVerificationFailed
   CardCvvVerificationPassed
+  CommonBalanceUpdated
   CommonCreated
   CommonDelisted
   CommonMemberCreated
@@ -1237,6 +1238,7 @@ input ProposalLinkInput {
 
 enum ProposalState {
   Accepted
+  AcceptedButInsufficientFunding
   Countdown
   Finalizing
   Rejected

@@ -3,13 +3,14 @@ import { Common, Payment, PaymentStatus } from '@prisma/client';
 import { CommonError } from '@errors';
 import { prisma } from '@toolkits';
 import { logger } from '@logger';
+import { eventService } from '@services';
 
 /**
  * Updates the common balance with the payment
  *
  * @param payment - The payment
  */
-export const updateCommonBalanceCommand = async (payment: Payment): Promise<Common> => {
+export const updateCommonBalanceWithPaymentCommand = async (payment: Payment): Promise<Common> => {
   if (payment.processed) {
     throw new CommonError('Cannot update the common balance with processed payment');
   }
@@ -21,7 +22,7 @@ export const updateCommonBalanceCommand = async (payment: Payment): Promise<Comm
   logger.info('Updating common balance');
 
   // Update the balance and return the updated common
-  return prisma.common.update({
+  const res = prisma.common.update({
     where: {
       id: payment.commonId
     },
@@ -34,4 +35,12 @@ export const updateCommonBalanceCommand = async (payment: Payment): Promise<Comm
       }
     }
   });
+
+  // Create the event
+  eventService.create({
+    type: 'CommonBalanceUpdated',
+    commonId: payment.commonId
+  });
+
+  return res;
 };

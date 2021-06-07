@@ -5,7 +5,7 @@ import { logger } from '@logger';
 
 import { processOneTimePayment } from './processOneTimeProposalPayment';
 import { processSubscriptionPayment } from './processSubscriptionPayment';
-import { updateCommonBalanceCommand } from '../../../commons/command/updateCommonBalanceCommand';
+import { updateCommonBalanceWithPaymentCommand } from '../../../commons/command/updateCommonBalanceWithPaymentCommand';
 
 export const processPaymentCommand = async (paymentId: string): Promise<void> => {
   const payment = (await prisma.payment.findUnique({
@@ -28,7 +28,7 @@ export const processPaymentCommand = async (paymentId: string): Promise<void> =>
 
     // If the payment was successful update the common balance
     if (payment.status === PaymentStatus.Successful) {
-      await updateCommonBalanceCommand(payment);
+      await updateCommonBalanceWithPaymentCommand(payment);
     }
 
     if (payment.type === PaymentType.OneTimePayment) {

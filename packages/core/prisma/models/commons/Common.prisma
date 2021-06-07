@@ -6,8 +6,9 @@ model Common {
 
   name String
 
-  balance Int @default(0)
   raised  Int @default(0)
+  balance Int @default(0)
+  blocked Int @default(0)
 
   image String
 
