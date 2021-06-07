@@ -1,3 +1,5 @@
+import { testFlag } from '../../helpers';
+
 const template = `
 The following proposal was approved but the payment could not be processed.
 
@@ -43,7 +45,7 @@ const emailStubs = {
 };
 
 export const adminJoinedButPaymentFailed = {
-  subject: 'Payment could not be processed',
+  subject: `${testFlag()}Payment could not be processed`,
   emailStubs,
   template
 };

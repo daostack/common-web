@@ -1,3 +1,5 @@
+import { testFlag } from '../../helpers';
+
 const template = `
 <div>
   Hello stranger,
@@ -59,7 +61,7 @@ const emailStubs = {
 };
 
 export const approvePayout = {
-  subject: 'Approve payout',
+  subject: `${testFlag()}Approve payout`,
   emailStubs,
   template
 };

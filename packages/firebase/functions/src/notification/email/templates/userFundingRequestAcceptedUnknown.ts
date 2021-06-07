@@ -1,3 +1,5 @@
+import { testFlag } from '../../helpers';
+
 const template = `
 Hello {{userName}},
 <br /><br />
@@ -40,7 +42,7 @@ const emailStubs = {
 };
 
 export const userFundingRequestAcceptedUnknown = {
-  subject: 'Proposal approved - Missing information',
+  subject: `${testFlag()}Proposal approved - Missing information`,
   emailStubs,
   template
 };
