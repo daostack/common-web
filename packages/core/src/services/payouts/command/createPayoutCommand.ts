@@ -60,6 +60,29 @@ export const createPayoutCommand = async (command: z.infer<typeof schema>): Prom
     throw new CommonError('Cannot create payout because the selected wire was not found');
   }
 
+  // Calculate the requirement for each common
+  const commonRequirements: any = {};
+
+  for (const p of proposals) {
+    commonRequirements[p.commonId] = (commonRequirements[p.commonId] || 0) + (p.funding!).amount;
+  }
+
+  // Fetch the commons and check
+  const commons = await prisma.common
+    .findMany({
+      where: {
+        id: {
+          in: Object.keys(commonRequirements)
+        }
+      }
+    });
+
+  for (const common of commons) {
+    if (common.blocked < commonRequirements[common.id]) {
+      throw new CommonError('Cannot create the payout because common does not have enough blocked funds!');
+    }
+  }
+
   // Calculate the required amount
   const amount = (proposals.map(p => (p.funding!).amount))
     .reduce((p, a) => {
@@ -91,6 +114,24 @@ export const createPayoutCommand = async (command: z.infer<typeof schema>): Prom
     });
 
   logger.info('Proposals marked successfully as redeemed');
+
+  // Claim the common funds
+  Object.keys(commonRequirements).map(async (commonId) => {
+    logger.info(`Claiming ${commonRequirements[commonId]} cents from common with id ${commonId}`);
+
+    await prisma.common.update({
+      where: {
+        id: commonId
+      },
+      data: {
+        blocked: {
+          decrement: commonRequirements[commonId]
+        }
+      }
+    });
+
+    logger.info(`Claimed ${commonRequirements[commonId]} cents from common with id ${commonId}`);
+  });
 
   // Create the payout in the database
   const payout = await prisma.payout
