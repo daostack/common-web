@@ -1,6 +1,7 @@
 import React from "react";
 import { Proposal } from "../../../../../shared/models";
 import "./index.scss";
+import classNames from "classnames";
 
 interface VotesComponentProps {
   proposal: Proposal;
@@ -9,6 +10,17 @@ interface VotesComponentProps {
 
 export default function VotesComponent({ proposal, type }: VotesComponentProps) {
   const votes = (proposal.votesAgainst || 0) + (proposal.votesFor || 0);
+
+  const forClassName = classNames({
+    for: true,
+    rounded: proposal.votesAgainst === 0,
+  });
+
+  const againstClassName = classNames({
+    against: true,
+    rounded: proposal.votesFor === 0,
+  });
+
   return (
     <div className="votes-wrapper">
       <div className="top-votes-side">
@@ -31,8 +43,8 @@ export default function VotesComponent({ proposal, type }: VotesComponentProps) 
         </div>
       </div>
       <div className="progress">
-        <div className="for" style={{ width: `${((proposal.votesFor || 0) * 100) / votes}%` }}></div>
-        <div className="against" style={{ width: `${((proposal.votesAgainst || 0) * 100) / votes}%` }}></div>
+        <div className={forClassName} style={{ width: `${((proposal.votesFor || 0) * 100) / votes}%` }}></div>
+        <div className={againstClassName} style={{ width: `${((proposal.votesAgainst || 0) * 100) / votes}%` }}></div>
       </div>
     </div>
   );
