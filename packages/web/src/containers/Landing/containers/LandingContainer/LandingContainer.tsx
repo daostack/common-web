@@ -40,7 +40,7 @@ const LandingContainer = () => {
         <p>
           Common enables large groups of people to collaborate on shared <br /> agendas by pooling funds and
           collectively making decisions. <br /> <br />
-          <b>Anyone</b> can create a Common, invite <br className="mobile-break" /> thier friends, and work{" "}
+          <b>Anyone</b> can create a Common, invite <br className="desktop-break" /> thier friends, and work{" "}
           <br className="desktop-break" /> together to achieve a common goal.
         </p>
         <div className="illustrations-wrapper-1">
@@ -71,17 +71,19 @@ const LandingContainer = () => {
         <img src="assets/images/iphone.png" alt="iphone" className="half-iphone" />
         <div>
           <h1>
-            Leverage <span className="purple-text">trust</span> and <br />
-            <span className="purple-text">transparency</span> to galvanize <br /> massive action.
+            Leverage <span className="purple-text">trust</span> and <br className="desktop-break" />
+            <span className="purple-text">transparency</span> to galvanize <br className="desktop-break" /> massive
+            action.
           </h1>
           <b>
-            The goal of Common is to support large communities that wish to <br /> collaborate on simple, and
-            well-defined agendas.
+            The goal of Common is to support large communities that wish to <br className="desktop-break" /> collaborate
+            on simple, and well-defined agendas.
           </b>
           <p>
-            Humanity's greatest achievements were made by massive <br /> collaborations. Common empowers groups to
-            collaborate with no <br /> single organizer. And when every member gets an equal part in <br /> every step
-            of the process, we enter a new era of trust and <br /> collaboration.
+            Humanity's greatest achievements were made by massive <br className="desktop-break" /> collaborations.
+            Common empowers groups to collaborate with no <br className="desktop-break" /> single organizer. And when
+            every member gets an equal part in <br className="desktop-break" /> every step of the process, we enter a
+            new era of trust and <br className="desktop-break" /> collaboration.
           </p>
         </div>
       </section>
@@ -120,6 +122,7 @@ const LandingContainer = () => {
         <span>
           Download the Common app and find <br /> countless opportunities to make a difference.
         </span>
+        <div className="available-on-label">Available on</div>
         <MobileLinks color={Colors.white} />
       </section>
     </div>

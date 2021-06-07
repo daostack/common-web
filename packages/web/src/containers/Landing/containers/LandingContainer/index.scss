@@ -22,11 +22,11 @@
     .info {
       display: flex;
       flex-direction: column;
-      width: 100%;
+      width: 80%;
       margin-left: 50px;
       margin-bottom: 100px;
       position: relative;
-      max-width: 80%;
+      max-width: $element-max-width;
       .logo {
         margin-bottom: 50px;
         margin-top: 30px;
@@ -101,11 +101,6 @@
       .mobile-apps-wrapper {
         text-align: left;
         margin-top: 50px;
-        .available-on-label {
-          color: white;
-          margin-bottom: 10px;
-          margin-top: 40px;
-        }
       }
       .iphone-image {
         position: absolute;
@@ -218,6 +213,7 @@
     .landing-top {
       flex-direction: column;
       .info {
+        width: 100%;
         margin-left: unset;
         margin-bottom: unset;
         max-width: unset;
@@ -249,6 +245,16 @@
     }
     .illustrations-wrapper-1 {
       flex-direction: column;
+      > div {
+        margin-bottom: 3rem;
+        h2 {
+          margin-top: 0px;
+          margin-bottom: 5px;
+        }
+      }
+      div:last-child {
+        margin-bottom: unset;
+      }
     }
     .illustrations-wrapper-2 {
       display: grid;
@@ -277,4 +283,10 @@
       margin-bottom: unset;
     }
   }
+}
+
+.available-on-label {
+  color: white;
+  margin-bottom: 10px;
+  margin-top: 40px;
 }

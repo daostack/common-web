@@ -20,6 +20,12 @@
   src: url(./shared/assets/fonts/NotoSerifSC-SemiBold.otf);
 }
 
+@font-face {
+  font-family: NunitoSans-Bold;
+  src: url(./shared/assets/fonts/NunitoSans-Bold.ttf);
+}
+
+
 body {
   #root {
     overflow-x: hidden;
@@ -41,6 +47,7 @@ body {
     }
 
     .button-blue {
+      font-family: NunitoSans-Bold;
       height: 40px;
       border-radius: 30.5px;
       background-color: $purple;

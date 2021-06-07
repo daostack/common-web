@@ -272,7 +272,7 @@ export default function CommonDetail() {
                   {screenSize === ScreenSize.Mobile && <Share type="modal" color={Colors.transparent} />}
                 </div>
                 <div className="numbers">
-                  <div className="item" onClick={onOpen}>
+                  <div className="item">
                     <div className="value">{formatPrice(common?.balance)}</div>
                     <div className="name">{`Available ${screenSize === ScreenSize.Desktop ? "Funds" : ""}`}</div>
                   </div>
@@ -314,7 +314,12 @@ export default function CommonDetail() {
           <div className="main-content-container">
             <div className={tab === "history" ? "inner-main-content-wrapper history" : "inner-main-content-wrapper"}>
               <div className="tab-content-wrapper">
-                {tab === "about" && <AboutTabComponent common={common} />}
+                {tab === "about" && (
+                  <>
+                    <div className="about-title">About</div>
+                    <AboutTabComponent common={common} />
+                  </>
+                )}
                 {tab === "discussions" &&
                   (isDiscussionsLoaded ? (
                     <DiscussionsComponent discussions={discussions} loadDisscussionDetail={getDisscussionDetail} />
