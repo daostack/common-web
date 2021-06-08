@@ -6,4 +6,5 @@ export interface ModalProps {
   onClose: () => void;
   children: React.ReactNode;
   closeColor?: Colors;
+  className?: string;
 }
