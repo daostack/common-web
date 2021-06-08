@@ -9,7 +9,7 @@ import { Breadcrumbs, Card, Grid, Pagination, Spacer, Table, Text } from '@geist
 import { Link } from '@components/Link';
 import { useRouter } from 'next/router';
 import { ChevronLeftCircleFill, ChevronRightCircleFill } from '@geist-ui/react-icons';
-import { useGetProposalsHomescreenQuery, useGetAllTimeStatistiscQuery } from '@core/graphql';
+import { useGetProposalsHomescreenQuery } from '@core/graphql';
 
 const ProposalsHomepageData = gql`
   query getProposalsHomescreen($fundingPaginate: PaginateInput!, $joinPaginate: PaginateInput!) {

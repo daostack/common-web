@@ -54,7 +54,7 @@ export const actOnReportCommand = async (payload: z.infer<typeof schema>): Promi
         reviewerId: payload.userId,
         reviewAuthority: authority,
 
-        status: ReportStatus.Clossed,
+        status: ReportStatus.Closed,
         action: payload.action
       }
     }),

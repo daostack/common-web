@@ -1,13 +1,13 @@
 import { extendType } from 'nexus';
 import { prisma } from '@common/core';
 
-export const ReportReportedMessageExtension = extendType({
+export const ReportReportedProposalExtension = extendType({
   type: 'Report',
   definition(t) {
-    t.uuid('messageId');
+    t.uuid('proposalId');
 
-    t.field('message', {
-      type: 'DiscussionMessage',
+    t.field('proposal', {
+      type: 'Proposal',
       resolve: async (root) => {
         return (await prisma.report
           .findUnique({
@@ -15,7 +15,7 @@ export const ReportReportedMessageExtension = extendType({
               id: root.id
             }
           })
-          .message())!;
+          .proposal())!;
       }
     });
   }

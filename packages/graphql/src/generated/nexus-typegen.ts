@@ -423,8 +423,8 @@ export interface NexusGenEnums {
   StatisticType: 'AllTime' | 'Daily' | 'Hourly' | 'Weekly'
   SubscriptionPaymentStatus: 'AwaitingInitialPayment' | 'Pending' | 'Successful' | 'Unsuccessful'
   SubscriptionStatus: 'Active' | 'CanceledByPaymentFailure' | 'CanceledByUser' | 'PaymentFailed' | 'Pending'
-  UserNotificationTokenState: "Active" | "Expired" | "Voided"
-  VoteOutcome: "Approve" | "Condemn"
+  UserNotificationTokenState: 'Active' | 'Expired' | 'Voided'
+  VoteOutcome: 'Approve' | 'Condemn'
 }
 
 export interface NexusGenScalars {
@@ -649,8 +649,9 @@ export interface NexusGenObjects {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     for: NexusGenEnums['ReportFor']; // ReportFor!
     id: NexusGenScalars['UUID']; // UUID!
-    messageId: NexusGenScalars['UUID']; // UUID!
+    messageId?: NexusGenScalars['UUID'] | null; // UUID
     note: string; // String!
+    proposalId?: NexusGenScalars['UUID'] | null; // UUID
     reporterId: string; // ID!
     reviewedOn?: NexusGenScalars['DateTime'] | null; // DateTime
     status: NexusGenEnums['ReportStatus']; // ReportStatus!
@@ -1051,6 +1052,7 @@ export interface NexusGenFieldTypes {
     payouts: Array<NexusGenRootTypes['Payout'] | null> | null; // [Payout]
     proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
     proposals: Array<NexusGenRootTypes['Proposal'] | null> | null; // [Proposal]
+    reports: Array<NexusGenRootTypes['Report'] | null> | null; // [Report]
     role: NexusGenRootTypes['Role'] | null; // Role
     roles: Array<NexusGenRootTypes['Role'] | null> | null; // [Role]
     settings: NexusGenRootTypes['Settings']; // Settings!
@@ -1062,9 +1064,11 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     for: NexusGenEnums['ReportFor']; // ReportFor!
     id: NexusGenScalars['UUID']; // UUID!
-    message: NexusGenRootTypes['DiscussionMessage']; // DiscussionMessage!
-    messageId: NexusGenScalars['UUID']; // UUID!
+    message: NexusGenRootTypes['DiscussionMessage'] | null; // DiscussionMessage
+    messageId: NexusGenScalars['UUID'] | null; // UUID
     note: string; // String!
+    proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
+    proposalId: NexusGenScalars['UUID'] | null; // UUID
     reporter: NexusGenRootTypes['User']; // User!
     reporterId: string; // ID!
     reviewedOn: NexusGenScalars['DateTime'] | null; // DateTime
@@ -1487,6 +1491,7 @@ export interface NexusGenFieldTypeNames {
     payouts: 'Payout'
     proposal: 'Proposal'
     proposals: 'Proposal'
+    reports: 'Report'
     role: 'Role'
     roles: 'Role'
     settings: 'Settings'
@@ -1501,6 +1506,8 @@ export interface NexusGenFieldTypeNames {
     message: 'DiscussionMessage'
     messageId: 'UUID'
     note: 'String'
+    proposal: 'Proposal'
+    proposalId: 'UUID'
     reporter: 'User'
     reporterId: 'ID'
     reviewedOn: 'DateTime'
@@ -1824,6 +1831,10 @@ export interface NexusGenArgTypes {
       fundingWhere?: NexusGenInputs['FundingProposalWhereInput'] | null; // FundingProposalWhereInput
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
       where?: NexusGenInputs['ProposalWhereInput'] | null; // ProposalWhereInput
+    }
+    reports: { // args
+      pagination?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
+      where?: NexusGenInputs['ReportWhereInput'] | null; // ReportWhereInput
     }
     role: { // args
       where: NexusGenInputs['RoleWhereUniqueInput']; // RoleWhereUniqueInput!

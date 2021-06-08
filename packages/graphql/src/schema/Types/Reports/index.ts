@@ -13,10 +13,12 @@ import { ReportReporterExtension } from './Extensions/ReportReporter.extension';
 import { ReportTypeEnum } from './Enums/ReportType.enum';
 
 import { ReportReportedMessageExtension } from './Extensions/ReportReportedMessage.extension';
+import { ReportReportedProposalExtension } from './Extensions/ReportReportedProposal.extension';
 
 import { CreateReportMutation } from './Mutations/CreateReport.mutation';
 
 import { ActOnReportMutation, ActOnReportInput } from './Mutations/ActOnReport.mutation';
+import { GetReportsQuery } from './Queries/GetReports.query';
 
 export const ReportTypes = [
   ReportType,
@@ -33,9 +35,11 @@ export const ReportTypes = [
 
   ReportReporterExtension,
   ReportReportedMessageExtension,
+  ReportReportedProposalExtension,
 
   ActOnReportInput,
   ActOnReportMutation,
 
-  CreateReportMutation
+  CreateReportMutation,
+  GetReportsQuery
 ];

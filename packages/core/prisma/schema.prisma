@@ -1167,7 +1167,7 @@ enum ReportType {
 
 enum ReportStatus {
   Active
-  Clossed
+  Closed
 }
 
 enum ReportFor {

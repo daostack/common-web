@@ -216,6 +216,7 @@ enum EventType {
   CommonUpdated
   CommonDelisted
   CommonWhitelisted
+  CommonBalanceUpdated
   CommonMemberCreated
   CommonMemberRoleAdded
   CommonMemberRoleRemoved
@@ -378,8 +379,10 @@ type Report implements BaseEntity {
   reviewedOn: DateTime
   reporterId: ID!
   reporter: User!
-  messageId: UUID!
-  message: DiscussionMessage!
+  messageId: UUID
+  message: DiscussionMessage
+  proposalId: UUID
+  proposal: Proposal
 }
 
 enum ReportFor {
@@ -667,6 +670,7 @@ enum ProposalState {
   Finalizing
   Rejected
   Accepted
+  AcceptedButInsufficientFunding
 }
 
 enum FundingState {
@@ -1468,6 +1472,7 @@ type Query {
   events(paginate: PaginateInput): [Event]
   common(where: CommonWhereUniqueInput!): Common
   commons(paginate: PaginateInput, where: CommonWhereInput): [Common]
+  reports(where: ReportWhereInput, pagination: PaginateInput): [Report]
   payout(id: ID!): Payout
   payouts(paginate: PaginateInput = {take: 10, skip: 0}, where: PayoutWhereInput): [Payout]
   payment(id: ID): Payment

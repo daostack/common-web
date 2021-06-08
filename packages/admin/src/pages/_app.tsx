@@ -59,7 +59,13 @@ const CommonAdmin = ({ Component, pageProps }: AppProps): React.ReactElement => 
             </IfFirebaseAuthed>
 
             <IfFirebaseUnAuthed>
-              {() => <Component {...pageProps} />}
+              {({ firebase }) => (
+                <React.Fragment>
+                  {(Object.keys(firebase || {}).length > 0) && (
+                    <Component {...pageProps} />
+                  )}
+                </React.Fragment>
+              )}
             </IfFirebaseUnAuthed>
           </CommonApolloProvider>
         </AuthenticationProvider>

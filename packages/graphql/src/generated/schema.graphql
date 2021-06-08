@@ -1288,6 +1288,7 @@ type Query {
   payouts(paginate: PaginateInput = {skip: 0, take: 10}, where: PayoutWhereInput): [Payout]
   proposal(where: ProposalWhereUniqueInput!): Proposal
   proposals(fundingWhere: FundingProposalWhereInput, paginate: PaginateInput, where: ProposalWhereInput): [Proposal]
+  reports(pagination: PaginateInput, where: ReportWhereInput): [Report]
   role(where: RoleWhereUniqueInput!): Role
   roles(paginate: PaginateInput): [Role]
   settings: Settings!
@@ -1309,11 +1310,13 @@ type Report implements BaseEntity {
 
   """The main identifier of the item"""
   id: UUID!
-  message: DiscussionMessage!
-  messageId: UUID!
+  message: DiscussionMessage
+  messageId: UUID
 
   """The note that the report has left for the content"""
   note: String!
+  proposal: Proposal
+  proposalId: UUID
   reporter: User!
   reporterId: ID!
 

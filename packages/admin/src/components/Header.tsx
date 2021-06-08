@@ -22,12 +22,6 @@ export const Header: React.FC = () => {
   });
 
   // Actions
-  const onTabChange = (value: string): void => {
-    setCurrentTab(value);
-
-    router.push(`/${value}`);
-  };
-
   const onSignOut = async (): Promise<void> => {
     await firebase.auth().signOut();
     await router.push('/');
@@ -126,6 +120,18 @@ export const Header: React.FC = () => {
               Users
             </Link>
           </HasPermission>
+
+          <HasPermission permission="admin.report.*">
+            <Link
+              to="/reports"
+              style={{
+                margin: '0 .5em'
+              }}
+            >
+              Reports
+            </Link>
+          </HasPermission>
+
 
           <HasPermission permission="admin.financials.*">
             <Popover

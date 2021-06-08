@@ -262,6 +262,7 @@ export enum EventType {
   CommonUpdated = 'CommonUpdated',
   CommonDelisted = 'CommonDelisted',
   CommonWhitelisted = 'CommonWhitelisted',
+  CommonBalanceUpdated = 'CommonBalanceUpdated',
   CommonMemberCreated = 'CommonMemberCreated',
   CommonMemberRoleAdded = 'CommonMemberRoleAdded',
   CommonMemberRoleRemoved = 'CommonMemberRoleRemoved',
@@ -458,8 +459,10 @@ export type Report = BaseEntity & {
   reviewedOn?: Maybe<Scalars['DateTime']>;
   reporterId: Scalars['ID'];
   reporter: User;
-  messageId: Scalars['UUID'];
-  message: DiscussionMessage;
+  messageId?: Maybe<Scalars['UUID']>;
+  message?: Maybe<DiscussionMessage>;
+  proposalId?: Maybe<Scalars['UUID']>;
+  proposal?: Maybe<Proposal>;
 };
 
 export enum ReportFor {
@@ -758,7 +761,8 @@ export enum ProposalState {
   Countdown = 'Countdown',
   Finalizing = 'Finalizing',
   Rejected = 'Rejected',
-  Accepted = 'Accepted'
+  Accepted = 'Accepted',
+  AcceptedButInsufficientFunding = 'AcceptedButInsufficientFunding'
 }
 
 export enum FundingState {
@@ -1588,6 +1592,7 @@ export type Query = {
   events?: Maybe<Array<Maybe<Event>>>;
   common?: Maybe<Common>;
   commons?: Maybe<Array<Maybe<Common>>>;
+  reports?: Maybe<Array<Maybe<Report>>>;
   payout?: Maybe<Payout>;
   payouts?: Maybe<Array<Maybe<Payout>>>;
   payment?: Maybe<Payment>;
@@ -1652,6 +1657,12 @@ export type QueryCommonArgs = {
 export type QueryCommonsArgs = {
   paginate?: Maybe<PaginateInput>;
   where?: Maybe<CommonWhereInput>;
+};
+
+
+export type QueryReportsArgs = {
+  where?: Maybe<ReportWhereInput>;
+  pagination?: Maybe<PaginateInput>;
 };
 
 
@@ -2553,6 +2564,21 @@ export type GetProposalsHomescreenQuery = (
       & Pick<JoinProposal, 'funding' | 'fundingType'>
       )>
   }
+    )>>>
+}
+  );
+
+export type GetReportsQueryVariables = Exact<{
+  pagination: PaginateInput;
+}>;
+
+
+export type GetReportsQuery = (
+  { __typename?: 'Query' }
+  & {
+  reports?: Maybe<Array<Maybe<(
+    { __typename?: 'Report' }
+    & Pick<Report, 'id' | 'status' | 'type'>
     )>>>
 }
   );
@@ -3477,7 +3503,6 @@ export type CreateNotificationEventIntegrationMutationFn = Apollo.MutationFuncti
 export function useCreateNotificationEventIntegrationMutation(baseOptions?: Apollo.MutationHookOptions<CreateNotificationEventIntegrationMutation, CreateNotificationEventIntegrationMutationVariables>) {
   return Apollo.useMutation<CreateNotificationEventIntegrationMutation, CreateNotificationEventIntegrationMutationVariables>(CreateNotificationEventIntegrationDocument, baseOptions);
 }
-
 export type CreateNotificationEventIntegrationMutationHookResult = ReturnType<typeof useCreateNotificationEventIntegrationMutation>;
 export type CreateNotificationEventIntegrationMutationResult = Apollo.MutationResult<CreateNotificationEventIntegrationMutation>;
 export type CreateNotificationEventIntegrationMutationOptions = Apollo.BaseMutationOptions<CreateNotificationEventIntegrationMutation, CreateNotificationEventIntegrationMutationVariables>;
@@ -3508,7 +3533,6 @@ export type DeleteNotificationEventIntegrationMutationFn = Apollo.MutationFuncti
 export function useDeleteNotificationEventIntegrationMutation(baseOptions?: Apollo.MutationHookOptions<DeleteNotificationEventIntegrationMutation, DeleteNotificationEventIntegrationMutationVariables>) {
   return Apollo.useMutation<DeleteNotificationEventIntegrationMutation, DeleteNotificationEventIntegrationMutationVariables>(DeleteNotificationEventIntegrationDocument, baseOptions);
 }
-
 export type DeleteNotificationEventIntegrationMutationHookResult = ReturnType<typeof useDeleteNotificationEventIntegrationMutation>;
 export type DeleteNotificationEventIntegrationMutationResult = Apollo.MutationResult<DeleteNotificationEventIntegrationMutation>;
 export type DeleteNotificationEventIntegrationMutationOptions = Apollo.BaseMutationOptions<DeleteNotificationEventIntegrationMutation, DeleteNotificationEventIntegrationMutationVariables>;
@@ -3920,12 +3944,51 @@ export const GetProposalsHomescreenDocument = gql`
 export function useGetProposalsHomescreenQuery(baseOptions: Apollo.QueryHookOptions<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>) {
   return Apollo.useQuery<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>(GetProposalsHomescreenDocument, baseOptions);
 }
+
 export function useGetProposalsHomescreenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>) {
   return Apollo.useLazyQuery<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>(GetProposalsHomescreenDocument, baseOptions);
 }
+
 export type GetProposalsHomescreenQueryHookResult = ReturnType<typeof useGetProposalsHomescreenQuery>;
 export type GetProposalsHomescreenLazyQueryHookResult = ReturnType<typeof useGetProposalsHomescreenLazyQuery>;
 export type GetProposalsHomescreenQueryResult = Apollo.QueryResult<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>;
+export const GetReportsDocument = gql`
+  query getReports($pagination: PaginateInput!) {
+    reports(pagination: $pagination) {
+      id
+      status
+      type
+    }
+  }
+`;
+
+/**
+ * __useGetReportsQuery__
+ *
+ * To run a query within a React component, call `useGetReportsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetReportsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetReportsQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useGetReportsQuery(baseOptions: Apollo.QueryHookOptions<GetReportsQuery, GetReportsQueryVariables>) {
+  return Apollo.useQuery<GetReportsQuery, GetReportsQueryVariables>(GetReportsDocument, baseOptions);
+}
+
+export function useGetReportsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReportsQuery, GetReportsQueryVariables>) {
+  return Apollo.useLazyQuery<GetReportsQuery, GetReportsQueryVariables>(GetReportsDocument, baseOptions);
+}
+
+export type GetReportsQueryHookResult = ReturnType<typeof useGetReportsQuery>;
+export type GetReportsLazyQueryHookResult = ReturnType<typeof useGetReportsLazyQuery>;
+export type GetReportsQueryResult = Apollo.QueryResult<GetReportsQuery, GetReportsQueryVariables>;
 export const RoleDetailsDocument = gql`
   query roleDetails($roleName: String!) {
     role(where: {name: $roleName}) {
