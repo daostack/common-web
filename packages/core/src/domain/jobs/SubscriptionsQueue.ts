@@ -11,7 +11,14 @@ export interface ISubscriptionQueueJob {
 
 export type SubscriptionsQueueJob = 'charge';
 
-const SubscriptionsQueue = Queue<ISubscriptionQueueJob>(Queues.SubscriptionsQueue);
+const SubscriptionsQueue = Queue<ISubscriptionQueueJob>(Queues.SubscriptionsQueue, {
+  redis: {
+    host: process.env['REDIS_HOST'],
+    port: Number(process.env['REDIS_PORT']),
+    username: process.env['REDIS_USERNAME'],
+    password: process.env['REDIS_PASSWORD']
+  }
+});
 
 export const addSubscriptionsJob = async (job: SubscriptionsQueueJob, subscriptionId: string) => {
   const subscription = (await prisma.subscription.findUnique({

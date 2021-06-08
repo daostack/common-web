@@ -25,7 +25,14 @@ export interface IEventsQueueJob {
 export type EventsQueueJob = 'create' | 'process';
 
 // Create the queue
-export const EventQueue = Queue(Queues.EventQueue);
+export const EventQueue = Queue(Queues.EventQueue, {
+  redis: {
+    host: process.env['REDIS_HOST'],
+    port: Number(process.env['REDIS_PORT']),
+    username: process.env['REDIS_USERNAME'],
+    password: process.env['REDIS_PASSWORD']
+  }
+});
 
 // Create a way to add new job
 export const addEventJob = (job: EventsQueueJob, payload: IEventsQueueJob['create'] | IEventsQueueJob['process'], options?: JobOptions): void => {
