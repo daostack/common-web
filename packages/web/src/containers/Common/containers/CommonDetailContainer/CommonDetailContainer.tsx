@@ -235,6 +235,7 @@ export default function CommonDetail() {
           isShowing={isShowing}
           onClose={closeModalHandler}
           closeColor={screenSize === ScreenSize.Mobile ? Colors.white : Colors.gray}
+          className={tab}
         >
           {screenSize === ScreenSize.Desktop && tab === "discussions" && (
             <DiscussionDetailModal disscussion={currentDisscussion} onOpenJoinModal={openJoinModal} />

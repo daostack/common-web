@@ -31,6 +31,12 @@
   max-width: 1000px;
   border-radius: 12px;
 
+  &.discussions,
+  &.proposals,
+  &.history {
+    max-width: 90%;
+  }
+
   .close-wrapper {
     position: absolute;
     right: 20px;

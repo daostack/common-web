@@ -37,7 +37,7 @@ const Modal = (props: ModalProps) => {
         <div id="modal">
           <div className="modal-overlay" />
           <div className="modal-wrapper">
-            <div className="modal box" ref={wrapperRef}>
+            <div className={`modal box ${props.className}`} ref={wrapperRef}>
               <div className="close-wrapper" onClick={() => onClose()}>
                 <CloseIcon fill={closeColor ?? Colors.black} />
               </div>
