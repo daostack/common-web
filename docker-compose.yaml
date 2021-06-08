@@ -1,24 +1,50 @@
-version: '2'
+version: '3'
 services:
   redis:
     image: "redis:alpine"
-    container_name: redis  
+    container_name: redis
+    hostname: redis
     restart: unless-stopped
+    networks: [internal]
   postgres:
     image: "postgres:13"
     container_name: postrges-db
+    hostname: postgres
     restart: unless-stopped
     environment:
-     POSTGRES_PASSWORD: 123456
-     POSTGRES_USER: postgres
-  backend:
-    build: .
-    container_name: common-backend
-    ports:
-     - "81:8080"
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_USER: postgres
     volumes:
-     - .:/usr/src/app
+      - ./:/var/lib/postgres:rw
+    networks: [internal]
+  worker:
+    image: common-backend
+    container_name: common-worker
+    ports:
+     - "4001:4001"
     depends_on:
       - postgres
       - redis
-    command: ["npm", "start"]
+    command: ["yarn", "run", "start"]
+    env_file: [".env"]
+    working_dir: /app/packages/worker
+    networks: [internal, host]
+  graphql:
+    image: common-backend
+    container_name: common-graphql
+    ports:
+     - "4000:4000"
+    depends_on:
+      - postgres
+      - redis
+    command: ["yarn", "run", "start"]
+    env_file: [".env"]
+    working_dir: /app/packages/graphql
+    networks: [internal, host]
+#  init-db:
+#   image: common-backend
+#   restart: "no"
+#   entrypoint: [init-db.sh]
+networks:
+  internal:
+  host:
