@@ -75,6 +75,7 @@
           display: flex;
           align-items: flex-end;
           padding-top: 30px;
+          font-family: NunitoSans-Bold;
           .tab-item {
             font-weight: bold;
             color: $deep-blue;
@@ -116,6 +117,7 @@
         margin-bottom: 20px;
         width: 60%;
         .about-title {
+          font-family: NunitoSans-Bold;
           font-size: $moderate-med;
           font-weight: bold;
           color: $blue-text;

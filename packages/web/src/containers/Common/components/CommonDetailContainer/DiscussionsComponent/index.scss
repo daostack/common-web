@@ -53,6 +53,9 @@
         color: #001a36;
         margin-bottom: 16px;
         overflow-wrap: break-word;
+        max-height: 8rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .read-more {
         font-size: 16px;
