@@ -11,6 +11,7 @@
     "noImplicitReturns": true,
     "baseUrl": "./src",
     "resolveJsonModule": true,
+    "allowJs": false,
     "strict": true,
     "declaration": true,
     "sourceMap": true,
@@ -50,6 +51,9 @@
       ],
       "@constants": [
         "./domain/constants/index"
+      ],
+      "@jobs": [
+        "./domain/jobs/index"
       ]
     },
     "esModuleInterop": true,

@@ -34,7 +34,7 @@ export const createSubscriptionCommand = async (proposalId: string): Promise<Sub
 
   // Check if it is for subscription common
   if (proposal.join.fundingType !== FundingType.Monthly) {
-    throw new CommonError('Cannot create subscription for proposal that is not of Monthly funding type', {
+    throw new CommonError('Cannot create subscription for proposal that is not of Monthly funding Types', {
       proposal
     });
   }

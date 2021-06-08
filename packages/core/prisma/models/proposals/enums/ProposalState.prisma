@@ -4,5 +4,7 @@ enum ProposalState {
   Finalizing
 
   Rejected
+
   Accepted
+  AcceptedButInsufficientFunding
 }

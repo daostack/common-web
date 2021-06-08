@@ -3,6 +3,9 @@ import { _getCircleCard } from './cards/_getCard';
 
 import { _createCirclePayment } from './payment/_createPayment';
 import { _getPayment } from './payment/_getPayment';
+import { _createWire } from '@circle/wires/_createWire';
+import { _createCirclePayout } from '@circle/payouts/_createPayout';
+import { _getPayout } from '@circle/payouts/_getPayout';
 
 export const circleClient = {
   cards: {
@@ -34,5 +37,24 @@ export const circleClient = {
      * what we currently have in our database
      */
     get: _getPayment
+  },
+
+  payouts: {
+    /**
+     * Executes payout in the circle system. No verification check
+     * are being performed here! The amount is in dollars, not cents!
+     */
+    create: _createCirclePayout,
+
+    get: _getPayout
+  },
+
+  wires: {
+    /**
+     * Creates new wires account in the circle system. This also
+     * should make sure that the details provided are valid and
+     * up to standard
+     */
+    create: _createWire
   }
 };

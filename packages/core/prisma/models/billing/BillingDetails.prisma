@@ -1,0 +1,20 @@
+model BillingDetail {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+
+  user   User @relation(fields: [userId], references: [id])
+  userId String
+
+  line1 String
+  line2 String?
+
+  city       String
+  country    String
+  district   String?
+  postalCode String
+}
+

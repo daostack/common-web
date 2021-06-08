@@ -1,15 +1,13 @@
-import { gql } from '@apollo/client';
+import React from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { withPermission } from '../../../../helpers/hoc/withPermission';
-import { useGetProposalsSelectedForBatchQuery, Wire, useExecutePayoutMutation } from '@core/graphql';
-import { Link } from '@components/Link';
-import React from 'react';
+
+import { gql } from '@apollo/client';
+import { Trash2 as Trash } from '@geist-ui/react-icons';
 import {
   Breadcrumbs,
   Button,
   Card,
-  Divider,
   Grid,
   Note,
   Select,
@@ -19,56 +17,58 @@ import {
   useTheme,
   useToasts
 } from '@geist-ui/react';
-import { Trash2 as Trash } from '@geist-ui/react-icons';
+
+import { Link } from '@components/Link';
+import { withPermission } from '../../../../helpers/hoc/withPermission';
 import { CreateBankAccount } from '@components/modals/CreateBankAccountModal';
+import {
+  useGetProposalsSelectedForBatchQuery,
+  useAvailableWiresLazyQuery,
+  useCreatePayoutMutation
+} from '@core/graphql';
 
 const BatchQuery = gql`
-  query getProposalsSelectedForBatch($ids: [String!]!) {
+  query getProposalsSelectedForBatch($where: ProposalWhereInput!) {
     proposals(
-      ids: $ids
+      where: $where
     ) {
       id
 
       state
-      fundingState
 
-      proposer {
+      user {
+        id
         firstName
         lastName
       }
 
-      description {
-        title
-        description
-      }
+      title
+      description
 
       common {
         name
       }
 
-      fundingRequest {
+      funding {
+        fundingState
         amount
-      }
-    }
-
-    wires {
-      id
-
-      description
-
-      billingDetails {
-        city
-        country
-        name
       }
     }
   }
 `;
 
+const AvailableWiresQuery = gql`
+  query availableWires($where: WireWhereInput!) {
+    wires(where: $where) {
+      id
+      description
+    }
+  }
+`;
 
-const executePayout = gql`
-  mutation ExecutePayout($input: ExecutePayoutInput!) {
-    executePayouts(input: $input) {
+const CreatePayout = gql`
+  mutation createPayout($input: CreatePayoutInput!) {
+    createPayout(input: $input) {
       id
     }
   }
@@ -79,16 +79,23 @@ const CreateBatchPayoutPage: NextPage = () => {
   const theme = useTheme();
 
   const [toasts, setToast] = useToasts();
-  const [executePayout, { data: executionData, loading }] = useExecutePayoutMutation();
+
+  const [createPayout, { loading: creatingPayout }] = useCreatePayoutMutation();
+  const [getWires, { data: wires }] = useAvailableWiresLazyQuery();
   const data = useGetProposalsSelectedForBatchQuery({
     pollInterval: 5 * 1000,
     variables: {
-      ids: router.query.selectedProposals
+      where: {
+        id: {
+          in: router.query.selectedProposals as string[]
+        }
+      }
     }
   });
 
 
   // --- State
+  const [userIds, setUserIds] = React.useState<string[]>([]);
   const [selectedWire, setSelectedWire] = React.useState<string>();
   const [removedProposals, setRemovedProposals] = React.useState<string[]>([]);
 
@@ -98,27 +105,38 @@ const CreateBatchPayoutPage: NextPage = () => {
   };
 
   // --- Helper
-  const getSelectedWire = (): Wire => {
-    return data.data.wires.find((wire) => wire.id === selectedWire);
-  };
-
   const getSelectedProposals = () => {
-    return data.data.proposals.filter(p => !removedProposals.includes(p.id)) || [];
-  };
-
-  const getTotalPayoutAmount = (): string => {
-    let sum = 0;
-
-    getSelectedProposals().forEach((proposal) => {
-      sum += proposal.fundingRequest.amount;
-    });
-
-    return (sum ? sum / 100 : 0).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    return data?.data?.proposals?.filter(p => !removedProposals.includes(p.id)) || [];
   };
 
   const isExecuteDisabled = (): boolean => {
-    return (!selectedWire || selectedWire === 'create') || data.data.proposals.some(p => p.fundingState !== 'available');
+    return (!selectedWire || selectedWire === 'create') || data.data.proposals.some(p => p.funding.fundingState !== 'Eligible');
   };
+
+  // --- Effects
+  React.useEffect(() => {
+    if (data.data) {
+      const temp: string[] = [];
+
+      data.data.proposals.map(x => temp.push(x.user?.id));
+
+      setUserIds(Array.from(new Set(temp)));
+    }
+  }, [data]);
+
+  React.useEffect(() => {
+    if (userIds.length) {
+      getWires({
+        variables: {
+          where: {
+            userId: {
+              in: userIds
+            }
+          }
+        }
+      });
+    }
+  }, [userIds]);
 
   // --- Actions
 
@@ -147,7 +165,7 @@ const CreateBatchPayoutPage: NextPage = () => {
 
   const onExecute = async () => {
     try {
-      const res = await executePayout({
+      const res = await createPayout({
         variables: {
           input: {
             wireId: selectedWire,
@@ -161,8 +179,8 @@ const CreateBatchPayoutPage: NextPage = () => {
         delay: 4000
       });
 
-      router.push({
-        pathname: `/financials/payouts/details/${res.data.executePayouts.id}`
+      await router.push({
+        pathname: `/financials/payouts/details/${res.data.createPayout.id}`
       });
     } catch (e) {
       setToast({
@@ -190,7 +208,7 @@ const CreateBatchPayoutPage: NextPage = () => {
           </Breadcrumbs.Item>
 
           <Breadcrumbs.Item>
-            <Link to="/payouts">Payouts</Link>
+            <Link to="/financials/payouts">Payouts</Link>
           </Breadcrumbs.Item>
 
           <Breadcrumbs.Item>
@@ -216,11 +234,17 @@ const CreateBatchPayoutPage: NextPage = () => {
               onChange={onWireSelected}
               placeholder="Please, select bank account"
             >
-              <Select.Option value="create">
-                Create new bank account
-              </Select.Option>
+              {wires ? (
+                <Select.Option value="create">
+                  Create new bank account
+                </Select.Option>
+              ) : (
+                <Select.Option disabled>
+                  Loading...
+                </Select.Option>
+              )}
 
-              {data.data.wires.map((wire) => (
+              {wires && wires.wires.map((wire) => (
                 <Select.Option value={wire.id} key={wire.id}>
                   {wire.description}
                 </Select.Option>
@@ -237,9 +261,9 @@ const CreateBatchPayoutPage: NextPage = () => {
               <Card key={proposal.id} style={{ margin: '20px 0' }}>
                 <Grid.Container>
                   <Grid xs={20}>
-                    <Text h3 style={{ marginBottom: 0 }}>{proposal.description.title}</Text>
+                    <Text h3 style={{ marginBottom: 0 }}>{proposal.title}</Text>
                     <Text b>
-                      {(proposal.fundingRequest.amount / 100).toLocaleString('en-US', {
+                      {(proposal.funding.amount / 100).toLocaleString('en-US', {
                         style: 'currency',
                         currency: 'USD'
                       })}
@@ -262,13 +286,13 @@ const CreateBatchPayoutPage: NextPage = () => {
                 </Grid.Container>
 
 
-                <Text p>{proposal.description.description}</Text>
+                <Text p>{proposal.description}</Text>
 
-                {proposal.fundingState !== 'available' && (
+                {proposal.funding.fundingState !== 'Eligible' && (
                   <Note type="error">
                     The funding proposal is not longer eligible for payout. The current funding state of the proposal
                     is{' '}
-                    <b>{proposal.fundingState}</b>
+                    <b>{proposal.funding.fundingState}</b>
                   </Note>
                 )}
               </Card>
@@ -277,65 +301,21 @@ const CreateBatchPayoutPage: NextPage = () => {
             <Spacer y={2}/>
           </React.Fragment>
 
-          <React.Fragment>
-            <Text h3>Payout overview</Text>
-
-            <Grid.Container gap={4}>
-              <Grid xs={24} md={12}>
-                <Text h5>Numbers</Text>
-
-                <Divider style={{ marginTop: 0 }}/>
-
-                <Text p style={{ margin: '5px 0' }}>
-                  <b>Number of proposals:</b> {getSelectedProposals().length}
-                </Text>
-
-                <Text p style={{ margin: '5px 0' }}>
-                  <b>Total payout amount:</b> {getTotalPayoutAmount()}
-                </Text>
-              </Grid>
-
-              <Grid xs={24} md={12}>
-                <Text h5>Bank Account</Text>
-
-                <Divider style={{ marginTop: 0 }}/>
-
-                {(selectedWire && selectedWire !== 'create') ? (
-                  <React.Fragment>
-                    <Text p style={{ margin: '5px 0' }}>
-                      <b>Description:</b> {getSelectedWire()?.description}
-                    </Text>
-
-                    <Text p style={{ margin: '2px 0' }}>
-                      <b>Account Holder:</b> {getSelectedWire()?.billingDetails?.name}
-                    </Text>
-
-                    <Text p style={{ margin: '2px 0' }}>
-                      <b>Account Country:</b> {getSelectedWire()?.billingDetails?.country}
-                    </Text>
-
-                    <Text p style={{ margin: '2px 0' }}>
-                      <b>Account City:</b> {getSelectedWire()?.billingDetails?.city}
-                    </Text>
-                  </React.Fragment>
-                ) : (
-                  <Text>Please select bank account</Text>
-                )}
-              </Grid>
-
-              <Spacer y={1}/>
-            </Grid.Container>
-
+          {userIds.length > 1 && (
             <Note type="warning">
-              When clicking execute the payout is no longer reversible. Though if not approved in timely manner it will
-              be aborted
+              There are proposals from more than one user in the current payout!
             </Note>
+          )}
 
-            <Spacer y={1}/>
-          </React.Fragment>
+          <Spacer y={.5}/>
 
           <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
-            <Button size="small" disabled={isExecuteDisabled()} loading={loading} onClick={onExecute}>
+            <Button
+              size="small"
+              onClick={onExecute}
+              loading={creatingPayout}
+              disabled={isExecuteDisabled()}
+            >
               Create payout
             </Button>
           </div>
@@ -346,6 +326,6 @@ const CreateBatchPayoutPage: NextPage = () => {
   );
 };
 
-export default withPermission('admin.payouts.create', {
+export default withPermission('admin.financials.payouts.create', {
   redirect: true
 })(CreateBatchPayoutPage);

@@ -17,13 +17,14 @@ const LoginPage: NextPage<IAuthenticatePageProps> = () => {
   const theme = useTheme();
   const router = useRouter();
   const isLarge = useMediaQuery('md', { match: 'up' });
+  const isSM = useMediaQuery('sm', { match: 'down' });
 
   const [toasts, setToasts] = useToasts();
 
   const singIn = (provider: firebase.auth.AuthProvider) => {
     return async () => {
       try {
-        const signInResult = await firebase.auth()
+        await firebase.auth()
           .signInWithPopup(provider);
 
         setToasts({
@@ -32,7 +33,7 @@ const LoginPage: NextPage<IAuthenticatePageProps> = () => {
           delay: 3000
         });
 
-        router.push('/dashboard');
+        await router.push('/dashboard');
       } catch (e) {
         if (e.code === 'auth/popup-closed-by-user') {
           setToasts({
@@ -55,12 +56,18 @@ const LoginPage: NextPage<IAuthenticatePageProps> = () => {
   return (
     <React.Fragment>
       <Grid.Container style={{ height: '100vh' }}>
-        <Grid md={12} style={{
-          background: theme.palette.accents_1,
-          display: 'flex',
-          justifyContent: 'flex-end',
-          alignItems: 'center'
-        }}>
+        <Grid
+          md={12}
+          style={{
+            background: theme.palette.accents_1,
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            ...(isSM && {
+              display: 'none'
+            })
+          }}
+        >
           <div style={{ width: '25vw', marginRight: '5vw' }}>
             <Text h2>Common Admin</Text>
 
@@ -99,15 +106,23 @@ const LoginPage: NextPage<IAuthenticatePageProps> = () => {
           </div>
         </Grid>
 
-        <Grid sm={24} md={12} style={{
+        <Grid
+          xs={24}
+          md={12} style={{
           background: theme.palette.background,
           display: 'flex',
           justifyContent: 'flex-start',
           alignItems: 'center',
           padding: '5vw'
-        }}>
-          <div style={{ ...(isLarge && { width: '25vw' }) }}>
-            <Text h2>Sign in to continue</Text>
+        }}
+        >
+          <div style={{ ...(isLarge ? { width: '25vw' } : { width: '100%' }) }}>
+            <Text
+              h2
+              style={isSM ? { textAlign: 'center' } : {}}
+            >
+              Sign in to continue
+            </Text>
 
             <div style={{ margin: '10px 0' }}>
               <Button

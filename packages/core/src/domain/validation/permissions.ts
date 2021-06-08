@@ -6,17 +6,22 @@ export const allPermissions = [
   'admin.roles.create',
   'admin.roles.update',
 
-  'admin.roles.permissions.add',
-  'admin.roles.permissions.remove',
-
   'admin.roles.assign',
   'admin.roles.unassign',
 
   'admin.events.read',
 
+  'admin.financials.payments.read',
+
+  'admin.financials.payouts.read',
+  'admin.financials.payouts.create',
+  'admin.financials.payouts.approve',
+  'admin.financials.payouts.confirm',
+
   'admin.proposals.read',
   'admin.proposals.read.ipAddress',
 
+  'admin.commons.read',
   'admin.commons.update',
   'admin.commons.delist',
   'admin.commons.whitelist',
@@ -38,5 +43,23 @@ export const allPermissions = [
   'admin.notification.setting.template.update',
   'admin.notification.setting.template.delete',
 
-  'user.permissions.read'
+  'admin.users.read',
+  'admin.users.update',
+
+  'admin.users.billingDetails.read',
+  'admin.users.billingDetails.update',
+  'admin.users.billingDetails.delete',
+
+  'user.permissions.read',
+
+  'admin.wire.read',
+  'admin.wire.create',
+  'admin.wire.update',
+
+  'admin.wire.bank.read',
+  'admin.wire.bank.create',
+  'admin.wire.bank.update'
 ];
+
+
+export type AllPermission = (typeof allPermissions[number]);

@@ -51,7 +51,7 @@ module.exports = {
           ["sibling", "parent"], // Then sibling and parent types. They can be mingled together
           "index", // Then the index file
           "object",
-          // Then the rest: internal and external type
+          // Then the rest: internal and external Types
         ],
         "newlines-between": "always",
       },

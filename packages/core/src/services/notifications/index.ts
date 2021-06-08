@@ -6,6 +6,7 @@ import { createNotificationEventSettings } from './command/createNotificationEve
 
 import { updateNotificationSettings } from './command/updateNotificationSettings';
 import { updateNotificationTemplate } from './command/updateNotificationTemplate';
+import { deleteNotificationEventSettingsCommand } from './command/deleteNotificationEventSettingsCommand';
 
 export const notificationService = {
   create: createNotificationCommand,
@@ -18,6 +19,7 @@ export const notificationService = {
 
   settings: {
     createEventSettings: createNotificationEventSettings,
+    deleteEventSettings: deleteNotificationEventSettingsCommand,
     update: updateNotificationSettings
   }
 };

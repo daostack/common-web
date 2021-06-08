@@ -6,9 +6,7 @@ import { AuthContainer } from "../Auth";
 import { CommonContainer } from "../Common";
 import PrivateRoute from "./PrivateRoute";
 
-
 const App = () => {
-
   return (
     <div className="App">
       <Header />

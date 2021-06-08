@@ -10,8 +10,6 @@ import { startLoading, stopLoading } from "../../../shared/store/actions";
 import { User } from "../../../shared/models";
 import { GoogleAuthResultInterface } from "../interface";
 
-
-
 function* socialLoginSaga({ payload }: AnyAction & { payload: string }) {
   try {
     yield put(startLoading());

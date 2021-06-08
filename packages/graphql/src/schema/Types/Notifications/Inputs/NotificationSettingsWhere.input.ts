@@ -5,7 +5,7 @@ export const NotificationSettingsWhereInput = inputObjectType({
   definition(t) {
     t.field('type', {
       type: 'NotificationType',
-      description: 'The type of the notification'
+      description: 'The Types of the notification'
     });
   }
 });

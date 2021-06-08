@@ -24,6 +24,18 @@ export const UserType = objectType({
       description: 'The last name of the user'
     });
 
+    t.nonNull.field('country', {
+      type: 'Country',
+      description: 'The last name of the user',
+      authorize: async (root, args, ctx) => {
+        const userId = await ctx.getUserId();
+
+        return (userId === root.id);
+      }
+    });
+
+    t.string('intro');
+
     t.nonNull.string('displayName', {
       description: 'The display name of the user',
       resolve: (root) => {

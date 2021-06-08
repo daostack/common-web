@@ -15,7 +15,7 @@ export const ChangeDiscussionSubscriptionTypeMutation = extendType({
         type: nonNull(
           arg({
             type: 'DiscussionSubscriptionType',
-            description: 'The new subscription type'
+            description: 'The new subscription Types'
           })
         )
       },

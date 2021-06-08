@@ -78,6 +78,14 @@ export interface NexusGenInputs {
   CommonMemberOrderByInput: { // input type
     createdAt: NexusGenEnums['SortOrder']; // SortOrder!
   }
+  CommonRuleInput: { // input type
+    description?: string | null; // String
+    title: string; // String!
+  }
+  CommonWhereInput: { // input type
+    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    name?: NexusGenInputs['StringFilter'] | null; // StringFilter
+  }
   CommonWhereUniqueInput: { // input type
     id: string; // ID!
   }
@@ -97,7 +105,7 @@ export interface NexusGenInputs {
     image: string; // String!
     links?: NexusGenInputs['CommonLinkInput'][] | null; // [CommonLinkInput!]
     name: string; // String!
-    rules?: NexusGenInputs['CommonLinkInput'][] | null; // [CommonLinkInput!]
+    rules?: NexusGenInputs['CommonRuleInput'][] | null; // [CommonRuleInput!]
   }
   CreateDiscussionInput: { // input type
     commonId: string; // ID!
@@ -143,15 +151,38 @@ export interface NexusGenInputs {
     subject: string; // String!
     templateType: NexusGenEnums['NotificationTemplateType']; // NotificationTemplateType!
   }
+  CreatePayoutInput: { // input type
+    description?: string | null; // String
+    proposalIds: string[]; // [ID!]!
+    wireId: string; // ID!
+  }
+  CreateReportInput: { // input type
+    for: NexusGenEnums['ReportFor']; // ReportFor!
+    messageId?: NexusGenScalars['UUID'] | null; // UUID
+    note: string; // String!
+    proposalId?: NexusGenScalars['UUID'] | null; // UUID
+    type: NexusGenEnums['ReportType']; // ReportType!
+  }
   CreateRoleInput: { // input type
     description: string; // String!
     displayName: string; // String!
     name: string; // String!
     permissions: string[]; // [String!]!
   }
+  CreateUserBillingDetailsInput: { // input type
+    city: string; // String!
+    country: NexusGenEnums['Country']; // Country!
+    district?: string | null; // String
+    line1: string; // String!
+    line2?: string | null; // String
+    name: string; // String!
+    postalCode: string; // String!
+  }
   CreateUserInput: { // input type
+    country: NexusGenEnums['Country']; // Country!
     email: string; // String!
     firstName: string; // String!
+    intro?: string | null; // String
     lastName: string; // String!
     photo: string; // String!
   }
@@ -162,6 +193,25 @@ export interface NexusGenInputs {
   CreateVoteInput: { // input type
     outcome: NexusGenEnums['VoteOutcome']; // VoteOutcome!
     proposalId: string; // ID!
+  }
+  CreateWireBankAccountInput: { // input type
+    bankName: string; // String!
+    city: string; // String!
+    country: NexusGenEnums['Country']; // Country!
+    district?: string | null; // String
+    line1?: string | null; // String
+    line2?: string | null; // String
+    postalCode: string; // String!
+  }
+  CreateWireInput: { // input type
+    accountNumber?: string | null; // String
+    billingDetailsId?: string | null; // String
+    createBillingDetails?: NexusGenInputs['CreateUserBillingDetailsInput'] | null; // CreateUserBillingDetailsInput
+    createWireBankDetails?: NexusGenInputs['CreateWireBankAccountInput'] | null; // CreateWireBankAccountInput
+    iban?: string | null; // String
+    routingNumber?: string | null; // String
+    userId: string; // String!
+    wireBankDetailsId?: string | null; // String
   }
   DiscussionMessagesOrderByInput: { // input type
     createdAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -180,6 +230,9 @@ export interface NexusGenInputs {
     createdAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
     type?: NexusGenEnums['SortOrder'] | null; // SortOrder
     updatedAt?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
+  FundingProposalWhereInput: { // input type
+    fundingState?: NexusGenEnums['FundingState'] | null; // FundingState
   }
   LinkInput: { // input type
     title: string; // String!
@@ -210,8 +263,33 @@ export interface NexusGenInputs {
     id?: NexusGenScalars['UUID'] | null; // UUID
   }
   PaginateInput: { // input type
-    skip?: number | null; // Int
+    skip: number; // Int!
     take: number; // Int!
+  }
+  PaymentsWhereInput: { // input type
+    commonId?: NexusGenScalars['UUID'] | null; // UUID
+    userId?: NexusGenScalars['UUID'] | null; // UUID
+  }
+  PayoutApproverFilter: { // input type
+    every?: NexusGenInputs['PayoutApproversWhereInput'] | null; // PayoutApproversWhereInput
+    none?: NexusGenInputs['PayoutApproversWhereInput'] | null; // PayoutApproversWhereInput
+    some?: NexusGenInputs['PayoutApproversWhereInput'] | null; // PayoutApproversWhereInput
+  }
+  PayoutApproversWhereInput: { // input type
+    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    outcome?: NexusGenEnums['PayoutApproverResponse'] | null; // PayoutApproverResponse
+    userId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+  }
+  PayoutStatusFilter: { // input type
+    equals?: NexusGenEnums['PayoutStatus'] | null; // PayoutStatus
+    in?: Array<NexusGenEnums['PayoutStatus'] | null> | null; // [PayoutStatus]
+    not?: NexusGenEnums['PayoutStatus'] | null; // PayoutStatus
+    notIn?: Array<NexusGenEnums['PayoutStatus'] | null> | null; // [PayoutStatus]
+  }
+  PayoutWhereInput: { // input type
+    approvers?: NexusGenInputs['PayoutApproverFilter'] | null; // PayoutApproverFilter
+    isPendingApprover?: boolean | null; // Boolean
+    status?: NexusGenInputs['PayoutStatusFilter'] | null; // PayoutStatusFilter
   }
   ProposalFileInput: { // input type
     value: string; // String!
@@ -224,19 +302,19 @@ export interface NexusGenInputs {
     url: string; // String!
   }
   ProposalWhereInput: { // input type
+    AND?: NexusGenInputs['ProposalWhereInput'][] | null; // [ProposalWhereInput!]
+    OR?: NexusGenInputs['ProposalWhereInput'][] | null; // [ProposalWhereInput!]
     commonId?: NexusGenScalars['UUID'] | null; // UUID
     commonMemberId?: NexusGenScalars['UUID'] | null; // UUID
+    description?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    id?: NexusGenInputs['StringFilter'] | null; // StringFilter
     state?: NexusGenEnums['ProposalState'] | null; // ProposalState
+    title?: NexusGenInputs['StringFilter'] | null; // StringFilter
     type?: NexusGenEnums['ProposalType'] | null; // ProposalType
     userId?: string | null; // ID
   }
   ProposalWhereUniqueInput: { // input type
     id: NexusGenScalars['UUID']; // UUID!
-  }
-  ReportDiscussionMessageInput: { // input type
-    for: NexusGenEnums['ReportFor']; // ReportFor!
-    messageId: NexusGenScalars['UUID']; // UUID!
-    note: string; // String!
   }
   ReportStatusFilterInput: { // input type
     in?: Array<NexusGenEnums['ReportStatus'] | null> | null; // [ReportStatus]
@@ -245,6 +323,10 @@ export interface NexusGenInputs {
   ReportWhereInput: { // input type
     for?: NexusGenEnums['ReportFor'] | null; // ReportFor
     status?: NexusGenInputs['ReportStatusFilterInput'] | null; // ReportStatusFilterInput
+  }
+  RoleWhereUniqueInput: { // input type
+    id?: string | null; // ID
+    name?: string | null; // String
   }
   StatisticsWhereInput: { // input type
     type?: NexusGenEnums['StatisticType'] | null; // StatisticType
@@ -261,6 +343,16 @@ export interface NexusGenInputs {
     notIn?: string[] | null; // [String!]
     startsWith?: string | null; // String
   }
+  UpdateCommonInput: { // input type
+    action?: string | null; // String
+    byline?: string | null; // String
+    commonId: string; // ID!
+    description?: string | null; // String
+    image?: string | null; // String
+    links?: NexusGenInputs['CommonLinkInput'][] | null; // [CommonLinkInput!]
+    name?: string | null; // String
+    rules?: NexusGenInputs['CommonRuleInput'][] | null; // [CommonRuleInput!]
+  }
   UpdateNotificationSettingsInput: { // input type
     id: string; // String!
     sendEmail?: boolean | null; // Boolean
@@ -276,7 +368,18 @@ export interface NexusGenInputs {
     id: string; // String!
     subject?: string | null; // String
   }
+  UpdateUserInput: { // input type
+    country?: NexusGenEnums['Country'] | null; // Country
+    firstName?: string | null; // String
+    id: string; // String!
+    intro?: string | null; // String
+    lastName?: string | null; // String
+    notificationLanguage?: NexusGenEnums['NotificationLanguage'] | null; // NotificationLanguage
+    photo?: string | null; // String
+  }
   UserWhereInput: { // input type
+    AND?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
+    OR?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
     email?: NexusGenInputs['StringFilter'] | null; // StringFilter
     firstName?: NexusGenInputs['StringFilter'] | null; // StringFilter
     lastName?: NexusGenInputs['StringFilter'] | null; // StringFilter
@@ -284,34 +387,44 @@ export interface NexusGenInputs {
   UserWhereUniqueInput: { // input type
     userId: string; // ID!
   }
+  WireWhereInput: { // input type
+    userId?: NexusGenInputs['StringFilter'] | null; // StringFilter
+  }
 }
 
 export interface NexusGenEnums {
-  CommonMemberRole: "Founder" | "Moderator"
-  DiscussionMessageFlag: "Clear" | "Hidden" | "Reported"
-  DiscussionMessageType: "Message"
-  DiscussionSubscriptionType: "AllNotifications" | "NoNotification" | "OnlyMentions"
-  DiscussionType: "CommonDiscussion" | "ProposalDiscussion"
-  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonCreated" | "CommonDelisted" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "CommonWhitelisted" | "DiscussionCreated" | "DiscussionMessageCreated" | "DiscussionSubscriptionCreated" | "DiscussionSubscriptionTypeChanged" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "NotificationTemplateCreated" | "NotificationTemplateUpdated" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "ProposalExpired" | "ProposalMajorityReached" | "ReportCreated" | "ReportDismissed" | "ReportRespected" | "RoleCreated" | "RoleDeleted" | "RolePermissionAdded" | "RolePermissionRemoved" | "RoleUpdated" | "UserAddedToRole" | "UserCreated" | "UserNotificationTokenCreated" | "UserNotificationTokenExpired" | "UserNotificationTokenRefreshed" | "UserNotificationTokenVoided" | "UserRemovedFromRole" | "VoteCreated"
-  FundingState: "AwaitingApproval" | "Completed" | "Confirmed" | "Eligible" | "NotEligible" | "Pending"
-  FundingType: "Monthly" | "OneTime"
-  NotificationLanguage: "BG" | "EN" | "HE" | "JP" | "KO" | "RU"
-  NotificationSeenStatus: "Done" | "NotSeen" | "Seen"
-  NotificationTemplateType: "EmailNotification" | "PushNotification"
-  NotificationType: "FundingRequestAccepted" | "FundingRequestRejected" | "General" | "JoinRequestAccepted" | "JoinRequestRejected"
-  PaymentState: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
-  ProposalState: "Accepted" | "Countdown" | "Finalizing" | "Rejected"
-  ProposalType: "FundingRequest" | "JoinRequest"
-  ReportAction: "Dismissed" | "Respected"
-  ReportAuditor: "CommonModerator" | "SystemAdmin"
-  ReportFor: "FalseNews" | "Harassment" | "Hate" | "Nudity" | "Other" | "Spam" | "Violance"
-  ReportStatus: "Active" | "Clossed"
-  SortOrder: "asc" | "desc"
-  StatisticType: "AllTime" | "Daily" | "Hourly" | "Weekly"
-  SubscriptionPaymentStatus: "AwaitingInitialPayment" | "Pending" | "Successful" | "Unsuccessful"
-  SubscriptionStatus: "Active" | "CanceledByPaymentFailure" | "CanceledByUser" | "PaymentFailed" | "Pending"
-  UserNotificationTokenState: "Active" | "Expired" | "Voided"
-  VoteOutcome: "Approve" | "Condemn"
+  CommonMemberRole: 'Founder' | 'Moderator'
+  Country: 'AD' | 'AE' | 'AF' | 'AG' | 'AI' | 'AL' | 'AM' | 'AO' | 'AQ' | 'AR' | 'AS' | 'AT' | 'AU' | 'AW' | 'AX' | 'AZ' | 'BA' | 'BB' | 'BD' | 'BE' | 'BF' | 'BG' | 'BH' | 'BI' | 'BJ' | 'BL' | 'BM' | 'BN' | 'BO' | 'BQ' | 'BR' | 'BS' | 'BT' | 'BV' | 'BW' | 'BY' | 'BZ' | 'CA' | 'CC' | 'CD' | 'CF' | 'CG' | 'CH' | 'CI' | 'CK' | 'CL' | 'CM' | 'CN' | 'CO' | 'CR' | 'CU' | 'CV' | 'CW' | 'CX' | 'CY' | 'CZ' | 'DE' | 'DJ' | 'DK' | 'DM' | 'DO' | 'DZ' | 'EC' | 'EE' | 'EG' | 'EH' | 'ER' | 'ES' | 'ET' | 'FI' | 'FJ' | 'FK' | 'FM' | 'FO' | 'FR' | 'GA' | 'GB' | 'GD' | 'GE' | 'GF' | 'GG' | 'GH' | 'GI' | 'GL' | 'GM' | 'GN' | 'GP' | 'GQ' | 'GR' | 'GS' | 'GT' | 'GU' | 'GW' | 'GY' | 'HK' | 'HM' | 'HN' | 'HR' | 'HT' | 'HU' | 'ID' | 'IE' | 'IL' | 'IM' | 'IN' | 'IO' | 'IQ' | 'IR' | 'IS' | 'IT' | 'JE' | 'JM' | 'JO' | 'JP' | 'KE' | 'KG' | 'KH' | 'KI' | 'KM' | 'KN' | 'KP' | 'KR' | 'KW' | 'KY' | 'KZ' | 'LA' | 'LB' | 'LC' | 'LI' | 'LK' | 'LR' | 'LS' | 'LT' | 'LU' | 'LV' | 'LY' | 'MA' | 'MC' | 'MD' | 'ME' | 'MF' | 'MG' | 'MH' | 'MK' | 'ML' | 'MM' | 'MN' | 'MO' | 'MP' | 'MQ' | 'MR' | 'MS' | 'MT' | 'MU' | 'MV' | 'MW' | 'MX' | 'MY' | 'MZ' | 'NA' | 'NC' | 'NE' | 'NF' | 'NG' | 'NI' | 'NL' | 'NO' | 'NP' | 'NR' | 'NU' | 'NZ' | 'OM' | 'PA' | 'PE' | 'PF' | 'PG' | 'PH' | 'PK' | 'PL' | 'PM' | 'PN' | 'PR' | 'PS' | 'PT' | 'PW' | 'PY' | 'QA' | 'RE' | 'RO' | 'RS' | 'RU' | 'RW' | 'SA' | 'SB' | 'SC' | 'SD' | 'SE' | 'SG' | 'SH' | 'SI' | 'SJ' | 'SK' | 'SL' | 'SM' | 'SN' | 'SO' | 'SR' | 'SS' | 'ST' | 'SV' | 'SX' | 'SY' | 'SZ' | 'TC' | 'TD' | 'TF' | 'TG' | 'TH' | 'TJ' | 'TK' | 'TL' | 'TM' | 'TN' | 'TO' | 'TR' | 'TT' | 'TV' | 'TW' | 'TZ' | 'UA' | 'UG' | 'UM' | 'US' | 'UY' | 'UZ' | 'Unknown' | 'VA' | 'VC' | 'VE' | 'VG' | 'VI' | 'VN' | 'VU' | 'WF' | 'WS' | 'YE' | 'YT' | 'ZA' | 'ZM' | 'ZW'
+  DiscussionMessageType: 'Message'
+  DiscussionSubscriptionType: 'AllNotifications' | 'NoNotification' | 'OnlyMentions'
+  DiscussionType: 'CommonDiscussion' | 'ProposalDiscussion'
+  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonBalanceUpdated' | 'CommonCreated' | 'CommonDelisted' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'CommonUpdated' | 'CommonWhitelisted' | 'DiscussionCreated' | 'DiscussionMessageCreated' | 'DiscussionSubscriptionCreated' | 'DiscussionSubscriptionTypeChanged' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'NotificationTemplateCreated' | 'NotificationTemplateUpdated' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'PayoutApprovalGiven' | 'PayoutApproved' | 'PayoutApproverCreated' | 'PayoutCompleted' | 'PayoutCreated' | 'PayoutExecuted' | 'PayoutRejected' | 'PayoutRejectionGiven' | 'ProposalExpired' | 'ProposalMajorityReached' | 'ReportCreated' | 'ReportDismissed' | 'ReportRespected' | 'RoleCreated' | 'RoleDeleted' | 'RolePermissionAdded' | 'RolePermissionRemoved' | 'RoleUpdated' | 'UserAddedToRole' | 'UserCreated' | 'UserNotificationTokenCreated' | 'UserNotificationTokenExpired' | 'UserNotificationTokenRefreshed' | 'UserNotificationTokenVoided' | 'UserRemovedFromRole' | 'UserUpdated' | 'VoteCreated' | 'WireCreated' | 'WireUpdated'
+  FundingState: 'Eligible' | 'NotEligible' | 'Redeemed'
+  FundingType: 'Monthly' | 'OneTime'
+  NotificationLanguage: 'BG' | 'EN' | 'HE' | 'JP' | 'KO' | 'RU'
+  NotificationSeenStatus: 'Done' | 'NotSeen' | 'Seen'
+  NotificationTemplateType: 'EmailNotification' | 'PushNotification'
+  NotificationType: 'FundingRequestAccepted' | 'FundingRequestRejected' | 'General' | 'JoinRequestAccepted' | 'JoinRequestRejected'
+  PaymentCircleStatus: 'confirmed' | 'failed' | 'paid' | 'pending'
+  PaymentState: 'NotAttempted' | 'Pending' | 'Successful' | 'Unsuccessful'
+  PaymentStatus: 'NotAttempted' | 'Pending' | 'Successful' | 'Unsuccessful'
+  PaymentType: 'ImportedPayment' | 'OneTimePayment' | 'SubscriptionInitialPayment' | 'SubscriptionSequentialPayment'
+  PayoutApproverResponse: 'Approved' | 'Declined' | 'Pending'
+  PayoutStatus: 'CircleComplete' | 'CircleFailed' | 'CirclePending' | 'Failed' | 'PendingApproval'
+  ProposalState: 'Accepted' | 'AcceptedButInsufficientFunding' | 'Countdown' | 'Finalizing' | 'Rejected'
+  ProposalType: 'FundingRequest' | 'JoinRequest'
+  ReportAction: 'Dismissed' | 'Respected'
+  ReportAuditor: 'CommonModerator' | 'SystemAdmin'
+  ReportFlag: 'Clear' | 'Hidden' | 'Reported'
+  ReportFor: 'FalseNews' | 'Harassment' | 'Hate' | 'Nudity' | 'Other' | 'Spam' | 'Violance'
+  ReportStatus: 'Active' | 'Clossed'
+  ReportType: 'MessageReport' | 'ProposalReport'
+  SortOrder: 'asc' | 'desc'
+  StatisticType: 'AllTime' | 'Daily' | 'Hourly' | 'Weekly'
+  SubscriptionPaymentStatus: 'AwaitingInitialPayment' | 'Pending' | 'Successful' | 'Unsuccessful'
+  SubscriptionStatus: 'Active' | 'CanceledByPaymentFailure' | 'CanceledByUser' | 'PaymentFailed' | 'Pending'
+  UserNotificationTokenState: 'Active' | 'Expired' | 'Voided'
+  VoteOutcome: 'Approve' | 'Condemn'
 }
 
 export interface NexusGenScalars {
@@ -369,6 +482,11 @@ export interface NexusGenObjects {
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     voided: boolean; // Boolean!
   }
+  CommonUpdate: { // root type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: NexusGenScalars['UUID']; // UUID!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   Discussion: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description: string; // String!
@@ -381,7 +499,7 @@ export interface NexusGenObjects {
   }
   DiscussionMessage: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    flag: NexusGenEnums['DiscussionMessageFlag']; // DiscussionMessageFlag!
+    flag: NexusGenEnums['ReportFlag']; // ReportFlag!
     id: NexusGenScalars['UUID']; // UUID!
     message: string; // String!
     type: NexusGenEnums['DiscussionMessageType']; // DiscussionMessageType!
@@ -474,6 +592,36 @@ export interface NexusGenObjects {
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   NotificationTemplateOptions: {};
+  Payment: { // root type
+    amount?: number | null; // Int
+    circlePaymentId?: string | null; // String
+    circlePaymentStatus?: NexusGenEnums['PaymentCircleStatus'] | null; // PaymentCircleStatus
+    commonId: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    fees?: number | null; // Int
+    id: NexusGenScalars['UUID']; // UUID!
+    processed: boolean; // Boolean!
+    processedError: boolean; // Boolean!
+    status: NexusGenEnums['PaymentStatus']; // PaymentStatus!
+    type: NexusGenEnums['PaymentType']; // PaymentType!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    userId: string; // String!
+  }
+  Payout: { // root type
+    amount: number; // Int!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    description: string; // String!
+    id: NexusGenScalars['UUID']; // UUID!
+    status: NexusGenEnums['PayoutStatus']; // PayoutStatus!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
+  PayoutApprover: { // root type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: NexusGenScalars['UUID']; // UUID!
+    outcome: NexusGenEnums['PayoutApproverResponse']; // PayoutApproverResponse!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    userId: string; // ID!
+  }
   Proposal: { // root type
     commonId: NexusGenScalars['UUID']; // UUID!
     commonMemberId: NexusGenScalars['UUID']; // UUID!
@@ -481,6 +629,7 @@ export interface NexusGenObjects {
     description?: string | null; // String
     expiresAt: NexusGenScalars['DateTime']; // DateTime!
     files?: NexusGenScalars['JSON'] | null; // JSON
+    flag: NexusGenEnums['ReportFlag']; // ReportFlag!
     fundingId?: NexusGenScalars['UUID'] | null; // UUID
     id: string; // ID!
     images?: NexusGenScalars['JSON'] | null; // JSON
@@ -500,11 +649,13 @@ export interface NexusGenObjects {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     for: NexusGenEnums['ReportFor']; // ReportFor!
     id: NexusGenScalars['UUID']; // UUID!
-    messageId: NexusGenScalars['UUID']; // UUID!
+    messageId?: NexusGenScalars['UUID'] | null; // UUID
     note: string; // String!
+    proposalId?: NexusGenScalars['UUID'] | null; // UUID
     reporterId: string; // ID!
     reviewedOn?: NexusGenScalars['DateTime'] | null; // DateTime
     status: NexusGenEnums['ReportStatus']; // ReportStatus!
+    type: NexusGenEnums['ReportType']; // ReportType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Role: { // root type
@@ -516,6 +667,7 @@ export interface NexusGenObjects {
     permissions: string[]; // [String!]!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
+  Settings: {};
   Statistic: { // root type
     commons: number; // Int!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -527,13 +679,27 @@ export interface NexusGenObjects {
   }
   Subscription: {};
   User: { // root type
+    country: NexusGenEnums['Country']; // Country!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     email: string; // String!
     firstName: string; // String!
     id: string; // ID!
+    intro?: string | null; // String
     lastName: string; // String!
     permissions: string[]; // [String!]!
     photo: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
+  UserBillingDetails: { // root type
+    city: string; // String!
+    country: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    district?: string | null; // String
+    id: NexusGenScalars['UUID']; // UUID!
+    line1?: string | null; // String
+    line2?: string | null; // String
+    name: string; // String!
+    postalCode: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   UserNotificationToken: { // root type
@@ -551,10 +717,32 @@ export interface NexusGenObjects {
     outcome: NexusGenEnums['VoteOutcome']; // VoteOutcome!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
+  Wire: { // root type
+    circleFingerprint?: string | null; // String
+    circleId?: string | null; // String
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    description?: string | null; // String
+    id: NexusGenScalars['UUID']; // UUID!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    userId: string; // String!
+  }
+  WireBankAccount: { // root type
+    bankName: string; // String!
+    city: string; // String!
+    country: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    district?: string | null; // String
+    id: NexusGenScalars['UUID']; // UUID!
+    line1?: string | null; // String
+    line2?: string | null; // String
+    postalCode: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
 }
 
 export interface NexusGenInterfaces {
-  BaseEntity: NexusGenRootTypes['CommonMember'] | NexusGenRootTypes['CommonSubscription'] | NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['FundingProposal'] | NexusGenRootTypes['JoinProposal'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['NotificationEventSettings'] | NexusGenRootTypes['NotificationSystemSettings'] | NexusGenRootTypes['NotificationTemplate'] | NexusGenRootTypes['Report'] | NexusGenRootTypes['Role'] | NexusGenRootTypes['Statistic'] | NexusGenRootTypes['UserNotificationToken'];
+  Address: NexusGenRootTypes['UserBillingDetails'] | NexusGenRootTypes['WireBankAccount'];
+  BaseEntity: NexusGenRootTypes['CommonMember'] | NexusGenRootTypes['CommonSubscription'] | NexusGenRootTypes['CommonUpdate'] | NexusGenRootTypes['Discussion'] | NexusGenRootTypes['DiscussionMessage'] | NexusGenRootTypes['DiscussionSubscription'] | NexusGenRootTypes['FundingProposal'] | NexusGenRootTypes['JoinProposal'] | NexusGenRootTypes['Notification'] | NexusGenRootTypes['NotificationEventSettings'] | NexusGenRootTypes['NotificationSystemSettings'] | NexusGenRootTypes['NotificationTemplate'] | NexusGenRootTypes['Payment'] | NexusGenRootTypes['Payout'] | NexusGenRootTypes['PayoutApprover'] | NexusGenRootTypes['Report'] | NexusGenRootTypes['Role'] | NexusGenRootTypes['Statistic'] | NexusGenRootTypes['UserBillingDetails'] | NexusGenRootTypes['UserNotificationToken'] | NexusGenRootTypes['Wire'] | NexusGenRootTypes['WireBankAccount'];
 }
 
 export interface NexusGenUnions {
@@ -593,6 +781,7 @@ export interface NexusGenFieldTypes {
     reports: NexusGenRootTypes['Report'][]; // [Report!]!
     rules: NexusGenScalars['JSON'] | null; // JSON
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    updates: NexusGenRootTypes['CommonUpdate'][]; // [CommonUpdate!]!
     whitelisted: boolean; // Boolean!
   }
   CommonMember: { // field return type
@@ -618,6 +807,14 @@ export interface NexusGenFieldTypes {
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     voided: boolean; // Boolean!
   }
+  CommonUpdate: { // field return type
+    change: NexusGenScalars['JSON'] | null; // JSON
+    commonAfter: NexusGenRootTypes['Common']; // Common!
+    commonBefore: NexusGenRootTypes['Common']; // Common!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: NexusGenScalars['UUID']; // UUID!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   Discussion: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description: string; // String!
@@ -632,7 +829,7 @@ export interface NexusGenFieldTypes {
   }
   DiscussionMessage: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    flag: NexusGenEnums['DiscussionMessageFlag']; // DiscussionMessageFlag!
+    flag: NexusGenEnums['ReportFlag']; // ReportFlag!
     id: NexusGenScalars['UUID']; // UUID!
     message: string; // String!
     owner: NexusGenRootTypes['User']; // User!
@@ -681,6 +878,7 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     actOnReport: NexusGenRootTypes['Report'] | null; // Report
+    approvePayout: NexusGenRootTypes['PayoutApprover'] | null; // PayoutApprover
     assignRole: NexusGenScalars['Void'] | null; // Void
     changeDiscussionSubscriptionType: NexusGenRootTypes['DiscussionSubscription'] | null; // DiscussionSubscription
     createCard: NexusGenRootTypes['Card']; // Card!
@@ -691,16 +889,23 @@ export interface NexusGenFieldTypes {
     createJoinProposal: NexusGenRootTypes['Proposal']; // Proposal!
     createNotificationEventSettings: NexusGenRootTypes['NotificationEventSettings'] | null; // NotificationEventSettings
     createNotificationTemplate: NexusGenRootTypes['NotificationTemplate'] | null; // NotificationTemplate
+    createPayout: NexusGenRootTypes['Payout'] | null; // Payout
+    createReport: NexusGenRootTypes['Report']; // Report!
     createRole: NexusGenRootTypes['Role'] | null; // Role
     createUser: NexusGenRootTypes['User']; // User!
+    createUserBillingDetails: NexusGenRootTypes['UserBillingDetails'] | null; // UserBillingDetails
     createUserNotificationToken: NexusGenRootTypes['UserNotificationToken']; // UserNotificationToken!
     createVote: NexusGenRootTypes['Vote']; // Vote!
+    createWire: NexusGenRootTypes['Wire'] | null; // Wire
+    createWireBankAccount: NexusGenRootTypes['WireBankAccount'] | null; // WireBankAccount
+    deleteEventNotificationSetting: boolean | null; // Boolean
     delistCommon: boolean | null; // Boolean
     finalizeProposal: boolean; // Boolean!
-    reportDiscussionMessage: NexusGenRootTypes['Report']; // Report!
     unassignRole: NexusGenScalars['Void'] | null; // Void
+    updateCommon: NexusGenRootTypes['Common'] | null; // Common
     updateNotificationSettings: NexusGenRootTypes['NotificationSystemSettings'] | null; // NotificationSystemSettings
     updateNotificationTemplate: NexusGenRootTypes['NotificationTemplate'] | null; // NotificationTemplate
+    updateUser: NexusGenRootTypes['User'] | null; // User
     voidUserNotificationToken: NexusGenRootTypes['UserNotificationToken']; // UserNotificationToken!
     whitelistCommon: boolean | null; // Boolean
   }
@@ -764,6 +969,40 @@ export interface NexusGenFieldTypes {
     notificationTypes: Array<NexusGenEnums['NotificationType'] | null>; // [NotificationType]!
     templateTypes: Array<NexusGenEnums['NotificationTemplateType'] | null>; // [NotificationTemplateType]!
   }
+  Payment: { // field return type
+    amount: number | null; // Int
+    circlePaymentId: string | null; // String
+    circlePaymentStatus: NexusGenEnums['PaymentCircleStatus'] | null; // PaymentCircleStatus
+    common: NexusGenRootTypes['Common']; // Common!
+    commonId: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    fees: number | null; // Int
+    id: NexusGenScalars['UUID']; // UUID!
+    processed: boolean; // Boolean!
+    processedError: boolean; // Boolean!
+    status: NexusGenEnums['PaymentStatus']; // PaymentStatus!
+    type: NexusGenEnums['PaymentType']; // PaymentType!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    user: NexusGenRootTypes['User']; // User!
+    userId: string; // String!
+  }
+  Payout: { // field return type
+    amount: number; // Int!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    description: string; // String!
+    id: NexusGenScalars['UUID']; // UUID!
+    proposals: NexusGenRootTypes['Proposal'][]; // [Proposal!]!
+    status: NexusGenEnums['PayoutStatus']; // PayoutStatus!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    wire: NexusGenRootTypes['Wire']; // Wire!
+  }
+  PayoutApprover: { // field return type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: NexusGenScalars['UUID']; // UUID!
+    outcome: NexusGenEnums['PayoutApproverResponse']; // PayoutApproverResponse!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    userId: string; // ID!
+  }
   Proposal: { // field return type
     common: NexusGenRootTypes['Common']; // Common!
     commonId: NexusGenScalars['UUID']; // UUID!
@@ -773,6 +1012,7 @@ export interface NexusGenFieldTypes {
     discussions: NexusGenRootTypes['Discussion'][]; // [Discussion!]!
     expiresAt: NexusGenScalars['DateTime']; // DateTime!
     files: NexusGenScalars['JSON'] | null; // JSON
+    flag: NexusGenEnums['ReportFlag']; // ReportFlag!
     funding: NexusGenRootTypes['FundingProposal'] | null; // FundingProposal
     fundingId: NexusGenScalars['UUID'] | null; // UUID
     id: string; // ID!
@@ -806,23 +1046,34 @@ export interface NexusGenFieldTypes {
     notificationTemplateOptions: NexusGenRootTypes['NotificationTemplateOptions'] | null; // NotificationTemplateOptions
     notificationTemplates: Array<NexusGenRootTypes['NotificationTemplate'] | null> | null; // [NotificationTemplate]
     notifications: Array<NexusGenRootTypes['Notification'] | null> | null; // [Notification]
+    payment: NexusGenRootTypes['Payment'] | null; // Payment
+    payments: Array<NexusGenRootTypes['Payment'] | null> | null; // [Payment]
+    payout: NexusGenRootTypes['Payout'] | null; // Payout
+    payouts: Array<NexusGenRootTypes['Payout'] | null> | null; // [Payout]
     proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
     proposals: Array<NexusGenRootTypes['Proposal'] | null> | null; // [Proposal]
+    reports: Array<NexusGenRootTypes['Report'] | null> | null; // [Report]
+    role: NexusGenRootTypes['Role'] | null; // Role
     roles: Array<NexusGenRootTypes['Role'] | null> | null; // [Role]
+    settings: NexusGenRootTypes['Settings']; // Settings!
     user: NexusGenRootTypes['User'] | null; // User
     users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
+    wires: Array<NexusGenRootTypes['Wire'] | null> | null; // [Wire]
   }
   Report: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     for: NexusGenEnums['ReportFor']; // ReportFor!
     id: NexusGenScalars['UUID']; // UUID!
-    message: NexusGenRootTypes['DiscussionMessage']; // DiscussionMessage!
-    messageId: NexusGenScalars['UUID']; // UUID!
+    message: NexusGenRootTypes['DiscussionMessage'] | null; // DiscussionMessage
+    messageId: NexusGenScalars['UUID'] | null; // UUID
     note: string; // String!
+    proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
+    proposalId: NexusGenScalars['UUID'] | null; // UUID
     reporter: NexusGenRootTypes['User']; // User!
     reporterId: string; // ID!
     reviewedOn: NexusGenScalars['DateTime'] | null; // DateTime
     status: NexusGenEnums['ReportStatus']; // ReportStatus!
+    type: NexusGenEnums['ReportType']; // ReportType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Role: { // field return type
@@ -833,6 +1084,10 @@ export interface NexusGenFieldTypes {
     name: string; // String!
     permissions: string[]; // [String!]!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    users: NexusGenRootTypes['User'][]; // [User!]!
+  }
+  Settings: { // field return type
+    permissions: Array<string | null>; // [String]!
   }
   Statistic: { // field return type
     commons: number; // Int!
@@ -849,6 +1104,9 @@ export interface NexusGenFieldTypes {
     onProposalChange: NexusGenRootTypes['Proposal'] | null; // Proposal
   }
   User: { // field return type
+    billingDetails: NexusGenRootTypes['UserBillingDetails'][]; // [UserBillingDetails!]!
+    commons: NexusGenRootTypes['Common'][]; // [Common!]!
+    country: NexusGenEnums['Country']; // Country!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     discussionSubscriptions: NexusGenRootTypes['DiscussionSubscription'][]; // [DiscussionSubscription!]!
     displayName: string; // String!
@@ -856,6 +1114,7 @@ export interface NexusGenFieldTypes {
     events: NexusGenRootTypes['Event'][]; // [Event!]!
     firstName: string; // String!
     id: string; // ID!
+    intro: string | null; // String
     lastName: string; // String!
     notificationTokens: NexusGenRootTypes['UserNotificationToken'][]; // [UserNotificationToken!]!
     notifications: NexusGenRootTypes['Notification'][]; // [Notification!]!
@@ -863,6 +1122,19 @@ export interface NexusGenFieldTypes {
     photo: string; // String!
     proposals: NexusGenRootTypes['Proposal'][]; // [Proposal!]!
     subscriptions: NexusGenRootTypes['CommonSubscription'][]; // [CommonSubscription!]!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    wires: NexusGenRootTypes['Wire'][]; // [Wire!]!
+  }
+  UserBillingDetails: { // field return type
+    city: string; // String!
+    country: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    district: string | null; // String
+    id: NexusGenScalars['UUID']; // UUID!
+    line1: string | null; // String
+    line2: string | null; // String
+    name: string; // String!
+    postalCode: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   UserNotificationToken: { // field return type
@@ -882,6 +1154,35 @@ export interface NexusGenFieldTypes {
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     voter: NexusGenRootTypes['CommonMember']; // CommonMember!
     voterId: string; // ID!
+  }
+  Wire: { // field return type
+    circleFingerprint: string | null; // String
+    circleId: string | null; // String
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    description: string | null; // String
+    id: NexusGenScalars['UUID']; // UUID!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    userId: string; // String!
+  }
+  WireBankAccount: { // field return type
+    bankName: string; // String!
+    city: string; // String!
+    country: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    district: string | null; // String
+    id: NexusGenScalars['UUID']; // UUID!
+    line1: string | null; // String
+    line2: string | null; // String
+    postalCode: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
+  Address: { // field return type
+    city: string; // String!
+    country: string; // String!
+    district: string | null; // String
+    line1: string | null; // String
+    line2: string | null; // String
+    postalCode: string; // String!
   }
   BaseEntity: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -919,6 +1220,7 @@ export interface NexusGenFieldTypeNames {
     reports: 'Report'
     rules: 'JSON'
     updatedAt: 'DateTime'
+    updates: 'CommonUpdate'
     whitelisted: 'Boolean'
   }
   CommonMember: { // field return type name
@@ -944,6 +1246,14 @@ export interface NexusGenFieldTypeNames {
     updatedAt: 'DateTime'
     voided: 'Boolean'
   }
+  CommonUpdate: { // field return type name
+    change: 'JSON'
+    commonAfter: 'Common'
+    commonBefore: 'Common'
+    createdAt: 'DateTime'
+    id: 'UUID'
+    updatedAt: 'DateTime'
+  }
   Discussion: { // field return type name
     createdAt: 'DateTime'
     description: 'String'
@@ -958,7 +1268,7 @@ export interface NexusGenFieldTypeNames {
   }
   DiscussionMessage: { // field return type name
     createdAt: 'DateTime'
-    flag: 'DiscussionMessageFlag'
+    flag: 'ReportFlag'
     id: 'UUID'
     message: 'String'
     owner: 'User'
@@ -1007,6 +1317,7 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     actOnReport: 'Report'
+    approvePayout: 'PayoutApprover'
     assignRole: 'Void'
     changeDiscussionSubscriptionType: 'DiscussionSubscription'
     createCard: 'Card'
@@ -1017,16 +1328,23 @@ export interface NexusGenFieldTypeNames {
     createJoinProposal: 'Proposal'
     createNotificationEventSettings: 'NotificationEventSettings'
     createNotificationTemplate: 'NotificationTemplate'
+    createPayout: 'Payout'
+    createReport: 'Report'
     createRole: 'Role'
     createUser: 'User'
+    createUserBillingDetails: 'UserBillingDetails'
     createUserNotificationToken: 'UserNotificationToken'
     createVote: 'Vote'
+    createWire: 'Wire'
+    createWireBankAccount: 'WireBankAccount'
+    deleteEventNotificationSetting: 'Boolean'
     delistCommon: 'Boolean'
     finalizeProposal: 'Boolean'
-    reportDiscussionMessage: 'Report'
     unassignRole: 'Void'
+    updateCommon: 'Common'
     updateNotificationSettings: 'NotificationSystemSettings'
     updateNotificationTemplate: 'NotificationTemplate'
+    updateUser: 'User'
     voidUserNotificationToken: 'UserNotificationToken'
     whitelistCommon: 'Boolean'
   }
@@ -1090,6 +1408,40 @@ export interface NexusGenFieldTypeNames {
     notificationTypes: 'NotificationType'
     templateTypes: 'NotificationTemplateType'
   }
+  Payment: { // field return type name
+    amount: 'Int'
+    circlePaymentId: 'String'
+    circlePaymentStatus: 'PaymentCircleStatus'
+    common: 'Common'
+    commonId: 'String'
+    createdAt: 'DateTime'
+    fees: 'Int'
+    id: 'UUID'
+    processed: 'Boolean'
+    processedError: 'Boolean'
+    status: 'PaymentStatus'
+    type: 'PaymentType'
+    updatedAt: 'DateTime'
+    user: 'User'
+    userId: 'String'
+  }
+  Payout: { // field return type name
+    amount: 'Int'
+    createdAt: 'DateTime'
+    description: 'String'
+    id: 'UUID'
+    proposals: 'Proposal'
+    status: 'PayoutStatus'
+    updatedAt: 'DateTime'
+    wire: 'Wire'
+  }
+  PayoutApprover: { // field return type name
+    createdAt: 'DateTime'
+    id: 'UUID'
+    outcome: 'PayoutApproverResponse'
+    updatedAt: 'DateTime'
+    userId: 'ID'
+  }
   Proposal: { // field return type name
     common: 'Common'
     commonId: 'UUID'
@@ -1099,6 +1451,7 @@ export interface NexusGenFieldTypeNames {
     discussions: 'Discussion'
     expiresAt: 'DateTime'
     files: 'JSON'
+    flag: 'ReportFlag'
     funding: 'FundingProposal'
     fundingId: 'UUID'
     id: 'ID'
@@ -1132,11 +1485,19 @@ export interface NexusGenFieldTypeNames {
     notificationTemplateOptions: 'NotificationTemplateOptions'
     notificationTemplates: 'NotificationTemplate'
     notifications: 'Notification'
+    payment: 'Payment'
+    payments: 'Payment'
+    payout: 'Payout'
+    payouts: 'Payout'
     proposal: 'Proposal'
     proposals: 'Proposal'
+    reports: 'Report'
+    role: 'Role'
     roles: 'Role'
+    settings: 'Settings'
     user: 'User'
     users: 'User'
+    wires: 'Wire'
   }
   Report: { // field return type name
     createdAt: 'DateTime'
@@ -1145,10 +1506,13 @@ export interface NexusGenFieldTypeNames {
     message: 'DiscussionMessage'
     messageId: 'UUID'
     note: 'String'
+    proposal: 'Proposal'
+    proposalId: 'UUID'
     reporter: 'User'
     reporterId: 'ID'
     reviewedOn: 'DateTime'
     status: 'ReportStatus'
+    type: 'ReportType'
     updatedAt: 'DateTime'
   }
   Role: { // field return type name
@@ -1159,6 +1523,10 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     permissions: 'String'
     updatedAt: 'DateTime'
+    users: 'User'
+  }
+  Settings: { // field return type name
+    permissions: 'String'
   }
   Statistic: { // field return type name
     commons: 'Int'
@@ -1175,6 +1543,9 @@ export interface NexusGenFieldTypeNames {
     onProposalChange: 'Proposal'
   }
   User: { // field return type name
+    billingDetails: 'UserBillingDetails'
+    commons: 'Common'
+    country: 'Country'
     createdAt: 'DateTime'
     discussionSubscriptions: 'DiscussionSubscription'
     displayName: 'String'
@@ -1182,6 +1553,7 @@ export interface NexusGenFieldTypeNames {
     events: 'Event'
     firstName: 'String'
     id: 'ID'
+    intro: 'String'
     lastName: 'String'
     notificationTokens: 'UserNotificationToken'
     notifications: 'Notification'
@@ -1189,6 +1561,19 @@ export interface NexusGenFieldTypeNames {
     photo: 'String'
     proposals: 'Proposal'
     subscriptions: 'CommonSubscription'
+    updatedAt: 'DateTime'
+    wires: 'Wire'
+  }
+  UserBillingDetails: { // field return type name
+    city: 'String'
+    country: 'String'
+    createdAt: 'DateTime'
+    district: 'String'
+    id: 'UUID'
+    line1: 'String'
+    line2: 'String'
+    name: 'String'
+    postalCode: 'String'
     updatedAt: 'DateTime'
   }
   UserNotificationToken: { // field return type name
@@ -1208,6 +1593,35 @@ export interface NexusGenFieldTypeNames {
     updatedAt: 'DateTime'
     voter: 'CommonMember'
     voterId: 'ID'
+  }
+  Wire: { // field return type name
+    circleFingerprint: 'String'
+    circleId: 'String'
+    createdAt: 'DateTime'
+    description: 'String'
+    id: 'UUID'
+    updatedAt: 'DateTime'
+    userId: 'String'
+  }
+  WireBankAccount: { // field return type name
+    bankName: 'String'
+    city: 'String'
+    country: 'String'
+    createdAt: 'DateTime'
+    district: 'String'
+    id: 'UUID'
+    line1: 'String'
+    line2: 'String'
+    postalCode: 'String'
+    updatedAt: 'DateTime'
+  }
+  Address: { // field return type name
+    city: 'String'
+    country: 'String'
+    district: 'String'
+    line1: 'String'
+    line2: 'String'
+    postalCode: 'String'
   }
   BaseEntity: { // field return type name
     createdAt: 'DateTime'
@@ -1258,6 +1672,10 @@ export interface NexusGenArgTypes {
     actOnReport: { // args
       input: NexusGenInputs['ActOnReportInput']; // ActOnReportInput!
     }
+    approvePayout: { // args
+      outcome: NexusGenEnums['PayoutApproverResponse']; // PayoutApproverResponse!
+      payoutId: string; // ID!
+    }
     assignRole: { // args
       roleId: string; // ID!
       userId: string; // ID!
@@ -1290,11 +1708,20 @@ export interface NexusGenArgTypes {
     createNotificationTemplate: { // args
       input: NexusGenInputs['CreateNotificationTemplateInput']; // CreateNotificationTemplateInput!
     }
+    createPayout: { // args
+      input: NexusGenInputs['CreatePayoutInput']; // CreatePayoutInput!
+    }
+    createReport: { // args
+      input: NexusGenInputs['CreateReportInput']; // CreateReportInput!
+    }
     createRole: { // args
       input: NexusGenInputs['CreateRoleInput']; // CreateRoleInput!
     }
     createUser: { // args
       input: NexusGenInputs['CreateUserInput']; // CreateUserInput!
+    }
+    createUserBillingDetails: { // args
+      input: NexusGenInputs['CreateUserBillingDetailsInput']; // CreateUserBillingDetailsInput!
     }
     createUserNotificationToken: { // args
       input: NexusGenInputs['CreateUserNotificationTokenInput']; // CreateUserNotificationTokenInput!
@@ -1302,24 +1729,36 @@ export interface NexusGenArgTypes {
     createVote: { // args
       input: NexusGenInputs['CreateVoteInput']; // CreateVoteInput!
     }
+    createWire: { // args
+      input: NexusGenInputs['CreateWireInput']; // CreateWireInput!
+    }
+    createWireBankAccount: { // args
+      input: NexusGenInputs['CreateWireBankAccountInput']; // CreateWireBankAccountInput!
+    }
+    deleteEventNotificationSetting: { // args
+      id: string; // ID!
+    }
     delistCommon: { // args
       commonId: string; // String!
     }
     finalizeProposal: { // args
       proposalId: string; // ID!
     }
-    reportDiscussionMessage: { // args
-      input: NexusGenInputs['ReportDiscussionMessageInput']; // ReportDiscussionMessageInput!
-    }
     unassignRole: { // args
       roleId: string; // ID!
       userId: string; // ID!
+    }
+    updateCommon: { // args
+      input: NexusGenInputs['UpdateCommonInput']; // UpdateCommonInput!
     }
     updateNotificationSettings: { // args
       input: NexusGenInputs['UpdateNotificationSettingsInput']; // UpdateNotificationSettingsInput!
     }
     updateNotificationTemplate: { // args
       input: NexusGenInputs['UpdateNotificationTemplateInput']; // UpdateNotificationTemplateInput!
+    }
+    updateUser: { // args
+      input: NexusGenInputs['UpdateUserInput']; // UpdateUserInput!
     }
     voidUserNotificationToken: { // args
       tokenId: string; // ID!
@@ -1340,6 +1779,7 @@ export interface NexusGenArgTypes {
     }
     commons: { // args
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
+      where?: NexusGenInputs['CommonWhereInput'] | null; // CommonWhereInput
     }
     discussion: { // args
       id: string; // ID!
@@ -1370,12 +1810,34 @@ export interface NexusGenArgTypes {
     notifications: { // args
       paginate: NexusGenInputs['PaginateInput']; // PaginateInput!
     }
+    payment: { // args
+      id?: string | null; // ID
+    }
+    payments: { // args
+      paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
+      where?: NexusGenInputs['PaymentsWhereInput'] | null; // PaymentsWhereInput
+    }
+    payout: { // args
+      id: string; // ID!
+    }
+    payouts: { // args
+      paginate: NexusGenInputs['PaginateInput'] | null; // PaginateInput
+      where?: NexusGenInputs['PayoutWhereInput'] | null; // PayoutWhereInput
+    }
     proposal: { // args
       where: NexusGenInputs['ProposalWhereUniqueInput']; // ProposalWhereUniqueInput!
     }
     proposals: { // args
+      fundingWhere?: NexusGenInputs['FundingProposalWhereInput'] | null; // FundingProposalWhereInput
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
       where?: NexusGenInputs['ProposalWhereInput'] | null; // ProposalWhereInput
+    }
+    reports: { // args
+      pagination?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
+      where?: NexusGenInputs['ReportWhereInput'] | null; // ReportWhereInput
+    }
+    role: { // args
+      where: NexusGenInputs['RoleWhereUniqueInput']; // RoleWhereUniqueInput!
     }
     roles: { // args
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
@@ -1386,6 +1848,9 @@ export interface NexusGenArgTypes {
     users: { // args
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
       where?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+    }
+    wires: { // args
+      where?: NexusGenInputs['WireWhereInput'] | null; // WireWhereInput
     }
   }
   Subscription: {
@@ -1422,25 +1887,33 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  BaseEntity: 'CommonMember' | 'CommonSubscription' | 'Discussion' | 'DiscussionMessage' | 'DiscussionSubscription' | 'FundingProposal' | 'JoinProposal' | 'Notification' | 'NotificationEventSettings' | 'NotificationSystemSettings' | 'NotificationTemplate' | 'Report' | 'Role' | 'Statistic' | 'UserNotificationToken'
+  Address: "UserBillingDetails" | "WireBankAccount"
+  BaseEntity: "CommonMember" | "CommonSubscription" | "CommonUpdate" | "Discussion" | "DiscussionMessage" | "DiscussionSubscription" | "FundingProposal" | "JoinProposal" | "Notification" | "NotificationEventSettings" | "NotificationSystemSettings" | "NotificationTemplate" | "Payment" | "Payout" | "PayoutApprover" | "Report" | "Role" | "Statistic" | "UserBillingDetails" | "UserNotificationToken" | "Wire" | "WireBankAccount"
 }
 
 export interface NexusGenTypeInterfaces {
-  CommonMember: 'BaseEntity'
-  CommonSubscription: 'BaseEntity'
-  Discussion: 'BaseEntity'
-  DiscussionMessage: 'BaseEntity'
-  DiscussionSubscription: 'BaseEntity'
-  FundingProposal: 'BaseEntity'
-  JoinProposal: 'BaseEntity'
-  Notification: 'BaseEntity'
-  NotificationEventSettings: 'BaseEntity'
-  NotificationSystemSettings: 'BaseEntity'
-  NotificationTemplate: 'BaseEntity'
-  Report: 'BaseEntity'
-  Role: 'BaseEntity'
-  Statistic: 'BaseEntity'
-  UserNotificationToken: 'BaseEntity'
+  CommonMember: "BaseEntity"
+  CommonSubscription: "BaseEntity"
+  CommonUpdate: "BaseEntity"
+  Discussion: "BaseEntity"
+  DiscussionMessage: "BaseEntity"
+  DiscussionSubscription: "BaseEntity"
+  FundingProposal: "BaseEntity"
+  JoinProposal: "BaseEntity"
+  Notification: "BaseEntity"
+  NotificationEventSettings: "BaseEntity"
+  NotificationSystemSettings: "BaseEntity"
+  NotificationTemplate: "BaseEntity"
+  Payment: "BaseEntity"
+  Payout: "BaseEntity"
+  PayoutApprover: "BaseEntity"
+  Report: "BaseEntity"
+  Role: "BaseEntity"
+  Statistic: "BaseEntity"
+  UserBillingDetails: "Address" | "BaseEntity"
+  UserNotificationToken: "BaseEntity"
+  Wire: "BaseEntity"
+  WireBankAccount: "Address" | "BaseEntity"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
@@ -1457,7 +1930,7 @@ export type NexusGenUnionNames = never;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = "BaseEntity";
+export type NexusGenAbstractsUsingStrategyResolveType = "Address" | "BaseEntity";
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {

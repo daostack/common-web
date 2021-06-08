@@ -2,7 +2,7 @@ import React from 'react';
 import { NextPage } from 'next';
 
 import { gql } from '@apollo/client';
-import { PlusCircle } from '@geist-ui/react-icons';
+import { PlusCircle, Trash } from '@geist-ui/react-icons';
 import {
   Text,
   Breadcrumbs,
@@ -26,7 +26,8 @@ import {
   useGetCreateNotificationEventOptionsLazyQuery,
   EventType,
   NotificationType,
-  useCreateNotificationEventIntegrationMutation
+  useCreateNotificationEventIntegrationMutation,
+  useDeleteNotificationEventIntegrationMutation
 } from '@core/graphql';
 import { HasPermission } from '@components/HasPermission';
 
@@ -56,12 +57,17 @@ const GetCreateNotificationEventsOptions = gql`
   }
 `;
 
-const CreateNotificationEventIntegration = gql`
+const Mutations = gql`
   mutation CreateNotificationEventIntegration($input: CreateNotificationEventSettingsInput!) {
     createNotificationEventSettings(input: $input) {
       id
     }
   }
+
+  mutation DeleteNotificationEventIntegration($id: ID!) {
+    deleteEventNotificationSetting(id: $id)
+  }
+
 `;
 
 interface CreateIntegrationData {
@@ -74,12 +80,13 @@ const NotificationEventsPage: NextPage = () => {
   const theme = useTheme();
   const [, setToasts] = useToasts();
 
+  const [deleteIntegration, { loading: deletingIntegration }] = useDeleteNotificationEventIntegrationMutation();
   const [createIntegration, { loading: creatingIntegration }] = useCreateNotificationEventIntegrationMutation();
   const [loadOptions, { data: options }] = useGetCreateNotificationEventOptionsLazyQuery();
   const { data, loading, refetch } = useGetNotificationEventsQuery({
     variables: {
       paginate: {
-        take: 10
+        take: 100
       }
     }
   });
@@ -163,6 +170,31 @@ const NotificationEventsPage: NextPage = () => {
     }
   };
 
+  const onDelete = (id: string) => {
+    return async () => {
+      const res = await deleteIntegration({
+        variables: {
+          id
+        }
+      });
+
+      if (res.data.deleteEventNotificationSetting) {
+        await refetch();
+
+        console.info('Refreshed the event integrations after one was deleted');
+
+        setToasts({
+          type: 'success',
+          text: 'Integration deleted'
+        });
+      } else {
+        setToasts({
+          type: 'error',
+          text: 'Error occurred when deleting the integration!'
+        });
+      }
+    };
+  };
 
   // Transformers
   const getNotificationEventsForTable = () => {
@@ -185,6 +217,15 @@ const NotificationEventsPage: NextPage = () => {
 
         sendNotification: (
           <Tag>{ns.sendNotificationType}</Tag>
+        ),
+
+        actions: (
+          <Trash
+            onClick={onDelete(ns.id)}
+            style={{
+              cursor: 'pointer'
+            }}
+          />
         )
       }));
     } else if (loading) {
@@ -194,7 +235,8 @@ const NotificationEventsPage: NextPage = () => {
         sendToCommon: FullWidthLoader,
         sendToUser: FullWidthLoader,
         onEvent: FullWidthLoader,
-        sendNotification: FullWidthLoader
+        sendNotification: FullWidthLoader,
+        actions: FullWidthLoader
       });
     }
   };
@@ -228,11 +270,13 @@ const NotificationEventsPage: NextPage = () => {
               <React.Fragment>
                 <Text style={{ marginBottom: 0 }}>On event</Text>
                 <Select width="100%" placeholder="Select event" value={createData.onEvent} onChange={onEventChange}>
-                  {options.notificationEventOptions.availableEvents.map((e) => (
-                    <Select.Option value={e} key={e}>
-                      {e}
-                    </Select.Option>
-                  ))}
+                  {options.notificationEventOptions.availableEvents
+                    .filter(x => !data.notificationEventSettings.filter(y => y.onEvent === x).length)
+                    .map((e) => (
+                      <Select.Option value={e} key={e}>
+                        {e}
+                      </Select.Option>
+                    ))}
                 </Select>
               </React.Fragment>
 
@@ -258,7 +302,7 @@ const NotificationEventsPage: NextPage = () => {
                 <Radio.Group value={createData.sendTo} onChange={onSendToChange}>
                   <Radio value="sendToEveryone">All users</Radio>
                   <Radio value="sendToCommon">All common members</Radio>
-                  <Radio value="setToUser">The event initiator</Radio>
+                  <Radio value="sendToUser">The event initiator</Radio>
                 </Radio.Group>
               </React.Fragment>
 
@@ -322,6 +366,7 @@ const NotificationEventsPage: NextPage = () => {
         <Table.Column prop="sendToUser" label="Send to user"/>
         <Table.Column prop="onEvent" label="Broadcast on event"/>
         <Table.Column prop="sendNotification" label="Type of the created notification"/>
+        <Table.Column prop="actions" label=""/>
       </Table>
     </React.Fragment>
   );

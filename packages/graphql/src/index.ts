@@ -19,6 +19,7 @@ const apollo = new ApolloServer({
   schema,
   context: createRequestContext,
 
+
   subscriptions: {
     // path: '/graphql'
   }

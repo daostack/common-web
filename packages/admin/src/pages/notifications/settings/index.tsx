@@ -185,7 +185,7 @@ export const NotificationSettingsPage: NextPage = () => {
 
 
       <React.Fragment>
-        <Text h1>Notifications Settings</Text>
+        <Text h1>Notification Settings</Text>
         <Breadcrumbs>
           <Breadcrumbs.Item>Home</Breadcrumbs.Item>
 

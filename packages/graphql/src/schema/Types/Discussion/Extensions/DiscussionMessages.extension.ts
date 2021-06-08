@@ -1,5 +1,5 @@
 import { extendType, intArg, arg } from 'nexus';
-import { DiscussionMessageFlag } from '@prisma/client';
+import { ReportFlag } from '@prisma/client';
 
 import { prisma } from '@common/core';
 
@@ -32,7 +32,7 @@ export const DiscussionMessagesExtension = extendType({
               discussionId: root.id,
               flag: {
                 notIn: [
-                  DiscussionMessageFlag.Hidden
+                  ReportFlag.Hidden
                 ]
               }
             },

@@ -95,7 +95,7 @@ const NotificationTemplatesPage: NextPage = () => {
 
         <div/>
 
-        <HasPermission permission="admin.notification.setting.templates.create">
+        <HasPermission permission="admin.notification.setting.template.create">
           <div
             style={{
               cursor: 'pointer'

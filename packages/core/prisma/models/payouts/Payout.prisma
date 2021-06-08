@@ -1,0 +1,20 @@
+model Payout {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  circlePayoutId String? @unique
+
+  status PayoutStatus @default(PendingApproval)
+
+  amount      Int
+  description String
+
+  users User[]
+
+  approvers PayoutApprover[]
+  proposals FundingProposal[]
+
+  wire Wire
+}

@@ -1,12 +1,6 @@
-import { setQueues, BullAdapter } from 'bull-board';
-
-import { Queues } from '@common/queues';
 import { voteService, logger } from '@common/core';
+import { Queues } from '../queues';
 
-// Add the queue to the UI
-setQueues([
-  new BullAdapter(Queues.VotesQueue)
-]);
 
 // Process the queue jobs
 Queues.VotesQueue.process('processVote', async (job, done) => {

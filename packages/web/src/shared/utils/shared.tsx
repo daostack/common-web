@@ -1,4 +1,4 @@
-import { User } from '../../graphql';
+import { User } from "../../graphql";
 
 export const formatPrice = (price?: number) => {
   if (price) return `$${price.toLocaleString("en")}`;

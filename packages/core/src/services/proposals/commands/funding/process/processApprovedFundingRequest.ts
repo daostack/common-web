@@ -2,7 +2,7 @@ import { ProposalState, Proposal, FundingState, EventType } from '@prisma/client
 
 import { prisma } from '@toolkits';
 import { CommonError } from '@errors';
-import { eventService } from '@services';
+import { eventService, commonService } from '@services';
 
 export const processApprovedFundingRequest = async (proposalArg: Proposal): Promise<void> => {
   if (!proposalArg.fundingId) {
@@ -10,6 +10,9 @@ export const processApprovedFundingRequest = async (proposalArg: Proposal): Prom
       proposalArg
     });
   }
+
+  // Update the common balance
+  const updateResult = await commonService.updateBalance.withFundingProposal(proposalArg.id);
 
   // Update the proposal funding availability
   const [
@@ -21,7 +24,9 @@ export const processApprovedFundingRequest = async (proposalArg: Proposal): Prom
         id: proposalArg.id
       },
       data: {
-        state: ProposalState.Accepted
+        state: updateResult === 'Updated'
+          ? ProposalState.Accepted
+          : ProposalState.AcceptedButInsufficientFunding
       }
     }),
     prisma.fundingProposal.update({
@@ -29,7 +34,9 @@ export const processApprovedFundingRequest = async (proposalArg: Proposal): Prom
         id: proposalArg.fundingId
       },
       data: {
-        fundingState: FundingState.Eligible
+        fundingState: updateResult === 'Updated'
+          ? FundingState.Eligible
+          : FundingState.NotEligible
       }
     })
   ]);

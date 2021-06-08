@@ -49,6 +49,7 @@ const GetCommonsHomescreenData = gql`
 const CommonsHomepage: NextPage = () => {
   // State
   const [page, setPage] = React.useState<number>(1);
+  const [tableData, setTableData] = React.useState(null);
 
   // Data fetching and custom hooks
   const [toasts, setToast] = useToasts();
@@ -60,6 +61,10 @@ const CommonsHomepage: NextPage = () => {
       skip: (page - 1) * 10
     }
   });
+
+  React.useEffect(() => {
+    setTableData(transformCommonsArray(data));
+  }, [data]);
 
   // Actions
   const onPageChange = (val: number): void => {
@@ -187,7 +192,7 @@ const CommonsHomepage: NextPage = () => {
 
       <Text h3>All commons</Text>
 
-      <Table data={transformCommonsArray(data)} onRow={onCommonTableRow}>
+      <Table data={tableData} onRow={onCommonTableRow}>
         <Table.Column prop="icon" width={70}/>
         <Table.Column prop="name" label="Display Name"/>
 

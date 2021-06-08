@@ -1,9 +1,8 @@
-import { Queues } from '@common/queues';
-import { logger } from '@common/core';
-import { notificationService } from '@common/core/dist/services';
+import { logger, notificationService } from '@common/core';
+import { Queues } from '../queues';
 
 // Process the jobs
-Queues.NotificationQueue.process((job, done) => {
+Queues.NotificationsQueue.process((job, done) => {
   logger.error('Unnamed payment job occurred', {
     job
   });
@@ -11,7 +10,7 @@ Queues.NotificationQueue.process((job, done) => {
   done();
 });
 
-Queues.NotificationQueue.process('process', async (job, done) => {
+Queues.NotificationsQueue.process('process', async (job, done) => {
   logger.debug('Starting processing of the notification');
 
   job.progress(3);

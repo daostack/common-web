@@ -19,7 +19,6 @@ import { FundingStateEnum } from './Enums/FundingState.enum';
 import { PaymentStateEnum } from './Enums/PaymentState.enum';
 
 import { GetProposalQuery } from './Queries/GetProposal.query';
-import { GetProposalsQuery } from './Queries/GetProposals.query';
 
 import { ProposalDiscussionsExtension } from './Extensions/ProposalDiscussions.extension';
 import { ProposalFundingExtension } from './Extensions/ProposalFunding.extension';
@@ -30,6 +29,7 @@ import { ProposalChangeSubscription } from './Subscriptions/ProposalChange.subsc
 import { GetProposalsQuery } from './Queries/GetProposals.query';
 import { ProposalProposerExtension } from './Enums/ProposalProposer.extension';
 import { ProposalVotesExtension } from './Enums/ProposalVotes.extension';
+import { FundingProposalWhereInput } from './Inputs/FundingProposalWhere.input';
 
 export const ProposalTypes = [
   ProposalType,
@@ -38,6 +38,7 @@ export const ProposalTypes = [
   FundingProposalType,
 
   ProposalWhereInput,
+  FundingProposalWhereInput,
   CreateJoinProposalInput,
 
   CreateFundingProposalInput,

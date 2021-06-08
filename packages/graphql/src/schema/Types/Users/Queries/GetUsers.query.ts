@@ -14,7 +14,7 @@ export const GetUsersQuery = queryField('users', {
   resolve: (root, args) => {
     return prisma.user
       .findMany({
-        where: args
+        where: args.where as any
       });
   }
 });

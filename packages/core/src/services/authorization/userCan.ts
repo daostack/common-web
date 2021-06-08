@@ -32,11 +32,11 @@ export const userCan = async (userId: string, check: Check): Promise<boolean> =>
     if (check.and?.length) {
       can = check.and.every((p: string) => permissions.includes(p));
 
-      logger.debug(`User ${can ? 'has' : 'does not have'} all "${check.and.join(', ')}" permissions`);
+      logger.debug(`User (${userId}) ${can ? 'has' : 'does not have'} all "${check.and.join(', ')}" permissions`);
     } else if (check.or?.length) {
       can = check.or.some((p: string) => permissions.includes(p));
 
-      logger.debug(`User ${can ? 'has' : 'does not have'} some of "${check.or.join(', ')}" permissions`);
+      logger.debug(`User (${userId}) ${can ? 'has' : 'does not have'} some of "${check.or.join(', ')}" permissions`);
     }
   }
 

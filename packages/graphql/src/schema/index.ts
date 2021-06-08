@@ -2,12 +2,16 @@ import path from 'path';
 import { makeSchema, queryComplexityPlugin, fieldAuthorizePlugin } from 'nexus';
 
 import { UserTypes } from './Types/Users';
+import { WireTypes } from './Types/Wires';
 import { CardTypes } from './Types/Cards';
 import { VoteTypes } from './Types/Votes';
 import { RoleTypes } from './Types/Roles';
 import { EventTypes } from './Types/Events';
 import { CommonTypes } from './Types/Common';
 import { ReportTypes } from './Types/Reports';
+import { PayoutTypes } from './Types/Payouts';
+import { PaymentTypes } from './Types/Payments';
+import { SettingsTypes } from './Types/Settings';
 import { ProposalTypes } from './Types/Proposals';
 import { StatisticTypes } from './Types/Statistics';
 import { DiscussionTypes } from './Types/Discussion';
@@ -23,6 +27,7 @@ import { UuidScalar } from './Shared/Scalars/Uuid.scalar';
 
 import { LinkType, LinkInputType } from './Shared/Types/Link.type';
 
+import { AddressInterface } from './Shared/Interfaces/Address.interface';
 import { BaseEntityInterface } from './Shared/Interfaces/BaseEntity.interface';
 
 import { PaginateInput } from './Shared/Inputs/Paginate.input';
@@ -30,16 +35,21 @@ import { StringFilterInput } from './Shared/Inputs/StringFilter.input';
 import { BillingDetailsInput } from './Shared/Inputs/BillingDetails.input';
 
 import { SortOrder } from './Shared/Enums/SortBy.enum';
+import { CountryEnum } from './Shared/Enums/Country.enum';
 
 const types = [
   UserTypes,
+  WireTypes,
   RoleTypes,
   CardTypes,
   VoteTypes,
   EventTypes,
   CommonTypes,
   ReportTypes,
+  PayoutTypes,
+  PaymentTypes,
   ProposalTypes,
+  SettingsTypes,
   StatisticTypes,
   DiscussionTypes,
   CommonMemberTypes,
@@ -55,12 +65,14 @@ const types = [
 
   // Shared Enums
   SortOrder,
+  CountryEnum,
 
   // Shared Types
   LinkType,
 
   // Shared Interfaces
   BaseEntityInterface,
+  AddressInterface,
 
   // Shared Input Types
   PaginateInput,

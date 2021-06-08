@@ -14,5 +14,13 @@ export const UserWhereInput = inputObjectType({
     t.field('email', {
       type: 'StringFilter'
     });
+
+    t.list.nonNull.field('OR', {
+      type: 'UserWhereInput'
+    });
+
+    t.list.nonNull.field('AND', {
+      type: 'UserWhereInput'
+    });
   }
 });
