@@ -5,7 +5,8 @@ import '../../functions/src';
 const requestToJoinStubs = {
   userName: 'Test Name',
   link: 'https://google.com',
-  commonName: 'Test Common Name'
+  commonName: 'Test Common Name',
+  fromEmail: 'staging@common.io',
 };
 
 const requestToJoinPartialStubs = {

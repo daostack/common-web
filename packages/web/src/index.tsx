@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { IfFirebaseAuthed, IfFirebaseUnAuthed } from '@react-firebase/auth';
+import { IfFirebaseAuthed, IfFirebaseUnAuthed } from "@react-firebase/auth";
 import { Router } from "react-router-dom";
-import { ApolloProvider } from './providers/ApolloProvider';
-import { AuthenticationProvider } from './providers/AuthenticationProvider';
-import { UserContextProvider } from './context/UserContext';
+import { ApolloProvider } from "./providers/ApolloProvider";
+import { AuthenticationProvider } from "./providers/AuthenticationProvider";
+import { UserContextProvider } from "./context/UserContext";
 
 import "./index.scss";
 import App from "./containers/App/App";
@@ -20,18 +20,15 @@ ReactDOM.render(
   <Router history={history}>
     <AuthenticationProvider>
       <ApolloProvider>
-      <IfFirebaseAuthed>
-              {() => (
-                <UserContextProvider>
-                    <App />
-                </UserContextProvider>
-              )}
-            </IfFirebaseAuthed>
+        <IfFirebaseAuthed>
+          {() => (
+            <UserContextProvider>
+              <App />
+            </UserContextProvider>
+          )}
+        </IfFirebaseAuthed>
 
-            <IfFirebaseUnAuthed>
-              {() => <App />}
-            </IfFirebaseUnAuthed>
-
+        <IfFirebaseUnAuthed>{() => <App />}</IfFirebaseUnAuthed>
       </ApolloProvider>
     </AuthenticationProvider>
   </Router>,

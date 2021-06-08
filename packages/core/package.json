@@ -1,6 +1,6 @@
 {
   "name": "@common/core",
-  "version": "1.9.12-rc.0",
+  "version": "1.9.12",
   "author": "Alexander Ivanov @alexander2001i",
   "main": "dist/index.js",
   "scripts": {

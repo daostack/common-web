@@ -56,7 +56,8 @@ export const onPayoutCreated: IEventTrigger = async (eventObj) => {
         payoutId: payout.id,
         amount: (payout.amount / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
         url: `${ urlBase }/circlepay/payouts/approve?payoutId=${ payout.id }&index=${ index }&token=${ payout.security[index].token }`,
-        adminUrl: `${ adminUrl }/financials/payouts/confirm?payoutId=${ payout.id }&index=${ index }&token=${ payout.security[index].token }`
+        adminUrl: `${ adminUrl }/financials/payouts/confirm?payoutId=${ payout.id }&index=${ index }&token=${ payout.security[index].token }`,
+        fromEmail: env.mail.payoutEmail
       }
     });
   }));

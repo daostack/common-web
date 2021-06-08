@@ -7,7 +7,6 @@ import { ItemType, IModeration } from '@common/types';
 import { hasPermission } from '../../core/domain/users/business';
 import { UnauthorizedError } from '../../util/errors';
 import { updateEntity } from './updateEntity';
-import { getNewCountdown } from '../../proposals/business/getNewCountdown';
 import { FLAGS, TYPES } from '../constants';
 import { db } from '../../util';
 
@@ -42,22 +41,12 @@ export const showContent = async (showContentPayload: ShowContentPayload): Promi
 
   const item = (await db.collection(type).doc(itemId).get()).data();
   
-  // if showing item when in quiet ending period, we need to reset countdown to quietEndingPeriod
-  let quietEnding = null;
-  if (type === TYPES.proposals) {
-    quietEnding = getNewCountdown(
-      item.moderation?.updatedAt.seconds + item?.countdownPeriod,
-      item.quietEndingPeriod
-    );
-  }
-
   const updatedItem = {
     ...item,
     moderation: {
       ...item.moderation,
       flag: FLAGS.visible,
       updatedAt: firestore.Timestamp.now(),
-      quietEnding,
       moderator: userId,
     } as IModeration,
   }

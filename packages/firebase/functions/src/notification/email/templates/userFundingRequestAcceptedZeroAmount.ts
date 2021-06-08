@@ -7,7 +7,7 @@ Your proposal "{{proposal}}" to "{{commonName}}" has been approved by the Common
 <br /><br />
 For more information you can contact us any time using our  <a href="{{supportChatLink}}">support chat</a>
 <br /><br />
-Common,
+Common Team ({{fromEmail}}),
 <br /><br />
 Collaborative Social Action.
 `;
@@ -24,7 +24,10 @@ const emailStubs = {
   },
   supportChatLink: {
     required: true
-  }
+  },
+  fromEmail: {
+    required: true
+  },
 };
 
 export const userFundingRequestAcceptedZeroAmount = {

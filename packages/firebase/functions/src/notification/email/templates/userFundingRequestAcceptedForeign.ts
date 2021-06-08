@@ -1,3 +1,5 @@
+import { testFlag } from '../../helpers';
+
 const template = `
 Hello {{userName}},
 <br /><br />
@@ -15,7 +17,7 @@ To ensure transparency, after receiving the funds and paying for the proposed pr
 <br /><br />
 For more information you can contact us any time by replying to this email.
 <br /><br />
-Common,
+Common Payouts ({{fromEmail}}),
 <br /><br />
 Collaborative Social Action.
 `;
@@ -35,11 +37,15 @@ const emailStubs = {
   },
   supportChatLink: {
     required: true
-  }
+  },
+  fromEmail: {
+    require: true
+  },
+
 };
 
 export const userFundingRequestAcceptedForeign = {
-  subject: 'Your funding proposal was approved',
+  subject: `${testFlag()}Your funding proposal was approved`,
   emailStubs,
   template
 };
