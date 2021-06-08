@@ -408,7 +408,7 @@ enum ReportAction {
 
 enum ReportStatus {
   Active
-  Clossed
+  Closed
 }
 
 enum ReportAuditor {

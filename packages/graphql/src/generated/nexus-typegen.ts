@@ -4,11 +4,10 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
-import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
+import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -393,38 +392,38 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  CommonMemberRole: 'Founder' | 'Moderator'
-  Country: 'AD' | 'AE' | 'AF' | 'AG' | 'AI' | 'AL' | 'AM' | 'AO' | 'AQ' | 'AR' | 'AS' | 'AT' | 'AU' | 'AW' | 'AX' | 'AZ' | 'BA' | 'BB' | 'BD' | 'BE' | 'BF' | 'BG' | 'BH' | 'BI' | 'BJ' | 'BL' | 'BM' | 'BN' | 'BO' | 'BQ' | 'BR' | 'BS' | 'BT' | 'BV' | 'BW' | 'BY' | 'BZ' | 'CA' | 'CC' | 'CD' | 'CF' | 'CG' | 'CH' | 'CI' | 'CK' | 'CL' | 'CM' | 'CN' | 'CO' | 'CR' | 'CU' | 'CV' | 'CW' | 'CX' | 'CY' | 'CZ' | 'DE' | 'DJ' | 'DK' | 'DM' | 'DO' | 'DZ' | 'EC' | 'EE' | 'EG' | 'EH' | 'ER' | 'ES' | 'ET' | 'FI' | 'FJ' | 'FK' | 'FM' | 'FO' | 'FR' | 'GA' | 'GB' | 'GD' | 'GE' | 'GF' | 'GG' | 'GH' | 'GI' | 'GL' | 'GM' | 'GN' | 'GP' | 'GQ' | 'GR' | 'GS' | 'GT' | 'GU' | 'GW' | 'GY' | 'HK' | 'HM' | 'HN' | 'HR' | 'HT' | 'HU' | 'ID' | 'IE' | 'IL' | 'IM' | 'IN' | 'IO' | 'IQ' | 'IR' | 'IS' | 'IT' | 'JE' | 'JM' | 'JO' | 'JP' | 'KE' | 'KG' | 'KH' | 'KI' | 'KM' | 'KN' | 'KP' | 'KR' | 'KW' | 'KY' | 'KZ' | 'LA' | 'LB' | 'LC' | 'LI' | 'LK' | 'LR' | 'LS' | 'LT' | 'LU' | 'LV' | 'LY' | 'MA' | 'MC' | 'MD' | 'ME' | 'MF' | 'MG' | 'MH' | 'MK' | 'ML' | 'MM' | 'MN' | 'MO' | 'MP' | 'MQ' | 'MR' | 'MS' | 'MT' | 'MU' | 'MV' | 'MW' | 'MX' | 'MY' | 'MZ' | 'NA' | 'NC' | 'NE' | 'NF' | 'NG' | 'NI' | 'NL' | 'NO' | 'NP' | 'NR' | 'NU' | 'NZ' | 'OM' | 'PA' | 'PE' | 'PF' | 'PG' | 'PH' | 'PK' | 'PL' | 'PM' | 'PN' | 'PR' | 'PS' | 'PT' | 'PW' | 'PY' | 'QA' | 'RE' | 'RO' | 'RS' | 'RU' | 'RW' | 'SA' | 'SB' | 'SC' | 'SD' | 'SE' | 'SG' | 'SH' | 'SI' | 'SJ' | 'SK' | 'SL' | 'SM' | 'SN' | 'SO' | 'SR' | 'SS' | 'ST' | 'SV' | 'SX' | 'SY' | 'SZ' | 'TC' | 'TD' | 'TF' | 'TG' | 'TH' | 'TJ' | 'TK' | 'TL' | 'TM' | 'TN' | 'TO' | 'TR' | 'TT' | 'TV' | 'TW' | 'TZ' | 'UA' | 'UG' | 'UM' | 'US' | 'UY' | 'UZ' | 'Unknown' | 'VA' | 'VC' | 'VE' | 'VG' | 'VI' | 'VN' | 'VU' | 'WF' | 'WS' | 'YE' | 'YT' | 'ZA' | 'ZM' | 'ZW'
-  DiscussionMessageType: 'Message'
-  DiscussionSubscriptionType: 'AllNotifications' | 'NoNotification' | 'OnlyMentions'
-  DiscussionType: 'CommonDiscussion' | 'ProposalDiscussion'
-  EventType: 'CardCreated' | 'CardCvvVerificationFailed' | 'CardCvvVerificationPassed' | 'CommonBalanceUpdated' | 'CommonCreated' | 'CommonDelisted' | 'CommonMemberCreated' | 'CommonMemberRoleAdded' | 'CommonMemberRoleRemoved' | 'CommonUpdated' | 'CommonWhitelisted' | 'DiscussionCreated' | 'DiscussionMessageCreated' | 'DiscussionSubscriptionCreated' | 'DiscussionSubscriptionTypeChanged' | 'FundingRequestAccepted' | 'FundingRequestCreated' | 'FundingRequestRejected' | 'JoinRequestAccepted' | 'JoinRequestCreated' | 'JoinRequestRejected' | 'NotificationTemplateCreated' | 'NotificationTemplateUpdated' | 'PaymentCreated' | 'PaymentFailed' | 'PaymentSucceeded' | 'PayoutApprovalGiven' | 'PayoutApproved' | 'PayoutApproverCreated' | 'PayoutCompleted' | 'PayoutCreated' | 'PayoutExecuted' | 'PayoutRejected' | 'PayoutRejectionGiven' | 'ProposalExpired' | 'ProposalMajorityReached' | 'ReportCreated' | 'ReportDismissed' | 'ReportRespected' | 'RoleCreated' | 'RoleDeleted' | 'RolePermissionAdded' | 'RolePermissionRemoved' | 'RoleUpdated' | 'UserAddedToRole' | 'UserCreated' | 'UserNotificationTokenCreated' | 'UserNotificationTokenExpired' | 'UserNotificationTokenRefreshed' | 'UserNotificationTokenVoided' | 'UserRemovedFromRole' | 'UserUpdated' | 'VoteCreated' | 'WireCreated' | 'WireUpdated'
-  FundingState: 'Eligible' | 'NotEligible' | 'Redeemed'
-  FundingType: 'Monthly' | 'OneTime'
-  NotificationLanguage: 'BG' | 'EN' | 'HE' | 'JP' | 'KO' | 'RU'
-  NotificationSeenStatus: 'Done' | 'NotSeen' | 'Seen'
-  NotificationTemplateType: 'EmailNotification' | 'PushNotification'
-  NotificationType: 'FundingRequestAccepted' | 'FundingRequestRejected' | 'General' | 'JoinRequestAccepted' | 'JoinRequestRejected'
-  PaymentCircleStatus: 'confirmed' | 'failed' | 'paid' | 'pending'
-  PaymentState: 'NotAttempted' | 'Pending' | 'Successful' | 'Unsuccessful'
-  PaymentStatus: 'NotAttempted' | 'Pending' | 'Successful' | 'Unsuccessful'
-  PaymentType: 'ImportedPayment' | 'OneTimePayment' | 'SubscriptionInitialPayment' | 'SubscriptionSequentialPayment'
-  PayoutApproverResponse: 'Approved' | 'Declined' | 'Pending'
-  PayoutStatus: 'CircleComplete' | 'CircleFailed' | 'CirclePending' | 'Failed' | 'PendingApproval'
-  ProposalState: 'Accepted' | 'AcceptedButInsufficientFunding' | 'Countdown' | 'Finalizing' | 'Rejected'
-  ProposalType: 'FundingRequest' | 'JoinRequest'
-  ReportAction: 'Dismissed' | 'Respected'
-  ReportAuditor: 'CommonModerator' | 'SystemAdmin'
-  ReportFlag: 'Clear' | 'Hidden' | 'Reported'
-  ReportFor: 'FalseNews' | 'Harassment' | 'Hate' | 'Nudity' | 'Other' | 'Spam' | 'Violance'
-  ReportStatus: 'Active' | 'Clossed'
-  ReportType: 'MessageReport' | 'ProposalReport'
-  SortOrder: 'asc' | 'desc'
-  StatisticType: 'AllTime' | 'Daily' | 'Hourly' | 'Weekly'
-  SubscriptionPaymentStatus: 'AwaitingInitialPayment' | 'Pending' | 'Successful' | 'Unsuccessful'
-  SubscriptionStatus: 'Active' | 'CanceledByPaymentFailure' | 'CanceledByUser' | 'PaymentFailed' | 'Pending'
-  UserNotificationTokenState: 'Active' | 'Expired' | 'Voided'
-  VoteOutcome: 'Approve' | 'Condemn'
+  CommonMemberRole: "Founder" | "Moderator"
+  Country: "AD" | "AE" | "AF" | "AG" | "AI" | "AL" | "AM" | "AO" | "AQ" | "AR" | "AS" | "AT" | "AU" | "AW" | "AX" | "AZ" | "BA" | "BB" | "BD" | "BE" | "BF" | "BG" | "BH" | "BI" | "BJ" | "BL" | "BM" | "BN" | "BO" | "BQ" | "BR" | "BS" | "BT" | "BV" | "BW" | "BY" | "BZ" | "CA" | "CC" | "CD" | "CF" | "CG" | "CH" | "CI" | "CK" | "CL" | "CM" | "CN" | "CO" | "CR" | "CU" | "CV" | "CW" | "CX" | "CY" | "CZ" | "DE" | "DJ" | "DK" | "DM" | "DO" | "DZ" | "EC" | "EE" | "EG" | "EH" | "ER" | "ES" | "ET" | "FI" | "FJ" | "FK" | "FM" | "FO" | "FR" | "GA" | "GB" | "GD" | "GE" | "GF" | "GG" | "GH" | "GI" | "GL" | "GM" | "GN" | "GP" | "GQ" | "GR" | "GS" | "GT" | "GU" | "GW" | "GY" | "HK" | "HM" | "HN" | "HR" | "HT" | "HU" | "ID" | "IE" | "IL" | "IM" | "IN" | "IO" | "IQ" | "IR" | "IS" | "IT" | "JE" | "JM" | "JO" | "JP" | "KE" | "KG" | "KH" | "KI" | "KM" | "KN" | "KP" | "KR" | "KW" | "KY" | "KZ" | "LA" | "LB" | "LC" | "LI" | "LK" | "LR" | "LS" | "LT" | "LU" | "LV" | "LY" | "MA" | "MC" | "MD" | "ME" | "MF" | "MG" | "MH" | "MK" | "ML" | "MM" | "MN" | "MO" | "MP" | "MQ" | "MR" | "MS" | "MT" | "MU" | "MV" | "MW" | "MX" | "MY" | "MZ" | "NA" | "NC" | "NE" | "NF" | "NG" | "NI" | "NL" | "NO" | "NP" | "NR" | "NU" | "NZ" | "OM" | "PA" | "PE" | "PF" | "PG" | "PH" | "PK" | "PL" | "PM" | "PN" | "PR" | "PS" | "PT" | "PW" | "PY" | "QA" | "RE" | "RO" | "RS" | "RU" | "RW" | "SA" | "SB" | "SC" | "SD" | "SE" | "SG" | "SH" | "SI" | "SJ" | "SK" | "SL" | "SM" | "SN" | "SO" | "SR" | "SS" | "ST" | "SV" | "SX" | "SY" | "SZ" | "TC" | "TD" | "TF" | "TG" | "TH" | "TJ" | "TK" | "TL" | "TM" | "TN" | "TO" | "TR" | "TT" | "TV" | "TW" | "TZ" | "UA" | "UG" | "UM" | "US" | "UY" | "UZ" | "Unknown" | "VA" | "VC" | "VE" | "VG" | "VI" | "VN" | "VU" | "WF" | "WS" | "YE" | "YT" | "ZA" | "ZM" | "ZW"
+  DiscussionMessageType: "Message"
+  DiscussionSubscriptionType: "AllNotifications" | "NoNotification" | "OnlyMentions"
+  DiscussionType: "CommonDiscussion" | "ProposalDiscussion"
+  EventType: "CardCreated" | "CardCvvVerificationFailed" | "CardCvvVerificationPassed" | "CommonBalanceUpdated" | "CommonCreated" | "CommonDelisted" | "CommonMemberCreated" | "CommonMemberRoleAdded" | "CommonMemberRoleRemoved" | "CommonUpdated" | "CommonWhitelisted" | "DiscussionCreated" | "DiscussionMessageCreated" | "DiscussionSubscriptionCreated" | "DiscussionSubscriptionTypeChanged" | "FundingRequestAccepted" | "FundingRequestCreated" | "FundingRequestRejected" | "JoinRequestAccepted" | "JoinRequestCreated" | "JoinRequestRejected" | "NotificationTemplateCreated" | "NotificationTemplateUpdated" | "PaymentCreated" | "PaymentFailed" | "PaymentSucceeded" | "PayoutApprovalGiven" | "PayoutApproved" | "PayoutApproverCreated" | "PayoutCompleted" | "PayoutCreated" | "PayoutExecuted" | "PayoutRejected" | "PayoutRejectionGiven" | "ProposalExpired" | "ProposalMajorityReached" | "ReportCreated" | "ReportDismissed" | "ReportRespected" | "RoleCreated" | "RoleDeleted" | "RolePermissionAdded" | "RolePermissionRemoved" | "RoleUpdated" | "UserAddedToRole" | "UserCreated" | "UserNotificationTokenCreated" | "UserNotificationTokenExpired" | "UserNotificationTokenRefreshed" | "UserNotificationTokenVoided" | "UserRemovedFromRole" | "UserUpdated" | "VoteCreated" | "WireCreated" | "WireUpdated"
+  FundingState: "Eligible" | "NotEligible" | "Redeemed"
+  FundingType: "Monthly" | "OneTime"
+  NotificationLanguage: "BG" | "EN" | "HE" | "JP" | "KO" | "RU"
+  NotificationSeenStatus: "Done" | "NotSeen" | "Seen"
+  NotificationTemplateType: "EmailNotification" | "PushNotification"
+  NotificationType: "FundingRequestAccepted" | "FundingRequestRejected" | "General" | "JoinRequestAccepted" | "JoinRequestRejected"
+  PaymentCircleStatus: "confirmed" | "failed" | "paid" | "pending"
+  PaymentState: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
+  PaymentStatus: "NotAttempted" | "Pending" | "Successful" | "Unsuccessful"
+  PaymentType: "ImportedPayment" | "OneTimePayment" | "SubscriptionInitialPayment" | "SubscriptionSequentialPayment"
+  PayoutApproverResponse: "Approved" | "Declined" | "Pending"
+  PayoutStatus: "CircleComplete" | "CircleFailed" | "CirclePending" | "Failed" | "PendingApproval"
+  ProposalState: "Accepted" | "AcceptedButInsufficientFunding" | "Countdown" | "Finalizing" | "Rejected"
+  ProposalType: "FundingRequest" | "JoinRequest"
+  ReportAction: "Dismissed" | "Respected"
+  ReportAuditor: "CommonModerator" | "SystemAdmin"
+  ReportFlag: "Clear" | "Hidden" | "Reported"
+  ReportFor: "FalseNews" | "Harassment" | "Hate" | "Nudity" | "Other" | "Spam" | "Violance"
+  ReportStatus: "Active" | "Closed"
+  ReportType: "MessageReport" | "ProposalReport"
+  SortOrder: "asc" | "desc"
+  StatisticType: "AllTime" | "Daily" | "Hourly" | "Weekly"
+  SubscriptionPaymentStatus: "AwaitingInitialPayment" | "Pending" | "Successful" | "Unsuccessful"
+  SubscriptionStatus: "Active" | "CanceledByPaymentFailure" | "CanceledByUser" | "PaymentFailed" | "Pending"
+  UserNotificationTokenState: "Active" | "Expired" | "Voided"
+  VoteOutcome: "Approve" | "Condemn"
 }
 
 export interface NexusGenScalars {
@@ -1052,6 +1051,7 @@ export interface NexusGenFieldTypes {
     payouts: Array<NexusGenRootTypes['Payout'] | null> | null; // [Payout]
     proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
     proposals: Array<NexusGenRootTypes['Proposal'] | null> | null; // [Proposal]
+    report: NexusGenRootTypes['Report'] | null; // Report
     reports: Array<NexusGenRootTypes['Report'] | null> | null; // [Report]
     role: NexusGenRootTypes['Role'] | null; // Role
     roles: Array<NexusGenRootTypes['Role'] | null> | null; // [Role]
@@ -1491,6 +1491,7 @@ export interface NexusGenFieldTypeNames {
     payouts: 'Payout'
     proposal: 'Proposal'
     proposals: 'Proposal'
+    report: 'Report'
     reports: 'Report'
     role: 'Role'
     roles: 'Role'
@@ -1831,6 +1832,9 @@ export interface NexusGenArgTypes {
       fundingWhere?: NexusGenInputs['FundingProposalWhereInput'] | null; // FundingProposalWhereInput
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
       where?: NexusGenInputs['ProposalWhereInput'] | null; // ProposalWhereInput
+    }
+    report: { // args
+      id: string; // ID!
     }
     reports: { // args
       pagination?: NexusGenInputs['PaginateInput'] | null; // PaginateInput

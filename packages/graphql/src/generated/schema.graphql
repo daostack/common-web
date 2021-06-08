@@ -1288,6 +1288,7 @@ type Query {
   payouts(paginate: PaginateInput = {skip: 0, take: 10}, where: PayoutWhereInput): [Payout]
   proposal(where: ProposalWhereUniqueInput!): Proposal
   proposals(fundingWhere: FundingProposalWhereInput, paginate: PaginateInput, where: ProposalWhereInput): [Proposal]
+  report(id: ID!): Report
   reports(pagination: PaginateInput, where: ReportWhereInput): [Report]
   role(where: RoleWhereUniqueInput!): Role
   roles(paginate: PaginateInput): [Role]
@@ -1361,7 +1362,7 @@ enum ReportFor {
 
 enum ReportStatus {
   Active
-  Clossed
+  Closed
 }
 
 input ReportStatusFilterInput {

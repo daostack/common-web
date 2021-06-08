@@ -488,7 +488,7 @@ export enum ReportAction {
 
 export enum ReportStatus {
   Active = 'Active',
-  Clossed = 'Clossed'
+  Closed = 'Closed'
 }
 
 export enum ReportAuditor {
@@ -2579,6 +2579,12 @@ export type GetReportsQuery = (
   reports?: Maybe<Array<Maybe<(
     { __typename?: 'Report' }
     & Pick<Report, 'id' | 'status' | 'type'>
+    & {
+    reporter: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'photo' | 'displayName'>
+      )
+  }
     )>>>
 }
   );
@@ -3944,11 +3950,9 @@ export const GetProposalsHomescreenDocument = gql`
 export function useGetProposalsHomescreenQuery(baseOptions: Apollo.QueryHookOptions<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>) {
   return Apollo.useQuery<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>(GetProposalsHomescreenDocument, baseOptions);
 }
-
 export function useGetProposalsHomescreenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>) {
   return Apollo.useLazyQuery<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>(GetProposalsHomescreenDocument, baseOptions);
 }
-
 export type GetProposalsHomescreenQueryHookResult = ReturnType<typeof useGetProposalsHomescreenQuery>;
 export type GetProposalsHomescreenLazyQueryHookResult = ReturnType<typeof useGetProposalsHomescreenLazyQuery>;
 export type GetProposalsHomescreenQueryResult = Apollo.QueryResult<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>;
@@ -3958,6 +3962,11 @@ export const GetReportsDocument = gql`
       id
       status
       type
+      reporter {
+        id
+        photo
+        displayName
+      }
     }
   }
 `;
@@ -3981,11 +3990,9 @@ export const GetReportsDocument = gql`
 export function useGetReportsQuery(baseOptions: Apollo.QueryHookOptions<GetReportsQuery, GetReportsQueryVariables>) {
   return Apollo.useQuery<GetReportsQuery, GetReportsQueryVariables>(GetReportsDocument, baseOptions);
 }
-
 export function useGetReportsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReportsQuery, GetReportsQueryVariables>) {
   return Apollo.useLazyQuery<GetReportsQuery, GetReportsQueryVariables>(GetReportsDocument, baseOptions);
 }
-
 export type GetReportsQueryHookResult = ReturnType<typeof useGetReportsQuery>;
 export type GetReportsLazyQueryHookResult = ReturnType<typeof useGetReportsLazyQuery>;
 export type GetReportsQueryResult = Apollo.QueryResult<GetReportsQuery, GetReportsQueryVariables>;
