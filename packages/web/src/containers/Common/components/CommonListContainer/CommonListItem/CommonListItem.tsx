@@ -16,6 +16,7 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
     <div className="common-item">
       <Link to={`${ROUTE_PATHS.COMMON_LIST}/` + common.id}>
         <div className="image-wrapper">
+          <div className="overlay"></div>
           {!imageError ? (
             <img src={common.image} alt={common.name} onError={() => setImageError(true)} />
           ) : (
