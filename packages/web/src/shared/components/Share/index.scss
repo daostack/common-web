@@ -65,6 +65,9 @@
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
+  .social-wrapper {
+    align-self: self-end;
+  }
   .social-buttons-wrapper {
     position: unset;
     box-shadow: unset;

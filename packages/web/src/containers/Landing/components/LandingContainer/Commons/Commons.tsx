@@ -44,7 +44,7 @@ export default function Commons() {
   return (
     <div className="commons-wrapper">
       <h1>Featured Commons</h1>
-      <b>Browse some of the emerging groups on the Common app</b>
+      <span className="bold-text">Browse some of the emerging groups on the Common app</span>
 
       {loading ? (
         <Loader />

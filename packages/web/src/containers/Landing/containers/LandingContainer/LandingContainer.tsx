@@ -27,8 +27,8 @@ const LandingContainer = () => {
               Start a Neighborhood Project, <br /> <span className="main-title">Together.</span>
             </span>
           </div>
-          <div className="mobile-apps-wrapper">
-            <div className="available-on-label">Available on</div>
+          <div className="mobile-apps-wrapper-top">
+            <div className="available-on-label-top">Available on</div>
             <MobileLinks color={Colors.white} />
           </div>
           <div className={screenSize === ScreenSize.Desktop ? "iphone-image full" : "iphone-image half"} />
@@ -40,8 +40,8 @@ const LandingContainer = () => {
         <p>
           Common enables large groups of people to collaborate on shared <br /> agendas by pooling funds and
           collectively making decisions. <br /> <br />
-          <b>Anyone</b> can create a Common, invite <br className="desktop-break" /> thier friends, and work{" "}
-          <br className="desktop-break" /> together to achieve a common goal.
+          <b>Anyone</b> can create a Common, invite thier friends, and work <br className="desktop-break" /> together to
+          achieve a common goal.
         </p>
         <div className="illustrations-wrapper-1">
           <div>
@@ -75,10 +75,10 @@ const LandingContainer = () => {
             <span className="purple-text">transparency</span> to galvanize <br className="desktop-break" /> massive
             action.
           </h1>
-          <b>
+          <span className="bold-text">
             The goal of Common is to support large communities that wish to <br className="desktop-break" /> collaborate
             on simple, and well-defined agendas.
-          </b>
+          </span>
           <p>
             Humanity's greatest achievements were made by massive <br className="desktop-break" /> collaborations.
             Common empowers groups to collaborate with no <br className="desktop-break" /> single organizer. And when
@@ -92,7 +92,7 @@ const LandingContainer = () => {
       </section>
       <section>
         <h1>What's Calling You?</h1>
-        <b>You can start a common for any shared agenda such as...</b>
+        <span className="bold-text">You can start a common for any shared agenda such as...</span>
         <div className="illustrations-wrapper-2">
           <div>
             <img src="assets/images/movement.svg" alt="movement" />
@@ -122,7 +122,7 @@ const LandingContainer = () => {
         <span>
           Download the Common app and find <br /> countless opportunities to make a difference.
         </span>
-        <div className="available-on-label">Available on</div>
+        <div className="available-on-label-bottom">Available on</div>
         <MobileLinks color={Colors.white} />
       </section>
     </div>
