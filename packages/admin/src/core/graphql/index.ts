@@ -2584,6 +2584,47 @@ export type GetProposalsHomescreenQuery = (
 }
   );
 
+export type ReportDetailsQueryVariables = Exact<{
+  reportId: Scalars['ID'];
+}>;
+
+
+export type ReportDetailsQuery = (
+  { __typename?: 'Query' }
+  & {
+  report?: Maybe<(
+    { __typename?: 'Report' }
+    & Pick<Report, 'id' | 'type' | 'status'>
+    & {
+    message?: Maybe<(
+      { __typename?: 'DiscussionMessage' }
+      & Pick<DiscussionMessage, 'message'>
+      & {
+      owner: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'firstName' | 'lastName'>
+        )
+    }
+      )>, proposal?: Maybe<(
+      { __typename?: 'Proposal' }
+      & Pick<Proposal, 'title' | 'description' | 'files' | 'images'>
+      & {
+      member: (
+        { __typename?: 'CommonMember' }
+        & {
+        user?: Maybe<(
+          { __typename?: 'User' }
+          & Pick<User, 'id' | 'firstName' | 'lastName'>
+          )>
+      }
+        )
+    }
+      )>
+  }
+    )>
+}
+  );
+
 export type GetReportsQueryVariables = Exact<{
   pagination: PaginateInput;
 }>;
@@ -3092,11 +3133,9 @@ export const GetCommonsHomescreenDataDocument = gql`
 export function useGetCommonsHomescreenDataQuery(baseOptions?: Apollo.QueryHookOptions<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>) {
   return Apollo.useQuery<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>(GetCommonsHomescreenDataDocument, baseOptions);
 }
-
 export function useGetCommonsHomescreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>) {
   return Apollo.useLazyQuery<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>(GetCommonsHomescreenDataDocument, baseOptions);
 }
-
 export type GetCommonsHomescreenDataQueryHookResult = ReturnType<typeof useGetCommonsHomescreenDataQuery>;
 export type GetCommonsHomescreenDataLazyQueryHookResult = ReturnType<typeof useGetCommonsHomescreenDataLazyQuery>;
 export type GetCommonsHomescreenDataQueryResult = Apollo.QueryResult<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>;
@@ -3129,11 +3168,9 @@ export const AllTimeStatisticsDocument = gql`
 export function useAllTimeStatisticsQuery(baseOptions?: Apollo.QueryHookOptions<AllTimeStatisticsQuery, AllTimeStatisticsQueryVariables>) {
   return Apollo.useQuery<AllTimeStatisticsQuery, AllTimeStatisticsQueryVariables>(AllTimeStatisticsDocument, baseOptions);
 }
-
 export function useAllTimeStatisticsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllTimeStatisticsQuery, AllTimeStatisticsQueryVariables>) {
   return Apollo.useLazyQuery<AllTimeStatisticsQuery, AllTimeStatisticsQueryVariables>(AllTimeStatisticsDocument, baseOptions);
 }
-
 export type AllTimeStatisticsQueryHookResult = ReturnType<typeof useAllTimeStatisticsQuery>;
 export type AllTimeStatisticsLazyQueryHookResult = ReturnType<typeof useAllTimeStatisticsLazyQuery>;
 export type AllTimeStatisticsQueryResult = Apollo.QueryResult<AllTimeStatisticsQuery, AllTimeStatisticsQueryVariables>;
@@ -3999,12 +4036,72 @@ export const GetProposalsHomescreenDocument = gql`
 export function useGetProposalsHomescreenQuery(baseOptions: Apollo.QueryHookOptions<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>) {
   return Apollo.useQuery<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>(GetProposalsHomescreenDocument, baseOptions);
 }
+
 export function useGetProposalsHomescreenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>) {
   return Apollo.useLazyQuery<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>(GetProposalsHomescreenDocument, baseOptions);
 }
+
 export type GetProposalsHomescreenQueryHookResult = ReturnType<typeof useGetProposalsHomescreenQuery>;
 export type GetProposalsHomescreenLazyQueryHookResult = ReturnType<typeof useGetProposalsHomescreenLazyQuery>;
 export type GetProposalsHomescreenQueryResult = Apollo.QueryResult<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>;
+export const ReportDetailsDocument = gql`
+  query reportDetails($reportId: ID!) {
+    report(id: $reportId) {
+      id
+      type
+      status
+      message {
+        message
+        owner {
+          id
+          firstName
+          lastName
+        }
+      }
+      proposal {
+        title
+        description
+        files
+        images
+        member {
+          user {
+            id
+            firstName
+            lastName
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useReportDetailsQuery__
+ *
+ * To run a query within a React component, call `useReportDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useReportDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useReportDetailsQuery({
+ *   variables: {
+ *      reportId: // value for 'reportId'
+ *   },
+ * });
+ */
+export function useReportDetailsQuery(baseOptions: Apollo.QueryHookOptions<ReportDetailsQuery, ReportDetailsQueryVariables>) {
+  return Apollo.useQuery<ReportDetailsQuery, ReportDetailsQueryVariables>(ReportDetailsDocument, baseOptions);
+}
+
+export function useReportDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ReportDetailsQuery, ReportDetailsQueryVariables>) {
+  return Apollo.useLazyQuery<ReportDetailsQuery, ReportDetailsQueryVariables>(ReportDetailsDocument, baseOptions);
+}
+
+export type ReportDetailsQueryHookResult = ReturnType<typeof useReportDetailsQuery>;
+export type ReportDetailsLazyQueryHookResult = ReturnType<typeof useReportDetailsLazyQuery>;
+export type ReportDetailsQueryResult = Apollo.QueryResult<ReportDetailsQuery, ReportDetailsQueryVariables>;
 export const GetReportsDocument = gql`
   query getReports($pagination: PaginateInput!) {
     reports(pagination: $pagination) {

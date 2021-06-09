@@ -99,7 +99,7 @@ const DashboardHomePage: NextPage = () => {
             <Card hoverable>
               <Text h1>
                 {statistics && (
-                  statistics.getStatistics[0].commons
+                  statistics.statistics[0].commons
                 )}
 
                 {!statistics && (
@@ -114,8 +114,8 @@ const DashboardHomePage: NextPage = () => {
             <Card hoverable>
               <Text h1>
                 {statistics && (
-                  statistics.getStatistics[0].joinProposals +
-                  statistics.getStatistics[0].fundingProposals
+                  statistics.statistics[0].joinProposals +
+                  statistics.statistics[0].fundingProposals
                 )}
 
                 {!statistics && (
@@ -130,7 +130,7 @@ const DashboardHomePage: NextPage = () => {
             <Card hoverable>
               <Text h1>
                 {statistics && (
-                  statistics.getStatistics[0].users
+                  statistics.statistics[0].users
                 )}
 
                 {!statistics && (
