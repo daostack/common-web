@@ -1486,7 +1486,7 @@ type Query {
   proposal(where: ProposalWhereUniqueInput!): Proposal
   proposals(where: ProposalWhereInput, fundingWhere: FundingProposalWhereInput, paginate: PaginateInput): [Proposal]
   settings: Settings!
-  getStatistics(where: StatisticsWhereInput): [Statistic]
+  statistics(where: StatisticsWhereInput): [Statistic]
   discussion(id: ID!): Discussion
   discussions(where: DiscussionWhereInput, paginate: PaginateInput): [Discussion]
   notificationTemplateOptions: NotificationTemplateOptions
@@ -1524,6 +1524,7 @@ type Mutation {
   """Create new proposal of Types JOIN."""
   createJoinProposal(input: CreateJoinProposalInput!): Proposal!
   createFundingProposal(input: CreateFundingProposalInput!): Proposal!
+  forceUpdateStatistics: Boolean
   createDiscussion(input: CreateDiscussionInput!): Discussion!
   createDiscussionMessage(input: CreateDiscussionMessageInput!): DiscussionMessage!
   changeDiscussionSubscriptionType(

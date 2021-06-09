@@ -13,7 +13,7 @@ import { ArrowUpCircle } from '@geist-ui/react-icons';
 
 const AllTimeStatistics = gql`
   query AllTimeStatistics {
-    statistics: getStatistics(where: {
+    statistics(where: {
       type: AllTime
     }) {
       users
@@ -49,8 +49,8 @@ const DashboardHomePage: NextPage = () => {
   const { data } = useDashboardDataQuery();
 
   const onCardClick = (url: string) => {
-    return () => {
-      router.push(url);
+    return async () => {
+      await router.push(url);
     };
   };
 

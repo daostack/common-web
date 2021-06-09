@@ -1274,7 +1274,6 @@ type Query {
   discussions(paginate: PaginateInput, where: DiscussionWhereInput): [Discussion]
   events(paginate: PaginateInput): [Event]
   generateUserAuthToken(authId: String!): String!
-  getStatistics(where: StatisticsWhereInput): [Statistic]
   notificationEventOptions: NotificationEventOptions
   notificationEventSettings(paginate: PaginateInput!): [NotificationEventSettings]
   notificationSettings(where: NotificationSettingsWhereInput): [NotificationSystemSettings]
@@ -1294,6 +1293,7 @@ type Query {
   role(where: RoleWhereUniqueInput!): Role
   roles(paginate: PaginateInput): [Role]
   settings: Settings!
+  statistics(where: StatisticsWhereInput): [Statistic]
 
   """
   Provide ID to fetch specific user or do not pass anything to get the currently authenticated user

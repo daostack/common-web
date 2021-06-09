@@ -13113,7 +13113,7 @@
             "deprecationReason": null
           },
           {
-            "name": "getStatistics",
+            "name": "statistics",
             "description": null,
             "args": [
               {
@@ -14133,6 +14133,18 @@
                 "name": "Proposal",
                 "ofType": null
               }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "forceUpdateStatistics",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null

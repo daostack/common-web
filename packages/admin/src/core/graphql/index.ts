@@ -1606,7 +1606,7 @@ export type Query = {
   proposal?: Maybe<Proposal>;
   proposals?: Maybe<Array<Maybe<Proposal>>>;
   settings: Settings;
-  getStatistics?: Maybe<Array<Maybe<Statistic>>>;
+  statistics?: Maybe<Array<Maybe<Statistic>>>;
   discussion?: Maybe<Discussion>;
   discussions?: Maybe<Array<Maybe<Discussion>>>;
   notificationTemplateOptions?: Maybe<NotificationTemplateOptions>;
@@ -1711,7 +1711,7 @@ export type QueryProposalsArgs = {
 };
 
 
-export type QueryGetStatisticsArgs = {
+export type QueryStatisticsArgs = {
   where?: Maybe<StatisticsWhereInput>;
 };
 
@@ -1774,6 +1774,7 @@ export type Mutation = {
   /** Create new proposal of Types JOIN. */
   createJoinProposal: Proposal;
   createFundingProposal: Proposal;
+  forceUpdateStatistics?: Maybe<Scalars['Boolean']>;
   createDiscussion: Discussion;
   createDiscussionMessage: DiscussionMessage;
   changeDiscussionSubscriptionType?: Maybe<DiscussionSubscription>;
@@ -3167,7 +3168,7 @@ export type GetCommonsHomescreenDataLazyQueryHookResult = ReturnType<typeof useG
 export type GetCommonsHomescreenDataQueryResult = Apollo.QueryResult<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>;
 export const AllTimeStatisticsDocument = gql`
   query AllTimeStatistics {
-    statistics: getStatistics(where: {type: AllTime}) {
+    statistics(where: {type: AllTime}) {
       users
       commons
       joinProposals
@@ -4138,11 +4139,9 @@ export const ReportDetailsDocument = gql`
 export function useReportDetailsQuery(baseOptions: Apollo.QueryHookOptions<ReportDetailsQuery, ReportDetailsQueryVariables>) {
   return Apollo.useQuery<ReportDetailsQuery, ReportDetailsQueryVariables>(ReportDetailsDocument, baseOptions);
 }
-
 export function useReportDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ReportDetailsQuery, ReportDetailsQueryVariables>) {
   return Apollo.useLazyQuery<ReportDetailsQuery, ReportDetailsQueryVariables>(ReportDetailsDocument, baseOptions);
 }
-
 export type ReportDetailsQueryHookResult = ReturnType<typeof useReportDetailsQuery>;
 export type ReportDetailsLazyQueryHookResult = ReturnType<typeof useReportDetailsLazyQuery>;
 export type ReportDetailsQueryResult = Apollo.QueryResult<ReportDetailsQuery, ReportDetailsQueryVariables>;
@@ -4175,7 +4174,6 @@ export type ActOnReportMutationFn = Apollo.MutationFunction<ActOnReportMutation,
 export function useActOnReportMutation(baseOptions?: Apollo.MutationHookOptions<ActOnReportMutation, ActOnReportMutationVariables>) {
   return Apollo.useMutation<ActOnReportMutation, ActOnReportMutationVariables>(ActOnReportDocument, baseOptions);
 }
-
 export type ActOnReportMutationHookResult = ReturnType<typeof useActOnReportMutation>;
 export type ActOnReportMutationResult = Apollo.MutationResult<ActOnReportMutation>;
 export type ActOnReportMutationOptions = Apollo.BaseMutationOptions<ActOnReportMutation, ActOnReportMutationVariables>;

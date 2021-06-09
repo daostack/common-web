@@ -1043,7 +1043,6 @@ export interface NexusGenFieldTypes {
     discussions: Array<NexusGenRootTypes['Discussion'] | null> | null; // [Discussion]
     events: Array<NexusGenRootTypes['Event'] | null> | null; // [Event]
     generateUserAuthToken: string; // String!
-    getStatistics: Array<NexusGenRootTypes['Statistic'] | null> | null; // [Statistic]
     notificationEventOptions: NexusGenRootTypes['NotificationEventOptions'] | null; // NotificationEventOptions
     notificationEventSettings: Array<NexusGenRootTypes['NotificationEventSettings'] | null> | null; // [NotificationEventSettings]
     notificationSettings: Array<NexusGenRootTypes['NotificationSystemSettings'] | null> | null; // [NotificationSystemSettings]
@@ -1061,6 +1060,7 @@ export interface NexusGenFieldTypes {
     role: NexusGenRootTypes['Role'] | null; // Role
     roles: Array<NexusGenRootTypes['Role'] | null> | null; // [Role]
     settings: NexusGenRootTypes['Settings']; // Settings!
+    statistics: Array<NexusGenRootTypes['Statistic'] | null> | null; // [Statistic]
     user: NexusGenRootTypes['User'] | null; // User
     users: Array<NexusGenRootTypes['User'] | null> | null; // [User]
     wires: Array<NexusGenRootTypes['Wire'] | null> | null; // [Wire]
@@ -1488,7 +1488,6 @@ export interface NexusGenFieldTypeNames {
     discussions: 'Discussion'
     events: 'Event'
     generateUserAuthToken: 'String'
-    getStatistics: 'Statistic'
     notificationEventOptions: 'NotificationEventOptions'
     notificationEventSettings: 'NotificationEventSettings'
     notificationSettings: 'NotificationSystemSettings'
@@ -1506,6 +1505,7 @@ export interface NexusGenFieldTypeNames {
     role: 'Role'
     roles: 'Role'
     settings: 'Settings'
+    statistics: 'Statistic'
     user: 'User'
     users: 'User'
     wires: 'Wire'
@@ -1809,9 +1809,6 @@ export interface NexusGenArgTypes {
     generateUserAuthToken: { // args
       authId: string; // String!
     }
-    getStatistics: { // args
-      where?: NexusGenInputs['StatisticsWhereInput'] | null; // StatisticsWhereInput
-    }
     notificationEventSettings: { // args
       paginate: NexusGenInputs['PaginateInput']; // PaginateInput!
     }
@@ -1859,6 +1856,9 @@ export interface NexusGenArgTypes {
     }
     roles: { // args
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput
+    }
+    statistics: { // args
+      where?: NexusGenInputs['StatisticsWhereInput'] | null; // StatisticsWhereInput
     }
     user: { // args
       where?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
