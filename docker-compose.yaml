@@ -18,33 +18,38 @@ services:
       - ./:/var/lib/postgres:rw
     networks: [internal]
   worker:
-    image: common-backend
+    image: common-backend-alpine
     container_name: common-worker
     ports:
      - "4001:4001"
     depends_on:
       - postgres
       - redis
+      - init-db
     command: ["yarn", "run", "start"]
     env_file: [".env"]
     working_dir: /app/packages/worker
     networks: [internal, host]
   graphql:
-    image: common-backend
+    image: common-backend-alpine
     container_name: common-graphql
     ports:
      - "4000:4000"
     depends_on:
       - postgres
       - redis
+      - init-db
     command: ["yarn", "run", "start"]
     env_file: [".env"]
     working_dir: /app/packages/graphql
     networks: [internal, host]
-#  init-db:
-#   image: common-backend
-#   restart: "no"
-#   entrypoint: [init-db.sh]
+  init-db:
+    image: common-backend-alpine
+    restart: "no"
+    working_dir: /app/packages/core
+    env_file: [".env"]
+    command: ["yarn", "run", "db:sync"]
+    networks: [internal]
 networks:
   internal:
   host:

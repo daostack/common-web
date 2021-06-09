@@ -19,9 +19,6 @@ RUN cd ./packages/core/ && \
      yarn run compile
 
 
-#FROM node:12-alpine as prod
-#WORKDIR /app
-#COPY --from builder /app/packages/core/dist ./core
-#COPY --from builder /app/packages/graphql/dist ./graphql
-#COPY --from builder /app/packages/worker/dist ./worker
-#ENTRYPOINT [node server ./worker]
+FROM node:12-alpine as prod
+WORKDIR /app
+COPY --from=1 /app .
