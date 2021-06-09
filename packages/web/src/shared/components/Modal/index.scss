@@ -28,7 +28,8 @@
   z-index: 100;
   position: relative;
   margin: 1.75rem auto;
-  max-width: 1000px;
+  max-width: 900px;
+  box-sizing: border-box;
   border-radius: 12px;
 
   &.discussions,
