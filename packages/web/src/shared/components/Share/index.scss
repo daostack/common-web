@@ -48,15 +48,27 @@
     margin: 0 10px;
     &.facebook {
       background-image: url("/icons/social-share/facebook.svg");
+      &:hover {
+        background-image: url("/icons/social-share/facebook-h.svg");
+      }
     }
     &.linkedin {
       background-image: url("/icons/social-share/linkedin.svg");
+      &:hover {
+        background-image: url("/icons/social-share/linkedin-h.svg");
+      }
     }
     &.telegram {
       background-image: url("/icons/social-share/telegram.svg");
+      &:hover {
+        background-image: url("/icons/social-share/telegram-h.svg");
+      }
     }
     &.twitter {
       background-image: url("/icons/social-share/twitter.svg");
+      &:hover {
+        background-image: url("/icons/social-share/twitter-h.svg");
+      }
     }
   }
   button:hover {
