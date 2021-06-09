@@ -224,7 +224,7 @@ const CommonsHomepage: NextPage = () => {
 
       {statistics && statistics.statistics[0].commons > 10 && (
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-          <Pagination count={Math.ceil(statistics.data.getStatistics[0].commons / 10)} onChange={onPageChange}>
+          <Pagination count={Math.ceil(statistics.statistics[0].commons / 10)} onChange={onPageChange}>
             <Pagination.Next><ChevronRightCircleFill/></Pagination.Next>
             <Pagination.Previous><ChevronLeftCircleFill/></Pagination.Previous>
           </Pagination>

@@ -870,6 +870,7 @@ type Mutation {
   deleteEventNotificationSetting(id: ID!): Boolean
   delistCommon(commonId: String!): Boolean
   finalizeProposal(proposalId: ID!): Boolean!
+  forceUpdateStatistics: Boolean
   unassignRole(roleId: ID!, userId: ID!): Void
   updateCommon(input: UpdateCommonInput!): Common
   updateNotificationSettings(input: UpdateNotificationSettingsInput!): NotificationSystemSettings

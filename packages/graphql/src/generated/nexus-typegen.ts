@@ -4,10 +4,11 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -903,6 +904,7 @@ export interface NexusGenFieldTypes {
     deleteEventNotificationSetting: boolean | null; // Boolean
     delistCommon: boolean | null; // Boolean
     finalizeProposal: boolean; // Boolean!
+    forceUpdateStatistics: boolean | null; // Boolean
     unassignRole: NexusGenScalars['Void'] | null; // Void
     updateCommon: NexusGenRootTypes['Common'] | null; // Common
     updateNotificationSettings: NexusGenRootTypes['NotificationSystemSettings'] | null; // NotificationSystemSettings
@@ -1347,6 +1349,7 @@ export interface NexusGenFieldTypeNames {
     deleteEventNotificationSetting: 'Boolean'
     delistCommon: 'Boolean'
     finalizeProposal: 'Boolean'
+    forceUpdateStatistics: 'Boolean'
     unassignRole: 'Void'
     updateCommon: 'Common'
     updateNotificationSettings: 'NotificationSystemSettings'
