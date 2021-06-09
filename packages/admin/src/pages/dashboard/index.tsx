@@ -7,13 +7,13 @@ import { useRouter } from 'next/router';
 import { Link } from '@components/Link';
 import { gql } from '@apollo/client';
 import Skeleton from 'react-loading-skeleton';
-import { useDashboardDataQuery } from '@core/graphql';
+import { useDashboardDataQuery, useAllTimeStatisticsQuery } from '@core/graphql';
 import { ArrowUpCircle } from '@geist-ui/react-icons';
 
 
-const GetAllTimeStatistics = gql`
-  query dashboardData {
-    getStatistics(where: {
+const AllTimeStatistics = gql`
+  query AllTimeStatistics {
+    statistics: getStatistics(where: {
       type: AllTime
     }) {
       users
@@ -21,7 +21,11 @@ const GetAllTimeStatistics = gql`
       joinProposals
       fundingProposals
     }
+  }
+`;
 
+const DashboardData = gql`
+  query dashboardData {
     payouts(
       where: {
         isPendingApprover: true
@@ -41,6 +45,7 @@ const GetAllTimeStatistics = gql`
 const DashboardHomePage: NextPage = () => {
   const router = useRouter();
 
+  const { data: statistics } = useAllTimeStatisticsQuery();
   const { data } = useDashboardDataQuery();
 
   const onCardClick = (url: string) => {
@@ -93,11 +98,11 @@ const DashboardHomePage: NextPage = () => {
           <Grid xs={24} md={8} onClick={onCardClick('/commons')} style={{ cursor: 'pointer' }}>
             <Card hoverable>
               <Text h1>
-                {data && (
-                  data.getStatistics[0].commons
+                {statistics && (
+                  statistics.getStatistics[0].commons
                 )}
 
-                {!data && (
+                {!statistics && (
                   <Skeleton/>
                 )}
               </Text>
@@ -108,12 +113,12 @@ const DashboardHomePage: NextPage = () => {
           <Grid xs={24} md={8} onClick={onCardClick('/proposals')} style={{ cursor: 'pointer' }}>
             <Card hoverable>
               <Text h1>
-                {data && (
-                  data.getStatistics[0].joinProposals +
-                  data.getStatistics[0].fundingProposals
+                {statistics && (
+                  statistics.getStatistics[0].joinProposals +
+                  statistics.getStatistics[0].fundingProposals
                 )}
 
-                {!data && (
+                {!statistics && (
                   <Skeleton/>
                 )}
               </Text>
@@ -124,11 +129,11 @@ const DashboardHomePage: NextPage = () => {
           <Grid xs={24} md={8} onClick={onCardClick('/users')} style={{ cursor: 'pointer' }}>
             <Card hoverable>
               <Text h1>
-                {data && (
-                  data.getStatistics[0].users
+                {statistics && (
+                  statistics.getStatistics[0].users
                 )}
 
-                {!data && (
+                {!statistics && (
                   <Skeleton/>
                 )}
               </Text>

@@ -1593,6 +1593,7 @@ export type Query = {
   common?: Maybe<Common>;
   commons?: Maybe<Array<Maybe<Common>>>;
   reports?: Maybe<Array<Maybe<Report>>>;
+  report?: Maybe<Report>;
   payout?: Maybe<Payout>;
   payouts?: Maybe<Array<Maybe<Payout>>>;
   payment?: Maybe<Payment>;
@@ -1663,6 +1664,11 @@ export type QueryCommonsArgs = {
 export type QueryReportsArgs = {
   where?: Maybe<ReportWhereInput>;
   pagination?: Maybe<PaginateInput>;
+};
+
+
+export type QueryReportArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -2132,16 +2138,26 @@ export type GetCommonsHomescreenDataQuery = (
 }
   );
 
+export type AllTimeStatisticsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllTimeStatisticsQuery = (
+  { __typename?: 'Query' }
+  & {
+  statistics?: Maybe<Array<Maybe<(
+    { __typename?: 'Statistic' }
+    & Pick<Statistic, 'users' | 'commons' | 'joinProposals' | 'fundingProposals'>
+    )>>>
+}
+  );
+
 export type DashboardDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type DashboardDataQuery = (
   { __typename?: 'Query' }
   & {
-  getStatistics?: Maybe<Array<Maybe<(
-    { __typename?: 'Statistic' }
-    & Pick<Statistic, 'users' | 'commons' | 'joinProposals' | 'fundingProposals'>
-    )>>>, payouts?: Maybe<Array<Maybe<(
+  payouts?: Maybe<Array<Maybe<(
     { __typename?: 'Payout' }
     & Pick<Payout, 'id' | 'status' | 'description'>
     & {
@@ -3076,20 +3092,53 @@ export const GetCommonsHomescreenDataDocument = gql`
 export function useGetCommonsHomescreenDataQuery(baseOptions?: Apollo.QueryHookOptions<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>) {
   return Apollo.useQuery<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>(GetCommonsHomescreenDataDocument, baseOptions);
 }
+
 export function useGetCommonsHomescreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>) {
   return Apollo.useLazyQuery<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>(GetCommonsHomescreenDataDocument, baseOptions);
 }
+
 export type GetCommonsHomescreenDataQueryHookResult = ReturnType<typeof useGetCommonsHomescreenDataQuery>;
 export type GetCommonsHomescreenDataLazyQueryHookResult = ReturnType<typeof useGetCommonsHomescreenDataLazyQuery>;
 export type GetCommonsHomescreenDataQueryResult = Apollo.QueryResult<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>;
-export const DashboardDataDocument = gql`
-  query dashboardData {
-    getStatistics(where: {type: AllTime}) {
+export const AllTimeStatisticsDocument = gql`
+  query AllTimeStatistics {
+    statistics: getStatistics(where: {type: AllTime}) {
       users
       commons
       joinProposals
       fundingProposals
     }
+  }
+`;
+
+/**
+ * __useAllTimeStatisticsQuery__
+ *
+ * To run a query within a React component, call `useAllTimeStatisticsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllTimeStatisticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllTimeStatisticsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllTimeStatisticsQuery(baseOptions?: Apollo.QueryHookOptions<AllTimeStatisticsQuery, AllTimeStatisticsQueryVariables>) {
+  return Apollo.useQuery<AllTimeStatisticsQuery, AllTimeStatisticsQueryVariables>(AllTimeStatisticsDocument, baseOptions);
+}
+
+export function useAllTimeStatisticsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllTimeStatisticsQuery, AllTimeStatisticsQueryVariables>) {
+  return Apollo.useLazyQuery<AllTimeStatisticsQuery, AllTimeStatisticsQueryVariables>(AllTimeStatisticsDocument, baseOptions);
+}
+
+export type AllTimeStatisticsQueryHookResult = ReturnType<typeof useAllTimeStatisticsQuery>;
+export type AllTimeStatisticsLazyQueryHookResult = ReturnType<typeof useAllTimeStatisticsLazyQuery>;
+export type AllTimeStatisticsQueryResult = Apollo.QueryResult<AllTimeStatisticsQuery, AllTimeStatisticsQueryVariables>;
+export const DashboardDataDocument = gql`
+  query dashboardData {
     payouts(where: {isPendingApprover: true}) {
       id
       status

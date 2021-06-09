@@ -1473,6 +1473,7 @@ type Query {
   common(where: CommonWhereUniqueInput!): Common
   commons(paginate: PaginateInput, where: CommonWhereInput): [Common]
   reports(where: ReportWhereInput, pagination: PaginateInput): [Report]
+  report(id: ID!): Report
   payout(id: ID!): Payout
   payouts(paginate: PaginateInput = {take: 10, skip: 0}, where: PayoutWhereInput): [Payout]
   payment(id: ID): Payment
