@@ -15,6 +15,15 @@ export const ReportType = objectType({
       description: 'The Types of violation that this report is for'
     });
 
+    t.field('action', {
+      type: 'ReportAction',
+      description: 'The type of action that this done after the report review'
+    });
+
+    t.field('reviewAuthority', {
+      type: 'ReportAuditor'
+    });
+
     t.nonNull.field('type', {
       type: 'ReportType',
       description: 'The type of the report'

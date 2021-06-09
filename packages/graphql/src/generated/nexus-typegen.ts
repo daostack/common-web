@@ -645,6 +645,7 @@ export interface NexusGenObjects {
   }
   Query: {};
   Report: { // root type
+    action?: NexusGenEnums['ReportAction'] | null; // ReportAction
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     for: NexusGenEnums['ReportFor']; // ReportFor!
     id: NexusGenScalars['UUID']; // UUID!
@@ -652,7 +653,9 @@ export interface NexusGenObjects {
     note: string; // String!
     proposalId?: NexusGenScalars['UUID'] | null; // UUID
     reporterId: string; // ID!
+    reviewAuthority?: NexusGenEnums['ReportAuditor'] | null; // ReportAuditor
     reviewedOn?: NexusGenScalars['DateTime'] | null; // DateTime
+    reviewerId?: string | null; // ID
     status: NexusGenEnums['ReportStatus']; // ReportStatus!
     type: NexusGenEnums['ReportType']; // ReportType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
@@ -1061,6 +1064,7 @@ export interface NexusGenFieldTypes {
     wires: Array<NexusGenRootTypes['Wire'] | null> | null; // [Wire]
   }
   Report: { // field return type
+    action: NexusGenEnums['ReportAction'] | null; // ReportAction
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     for: NexusGenEnums['ReportFor']; // ReportFor!
     id: NexusGenScalars['UUID']; // UUID!
@@ -1071,7 +1075,10 @@ export interface NexusGenFieldTypes {
     proposalId: NexusGenScalars['UUID'] | null; // UUID
     reporter: NexusGenRootTypes['User']; // User!
     reporterId: string; // ID!
+    reviewAuthority: NexusGenEnums['ReportAuditor'] | null; // ReportAuditor
     reviewedOn: NexusGenScalars['DateTime'] | null; // DateTime
+    reviewer: NexusGenRootTypes['User'] | null; // User
+    reviewerId: string | null; // ID
     status: NexusGenEnums['ReportStatus']; // ReportStatus!
     type: NexusGenEnums['ReportType']; // ReportType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
@@ -1501,6 +1508,7 @@ export interface NexusGenFieldTypeNames {
     wires: 'Wire'
   }
   Report: { // field return type name
+    action: 'ReportAction'
     createdAt: 'DateTime'
     for: 'ReportFor'
     id: 'UUID'
@@ -1511,7 +1519,10 @@ export interface NexusGenFieldTypeNames {
     proposalId: 'UUID'
     reporter: 'User'
     reporterId: 'ID'
+    reviewAuthority: 'ReportAuditor'
     reviewedOn: 'DateTime'
+    reviewer: 'User'
+    reviewerId: 'ID'
     status: 'ReportStatus'
     type: 'ReportType'
     updatedAt: 'DateTime'

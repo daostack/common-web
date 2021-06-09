@@ -371,12 +371,17 @@ type Report implements BaseEntity {
   status: ReportStatus!
   """The Types of violation that this report is for"""
   for: ReportFor!
+  """The type of action that this done after the report review"""
+  action: ReportAction
+  reviewAuthority: ReportAuditor
   """The type of the report"""
   type: ReportType!
   """The note that the report has left for the content"""
   note: String!
   """The date on which the report was last reviewed if reviewed"""
   reviewedOn: DateTime
+  reviewerId: ID
+  reviewer: User
   reporterId: ID!
   reporter: User!
   messageId: UUID

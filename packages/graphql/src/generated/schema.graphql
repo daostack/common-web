@@ -1303,6 +1303,9 @@ type Query {
 }
 
 type Report implements BaseEntity {
+  """The type of action that this done after the report review"""
+  action: ReportAction
+
   """The date, at which the item was created"""
   createdAt: DateTime!
 
@@ -1320,9 +1323,12 @@ type Report implements BaseEntity {
   proposalId: UUID
   reporter: User!
   reporterId: ID!
+  reviewAuthority: ReportAuditor
 
   """The date on which the report was last reviewed if reviewed"""
   reviewedOn: DateTime
+  reviewer: User
+  reviewerId: ID
 
   """The current status of the report"""
   status: ReportStatus!

@@ -451,12 +451,17 @@ export type Report = BaseEntity & {
   status: ReportStatus;
   /** The Types of violation that this report is for */
   for: ReportFor;
+  /** The type of action that this done after the report review */
+  action?: Maybe<ReportAction>;
+  reviewAuthority?: Maybe<ReportAuditor>;
   /** The type of the report */
   type: ReportType;
   /** The note that the report has left for the content */
   note: Scalars['String'];
   /** The date on which the report was last reviewed if reviewed */
   reviewedOn?: Maybe<Scalars['DateTime']>;
+  reviewerId?: Maybe<Scalars['ID']>;
+  reviewer?: Maybe<User>;
   reporterId: Scalars['ID'];
   reporter: User;
   messageId?: Maybe<Scalars['UUID']>;
@@ -2594,15 +2599,21 @@ export type ReportDetailsQuery = (
   & {
   report?: Maybe<(
     { __typename?: 'Report' }
-    & Pick<Report, 'id' | 'type' | 'status'>
+    & Pick<Report, 'id' | 'createdAt' | 'type' | 'action' | 'status' | 'for' | 'note' | 'reviewedOn' | 'reviewAuthority'>
     & {
-    message?: Maybe<(
+    reporter: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'photo' | 'firstName' | 'lastName'>
+      ), reviewer?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'photo' | 'firstName' | 'lastName'>
+      )>, message?: Maybe<(
       { __typename?: 'DiscussionMessage' }
       & Pick<DiscussionMessage, 'message'>
       & {
       owner: (
         { __typename?: 'User' }
-        & Pick<User, 'id' | 'firstName' | 'lastName'>
+        & Pick<User, 'id' | 'photo' | 'firstName' | 'lastName'>
         )
     }
       )>, proposal?: Maybe<(
@@ -2614,13 +2625,28 @@ export type ReportDetailsQuery = (
         & {
         user?: Maybe<(
           { __typename?: 'User' }
-          & Pick<User, 'id' | 'firstName' | 'lastName'>
+          & Pick<User, 'id' | 'photo' | 'firstName' | 'lastName'>
           )>
       }
         )
     }
       )>
   }
+    )>
+}
+  );
+
+export type ActOnReportMutationVariables = Exact<{
+  input: ActOnReportInput;
+}>;
+
+
+export type ActOnReportMutation = (
+  { __typename?: 'Mutation' }
+  & {
+  actOnReport?: Maybe<(
+    { __typename?: 'Report' }
+    & Pick<Report, 'id'>
     )>
 }
   );
@@ -4036,11 +4062,9 @@ export const GetProposalsHomescreenDocument = gql`
 export function useGetProposalsHomescreenQuery(baseOptions: Apollo.QueryHookOptions<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>) {
   return Apollo.useQuery<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>(GetProposalsHomescreenDocument, baseOptions);
 }
-
 export function useGetProposalsHomescreenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>) {
   return Apollo.useLazyQuery<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>(GetProposalsHomescreenDocument, baseOptions);
 }
-
 export type GetProposalsHomescreenQueryHookResult = ReturnType<typeof useGetProposalsHomescreenQuery>;
 export type GetProposalsHomescreenLazyQueryHookResult = ReturnType<typeof useGetProposalsHomescreenLazyQuery>;
 export type GetProposalsHomescreenQueryResult = Apollo.QueryResult<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>;
@@ -4048,12 +4072,31 @@ export const ReportDetailsDocument = gql`
   query reportDetails($reportId: ID!) {
     report(id: $reportId) {
       id
+      createdAt
       type
+      action
       status
+      for
+      note
+      reviewedOn
+      reviewAuthority
+      reporter {
+        id
+        photo
+        firstName
+        lastName
+      }
+      reviewer {
+        id
+        photo
+        firstName
+        lastName
+      }
       message {
         message
         owner {
           id
+          photo
           firstName
           lastName
         }
@@ -4066,6 +4109,7 @@ export const ReportDetailsDocument = gql`
         member {
           user {
             id
+            photo
             firstName
             lastName
           }
@@ -4102,6 +4146,39 @@ export function useReportDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type ReportDetailsQueryHookResult = ReturnType<typeof useReportDetailsQuery>;
 export type ReportDetailsLazyQueryHookResult = ReturnType<typeof useReportDetailsLazyQuery>;
 export type ReportDetailsQueryResult = Apollo.QueryResult<ReportDetailsQuery, ReportDetailsQueryVariables>;
+export const ActOnReportDocument = gql`
+  mutation actOnReport($input: ActOnReportInput!) {
+    actOnReport(input: $input) {
+      id
+    }
+  }
+`;
+export type ActOnReportMutationFn = Apollo.MutationFunction<ActOnReportMutation, ActOnReportMutationVariables>;
+
+/**
+ * __useActOnReportMutation__
+ *
+ * To run a mutation, you first call `useActOnReportMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useActOnReportMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [actOnReportMutation, { data, loading, error }] = useActOnReportMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useActOnReportMutation(baseOptions?: Apollo.MutationHookOptions<ActOnReportMutation, ActOnReportMutationVariables>) {
+  return Apollo.useMutation<ActOnReportMutation, ActOnReportMutationVariables>(ActOnReportDocument, baseOptions);
+}
+
+export type ActOnReportMutationHookResult = ReturnType<typeof useActOnReportMutation>;
+export type ActOnReportMutationResult = Apollo.MutationResult<ActOnReportMutation>;
+export type ActOnReportMutationOptions = Apollo.BaseMutationOptions<ActOnReportMutation, ActOnReportMutationVariables>;
 export const GetReportsDocument = gql`
   query getReports($pagination: PaginateInput!) {
     reports(pagination: $pagination) {
