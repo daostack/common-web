@@ -5,6 +5,7 @@ FirebaseToolkit.InitializeFirebase();
 SendgridToolkit.InitializeSendgrid();
 
 export { logger } from '@logger';
+export { circleClient } from '@clients';
 export { prisma, pubSub } from '@toolkits';
 export { allPermissions } from './domain/validation/permissions';
 
