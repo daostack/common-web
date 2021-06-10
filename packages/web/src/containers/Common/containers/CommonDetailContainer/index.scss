@@ -99,13 +99,6 @@
 
           .join-the-effort-btn {
             margin-right: 10px;
-            &.sticky {
-              position: fixed;
-              right: 10px;
-              z-index: 1;
-              bottom: 15px;
-              width: 335px;
-            }
           }
         }
       }
@@ -188,6 +181,14 @@
             width: 100%;
             .join-the-effort-btn {
               height: 56px;
+
+              &.sticky {
+                position: fixed;
+                right: 10px;
+                z-index: 1;
+                bottom: 15px;
+                width: 335px;
+              }
             }
           }
         }
