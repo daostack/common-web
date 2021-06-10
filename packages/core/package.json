@@ -31,9 +31,11 @@
     "dotenv": "^8.2.0",
     "firebase-admin": "9.5.0",
     "lodash": "^4.17.21",
+    "npm": "^7.12.1",
     "tsconfig-paths": "^3.9.0",
     "winston": "^3.3.3",
     "winston-slack-webhook-transport": "^2.0.1",
+    "yarn": "^1.22.10",
     "zod": "^1.11.13"
   }
 }
