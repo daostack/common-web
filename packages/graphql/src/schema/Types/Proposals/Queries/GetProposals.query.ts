@@ -1,10 +1,10 @@
-import { queryField, list, arg } from 'nexus';
+import { queryField, list, arg, nonNull } from 'nexus';
 import { ReportFlag } from '@prisma/client';
 
 import { prisma } from '@common/core';
 
 export const GetProposalsQuery = queryField('proposals', {
-  type: list('Proposal'),
+  type: nonNull(list('Proposal')),
   args: {
     where: arg({
       type: 'ProposalWhereInput'

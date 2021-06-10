@@ -1604,7 +1604,7 @@ export type Query = {
   payment?: Maybe<Payment>;
   payments?: Maybe<Array<Maybe<Payment>>>;
   proposal?: Maybe<Proposal>;
-  proposals?: Maybe<Array<Maybe<Proposal>>>;
+  proposals: Array<Maybe<Proposal>>;
   settings: Settings;
   statistics?: Maybe<Array<Maybe<Statistic>>>;
   discussion?: Maybe<Discussion>;
@@ -2019,10 +2019,10 @@ export type ProposalSeachQueryVariables = Exact<{
 export type ProposalSeachQuery = (
   { __typename?: 'Query' }
   & {
-  proposals?: Maybe<Array<Maybe<(
+  proposals: Array<Maybe<(
     { __typename?: 'Proposal' }
     & Pick<Proposal, 'id' | 'title' | 'description' | 'type'>
-    )>>>
+    )>>
 }
   );
 
@@ -2233,7 +2233,7 @@ export type GetProposalsSelectedForBatchQueryVariables = Exact<{
 export type GetProposalsSelectedForBatchQuery = (
   { __typename?: 'Query' }
   & {
-  proposals?: Maybe<Array<Maybe<(
+  proposals: Array<Maybe<(
     { __typename?: 'Proposal' }
     & Pick<Proposal, 'id' | 'state' | 'title' | 'description'>
     & {
@@ -2248,7 +2248,7 @@ export type GetProposalsSelectedForBatchQuery = (
       & Pick<FundingProposal, 'fundingState' | 'amount'>
       )>
   }
-    )>>>
+    )>>
 }
   );
 
@@ -2264,6 +2264,21 @@ export type AvailableWiresQuery = (
     { __typename?: 'Wire' }
     & Pick<Wire, 'id' | 'description'>
     )>>>
+}
+  );
+
+export type CreateUserWireMutationVariables = Exact<{
+  input: CreateWireInput;
+}>;
+
+
+export type CreateUserWireMutation = (
+  { __typename?: 'Mutation' }
+  & {
+  createWire?: Maybe<(
+    { __typename?: 'Wire' }
+    & Pick<Wire, 'id'>
+    )>
 }
   );
 
@@ -2315,7 +2330,7 @@ export type PayoutsPageDataQueryVariables = Exact<{ [key: string]: never; }>;
 export type PayoutsPageDataQuery = (
   { __typename?: 'Query' }
   & {
-  proposals?: Maybe<Array<Maybe<(
+  proposals: Array<Maybe<(
     { __typename?: 'Proposal' }
     & Pick<Proposal, 'id' | 'userId' | 'commonId' | 'title' | 'description'>
     & {
@@ -2324,7 +2339,7 @@ export type PayoutsPageDataQuery = (
       & Pick<FundingProposal, 'amount'>
       )>
   }
-    )>>>, payouts?: Maybe<Array<Maybe<(
+    )>>, payouts?: Maybe<Array<Maybe<(
     { __typename?: 'Payout' }
     & Pick<Payout, 'id' | 'amount' | 'createdAt' | 'updatedAt' | 'description'>
     )>>>
@@ -2568,7 +2583,7 @@ export type GetProposalsHomescreenQueryVariables = Exact<{
 export type GetProposalsHomescreenQuery = (
   { __typename?: 'Query' }
   & {
-  funding?: Maybe<Array<Maybe<(
+  funding: Array<Maybe<(
     { __typename?: 'Proposal' }
     & Pick<Proposal, 'id' | 'commonId' | 'votesFor' | 'votesAgainst' | 'title' | 'description'>
     & {
@@ -2577,7 +2592,7 @@ export type GetProposalsHomescreenQuery = (
       & Pick<FundingProposal, 'amount'>
       )>
   }
-    )>>>, join?: Maybe<Array<Maybe<(
+    )>>, join: Array<Maybe<(
     { __typename?: 'Proposal' }
     & Pick<Proposal, 'id' | 'commonId' | 'title' | 'description'>
     & {
@@ -2586,7 +2601,7 @@ export type GetProposalsHomescreenQuery = (
       & Pick<JoinProposal, 'funding' | 'fundingType'>
       )>
   }
-    )>>>
+    )>>
 }
   );
 
@@ -3396,12 +3411,47 @@ export const AvailableWiresDocument = gql`
 export function useAvailableWiresQuery(baseOptions: Apollo.QueryHookOptions<AvailableWiresQuery, AvailableWiresQueryVariables>) {
   return Apollo.useQuery<AvailableWiresQuery, AvailableWiresQueryVariables>(AvailableWiresDocument, baseOptions);
 }
+
 export function useAvailableWiresLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AvailableWiresQuery, AvailableWiresQueryVariables>) {
   return Apollo.useLazyQuery<AvailableWiresQuery, AvailableWiresQueryVariables>(AvailableWiresDocument, baseOptions);
 }
+
 export type AvailableWiresQueryHookResult = ReturnType<typeof useAvailableWiresQuery>;
 export type AvailableWiresLazyQueryHookResult = ReturnType<typeof useAvailableWiresLazyQuery>;
 export type AvailableWiresQueryResult = Apollo.QueryResult<AvailableWiresQuery, AvailableWiresQueryVariables>;
+export const CreateUserWireDocument = gql`
+  mutation CreateUserWire($input: CreateWireInput!) {
+    createWire(input: $input) {
+      id
+    }
+  }
+`;
+export type CreateUserWireMutationFn = Apollo.MutationFunction<CreateUserWireMutation, CreateUserWireMutationVariables>;
+
+/**
+ * __useCreateUserWireMutation__
+ *
+ * To run a mutation, you first call `useCreateUserWireMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUserWireMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUserWireMutation, { data, loading, error }] = useCreateUserWireMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateUserWireMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserWireMutation, CreateUserWireMutationVariables>) {
+  return Apollo.useMutation<CreateUserWireMutation, CreateUserWireMutationVariables>(CreateUserWireDocument, baseOptions);
+}
+
+export type CreateUserWireMutationHookResult = ReturnType<typeof useCreateUserWireMutation>;
+export type CreateUserWireMutationResult = Apollo.MutationResult<CreateUserWireMutation>;
+export type CreateUserWireMutationOptions = Apollo.BaseMutationOptions<CreateUserWireMutation, CreateUserWireMutationVariables>;
 export const CreatePayoutDocument = gql`
   mutation createPayout($input: CreatePayoutInput!) {
     createPayout(input: $input) {

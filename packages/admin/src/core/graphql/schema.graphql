@@ -1484,7 +1484,7 @@ type Query {
   payment(id: ID): Payment
   payments(paginate: PaginateInput, where: PaymentsWhereInput): [Payment]
   proposal(where: ProposalWhereUniqueInput!): Proposal
-  proposals(where: ProposalWhereInput, fundingWhere: FundingProposalWhereInput, paginate: PaginateInput): [Proposal]
+  proposals(where: ProposalWhereInput, fundingWhere: FundingProposalWhereInput, paginate: PaginateInput): [Proposal]!
   settings: Settings!
   statistics(where: StatisticsWhereInput): [Statistic]
   discussion(id: ID!): Discussion

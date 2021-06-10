@@ -1054,7 +1054,7 @@ export interface NexusGenFieldTypes {
     payout: NexusGenRootTypes['Payout'] | null; // Payout
     payouts: Array<NexusGenRootTypes['Payout'] | null> | null; // [Payout]
     proposal: NexusGenRootTypes['Proposal'] | null; // Proposal
-    proposals: Array<NexusGenRootTypes['Proposal'] | null> | null; // [Proposal]
+    proposals: Array<NexusGenRootTypes['Proposal'] | null>; // [Proposal]!
     report: NexusGenRootTypes['Report'] | null; // Report
     reports: Array<NexusGenRootTypes['Report'] | null> | null; // [Report]
     role: NexusGenRootTypes['Role'] | null; // Role
