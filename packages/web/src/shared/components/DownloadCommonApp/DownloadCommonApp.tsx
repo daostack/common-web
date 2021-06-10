@@ -12,8 +12,17 @@ interface IProps {
 export default function DownloadCommonApp(props: IProps) {
   return (
     <div className={props.inMenu ? "download-common-app-wrapper in-menu" : "download-common-app-wrapper"}>
-      <div className="icon-text-wrapper">
-        <img src="icons/common-icon-round-corners.svg" alt="Common app logo" />
+      <div
+        className="icon-text-wrapper"
+        onClick={() =>
+          window.open(
+            getMobileOperatingSystem() === MobileOperatingSystem.iOS
+              ? COMMON_APP_APP_STORE_LINK
+              : COMMON_APP_GOOGLE_PLAY_LINK,
+          )
+        }
+      >
+        <img src="/icons/common-icon-round-corners.svg" alt="Common app logo" />
         {!props.inMenu ? (
           <span className="text">
             Download now
@@ -26,7 +35,7 @@ export default function DownloadCommonApp(props: IProps) {
       </div>
       <div className="download-close-buttons">
         <img
-          src="icons/download.svg"
+          src="/icons/download.svg"
           alt="download"
           onClick={() =>
             window.open(
