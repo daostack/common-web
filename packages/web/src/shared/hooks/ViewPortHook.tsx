@@ -10,7 +10,6 @@ function useViewPortHook(element: any, rootMargin: string) {
       },
       { rootMargin },
     );
-    console.log(element);
 
     element && observer.observe(element);
 
