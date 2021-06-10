@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Loader, Share } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
-import { useModal } from "../../../../shared/hooks";
+import { useModal, useViewPortHook } from "../../../../shared/hooks";
 import { Discussion, Proposal } from "../../../../shared/models";
 import { getLoading, getScreenSize } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
@@ -66,6 +66,9 @@ const tabs = [
 
 export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
+  const joinEffort = useRef(null);
+  const inViewport = useViewPortHook(joinEffort.current, "-20px");
+  const [stickyClass, setStickyClass] = useState("");
   const [tab, setTab] = useState("about");
   const [imageError, setImageError] = useState(false);
   const loading = useSelector(getLoading());
@@ -226,6 +229,14 @@ export default function CommonDetail() {
     }
   };
 
+  useEffect(() => {
+    if (inViewport) {
+      setStickyClass("");
+    } else {
+      setStickyClass("sticky");
+    }
+  }, [inViewport, setStickyClass]);
+
   return loading && !common ? (
     <Loader />
   ) : (
@@ -303,8 +314,8 @@ export default function CommonDetail() {
                     </div>
                   ))}
                 </div>
-                <div className="social-wrapper">
-                  <button className="button-blue join-the-effort-btn" onClick={onOpenJoinModal}>
+                <div className="social-wrapper" ref={joinEffort}>
+                  <button className={`button-blue join-the-effort-btn ${stickyClass}`} onClick={onOpenJoinModal}>
                     Join the effort
                   </button>
                   {screenSize === ScreenSize.Desktop && <Share type="popup" color={Colors.lightPurple} />}

@@ -96,8 +96,16 @@
         .social-wrapper {
           display: flex;
           align-items: center;
+
           .join-the-effort-btn {
             margin-right: 10px;
+            &.sticky {
+              position: fixed;
+              right: 10px;
+              z-index: 1;
+              bottom: 15px;
+              width: 335px;
+            }
           }
         }
       }
