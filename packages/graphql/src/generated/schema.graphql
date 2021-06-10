@@ -677,6 +677,11 @@ input DiscussionWhereInput {
   userId: ID
 }
 
+type EncryptionKey {
+  keyId: String!
+  publicKey: String!
+}
+
 type Event {
   """The ID of the common, for whom the event was created"""
   commonId: ID
@@ -1412,6 +1417,8 @@ input RoleWhereUniqueInput {
 
 """Setting description about the common application"""
 type Settings {
+  encryptionKey: EncryptionKey!
+
   """List of all available permission for roles"""
   permissions: [String]!
 }

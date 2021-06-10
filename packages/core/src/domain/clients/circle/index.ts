@@ -6,6 +6,7 @@ import { _getPayment } from './payment/_getPayment';
 import { _createWire } from '@circle/wires/_createWire';
 import { _createCirclePayout } from '@circle/payouts/_createPayout';
 import { _getPayout } from '@circle/payouts/_getPayout';
+import { _getEncryptionKey } from '@circle/general/encryption';
 
 export const circleClient = {
   cards: {
@@ -56,5 +57,9 @@ export const circleClient = {
      * up to standard
      */
     create: _createWire
+  },
+
+  general: {
+    getEncryptionKey: _getEncryptionKey
   }
 };

@@ -4,11 +4,10 @@
  */
 
 
-import { IRequestContext } from './../context';
-import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
-import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
-import { core } from 'nexus';
-
+import { IRequestContext } from "./../context"
+import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
+import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
+import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -514,6 +513,10 @@ export interface NexusGenObjects {
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     userId: string; // String!
   }
+  EncryptionKey: { // root type
+    keyId: string; // String!
+    publicKey: string; // String!
+  }
   Event: { // root type
     commonId?: string | null; // ID
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -850,6 +853,10 @@ export interface NexusGenFieldTypes {
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     userId: string; // String!
   }
+  EncryptionKey: { // field return type
+    keyId: string; // String!
+    publicKey: string; // String!
+  }
   Event: { // field return type
     commonId: string | null; // ID
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -1096,6 +1103,7 @@ export interface NexusGenFieldTypes {
     users: NexusGenRootTypes['User'][]; // [User!]!
   }
   Settings: { // field return type
+    encryptionKey: NexusGenRootTypes['EncryptionKey']; // EncryptionKey!
     permissions: Array<string | null>; // [String]!
   }
   Statistic: { // field return type
@@ -1294,6 +1302,10 @@ export interface NexusGenFieldTypeNames {
     type: 'DiscussionSubscriptionType'
     updatedAt: 'DateTime'
     userId: 'String'
+  }
+  EncryptionKey: { // field return type name
+    keyId: 'String'
+    publicKey: 'String'
   }
   Event: { // field return type name
     commonId: 'ID'
@@ -1541,6 +1553,7 @@ export interface NexusGenFieldTypeNames {
     users: 'User'
   }
   Settings: { // field return type name
+    encryptionKey: 'EncryptionKey'
     permissions: 'String'
   }
   Statistic: { // field return type name
