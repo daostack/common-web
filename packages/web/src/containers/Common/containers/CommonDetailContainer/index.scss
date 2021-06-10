@@ -50,12 +50,12 @@
               font-size: 16px;
               text-align: center;
               color: #001a36;
+              margin-top: 0.5rem;
             }
             .value {
               font-size: 23px;
-              font-weight: bold;
+              font-family: NunitoSans-Bold;
               color: #001a36;
-              height: 47px;
               justify-content: center;
               align-items: center;
               display: flex;
@@ -155,7 +155,11 @@
             width: 100%;
             .item {
               .value {
-                font-size: $small;
+                font-size: $moderate;
+              }
+              .name {
+                margin-top: 0.3rem;
+                font-size: $xxsmall;
               }
             }
           }
@@ -196,7 +200,6 @@
           margin-bottom: 60px;
           .about-title {
             padding-bottom: 0px;
-            padding-left: 20px;
           }
         }
         .sidebar-wrapper {
@@ -218,7 +221,7 @@
   align-items: center;
   text-align: center;
   border-radius: 12px;
-  height: 30vh;
+  height: 300px;
   padding: 20px 15px;
   .logo {
     width: 100px;

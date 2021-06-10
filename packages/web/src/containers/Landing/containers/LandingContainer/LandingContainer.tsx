@@ -68,7 +68,13 @@ const LandingContainer = () => {
         </div>
       </section>
       <section className="goal-wrapper">
-        <img src="assets/images/iphone.png" alt="iphone" className="half-iphone" />
+        <img
+          src={`assets/images/${
+            screenSize === ScreenSize.Mobile ? "iphone-half-mobile.png" : "iphone-half-desktop.png"
+          }`}
+          alt="iphone"
+          className="half-iphone"
+        />
         <div>
           <h1>
             Leverage <span className="purple-text">trust</span> and <br className="desktop-break" />

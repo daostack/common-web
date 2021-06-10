@@ -14,6 +14,7 @@ export default function VotesComponent({ proposal, type }: VotesComponentProps) 
   const forClassName = classNames({
     for: true,
     rounded: proposal.votesAgainst === 0,
+    "no-border": proposal.votesFor === 0,
   });
 
   const againstClassName = classNames({
@@ -32,7 +33,7 @@ export default function VotesComponent({ proposal, type }: VotesComponentProps) 
           )}
           <span>{proposal.votesFor || 0}</span>
         </div>
-        <div className="count">{`${votes} ${votes === 1 ? "vote" : "votes"}`}</div>
+        <div className="count">{votes === 0 ? "No votes yet" : `${votes} ${votes === 1 ? "vote" : "votes"}`}</div>
         <div className="against">
           <span>{proposal.votesAgainst || 0}</span>
           {!type ? (
@@ -43,8 +44,17 @@ export default function VotesComponent({ proposal, type }: VotesComponentProps) 
         </div>
       </div>
       <div className="progress">
-        <div className={forClassName} style={{ width: `${((proposal.votesFor || 0) * 100) / votes}%` }}></div>
-        <div className={againstClassName} style={{ width: `${((proposal.votesAgainst || 0) * 100) / votes}%` }}></div>
+        {votes === 0 ? (
+          <div className="gray-bar" />
+        ) : (
+          <>
+            <div className={forClassName} style={{ width: `${((proposal.votesFor || 0) * 100) / votes}%` }}></div>
+            <div
+              className={againstClassName}
+              style={{ width: `${((proposal.votesAgainst || 0) * 100) / votes}%` }}
+            ></div>
+          </>
+        )}
       </div>
     </div>
   );

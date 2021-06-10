@@ -81,6 +81,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        max-width: 400px;
+        margin: auto;
         .amount {
           font-size: 18px;
           font-weight: bold;
@@ -89,14 +91,14 @@
         }
       }
       .votes {
-        margin-top: 24px;
-        margin-bottom: 24px;
+        margin: 24px auto;
+        max-width: 400px;
       }
     }
 
     .discussion-top-bar {
       display: flex;
-      margin-bottom: 24px;
+      margin: 24px 0;
       .img-wrapper {
         margin-right: 16px;
         width: 40px;
@@ -131,10 +133,14 @@
         margin-bottom: 16px;
       }
       .description {
-        overflow-wrap: break-word;
         font-size: 16px;
         color: #001a36;
         margin-bottom: 16px;
+        overflow-wrap: break-word;
+        display: -webkit-box;
+        -webkit-line-clamp: 6;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
       .read-more {
         font-size: 16px;
@@ -158,10 +164,7 @@
           margin-left: 8px;
           font-size: 16px;
           font-weight: bold;
-          font-stretch: normal;
-          font-style: normal;
           line-height: 1.5;
-          letter-spacing: normal;
           color: #979bba;
           display: inline-block;
         }
@@ -169,10 +172,7 @@
       .view-all-discussions {
         font-size: 16px;
         font-weight: bold;
-        font-stretch: normal;
-        font-style: normal;
         line-height: 1.5;
-        letter-spacing: normal;
         text-align: right;
         color: #7786ff;
         position: relative;
