@@ -2,6 +2,7 @@
 
 .chat-wrapper {
   padding: 32px;
+  padding-top: unset;
   background-color: #f3f4ff;
   height: calc(100% - 74px);
   border-radius: 0 12px 12px 0;
@@ -87,13 +88,12 @@
   }
   .bottom-chat-wrapper {
     padding: 16px 30px 16px 32px;
-    box-shadow: 0 -2px 4px 0 #4f5c6919;
+    box-shadow: 0 -5px 5px -2px #4f5c6919;
     background-color: #ffffff;
     width: 100%;
     margin: 24px -32px;
     bottom: 0px;
     height: 50px;
-    border-left: 1px solid $light-gray;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -101,10 +101,11 @@
     .text {
       font-size: 14px;
       color: #979bba;
+      margin-right: 5px;
     }
     .button-wrapper {
       display: flex;
-
+      margin-left: 5px;
       .button-blue {
         height: 40px;
         padding: 8px 32px;

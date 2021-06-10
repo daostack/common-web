@@ -49,6 +49,9 @@
       &.rounded {
         border-radius: 100px;
       }
+      &.no-border {
+        border-right: unset;
+      }
     }
     .against {
       background-color: #ff603e;
@@ -56,6 +59,13 @@
       &.rounded {
         border-radius: 100px;
       }
+    }
+    .gray-bar {
+      height: 8px;
+      display: inline-block;
+      background-color: $light-gray;
+      border-radius: 100px;
+      width: 100%;
     }
   }
 }

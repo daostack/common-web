@@ -105,6 +105,7 @@
       .mobile-apps-wrapper-top {
         text-align: left;
         margin-top: 2.8rem;
+        font-family: NunitoSans-Bold;
         .available-on-label-top {
           color: $white;
           margin-bottom: 10px;
@@ -216,7 +217,8 @@
     padding: 150px 0; // to make the background more visible
     margin-bottom: 60px;
     .available-on-label-bottom {
-      color: white;
+      font-family: NunitoSans-Bold;
+      color: $white;
       margin-bottom: 10px;
     }
   }
@@ -233,7 +235,7 @@
         margin-left: unset;
         margin-bottom: unset;
         max-width: unset;
-        .mobile-apps-wrapper {
+        .mobile-apps-wrapper-top {
           align-self: center;
           text-align: center;
         }
@@ -292,6 +294,7 @@
       padding-bottom: 0;
       .half-iphone {
         margin-top: 30px;
+        margin-right: unset;
         width: 350px;
       }
     }
