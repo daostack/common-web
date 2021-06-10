@@ -5,13 +5,13 @@ import { notificationService } from '@services';
 import { logger } from '@logger';
 
 export const createEventNotificationCommand = async (event: Event): Promise<void> => {
-  // switch (event.type) {
+  // switch (event.Types) {
   //   case EventType.FundingRequestAccepted:
   //   case EventType.FundingRequestRejected:
   //   case EventType.JoinRequestAccepted:
   //   case EventType.JoinRequestRejected:
   //     await notificationService.create({
-  //       type: event.type,
+  //       Types: event.Types,
   //       userId: event.userId!,
   //       connect: {
   //         discussionId: event.discussionId || undefined,

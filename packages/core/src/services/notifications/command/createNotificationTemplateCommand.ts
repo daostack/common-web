@@ -24,19 +24,15 @@ const schema = z.object({
     .nonempty(),
 
   from: z.string()
-    .nonempty()
     .optional(),
 
   fromName: z.string()
-    .nonempty()
     .optional(),
 
   bcc: z.string()
-    .nonempty()
     .optional(),
 
   bccName: z.string()
-    .nonempty()
     .optional()
 });
 

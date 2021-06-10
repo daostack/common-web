@@ -1,21 +1,30 @@
 import React from 'react';
 
-import { Centered } from '@components/Centered';
-import { Link } from '@components/Link';
+import { gql } from '@apollo/client';
 import { Card, Row, Col, Text, Spacer, Tag, User, Divider, useTheme } from '@geist-ui/react';
 import { ChevronLeftCircle, ChevronRightCircle, ChevronDownCircle, ChevronUpCircle } from '@geist-ui/react-icons';
-import { gql } from '@apollo/client';
-import { useGetPaymentDetailsLazyQuery, useGetPaymentsQuery } from '@core/graphql';
-import { useRouter } from 'next/router';
+
+import { Centered } from '@components/Centered';
+import { useGetPaymentsQuery } from '@core/graphql';
+import { Link } from '@components/Link';
+import Skeleton from 'react-loading-skeleton';
 
 
 export const PaymentsTableQuery = gql`
-  query GetPayments($page: Int = 1) {
-    payments: payments(page: $page) {
+  query GetPayments($paginate: PaginateInput) {
+    payments(paginate: $paginate) {
       id
 
       type
       status
+
+      amount
+
+      type
+
+      commonId
+
+      fees
 
       user {
         id
@@ -23,58 +32,20 @@ export const PaymentsTableQuery = gql`
         firstName
         lastName
 
-        photoURL
+        photo
 
         email
       }
-
-      amount {
-        amount
-        currency
-      }
     }
   }
 `;
 
-const GetPaymentDetailsQuery = gql`
-  query GetPaymentDetails($paymentId: ID!) {
-    payment(id: $paymentId) {
-      type
-
-      common {
-        id
-
-        name
-      }
-
-      amount {
-        amount
-        currency
-      }
-
-      fees {
-        amount
-        currency
-      }
-
-      card {
-        id
-
-        metadata {
-          digits
-          network
-        }
-      }
-    }
-  }
-`;
 
 interface IPaymentTableProps {
   hideNavigation?: boolean;
 }
 
 export const PaymentsTable: React.FC<IPaymentTableProps> = ({ hideNavigation }) => {
-  const router = useRouter();
   const theme = useTheme();
 
   // --- State
@@ -82,23 +53,14 @@ export const PaymentsTable: React.FC<IPaymentTableProps> = ({ hideNavigation }) 
   const [selectedPayment, setSelectedPayment] = React.useState<string>();
 
 
-  const [getPayment, { data: payment, loading: paymentLoading }] = useGetPaymentDetailsLazyQuery();
   const { data: payments } = useGetPaymentsQuery({
     variables: {
-      page
+      paginate: {
+        take: 10,
+        skip: (page - 1) * 10
+      }
     }
   });
-
-  // Effects
-  React.useEffect(() => {
-    if (selectedPayment) {
-      getPayment({
-        variables: {
-          paymentId: selectedPayment
-        }
-      });
-    }
-  }, [selectedPayment]);
 
   // --- Actions
   const onNextPage = () => {
@@ -154,6 +116,10 @@ export const PaymentsTable: React.FC<IPaymentTableProps> = ({ hideNavigation }) 
       </Card>
 
       <div style={{ margin: '1rem 0' }}>
+        {(!payments?.payments) && (new Array(10).fill(null)).map(() => (
+          <Skeleton height="5rem" style={{ margin: '.25rem 0' }}/>
+        ))}
+
         {payments?.payments?.map((p) => {
           return (
             <Card key={p.id} style={{ margin: '.5rem 0' }}>
@@ -162,9 +128,9 @@ export const PaymentsTable: React.FC<IPaymentTableProps> = ({ hideNavigation }) 
                   <Col span={3}>
                     <Centered vertical>
                       <Text b>
-                        {(p.amount.amount / 100).toLocaleString('en-US', {
+                        {(p.amount / 100).toLocaleString('en-US', {
                           style: 'currency',
-                          currency: p.amount.currency
+                          currency: 'USD'
                         })}
                       </Text>
                     </Centered>
@@ -172,19 +138,19 @@ export const PaymentsTable: React.FC<IPaymentTableProps> = ({ hideNavigation }) 
 
                   <Col span={4}>
                     <Centered vertical>
-                      {p.status === 'pending' && (
+                      {p.status === 'Pending' && (
                         <Tag type="warning" invert>
                           Pending
                         </Tag>
                       )}
 
-                      {(p.status === 'confirmed' || p.status === 'paid') && (
+                      {(p.status === 'Successful') && (
                         <Tag type="success" invert>
                           Successful
                         </Tag>
                       )}
 
-                      {(p.status === 'failed') && (
+                      {(p.status === 'Unsuccessful') && (
                         <Tag type="error" invert>
                           Failed
                         </Tag>
@@ -194,7 +160,7 @@ export const PaymentsTable: React.FC<IPaymentTableProps> = ({ hideNavigation }) 
 
                   <Col span={6}>
                     <User
-                      src={p.user.photoURL}
+                      src={p.user.photo}
                       name={`${p.user.firstName} ${p.user.lastName}`}
                     >
                       <User.Link href={`mailto:${p.user.email}`}>{p.user.email}</User.Link>
@@ -223,80 +189,74 @@ export const PaymentsTable: React.FC<IPaymentTableProps> = ({ hideNavigation }) 
 
                   <Card.Content>
                     <Row>
-                      {paymentLoading && (
-                        <div/>
-                      )}
+                      <React.Fragment>
+                        <Col span={12}>
+                          <Text h4 style={{ margin: 0 }}>Billing Plan</Text>
+                          <Text
+                            h2
+                            style={{ margin: 0 }}
+                          >
+                            {p.type === 'OneTimePayment' ? 'One Time' : 'Subscription'} Payment
+                          </Text>
 
-                      {payment && (
-                        <React.Fragment>
-                          <Col span={12}>
-                            <Text h4 style={{ margin: 0 }}>Billing Plan</Text>
-                            <Text
-                              h2
-                              style={{ margin: 0 }}
-                            >
-                              {payment.payment.type === 'oneTime' ? 'One Time' : 'Subscription'} Payment
-                            </Text>
+                          <Text style={{ margin: 0 }}>
+                            For {p.type === 'OneTimePayment' ? 'joining' : 'participating in'}{' '}
 
-                            <Text style={{ margin: 0 }}>
-                              For {payment.payment.type === 'oneTime' ? 'joining' : 'participating in'}{' '}
+                            <Link to={`/commons/details/${p.commonId}`}>
+                              Common
+                            </Link>
+                          </Text>
 
-                              <Link to={`/commons/details/${payment.payment.common.id}`}>
-                                {payment.payment.common.name}
-                              </Link>
-                            </Text>
-
-                            <div style={{ display: 'flex', marginTop: 15 }}>
-                              <div>
-                                <Text h6>Fees</Text>
-                                <Text h4>
-                                  {(payment.payment.fees.amount / 100).toLocaleString('en-US', {
-                                    style: 'currency',
-                                    currency: payment.payment.fees.currency
-                                  })}
-                                </Text>
-                              </div>
-
-                              <Spacer x={1}/>
-
-                              <div>
-                                <Text h6>Money left</Text>
-                                <Text h4>
-                                  {((payment.payment.amount.amount - payment.payment.fees.amount) / 100).toLocaleString('en-US', {
-                                    style: 'currency',
-                                    currency: payment.payment.fees.currency
-                                  })}
-                                </Text>
-                              </div>
+                          <div style={{ display: 'flex', marginTop: 15 }}>
+                            <div>
+                              <Text h6>Fees</Text>
+                              <Text h4>
+                                {(p.fees / 100).toLocaleString('en-US', {
+                                  style: 'currency',
+                                  currency: 'USD'
+                                })}
+                              </Text>
                             </div>
-                          </Col>
 
-                          <Col span={12}>
-                            <Row>
-                              <Col span={16}>
-                                {/*<Row>*/}
-                                {/*  <Col span={24}>*/}
-                                {/*    <Text h6>Payment Instrument</Text>*/}
-                                {/*    <Text h4>{payment.payment.card.metadata.network} {payment.payment.card.metadata.digits}</Text>*/}
-                                {/*  </Col>*/}
-                                {/*</Row>*/}
-                              </Col>
+                            <Spacer x={1}/>
 
-                              <Col span={8}>
-                                <div style={{ display: 'flex', flexFlow: 'column', alignItems: 'flex-end' }}>
-                                  <Text h4>Amount due</Text>
-                                  <Text h2>
-                                    {(payment.payment.amount.amount / 100).toLocaleString('en-US', {
-                                      style: 'currency',
-                                      currency: payment.payment.amount.currency
-                                    })}
-                                  </Text>
-                                </div>
-                              </Col>
-                            </Row>
-                          </Col>
-                        </React.Fragment>
-                      )}
+                            <div>
+                              <Text h6>Money left</Text>
+                              <Text h4>
+                                {((p.amount - p.fees) / 100).toLocaleString('en-US', {
+                                  style: 'currency',
+                                  currency: 'USD'
+                                })}
+                              </Text>
+                            </div>
+                          </div>
+                        </Col>
+
+                        <Col span={12}>
+                          <Row>
+                            <Col span={16}>
+                              {/*<Row>*/}
+                              {/*  <Col span={24}>*/}
+                              {/*    <Text h6>Payment Instrument</Text>*/}
+                              {/*    <Text h4>{payment.payment.card.metadata.network} {payment.payment.card.metadata.digits}</Text>*/}
+                              {/*  </Col>*/}
+                              {/*</Row>*/}
+                            </Col>
+
+                            <Col span={8}>
+                              <div style={{ display: 'flex', flexFlow: 'column', alignItems: 'flex-end' }}>
+                                <Text h4>Amount due</Text>
+                                <Text h2>
+                                  {(p.amount / 100).toLocaleString('en-US', {
+                                    style: 'currency',
+                                    currency: 'USD'
+                                  })}
+                                </Text>
+                              </div>
+                            </Col>
+                          </Row>
+                        </Col>
+                      </React.Fragment>
                     </Row>
                   </Card.Content>
                 </React.Fragment>
@@ -327,5 +287,5 @@ export const PaymentsTable: React.FC<IPaymentTableProps> = ({ hideNavigation }) 
       )}
 
     </React.Fragment>
-  )
-}
+  );
+};

@@ -2,6 +2,7 @@ import { ReportAuditor, CommonMemberRole } from '@prisma/client';
 
 import { prisma } from '@toolkits';
 import { CommonError } from '@errors';
+import { authorizationService } from '../../authorization';
 
 export const getUserReportActingAuthority = async (userId: string, reportId: string): Promise<ReportAuditor> => {
   // Check if the user is moderator
@@ -26,7 +27,10 @@ export const getUserReportActingAuthority = async (userId: string, reportId: str
     return ReportAuditor.CommonModerator;
   }
 
-  // @todo Check if the user is admin
+  // Check if the user is admin
+  if (await authorizationService.can(userId, 'admin.report.act')) {
+    return ReportAuditor.SystemAdmin;
+  }
 
   throw new CommonError('User does not have report authority!');
 };

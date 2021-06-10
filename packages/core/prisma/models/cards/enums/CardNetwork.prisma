@@ -1,0 +1,5 @@
+enum CardNetwork {
+  VISA
+  MASTERCARD
+}
+

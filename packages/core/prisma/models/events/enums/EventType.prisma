@@ -1,7 +1,10 @@
 enum EventType {
   CommonCreated
+  CommonUpdated
   CommonDelisted
   CommonWhitelisted
+
+  CommonBalanceUpdated
 
   CommonMemberCreated
   CommonMemberRoleAdded
@@ -29,6 +32,7 @@ enum EventType {
   VoteCreated
 
   UserCreated
+  UserUpdated
 
   DiscussionCreated
   DiscussionMessageCreated
@@ -57,4 +61,16 @@ enum EventType {
 
   UserAddedToRole
   UserRemovedFromRole
+
+  WireCreated
+  WireUpdated
+
+  PayoutCreated
+  PayoutApproverCreated
+  PayoutApprovalGiven
+  PayoutRejectionGiven
+  PayoutApproved
+  PayoutRejected
+  PayoutExecuted
+  PayoutCompleted
 }

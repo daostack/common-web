@@ -2,9 +2,8 @@ import { addMonths } from 'date-fns';
 import { Payment, PaymentStatus, PaymentType, SubscriptionStatus } from '@prisma/client';
 
 import { logger as $logger } from '@logger';
-import { commonService } from '../../../index';
+import { commonService, subscriptionService } from '@services';
 import { prisma } from '@toolkits';
-import { scheduleSubscriptionCharge } from '../../../subscriptions/queues/chargeSubscriptionQueue';
 
 export const processSubscriptionPayment = async (payment: Payment): Promise<void> => {
   const logger = $logger.child({
@@ -80,6 +79,6 @@ export const processSubscriptionPayment = async (payment: Payment): Promise<void
     subscription.status !== SubscriptionStatus.CanceledByUser &&
     subscription.status !== SubscriptionStatus.CanceledByPaymentFailure
   ) {
-    await scheduleSubscriptionCharge(subscription.id);
+    await subscriptionService.createPayment(subscription.id);
   }
 };

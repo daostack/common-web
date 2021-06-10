@@ -1,3 +1,5 @@
+import { testFlag } from '../../helpers';
+
 const template = `<div dir="auto">
 היי {{userName}}, ברכות!
 <br /><br />
@@ -31,6 +33,8 @@ const template = `<div dir="auto">
 תודה,
 <br />
 צוות Common
+<br />
+({{fromEmail}})
 </div>
 `;
 
@@ -52,11 +56,14 @@ const emailStubs = {
   },
   proposalId: {
     required: true
-  }
+  },
+  fromEmail: {
+    required: true
+  },
 };
 
 export const userFundingRequestAcceptedIsraeli = {
-  subject: 'ההצעה שלך ב- Common אושרה!',
+  subject: `${testFlag()}ההצעה שלך ב- Common אושרה!`,
   emailStubs,
   template
 };

@@ -8,14 +8,14 @@ export const ProposalCommonExtension = extendType({
 
     t.nonNull.field('common', {
       type: 'Common',
-      resolve: (root) => {
-        return prisma.proposal
+      resolve: async (root) => {
+        return (await prisma.proposal
           .findUnique({
             where: {
               id: root.id
             }
           })
-          .common();
+          .common())!;
       }
     });
   }

@@ -12,7 +12,21 @@ export const ReportType = objectType({
 
     t.nonNull.field('for', {
       type: 'ReportFor',
-      description: 'The type of violation that this report is for'
+      description: 'The Types of violation that this report is for'
+    });
+
+    t.field('action', {
+      type: 'ReportAction',
+      description: 'The type of action that this done after the report review'
+    });
+
+    t.field('reviewAuthority', {
+      type: 'ReportAuditor'
+    });
+
+    t.nonNull.field('type', {
+      type: 'ReportType',
+      description: 'The type of the report'
     });
 
     t.nonNull.string('note', {

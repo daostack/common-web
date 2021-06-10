@@ -1,7 +1,7 @@
 import * as z from 'zod';
 import { EventType } from '@prisma/client';
 
-import { worker } from '@common/queues';
+import { worker } from '@jobs';
 
 const schema = z.object({
   proposalId: z.string()

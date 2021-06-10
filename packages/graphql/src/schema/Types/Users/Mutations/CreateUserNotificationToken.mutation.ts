@@ -17,7 +17,7 @@ export const CreateUserNotificationTokenMutation = extendType({
       args: {
         input: nonNull(
           arg({
-            type: 'CreateUserNotificationTokenInput'
+            type: CreateUserNotificationTokenInput
           })
         )
       },

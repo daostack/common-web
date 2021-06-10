@@ -32,7 +32,7 @@ export const proposalService = {
   join: joinProposalService,
   funding: fundingProposalService,
 
-  // Shared commands and queries
+  // Shared commands and Queries
   updateVoteCount: updateProposalVoteCountsCommand,
   finalize: finalizeProposalCommand,
 

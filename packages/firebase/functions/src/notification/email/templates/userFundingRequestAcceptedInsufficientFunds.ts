@@ -1,4 +1,5 @@
 import { IEmailTemplate } from '..';
+import { testFlag } from '../../helpers';
 
 const template = `
   <div>
@@ -22,14 +23,14 @@ const template = `
     <p>For more information you can contact us any time using our <a href="{{supportChatLink}}">support chat</a>.</p>
     
     <p>
-      Common,<br />
+      Common Team ({{fromEmail}}),<br />
       Collaborative Social Action.
       </p>
   </div>
 `;
 
 export const userFundingRequestAcceptedInsufficientFunds: IEmailTemplate = {
-  subject: 'Your proposal was canceled due to insufficient funds',
+  subject: `${testFlag()}Your proposal was canceled due to insufficient funds`,
   template: template,
   emailStubs: {
     firstName: {
@@ -46,6 +47,9 @@ export const userFundingRequestAcceptedInsufficientFunds: IEmailTemplate = {
     },
     commonBalance: {
       required: true
-    }
+    },
+    fromEmail: {
+      required: true
+    },
   }
 };

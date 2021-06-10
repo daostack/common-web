@@ -7,7 +7,7 @@ import { ProposalLinkSchema } from '@validation';
 import { eventService } from '@services';
 
 import { prisma } from '@toolkits';
-import { worker } from '@common/queues';
+import { worker } from '@jobs';
 
 const schema = z.object({
   title: z.string()

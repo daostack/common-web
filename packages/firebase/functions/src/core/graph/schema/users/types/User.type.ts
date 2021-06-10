@@ -27,7 +27,11 @@ export const UserType = objectType({
           'H5ZkcKBX5eXXNyBiPaph8EHCiax2',
           'tPfZmRJnQjdnXIlgMZyfphEat3n2',
           'KhgMwi931pMJaWri6LtcczteF693',
-          '0gzqlV9O9vWWe6i2wagAZHMMDDD2'
+          '0gzqlV9O9vWWe6i2wagAZHMMDDD2',
+          'Ezt5ZO19ejV2cteBocxuEkTq13l2',
+          '1x7pgfPU3qbb2O9NpQG4guvU7Nn2',
+          'rLLzPOKc9nXdHguu4jXcnPb3b873',
+          'WKODFO6A3VMqWLYE2rrmrSGRrKF2'
         ];
 
         return userWithPermission.includes((root as any).id || (root as any).uid || (root as any).userId) ? [

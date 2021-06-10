@@ -5,7 +5,7 @@ export const UserType = objectType({
   name: 'User',
   definition(t) {
     t.nonNull.id('id', {
-      description: 'The system Id of the user'
+      description: 'The settings Id of the user'
     });
 
     t.nonNull.date('createdAt', {
@@ -23,6 +23,18 @@ export const UserType = objectType({
     t.nonNull.string('lastName', {
       description: 'The last name of the user'
     });
+
+    t.nonNull.field('country', {
+      type: 'Country',
+      description: 'The last name of the user',
+      authorize: async (root, args, ctx) => {
+        const userId = await ctx.getUserId();
+
+        return (userId === root.id);
+      }
+    });
+
+    t.string('intro');
 
     t.nonNull.string('displayName', {
       description: 'The display name of the user',

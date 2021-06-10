@@ -1,32 +1,35 @@
 import { UserType } from './Types/User.type';
+import { UserBillingDetailsType } from './Types/UserBillingDetails.type';
 import { UserNotificationTokenType } from './Types/UserNotificationToken.type';
 
 import { GetUserQuery } from './Queries/GetUser.query';
-
+import { GetUsersQuery } from './Queries/GetUsers.query';
 import { GenerateUserAuthTokenQuery } from './Queries/GenerateUserAuthToken.query';
 
 import { UserNotificationTokenStateEnum } from './Enums/UserNotificationTokenState.enum';
 
-
+import { UserWiresExtension } from './Extensions/UserWires.extension';
 import { UserEventsExtension } from './Extensions/UserEvents.extension';
+import { UserCommonsExtension } from './Extensions/UserCommons.extension';
 import { UserProposalsExtension } from './Extensions/UserProposals.extension';
 import { UserNotificationsExtension } from './Extensions/UserNotifications.extension';
+import { UserSubscriptionsExtension } from './Extensions/UserSubscriptions.extension';
+import { UserBillingDetailsExtension } from './Extensions/UserBillingDetails.extension';
 import { UserNotificationTokensExtension } from './Extensions/UserNotificationTokens.extension';
 import { UserDiscussionSubscriptionsExtension } from './Extensions/UserDiscussionSubscriptions.extension';
 
-import {
-  CreateUserNotificationTokenInput,
-  CreateUserNotificationTokenMutation
-} from './Mutations/CreateUserNotificationToken.mutation';
-import { CreateUserInput, CreateUserMutation } from './Mutations/CreateUser.mutation';
+import { UpdateUserMutation } from './Mutations/UpdateUser.mutation';
+import { CreateUserMutation } from './Mutations/CreateUser.mutation';
+import { CreateUserBillingDetailsMutation } from './Mutations/CreateUserBillingDetails.mutation';
 import { VoidUserNotificationTokenMutation } from './Mutations/VoidUserNotificationToken.mutation';
-import { UserWhereUniqueInput } from './Inputs/UserWhereUnique.input';
-import { UserSubscriptionsExtension } from './Extensions/UserSubscriptions.extension';
+import { CreateUserNotificationTokenMutation } from './Mutations/CreateUserNotificationToken.mutation';
+
 import { UserWhereInput } from './Inputs/UserWhere.input';
-import { GetUsersQuery } from './Queries/GetUsers.query';
+import { UserWhereUniqueInput } from './Inputs/UserWhereUnique.input';
 
 export const UserTypes = [
   UserType,
+  UserBillingDetailsType,
   UserNotificationTokenType,
 
   GetUserQuery,
@@ -35,20 +38,21 @@ export const UserTypes = [
   UserWhereUniqueInput,
   UserWhereInput,
 
-  CreateUserInput,
   CreateUserMutation,
-
-  CreateUserNotificationTokenInput,
+  CreateUserBillingDetailsMutation,
+  VoidUserNotificationTokenMutation,
   CreateUserNotificationTokenMutation,
 
-  VoidUserNotificationTokenMutation,
-
   UserNotificationTokenStateEnum,
+  UpdateUserMutation,
 
+  UserWiresExtension,
   UserEventsExtension,
+  UserCommonsExtension,
   UserProposalsExtension,
   UserSubscriptionsExtension,
   UserNotificationsExtension,
+  UserBillingDetailsExtension,
   UserNotificationTokensExtension,
   UserDiscussionSubscriptionsExtension,
 

@@ -12,7 +12,7 @@ export type RequestToJoinState = 'countdown' | 'passed' | 'failed';
 
 /**
  * The base proposal fields, that will be available
- * to all proposal regardless of their type
+ * to all proposal regardless of their Types
  */
 interface IBaseProposalEntity extends IBaseEntity {
   /**
@@ -27,7 +27,7 @@ interface IBaseProposalEntity extends IBaseEntity {
   commonId: string;
 
   /**
-   * The type of the proposal: fundingRequest or join
+   * The Types of the proposal: fundingRequest or join
    */
   type: ProposalType;
 
@@ -44,7 +44,7 @@ interface IBaseProposalEntity extends IBaseEntity {
    * Passed - The voting is ended. The proposal is accepted
    * Failed - The voting is ended. The proposal is rejected
    *
-   * If the proposal is of funding type it may have one additional proposal state:
+   * If the proposal is of funding Types it may have one additional proposal state:
    *
    * PassedInsufficientBalance - The voting has ended and the proposal has been approved,
    *    however there were not enough funds in the common balance at the time of the approval
@@ -247,7 +247,7 @@ export interface IJoinRequestProposal extends IBaseProposalEntity {
 export type ProposalType = 'join' | 'fundingRequest';
 
 /**
- * The proposal base type. This is advanced typing that will change the
- * available fields based on the type field (witch can be either joinRequest or fundingRequest)
+ * The proposal base Types. This is advanced typing that will change the
+ * available fields based on the Types field (witch can be either joinRequest or fundingRequest)
  */
 export type IProposalEntity = IJoinRequestProposal | IFundingRequestProposal;

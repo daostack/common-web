@@ -4,9 +4,9 @@ import { prisma } from '@common/core';
 export const ReportReportedMessageExtension = extendType({
   type: 'Report',
   definition(t) {
-    t.nonNull.uuid('messageId');
+    t.uuid('messageId');
 
-    t.nonNull.field('message', {
+    t.field('message', {
       type: 'DiscussionMessage',
       resolve: async (root) => {
         return (await prisma.report

@@ -1,10 +1,8 @@
 import { User } from '@prisma/client';
-import { db } from '../firestore';
+import { UsersCollection } from '../firestore';
 import { seeder } from '../../seed';
 
 export const importUsers = async () => {
-  const UsersCollection = db.collection('users');
-
   const firebaseUsers = (await UsersCollection.get()).docs.map(u => u.data());
 
   const failedUsers: {
@@ -44,6 +42,17 @@ export const importUsers = async () => {
     }
   }
 
-  console.log(failedUsers);
-  console.log(createdUsers);
+  // Create default user
+  await seeder.user.create({
+    data: {
+      id: 'default',
+      firstName: 'Default User',
+      lastName: '',
+      email: 'default@common.com',
+      photo: ''
+    }
+  });
+
+  console.log('[LogTag: 1332]', failedUsers);
+  // console.log(createdUsers);
 };

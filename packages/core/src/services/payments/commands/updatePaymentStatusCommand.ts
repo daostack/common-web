@@ -4,7 +4,7 @@ import { prisma } from '@toolkits';
 import { circleClient } from '@clients';
 import { logger as $logger } from '@logger';
 import { convertCirclePaymentStatus } from '../helpers';
-import { worker } from '@common/queues';
+import { worker } from '@jobs';
 
 export interface IUpdatePaymentStatusResult {
   initialPayment: Payment;
@@ -67,7 +67,9 @@ export const updatePaymentStatusCommand = async (paymentId: string): Promise<IUp
   if (updatedPayment.status === PaymentStatus.Pending) {
     logger.debug('After updating status payment is still pending. Scheduling retry');
 
-    worker.addPaymentJob('updateStatus', updatedPayment.id);
+    worker.addPaymentJob('updateStatus', updatedPayment.id, {
+      delay: 3 * 60 * 60 * 1000 // Retry after 3 hours
+    });
   }
 
   // Return the result

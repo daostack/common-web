@@ -1,0 +1,8 @@
+enum PaymentType {
+  OneTimePayment
+
+  SubscriptionInitialPayment
+  SubscriptionSequentialPayment
+
+  ImportedPayment
+}

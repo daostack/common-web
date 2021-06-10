@@ -12,7 +12,9 @@ export const DiscussionMessageType = objectType({
     });
 
     t.nonNull.field('flag', {
-      type: 'DiscussionMessageFlag'
+      type: 'ReportFlag'
     });
+
+    t.nonNull.string('userId');
   }
 });

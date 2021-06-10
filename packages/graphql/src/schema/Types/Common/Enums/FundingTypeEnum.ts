@@ -3,6 +3,6 @@ import { FundingType } from '@prisma/client';
 
 export const FundingTypeEnum = enumType({
   name: 'FundingType',
-  description: 'The funding type of the common',
+  description: 'The funding Types of the common',
   members: FundingType
 });

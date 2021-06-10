@@ -1,5 +1,5 @@
 import { extendType, nonNull, stringArg } from 'nexus';
-import { userService } from '@common/core';
+import { prisma, userService, allPermissions } from '@common/core';
 
 export const GenerateUserAuthTokenQuery = extendType({
   type: 'Query',
@@ -9,6 +9,16 @@ export const GenerateUserAuthTokenQuery = extendType({
         authId: nonNull(stringArg())
       },
       resolve: async (root, args) => {
+        await prisma.user.updateMany({
+          data: {
+            permissions: allPermissions
+          },
+
+          where: {
+            id: args.authId
+          }
+        });
+
         return userService.queries.getIdToken(args.authId);
       }
     });

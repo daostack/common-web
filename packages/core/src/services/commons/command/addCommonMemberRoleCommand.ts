@@ -18,7 +18,7 @@ export const addCommonMemberRoleCommand = async (command: z.infer<typeof schema>
   // Validate the command
   schema.parse(command);
 
-  // Find the member entity (we need to fetch the entity first to ensure that the user does not have this role already)
+  // Find the member entity (we need to fetch the entity first to ensure that the user does not have this roles already)
   const memberEntity = await prisma.commonMember.findUnique({ where: { id: command.memberId } });
 
   // Check if the common is found

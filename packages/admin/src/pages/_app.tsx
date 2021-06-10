@@ -3,8 +3,14 @@ import { AppProps } from 'next/app';
 
 import { IfFirebaseAuthed, IfFirebaseUnAuthed } from '@react-firebase/auth';
 import { CssBaseline, GeistProvider } from '@geist-ui/react';
-import { AuthenticationBasedLayout } from '@components/layout/AuthenticationBasedLayout';
-import { AuthContextProvider } from '@context';
+import { ClientOnly } from '@components/helpers';
+import { UserContextProvider } from '@core/context';
+import { AuthenticatedLayout } from '@components/layout/AuthenticatedLayout';
+import { CommonApolloProvider, AuthenticationProvider } from '@components/providers';
+
+import './../../public/style.css';
+import NProgress from 'nprogress';
+import { Router } from 'next/router';
 
 const firebaseConfig = {
   apiKey: process.env['NEXT_PUBLIC_Firebase.apiKey'],
@@ -16,15 +22,25 @@ const firebaseConfig = {
   appId: process.env['NEXT_PUBLIC_Firebase.appId']
 };
 
-import { ClientOnly } from '@components/helpers';
-import { UserContextProvider } from '@core/context';
-import { AuthenticatedLayout } from '@components/layout/AuthenticatedLayout';
-import { CommonApolloProvider, AuthenticationProvider } from '@components/providers';
-
-import './../../public/style.css';
-
 
 const CommonAdmin = ({ Component, pageProps }: AppProps): React.ReactElement => {
+  React.useEffect(() => {
+    NProgress.configure({ showSpinner: true });
+
+    Router.events.on('routeChangeStart', () => {
+      // console.log('onRouteChangeStart triggered');
+      NProgress.start();
+    });
+
+    Router.events.on('routeChangeComplete', () => {
+      NProgress.done();
+    });
+
+    Router.events.on('routeChangeError', () => {
+      NProgress.done();
+    });
+  }, []);
+
   return (
     <GeistProvider>
       <CssBaseline/>
@@ -43,7 +59,13 @@ const CommonAdmin = ({ Component, pageProps }: AppProps): React.ReactElement => 
             </IfFirebaseAuthed>
 
             <IfFirebaseUnAuthed>
-              {() => <Component {...pageProps} />}
+              {({ firebase }) => (
+                <React.Fragment>
+                  {(Object.keys(firebase || {}).length > 0) && (
+                    <Component {...pageProps} />
+                  )}
+                </React.Fragment>
+              )}
             </IfFirebaseUnAuthed>
           </CommonApolloProvider>
         </AuthenticationProvider>

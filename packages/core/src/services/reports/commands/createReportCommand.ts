@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { DiscussionMessageFlag, ReportFor, EventType } from '@prisma/client';
+import { ReportFlag, ReportFor, ReportType, EventType } from '@prisma/client';
 
 import { prisma } from '@toolkits';
 import { eventService } from '@services';
@@ -10,12 +10,16 @@ const schema = z.object({
     .nonempty(),
 
   messageId: z.string()
-    .nonempty(),
+    .optional(),
+
+  proposalId: z.string()
+    .optional(),
 
   note: z.string()
     .nonempty(),
 
-  for: z.enum(Object.keys(ReportFor) as [(keyof typeof ReportFor)])
+  for: z.enum(Object.keys(ReportFor) as [(keyof typeof ReportFor)]),
+  type: z.enum(Object.keys(ReportType) as [(keyof typeof ReportType)])
 });
 
 export const createReportCommand = async (payload: z.infer<typeof schema>) => {
@@ -25,15 +29,23 @@ export const createReportCommand = async (payload: z.infer<typeof schema>) => {
   // Find the ID of the common
   const commonWithId = await prisma.common.findFirst({
     where: {
-      discussions: {
-        some: {
-          messages: {
-            some: {
-              id: payload.messageId
+      OR: [{
+        discussions: {
+          some: {
+            messages: {
+              some: {
+                id: payload.messageId
+              }
             }
           }
         }
-      }
+      }, {
+        proposals: {
+          some: {
+            id: payload.proposalId
+          }
+        }
+      }]
     },
     select: {
       id: true
@@ -43,7 +55,7 @@ export const createReportCommand = async (payload: z.infer<typeof schema>) => {
   if (!commonWithId) {
     throw new CommonError(
       'Cannot create the report because we are having ' +
-      'trouble locating the common of the message'
+      'trouble locating the common of the message or proposal'
     );
   }
 
@@ -69,27 +81,41 @@ export const createReportCommand = async (payload: z.infer<typeof schema>) => {
       }
     }),
 
-    // Mark the message as reported
-    prisma.discussionMessage.update({
-      where: {
-        id: payload.messageId
-      },
-      data: {
-        flag: DiscussionMessageFlag.Reported
-      },
-      select: {
-        id: true
-      }
-    })
+    payload.type === ReportType.ProposalReport
+      // Mark the proposal as reported
+      ? prisma.proposal.update({
+        where: {
+          id: payload.proposalId
+        },
+        data: {
+          flag: ReportFlag.Reported
+        },
+        select: {
+          id: true
+        }
+      })
+      // Mark the message as reported
+      : prisma.discussionMessage.update({
+        where: {
+          id: payload.messageId
+        },
+        data: {
+          flag: ReportFlag.Reported
+        },
+        select: {
+          id: true
+        }
+      })
   ]);
 
   // Create the event about the report being created
   await eventService.create({
     userId: payload.reporterId,
-    commonId: report.message.discussion.commonId,
+    commonId: commonWithId.id,
     type: EventType.ReportCreated,
     payload: {
       reportedMessageId: payload.messageId,
+      reportedProposalId: payload.proposalId,
       reportId: report.id
     }
   });

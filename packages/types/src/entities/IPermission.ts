@@ -5,8 +5,8 @@ export interface IPermissionPayload {
 	commonId: string;
 	
 	/**
-	 * The role we want to grant the user with userId
-	 */
+   * The roles we want to grant the user with userId
+   */
 	role: Role;
 
 	/**

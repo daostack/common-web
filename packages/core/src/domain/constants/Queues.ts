@@ -1,14 +1,17 @@
-const BaseQueue = 'Common.Queue';
+const SubscriptionsQueue = 'Common.Subscriptions';
+const NotificationsQueue = 'Common.Notifications';
+const ProposalsQueue = 'Common.Proposals';
+const PaymentsQueue = 'Common.Payments';
+const PayoutsQueue = 'Common.Payouts';
+const EventQueue = 'Common.Events';
+const VotesQueue = 'Common.Votes';
 
-export const VotingQueue = `${BaseQueue}.Proposals.Voting`;
-
-export const FinalizeProposalQueue = `${BaseQueue}.Proposals.Finalize`;
-export const ExpireProposalsQueue = `${BaseQueue}.Proposals.Expire`;
-export const ProcessProposalPayment = `${BaseQueue}.Proposals.Payments.Process`;
-
-export const EventsQueue = `${BaseQueue}.Events`;
-
-export const PaymentsProcessingQueue = `${BaseQueue}.Payments.Processing`;
-
-
-export const ChargeSubscriptionQueue = `${BaseQueue}.Subscription.Charge`;
+export const Queues = {
+  SubscriptionsQueue,
+  NotificationsQueue,
+  ProposalsQueue,
+  PaymentsQueue,
+  PayoutsQueue,
+  EventQueue,
+  VotesQueue
+};

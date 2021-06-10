@@ -19,7 +19,7 @@ export const discussionService = {
     create: createDiscussionSubscriptionCommand,
 
     /**
-     * Updates the type of the subscription in the backing store. Please note
+     * Updates the Types of the subscription in the backing store. Please note
      * that this function does not check if the user has permission to update
      * the specified subscription
      */

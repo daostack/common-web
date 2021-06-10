@@ -14,13 +14,7 @@ const withPush: NotificationType[] = [];
 const withShow: NotificationType[] = [];
 
 export const seedNotificationSystemSetting = async () => {
-  const allTypes = Array.from(
-    new Set([
-      ...withEmail,
-      ...withPush,
-      ...withShow
-    ])
-  );
+  const allTypes = Object.keys(NotificationType) as NotificationType[];
 
   for (const type of allTypes) {
     await seeder.notificationSystemSettings.upsert({

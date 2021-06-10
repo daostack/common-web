@@ -1,6 +1,5 @@
-import { Queues } from '@common/queues';
+import { Queues } from '../queues';
 import { logger, proposalService } from '@common/core';
-
 
 // Process the jobs
 Queues.ProposalsQueue.process((job, done) => {

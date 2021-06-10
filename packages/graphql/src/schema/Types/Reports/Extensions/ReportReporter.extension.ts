@@ -13,7 +13,7 @@ export const ReportReporterExtension = extendType({
         return (await prisma.report
           .findUnique({
             where: {
-              id: 'root.id'
+              id: root.id
             }
           })
           .reporter())!;

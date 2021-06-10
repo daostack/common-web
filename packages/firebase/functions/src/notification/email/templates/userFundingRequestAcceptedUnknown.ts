@@ -1,3 +1,5 @@
+import { testFlag } from '../../helpers';
+
 const template = `
 Hello {{userName}},
 <br /><br />
@@ -13,7 +15,7 @@ Once received, we will send you another email with instructions on how to procee
 <br /><br />
 For more information you can contact us any time by replying to this email.
 <br /><br />
-Common,
+Common Payouts ({{fromEmail}}),
 <br /><br />
 Collaborative Social Action.
 `;
@@ -33,11 +35,14 @@ const emailStubs = {
   },
   supportChatLink: {
     required: true
-  }
+  },
+  fromEmail: {
+    required: true
+  },
 };
 
 export const userFundingRequestAcceptedUnknown = {
-  subject: 'Proposal approved - Missing information',
+  subject: `${testFlag()}Proposal approved - Missing information`,
   emailStubs,
   template
 };

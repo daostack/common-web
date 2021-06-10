@@ -19,7 +19,7 @@ circleClient.interceptors.response.use(
       responseData: error.response.data
     });
 
-    return Promise.reject(error);
+    return Promise.reject(error.response.data);
   });
 
 

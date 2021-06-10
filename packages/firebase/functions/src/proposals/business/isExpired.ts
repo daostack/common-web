@@ -31,7 +31,7 @@ export const isExpired = async (proposal: IProposalEntity): Promise<boolean> => 
     ? moderation?.updatedAt?.toDate().getTime()
     : proposal.createdAt.toDate().getTime();
     
-  const expiration = new Date(startTime + (proposal.countdownPeriod * 1000));
+  const expiration = new Date(startTime + ((proposal.moderation?.countdownPeriod || proposal.countdownPeriod) * 1000));
   // If the expiration is in the past it is therefore expired
   return expiration < now;
 };

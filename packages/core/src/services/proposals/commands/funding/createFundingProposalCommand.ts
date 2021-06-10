@@ -1,7 +1,7 @@
 import * as z from 'zod';
 import { EventType, Proposal, ProposalType } from '@prisma/client';
 
-import { worker } from '@common/queues';
+import { worker } from '@jobs';
 
 import { ProposalLinkSchema, ProposalImageSchema, ProposalFileSchema } from '@validation';
 import { generateProposalExpiresAtDate } from '../../helpers';

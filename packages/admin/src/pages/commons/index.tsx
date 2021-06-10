@@ -1,20 +1,21 @@
 import React from 'react';
 import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 
 import Skeleton from 'react-loading-skeleton';
-import { gql } from '@apollo/client/core';
-import { Spacer, Text, Table, Pagination, Tag, useToasts, Breadcrumbs, Grid, Card } from '@geist-ui/react';
-import { ChevronRightCircleFill, ChevronLeftCircleFill, Home } from '@geist-ui/react-icons';
 
-import { Link } from '../../components/Link';
+import { gql } from '@apollo/client/core';
+import { ChevronRightCircleFill, ChevronLeftCircleFill, Home } from '@geist-ui/react-icons';
+import { Spacer, Text, Table, Pagination, Tag, useToasts, Breadcrumbs, Grid, Card } from '@geist-ui/react';
+
 import { withPermission } from '../../helpers/hoc/withPermission';
-import { useRouter } from 'next/router';
+import { Link } from '@components/Link';
 import { Centered } from '@components/Centered';
 import { FullWidthLoader } from '@components/FullWidthLoader';
 import {
-  useGetAllTimeStatistiscQuery,
   useGetCommonsHomescreenDataQuery,
-  GetCommonsHomescreenDataQueryResult
+  GetCommonsHomescreenDataQueryResult,
+  useAllTimeStatisticsQuery
 } from '@core/graphql';
 
 const GetCommonsHomescreenData = gql`
@@ -49,17 +50,22 @@ const GetCommonsHomescreenData = gql`
 const CommonsHomepage: NextPage = () => {
   // State
   const [page, setPage] = React.useState<number>(1);
+  const [tableData, setTableData] = React.useState(null);
 
   // Data fetching and custom hooks
   const [toasts, setToast] = useToasts();
   const router = useRouter();
-  const statistics = useGetAllTimeStatistiscQuery();
+  const { data: statistics } = useAllTimeStatisticsQuery();
   const data = useGetCommonsHomescreenDataQuery({
     variables: {
       take: 10,
       skip: (page - 1) * 10
     }
   });
+
+  React.useEffect(() => {
+    setTableData(transformCommonsArray(data));
+  }, [data]);
 
   // Actions
   const onPageChange = (val: number): void => {
@@ -151,11 +157,11 @@ const CommonsHomepage: NextPage = () => {
           <Grid sm={24} md={8}>
             <Card hoverable>
               <Text h1>
-                {statistics.data && (
-                  statistics.data.getStatistics[0].commons
+                {statistics && (
+                  statistics.statistics[0].commons
                 )}
 
-                {!statistics.data && (
+                {!statistics && (
                   <Skeleton/>
                 )}
               </Text>
@@ -187,7 +193,7 @@ const CommonsHomepage: NextPage = () => {
 
       <Text h3>All commons</Text>
 
-      <Table data={transformCommonsArray(data)} onRow={onCommonTableRow}>
+      <Table data={tableData} onRow={onCommonTableRow}>
         <Table.Column prop="icon" width={70}/>
         <Table.Column prop="name" label="Display Name"/>
 
@@ -216,9 +222,9 @@ const CommonsHomepage: NextPage = () => {
         />
       </Table>
 
-      {statistics.data && statistics.data.getStatistics[0].commons > 10 && (
+      {statistics && statistics.statistics[0].commons > 10 && (
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-          <Pagination count={Math.ceil(statistics.data.getStatistics[0].commons / 10)} onChange={onPageChange}>
+          <Pagination count={Math.ceil(statistics.statistics[0].commons / 10)} onChange={onPageChange}>
             <Pagination.Next><ChevronRightCircleFill/></Pagination.Next>
             <Pagination.Previous><ChevronLeftCircleFill/></Pagination.Previous>
           </Pagination>

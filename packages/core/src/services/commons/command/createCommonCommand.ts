@@ -3,6 +3,7 @@ import { FundingType, Common, CommonMemberRole, EventType } from '@prisma/client
 
 import { prisma } from '@toolkits';
 import { eventService } from '@services';
+import { LinkSchema, RuleSchema } from '@validation';
 
 import { createCommonMemberCommand } from './createCommonMemberCommand';
 import { addCommonMemberRoleCommand } from './addCommonMemberRoleCommand';
@@ -32,7 +33,15 @@ const schema = z.object({
     .max(100000),
 
   founderId: z.string()
-    .nonempty()
+    .nonempty(),
+
+  links: z.array(LinkSchema)
+    .nullable()
+    .optional(),
+
+  rules: z.array(RuleSchema)
+    .nullable()
+    .optional()
 });
 
 export const createCommonCommand = async (command: z.infer<typeof schema>): Promise<Common> => {
@@ -46,7 +55,10 @@ export const createCommonCommand = async (command: z.infer<typeof schema>): Prom
       image: command.image,
 
       fundingType: command.fundingType,
-      fundingMinimumAmount: command.fundingMinimumAmount
+      fundingMinimumAmount: command.fundingMinimumAmount,
+      byline: command.byline,
+      links: command.links,
+      rules: command.rules
     }
   });
 
@@ -63,7 +75,7 @@ export const createCommonCommand = async (command: z.infer<typeof schema>): Prom
     userId: command.founderId
   });
 
-  // Add the founder role to the creator
+  // Add the founder roles to the creator
   await addCommonMemberRoleCommand({
     memberId: founder.id,
     roles: [

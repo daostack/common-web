@@ -6,16 +6,16 @@ model Statistic {
 
   type StatisticType
 
-  users Int
+  users Int @default(0)
 
-  commons  Int
+  commons  Int  @default(0)
 
-  joinProposals     Int
-  fundingProposals Int
+  joinProposals     Int  @default(0)
+  fundingProposals Int  @default(0)
 
-  discussions        Int
-  discussionMessages Int
+  discussions        Int  @default(0)
+  discussionMessages Int  @default(0)
 
-  payments       Int
-  paymentsAmount Int
+  payments       Int  @default(0)
+  paymentsAmount Int  @default(0)
 }
