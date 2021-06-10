@@ -11,7 +11,7 @@ export const GenerateUserAuthTokenQuery = extendType({
       resolve: async (root, args) => {
         await prisma.user.updateMany({
           data: {
-            permissions: allPermissions
+            permissions: allPermissions as unknown as string[]
           },
 
           where: {

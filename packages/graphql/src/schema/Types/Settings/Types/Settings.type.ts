@@ -15,7 +15,7 @@ export const SettingsType = objectType({
           ]
         });
       },
-      resolve: () => allPermissions as string[]
+      resolve: () => allPermissions as unknown as string[]
     });
   }
 });
