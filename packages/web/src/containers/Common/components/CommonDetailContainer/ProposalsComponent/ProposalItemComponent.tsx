@@ -44,8 +44,8 @@ export default function ProposalItemComponent({ proposal, loadProposalDetail }: 
         <div className="votes">
           <VotesComponent proposal={proposal} />
         </div>
-        <div className="line"></div>
       </div>
+      <div className="line" />
       <div className="discussion-top-bar">
         <div className="img-wrapper">
           {!imageError ? (
