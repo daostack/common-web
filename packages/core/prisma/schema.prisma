@@ -296,7 +296,7 @@ model CommonMember {
   commonId String
   userId   String
 
-  Vote Vote[]
+  votes Vote[]
 
   @@unique([userId, commonId])
 }
