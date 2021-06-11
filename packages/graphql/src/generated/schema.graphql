@@ -600,6 +600,7 @@ type Discussion implements BaseEntity {
 
   """The date at which the last message on the discussion was added"""
   latestMessage: DateTime!
+  messageCount: Int!
   messages(orderBy: DiscussionMessagesOrderByInput = {createdAt: asc}, skip: Int = 0, take: Int = 10): [DiscussionMessage!]!
 
   """The discussion creator"""
