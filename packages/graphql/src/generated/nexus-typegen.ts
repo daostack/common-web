@@ -4,10 +4,11 @@
  */
 
 
-import { IRequestContext } from "./../context"
-import { QueryComplexity } from "nexus/dist/plugins/queryComplexityPlugin"
-import { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
-import { core } from "nexus"
+import { IRequestContext } from './../context';
+import { QueryComplexity } from 'nexus/dist/plugins/queryComplexityPlugin';
+import { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -1015,6 +1016,7 @@ export interface NexusGenFieldTypes {
     userId: string; // ID!
   }
   Proposal: { // field return type
+    canVote: boolean; // Boolean!
     common: NexusGenRootTypes['Common']; // Common!
     commonId: NexusGenScalars['UUID']; // UUID!
     commonMemberId: NexusGenScalars['UUID']; // UUID!
@@ -1465,6 +1467,7 @@ export interface NexusGenFieldTypeNames {
     userId: 'ID'
   }
   Proposal: { // field return type name
+    canVote: 'Boolean'
     common: 'Common'
     commonId: 'UUID'
     commonMemberId: 'UUID'
