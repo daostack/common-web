@@ -1,4 +1,5 @@
 import { objectType } from 'nexus';
+import { prisma } from '@common/core';
 
 export const DiscussionType = objectType({
   name: 'Discussion',
@@ -22,11 +23,21 @@ export const DiscussionType = objectType({
     });
 
     t.nonNull.string('userId');
-    
+
     t.nonNull.field('owner', {
       type: 'User'
     });
 
-    
+    t.nonNull.int('messageCount', {
+      complexity: 20,
+      resolve: (root) => {
+        return prisma.discussionMessage
+          .count({
+            where: {
+              discussionId: root.id
+            }
+          });
+      }
+    });
   }
 });

@@ -827,6 +827,7 @@ export interface NexusGenFieldTypes {
     description: string; // String!
     id: NexusGenScalars['UUID']; // UUID!
     latestMessage: NexusGenScalars['DateTime']; // DateTime!
+    messageCount: number; // Int!
     messages: NexusGenRootTypes['DiscussionMessage'][]; // [DiscussionMessage!]!
     owner: NexusGenRootTypes['User'] | null; // User
     topic: string; // String!
@@ -1278,6 +1279,7 @@ export interface NexusGenFieldTypeNames {
     description: 'String'
     id: 'UUID'
     latestMessage: 'DateTime'
+    messageCount: 'Int'
     messages: 'DiscussionMessage'
     owner: 'User'
     topic: 'String'
