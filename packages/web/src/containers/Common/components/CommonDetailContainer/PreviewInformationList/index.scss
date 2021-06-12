@@ -78,11 +78,13 @@
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .item-bottom {
         display: flex;
         align-items: center;
-        padding-top: 24px;
+        padding-top: 16px;
         .votes {
           min-width: 100px;
           .votes-wrapper {
