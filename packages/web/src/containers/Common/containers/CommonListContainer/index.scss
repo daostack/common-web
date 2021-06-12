@@ -2,6 +2,7 @@
 
 .common-list-wrapper {
   padding-top: 20px;
+  padding-bottom: 44px;
   .common-list {
     display: grid;
     justify-items: center;
@@ -11,7 +12,8 @@
   }
   .loader-container {
     line-height: 40px;
-    margin-top: 40px;
+    margin-top: 54px;
+    margin-bottom: 0;
     .loading-btn {
       margin: auto;
       background-color: $white;
@@ -24,5 +26,11 @@
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
-
+  .common-list-wrapper {
+    padding-bottom: 0;
+    .loader-container {
+      margin-top: 35px;
+      margin-bottom: 20px;
+    }
+  }
 }
