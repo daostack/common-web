@@ -9,6 +9,7 @@ interface DiscussionItemComponentProps {
 
 export default function DiscussionItemComponent({ discussion, loadDisscussionDetail }: DiscussionItemComponentProps) {
   const [imageError, setImageError] = useState(false);
+  const [readMore, setReadMore] = useState("");
   const date = new Date();
   return (
     <div className="discussion-item-wrapper">
@@ -33,10 +34,12 @@ export default function DiscussionItemComponent({ discussion, loadDisscussionDet
         <div className="title" onClick={() => loadDisscussionDetail(discussion)}>
           {discussion.title}
         </div>
-        <div className="description">{discussion.message}</div>
-        <div className="read-more" onClick={() => loadDisscussionDetail(discussion)}>
-          Read More
-        </div>
+        <div className={`description ${readMore}`}>{discussion.message}</div>
+        {discussion.message.length > 650 && !readMore ? (
+          <div className="read-more" onClick={() => setReadMore("full")}>
+            Read More
+          </div>
+        ) : null}
         <div className="line"></div>
       </div>
       <div className="bottom-content">

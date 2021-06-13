@@ -57,6 +57,12 @@
         -webkit-line-clamp: 6;
         -webkit-box-orient: vertical;
         overflow: hidden;
+
+        &.full {
+          -webkit-line-clamp: unset;
+          -webkit-box-orient: vertical;
+          overflow: unset;
+        }
       }
       .read-more {
         font-size: 16px;

@@ -11,6 +11,7 @@ interface ProposalItemComponentProps {
 
 export default function ProposalItemComponent({ proposal, loadProposalDetail }: ProposalItemComponentProps) {
   const [imageError, setImageError] = useState(false);
+  const [readMore, setReadMore] = useState("");
   const date = new Date();
   const requestedAmount = formatPrice(proposal.fundingRequest?.amount || proposal.join?.funding);
   return (
@@ -64,10 +65,12 @@ export default function ProposalItemComponent({ proposal, loadProposalDetail }: 
         </div>
       </div>
       <div className="discussion-content">
-        <div className="description">{proposal.description.description}</div>
-        <div className="read-more" onClick={() => loadProposalDetail(proposal)}>
-          Read More
-        </div>
+        <div className={`description ${readMore}`}>{proposal.description.description}</div>
+        {proposal.description.description.length > 650 && !readMore ? (
+          <div className="read-more" onClick={() => setReadMore("full")}>
+            Read More
+          </div>
+        ) : null}
         <div className="line"></div>
       </div>
       <div className="bottom-content">
