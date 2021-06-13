@@ -44,8 +44,8 @@
         .numbers {
           display: flex;
           width: 50%;
+          justify-content: space-between;
           .item {
-            flex: 25%;
             .name {
               font-size: 16px;
               text-align: center;
@@ -154,6 +154,7 @@
           }
           .numbers {
             width: 100%;
+            justify-content: space-between;
             .item {
               .value {
                 font-size: $moderate;

@@ -23,7 +23,7 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
             <img src="/icons/default-image.svg" alt={common.name} />
           )}
           <div className="common-information">
-            <div className="name"> {common.name}</div>
+            <div className="name">{common.name}</div>
             {common.metadata?.byline && <div className="description">{common.metadata?.byline}</div>}
           </div>
         </div>
