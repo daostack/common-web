@@ -38,6 +38,10 @@
     max-width: 90%;
   }
 
+  &.join-effort {
+    margin-top: calc(50% - 540px);
+  }
+
   .close-wrapper {
     position: absolute;
     right: 20px;

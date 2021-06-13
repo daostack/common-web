@@ -262,7 +262,7 @@ export default function CommonDetail() {
             </div>
           )}
         </Modal>
-        <Modal isShowing={showJoinModal} onClose={closeJoinModal} closeColor={Colors.white}>
+        <Modal isShowing={showJoinModal} onClose={closeJoinModal} closeColor={Colors.white} className="join-effort">
           <JoinTheEffortModal />
         </Modal>
         <div className="common-detail-wrapper">
