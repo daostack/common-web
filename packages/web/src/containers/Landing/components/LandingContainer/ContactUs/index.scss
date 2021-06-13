@@ -16,7 +16,6 @@
     flex-direction: column;
     align-self: self-start;
     margin-right: 50px;
-    margin-bottom: 50px;
     .email-wrapper {
       display: flex;
       a {
@@ -63,6 +62,7 @@
       align-self: unset;
       align-items: center;
       margin-right: unset;
+      margin-bottom: 1.5rem;
     }
     .form-wrapper {
       textarea {

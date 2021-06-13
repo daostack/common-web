@@ -12,8 +12,8 @@ export default function JoinTheEffortModal() {
     <div className="join-the-effort-wrapper">
       <img src="/icons/logo-all-white.svg" alt="logo" className="logo" />
       <span>
-        Download the <b>Common app</b> on your mobile, look for this <br /> common, and start to make a difference in 2
-        min!
+        Download the <b>Common app</b> on your mobile, look for this <br className="desktop-break" /> common, and start
+        to make a difference in 2 min!
       </span>
       {screenSize === ScreenSize.Desktop && (
         <div className="qr-code-wrapper">

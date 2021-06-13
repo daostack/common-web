@@ -10,12 +10,13 @@
   margin-bottom: 50px;
   width: 100%;
   box-sizing: border-box;
-  .icon-text-wrapper {
+  .icon {
     display: flex;
     align-items: center;
-    .text {
-      margin-left: 20px;
-    }
+  }
+  .text {
+    margin-right: auto;
+    margin-left: 20px;
   }
   .download-close-buttons {
     display: flex;
@@ -28,5 +29,9 @@
   &.in-menu {
     box-shadow: unset;
     margin-bottom: unset;
+    .text {
+      margin-right: unset;
+      margin-left: unset;
+    }
   }
 }
