@@ -45,7 +45,7 @@
   }
   .information-content {
     .item {
-      height: 60px;
+      height: 64px;
       padding: 16px;
       font-size: 16px;
       font-weight: normal;
@@ -69,7 +69,7 @@
           background-image: url("/icons/right-arrow.svg");
           background-repeat: no-repeat;
           position: absolute;
-          right: 5px;
+          right: 16px;
           background-size: contain;
         }
       }
@@ -80,7 +80,7 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
-        width: 95%;
+        width: 90%;
       }
       .item-bottom {
         display: flex;
