@@ -300,6 +300,10 @@
     }
     .landing-bottom {
       margin-bottom: unset;
+      background: url("/assets/images/wave-bottom-mobile.svg"), url("/assets/images/join-mobile.jpg");
+      background-position: 50% -1%, 14% 0;
+      background-size: contain, cover;
+      background-repeat: no-repeat, no-repeat;
     }
   }
 }
