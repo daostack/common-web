@@ -575,6 +575,7 @@ type Proposal {
   description: String
   """The IP from which the proposal was created"""
   ipAddress: String
+  canVote: Boolean!
   discussions(take: Int, skip: Int): [Discussion!]!
   """The ID of the user who created the proposal"""
   userId: ID!
@@ -699,6 +700,12 @@ input ProposalWhereUniqueInput {
 type Settings {
   """List of all available permission for roles"""
   permissions: [String]!
+  encryptionKey: EncryptionKey!
+}
+
+type EncryptionKey {
+  keyId: String!
+  publicKey: String!
 }
 
 enum StatisticType {
@@ -742,6 +749,7 @@ type Discussion implements BaseEntity {
   userId: String!
   """The discussion creator"""
   owner: User
+  messageCount: Int!
   messages(take: Int = 10, skip: Int = 0, orderBy: DiscussionMessagesOrderByInput = {createdAt: asc}): [DiscussionMessage!]!
 }
 

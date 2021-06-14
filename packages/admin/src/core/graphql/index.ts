@@ -659,6 +659,7 @@ export type Proposal = {
   description?: Maybe<Scalars['String']>;
   /** The IP from which the proposal was created */
   ipAddress?: Maybe<Scalars['String']>;
+  canVote: Scalars['Boolean'];
   discussions: Array<Discussion>;
   /** The ID of the user who created the proposal */
   userId: Scalars['ID'];
@@ -792,6 +793,13 @@ export type Settings = {
   __typename?: 'Settings';
   /** List of all available permission for roles */
   permissions: Array<Maybe<Scalars['String']>>;
+  encryptionKey: EncryptionKey;
+};
+
+export type EncryptionKey = {
+  __typename?: 'EncryptionKey';
+  keyId: Scalars['String'];
+  publicKey: Scalars['String'];
 };
 
 export enum StatisticType {
@@ -837,6 +845,7 @@ export type Discussion = BaseEntity & {
   userId: Scalars['String'];
   /** The discussion creator */
   owner?: Maybe<User>;
+  messageCount: Scalars['Int'];
   messages: Array<DiscussionMessage>;
 };
 
@@ -2157,6 +2166,14 @@ export type AllTimeStatisticsQuery = (
 }
   );
 
+export type RefreshStatisticsMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RefreshStatisticsMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'forceUpdateStatistics'>
+  );
+
 export type DashboardDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -3210,12 +3227,44 @@ export const AllTimeStatisticsDocument = gql`
 export function useAllTimeStatisticsQuery(baseOptions?: Apollo.QueryHookOptions<AllTimeStatisticsQuery, AllTimeStatisticsQueryVariables>) {
   return Apollo.useQuery<AllTimeStatisticsQuery, AllTimeStatisticsQueryVariables>(AllTimeStatisticsDocument, baseOptions);
 }
+
 export function useAllTimeStatisticsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllTimeStatisticsQuery, AllTimeStatisticsQueryVariables>) {
   return Apollo.useLazyQuery<AllTimeStatisticsQuery, AllTimeStatisticsQueryVariables>(AllTimeStatisticsDocument, baseOptions);
 }
+
 export type AllTimeStatisticsQueryHookResult = ReturnType<typeof useAllTimeStatisticsQuery>;
 export type AllTimeStatisticsLazyQueryHookResult = ReturnType<typeof useAllTimeStatisticsLazyQuery>;
 export type AllTimeStatisticsQueryResult = Apollo.QueryResult<AllTimeStatisticsQuery, AllTimeStatisticsQueryVariables>;
+export const RefreshStatisticsDocument = gql`
+  mutation RefreshStatistics {
+    forceUpdateStatistics
+  }
+`;
+export type RefreshStatisticsMutationFn = Apollo.MutationFunction<RefreshStatisticsMutation, RefreshStatisticsMutationVariables>;
+
+/**
+ * __useRefreshStatisticsMutation__
+ *
+ * To run a mutation, you first call `useRefreshStatisticsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRefreshStatisticsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [refreshStatisticsMutation, { data, loading, error }] = useRefreshStatisticsMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRefreshStatisticsMutation(baseOptions?: Apollo.MutationHookOptions<RefreshStatisticsMutation, RefreshStatisticsMutationVariables>) {
+  return Apollo.useMutation<RefreshStatisticsMutation, RefreshStatisticsMutationVariables>(RefreshStatisticsDocument, baseOptions);
+}
+
+export type RefreshStatisticsMutationHookResult = ReturnType<typeof useRefreshStatisticsMutation>;
+export type RefreshStatisticsMutationResult = Apollo.MutationResult<RefreshStatisticsMutation>;
+export type RefreshStatisticsMutationOptions = Apollo.BaseMutationOptions<RefreshStatisticsMutation, RefreshStatisticsMutationVariables>;
 export const DashboardDataDocument = gql`
   query dashboardData {
     payouts(where: {isPendingApprover: true}) {
@@ -3411,11 +3460,9 @@ export const AvailableWiresDocument = gql`
 export function useAvailableWiresQuery(baseOptions: Apollo.QueryHookOptions<AvailableWiresQuery, AvailableWiresQueryVariables>) {
   return Apollo.useQuery<AvailableWiresQuery, AvailableWiresQueryVariables>(AvailableWiresDocument, baseOptions);
 }
-
 export function useAvailableWiresLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AvailableWiresQuery, AvailableWiresQueryVariables>) {
   return Apollo.useLazyQuery<AvailableWiresQuery, AvailableWiresQueryVariables>(AvailableWiresDocument, baseOptions);
 }
-
 export type AvailableWiresQueryHookResult = ReturnType<typeof useAvailableWiresQuery>;
 export type AvailableWiresLazyQueryHookResult = ReturnType<typeof useAvailableWiresLazyQuery>;
 export type AvailableWiresQueryResult = Apollo.QueryResult<AvailableWiresQuery, AvailableWiresQueryVariables>;
@@ -3448,7 +3495,6 @@ export type CreateUserWireMutationFn = Apollo.MutationFunction<CreateUserWireMut
 export function useCreateUserWireMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserWireMutation, CreateUserWireMutationVariables>) {
   return Apollo.useMutation<CreateUserWireMutation, CreateUserWireMutationVariables>(CreateUserWireDocument, baseOptions);
 }
-
 export type CreateUserWireMutationHookResult = ReturnType<typeof useCreateUserWireMutation>;
 export type CreateUserWireMutationResult = Apollo.MutationResult<CreateUserWireMutation>;
 export type CreateUserWireMutationOptions = Apollo.BaseMutationOptions<CreateUserWireMutation, CreateUserWireMutationVariables>;

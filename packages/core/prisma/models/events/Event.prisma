@@ -10,11 +10,13 @@ model Event {
 
   discussionId String?
   proposalId   String?
+  payoutId     String?
   commonId     String?
   userId       String?
 
   discussion Discussion? @relation(fields: [discussionId], references: [id])
   proposal   Proposal?   @relation(fields: [proposalId], references: [id])
+  payout     Payout?     @relation(fields: [payoutId], references: [id])
   common     Common?     @relation(fields: [commonId], references: [id])
   user       User?       @relation(fields: [userId], references: [id])
 }
