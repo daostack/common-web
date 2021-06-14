@@ -3,7 +3,9 @@ WORKDIR /app
 COPY . /app
 RUN apk add --no-cache git
 RUN /bin/sh -c date
-RUN yarn bootstrap
+RUN yarn 
+RUN /bin/sh -c date
+RUN lerna bootstrap
 RUN /bin/sh -c date
 RUN yarn prisma generate
 RUN /bin/sh -c date
