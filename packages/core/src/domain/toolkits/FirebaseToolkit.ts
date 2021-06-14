@@ -3,10 +3,8 @@ import admin from 'firebase-admin';
 import { logger } from '@logger';
 import { CommonError } from '@errors';
 
-import adminKeys from '../constants/secrets/adminsdk-keys.json';
-
 export const InitializeFirebase = () => {
-  if (!adminKeys) {
+  if (!process.env['FIREBASE_PRIVATE_KEY'] || !process.env['FIREBASE_PROJECT_ID'] || !process.env['FIREBASE_CLIENT_EMAIL']) {
     throw new CommonError('Firebase Admin keys are not present!');
   }
 
@@ -14,7 +12,11 @@ export const InitializeFirebase = () => {
     logger.info('⚙️ Initializing Firebase Admin');
 
     // @ts-ignore
-    const credential = admin.credential.cert(adminKeys);
+    const credential = admin.credential.cert({
+      privateKey: process.env['FIREBASE_PRIVATE_KEY'],
+      projectId: process.env['FIREBASE_PROJECT_ID'],
+      clientEmail: process.env['FIREBASE_CLIENT_EMAIL']
+    });
 
     admin.initializeApp({
       credential
