@@ -1,6 +1,7 @@
-FROM common-backend-cache
+FROM node:12-alpine
 WORKDIR /app
 COPY . /app
+RUN apk add --no-cache git
 RUN yarn bootstrap
 RUN yarn prisma generate
 RUN cd /app/packages/core/ && \
