@@ -153,23 +153,13 @@ const DashboardHomePage: NextPage = () => {
           >
             <HasPermission permission="admin.general.write">
               <motion.div
-                variants={{
-                  rotate: {
-                    rotate: 360,
-                    transition: {
-                      duration: 1.5,
-                      repeat: Infinity
-                    }
-                  },
-                  end: {
-                    rotate: 360,
-                    transition: {
-                      duration: 1.5,
-                      repeat: 1
-                    }
+                animate={{
+                  rotate: 360,
+                  transition: {
+                    duration: 1.5,
+                    repeat: refreshing ? Infinity : 0
                   }
                 }}
-                animate={refreshing ? 'rotate' : 'end'}
               >
                 <Refresh
                   onClick={onRefreshStatistics}
