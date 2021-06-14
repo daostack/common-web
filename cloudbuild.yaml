@@ -40,7 +40,7 @@ steps:
       - '--platform=managed'
       - '--image=$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
       - >-
-        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID,$_LABELS
+        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID
       - '--region=$_DEPLOY_REGION'
       - '--quiet'
     id: Deploy Graphql
@@ -53,7 +53,6 @@ substitutions:
   _PLATFORM: managed
   _SERVICE_NAME: common-backend
   _TRIGGER_ID: e04f6192-0ecc-478b-a63e-bb17124c9195
-  _LABELS: staging
   _DEPLOY_REGION: europe-west2
   _GCR_HOSTNAME: eu.gcr.io
 tags:
