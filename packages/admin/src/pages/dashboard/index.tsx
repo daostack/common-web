@@ -1,14 +1,17 @@
 import React from 'react';
 import { NextPage } from 'next';
-import { Breadcrumbs, Card, Grid, Spacer, Text, Table } from '@geist-ui/react';
+import { Breadcrumbs, Card, Grid, Spacer, Text, Table, useToasts } from '@geist-ui/react';
 import { withPermission } from '../../helpers/hoc/withPermission';
 import { LatestEventsTable } from '@components/tables/LatestEventsTable';
 import { useRouter } from 'next/router';
 import { Link } from '@components/Link';
 import { gql } from '@apollo/client';
 import Skeleton from 'react-loading-skeleton';
-import { useDashboardDataQuery, useAllTimeStatisticsQuery } from '@core/graphql';
+import { useDashboardDataQuery, useAllTimeStatisticsQuery, useRefreshStatisticsMutation } from '@core/graphql';
 import { ArrowUpCircle } from '@geist-ui/react-icons';
+import Refresh from '@geist-ui/react-icons/refreshCw';
+import { motion } from 'framer-motion';
+import { HasPermission } from '@components/HasPermission';
 
 
 const AllTimeStatistics = gql`
@@ -21,6 +24,12 @@ const AllTimeStatistics = gql`
       joinProposals
       fundingProposals
     }
+  }
+`;
+
+const RefreshAllTimeStatistics = gql`
+  mutation RefreshStatistics {
+    forceUpdateStatistics
   }
 `;
 
@@ -45,13 +54,47 @@ const DashboardData = gql`
 const DashboardHomePage: NextPage = () => {
   const router = useRouter();
 
-  const { data: statistics } = useAllTimeStatisticsQuery();
+  const [refreshing, setRefreshing] = React.useState<boolean>(false);
+  const [, setToasts] = useToasts();
+
+  const [refreshStatistics] = useRefreshStatisticsMutation();
+  const { data: statistics, refetch } = useAllTimeStatisticsQuery();
   const { data } = useDashboardDataQuery();
 
   const onCardClick = (url: string) => {
     return async () => {
       await router.push(url);
     };
+  };
+
+  const onRefreshStatistics = async () => {
+    if (!refreshing) {
+      setRefreshing(true);
+
+      try {
+        const data = await refreshStatistics();
+
+        if (data) {
+          await refetch();
+
+          setToasts({
+            type: 'success',
+            text: 'Successfully refreshed statistics'
+          });
+        } else {
+          throw new Error();
+        }
+      } catch (e) {
+        setToasts({
+          type: 'error',
+          text: 'Error occurred while refreshing statistics'
+        });
+      } finally {
+        setTimeout(() => {
+          setRefreshing(false);
+        }, 500);
+      }
+    }
   };
 
   const transformPayoutsTable = () => {
@@ -92,7 +135,49 @@ const DashboardHomePage: NextPage = () => {
 
       <React.Fragment>
         {/* --- Overview --- */}
-        <Text h3>Application's overview</Text>
+
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between'
+          }}
+        >
+          <Text h3>Application's overview</Text>
+
+          <div
+            style={{
+              cursor: refreshing
+                ? 'not-allowed'
+                : 'pointer'
+            }}
+          >
+            <HasPermission permission="admin.general.write">
+              <motion.div
+                variants={{
+                  rotate: {
+                    rotate: 360,
+                    transition: {
+                      duration: 1.5,
+                      repeat: Infinity
+                    }
+                  },
+                  end: {
+                    rotate: 360,
+                    transition: {
+                      duration: 1.5,
+                      repeat: 1
+                    }
+                  }
+                }}
+                animate={refreshing ? 'rotate' : 'end'}
+              >
+                <Refresh
+                  onClick={onRefreshStatistics}
+                />
+              </motion.div>
+            </HasPermission>
+          </div>
+        </div>
 
         <Grid.Container gap={2} alignItems="stretch" style={{ display: 'flex' }}>
           <Grid xs={24} md={8} onClick={onCardClick('/commons')} style={{ cursor: 'pointer' }}>

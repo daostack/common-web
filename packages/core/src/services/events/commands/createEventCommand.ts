@@ -16,6 +16,10 @@ const schema = z.object({
     .uuid()
     .optional(),
 
+  payoutId: z.string()
+    .uuid()
+    .optional(),
+
   userId: z.string()
     .uuid()
     .optional(),

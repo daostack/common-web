@@ -206,6 +206,7 @@ export const createPayoutCommand = async (command: z.infer<typeof schema>): Prom
   // Create event
   eventService.create({
     type: EventType.PayoutCreated,
+    payoutId: payout.id,
     payload: {
       proposalIds: command.proposalIds,
       payoutId: payout.id,

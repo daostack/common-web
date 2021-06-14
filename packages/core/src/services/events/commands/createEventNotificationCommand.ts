@@ -5,25 +5,6 @@ import { notificationService } from '@services';
 import { logger } from '@logger';
 
 export const createEventNotificationCommand = async (event: Event): Promise<void> => {
-  // switch (event.Types) {
-  //   case EventType.FundingRequestAccepted:
-  //   case EventType.FundingRequestRejected:
-  //   case EventType.JoinRequestAccepted:
-  //   case EventType.JoinRequestRejected:
-  //     await notificationService.create({
-  //       Types: event.Types,
-  //       userId: event.userId!,
-  //       connect: {
-  //         discussionId: event.discussionId || undefined,
-  //         proposalId: event.proposalId || undefined,
-  //         commonId: event.commonId || undefined
-  //       }
-  //     });
-  //
-  //   // New discussion -> All common members
-  //   // New discussion message -> All discussion subscribers
-  // }
-
   // Find the event notification settings
   const settings = await prisma.notificationEventSettings.findUnique({
     where: {
@@ -122,6 +103,7 @@ export const createEventNotificationCommand = async (event: Event): Promise<void
         connect: {
           discussionId: event.discussionId || undefined,
           proposalId: event.proposalId || undefined,
+          payoutId: event.payoutId || undefined,
           commonId: event.commonId || undefined
         }
       })
