@@ -19,7 +19,7 @@ steps:
       - run
       - services
       - update
-      - $_SERVICE_NAME_WORKER
+      - $_SERVICE_NAME-worker
       - '--platform=managed'
       - '--image=$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
       - >-
@@ -33,7 +33,7 @@ steps:
       - run
       - services
       - update
-      - $_SERVICE_NAME_GRAPHQL
+      - $_SERVICE_NAME-graphql
       - '--platform=managed'
       - '--image=$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
       - >-
@@ -48,10 +48,9 @@ options:
   substitutionOption: ALLOW_LOOSE
 substitutions:
   _PLATFORM: managed
-  _SERVICE_NAME_WORKER: common-backend-worker
+  _SERVICE_NAME: common-backend
   _TRIGGER_ID: e04f6192-0ecc-478b-a63e-bb17124c9195
   _LABELS: staging
-  _SERVICE_NAME_GRAPHQL: common-backend-graphql
   _DEPLOY_REGION: europe-west2
   _GCR_HOSTNAME: eu.gcr.io
 tags:
