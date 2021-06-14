@@ -11,6 +11,7 @@ steps:
       - '-f'
       - Dockerfile
     id: Build
+    timeout: 1800s
   - name: gcr.io/cloud-builders/docker
     args:
       - push
@@ -60,3 +61,4 @@ tags:
   - gcp-cloud-build-deploy-cloud-run-managed
   - staging
   - common-backend
+timeout: 3600s
