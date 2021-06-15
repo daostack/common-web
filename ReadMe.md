@@ -12,7 +12,7 @@
   <img alt="CloudFunctions Tests Badge" src="https://github.com/daostack/common-monorepo/workflows/Firebase%20CloudFunctions%20Test%20CI/badge.svg" />
 </p>
 
-### Documentation
+## Documentation
 
 The backend consist of multiple parts:
 
@@ -21,7 +21,7 @@ The backend consist of multiple parts:
   handled here as they are not one of `core`'s concerns
 * `Worker` - This package contains the background jobs of the project
 
-#### Setting up the project
+### Setting up the project
 
 Before you begin you must have Node, Postgres and Redis installed on your machine. Versions, know to work are:
 
@@ -41,7 +41,7 @@ run `yarn db:setup` and wait for it to finish.
 
 And with that the project is set up.
 
-#### Running the project
+### Running the project
 
 The backend has two entry points: `graphql` and `worker`. They both depend on the third package: `core`, so to run
 either of them the first package. To compile any project you need to run `yarn compile` in that project folder. If you
@@ -53,3 +53,7 @@ To run the `graphql` project you have two options:
 * `yarn dev` - To hotreload it on changes. This only transpiles the changes, perfect for fast development
 
 The same applies to the `worker` project
+
+## Guides
+
+[**Authorization Guide**](/docs/guides/authorization.md) - How and where to handle the authorization
