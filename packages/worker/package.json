@@ -4,6 +4,7 @@
   "author": "Alexander Ivanov @alexander2001i",
   "main": "dist/index.js",
   "scripts": {
+    "clean": "rm -rf dist",
     "dev": "tsc-watch --onSuccess \"yarn start\"",
     "compile": "tsc -p tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
     "start": "node -r dotenv/config dist/index.js"

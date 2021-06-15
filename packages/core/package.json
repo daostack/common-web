@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "private": true,
   "scripts": {
+    "clean": "rm -rf dist",
     "dev": "yarn compile:watch",
     "compile": "tsc -p tsconfig.json && yarn fix:paths",
     "compile:watch": "tsc-watch --onSuccess \"yarn fix:paths\"",
@@ -12,6 +13,7 @@
     "studio": "prisma studio",
     "seed": "prisma migrate reset --force && ts-node --transpile -r dotenv/config  prisma/seed.ts",
     "db:sync": "prisma migrate deploy",
+    "db:generate": "prisma generate",
     "create:schema": "find prisma -name '*.prisma' -not -name \"schema.prisma\" -exec cat {} + > prisma/schema.prisma  && prisma format",
     "create:migration": "yarn create:schema && prisma migrate dev"
   },
