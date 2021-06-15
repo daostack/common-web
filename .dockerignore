@@ -11,4 +11,6 @@ cache-Dockerfile
 .dockerignore
 cloudbuild.yaml
 ReadMe.md
-docs
+docs/
+node_modules
+**/node_modules
