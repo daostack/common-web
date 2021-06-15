@@ -301,7 +301,7 @@
     .landing-bottom {
       margin-bottom: unset;
       background: url("/assets/images/wave-bottom-mobile.svg"), url("/assets/images/join-mobile.jpg");
-      background-position: 50% -1%, 14% 0;
+
       background-size: contain, cover;
       background-repeat: no-repeat, no-repeat;
     }
@@ -310,4 +310,13 @@
 
 .bold-text {
   font-family: NunitoSans-Bold;
+}
+
+@media only screen and (max-width: $mobile-portrait) {
+  .landing-wrapper {
+    .landing-bottom {
+      background-position: 50% -9%, 0;
+      padding: 150px 0 95px;
+    }
+  }
 }
