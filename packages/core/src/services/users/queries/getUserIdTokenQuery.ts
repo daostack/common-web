@@ -18,7 +18,7 @@ export const getUserIdTokenQuery = async (uid: string): Promise<string> => {
     .auth()
     .createCustomToken(uid);
 
-  const res = await axios.post(`https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyCustomToken?key=${process.env['Firebase.ApiKey']}`, {
+  const res = await axios.post(`https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyCustomToken?key=${process.env['FIREBASE_API_KEY']}`, {
     token: customToken,
     returnSecureToken: true
   });
