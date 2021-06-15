@@ -11,7 +11,10 @@
   "dependencies": {
     "@common/core": "^1.9.12",
     "@prisma/client": "^2.20.1",
+    "apollo-server-express": "^2.25.1",
+    "cors": "^2.8.5",
     "firebase-admin": "9.5.0",
+    "graphql": "^15.5.0",
     "graphql-middleware": "^6.0.7",
     "graphql-query-complexity": "^0.8.0",
     "graphql-redis-subscriptions": "^2.3.1",
