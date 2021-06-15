@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useCalculateReadMoreLength } from "../../../../../shared/hooks";
 import { Discussion } from "../../../../../shared/models";
 import { getUserName, getDaysAgo } from "../../../../../shared/utils";
 
@@ -11,6 +12,8 @@ export default function DiscussionItemComponent({ discussion, loadDisscussionDet
   const [imageError, setImageError] = useState(false);
   const [readMore, setReadMore] = useState("");
   const date = new Date();
+
+  const textLength = useCalculateReadMoreLength();
   return (
     <div className="discussion-item-wrapper">
       <div className="discussion-top-bar">
@@ -35,7 +38,7 @@ export default function DiscussionItemComponent({ discussion, loadDisscussionDet
           {discussion.title}
         </div>
         <div className={`description ${readMore}`}>{discussion.message}</div>
-        {discussion.message.length > 650 && !readMore ? (
+        {discussion.message.length > textLength && !readMore ? (
           <div className="read-more" onClick={() => setReadMore("full")}>
             Read More
           </div>
