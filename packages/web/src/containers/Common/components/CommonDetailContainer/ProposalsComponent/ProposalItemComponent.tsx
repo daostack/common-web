@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ProposalCountDown } from "..";
+import { useCalculateReadMoreLength } from "../../../../../shared/hooks";
 import { Proposal } from "../../../../../shared/models";
 import { formatPrice, getUserName, getDaysAgo } from "../../../../../shared/utils";
 import { VotesComponent } from "../VotesComponent";
@@ -14,6 +15,8 @@ export default function ProposalItemComponent({ proposal, loadProposalDetail }: 
   const [readMore, setReadMore] = useState("");
   const date = new Date();
   const requestedAmount = formatPrice(proposal.fundingRequest?.amount || proposal.join?.funding);
+  const textLength = useCalculateReadMoreLength();
+
   return (
     <div className="discussion-item-wrapper">
       {proposal.state === "countdown" ? (
@@ -66,7 +69,7 @@ export default function ProposalItemComponent({ proposal, loadProposalDetail }: 
       </div>
       <div className="discussion-content">
         <div className={`description ${readMore}`}>{proposal.description.description}</div>
-        {proposal.description.description.length > 650 && !readMore ? (
+        {proposal.description.description.length > textLength && !readMore ? (
           <div className="read-more" onClick={() => setReadMore("full")}>
             Read More
           </div>
