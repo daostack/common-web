@@ -20,10 +20,10 @@ The backend consist of multiple parts:
 * `GraphQL` - In this package is all the user facing GraphQL API. The authentication and authorization should also be
   handled here as they are not one of `core`'s concerns
 * `Worker` - This package contains the background jobs of the project
+<<<<<<< HEAD
 
 ### Setting up the project
 
-Before you begin you must have Node, Postgres and Redis installed on your machine. Versions, know to work are:
 
 * Node - v14.17.0
 * Postgres - PostgreSQL 13.2
@@ -57,3 +57,7 @@ The same applies to the `worker` project
 ## Guides
 
 [**Authorization Guide**](/docs/guides/authorization.md) - How and where to handle the authorization
+=======
+
+#### Setting up the project
+
