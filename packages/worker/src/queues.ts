@@ -2,6 +2,7 @@ import Queue from 'bull';
 
 const SubscriptionsQueueConst = 'Common.Subscriptions';
 const NotificationsQueueConst = 'Common.Notifications';
+const StatisticsQueueConst = 'Common.Statistics';
 const ProposalsQueueConst = 'Common.Proposals';
 const PaymentsQueueConst = 'Common.Payments';
 const PayoutsQueueConst = 'Common.Payouts';
@@ -22,6 +23,7 @@ export const VotesQueue = Queue(VotesQueueConst, config);
 export const PayoutsQueue = Queue(PayoutsQueueConst, config);
 export const PaymentsQueue = Queue(PaymentsQueueConst, config);
 export const ProposalsQueue = Queue(ProposalsQueueConst, config);
+export const StatisticsQueue = Queue(StatisticsQueueConst, config);
 export const NotificationsQueue = Queue(NotificationsQueueConst, config);
 export const SubscriptionsQueue = Queue(SubscriptionsQueueConst, config);
 
@@ -31,6 +33,7 @@ export const Queues = {
   PayoutsQueue,
   PaymentsQueue,
   ProposalsQueue,
+  StatisticsQueue,
   NotificationsQueue,
   SubscriptionsQueue
 };

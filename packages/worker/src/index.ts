@@ -8,11 +8,14 @@ import './processors/EventsWorker';
 import './processors/PayoutsWorker';
 import './processors/PaymentsWorker';
 import './processors/ProposalsWorker';
+import './processors/StatisticsWorker';
 import './processors/NotificationsWorker';
 
-import './events/onUserCreated';
+// import './events/onUserCreated';
 import './events/onCommonCreated';
-
+// import './events/onPaymentSucceeded';
+// import './events/onDiscussionCreated';
+// import './events/onDiscussionMessageCreated';
 import { Queues } from './queues';
 
 const app = express();
@@ -24,3 +27,5 @@ app.use('/queues/dashboard', router);
 app.listen(4001, () => {
   logger.info('Worker UI started on port 4001');
 });
+
+

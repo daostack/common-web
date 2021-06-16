@@ -1,13 +1,14 @@
 import { Event } from '@prisma/client';
 
 import { statisticService } from '@common/core';
+
 import { Queues } from '../queues';
 
 Queues.EventQueue.on('completed', async (job, result: Event) => {
-  if (result.type === 'UserCreated') {
+  if (result.type === 'DiscussionMessageCreated') {
     // Update the statistics
     await statisticService.updateAll({
-      users: {
+      discussionMessages: {
         increment: 1
       }
     });
