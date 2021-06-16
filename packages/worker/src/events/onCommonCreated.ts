@@ -8,7 +8,7 @@ Queues.EventQueue.on('completed', async (job, result: Event) => {
     logger.info('Executing `onCommonCreated`');
 
     // Update the statistics
-    await statisticService.updateAllTime({
+    await statisticService.updateAll({
       commons: {
         increment: 1
       }

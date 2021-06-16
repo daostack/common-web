@@ -73,4 +73,7 @@ enum EventType {
   PayoutRejected
   PayoutExecuted
   PayoutCompleted
+
+  HourlyStatisticCreated
+  DailyStatisticCreated
 }
