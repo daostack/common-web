@@ -10,15 +10,8 @@ export const InitializeFirebase = () => {
       logger.error('Cannot find firebase private key');
     }
 
-    let adminKeys;
-
-    try {
-      adminKeys = require('../constants/secrets/adminsdk-keys.json');
-    } catch (e) {
-    }
-
     // @ts-ignore
-    const credential = admin.credential.cert(adminKeys || {
+    const credential = admin.credential.cert({
       type: process.env['FIREBASE_TYPE'],
       project_id: process.env['FIREBASE_PROJECT_ID'],
       private_key_id: process.env['FIREBASE_PRIVATE_KEY_ID'],
