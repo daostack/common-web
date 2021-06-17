@@ -728,6 +728,7 @@ enum EventType {
   CommonMemberRoleRemoved
   CommonUpdated
   CommonWhitelisted
+  DailyStatisticCreated
   DiscussionCreated
   DiscussionMessageCreated
   DiscussionSubscriptionCreated
@@ -735,6 +736,7 @@ enum EventType {
   FundingRequestAccepted
   FundingRequestCreated
   FundingRequestRejected
+  HourlyStatisticCreated
   JoinRequestAccepted
   JoinRequestCreated
   JoinRequestRejected
