@@ -1,11 +1,8 @@
-import { Event } from '@prisma/client';
-
 import { statisticService } from '@common/core';
+import { EventHandler } from './index';
 
-import { Queues } from '../queues';
-
-Queues.EventQueue.on('completed', async (job, result: Event) => {
-  if (result.type === 'DiscussionMessageCreated') {
+export const onDiscussionMessageCreated: EventHandler = async (data, event) => {
+  if (event.type === 'DiscussionMessageCreated') {
     // Update the statistics
     await statisticService.updateAll({
       discussionMessages: {
@@ -13,4 +10,4 @@ Queues.EventQueue.on('completed', async (job, result: Event) => {
       }
     });
   }
-});
+};

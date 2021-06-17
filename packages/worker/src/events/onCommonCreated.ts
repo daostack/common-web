@@ -1,10 +1,8 @@
-import { Event } from '@prisma/client';
-
 import { statisticService, logger } from '@common/core';
-import { Queues } from '../queues';
+import { EventHandler } from './index';
 
-Queues.EventQueue.on('completed', async (job, result: Event) => {
-  if (result.type === 'CommonCreated') {
+export const onCommonCreated: EventHandler = async (data, event) => {
+  if (event.type === 'CommonCreated') {
     logger.info('Executing `onCommonCreated`');
 
     // Update the statistics
@@ -14,4 +12,4 @@ Queues.EventQueue.on('completed', async (job, result: Event) => {
       }
     });
   }
-});
+};

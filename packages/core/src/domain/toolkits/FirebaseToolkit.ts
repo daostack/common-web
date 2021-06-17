@@ -3,8 +3,6 @@ import admin from 'firebase-admin';
 import { logger } from '@logger';
 
 export const InitializeFirebase = () => {
-
-
   if (!admin.apps.length) {
     logger.info('⚙️ Initializing Firebase Admin');
 
@@ -12,8 +10,15 @@ export const InitializeFirebase = () => {
       logger.error('Cannot find firebase private key');
     }
 
+    let adminKeys;
+
+    try {
+      adminKeys = require('../constants/secrets/adminsdk-keys.json');
+    } catch (e) {
+    }
+
     // @ts-ignore
-    const credential = admin.credential.cert({
+    const credential = admin.credential.cert(adminKeys || {
       type: process.env['FIREBASE_TYPE'],
       project_id: process.env['FIREBASE_PROJECT_ID'],
       private_key_id: process.env['FIREBASE_PRIVATE_KEY_ID'],
@@ -29,6 +34,8 @@ export const InitializeFirebase = () => {
     admin.initializeApp({
       credential
     });
+
+    logger.info('✨  Initialized Firebase Admin');
   }
 };
 

@@ -1,9 +1,7 @@
-import { Event } from '@prisma/client';
+import { EventHandler } from './index';
 
-import { Queues } from '../queues';
-
-Queues.EventQueue.on('completed', async (job, result: Event) => {
-  if (result.type === 'PaymentSucceeded') {
-    console.log('successful payment', job.data);
+export const onPaymentSucceeded: EventHandler = async (data, event) => {
+  if (event.type === 'PaymentSucceeded') {
+    console.log('successful payment', data, event);
   }
-});
+};

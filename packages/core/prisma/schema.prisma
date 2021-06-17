@@ -796,6 +796,9 @@ enum EventType {
   PayoutRejected
   PayoutExecuted
   PayoutCompleted
+
+  HourlyStatisticCreated
+  DailyStatisticCreated
 }
 
 model Event {
@@ -804,7 +807,8 @@ model Event {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  type EventType
+  type      EventType
+  processed Boolean   @default(false)
 
   payload Json?
 
