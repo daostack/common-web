@@ -1,4 +1,7 @@
 export const allPermissions = [
+  'admin.general.read',
+  'admin.general.write',
+
   'admin.report.read',
   'admin.report.act',
 
@@ -22,6 +25,7 @@ export const allPermissions = [
   'admin.proposals.read.ipAddress',
 
   'admin.commons.read',
+  'admin.commons.read.payments',
   'admin.commons.update',
   'admin.commons.delist',
   'admin.commons.whitelist',
@@ -59,7 +63,6 @@ export const allPermissions = [
   'admin.wire.bank.read',
   'admin.wire.bank.create',
   'admin.wire.bank.update'
-];
-
+] as const;
 
 export type AllPermission = (typeof allPermissions[number]);

@@ -296,7 +296,7 @@ model CommonMember {
   commonId String
   userId   String
 
-  Vote Vote[]
+  votes Vote[]
 
   @@unique([userId, commonId])
 }
@@ -796,6 +796,9 @@ enum EventType {
   PayoutRejected
   PayoutExecuted
   PayoutCompleted
+
+  HourlyStatisticCreated
+  DailyStatisticCreated
 }
 
 model Event {
@@ -804,17 +807,20 @@ model Event {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  type EventType
+  type      EventType
+  processed Boolean   @default(false)
 
   payload Json?
 
   discussionId String?
   proposalId   String?
+  payoutId     String?
   commonId     String?
   userId       String?
 
   discussion Discussion? @relation(fields: [discussionId], references: [id])
   proposal   Proposal?   @relation(fields: [proposalId], references: [id])
+  payout     Payout?     @relation(fields: [payoutId], references: [id])
   common     Common?     @relation(fields: [commonId], references: [id])
   user       User?       @relation(fields: [userId], references: [id])
 }
@@ -913,9 +919,11 @@ model Notification {
 
   // Optional Links
   common       Common?     @relation(fields: [commonId], references: [id])
+  payout       Payout?     @relation(fields: [payoutId], references: [id])
   proposal     Proposal?   @relation(fields: [proposalId], references: [id])
   discussion   Discussion? @relation(fields: [discussionId], references: [id])
   commonId     String?
+  payoutId     String?
   proposalId   String?
   discussionId String?
 }
@@ -979,6 +987,9 @@ model Payout {
 
   approvers PayoutApprover[]
   proposals FundingProposal[]
+
+  events        Event[]
+  notifications Notification[]
 
   wire   Wire   @relation(fields: [wireId], references: [id])
   wireId String

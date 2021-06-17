@@ -9,7 +9,7 @@ import { Breadcrumbs, Card, Grid, Pagination, Spacer, Table, Text } from '@geist
 import { Link } from '@components/Link';
 import { useRouter } from 'next/router';
 import { ChevronLeftCircleFill, ChevronRightCircleFill } from '@geist-ui/react-icons';
-import { useGetProposalsHomescreenQuery } from '@core/graphql';
+import { useGetProposalsHomescreenQuery, useAllTimeStatisticsQuery } from '@core/graphql';
 
 const ProposalsHomepageData = gql`
   query getProposalsHomescreen($fundingPaginate: PaginateInput!, $joinPaginate: PaginateInput!) {
@@ -64,7 +64,7 @@ const ProposalsHomepage: NextPage = () => {
 
   const router = useRouter();
 
-  const { data: statistics } = useGetAllTimeStatistiscQuery();
+  const { data: statistics } = useAllTimeStatisticsQuery();
   const { data } = useGetProposalsHomescreenQuery({
     variables: {
       joinPaginate: {
@@ -128,7 +128,7 @@ const ProposalsHomepage: NextPage = () => {
               <Card hoverable>
                 <Text h1>
                   {statistics && (
-                    statistics.getStatistics[0].fundingProposals
+                    statistics.statistics[0].fundingProposals
                   )}
 
                   {!statistics && (
@@ -143,7 +143,7 @@ const ProposalsHomepage: NextPage = () => {
               <Card hoverable>
                 <Text h1>
                   {statistics && (
-                    statistics.getStatistics[0].joinProposals
+                    statistics.statistics[0].joinProposals
                   )}
 
                   {!statistics && (
@@ -158,8 +158,8 @@ const ProposalsHomepage: NextPage = () => {
               <Card hoverable>
                 <Text h1>
                   {statistics && (
-                    statistics.getStatistics[0].joinProposals +
-                    statistics.getStatistics[0].fundingProposals
+                    statistics.statistics[0].joinProposals +
+                    statistics.statistics[0].fundingProposals
                   )}
 
                   {!statistics && (
@@ -184,9 +184,9 @@ const ProposalsHomepage: NextPage = () => {
               <Table.Column prop="id"/>
             </Table>
 
-            {statistics && statistics.getStatistics[0].fundingProposals > 10 && (
+            {statistics && statistics.statistics[0].fundingProposals > 10 && (
               <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-                <Pagination count={Math.ceil(statistics.getStatistics[0].fundingProposals / 10)}
+                <Pagination count={Math.ceil(statistics.statistics[0].fundingProposals / 10)}
                             onChange={onFundingPageChange} w>
                   <Pagination.Next>
                     <ChevronRightCircleFill/>
@@ -209,9 +209,9 @@ const ProposalsHomepage: NextPage = () => {
               <Table.Column prop="id"/>
             </Table>
 
-            {statistics && statistics.getStatistics[0].joinProposals > 10 && (
+            {statistics && statistics.statistics[0].joinProposals > 10 && (
               <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-                <Pagination count={Math.ceil(statistics.getStatistics[0].joinProposals / 10)}
+                <Pagination count={Math.ceil(statistics.statistics[0].joinProposals / 10)}
                             onChange={onJoinPageChange}>
                   <Pagination.Next>
                     <ChevronRightCircleFill/>

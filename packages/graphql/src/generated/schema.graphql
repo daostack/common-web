@@ -78,6 +78,9 @@ type Common {
 
   """The name of the common as provided"""
   name: String!
+
+  """List of payments made for funding this common"""
+  payments(paginate: PaginateInput = {skip: 0, take: 10}, where: PaymentsWhereInput): [Payment!]!
   proposals(paginate: PaginateInput, where: ProposalWhereInput): [Proposal!]!
 
   """The total amount of money that the common has raised. In cents"""
@@ -600,6 +603,7 @@ type Discussion implements BaseEntity {
 
   """The date at which the last message on the discussion was added"""
   latestMessage: DateTime!
+  messageCount: Int!
   messages(orderBy: DiscussionMessagesOrderByInput = {createdAt: asc}, skip: Int = 0, take: Int = 10): [DiscussionMessage!]!
 
   """The discussion creator"""
@@ -677,6 +681,11 @@ input DiscussionWhereInput {
   userId: ID
 }
 
+type EncryptionKey {
+  keyId: String!
+  publicKey: String!
+}
+
 type Event {
   """The ID of the common, for whom the event was created"""
   commonId: ID
@@ -719,6 +728,7 @@ enum EventType {
   CommonMemberRoleRemoved
   CommonUpdated
   CommonWhitelisted
+  DailyStatisticCreated
   DiscussionCreated
   DiscussionMessageCreated
   DiscussionSubscriptionCreated
@@ -726,6 +736,7 @@ enum EventType {
   FundingRequestAccepted
   FundingRequestCreated
   FundingRequestRejected
+  HourlyStatisticCreated
   JoinRequestAccepted
   JoinRequestCreated
   JoinRequestRejected
@@ -870,6 +881,7 @@ type Mutation {
   deleteEventNotificationSetting(id: ID!): Boolean
   delistCommon(commonId: String!): Boolean
   finalizeProposal(proposalId: ID!): Boolean!
+  forceUpdateStatistics: Boolean
   unassignRole(roleId: ID!, userId: ID!): Void
   updateCommon(input: UpdateCommonInput!): Common
   updateNotificationSettings(input: UpdateNotificationSettingsInput!): NotificationSystemSettings
@@ -1182,6 +1194,7 @@ input PayoutWhereInput {
 }
 
 type Proposal {
+  canVote: Boolean!
   common: Common!
   commonId: UUID!
 
@@ -1273,7 +1286,6 @@ type Query {
   discussions(paginate: PaginateInput, where: DiscussionWhereInput): [Discussion]
   events(paginate: PaginateInput): [Event]
   generateUserAuthToken(authId: String!): String!
-  getStatistics(where: StatisticsWhereInput): [Statistic]
   notificationEventOptions: NotificationEventOptions
   notificationEventSettings(paginate: PaginateInput!): [NotificationEventSettings]
   notificationSettings(where: NotificationSettingsWhereInput): [NotificationSystemSettings]
@@ -1287,11 +1299,13 @@ type Query {
   payout(id: ID!): Payout
   payouts(paginate: PaginateInput = {skip: 0, take: 10}, where: PayoutWhereInput): [Payout]
   proposal(where: ProposalWhereUniqueInput!): Proposal
-  proposals(fundingWhere: FundingProposalWhereInput, paginate: PaginateInput, where: ProposalWhereInput): [Proposal]
+  proposals(fundingWhere: FundingProposalWhereInput, paginate: PaginateInput, where: ProposalWhereInput): [Proposal]!
+  report(id: ID!): Report
   reports(pagination: PaginateInput, where: ReportWhereInput): [Report]
   role(where: RoleWhereUniqueInput!): Role
   roles(paginate: PaginateInput): [Role]
   settings: Settings!
+  statistics(where: StatisticsWhereInput): [Statistic]
 
   """
   Provide ID to fetch specific user or do not pass anything to get the currently authenticated user
@@ -1302,6 +1316,9 @@ type Query {
 }
 
 type Report implements BaseEntity {
+  """The type of action that this done after the report review"""
+  action: ReportAction
+
   """The date, at which the item was created"""
   createdAt: DateTime!
 
@@ -1319,9 +1336,12 @@ type Report implements BaseEntity {
   proposalId: UUID
   reporter: User!
   reporterId: ID!
+  reviewAuthority: ReportAuditor
 
   """The date on which the report was last reviewed if reviewed"""
   reviewedOn: DateTime
+  reviewer: User
+  reviewerId: ID
 
   """The current status of the report"""
   status: ReportStatus!
@@ -1361,7 +1381,7 @@ enum ReportFor {
 
 enum ReportStatus {
   Active
-  Clossed
+  Closed
 }
 
 input ReportStatusFilterInput {
@@ -1404,6 +1424,8 @@ input RoleWhereUniqueInput {
 
 """Setting description about the common application"""
 type Settings {
+  encryptionKey: EncryptionKey!
+
   """List of all available permission for roles"""
   permissions: [String]!
 }

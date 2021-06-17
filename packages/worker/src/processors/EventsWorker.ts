@@ -1,5 +1,6 @@
 import { eventService, logger } from '@common/core';
 import { Queues } from '../queues';
+import { eventHookHandlers } from '../events';
 
 // Process the jobs
 Queues.EventQueue.process('create', async (job, done) => {
@@ -21,6 +22,20 @@ Queues.EventQueue.process('create', async (job, done) => {
       job,
       event
     });
+
+    // Process the handlers
+    await Promise.all(eventHookHandlers.map((handler) => {
+      return (async () => {
+        try {
+          await handler(job.data, event);
+        } catch (e) {
+          logger.error('Error occurred processing event handler!', {
+            error: e,
+            handler
+          });
+        }
+      })();
+    }));
 
     done(null, event);
   } catch (e) {

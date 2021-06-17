@@ -11,7 +11,14 @@ export interface IProposalsQueueJob {
 export type ProposalsQueueJob = 'finalizeProposal';
 
 // Create the queue
-export const ProposalsQueue = Queue<IProposalsQueueJob>(Queues.ProposalsQueue);
+export const ProposalsQueue = Queue<IProposalsQueueJob>(Queues.ProposalsQueue, {
+  redis: {
+    host: process.env['REDIS_HOST'],
+    port: Number(process.env['REDIS_PORT']),
+    username: process.env['REDIS_USERNAME'],
+    password: process.env['REDIS_PASSWORD']
+  }
+});
 
 // Create a way to add jobs to the queue
 export const addProposalsJob = (job: ProposalsQueueJob, proposalId: string, options?: JobOptions): void => {

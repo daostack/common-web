@@ -1,5 +1,5 @@
 import { objectType } from 'nexus';
-import { authorizationService, allPermissions } from '@common/core';
+import { authorizationService, allPermissions, circleClient } from '@common/core';
 
 export const SettingsType = objectType({
   name: 'Settings',
@@ -15,7 +15,14 @@ export const SettingsType = objectType({
           ]
         });
       },
-      resolve: () => allPermissions as string[]
+      resolve: () => allPermissions as unknown as string[]
+    });
+
+    t.nonNull.field('encryptionKey', {
+      type: 'EncryptionKey',
+      resolve: async () => {
+        return (await circleClient.general.getEncryptionKey()).data;
+      }
     });
   }
 });

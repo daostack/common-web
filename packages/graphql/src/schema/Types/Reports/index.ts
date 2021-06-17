@@ -19,6 +19,8 @@ import { CreateReportMutation } from './Mutations/CreateReport.mutation';
 
 import { ActOnReportMutation, ActOnReportInput } from './Mutations/ActOnReport.mutation';
 import { GetReportsQuery } from './Queries/GetReports.query';
+import { GetReportQuery } from './Queries/GetReport.query';
+import { ReportReviewerExtension } from './Extensions/ReportReviewerExtension';
 
 export const ReportTypes = [
   ReportType,
@@ -33,6 +35,7 @@ export const ReportTypes = [
   ReportWhereInput,
   ReportStatusFilterInput,
 
+  ReportReviewerExtension,
   ReportReporterExtension,
   ReportReportedMessageExtension,
   ReportReportedProposalExtension,
@@ -41,5 +44,6 @@ export const ReportTypes = [
   ActOnReportMutation,
 
   CreateReportMutation,
-  GetReportsQuery
+  GetReportsQuery,
+  GetReportQuery
 ];

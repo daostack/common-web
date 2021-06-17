@@ -15,7 +15,14 @@ export interface IPaymentsQueueJob {
 export type PaymentsQueueJob = 'process' | 'updateStatus';
 
 // Create the queue
-export const PaymentsQueue = Queue<IPaymentsQueueJob>(Queues.PaymentsQueue);
+export const PaymentsQueue = Queue<IPaymentsQueueJob>(Queues.PaymentsQueue, {
+  redis: {
+    host: process.env['REDIS_HOST'],
+    port: Number(process.env['REDIS_PORT']),
+    username: process.env['REDIS_USERNAME'],
+    password: process.env['REDIS_PASSWORD']
+  }
+});
 
 
 // Create a way to add jobs

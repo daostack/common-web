@@ -16,5 +16,8 @@ model Payout {
   approvers PayoutApprover[]
   proposals FundingProposal[]
 
+  events Event[]
+  notifications Notification[]
+
   wire Wire
 }

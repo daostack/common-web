@@ -14,10 +14,10 @@ export const GetReportsQuery = queryField('reports', {
   authorize: async (root, args, ctx) => {
     return authorizationService.can(await ctx.getUserId(), 'admin.report.read');
   },
-  resolve: (root, { where, paginate }) => {
+  resolve: (root, { where, pagination }) => {
     return prisma.report
       .findMany({
-        ...paginate,
+        ...pagination,
         where: where as any
       });
   }

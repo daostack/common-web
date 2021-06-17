@@ -6,17 +6,17 @@ interface ICreateBankAccountModalProps {
   open: boolean;
 
   onCreated?: (bankAccountId: string) => void;
-  onAbondon?: () => void;
+  onAbandon?: () => void;
 }
 
-export const CreateBankAccount: React.FC<ICreateBankAccountModalProps> = ({ open, onCreated, onAbondon }) => {
+export const CreateBankAccount: React.FC<ICreateBankAccountModalProps> = ({ open, onCreated, onAbandon }) => {
   return (
-    <Modal open={open} onClose={onAbondon} width="800px">
+    <Modal open={open} onClose={onAbandon} width="800px">
       <div style={{ textAlign: 'start' }}>
         <Text h2>Create new bank account</Text>
       </div>
 
-      <Modal.Action passive onClick={onAbondon}>Cancel</Modal.Action>
+      <Modal.Action passive onClick={onAbandon}>Cancel</Modal.Action>
       <Modal.Action loading>Create</Modal.Action>
     </Modal>
   );

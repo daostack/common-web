@@ -11,7 +11,7 @@ import { Centered } from '@components/Centered';
 import {
   useGetUsersHomepageDataQuery,
   User,
-  useGetAllTimeStatistiscQuery,
+  useAllTimeStatisticsQuery,
   GetUsersHomepageDataQuery
 } from '@core/graphql';
 import Skeleton from 'react-loading-skeleton';
@@ -42,7 +42,7 @@ const UsersHomepage: NextPage = () => {
   const [page, setPage] = React.useState<number>(1);
   const [perPage, setPerPage] = React.useState<number>(10);
 
-  const statistics = useGetAllTimeStatistiscQuery();
+  const statistics = useAllTimeStatisticsQuery();
   const { data, loading } = useGetUsersHomepageDataQuery({
     variables: {
       paginate: {
@@ -137,7 +137,7 @@ const UsersHomepage: NextPage = () => {
                 <Card hoverable>
                   <Text h1>
                     {statistics.data && (
-                      statistics.data.getStatistics[0].users
+                      statistics.data.statistics[0].users
                     )}
 
                     {!statistics.data && (
@@ -187,7 +187,7 @@ const UsersHomepage: NextPage = () => {
             <Centered>
               <div style={{ margin: '20px 0' }}>
                 <Pagination
-                  count={Math.ceil(statistics.data.getStatistics[0].users / 10)}
+                  count={Math.ceil(statistics.data.statistics[0].users / 10)}
                   onChange={onPageChange}
                 >
                   <Pagination.Next>

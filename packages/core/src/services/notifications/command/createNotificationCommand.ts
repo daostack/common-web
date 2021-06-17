@@ -15,6 +15,10 @@ const schema = z.object({
       .nonempty()
       .optional(),
 
+    payoutId: z.string()
+      .nonempty()
+      .optional(),
+
     proposalId: z.string()
       .nonempty()
       .optional(),

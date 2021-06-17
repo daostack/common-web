@@ -451,12 +451,17 @@ export type Report = BaseEntity & {
   status: ReportStatus;
   /** The Types of violation that this report is for */
   for: ReportFor;
+  /** The type of action that this done after the report review */
+  action?: Maybe<ReportAction>;
+  reviewAuthority?: Maybe<ReportAuditor>;
   /** The type of the report */
   type: ReportType;
   /** The note that the report has left for the content */
   note: Scalars['String'];
   /** The date on which the report was last reviewed if reviewed */
   reviewedOn?: Maybe<Scalars['DateTime']>;
+  reviewerId?: Maybe<Scalars['ID']>;
+  reviewer?: Maybe<User>;
   reporterId: Scalars['ID'];
   reporter: User;
   messageId?: Maybe<Scalars['UUID']>;
@@ -488,7 +493,7 @@ export enum ReportAction {
 
 export enum ReportStatus {
   Active = 'Active',
-  Clossed = 'Clossed'
+  Closed = 'Closed'
 }
 
 export enum ReportAuditor {
@@ -654,6 +659,7 @@ export type Proposal = {
   description?: Maybe<Scalars['String']>;
   /** The IP from which the proposal was created */
   ipAddress?: Maybe<Scalars['String']>;
+  canVote: Scalars['Boolean'];
   discussions: Array<Discussion>;
   /** The ID of the user who created the proposal */
   userId: Scalars['ID'];
@@ -787,6 +793,13 @@ export type Settings = {
   __typename?: 'Settings';
   /** List of all available permission for roles */
   permissions: Array<Maybe<Scalars['String']>>;
+  encryptionKey: EncryptionKey;
+};
+
+export type EncryptionKey = {
+  __typename?: 'EncryptionKey';
+  keyId: Scalars['String'];
+  publicKey: Scalars['String'];
 };
 
 export enum StatisticType {
@@ -832,6 +845,7 @@ export type Discussion = BaseEntity & {
   userId: Scalars['String'];
   /** The discussion creator */
   owner?: Maybe<User>;
+  messageCount: Scalars['Int'];
   messages: Array<DiscussionMessage>;
 };
 
@@ -1593,14 +1607,15 @@ export type Query = {
   common?: Maybe<Common>;
   commons?: Maybe<Array<Maybe<Common>>>;
   reports?: Maybe<Array<Maybe<Report>>>;
+  report?: Maybe<Report>;
   payout?: Maybe<Payout>;
   payouts?: Maybe<Array<Maybe<Payout>>>;
   payment?: Maybe<Payment>;
   payments?: Maybe<Array<Maybe<Payment>>>;
   proposal?: Maybe<Proposal>;
-  proposals?: Maybe<Array<Maybe<Proposal>>>;
+  proposals: Array<Maybe<Proposal>>;
   settings: Settings;
-  getStatistics?: Maybe<Array<Maybe<Statistic>>>;
+  statistics?: Maybe<Array<Maybe<Statistic>>>;
   discussion?: Maybe<Discussion>;
   discussions?: Maybe<Array<Maybe<Discussion>>>;
   notificationTemplateOptions?: Maybe<NotificationTemplateOptions>;
@@ -1666,6 +1681,11 @@ export type QueryReportsArgs = {
 };
 
 
+export type QueryReportArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type QueryPayoutArgs = {
   id: Scalars['ID'];
 };
@@ -1700,7 +1720,7 @@ export type QueryProposalsArgs = {
 };
 
 
-export type QueryGetStatisticsArgs = {
+export type QueryStatisticsArgs = {
   where?: Maybe<StatisticsWhereInput>;
 };
 
@@ -1763,6 +1783,7 @@ export type Mutation = {
   /** Create new proposal of Types JOIN. */
   createJoinProposal: Proposal;
   createFundingProposal: Proposal;
+  forceUpdateStatistics?: Maybe<Scalars['Boolean']>;
   createDiscussion: Discussion;
   createDiscussionMessage: DiscussionMessage;
   changeDiscussionSubscriptionType?: Maybe<DiscussionSubscription>;
@@ -2007,10 +2028,10 @@ export type ProposalSeachQueryVariables = Exact<{
 export type ProposalSeachQuery = (
   { __typename?: 'Query' }
   & {
-  proposals?: Maybe<Array<Maybe<(
+  proposals: Array<Maybe<(
     { __typename?: 'Proposal' }
     & Pick<Proposal, 'id' | 'title' | 'description' | 'type'>
-    )>>>
+    )>>
 }
   );
 
@@ -2132,16 +2153,34 @@ export type GetCommonsHomescreenDataQuery = (
 }
   );
 
+export type AllTimeStatisticsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllTimeStatisticsQuery = (
+  { __typename?: 'Query' }
+  & {
+  statistics?: Maybe<Array<Maybe<(
+    { __typename?: 'Statistic' }
+    & Pick<Statistic, 'users' | 'commons' | 'joinProposals' | 'fundingProposals'>
+    )>>>
+}
+  );
+
+export type RefreshStatisticsMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RefreshStatisticsMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'forceUpdateStatistics'>
+  );
+
 export type DashboardDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type DashboardDataQuery = (
   { __typename?: 'Query' }
   & {
-  getStatistics?: Maybe<Array<Maybe<(
-    { __typename?: 'Statistic' }
-    & Pick<Statistic, 'users' | 'commons' | 'joinProposals' | 'fundingProposals'>
-    )>>>, payouts?: Maybe<Array<Maybe<(
+  payouts?: Maybe<Array<Maybe<(
     { __typename?: 'Payout' }
     & Pick<Payout, 'id' | 'status' | 'description'>
     & {
@@ -2211,7 +2250,7 @@ export type GetProposalsSelectedForBatchQueryVariables = Exact<{
 export type GetProposalsSelectedForBatchQuery = (
   { __typename?: 'Query' }
   & {
-  proposals?: Maybe<Array<Maybe<(
+  proposals: Array<Maybe<(
     { __typename?: 'Proposal' }
     & Pick<Proposal, 'id' | 'state' | 'title' | 'description'>
     & {
@@ -2226,7 +2265,7 @@ export type GetProposalsSelectedForBatchQuery = (
       & Pick<FundingProposal, 'fundingState' | 'amount'>
       )>
   }
-    )>>>
+    )>>
 }
   );
 
@@ -2242,6 +2281,21 @@ export type AvailableWiresQuery = (
     { __typename?: 'Wire' }
     & Pick<Wire, 'id' | 'description'>
     )>>>
+}
+  );
+
+export type CreateUserWireMutationVariables = Exact<{
+  input: CreateWireInput;
+}>;
+
+
+export type CreateUserWireMutation = (
+  { __typename?: 'Mutation' }
+  & {
+  createWire?: Maybe<(
+    { __typename?: 'Wire' }
+    & Pick<Wire, 'id'>
+    )>
 }
   );
 
@@ -2293,7 +2347,7 @@ export type PayoutsPageDataQueryVariables = Exact<{ [key: string]: never; }>;
 export type PayoutsPageDataQuery = (
   { __typename?: 'Query' }
   & {
-  proposals?: Maybe<Array<Maybe<(
+  proposals: Array<Maybe<(
     { __typename?: 'Proposal' }
     & Pick<Proposal, 'id' | 'userId' | 'commonId' | 'title' | 'description'>
     & {
@@ -2302,7 +2356,7 @@ export type PayoutsPageDataQuery = (
       & Pick<FundingProposal, 'amount'>
       )>
   }
-    )>>>, payouts?: Maybe<Array<Maybe<(
+    )>>, payouts?: Maybe<Array<Maybe<(
     { __typename?: 'Payout' }
     & Pick<Payout, 'id' | 'amount' | 'createdAt' | 'updatedAt' | 'description'>
     )>>>
@@ -2546,7 +2600,7 @@ export type GetProposalsHomescreenQueryVariables = Exact<{
 export type GetProposalsHomescreenQuery = (
   { __typename?: 'Query' }
   & {
-  funding?: Maybe<Array<Maybe<(
+  funding: Array<Maybe<(
     { __typename?: 'Proposal' }
     & Pick<Proposal, 'id' | 'commonId' | 'votesFor' | 'votesAgainst' | 'title' | 'description'>
     & {
@@ -2555,7 +2609,7 @@ export type GetProposalsHomescreenQuery = (
       & Pick<FundingProposal, 'amount'>
       )>
   }
-    )>>>, join?: Maybe<Array<Maybe<(
+    )>>, join: Array<Maybe<(
     { __typename?: 'Proposal' }
     & Pick<Proposal, 'id' | 'commonId' | 'title' | 'description'>
     & {
@@ -2564,7 +2618,69 @@ export type GetProposalsHomescreenQuery = (
       & Pick<JoinProposal, 'funding' | 'fundingType'>
       )>
   }
-    )>>>
+    )>>
+}
+  );
+
+export type ReportDetailsQueryVariables = Exact<{
+  reportId: Scalars['ID'];
+}>;
+
+
+export type ReportDetailsQuery = (
+  { __typename?: 'Query' }
+  & {
+  report?: Maybe<(
+    { __typename?: 'Report' }
+    & Pick<Report, 'id' | 'createdAt' | 'type' | 'action' | 'status' | 'for' | 'note' | 'reviewedOn' | 'reviewAuthority'>
+    & {
+    reporter: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'photo' | 'firstName' | 'lastName'>
+      ), reviewer?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'photo' | 'firstName' | 'lastName'>
+      )>, message?: Maybe<(
+      { __typename?: 'DiscussionMessage' }
+      & Pick<DiscussionMessage, 'message'>
+      & {
+      owner: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'photo' | 'firstName' | 'lastName'>
+        )
+    }
+      )>, proposal?: Maybe<(
+      { __typename?: 'Proposal' }
+      & Pick<Proposal, 'title' | 'description' | 'files' | 'images'>
+      & {
+      member: (
+        { __typename?: 'CommonMember' }
+        & {
+        user?: Maybe<(
+          { __typename?: 'User' }
+          & Pick<User, 'id' | 'photo' | 'firstName' | 'lastName'>
+          )>
+      }
+        )
+    }
+      )>
+  }
+    )>
+}
+  );
+
+export type ActOnReportMutationVariables = Exact<{
+  input: ActOnReportInput;
+}>;
+
+
+export type ActOnReportMutation = (
+  { __typename?: 'Mutation' }
+  & {
+  actOnReport?: Maybe<(
+    { __typename?: 'Report' }
+    & Pick<Report, 'id'>
+    )>
 }
   );
 
@@ -2579,6 +2695,12 @@ export type GetReportsQuery = (
   reports?: Maybe<Array<Maybe<(
     { __typename?: 'Report' }
     & Pick<Report, 'id' | 'status' | 'type'>
+    & {
+    reporter: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'photo' | 'displayName'>
+      )
+  }
     )>>>
 }
   );
@@ -3076,14 +3198,75 @@ export function useGetCommonsHomescreenDataLazyQuery(baseOptions?: Apollo.LazyQu
 export type GetCommonsHomescreenDataQueryHookResult = ReturnType<typeof useGetCommonsHomescreenDataQuery>;
 export type GetCommonsHomescreenDataLazyQueryHookResult = ReturnType<typeof useGetCommonsHomescreenDataLazyQuery>;
 export type GetCommonsHomescreenDataQueryResult = Apollo.QueryResult<GetCommonsHomescreenDataQuery, GetCommonsHomescreenDataQueryVariables>;
-export const DashboardDataDocument = gql`
-  query dashboardData {
-    getStatistics(where: {type: AllTime}) {
+export const AllTimeStatisticsDocument = gql`
+  query AllTimeStatistics {
+    statistics(where: {type: AllTime}) {
       users
       commons
       joinProposals
       fundingProposals
     }
+  }
+`;
+
+/**
+ * __useAllTimeStatisticsQuery__
+ *
+ * To run a query within a React component, call `useAllTimeStatisticsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllTimeStatisticsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllTimeStatisticsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAllTimeStatisticsQuery(baseOptions?: Apollo.QueryHookOptions<AllTimeStatisticsQuery, AllTimeStatisticsQueryVariables>) {
+  return Apollo.useQuery<AllTimeStatisticsQuery, AllTimeStatisticsQueryVariables>(AllTimeStatisticsDocument, baseOptions);
+}
+
+export function useAllTimeStatisticsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllTimeStatisticsQuery, AllTimeStatisticsQueryVariables>) {
+  return Apollo.useLazyQuery<AllTimeStatisticsQuery, AllTimeStatisticsQueryVariables>(AllTimeStatisticsDocument, baseOptions);
+}
+
+export type AllTimeStatisticsQueryHookResult = ReturnType<typeof useAllTimeStatisticsQuery>;
+export type AllTimeStatisticsLazyQueryHookResult = ReturnType<typeof useAllTimeStatisticsLazyQuery>;
+export type AllTimeStatisticsQueryResult = Apollo.QueryResult<AllTimeStatisticsQuery, AllTimeStatisticsQueryVariables>;
+export const RefreshStatisticsDocument = gql`
+  mutation RefreshStatistics {
+    forceUpdateStatistics
+  }
+`;
+export type RefreshStatisticsMutationFn = Apollo.MutationFunction<RefreshStatisticsMutation, RefreshStatisticsMutationVariables>;
+
+/**
+ * __useRefreshStatisticsMutation__
+ *
+ * To run a mutation, you first call `useRefreshStatisticsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRefreshStatisticsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [refreshStatisticsMutation, { data, loading, error }] = useRefreshStatisticsMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRefreshStatisticsMutation(baseOptions?: Apollo.MutationHookOptions<RefreshStatisticsMutation, RefreshStatisticsMutationVariables>) {
+  return Apollo.useMutation<RefreshStatisticsMutation, RefreshStatisticsMutationVariables>(RefreshStatisticsDocument, baseOptions);
+}
+
+export type RefreshStatisticsMutationHookResult = ReturnType<typeof useRefreshStatisticsMutation>;
+export type RefreshStatisticsMutationResult = Apollo.MutationResult<RefreshStatisticsMutation>;
+export type RefreshStatisticsMutationOptions = Apollo.BaseMutationOptions<RefreshStatisticsMutation, RefreshStatisticsMutationVariables>;
+export const DashboardDataDocument = gql`
+  query dashboardData {
     payouts(where: {isPendingApprover: true}) {
       id
       status
@@ -3283,6 +3466,38 @@ export function useAvailableWiresLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type AvailableWiresQueryHookResult = ReturnType<typeof useAvailableWiresQuery>;
 export type AvailableWiresLazyQueryHookResult = ReturnType<typeof useAvailableWiresLazyQuery>;
 export type AvailableWiresQueryResult = Apollo.QueryResult<AvailableWiresQuery, AvailableWiresQueryVariables>;
+export const CreateUserWireDocument = gql`
+  mutation CreateUserWire($input: CreateWireInput!) {
+    createWire(input: $input) {
+      id
+    }
+  }
+`;
+export type CreateUserWireMutationFn = Apollo.MutationFunction<CreateUserWireMutation, CreateUserWireMutationVariables>;
+
+/**
+ * __useCreateUserWireMutation__
+ *
+ * To run a mutation, you first call `useCreateUserWireMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUserWireMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUserWireMutation, { data, loading, error }] = useCreateUserWireMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateUserWireMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserWireMutation, CreateUserWireMutationVariables>) {
+  return Apollo.useMutation<CreateUserWireMutation, CreateUserWireMutationVariables>(CreateUserWireDocument, baseOptions);
+}
+export type CreateUserWireMutationHookResult = ReturnType<typeof useCreateUserWireMutation>;
+export type CreateUserWireMutationResult = Apollo.MutationResult<CreateUserWireMutation>;
+export type CreateUserWireMutationOptions = Apollo.BaseMutationOptions<CreateUserWireMutation, CreateUserWireMutationVariables>;
 export const CreatePayoutDocument = gql`
   mutation createPayout($input: CreatePayoutInput!) {
     createPayout(input: $input) {
@@ -3944,20 +4159,131 @@ export const GetProposalsHomescreenDocument = gql`
 export function useGetProposalsHomescreenQuery(baseOptions: Apollo.QueryHookOptions<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>) {
   return Apollo.useQuery<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>(GetProposalsHomescreenDocument, baseOptions);
 }
-
 export function useGetProposalsHomescreenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>) {
   return Apollo.useLazyQuery<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>(GetProposalsHomescreenDocument, baseOptions);
 }
-
 export type GetProposalsHomescreenQueryHookResult = ReturnType<typeof useGetProposalsHomescreenQuery>;
 export type GetProposalsHomescreenLazyQueryHookResult = ReturnType<typeof useGetProposalsHomescreenLazyQuery>;
 export type GetProposalsHomescreenQueryResult = Apollo.QueryResult<GetProposalsHomescreenQuery, GetProposalsHomescreenQueryVariables>;
+export const ReportDetailsDocument = gql`
+  query reportDetails($reportId: ID!) {
+    report(id: $reportId) {
+      id
+      createdAt
+      type
+      action
+      status
+      for
+      note
+      reviewedOn
+      reviewAuthority
+      reporter {
+        id
+        photo
+        firstName
+        lastName
+      }
+      reviewer {
+        id
+        photo
+        firstName
+        lastName
+      }
+      message {
+        message
+        owner {
+          id
+          photo
+          firstName
+          lastName
+        }
+      }
+      proposal {
+        title
+        description
+        files
+        images
+        member {
+          user {
+            id
+            photo
+            firstName
+            lastName
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useReportDetailsQuery__
+ *
+ * To run a query within a React component, call `useReportDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useReportDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useReportDetailsQuery({
+ *   variables: {
+ *      reportId: // value for 'reportId'
+ *   },
+ * });
+ */
+export function useReportDetailsQuery(baseOptions: Apollo.QueryHookOptions<ReportDetailsQuery, ReportDetailsQueryVariables>) {
+  return Apollo.useQuery<ReportDetailsQuery, ReportDetailsQueryVariables>(ReportDetailsDocument, baseOptions);
+}
+export function useReportDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ReportDetailsQuery, ReportDetailsQueryVariables>) {
+  return Apollo.useLazyQuery<ReportDetailsQuery, ReportDetailsQueryVariables>(ReportDetailsDocument, baseOptions);
+}
+export type ReportDetailsQueryHookResult = ReturnType<typeof useReportDetailsQuery>;
+export type ReportDetailsLazyQueryHookResult = ReturnType<typeof useReportDetailsLazyQuery>;
+export type ReportDetailsQueryResult = Apollo.QueryResult<ReportDetailsQuery, ReportDetailsQueryVariables>;
+export const ActOnReportDocument = gql`
+  mutation actOnReport($input: ActOnReportInput!) {
+    actOnReport(input: $input) {
+      id
+    }
+  }
+`;
+export type ActOnReportMutationFn = Apollo.MutationFunction<ActOnReportMutation, ActOnReportMutationVariables>;
+
+/**
+ * __useActOnReportMutation__
+ *
+ * To run a mutation, you first call `useActOnReportMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useActOnReportMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [actOnReportMutation, { data, loading, error }] = useActOnReportMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useActOnReportMutation(baseOptions?: Apollo.MutationHookOptions<ActOnReportMutation, ActOnReportMutationVariables>) {
+  return Apollo.useMutation<ActOnReportMutation, ActOnReportMutationVariables>(ActOnReportDocument, baseOptions);
+}
+export type ActOnReportMutationHookResult = ReturnType<typeof useActOnReportMutation>;
+export type ActOnReportMutationResult = Apollo.MutationResult<ActOnReportMutation>;
+export type ActOnReportMutationOptions = Apollo.BaseMutationOptions<ActOnReportMutation, ActOnReportMutationVariables>;
 export const GetReportsDocument = gql`
   query getReports($pagination: PaginateInput!) {
     reports(pagination: $pagination) {
       id
       status
       type
+      reporter {
+        id
+        photo
+        displayName
+      }
     }
   }
 `;
@@ -3981,11 +4307,9 @@ export const GetReportsDocument = gql`
 export function useGetReportsQuery(baseOptions: Apollo.QueryHookOptions<GetReportsQuery, GetReportsQueryVariables>) {
   return Apollo.useQuery<GetReportsQuery, GetReportsQueryVariables>(GetReportsDocument, baseOptions);
 }
-
 export function useGetReportsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetReportsQuery, GetReportsQueryVariables>) {
   return Apollo.useLazyQuery<GetReportsQuery, GetReportsQueryVariables>(GetReportsDocument, baseOptions);
 }
-
 export type GetReportsQueryHookResult = ReturnType<typeof useGetReportsQuery>;
 export type GetReportsLazyQueryHookResult = ReturnType<typeof useGetReportsLazyQuery>;
 export type GetReportsQueryResult = Apollo.QueryResult<GetReportsQuery, GetReportsQueryVariables>;

@@ -371,12 +371,17 @@ type Report implements BaseEntity {
   status: ReportStatus!
   """The Types of violation that this report is for"""
   for: ReportFor!
+  """The type of action that this done after the report review"""
+  action: ReportAction
+  reviewAuthority: ReportAuditor
   """The type of the report"""
   type: ReportType!
   """The note that the report has left for the content"""
   note: String!
   """The date on which the report was last reviewed if reviewed"""
   reviewedOn: DateTime
+  reviewerId: ID
+  reviewer: User
   reporterId: ID!
   reporter: User!
   messageId: UUID
@@ -408,7 +413,7 @@ enum ReportAction {
 
 enum ReportStatus {
   Active
-  Clossed
+  Closed
 }
 
 enum ReportAuditor {
@@ -570,6 +575,7 @@ type Proposal {
   description: String
   """The IP from which the proposal was created"""
   ipAddress: String
+  canVote: Boolean!
   discussions(take: Int, skip: Int): [Discussion!]!
   """The ID of the user who created the proposal"""
   userId: ID!
@@ -694,6 +700,12 @@ input ProposalWhereUniqueInput {
 type Settings {
   """List of all available permission for roles"""
   permissions: [String]!
+  encryptionKey: EncryptionKey!
+}
+
+type EncryptionKey {
+  keyId: String!
+  publicKey: String!
 }
 
 enum StatisticType {
@@ -737,6 +749,7 @@ type Discussion implements BaseEntity {
   userId: String!
   """The discussion creator"""
   owner: User
+  messageCount: Int!
   messages(take: Int = 10, skip: Int = 0, orderBy: DiscussionMessagesOrderByInput = {createdAt: asc}): [DiscussionMessage!]!
 }
 
@@ -1473,14 +1486,15 @@ type Query {
   common(where: CommonWhereUniqueInput!): Common
   commons(paginate: PaginateInput, where: CommonWhereInput): [Common]
   reports(where: ReportWhereInput, pagination: PaginateInput): [Report]
+  report(id: ID!): Report
   payout(id: ID!): Payout
   payouts(paginate: PaginateInput = {take: 10, skip: 0}, where: PayoutWhereInput): [Payout]
   payment(id: ID): Payment
   payments(paginate: PaginateInput, where: PaymentsWhereInput): [Payment]
   proposal(where: ProposalWhereUniqueInput!): Proposal
-  proposals(where: ProposalWhereInput, fundingWhere: FundingProposalWhereInput, paginate: PaginateInput): [Proposal]
+  proposals(where: ProposalWhereInput, fundingWhere: FundingProposalWhereInput, paginate: PaginateInput): [Proposal]!
   settings: Settings!
-  getStatistics(where: StatisticsWhereInput): [Statistic]
+  statistics(where: StatisticsWhereInput): [Statistic]
   discussion(id: ID!): Discussion
   discussions(where: DiscussionWhereInput, paginate: PaginateInput): [Discussion]
   notificationTemplateOptions: NotificationTemplateOptions
@@ -1518,6 +1532,7 @@ type Mutation {
   """Create new proposal of Types JOIN."""
   createJoinProposal(input: CreateJoinProposalInput!): Proposal!
   createFundingProposal(input: CreateFundingProposalInput!): Proposal!
+  forceUpdateStatistics: Boolean
   createDiscussion(input: CreateDiscussionInput!): Discussion!
   createDiscussionMessage(input: CreateDiscussionMessageInput!): DiscussionMessage!
   changeDiscussionSubscriptionType(

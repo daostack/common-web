@@ -1,17 +1,15 @@
-import { Event } from '@prisma/client';
-
 import { statisticService, logger } from '@common/core';
-import { Queues } from '../queues';
+import { EventHookHandler } from './index';
 
-Queues.EventQueue.on('completed', async (job, result: Event) => {
-  if (result.type === 'CommonCreated') {
+export const onCommonCreated: EventHookHandler = async (data, event) => {
+  if (event.type === 'CommonCreated') {
     logger.info('Executing `onCommonCreated`');
 
     // Update the statistics
-    await statisticService.updateAllTime({
+    await statisticService.updateAll({
       commons: {
         increment: 1
       }
     });
   }
-});
+};

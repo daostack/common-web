@@ -1,5 +1,5 @@
 import { objectType } from 'nexus';
-import { authorizationService } from '@common/core';
+import { authorizationService, voteService } from '@common/core';
 
 export const ProposalType = objectType({
   name: 'Proposal',
@@ -45,6 +45,15 @@ export const ProposalType = objectType({
         return authorizationService.can(await ctx.getUserId(), 'admin.proposals.read.ipAddress');
       },
       description: 'The IP from which the proposal was created'
+    });
+
+    t.nonNull.boolean('canVote', {
+      complexity: 50,
+      resolve: async (root, args, ctx) => {
+        const userId = await ctx.getUserId();
+
+        return voteService.canVote(userId, root.id);
+      }
     });
   }
 });

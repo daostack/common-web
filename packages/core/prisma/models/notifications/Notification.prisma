@@ -16,6 +16,7 @@ model Notification {
 
   // Optional Links
   common     Common?
+  payout     Payout?
   proposal   Proposal?
   discussion Discussion?
 }

@@ -13,7 +13,14 @@ export interface INotificationsQueueJob {
 export type NotificationsQueueJob = 'process';
 
 // Create the queue
-export const NotificationQueue = Queue(Queues.NotificationsQueue);
+export const NotificationQueue = Queue(Queues.NotificationsQueue, {
+  redis: {
+    host: process.env['REDIS_HOST'],
+    port: Number(process.env['REDIS_PORT']),
+    username: process.env['REDIS_USERNAME'],
+    password: process.env['REDIS_PASSWORD']
+  }
+});
 
 // Create a way to add new job
 export const addNotificationJob = (job: NotificationsQueueJob, notification: Notification, options?: JobOptions): void => {

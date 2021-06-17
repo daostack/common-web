@@ -44,44 +44,43 @@ export const actOnReportCommand = async (payload: z.infer<typeof schema>): Promi
   }
 
   // Update the message and report accordingly
-  const [report, item] = await prisma.$transaction([
-    prisma.report.update({
-      where: {
-        id: payload.reportId
-      },
-      data: {
-        reviewedOn: new Date(),
-        reviewerId: payload.userId,
-        reviewAuthority: authority,
+  const report = await prisma.report.update({
+    where: {
+      id: payload.reportId
+    },
+    data: {
+      reviewedOn: new Date(),
+      reviewerId: payload.userId,
+      reviewAuthority: authority,
 
-        status: ReportStatus.Closed,
-        action: payload.action
-      }
-    }),
-    reportWithDiscussionAndCommonIds.messageId
-      ? prisma.discussionMessage
-        .update({
-          where: {
-            id: reportWithDiscussionAndCommonIds.messageId!
-          },
-          data: {
-            flag: payload.action === ReportAction.Respected
-              ? ReportFlag.Hidden
-              : ReportFlag.Clear
-          }
-        })
-      : prisma.proposal
-        .update({
-          where: {
-            id: reportWithDiscussionAndCommonIds.proposalId!
-          },
-          data: {
-            flag: payload.action === ReportAction.Respected
-              ? ReportFlag.Hidden
-              : ReportFlag.Clear
-          }
-        })
-  ]);
+      status: ReportStatus.Closed,
+      action: payload.action
+    }
+  });
+
+  const item = reportWithDiscussionAndCommonIds.messageId
+    ? await prisma.discussionMessage
+      .update({
+        where: {
+          id: reportWithDiscussionAndCommonIds.messageId!
+        },
+        data: {
+          flag: payload.action === ReportAction.Respected
+            ? ReportFlag.Hidden
+            : ReportFlag.Clear
+        }
+      })
+    : await prisma.proposal
+      .update({
+        where: {
+          id: reportWithDiscussionAndCommonIds.proposalId!
+        },
+        data: {
+          flag: payload.action === ReportAction.Respected
+            ? ReportFlag.Hidden
+            : ReportFlag.Clear
+        }
+      });
 
   logger.debug('Successfully acted on report');
 
