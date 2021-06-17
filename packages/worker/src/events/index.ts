@@ -9,9 +9,9 @@ import { onFundingRequestCreated } from './onFundingRequestCreated';
 import { onDiscussionMessageCreated } from './onDiscussionMessageCreated';
 
 
-export type EventHandler = (data: any, event: Event) => void | Promise<void>;
+export type EventHookHandler = (data: any, event: Event) => void | Promise<void>;
 
-export const eventHandlers: EventHandler[] = [
+export const eventHookHandlers: EventHookHandler[] = [
   onCommonCreated,
   onDiscussionCreated,
   onDiscussionMessageCreated,

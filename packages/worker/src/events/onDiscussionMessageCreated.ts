@@ -1,7 +1,7 @@
 import { statisticService } from '@common/core';
-import { EventHandler } from './index';
+import { EventHookHandler } from './index';
 
-export const onDiscussionMessageCreated: EventHandler = async (data, event) => {
+export const onDiscussionMessageCreated: EventHookHandler = async (data, event) => {
   if (event.type === 'DiscussionMessageCreated') {
     // Update the statistics
     await statisticService.updateAll({

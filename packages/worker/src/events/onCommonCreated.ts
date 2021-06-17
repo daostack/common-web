@@ -1,7 +1,7 @@
 import { statisticService, logger } from '@common/core';
-import { EventHandler } from './index';
+import { EventHookHandler } from './index';
 
-export const onCommonCreated: EventHandler = async (data, event) => {
+export const onCommonCreated: EventHookHandler = async (data, event) => {
   if (event.type === 'CommonCreated') {
     logger.info('Executing `onCommonCreated`');
 

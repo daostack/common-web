@@ -1,7 +1,7 @@
-import { EventHandler } from './index';
+import { EventHookHandler } from './index';
 import { statisticService } from '@common/core';
 
-export const onJoinRequestCreated: EventHandler = async (data, event) => {
+export const onJoinRequestCreated: EventHookHandler = async (data, event) => {
   if (event.type === 'JoinRequestCreated') {
     // Update the statistics
     await statisticService.updateAll({

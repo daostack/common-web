@@ -56,8 +56,5 @@ The same applies to the `worker` project
 
 ## Guides
 
-[**Authorization Guide**](/docs/guides/authorization.md) - How and where to handle the authorization
-=======
-
-#### Setting up the project
-
+[**Authorization Guide**](/docs/guides/authorization.md) - How and where to handle the authorization <br />
+[**Event Hooks Guide**](/docs/guides/event-hooks.md) - How and where register and create hooks that run on events <br />
