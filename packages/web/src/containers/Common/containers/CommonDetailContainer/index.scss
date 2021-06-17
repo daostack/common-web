@@ -14,7 +14,8 @@
           position: absolute;
           right: 0;
           bottom: 0;
-          width: 100%;
+          width: calc(100% + 4rem);
+          transform: translateX(2rem);
           height: 100%;
           object-fit: fill;
           background-color: #0b2046;
@@ -83,7 +84,7 @@
             border-bottom: 4px solid;
             border-bottom-color: transparent;
             padding-bottom: 20px;
-            margin-right: 25px;
+            margin-right: 3rem;
             &.active {
               border-bottom-color: $purple;
               color: $purple;
@@ -185,10 +186,12 @@
 
               &.sticky {
                 position: fixed;
-                right: 10px;
                 z-index: 1;
                 bottom: 15px;
-                width: 335px;
+                width: 90%;
+                transform: translateX(-50%);
+                margin-right: unset;
+                left: 50%;
               }
             }
           }

@@ -43,6 +43,8 @@
     background-position-y: unset;
     > span {
       padding: 30px;
+      font-size: $xsmall;
+      padding-top: 10px;
     }
     .qr-code-wrapper {
       margin-bottom: 50px;
