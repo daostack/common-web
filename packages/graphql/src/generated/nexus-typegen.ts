@@ -783,6 +783,7 @@ export interface NexusGenFieldTypes {
     links: NexusGenScalars['JSON'] | null; // JSON
     members: Array<NexusGenRootTypes['CommonMember'] | null>; // [CommonMember]!
     name: string; // String!
+    payments: NexusGenRootTypes['Payment'][]; // [Payment!]!
     proposals: NexusGenRootTypes['Proposal'][]; // [Proposal!]!
     raised: number; // Int!
     reports: NexusGenRootTypes['Report'][]; // [Report!]!
@@ -1235,6 +1236,7 @@ export interface NexusGenFieldTypeNames {
     links: 'JSON'
     members: 'CommonMember'
     name: 'String'
+    payments: 'Payment'
     proposals: 'Proposal'
     raised: 'Int'
     reports: 'Report'
@@ -1678,6 +1680,10 @@ export interface NexusGenArgTypes {
       orderBy?: NexusGenInputs['CommonMemberOrderByInput'] | null; // CommonMemberOrderByInput
       skip?: number | null; // Int
       take?: number | null; // Int
+    }
+    payments: { // args
+      paginate: NexusGenInputs['PaginateInput'] | null; // PaginateInput
+      where?: NexusGenInputs['PaymentsWhereInput'] | null; // PaymentsWhereInput
     }
     proposals: { // args
       paginate?: NexusGenInputs['PaginateInput'] | null; // PaginateInput

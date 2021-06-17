@@ -78,6 +78,9 @@ type Common {
 
   """The name of the common as provided"""
   name: String!
+
+  """List of payments made for funding this common"""
+  payments(paginate: PaginateInput = {skip: 0, take: 10}, where: PaymentsWhereInput): [Payment!]!
   proposals(paginate: PaginateInput, where: ProposalWhereInput): [Proposal!]!
 
   """The total amount of money that the common has raised. In cents"""

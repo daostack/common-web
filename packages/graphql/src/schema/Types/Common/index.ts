@@ -11,6 +11,7 @@ import { GetCommonsQuery } from './Queries/GetCommons.query';
 import { CommonEventsExtension } from './Extensions/CommonEvents.extension';
 import { CommonReportsExtension } from './Extensions/CommonReports.extension';
 import { CommonUpdatesExtension } from './Extensions/CommonUpdates.extension';
+import { CommonPaymentsExtension } from './Extensions/CommonPayments.extension';
 import { CommonProposalsExtension } from './Extensions/CommonProposals.extension';
 import { CommonDiscussionsExtension } from './Extensions/CommonDiscussions.extension';
 import { CommonCommonMemberExtension } from './Extensions/CommonCommonMember.extension';
@@ -48,6 +49,7 @@ export const CommonTypes = [
   CommonEventsExtension,
   CommonReportsExtension,
   CommonUpdatesExtension,
+  CommonPaymentsExtension,
   CommonProposalsExtension,
   CommonDiscussionsExtension,
   CommonCommonMemberExtension,
