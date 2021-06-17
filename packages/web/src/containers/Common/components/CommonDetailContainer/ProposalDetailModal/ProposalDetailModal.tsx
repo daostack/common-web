@@ -51,7 +51,9 @@ export default function ProposalDetailModal({ proposal, onOpenJoinModal }: Discu
             <div className="days-ago">{getDaysAgo(date, proposal.createdAt)} </div>
           </div>
           <div className="discussion-information-wrapper">
-            <div className="discussion-name">{proposal.description.title}</div>
+            <div className="discussion-name" title={proposal.description.title}>
+              {proposal.description.title}
+            </div>
             <div className="requested-amount">
               {requestedAmount === "$0" ? (
                 "No funding requested"

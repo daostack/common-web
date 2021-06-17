@@ -35,7 +35,9 @@ export default function DiscussionDetailModal({ disscussion, onOpenJoinModal }: 
             <div className="days-ago">{getDaysAgo(date, disscussion.createTime)} </div>
           </div>
           <div className="discussion-information-wrapper">
-            <div className="discussion-name">{disscussion.title}</div>
+            <div className="discussion-name" title={disscussion.title}>
+              {disscussion.title}
+            </div>
           </div>
           <div className="line"></div>
         </div>
