@@ -21,6 +21,8 @@
   overflow-x: hidden;
   overflow-y: auto;
   outline: 0;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .modal {
@@ -35,11 +37,7 @@
   &.discussions,
   &.proposals,
   &.history {
-    max-width: 90%;
-  }
-
-  &.join-effort {
-    margin-top: calc(50% - 540px);
+    max-width: $element-max-width;
   }
 
   .close-wrapper {
@@ -72,38 +70,6 @@
     .close-wrapper {
       right: 15px;
       top: 15px;
-    }
-  }
-}
-
-@media only screen and (max-width: 1280px) {
-  .modal {
-    &.join-effort {
-      margin-top: calc(50% - 570px);
-    }
-  }
-}
-
-@media only screen and (max-width: 1360px) {
-  .modal {
-    &.join-effort {
-      margin-top: calc(50% - 570px);
-    }
-  }
-}
-
-@media only screen and (max-width: 1680px) {
-  .modal {
-    &.join-effort {
-      margin-top: calc(50% - 580px);
-    }
-  }
-}
-
-@media only screen and (max-width: 1980px) {
-  .modal {
-    &.join-effort {
-      margin-top: calc(50% - 680px);
     }
   }
 }

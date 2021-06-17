@@ -41,7 +41,10 @@ body {
     padding-bottom: 20px;
     min-height: 350px;
     margin-top: $header-height;
-
+    &.landing-page {
+      max-width: $element-max-width;
+      margin: auto;
+    }
     .page-title {
       color: $deep-blue;
     }
