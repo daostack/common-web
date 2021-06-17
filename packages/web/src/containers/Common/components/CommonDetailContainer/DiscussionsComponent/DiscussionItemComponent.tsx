@@ -34,7 +34,7 @@ export default function DiscussionItemComponent({ discussion, loadDisscussionDet
         </div>
       </div>
       <div className="discussion-content">
-        <div className="title" onClick={() => loadDisscussionDetail(discussion)}>
+        <div className="title" onClick={() => loadDisscussionDetail(discussion)} title={discussion.title}>
           {discussion.title}
         </div>
         <div className={`description ${readMore}`}>{discussion.message}</div>

@@ -33,7 +33,7 @@ export default function ProposalItemComponent({ proposal, loadProposalDetail }: 
         </div>
       )}
       <div className="proposal-charts-wrapper">
-        <div className="proposal-title" onClick={() => loadProposalDetail(proposal)}>
+        <div className="proposal-title" onClick={() => loadProposalDetail(proposal)} title={proposal.description.title}>
           {proposal.description.title}
         </div>
         <div className="requested-amount">

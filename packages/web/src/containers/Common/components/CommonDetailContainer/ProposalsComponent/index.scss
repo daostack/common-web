@@ -68,6 +68,12 @@
         color: #001a36;
         margin-bottom: 24px;
         cursor: pointer;
+        overflow-wrap: break-word;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
         &:hover {
           color: #7786ff;
         }
@@ -131,6 +137,12 @@
         font-weight: bold;
         color: #7786ff;
         margin-bottom: 16px;
+        overflow-wrap: break-word;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .description {
         font-size: 16px;
