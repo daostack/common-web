@@ -31,5 +31,5 @@ COPY --from=0 /app/packages/core/dist /app/packages/core/dist
 COPY --from=0 /app/packages/graphql/dist /app/packages/graphql/dist
 COPY --from=0 /app/packages/worker/dist /app/packages/worker/dist
 RUN yarn
-RUN yarn global add prisma@^2.21.1 && cd packages/core && yarn db:generate && yarn global remove prisma
+RUN yarn global add prisma@^2.21.1 && cd packages/core && yarn db:generate
 ENTRYPOINT ["/app/entrypoint.sh"]

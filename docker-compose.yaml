@@ -12,7 +12,7 @@ services:
     hostname: postgres
     restart: unless-stopped
     environment:
-      POSTGRES_PASSWORD: 123456
+      POSTGRES_PASSWORD: 12345678
       POSTGRES_USER: postgres
     volumes:
       - ./:/var/lib/postgres:rw
@@ -26,9 +26,8 @@ services:
       - postgres
       - redis
       - init-db
-    command: ["yarn", "run", "start"]
+    command: worker
     env_file: [".env"]
-    working_dir: /app/packages/worker
     networks: [internal, host]
   graphql:
     image: common-backend-alpine
@@ -39,16 +38,15 @@ services:
       - postgres
       - redis
       - init-db
-    command: ["yarn", "run", "start"]
+    command: graphql
     env_file: [".env"]
-    working_dir: /app/packages/graphql
     networks: [internal, host]
   init-db:
     image: common-backend-alpine
     restart: "no"
     working_dir: /app/packages/core
     env_file: [".env"]
-    command: ["yarn", "run", "db:sync"]
+    command: init-db
     networks: [internal]
 networks:
   internal:

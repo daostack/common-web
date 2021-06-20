@@ -5,6 +5,9 @@ then
 elif [ $1 == "graphql" ];
 then
   cd ./packages/graphql && dumb-init node -r dotenv/config dist/index.js
+elif [ $1 == "init-db" ];
+then
+  cd /app/packages/core && yarn run db:sync
 else
   echo "Argument not supported"
   exit 1
