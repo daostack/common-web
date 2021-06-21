@@ -1,9 +1,19 @@
 enum NotificationType {
-  JoinRequestAccepted
-  JoinRequestRejected
-
-  FundingRequestAccepted
-  FundingRequestRejected
-
   General
+
+  CommonWhitelisted
+  CommonCreated
+  FundingRequestCreated
+  FundingRequestAccepted
+  FundingRequestExecuted
+  FundingRequestRejected
+  MessageCreated
+  CommonMemberAdded
+  RequestToJoinCreated
+  RequestToJoinRejected
+  DiscussionCreated
+  ProposalReported
+  DiscussionReported
+  DiscussionMessageReported
+  WelcomeNotification
 }

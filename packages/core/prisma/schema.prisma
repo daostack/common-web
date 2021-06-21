@@ -807,8 +807,7 @@ model Event {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  type      EventType
-  processed Boolean   @default(false)
+  type EventType
 
   payload Json?
 
@@ -881,13 +880,23 @@ enum NotificationLanguage {
 }
 
 enum NotificationType {
-  JoinRequestAccepted
-  JoinRequestRejected
-
-  FundingRequestAccepted
-  FundingRequestRejected
-
   General
+
+  CommonWhitelisted
+  CommonCreated
+  FundingRequestCreated
+  FundingRequestAccepted
+  FundingRequestExecuted
+  FundingRequestRejected
+  MessageCreated
+  CommonMemberAdded
+  RequestToJoinCreated
+  RequestToJoinRejected
+  DiscussionCreated
+  ProposalReported
+  DiscussionReported
+  DiscussionMessageReported
+  WelcomeNotification
 }
 
 enum NotificationSeenStatus {

@@ -31,3 +31,5 @@ export { subscriptionService } from './services/subscriptions';
 export { authorizationService } from './services/authorization';
 
 export { FirebaseToolkit };
+
+export * as Prisma from '@prisma/client';
