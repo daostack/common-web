@@ -1,4 +1,4 @@
-import { Event } from '@prisma/client';
+import { Prisma } from '@common/core';
 
 import { onUserCreated } from './onUserCreated';
 import { onCommonCreated } from './onCommonCreated';
@@ -9,7 +9,7 @@ import { onFundingRequestCreated } from './onFundingRequestCreated';
 import { onDiscussionMessageCreated } from './onDiscussionMessageCreated';
 
 
-export type EventHookHandler = (data: any, event: Event) => void | Promise<void>;
+export type EventHookHandler = (data: any, event: Prisma.Event) => void | Promise<void>;
 
 export const eventHookHandlers: EventHookHandler[] = [
   onCommonCreated,
