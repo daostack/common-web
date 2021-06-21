@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ROUTE_PATHS } from "../../../../../shared/constants";
 import { Common } from "../../../../../shared/models";
-import { formatPrice } from "../../../../../shared/utils";
+import { containsHebrew, formatPrice } from "../../../../../shared/utils";
 import "./index.scss";
 
 interface CommonListItemInterface {
@@ -23,7 +23,9 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
             <img src="/icons/default-image.svg" alt={common.name} />
           )}
           <div className="common-information">
-            <div className="name">{common.name}</div>
+            <div lang={`${containsHebrew(common.name) ? "he" : "en"}`} className="name">
+              {common.name}
+            </div>
             {common.metadata?.byline && <div className="description">{common.metadata?.byline}</div>}
           </div>
         </div>

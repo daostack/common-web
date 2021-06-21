@@ -9,10 +9,11 @@ type ViewType = "popup" | "modal";
 interface IProps {
   color: Colors;
   type: ViewType;
+  top?: string;
 }
 
 export default function Share(props: IProps) {
-  const { color, type } = props;
+  const { color, type, top } = props;
   const wrapperRef = useRef(null);
   const [isShown, setShown] = useState(false);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
@@ -36,7 +37,7 @@ export default function Share(props: IProps) {
   };
 
   const links = (
-    <div className="social-buttons-wrapper">
+    <div className="social-buttons-wrapper" style={{ top: `${top ?? "64px"}` }}>
       <div className="title">Share with</div>
       <div className="social-buttons">
         <button className="facebook" />

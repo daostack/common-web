@@ -60,6 +60,9 @@
         font-weight: bold;
         color: $white;
       }
+      .name:lang(he) {
+        font-family: Assistant-Bold;
+      }
       .description {
         z-index: 1;
         display: block;
