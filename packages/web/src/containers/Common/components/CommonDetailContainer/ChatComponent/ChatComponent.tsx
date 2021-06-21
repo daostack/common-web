@@ -61,7 +61,7 @@ export default function ChatComponent({ discussionMessage, onOpenJoinModal }: Ch
           <button className="button-blue join-the-effort-btn" onClick={onOpenJoinModal}>
             Join the effort
           </button>
-          <Share type="popup" color={Colors.lightPurple} />
+          <Share type="popup" color={Colors.lightPurple} top="-130px" />
         </div>
       </div>
     </div>

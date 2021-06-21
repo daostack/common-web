@@ -74,3 +74,11 @@ export const getMobileOperatingSystem = (): MobileOperatingSystem => {
 
   return MobileOperatingSystem.unknown;
 };
+
+/**
+ * Returns true if the given string contains Hebrew
+ * @param {string} str
+ */
+export const containsHebrew = (str: string) => {
+  return /[\u0590-\u05FF]/.test(str);
+};
