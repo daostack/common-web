@@ -329,7 +329,7 @@ export default function CommonDetail() {
                 {tab === "about" && (
                   <>
                     <div className="about-title">About</div>
-                    <AboutTabComponent common={common} />
+                    <AboutTabComponent common={common} screenSize={screenSize} onOpenJoinModal={onOpenJoinModal} />
                   </>
                 )}
                 {tab === "discussions" &&
