@@ -1,13 +1,17 @@
 import React from "react";
+import { Share } from "../../../../../shared/components";
+import { Colors, ScreenSize } from "../../../../../shared/constants";
 import { Common } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import "./index.scss";
 
 interface AboutTabComponentProps {
   common: Common;
+  screenSize: string;
+  onOpenJoinModal: () => void;
 }
 
-export default function AboutTabComponent({ common }: AboutTabComponentProps) {
+export default function AboutTabComponent({ common, screenSize, onOpenJoinModal }: AboutTabComponentProps) {
   const renderContributionType = (type: string) => {
     return <b>{type}</b>;
   };
@@ -33,6 +37,14 @@ export default function AboutTabComponent({ common }: AboutTabComponentProps) {
           {formatPrice(common.metadata.minFeeToJoin) + " "}
           {renderContributionType(common.metadata.contributionType || "")} contribution
         </div>
+        {screenSize === ScreenSize.Desktop && (
+          <div className="social-wrapper">
+            <button className={`button-blue`} onClick={onOpenJoinModal}>
+              Join the effort
+            </button>
+            <Share type="popup" color={Colors.lightPurple} />
+          </div>
+        )}
       </div>
     </div>
   );
