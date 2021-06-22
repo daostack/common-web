@@ -83,5 +83,9 @@
   .social-buttons-wrapper {
     position: unset;
     box-shadow: unset;
+    .social-buttons {
+      height: 110px;
+      align-items: center;
+    }
   }
 }
