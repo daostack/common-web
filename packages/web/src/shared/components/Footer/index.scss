@@ -6,6 +6,7 @@
     padding: 30px 80px;
     background-color: $blue;
     justify-content: center;
+    align-items: center;
     .logo {
       margin-right: auto;
       margin-bottom: auto;
@@ -15,19 +16,15 @@
       align-items: center;
       font-size: $xsmall;
       color: $purple;
-      margin-right: auto;
-      display: flex;
       width: 100%;
-      justify-content: space-evenly;
-      flex-wrap: wrap;
-      margin-left: 7rem;
+      text-align: center;
       a {
         text-decoration: none;
-        margin: 10px 15px;
+        margin-right: 2.5rem;
         color: $purple;
       }
-      span {
-        margin: 10px;
+      a:last-child {
+        margin-right: unset;
       }
     }
   }
@@ -71,6 +68,7 @@
         margin-right: unset;
       }
       .links {
+        display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
@@ -78,6 +76,12 @@
         margin-top: 20px;
         margin-right: unset;
         margin-left: unset;
+        a {
+          margin: 10px 15px;
+        }
+        a:last-child {
+          margin: 10px 15px;
+        }
       }
     }
   }

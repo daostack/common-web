@@ -41,7 +41,7 @@
       height: 100%;
       object-fit: fill;
       border-radius: 24px 24px 0 0;
-      background-color: #7786ff;
+      background-color: $purple;
     }
     .common-information {
       display: flex;
@@ -59,9 +59,6 @@
         font-size: 20px;
         font-weight: bold;
         color: $white;
-      }
-      .name:lang(he) {
-        font-family: Assistant-Bold;
       }
       .description {
         z-index: 1;
@@ -86,10 +83,6 @@
       .title {
         font-size: 12px;
         font-weight: 600;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: normal;
-        letter-spacing: normal;
         text-align: center;
         color: #979bba;
         margin-bottom: 8px;
@@ -97,10 +90,7 @@
       .value {
         font-size: 16px;
         font-weight: bold;
-        font-stretch: normal;
-        font-style: normal;
         line-height: 1.5;
-        letter-spacing: normal;
         text-align: center;
         color: #001a36;
       }

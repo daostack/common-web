@@ -62,8 +62,9 @@ export default function CommonListContainer() {
     }, 500);
   };
 
+  // See https://github.com/daostack/common-monorepo/issues/691 - the field might change in the new DB
   return (
-    <div className="common-list-wrapper">
+    <div className="content-element common-list-wrapper">
       {isMobile() && !hasClosedPopup && <DownloadCommonApp setHasClosedPopup={setHasClosedPopup} />}
       <h1 className="page-title">Explore commons</h1>
 
@@ -71,9 +72,11 @@ export default function CommonListContainer() {
         <Loader />
       ) : (
         <div className="common-list">
-          {currentCommons.map((c) => (
-            <CommonListItem common={c} key={c.id} />
-          ))}
+          {currentCommons
+            .filter((c) => c.register === "registered")
+            .map((c) => (
+              <CommonListItem common={c} key={c.id} />
+            ))}
         </div>
       )}
 
