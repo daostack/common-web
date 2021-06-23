@@ -7,7 +7,7 @@
   background-size: cover;
   margin: -30px; // to compensate the modal padding
   padding-bottom: $content-padding;
-  background-position-y: -230px;
+  background-position-y: -210px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,7 +24,7 @@
     margin-top: 30px;
   }
   .qr-code-wrapper {
-    margin-bottom: 75px;
+    margin-bottom: 55px;
     margin-top: 75px;
     display: flex;
     flex-direction: column;
@@ -32,6 +32,7 @@
       color: $deep-blue;
       margin-bottom: 10px;
       font-weight: bold;
+      margin-top: 40px;
     }
   }
 }
