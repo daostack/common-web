@@ -268,14 +268,14 @@ export default function CommonDetail() {
         <div className="common-detail-wrapper">
           <div className="main-information-block">
             <div className="main-information-wrapper">
-              <div className="img-wrapper">
+              <div className="content-element img-wrapper">
                 {!imageError ? (
                   <img src={common?.image} alt={common?.name} onError={() => setImageError(true)} />
                 ) : (
                   <img src="/icons/logo-white.svg" alt={common.name} />
                 )}
               </div>
-              <div className="text-information-wrapper">
+              <div className="content-element text-information-wrapper">
                 <div className="text">
                   <div>
                     <div className="name">{common?.name}</div>
@@ -303,28 +303,36 @@ export default function CommonDetail() {
                 </div>
               </div>
               <div className="common-content-selector">
-                <div className="tabs-wrapper">
-                  {tabs.map((t) => (
-                    <div
-                      key={t.key}
-                      className={`tab-item ${tab === t.key ? "active" : ""}`}
-                      onClick={() => changeTabHandler(t.key)}
-                    >
-                      {t.name}
-                    </div>
-                  ))}
-                </div>
-                <div className="social-wrapper" ref={joinEffort}>
-                  <button className={`button-blue join-the-effort-btn ${stickyClass}`} onClick={onOpenJoinModal}>
-                    Join the effort
-                  </button>
-                  {screenSize === ScreenSize.Desktop && <Share type="popup" color={Colors.lightPurple} />}
+                <div className="content-element tabs-container">
+                  <div className="tabs-wrapper">
+                    {tabs.map((t) => (
+                      <div
+                        key={t.key}
+                        className={`tab-item ${tab === t.key ? "active" : ""}`}
+                        onClick={() => changeTabHandler(t.key)}
+                      >
+                        {t.name}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="social-wrapper" ref={joinEffort}>
+                    <button className={`button-blue join-the-effort-btn ${stickyClass}`} onClick={onOpenJoinModal}>
+                      Join the effort
+                    </button>
+                    {screenSize === ScreenSize.Desktop && <Share type="popup" color={Colors.lightPurple} />}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           <div className="main-content-container">
-            <div className={tab === "history" ? "inner-main-content-wrapper history" : "inner-main-content-wrapper"}>
+            <div
+              className={
+                tab === "history"
+                  ? "content-element inner-main-content-wrapper history"
+                  : "content-element inner-main-content-wrapper"
+              }
+            >
               <div className="tab-content-wrapper">
                 {tab === "about" && (
                   <>

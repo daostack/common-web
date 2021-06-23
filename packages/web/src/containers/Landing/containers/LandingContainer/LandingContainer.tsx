@@ -43,7 +43,7 @@ const LandingContainer = () => {
           <b>Anyone</b> can create a Common, invite thier friends, and work <br className="desktop-break" /> together to
           achieve a common goal.
         </p>
-        <div className="illustrations-wrapper-1">
+        <div className="content-element illustrations-wrapper-1">
           <div>
             <img src="assets/images/transparent.svg" alt="transparent" />
             <h2>Transparent</h2>
@@ -99,7 +99,7 @@ const LandingContainer = () => {
       <section>
         <h1>What's Calling You?</h1>
         <span className="bold-text">You can start a common for any shared agenda such as...</span>
-        <div className="illustrations-wrapper-2">
+        <div className="content-element illustrations-wrapper-2">
           <div>
             <img src="assets/images/movement.svg" alt="movement" />
             <h5>Catalyze a Movement</h5>

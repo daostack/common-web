@@ -30,16 +30,20 @@ export default function Commons() {
   }, [dispatch, commons]);
 
   // TODO: for now we show the first 8 commons. Need to filter 8 featured commons.
-  const featuredCommons = commons.slice(0, 8).map((common: Common) => {
-    if (screenSize === ScreenSize.Desktop) {
-      return <CommonListItem common={common} key={common.id} />;
-    }
-    return (
-      <SwiperSlide className="swiper-slide" key={common.id}>
-        <CommonListItem common={common} />
-      </SwiperSlide>
-    );
-  });
+  // See https://github.com/daostack/common-monorepo/issues/691 - the field might change in the new DB
+  const featuredCommons = commons
+    .filter((common) => common.register === "registered")
+    .slice(0, 8)
+    .map((common: Common) => {
+      if (screenSize === ScreenSize.Desktop) {
+        return <CommonListItem common={common} key={common.id} />;
+      }
+      return (
+        <SwiperSlide className="swiper-slide" key={common.id}>
+          <CommonListItem common={common} />
+        </SwiperSlide>
+      );
+    });
 
   return (
     <div className="commons-wrapper">
