@@ -201,6 +201,9 @@
                 transform: translateX(-50%);
                 margin-right: unset;
                 left: 50%;
+                &.footer-sticky {
+                  bottom: 510px;
+                }
               }
             }
           }
