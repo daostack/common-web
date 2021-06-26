@@ -8,7 +8,8 @@
     flex: 40;
     margin-right: 48px;
     overflow: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
+
     .top-side {
       justify-content: center;
       display: flex;
