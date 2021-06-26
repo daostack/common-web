@@ -11,7 +11,7 @@
   .messages {
     height: 100%;
     overflow: auto;
-
+    scrollbar-width: none;
     .date {
       .title {
         text-align: center;

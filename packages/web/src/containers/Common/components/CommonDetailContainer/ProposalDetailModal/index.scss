@@ -9,7 +9,11 @@
     margin-right: 48px;
     overflow: hidden;
     overflow-y: auto;
-
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      width: 0; /* Remove scrollbar space */
+      background: transparent; /* Optional: just make scrollbar invisible */
+    }
     .top-side {
       justify-content: center;
       display: flex;
