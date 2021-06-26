@@ -10,7 +10,8 @@
   box-sizing: border-box;
   .messages {
     height: 100%;
-    overflow: scroll;
+    overflow: auto;
+
     .date {
       .title {
         text-align: center;
