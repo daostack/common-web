@@ -1,6 +1,8 @@
 @import "../../../constants.scss";
 
 .footer-wrapper {
+  position: relative;
+  z-index: 1;
   .footer-top {
     display: flex;
     padding: 30px 80px;
