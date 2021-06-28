@@ -68,6 +68,9 @@
         font-size: 12px;
         font-weight: 300;
         color: $white;
+        &:lang(he) {
+          font-family: Assistant-Light;
+        }
       }
     }
   }
