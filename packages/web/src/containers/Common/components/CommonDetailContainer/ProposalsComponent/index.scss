@@ -1,0 +1,228 @@
+@import "../../../../../constants.scss";
+
+.proposals-component-wrapper {
+  .discussion-item-wrapper {
+    padding: 40px;
+    padding-top: 0;
+    border-radius: 14px;
+    box-shadow: 0 3px 8px 0 #001a3614;
+    background-color: $white;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    .state-wrapper {
+      margin: 0 -40px;
+      margin-bottom: 24px;
+      .state-inner-wrapper {
+        width: 100%;
+        margin: 0;
+        border-radius: 6px 6px 0 0;
+        display: flex;
+        margin-bottom: 24px;
+        align-items: center;
+        justify-content: center;
+        height: 32px;
+        img {
+          width: 17px;
+          height: 17px;
+          margin-right: 4px;
+        }
+        .state-name {
+          font-size: 14px;
+          font-weight: bold;
+          font-stretch: normal;
+          font-style: normal;
+          letter-spacing: normal;
+        }
+      }
+      &.passed {
+        .state-inner-wrapper {
+          background: #f0fdf0;
+          .state-name {
+            color: #6ee569;
+          }
+        }
+      }
+      &.failed {
+        .state-inner-wrapper {
+          background: #feefec;
+          .state-name {
+            color: #ff603e;
+          }
+        }
+      }
+    }
+    .countdown-wrapper {
+      margin: 0 -40px;
+      margin-bottom: 24px;
+      .inner-wrapper {
+        width: 100%;
+        margin: 0;
+      }
+    }
+    .proposal-charts-wrapper {
+      margin-bottom: 24px;
+      .proposal-title {
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+        color: #001a36;
+        margin-bottom: 24px;
+        cursor: pointer;
+        overflow-wrap: break-word;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        &:hover {
+          color: #7786ff;
+        }
+      }
+
+      .requested-amount {
+        padding: 12px;
+        border-radius: 20px;
+        background-color: $light-purple;
+        font-size: $xsmall;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-width: 400px;
+        margin: auto;
+        .amount {
+          font-size: 18px;
+          font-weight: bold;
+          color: #001a36;
+          margin-left: 4px;
+        }
+      }
+      .votes {
+        margin: 24px auto;
+        max-width: 400px;
+      }
+    }
+
+    .discussion-top-bar {
+      display: flex;
+      margin: 24px 0;
+      .img-wrapper {
+        margin-right: 16px;
+        width: 40px;
+        height: 40px;
+        position: relative;
+        img {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 50%;
+        }
+      }
+      .creator-information {
+        .name {
+          font-size: 16px;
+          color: #001a36;
+        }
+        .days-ago {
+          font-size: 14px;
+          color: #979bba;
+        }
+      }
+    }
+    .discussion-content {
+      .title {
+        font-size: 18px;
+        font-weight: bold;
+        color: #7786ff;
+        margin-bottom: 16px;
+        overflow-wrap: break-word;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .description {
+        font-size: 16px;
+        color: #001a36;
+        margin-bottom: 16px;
+        overflow-wrap: break-word;
+        display: -webkit-box;
+        -webkit-line-clamp: 6;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        &.full {
+          -webkit-line-clamp: unset;
+          -webkit-box-orient: vertical;
+          overflow: unset;
+        }
+      }
+      .read-more {
+        font-size: 16px;
+        font-weight: bold;
+        color: #7786ff;
+        cursor: pointer;
+        margin-bottom: 16px;
+        color: #001a36;
+        &:hover {
+          color: #7786ff;
+        }
+      }
+    }
+    .bottom-content {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      .discussion-count {
+        display: flex;
+        .count {
+          margin-left: 8px;
+          font-size: 16px;
+          font-weight: bold;
+          line-height: 1.5;
+          color: #979bba;
+          display: inline-block;
+        }
+      }
+      .view-all-discussions {
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 1.5;
+        text-align: right;
+        color: #7786ff;
+        position: relative;
+        padding-right: 15px;
+        cursor: pointer;
+        &::after {
+          background-image: url("/icons/right-arrow-hover.svg");
+          display: inline-block;
+          content: " ";
+          background-size: 16px 16px;
+          height: 16px;
+          width: 16px;
+          top: 5px;
+          position: absolute;
+          right: -4px;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .proposals-component-wrapper {
+    .discussion-item-wrapper {
+      padding: 20px;
+      padding-top: 0;
+      .state-wrapper {
+        margin: 0 -20px;
+      }
+      .countdown-wrapper {
+        margin-right: -20px;
+        margin-left: -20px;
+      }
+    }
+  }
+}

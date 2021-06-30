@@ -1,5 +1,7 @@
 import produce from "immer";
 import { ActionType, createReducer } from "typesafe-actions";
+import { ScreenSize, SMALL_SCREEN_BREAKPOINT } from "../constants";
+
 import { SharedStateType } from "../interfaces";
 import * as actions from "./actions";
 
@@ -8,6 +10,9 @@ type Action = ActionType<typeof actions>;
 const initialState: SharedStateType = {
   loading: false,
   notification: null,
+  screenSize: window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`).matches
+    ? ScreenSize.Desktop
+    : ScreenSize.Mobile,
 };
 
 const reducer = createReducer<SharedStateType, Action>(initialState)
@@ -24,6 +29,11 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
   .handleAction(actions.showNotification, (state, action) =>
     produce(state, (nexState) => {
       nexState.notification = action.payload;
+    }),
+  )
+  .handleAction(actions.changeScreenSize, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.screenSize = action.payload;
     }),
   );
 export { reducer as SharedReducer };

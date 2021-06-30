@@ -1,0 +1,48 @@
+@import "../../../../../constants.scss";
+
+.about-sidebar-wrapper {
+  margin-bottom: 48px;
+  .title-wrapper {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 16px;
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #001a36;
+      flex: 60;
+    }
+    .view-all {
+      font-size: 16px;
+      text-align: right;
+      color: #001a36;
+      flex: 40;
+      cursor: pointer;
+      position: relative;
+      padding-right: 16px;
+      &:hover {
+        color: #7786ff;
+        &::after {
+          background-image: url("/icons/right-arrow-hover.svg");
+        }
+      }
+      &::after {
+        background-image: url("/icons/right-arrow.svg");
+        display: inline-block;
+        content: " ";
+        background-size: 15px 15px;
+        height: 15px;
+        width: 15px;
+        top: 4px;
+        position: absolute;
+        right: -4px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .about-sidebar-wrapper {
+    display: none;
+  }
+}

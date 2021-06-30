@@ -1,49 +1,153 @@
+@import "./constants.scss";
+
+@font-face {
+  font-family: NotoSerifSC-Black;
+  src: url(./shared/assets/fonts/NotoSerifSC-Black.otf);
+}
+
+@font-face {
+  font-family: NunitoSans-Regular;
+  src: url(./shared/assets/fonts/NunitoSans-Regular.ttf);
+}
+
+@font-face {
+  font-family: NotoSerifSC-Bold;
+  src: url(./shared/assets/fonts/NotoSerifSC-Bold.otf);
+}
+
+@font-face {
+  font-family: NotoSerifSC-SemiBold;
+  src: url(./shared/assets/fonts/NotoSerifSC-SemiBold.otf);
+}
+
+@font-face {
+  font-family: NunitoSans-Bold;
+  src: url(./shared/assets/fonts/NunitoSans-Bold.ttf);
+}
+
+@font-face {
+  font-family: Assistant-Bold;
+  src: url(./shared/assets/fonts/Assistant-Bold.ttf);
+}
+
+@font-face {
+  font-family: Assistant-Light;
+  src: url(./shared/assets/fonts/Assistant-Light.ttf);
+}
+
 body {
+  #root {
+    overflow-x: hidden;
+  }
+  // Disable highlight when Touch/Press
+  -webkit-tap-highlight-color:  rgba(255, 255, 255, 0);
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
-    "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: NunitoSans-Regular;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   .content-wrapper {
-    padding: 0 80px;
+    padding: 0px $content-padding;
+    padding-bottom: 20px;
     min-height: 350px;
-
+    margin-top: $header-height;
     .page-title {
-      font-family: NotoSerifSC;
-      font-size: 36px;
-      font-weight: 600;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: 1.33;
-      letter-spacing: normal;
-      color: #001a36;
-      margin: 0;
-      padding: 0;
-      margin-bottom: 40px;
+      color: $deep-blue;
     }
 
     .button-blue {
+      font-family: NunitoSans-Bold;
       height: 40px;
-      padding: 8px 32px;
       border-radius: 30.5px;
-      background-color: #7786ff;
+      background-color: $purple;
       border: none;
       outline: none;
-      font-family: NunitoSans;
       font-size: 16px;
       font-weight: bold;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: 1.5;
-      letter-spacing: normal;
       text-align: center;
-      color: #ffffff;
+      color: $white;
+      cursor: pointer;
+      text-decoration: none;
+      width: fit-content;
+      min-width: 200px;
+      &:hover {
+        opacity: 0.9;
+      }
+      &:disabled {
+        pointer-events: none;
+        opacity: 0.5;
+      }
     }
 
     .line {
+      margin: 0 -40px;
       height: 1px;
-      background-color: #eeeeee;
-      width: 100%;
+      background-color: $light-gray;
+    }
+
+    /* Remove inputs border highlight */
+    input:focus,
+    select:focus,
+    textarea:focus,
+    button:focus {
+      outline: none;
+    }
+  }
+  h1 {
+    font-size: $large;
+  }
+  h2,
+  h1 {
+    font-family: NotoSerifSC-SemiBold;
+  }
+  p {
+    font-size: $moderate;
+  }
+  textarea {
+    font-family: NunitoSans-Regular;
+  }
+}
+
+:lang(he) {
+  font-family: Assistant-Bold;
+}
+
+.content-element {
+  max-width: $element-max-width;
+  margin: auto;
+}
+
+// Use with <br /> tags
+@media screen and (min-width: $mobile-breakpoint) {
+  .mobile-break {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  body {
+    // Use with <br /> tags
+    .desktop-break {
+      display: none;
+    }
+    h1 {
+      font-size: $medium;
+    }
+    h2 {
+      font-size: $medium;
+    }
+    .content-wrapper {
+      padding: 0px $content-padding-mobile;
+      padding-bottom: 20px;
+      margin-top: $header-height-mobile;
+      .page-title {
+        text-align: center;
+      }
+      .button-blue {
+        width: 100%;
+      }
+      .line {
+        margin: 0 -20px;
+      }
     }
   }
 }

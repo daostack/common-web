@@ -1,0 +1,97 @@
+@import "../../../constants.scss";
+
+.social-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  .share-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    background-color: var(--share-button-bg);
+    background-image: url("/icons/icons-share.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+  }
+  .share-button:hover {
+    opacity: 0.9;
+  }
+}
+.social-buttons-wrapper {
+  z-index: 2;
+  position: absolute;
+  padding: 0.75rem 1.5rem 1.5rem 1.5rem;
+  border-radius: 30px;
+  box-shadow: 0 4px 15px 0 $shadow;
+  background-color: $white;
+  top: 64px;
+  right: 10%;
+  .title {
+    font-size: $xsmall;
+    font-weight: bold;
+    text-align: center;
+    color: $blue;
+    margin-bottom: 16px;
+  }
+}
+
+.social-buttons {
+  display: flex;
+  justify-content: center;
+  button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    margin: 0 10px;
+    &.facebook {
+      background-image: url("/icons/social-share/facebook.svg");
+      &:hover {
+        background-image: url("/icons/social-share/facebook-h.svg");
+      }
+    }
+    &.linkedin {
+      background-image: url("/icons/social-share/linkedin.svg");
+      &:hover {
+        background-image: url("/icons/social-share/linkedin-h.svg");
+      }
+    }
+    &.telegram {
+      background-image: url("/icons/social-share/telegram.svg");
+      &:hover {
+        background-image: url("/icons/social-share/telegram-h.svg");
+      }
+    }
+    &.twitter {
+      background-image: url("/icons/social-share/twitter.svg");
+      &:hover {
+        background-image: url("/icons/social-share/twitter-h.svg");
+      }
+    }
+  }
+  button:first-child {
+    margin-left: unset;
+  }
+  button:last-child {
+    margin-right: unset;
+  }
+  button:hover {
+    opacity: 0.9;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .social-wrapper {
+    align-self: self-end;
+  }
+  .social-buttons-wrapper {
+    position: unset;
+    box-shadow: unset;
+    .social-buttons {
+      height: 110px;
+      align-items: center;
+    }
+  }
+}

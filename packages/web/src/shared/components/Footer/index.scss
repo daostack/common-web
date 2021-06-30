@@ -1,37 +1,41 @@
+@import "../../../constants.scss";
+
 .footer-wrapper {
-  margin: 72px 0 0;
-  .first-wrapper {
-    padding: 10px 80px;
-    background-color: #0b2046;
-    .grid {
-      height: 120px;
-      display: grid;
-      justify-items: center;
+  position: relative;
+  z-index: 1;
+  .footer-top {
+    display: flex;
+    padding: 30px 80px;
+    background-color: $blue;
+    justify-content: center;
+    align-items: center;
+    .logo {
+      margin-right: auto;
+      margin-bottom: auto;
+      width: 100px;
+    }
+    .links {
       align-items: center;
-      grid-auto-columns: 1fr;
-      grid-column-gap: 16px;
-      grid-row-gap: 16px;
-      grid-template-columns: 0.75fr 1fr 1fr 1fr 1fr;
-      grid-template-rows: auto;
+      font-size: $xsmall;
+      color: $purple;
+      width: 100%;
+      text-align: center;
       a {
-        display: block;
-        color: #7786ff;
-        font-size: 14px;
         text-decoration: none;
+        margin-right: 2.5rem;
+        color: $purple;
       }
-      .logo-wrapper {
-        img {
-          max-width: 120px;
-        }
+      a:last-child {
+        margin-right: unset;
       }
     }
   }
-  .second-wrapper {
+  .footer-bottom {
     height: 80px;
-    background-color: #071836;
-    padding: 10px 80px;
+    background-color: $deep-blue;
+    padding: 10px;
     .powered-by {
-      color: #fff;
+      color: $white;
       font-size: 12px;
       text-align: center;
       display: flex;
@@ -46,13 +50,41 @@
       }
     }
     .copyrights {
-      color: #fff;
+      color: $white;
       font-size: 12px;
       text-align: center;
       display: flex;
       justify-content: center;
       align-items: center;
       line-height: 30px;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .footer-wrapper {
+    .footer-top {
+      flex-direction: column;
+      align-items: center;
+      .logo {
+        margin-right: unset;
+      }
+      .links {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        justify-items: center;
+        margin-top: 20px;
+        margin-right: unset;
+        margin-left: unset;
+        a {
+          margin: 10px 15px;
+        }
+        a:last-child {
+          margin: 10px 15px;
+        }
+      }
     }
   }
 }

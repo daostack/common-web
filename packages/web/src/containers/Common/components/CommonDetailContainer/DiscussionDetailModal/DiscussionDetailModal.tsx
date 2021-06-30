@@ -1,75 +1,52 @@
-import React from "react";
-
+import React, { useState } from "react";
 import { Loader } from "../../../../../shared/components";
-import { Common, Discussion } from "../../../../../graphql";
-import { formatPrice, getDaysAgo, getUserInitials, getUserName } from "../../../../../shared/utils";
+import { Discussion } from "../../../../../shared/models";
+import { getDaysAgo, getUserName } from "../../../../../shared/utils";
+import { ChatComponent } from "../ChatComponent";
 import "./index.scss";
 
 interface DiscussionDetailModalProps {
-  discussion?: Discussion | null;
-  common: Common;
+  disscussion: Discussion | null;
+  onOpenJoinModal: () => void;
 }
 
-export default function DiscussionDetailModal({ discussion, common }: DiscussionDetailModalProps) {
+export default function DiscussionDetailModal({ disscussion, onOpenJoinModal }: DiscussionDetailModalProps) {
   const date = new Date();
-  return !discussion ? (
+  const [imageError, setImageError] = useState(false);
+  return !disscussion ? (
     <Loader />
   ) : (
     <div className="discussion-detail-modal-wrapper">
       <div className="left-side">
         <div className="top-side">
-          <div className="countdown-wrapper">
-            <div className="inner-wrapper">
-              <img className="clock-icon" src="/icons/alarm-clock.svg" alt="alarm-clock" />
-              <div className="text">Countdown 08:21:13</div>
-            </div>
-          </div>
           <div className="owner-wrapper">
             <div className="owner-icon-wrapper">
-              <img src={discussion.owner?.photo} alt={getUserName(discussion.owner)} />
+              {!imageError ? (
+                <img
+                  src={disscussion.owner?.photoURL}
+                  alt={getUserName(disscussion.owner)}
+                  onError={() => setImageError(true)}
+                />
+              ) : (
+                <img src="/icons/default_user.svg" alt={getUserName(disscussion.owner)} />
+              )}
             </div>
-            <div className="owner-name">{getUserName(discussion.owner)}</div>
-            <div className="days-ago">{getDaysAgo(date, discussion.createdAt)} </div>
+            <div className="owner-name">{getUserName(disscussion.owner)}</div>
+            <div className="days-ago">{getDaysAgo(date, disscussion.createTime)} </div>
           </div>
           <div className="discussion-information-wrapper">
-            <div className="discussion-name">{discussion.title}</div>
-            <div className="requested-amount">
-              Requested amount <div className="amount">{formatPrice(common.balance)}</div>
+            <div className="discussion-name" title={disscussion.title}>
+              {disscussion.title}
             </div>
           </div>
           <div className="line"></div>
         </div>
         <div className="down-side">
-          <p className="description">{discussion.description}</p>
+          <p className="description">{disscussion.message}</p>
         </div>
       </div>
       <div className="right-side">
-        <div className="chat-wrapper">
-          {discussion.messages?.map((m: any) => {
-            const mDate = new Date(m.createdAt);
-            return (
-              <div key={m.id} className="message-wrapper">
-                <div className="icon-wrapper">
-                  {discussion.owner?.photo ? (
-                    <img src={m.owner?.photo} alt={getUserName(m.owner)} />
-                  ) : (
-                    <span
-                      className="initials"
-                      style={{ backgroundColor: Math.floor(Math.random() * 16777215).toString(16) }}
-                    >
-                      {getUserInitials(m.owner)}
-                    </span>
-                  )}
-                </div>
-                <div className="message-text">
-                  <div className="message-name">{getUserName(m.owner)}</div>
-                  <div className="message-content">{m.message}</div>
-                </div>
-                <div className="time-wrapper">{mDate.toLocaleDateString() + "," + mDate.toLocaleTimeString()}</div>
-              </div>
-            );
-          })}
-        </div>
+        <ChatComponent discussionMessage={disscussion.discussionMessage || []} onOpenJoinModal={onOpenJoinModal} />
       </div>
     </div>
   );

@@ -1,0 +1,59 @@
+@import "../../../../../constants.scss";
+
+.proposals-history-wrapper {
+  .history-header {
+    border-top: 1px solid $light-gray;
+    border-bottom: 1px solid $light-gray;
+    padding: 15px 0px;
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+      color: $deep-blue;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+    }
+  }
+  .history-content {
+    .block-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 36px 0;
+      flex-direction: column;
+      .value {
+        font-size: $medium;
+        font-weight: bold;
+        text-align: center;
+        color: $deep-blue;
+      }
+      .title {
+        margin-top: 8px;
+        font-size: 18px;
+        font-weight: 300;
+        text-align: center;
+        color: #001a36;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .proposals-history-wrapper {
+    .history-header {
+      border-top: unset;
+      border-bottom: unset;
+      padding: unset;
+    }
+    .history-content {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 10px;
+      .block-item {
+        .value {
+          font-size: $moderate;
+        }
+      }
+    }
+  }
+}

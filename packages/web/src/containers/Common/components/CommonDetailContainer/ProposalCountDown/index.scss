@@ -1,0 +1,25 @@
+.countdown-wrapper {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  .inner-wrapper {
+    width: 315px;
+    height: 32px;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+    background-color: #fff3d8;
+    display: flex;
+    margin-bottom: 24px;
+    align-items: center;
+    justify-content: center;
+    .clock-icon {
+      width: 15px;
+      margin-right: 8px;
+    }
+    .text {
+      font-size: 14px;
+      font-weight: bold;
+      color: #ffae26;
+    }
+  }
+}

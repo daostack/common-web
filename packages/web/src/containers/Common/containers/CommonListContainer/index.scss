@@ -1,15 +1,37 @@
+@import "../../../../constants.scss";
+
 .common-list-wrapper {
+  padding-top: 40px;
+  padding-bottom: 44px;
   .common-list {
     display: grid;
     justify-items: center;
-    align-items: center;
-    grid-auto-columns: 1fr;
-    grid-column-gap: 16px;
-    grid-row-gap: 16px;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: auto;
+    grid-column-gap: 2rem;
+    grid-row-gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   }
-  .loading {
-    text-align: center;
+  .loader-container {
+    line-height: 40px;
+    margin-top: 54px;
+    margin-bottom: 0;
+    .loading-btn {
+      margin: auto;
+      background-color: $white;
+      color: black;
+      border: 1px solid $light-gray;
+      font-family: NunitoSans-Regular;
+      font-weight: unset;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .common-list-wrapper {
+    padding-bottom: 0;
+    padding-top: 20px;
+    .loader-container {
+      margin-top: 35px;
+      margin-bottom: 20px;
+    }
   }
 }

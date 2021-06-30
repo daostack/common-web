@@ -1,26 +1,46 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-
-import {
-  Discussion,
-  GetDiscussionById,
-  useGetCommonById,
-  useGetCommonDiscussions,
-  useGetCommonProposals,
-} from "../../../../graphql";
-import { useApollo } from "../../../../hooks/useApollo";
-import { Loader } from "../../../../shared/components";
+import { Loader, Share } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
-import { useModal } from "../../../../shared/hooks";
+import { useModal, useViewPortHook } from "../../../../shared/hooks";
+import { Discussion, Proposal } from "../../../../shared/models";
+import { getLoading, getScreenSize } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
+
 import {
   AboutTabComponent,
-  DiscussionDetailModal,
-  DiscussionsComponent,
   PreviewInformationList,
+  DiscussionsComponent,
+  DiscussionDetailModal,
+  ProposalsComponent,
+  ProposalsHistory,
+  AboutSidebarComponent,
+  JoinTheEffortModal,
 } from "../../components/CommonDetailContainer";
+import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
+import {
+  clearCurrentDiscussion,
+  clearCurrentProposal,
+  closeCurrentCommon,
+  getCommonDetail,
+  loadCommonDiscussionList,
+  loadDisscussionDetail,
+  loadProposalDetail,
+  loadProposalList,
+} from "../../store/actions";
+import {
+  selectCommonDetail,
+  selectProposals,
+  selectDiscussions,
+  selectIsDiscussionsLoaded,
+  selectCurrentDisscussion,
+  selectIsProposalLoaded,
+  selectCurrentProposal,
+} from "../../store/selectors";
 import "./index.scss";
-
+import { Colors, ScreenSize } from "../../../../shared/constants";
+import { MobileLinks } from "../../../../shared/components/MobileLinks";
 interface CommonDetailRouterParams {
   id: string;
 }
@@ -46,120 +66,261 @@ const tabs = [
 
 export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
+  const joinEffort = useRef(null);
+  // const contentBottom = useRef(null);
+  const inViewport = useViewPortHook(joinEffort.current, "-20px");
+  const inViewPortFooter = useViewPortHook(document.querySelector(".copyrights"), "0px");
+  const [stickyClass, setStickyClass] = useState("");
+  const [footerClass, setFooterClass] = useState("");
   const [tab, setTab] = useState("about");
-  const apolloClient = useApollo("http://localhost:4000/graphql");
-  const [currentDiscussion, setCurrentDiscussion] = useState(null);
+  const [imageError, setImageError] = useState(false);
+  const loading = useSelector(getLoading());
+  const common = useSelector(selectCommonDetail());
+  const currentDisscussion = useSelector(selectCurrentDisscussion());
+  const proposals = useSelector(selectProposals());
+  const discussions = useSelector(selectDiscussions());
+  const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
+  const isProposalsLoaded = useSelector(selectIsProposalLoaded());
+  const currentProposal = useSelector(selectCurrentProposal());
+  const screenSize = useSelector(getScreenSize());
 
-  const { data: proposalsData } = useGetCommonProposals({
-    variables: {
-      where: {
-        commonId: id,
-      },
-    },
-  });
-
-  const { data: discussionsData, loading: isDiscussionsLoaded } = useGetCommonDiscussions({
-    variables: {
-      where: {
-        commonId: id,
-      },
-    },
-  });
-
-  const { data: commonData, loading: isCommonLoading } = useGetCommonById({
-    variables: {
-      where: {
-        id,
-      },
-    },
-  });
-
-  const common = commonData?.common;
-
+  const dispatch = useDispatch();
   const { isShowing, onOpen, onClose } = useModal(false);
+  const { isShowing: showJoinModal, onOpen: onOpenJoinModal, onClose: onCloseJoinModal } = useModal(false);
 
-  const latestProposals = useMemo(
-    () =>
-      [...(proposalsData?.proposals || [])].splice(0, 5).map((p) => {
-        return { id: p.id, value: p.title };
-      }),
-    [proposalsData],
-  );
+  useEffect(() => {
+    dispatch(getCommonDetail.request(id));
+    return () => {
+      dispatch(closeCurrentCommon());
+    };
+  }, [dispatch, id]);
 
-  const latestDiscussions = useMemo(
-    () =>
-      [...(discussionsData?.discussions || [])].splice(0, 5).map((d) => {
-        return { id: d.id, value: d.title };
-      }),
-    [discussionsData],
-  );
+  const activeProposals = useMemo(() => [...proposals].filter((d) => d.state === "countdown"), [proposals]);
 
-  const changeTabHandler = (tab: string) => setTab(tab);
+  const historyProposals = useMemo(() => [...proposals].filter((d) => d.state !== "countdown"), [proposals]);
 
-  const getDiscussionDetail = useCallback(
-    async (payload: Discussion) => {
-      try {
-        const { data } = await apolloClient.query({
-          query: GetDiscussionById,
-          variables: {
-            id: payload.id,
-          },
-        });
-        setCurrentDiscussion(data.discussion);
-        onOpen();
-      } catch (error) {
-        onClose();
+  const changeTabHandler = useCallback(
+    (tab: string) => {
+      switch (tab) {
+        case "discussions":
+          if (!isDiscussionsLoaded) {
+            dispatch(loadCommonDiscussionList.request());
+          }
+          break;
+        case "history":
+        case "proposals":
+          if (!isProposalsLoaded) {
+            dispatch(loadProposalList.request());
+          }
+          break;
+
+        default:
+          break;
       }
+      setTab(tab);
     },
-    [onOpen, apolloClient, onClose],
+    [dispatch, isDiscussionsLoaded, isProposalsLoaded],
+  );
+
+  const getDisscussionDetail = useCallback(
+    (payload: Discussion) => {
+      dispatch(loadDisscussionDetail.request(payload));
+      onOpen();
+    },
+    [dispatch, onOpen],
+  );
+
+  const getProposalDetail = useCallback(
+    (payload: Proposal) => {
+      dispatch(loadProposalDetail.request(payload));
+      onOpen();
+    },
+    [dispatch, onOpen],
   );
 
   const closeModalHandler = useCallback(() => {
     onClose();
-    setCurrentDiscussion(null);
-  }, [onClose]);
+    dispatch(clearCurrentDiscussion());
+    dispatch(clearCurrentProposal());
+  }, [onClose, dispatch]);
 
-  return isCommonLoading && !common ? (
+  const clickPreviewDisscusionHandler = useCallback(
+    (id: string) => {
+      changeTabHandler("discussions");
+      const disscussion = discussions.find((f) => f.id === id);
+      if (disscussion) {
+        getDisscussionDetail(disscussion);
+      }
+    },
+    [discussions, changeTabHandler, getDisscussionDetail],
+  );
+
+  const clickPreviewProposalHandler = useCallback(
+    (id: string) => {
+      changeTabHandler("proposals");
+      const proposal = proposals.find((f) => f.id === id);
+      if (proposal) {
+        getProposalDetail(proposal);
+      }
+    },
+    [proposals, changeTabHandler, getProposalDetail],
+  );
+
+  const openJoinModal = useCallback(() => {
+    onClose();
+    setTimeout(onOpenJoinModal, 0);
+  }, [onOpenJoinModal, onClose]);
+
+  const closeJoinModal = useCallback(() => {
+    onCloseJoinModal();
+    if (currentDisscussion || currentProposal) {
+      setTimeout(onOpen, 0);
+    }
+  }, [onOpen, currentProposal, currentDisscussion, onCloseJoinModal]);
+
+  const renderSidebarContent = () => {
+    if (!common) return null;
+    switch (tab) {
+      case "about":
+        return (
+          <>
+            <PreviewInformationList
+              title="Latest Discussions"
+              discussions={discussions}
+              vievAllHandler={() => changeTabHandler("discussions")}
+              onClickItem={clickPreviewDisscusionHandler}
+              type="discussions"
+            />
+            <PreviewInformationList
+              title="Latest Proposals"
+              proposals={activeProposals}
+              vievAllHandler={() => changeTabHandler("proposals")}
+              onClickItem={clickPreviewProposalHandler}
+              type="proposals"
+            />
+          </>
+        );
+
+      case "discussions":
+        return (
+          <>
+            <AboutSidebarComponent title="About" vievAllHandler={() => changeTabHandler("about")} common={common} />
+            <PreviewInformationList
+              title="Latest Proposals"
+              proposals={activeProposals}
+              vievAllHandler={() => changeTabHandler("proposals")}
+              onClickItem={clickPreviewProposalHandler}
+              type="proposals"
+            />
+          </>
+        );
+      case "proposals":
+        return (
+          <>
+            <AboutSidebarComponent title="About" vievAllHandler={() => changeTabHandler("about")} common={common} />
+            <PreviewInformationList
+              title="Latest Discussions"
+              discussions={discussions}
+              vievAllHandler={() => changeTabHandler("discussions")}
+              onClickItem={clickPreviewDisscusionHandler}
+              type="discussions"
+            />
+          </>
+        );
+      case "history":
+        return <ProposalsHistory proposals={historyProposals} common={common} />;
+    }
+  };
+
+  useEffect(() => {
+    if (inViewport) {
+      setStickyClass("");
+    } else {
+      if (tab === "discussions" && discussions.length) {
+        setStickyClass("sticky");
+      } else if (tab === "proposals" && activeProposals.length) {
+        setStickyClass("sticky");
+      } else if (tab === "history" || tab === "about") {
+        setStickyClass("sticky");
+      }
+    }
+  }, [inViewport, activeProposals, tab, discussions, setStickyClass]);
+
+  useEffect(() => {
+    if (inViewPortFooter) {
+      setFooterClass("footer-sticky");
+    } else {
+      setFooterClass("");
+    }
+  }, [inViewPortFooter, setFooterClass]);
+
+  return loading && !common ? (
     <Loader />
   ) : (
-    <>
-      {common && (
-        <>
-          <Modal isShowing={isShowing} onClose={closeModalHandler}>
-            <DiscussionDetailModal discussion={currentDiscussion} common={common} />
-          </Modal>
-          <div className="common-detail-wrapper">
-            <div className="main-information-block">
-              <div className="main-information-wrapper">
-                <div className="img-wrapper">
-                  <img src={common?.image} alt={common?.name} />
-                </div>
-                <div className="text-information-wrapper">
-                  <div className="text">
+    common && (
+      <>
+        <Modal
+          isShowing={isShowing}
+          onClose={closeModalHandler}
+          closeColor={screenSize === ScreenSize.Mobile ? Colors.white : Colors.gray}
+          className={tab}
+        >
+          {screenSize === ScreenSize.Desktop && tab === "discussions" && (
+            <DiscussionDetailModal disscussion={currentDisscussion} onOpenJoinModal={openJoinModal} />
+          )}
+          {screenSize === ScreenSize.Desktop && (tab === "proposals" || tab === "history") && (
+            <ProposalDetailModal proposal={currentProposal} onOpenJoinModal={openJoinModal} />
+          )}
+          {screenSize === ScreenSize.Mobile && (
+            <div className="get-common-app-wrapper">
+              <img src="/icons/logo-all-white.svg" alt="logo" className="logo" />
+              <span className="text">Download the Common app to participate in discussions and join the community</span>
+              <MobileLinks color={Colors.black} detectOS={true} />
+            </div>
+          )}
+        </Modal>
+        <Modal isShowing={showJoinModal} onClose={closeJoinModal} closeColor={Colors.white} className="join-effort">
+          <JoinTheEffortModal />
+        </Modal>
+        <div className="common-detail-wrapper">
+          <div className="main-information-block">
+            <div className="main-information-wrapper">
+              <div className="content-element img-wrapper">
+                {!imageError ? (
+                  <img src={common?.image} alt={common?.name} onError={() => setImageError(true)} />
+                ) : (
+                  <img src="/icons/logo-white.svg" alt={common.name} />
+                )}
+              </div>
+              <div className="content-element text-information-wrapper">
+                <div className="text">
+                  <div>
                     <div className="name">{common?.name}</div>
-                    <div className="tagline">{common?.byline}</div>
+                    <div className="tagline">{common?.metadata.byline}</div>
                   </div>
-                  <div className="numbers">
-                    <div className="item" onClick={onOpen}>
-                      <div className="value">{formatPrice(common?.balance)}</div>
-                      <div className="name">Available Funds</div>
-                    </div>
-                    <div className="item">
-                      <div className="value">{formatPrice(common?.raised)}</div>
-                      <div className="name">Total Raised</div>
-                    </div>
-                    <div className="item">
-                      <div className="value">{common?.members.length}</div>
-                      <div className="name">Members</div>
-                    </div>
-                    <div className="item">
-                      <div className="value">0</div>
-                      <div className="name">Active Proposals</div>
-                    </div>
+                  {screenSize === ScreenSize.Mobile && <Share type="modal" color={Colors.transparent} />}
+                </div>
+                <div className="numbers">
+                  <div className="item">
+                    <div className="value">{formatPrice(common?.balance)}</div>
+                    <div className="name">{`Available ${screenSize === ScreenSize.Desktop ? "Funds" : ""}`}</div>
+                  </div>
+                  <div className="item">
+                    <div className="value">{formatPrice(common?.raised)}</div>
+                    <div className="name">{`${screenSize === ScreenSize.Desktop ? "Total" : ""} Raised`}</div>
+                  </div>
+                  <div className="item">
+                    <div className="value">{common?.members.length}</div>
+                    <div className="name">Members</div>
+                  </div>
+                  <div className="item">
+                    <div className="value">{activeProposals.length}</div>
+                    <div className="name">{`${screenSize === ScreenSize.Desktop ? "Active" : ""} Proposals`}</div>
                   </div>
                 </div>
-                <div className="line"></div>
-                <div className="common-content-selector">
+              </div>
+              <div className="common-content-selector">
+                <div className="content-element tabs-container">
                   <div className="tabs-wrapper">
                     {tabs.map((t) => (
                       <div
@@ -168,48 +329,73 @@ export default function CommonDetail() {
                         onClick={() => changeTabHandler(t.key)}
                       >
                         {t.name}
-                        {tab === t.key && <span></span>}
                       </div>
                     ))}
                   </div>
-                  <div className="social-wrapper">
-                    <button className="button-blue">Join the effort</button>
+                  <div className="social-wrapper" ref={joinEffort}>
+                    <button
+                      className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
+                      onClick={onOpenJoinModal}
+                    >
+                      Join the effort
+                    </button>
+                    {screenSize === ScreenSize.Desktop && <Share type="popup" color={Colors.lightPurple} />}
                   </div>
-                </div>
-              </div>
-            </div>
-            <div className="main-content-container">
-              <div className="tab-title">{tab}</div>
-              <div className="inner-main-content-wrapper">
-                <div className="tab-content-wrapper">
-                  {tab === "about" && <AboutTabComponent common={common} />}
-                  {tab === "discussions" &&
-                    (!isDiscussionsLoaded ? (
-                      <DiscussionsComponent
-                        discussions={discussionsData?.discussions as any}
-                        loadDiscussionDetail={getDiscussionDetail}
-                      />
-                    ) : (
-                      <Loader />
-                    ))}
-                </div>
-                <div className="sidebar-wrapper">
-                  <PreviewInformationList
-                    title="Latest Discussions"
-                    data={latestDiscussions}
-                    viewAllHandler={() => setTab("discussions")}
-                  />
-                  <PreviewInformationList
-                    title="Latest Proposals"
-                    data={latestProposals}
-                    viewAllHandler={() => setTab("proposals")}
-                  />
                 </div>
               </div>
             </div>
           </div>
-        </>
-      )}
-    </>
+          <div className="main-content-container">
+            <div
+              className={
+                tab === "history"
+                  ? "content-element inner-main-content-wrapper history"
+                  : "content-element inner-main-content-wrapper"
+              }
+            >
+              <div className="tab-content-wrapper">
+                {tab === "about" && (
+                  <>
+                    <div className="about-title">About</div>
+                    <AboutTabComponent common={common} screenSize={screenSize} onOpenJoinModal={onOpenJoinModal} />
+                  </>
+                )}
+                {tab === "discussions" &&
+                  (isDiscussionsLoaded ? (
+                    <DiscussionsComponent discussions={discussions} loadDisscussionDetail={getDisscussionDetail} />
+                  ) : (
+                    <Loader />
+                  ))}
+
+                {tab === "proposals" &&
+                  (isProposalsLoaded ? (
+                    <ProposalsComponent
+                      currentTab={tab}
+                      proposals={activeProposals}
+                      loadProposalDetail={getProposalDetail}
+                    />
+                  ) : (
+                    <Loader />
+                  ))}
+
+                {tab === "history" &&
+                  (isProposalsLoaded ? (
+                    <ProposalsComponent
+                      currentTab={tab}
+                      proposals={historyProposals}
+                      loadProposalDetail={getProposalDetail}
+                    />
+                  ) : (
+                    <Loader />
+                  ))}
+              </div>
+              {(screenSize === ScreenSize.Desktop || tab !== "about") && (
+                <div className="sidebar-wrapper">{renderSidebarContent()}</div>
+              )}
+            </div>
+          </div>
+        </div>
+      </>
+    )
   );
 }

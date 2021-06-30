@@ -1,0 +1,73 @@
+@import "../../../../../constants.scss";
+
+.contact-us-wrapper {
+  display: flex;
+  justify-content: center;
+  background-image: url("/assets/images/contact-us-overlay-wave.svg");
+  background-position: 50% -1%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  align-items: center;
+  padding: $content-padding;
+  background-color: $light-purple;
+  padding-top: 200px;
+  .title {
+    display: flex;
+    flex-direction: column;
+    align-self: self-start;
+    margin-right: 50px;
+    .email-wrapper {
+      display: flex;
+      a {
+        text-decoration: none;
+        margin-left: 10px;
+        color: $blue;
+        font-weight: bold;
+      }
+    }
+  }
+  .form-wrapper {
+    display: flex;
+    flex-direction: column;
+    input {
+      border: none;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 0.7rem 0;
+      text-indent: 5px;
+    }
+    textarea {
+      resize: none;
+      border: none;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 0.7rem 0;
+      width: 500px;
+      height: 150px;
+      text-indent: 5px;
+    }
+    .send {
+      margin-left: auto;
+      margin-top: 20px;
+      height: 56px;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .contact-us-wrapper {
+    flex-direction: column;
+    padding-top: 40px;
+    .title {
+      align-self: unset;
+      align-items: center;
+      margin-right: unset;
+      margin-bottom: 1.5rem;
+    }
+    .form-wrapper {
+      textarea {
+        width: 300px;
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+@import "../../../../../constants.scss";
+
+.empty-tab-component-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  .empty-tab-content-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      color: #001a36;
+    }
+    .message {
+      font-size: 16px;
+      text-align: center;
+      color: #001a36;
+      margin-top: 16px;
+      margin-bottom: 32px;
+      max-width: 350px;
+    }
+    .button-blue {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .empty-tab-component-wrapper {
+    .empty-tab-content-wrapper {
+      .join-the-effort-btn {
+        height: 56px;
+      }
+    }
+  }
+}
