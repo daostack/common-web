@@ -19,11 +19,11 @@ export const getUserName = (user: User | undefined) => {
 
 export const getUserInitials = (user: User | undefined) => {
   if (!user) return "";
-  return user.displayName || `${user.firstName?.[0]}${user.lastName?.[0]}`;
+  return user.displayName || `${user.firstName[0]}${user.lastName[0]}`;
 };
 
-export const getDaysAgo = (currentDate: Date, time: Date) => {
-  const previousDate = new Date(time);
+export const getDaysAgo = (currentDate: Date, time: Time) => {
+  const previousDate = new Date(time.seconds * 1000);
   const differenceInTime = currentDate.getTime() - previousDate.getTime();
   const differenceInDays = differenceInTime / (1000 * 3600 * 24);
   if (differenceInDays < 1) {
