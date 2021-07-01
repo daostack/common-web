@@ -20,21 +20,21 @@ export default function ProposalItemComponent({ proposal, loadProposalDetail }: 
   return (
     <div className="discussion-item-wrapper">
       {proposal.state === "countdown" ? (
-        <ProposalCountDown date={new Date((proposal?.createdAt.seconds + proposal.countdownPeriod) * 1000)} />
+        <ProposalCountDown date={new Date(proposal?.expiresAt)} />
       ) : (
-        <div className={`state-wrapper ${proposal.state}`}>
+        <div className={`state-wrapper ${proposal.state.toLocaleLowerCase()}`}>
           <div className="state-inner-wrapper">
             <img
-              src={proposal.state === "failed" ? "/icons/declined.svg" : "/icons/approved.svg"}
+              src={proposal.state === "Rejected" ? "/icons/declined.svg" : "/icons/approved.svg"}
               alt="state-wrapper"
             />
-            <span className="state-name">{proposal.state === "failed" ? "Rejected" : "Approved"}</span>
+            <span className="state-name">{proposal.state === "Rejected" ? "Rejected" : "Approved"}</span>
           </div>
         </div>
       )}
       <div className="proposal-charts-wrapper">
-        <div className="proposal-title" onClick={() => loadProposalDetail(proposal)} title={proposal.description.title}>
-          {proposal.description.title}
+        <div className="proposal-title" onClick={() => loadProposalDetail(proposal)} title={proposal.title}>
+          {proposal.title}
         </div>
         <div className="requested-amount">
           {requestedAmount === "$0" ? (
@@ -53,23 +53,19 @@ export default function ProposalItemComponent({ proposal, loadProposalDetail }: 
       <div className="discussion-top-bar">
         <div className="img-wrapper">
           {!imageError ? (
-            <img
-              src={proposal.proposer?.photo}
-              alt={getUserName(proposal.proposer)}
-              onError={() => setImageError(true)}
-            />
+            <img src={proposal.user?.photo} alt={getUserName(proposal.user)} onError={() => setImageError(true)} />
           ) : (
-            <img src="/icons/default_user.svg" alt={getUserName(proposal.proposer)} />
+            <img src="/icons/default_user.svg" alt={getUserName(proposal.user)} />
           )}
         </div>
         <div className="creator-information">
-          <div className="name">{getUserName(proposal.proposer)}</div>
+          <div className="name">{getUserName(proposal.user)}</div>
           <div className="days-ago">{getDaysAgo(date, proposal.createdAt)} </div>
         </div>
       </div>
       <div className="discussion-content">
-        <div className={`description `}>{proposal.description.description}</div>
-        {proposal.description.description.length > textLength ? (
+        <div className={`description `}>{proposal.description}</div>
+        {proposal.description.length > textLength ? (
           <div className="read-more" onClick={() => loadProposalDetail(proposal)}>
             Read More
           </div>

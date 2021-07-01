@@ -104,19 +104,7 @@ export function* loadProposalList(action: ReturnType<typeof actions.loadProposal
 
     const proposals: Proposal[] = (yield select(selectProposals())) as Proposal[];
 
-    const ownerIds = Array.from(new Set(proposals.map((d) => d.proposerId)));
-    const discussions_ids = proposals.map((d) => d.id);
-
-    const owners = (yield fetchOwners(ownerIds)) as User[];
-    const dMessages = (yield fetchDiscussionsMessages(discussions_ids)) as DiscussionMessage[];
-
-    const loadedProposals = proposals.map((d) => {
-      d.discussionMessage = dMessages.filter((dM) => dM.id === d.id);
-      d.proposer = owners.find((o) => o.id === d.proposerId);
-      return d;
-    });
-
-    yield put(actions.loadProposalList.success(loadedProposals));
+    yield put(actions.loadProposalList.success(proposals));
     yield put(stopLoading());
   } catch (e) {
     yield put(actions.loadProposalList.failure(e));

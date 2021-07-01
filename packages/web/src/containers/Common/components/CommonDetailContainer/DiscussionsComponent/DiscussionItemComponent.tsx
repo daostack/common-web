@@ -38,7 +38,7 @@ export default function DiscussionItemComponent({ discussion, loadDisscussionDet
           {discussion.title}
         </div>
         <div className={`description `}>{discussion.message}</div>
-        {discussion.message.length > textLength ? (
+        {discussion.description.length > textLength ? (
           <div className="read-more" onClick={() => loadDisscussionDetail(discussion)}>
             Read More
           </div>

@@ -38,7 +38,7 @@ export default function PreviewInformationList(props: PreviewInformationListProp
     if (type === "proposals" && proposals) {
       setData(
         [...proposals].splice(0, 5).map((d) => {
-          return { id: d.id, value: d.description.title || d.description.description };
+          return { id: d.id, value: d.title || d.description };
         }),
       );
     }
@@ -75,10 +75,7 @@ export default function PreviewInformationList(props: PreviewInformationListProp
                       <div className="count">{proposal.discussionMessage?.length || 0}</div>
                     </div>
                     <div className="countdown">
-                      <ProposalCountDown
-                        type="preview"
-                        date={new Date((proposal?.createdAt.seconds + proposal.countdownPeriod) * 1000)}
-                      />
+                      <ProposalCountDown type="preview" date={new Date(proposal?.expiresAt)} />
                     </div>
                   </div>
                 ) : null}

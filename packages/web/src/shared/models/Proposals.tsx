@@ -50,27 +50,26 @@ export type ProposalVote = {
 export interface Proposal {
   commonId: string;
   countdownPeriod: number;
-  createdAt: Time;
-
+  createdAt: Date;
+  expiresAt: Date;
   fundingRequest?: { funded: boolean; amount: number };
 
   id: string;
   moderation: Moderation;
 
-  proposerId: string;
   quietEndingPeriod: number;
 
-  updatedAt: Time;
+  updatedAt: Date;
   votesAgainst?: number;
   votesFor?: number;
-  proposer?: User;
+  user?: User;
   discussionMessage?: DiscussionMessage[];
   isLoaded?: boolean;
 
   title: string;
 
-  state: ProposalState;
-  description: { title: string; description: string };
+  state: string;
+  description: string;
   type: ProposalType;
   paymentState?: ProposalPaymentState;
   fundingState?: ProposalFundingState;

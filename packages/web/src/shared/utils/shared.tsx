@@ -22,8 +22,8 @@ export const getUserInitials = (user: User | undefined) => {
   return user.displayName || `${user.firstName[0]}${user.lastName[0]}`;
 };
 
-export const getDaysAgo = (currentDate: Date, time: Time) => {
-  const previousDate = new Date(time.seconds * 1000);
+export const getDaysAgo = (currentDate: Date, time: Date) => {
+  const previousDate = new Date(time);
   const differenceInTime = currentDate.getTime() - previousDate.getTime();
   const differenceInDays = differenceInTime / (1000 * 3600 * 24);
   if (differenceInDays < 1) {

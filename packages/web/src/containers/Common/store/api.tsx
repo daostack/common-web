@@ -6,18 +6,14 @@ export async function fetchCommonDiscussions(commonId: string) {
   const commons = await firebase.firestore().collection("discussion").where("commonId", "==", commonId).get();
   const data = transformFirebaseDataList<Discussion>(commons);
 
-  return data.sort(
-    (proposal: Discussion, prevProposal: Discussion) => prevProposal.createTime?.seconds - proposal.createTime?.seconds,
-  );
+  return data;
 }
 
 export async function fetchCommonProposals(commonId: string) {
   const commons = await firebase.firestore().collection("proposals").where("commonId", "==", commonId).get();
   const data = transformFirebaseDataList<Proposal>(commons);
 
-  return data.sort(
-    (proposal: Proposal, prevProposal: Proposal) => prevProposal.createdAt?.seconds - proposal.createdAt?.seconds,
-  );
+  return data;
 }
 
 export async function fetchCommonList(): Promise<Common[]> {

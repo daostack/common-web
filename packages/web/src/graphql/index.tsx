@@ -86,6 +86,7 @@ export const GetCommonsDataDocument = gql`
       id
       name
       image
+      raised
       createdAt
       updatedAt
       whitelisted
@@ -113,6 +114,14 @@ export const GetCommonProposals = gql`
       votesAgainst
       title
       description
+      expiresAt
+      user {
+        id
+        displayName
+        lastName
+        firstName
+        photo
+      }
       discussions {
         id
         topic
