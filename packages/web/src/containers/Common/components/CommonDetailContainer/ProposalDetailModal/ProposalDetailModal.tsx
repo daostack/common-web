@@ -39,7 +39,7 @@ export default function ProposalDetailModal({ proposal, onOpenJoinModal }: Discu
             <div className="owner-icon-wrapper">
               {!imageError ? (
                 <img
-                  src={proposal.proposer?.photoURL}
+                  src={proposal.proposer?.photo}
                   alt={getUserName(proposal.proposer)}
                   onError={() => setImageError(true)}
                 />

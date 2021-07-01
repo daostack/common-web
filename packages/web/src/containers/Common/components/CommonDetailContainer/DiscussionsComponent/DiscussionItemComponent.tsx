@@ -20,7 +20,7 @@ export default function DiscussionItemComponent({ discussion, loadDisscussionDet
         <div className="img-wrapper">
           {!imageError ? (
             <img
-              src={discussion.owner?.photoURL}
+              src={discussion.owner?.photo}
               alt={getUserName(discussion.owner)}
               onError={() => setImageError(true)}
             />
@@ -48,7 +48,7 @@ export default function DiscussionItemComponent({ discussion, loadDisscussionDet
       <div className="bottom-content">
         <div className="discussion-count">
           <img src="/icons/discussions.svg" alt="discussions" />
-          <div className="count">{discussion.discussionMessage?.length || 0}</div>
+          <div className="count">{discussion.messages?.length || 0}</div>
         </div>
         <div className="view-all-discussions" onClick={() => loadDisscussionDetail(discussion)}>
           View discussion

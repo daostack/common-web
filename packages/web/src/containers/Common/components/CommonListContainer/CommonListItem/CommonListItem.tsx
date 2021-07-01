@@ -6,7 +6,7 @@ import { containsHebrew, formatPrice } from "../../../../../shared/utils";
 import "./index.scss";
 
 interface CommonListItemInterface {
-  common: Common;
+  common: any;
 }
 
 export default function CommonListItem({ common }: CommonListItemInterface) {

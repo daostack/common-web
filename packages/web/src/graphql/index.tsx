@@ -1,6 +1,8 @@
 import * as Apollo from "@apollo/client";
 import { gql } from "@apollo/client";
 
+import { Common, Discussion, Proposal, ProposalState, ProposalType, User } from "../shared/models";
+
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type Scalars = {
@@ -13,16 +15,6 @@ export type Scalars = {
   Date: any;
 };
 
-export enum DiscussionMessageType {
-  Message = "Message",
-}
-
-export enum DiscussionMessageFlag {
-  Clear = "Clear",
-  Reported = "Reported",
-  Hidden = "Hidden",
-}
-
 export type BaseEntity = {
   id: Scalars["ID"];
   createdAt: Scalars["Date"];
@@ -33,146 +25,6 @@ export enum DiscussionType {
   ProposalDiscussion = "ProposalDiscussion",
   CommonDiscussion = "CommonDiscussion",
 }
-
-export type DiscussionMessage = BaseEntity & {
-  id: Scalars["ID"];
-  message: Scalars["String"];
-  type: DiscussionMessageType;
-  flag: DiscussionMessageFlag;
-  reports: Array<Report>;
-};
-
-export enum ReportFor {
-  Nudity = "Nudity",
-  Violance = "Violance",
-  Harassment = "Harassment",
-  FalseNews = "FalseNews",
-  Spam = "Spam",
-  Hate = "Hate",
-  Other = "Other",
-}
-
-enum ReportStatus {
-  Active = "Active",
-  Clossed = "Clossed",
-}
-
-export type Report = BaseEntity & {
-  status: ReportStatus;
-  for: ReportFor;
-  note: Scalars["String"];
-  reviewedOn: Scalars["Date"];
-  reporterId: Scalars["ID"];
-  reporter: User;
-  messageId: Scalars["ID"];
-};
-
-export type Discussion = BaseEntity & {
-  __typename?: "Discussion";
-  id: Scalars["ID"];
-  messages: Array<DiscussionMessage>;
-  title: Scalars["String"];
-  description: Scalars["String"];
-  userId: Scalars["ID"];
-  owner: User;
-};
-
-export enum ProposalType {
-  FundingRequest = "fundingRequest",
-  Join = "join",
-}
-
-export enum ProposalState {
-  PassedInsufficientBalance = "passedInsufficientBalance",
-  Countdown = "countdown",
-  Passed = "passed",
-  Failed = "failed",
-}
-
-export enum ProposalVoteOutcome {
-  Approved = "approved",
-  Rejected = "rejected",
-}
-
-export enum ProposalPaymentState {
-  NotAttempted = "notAttempted",
-  NotRelevant = "notRelevant",
-  Confirmed = "confirmed",
-  Pending = "pending",
-  Failed = "failed",
-}
-
-export enum ProposalFundingState {
-  NotRelevant = "notRelevant",
-  NotAvailable = "notAvailable",
-  Available = "available",
-  Funded = "funded",
-}
-
-/** The proposals Types */
-export type Proposal = {
-  __typename?: "Proposal";
-  id: Scalars["ID"];
-  title: Scalars["String"];
-  createdAt: Scalars["Date"];
-  updatedAt: Scalars["Date"];
-  commonId: Scalars["ID"];
-  proposerId: Scalars["ID"];
-  votesFor: Scalars["Int"];
-  votesAgainst: Scalars["Int"];
-  state: ProposalState;
-  description: ProposalDescription;
-  type: ProposalType;
-  paymentState?: Maybe<ProposalPaymentState>;
-  fundingState?: Maybe<ProposalFundingState>;
-  /** Details about the funding request. Exists only on funding request proposals */
-  funding?: Maybe<ProposalFunding>;
-  /** Details about the join request. Exists only on join request proposals */
-  join?: Maybe<ProposalJoin>;
-  votes?: Maybe<Array<Maybe<ProposalVote>>>;
-  common: Common;
-  proposer: User;
-};
-
-// countdownPeriod: number;
-// createdAt: Time;
-// description: { description: string; links: Rules[]; images: File[]; files: File[]; title: string };
-// fundingRequest: { funded: boolean; amount: number };
-// fundingState: string;
-// id: string;
-// moderation: Moderation;
-// paymentState: string;
-// proposerId: string;
-// quietEndingPeriod: 10800;
-// state: string;
-// Types: string;
-// updatedAt: Time;
-
-export type ProposalDescription = {
-  __typename?: "ProposalDescription";
-  title?: Maybe<Scalars["String"]>;
-  description: Scalars["String"];
-};
-
-export type ProposalFunding = {
-  __typename?: "ProposalFunding";
-  amount: Scalars["Int"];
-};
-
-export type ProposalJoin = {
-  __typename?: "ProposalJoin";
-  cardId: Scalars["ID"];
-  funding: Scalars["Int"];
-  fundingType?: Maybe<CommonContributionType>;
-};
-
-export type ProposalVote = {
-  __typename?: "ProposalVote";
-  voteId: Scalars["ID"];
-  voterId: Scalars["ID"];
-  outcome: ProposalVoteOutcome;
-  voter?: Maybe<User>;
-};
 
 export enum SubscriptionStatus {
   Pending = "pending",
@@ -210,36 +62,6 @@ export type SubscriptionMetadataCommon = {
   name?: Maybe<Scalars["String"]>;
 };
 
-export type User = {
-  __typename?: "User";
-  id: Scalars["ID"];
-  displayName?: Scalars["String"];
-  firstName?: Scalars["String"];
-  lastName?: Scalars["String"];
-  email?: Scalars["String"];
-  photo?: Scalars["String"];
-  createdAt?: Maybe<Scalars["Date"]>;
-  tokens?: Maybe<Array<Maybe<Scalars["String"]>>>;
-  permissions?: Array<Scalars["String"]>;
-  proposals?: Maybe<Array<Maybe<Proposal>>>;
-  subscriptions?: Maybe<Array<Maybe<Subscription>>>;
-};
-
-export enum CommonContributionType {
-  OneTime = "oneTime",
-  Monthly = "monthly",
-}
-
-export type CommonMetadata = {
-  __typename?: "CommonMetadata";
-  byline: Scalars["String"];
-  description: Scalars["String"];
-  founderId: Scalars["String"];
-  minFeeToJoin: Scalars["Int"];
-  contributionType: CommonContributionType;
-  action: Scalars["String"];
-};
-
 export type CommonMember = {
   __typename?: "CommonMember";
   /** The user ID of the member */
@@ -248,38 +70,7 @@ export type CommonMember = {
   joinedAt?: Maybe<Scalars["Date"]>;
 };
 
-export type Link = {
-  title: Scalars["String"];
-  url: Scalars["String"];
-};
-
 /** The common Types */
-export type Common = {
-  __typename?: "Common";
-  /** The unique identifier of the common */
-  id: Scalars["ID"];
-  /** The date, at which the common was created */
-  createdAt?: Maybe<Scalars["Date"]>;
-  /** The date, at which the common was last updated */
-  updatedAt?: Maybe<Scalars["Date"]>;
-  /** The display name of the common */
-  name: Scalars["String"];
-  /** The currently available funds of the common */
-  balance: Scalars["Int"];
-  /** The total amount of money, raised by the common */
-  raised: Scalars["Int"];
-  byline: Scalars["String"];
-  description: Scalars["String"];
-  fundingMinimumAmount: Scalars["Int"];
-  links: Array<Link>;
-  fundingType: CommonContributionType;
-  members: Array<CommonMember>;
-  proposals?: Maybe<Array<Maybe<Proposal>>>;
-  openJoinRequests: Scalars["Int"];
-  openFundingRequests: Scalars["Int"];
-  image: Scalars["String"];
-  register: Scalars["String"];
-};
 
 export type GetCommonsDataQuery = { __typename?: "Query" } & {
   commons?: Array<
@@ -294,6 +85,7 @@ export const GetCommonsDataDocument = gql`
     commons(paginate: $paginate) {
       id
       name
+      image
       createdAt
       updatedAt
       whitelisted

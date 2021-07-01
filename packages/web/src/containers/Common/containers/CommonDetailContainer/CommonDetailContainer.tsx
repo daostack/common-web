@@ -296,7 +296,7 @@ export default function CommonDetail() {
                 <div className="text">
                   <div>
                     <div className="name">{common?.name}</div>
-                    <div className="tagline">{common?.metadata.byline}</div>
+                    <div className="tagline">{common?.byline}</div>
                   </div>
                   {screenSize === ScreenSize.Mobile && <Share type="modal" color={Colors.transparent} />}
                 </div>

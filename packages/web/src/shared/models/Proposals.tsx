@@ -1,30 +1,84 @@
-import { DiscussionMessage, Rules, User } from ".";
+import { CommonContributionType, DiscussionMessage, Rules, User } from ".";
 import { Time, Moderation, File } from "./shared";
+
+export enum ProposalFundingState {
+  NotRelevant = "notRelevant",
+  NotAvailable = "notAvailable",
+  Available = "available",
+  Funded = "funded",
+}
+export enum ProposalPaymentState {
+  NotAttempted = "notAttempted",
+  NotRelevant = "notRelevant",
+  Confirmed = "confirmed",
+  Pending = "pending",
+  Failed = "failed",
+}
+
+export enum ProposalVoteOutcome {
+  Approved = "approved",
+  Rejected = "rejected",
+}
+
+export enum ProposalState {
+  PassedInsufficientBalance = "passedInsufficientBalance",
+  Countdown = "countdown",
+  Passed = "passed",
+  Failed = "failed",
+}
+
+export enum ProposalType {
+  FundingRequest = "fundingRequest",
+  Join = "join",
+}
+
+interface ProposalJoin {
+  __typename?: "ProposalJoin";
+  cardId: string;
+  funding: number;
+  fundingType?: CommonContributionType;
+}
+
+export type ProposalVote = {
+  __typename?: "ProposalVote";
+  voteId: string;
+  voterId: string;
+  outcome: ProposalVoteOutcome;
+  voter?: User;
+};
 
 export interface Proposal {
   commonId: string;
   countdownPeriod: number;
   createdAt: Time;
-  description: { description: string; links: Rules[]; images: File[]; files: File[]; title: string };
+
   fundingRequest?: { funded: boolean; amount: number };
-  fundingState: string;
+
   id: string;
   moderation: Moderation;
-  paymentState: string;
+
   proposerId: string;
   quietEndingPeriod: number;
-  state: string;
-  type: string;
+
   updatedAt: Time;
   votesAgainst?: number;
   votesFor?: number;
   proposer?: User;
   discussionMessage?: DiscussionMessage[];
   isLoaded?: boolean;
-  join?: {
-    cardId: string;
-    funding: number;
-    fundingType: string;
-    ip: string;
+
+  title: string;
+
+  state: ProposalState;
+  description: { title: string; description: string };
+  type: ProposalType;
+  paymentState?: ProposalPaymentState;
+  fundingState?: ProposalFundingState;
+  /** Details about the funding request. Exists only on funding request proposals */
+  funding?: {
+    amount: number;
   };
+  /** Details about the join request. Exists only on join request proposals */
+  join?: ProposalJoin;
+  votes?: ProposalVote[];
 }

@@ -17,7 +17,7 @@ export default function AboutTabComponent({ common, screenSize, onOpenJoinModal 
   };
   return (
     <div className="about-name-wrapper">
-      <div className="description">{common.metadata.description}</div>
+      <div className="description">{common.description}</div>
       {common?.links?.length > 0 && (
         <div className="links">
           <div className="title">Links</div>
@@ -34,8 +34,8 @@ export default function AboutTabComponent({ common, screenSize, onOpenJoinModal 
         <div className="contribution">
           Minimum contribution for new members:
           <br />
-          {formatPrice(common.metadata.minFeeToJoin) + " "}
-          {renderContributionType(common.metadata.contributionType || "")} contribution
+          {formatPrice(common.fundingMinimumAmount) + " "}
+          {renderContributionType(common.fundingType || "")} contribution
         </div>
         {screenSize === ScreenSize.Desktop && (
           <div className="social-wrapper">

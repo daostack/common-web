@@ -7,6 +7,8 @@ import App from "./containers/App/App";
 import history from "./shared/history";
 import { Provider } from "react-redux";
 
+import { ApolloProvider } from "./shared/providers";
+
 const { store } = configureStore(history);
 
 if (process.env.REACT_APP_ENV === "dev") {
@@ -18,7 +20,9 @@ if (process.env.REACT_APP_ENV === "dev") {
 ReactDOM.render(
   <Router history={history}>
     <Provider store={store}>
-      <App />
+      <ApolloProvider>
+        <App />
+      </ApolloProvider>
     </Provider>
   </Router>,
   document.getElementById("root"),

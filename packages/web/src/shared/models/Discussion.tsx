@@ -16,6 +16,8 @@ export interface Discussion {
   updatedAt: Time;
   id: string;
   owner?: User;
-  discussionMessage?: DiscussionMessage[];
+  messages?: DiscussionMessage[];
   isLoaded?: boolean;
+
+  description: string;
 }

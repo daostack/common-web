@@ -54,7 +54,7 @@ export default function ProposalItemComponent({ proposal, loadProposalDetail }: 
         <div className="img-wrapper">
           {!imageError ? (
             <img
-              src={proposal.proposer?.photoURL}
+              src={proposal.proposer?.photo}
               alt={getUserName(proposal.proposer)}
               onError={() => setImageError(true)}
             />

@@ -82,8 +82,7 @@ export async function fetchDiscussionsMessages(dIds: string[]) {
     .reduce((resultArray: any, item) => {
       resultArray.push(...item);
       return resultArray;
-    }, [])
-    .sort((m: DiscussionMessage, mP: DiscussionMessage) => m.createTime?.seconds - mP.createTime?.seconds);
+    }, []);
 
   return data;
 }

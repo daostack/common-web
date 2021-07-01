@@ -8,13 +8,13 @@ interface ChatMessageProps {
 
 export default function ChatMessage({ disscussionMessage }: ChatMessageProps) {
   const [imageError, setImageError] = useState(false);
-  const mDate = new Date(disscussionMessage.createTime.seconds * 1000);
+  const mDate = new Date(disscussionMessage.createTime);
   return (
     <div className="message-wrapper">
       <div className="icon-wrapper">
-        {disscussionMessage.owner?.photoURL && !imageError ? (
+        {disscussionMessage.owner?.photo && !imageError ? (
           <img
-            src={disscussionMessage.owner?.photoURL}
+            src={disscussionMessage.owner?.photo}
             alt={getUserName(disscussionMessage.owner)}
             onError={() => setImageError(true)}
           />
@@ -26,7 +26,7 @@ export default function ChatMessage({ disscussionMessage }: ChatMessageProps) {
       </div>
       <div className="message-text">
         <div className="message-name">{getUserName(disscussionMessage.owner)}</div>
-        <div className="message-content">{disscussionMessage.text}</div>
+        <div className="message-content">{disscussionMessage.message}</div>
       </div>
       <div className="time-wrapper">
         {mDate.toLocaleTimeString([], { hour12: false, hour: "2-digit", minute: "2-digit" })}
