@@ -67,7 +67,6 @@ const tabs = [
 export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
   const joinEffort = useRef(null);
-  // const contentBottom = useRef(null);
   const inViewport = useViewPortHook(joinEffort.current, "-20px");
   const inViewPortFooter = useViewPortHook(document.querySelector(".copyrights"), "0px");
   const [stickyClass, setStickyClass] = useState("");
@@ -236,12 +235,14 @@ export default function CommonDetail() {
     if (inViewport) {
       setStickyClass("");
     } else {
-      if (tab === "discussions" && discussions.length) {
-        setStickyClass("sticky");
-      } else if (tab === "proposals" && activeProposals.length) {
-        setStickyClass("sticky");
-      } else if (tab === "history" || tab === "about") {
-        setStickyClass("sticky");
+      if ((joinEffort?.current as any)?.offsetTop < window.scrollY) {
+        if (tab === "discussions" && discussions.length) {
+          setStickyClass("sticky");
+        } else if (tab === "proposals" && activeProposals.length) {
+          setStickyClass("sticky");
+        } else if (tab === "history" || tab === "about") {
+          setStickyClass("sticky");
+        }
       }
     }
   }, [inViewport, activeProposals, tab, discussions, setStickyClass]);
