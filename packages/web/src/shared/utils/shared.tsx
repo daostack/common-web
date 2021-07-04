@@ -1,5 +1,5 @@
 import { MobileOperatingSystem } from "../constants";
-import { Time, User } from "../models";
+import { User } from "../models";
 import millify from "millify";
 import moment from "moment";
 

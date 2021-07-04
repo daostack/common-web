@@ -6,7 +6,7 @@ import { containsHebrew, formatPrice } from "../../../../../shared/utils";
 import "./index.scss";
 
 interface CommonListItemInterface {
-  common: any;
+  common: Common;
 }
 
 export default function CommonListItem({ common }: CommonListItemInterface) {
@@ -26,9 +26,9 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
             <div lang={`${containsHebrew(common.name) ? "he" : "en"}`} className="name">
               {common.name}
             </div>
-            {common.metadata?.byline && (
+            {common?.byline && (
               <div lang={`${containsHebrew(common.name) ? "he" : "en"}`} className="description">
-                {common.metadata?.byline}
+                {common?.byline}
               </div>
             )}
           </div>

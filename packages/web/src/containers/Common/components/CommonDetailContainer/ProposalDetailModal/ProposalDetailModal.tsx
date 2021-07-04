@@ -25,13 +25,13 @@ export default function ProposalDetailModal({ proposal, onOpenJoinModal }: Discu
           {proposal.state === "countdown" ? (
             <ProposalCountDown date={new Date(proposal?.expiresAt)} />
           ) : (
-            <div className={`state-wrapper ${proposal.state}`}>
+            <div className={`state-wrapper ${proposal.state.toLocaleLowerCase()}`}>
               <div className="state-inner-wrapper">
                 <img
-                  src={proposal.state === "failed" ? "/icons/declined.svg" : "/icons/approved.svg"}
+                  src={proposal.state === "Rejected" ? "/icons/declined.svg" : "/icons/approved.svg"}
                   alt="state-wrapper"
                 />
-                <span className="state-name">{proposal.state === "rejected" ? "Rejected" : "Approved"}</span>
+                <span className="state-name">{proposal.state === "Rejected" ? "Rejected" : "Approved"}</span>
               </div>
             </div>
           )}

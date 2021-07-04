@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Loader, Share } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
 import { useModal, useViewPortHook } from "../../../../shared/hooks";
 import { Discussion, Proposal } from "../../../../shared/models";
-import { getLoading, getScreenSize } from "../../../../shared/store/selectors";
+import { getScreenSize } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
 import {
   AboutTabComponent,
@@ -18,25 +18,6 @@ import {
   JoinTheEffortModal,
 } from "../../components/CommonDetailContainer";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
-import {
-  clearCurrentDiscussion,
-  clearCurrentProposal,
-  closeCurrentCommon,
-  getCommonDetail,
-  loadCommonDiscussionList,
-  loadDisscussionDetail,
-  loadProposalDetail,
-  loadProposalList,
-} from "../../store/actions";
-import {
-  selectCommonDetail,
-  selectProposals,
-  selectDiscussions,
-  selectIsDiscussionsLoaded,
-  selectCurrentDisscussion,
-  selectIsProposalLoaded,
-  selectCurrentProposal,
-} from "../../store/selectors";
 import "./index.scss";
 import { Colors, ScreenSize } from "../../../../shared/constants";
 import { MobileLinks } from "../../../../shared/components/MobileLinks";
@@ -74,16 +55,12 @@ export default function CommonDetail() {
   const [footerClass, setFooterClass] = useState("");
   const [tab, setTab] = useState("about");
   const [imageError, setImageError] = useState(false);
-  const loading = useSelector(getLoading());
 
-  const currentDisscussion = useSelector(selectCurrentDisscussion());
-  const discussions = useSelector(selectDiscussions());
-  //  const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
-  const isProposalsLoaded = useSelector(selectIsProposalLoaded());
-  const currentProposal = useSelector(selectCurrentProposal());
+  const [currentProposal, setCurrentProposal] = useState<Proposal | null>(null);
+  const [currentDisscussion, setCurrentDisscussion] = useState<Discussion | null>(null);
+
   const screenSize = useSelector(getScreenSize());
 
-  const dispatch = useDispatch();
   const { isShowing, onOpen, onClose } = useModal(false);
   const { isShowing: showJoinModal, onOpen: onOpenJoinModal, onClose: onCloseJoinModal } = useModal(false);
 
@@ -95,7 +72,7 @@ export default function CommonDetail() {
     },
   });
 
-  const { data: discussionsData, loading: isDiscussionsLoaded } = useGetCommonDiscussions({
+  const { data: discussionsData } = useGetCommonDiscussions({
     variables: {
       where: {
         commonId: id,
@@ -103,7 +80,7 @@ export default function CommonDetail() {
     },
   });
 
-  const { data: commonData, loading: isCommonLoading } = useGetCommonById({
+  const { data: commonData } = useGetCommonById({
     variables: {
       where: {
         id,
@@ -121,52 +98,52 @@ export default function CommonDetail() {
     proposalsData,
   ]);
 
-  const changeTabHandler = (tab: string) => setTab(tab);
-
   const getDisscussionDetail = useCallback(
     (payload: Discussion) => {
-      dispatch(loadDisscussionDetail.request(payload));
+      setCurrentDisscussion(payload);
       onOpen();
     },
-    [dispatch, onOpen],
+    [onOpen],
   );
 
   const getProposalDetail = useCallback(
     (payload: Proposal) => {
-      dispatch(loadProposalDetail.request(payload));
+      setCurrentProposal(payload);
       onOpen();
     },
-    [dispatch, onOpen],
+    [onOpen],
   );
 
   const closeModalHandler = useCallback(() => {
     onClose();
-    dispatch(clearCurrentDiscussion());
-    dispatch(clearCurrentProposal());
-  }, [onClose, dispatch]);
+    setCurrentDisscussion(null);
+    setCurrentProposal(null);
+  }, [onClose]);
 
   const clickPreviewDisscusionHandler = useCallback(
     (id: string) => {
-      changeTabHandler("discussions");
-      const disscussion = discussions.find((f) => f.id === id);
-      if (disscussion) {
-        getDisscussionDetail(disscussion);
+      setTab("discussions");
+      if (discussionsData?.discussions) {
+        const disscussion = discussionsData?.discussions.find((f) => f.id === id);
+        if (disscussion) {
+          getDisscussionDetail(disscussion);
+        }
       }
     },
-    [discussions, changeTabHandler, getDisscussionDetail],
+    [discussionsData, getDisscussionDetail],
   );
 
   const clickPreviewProposalHandler = useCallback(
     (id: string) => {
       if (proposalsData?.proposals) {
-        changeTabHandler("proposals");
+        setTab("proposals");
         const proposal = proposalsData?.proposals.find((f) => f.id === id);
         if (proposal) {
           getProposalDetail(proposal);
         }
       }
     },
-    [proposalsData?.proposals, changeTabHandler, getProposalDetail],
+    [proposalsData, getProposalDetail],
   );
 
   const openJoinModal = useCallback(() => {
@@ -189,15 +166,15 @@ export default function CommonDetail() {
           <>
             <PreviewInformationList
               title="Latest Discussions"
-              discussions={discussions}
-              vievAllHandler={() => changeTabHandler("discussions")}
+              discussions={discussionsData?.discussions || []}
+              vievAllHandler={() => setTab("discussions")}
               onClickItem={clickPreviewDisscusionHandler}
               type="discussions"
             />
             <PreviewInformationList
               title="Latest Proposals"
               proposals={activeProposals}
-              vievAllHandler={() => changeTabHandler("proposals")}
+              vievAllHandler={() => setTab("proposals")}
               onClickItem={clickPreviewProposalHandler}
               type="proposals"
             />
@@ -207,11 +184,11 @@ export default function CommonDetail() {
       case "discussions":
         return (
           <>
-            <AboutSidebarComponent title="About" vievAllHandler={() => changeTabHandler("about")} common={common} />
+            <AboutSidebarComponent title="About" vievAllHandler={() => setTab("about")} common={common} />
             <PreviewInformationList
               title="Latest Proposals"
               proposals={activeProposals}
-              vievAllHandler={() => changeTabHandler("proposals")}
+              vievAllHandler={() => setTab("proposals")}
               onClickItem={clickPreviewProposalHandler}
               type="proposals"
             />
@@ -220,11 +197,11 @@ export default function CommonDetail() {
       case "proposals":
         return (
           <>
-            <AboutSidebarComponent title="About" vievAllHandler={() => changeTabHandler("about")} common={common} />
+            <AboutSidebarComponent title="About" vievAllHandler={() => setTab("about")} common={common} />
             <PreviewInformationList
               title="Latest Discussions"
-              discussions={discussions}
-              vievAllHandler={() => changeTabHandler("discussions")}
+              discussions={discussionsData?.discussions || []}
+              vievAllHandler={() => setTab("discussions")}
               onClickItem={clickPreviewDisscusionHandler}
               type="discussions"
             />
@@ -239,7 +216,7 @@ export default function CommonDetail() {
     if (inViewport) {
       setStickyClass("");
     } else {
-      if (tab === "discussions" && discussions.length) {
+      if (tab === "discussions" && discussionsData?.discussions?.length) {
         setStickyClass("sticky");
       } else if (tab === "proposals" && activeProposals.length) {
         setStickyClass("sticky");
@@ -247,7 +224,7 @@ export default function CommonDetail() {
         setStickyClass("sticky");
       }
     }
-  }, [inViewport, activeProposals, tab, discussions, setStickyClass]);
+  }, [inViewport, activeProposals, tab, discussionsData, setStickyClass]);
 
   useEffect(() => {
     if (inViewPortFooter) {
@@ -257,7 +234,7 @@ export default function CommonDetail() {
     }
   }, [inViewPortFooter, setFooterClass]);
 
-  return loading && !common ? (
+  return !common ? (
     <Loader />
   ) : common ? (
     <>
@@ -328,7 +305,7 @@ export default function CommonDetail() {
                     <div
                       key={t.key}
                       className={`tab-item ${tab === t.key ? "active" : ""}`}
-                      onClick={() => changeTabHandler(t.key)}
+                      onClick={() => setTab(t.key)}
                     >
                       {t.name}
                     </div>
