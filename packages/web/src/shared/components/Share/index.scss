@@ -15,7 +15,10 @@
     cursor: pointer;
   }
   .share-button:hover {
-    opacity: 0.9;
+    background-color: $purple-hover;
+  }
+  .share-button:active {
+    background-color: $purple-pressed;
   }
 }
 .social-buttons-wrapper {
@@ -85,6 +88,9 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .social-wrapper {
     align-self: self-end;
+    .share-button:active {
+      background-color: unset;
+    }
   }
   .social-buttons-wrapper {
     position: unset;
