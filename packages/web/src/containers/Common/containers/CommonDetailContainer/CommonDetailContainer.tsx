@@ -68,7 +68,7 @@ export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
   const joinEffort = useRef(null);
   const inViewport = useViewPortHook(joinEffort.current, "-20px");
-  const inViewPortFooter = useViewPortHook(document.querySelector(".copyrights"), "0px");
+  const inViewPortFooter = useViewPortHook(document.querySelector(".footer-wrapper"), "0px");
   const [stickyClass, setStickyClass] = useState("");
   const [footerClass, setFooterClass] = useState("");
   const [tab, setTab] = useState("about");
@@ -246,6 +246,13 @@ export default function CommonDetail() {
       }
     }
   }, [inViewport, activeProposals, tab, discussions, setStickyClass]);
+
+  window.onscroll = () => {
+    document.documentElement.style.setProperty(
+      "--join-effort-bottom",
+      `${Math.abs(document.body.scrollHeight - window.pageYOffset - window.screen.height - 520)}px`,
+    );
+  };
 
   useEffect(() => {
     if (inViewPortFooter) {

@@ -202,7 +202,7 @@
                 margin-right: unset;
                 left: 50%;
                 &.footer-sticky {
-                  bottom: 510px;
+                  bottom: var(--join-effort-bottom);
                 }
               }
             }
