@@ -247,20 +247,16 @@ export default function CommonDetail() {
     }
   }, [inViewport, activeProposals, tab, discussions, setStickyClass]);
 
-  window.onscroll = () => {
-    document.documentElement.style.setProperty(
-      "--join-effort-bottom",
-      `${Math.abs(document.body.scrollHeight - window.pageYOffset - window.screen.height - 520)}px`,
-    );
-  };
-
   useEffect(() => {
     if (inViewPortFooter) {
+      if (inViewport) {
+        setStickyClass("sticky");
+      }
       setFooterClass("footer-sticky");
     } else {
       setFooterClass("");
     }
-  }, [inViewPortFooter, setFooterClass]);
+  }, [inViewPortFooter, setFooterClass, inViewport]);
 
   return loading && !common ? (
     <Loader />
@@ -341,10 +337,7 @@ export default function CommonDetail() {
                     ))}
                   </div>
                   <div className="social-wrapper" ref={joinEffort}>
-                    <button
-                      className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
-                      onClick={onOpenJoinModal}
-                    >
+                    <button className="button-blue join-the-effort-btn" onClick={onOpenJoinModal}>
                       Join the effort
                     </button>
                     {screenSize === ScreenSize.Desktop && <Share type="popup" color={Colors.lightPurple} />}
@@ -397,6 +390,14 @@ export default function CommonDetail() {
                     <Loader />
                   ))}
               </div>
+              {screenSize === ScreenSize.Mobile && !inViewport && (
+                <button
+                  className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
+                  onClick={onOpenJoinModal}
+                >
+                  Join the effort
+                </button>
+              )}
               {(screenSize === ScreenSize.Desktop || tab !== "about") && (
                 <div className="sidebar-wrapper">{renderSidebarContent()}</div>
               )}

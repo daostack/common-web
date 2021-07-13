@@ -192,19 +192,6 @@
             width: 100%;
             .join-the-effort-btn {
               height: 56px;
-
-              &.sticky {
-                position: fixed;
-                z-index: 1;
-                bottom: 30px;
-                width: 90%;
-                transform: translateX(-50%);
-                margin-right: unset;
-                left: 50%;
-                &.footer-sticky {
-                  bottom: var(--join-effort-bottom);
-                }
-              }
             }
           }
         }
@@ -215,6 +202,7 @@
       background-color: $light-purple-background;
       padding: 20px 0;
       .inner-main-content-wrapper {
+        position: relative;
         flex-direction: column;
         padding: 0px $content-padding-mobile;
         &.history {
@@ -222,7 +210,7 @@
         }
         .tab-content-wrapper {
           width: unset;
-          margin-bottom: 60px;
+          margin-bottom: 70px;
           .about-title {
             padding-bottom: 0px;
           }
@@ -230,6 +218,22 @@
         .sidebar-wrapper {
           width: unset;
           padding-left: unset;
+        }
+        .join-the-effort-btn {
+          height: 56px;
+          &.sticky {
+            position: fixed;
+            z-index: 1;
+            bottom: 30px;
+            width: 90%;
+            transform: translateX(-50%);
+            margin-right: unset;
+            left: 50%;
+            &.footer-sticky {
+              position: absolute;
+              bottom: 25px;
+            }
+          }
         }
       }
     }
