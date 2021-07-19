@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import { ProposalCountDown } from "..";
 import { Proposal, Discussion } from "../../../../../shared/models";
 import { VotesComponent } from "../VotesComponent";

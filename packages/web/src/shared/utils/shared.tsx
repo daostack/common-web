@@ -1,7 +1,8 @@
-import { MobileOperatingSystem } from "../constants";
-import { User } from "../models";
 import millify from "millify";
 import moment from "moment";
+
+import { MobileOperatingSystem } from "../constants";
+import { User } from "../models";
 
 export const formatPrice = (price?: number) => {
   if (price) return `$${millify(price / 100)}`;
@@ -58,7 +59,7 @@ export const isMobile = (): boolean => {
  * @returns {MobileOperatingSystem}
  */
 export const getMobileOperatingSystem = (): MobileOperatingSystem => {
-  var userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+  const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
   // Windows Phone must come first because its UA also contains "Android"
   if (/windows phone/i.test(userAgent)) {
     return MobileOperatingSystem.WindowsPhone;

@@ -1,5 +1,6 @@
-import { User } from ".";
 import { Report } from "./Report";
+
+import { User } from ".";
 
 export enum DiscussionMessageType {
   Message = "Message",

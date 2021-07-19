@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { NavLink, Link, useLocation, useHistory } from "react-router-dom";
+import classNames from "classnames";
+
 import { Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
@@ -8,7 +10,6 @@ import { getScreenSize } from "../../store/selectors";
 import DownloadCommonApp from "../DownloadCommonApp/DownloadCommonApp";
 import MobileLinks from "../MobileLinks/MobileLinks";
 import "./index.scss";
-import classNames from "classnames";
 
 const Header = () => {
   const location = useLocation();
@@ -76,7 +77,12 @@ const Header = () => {
           </div>
           {showMenu && (
             <div className="menu-wrapper">
-              <DownloadCommonApp setHasClosedPopup={() => {}} inMenu={true} />
+              <DownloadCommonApp
+                setHasClosedPopup={() => {
+                  return true;
+                }}
+                inMenu={true}
+              />
               {links}
             </div>
           )}

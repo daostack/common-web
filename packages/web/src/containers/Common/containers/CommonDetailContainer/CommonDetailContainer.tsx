@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+
 import { Loader, Share } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
 import { useModal, useViewPortHook } from "../../../../shared/hooks";

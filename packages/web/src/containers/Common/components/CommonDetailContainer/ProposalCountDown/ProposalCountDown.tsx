@@ -41,7 +41,7 @@ export default function ProposalCountDown({ date, type }: ProposalCountDownInter
   useEffect(() => {
     if (state.difference > 0) {
       const interval = setTimeout(() => {
-        setState(countDownCount(date));
+        return setState(countDownCount(date));
       }, 1000);
 
       return () => clearTimeout(interval);

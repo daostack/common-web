@@ -1,4 +1,5 @@
 import React from "react";
+
 import { createApolloClient } from "../utils";
 
 const useApollo = (uri: string, token?: string) => {

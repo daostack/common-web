@@ -1,7 +1,9 @@
 import React from "react";
-import { Proposal } from "../../../../../shared/models";
-import "./index.scss";
 import classNames from "classnames";
+
+import { Proposal } from "../../../../../shared/models";
+
+import "./index.scss";
 
 interface VotesComponentProps {
   proposal: Proposal;

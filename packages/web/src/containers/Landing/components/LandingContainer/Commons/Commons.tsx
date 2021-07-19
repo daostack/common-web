@@ -1,17 +1,17 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import SwiperCore, { Pagination } from "swiper/core";
+import { Swiper, SwiperSlide } from "swiper/react";
+
 import { Loader } from "../../../../../shared/components";
 import { ROUTE_PATHS, ScreenSize } from "../../../../../shared/constants";
 import { Common } from "../../../../../shared/models";
 import { getScreenSize } from "../../../../../shared/store/selectors";
 import { CommonListItem } from "../../../../Common/components";
-
 import "./index.scss";
-import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper.min.css";
 import "swiper/components/pagination/pagination.min.css";
-import SwiperCore, { Pagination } from "swiper/core";
 import { useGetCommonDataQuery } from "../../../../../graphql";
 
 SwiperCore.use([Pagination]);

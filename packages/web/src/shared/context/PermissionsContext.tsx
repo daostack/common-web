@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from "react";
-import { useGetUserPermissionsQuery } from "../../graphql";
 
+import { useGetUserPermissionsQuery } from "../../graphql";
 import { useAuthContext } from "./AuthContext";
 
 interface IPermissionsContext {

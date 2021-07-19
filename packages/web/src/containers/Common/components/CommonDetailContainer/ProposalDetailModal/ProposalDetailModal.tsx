@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import { Loader } from "../../../../../shared/components";
 import { Proposal } from "../../../../../shared/models";
 import { formatPrice, getDaysAgo, getUserName } from "../../../../../shared/utils";

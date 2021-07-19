@@ -1,9 +1,9 @@
-import produce from "immer";
+import { produce } from "immer";
+import { ActionType, createReducer } from "typesafe-actions";
 
 import { AuthStateType } from "../interface";
 // import { tokenHandler } from "../../../shared/utils";
 import * as actions from "./actions";
-import { ActionType, createReducer } from "typesafe-actions";
 
 type Action = ActionType<typeof actions>;
 

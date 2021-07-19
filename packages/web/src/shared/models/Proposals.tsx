@@ -1,5 +1,6 @@
-import { CommonContributionType, DiscussionMessage, Rules, User } from ".";
-import { Time, Moderation, File } from "./shared";
+import { Moderation } from "./shared";
+
+import { CommonContributionType, DiscussionMessage, User } from ".";
 
 export enum ProposalFundingState {
   NotRelevant = "notRelevant",

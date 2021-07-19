@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Discussion } from "../../../../../shared/models";
 import { EmptyTabComponent } from "../EmptyTabContent";
 import DiscussionItemComponent from "./DiscussionItemComponent";
@@ -6,7 +7,7 @@ import "./index.scss";
 
 interface DiscussionsComponentProps {
   discussions: Discussion[];
-  loadDisscussionDetail: Function;
+  loadDisscussionDetail: (payload: Discussion) => void;
 }
 
 export default function DiscussionsComponent({ discussions, loadDisscussionDetail }: DiscussionsComponentProps) {

@@ -1,4 +1,5 @@
 import { ScreenSize } from "../constants";
+
 import { Notification } from "./";
 
 export interface SharedStateType {

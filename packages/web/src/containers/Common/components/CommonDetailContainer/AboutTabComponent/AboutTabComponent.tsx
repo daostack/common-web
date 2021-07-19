@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Share } from "../../../../../shared/components";
 import { Colors, ScreenSize } from "../../../../../shared/constants";
 import { Common } from "../../../../../shared/models";
@@ -22,7 +23,7 @@ export default function AboutTabComponent({ common, screenSize, onOpenJoinModal 
         <div className="links">
           <div className="title">Links</div>
           {common.links.map((link) => (
-            <a href={link.value} target="_blank" rel="noopener noreferrer">
+            <a href={link.value} key={link.title} target="_blank" rel="noopener noreferrer">
               {link.title}
             </a>
           ))}

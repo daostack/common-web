@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+
 import { useCalculateReadMoreLength } from "../../../../../shared/hooks";
 import { Discussion } from "../../../../../shared/models";
 import { getUserName, getDaysAgo } from "../../../../../shared/utils";
 
 interface DiscussionItemComponentProps {
   discussion: Discussion;
-  loadDisscussionDetail: Function;
+  loadDisscussionDetail: (payload: Discussion) => void;
 }
 
 export default function DiscussionItemComponent({ discussion, loadDisscussionDetail }: DiscussionItemComponentProps) {

@@ -1,4 +1,5 @@
 import React, { useCallback } from "react";
+
 import { JoinTheEffortModal } from "..";
 import { Modal } from "../../../../../shared/components/Modal";
 import { Colors } from "../../../../../shared/constants";

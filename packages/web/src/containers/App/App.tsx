@@ -1,12 +1,13 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
 import { AuthContainer } from "../Auth";
 import PrivateRoute from "./PrivateRoute";
 import { Content, NotFound, Footer, Header } from "../../shared/components";
 import { CommonContainer } from "../Common";
 import { LandingContainer } from "../Landing";
 import { ROUTE_PATHS, SMALL_SCREEN_BREAKPOINT, ScreenSize } from "../../shared/constants";
-import { useDispatch } from "react-redux";
 import { changeScreenSize } from "../../shared/store/actions";
 
 const App = () => {

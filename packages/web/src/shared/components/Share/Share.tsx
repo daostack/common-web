@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+
 import { Colors } from "../../constants";
 import { useModal, useOutsideClick } from "../../hooks";
 import { Modal } from "../Modal";

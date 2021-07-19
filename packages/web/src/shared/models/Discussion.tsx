@@ -1,5 +1,5 @@
 import { DiscussionMessage } from "./DiscussionMessage";
-import { Time, Moderation, File } from "./shared";
+import { Moderation, File } from "./shared";
 import { User } from "./User";
 
 export interface Discussion {

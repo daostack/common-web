@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Share } from "../../../../../shared/components";
 import { DiscussionMessage } from "../../../../../shared/models";
 import ChatMessage from "./ChatMessage";
@@ -12,7 +13,7 @@ interface ChatComponentInterface {
 }
 
 function groupday(acc: any, currentValue: DiscussionMessage): Messages {
-  let d = new Date(currentValue.createTime);
+  const d = new Date(currentValue.createTime);
   const i = Math.floor(d.getTime() / (1000 * 60 * 60 * 24));
   const timestamp = i * (1000 * 60 * 60 * 24);
   acc[timestamp] = acc[timestamp] || [];

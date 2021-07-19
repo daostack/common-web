@@ -1,5 +1,6 @@
 import React from "react";
 import { Route, Redirect, RouteProps } from "react-router-dom";
+
 import { LOGIN_REDIRECT_LINK } from "../../shared/constants";
 
 interface PrivateRouteProps extends RouteProps {

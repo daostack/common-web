@@ -1,5 +1,3 @@
-import { Proposal } from "./Proposals";
-
 export interface Member {
   joinedAt: { seconds: number; nanoseconds: number };
   userId: string;

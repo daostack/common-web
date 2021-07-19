@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
+
 import { MobileLinks } from "../../../../shared/components/MobileLinks";
 import { ContactUs } from "../../components/LandingContainer/ContactUs";
 import { Commons } from "../../components/LandingContainer/Commons";
@@ -86,7 +87,7 @@ const LandingContainer = () => {
             on simple, and well-defined agendas.
           </span>
           <p>
-            Humanity's greatest achievements were made by massive <br className="desktop-break" /> collaborations.
+            Humanity&apos;s greatest achievements were made by massive <br className="desktop-break" /> collaborations.
             Common empowers groups to collaborate with no <br className="desktop-break" /> single organizer. And when
             every member gets an equal part in <br className="desktop-break" /> every step of the process, we enter a
             new era of trust and <br className="desktop-break" /> collaboration.
@@ -97,7 +98,7 @@ const LandingContainer = () => {
         <Commons />
       </section>
       <section>
-        <h1>What's Calling You?</h1>
+        <h1>What&apos;s Calling You?</h1>
         <span className="bold-text">You can start a common for any shared agenda such as...</span>
         <div className="content-element illustrations-wrapper-2">
           <div>

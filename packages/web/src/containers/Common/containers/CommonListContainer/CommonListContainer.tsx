@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
 import { useGetCommonDataQuery } from "../../../../graphql";
 import { Loader } from "../../../../shared/components";
 import DownloadCommonApp from "../../../../shared/components/DownloadCommonApp/DownloadCommonApp";
 import { isMobile } from "../../../../shared/utils";
-
 import { CommonListItem } from "../../components";
 import { COMMON_PAGE_SIZE } from "../../constants";
 

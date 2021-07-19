@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import { ProposalCountDown } from "..";
 import { useCalculateReadMoreLength } from "../../../../../shared/hooks";
 import { Proposal } from "../../../../../shared/models";
@@ -6,7 +7,7 @@ import { formatPrice, getUserName, getDaysAgo } from "../../../../../shared/util
 import { VotesComponent } from "../VotesComponent";
 
 interface ProposalItemComponentProps {
-  loadProposalDetail: Function;
+  loadProposalDetail: (payload: Proposal) => void;
   proposal: Proposal;
 }
 

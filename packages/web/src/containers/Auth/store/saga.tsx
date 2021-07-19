@@ -5,7 +5,6 @@ import history from "../../../shared/history";
 import { tokenHandler } from "../../../shared/utils";
 import * as actions from "./actions";
 import firebase from "../../../shared/utils/firebase";
-
 import { startLoading, stopLoading } from "../../../shared/store/actions";
 import { User } from "../../../shared/models";
 import { GoogleAuthResultInterface } from "../interface";
@@ -27,6 +26,7 @@ function* socialLoginSaga({ payload }: AnyAction & { payload: string }) {
           tokenHandler.setUser(user);
           history.push("/");
         }
+        return user;
       });
   } catch (error) {
     yield put(actions.socialLogin.failure(error));
