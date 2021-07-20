@@ -10,6 +10,7 @@ export const InitializeFirebase = () => {
       logger.error('Cannot find firebase private key');
     }
 
+    /* eslint-disable */
     // @ts-ignore
     const credential = admin.credential.cert({
       type: process.env['FIREBASE_TYPE'],
@@ -23,6 +24,7 @@ export const InitializeFirebase = () => {
       auth_provider_x509_cert_url: process.env['FIREBASE_AUTH_PROVIDER_X509_CERT_URL'],
       client_x509_cert_url: process.env['FIREBASE_CLIENT_X509_CERT_URL']
     } as any);
+    /* eslint-enable */
 
     admin.initializeApp({
       credential
@@ -37,6 +39,9 @@ export const messaging = (() => {
 
   return admin.messaging();
 })();
+
+export const verifyIdToken = (token: string) =>
+  admin.auth().verifyIdToken(token);
 
 /**
  * @deprecated
