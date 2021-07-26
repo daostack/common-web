@@ -1,8 +1,8 @@
-import { auth } from 'firebase-admin';
 import { PrismaClient } from '@prisma/client';
 import { ExpressContext } from 'apollo-server-express';
 
-import { prisma } from '@common/core';
+import { prisma, FirebaseToolkit } from '@common/core';
+
 import { Express } from 'express';
 
 export interface IRequestContext {
@@ -16,7 +16,7 @@ export interface IRequestContext {
    * Get the authenticated user decoded token payload
    * or throw an error if no user is authenticated
    */
-  getUserDecodedToken: () => Promise<auth.DecodedIdToken>;
+  getUserDecodedToken: () => Promise<string>;
 
   /**
    * The prisma client
@@ -50,12 +50,12 @@ export const createRequestContext = ({ req, res, connection }: ExpressContext): 
       }
 
       // @todo Use custom method for that
-      return (await auth().verifyIdToken(token)).uid;
+      return (await FirebaseToolkit.verifyIdToken(token)).uid;
     },
 
     getUserDecodedToken: async () => {
       // @todo Use custom method for that
-      return (await auth().verifyIdToken(req.headers.authorization as string));
+      return (await FirebaseToolkit.verifyIdToken(req.headers.authorization as string));
     }
   };
 };

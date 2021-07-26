@@ -847,6 +847,8 @@ export type Discussion = BaseEntity & {
   owner?: Maybe<User>;
   messageCount: Scalars['Int'];
   messages: Array<DiscussionMessage>;
+
+  commonId: Scalars['String'];
 };
 
 

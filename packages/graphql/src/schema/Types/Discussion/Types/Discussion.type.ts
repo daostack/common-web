@@ -28,6 +28,10 @@ export const DiscussionType = objectType({
       type: 'User'
     });
 
+    t.nonNull.string('commonId', {
+      description: 'The parent common of the discussion'
+    });
+
     t.nonNull.int('messageCount', {
       complexity: 20,
       resolve: (root) => {

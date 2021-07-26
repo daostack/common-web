@@ -17,4 +17,6 @@ model Discussion {
 
   messages      DiscussionMessage[]
   subscriptions DiscussionSubscription[]
+
+  commonId String
 }
