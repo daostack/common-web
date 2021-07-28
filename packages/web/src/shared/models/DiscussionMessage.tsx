@@ -1,14 +1,23 @@
-import { Time, Moderation } from "./shared";
-import { User } from "./User";
+import { Report } from "./Report";
+
+import { User } from ".";
+
+export enum DiscussionMessageType {
+  Message = "Message",
+}
+
+export enum DiscussionMessageFlag {
+  Clear = "Clear",
+  Reported = "Reported",
+  Hidden = "Hidden",
+}
 
 export interface DiscussionMessage {
-  commonId: string;
-  createTime: Time;
-  discussionId: string;
   id: string;
-  moderation: Moderation;
-  ownerId: string;
-  text: string;
-  updatedAt: Time;
+  message: string;
+  type: DiscussionMessageType;
+  flag: DiscussionMessageFlag;
+  reports: Array<Report>;
+  createTime: Date;
   owner?: User;
 }

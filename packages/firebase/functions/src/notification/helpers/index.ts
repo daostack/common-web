@@ -1,3 +1,5 @@
+import { env } from '../../constants';
+
 export const getFundingRequestAcceptedTemplate = (country: string, amount: number): string => {
   if (amount) {
     return !country
@@ -8,3 +10,6 @@ export const getFundingRequestAcceptedTemplate = (country: string, amount: numbe
   }
   return 'userFundingRequestAcceptedZeroAmount';
 };
+
+//indication the email was sent from staging
+export const testFlag = (): string => env.environment === 'staging' || env.environment === 'dev' ? '[TEST] ' : '';

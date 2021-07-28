@@ -70,7 +70,8 @@ export const notifyData: Record<string, IEventObject> = {
           emailStubs: {
             userName: getNameString(userData),
             commonName: commonData.name,
-            commonLink: Utils.getCommonLink(commonData.id)
+            commonLink: Utils.getCommonLink(commonData.id),
+            fromEmail: env.mail.sender,
           }
         },
         {
@@ -87,7 +88,7 @@ export const notifyData: Record<string, IEventObject> = {
             commonName: commonData.name,
             tagline: commonData.metadata.byline,
             about: commonData.metadata.description,
-            paymentType: 'one-time',
+            paymentType: commonData.metadata.contributionType,
             minContribution: (commonData.metadata.minFeeToJoin / 100)
               .toLocaleString('en-US', {
                 style: 'currency',
@@ -128,7 +129,8 @@ export const notifyData: Record<string, IEventObject> = {
         emailStubs: {
           userName: getNameString(userData),
           link: Utils.getCommonLink(commonData.id),
-          commonName: commonData.name
+          commonName: commonData.name,
+          fromEmail: env.mail.sender,
         }
       };
     }
@@ -184,7 +186,8 @@ export const notifyData: Record<string, IEventObject> = {
         emailStubs: {
           commonName: commonData.name,
           commonLink: Utils.getCommonLink(commonData.id),
-          userName: getNameString(userData)
+          userName: getNameString(userData),
+          fromEmail: env.mail.sender,
         }
       };
     }
@@ -328,20 +331,23 @@ export const notifyData: Record<string, IEventObject> = {
       cardMetadata: ICardMetadata;
     }): ISendTemplatedEmailData[] => {
       const userTemplate = getFundingRequestAcceptedTemplate(cardMetadata?.billingDetails?.country, proposalData.fundingRequest.amount);
+      const from = proposalData.fundingRequest.amount === 0 ? env.mail.sender : env.mail.payoutEmail;
       return [
         {
           to: userData.email,
-          from: proposalData.fundingRequest.amount === 0 ? env.mail.sender : env.mail.payoutEmail,
+          from,
           bcc: env.mail.payoutEmail,
           templateKey: (userTemplate as any),
           emailStubs: {
             userName: getNameString(userData),
             proposal: (proposalData as any).description.title,
+            proposalId: proposalData.id,
             fundingAmount: (proposalData.fundingRequest.amount / 100).toLocaleString('en-US', {
               style: 'currency',
               currency: 'USD'
             }),
-            commonName: commonData.name
+            commonName: commonData.name,
+            fromEmail: from
           }
         },
         {
@@ -394,7 +400,8 @@ export const notifyData: Record<string, IEventObject> = {
         amountRequested: (proposal.fundingRequest.amount / 100)
           .toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
         commonBalance: (common.balance / 100)
-          .toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+          .toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
+        fromEmail: env.mail.sender,
       }
     })
   },
@@ -426,7 +433,8 @@ export const notifyData: Record<string, IEventObject> = {
         emailStubs: {
           userName: getNameString(userData),
           commonLink: Utils.getCommonLink(commonData.id),
-          commonName: commonData.name
+          commonName: commonData.name,
+          fromEmail: env.mail.sender,
         }
       };
     }
@@ -525,7 +533,8 @@ export const notifyData: Record<string, IEventObject> = {
         emailStubs: {
           userName: getNameString(userData),
           commonLink: Utils.getCommonLink(commonData.id),
-          commonName: commonData.name
+          commonName: commonData.name,
+          fromEmail: env.mail.payoutEmail,
         }
       };
     }
@@ -551,7 +560,8 @@ export const notifyData: Record<string, IEventObject> = {
       emailStubs: {
         firstName: user.firstName,
         commonName: subscription.metadata.common.name,
-        commonLink: Utils.getCommonLink(subscription.metadata.common.id)
+        commonLink: Utils.getCommonLink(subscription.metadata.common.id),
+        fromEmail: env.mail.payoutEmail,
       }
     })
   },
@@ -577,7 +587,8 @@ export const notifyData: Record<string, IEventObject> = {
         firstName: user.firstName,
         dueDate: moment(subscription.dueDate.toDate()).format('MMMM D, YYYY'),
         commonName: subscription.metadata.common.name,
-        commonLink: Utils.getCommonLink(subscription.metadata.common.id)
+        commonLink: Utils.getCommonLink(subscription.metadata.common.id),
+        fromEmail: env.mail.payoutEmail,
       }
     })
   },
@@ -612,7 +623,8 @@ export const notifyData: Record<string, IEventObject> = {
         commonLink: Utils.getCommonLink(subscription.metadata.common.id),
         chargeDate: moment(new Date()).format('MMMM D, YYYY'),
         lastDigits: card.metadata.digits,
-        chargeAmount: (subscription.amount / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+        chargeAmount: (subscription.amount / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
+        fromEmail: env.mail.payoutEmail,
       }
     })
   }

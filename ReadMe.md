@@ -12,33 +12,49 @@
   <img alt="CloudFunctions Tests Badge" src="https://github.com/daostack/common-monorepo/workflows/Firebase%20CloudFunctions%20Test%20CI/badge.svg" />
 </p>
 
-### Getting Started
+## Documentation
 
-To get started with development for the project you should have `Node 12 LTS` installed on your machine. 
-If you plan to run the CloudFunctions you should also have Java SDK installed. The next think you need to do is to 
-install lerna globally. To do so you should run `yarn global add lerna` in any location. Afterwards simple `yarn boot`
+The backend consist of multiple parts:
 
-### Documentation
+* `Core` - In this package is all the logic of the app
+* `GraphQL` - In this package is all the user facing GraphQL API. The authentication and authorization should also be
+  handled here as they are not one of `core`'s concerns
+* `Worker` - This package contains the background jobs of the project
+<<<<<<< HEAD
 
-- General Commands
-    - [`exec`](/docs/commands/general-commands.md#exec)
-    - [`clean`](/docs/commands/general-commands.md#clean)
-    - [`typecheck`](/docs/commands/general-commands.md#typecheck)
+### Setting up the project
 
 
-- Firebase Commands
-    - [`firebase:dev`](/docs/commands/firebase-commands.md#dev)
-    - [`firebase:start`](/docs/commands/firebase-commands.md#start)
-    - [`firebase:compile`](/docs/commands/firebase-commands.md#compile)
-    - [`firebase:compile:watch`](/docs/commands/firebase-commands.md#compile:watch)
-    - *`Internal: firebase:ci:setup`*
-    - *`Internal: firebase:ci:test`*
-    
+* Node - v14.17.0
+* Postgres - PostgreSQL 13.2
+* Redis - Redis server v=6.2.3
 
-- Typings Commands
-    - [`types:compile`](/docs/commands/typings-commands.md)
-    - [`types:compile:watch`](/docs/commands/typings-commands.md)
-    
+Then you need to install all the dependencies in the project. To do that you need to run `yarn bootstrap`. This will
+install all the dependencies and link them accordingly.
 
-- Hooks Commands (Internal, not for use)
-    - `hooks:precommit`
+After you get all your things installed you need to get a hold of the env file. Example can be found
+[here](.env.example). When the .env is placed in the project root you need to run `yarn env:update` to propagate the env
+file in all the packages that need it.
+
+When the .env files are placed correctly you need to sync the database with the latest migrations. To do so you need to
+run `yarn db:setup` and wait for it to finish.
+
+And with that the project is set up.
+
+### Running the project
+
+The backend has two entry points: `graphql` and `worker`. They both depend on the third package: `core`, so to run
+either of them the first package. To compile any project you need to run `yarn compile` in that project folder. If you
+wish to compile all projects you can also run `yarn compile:backend` in the root of the project.
+
+To run the `graphql` project you have two options:
+
+* `yarn start` - To run in normally, without reloading. This is mostly for production
+* `yarn dev` - To hotreload it on changes. This only transpiles the changes, perfect for fast development
+
+The same applies to the `worker` project
+
+## Guides
+
+[**Authorization Guide**](/docs/guides/authorization.md) - How and where to handle the authorization <br />
+[**Event Hooks Guide**](/docs/guides/event-hooks.md) - How and where register and create hooks that run on events <br />

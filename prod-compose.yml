@@ -1,0 +1,34 @@
+version: '3'
+services:
+  worker:
+    image: common-backend:latest
+    container_name: common-worker
+    ports:
+     - "4001:4001"
+    depends_on:
+      - init-db
+    command: ["yarn", "run", "start"]
+    env_file: [".env"]
+    working_dir: /app/packages/worker
+    networks: [internal, host]
+  graphql:
+    image: common-backend:latest
+    container_name: common-graphql
+    ports:
+     - "80:4000"
+    depends_on:
+      - init-db
+    command: ["yarn", "run", "start"]
+    env_file: [".env"]
+    working_dir: /app/packages/graphql
+    networks: [internal, host]
+  init-db:
+    image: common-backend
+    restart: "no"
+    working_dir: /app/packages/core
+    env_file: [".env"]
+    command: ["yarn", "run", "db:sync"]
+    networks: [internal]
+networks:
+  internal:
+  host:

@@ -12,7 +12,7 @@ This Common is visible to you and anyone you share it with. Inspiring or highly 
 <br />
 For more information you can contact us any time using our  <a href="{{supportChatLink}}">support chat</a>
 <br />
-Common,
+Common Team ({{fromEmail}}),
 <br />
 Collaborative Social Action.
 `;
@@ -29,7 +29,10 @@ const emailStubs = {
   },
   supportChatLink: {
     required: true
-  }
+  },
+  fromEmail: {
+    required: true
+  },
 };
 
 export const userCommonCreated = {

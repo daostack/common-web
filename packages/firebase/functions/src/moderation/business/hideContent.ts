@@ -36,19 +36,29 @@ export const hideContent = async (hideContentPayload: HideContentPayload): Promi
 
 	//Only users with permissions can hide content
   const { itemId, commonId, userId, type } = hideContentPayload;
-  if (!hasPermission(userId, commonId)) {
+  const isModerator = await hasPermission(userId, commonId);
+  if (!isModerator) {
     throw new UnauthorizedError();
   }
 
   const item = (await db.collection(type).doc(itemId).get()).data();
+  const updatedAt = firestore.Timestamp.now();
+  let countdownPeriod = null;
+  if (type === TYPES.proposals) {
 
+    countdownPeriod = item?.moderation?.countdownPeriod < item.quietEndingPeriod
+      ? item.quietEndingPeriod
+      : item?.countdownPeriod - (updatedAt.seconds - item.createdAt.seconds);
+  }
+  
   const updatedItem = {
     ...item,
     moderation: {
       flag: FLAGS.hidden,
       reasons: item.moderation?.reasons || [],
       moderatorNote: item.moderation?.moderatorNote || '',
-      updatedAt: firestore.Timestamp.now(),
+      updatedAt,
+      countdownPeriod: countdownPeriod < item.quietEndingPeriod ? item.quietEndingPeriod : countdownPeriod,
       reporter: userId,
       moderator: userId,
     } as IModeration,

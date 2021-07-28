@@ -1,0 +1,19 @@
+enum NotificationType {
+  General
+
+  CommonWhitelisted
+  CommonCreated
+  FundingRequestCreated
+  FundingRequestAccepted
+  FundingRequestExecuted
+  FundingRequestRejected
+  MessageCreated
+  CommonMemberAdded
+  RequestToJoinCreated
+  RequestToJoinRejected
+  DiscussionCreated
+  ProposalReported
+  DiscussionReported
+  DiscussionMessageReported
+  WelcomeNotification
+}

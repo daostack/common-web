@@ -1,4 +1,4 @@
-import { Common, Proposal, Discussion } from "../../../shared/models";
+import { Common, Discussion, Proposal } from "../../../shared/models";
 
 export interface CommonsStateType {
   commons: Common[];

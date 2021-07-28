@@ -38,6 +38,20 @@ const validFundingData = (commonId: string) => ({
   title: 'I need money'
 });
 
+const validJoinDataZeroContribution = (commonId: string) => ({
+  commonId,
+  description: 'I wanna be a part, but without paying',
+  funding: 0,
+  cardId: `test-card-id-for-common-${commonId}`
+});
+
+const invalidJoinDataZeroContribution = (commonId: string) => ({
+  commonId,
+  description: 'I wanna be a part, but pay less that $5',
+  funding: 300,
+  cardId: `test-card-id-for-common-${commonId}`
+});
+
 describe('Proposal Related Cloud Functions', () => {
   afterAll(async () => {
     await test.cleanup();
@@ -167,6 +181,70 @@ describe('Proposal Related Cloud Functions', () => {
       expect(response.body.proposerId).toBe(joinerId);
       expect(response.body.type).toBe('join');
       expect(response.body.commonId).toBe(common.id);
+    });
+
+    it('should make a join request when funding = 0 and 0 contribution is allowed', async () => {
+      // Setup
+      const joinerId = v4();
+      const founderId = v4();
+
+      const authToken = await getTestAuthToken(joinerId);
+      const common = await createTestCommon(founderId);
+
+      const response = await proposalsApp
+        .post(joinEndpoint)
+        .send(validJoinDataZeroContribution(common.id))
+        .set({
+          Authorization: authToken
+        });
+
+      expect(response.body.message).toBe('Join request successfully created!');
+      expect(response.body.proposerId).toBe(joinerId);
+      expect(response.body.type).toBe('join');
+      expect(response.body.commonId).toBe(common.id);
+
+    });
+
+    it('should not make a join request when 0 < funding < 5 and 0 contribution is allowed', async () => {
+      // Setup
+      const joinerId = v4();
+      const founderId = v4();
+
+      const authToken = await getTestAuthToken(joinerId);
+      const common = await createTestCommon(founderId);
+
+      const response = await proposalsApp
+        .post(joinEndpoint)
+        .send(invalidJoinDataZeroContribution(common.id))
+        .set({
+          Authorization: authToken
+        });
+
+      expect(response.body.error.includes(`The funding cannot be less than the minimum required funding`)).toBeTruthy();
+      expect(response.body.errorCode).toBe('GenericError');
+      expect(response.body.errorMessage).toBe('Your join request cannot be created, because the min fee to join is $65.00, but you provided $3.00');
+      expect(response.status).toBe(400);
+    });
+
+    it('should not make a join request when funding = 0 and 0 contribution is not allowed', async () => {
+      // Setup
+      const joinerId = v4();
+      const founderId = v4();
+
+      const authToken = await getTestAuthToken(joinerId);
+      const common = await createTestCommon(founderId, false); //@askAlexI if he's ok with that (having a second argument for zeroContribution) :)
+
+      const response = await proposalsApp
+        .post(joinEndpoint)
+        .send(validJoinDataZeroContribution(common.id))
+        .set({
+          Authorization: authToken
+        });
+
+      expect(response.body.error.includes(`The funding cannot be less than the minimum required funding`)).toBeTruthy();
+      expect(response.body.errorCode).toBe('GenericError');
+      expect(response.body.errorMessage).toBe('Your join request cannot be created, because the min fee to join is $65.00, but you provided $0.00');
+      expect(response.status).toBe(400);
     });
   });
 

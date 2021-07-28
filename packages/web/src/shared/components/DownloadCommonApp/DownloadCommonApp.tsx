@@ -1,11 +1,12 @@
 import React from "react";
+
 import { COMMON_APP_APP_STORE_LINK, COMMON_APP_GOOGLE_PLAY_LINK, MobileOperatingSystem } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import { getMobileOperatingSystem } from "../../utils";
 import "./index.scss";
 
 interface IProps {
-  setHasClosedPopup: Function;
+  setHasClosedPopup: (payload: string) => void;
   inMenu?: boolean;
 }
 

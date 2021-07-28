@@ -1,0 +1,22 @@
+model Notification {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  show Boolean @default(true)
+
+  type       NotificationType
+  seenStatus NotificationSeenStatus @default(NotSeen)
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  status NotificationProcessStatus @default(NotProcessed)
+
+  // Optional Links
+  common     Common?
+  payout     Payout?
+  proposal   Proposal?
+  discussion Discussion?
+}

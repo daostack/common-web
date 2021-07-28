@@ -1,7 +1,7 @@
 import produce from "immer";
 import { ActionType, createReducer } from "typesafe-actions";
-import { ScreenSize, SMALL_SCREEN_BREAKPOINT } from "../constants";
 
+import { ScreenSize, SMALL_SCREEN_BREAKPOINT } from "../constants";
 import { SharedStateType } from "../interfaces";
 import * as actions from "./actions";
 

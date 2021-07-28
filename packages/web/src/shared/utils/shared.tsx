@@ -1,7 +1,8 @@
-import { MobileOperatingSystem } from "../constants";
-import { Time, User } from "../models";
 import millify from "millify";
 import moment from "moment";
+
+import { MobileOperatingSystem } from "../constants";
+import { User } from "../models";
 
 export const formatPrice = (price?: number) => {
   if (price) return `$${millify(price / 100)}`;
@@ -22,8 +23,8 @@ export const getUserInitials = (user: User | undefined) => {
   return user.displayName || `${user.firstName[0]}${user.lastName[0]}`;
 };
 
-export const getDaysAgo = (currentDate: Date, time: Time) => {
-  const previousDate = new Date(time.seconds * 1000);
+export const getDaysAgo = (currentDate: Date, time: Date) => {
+  const previousDate = new Date(time);
   const differenceInTime = currentDate.getTime() - previousDate.getTime();
   const differenceInDays = differenceInTime / (1000 * 3600 * 24);
   if (differenceInDays < 1) {
@@ -58,7 +59,7 @@ export const isMobile = (): boolean => {
  * @returns {MobileOperatingSystem}
  */
 export const getMobileOperatingSystem = (): MobileOperatingSystem => {
-  var userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+  const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
   // Windows Phone must come first because its UA also contains "Android"
   if (/windows phone/i.test(userAgent)) {
     return MobileOperatingSystem.WindowsPhone;

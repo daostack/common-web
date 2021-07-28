@@ -1,3 +1,5 @@
+import { testFlag } from '../../helpers';
+
 const template = `
 <div>
   Hello stranger,
@@ -21,7 +23,7 @@ const template = `
   <br /><br />
   Have a nice day,
   <br>
-  Common
+  Common Payouts ({{fromEmail}})
 </div>
 `;
 
@@ -52,11 +54,14 @@ const emailStubs = {
   },
   bank: {
     required: true
-  }
+  },
+  fromEmail: {
+    required: true
+  },
 };
 
 export const approvePayout = {
-  subject: 'Approve payout',
+  subject: `${testFlag()}Approve payout`,
   emailStubs,
   template
 };

@@ -1,0 +1,8 @@
+enum SubscriptionPaymentStatus {
+  AwaitingInitialPayment
+
+  Pending
+
+  Successful
+  Unsuccessful
+}

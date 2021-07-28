@@ -1,0 +1,6 @@
+.env
+.env.staging
+.env.production
+
+**/secrets/*
+

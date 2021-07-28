@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Common, Proposal } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import "./index.scss";

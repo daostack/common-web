@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Share } from "../../../../../shared/components";
 import { Colors, ScreenSize } from "../../../../../shared/constants";
 import { Common } from "../../../../../shared/models";
@@ -17,12 +18,12 @@ export default function AboutTabComponent({ common, screenSize, onOpenJoinModal 
   };
   return (
     <div className="about-name-wrapper">
-      <div className="description">{common.metadata.description}</div>
+      <div className="description">{common.description}</div>
       {common?.links?.length > 0 && (
         <div className="links">
           <div className="title">Links</div>
           {common.links.map((link) => (
-            <a href={link.value} target="_blank" rel="noopener noreferrer">
+            <a href={link.value} key={link.title} target="_blank" rel="noopener noreferrer">
               {link.title}
             </a>
           ))}
@@ -34,8 +35,8 @@ export default function AboutTabComponent({ common, screenSize, onOpenJoinModal 
         <div className="contribution">
           Minimum contribution for new members:
           <br />
-          {formatPrice(common.metadata.minFeeToJoin) + " "}
-          {renderContributionType(common.metadata.contributionType || "")} contribution
+          {formatPrice(common.fundingMinimumAmount) + " "}
+          {renderContributionType(common.fundingType || "")} contribution
         </div>
         {screenSize === ScreenSize.Desktop && (
           <div className="social-wrapper">

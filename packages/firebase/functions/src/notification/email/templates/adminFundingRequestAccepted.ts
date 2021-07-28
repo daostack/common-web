@@ -1,3 +1,5 @@
+import { testFlag } from '../../helpers';
+
 const template = `
 Notice to Admin<br />
 The following proposal was approved and is awaiting payment.
@@ -60,7 +62,7 @@ const emailStubs = {
 };
 
 export const adminFundingRequestAccepted = {
-  subject: 'Funding proposal was approved',
+  subject: `${testFlag()}Funding proposal was approved`,
   emailStubs,
   template
 };

@@ -1,0 +1,14 @@
+model FundingProposal {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  proposal Proposal?
+
+  amount Int
+
+  fundingState FundingState @default(NotEligible)
+
+  payout Payout?
+}

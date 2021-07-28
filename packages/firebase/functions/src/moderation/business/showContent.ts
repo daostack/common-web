@@ -34,12 +34,13 @@ export const showContent = async (showContentPayload: ShowContentPayload): Promi
 
   //Only users with permissions can make content visible
   const { itemId, commonId, userId, type } = showContentPayload;
-  if (!hasPermission(userId, commonId)) {
+  const isModerator = await hasPermission(userId, commonId);
+  if (!isModerator) {
     throw new UnauthorizedError();
   }
 
   const item = (await db.collection(type).doc(itemId).get()).data();
-
+  
   const updatedItem = {
     ...item,
     moderation: {

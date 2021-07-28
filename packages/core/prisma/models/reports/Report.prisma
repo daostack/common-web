@@ -1,0 +1,33 @@
+model Report {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  status ReportStatus @default(Active)
+  type   ReportType
+
+  for  ReportFor
+  note String
+
+  common Common
+
+  reporter User @relation(name: "CreatedReports", fields: [reporterId], references: [id])
+
+  message    DiscussionMessage?  @relation(fields: [messageId], references: [id])
+  proposal   Proposal?  @relation(fields: [proposalId], references: [id])
+
+  reviewAuthority ReportAuditor?
+
+  action ReportAction?
+
+  reviewedOn DateTime?
+
+  reviewedBy User?     @relation(name: "ReviewedReports", fields: [reviewerId], references: [id])
+
+  messageId  String?
+  proposalId String?
+
+  reporterId String
+  reviewerId String?
+}

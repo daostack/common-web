@@ -1,0 +1,16 @@
+.gitignore
+*compose*.yaml
+Dockerfile
+cache-Dockerfile
+.github
+.git
+*Dockerfile*
+.run
+.huskyrc.json
+.eslintrc.json
+.dockerignore
+cloudbuild.yaml
+ReadMe.md
+docs/
+node_modules
+**/node_modules

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Colors, COMMON_APP_APP_STORE_LINK, COMMON_APP_GOOGLE_PLAY_LINK, MobileOperatingSystem } from "../../constants";
 import { getMobileOperatingSystem } from "../../utils";
 import "./index.scss";

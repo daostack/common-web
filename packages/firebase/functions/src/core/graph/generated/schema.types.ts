@@ -4,8 +4,9 @@
  */
 
 
-import { IRequestContext } from "./../../../core"
-import { core } from "nexus"
+import { IRequestContext } from './../../../core';
+import { core } from 'nexus';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Date";
@@ -61,6 +62,14 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Amount: { // root type
+    amount?: string | null; // String
+    currency?: string | null; // String
+  }
+  Balance: { // root type
+    available?: NexusGenRootTypes['Amount'] | null; // Amount
+    unsettled?: NexusGenRootTypes['Amount'] | null; // Amount
+  }
   Card: { // root type
     circleCardId: string; // ID!
     createdAt: NexusGenScalars['Date']; // Date!
@@ -98,9 +107,7 @@ export interface NexusGenObjects {
     userId: string; // ID!
   }
   CommonMetadata: { // root type
-    byline: string; // String!
     contributionType?: NexusGenEnums['CommonContributionType'] | null; // CommonContributionType
-    description: string; // String!
     founderId: string; // String!
     minFeeToJoin: number; // Int!
   }
@@ -266,6 +273,14 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  Amount: { // field return type
+    amount: string | null; // String
+    currency: string | null; // String
+  }
+  Balance: { // field return type
+    available: NexusGenRootTypes['Amount'] | null; // Amount
+    unsettled: NexusGenRootTypes['Amount'] | null; // Amount
+  }
   Card: { // field return type
     circleCardId: string; // ID!
     createdAt: NexusGenScalars['Date']; // Date!
@@ -310,9 +325,7 @@ export interface NexusGenFieldTypes {
     userId: string; // ID!
   }
   CommonMetadata: { // field return type
-    byline: string; // String!
     contributionType: NexusGenEnums['CommonContributionType'] | null; // CommonContributionType
-    description: string; // String!
     founderId: string; // String!
     minFeeToJoin: number; // Int!
   }
@@ -333,10 +346,15 @@ export interface NexusGenFieldTypes {
     updatedAt: NexusGenScalars['Date']; // Date!
   }
   Mutation: { // field return type
+    approvePayout: boolean | null; // Boolean
     createIntention: NexusGenRootTypes['Intention'] | null; // Intention
     executePayouts: NexusGenRootTypes['Payout'] | null; // Payout
     refreshCommonMembers: number | null; // Int
     updatePaymentData: boolean | null; // Boolean
+    updatePaymentsCommonId: boolean | null; // Boolean
+    updatePayoutStatus: boolean | null; // Boolean
+    updatePayoutsStatus: boolean | null; // Boolean
+    whitelistCommon: boolean | null; // Boolean
   }
   Payment: { // field return type
     amount: NexusGenRootTypes['PaymentAmount']; // PaymentAmount!
@@ -425,6 +443,7 @@ export interface NexusGenFieldTypes {
     voterId: string; // ID!
   }
   Query: { // field return type
+    balance: NexusGenRootTypes['Balance'] | null; // Balance
     common: NexusGenRootTypes['Common'] | null; // Common
     commons: Array<NexusGenRootTypes['Common'] | null> | null; // [Common]
     event: NexusGenRootTypes['Event'] | null; // Event
@@ -509,6 +528,14 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  Amount: { // field return type name
+    amount: 'String'
+    currency: 'String'
+  }
+  Balance: { // field return type name
+    available: 'Amount'
+    unsettled: 'Amount'
+  }
   Card: { // field return type name
     circleCardId: 'ID'
     createdAt: 'Date'
@@ -553,9 +580,7 @@ export interface NexusGenFieldTypeNames {
     userId: 'ID'
   }
   CommonMetadata: { // field return type name
-    byline: 'String'
     contributionType: 'CommonContributionType'
-    description: 'String'
     founderId: 'String'
     minFeeToJoin: 'Int'
   }
@@ -576,10 +601,15 @@ export interface NexusGenFieldTypeNames {
     updatedAt: 'Date'
   }
   Mutation: { // field return type name
+    approvePayout: 'Boolean'
     createIntention: 'Intention'
     executePayouts: 'Payout'
     refreshCommonMembers: 'Int'
     updatePaymentData: 'Boolean'
+    updatePaymentsCommonId: 'Boolean'
+    updatePayoutStatus: 'Boolean'
+    updatePayoutsStatus: 'Boolean'
+    whitelistCommon: 'Boolean'
   }
   Payment: { // field return type name
     amount: 'PaymentAmount'
@@ -668,6 +698,7 @@ export interface NexusGenFieldTypeNames {
     voterId: 'ID'
   }
   Query: { // field return type name
+    balance: 'Balance'
     common: 'Common'
     commons: 'Common'
     event: 'Event'
@@ -761,6 +792,11 @@ export interface NexusGenArgTypes {
     }
   }
   Mutation: {
+    approvePayout: { // args
+      index: number; // Int!
+      payoutId: string; // ID!
+      token: string; // String!
+    }
     createIntention: { // args
       input: NexusGenInputs['CreateIntentionInput']; // CreateIntentionInput!
     }
@@ -773,6 +809,12 @@ export interface NexusGenArgTypes {
     updatePaymentData: { // args
       id: string; // ID!
       trackId: string | null; // ID
+    }
+    updatePayoutStatus: { // args
+      payoutId: string; // ID!
+    }
+    whitelistCommon: { // args
+      commonId: string; // ID!
     }
   }
   Query: {

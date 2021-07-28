@@ -1,21 +1,23 @@
 import { DiscussionMessage } from "./DiscussionMessage";
-import { Time, Moderation, File } from "./shared";
+import { Moderation, File } from "./shared";
 import { User } from "./User";
 
 export interface Discussion {
   commonId: string;
-  createTime: Time;
+  createTime: Date;
   files: File[];
   follower: [];
   images: File[];
-  lastMessage: Time;
+  lastMessage: Date;
   message: string;
   moderation?: Moderation;
   ownerId: string;
   title: string;
-  updatedAt: Time;
+  updatedAt: Date;
   id: string;
   owner?: User;
-  discussionMessage?: DiscussionMessage[];
+  messages?: DiscussionMessage[];
   isLoaded?: boolean;
+
+  description: string;
 }

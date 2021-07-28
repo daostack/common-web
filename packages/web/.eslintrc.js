@@ -39,6 +39,9 @@ module.exports = {
     "import/namespace": 2,
     "import/default": 2,
     "import/export": 2,
+    "eslint@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "no-console": 1,
     "import/order": [
       "error",
       {
@@ -48,7 +51,7 @@ module.exports = {
           ["sibling", "parent"], // Then sibling and parent types. They can be mingled together
           "index", // Then the index file
           "object",
-          // Then the rest: internal and external type
+          // Then the rest: internal and external Types
         ],
         "newlines-between": "always",
       },

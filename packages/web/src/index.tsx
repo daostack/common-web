@@ -1,12 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
+import { Provider } from "react-redux";
 
 import configureStore from "./store";
 import "./index.scss";
 import App from "./containers/App/App";
 import history from "./shared/history";
+import { ApolloProvider } from "./shared/providers";
 
 const { store } = configureStore(history);
 
@@ -19,10 +20,10 @@ if (process.env.REACT_APP_ENV === "dev") {
 ReactDOM.render(
   <Router history={history}>
     <Provider store={store}>
-      <App />
+      <ApolloProvider>
+        <App />
+      </ApolloProvider>
     </Provider>
   </Router>,
   document.getElementById("root"),
 );
-
-export default store;

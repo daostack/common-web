@@ -1,0 +1,40 @@
+model Common {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+
+  raised  Int @default(0)
+  balance Int @default(0)
+  blocked Int @default(0)
+
+  image String
+
+  action String?
+  byline String?
+  description String?
+
+  links   Json?
+  rules  Json?
+
+  whitelisted Boolean @default(false)
+
+  fundingType          FundingType
+  fundingMinimumAmount Int
+
+  events  Event[]
+  members CommonMember[]
+
+  payments      Payment[]
+  subscriptions Subscription[]
+
+  proposals   Proposal[]
+  discussions Discussion[]
+
+  reports Report[]
+  updates CommonUpdate[]
+}
+
+

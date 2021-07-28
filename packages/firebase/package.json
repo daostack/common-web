@@ -1,7 +1,7 @@
 {
   "name": "@common/firebase",
   "description": "Cloud Functions for Firebase",
-  "version": "1.9.10-rc.1",
+  "version": "1.9.12",
   "scripts": {
     "build": "yarn compile",
     "build:watch": "yarn compile:watch",
@@ -59,6 +59,7 @@
     "concurrently": "^5.3.0",
     "eslint": "^7.8.1",
     "eslint-plugin-promise": "^4.2.1",
+    "firebase-functions": "^3.13.2",
     "firebase-functions-test": "^0.2.3",
     "husky": "^4.2.5",
     "jest": "^26.6.3",
@@ -75,7 +76,7 @@
   },
   "private": true,
   "dependencies": {
-    "@common/types": "^1.9.10-rc.1",
+    "@common/types": "^1.9.12",
     "apollo-server": "^2.19.2",
     "crossenv": "^0.0.2-security",
     "graphql": "^15.5.0",

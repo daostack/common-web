@@ -18,13 +18,13 @@ jest.mock('../../../../../common/database/getCommon', () =>
         return {
           links: [],
           image: 'https://firebasestorage.googleapis.com/v0/b/common-staging-50741.appspot.com/o/public_img%2Fimg_1605603725987.jpg?alt=media&token=4fc5ab99-8f38-49f0-8d6e-83a94b30db60',
-          fundingGoalDeadline: 1606206379,
           metadata: {
             minFeeToJoin: 700,
             description: 'testetest',
             founderId: 'Xlun3Ux94Zfc73axkiuVdkktOWf1',
             byline: 'testtestetstetst',
-            contributionType: contributionType
+            contributionType: contributionType,
+            zeroContribution: true,
           },
           raised: 0,
           rules: [

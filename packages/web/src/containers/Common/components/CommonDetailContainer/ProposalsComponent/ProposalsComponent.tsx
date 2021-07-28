@@ -1,11 +1,12 @@
 import React from "react";
+
 import { Proposal } from "../../../../../shared/models";
 import { EmptyTabComponent } from "../EmptyTabContent";
 import "./index.scss";
 import ProposalItemComponent from "./ProposalItemComponent";
 interface DiscussionsComponentProps {
   proposals: Proposal[];
-  loadProposalDetail: Function;
+  loadProposalDetail: (payload: Proposal) => void;
   currentTab: string;
 }
 

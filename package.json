@@ -3,6 +3,7 @@
   "private": true,
   "devDependencies": {
     "concurrently": "^5.3.0",
+    "dedent": "^0.7.0",
     "husky": "^4.3.8",
     "lerna": "^3.22.1",
     "lint-staged": "^10.5.3"
@@ -17,6 +18,7 @@
     "clean": "lerna run clean",
     "typecheck": "lerna run --parallel 'typecheck'",
     "compile": "lerna run --parallel --no-bail 'compile'",
+    "compile:backend": "lerna run compile --include-dependencies --stream --scope=@common/{core,graphql,worker}",
     "compile:wacth": "lerna run --parallel --no-bail 'compile:watch'",
     "bootstrap": "yarn && lerna bootstrap",
     "types:compile": "lerna exec 'yarn compile' --scope @common/types",
@@ -27,6 +29,13 @@
     "firebase:start": "lerna exec 'yarn start' --scope @common/firebase",
     "firebase:ci:setup": "cd packages/firebase && yarn ci:setup",
     "firebase:ci:test": "lerna exec 'yarn ci:test' --scope @common/firebase",
-    "hooks:precommit": "lerna run hooks:precommit --since HEAD"
+    "db:setup": "yarn db:sync && yarn db:generate",
+    "db:sync": "lerna run db:sync",
+    "db:generate": "lerna run db:generate",
+    "hooks:precommit": "lerna run hooks:precommit --since HEAD",
+    "env:update": "yarn env:update:core && yarn env:update:worker && yarn env:update:graphql",
+    "env:update:core": "yes | cp -rf ./.env ./packages/core/.env",
+    "env:update:worker": "yes | cp -rf ./.env ./packages/worker/.env",
+    "env:update:graphql": "yes | cp -rf ./.env ./packages/graphql/.env"
   }
 }

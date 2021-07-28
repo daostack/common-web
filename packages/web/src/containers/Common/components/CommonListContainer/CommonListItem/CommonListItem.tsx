@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+
 import { ROUTE_PATHS } from "../../../../../shared/constants";
 import { Common } from "../../../../../shared/models";
 import { containsHebrew, formatPrice } from "../../../../../shared/utils";
@@ -26,9 +27,9 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
             <div lang={`${containsHebrew(common.name) ? "he" : "en"}`} className="name">
               {common.name}
             </div>
-            {common.metadata?.byline && (
+            {common?.byline && (
               <div lang={`${containsHebrew(common.name) ? "he" : "en"}`} className="description">
-                {common.metadata?.byline}
+                {common?.byline}
               </div>
             )}
           </div>

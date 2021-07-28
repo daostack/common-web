@@ -1,8 +1,11 @@
 {
   "name": "@common/web",
-  "version": "1.9.10-rc.1",
+  "version": "1.9.12",
   "private": true,
   "dependencies": {
+    "@apollo/client": "^3.3.15",
+    "@react-firebase/auth": "^0.2.10",
+    "apollo-link-context": "^1.0.20",
     "axios": "^0.21.0",
     "classnames": "^2.3.1",
     "connected-react-router": "^6.8.0",
@@ -31,7 +34,7 @@
     "test": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject",
     "commit-hook": "git add .",
-    "lint": "eslint src/**/*.ts{,x} --fix",
+    "lint": "eslint './src/**/*.ts{,x}' --fix",
     "prettier": "prettier --write \"**/*.+(ts|tsx)\"",
     "hooks:precommit": "yarn prettier && yarn lint && yarn commit-hook"
   },

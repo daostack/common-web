@@ -21,7 +21,9 @@ class CommonAdminDocument extends Document {
   render() {
     return (
       <Html>
-        <Head/>
+        <Head>
+          <link rel="stylesheet" href="https://unpkg.com/nprogress@0.2.0/nprogress.css"/>
+        </Head>
         <body>
         <Main/>
         <NextScript/>

@@ -1,49 +1,27 @@
-import { NextPage } from 'next';
-
-import { Text } from '@geist-ui/react';
-import { useRouter } from 'next/router';
-import firebase from 'firebase/app';
 import React from 'react';
-import { gql } from '@apollo/client';
-import { useCreateIntentionMutation, IntentionType } from '@graphql';
+import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 
-const CreateIntentionMutation = gql`
-  mutation createIntention($type: IntentionType!, $intention: String!) {
-    createIntention(
-      input: {
-        type: $type,
-        intention: $intention
-      }
-    ) {
-      id
-    }
-  }
-`;
+import firebase from 'firebase/app';
+import { Text } from '@geist-ui/react';
 
 const UnauthorizedPage: NextPage = () => {
   const router = useRouter();
-  const [createIntention] = useCreateIntentionMutation();
 
   React.useEffect(() => {
     (async () => {
       if (router.query.failedPermission) {
-        const { data } = await createIntention({
-          variables: {
-            type: IntentionType.Access,
-            intention: router.query.failedPermission as string
-          }
-        });
-
         console.error(
           `The permission you are lacking is [${router.query.failedPermission}].` +
-          `You can request it by asking to look up intention with ID ${data.createIntention.id}`
+          `You can request it by asking to look up intention with ID `
         );
       }
     })();
   }, [router.query]);
 
   const onClickSwitch = async () => {
-    await firebase.auth().signOut();
+    await firebase.auth()
+      .signOut();
   };
 
   return (

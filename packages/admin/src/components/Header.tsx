@@ -1,16 +1,16 @@
 import React from 'react';
-import { Avatar, Divider, Link, Page, Tabs, Tooltip, Text } from '@geist-ui/react';
-import { HasPermission } from '@components/HasPermission';
-import { useCreateIntentionMutation, IntentionType } from '@graphql';
-import { useAuthContext } from '@context';
-import { useRouter } from 'next/router';
 import firebase from 'firebase/app';
+import { useRouter } from 'next/router';
+
+import { Avatar, Divider, Page, Tooltip, Text, Popover } from '@geist-ui/react';
+import { HasPermission } from '@components/HasPermission';
+import { useUserContext } from '@core/context';
+import { SearchEverywhere } from '@components/modals/SearchEverywhere';
+import { Link } from './Link';
 
 export const Header: React.FC = () => {
-  const [createIntention] = useCreateIntentionMutation();
-
+  const userContext = useUserContext();
   const [currentTab, setCurrentTab] = React.useState<string>('dashboard');
-  const authContext = useAuthContext();
 
 
   // Hooks
@@ -21,36 +21,10 @@ export const Header: React.FC = () => {
     setCurrentTab(router.pathname.split('/')[1]);
   });
 
-  React.useEffect(() => {
-    if (authContext.loaded) {
-      if (!authContext.authenticated && router.pathname !== '/auth') {
-        router.push('/auth');
-      }
-    }
-  }, [authContext]);
-
   // Actions
-  const onTabChange = (value: string): void => {
-    setCurrentTab(value);
-
-    router.push(`/${value}`);
-  };
-
   const onSignOut = async (): Promise<void> => {
     await firebase.auth().signOut();
-
-    router.push('/');
-  };
-
-  const commitIntention = (intention: string) => {
-    return () => {
-      createIntention({
-        variables: {
-          type: IntentionType.Request,
-          intention
-        }
-      });
-    };
+    await router.push('/');
   };
 
 
@@ -60,47 +34,183 @@ export const Header: React.FC = () => {
         style={{
           width: '100%',
           display: 'flex',
-          justifyContent: 'flex-end',
+          justifyContent: 'space-between',
           alignItems: 'center',
-          marginTop: '2.5vh'
+          marginTop: '2.5vh',
+          marginBottom: '1.5vh'
         }}
       >
-        <Text p style={{ margin: 0 }}>{authContext.userInfo.displayName}</Text>
-        <Tooltip
-          trigger="click"
-          placement="bottomEnd"
-          text={(
-            <div style={{ minWidth: '10vw' }}>
-              <b onClick={commitIntention('admin.theme.toggle')}>Theme </b> <br/>
-              <b onClick={commitIntention('admin.notification.toggle')}>Notifications </b>
+        <SearchEverywhere/>
 
-              <Divider y={0.5}/>
+        <div style={{ display: 'flex' }}>
+          <Text p style={{ margin: 0 }}>{userContext.displayName}</Text>
+          <Tooltip
+            trigger="click"
+            placement="bottomEnd"
+            text={(
+              <div style={{ minWidth: '10vw' }}>
+                <Divider y={0.5}/>
 
-              <Link onClick={onSignOut}>
-                <b>Sign Out</b>
-              </Link>
+                <div
+                  style={{
+                    cursor: 'pointer'
+                  }}
+                  onClick={onSignOut}
+                >
+                  <b>Sign Out</b>
+                </div>
+              </div>
+            )}
+            style={{
+              marginLeft: 10
+            }}
+          >
+            <div style={{ cursor: 'pointer' }}>
+              <Avatar src={userContext.photo}/>
             </div>
-          )}
-          style={{
-            marginLeft: 10
-          }}
-        >
-          <div style={{ cursor: 'pointer' }}>
-            <Avatar src={authContext.userInfo.photoURL}/>
-          </div>
-        </Tooltip>
+          </Tooltip>
+        </div>
       </div>
 
       <HasPermission permission="admin.*">
-        <Tabs value={currentTab} onChange={onTabChange} hideDivider>
-          <Tabs.Item value="dashboard" label="Dashboard"/>
-          <Tabs.Item value="commons" label="Commons"/>
-          <Tabs.Item value="proposals" label="Proposals"/>
-          <Tabs.Item value="users" label="Users"/>
-          <Tabs.Item value="financials" label="Financials"/>
-          <Tabs.Item value="events" label="Events"/>
-          {/*<Tabs.Item value="development/playground" label="Playground"/>*/}
-        </Tabs>
+        <div
+          style={{
+            display: 'flex'
+          }}
+        >
+          <Link
+            to="/"
+            style={{
+              margin: '0 .5em',
+              marginLeft: '0'
+            }}
+          >
+            Dashboard
+          </Link>
+
+          <HasPermission permission="admin.commons.*">
+            <Link
+              to="/commons"
+              style={{
+                margin: '0 .5em'
+              }}
+            >
+              Commons
+            </Link>
+          </HasPermission>
+
+          <HasPermission permission="admin.proposals.*">
+            <Link
+              to="/proposals"
+              style={{
+                margin: '0 .5em'
+              }}
+            >
+              Proposals
+            </Link>
+          </HasPermission>
+
+          <HasPermission permission="admin.users.*">
+            <Link
+              to="/users"
+              style={{
+                margin: '0 .5em'
+              }}
+            >
+              Users
+            </Link>
+          </HasPermission>
+
+          <HasPermission permission="admin.report.*">
+            <Link
+              to="/reports"
+              style={{
+                margin: '0 .5em'
+              }}
+            >
+              Reports
+            </Link>
+          </HasPermission>
+
+
+          <HasPermission permission="admin.financials.*">
+            <Popover
+              trigger="hover"
+              content={(
+                <React.Fragment>
+                  <HasPermission permission="admin.financials.payments.*">
+                    <Popover.Item>
+                      <Link to="/financials/payments">Payments</Link>
+                    </Popover.Item>
+                  </HasPermission>
+
+                  <HasPermission permission="admin.financials.payouts.*">
+                    <Popover.Item>
+                      <Link to="/financials/payouts">Payouts</Link>
+                    </Popover.Item>
+                  </HasPermission>
+                </React.Fragment>
+              )}
+            >
+              <Text
+                p
+                style={{
+                  margin: '0 .5em',
+                  cursor: 'pointer'
+                }}
+              >
+                Financials
+              </Text>
+            </Popover>
+
+          </HasPermission>
+
+
+          <HasPermission permission="admin.notification.*">
+            <Popover
+              trigger="hover"
+              content={(
+                <React.Fragment>
+                  <Popover.Item>
+                    <Link to="/notifications/templates">Templates</Link>
+                  </Popover.Item>
+
+                  <Popover.Item>
+                    <Link to="/notifications/settings">Settings</Link>
+                  </Popover.Item>
+
+                  <Popover.Item>
+                    <Link to="/notifications/events">Event integrations</Link>
+                  </Popover.Item>
+                </React.Fragment>
+              )}
+            >
+              <Text
+                p
+                style={{
+                  margin: '0 .5em',
+                  cursor: 'pointer'
+                }}
+              >
+                Notifications
+              </Text>
+            </Popover>
+
+          </HasPermission>
+
+          <HasPermission permission="admin.roles.*">
+            <Link
+              to="/roles"
+              style={{
+                margin: '0 .5em'
+              }}
+            >
+              Roles
+            </Link>
+          </HasPermission>
+
+
+        </div>
       </HasPermission>
     </Page.Header>
   );

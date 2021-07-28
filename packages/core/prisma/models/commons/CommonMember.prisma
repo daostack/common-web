@@ -1,0 +1,20 @@
+model CommonMember {
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  common Common @relation(fields: [commonId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  roles CommonMemberRole[]
+
+  proposals Proposal[]
+
+  commonId String
+  userId   String
+
+  votes Vote[]
+
+  @@unique([userId, commonId])
+}

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import { Loader } from "../../../../../shared/components";
 import { Discussion } from "../../../../../shared/models";
 import { getDaysAgo, getUserName } from "../../../../../shared/utils";
@@ -23,7 +24,7 @@ export default function DiscussionDetailModal({ disscussion, onOpenJoinModal }: 
             <div className="owner-icon-wrapper">
               {!imageError ? (
                 <img
-                  src={disscussion.owner?.photoURL}
+                  src={disscussion.owner?.photo}
                   alt={getUserName(disscussion.owner)}
                   onError={() => setImageError(true)}
                 />
@@ -46,7 +47,7 @@ export default function DiscussionDetailModal({ disscussion, onOpenJoinModal }: 
         </div>
       </div>
       <div className="right-side">
-        <ChatComponent discussionMessage={disscussion.discussionMessage || []} onOpenJoinModal={onOpenJoinModal} />
+        <ChatComponent discussionMessage={disscussion.messages || []} onOpenJoinModal={onOpenJoinModal} />
       </div>
     </div>
   );

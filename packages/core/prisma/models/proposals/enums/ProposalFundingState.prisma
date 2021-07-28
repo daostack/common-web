@@ -1,0 +1,8 @@
+enum FundingState {
+  NotEligible
+  Eligible
+  Redeemed
+}
+
+
+

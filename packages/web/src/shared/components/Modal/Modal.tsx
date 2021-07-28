@@ -1,8 +1,8 @@
 import "./index.scss";
 
 import React, { useEffect, useRef } from "react";
-
 import ReactDOM from "react-dom";
+
 import { useOutsideClick } from "../../hooks";
 import { ModalProps } from "../../interfaces";
 import CloseIcon from "../../icons/close.icon";

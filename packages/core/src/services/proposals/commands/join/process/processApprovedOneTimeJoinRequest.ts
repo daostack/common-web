@@ -1,0 +1,51 @@
+import { prisma } from '@toolkits';
+import { EventType, FundingType, ProposalState } from '@prisma/client';
+import { CommonError } from '@errors';
+import { paymentService, commonService, eventService } from '@services';
+
+export const processApprovedOneTimeJoinRequestCommand = async (proposalId: string) => {
+  const proposal = await prisma.proposal.update({
+    where: {
+      id: proposalId
+    },
+    data: {
+      state: ProposalState.Accepted
+    },
+    include: {
+      join: true
+    }
+  });
+
+  // Create event
+  eventService.create({
+    type: EventType.JoinRequestAccepted,
+    userId: proposal.userId,
+    commonId: proposal.commonId,
+    payload: JSON.stringify({
+      proposalId: proposal.id
+    })
+  });
+
+  if (!proposal.join) {
+    throw new CommonError('Cannot process non join request proposal');
+  }
+
+  if (proposal.state !== ProposalState.Accepted) {
+    throw new CommonError('Cannot process not accepted join request');
+  }
+
+  if (proposal.join.fundingType !== FundingType.OneTime) {
+    throw new CommonError('Cannot process proposal that is not of one time');
+  }
+
+  if (proposal.join.funding > 0) {
+    // Create payment
+    await paymentService.createOneTimePayment(proposal.id);
+  } else {
+    // Add the common member
+    await commonService.createMember({
+      commonId: proposal.commonId,
+      userId: proposal.userId
+    });
+  }
+};

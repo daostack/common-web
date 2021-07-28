@@ -1,0 +1,44 @@
+model User {
+  id String @id
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  firstName String
+  lastName  String
+
+  country Country @default(Unknown)
+
+  intro String?
+
+  photo String
+
+  email         String  @unique
+  emailVerified Boolean @default(false)
+
+  cards         Card[]
+  wires         Wire[]
+  events        Event[]
+  memberships   CommonMember[]
+  billinDetails BillingDetail[]
+
+  reportsCreated  Report[] @relation(name: "CreatedReports")
+  reportsReviewed Report[] @relation(name: "ReviewedReports")
+
+  payouts                 Payout[]
+  payments                Payment[]
+  proposals               Proposal[]
+  subscriptions           Subscription[]
+
+  discussionSubscriptions DiscussionSubscription[]
+  discussionMessages      DiscussionMessage[]
+  discussions             Discussion[]
+
+  notifications        Notification[]
+  notificationLanguage NotificationLanguage @default(EN)
+
+  notificationTokens UserNotificationToken[]
+
+  roles       Role[]
+  permissions String[]
+}
