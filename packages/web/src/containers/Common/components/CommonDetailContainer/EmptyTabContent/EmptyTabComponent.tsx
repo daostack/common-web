@@ -13,7 +13,7 @@ interface EmptyTabComponentProps {
 }
 
 export default function EmptyTabComponent({ currentTab, message, title }: EmptyTabComponentProps) {
-  const { isShowing: showJoinModal, onOpen: onOpenJoinModal, onClose: onCloseJoinModal } = useModal(false);
+  const { isShowing: showJoinModal, onClose: onCloseJoinModal } = useModal(false);
 
   const closeJoinModalHandler = useCallback(() => {
     onCloseJoinModal();
@@ -33,11 +33,11 @@ export default function EmptyTabComponent({ currentTab, message, title }: EmptyT
         <div className="empty-tab-content-wrapper ">
           <div className="title">{title}</div>
           <div className="message">{message}</div>
-          {currentTab !== "history" && (
+          {/* {currentTab !== "history" && (
             <div className="button-blue join-the-effort-btn" onClick={onOpenJoinModal}>
               Join the effort
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </>

@@ -49,9 +49,8 @@ const tabs = [
 export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
   const joinEffort = useRef(null);
-  // const contentBottom = useRef(null);
   const inViewport = useViewPortHook(joinEffort.current, "-20px");
-  const inViewPortFooter = useViewPortHook(document.querySelector(".copyrights"), "0px");
+  const inViewPortFooter = useViewPortHook(document.querySelector(".footer-wrapper"), "0px");
   const [stickyClass, setStickyClass] = useState("");
   const [footerClass, setFooterClass] = useState("");
   const [tab, setTab] = useState("about");
@@ -217,23 +216,28 @@ export default function CommonDetail() {
     if (inViewport) {
       setStickyClass("");
     } else {
-      if (tab === "discussions" && discussionsData?.discussions?.length) {
-        setStickyClass("sticky");
-      } else if (tab === "proposals" && activeProposals.length) {
-        setStickyClass("sticky");
-      } else if (tab === "history" || tab === "about") {
-        setStickyClass("sticky");
+      if ((joinEffort?.current as any)?.offsetTop < window.scrollY) {
+        if (tab === "discussions" && discussionsData?.discussions?.length) {
+          setStickyClass("sticky");
+        } else if (tab === "proposals" && activeProposals.length) {
+          setStickyClass("sticky");
+        } else if (tab === "history" || tab === "about") {
+          setStickyClass("sticky");
+        }
       }
     }
   }, [inViewport, activeProposals, tab, discussionsData, setStickyClass]);
 
   useEffect(() => {
     if (inViewPortFooter) {
+      if (inViewport) {
+        setStickyClass("sticky");
+      }
       setFooterClass("footer-sticky");
     } else {
       setFooterClass("");
     }
-  }, [inViewPortFooter, setFooterClass]);
+  }, [inViewPortFooter, setFooterClass, inViewport]);
 
   return !common ? (
     <Loader />
@@ -313,10 +317,7 @@ export default function CommonDetail() {
                   ))}
                 </div>
                 <div className="social-wrapper" ref={joinEffort}>
-                  <button
-                    className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
-                    onClick={onOpenJoinModal}
-                  >
+                  <button className={`button-blue join-the-effort-btn`} onClick={onOpenJoinModal}>
                     Join the effort
                   </button>
                   {screenSize === ScreenSize.Desktop && <Share type="popup" color={Colors.lightPurple} />}
@@ -363,6 +364,14 @@ export default function CommonDetail() {
                 />
               )}
             </div>
+            {screenSize === ScreenSize.Mobile && !inViewport && (
+              <button
+                className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
+                onClick={onOpenJoinModal}
+              >
+                Join the effort
+              </button>
+            )}
             {(screenSize === ScreenSize.Desktop || tab !== "about") && (
               <div className="sidebar-wrapper">{renderSidebarContent()}</div>
             )}

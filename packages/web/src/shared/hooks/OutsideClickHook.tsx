@@ -4,7 +4,7 @@ function useOutsideClick<T extends { contains: (target: EventTarget | null) => b
   const [isOutside, setOutside] = useState(false);
 
   const handleClickOutside = (event: MouseEvent) => {
-    setOutside(Boolean(ref.current) && !ref.current.contains(event.target));
+    setOutside(Boolean(ref.current) && !ref?.current?.contains(event.target));
   };
 
   const setOusideValue = () => {
