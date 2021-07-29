@@ -36,7 +36,7 @@
     "commit-hook": "git add .",
     "lint": "eslint './src/**/*.ts{,x}' --fix",
     "prettier": "prettier --write \"**/*.+(ts|tsx)\"",
-    "hooks:precommit": "yarn prettier && yarn lint && yarn commit-hook"
+    "hooks:precommit": "yarn prettier && yarn commit-hook"
   },
   "eslintConfig": {
     "extends": "react-app"

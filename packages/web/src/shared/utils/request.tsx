@@ -43,5 +43,6 @@ axiosInstance.interceptors.response.use(
  *
  * @return {object} wrapped axios function that receives params
  */
-export default (method: string, url: string) => (...params: unknown[]) =>
-  makeRequest(axiosInstance)(method, url, params);
+export default (method: string, url: string) =>
+  (...params: unknown[]) =>
+    makeRequest(axiosInstance)(method, url, params);
