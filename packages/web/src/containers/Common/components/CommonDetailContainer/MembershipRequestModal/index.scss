@@ -277,6 +277,12 @@
     .inputs-wrapper {
       flex-direction: column;
       margin-bottom: 1rem;
+      .inputs-group {  
+        select,
+        input {
+          width: 100%;
+        }
+      }
     }
   }
 

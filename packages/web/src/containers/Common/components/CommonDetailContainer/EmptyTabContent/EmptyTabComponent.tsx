@@ -2,7 +2,6 @@ import React, { useCallback } from "react";
 
 import { MembershipRequestModal } from "../MembershipRequestModal";
 import { Modal } from "../../../../../shared/components/Modal";
-import { Colors } from "../../../../../shared/constants";
 import { useModal } from "../../../../../shared/hooks";
 import "./index.scss";
 
@@ -21,13 +20,7 @@ export default function EmptyTabComponent({ currentTab, message, title }: EmptyT
 
   return (
     <>
-      <Modal
-        isShowing={showJoinModal}
-        onClose={closeJoinModalHandler}
-        closeColor={Colors.white}
-        className="mobile-full-screen"
-        mobileFullScreen
-      >
+      <Modal isShowing={showJoinModal} onClose={closeJoinModalHandler} className="mobile-full-screen" mobileFullScreen>
         <MembershipRequestModal />
       </Modal>
       <div className="empty-tab-component-wrapper">
