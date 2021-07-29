@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 
-import { JoinTheEffortModal } from "..";
+import { MembershipRequestModal } from "../MembershipRequestModal";
 import { Modal } from "../../../../../shared/components/Modal";
 import { Colors } from "../../../../../shared/constants";
 import { useModal } from "../../../../../shared/hooks";
@@ -21,8 +21,14 @@ export default function EmptyTabComponent({ currentTab, message, title }: EmptyT
 
   return (
     <>
-      <Modal isShowing={showJoinModal} onClose={closeJoinModalHandler} closeColor={Colors.white}>
-        <JoinTheEffortModal />
+      <Modal
+        isShowing={showJoinModal}
+        onClose={closeJoinModalHandler}
+        closeColor={Colors.white}
+        className="mobile-full-screen"
+        mobileFullScreen
+      >
+        <MembershipRequestModal />
       </Modal>
       <div className="empty-tab-component-wrapper">
         <div className="img-wrapper">
@@ -33,11 +39,6 @@ export default function EmptyTabComponent({ currentTab, message, title }: EmptyT
         <div className="empty-tab-content-wrapper ">
           <div className="title">{title}</div>
           <div className="message">{message}</div>
-          {/* {currentTab !== "history" && (
-            <div className="button-blue join-the-effort-btn" onClick={onOpenJoinModal}>
-              Join the effort
-            </div>
-          )} */}
         </div>
       </div>
     </>

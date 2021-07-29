@@ -8,7 +8,7 @@ import * as actions from "./actions";
 type Action = ActionType<typeof actions>;
 
 const initialState: AuthStateType = {
-  authentificated: true,
+  authentificated: !localStorage.getItem("user") ? false : true, // TODO: maybe need a better way to check this
   user: null,
 };
 

@@ -10,6 +10,12 @@ import { getScreenSize } from "../../store/selectors";
 import DownloadCommonApp from "../DownloadCommonApp/DownloadCommonApp";
 import MobileLinks from "../MobileLinks/MobileLinks";
 import "./index.scss";
+import { Account } from "../Account";
+import { useModal } from "../../hooks";
+import { authentificated } from "../../../containers/Auth/store/selectors";
+import { isMobile } from "../../utils";
+import { Modal } from "../Modal";
+import { LoginContainer } from "../../../containers/Login/containers/LoginContainer";
 
 const Header = () => {
   const location = useLocation();
@@ -17,6 +23,8 @@ const Header = () => {
   const screenSize = useSelector(getScreenSize());
   const [showMenu, setShowMenu] = useState(false);
   const [isTop, setIsTop] = useState<boolean | undefined>(undefined);
+  const { isShowing, onOpen, onClose } = useModal(false);
+  const isAuthorized = useSelector(authentificated());
 
   React.useEffect(() => {
     window.addEventListener("scroll", () => {
@@ -48,6 +56,12 @@ const Header = () => {
         Explore Commons
       </NavLink>
       <a href="mailto:hi@common.io">Contact</a>
+      {isAuthorized && isMobile() && <button>Log out</button>}
+      {!isAuthorized && (
+        <button className="login-button" onClick={() => onOpen()}>
+          Login / Sign up
+        </button>
+      )}
     </div>
   );
 
@@ -66,6 +80,7 @@ const Header = () => {
       {screenSize === ScreenSize.Desktop ? (
         <>
           {links}
+          {isAuthorized && <Account />}
           <div className="mobile-links-container">
             <MobileLinks color={Colors.black} />
           </div>
@@ -88,6 +103,9 @@ const Header = () => {
           )}
         </>
       )}
+      <Modal isShowing={isShowing} onClose={onClose} className="mobile-full-screen" mobileFullScreen>
+        <LoginContainer />
+      </Modal>
     </section>
   );
 };

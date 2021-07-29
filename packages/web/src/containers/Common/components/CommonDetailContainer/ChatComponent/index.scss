@@ -80,7 +80,7 @@
         position: absolute;
         font-size: 10px;
         font-weight: bold;
-        color: #979bba;
+        color: $light-gray-2;
         right: 0.9rem;
         bottom: 0.5rem;
       }
@@ -100,7 +100,7 @@
     border-radius: 0 0 12px 0;
     .text {
       font-size: 14px;
-      color: #979bba;
+      color: $light-gray-2;
       margin-right: 5px;
     }
     .button-wrapper {

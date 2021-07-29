@@ -23,6 +23,7 @@
   outline: 0;
   padding: 20px;
   box-sizing: border-box;
+  backdrop-filter: blur(2px);
 }
 
 .modal {
@@ -58,6 +59,11 @@
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
+  .modal-wrapper {
+    &.mobile-full-screen {
+      padding: unset;
+    }
+  }
   .modal {
     top: 50%;
     transform: translateY(-50%);
@@ -69,6 +75,13 @@
     .close-wrapper {
       right: 15px;
       top: 15px;
+    }
+    &.mobile-full-screen {
+      border-radius: unset;
+      margin: unset;
+      top: unset;
+      transform: unset;
+      //height: 100%;
     }
   }
 }
