@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { NavLink, Link, useLocation, useHistory } from "react-router-dom";
 import classNames from "classnames";
 
-import { Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
+import { Colors, CONTACT_EMAIL, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
 import { getScreenSize } from "../../store/selectors";
@@ -55,7 +55,7 @@ const Header = () => {
       <NavLink to={ROUTE_PATHS.COMMON_LIST} activeClassName="active">
         Explore Commons
       </NavLink>
-      <a href="mailto:hi@common.io">Contact</a>
+      <a href={`mailto:${CONTACT_EMAIL}`}>Contact</a>
       {isAuthorized && isMobile() && <button>Log out</button>}
       {!isAuthorized && (
         <button className="login-button" onClick={() => onOpen()}>
