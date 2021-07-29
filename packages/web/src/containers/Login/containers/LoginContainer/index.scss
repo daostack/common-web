@@ -1,0 +1,16 @@
+@import "../../../../constants.scss";
+
+.login-wrapper {
+  .title {
+    font-family: NotoSerifSC-Bold;
+    font-size: $moderate-med;
+    margin: 1rem 0;
+  }
+  .sub-text {
+    color: $light-gray-2;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+
+}
