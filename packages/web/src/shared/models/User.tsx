@@ -7,6 +7,7 @@ export interface User {
   lastName: string;
   email?: string;
   photo?: string;
+  photoURL?: string;
   createdAt?: Date;
   tokens?: string[];
   permissions?: string[];

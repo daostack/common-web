@@ -1,27 +1,22 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { authentificated } from "../../../containers/Auth/store/selectors";
-import { User } from "../../models";
+import { useDispatch, useSelector } from "react-redux";
+import { logOut } from "../../../containers/Auth/store/actions";
+import { selectUser } from "../../../containers/Auth/store/selectors";
+
 import "./index.scss";
 
 const Account = () => {
   const [showMenu, setShowMenu] = useState(false);
-  const isAuthorized = useSelector(authentificated());
-  let userData: User | null = null;
-
-  try {
-    userData = JSON.parse(localStorage.getItem("user") || "");
-  } catch (err) {
-    console.error(err);
-  }
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser());
 
   return (
     <div className="account-wrapper" onClick={() => setShowMenu(!showMenu)}>
-      <img src={userData?.photo} className="avatar" alt="user avatar" />
-      <div>{isAuthorized && userData?.displayName}</div>
+      <img src={user?.photoURL} className="avatar" alt="user avatar" />
+      <div>{user?.displayName}</div>
       {showMenu && (
         <div className="menu-wrapper">
-          <div>Log out</div>
+          <div onClick={() => dispatch(logOut())}>Log out</div>
         </div>
       )}
     </div>

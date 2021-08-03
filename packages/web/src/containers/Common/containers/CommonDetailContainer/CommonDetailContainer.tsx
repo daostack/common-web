@@ -90,15 +90,13 @@ export default function CommonDetail() {
 
   const common = commonData?.common;
 
-  const activeProposals = useMemo(
-    () => [...(proposalsData?.proposals || [])].filter((d) => d.state === "countdown"),
-    [proposalsData],
-  );
+  const activeProposals = useMemo(() => [...(proposalsData?.proposals || [])].filter((d) => d.state === "countdown"), [
+    proposalsData,
+  ]);
 
-  const historyProposals = useMemo(
-    () => [...(proposalsData?.proposals || [])].filter((d) => d.state !== "countdown"),
-    [proposalsData],
-  );
+  const historyProposals = useMemo(() => [...(proposalsData?.proposals || [])].filter((d) => d.state !== "countdown"), [
+    proposalsData,
+  ]);
 
   const getDisscussionDetail = useCallback(
     (payload: Discussion) => {
