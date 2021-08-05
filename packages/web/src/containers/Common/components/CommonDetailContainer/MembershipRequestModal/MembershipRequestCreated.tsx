@@ -1,7 +1,10 @@
 import React from "react";
-import { IStageProps } from "./MembershipRequestModal";
 
-export default function MembershipRequestCreated(props: IStageProps) {
+interface IProps {
+  closeModal: Function;
+}
+
+export default function MembershipRequestCreated(props: IProps) {
   return (
     <div className="membership-request-content membership-request-created">
       <img src="/assets/images/membership-request-created.svg" alt="introduce" />
@@ -10,7 +13,7 @@ export default function MembershipRequestCreated(props: IStageProps) {
         The common members will vote on your membership request. If it's approved, you will become a member with equal
         voting rights.
       </span>
-      <button>Back to Common</button>
+      <button onClick={() => props.closeModal()}>Back to Common</button>
     </div>
   );
 }

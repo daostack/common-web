@@ -43,7 +43,11 @@ const initData: IMembershipRequestData = {
   postal: "",
 };
 
-export default function MembershipRequestModal() {
+interface IProps {
+  closeModal: Function;
+}
+
+export default function MembershipRequestModal(props: IProps) {
   // TODO: should be saved in the localstorage for saving the progress?
   const [userData, setUserData] = useState(initData);
   const { stage } = userData;
@@ -65,7 +69,7 @@ export default function MembershipRequestModal() {
       case 6:
         return <MembershipRequestCreating userData={userData} setUserData={setUserData} />;
       case 7:
-        return <MembershipRequestCreated userData={userData} setUserData={setUserData} />;
+        return <MembershipRequestCreated closeModal={props.closeModal} />;
     }
   };
 

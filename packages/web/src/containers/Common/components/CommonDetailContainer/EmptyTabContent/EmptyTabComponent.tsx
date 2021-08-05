@@ -21,7 +21,7 @@ export default function EmptyTabComponent({ currentTab, message, title }: EmptyT
   return (
     <>
       <Modal isShowing={showJoinModal} onClose={closeJoinModalHandler} className="mobile-full-screen" mobileFullScreen>
-        <MembershipRequestModal />
+        <MembershipRequestModal closeModal={closeJoinModalHandler} />
       </Modal>
       <div className="empty-tab-component-wrapper">
         <div className="img-wrapper">
