@@ -2,7 +2,7 @@ name: continuous delivery
 
 on:
   push:
-    branches: [ web/gcp/cd/batch-2 ]
+    branches: [ web/gcp/cd/batch-2 ] 
 
 jobs:
   deploy:
