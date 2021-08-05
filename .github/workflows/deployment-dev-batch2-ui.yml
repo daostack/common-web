@@ -1,0 +1,19 @@
+name: continuous delivery
+
+on:
+  push:
+    branches: [ web/gcp/cd/batch-2 ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Push to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.INSTANCE_IP_BATCH_2 }}
+          username: ${{ secrets.INSTANCE_USERNAME }}
+          key: ${{ secrets.INSTANCE_KEY }}
+          passphrase: ${{ secrets.INSTANCE_PASSPHRASE }} 
+          script: ${{ secrets.GIT_REPO }} && sudo docker build -t common-ui:latest . && docker rm -f  common-ui || true && sudo docker run -d -p 80:80 --name  common-ui common-ui:latest
