@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { logOut } from "../../../containers/Auth/store/actions";
-import { selectUser } from "../../../containers/Auth/store/selectors";
+import { User } from "../../models";
 
 import "./index.scss";
 
-const Account = () => {
+interface AccountProps {
+  user: User;
+  logOut: () => void;
+}
+
+const Account = ({ user, logOut }: AccountProps) => {
   const [showMenu, setShowMenu] = useState(false);
-  const dispatch = useDispatch();
-  const user = useSelector(selectUser());
 
   return (
     <div className="account-wrapper" onClick={() => setShowMenu(!showMenu)}>
@@ -16,7 +17,7 @@ const Account = () => {
       <div>{user?.displayName}</div>
       {showMenu && (
         <div className="menu-wrapper">
-          <div onClick={() => dispatch(logOut())}>Log out</div>
+          <div onClick={() => logOut()}>Log out</div>
         </div>
       )}
     </div>

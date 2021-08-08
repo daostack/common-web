@@ -41,6 +41,10 @@ function* socialLoginSaga({ payload }: AnyAction & { payload: string }) {
 }
 
 function* logOut() {
+  yield firebase
+    .auth()
+    .signOut()
+    .then((res) => console.log(res));
   yield localStorage.clear();
 }
 
