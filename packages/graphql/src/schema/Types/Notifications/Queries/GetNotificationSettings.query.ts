@@ -11,6 +11,7 @@ export const GetNotificationSettingsQuery = queryField('notificationSettings', {
   authorize: async (root, args, ctx) => {
     return authorizationService.can(await ctx.getUserId(), 'admin.notification.setting.read');
   },
+  // @ts-ignore
   resolve: () => {
     return prisma.notificationSystemSettings
       .findMany({

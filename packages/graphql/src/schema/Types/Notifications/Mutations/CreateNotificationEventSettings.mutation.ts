@@ -32,7 +32,8 @@ export const CreateNotificationEventSettingsMutation = mutationField('createNoti
   authorize: async (root, args, ctx) => {
     return authorizationService.can(await ctx.getUserId(), 'admin.notification.setting.event.create');
   },
+  // @ts-ignore
   resolve: (root, args) => {
-    return notificationService.settings.createEventSettings(args.input);
+    return notificationService.settings.createEventSettings(args.input as any); // FIXME
   }
 });

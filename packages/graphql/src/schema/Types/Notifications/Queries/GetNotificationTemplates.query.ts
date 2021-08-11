@@ -10,6 +10,7 @@ export const GetNotificationTemplatesQuery = queryField('notificationTemplates',
   authorize: async (root, args, ctx) => {
     return authorizationService.can(await ctx.getUserId(), 'admin.notification.setting.template.read');
   },
+  // @ts-ignore
   resolve: (root, args) => {
     return prisma.notificationTemplate
       .findMany({
