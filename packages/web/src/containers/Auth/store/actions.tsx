@@ -1,4 +1,5 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
+
 import { User } from "../../../shared/models";
 
 import { AuthActionTypes } from "./constants";
@@ -10,3 +11,9 @@ export const socialLogin = createAsyncAction(
 )<string, User, Error>();
 
 export const logOut = createStandardAction(AuthActionTypes.LOG_OUT)();
+
+export const updateUserDetails = createAsyncAction(
+  AuthActionTypes.UPDATE_USER_DATA,
+  AuthActionTypes.UPDATE_USER_DATA_SUCCESS,
+  AuthActionTypes.UPDATE_USER_DATA_FAILURE,
+)<User, User, Error>();

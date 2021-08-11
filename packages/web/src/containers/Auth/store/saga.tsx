@@ -1,12 +1,13 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { AnyAction } from "redux";
 
-import { tokenHandler } from "../../../shared/utils";
+import { createApolloClient, tokenHandler } from "../../../shared/utils";
 import * as actions from "./actions";
 import firebase from "../../../shared/utils/firebase";
 import { startLoading, stopLoading } from "../../../shared/store/actions";
 import { User } from "../../../shared/models";
 import { GoogleAuthResultInterface } from "../interface";
+import { UpdateUserDocument } from "../../../graphql";
 
 const authorizeUser = async (payload: string) => {
   const provider =
@@ -24,6 +25,28 @@ const authorizeUser = async (payload: string) => {
       }
       return user;
     });
+};
+
+const updateUserData = async (user: any) => {
+  const currentUser = await firebase.auth().currentUser;
+  await currentUser?.updateProfile({ displayName: `${user.firstName} ${user.lastName}` });
+
+  const apollo = await createApolloClient("https://api.staging.common.io/graphql" || "", localStorage.token || "");
+  const { data } = await apollo.mutate({
+    mutation: UpdateUserDocument,
+    variables: {
+      user: {
+        id: currentUser?.uid,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        photo: currentUser?.photoURL,
+        country: user.country || "",
+      },
+    },
+  });
+
+  console.log(data);
+  return data;
 };
 
 function* socialLoginSaga({ payload }: AnyAction & { payload: string }) {
@@ -48,9 +71,23 @@ function* logOut() {
   yield localStorage.clear();
 }
 
+function* updateUserDetails({ payload }: ReturnType<typeof actions.updateUserDetails.request>) {
+  try {
+    yield put(startLoading());
+    const user: User = yield call(updateUserData, payload);
+
+    console.log(user);
+  } catch (error) {
+    yield put(actions.socialLogin.failure(error));
+  } finally {
+    yield put(stopLoading());
+  }
+}
+
 function* authSagas() {
   yield takeLatest(actions.socialLogin.request, socialLoginSaga);
   yield takeLatest(actions.logOut, logOut);
+  yield takeLatest(actions.updateUserDetails.request, updateUserDetails);
 }
 
 export default authSagas;

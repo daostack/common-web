@@ -6,6 +6,9 @@ import "./index.scss";
 import "../../../containers/LoginContainer/index.scss";
 import { User } from "../../../../../shared/models";
 import { FORM_ERROR_MESSAGES } from "../../../../../shared/constants";
+import { COUNTRIES } from "../../../../../shared/assets/countries";
+import { useDispatch } from "react-redux";
+import { updateUserDetails } from "../../../../Auth/store/actions";
 
 interface UserDetailsProps {
   user: User;
@@ -23,12 +26,17 @@ const validationSchema = Yup.object({
 });
 
 const UserDetails = ({ user }: UserDetailsProps) => {
-  console.log(user);
   const [formValues, setFormValues] = useState<UserDetailsInterface>({
     firstName: "",
     lastName: "",
     country: "",
   });
+
+  const dispatch = useDispatch();
+
+  const countries = COUNTRIES.map((country) => (
+    <option key={country.code}>{`${country.name} ${country.emoji}`}</option>
+  ));
 
   useEffect(() => {
     if (user) {
@@ -60,6 +68,8 @@ const UserDetails = ({ user }: UserDetailsProps) => {
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
           setSubmitting(false);
+
+          dispatch(updateUserDetails.request({ ...user, ...values }));
           // submitFormHandler(values);
         }}
         initialValues={formValues}
@@ -85,9 +95,14 @@ const UserDetails = ({ user }: UserDetailsProps) => {
               </label>
               <input type="text" onChange={handleChange} onBlur={handleBlur} value={values.lastName} name="lastName" />
               <label>Country</label>
-              <select></select>
+              <select name="country" onChange={handleChange} onBlur={handleBlur} value={values.country}>
+                <option value="" disabled>
+                  --- select country ---
+                </option>
+                {countries}
+              </select>
             </form>
-            <button className="button-blue" type="submit">
+            <button className="button-blue" type="submit" onClick={() => handleSubmit()}>
               Continue
             </button>
           </>
