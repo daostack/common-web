@@ -16,14 +16,18 @@ const authorizeUser = async (payload: string) => {
   return await firebase
     .auth()
     .signInWithPopup(provider)
-    .then((result) => {
+    .then(async (result) => {
       const credentials = result.credential?.toJSON() as GoogleAuthResultInterface;
       const user = result.user?.toJSON() as User;
+      const currentUser = await firebase.auth().currentUser;
       if (credentials && user) {
-        tokenHandler.set(credentials.oauthAccessToken);
-        tokenHandler.setUser(user);
+        const tk = await currentUser?.getIdToken(true);
+        if (tk) {
+          tokenHandler.set(tk);
+          tokenHandler.setUser(user);
+        }
       }
-      return user;
+      return currentUser;
     });
 };
 

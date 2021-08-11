@@ -6,8 +6,9 @@ import "./index.scss";
 import "../../../containers/LoginContainer/index.scss";
 import { User } from "../../../../../shared/models";
 import { FORM_ERROR_MESSAGES } from "../../../../../shared/constants";
-import { COUNTRIES } from "../../../../../shared/assets/countries";
+import { countryList } from "../../../../../shared/assets/countries";
 import { useDispatch } from "react-redux";
+
 import { updateUserDetails } from "../../../../Auth/store/actions";
 
 interface UserDetailsProps {
@@ -34,9 +35,11 @@ const UserDetails = ({ user }: UserDetailsProps) => {
 
   const dispatch = useDispatch();
 
-  const countries = COUNTRIES.map((country) => (
-    <option key={country.code}>{`${country.name} ${country.emoji}`}</option>
+  const countries = countryList.map((country) => (
+    <option key={country.name} value={country.value}>{`${country.name} `}</option>
   ));
+
+  console.log(countries);
 
   useEffect(() => {
     if (user) {
