@@ -13,6 +13,7 @@ export const GetNotificationEventSettingsQuery = queryField('notificationEventSe
       })
     )
   },
+  // @ts-ignore
   resolve: (root, args) => {
     return prisma.notificationEventSettings
       .findMany({
