@@ -36,6 +36,7 @@ export const CreateNotificationTemplateMutation = mutationField('createNotificat
   authorize: async (root, args, ctx) => {
     return authorizationService.can(await ctx.getUserId(), 'admin.notification.setting.template.create');
   },
+  // @ts-ignore
   resolve: (root, args) => {
     return notificationService.template.create(args.input as any);
   }
