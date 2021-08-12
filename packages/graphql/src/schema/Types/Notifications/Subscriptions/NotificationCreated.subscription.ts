@@ -10,6 +10,7 @@ export const NotificationCreatedSubscription = subscriptionField('notificationCr
 
     return pubSub.asyncIterator<Notification>(`Notifications.${userId}.Created`);
   },
+  // @ts-ignore
   resolve: (root: Notification) => {
     return root;
   }

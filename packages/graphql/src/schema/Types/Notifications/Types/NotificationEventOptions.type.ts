@@ -6,6 +6,7 @@ export const NotificationEventOptionsType = objectType({
   definition(t) {
     t.nonNull.list.nonNull.field('availableNotifications', {
       type: 'NotificationType',
+      // @ts-ignore
       resolve: () => {
         return Object.values(NotificationType);
       }

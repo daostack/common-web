@@ -16,7 +16,7 @@ export interface IRequestContext {
    * Get the authenticated user decoded token payload
    * or throw an error if no user is authenticated
    */
-  getUserDecodedToken: () => Promise<string>;
+  getUserDecodedToken: () => Promise<any>; // FIXME
 
   /**
    * The prisma client

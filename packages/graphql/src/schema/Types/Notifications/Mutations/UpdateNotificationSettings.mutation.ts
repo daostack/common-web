@@ -20,6 +20,7 @@ export const UpdateNotificationSettingsMutation = mutationField('updateNotificat
   authorize: async (root, args, ctx) => {
     return authorizationService.can(await ctx.getUserId(), 'admin.notification.setting.update');
   },
+  // @ts-ignore
   resolve: (root, args) => {
     return notificationService.settings.update(args.input as any);
   }

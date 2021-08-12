@@ -28,6 +28,7 @@ export const UserNotificationsExtension = extendType({
 
         skip: intArg()
       },
+      // @ts-ignore
       resolve: (root, args) => {
         if (args.take && args.take > 25) {
           throw new CommonError('Cannot get more that 25 notification at a time');
