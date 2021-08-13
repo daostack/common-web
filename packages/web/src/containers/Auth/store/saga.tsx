@@ -7,7 +7,33 @@ import firebase from "../../../shared/utils/firebase";
 import { startLoading, stopLoading } from "../../../shared/store/actions";
 import { User } from "../../../shared/models";
 import { GoogleAuthResultInterface } from "../interface";
-import { UpdateUserDocument } from "../../../graphql";
+import { UpdateUserDocument, CreateUserDocument } from "../../../graphql";
+
+const createUser = async (profile: any) => {
+  const userPhotoUrl =
+    profile?.picture ||
+    `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${profile?.email}&rounded=true`;
+
+  try {
+    const apollo = await createApolloClient("https://api.staging.common.io/graphql" || "", localStorage.token || "");
+    const { data } = await apollo.mutate({
+      mutation: CreateUserDocument,
+      variables: {
+        user: {
+          firstName: profile.given_name,
+          lastName: profile.family_name,
+          email: profile.email,
+          photo: userPhotoUrl,
+          country: "Unknown",
+        },
+      },
+    });
+
+    return data?.user;
+  } catch (error) {
+    console.error("createUser - Error -> ", error);
+  }
+};
 
 const authorizeUser = async (payload: string) => {
   const provider =
@@ -26,6 +52,11 @@ const authorizeUser = async (payload: string) => {
           tokenHandler.set(tk);
           tokenHandler.setUser(user);
         }
+      }
+      if (result.additionalUserInfo?.isNewUser) {
+        const graphUser = await createUser(result.additionalUserInfo?.profile);
+        console.log(graphUser);
+        // todo dispatch is new user for user details step
       }
       return currentUser;
     });
@@ -49,7 +80,6 @@ const updateUserData = async (user: any) => {
     },
   });
 
-  console.log(data);
   return data;
 };
 
@@ -68,11 +98,9 @@ function* socialLoginSaga({ payload }: AnyAction & { payload: string }) {
 }
 
 function* logOut() {
-  yield firebase
-    .auth()
-    .signOut()
-    .then((res) => console.log(res));
-  yield localStorage.clear();
+  yield firebase.auth().signOut();
+
+  localStorage.clear();
 }
 
 function* updateUserDetails({ payload }: ReturnType<typeof actions.updateUserDetails.request>) {
