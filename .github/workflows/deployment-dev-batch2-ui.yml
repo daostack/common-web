@@ -16,4 +16,5 @@ jobs:
           username: ${{ secrets.INSTANCE_USERNAME }}
           key: ${{ secrets.INSTANCE_KEY }}
           passphrase: ${{ secrets.INSTANCE_PASSPHRASE }} 
-          script: ${{ secrets.GIT_REPO_BATCH_2 }} && sudo docker build -t common-ui:latest . && docker rm -f  common-ui || true && sudo docker run -d -p 80:80 --name  common-ui common-ui:latest
+          script: ${{ secrets.GIT_REPO_BATCH_2 }} && sudo docker build -t common-ui:latest . || true && sudo docker run -d -p 80:80 --name  common-ui common-ui:latest
+          #script: ${{ secrets.GIT_REPO_BATCH_2 }} && sudo docker build -t common-ui:latest . && docker rm -f  common-ui || true && sudo docker run -d -p 80:80 --name  common-ui common-ui:latest
