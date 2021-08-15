@@ -34,6 +34,6 @@ export const CreateNotificationEventSettingsMutation = mutationField('createNoti
   },
   // @ts-ignore
   resolve: (root, args) => {
-    return notificationService.settings.createEventSettings(args.input as any);
+    return notificationService.settings.createEventSettings(args.input as any); // FIXME
   }
 });
