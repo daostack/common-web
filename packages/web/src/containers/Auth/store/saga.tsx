@@ -1,6 +1,7 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { AnyAction } from "redux";
 
+import { default as store } from "../../../index";
 import { createApolloClient, tokenHandler } from "../../../shared/utils";
 import * as actions from "./actions";
 import firebase from "../../../shared/utils/firebase";
@@ -54,9 +55,9 @@ const authorizeUser = async (payload: string) => {
         }
       }
       if (result.additionalUserInfo?.isNewUser) {
-        const graphUser = await createUser(result.additionalUserInfo?.profile);
-        console.log(graphUser);
-        // todo dispatch is new user for user details step
+        await createUser(result.additionalUserInfo?.profile);
+
+        store.dispatch(actions.setIsUserNew(true));
       }
       return currentUser;
     });
@@ -107,10 +108,10 @@ function* updateUserDetails({ payload }: ReturnType<typeof actions.updateUserDet
   try {
     yield put(startLoading());
     const user: User = yield call(updateUserData, payload);
-
-    console.log(user);
+    yield put(actions.updateUserDetails.success(user));
+    yield put(actions.setIsUserNew(false));
   } catch (error) {
-    yield put(actions.socialLogin.failure(error));
+    yield put(actions.updateUserDetails.failure(error));
   } finally {
     yield put(stopLoading());
   }

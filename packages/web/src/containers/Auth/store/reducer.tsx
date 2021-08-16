@@ -10,6 +10,7 @@ type Action = ActionType<typeof actions>;
 const initialState: AuthStateType = {
   authentificated: !localStorage.getItem("token") ? false : true, // TODO: maybe need a better way to check this
   user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user") || "") : false,
+  isNewUser: false,
 };
 
 const reducer = createReducer<AuthStateType, Action>(initialState)
@@ -23,6 +24,11 @@ const reducer = createReducer<AuthStateType, Action>(initialState)
     produce(state, (nextState) => {
       nextState.authentificated = false;
       nextState.user = null;
+    }),
+  )
+  .handleAction(actions.setIsUserNew, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.isNewUser = action.payload;
     }),
   );
 

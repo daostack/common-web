@@ -1,7 +1,6 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 
 import { User } from "../../../shared/models";
-
 import { AuthActionTypes } from "./constants";
 
 export const socialLogin = createAsyncAction(
@@ -17,3 +16,5 @@ export const updateUserDetails = createAsyncAction(
   AuthActionTypes.UPDATE_USER_DATA_SUCCESS,
   AuthActionTypes.UPDATE_USER_DATA_FAILURE,
 )<User, User, Error>();
+
+export const setIsUserNew = createStandardAction(AuthActionTypes.SET_IS_NEW_USER)<boolean>();

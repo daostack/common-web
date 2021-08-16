@@ -12,7 +12,7 @@ import MobileLinks from "../MobileLinks/MobileLinks";
 import "./index.scss";
 import { Account } from "../Account";
 import { useModal } from "../../hooks";
-import { authentificated, selectUser } from "../../../containers/Auth/store/selectors";
+import { authentificated, selectIsNewUser, selectUser } from "../../../containers/Auth/store/selectors";
 import { isMobile } from "../../utils";
 import { Modal } from "../Modal";
 import { LoginContainer } from "../../../containers/Login/containers/LoginContainer";
@@ -28,6 +28,7 @@ const Header = () => {
   const { isShowing, onOpen, onClose } = useModal(false);
   const isAuthorized = useSelector(authentificated());
   const user = useSelector(selectUser());
+  const isNewUser = useSelector(selectIsNewUser());
 
   React.useEffect(() => {
     window.addEventListener("scroll", () => {
@@ -45,16 +46,12 @@ const Header = () => {
   }, [history]);
 
   React.useEffect(() => {
-    // 10 sec
-
-    if (user) {
-      if (new Date(Number(user?.lastLoginAt)).getTime() - new Date(Number(user?.createdAt)).getTime() > 10000) {
-        if (isShowing) {
-          //   onClose();
-        }
+    if (!isNewUser && user) {
+      if (isShowing) {
+        onClose();
       }
     }
-  }, [user, isShowing, onClose]);
+  }, [user, isNewUser, isShowing, onClose]);
 
   const handleNavLinkClick = () => {
     if (showMenu) {

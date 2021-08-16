@@ -39,8 +39,6 @@ const UserDetails = ({ user }: UserDetailsProps) => {
     <option key={country.name} value={country.value}>{`${country.name} `}</option>
   ));
 
-  console.log(countries);
-
   useEffect(() => {
     if (user) {
       if (user.firstName || user.lastName) {
