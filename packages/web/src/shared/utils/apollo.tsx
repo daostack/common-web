@@ -1,15 +1,19 @@
-import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
-import { setContext } from "apollo-link-context";
+import { ApolloClient, InMemoryCache, createHttpLink, ApolloLink } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 
 export const createApolloClient = (uri: string, token?: string) => {
-  const baseLink = new HttpLink({
+  const baseLink = createHttpLink({
     uri,
   });
 
-  const withToken = setContext(async () => {
+  const authLink = setContext((_, { headers }) => {
+    // get the authentication token from local storage if it exists
+    const token = localStorage.getItem("token");
+    // return the headers to the context so httpLink can read them
     return {
       headers: {
-        authorization: token,
+        ...headers,
+        authorization: token ? `${token}` : "",
       },
     };
   });
@@ -17,6 +21,6 @@ export const createApolloClient = (uri: string, token?: string) => {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     cache: new InMemoryCache(),
-    link: withToken.concat(baseLink as any) as any,
+    link: (authLink.concat(baseLink) as unknown) as ApolloLink,
   });
 };

@@ -90,17 +90,15 @@ export default function CommonDetail() {
 
   const common = commonData?.common;
 
-  const activeProposals = useMemo(
-    () => [...(proposalsData?.proposals || [])].filter((d) => d.state === "countdown"),
-    [proposalsData],
-  );
+  const activeProposals = useMemo(() => [...(proposalsData?.proposals || [])].filter((d) => d.state === "countdown"), [
+    proposalsData,
+  ]);
 
-  const historyProposals = useMemo(
-    () => [...(proposalsData?.proposals || [])].filter((d) => d.state !== "countdown"),
-    [proposalsData],
-  );
+  const historyProposals = useMemo(() => [...(proposalsData?.proposals || [])].filter((d) => d.state !== "countdown"), [
+    proposalsData,
+  ]);
 
-  const getDisscussionDetail = useCallback(
+  const getDiscussionDetail = useCallback(
     (payload: Discussion) => {
       setCurrentDisscussion(payload);
       onOpen();
@@ -128,11 +126,11 @@ export default function CommonDetail() {
       if (discussionsData?.discussions) {
         const disscussion = discussionsData?.discussions.find((f) => f.id === id);
         if (disscussion) {
-          getDisscussionDetail(disscussion);
+          getDiscussionDetail(disscussion);
         }
       }
     },
-    [discussionsData, getDisscussionDetail],
+    [discussionsData, getDiscussionDetail],
   );
 
   const clickPreviewProposalHandler = useCallback(
@@ -346,7 +344,7 @@ export default function CommonDetail() {
               {tab === "discussions" && (
                 <DiscussionsComponent
                   discussions={discussionsData?.discussions || []}
-                  loadDisscussionDetail={getDisscussionDetail}
+                  loadDisscussionDetail={getDiscussionDetail}
                 />
               )}
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Link, useLocation, useHistory } from "react-router-dom";
 import classNames from "classnames";
 
@@ -12,19 +12,23 @@ import MobileLinks from "../MobileLinks/MobileLinks";
 import "./index.scss";
 import { Account } from "../Account";
 import { useModal } from "../../hooks";
-import { authentificated } from "../../../containers/Auth/store/selectors";
+import { authentificated, selectIsNewUser, selectUser } from "../../../containers/Auth/store/selectors";
 import { isMobile } from "../../utils";
 import { Modal } from "../Modal";
 import { LoginContainer } from "../../../containers/Login/containers/LoginContainer";
+import { logOut } from "../../../containers/Auth/store/actions";
 
 const Header = () => {
   const location = useLocation();
   const history = useHistory();
+  const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
   const [showMenu, setShowMenu] = useState(false);
   const [isTop, setIsTop] = useState<boolean | undefined>(undefined);
   const { isShowing, onOpen, onClose } = useModal(false);
   const isAuthorized = useSelector(authentificated());
+  const user = useSelector(selectUser());
+  const isNewUser = useSelector(selectIsNewUser());
 
   React.useEffect(() => {
     window.addEventListener("scroll", () => {
@@ -41,10 +45,22 @@ const Header = () => {
     };
   }, [history]);
 
+  React.useEffect(() => {
+    if (!isNewUser && user) {
+      if (isShowing) {
+        onClose();
+      }
+    }
+  }, [user, isNewUser, isShowing, onClose]);
+
   const handleNavLinkClick = () => {
     if (showMenu) {
       setShowMenu(false);
     }
+  };
+
+  const logOutUser = () => {
+    dispatch(logOut());
   };
 
   const links = (
@@ -80,7 +96,7 @@ const Header = () => {
       {screenSize === ScreenSize.Desktop ? (
         <>
           {links}
-          {isAuthorized && <Account />}
+          {user && <Account user={user} logOut={logOutUser} />}
           <div className="mobile-links-container">
             <MobileLinks color={Colors.black} />
           </div>

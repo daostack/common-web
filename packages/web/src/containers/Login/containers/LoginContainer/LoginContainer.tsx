@@ -1,14 +1,15 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { authentificated } from "../../../Auth/store/selectors";
+
+import { selectUser } from "../../../Auth/store/selectors";
 import { Connect } from "../../components/LoginContainer/Connect";
-import { Details } from "../../components/LoginContainer/Details";
+import { UserDetails } from "../../components/LoginContainer/UserDetails";
 import "./index.scss";
 
 const LoginContainer = () => {
-  const isAuthorized = useSelector(authentificated());
+  const user = useSelector(selectUser());
 
-  return <div className="login-wrapper">{isAuthorized ? <Details /> : <Connect />}</div>;
+  return <div className="login-wrapper">{user ? <UserDetails user={user} /> : <Connect />}</div>;
 };
 
 export default LoginContainer;

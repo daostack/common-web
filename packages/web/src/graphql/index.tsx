@@ -219,6 +219,29 @@ export function useGetCommonDiscussions(
   );
 }
 
+export const CreateUserDocument = gql`
+  mutation CreateUser($user: CreateUserInput!) {
+    createUser(input: $user) {
+      id
+    }
+  }
+`;
+
+export const UpdateUserDocument = gql`
+  mutation UpdateUser($user: UpdateUserInput!) {
+    updateUser(input: $user) {
+      uid: id
+      firstName
+      lastName
+      email
+      photoURL: photo
+      country
+      intro
+      joinedAt: createdAt
+    }
+  }
+`;
+
 export const GetDiscussionById = gql`
   query getDiscussionById($id: ID!) {
     discussion(id: $id) {
