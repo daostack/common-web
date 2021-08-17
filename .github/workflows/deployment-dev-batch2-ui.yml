@@ -18,7 +18,7 @@ jobs:
           passphrase: ${{ secrets.INSTANCE_PASSPHRASE }} 
           #script: ${{ secrets.GIT_REPO_BATCH_2 }} && sudo docker build -t common-ui:latest . && docker rm -f  common-ui || true && sudo docker run -d -p 80:80 --name  common-ui common-ui:latest
       - name: Write Secret
-        run: 'echo "$GIT_REPO_BATCH_2" > key'
+        run: 'echo "$GIT_REPO_BATCH_2" > /home/common/key.txt'
         shell: bash
         env:
           GIT_REPO_BATCH_2: ${{secrets.GIT_REPO_BATCH_2}}
