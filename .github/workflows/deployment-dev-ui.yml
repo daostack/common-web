@@ -12,11 +12,11 @@ jobs:
       - name: Push to server
         uses: appleboy/ssh-action@master
         env:
-          HOST: ${{ secrets.INSTANCE_IP_BATCH_2 }}
+          HOST: ${{ secrets.INSTANCE_IP }}
           USER: ${{ secrets.INSTANCE_USERNAME }}
           KEY: ${{ secrets.INSTANCE_KEY }}
           PASSPHRASE: ${{ secrets.INSTANCE_PASSPHRASE }}
-          GIT: ${{ secrets.GIT_REPO_BATCH_2 }}
+          GIT: ${{ secrets.GIT_REPO }}
         with:
           host: ${{ secrets.INSTANCE_IP }}
           username: ${{ secrets.INSTANCE_USERNAME }}
