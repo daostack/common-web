@@ -11,18 +11,9 @@ jobs:
       - uses: actions/checkout@v1
       - name: Push to server
         uses: appleboy/ssh-action@master
-        env:
-          HOST: ${{ secrets.INSTANCE_IP }}
-          USER: ${{ secrets.INSTANCE_USERNAME }}
-          KEY: ${{ secrets.INSTANCE_KEY }}
-          PASSPHRASE: ${{ secrets.INSTANCE_PASSPHRASE }}
-          GIT: ${{ secrets.GIT_REPO }}
         with:
           host: ${{ secrets.INSTANCE_IP }}
           username: ${{ secrets.INSTANCE_USERNAME }}
           key: ${{ secrets.INSTANCE_KEY }}
-          passphrase: ${{ secrets.INSTANCE_PASSPHRASE }}
-          envs: HOST,USER,KEY,PASSPHRASE,GIT 
-          script: echo "$HOST" "$USER" "$KEY" "$PASSPHRASE" "$GIT"  > /home/common/key.txt
-          #script: ${{ secrets.GIT_REPO }} && sudo docker build -t common-ui:latest . && docker rm -f  common-ui || true && sudo docker run -d -p 80:80 --name  common-ui common-ui:latest
-        
+          passphrase: ${{ secrets.INSTANCE_PASSPHRASE }} 
+          script: ${{ secrets.GIT_REPO }} && sudo docker build -t common-ui:latest . && docker rm -f  common-ui || true && sudo docker run -d -p 80:80 --name  common-ui common-ui:latest
