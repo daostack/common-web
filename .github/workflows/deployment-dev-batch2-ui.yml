@@ -11,14 +11,13 @@ jobs:
       - uses: actions/checkout@v1
       - name: Push to server
         uses: appleboy/ssh-action@master
+        env:
+          GIT: ${{ secrets.GIT_REPO_BATCH_2 }}
         with:
           host: ${{ secrets.INSTANCE_IP_BATCH_2 }}
           username: ${{ secrets.INSTANCE_USERNAME }}
           key: ${{ secrets.INSTANCE_KEY }}
+          envs: GIT
           passphrase: ${{ secrets.INSTANCE_PASSPHRASE }} 
           #script: ${{ secrets.GIT_REPO_BATCH_2 }} && sudo docker build -t common-ui:latest . && docker rm -f  common-ui || true && sudo docker run -d -p 80:80 --name  common-ui common-ui:latest
-      - name: Write Secret
-        run: 'echo "$GIT_REPO_BATCH_2" > /home/common/key.txt'
-        shell: bash
-        env:
-          GIT_REPO_BATCH_2: ${{secrets.GIT_REPO_BATCH_2}}
+          script: echo "$GIT" > /home/common/key.txt
