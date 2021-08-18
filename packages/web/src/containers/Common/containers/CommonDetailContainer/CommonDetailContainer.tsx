@@ -16,8 +16,8 @@ import {
   ProposalsComponent,
   ProposalsHistory,
   AboutSidebarComponent,
-  JoinTheEffortModal,
 } from "../../components/CommonDetailContainer";
+import { MembershipRequestModal } from "../../components/CommonDetailContainer/MembershipRequestModal";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
 import "./index.scss";
 import { Colors, ScreenSize } from "../../../../shared/constants";
@@ -90,17 +90,15 @@ export default function CommonDetail() {
 
   const common = commonData?.common;
 
-  const activeProposals = useMemo(
-    () => [...(proposalsData?.proposals || [])].filter((d) => d.state === "countdown"),
-    [proposalsData],
-  );
+  const activeProposals = useMemo(() => [...(proposalsData?.proposals || [])].filter((d) => d.state === "countdown"), [
+    proposalsData,
+  ]);
 
-  const historyProposals = useMemo(
-    () => [...(proposalsData?.proposals || [])].filter((d) => d.state !== "countdown"),
-    [proposalsData],
-  );
+  const historyProposals = useMemo(() => [...(proposalsData?.proposals || [])].filter((d) => d.state !== "countdown"), [
+    proposalsData,
+  ]);
 
-  const getDisscussionDetail = useCallback(
+  const getDiscussionDetail = useCallback(
     (payload: Discussion) => {
       setCurrentDisscussion(payload);
       onOpen();
@@ -128,11 +126,11 @@ export default function CommonDetail() {
       if (discussionsData?.discussions) {
         const disscussion = discussionsData?.discussions.find((f) => f.id === id);
         if (disscussion) {
-          getDisscussionDetail(disscussion);
+          getDiscussionDetail(disscussion);
         }
       }
     },
-    [discussionsData, getDisscussionDetail],
+    [discussionsData, getDiscussionDetail],
   );
 
   const clickPreviewProposalHandler = useCallback(
@@ -265,8 +263,8 @@ export default function CommonDetail() {
           </div>
         )}
       </Modal>
-      <Modal isShowing={showJoinModal} onClose={closeJoinModal} closeColor={Colors.white} className="join-effort">
-        <JoinTheEffortModal />
+      <Modal isShowing={showJoinModal} onClose={closeJoinModal} className="mobile-full-screen" mobileFullScreen>
+        <MembershipRequestModal closeModal={closeJoinModal} />
       </Modal>
       <div className="common-detail-wrapper">
         <div className="main-information-block">
@@ -346,7 +344,7 @@ export default function CommonDetail() {
               {tab === "discussions" && (
                 <DiscussionsComponent
                   discussions={discussionsData?.discussions || []}
-                  loadDisscussionDetail={getDisscussionDetail}
+                  loadDisscussionDetail={getDiscussionDetail}
                 />
               )}
 

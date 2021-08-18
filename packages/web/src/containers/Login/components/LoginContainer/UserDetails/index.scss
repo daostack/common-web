@@ -1,0 +1,39 @@
+@import "../../../../../constants.scss";
+
+.details-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  form {
+    display: flex;
+    flex-direction: column;
+    width: 25rem;
+    margin-bottom: 30px;
+    label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.6rem;
+      margin-top: 0.8rem;
+      > span:nth-child(2) {
+        color: $light-gray-2;
+      }
+    }
+    select,
+    input {
+      border: 1px solid $light-gray-1;
+      border-radius: 3px;
+      height: 50px;
+      text-indent: 0.75rem;
+      outline: none;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .details-wrapper {
+    form {
+      width: 100%;
+    }
+  }
+}

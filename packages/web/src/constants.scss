@@ -11,6 +11,7 @@ $xlarge: 46px;
 $large: 35px;
 $medium: 26px;
 $moderate-med: 24px;
+$moderate-small: 20px;
 $moderate: 18px;
 $small: 16px;
 $xsmall: 14px;
@@ -18,8 +19,8 @@ $xxsmall: 12px;
 
 /* colors */
 $purple: #7786ff;
-$purple-hover: #E4E7FF;
-$purple-pressed: #D6DAFF;
+$purple-hover: #e4e7ff;
+$purple-pressed: #d6daff;
 $light-purple: rgba(117, 133, 255, 0.1);
 $light-purple-background: #fbfcfc;
 $white: #ffffff;
@@ -27,7 +28,8 @@ $pink: #ff5e9d;
 $blue: #0b2046;
 $deep-blue: #071836;
 $blue-text: #0a2149;
-$light-gray: #eeeeee;
+$light-gray-1: #eeeeee;
+$light-gray-2: #979bba;
 $gray: #92a2b5;
 $green: #6ee569;
 $shadow: rgba(0, 0, 0, 0.14);

@@ -54,34 +54,10 @@ body {
       color: $deep-blue;
     }
 
-    .button-blue {
-      font-family: NunitoSans-Bold;
-      height: 40px;
-      border-radius: 30.5px;
-      background-color: $purple;
-      border: none;
-      outline: none;
-      font-size: 16px;
-      font-weight: bold;
-      text-align: center;
-      color: $white;
-      cursor: pointer;
-      text-decoration: none;
-      width: fit-content;
-      min-width: 200px;
-      &:hover {
-        opacity: 0.9;
-      }
-      &:disabled {
-        pointer-events: none;
-        opacity: 0.5;
-      }
-    }
-
     .line {
       margin: 0 -40px;
       height: 1px;
-      background-color: $light-gray;
+      background-color: $light-gray-1;
     }
 
     /* Remove inputs border highlight */
@@ -90,6 +66,29 @@ body {
     textarea:focus,
     button:focus {
       outline: none;
+    }
+  }
+  .button-blue {
+    font-family: NunitoSans-Bold;
+    height: 40px;
+    border-radius: 30.5px;
+    background-color: $purple;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    color: $white;
+    cursor: pointer;
+    text-decoration: none;
+    width: fit-content;
+    min-width: 200px;
+    &:hover {
+      opacity: 0.9;
+    }
+    &:disabled {
+      pointer-events: none;
+      opacity: 0.5;
     }
   }
   h1 {
@@ -142,12 +141,12 @@ body {
       .page-title {
         text-align: center;
       }
-      .button-blue {
-        width: 100%;
-      }
       .line {
         margin: 0 -20px;
       }
+    }
+    .button-blue {
+      width: 100%;
     }
   }
 }

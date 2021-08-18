@@ -8,4 +8,5 @@ export interface ModalProps {
   children: React.ReactNode;
   closeColor?: Colors;
   className?: string;
+  mobileFullScreen?: boolean;
 }

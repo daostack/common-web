@@ -17,6 +17,8 @@ if (process.env.REACT_APP_ENV === "dev") {
   whyDidYouRender(React, { trackHooks: true });
 }
 
+export default store;
+
 ReactDOM.render(
   <Router history={history}>
     <Provider store={store}>
