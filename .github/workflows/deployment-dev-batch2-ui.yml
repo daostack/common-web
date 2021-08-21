@@ -1,4 +1,4 @@
-name: continuous delivery
+name: web dev 2 continuous delivery
 
 on:
   push:
