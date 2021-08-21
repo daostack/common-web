@@ -10,6 +10,7 @@ import { countryList } from "../../../../../shared/assets/countries";
 import { useDispatch } from "react-redux";
 
 import { updateUserDetails } from "../../../../Auth/store/actions";
+import { uploadImage } from "../../../../Auth/store/saga";
 
 interface UserDetailsProps {
   user: User;
@@ -19,6 +20,7 @@ interface UserDetailsInterface {
   firstName: string;
   lastName: string;
   country: string;
+  photo: string;
 }
 
 const validationSchema = Yup.object({
@@ -31,6 +33,7 @@ const UserDetails = ({ user }: UserDetailsProps) => {
     firstName: "",
     lastName: "",
     country: "",
+    photo: "",
   });
 
   const dispatch = useDispatch();
@@ -46,6 +49,7 @@ const UserDetails = ({ user }: UserDetailsProps) => {
           firstName: user.firstName || "",
           lastName: user.lastName || "",
           country: "",
+          photo: user.photoURL || "",
         });
       } else {
         const name = user.displayName?.split(" ");
@@ -55,11 +59,26 @@ const UserDetails = ({ user }: UserDetailsProps) => {
             firstName: name[0],
             lastName: name[1],
             country: "",
+            photo: user.photoURL || "",
           });
         }
       }
     }
   }, [user]);
+
+  const uploadAvatar = (
+    files: FileList | null,
+    setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void,
+  ) => {
+    if (files) {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(files[0]);
+      fileReader.addEventListener("load", async function () {
+        const imageUrl = await uploadImage(this.result);
+        setFieldValue("photo", imageUrl);
+      });
+    }
+  };
 
   return (
     <div className="details-wrapper">
@@ -76,9 +95,16 @@ const UserDetails = ({ user }: UserDetailsProps) => {
         initialValues={formValues}
         enableReinitialize={true}
       >
-        {({ values, errors, touched, handleChange, handleBlur, handleSubmit }) => (
+        {({ values, setFieldValue, errors, touched, handleChange, handleBlur, handleSubmit }) => (
           <>
             <form>
+              <div className="avatar-wrapper">
+                <div className="avatar">
+                  <img src={values.photo} alt="avatar" />
+                  <input type="file" onChange={(value) => uploadAvatar(value.target.files, setFieldValue)} />
+                </div>
+                <div className="user-account-name">{user.email}</div>
+              </div>
               <label>
                 <span>First name</span>
                 <span>Required</span>

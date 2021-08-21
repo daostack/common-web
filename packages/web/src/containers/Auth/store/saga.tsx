@@ -10,6 +10,17 @@ import { User } from "../../../shared/models";
 import { GoogleAuthResultInterface } from "../interface";
 import { UpdateUserDocument, CreateUserDocument } from "../../../graphql";
 
+export const uploadImage = async (imageUri: any) => {
+  const ext = imageUri.split(";")[0].split("/")[1];
+  const timeStamp = new Date().getTime();
+  const filename = `img_${timeStamp}.${ext}`;
+  const path = `public_img/${filename}`;
+  const ref = firebase.storage().ref(path);
+
+  await ref.putString(imageUri.split(",")[1], "base64", { contentType: `image/${ext}` });
+  return await ref.getDownloadURL();
+};
+
 const createUser = async (profile: any) => {
   const userPhotoUrl =
     profile?.picture ||
@@ -46,12 +57,12 @@ const authorizeUser = async (payload: string) => {
     .then(async (result) => {
       const credentials = result.credential?.toJSON() as GoogleAuthResultInterface;
       const user = result.user?.toJSON() as User;
-      const currentUser = await firebase.auth().currentUser;
+      const currentUser = (await firebase.auth().currentUser) as any;
       if (credentials && user) {
         const tk = await currentUser?.getIdToken(true);
         if (tk) {
           tokenHandler.set(tk);
-          tokenHandler.setUser(user);
+          tokenHandler.setUser(currentUser);
         }
       }
       if (result.additionalUserInfo?.isNewUser) {
@@ -65,9 +76,11 @@ const authorizeUser = async (payload: string) => {
 
 const updateUserData = async (user: any) => {
   const currentUser = await firebase.auth().currentUser;
-  await currentUser?.updateProfile({ displayName: `${user.firstName} ${user.lastName}` });
+  await currentUser?.updateProfile({ displayName: `${user.firstName} ${user.lastName}`, photoURL: user.photo });
 
   const apollo = await createApolloClient("https://api.staging.common.io/graphql" || "", localStorage.token || "");
+  const updatedCurrentUser = await firebase.auth().currentUser;
+
   const { data } = await apollo.mutate({
     mutation: UpdateUserDocument,
     variables: {
@@ -75,13 +88,13 @@ const updateUserData = async (user: any) => {
         id: currentUser?.uid,
         firstName: user.firstName,
         lastName: user.lastName,
-        photo: currentUser?.photoURL,
+        photo: updatedCurrentUser?.photoURL,
         country: user.country || "",
       },
     },
   });
 
-  return data;
+  return data.updateUser;
 };
 
 function* socialLoginSaga({ payload }: AnyAction & { payload: string }) {
@@ -108,7 +121,9 @@ function* updateUserDetails({ payload }: ReturnType<typeof actions.updateUserDet
   try {
     yield put(startLoading());
     const user: User = yield call(updateUserData, payload);
+    console.log(user);
     yield put(actions.updateUserDetails.success(user));
+    tokenHandler.setUser(user);
     yield put(actions.setIsUserNew(false));
   } catch (error) {
     yield put(actions.updateUserDetails.failure(error));

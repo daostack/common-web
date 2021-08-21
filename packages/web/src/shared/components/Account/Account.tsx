@@ -14,7 +14,7 @@ const Account = ({ user, logOut }: AccountProps) => {
   return (
     <div className="account-wrapper" onClick={() => setShowMenu(!showMenu)}>
       <img src={user?.photoURL} className="avatar" alt="user avatar" />
-      <div>{user?.displayName}</div>
+      <div>{user?.displayName || `${user.firstName} ${user.lastName}`}</div>
       {showMenu && (
         <div className="menu-wrapper">
           <div onClick={() => logOut()}>Log out</div>
