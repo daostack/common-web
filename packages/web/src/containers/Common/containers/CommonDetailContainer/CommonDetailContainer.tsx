@@ -23,6 +23,8 @@ import "./index.scss";
 import { Colors, ScreenSize } from "../../../../shared/constants";
 import { MobileLinks } from "../../../../shared/components/MobileLinks";
 import { useGetCommonProposals, useGetCommonDiscussions, useGetCommonById } from "../../../../graphql";
+import { selectUser } from "../../../Auth/store/selectors";
+import CheckIcon from "../../../../shared/icons/check.icon";
 interface CommonDetailRouterParams {
   id: string;
 }
@@ -60,6 +62,7 @@ export default function CommonDetail() {
   const [currentDisscussion, setCurrentDisscussion] = useState<Discussion | null>(null);
 
   const screenSize = useSelector(getScreenSize());
+  const user = useSelector(selectUser());
 
   const { isShowing, onOpen, onClose } = useModal(false);
   const { isShowing: showJoinModal, onOpen: onOpenJoinModal, onClose: onCloseJoinModal } = useModal(false);
@@ -90,13 +93,18 @@ export default function CommonDetail() {
 
   const common = commonData?.common;
 
-  const activeProposals = useMemo(() => [...(proposalsData?.proposals || [])].filter((d) => d.state === "countdown"), [
-    proposalsData,
-  ]);
+  const commonMemberData = common?.members.filter((member: any) => member.user.id === user?.uid);
+  const isCommonMember = commonMemberData && commonMemberData?.length > 0;
 
-  const historyProposals = useMemo(() => [...(proposalsData?.proposals || [])].filter((d) => d.state !== "countdown"), [
-    proposalsData,
-  ]);
+  const activeProposals = useMemo(
+    () => [...(proposalsData?.proposals || [])].filter((d) => d.state === "countdown"),
+    [proposalsData],
+  );
+
+  const historyProposals = useMemo(
+    () => [...(proposalsData?.proposals || [])].filter((d) => d.state !== "countdown"),
+    [proposalsData],
+  );
 
   const getDiscussionDetail = useCallback(
     (payload: Discussion) => {
@@ -250,10 +258,18 @@ export default function CommonDetail() {
         className={tab}
       >
         {screenSize === ScreenSize.Desktop && tab === "discussions" && (
-          <DiscussionDetailModal disscussion={currentDisscussion} onOpenJoinModal={openJoinModal} />
+          <DiscussionDetailModal
+            disscussion={currentDisscussion}
+            onOpenJoinModal={openJoinModal}
+            isCommonMember={isCommonMember}
+          />
         )}
         {screenSize === ScreenSize.Desktop && (tab === "proposals" || tab === "history") && (
-          <ProposalDetailModal proposal={currentProposal} onOpenJoinModal={openJoinModal} />
+          <ProposalDetailModal
+            proposal={currentProposal}
+            onOpenJoinModal={openJoinModal}
+            isCommonMember={isCommonMember}
+          />
         )}
         {screenSize === ScreenSize.Mobile && (
           <div className="get-common-app-wrapper">
@@ -317,9 +333,17 @@ export default function CommonDetail() {
                   ))}
                 </div>
                 <div className="social-wrapper" ref={joinEffort}>
-                  <button className={`button-blue join-the-effort-btn`} onClick={onOpenJoinModal}>
-                    Join the effort
-                  </button>
+                  {!isCommonMember && (
+                    <button className={`button-blue join-the-effort-btn`} onClick={onOpenJoinModal}>
+                      Join the effort
+                    </button>
+                  )}
+                  {isCommonMember && screenSize === ScreenSize.Desktop && (
+                    <div className="member-label">
+                      <CheckIcon />
+                      &nbsp;You are a member
+                    </div>
+                  )}
                   {screenSize === ScreenSize.Desktop && <Share type="popup" color={Colors.lightPurple} />}
                 </div>
               </div>
@@ -338,7 +362,12 @@ export default function CommonDetail() {
               {tab === "about" && (
                 <>
                   <div className="about-title">About</div>
-                  <AboutTabComponent common={common} screenSize={screenSize} onOpenJoinModal={onOpenJoinModal} />
+                  <AboutTabComponent
+                    common={common}
+                    screenSize={screenSize}
+                    onOpenJoinModal={onOpenJoinModal}
+                    isCommonMember={isCommonMember}
+                  />
                 </>
               )}
               {tab === "discussions" && (
@@ -364,7 +393,7 @@ export default function CommonDetail() {
                 />
               )}
             </div>
-            {screenSize === ScreenSize.Mobile && !inViewport && (
+            {screenSize === ScreenSize.Mobile && !isCommonMember && !inViewport && (
               <button
                 className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
                 onClick={onOpenJoinModal}

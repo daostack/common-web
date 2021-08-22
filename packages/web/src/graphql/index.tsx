@@ -314,6 +314,7 @@ export const GetCommonById = gql`
       members {
         id
         user {
+          id
           firstName
           lastName
           displayName
@@ -397,7 +398,7 @@ export const LoadUserContextDocument = gql`
 `;
 
 export type LoadUserContextQuery = {
-  user?: Pick<User, "id" | "firstName" | "lastName" | "displayName" | "email" | "photo" | "permissions">;
+  user?: Pick<User, "uid" | "firstName" | "lastName" | "displayName" | "email" | "photo" | "permissions">;
 };
 
 export type LoadUserContextQueryVariables = Exact<{ [key: string]: never }>;
