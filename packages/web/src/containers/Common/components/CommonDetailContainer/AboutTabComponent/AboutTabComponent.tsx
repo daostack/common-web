@@ -10,9 +10,15 @@ interface AboutTabComponentProps {
   common: Common;
   screenSize: string;
   onOpenJoinModal: () => void;
+  isCommonMember: boolean | undefined;
 }
 
-export default function AboutTabComponent({ common, screenSize, onOpenJoinModal }: AboutTabComponentProps) {
+export default function AboutTabComponent({
+  common,
+  screenSize,
+  onOpenJoinModal,
+  isCommonMember,
+}: AboutTabComponentProps) {
   const renderContributionType = (type: string) => {
     return <b>{type}</b>;
   };
@@ -38,7 +44,7 @@ export default function AboutTabComponent({ common, screenSize, onOpenJoinModal 
           {formatPrice(common.fundingMinimumAmount) + " "}
           {renderContributionType(common.fundingType || "")} contribution
         </div>
-        {screenSize === ScreenSize.Desktop && (
+        {screenSize === ScreenSize.Desktop && !isCommonMember && (
           <div className="social-wrapper">
             <button className={`button-blue`} onClick={onOpenJoinModal}>
               Join the effort
