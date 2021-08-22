@@ -25,7 +25,7 @@ const Header = () => {
   const screenSize = useSelector(getScreenSize());
   const [showMenu, setShowMenu] = useState(false);
   const [isTop, setIsTop] = useState<boolean | undefined>(undefined);
-  const { isShowing, onOpen, onClose } = useModal(false);
+  const { isShowing, onOpen, onClose } = useModal(true);
   const isAuthorized = useSelector(authentificated());
   const user = useSelector(selectUser());
   const isNewUser = useSelector(selectIsNewUser());

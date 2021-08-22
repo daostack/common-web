@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
@@ -35,6 +35,7 @@ const UserDetails = ({ user }: UserDetailsProps) => {
     country: "",
     photo: "",
   });
+  const inputFile: any = useRef(null);
 
   const dispatch = useDispatch();
 
@@ -101,7 +102,15 @@ const UserDetails = ({ user }: UserDetailsProps) => {
               <div className="avatar-wrapper">
                 <div className="avatar">
                   <img src={values.photo} alt="avatar" />
-                  <input type="file" onChange={(value) => uploadAvatar(value.target.files, setFieldValue)} />
+                  <div className="edit-avatar" onClick={() => inputFile?.current && inputFile?.current?.click()}>
+                    <img src="/icons/edit-avatar.svg" alt="edit-avatar" />
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={inputFile}
+                    onChange={(value) => uploadAvatar(value.target.files, setFieldValue)}
+                  />
                 </div>
                 <div className="user-account-name">{user.email}</div>
               </div>
