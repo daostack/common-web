@@ -25,7 +25,7 @@ const Header = () => {
   const screenSize = useSelector(getScreenSize());
   const [showMenu, setShowMenu] = useState(false);
   const [isTop, setIsTop] = useState<boolean | undefined>(undefined);
-  const { isShowing, onOpen, onClose } = useModal(true);
+  const { isShowing, onOpen, onClose } = useModal(false);
   const isAuthorized = useSelector(authentificated());
   const user = useSelector(selectUser());
   const isNewUser = useSelector(selectIsNewUser());
@@ -120,7 +120,7 @@ const Header = () => {
         </>
       )}
       <Modal isShowing={isShowing} onClose={onClose} className="mobile-full-screen" mobileFullScreen>
-        <LoginContainer />
+        <LoginContainer closeModal={onClose} />
       </Modal>
     </section>
   );

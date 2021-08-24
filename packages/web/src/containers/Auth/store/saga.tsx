@@ -10,6 +10,8 @@ import { User } from "../../../shared/models";
 import { GoogleAuthResultInterface } from "../interface";
 import { UpdateUserDocument, CreateUserDocument } from "../../../graphql";
 
+const apollo = createApolloClient("https://api.staging.common.io/graphql" || "", localStorage.token || "");
+
 export const uploadImage = async (imageUri: any) => {
   const ext = imageUri.split(";")[0].split("/")[1];
   const timeStamp = new Date().getTime();
@@ -27,7 +29,6 @@ const createUser = async (profile: any) => {
     `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${profile?.email}&rounded=true`;
 
   try {
-    const apollo = await createApolloClient("https://api.staging.common.io/graphql" || "", localStorage.token || "");
     const { data } = await apollo.mutate({
       mutation: CreateUserDocument,
       variables: {
@@ -78,7 +79,6 @@ const updateUserData = async (user: any) => {
   const currentUser = await firebase.auth().currentUser;
   await currentUser?.updateProfile({ displayName: `${user.firstName} ${user.lastName}`, photoURL: user.photo });
 
-  const apollo = await createApolloClient("https://api.staging.common.io/graphql" || "", localStorage.token || "");
   const updatedCurrentUser = await firebase.auth().currentUser;
 
   const { data } = await apollo.mutate({
@@ -120,13 +120,15 @@ function* logOut() {
 function* updateUserDetails({ payload }: ReturnType<typeof actions.updateUserDetails.request>) {
   try {
     yield put(startLoading());
-    const user: User = yield call(updateUserData, payload);
-    console.log(user);
+    const user: User = yield call(updateUserData, payload.user);
+
     yield put(actions.updateUserDetails.success(user));
     tokenHandler.setUser(user);
     yield put(actions.setIsUserNew(false));
+    yield payload.callback();
   } catch (error) {
     yield put(actions.updateUserDetails.failure(error));
+    yield payload.callback();
   } finally {
     yield put(stopLoading());
   }

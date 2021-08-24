@@ -33,27 +33,53 @@
     }
   }
 
-  .avatar {
+  .avatar-wrapper {
     position: relative;
-    text-align: center;
-    input {
-      display: none;
+    .avatar {
+      position: relative;
+      text-align: center;
+
+      input {
+        display: none;
+      }
+
+      .edit-avatar {
+        width: 1.75rem;
+        height: 1.75rem;
+        background-color: #7786ff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 38px;
+        left: 52%;
+        cursor: pointer;
+
+        img {
+          width: 0.875rem;
+          height: 0.875rem;
+        }
+      }
     }
-    .edit-avatar{
-      width: 1.75rem;
-      height: 1.75rem;
-      background-color: #7786ff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .loader-wrapper{
       position: absolute;
-      top: 38px;
-      left: 52%;
-      cursor: pointer;
-      img{
-        width: 0.875rem;
-        height: 0.875rem;
+      width: 61px;
+      height: 61px;
+      top: 23px;
+      border-radius: 50%;
+    }
+  }
+  .actions-wrapper{
+    margin-top: 100px;
+    .button-blue{
+      &.white{
+        border: solid 1px #eee;
+        background-color: #fff;
+        color: #001a36;
+        font-weight: normal;
+        min-width: 	96px;
+        margin-right: 16px;
       }
     }
   }

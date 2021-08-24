@@ -1,19 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Formik } from "formik";
+// eslint-disable-next-line import/order
 import * as Yup from "yup";
 
 import "./index.scss";
 import "../../../containers/LoginContainer/index.scss";
+import { useDispatch } from "react-redux";
+
 import { User } from "../../../../../shared/models";
 import { FORM_ERROR_MESSAGES } from "../../../../../shared/constants";
 import { countryList } from "../../../../../shared/assets/countries";
-import { useDispatch } from "react-redux";
-
 import { updateUserDetails } from "../../../../Auth/store/actions";
 import { uploadImage } from "../../../../Auth/store/saga";
+import { Loader } from "../../../../../shared/components";
 
 interface UserDetailsProps {
   user: User;
+  closeModal: () => void;
 }
 
 interface UserDetailsInterface {
@@ -28,13 +31,15 @@ const validationSchema = Yup.object({
   lastName: Yup.string().required(FORM_ERROR_MESSAGES.REQUIRED),
 });
 
-const UserDetails = ({ user }: UserDetailsProps) => {
+const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
   const [formValues, setFormValues] = useState<UserDetailsInterface>({
     firstName: "",
     lastName: "",
     country: "",
     photo: "",
   });
+
+  const [loading, setLoading] = useState(false);
   const inputFile: any = useRef(null);
 
   const dispatch = useDispatch();
@@ -72,10 +77,12 @@ const UserDetails = ({ user }: UserDetailsProps) => {
     setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void,
   ) => {
     if (files) {
+      setLoading(true);
       const fileReader = new FileReader();
       fileReader.readAsDataURL(files[0]);
       fileReader.addEventListener("load", async function () {
         const imageUrl = await uploadImage(this.result);
+        setLoading(false);
         setFieldValue("photo", imageUrl);
       });
     }
@@ -90,8 +97,7 @@ const UserDetails = ({ user }: UserDetailsProps) => {
         onSubmit={(values, { setSubmitting }) => {
           setSubmitting(false);
 
-          dispatch(updateUserDetails.request({ ...user, ...values }));
-          // submitFormHandler(values);
+          dispatch(updateUserDetails.request({ user: { ...user, ...values }, callback: closeModal }));
         }}
         initialValues={formValues}
         enableReinitialize={true}
@@ -102,9 +108,11 @@ const UserDetails = ({ user }: UserDetailsProps) => {
               <div className="avatar-wrapper">
                 <div className="avatar">
                   <img src={values.photo} alt="avatar" />
-                  <div className="edit-avatar" onClick={() => inputFile?.current && inputFile?.current?.click()}>
-                    <img src="/icons/edit-avatar.svg" alt="edit-avatar" />
-                  </div>
+                  {!loading ? (
+                    <div className="edit-avatar" onClick={() => inputFile?.current && inputFile?.current?.click()}>
+                      <img src="/icons/edit-avatar.svg" alt="edit-avatar" />
+                    </div>
+                  ) : null}
                   <input
                     type="file"
                     accept="image/*"
@@ -113,6 +121,7 @@ const UserDetails = ({ user }: UserDetailsProps) => {
                   />
                 </div>
                 <div className="user-account-name">{user.email}</div>
+                {loading ? <Loader /> : null}
               </div>
               <label>
                 <span>First name</span>
@@ -138,9 +147,14 @@ const UserDetails = ({ user }: UserDetailsProps) => {
                 {countries}
               </select>
             </form>
-            <button className="button-blue" type="submit" onClick={() => handleSubmit()}>
-              Continue
-            </button>
+            <div className="actions-wrapper">
+              <button className="button-blue white" type="submit" onClick={() => closeModal()}>
+                Skip
+              </button>
+              <button className="button-blue" type="submit" onClick={() => handleSubmit()}>
+                Continue
+              </button>
+            </div>
           </>
         )}
       </Formik>
