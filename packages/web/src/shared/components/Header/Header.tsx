@@ -120,7 +120,7 @@ const Header = () => {
         </>
       )}
       <Modal isShowing={isShowing} onClose={onClose} className="mobile-full-screen" mobileFullScreen>
-        <LoginContainer />
+        <LoginContainer closeModal={onClose} />
       </Modal>
     </section>
   );

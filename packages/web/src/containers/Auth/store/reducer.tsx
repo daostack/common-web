@@ -20,6 +20,11 @@ const reducer = createReducer<AuthStateType, Action>(initialState)
       nextState.user = action.payload;
     }),
   )
+  .handleAction(actions.updateUserDetails.success, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.user = action.payload;
+    }),
+  )
   .handleAction(actions.logOut, (state) =>
     produce(state, (nextState) => {
       nextState.authentificated = false;

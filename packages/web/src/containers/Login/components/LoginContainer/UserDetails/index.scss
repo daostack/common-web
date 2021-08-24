@@ -5,20 +5,24 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+
   form {
     display: flex;
     flex-direction: column;
     width: 25rem;
     margin-bottom: 30px;
+
     label {
       display: flex;
       justify-content: space-between;
       margin-bottom: 0.6rem;
       margin-top: 0.8rem;
+
       > span:nth-child(2) {
         color: $light-gray-2;
       }
     }
+
     select,
     input {
       border: 1px solid $light-gray-1;
@@ -26,6 +30,57 @@
       height: 50px;
       text-indent: 0.75rem;
       outline: none;
+    }
+  }
+
+  .avatar-wrapper {
+    position: relative;
+    .avatar {
+      position: relative;
+      text-align: center;
+
+      input {
+        display: none;
+      }
+
+      .edit-avatar {
+        width: 1.75rem;
+        height: 1.75rem;
+        background-color: #7786ff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 38px;
+        left: 52%;
+        cursor: pointer;
+
+        img {
+          width: 0.875rem;
+          height: 0.875rem;
+        }
+      }
+    }
+    .loader-wrapper{
+      position: absolute;
+      width: 61px;
+      height: 61px;
+      top: 23px;
+      border-radius: 50%;
+    }
+  }
+  .actions-wrapper{
+    margin-top: 100px;
+    .button-blue{
+      &.white{
+        border: solid 1px #eee;
+        background-color: #fff;
+        color: #001a36;
+        font-weight: normal;
+        min-width: 	96px;
+        margin-right: 16px;
+      }
     }
   }
 }
