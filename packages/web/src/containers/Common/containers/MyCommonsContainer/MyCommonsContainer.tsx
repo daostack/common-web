@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { useGetCommonDataQuery } from "../../../../graphql";
+import { useGetUserCommonsDataQuery } from "../../../../graphql";
 import { Loader } from "../../../../shared/components";
 import DownloadCommonApp from "../../../../shared/components/DownloadCommonApp/DownloadCommonApp";
 import { ROUTE_PATHS } from "../../../../shared/constants";
 import { isMobile } from "../../../../shared/utils";
+import { selectUser } from "../../../Auth/store/selectors";
 import { CommonListItem } from "../../components";
 import { COMMON_PAGE_SIZE } from "../../constants";
 
@@ -22,9 +24,13 @@ export default function MyCommonsContainer() {
   const loader = useRef(null);
   const previousData: any = useRef();
   const [hasClosedPopup, setHasClosedPopup] = useState(sessionStorage.getItem("hasClosedPopup"));
+  const user = useSelector(selectUser());
 
-  const { loading, data } = useGetCommonDataQuery({
+  const { loading, data } = useGetUserCommonsDataQuery({
     variables: {
+      where: {
+        userId: user?.uid,
+      },
       paginate: {
         take: COMMON_PAGE_SIZE,
         skip: 0 + (page - 1) * COMMON_PAGE_SIZE,
@@ -32,8 +38,10 @@ export default function MyCommonsContainer() {
     },
   });
 
+  console.log(data);
+
   useEffect(() => {
-    previousData.current = [...(previousData.current || []), ...(data?.commons || [])];
+    previousData.current = [...(previousData.current || []), ...((data as any)?.user?.commons || [])];
   });
 
   const handleObserver = useCallback(
@@ -53,7 +61,10 @@ export default function MyCommonsContainer() {
     }
   }, [handleObserver]);
 
-  const currentCommons = useMemo(() => [...(previousData.current || []), ...(data?.commons ?? [])], [data]);
+  const currentCommons = useMemo(
+    () => [...(previousData.current || []), ...((data as any)?.user?.commons ?? [])],
+    [data],
+  );
 
   // See https://github.com/daostack/common-monorepo/issues/691 - the field might change in the new DB
   return (

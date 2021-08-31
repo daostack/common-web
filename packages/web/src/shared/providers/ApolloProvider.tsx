@@ -6,7 +6,7 @@ import { useAuthContext } from "../context";
 
 export const ApolloProvider: React.FC<PropsWithChildren<any>> = ({ children, ...rest }) => {
   const authContext = useAuthContext();
-  const apollo = useApollo("https://api.staging.common.io/graphql" || "", authContext.token || "");
+  const apollo = useApollo("https://api-test.staging.common.io/graphql" || "", authContext.token || "");
 
   return (
     <BareApolloProvider client={apollo}>

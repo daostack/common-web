@@ -100,6 +100,28 @@ export const GetCommonsDataDocument = gql`
   }
 `;
 
+export const GetUserCommonsDataDocument = gql`
+  query getUserCommons {
+    user(where: $where) {
+      commons {
+        id
+        name
+        image
+        raised
+        createdAt
+        updatedAt
+        whitelisted
+        members {
+          userId
+        }
+        proposals {
+          id
+        }
+      }
+    }
+  }
+`;
+
 export const GetCommonProposals = gql`
   query getCommonProposals($where: ProposalWhereInput, $paginate: PaginateInput! = { take: 10, skip: 0 }) {
     proposals(where: $where, paginate: $paginate) {
@@ -332,7 +354,20 @@ export type GetCommonDataQueryVariables = Exact<{
   paginate?: Pagination;
 }>;
 
+export type UserCommonWhereInput = {
+  userId: Scalars["ID"] | undefined;
+};
+
+export type GetUserCommonsDataQueryVariables = Exact<{
+  where: UserCommonWhereInput;
+  paginate?: Pagination;
+}>;
+
 export type GetCommonDataQuery = {
+  commons?: Maybe<Array<Common>>;
+};
+
+export type GetUserCommonsDataQuery = {
   commons?: Maybe<Array<Common>>;
 };
 
@@ -340,6 +375,15 @@ export function useGetCommonDataQuery(
   baseOptions: Apollo.QueryHookOptions<GetCommonDataQuery, GetCommonDataQueryVariables>,
 ) {
   return Apollo.useQuery<GetCommonDataQuery, GetCommonDataQueryVariables>(GetCommonsDataDocument, baseOptions);
+}
+
+export function useGetUserCommonsDataQuery(
+  baseOptions: Apollo.QueryHookOptions<GetUserCommonsDataQuery, GetUserCommonsDataQueryVariables>,
+) {
+  return Apollo.useQuery<GetUserCommonsDataQuery, GetUserCommonsDataQueryVariables>(
+    GetUserCommonsDataDocument,
+    baseOptions,
+  );
 }
 
 export type GetUserPermissionsQueryVariables = Exact<{
