@@ -1,72 +1,38 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
-import { useGetUserCommonsDataQuery } from "../../../../graphql";
 import { Loader } from "../../../../shared/components";
 import DownloadCommonApp from "../../../../shared/components/DownloadCommonApp/DownloadCommonApp";
 import { ROUTE_PATHS } from "../../../../shared/constants";
-import { isMobile } from "../../../../shared/utils";
-import { selectUser } from "../../../Auth/store/selectors";
+import { createApolloClient, isMobile } from "../../../../shared/utils";
 import { CommonListItem } from "../../components";
-import { COMMON_PAGE_SIZE } from "../../constants";
 
 import "./index.scss";
 
-const options = {
-  root: null,
-  rootMargin: "20px",
-  threshold: 1.0,
-};
+import { Common } from "../../../../shared/models";
+import { GetUserCommonsDocument } from "../../../../graphql";
 
 export default function MyCommonsContainer() {
-  const [page, setPage] = useState(1);
-  const loader = useRef(null);
-  const previousData: any = useRef();
+  const [commons, setCommons] = useState<Common[]>([]);
+  const [loading, setLoading] = useState(true);
+  const apollo = createApolloClient("https://api-test.staging.common.io/graphql" || "", localStorage.token || "");
   const [hasClosedPopup, setHasClosedPopup] = useState(sessionStorage.getItem("hasClosedPopup"));
-  const user = useSelector(selectUser());
-
-  const { loading, data } = useGetUserCommonsDataQuery({
-    variables: {
-      where: {
-        userId: user?.uid,
-      },
-      paginate: {
-        take: COMMON_PAGE_SIZE,
-        skip: 0 + (page - 1) * COMMON_PAGE_SIZE,
-      },
-    },
-  });
-
-  console.log(data);
 
   useEffect(() => {
-    previousData.current = [...(previousData.current || []), ...((data as any)?.user?.commons || [])];
-  });
-
-  const handleObserver = useCallback(
-    (entities: any[]) => {
-      const target = entities[0];
-      if (target.isIntersecting && page < 3 && !loading) {
-        setPage(page + 1);
+    (async () => {
+      try {
+        const { data } = await apollo.query({
+          query: GetUserCommonsDocument,
+        });
+        setLoading(false);
+        const commons = data.user?.commons.map((item: Common) => item) ?? [];
+        setCommons(commons);
+      } catch (e) {
+        console.log(e);
       }
-    },
-    [setPage, loading, page],
-  );
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(handleObserver, options);
-    if (loader.current) {
-      observer.observe(loader.current as any);
-    }
-  }, [handleObserver]);
-
-  const currentCommons = useMemo(
-    () => [...(previousData.current || []), ...((data as any)?.user?.commons ?? [])],
-    [data],
-  );
-
-  // See https://github.com/daostack/common-monorepo/issues/691 - the field might change in the new DB
   return (
     <div className="content-element my-commons-wrapper">
       {isMobile() && !hasClosedPopup && <DownloadCommonApp setHasClosedPopup={setHasClosedPopup} />}
@@ -78,20 +44,12 @@ export default function MyCommonsContainer() {
       </div>
 
       <div className="common-list">
-        {currentCommons.map((c) => (
+        {commons.map((c) => (
           <CommonListItem common={c} key={c.id} />
         ))}
       </div>
 
-      <div className="loader-container">
-        {page < 3 ? <div ref={loader} /> : null}
-        {loading ? <Loader /> : null}
-        {page >= 3 && !loading ? (
-          <div className="loading-btn button-blue" onClick={() => setPage(page + 1)}>
-            Load more Commons
-          </div>
-        ) : null}
-      </div>
+      <div className="loader-container">{loading ? <Loader /> : null}</div>
     </div>
   );
 }

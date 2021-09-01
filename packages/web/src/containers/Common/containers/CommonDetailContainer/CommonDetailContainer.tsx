@@ -96,15 +96,13 @@ export default function CommonDetail() {
   const commonMemberData = common?.members.filter((member: any) => member.user.id === user?.uid);
   const isCommonMember = commonMemberData && commonMemberData?.length > 0;
 
-  const activeProposals = useMemo(
-    () => [...(proposalsData?.proposals || [])].filter((d) => d.state === "countdown"),
-    [proposalsData],
-  );
+  const activeProposals = useMemo(() => [...(proposalsData?.proposals || [])].filter((d) => d.state === "countdown"), [
+    proposalsData,
+  ]);
 
-  const historyProposals = useMemo(
-    () => [...(proposalsData?.proposals || [])].filter((d) => d.state !== "countdown"),
-    [proposalsData],
-  );
+  const historyProposals = useMemo(() => [...(proposalsData?.proposals || [])].filter((d) => d.state !== "countdown"), [
+    proposalsData,
+  ]);
 
   const getDiscussionDetail = useCallback(
     (payload: Discussion) => {

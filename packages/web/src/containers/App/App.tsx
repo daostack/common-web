@@ -7,6 +7,7 @@ import { CommonContainer } from "../Common";
 import { LandingContainer } from "../Landing";
 import { ROUTE_PATHS, SMALL_SCREEN_BREAKPOINT, ScreenSize } from "../../shared/constants";
 import { changeScreenSize } from "../../shared/store/actions";
+import { MyCommonsContainer } from "../Common/containers/MyCommonsContainer";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ const App = () => {
         <Switch>
           <Route path="/" exact component={LandingContainer} />
           <PrivateRoute path={ROUTE_PATHS.COMMON_LIST} component={CommonContainer} authentificated={true} />
+          <PrivateRoute path={ROUTE_PATHS.MY_COMMONS} component={MyCommonsContainer} authentificated={true} />
           <Route component={NotFound} />
         </Switch>
       </Content>

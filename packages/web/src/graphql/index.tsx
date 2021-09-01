@@ -80,6 +80,38 @@ export type GetCommonsDataQuery = { __typename?: "Query" } & {
   >;
 };
 
+export const GetUserCommonsDocument = gql`
+  query MyCommons {
+    user {
+      commons {
+        id
+        name
+        image
+        balance
+        raised
+        members {
+          userId
+          joinedAt: createdAt
+          roles
+          user {
+            id
+            displayName
+            photoURL: photo
+          }
+        }
+        rules
+        links
+        whitelisted
+        action
+        byline
+        description
+        fundingType
+        fundingMinimumAmount
+      }
+    }
+  }
+`;
+
 export const GetCommonsDataDocument = gql`
   query getCommonsHomescreenData($paginate: PaginateInput! = { take: 10, skip: 0 }) {
     commons(paginate: $paginate) {
