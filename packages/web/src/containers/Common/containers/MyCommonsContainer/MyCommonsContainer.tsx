@@ -49,6 +49,8 @@ export default function MyCommonsContainer() {
         ))}
       </div>
 
+      {commons.length === 0 && !loading && <div className="no-commons-label">No Commons Yet</div>}
+
       <div className="loader-container">{loading ? <Loader /> : null}</div>
     </div>
   );

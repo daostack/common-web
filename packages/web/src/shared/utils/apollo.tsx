@@ -21,6 +21,6 @@ export const createApolloClient = (uri: string, token?: string) => {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     cache: new InMemoryCache(),
-    link: (authLink.concat(baseLink) as unknown) as ApolloLink,
+    link: authLink.concat(baseLink) as unknown as ApolloLink,
   });
 };
