@@ -9,6 +9,7 @@ import { startLoading, stopLoading } from "../../../shared/store/actions";
 import { User } from "../../../shared/models";
 import { GoogleAuthResultInterface } from "../interface";
 import { UpdateUserDocument, CreateUserDocument } from "../../../graphql";
+import { ROUTE_PATHS } from "../../../shared/constants";
 
 const apollo = createApolloClient("https://api.staging.common.io/graphql" || "", localStorage.token || "");
 
@@ -113,8 +114,10 @@ function* socialLoginSaga({ payload }: AnyAction & { payload: string }) {
 
 function* logOut() {
   yield firebase.auth().signOut();
-
   localStorage.clear();
+  if (window.location.pathname === ROUTE_PATHS.MY_COMMONS) {
+    window.location.href = "/";
+  }
 }
 
 function* updateUserDetails({ payload }: ReturnType<typeof actions.updateUserDetails.request>) {

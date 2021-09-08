@@ -80,6 +80,38 @@ export type GetCommonsDataQuery = { __typename?: "Query" } & {
   >;
 };
 
+export const GetUserCommonsDocument = gql`
+  query MyCommons {
+    user {
+      commons {
+        id
+        name
+        image
+        balance
+        raised
+        members {
+          userId
+          joinedAt: createdAt
+          roles
+          user {
+            id
+            displayName
+            photoURL: photo
+          }
+        }
+        rules
+        links
+        whitelisted
+        action
+        byline
+        description
+        fundingType
+        fundingMinimumAmount
+      }
+    }
+  }
+`;
+
 export const GetCommonsDataDocument = gql`
   query getCommonsHomescreenData($paginate: PaginateInput! = { take: 10, skip: 0 }) {
     commons(paginate: $paginate) {
@@ -95,6 +127,28 @@ export const GetCommonsDataDocument = gql`
       }
       proposals {
         id
+      }
+    }
+  }
+`;
+
+export const GetUserCommonsDataDocument = gql`
+  query getUserCommons {
+    user(where: $where) {
+      commons {
+        id
+        name
+        image
+        raised
+        createdAt
+        updatedAt
+        whitelisted
+        members {
+          userId
+        }
+        proposals {
+          id
+        }
       }
     }
   }
@@ -332,7 +386,20 @@ export type GetCommonDataQueryVariables = Exact<{
   paginate?: Pagination;
 }>;
 
+export type UserCommonWhereInput = {
+  userId: Scalars["ID"] | undefined;
+};
+
+export type GetUserCommonsDataQueryVariables = Exact<{
+  where: UserCommonWhereInput;
+  paginate?: Pagination;
+}>;
+
 export type GetCommonDataQuery = {
+  commons?: Maybe<Array<Common>>;
+};
+
+export type GetUserCommonsDataQuery = {
   commons?: Maybe<Array<Common>>;
 };
 
@@ -340,6 +407,15 @@ export function useGetCommonDataQuery(
   baseOptions: Apollo.QueryHookOptions<GetCommonDataQuery, GetCommonDataQueryVariables>,
 ) {
   return Apollo.useQuery<GetCommonDataQuery, GetCommonDataQueryVariables>(GetCommonsDataDocument, baseOptions);
+}
+
+export function useGetUserCommonsDataQuery(
+  baseOptions: Apollo.QueryHookOptions<GetUserCommonsDataQuery, GetUserCommonsDataQueryVariables>,
+) {
+  return Apollo.useQuery<GetUserCommonsDataQuery, GetUserCommonsDataQueryVariables>(
+    GetUserCommonsDataDocument,
+    baseOptions,
+  );
 }
 
 export type GetUserPermissionsQueryVariables = Exact<{

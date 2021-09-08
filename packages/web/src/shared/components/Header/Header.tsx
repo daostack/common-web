@@ -71,6 +71,11 @@ const Header = () => {
       <NavLink to={ROUTE_PATHS.COMMON_LIST} activeClassName="active">
         Explore Commons
       </NavLink>
+      {isAuthorized && (
+        <NavLink to={ROUTE_PATHS.MY_COMMONS} exact activeClassName="active">
+          My Commons
+        </NavLink>
+      )}
       <a href={`mailto:${CONTACT_EMAIL}`}>Contact</a>
       {isAuthorized && isMobile() && <button>Log out</button>}
       {!isAuthorized && (
