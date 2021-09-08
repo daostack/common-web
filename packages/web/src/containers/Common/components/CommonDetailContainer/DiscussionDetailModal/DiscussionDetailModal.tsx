@@ -38,7 +38,7 @@ export default function DiscussionDetailModal({
               )}
             </div>
             <div className="owner-name">{getUserName(disscussion.owner)}</div>
-            <div className="days-ago">{getDaysAgo(date, disscussion.createTime)} </div>
+            <div className="days-ago">{getDaysAgo(date, disscussion.createdAt)} </div>
           </div>
           <div className="discussion-information-wrapper">
             <div className="discussion-name" title={disscussion.title}>

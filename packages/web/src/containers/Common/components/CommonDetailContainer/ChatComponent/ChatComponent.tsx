@@ -14,7 +14,7 @@ interface ChatComponentInterface {
 }
 
 function groupday(acc: any, currentValue: DiscussionMessage): Messages {
-  const d = new Date(currentValue.createTime);
+  const d = new Date(currentValue.createdAt);
   const i = Math.floor(d.getTime() / (1000 * 60 * 60 * 24));
   const timestamp = i * (1000 * 60 * 60 * 24);
   acc[timestamp] = acc[timestamp] || [];

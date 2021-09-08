@@ -9,7 +9,7 @@ interface ChatMessageProps {
 
 export default function ChatMessage({ disscussionMessage }: ChatMessageProps) {
   const [imageError, setImageError] = useState(false);
-  const mDate = new Date(disscussionMessage.createTime);
+  const mDate = new Date(disscussionMessage.createdAt);
   return (
     <div className="message-wrapper">
       <div className="icon-wrapper">

@@ -18,6 +18,6 @@ export interface DiscussionMessage {
   type: DiscussionMessageType;
   flag: DiscussionMessageFlag;
   reports: Array<Report>;
-  createTime: Date;
+  createdAt: Date;
   owner?: User;
 }
