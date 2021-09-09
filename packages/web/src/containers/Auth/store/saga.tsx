@@ -9,9 +9,10 @@ import { startLoading, stopLoading } from "../../../shared/store/actions";
 import { User } from "../../../shared/models";
 import { GoogleAuthResultInterface } from "../interface";
 import { UpdateUserDocument, CreateUserDocument } from "../../../graphql";
-import { ROUTE_PATHS } from "../../../shared/constants";
+import { ROUTE_PATHS, GRAPH_QL_URL } from "../../../shared/constants";
+import history from "../../../shared/history";
 
-const apollo = createApolloClient("https://api.staging.common.io/graphql" || "", localStorage.token || "");
+const apollo = createApolloClient(GRAPH_QL_URL || "", localStorage.token || "");
 
 export const uploadImage = async (imageUri: any) => {
   const ext = imageUri.split(";")[0].split("/")[1];
@@ -53,6 +54,11 @@ const authorizeUser = async (payload: string) => {
   const provider =
     payload === "google" ? new firebase.auth.GoogleAuthProvider() : new firebase.auth.OAuthProvider("apple.com");
 
+  if (payload !== "google") {
+    provider.addScope("email");
+    provider.addScope("name");
+  }
+
   return await firebase
     .auth()
     .signInWithPopup(provider)
@@ -73,7 +79,8 @@ const authorizeUser = async (payload: string) => {
         store.dispatch(actions.setIsUserNew(true));
       }
       return currentUser;
-    });
+    })
+    .catch((e) => console.log(e));
 };
 
 const updateUserData = async (user: any) => {
@@ -115,8 +122,9 @@ function* socialLoginSaga({ payload }: AnyAction & { payload: string }) {
 function* logOut() {
   yield firebase.auth().signOut();
   localStorage.clear();
+
   if (window.location.pathname === ROUTE_PATHS.MY_COMMONS) {
-    window.location.href = "/";
+    history.push("/");
   }
 }
 

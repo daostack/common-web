@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 import { useDispatch } from "react-redux";
+
 import PrivateRoute from "./PrivateRoute";
 import { Content, NotFound, Footer, Header } from "../../shared/components";
 import { CommonContainer } from "../Common";

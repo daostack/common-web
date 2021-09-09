@@ -3,10 +3,11 @@ import { ApolloProvider as BareApolloProvider } from "@apollo/client";
 
 import { useApollo } from "../hooks";
 import { useAuthContext } from "../context";
+import { GRAPH_QL_URL } from "../constants";
 
 export const ApolloProvider: React.FC<PropsWithChildren<any>> = ({ children, ...rest }) => {
   const authContext = useAuthContext();
-  const apollo = useApollo("https://api-test.staging.common.io/graphql" || "", authContext.token || "");
+  const apollo = useApollo(GRAPH_QL_URL || "", authContext.token || "");
 
   return (
     <BareApolloProvider client={apollo}>
