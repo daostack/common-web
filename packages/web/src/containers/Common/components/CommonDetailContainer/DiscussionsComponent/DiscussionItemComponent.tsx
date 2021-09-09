@@ -13,7 +13,6 @@ export default function DiscussionItemComponent({ discussion, loadDisscussionDet
   const [imageError, setImageError] = useState(false);
   // const [readMore, setReadMore] = useState("");
   const date = new Date();
-
   const textLength = useCalculateReadMoreLength();
   return (
     <div className="discussion-item-wrapper">
@@ -31,7 +30,7 @@ export default function DiscussionItemComponent({ discussion, loadDisscussionDet
         </div>
         <div className="creator-information">
           <div className="name">{getUserName(discussion.owner)}</div>
-          <div className="days-ago">{getDaysAgo(date, discussion.createTime)} </div>
+          <div className="days-ago">{getDaysAgo(date, discussion.createdAt)} </div>
         </div>
       </div>
       <div className="discussion-content">

@@ -4,7 +4,7 @@ import { User } from "./User";
 
 export interface Discussion {
   commonId: string;
-  createTime: Date;
+  createdAt: Date;
   files: File[];
   follower: [];
   images: File[];
@@ -18,6 +18,5 @@ export interface Discussion {
   owner?: User;
   messages?: DiscussionMessage[];
   isLoaded?: boolean;
-
   description: string;
 }
