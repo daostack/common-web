@@ -177,12 +177,6 @@ export const countryList = [
     payout: true,
   },
   {
-    value: "BN",
-    name: "Brunei Darussalam 🇧🇳",
-    payin: true,
-    payout: false,
-  },
-  {
     // only payin
     value: "BT",
     name: "Bhutan 🇧🇹",
@@ -837,12 +831,6 @@ export const countryList = [
     name: "Macedonia 🇲🇰",
     payin: true,
     payout: false,
-  },
-  {
-    value: "MO",
-    name: "Macau SAR China 🇲🇴",
-    payin: true,
-    payout: true,
   },
   {
     // only payin

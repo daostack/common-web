@@ -13,6 +13,8 @@ export const COMMON_APP_GOOGLE_PLAY_LINK = "https://play.google.com/store/apps/d
 
 export const CONTACT_EMAIL = "hi@common.io";
 
+export const CIRCLE_PAY_URL = "ttps://api-sandbox.circle.com/v1";
+
 export enum MobileOperatingSystem {
   WindowsPhone = "Windows Phone",
   Android = "Android",

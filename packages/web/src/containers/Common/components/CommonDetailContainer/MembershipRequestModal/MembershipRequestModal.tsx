@@ -19,28 +19,34 @@ export interface IMembershipRequestData {
   stage: number;
   intro: string;
   notes: string;
-  contributionAmount: number;
-  contributionId: number | undefined;
+  contribution_amount: number;
+  contribution_id: number | undefined;
   fullname: string;
   city: string;
   country: string;
   district: string;
   address: string;
   postal: string;
+  card_number: number | undefined;
+  cvv: number | undefined;
+  expiration_date: string;
 }
 
 const initData: IMembershipRequestData = {
   stage: 0,
   intro: "",
   notes: "",
-  contributionAmount: 0,
-  contributionId: undefined,
+  contribution_amount: 0,
+  contribution_id: undefined,
   fullname: "",
   city: "",
   country: "",
   district: "",
   address: "",
   postal: "",
+  card_number: undefined,
+  cvv: undefined,
+  expiration_date: "",
 };
 
 interface IProps {
