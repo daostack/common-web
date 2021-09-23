@@ -8,7 +8,7 @@ import firebase from "../../../shared/utils/firebase";
 import { startLoading, stopLoading } from "../../../shared/store/actions";
 import { User } from "../../../shared/models";
 import { GoogleAuthResultInterface } from "../interface";
-import { UpdateUserDocument, CreateUserDocument } from "../../../graphql";
+import { UpdateUserDocument, CreateUserDocument, LoadUserContextDocument } from "../../../graphql";
 import { ROUTE_PATHS, GRAPH_QL_URL } from "../../../shared/constants";
 import history from "../../../shared/history";
 
@@ -50,6 +50,16 @@ const createUser = async (profile: any) => {
   }
 };
 
+const fetchCurrentUser = async () => {
+  const token = localStorage.getItem("token");
+  const updatedApollo = createApolloClient(GRAPH_QL_URL, token || "");
+  const { data } = await updatedApollo.query({
+    query: LoadUserContextDocument,
+  });
+
+  return data?.user;
+};
+
 const authorizeUser = async (payload: string) => {
   const provider =
     payload === "google" ? new firebase.auth.GoogleAuthProvider() : new firebase.auth.OAuthProvider("apple.com");
@@ -61,24 +71,38 @@ const authorizeUser = async (payload: string) => {
 
   return await firebase
     .auth()
-    .signInWithPopup(provider)
-    .then(async (result) => {
-      const credentials = result.credential?.toJSON() as GoogleAuthResultInterface;
-      const user = result.user?.toJSON() as User;
-      const currentUser = (await firebase.auth().currentUser) as any;
-      if (credentials && user) {
-        const tk = await currentUser?.getIdToken(true);
-        if (tk) {
-          tokenHandler.set(tk);
-          tokenHandler.setUser(currentUser);
-        }
-      }
-      if (result.additionalUserInfo?.isNewUser) {
-        await createUser(result.additionalUserInfo?.profile);
+    .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    .then(async () => {
+      return await firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then(async (result) => {
+          const credentials = result.credential?.toJSON() as GoogleAuthResultInterface;
+          const user = result.user?.toJSON() as User;
+          const currentUser = (await firebase.auth().currentUser) as any;
+          let loginedUser: any;
+          if (credentials && user && !result.additionalUserInfo?.isNewUser) {
+            const tk = await currentUser?.getIdToken(true);
+            if (tk) {
+              tokenHandler.set(tk);
+              const currentUser = await fetchCurrentUser();
 
-        store.dispatch(actions.setIsUserNew(true));
-      }
-      return currentUser;
+              if (currentUser) {
+                loginedUser = currentUser;
+                store.dispatch(actions.socialLogin.success(currentUser));
+                tokenHandler.setUser(currentUser);
+              }
+            }
+          }
+          if (result.additionalUserInfo?.isNewUser) {
+            const createdUser = await createUser(result.additionalUserInfo?.profile);
+            if (createdUser) {
+              loginedUser = createdUser;
+            }
+            store.dispatch(actions.setIsUserNew(true));
+          }
+          return loginedUser;
+        });
     })
     .catch((e) => console.log(e));
 };
@@ -93,7 +117,7 @@ const updateUserData = async (user: any) => {
     mutation: UpdateUserDocument,
     variables: {
       user: {
-        id: currentUser?.uid,
+        id: updatedCurrentUser?.uid,
         firstName: user.firstName,
         lastName: user.lastName,
         photo: updatedCurrentUser?.photoURL,
@@ -110,8 +134,9 @@ function* socialLoginSaga({ payload }: AnyAction & { payload: string }) {
     yield put(startLoading());
 
     const user: User = yield call(authorizeUser, payload);
-
-    yield put(actions.socialLogin.success(user));
+    if (user) {
+      yield put(actions.socialLogin.success(user));
+    }
   } catch (error) {
     yield put(actions.socialLogin.failure(error));
   } finally {
@@ -120,12 +145,13 @@ function* socialLoginSaga({ payload }: AnyAction & { payload: string }) {
 }
 
 function* logOut() {
-  yield firebase.auth().signOut();
   localStorage.clear();
+  firebase.auth().signOut();
 
   if (window.location.pathname === ROUTE_PATHS.MY_COMMONS) {
     history.push("/");
   }
+  yield true;
 }
 
 function* updateUserDetails({ payload }: ReturnType<typeof actions.updateUserDetails.request>) {
@@ -150,5 +176,33 @@ function* authSagas() {
   yield takeLatest(actions.logOut, logOut);
   yield takeLatest(actions.updateUserDetails.request, updateUserDetails);
 }
+
+(async () => {
+  firebase.auth().onAuthStateChanged(async (data) => {
+    const newToken = await data?.getIdToken();
+    const currentToken = tokenHandler.get();
+    if (newToken !== currentToken && currentToken) {
+      if (newToken) {
+        tokenHandler.set(newToken);
+      } else {
+        logOut().next();
+      }
+    }
+  });
+
+  firebase.auth().onAuthStateChanged(async (res) => {
+    try {
+      if (tokenHandler.get()) {
+        const currentUser = await fetchCurrentUser();
+        if (currentUser) {
+          store.dispatch(actions.updateUserDetails.success(currentUser));
+          tokenHandler.setUser(currentUser);
+        }
+      }
+    } catch (e) {
+      // logOut().next();
+    }
+  });
+})();
 
 export default authSagas;
