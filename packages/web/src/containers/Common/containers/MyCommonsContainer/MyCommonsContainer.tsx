@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
 import { Loader } from "../../../../shared/components";
 import DownloadCommonApp from "../../../../shared/components/DownloadCommonApp/DownloadCommonApp";
 import { ROUTE_PATHS } from "../../../../shared/constants";
 import { createApolloClient, isMobile } from "../../../../shared/utils";
 import { CommonListItem } from "../../components";
-
 import "./index.scss";
-
 import { Common } from "../../../../shared/models";
-import { GetUserCommonsDocument } from "../../../../graphql";
+import { GetUserCommonsDocument, GetUserPendingCommonsDocument } from "../../../../graphql";
 
 export default function MyCommonsContainer() {
+  const [pendingCommons, setPendingCommons] = useState<Common[]>([]);
   const [commons, setCommons] = useState<Common[]>([]);
   const [loading, setLoading] = useState(true);
   const apollo = createApolloClient("https://api-test.staging.common.io/graphql" || "", localStorage.token || "");
@@ -33,6 +33,22 @@ export default function MyCommonsContainer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await apollo.query({
+          query: GetUserPendingCommonsDocument,
+        });
+
+        const pendingCommons = data.user?.proposals?.map(({ common }: { common: Common }) => common) ?? [];
+        setPendingCommons(pendingCommons);
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="content-element my-commons-wrapper">
       {isMobile() && !hasClosedPopup && <DownloadCommonApp setHasClosedPopup={setHasClosedPopup} />}
@@ -48,6 +64,17 @@ export default function MyCommonsContainer() {
           <CommonListItem common={c} key={c.id} />
         ))}
       </div>
+
+      {pendingCommons.length ? (
+        <div className="pending-commons">
+          <div className="pending-title">Pending</div>
+          <div className="common-list">
+            {commons.map((c) => (
+              <CommonListItem common={c} key={c.id} />
+            ))}
+          </div>
+        </div>
+      ) : null}
 
       {commons.length === 0 && !loading && <div className="no-commons-label">No Commons Yet</div>}
 
