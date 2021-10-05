@@ -28,7 +28,7 @@ const getTodayDate = () => {
 
 export default function MembershipRequestPayment(props: IStageProps) {
   const { userData, setUserData } = props;
-  const [card_number, setCardNumber] = useState(0);
+  const [card_number, setCardNumber] = useState(4007400000000007);
   const [expiration_date, setExpirationDate] = useState("");
   const [cvv, setCvv] = useState(0);
 

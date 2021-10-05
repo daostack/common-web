@@ -16,16 +16,20 @@ const apollo = createApolloClient(GRAPH_QL_URL || "", localStorage.token || "");
 
 // TODO: replace with call to new backend when API is ready.
 const getEncryptedData = async (token: any, dataToEncrypt: any) => {
-  const { data } = await axiosClient.get("encryption", {
+  const { data } = await axiosClient.get("encryption/public", {
     headers: {
-      Authorization: token,
+      Authorization:
+        "Bearer QVBJX0tFWTpmNThkOGFkYmEyMWE5Y2FlMzI4MzkxYjJjNGVlNWFmYjphMGNiN2UyYTUwYzEzNzNmNTVjNjg5ODYxZDdmZTIxZQ",
     },
   });
   const { keyId, publicKey } = data.data;
   let decodedPublicKey = base64.decode(publicKey);
+  console.log(decodedPublicKey);
+  const messageToSend = await openpgp.createMessage({ text: JSON.stringify(dataToEncrypt) });
+  console.log(messageToSend);
   return openpgp
     .encrypt({
-      message: await openpgp.createMessage({ text: JSON.stringify(dataToEncrypt) }),
+      message: messageToSend,
       encryptionKeys: decodedPublicKey,
     })
     .then((ciphertext: any) => ({
@@ -49,10 +53,12 @@ const cardData = (formData: IMembershipRequestData) => ({
 
 export const createCard = async (formData: IMembershipRequestData) => {
   try {
+    const cardData = await createCardPayload(formData);
+    console.log(cardData);
     return await apollo.mutate({
       mutation: CreateCardDocument,
       variables: {
-        createCard: await createCardPayload(formData),
+        createCard: cardData,
       },
     });
   } catch (err) {
@@ -63,15 +69,18 @@ export const createCard = async (formData: IMembershipRequestData) => {
 
 export const createCardPayload = async (formData: IMembershipRequestData) => {
   const token = tokenHandler.get();
+  try {
+    const { encryptedData, keyId } = await getEncryptedData(token, {
+      number: `${formData.card_number}`,
+      cvv: `${formData.cvv}`,
+    });
 
-  const { encryptedData, keyId } = await getEncryptedData(token, {
-    number: `${formData.card_number}`,
-    cvv: `${formData.cvv}`,
-  });
-
-  return {
-    keyId,
-    encryptedData,
-    ...cardData(formData),
-  };
+    return {
+      keyId,
+      encryptedData,
+      ...cardData(formData),
+    };
+  } catch (err) {
+    console.log(err);
+  }
 };
