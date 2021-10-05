@@ -80,6 +80,40 @@ export type GetCommonsDataQuery = { __typename?: "Query" } & {
   >;
 };
 
+export const GetUserPendingCommonsDocument = gql`
+  query PendingCommons {
+    user {
+      proposals(where: {state: ${ProposalState.Countdown}, type: ${ProposalType.JoinRequest}}) {
+        common {
+          id
+          name
+          image
+          balance
+          raised
+          members {
+            userId
+            joinedAt: createdAt
+            roles
+            user {
+              id
+              displayName
+              photoURL: photo
+            }
+          }
+          rules
+          links
+          whitelisted
+          action
+          byline
+          description
+          fundingType
+          fundingMinimumAmount
+        }
+      }
+    }
+  }
+`;
+
 export const GetUserCommonsDocument = gql`
   query MyCommons {
     user {
