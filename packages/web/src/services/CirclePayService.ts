@@ -1,11 +1,11 @@
 import axios from "axios";
+
 import { createApolloClient, tokenHandler } from "../shared/utils";
 import { CIRCLE_PAY_URL, GRAPH_QL_URL } from "../shared/constants";
 import { IMembershipRequestData } from "../containers/Common/components/CommonDetailContainer/MembershipRequestModal/MembershipRequestModal";
 import { CreateCardDocument } from "../graphql";
-const openpgp = require("openpgp");
 
-var base64 = require("base-64");
+const openpgpModule = import(/* webpackChunkName: "openpgp,  webpackPrefetch: true" */ "openpgp");
 
 const axiosClient = axios.create({
   baseURL: CIRCLE_PAY_URL,
@@ -23,19 +23,21 @@ const getEncryptedData = async (token: any, dataToEncrypt: any) => {
     },
   });
   const { keyId, publicKey } = data.data;
-  let decodedPublicKey = base64.decode(publicKey);
-  console.log(decodedPublicKey);
-  const messageToSend = await openpgp.createMessage({ text: JSON.stringify(dataToEncrypt) });
-  console.log(messageToSend);
-  return openpgp
-    .encrypt({
-      message: messageToSend,
-      encryptionKeys: decodedPublicKey,
-    })
-    .then((ciphertext: any) => ({
-      encryptedData: base64.encode(ciphertext),
-      keyId: keyId,
-    }));
+  const decodedPublicKey = atob(publicKey);
+
+  const openpgp = await openpgpModule;
+
+  const options = {
+    message: openpgp.message.fromText(JSON.stringify(dataToEncrypt)),
+    publicKeys: (await openpgp.key.readArmored(decodedPublicKey)).keys,
+  };
+
+  console.log(options);
+
+  return await openpgp.encrypt(options).then((ciphertext: any) => ({
+    encryptedData: btoa(ciphertext.data),
+    keyId: keyId,
+  }));
 };
 
 const cardData = (formData: IMembershipRequestData) => ({

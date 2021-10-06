@@ -17,7 +17,7 @@
     "millify": "^3.5.2",
     "moment": "^2.29.1",
     "node-sass": "^4.14.1",
-    "openpgp": "^5.0.0",
+    "openpgp": "4.10.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-firebase-hooks": "^3.0.4",
@@ -58,6 +58,7 @@
     ]
   },
   "devDependencies": {
+    "@types/openpgp": "4.4.12",
     "@types/enzyme": "^3.10.8",
     "@types/lodash": "^4.14.163",
     "@types/node": "^12.19.3",
