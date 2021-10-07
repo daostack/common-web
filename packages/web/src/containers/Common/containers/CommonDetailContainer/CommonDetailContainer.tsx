@@ -93,7 +93,7 @@ export default function CommonDetail() {
 
   const common = commonData?.common;
 
-  const commonMemberData = common?.members.filter((member: any) => member.user.id === user?.uid);
+  const commonMemberData = common?.members.filter((member: any) => member.user.id === user?.id);
   const isCommonMember = commonMemberData && commonMemberData?.length > 0;
 
   const activeProposals = useMemo(() => [...(proposalsData?.proposals || [])].filter((d) => d.state === "countdown"), [

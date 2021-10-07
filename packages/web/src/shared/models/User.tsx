@@ -1,7 +1,7 @@
 import { Proposal } from ".";
 
 export interface User {
-  uid: string;
+  id: string;
   displayName?: string;
   firstName: string;
   lastName: string;
