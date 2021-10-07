@@ -32,8 +32,6 @@ const getEncryptedData = async (token: any, dataToEncrypt: any) => {
     publicKeys: (await openpgp.key.readArmored(decodedPublicKey)).keys,
   };
 
-  console.log(options);
-
   return await openpgp.encrypt(options).then((ciphertext: any) => ({
     encryptedData: btoa(ciphertext.data),
     keyId: keyId,
@@ -49,8 +47,8 @@ const cardData = (formData: IMembershipRequestData) => ({
     postalCode: formData.postal,
     district: formData.district,
   },
-  expMonth: +formData.expiration_date.split("/")[0],
-  expYear: +`20${formData.expiration_date.split("/")[1]}`,
+  expMonth: +formData.expiration_date.split("-")[1],
+  expYear: +formData.expiration_date.split("-")[0],
 });
 
 export const createCard = async (formData: IMembershipRequestData) => {
@@ -83,6 +81,6 @@ export const createCardPayload = async (formData: IMembershipRequestData) => {
       ...cardData(formData),
     };
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };

@@ -34,18 +34,18 @@ export interface IMembershipRequestData {
 
 const initData: IMembershipRequestData = {
   stage: 5,
-  intro: "test",
-  notes: "test",
-  contribution_amount: 20,
+  intro: "I'm a web developer",
+  notes: "Hello :)",
+  contribution_amount: 800,
   contribution_id: 1,
-  fullname: "test",
-  city: "test",
-  country: "test",
-  district: "test",
-  address: "test",
-  postal: "test",
-  card_number: 4757140000000001, // undefined
-  cvv: 124, // undefined
+  fullname: "Roie Natan",
+  city: "Safed",
+  country: "IL",
+  district: "HaZafon",
+  address: "Jabotinsky",
+  postal: "12345",
+  card_number: undefined,
+  cvv: undefined,
   expiration_date: "",
 };
 

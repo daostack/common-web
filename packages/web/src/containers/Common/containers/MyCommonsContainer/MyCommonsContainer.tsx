@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { Loader } from "../../../../shared/components";
 import DownloadCommonApp from "../../../../shared/components/DownloadCommonApp/DownloadCommonApp";
-import { ROUTE_PATHS } from "../../../../shared/constants";
+import { GRAPH_QL_URL, ROUTE_PATHS } from "../../../../shared/constants";
 import { createApolloClient, isMobile } from "../../../../shared/utils";
 import { CommonListItem } from "../../components";
 import "./index.scss";
@@ -14,7 +14,7 @@ export default function MyCommonsContainer() {
   const [pendingCommons, setPendingCommons] = useState<Common[]>([]);
   const [commons, setCommons] = useState<Common[]>([]);
   const [loading, setLoading] = useState(true);
-  const apollo = createApolloClient("https://api-test.staging.common.io/graphql" || "", localStorage.token || "");
+  const apollo = createApolloClient(GRAPH_QL_URL || "", localStorage.token || "");
   const [hasClosedPopup, setHasClosedPopup] = useState(sessionStorage.getItem("hasClosedPopup"));
 
   useEffect(() => {

@@ -527,7 +527,7 @@ export const LoadUserContextDocument = gql`
 `;
 
 export type LoadUserContextQuery = {
-  user?: Pick<User, "uid" | "firstName" | "lastName" | "displayName" | "email" | "photo" | "permissions">;
+  user?: Pick<User, "id" | "firstName" | "lastName" | "displayName" | "email" | "photo" | "permissions">;
 };
 
 export type LoadUserContextQueryVariables = Exact<{ [key: string]: never }>;

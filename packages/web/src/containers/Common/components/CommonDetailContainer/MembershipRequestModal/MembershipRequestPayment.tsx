@@ -30,7 +30,7 @@ export default function MembershipRequestPayment(props: IStageProps) {
   const { userData, setUserData } = props;
   const [card_number, setCardNumber] = useState(4007400000000007);
   const [expiration_date, setExpirationDate] = useState("");
-  const [cvv, setCvv] = useState(0);
+  const [cvv, setCvv] = useState(123);
 
   const createJoinProposal = async (formData: any) => {
     try {
@@ -63,19 +63,27 @@ export default function MembershipRequestPayment(props: IStageProps) {
         commonId: `${window.location.pathname.split("/")[2]}`,
       };
 
+      console.log(data);
+
       setUserData({ ...userData, stage: 6 });
 
       const createdCard = await createCard({
         ...formData,
       });
 
+      console.log(createdCard);
+
       const createJoinProposalResponse = await createJoinProposal({
         ...data,
         cardId: createdCard.data.createCard.id,
       });
 
-      const proposalId = createJoinProposalResponse.data.createJoinProposal.id;
+      console.log(createJoinProposalResponse);
 
+      const proposalId = createJoinProposalResponse.data.createJoinProposal.id;
+      console.log(proposalId);
+
+      setUserData({ ...userData, stage: 7 });
       // Need to disable temporary timeout in MembershipRequestCreating and change view to MembershipRequestCreated and show the proposalId
     } catch (e) {
       console.error("We couldn't create your proposal");
