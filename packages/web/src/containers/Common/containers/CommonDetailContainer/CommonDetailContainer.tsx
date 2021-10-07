@@ -346,7 +346,8 @@ export default function CommonDetail() {
                       &nbsp;You are a member
                     </div>
                   )}
-                  {isPending && screenSize === ScreenSize.Desktop && (
+
+                  {!isCommonMember && isPending && screenSize === ScreenSize.Desktop && (
                     <div className="member-label">
                       <CheckIcon />
                       &nbsp;Pending
