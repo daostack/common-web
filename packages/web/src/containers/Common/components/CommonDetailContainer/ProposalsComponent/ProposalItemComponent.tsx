@@ -20,7 +20,7 @@ export default function ProposalItemComponent({ proposal, loadProposalDetail }: 
 
   return (
     <div className="discussion-item-wrapper">
-      {proposal.state === "countdown" ? (
+      {proposal.state === "Countdown" ? (
         <ProposalCountDown date={new Date(proposal?.expiresAt)} />
       ) : (
         <div className={`state-wrapper ${proposal.state.toLocaleLowerCase()}`}>

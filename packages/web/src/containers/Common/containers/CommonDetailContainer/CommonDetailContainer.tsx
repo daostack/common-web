@@ -92,15 +92,18 @@ export default function CommonDetail() {
   });
 
   const common = commonData?.common;
-  console.log(common);
   const commonMemberData = common?.members.filter((member: any) => member.user.id === user?.id);
   const isCommonMember = commonMemberData && commonMemberData?.length > 0;
 
-  const activeProposals = useMemo(() => [...(proposalsData?.proposals || [])].filter((d) => d.state === "countdown"), [
+  const isPending = !!proposalsData?.proposals
+    ?.filter((p) => p.state === "Countdown")
+    .filter((p) => p.user?.uid === user?.uid);
+
+  const activeProposals = useMemo(() => [...(proposalsData?.proposals || [])].filter((d) => d.state === "Countdown"), [
     proposalsData,
   ]);
 
-  const historyProposals = useMemo(() => [...(proposalsData?.proposals || [])].filter((d) => d.state !== "countdown"), [
+  const historyProposals = useMemo(() => [...(proposalsData?.proposals || [])].filter((d) => d.state !== "Countdown"), [
     proposalsData,
   ]);
 
@@ -331,7 +334,7 @@ export default function CommonDetail() {
                   ))}
                 </div>
                 <div className="social-wrapper" ref={joinEffort}>
-                  {!isCommonMember && (
+                  {!isCommonMember && !isPending && (
                     <button className={`button-blue join-the-effort-btn`} onClick={onOpenJoinModal}>
                       Join the effort
                     </button>
@@ -340,6 +343,13 @@ export default function CommonDetail() {
                     <div className="member-label">
                       <CheckIcon />
                       &nbsp;You are a member
+                    </div>
+                  )}
+
+                  {!isCommonMember && isPending && screenSize === ScreenSize.Desktop && (
+                    <div className="member-label">
+                      <CheckIcon />
+                      &nbsp;Pending
                     </div>
                   )}
                   {screenSize === ScreenSize.Desktop && <Share type="popup" color={Colors.lightPurple} />}

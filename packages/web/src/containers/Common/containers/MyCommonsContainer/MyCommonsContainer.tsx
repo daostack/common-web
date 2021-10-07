@@ -69,7 +69,7 @@ export default function MyCommonsContainer() {
         <div className="pending-commons">
           <div className="pending-title">Pending</div>
           <div className="common-list">
-            {commons.map((c) => (
+            {pendingCommons.map((c) => (
               <CommonListItem common={c} key={c.id} />
             ))}
           </div>
