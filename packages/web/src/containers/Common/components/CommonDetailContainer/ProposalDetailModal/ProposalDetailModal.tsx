@@ -24,7 +24,7 @@ export default function ProposalDetailModal({ proposal, onOpenJoinModal, isCommo
     <div className="discussion-detail-modal-wrapper">
       <div className="left-side">
         <div className="top-side">
-          {proposal.state === "countdown" ? (
+          {proposal.state === "Countdown" ? (
             <ProposalCountDown date={new Date(proposal?.expiresAt)} />
           ) : (
             <div className={`state-wrapper ${proposal.state.toLocaleLowerCase()}`}>
