@@ -37,6 +37,7 @@ const Account = ({ user, logOut }: AccountProps) => {
     <div className="account-wrapper" onClick={() => setShowMenu(!showMenu)}>
       <img src={userPic} className="avatar" alt="user avatar" />
       <div>{user?.displayName || `${user.firstName} ${user.lastName}`}</div>
+      <div className="vertical-menu" />
       {showMenu && (
         <div className="menu-wrapper" ref={wrapperRef}>
           <div onClick={() => (window.location.href = ROUTE_PATHS.MY_COMMONS)}>My Commons</div>
