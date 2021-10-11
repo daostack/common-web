@@ -69,7 +69,7 @@ export const getMobileOperatingSystem = (): MobileOperatingSystem => {
     return MobileOperatingSystem.Android;
   }
 
-  if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+  if (/iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream) {
     return MobileOperatingSystem.iOS;
   }
 
@@ -82,4 +82,46 @@ export const getMobileOperatingSystem = (): MobileOperatingSystem => {
  */
 export const containsHebrew = (str: string) => {
   return /[\u0590-\u05FF]/.test(str);
+};
+
+/**
+ * Validate credit card provider (Visa or MasterCard)
+ * @param {string | number} ccNumber
+ */
+export const validateCreditCardProvider = (ccNumber: string | number) => {
+  return new RegExp(
+    /^4[0-9]{12}(?:[0-9]{3})?$|^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$/,
+  ).test(String(ccNumber));
+};
+
+/**
+ * Luhn algorithm to verfiy a credit card number
+ * @param {string | number} ccNumber
+ */
+export const luhnAlgo = (ccNumber: string | number) => {
+  let nCheck = 0,
+    bEven = false;
+  ccNumber = String(ccNumber).replace(/\D/g, "");
+
+  for (let n = ccNumber.length - 1; n >= 0; n--) {
+    let cDigit = ccNumber.charAt(n),
+      nDigit = parseInt(cDigit, 10);
+
+    if (bEven) {
+      if ((nDigit *= 2) > 9) nDigit -= 9;
+    }
+
+    nCheck += nDigit;
+    bEven = !bEven;
+  }
+
+  return nCheck % 10 === 0;
+};
+
+/**
+ * Validate a CVV number
+ * @param {string | number} cvv
+ */
+export const validateCVV = (cvv: string | number) => {
+  return new RegExp(/^[0-9]{3,4}$/).test(String(cvv));
 };

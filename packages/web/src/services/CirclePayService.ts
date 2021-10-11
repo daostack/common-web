@@ -14,7 +14,7 @@ const axiosClient = axios.create({
 
 const apollo = createApolloClient(GRAPH_QL_URL || "", localStorage.token || "");
 
-// TODO: replace with call to new backend when API is ready.
+// TODO: the Circle API should be via env var or something
 const getEncryptedData = async (token: any, dataToEncrypt: any) => {
   const { data } = await axiosClient.get("encryption/public", {
     headers: {
@@ -54,7 +54,7 @@ const cardData = (formData: IMembershipRequestData) => ({
 export const createCard = async (formData: IMembershipRequestData) => {
   try {
     const cardData = await createCardPayload(formData);
-    console.log(cardData);
+    //console.log(cardData);
     return await apollo.mutate({
       mutation: CreateCardDocument,
       variables: {

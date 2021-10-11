@@ -95,9 +95,8 @@ export default function CommonDetail() {
   const commonMemberData = common?.members.filter((member: any) => member.user.id === user?.id);
   const isCommonMember = commonMemberData && commonMemberData?.length > 0;
 
-  const isPending = !!proposalsData?.proposals
-    ?.filter((p) => p.state === "Countdown")
-    .filter((p) => p.user?.uid === user?.uid);
+  //const isPending = !!proposalsData?.proposals?.filter((p) => p.state === "Countdown").filter((p) => p.user?.uid === user?.uid);
+  const isPending = false;
 
   const activeProposals = useMemo(() => [...(proposalsData?.proposals || [])].filter((d) => d.state === "Countdown"), [
     proposalsData,
@@ -281,7 +280,7 @@ export default function CommonDetail() {
         )}
       </Modal>
       <Modal isShowing={showJoinModal} onClose={closeJoinModal} className="mobile-full-screen" mobileFullScreen>
-        <MembershipRequestModal closeModal={closeJoinModal} />
+        <MembershipRequestModal common={common} closeModal={closeJoinModal} />
       </Modal>
       <div className="common-detail-wrapper">
         <div className="main-information-block">
@@ -380,6 +379,7 @@ export default function CommonDetail() {
               )}
               {tab === "discussions" && (
                 <DiscussionsComponent
+                  common={common}
                   discussions={discussionsData?.discussions || []}
                   loadDisscussionDetail={getDiscussionDetail}
                 />
@@ -387,6 +387,7 @@ export default function CommonDetail() {
 
               {tab === "proposals" && (
                 <ProposalsComponent
+                  common={common}
                   currentTab={tab}
                   proposals={activeProposals}
                   loadProposalDetail={getProposalDetail}
@@ -395,6 +396,7 @@ export default function CommonDetail() {
 
               {tab === "history" && (
                 <ProposalsComponent
+                  common={common}
                   currentTab={tab}
                   proposals={historyProposals}
                   loadProposalDetail={getProposalDetail}

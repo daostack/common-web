@@ -5,6 +5,7 @@ import { GRAPH_QL_URL } from "../../../../../shared/constants";
 import { createApolloClient } from "../../../../../shared/utils";
 import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
+import { formatPrice, luhnAlgo, validateCreditCardProvider, validateCVV } from "../../../../../shared/utils/shared";
 
 const apollo = createApolloClient(GRAPH_QL_URL || "", localStorage.token || "");
 
@@ -28,9 +29,9 @@ const getTodayDate = () => {
 
 export default function MembershipRequestPayment(props: IStageProps) {
   const { userData, setUserData } = props;
-  const [card_number, setCardNumber] = useState(4007400000000007);
+  const [card_number, setCardNumber] = useState(0); // 4007400000000007
   const [expiration_date, setExpirationDate] = useState("");
-  const [cvv, setCvv] = useState(123);
+  const [cvv, setCvv] = useState(0);
 
   const createJoinProposal = async (formData: any) => {
     try {
@@ -63,7 +64,7 @@ export default function MembershipRequestPayment(props: IStageProps) {
         commonId: `${window.location.pathname.split("/")[2]}`,
       };
 
-      console.log(data);
+      //console.log(data);
 
       setUserData({ ...userData, stage: 6 });
 
@@ -71,14 +72,14 @@ export default function MembershipRequestPayment(props: IStageProps) {
         ...formData,
       });
 
-      console.log(createdCard);
+      //console.log(createdCard);
 
       const createJoinProposalResponse = await createJoinProposal({
         ...data,
         cardId: createdCard.data.createCard.id,
       });
 
-      console.log(createJoinProposalResponse);
+      //console.log(createJoinProposalResponse);
 
       const proposalId = createJoinProposalResponse.data.createJoinProposal.id;
       console.log(proposalId);
@@ -93,7 +94,9 @@ export default function MembershipRequestPayment(props: IStageProps) {
   return (
     <div className="membership-request-content membership-request-payment">
       <div className="sub-title">Payment Details</div>
-      <div className="sub-text">You are contributing $?? (monthly or one-time) to this Common</div>
+      <div className="sub-text">{`You are contributing ${formatPrice(
+        userData.contribution_amount,
+      )} (monthly or one-time) to this Common`}</div>
       <label>Card Number</label>
       <input type="number" value={card_number} onChange={(e) => setCardNumber(Number(e.target.value))} />
       <div className="expiration-cvv-wrapper">
@@ -114,7 +117,13 @@ export default function MembershipRequestPayment(props: IStageProps) {
       <span className="membership-rejected-text">
         If your membership request will not be accepted, you will not be charged.
       </span>
-      <button disabled={!card_number || !expiration_date || !cvv} className="button-blue" onClick={() => pay()}>
+      <button
+        disabled={
+          !validateCreditCardProvider(card_number) || !luhnAlgo(card_number) || !validateCVV(cvv) || !expiration_date
+        }
+        className="button-blue"
+        onClick={() => pay()}
+      >
         Pay Now
       </button>
       <div className="circle-wrapper">
