@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { Loader, Share } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
 import { useModal, useViewPortHook } from "../../../../shared/hooks";
-import { Discussion, Proposal } from "../../../../shared/models";
+import { Discussion, Proposal, ProposalState } from "../../../../shared/models";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
 import {
@@ -95,16 +95,18 @@ export default function CommonDetail() {
   const commonMemberData = common?.members.filter((member: any) => member.user.id === user?.id);
   const isCommonMember = commonMemberData && commonMemberData?.length > 0;
 
-  //const isPending = !!proposalsData?.proposals?.filter((p) => p.state === "Countdown").filter((p) => p.user?.uid === user?.uid);
+  //const isPending = !!proposalsData?.proposals?.filter((p) => p.state === ProposalState.Countdown).filter((p) => p.user?.uid === user?.uid);
   const isPending = false;
 
-  const activeProposals = useMemo(() => [...(proposalsData?.proposals || [])].filter((d) => d.state === "Countdown"), [
-    proposalsData,
-  ]);
+  const activeProposals = useMemo(
+    () => [...(proposalsData?.proposals || [])].filter((d) => d.state === ProposalState.Countdown),
+    [proposalsData],
+  );
 
-  const historyProposals = useMemo(() => [...(proposalsData?.proposals || [])].filter((d) => d.state !== "Countdown"), [
-    proposalsData,
-  ]);
+  const historyProposals = useMemo(
+    () => [...(proposalsData?.proposals || [])].filter((d) => d.state !== ProposalState.Countdown),
+    [proposalsData],
+  );
 
   const getDiscussionDetail = useCallback(
     (payload: Discussion) => {

@@ -7,7 +7,9 @@ import { IStageProps } from "./MembershipRequestModal";
 export default function MembershipRequestBilling(props: IStageProps) {
   const { userData, setUserData } = props;
 
-  const countries = countryList.map((country) => <option key={country.value}>{`${country.value} `}</option>);
+  const countries = countryList.map((country) => (
+    <option key={country.value} value={country.value}>{`${country.name}`}</option>
+  ));
 
   return (
     <div className="membership-request-content membership-request-billing">

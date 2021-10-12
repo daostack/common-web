@@ -5,27 +5,15 @@ import { GRAPH_QL_URL } from "../../../../../shared/constants";
 import { createApolloClient } from "../../../../../shared/utils";
 import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
-import { formatPrice, luhnAlgo, validateCreditCardProvider, validateCVV } from "../../../../../shared/utils/shared";
+import {
+  formatPrice,
+  getTodayDate,
+  luhnAlgo,
+  validateCreditCardProvider,
+  validateCVV,
+} from "../../../../../shared/utils/shared";
 
 const apollo = createApolloClient(GRAPH_QL_URL || "", localStorage.token || "");
-
-// TODO: should be in utils
-const getTodayDate = () => {
-  const today = new Date();
-  let dd: number | string = today.getDate();
-  let mm: number | string = today.getMonth() + 1;
-  const yyyy = today.getFullYear();
-
-  if (dd < 10) {
-    dd = "0" + dd;
-  }
-
-  if (mm < 10) {
-    mm = "0" + mm;
-  }
-
-  return yyyy + "-" + mm + "-" + dd;
-};
 
 export default function MembershipRequestPayment(props: IStageProps) {
   const { userData, setUserData } = props;

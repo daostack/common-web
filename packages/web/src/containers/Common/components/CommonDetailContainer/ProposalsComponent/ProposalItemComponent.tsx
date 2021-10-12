@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { ProposalCountDown } from "..";
 import { useCalculateReadMoreLength } from "../../../../../shared/hooks";
-import { Proposal } from "../../../../../shared/models";
+import { Proposal, ProposalState } from "../../../../../shared/models";
 import { formatPrice, getUserName, getDaysAgo } from "../../../../../shared/utils";
 import { VotesComponent } from "../VotesComponent";
 
@@ -20,7 +20,7 @@ export default function ProposalItemComponent({ proposal, loadProposalDetail }: 
 
   return (
     <div className="discussion-item-wrapper">
-      {proposal.state === "Countdown" ? (
+      {proposal.state === ProposalState.Countdown ? (
         <ProposalCountDown date={new Date(proposal?.expiresAt)} />
       ) : (
         <div className={`state-wrapper ${proposal.state.toLocaleLowerCase()}`}>

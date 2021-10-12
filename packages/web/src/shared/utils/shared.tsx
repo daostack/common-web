@@ -86,12 +86,12 @@ export const containsHebrew = (str: string) => {
 
 /**
  * Validate credit card provider (Visa or MasterCard)
+ * Currently only Visa is supported.
+ * MasterCard RegEx |^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$
  * @param {string | number} ccNumber
  */
 export const validateCreditCardProvider = (ccNumber: string | number) => {
-  return new RegExp(
-    /^4[0-9]{12}(?:[0-9]{3})?$|^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$/,
-  ).test(String(ccNumber));
+  return new RegExp(/^4[0-9]{12}(?:[0-9]{3})?$/).test(String(ccNumber));
 };
 
 /**
@@ -124,4 +124,26 @@ export const luhnAlgo = (ccNumber: string | number) => {
  */
 export const validateCVV = (cvv: string | number) => {
   return new RegExp(/^[0-9]{3,4}$/).test(String(cvv));
+};
+
+/**
+ * Get today date in pattern of yyyy-mm-dd
+ * Also used for a <input> type "date"
+ * @returns {string} yyyy-mm-dd
+ */
+export const getTodayDate = () => {
+  const today = new Date();
+  let dd: number | string = today.getDate();
+  let mm: number | string = today.getMonth() + 1;
+  const yyyy = today.getFullYear();
+
+  if (dd < 10) {
+    dd = "0" + dd;
+  }
+
+  if (mm < 10) {
+    mm = "0" + mm;
+  }
+
+  return yyyy + "-" + mm + "-" + dd;
 };

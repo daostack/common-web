@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { Loader } from "../../../../../shared/components";
-import { Proposal } from "../../../../../shared/models";
+import { Proposal, ProposalState } from "../../../../../shared/models";
 import { formatPrice, getDaysAgo, getUserName } from "../../../../../shared/utils";
 import { ChatComponent } from "../ChatComponent";
 import { ProposalCountDown } from "../ProposalCountDown";
@@ -24,7 +24,7 @@ export default function ProposalDetailModal({ proposal, onOpenJoinModal, isCommo
     <div className="discussion-detail-modal-wrapper">
       <div className="left-side">
         <div className="top-side">
-          {proposal.state === "Countdown" ? (
+          {proposal.state === ProposalState.Countdown ? (
             <ProposalCountDown date={new Date(proposal?.expiresAt)} />
           ) : (
             <div className={`state-wrapper ${proposal.state.toLocaleLowerCase()}`}>
