@@ -95,6 +95,7 @@ export default function CommonDetail() {
   const commonMemberData = common?.members.filter((member: any) => member.user.id === user?.id);
   const isCommonMember = commonMemberData && commonMemberData?.length > 0;
 
+  // TODO: need to fix the condition - it shows "pending" for commons that a user is not a member of and not requested to be a member
   //const isPending = !!proposalsData?.proposals?.filter((p) => p.state === ProposalState.Countdown).filter((p) => p.user?.uid === user?.uid);
   const isPending = false;
 

@@ -75,7 +75,7 @@ export default function MembershipRequestModal(props: IProps) {
       case 4:
         return <MembershipRequestBilling userData={userData} setUserData={setUserData} />;
       case 5:
-        return <MembershipRequestPayment userData={userData} setUserData={setUserData} />;
+        return <MembershipRequestPayment userData={userData} setUserData={setUserData} common={common} />;
       case 6:
         return <MembershipRequestCreating userData={userData} setUserData={setUserData} />;
       case 7:

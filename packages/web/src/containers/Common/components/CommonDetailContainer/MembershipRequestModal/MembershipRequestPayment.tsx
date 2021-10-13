@@ -20,6 +20,16 @@ export default function MembershipRequestPayment(props: IStageProps) {
   const [card_number, setCardNumber] = useState(0); // 4007400000000007
   const [expiration_date, setExpirationDate] = useState("");
   const [cvv, setCvv] = useState(0);
+  const [showCCNumberError, setShowCCNumberError] = useState(false);
+
+  const onCCNumberChange = (value: string) => {
+    setCardNumber(Number(value));
+    if (!validateCreditCardProvider(value) || !luhnAlgo(value)) {
+      setShowCCNumberError(true);
+    } else {
+      setShowCCNumberError(false);
+    }
+  };
 
   const createJoinProposal = async (formData: any) => {
     try {
@@ -46,7 +56,7 @@ export default function MembershipRequestPayment(props: IStageProps) {
       };
 
       const data = {
-        title: `User join for common COMMON_NAME`,
+        title: `User join for common ${props.common?.name}`,
         description: formData.intro,
         fundingAmount: formData.contribution_amount,
         commonId: `${window.location.pathname.split("/")[2]}`,
@@ -73,7 +83,7 @@ export default function MembershipRequestPayment(props: IStageProps) {
       console.log(proposalId);
 
       setUserData({ ...userData, stage: 7 });
-      // Need to disable temporary timeout in MembershipRequestCreating and change view to MembershipRequestCreated and show the proposalId
+      // TODO: show the proposalId somewhere?
     } catch (e) {
       console.error("We couldn't create your proposal");
     }
@@ -86,7 +96,10 @@ export default function MembershipRequestPayment(props: IStageProps) {
         userData.contribution_amount,
       )} (monthly or one-time) to this Common`}</div>
       <label>Card Number</label>
-      <input type="number" value={card_number} onChange={(e) => setCardNumber(Number(e.target.value))} />
+      <input type="number" value={card_number} onChange={(e) => onCCNumberChange(e.target.value)} />
+      {showCCNumberError && (
+        <span className="error">Enter a valid credit card number. Only Visa is currently supported.</span>
+      )}
       <div className="expiration-cvv-wrapper">
         <div>
           <label>Expiration date</label>

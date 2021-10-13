@@ -66,7 +66,6 @@
     padding: 0 0.7rem;
     border-radius: 3px;
     border: 1px solid $light-gray-1;
-    margin-bottom: 1.3rem;
     box-sizing: border-box;
   }
 }
@@ -173,8 +172,13 @@
   input {
     width: 100%;
   }
+  .error {
+    align-self: flex-start;
+    color: $red;
+  }
 
   .expiration-cvv-wrapper {
+    margin-top: 1.3rem;
     width: 100%;
     display: flex;
     justify-content: space-between;
