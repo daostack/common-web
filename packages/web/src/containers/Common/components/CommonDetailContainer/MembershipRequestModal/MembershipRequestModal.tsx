@@ -21,7 +21,7 @@ export interface IMembershipRequestData {
   stage: number;
   intro: string;
   notes: string;
-  contribution_amount: number;
+  contribution_amount: number | undefined;
   contribution_id: number | undefined;
   fullname: string;
   city: string;
@@ -35,17 +35,17 @@ export interface IMembershipRequestData {
 }
 
 const initData: IMembershipRequestData = {
-  stage: 5,
-  intro: "I'm a web developer",
-  notes: "Hello :)",
-  contribution_amount: 800,
-  contribution_id: 1,
-  fullname: "Roie Natan",
-  city: "Safed",
-  country: "IL",
-  district: "HaZafon",
-  address: "Jabotinsky",
-  postal: "12345",
+  stage: 0,
+  intro: "",
+  notes: "",
+  contribution_amount: undefined,
+  contribution_id: undefined,
+  fullname: "",
+  city: "",
+  country: "",
+  district: "",
+  address: "",
+  postal: "",
   card_number: undefined,
   cvv: undefined,
   expiration_date: "",

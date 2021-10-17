@@ -96,8 +96,9 @@ export default function CommonDetail() {
   const isCommonMember = commonMemberData && commonMemberData?.length > 0;
 
   // TODO: need to fix the condition - it shows "pending" for commons that a user is not a member of and not requested to be a member
-  //const isPending = !!proposalsData?.proposals?.filter((p) => p.state === ProposalState.Countdown).filter((p) => p.user?.uid === user?.uid);
-  const isPending = false;
+  const isPending = !!proposalsData?.proposals
+    ?.filter((p) => p.state === ProposalState.Countdown)
+    .filter((p) => p.user?.uid === user?.uid);
 
   const activeProposals = useMemo(
     () => [...(proposalsData?.proposals || [])].filter((d) => d.state === ProposalState.Countdown),
