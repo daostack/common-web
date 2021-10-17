@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { Loader, Share } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
 import { useModal, useViewPortHook } from "../../../../shared/hooks";
-import { Discussion, Proposal } from "../../../../shared/models";
+import { Discussion, Proposal, ProposalState } from "../../../../shared/models";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
 import {
@@ -92,21 +92,23 @@ export default function CommonDetail() {
   });
 
   const common = commonData?.common;
-
   const commonMemberData = common?.members.filter((member: any) => member.user.id === user?.id);
   const isCommonMember = commonMemberData && commonMemberData?.length > 0;
 
+  // TODO: need to fix the condition - it shows "pending" for commons that a user is not a member of and not requested to be a member
   const isPending = !!proposalsData?.proposals
-    ?.filter((p) => p.state === "Countdown")
+    ?.filter((p) => p.state === ProposalState.Countdown)
     .filter((p) => p.user?.uid === user?.uid);
 
-  const activeProposals = useMemo(() => [...(proposalsData?.proposals || [])].filter((d) => d.state === "Countdown"), [
-    proposalsData,
-  ]);
+  const activeProposals = useMemo(
+    () => [...(proposalsData?.proposals || [])].filter((d) => d.state === ProposalState.Countdown),
+    [proposalsData],
+  );
 
-  const historyProposals = useMemo(() => [...(proposalsData?.proposals || [])].filter((d) => d.state !== "Countdown"), [
-    proposalsData,
-  ]);
+  const historyProposals = useMemo(
+    () => [...(proposalsData?.proposals || [])].filter((d) => d.state !== ProposalState.Countdown),
+    [proposalsData],
+  );
 
   const getDiscussionDetail = useCallback(
     (payload: Discussion) => {
@@ -282,7 +284,7 @@ export default function CommonDetail() {
         )}
       </Modal>
       <Modal isShowing={showJoinModal} onClose={closeJoinModal} className="mobile-full-screen" mobileFullScreen>
-        <MembershipRequestModal closeModal={closeJoinModal} />
+        <MembershipRequestModal common={common} closeModal={closeJoinModal} />
       </Modal>
       <div className="common-detail-wrapper">
         <div className="main-information-block">
@@ -381,6 +383,7 @@ export default function CommonDetail() {
               )}
               {tab === "discussions" && (
                 <DiscussionsComponent
+                  common={common}
                   discussions={discussionsData?.discussions || []}
                   loadDisscussionDetail={getDiscussionDetail}
                 />
@@ -388,6 +391,7 @@ export default function CommonDetail() {
 
               {tab === "proposals" && (
                 <ProposalsComponent
+                  common={common}
                   currentTab={tab}
                   proposals={activeProposals}
                   loadProposalDetail={getProposalDetail}
@@ -396,6 +400,7 @@ export default function CommonDetail() {
 
               {tab === "history" && (
                 <ProposalsComponent
+                  common={common}
                   currentTab={tab}
                   proposals={historyProposals}
                   loadProposalDetail={getProposalDetail}

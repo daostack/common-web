@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Common, Proposal } from "../../../../../shared/models";
+import { Common, Proposal, ProposalState } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import "./index.scss";
 
@@ -10,8 +10,8 @@ interface ProposalsHistoryProps {
 }
 
 export default function ProposalsHistory({ proposals, common }: ProposalsHistoryProps) {
-  const rejected = proposals.filter((p) => p.state === "failed").length;
-  const approved = proposals.filter((p) => p.state !== "failed").length;
+  const rejected = proposals.filter((p) => p.state === ProposalState.Rejected).length;
+  const approved = proposals.filter((p) => p.state !== ProposalState.Rejected).length;
   return (
     <div className="proposals-history-wrapper">
       <div className="history-header">

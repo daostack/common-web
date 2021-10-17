@@ -1,17 +1,22 @@
 import React from "react";
 import { countryList } from "../../../../../shared/assets/countries";
+import { formatPrice } from "../../../../../shared/utils";
 import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
 
 export default function MembershipRequestBilling(props: IStageProps) {
   const { userData, setUserData } = props;
 
-  const countries = countryList.map((country) => <option key={country.value}>{`${country.name} `}</option>);
+  const countries = countryList.map((country) => (
+    <option key={country.value} value={country.value}>{`${country.name}`}</option>
+  ));
 
   return (
     <div className="membership-request-content membership-request-billing">
       <div className="sub-title">Billing Details</div>
-      <div className="sub-text">You are contributing $25 (monthly) to this Common</div>
+      <div className="sub-text">{`You are contributing ${formatPrice(
+        userData.contribution_amount,
+      )} (monthly or one-time) to this Common`}</div>
       <div className="inputs-wrapper">
         <div className="inputs-group">
           <label>Fullname</label>

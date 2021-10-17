@@ -24,8 +24,8 @@ export enum ProposalVoteOutcome {
 export enum ProposalState {
   PassedInsufficientBalance = "passedInsufficientBalance",
   Countdown = "Countdown",
-  Passed = "passed",
-  Failed = "failed",
+  Accepted = "Accepted",
+  Rejected = "Rejected",
 }
 
 export enum ProposalType {

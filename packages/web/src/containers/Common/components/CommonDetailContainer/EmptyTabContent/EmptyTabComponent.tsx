@@ -4,14 +4,16 @@ import { MembershipRequestModal } from "../MembershipRequestModal";
 import { Modal } from "../../../../../shared/components/Modal";
 import { useModal } from "../../../../../shared/hooks";
 import "./index.scss";
+import { Common } from "../../../../../shared/models";
 
 interface EmptyTabComponentProps {
   currentTab: string;
   message: string;
   title: string;
+  common: Common;
 }
 
-export default function EmptyTabComponent({ currentTab, message, title }: EmptyTabComponentProps) {
+export default function EmptyTabComponent({ currentTab, message, title, common }: EmptyTabComponentProps) {
   const { isShowing: showJoinModal, onClose: onCloseJoinModal } = useModal(false);
 
   const closeJoinModalHandler = useCallback(() => {
@@ -21,7 +23,7 @@ export default function EmptyTabComponent({ currentTab, message, title }: EmptyT
   return (
     <>
       <Modal isShowing={showJoinModal} onClose={closeJoinModalHandler} className="mobile-full-screen" mobileFullScreen>
-        <MembershipRequestModal closeModal={closeJoinModalHandler} />
+        <MembershipRequestModal common={common} closeModal={closeJoinModalHandler} />
       </Modal>
       <div className="empty-tab-component-wrapper">
         <div className="img-wrapper">

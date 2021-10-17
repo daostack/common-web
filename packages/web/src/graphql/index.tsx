@@ -330,6 +330,25 @@ export const UpdateUserDocument = gql`
   }
 `;
 
+export const CreateJoinProposalDocument = gql`
+  mutation CreateJoinProposal($proposal: CreateJoinProposalInput!) {
+    createJoinProposal(input: $proposal) {
+      id
+      title
+      commonId
+      description
+    }
+  }
+`;
+
+export const CreateCardDocument = gql`
+  mutation CreateJoinProposal($createCard: CreateCardInput!) {
+    createCard(input: $createCard) {
+      id
+    }
+  }
+`;
+
 export const GetDiscussionById = gql`
   query getDiscussionById($id: ID!) {
     discussion(id: $id) {

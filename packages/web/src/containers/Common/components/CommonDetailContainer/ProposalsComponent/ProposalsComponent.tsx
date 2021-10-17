@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Proposal } from "../../../../../shared/models";
+import { Common, Proposal } from "../../../../../shared/models";
 import { EmptyTabComponent } from "../EmptyTabContent";
 import "./index.scss";
 import ProposalItemComponent from "./ProposalItemComponent";
@@ -8,9 +8,15 @@ interface DiscussionsComponentProps {
   proposals: Proposal[];
   loadProposalDetail: (payload: Proposal) => void;
   currentTab: string;
+  common: Common;
 }
 
-export default function ProposalsComponent({ proposals, loadProposalDetail, currentTab }: DiscussionsComponentProps) {
+export default function ProposalsComponent({
+  proposals,
+  loadProposalDetail,
+  currentTab,
+  common,
+}: DiscussionsComponentProps) {
   return (
     <div className="proposals-component-wrapper">
       {proposals.length > 0 ? (
@@ -21,6 +27,7 @@ export default function ProposalsComponent({ proposals, loadProposalDetail, curr
         </>
       ) : (
         <EmptyTabComponent
+          common={common}
           currentTab={currentTab}
           message={
             currentTab === "proposals"
