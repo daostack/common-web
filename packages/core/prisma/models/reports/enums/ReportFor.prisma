@@ -1,9 +1,0 @@
-enum ReportFor {
-  Nudity
-  Violance
-  Harassment
-  FalseNews
-  Spam
-  Hate
-  Other
-}

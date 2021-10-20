@@ -1,9 +1,0 @@
-{
-  "packages": [
-    "packages/*",
-    "packages/firebase/functions"
-  ],
-  "version": "1.9.12",
-  "npmClient": "yarn",
-  "useWorkspaces": true
-}

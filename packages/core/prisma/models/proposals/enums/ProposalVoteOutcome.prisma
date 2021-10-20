@@ -1,4 +1,0 @@
-enum VoteOutcome {
-  Approve
-  Condemn
-}

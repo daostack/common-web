@@ -1,7 +1,0 @@
-enum StatisticType {
-  AllTime
-
-  Hourly
-  Daily
-  Weekly
-}

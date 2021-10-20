@@ -1,6 +1,0 @@
-enum DiscussionSubscriptionType {
-  AllNotifications
-  OnlyMentions
-  NoNotification
-}
-

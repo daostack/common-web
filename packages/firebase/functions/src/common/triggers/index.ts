@@ -1,1 +1,0 @@
-export { onCommonWhitelisted } from './onCommonWhitelisted';

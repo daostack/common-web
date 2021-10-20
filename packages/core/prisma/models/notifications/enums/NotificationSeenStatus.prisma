@@ -1,5 +1,0 @@
-enum NotificationSeenStatus {
-  NotSeen
-  Seen
-  Done
-}

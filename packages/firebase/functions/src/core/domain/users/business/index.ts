@@ -1,1 +1,0 @@
-export { hasPermission } from './hasPermission';

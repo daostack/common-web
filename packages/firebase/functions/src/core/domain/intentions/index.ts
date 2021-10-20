@@ -1,1 +1,0 @@
-export { intentionDb }from './database/';

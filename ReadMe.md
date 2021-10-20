@@ -1,60 +1,44 @@
-<!--suppress HtmlDeprecatedAttribute -->
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-<p align="center">
-  <img alt="Common Logo" src="/docs/img/logo.png">
-</p>
+## Available Scripts
 
-<p align="center">
-  The monorepo containg the code behind <a href="https://common.io">Common</a>
-</p>
+In the project directory, you can run:
 
-<p align="center">
-  <img alt="CloudFunctions Tests Badge" src="https://github.com/daostack/common-monorepo/workflows/Firebase%20CloudFunctions%20Test%20CI/badge.svg" />
-</p>
+### `npm start`
 
-## Documentation
+Runs the app in the development mode.<br>
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The backend consist of multiple parts:
+The page will reload if you make edits.<br>
+You will also see any lint errors in the console.
 
-* `Core` - In this package is all the logic of the app
-* `GraphQL` - In this package is all the user facing GraphQL API. The authentication and authorization should also be
-  handled here as they are not one of `core`'s concerns
-* `Worker` - This package contains the background jobs of the project
-<<<<<<< HEAD
+### `npm test`
 
-### Setting up the project
+Launches the test runner in the interactive watch mode.<br>
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
+### `npm run build`
 
-* Node - v14.17.0
-* Postgres - PostgreSQL 13.2
-* Redis - Redis server v=6.2.3
+Builds the app for production to the `build` folder.<br>
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-Then you need to install all the dependencies in the project. To do that you need to run `yarn bootstrap`. This will
-install all the dependencies and link them accordingly.
+The build is minified and the filenames include the hashes.<br>
+Your app is ready to be deployed!
 
-After you get all your things installed you need to get a hold of the env file. Example can be found
-[here](.env.example). When the .env is placed in the project root you need to run `yarn env:update` to propagate the env
-file in all the packages that need it.
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-When the .env files are placed correctly you need to sync the database with the latest migrations. To do so you need to
-run `yarn db:setup` and wait for it to finish.
+### `npm run eject`
 
-And with that the project is set up.
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-### Running the project
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-The backend has two entry points: `graphql` and `worker`. They both depend on the third package: `core`, so to run
-either of them the first package. To compile any project you need to run `yarn compile` in that project folder. If you
-wish to compile all projects you can also run `yarn compile:backend` in the root of the project.
+Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-To run the `graphql` project you have two options:
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-* `yarn start` - To run in normally, without reloading. This is mostly for production
-* `yarn dev` - To hotreload it on changes. This only transpiles the changes, perfect for fast development
+## Learn More
 
-The same applies to the `worker` project
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-## Guides
-
-[**Authorization Guide**](/docs/guides/authorization.md) - How and where to handle the authorization <br />
-[**Event Hooks Guide**](/docs/guides/event-hooks.md) - How and where register and create hooks that run on events <br />
+To learn React, check out the [React documentation](https://reactjs.org/).

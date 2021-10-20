@@ -1,4 +1,0 @@
-enum DiscussionType {
-  ProposalDiscussion
-  CommonDiscussion
-}

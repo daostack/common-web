@@ -1,7 +1,0 @@
-enum ProposalPaymentState {
-  NotAttempted
-  Pending
-
-  Successful
-  Unsuccessful
-}

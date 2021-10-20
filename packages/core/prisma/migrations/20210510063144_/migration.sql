@@ -1,9 +1,0 @@
--- AlterTable
-ALTER TABLE "Statistic" ALTER COLUMN "users" SET DEFAULT 0,
-ALTER COLUMN "commons" SET DEFAULT 0,
-ALTER COLUMN "joinProposals" SET DEFAULT 0,
-ALTER COLUMN "discussions" SET DEFAULT 0,
-ALTER COLUMN "discussionMessages" SET DEFAULT 0,
-ALTER COLUMN "payments" SET DEFAULT 0,
-ALTER COLUMN "paymentsAmount" SET DEFAULT 0,
-ALTER COLUMN "fundingProposals" SET DEFAULT 0;

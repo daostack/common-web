@@ -1,1 +1,0 @@
-export { onDiscussionCreated } from './onDiscussionCreated';

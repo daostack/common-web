@@ -1,9 +1,0 @@
-enum PayoutStatus {
-  PendingApproval
-
-  CirclePending
-  CircleComplete
-  CircleFailed
-
-  Failed
-}

@@ -1,8 +1,0 @@
-enum NotificationLanguage {
-  EN
-  RU
-  BG
-  HE
-  JP
-  KO
-}

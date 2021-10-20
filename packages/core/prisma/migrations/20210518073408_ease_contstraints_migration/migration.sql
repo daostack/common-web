@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Payment" ALTER COLUMN "joinId" DROP NOT NULL,
-ALTER COLUMN "commonId" DROP NOT NULL;

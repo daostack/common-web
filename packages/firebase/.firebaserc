@@ -1,7 +1,0 @@
-{
-  "projects": {
-    "default": "common-daostack",
-    "staging": "common-staging-50741",
-    "production": "common-daostack"
-  }
-}

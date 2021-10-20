@@ -1,1 +1,0 @@
-export { backup } from './backupCron';

@@ -1,1 +1,0 @@
-export { finalizePaymentCron } from './finalizePaymentsCron';

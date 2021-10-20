@@ -1,1 +1,0 @@
-export { onProposalApproved } from  './onProposalApproved';

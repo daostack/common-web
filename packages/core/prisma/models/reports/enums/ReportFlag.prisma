@@ -1,5 +1,0 @@
-enum ReportFlag {
-  Clear
-  Reported
-  Hidden
-}
