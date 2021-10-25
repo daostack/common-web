@@ -1,4 +1,4 @@
-name: web dev 1 continuous delivery
+name: web batch 1 continuous delivery
 
 on:
   push:
