@@ -9,7 +9,7 @@ interface ChatMessageProps {
 
 export default function ChatMessage({ disscussionMessage }: ChatMessageProps) {
   const [imageError, setImageError] = useState(false);
-  const mDate = new Date(disscussionMessage.createTime);
+  const mDate = new Date(disscussionMessage.createTime.seconds * 1000);
   return (
     <div className="message-wrapper">
       <div className="icon-wrapper">
@@ -20,17 +20,30 @@ export default function ChatMessage({ disscussionMessage }: ChatMessageProps) {
             onError={() => setImageError(true)}
           />
         ) : (
-          <span className="initials" style={{ backgroundColor: Math.floor(Math.random() * 16777215).toString(16) }}>
+          <span
+            className="initials"
+            style={{
+              backgroundColor: Math.floor(Math.random() * 16777215).toString(
+                16
+              ),
+            }}
+          >
             {getUserInitials(disscussionMessage.owner)}
           </span>
         )}
       </div>
       <div className="message-text">
-        <div className="message-name">{getUserName(disscussionMessage.owner)}</div>
+        <div className="message-name">
+          {getUserName(disscussionMessage.owner)}
+        </div>
         <div className="message-content">{disscussionMessage.message}</div>
       </div>
       <div className="time-wrapper">
-        {mDate.toLocaleTimeString([], { hour12: false, hour: "2-digit", minute: "2-digit" })}
+        {mDate.toLocaleTimeString([], {
+          hour12: false,
+          hour: "2-digit",
+          minute: "2-digit",
+        })}
       </div>
     </div>
   );

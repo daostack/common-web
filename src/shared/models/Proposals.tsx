@@ -1,4 +1,4 @@
-import { Moderation } from "./shared";
+import { Moderation, Time } from "./shared";
 
 import { CommonContributionType, DiscussionMessage, User } from ".";
 
@@ -50,8 +50,10 @@ export type ProposalVote = {
 
 export interface Proposal {
   commonId: string;
+  proposerId: string;
   countdownPeriod: number;
-  createdAt: Date;
+  createTime: Time;
+  createdAt: Time;
   expiresAt: Date;
   fundingRequest?: { funded: boolean; amount: number };
 
@@ -64,6 +66,7 @@ export interface Proposal {
   votesAgainst?: number;
   votesFor?: number;
   user?: User;
+  proposer?: User;
   discussionMessage?: DiscussionMessage[];
   isLoaded?: boolean;
 

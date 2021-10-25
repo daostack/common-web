@@ -1,6 +1,6 @@
 import { Report } from "./Report";
 
-import { User } from ".";
+import { Time, User } from ".";
 
 export enum DiscussionMessageType {
   Message = "Message",
@@ -14,10 +14,12 @@ export enum DiscussionMessageFlag {
 
 export interface DiscussionMessage {
   id: string;
+  discussionId: string;
+  ownerId: string;
   message: string;
   type: DiscussionMessageType;
   flag: DiscussionMessageFlag;
   reports: Array<Report>;
-  createTime: Date;
+  createTime: Time;
   owner?: User;
 }
