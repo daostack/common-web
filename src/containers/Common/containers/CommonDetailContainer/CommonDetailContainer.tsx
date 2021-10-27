@@ -1,12 +1,18 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 import { Loader, Share } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
 import { useModal, useViewPortHook } from "../../../../shared/hooks";
 import { Discussion, Proposal } from "../../../../shared/models";
-import { getScreenSize } from "../../../../shared/store/selectors";
+import { getLoading, getScreenSize } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
 import {
   AboutTabComponent,
@@ -22,7 +28,26 @@ import { ProposalDetailModal } from "../../components/CommonDetailContainer/Prop
 import "./index.scss";
 import { Colors, ScreenSize } from "../../../../shared/constants";
 import { MobileLinks } from "../../../../shared/components/MobileLinks";
-import { useGetCommonProposals, useGetCommonDiscussions, useGetCommonById } from "../../../../graphql";
+import {
+  selectCommonDetail,
+  selectCurrentDisscussion,
+  selectCurrentProposal,
+  selectDiscussions,
+  selectIsDiscussionsLoaded,
+  selectIsProposalLoaded,
+  selectProposals,
+} from "../../store/selectors";
+import {
+  clearCurrentDiscussion,
+  clearCurrentProposal,
+  closeCurrentCommon,
+  getCommonDetail,
+  loadCommonDiscussionList,
+  loadDisscussionDetail,
+  loadProposalDetail,
+  loadProposalList,
+} from "../../store/actions";
+
 interface CommonDetailRouterParams {
   id: string;
 }
@@ -50,102 +75,116 @@ export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
   const joinEffort = useRef(null);
   const inViewport = useViewPortHook(joinEffort.current, "-20px");
-  const inViewPortFooter = useViewPortHook(document.querySelector(".footer-wrapper"), "0px");
+  const inViewPortFooter = useViewPortHook(
+    document.querySelector(".footer-wrapper"),
+    "0px"
+  );
   const [stickyClass, setStickyClass] = useState("");
   const [footerClass, setFooterClass] = useState("");
   const [tab, setTab] = useState("about");
   const [imageError, setImageError] = useState(false);
 
-  const [currentProposal, setCurrentProposal] = useState<Proposal | null>(null);
-  const [currentDisscussion, setCurrentDisscussion] = useState<Discussion | null>(null);
-
+  const loading = useSelector(getLoading());
+  const common = useSelector(selectCommonDetail());
+  const currentDisscussion = useSelector(selectCurrentDisscussion());
+  const proposals = useSelector(selectProposals());
+  const discussions = useSelector(selectDiscussions());
+  const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
+  const isProposalsLoaded = useSelector(selectIsProposalLoaded());
+  const currentProposal = useSelector(selectCurrentProposal());
   const screenSize = useSelector(getScreenSize());
 
+  const dispatch = useDispatch();
+
   const { isShowing, onOpen, onClose } = useModal(false);
-  const { isShowing: showJoinModal, onOpen: onOpenJoinModal, onClose: onCloseJoinModal } = useModal(false);
+  const {
+    isShowing: showJoinModal,
+    onOpen: onOpenJoinModal,
+    onClose: onCloseJoinModal,
+  } = useModal(false);
 
-  const { data: proposalsData } = useGetCommonProposals({
-    variables: {
-      where: {
-        commonId: id,
-      },
-    },
-  });
-
-  const { data: discussionsData } = useGetCommonDiscussions({
-    variables: {
-      where: {
-        commonId: id,
-      },
-    },
-  });
-
-  const { data: commonData } = useGetCommonById({
-    variables: {
-      where: {
-        id,
-      },
-    },
-  });
-
-  const common = commonData?.common;
+  useEffect(() => {
+    dispatch(getCommonDetail.request(id));
+    return () => {
+      dispatch(closeCurrentCommon());
+    };
+  }, [dispatch, id]);
 
   const activeProposals = useMemo(
-    () => [...(proposalsData?.proposals || [])].filter((d) => d.state === "countdown"),
-    [proposalsData],
+    () => [...proposals].filter((d) => d.state === "countdown"),
+    [proposals]
   );
 
   const historyProposals = useMemo(
-    () => [...(proposalsData?.proposals || [])].filter((d) => d.state !== "countdown"),
-    [proposalsData],
+    () => [...proposals].filter((d) => d.state !== "countdown"),
+    [proposals]
+  );
+
+  const changeTabHandler = useCallback(
+    (tab: string) => {
+      switch (tab) {
+        case "discussions":
+          if (!isDiscussionsLoaded) {
+            dispatch(loadCommonDiscussionList.request());
+          }
+          break;
+        case "history":
+        case "proposals":
+          if (!isProposalsLoaded) {
+            dispatch(loadProposalList.request());
+          }
+          break;
+
+        default:
+          break;
+      }
+      setTab(tab);
+    },
+    [dispatch, isDiscussionsLoaded, isProposalsLoaded]
   );
 
   const getDisscussionDetail = useCallback(
     (payload: Discussion) => {
-      setCurrentDisscussion(payload);
+      dispatch(loadDisscussionDetail.request(payload));
       onOpen();
     },
-    [onOpen],
+    [dispatch, onOpen]
   );
 
   const getProposalDetail = useCallback(
     (payload: Proposal) => {
-      setCurrentProposal(payload);
+      dispatch(loadProposalDetail.request(payload));
       onOpen();
     },
-    [onOpen],
+    [dispatch, onOpen]
   );
 
   const closeModalHandler = useCallback(() => {
     onClose();
-    setCurrentDisscussion(null);
-    setCurrentProposal(null);
-  }, [onClose]);
+    dispatch(clearCurrentDiscussion());
+    dispatch(clearCurrentProposal());
+  }, [onClose, dispatch]);
 
   const clickPreviewDisscusionHandler = useCallback(
     (id: string) => {
-      setTab("discussions");
-      if (discussionsData?.discussions) {
-        const disscussion = discussionsData?.discussions.find((f) => f.id === id);
-        if (disscussion) {
-          getDisscussionDetail(disscussion);
-        }
+      changeTabHandler("discussions");
+      const disscussion = discussions.find((f) => f.id === id);
+      if (disscussion) {
+        getDisscussionDetail(disscussion);
       }
     },
-    [discussionsData, getDisscussionDetail],
+    [discussions, changeTabHandler, getDisscussionDetail]
   );
 
   const clickPreviewProposalHandler = useCallback(
     (id: string) => {
-      if (proposalsData?.proposals) {
-        setTab("proposals");
-        const proposal = proposalsData?.proposals.find((f) => f.id === id);
-        if (proposal) {
-          getProposalDetail(proposal);
-        }
+      changeTabHandler("proposals");
+      const proposal = proposals.find((f) => f.id === id);
+      if (proposal) {
+        getProposalDetail(proposal);
       }
     },
-    [proposalsData, getProposalDetail],
+    [proposals, changeTabHandler, getProposalDetail]
   );
 
   const openJoinModal = useCallback(() => {
@@ -168,15 +207,15 @@ export default function CommonDetail() {
           <>
             <PreviewInformationList
               title="Latest Discussions"
-              discussions={discussionsData?.discussions || []}
-              vievAllHandler={() => setTab("discussions")}
+              discussions={discussions}
+              vievAllHandler={() => changeTabHandler("discussions")}
               onClickItem={clickPreviewDisscusionHandler}
               type="discussions"
             />
             <PreviewInformationList
               title="Latest Proposals"
               proposals={activeProposals}
-              vievAllHandler={() => setTab("proposals")}
+              vievAllHandler={() => changeTabHandler("proposals")}
               onClickItem={clickPreviewProposalHandler}
               type="proposals"
             />
@@ -186,11 +225,15 @@ export default function CommonDetail() {
       case "discussions":
         return (
           <>
-            <AboutSidebarComponent title="About" vievAllHandler={() => setTab("about")} common={common} />
+            <AboutSidebarComponent
+              title="About"
+              vievAllHandler={() => changeTabHandler("about")}
+              common={common}
+            />
             <PreviewInformationList
               title="Latest Proposals"
               proposals={activeProposals}
-              vievAllHandler={() => setTab("proposals")}
+              vievAllHandler={() => changeTabHandler("proposals")}
               onClickItem={clickPreviewProposalHandler}
               type="proposals"
             />
@@ -199,18 +242,24 @@ export default function CommonDetail() {
       case "proposals":
         return (
           <>
-            <AboutSidebarComponent title="About" vievAllHandler={() => setTab("about")} common={common} />
+            <AboutSidebarComponent
+              title="About"
+              vievAllHandler={() => changeTabHandler("about")}
+              common={common}
+            />
             <PreviewInformationList
               title="Latest Discussions"
-              discussions={discussionsData?.discussions || []}
-              vievAllHandler={() => setTab("discussions")}
+              discussions={discussions}
+              vievAllHandler={() => changeTabHandler("discussions")}
               onClickItem={clickPreviewDisscusionHandler}
               type="discussions"
             />
           </>
         );
       case "history":
-        return <ProposalsHistory proposals={historyProposals} common={common} />;
+        return (
+          <ProposalsHistory proposals={historyProposals} common={common} />
+        );
     }
   };
 
@@ -219,7 +268,7 @@ export default function CommonDetail() {
       setStickyClass("");
     } else {
       if ((joinEffort?.current as any)?.offsetTop < window.scrollY) {
-        if (tab === "discussions" && discussionsData?.discussions?.length) {
+        if (tab === "discussions" && discussions?.length) {
           setStickyClass("sticky");
         } else if (tab === "proposals" && activeProposals.length) {
           setStickyClass("sticky");
@@ -228,7 +277,7 @@ export default function CommonDetail() {
         }
       }
     }
-  }, [inViewport, activeProposals, tab, discussionsData, setStickyClass]);
+  }, [inViewport, activeProposals, tab, discussions, setStickyClass]);
 
   useEffect(() => {
     if (inViewPortFooter) {
@@ -248,24 +297,41 @@ export default function CommonDetail() {
       <Modal
         isShowing={isShowing}
         onClose={closeModalHandler}
-        closeColor={screenSize === ScreenSize.Mobile ? Colors.white : Colors.gray}
+        closeColor={
+          screenSize === ScreenSize.Mobile ? Colors.white : Colors.gray
+        }
         className={tab}
       >
         {screenSize === ScreenSize.Desktop && tab === "discussions" && (
-          <DiscussionDetailModal disscussion={currentDisscussion} onOpenJoinModal={openJoinModal} />
+          <DiscussionDetailModal
+            disscussion={currentDisscussion}
+            onOpenJoinModal={openJoinModal}
+          />
         )}
-        {screenSize === ScreenSize.Desktop && (tab === "proposals" || tab === "history") && (
-          <ProposalDetailModal proposal={currentProposal} onOpenJoinModal={openJoinModal} />
-        )}
+        {screenSize === ScreenSize.Desktop &&
+          (tab === "proposals" || tab === "history") && (
+            <ProposalDetailModal
+              proposal={currentProposal}
+              onOpenJoinModal={openJoinModal}
+            />
+          )}
         {screenSize === ScreenSize.Mobile && (
           <div className="get-common-app-wrapper">
             <img src="/icons/logo-all-white.svg" alt="logo" className="logo" />
-            <span className="text">Download the Common app to participate in discussions and join the community</span>
+            <span className="text">
+              Download the Common app to participate in discussions and join the
+              community
+            </span>
             <MobileLinks color={Colors.black} detectOS={true} />
           </div>
         )}
       </Modal>
-      <Modal isShowing={showJoinModal} onClose={closeJoinModal} closeColor={Colors.white} className="join-effort">
+      <Modal
+        isShowing={showJoinModal}
+        onClose={closeJoinModal}
+        closeColor={Colors.white}
+        className="join-effort"
+      >
         <JoinTheEffortModal />
       </Modal>
       <div className="common-detail-wrapper">
@@ -273,7 +339,11 @@ export default function CommonDetail() {
           <div className="main-information-wrapper">
             <div className="content-element img-wrapper">
               {!imageError ? (
-                <img src={common?.image} alt={common?.name} onError={() => setImageError(true)} />
+                <img
+                  src={common?.image}
+                  alt={common?.name}
+                  onError={() => setImageError(true)}
+                />
               ) : (
                 <img src="/icons/logo-white.svg" alt={common.name} />
               )}
@@ -284,16 +354,22 @@ export default function CommonDetail() {
                   <div className="name">{common?.name}</div>
                   <div className="tagline">{common?.byline}</div>
                 </div>
-                {screenSize === ScreenSize.Mobile && <Share type="modal" color={Colors.transparent} />}
+                {screenSize === ScreenSize.Mobile && (
+                  <Share type="modal" color={Colors.transparent} />
+                )}
               </div>
               <div className="numbers">
                 <div className="item">
                   <div className="value">{formatPrice(common?.balance)}</div>
-                  <div className="name">{`Available ${screenSize === ScreenSize.Desktop ? "Funds" : ""}`}</div>
+                  <div className="name">{`Available ${
+                    screenSize === ScreenSize.Desktop ? "Funds" : ""
+                  }`}</div>
                 </div>
                 <div className="item">
                   <div className="value">{formatPrice(common?.raised)}</div>
-                  <div className="name">{`${screenSize === ScreenSize.Desktop ? "Total" : ""} Raised`}</div>
+                  <div className="name">{`${
+                    screenSize === ScreenSize.Desktop ? "Total" : ""
+                  } Raised`}</div>
                 </div>
                 <div className="item">
                   <div className="value">{common?.members.length}</div>
@@ -301,7 +377,9 @@ export default function CommonDetail() {
                 </div>
                 <div className="item">
                   <div className="value">{activeProposals.length}</div>
-                  <div className="name">{`${screenSize === ScreenSize.Desktop ? "Active" : ""} Proposals`}</div>
+                  <div className="name">{`${
+                    screenSize === ScreenSize.Desktop ? "Active" : ""
+                  } Proposals`}</div>
                 </div>
               </div>
             </div>
@@ -319,10 +397,15 @@ export default function CommonDetail() {
                   ))}
                 </div>
                 <div className="social-wrapper" ref={joinEffort}>
-                  <button className={`button-blue join-the-effort-btn`} onClick={onOpenJoinModal}>
+                  <button
+                    className={`button-blue join-the-effort-btn`}
+                    onClick={onOpenJoinModal}
+                  >
                     Join the effort
                   </button>
-                  {screenSize === ScreenSize.Desktop && <Share type="popup" color={Colors.lightPurple} />}
+                  {screenSize === ScreenSize.Desktop && (
+                    <Share type="popup" color={Colors.lightPurple} />
+                  )}
                 </div>
               </div>
             </div>
@@ -340,12 +423,16 @@ export default function CommonDetail() {
               {tab === "about" && (
                 <>
                   <div className="about-title">About</div>
-                  <AboutTabComponent common={common} screenSize={screenSize} onOpenJoinModal={onOpenJoinModal} />
+                  <AboutTabComponent
+                    common={common}
+                    screenSize={screenSize}
+                    onOpenJoinModal={onOpenJoinModal}
+                  />
                 </>
               )}
               {tab === "discussions" && (
                 <DiscussionsComponent
-                  discussions={discussionsData?.discussions || []}
+                  discussions={discussions || []}
                   loadDisscussionDetail={getDisscussionDetail}
                 />
               )}
