@@ -27,7 +27,7 @@ export default function DiscussionDetailModal({
             <div className="owner-icon-wrapper">
               {!imageError ? (
                 <img
-                  src={disscussion.owner?.photo}
+                  src={disscussion.owner?.photoURL}
                   alt={getUserName(disscussion.owner)}
                   onError={() => setImageError(true)}
                 />

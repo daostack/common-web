@@ -390,7 +390,7 @@ export default function CommonDetail() {
                     <div
                       key={t.key}
                       className={`tab-item ${tab === t.key ? "active" : ""}`}
-                      onClick={() => setTab(t.key)}
+                      onClick={() => changeTabHandler(t.key)}
                     >
                       {t.name}
                     </div>

@@ -1,6 +1,12 @@
 import { call, put, select, takeLatest } from "redux-saga/effects";
 import { actions } from ".";
-import { Common, Discussion, User, DiscussionMessage, Proposal } from "../../../shared/models";
+import {
+  Common,
+  Discussion,
+  User,
+  DiscussionMessage,
+  Proposal,
+} from "../../../shared/models";
 import { startLoading, stopLoading } from "../../../shared/store/actions";
 import {
   fetchCommonList,
@@ -26,7 +32,9 @@ export function* getCommonsList(): Generator {
   }
 }
 
-export function* getCommonDetail(action: ReturnType<typeof actions.getCommonDetail.request>): Generator {
+export function* getCommonDetail(
+  action: ReturnType<typeof actions.getCommonDetail.request>
+): Generator {
   try {
     yield put(startLoading());
     const common = yield call(fetchCommonDetail, action.payload);
@@ -48,17 +56,23 @@ export function* getCommonDetail(action: ReturnType<typeof actions.getCommonDeta
 }
 
 export function* loadCommonDiscussionList(
-  action: ReturnType<typeof actions.loadCommonDiscussionList.request>,
+  action: ReturnType<typeof actions.loadCommonDiscussionList.request>
 ): Generator {
   try {
     yield put(startLoading());
-    const discussions: Discussion[] = (yield select(selectDiscussions())) as Discussion[];
+    const discussions: Discussion[] = (yield select(
+      selectDiscussions()
+    )) as Discussion[];
 
     const ownerIds = Array.from(new Set(discussions.map((d) => d.ownerId)));
     const discussions_ids = discussions.map((d) => d.id);
 
     const owners = (yield fetchOwners(ownerIds)) as User[];
-    const dMessages = (yield fetchDiscussionsMessages(discussions_ids)) as DiscussionMessage[];
+    const dMessages = (yield fetchDiscussionsMessages(
+      discussions_ids
+    )) as DiscussionMessage[];
+
+    console.log(owners);
 
     const loadedDiscussions = discussions.map((d) => {
       d.discussionMessage = dMessages.filter((dM) => dM.discussionId === d.id);
@@ -74,15 +88,20 @@ export function* loadCommonDiscussionList(
   }
 }
 
-export function* loadDiscussionDetail(action: ReturnType<typeof actions.loadDisscussionDetail.request>): Generator {
+export function* loadDiscussionDetail(
+  action: ReturnType<typeof actions.loadDisscussionDetail.request>
+): Generator {
   try {
     yield put(startLoading());
     const discussion = { ...action.payload };
     if (!discussion.isLoaded) {
       const { discussionMessage } = action.payload;
 
-      const ownerIds = Array.from(new Set(discussionMessage?.map((d) => d.ownerId)));
+      const ownerIds = Array.from(
+        new Set(discussionMessage?.map((d) => d.ownerId))
+      );
       const owners = (yield fetchOwners(ownerIds)) as User[];
+
       const loadedDisscussionMessage = discussionMessage?.map((d) => {
         d.owner = owners.find((o) => o.uid === d.ownerId);
         return d;
@@ -98,17 +117,23 @@ export function* loadDiscussionDetail(action: ReturnType<typeof actions.loadDiss
   }
 }
 
-export function* loadProposalList(action: ReturnType<typeof actions.loadProposalList.request>): Generator {
+export function* loadProposalList(
+  action: ReturnType<typeof actions.loadProposalList.request>
+): Generator {
   try {
     yield put(startLoading());
 
-    const proposals: Proposal[] = (yield select(selectProposals())) as Proposal[];
+    const proposals: Proposal[] = (yield select(
+      selectProposals()
+    )) as Proposal[];
 
     const ownerIds = Array.from(new Set(proposals.map((d) => d.proposerId)));
     const discussions_ids = proposals.map((d) => d.id);
 
     const owners = (yield fetchOwners(ownerIds)) as User[];
-    const dMessages = (yield fetchDiscussionsMessages(discussions_ids)) as DiscussionMessage[];
+    const dMessages = (yield fetchDiscussionsMessages(
+      discussions_ids
+    )) as DiscussionMessage[];
 
     const loadedProposals = proposals.map((d) => {
       d.discussionMessage = dMessages.filter((dM) => dM.discussionId === d.id);
@@ -124,14 +149,18 @@ export function* loadProposalList(action: ReturnType<typeof actions.loadProposal
   }
 }
 
-export function* loadProposalDetail(action: ReturnType<typeof actions.loadProposalDetail.request>): Generator {
+export function* loadProposalDetail(
+  action: ReturnType<typeof actions.loadProposalDetail.request>
+): Generator {
   try {
     yield put(startLoading());
     const proposal = { ...action.payload };
     if (!proposal.isLoaded) {
       const { discussionMessage } = action.payload;
 
-      const ownerIds = Array.from(new Set(discussionMessage?.map((d) => d.ownerId)));
+      const ownerIds = Array.from(
+        new Set(discussionMessage?.map((d) => d.ownerId))
+      );
       const owners = (yield fetchOwners(ownerIds)) as User[];
       const loadedDisscussionMessage = discussionMessage?.map((d) => {
         d.owner = owners.find((o) => o.uid === d.ownerId);
@@ -151,7 +180,10 @@ export function* loadProposalDetail(action: ReturnType<typeof actions.loadPropos
 function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
-  yield takeLatest(actions.loadCommonDiscussionList.request, loadCommonDiscussionList);
+  yield takeLatest(
+    actions.loadCommonDiscussionList.request,
+    loadCommonDiscussionList
+  );
   yield takeLatest(actions.loadDisscussionDetail.request, loadDiscussionDetail);
   yield takeLatest(actions.loadProposalList.request, loadProposalList);
   yield takeLatest(actions.loadProposalDetail.request, loadProposalDetail);

@@ -1,10 +1,19 @@
 import * as Apollo from "@apollo/client";
 import { gql } from "@apollo/client";
 
-import { Common, Discussion, Proposal, ProposalState, ProposalType, User } from "../shared/models";
+import {
+  Common,
+  Discussion,
+  Proposal,
+  ProposalState,
+  ProposalType,
+  User,
+} from "../shared/models";
 
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
 export type Scalars = {
   ID: string;
   String: string;
@@ -75,13 +84,21 @@ export type CommonMember = {
 export type GetCommonsDataQuery = { __typename?: "Query" } & {
   commons?: Array<
     { __typename?: "Common" } & Common & {
-        members?: Maybe<Array<Maybe<{ __typename?: "CommonMember" } & Pick<CommonMember, "userId">>>>;
+        members?: Maybe<
+          Array<
+            Maybe<
+              { __typename?: "CommonMember" } & Pick<CommonMember, "userId">
+            >
+          >
+        >;
       }
   >;
 };
 
 export const GetCommonsDataDocument = gql`
-  query getCommonsHomescreenData($paginate: PaginateInput! = { take: 10, skip: 0 }) {
+  query getCommonsHomescreenData(
+    $paginate: PaginateInput! = { take: 10, skip: 0 }
+  ) {
     commons(paginate: $paginate) {
       id
       name
@@ -101,7 +118,10 @@ export const GetCommonsDataDocument = gql`
 `;
 
 export const GetCommonProposals = gql`
-  query getCommonProposals($where: ProposalWhereInput, $paginate: PaginateInput! = { take: 10, skip: 0 }) {
+  query getCommonProposals(
+    $where: ProposalWhereInput
+    $paginate: PaginateInput! = { take: 10, skip: 0 }
+  ) {
     proposals(where: $where, paginate: $paginate) {
       id
       state
@@ -176,7 +196,10 @@ export type GetCommonDiscussionsQueryVariables = Exact<{
 }>;
 
 export const GetCommonDiscussions = gql`
-  query getCommonDiscussions($where: DiscussionWhereInput, $paginate: PaginateInput! = { take: 10, skip: 0 }) {
+  query getCommonDiscussions(
+    $where: DiscussionWhereInput
+    $paginate: PaginateInput! = { take: 10, skip: 0 }
+  ) {
     discussions(where: $where, paginate: $paginate) {
       id
       createdAt
@@ -211,12 +234,15 @@ export type GetCommonDiscussionsQuery = {
 };
 
 export function useGetCommonDiscussions(
-  baseOptions: Apollo.QueryHookOptions<GetCommonDiscussionsQuery, GetCommonDiscussionsQueryVariables>,
+  baseOptions: Apollo.QueryHookOptions<
+    GetCommonDiscussionsQuery,
+    GetCommonDiscussionsQueryVariables
+  >
 ) {
-  return Apollo.useQuery<GetCommonDiscussionsQuery, GetCommonDiscussionsQueryVariables>(
-    GetCommonDiscussions,
-    baseOptions,
-  );
+  return Apollo.useQuery<
+    GetCommonDiscussionsQuery,
+    GetCommonDiscussionsQueryVariables
+  >(GetCommonDiscussions, baseOptions);
 }
 
 export const GetDiscussionById = gql`
@@ -313,9 +339,15 @@ export type GetCommonDataQuery = {
 };
 
 export function useGetCommonDataQuery(
-  baseOptions: Apollo.QueryHookOptions<GetCommonDataQuery, GetCommonDataQueryVariables>,
+  baseOptions: Apollo.QueryHookOptions<
+    GetCommonDataQuery,
+    GetCommonDataQueryVariables
+  >
 ) {
-  return Apollo.useQuery<GetCommonDataQuery, GetCommonDataQueryVariables>(GetCommonsDataDocument, baseOptions);
+  return Apollo.useQuery<GetCommonDataQuery, GetCommonDataQueryVariables>(
+    GetCommonsDataDocument,
+    baseOptions
+  );
 }
 
 export type GetUserPermissionsQueryVariables = Exact<{
@@ -339,24 +371,39 @@ export type GetCommonProposalsQueryVariables = Exact<{
 }>;
 
 export function useGetUserPermissionsQuery(
-  baseOptions: Apollo.QueryHookOptions<GetUserPermissionsQuery, GetUserPermissionsQueryVariables>,
+  baseOptions: Apollo.QueryHookOptions<
+    GetUserPermissionsQuery,
+    GetUserPermissionsQueryVariables
+  >
 ) {
-  return Apollo.useQuery<GetUserPermissionsQuery, GetUserPermissionsQueryVariables>(
-    GetUserPermissionsDocument,
-    baseOptions,
-  );
+  return Apollo.useQuery<
+    GetUserPermissionsQuery,
+    GetUserPermissionsQueryVariables
+  >(GetUserPermissionsDocument, baseOptions);
 }
 
 export function useGetCommonProposals(
-  baseOptions: Apollo.QueryHookOptions<GetCommonProposalsQuery, GetCommonProposalsQueryVariables>,
+  baseOptions: Apollo.QueryHookOptions<
+    GetCommonProposalsQuery,
+    GetCommonProposalsQueryVariables
+  >
 ) {
-  return Apollo.useQuery<GetCommonProposalsQuery, GetCommonProposalsQueryVariables>(GetCommonProposals, baseOptions);
+  return Apollo.useQuery<
+    GetCommonProposalsQuery,
+    GetCommonProposalsQueryVariables
+  >(GetCommonProposals, baseOptions);
 }
 
 export function useGetCommonById(
-  baseOptions: Apollo.QueryHookOptions<GetCommonByIdQuery, GetCommonByIdQueryVariables>,
+  baseOptions: Apollo.QueryHookOptions<
+    GetCommonByIdQuery,
+    GetCommonByIdQueryVariables
+  >
 ) {
-  return Apollo.useQuery<GetCommonByIdQuery, GetCommonByIdQueryVariables>(GetCommonById, baseOptions);
+  return Apollo.useQuery<GetCommonByIdQuery, GetCommonByIdQueryVariables>(
+    GetCommonById,
+    baseOptions
+  );
 }
 
 export const LoadUserContextDocument = gql`
@@ -374,13 +421,28 @@ export const LoadUserContextDocument = gql`
 `;
 
 export type LoadUserContextQuery = {
-  user?: Pick<User, "id" | "firstName" | "lastName" | "displayName" | "email" | "photo" | "permissions">;
+  user?: Pick<
+    User,
+    | "id"
+    | "firstName"
+    | "lastName"
+    | "displayName"
+    | "email"
+    | "photoURL"
+    | "permissions"
+  >;
 };
 
 export type LoadUserContextQueryVariables = Exact<{ [key: string]: never }>;
 
 export function useLoadUserContextQuery(
-  baseOptions?: Apollo.QueryHookOptions<LoadUserContextQuery, LoadUserContextQueryVariables>,
+  baseOptions?: Apollo.QueryHookOptions<
+    LoadUserContextQuery,
+    LoadUserContextQueryVariables
+  >
 ) {
-  return Apollo.useQuery<LoadUserContextQuery, LoadUserContextQueryVariables>(LoadUserContextDocument, baseOptions);
+  return Apollo.useQuery<LoadUserContextQuery, LoadUserContextQueryVariables>(
+    LoadUserContextDocument,
+    baseOptions
+  );
 }

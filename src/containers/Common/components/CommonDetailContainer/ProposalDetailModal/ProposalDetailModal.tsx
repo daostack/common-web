@@ -2,7 +2,11 @@ import React, { useState } from "react";
 
 import { Loader } from "../../../../../shared/components";
 import { Proposal } from "../../../../../shared/models";
-import { formatPrice, getDaysAgo, getUserName } from "../../../../../shared/utils";
+import {
+  formatPrice,
+  getDaysAgo,
+  getUserName,
+} from "../../../../../shared/utils";
 import { ChatComponent } from "../ChatComponent";
 import { ProposalCountDown } from "../ProposalCountDown";
 import { VotesComponent } from "../VotesComponent";
@@ -13,10 +17,15 @@ interface DiscussionDetailModalProps {
   onOpenJoinModal: () => void;
 }
 
-export default function ProposalDetailModal({ proposal, onOpenJoinModal }: DiscussionDetailModalProps) {
+export default function ProposalDetailModal({
+  proposal,
+  onOpenJoinModal,
+}: DiscussionDetailModalProps) {
   const date = new Date();
   const [imageError, setImageError] = useState(false);
-  const requestedAmount = formatPrice(proposal?.fundingRequest?.amount || proposal?.join?.funding);
+  const requestedAmount = formatPrice(
+    proposal?.fundingRequest?.amount || proposal?.join?.funding
+  );
   return !proposal ? (
     <Loader />
   ) : (
@@ -26,26 +35,43 @@ export default function ProposalDetailModal({ proposal, onOpenJoinModal }: Discu
           {proposal.state === "countdown" ? (
             <ProposalCountDown date={new Date(proposal?.expiresAt)} />
           ) : (
-            <div className={`state-wrapper ${proposal.state.toLocaleLowerCase()}`}>
+            <div
+              className={`state-wrapper ${proposal.state.toLocaleLowerCase()}`}
+            >
               <div className="state-inner-wrapper">
                 <img
-                  src={proposal.state === "Rejected" ? "/icons/declined.svg" : "/icons/approved.svg"}
+                  src={
+                    proposal.state === "Rejected"
+                      ? "/icons/declined.svg"
+                      : "/icons/approved.svg"
+                  }
                   alt="state-wrapper"
                 />
-                <span className="state-name">{proposal.state === "Rejected" ? "Rejected" : "Approved"}</span>
+                <span className="state-name">
+                  {proposal.state === "Rejected" ? "Rejected" : "Approved"}
+                </span>
               </div>
             </div>
           )}
           <div className="owner-wrapper">
             <div className="owner-icon-wrapper">
               {!imageError ? (
-                <img src={proposal.user?.photo} alt={getUserName(proposal.user)} onError={() => setImageError(true)} />
+                <img
+                  src={proposal.user?.photoURL}
+                  alt={getUserName(proposal.user)}
+                  onError={() => setImageError(true)}
+                />
               ) : (
-                <img src="/icons/default_user.svg" alt={getUserName(proposal.user)} />
+                <img
+                  src="/icons/default_user.svg"
+                  alt={getUserName(proposal.user)}
+                />
               )}
             </div>
             <div className="owner-name">{getUserName(proposal.user)}</div>
-            <div className="days-ago">{getDaysAgo(date, proposal.createdAt)} </div>
+            <div className="days-ago">
+              {getDaysAgo(date, proposal.createdAt)}{" "}
+            </div>
           </div>
           <div className="discussion-information-wrapper">
             <div className="discussion-name" title={proposal.title}>
@@ -56,7 +82,8 @@ export default function ProposalDetailModal({ proposal, onOpenJoinModal }: Discu
                 "No funding requested"
               ) : (
                 <>
-                  Requested amount <span className="amount">{requestedAmount}</span>
+                  Requested amount{" "}
+                  <span className="amount">{requestedAmount}</span>
                 </>
               )}
             </div>
@@ -69,7 +96,10 @@ export default function ProposalDetailModal({ proposal, onOpenJoinModal }: Discu
         </div>
       </div>
       <div className="right-side">
-        <ChatComponent discussionMessage={proposal.discussionMessage || []} onOpenJoinModal={onOpenJoinModal} />
+        <ChatComponent
+          discussionMessage={proposal.discussionMessage || []}
+          onOpenJoinModal={onOpenJoinModal}
+        />
       </div>
     </div>
   );

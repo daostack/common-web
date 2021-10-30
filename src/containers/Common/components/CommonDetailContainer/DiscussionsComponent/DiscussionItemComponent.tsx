@@ -23,7 +23,7 @@ export default function DiscussionItemComponent({
         <div className="img-wrapper">
           {!imageError ? (
             <img
-              src={discussion.owner?.photo}
+              src={discussion.owner?.photoURL}
               alt={getUserName(discussion.owner)}
               onError={() => setImageError(true)}
             />
@@ -37,7 +37,7 @@ export default function DiscussionItemComponent({
         <div className="creator-information">
           <div className="name">{getUserName(discussion.owner)}</div>
           <div className="days-ago">
-            {getDaysAgo(date, discussion.createdAt)}{" "}
+            {getDaysAgo(date, discussion.createTime)}
           </div>
         </div>
       </div>
@@ -50,7 +50,7 @@ export default function DiscussionItemComponent({
           {discussion.title}
         </div>
         <div className={`description `}>{discussion.message}</div>
-        {discussion.description.length > textLength ? (
+        {discussion.message.length > textLength ? (
           <div
             className="read-more"
             onClick={() => loadDisscussionDetail(discussion)}

@@ -13,9 +13,9 @@ export default function ChatMessage({ disscussionMessage }: ChatMessageProps) {
   return (
     <div className="message-wrapper">
       <div className="icon-wrapper">
-        {disscussionMessage.owner?.photo && !imageError ? (
+        {disscussionMessage.owner?.photoURL && !imageError ? (
           <img
-            src={disscussionMessage.owner?.photo}
+            src={disscussionMessage.owner?.photoURL}
             alt={getUserName(disscussionMessage.owner)}
             onError={() => setImageError(true)}
           />
