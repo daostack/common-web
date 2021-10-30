@@ -30,20 +30,26 @@ export default function ProposalItemComponent({
   return (
     <div className="discussion-item-wrapper">
       {proposal.state === "countdown" ? (
-        <ProposalCountDown date={new Date(proposal?.expiresAt)} />
+        <ProposalCountDown
+          date={
+            new Date(
+              (proposal?.createdAt.seconds + proposal.countdownPeriod) * 1000
+            )
+          }
+        />
       ) : (
         <div className={`state-wrapper ${proposal.state.toLocaleLowerCase()}`}>
           <div className="state-inner-wrapper">
             <img
               src={
-                proposal.state === "Rejected"
+                proposal.state === "failed"
                   ? "/icons/declined.svg"
                   : "/icons/approved.svg"
               }
               alt="state-wrapper"
             />
             <span className="state-name">
-              {proposal.state === "Rejected" ? "Rejected" : "Approved"}
+              {proposal.state === "failed" ? "Rejected" : "Approved"}
             </span>
           </div>
         </div>
@@ -52,9 +58,9 @@ export default function ProposalItemComponent({
         <div
           className="proposal-title"
           onClick={() => loadProposalDetail(proposal)}
-          title={proposal.title}
+          title={proposal.description.title}
         >
-          {proposal.title}
+          {proposal.description.title}
         </div>
         <div className="requested-amount">
           {requestedAmount === "$0" ? (
@@ -74,27 +80,25 @@ export default function ProposalItemComponent({
         <div className="img-wrapper">
           {!imageError ? (
             <img
-              src={proposal.user?.photoURL}
-              alt={getUserName(proposal.user)}
+              src={proposal.proposer?.photoURL}
+              alt={getUserName(proposal.proposer)}
               onError={() => setImageError(true)}
             />
           ) : (
             <img
               src="/icons/default_user.svg"
-              alt={getUserName(proposal.user)}
+              alt={getUserName(proposal.proposer)}
             />
           )}
         </div>
         <div className="creator-information">
-          <div className="name">{getUserName(proposal.user)}</div>
-          <div className="days-ago">
-            {getDaysAgo(date, proposal.createdAt)}{" "}
-          </div>
+          <div className="name">{getUserName(proposal.proposer)}</div>
+          <div className="days-ago">{getDaysAgo(date, proposal.createdAt)}</div>
         </div>
       </div>
       <div className="discussion-content">
-        <div className={`description `}>{proposal.description}</div>
-        {proposal.description.length > textLength ? (
+        <div className={`description `}>{proposal.description.description}</div>
+        {proposal.description.description.length > textLength ? (
           <div
             className="read-more"
             onClick={() => loadProposalDetail(proposal)}

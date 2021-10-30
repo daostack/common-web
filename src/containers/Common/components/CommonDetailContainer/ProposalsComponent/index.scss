@@ -34,7 +34,7 @@
           letter-spacing: normal;
         }
       }
-      &.accepted {
+      &.passed {
         .state-inner-wrapper {
           background: #f0fdf0;
           .state-name {
@@ -42,7 +42,7 @@
           }
         }
       }
-      &.rejected {
+      &.failed {
         .state-inner-wrapper {
           background: #feefec;
           .state-name {

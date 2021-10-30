@@ -33,7 +33,14 @@ export default function ProposalDetailModal({
       <div className="left-side">
         <div className="top-side">
           {proposal.state === "countdown" ? (
-            <ProposalCountDown date={new Date(proposal?.expiresAt)} />
+            <ProposalCountDown
+              date={
+                new Date(
+                  (proposal?.createdAt.seconds + proposal.countdownPeriod) *
+                    1000
+                )
+              }
+            />
           ) : (
             <div
               className={`state-wrapper ${proposal.state.toLocaleLowerCase()}`}
@@ -41,14 +48,14 @@ export default function ProposalDetailModal({
               <div className="state-inner-wrapper">
                 <img
                   src={
-                    proposal.state === "Rejected"
+                    proposal.state === "failed"
                       ? "/icons/declined.svg"
                       : "/icons/approved.svg"
                   }
                   alt="state-wrapper"
                 />
                 <span className="state-name">
-                  {proposal.state === "Rejected" ? "Rejected" : "Approved"}
+                  {proposal.state === "failed" ? "Rejected" : "Approved"}
                 </span>
               </div>
             </div>
@@ -57,32 +64,32 @@ export default function ProposalDetailModal({
             <div className="owner-icon-wrapper">
               {!imageError ? (
                 <img
-                  src={proposal.user?.photoURL}
-                  alt={getUserName(proposal.user)}
+                  src={proposal.proposer?.photoURL}
+                  alt={getUserName(proposal.proposer)}
                   onError={() => setImageError(true)}
                 />
               ) : (
                 <img
                   src="/icons/default_user.svg"
-                  alt={getUserName(proposal.user)}
+                  alt={getUserName(proposal.proposer)}
                 />
               )}
             </div>
-            <div className="owner-name">{getUserName(proposal.user)}</div>
+            <div className="owner-name">{getUserName(proposal.proposer)}</div>
             <div className="days-ago">
-              {getDaysAgo(date, proposal.createdAt)}{" "}
+              {getDaysAgo(date, proposal.createdAt)}
             </div>
           </div>
           <div className="discussion-information-wrapper">
-            <div className="discussion-name" title={proposal.title}>
-              {proposal.title}
+            <div className="discussion-name" title={proposal.description.title}>
+              {proposal.description.title}
             </div>
             <div className="requested-amount">
               {requestedAmount === "$0" ? (
                 "No funding requested"
               ) : (
                 <>
-                  Requested amount{" "}
+                  Requested amount
                   <span className="amount">{requestedAmount}</span>
                 </>
               )}
@@ -92,7 +99,7 @@ export default function ProposalDetailModal({
           <div className="line"></div>
         </div>
         <div className="down-side">
-          <p className="description">{proposal.description}</p>
+          <p className="description">{proposal.description.description}</p>
         </div>
       </div>
       <div className="right-side">

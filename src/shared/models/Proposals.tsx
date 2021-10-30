@@ -1,6 +1,10 @@
 import { Moderation, Time } from "./shared";
 
 import { CommonContributionType, DiscussionMessage, User } from ".";
+import {
+  File,
+  Rules,
+} from "../../../../common-monorepo/packages/web/src/shared/models";
 
 export enum ProposalFundingState {
   NotRelevant = "notRelevant",
@@ -73,7 +77,13 @@ export interface Proposal {
   title: string;
 
   state: string;
-  description: string;
+  description: {
+    description: string;
+    links: Rules[];
+    images: File[];
+    files: File[];
+    title: string;
+  };
   type: ProposalType;
   paymentState?: ProposalPaymentState;
   fundingState?: ProposalFundingState;
