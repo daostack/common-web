@@ -15,11 +15,13 @@ import "./index.scss";
 interface DiscussionDetailModalProps {
   proposal: Proposal | null;
   onOpenJoinModal: () => void;
+  isCommonMember: boolean;
 }
 
 export default function ProposalDetailModal({
   proposal,
   onOpenJoinModal,
+  isCommonMember,
 }: DiscussionDetailModalProps) {
   const date = new Date();
   const [imageError, setImageError] = useState(false);
@@ -106,6 +108,7 @@ export default function ProposalDetailModal({
         <ChatComponent
           discussionMessage={proposal.discussionMessage || []}
           onOpenJoinModal={onOpenJoinModal}
+          isCommonMember={isCommonMember}
         />
       </div>
     </div>

@@ -24,7 +24,7 @@
       .text-information-wrapper {
         display: flex;
         margin-top: 32px;
-        border-bottom: 1px solid $light-gray;
+        border-bottom: 1px solid $light-gray-1;
         padding-bottom: 30px;
         justify-content: space-between;
         .text {
@@ -105,6 +105,12 @@
 
           .join-the-effort-btn {
             margin-right: 10px;
+          }
+          .member-label {
+            color: $purple;
+            display: flex;
+            align-items: center;
+            margin-right: 1.5rem;
           }
         }
       }

@@ -1,10 +1,6 @@
 import { Moderation, Time } from "./shared";
 
-import { CommonContributionType, DiscussionMessage, User } from ".";
-import {
-  File,
-  Rules,
-} from "../../../../common-monorepo/packages/web/src/shared/models";
+import { CommonContributionType, DiscussionMessage, Rules, User } from ".";
 
 export enum ProposalFundingState {
   NotRelevant = "notRelevant",
@@ -27,7 +23,7 @@ export enum ProposalVoteOutcome {
 
 export enum ProposalState {
   ACCEPTED = "Accepted",
-  COUNTDOWN = "Countdown",
+  COUNTDOWN = "countdown",
   FINALIZING = "Finalizing",
   REJECTED = "Rejected",
 }

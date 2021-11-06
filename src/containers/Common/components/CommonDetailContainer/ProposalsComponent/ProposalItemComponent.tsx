@@ -3,11 +3,7 @@ import React, { useState } from "react";
 import { ProposalCountDown } from "..";
 import { useCalculateReadMoreLength } from "../../../../../shared/hooks";
 import { Proposal } from "../../../../../shared/models";
-import {
-  formatPrice,
-  getUserName,
-  getDaysAgo,
-} from "../../../../../shared/utils";
+import { formatPrice, getUserName, getDaysAgo } from "../../../../../shared/utils";
 import { VotesComponent } from "../VotesComponent";
 
 interface ProposalItemComponentProps {

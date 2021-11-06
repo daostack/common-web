@@ -3,7 +3,7 @@ import { History } from "history";
 import { connectRouter } from "connected-react-router";
 
 import { AuthReducer } from "../containers/Auth/store/reducer";
-import { AppState } from "../shared/interfaces/State";
+import { AppState } from "../shared/interfaces";
 import { SharedReducer } from "../shared/store/reducer";
 import { commonsReducer } from "../containers/Common/store";
 

@@ -15,6 +15,7 @@
     "lodash": "^4.17.20",
     "millify": "^3.5.2",
     "moment": "^2.29.1",
+    "openpgp": "4.10.4",
     "node-sass": "^4.14.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -56,6 +57,7 @@
     ]
   },
   "devDependencies": {
+    "@types/openpgp": "4.4.12",
     "@types/enzyme": "^3.10.8",
     "@types/lodash": "^4.14.163",
     "@types/node": "^12.19.3",

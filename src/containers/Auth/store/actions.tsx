@@ -15,7 +15,7 @@ export const updateUserDetails = createAsyncAction(
   AuthActionTypes.UPDATE_USER_DATA,
   AuthActionTypes.UPDATE_USER_DATA_SUCCESS,
   AuthActionTypes.UPDATE_USER_DATA_FAILURE
-)<User, User, Error>();
+)<{ user: User; callback: () => void }, User, Error>();
 
 export const setIsUserNew = createStandardAction(
   AuthActionTypes.SET_IS_NEW_USER

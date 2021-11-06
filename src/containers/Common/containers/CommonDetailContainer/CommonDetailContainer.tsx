@@ -11,8 +11,9 @@ import { useParams } from "react-router-dom";
 import { Loader, Share } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
 import { useModal, useViewPortHook } from "../../../../shared/hooks";
-import { Discussion, Proposal } from "../../../../shared/models";
-import { getLoading, getScreenSize } from "../../../../shared/store/selectors";
+
+import { Discussion, Proposal, ProposalState } from "../../../../shared/models";
+import { getScreenSize, getLoading } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
 import {
   AboutTabComponent,
@@ -22,8 +23,8 @@ import {
   ProposalsComponent,
   ProposalsHistory,
   AboutSidebarComponent,
-  JoinTheEffortModal,
 } from "../../components/CommonDetailContainer";
+import { MembershipRequestModal } from "../../components/CommonDetailContainer/MembershipRequestModal";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
 import "./index.scss";
 import { Colors, ScreenSize } from "../../../../shared/constants";
@@ -47,6 +48,8 @@ import {
   loadProposalDetail,
   loadProposalList,
 } from "../../store/actions";
+import CheckIcon from "../../../../shared/icons/check.icon";
+import { selectUser } from "../../../Auth/store/selectors";
 
 interface CommonDetailRouterParams {
   id: string;
@@ -93,6 +96,17 @@ export default function CommonDetail() {
   const isProposalsLoaded = useSelector(selectIsProposalLoaded());
   const currentProposal = useSelector(selectCurrentProposal());
   const screenSize = useSelector(getScreenSize());
+  const user = useSelector(selectUser());
+
+  const commonMemberData = common?.members.filter(
+    (member: any) => member.user.id === user?.id
+  );
+  const isCommonMember = commonMemberData && commonMemberData?.length > 0;
+
+  // TODO: need to fix the condition - it shows "pending" for commons that a user is not a member of and not requested to be a member
+  const isPending = proposals
+    ?.filter((p) => p.state === ProposalState.COUNTDOWN)
+    .filter((p) => p.user?.uid === user?.uid);
 
   const dispatch = useDispatch();
 
@@ -306,6 +320,7 @@ export default function CommonDetail() {
           <DiscussionDetailModal
             disscussion={currentDisscussion}
             onOpenJoinModal={openJoinModal}
+            isCommonMember={isCommonMember}
           />
         )}
         {screenSize === ScreenSize.Desktop &&
@@ -313,6 +328,7 @@ export default function CommonDetail() {
             <ProposalDetailModal
               proposal={currentProposal}
               onOpenJoinModal={openJoinModal}
+              isCommonMember={!!isCommonMember}
             />
           )}
         {screenSize === ScreenSize.Mobile && (
@@ -329,10 +345,10 @@ export default function CommonDetail() {
       <Modal
         isShowing={showJoinModal}
         onClose={closeJoinModal}
-        closeColor={Colors.white}
-        className="join-effort"
+        className="mobile-full-screen"
+        mobileFullScreen
       >
-        <JoinTheEffortModal />
+        <MembershipRequestModal common={common} closeModal={closeJoinModal} />
       </Modal>
       <div className="common-detail-wrapper">
         <div className="main-information-block">
@@ -397,12 +413,29 @@ export default function CommonDetail() {
                   ))}
                 </div>
                 <div className="social-wrapper" ref={joinEffort}>
-                  <button
-                    className={`button-blue join-the-effort-btn`}
-                    onClick={onOpenJoinModal}
-                  >
-                    Join the effort
-                  </button>
+                  {!isCommonMember && !isPending && (
+                    <button
+                      className={`button-blue join-the-effort-btn`}
+                      onClick={onOpenJoinModal}
+                    >
+                      Join the effort
+                    </button>
+                  )}
+                  {isCommonMember && screenSize === ScreenSize.Desktop && (
+                    <div className="member-label">
+                      <CheckIcon />
+                      &nbsp;You are a member
+                    </div>
+                  )}
+
+                  {!isCommonMember &&
+                    isPending &&
+                    screenSize === ScreenSize.Desktop && (
+                      <div className="member-label">
+                        <CheckIcon />
+                        &nbsp;Pending
+                      </div>
+                    )}
                   {screenSize === ScreenSize.Desktop && (
                     <Share type="popup" color={Colors.lightPurple} />
                   )}
@@ -427,11 +460,13 @@ export default function CommonDetail() {
                     common={common}
                     screenSize={screenSize}
                     onOpenJoinModal={onOpenJoinModal}
+                    isCommonMember={isCommonMember}
                   />
                 </>
               )}
               {tab === "discussions" && (
                 <DiscussionsComponent
+                  common={common}
                   discussions={discussions || []}
                   loadDisscussionDetail={getDisscussionDetail}
                 />
@@ -439,6 +474,7 @@ export default function CommonDetail() {
 
               {tab === "proposals" && (
                 <ProposalsComponent
+                  common={common}
                   currentTab={tab}
                   proposals={activeProposals}
                   loadProposalDetail={getProposalDetail}
@@ -447,20 +483,23 @@ export default function CommonDetail() {
 
               {tab === "history" && (
                 <ProposalsComponent
+                  common={common}
                   currentTab={tab}
                   proposals={historyProposals}
                   loadProposalDetail={getProposalDetail}
                 />
               )}
             </div>
-            {screenSize === ScreenSize.Mobile && !inViewport && (
-              <button
-                className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
-                onClick={onOpenJoinModal}
-              >
-                Join the effort
-              </button>
-            )}
+            {screenSize === ScreenSize.Mobile &&
+              !isCommonMember &&
+              !inViewport && (
+                <button
+                  className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
+                  onClick={onOpenJoinModal}
+                >
+                  Join the effort
+                </button>
+              )}
             {(screenSize === ScreenSize.Desktop || tab !== "about") && (
               <div className="sidebar-wrapper">{renderSidebarContent()}</div>
             )}
