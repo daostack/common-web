@@ -3,7 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Link, useLocation, useHistory } from "react-router-dom";
 import classNames from "classnames";
 
-import { Colors, CONTACT_EMAIL, ROUTE_PATHS, ScreenSize } from "../../constants";
+import {
+  Colors,
+  CONTACT_EMAIL,
+  ROUTE_PATHS,
+  ScreenSize,
+} from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
 import { getScreenSize } from "../../store/selectors";
@@ -12,7 +17,11 @@ import MobileLinks from "../MobileLinks/MobileLinks";
 import "./index.scss";
 import { Account } from "../Account";
 import { useModal } from "../../hooks";
-import { authentificated, selectIsNewUser, selectUser } from "../../../containers/Auth/store/selectors";
+import {
+  authentificated,
+  selectIsNewUser,
+  selectUser,
+} from "../../../containers/Auth/store/selectors";
 import { isMobile } from "../../utils";
 import { Modal } from "../Modal";
 import { LoginContainer } from "../../../containers/Login/containers/LoginContainer";
@@ -108,8 +117,15 @@ const Header = () => {
         </>
       ) : (
         <>
-          <div className="humburger-menu" onClick={() => setShowMenu(!showMenu)}>
-            {showMenu ? <CloseIcon width="24" height="24" /> : <HamburgerIcon />}
+          <div
+            className="humburger-menu"
+            onClick={() => setShowMenu(!showMenu)}
+          >
+            {showMenu ? (
+              <CloseIcon width="24" height="24" />
+            ) : (
+              <HamburgerIcon />
+            )}
           </div>
           {showMenu && (
             <div className="menu-wrapper">
@@ -124,7 +140,12 @@ const Header = () => {
           )}
         </>
       )}
-      <Modal isShowing={isShowing} onClose={onClose} className="mobile-full-screen" mobileFullScreen>
+      <Modal
+        isShowing={isShowing}
+        onClose={onClose}
+        className="mobile-full-screen"
+        mobileFullScreen
+      >
         <LoginContainer closeModal={onClose} />
       </Modal>
     </section>

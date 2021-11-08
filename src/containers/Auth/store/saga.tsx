@@ -9,7 +9,7 @@ import { startLoading, stopLoading } from "../../../shared/store/actions";
 import { User } from "../../../shared/models";
 import { GoogleAuthResultInterface } from "../interface";
 
-import { ROUTE_PATHS, GRAPH_QL_URL } from "../../../shared/constants";
+import { ROUTE_PATHS } from "../../../shared/constants";
 import history from "../../../shared/history";
 
 export const uploadImage = async (imageUri: any) => {
@@ -23,42 +23,6 @@ export const uploadImage = async (imageUri: any) => {
     contentType: `image/${ext}`,
   });
   return await ref.getDownloadURL();
-};
-
-const createUser = async (profile: any) => {
-  const userPhotoUrl =
-    profile?.picture ||
-    `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${profile?.email}&rounded=true`;
-
-  try {
-    // const { data } = await apollo.mutate({
-    //   mutation: CreateUserDocument,
-    //   variables: {
-    //     user: {
-    //       firstName: profile.given_name,
-    //       lastName: profile.family_name,
-    //       email: profile.email,
-    //       photo: userPhotoUrl,
-    //       country: "Unknown",
-    //     },
-    //   },
-    // });
-    //
-    // return data?.user;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("createUser - Error -> ", error);
-  }
-};
-
-const fetchCurrentUser = async () => {
-  const token = localStorage.getItem("token");
-  const updatedApollo = createApolloClient(GRAPH_QL_URL, token || "");
-  // const { data } = await updatedApollo.query({
-  //   query: LoadUserContextDocument,
-  // });
-
-  return {};
 };
 
 const authorizeUser = async (payload: string) => {
@@ -83,8 +47,12 @@ const authorizeUser = async (payload: string) => {
           const credentials = result.credential?.toJSON() as GoogleAuthResultInterface;
           const user = result.user?.toJSON() as User;
           const currentUser = (await firebase.auth().currentUser) as any;
+
           let loginedUser: any;
-          if (credentials && user && !result.additionalUserInfo?.isNewUser) {
+          if (result.additionalUserInfo?.isNewUser) {
+            store.dispatch(actions.setIsUserNew(true));
+          }
+          if (credentials && user) {
             const tk = await currentUser?.getIdToken(true);
             if (tk) {
               tokenHandler.set(tk);
@@ -96,9 +64,7 @@ const authorizeUser = async (payload: string) => {
               }
             }
           }
-          if (result.additionalUserInfo?.isNewUser) {
-            store.dispatch(actions.setIsUserNew(true));
-          }
+
           return loginedUser;
         });
     })
@@ -113,19 +79,6 @@ const updateUserData = async (user: any) => {
   });
 
   const updatedCurrentUser = await firebase.auth().currentUser;
-
-  // const { data } = await apollo.mutate({
-  //   mutation: UpdateUserDocument,
-  //   variables: {
-  //     user: {
-  //       id: updatedCurrentUser?.uid,
-  //       firstName: user.firstName,
-  //       lastName: user.lastName,
-  //       photo: updatedCurrentUser?.photoURL,
-  //       country: user.country || "",
-  //     },
-  //   },
-  // });
 
   return updatedCurrentUser;
 };
@@ -196,14 +149,14 @@ function* authSagas() {
   firebase.auth().onAuthStateChanged(async (res) => {
     try {
       if (tokenHandler.get()) {
-        // const currentUser = await fetchCurrentUser();
-        // if (currentUser) {
-        //   store.dispatch(actions.updateUserDetails.success(res?.toJSON()));
-        //   tokenHandler.setUser(res?.toJSON());
-        // }
+        const currentUser: User | undefined = res?.toJSON() as any;
+        if (currentUser) {
+          store.dispatch(actions.updateUserDetails.success(currentUser));
+          tokenHandler.setUser(currentUser);
+        }
       }
     } catch (e) {
-      // logOut().next();
+      logOut().next();
     }
   });
 })();
