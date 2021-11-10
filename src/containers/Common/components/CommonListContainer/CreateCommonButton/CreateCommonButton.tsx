@@ -12,8 +12,8 @@ export default function CreateCommonButton() {
   return (
     <button className="create-common-button button-blue" aria-label={isMobileView ? BUTTON_TEXT : undefined}>
       <CloseIcon
-        width={22}
-        height={22}
+        width={24}
+        height={24}
         fill="currentColor"
       />
       <span className="create-common-button-text">
