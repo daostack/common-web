@@ -5,6 +5,11 @@
   align-items: center;
   justify-content: center;
 
+  .create-common-button-icon {
+    width: 24px;
+    height: 24px;
+  }
+
   .create-common-button-text {
     margin-left: 8px;
   }
@@ -13,14 +18,21 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .create-common-button {
     position: fixed;
-    right: 20px;
-    bottom: 20px;
+    right: 24px;
+    bottom: 24px;
+    z-index: 2;
+    box-shadow: 0 0 6px 0 $fixed-button-shadow;
 
     &.button-blue {
-      width: 50px;
-      height: 50px;
+      width: 64px;
+      height: 64px;
       min-width: unset;
       border-radius: 50%;
+    }
+
+    .create-common-button-icon {
+      width: 32px;
+      height: 32px;
     }
 
     .create-common-button-text {

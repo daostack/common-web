@@ -1,7 +1,7 @@
 import React from "react";
 
 import { isMobile } from "../../../../../shared/utils";
-import CloseIcon from "../../../../../shared/icons/close.icon";
+import AddIcon from "../../../../../shared/icons/add.icon";
 import "./index.scss";
 
 const BUTTON_TEXT = 'Create Common';
@@ -11,11 +11,7 @@ export default function CreateCommonButton() {
 
   return (
     <button className="create-common-button button-blue" aria-label={isMobileView ? BUTTON_TEXT : undefined}>
-      <CloseIcon
-        width={24}
-        height={24}
-        fill="currentColor"
-      />
+      <AddIcon className="create-common-button-icon" />
       <span className="create-common-button-text">
         {BUTTON_TEXT}
       </span>
