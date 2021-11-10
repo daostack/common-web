@@ -1,0 +1,30 @@
+@import "../../../../../constants.scss";
+
+.create-common-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .create-common-button-text {
+    margin-left: 8px;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .create-common-button {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+
+    &.button-blue {
+      width: 50px;
+      height: 50px;
+      min-width: unset;
+      border-radius: 50%;
+    }
+
+    .create-common-button-text {
+      display: none;
+    }
+  }
+}
