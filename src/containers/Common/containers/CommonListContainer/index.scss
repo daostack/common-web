@@ -3,6 +3,18 @@
 .common-list-wrapper {
   padding-top: 40px;
   padding-bottom: 44px;
+
+  .title-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 40px;
+
+    .page-title {
+      margin: 0;
+    }
+  }
+
   .common-list {
     display: grid;
     justify-items: center;
@@ -29,6 +41,11 @@
   .common-list-wrapper {
     padding-bottom: 0;
     padding-top: 20px;
+
+    .title-wrapper {
+      justify-content: center;
+    }
+
     .loader-container {
       margin-top: 35px;
       margin-bottom: 20px;

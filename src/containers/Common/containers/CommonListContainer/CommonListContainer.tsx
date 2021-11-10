@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Loader } from "../../../../shared/components";
 import DownloadCommonApp from "../../../../shared/components/DownloadCommonApp/DownloadCommonApp";
 import { isMobile } from "../../../../shared/utils";
-import { CommonListItem } from "../../components";
+import { CreateCommonButton, CommonListItem } from "../../components";
 import { COMMON_PAGE_SIZE } from "../../constants";
 
 import "./index.scss";
@@ -72,7 +72,10 @@ export default function CommonListContainer() {
       {isMobile() && !hasClosedPopup && (
         <DownloadCommonApp setHasClosedPopup={setHasClosedPopup} />
       )}
-      <h1 className="page-title">Explore commons</h1>
+      <div className="title-wrapper">
+        <h1 className="page-title">Explore Commons</h1>
+        <CreateCommonButton />
+      </div>
 
       <div className="common-list">
         {currentCommons.map((c) => (
