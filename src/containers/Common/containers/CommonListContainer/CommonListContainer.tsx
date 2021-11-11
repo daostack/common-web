@@ -76,7 +76,7 @@ export default function CommonListContainer() {
         <h1 className="page-title">Explore Commons</h1>
         <CreateCommonButton />
       </div>
-
+      {loading ? <Loader /> : null}
       <div className="common-list">
         {currentCommons.map((c) => (
           <CommonListItem common={c} key={c.id} />
