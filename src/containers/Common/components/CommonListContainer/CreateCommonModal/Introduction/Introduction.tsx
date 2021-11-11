@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperClass from 'swiper/types/swiper-class';
 
 import { isMobile } from "../../../../../shared/utils";
 import "./index.scss";
@@ -38,13 +39,22 @@ const SLIDES: SlideOptions[] = [
 ];
 
 export default function Introduction({ setTitle }: IntroductionProps) {
+  const [continueButtonText, setContinueButtonText] = useState('Continue');
+
   useEffect(() => {
     setTitle('Create a Common');
   }, []);
 
+  const handleSlideChange = useCallback((swiper: SwiperClass) => {
+    setContinueButtonText(swiper.isEnd ? 'Get started' : 'Continue');
+  }, []);
+
   return (
     <div className="create-common-introduction">
-      <Swiper pagination={{ clickable: true, bulletActiveClass: 'create-common-introduction__active-bullet' }}>
+      <Swiper
+        pagination={{ clickable: true, bulletActiveClass: 'create-common-introduction__active-bullet' }}
+        onSlideChange={handleSlideChange}
+      >
         {SLIDES.map((slide) => (
           <SwiperSlide key={slide.title}>
             <figure className="create-common-introduction__slide">
@@ -59,7 +69,9 @@ export default function Introduction({ setTitle }: IntroductionProps) {
           </SwiperSlide>
         ))}
       </Swiper>
-      <button className="button-blue create-common-introduction__button">Continue</button>
+      <button className="button-blue create-common-introduction__button">
+        {continueButtonText}
+      </button>
     </div>
   );
 }
