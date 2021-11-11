@@ -1,7 +1,7 @@
 @import "../../../../../../constants.scss";
 
 .create-common-introduction {
-  margin: 20px auto 0;
+  margin: 24px auto 0;
   text-align: center;
 
   .create-common-introduction__active-bullet {
@@ -10,11 +10,12 @@
   }
 
   .create-common-introduction__slide {
-    padding-bottom: 20px;
+    margin: 0;
+    padding-bottom: 36px;
   }
   .create-common-introduction__image {
-    width: 235px;
-    height: 235px;
+    width: 236px;
+    height: 236px;
   }
   .create-common-introduction__slide-title {
     margin: 24px 0 8px;
@@ -33,5 +34,29 @@
 
   .create-common-introduction__button {
     margin-top: 12px;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .create-common-introduction {
+    margin-top: 16px;
+
+    .create-common-introduction__slide {
+      padding-bottom: 60px;
+    }
+    .create-common-introduction__image {
+      width: 268px;
+      height: 268px;
+    }
+    .create-common-introduction__slide-title {
+      margin: 8px 0 16px;
+      font-size: 24px;
+      line-height: 1.62;
+    }
+    .create-common-introduction__slide-description {
+      max-width: unset;
+      font-size: 14px;
+      line-height: 1.42;
+    }
   }
 }

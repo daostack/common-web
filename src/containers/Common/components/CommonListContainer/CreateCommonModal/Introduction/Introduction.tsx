@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { Swiper, SwiperSlide } from "swiper/react";
-import SwiperClass from 'swiper/types/swiper-class';
+import SwiperClass from "swiper/types/swiper-class";
 
-import { isMobile } from "../../../../../shared/utils";
+import { getScreenSize } from "../../../../../../shared/store/selectors";
+import { ScreenSize } from "../../../../../../shared/constants";
 import "./index.scss";
 
 interface IntroductionProps {
@@ -18,41 +20,43 @@ interface SlideOptions {
 
 const SLIDES: SlideOptions[] = [
   {
-    imageSrc: '/assets/images/membership-request-introduce.svg',
-    title: 'Create a Common',
-    description: 'Collaborate on shared agendas by pooling funds and collectively making decisions.',
+    imageSrc: "/assets/images/membership-request-introduce.svg",
+    title: "Create a Common",
+    description: "Collaborate on shared agendas by pooling funds and collectively making decisions.",
   },
   {
-    imageSrc: '/assets/images/membership-request-funds.svg',
-    title: 'Invite members and pool funds',
-    description: 'Invite others to join your Common. Easily pool funds from all members and work together to advance your cause.',
+    imageSrc: "/assets/images/membership-request-funds.svg",
+    title: "Invite members and pool funds",
+    description: "Invite others to join your Common. Easily pool funds from all members and work together to advance your cause.",
   },
   {
-    imageSrc: '/assets/images/membership-request-vote.svg',
-    title: 'Work as a collective',
-    description: 'All members get an equal vote and can take part in the shared effort.',
+    imageSrc: "/assets/images/membership-request-vote.svg",
+    title: "Work as a collective",
+    description: "All members get an equal vote and can take part in the shared effort.",
   },
   {
-    imageSrc: '/assets/images/membership-request-membership.svg',
-    title: 'Harness the power of communities',
-    description: 'There‘s no limit to what we can achieve when working together. By getting everyone involved, more people will actively promote the cause.',
+    imageSrc: "/assets/images/membership-request-membership.svg",
+    title: "Harness the power of communities",
+    description: "There‘s no limit to what we can achieve when working together. By getting everyone involved, more people will actively promote the cause.",
   },
 ];
 
 export default function Introduction({ setTitle, onFinish }: IntroductionProps) {
-  const [continueButtonText, setContinueButtonText] = useState('Continue');
+  const [continueButtonText, setContinueButtonText] = useState("Continue");
   const swiperRef = useRef<SwiperClass>();
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   useEffect(() => {
-    setTitle('Create a Common');
-  }, []);
+    setTitle(isMobileView ? "New Common" : "Create a Common");
+  }, [isMobileView]);
 
   const handleSwiper = useCallback((swiper: SwiperClass) => {
     swiperRef.current = swiper;
   }, [swiperRef]);
 
   const handleSlideChange = useCallback((swiper: SwiperClass) => {
-    setContinueButtonText(swiper.isEnd ? 'Get started' : 'Continue');
+    setContinueButtonText(swiper.isEnd ? "Get started" : "Continue");
   }, []);
 
   const handleContinueClick = useCallback(() => {
@@ -70,7 +74,7 @@ export default function Introduction({ setTitle, onFinish }: IntroductionProps) 
   return (
     <div className="create-common-introduction">
       <Swiper
-        pagination={{ clickable: true, bulletActiveClass: 'create-common-introduction__active-bullet' }}
+        pagination={{ clickable: true, bulletActiveClass: "create-common-introduction__active-bullet" }}
         onSwiper={handleSwiper}
         onSlideChange={handleSlideChange}
       >

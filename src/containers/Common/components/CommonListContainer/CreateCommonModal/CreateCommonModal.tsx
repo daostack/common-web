@@ -1,8 +1,10 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import { useSelector } from "react-redux";
 import classNames from 'classnames';
 
-import { isMobile } from "../../../../../shared/utils";
 import { Modal } from "../../../../../shared/components";
+import { getScreenSize } from "../../../../../shared/store/selectors";
+import { ScreenSize } from "../../../../../shared/constants";
 import { Introduction } from "./Introduction";
 import "./index.scss";
 
@@ -19,6 +21,8 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   const [stage, setStage] = useState(CreateCommonStages.Introduction);
   const [title, setTitle] = useState('');
   const [isBigTitle, setIsBigTitle] = useState(true);
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   const setBigTitle = useCallback((title: string) => {
     setTitle(title);
@@ -36,22 +40,30 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   const content = useMemo(() => {
     switch (stage) {
       case CreateCommonStages.Introduction:
-        return <Introduction setTitle={setBigTitle} onFinish={handleIntroductionFinish} />;
+        return (
+          <Introduction
+            setTitle={isMobileView ? setSmallTitle : setBigTitle}
+            onFinish={handleIntroductionFinish}
+          />
+        );
       default:
         return null;
     }
-  }, [stage]);
+  }, [stage, isMobileView]);
 
   return (
     <Modal
       isShowing={props.isShowing}
       onClose={props.onClose}
-      className="create-common-modal"
+      className={classNames("create-common-modal", {
+        "mobile-full-screen": isMobileView,
+      })}
+      mobileFullScreen={isMobileView}
     >
       {title && (
         <h2
-          className={classNames('create-common-modal__title', {
-            'create-common-modal__title--small': !isBigTitle,
+          className={classNames("create-common-modal__title", {
+            "create-common-modal__title--small": !isBigTitle,
           })}
         >
           {title}
