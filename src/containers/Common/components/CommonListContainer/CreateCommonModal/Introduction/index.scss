@@ -1,1 +1,37 @@
 @import "../../../../../../constants.scss";
+
+.create-common-introduction {
+  margin: 20px auto 0;
+  text-align: center;
+
+  .create-common-introduction__active-bullet {
+    opacity: 1;
+    background-color: $purple;
+  }
+
+  .create-common-introduction__slide {
+    padding-bottom: 20px;
+  }
+  .create-common-introduction__image {
+    width: 235px;
+    height: 235px;
+  }
+  .create-common-introduction__slide-title {
+    margin: 24px 0 8px;
+    font-size: 20px;
+    font-family: NotoSerifSC-Bold, serif;
+    font-weight: bold;
+    line-height: 1.4;
+  }
+  .create-common-introduction__slide-description {
+    max-width: 378px;
+    margin: 0 auto;
+    font-size: 16px;
+    font-family: NunitoSans-Regular, sans-serif;
+    line-height: 1.5;
+  }
+
+  .create-common-introduction__button {
+    margin-top: 12px;
+  }
+}
