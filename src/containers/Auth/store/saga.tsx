@@ -2,7 +2,7 @@ import { call, put, takeLatest } from "redux-saga/effects";
 import { AnyAction } from "redux";
 
 import { default as store } from "../../../index";
-import { createApolloClient, tokenHandler } from "../../../shared/utils";
+import { tokenHandler } from "../../../shared/utils";
 import * as actions from "./actions";
 import firebase from "../../../shared/utils/firebase";
 import { startLoading, stopLoading } from "../../../shared/store/actions";

@@ -73,7 +73,7 @@ export default function CommonListContainer() {
         <DownloadCommonApp setHasClosedPopup={setHasClosedPopup} />
       )}
       <h1 className="page-title">Explore commons</h1>
-
+      {loading ? <Loader /> : null}
       <div className="common-list">
         {currentCommons.map((c) => (
           <CommonListItem common={c} key={c.id} />
