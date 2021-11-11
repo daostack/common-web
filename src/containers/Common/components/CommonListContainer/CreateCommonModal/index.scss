@@ -1,0 +1,15 @@
+@import "../../../../../constants.scss";
+
+.create-common-modal {
+  color: $secondary-blue;
+
+  .create-common-modal__title {
+    margin: 0;
+    text-align: center;
+  }
+  .create-common-modal__title--small {
+    font-size: 16px;
+    font-family: NunitoSans-Bold, sans-serif;
+    line-height: 1;
+  }
+}
