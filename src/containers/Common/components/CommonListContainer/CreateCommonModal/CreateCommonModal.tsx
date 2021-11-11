@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from "react-redux";
 import classNames from 'classnames';
 
@@ -50,6 +50,12 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
         return null;
     }
   }, [stage, isMobileView]);
+
+  useEffect(() => {
+    if (!props.isShowing) {
+      setStage(CreateCommonStages.Introduction);
+    }
+  }, [props.isShowing]);
 
   return (
     <Modal
