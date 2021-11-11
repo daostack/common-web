@@ -7,6 +7,7 @@ import "./index.scss";
 
 interface IntroductionProps {
   setTitle: (title: string) => void;
+  onFinish: () => void;
 }
 
 interface SlideOptions {
@@ -38,7 +39,7 @@ const SLIDES: SlideOptions[] = [
   },
 ];
 
-export default function Introduction({ setTitle }: IntroductionProps) {
+export default function Introduction({ setTitle, onFinish }: IntroductionProps) {
   const [continueButtonText, setContinueButtonText] = useState('Continue');
   const swiperRef = useRef<SwiperClass>();
 
@@ -55,10 +56,16 @@ export default function Introduction({ setTitle }: IntroductionProps) {
   }, []);
 
   const handleContinueClick = useCallback(() => {
-    if (swiperRef.current && !swiperRef.current.isEnd) {
+    if (!swiperRef.current) {
+      return;
+    }
+
+    if (swiperRef.current.isEnd) {
+      onFinish();
+    } else {
       swiperRef.current.slideNext();
     }
-  }, [swiperRef]);
+  }, [swiperRef, onFinish]);
 
   return (
     <div className="create-common-introduction">

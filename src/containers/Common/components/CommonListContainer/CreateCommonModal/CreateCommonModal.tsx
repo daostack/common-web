@@ -29,10 +29,14 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     setIsBigTitle(false);
   }, []);
 
+  const handleIntroductionFinish = useCallback(() => {
+    setStage(stage => stage + 1);
+  }, []);
+
   const content = useMemo(() => {
     switch (stage) {
       case CreateCommonStages.Introduction:
-        return <Introduction setTitle={setBigTitle} />;
+        return <Introduction setTitle={setBigTitle} onFinish={handleIntroductionFinish} />;
       default:
         return null;
     }
