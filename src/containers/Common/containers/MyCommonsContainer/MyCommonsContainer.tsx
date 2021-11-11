@@ -3,58 +3,59 @@ import { Link } from "react-router-dom";
 
 import { Loader } from "../../../../shared/components";
 import DownloadCommonApp from "../../../../shared/components/DownloadCommonApp/DownloadCommonApp";
-import { GRAPH_QL_URL, ROUTE_PATHS } from "../../../../shared/constants";
-import { createApolloClient, isMobile } from "../../../../shared/utils";
+import { ROUTE_PATHS } from "../../../../shared/constants";
+import { isMobile } from "../../../../shared/utils";
 import { CommonListItem } from "../../components";
 import "./index.scss";
 import { Common } from "../../../../shared/models";
+import { getCommonsList, loadUserProposalList } from "../../store/actions";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectCommonList,
+  selectUserProposalList,
+} from "../../store/selectors";
+import { selectUser } from "../../../Auth/store/selectors";
+import { getLoading } from "../../../../shared/store/selectors";
 
 export default function MyCommonsContainer() {
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser());
+  const commons = useSelector(selectCommonList());
+  const myProposals = useSelector(selectUserProposalList());
+  const loading = useSelector(getLoading());
   const [pendingCommons, setPendingCommons] = useState<Common[]>([]);
-  const [commons, setCommons] = useState<Common[]>([]);
-  const [loading, setLoading] = useState(true);
-  const apollo = createApolloClient(
-    GRAPH_QL_URL || "",
-    localStorage.token || ""
-  );
+  const [myCommons, setMyCommons] = useState<Common[]>([]);
+
   const [hasClosedPopup, setHasClosedPopup] = useState(
     sessionStorage.getItem("hasClosedPopup")
   );
 
-  // useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       const { data } = await apollo.query({
-  //         query: GetUserCommonsDocument,
-  //       });
-  //       setLoading(false);
-  //       const commons = data.user?.commons.map((item: Common) => item) ?? [];
-  //       setCommons(commons);
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   })();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+  useEffect(() => {
+    if (commons.length === 0) {
+      dispatch(getCommonsList.request());
+    }
+  }, [dispatch, commons]);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       const { data } = await apollo.query({
-  //         query: GetUserPendingCommonsDocument,
-  //       });
-  //
-  //       const pendingCommons =
-  //         data.user?.proposals?.map(
-  //           ({ common }: { common: Common }) => common
-  //         ) ?? [];
-  //       setPendingCommons(pendingCommons);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   })();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+  useEffect(() => {
+    if (myProposals.length === 0 && user?.uid) {
+      dispatch(loadUserProposalList.request(user?.uid));
+    }
+  }, [dispatch, myProposals, user]);
+
+  useEffect(() => {
+    const myCommons = commons.filter((c) =>
+      c.members.some((m) => m.userId === user?.uid)
+    );
+    setMyCommons(myCommons);
+  }, [commons, user]);
+
+  useEffect(() => {
+    const ids = myProposals
+      .filter((p) => p.state === "countdown")
+      .map((p) => p.commonId);
+    const pC = commons.filter((c) => ids.includes(c.id));
+    setPendingCommons(pC);
+  }, [myProposals, commons]);
 
   return (
     <div className="content-element my-commons-wrapper">
@@ -67,9 +68,9 @@ export default function MyCommonsContainer() {
           Browse all Commons
         </Link>
       </div>
-
+      {loading ? <Loader /> : null}
       <div className="common-list">
-        {commons.map((c) => (
+        {myCommons.map((c) => (
           <CommonListItem common={c} key={c.id} />
         ))}
       </div>
@@ -85,11 +86,9 @@ export default function MyCommonsContainer() {
         </div>
       ) : null}
 
-      {commons.length === 0 && !loading && (
+      {myCommons.length === 0 && !loading && (
         <div className="no-commons-label">No Commons Yet</div>
       )}
-
-      <div className="loader-container">{loading ? <Loader /> : null}</div>
     </div>
   );
 }

@@ -7,7 +7,6 @@ import {
 } from "../../constants";
 import { useOutsideClick } from "../../hooks";
 
-import { User } from "../../models";
 import { getMobileOperatingSystem } from "../../utils";
 
 import "./index.scss";

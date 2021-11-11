@@ -15,6 +15,7 @@ import {
   fetchCommonProposals,
   fetchOwners,
   fetchDiscussionsMessages,
+  fetchUserProposals,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -71,8 +72,6 @@ export function* loadCommonDiscussionList(
     const dMessages = (yield fetchDiscussionsMessages(
       discussions_ids
     )) as DiscussionMessage[];
-
-    console.log(owners);
 
     const loadedDiscussions = discussions.map((d) => {
       d.discussionMessage = dMessages.filter((dM) => dM.discussionId === d.id);
@@ -177,6 +176,21 @@ export function* loadProposalDetail(
   }
 }
 
+export function* loadUserProposalList(
+  action: ReturnType<typeof actions.loadUserProposalList.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    const proposals = yield fetchUserProposals(action.payload);
+
+    yield put(actions.loadUserProposalList.success(proposals as Proposal[]));
+    yield put(stopLoading());
+  } catch (e) {
+    yield put(actions.loadUserProposalList.failure(e));
+    yield put(stopLoading());
+  }
+}
+
 function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
@@ -187,6 +201,7 @@ function* commonsSaga() {
   yield takeLatest(actions.loadDisscussionDetail.request, loadDiscussionDetail);
   yield takeLatest(actions.loadProposalList.request, loadProposalList);
   yield takeLatest(actions.loadProposalDetail.request, loadProposalDetail);
+  yield takeLatest(actions.loadUserProposalList.request, loadUserProposalList);
 }
 
 export default commonsSaga;

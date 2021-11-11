@@ -10,4 +10,5 @@ export interface CommonsStateType {
   isProposalsLoaded: boolean;
   currentDiscussion: Discussion | null;
   currentProposal: Proposal | null;
+  userProposals: Proposal[];
 }

@@ -1,22 +1,55 @@
-import { Common, Discussion, DiscussionMessage, Proposal, User } from "../../../shared/models";
-import { transformFirebaseDataList, transformFirebaseDataSingle } from "../../../shared/utils";
+import {
+  Common,
+  Discussion,
+  DiscussionMessage,
+  Proposal,
+  User,
+} from "../../../shared/models";
+import {
+  transformFirebaseDataList,
+  transformFirebaseDataSingle,
+} from "../../../shared/utils";
 import firebase from "../../../shared/utils/firebase";
 
 export async function fetchCommonDiscussions(commonId: string) {
-  const commons = await firebase.firestore().collection("discussion").where("commonId", "==", commonId).get();
+  const commons = await firebase
+    .firestore()
+    .collection("discussion")
+    .where("commonId", "==", commonId)
+    .get();
   const data = transformFirebaseDataList<Discussion>(commons);
 
   return data.sort(
-    (proposal: Discussion, prevProposal: Discussion) => prevProposal.createTime?.seconds - proposal.createTime?.seconds,
+    (proposal: Discussion, prevProposal: Discussion) =>
+      prevProposal.createTime?.seconds - proposal.createTime?.seconds
   );
 }
 
 export async function fetchCommonProposals(commonId: string) {
-  const commons = await firebase.firestore().collection("proposals").where("commonId", "==", commonId).get();
+  const commons = await firebase
+    .firestore()
+    .collection("proposals")
+    .where("commonId", "==", commonId)
+    .get();
   const data = transformFirebaseDataList<Proposal>(commons);
 
   return data.sort(
-    (proposal: Proposal, prevProposal: Proposal) => prevProposal.createdAt?.seconds - proposal.createdAt?.seconds,
+    (proposal: Proposal, prevProposal: Proposal) =>
+      prevProposal.createdAt?.seconds - proposal.createdAt?.seconds
+  );
+}
+
+export async function fetchUserProposals(userId: string) {
+  const commons = await firebase
+    .firestore()
+    .collection("proposals")
+    .where("proposerId", "==", userId)
+    .get();
+  const data = transformFirebaseDataList<Proposal>(commons);
+
+  return data.sort(
+    (proposal: Proposal, prevProposal: Proposal) =>
+      prevProposal.createdAt?.seconds - proposal.createdAt?.seconds
   );
 }
 
@@ -46,7 +79,9 @@ export async function fetchOwners(ownerids: string[]) {
   }, []);
 
   const users = await Promise.all(
-    idsChunks.map((ids: string[]) => firebase.firestore().collection("users").where("uid", "in", ids).get()),
+    idsChunks.map((ids: string[]) =>
+      firebase.firestore().collection("users").where("uid", "in", ids).get()
+    )
   );
 
   const data = (users as unknown[])
@@ -74,8 +109,12 @@ export async function fetchDiscussionsMessages(dIds: string[]) {
 
   const discussions = await Promise.all(
     idsChunks.map((ids: string[]) =>
-      firebase.firestore().collection("discussionMessage").where("discussionId", "in", ids).get(),
-    ),
+      firebase
+        .firestore()
+        .collection("discussionMessage")
+        .where("discussionId", "in", ids)
+        .get()
+    )
   );
   const data = (discussions as unknown[])
     .map((d: any) => transformFirebaseDataList<DiscussionMessage>(d))
@@ -83,7 +122,10 @@ export async function fetchDiscussionsMessages(dIds: string[]) {
       resultArray.push(...item);
       return resultArray;
     }, [])
-    .sort((m: DiscussionMessage, mP: DiscussionMessage) => m.createTime?.seconds - mP.createTime?.seconds);
+    .sort(
+      (m: DiscussionMessage, mP: DiscussionMessage) =>
+        m.createTime?.seconds - mP.createTime?.seconds
+    );
 
   return data;
 }
