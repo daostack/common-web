@@ -42,10 +42,10 @@ const SLIDES: SlideOptions[] = [
 ];
 
 export default function Introduction({ setTitle, onFinish }: IntroductionProps) {
-  const [continueButtonText, setContinueButtonText] = useState("Continue");
   const swiperRef = useRef<SwiperClass>();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const [continueButtonText, setContinueButtonText] = useState(isMobileView ? "Get started" : "Continue");
 
   useEffect(() => {
     setTitle(isMobileView ? "New Common" : "Create a Common");
@@ -56,10 +56,17 @@ export default function Introduction({ setTitle, onFinish }: IntroductionProps) 
   }, [swiperRef]);
 
   const handleSlideChange = useCallback((swiper: SwiperClass) => {
-    setContinueButtonText(swiper.isEnd ? "Get started" : "Continue");
-  }, []);
+    if (!isMobileView) {
+      setContinueButtonText(swiper.isEnd ? "Get started" : "Continue");
+    }
+  }, [isMobileView]);
 
   const handleContinueClick = useCallback(() => {
+    if (isMobileView) {
+      onFinish();
+      return;
+    }
+
     if (!swiperRef.current) {
       return;
     }
@@ -69,7 +76,7 @@ export default function Introduction({ setTitle, onFinish }: IntroductionProps) 
     } else {
       swiperRef.current.slideNext();
     }
-  }, [swiperRef, onFinish]);
+  }, [swiperRef, onFinish, isMobileView]);
 
   return (
     <div className="create-common-introduction">
