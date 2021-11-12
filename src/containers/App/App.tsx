@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
@@ -12,10 +12,27 @@ import { MyCommonsContainer } from "../Common/containers/MyCommonsContainer";
 
 const App = () => {
   const dispatch = useDispatch();
-  const screenSize = window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`);
-  screenSize.addEventListener("change", (screenSize) => {
-    dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile));
-  });
+
+  useEffect(() => {
+    const screenSize = window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`);
+    const handleScreenSizeChange = (screenSize: MediaQueryListEvent) => {
+      dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile));
+    };
+
+    if (screenSize.addEventListener) {
+      screenSize.addEventListener("change", handleScreenSizeChange);
+    } else {
+      screenSize.addListener(handleScreenSizeChange);
+    }
+
+    return () => {
+      if (screenSize.removeEventListener) {
+        screenSize.removeEventListener("change", handleScreenSizeChange);
+      } else {
+        screenSize.removeListener(handleScreenSizeChange);
+      }
+    };
+  }, [dispatch]);
 
   return (
     <div className="App">
