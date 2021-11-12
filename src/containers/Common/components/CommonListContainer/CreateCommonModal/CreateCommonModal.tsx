@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import classNames from 'classnames';
+import classNames from "classnames";
 
 import { Modal } from "../../../../../shared/components";
 import { getScreenSize } from "../../../../../shared/store/selectors";
