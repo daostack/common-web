@@ -49,7 +49,7 @@ export default function Introduction({ setTitle, onFinish }: IntroductionProps) 
 
   useEffect(() => {
     setTitle(isMobileView ? "New Common" : "Create a Common");
-  }, [isMobileView]);
+  }, [setTitle, isMobileView]);
 
   const handleSwiper = useCallback((swiper: SwiperClass) => {
     swiperRef.current = swiper;
