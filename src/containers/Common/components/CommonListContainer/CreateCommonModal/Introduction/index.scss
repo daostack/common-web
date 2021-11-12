@@ -32,14 +32,16 @@
     line-height: 1.5;
   }
 
-  .create-common-introduction__button {
+  .create-common-introduction__button-wrapper {
     margin-top: 12px;
   }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .create-common-introduction {
+    position: relative;
     margin-top: 16px;
+    padding-bottom: 28px;
 
     .create-common-introduction__slide {
       padding-bottom: 60px;
@@ -54,9 +56,19 @@
       line-height: 1.62;
     }
     .create-common-introduction__slide-description {
-      max-width: unset;
+      max-width: 400px;
       font-size: 14px;
       line-height: 1.42;
+    }
+
+    .create-common-introduction__button-wrapper {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      padding: 0 30px 24px;
+      background-color: $white;
+      z-index: 1;
     }
   }
 }

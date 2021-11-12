@@ -99,9 +99,11 @@ export default function Introduction({ setTitle, onFinish }: IntroductionProps) 
           </SwiperSlide>
         ))}
       </Swiper>
-      <button className="button-blue create-common-introduction__button" onClick={handleContinueClick}>
-        {continueButtonText}
-      </button>
+      <div className="create-common-introduction__button-wrapper">
+        <button className="button-blue" onClick={handleContinueClick}>
+          {continueButtonText}
+        </button>
+      </div>
     </div>
   );
 }
