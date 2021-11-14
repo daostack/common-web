@@ -19,6 +19,7 @@ const App = () => {
       dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile));
     };
 
+    // Condition is added to solve issue https://www.designcise.com/web/tutorial/how-to-fix-the-javascript-typeerror-matchmedia-addeventlistener-is-not-a-function
     if (screenSize.addEventListener) {
       screenSize.addEventListener("change", handleScreenSizeChange);
     } else {
