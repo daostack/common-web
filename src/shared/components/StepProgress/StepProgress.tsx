@@ -38,10 +38,11 @@ const getImageSource = (item: StepProgressItem, step: number, currentStep: numbe
 
 const StepProgress: FC<StepProgressProps> = ({ currentStep, items, styles }) => (
   <div className="step-progress">
-    {items.reduce<ReactNode[]>((acc, item, step) => {
+    {items.reduce<ReactNode[]>((acc, item, index) => {
       const result = [...acc];
+      const step = index + 1;
 
-      if (step !== 0) {
+      if (step !== 1) {
         result.push(
           <span
             key={`separator-${step}`}
