@@ -1,0 +1,47 @@
+@import "../constants.scss";
+
+/**
+ * .container {
+ *   background-color: green;
+ *
+ *   @include big-phone {
+ *     background-color: blue;
+ *   }
+ *
+ *   @include phone-portrait {
+ *     background-color: red;
+ *   }
+ * }
+ *
+ * The order of mixins usage is important.
+ * We should use them descending (desktop -> laptop -> big-phone -> phone-portrait).
+ */
+@mixin phone-portrait {
+  @media only screen and (max-width: $mobile-portrait) {
+    @content;
+  }
+}
+
+@mixin big-phone {
+  @media only screen and (max-width: $mobile-breakpoint) {
+    @content;
+  }
+}
+
+@mixin laptop {
+  @media only screen and (max-width: $small-screen) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media only screen and (min-width: #{$small-screen + 1}) {
+    @content;
+  }
+}
+
+@mixin viewport-breakpoint($breakpoint) {
+  @media only screen and (max-width: $breakpoint) {
+    @content;
+  }
+}

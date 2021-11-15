@@ -1,4 +1,5 @@
-@import "../../../../../constants.scss";
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
 
 .create-common-button {
   display: flex;
@@ -13,10 +14,8 @@
   .create-common-button-text {
     margin-left: 8px;
   }
-}
 
-@media only screen and (max-width: $mobile-breakpoint) {
-  .create-common-button {
+  @include big-phone {
     position: fixed;
     right: 24px;
     bottom: 24px;
