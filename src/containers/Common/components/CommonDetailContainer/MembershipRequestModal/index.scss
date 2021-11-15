@@ -21,19 +21,9 @@
     margin: auto;
   }
   .membership-request-progress-bar {
-    display: flex;
-    justify-content: space-between;
+    width: 220px;
     margin: 1.5rem 0;
     align-self: center;
-    align-items: center;
-    .line {
-      width: 10px;
-      background-color: $purple;
-      height: 1px;
-      &.gray {
-        background-color: $light-gray-1;
-      }
-    }
   }
   .sub-title {
     font-weight: bold;
@@ -283,7 +273,7 @@
     .inputs-wrapper {
       flex-direction: column;
       margin-bottom: 1rem;
-      .inputs-group {  
+      .inputs-group {
         select,
         input {
           width: 100%;

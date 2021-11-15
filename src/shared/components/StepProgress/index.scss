@@ -1,0 +1,27 @@
+@import "../../../constants.scss";
+
+.step-progress {
+  display: flex;
+  align-items: center;
+
+  .step-progress__separator {
+    width: 100%;
+    height: 1px;
+    background-color: $light-gray-1;
+  }
+  .step-progress__separator--active {
+    background-color: $purple;
+  }
+  .step-progress__separator--short {
+    width: 80%;
+  }
+
+  .step-progress__image {
+    width: 32px;
+    height: 32px;
+  }
+  .step-progress__image--active {
+    width: 48px;
+    height: 48px;
+  }
+}
