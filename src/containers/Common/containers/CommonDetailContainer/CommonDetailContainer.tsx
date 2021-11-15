@@ -12,7 +12,7 @@ import { Loader, Share } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
 import { useModal, useViewPortHook } from "../../../../shared/hooks";
 
-import { Discussion, Proposal, ProposalState } from "../../../../shared/models";
+import { Discussion, Member, Proposal, ProposalState } from "../../../../shared/models";
 import { getScreenSize, getLoading } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
 import {
@@ -99,8 +99,9 @@ export default function CommonDetail() {
   const user = useSelector(selectUser());
 
   const commonMemberData = common?.members.filter(
-    (member: any) => member.user.id === user?.id
+    (member: Member) => member?.userId === user?.uid
   );
+
   const isCommonMember = commonMemberData && commonMemberData?.length > 0;
 
   // TODO: need to fix the condition - it shows "pending" for commons that a user is not a member of and not requested to be a member
