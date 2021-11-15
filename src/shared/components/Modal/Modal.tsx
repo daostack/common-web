@@ -43,7 +43,7 @@ const Modal: FC<ModalProps> = (props) => {
           <div className="modal-overlay" />
           <div className={modalWrapperClassName}>
             <div className={`modal box ${props.className}`} ref={wrapperRef}>
-              <div className="modal__header">
+              <header className="modal__header">
                 {onGoBack && (
                   <div className="modal__action-wrapper modal__back-wrapper" onClick={onGoBack}>
                     <LeftArrowIcon className="modal__back-action" />
@@ -57,7 +57,7 @@ const Modal: FC<ModalProps> = (props) => {
                     fill={closeColor ?? Colors.black}
                   />
                 </div>
-              </div>
+              </header>
               {children}
             </div>
           </div>
