@@ -14,7 +14,7 @@ interface Styles {
   };
 }
 
-interface StepProgressItem {
+export interface StepProgressItem {
   title: string;
   activeImageSource: string;
   inactiveImageSource: string;
