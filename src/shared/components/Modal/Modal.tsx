@@ -1,16 +1,15 @@
-import "./index.scss";
-
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, FC } from "react";
 import ReactDOM from "react-dom";
+import classNames from "classnames";
 
 import { useOutsideClick } from "../../hooks";
 import { ModalProps } from "../../interfaces";
 import CloseIcon from "../../icons/close.icon";
 import LeftArrowIcon from "../../icons/leftArrow.icon";
 import { Colors } from "../../constants";
-import classNames from "classnames";
+import "./index.scss";
 
-const Modal = (props: ModalProps) => {
+const Modal: FC<ModalProps> = (props) => {
   const wrapperRef = useRef(null);
   const { isShowing, onGoBack, onClose, children, closeColor, mobileFullScreen, title } = props;
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);

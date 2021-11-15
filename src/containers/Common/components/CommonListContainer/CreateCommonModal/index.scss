@@ -5,11 +5,9 @@
 
   .create-common-modal__title {
     margin: 0;
-    text-align: center;
-  }
-  .create-common-modal__title--small {
-    font-size: $small;
-    font-family: NunitoSans-Bold, sans-serif;
-    line-height: 1;
+    font-family: NotoSerifSC-Bold, serif;
+    font-size: $moderate-med;
+    font-weight: bold;
+    line-height: 1.32;
   }
 }
