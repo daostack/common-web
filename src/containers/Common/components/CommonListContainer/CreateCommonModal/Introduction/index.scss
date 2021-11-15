@@ -19,7 +19,7 @@
   }
   .create-common-introduction__slide-title {
     margin: 24px 0 8px;
-    font-size: 20px;
+    font-size: $moderate-small;
     font-family: NotoSerifSC-Bold, serif;
     font-weight: bold;
     line-height: 1.4;
@@ -27,7 +27,7 @@
   .create-common-introduction__slide-description {
     max-width: 378px;
     margin: 0 auto;
-    font-size: 16px;
+    font-size: $small;
     font-family: NunitoSans-Regular, sans-serif;
     line-height: 1.5;
   }
@@ -52,12 +52,12 @@
     }
     .create-common-introduction__slide-title {
       margin: 8px 0 16px;
-      font-size: 24px;
+      font-size: $moderate-med;
       line-height: 1.62;
     }
     .create-common-introduction__slide-description {
       max-width: 400px;
-      font-size: 14px;
+      font-size: $xsmall;
       line-height: 1.42;
     }
 
