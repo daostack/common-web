@@ -1,5 +1,7 @@
 @import "../../../constants.scss";
 
+$modal-action-size: 24px;
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -41,16 +43,25 @@
     max-width: $element-max-width;
   }
 
-  .close-wrapper {
-    position: absolute;
-    right: 24px;
-    top: 24px;
-    z-index: 1;
+  .modal__header {
+    position: relative;
+    min-height: $modal-action-size;
+    display: flex;
+    align-items: center;
+    padding: 0 $modal-action-size;
   }
 
-  .close-wrapper:hover {
-    opacity: 0.9;
-    cursor: pointer;
+  .modal__close-wrapper {
+    position: absolute;
+    right: 0;
+    width: $modal-action-size;
+    height: $modal-action-size;
+    margin: auto 0;
+
+    &:hover {
+      opacity: 0.9;
+      cursor: pointer;
+    }
   }
 
   &.box {
@@ -72,10 +83,6 @@
       margin-top: 0;
     }
 
-    .close-wrapper {
-      right: 15px;
-      top: 15px;
-    }
     &.mobile-full-screen {
       border-radius: unset;
       margin: unset;
