@@ -47,8 +47,18 @@ $modal-action-size: 32px;
     position: relative;
     min-height: $modal-action-size;
     display: flex;
+    justify-content: center;
     align-items: center;
     padding: 0 $modal-action-size;
+  }
+
+  .modal__title {
+    margin: 0;
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: $small;
+    font-weight: bold;
+    line-height: 1.38;
+    color: $secondary-blue;
   }
 
   .modal__action-wrapper {

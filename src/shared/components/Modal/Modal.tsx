@@ -12,7 +12,7 @@ import classNames from "classnames";
 
 const Modal = (props: ModalProps) => {
   const wrapperRef = useRef(null);
-  const { isShowing, onGoBack, onClose, children, closeColor, mobileFullScreen } = props;
+  const { isShowing, onGoBack, onClose, children, closeColor, mobileFullScreen, title } = props;
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
 
   useEffect(() => {
@@ -51,6 +51,7 @@ const Modal = (props: ModalProps) => {
                     <LeftArrowIcon className="modal__back-action" />
                   </div>
                 )}
+                {typeof title === 'string' ? <h3 className="modal__title">{title}</h3> : title}
                 <div className="modal__action-wrapper modal__close-wrapper" onClick={onClose}>
                   <CloseIcon
                     width="24"

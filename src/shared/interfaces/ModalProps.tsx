@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 
 import { Colors } from "../constants";
 
@@ -10,4 +10,5 @@ export interface ModalProps {
   closeColor?: Colors;
   className?: string;
   mobileFullScreen?: boolean;
+  title?: ReactNode;
 }
