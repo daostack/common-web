@@ -6,12 +6,13 @@ import ReactDOM from "react-dom";
 import { useOutsideClick } from "../../hooks";
 import { ModalProps } from "../../interfaces";
 import CloseIcon from "../../icons/close.icon";
+import LeftArrowIcon from "../../icons/leftArrow.icon";
 import { Colors } from "../../constants";
 import classNames from "classnames";
 
 const Modal = (props: ModalProps) => {
   const wrapperRef = useRef(null);
-  const { isShowing, onClose, children, closeColor, mobileFullScreen } = props;
+  const { isShowing, onGoBack, onClose, children, closeColor, mobileFullScreen } = props;
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
 
   useEffect(() => {
@@ -45,10 +46,15 @@ const Modal = (props: ModalProps) => {
           <div className={modalWrapperClassName}>
             <div className={`modal box ${props.className}`} ref={wrapperRef}>
               <div className="modal__header">
-                <div className="modal__close-wrapper" onClick={onClose}>
+                {onGoBack && (
+                  <div className="modal__action-wrapper modal__back-wrapper" onClick={onGoBack}>
+                    <LeftArrowIcon className="modal__back-action" />
+                  </div>
+                )}
+                <div className="modal__action-wrapper modal__close-wrapper" onClick={onClose}>
                   <CloseIcon
-                    width="100%"
-                    height="100%"
+                    width="24"
+                    height="24"
                     fill={closeColor ?? Colors.black}
                   />
                 </div>
