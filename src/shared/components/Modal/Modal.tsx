@@ -33,8 +33,7 @@ const Modal: FC<ModalProps> = (props) => {
     }
   }, [isShowing]);
 
-  const modalWrapperClassName = classNames({
-    "modal-wrapper": true,
+  const modalWrapperClassName = classNames("modal-wrapper", {
     "mobile-full-screen": mobileFullScreen,
   });
 
