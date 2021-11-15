@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Loader } from "../../../../shared/components";
 import DownloadCommonApp from "../../../../shared/components/DownloadCommonApp/DownloadCommonApp";
 import { isMobile } from "../../../../shared/utils";
-import { CreateCommonButton, CommonListItem } from "../../components";
+import { CreateCommonButton, CommonListItem, CreateCommonModal } from "../../components";
 import { COMMON_PAGE_SIZE } from "../../constants";
 
 import "./index.scss";
@@ -25,6 +25,7 @@ export default function CommonListContainer() {
   const loading = useSelector(getLoading());
   const dispatch = useDispatch();
   const [loaderHack, setLoaderHack] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const loader = useRef(null);
 
@@ -66,6 +67,13 @@ export default function CommonListContainer() {
     }, 500);
   };
 
+  const handleModalOpen = useCallback(() => {
+    setIsModalOpen(true);
+  }, []);
+  const handleModalClose = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
+
   // See https://github.com/daostack/common-monorepo/issues/691 - the field might change in the new DB
   return (
     <div className="content-element common-list-wrapper">
@@ -74,7 +82,7 @@ export default function CommonListContainer() {
       )}
       <div className="title-wrapper">
         <h1 className="page-title">Explore Commons</h1>
-        <CreateCommonButton />
+        <CreateCommonButton onClick={handleModalOpen} />
       </div>
       {loading ? <Loader /> : null}
       <div className="common-list">
@@ -94,6 +102,11 @@ export default function CommonListContainer() {
           ) : null}
         </div>
       )}
+
+      <CreateCommonModal
+        isShowing={isModalOpen}
+        onClose={handleModalClose}
+      />
     </div>
   );
 }
