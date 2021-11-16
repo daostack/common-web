@@ -115,7 +115,7 @@ const Modal: FC<ModalProps> = (props) => {
           <div className={modalWrapperClassName}>
             <div
               ref={wrapperRef}
-              className={`modal box ${props.className}`}
+              className={`modal ${props.className}`}
               style={modalStyles}
               onScroll={handleScroll}
             >

@@ -35,6 +35,7 @@ $modal-border-radius: 12px;
   max-width: 900px;
   max-height: 90vh;
   margin: 5vh auto;
+  padding: 30px;
   box-sizing: border-box;
   border-radius: $modal-border-radius;
   overflow-x: hidden;
@@ -105,10 +106,6 @@ $modal-border-radius: 12px;
   }
   .modal__footer--shadowed {
     box-shadow: 0 2px 9px 0 $fixed-modal-element-shadow;
-  }
-
-  &.box {
-    padding: 30px;
   }
 }
 
