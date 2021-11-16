@@ -33,10 +33,6 @@
     line-height: 1.5;
   }
 
-  .create-common-introduction__button-wrapper {
-    margin-top: 12px;
-  }
-
   @include big-phone {
     position: relative;
     margin-top: 16px;
@@ -59,16 +55,6 @@
       font-size: $xsmall;
       line-height: 1.42;
     }
-
-    .create-common-introduction__button-wrapper {
-      position: fixed;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      padding: 0 30px 24px;
-      background-color: $white;
-      z-index: 1;
-    }
   }
 
   @include viewport-breakpoint(328px) {
@@ -76,5 +62,21 @@
       width: 100%;
       height: auto;
     }
+  }
+}
+
+.create-common-introduction__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0 40px;
+
+  @include big-phone {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 0 30px 24px;
+    background-color: $white;
+    z-index: 1;
   }
 }

@@ -1,6 +1,8 @@
 @import "../../../constants.scss";
 
 $modal-action-size: 32px;
+$modal-background-color: $white;
+$modal-border-radius: 12px;
 
 .modal-overlay {
   position: fixed;
@@ -27,14 +29,14 @@ $modal-action-size: 32px;
 }
 
 .modal {
-  background: $white;
+  background-color: $modal-background-color;
   z-index: 100;
   position: relative;
   max-width: 900px;
   max-height: 90vh;
   margin: 5vh auto;
   box-sizing: border-box;
-  border-radius: 12px;
+  border-radius: $modal-border-radius;
   overflow-x: hidden;
   overflow-y: auto;
 
@@ -88,6 +90,21 @@ $modal-action-size: 32px;
 
   .modal__close-wrapper {
     right: 0;
+  }
+
+  .modal__footer {
+    background-color: $modal-background-color;
+    z-index: 1;
+  }
+  .modal__footer--fixed {
+    position: fixed;
+    right: 0;
+    left: 0;
+    border-bottom-left-radius: $modal-border-radius;
+    border-bottom-right-radius: $modal-border-radius;
+  }
+  .modal__footer--shadowed {
+    box-shadow: 0 2px 9px 0 $fixed-modal-element-shadow;
   }
 
   &.box {

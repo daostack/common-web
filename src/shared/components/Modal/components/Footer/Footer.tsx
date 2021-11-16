@@ -6,7 +6,7 @@ import { useComponentWillUnmount } from "../../../../../shared/hooks/useComponen
 type FooterProps = FooterOptions;
 
 const Footer: FC<FooterProps> = (props) => {
-  const { children, alwaysVisible, sticky } = props;
+  const { children, sticky } = props;
   const { setFooter, setFooterOptions } = useModalContext();
 
   const reset = useCallback(() => {
@@ -20,10 +20,9 @@ const Footer: FC<FooterProps> = (props) => {
 
   useEffect(() => {
     setFooterOptions({
-      alwaysVisible,
       sticky,
     });
-  }, [alwaysVisible, sticky]);
+  }, [sticky]);
 
   useComponentWillUnmount(reset);
 

@@ -5,6 +5,7 @@ import SwiperClass from "swiper/types/swiper-class";
 
 import { getScreenSize } from "../../../../../../shared/store/selectors";
 import { ScreenSize } from "../../../../../../shared/constants";
+import { ModalFooter } from "../../../../../../shared/components/Modal";
 import "./index.scss";
 
 interface IntroductionProps {
@@ -79,31 +80,35 @@ export default function Introduction({ setTitle, onFinish }: IntroductionProps) 
   }, [swiperRef, onFinish, isMobileView]);
 
   return (
-    <div className="create-common-introduction">
-      <Swiper
-        pagination={{ clickable: true, bulletActiveClass: "create-common-introduction__active-bullet" }}
-        onSwiper={handleSwiper}
-        onSlideChange={handleSlideChange}
-      >
-        {SLIDES.map((slide) => (
-          <SwiperSlide key={slide.title}>
-            <figure className="create-common-introduction__slide">
-              <img
-                className="create-common-introduction__image"
-                src={slide.imageSrc}
-                alt={slide.title}
-              />
-              <figcaption className="create-common-introduction__slide-title">{slide.title}</figcaption>
-              <figcaption className="create-common-introduction__slide-description">{slide.description}</figcaption>
-            </figure>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-      <div className="create-common-introduction__button-wrapper">
-        <button className="button-blue" onClick={handleContinueClick}>
-          {continueButtonText}
-        </button>
+    <>
+      <div className="create-common-introduction">
+        <Swiper
+          pagination={{ clickable: true, bulletActiveClass: "create-common-introduction__active-bullet" }}
+          onSwiper={handleSwiper}
+          onSlideChange={handleSlideChange}
+        >
+          {SLIDES.map((slide) => (
+            <SwiperSlide key={slide.title}>
+              <figure className="create-common-introduction__slide">
+                <img
+                  className="create-common-introduction__image"
+                  src={slide.imageSrc}
+                  alt={slide.title}
+                />
+                <figcaption className="create-common-introduction__slide-title">{slide.title}</figcaption>
+                <figcaption className="create-common-introduction__slide-description">{slide.description}</figcaption>
+              </figure>
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
-    </div>
+      <ModalFooter sticky>
+        <div className="create-common-introduction__modal-footer">
+          <button className="button-blue" onClick={handleContinueClick}>
+            {continueButtonText}
+          </button>
+        </div>
+      </ModalFooter>
+    </>
   );
 }

@@ -1,7 +1,6 @@
 import React, { useContext, ReactNode } from "react";
 
 export interface FooterOptions {
-  alwaysVisible?: boolean;
   sticky?: boolean;
 }
 
