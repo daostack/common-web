@@ -2,7 +2,7 @@
 @import "../../../../../../styles/sizes";
 
 .create-common-introduction {
-  margin: 24px auto 0;
+  margin: 0 auto;
   text-align: center;
 
   .create-common-introduction__active-bullet {
@@ -35,7 +35,6 @@
 
   @include big-phone {
     position: relative;
-    margin-top: 16px;
     padding-bottom: 28px;
 
     .create-common-introduction__slide {
@@ -71,12 +70,6 @@
   padding: 12px 0 40px;
 
   @include big-phone {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    padding: 0 30px 24px;
-    background-color: $white;
-    z-index: 1;
+    padding-bottom: 24px;
   }
 }

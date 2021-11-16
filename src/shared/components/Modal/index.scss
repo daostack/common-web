@@ -1,8 +1,10 @@
-@import "../../../constants.scss";
+@import "../../../constants";
+@import "../../../styles/sizes";
 
 $modal-action-size: 32px;
-$modal-background-color: $white;
 $modal-border-radius: 12px;
+$modal-padding: 30px;
+$modal-mobile-padding: 24px;
 
 .modal-overlay {
   position: fixed;
@@ -26,20 +28,26 @@ $modal-border-radius: 12px;
   outline: 0;
   box-sizing: border-box;
   backdrop-filter: blur(2px);
+
+  @include big-phone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .modal {
-  background-color: $modal-background-color;
+  display: flex;
+  flex-direction: column;
+  background-color: $white;
   z-index: 100;
   position: relative;
   max-width: 900px;
   max-height: 90vh;
   margin: 5vh auto;
-  padding: 30px;
   box-sizing: border-box;
   border-radius: $modal-border-radius;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
 
   &.discussions,
   &.proposals,
@@ -53,7 +61,33 @@ $modal-border-radius: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 $modal-action-size;
+    flex: 0 0;
+  }
+  .modal__header--default-padding {
+    padding-top: $modal-padding;
+  }
+  .modal__header--with-string-title {
+    padding-top: 28px;
+    padding-bottom: 20px;
+
+    @include big-phone {
+      padding-top: 20px;
+    }
+  }
+  .modal__header--fixed {
+    padding-left: #{$modal-padding + $modal-action-size};
+    padding-right: #{$modal-padding + $modal-action-size};
+
+    .modal__back-wrapper {
+      margin-left: $modal-padding;
+    }
+
+    .modal__close-wrapper {
+      margin-right: $modal-padding;
+    }
+  }
+  .modal__header--shadowed {
+    box-shadow: 0 2px 9px 0 $fixed-modal-element-shadow;
   }
 
   .modal__title {
@@ -93,40 +127,49 @@ $modal-border-radius: 12px;
     right: 0;
   }
 
+  .modal__content {
+    flex: 1;
+    padding: 0 $modal-padding;
+    overflow-y: auto;
+
+    @include big-phone {
+      padding-left: $modal-mobile-padding;
+      padding-right: $modal-mobile-padding;
+    }
+  }
+  .modal__content--without-footer {
+    padding-bottom: $modal-padding;
+
+    @include big-phone {
+      padding-bottom: $modal-mobile-padding;
+    }
+  }
+
   .modal__footer {
-    background-color: $modal-background-color;
-    z-index: 1;
+    flex: 0 0;
   }
   .modal__footer--fixed {
-    position: fixed;
-    right: 0;
-    left: 0;
-    border-bottom-left-radius: $modal-border-radius;
-    border-bottom-right-radius: $modal-border-radius;
+    padding-left: $modal-padding;
+    padding-right: $modal-padding;
+
+    @include big-phone {
+      padding-left: $modal-mobile-padding;
+      padding-right: $modal-mobile-padding;
+    }
   }
   .modal__footer--shadowed {
     box-shadow: 0 2px 9px 0 $fixed-modal-element-shadow;
   }
-}
 
-@media only screen and (max-width: $mobile-breakpoint) {
-  .modal-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .modal {
-    &.join-effort {
-      margin-top: 0;
-    }
-
+  @include big-phone {
     &.mobile-full-screen {
       border-radius: unset;
       margin: unset;
       top: unset;
       transform: unset;
       overflow: scroll;
+      max-width: 100vw;
+      width: 100vw;
       max-height: 100vh;
       height: 100%;
     }

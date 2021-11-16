@@ -5,10 +5,8 @@ import React, {
   useMemo,
   useRef,
   useState,
-  CSSProperties,
   FC,
   ReactNode,
-  RefObject,
 } from "react";
 import ReactDOM from "react-dom";
 import classNames from "classnames";
@@ -21,43 +19,16 @@ import { Colors } from "../../constants";
 import { ModalContext, FooterOptions, ModalContextValue } from "./context";
 import "./index.scss";
 
-const calculateModalStyles = (isSticky: boolean, footerRef: RefObject<HTMLDivElement>): CSSProperties | undefined => {
-  if (!footerRef.current || !isSticky) {
-    return;
-  }
-
-  return {
-    paddingBottom: footerRef.current.clientHeight,
-  };
-};
-
-const calculateFooterStyles = (
-  isSticky: boolean,
-  wrapperRef: RefObject<HTMLDivElement>,
-  footerRef: RefObject<HTMLDivElement>,
-): CSSProperties | undefined => {
-  if (!wrapperRef.current || !footerRef.current || !isSticky) {
-    return;
-  }
-
-  return {
-    top: wrapperRef.current.clientHeight + wrapperRef.current.offsetTop - footerRef.current.clientHeight,
-    left: wrapperRef.current.offsetLeft,
-    width: wrapperRef.current.clientWidth,
-  };
-};
-
 const Modal: FC<ModalProps> = (props) => {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const footerRef = useRef<HTMLDivElement>(null);
-  const { isShowing, onGoBack, onClose, children, closeColor, mobileFullScreen, title } = props;
+  const wrapperRef = useRef(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const { isShowing, onGoBack, onClose, children, closeColor, mobileFullScreen, title, isHeaderSticky = false } = props;
   const [footer, setFooter] = useState<ReactNode>(null);
   const [footerOptions, setFooterOptions] = useState<FooterOptions>({});
-  const [modalStyles, setModalStyles] = useState<CSSProperties | undefined>();
-  const [footerStyles, setFooterStyles] = useState<CSSProperties | undefined>();
+  const [isFullyScrolledToTop, setIsFullyScrolledToTop] = useState(true);
   const [isFullyScrolledToBottom, setIsFullyScrolledToBottom] = useState(false);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
-  const { sticky: isSticky = false } = footerOptions;
+  const { sticky: isFooterSticky = false } = footerOptions;
 
   useEffect(() => {
     if (isOutside) {
@@ -79,29 +50,58 @@ const Modal: FC<ModalProps> = (props) => {
   }, [isShowing]);
 
   const handleScroll = useCallback(() => {
-    if (!isSticky) {
-      setIsFullyScrolledToBottom(true);
-      return;
-    }
+    const { current } = contentRef;
 
-    const { current } = wrapperRef;
-
-    setIsFullyScrolledToBottom(Boolean(current && (current.clientHeight === current.scrollHeight - current.scrollTop)));
-  }, [isSticky]);
+    setIsFullyScrolledToTop(!isHeaderSticky || Boolean(current && current.scrollTop === 0));
+    setIsFullyScrolledToBottom((
+      !isFooterSticky
+      || Boolean(current && (current.clientHeight === current.scrollHeight - current.scrollTop))
+    ));
+  }, [isHeaderSticky, isFooterSticky]);
 
   const modalWrapperClassName = classNames("modal-wrapper", {
     "mobile-full-screen": mobileFullScreen,
   });
-  const footerClassName = classNames("modal__footer", {
-    "modal__footer--fixed": isSticky,
-    "modal__footer--shadowed": isSticky && !isFullyScrolledToBottom,
+  const headerClassName = classNames("modal__header", {
+    "modal__header--default-padding": !title,
+    "modal__header--with-string-title": title && typeof title === 'string',
+    "modal__header--fixed": isHeaderSticky,
+    "modal__header--shadowed": isHeaderSticky && !isFullyScrolledToTop,
   });
+  const modalContentClassName = classNames("modal__content", {
+    "modal__content--without-footer": !footer,
+  });
+  const footerClassName = classNames("modal__footer", {
+    "modal__footer--fixed": isFooterSticky,
+    "modal__footer--shadowed": isFooterSticky && !isFullyScrolledToBottom,
+  });
+
+  const headerEl = (
+    <header className={headerClassName}>
+      {onGoBack && (
+        <div className="modal__action-wrapper modal__back-wrapper" onClick={onGoBack}>
+          <LeftArrowIcon className="modal__back-action" />
+        </div>
+      )}
+      {typeof title === 'string' ? <h3 className="modal__title">{title}</h3> : title}
+      <div className="modal__action-wrapper modal__close-wrapper" onClick={onClose}>
+        <CloseIcon
+          width="24"
+          height="24"
+          fill={closeColor ?? Colors.black}
+        />
+      </div>
+    </header>
+  );
+  const footerEl = footer && (
+    <footer className={footerClassName}>
+      {footer}
+    </footer>
+  );
 
   useLayoutEffect(() => {
     handleScroll();
-    setModalStyles(calculateModalStyles(isSticky, footerRef));
-    setFooterStyles(calculateFooterStyles(isSticky, wrapperRef, footerRef));
-  }, [isSticky, footerRef.current, wrapperRef.current]);
+  }, [isHeaderSticky, isFooterSticky, contentRef.current]);
 
   const contextValue = useMemo<ModalContextValue>(() => ({
     setFooter,
@@ -113,39 +113,20 @@ const Modal: FC<ModalProps> = (props) => {
         <div id="modal">
           <div className="modal-overlay" />
           <div className={modalWrapperClassName}>
-            <div
-              ref={wrapperRef}
-              className={`modal ${props.className}`}
-              style={modalStyles}
-              onScroll={handleScroll}
-            >
-              <header className="modal__header">
-                {onGoBack && (
-                  <div className="modal__action-wrapper modal__back-wrapper" onClick={onGoBack}>
-                    <LeftArrowIcon className="modal__back-action" />
-                  </div>
-                )}
-                {typeof title === 'string' ? <h3 className="modal__title">{title}</h3> : title}
-                <div className="modal__action-wrapper modal__close-wrapper" onClick={onClose}>
-                  <CloseIcon
-                    width="24"
-                    height="24"
-                    fill={closeColor ?? Colors.black}
-                  />
-                </div>
-              </header>
+            <div ref={wrapperRef} className={`modal ${props.className}`}>
+              {isHeaderSticky && headerEl}
               <ModalContext.Provider value={contextValue}>
-                {children}
-              </ModalContext.Provider>
-              {footer && (
-                <footer
-                  ref={footerRef}
-                  className={footerClassName}
-                  style={footerStyles}
+                <div
+                  ref={contentRef}
+                  className={modalContentClassName}
+                  onScroll={handleScroll}
                 >
-                  {footer}
-                </footer>
-              )}
+                  {!isHeaderSticky && headerEl}
+                  {children}
+                  {!isFooterSticky && footerEl}
+                </div>
+              </ModalContext.Provider>
+              {isFooterSticky && footerEl}
             </div>
           </div>
         </div>,

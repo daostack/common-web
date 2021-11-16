@@ -1,10 +1,10 @@
 import { RefObject, useEffect, useState } from "react";
 
-function useOutsideClick<T extends Node>(ref: RefObject<T>) {
+function useOutsideClick<T extends { contains: (target: EventTarget | null) => boolean }>(ref: RefObject<T>) {
   const [isOutside, setOutside] = useState(false);
 
   const handleClickOutside = (event: MouseEvent) => {
-    setOutside(Boolean(ref.current) && !ref?.current?.contains(event.target as Node));
+    setOutside(Boolean(ref.current) && !ref?.current?.contains(event.target));
   };
 
   const setOusideValue = () => {

@@ -11,4 +11,5 @@ export interface ModalProps {
   className?: string;
   mobileFullScreen?: boolean;
   title?: ReactNode;
+  isHeaderSticky?: boolean;
 }
