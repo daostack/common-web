@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, FC } from "react";
+import React, { useEffect, useMemo, useRef, useState, FC, ReactNode } from "react";
 import ReactDOM from "react-dom";
 import classNames from "classnames";
 
@@ -7,11 +7,14 @@ import { ModalProps } from "../../interfaces";
 import CloseIcon from "../../icons/close.icon";
 import LeftArrowIcon from "../../icons/leftArrow.icon";
 import { Colors } from "../../constants";
+import { ModalContext, FooterOptions, ModalContextValue } from "./context";
 import "./index.scss";
 
 const Modal: FC<ModalProps> = (props) => {
   const wrapperRef = useRef(null);
   const { isShowing, onGoBack, onClose, children, closeColor, mobileFullScreen, title } = props;
+  const [footer, setFooter] = useState<ReactNode>(null);
+  const [footerOptions, setFooterOptions] = useState<FooterOptions>({});
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
 
   useEffect(() => {
@@ -37,6 +40,11 @@ const Modal: FC<ModalProps> = (props) => {
     "mobile-full-screen": mobileFullScreen,
   });
 
+  const contextValue = useMemo<ModalContextValue>(() => ({
+    setFooter,
+    setFooterOptions,
+  }), []);
+
   return isShowing
     ? ReactDOM.createPortal(
         <div id="modal">
@@ -58,7 +66,9 @@ const Modal: FC<ModalProps> = (props) => {
                   />
                 </div>
               </header>
-              {children}
+              <ModalContext.Provider value={contextValue}>
+                {children}
+              </ModalContext.Provider>
             </div>
           </div>
         </div>,
