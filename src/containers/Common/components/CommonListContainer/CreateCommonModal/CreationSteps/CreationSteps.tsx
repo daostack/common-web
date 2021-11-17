@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
+import { ModalHeaderContent } from "../../../../../../shared/components/Modal";
 import { GeneralInfo } from "./GeneralInfo";
+import { Progress } from "./Progress";
 import { CreationStep } from "./constants";
 
 interface CreationStepsProps {
@@ -37,5 +39,12 @@ export default function CreationSteps({ setTitle, setGoBackHandler, onFinish }: 
     }
   }, [step]);
 
-  return content;
+  return (
+    <>
+      <ModalHeaderContent>
+        <Progress creationStep={step} />
+      </ModalHeaderContent>
+      {content}
+    </>
+  );
 }

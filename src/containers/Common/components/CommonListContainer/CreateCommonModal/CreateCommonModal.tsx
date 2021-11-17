@@ -26,6 +26,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   const [onGoBack, setOnGoBack] = useState<(() => boolean | undefined) | undefined>();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const isHeaderSticky = stage === CreateCommonStage.CreationSteps;
 
   const setBigTitle = useCallback((title: string) => {
     setTitle(title);
@@ -103,6 +104,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       })}
       mobileFullScreen={isMobileView}
       title={renderedTitle}
+      isHeaderSticky={isHeaderSticky}
     >
       {content}
     </Modal>
