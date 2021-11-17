@@ -10,6 +10,7 @@ import "./index.scss";
 
 interface IntroductionProps {
   setTitle: (title: string) => void;
+  setGoBackHandler: (handle?: () => boolean | undefined) => void;
   onFinish: () => void;
 }
 
@@ -42,7 +43,7 @@ const SLIDES: SlideOptions[] = [
   },
 ];
 
-export default function Introduction({ setTitle, onFinish }: IntroductionProps) {
+export default function Introduction({ setTitle, setGoBackHandler, onFinish }: IntroductionProps) {
   const swiperRef = useRef<SwiperClass>();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -51,6 +52,10 @@ export default function Introduction({ setTitle, onFinish }: IntroductionProps) 
   useEffect(() => {
     setTitle(isMobileView ? "New Common" : "Create a Common");
   }, [setTitle, isMobileView]);
+
+  useEffect(() => {
+    setGoBackHandler();
+  }, [setGoBackHandler]);
 
   const handleSwiper = useCallback((swiper: SwiperClass) => {
     swiperRef.current = swiper;
