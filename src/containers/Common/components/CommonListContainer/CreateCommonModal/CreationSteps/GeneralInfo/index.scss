@@ -1,0 +1,12 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.create-common-general-info__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding: 28px 0;
+
+  @include big-phone {
+    padding: 24px 0;
+  }
+}
