@@ -55,13 +55,28 @@ $modal-mobile-padding: 24px;
     max-width: $element-max-width;
   }
 
+  .modal__header-wrapper {
+    min-height: $modal-action-size;
+    flex: 0 0;
+  }
+  .modal__header-wrapper--fixed {
+    padding-left: $modal-padding;
+    padding-right: $modal-padding;
+
+    .modal__header {
+      padding-left: $modal-action-size;
+      padding-right: $modal-action-size;
+    }
+  }
+  .modal__header-wrapper--shadowed {
+    box-shadow: 0 2px 9px 0 $fixed-modal-element-shadow;
+  }
+
   .modal__header {
     position: relative;
-    min-height: $modal-action-size;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex: 0 0;
   }
   .modal__header--default-padding {
     padding-top: $modal-padding;
@@ -73,21 +88,6 @@ $modal-mobile-padding: 24px;
     @include big-phone {
       padding-top: 20px;
     }
-  }
-  .modal__header--fixed {
-    padding-left: #{$modal-padding + $modal-action-size};
-    padding-right: #{$modal-padding + $modal-action-size};
-
-    .modal__back-wrapper {
-      margin-left: $modal-padding;
-    }
-
-    .modal__close-wrapper {
-      margin-right: $modal-padding;
-    }
-  }
-  .modal__header--shadowed {
-    box-shadow: 0 2px 9px 0 $fixed-modal-element-shadow;
   }
 
   .modal__title {

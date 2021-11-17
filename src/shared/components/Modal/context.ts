@@ -7,6 +7,7 @@ export interface FooterOptions {
 export interface ModalContextValue {
   setFooter: (footer: ReactNode) => void;
   setFooterOptions: (options: FooterOptions) => void;
+  setHeaderContent: (headerContent: ReactNode) => void;
 }
 
 export const ModalContext = React.createContext<ModalContextValue>({
@@ -15,6 +16,9 @@ export const ModalContext = React.createContext<ModalContextValue>({
   },
   setFooterOptions: () => {
     throw new Error('Modal Footer is not the child of Modal');
+  },
+  setHeaderContent: () => {
+    throw new Error('Modal Header Content is not the child of Modal');
   },
 });
 

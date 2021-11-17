@@ -25,6 +25,7 @@ const Modal: FC<ModalProps> = (props) => {
   const { isShowing, onGoBack, onClose, children, closeColor, mobileFullScreen, title, isHeaderSticky = false } = props;
   const [footer, setFooter] = useState<ReactNode>(null);
   const [footerOptions, setFooterOptions] = useState<FooterOptions>({});
+  const [headerContent, setHeaderContent] = useState<ReactNode>(null);
   const [isFullyScrolledToTop, setIsFullyScrolledToTop] = useState(true);
   const [isFullyScrolledToBottom, setIsFullyScrolledToBottom] = useState(false);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
@@ -62,11 +63,13 @@ const Modal: FC<ModalProps> = (props) => {
   const modalWrapperClassName = classNames("modal-wrapper", {
     "mobile-full-screen": mobileFullScreen,
   });
+  const headerWrapperClassName = classNames("modal__header-wrapper", {
+    "modal__header-wrapper--fixed": isHeaderSticky,
+    "modal__header-wrapper--shadowed": isHeaderSticky && !isFullyScrolledToTop,
+  });
   const headerClassName = classNames("modal__header", {
     "modal__header--default-padding": !title,
     "modal__header--with-string-title": title && typeof title === 'string',
-    "modal__header--fixed": isHeaderSticky,
-    "modal__header--shadowed": isHeaderSticky && !isFullyScrolledToTop,
   });
   const modalContentClassName = classNames("modal__content", {
     "modal__content--without-footer": !footer,
@@ -77,20 +80,23 @@ const Modal: FC<ModalProps> = (props) => {
   });
 
   const headerEl = (
-    <header className={headerClassName}>
-      {onGoBack && (
-        <div className="modal__action-wrapper modal__back-wrapper" onClick={onGoBack}>
-          <LeftArrowIcon className="modal__back-action" />
+    <header className={headerWrapperClassName}>
+      <div className={headerClassName}>
+        {onGoBack && (
+          <div className="modal__action-wrapper modal__back-wrapper" onClick={onGoBack}>
+            <LeftArrowIcon className="modal__back-action" />
+          </div>
+        )}
+        {typeof title === 'string' ? <h3 className="modal__title">{title}</h3> : title}
+        <div className="modal__action-wrapper modal__close-wrapper" onClick={onClose}>
+          <CloseIcon
+            width="24"
+            height="24"
+            fill={closeColor ?? Colors.black}
+          />
         </div>
-      )}
-      {typeof title === 'string' ? <h3 className="modal__title">{title}</h3> : title}
-      <div className="modal__action-wrapper modal__close-wrapper" onClick={onClose}>
-        <CloseIcon
-          width="24"
-          height="24"
-          fill={closeColor ?? Colors.black}
-        />
       </div>
+      {headerContent}
     </header>
   );
   const footerEl = footer && (
@@ -106,6 +112,7 @@ const Modal: FC<ModalProps> = (props) => {
   const contextValue = useMemo<ModalContextValue>(() => ({
     setFooter,
     setFooterOptions,
+    setHeaderContent,
   }), []);
 
   return isShowing
