@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState, ReactNode } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 
@@ -37,6 +37,16 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     setStage(stage => stage + 1);
   }, []);
 
+  const renderedTitle = useMemo((): ReactNode => {
+    if (!title) {
+      return null;
+    }
+    if (!isBigTitle) {
+      return title;
+    }
+
+    return <h3 className="create-common-modal__title">{title}</h3>;
+  }, [title, isBigTitle]);
   const content = useMemo(() => {
     switch (stage) {
       case CreateCommonStages.Introduction:
@@ -65,16 +75,8 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
         "mobile-full-screen": isMobileView,
       })}
       mobileFullScreen={isMobileView}
+      title={renderedTitle}
     >
-      {title && (
-        <h2
-          className={classNames("create-common-modal__title", {
-            "create-common-modal__title--small": !isBigTitle,
-          })}
-        >
-          {title}
-        </h2>
-      )}
       {content}
     </Modal>
   );
