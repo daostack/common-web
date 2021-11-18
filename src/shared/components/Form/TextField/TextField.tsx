@@ -1,4 +1,5 @@
 import React from "react";
+import classNames from "classnames";
 import { useField } from "formik";
 import { FieldHookConfig } from "formik/dist/Field";
 
@@ -12,8 +13,9 @@ type TextFieldProps = FieldHookConfig<string> & {
 
 const TextField = (props: TextFieldProps) => {
   const { label, isRequired, hint, ...restProps } = props;
-  const [field] = useField(restProps);
+  const [field, { touched, error }] = useField(restProps);
   const hintToShow = hint || (isRequired ? 'Required' : '');
+  const hasError = Boolean(touched && error);
 
   return (
     <div className="text-field">
@@ -32,8 +34,11 @@ const TextField = (props: TextFieldProps) => {
         id={restProps.id}
         type={restProps.type}
         placeholder={restProps.placeholder}
-        className="text-field__input"
+        className={classNames("text-field__input", {
+          "text-field__input--error": hasError,
+        })}
       />
+      {hasError && <span className="text-field__error">{error}</span>}
     </div>
   );
 };

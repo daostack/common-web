@@ -33,4 +33,15 @@
       color: $light-gray-2;
     }
   }
+  .text-field__input--error {
+    border-color: $error;
+  }
+
+  .text-field__error {
+    margin-top: 8px;
+    font-size: $xxsmall;
+    line-height: 1.42;
+    text-align: left;
+    color: $error;
+  }
 }
