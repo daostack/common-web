@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, FC } from "react";
 import classNames from "classnames";
 import { useField } from "formik";
 import { FieldHookConfig } from "formik/dist/Field";
@@ -21,7 +21,7 @@ const getTextFieldSpecificProps = (props: TextFieldProps) => (
     : { type: props.type }
 );
 
-const TextField = (props: TextFieldProps) => {
+const TextField: FC<TextFieldProps> = (props) => {
   const { className, label, isRequired, hint, maxLength, shouldDisplayCount, rows, ...restProps } = props;
   const [field, { value = '', touched, error }] = useField(restProps);
   const [inputLengthRef, setInputLengthRef] = useState<HTMLSpanElement | null>(null);
