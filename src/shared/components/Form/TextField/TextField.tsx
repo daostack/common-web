@@ -6,6 +6,7 @@ import { FieldHookConfig } from "formik/dist/Field";
 import "./index.scss";
 
 type TextFieldProps = FieldHookConfig<string> & {
+  className?: string;
   label?: string;
   isRequired?: boolean;
   hint?: string;
@@ -14,7 +15,7 @@ type TextFieldProps = FieldHookConfig<string> & {
 };
 
 const TextField = (props: TextFieldProps) => {
-  const { label, isRequired, hint, maxLength, shouldDisplayCount, ...restProps } = props;
+  const { className, label, isRequired, hint, maxLength, shouldDisplayCount, ...restProps } = props;
   const [field, { value = '', touched, error }] = useField(restProps);
   const inputLengthRef = useRef<HTMLSpanElement>(null);
   const hintToShow = hint || (isRequired ? 'Required' : '');
@@ -25,7 +26,7 @@ const TextField = (props: TextFieldProps) => {
     : undefined;
 
   return (
-    <div className="text-field">
+    <div className={classNames("text-field", className)}>
       {(label || hintToShow) && (
         <div className="text-field__label-wrapper">
           {label && (
