@@ -1,5 +1,7 @@
 @import "../../../../constants";
 
+$text-field-vertical-padding: 14px;
+
 .text-field {
   display: flex;
   flex-direction: column;
@@ -14,6 +16,11 @@
     line-height: 1.32;
   }
 
+  .text-field__label {
+    width: 100%;
+    text-align: left;
+  }
+
   .text-field__hint {
     margin-left: auto;
     font-style: italic;
@@ -21,14 +28,21 @@
     color: $light-gray-3;
   }
 
+  .text-field__input-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
   .text-field__input {
-    padding: 14px 12px;
+    width: 100%;
+    padding: $text-field-vertical-padding 12px;
     border-radius: 3px;
     border: solid 1px $light-gray-1;
     background-color: $white;
     font-size: $xsmall;
     line-height: 1.42;
     outline: none;
+    box-sizing: border-box;
 
     &::placeholder {
       color: $light-gray-2;
@@ -36,6 +50,15 @@
   }
   .text-field__input--error {
     border-color: $error;
+  }
+
+  .text-field__input-length {
+    position: absolute;
+    top: $text-field-vertical-padding;
+    right: 8px;
+    font-size: $xsmall;
+    text-align: right;
+    color: $light-gray-2;
   }
 
   .text-field__error {
