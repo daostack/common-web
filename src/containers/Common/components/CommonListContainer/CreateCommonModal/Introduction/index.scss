@@ -1,7 +1,8 @@
-@import "../../../../../../constants.scss";
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
 
 .create-common-introduction {
-  margin: 24px auto 0;
+  margin: 0 auto;
   text-align: center;
 
   .create-common-introduction__active-bullet {
@@ -32,15 +33,8 @@
     line-height: 1.5;
   }
 
-  .create-common-introduction__button-wrapper {
-    margin-top: 12px;
-  }
-}
-
-@media only screen and (max-width: $mobile-breakpoint) {
-  .create-common-introduction {
+  @include big-phone {
     position: relative;
-    margin-top: 16px;
     padding-bottom: 28px;
 
     .create-common-introduction__slide {
@@ -60,24 +54,22 @@
       font-size: $xsmall;
       line-height: 1.42;
     }
-
-    .create-common-introduction__button-wrapper {
-      position: fixed;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      padding: 0 30px 24px;
-      background-color: $white;
-      z-index: 1;
-    }
   }
-}
 
-@media only screen and (max-width: 328px) {
-  .create-common-introduction {
+  @include viewport-breakpoint(328px) {
     .create-common-introduction__image {
       width: 100%;
       height: auto;
     }
+  }
+}
+
+.create-common-introduction__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0 40px;
+
+  @include big-phone {
+    padding-bottom: 24px;
   }
 }

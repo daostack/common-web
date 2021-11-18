@@ -13,5 +13,5 @@ export default function AddIcon({ className }: AddIconProps) {
         fillRule="evenodd"
       />
     </svg>
-  )
+  );
 }
