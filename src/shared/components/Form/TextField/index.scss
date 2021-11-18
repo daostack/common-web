@@ -31,6 +31,7 @@ $text-field-vertical-padding: 14px;
   .text-field__input-wrapper {
     position: relative;
     width: 100%;
+    display: flex;
   }
 
   .text-field__input {
@@ -43,6 +44,7 @@ $text-field-vertical-padding: 14px;
     line-height: 1.42;
     outline: none;
     box-sizing: border-box;
+    resize: none;
 
     &::placeholder {
       color: $light-gray-2;

@@ -12,10 +12,17 @@ type TextFieldProps = FieldHookConfig<string> & {
   hint?: string;
   maxLength?: number;
   shouldDisplayCount?: boolean;
+  rows?: number;
 };
 
+const getTextFieldSpecificProps = (props: TextFieldProps) => (
+  props.as === 'textarea'
+    ? { rows: props.rows }
+    : { type: props.type }
+);
+
 const TextField = (props: TextFieldProps) => {
-  const { className, label, isRequired, hint, maxLength, shouldDisplayCount, ...restProps } = props;
+  const { className, label, isRequired, hint, maxLength, shouldDisplayCount, rows, ...restProps } = props;
   const [field, { value = '', touched, error }] = useField(restProps);
   const inputLengthRef = useRef<HTMLSpanElement>(null);
   const hintToShow = hint || (isRequired ? 'Required' : '');
@@ -24,6 +31,8 @@ const TextField = (props: TextFieldProps) => {
   const inputStyles = shouldDisplayCountToUse && inputLengthRef.current
     ? { paddingRight: inputLengthRef.current.clientWidth + 14 }
     : undefined;
+  const isTextarea = restProps.as === 'textarea';
+  const TextFieldTag = isTextarea ? 'textarea' : 'input';
 
   return (
     <div className={classNames("text-field", className)}>
@@ -41,15 +50,15 @@ const TextField = (props: TextFieldProps) => {
         </div>
       )}
       <div className="text-field__input-wrapper">
-        <input
+        <TextFieldTag
           {...field}
           id={restProps.id}
-          type={restProps.type}
           placeholder={restProps.placeholder}
           className={classNames("text-field__input", {
             "text-field__input--error": hasError,
           })}
           style={inputStyles}
+          {...getTextFieldSpecificProps(props)}
         />
         {shouldDisplayCountToUse && (
           <span
