@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import classNames from "classnames";
 import { useField } from "formik";
 import { FieldHookConfig } from "formik/dist/Field";
@@ -24,12 +24,12 @@ const getTextFieldSpecificProps = (props: TextFieldProps) => (
 const TextField = (props: TextFieldProps) => {
   const { className, label, isRequired, hint, maxLength, shouldDisplayCount, rows, ...restProps } = props;
   const [field, { value = '', touched, error }] = useField(restProps);
-  const inputLengthRef = useRef<HTMLSpanElement>(null);
+  const [inputLengthRef, setInputLengthRef] = useState<HTMLSpanElement | null>(null);
   const hintToShow = hint || (isRequired ? 'Required' : '');
   const hasError = Boolean(touched && error);
   const shouldDisplayCountToUse = shouldDisplayCount ?? Boolean(maxLength && maxLength > 0);
-  const inputStyles = shouldDisplayCountToUse && inputLengthRef.current
-    ? { paddingRight: inputLengthRef.current.clientWidth + 14 }
+  const inputStyles = shouldDisplayCountToUse && inputLengthRef
+    ? { paddingRight: inputLengthRef.clientWidth + 14 }
     : undefined;
   const isTextarea = restProps.as === 'textarea';
   const TextFieldTag = isTextarea ? 'textarea' : 'input';
@@ -63,7 +63,7 @@ const TextField = (props: TextFieldProps) => {
         {shouldDisplayCountToUse && (
           <span
             className="text-field__input-length"
-            ref={inputLengthRef}
+            ref={setInputLengthRef}
           >
             {value.length}/{maxLength}
           </span>
