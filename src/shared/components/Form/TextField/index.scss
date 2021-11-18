@@ -28,6 +28,7 @@
     background-color: $white;
     font-size: $xsmall;
     line-height: 1.42;
+    outline: none;
 
     &::placeholder {
       color: $light-gray-2;
