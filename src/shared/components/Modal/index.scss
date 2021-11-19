@@ -67,6 +67,11 @@ $modal-mobile-padding: 24px;
       padding-left: $modal-action-size;
       padding-right: $modal-action-size;
     }
+
+    @include big-phone {
+      padding-left: $modal-mobile-padding;
+      padding-right: $modal-mobile-padding;
+    }
   }
   .modal__header-wrapper--shadowed {
     box-shadow: 0 2px 9px 0 $fixed-modal-element-shadow;
