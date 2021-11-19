@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 
 import { StepProgress, StepProgressItem } from "../../../../../../../shared/components/StepProgress";
 import { CreationStep } from "../constants";
@@ -49,7 +49,7 @@ const ITEMS: StepProgressItem[] = [
   },
 ];
 
-export default function Progress({ creationStep }: ProgressProps) {
+export default function Progress({ creationStep }: ProgressProps): ReactElement {
   const stepData = STEP_DATA[creationStep];
 
   return (

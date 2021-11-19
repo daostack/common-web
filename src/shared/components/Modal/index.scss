@@ -57,7 +57,7 @@ $modal-mobile-padding: 24px;
 
   .modal__header-wrapper {
     min-height: $modal-action-size;
-    flex: 0 0;
+    flex: 1 0;
   }
   .modal__header-wrapper--fixed {
     padding-left: $modal-padding;
@@ -128,7 +128,7 @@ $modal-mobile-padding: 24px;
   }
 
   .modal__content {
-    flex: 1;
+    flex: 1 0;
     padding: 0 $modal-padding;
     overflow-y: auto;
 
