@@ -2,11 +2,17 @@ import React, { useCallback, useRef, ReactElement } from "react";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
 
-import { isMobile } from '../../../../../../../shared/utils';
-import { ModalFooter } from "../../../../../../../shared/components/Modal";
+import { isMobile } from "../../../../../../../shared/utils";
+import { ModalFooter, ModalHeaderContent } from "../../../../../../../shared/components/Modal";
 import { Form, TextField } from "../../../../../../../shared/components/Form";
 import { Separator } from "../../Separator";
+import { Progress } from "../Progress";
 import "./index.scss";
+
+interface GeneralInfoProps {
+  currentStep: number;
+  onFinish: () => void;
+}
 
 interface FormValues {
   commonName: string;
@@ -20,7 +26,7 @@ const INITIAL_VALUES: FormValues = {
   about: '',
 };
 
-export default function GeneralInfo(): ReactElement {
+export default function GeneralInfo({ currentStep, onFinish }: GeneralInfoProps): ReactElement {
   const formRef = useRef<FormikProps<FormValues>>(null);
   const isMobileView = isMobile();
 
@@ -32,11 +38,20 @@ export default function GeneralInfo(): ReactElement {
 
   const handleSubmit = useCallback<FormikConfig<FormValues>['onSubmit']>((values) => {
     console.log(values);
-  }, []);
+    onFinish();
+  }, [onFinish]);
+
+  const progressEl = <Progress creationStep={currentStep} />;
 
   return (
     <>
+      {!isMobileView && (
+        <ModalHeaderContent>
+          {progressEl}
+        </ModalHeaderContent>
+      )}
       <div className="create-common-general-info">
+        {isMobileView && progressEl}
         <Separator />
         <Formik
           initialValues={INITIAL_VALUES}
@@ -74,7 +89,7 @@ export default function GeneralInfo(): ReactElement {
           </Form>
         </Formik>
       </div>
-      <ModalFooter sticky>
+      <ModalFooter sticky={!isMobileView}>
         <div className="create-common-general-info__modal-footer">
           <button className="button-blue" onClick={handleContinueClick}>
             Continue to Funding
