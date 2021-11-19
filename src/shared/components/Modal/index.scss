@@ -57,7 +57,7 @@ $modal-mobile-padding: 24px;
 
   .modal__header-wrapper {
     min-height: $modal-action-size;
-    flex: 1 0;
+    flex: 0 0;
     transition: box-shadow .1s;
   }
   .modal__header-wrapper--fixed {
