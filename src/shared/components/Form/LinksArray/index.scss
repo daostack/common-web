@@ -1,0 +1,14 @@
+@import "../../../../constants";
+
+.links-array {
+  .links-array__title-input {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .links-array__link-input {
+    border-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+}

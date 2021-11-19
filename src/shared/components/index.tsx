@@ -4,7 +4,7 @@ export * from "./Dots";
 export { default as NotFound } from "./NotFound";
 export * from "./SocialLogin";
 export * from "./Footer";
-export * from "./Form";
+export { Form } from "./Form";
 export * from "./Header";
 export * from "./Loader";
 export * from "./Share";

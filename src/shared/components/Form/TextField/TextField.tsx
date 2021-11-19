@@ -5,6 +5,12 @@ import { FieldHookConfig } from "formik/dist/Field";
 
 import "./index.scss";
 
+interface Styles {
+  input?: {
+    default?: string;
+  };
+}
+
 type TextFieldProps = FieldHookConfig<string> & {
   name: string;
   className?: string;
@@ -14,6 +20,7 @@ type TextFieldProps = FieldHookConfig<string> & {
   maxLength?: number;
   shouldDisplayCount?: boolean;
   rows?: number;
+  styles?: Styles;
 };
 
 const getTextFieldSpecificProps = (props: TextFieldProps) => (
@@ -23,7 +30,7 @@ const getTextFieldSpecificProps = (props: TextFieldProps) => (
 );
 
 const TextField: FC<TextFieldProps> = (props) => {
-  const { className, label, isRequired, hint, maxLength, shouldDisplayCount, rows, ...restProps } = props;
+  const { className, label, isRequired, hint, maxLength, shouldDisplayCount, rows, styles, ...restProps } = props;
   const [field, { value = '', touched, error }] = useField(restProps);
   const [inputLengthRef, setInputLengthRef] = useState<HTMLSpanElement | null>(null);
   const id = restProps.id || restProps.name;
@@ -56,7 +63,7 @@ const TextField: FC<TextFieldProps> = (props) => {
           {...field}
           id={id}
           placeholder={restProps.placeholder}
-          className={classNames("text-field__input", {
+          className={classNames("text-field__input", styles?.input?.default, {
             "text-field__input--error": hasError,
           })}
           style={inputStyles}

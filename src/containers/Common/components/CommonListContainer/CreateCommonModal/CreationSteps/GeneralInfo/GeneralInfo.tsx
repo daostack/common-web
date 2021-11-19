@@ -4,13 +4,14 @@ import { FormikProps } from "formik/dist/types";
 
 import { isMobile } from "../../../../../../../shared/utils";
 import { ModalFooter, ModalHeaderContent } from "../../../../../../../shared/components/Modal";
-import { Form, TextField } from "../../../../../../../shared/components/Form";
+import { Form, TextField, LinksArray, LinksArrayItem } from "../../../../../../../shared/components/Form";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
 import {
   MAX_COMMON_NAME_LENGTH,
   MAX_TAGLINE_LENGTH,
   MAX_ABOUT_LENGTH,
+  MAX_LINK_TITLE_LENGTH,
 } from "./constants";
 import validationSchema from "./validationSchema";
 import "./index.scss";
@@ -24,12 +25,14 @@ interface FormValues {
   commonName: string;
   tagline: string;
   about: string;
+  links: LinksArrayItem[];
 }
 
 const INITIAL_VALUES: FormValues = {
   commonName: '',
   tagline: '',
   about: '',
+  links: [{ title: '', link: '' }],
 };
 
 export default function GeneralInfo({ currentStep, onFinish }: GeneralInfoProps): ReactElement {
@@ -66,7 +69,7 @@ export default function GeneralInfo({ currentStep, onFinish }: GeneralInfoProps)
           validationSchema={validationSchema}
           validateOnMount
         >
-          {({ isValid }) => (
+          {({ values, errors, isValid }) => (
             <Form>
               <TextField
                 className="create-common-general-info__text-field"
@@ -95,6 +98,12 @@ export default function GeneralInfo({ currentStep, onFinish }: GeneralInfoProps)
                 maxLength={MAX_ABOUT_LENGTH}
                 shouldDisplayCount={!isMobileView}
                 rows={isMobileView ? 4 : 3}
+              />
+              <LinksArray
+                name="links"
+                values={values.links}
+                errors={errors.links}
+                maxTitleLength={MAX_LINK_TITLE_LENGTH}
               />
               <ModalFooter sticky={!isMobileView}>
                 <div className="create-common-general-info__modal-footer">
