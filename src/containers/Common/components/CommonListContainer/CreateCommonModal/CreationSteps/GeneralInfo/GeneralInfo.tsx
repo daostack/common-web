@@ -7,6 +7,12 @@ import { ModalFooter, ModalHeaderContent } from "../../../../../../../shared/com
 import { Form, TextField } from "../../../../../../../shared/components/Form";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
+import {
+  MAX_COMMON_NAME_LENGTH,
+  MAX_TAGLINE_LENGTH,
+  MAX_ABOUT_LENGTH,
+} from "./constants";
+import validationSchema from "./validationSchema";
 import "./index.scss";
 
 interface GeneralInfoProps {
@@ -57,45 +63,54 @@ export default function GeneralInfo({ currentStep, onFinish }: GeneralInfoProps)
           initialValues={INITIAL_VALUES}
           onSubmit={handleSubmit}
           innerRef={formRef}
+          validationSchema={validationSchema}
+          validateOnMount
         >
-          <Form>
-            <TextField
-              className="create-common-general-info__text-field"
-              id="commonName"
-              name="commonName"
-              label="Common name"
-              placeholder="Ashley Johnson"
-              maxLength={49}
-              isRequired
-            />
-            <TextField
-              className="create-common-general-info__text-field"
-              id="tagline"
-              name="tagline"
-              label="Tagline"
-              placeholder="What is the ultimate goal of the Common?"
-              maxLength={89}
-            />
-            <TextField
-              className="create-common-general-info__text-field"
-              as="textarea"
-              id="about"
-              name="about"
-              label="About"
-              placeholder="Describe your cause and let others know why they should join you. What makes you passionate about it? What does success look like?"
-              maxLength={49}
-              rows={isMobileView ? 4 : 3}
-            />
-          </Form>
+          {({ isValid }) => (
+            <Form>
+              <TextField
+                className="create-common-general-info__text-field"
+                id="commonName"
+                name="commonName"
+                label="Common name"
+                placeholder="Ashley Johnson"
+                maxLength={MAX_COMMON_NAME_LENGTH}
+                isRequired
+              />
+              <TextField
+                className="create-common-general-info__text-field"
+                id="tagline"
+                name="tagline"
+                label="Tagline"
+                placeholder="What is the ultimate goal of the Common?"
+                maxLength={MAX_TAGLINE_LENGTH}
+              />
+              <TextField
+                className="create-common-general-info__text-field"
+                as="textarea"
+                id="about"
+                name="about"
+                label="About"
+                placeholder="Describe your cause and let others know why they should join you. What makes you passionate about it? What does success look like?"
+                maxLength={MAX_ABOUT_LENGTH}
+                shouldDisplayCount={!isMobileView}
+                rows={isMobileView ? 4 : 3}
+              />
+              <ModalFooter sticky={!isMobileView}>
+                <div className="create-common-general-info__modal-footer">
+                  <button
+                    className="button-blue"
+                    onClick={handleContinueClick}
+                    disabled={!isValid}
+                  >
+                    Continue to Funding
+                  </button>
+                </div>
+              </ModalFooter>
+            </Form>
+          )}
         </Formik>
       </div>
-      <ModalFooter sticky={!isMobileView}>
-        <div className="create-common-general-info__modal-footer">
-          <button className="button-blue" onClick={handleContinueClick}>
-            Continue to Funding
-          </button>
-        </div>
-      </ModalFooter>
     </>
   );
 }
