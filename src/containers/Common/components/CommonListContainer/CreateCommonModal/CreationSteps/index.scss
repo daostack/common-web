@@ -1,0 +1,24 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+
+.create-common-creation-steps__modal-title-wrapper {
+  height: 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .create-common-creation-steps__modal-title-dots {
+    margin: 6px 0;
+  }
+
+  .create-common-creation-steps__modal-title {
+    margin: 0;
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: $small;
+    font-weight: bold;
+    line-height: 1.38;
+    text-align: center;
+    color: $secondary-blue;
+  }
+}

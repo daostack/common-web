@@ -21,8 +21,9 @@ interface CreateCommonModalProps {
 
 export default function CreateCommonModal(props: CreateCommonModalProps) {
   const [stage, setStage] = useState(CreateCommonStage.Introduction);
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState<ReactNode>('');
   const [isBigTitle, setIsBigTitle] = useState(true);
+  const [isHeaderScrolledToTop, setIsHeaderScrolledToTop] = useState(true);
   const [onGoBack, setOnGoBack] = useState<(() => boolean | undefined) | undefined>();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -32,7 +33,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     setTitle(title);
     setIsBigTitle(true);
   }, []);
-  const setSmallTitle = useCallback((title: string) => {
+  const setSmallTitle = useCallback((title: ReactNode) => {
     setTitle(title);
     setIsBigTitle(false);
   }, []);
@@ -78,6 +79,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       case CreateCommonStage.CreationSteps:
         return (
           <CreationSteps
+            isHeaderScrolledToTop={isHeaderScrolledToTop}
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
             onFinish={handleCreationStepsFinish}
@@ -86,7 +88,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       default:
         return null;
     }
-  }, [stage, isMobileView]);
+  }, [stage, isMobileView, isHeaderScrolledToTop]);
 
   useEffect(() => {
     if (!props.isShowing) {
@@ -105,6 +107,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       mobileFullScreen={isMobileView}
       title={renderedTitle}
       isHeaderSticky={isHeaderSticky}
+      onHeaderScrolledToTop={setIsHeaderScrolledToTop}
     >
       {content}
     </Modal>

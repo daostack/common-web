@@ -1,16 +1,21 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState, ReactNode } from "react";
 
+import { isMobile } from "../../../../../../shared/utils";
+import { Dots } from "../../../../../../shared/components";
 import { GeneralInfo } from "./GeneralInfo";
 import { CreationStep } from "./constants";
+import "./index.scss";
 
 interface CreationStepsProps {
-  setTitle: (title: string) => void;
+  isHeaderScrolledToTop: boolean;
+  setTitle: (title: ReactNode) => void;
   setGoBackHandler: (handle?: () => boolean | undefined) => void;
   onFinish: () => void;
 }
 
-export default function CreationSteps({ setTitle, setGoBackHandler, onFinish }: CreationStepsProps) {
+export default function CreationSteps({ isHeaderScrolledToTop, setTitle, setGoBackHandler, onFinish }: CreationStepsProps) {
   const [step, setStep] = useState(CreationStep.GeneralInfo);
+  const isMobileView = isMobile();
 
   const handleGoBack = useCallback(() => {
     if (step === CreationStep.GeneralInfo) {
@@ -28,9 +33,24 @@ export default function CreationSteps({ setTitle, setGoBackHandler, onFinish }: 
     setStep(step => step + 1);
   }, [step]);
 
+  const title = useMemo(() => {
+    return (
+      <div className="create-common-creation-steps__modal-title-wrapper">
+        {isMobileView && !isHeaderScrolledToTop && (
+          <Dots
+            className="create-common-creation-steps__modal-title-dots"
+            currentStep={step}
+            stepsAmount={Object.keys(CreationStep).length / 2}
+          />
+        )}
+        <h3 className="create-common-creation-steps__modal-title">Create a Common</h3>
+      </div>
+    );
+  }, [isMobileView, isHeaderScrolledToTop, step]);
+
   useEffect(() => {
-    setTitle("Create a Common");
-  }, [setTitle]);
+    setTitle(title);
+  }, [setTitle, title]);
 
   useEffect(() => {
     setGoBackHandler(handleGoBack);

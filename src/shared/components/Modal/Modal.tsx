@@ -22,7 +22,7 @@ import "./index.scss";
 const Modal: FC<ModalProps> = (props) => {
   const wrapperRef = useRef(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const { isShowing, onGoBack, onClose, children, closeColor, mobileFullScreen, title, isHeaderSticky = false } = props;
+  const { isShowing, onGoBack, onClose, children, closeColor, mobileFullScreen, title, onHeaderScrolledToTop, isHeaderSticky = false } = props;
   const [footer, setFooter] = useState<ReactNode>(null);
   const [footerOptions, setFooterOptions] = useState<FooterOptions>({});
   const [headerContent, setHeaderContent] = useState<ReactNode>(null);
@@ -49,6 +49,12 @@ const Modal: FC<ModalProps> = (props) => {
       document.body.style.overflow = "hidden";
     }
   }, [isShowing]);
+
+  useEffect(() => {
+    if (isHeaderSticky && onHeaderScrolledToTop) {
+      onHeaderScrolledToTop(isFullyScrolledToTop);
+    }
+  }, [isFullyScrolledToTop]);
 
   const handleScroll = useCallback(() => {
     const { current } = contentRef;

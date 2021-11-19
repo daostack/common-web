@@ -3,17 +3,19 @@ import classNames from "classnames";
 import "./index.scss";
 
 interface DotsProps {
+  className?: string;
   currentStep: number;
   stepsAmount: number;
 }
 
-const Dots: FC<DotsProps> = ({ currentStep, stepsAmount }) => {
+const Dots: FC<DotsProps> = ({ className, currentStep, stepsAmount }) => {
   const dots = Array(stepsAmount).fill(null);
 
   return (
-    <div className="dots">
+    <div className={classNames("dots", className)}>
       {dots.map((dot, index) => (
         <span
+          key={index}
           className={classNames("dots__item", {
             "dots__item--active": currentStep === index + 1,
           })}
