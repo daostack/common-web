@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import { ModalHeaderContent } from "../../../../../../shared/components/Modal";
 import { GeneralInfo } from "./GeneralInfo";
-import { Progress } from "./Progress";
 import { CreationStep } from "./constants";
 
 interface CreationStepsProps {
@@ -22,6 +20,14 @@ export default function CreationSteps({ setTitle, setGoBackHandler, onFinish }: 
     setStep(step => step - 1);
   }, [step]);
 
+  const handleFinish = useCallback(() => {
+    if (step === CreationStep.Review) {
+      return;
+    }
+
+    setStep(step => step + 1);
+  }, [step]);
+
   useEffect(() => {
     setTitle("Create a Common");
   }, [setTitle]);
@@ -33,18 +39,11 @@ export default function CreationSteps({ setTitle, setGoBackHandler, onFinish }: 
   const content = useMemo(() => {
     switch (step) {
       case CreationStep.GeneralInfo:
-        return <GeneralInfo />;
+        return <GeneralInfo currentStep={step} onFinish={handleFinish} />;
       default:
         return null;
     }
   }, [step]);
 
-  return (
-    <>
-      <ModalHeaderContent>
-        <Progress creationStep={step} />
-      </ModalHeaderContent>
-      {content}
-    </>
-  );
+  return content;
 }
