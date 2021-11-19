@@ -6,6 +6,7 @@ import { FieldHookConfig } from "formik/dist/Field";
 import "./index.scss";
 
 type TextFieldProps = FieldHookConfig<string> & {
+  name: string;
   className?: string;
   label?: string;
   isRequired?: boolean;
