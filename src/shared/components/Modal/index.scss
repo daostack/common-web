@@ -56,7 +56,6 @@ $modal-mobile-padding: 24px;
   }
 
   .modal__header-wrapper {
-    min-height: $modal-action-size;
     flex: 0 0;
     transition: box-shadow .1s;
   }
@@ -80,6 +79,7 @@ $modal-mobile-padding: 24px;
     align-items: center;
   }
   .modal__header--default-padding {
+    min-height: $modal-action-size;
     padding-top: $modal-padding;
   }
   .modal__header--with-string-title {
