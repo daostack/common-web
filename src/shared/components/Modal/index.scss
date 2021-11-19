@@ -58,6 +58,7 @@ $modal-mobile-padding: 24px;
   .modal__header-wrapper {
     min-height: $modal-action-size;
     flex: 1 0;
+    transition: box-shadow .1s;
   }
   .modal__header-wrapper--fixed {
     padding-left: $modal-padding;
@@ -151,6 +152,7 @@ $modal-mobile-padding: 24px;
   .modal__footer--fixed {
     padding-left: $modal-padding;
     padding-right: $modal-padding;
+    transition: box-shadow .1s;
 
     @include big-phone {
       padding-left: $modal-mobile-padding;
