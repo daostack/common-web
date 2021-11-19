@@ -56,7 +56,7 @@ const Modal: FC<ModalProps> = (props) => {
     setIsFullyScrolledToTop(!isHeaderSticky || Boolean(current && current.scrollTop === 0));
     setIsFullyScrolledToBottom((
       !isFooterSticky
-      || Boolean(current && (current.clientHeight === current.scrollHeight - current.scrollTop))
+      || Boolean(current && (current.clientHeight + 1 >= current.scrollHeight - current.scrollTop))
     ));
   }, [isHeaderSticky, isFooterSticky]);
 
