@@ -69,7 +69,7 @@ export default function GeneralInfo({ currentStep, onFinish }: GeneralInfoProps)
           validationSchema={validationSchema}
           validateOnMount
         >
-          {({ values, errors, isValid }) => (
+          {({ values, errors, touched, isValid }) => (
             <Form>
               <TextField
                 className="create-common-general-info__text-field"
@@ -103,6 +103,7 @@ export default function GeneralInfo({ currentStep, onFinish }: GeneralInfoProps)
                 name="links"
                 values={values.links}
                 errors={errors.links}
+                touched={touched.links}
                 maxTitleLength={MAX_LINK_TITLE_LENGTH}
               />
               <ModalFooter sticky={!isMobileView}>

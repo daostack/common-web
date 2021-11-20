@@ -9,6 +9,7 @@ interface Styles {
   input?: {
     default?: string;
   };
+  error?: string;
 }
 
 type TextFieldProps = FieldHookConfig<string> & {
@@ -78,7 +79,7 @@ const TextField: FC<TextFieldProps> = (props) => {
           </span>
         )}
       </div>
-      {hasError && <span className="text-field__error">{error}</span>}
+      {hasError && <span className={classNames("text-field__error", styles?.error)}>{error}</span>}
     </div>
   );
 };
