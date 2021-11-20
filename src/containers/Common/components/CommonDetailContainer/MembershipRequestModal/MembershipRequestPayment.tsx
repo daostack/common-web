@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 
 import { createCard } from "../../../../../services/CirclePayService";
-import { GRAPH_QL_URL } from "../../../../../shared/constants";
-import { createApolloClient } from "../../../../../shared/utils";
+
 import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
 import {
@@ -12,8 +11,6 @@ import {
   validateCreditCardProvider,
   validateCVV,
 } from "../../../../../shared/utils/shared";
-
-const apollo = createApolloClient(GRAPH_QL_URL || "", localStorage.token || "");
 
 export default function MembershipRequestPayment(props: IStageProps) {
   const { userData, setUserData } = props;

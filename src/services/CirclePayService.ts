@@ -1,20 +1,24 @@
 import axios from "axios";
 
-import { createApolloClient, tokenHandler } from "../shared/utils";
-import { CIRCLE_PAY_URL, GRAPH_QL_URL } from "../shared/constants";
+import { CIRCLE_PAY_URL } from "../shared/constants";
 import { IMembershipRequestData } from "../containers/Common/components/CommonDetailContainer/MembershipRequestModal/MembershipRequestModal";
-//import { CreateCardDocument } from "../graphql";
+import firebase from "../shared/utils/firebase";
 
 const openpgpModule = import(
   /* webpackChunkName: "openpgp,  webpackPrefetch: true" */ "openpgp"
 );
 
+const endpoints = {
+  assign:
+    "https://us-central1-common-daostack.cloudfunctions.net/circlepay/assign-card",
+  create:
+    "https://us-central1-common-daostack.cloudfunctions.net/circlepay/create-card",
+};
+
 const axiosClient = axios.create({
   baseURL: CIRCLE_PAY_URL,
   timeout: 1000000,
 });
-
-const apollo = createApolloClient(GRAPH_QL_URL || "", localStorage.token || "");
 
 // TODO: the Circle API should be via env var or something
 const getEncryptedData = async (token: any, dataToEncrypt: any) => {
@@ -53,24 +57,21 @@ const cardData = (formData: IMembershipRequestData) => ({
   expYear: +formData.expiration_date.split("-")[0],
 });
 
-export const createCard = async (formData: IMembershipRequestData) => {
-  try {
-    const cardData = await createCardPayload(formData);
-    //console.log(cardData);
-    // return await apollo.mutate({
-    //   mutation: CreateCardDocument,
-    //   variables: {
-    //     createCard: cardData,
-    //   },
-    // });
-  } catch (err) {
-    console.error("Error while trying to create a new Card");
-    throw err;
-  }
-};
+export const createCard = async (formData: IMembershipRequestData) =>
+  (
+    await axiosClient.post(
+      endpoints.create,
+      await createCardPayload(formData),
+      {
+        headers: {
+          Authorization: await firebase.auth().currentUser?.getIdToken(true),
+        },
+      }
+    )
+  ).data;
 
 export const createCardPayload = async (formData: IMembershipRequestData) => {
-  const token = tokenHandler.get();
+  const token = await firebase.auth().currentUser?.getIdToken(true);
   try {
     const { encryptedData, keyId } = await getEncryptedData(token, {
       number: `${formData.card_number}`,
@@ -83,6 +84,7 @@ export const createCardPayload = async (formData: IMembershipRequestData) => {
       ...cardData(formData),
     };
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error(err);
   }
 };
