@@ -90,7 +90,6 @@ export default function GeneralInfo({ currentStep, onFinish }: GeneralInfoProps)
               />
               <TextField
                 className="create-common-general-info__text-field"
-                as="textarea"
                 id="about"
                 name="about"
                 label="About"
@@ -98,6 +97,7 @@ export default function GeneralInfo({ currentStep, onFinish }: GeneralInfoProps)
                 maxLength={MAX_ABOUT_LENGTH}
                 shouldDisplayCount={!isMobileView}
                 rows={isMobileView ? 4 : 3}
+                isTextarea
               />
               <LinksArray
                 name="links"
