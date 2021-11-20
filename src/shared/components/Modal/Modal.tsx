@@ -101,7 +101,7 @@ const Modal: FC<ModalProps> = (props) => {
 
   useLayoutEffect(() => {
     handleScroll();
-  }, [isHeaderSticky, isFooterSticky, contentRef.current]);
+  }, [isHeaderSticky, isFooterSticky, handleScroll]);
 
   const contextValue = useMemo<ModalContextValue>(() => ({
     setFooter,

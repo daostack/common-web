@@ -16,13 +16,13 @@ const Footer: FC<FooterProps> = (props) => {
 
   useEffect(() => {
     setFooter(children || null);
-  }, [children]);
+  }, [children, setFooter, setFooterOptions]);
 
   useEffect(() => {
     setFooterOptions({
       sticky,
     });
-  }, [sticky]);
+  }, [sticky, setFooterOptions]);
 
   useComponentWillUnmount(reset);
 

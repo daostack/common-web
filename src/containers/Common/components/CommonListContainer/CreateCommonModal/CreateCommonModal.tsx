@@ -59,7 +59,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       default:
         return null;
     }
-  }, [stage, isMobileView]);
+  }, [stage, isMobileView, handleIntroductionFinish, setBigTitle, setSmallTitle]);
 
   useEffect(() => {
     if (!props.isShowing) {
