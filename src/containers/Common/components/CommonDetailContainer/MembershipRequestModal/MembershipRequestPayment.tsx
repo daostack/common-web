@@ -28,20 +28,20 @@ export default function MembershipRequestPayment(props: IStageProps) {
     }
   };
 
-  const createJoinProposal = async (formData: any) => {
-    try {
-      // return await apollo.mutate({
-      //   mutation: CreateJoinProposalDocument,
-      //   variables: {
-      //     proposal: formData,
-      //   },
-      //   errorPolicy: "none",
-      // });
-    } catch (err) {
-      console.error("Error while trying to create a new Join Proposal");
-      throw err;
-    }
-  };
+  // const createJoinProposal = async (formData: any) => {
+  //   try {
+  //     // return await apollo.mutate({
+  //     //   mutation: CreateJoinProposalDocument,
+  //     //   variables: {
+  //     //     proposal: formData,
+  //     //   },
+  //     //   errorPolicy: "none",
+  //     // });
+  //   } catch (err) {
+  //     console.error("Error while trying to create a new Join Proposal");
+  //     throw err;
+  //   }
+  // };
 
   const pay = async () => {
     try {
@@ -52,18 +52,22 @@ export default function MembershipRequestPayment(props: IStageProps) {
         cvv,
       };
 
-      const data = {
-        title: `User join for common ${props.common?.name}`,
-        description: formData.intro,
-        fundingAmount: formData.contribution_amount,
-        commonId: `${window.location.pathname.split("/")[2]}`,
-      };
+      // const data = {
+      //   title: `User join for common ${props.common?.name}`,
+      //   description: formData.intro,
+      //   fundingAmount: formData.contribution_amount,
+      //   commonId: `${window.location.pathname.split("/")[2]}`,
+      // };
 
       //console.log(data);
 
       setUserData({ ...userData, stage: 6 });
 
-      const createdCard = await createCard({
+      // const createdCard = await createCard({
+      //   ...formData,
+      // });
+
+      await createCard({
         ...formData,
       });
 
