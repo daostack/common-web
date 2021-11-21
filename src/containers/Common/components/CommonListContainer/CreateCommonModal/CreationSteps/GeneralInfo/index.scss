@@ -22,6 +22,10 @@
       margin-top: 0;
     }
   }
+
+  @include big-phone {
+    padding-bottom: 14px;
+  }
 }
 
 .create-common-general-info__modal-footer {
