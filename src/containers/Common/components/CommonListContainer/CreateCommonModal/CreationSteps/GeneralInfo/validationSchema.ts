@@ -18,10 +18,8 @@ const schema = Yup.object().shape({
   links: Yup.array()
     .of(Yup.object().shape({
       title: Yup.string()
-        .max(MAX_LINK_TITLE_LENGTH, 'Entered title is too long')
-        .required('Please enter link title'),
-      link: Yup.string()
-        .required('Please enter a link'),
+        .max(MAX_LINK_TITLE_LENGTH, 'Entered title is too long'),
+      link: Yup.string(),
     }))
     .required('Please add at least 1 link')
     .min(1, 'Please add at least 1 link'),
