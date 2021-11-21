@@ -46,6 +46,7 @@ export default function MembershipRequestPayment(props: IStageProps) {
         commonId: `${window.location.pathname.split("/")[2]}`,
       };
 
+
       setUserData({ ...userData, stage: 6 });
 
       const createdCard = await createCard({

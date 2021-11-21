@@ -18,7 +18,7 @@ import {
   Proposal,
   ProposalState,
 } from "../../../../shared/models";
-import { getScreenSize, getLoading } from "../../../../shared/store/selectors";
+import { getScreenSize } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
 import {
   AboutTabComponent,
@@ -92,7 +92,6 @@ export default function CommonDetail() {
   const [tab, setTab] = useState("about");
   const [imageError, setImageError] = useState(false);
 
-  const loading = useSelector(getLoading());
   const common = useSelector(selectCommonDetail());
   const currentDisscussion = useSelector(selectCurrentDisscussion());
   const proposals = useSelector(selectProposals());
