@@ -20,6 +20,8 @@ interface LinksArrayProps extends FieldArrayConfig {
   errors: Errors;
   touched: Touched;
   maxTitleLength?: number;
+  className?: string;
+  itemClassName?: string;
 }
 
 const getInputError = (errors: Errors, index: number, key: keyof LinksArrayItem): string => {
@@ -41,19 +43,19 @@ const isTouched = (touched: Touched, index: number, key: keyof LinksArrayItem): 
 );
 
 const LinksArray: FC<LinksArrayProps> = (props) => {
-  const { values, errors, touched, maxTitleLength, ...restProps } = props;
+  const { values, errors, touched, maxTitleLength, className, itemClassName, ...restProps } = props;
 
   return (
     <FieldArray
       {...restProps}
       render={({ insert, remove, push }) => (
-        <div className="links-array">
+        <div className={classNames("links-array", className)}>
           {values.map((value, index) => {
             const titleError = isTouched(touched, index, 'title') ? getInputError(errors, index, 'title') : '';
             const linkError = isTouched(touched, index, 'link') ? getInputError(errors, index, 'link') : '';
 
             return (
-              <div key={index}>
+              <div key={index} className={itemClassName}>
                 <TextField
                   id={`${restProps.name}.${index}.title`}
                   name={`${restProps.name}.${index}.title`}

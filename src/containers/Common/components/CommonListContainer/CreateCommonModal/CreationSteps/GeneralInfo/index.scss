@@ -14,6 +14,14 @@
       margin-bottom: 0;
     }
   }
+
+  .create-common-general-info__links-array-item {
+    margin-top: 24px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
 }
 
 .create-common-general-info__modal-footer {

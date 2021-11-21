@@ -105,6 +105,8 @@ export default function GeneralInfo({ currentStep, onFinish }: GeneralInfoProps)
                 errors={errors.links}
                 touched={touched.links}
                 maxTitleLength={MAX_LINK_TITLE_LENGTH}
+                className="create-common-general-info__text-field"
+                itemClassName="create-common-general-info__links-array-item"
               />
               <ModalFooter sticky={!isMobileView}>
                 <div className="create-common-general-info__modal-footer">
