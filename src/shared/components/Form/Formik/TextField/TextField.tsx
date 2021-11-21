@@ -1,31 +1,24 @@
 import React, { FC } from "react";
 import { useField } from "formik";
-import { FieldHookConfig } from "formik/dist/Field";
 
 import { Input, InputProps } from "../../Input";
 import "./index.scss";
 
-type TextFieldProps = Omit<InputProps, "error"> & FieldHookConfig<string> & {
+type TextFieldProps = InputProps & {
   isRequired?: boolean;
 };
 
 const TextField: FC<TextFieldProps> = (props) => {
-  const { className, label, isRequired, hint, maxLength, shouldDisplayCount, styles, isTextarea, ...restProps } = props;
+  const { isRequired, ...restProps } = props;
   const [field, { touched, error }] = useField(restProps);
-  const hintToShow = hint || (isRequired ? "Required" : "");
+  const hintToShow = restProps.hint || (isRequired ? "Required" : "");
 
   return (
     <Input
+      {...restProps}
       {...field}
-      className={className}
-      label={label}
-      placeholder={restProps.placeholder}
       hint={hintToShow}
-      maxLength={maxLength}
-      shouldDisplayCount={shouldDisplayCount}
       error={touched ? error : ''}
-      styles={styles}
-      isTextarea={isTextarea}
     />
   );
 };

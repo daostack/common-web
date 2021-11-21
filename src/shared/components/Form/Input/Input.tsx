@@ -18,6 +18,7 @@ type FilterExtraPropsFunction = {
   (props: TextareaProps): JSX.IntrinsicElements['textarea'];
 };
 export type FullInputProps = (InputProps | TextareaProps) & {
+  name: string;
   className?: string;
   label?: string;
   hint?: string;
