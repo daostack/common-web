@@ -2,7 +2,6 @@ import React, { FC } from "react";
 import { useField } from "formik";
 
 import { Input, InputProps } from "../../Input";
-import "./index.scss";
 
 type TextFieldProps = InputProps & {
   isRequired?: boolean;
