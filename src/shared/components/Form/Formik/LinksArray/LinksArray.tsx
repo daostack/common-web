@@ -4,6 +4,7 @@ import { FieldArray, FieldArrayConfig, FormikErrors } from "formik";
 import { FormikTouched } from "formik/dist/types";
 
 import { ButtonLink } from "../../../ButtonLink";
+import { ErrorText } from "../../ErrorText";
 import { TextField } from "../TextField";
 import "./index.scss";
 
@@ -53,6 +54,7 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
           {values.map((value, index) => {
             const titleError = isTouched(touched, index, 'title') ? getInputError(errors, index, 'title') : '';
             const linkError = isTouched(touched, index, 'link') ? getInputError(errors, index, 'link') : '';
+            const error = titleError || linkError;
 
             return (
               <div key={index} className={itemClassName}>
@@ -82,8 +84,10 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
                         "links-array__link-input--without-top-border": titleError || !linkError,
                       }),
                     },
+                    error: "links-array__link-error",
                   }}
                 />
+                {error && <ErrorText>{error}</ErrorText>}
               </div>
             );
           })}

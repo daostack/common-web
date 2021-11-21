@@ -1,6 +1,7 @@
 import React, { useState, FC } from "react";
 import classNames from "classnames";
 
+import { ErrorText } from "../ErrorText";
 import "./index.scss";
 
 interface InputStyles {
@@ -86,7 +87,7 @@ const Input: FC<FullInputProps> = (props) => {
           </span>
         )}
       </div>
-      {Boolean(error) && <span className={classNames("custom-input__error", styles?.error)}>{error}</span>}
+      {Boolean(error) && <ErrorText className={styles?.error}>{error}</ErrorText>}
     </div>
   );
 };
