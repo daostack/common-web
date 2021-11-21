@@ -6,10 +6,13 @@ import { Modal } from "../../../../../shared/components";
 import { getScreenSize } from "../../../../../shared/store/selectors";
 import { ScreenSize } from "../../../../../shared/constants";
 import { Introduction } from "./Introduction";
+import { GeneralInfo } from "./GeneralInfo";
 import "./index.scss";
+import CreateCommonProgressBar from "./CreateCommonProgressBar/CreateCommonProgressBar";
 
 enum CreateCommonStages {
   Introduction,
+  GeneralInfo
 }
 
 interface CreateCommonModalProps {
@@ -56,6 +59,13 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             onFinish={handleIntroductionFinish}
           />
         );
+      case CreateCommonStages.GeneralInfo:
+        return (
+          <GeneralInfo
+            setTitle={isMobileView ? setSmallTitle : setBigTitle}
+            onFinish={handleIntroductionFinish}
+          />
+        )
       default:
         return null;
     }
@@ -77,6 +87,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       mobileFullScreen={isMobileView}
       title={renderedTitle}
     >
+      {stage !== CreateCommonStages.Introduction && <CreateCommonProgressBar currentStage={stage} />}
       {content}
     </Modal>
   );
