@@ -34,7 +34,12 @@ $custom-input-vertical-padding: 14px;
   }
 
   .custom-input__input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
     width: 100%;
+    margin: 0;
     padding: $custom-input-vertical-padding 12px;
     border-radius: 3px;
     border: solid 1px $light-gray-1;
