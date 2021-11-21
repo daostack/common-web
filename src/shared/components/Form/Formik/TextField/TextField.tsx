@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { useField } from "formik";
 import { FieldHookConfig } from "formik/dist/Field";
 
-import { Input, InputProps } from "../Input";
+import { Input, InputProps } from "../../Input";
 import "./index.scss";
 
 type TextFieldProps = Omit<InputProps, "error"> & FieldHookConfig<string> & {

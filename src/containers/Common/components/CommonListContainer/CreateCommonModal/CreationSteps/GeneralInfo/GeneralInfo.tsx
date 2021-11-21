@@ -4,7 +4,7 @@ import { FormikProps } from "formik/dist/types";
 
 import { isMobile } from "../../../../../../../shared/utils";
 import { ModalFooter, ModalHeaderContent } from "../../../../../../../shared/components/Modal";
-import { Form, TextField, LinksArray, LinksArrayItem } from "../../../../../../../shared/components/Form";
+import { Form, TextField, LinksArray, LinksArrayItem } from "../../../../../../../shared/components/Form/Formik";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
 import {

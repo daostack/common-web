@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { FieldArray, FieldArrayConfig, FormikErrors } from "formik";
 import { FormikTouched } from "formik/dist/types";
 
-import { ButtonLink } from "../../ButtonLink";
+import { ButtonLink } from "../../../ButtonLink";
 import { TextField } from "../TextField";
 import "./index.scss";
 
