@@ -1,6 +1,10 @@
 @import "../../../../../constants";
 
 .links-array {
+  .links-array__item {
+    position: relative;
+  }
+
   .links-array__title-input {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
@@ -23,6 +27,25 @@
 
   .links-array__link-error {
     display: none;
+  }
+
+  .links-array__remove-button {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    padding: 8px;
+    background-color: $light-gray-3;
+    border-radius: 50%;
+    opacity: .7;
+    transform: translateY(-10%);
+    transition: opacity .2s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+  .links-array__remove-button--with-item-error {
+    transform: translateY(-51%);
   }
 
   .links-array__add-button {

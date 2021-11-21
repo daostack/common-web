@@ -3,6 +3,8 @@ import classNames from "classnames";
 import { FieldArray, FieldArrayConfig, FormikErrors } from "formik";
 import { FormikTouched } from "formik/dist/types";
 
+import CloseIcon from '../../../../../shared/icons/close.icon';
+import { ButtonIcon } from "../../../ButtonIcon";
 import { ButtonLink } from "../../../ButtonLink";
 import { ErrorText } from "../../ErrorText";
 import { TextField } from "../TextField";
@@ -49,7 +51,7 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
   return (
     <FieldArray
       {...restProps}
-      render={({ insert, remove, push }) => (
+      render={({ remove, push }) => (
         <div className={classNames("links-array", className)}>
           {values.map((value, index) => {
             const titleError = isTouched(touched, index, 'title') ? getInputError(errors, index, 'title') : '';
@@ -57,7 +59,7 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
             const error = titleError || linkError;
 
             return (
-              <div key={index} className={itemClassName}>
+              <div key={index} className={classNames("links-array__item", itemClassName)}>
                 <TextField
                   id={`${restProps.name}.${index}.title`}
                   name={`${restProps.name}.${index}.title`}
@@ -88,6 +90,16 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
                   }}
                 />
                 {error && <ErrorText>{error}</ErrorText>}
+                {values.length > 1 && (
+                  <ButtonIcon
+                    className={classNames("links-array__remove-button", {
+                      "links-array__remove-button--with-item-error": error,
+                    })}
+                    onClick={() => remove(index)}
+                  >
+                    <CloseIcon width="16" height="16"/>
+                  </ButtonIcon>
+                )}
               </div>
             );
           })}
