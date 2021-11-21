@@ -1,27 +1,32 @@
 import axios from "axios";
 
-import { createApolloClient, tokenHandler } from "../shared/utils";
-import { CIRCLE_PAY_URL, GRAPH_QL_URL } from "../shared/constants";
-import { IMembershipRequestData } from "../containers/Common/components/CommonDetailContainer/MembershipRequestModal/MembershipRequestModal";
-//import { CreateCardDocument } from "../graphql";
+import {
+  IMembershipRequestData,
+  IProposalPayload,
+} from "../containers/Common/components/CommonDetailContainer/MembershipRequestModal/MembershipRequestModal";
+import firebase from "../shared/utils/firebase";
+import config from "../config";
 
 const openpgpModule = import(
   /* webpackChunkName: "openpgp,  webpackPrefetch: true" */ "openpgp"
 );
 
+const endpoints = {
+  assignCard: config.cloudFunctionUrl + "/circlepay/assign-card",
+  encription: config.cloudFunctionUrl + "/circlepay/encryption",
+  createCard: config.cloudFunctionUrl + "/circlepay/create-card",
+  createJoin: config.cloudFunctionUrl + "/proposals/create/join",
+};
+
 const axiosClient = axios.create({
-  baseURL: CIRCLE_PAY_URL,
   timeout: 1000000,
 });
 
-const apollo = createApolloClient(GRAPH_QL_URL || "", localStorage.token || "");
-
 // TODO: the Circle API should be via env var or something
 const getEncryptedData = async (token: any, dataToEncrypt: any) => {
-  const { data } = await axiosClient.get("encryption/public", {
+  const { data } = await axiosClient.get(endpoints.encription, {
     headers: {
-      Authorization:
-        "Bearer QVBJX0tFWTpmNThkOGFkYmEyMWE5Y2FlMzI4MzkxYjJjNGVlNWFmYjphMGNiN2UyYTUwYzEzNzNmNTVjNjg5ODYxZDdmZTIxZQ",
+      Authorization: await firebase.auth().currentUser?.getIdToken(true),
     },
   });
   const { keyId, publicKey } = data.data;
@@ -53,28 +58,39 @@ const cardData = (formData: IMembershipRequestData) => ({
   expYear: +formData.expiration_date.split("-")[0],
 });
 
-export const createCard = async (formData: IMembershipRequestData) => {
-  try {
-    const cardData = await createCardPayload(formData);
-    //console.log(cardData);
-    // return await apollo.mutate({
-    //   mutation: CreateCardDocument,
-    //   variables: {
-    //     createCard: cardData,
-    //   },
-    // });
-  } catch (err) {
-    console.error("Error while trying to create a new Card");
-    throw err;
-  }
+export const createCard = async (formData: IMembershipRequestData) =>
+  (
+    await axiosClient.post(
+      endpoints.createCard,
+      await createCardPayload(formData),
+      {
+        headers: {
+          Authorization: await firebase.auth().currentUser?.getIdToken(true),
+        },
+      }
+    )
+  ).data;
+
+export const createRequestToJoin = async (formData: IProposalPayload) => {
+  return await axiosClient.post(endpoints.createJoin, formData, {
+    headers: {
+      Authorization: await firebase.auth().currentUser?.getIdToken(true),
+    },
+  });
 };
 
 export const createCardPayload = async (formData: IMembershipRequestData) => {
-  const token = tokenHandler.get();
+  const token = await firebase.auth().currentUser?.getIdToken(true);
   try {
     const { encryptedData, keyId } = await getEncryptedData(token, {
       number: `${formData.card_number}`,
       cvv: `${formData.cvv}`,
+    });
+
+    console.log({
+      keyId,
+      encryptedData,
+      ...cardData(formData),
     });
 
     return {
@@ -83,6 +99,7 @@ export const createCardPayload = async (formData: IMembershipRequestData) => {
       ...cardData(formData),
     };
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error(err);
   }
 };

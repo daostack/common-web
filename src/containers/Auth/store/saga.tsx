@@ -12,6 +12,60 @@ import { GoogleAuthResultInterface } from "../interface";
 import { ROUTE_PATHS } from "../../../shared/constants";
 import history from "../../../shared/history";
 
+const saveTokenToDatabase = async (token: string) => {
+  const currentUser = await firebase.auth().currentUser;
+  if (currentUser) {
+    await firebase
+      .firestore()
+      .collection("users")
+      .doc(currentUser?.uid)
+      .update({
+        tokens: firebase.firestore.FieldValue.arrayUnion(token),
+      })
+      .then(() => {
+        console.log("FCM token updated");
+      })
+      .catch((err) => console.error(err));
+  }
+};
+
+const createUser = async (user: firebase.User) => {
+  if (!user) return;
+  const splittedDisplayName = user?.displayName?.split(" ") || [
+    user?.email?.split("@")[0],
+  ];
+
+  const userPhotoUrl = user.photoURL
+    ? user.photoURL
+    : `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${
+        user.displayName ? user.displayName : user.email
+      }&rounded=true`;
+
+  const userPublicData = {
+    createdAt: new Date(),
+    firstName: splittedDisplayName[0] || "",
+    lastName: splittedDisplayName[1] || "",
+    email: user.email,
+    photoURL: userPhotoUrl,
+    uid: user.uid,
+  };
+
+  const userSnapshot = await firebase
+    .firestore()
+    .collection("users")
+    .doc(user.uid)
+    .get();
+  if (userSnapshot.exists) {
+    return;
+  }
+
+  return await firebase
+    .firestore()
+    .collection("users")
+    .doc(user.uid)
+    .set(userPublicData);
+};
+
 export const uploadImage = async (imageUri: any) => {
   const ext = imageUri.split(";")[0].split("/")[1];
   const timeStamp = new Date().getTime();
@@ -80,6 +134,12 @@ const updateUserData = async (user: any) => {
 
   const updatedCurrentUser = await firebase.auth().currentUser;
 
+  if (store.getState().auth.isNewUser) {
+    if (updatedCurrentUser) {
+      await createUser(updatedCurrentUser);
+    }
+  }
+
   return updatedCurrentUser;
 };
 
@@ -140,6 +200,7 @@ function* authSagas() {
     if (newToken !== currentToken && currentToken) {
       if (newToken) {
         tokenHandler.set(newToken);
+        await saveTokenToDatabase(newToken);
       } else {
         logOut().next();
       }

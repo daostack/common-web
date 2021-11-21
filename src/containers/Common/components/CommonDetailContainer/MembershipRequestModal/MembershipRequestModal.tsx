@@ -16,6 +16,12 @@ export interface IStageProps {
   userData: IMembershipRequestData;
   common?: Common;
 }
+export interface IProposalPayload {
+  description: string;
+  funding: number;
+  commonId: string;
+  cardId: string;
+}
 
 export interface IMembershipRequestData {
   stage: number;
@@ -32,6 +38,7 @@ export interface IMembershipRequestData {
   card_number: number | undefined;
   cvv: number | undefined;
   expiration_date: string;
+  cardId?: string;
 }
 
 const initData: IMembershipRequestData = {
@@ -65,19 +72,56 @@ export default function MembershipRequestModal(props: IProps) {
   const renderCurrentStage = (stage: number) => {
     switch (stage) {
       case 0:
-        return <MembershipRequestWelcome userData={userData} setUserData={setUserData} />;
+        return (
+          <MembershipRequestWelcome
+            userData={userData}
+            setUserData={setUserData}
+          />
+        );
       case 1:
-        return <MembershipRequestIntroduce userData={userData} setUserData={setUserData} />;
+        return (
+          <MembershipRequestIntroduce
+            userData={userData}
+            setUserData={setUserData}
+          />
+        );
       case 2:
-        return <MembershipRequestRules userData={userData} setUserData={setUserData} />;
+        return (
+          <MembershipRequestRules
+            userData={userData}
+            setUserData={setUserData}
+          />
+        );
       case 3:
-        return <MembershipRequestContribution userData={userData} setUserData={setUserData} common={common} />;
+        return (
+          <MembershipRequestContribution
+            userData={userData}
+            setUserData={setUserData}
+            common={common}
+          />
+        );
       case 4:
-        return <MembershipRequestBilling userData={userData} setUserData={setUserData} />;
+        return (
+          <MembershipRequestBilling
+            userData={userData}
+            setUserData={setUserData}
+          />
+        );
       case 5:
-        return <MembershipRequestPayment userData={userData} setUserData={setUserData} common={common} />;
+        return (
+          <MembershipRequestPayment
+            userData={userData}
+            setUserData={setUserData}
+            common={common}
+          />
+        );
       case 6:
-        return <MembershipRequestCreating userData={userData} setUserData={setUserData} />;
+        return (
+          <MembershipRequestCreating
+            userData={userData}
+            setUserData={setUserData}
+          />
+        );
       case 7:
         return <MembershipRequestCreated closeModal={closeModal} />;
     }
@@ -98,7 +142,9 @@ export default function MembershipRequestModal(props: IProps) {
           <div className="title">Membership Request</div>
         </div>
       )}
-      {stage > 0 && stage !== 6 && stage !== 7 && <MembershipRequestProgressBar currentStage={stage} />}
+      {stage > 0 && stage !== 6 && stage !== 7 && (
+        <MembershipRequestProgressBar currentStage={stage} />
+      )}
       {renderCurrentStage(stage)}
     </div>
   );

@@ -12,8 +12,13 @@ import { Loader, Share } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
 import { useModal, useViewPortHook } from "../../../../shared/hooks";
 
-import { Discussion, Member, Proposal, ProposalState } from "../../../../shared/models";
-import { getScreenSize, getLoading } from "../../../../shared/store/selectors";
+import {
+  Discussion,
+  Member,
+  Proposal,
+  ProposalState,
+} from "../../../../shared/models";
+import { getScreenSize } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
 import {
   AboutTabComponent,
@@ -87,7 +92,6 @@ export default function CommonDetail() {
   const [tab, setTab] = useState("about");
   const [imageError, setImageError] = useState(false);
 
-  const loading = useSelector(getLoading());
   const common = useSelector(selectCommonDetail());
   const currentDisscussion = useSelector(selectCurrentDisscussion());
   const proposals = useSelector(selectProposals());
@@ -104,10 +108,9 @@ export default function CommonDetail() {
 
   const isCommonMember = commonMemberData && commonMemberData?.length > 0;
 
-  // TODO: need to fix the condition - it shows "pending" for commons that a user is not a member of and not requested to be a member
-  const isPending = proposals
+  const isPending = !!proposals
     ?.filter((p) => p.state === ProposalState.COUNTDOWN)
-    .filter((p) => p.user?.uid === user?.uid);
+    .filter((p) => p.user?.uid === user?.uid).length;
 
   const dispatch = useDispatch();
 
