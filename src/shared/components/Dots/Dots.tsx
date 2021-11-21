@@ -1,4 +1,4 @@
-import React, { memo, FC } from "react";
+import React, { FC } from "react";
 import classNames from "classnames";
 import "./index.scss";
 
@@ -25,4 +25,4 @@ const Dots: FC<DotsProps> = ({ className, currentStep, stepsAmount }) => {
   );
 };
 
-export default memo(Dots);
+export default Dots;

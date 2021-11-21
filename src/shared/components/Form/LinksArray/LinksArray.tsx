@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { FieldArray, FieldArrayConfig, FormikErrors } from "formik";
 import { FormikTouched } from "formik/dist/types";
 
+import { ButtonLink } from "../../ButtonLink";
 import { TextField } from "../TextField";
 import "./index.scss";
 
@@ -57,7 +58,7 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
                   id={`${restProps.name}.${index}.title`}
                   name={`${restProps.name}.${index}.title`}
                   label="Add links"
-                  placeholder="Link Title"
+                  placeholder="Link title"
                   maxLength={maxTitleLength}
                   hint="Resources, related content, or social pages"
                   styles={{
@@ -84,7 +85,12 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
               </div>
             );
           })}
-          <button>Add Link</button>
+          <ButtonLink
+            className="links-array__add-button"
+            onClick={() => push({ title: '', link: '' })}
+          >
+            Add link
+          </ButtonLink>
         </div>
       )}
     />
