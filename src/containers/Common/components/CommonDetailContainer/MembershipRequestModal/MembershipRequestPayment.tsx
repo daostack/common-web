@@ -41,13 +41,10 @@ export default function MembershipRequestPayment(props: IStageProps) {
       };
 
       const data = {
-        title: `User join for common ${props.common?.name}`,
         description: formData.intro,
-        fundingAmount: formData.contribution_amount || 0,
+        funding: (formData?.contribution_amount || 0) * 100,
         commonId: `${window.location.pathname.split("/")[2]}`,
       };
-
-      console.log(data);
 
       setUserData({ ...userData, stage: 6 });
 

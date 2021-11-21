@@ -17,9 +17,8 @@ export interface IStageProps {
   common?: Common;
 }
 export interface IProposalPayload {
-  title: string;
   description: string;
-  fundingAmount: number;
+  funding: number;
   commonId: string;
   cardId: string;
 }

@@ -5,20 +5,17 @@ import {
   IProposalPayload,
 } from "../containers/Common/components/CommonDetailContainer/MembershipRequestModal/MembershipRequestModal";
 import firebase from "../shared/utils/firebase";
+import config from "../config";
 
 const openpgpModule = import(
   /* webpackChunkName: "openpgp,  webpackPrefetch: true" */ "openpgp"
 );
 
 const endpoints = {
-  assignCard:
-    "https://us-central1-common-daostack.cloudfunctions.net/circlepay/assign-card",
-  encription:
-    "https://us-central1-common-daostack.cloudfunctions.net/circlepay/encryption",
-  createCard:
-    "https://us-central1-common-daostack.cloudfunctions.net/circlepay/create-card",
-  createJoin:
-    "https://us-central1-common-daostack.cloudfunctions.net/proposals/",
+  assignCard: config.cloudFunctionUrl + "/circlepay/assign-card",
+  encription: config.cloudFunctionUrl + "/circlepay/encryption",
+  createCard: config.cloudFunctionUrl + "/circlepay/create-card",
+  createJoin: config.cloudFunctionUrl + "/proposals/create/join",
 };
 
 const axiosClient = axios.create({

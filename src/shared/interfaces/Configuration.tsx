@@ -10,6 +10,7 @@ export interface Configuration {
     messagingSenderId: string;
     appId: string;
   };
+  cloudFunctionUrl: string;
 }
 
 export interface ConfigurationObject {
