@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 
-import { createCard } from "../../../../../services/CirclePayService";
+import {
+  createCard,
+  createRequestToJoin,
+} from "../../../../../services/CirclePayService";
 
 import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
@@ -10,7 +13,7 @@ import {
   luhnAlgo,
   validateCreditCardProvider,
   validateCVV,
-} from "../../../../../shared/utils/shared";
+} from "../../../../../shared/utils";
 
 export default function MembershipRequestPayment(props: IStageProps) {
   const { userData, setUserData } = props;
@@ -28,21 +31,6 @@ export default function MembershipRequestPayment(props: IStageProps) {
     }
   };
 
-  // const createJoinProposal = async (formData: any) => {
-  //   try {
-  //     // return await apollo.mutate({
-  //     //   mutation: CreateJoinProposalDocument,
-  //     //   variables: {
-  //     //     proposal: formData,
-  //     //   },
-  //     //   errorPolicy: "none",
-  //     // });
-  //   } catch (err) {
-  //     console.error("Error while trying to create a new Join Proposal");
-  //     throw err;
-  //   }
-  // };
-
   const pay = async () => {
     try {
       const formData = {
@@ -52,36 +40,27 @@ export default function MembershipRequestPayment(props: IStageProps) {
         cvv,
       };
 
-      // const data = {
-      //   title: `User join for common ${props.common?.name}`,
-      //   description: formData.intro,
-      //   fundingAmount: formData.contribution_amount,
-      //   commonId: `${window.location.pathname.split("/")[2]}`,
-      // };
+      const data = {
+        description: formData.intro,
+        funding: (formData?.contribution_amount || 0) * 100,
+        commonId: `${window.location.pathname.split("/")[2]}`,
+      };
 
-      //console.log(data);
 
       setUserData({ ...userData, stage: 6 });
 
-      // const createdCard = await createCard({
-      //   ...formData,
-      // });
-
-      await createCard({
+      const createdCard = await createCard({
         ...formData,
       });
 
-      //console.log(createdCard);
+      console.log(createdCard);
 
-      // const createJoinProposalResponse = await createJoinProposal({
-      //   ...data,
-      //   cardId: createdCard.data.createCard.id,
-      // });
+      const createRequestToJoinResponse = await createRequestToJoin({
+        ...data,
+        cardId: createdCard.id as string,
+      });
 
-      //console.log(createJoinProposalResponse);
-
-      //const proposalId = createJoinProposalResponse.data.createJoinProposal.id;
-      // console.log(proposalId);
+      console.log(createRequestToJoinResponse);
 
       setUserData({ ...userData, stage: 7 });
       // TODO: show the proposalId somewhere?

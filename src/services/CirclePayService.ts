@@ -1,31 +1,32 @@
 import axios from "axios";
 
-import { CIRCLE_PAY_URL } from "../shared/constants";
-import { IMembershipRequestData } from "../containers/Common/components/CommonDetailContainer/MembershipRequestModal/MembershipRequestModal";
+import {
+  IMembershipRequestData,
+  IProposalPayload,
+} from "../containers/Common/components/CommonDetailContainer/MembershipRequestModal/MembershipRequestModal";
 import firebase from "../shared/utils/firebase";
+import config from "../config";
 
 const openpgpModule = import(
   /* webpackChunkName: "openpgp,  webpackPrefetch: true" */ "openpgp"
 );
 
 const endpoints = {
-  assign:
-    "https://us-central1-common-daostack.cloudfunctions.net/circlepay/assign-card",
-  create:
-    "https://us-central1-common-daostack.cloudfunctions.net/circlepay/create-card",
+  assignCard: config.cloudFunctionUrl + "/circlepay/assign-card",
+  encription: config.cloudFunctionUrl + "/circlepay/encryption",
+  createCard: config.cloudFunctionUrl + "/circlepay/create-card",
+  createJoin: config.cloudFunctionUrl + "/proposals/create/join",
 };
 
 const axiosClient = axios.create({
-  baseURL: CIRCLE_PAY_URL,
   timeout: 1000000,
 });
 
 // TODO: the Circle API should be via env var or something
 const getEncryptedData = async (token: any, dataToEncrypt: any) => {
-  const { data } = await axiosClient.get("encryption/public", {
+  const { data } = await axiosClient.get(endpoints.encription, {
     headers: {
-      Authorization:
-        "Bearer QVBJX0tFWTpmNThkOGFkYmEyMWE5Y2FlMzI4MzkxYjJjNGVlNWFmYjphMGNiN2UyYTUwYzEzNzNmNTVjNjg5ODYxZDdmZTIxZQ",
+      Authorization: await firebase.auth().currentUser?.getIdToken(true),
     },
   });
   const { keyId, publicKey } = data.data;
@@ -60,7 +61,7 @@ const cardData = (formData: IMembershipRequestData) => ({
 export const createCard = async (formData: IMembershipRequestData) =>
   (
     await axiosClient.post(
-      endpoints.create,
+      endpoints.createCard,
       await createCardPayload(formData),
       {
         headers: {
@@ -70,12 +71,26 @@ export const createCard = async (formData: IMembershipRequestData) =>
     )
   ).data;
 
+export const createRequestToJoin = async (formData: IProposalPayload) => {
+  return await axiosClient.post(endpoints.createJoin, formData, {
+    headers: {
+      Authorization: await firebase.auth().currentUser?.getIdToken(true),
+    },
+  });
+};
+
 export const createCardPayload = async (formData: IMembershipRequestData) => {
   const token = await firebase.auth().currentUser?.getIdToken(true);
   try {
     const { encryptedData, keyId } = await getEncryptedData(token, {
       number: `${formData.card_number}`,
       cvv: `${formData.cvv}`,
+    });
+
+    console.log({
+      keyId,
+      encryptedData,
+      ...cardData(formData),
     });
 
     return {
