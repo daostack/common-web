@@ -11,8 +11,17 @@ const dev: Configuration = {
     projectId: "common-staging-50741",
     storageBucket: "common-staging-50741.appspot.com",
     messagingSenderId: "78965953367",
-    appId: "1:78965953367:android:257ae3c68f0101542f6412",
+    appId: "1:78965953367:web:bc3e913a792fa28d2f6412",
   },
+  // firebase: {
+  //   apiKey: "AIzaSyAml-zMhoG_amLvM8mTxrydDOYXTGuubsA",
+  //   authDomain: "common-daostack.firebaseapp.com",
+  //   databaseURL: "https://common-daostack.firebaseio.com",
+  //   projectId: "common-daostack",
+  //   storageBucket: "common-daostack.appspot.com",
+  //   messagingSenderId: "78965953367",
+  //   appId: "1:854172758045:android:e4b053ade246c6fb1e96f4",
+  // },
 };
 
 const stage: Configuration = {

@@ -12,7 +12,12 @@ import { Loader, Share } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
 import { useModal, useViewPortHook } from "../../../../shared/hooks";
 
-import { Discussion, Member, Proposal, ProposalState } from "../../../../shared/models";
+import {
+  Discussion,
+  Member,
+  Proposal,
+  ProposalState,
+} from "../../../../shared/models";
 import { getScreenSize, getLoading } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
 import {
@@ -104,10 +109,9 @@ export default function CommonDetail() {
 
   const isCommonMember = commonMemberData && commonMemberData?.length > 0;
 
-  // TODO: need to fix the condition - it shows "pending" for commons that a user is not a member of and not requested to be a member
-  const isPending = proposals
+  const isPending = !!proposals
     ?.filter((p) => p.state === ProposalState.COUNTDOWN)
-    .filter((p) => p.user?.uid === user?.uid);
+    .filter((p) => p.user?.uid === user?.uid).length;
 
   const dispatch = useDispatch();
 

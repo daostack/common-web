@@ -10,29 +10,45 @@ export default function MembershipRequestContribution(props: IStageProps) {
     <div className="membership-request-content membership-request-contribution">
       <div className="sub-title">Personal Contribution</div>
       <div className="sub-text">{`Select the amount you would like to contribute (${formatPrice(
-        common?.fundingMinimumAmount,
+        common?.fundingMinimumAmount
       )} min.)`}</div>
       <div className="options-wrapper">
         <button
           className={`${userData.contribution_id === 0 ? "selected" : ""}`}
           onClick={() =>
-            setUserData({ ...userData, contribution_amount: common?.fundingMinimumAmount, contribution_id: 0 })
+            setUserData({
+              ...userData,
+              contribution_amount: common?.fundingMinimumAmount,
+              contribution_id: 0,
+            })
           }
         >
           {`${formatPrice(common?.fundingMinimumAmount)}`}
         </button>
-        {/* <button
+        <button
           className={`${userData.contribution_id === 1 ? "selected" : ""}`}
-          onClick={() => setUserData({ ...userData, contribution_amount: 20, contribution_id: 1 })}
+          onClick={() =>
+            setUserData({
+              ...userData,
+              contribution_amount: 20,
+              contribution_id: 1,
+            })
+          }
         >
           $20
         </button>
         <button
           className={`${userData.contribution_id === 2 ? "selected" : ""}`}
-          onClick={() => setUserData({ ...userData, contribution_amount: 50, contribution_id: 2 })}
+          onClick={() =>
+            setUserData({
+              ...userData,
+              contribution_amount: 50,
+              contribution_id: 2,
+            })
+          }
         >
           $50
-        </button> */}
+        </button>{" "}
       </div>
       <button
         disabled={!userData.contribution_amount}
