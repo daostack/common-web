@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState, ReactNode } from "rea
 import { isMobile } from "../../../../../../shared/utils";
 import { Dots } from "../../../../../../shared/components";
 import { GeneralInfo } from "./GeneralInfo";
+import { PROGRESS_RELATED_STEPS } from './Progress';
 import { CreationStep } from "./constants";
 import "./index.scss";
 
@@ -34,13 +35,15 @@ export default function CreationSteps({ isHeaderScrolledToTop, setTitle, setGoBa
   }, [step]);
 
   const title = useMemo(() => {
+    const stepIndex = PROGRESS_RELATED_STEPS.findIndex(progressStep => progressStep === step);
+
     return (
       <div className="create-common-creation-steps__modal-title-wrapper">
-        {isMobileView && !isHeaderScrolledToTop && (
+        {isMobileView && !isHeaderScrolledToTop && stepIndex !== -1 && (
           <Dots
             className="create-common-creation-steps__modal-title-dots"
-            currentStep={step}
-            stepsAmount={Object.keys(CreationStep).length / 2}
+            currentStep={stepIndex + 1}
+            stepsAmount={PROGRESS_RELATED_STEPS.length}
           />
         )}
         <h3 className="create-common-creation-steps__modal-title">Create a Common</h3>
