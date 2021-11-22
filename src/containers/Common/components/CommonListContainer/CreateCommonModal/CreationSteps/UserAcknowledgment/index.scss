@@ -8,10 +8,16 @@
 }
 
 .create-common-user-acknowledgment__header-image {
+  width: 116px;
+  height: 116px;
   display: block;
   margin: 0 auto 24px;
 
   @include big-phone {
+    max-width: 154px;
+    width: 100%;
+    max-height: 154px;
+    height: 100%;
     margin-top: 24px;
     margin-bottom: 16px;
   }
