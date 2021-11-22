@@ -1,17 +1,13 @@
-import React, { useCallback, useMemo, useRef, useState, ReactElement } from "react";
-import { Formik, FormikConfig } from "formik";
-import { FormikProps } from "formik/dist/types";
+import React, { useCallback, useMemo, useState, ReactElement } from "react";
 
 import { isMobile } from "../../../../../../../shared/utils";
 import { ButtonLink } from "../../../../../../../shared/components";
 import { Checkbox } from "../../../../../../../shared/components/Form";
 import { ModalFooter, ModalHeaderContent } from "../../../../../../../shared/components/Modal";
-import { Form } from "../../../../../../../shared/components/Form/Formik";
 import ExplanationIcon from "../../../../../../../shared/icons/explanation.icon";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
 import { CheckedList } from "./CheckedList";
-import validationSchema from "./validationSchema";
 import "./index.scss";
 
 interface UserAcknowledgmentProps {
@@ -19,22 +15,9 @@ interface UserAcknowledgmentProps {
   onFinish: () => void;
 }
 
-interface FormValues {
-  commonName: string;
-  tagline: string;
-  about: string;
-}
-
-const INITIAL_VALUES: FormValues = {
-  commonName: '',
-  tagline: '',
-  about: '',
-};
-
 const CAUSES_TEXT = "Education, Religion, Culture, Science, Health, Welfare, Sports, Fighting corruption, Protecting democracy, Employment, and Human rights.";
 
 export default function UserAcknowledgment({ currentStep, onFinish }: UserAcknowledgmentProps): ReactElement {
-  const formRef = useRef<FormikProps<FormValues>>(null);
   const [showCausesBox, setShowCausesBox] = useState(false);
   const [areTermsConfirmed, setAreTermsConfirmed] = useState(false);
   const isMobileView = isMobile();
@@ -46,17 +29,6 @@ export default function UserAcknowledgment({ currentStep, onFinish }: UserAcknow
   const handleTermsChange = useCallback(() => {
     setAreTermsConfirmed(checked => !checked);
   }, []);
-
-  const handleContinueClick = useCallback(() => {
-    if (formRef.current) {
-      formRef.current.submitForm();
-    }
-  }, []);
-
-  const handleSubmit = useCallback<FormikConfig<FormValues>['onSubmit']>((values) => {
-    console.log(values);
-    onFinish();
-  }, [onFinish]);
 
   const listItems = useMemo(() => [
     "The purpose of the Common is not in violation of any law, regulation, or 3rd party rights.",
@@ -111,29 +83,17 @@ export default function UserAcknowledgment({ currentStep, onFinish }: UserAcknow
             label: "create-common-user-acknowledgment__terms-checkbox-label",
           }}
         />
-        {/*<ModalFooter sticky={!isMobileView}>*/}
-        {/*  <div className="create-common-user-acknowledgment__modal-footer">*/}
-        {/*    <Formik*/}
-        {/*      initialValues={INITIAL_VALUES}*/}
-        {/*      onSubmit={handleSubmit}*/}
-        {/*      innerRef={formRef}*/}
-        {/*      validationSchema={validationSchema}*/}
-        {/*      validateOnMount*/}
-        {/*    >*/}
-        {/*      {({ values, errors, touched, isValid }) => (*/}
-        {/*        <Form>*/}
-        {/*          <button*/}
-        {/*            className="button-blue"*/}
-        {/*            onClick={handleContinueClick}*/}
-        {/*            disabled={!isValid}*/}
-        {/*          >*/}
-        {/*            Continue to Funding*/}
-        {/*          </button>*/}
-        {/*        </Form>*/}
-        {/*      )}*/}
-        {/*    </Formik>*/}
-        {/*  </div>*/}
-        {/*</ModalFooter>*/}
+        <ModalFooter sticky={!isMobileView}>
+          <div className="create-common-user-acknowledgment__modal-footer">
+            <button
+              className="button-blue"
+              onClick={onFinish}
+              disabled={!areTermsConfirmed}
+            >
+              Continue to Funding
+            </button>
+          </div>
+        </ModalFooter>
       </div>
     </>
   );

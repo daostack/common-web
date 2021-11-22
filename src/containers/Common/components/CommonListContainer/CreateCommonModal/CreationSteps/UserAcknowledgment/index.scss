@@ -80,11 +80,11 @@
 }
 
 .create-common-user-acknowledgment__modal-footer {
-  //display: flex;
-  //justify-content: center;
-  //padding: 28px 0;
-  //
-  //@include big-phone {
-  //  padding: 24px 0;
-  //}
+  display: flex;
+  justify-content: center;
+  padding: 28px 0;
+
+  @include big-phone {
+    padding: 24px 0;
+  }
 }
