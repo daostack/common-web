@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, ReactElement } from "react";
+import React, { useCallback, useMemo, useRef, useState, ReactElement } from "react";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
 
@@ -30,19 +30,16 @@ const INITIAL_VALUES: FormValues = {
   about: '',
 };
 
-const LIST_ITEMS = [
-  "The purpose of the Common is not in violation of any law, regulation, or 3rd party rights.",
-  <>The Common will be raising funds for <strong>non-profit or charitable causes only.</strong> The common is not intended for commercial or for-profit purposes.</>,
-  "All Commons and their members must comply with applicable financial and tax obligations.",
-  <>
-    The Common will solely promote one or more of the following <ButtonLink className="create-common-user-acknowledgment__causes-link">Causes<ExplanationIcon className="create-common-user-acknowledgment__causes-icon" /></ButtonLink>.
-  </>,
-];
 const CAUSES_TEXT = "Education, Religion, Culture, Science, Health, Welfare, Sports, Fighting corruption, Protecting democracy, Employment, and Human rights.";
 
 export default function UserAcknowledgment({ currentStep, onFinish }: UserAcknowledgmentProps): ReactElement {
   const formRef = useRef<FormikProps<FormValues>>(null);
+  const [showCausesBox, setShowCausesBox] = useState(false);
   const isMobileView = isMobile();
+
+  const toggleCausesBoxShowing = useCallback(() => {
+    setShowCausesBox(shouldShow => !shouldShow);
+  }, []);
 
   const handleContinueClick = useCallback(() => {
     if (formRef.current) {
@@ -54,6 +51,15 @@ export default function UserAcknowledgment({ currentStep, onFinish }: UserAcknow
     console.log(values);
     onFinish();
   }, [onFinish]);
+
+  const listItems = useMemo(() => [
+    "The purpose of the Common is not in violation of any law, regulation, or 3rd party rights.",
+    <>The Common will be raising funds for <strong>non-profit or charitable causes only.</strong> The common is not intended for commercial or for-profit purposes.</>,
+    "All Commons and their members must comply with applicable financial and tax obligations.",
+    <>
+      The Common will solely promote one or more of the following <ButtonLink className="create-common-user-acknowledgment__causes-link" onClick={toggleCausesBoxShowing}>Causes<ExplanationIcon className="create-common-user-acknowledgment__causes-icon" /></ButtonLink>.
+    </>,
+  ], [toggleCausesBoxShowing]);
 
   const headerEl = (
     <>
@@ -76,10 +82,12 @@ export default function UserAcknowledgment({ currentStep, onFinish }: UserAcknow
       <div className="create-common-user-acknowledgment">
         {isMobileView && headerEl}
         <Separator />
-        <CheckedList items={LIST_ITEMS} />
-        <div className="create-common-user-acknowledgment__causes-box">
-          {CAUSES_TEXT}
-        </div>
+        <CheckedList items={listItems} />
+        {showCausesBox && (
+          <div className="create-common-user-acknowledgment__causes-box">
+            {CAUSES_TEXT}
+          </div>
+        )}
         {/*<ModalFooter sticky={!isMobileView}>*/}
         {/*  <div className="create-common-user-acknowledgment__modal-footer">*/}
         {/*    <Formik*/}
