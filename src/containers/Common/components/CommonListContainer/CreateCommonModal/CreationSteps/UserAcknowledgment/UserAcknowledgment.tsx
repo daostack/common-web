@@ -82,12 +82,18 @@ export default function UserAcknowledgment({ currentStep, onFinish }: UserAcknow
       <div className="create-common-user-acknowledgment">
         {isMobileView && headerEl}
         <Separator />
-        <CheckedList items={listItems} />
+        <CheckedList
+          className="create-common-user-acknowledgment__checked-list"
+          items={listItems}
+        />
         {showCausesBox && (
           <div className="create-common-user-acknowledgment__causes-box">
             {CAUSES_TEXT}
           </div>
         )}
+        <span className="create-common-user-acknowledgment__terms-text">
+          For more details and information refer to the <ButtonLink className="create-common-user-acknowledgment__terms-link">Terms of Use.</ButtonLink>
+        </span>
         {/*<ModalFooter sticky={!isMobileView}>*/}
         {/*  <div className="create-common-user-acknowledgment__modal-footer">*/}
         {/*    <Formik*/}

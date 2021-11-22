@@ -6,6 +6,10 @@
   max-width: 584px;
   margin: 0 auto;
 
+  .create-common-user-acknowledgment__checked-list {
+    margin-bottom: 8px;
+  }
+
   .create-common-user-acknowledgment__causes-link {
     display: inline-flex;
     align-items: center;
@@ -20,7 +24,6 @@
   }
 
   .create-common-user-acknowledgment__causes-box {
-    margin-top: 8px;
     padding: 16px;
     border-radius: 14px;
     background-color: $light-gray-4;
@@ -28,6 +31,21 @@
     font-size: $xsmall;
     line-height: 1.42;
     color: $secondary-blue;
+  }
+
+  .create-common-user-acknowledgment__terms-text {
+    margin-top: 16px;
+    display: inline-block;
+    font-family: NunitoSans-Regular, sans-serif;
+    font-size: $xsmall;
+    line-height: 1.42;
+    color: $secondary-blue;
+  }
+
+  .create-common-user-acknowledgment__terms-link {
+    font-weight: bold;
+    color: $secondary-blue;
+    text-decoration: underline;
   }
 }
 
