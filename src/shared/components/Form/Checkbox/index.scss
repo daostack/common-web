@@ -1,0 +1,48 @@
+@import "../../../../constants";
+
+.custom-checkbox {
+  display: flex;
+  align-items: flex-end;
+
+  .custom-checkbox__input-wrapper {
+    position: relative;
+    width: 24px;
+    height: 24px;
+  }
+
+  .custom-checkbox__input {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+
+    &:checked ~ .custom-checkbox__regular-icon,
+    &:not(:checked) ~ .custom-checkbox__selected-icon {
+      display: none;
+    }
+
+    &:focus-visible ~ .custom-checkbox__icon {
+      outline: $purple auto 5px;
+    }
+  }
+
+  .custom-checkbox__icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .custom-checkbox__label {
+    margin-left: 8px;
+    font-family: NunitoSans-Regular, sans-serif;
+    font-size: $xsmall;
+    line-height: 1.42;
+    color: $secondary-blue;
+    cursor: pointer;
+    user-select: none;
+  }
+}
