@@ -7,6 +7,7 @@ import { ModalFooter, ModalHeaderContent } from "../../../../../../../shared/com
 import { Form } from "../../../../../../../shared/components/Form/Formik";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
+import { CheckedList } from "./CheckedList";
 import validationSchema from "./validationSchema";
 import "./index.scss";
 
@@ -26,6 +27,13 @@ const INITIAL_VALUES: FormValues = {
   tagline: '',
   about: '',
 };
+
+const LIST_ITEMS = [
+  "The purpose of the Common is not in violation of any law, regulation, or 3rd party rights.",
+  <>The Common will be raising funds for <strong>non-profit or charitable causes only.</strong> The common is not intended for commercial or for-profit purposes.</>,
+  "All Commons and their members must comply with applicable financial and tax obligations.",
+  <>The Common will solely promote one or more of the following Causes.</>
+];
 
 export default function UserAcknowledgment({ currentStep, onFinish }: UserAcknowledgmentProps): ReactElement {
   const formRef = useRef<FormikProps<FormValues>>(null);
@@ -63,6 +71,7 @@ export default function UserAcknowledgment({ currentStep, onFinish }: UserAcknow
       <div className="create-common-user-acknowledgment">
         {isMobileView && headerEl}
         <Separator />
+        <CheckedList items={LIST_ITEMS} />
         {/*<ModalFooter sticky={!isMobileView}>*/}
         {/*  <div className="create-common-user-acknowledgment__modal-footer">*/}
         {/*    <Formik*/}

@@ -1,0 +1,38 @@
+@import "../../../../../../../../constants";
+@import "../../../../../../../../styles/sizes";
+
+.create-common-checked-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+
+  .create-common-checked-list__item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    font-family: NunitoSans-Regular, sans-serif;
+    font-size: $small;
+    line-height: 1.5;
+    color: $secondary-blue;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    @include big-phone {
+      font-size: $xsmall;
+      line-height: 1.42;
+    }
+  }
+
+  .create-common-checked-list__icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    margin-right: 16px;
+
+    @include big-phone {
+      margin-right: 8px;
+    }
+  }
+}
