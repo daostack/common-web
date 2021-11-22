@@ -5,6 +5,19 @@
   width: 100%;
   max-width: 584px;
   margin: 0 auto;
+
+  .create-common-user-acknowledgment__causes-link {
+    display: inline-flex;
+    align-items: center;
+    font-weight: bold;
+
+    @include big-phone {
+      text-decoration: underline;
+    }
+  }
+  .create-common-user-acknowledgment__causes-icon {
+    margin-left: 4px;
+  }
 }
 
 .create-common-user-acknowledgment__header-image {
