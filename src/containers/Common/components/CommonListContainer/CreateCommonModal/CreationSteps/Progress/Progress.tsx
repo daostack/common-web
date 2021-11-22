@@ -13,6 +13,10 @@ const STEP_DATA: Record<CreationStep, { title: string; description?: string }> =
     title: 'General Info',
     description: 'Describe your cause and let the community learn more about your plans and goals.',
   },
+  [CreationStep.UserAcknowledgment]: {
+    title: 'User Acknowledgment',
+    description: 'Before creating a Common, please make sure that:',
+  },
   [CreationStep.Funding]: {
     title: 'Funding',
     description: 'Control how this Common will collect and manage funds.',

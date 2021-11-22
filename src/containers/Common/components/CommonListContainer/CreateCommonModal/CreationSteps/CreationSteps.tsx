@@ -4,6 +4,7 @@ import { isMobile } from "../../../../../../shared/utils";
 import { Dots } from "../../../../../../shared/components";
 import { GeneralInfo } from "./GeneralInfo";
 import { PROGRESS_RELATED_STEPS } from './Progress';
+import { UserAcknowledgment } from './UserAcknowledgment';
 import { CreationStep } from "./constants";
 import "./index.scss";
 
@@ -63,6 +64,8 @@ export default function CreationSteps({ isHeaderScrolledToTop, setTitle, setGoBa
     switch (step) {
       case CreationStep.GeneralInfo:
         return <GeneralInfo currentStep={step} onFinish={handleFinish} />;
+      case CreationStep.UserAcknowledgment:
+        return <UserAcknowledgment currentStep={step} onFinish={handleFinish} />;
       default:
         return null;
     }

@@ -1,0 +1,28 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.create-common-user-acknowledgment {
+  width: 100%;
+  max-width: 584px;
+  margin: 0 auto;
+}
+
+.create-common-user-acknowledgment__header-image {
+  display: block;
+  margin: 0 auto 24px;
+
+  @include big-phone {
+    margin-top: 24px;
+    margin-bottom: 16px;
+  }
+}
+
+.create-common-user-acknowledgment__modal-footer {
+  //display: flex;
+  //justify-content: center;
+  //padding: 28px 0;
+  //
+  //@include big-phone {
+  //  padding: 24px 0;
+  //}
+}
