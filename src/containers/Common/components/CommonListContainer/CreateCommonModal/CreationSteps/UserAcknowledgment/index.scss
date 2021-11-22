@@ -40,6 +40,11 @@
     font-size: $xsmall;
     line-height: 1.42;
     color: $secondary-blue;
+
+    @include big-phone {
+      font-size: $xxsmall;
+      line-height: 1.32;
+    }
   }
 
   .create-common-user-acknowledgment__terms-link {
