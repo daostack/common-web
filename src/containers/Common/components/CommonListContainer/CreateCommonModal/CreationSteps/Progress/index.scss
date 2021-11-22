@@ -6,15 +6,20 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 26px 0 16px;
+  padding-bottom: 16px;
 
   .create-common-steps-progress__stepper {
     max-width: 280px;
     width: 100%;
+    margin: 26px 0 24px;
+
+    @include big-phone {
+      margin-top: 16px;
+    }
   }
 
   .create-common-steps-progress__title {
-    margin: 24px 0 0;
+    margin: 0;
     font-family: NunitoSans-Bold, sans-serif;
     font-size: $small;
     font-weight: bold;
@@ -34,6 +39,6 @@
   }
 
   @include big-phone {
-    padding: 16px 0 20px;
+    padding-bottom: 20px;
   }
 }
