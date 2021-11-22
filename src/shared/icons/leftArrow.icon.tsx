@@ -1,10 +1,10 @@
-import React from "react";
+import React, { ReactElement } from "react";
 
 interface LeftArrowIconProps {
   className?: string;
 }
 
-export default function LeftArrowIcon({ className }: LeftArrowIconProps) {
+export default function LeftArrowIcon({ className }: LeftArrowIconProps): ReactElement {
   return (
     <svg className={className} xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
       <g fill="none" fillRule="evenodd">
