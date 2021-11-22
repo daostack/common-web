@@ -52,6 +52,15 @@
     color: $secondary-blue;
     text-decoration: underline;
   }
+
+  .create-common-user-acknowledgment__terms-checkbox {
+    margin-top: 24px;
+  }
+  .create-common-user-acknowledgment__terms-checkbox-label {
+    font-size: $small;
+    font-weight: bold;
+    line-height: 1.24;
+  }
 }
 
 .create-common-user-acknowledgment__header-image {

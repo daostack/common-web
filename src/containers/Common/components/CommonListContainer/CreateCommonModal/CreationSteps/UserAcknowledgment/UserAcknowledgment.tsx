@@ -4,6 +4,7 @@ import { FormikProps } from "formik/dist/types";
 
 import { isMobile } from "../../../../../../../shared/utils";
 import { ButtonLink } from "../../../../../../../shared/components";
+import { Checkbox } from "../../../../../../../shared/components/Form";
 import { ModalFooter, ModalHeaderContent } from "../../../../../../../shared/components/Modal";
 import { Form } from "../../../../../../../shared/components/Form/Formik";
 import ExplanationIcon from "../../../../../../../shared/icons/explanation.icon";
@@ -35,10 +36,15 @@ const CAUSES_TEXT = "Education, Religion, Culture, Science, Health, Welfare, Spo
 export default function UserAcknowledgment({ currentStep, onFinish }: UserAcknowledgmentProps): ReactElement {
   const formRef = useRef<FormikProps<FormValues>>(null);
   const [showCausesBox, setShowCausesBox] = useState(false);
+  const [areTermsConfirmed, setAreTermsConfirmed] = useState(false);
   const isMobileView = isMobile();
 
   const toggleCausesBoxShowing = useCallback(() => {
     setShowCausesBox(shouldShow => !shouldShow);
+  }, []);
+
+  const handleTermsChange = useCallback(() => {
+    setAreTermsConfirmed(checked => !checked);
   }, []);
 
   const handleContinueClick = useCallback(() => {
@@ -94,6 +100,17 @@ export default function UserAcknowledgment({ currentStep, onFinish }: UserAcknow
         <span className="create-common-user-acknowledgment__terms-text">
           For more details and information refer to the <ButtonLink className="create-common-user-acknowledgment__terms-link">Terms of Use.</ButtonLink>
         </span>
+        <Checkbox
+          className="create-common-user-acknowledgment__terms-checkbox"
+          id="termsAgreement"
+          name="termsAgreement"
+          label="I agree with the above statement."
+          checked={areTermsConfirmed}
+          onChange={handleTermsChange}
+          styles={{
+            label: "create-common-user-acknowledgment__terms-checkbox-label",
+          }}
+        />
         {/*<ModalFooter sticky={!isMobileView}>*/}
         {/*  <div className="create-common-user-acknowledgment__modal-footer">*/}
         {/*    <Formik*/}
