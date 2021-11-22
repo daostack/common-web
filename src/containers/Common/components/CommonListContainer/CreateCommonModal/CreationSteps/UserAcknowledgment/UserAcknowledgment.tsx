@@ -38,6 +38,7 @@ const LIST_ITEMS = [
     The Common will solely promote one or more of the following <ButtonLink className="create-common-user-acknowledgment__causes-link">Causes<ExplanationIcon className="create-common-user-acknowledgment__causes-icon" /></ButtonLink>.
   </>,
 ];
+const CAUSES_TEXT = "Education, Religion, Culture, Science, Health, Welfare, Sports, Fighting corruption, Protecting democracy, Employment, and Human rights.";
 
 export default function UserAcknowledgment({ currentStep, onFinish }: UserAcknowledgmentProps): ReactElement {
   const formRef = useRef<FormikProps<FormValues>>(null);
@@ -76,6 +77,9 @@ export default function UserAcknowledgment({ currentStep, onFinish }: UserAcknow
         {isMobileView && headerEl}
         <Separator />
         <CheckedList items={LIST_ITEMS} />
+        <div className="create-common-user-acknowledgment__causes-box">
+          {CAUSES_TEXT}
+        </div>
         {/*<ModalFooter sticky={!isMobileView}>*/}
         {/*  <div className="create-common-user-acknowledgment__modal-footer">*/}
         {/*    <Formik*/}
