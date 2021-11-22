@@ -10,7 +10,7 @@ import "./index.scss";
 
 interface IntroductionProps {
   setTitle: (title: string) => void;
-  setGoBackHandler: (handle?: () => boolean | undefined) => void;
+  setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
   onFinish: () => void;
 }
 
@@ -54,7 +54,7 @@ export default function Introduction({ setTitle, setGoBackHandler, onFinish }: I
   }, [setTitle, isMobileView]);
 
   useEffect(() => {
-    setGoBackHandler();
+    setGoBackHandler(null);
   }, [setGoBackHandler]);
 
   const handleSwiper = useCallback((swiper: SwiperClass) => {

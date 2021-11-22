@@ -38,8 +38,8 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     setIsBigTitle(false);
   }, []);
 
-  const setGoBackHandler = useCallback((handler: (() => boolean | undefined) | undefined) => {
-    setOnGoBack(() => handler);
+  const setGoBackHandler = useCallback((handler?: (() => boolean | undefined) | null) => {
+    setOnGoBack(() => (handler ?? undefined));
   }, []);
   const moveStageBack = useCallback(() => {
     setStage((stage) => (stage === CreateCommonStage.Introduction ? stage : (stage - 1)));

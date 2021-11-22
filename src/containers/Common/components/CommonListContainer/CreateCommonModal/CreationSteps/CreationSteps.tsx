@@ -9,7 +9,7 @@ import "./index.scss";
 interface CreationStepsProps {
   isHeaderScrolledToTop: boolean;
   setTitle: (title: ReactNode) => void;
-  setGoBackHandler: (handle?: () => boolean | undefined) => void;
+  setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
   onFinish: () => void;
 }
 
