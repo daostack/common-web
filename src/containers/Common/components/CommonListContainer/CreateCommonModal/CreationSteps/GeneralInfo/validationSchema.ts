@@ -5,6 +5,7 @@ import {
   MAX_TAGLINE_LENGTH,
   MAX_ABOUT_LENGTH,
   MAX_LINK_TITLE_LENGTH,
+  HTTPS_URL_REGEXP,
 } from "./constants";
 
 const schema = Yup.object().shape({
@@ -21,7 +22,10 @@ const schema = Yup.object().shape({
         .max(MAX_LINK_TITLE_LENGTH, "Entered title is too long")
         .required("Please enter link title"),
       link: Yup.string()
-        .url("Please enter correct URL")
+        .matches(
+          HTTPS_URL_REGEXP,
+          "Please enter correct URL",
+        )
         .required("Please enter a link"),
     }))
     .required("Please add at least 1 link")
