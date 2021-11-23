@@ -25,6 +25,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   const [isBigTitle, setIsBigTitle] = useState(true);
   const [isHeaderScrolledToTop, setIsHeaderScrolledToTop] = useState(true);
   const [onGoBack, setOnGoBack] = useState<(() => boolean | undefined) | undefined>();
+  const [shouldShowCloseButton, setShouldShowCloseButton] = useState(true);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const isHeaderSticky = stage === CreateCommonStage.CreationSteps;
@@ -82,6 +83,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             isHeaderScrolledToTop={isHeaderScrolledToTop}
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
+            setShouldShowCloseButton={setShouldShowCloseButton}
             onFinish={handleCreationStepsFinish}
           />
         );
@@ -106,6 +108,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       })}
       mobileFullScreen={isMobileView}
       title={renderedTitle}
+      hideCloseButton={!shouldShowCloseButton}
       isHeaderSticky={isHeaderSticky}
       onHeaderScrolledToTop={setIsHeaderScrolledToTop}
     >

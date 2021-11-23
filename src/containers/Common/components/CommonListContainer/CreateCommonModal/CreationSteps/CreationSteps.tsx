@@ -12,10 +12,12 @@ interface CreationStepsProps {
   isHeaderScrolledToTop: boolean;
   setTitle: (title: ReactNode) => void;
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
+  setShouldShowCloseButton: (shouldShow: boolean) => void;
   onFinish: () => void;
 }
 
-export default function CreationSteps({ isHeaderScrolledToTop, setTitle, setGoBackHandler, onFinish }: CreationStepsProps) {
+export default function CreationSteps(props: CreationStepsProps) {
+  const { isHeaderScrolledToTop, setTitle, setGoBackHandler, setShouldShowCloseButton, onFinish } = props;
   const [step, setStep] = useState(CreationStep.GeneralInfo);
   const isMobileView = isMobile();
 
@@ -38,6 +40,14 @@ export default function CreationSteps({ isHeaderScrolledToTop, setTitle, setGoBa
   const shouldShowGoBackButton = useCallback((): boolean => {
     if (step === CreationStep.UserAcknowledgment) {
       return isMobileView;
+    }
+
+    return true;
+  }, [step, isMobileView]);
+
+  const shouldShowCloseButton = useCallback((): boolean => {
+    if (step === CreationStep.UserAcknowledgment) {
+      return !isMobileView;
     }
 
     return true;
@@ -79,6 +89,10 @@ export default function CreationSteps({ isHeaderScrolledToTop, setTitle, setGoBa
   useEffect(() => {
     setGoBackHandler(shouldShowGoBackButton() ? handleGoBack : null);
   }, [setGoBackHandler, shouldShowGoBackButton, handleGoBack]);
+
+  useEffect(() => {
+    setShouldShowCloseButton(shouldShowCloseButton());
+  }, [setShouldShowCloseButton, shouldShowCloseButton]);
 
   const content = useMemo(() => {
     switch (step) {
