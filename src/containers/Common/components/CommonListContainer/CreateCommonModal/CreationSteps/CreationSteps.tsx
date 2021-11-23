@@ -35,6 +35,14 @@ export default function CreationSteps({ isHeaderScrolledToTop, setTitle, setGoBa
     setStep(step => step + 1);
   }, [step]);
 
+  const shouldShowGoBackButton = useCallback((): boolean => {
+    if (step === CreationStep.UserAcknowledgment) {
+      return isMobileView;
+    }
+
+    return true;
+  }, [step, isMobileView]);
+
   const shouldShowTitle = useCallback((): boolean => {
     if (step === CreationStep.UserAcknowledgment) {
       return isMobileView;
@@ -69,8 +77,8 @@ export default function CreationSteps({ isHeaderScrolledToTop, setTitle, setGoBa
   }, [setTitle, title]);
 
   useEffect(() => {
-    setGoBackHandler(handleGoBack);
-  }, [setGoBackHandler, handleGoBack]);
+    setGoBackHandler(shouldShowGoBackButton() ? handleGoBack : null);
+  }, [setGoBackHandler, shouldShowGoBackButton, handleGoBack]);
 
   const content = useMemo(() => {
     switch (step) {
