@@ -29,10 +29,10 @@ interface FormValues {
 }
 
 const INITIAL_VALUES: FormValues = {
-  commonName: '',
-  tagline: '',
-  about: '',
-  links: [{ title: '', link: '' }],
+  commonName: "",
+  tagline: "",
+  about: "",
+  links: [{ title: "", link: "" }],
 };
 
 export default function GeneralInfo({ currentStep, onFinish }: GeneralInfoProps): ReactElement {
