@@ -6,7 +6,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 26px 0 16px;
+  padding: 16px 0;
 
   .create-common-steps-progress__stepper {
     max-width: 280px;
@@ -34,6 +34,6 @@
   }
 
   @include big-phone {
-    padding: 16px 0 20px;
+    padding-bottom: 20px;
   }
 }

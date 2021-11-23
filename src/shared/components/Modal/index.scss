@@ -89,11 +89,12 @@ $modal-mobile-padding: 24px;
     padding-top: $modal-padding;
   }
   .modal__header--with-string-title {
-    padding-top: 28px;
-    padding-bottom: 20px;
+    padding-top: 32px;
+    padding-bottom: 32px;
 
     @include big-phone {
-      padding-top: 20px;
+      padding-top: 24px;
+      padding-bottom: 24px;
     }
   }
 
@@ -102,7 +103,7 @@ $modal-mobile-padding: 24px;
     font-family: NunitoSans-Bold, sans-serif;
     font-size: $small;
     font-weight: bold;
-    line-height: 1.38;
+    line-height: 1;
     text-align: center;
     color: $secondary-blue;
   }
