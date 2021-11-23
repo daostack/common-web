@@ -35,7 +35,19 @@ export default function CreationSteps({ isHeaderScrolledToTop, setTitle, setGoBa
     setStep(step => step + 1);
   }, [step]);
 
+  const shouldShowTitle = useCallback((): boolean => {
+    if (step === CreationStep.UserAcknowledgment) {
+      return isMobileView;
+    }
+
+    return true;
+  }, [step, isMobileView]);
+
   const title = useMemo(() => {
+    if (!shouldShowTitle()) {
+      return '';
+    }
+
     const stepIndex = PROGRESS_RELATED_STEPS.findIndex(progressStep => progressStep === step);
 
     return (
@@ -50,7 +62,7 @@ export default function CreationSteps({ isHeaderScrolledToTop, setTitle, setGoBa
         <h3 className="create-common-creation-steps__modal-title">Create a Common</h3>
       </div>
     );
-  }, [isMobileView, isHeaderScrolledToTop, step]);
+  }, [shouldShowTitle, isMobileView, isHeaderScrolledToTop, step]);
 
   useEffect(() => {
     setTitle(title);
