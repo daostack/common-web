@@ -2,7 +2,7 @@
 @import "../../../../../../styles/sizes";
 
 .create-common-creation-steps__modal-title-wrapper {
-  height: 64px;
+  height: 80px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -20,5 +20,9 @@
     line-height: 1.38;
     text-align: center;
     color: $secondary-blue;
+  }
+
+  @include big-phone {
+    height: 64px;
   }
 }

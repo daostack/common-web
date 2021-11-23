@@ -11,11 +11,7 @@
   .create-common-steps-progress__stepper {
     max-width: 280px;
     width: 100%;
-    margin: 26px 0 24px;
-
-    @include big-phone {
-      margin-top: 16px;
-    }
+    margin: 16px 0 24px;
   }
 
   .create-common-steps-progress__title {
@@ -30,7 +26,6 @@
   .create-common-steps-progress__description {
     max-width: 376px;
     margin: 4px 0 0;
-    font-family: NunitoSans-Regular, sans-serif;
     font-size: $xsmall;
     font-weight: normal;
     line-height: 1.42;
