@@ -46,7 +46,6 @@ export default function GeneralInfo({ currentStep, onFinish }: GeneralInfoProps)
   }, []);
 
   const handleSubmit = useCallback<FormikConfig<FormValues>['onSubmit']>((values) => {
-    console.log(values);
     onFinish();
   }, [onFinish]);
 
