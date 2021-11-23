@@ -86,6 +86,7 @@ export default function UserAcknowledgment({ currentStep, onFinish }: UserAcknow
         <ModalFooter sticky={!isMobileView}>
           <div className="create-common-user-acknowledgment__modal-footer">
             <button
+              key="user-acknowledgement-continue"
               className="button-blue"
               onClick={onFinish}
               disabled={!areTermsConfirmed}
