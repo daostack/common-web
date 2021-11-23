@@ -11,6 +11,10 @@
   }
 
   .custom-checkbox__input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
     width: 100%;
     height: 100%;
     margin: 0;
