@@ -1,0 +1,39 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.create-common-general-info {
+  width: 100%;
+  max-width: 584px;
+  margin: 0 auto;
+  padding-bottom: 32px;
+
+  .create-common-general-info__text-field {
+    margin-bottom: 24px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .create-common-general-info__links-array-item {
+    margin-top: 24px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  @include big-phone {
+    padding-bottom: 14px;
+  }
+}
+
+.create-common-general-info__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding: 28px 0;
+
+  @include big-phone {
+    padding: 24px 0;
+  }
+}

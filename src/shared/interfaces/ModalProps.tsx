@@ -12,4 +12,5 @@ export interface ModalProps {
   mobileFullScreen?: boolean;
   title?: ReactNode;
   isHeaderSticky?: boolean;
+  onHeaderScrolledToTop?: (isHeaderScrolledToTop: boolean) => void;
 }

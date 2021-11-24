@@ -1,42 +1,46 @@
 @import "../../../../constants";
 
-$text-field-vertical-padding: 14px;
+$custom-input-vertical-padding: 14px;
 
-.text-field {
+.custom-input {
   display: flex;
   flex-direction: column;
   font-family: NunitoSans-Regular, sans-serif;
   font-weight: normal;
   color: $secondary-blue;
 
-  .text-field__label-wrapper {
+  .custom-input__label-wrapper {
     margin-bottom: 10px;
     display: flex;
     font-size: $xxsmall;
     line-height: 1.32;
   }
 
-  .text-field__label {
-    width: 100%;
+  .custom-input__label {
     text-align: left;
   }
 
-  .text-field__hint {
+  .custom-input__hint {
     margin-left: auto;
     font-style: italic;
     text-align: right;
     color: $light-gray-3;
   }
 
-  .text-field__input-wrapper {
+  .custom-input__input-wrapper {
     position: relative;
     width: 100%;
     display: flex;
   }
 
-  .text-field__input {
+  .custom-input__input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
     width: 100%;
-    padding: $text-field-vertical-padding 12px;
+    margin: 0;
+    padding: $custom-input-vertical-padding 12px;
     border-radius: 3px;
     border: solid 1px $light-gray-1;
     background-color: $white;
@@ -50,24 +54,16 @@ $text-field-vertical-padding: 14px;
       color: $light-gray-2;
     }
   }
-  .text-field__input--error {
+  .custom-input__input--error {
     border-color: $error;
   }
 
-  .text-field__input-length {
+  .custom-input__input-length {
     position: absolute;
-    top: $text-field-vertical-padding;
+    top: $custom-input-vertical-padding;
     right: 8px;
     font-size: $xsmall;
     text-align: right;
     color: $light-gray-2;
-  }
-
-  .text-field__error {
-    margin-top: 8px;
-    font-size: $xxsmall;
-    line-height: 1.42;
-    text-align: left;
-    color: $error;
   }
 }

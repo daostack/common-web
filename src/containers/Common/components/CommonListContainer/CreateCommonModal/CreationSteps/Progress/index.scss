@@ -1,0 +1,38 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.create-common-steps-progress {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 0;
+
+  .create-common-steps-progress__stepper {
+    max-width: 280px;
+    width: 100%;
+  }
+
+  .create-common-steps-progress__title {
+    margin: 24px 0 0;
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: $small;
+    font-weight: bold;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .create-common-steps-progress__description {
+    max-width: 376px;
+    margin: 4px 0 0;
+    font-size: $xsmall;
+    font-weight: normal;
+    line-height: 1.42;
+    text-align: center;
+    color: $light-gray-2;
+  }
+
+  @include big-phone {
+    padding-bottom: 20px;
+  }
+}

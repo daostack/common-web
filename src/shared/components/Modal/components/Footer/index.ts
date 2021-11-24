@@ -1,1 +1,1 @@
-export { default as ModalFooter } from './Footer';
+export { default as ModalFooter } from "./Footer";

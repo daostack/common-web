@@ -55,39 +55,47 @@ $modal-mobile-padding: 24px;
     max-width: $element-max-width;
   }
 
+  .modal__header-wrapper {
+    z-index: 1;
+    flex: 0 0;
+    transition: box-shadow .1s;
+  }
+  .modal__header-wrapper--fixed {
+    padding-left: $modal-padding;
+    padding-right: $modal-padding;
+
+    .modal__header {
+      padding-left: $modal-action-size;
+      padding-right: $modal-action-size;
+    }
+
+    @include big-phone {
+      padding-left: $modal-mobile-padding;
+      padding-right: $modal-mobile-padding;
+    }
+  }
+  .modal__header-wrapper--shadowed {
+    box-shadow: 0 2px 9px 0 $fixed-modal-element-shadow;
+  }
+
   .modal__header {
     position: relative;
-    min-height: $modal-action-size;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex: 0 0;
   }
   .modal__header--default-padding {
+    min-height: $modal-action-size;
     padding-top: $modal-padding;
   }
   .modal__header--with-string-title {
-    padding-top: 28px;
-    padding-bottom: 20px;
+    padding-top: 32px;
+    padding-bottom: 32px;
 
     @include big-phone {
-      padding-top: 20px;
+      padding-top: 24px;
+      padding-bottom: 24px;
     }
-  }
-  .modal__header--fixed {
-    padding-left: #{$modal-padding + $modal-action-size};
-    padding-right: #{$modal-padding + $modal-action-size};
-
-    .modal__back-wrapper {
-      margin-left: $modal-padding;
-    }
-
-    .modal__close-wrapper {
-      margin-right: $modal-padding;
-    }
-  }
-  .modal__header--shadowed {
-    box-shadow: 0 2px 9px 0 $fixed-modal-element-shadow;
   }
 
   .modal__title {
@@ -95,7 +103,7 @@ $modal-mobile-padding: 24px;
     font-family: NunitoSans-Bold, sans-serif;
     font-size: $small;
     font-weight: bold;
-    line-height: 1.38;
+    line-height: 1;
     text-align: center;
     color: $secondary-blue;
   }
@@ -146,11 +154,13 @@ $modal-mobile-padding: 24px;
   }
 
   .modal__footer {
+    z-index: 1;
     flex: 0 0;
   }
   .modal__footer--fixed {
     padding-left: $modal-padding;
     padding-right: $modal-padding;
+    transition: box-shadow .1s;
 
     @include big-phone {
       padding-left: $modal-mobile-padding;

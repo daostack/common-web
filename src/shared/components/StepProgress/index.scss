@@ -1,4 +1,7 @@
-@import "../../../constants.scss";
+@import "../../../constants";
+
+$step-progress-image-size: 32px;
+$step-progress-active-image-size: 48px;
 
 .step-progress {
   display: flex;
@@ -17,11 +20,15 @@
   }
 
   .step-progress__image {
-    width: 32px;
-    height: 32px;
+    width: $step-progress-image-size;
+    min-width: $step-progress-image-size;
+    height: $step-progress-image-size;
+    min-height: $step-progress-image-size;
   }
   .step-progress__image--active {
-    width: 48px;
-    height: 48px;
+    width: $step-progress-active-image-size;
+    min-width: $step-progress-active-image-size;
+    height: $step-progress-active-image-size;
+    min-height: $step-progress-active-image-size;
   }
 }

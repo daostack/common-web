@@ -1,0 +1,23 @@
+@import "../../../constants";
+
+.dots {
+  display: flex;
+
+  .dots__item {
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    border: 1px solid $light-gray-3;
+    border-radius: 50%;
+    background-color: $white-2;
+    box-sizing: border-box;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+  .dots__item--active {
+    border-color: transparent;
+    background-color: $purple;
+  }
+}
