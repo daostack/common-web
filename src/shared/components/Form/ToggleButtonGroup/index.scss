@@ -1,0 +1,18 @@
+@import "../../../../constants";
+
+.custom-toggle-button-group {
+  display: flex;
+  flex-direction: column;
+  font-family: NunitoSans-Regular, sans-serif;
+  font-size: $xsmall;
+  color: $secondary-blue;
+
+  .custom-toggle-button-group__label {
+    margin-bottom: 8px;
+    line-height: 1.42;
+  }
+
+  .custom-toggle-button-group__buttons {
+    display: flex;
+  }
+}
