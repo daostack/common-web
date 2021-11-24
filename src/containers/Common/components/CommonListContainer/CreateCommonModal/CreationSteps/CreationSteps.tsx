@@ -17,7 +17,7 @@ interface CreationStepsProps {
 }
 
 export default function CreationSteps(props: CreationStepsProps) {
-  const { isHeaderScrolledToTop, setTitle, setGoBackHandler, setShouldShowCloseButton, onFinish } = props;
+  const { isHeaderScrolledToTop, setTitle, setGoBackHandler, setShouldShowCloseButton } = props;
   const [step, setStep] = useState(CreationStep.GeneralInfo);
   const isMobileView = isMobile();
 
