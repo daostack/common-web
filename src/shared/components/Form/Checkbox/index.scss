@@ -2,12 +2,12 @@
 
 .custom-checkbox {
   display: flex;
-  align-items: flex-end;
 
   .custom-checkbox__input-wrapper {
     position: relative;
     width: 24px;
     height: 24px;
+    flex-shrink: 0;
   }
 
   .custom-checkbox__input {
@@ -42,6 +42,8 @@
 
   .custom-checkbox__label {
     margin-left: 8px;
+    display: inline-flex;
+    align-items: center;
     font-family: NunitoSans-Regular, sans-serif;
     font-size: $xsmall;
     line-height: 1.42;
