@@ -103,7 +103,7 @@ export default function CreationSteps(props: CreationStepsProps) {
       default:
         return null;
     }
-  }, [step]);
+  }, [step, handleFinish]);
 
   return content;
 }

@@ -62,10 +62,10 @@ const Modal: FC<ModalProps> = (props) => {
   }, [isShowing]);
 
   useEffect(() => {
-    if (isHeaderSticky && onHeaderScrolledToTop) {
-      onHeaderScrolledToTop(isFullyScrolledToTop);
+    if (onHeaderScrolledToTop) {
+      onHeaderScrolledToTop(!isHeaderSticky || isFullyScrolledToTop);
     }
-  }, [isFullyScrolledToTop]);
+  }, [onHeaderScrolledToTop, isHeaderSticky, isFullyScrolledToTop]);
 
   const handleScroll = useCallback(() => {
     const { current } = contentRef;
@@ -126,7 +126,7 @@ const Modal: FC<ModalProps> = (props) => {
 
   useLayoutEffect(() => {
     handleScroll();
-  }, [isHeaderSticky, headerContent, isFooterSticky, footer, contentRef.current]);
+  }, [handleScroll, isHeaderSticky, headerContent, isFooterSticky, footer]);
 
   const contextValue = useMemo<ModalContextValue>(() => ({
     setFooter,

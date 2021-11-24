@@ -90,7 +90,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       default:
         return null;
     }
-  }, [stage, isMobileView, isHeaderScrolledToTop]);
+  }, [stage, isMobileView, isHeaderScrolledToTop, setSmallTitle, setBigTitle, setGoBackHandler, moveStageForward, handleCreationStepsFinish]);
 
   useEffect(() => {
     if (!props.isShowing) {
