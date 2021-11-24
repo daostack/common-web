@@ -37,29 +37,17 @@ export default function CreationSteps(props: CreationStepsProps) {
     setStep(step => step + 1);
   }, [step]);
 
-  const shouldShowGoBackButton = useCallback((): boolean => {
-    if (step === CreationStep.UserAcknowledgment) {
-      return isMobileView;
-    }
+  const shouldShowGoBackButton = useCallback((): boolean => (
+    step !== CreationStep.UserAcknowledgment || isMobileView
+  ), [step, isMobileView]);
 
-    return true;
-  }, [step, isMobileView]);
+  const shouldShowCloseButton = useCallback((): boolean => (
+    step !== CreationStep.UserAcknowledgment || !isMobileView
+  ), [step, isMobileView]);
 
-  const shouldShowCloseButton = useCallback((): boolean => {
-    if (step === CreationStep.UserAcknowledgment) {
-      return !isMobileView;
-    }
-
-    return true;
-  }, [step, isMobileView]);
-
-  const shouldShowTitle = useCallback((): boolean => {
-    if (step === CreationStep.UserAcknowledgment) {
-      return isMobileView;
-    }
-
-    return true;
-  }, [step, isMobileView]);
+  const shouldShowTitle = useCallback((): boolean => (
+    step !== CreationStep.UserAcknowledgment || isMobileView
+  ), [step, isMobileView]);
 
   const title = useMemo(() => {
     if (!shouldShowTitle()) {
