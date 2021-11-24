@@ -39,7 +39,7 @@ export default function UserAcknowledgment({ currentStep, onFinish }: UserAcknow
     </>,
   ], [toggleCausesBoxShowing]);
 
-  const headerEl = (
+  const headerEl = useMemo(() => (
     <>
       <img
         className="create-common-user-acknowledgment__header-image"
@@ -48,7 +48,7 @@ export default function UserAcknowledgment({ currentStep, onFinish }: UserAcknow
       />
       <Progress creationStep={currentStep} />
     </>
-  );
+  ), [currentStep]);
 
   return (
     <>
