@@ -4,12 +4,14 @@ import "./index.scss";
 
 type ButtonLinkProps = JSX.IntrinsicElements['a'];
 
-const ButtonLink: FC<ButtonLinkProps> = (props) => {
+const ButtonLink: FC<ButtonLinkProps> = ({ children, ...restProps }) => {
   return (
     <a
-      {...props}
-      className={classNames("button-link", props.className)}
-    />
+      {...restProps}
+      className={classNames("button-link", restProps.className)}
+    >
+      {children}
+    </a>
   );
 };
 

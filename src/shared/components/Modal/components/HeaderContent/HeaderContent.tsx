@@ -13,7 +13,7 @@ const HeaderContent: FC = (props) => {
 
   useEffect(() => {
     setHeaderContent(children || null);
-  }, [children]);
+  }, [setHeaderContent, children]);
 
   useComponentWillUnmount(reset);
 

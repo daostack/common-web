@@ -63,7 +63,7 @@ export default function CreationSteps({ isHeaderScrolledToTop, setTitle, setGoBa
       default:
         return null;
     }
-  }, [step]);
+  }, [step, handleFinish]);
 
   return content;
 }
