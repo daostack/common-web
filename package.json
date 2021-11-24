@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.3.15",
-    "@craco/craco": "^5.8.0",
+    "@craco/craco": "5.8.0",
     "@react-firebase/auth": "^0.2.10",
     "apollo-link-context": "^1.0.20",
     "axios": "^0.21.0",
