@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState, ReactNode } from "react";
 
-import { isMobile } from "../../../../../../shared/utils";
-import { Dots } from "../../../../../../shared/components";
+import { isMobile } from "@/shared/utils";
+import { Dots } from "@/shared/components";
 import { GeneralInfo } from "./GeneralInfo";
 import { CreationStep } from "./constants";
 import "./index.scss";
