@@ -64,6 +64,7 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
                 className="create-common-funding__field"
                 name="contributionType"
                 label="Contribution type"
+                styles={{ label: "create-common-funding__field-label" }}
               >
                 <ToggleButton value={ContributionType.OneTime}>
                   One-time
@@ -79,6 +80,7 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
                 label={<>Minimum <strong>{contributionType === ContributionType.OneTime ? "one-time" : "monthly"}</strong> contribution</>}
                 placeholder="$5"
                 allowDecimals={false}
+                styles={{ label: "create-common-funding__field-label" }}
               />
               <Checkbox
                 className="create-common-funding__field"
