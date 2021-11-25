@@ -2,10 +2,10 @@ import React, { useCallback, useRef, ReactElement } from "react";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
 
-import { isMobile } from "../../../../../../../shared/utils";
-import { ModalFooter, ModalHeaderContent } from "../../../../../../../shared/components/Modal";
-import { Checkbox, Form, ToggleButtonGroup, ToggleButton } from "../../../../../../../shared/components/Form/Formik";
-import { ContributionType } from "../../../../../../../shared/constants/contributionType";
+import { isMobile } from "@/shared/utils";
+import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
+import { Checkbox, CurrencyInput, Form, ToggleButtonGroup, ToggleButton } from "@/shared/components/Form/Formik";
+import { ContributionType } from "@/shared/constants/contributionType";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
 import "./index.scss";
@@ -17,6 +17,7 @@ interface FundingProps {
 
 interface FormValues {
   contributionType: ContributionType;
+  minimumContribution?: number;
   isCommonJoinFree: boolean;
 }
 
@@ -57,7 +58,7 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
           innerRef={formRef}
           validateOnMount
         >
-          {({ values, errors, touched, isValid }) => (
+          {({ values: { contributionType }, errors, touched, isValid }) => (
             <Form className="create-common-funding__form">
               <ToggleButtonGroup
                 className="create-common-funding__field"
@@ -71,6 +72,14 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
                   Monthly
                 </ToggleButton>
               </ToggleButtonGroup>
+              <CurrencyInput
+                className="create-common-funding__field"
+                id="minimumContribution"
+                name="minimumContribution"
+                label={<>Minimum <strong>{contributionType === ContributionType.OneTime ? "one-time" : "monthly"}</strong> contribution</>}
+                placeholder="$5"
+                allowDecimals={false}
+              />
               <Checkbox
                 className="create-common-funding__field"
                 id="isCommonJoinFree"

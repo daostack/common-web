@@ -1,4 +1,4 @@
-import React, { useState, FC } from "react";
+import React, { useState, FC, ReactNode } from "react";
 import classNames from "classnames";
 import BaseCurrencyInput, { CurrencyInputProps as BaseCurrencyInputProps } from "react-currency-input-field";
 import { IntlConfig } from "react-currency-input-field/dist/components/CurrencyInputProps";
@@ -16,7 +16,7 @@ interface CurrencyInputStyles {
 
 export interface CurrencyInputProps extends BaseCurrencyInputProps {
   name: string;
-  label?: string;
+  label?: ReactNode;
   hint?: string;
   error?: string;
   styles?: CurrencyInputStyles;
