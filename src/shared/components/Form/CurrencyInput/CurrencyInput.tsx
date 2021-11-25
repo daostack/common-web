@@ -18,7 +18,6 @@ export interface CurrencyInputProps extends BaseCurrencyInputProps {
   name: string;
   label?: string;
   hint?: string;
-  shouldDisplayCount?: boolean;
   error?: string;
   styles?: CurrencyInputStyles;
 }
@@ -29,9 +28,10 @@ const DEFAULT_INTL_CONFIG: IntlConfig = {
 };
 
 const CurrencyInput: FC<CurrencyInputProps> = (props) => {
-  const { className, label, hint, shouldDisplayCount, error, styles, allowNegativeValue, intlConfig, ...restProps } = props;
+  const { className, label, hint, error, styles, allowNegativeValue, intlConfig, ...restProps } = props;
   const [inputLengthRef, setInputLengthRef] = useState<HTMLSpanElement | null>(null);
   const id = restProps.id || restProps.name;
+  const shouldDisplayCount = false;
   const inputStyles = shouldDisplayCount && inputLengthRef
     ? { paddingRight: inputLengthRef.clientWidth + 14 }
     : undefined;
