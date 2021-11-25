@@ -20,9 +20,20 @@ import { ModalContext, FooterOptions, ModalContextValue } from "./context";
 import "./index.scss";
 
 const Modal: FC<ModalProps> = (props) => {
+  const {
+    isShowing,
+    onGoBack,
+    onClose,
+    children,
+    closeColor,
+    mobileFullScreen,
+    title,
+    onHeaderScrolledToTop,
+    hideCloseButton = false,
+    isHeaderSticky = false,
+  } = props;
   const wrapperRef = useRef(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const { isShowing, onGoBack, onClose, children, closeColor, mobileFullScreen, title, onHeaderScrolledToTop, isHeaderSticky = false } = props;
   const [footer, setFooter] = useState<ReactNode>(null);
   const [footerOptions, setFooterOptions] = useState<FooterOptions>({});
   const [headerContent, setHeaderContent] = useState<ReactNode>(null);
@@ -94,13 +105,15 @@ const Modal: FC<ModalProps> = (props) => {
           </div>
         )}
         {typeof title === 'string' ? <h3 className="modal__title">{title}</h3> : title}
-        <div className="modal__action-wrapper modal__close-wrapper" onClick={onClose}>
-          <CloseIcon
-            width="24"
-            height="24"
-            fill={closeColor ?? Colors.black}
-          />
-        </div>
+        {!hideCloseButton && (
+          <div className="modal__action-wrapper modal__close-wrapper" onClick={onClose}>
+            <CloseIcon
+              width="24"
+              height="24"
+              fill={closeColor ?? Colors.black}
+            />
+          </div>
+        )}
       </div>
       {headerContent}
     </header>

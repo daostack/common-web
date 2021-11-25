@@ -1,10 +1,10 @@
-import React from "react";
+import React, { ReactElement } from "react";
 
 interface AddIconProps {
   className?: string;
 }
 
-export default function AddIcon({ className }: AddIconProps) {
+export default function AddIcon({ className }: AddIconProps): ReactElement {
   return (
     <svg className={className} width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
       <path

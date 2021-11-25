@@ -83,6 +83,7 @@ body {
     text-decoration: none;
     width: fit-content;
     min-width: 200px;
+    user-select: none;
     &:hover {
       opacity: 0.9;
     }

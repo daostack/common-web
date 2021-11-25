@@ -13,6 +13,10 @@ const STEP_DATA: Record<CreationStep, { title: string; description?: string }> =
     title: 'General Info',
     description: 'Describe your cause and let the community learn more about your plans and goals.',
   },
+  [CreationStep.UserAcknowledgment]: {
+    title: 'User Acknowledgment',
+    description: 'Before creating a Common, please make sure that:',
+  },
   [CreationStep.Funding]: {
     title: 'Funding',
     description: 'Control how this Common will collect and manage funds.',
@@ -48,17 +52,21 @@ const ITEMS: StepProgressItem[] = [
     inactiveImageSource: '/icons/common-creation/review-next.svg',
   },
 ];
+export const PROGRESS_RELATED_STEPS = [CreationStep.GeneralInfo, CreationStep.Funding, CreationStep.Rules, CreationStep.Review];
 
 export default function Progress({ creationStep }: ProgressProps): ReactElement {
   const stepData = STEP_DATA[creationStep];
+  const stepIndex = PROGRESS_RELATED_STEPS.findIndex(step => step === creationStep);
 
   return (
     <div className="create-common-steps-progress">
-      <StepProgress
-        className="create-common-steps-progress__stepper"
-        currentStep={creationStep}
-        items={ITEMS}
-      />
+      {stepIndex !== -1 && (
+        <StepProgress
+          className="create-common-steps-progress__stepper"
+          currentStep={stepIndex + 1}
+          items={ITEMS}
+        />
+      )}
       <h4 className="create-common-steps-progress__title">{stepData.title}</h4>
       {stepData.description && <p className="create-common-steps-progress__description">{stepData.description}</p>}
     </div>
