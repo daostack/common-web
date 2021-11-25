@@ -16,7 +16,7 @@ export interface DiscussionMessage {
   id: string;
   discussionId: string;
   ownerId: string;
-  message: string;
+  text: string;
   type: DiscussionMessageType;
   flag: DiscussionMessageFlag;
   reports: Array<Report>;
