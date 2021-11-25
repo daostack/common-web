@@ -8,6 +8,7 @@ import "./index.scss";
 
 interface CurrencyInputStyles {
   label?: string;
+  description?: string;
   input?: {
     default?: string;
   };
@@ -17,6 +18,7 @@ interface CurrencyInputStyles {
 export interface CurrencyInputProps extends BaseCurrencyInputProps {
   name: string;
   label?: ReactNode;
+  description?: string;
   hint?: string;
   error?: string;
   styles?: CurrencyInputStyles;
@@ -28,13 +30,16 @@ const DEFAULT_INTL_CONFIG: IntlConfig = {
 };
 
 const CurrencyInput: FC<CurrencyInputProps> = (props) => {
-  const { className, label, hint, error, styles, allowNegativeValue, intlConfig, ...restProps } = props;
+  const { className, label, description, hint, error, styles, allowNegativeValue, intlConfig, ...restProps } = props;
   const [inputLengthRef, setInputLengthRef] = useState<HTMLSpanElement | null>(null);
   const id = restProps.id || restProps.name;
   const shouldDisplayCount = false;
   const inputStyles = shouldDisplayCount && inputLengthRef
     ? { paddingRight: inputLengthRef.clientWidth + 14 }
     : undefined;
+  const labelWrapperClassName = classNames("custom-currency-input__label-wrapper", {
+    "custom-currency-input__label-wrapper--with-description": description,
+  });
   const inputClassName = classNames("custom-currency-input__input", styles?.input?.default, {
     "custom-currency-input__input--error": error,
   });
@@ -42,7 +47,7 @@ const CurrencyInput: FC<CurrencyInputProps> = (props) => {
   return (
     <div className={classNames("custom-currency-input", className)}>
       {(label || hint) && (
-        <div className="custom-currency-input__label-wrapper">
+        <div className={labelWrapperClassName}>
           {label && (
             <label
               htmlFor={id}
@@ -53,6 +58,11 @@ const CurrencyInput: FC<CurrencyInputProps> = (props) => {
           )}
           {hint && <span className="custom-currency-input__hint">{hint}</span>}
         </div>
+      )}
+      {description && (
+        <p className={classNames("custom-currency-input__description", styles?.description)}>
+          {description}
+        </p>
       )}
       <div className="custom-currency-input__input-wrapper">
         <BaseCurrencyInput

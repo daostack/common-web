@@ -78,9 +78,13 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
                 id="minimumContribution"
                 name="minimumContribution"
                 label={<>Minimum <strong>{contributionType === ContributionType.OneTime ? "one-time" : "monthly"}</strong> contribution</>}
+                description="Set the minimum amount that new members will have to contribute in order to join this Common. The minimum contribution allowed by credit card is $5."
                 placeholder="$5"
                 allowDecimals={false}
-                styles={{ label: "create-common-funding__field-label" }}
+                styles={{
+                  label: "create-common-funding__field-label",
+                  description: "create-common-funding__currency-input-label",
+                }}
               />
               <Checkbox
                 className="create-common-funding__field"
