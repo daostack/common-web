@@ -6,6 +6,7 @@ import { ToggleButtonGroupContext, ToggleButtonGroupContextValue } from "./conte
 import "./index.scss";
 
 interface ToggleButtonGroupStyles {
+  label?: string;
   error?: string;
 }
 
@@ -29,7 +30,7 @@ const ToggleButtonGroup: FC<ToggleButtonGroupProps> = (props) => {
   return (
     <div className={classNames("custom-toggle-button-group", className)}>
       {label && (
-        <label className="custom-toggle-button-group__label">
+        <label className={classNames("custom-toggle-button-group__label", styles?.label)}>
           {label}
         </label>
       )}

@@ -7,6 +7,7 @@ import { ErrorText } from "../ErrorText";
 import "./index.scss";
 
 interface CurrencyInputStyles {
+  label?: string;
   input?: {
     default?: string;
   };
@@ -45,7 +46,7 @@ const CurrencyInput: FC<CurrencyInputProps> = (props) => {
           {label && (
             <label
               htmlFor={id}
-              className="custom-currency-input__label"
+              className={classNames("custom-currency-input__label", styles?.label)}
             >
               {label}
             </label>
