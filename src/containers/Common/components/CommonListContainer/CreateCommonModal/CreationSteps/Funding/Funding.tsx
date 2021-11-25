@@ -4,7 +4,8 @@ import { FormikProps } from "formik/dist/types";
 
 import { isMobile } from "../../../../../../../shared/utils";
 import { ModalFooter, ModalHeaderContent } from "../../../../../../../shared/components/Modal";
-import { Form } from "../../../../../../../shared/components/Form/Formik";
+import { Form, ToggleButtonGroup, ToggleButton } from "../../../../../../../shared/components/Form/Formik";
+import { ContributionType } from "../../../../../../../shared/constants/contributionType";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
 import "./index.scss";
@@ -15,9 +16,11 @@ interface FundingProps {
 }
 
 interface FormValues {
+  contributionType: ContributionType;
 }
 
 const INITIAL_VALUES: FormValues = {
+  contributionType: ContributionType.OneTime,
 };
 
 export default function Funding({ currentStep, onFinish }: FundingProps): ReactElement {
@@ -53,7 +56,18 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
           validateOnMount
         >
           {({ values, errors, touched, isValid }) => (
-            <Form>
+            <Form className="create-common-funding__form">
+              <ToggleButtonGroup
+                name="contributionType"
+                label="Contribution type"
+              >
+                <ToggleButton value={ContributionType.OneTime}>
+                  One-time
+                </ToggleButton>
+                <ToggleButton value={ContributionType.Monthly}>
+                  Monthly
+                </ToggleButton>
+              </ToggleButtonGroup>
               <ModalFooter sticky={!isMobileView}>
                 <div className="create-common-funding__modal-footer">
                   <button

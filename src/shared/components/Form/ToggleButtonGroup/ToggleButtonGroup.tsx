@@ -9,7 +9,7 @@ interface ToggleButtonGroupStyles {
   error?: string;
 }
 
-interface ToggleButtonGroupProps {
+export interface ToggleButtonGroupProps {
   className?: string;
   label?: string;
   value?: unknown;
