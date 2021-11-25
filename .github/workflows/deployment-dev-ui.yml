@@ -1,8 +1,8 @@
-name: web dev 1 continuous delivery
+name: web batch 1 continuous delivery
 
 on:
   push:
-    branches: [ gcp/cd ]
+    branches: [ master ]
 
 jobs:
   deploy:
@@ -12,7 +12,7 @@ jobs:
       - name: Push to server
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.INSTANCE_IP }}
+          host: ${{ secrets.INSTANCE_IP_BATCH_1 }}
           username: ${{ secrets.INSTANCE_USERNAME }}
           key: ${{ secrets.INSTANCE_KEY }}
           passphrase: ${{ secrets.INSTANCE_PASSPHRASE }} 
