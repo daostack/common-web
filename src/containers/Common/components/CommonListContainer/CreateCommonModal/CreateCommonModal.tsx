@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useMemo, useState, ReactNode } from "rea
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 
-import { Modal } from "../../../../../shared/components";
-import { getScreenSize } from "../../../../../shared/store/selectors";
-import { ScreenSize } from "../../../../../shared/constants";
+import { Modal } from "@/shared/components";
+import { getScreenSize } from "@/shared/store/selectors";
+import { ScreenSize } from "@/shared/constants";
 import { CreationSteps } from "./CreationSteps";
 import { Introduction } from "./Introduction";
 import "./index.scss";
