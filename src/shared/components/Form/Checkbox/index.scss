@@ -2,6 +2,11 @@
 
 .custom-checkbox {
   display: flex;
+  flex-direction: column;
+
+  .custom-checkbox__wrapper {
+    display: flex;
+  }
 
   .custom-checkbox__input-wrapper {
     position: relative;
