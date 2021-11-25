@@ -18,7 +18,9 @@ interface PreviewInformationListProps {
   type: string;
 }
 
-export default function PreviewInformationList(props: PreviewInformationListProps) {
+export default function PreviewInformationList(
+  props: PreviewInformationListProps
+) {
   const [data, setData] = useState<PreviedData[]>([]);
   const { title, vievAllHandler, type, discussions, proposals } = props;
 
@@ -27,7 +29,7 @@ export default function PreviewInformationList(props: PreviewInformationListProp
       setData(
         [...discussions].splice(0, 5).map((d) => {
           return { id: d.id, value: d?.title };
-        }),
+        })
       );
     }
     return () => {
@@ -39,8 +41,11 @@ export default function PreviewInformationList(props: PreviewInformationListProp
     if (type === "proposals" && proposals) {
       setData(
         [...proposals].splice(0, 5).map((d) => {
-          return { id: d.id, value: d.title || d.description };
-        }),
+          return {
+            id: d.id,
+            value: d.description.title || d.description.description,
+          };
+        })
       );
     }
     return () => {
@@ -64,7 +69,11 @@ export default function PreviewInformationList(props: PreviewInformationListProp
           {data.map((d) => {
             const proposal = proposals?.find((p) => p.id === d.id);
             return (
-              <div className="item" key={d.id} onClick={() => props.onClickItem(d.id)}>
+              <div
+                className="item"
+                key={d.id}
+                onClick={() => props.onClickItem(d.id)}
+              >
                 <div className="item-title">{d.value}</div>
                 {type === "proposals" && proposal ? (
                   <div className="item-bottom">
@@ -73,10 +82,15 @@ export default function PreviewInformationList(props: PreviewInformationListProp
                     </div>
                     <div className="discussion-count">
                       <img src="/icons/discussions.svg" alt="discussions" />
-                      <div className="count">{proposal.discussionMessage?.length || 0}</div>
+                      <div className="count">
+                        {proposal.discussionMessage?.length || 0}
+                      </div>
                     </div>
                     <div className="countdown">
-                      <ProposalCountDown type="preview" date={new Date(proposal?.expiresAt)} />
+                      <ProposalCountDown
+                        type="preview"
+                        date={new Date(proposal?.expiresAt)}
+                      />
                     </div>
                   </div>
                 ) : null}
@@ -87,9 +101,15 @@ export default function PreviewInformationList(props: PreviewInformationListProp
       ) : (
         <div className="empty-information-wrapper">
           {title === "Latest Discussions" ? (
-            <img src="/icons/empty-discussion-preview.svg" alt="empty-disscussions" />
+            <img
+              src="/icons/empty-discussion-preview.svg"
+              alt="empty-disscussions"
+            />
           ) : (
-            <img src="/icons/empty-proposals-preview.svg" alt="empty-proposals" />
+            <img
+              src="/icons/empty-proposals-preview.svg"
+              alt="empty-proposals"
+            />
           )}
           <div className="message">
             No

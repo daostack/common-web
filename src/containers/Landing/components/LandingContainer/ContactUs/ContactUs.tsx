@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { CONTACT_EMAIL } from "../../../../../shared/constants";
 import "./index.scss";
 
 export default function ContactUs() {
@@ -12,7 +13,7 @@ export default function ContactUs() {
         <h1>Contact us</h1>
         <div className="email-wrapper">
           <img src={"/icons/email.svg"} alt="envelope" />
-          <a href="mailto:hi@common.io">hi@common.io</a>
+          <a href={`mailto:${CONTACT_EMAIL}`}>hi@common.io</a>
         </div>
       </div>
       <div className="form-wrapper">

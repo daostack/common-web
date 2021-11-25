@@ -1,0 +1,66 @@
+@import "../../../../constants.scss";
+
+.my-commons-wrapper {
+  padding-top: 40px;
+  padding-bottom: 44px;
+  .page-top-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    a {
+      background-color: $light-purple;
+      color: $black;
+      line-height: 40px;
+    }
+  }
+  .pending-commons{
+    .pending-title {
+      margin-top: 40px;
+      margin-bottom: 40px;
+      color: $light-gray-2;
+      font-weight: bold;
+      font-size: $medium;
+    }
+  }
+  .common-list {
+    display: grid;
+    justify-items: center;
+    grid-column-gap: 2rem;
+    grid-row-gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+  .no-commons-label {
+    text-align: center;
+    color: $gray;
+  }
+  .loader-container {
+    line-height: 40px;
+    margin-top: 54px;
+    margin-bottom: 0;
+    .loading-btn {
+      margin: auto;
+      background-color: $white;
+      color: black;
+      border: 1px solid $light-gray-1;
+      font-family: NunitoSans-Regular;
+      font-weight: unset;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .my-commons-wrapper {
+    padding-bottom: 0;
+    padding-top: 20px;
+    .page-top-wrapper {
+      flex-direction: column;
+      a {
+        margin-bottom: 20px;
+      }
+    }
+    .loader-container {
+      margin-top: 35px;
+      margin-bottom: 20px;
+    }
+  }
+}

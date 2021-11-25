@@ -9,9 +9,14 @@ import "./index.scss";
 interface DiscussionDetailModalProps {
   disscussion: Discussion | null;
   onOpenJoinModal: () => void;
+  isCommonMember: boolean | undefined;
 }
 
-export default function DiscussionDetailModal({ disscussion, onOpenJoinModal }: DiscussionDetailModalProps) {
+export default function DiscussionDetailModal({
+  disscussion,
+  onOpenJoinModal,
+  isCommonMember,
+}: DiscussionDetailModalProps) {
   const date = new Date();
   const [imageError, setImageError] = useState(false);
   return !disscussion ? (
@@ -24,16 +29,21 @@ export default function DiscussionDetailModal({ disscussion, onOpenJoinModal }: 
             <div className="owner-icon-wrapper">
               {!imageError ? (
                 <img
-                  src={disscussion.owner?.photo}
+                  src={disscussion.owner?.photoURL}
                   alt={getUserName(disscussion.owner)}
                   onError={() => setImageError(true)}
                 />
               ) : (
-                <img src="/icons/default_user.svg" alt={getUserName(disscussion.owner)} />
+                <img
+                  src="/icons/default_user.svg"
+                  alt={getUserName(disscussion.owner)}
+                />
               )}
             </div>
             <div className="owner-name">{getUserName(disscussion.owner)}</div>
-            <div className="days-ago">{getDaysAgo(date, disscussion.createdAt)} </div>
+            <div className="days-ago">
+              {getDaysAgo(date, disscussion.createTime)}
+            </div>
           </div>
           <div className="discussion-information-wrapper">
             <div className="discussion-name" title={disscussion.title}>
@@ -47,7 +57,11 @@ export default function DiscussionDetailModal({ disscussion, onOpenJoinModal }: 
         </div>
       </div>
       <div className="right-side">
-        <ChatComponent discussionMessage={disscussion.messages || []} onOpenJoinModal={onOpenJoinModal} />
+        <ChatComponent
+          discussionMessage={disscussion.discussionMessage || []}
+          onOpenJoinModal={onOpenJoinModal}
+          isCommonMember={isCommonMember}
+        />
       </div>
     </div>
   );

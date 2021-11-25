@@ -1,6 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
-import { useGetCommonDataQuery } from "../../../../graphql";
 import { Loader } from "../../../../shared/components";
 import DownloadCommonApp from "../../../../shared/components/DownloadCommonApp/DownloadCommonApp";
 import { isMobile } from "../../../../shared/utils";
@@ -9,6 +8,11 @@ import { COMMON_PAGE_SIZE } from "../../constants";
 
 import "./index.scss";
 
+import { useDispatch, useSelector } from "react-redux";
+import { selectCommonList, selectCurrentPage } from "../../store/selectors";
+import { getLoading } from "../../../../shared/store/selectors";
+import { getCommonsList, updatePage } from "../../store/actions";
+
 const options = {
   root: null,
   rootMargin: "20px",
@@ -16,32 +20,33 @@ const options = {
 };
 
 export default function CommonListContainer() {
-  const [page, setPage] = useState(1);
-  const loader = useRef(null);
-  const previousData: any = useRef();
-  const [hasClosedPopup, setHasClosedPopup] = useState(sessionStorage.getItem("hasClosedPopup"));
+  const commons = useSelector(selectCommonList());
+  const page = useSelector(selectCurrentPage());
+  const loading = useSelector(getLoading());
+  const dispatch = useDispatch();
+  const [loaderHack, setLoaderHack] = useState(false);
 
-  const { loading, data } = useGetCommonDataQuery({
-    variables: {
-      paginate: {
-        take: COMMON_PAGE_SIZE,
-        skip: 0 + (page - 1) * COMMON_PAGE_SIZE,
-      },
-    },
-  });
+  const loader = useRef(null);
+
+  const [hasClosedPopup, setHasClosedPopup] = useState(
+    sessionStorage.getItem("hasClosedPopup")
+  );
 
   useEffect(() => {
-    previousData.current = [...(previousData.current || []), ...(data?.commons || [])];
-  });
+    if (commons.length === 0) {
+      dispatch(getCommonsList.request());
+    }
+  }, [dispatch, commons]);
 
   const handleObserver = useCallback(
     (entities: any[]) => {
       const target = entities[0];
-      if (target.isIntersecting && page < 3 && !loading) {
-        setPage(page + 1);
+
+      if (target.isIntersecting && page < 3 && !loaderHack) {
+        dispatch(updatePage(page + 1));
       }
     },
-    [setPage, loading, page],
+    [dispatch, loaderHack, page]
   );
 
   useEffect(() => {
@@ -49,31 +54,43 @@ export default function CommonListContainer() {
     if (loader.current) {
       observer.observe(loader.current as any);
     }
-  }, [handleObserver]);
+  }, [handleObserver, commons]);
 
-  const currentCommons = useMemo(() => [...(previousData.current || []), ...(data?.commons ?? [])], [data]);
+  const currentCommons = [...commons].splice(0, COMMON_PAGE_SIZE * page);
+
+  const loadHack = () => {
+    setLoaderHack(true);
+    setTimeout(() => {
+      dispatch(updatePage(page + 1));
+      setLoaderHack(false);
+    }, 500);
+  };
 
   // See https://github.com/daostack/common-monorepo/issues/691 - the field might change in the new DB
   return (
     <div className="content-element common-list-wrapper">
-      {isMobile() && !hasClosedPopup && <DownloadCommonApp setHasClosedPopup={setHasClosedPopup} />}
+      {isMobile() && !hasClosedPopup && (
+        <DownloadCommonApp setHasClosedPopup={setHasClosedPopup} />
+      )}
       <h1 className="page-title">Explore commons</h1>
-
+      {loading ? <Loader /> : null}
       <div className="common-list">
         {currentCommons.map((c) => (
           <CommonListItem common={c} key={c.id} />
         ))}
       </div>
 
-      <div className="loader-container">
-        {page < 3 ? <div ref={loader} /> : null}
-        {loading ? <Loader /> : null}
-        {page >= 3 && !loading ? (
-          <div className="loading-btn button-blue" onClick={() => setPage(page + 1)}>
-            Load more Commons
-          </div>
-        ) : null}
-      </div>
+      {commons.length !== currentCommons.length && (
+        <div className="loader-container">
+          {page < 3 && !loaderHack ? <div ref={loader} /> : null}
+          {loaderHack ? <Loader /> : null}
+          {page >= 3 && !loaderHack ? (
+            <div className="loading-btn button-blue" onClick={() => loadHack()}>
+              Load more Commons
+            </div>
+          ) : null}
+        </div>
+      )}
     </div>
   );
 }

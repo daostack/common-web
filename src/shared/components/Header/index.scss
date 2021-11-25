@@ -18,13 +18,23 @@
   }
 
   .navigation-wrapper {
+    width: 100%;
     margin-left: 7.5rem;
     display: flex;
+    .login-button {
+      margin-left: auto;
+      margin-right: 1.5rem;
+    }
+    button,
     a {
       text-decoration: none;
       font-size: 18px;
       color: $blue;
       margin-right: 50px;
+      background-color: transparent;
+      border: none;
+      font-family: NunitoSans-Regular;
+      cursor: pointer;
       &.active {
         font-weight: bold;
       }
@@ -32,6 +42,7 @@
   }
   .mobile-links-container {
     margin-left: auto;
+    white-space: nowrap;
   }
   &.init {
     top: -$header-height;
@@ -101,6 +112,7 @@
       align-items: center;
       margin-left: unset;
       width: 100%;
+      button,
       a {
         margin-right: unset;
         width: 100%;

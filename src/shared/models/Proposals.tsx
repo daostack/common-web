@@ -1,6 +1,6 @@
-import { Moderation } from "./shared";
+import { Moderation, Time } from "./shared";
 
-import { CommonContributionType, DiscussionMessage, User } from ".";
+import { CommonContributionType, DiscussionMessage, Rules, User } from ".";
 
 export enum ProposalFundingState {
   NotRelevant = "notRelevant",
@@ -23,7 +23,7 @@ export enum ProposalVoteOutcome {
 
 export enum ProposalState {
   ACCEPTED = "Accepted",
-  COUNTDOWN = "Countdown",
+  COUNTDOWN = "countdown",
   FINALIZING = "Finalizing",
   REJECTED = "Rejected",
 }
@@ -50,8 +50,10 @@ export type ProposalVote = {
 
 export interface Proposal {
   commonId: string;
+  proposerId: string;
   countdownPeriod: number;
-  createdAt: Date;
+  createTime: Time;
+  createdAt: Time;
   expiresAt: Date;
   fundingRequest?: { funded: boolean; amount: number };
 
@@ -64,13 +66,20 @@ export interface Proposal {
   votesAgainst?: number;
   votesFor?: number;
   user?: User;
+  proposer?: User;
   discussionMessage?: DiscussionMessage[];
   isLoaded?: boolean;
 
   title: string;
 
   state: string;
-  description: string;
+  description: {
+    description: string;
+    links: Rules[];
+    images: File[];
+    files: File[];
+    title: string;
+  };
   type: ProposalType;
   paymentState?: ProposalPaymentState;
   fundingState?: ProposalFundingState;

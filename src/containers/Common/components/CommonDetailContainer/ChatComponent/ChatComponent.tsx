@@ -10,10 +10,11 @@ import { Colors } from "../../../../../shared/constants";
 interface ChatComponentInterface {
   discussionMessage: DiscussionMessage[];
   onOpenJoinModal: () => void;
+  isCommonMember: boolean | undefined;
 }
 
 function groupday(acc: any, currentValue: DiscussionMessage): Messages {
-  const d = new Date(currentValue.createTime);
+  let d = new Date(currentValue.createTime.seconds * 1000);
   const i = Math.floor(d.getTime() / (1000 * 60 * 60 * 24));
   const timestamp = i * (1000 * 60 * 60 * 24);
   acc[timestamp] = acc[timestamp] || [];
@@ -34,7 +35,11 @@ interface Messages {
   [key: number]: DiscussionMessage[];
 }
 
-export default function ChatComponent({ discussionMessage, onOpenJoinModal }: ChatComponentInterface) {
+export default function ChatComponent({
+  discussionMessage,
+  onOpenJoinModal,
+                                        isCommonMember,
+}: ChatComponentInterface) {
   const messages = discussionMessage.reduce(groupday, {});
 
   const dateList = Object.keys(messages);
@@ -46,7 +51,9 @@ export default function ChatComponent({ discussionMessage, onOpenJoinModal }: Ch
           const date = new Date(Number(day));
           return (
             <div className="date" key={day}>
-              <div className="title">{isToday(date) ? "Today" : formatDate(date)}</div>
+              <div className="title">
+                {isToday(date) ? "Today" : formatDate(date)}
+              </div>
               <div className="message-list">
                 {messages[Number(day)].map((m) => {
                   return <ChatMessage key={m.id} disscussionMessage={m} />;
@@ -59,9 +66,11 @@ export default function ChatComponent({ discussionMessage, onOpenJoinModal }: Ch
       <div className="bottom-chat-wrapper">
         <div className="text">Download the Common app to join the discussion</div>
         <div className="button-wrapper">
-          <button className="button-blue join-the-effort-btn" onClick={onOpenJoinModal}>
-            Join the effort
-          </button>
+          {!isCommonMember && (
+            <button className="button-blue join-the-effort-btn" onClick={onOpenJoinModal}>
+              Join the effort
+            </button>
+          )}
           <Share type="popup" color={Colors.lightPurple} top="-130px" />
         </div>
       </div>

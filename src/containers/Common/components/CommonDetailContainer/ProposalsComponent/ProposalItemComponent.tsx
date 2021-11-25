@@ -11,31 +11,52 @@ interface ProposalItemComponentProps {
   proposal: Proposal;
 }
 
-export default function ProposalItemComponent({ proposal, loadProposalDetail }: ProposalItemComponentProps) {
+export default function ProposalItemComponent({
+  proposal,
+  loadProposalDetail,
+}: ProposalItemComponentProps) {
   const [imageError, setImageError] = useState(false);
   //  const [readMore, setReadMore] = useState("");
   const date = new Date();
-  const requestedAmount = formatPrice(proposal.fundingRequest?.amount || proposal.join?.funding);
+  const requestedAmount = formatPrice(
+    proposal.fundingRequest?.amount || proposal.join?.funding
+  );
   const textLength = useCalculateReadMoreLength();
 
   return (
     <div className="discussion-item-wrapper">
       {proposal.state === "countdown" ? (
-        <ProposalCountDown date={new Date(proposal?.expiresAt)} />
+        <ProposalCountDown
+          date={
+            new Date(
+              (proposal?.createdAt.seconds + proposal.countdownPeriod) * 1000
+            )
+          }
+        />
       ) : (
         <div className={`state-wrapper ${proposal.state.toLocaleLowerCase()}`}>
           <div className="state-inner-wrapper">
             <img
-              src={proposal.state === "Rejected" ? "/icons/declined.svg" : "/icons/approved.svg"}
+              src={
+                proposal.state === "failed"
+                  ? "/icons/declined.svg"
+                  : "/icons/approved.svg"
+              }
               alt="state-wrapper"
             />
-            <span className="state-name">{proposal.state === "Rejected" ? "Rejected" : "Approved"}</span>
+            <span className="state-name">
+              {proposal.state === "failed" ? "Rejected" : "Approved"}
+            </span>
           </div>
         </div>
       )}
       <div className="proposal-charts-wrapper">
-        <div className="proposal-title" onClick={() => loadProposalDetail(proposal)} title={proposal.title}>
-          {proposal.title}
+        <div
+          className="proposal-title"
+          onClick={() => loadProposalDetail(proposal)}
+          title={proposal.description.title}
+        >
+          {proposal.description.title}
         </div>
         <div className="requested-amount">
           {requestedAmount === "$0" ? (
@@ -54,20 +75,30 @@ export default function ProposalItemComponent({ proposal, loadProposalDetail }: 
       <div className="discussion-top-bar">
         <div className="img-wrapper">
           {!imageError ? (
-            <img src={proposal.user?.photo} alt={getUserName(proposal.user)} onError={() => setImageError(true)} />
+            <img
+              src={proposal.proposer?.photoURL}
+              alt={getUserName(proposal.proposer)}
+              onError={() => setImageError(true)}
+            />
           ) : (
-            <img src="/icons/default_user.svg" alt={getUserName(proposal.user)} />
+            <img
+              src="/icons/default_user.svg"
+              alt={getUserName(proposal.proposer)}
+            />
           )}
         </div>
         <div className="creator-information">
-          <div className="name">{getUserName(proposal.user)}</div>
-          <div className="days-ago">{getDaysAgo(date, proposal.createdAt)} </div>
+          <div className="name">{getUserName(proposal.proposer)}</div>
+          <div className="days-ago">{getDaysAgo(date, proposal.createdAt)}</div>
         </div>
       </div>
       <div className="discussion-content">
-        <div className={`description `}>{proposal.description}</div>
-        {proposal.description.length > textLength ? (
-          <div className="read-more" onClick={() => loadProposalDetail(proposal)}>
+        <div className={`description `}>{proposal.description.description}</div>
+        {proposal.description.description.length > textLength ? (
+          <div
+            className="read-more"
+            onClick={() => loadProposalDetail(proposal)}
+          >
             Read More
           </div>
         ) : null}
@@ -79,7 +110,10 @@ export default function ProposalItemComponent({ proposal, loadProposalDetail }: 
           <div className="count">{proposal.discussionMessage?.length || 0}</div>
         </div>
         {proposal && (
-          <div className="view-all-discussions" onClick={() => loadProposalDetail(proposal)}>
+          <div
+            className="view-all-discussions"
+            onClick={() => loadProposalDetail(proposal)}
+          >
             View proposal
           </div>
         )}

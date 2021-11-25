@@ -7,7 +7,6 @@ import configureStore from "./store";
 import "./index.scss";
 import App from "./containers/App/App";
 import history from "./shared/history";
-import { ApolloProvider } from "./shared/providers";
 
 const { store } = configureStore(history);
 
@@ -17,13 +16,13 @@ if (process.env.REACT_APP_ENV === "dev") {
   whyDidYouRender(React, { trackHooks: true });
 }
 
+export default store;
+
 ReactDOM.render(
   <Router history={history}>
     <Provider store={store}>
-      <ApolloProvider>
-        <App />
-      </ApolloProvider>
+      <App />
     </Provider>
   </Router>,
-  document.getElementById("root"),
+  document.getElementById("root")
 );

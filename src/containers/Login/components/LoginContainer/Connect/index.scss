@@ -1,0 +1,27 @@
+@import "../../../../../constants.scss";
+
+.connect-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  .login-buttons-wrapper {
+    width: 100%;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    button:first-child {
+      margin-top: 2rem;
+    }
+  }
+
+  .terms-of-use {
+    color: $purple;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .connect-wrapper {
+  }
+}

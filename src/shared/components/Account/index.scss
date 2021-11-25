@@ -1,0 +1,57 @@
+@import "../../../constants.scss";
+
+.account-wrapper {
+  margin: 0px 1.5rem;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  .avatar {
+    border-radius: 50px;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-right: 0.6rem;
+  }
+  .vertical-menu {
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    background-color: $light-purple;
+    background-image: url("/icons/vertical-menu.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+    margin-left: 10px;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  .menu-wrapper {
+    position: absolute;
+    top: 50px;
+    right: 5px;
+    background-color: $white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px 0 $shadow;
+    display: flex;
+    flex-direction: column;
+    > div {
+      cursor: pointer;
+      padding: 0.7rem 2rem;
+      width: 200px;
+      &:first-child {
+        border-top-right-radius: 12px;
+        border-top-left-radius: 12px;
+      }
+      &:last-child {
+        border-bottom-right-radius: 12px;
+        border-bottom-left-radius: 12px;
+      }
+      &:hover {
+        background-color: $purple-hover;
+      }
+    }
+  }
+}

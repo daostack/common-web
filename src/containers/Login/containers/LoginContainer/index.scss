@@ -1,0 +1,42 @@
+@import "../../../../constants.scss";
+
+.login-wrapper {
+  .title {
+    font-family: NotoSerifSC-Bold;
+    font-size: $moderate-med;
+    margin: 1rem 0;
+  }
+
+  .sub-text {
+    color: $light-gray-2;
+  }
+
+  .avatar-wrapper {
+    .avatar {
+      margin-top: 24px;
+      img {
+        width: 59px;
+        height: 59px;
+        border-radius: 50%;
+      }
+    }
+
+    .user-account-name{
+      font-family: NunitoSans;
+      font-size: 16px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: normal;
+      text-align: center;
+      color: $purple;
+      margin-top: 16px;
+      margin-bottom: 16px;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+
+}

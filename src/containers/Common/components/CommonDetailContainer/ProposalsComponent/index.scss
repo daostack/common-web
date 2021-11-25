@@ -34,7 +34,7 @@
           letter-spacing: normal;
         }
       }
-      &.accepted {
+      &.passed {
         .state-inner-wrapper {
           background: #f0fdf0;
           .state-name {
@@ -42,7 +42,7 @@
           }
         }
       }
-      &.rejected {
+      &.failed {
         .state-inner-wrapper {
           background: #feefec;
           .state-name {
@@ -127,7 +127,7 @@
         }
         .days-ago {
           font-size: 14px;
-          color: #979bba;
+          color: $light-gray-2;
         }
       }
     }
@@ -182,7 +182,7 @@
           font-size: 16px;
           font-weight: bold;
           line-height: 1.5;
-          color: #979bba;
+          color: $light-gray-2;
           display: inline-block;
         }
       }
