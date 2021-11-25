@@ -8,6 +8,8 @@ import { Checkbox, CurrencyInput, Form, ToggleButtonGroup, ToggleButton } from "
 import { ContributionType } from "@/shared/constants/contributionType";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
+import { MIN_CONTRIBUTION_VALUE } from "./constants";
+import validationSchema from "./validationSchema";
 import "./index.scss";
 
 interface FundingProps {
@@ -56,6 +58,7 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
           initialValues={INITIAL_VALUES}
           onSubmit={handleSubmit}
           innerRef={formRef}
+          validationSchema={validationSchema}
           validateOnMount
         >
           {({ values: { contributionType }, errors, touched, isValid }) => (
@@ -78,23 +81,25 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
                 id="minimumContribution"
                 name="minimumContribution"
                 label={<>Minimum <strong>{contributionType === ContributionType.OneTime ? "one-time" : "monthly"}</strong> contribution</>}
-                description="Set the minimum amount that new members will have to contribute in order to join this Common. The minimum contribution allowed by credit card is $5."
-                placeholder="$5"
+                description={`Set the minimum amount that new members will have to contribute in order to join this Common. The minimum contribution allowed by credit card is $${MIN_CONTRIBUTION_VALUE}.`}
+                placeholder={`$${MIN_CONTRIBUTION_VALUE}`}
                 allowDecimals={false}
                 styles={{
                   label: "create-common-funding__field-label",
                   description: "create-common-funding__currency-input-label",
                 }}
               />
-              <Checkbox
-                className="create-common-funding__field"
-                id="isCommonJoinFree"
-                name="isCommonJoinFree"
-                label="Let users join the Common without a personal contribution"
-                styles={{
-                  label: "create-common-funding__checkbox-label",
-                }}
-              />
+              {contributionType === ContributionType.OneTime && (
+                <Checkbox
+                  className="create-common-funding__field"
+                  id="isCommonJoinFree"
+                  name="isCommonJoinFree"
+                  label="Let users join the Common without a personal contribution"
+                  styles={{
+                    label: "create-common-funding__checkbox-label",
+                  }}
+                />
+              )}
               <ModalFooter sticky={!isMobileView}>
                 <div className="create-common-funding__modal-footer">
                   <button
