@@ -4,7 +4,7 @@ import { FormikProps } from "formik/dist/types";
 
 import { isMobile } from "../../../../../../../shared/utils";
 import { ModalFooter, ModalHeaderContent } from "../../../../../../../shared/components/Modal";
-import { Form, ToggleButtonGroup, ToggleButton } from "../../../../../../../shared/components/Form/Formik";
+import { Checkbox, Form, ToggleButtonGroup, ToggleButton } from "../../../../../../../shared/components/Form/Formik";
 import { ContributionType } from "../../../../../../../shared/constants/contributionType";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
@@ -17,10 +17,12 @@ interface FundingProps {
 
 interface FormValues {
   contributionType: ContributionType;
+  isCommonJoinFree: boolean;
 }
 
 const INITIAL_VALUES: FormValues = {
   contributionType: ContributionType.OneTime,
+  isCommonJoinFree: false,
 };
 
 export default function Funding({ currentStep, onFinish }: FundingProps): ReactElement {
@@ -58,6 +60,7 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
           {({ values, errors, touched, isValid }) => (
             <Form className="create-common-funding__form">
               <ToggleButtonGroup
+                className="create-common-funding__field"
                 name="contributionType"
                 label="Contribution type"
               >
@@ -68,6 +71,15 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
                   Monthly
                 </ToggleButton>
               </ToggleButtonGroup>
+              <Checkbox
+                className="create-common-funding__field"
+                id="isCommonJoinFree"
+                name="isCommonJoinFree"
+                label="Let users join the Common without a personal contribution"
+                styles={{
+                  label: "create-common-funding__checkbox-label",
+                }}
+              />
               <ModalFooter sticky={!isMobileView}>
                 <div className="create-common-funding__modal-footer">
                   <button

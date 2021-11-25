@@ -11,6 +11,18 @@
     max-width: 376px;
     margin: 0 auto;
   }
+
+  .create-common-funding__field {
+    margin-bottom: 24px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .create-common-funding__checkbox-label {
+    margin-left: 4px;
+  }
 }
 
 .create-common-funding__modal-footer {

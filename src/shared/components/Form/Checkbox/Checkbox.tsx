@@ -12,7 +12,7 @@ interface CheckboxStyles {
   error?: string;
 }
 
-type CheckboxProps = JSX.IntrinsicElements['input'] & {
+export type CheckboxProps = JSX.IntrinsicElements['input'] & {
   name: string;
   label?: string;
   type?: "checkbox";
