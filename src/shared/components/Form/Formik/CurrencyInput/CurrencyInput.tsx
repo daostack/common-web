@@ -12,15 +12,19 @@ const CurrencyInput: FC<CurrencyInputProps> = (props) => {
   const [{ value }, { touched, error }, { setTouched, setValue }] = useField(props.name);
 
   const handleValueChange = useCallback((newValue?: string) => {
-    setTouched(true);
     setValue(newValue);
-  }, [setTouched, setValue]);
+  }, [setValue]);
+
+  const handleBlur = useCallback(() => {
+    setTouched(true);
+  }, [setTouched]);
 
   return (
     <BaseCurrencyInput
       {...props}
       value={value}
       onValueChange={handleValueChange}
+      onBlur={handleBlur}
       error={touched ? error : ''}
     />
   );
