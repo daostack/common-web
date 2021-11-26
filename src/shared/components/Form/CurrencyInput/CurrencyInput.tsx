@@ -31,12 +31,7 @@ const DEFAULT_INTL_CONFIG: IntlConfig = {
 
 const CurrencyInput: FC<CurrencyInputProps> = (props) => {
   const { className, label, description, hint, error, styles, allowNegativeValue, intlConfig, ...restProps } = props;
-  const [inputLengthRef, setInputLengthRef] = useState<HTMLSpanElement | null>(null);
   const id = restProps.id || restProps.name;
-  const shouldDisplayCount = false;
-  const inputStyles = shouldDisplayCount && inputLengthRef
-    ? { paddingRight: inputLengthRef.clientWidth + 14 }
-    : undefined;
   const labelWrapperClassName = classNames("custom-currency-input__label-wrapper", {
     "custom-currency-input__label-wrapper--with-description": description,
   });
@@ -72,14 +67,6 @@ const CurrencyInput: FC<CurrencyInputProps> = (props) => {
           allowNegativeValue={allowNegativeValue ?? false}
           intlConfig={intlConfig ?? DEFAULT_INTL_CONFIG}
         />
-        {shouldDisplayCount && (
-          <span
-            className="custom-currency-input__input-length"
-            ref={setInputLengthRef}
-          >
-            {typeof restProps.value === 'string' ? restProps.value.length : 0}/{5}
-          </span>
-        )}
       </div>
       {Boolean(error) && <ErrorText className={styles?.error}>{error}</ErrorText>}
     </div>
