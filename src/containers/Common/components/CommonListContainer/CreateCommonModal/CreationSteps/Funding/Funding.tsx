@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, ReactElement } from "react";
+import React, { useCallback, useRef, ReactElement, ReactNode } from "react";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
 
@@ -26,6 +26,25 @@ interface FormValues {
 const INITIAL_VALUES: FormValues = {
   contributionType: ContributionType.OneTime,
   isCommonJoinFree: false,
+};
+
+const getCurrencyInputLabel = (contributionType: ContributionType, isMobileView: boolean): ReactNode => {
+  const contributionText = contributionType === ContributionType.OneTime ? "one-time" : "monthly";
+  const additionalText = isMobileView && contributionType === ContributionType.Monthly
+    ? ` (min. $${MIN_CONTRIBUTION_VALUE})`
+    : "";
+
+  return <>Minimum <strong>{contributionText}</strong> contribution{additionalText}</>;
+};
+
+const getCurrencyInputDescription = (contributionType: ContributionType, isMobileView: boolean): string => {
+  const descriptionPieces = ["Set the minimum amount that new members will have to contribute in order to join this Common."];
+
+  if (!isMobileView || contributionType !== ContributionType.Monthly) {
+    descriptionPieces.push(`The minimum contribution allowed by credit card is $${MIN_CONTRIBUTION_VALUE}.`);
+  }
+
+  return descriptionPieces.join(" ");
 };
 
 export default function Funding({ currentStep, onFinish }: FundingProps): ReactElement {
@@ -61,7 +80,7 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
           validationSchema={validationSchema}
           validateOnMount
         >
-          {({ values: { contributionType }, errors, touched, isValid }) => (
+          {({ values: { contributionType }, isValid }) => (
             <Form className="create-common-funding__form">
               <ToggleButtonGroup
                 className="create-common-funding__field"
@@ -80,8 +99,8 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
                 className="create-common-funding__field"
                 id="minimumContribution"
                 name="minimumContribution"
-                label={<>Minimum <strong>{contributionType === ContributionType.OneTime ? "one-time" : "monthly"}</strong> contribution</>}
-                description={`Set the minimum amount that new members will have to contribute in order to join this Common. The minimum contribution allowed by credit card is $${MIN_CONTRIBUTION_VALUE}.`}
+                label={getCurrencyInputLabel(contributionType, isMobileView)}
+                description={getCurrencyInputDescription(contributionType, isMobileView)}
                 placeholder={`$${MIN_CONTRIBUTION_VALUE}`}
                 allowDecimals={false}
                 styles={{
