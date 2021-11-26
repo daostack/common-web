@@ -20,9 +20,17 @@
     }
   }
 
-  .create-common-funding__field-label,
-  .create-common-funding__currency-input-label {
+  .create-common-funding__field-label {
     font-size: $xsmall;
+  }
+
+  .create-common-funding__currency-input-description {
+    font-size: $xsmall;
+
+    @include big-phone {
+      margin-bottom: 16px;
+      font-size: $xxsmall;
+    }
   }
 
   .create-common-funding__currency-input-error {

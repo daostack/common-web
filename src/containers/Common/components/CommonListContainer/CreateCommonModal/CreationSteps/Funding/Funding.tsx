@@ -86,7 +86,7 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
                 allowDecimals={false}
                 styles={{
                   label: "create-common-funding__field-label",
-                  description: "create-common-funding__currency-input-label",
+                  description: "create-common-funding__currency-input-description",
                   error: "create-common-funding__currency-input-error",
                 }}
               />
@@ -101,7 +101,7 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
                   }}
                 />
               )}
-              <ModalFooter sticky={!isMobileView}>
+              <ModalFooter sticky>
                 <div className="create-common-funding__modal-footer">
                   <button
                     className="button-blue"
