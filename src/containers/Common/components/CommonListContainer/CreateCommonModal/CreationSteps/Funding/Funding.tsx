@@ -87,6 +87,7 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
                 styles={{
                   label: "create-common-funding__field-label",
                   description: "create-common-funding__currency-input-label",
+                  error: "create-common-funding__currency-input-error",
                 }}
               />
               {contributionType === ContributionType.OneTime && (
