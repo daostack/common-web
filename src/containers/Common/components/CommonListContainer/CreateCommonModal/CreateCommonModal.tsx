@@ -8,6 +8,7 @@ import { ScreenSize } from "@/shared/constants";
 import { CreationSteps } from "./CreationSteps";
 import { Introduction } from "./Introduction";
 import "./index.scss";
+import UnsavedChangesPrompt from "./UnsavedChangesPrompt/UnsavedChangesPrompt";
 
 enum CreateCommonStage {
   Introduction,
@@ -17,6 +18,9 @@ enum CreateCommonStage {
 interface CreateCommonModalProps {
   isShowing: boolean;
   onClose: () => void;
+  showUnsavedPrompt: boolean
+  setShowUnsavedPrompt: Function
+  setIsModalOpen: Function;
 }
 
 export default function CreateCommonModal(props: CreateCommonModalProps) {
@@ -112,7 +116,13 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       isHeaderSticky={isHeaderSticky}
       onHeaderScrolledToTop={setIsHeaderScrolledToTop}
     >
-      {content}
+      {<>
+        {content}
+        {props.showUnsavedPrompt && <UnsavedChangesPrompt
+          setIsModalOpen={props.setIsModalOpen}
+          setShowUnsavedPrompt={props.setShowUnsavedPrompt} />}
+      </>}
+
     </Modal>
   );
 }

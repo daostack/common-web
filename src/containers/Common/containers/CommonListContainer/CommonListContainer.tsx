@@ -26,6 +26,7 @@ export default function CommonListContainer() {
   const dispatch = useDispatch();
   const [loaderHack, setLoaderHack] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showUnsavedPrompt, setShowUnsavedPrompt] = useState(false);
 
   const loader = useRef(null);
 
@@ -71,7 +72,7 @@ export default function CommonListContainer() {
     setIsModalOpen(true);
   }, []);
   const handleModalClose = useCallback(() => {
-    setIsModalOpen(false);
+    setShowUnsavedPrompt(true);
   }, []);
 
   // See https://github.com/daostack/common-monorepo/issues/691 - the field might change in the new DB
@@ -106,6 +107,9 @@ export default function CommonListContainer() {
       <CreateCommonModal
         isShowing={isModalOpen}
         onClose={handleModalClose}
+        showUnsavedPrompt={showUnsavedPrompt}
+        setShowUnsavedPrompt={setShowUnsavedPrompt}
+        setIsModalOpen={setIsModalOpen}
       />
     </div>
   );
