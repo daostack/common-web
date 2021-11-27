@@ -91,6 +91,17 @@ body {
       pointer-events: none;
       opacity: 0.5;
     }
+
+    /* 
+      TODO: need to eliminate the use of button-blue across the project and
+      either create a button component or better global styles.
+     */
+
+    &.transparent {
+      background-color: transparent;
+      color: $secondary-blue;
+      border: 1px solid $light-gray-1;
+    }
   }
   h1 {
     font-size: $large;

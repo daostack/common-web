@@ -168,7 +168,7 @@ const Modal: FC<ModalProps> = (props) => {
                 </div>
               </ModalContext.Provider>
               {isFooterSticky && footerEl}
-              {closePrompt && showClosePrompt && <ClosePrompt />}
+              {closePrompt && showClosePrompt && <ClosePrompt setShowClosePrompt={setShowClosePrompt} onClose={onClose} />}
             </div>
           </div>
         </div>,
