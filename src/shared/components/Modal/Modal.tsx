@@ -18,6 +18,7 @@ import LeftArrowIcon from "../../icons/leftArrow.icon";
 import { Colors } from "../../constants";
 import { ModalContext, FooterOptions, ModalContextValue } from "./context";
 import "./index.scss";
+import { ClosePrompt } from "./components/ClosePrompt";
 
 const Modal: FC<ModalProps> = (props) => {
   const {
@@ -31,6 +32,7 @@ const Modal: FC<ModalProps> = (props) => {
     onHeaderScrolledToTop,
     hideCloseButton = false,
     isHeaderSticky = false,
+    closePrompt = false,
   } = props;
   const wrapperRef = useRef(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -41,13 +43,26 @@ const Modal: FC<ModalProps> = (props) => {
   const [isFullyScrolledToBottom, setIsFullyScrolledToBottom] = useState(false);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
   const { sticky: isFooterSticky = false } = footerOptions;
+  const [showClosePrompt, setShowClosePrompt] = useState(false);
+
+  const handleOnClose = () => {
+    if (closePrompt) {
+      setShowClosePrompt(true);
+    } else {
+      onClose();
+    }
+  }
 
   useEffect(() => {
     if (isOutside) {
-      onClose();
-      setOusideValue();
+      if (closePrompt) {
+        setShowClosePrompt(true);
+      } else {
+        onClose();
+        setOusideValue();
+      }
     }
-  }, [isOutside, onClose, setOusideValue]);
+  }, [isOutside, onClose, setOusideValue, closePrompt]);
 
   useEffect(() => {
     if (!isShowing) {
@@ -106,7 +121,7 @@ const Modal: FC<ModalProps> = (props) => {
         )}
         {typeof title === 'string' ? <h3 className="modal__title">{title}</h3> : title}
         {!hideCloseButton && (
-          <div className="modal__action-wrapper modal__close-wrapper" onClick={onClose}>
+          <div className="modal__action-wrapper modal__close-wrapper" onClick={handleOnClose}>
             <CloseIcon
               width="24"
               height="24"
@@ -153,6 +168,7 @@ const Modal: FC<ModalProps> = (props) => {
                 </div>
               </ModalContext.Provider>
               {isFooterSticky && footerEl}
+              {closePrompt && showClosePrompt && <ClosePrompt />}
             </div>
           </div>
         </div>,

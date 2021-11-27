@@ -111,6 +111,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       hideCloseButton={!shouldShowCloseButton}
       isHeaderSticky={isHeaderSticky}
       onHeaderScrolledToTop={setIsHeaderScrolledToTop}
+      closePrompt
     >
       {content}
     </Modal>
