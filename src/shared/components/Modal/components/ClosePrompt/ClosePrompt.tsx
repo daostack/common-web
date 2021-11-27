@@ -6,6 +6,10 @@ interface IProps {
   onClose: Function
 }
 
+/**
+ * In the future we can support passing any content to the ClosePrompt component.
+ */
+
 export default function ClosePrompt({ setShowClosePrompt, onClose }: IProps) {
   return (
     <div className="close-prompt-wrapper">
