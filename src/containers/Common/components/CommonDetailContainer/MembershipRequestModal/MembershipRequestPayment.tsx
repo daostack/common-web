@@ -46,21 +46,16 @@ export default function MembershipRequestPayment(props: IStageProps) {
         commonId: `${window.location.pathname.split("/")[2]}`,
       };
 
-
       setUserData({ ...userData, stage: 6 });
 
       const createdCard = await createCard({
         ...formData,
       });
 
-      console.log(createdCard);
-
-      const createRequestToJoinResponse = await createRequestToJoin({
+      await createRequestToJoin({
         ...data,
         cardId: createdCard.id as string,
       });
-
-      console.log(createRequestToJoinResponse);
 
       setUserData({ ...userData, stage: 7 });
       // TODO: show the proposalId somewhere?

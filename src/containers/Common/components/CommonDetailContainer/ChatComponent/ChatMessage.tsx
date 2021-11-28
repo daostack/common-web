@@ -10,6 +10,7 @@ interface ChatMessageProps {
 export default function ChatMessage({ disscussionMessage }: ChatMessageProps) {
   const [imageError, setImageError] = useState(false);
   const mDate = new Date(disscussionMessage.createTime.seconds * 1000);
+
   return (
     <div className="message-wrapper">
       <div className="icon-wrapper">
@@ -36,7 +37,7 @@ export default function ChatMessage({ disscussionMessage }: ChatMessageProps) {
         <div className="message-name">
           {getUserName(disscussionMessage.owner)}
         </div>
-        <div className="message-content">{disscussionMessage.message}</div>
+        <div className="message-content">{disscussionMessage.text}</div>
       </div>
       <div className="time-wrapper">
         {mDate.toLocaleTimeString([], {
