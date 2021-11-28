@@ -34,18 +34,21 @@
     top: 50%;
     right: 0;
     padding: 8px;
-    background-color: $light-gray-3;
     border-radius: 50%;
-    opacity: .7;
     transform: translateY(-10%);
     transition: opacity .2s;
 
     &:hover {
-      opacity: 1;
+      opacity: .8;
     }
   }
   .links-array__remove-button--with-item-error {
     transform: translateY(-51%);
+  }
+
+  .links-array__delete-icon {
+    width: 16px;
+    height: 16px;
   }
 
   .links-array__add-button {

@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { FieldArray, FieldArrayConfig, FormikErrors } from "formik";
 import { FormikTouched } from "formik/dist/types";
 
-import CloseIcon from '../../../../../shared/icons/close.icon';
+import DeleteIcon from '../../../../../shared/icons/delete.icon';
 import { ButtonIcon } from "../../../ButtonIcon";
 import { ButtonLink } from "../../../ButtonLink";
 import { ErrorText } from "../../ErrorText";
@@ -97,7 +97,7 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
                     })}
                     onClick={() => remove(index)}
                   >
-                    <CloseIcon width="16" height="16"/>
+                    <DeleteIcon className="links-array__delete-icon" />
                   </ButtonIcon>
                 )}
               </div>
