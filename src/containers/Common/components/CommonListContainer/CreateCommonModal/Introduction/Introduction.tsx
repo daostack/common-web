@@ -47,7 +47,7 @@ export default function Introduction({ setTitle, setGoBackHandler, onFinish }: I
   const swiperRef = useRef<SwiperClass>();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const [continueButtonText, setContinueButtonText] = useState(isMobileView ? "Get started" : "Continue");
+  const [continueButtonText, setContinueButtonText] = useState("Continue");
 
   useEffect(() => {
     setTitle(isMobileView ? "New Common" : "Create a Common");
@@ -62,17 +62,10 @@ export default function Introduction({ setTitle, setGoBackHandler, onFinish }: I
   }, [swiperRef]);
 
   const handleSlideChange = useCallback((swiper: SwiperClass) => {
-    if (!isMobileView) {
-      setContinueButtonText(swiper.isEnd ? "Get started" : "Continue");
-    }
-  }, [isMobileView]);
+    setContinueButtonText(swiper.isEnd ? "Get started" : "Continue");
+  }, []);
 
   const handleContinueClick = useCallback(() => {
-    if (isMobileView) {
-      onFinish();
-      return;
-    }
-
     if (!swiperRef.current) {
       return;
     }
@@ -82,7 +75,7 @@ export default function Introduction({ setTitle, setGoBackHandler, onFinish }: I
     } else {
       swiperRef.current.slideNext();
     }
-  }, [swiperRef, onFinish, isMobileView]);
+  }, [swiperRef, onFinish]);
 
   return (
     <>
