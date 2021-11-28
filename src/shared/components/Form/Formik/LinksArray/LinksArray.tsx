@@ -57,6 +57,7 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
             const titleError = isTouched(touched, index, 'title') ? getInputError(errors, index, 'title') : '';
             const linkError = isTouched(touched, index, 'link') ? getInputError(errors, index, 'link') : '';
             const error = titleError || linkError;
+            const shouldDisplayDeleteButton = values.length > 1;
 
             return (
               <div key={index} className={classNames("links-array__item", itemClassName)}>
@@ -76,30 +77,31 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
                     error: "links-array__title-error",
                   }}
                 />
-                <TextField
-                  id={`${restProps.name}.${index}.link`}
-                  name={`${restProps.name}.${index}.link`}
-                  placeholder={`Link #${index + 1}`}
-                  styles={{
-                    input: {
-                      default: classNames("links-array__link-input", {
-                        "links-array__link-input--without-top-border": titleError || !linkError,
-                      }),
-                    },
-                    error: "links-array__link-error",
-                  }}
-                />
+                <div className="links-array__link-input-wrapper">
+                  <TextField
+                    id={`${restProps.name}.${index}.link`}
+                    name={`${restProps.name}.${index}.link`}
+                    placeholder={`Link #${index + 1}`}
+                    styles={{
+                      input: {
+                        default: classNames("links-array__link-input", {
+                          "links-array__link-input--without-top-border": titleError || !linkError,
+                          "links-array__link-input--with-delete-button": shouldDisplayDeleteButton,
+                        }),
+                      },
+                      error: "links-array__link-error",
+                    }}
+                  />
+                  {shouldDisplayDeleteButton && (
+                    <ButtonIcon
+                      className="links-array__remove-button"
+                      onClick={() => remove(index)}
+                    >
+                      <DeleteIcon className="links-array__delete-icon" />
+                    </ButtonIcon>
+                  )}
+                </div>
                 {error && <ErrorText>{error}</ErrorText>}
-                {values.length > 1 && (
-                  <ButtonIcon
-                    className={classNames("links-array__remove-button", {
-                      "links-array__remove-button--with-item-error": error,
-                    })}
-                    onClick={() => remove(index)}
-                  >
-                    <DeleteIcon className="links-array__delete-icon" />
-                  </ButtonIcon>
-                )}
               </div>
             );
           })}
