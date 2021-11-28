@@ -63,10 +63,10 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
                 <TextField
                   id={`${restProps.name}.${index}.title`}
                   name={`${restProps.name}.${index}.title`}
-                  label="Add links"
+                  label={index === 0 ? "Add links" : ""}
                   placeholder="Link title"
                   maxLength={maxTitleLength}
-                  hint="Resources, related content, or social pages"
+                  hint={index === 0 ? "Resources, related content, or social pages" : ""}
                   styles={{
                     input: {
                       default: classNames("links-array__title-input", {
