@@ -3,7 +3,7 @@ import axios from "axios";
 import {
   IMembershipRequestData,
   IProposalPayload,
-} from "../containers/Common/components/CommonDetailContainer/MembershipRequestModal/MembershipRequestModal";
+} from "../containers/Common/components/CommonDetailContainer/MembershipRequestModal";
 import firebase from "../shared/utils/firebase";
 import config from "../config";
 
@@ -22,7 +22,6 @@ const axiosClient = axios.create({
   timeout: 1000000,
 });
 
-// TODO: the Circle API should be via env var or something
 const getEncryptedData = async (token: any, dataToEncrypt: any) => {
   const { data } = await axiosClient.get(endpoints.encription, {
     headers: {
@@ -85,12 +84,6 @@ export const createCardPayload = async (formData: IMembershipRequestData) => {
     const { encryptedData, keyId } = await getEncryptedData(token, {
       number: `${formData.card_number}`,
       cvv: `${formData.cvv}`,
-    });
-
-    console.log({
-      keyId,
-      encryptedData,
-      ...cardData(formData),
     });
 
     return {

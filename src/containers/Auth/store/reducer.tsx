@@ -2,13 +2,12 @@ import { produce } from "immer";
 import { ActionType, createReducer } from "typesafe-actions";
 
 import { AuthStateType } from "../interface";
-// import { tokenHandler } from "../../../shared/utils";
 import * as actions from "./actions";
 
 type Action = ActionType<typeof actions>;
 
 const initialState: AuthStateType = {
-  authentificated: !localStorage.getItem("token") ? false : true, // TODO: maybe need a better way to check this
+  authentificated: !!localStorage.getItem("token"),
   user: localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user") || "")
     : false,
