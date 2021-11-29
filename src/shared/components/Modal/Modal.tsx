@@ -149,29 +149,29 @@ const Modal: FC<ModalProps> = (props) => {
 
   return isShowing
     ? ReactDOM.createPortal(
-        <div id="modal">
-          <div className="modal-overlay" />
-          <div className={modalWrapperClassName}>
-            <div ref={wrapperRef} className={`modal ${props.className}`}>
-              {isHeaderSticky && headerEl}
-              <ModalContext.Provider value={contextValue}>
-                <div
-                  ref={contentRef}
-                  className={modalContentClassName}
-                  onScroll={handleScroll}
-                >
-                  {!isHeaderSticky && headerEl}
-                  {children}
-                  {!isFooterSticky && footerEl}
-                </div>
-              </ModalContext.Provider>
-              {isFooterSticky && footerEl}
-              {showClosePrompt && <ClosePrompt setShowClosePrompt={setShowClosePrompt} onClose={onClose} />}
-            </div>
+      <div id="modal">
+        <div className="modal-overlay" />
+        <div className={modalWrapperClassName}>
+          <div ref={wrapperRef} className={`modal ${props.className}`}>
+            {isHeaderSticky && headerEl}
+            <ModalContext.Provider value={contextValue}>
+              <div
+                ref={contentRef}
+                className={modalContentClassName}
+                onScroll={handleScroll}
+              >
+                {!isHeaderSticky && headerEl}
+                {children}
+                {!isFooterSticky && footerEl}
+              </div>
+            </ModalContext.Provider>
+            {isFooterSticky && footerEl}
+            {showClosePrompt && <ClosePrompt onClose={() => { setShowClosePrompt(false); onClose(); }} onContinue={() => setShowClosePrompt(false)} />}
           </div>
-        </div>,
-        document.body,
-      )
+        </div>
+      </div>,
+      document.body,
+    )
     : null;
 };
 
