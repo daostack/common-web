@@ -5,7 +5,7 @@ import { FormikProps } from "formik/dist/types";
 import { isMobile } from "@/shared/utils";
 import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
 import { Checkbox, CurrencyInput, Form, ToggleButtonGroup, ToggleButton } from "@/shared/components/Form/Formik";
-import { ContributionType } from "@/shared/constants/contributionType";
+import { CommonContributionType } from "@/shared/models";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
 import { MIN_CONTRIBUTION_VALUE } from "./constants";
@@ -18,29 +18,29 @@ interface FundingProps {
 }
 
 interface FormValues {
-  contributionType: ContributionType;
+  contributionType: CommonContributionType;
   minimumContribution?: number;
   isCommonJoinFree: boolean;
 }
 
 const INITIAL_VALUES: FormValues = {
-  contributionType: ContributionType.OneTime,
+  contributionType: CommonContributionType.OneTime,
   isCommonJoinFree: false,
 };
 
-const getCurrencyInputLabel = (contributionType: ContributionType, isMobileView: boolean): ReactNode => {
-  const contributionText = contributionType === ContributionType.OneTime ? "one-time" : "monthly";
-  const additionalText = isMobileView && contributionType === ContributionType.Monthly
+const getCurrencyInputLabel = (contributionType: CommonContributionType, isMobileView: boolean): ReactNode => {
+  const contributionText = contributionType === CommonContributionType.OneTime ? "one-time" : "monthly";
+  const additionalText = isMobileView && contributionType === CommonContributionType.Monthly
     ? ` (min. $${MIN_CONTRIBUTION_VALUE})`
     : "";
 
   return <>Minimum <strong>{contributionText}</strong> contribution{additionalText}</>;
 };
 
-const getCurrencyInputDescription = (contributionType: ContributionType, isMobileView: boolean): string => {
+const getCurrencyInputDescription = (contributionType: CommonContributionType, isMobileView: boolean): string => {
   const descriptionPieces = ["Set the minimum amount that new members will have to contribute in order to join this Common."];
 
-  if (!isMobileView || contributionType !== ContributionType.Monthly) {
+  if (!isMobileView || contributionType !== CommonContributionType.Monthly) {
     descriptionPieces.push(`The minimum contribution allowed by credit card is $${MIN_CONTRIBUTION_VALUE}.`);
   }
 
@@ -88,10 +88,10 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
                 label="Contribution type"
                 styles={{ label: "create-common-funding__field-label" }}
               >
-                <ToggleButton value={ContributionType.OneTime}>
+                <ToggleButton value={CommonContributionType.OneTime}>
                   One-time
                 </ToggleButton>
-                <ToggleButton value={ContributionType.Monthly}>
+                <ToggleButton value={CommonContributionType.Monthly}>
                   Monthly
                 </ToggleButton>
               </ToggleButtonGroup>
@@ -109,7 +109,7 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
                   error: "create-common-funding__currency-input-error",
                 }}
               />
-              {contributionType === ContributionType.OneTime && (
+              {contributionType === CommonContributionType.OneTime && (
                 <Checkbox
                   className="create-common-funding__field"
                   id="isCommonJoinFree"
