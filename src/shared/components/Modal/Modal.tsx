@@ -17,8 +17,8 @@ import CloseIcon from "../../icons/close.icon";
 import LeftArrowIcon from "../../icons/leftArrow.icon";
 import { Colors } from "../../constants";
 import { ModalContext, FooterOptions, ModalContextValue } from "./context";
-import "./index.scss";
 import { ClosePrompt } from "./components/ClosePrompt";
+import "./index.scss";
 
 const Modal: FC<ModalProps> = (props) => {
   const {
@@ -45,7 +45,7 @@ const Modal: FC<ModalProps> = (props) => {
   const { sticky: isFooterSticky = false } = footerOptions;
   const [showClosePrompt, setShowClosePrompt] = useState(false);
 
-  const handleOnClose = () => {
+  const handleClose = () => {
     if (closePrompt) {
       setShowClosePrompt(true);
     } else {
@@ -121,7 +121,7 @@ const Modal: FC<ModalProps> = (props) => {
         )}
         {typeof title === 'string' ? <h3 className="modal__title">{title}</h3> : title}
         {!hideCloseButton && (
-          <div className="modal__action-wrapper modal__close-wrapper" onClick={handleOnClose}>
+          <div className="modal__action-wrapper modal__close-wrapper" onClick={handleClose}>
             <CloseIcon
               width="24"
               height="24"

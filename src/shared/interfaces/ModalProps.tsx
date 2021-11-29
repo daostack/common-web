@@ -14,5 +14,5 @@ export interface ModalProps {
   hideCloseButton?: boolean;
   isHeaderSticky?: boolean;
   onHeaderScrolledToTop?: (isHeaderScrolledToTop: boolean) => void;
-  closePrompt?: boolean
+  closePrompt?: boolean;
 }
