@@ -63,7 +63,7 @@ interface IProps {
   closeModal: Function;
 }
 
-export default function MembershipRequestModal(props: IProps) {
+export function MembershipRequestModal(props: IProps) {
   const [userData, setUserData] = useState(initData);
   const { stage } = userData;
   const { common, closeModal } = props;

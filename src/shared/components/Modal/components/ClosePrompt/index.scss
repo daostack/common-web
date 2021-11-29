@@ -1,4 +1,5 @@
 @import "../../../../../constants.scss";
+@import "../../../../../styles/sizes.scss";
 
 .close-prompt-wrapper {
   position: absolute;
@@ -27,7 +28,7 @@
   }
 }
 
-@media only screen and (max-width: $mobile-breakpoint) {
+@include big-phone {
   .close-prompt-wrapper {
     .content {
       height: 100%;
