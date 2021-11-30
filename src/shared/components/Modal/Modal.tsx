@@ -69,7 +69,7 @@ const Modal: FC<ModalProps> = (props) => {
     if (isOutside) {
       handleClose();
     }
-  }, [isOutside, handleClose])
+  }, [isOutside, handleClose]);
 
   useEffect(() => {
     if (!isShowing) {
