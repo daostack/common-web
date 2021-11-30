@@ -57,7 +57,7 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
             const titleError = isTouched(touched, index, 'title') ? getInputError(errors, index, 'title') : '';
             const linkError = isTouched(touched, index, 'link') ? getInputError(errors, index, 'link') : '';
             const error = titleError || linkError;
-            const shouldDisplayDeleteButton = values.length > 1;
+            const shouldDisplayDeleteButton = values.length > 1 && Boolean(value.title && value.link);
 
             return (
               <div key={index} className={classNames("links-array__item", itemClassName)}>
