@@ -56,6 +56,15 @@ const Modal: FC<ModalProps> = (props) => {
     }
   }, [isOutside, closePrompt, onClose, setOusideValue]);
 
+  const handleClosePromptContinue = useCallback(() => {
+    setShowClosePrompt(false);
+  }, []);
+
+  const handleClosePromptClose = useCallback(() => {
+    setShowClosePrompt(false);
+    onClose();
+  }, [onClose]);
+
   useEffect(() => {
     if (isOutside) {
       handleClose();
@@ -166,7 +175,7 @@ const Modal: FC<ModalProps> = (props) => {
               </div>
             </ModalContext.Provider>
             {isFooterSticky && footerEl}
-            {showClosePrompt && <ClosePrompt onClose={() => { setShowClosePrompt(false); onClose(); }} onContinue={() => setShowClosePrompt(false)} />}
+            {showClosePrompt && <ClosePrompt onClose={handleClosePromptClose} onContinue={handleClosePromptContinue} />}
           </div>
         </div>
       </div>,
