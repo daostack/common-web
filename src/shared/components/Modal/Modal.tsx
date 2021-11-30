@@ -17,6 +17,7 @@ import CloseIcon from "../../icons/close.icon";
 import LeftArrowIcon from "../../icons/leftArrow.icon";
 import { Colors } from "../../constants";
 import { ModalContext, FooterOptions, ModalContextValue } from "./context";
+import { ClosePrompt } from "./components/ClosePrompt";
 import "./index.scss";
 
 const Modal: FC<ModalProps> = (props) => {
@@ -31,6 +32,7 @@ const Modal: FC<ModalProps> = (props) => {
     onHeaderScrolledToTop,
     hideCloseButton = false,
     isHeaderSticky = false,
+    closePrompt = false,
   } = props;
   const wrapperRef = useRef(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -41,13 +43,33 @@ const Modal: FC<ModalProps> = (props) => {
   const [isFullyScrolledToBottom, setIsFullyScrolledToBottom] = useState(false);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
   const { sticky: isFooterSticky = false } = footerOptions;
+  const [showClosePrompt, setShowClosePrompt] = useState(false);
+
+  const handleClose = useCallback(() => {
+    if (closePrompt) {
+      setShowClosePrompt(true);
+    } else {
+      onClose();
+      if (isOutside) {
+        setOusideValue();
+      }
+    }
+  }, [isOutside, closePrompt, onClose, setOusideValue]);
+
+  const handleClosePromptContinue = useCallback(() => {
+    setShowClosePrompt(false);
+  }, []);
+
+  const handleClosePromptClose = useCallback(() => {
+    setShowClosePrompt(false);
+    onClose();
+  }, [onClose]);
 
   useEffect(() => {
     if (isOutside) {
-      onClose();
-      setOusideValue();
+      handleClose();
     }
-  }, [isOutside, onClose, setOusideValue]);
+  }, [isOutside, handleClose]);
 
   useEffect(() => {
     if (!isShowing) {
@@ -106,7 +128,7 @@ const Modal: FC<ModalProps> = (props) => {
         )}
         {typeof title === 'string' ? <h3 className="modal__title">{title}</h3> : title}
         {!hideCloseButton && (
-          <div className="modal__action-wrapper modal__close-wrapper" onClick={onClose}>
+          <div className="modal__action-wrapper modal__close-wrapper" onClick={handleClose}>
             <CloseIcon
               width="24"
               height="24"
@@ -136,28 +158,29 @@ const Modal: FC<ModalProps> = (props) => {
 
   return isShowing
     ? ReactDOM.createPortal(
-        <div id="modal">
-          <div className="modal-overlay" />
-          <div className={modalWrapperClassName}>
-            <div ref={wrapperRef} className={`modal ${props.className}`}>
-              {isHeaderSticky && headerEl}
-              <ModalContext.Provider value={contextValue}>
-                <div
-                  ref={contentRef}
-                  className={modalContentClassName}
-                  onScroll={handleScroll}
-                >
-                  {!isHeaderSticky && headerEl}
-                  {children}
-                  {!isFooterSticky && footerEl}
-                </div>
-              </ModalContext.Provider>
-              {isFooterSticky && footerEl}
-            </div>
+      <div id="modal">
+        <div className="modal-overlay" />
+        <div className={modalWrapperClassName}>
+          <div ref={wrapperRef} className={`modal ${props.className}`}>
+            {isHeaderSticky && headerEl}
+            <ModalContext.Provider value={contextValue}>
+              <div
+                ref={contentRef}
+                className={modalContentClassName}
+                onScroll={handleScroll}
+              >
+                {!isHeaderSticky && headerEl}
+                {children}
+                {!isFooterSticky && footerEl}
+              </div>
+            </ModalContext.Provider>
+            {isFooterSticky && footerEl}
+            {showClosePrompt && <ClosePrompt onClose={handleClosePromptClose} onContinue={handleClosePromptContinue} />}
           </div>
-        </div>,
-        document.body,
-      )
+        </div>
+      </div>,
+      document.body,
+    )
     : null;
 };
 
