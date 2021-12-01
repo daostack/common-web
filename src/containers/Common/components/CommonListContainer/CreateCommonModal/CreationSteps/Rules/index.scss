@@ -1,0 +1,27 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.create-common-rules {
+  width: 100%;
+  max-width: 584px;
+  margin: 0 auto;
+  padding-bottom: 32px;
+
+  .create-common-rules__rules-array-item {
+    margin-top: 16px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
+
+.create-common-rules__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding: 28px 0;
+
+  @include big-phone {
+    padding: 24px 0;
+  }
+}
