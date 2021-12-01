@@ -72,6 +72,7 @@ export default function Rules({ currentStep, onFinish }: RulesProps): ReactEleme
               <ModalFooter sticky>
                 <div className="create-common-rules__modal-footer">
                   <button
+                    key="rules-continue"
                     className="button-blue"
                     onClick={handleContinueClick}
                     disabled={!isValid}

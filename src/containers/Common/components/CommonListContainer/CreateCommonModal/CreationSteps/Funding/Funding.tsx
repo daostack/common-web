@@ -123,6 +123,7 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
               <ModalFooter sticky>
                 <div className="create-common-funding__modal-footer">
                   <button
+                    key="funding-continue"
                     className="button-blue"
                     onClick={handleContinueClick}
                     disabled={!isValid}
