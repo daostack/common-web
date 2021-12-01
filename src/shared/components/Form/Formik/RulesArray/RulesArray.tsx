@@ -30,17 +30,17 @@ interface RulesArrayProps extends FieldArrayConfig {
 }
 
 const getInputError = (errors: Errors, index: number, key: keyof RulesArrayItem): string => {
-  if (!errors || typeof errors !== 'object') {
-    return '';
+  if (!errors || typeof errors !== "object") {
+    return "";
   }
 
   const error = errors[index];
 
-  if (!error || typeof error === 'string') {
-    return '';
+  if (!error || typeof error === "string") {
+    return "";
   }
 
-  return error[key] || '';
+  return error[key] || "";
 };
 
 const isTouched = (touched: Touched, index: number, key: keyof RulesArrayItem): boolean => (
@@ -56,10 +56,10 @@ const RulesArray: FC<RulesArrayProps> = (props) => {
       render={({ remove, push }) => (
         <div className={classNames("description-array", className)}>
           {values.map((value, index) => {
-            const titleError = isTouched(touched, index, 'title') ? getInputError(errors, index, 'title') : '';
-            const descriptionError = isTouched(touched, index, 'description')
-              ? getInputError(errors, index, 'description')
-              : '';
+            const titleError = isTouched(touched, index, "title") ? getInputError(errors, index, "title") : "";
+            const descriptionError = isTouched(touched, index, "description")
+              ? getInputError(errors, index, "description")
+              : "";
             const error = titleError || descriptionError;
             const shouldDisplayDeleteButton = values.length > 1 && Boolean(value.title && value.description);
 
@@ -115,7 +115,7 @@ const RulesArray: FC<RulesArrayProps> = (props) => {
           })}
           <ButtonLink
             className="description-array__add-button"
-            onClick={() => push({ title: '', description: '' })}
+            onClick={() => push({ title: "", description: "" })}
           >
             Add rule
           </ButtonLink>
