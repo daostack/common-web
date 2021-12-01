@@ -5,6 +5,7 @@ import { ErrorText } from "../ErrorText";
 import "./index.scss";
 
 interface InputStyles {
+  description?: string;
   input?: {
     default?: string;
   };
@@ -21,6 +22,7 @@ export type FullInputProps = (InputProps | TextareaProps) & {
   name: string;
   className?: string;
   label?: string;
+  description?: string;
   hint?: string;
   maxLength?: number;
   shouldDisplayCount?: boolean;
@@ -35,13 +37,16 @@ const filterExtraProps: FilterExtraPropsFunction = <T extends (InputProps | Text
 };
 
 const Input: FC<FullInputProps> = (props) => {
-  const { className, label, hint, maxLength, shouldDisplayCount, error, styles, ...restProps } = props;
+  const { className, label, description, hint, maxLength, shouldDisplayCount, error, styles, ...restProps } = props;
   const [inputLengthRef, setInputLengthRef] = useState<HTMLSpanElement | null>(null);
   const id = restProps.id || restProps.name;
   const shouldDisplayCountToUse = shouldDisplayCount ?? Boolean(maxLength && maxLength > 0);
   const inputStyles = shouldDisplayCountToUse && inputLengthRef
     ? { paddingRight: inputLengthRef.clientWidth + 14 }
     : undefined;
+  const labelWrapperClassName = classNames("custom-input__label-wrapper", {
+    "custom-input__label-wrapper--with-description": description,
+  });
   const inputClassName = classNames("custom-input__input", styles?.input?.default, {
     "custom-input__input--error": error,
   });
@@ -54,7 +59,7 @@ const Input: FC<FullInputProps> = (props) => {
   return (
     <div className={classNames("custom-input", className)}>
       {(label || hint) && (
-        <div className="custom-input__label-wrapper">
+        <div className={labelWrapperClassName}>
           {label && (
             <label
               htmlFor={id}
@@ -65,6 +70,11 @@ const Input: FC<FullInputProps> = (props) => {
           )}
           {hint && <span className="custom-input__hint">{hint}</span>}
         </div>
+      )}
+      {description && (
+        <p className={classNames("custom-input__description", styles?.description)}>
+          {description}
+        </p>
       )}
       <div className="custom-input__input-wrapper">
         {!restProps.isTextarea && (
