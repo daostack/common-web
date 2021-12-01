@@ -8,6 +8,7 @@ import { Form, RulesArray, RulesArrayItem } from '@/shared/components/Form/Formi
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
 import { MAX_RULE_TITLE_LENGTH } from "./constants";
+import validationSchema from "./validationSchema";
 import "./index.scss";
 
 interface RulesProps {
@@ -53,6 +54,7 @@ export default function Rules({ currentStep, onFinish }: RulesProps): ReactEleme
           initialValues={INITIAL_VALUES}
           onSubmit={handleSubmit}
           innerRef={formRef}
+          validationSchema={validationSchema}
           validateOnMount
         >
           {({ values, errors, touched, isValid }) => (
