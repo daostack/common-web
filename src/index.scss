@@ -68,6 +68,7 @@ body {
       outline: none;
     }
   }
+  /* TODO: need to eliminate the use of button-blue across the project and either create a button component or better global styles. */
   .button-blue {
     font-family: NunitoSans-Bold, sans-serif;
     height: 40px;
@@ -90,6 +91,11 @@ body {
     &:disabled {
       pointer-events: none;
       opacity: 0.5;
+    }
+    &.transparent {
+      background-color: transparent;
+      color: $secondary-blue;
+      border: 1px solid $light-gray-1;
     }
   }
   h1 {

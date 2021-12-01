@@ -22,7 +22,7 @@ export default function EmptyTabComponent({ currentTab, message, title, common }
 
   return (
     <>
-      <Modal isShowing={showJoinModal} onClose={closeJoinModalHandler} className="mobile-full-screen" mobileFullScreen>
+      <Modal isShowing={showJoinModal} onClose={closeJoinModalHandler} className="mobile-full-screen" mobileFullScreen closePrompt>
         <MembershipRequestModal common={common} closeModal={closeJoinModalHandler} />
       </Modal>
       <div className="empty-tab-component-wrapper">

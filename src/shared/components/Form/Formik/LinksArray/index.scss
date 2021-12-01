@@ -17,12 +17,19 @@
     display: none;
   }
 
+  .links-array__link-input-wrapper {
+    position: relative;
+  }
+
   .links-array__link-input {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
   }
   .links-array__link-input--without-top-border {
     border-top: 0;
+  }
+  .links-array__link-input--with-delete-button {
+    padding-right: 32px;
   }
 
   .links-array__link-error {
@@ -34,18 +41,18 @@
     top: 50%;
     right: 0;
     padding: 8px;
-    background-color: $light-gray-3;
     border-radius: 50%;
-    opacity: .7;
-    transform: translateY(-10%);
+    transform: translateY(-50%);
     transition: opacity .2s;
 
     &:hover {
-      opacity: 1;
+      opacity: .8;
     }
   }
-  .links-array__remove-button--with-item-error {
-    transform: translateY(-51%);
+
+  .links-array__delete-icon {
+    width: 16px;
+    height: 16px;
   }
 
   .links-array__add-button {

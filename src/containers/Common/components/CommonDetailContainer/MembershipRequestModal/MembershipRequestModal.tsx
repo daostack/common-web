@@ -64,7 +64,6 @@ interface IProps {
 }
 
 export function MembershipRequestModal(props: IProps) {
-  // TODO: should be saved in the localstorage for saving the progress?
   const [userData, setUserData] = useState(initData);
   const { stage } = userData;
   const { common, closeModal } = props;
