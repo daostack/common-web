@@ -19,6 +19,8 @@ type Errors = string | string[] | FormikErrors<RulesArrayItem[]> | undefined;
 type Touched = FormikTouched<RulesArrayItem>[] | undefined;
 
 interface RulesArrayProps extends FieldArrayConfig {
+  title?: string;
+  description?: string;
   values: RulesArrayItem[];
   errors: Errors;
   touched: Touched;
@@ -46,7 +48,7 @@ const isTouched = (touched: Touched, index: number, key: keyof RulesArrayItem): 
 );
 
 const RulesArray: FC<RulesArrayProps> = (props) => {
-  const { values, errors, touched, maxTitleLength, className, itemClassName, ...restProps } = props;
+  const { title, description, values, errors, touched, maxTitleLength, className, itemClassName, ...restProps } = props;
 
   return (
     <FieldArray
@@ -66,10 +68,13 @@ const RulesArray: FC<RulesArrayProps> = (props) => {
                 <TextField
                   id={`${restProps.name}.${index}.title`}
                   name={`${restProps.name}.${index}.title`}
-                  label={index === 0 ? "Rules of conduct" : ""}
+                  label={index === 0 ? title : ""}
+                  description={index === 0 ? description : ""}
                   placeholder={`Rule #${index + 1} title`}
                   maxLength={maxTitleLength}
                   styles={{
+                    label: "description-array__title-label",
+                    description: "description-array__title-description",
                     input: {
                       default: classNames("description-array__title-input", {
                         "description-array__title-input--without-bottom-border": !titleError && descriptionError,

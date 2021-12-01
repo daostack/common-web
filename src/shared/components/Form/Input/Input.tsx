@@ -5,6 +5,7 @@ import { ErrorText } from "../ErrorText";
 import "./index.scss";
 
 interface InputStyles {
+  label?: string;
   description?: string;
   input?: {
     default?: string;
@@ -63,7 +64,7 @@ const Input: FC<FullInputProps> = (props) => {
           {label && (
             <label
               htmlFor={id}
-              className="custom-input__label"
+              className={classNames("custom-input__label", styles?.label)}
             >
               {label}
             </label>

@@ -1,8 +1,23 @@
 @import "../../../../../constants";
+@import "../../../../../styles/sizes";
 
 .description-array {
   .description-array__item {
     position: relative;
+  }
+
+  .description-array__title-label {
+    font-size: $xsmall;
+  }
+
+  .description-array__title-description {
+    max-width: 376px;
+    margin-bottom: 16px;
+    font-size: $xsmall;
+
+    @include big-phone {
+      font-size: $xxsmall;
+    }
   }
 
   .description-array__title-input {

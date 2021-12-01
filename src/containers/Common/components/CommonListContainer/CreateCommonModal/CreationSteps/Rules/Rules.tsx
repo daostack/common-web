@@ -60,6 +60,8 @@ export default function Rules({ currentStep, onFinish }: RulesProps): ReactEleme
           {({ values, errors, touched, isValid }) => (
             <Form className="create-common-rules__form">
               <RulesArray
+                title="Rules of conduct"
+                description="Use rules to set the tone for your Common‘s discussions. (No advertising and spam, accepted language, etc.)"
                 name="rules"
                 values={values.rules}
                 errors={errors.rules}
