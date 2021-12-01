@@ -1,4 +1,4 @@
-import React, { useState, FC, ReactNode } from "react";
+import React, { FC, ReactNode } from "react";
 import classNames from "classnames";
 import BaseCurrencyInput, { CurrencyInputProps as BaseCurrencyInputProps } from "react-currency-input-field";
 import { IntlConfig } from "react-currency-input-field/dist/components/CurrencyInputProps";
