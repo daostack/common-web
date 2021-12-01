@@ -4,7 +4,7 @@ import { FormikProps } from "formik/dist/types";
 
 import { isMobile } from "@/shared/utils";
 import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
-import { Form, RulesArray, RulesArrayItem } from '@/shared/components/Form/Formik';
+import { Form, RulesArray, RulesArrayItem } from "@/shared/components/Form/Formik";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
 import { MAX_RULE_TITLE_LENGTH } from "./constants";
@@ -34,7 +34,7 @@ export default function Rules({ currentStep, onFinish }: RulesProps): ReactEleme
     }
   }, []);
 
-  const handleSubmit = useCallback<FormikConfig<FormValues>['onSubmit']>((values) => {
+  const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>((values) => {
     onFinish();
   }, [onFinish]);
 
@@ -76,7 +76,7 @@ export default function Rules({ currentStep, onFinish }: RulesProps): ReactEleme
                     onClick={handleContinueClick}
                     disabled={!isValid}
                   >
-                    Continue to Rules
+                    Continue to Review
                   </button>
                 </div>
               </ModalFooter>
