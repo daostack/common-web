@@ -35,7 +35,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
             })
           }
         >
-          $20
+          {formatPrice(2000)}
         </button>
         <button
           className={`${userData.contribution_id === 2 ? "selected" : ""}`}
@@ -47,7 +47,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
             })
           }
         >
-          $50
+          {formatPrice(5000)}
         </button>{" "}
       </div>
       <button
