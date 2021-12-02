@@ -25,9 +25,7 @@ export default function ProposalDetailModal({
 }: DiscussionDetailModalProps) {
   const date = new Date();
   const [imageError, setImageError] = useState(false);
-  const requestedAmount = formatPrice(
-    proposal?.fundingRequest?.amount || proposal?.join?.funding
-  );
+  const rawRequestedAmount = proposal?.fundingRequest?.amount || proposal?.join?.funding;
   return !proposal ? (
     <Loader />
   ) : (
@@ -87,12 +85,12 @@ export default function ProposalDetailModal({
               {proposal.description.title}
             </div>
             <div className="requested-amount">
-              {requestedAmount === "$0" ? (
+              {!rawRequestedAmount ? (
                 "No funding requested"
               ) : (
                 <>
                   Requested amount
-                  <span className="amount">{requestedAmount}</span>
+                  <span className="amount">{formatPrice(rawRequestedAmount)}</span>
                 </>
               )}
             </div>

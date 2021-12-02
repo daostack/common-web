@@ -23,7 +23,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
             })
           }
         >
-          {`${formatPrice(common?.fundingMinimumAmount)}`}
+          {formatPrice(common?.fundingMinimumAmount)}
         </button>
         <button
           className={`${userData.contribution_id === 1 ? "selected" : ""}`}
