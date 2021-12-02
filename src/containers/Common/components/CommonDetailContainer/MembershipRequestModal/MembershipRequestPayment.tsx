@@ -42,7 +42,7 @@ export default function MembershipRequestPayment(props: IStageProps) {
 
       const data = {
         description: formData.intro,
-        funding: (formData?.contribution_amount || 0) * 100,
+        funding: formData?.contribution_amount || 0,
         commonId: `${window.location.pathname.split("/")[2]}`,
       };
 
