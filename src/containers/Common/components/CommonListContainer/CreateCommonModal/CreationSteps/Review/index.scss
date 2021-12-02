@@ -1,0 +1,63 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.create-common-review {
+  width: 100%;
+  max-width: 584px;
+  margin: 0 auto;
+  padding-bottom: 32px;
+
+  .create-common-review__main-info-wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .create-common-review__common-name {
+    margin: 0;
+    font-family: NotoSerifSC-Bold, serif;
+    font-size: $moderate-small;
+    font-weight: bold;
+    line-height: 1.4;
+  }
+
+  .create-common-review__tagline {
+    margin: 8px 0 0;
+    font-size: $small;
+    line-height: 1.5;
+  }
+
+  .create-common-review__price-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .create-common-review__minimum-contribution {
+    margin-top: 6px;
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: $moderate-med;
+    font-weight: bold;
+    line-height: 0.96;
+  }
+
+  .create-common-review__minimum-contribution-text {
+    font-size: $small;
+    line-height: 1.5;
+    color: $light-gray-2;
+  }
+
+  .create-common-review__separator {
+    margin: 16px 0;
+  }
+}
+
+.create-common-review__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding: 28px 0;
+
+  @include big-phone {
+    padding: 24px 0;
+  }
+}

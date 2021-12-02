@@ -1,7 +1,12 @@
 import React, { ReactElement } from "react";
+import classNames from "classnames";
 
 import "./index.scss";
 
-export default function Separator(): ReactElement {
-  return <div className="create-common-separator" />;
+interface SeparatorProps {
+  className?: string;
+}
+
+export default function Separator({ className }: SeparatorProps): ReactElement {
+  return <div className={classNames("create-common-separator", className)} />;
 }

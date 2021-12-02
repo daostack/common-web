@@ -5,6 +5,7 @@ import { Dots } from "@/shared/components";
 import { Funding } from "./Funding";
 import { GeneralInfo } from "./GeneralInfo";
 import { PROGRESS_RELATED_STEPS } from './Progress';
+import { Review } from './Review';
 import { Rules } from './Rules';
 import { UserAcknowledgment } from './UserAcknowledgment';
 import { CreationStep } from "./constants";
@@ -94,6 +95,8 @@ export default function CreationSteps(props: CreationStepsProps) {
         return <Funding currentStep={step} onFinish={handleFinish} />;
       case CreationStep.Rules:
         return <Rules currentStep={step} onFinish={handleFinish} />;
+      case CreationStep.Review:
+        return <Review currentStep={step} onFinish={handleFinish} />;
       default:
         return null;
     }
