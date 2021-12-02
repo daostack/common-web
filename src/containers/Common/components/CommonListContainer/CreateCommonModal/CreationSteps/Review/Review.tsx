@@ -16,6 +16,7 @@ export default function Review({ currentStep, onFinish }: ReviewProps): ReactEle
   const commonName = "Amazon Network";
   const tagline = "If you wanna save the Amazon, own it.";
   const minimumContribution = 10;
+  const about = "We aim to ba a global non-profit initiative. Only small percentage of creative directors are women and we want to help change this through mentorship circles, portfolio reviews, talks & creative meetups.";
 
   const handleContinueClick = useCallback(() => {
     onFinish();
@@ -43,6 +44,12 @@ export default function Review({ currentStep, onFinish }: ReviewProps): ReactEle
           </div>
         </div>
         <Separator className="create-common-review__separator" />
+        {about && (
+          <div className="create-common-review__section">
+            <h5 className="create-common-review__section-title">About</h5>
+            <p className="create-common-review__section-description">{about}</p>
+          </div>
+        )}
         <ModalFooter sticky>
           <div className="create-common-review__modal-footer">
             <button

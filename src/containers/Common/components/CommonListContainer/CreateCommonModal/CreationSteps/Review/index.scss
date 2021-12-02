@@ -50,6 +50,25 @@
   .create-common-review__separator {
     margin: 16px 0;
   }
+
+  .create-common-review__section {
+    margin-bottom: 24px;
+  }
+
+  .create-common-review__section-title {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: $moderate;
+    font-weight: bold;
+    line-height: 1.22;
+  }
+
+  .create-common-review__section-description {
+    margin: 0;
+    font-size: $xsmall;
+    line-height: 1.42;
+  }
 }
 
 .create-common-review__modal-footer {
