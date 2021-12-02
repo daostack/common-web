@@ -29,13 +29,8 @@ export interface Common {
   name: string;
   balance: number;
   raised: number;
-  byline: string;
-  description: string;
   links: Rules[];
   image: string;
-  fundingType: CommonContributionType;
-  openJoinRequests: number;
-  openFundingRequests: number;
 
   register: string;
   members: Member[];
