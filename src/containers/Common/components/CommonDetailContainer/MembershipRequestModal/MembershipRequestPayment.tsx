@@ -116,10 +116,6 @@ export default function MembershipRequestPayment(props: IStageProps) {
       >
         Pay Now
       </button>
-      <div className="circle-wrapper">
-        <span>Powered by</span>
-        <img src="/icons/membership-request/circle-pay.png" alt="circle pay" />
-      </div>
     </div>
   );
 }
