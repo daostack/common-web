@@ -41,7 +41,7 @@ export default function AboutTabComponent({
         <div className="contribution">
           Minimum contribution for new members:
           <br />
-          {formatPrice(common.fundingMinimumAmount) + " "}
+          {formatPrice(common.metadata.minFeeToJoin) + " "}
           {renderContributionType(common.fundingType || "")} contribution
         </div>
         {screenSize === ScreenSize.Desktop && !isCommonMember && (
