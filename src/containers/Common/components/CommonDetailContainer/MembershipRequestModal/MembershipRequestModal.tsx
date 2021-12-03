@@ -163,6 +163,7 @@ export function MembershipRequestModal(props: IProps) {
       onClose={onClose}
       className="mobile-full-screen membership-request-modal"
       mobileFullScreen
+      closePrompt
       title={renderedTitle}
       onGoBack={shouldDisplayBackButton ? moveStageBack : undefined}
       styles={{
