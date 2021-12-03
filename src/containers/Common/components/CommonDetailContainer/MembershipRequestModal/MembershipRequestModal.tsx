@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState, ReactNode } from "react";
+import classNames from "classnames";
 import { Modal } from "../../../../../shared/components";
 import { ModalProps } from "../../../../../shared/interfaces";
 import { Common } from "../../../../../shared/models";
@@ -136,7 +137,9 @@ export function MembershipRequestModal(props: IProps) {
 
     const shouldBeBigTitle = stage === 0;
     const text = shouldBeBigTitle ? "Membership Request Process" : "Membership Request";
-    const className = shouldBeBigTitle ? "membership-request-modal__title--big" : "membership-request-modal__title";
+    const className = classNames("membership-request-modal__title", {
+      "membership-request-modal__title--big": shouldBeBigTitle,
+    });
 
     return <h3 className={className}>{text}</h3>;
   }, [stage]);
