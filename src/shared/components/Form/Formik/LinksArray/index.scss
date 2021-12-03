@@ -1,0 +1,61 @@
+@import "../../../../../constants";
+
+.links-array {
+  .links-array__item {
+    position: relative;
+  }
+
+  .links-array__title-input {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .links-array__title-input--without-bottom-border {
+    border-bottom: 0;
+  }
+
+  .links-array__title-error {
+    display: none;
+  }
+
+  .links-array__link-input-wrapper {
+    position: relative;
+  }
+
+  .links-array__link-input {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  .links-array__link-input--without-top-border {
+    border-top: 0;
+  }
+  .links-array__link-input--with-delete-button {
+    padding-right: 32px;
+  }
+
+  .links-array__link-error {
+    display: none;
+  }
+
+  .links-array__remove-button {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    padding: 8px;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    transition: opacity .2s;
+
+    &:hover {
+      opacity: .8;
+    }
+  }
+
+  .links-array__delete-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .links-array__add-button {
+    margin-top: 16px;
+  }
+}
