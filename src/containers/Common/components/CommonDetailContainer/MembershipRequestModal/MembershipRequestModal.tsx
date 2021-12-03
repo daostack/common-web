@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Modal } from "../../../../../shared/components";
+import { ModalProps } from "../../../../../shared/interfaces";
 import { Common } from "../../../../../shared/models";
 import "./index.scss";
 import MembershipRequestBilling from "./MembershipRequestBilling";
@@ -58,16 +60,15 @@ const initData: IMembershipRequestData = {
   expiration_date: "",
 };
 
-interface IProps {
+interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
   common: Common;
-  closeModal: Function;
 }
 
 export function MembershipRequestModal(props: IProps) {
   // TODO: should be saved in the localstorage for saving the progress?
   const [userData, setUserData] = useState(initData);
   const { stage } = userData;
-  const { common, closeModal } = props;
+  const { isShowing, onClose, common } = props;
 
   const renderCurrentStage = (stage: number) => {
     switch (stage) {
@@ -123,29 +124,36 @@ export function MembershipRequestModal(props: IProps) {
           />
         );
       case 7:
-        return <MembershipRequestCreated closeModal={closeModal} />;
+        return <MembershipRequestCreated closeModal={onClose} />;
     }
   };
 
   return (
-    <div className="membership-request-wrapper">
-      {stage !== 6 && stage !== 7 && (
-        <div className="top">
-          {stage > 0 && (
-            <img
-              src="/icons/left-arrow.svg"
-              alt="back"
-              className="arrow-back"
-              onClick={() => setUserData({ ...userData, stage: stage - 1 })}
-            />
-          )}
-          <div className="title">Membership Request</div>
-        </div>
-      )}
-      {stage > 0 && stage !== 6 && stage !== 7 && (
-        <MembershipRequestProgressBar currentStage={stage} />
-      )}
-      {renderCurrentStage(stage)}
-    </div>
+    <Modal
+      isShowing={isShowing}
+      onClose={onClose}
+      className="mobile-full-screen"
+      mobileFullScreen
+    >
+      <div className="membership-request-wrapper">
+        {stage !== 6 && stage !== 7 && (
+          <div className="top">
+            {stage > 0 && (
+              <img
+                src="/icons/left-arrow.svg"
+                alt="back"
+                className="arrow-back"
+                onClick={() => setUserData({ ...userData, stage: stage - 1 })}
+              />
+            )}
+            <div className="title">Membership Request</div>
+          </div>
+        )}
+        {stage > 0 && stage !== 6 && stage !== 7 && (
+          <MembershipRequestProgressBar currentStage={stage} />
+        )}
+        {renderCurrentStage(stage)}
+      </div>
+    </Modal>
   );
 }

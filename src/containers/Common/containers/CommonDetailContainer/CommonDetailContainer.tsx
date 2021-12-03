@@ -346,14 +346,11 @@ export default function CommonDetail() {
           </div>
         )}
       </Modal>
-      <Modal
+      <MembershipRequestModal
         isShowing={showJoinModal}
         onClose={closeJoinModal}
-        className="mobile-full-screen"
-        mobileFullScreen
-      >
-        <MembershipRequestModal common={common} closeModal={closeJoinModal} />
-      </Modal>
+        common={common}
+      />
       <div className="common-detail-wrapper">
         <div className="main-information-block">
           <div className="main-information-wrapper">

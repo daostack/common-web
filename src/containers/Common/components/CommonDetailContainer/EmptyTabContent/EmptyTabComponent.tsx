@@ -1,7 +1,6 @@
 import React, { useCallback } from "react";
 
 import { MembershipRequestModal } from "../MembershipRequestModal";
-import { Modal } from "../../../../../shared/components/Modal";
 import { useModal } from "../../../../../shared/hooks";
 import "./index.scss";
 import { Common } from "../../../../../shared/models";
@@ -22,9 +21,11 @@ export default function EmptyTabComponent({ currentTab, message, title, common }
 
   return (
     <>
-      <Modal isShowing={showJoinModal} onClose={closeJoinModalHandler} className="mobile-full-screen" mobileFullScreen>
-        <MembershipRequestModal common={common} closeModal={closeJoinModalHandler} />
-      </Modal>
+      <MembershipRequestModal
+        isShowing={showJoinModal}
+        onClose={closeJoinModalHandler}
+        common={common}
+      />
       <div className="empty-tab-component-wrapper">
         <div className="img-wrapper">
           {currentTab === "proposals" && <img alt={currentTab} src="/icons/proposals-empty.svg" />}
