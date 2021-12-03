@@ -1,0 +1,11 @@
+@import "../../../../constants";
+
+.error-text {
+  margin-top: 8px;
+  display: inline-block;
+  font-family: NunitoSans-Regular, sans-serif;
+  font-size: $xxsmall;
+  line-height: 1.42;
+  text-align: left;
+  color: $error;
+}

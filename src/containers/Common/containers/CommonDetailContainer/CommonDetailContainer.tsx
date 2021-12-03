@@ -351,6 +351,7 @@ export default function CommonDetail() {
         onClose={closeJoinModal}
         className="mobile-full-screen"
         mobileFullScreen
+        closePrompt
       >
         <MembershipRequestModal common={common} closeModal={closeJoinModal} />
       </Modal>

@@ -1,0 +1,81 @@
+@import "../../../../constants";
+
+$custom-currency-input-vertical-padding: 14px;
+
+.custom-currency-input {
+  display: flex;
+  flex-direction: column;
+  font-family: NunitoSans-Regular, sans-serif;
+  font-weight: normal;
+  color: $secondary-blue;
+
+  .custom-currency-input__label-wrapper {
+    margin-bottom: 10px;
+    display: flex;
+    font-size: $xxsmall;
+    line-height: 1.32;
+  }
+  .custom-currency-input__label-wrapper--with-description {
+    margin-bottom: 6px;
+  }
+
+  .custom-currency-input__label {
+    text-align: left;
+  }
+
+  .custom-currency-input__description {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: $xxsmall;
+    line-height: 1.42;
+    color: $light-gray-2;
+  }
+
+  .custom-currency-input__hint {
+    margin-left: auto;
+    font-style: italic;
+    text-align: right;
+    color: $light-gray-3;
+  }
+
+  .custom-currency-input__input-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+  }
+
+  .custom-currency-input__input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    width: 100%;
+    margin: 0;
+    padding: $custom-currency-input-vertical-padding 12px;
+    border-radius: 3px;
+    border: solid 1px $light-gray-1;
+    background-color: $white;
+    font-family: inherit;
+    font-size: $xsmall;
+    line-height: 1.42;
+    outline: none;
+    box-sizing: border-box;
+    resize: none;
+
+    &::placeholder {
+      color: $light-gray-2;
+    }
+  }
+  .custom-currency-input__input--error {
+    border-color: $error;
+  }
+
+  .custom-currency-input__input-length {
+    position: absolute;
+    top: $custom-currency-input-vertical-padding;
+    right: 8px;
+    font-size: $xsmall;
+    text-align: right;
+    color: $light-gray-2;
+  }
+}
