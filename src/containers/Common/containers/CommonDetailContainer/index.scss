@@ -246,6 +246,14 @@
   }
 }
 
+.common-detail-container__detail-modal-header-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  background-color: transparent;
+}
+
 .get-common-app-wrapper {
   background: url("/assets/images/purple-stains.svg") no-repeat center;
   background-size: cover;

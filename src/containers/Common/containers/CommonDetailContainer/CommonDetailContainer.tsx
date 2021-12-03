@@ -319,6 +319,11 @@ export default function CommonDetail() {
           screenSize === ScreenSize.Mobile ? Colors.white : Colors.gray
         }
         className={tab}
+        isHeaderSticky
+        shouldShowHeaderShadow={false}
+        styles={{
+          headerWrapper: "common-detail-container__detail-modal-header-wrapper",
+        }}
       >
         {screenSize === ScreenSize.Desktop && tab === "discussions" && (
           <DiscussionDetailModal

@@ -30,8 +30,10 @@ const Modal: FC<ModalProps> = (props) => {
     mobileFullScreen,
     title,
     onHeaderScrolledToTop,
+    styles,
     hideCloseButton = false,
     isHeaderSticky = false,
+    shouldShowHeaderShadow = true,
     closePrompt = false,
   } = props;
   const wrapperRef = useRef(null);
@@ -102,9 +104,9 @@ const Modal: FC<ModalProps> = (props) => {
   const modalWrapperClassName = classNames("modal-wrapper", {
     "mobile-full-screen": mobileFullScreen,
   });
-  const headerWrapperClassName = classNames("modal__header-wrapper", {
+  const headerWrapperClassName = classNames("modal__header-wrapper", styles?.headerWrapper, {
     "modal__header-wrapper--fixed": isHeaderSticky,
-    "modal__header-wrapper--shadowed": isHeaderSticky && !isFullyScrolledToTop,
+    "modal__header-wrapper--shadowed": isHeaderSticky && !isFullyScrolledToTop && shouldShowHeaderShadow,
   });
   const headerClassName = classNames("modal__header", {
     "modal__header--default-padding": !title,

@@ -13,6 +13,10 @@ export interface ModalProps {
   title?: ReactNode;
   hideCloseButton?: boolean;
   isHeaderSticky?: boolean;
+  shouldShowHeaderShadow?: boolean;
   onHeaderScrolledToTop?: (isHeaderScrolledToTop: boolean) => void;
   closePrompt?: boolean;
+  styles?: {
+    headerWrapper?: string;
+  };
 }
