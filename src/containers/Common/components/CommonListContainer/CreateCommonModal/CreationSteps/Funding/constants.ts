@@ -1,0 +1,1 @@
+export const MIN_CONTRIBUTION_VALUE = 5;

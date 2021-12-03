@@ -1,0 +1,54 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.create-common-funding {
+  width: 100%;
+  max-width: 584px;
+  margin: 0 auto;
+  padding-bottom: 32px;
+
+  .create-common-funding__form {
+    max-width: 376px;
+    margin: 0 auto;
+  }
+
+  .create-common-funding__field {
+    margin-bottom: 24px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .create-common-funding__field-label {
+    font-size: $xsmall;
+  }
+
+  .create-common-funding__currency-input-description {
+    font-size: $xsmall;
+
+    @include big-phone {
+      margin-bottom: 16px;
+      font-size: $xxsmall;
+    }
+  }
+
+  .create-common-funding__currency-input-error {
+    margin-top: 6px;
+    font-size: $xsmall;
+  }
+
+  .create-common-funding__checkbox-label {
+    margin-left: 4px;
+  }
+}
+
+.create-common-funding__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding: 28px 0;
+
+  @include big-phone {
+    padding: 24px 0;
+  }
+}

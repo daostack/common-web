@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState, ReactNode } from "rea
 
 import { isMobile } from "@/shared/utils";
 import { Dots } from "@/shared/components";
+import { Funding } from "./Funding";
 import { GeneralInfo } from "./GeneralInfo";
 import { PROGRESS_RELATED_STEPS } from './Progress';
 import { UserAcknowledgment } from './UserAcknowledgment';
@@ -88,6 +89,8 @@ export default function CreationSteps(props: CreationStepsProps) {
         return <GeneralInfo currentStep={step} onFinish={handleFinish} />;
       case CreationStep.UserAcknowledgment:
         return <UserAcknowledgment currentStep={step} onFinish={handleFinish} />;
+      case CreationStep.Funding:
+        return <Funding currentStep={step} onFinish={handleFinish} />;
       default:
         return null;
     }
