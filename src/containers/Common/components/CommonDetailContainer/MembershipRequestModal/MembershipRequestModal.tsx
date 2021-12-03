@@ -161,7 +161,7 @@ export function MembershipRequestModal(props: IProps) {
       onGoBack={shouldDisplayBackButton ? moveStageBack : undefined}
     >
       <div className="membership-request-wrapper">
-        {stage > 0 && stage !== 6 && stage !== 7 && (
+        {shouldDisplayBackButton && (
           <MembershipRequestProgressBar currentStage={stage} />
         )}
         {renderCurrentStage(stage)}
