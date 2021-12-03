@@ -1,8 +1,11 @@
 import React, { useCallback, useMemo, useState, ReactNode } from "react";
+import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { Modal } from "../../../../../shared/components";
 import { ModalProps } from "../../../../../shared/interfaces";
 import { Common } from "../../../../../shared/models";
+import { getScreenSize } from "../../../../../shared/store/selectors";
+import { ScreenSize } from "../../../../../shared/constants";
 import "./index.scss";
 import MembershipRequestBilling from "./MembershipRequestBilling";
 import MembershipRequestContribution from "./MembershipRequestContribution";
@@ -71,6 +74,8 @@ export function MembershipRequestModal(props: IProps) {
   const { stage } = userData;
   const { isShowing, onClose, common } = props;
   const shouldDisplayBackButton = stage > 0 && stage < 6;
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   const renderCurrentStage = (stage: number) => {
     switch (stage) {
@@ -138,11 +143,12 @@ export function MembershipRequestModal(props: IProps) {
     const shouldBeBigTitle = stage === 0;
     const text = shouldBeBigTitle ? "Membership Request Process" : "Membership Request";
     const className = classNames("membership-request-modal__title", {
-      "membership-request-modal__title--big": shouldBeBigTitle,
+      "membership-request-modal__title--big": shouldBeBigTitle && !isMobileView,
+      "membership-request-modal__title--short": shouldBeBigTitle && isMobileView,
     });
 
     return <h3 className={className}>{text}</h3>;
-  }, [stage]);
+  }, [stage, isMobileView]);
 
   const moveStageBack = useCallback(() => {
     setUserData((data) => ({
@@ -159,6 +165,9 @@ export function MembershipRequestModal(props: IProps) {
       mobileFullScreen
       title={renderedTitle}
       onGoBack={shouldDisplayBackButton ? moveStageBack : undefined}
+      styles={{
+        header: stage === 0 ? "membership-request-modal__header-wrapper--introduction" : "",
+      }}
     >
       <div className="membership-request-wrapper">
         {shouldDisplayBackButton && (

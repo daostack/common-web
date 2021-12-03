@@ -4,6 +4,12 @@
 .membership-request-modal {
   color: $secondary-blue;
 
+  .membership-request-modal__header-wrapper--introduction {
+    @include big-phone {
+      padding-top: 24px;
+    }
+  }
+
   .membership-request-modal__title {
     height: 80px;
     margin: 0;
@@ -13,14 +19,21 @@
     font-family: NunitoSans-Bold, sans-serif;
     font-size: $moderate;
     font-weight: bold;
+    text-align: center;
 
     @include big-phone {
       height: 64px;
+      font-size: $small;
     }
   }
   .membership-request-modal__title--big {
     font-family: NotoSerifSC-Bold, serif;
     font-size: $moderate-med;
+  }
+  .membership-request-modal__title--short {
+    @include big-phone {
+      max-width: 176px;
+    }
   }
 }
 
