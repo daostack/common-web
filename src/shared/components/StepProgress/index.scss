@@ -1,0 +1,34 @@
+@import "../../../constants";
+
+$step-progress-image-size: 32px;
+$step-progress-active-image-size: 48px;
+
+.step-progress {
+  display: flex;
+  align-items: center;
+
+  .step-progress__separator {
+    width: 100%;
+    height: 1px;
+    background-color: $light-gray-1;
+  }
+  .step-progress__separator--active {
+    background-color: $purple;
+  }
+  .step-progress__separator--short {
+    width: 80%;
+  }
+
+  .step-progress__image {
+    width: $step-progress-image-size;
+    min-width: $step-progress-image-size;
+    height: $step-progress-image-size;
+    min-height: $step-progress-image-size;
+  }
+  .step-progress__image--active {
+    width: $step-progress-active-image-size;
+    min-width: $step-progress-active-image-size;
+    height: $step-progress-active-image-size;
+    min-height: $step-progress-active-image-size;
+  }
+}
