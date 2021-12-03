@@ -108,11 +108,11 @@ const Modal: FC<ModalProps> = (props) => {
     "modal__header-wrapper--fixed": isHeaderSticky,
     "modal__header-wrapper--shadowed": isHeaderSticky && !isFullyScrolledToTop && shouldShowHeaderShadow,
   });
-  const headerClassName = classNames("modal__header", {
+  const headerClassName = classNames("modal__header", styles?.header, {
     "modal__header--default-padding": !title,
     "modal__header--with-string-title": title && typeof title === 'string',
   });
-  const modalContentClassName = classNames("modal__content", {
+  const modalContentClassName = classNames("modal__content", styles?.content, {
     "modal__content--without-footer": !footer,
   });
   const footerClassName = classNames("modal__footer", {
@@ -130,7 +130,10 @@ const Modal: FC<ModalProps> = (props) => {
         )}
         {typeof title === 'string' ? <h3 className="modal__title">{title}</h3> : title}
         {!hideCloseButton && (
-          <div className="modal__action-wrapper modal__close-wrapper" onClick={handleClose}>
+          <div
+            className={classNames("modal__action-wrapper modal__close-wrapper", styles?.closeWrapper)}
+            onClick={handleClose}
+          >
             <CloseIcon
               width="24"
               height="24"

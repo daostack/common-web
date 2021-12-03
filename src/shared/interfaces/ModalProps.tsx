@@ -18,5 +18,8 @@ export interface ModalProps {
   closePrompt?: boolean;
   styles?: {
     headerWrapper?: string;
+    header?: string;
+    closeWrapper?: string;
+    content?: string;
   };
 }
