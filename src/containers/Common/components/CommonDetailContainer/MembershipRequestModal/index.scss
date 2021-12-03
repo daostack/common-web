@@ -1,4 +1,19 @@
-@import "../../../../../constants.scss";
+@import "../../../../../constants";
+
+.membership-request-modal {
+  color: $secondary-blue;
+
+  .membership-request-modal__title {
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: $moderate;
+    font-weight: bold;
+  }
+  .membership-request-modal__title--big {
+    font-family: NotoSerifSC-Bold, serif;
+    font-size: $moderate-med;
+    font-weight: bold;
+  }
+}
 
 .membership-request-wrapper {
   display: flex;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState, ReactNode } from "react";
 import { Modal } from "../../../../../shared/components";
 import { ModalProps } from "../../../../../shared/interfaces";
 import { Common } from "../../../../../shared/models";
@@ -69,6 +69,7 @@ export function MembershipRequestModal(props: IProps) {
   const [userData, setUserData] = useState(initData);
   const { stage } = userData;
   const { isShowing, onClose, common } = props;
+  const shouldDisplayBackButton = stage > 0 && stage < 6;
 
   const renderCurrentStage = (stage: number) => {
     switch (stage) {
@@ -128,27 +129,35 @@ export function MembershipRequestModal(props: IProps) {
     }
   };
 
+  const renderedTitle = useMemo((): ReactNode => {
+    if (stage >= 6) {
+      return null;
+    }
+
+    const shouldBeBigTitle = stage === 0;
+    const text = shouldBeBigTitle ? "Membership Request Process" : "Membership Request";
+    const className = shouldBeBigTitle ? "membership-request-modal__title--big" : "membership-request-modal__title";
+
+    return <h3 className={className}>{text}</h3>;
+  }, [stage]);
+
+  const moveStageBack = useCallback(() => {
+    setUserData((data) => ({
+      ...data,
+      stage: data.stage - 1,
+    }));
+  }, []);
+
   return (
     <Modal
       isShowing={isShowing}
       onClose={onClose}
-      className="mobile-full-screen"
+      className="mobile-full-screen membership-request-modal"
       mobileFullScreen
+      title={renderedTitle}
+      onGoBack={shouldDisplayBackButton ? moveStageBack : undefined}
     >
       <div className="membership-request-wrapper">
-        {stage !== 6 && stage !== 7 && (
-          <div className="top">
-            {stage > 0 && (
-              <img
-                src="/icons/left-arrow.svg"
-                alt="back"
-                className="arrow-back"
-                onClick={() => setUserData({ ...userData, stage: stage - 1 })}
-              />
-            )}
-            <div className="title">Membership Request</div>
-          </div>
-        )}
         {stage > 0 && stage !== 6 && stage !== 7 && (
           <MembershipRequestProgressBar currentStage={stage} />
         )}
