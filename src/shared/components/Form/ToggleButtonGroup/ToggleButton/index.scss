@@ -1,0 +1,43 @@
+@import "../../../../../constants";
+
+$custom-toggle-button-border-radius: 8px;
+
+.custom-toggle-button {
+  flex: 1 0;
+  padding: 10px;
+  border: 1px solid $light-gray-1;
+  background-color: $white;
+  font-family: inherit;
+  font-size: inherit;
+  text-align: center;
+  color: $purple;
+  box-sizing: border-box;
+  cursor: pointer;
+
+  &:first-child {
+    border-top-left-radius: $custom-toggle-button-border-radius;
+    border-bottom-left-radius: $custom-toggle-button-border-radius;
+  }
+  &:last-child {
+    border-top-right-radius: $custom-toggle-button-border-radius;
+    border-bottom-right-radius: $custom-toggle-button-border-radius;
+  }
+
+  &:hover {
+    background-color: $light-gray-5;
+  }
+
+  &:active {
+    background-color: $light-gray-6;
+  }
+}
+.custom-toggle-button--active {
+  border-color: $purple;
+  background-color: $purple;
+  color: $white;
+
+  &:hover,
+  &:active {
+    background-color: $purple;
+  }
+}

@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import classNames from "classnames";
 
 import { Loader, Share } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
@@ -120,6 +121,7 @@ export default function CommonDetail() {
     onOpen: onOpenJoinModal,
     onClose: onCloseJoinModal,
   } = useModal(false);
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   useEffect(() => {
     dispatch(getCommonDetail.request(id));
@@ -318,16 +320,24 @@ export default function CommonDetail() {
         closeColor={
           screenSize === ScreenSize.Mobile ? Colors.white : Colors.gray
         }
-        className={tab}
+        className={classNames(tab, { "common-detail-container__detail-modal--mobile": isMobileView })}
+        isHeaderSticky
+        shouldShowHeaderShadow={false}
+        styles={{
+          headerWrapper: "common-detail-container__detail-modal-header-wrapper",
+          header: "common-detail-container__detail-modal-header",
+          closeWrapper: "common-detail-container__detail-modal-close-wrapper",
+          content: "common-detail-container__detail-modal-content",
+        }}
       >
-        {screenSize === ScreenSize.Desktop && tab === "discussions" && (
+        {!isMobileView && tab === "discussions" && (
           <DiscussionDetailModal
             disscussion={currentDisscussion}
             onOpenJoinModal={openJoinModal}
             isCommonMember={isCommonMember}
           />
         )}
-        {screenSize === ScreenSize.Desktop &&
+        {!isMobileView &&
           (tab === "proposals" || tab === "history") && (
             <ProposalDetailModal
               proposal={currentProposal}
@@ -335,7 +345,7 @@ export default function CommonDetail() {
               isCommonMember={!!isCommonMember}
             />
           )}
-        {screenSize === ScreenSize.Mobile && (
+        {isMobileView && (
           <div className="get-common-app-wrapper">
             <img src="/icons/logo-all-white.svg" alt="logo" className="logo" />
             <span className="text">
@@ -346,14 +356,11 @@ export default function CommonDetail() {
           </div>
         )}
       </Modal>
-      <Modal
+      <MembershipRequestModal
         isShowing={showJoinModal}
         onClose={closeJoinModal}
-        className="mobile-full-screen"
-        mobileFullScreen
-      >
-        <MembershipRequestModal common={common} closeModal={closeJoinModal} />
-      </Modal>
+        common={common}
+      />
       <div className="common-detail-wrapper">
         <div className="main-information-block">
           <div className="main-information-wrapper">

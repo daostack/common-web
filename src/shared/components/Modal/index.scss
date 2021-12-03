@@ -1,4 +1,10 @@
-@import "../../../constants.scss";
+@import "../../../constants";
+@import "../../../styles/sizes";
+
+$modal-action-size: 32px;
+$modal-border-radius: 12px;
+$modal-padding: 30px;
+$modal-mobile-padding: 24px;
 
 .modal-overlay {
   position: fixed;
@@ -14,26 +20,34 @@
 .modal-wrapper {
   position: fixed;
   top: 0;
+  right: 0;
+  bottom: 0;
   left: 0;
   z-index: 999;
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
   outline: 0;
-  padding: 20px;
   box-sizing: border-box;
   backdrop-filter: blur(2px);
+
+  @include big-phone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .modal {
-  background: $white;
+  display: flex;
+  flex-direction: column;
+  background-color: $white;
   z-index: 100;
   position: relative;
-  margin: 1.75rem auto;
   max-width: 900px;
+  max-height: 90vh;
+  margin: 5vh auto;
   box-sizing: border-box;
-  border-radius: 12px;
+  border-radius: $modal-border-radius;
+  overflow: hidden;
 
   &.discussions,
   &.proposals,
@@ -41,47 +55,132 @@
     max-width: $element-max-width;
   }
 
-  .close-wrapper {
-    position: absolute;
-    right: 20px;
-    top: 20px;
+  .modal__header-wrapper {
     z-index: 1;
+    flex: 0 0;
+    transition: box-shadow .1s;
   }
+  .modal__header-wrapper--fixed {
+    padding-left: $modal-padding;
+    padding-right: $modal-padding;
 
-  .close-wrapper:hover {
-    opacity: 0.9;
-    cursor: pointer;
-  }
-
-  &.box {
-    padding: 30px;
-  }
-}
-
-@media only screen and (max-width: $mobile-breakpoint) {
-  .modal-wrapper {
-    &.mobile-full-screen {
-      padding: unset;
-    }
-  }
-  .modal {
-    top: 50%;
-    transform: translateY(-50%);
-
-    &.join-effort {
-      margin-top: 0;
+    .modal__header {
+      padding-left: $modal-action-size;
+      padding-right: $modal-action-size;
     }
 
-    .close-wrapper {
-      right: 15px;
-      top: 15px;
+    @include big-phone {
+      padding-left: $modal-mobile-padding;
+      padding-right: $modal-mobile-padding;
     }
+  }
+  .modal__header-wrapper--shadowed {
+    box-shadow: 0 2px 9px 0 $fixed-modal-element-shadow;
+  }
+
+  .modal__header {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .modal__header--default-padding {
+    min-height: $modal-action-size;
+    padding-top: 24px;
+  }
+  .modal__header--with-string-title {
+    padding-top: 32px;
+    padding-bottom: 32px;
+
+    @include big-phone {
+      padding-top: 24px;
+      padding-bottom: 24px;
+    }
+  }
+
+  .modal__title {
+    margin: 0;
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: $small;
+    font-weight: bold;
+    line-height: 1;
+    text-align: center;
+    color: $secondary-blue;
+  }
+
+  .modal__action-wrapper {
+    position: absolute;
+    width: $modal-action-size;
+    height: $modal-action-size;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto 0;
+
+    &:hover {
+      opacity: 0.9;
+      cursor: pointer;
+    }
+  }
+
+  .modal__back-wrapper {
+    left: 0;
+  }
+  .modal__back-action {
+    width: 100%;
+    height: 100%;
+  }
+
+  .modal__close-wrapper {
+    right: 0;
+  }
+
+  .modal__content {
+    flex: 1;
+    padding: 0 $modal-padding;
+    overflow-y: auto;
+
+    @include big-phone {
+      padding-left: $modal-mobile-padding;
+      padding-right: $modal-mobile-padding;
+    }
+  }
+  .modal__content--without-footer {
+    padding-bottom: $modal-padding;
+
+    @include big-phone {
+      padding-bottom: $modal-mobile-padding;
+    }
+  }
+
+  .modal__footer {
+    z-index: 1;
+    flex: 0 0;
+  }
+  .modal__footer--fixed {
+    padding-left: $modal-padding;
+    padding-right: $modal-padding;
+    transition: box-shadow .1s;
+
+    @include big-phone {
+      padding-left: $modal-mobile-padding;
+      padding-right: $modal-mobile-padding;
+    }
+  }
+  .modal__footer--shadowed {
+    box-shadow: 0 2px 9px 0 $fixed-modal-element-shadow;
+  }
+
+  @include big-phone {
     &.mobile-full-screen {
       border-radius: unset;
       margin: unset;
       top: unset;
       transform: unset;
       overflow: scroll;
+      max-width: 100vw;
+      width: 100vw;
+      max-height: 100vh;
       height: 100%;
     }
   }
