@@ -246,6 +246,14 @@
   }
 }
 
+.common-detail-container__detail-modal-header-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  background-color: transparent;
+}
+
 .common-detail-container__detail-modal--mobile {
   &.modal {
     max-width: 328px;
@@ -255,12 +263,7 @@
     border-radius: 20px;
 
     .common-detail-container__detail-modal-header-wrapper {
-      position: absolute;
-      top: 0;
-      right: 0;
-      left: 0;
       padding-right: 16px;
-      background-color: transparent;
     }
 
     .common-detail-container__detail-modal-header {
