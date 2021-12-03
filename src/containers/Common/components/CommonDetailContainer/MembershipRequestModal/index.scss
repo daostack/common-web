@@ -1,4 +1,41 @@
-@import "../../../../../constants.scss";
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.membership-request-modal {
+  color: $secondary-blue;
+
+  .membership-request-modal__header-wrapper--introduction {
+    @include big-phone {
+      padding-top: 24px;
+    }
+  }
+
+  .membership-request-modal__title {
+    height: 80px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: $moderate;
+    font-weight: bold;
+    text-align: center;
+
+    @include big-phone {
+      height: 64px;
+      font-size: $small;
+    }
+  }
+  .membership-request-modal__title--big {
+    font-family: NotoSerifSC-Bold, serif;
+    font-size: $moderate-med;
+  }
+  .membership-request-modal__title--short {
+    @include big-phone {
+      max-width: 176px;
+    }
+  }
+}
 
 .membership-request-wrapper {
   display: flex;
@@ -22,7 +59,7 @@
   }
   .membership-request-progress-bar {
     width: 304px;
-    margin: 1.5rem 0;
+    margin-bottom: 1.5rem;
     align-self: center;
   }
   .sub-title {
@@ -30,6 +67,7 @@
     margin-bottom: 0.2rem;
   }
   .sub-text {
+    max-width: 380px;
     color: $light-gray-2;
     text-align: center;
     width: 100%;

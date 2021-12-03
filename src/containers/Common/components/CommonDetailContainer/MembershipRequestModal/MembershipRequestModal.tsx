@@ -1,5 +1,11 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState, ReactNode } from "react";
+import { useSelector } from "react-redux";
+import classNames from "classnames";
+import { Modal } from "../../../../../shared/components";
+import { ModalProps } from "../../../../../shared/interfaces";
 import { Common } from "../../../../../shared/models";
+import { getScreenSize } from "../../../../../shared/store/selectors";
+import { ScreenSize } from "../../../../../shared/constants";
 import "./index.scss";
 import MembershipRequestBilling from "./MembershipRequestBilling";
 import MembershipRequestContribution from "./MembershipRequestContribution";
@@ -58,16 +64,18 @@ const initData: IMembershipRequestData = {
   expiration_date: "",
 };
 
-interface IProps {
+interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
   common: Common;
-  closeModal: Function;
 }
 
 export function MembershipRequestModal(props: IProps) {
   // TODO: should be saved in the localstorage for saving the progress?
   const [userData, setUserData] = useState(initData);
   const { stage } = userData;
-  const { common, closeModal } = props;
+  const { isShowing, onClose, common } = props;
+  const shouldDisplayBackButton = stage > 0 && stage < 6;
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   const renderCurrentStage = (stage: number) => {
     switch (stage) {
@@ -123,29 +131,51 @@ export function MembershipRequestModal(props: IProps) {
           />
         );
       case 7:
-        return <MembershipRequestCreated closeModal={closeModal} />;
+        return <MembershipRequestCreated closeModal={onClose} />;
     }
   };
 
+  const renderedTitle = useMemo((): ReactNode => {
+    if (stage >= 6) {
+      return null;
+    }
+
+    const shouldBeBigTitle = stage === 0;
+    const text = shouldBeBigTitle ? "Membership Request Process" : "Membership Request";
+    const className = classNames("membership-request-modal__title", {
+      "membership-request-modal__title--big": shouldBeBigTitle && !isMobileView,
+      "membership-request-modal__title--short": shouldBeBigTitle && isMobileView,
+    });
+
+    return <h3 className={className}>{text}</h3>;
+  }, [stage, isMobileView]);
+
+  const moveStageBack = useCallback(() => {
+    setUserData((data) => ({
+      ...data,
+      stage: data.stage - 1,
+    }));
+  }, []);
+
   return (
-    <div className="membership-request-wrapper">
-      {stage !== 6 && stage !== 7 && (
-        <div className="top">
-          {stage > 0 && (
-            <img
-              src="/icons/left-arrow.svg"
-              alt="back"
-              className="arrow-back"
-              onClick={() => setUserData({ ...userData, stage: stage - 1 })}
-            />
-          )}
-          <div className="title">Membership Request</div>
-        </div>
-      )}
-      {stage > 0 && stage !== 6 && stage !== 7 && (
-        <MembershipRequestProgressBar currentStage={stage} />
-      )}
-      {renderCurrentStage(stage)}
-    </div>
+    <Modal
+      isShowing={isShowing}
+      onClose={onClose}
+      className="mobile-full-screen membership-request-modal"
+      mobileFullScreen
+      closePrompt
+      title={renderedTitle}
+      onGoBack={shouldDisplayBackButton ? moveStageBack : undefined}
+      styles={{
+        header: stage === 0 ? "membership-request-modal__header-wrapper--introduction" : "",
+      }}
+    >
+      <div className="membership-request-wrapper">
+        {shouldDisplayBackButton && (
+          <MembershipRequestProgressBar currentStage={stage} />
+        )}
+        {renderCurrentStage(stage)}
+      </div>
+    </Modal>
   );
 }
