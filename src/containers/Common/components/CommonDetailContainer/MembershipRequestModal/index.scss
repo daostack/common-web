@@ -123,6 +123,12 @@
   .button-blue{
     min-width: 174px !important;
   }
+
+  .membership-request-welcome-wrapper__slide {
+    @include big-phone {
+      padding-bottom: 24px;
+    }
+  }
 }
 
 .membership-request-welcome__modal-footer {

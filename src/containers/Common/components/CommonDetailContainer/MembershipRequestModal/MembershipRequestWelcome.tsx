@@ -13,7 +13,7 @@ export default function MembershipRequestWelcome(props: IStageProps) {
   const [continueButtonText, setContinueButtonText] = useState("Continue");
 
   const introduce = (
-    <figure>
+    <figure className="membership-request-welcome-wrapper__slide">
       <img src="/assets/images/membership-request-introduce.svg" alt="introduce" />
       <figcaption>Introduce</figcaption>
       <figcaption>Request to join the Common</figcaption>
@@ -21,7 +21,7 @@ export default function MembershipRequestWelcome(props: IStageProps) {
   );
 
   const vote = (
-    <figure>
+    <figure className="membership-request-welcome-wrapper__slide">
       <img src="/assets/images/membership-request-vote.svg" alt="vote" />
       <figcaption>Vote</figcaption>
       <figcaption>Members vote on your request</figcaption>
@@ -29,7 +29,7 @@ export default function MembershipRequestWelcome(props: IStageProps) {
   );
 
   const membership = (
-    <figure>
+    <figure className="membership-request-welcome-wrapper__slide">
       <img src="/assets/images/membership-request-membership.svg" alt="membership" />
       <figcaption>Membership</figcaption>
       <figcaption>Become a member with an equal vote</figcaption>
