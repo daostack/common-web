@@ -1,6 +1,7 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperClass from "swiper/types/swiper-class";
 import { ScreenSize } from "../../../../../shared/constants";
 import { getScreenSize } from "../../../../../shared/store/selectors";
 import { ModalFooter } from "../../../../../shared/components/Modal";
@@ -9,8 +10,33 @@ import "./index.scss";
 
 export default function MembershipRequestWelcome(props: IStageProps) {
   const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
   const { userData, setUserData } = props;
-  const [continueButtonText, setContinueButtonText] = useState("Continue");
+  const swiperRef = useRef<SwiperClass>();
+  const [continueButtonText, setContinueButtonText] = useState(isMobileView ? "Continue" : "Request to join");
+
+  const handleSwiper = useCallback((swiper: SwiperClass) => {
+    swiperRef.current = swiper;
+  }, []);
+
+  const handleSlideChange = useCallback((swiper: SwiperClass) => {
+    if (isMobileView) {
+      setContinueButtonText(swiper.isEnd ? "Request to join" : "Continue");
+    }
+  }, [isMobileView]);
+
+  const handleContinueClick = useCallback(() => {
+    if (!isMobileView || !swiperRef.current) {
+      setUserData({ ...userData, stage: 1 });
+      return;
+    }
+
+    if (swiperRef.current.isEnd) {
+      setUserData({ ...userData, stage: 1 });
+    } else {
+      swiperRef.current.slideNext();
+    }
+  }, [isMobileView, setUserData, userData]);
 
   const introduce = (
     <figure className="membership-request-welcome-wrapper__slide">
@@ -36,10 +62,6 @@ export default function MembershipRequestWelcome(props: IStageProps) {
     </figure>
   );
 
-  const handleContinueClick = useCallback(() => {
-    setUserData({ ...userData, stage: 1 });
-  }, [setUserData, userData]);
-
   return (
     <div className="membership-request-content membership-request-welcome-wrapper">
       <div className="illustrations-container">
@@ -52,7 +74,11 @@ export default function MembershipRequestWelcome(props: IStageProps) {
             {membership}
           </>
         ) : (
-          <Swiper pagination={{ clickable: true }}>
+          <Swiper
+            pagination={{ clickable: true }}
+            onSwiper={handleSwiper}
+            onSlideChange={handleSlideChange}
+          >
             <SwiperSlide>{introduce}</SwiperSlide>
             <SwiperSlide>{vote}</SwiperSlide>
             <SwiperSlide>{membership}</SwiperSlide>
