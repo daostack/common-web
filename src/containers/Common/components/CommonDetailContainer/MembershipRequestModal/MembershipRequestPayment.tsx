@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, ReactElement } from "react";
 
 import {
   createCard,
@@ -14,13 +14,15 @@ import {
   validateCreditCardProvider,
   validateCVV,
 } from "../../../../../shared/utils";
+import { CommonContributionType } from "../../../../../shared/models";
 
-export default function MembershipRequestPayment(props: IStageProps) {
-  const { userData, setUserData } = props;
+export default function MembershipRequestPayment(props: IStageProps): ReactElement {
+  const { userData, setUserData, common } = props;
   const [card_number, setCardNumber] = useState(0); // 4007400000000007
   const [expiration_date, setExpirationDate] = useState("");
   const [cvv, setCvv] = useState(0);
   const [showCCNumberError, setShowCCNumberError] = useState(false);
+  const contributionTypeText = common?.metadata.contributionType === CommonContributionType.Monthly ? "monthly" : "one-time";
 
   const onCCNumberChange = (value: string) => {
     setCardNumber(Number(value));
@@ -67,9 +69,9 @@ export default function MembershipRequestPayment(props: IStageProps) {
   return (
     <div className="membership-request-content membership-request-payment">
       <div className="sub-title">Payment Details</div>
-      <div className="sub-text">{`You are contributing ${formatPrice(
-        userData.contribution_amount
-      )} (monthly or one-time) to this Common`}</div>
+      <div className="sub-text">
+        You are contributing <strong className="membership-request-payment__amount">{formatPrice(userData.contribution_amount)} ({contributionTypeText})</strong> to this Common.
+      </div>
       <label>Card Number</label>
       <input
         type="number"
