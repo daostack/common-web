@@ -155,8 +155,8 @@ const Modal: FC<ModalProps> = (props) => {
             onClick={handleClose}
           >
             <CloseIcon
-              width="32"
-              height="32"
+              width="24"
+              height="24"
               fill={closeColor ?? Colors.black}
             />
           </div>
