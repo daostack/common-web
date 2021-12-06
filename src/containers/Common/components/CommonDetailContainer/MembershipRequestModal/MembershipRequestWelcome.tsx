@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ScreenSize } from "../../../../../shared/constants";
 import { getScreenSize } from "../../../../../shared/store/selectors";
-import "./index.scss";
+import { ModalFooter } from "../../../../../shared/components/Modal";
 import { IStageProps } from "./MembershipRequestModal";
+import "./index.scss";
 
 export default function MembershipRequestWelcome(props: IStageProps) {
   const screenSize = useSelector(getScreenSize());
   const { userData, setUserData } = props;
+  const [continueButtonText, setContinueButtonText] = useState("Continue");
 
   const introduce = (
     <figure>
@@ -34,6 +36,10 @@ export default function MembershipRequestWelcome(props: IStageProps) {
     </figure>
   );
 
+  const handleContinueClick = useCallback(() => {
+    setUserData({ ...userData, stage: 1 });
+  }, [setUserData, userData]);
+
   return (
     <div className="membership-request-content membership-request-welcome-wrapper">
       <div className="illustrations-container">
@@ -53,9 +59,13 @@ export default function MembershipRequestWelcome(props: IStageProps) {
           </Swiper>
         )}
       </div>
-      <button onClick={() => setUserData({ ...userData, stage: 1 })} className="button-blue">
-        Request to join
-      </button>
+      <ModalFooter sticky>
+        <div className="membership-request-welcome__modal-footer">
+          <button className="button-blue" onClick={handleContinueClick}>
+            {continueButtonText}
+          </button>
+        </div>
+      </ModalFooter>
     </div>
   );
 }

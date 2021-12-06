@@ -125,6 +125,16 @@
   }
 }
 
+.membership-request-welcome__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+
+  @include big-phone {
+    padding: 32px 0;
+  }
+}
+
 .membership-request-introduce {
   label {
     align-self: self-start;
@@ -295,7 +305,6 @@
         }
       }
     }
-
   }
 
   .membership-request-introduce {
