@@ -16,6 +16,7 @@ import {
 } from "../../store/selectors";
 import { selectUser } from "../../../Auth/store/selectors";
 import { getLoading } from "../../../../shared/store/selectors";
+import { EmptyTabComponent } from "../../components/CommonDetailContainer";
 
 export default function MyCommonsContainer() {
   const dispatch = useDispatch();
@@ -64,11 +65,14 @@ export default function MyCommonsContainer() {
       )}
       <div className="page-top-wrapper">
         <h1 className="page-title">My Commons</h1>
-        <Link className="button-blue" to={ROUTE_PATHS.COMMON_LIST}>
-          Browse all Commons
-        </Link>
+        {myCommons.length || pendingCommons.length ? (
+          <Link className="button-blue" to={ROUTE_PATHS.COMMON_LIST}>
+            Browse all Commons
+          </Link>
+        ) : null}
       </div>
       {loading ? <Loader /> : null}
+
       <div className="common-list">
         {myCommons.map((c) => (
           <CommonListItem common={c} key={c.id} />
@@ -87,7 +91,11 @@ export default function MyCommonsContainer() {
       ) : null}
 
       {myCommons.length === 0 && !loading && (
-        <div className="no-commons-label">No Commons Yet</div>
+        <EmptyTabComponent
+          currentTab={"my-commons"}
+          message={"This is where you can find your future commons"}
+          title={"No commons yet"}
+        />
       )}
     </div>
   );
