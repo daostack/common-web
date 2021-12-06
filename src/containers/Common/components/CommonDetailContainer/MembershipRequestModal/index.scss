@@ -40,7 +40,7 @@
 .membership-request-wrapper {
   display: flex;
   flex-direction: column;
-  height: 100%;
+
   .top {
     display: flex;
     align-items: center;
@@ -122,6 +122,22 @@
   }
   .button-blue{
     min-width: 174px !important;
+  }
+
+  .membership-request-welcome-wrapper__slide {
+    @include big-phone {
+      padding-bottom: 24px;
+    }
+  }
+}
+
+.membership-request-welcome__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+
+  @include big-phone {
+    padding: 32px 0;
   }
 }
 
@@ -280,7 +296,8 @@
   .membership-request-welcome-wrapper {
     align-items: unset;
     .illustrations-container {
-      margin: 1rem 0;
+      margin: 0 0 1rem;
+
       figure {
         > img {
           width: 300px;
@@ -295,7 +312,6 @@
         }
       }
     }
-
   }
 
   .membership-request-introduce {
