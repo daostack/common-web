@@ -4,6 +4,9 @@ import moment from "moment";
 import { MobileOperatingSystem } from "../constants";
 import { Time, User } from "../models";
 
+/**
+ * Backend stores the price in cents, that's why we divide by 100
+ **/
 export const formatPrice = (price?: number) => {
   if (price) return `$${millify(price / 100)}`;
   return "$0";

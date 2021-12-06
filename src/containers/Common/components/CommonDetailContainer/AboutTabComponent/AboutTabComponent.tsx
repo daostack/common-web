@@ -24,7 +24,7 @@ export default function AboutTabComponent({
   };
   return (
     <div className="about-name-wrapper">
-      <div className="description">{common.description}</div>
+      <div className="description">{common.metadata.description}</div>
       {common?.links?.length > 0 && (
         <div className="links">
           <div className="title">Links</div>
@@ -41,8 +41,8 @@ export default function AboutTabComponent({
         <div className="contribution">
           Minimum contribution for new members:
           <br />
-          {formatPrice(common.fundingMinimumAmount) + " "}
-          {renderContributionType(common.fundingType || "")} contribution
+          {formatPrice(common.metadata.minFeeToJoin) + " "}
+          {renderContributionType(common.metadata.contributionType || "")} contribution
         </div>
         {screenSize === ScreenSize.Desktop && !isCommonMember && (
           <div className="social-wrapper">

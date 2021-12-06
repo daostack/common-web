@@ -5,49 +5,49 @@ import { IStageProps } from "./MembershipRequestModal";
 
 export default function MembershipRequestContribution(props: IStageProps) {
   const { userData, setUserData, common } = props;
+  const minFeeToJoin = common?.metadata.minFeeToJoin;
+  const formattedMinFeeToJoin = formatPrice(minFeeToJoin);
 
   return (
     <div className="membership-request-content membership-request-contribution">
       <div className="sub-title">Personal Contribution</div>
-      <div className="sub-text">{`Select the amount you would like to contribute (${formatPrice(
-        common?.fundingMinimumAmount
-      )} min.)`}</div>
+      <div className="sub-text">{`Select the amount you would like to contribute (${formattedMinFeeToJoin} min.)`}</div>
       <div className="options-wrapper">
         <button
           className={`${userData.contribution_id === 0 ? "selected" : ""}`}
           onClick={() =>
             setUserData({
               ...userData,
-              contribution_amount: common?.fundingMinimumAmount,
+              contribution_amount: minFeeToJoin,
               contribution_id: 0,
             })
           }
         >
-          {`${formatPrice(common?.fundingMinimumAmount)}`}
+          {formattedMinFeeToJoin}
         </button>
         <button
           className={`${userData.contribution_id === 1 ? "selected" : ""}`}
           onClick={() =>
             setUserData({
               ...userData,
-              contribution_amount: 20,
+              contribution_amount: 2000,
               contribution_id: 1,
             })
           }
         >
-          $20
+          {formatPrice(2000)}
         </button>
         <button
           className={`${userData.contribution_id === 2 ? "selected" : ""}`}
           onClick={() =>
             setUserData({
               ...userData,
-              contribution_amount: 50,
+              contribution_amount: 5000,
               contribution_id: 2,
             })
           }
         >
-          $50
+          {formatPrice(5000)}
         </button>{" "}
       </div>
       <button

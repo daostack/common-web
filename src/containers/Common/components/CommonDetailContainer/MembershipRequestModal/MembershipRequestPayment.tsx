@@ -42,7 +42,7 @@ export default function MembershipRequestPayment(props: IStageProps) {
 
       const data = {
         description: formData.intro,
-        funding: (formData?.contribution_amount || 0) * 100,
+        funding: formData?.contribution_amount || 0,
         commonId: `${window.location.pathname.split("/")[2]}`,
       };
 
@@ -116,10 +116,6 @@ export default function MembershipRequestPayment(props: IStageProps) {
       >
         Pay Now
       </button>
-      <div className="circle-wrapper">
-        <span>Powered by</span>
-        <img src="/icons/membership-request/circle-pay.png" alt="circle pay" />
-      </div>
     </div>
   );
 }
