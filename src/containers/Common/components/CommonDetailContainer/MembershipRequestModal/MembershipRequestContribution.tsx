@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import { ButtonLink } from "../../../../../shared/components";
 import { CurrencyInput, ToggleButtonGroup, ToggleButton, ToggleButtonGroupVariant } from "../../../../../shared/components/Form";
 import { ModalFooter } from "../../../../../shared/components/Modal";
 import { formatPrice } from "../../../../../shared/utils";
@@ -67,6 +68,11 @@ export default function MembershipRequestContribution(props: IStageProps) {
     setSelectedContribution(!Number.isNaN(convertedValue) ? convertedValue : "other");
   }, []);
 
+  const handleBackToSelectionClick = useCallback(() => {
+    setSelectedContribution(null);
+    setEnteredContribution(undefined);
+  }, []);
+
   const handleSubmit = useCallback(() => {
     const contributionAmount = selectedContribution === "other" ? Number(enteredContribution) * 100 : selectedContribution;
 
@@ -129,6 +135,12 @@ export default function MembershipRequestContribution(props: IStageProps) {
             }}
             allowDecimals={false}
           />
+          <ButtonLink
+            className="membership-request-contribution__back-to-selection"
+            onClick={handleBackToSelectionClick}
+          >
+            Back to amount selection
+          </ButtonLink>
         </div>
       )}
       {isMonthlyContribution && (
