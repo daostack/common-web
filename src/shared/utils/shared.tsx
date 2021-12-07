@@ -8,8 +8,8 @@ import { Time, User } from "../models";
  * Backend stores the price in cents, that's why we divide by 100
  **/
 export const formatPrice = (price?: number) => {
-  if (price) return `$${millify(price / 100)}`;
-  return "$0";
+  if (price) return `₪${millify(price / 100)}`;
+  return "₪0";
 };
 
 export const formatDate = (date: string | Date) => {
