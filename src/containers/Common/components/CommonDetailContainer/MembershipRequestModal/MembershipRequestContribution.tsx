@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { ToggleButtonGroup, ToggleButton, ToggleButtonGroupVariant } from "../../../../../shared/components/Form/ToggleButtonGroup";
+import { ModalFooter } from "../../../../../shared/components/Modal";
 import { formatPrice } from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
 import "./index.scss";
@@ -64,13 +65,17 @@ export default function MembershipRequestContribution(props: IStageProps) {
       {isMonthlyContribution && (
         <span className="membership-request-contribution__hint">You can cancel the recurring payment at any time</span>
       )}
-      <button
-        disabled={!userData.contribution_amount}
-        className="button-blue"
-        onClick={() => setUserData({ ...userData, stage: 4 })}
-      >
-        Submit
-      </button>
+      <ModalFooter sticky>
+        <div className="membership-request-contribution__modal-footer">
+          <button
+            disabled={!userData.contribution_amount}
+            className="button-blue"
+            onClick={() => setUserData({ ...userData, stage: 4 })}
+          >
+            Submit
+          </button>
+        </div>
+      </ModalFooter>
     </div>
   );
 }

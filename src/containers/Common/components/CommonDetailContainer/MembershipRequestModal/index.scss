@@ -222,6 +222,12 @@
   }
 }
 
+.membership-request-contribution__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0;
+}
+
 .membership-request-billing {
   .inputs-wrapper {
     display: flex;
