@@ -2,6 +2,7 @@ import React, { useCallback, useState } from "react";
 import { ButtonLink } from "../../../../../shared/components";
 import { CurrencyInput, ToggleButtonGroup, ToggleButton, ToggleButtonGroupVariant } from "../../../../../shared/components/Form";
 import { ModalFooter } from "../../../../../shared/components/Modal";
+import { MIN_CONTRIBUTION_ILS_AMOUNT } from "../../../../../shared/constants/shared";
 import { formatPrice } from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
 import "./index.scss";
@@ -12,7 +13,7 @@ const MIN_CALCULATION_AMOUNT = 2000;
 const validateContributionAmount = (minFeeToJoin: number, value?: string): string => {
   const convertedValue = Number(value) * 100;
 
-  if (convertedValue >= minFeeToJoin && (convertedValue === 0 || convertedValue >= 500)) {
+  if (convertedValue >= minFeeToJoin && (convertedValue === 0 || convertedValue >= MIN_CONTRIBUTION_ILS_AMOUNT)) {
     return "";
   }
 
@@ -21,7 +22,7 @@ const validateContributionAmount = (minFeeToJoin: number, value?: string): strin
 
   if (minFeeToJoin === 0) {
     errorTexts.push("0, or");
-    errorTexts.push(`at least ${formatPrice(500)}`);
+    errorTexts.push(`at least ${formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT)}`);
   } else {
     errorTexts.push(`at least ${formatPrice(minFeeToJoin)}`);
   }
