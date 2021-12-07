@@ -27,7 +27,7 @@ const ToggleButtonGroup: FC<ToggleButtonGroupProps> = (props) => {
     currentValue: value,
     onChange,
     variant,
-  }), [value, onChange]);
+  }), [value, onChange, variant]);
 
   return (
     <div className={classNames("custom-toggle-button-group", className)}>
