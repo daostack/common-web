@@ -69,7 +69,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
         className="button-blue"
         onClick={() => setUserData({ ...userData, stage: 4 })}
       >
-        Continue
+        Submit
       </button>
     </div>
   );
