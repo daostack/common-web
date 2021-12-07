@@ -127,6 +127,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
             styles={{
               label: "membership-request-contribution__currency-input-label",
             }}
+            allowDecimals={false}
           />
         </div>
       )}

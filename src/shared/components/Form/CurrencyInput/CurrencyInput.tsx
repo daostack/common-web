@@ -26,11 +26,10 @@ export interface CurrencyInputProps extends BaseCurrencyInputProps {
 
 const DEFAULT_INTL_CONFIG: IntlConfig = {
   locale: "en-US",
-  currency: "USD",
 };
 
 const CurrencyInput: FC<CurrencyInputProps> = (props) => {
-  const { className, label, description, hint, error, styles, allowNegativeValue, intlConfig, ...restProps } = props;
+  const { className, label, description, hint, error, styles, allowNegativeValue, intlConfig, prefix, ...restProps } = props;
   const id = restProps.id || restProps.name;
   const labelWrapperClassName = classNames("custom-currency-input__label-wrapper", {
     "custom-currency-input__label-wrapper--with-description": description,
@@ -66,6 +65,7 @@ const CurrencyInput: FC<CurrencyInputProps> = (props) => {
           id={id}
           allowNegativeValue={allowNegativeValue ?? false}
           intlConfig={intlConfig ?? DEFAULT_INTL_CONFIG}
+          prefix={prefix ?? "₪"}
         />
       </div>
       {Boolean(error) && <ErrorText className={styles?.error}>{error}</ErrorText>}
