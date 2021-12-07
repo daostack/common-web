@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { ToggleButtonGroup, ToggleButton, ToggleButtonGroupVariant } from "../../../../../shared/components/Form/ToggleButtonGroup";
 import { formatPrice } from "../../../../../shared/utils";
+import { CommonContributionType } from "../../../../../shared/models";
 import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
 
@@ -13,6 +14,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
   const formattedMinFeeToJoin = formatPrice(minFeeToJoin);
   const secondAmount = minFeeToJoin < MIN_CALCULATION_AMOUNT ? 2000 : (minFeeToJoin + 1000);
   const thirdAmount = minFeeToJoin < MIN_CALCULATION_AMOUNT ? 5000 : (minFeeToJoin + 2000);
+  const pricePostfix = common?.metadata.contributionType === CommonContributionType.Monthly ? "/mo" : "";
 
   const handleChange = useCallback((value: unknown) => {
     const convertedValue = Number(value);
@@ -24,7 +26,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
   return (
     <div className="membership-request-content membership-request-contribution">
       <div className="sub-title">Personal Contribution</div>
-      <div className="sub-text">{`Select the amount you would like to contribute (${formattedMinFeeToJoin} min.)`}</div>
+      <div className="sub-text">{`Select the amount you would like to contribute (${formattedMinFeeToJoin}${pricePostfix} min.)`}</div>
       <ToggleButtonGroup
         className="membership-request-contribution__toggle-button-group"
         value={selectedContribution}
@@ -35,19 +37,19 @@ export default function MembershipRequestContribution(props: IStageProps) {
           styles={toggleButtonStyles}
           value={minFeeToJoin}
         >
-          {formatPrice(minFeeToJoin)}
+          {formatPrice(minFeeToJoin)}{pricePostfix}
         </ToggleButton>
         <ToggleButton
           styles={toggleButtonStyles}
           value={secondAmount}
         >
-          {formatPrice(secondAmount)}
+          {formatPrice(secondAmount)}{pricePostfix}
         </ToggleButton>
         <ToggleButton
           styles={toggleButtonStyles}
           value={thirdAmount}
         >
-          {formatPrice(thirdAmount)}
+          {formatPrice(thirdAmount)}{pricePostfix}
         </ToggleButton>
         <ToggleButton
           styles={toggleButtonStyles}
