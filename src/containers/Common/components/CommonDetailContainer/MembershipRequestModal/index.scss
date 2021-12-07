@@ -209,10 +209,18 @@
     width: 100%;
     margin-top: 8px;
     font-size: $small;
+
+    @include big-phone {
+      margin-top: 0;
+    }
   }
 
   .membership-request-contribution__toggle-button {
     padding: 22px;
+
+    @include big-phone {
+      padding: 20px;
+    }
   }
 
   .membership-request-contribution__currency-input-wrapper {
