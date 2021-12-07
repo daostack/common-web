@@ -39,7 +39,12 @@ export default function MembershipRequestContribution(props: IStageProps) {
   const secondAmount = minFeeToJoin < MIN_CALCULATION_AMOUNT ? 2000 : (minFeeToJoin + 1000);
   const thirdAmount = minFeeToJoin < MIN_CALCULATION_AMOUNT ? 5000 : (minFeeToJoin + 2000);
   const pricePostfix = isMonthlyContribution ? "/mo" : "";
-  const currencyInputError = isCurrencyInputTouched ? validateEnteredCurrency(minFeeToJoin, enteredContribution) : "";
+  const currencyInputError = validateEnteredCurrency(minFeeToJoin, enteredContribution);
+  const isSubmitDisabled = Boolean(
+    selectedContribution === "other"
+      ? currencyInputError
+      : selectedContribution === null
+  );
 
   const handleCurrencyInputBlur = useCallback(() => {
     setIsCurrencyInputTouched(true);
@@ -100,7 +105,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
             value={enteredContribution}
             onValueChange={setEnteredContribution}
             onBlur={handleCurrencyInputBlur}
-            error={currencyInputError}
+            error={isCurrencyInputTouched ? currencyInputError : ""}
             styles={{
               label: "membership-request-contribution__currency-input-label",
             }}
@@ -113,7 +118,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
       <ModalFooter sticky>
         <div className="membership-request-contribution__modal-footer">
           <button
-            disabled={!userData.contribution_amount}
+            disabled={isSubmitDisabled}
             className="button-blue"
             onClick={() => setUserData({ ...userData, stage: 4 })}
           >
