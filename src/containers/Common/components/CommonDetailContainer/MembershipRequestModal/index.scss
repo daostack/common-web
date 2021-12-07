@@ -197,6 +197,11 @@
     }
   }
 
+  .membership-request-contribution__description {
+    max-width: 322px;
+    font-size: $xsmall;
+  }
+
   .membership-request-contribution__toggle-button-group {
     max-width: 380px;
     width: 100%;
@@ -206,6 +211,14 @@
 
   .membership-request-contribution__toggle-button {
     padding: 22px;
+  }
+
+  .membership-request-contribution__hint {
+    margin-top: 16px;
+    font-size: $xsmall;
+    line-height: 1.42;
+    text-align: center;
+    color: $blue-2;
   }
 }
 

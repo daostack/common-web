@@ -10,11 +10,12 @@ const MIN_CALCULATION_AMOUNT = 2000;
 export default function MembershipRequestContribution(props: IStageProps) {
   const { userData, setUserData, common } = props;
   const [selectedContribution, setSelectedContribution] = useState<number | "other">(userData.contribution_amount || 0);
+  const isMonthlyContribution = common?.metadata.contributionType === CommonContributionType.Monthly;
   const minFeeToJoin = common?.metadata.minFeeToJoin || 0;
   const formattedMinFeeToJoin = formatPrice(minFeeToJoin);
   const secondAmount = minFeeToJoin < MIN_CALCULATION_AMOUNT ? 2000 : (minFeeToJoin + 1000);
   const thirdAmount = minFeeToJoin < MIN_CALCULATION_AMOUNT ? 5000 : (minFeeToJoin + 2000);
-  const pricePostfix = common?.metadata.contributionType === CommonContributionType.Monthly ? "/mo" : "";
+  const pricePostfix = isMonthlyContribution ? "/mo" : "";
 
   const handleChange = useCallback((value: unknown) => {
     const convertedValue = Number(value);
@@ -25,8 +26,10 @@ export default function MembershipRequestContribution(props: IStageProps) {
 
   return (
     <div className="membership-request-content membership-request-contribution">
-      <div className="sub-title">Personal Contribution</div>
-      <div className="sub-text">{`Select the amount you would like to contribute (${formattedMinFeeToJoin}${pricePostfix} min.)`}</div>
+      <div className="sub-title">{isMonthlyContribution ? "Monthly" : "Personal"} Contribution</div>
+      <div className="sub-text membership-request-contribution__description">
+        Select the amount you would like to contribute{isMonthlyContribution ? " each month" : ""} ({formattedMinFeeToJoin}{pricePostfix} min.)
+      </div>
       <ToggleButtonGroup
         className="membership-request-contribution__toggle-button-group"
         value={selectedContribution}
@@ -58,6 +61,9 @@ export default function MembershipRequestContribution(props: IStageProps) {
           Other
         </ToggleButton>
       </ToggleButtonGroup>
+      {isMonthlyContribution && (
+        <span className="membership-request-contribution__hint">You can cancel the recurring payment at any time</span>
+      )}
       <button
         disabled={!userData.contribution_amount}
         className="button-blue"
