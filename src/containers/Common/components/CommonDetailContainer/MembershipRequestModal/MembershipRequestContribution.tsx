@@ -10,7 +10,7 @@ const MIN_CALCULATION_AMOUNT = 2000;
 
 export default function MembershipRequestContribution(props: IStageProps) {
   const { userData, setUserData, common } = props;
-  const [selectedContribution, setSelectedContribution] = useState<number | "other">(userData.contribution_amount || 0);
+  const [selectedContribution, setSelectedContribution] = useState<number | "other" | null>(userData.contribution_amount ?? null);
   const isMonthlyContribution = common?.metadata.contributionType === CommonContributionType.Monthly;
   const minFeeToJoin = common?.metadata.minFeeToJoin || 0;
   const formattedMinFeeToJoin = formatPrice(minFeeToJoin);
@@ -31,37 +31,39 @@ export default function MembershipRequestContribution(props: IStageProps) {
       <div className="sub-text membership-request-contribution__description">
         Select the amount you would like to contribute{isMonthlyContribution ? " each month" : ""} ({formattedMinFeeToJoin}{pricePostfix} min.)
       </div>
-      <ToggleButtonGroup
-        className="membership-request-contribution__toggle-button-group"
-        value={selectedContribution}
-        onChange={handleChange}
-        variant={ToggleButtonGroupVariant.Vertical}
-      >
-        <ToggleButton
-          styles={toggleButtonStyles}
-          value={minFeeToJoin}
+      {selectedContribution !== "other" && (
+        <ToggleButtonGroup
+          className="membership-request-contribution__toggle-button-group"
+          value={selectedContribution}
+          onChange={handleChange}
+          variant={ToggleButtonGroupVariant.Vertical}
         >
-          {formatPrice(minFeeToJoin)}{pricePostfix}
-        </ToggleButton>
-        <ToggleButton
-          styles={toggleButtonStyles}
-          value={secondAmount}
-        >
-          {formatPrice(secondAmount)}{pricePostfix}
-        </ToggleButton>
-        <ToggleButton
-          styles={toggleButtonStyles}
-          value={thirdAmount}
-        >
-          {formatPrice(thirdAmount)}{pricePostfix}
-        </ToggleButton>
-        <ToggleButton
-          styles={toggleButtonStyles}
-          value="other"
-        >
-          Other
-        </ToggleButton>
-      </ToggleButtonGroup>
+          <ToggleButton
+            styles={toggleButtonStyles}
+            value={minFeeToJoin}
+          >
+            {formatPrice(minFeeToJoin)}{pricePostfix}
+          </ToggleButton>
+          <ToggleButton
+            styles={toggleButtonStyles}
+            value={secondAmount}
+          >
+            {formatPrice(secondAmount)}{pricePostfix}
+          </ToggleButton>
+          <ToggleButton
+            styles={toggleButtonStyles}
+            value={thirdAmount}
+          >
+            {formatPrice(thirdAmount)}{pricePostfix}
+          </ToggleButton>
+          <ToggleButton
+            styles={toggleButtonStyles}
+            value="other"
+          >
+            Other
+          </ToggleButton>
+        </ToggleButtonGroup>
+      )}
       {isMonthlyContribution && (
         <span className="membership-request-contribution__hint">You can cancel the recurring payment at any time</span>
       )}
