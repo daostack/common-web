@@ -8,7 +8,7 @@ import { IStageProps } from "./MembershipRequestModal";
 
 const MIN_CALCULATION_AMOUNT = 2000;
 
-const validateEnteredCurrency = (minFeeToJoin: number, value?: string): string => {
+const validateContributionAmount = (minFeeToJoin: number, value?: string): string => {
   const convertedValue = Number(value) * 100;
 
   if (convertedValue >= minFeeToJoin && (convertedValue === 0 || convertedValue >= 500)) {
@@ -30,16 +30,28 @@ const validateEnteredCurrency = (minFeeToJoin: number, value?: string): string =
 
 export default function MembershipRequestContribution(props: IStageProps) {
   const { userData, setUserData, common } = props;
-  const [selectedContribution, setSelectedContribution] = useState<number | "other" | null>(userData.contribution_amount ?? null);
-  const [enteredContribution, setEnteredContribution] = useState<string | undefined>();
-  const [isCurrencyInputTouched, setIsCurrencyInputTouched] = useState(false);
   const isMonthlyContribution = common?.metadata.contributionType === CommonContributionType.Monthly;
   const minFeeToJoin = common?.metadata.minFeeToJoin || 0;
-  const formattedMinFeeToJoin = formatPrice(minFeeToJoin);
   const secondAmount = minFeeToJoin < MIN_CALCULATION_AMOUNT ? 2000 : (minFeeToJoin + 1000);
   const thirdAmount = minFeeToJoin < MIN_CALCULATION_AMOUNT ? 5000 : (minFeeToJoin + 2000);
+  const [selectedContribution, setSelectedContribution] = useState<number | "other" | null>(() => {
+    if (userData.contribution_amount === undefined) {
+      return null;
+    }
+
+    return (
+      [minFeeToJoin, secondAmount, thirdAmount].includes(userData.contribution_amount)
+        ? userData.contribution_amount
+        : "other"
+    );
+  });
+  const [enteredContribution, setEnteredContribution] = useState<string | undefined>(() => (
+    selectedContribution === "other" ? String((userData.contribution_amount || 0) / 100) : undefined
+  ));
+  const [isCurrencyInputTouched, setIsCurrencyInputTouched] = useState(false);
+  const formattedMinFeeToJoin = formatPrice(minFeeToJoin);
   const pricePostfix = isMonthlyContribution ? "/mo" : "";
-  const currencyInputError = validateEnteredCurrency(minFeeToJoin, enteredContribution);
+  const currencyInputError = validateContributionAmount(minFeeToJoin, enteredContribution);
   const isSubmitDisabled = Boolean(
     selectedContribution === "other"
       ? currencyInputError
@@ -54,6 +66,12 @@ export default function MembershipRequestContribution(props: IStageProps) {
     const convertedValue = Number(value);
     setSelectedContribution(!Number.isNaN(convertedValue) ? convertedValue : "other");
   }, []);
+
+  const handleSubmit = useCallback(() => {
+    const contributionAmount = selectedContribution === "other" ? Number(enteredContribution) * 100 : selectedContribution;
+
+    setUserData({ ...userData, contribution_amount: contributionAmount, stage: 4 });
+  }, [setUserData, userData, selectedContribution, enteredContribution]);
 
   const toggleButtonStyles = { default: "membership-request-contribution__toggle-button" };
 
@@ -120,7 +138,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
           <button
             disabled={isSubmitDisabled}
             className="button-blue"
-            onClick={() => setUserData({ ...userData, stage: 4 })}
+            onClick={handleSubmit}
           >
             Submit
           </button>
