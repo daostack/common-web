@@ -196,6 +196,17 @@
       }
     }
   }
+
+  .membership-request-contribution__toggle-button-group {
+    max-width: 380px;
+    width: 100%;
+    margin-top: 8px;
+    font-size: $small;
+  }
+
+  .membership-request-contribution__toggle-button {
+    padding: 22px;
+  }
 }
 
 .membership-request-billing {
