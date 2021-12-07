@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { ToggleButtonGroup, ToggleButton, ToggleButtonGroupVariant } from "../../../../../shared/components/Form/ToggleButtonGroup";
+import { CurrencyInput, ToggleButtonGroup, ToggleButton, ToggleButtonGroupVariant } from "../../../../../shared/components/Form";
 import { ModalFooter } from "../../../../../shared/components/Modal";
 import { formatPrice } from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
@@ -8,15 +8,42 @@ import { IStageProps } from "./MembershipRequestModal";
 
 const MIN_CALCULATION_AMOUNT = 2000;
 
+const validateEnteredCurrency = (minFeeToJoin: number, value?: string): string => {
+  const convertedValue = Number(value) * 100;
+
+  if (convertedValue >= minFeeToJoin && (convertedValue === 0 || convertedValue >= 500)) {
+    return "";
+  }
+
+  const errorTexts = ["The amount must be"];
+
+
+  if (minFeeToJoin === 0) {
+    errorTexts.push("0, or");
+    errorTexts.push(`at least ${formatPrice(500)}`);
+  } else {
+    errorTexts.push(`at least ${formatPrice(minFeeToJoin)}`);
+  }
+
+  return errorTexts.join(" ");
+};
+
 export default function MembershipRequestContribution(props: IStageProps) {
   const { userData, setUserData, common } = props;
   const [selectedContribution, setSelectedContribution] = useState<number | "other" | null>(userData.contribution_amount ?? null);
+  const [enteredContribution, setEnteredContribution] = useState<string | undefined>();
+  const [isCurrencyInputTouched, setIsCurrencyInputTouched] = useState(false);
   const isMonthlyContribution = common?.metadata.contributionType === CommonContributionType.Monthly;
   const minFeeToJoin = common?.metadata.minFeeToJoin || 0;
   const formattedMinFeeToJoin = formatPrice(minFeeToJoin);
   const secondAmount = minFeeToJoin < MIN_CALCULATION_AMOUNT ? 2000 : (minFeeToJoin + 1000);
   const thirdAmount = minFeeToJoin < MIN_CALCULATION_AMOUNT ? 5000 : (minFeeToJoin + 2000);
   const pricePostfix = isMonthlyContribution ? "/mo" : "";
+  const currencyInputError = isCurrencyInputTouched ? validateEnteredCurrency(minFeeToJoin, enteredContribution) : "";
+
+  const handleCurrencyInputBlur = useCallback(() => {
+    setIsCurrencyInputTouched(true);
+  }, []);
 
   const handleChange = useCallback((value: unknown) => {
     const convertedValue = Number(value);
@@ -63,6 +90,22 @@ export default function MembershipRequestContribution(props: IStageProps) {
             Other
           </ToggleButton>
         </ToggleButtonGroup>
+      )}
+      {selectedContribution === "other" && (
+        <div className="membership-request-contribution__currency-input-wrapper">
+          <CurrencyInput
+            name="contributionAmount"
+            label="Contribution amount"
+            placeholder={formattedMinFeeToJoin}
+            value={enteredContribution}
+            onValueChange={setEnteredContribution}
+            onBlur={handleCurrencyInputBlur}
+            error={currencyInputError}
+            styles={{
+              label: "membership-request-contribution__currency-input-label",
+            }}
+          />
+        </div>
       )}
       {isMonthlyContribution && (
         <span className="membership-request-contribution__hint">You can cancel the recurring payment at any time</span>

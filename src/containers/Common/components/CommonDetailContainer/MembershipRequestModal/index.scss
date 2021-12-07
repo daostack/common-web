@@ -172,6 +172,8 @@
 }
 
 .membership-request-contribution {
+  min-height: 466px;
+
   .options-wrapper {
     display: flex;
     flex-direction: column;
@@ -198,7 +200,7 @@
   }
 
   .membership-request-contribution__description {
-    max-width: 322px;
+    max-width: 314px;
     font-size: $xsmall;
   }
 
@@ -213,12 +215,26 @@
     padding: 22px;
   }
 
+  .membership-request-contribution__currency-input-wrapper {
+    max-width: 380px;
+    width: 100%;
+  }
+
+  .membership-request-contribution__currency-input-label {
+    margin: 0;
+    font-size: $xsmall;
+  }
+
   .membership-request-contribution__hint {
     margin-top: 16px;
     font-size: $xsmall;
     line-height: 1.42;
     text-align: center;
     color: $blue-2;
+  }
+
+  @include big-phone {
+    min-height: unset;
   }
 }
 

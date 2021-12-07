@@ -34,7 +34,6 @@ export interface IMembershipRequestData {
   intro: string;
   notes: string;
   contribution_amount: number | undefined;
-  contribution_id: number | undefined;
   fullname: string;
   city: string;
   country: string;
@@ -52,7 +51,6 @@ const initData: IMembershipRequestData = {
   intro: "",
   notes: "",
   contribution_amount: undefined,
-  contribution_id: undefined,
   fullname: "",
   city: "",
   country: "",
