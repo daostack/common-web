@@ -33,11 +33,17 @@ export default function CreationSteps(props: CreationStepsProps) {
   const [step, setStep] = useState(CreationStep.GeneralInfo);
   const isMobileView = isMobile();
 
+  const scrollTop = () => {
+    const content = document.getElementById("content");
+
+    if (content) content.scrollIntoView(true);
+  };
+
   const handleGoBack = useCallback(() => {
     if (step === CreationStep.GeneralInfo) {
       return true;
     }
-
+    scrollTop();
     setStep((step) => step - 1);
   }, [step]);
 
@@ -45,14 +51,7 @@ export default function CreationSteps(props: CreationStepsProps) {
     if (step === CreationStep.Review) {
       return;
     }
-    const content = document.getElementById("content");
-
-    if (content) {
-      console.log(content?.scrollTop);
-    }
-
-    if (content) content.scrollIntoView(true);
-
+    scrollTop();
     setStep((step) => step + 1);
   }, [step]);
 
