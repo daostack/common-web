@@ -124,7 +124,7 @@ const Header = () => {
               <HamburgerIcon />
             )}
           </div>
-          {!showMenu && (
+          {showMenu && (
             <div className="menu-wrapper">
               <DownloadCommonApp
                 setHasClosedPopup={() => {
