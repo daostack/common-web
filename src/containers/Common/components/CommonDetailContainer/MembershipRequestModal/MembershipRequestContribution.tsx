@@ -11,7 +11,10 @@ import { IStageProps } from "./MembershipRequestModal";
 const validateContributionAmount = (minFeeToJoin: number, value?: string): string => {
   const convertedValue = Number(value) * 100;
 
-  if (convertedValue >= minFeeToJoin && (convertedValue === 0 || convertedValue >= MIN_CONTRIBUTION_ILS_AMOUNT)) {
+  if (
+    convertedValue >= minFeeToJoin
+    && (convertedValue === 0 || (convertedValue >= MIN_CONTRIBUTION_ILS_AMOUNT && convertedValue <= MAX_CONTRIBUTION_ILS_AMOUNT))
+  ) {
     return "";
   }
 
@@ -24,6 +27,8 @@ const validateContributionAmount = (minFeeToJoin: number, value?: string): strin
   } else {
     errorTexts.push(`at least ${formatPrice(minFeeToJoin)}`);
   }
+
+  errorTexts.push(`and at most ${formatPrice(MAX_CONTRIBUTION_ILS_AMOUNT)}`);
 
   return errorTexts.join(" ");
 };
