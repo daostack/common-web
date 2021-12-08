@@ -1,11 +1,12 @@
 import React, { useCallback, useMemo, useState, ReactNode, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { Modal } from "../../../../../shared/components";
 import { ModalProps } from "../../../../../shared/interfaces";
 import { Common } from "../../../../../shared/models";
 import { getScreenSize } from "../../../../../shared/store/selectors";
 import { ScreenSize } from "../../../../../shared/constants";
+import { clearCurrentCommonPayment } from "../../../store/actions";
 import "./index.scss";
 import MembershipRequestBilling from "./MembershipRequestBilling";
 import MembershipRequestContribution from "./MembershipRequestContribution";
@@ -74,6 +75,7 @@ export function MembershipRequestModal(props: IProps) {
   const shouldDisplayBackButton = stage > 0 && stage < 6;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const dispatch = useDispatch();
 
   /**
    * The data is saved only when we are on the Common Details Page.
@@ -82,8 +84,9 @@ export function MembershipRequestModal(props: IProps) {
   useEffect(() => {
     if (!isShowing) {
       setUserData(initData);
+      dispatch(clearCurrentCommonPayment());
     }
-  }, [isShowing]);
+  }, [isShowing, dispatch]);
 
   const renderCurrentStage = (stage: number) => {
     switch (stage) {
