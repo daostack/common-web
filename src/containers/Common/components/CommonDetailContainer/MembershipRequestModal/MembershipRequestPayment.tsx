@@ -68,7 +68,8 @@ export default function MembershipRequestPayment(props: IStageProps) {
     <div className="membership-request-content membership-request-payment">
       <div className="sub-title">Payment Details</div>
       <div className="sub-text">{`You are contributing ${formatPrice(
-        userData.contribution_amount
+        userData.contribution_amount,
+        false,
       )} (monthly or one-time) to this Common`}</div>
       <label>Card Number</label>
       <input

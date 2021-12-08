@@ -23,12 +23,12 @@ const validateContributionAmount = (minFeeToJoin: number, value?: string): strin
 
   if (minFeeToJoin === 0) {
     errorTexts.push("0, or");
-    errorTexts.push(`at least ${formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT)}`);
+    errorTexts.push(`at least ${formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT, false)}`);
   } else {
-    errorTexts.push(`at least ${formatPrice(minFeeToJoin)}`);
+    errorTexts.push(`at least ${formatPrice(minFeeToJoin, false)}`);
   }
 
-  errorTexts.push(`and at most ${formatPrice(MAX_CONTRIBUTION_ILS_AMOUNT)}`);
+  errorTexts.push(`and at most ${formatPrice(MAX_CONTRIBUTION_ILS_AMOUNT, false)}`);
 
   return errorTexts.join(" ");
 };
@@ -66,7 +66,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
     selectedContribution === "other" ? String((userData.contribution_amount || 0) / 100) : undefined
   ));
   const [isCurrencyInputTouched, setIsCurrencyInputTouched] = useState(false);
-  const formattedMinFeeToJoin = formatPrice(minFeeToJoin);
+  const formattedMinFeeToJoin = formatPrice(minFeeToJoin, false);
   const pricePostfix = isMonthlyContribution ? "/mo" : "";
   const currencyInputError = validateContributionAmount(minFeeToJoin, enteredContribution);
   const isSubmitDisabled = Boolean(
@@ -116,7 +116,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
               styles={toggleButtonStyles}
               value={amount}
             >
-              {formatPrice(amount)}{pricePostfix}
+              {formatPrice(amount, false)}{pricePostfix}
             </ToggleButton>
           ))}
           <ToggleButton
