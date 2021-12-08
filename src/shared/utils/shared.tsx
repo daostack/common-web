@@ -154,3 +154,13 @@ export const getTodayDate = () => {
 
   return yyyy + "-" + mm + "-" + dd;
 };
+
+/**
+ * Examples:
+ *   value = 10 -> 20 will be returned
+ *   value = 24 -> 30 will be returned
+ *   value = 36 -> 40 will be returned
+ **/
+export const roundNumberToNextTenths = (value: number, valueForRounding = 10): number => (
+  Math.floor((value + valueForRounding) / valueForRounding) * valueForRounding
+);

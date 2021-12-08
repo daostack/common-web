@@ -1,14 +1,12 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { ButtonLink } from "../../../../../shared/components";
 import { CurrencyInput, ToggleButtonGroup, ToggleButton, ToggleButtonGroupVariant } from "../../../../../shared/components/Form";
 import { ModalFooter } from "../../../../../shared/components/Modal";
-import { MIN_CONTRIBUTION_ILS_AMOUNT } from "../../../../../shared/constants/shared";
-import { formatPrice } from "../../../../../shared/utils";
+import { MIN_CONTRIBUTION_ILS_AMOUNT, MAX_CONTRIBUTION_ILS_AMOUNT } from "../../../../../shared/constants/shared";
+import { formatPrice, roundNumberToNextTenths } from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
 import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
-
-const MIN_CALCULATION_AMOUNT = 2000;
 
 const validateContributionAmount = (minFeeToJoin: number, value?: string): string => {
   const convertedValue = Number(value) * 100;
@@ -30,19 +28,31 @@ const validateContributionAmount = (minFeeToJoin: number, value?: string): strin
   return errorTexts.join(" ");
 };
 
+const getAmountsForSelection = (minFeeToJoin: number): number[] => {
+  const initialAmount = minFeeToJoin * 2 / 100;
+  const firstAmount = (initialAmount !== 0 && initialAmount % 10 === 0)
+    ? initialAmount
+    : roundNumberToNextTenths(initialAmount);
+
+  return [firstAmount, firstAmount * 2]
+    .map(amount => amount * 100)
+    .filter(amount => amount <= MAX_CONTRIBUTION_ILS_AMOUNT);
+};
+
 export default function MembershipRequestContribution(props: IStageProps) {
   const { userData, setUserData, common } = props;
   const isMonthlyContribution = common?.metadata.contributionType === CommonContributionType.Monthly;
   const minFeeToJoin = common?.metadata.minFeeToJoin || 0;
-  const secondAmount = minFeeToJoin < MIN_CALCULATION_AMOUNT ? 2000 : (minFeeToJoin + 1000);
-  const thirdAmount = minFeeToJoin < MIN_CALCULATION_AMOUNT ? 5000 : (minFeeToJoin + 2000);
+  const amountsForSelection = useMemo(() => (
+    [minFeeToJoin, ...getAmountsForSelection(minFeeToJoin)]
+  ), [minFeeToJoin]);
   const [selectedContribution, setSelectedContribution] = useState<number | "other" | null>(() => {
     if (userData.contribution_amount === undefined) {
       return null;
     }
 
     return (
-      [minFeeToJoin, secondAmount, thirdAmount].includes(userData.contribution_amount)
+      amountsForSelection.includes(userData.contribution_amount)
         ? userData.contribution_amount
         : "other"
     );
@@ -95,24 +105,15 @@ export default function MembershipRequestContribution(props: IStageProps) {
           onChange={handleChange}
           variant={ToggleButtonGroupVariant.Vertical}
         >
-          <ToggleButton
-            styles={toggleButtonStyles}
-            value={minFeeToJoin}
-          >
-            {formatPrice(minFeeToJoin)}{pricePostfix}
-          </ToggleButton>
-          <ToggleButton
-            styles={toggleButtonStyles}
-            value={secondAmount}
-          >
-            {formatPrice(secondAmount)}{pricePostfix}
-          </ToggleButton>
-          <ToggleButton
-            styles={toggleButtonStyles}
-            value={thirdAmount}
-          >
-            {formatPrice(thirdAmount)}{pricePostfix}
-          </ToggleButton>
+          {amountsForSelection.map((amount) => (
+            <ToggleButton
+              key={amount}
+              styles={toggleButtonStyles}
+              value={amount}
+            >
+              {formatPrice(amount)}{pricePostfix}
+            </ToggleButton>
+          ))}
           <ToggleButton
             styles={toggleButtonStyles}
             value="other"
