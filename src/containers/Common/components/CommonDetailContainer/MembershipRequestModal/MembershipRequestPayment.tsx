@@ -1,4 +1,5 @@
 import React, { useState, ReactElement } from "react";
+import { useSelector } from "react-redux";
 
 import {
   createCard,
@@ -7,6 +8,7 @@ import {
 
 import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
+import { ScreenSize } from "../../../../../shared/constants";
 import {
   formatPrice,
   getTodayDate,
@@ -15,9 +17,12 @@ import {
   validateCVV,
 } from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
+import { getScreenSize } from "../../../../../shared/store/selectors";
 
 export default function MembershipRequestPayment(props: IStageProps): ReactElement {
   const { userData, setUserData, common } = props;
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
   const [card_number, setCardNumber] = useState(0); // 4007400000000007
   const [expiration_date, setExpirationDate] = useState("");
   const [cvv, setCvv] = useState(0);
@@ -68,7 +73,7 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
 
   return (
     <div className="membership-request-content membership-request-payment">
-      <div className="sub-title">Payment Details</div>
+      <div className="sub-title">{isMobileView ? "Billing Details" : "Payment Details"}</div>
       <div className="sub-text">
         You are contributing <strong className="membership-request-payment__amount">{formatPrice(userData.contribution_amount, false)} ({contributionTypeText})</strong> to this Common.
       </div>
