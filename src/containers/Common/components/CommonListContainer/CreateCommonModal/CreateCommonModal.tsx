@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState, ReactNode } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  ReactNode,
+} from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 
@@ -21,10 +27,12 @@ interface CreateCommonModalProps {
 
 export default function CreateCommonModal(props: CreateCommonModalProps) {
   const [stage, setStage] = useState(CreateCommonStage.Introduction);
-  const [title, setTitle] = useState<ReactNode>('');
+  const [title, setTitle] = useState<ReactNode>("");
   const [isBigTitle, setIsBigTitle] = useState(true);
   const [isHeaderScrolledToTop, setIsHeaderScrolledToTop] = useState(true);
-  const [onGoBack, setOnGoBack] = useState<(() => boolean | undefined) | undefined>();
+  const [onGoBack, setOnGoBack] = useState<
+    (() => boolean | undefined) | undefined
+  >();
   const [shouldShowCloseButton, setShouldShowCloseButton] = useState(true);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -39,14 +47,19 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     setIsBigTitle(false);
   }, []);
 
-  const setGoBackHandler = useCallback((handler?: (() => boolean | undefined) | null) => {
-    setOnGoBack(() => (handler ?? undefined));
-  }, []);
+  const setGoBackHandler = useCallback(
+    (handler?: (() => boolean | undefined) | null) => {
+      setOnGoBack(() => handler ?? undefined);
+    },
+    []
+  );
   const moveStageBack = useCallback(() => {
-    setStage((stage) => (stage === CreateCommonStage.Introduction ? stage : (stage - 1)));
+    setStage((stage) =>
+      stage === CreateCommonStage.Introduction ? stage : stage - 1
+    );
   }, []);
   const moveStageForward = useCallback(() => {
-    setStage(stage => stage + 1);
+    setStage((stage) => stage + 1);
   }, []);
   const handleGoBack = useCallback(() => {
     if (onGoBack && onGoBack()) {
@@ -90,7 +103,16 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       default:
         return null;
     }
-  }, [stage, isMobileView, isHeaderScrolledToTop, setSmallTitle, setBigTitle, setGoBackHandler, moveStageForward, handleCreationStepsFinish]);
+  }, [
+    stage,
+    isMobileView,
+    isHeaderScrolledToTop,
+    setSmallTitle,
+    setBigTitle,
+    setGoBackHandler,
+    moveStageForward,
+    handleCreationStepsFinish,
+  ]);
 
   useEffect(() => {
     if (!props.isShowing) {
@@ -113,7 +135,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       onHeaderScrolledToTop={setIsHeaderScrolledToTop}
       closePrompt
     >
-      {content}
+      <div id="content">{content}</div>
     </Modal>
   );
 }
