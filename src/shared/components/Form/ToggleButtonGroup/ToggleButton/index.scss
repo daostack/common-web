@@ -41,3 +41,11 @@ $custom-toggle-button-border-radius: 8px;
     background-color: $purple;
   }
 }
+.custom-toggle-button--vertical {
+  margin-top: 24px;
+  border-radius: 8px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}

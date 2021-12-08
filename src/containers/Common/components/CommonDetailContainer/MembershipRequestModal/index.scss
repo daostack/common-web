@@ -172,6 +172,8 @@
 }
 
 .membership-request-contribution {
+  min-height: 466px;
+
   .options-wrapper {
     display: flex;
     flex-direction: column;
@@ -196,6 +198,62 @@
       }
     }
   }
+
+  .membership-request-contribution__description {
+    max-width: 314px;
+    font-size: $xsmall;
+  }
+
+  .membership-request-contribution__toggle-button-group {
+    max-width: 380px;
+    width: 100%;
+    margin-top: 8px;
+    font-size: $small;
+
+    @include big-phone {
+      margin-top: 0;
+    }
+  }
+
+  .membership-request-contribution__toggle-button {
+    padding: 22px;
+
+    @include big-phone {
+      padding: 20px;
+    }
+  }
+
+  .membership-request-contribution__currency-input-wrapper {
+    max-width: 380px;
+    width: 100%;
+  }
+
+  .membership-request-contribution__currency-input-label {
+    margin: 0;
+    font-size: $xsmall;
+  }
+
+  .membership-request-contribution__back-to-selection {
+    margin-top: 8px;
+  }
+
+  .membership-request-contribution__hint {
+    margin-top: 16px;
+    font-size: $xsmall;
+    line-height: 1.42;
+    text-align: center;
+    color: $blue-2;
+  }
+
+  @include big-phone {
+    min-height: unset;
+  }
+}
+
+.membership-request-contribution__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0;
 }
 
 .membership-request-billing {
