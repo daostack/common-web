@@ -70,7 +70,7 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
     <div className="membership-request-content membership-request-payment">
       <div className="sub-title">Payment Details</div>
       <div className="sub-text">
-        You are contributing <strong className="membership-request-payment__amount">{formatPrice(userData.contribution_amount)} ({contributionTypeText})</strong> to this Common.
+        You are contributing <strong className="membership-request-payment__amount">{formatPrice(userData.contribution_amount, false)} ({contributionTypeText})</strong> to this Common.
       </div>
       <label>Card Number</label>
       <input
