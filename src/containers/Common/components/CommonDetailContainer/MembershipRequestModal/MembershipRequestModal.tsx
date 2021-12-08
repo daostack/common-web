@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, ReactNode } from "react";
+import React, { useCallback, useMemo, useState, ReactNode, useEffect } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { Modal } from "../../../../../shared/components";
@@ -76,6 +76,16 @@ export function MembershipRequestModal(props: IProps) {
   const shouldDisplayBackButton = stage > 0 && stage < 6;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+
+  /**
+   * The data is saved only when we are on the Common Details Page.
+   * Until implementing a robust way to handle the saving of the data the user will be notified of losing the data.
+   */
+  useEffect(() => {
+    if (!isShowing) {
+      setUserData(initData);
+    }
+  }, [isShowing]);
 
   const renderCurrentStage = (stage: number) => {
     switch (stage) {
