@@ -85,7 +85,7 @@ export function MembershipRequestModal(props: IProps) {
     if (!isShowing) {
       setUserData(initData);
     }
-  }, [isShowing])
+  }, [isShowing]);
 
   const renderCurrentStage = (stage: number) => {
     switch (stage) {
