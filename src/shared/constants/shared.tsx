@@ -15,6 +15,9 @@ export const CONTACT_EMAIL = "hi@common.io";
 
 export const CIRCLE_PAY_URL = "https://api-sandbox.circle.com/v1";
 
+export const MIN_CONTRIBUTION_ILS_AMOUNT = 1000; // ₪10 * 100
+export const MAX_CONTRIBUTION_ILS_AMOUNT = 250000; // ₪2500 * 100
+
 export enum MobileOperatingSystem {
   WindowsPhone = "Windows Phone",
   Android = "Android",

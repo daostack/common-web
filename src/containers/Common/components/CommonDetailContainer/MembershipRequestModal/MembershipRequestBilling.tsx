@@ -16,6 +16,7 @@ export default function MembershipRequestBilling(props: IStageProps) {
       <div className="sub-title">Billing Details</div>
       <div className="sub-text">{`You are contributing ${formatPrice(
         userData.contribution_amount,
+        false,
       )} (monthly or one-time) to this Common`}</div>
       <div className="inputs-wrapper">
         <div className="inputs-group">
