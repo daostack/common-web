@@ -40,3 +40,7 @@ export interface Common {
 
   metadata: Metadata;
 }
+
+export interface CommonPayment {
+
+}

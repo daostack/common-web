@@ -6,12 +6,14 @@ import * as actions from "./actions";
 const initialState: CommonsStateType = {
   commons: [],
   common: null,
+  commonPayment: null,
   page: 1,
   proposals: [],
   discussions: [],
   userProposals: [],
   isDiscussionsLoaded: false,
   isProposalsLoaded: false,
+  isCommonPaymentLoaded: false,
   currentDiscussion: null,
   currentProposal: null,
 };
