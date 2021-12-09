@@ -6,14 +6,12 @@ import * as actions from "./actions";
 const initialState: CommonsStateType = {
   commons: [],
   common: null,
-  commonPayment: null,
   page: 1,
   proposals: [],
   discussions: [],
   userProposals: [],
   isDiscussionsLoaded: false,
   isProposalsLoaded: false,
-  isCommonPaymentLoading: false,
   currentDiscussion: null,
   currentProposal: null,
 };
@@ -88,12 +86,10 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
     produce(state, (nextState) => {
       nextState.currentDiscussion = null;
       nextState.common = null;
-      nextState.commonPayment = null;
       nextState.discussions = [];
       nextState.proposals = [];
       nextState.isDiscussionsLoaded = false;
       nextState.isProposalsLoaded = false;
-      nextState.isCommonPaymentLoading = false;
     })
   )
   .handleAction(actions.loadProposalDetail.success, (state, action) =>
@@ -105,23 +101,6 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       proposals[index] = proposal;
       nextState.proposals = proposals;
       nextState.currentProposal = proposal;
-    })
-  )
-  .handleAction(actions.createCommonPayment.request, (state) =>
-    produce(state, (nextState) => {
-      nextState.isCommonPaymentLoading = true;
-    })
-  )
-  .handleAction(actions.createCommonPayment.success, (state, action) =>
-    produce(state, (nextState) => {
-      nextState.commonPayment = action.payload;
-      nextState.isCommonPaymentLoading = false;
-    })
-  )
-  .handleAction(actions.clearCurrentCommonPayment, (state) =>
-    produce(state, (nextState) => {
-      nextState.commonPayment = null;
-      nextState.isCommonPaymentLoading = false;
     })
   );
 

@@ -1,7 +1,6 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 
-import { PaymentPageCreationData } from "../../../shared/interfaces/api/payMe";
-import { Common, CommonPayment, Proposal, Discussion } from "../../../shared/models";
+import { Common, Proposal, Discussion } from "../../../shared/models";
 import { CommonsActionTypes } from "./constants";
 
 export const getCommonsList = createAsyncAction(
@@ -15,16 +14,6 @@ export const getCommonDetail = createAsyncAction(
   CommonsActionTypes.GET_COMMON_DETAIL_SUCCESS,
   CommonsActionTypes.GET_COMMON_DETAIL_FAILURE
 )<string, Common | null, Error>();
-
-export const createCommonPayment = createAsyncAction(
-  CommonsActionTypes.CREATE_COMMON_PAYMENT,
-  CommonsActionTypes.CREATE_COMMON_PAYMENT_SUCCESS,
-  CommonsActionTypes.CREATE_COMMON_PAYMENT_FAILURE
-)<PaymentPageCreationData, CommonPayment, Error>();
-
-export const clearCurrentCommonPayment = createStandardAction(
-  CommonsActionTypes.CLEAR_CURRENT_COMMON_PAYMENT
-)();
 
 export const updatePage = createStandardAction(
   CommonsActionTypes.UPDATE_PAGE

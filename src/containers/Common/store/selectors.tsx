@@ -7,10 +7,6 @@ export const selectCommonList = () =>
   createSelector(selectCommons, (state) => state.commons);
 export const selectCommonDetail = () =>
   createSelector(selectCommons, (state) => state.common);
-export const selectCommonPayment = () =>
-  createSelector(selectCommons, (state) => state.commonPayment);
-export const selectIsCommonPaymentLoading = () =>
-  createSelector(selectCommons, (state) => state.isCommonPaymentLoading);
 export const selectCurrentPage = () =>
   createSelector(selectCommons, (state) => state.page);
 export const selectProposals = () =>
