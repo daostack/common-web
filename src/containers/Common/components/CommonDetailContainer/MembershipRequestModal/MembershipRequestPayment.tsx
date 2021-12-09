@@ -9,13 +9,8 @@ import {
 import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
 import { ScreenSize } from "../../../../../shared/constants";
-import {
-  formatPrice,
-  getTodayDate,
-  luhnAlgo,
-  validateCreditCardProvider,
-  validateCVV,
-} from "../../../../../shared/utils";
+import { Loader } from "../../../../../shared/components";
+import { formatPrice } from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
 import { getScreenSize } from "../../../../../shared/store/selectors";
 
@@ -67,22 +62,13 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
       <div className="sub-text">
         You are contributing <strong className="membership-request-payment__amount">{formatPrice(userData.contribution_amount, false)} ({contributionTypeText})</strong> to this Common.
       </div>
+      <div className="membership-request-payment__loader">
+        <Loader />
+      </div>
       <span className="membership-rejected-text">
         If your membership request will not be accepted, you will not be
         charged.
       </span>
-      <button
-        disabled={
-          !validateCreditCardProvider(card_number) ||
-          !luhnAlgo(card_number) ||
-          !validateCVV(cvv) ||
-          !expiration_date
-        }
-        className="button-blue"
-        onClick={() => pay()}
-      >
-        Pay Now
-      </button>
     </div>
   );
 }

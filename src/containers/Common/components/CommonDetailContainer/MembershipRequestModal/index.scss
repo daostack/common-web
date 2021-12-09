@@ -275,6 +275,8 @@
 }
 
 .membership-request-payment {
+  min-height: 400px;
+
   input {
     width: 100%;
   }
@@ -292,7 +294,7 @@
 
   .membership-rejected-text {
     color: $light-gray-2;
-    margin: 1.5rem 0;
+    margin-top: 1.5rem;
     text-align: center;
   }
 
@@ -311,6 +313,16 @@
   .membership-request-payment__amount {
     color: $purple;
   }
+
+  @include big-phone {
+    min-height: unset;
+  }
+}
+
+.membership-request-payment__loader {
+  flex: 1 0;
+  display: flex;
+  align-items: center;
 }
 
 .membership-request-creating {

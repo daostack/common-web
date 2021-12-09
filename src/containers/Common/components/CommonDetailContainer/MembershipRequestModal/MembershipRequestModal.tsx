@@ -71,7 +71,8 @@ export function MembershipRequestModal(props: IProps) {
   const [userData, setUserData] = useState(initData);
   const { stage } = userData;
   const { isShowing, onClose, common } = props;
-  const shouldDisplayBackButton = stage > 0 && stage < 6;
+  const shouldDisplayBackButton = stage > 0 && stage < 5;
+  const shouldDisplayProgressBar = stage > 0 && stage < 6;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
@@ -179,7 +180,7 @@ export function MembershipRequestModal(props: IProps) {
       }}
     >
       <div className="membership-request-wrapper">
-        {shouldDisplayBackButton && (
+        {shouldDisplayProgressBar && (
           <MembershipRequestProgressBar currentStage={stage} />
         )}
         {renderCurrentStage(stage)}
