@@ -15,7 +15,7 @@ const endpoints = {
 
 const getFirebaseToken = async (): Promise<string | undefined> => await firebase.auth().currentUser?.getIdToken(true);
 
-export const createPaymentPage = async (creationData: PaymentPageCreationData): Promise<CommonPayment> => {
+const createPaymentPage = async (creationData: PaymentPageCreationData): Promise<CommonPayment> => {
   const headers = {
     Authorization: await getFirebaseToken(),
   };
@@ -26,4 +26,8 @@ export const createPaymentPage = async (creationData: PaymentPageCreationData): 
   );
 
   return data;
+};
+
+export default {
+  createPaymentPage,
 };
