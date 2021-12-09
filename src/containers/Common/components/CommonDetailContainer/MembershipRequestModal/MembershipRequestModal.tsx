@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState, Dispatch, ReactNode, SetStateAction } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
+import { v4 as uuidv4 } from "uuid";
 import { Modal } from "../../../../../shared/components";
 import { ModalProps } from "../../../../../shared/interfaces";
 import { Common } from "../../../../../shared/models";
@@ -44,6 +45,7 @@ export interface IMembershipRequestData {
   cvv: number | undefined;
   expiration_date: string;
   cardId?: string;
+  transactionId: string;
 }
 
 const initData: IMembershipRequestData = {
@@ -60,6 +62,7 @@ const initData: IMembershipRequestData = {
   card_number: undefined,
   cvv: undefined,
   expiration_date: "",
+  transactionId: uuidv4(),
 };
 
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
@@ -81,8 +84,11 @@ export function MembershipRequestModal(props: IProps) {
    * Until implementing a robust way to handle the saving of the data the user will be notified of losing the data.
    */
   useEffect(() => {
-    if (!isShowing) {
-      setUserData(initData);
+    if (isShowing) {
+      setUserData({
+        ...initData,
+        transactionId: uuidv4(),
+      });
     }
   }, [isShowing]);
 
