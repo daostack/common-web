@@ -20,7 +20,7 @@ export const createCommonPayment = createAsyncAction(
   CommonsActionTypes.CREATE_COMMON_PAYMENT,
   CommonsActionTypes.CREATE_COMMON_PAYMENT_SUCCESS,
   CommonsActionTypes.CREATE_COMMON_PAYMENT_FAILURE
-)<PaymentPageCreationData, CommonPayment | null, Error>();
+)<PaymentPageCreationData, CommonPayment, Error>();
 
 export const clearCurrentCommonPayment = createStandardAction(
   CommonsActionTypes.CLEAR_CURRENT_COMMON_PAYMENT

@@ -9,7 +9,7 @@ export interface CommonsStateType {
   discussions: Discussion[];
   isDiscussionsLoaded: boolean;
   isProposalsLoaded: boolean;
-  isCommonPaymentLoaded: boolean;
+  isCommonPaymentLoading: boolean;
   currentDiscussion: Discussion | null;
   currentProposal: Proposal | null;
   userProposals: Proposal[];

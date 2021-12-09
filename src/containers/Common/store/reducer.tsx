@@ -13,7 +13,7 @@ const initialState: CommonsStateType = {
   userProposals: [],
   isDiscussionsLoaded: false,
   isProposalsLoaded: false,
-  isCommonPaymentLoaded: false,
+  isCommonPaymentLoading: false,
   currentDiscussion: null,
   currentProposal: null,
 };
@@ -93,7 +93,7 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       nextState.proposals = [];
       nextState.isDiscussionsLoaded = false;
       nextState.isProposalsLoaded = false;
-      nextState.isCommonPaymentLoaded = false;
+      nextState.isCommonPaymentLoading = false;
     })
   )
   .handleAction(actions.loadProposalDetail.success, (state, action) =>
@@ -107,16 +107,21 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       nextState.currentProposal = proposal;
     })
   )
+  .handleAction(actions.createCommonPayment.request, (state) =>
+    produce(state, (nextState) => {
+      nextState.isCommonPaymentLoading = true;
+    })
+  )
   .handleAction(actions.createCommonPayment.success, (state, action) =>
     produce(state, (nextState) => {
       nextState.commonPayment = action.payload;
-      nextState.isCommonPaymentLoaded = action.payload !== null;
+      nextState.isCommonPaymentLoading = false;
     })
   )
   .handleAction(actions.clearCurrentCommonPayment, (state) =>
     produce(state, (nextState) => {
       nextState.commonPayment = null;
-      nextState.isCommonPaymentLoaded = false;
+      nextState.isCommonPaymentLoading = false;
     })
   );
 
