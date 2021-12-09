@@ -86,7 +86,7 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
           commonId: common.id,
           installments: 1,
           userId: user.uid,
-          proposalId: userData.transactionId,
+          proposalId: userData.proposalId,
         });
 
         setState((nextState) => ({
