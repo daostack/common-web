@@ -8,7 +8,3 @@ export interface PaymentPageCreationData {
   userId: string;
   proposalId: string;
 }
-
-export interface PaymentPageCreationResponse {
-  url: string;
-}

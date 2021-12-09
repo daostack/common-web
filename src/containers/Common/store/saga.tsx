@@ -2,11 +2,13 @@ import { call, put, select, takeLatest } from "redux-saga/effects";
 import { actions } from ".";
 import {
   Common,
+  CommonPayment,
   Discussion,
   User,
   DiscussionMessage,
   Proposal,
 } from "../../../shared/models";
+import { createPaymentPage } from "../../../services/PayMeService";
 import { startLoading, stopLoading } from "../../../shared/store/actions";
 import {
   fetchCommonList,
@@ -52,6 +54,21 @@ export function* getCommonDetail(
     yield put(stopLoading());
   } catch (e) {
     yield put(actions.getCommonDetail.failure(e));
+    yield put(stopLoading());
+  }
+}
+
+export function* createCommonPayment(
+  action: ReturnType<typeof actions.createCommonPayment.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    const commonPayment = yield call(createPaymentPage, action.payload);
+
+    yield put(actions.createCommonPayment.success(commonPayment as CommonPayment));
+    yield put(stopLoading());
+  } catch (e) {
+    yield put(actions.createCommonPayment.failure(e));
     yield put(stopLoading());
   }
 }
@@ -194,6 +211,7 @@ export function* loadUserProposalList(
 function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
+  yield takeLatest(actions.createCommonPayment.request, createCommonPayment);
   yield takeLatest(
     actions.loadCommonDiscussionList.request,
     loadCommonDiscussionList

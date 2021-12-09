@@ -1,9 +1,7 @@
 import axios from "axios";
 
-import {
-  PaymentPageCreationData,
-  PaymentPageCreationResponse,
-} from "../shared/interfaces/api/payMe";
+import { PaymentPageCreationData } from "../shared/interfaces/api/payMe";
+import { CommonPayment } from "../shared/models";
 import firebase from "../shared/utils/firebase";
 import config from "../config";
 
@@ -17,11 +15,11 @@ const endpoints = {
 
 const getFirebaseToken = async (): Promise<string | undefined> => await firebase.auth().currentUser?.getIdToken(true);
 
-export const createPaymentPage = async (creationData: PaymentPageCreationData): Promise<PaymentPageCreationResponse> => {
+export const createPaymentPage = async (creationData: PaymentPageCreationData): Promise<CommonPayment> => {
   const headers = {
     Authorization: await getFirebaseToken(),
   };
-  const { data } = await axiosClient.post<PaymentPageCreationResponse>(
+  const { data } = await axiosClient.post<CommonPayment>(
     endpoints.createPaymentPage,
     creationData,
     { headers },
