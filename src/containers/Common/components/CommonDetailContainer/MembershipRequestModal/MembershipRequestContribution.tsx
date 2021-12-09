@@ -92,8 +92,12 @@ export default function MembershipRequestContribution(props: IStageProps) {
   const handleSubmit = useCallback(() => {
     const contributionAmount = selectedContribution === "other" ? Number(enteredContribution) * 100 : selectedContribution;
 
-    setUserData({ ...userData, contribution_amount: contributionAmount, stage: 4 });
-  }, [setUserData, userData, selectedContribution, enteredContribution]);
+    setUserData((nextUserData) => ({
+      ...nextUserData,
+      contribution_amount: contributionAmount ?? undefined,
+      stage: 4,
+    }));
+  }, [setUserData, selectedContribution, enteredContribution]);
 
   const toggleButtonStyles = { default: "membership-request-contribution__toggle-button" };
 

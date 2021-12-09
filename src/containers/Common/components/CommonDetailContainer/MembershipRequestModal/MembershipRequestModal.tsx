@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, ReactNode, useEffect } from "react";
+import React, { useCallback, useEffect, useMemo, useState, Dispatch, ReactNode, SetStateAction } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { Modal } from "../../../../../shared/components";
@@ -18,7 +18,7 @@ import MembershipRequestRules from "./MembershipRequestRules";
 import MembershipRequestWelcome from "./MembershipRequestWelcome";
 
 export interface IStageProps {
-  setUserData: Function;
+  setUserData: Dispatch<SetStateAction<IMembershipRequestData>>;
   userData: IMembershipRequestData;
   common?: Common;
 }
