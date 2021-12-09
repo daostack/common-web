@@ -1,4 +1,4 @@
-import React, { useState, ReactElement } from "react";
+import React, { useEffect, useState, ReactElement } from "react";
 import { useSelector } from "react-redux";
 
 import {
@@ -8,19 +8,32 @@ import {
 
 import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
+import { selectUser } from "../../../../Auth/store/selectors";
+import PayMeService from "../../../../../services/PayMeService";
 import { ScreenSize } from "../../../../../shared/constants";
 import { Loader } from "../../../../../shared/components";
+import { CommonPayment } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
 import { getScreenSize } from "../../../../../shared/store/selectors";
 
+interface State {
+  commonPayment: CommonPayment | null;
+  isCommonPaymentLoading: boolean;
+}
+
 export default function MembershipRequestPayment(props: IStageProps): ReactElement {
   const { userData, setUserData, common } = props;
+  const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const [card_number, setCardNumber] = useState(0); // 4007400000000007
   const [expiration_date, setExpirationDate] = useState("");
   const [cvv, setCvv] = useState(0);
+  const [{ commonPayment, isCommonPaymentLoading }, setState] = useState<State>({
+    commonPayment: null,
+    isCommonPaymentLoading: false,
+  });
   const contributionTypeText = common?.metadata.contributionType === CommonContributionType.Monthly ? "monthly" : "one-time";
 
   const pay = async () => {
@@ -55,6 +68,37 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
       console.error("We couldn't create your proposal");
     }
   };
+
+  useEffect(() => {
+    (async () => {
+      if (commonPayment || isCommonPaymentLoading || !common || !user?.uid) {
+        return;
+      }
+
+      try {
+        setState((nextState) => ({ ...nextState, isCommonPaymentLoading: true }));
+
+        const createdCommonPayment = await PayMeService.createPaymentPage({
+          sale_price: userData.contribution_amount || 0,
+          product_name: common.name,
+          capture_buyer: 1,
+          currency: "ILS",
+          commonId: common.id,
+          installments: 1,
+          userId: user.uid,
+          proposalId: userData.transactionId,
+        });
+
+        setState((nextState) => ({
+          ...nextState,
+          commonPayment: createdCommonPayment,
+          isCommonPaymentLoading: false,
+        }));
+      } catch (error) {
+        console.error("Error during payment page creation");
+      }
+    })();
+  }, [commonPayment, isCommonPaymentLoading, userData, common, user]);
 
   return (
     <div className="membership-request-content membership-request-payment">
