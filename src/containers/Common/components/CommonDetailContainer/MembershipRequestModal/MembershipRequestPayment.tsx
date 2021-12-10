@@ -12,16 +12,18 @@ import { selectUser } from "../../../../Auth/store/selectors";
 import PayMeService from "../../../../../services/PayMeService";
 import { ScreenSize } from "../../../../../shared/constants";
 import { ButtonLink, Loader } from "../../../../../shared/components";
-import { CommonPayment } from "../../../../../shared/models";
+import { CommonPayment, PaymentStatus } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
 import { getScreenSize } from "../../../../../shared/store/selectors";
+import { subscribeByProposalToPaymentChange } from "../../../store/api";
 
 interface State {
   commonPayment: CommonPayment | null;
   isCommonPaymentLoading: boolean;
   isPaymentPageOpen: boolean;
   shouldShowPaymentPageLink: boolean;
+  isPaymentFailed: boolean;
 }
 
 const INITIAL_STATE: State = {
@@ -29,6 +31,7 @@ const INITIAL_STATE: State = {
   isCommonPaymentLoading: false,
   isPaymentPageOpen: false,
   shouldShowPaymentPageLink: false,
+  isPaymentFailed: false,
 };
 
 export default function MembershipRequestPayment(props: IStageProps): ReactElement {
@@ -40,7 +43,7 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
   const [expiration_date, setExpirationDate] = useState("");
   const [cvv, setCvv] = useState(0);
   const [
-    { commonPayment, isCommonPaymentLoading, isPaymentPageOpen, shouldShowPaymentPageLink },
+    { commonPayment, isCommonPaymentLoading, isPaymentPageOpen, shouldShowPaymentPageLink, isPaymentFailed },
     setState,
   ] = useState<State>(INITIAL_STATE);
   const contributionTypeText = common?.metadata.contributionType === CommonContributionType.Monthly ? "monthly" : "one-time";
@@ -118,7 +121,6 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
       return;
     }
 
-    // 1. Open new tab/window for user to enter card details
     if (window.open) {
       const openFeatures = isMobileView ? "" : "popup=yes,fullscreen=no,width=600,height=600";
 
@@ -129,10 +131,29 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
     }
 
     setState((nextState) => ({ ...nextState, shouldShowPaymentPageLink: true }));
-    // 2. Subscribe to payment status update
-    // 3. Once status is good for us => change the stage to 6 where we should create a proposal using our custom proposal id
-    // 4. Remove subscription
   }, [commonPayment, isPaymentPageOpen, shouldShowPaymentPageLink]);
+
+  useEffect(() => {
+    if (!isPaymentPageOpen || isPaymentFailed) {
+      return;
+    }
+
+    try {
+      return subscribeByProposalToPaymentChange(userData.proposalId, (payments) => {
+        const payment = payments.find((payment) => (
+          [PaymentStatus.TokenCreated, PaymentStatus.Failed].includes(payment.status)
+        ));
+
+        if (payment?.status === PaymentStatus.TokenCreated) {
+          setUserData((nextUserData) => ({ ...nextUserData, stage: 6 }));
+        } else if (payment?.status === PaymentStatus.Failed) {
+          setState((nextState) => ({ ...nextState, isPaymentFailed: true }));
+        }
+      });
+    } catch (error) {
+      console.error("Error during subscription to payment status change");
+    }
+  }, [isPaymentPageOpen, isPaymentFailed, userData.proposalId, setUserData]);
 
   return (
     <div className="membership-request-content membership-request-payment">
