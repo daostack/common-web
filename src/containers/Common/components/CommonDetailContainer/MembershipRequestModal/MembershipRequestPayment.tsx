@@ -100,6 +100,17 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
     })();
   }, [commonPayment, isCommonPaymentLoading, userData, common, user]);
 
+  useEffect(() => {
+    if (!commonPayment) {
+      return;
+    }
+
+    // 1. Open new tab/window for user to enter card details
+    // 2. Subscribe to payment status update
+    // 3. Once status is good for us => change the stage to 6 where we should create a proposal using our custom proposal id
+    // 4. Remove subscription
+  }, [commonPayment]);
+
   return (
     <div className="membership-request-content membership-request-payment">
       <div className="sub-title">{isMobileView ? "Billing Details" : "Payment Details"}</div>
