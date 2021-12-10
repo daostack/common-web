@@ -42,5 +42,5 @@ export interface Common {
 }
 
 export interface CommonPayment {
-  url: string;
+  link: string;
 }

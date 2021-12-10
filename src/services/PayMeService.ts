@@ -1,13 +1,7 @@
-import axios from "axios";
-
 import { PaymentPageCreationData } from "../shared/interfaces/api/payMe";
 import { CommonPayment } from "../shared/models";
 import firebase from "../shared/utils/firebase";
 import config from "../config";
-
-const axiosClient = axios.create({
-  timeout: 1000000,
-});
 
 const endpoints = {
   createPaymentPage: `${config.cloudFunctionUrl}/payments/payme/payin/create-payment-page`,
