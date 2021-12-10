@@ -143,6 +143,7 @@ export function MembershipRequestModal(props: IProps) {
           <MembershipRequestCreating
             userData={userData}
             setUserData={setUserData}
+            common={common}
           />
         );
       case 7:
