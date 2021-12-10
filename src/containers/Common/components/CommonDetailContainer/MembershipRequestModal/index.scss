@@ -319,10 +319,13 @@
   }
 }
 
-.membership-request-payment__loader {
+.membership-request-payment__content {
   flex: 1 0;
   display: flex;
-  align-items: center;
+}
+
+.membership-request-payment__loader {
+  margin: auto 0;
 }
 
 .membership-request-creating {
