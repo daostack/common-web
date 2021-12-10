@@ -90,7 +90,7 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
     }
 
     setState((nextState) => ({ ...nextState, shouldShowPaymentPageLink: true }));
-  }, [commonPayment, isPaymentPageOpen, shouldShowPaymentPageLink]);
+  }, [commonPayment, isPaymentPageOpen, shouldShowPaymentPageLink, isMobileView]);
 
   useEffect(() => {
     if (!isPaymentPageOpen || isPaymentFailed) {
