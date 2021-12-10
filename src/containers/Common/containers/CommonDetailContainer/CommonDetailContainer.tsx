@@ -55,7 +55,8 @@ import {
   loadProposalList,
 } from "../../store/actions";
 import CheckIcon from "../../../../shared/icons/check.icon";
-import { selectUser } from "../../../Auth/store/selectors";
+import { setIsLoginModalShowing } from "../../../Auth/store/actions";
+import { selectUser, selectIsLoginModalShowing } from "../../../Auth/store/selectors";
 
 interface CommonDetailRouterParams {
   id: string;
@@ -92,6 +93,7 @@ export default function CommonDetail() {
   const [footerClass, setFooterClass] = useState("");
   const [tab, setTab] = useState("about");
   const [imageError, setImageError] = useState(false);
+  const [shouldOpenJoinModalOnLoginClose, setShouldOpenJoinModalOnLoginClose] = useState(false);
 
   const common = useSelector(selectCommonDetail());
   const currentDisscussion = useSelector(selectCurrentDisscussion());
@@ -102,6 +104,7 @@ export default function CommonDetail() {
   const currentProposal = useSelector(selectCurrentProposal());
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
+  const isLoginModalShowing = useSelector(selectIsLoginModalShowing());
 
   const commonMemberData = common?.members.filter(
     (member: Member) => member?.userId === user?.uid
@@ -139,6 +142,16 @@ export default function CommonDetail() {
     () => [...proposals].filter((d) => d.state !== "countdown"),
     [proposals]
   );
+
+  const handleJoinModalOpen = useCallback(() => {
+    if (user) {
+      onOpenJoinModal();
+      return;
+    }
+
+    dispatch(setIsLoginModalShowing(true));
+    setShouldOpenJoinModalOnLoginClose(true);
+  }, [user, onOpenJoinModal, dispatch]);
 
   const changeTabHandler = useCallback(
     (tab: string) => {
@@ -209,8 +222,8 @@ export default function CommonDetail() {
 
   const openJoinModal = useCallback(() => {
     onClose();
-    setTimeout(onOpenJoinModal, 0);
-  }, [onOpenJoinModal, onClose]);
+    setTimeout(handleJoinModalOpen, 0);
+  }, [handleJoinModalOpen, onClose]);
 
   const closeJoinModal = useCallback(() => {
     onCloseJoinModal();
@@ -309,6 +322,13 @@ export default function CommonDetail() {
       setFooterClass("");
     }
   }, [inViewPortFooter, setFooterClass, inViewport]);
+
+  useEffect(() => {
+    if (shouldOpenJoinModalOnLoginClose && !isLoginModalShowing) {
+      setShouldOpenJoinModalOnLoginClose(false);
+      onOpenJoinModal();
+    }
+  }, [shouldOpenJoinModalOnLoginClose, isLoginModalShowing, onOpenJoinModal]);
 
   return !common ? (
     <Loader />
@@ -427,7 +447,7 @@ export default function CommonDetail() {
                   {!isCommonMember && !isPending && (
                     <button
                       className={`button-blue join-the-effort-btn`}
-                      onClick={onOpenJoinModal}
+                      onClick={handleJoinModalOpen}
                     >
                       Join the effort
                     </button>
@@ -470,7 +490,7 @@ export default function CommonDetail() {
                   <AboutTabComponent
                     common={common}
                     screenSize={screenSize}
-                    onOpenJoinModal={onOpenJoinModal}
+                    onOpenJoinModal={handleJoinModalOpen}
                     isCommonMember={isCommonMember}
                   />
                 </>
@@ -506,7 +526,7 @@ export default function CommonDetail() {
               !inViewport && (
                 <button
                   className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
-                  onClick={onOpenJoinModal}
+                  onClick={handleJoinModalOpen}
                 >
                   Join the effort
                 </button>
