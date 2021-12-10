@@ -1,11 +1,6 @@
 import React, { useCallback, useEffect, useState, ReactElement } from "react";
 import { useSelector } from "react-redux";
 
-import {
-  createCard,
-  createRequestToJoin,
-} from "../../../../../services/CirclePayService";
-
 import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
 import { selectUser } from "../../../../Auth/store/selectors";
@@ -39,47 +34,11 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
   const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const [card_number, setCardNumber] = useState(0); // 4007400000000007
-  const [expiration_date, setExpirationDate] = useState("");
-  const [cvv, setCvv] = useState(0);
   const [
     { commonPayment, isCommonPaymentLoading, isPaymentPageOpen, shouldShowPaymentPageLink, isPaymentFailed },
     setState,
   ] = useState<State>(INITIAL_STATE);
   const contributionTypeText = common?.metadata.contributionType === CommonContributionType.Monthly ? "monthly" : "one-time";
-
-  const pay = async () => {
-    try {
-      const formData = {
-        ...userData,
-        card_number,
-        expiration_date,
-        cvv,
-      };
-
-      const data = {
-        description: formData.intro,
-        funding: formData?.contribution_amount || 0,
-        commonId: `${window.location.pathname.split("/")[2]}`,
-      };
-
-      setUserData({ ...userData, stage: 6 });
-
-      const createdCard = await createCard({
-        ...formData,
-      });
-
-      await createRequestToJoin({
-        ...data,
-        cardId: createdCard.id as string,
-      });
-
-      setUserData({ ...userData, stage: 7 });
-      // TODO: show the proposalId somewhere?
-    } catch (e) {
-      console.error("We couldn't create your proposal");
-    }
-  };
 
   const handlePaymentPageLinkClick = useCallback(() => {
     setState((nextState) => ({ ...nextState, isPaymentPageOpen: true }));
