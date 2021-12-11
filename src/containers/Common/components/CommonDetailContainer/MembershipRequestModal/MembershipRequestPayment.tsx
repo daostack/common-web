@@ -17,7 +17,7 @@ interface State {
   commonPayment: CommonPayment | null;
   isCommonPaymentLoading: boolean;
   isPaymentPageOpen: boolean;
-  shouldShowPaymentPageLink: boolean;
+  canPaymentPageBeOpened: boolean;
   isPaymentFailed: boolean;
 }
 
@@ -25,7 +25,7 @@ const INITIAL_STATE: State = {
   commonPayment: null,
   isCommonPaymentLoading: false,
   isPaymentPageOpen: false,
-  shouldShowPaymentPageLink: false,
+  canPaymentPageBeOpened: true,
   isPaymentFailed: false,
 };
 
@@ -35,10 +35,11 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const [
-    { commonPayment, isCommonPaymentLoading, isPaymentPageOpen, shouldShowPaymentPageLink, isPaymentFailed },
+    { commonPayment, isCommonPaymentLoading, isPaymentPageOpen, canPaymentPageBeOpened, isPaymentFailed },
     setState,
   ] = useState<State>(INITIAL_STATE);
   const contributionTypeText = common?.metadata.contributionType === CommonContributionType.Monthly ? "monthly" : "one-time";
+  const shouldShowPaymentPageLink = !canPaymentPageBeOpened && !isPaymentPageOpen;
 
   const handlePaymentPageLinkClick = useCallback(() => {
     setState((nextState) => ({ ...nextState, isPaymentPageOpen: true }));
@@ -76,7 +77,7 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
   }, [commonPayment, isCommonPaymentLoading, userData, common, user]);
 
   useEffect(() => {
-    if (!commonPayment || isPaymentPageOpen || shouldShowPaymentPageLink) {
+    if (!commonPayment || isPaymentPageOpen || !canPaymentPageBeOpened) {
       return;
     }
 
@@ -89,8 +90,8 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
       }
     }
 
-    setState((nextState) => ({ ...nextState, shouldShowPaymentPageLink: true }));
-  }, [commonPayment, isPaymentPageOpen, shouldShowPaymentPageLink, isMobileView]);
+    setState((nextState) => ({ ...nextState, canPaymentPageBeOpened: false }));
+  }, [commonPayment, isPaymentPageOpen, canPaymentPageBeOpened, isMobileView]);
 
   useEffect(() => {
     if (!isPaymentPageOpen || isPaymentFailed) {
@@ -121,8 +122,8 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
         You are contributing <strong className="membership-request-payment__amount">{formatPrice(userData.contribution_amount, false)} ({contributionTypeText})</strong> to this Common.
       </div>
       <div className="membership-request-payment__content">
-        {(!shouldShowPaymentPageLink || isPaymentPageOpen) && <Loader className="membership-request-payment__loader" />}
-        {commonPayment && shouldShowPaymentPageLink && !isPaymentPageOpen && (
+        {!shouldShowPaymentPageLink && <Loader className="membership-request-payment__loader" />}
+        {commonPayment && shouldShowPaymentPageLink && (
           <ButtonLink
             href={commonPayment.link}
             target="_blank"
