@@ -220,7 +220,6 @@
   }
 
   .membership-request-contribution__description {
-    max-width: 314px;
     font-size: $xsmall;
   }
 
@@ -267,6 +266,12 @@
 
   @include big-phone {
     min-height: unset;
+  }
+
+  .button-blue{
+    font-weight: normal !important;
+    min-width: 180px;
+    font-family:  NunitoSans-Regular;
   }
 }
 
