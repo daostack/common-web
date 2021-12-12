@@ -64,6 +64,7 @@
   }
   .sub-title {
     font-weight: bold;
+    font-family: NunitoSans-Bold, sans-serif;
     margin-bottom: 0.2rem;
   }
   .sub-text {
@@ -154,9 +155,19 @@
     border-color: $light-gray-1;
     padding: 0.7rem;
     box-sizing: border-box;
+
+    &::placeholder{
+      color:#979bba;
+    }
   }
   textarea:nth-child(6) {
     margin-bottom: 4.5rem;
+  }
+
+  .button-blue{
+    font-weight: normal !important;
+    min-width: 128px;
+    font-family:  NunitoSans-Regular;
   }
 }
 
