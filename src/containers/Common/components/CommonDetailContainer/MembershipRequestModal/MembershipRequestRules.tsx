@@ -20,8 +20,8 @@ export default function MembershipRequestRules(props: IStageProps) {
         </span>
         <li>Be courteous and kind to others</li>
         <span>
-          We're all in this together to create a nurturing enviroment. Let's
-          teat everyone with resprct. Healthy debates are natural, but kindness
+          We're all in this together to create a nurturing environment. Let's
+          treat everyone with respect. Healthy debates are natural, but kindness
           is required.
         </span>
       </ol>

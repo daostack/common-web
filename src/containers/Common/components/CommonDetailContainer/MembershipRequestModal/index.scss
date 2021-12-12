@@ -157,7 +157,7 @@
     box-sizing: border-box;
 
     &::placeholder{
-      color:#979bba;
+      color:$light-gray-2;
     }
   }
   textarea:nth-child(6) {
@@ -165,7 +165,7 @@
   }
 
   .button-blue{
-    font-weight: normal !important;
+    font-weight: normal ;
     min-width: 128px;
     font-family:  NunitoSans-Regular;
   }
@@ -184,7 +184,7 @@
   }
 
   .button-blue{
-    font-weight: normal !important;
+    font-weight: normal ;
     min-width: 180px;
     height: 48px;
     font-family:  NunitoSans-Regular;
@@ -269,7 +269,7 @@
   }
 
   .button-blue{
-    font-weight: normal !important;
+    font-weight: normal ;
     min-width: 180px;
     font-family:  NunitoSans-Regular;
   }
@@ -283,11 +283,11 @@
 
 .membership-request-billing {
   .button-blue{
-    font-weight: normal !important;
+    font-weight: normal ;
     font-family:  NunitoSans-Regular;
     height: 48px;
     &:disabled{
-      background: #d5dee4;
+      background: $blue-button-disabled-second-option;
     }
   }
   .sub-text{
