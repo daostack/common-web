@@ -282,6 +282,20 @@
 }
 
 .membership-request-billing {
+  .button-blue{
+    font-weight: normal !important;
+    font-family:  NunitoSans-Regular;
+    height: 48px;
+    &:disabled{
+      background: #d5dee4;
+    }
+  }
+  .sub-text{
+    margin: 0;
+  }
+  label{
+    padding-top: 22px;
+  }
   .inputs-wrapper {
     display: flex;
     justify-content: space-between;

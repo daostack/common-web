@@ -39,11 +39,7 @@ const Account = ({ user, logOut }: AccountProps) => {
     }
 
     if (!name) {
-      user?.providerData.map((pD: { displayName: string }) => {
-        if (pD.displayName) {
-          name = pD.displayName;
-        }
-      });
+      name = `${user.firstName} ${user.lastName}`;
     }
 
     return name;

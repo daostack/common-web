@@ -194,7 +194,7 @@ function* authSagas() {
 }
 
 (async () => {
-  firebase.auth().onAuthStateChanged(async (data) => {
+  firebase.auth().onIdTokenChanged(async (data) => {
     const newToken = await data?.getIdToken();
     const currentToken = tokenHandler.get();
     if (newToken !== currentToken && currentToken) {
@@ -211,9 +211,21 @@ function* authSagas() {
     try {
       if (tokenHandler.get()) {
         const currentUser: User | undefined = res?.toJSON() as any;
+
         if (currentUser) {
-          store.dispatch(actions.updateUserDetails.success(currentUser));
-          tokenHandler.setUser(currentUser);
+          const userSnapshot = await firebase
+            .firestore()
+            .collection("users")
+            .where("uid", "==", currentUser.uid)
+            .get();
+
+          if (userSnapshot.docs.length) {
+            const user: User = (userSnapshot.docs[0].data() as unknown) as User;
+            if (user) {
+              store.dispatch(actions.updateUserDetails.success(user));
+              tokenHandler.setUser(user);
+            }
+          }
         }
       }
     } catch (e) {

@@ -3,12 +3,19 @@ import { countryList } from "../../../../../shared/assets/countries";
 import { formatPrice } from "../../../../../shared/utils";
 import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
+import { CommonContributionType } from "../../../../../shared/models";
 
 export default function MembershipRequestBilling(props: IStageProps) {
-  const { userData, setUserData } = props;
+  const { userData, setUserData, common } = props;
+
+  const isMonthlyContribution =
+    common?.metadata.contributionType === CommonContributionType.Monthly;
 
   const countries = countryList.map((country) => (
-    <option key={country.value} value={country.value}>{`${country.name}`}</option>
+    <option
+      key={country.value}
+      value={country.value}
+    >{`${country.name}`}</option>
   ));
 
   return (
@@ -16,28 +23,39 @@ export default function MembershipRequestBilling(props: IStageProps) {
       <div className="sub-title">Billing Details</div>
       <div className="sub-text">{`You are contributing ${formatPrice(
         userData.contribution_amount,
-        false,
-      )} (monthly or one-time) to this Common`}</div>
+        false
+      )} ${
+        isMonthlyContribution ? "monthly" : "one-time"
+      } to this Common`}</div>
       <div className="inputs-wrapper">
         <div className="inputs-group">
-          <label>Fullname</label>
+          <label>Full Name</label>
           <input
             type="text"
             value={userData.fullname}
-            onChange={(e) => setUserData({ ...userData, fullname: e.target.value })}
+            onChange={(e) =>
+              setUserData({ ...userData, fullname: e.target.value })
+            }
           />
           <label>Country</label>
-          <select value={userData.country} onChange={(e) => setUserData({ ...userData, country: e.target.value })}>
+          <select
+            value={userData.country}
+            onChange={(e) =>
+              setUserData({ ...userData, country: e.target.value })
+            }
+          >
             <option value="" disabled>
               --- select country ---
             </option>
             {countries}
           </select>
-          <label>Adderss</label>
+          <label>Address</label>
           <input
             type="text"
             value={userData.address}
-            onChange={(e) => setUserData({ ...userData, address: e.target.value })}
+            onChange={(e) =>
+              setUserData({ ...userData, address: e.target.value })
+            }
           />
         </div>
         <div className="inputs-group">
@@ -51,13 +69,17 @@ export default function MembershipRequestBilling(props: IStageProps) {
           <input
             type="text"
             value={userData.district}
-            onChange={(e) => setUserData({ ...userData, district: e.target.value })}
+            onChange={(e) =>
+              setUserData({ ...userData, district: e.target.value })
+            }
           />
           <label>Postal Code</label>
           <input
             type="text"
             value={userData.postal}
-            onChange={(e) => setUserData({ ...userData, postal: e.target.value })}
+            onChange={(e) =>
+              setUserData({ ...userData, postal: e.target.value })
+            }
           />
         </div>
       </div>
