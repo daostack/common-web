@@ -3,6 +3,7 @@ import { Proposal } from ".";
 export interface User {
   id: string;
   displayName?: string;
+  country: string;
   firstName: string;
   lastName: string;
   email?: string;
