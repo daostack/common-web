@@ -9,7 +9,7 @@ import { Loader } from "../../../../../shared/components";
 import { CommonPayment, PaymentStatus } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
-import { subscribeByProposalToPaymentChange } from "../../../store/api";
+import { subscribeToPaymentChange } from "../../../store/api";
 
 interface State {
   commonPayment: CommonPayment | null;
@@ -72,11 +72,7 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
     }
 
     try {
-      return subscribeByProposalToPaymentChange(userData.transactionId, (payments) => {
-        const payment = payments.find((payment) => (
-          [PaymentStatus.TokenCreated, PaymentStatus.Failed].includes(payment.status)
-        ));
-
+      return subscribeToPaymentChange(userData.transactionId, (payment) => {
         if (payment?.status === PaymentStatus.TokenCreated) {
           setUserData((nextUserData) => ({ ...nextUserData, stage: 6 }));
         } else if (payment?.status === PaymentStatus.Failed) {

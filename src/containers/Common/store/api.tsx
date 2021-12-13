@@ -131,15 +131,15 @@ export async function fetchDiscussionsMessages(dIds: string[]) {
   return data;
 }
 
-export function subscribeByProposalToPaymentChange(
-  proposalId: string,
-  callback: (payments: Payment[]) => void,
+export function subscribeToPaymentChange(
+  paymentId: string,
+  callback: (payment?: Payment) => void,
 ): () => void {
   return firebase
     .firestore()
     .collection("payments")
-    .where("proposalId", "==", proposalId)
+    .doc(paymentId)
     .onSnapshot((snapshot) => {
-      callback(transformFirebaseDataList<Payment>(snapshot));
+      callback(transformFirebaseDataSingle<Payment>(snapshot));
     });
 }
