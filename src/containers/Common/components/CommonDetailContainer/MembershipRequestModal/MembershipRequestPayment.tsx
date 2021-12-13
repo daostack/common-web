@@ -5,44 +5,37 @@ import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
 import { selectUser } from "../../../../Auth/store/selectors";
 import PayMeService from "../../../../../services/PayMeService";
-import { ScreenSize } from "../../../../../shared/constants";
-import { ButtonLink, Loader } from "../../../../../shared/components";
+import { Loader } from "../../../../../shared/components";
 import { CommonPayment, PaymentStatus } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
-import { getScreenSize } from "../../../../../shared/store/selectors";
 import { subscribeByProposalToPaymentChange } from "../../../store/api";
 
 interface State {
   commonPayment: CommonPayment | null;
   isCommonPaymentLoading: boolean;
-  isPaymentPageOpen: boolean;
-  canPaymentPageBeOpened: boolean;
+  isPaymentIframeLoaded: boolean;
   isPaymentFailed: boolean;
 }
 
 const INITIAL_STATE: State = {
   commonPayment: null,
   isCommonPaymentLoading: false,
-  isPaymentPageOpen: false,
-  canPaymentPageBeOpened: true,
+  isPaymentIframeLoaded: false,
   isPaymentFailed: false,
 };
 
 export default function MembershipRequestPayment(props: IStageProps): ReactElement {
   const { userData, setUserData, common } = props;
   const user = useSelector(selectUser());
-  const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
   const [
-    { commonPayment, isCommonPaymentLoading, isPaymentPageOpen, canPaymentPageBeOpened, isPaymentFailed },
+    { commonPayment, isCommonPaymentLoading, isPaymentIframeLoaded, isPaymentFailed },
     setState,
   ] = useState<State>(INITIAL_STATE);
   const contributionTypeText = common?.metadata.contributionType === CommonContributionType.Monthly ? "monthly" : "one-time";
-  const shouldShowPaymentPageLink = !canPaymentPageBeOpened && !isPaymentPageOpen;
 
-  const handlePaymentPageLinkClick = useCallback(() => {
-    setState((nextState) => ({ ...nextState, isPaymentPageOpen: true }));
+  const handleIframeLoad = useCallback(() => {
+    setState((nextState) => ({ ...nextState, isPaymentIframeLoaded: true }));
   }, []);
 
   useEffect(() => {
@@ -74,24 +67,7 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
   }, [commonPayment, isCommonPaymentLoading, userData, common, user]);
 
   useEffect(() => {
-    if (!commonPayment || isPaymentPageOpen || !canPaymentPageBeOpened) {
-      return;
-    }
-
-    if (window.open) {
-      const openFeatures = isMobileView ? "" : "popup=yes,fullscreen=no,width=600,height=600";
-
-      if (window.open(commonPayment.link, "_blank", openFeatures)) {
-        setState((nextState) => ({ ...nextState, isPaymentPageOpen: true }));
-        return;
-      }
-    }
-
-    setState((nextState) => ({ ...nextState, canPaymentPageBeOpened: false }));
-  }, [commonPayment, isPaymentPageOpen, canPaymentPageBeOpened, isMobileView]);
-
-  useEffect(() => {
-    if (!isPaymentPageOpen || isPaymentFailed) {
+    if (!isPaymentIframeLoaded || isPaymentFailed) {
       return;
     }
 
@@ -110,7 +86,7 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
     } catch (error) {
       console.error("Error during subscription to payment status change");
     }
-  }, [isPaymentPageOpen, isPaymentFailed, userData.transactionId, setUserData]);
+  }, [isPaymentIframeLoaded, isPaymentFailed, userData.transactionId, setUserData]);
 
   return (
     <div className="membership-request-content membership-request-payment">
@@ -119,16 +95,14 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
         You are contributing <strong className="membership-request-payment__amount">{formatPrice(userData.contribution_amount, false)} ({contributionTypeText})</strong> to this Common.
       </div>
       <div className="membership-request-payment__content">
-        {!shouldShowPaymentPageLink && <Loader className="membership-request-payment__loader" />}
-        {commonPayment && shouldShowPaymentPageLink && (
-          <ButtonLink
-            href={commonPayment.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={handlePaymentPageLinkClick}
-          >
-            Open Payment Details Page
-          </ButtonLink>
+        {!commonPayment && <Loader className="membership-request-payment__loader" />}
+        {commonPayment && (
+          <iframe
+            className="membership-request-payment__payment-iframe"
+            src={commonPayment.link}
+            frameBorder="0"
+            onLoad={handleIframeLoad}
+          />
         )}
       </div>
       <span className="membership-rejected-text">
