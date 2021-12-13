@@ -91,7 +91,7 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
         You are contributing <strong className="membership-request-payment__amount">{formatPrice(userData.contribution_amount, false)} ({contributionTypeText})</strong> to this Common.
       </div>
       <div className="membership-request-payment__content">
-        {!commonPayment && <Loader className="membership-request-payment__loader" />}
+        {!isPaymentIframeLoaded && <Loader className="membership-request-payment__loader" />}
         {commonPayment && (
           <iframe
             className="membership-request-payment__payment-iframe"

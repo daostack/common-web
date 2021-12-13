@@ -324,19 +324,26 @@ $payment-iframe-height-mobile: 672px;
 
 .membership-request-payment__content {
   flex: 1 0;
+  position: relative;
   max-width: 400px;
   width: 100%;
   min-height: $payment-iframe-height;
   display: flex;
-  align-items: flex-start;
 
   @include big-phone {
-    min-height: $payment-iframe-height-mobile;
+    min-height: 50px;
   }
 }
 
 .membership-request-payment__loader {
-  margin: auto 0;
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+
+  @include big-phone {
+    top: unset;
+    transform: translateX(-50%);
+  }
 }
 
 .membership-request-payment__payment-iframe {
