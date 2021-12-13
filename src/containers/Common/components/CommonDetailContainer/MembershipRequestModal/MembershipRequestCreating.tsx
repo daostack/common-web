@@ -20,7 +20,7 @@ export default function MembershipRequestCreating(props: IStageProps) {
           commonId: common.id,
           description: userData.intro,
           funding: userData.contribution_amount || 0,
-          proposalId: userData.proposalId,
+          proposalId: userData.transactionId,
         });
 
         setUserData((nextUserData) => ({ ...nextUserData, stage: 7 }));

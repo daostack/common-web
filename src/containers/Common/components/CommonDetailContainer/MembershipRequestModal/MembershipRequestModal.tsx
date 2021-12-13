@@ -23,12 +23,6 @@ export interface IStageProps {
   userData: IMembershipRequestData;
   common?: Common;
 }
-export interface IProposalPayload {
-  description: string;
-  funding: number;
-  commonId: string;
-  cardId: string;
-}
 
 export interface IMembershipRequestData {
   stage: number;
@@ -44,8 +38,7 @@ export interface IMembershipRequestData {
   card_number: number | undefined;
   cvv: number | undefined;
   expiration_date: string;
-  cardId?: string;
-  proposalId: string;
+  transactionId: string;
 }
 
 const initData: IMembershipRequestData = {
@@ -62,7 +55,7 @@ const initData: IMembershipRequestData = {
   card_number: undefined,
   cvv: undefined,
   expiration_date: "",
-  proposalId: uuidv4(),
+  transactionId: uuidv4(),
 };
 
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
@@ -87,7 +80,7 @@ export function MembershipRequestModal(props: IProps) {
     if (isShowing) {
       setUserData({
         ...initData,
-        proposalId: uuidv4(),
+        transactionId: uuidv4(),
       });
     }
   }, [isShowing]);

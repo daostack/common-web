@@ -1,10 +1,16 @@
-export interface PaymentPageCreationData {
+export interface PaymentPageCreationBaseData {
   sale_price: number;
   product_name: string;
-  capture_buyer: number;
   currency: "ILS";
-  commonId: string;
-  installments: number;
-  userId: string;
-  proposalId: string;
+  user_id: string;
+  transaction_id: string;
+}
+
+export interface PaymentPageCreationDataWithCharging extends PaymentPageCreationBaseData {
+  sale_type: "charge";
+  create_buyer_token: boolean;
+}
+
+export interface PaymentPageCreationDataWithoutCharging extends PaymentPageCreationBaseData {
+  sale_type: "token";
 }

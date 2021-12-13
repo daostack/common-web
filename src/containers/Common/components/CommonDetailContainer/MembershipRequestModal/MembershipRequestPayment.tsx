@@ -54,15 +54,12 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
       try {
         setState((nextState) => ({ ...nextState, isCommonPaymentLoading: true }));
 
-        const createdCommonPayment = await PayMeService.createPaymentPage({
+        const createdCommonPayment = await PayMeService.createPaymentPageWithoutCharging({
           sale_price: userData.contribution_amount || 0,
           product_name: common.name,
-          capture_buyer: 1,
           currency: "ILS",
-          commonId: common.id,
-          installments: 1,
-          userId: user.uid,
-          proposalId: userData.proposalId,
+          user_id: user.uid,
+          transaction_id: userData.transactionId,
         });
 
         setState((nextState) => ({
@@ -99,7 +96,7 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
     }
 
     try {
-      return subscribeByProposalToPaymentChange(userData.proposalId, (payments) => {
+      return subscribeByProposalToPaymentChange(userData.transactionId, (payments) => {
         const payment = payments.find((payment) => (
           [PaymentStatus.TokenCreated, PaymentStatus.Failed].includes(payment.status)
         ));
@@ -113,7 +110,7 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
     } catch (error) {
       console.error("Error during subscription to payment status change");
     }
-  }, [isPaymentPageOpen, isPaymentFailed, userData.proposalId, setUserData]);
+  }, [isPaymentPageOpen, isPaymentFailed, userData.transactionId, setUserData]);
 
   return (
     <div className="membership-request-content membership-request-payment">
