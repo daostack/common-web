@@ -1,6 +1,9 @@
 @import "../../../../../constants";
 @import "../../../../../styles/sizes";
 
+$payment-iframe-height: 424px;
+$payment-iframe-height-mobile: 672px;
+
 .membership-request-modal {
   color: $secondary-blue;
 
@@ -323,8 +326,13 @@
   flex: 1 0;
   max-width: 400px;
   width: 100%;
+  min-height: $payment-iframe-height;
   display: flex;
   align-items: flex-start;
+
+  @include big-phone {
+    min-height: $payment-iframe-height-mobile;
+  }
 }
 
 .membership-request-payment__loader {
@@ -333,10 +341,10 @@
 
 .membership-request-payment__payment-iframe {
   width: 100%;
-  height: 424px;
+  height: $payment-iframe-height;
 
   @include big-phone {
-    height: 672px;
+    height: $payment-iframe-height-mobile;
   }
 }
 
