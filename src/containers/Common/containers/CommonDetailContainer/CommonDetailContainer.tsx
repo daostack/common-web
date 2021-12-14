@@ -391,6 +391,11 @@ export default function CommonDetail() {
                   <div className="name">{`Available ${
                     screenSize === ScreenSize.Desktop ? "Funds" : ""
                   }`}</div>
+                  {false && (
+                    <div className="text-information-wrapper__secondary-text">
+                      In process: {formatPrice(79900)}
+                    </div>
+                  )}
                 </div>
                 <div className="item">
                   <div className="value">{formatPrice(common?.raised)}</div>
