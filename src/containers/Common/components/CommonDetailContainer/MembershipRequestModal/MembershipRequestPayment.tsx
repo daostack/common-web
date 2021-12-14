@@ -50,6 +50,8 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
         const createdCommonPayment = await PayMeService.createBuyerTokenPage({
           user_id: user.uid,
           transaction_id: userData.transactionId,
+          sale_price: userData.contribution_amount || 0,
+          product_name: common.name,
         });
 
         setState((nextState) => ({
