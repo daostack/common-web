@@ -12,6 +12,20 @@ import { GoogleAuthResultInterface } from "../interface";
 import { ROUTE_PATHS } from "../../../shared/constants";
 import history from "../../../shared/history";
 
+const getUserData = async (userId: string) => {
+  const userSnapshot = await firebase
+    .firestore()
+    .collection("users")
+    .where("uid", "==", userId)
+    .get();
+
+  if (userSnapshot.docs.length) {
+    const user: User = (userSnapshot.docs[0].data() as unknown) as User;
+    return user;
+  }
+  return null;
+};
+
 const saveTokenToDatabase = async (token: string) => {
   const currentUser = await firebase.auth().currentUser;
   if (currentUser) {
@@ -140,7 +154,7 @@ const updateUserData = async (user: any) => {
     }
   }
 
-  return updatedCurrentUser;
+  return getUserData(updatedCurrentUser?.uid ?? "");
 };
 
 function* socialLoginSaga({ payload }: AnyAction & { payload: string }) {
@@ -148,8 +162,9 @@ function* socialLoginSaga({ payload }: AnyAction & { payload: string }) {
     yield put(startLoading());
 
     const user: User = yield call(authorizeUser, payload);
-    if (user) {
-      yield put(actions.socialLogin.success(user));
+    const firebaseUser: User = yield call(getUserData, user.uid ?? "");
+    if (firebaseUser) {
+      yield put(actions.socialLogin.success(firebaseUser));
     }
   } catch (error) {
     yield put(actions.socialLogin.failure(error));
@@ -194,7 +209,7 @@ function* authSagas() {
 }
 
 (async () => {
-  firebase.auth().onAuthStateChanged(async (data) => {
+  firebase.auth().onIdTokenChanged(async (data) => {
     const newToken = await data?.getIdToken();
     const currentToken = tokenHandler.get();
     if (newToken !== currentToken && currentToken) {
@@ -211,9 +226,14 @@ function* authSagas() {
     try {
       if (tokenHandler.get()) {
         const currentUser: User | undefined = res?.toJSON() as any;
+
         if (currentUser) {
-          store.dispatch(actions.updateUserDetails.success(currentUser));
-          tokenHandler.setUser(currentUser);
+          const user = await getUserData(currentUser.uid ?? "");
+
+          if (user) {
+            store.dispatch(actions.updateUserDetails.success(user));
+            tokenHandler.setUser(user);
+          }
         }
       }
     } catch (e) {

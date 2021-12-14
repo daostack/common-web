@@ -8,8 +8,18 @@ export interface Rules {
 }
 
 export enum CommonContributionType {
-  OneTime = "oneTime",
+  OneTime = "one-time",
   Monthly = "monthly",
+}
+
+export interface Metadata {
+  byline?: string;
+  description?: string;
+  founderId: string;
+  minFeeToJoin: number;
+  contributionType: CommonContributionType;
+  zeroContribution?: boolean;
+  searchable?: boolean;
 }
 
 export interface Common {
@@ -19,18 +29,14 @@ export interface Common {
   name: string;
   balance: number;
   raised: number;
-  byline: string;
-  description: string;
-  fundingMinimumAmount: number;
   links: Rules[];
   image: string;
-  fundingType: CommonContributionType;
-  openJoinRequests: number;
-  openFundingRequests: number;
 
   register: string;
   members: Member[];
 
   rules: Rules[];
   fundingGoalDeadline: number;
+
+  metadata: Metadata;
 }

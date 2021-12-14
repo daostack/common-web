@@ -3,12 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Link, useLocation, useHistory } from "react-router-dom";
 import classNames from "classnames";
 
-import {
-  Colors,
-  CONTACT_EMAIL,
-  ROUTE_PATHS,
-  ScreenSize,
-} from "../../constants";
+import { Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
 import { getScreenSize } from "../../store/selectors";
@@ -78,14 +73,14 @@ const Header = () => {
         About
       </NavLink>
       <NavLink to={ROUTE_PATHS.COMMON_LIST} activeClassName="active">
-        Explore Commons
+        Explore
       </NavLink>
       {isAuthorized && (
         <NavLink to={ROUTE_PATHS.MY_COMMONS} exact activeClassName="active">
           My Commons
         </NavLink>
       )}
-      <a href={`mailto:${CONTACT_EMAIL}`}>Contact</a>
+
       {isAuthorized && isMobile() && <button>Log out</button>}
       {!isAuthorized && (
         <button className="login-button" onClick={() => onOpen()}>
@@ -111,9 +106,11 @@ const Header = () => {
         <>
           {links}
           {user && <Account user={user} logOut={logOutUser} />}
-          <div className="mobile-links-container">
-            <MobileLinks color={Colors.black} />
-          </div>
+          {!isAuthorized ? (
+            <div className="mobile-links-container">
+              <MobileLinks color={Colors.black} />
+            </div>
+          ) : null}
         </>
       ) : (
         <>

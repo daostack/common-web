@@ -1,10 +1,15 @@
 @import "../../../../../constants.scss";
+@import "../../../../../styles/sizes";
 
 .details-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+
+  .title {
+    margin-top: 0;
+  }
 
   form {
     display: flex;
@@ -17,6 +22,8 @@
       justify-content: space-between;
       margin-bottom: 0.6rem;
       margin-top: 0.8rem;
+      font-size: 0.875rem;
+      font-family: NunitoSans-Regular;
 
       > span:nth-child(2) {
         color: $light-gray-2;
@@ -30,7 +37,18 @@
       height: 50px;
       text-indent: 0.75rem;
       outline: none;
+      padding: 0;
     }
+
+      select {
+        background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNSIgaGVpZ2h0PSIyNSIgdmlld0JveD0iMCAwIDI1IDI1Ij4KICAgIDxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgZmlsbD0iIzAwMUEzNiI+CiAgICAgICAgICAgIDxnPgogICAgICAgICAgICAgICAgPGc+CiAgICAgICAgICAgICAgICAgICAgPGc+CiAgICAgICAgICAgICAgICAgICAgICAgIDxnPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPHBhdGggZD0iTTEzLjgyMiAxMi41bC00LjAzNCAzLjkxNmMtLjU1LjUzNC0uNTUgMS40MDYgMCAxLjk0LjU0LjUyNSAxLjQxMi41MjUgMS45NTMgMGw1LjAzNC00Ljg4NmMuMjY3LS4yNTkuNDEzLS42MDguNDEzLS45N3MtLjE0Ni0uNzExLS40MTMtLjk3bC01LjAzNC00Ljg4NmMtLjU0Mi0uNTI1LTEuNDEzLS41MjUtMS45NTMgMC0uNTUuNTM0LS41NSAxLjQwNiAwIDEuOTRsNC4wMzQgMy45MTZ6IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtODY4LjAwMDAwMCwgLTUzNy4wMDAwMDApIHRyYW5zbGF0ZSg1MzEuMDAwMDAwLCAxMTEuMDAwMDAwKSB0cmFuc2xhdGUoMC4wMDAwMDAsIDM4NC4wMDAwMDApIHRyYW5zbGF0ZSgwLjAwMDAwMCwgMzAuMDAwMDAwKSB0cmFuc2xhdGUoMzM3LjAwMDAwMCwgMTIuMDAwMDAwKSB0cmFuc2xhdGUoMTMuMjgxMjUwLCAxMi41MDAwMDApIHJvdGF0ZSg5MC4wMDAwMDApIHRyYW5zbGF0ZSgtMTMuMjgxMjUwLCAtMTIuNTAwMDAwKSIvPgogICAgICAgICAgICAgICAgICAgICAgICA8L2c+CiAgICAgICAgICAgICAgICAgICAgPC9nPgogICAgICAgICAgICAgICAgPC9nPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K) no-repeat 97% 51%;
+        height: 52px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        width: 100%;
+      }
+
   }
 
   .avatar-wrapper {
@@ -71,8 +89,10 @@
     }
   }
   .actions-wrapper{
-    margin-top: 100px;
+    margin-top: 156px;
+    margin-bottom: 20px;
     .button-blue{
+      width: 130px;
       &.white{
         border: solid 1px #eee;
         background-color: #fff;

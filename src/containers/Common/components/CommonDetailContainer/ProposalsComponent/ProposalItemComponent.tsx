@@ -18,9 +18,7 @@ export default function ProposalItemComponent({
   const [imageError, setImageError] = useState(false);
   //  const [readMore, setReadMore] = useState("");
   const date = new Date();
-  const requestedAmount = formatPrice(
-    proposal.fundingRequest?.amount || proposal.join?.funding
-  );
+  const rawRequestedAmount = proposal.fundingRequest?.amount || proposal.join?.funding;
   const textLength = useCalculateReadMoreLength();
 
   return (
@@ -59,11 +57,11 @@ export default function ProposalItemComponent({
           {proposal.description.title}
         </div>
         <div className="requested-amount">
-          {requestedAmount === "$0" ? (
+          {!rawRequestedAmount ? (
             "No funding requested"
           ) : (
             <>
-              Requested amount <span className="amount">{requestedAmount}</span>
+              Requested amount <span className="amount">{formatPrice(rawRequestedAmount)}</span>
             </>
           )}
         </div>

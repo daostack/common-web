@@ -4,9 +4,17 @@ import moment from "moment";
 import { MobileOperatingSystem } from "../constants";
 import { Time, User } from "../models";
 
-export const formatPrice = (price?: number) => {
-  if (price) return `$${millify(price / 100)}`;
-  return "$0";
+/**
+ * Backend stores the price in cents, that's why we divide by 100
+ **/
+export const formatPrice = (price?: number, shouldMillify = true): string => {
+  if (!price) {
+    return "₪0";
+  }
+
+  const convertedPrice = price / 100;
+
+  return `₪${shouldMillify ? millify(convertedPrice) : convertedPrice.toLocaleString("en-US")}`;
 };
 
 export const formatDate = (date: string | Date) => {
@@ -151,3 +159,13 @@ export const getTodayDate = () => {
 
   return yyyy + "-" + mm + "-" + dd;
 };
+
+/**
+ * Examples:
+ *   value = 10 -> 20 will be returned
+ *   value = 24 -> 30 will be returned
+ *   value = 36 -> 40 will be returned
+ **/
+export const roundNumberToNextTenths = (value: number, valueForRounding = 10): number => (
+  Math.floor((value + valueForRounding) / valueForRounding) * valueForRounding
+);
