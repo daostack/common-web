@@ -1,0 +1,27 @@
+@import "../../../../constants.scss";
+
+.add-invoices-wrapper {
+  input[type="file"] {
+    display: none;
+  }
+  .add-invoice-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: $light-gray-4;
+    border-radius: 14px;
+    width: 160px;
+    height: 160px;
+    margin: auto;
+    cursor: pointer;
+    &:hover {
+      opacity: .9;
+    }
+  }
+  .upload-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+}
+

@@ -98,10 +98,6 @@ body {
       opacity: 0.5;
     }
 
-    &:hover:disabled {
-      opacity: 0.7;
-    }
-
     &.transparent {
       background-color: transparent;
       color: $secondary-blue;
