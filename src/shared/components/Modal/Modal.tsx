@@ -30,8 +30,10 @@ const Modal: FC<ModalProps> = (props) => {
     mobileFullScreen,
     title,
     onHeaderScrolledToTop,
+    styles,
     hideCloseButton = false,
     isHeaderSticky = false,
+    shouldShowHeaderShadow = true,
     closePrompt = false,
   } = props;
   const wrapperRef = useRef(null);
@@ -92,25 +94,35 @@ const Modal: FC<ModalProps> = (props) => {
   const handleScroll = useCallback(() => {
     const { current } = contentRef;
 
-    setIsFullyScrolledToTop(!isHeaderSticky || Boolean(current && current.scrollTop === 0));
-    setIsFullyScrolledToBottom((
-      !isFooterSticky
-      || Boolean(current && (current.clientHeight + 1 >= current.scrollHeight - current.scrollTop))
-    ));
+    setIsFullyScrolledToTop(
+      !isHeaderSticky || Boolean(current && current.scrollTop === 0)
+    );
+    setIsFullyScrolledToBottom(
+      !isFooterSticky ||
+        Boolean(
+          current &&
+            current.clientHeight + 1 >= current.scrollHeight - current.scrollTop
+        )
+    );
   }, [isHeaderSticky, isFooterSticky]);
 
   const modalWrapperClassName = classNames("modal-wrapper", {
     "mobile-full-screen": mobileFullScreen,
   });
-  const headerWrapperClassName = classNames("modal__header-wrapper", {
-    "modal__header-wrapper--fixed": isHeaderSticky,
-    "modal__header-wrapper--shadowed": isHeaderSticky && !isFullyScrolledToTop,
-  });
-  const headerClassName = classNames("modal__header", {
+  const headerWrapperClassName = classNames(
+    "modal__header-wrapper",
+    styles?.headerWrapper,
+    {
+      "modal__header-wrapper--fixed": isHeaderSticky,
+      "modal__header-wrapper--shadowed":
+        isHeaderSticky && !isFullyScrolledToTop && shouldShowHeaderShadow,
+    }
+  );
+  const headerClassName = classNames("modal__header", styles?.header, {
     "modal__header--default-padding": !title,
-    "modal__header--with-string-title": title && typeof title === 'string',
+    "modal__header--with-string-title": title && typeof title === "string",
   });
-  const modalContentClassName = classNames("modal__content", {
+  const modalContentClassName = classNames("modal__content", styles?.content, {
     "modal__content--without-footer": !footer,
   });
   const footerClassName = classNames("modal__footer", {
@@ -122,13 +134,26 @@ const Modal: FC<ModalProps> = (props) => {
     <header className={headerWrapperClassName}>
       <div className={headerClassName}>
         {onGoBack && (
-          <div className="modal__action-wrapper modal__back-wrapper" onClick={onGoBack}>
+          <div
+            className="modal__action-wrapper modal__back-wrapper"
+            onClick={onGoBack}
+          >
             <LeftArrowIcon className="modal__back-action" />
           </div>
         )}
-        {typeof title === 'string' ? <h3 className="modal__title">{title}</h3> : title}
+        {typeof title === "string" ? (
+          <h3 className="modal__title">{title}</h3>
+        ) : (
+          title
+        )}
         {!hideCloseButton && (
-          <div className="modal__action-wrapper modal__close-wrapper" onClick={handleClose}>
+          <div
+            className={classNames(
+              "modal__action-wrapper modal__close-wrapper",
+              styles?.closeWrapper
+            )}
+            onClick={handleClose}
+          >
             <CloseIcon
               width="24"
               height="24"
@@ -141,46 +166,52 @@ const Modal: FC<ModalProps> = (props) => {
     </header>
   );
   const footerEl = footer && (
-    <footer className={footerClassName}>
-      {footer}
-    </footer>
+    <footer className={footerClassName}>{footer}</footer>
   );
 
   useLayoutEffect(() => {
     handleScroll();
   }, [handleScroll, isHeaderSticky, headerContent, isFooterSticky, footer]);
 
-  const contextValue = useMemo<ModalContextValue>(() => ({
-    setFooter,
-    setFooterOptions,
-    setHeaderContent,
-  }), []);
+  const contextValue = useMemo<ModalContextValue>(
+    () => ({
+      setFooter,
+      setFooterOptions,
+      setHeaderContent,
+    }),
+    []
+  );
 
   return isShowing
     ? ReactDOM.createPortal(
-      <div id="modal">
-        <div className="modal-overlay" />
-        <div className={modalWrapperClassName}>
-          <div ref={wrapperRef} className={`modal ${props.className}`}>
-            {isHeaderSticky && headerEl}
-            <ModalContext.Provider value={contextValue}>
-              <div
-                ref={contentRef}
-                className={modalContentClassName}
-                onScroll={handleScroll}
-              >
-                {!isHeaderSticky && headerEl}
-                {children}
-                {!isFooterSticky && footerEl}
-              </div>
-            </ModalContext.Provider>
-            {isFooterSticky && footerEl}
-            {showClosePrompt && <ClosePrompt onClose={handleClosePromptClose} onContinue={handleClosePromptContinue} />}
+        <div id="modal">
+          <div className="modal-overlay" />
+          <div className={modalWrapperClassName}>
+            <div ref={wrapperRef} className={`modal ${props.className}`}>
+              {isHeaderSticky && headerEl}
+              <ModalContext.Provider value={contextValue}>
+                <div
+                  ref={contentRef}
+                  className={modalContentClassName}
+                  onScroll={handleScroll}
+                >
+                  {!isHeaderSticky && headerEl}
+                  {children}
+                  {!isFooterSticky && footerEl}
+                </div>
+              </ModalContext.Provider>
+              {isFooterSticky && footerEl}
+              {showClosePrompt && (
+                <ClosePrompt
+                  onClose={handleClosePromptClose}
+                  onContinue={handleClosePromptContinue}
+                />
+              )}
+            </div>
           </div>
-        </div>
-      </div>,
-      document.body,
-    )
+        </div>,
+        document.body
+      )
     : null;
 };
 

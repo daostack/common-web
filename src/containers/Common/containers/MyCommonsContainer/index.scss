@@ -46,6 +46,21 @@
       font-weight: unset;
     }
   }
+  .empty-tab-component-wrapper{
+    .img-wrapper{
+      img{
+        width: 276px;
+        height: 276px;
+      }
+    }
+    .message{
+      width: 276px;
+    }
+    a{
+      text-decoration: none;
+      outline: none;
+    }
+  }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
