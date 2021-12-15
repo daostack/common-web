@@ -9,7 +9,7 @@ import { LandingContainer } from "../Landing";
 import { ROUTE_PATHS, SMALL_SCREEN_BREAKPOINT, ScreenSize } from "../../shared/constants";
 import { changeScreenSize } from "../../shared/store/actions";
 import { MyCommonsContainer } from "../Common/containers/MyCommonsContainer";
-import { SubmitInvoicesContainer } from "../SubmitInvoices/containers/SubmitInvoicesContainer";
+import { SubmitInvoicesContainer } from "../Invoices/containers/SubmitInvoicesContainer";
 
 const App = () => {
   const dispatch = useDispatch();

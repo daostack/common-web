@@ -1,4 +1,5 @@
 @import "../../../../constants.scss";
+@import "../../../../styles/sizes.scss";
 
 .add-invoices-wrapper {
   input[type="file"] {
@@ -25,3 +26,11 @@
   }
 }
 
+@include big-phone {
+  .add-invoices-wrapper {
+    width: 100%;
+    .add-invoice-button {
+      width: 100%;
+    }
+  }
+}

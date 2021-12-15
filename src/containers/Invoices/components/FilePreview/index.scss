@@ -1,0 +1,28 @@
+@import "../../../../constants.scss";
+@import "../../../../styles/sizes.scss";
+
+.file-preview-wrapper {
+  .file-preview-overlay {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    background-color: $black;
+    opacity: 0.5;
+    top: 0;
+    left: 0;
+    z-index: 10;
+  }
+  
+  .content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 11;
+    backdrop-filter: blur(2px);
+  }
+}
