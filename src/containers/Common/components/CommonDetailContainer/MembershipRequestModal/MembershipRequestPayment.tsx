@@ -96,6 +96,7 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
             className="membership-request-payment__payment-iframe"
             src={commonPayment.link}
             frameBorder="0"
+            title="Payment Details"
             onLoad={handleIframeLoad}
           />
         )}
