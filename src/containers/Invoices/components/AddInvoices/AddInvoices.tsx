@@ -6,9 +6,11 @@ const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png, .pdf";
 
 export default function AddInvoices() {
   const [selectedFiles, setSelectedFiles] = useState<FileList | undefined>(undefined);
+  const [showFilePreview, setShowFilePreview] = useState(false);
 
   const selectFiles = (event: any) => {
     setSelectedFiles(event.target.files);
+    setShowFilePreview(true);
   };
 
   return (
@@ -22,7 +24,7 @@ export default function AddInvoices() {
       
       {selectedFiles && (
         <div className="upload-wrapper">
-          <FilePreview file={selectedFiles[0]} />
+          {showFilePreview && <FilePreview file={selectedFiles[0]} />}
           <button
             className="button-blue"
             disabled={!selectedFiles}>
