@@ -12,7 +12,7 @@ const dev: Configuration = {
     messagingSenderId: "1027354410661",
     appId: "1:1027354410661:web:af746f9f60f4483b5b974c",
     databaseURL: "https://common-dev-dea4e.firebaseio.com",
-    },
+  },
   cloudFunctionUrl:
     "https://us-central1-common-dev-dea4e.cloudfunctions.net",
 };
