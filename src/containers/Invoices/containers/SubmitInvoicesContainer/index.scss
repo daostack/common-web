@@ -11,6 +11,17 @@ $description-wrapper-border-radius: 14px;
   font-family: NunitoSans-Bold, sans-serif;
   color: $secondary-blue;
 
+  .submit-invoices-wrapper__common-name {
+    margin: 0 0 36px;
+    font-family: NotoSerifSC-Bold, serif;
+    font-size: $moderate;
+    text-align: center;
+
+    @include big-phone {
+      margin-bottom: 48px;
+    }
+  }
+
   .submit-invoices-wrapper__description-wrapper {
     max-width: 400px;
     width: 100%;
