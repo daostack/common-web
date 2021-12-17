@@ -1,1 +1,1 @@
-export { default as InvoiceTile } from "./InvoiceTile";
+export { default as InvoiceTile, InvoiceTileVariant } from "./InvoiceTile";

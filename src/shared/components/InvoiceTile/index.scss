@@ -1,17 +1,27 @@
 @import "../../../constants";
 @import "../../../styles/sizes";
 
+$invoice-tile-border-radius: 14px;
+
 .invoice-tile {
   position: relative;
   width: 160px;
   height: 160px;
-  border-radius: 14px;
+  cursor: pointer;
+
+  .invoice-tile__top-content-wrapper {
+    margin-bottom: 8px;
+    display: flex;
+  }
 
   .invoice-tile__image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: inherit;
+    border-radius: $invoice-tile-border-radius;
+  }
+  .invoice-tile__image--full-width {
+    height: 100px;
   }
 
   .invoice-tile__delete-button {
@@ -23,10 +33,21 @@
     padding: 8px;
     border-radius: 50%;
     background-color: $black-gray;
+    color: $white;
 
     &:hover {
       opacity: .9;
     }
+  }
+  .invoice-tile__delete-button--static {
+    position: static;
+    top: unset;
+    right: unset;
+    margin: 0 0 0 auto;
+    padding: 0 8px;
+    border-radius: unset;
+    background-color: unset;
+    color: $black;
   }
 
   .invoice-tile__delete-icon {
@@ -45,8 +66,27 @@
     font-weight: bold;
     color: $white;
     text-align: center;
-    border-bottom-left-radius: inherit;
-    border-bottom-right-radius: inherit;
+    border-bottom-left-radius: $invoice-tile-border-radius;
+    border-bottom-right-radius: $invoice-tile-border-radius;
     background-color: $black-gray;
   }
+  .invoice-tile__amount--static {
+    position: static;
+    right: unset;
+    bottom: unset;
+    left: unset;
+    padding: 0 0 0 8px;
+    font-family: NunitoSans-Regular, sans-serif;
+    font-weight: normal;
+    text-align: left;
+    border-radius: 0;
+    background-color: unset;
+  }
+  .invoice-tile__amount--purple {
+    color: $purple;
+  }
+}
+.invoice-tile--full-width {
+  width: 100%;
+  height: unset;
 }
