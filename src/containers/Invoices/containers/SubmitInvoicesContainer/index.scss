@@ -1,10 +1,60 @@
-@import "../../../../constants.scss";
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+$description-wrapper-border-radius: 14px;
 
 .submit-invoices-wrapper {
   padding-top: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: NunitoSans-Bold;
+  font-family: NunitoSans-Bold, sans-serif;
   color: $secondary-blue;
+
+  .submit-invoices-wrapper__description-wrapper {
+    max-width: 400px;
+    width: 100%;
+    margin: 36px auto 0;
+    display: flex;
+    flex-direction: column;
+    font-size: $small;
+    font-weight: bold;
+    text-align: center;
+    border-radius: $description-wrapper-border-radius;
+    box-shadow: 0 3px 8px 0 $invoice-description-card-shadow;
+    background-color: $white;
+  }
+
+  .submit-invoices-wrapper__description-header {
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: $xxsmall;
+    color: $green;
+    border-top-right-radius: $description-wrapper-border-radius;
+    border-top-left-radius: $description-wrapper-border-radius;
+    background-color: $secondary-green;
+    box-sizing: border-box;
+  }
+
+  .submit-invoices-wrapper__description-approved-icon {
+    flex-shrink: 0;
+    margin-right: 4px;
+  }
+
+  .submit-invoices-wrapper__description-content {
+    padding: 16px 60px;
+    display: flex;
+    flex-direction: column;
+
+    @include big-phone {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+  }
+
+  .submit-invoices-wrapper__description-amount {
+    margin-top: 16px;
+  }
 }
