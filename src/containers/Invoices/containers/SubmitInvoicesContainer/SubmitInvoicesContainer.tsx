@@ -30,7 +30,7 @@ export default function SubmitInvoicesContainer() {
           </span>
         </div>
       </div>
-      <AddInvoices />
+      <AddInvoices className="submit-invoices-wrapper__add-invoice" />
     </div>
   )
 }

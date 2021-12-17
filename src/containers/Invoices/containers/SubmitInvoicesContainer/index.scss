@@ -57,4 +57,12 @@ $description-wrapper-border-radius: 14px;
   .submit-invoices-wrapper__description-amount {
     margin-top: 16px;
   }
+
+  .submit-invoices-wrapper__add-invoice {
+    margin-top: 36px;
+
+    @include big-phone {
+      margin-top: 24px;
+    }
+  }
 }
