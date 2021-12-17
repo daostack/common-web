@@ -14,6 +14,26 @@
     border-radius: inherit;
   }
 
+  .invoice-tile__delete-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 8px;
+    margin-right: 8px;
+    padding: 8px;
+    border-radius: 50%;
+    background-color: $black-gray;
+
+    &:hover {
+      opacity: .9;
+    }
+  }
+
+  .invoice-tile__delete-icon {
+    width: 16px;
+    height: 16px;
+  }
+
   .invoice-tile__amount {
     position: absolute;
     right: 0;
