@@ -24,11 +24,10 @@
     display: flex;
     flex-direction: column;
   }
-}
 
-@include big-phone {
-  .add-invoices-wrapper {
+  @include big-phone {
     width: 100%;
+
     .add-invoice-button {
       width: 100%;
     }
