@@ -17,8 +17,8 @@ export default function SubmitInvoicesContainer() {
     <div className="submit-invoices-wrapper">
       {/* <img src="/icons/logo.svg" alt="logo" className="logo" /> */}
       <h2 className="submit-invoices-wrapper__common-name">Amazon Network</h2>
-      <span>{`Hi ${user?.displayName},`}</span>
-      <span>{`Please add all of your invoices related to this ${expense}`}</span>
+      <span className="submit-invoices-wrapper__welcome-text">Hi {user?.displayName},</span>
+      <span className="submit-invoices-wrapper__welcome-text">Please add all of your invoices related to this {expense}</span>
       <div className="submit-invoices-wrapper__description-wrapper">
         <span className="submit-invoices-wrapper__description-header">
           <ApprovedIcon className="submit-invoices-wrapper__description-approved-icon" />

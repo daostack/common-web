@@ -1,8 +1,6 @@
 @import "../../../../constants";
 @import "../../../../styles/sizes";
 
-$description-wrapper-border-radius: 14px;
-
 .submit-invoices-wrapper {
   padding-top: 40px;
   display: flex;
@@ -22,6 +20,16 @@ $description-wrapper-border-radius: 14px;
     }
   }
 
+  .submit-invoices-wrapper__welcome-text {
+    font-size: $moderate;
+    font-weight: bold;
+    text-align: center;
+
+    @include big-phone {
+      font-size: $small;
+    }
+  }
+
   .submit-invoices-wrapper__description-wrapper {
     max-width: 400px;
     width: 100%;
@@ -31,7 +39,7 @@ $description-wrapper-border-radius: 14px;
     font-size: $small;
     font-weight: bold;
     text-align: center;
-    border-radius: $description-wrapper-border-radius;
+    border-radius: 14px;
     box-shadow: 0 3px 8px 0 $invoice-description-card-shadow;
     background-color: $white;
   }
@@ -43,8 +51,8 @@ $description-wrapper-border-radius: 14px;
     align-items: center;
     font-size: $xxsmall;
     color: $green;
-    border-top-right-radius: $description-wrapper-border-radius;
-    border-top-left-radius: $description-wrapper-border-radius;
+    border-top-right-radius: inherit;
+    border-top-left-radius: inherit;
     background-color: $secondary-green;
     box-sizing: border-box;
   }
