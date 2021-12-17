@@ -1,74 +1,108 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { ButtonLink } from "../../../../../shared/components";
-import { CurrencyInput, ToggleButtonGroup, ToggleButton, ToggleButtonGroupVariant } from "../../../../../shared/components/Form";
+import {
+  CurrencyInput,
+  ToggleButtonGroup,
+  ToggleButton,
+  ToggleButtonGroupVariant,
+} from "../../../../../shared/components/Form";
 import { ModalFooter } from "../../../../../shared/components/Modal";
-import { MIN_CONTRIBUTION_ILS_AMOUNT, MAX_CONTRIBUTION_ILS_AMOUNT } from "../../../../../shared/constants/shared";
-import { formatPrice, roundNumberToNextTenths } from "../../../../../shared/utils";
+import {
+  MIN_CONTRIBUTION_ILS_AMOUNT,
+  MAX_CONTRIBUTION_ILS_AMOUNT,
+} from "../../../../../shared/constants/shared";
+import {
+  formatPrice,
+  roundNumberToNextTenths,
+} from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
 import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
 
-const validateContributionAmount = (minFeeToJoin: number, value?: string): string => {
+const validateContributionAmount = (
+  minFeeToJoin: number,
+  value?: string
+): string => {
   const convertedValue = Number(value) * 100;
 
   if (
-    convertedValue >= minFeeToJoin
-    && (convertedValue === 0 || (convertedValue >= MIN_CONTRIBUTION_ILS_AMOUNT && convertedValue <= MAX_CONTRIBUTION_ILS_AMOUNT))
+    convertedValue >= minFeeToJoin &&
+    (convertedValue === 0 ||
+      (convertedValue >= MIN_CONTRIBUTION_ILS_AMOUNT &&
+        convertedValue <= MAX_CONTRIBUTION_ILS_AMOUNT))
   ) {
     return "";
   }
 
   const errorTexts = ["The amount must be"];
 
-
   if (minFeeToJoin === 0) {
     errorTexts.push("0, or");
-    errorTexts.push(`at least ${formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT, false)}`);
+    errorTexts.push(
+      `at least ${formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT, false)}`
+    );
   } else {
     errorTexts.push(`at least ${formatPrice(minFeeToJoin, false)}`);
   }
 
-  errorTexts.push(`and at most ${formatPrice(MAX_CONTRIBUTION_ILS_AMOUNT, false)}`);
+  errorTexts.push(
+    `and at most ${formatPrice(MAX_CONTRIBUTION_ILS_AMOUNT, false)}`
+  );
 
   return errorTexts.join(" ");
 };
 
 const getAmountsForSelection = (minFeeToJoin: number): number[] => {
-  const initialAmount = minFeeToJoin * 2 / 100;
-  const firstAmount = (initialAmount !== 0 && initialAmount % 10 === 0)
-    ? initialAmount
-    : roundNumberToNextTenths(initialAmount);
+  const initialAmount = (minFeeToJoin * 2) / 100;
+  const firstAmount =
+    initialAmount !== 0 && initialAmount % 10 === 0
+      ? initialAmount
+      : roundNumberToNextTenths(initialAmount);
 
   return [firstAmount, firstAmount * 2]
-    .map(amount => amount * 100)
-    .filter(amount => amount <= MAX_CONTRIBUTION_ILS_AMOUNT);
+    .map((amount) => amount * 100)
+    .filter((amount) => amount <= MAX_CONTRIBUTION_ILS_AMOUNT);
 };
 
 export default function MembershipRequestContribution(props: IStageProps) {
   const { userData, setUserData, common } = props;
-  const isMonthlyContribution = common?.metadata.contributionType === CommonContributionType.Monthly;
+  const isMonthlyContribution =
+    common?.metadata.contributionType === CommonContributionType.Monthly;
   const minFeeToJoin = common?.metadata.minFeeToJoin || 0;
-  const amountsForSelection = useMemo(() => (
-    [minFeeToJoin, ...getAmountsForSelection(minFeeToJoin)]
-  ), [minFeeToJoin]);
-  const [selectedContribution, setSelectedContribution] = useState<number | "other" | null>(() => {
+
+  const amountsForSelection = useMemo(
+    () =>
+      [
+        minFeeToJoin ? minFeeToJoin : 0,
+        ...getAmountsForSelection(minFeeToJoin),
+      ].filter((v) => v),
+    [minFeeToJoin]
+  );
+  const [selectedContribution, setSelectedContribution] = useState<
+    number | "other" | null
+  >(() => {
     if (userData.contribution_amount === undefined) {
       return null;
     }
 
-    return (
-      amountsForSelection.includes(userData.contribution_amount)
-        ? userData.contribution_amount
-        : "other"
-    );
+    return amountsForSelection.includes(userData.contribution_amount)
+      ? userData.contribution_amount
+      : "other";
   });
-  const [enteredContribution, setEnteredContribution] = useState<string | undefined>(() => (
-    selectedContribution === "other" ? String((userData.contribution_amount || 0) / 100) : undefined
-  ));
+  const [enteredContribution, setEnteredContribution] = useState<
+    string | undefined
+  >(() =>
+    selectedContribution === "other"
+      ? String((userData.contribution_amount || 0) / 100)
+      : undefined
+  );
   const [isCurrencyInputTouched, setIsCurrencyInputTouched] = useState(false);
   const formattedMinFeeToJoin = formatPrice(minFeeToJoin, false);
   const pricePostfix = isMonthlyContribution ? "/mo" : "";
-  const currencyInputError = validateContributionAmount(minFeeToJoin, enteredContribution);
+  const currencyInputError = validateContributionAmount(
+    minFeeToJoin,
+    enteredContribution
+  );
   const isSubmitDisabled = Boolean(
     selectedContribution === "other"
       ? currencyInputError
@@ -81,7 +115,9 @@ export default function MembershipRequestContribution(props: IStageProps) {
 
   const handleChange = useCallback((value: unknown) => {
     const convertedValue = Number(value);
-    setSelectedContribution(!Number.isNaN(convertedValue) ? convertedValue : "other");
+    setSelectedContribution(
+      !Number.isNaN(convertedValue) ? convertedValue : "other"
+    );
   }, []);
 
   const handleBackToSelectionClick = useCallback(() => {
@@ -90,7 +126,10 @@ export default function MembershipRequestContribution(props: IStageProps) {
   }, []);
 
   const handleSubmit = useCallback(() => {
-    const contributionAmount = selectedContribution === "other" ? Number(enteredContribution) * 100 : selectedContribution;
+    const contributionAmount =
+      selectedContribution === "other"
+        ? Number(enteredContribution) * 100
+        : selectedContribution;
 
     setUserData((nextUserData) => ({
       ...nextUserData,
@@ -99,13 +138,19 @@ export default function MembershipRequestContribution(props: IStageProps) {
     }));
   }, [setUserData, selectedContribution, enteredContribution]);
 
-  const toggleButtonStyles = { default: "membership-request-contribution__toggle-button" };
+  const toggleButtonStyles = {
+    default: "membership-request-contribution__toggle-button",
+  };
 
   return (
     <div className="membership-request-content membership-request-contribution">
-      <div className="sub-title">{isMonthlyContribution ? "Monthly" : "Personal"} Contribution</div>
+      <div className="sub-title">
+        {isMonthlyContribution ? "Monthly" : "Personal"} Contribution
+      </div>
       <div className="sub-text membership-request-contribution__description">
-        Select the amount you would like to contribute{isMonthlyContribution ? " each month" : ""} ({formattedMinFeeToJoin}{pricePostfix} min.)
+        Select the amount you would like to contribute <br />
+        {isMonthlyContribution ? " each month" : ""} ({formattedMinFeeToJoin}
+        {pricePostfix} min.)
       </div>
       {selectedContribution !== "other" && (
         <ToggleButtonGroup
@@ -120,13 +165,11 @@ export default function MembershipRequestContribution(props: IStageProps) {
               styles={toggleButtonStyles}
               value={amount}
             >
-              {formatPrice(amount, false)}{pricePostfix}
+              {formatPrice(amount, false)}
+              {pricePostfix}
             </ToggleButton>
           ))}
-          <ToggleButton
-            styles={toggleButtonStyles}
-            value="other"
-          >
+          <ToggleButton styles={toggleButtonStyles} value="other">
             Other
           </ToggleButton>
         </ToggleButtonGroup>
@@ -155,7 +198,9 @@ export default function MembershipRequestContribution(props: IStageProps) {
         </div>
       )}
       {isMonthlyContribution && (
-        <span className="membership-request-contribution__hint">You can cancel the recurring payment at any time</span>
+        <span className="membership-request-contribution__hint">
+          You can cancel the recurring payment at any time
+        </span>
       )}
       <ModalFooter sticky>
         <div className="membership-request-contribution__modal-footer">

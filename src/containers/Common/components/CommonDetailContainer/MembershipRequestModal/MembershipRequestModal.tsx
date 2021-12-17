@@ -1,4 +1,12 @@
-import React, { useCallback, useEffect, useMemo, useState, Dispatch, ReactNode, SetStateAction } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+} from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
@@ -17,6 +25,7 @@ import MembershipRequestPayment from "./MembershipRequestPayment";
 import MembershipRequestProgressBar from "./MembershipRequestProgressBar";
 import MembershipRequestRules from "./MembershipRequestRules";
 import MembershipRequestWelcome from "./MembershipRequestWelcome";
+import { selectUser } from "../../../../Auth/store/selectors";
 
 export interface IStageProps {
   setUserData: Dispatch<SetStateAction<IMembershipRequestData>>;
@@ -65,6 +74,7 @@ interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
 export function MembershipRequestModal(props: IProps) {
   // TODO: should be saved in the localstorage for saving the progress?
   const [userData, setUserData] = useState(initData);
+  const user = useSelector(selectUser());
   const { stage } = userData;
   const { isShowing, onClose, common } = props;
   const shouldDisplayBackButton = stage > 0 && stage < 5;
@@ -78,12 +88,22 @@ export function MembershipRequestModal(props: IProps) {
    */
   useEffect(() => {
     if (isShowing) {
-      setUserData({
+      const payload = {
         ...initData,
         transactionId: uuidv4(),
-      });
+      };
+
+      if (user) {
+        payload.fullname = user.displayName ?? "";
+        if (!payload.fullname) {
+          payload.fullname = `${user.firstName} ${user.lastName}`;
+        }
+        payload.country = user.country ?? "";
+      }
+
+      setUserData(payload);
     }
-  }, [isShowing]);
+  }, [isShowing, user]);
 
   const renderCurrentStage = (stage: number) => {
     switch (stage) {
@@ -121,6 +141,7 @@ export function MembershipRequestModal(props: IProps) {
           <MembershipRequestBilling
             userData={userData}
             setUserData={setUserData}
+            common={common}
           />
         );
       case 5:
@@ -150,10 +171,13 @@ export function MembershipRequestModal(props: IProps) {
     }
 
     const shouldBeBigTitle = stage === 0;
-    const text = shouldBeBigTitle ? "Membership Request Process" : "Membership Request";
+    const text = shouldBeBigTitle
+      ? "Membership Request Process"
+      : "Membership Request";
     const className = classNames("membership-request-modal__title", {
       "membership-request-modal__title--big": shouldBeBigTitle && !isMobileView,
-      "membership-request-modal__title--short": shouldBeBigTitle && isMobileView,
+      "membership-request-modal__title--short":
+        shouldBeBigTitle && isMobileView,
     });
 
     return <h3 className={className}>{text}</h3>;
@@ -176,7 +200,10 @@ export function MembershipRequestModal(props: IProps) {
       title={renderedTitle}
       onGoBack={shouldDisplayBackButton ? moveStageBack : undefined}
       styles={{
-        header: stage === 0 ? "membership-request-modal__header-wrapper--introduction" : "",
+        header:
+          stage === 0
+            ? "membership-request-modal__header-wrapper--introduction"
+            : "",
       }}
     >
       <div className="membership-request-wrapper">

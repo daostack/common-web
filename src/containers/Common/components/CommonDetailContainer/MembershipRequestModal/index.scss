@@ -67,10 +67,11 @@ $payment-iframe-height-mobile: 672px;
   }
   .sub-title {
     font-weight: bold;
+    font-family: NunitoSans-Bold, sans-serif;
     margin-bottom: 0.2rem;
   }
   .sub-text {
-    max-width: 380px;
+    max-width: 584px;
     color: $light-gray-2;
     text-align: center;
     width: 100%;
@@ -157,20 +158,39 @@ $payment-iframe-height-mobile: 672px;
     border-color: $light-gray-1;
     padding: 0.7rem;
     box-sizing: border-box;
+
+    &::placeholder{
+      color:$light-gray-2;
+    }
   }
   textarea:nth-child(6) {
     margin-bottom: 4.5rem;
+  }
+
+  .button-blue{
+    font-weight: normal ;
+    min-width: 128px;
+    font-family:  NunitoSans-Regular;
   }
 }
 
 .membership-request-rules {
   ol {
+    margin: 0;
+    margin-bottom: 46px;
     padding-left: 10px;
     li {
       font-weight: bold;
       margin-top: 1.5rem;
       margin-bottom: 0.3rem;
     }
+  }
+
+  .button-blue{
+    font-weight: normal ;
+    min-width: 180px;
+    height: 48px;
+    font-family:  NunitoSans-Regular;
   }
 }
 
@@ -203,7 +223,6 @@ $payment-iframe-height-mobile: 672px;
   }
 
   .membership-request-contribution__description {
-    max-width: 314px;
     font-size: $xsmall;
   }
 
@@ -251,6 +270,12 @@ $payment-iframe-height-mobile: 672px;
   @include big-phone {
     min-height: unset;
   }
+
+  .button-blue{
+    font-weight: normal ;
+    min-width: 180px;
+    font-family:  NunitoSans-Regular;
+  }
 }
 
 .membership-request-contribution__modal-footer {
@@ -260,6 +285,17 @@ $payment-iframe-height-mobile: 672px;
 }
 
 .membership-request-billing {
+  .button-blue{
+    font-weight: normal ;
+    font-family:  NunitoSans-Regular;
+    height: 48px;
+  }
+  .sub-text{
+    margin: 0;
+  }
+  label{
+    padding-top: 22px;
+  }
   .inputs-wrapper {
     display: flex;
     justify-content: space-between;
