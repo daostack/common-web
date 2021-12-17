@@ -1,4 +1,4 @@
-import React, { useState, ReactElement } from "react";
+import React, { useState, ChangeEventHandler, ReactElement } from "react";
 import classNames from "classnames";
 import { FilePreview } from "../FilePreview";
 import "./index.scss";
@@ -11,11 +11,14 @@ interface AddInvoicesProps {
 
 export default function AddInvoices(props: AddInvoicesProps): ReactElement {
   const { className } = props;
-  const [selectedFiles, setSelectedFiles] = useState<FileList | undefined>(undefined);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [showFilePreview, setShowFilePreview] = useState(false);
 
-  const selectFiles = (event: any) => {
-    setSelectedFiles(event.target.files);
+  const selectFiles: ChangeEventHandler<HTMLInputElement> = (event) => {
+    setSelectedFiles((selectedFiles) => [
+      ...selectedFiles,
+      ...(event.target.files ? Array.from(event.target.files) : []),
+    ]);
     setShowFilePreview(true);
   };
 
@@ -27,7 +30,7 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
         <img src="/icons/upload-file.svg" alt="upload file" />
         Add Invoices
       </label>
-      {selectedFiles && (
+      {selectedFiles.length > 0 && (
         <div className="upload-wrapper">
           {showFilePreview && <FilePreview file={selectedFiles[0]} />}
           <button
