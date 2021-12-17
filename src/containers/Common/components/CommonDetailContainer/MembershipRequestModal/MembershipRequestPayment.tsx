@@ -48,10 +48,7 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
         setState((nextState) => ({ ...nextState, isCommonPaymentLoading: true }));
 
         const createdCommonPayment = await PayMeService.createBuyerTokenPage({
-          user_id: user.uid,
-          transaction_id: userData.transactionId,
-          sale_price: userData.contribution_amount || 0,
-          product_name: common.name,
+          cardId: userData.transactionId,
         });
 
         setState((nextState) => ({
