@@ -9,12 +9,16 @@ import { Time, User } from "../models";
  **/
 export const formatPrice = (price?: number, shouldMillify = true): string => {
   if (!price) {
-    return "₪0";
+    return "0";
   }
 
   const convertedPrice = price / 100;
 
-  return `₪${shouldMillify ? millify(convertedPrice) : convertedPrice.toLocaleString("en-US")}`;
+  return `₪${
+    shouldMillify
+      ? millify(convertedPrice)
+      : convertedPrice.toLocaleString("en-US")
+  }`;
 };
 
 export const formatDate = (date: string | Date) => {
@@ -166,6 +170,8 @@ export const getTodayDate = () => {
  *   value = 24 -> 30 will be returned
  *   value = 36 -> 40 will be returned
  **/
-export const roundNumberToNextTenths = (value: number, valueForRounding = 10): number => (
-  Math.floor((value + valueForRounding) / valueForRounding) * valueForRounding
-);
+export const roundNumberToNextTenths = (
+  value: number,
+  valueForRounding = 10
+): number =>
+  Math.floor((value + valueForRounding) / valueForRounding) * valueForRounding;
