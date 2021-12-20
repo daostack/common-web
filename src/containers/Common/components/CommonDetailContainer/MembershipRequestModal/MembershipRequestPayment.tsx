@@ -9,7 +9,7 @@ import { Loader } from "../../../../../shared/components";
 import { CommonPayment } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
-import { subscribeToCard } from "../../../store/api";
+import { subscribeToCardChange } from "../../../store/api";
 
 interface State {
   commonPayment: CommonPayment | null;
@@ -78,7 +78,7 @@ export default function MembershipRequestPayment(
     }
 
     try {
-      return subscribeToCard(userData.cardId, (card) => {
+      return subscribeToCardChange(userData.cardId, (card) => {
         if (card) {
           setUserData((nextUserData) => ({ ...nextUserData, stage: 6 }));
         }

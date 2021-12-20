@@ -131,7 +131,7 @@ export async function fetchDiscussionsMessages(dIds: string[]) {
   return data;
 }
 
-export function subscribeToCard(
+export function subscribeToCardChange(
   cardId: string,
   callback: (card?: Card) => void,
 ): () => void {
