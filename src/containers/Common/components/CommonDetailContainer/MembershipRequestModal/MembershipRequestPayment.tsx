@@ -16,6 +16,9 @@ interface State {
   isCommonPaymentLoading: boolean;
   isPaymentIframeLoaded: boolean;
   isPaymentFailed: boolean;
+  paymentMethod: CommonPayment | null;
+  isPaymentMethodLoading: boolean;
+  isPaymentMethodFetched: boolean;
 }
 
 const INITIAL_STATE: State = {
@@ -23,16 +26,33 @@ const INITIAL_STATE: State = {
   isCommonPaymentLoading: false,
   isPaymentIframeLoaded: false,
   isPaymentFailed: false,
+  paymentMethod: null,
+  isPaymentMethodLoading: false,
+  isPaymentMethodFetched: false,
 };
 
-export default function MembershipRequestPayment(props: IStageProps): ReactElement {
+export default function MembershipRequestPayment(
+  props: IStageProps
+): ReactElement {
   const { userData, setUserData, common } = props;
   const user = useSelector(selectUser());
   const [
-    { commonPayment, isCommonPaymentLoading, isPaymentIframeLoaded, isPaymentFailed },
+    {
+      commonPayment,
+      isCommonPaymentLoading,
+      isPaymentIframeLoaded,
+      isPaymentFailed,
+      paymentMethod,
+      isPaymentMethodLoading,
+      isPaymentMethodFetched,
+    },
     setState,
   ] = useState<State>(INITIAL_STATE);
-  const contributionTypeText = common?.metadata.contributionType === CommonContributionType.Monthly ? "monthly" : "one-time";
+  const shouldShowLoader = !isPaymentIframeLoaded && !paymentMethod;
+  const contributionTypeText =
+    common?.metadata.contributionType === CommonContributionType.Monthly
+      ? "monthly"
+      : "one-time";
 
   const handleIframeLoad = useCallback(() => {
     setState((nextState) => ({ ...nextState, isPaymentIframeLoaded: true }));
@@ -40,12 +60,48 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
 
   useEffect(() => {
     (async () => {
-      if (commonPayment || isCommonPaymentLoading || !common || !user?.uid) {
+      if (isPaymentMethodLoading || isPaymentMethodFetched) {
         return;
       }
 
       try {
-        setState((nextState) => ({ ...nextState, isCommonPaymentLoading: true }));
+        setState((nextState) => ({
+          ...nextState,
+          isPaymentMethodLoading: true,
+        }));
+
+        // Fetch payment method
+
+        setState((nextState) => ({
+          ...nextState,
+          paymentMethod: null,
+          isPaymentMethodLoading: false,
+          isPaymentMethodFetched: true,
+        }));
+      } catch (error) {
+        console.error("Error during payment method fetch");
+      }
+    })();
+  }, [isPaymentMethodLoading, isPaymentMethodFetched]);
+
+  useEffect(() => {
+    (async () => {
+      if (
+        commonPayment ||
+        isCommonPaymentLoading ||
+        !common ||
+        !user?.uid ||
+        paymentMethod ||
+        !isPaymentMethodFetched
+      ) {
+        return;
+      }
+
+      try {
+        setState((nextState) => ({
+          ...nextState,
+          isCommonPaymentLoading: true,
+        }));
 
         const createdCommonPayment = await PayMeService.createBuyerTokenPage({
           cardId: userData.transactionId,
@@ -60,7 +116,15 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
         console.error("Error during payment page creation");
       }
     })();
-  }, [commonPayment, isCommonPaymentLoading, userData, common, user]);
+  }, [
+    commonPayment,
+    isCommonPaymentLoading,
+    userData,
+    common,
+    user,
+    paymentMethod,
+    isPaymentMethodFetched,
+  ]);
 
   useEffect(() => {
     if (!isPaymentIframeLoaded || isPaymentFailed) {
@@ -78,16 +142,28 @@ export default function MembershipRequestPayment(props: IStageProps): ReactEleme
     } catch (error) {
       console.error("Error during subscription to payment status change");
     }
-  }, [isPaymentIframeLoaded, isPaymentFailed, userData.transactionId, setUserData]);
+  }, [
+    isPaymentIframeLoaded,
+    isPaymentFailed,
+    userData.transactionId,
+    setUserData,
+  ]);
 
   return (
     <div className="membership-request-content membership-request-payment">
       <div className="sub-title">Payment Details</div>
       <div className="sub-text">
-        You are contributing <strong className="membership-request-payment__amount">{formatPrice(userData.contribution_amount, false)} ({contributionTypeText})</strong> to this Common.
+        You are contributing{" "}
+        <strong className="membership-request-payment__amount">
+          {formatPrice(userData.contribution_amount, false)} (
+          {contributionTypeText})
+        </strong>{" "}
+        to this Common.
       </div>
       <div className="membership-request-payment__content">
-        {!isPaymentIframeLoaded && <Loader className="membership-request-payment__loader" />}
+        {shouldShowLoader && (
+          <Loader className="membership-request-payment__loader" />
+        )}
         {commonPayment && (
           <iframe
             className="membership-request-payment__payment-iframe"
