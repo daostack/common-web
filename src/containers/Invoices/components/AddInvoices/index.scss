@@ -5,31 +5,38 @@
   input[type="file"] {
     display: none;
   }
-  .add-invoice-button {
+  .invoices-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: $light-gray-4;
-    border-radius: 14px;
-    width: 160px;
-    height: 160px;
-    margin: auto;
-    cursor: pointer;
-    &:hover {
-      opacity: .9;
+    .add-invoice-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: $light-gray-4;
+      border-radius: 14px;
+      width: 160px;
+      height: 160px;
+      cursor: pointer;
+      margin-right: 5px;
+      &:hover {
+        opacity: .9;
+      }
     }
   }
+
   .upload-wrapper {
     display: flex;
     flex-direction: column;
+    align-items: center;
   }
 
   @include big-phone {
     width: 100%;
-
-    .add-invoice-button {
-      width: 100%;
+    .invoices-container {
+      flex-direction: column-reverse;
+      .add-invoice-button {
+        width: 100%;
+      }
     }
   }
 }

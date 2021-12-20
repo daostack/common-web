@@ -45,6 +45,17 @@
       margin: auto;
       border-radius: 10px;
       max-height: 70%;
+      &.shrink {
+        animation: shrink .5s forwards;
+      }
+      @keyframes shrink {
+        from {
+          max-height: 70%;
+        }
+        to {
+          max-height: 40%;
+        }
+      }
     }
     .bottom {
       padding: 20px;

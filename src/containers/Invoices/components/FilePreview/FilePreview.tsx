@@ -1,14 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { AmountPrompt } from "../AmountPrompt";
 import { DeletePrompt } from "../DeletePrompt";
+import classNames from "classnames";
 import "./index.scss";
 
 interface IProps {
-  file: any
+  file: any,
+  onDelete: () => void
+  onContinue: () => void
 }
 
-export default function FilePreview({ file }: IProps) {
-  const [previewFile, setPreviewFile] = useState(URL.createObjectURL(file));
+export default function FilePreview({ file, onDelete, onContinue }: IProps) {
   const [showDeletePrompt, setShowDeletePrompt] = useState(false);
+  const [showInsertAmountPrompt, setShowInsertAmountPrompt] = useState(false);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "initial";
+    }
+  }, []);
+
+  const previewImageClassName = classNames({
+    "preview-image": true,
+    "shrink": showInsertAmountPrompt
+  });
 
   return (
     <div className="file-preview-wrapper">
@@ -17,12 +33,18 @@ export default function FilePreview({ file }: IProps) {
         <div className="top">
           <img className="delete-invoice" src="/icons/trash.svg" alt="trash" onClick={() => setShowDeletePrompt(true)} />
         </div>
-        <img className="preview-image" src={previewFile} alt="preview" />
+        <img className={previewImageClassName} src={URL.createObjectURL(file)} alt="preview" />
         <div className="bottom">
-          <button className="button-blue">Add invoice amount</button>
+          {!showInsertAmountPrompt ? (
+            <button
+              className="button-blue"
+              onClick={() => setShowInsertAmountPrompt(true)}>Add invoice amount</button>
+          ) : (
+            <AmountPrompt onContinue={() => onContinue()} />
+          )}
         </div>
       </div>
-      {showDeletePrompt && <DeletePrompt onCancel={() => setShowDeletePrompt(false)} />}
+      {showDeletePrompt && <DeletePrompt onCancel={() => setShowDeletePrompt(false)} onDelete={() => onDelete()} />}
     </div>
   )
 }
