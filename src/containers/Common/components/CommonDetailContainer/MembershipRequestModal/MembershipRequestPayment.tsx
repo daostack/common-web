@@ -5,26 +5,17 @@ import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
 import { selectUser } from "../../../../Auth/store/selectors";
 import PayMeService from "../../../../../services/PayMeService";
-import { ButtonLink, Loader } from "../../../../../shared/components";
-import { ModalFooter } from "../../../../../shared/components/Modal";
-import {
-  CommonPayment,
-  PaymentMethod,
-  PaymentStatus,
-} from "../../../../../shared/models";
+import { Loader } from "../../../../../shared/components";
+import { CommonPayment, PaymentStatus } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
 import { subscribeToPaymentChange } from "../../../store/api";
-import MembershipRequestPaymentMethod from "./MembershipRequestPaymentMethod";
 
 interface State {
   commonPayment: CommonPayment | null;
   isCommonPaymentLoading: boolean;
   isPaymentIframeLoaded: boolean;
   isPaymentFailed: boolean;
-  paymentMethod: PaymentMethod | null;
-  isPaymentMethodLoading: boolean;
-  isPaymentMethodFetched: boolean;
 }
 
 const INITIAL_STATE: State = {
@@ -32,9 +23,6 @@ const INITIAL_STATE: State = {
   isCommonPaymentLoading: false,
   isPaymentIframeLoaded: false,
   isPaymentFailed: false,
-  paymentMethod: null,
-  isPaymentMethodLoading: false,
-  isPaymentMethodFetched: false,
 };
 
 export default function MembershipRequestPayment(
@@ -48,13 +36,9 @@ export default function MembershipRequestPayment(
       isCommonPaymentLoading,
       isPaymentIframeLoaded,
       isPaymentFailed,
-      paymentMethod,
-      isPaymentMethodLoading,
-      isPaymentMethodFetched,
     },
     setState,
   ] = useState<State>(INITIAL_STATE);
-  const shouldShowLoader = !isPaymentIframeLoaded && !paymentMethod;
   const contributionTypeText =
     common?.metadata.contributionType === CommonContributionType.Monthly
       ? "monthly"
@@ -64,63 +48,9 @@ export default function MembershipRequestPayment(
     setState((nextState) => ({ ...nextState, isPaymentIframeLoaded: true }));
   }, []);
 
-  const handlePaymentMethodReplace = useCallback(() => {
-    setState((nextState) => ({
-      ...nextState,
-      paymentMethod: null,
-      isPaymentMethodLoading: false,
-      isPaymentMethodFetched: true,
-    }));
-  }, []);
-
-  const handlePaymentMethodConfirm = useCallback(() => {
-    if (!paymentMethod) {
-      return;
-    }
-
-    setUserData((nextUserData) => ({
-      ...nextUserData,
-      transactionId: paymentMethod.cardId,
-      stage: 6,
-    }));
-  }, [paymentMethod, setUserData]);
-
   useEffect(() => {
     (async () => {
-      if (isPaymentMethodLoading || isPaymentMethodFetched) {
-        return;
-      }
-
-      try {
-        setState((nextState) => ({
-          ...nextState,
-          isPaymentMethodLoading: true,
-        }));
-
-        // Fetch payment method
-
-        setState((nextState) => ({
-          ...nextState,
-          paymentMethod: null,
-          isPaymentMethodLoading: false,
-          isPaymentMethodFetched: true,
-        }));
-      } catch (error) {
-        console.error("Error during payment method fetch");
-      }
-    })();
-  }, [isPaymentMethodLoading, isPaymentMethodFetched]);
-
-  useEffect(() => {
-    (async () => {
-      if (
-        commonPayment ||
-        isCommonPaymentLoading ||
-        !common ||
-        !user?.uid ||
-        paymentMethod ||
-        !isPaymentMethodFetched
-      ) {
+      if (commonPayment || isCommonPaymentLoading || !common || !user?.uid) {
         return;
       }
 
@@ -143,15 +73,7 @@ export default function MembershipRequestPayment(
         console.error("Error during payment page creation");
       }
     })();
-  }, [
-    commonPayment,
-    isCommonPaymentLoading,
-    userData,
-    common,
-    user,
-    paymentMethod,
-    isPaymentMethodFetched,
-  ]);
+  }, [commonPayment, isCommonPaymentLoading, userData, common, user]);
 
   useEffect(() => {
     if (!isPaymentIframeLoaded || isPaymentFailed) {
@@ -188,7 +110,7 @@ export default function MembershipRequestPayment(
         to this Common.
       </div>
       <div className="membership-request-payment__content">
-        {shouldShowLoader && (
+        {!isPaymentIframeLoaded && (
           <Loader className="membership-request-payment__loader" />
         )}
         {commonPayment && (
@@ -199,27 +121,6 @@ export default function MembershipRequestPayment(
             title="Payment Details"
             onLoad={handleIframeLoad}
           />
-        )}
-        {paymentMethod && (
-          <div className="membership-request-payment__payment-method-wrapper">
-            <MembershipRequestPaymentMethod />
-            <ButtonLink
-              className="membership-request-payment__replace-method-link"
-              onClick={handlePaymentMethodReplace}
-            >
-              Replace payment method?
-            </ButtonLink>
-            <ModalFooter sticky>
-              <div className="membership-request-payment__modal-footer">
-                <button
-                  className="button-blue"
-                  onClick={handlePaymentMethodConfirm}
-                >
-                  Confirm Payment
-                </button>
-              </div>
-            </ModalFooter>
-          </div>
         )}
       </div>
       <span className="membership-rejected-text">

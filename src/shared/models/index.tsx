@@ -1,4 +1,3 @@
-export * from "./Card";
 export * from "./User";
 export * from "./Common";
 export * from "./shared";
