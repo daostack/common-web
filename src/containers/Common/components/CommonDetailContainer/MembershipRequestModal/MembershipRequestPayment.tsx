@@ -5,9 +5,13 @@ import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
 import { selectUser } from "../../../../Auth/store/selectors";
 import PayMeService from "../../../../../services/PayMeService";
-import { Loader } from "../../../../../shared/components";
+import { ButtonLink, Loader } from "../../../../../shared/components";
 import { ModalFooter } from "../../../../../shared/components/Modal";
-import { CommonPayment, PaymentMethod, PaymentStatus } from "../../../../../shared/models";
+import {
+  CommonPayment,
+  PaymentMethod,
+  PaymentStatus,
+} from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
 import { subscribeToPaymentChange } from "../../../store/api";
@@ -58,6 +62,15 @@ export default function MembershipRequestPayment(
 
   const handleIframeLoad = useCallback(() => {
     setState((nextState) => ({ ...nextState, isPaymentIframeLoaded: true }));
+  }, []);
+
+  const handlePaymentMethodReplace = useCallback(() => {
+    setState((nextState) => ({
+      ...nextState,
+      paymentMethod: null,
+      isPaymentMethodLoading: false,
+      isPaymentMethodFetched: true,
+    }));
   }, []);
 
   const handlePaymentMethodConfirm = useCallback(() => {
@@ -188,8 +201,14 @@ export default function MembershipRequestPayment(
           />
         )}
         {paymentMethod && (
-          <>
+          <div className="membership-request-payment__payment-method-wrapper">
             <MembershipRequestPaymentMethod />
+            <ButtonLink
+              className="membership-request-payment__replace-method-link"
+              onClick={handlePaymentMethodReplace}
+            >
+              Replace payment method?
+            </ButtonLink>
             <ModalFooter sticky>
               <div className="membership-request-payment__modal-footer">
                 <button
@@ -200,7 +219,7 @@ export default function MembershipRequestPayment(
                 </button>
               </div>
             </ModalFooter>
-          </>
+          </div>
         )}
       </div>
       <span className="membership-rejected-text">

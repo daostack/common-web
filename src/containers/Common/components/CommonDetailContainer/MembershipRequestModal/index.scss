@@ -391,6 +391,20 @@ $payment-iframe-height-mobile: 672px;
   }
 }
 
+.membership-request-payment__payment-method-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.membership-request-payment__replace-method-link {
+  margin-top: 24px;
+
+  @include big-phone {
+    margin-top: 8px;
+  }
+}
+
 .membership-request-payment__modal-footer {
   display: flex;
   justify-content: center;
