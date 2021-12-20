@@ -391,6 +391,16 @@ $payment-iframe-height-mobile: 672px;
   }
 }
 
+.membership-request-payment__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding: 28px 0;
+
+  @include big-phone {
+    padding: 24px 0;
+  }
+}
+
 .membership-request-payment-method {
   width: 100%;
   color: $secondary-blue;

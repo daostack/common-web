@@ -6,17 +6,19 @@ import { IStageProps } from "./MembershipRequestModal";
 import { selectUser } from "../../../../Auth/store/selectors";
 import PayMeService from "../../../../../services/PayMeService";
 import { Loader } from "../../../../../shared/components";
-import { CommonPayment, PaymentStatus } from "../../../../../shared/models";
+import { ModalFooter } from "../../../../../shared/components/Modal";
+import { CommonPayment, PaymentMethod, PaymentStatus } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
 import { subscribeToPaymentChange } from "../../../store/api";
+import MembershipRequestPaymentMethod from "./MembershipRequestPaymentMethod";
 
 interface State {
   commonPayment: CommonPayment | null;
   isCommonPaymentLoading: boolean;
   isPaymentIframeLoaded: boolean;
   isPaymentFailed: boolean;
-  paymentMethod: CommonPayment | null;
+  paymentMethod: PaymentMethod | null;
   isPaymentMethodLoading: boolean;
   isPaymentMethodFetched: boolean;
 }
@@ -57,6 +59,18 @@ export default function MembershipRequestPayment(
   const handleIframeLoad = useCallback(() => {
     setState((nextState) => ({ ...nextState, isPaymentIframeLoaded: true }));
   }, []);
+
+  const handlePaymentMethodConfirm = useCallback(() => {
+    if (!paymentMethod) {
+      return;
+    }
+
+    setUserData((nextUserData) => ({
+      ...nextUserData,
+      transactionId: paymentMethod.cardId,
+      stage: 6,
+    }));
+  }, [paymentMethod, setUserData]);
 
   useEffect(() => {
     (async () => {
@@ -172,6 +186,21 @@ export default function MembershipRequestPayment(
             title="Payment Details"
             onLoad={handleIframeLoad}
           />
+        )}
+        {paymentMethod && (
+          <>
+            <MembershipRequestPaymentMethod />
+            <ModalFooter sticky>
+              <div className="membership-request-payment__modal-footer">
+                <button
+                  className="button-blue"
+                  onClick={handlePaymentMethodConfirm}
+                >
+                  Confirm Payment
+                </button>
+              </div>
+            </ModalFooter>
+          </>
         )}
       </div>
       <span className="membership-rejected-text">
