@@ -1,8 +1,8 @@
 import {
+  Card,
   Common,
   Discussion,
   DiscussionMessage,
-  Payment,
   Proposal,
   User,
 } from "../../../shared/models";
@@ -131,15 +131,15 @@ export async function fetchDiscussionsMessages(dIds: string[]) {
   return data;
 }
 
-export function subscribeToPaymentChange(
-  paymentId: string,
-  callback: (payment?: Payment) => void,
+export function subscribeToCard(
+  cardId: string,
+  callback: (card?: Card) => void,
 ): () => void {
   return firebase
     .firestore()
-    .collection("payments")
-    .doc(paymentId)
+    .collection("cards")
+    .doc(cardId)
     .onSnapshot((snapshot) => {
-      callback(transformFirebaseDataSingle<Payment>(snapshot));
+      callback(transformFirebaseDataSingle<Card>(snapshot));
     });
 }

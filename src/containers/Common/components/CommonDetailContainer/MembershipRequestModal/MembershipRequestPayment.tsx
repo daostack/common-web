@@ -6,10 +6,10 @@ import { IStageProps } from "./MembershipRequestModal";
 import { selectUser } from "../../../../Auth/store/selectors";
 import PayMeService from "../../../../../services/PayMeService";
 import { Loader } from "../../../../../shared/components";
-import { CommonPayment, PaymentStatus } from "../../../../../shared/models";
+import { CommonPayment } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
-import { subscribeToPaymentChange } from "../../../store/api";
+import { subscribeToCard } from "../../../store/api";
 
 interface State {
   commonPayment: CommonPayment | null;
@@ -81,22 +81,15 @@ export default function MembershipRequestPayment(
     }
 
     try {
-      return subscribeToPaymentChange(userData.cardId, (payment) => {
-        if (payment?.status === PaymentStatus.TokenCreated) {
+      return subscribeToCard(userData.cardId, (card) => {
+        if (card) {
           setUserData((nextUserData) => ({ ...nextUserData, stage: 6 }));
-        } else if (payment?.status === PaymentStatus.Failed) {
-          setState((nextState) => ({ ...nextState, isPaymentFailed: true }));
         }
       });
     } catch (error) {
       console.error("Error during subscription to payment status change");
     }
-  }, [
-    isPaymentIframeLoaded,
-    isPaymentFailed,
-    userData.cardId,
-    setUserData,
-  ]);
+  }, [isPaymentIframeLoaded, isPaymentFailed, userData.cardId, setUserData]);
 
   return (
     <div className="membership-request-content membership-request-payment">
