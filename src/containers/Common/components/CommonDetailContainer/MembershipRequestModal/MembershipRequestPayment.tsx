@@ -61,7 +61,7 @@ export default function MembershipRequestPayment(
         }));
 
         const createdCommonPayment = await PayMeService.createBuyerTokenPage({
-          cardId: userData.transactionId,
+          cardId: userData.cardId,
         });
 
         setState((nextState) => ({
@@ -81,7 +81,7 @@ export default function MembershipRequestPayment(
     }
 
     try {
-      return subscribeToPaymentChange(userData.transactionId, (payment) => {
+      return subscribeToPaymentChange(userData.cardId, (payment) => {
         if (payment?.status === PaymentStatus.TokenCreated) {
           setUserData((nextUserData) => ({ ...nextUserData, stage: 6 }));
         } else if (payment?.status === PaymentStatus.Failed) {
@@ -94,7 +94,7 @@ export default function MembershipRequestPayment(
   }, [
     isPaymentIframeLoaded,
     isPaymentFailed,
-    userData.transactionId,
+    userData.cardId,
     setUserData,
   ]);
 

@@ -47,7 +47,7 @@ export interface IMembershipRequestData {
   card_number: number | undefined;
   cvv: number | undefined;
   expiration_date: string;
-  transactionId: string;
+  cardId: string;
 }
 
 const initData: IMembershipRequestData = {
@@ -64,7 +64,7 @@ const initData: IMembershipRequestData = {
   card_number: undefined,
   cvv: undefined,
   expiration_date: "",
-  transactionId: uuidv4(),
+  cardId: uuidv4(),
 };
 
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
