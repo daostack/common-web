@@ -15,14 +15,12 @@ interface State {
   commonPayment: CommonPayment | null;
   isCommonPaymentLoading: boolean;
   isPaymentIframeLoaded: boolean;
-  isPaymentFailed: boolean;
 }
 
 const INITIAL_STATE: State = {
   commonPayment: null,
   isCommonPaymentLoading: false,
   isPaymentIframeLoaded: false,
-  isPaymentFailed: false,
 };
 
 export default function MembershipRequestPayment(
@@ -35,7 +33,6 @@ export default function MembershipRequestPayment(
       commonPayment,
       isCommonPaymentLoading,
       isPaymentIframeLoaded,
-      isPaymentFailed,
     },
     setState,
   ] = useState<State>(INITIAL_STATE);
@@ -76,7 +73,7 @@ export default function MembershipRequestPayment(
   }, [commonPayment, isCommonPaymentLoading, userData, common, user]);
 
   useEffect(() => {
-    if (!isPaymentIframeLoaded || isPaymentFailed) {
+    if (!isPaymentIframeLoaded) {
       return;
     }
 
@@ -89,7 +86,7 @@ export default function MembershipRequestPayment(
     } catch (error) {
       console.error("Error during subscription to payment status change");
     }
-  }, [isPaymentIframeLoaded, isPaymentFailed, userData.cardId, setUserData]);
+  }, [isPaymentIframeLoaded, userData.cardId, setUserData]);
 
   return (
     <div className="membership-request-content membership-request-payment">
