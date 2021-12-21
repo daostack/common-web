@@ -1,7 +1,7 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { MembershipRequestModal } from "../MembershipRequestModal";
-import { useModal } from "../../../../../shared/hooks";
+import { useAuthorizedModal } from "../../../../../shared/hooks";
 import "./index.scss";
 import { Common } from "../../../../../shared/models";
 import { ROUTE_PATHS } from "../../../../../shared/constants";
@@ -19,20 +19,18 @@ export default function EmptyTabComponent({
   title,
   common,
 }: EmptyTabComponentProps) {
-  const { isShowing: showJoinModal, onClose: onCloseJoinModal } = useModal(
-    false
-  );
-
-  const closeJoinModalHandler = useCallback(() => {
-    onCloseJoinModal();
-  }, [onCloseJoinModal]);
+  const {
+    isModalOpen: showJoinModal,
+    onOpen: onJoinModalOpen,
+    onClose: onCloseJoinModal,
+  } = useAuthorizedModal();
 
   return (
     <>
       {common && (
         <MembershipRequestModal
           isShowing={showJoinModal}
-          onClose={closeJoinModalHandler}
+          onClose={onCloseJoinModal}
           common={common}
         />
       )}
@@ -58,11 +56,19 @@ export default function EmptyTabComponent({
           <div className="title">{title}</div>
           <div className="message">{message}</div>
 
-          {currentTab === "my-commons" && (
-            <Link to={`${ROUTE_PATHS.COMMON_LIST}`}>
-              <button className={`button-blue`}>Browse all Commons</button>
-            </Link>
-          )}
+          <div className="empty-tab-content-wrapper__buttons-wrapper">
+            <button className="button-blue" onClick={onJoinModalOpen}>
+              Join the effort
+            </button>
+            {currentTab === "my-commons" && (
+              <Link
+                className="empty-tab-content-wrapper__browse-commons-button"
+                to={`${ROUTE_PATHS.COMMON_LIST}`}
+              >
+                <button className={`button-blue`}>Browse all Commons</button>
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </>
