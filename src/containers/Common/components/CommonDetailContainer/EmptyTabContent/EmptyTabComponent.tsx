@@ -1,10 +1,12 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { MembershipRequestModal } from "../MembershipRequestModal";
+import { selectUser } from "../../../../Auth/store/selectors";
 import { useAuthorizedModal } from "../../../../../shared/hooks";
-import "./index.scss";
-import { Common } from "../../../../../shared/models";
+import { Common, Member } from "../../../../../shared/models";
 import { ROUTE_PATHS } from "../../../../../shared/constants";
+import "./index.scss";
 
 interface EmptyTabComponentProps {
   currentTab: string;
@@ -24,6 +26,10 @@ export default function EmptyTabComponent({
     onOpen: onJoinModalOpen,
     onClose: onCloseJoinModal,
   } = useAuthorizedModal();
+  const user = useSelector(selectUser());
+  const shouldShowJoinEffortButton =
+    common &&
+    !common.members.some((member: Member) => member.userId === user?.uid);
 
   return (
     <>
@@ -57,12 +63,17 @@ export default function EmptyTabComponent({
           <div className="message">{message}</div>
 
           <div className="empty-tab-content-wrapper__buttons-wrapper">
-            <button className="button-blue" onClick={onJoinModalOpen}>
-              Join the effort
-            </button>
+            {shouldShowJoinEffortButton && (
+              <button
+                className="button-blue empty-tab-content-wrapper__button"
+                onClick={onJoinModalOpen}
+              >
+                Join the effort
+              </button>
+            )}
             {currentTab === "my-commons" && (
               <Link
-                className="empty-tab-content-wrapper__browse-commons-button"
+                className="empty-tab-content-wrapper__button"
                 to={`${ROUTE_PATHS.COMMON_LIST}`}
               >
                 <button className={`button-blue`}>Browse all Commons</button>
