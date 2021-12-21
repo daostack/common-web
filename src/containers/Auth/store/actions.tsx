@@ -20,3 +20,7 @@ export const updateUserDetails = createAsyncAction(
 export const setIsUserNew = createStandardAction(
   AuthActionTypes.SET_IS_NEW_USER
 )<boolean>();
+
+export const setIsLoginModalShowing = createStandardAction(
+  AuthActionTypes.SET_IS_LOGIN_MODAL_SHOWING
+)<boolean>();
