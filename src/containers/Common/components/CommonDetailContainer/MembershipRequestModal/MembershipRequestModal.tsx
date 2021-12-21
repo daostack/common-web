@@ -37,7 +37,7 @@ export interface IMembershipRequestData {
   stage: number;
   intro: string;
   notes: string;
-  contribution_amount: number | undefined;
+  contributionAmount: number | undefined;
   fullname: string;
   city: string;
   country: string;
@@ -54,7 +54,7 @@ const initData: IMembershipRequestData = {
   stage: 0,
   intro: "",
   notes: "",
-  contribution_amount: undefined,
+  contributionAmount: undefined,
   fullname: "",
   city: "",
   country: "",

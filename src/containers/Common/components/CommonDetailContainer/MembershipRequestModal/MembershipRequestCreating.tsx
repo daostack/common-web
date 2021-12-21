@@ -19,7 +19,7 @@ export default function MembershipRequestCreating(props: IStageProps) {
         await ProposalService.createRequestToJoin({
           commonId: common.id,
           description: userData.intro,
-          funding: userData.contribution_amount || 0,
+          funding: userData.contributionAmount || 0,
           cardId: userData.cardId,
         });
 
