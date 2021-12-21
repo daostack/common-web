@@ -11,7 +11,7 @@ import classNames from "classnames";
 
 import { Loader, Share } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
-import { useModal, useViewPortHook } from "../../../../shared/hooks";
+import { useAuthorizedModal, useModal, useViewPortHook } from "../../../../shared/hooks";
 
 import {
   Discussion,
@@ -117,10 +117,10 @@ export default function CommonDetail() {
 
   const { isShowing, onOpen, onClose } = useModal(false);
   const {
-    isShowing: showJoinModal,
+    isModalOpen: showJoinModal,
     onOpen: onOpenJoinModal,
     onClose: onCloseJoinModal,
-  } = useModal(false);
+  } = useAuthorizedModal();
   const isMobileView = screenSize === ScreenSize.Mobile;
 
   useEffect(() => {

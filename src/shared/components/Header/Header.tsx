@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Link, useLocation, useHistory } from "react-router-dom";
 import classNames from "classnames";
@@ -11,16 +11,16 @@ import DownloadCommonApp from "../DownloadCommonApp/DownloadCommonApp";
 import MobileLinks from "../MobileLinks/MobileLinks";
 import "./index.scss";
 import { Account } from "../Account";
-import { useModal } from "../../hooks";
 import {
   authentificated,
   selectIsNewUser,
   selectUser,
+  selectIsLoginModalShowing,
 } from "../../../containers/Auth/store/selectors";
 import { isMobile } from "../../utils";
 import { Modal } from "../Modal";
 import { LoginContainer } from "../../../containers/Login/containers/LoginContainer";
-import { logOut } from "../../../containers/Auth/store/actions";
+import { logOut, setIsLoginModalShowing } from "../../../containers/Auth/store/actions";
 
 const Header = () => {
   const location = useLocation();
@@ -29,10 +29,18 @@ const Header = () => {
   const screenSize = useSelector(getScreenSize());
   const [showMenu, setShowMenu] = useState(false);
   const [isTop, setIsTop] = useState<boolean | undefined>(undefined);
-  const { isShowing, onOpen, onClose } = useModal(false);
   const isAuthorized = useSelector(authentificated());
   const user = useSelector(selectUser());
   const isNewUser = useSelector(selectIsNewUser());
+  const isLoginModalShowing = useSelector(selectIsLoginModalShowing());
+
+  const handleOpen = useCallback(() => {
+    dispatch(setIsLoginModalShowing(true));
+  }, [dispatch]);
+
+  const handleClose = useCallback(() => {
+    dispatch(setIsLoginModalShowing(false));
+  }, [dispatch]);
 
   React.useEffect(() => {
     window.addEventListener("scroll", () => {
@@ -51,11 +59,11 @@ const Header = () => {
 
   React.useEffect(() => {
     if (!isNewUser && user) {
-      if (isShowing) {
-        onClose();
+      if (isLoginModalShowing) {
+        handleClose();
       }
     }
-  }, [user, isNewUser, isShowing, onClose]);
+  }, [user, isNewUser, isLoginModalShowing, handleClose]);
 
   const handleNavLinkClick = () => {
     if (showMenu) {
@@ -83,7 +91,7 @@ const Header = () => {
 
       {isAuthorized && isMobile() && <button>Log out</button>}
       {!isAuthorized && (
-        <button className="login-button" onClick={() => onOpen()}>
+        <button className="login-button" onClick={handleOpen}>
           Login / Sign up
         </button>
       )}
@@ -138,12 +146,12 @@ const Header = () => {
         </>
       )}
       <Modal
-        isShowing={isShowing}
-        onClose={onClose}
+        isShowing={isLoginModalShowing}
+        onClose={handleClose}
         className="mobile-full-screen"
         mobileFullScreen
       >
-        <LoginContainer closeModal={onClose} />
+        <LoginContainer closeModal={handleClose} />
       </Modal>
     </section>
   );
