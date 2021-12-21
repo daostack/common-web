@@ -34,6 +34,14 @@ const Header = () => {
   const isNewUser = useSelector(selectIsNewUser());
   const isLoginModalShowing = useSelector(selectIsLoginModalShowing());
 
+  const handleOpen = useCallback(() => {
+    dispatch(setIsLoginModalShowing(true));
+  }, [dispatch]);
+
+  const handleClose = useCallback(() => {
+    dispatch(setIsLoginModalShowing(false));
+  }, [dispatch]);
+
   React.useEffect(() => {
     window.addEventListener("scroll", () => {
       setIsTop(window.scrollY === 0 ? true : false);
@@ -48,14 +56,6 @@ const Header = () => {
       unlisten();
     };
   }, [history]);
-
-  const handleOpen = useCallback(() => {
-    dispatch(setIsLoginModalShowing(true));
-  }, [dispatch]);
-
-  const handleClose = useCallback(() => {
-    dispatch(setIsLoginModalShowing(false));
-  }, [dispatch]);
 
   React.useEffect(() => {
     if (!isNewUser && user) {
