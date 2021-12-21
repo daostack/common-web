@@ -37,9 +37,13 @@
     justify-content: center;
   }
 
-  .empty-tab-content-wrapper__browse-commons-button {
+  .empty-tab-content-wrapper__button {
     margin-top: 8px;
     text-decoration: none;
+
+    &:first-child {
+      margin-top: 0;
+    }
   }
 }
 
