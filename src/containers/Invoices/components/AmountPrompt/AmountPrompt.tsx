@@ -3,11 +3,11 @@ import { CurrencyInput } from "../../../../shared/components/Form";
 import "./index.scss";
 
 interface IProps {
-  onContinue: () => void
+  onContinue: (amount: number | undefined) => void
 }
 
 export default function AmountPrompt({ onContinue }: IProps) {
-  const [amount, setAmount] = useState<string | undefined>();
+  const [amount, setAmount] = useState<number | undefined>();
 
   return (
     <div className="amount-prompt-wrapper">
@@ -15,10 +15,10 @@ export default function AmountPrompt({ onContinue }: IProps) {
       <CurrencyInput
         name="invoiceAmount"
         value={amount}
-        onValueChange={(value) => setAmount(value)}
+        onValueChange={(value) => setAmount(Number(value))}
         className="amount-prompt-wrapper__amount-input"
       />
-      <button disabled={!amount} className="button-blue" onClick={() => onContinue()}>Done</button>
+      <button disabled={!amount} className="button-blue" onClick={() => onContinue(amount)}>Done</button>
     </div>
   )
 }

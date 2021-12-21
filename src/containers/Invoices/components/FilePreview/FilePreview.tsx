@@ -7,7 +7,7 @@ import "./index.scss";
 interface IProps {
   file: any,
   onDelete: () => void
-  onContinue: () => void
+  onContinue: (amount: number | undefined) => void
 }
 
 export default function FilePreview({ file, onDelete, onContinue }: IProps) {
@@ -40,7 +40,7 @@ export default function FilePreview({ file, onDelete, onContinue }: IProps) {
               className="button-blue"
               onClick={() => setShowInsertAmountPrompt(true)}>Add invoice amount</button>
           ) : (
-            <AmountPrompt onContinue={() => onContinue()} />
+            <AmountPrompt onContinue={onContinue} />
           )}
         </div>
       </div>
