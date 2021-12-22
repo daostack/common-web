@@ -16,4 +16,7 @@
   .custom-toggle-button-group__buttons {
     display: flex;
   }
+  .custom-toggle-button-group__buttons--vertical {
+    flex-direction: column;
+  }
 }

@@ -1,39 +1,85 @@
-import React, { useCallback } from "react";
-
+import React from "react";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { MembershipRequestModal } from "../MembershipRequestModal";
-import { Modal } from "../../../../../shared/components/Modal";
-import { useModal } from "../../../../../shared/hooks";
+import { selectUser } from "../../../../Auth/store/selectors";
+import { useAuthorizedModal } from "../../../../../shared/hooks";
+import { Common, Member } from "../../../../../shared/models";
+import { ROUTE_PATHS } from "../../../../../shared/constants";
 import "./index.scss";
-import { Common } from "../../../../../shared/models";
 
 interface EmptyTabComponentProps {
   currentTab: string;
   message: string;
   title: string;
-  common: Common;
+  common?: Common;
 }
 
-export default function EmptyTabComponent({ currentTab, message, title, common }: EmptyTabComponentProps) {
-  const { isShowing: showJoinModal, onClose: onCloseJoinModal } = useModal(false);
-
-  const closeJoinModalHandler = useCallback(() => {
-    onCloseJoinModal();
-  }, [onCloseJoinModal]);
+export default function EmptyTabComponent({
+  currentTab,
+  message,
+  title,
+  common,
+}: EmptyTabComponentProps) {
+  const {
+    isModalOpen: showJoinModal,
+    onOpen: onJoinModalOpen,
+    onClose: onCloseJoinModal,
+  } = useAuthorizedModal();
+  const user = useSelector(selectUser());
+  const shouldShowJoinEffortButton =
+    common &&
+    !common.members.some((member: Member) => member.userId === user?.uid);
 
   return (
     <>
-      <Modal isShowing={showJoinModal} onClose={closeJoinModalHandler} className="mobile-full-screen" mobileFullScreen closePrompt>
-        <MembershipRequestModal common={common} closeModal={closeJoinModalHandler} />
-      </Modal>
+      {common && (
+        <MembershipRequestModal
+          isShowing={showJoinModal}
+          onClose={onCloseJoinModal}
+          common={common}
+        />
+      )}
       <div className="empty-tab-component-wrapper">
         <div className="img-wrapper">
-          {currentTab === "proposals" && <img alt={currentTab} src="/icons/proposals-empty.svg" />}
-          {currentTab === "history" && <img alt={currentTab} src="/icons/proposals-empty.svg" />}
-          {currentTab === "discussions" && <img alt={currentTab} src="/icons/discussions-empty.svg" />}
+          {currentTab === "proposals" && (
+            <img alt={currentTab} src="/icons/proposals-empty.svg" />
+          )}
+          {currentTab === "history" && (
+            <img alt={currentTab} src="/icons/proposals-empty.svg" />
+          )}
+          {currentTab === "discussions" && (
+            <img alt={currentTab} src="/icons/discussions-empty.svg" />
+          )}
+          {currentTab === "my-commons" && (
+            <img
+              alt={currentTab}
+              src="/assets/images/membership-request-membership.svg"
+            />
+          )}
         </div>
         <div className="empty-tab-content-wrapper ">
           <div className="title">{title}</div>
           <div className="message">{message}</div>
+
+          <div className="empty-tab-content-wrapper__buttons-wrapper">
+            {shouldShowJoinEffortButton && (
+              <button
+                className="button-blue empty-tab-content-wrapper__button"
+                onClick={onJoinModalOpen}
+              >
+                Join the effort
+              </button>
+            )}
+            {currentTab === "my-commons" && (
+              <Link
+                className="empty-tab-content-wrapper__button"
+                to={`${ROUTE_PATHS.COMMON_LIST}`}
+              >
+                <button className={`button-blue`}>Browse all Commons</button>
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </>

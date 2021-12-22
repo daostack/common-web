@@ -14,15 +14,27 @@ const Connect = () => {
 
   return (
     <div className="connect-wrapper">
-      <img src="/assets/images/people-pyramid.svg" alt="people pyramid" height="200px" />
+      <img
+        src="/assets/images/people-pyramid.svg"
+        alt="people pyramid"
+        height="200px"
+      />
       <span className="title">Be a part of Common</span>
       <span className="sub-text">Connect your account to join this Common</span>
       <div className="login-buttons-wrapper">
-        <SocialLoginButton provider="google" text="Continue with Google" loginHandler={socialLoginHandler} />
-        <SocialLoginButton provider="apple" text="Continue with Apple" loginHandler={socialLoginHandler} />
+        <SocialLoginButton
+          provider="google"
+          text="Continue with Google"
+          loginHandler={socialLoginHandler}
+        />
+        <SocialLoginButton
+          provider="apple"
+          text="Continue with Apple"
+          loginHandler={socialLoginHandler}
+        />
       </div>
       <span className="sub-text">
-        By using Common you agree to the app’s&nbsp;
+        By using Common you agree to the app’s&nbsp; <br />
         <a
           className="terms-of-use"
           href={require("../../../../../shared/assets/terms_and_conditions.pdf")}

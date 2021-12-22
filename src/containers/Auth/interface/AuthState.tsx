@@ -4,4 +4,5 @@ export interface AuthStateType {
   user: User | null;
   authentificated: boolean;
   isNewUser: boolean;
+  isLoginModalShowing: boolean;
 }

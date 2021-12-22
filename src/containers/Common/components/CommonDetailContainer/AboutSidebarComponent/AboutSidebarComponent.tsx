@@ -10,7 +10,9 @@ interface AboutSidebarComponentProps {
 }
 
 export default function AboutSidebarComponent({ title, vievAllHandler, common }: AboutSidebarComponentProps) {
-  return common?.description ? (
+  const description = common?.metadata.description;
+
+  return description ? (
     <div className="about-sidebar-wrapper">
       <div className="title-wrapper">
         <div className="title">{title}</div>
@@ -18,7 +20,7 @@ export default function AboutSidebarComponent({ title, vievAllHandler, common }:
           View full agenda
         </div>
       </div>
-      <div className="information-content">{common.description}</div>
+      <div className="information-content">{description}</div>
     </div>
   ) : null;
 }

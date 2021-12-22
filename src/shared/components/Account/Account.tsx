@@ -17,6 +17,7 @@ interface AccountProps {
 }
 
 const Account = ({ user, logOut }: AccountProps) => {
+  const [imageError, setImageError] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const wrapperRef = useRef(null);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
@@ -39,11 +40,7 @@ const Account = ({ user, logOut }: AccountProps) => {
     }
 
     if (!name) {
-      user?.providerData.map((pD: { displayName: string }) => {
-        if (pD.displayName) {
-          name = pD.displayName;
-        }
-      });
+      name = `${user.firstName} ${user.lastName}`;
     }
 
     return name;
@@ -51,7 +48,20 @@ const Account = ({ user, logOut }: AccountProps) => {
 
   return (
     <div className="account-wrapper" onClick={() => setShowMenu(!showMenu)}>
-      <img src={userPic} className="avatar" alt="user avatar" />
+      {!imageError ? (
+        <img
+          src={userPic}
+          className="avatar"
+          alt="user avatar"
+          onError={() => setImageError(true)}
+        />
+      ) : (
+        <img
+          src={`https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${user?.email}&rounded=true`}
+          className="avatar"
+          alt="user avatar"
+        />
+      )}
       <div>{getUserName()}</div>
       <div className="vertical-menu" />
       {showMenu && (
