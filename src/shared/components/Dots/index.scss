@@ -7,14 +7,18 @@
     width: 8px;
     height: 8px;
     margin-right: 8px;
-    border: 1px solid $light-gray-3;
+    border: 1px solid $purple;
     border-radius: 50%;
-    background-color: $white-2;
+    background-color: $light-gray-4;
     box-sizing: border-box;
 
     &:last-child {
       margin-right: 0;
     }
+  }
+  .dots__item--unfinished {
+    border-color: $light-gray-3;
+    background-color: $white-2;
   }
   .dots__item--active {
     border-color: transparent;

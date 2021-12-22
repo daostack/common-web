@@ -87,6 +87,7 @@ export default function CreationSteps(props: CreationStepsProps) {
             className="create-common-creation-steps__modal-title-dots"
             currentStep={stepIndex + 1}
             stepsAmount={PROGRESS_RELATED_STEPS.length}
+            shouldHighlightUnfinishedSteps
           />
         )}
         <h3 className="create-common-creation-steps__modal-title">
