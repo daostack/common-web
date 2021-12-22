@@ -105,6 +105,14 @@ export function MembershipRequestModal(props: IProps) {
     }
   }, [isShowing, user]);
 
+  useEffect(() => {
+    const isCommonMember = common.members.some((member) => member.userId === user?.uid);
+
+    if (isCommonMember) {
+      onClose();
+    }
+  }, [common, user, onClose]);
+
   const renderCurrentStage = (stage: number) => {
     switch (stage) {
       case 0:
