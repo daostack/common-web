@@ -45,6 +45,7 @@
       margin: auto;
       border-radius: 10px;
       max-height: 70%;
+      max-width: 70%;
       &.shrink {
         animation: shrink .5s forwards;
       }
