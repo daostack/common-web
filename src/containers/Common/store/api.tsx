@@ -1,5 +1,6 @@
 import {
   Card,
+  Collection,
   Common,
   Discussion,
   DiscussionMessage,
@@ -137,7 +138,7 @@ export function subscribeToCardChange(
 ): () => void {
   return firebase
     .firestore()
-    .collection("cards")
+    .collection(Collection.Cards)
     .doc(cardId)
     .onSnapshot((snapshot) => {
       callback(transformFirebaseDataSingle<Card>(snapshot));
