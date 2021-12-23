@@ -8,6 +8,7 @@ import { getScreenSize } from "../../../../shared/store/selectors";
 import { ScreenSize } from "../../../../shared/constants";
 import { formatPrice } from "../../../../shared/utils";
 import { DeletePrompt } from "../DeletePrompt";
+import { UploadPrompt } from "../UploadPrompt";
 
 const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png, .pdf";
 
@@ -28,6 +29,7 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
   const totalAmount = selectedFiles.map((file: IFile) => file.amount).reduce((a: number, b: number) => a + b, 0);
   const [showDeletePrompt, setShowDeletePrompt] = useState(false);
   const [selectedInvoiceIndexToDelete, setSelectedInvoiceIndexToDelete] = useState<number | undefined>(undefined);
+  const [showUploadPrompt, setShowUploadPrompt] = useState(false);
 
   console.log(selectedFiles);
 
@@ -85,7 +87,8 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
           <span className="add-invoices__total-amount-label">{`Total invoices amount: ${formatPrice(totalAmount * 100)}`}</span>
           <button
             className="button-blue"
-            disabled={!selectedFiles}>
+            disabled={!selectedFiles}
+            onClick={() => setShowUploadPrompt(true)}>
             Done with uploading all invoices
           </button>
         </div>
@@ -94,6 +97,9 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
         <DeletePrompt
           onCancel={() => setShowDeletePrompt(false)}
           onDelete={() => { setSelectedFiles(removeInvoice(selectedInvoiceIndexToDelete as number)); setShowDeletePrompt(false); }} />
+      )}
+      {showUploadPrompt && (
+        <UploadPrompt onUpload={() => { return; }} onCancel={() => setShowUploadPrompt(false)} />
       )}
     </div>
   )
