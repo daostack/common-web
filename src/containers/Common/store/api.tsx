@@ -1,4 +1,6 @@
 import {
+  Card,
+  Collection,
   Common,
   Discussion,
   DiscussionMessage,
@@ -128,4 +130,17 @@ export async function fetchDiscussionsMessages(dIds: string[]) {
     );
 
   return data;
+}
+
+export function subscribeToCardChange(
+  cardId: string,
+  callback: (card?: Card) => void,
+): () => void {
+  return firebase
+    .firestore()
+    .collection(Collection.Cards)
+    .doc(cardId)
+    .onSnapshot((snapshot) => {
+      callback(transformFirebaseDataSingle<Card>(snapshot));
+    });
 }

@@ -22,7 +22,7 @@ export default function MembershipRequestBilling(props: IStageProps) {
     <div className="membership-request-content membership-request-billing">
       <div className="sub-title">Billing Details</div>
       <div className="sub-text">{`You are contributing ${formatPrice(
-        userData.contribution_amount,
+        userData.contributionAmount,
         false
       )} ${
         isMonthlyContribution ? "monthly" : "one-time"
