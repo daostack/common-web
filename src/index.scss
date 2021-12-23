@@ -35,19 +35,13 @@
   src: url(./shared/assets/fonts/Assistant-Light.ttf);
 }
 
-html {
-  height: 100%;
-}
-
 body {
-  height: 100%;
-
   #root {
-    height: 100%;
     overflow-x: hidden;
   }
 
   .App {
+    min-height: 100vh;
     height: 100%;
     display: flex;
     flex-direction: column;
