@@ -35,9 +35,22 @@
   src: url(./shared/assets/fonts/Assistant-Light.ttf);
 }
 
+html {
+  height: 100%;
+}
+
 body {
+  height: 100%;
+
   #root {
+    height: 100%;
     overflow-x: hidden;
+  }
+
+  .App {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
   }
 
   // Disable highlight when Touch/Press
@@ -48,6 +61,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   .content-wrapper {
+    flex: 1 0 auto;
     padding: 0px $content-padding;
     padding-bottom: 20px;
     min-height: 350px;
