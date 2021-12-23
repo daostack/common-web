@@ -81,19 +81,19 @@ export default function MembershipRequestContribution(props: IStageProps) {
   const [selectedContribution, setSelectedContribution] = useState<
     number | "other" | null
   >(() => {
-    if (userData.contribution_amount === undefined) {
+    if (userData.contributionAmount === undefined) {
       return null;
     }
 
-    return amountsForSelection.includes(userData.contribution_amount)
-      ? userData.contribution_amount
+    return amountsForSelection.includes(userData.contributionAmount)
+      ? userData.contributionAmount
       : "other";
   });
   const [enteredContribution, setEnteredContribution] = useState<
     string | undefined
   >(() =>
     selectedContribution === "other"
-      ? String((userData.contribution_amount || 0) / 100)
+      ? String((userData.contributionAmount || 0) / 100)
       : undefined
   );
   const [isCurrencyInputTouched, setIsCurrencyInputTouched] = useState(false);
@@ -131,12 +131,12 @@ export default function MembershipRequestContribution(props: IStageProps) {
         ? Number(enteredContribution) * 100
         : selectedContribution;
 
-    setUserData({
-      ...userData,
-      contribution_amount: contributionAmount,
+    setUserData((nextUserData) => ({
+      ...nextUserData,
+      contributionAmount: contributionAmount ?? undefined,
       stage: 4,
-    });
-  }, [setUserData, userData, selectedContribution, enteredContribution]);
+    }));
+  }, [setUserData, selectedContribution, enteredContribution]);
 
   const toggleButtonStyles = {
     default: "membership-request-contribution__toggle-button",

@@ -17,8 +17,8 @@
     "lodash": "^4.17.20",
     "millify": "^3.5.2",
     "moment": "^2.29.1",
-    "openpgp": "4.10.4",
     "node-sass": "^4.14.1",
+    "openpgp": "4.10.4",
     "react": "^17.0.1",
     "react-currency-input-field": "^3.6.0",
     "react-dom": "^17.0.1",
@@ -32,6 +32,7 @@
     "styled-components": "^5.2.1",
     "swiper": "^6.5.9",
     "typesafe-actions": "^4.4.2",
+    "uuid": "^8.3.2",
     "yup": "^0.27.0"
   },
   "scripts": {
@@ -60,16 +61,17 @@
     ]
   },
   "devDependencies": {
-    "@types/openpgp": "4.4.12",
     "@types/enzyme": "^3.10.8",
     "@types/lodash": "^4.14.163",
     "@types/node": "^12.19.3",
+    "@types/openpgp": "4.4.12",
     "@types/react": "^16.9.55",
     "@types/react-dom": "^16.9.9",
     "@types/react-loadable": "^5.5.1",
     "@types/react-redux": "^7.1.9",
     "@types/react-router-dom": "^5.1.6",
     "@types/styled-components": "^5.1.4",
+    "@types/uuid": "^8.3.3",
     "@types/webpack-env": "^1.14.0",
     "@types/yup": "^0.26.24",
     "@typescript-eslint/eslint-plugin": "^3.10.1",

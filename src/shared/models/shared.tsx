@@ -15,3 +15,7 @@ export interface Moderation {
 export interface File {
   value: string;
 }
+
+export enum Collection {
+  Cards = "cards",
+}

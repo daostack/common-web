@@ -1,12 +1,15 @@
 import React, {
   useCallback,
+  useEffect,
   useMemo,
   useState,
+  Dispatch,
   ReactNode,
-  useEffect,
+  SetStateAction,
 } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
+import { v4 as uuidv4 } from "uuid";
 import { Modal } from "../../../../../shared/components";
 import { ModalProps } from "../../../../../shared/interfaces";
 import { Common } from "../../../../../shared/models";
@@ -25,22 +28,16 @@ import MembershipRequestWelcome from "./MembershipRequestWelcome";
 import { selectUser } from "../../../../Auth/store/selectors";
 
 export interface IStageProps {
-  setUserData: Function;
+  setUserData: Dispatch<SetStateAction<IMembershipRequestData>>;
   userData: IMembershipRequestData;
   common?: Common;
-}
-export interface IProposalPayload {
-  description: string;
-  funding: number;
-  commonId: string;
-  cardId: string;
 }
 
 export interface IMembershipRequestData {
   stage: number;
   intro: string;
   notes: string;
-  contribution_amount: number | undefined;
+  contributionAmount: number | undefined;
   fullname: string;
   city: string;
   country: string;
@@ -50,14 +47,14 @@ export interface IMembershipRequestData {
   card_number: number | undefined;
   cvv: number | undefined;
   expiration_date: string;
-  cardId?: string;
+  cardId: string;
 }
 
 const initData: IMembershipRequestData = {
   stage: 0,
   intro: "",
   notes: "",
-  contribution_amount: undefined,
+  contributionAmount: undefined,
   fullname: "",
   city: "",
   country: "",
@@ -67,6 +64,7 @@ const initData: IMembershipRequestData = {
   card_number: undefined,
   cvv: undefined,
   expiration_date: "",
+  cardId: uuidv4(),
 };
 
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
@@ -78,7 +76,8 @@ export function MembershipRequestModal(props: IProps) {
   const user = useSelector(selectUser());
   const { stage } = userData;
   const { isShowing, onClose, common } = props;
-  const shouldDisplayBackButton = stage > 0 && stage < 6;
+  const shouldDisplayBackButton = stage > 0 && stage < 5;
+  const shouldDisplayProgressBar = stage > 0 && stage < 6;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
@@ -87,8 +86,11 @@ export function MembershipRequestModal(props: IProps) {
    * Until implementing a robust way to handle the saving of the data the user will be notified of losing the data.
    */
   useEffect(() => {
-    if (!isShowing) {
-      const payload = { ...initData };
+    if (isShowing) {
+      const payload = {
+        ...initData,
+        transactionId: uuidv4(),
+      };
 
       if (user) {
         payload.fullname = user.displayName ?? "";
@@ -101,6 +103,14 @@ export function MembershipRequestModal(props: IProps) {
       setUserData(payload);
     }
   }, [isShowing, user]);
+
+  useEffect(() => {
+    const isCommonMember = common.members.some((member) => member.userId === user?.uid);
+
+    if (isCommonMember) {
+      onClose();
+    }
+  }, [common, user, onClose]);
 
   const renderCurrentStage = (stage: number) => {
     switch (stage) {
@@ -154,6 +164,7 @@ export function MembershipRequestModal(props: IProps) {
           <MembershipRequestCreating
             userData={userData}
             setUserData={setUserData}
+            common={common}
           />
         );
       case 7:
@@ -192,7 +203,7 @@ export function MembershipRequestModal(props: IProps) {
       onClose={onClose}
       className="mobile-full-screen membership-request-modal"
       mobileFullScreen
-      closePrompt
+      closePrompt={stage !== 7}
       title={renderedTitle}
       onGoBack={shouldDisplayBackButton ? moveStageBack : undefined}
       styles={{
@@ -203,7 +214,7 @@ export function MembershipRequestModal(props: IProps) {
       }}
     >
       <div className="membership-request-wrapper">
-        {shouldDisplayBackButton && (
+        {shouldDisplayProgressBar && (
           <MembershipRequestProgressBar currentStage={stage} />
         )}
         {renderCurrentStage(stage)}
