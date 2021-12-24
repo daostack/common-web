@@ -1,8 +1,6 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { MembershipRequestModal } from "../MembershipRequestModal";
-import { selectUser } from "../../../../Auth/store/selectors";
 import { useAuthorizedModal } from "../../../../../shared/hooks";
 import { Common, Member } from "../../../../../shared/models";
 import { ROUTE_PATHS } from "../../../../../shared/constants";
@@ -13,6 +11,8 @@ interface EmptyTabComponentProps {
   message: string;
   title: string;
   common?: Common;
+  isCommonMember?: boolean;
+  isJoiningPending?: boolean;
 }
 
 export default function EmptyTabComponent({
@@ -20,16 +20,21 @@ export default function EmptyTabComponent({
   message,
   title,
   common,
+  isCommonMember,
+  isJoiningPending,
 }: EmptyTabComponentProps) {
   const {
     isModalOpen: showJoinModal,
     onOpen: onJoinModalOpen,
     onClose: onCloseJoinModal,
   } = useAuthorizedModal();
-  const user = useSelector(selectUser());
-  const shouldShowJoinEffortButton =
-    common &&
-    !common.members.some((member: Member) => member.userId === user?.uid);
+  const shouldAllowJoiningToCommon = Boolean(common) && !isCommonMember && !isJoiningPending;
+
+  useEffect(() => {
+    if (showJoinModal && !shouldAllowJoiningToCommon) {
+      onCloseJoinModal();
+    }
+  }, [showJoinModal, shouldAllowJoiningToCommon, onCloseJoinModal]);
 
   return (
     <>
@@ -63,7 +68,7 @@ export default function EmptyTabComponent({
           <div className="message">{message}</div>
 
           <div className="empty-tab-content-wrapper__buttons-wrapper">
-            {shouldShowJoinEffortButton && (
+            {shouldAllowJoiningToCommon && (
               <button
                 className="button-blue empty-tab-content-wrapper__button"
                 onClick={onJoinModalOpen}
