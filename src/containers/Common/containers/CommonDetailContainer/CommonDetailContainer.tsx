@@ -17,12 +17,7 @@ import {
   useViewPortHook,
 } from "../../../../shared/hooks";
 
-import {
-  Discussion,
-  Member,
-  Proposal,
-  ProposalState,
-} from "../../../../shared/models";
+import { Discussion, Proposal, ProposalState } from "../../../../shared/models";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
 import {
@@ -60,6 +55,7 @@ import {
 } from "../../store/actions";
 import CheckIcon from "../../../../shared/icons/check.icon";
 import { selectUser } from "../../../Auth/store/selectors";
+import AddDiscussionComponent from "@/containers/Common/components/CommonDetailContainer/AddDiscussionComponent/AddDiscussionComponent";
 
 interface CommonDetailRouterParams {
   id: string;
@@ -120,6 +116,11 @@ export default function CommonDetail() {
   const dispatch = useDispatch();
 
   const { isShowing, onOpen, onClose } = useModal(false);
+  const {
+    isShowing: isShowingNewD,
+    onOpen: onOpenNewD,
+    onClose: onCloseNewD,
+  } = useModal(false);
   const {
     isModalOpen: showJoinModal,
     onOpen: onOpenJoinModal,
@@ -222,6 +223,11 @@ export default function CommonDetail() {
       setTimeout(onOpen, 0);
     }
   }, [onOpen, currentProposal, currentDisscussion, onCloseJoinModal]);
+
+  const addPost = useCallback(() => {
+    if (!user) return setTimeout(onOpenJoinModal, 0);
+    onOpenNewD();
+  }, [onOpenJoinModal, onOpenNewD, user]);
 
   const renderSidebarContent = () => {
     if (!common) return null;
@@ -374,6 +380,11 @@ export default function CommonDetail() {
         onClose={closeJoinModal}
         common={common}
       />
+      <AddDiscussionComponent
+        isShowing={isShowingNewD}
+        common={common}
+        onClose={onCloseNewD}
+      />
       <div className="common-detail-wrapper">
         <div className="main-information-block">
           <div className="main-information-wrapper">
@@ -491,6 +502,7 @@ export default function CommonDetail() {
               )}
               {tab === "discussions" && (
                 <DiscussionsComponent
+                  onAddNewPost={addPost}
                   common={common}
                   discussions={discussions || []}
                   loadDisscussionDetail={getDisscussionDetail}

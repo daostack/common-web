@@ -1,5 +1,42 @@
 @import "../../../../../constants.scss";
 
+.discussion-title-wrapper{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  .title{
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.17;
+    letter-spacing: normal;
+    color: $secondary-blue;
+    font-family: NunitoSans-Bold, sans-serif;
+  }
+  .add-button{
+    display: flex;
+    padding: 0.5rem 1.5rem;
+    border-radius: 30.5px;
+    background-color:#E6EAFB;
+    font-size: 1rem;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: center;
+    color: $secondary-blue;
+    cursor: pointer;
+    width: 176px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    font-family: NunitoSans-Bold;
+  }
+}
+
 .discussions-component-wrapper {
   .discussion-item-wrapper {
     padding: 40px;
