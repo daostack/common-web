@@ -26,9 +26,31 @@
     backdrop-filter: blur(2px);
     .content {
       background-color: $white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      box-shadow: $secondary-modal-shadow;
+      border-radius: 30px;
+      padding: 45px;
+      > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .pre-upload-wrapper {
+        .pre-upload__title {
+          font-size: $moderate-med;
+        }
+      }
+      .pending-upload-wrapper {
+        align-items: inherit;
+        span {
+          color: $purple;
+          margin-top: 1.5rem;
+        }
+      }
+      .upload-success-wrapper {
+        .upload-success__title {
+          font-size: $moderate-med;
+        }
+      }
     }
   }
 }

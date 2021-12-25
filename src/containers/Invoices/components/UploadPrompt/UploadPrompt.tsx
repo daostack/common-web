@@ -1,20 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
 import "./index.scss";
+import PendingUpload from "./PendingUpload";
+import PreUpload from "./PreUpload";
+import UploadSuccess from "./UploadSuccess";
 
 interface IProps {
   onUpload: () => void
   onCancel: () => void
 }
 
+enum UploadState {
+  PreUpload,
+  Pending,
+  Success
+}
+
 export default function UploadPrompt({ onUpload, onCancel }: IProps) {
+  const [uploadState, setUploadState] = useState<UploadState>(UploadState.PreUpload);
+
+  const renderContent = (uploadState: UploadState) => {
+    switch (uploadState) {
+      case UploadState.PreUpload:
+        return (
+          <PreUpload
+            onUpload={onUpload}
+            onCancel={onCancel}
+            updateUploadState={() => setUploadState(UploadState.Pending)} />
+        )
+      case UploadState.Pending:
+        return <PendingUpload updateUploadState={() => setUploadState(UploadState.Success)} />
+      case UploadState.Success:
+        return <UploadSuccess closePrompt={onCancel} />
+    }
+  }
+
   return (
     <div className="upload-prompt-wrapper">
       <div className="upload-prompt-overlay" />
       <div className="content-container">
         <div className="content">
-          <span>Please, make sure you've uploaded all invoices</span>
-          <button className="button-blue" onClick={onUpload} >Upload Invoices</button>
-          <button className="button-blue transparent" onClick={onCancel}>I have more invoices to upload</button>
+          {renderContent(uploadState)}
         </div>
       </div>
     </div>

@@ -29,7 +29,7 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
   const totalAmount = selectedFiles.map((file: IFile) => file.amount).reduce((a: number, b: number) => a + b, 0);
   const [showDeletePrompt, setShowDeletePrompt] = useState(false);
   const [selectedInvoiceIndexToDelete, setSelectedInvoiceIndexToDelete] = useState<number | undefined>(undefined);
-  const [showUploadPrompt, setShowUploadPrompt] = useState(false);
+  const [showUploadPrompt, setShowUploadPrompt] = useState(true);
 
   console.log(selectedFiles);
 
