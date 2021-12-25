@@ -10,7 +10,8 @@ import { Colors } from "../../../../../shared/constants";
 interface ChatComponentInterface {
   discussionMessage: DiscussionMessage[];
   onOpenJoinModal: () => void;
-  isCommonMember: boolean | undefined;
+  isCommonMember?: boolean;
+  isJoiningPending: boolean;
 }
 
 function groupday(acc: any, currentValue: DiscussionMessage): Messages {
@@ -38,8 +39,10 @@ interface Messages {
 export default function ChatComponent({
   discussionMessage,
   onOpenJoinModal,
-                                        isCommonMember,
+  isCommonMember,
+  isJoiningPending,
 }: ChatComponentInterface) {
+  const shouldAllowJoiningToCommon = !isCommonMember && !isJoiningPending;
   const messages = discussionMessage.reduce(groupday, {});
 
   const dateList = Object.keys(messages);
@@ -66,7 +69,7 @@ export default function ChatComponent({
       <div className="bottom-chat-wrapper">
         <div className="text">Download the Common app to join the discussion</div>
         <div className="button-wrapper">
-          {!isCommonMember && (
+          {shouldAllowJoiningToCommon && (
             <button className="button-blue join-the-effort-btn" onClick={onOpenJoinModal}>
               Join the effort
             </button>

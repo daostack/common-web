@@ -9,13 +9,15 @@ import "./index.scss";
 interface DiscussionDetailModalProps {
   disscussion: Discussion | null;
   onOpenJoinModal: () => void;
-  isCommonMember: boolean | undefined;
+  isCommonMember?: boolean;
+  isJoiningPending: boolean;
 }
 
 export default function DiscussionDetailModal({
   disscussion,
   onOpenJoinModal,
   isCommonMember,
+  isJoiningPending,
 }: DiscussionDetailModalProps) {
   const date = new Date();
   const [imageError, setImageError] = useState(false);
@@ -61,6 +63,7 @@ export default function DiscussionDetailModal({
           discussionMessage={disscussion.discussionMessage || []}
           onOpenJoinModal={onOpenJoinModal}
           isCommonMember={isCommonMember}
+          isJoiningPending={isJoiningPending}
         />
       </div>
     </div>

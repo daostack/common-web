@@ -16,12 +16,14 @@ interface DiscussionDetailModalProps {
   proposal: Proposal | null;
   onOpenJoinModal: () => void;
   isCommonMember: boolean;
+  isJoiningPending: boolean;
 }
 
 export default function ProposalDetailModal({
   proposal,
   onOpenJoinModal,
   isCommonMember,
+  isJoiningPending,
 }: DiscussionDetailModalProps) {
   const date = new Date();
   const [imageError, setImageError] = useState(false);
@@ -107,6 +109,7 @@ export default function ProposalDetailModal({
           discussionMessage={proposal.discussionMessage || []}
           onOpenJoinModal={onOpenJoinModal}
           isCommonMember={isCommonMember}
+          isJoiningPending={isJoiningPending}
         />
       </div>
     </div>
