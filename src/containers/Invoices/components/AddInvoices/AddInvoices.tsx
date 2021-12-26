@@ -2,13 +2,13 @@ import React, { useState, ChangeEventHandler, ReactElement, useMemo, useCallback
 import classNames from "classnames";
 import { FilePreview } from "../FilePreview";
 import { InvoiceTile, InvoiceTileVariant } from "../../../../shared/components";
-import "./index.scss";
 import { useSelector } from "react-redux";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import { ScreenSize } from "../../../../shared/constants";
 import { formatPrice } from "../../../../shared/utils";
 import { DeletePrompt } from "../DeletePrompt";
 import { UploadPrompt } from "../UploadPrompt";
+import "./index.scss";
 
 const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png, .pdf";
 
@@ -29,9 +29,7 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
   const totalAmount = selectedFiles.map((file: IFile) => file.amount).reduce((a: number, b: number) => a + b, 0);
   const [showDeletePrompt, setShowDeletePrompt] = useState(false);
   const [selectedInvoiceIndexToDelete, setSelectedInvoiceIndexToDelete] = useState<number | undefined>(undefined);
-  const [showUploadPrompt, setShowUploadPrompt] = useState(true);
-
-  console.log(selectedFiles);
+  const [showUploadPrompt, setShowUploadPrompt] = useState(false);
 
   const selectFiles: ChangeEventHandler<HTMLInputElement> = (event) => {
     setSelectedFiles((selectedFiles: IFile[]) => [
@@ -99,7 +97,11 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
           onDelete={() => { setSelectedFiles(removeInvoice(selectedInvoiceIndexToDelete as number)); setShowDeletePrompt(false); }} />
       )}
       {showUploadPrompt && (
-        <UploadPrompt onUpload={() => { return; }} onCancel={() => setShowUploadPrompt(false)} />
+        <UploadPrompt
+          onUpload={() => { return; }}
+          onCancel={() => setShowUploadPrompt(false)}
+          invoicesTotal={formatPrice(totalAmount * 100)}
+          proposalRequest={formatPrice(950)} />
       )}
     </div>
   )

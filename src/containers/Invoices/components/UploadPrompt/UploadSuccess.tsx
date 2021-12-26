@@ -9,7 +9,7 @@ export default function UploadSuccess({ closePrompt }: IProps) {
     <div className="upload-success-wrapper">
       <img src="/icons/checkmark.svg" alt="checkmark" />
       <span className="upload-success__title">Invoices uploaded successfully!</span>
-      <span>You will be notified via email after your invoices will be reviewed</span>
+      <span className="upload-success__sub-text">You will be notified via email after your invoices will be reviewed</span>
       <button className="button-blue" onClick={closePrompt}>Done</button>
     </div>
   )

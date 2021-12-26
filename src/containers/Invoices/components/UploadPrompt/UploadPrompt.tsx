@@ -7,6 +7,8 @@ import UploadSuccess from "./UploadSuccess";
 interface IProps {
   onUpload: () => void
   onCancel: () => void
+  invoicesTotal: string
+  proposalRequest: string
 }
 
 enum UploadState {
@@ -15,7 +17,7 @@ enum UploadState {
   Success
 }
 
-export default function UploadPrompt({ onUpload, onCancel }: IProps) {
+export default function UploadPrompt({ onUpload, onCancel, invoicesTotal, proposalRequest }: IProps) {
   const [uploadState, setUploadState] = useState<UploadState>(UploadState.PreUpload);
 
   const renderContent = (uploadState: UploadState) => {
@@ -25,7 +27,9 @@ export default function UploadPrompt({ onUpload, onCancel }: IProps) {
           <PreUpload
             onUpload={onUpload}
             onCancel={onCancel}
-            updateUploadState={() => setUploadState(UploadState.Pending)} />
+            updateUploadState={() => setUploadState(UploadState.Pending)}
+            invoicesTotal={invoicesTotal}
+            proposalRequest={proposalRequest} />
         )
       case UploadState.Pending:
         return <PendingUpload updateUploadState={() => setUploadState(UploadState.Success)} />
