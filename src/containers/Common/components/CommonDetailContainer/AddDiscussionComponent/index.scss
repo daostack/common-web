@@ -1,0 +1,72 @@
+@import "../../../../../constants.scss";
+
+.add-discussion-wrapper {
+  width: 576px;
+  margin: 0 auto;
+
+  .add-discussion-title {
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: 1.125rem;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.22;
+    letter-spacing: normal;
+    text-align: center;
+    color: $secondary-blue;
+    margin-top: -22px;
+    margin-bottom: 40px;
+  }
+
+  .discussion-form-wrapper {
+    .input-wrapper {
+      margin-bottom: 24px;
+      label {
+        font-family: NunitoSans;
+        font-size: 0.75rem;
+        line-height: 1.33;
+        letter-spacing: normal;
+        color: $secondary-blue;
+        margin-bottom: 10px;
+        position: relative;
+        width: 100%;
+        box-sizing: border-box;
+        display: block;
+
+        .required {
+          font-family: NunitoSans;
+          position: absolute;
+          right: 0;
+          font-size: 0.875rem;
+          font-style: italic;
+          text-align: right;
+          color: $light-gray-3;
+        }
+      }
+
+      .text-area-wrapper {
+        textarea {
+          width: 100%;
+          padding: 0.8rem;
+          border-radius: 3px;
+          border: solid 1px #eee;
+          resize: none;
+          box-sizing: border-box;
+          outline: none;
+
+          &.big{
+            height: 224px;
+          }
+        }
+      }
+    }
+
+    .action-wrapper{
+      width: 100%;
+      box-sizing: border-box;
+      display: block;
+      margin: 66px auto 0;
+      text-align: center;
+    }
+  }
+}
