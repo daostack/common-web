@@ -45,6 +45,11 @@
       }
 
       .text-area-wrapper {
+        &.error{
+          textarea{
+            border: 1px solid $error;
+          }
+        }
         textarea {
           width: 100%;
           padding: 0.8rem;
@@ -57,6 +62,13 @@
           &.big{
             height: 224px;
           }
+        }
+        .error-message{
+          font-family: NunitoSans;
+          font-size: 0.875rem;
+          line-height: 1.43;
+          letter-spacing: normal;
+          color: $error;
         }
       }
     }
