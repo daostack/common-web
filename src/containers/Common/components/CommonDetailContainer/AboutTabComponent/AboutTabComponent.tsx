@@ -10,7 +10,8 @@ interface AboutTabComponentProps {
   common: Common;
   screenSize: string;
   onOpenJoinModal: () => void;
-  isCommonMember: boolean | undefined;
+  isCommonMember?: boolean;
+  isJoiningPending: boolean;
 }
 
 export default function AboutTabComponent({
@@ -18,7 +19,10 @@ export default function AboutTabComponent({
   screenSize,
   onOpenJoinModal,
   isCommonMember,
+  isJoiningPending,
 }: AboutTabComponentProps) {
+  const shouldAllowJoiningToCommon = screenSize === ScreenSize.Desktop && !isCommonMember && !isJoiningPending;
+
   const renderContributionType = (type: string) => {
     return <b>{type}</b>;
   };
@@ -44,7 +48,7 @@ export default function AboutTabComponent({
           {formatPrice(common.metadata.minFeeToJoin) + " "}
           {renderContributionType(common.metadata.contributionType || "")} contribution
         </div>
-        {screenSize === ScreenSize.Desktop && !isCommonMember && (
+        {shouldAllowJoiningToCommon && (
           <div className="social-wrapper">
             <button className={`button-blue`} onClick={onOpenJoinModal}>
               Join the effort

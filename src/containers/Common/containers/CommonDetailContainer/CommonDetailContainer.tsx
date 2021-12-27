@@ -11,11 +11,14 @@ import classNames from "classnames";
 
 import { Loader, Share } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
-import { useAuthorizedModal, useModal, useViewPortHook } from "../../../../shared/hooks";
+import {
+  useAuthorizedModal,
+  useModal,
+  useViewPortHook,
+} from "../../../../shared/hooks";
 
 import {
   Discussion,
-  Member,
   Proposal,
   ProposalState,
 } from "../../../../shared/models";
@@ -103,15 +106,15 @@ export default function CommonDetail() {
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
 
-  const commonMemberData = common?.members.filter(
-    (member: Member) => member?.userId === user?.uid
+  const isCommonMember = Boolean(
+    common?.members.some((member) => member.userId === user?.uid)
   );
-
-  const isCommonMember = commonMemberData && commonMemberData?.length > 0;
-
-  const isPending = !!proposals
-    ?.filter((p) => p.state === ProposalState.COUNTDOWN)
-    .filter((p) => p.user?.uid === user?.uid).length;
+  const isJoiningPending = proposals.some(
+    (proposal) =>
+      proposal.state === ProposalState.COUNTDOWN &&
+      proposal.proposerId === user?.uid
+  );
+  const shouldAllowJoiningToCommon = !isCommonMember && !isJoiningPending;
 
   const dispatch = useDispatch();
 
@@ -310,6 +313,12 @@ export default function CommonDetail() {
     }
   }, [inViewPortFooter, setFooterClass, inViewport]);
 
+  useEffect(() => {
+    if (showJoinModal && !shouldAllowJoiningToCommon) {
+      closeJoinModal();
+    }
+  }, [showJoinModal, shouldAllowJoiningToCommon, closeJoinModal]);
+
   return !common ? (
     <Loader />
   ) : common ? (
@@ -320,7 +329,9 @@ export default function CommonDetail() {
         closeColor={
           screenSize === ScreenSize.Mobile ? Colors.white : Colors.gray
         }
-        className={classNames(tab, { "common-detail-container__detail-modal--mobile": isMobileView })}
+        className={classNames(tab, {
+          "common-detail-container__detail-modal--mobile": isMobileView,
+        })}
         isHeaderSticky
         shouldShowHeaderShadow={false}
         styles={{
@@ -335,16 +346,17 @@ export default function CommonDetail() {
             disscussion={currentDisscussion}
             onOpenJoinModal={openJoinModal}
             isCommonMember={isCommonMember}
+            isJoiningPending={isJoiningPending}
           />
         )}
-        {!isMobileView &&
-          (tab === "proposals" || tab === "history") && (
-            <ProposalDetailModal
-              proposal={currentProposal}
-              onOpenJoinModal={openJoinModal}
-              isCommonMember={!!isCommonMember}
-            />
-          )}
+        {!isMobileView && (tab === "proposals" || tab === "history") && (
+          <ProposalDetailModal
+            proposal={currentProposal}
+            onOpenJoinModal={openJoinModal}
+            isCommonMember={isCommonMember}
+            isJoiningPending={isJoiningPending}
+          />
+        )}
         {isMobileView && (
           <div className="get-common-app-wrapper">
             <img src="/icons/logo-all-white.svg" alt="logo" className="logo" />
@@ -424,7 +436,7 @@ export default function CommonDetail() {
                   ))}
                 </div>
                 <div className="social-wrapper" ref={joinEffort}>
-                  {!isCommonMember && !isPending && (
+                  {shouldAllowJoiningToCommon && (
                     <button
                       className={`button-blue join-the-effort-btn`}
                       onClick={onOpenJoinModal}
@@ -440,7 +452,7 @@ export default function CommonDetail() {
                   )}
 
                   {!isCommonMember &&
-                    isPending &&
+                    isJoiningPending &&
                     screenSize === ScreenSize.Desktop && (
                       <div className="member-label">
                         <CheckIcon />
@@ -472,6 +484,7 @@ export default function CommonDetail() {
                     screenSize={screenSize}
                     onOpenJoinModal={onOpenJoinModal}
                     isCommonMember={isCommonMember}
+                    isJoiningPending={isJoiningPending}
                   />
                 </>
               )}
@@ -480,6 +493,8 @@ export default function CommonDetail() {
                   common={common}
                   discussions={discussions || []}
                   loadDisscussionDetail={getDisscussionDetail}
+                  isCommonMember={isCommonMember}
+                  isJoiningPending={isJoiningPending}
                 />
               )}
 
@@ -489,6 +504,8 @@ export default function CommonDetail() {
                   currentTab={tab}
                   proposals={activeProposals}
                   loadProposalDetail={getProposalDetail}
+                  isCommonMember={isCommonMember}
+                  isJoiningPending={isJoiningPending}
                 />
               )}
 
@@ -498,6 +515,8 @@ export default function CommonDetail() {
                   currentTab={tab}
                   proposals={historyProposals}
                   loadProposalDetail={getProposalDetail}
+                  isCommonMember={isCommonMember}
+                  isJoiningPending={isJoiningPending}
                 />
               )}
             </div>
