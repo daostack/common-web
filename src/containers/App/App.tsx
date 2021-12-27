@@ -9,7 +9,7 @@ import { LandingContainer } from "../Landing";
 import { ROUTE_PATHS, SMALL_SCREEN_BREAKPOINT, ScreenSize } from "../../shared/constants";
 import { changeScreenSize } from "../../shared/store/actions";
 import { MyCommonsContainer } from "../Common/containers/MyCommonsContainer";
-import { SubmitInvoicesContainer } from "../Invoices/containers/SubmitInvoicesContainer";
+import { InvoicesApprovalContainer, SubmitInvoicesContainer } from "../Invoices/containers";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -47,6 +47,7 @@ const App = () => {
 
           {/* TODO: According the desgin it should be displayed without showing the Header and the Footer. Need to discuss about that. */}
           <PrivateRoute path={ROUTE_PATHS.SUBMIT_INVOICES} component={SubmitInvoicesContainer} authentificated={true} />
+          <PrivateRoute path={ROUTE_PATHS.INVOICES_APPROVAL} component={InvoicesApprovalContainer} authentificated />
 
           <Route component={NotFound} />
         </Switch>
