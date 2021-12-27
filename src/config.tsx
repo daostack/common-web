@@ -5,6 +5,22 @@ const dev: Configuration = {
   env: REACT_APP_ENV,
   baseApiUrl: "http://localhost:4000/api/v1/",
   firebase: {
+    apiKey: "AIzaSyACs4Fof0wNmAvknR_ykBMD7SxwdxFzKKk",
+    authDomain: "common-dev-dea4e.firebaseapp.com",
+    databaseURL: "https://common-dev-dea4e.firebaseio.com",
+    projectId: "common-dev-dea4e",
+    storageBucket: "common-dev-dea4e.appspot.com",
+    messagingSenderId: "1027354410661",
+    appId: "1:1027354410661:web:486445886843ffcc5b974c",
+  },
+  cloudFunctionUrl:
+    "https://us-central1-common-dev-dea4e.cloudfunctions.net",
+};
+
+const stage: Configuration = {
+  env: REACT_APP_ENV,
+  baseApiUrl: "http://localhost:4000/api/v1/",
+  firebase: {
     apiKey: "AIzaSyClh8UZh-PDyVgwPrHZwURoA4HWuiXUbR8",
     authDomain: "common-staging-50741.firebaseapp.com",
     databaseURL: "https://common-staging-50741.firebaseio.com",
@@ -15,10 +31,6 @@ const dev: Configuration = {
   },
   cloudFunctionUrl:
     "https://us-central1-common-staging-50741.cloudfunctions.net",
-};
-
-const stage: Configuration = {
-  ...dev,
 };
 
 const production: Configuration = {
