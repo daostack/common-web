@@ -29,14 +29,12 @@ const InvoiceApprovalItem: FC<InvoiceApprovalItemProps> = (props) => {
   return (
     <div className="invoice-approval-item-wrapper">
       <div className="invoice-approval-item-wrapper__proposal-info-wrapper">
-        <div>
-          <h4 className="invoice-approval-item-wrapper__title">{title}</h4>
-          <p className="invoice-approval-item-wrapper__description">
-            {description}
-          </p>
-        </div>
+        <h4 className="invoice-approval-item-wrapper__title">{title}</h4>
         <span>{formatPrice(amount)}</span>
       </div>
+      <p className="invoice-approval-item-wrapper__description">
+        {description}
+      </p>
       <ul className="invoice-approval-item-wrapper__invoices">
         {legalDocs.map((legalDoc, index) => (
           <li key={index} className="invoice-approval-item-wrapper__invoice">
