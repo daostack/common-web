@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { ProposalCountDown } from "..";
 import { Proposal, Discussion } from "../../../../../shared/models";
+import { getProposalExpirationDate } from "../../../../../shared/utils";
 import { VotesComponent } from "../VotesComponent";
 import "./index.scss";
 
@@ -89,13 +90,7 @@ export default function PreviewInformationList(
                     <div className="countdown">
                       <ProposalCountDown
                         type="preview"
-                        date={
-                          new Date(
-                            (proposal.createdAt.seconds +
-                              proposal.countdownPeriod) *
-                              1000
-                          )
-                        }
+                        date={getProposalExpirationDate(proposal)}
                       />
                     </div>
                   </div>
