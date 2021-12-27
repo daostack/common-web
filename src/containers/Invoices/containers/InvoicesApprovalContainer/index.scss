@@ -2,6 +2,7 @@
 @import "../../../../styles/sizes";
 
 .invoices-approval-wrapper {
+  padding-top: 32px;
   color: $secondary-blue;
 
   .invoices-approval-wrapper__items {
@@ -15,10 +16,16 @@
   }
 
   .invoices-approval-wrapper__item {
-    margin-bottom: 32px;
+    padding: 32px 0;
+    border-bottom: 1px solid $light-gray-1;
+
+    &:first-child {
+      padding-top: 0;
+    }
 
     &:last-child {
-      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: 0;
     }
   }
 }
