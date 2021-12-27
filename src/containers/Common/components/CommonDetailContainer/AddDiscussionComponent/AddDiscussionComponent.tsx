@@ -4,12 +4,12 @@ import * as Yup from "yup";
 
 import { Modal } from "../../../../../shared/components";
 import { ModalProps } from "@/shared/interfaces";
-import { Common } from "@/shared/models";
+
 import "./index.scss";
 
 interface AddDiscussionComponentProps
   extends Pick<ModalProps, "isShowing" | "onClose"> {
-  common: Common;
+  onDiscussionAdd: (payload: { title: string; message: string }) => void;
 }
 
 const validationSchema = Yup.object({
@@ -20,6 +20,7 @@ const validationSchema = Yup.object({
 const AddDiscussionComponent = ({
   isShowing,
   onClose,
+  onDiscussionAdd,
 }: AddDiscussionComponentProps) => {
   const [formValues] = useState({
     title: "",
@@ -31,8 +32,7 @@ const AddDiscussionComponent = ({
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
           setSubmitting(false);
-
-          console.log(values);
+          onDiscussionAdd(values);
         }}
         initialValues={formValues}
         validateOnChange={true}

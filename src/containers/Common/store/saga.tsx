@@ -7,7 +7,7 @@ import {
   DiscussionMessage,
   Proposal,
 } from "../../../shared/models";
-import { startLoading, stopLoading } from "../../../shared/store/actions";
+import { startLoading, stopLoading } from "@/shared/store/actions";
 import {
   fetchCommonList,
   fetchCommonDetail,
@@ -16,9 +16,12 @@ import {
   fetchOwners,
   fetchDiscussionsMessages,
   fetchUserProposals,
+  createDiscussion,
+  subscribeToCommonDiscussion,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
+import store from "@/index";
 
 export function* getCommonsList(): Generator {
   try {
@@ -56,9 +59,7 @@ export function* getCommonDetail(
   }
 }
 
-export function* loadCommonDiscussionList(
-  action: ReturnType<typeof actions.loadCommonDiscussionList.request>
-): Generator {
+export function* loadCommonDiscussionList(): Generator {
   try {
     yield put(startLoading());
     const discussions: Discussion[] = (yield select(
@@ -191,6 +192,43 @@ export function* loadUserProposalList(
   }
 }
 
+export function* createDiscussionSaga(
+  action: ReturnType<typeof actions.createDiscussion.request>
+): Generator {
+  try {
+    yield put(startLoading());
+
+    yield createDiscussion(action.payload.payload);
+
+    yield call(
+      subscribeToCommonDiscussion,
+      action.payload.payload.commonId,
+      async (data) => {
+        const d = data.find(
+          (d: Discussion) => d.title === action.payload.payload.title
+        );
+
+        if (d) {
+          d.owner = store.getState().auth.user;
+          action.payload.callback(d);
+        }
+
+        const ds = await fetchCommonDiscussions(
+          action.payload.payload.commonId
+        );
+
+        store.dispatch(actions.setDiscussion(ds));
+        store.dispatch(actions.loadCommonDiscussionList.request());
+      }
+    );
+
+    yield put(stopLoading());
+  } catch (e) {
+    yield put(actions.createDiscussion.failure(e));
+    yield put(stopLoading());
+  }
+}
+
 function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
@@ -202,6 +240,7 @@ function* commonsSaga() {
   yield takeLatest(actions.loadProposalList.request, loadProposalList);
   yield takeLatest(actions.loadProposalDetail.request, loadProposalDetail);
   yield takeLatest(actions.loadUserProposalList.request, loadUserProposalList);
+  yield takeLatest(actions.createDiscussion.request, createDiscussionSaga);
 }
 
 export default commonsSaga;

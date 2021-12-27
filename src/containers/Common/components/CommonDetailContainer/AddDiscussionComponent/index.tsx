@@ -1,1 +1,1 @@
-export * from "./AddDiscussionComponent";
+export { default as AddDiscussionComponent } from "./AddDiscussionComponent";

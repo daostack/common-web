@@ -28,6 +28,7 @@ import {
   ProposalsComponent,
   ProposalsHistory,
   AboutSidebarComponent,
+  AddDiscussionComponent,
 } from "../../components/CommonDetailContainer";
 import { MembershipRequestModal } from "../../components/CommonDetailContainer/MembershipRequestModal";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
@@ -52,10 +53,10 @@ import {
   loadDisscussionDetail,
   loadProposalDetail,
   loadProposalList,
+  createDiscussion,
 } from "../../store/actions";
 import CheckIcon from "../../../../shared/icons/check.icon";
 import { selectUser } from "../../../Auth/store/selectors";
-import AddDiscussionComponent from "@/containers/Common/components/CommonDetailContainer/AddDiscussionComponent/AddDiscussionComponent";
 
 interface CommonDetailRouterParams {
   id: string;
@@ -210,6 +211,29 @@ export default function CommonDetail() {
       }
     },
     [proposals, changeTabHandler, getProposalDetail]
+  );
+
+  const addDiscussion = useCallback(
+    (payload) => {
+      dispatch(
+        createDiscussion.request({
+          payload: {
+            ...payload,
+            createTime: new Date(),
+            lastMessage: new Date(),
+            ownerId: user?.uid,
+            commonId: common?.id,
+          },
+          callback: (discussion: Discussion) => {
+            onCloseNewD();
+            setTimeout(() => {
+              getDisscussionDetail(discussion);
+            }, 0);
+          },
+        })
+      );
+    },
+    [dispatch, user, common, onCloseNewD, getDisscussionDetail]
   );
 
   const openJoinModal = useCallback(() => {
@@ -382,8 +406,8 @@ export default function CommonDetail() {
       />
       <AddDiscussionComponent
         isShowing={isShowingNewD}
-        common={common}
         onClose={onCloseNewD}
+        onDiscussionAdd={addDiscussion}
       />
       <div className="common-detail-wrapper">
         <div className="main-information-block">
