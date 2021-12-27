@@ -6,6 +6,7 @@ import {
   formatPrice,
   getDaysAgo,
   getUserName,
+  getProposalExpirationDate,
 } from "../../../../../shared/utils";
 import { ChatComponent } from "../ChatComponent";
 import { ProposalCountDown } from "../ProposalCountDown";
@@ -16,12 +17,14 @@ interface DiscussionDetailModalProps {
   proposal: Proposal | null;
   onOpenJoinModal: () => void;
   isCommonMember: boolean;
+  isJoiningPending: boolean;
 }
 
 export default function ProposalDetailModal({
   proposal,
   onOpenJoinModal,
   isCommonMember,
+  isJoiningPending,
 }: DiscussionDetailModalProps) {
   const date = new Date();
   const [imageError, setImageError] = useState(false);
@@ -33,14 +36,7 @@ export default function ProposalDetailModal({
       <div className="left-side">
         <div className="top-side">
           {proposal.state === "countdown" ? (
-            <ProposalCountDown
-              date={
-                new Date(
-                  (proposal?.createdAt.seconds + proposal.countdownPeriod) *
-                    1000
-                )
-              }
-            />
+            <ProposalCountDown date={getProposalExpirationDate(proposal)} />
           ) : (
             <div
               className={`state-wrapper ${proposal.state.toLocaleLowerCase()}`}
@@ -107,6 +103,7 @@ export default function ProposalDetailModal({
           discussionMessage={proposal.discussionMessage || []}
           onOpenJoinModal={onOpenJoinModal}
           isCommonMember={isCommonMember}
+          isJoiningPending={isJoiningPending}
         />
       </div>
     </div>

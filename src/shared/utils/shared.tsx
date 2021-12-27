@@ -2,7 +2,7 @@ import millify from "millify";
 import moment from "moment";
 
 import { MobileOperatingSystem } from "../constants";
-import { Time, User } from "../models";
+import { Proposal, Time, User } from "../models";
 
 /**
  * Backend stores the price in cents, that's why we divide by 100
@@ -175,3 +175,6 @@ export const roundNumberToNextTenths = (
   valueForRounding = 10
 ): number =>
   Math.floor((value + valueForRounding) / valueForRounding) * valueForRounding;
+
+export const getProposalExpirationDate = (proposal: Proposal): Date =>
+  new Date((proposal.createdAt.seconds + proposal.countdownPeriod) * 1000);
