@@ -18,6 +18,8 @@ import {
   fetchUserProposals,
   createDiscussion,
   subscribeToCommonDiscussion,
+  addMessageToDiscussion,
+  subscribeToDiscussionMessages,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -229,6 +231,31 @@ export function* createDiscussionSaga(
   }
 }
 
+export function* addMessageToDiscussionSaga(
+  action: ReturnType<typeof actions.addMessageToDiscussion.request>
+): Generator {
+  try {
+    yield put(startLoading());
+
+    yield addMessageToDiscussion(action.payload.payload);
+
+    yield call(
+      subscribeToDiscussionMessages,
+      action.payload.payload.discussionId,
+      async (data) => {
+        store.dispatch(
+          actions.loadDisscussionDetail.request(action.payload.discussion)
+        );
+      }
+    );
+
+    yield put(stopLoading());
+  } catch (e) {
+    yield put(actions.addMessageToDiscussion.failure(e));
+    yield put(stopLoading());
+  }
+}
+
 function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
@@ -241,6 +268,10 @@ function* commonsSaga() {
   yield takeLatest(actions.loadProposalDetail.request, loadProposalDetail);
   yield takeLatest(actions.loadUserProposalList.request, loadUserProposalList);
   yield takeLatest(actions.createDiscussion.request, createDiscussionSaga);
+  yield takeLatest(
+    actions.addMessageToDiscussion.request,
+    addMessageToDiscussionSaga
+  );
 }
 
 export default commonsSaga;

@@ -13,6 +13,7 @@ import {
 } from "../../../shared/utils";
 import firebase from "../../../shared/utils/firebase";
 import { CreateDiscussionDto } from "@/containers/Common/interfaces";
+import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
 
 export async function fetchCommonDiscussions(commonId: string) {
   const commons = await firebase
@@ -161,6 +162,21 @@ export function createDiscussion(payload: CreateDiscussionDto) {
   }
 }
 
+export function addMessageToDiscussion(payload: AddMessageToDiscussionDto) {
+  try {
+    return firebase
+      .firestore()
+      .collection("discussionMessage")
+      .doc()
+      .set(payload)
+      .then((value) => {
+        return value;
+      });
+  } catch (e) {
+    console.log("addMessageToDiscussion", e);
+  }
+}
+
 export function subscribeToCommonDiscussion(
   commonId: string,
   callback: (payload: any) => void
@@ -169,6 +185,19 @@ export function subscribeToCommonDiscussion(
     .firestore()
     .collection("discussion")
     .where("commonId", "==", commonId);
+  return query.onSnapshot((snapshot) => {
+    callback(transformFirebaseDataList(snapshot));
+  });
+}
+export function subscribeToDiscussionMessages(
+  discussionId: string,
+  callback: (payload: any) => void
+): () => void {
+  const query = firebase
+    .firestore()
+    .collection("discussionMessage")
+    .where("discussionId", "==", discussionId);
+
   return query.onSnapshot((snapshot) => {
     callback(transformFirebaseDataList(snapshot));
   });
