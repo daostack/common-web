@@ -1,0 +1,53 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+.invoice-approval-item-wrapper {
+  .invoice-approval-item-wrapper__proposal-info-wrapper {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .invoice-approval-item-wrapper__title {
+    margin: 0;
+  }
+
+  .invoice-approval-item-wrapper__description {
+    margin: 4px 0 0;
+    font-size: $xsmall;
+    color: $light-gray-2;
+  }
+
+  .invoice-approval-item-wrapper__invoices {
+    margin: 12px 0 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style-type: none;
+
+    &:after {
+      content: "";
+      flex: auto;
+    }
+
+    @include big-phone {
+      flex-direction: column;
+      justify-content: unset;
+      flex-wrap: unset;
+      gap: unset;
+    }
+  }
+
+  .invoice-approval-item-wrapper__invoice {
+    @include big-phone {
+      margin-bottom: 8px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}

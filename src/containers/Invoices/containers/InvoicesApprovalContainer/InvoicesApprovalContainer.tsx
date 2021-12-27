@@ -1,14 +1,58 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { selectUser } from "../../../Auth/store/selectors";
-import { AddInvoices } from "../../components/AddInvoices";
-import ApprovedIcon from "../../../../shared/icons/approved.icon";
+import React, { FC } from "react";
+import { InvoiceApprovalItem } from "../../components/InvoiceApprovalItem";
 import "./index.scss";
 
-export default function InvoicesApprovalContainer() {
+const InvoicesApprovalContainer: FC = () => {
   return (
     <div className="invoices-approval-wrapper">
-      InvoicesApprovalContainer
+      <ul className="invoices-approval-wrapper__items">
+        <li className="invoices-approval-wrapper__item">
+          <InvoiceApprovalItem
+            title="Proposal Title"
+            description="Proposal Description"
+            amount={13000}
+            legalDocs={[
+              {
+                name: "file_name.jpg",
+                legalType: 2,
+                amount: 5000,
+                mimeType: "image/jpg",
+                downloadURL: "https://upload.wikimedia.org/wikipedia/commons/0/0b/ReceiptSwiss.jpg",
+              },
+              {
+                name: "file_name.jpg",
+                legalType: 2,
+                amount: 5000,
+                mimeType: "image/jpg",
+                downloadURL: "https://upload.wikimedia.org/wikipedia/commons/0/0b/ReceiptSwiss.jpg",
+              },
+              {
+                name: "file_name.jpg",
+                legalType: 2,
+                amount: 5000,
+                mimeType: "image/jpg",
+                downloadURL: "https://upload.wikimedia.org/wikipedia/commons/0/0b/ReceiptSwiss.jpg",
+              },
+              {
+                name: "file_name.jpg",
+                legalType: 2,
+                amount: 5000,
+                mimeType: "image/jpg",
+                downloadURL: "https://upload.wikimedia.org/wikipedia/commons/0/0b/ReceiptSwiss.jpg",
+              },
+              {
+                name: "file_name.jpg",
+                legalType: 2,
+                amount: 5000,
+                mimeType: "image/jpg",
+                downloadURL: "https://upload.wikimedia.org/wikipedia/commons/0/0b/ReceiptSwiss.jpg",
+              },
+            ]}
+          />
+        </li>
+      </ul>
     </div>
   );
-}
+};
+
+export default InvoicesApprovalContainer;
