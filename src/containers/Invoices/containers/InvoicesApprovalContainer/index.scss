@@ -5,6 +5,12 @@
   padding-top: 32px;
   color: $secondary-blue;
 
+  .invoices-approval-wrapper__no-proposals {
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+  }
+
   .invoices-approval-wrapper__items {
     max-width: 500px;
     width: 100%;
