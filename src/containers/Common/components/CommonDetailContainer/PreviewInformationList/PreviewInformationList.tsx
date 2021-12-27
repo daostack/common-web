@@ -89,7 +89,13 @@ export default function PreviewInformationList(
                     <div className="countdown">
                       <ProposalCountDown
                         type="preview"
-                        date={new Date(proposal?.expiresAt)}
+                        date={
+                          new Date(
+                            (proposal.createdAt.seconds +
+                              proposal.countdownPeriod) *
+                              1000
+                          )
+                        }
                       />
                     </div>
                   </div>

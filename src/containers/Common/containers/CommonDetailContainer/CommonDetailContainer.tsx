@@ -19,7 +19,6 @@ import {
 
 import {
   Discussion,
-  Member,
   Proposal,
   ProposalState,
 } from "../../../../shared/models";
