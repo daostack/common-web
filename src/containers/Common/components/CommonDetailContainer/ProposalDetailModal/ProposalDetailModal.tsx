@@ -6,6 +6,7 @@ import {
   formatPrice,
   getDaysAgo,
   getUserName,
+  getProposalExpirationDate,
 } from "../../../../../shared/utils";
 import { ChatComponent } from "../ChatComponent";
 import { ProposalCountDown } from "../ProposalCountDown";
@@ -35,14 +36,7 @@ export default function ProposalDetailModal({
       <div className="left-side">
         <div className="top-side">
           {proposal.state === "countdown" ? (
-            <ProposalCountDown
-              date={
-                new Date(
-                  (proposal?.createdAt.seconds + proposal.countdownPeriod) *
-                    1000
-                )
-              }
-            />
+            <ProposalCountDown date={getProposalExpirationDate(proposal)} />
           ) : (
             <div
               className={`state-wrapper ${proposal.state.toLocaleLowerCase()}`}

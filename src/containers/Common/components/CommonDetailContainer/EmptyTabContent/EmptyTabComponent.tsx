@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { MembershipRequestModal } from "../MembershipRequestModal";
 import { useAuthorizedModal } from "../../../../../shared/hooks";
-import { Common, Member } from "../../../../../shared/models";
+import { Common } from "../../../../../shared/models";
 import { ROUTE_PATHS } from "../../../../../shared/constants";
 import "./index.scss";
 
