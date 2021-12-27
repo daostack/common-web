@@ -1,0 +1,66 @@
+@import "../../../../constants.scss";
+@import "../../../../styles/sizes.scss";
+
+.file-preview-wrapper {
+  .file-preview-overlay {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    background-color: $black;
+    opacity: 0.5;
+    top: 0;
+    left: 0;
+    z-index: 10;
+  }
+
+  .content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 11;
+    backdrop-filter: blur(2px);
+    .top {
+      display: flex;
+      width: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+      .delete-invoice {
+        background-color: $black-gray;
+        padding: 10px;
+        border-radius: 50px;
+        margin-left: auto;
+        cursor: pointer;
+        &:hover {
+          opacity: 0.9;
+        }
+      }
+    }
+    .preview-image {
+      margin: auto;
+      border-radius: 10px;
+      max-height: 70%;
+      max-width: 70%;
+      &.shrink {
+        animation: shrink .5s forwards;
+      }
+      @keyframes shrink {
+        from {
+          max-height: 70%;
+        }
+        to {
+          max-height: 40%;
+        }
+      }
+    }
+    .bottom {
+      padding: 20px;
+      box-sizing: border-box;
+    }
+  }
+}

@@ -1,0 +1,60 @@
+@import "../../../../constants.scss";
+@import "../../../../styles/sizes.scss";
+
+.add-invoices-wrapper {
+  input[type="file"] {
+    display: none;
+  }
+  .invoices-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    > label,
+    > div {
+      margin: 0.75rem;
+    }
+    :first-child {
+      margin-left: 0;
+    }
+    :last-child {
+      margin-right: 0;
+    }
+    .add-invoice-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: $light-gray-4;
+      border-radius: 14px;
+      width: 160px;
+      height: 160px;
+      cursor: pointer;
+      &:hover {
+        opacity: .9;
+      }
+    }
+  }
+
+  .upload-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .add-invoices__total-amount-label {
+      margin: 1.5rem 0;
+    }
+  }
+
+  @include big-phone {
+    width: 100%;
+    .invoices-container {
+      flex-direction: column-reverse;
+      > label,
+      > div {
+        margin: 0.75rem 0;
+      }
+      .add-invoice-button {
+        width: 100%;
+      }
+    }
+  }
+}
