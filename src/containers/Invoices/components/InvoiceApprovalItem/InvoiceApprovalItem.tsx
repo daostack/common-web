@@ -31,7 +31,9 @@ const InvoiceApprovalItem: FC<InvoiceApprovalItemProps> = (props) => {
       <div className="invoice-approval-item-wrapper__proposal-info-wrapper">
         <div>
           <h4 className="invoice-approval-item-wrapper__title">{title}</h4>
-          <p className="invoice-approval-item-wrapper__description">{description}</p>
+          <p className="invoice-approval-item-wrapper__description">
+            {description}
+          </p>
         </div>
         <span>{formatPrice(amount)}</span>
       </div>
@@ -42,11 +44,23 @@ const InvoiceApprovalItem: FC<InvoiceApprovalItemProps> = (props) => {
               imageSrc={legalDoc.downloadURL}
               alt={legalDoc.name}
               amount={legalDoc.amount}
-              variant={isMobileView ? InvoiceTileVariant.FullWidth : InvoiceTileVariant.Square}
+              variant={
+                isMobileView
+                  ? InvoiceTileVariant.FullWidth
+                  : InvoiceTileVariant.Square
+              }
             />
           </li>
         ))}
       </ul>
+      <div className="invoice-approval-item-wrapper__buttons">
+        <button className="button-blue invoice-approval-item-wrapper__accept-button">
+          Accept
+        </button>
+        <button className="button-blue invoice-approval-item-wrapper__decline-button">
+          Decline
+        </button>
+      </div>
     </div>
   );
 };

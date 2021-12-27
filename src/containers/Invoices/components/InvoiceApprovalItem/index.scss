@@ -50,4 +50,22 @@
       }
     }
   }
+
+  .invoice-approval-item-wrapper__buttons {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+
+  .invoice-approval-item-wrapper__accept-button,
+  .invoice-approval-item-wrapper__decline-button {
+    margin-top: 12px;
+    border: 1px solid $light-gray-1;
+    background-color: $white;
+    color: $secondary-blue;
+  }
+
+  .invoice-approval-item-wrapper__decline-button {
+    color: $red;
+  }
 }
