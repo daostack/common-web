@@ -13,6 +13,7 @@ import "./index.scss";
 const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png, .pdf";
 
 interface AddInvoicesProps {
+  proposalRequest: number | undefined
   className?: string;
 }
 
@@ -22,7 +23,7 @@ interface IFile {
 }
 
 export default function AddInvoices(props: AddInvoicesProps): ReactElement {
-  const { className } = props;
+  const { className, proposalRequest } = props;
   const [selectedFiles, setSelectedFiles] = useState<IFile[]>([]);
   const [showFilePreview, setShowFilePreview] = useState(false);
   const screenSize = useSelector(getScreenSize());
@@ -101,7 +102,7 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
           onUpload={() => { return; }}
           onCancel={() => setShowUploadPrompt(false)}
           invoicesTotal={formatPrice(totalAmount * 100)}
-          proposalRequest={formatPrice(950)} />
+          proposalRequest={formatPrice(proposalRequest)} />
       )}
     </div>
   )
