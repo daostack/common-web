@@ -3,11 +3,16 @@ import classNames from "classnames";
 import "./index.scss";
 
 interface Styles {
-  previewImage?: string;
+  previewImage?: {
+    default?: string;
+    generalFile?: string;
+  };
 }
 
 interface IProps {
   fileURL: string;
+  fileName: string;
+  isImage: boolean;
   topContent?: ReactNode;
   bottomContent?: ReactNode;
   styles?: Styles;
@@ -15,6 +20,8 @@ interface IProps {
 
 export default function FilePreview({
   fileURL,
+  fileName,
+  isImage,
   topContent,
   bottomContent,
   styles,
@@ -28,7 +35,13 @@ export default function FilePreview({
 
   const previewImageClassName = classNames(
     "preview-image",
-    styles?.previewImage
+    {
+      [classNames(
+        "preview-image--general-file",
+        styles?.previewImage?.generalFile
+      )]: !isImage,
+    },
+    styles?.previewImage?.default
   );
 
   return (
@@ -36,11 +49,11 @@ export default function FilePreview({
       <div className="file-preview-overlay" />
       <div className="content">
         {topContent}
-        <img
-          className={previewImageClassName}
-          src={fileURL}
-          alt="preview"
-        />
+        {isImage ? (
+          <img className={previewImageClassName} src={fileURL} alt={fileName} />
+        ) : (
+          <div className={previewImageClassName}>{fileName}</div>
+        )}
         {bottomContent}
       </div>
     </div>

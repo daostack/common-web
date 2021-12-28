@@ -47,6 +47,10 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
   ] = useState<number | null>(null);
   const [showUploadPrompt, setShowUploadPrompt] = useState(false);
   const [showInsertAmountPrompt, setShowInsertAmountPrompt] = useState(false);
+  const fileForPreview =
+    showFilePreview && selectedFiles.length > 0
+      ? selectedFiles[selectedFiles.length - 1].data
+      : null;
 
   const selectFiles: ChangeEventHandler<HTMLInputElement> = (event) => {
     const file = event.target.files ? event.target.files[0] : null;
@@ -169,15 +173,19 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
       </div>
       {selectedFiles.length > 0 && (
         <div className="upload-wrapper">
-          {showFilePreview && (
+          {fileForPreview && (
             <FilePreview
-              fileURL={URL.createObjectURL(selectedFiles[selectedFiles.length - 1].data)}
+              fileURL={URL.createObjectURL(fileForPreview)}
+              fileName={fileForPreview.name}
+              isImage={fileForPreview.type.startsWith("image/")}
               topContent={topFilePreviewContent}
               bottomContent={bottomFilePreviewContent}
               styles={{
-                previewImage: showInsertAmountPrompt
-                  ? "add-invoices-wrapper__file-preview-image--shrink"
-                  : undefined,
+                previewImage: {
+                  default: showInsertAmountPrompt
+                    ? "add-invoices-wrapper__file-preview-image--shrink"
+                    : undefined,
+                },
               }}
             />
           )}
