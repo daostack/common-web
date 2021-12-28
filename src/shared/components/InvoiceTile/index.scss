@@ -34,6 +34,7 @@ $invoice-tile-border-radius: 14px;
     background-color: $light-gray-1;
     text-align: center;
     word-break: break-word;
+    user-select: none;
     overflow: hidden;
   }
 
