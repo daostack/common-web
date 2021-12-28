@@ -22,6 +22,10 @@ interface IFile {
   amount: number
 }
 
+const removeInvoice = (invoices: IFile[], indexToRemove: number) => (
+  invoices.filter((invoice, index) => index !== indexToRemove)
+);
+
 export default function AddInvoices(props: AddInvoicesProps): ReactElement {
   const { className, proposalRequest } = props;
   const [selectedFiles, setSelectedFiles] = useState<IFile[]>([]);
@@ -29,7 +33,7 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
   const screenSize = useSelector(getScreenSize());
   const totalAmount = selectedFiles.map((file: IFile) => file.amount).reduce((a: number, b: number) => a + b, 0);
   const [showDeletePrompt, setShowDeletePrompt] = useState(false);
-  const [selectedInvoiceIndexToDelete, setSelectedInvoiceIndexToDelete] = useState<number | undefined>(undefined);
+  const [selectedInvoiceIndexToDelete, setSelectedInvoiceIndexToDelete] = useState<number | null>(null);
   const [showUploadPrompt, setShowUploadPrompt] = useState(false);
 
   const selectFiles: ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -40,11 +44,24 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
     setShowFilePreview(true);
   };
 
-  const removeInvoice = useCallback((indexToRemove: number) => {
-    return selectedFiles.filter((file: IFile, index: number) =>
-      index !== indexToRemove
-    );
-  }, [selectedFiles]);
+  const onDeletePromptClose = useCallback(() => {
+    setShowDeletePrompt(false);
+  }, []);
+
+  const onInvoiceDeleteFromFilePreview = useCallback(() => {
+    setSelectedFiles((selectedFiles) => removeInvoice(selectedFiles, selectedFiles.length - 1));
+    onDeletePromptClose();
+    setShowFilePreview(false);
+  }, [onDeletePromptClose]);
+
+  const onInvoiceDelete = useCallback(() => {
+    if (selectedInvoiceIndexToDelete !== null) {
+      setSelectedFiles((selectedFiles) => removeInvoice(selectedFiles, selectedInvoiceIndexToDelete));
+    }
+
+    onDeletePromptClose();
+    setSelectedInvoiceIndexToDelete(null);
+  }, [selectedInvoiceIndexToDelete, onDeletePromptClose]);
 
   const uploadedInvoices = useMemo(() => selectedFiles.map((file: any, index: number) => {
     return (
@@ -56,6 +73,17 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
         onDelete={() => { setShowDeletePrompt(true); setSelectedInvoiceIndexToDelete(index); }}
         variant={screenSize === ScreenSize.Mobile ? InvoiceTileVariant.FullWidth : InvoiceTileVariant.Square} />)
   }), [selectedFiles, screenSize])
+
+  const topFilePreviewContent = useMemo(() => (
+    <div className="add-invoices-wrapper__file-preview-top-wrapper">
+      <img
+        className="add-invoices-wrapper__file-preview-delete-icon"
+        src="/icons/trash.svg"
+        alt="trash"
+        onClick={() => setShowDeletePrompt(true)}
+      />
+    </div>
+  ), []);
 
   return (
     <div className={classNames("add-invoices-wrapper", className)}>
@@ -72,17 +100,16 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
           {showFilePreview && (
             <FilePreview
               file={selectedFiles[selectedFiles.length - 1].data}
-              onDelete={() => {
-                setShowFilePreview(false);
-                setSelectedFiles(removeInvoice(selectedFiles.length - 1));
-              }}
               onContinue={(amount: number | undefined) => {
                 setShowFilePreview(false);
                 setSelectedFiles((selectedFiles: IFile[]) => [
                   ...selectedFiles.splice(0, selectedFiles.length - 1),
                   { ...selectedFiles[selectedFiles.length - 1], amount: Number(amount) }
                 ])
-              }} />)}
+              }}
+              topContent={topFilePreviewContent}
+            />
+          )}
           <span className="add-invoices__total-amount-label">{`Total invoices amount: ${formatPrice(totalAmount * 100)}`}</span>
           <button
             className="button-blue"
@@ -94,8 +121,9 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
       )}
       {showDeletePrompt && (
         <DeletePrompt
-          onCancel={() => setShowDeletePrompt(false)}
-          onDelete={() => { setSelectedFiles(removeInvoice(selectedInvoiceIndexToDelete as number)); setShowDeletePrompt(false); }} />
+          onCancel={onDeletePromptClose}
+          onDelete={showFilePreview ? onInvoiceDeleteFromFilePreview : onInvoiceDelete}
+        />
       )}
       {showUploadPrompt && (
         <UploadPrompt

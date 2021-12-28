@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ReactNode } from "react";
 import { AmountPrompt } from "../AmountPrompt";
-import { DeletePrompt } from "../DeletePrompt";
 import classNames from "classnames";
 import "./index.scss";
 
 interface IProps {
   file: any,
-  onDelete: () => void
   onContinue: (amount: number | undefined) => void
+  topContent?: ReactNode;
 }
 
-export default function FilePreview({ file, onDelete, onContinue }: IProps) {
-  const [showDeletePrompt, setShowDeletePrompt] = useState(false);
+export default function FilePreview({ file, onContinue, topContent }: IProps) {
   const [showInsertAmountPrompt, setShowInsertAmountPrompt] = useState(false);
 
   useEffect(() => {
@@ -30,9 +28,7 @@ export default function FilePreview({ file, onDelete, onContinue }: IProps) {
     <div className="file-preview-wrapper">
       <div className="file-preview-overlay" />
       <div className="content">
-        <div className="top">
-          <img className="delete-invoice" src="/icons/trash.svg" alt="trash" onClick={() => setShowDeletePrompt(true)} />
-        </div>
+        {topContent}
         <img className={previewImageClassName} src={URL.createObjectURL(file)} alt="preview" />
         <div className="bottom">
           {!showInsertAmountPrompt ? (
@@ -44,7 +40,6 @@ export default function FilePreview({ file, onDelete, onContinue }: IProps) {
           )}
         </div>
       </div>
-      {showDeletePrompt && <DeletePrompt onCancel={() => setShowDeletePrompt(false)} onDelete={() => onDelete()} />}
     </div>
   )
 }
