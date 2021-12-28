@@ -34,4 +34,21 @@
       border-bottom: 0;
     }
   }
+
+  .invoices-approval-wrapper__file-preview-top-wrapper {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .invoices-approval-wrapper__file-preview-close-icon {
+    margin-left: auto;
+    padding: 10px;
+    border-radius: 100%;
+    background-color: $black-gray;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
 }
