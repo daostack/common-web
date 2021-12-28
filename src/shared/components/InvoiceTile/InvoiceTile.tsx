@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { useCallback, FC, MouseEventHandler } from "react";
 import classNames from "classnames";
 import { ButtonIcon } from "../../../shared/components";
 import TrashIcon from "../../../shared/icons/trash.icon";
@@ -12,10 +12,12 @@ export enum InvoiceTileVariant {
 
 interface InvoiceTileProps {
   className?: string;
-  imageSrc: string;
-  alt: string;
+  fileURL: string;
+  fileName: string;
+  isImage: boolean;
   onClick?: () => void;
   onDelete?: () => void;
+  shouldDownloadOnClick?: boolean;
   amount?: number | null;
   variant?: InvoiceTileVariant;
 }
@@ -23,14 +25,26 @@ interface InvoiceTileProps {
 const InvoiceTile: FC<InvoiceTileProps> = (props) => {
   const {
     className,
-    imageSrc,
-    alt,
+    fileURL,
+    fileName,
+    isImage,
     onClick,
     onDelete,
+    shouldDownloadOnClick = false,
     amount = null,
     variant = InvoiceTileVariant.Square,
   } = props;
   const isFullWidthVariant = variant === InvoiceTileVariant.FullWidth;
+
+  const onTileClick = useCallback<MouseEventHandler>(
+    (event) => {
+      if (!shouldDownloadOnClick && onClick) {
+        event.preventDefault();
+        onClick();
+      }
+    },
+    [shouldDownloadOnClick, onClick]
+  );
 
   const amountEl = amount !== null && (
     <span
@@ -55,6 +69,18 @@ const InvoiceTile: FC<InvoiceTileProps> = (props) => {
   const shouldDisplayTopContent =
     isFullWidthVariant && (amountEl || deleteButtonEl);
 
+  const imageClassName = classNames("invoice-tile__image", {
+    "invoice-tile__image--full-width": isFullWidthVariant,
+    "invoice-tile__image--general-file": !isImage,
+  });
+
+  const additionalProps = shouldDownloadOnClick
+    ? {
+        href: fileURL,
+        target: "_blank",
+      }
+    : {};
+
   return (
     <div
       className={classNames(
@@ -62,8 +88,6 @@ const InvoiceTile: FC<InvoiceTileProps> = (props) => {
         { "invoice-tile--full-width": isFullWidthVariant },
         className
       )}
-      onClick={onClick}
-      tabIndex={0}
     >
       {shouldDisplayTopContent && (
         <div className="invoice-tile__top-content-wrapper">
@@ -71,13 +95,17 @@ const InvoiceTile: FC<InvoiceTileProps> = (props) => {
           {deleteButtonEl}
         </div>
       )}
-      <img
-        className={classNames("invoice-tile__image", {
-          "invoice-tile__image--full-width": isFullWidthVariant,
-        })}
-        src={imageSrc}
-        alt={alt}
-      />
+      <a
+        className="invoice-tile__image-wrapper"
+        onClick={onTileClick}
+        {...additionalProps}
+      >
+        {isImage ? (
+          <img className={imageClassName} src={fileURL} alt={fileName} />
+        ) : (
+          <div className={imageClassName}>{fileName}</div>
+        )}
+      </a>
       {!isFullWidthVariant && (
         <>
           {deleteButtonEl}

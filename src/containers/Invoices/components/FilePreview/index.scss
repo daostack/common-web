@@ -1,5 +1,5 @@
-@import "../../../../constants.scss";
-@import "../../../../styles/sizes.scss";
+@import "../../../../constants";
+@import "../../../../styles/sizes";
 
 .file-preview-wrapper {
   .file-preview-overlay {
@@ -25,42 +25,28 @@
     left: 0;
     z-index: 11;
     backdrop-filter: blur(2px);
-    .top {
-      display: flex;
-      width: 100%;
-      padding: 20px;
-      box-sizing: border-box;
-      .delete-invoice {
-        background-color: $black-gray;
-        padding: 10px;
-        border-radius: 50px;
-        margin-left: auto;
-        cursor: pointer;
-        &:hover {
-          opacity: 0.9;
-        }
-      }
-    }
+
     .preview-image {
       margin: auto;
       border-radius: 10px;
       max-height: 70%;
       max-width: 70%;
-      &.shrink {
-        animation: shrink .5s forwards;
-      }
-      @keyframes shrink {
-        from {
-          max-height: 70%;
-        }
-        to {
-          max-height: 40%;
-        }
-      }
     }
-    .bottom {
-      padding: 20px;
-      box-sizing: border-box;
+    .preview-image--general-file {
+      max-width: 520px;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: $light-gray-1;
+      text-align: center;
+      word-break: break-word;
+      overflow: hidden;
+
+      @include big-phone {
+        max-width: 70%;
+      }
     }
   }
 }

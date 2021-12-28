@@ -1,5 +1,5 @@
-@import "../../../../constants.scss";
-@import "../../../../styles/sizes.scss";
+@import "../../../../constants";
+@import "../../../../styles/sizes";
 
 .add-invoices-wrapper {
   input[type="file"] {
@@ -41,6 +41,43 @@
     align-items: center;
     .add-invoices__total-amount-label {
       margin: 1.5rem 0;
+    }
+  }
+
+  .add-invoices-wrapper__file-preview-top-wrapper {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: flex-end;
+    box-sizing: border-box;
+  }
+
+  .add-invoices-wrapper__file-preview-delete-icon {
+    padding: 10px;
+    border-radius: 100%;
+    background-color: $black-gray;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  .add-invoices-wrapper__file-preview-bottom-wrapper {
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .add-invoices-wrapper__file-preview-image--shrink {
+    animation: shrink .5s forwards;
+
+    @keyframes shrink {
+      from {
+        max-height: 70%;
+      }
+      to {
+        max-height: 40%;
+      }
     }
   }
 

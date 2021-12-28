@@ -1,50 +1,61 @@
-import React, { useEffect, useState } from "react";
-import { AmountPrompt } from "../AmountPrompt";
-import { DeletePrompt } from "../DeletePrompt";
+import React, { useEffect, ReactNode } from "react";
 import classNames from "classnames";
 import "./index.scss";
 
-interface IProps {
-  file: any,
-  onDelete: () => void
-  onContinue: (amount: number | undefined) => void
+interface Styles {
+  previewImage?: {
+    default?: string;
+    generalFile?: string;
+  };
 }
 
-export default function FilePreview({ file, onDelete, onContinue }: IProps) {
-  const [showDeletePrompt, setShowDeletePrompt] = useState(false);
-  const [showInsertAmountPrompt, setShowInsertAmountPrompt] = useState(false);
+interface IProps {
+  fileURL: string;
+  fileName: string;
+  isImage: boolean;
+  topContent?: ReactNode;
+  bottomContent?: ReactNode;
+  styles?: Styles;
+}
 
+export default function FilePreview({
+  fileURL,
+  fileName,
+  isImage,
+  topContent,
+  bottomContent,
+  styles,
+}: IProps) {
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "initial";
-    }
+    };
   }, []);
 
-  const previewImageClassName = classNames({
-    "preview-image": true,
-    "shrink": showInsertAmountPrompt
-  });
+  const previewImageClassName = classNames(
+    "preview-image",
+    {
+      [classNames(
+        "preview-image--general-file",
+        styles?.previewImage?.generalFile
+      )]: !isImage,
+    },
+    styles?.previewImage?.default
+  );
 
   return (
     <div className="file-preview-wrapper">
       <div className="file-preview-overlay" />
       <div className="content">
-        <div className="top">
-          <img className="delete-invoice" src="/icons/trash.svg" alt="trash" onClick={() => setShowDeletePrompt(true)} />
-        </div>
-        <img className={previewImageClassName} src={URL.createObjectURL(file)} alt="preview" />
-        <div className="bottom">
-          {!showInsertAmountPrompt ? (
-            <button
-              className="button-blue"
-              onClick={() => setShowInsertAmountPrompt(true)}>Add invoice amount</button>
-          ) : (
-            <AmountPrompt onContinue={onContinue} />
-          )}
-        </div>
+        {topContent}
+        {isImage ? (
+          <img className={previewImageClassName} src={fileURL} alt={fileName} />
+        ) : (
+          <div className={previewImageClassName}>{fileName}</div>
+        )}
+        {bottomContent}
       </div>
-      {showDeletePrompt && <DeletePrompt onCancel={() => setShowDeletePrompt(false)} onDelete={() => onDelete()} />}
     </div>
-  )
+  );
 }

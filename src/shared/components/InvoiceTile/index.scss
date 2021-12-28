@@ -7,11 +7,15 @@ $invoice-tile-border-radius: 14px;
   position: relative;
   width: 160px;
   height: 160px;
-  cursor: pointer;
 
   .invoice-tile__top-content-wrapper {
     margin-bottom: 8px;
     display: flex;
+  }
+
+  .invoice-tile__image-wrapper {
+    color: $secondary-blue;
+    text-decoration: none;
   }
 
   .invoice-tile__image {
@@ -22,6 +26,16 @@ $invoice-tile-border-radius: 14px;
   }
   .invoice-tile__image--full-width {
     height: 100px;
+  }
+  .invoice-tile__image--general-file {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $light-gray-1;
+    text-align: center;
+    word-break: break-word;
+    user-select: none;
+    overflow: hidden;
   }
 
   .invoice-tile__delete-button {
