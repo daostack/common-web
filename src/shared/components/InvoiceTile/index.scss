@@ -23,6 +23,15 @@ $invoice-tile-border-radius: 14px;
   .invoice-tile__image--full-width {
     height: 100px;
   }
+  .invoice-tile__image--general-file {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $light-gray-1;
+    text-align: center;
+    word-break: break-word;
+    overflow: hidden;
+  }
 
   .invoice-tile__delete-button {
     position: absolute;

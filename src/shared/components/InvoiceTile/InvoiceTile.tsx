@@ -12,8 +12,9 @@ export enum InvoiceTileVariant {
 
 interface InvoiceTileProps {
   className?: string;
-  imageSrc: string;
-  alt: string;
+  fileURL: string;
+  fileName: string;
+  isImage: boolean;
   onClick?: () => void;
   onDelete?: () => void;
   amount?: number | null;
@@ -23,8 +24,9 @@ interface InvoiceTileProps {
 const InvoiceTile: FC<InvoiceTileProps> = (props) => {
   const {
     className,
-    imageSrc,
-    alt,
+    fileURL,
+    fileName,
+    isImage,
     onClick,
     onDelete,
     amount = null,
@@ -55,6 +57,11 @@ const InvoiceTile: FC<InvoiceTileProps> = (props) => {
   const shouldDisplayTopContent =
     isFullWidthVariant && (amountEl || deleteButtonEl);
 
+  const imageClassName = classNames("invoice-tile__image", {
+    "invoice-tile__image--full-width": isFullWidthVariant,
+    "invoice-tile__image--general-file": !isImage,
+  });
+
   return (
     <div
       className={classNames(
@@ -71,13 +78,11 @@ const InvoiceTile: FC<InvoiceTileProps> = (props) => {
           {deleteButtonEl}
         </div>
       )}
-      <img
-        className={classNames("invoice-tile__image", {
-          "invoice-tile__image--full-width": isFullWidthVariant,
-        })}
-        src={imageSrc}
-        alt={alt}
-      />
+      {isImage ? (
+        <img className={imageClassName} src={fileURL} alt={fileName} />
+      ) : (
+        <div className={imageClassName}>{fileName}</div>
+      )}
       {!isFullWidthVariant && (
         <>
           {deleteButtonEl}

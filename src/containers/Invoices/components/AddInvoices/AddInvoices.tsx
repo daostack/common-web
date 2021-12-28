@@ -103,13 +103,14 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
 
   const uploadedInvoices = useMemo(
     () =>
-      selectedFiles.map((file: any, index: number) => {
+      selectedFiles.map(({ data, amount }, index) => {
         return (
           <InvoiceTile
             key={index}
-            imageSrc={URL.createObjectURL((file as any).data)}
-            alt={file.data.name}
-            amount={file.amount * 100}
+            fileURL={URL.createObjectURL(data)}
+            fileName={data.name}
+            isImage={data.type.startsWith("image/")}
+            amount={amount * 100}
             onDelete={() => {
               setShowDeletePrompt(true);
               setSelectedInvoiceIndexToDelete(index);
