@@ -18,8 +18,8 @@ interface AddInvoicesProps {
 }
 
 interface IFile {
-  data: File | [];
-  amount: number
+  data: File;
+  amount: number;
 }
 
 const removeInvoice = (invoices: IFile[], indexToRemove: number) => (
@@ -37,10 +37,16 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
   const [showUploadPrompt, setShowUploadPrompt] = useState(false);
 
   const selectFiles: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setSelectedFiles((selectedFiles: IFile[]) => [
+    const file = event.target.files ? event.target.files[0] : null;
+
+    if (!file) {
+      return;
+    }
+
+    setSelectedFiles((selectedFiles) => [
       ...selectedFiles,
-      { data: event.target.files ? event.target.files[0] : [], amount: 0 }
-    ])
+      { data: file, amount: 0 },
+    ]);
     setShowFilePreview(true);
   };
 

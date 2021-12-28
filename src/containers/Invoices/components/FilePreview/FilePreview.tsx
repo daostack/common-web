@@ -4,8 +4,8 @@ import classNames from "classnames";
 import "./index.scss";
 
 interface IProps {
-  file: any,
-  onContinue: (amount: number | undefined) => void
+  file: File;
+  onContinue: (amount?: number) => void;
   topContent?: ReactNode;
 }
 
