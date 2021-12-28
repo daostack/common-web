@@ -7,14 +7,14 @@ interface Styles {
 }
 
 interface IProps {
-  file: File;
+  fileURL: string;
   topContent?: ReactNode;
   bottomContent?: ReactNode;
   styles?: Styles;
 }
 
 export default function FilePreview({
-  file,
+  fileURL,
   topContent,
   bottomContent,
   styles,
@@ -38,7 +38,7 @@ export default function FilePreview({
         {topContent}
         <img
           className={previewImageClassName}
-          src={URL.createObjectURL(file)}
+          src={fileURL}
           alt="preview"
         />
         {bottomContent}

@@ -171,7 +171,7 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
         <div className="upload-wrapper">
           {showFilePreview && (
             <FilePreview
-              file={selectedFiles[selectedFiles.length - 1].data}
+              fileURL={URL.createObjectURL(selectedFiles[selectedFiles.length - 1].data)}
               topContent={topFilePreviewContent}
               bottomContent={bottomFilePreviewContent}
               styles={{
