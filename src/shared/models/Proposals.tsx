@@ -25,7 +25,7 @@ export enum ProposalState {
   ACCEPTED = "Accepted",
   COUNTDOWN = "countdown",
   FINALIZING = "Finalizing",
-  REJECTED = "Rejected",
+  REJECTED = "failed",
 }
 
 export enum ProposalType {
