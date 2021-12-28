@@ -1,17 +1,19 @@
-import React, { useEffect, useState, ReactNode } from "react";
-import { AmountPrompt } from "../AmountPrompt";
+import React, { useEffect, ReactNode } from "react";
 import classNames from "classnames";
 import "./index.scss";
 
-interface IProps {
-  file: File;
-  onContinue: (amount?: number) => void;
-  topContent?: ReactNode;
+interface Styles {
+  previewImage?: string;
 }
 
-export default function FilePreview({ file, onContinue, topContent }: IProps) {
-  const [showInsertAmountPrompt, setShowInsertAmountPrompt] = useState(false);
+interface IProps {
+  file: File;
+  topContent?: ReactNode;
+  bottomContent?: ReactNode;
+  styles?: Styles;
+}
 
+export default function FilePreview({ file, topContent, bottomContent, styles }: IProps) {
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -19,10 +21,7 @@ export default function FilePreview({ file, onContinue, topContent }: IProps) {
     }
   }, []);
 
-  const previewImageClassName = classNames({
-    "preview-image": true,
-    "shrink": showInsertAmountPrompt
-  });
+  const previewImageClassName = classNames("preview-image", styles?.previewImage);
 
   return (
     <div className="file-preview-wrapper">
@@ -30,15 +29,7 @@ export default function FilePreview({ file, onContinue, topContent }: IProps) {
       <div className="content">
         {topContent}
         <img className={previewImageClassName} src={URL.createObjectURL(file)} alt="preview" />
-        <div className="bottom">
-          {!showInsertAmountPrompt ? (
-            <button
-              className="button-blue"
-              onClick={() => setShowInsertAmountPrompt(true)}>Add invoice amount</button>
-          ) : (
-            <AmountPrompt onContinue={onContinue} />
-          )}
-        </div>
+        {bottomContent}
       </div>
     </div>
   )

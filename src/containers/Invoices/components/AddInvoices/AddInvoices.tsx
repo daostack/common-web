@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import { ScreenSize } from "../../../../shared/constants";
 import { formatPrice } from "../../../../shared/utils";
+import { AmountPrompt } from "../AmountPrompt";
 import { DeletePrompt } from "../DeletePrompt";
 import { UploadPrompt } from "../UploadPrompt";
 import "./index.scss";
@@ -35,6 +36,7 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
   const [showDeletePrompt, setShowDeletePrompt] = useState(false);
   const [selectedInvoiceIndexToDelete, setSelectedInvoiceIndexToDelete] = useState<number | null>(null);
   const [showUploadPrompt, setShowUploadPrompt] = useState(false);
+  const [showInsertAmountPrompt, setShowInsertAmountPrompt] = useState(false);
 
   const selectFiles: ChangeEventHandler<HTMLInputElement> = (event) => {
     const file = event.target.files ? event.target.files[0] : null;
@@ -69,6 +71,18 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
     setSelectedInvoiceIndexToDelete(null);
   }, [selectedInvoiceIndexToDelete, onDeletePromptClose]);
 
+  const onFileUploadFinish = useCallback((amount?: number) => {
+    setSelectedFiles((selectedFiles) => (
+      selectedFiles.map((selectedFile, index) => (
+        index === (selectedFiles.length - 1)
+          ? { ...selectedFile, amount: amount || 0 }
+          : selectedFile
+      ))
+    ));
+    setShowFilePreview(false);
+    setShowInsertAmountPrompt(false);
+  }, []);
+
   const uploadedInvoices = useMemo(() => selectedFiles.map((file: any, index: number) => {
     return (
       <InvoiceTile
@@ -91,6 +105,18 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
     </div>
   ), []);
 
+  const bottomFilePreviewContent = useMemo(() => (
+    <div className="add-invoices-wrapper__file-preview-bottom-wrapper">
+      {!showInsertAmountPrompt ? (
+        <button
+          className="button-blue"
+          onClick={() => setShowInsertAmountPrompt(true)}>Add invoice amount</button>
+      ) : (
+        <AmountPrompt onContinue={onFileUploadFinish} />
+      )}
+    </div>
+  ), [showInsertAmountPrompt, onFileUploadFinish]);
+
   return (
     <div className={classNames("add-invoices-wrapper", className)}>
       <div className="invoices-container">
@@ -106,14 +132,11 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
           {showFilePreview && (
             <FilePreview
               file={selectedFiles[selectedFiles.length - 1].data}
-              onContinue={(amount: number | undefined) => {
-                setShowFilePreview(false);
-                setSelectedFiles((selectedFiles: IFile[]) => [
-                  ...selectedFiles.splice(0, selectedFiles.length - 1),
-                  { ...selectedFiles[selectedFiles.length - 1], amount: Number(amount) }
-                ])
-              }}
               topContent={topFilePreviewContent}
+              bottomContent={bottomFilePreviewContent}
+              styles={{
+                previewImage: showInsertAmountPrompt ? "add-invoices-wrapper__file-preview-image--shrink" : undefined,
+              }}
             />
           )}
           <span className="add-invoices__total-amount-label">{`Total invoices amount: ${formatPrice(totalAmount * 100)}`}</span>
