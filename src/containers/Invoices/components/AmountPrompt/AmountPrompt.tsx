@@ -15,7 +15,7 @@ export default function AmountPrompt({ onContinue }: IProps) {
       <CurrencyInput
         name="invoiceAmount"
         value={amount}
-        onValueChange={(value) => setAmount(Number(value))}
+        onValueChange={(value) => setAmount(value ? Number(value) : undefined)}
         className="amount-prompt-wrapper__amount-input"
       />
       <button disabled={!amount} className="button-blue" onClick={() => onContinue(amount)}>Done</button>
