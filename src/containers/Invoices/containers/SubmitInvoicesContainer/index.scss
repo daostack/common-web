@@ -9,6 +9,10 @@
   font-family: NunitoSans-Bold, sans-serif;
   color: $secondary-blue;
 
+  .loader {
+    position: absolute;
+  }
+
   .submit-invoices-wrapper__common-name {
     margin: 0 0 36px;
     font-family: NotoSerifSC-Bold, serif;
@@ -73,6 +77,13 @@
     }
   }
 
+  .submit-invoices-wrapper__description {
+    overflow-wrap: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
   .submit-invoices-wrapper__description-amount {
     margin-top: 16px;
   }
