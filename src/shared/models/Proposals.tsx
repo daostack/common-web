@@ -48,6 +48,14 @@ export type ProposalVote = {
   voter?: User;
 };
 
+export interface LegalDocInfo {
+  name: string;
+  legalType: number;
+  amount?: number;
+  mimeType: string;
+  downloadURL: string;
+}
+
 export interface Proposal {
   commonId: string;
   proposerId: string;
@@ -90,4 +98,6 @@ export interface Proposal {
   /** Details about the join request. Exists only on join request proposals */
   join?: ProposalJoin;
   votes?: ProposalVote[];
+
+  legalDocsInfo?: LegalDocInfo[];
 }
