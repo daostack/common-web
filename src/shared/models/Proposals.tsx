@@ -48,6 +48,14 @@ export type ProposalVote = {
   voter?: User;
 };
 
+export interface LegalDocInfo {
+  name: string;
+  legalType: number;
+  amount?: number;
+  mimeType: string;
+  downloadURL: string;
+}
+
 export interface Proposal {
   commonId: string;
   proposerId: string;

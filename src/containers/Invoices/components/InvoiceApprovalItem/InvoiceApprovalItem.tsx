@@ -2,27 +2,20 @@ import React, { FC } from "react";
 import { useSelector } from "react-redux";
 import { ScreenSize } from "../../../../shared/constants";
 import { InvoiceTile, InvoiceTileVariant } from "../../../../shared/components";
+import { LegalDocInfo } from "../../../../shared/models";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
 import "./index.scss";
-
-interface LegalDoc {
-  name: string;
-  legalType: number;
-  amount: number;
-  mimeType: string;
-  downloadURL: string;
-}
 
 interface InvoiceApprovalItemProps {
   title: string;
   description: string;
   amount: number;
-  legalDocs: LegalDoc[];
+  legalDocsInfo: LegalDocInfo[];
 }
 
 const InvoiceApprovalItem: FC<InvoiceApprovalItemProps> = (props) => {
-  const { title, description, amount, legalDocs } = props;
+  const { title, description, amount, legalDocsInfo } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
@@ -36,12 +29,12 @@ const InvoiceApprovalItem: FC<InvoiceApprovalItemProps> = (props) => {
         {description}
       </p>
       <ul className="invoice-approval-item-wrapper__invoices">
-        {legalDocs.map((legalDoc, index) => (
+        {legalDocsInfo.map((legalDocInfo, index) => (
           <li key={index} className="invoice-approval-item-wrapper__invoice">
             <InvoiceTile
-              imageSrc={legalDoc.downloadURL}
-              alt={legalDoc.name}
-              amount={legalDoc.amount}
+              imageSrc={legalDocInfo.downloadURL}
+              alt={legalDocInfo.name}
+              amount={legalDocInfo.amount}
               variant={
                 isMobileView
                   ? InvoiceTileVariant.FullWidth
