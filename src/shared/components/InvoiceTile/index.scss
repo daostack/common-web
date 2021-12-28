@@ -16,6 +16,7 @@ $invoice-tile-border-radius: 14px;
   .invoice-tile__image-wrapper {
     color: $secondary-blue;
     text-decoration: none;
+    cursor: pointer;
   }
 
   .invoice-tile__image {
