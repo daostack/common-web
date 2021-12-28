@@ -7,11 +7,15 @@ $invoice-tile-border-radius: 14px;
   position: relative;
   width: 160px;
   height: 160px;
-  cursor: pointer;
 
   .invoice-tile__top-content-wrapper {
     margin-bottom: 8px;
     display: flex;
+  }
+
+  .invoice-tile__image-wrapper {
+    color: $secondary-blue;
+    text-decoration: none;
   }
 
   .invoice-tile__image {
