@@ -24,9 +24,9 @@ export default function MembershipRequestBilling(props: IStageProps) {
       <div className="sub-text">{`You are contributing ${formatPrice(
         userData.contributionAmount,
         false
-      )} ${
+      )} (${
         isMonthlyContribution ? "monthly" : "one-time"
-      } to this Common`}</div>
+      }) to this Common`}</div>
       <div className="inputs-wrapper">
         <div className="inputs-group">
           <label>Full Name</label>
