@@ -32,6 +32,24 @@ const getBillingDetails = async (): Promise<BillingDetails | null> => {
   }
 };
 
+const createBillingDetails = async (data: BillingDetails): Promise<void> => {
+  await axiosClient.post(endpoints.addBillingDetails, data, {
+    headers: {
+      Authorization: await getFirebaseToken(),
+    },
+  });
+};
+
+const updateBillingDetails = async (data: Partial<BillingDetails>): Promise<void> => {
+  await axiosClient.patch(endpoints.updateBillingDetails, data, {
+    headers: {
+      Authorization: await getFirebaseToken(),
+    },
+  });
+};
+
 export default {
   getBillingDetails,
+  createBillingDetails,
+  updateBillingDetails,
 };

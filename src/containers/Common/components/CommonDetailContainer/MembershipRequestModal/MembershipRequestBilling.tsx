@@ -1,15 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import BillingDetailsService from "../../../../../services/BillingDetailsService";
 import { countryList } from "../../../../../shared/assets/countries";
 import { Loader } from "../../../../../shared/components";
 import { formatPrice } from "../../../../../shared/utils";
-import { CommonContributionType } from "../../../../../shared/models";
+import {
+  BillingDetails,
+  CommonContributionType,
+} from "../../../../../shared/models";
 import { IStageProps } from "./MembershipRequestModal";
 import "./index.scss";
 
 export default function MembershipRequestBilling(props: IStageProps) {
   const { userData, setUserData, common } = props;
-  const [areBillingDetailsFetched, setAreBillingDetailsFetched] = useState(false);
+  const [
+    fetchedBillingDetails,
+    setFetchedBillingDetails,
+  ] = useState<BillingDetails | null>(null);
+  const [areBillingDetailsFetched, setAreBillingDetailsFetched] = useState(
+    false
+  );
+  const [
+    areBillingDetailsSubmitting,
+    setAreBillingDetailsSubmitting,
+  ] = useState(false);
+  const shouldShowLoader = !areBillingDetailsFetched || areBillingDetailsSubmitting;
 
   const isMonthlyContribution =
     common?.metadata.contributionType === CommonContributionType.Monthly;
@@ -20,6 +34,46 @@ export default function MembershipRequestBilling(props: IStageProps) {
       value={country.value}
     >{`${country.name}`}</option>
   ));
+
+  const handleContinue = useCallback(async () => {
+    const billingDetails: BillingDetails = {
+      name: userData.fullname,
+      city: userData.city,
+      country: userData.country,
+      line1: userData.address,
+      postalCode: userData.postal,
+    };
+
+    if (!fetchedBillingDetails) {
+      try {
+        setAreBillingDetailsSubmitting(true);
+        await BillingDetailsService.createBillingDetails(billingDetails);
+        setUserData((nextUserData) => ({ ...nextUserData, stage: 5 }));
+      } catch (error) {
+        console.error("Error during billing details creation");
+      }
+
+      return;
+    }
+
+    if (
+      billingDetails.name !== fetchedBillingDetails.name ||
+      billingDetails.city !== fetchedBillingDetails.city ||
+      billingDetails.country !== fetchedBillingDetails.country ||
+      billingDetails.line1 !== fetchedBillingDetails.line1 ||
+      billingDetails.postalCode !== fetchedBillingDetails.postalCode
+    ) {
+      try {
+        setAreBillingDetailsSubmitting(true);
+        await BillingDetailsService.updateBillingDetails(billingDetails);
+      } catch (error) {
+        console.error("Error during billing details update");
+        return;
+      }
+    }
+
+    setUserData((nextUserData) => ({ ...nextUserData, stage: 5 }));
+  }, [userData, setUserData, fetchedBillingDetails]);
 
   useEffect(() => {
     (async () => {
@@ -35,6 +89,7 @@ export default function MembershipRequestBilling(props: IStageProps) {
             address: billingDetails.line1,
             postal: billingDetails.postalCode,
           }));
+          setFetchedBillingDetails(billingDetails);
         }
 
         setAreBillingDetailsFetched(true);
@@ -53,12 +108,12 @@ export default function MembershipRequestBilling(props: IStageProps) {
       )} (${
         isMonthlyContribution ? "monthly" : "one-time"
       }) to this Common`}</div>
-      {!areBillingDetailsFetched && (
+      {shouldShowLoader && (
         <div className="membership-request-billing__loader-wrapper">
           <Loader />
         </div>
       )}
-      {areBillingDetailsFetched && (
+      {!shouldShowLoader && (
         <>
           <div className="inputs-wrapper">
             <div className="inputs-group">
@@ -96,7 +151,9 @@ export default function MembershipRequestBilling(props: IStageProps) {
               <input
                 type="text"
                 value={userData.city}
-                onChange={(e) => setUserData({ ...userData, city: e.target.value })}
+                onChange={(e) =>
+                  setUserData({ ...userData, city: e.target.value })
+                }
               />
               <label>District</label>
               <input
@@ -126,7 +183,7 @@ export default function MembershipRequestBilling(props: IStageProps) {
               !userData.postal
             }
             className="button-blue"
-            onClick={() => setUserData({ ...userData, stage: 5 })}
+            onClick={handleContinue}
           >
             Continue to payment
           </button>
