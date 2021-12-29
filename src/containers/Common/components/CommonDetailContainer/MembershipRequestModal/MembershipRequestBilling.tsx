@@ -76,6 +76,10 @@ export default function MembershipRequestBilling(props: IStageProps) {
   }, [userData, setUserData, fetchedBillingDetails]);
 
   useEffect(() => {
+    if (areBillingDetailsFetched) {
+      return;
+    }
+
     (async () => {
       try {
         const billingDetails = await BillingDetailsService.getBillingDetails();
@@ -97,7 +101,7 @@ export default function MembershipRequestBilling(props: IStageProps) {
         console.error("Error during billing details fetch");
       }
     })();
-  }, []);
+  }, [areBillingDetailsFetched, setUserData]);
 
   return (
     <div className="membership-request-content membership-request-billing">
