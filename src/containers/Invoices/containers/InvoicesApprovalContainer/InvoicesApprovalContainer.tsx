@@ -4,11 +4,12 @@ import { InvoiceApprovalItem } from "../../components/InvoiceApprovalItem";
 import { Colors } from "../../../../shared/constants";
 import { ButtonIcon } from "../../../../shared/components";
 import CloseIcon from "../../../../shared/icons/close.icon";
-import { LegalDocInfo } from "../../../../shared/models/Proposals";
+import { LegalDocInfo, Proposal } from "../../../../shared/models/Proposals";
 import "./index.scss";
 
 const InvoicesApprovalContainer: FC = () => {
   const [docForPreview, setDocForPreview] = useState<LegalDocInfo | null>(null);
+  const [proposals, setProposals] = useState<Proposal[]>([]);
 
   const topFilePreviewContent = useMemo(
     () => (
@@ -26,58 +27,25 @@ const InvoicesApprovalContainer: FC = () => {
 
   return (
     <div className="invoices-approval-wrapper">
-      <ul className="invoices-approval-wrapper__items">
-        <li className="invoices-approval-wrapper__item">
-          <InvoiceApprovalItem
-            title="Proposal Title"
-            description="Proposal Description"
-            amount={13000}
-            onInvoiceClick={setDocForPreview}
-            legalDocsInfo={[
-              {
-                name: "file_name.jpg",
-                legalType: 2,
-                amount: 5000,
-                mimeType: "image/jpg",
-                downloadURL:
-                  "https://upload.wikimedia.org/wikipedia/commons/0/0b/ReceiptSwiss.jpg",
-              },
-              {
-                name: "file_name.jpg",
-                legalType: 2,
-                amount: 5000,
-                mimeType: "image/jpg",
-                downloadURL:
-                  "https://upload.wikimedia.org/wikipedia/commons/0/0b/ReceiptSwiss.jpg",
-              },
-              {
-                name: "file_name.jpg",
-                legalType: 2,
-                amount: 5000,
-                mimeType: "image/jpg",
-                downloadURL:
-                  "https://upload.wikimedia.org/wikipedia/commons/0/0b/ReceiptSwiss.jpg",
-              },
-              {
-                name: "file_name.jpg",
-                legalType: 2,
-                amount: 5000,
-                mimeType: "image/jpg",
-                downloadURL:
-                  "https://upload.wikimedia.org/wikipedia/commons/0/0b/ReceiptSwiss.jpg",
-              },
-              {
-                name: "file_name.jpg",
-                legalType: 2,
-                amount: 5000,
-                mimeType: "image/jpg",
-                downloadURL:
-                  "https://upload.wikimedia.org/wikipedia/commons/0/0b/ReceiptSwiss.jpg",
-              },
-            ]}
-          />
-        </li>
-      </ul>
+      {proposals.length > 0 ? (
+        <ul className="invoices-approval-wrapper__items">
+          {proposals.map((proposal) => (
+            <li key={proposal.id} className="invoices-approval-wrapper__item">
+              <InvoiceApprovalItem
+                title={proposal.title}
+                description={proposal.description.description}
+                amount={proposal.fundingRequest?.amount || 0}
+                legalDocsInfo={proposal.legalDocsInfo || []}
+                onInvoiceClick={setDocForPreview}
+              />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <span className="invoices-approval-wrapper__no-proposals">
+          There are no pending approval invoice submissions.
+        </span>
+      )}
       {docForPreview && (
         <FilePreview
           fileURL={docForPreview.downloadURL}
