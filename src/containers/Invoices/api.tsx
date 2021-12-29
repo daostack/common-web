@@ -19,11 +19,6 @@ export async function fetchProposal(proposalId: string) {
   return data[0];
 }
 
-// TODO: need to figure out why we can't access to the ref in the firabase storage
-export async function generateDownloadURL(image: any) {
-
-}
-
 export async function uploadInvoices(invoicesData: InvoicesSubmission) {
   const endpoint = `${config.cloudFunctionUrl}/payments/payme/payout/save-legal-docs-info`;
   const { data } = await axiosClient.post(

@@ -5,6 +5,7 @@ interface IProps {
 }
 
 export default function UploadSuccess({ closePrompt }: IProps) {
+  // TODO: on closePrompt need to update SubmissionStatus to Submitted
   return (
     <div className="upload-success-wrapper">
       <img src="/icons/checkmark.svg" alt="checkmark" />

@@ -22,7 +22,7 @@ enum Expense {
 enum SubmissionStatus {
   Loading,
   PendingUser,
-  Submitted, 
+  Submitted,
 }
 
 export default function SubmitInvoicesContainer() {
@@ -79,6 +79,7 @@ export default function SubmitInvoicesContainer() {
             </div>
           </div>
           <AddInvoices
+            proposalId={proposalId}
             className="submit-invoices-wrapper__add-invoice"
             proposalRequest={proposal?.fundingRequest?.amount} />
         </>

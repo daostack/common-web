@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 
 interface IProps {
-  onUpload: () => void
   onCancel: () => void
   updateUploadState: () => void
   invoicesTotal: string
   proposalRequest: string
 }
 
-export default function PreUpload({ onUpload, onCancel, updateUploadState, invoicesTotal, proposalRequest }: IProps) {
+export default function PreUpload({ onCancel, updateUploadState, invoicesTotal, proposalRequest }: IProps) {
   const [note, setNote] = useState("");
 
   return (
@@ -26,7 +25,7 @@ export default function PreUpload({ onUpload, onCancel, updateUploadState, invoi
         </div>
       </div>
       <textarea value={note} onChange={(e) => setNote(e.target.value)} rows={5} placeholder="Add Note" />
-      <button className="button-blue upload-btn" onClick={() => { onUpload(); updateUploadState(); }} >Upload Invoices</button>
+      <button className="button-blue upload-btn" onClick={() => { updateUploadState(); }} >Upload Invoices</button>
       <button className="button-blue transparent" onClick={onCancel}>I have more invoices to upload</button>
     </div>
   )

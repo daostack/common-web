@@ -1,23 +1,25 @@
 import React, { useState } from "react";
-import "./index.scss";
+import { IFile } from "../AddInvoices/AddInvoices";
 import PendingUpload from "./PendingUpload";
 import PreUpload from "./PreUpload";
 import UploadSuccess from "./UploadSuccess";
+import "./index.scss";
 
 interface IProps {
-  onUpload: () => void
+  proposalId: string
+  selectedFiles: IFile[]
   onCancel: () => void
   invoicesTotal: string
   proposalRequest: string
 }
 
-enum UploadState {
+export enum UploadState {
   PreUpload,
   Pending,
   Success
 }
 
-export default function UploadPrompt({ onUpload, onCancel, invoicesTotal, proposalRequest }: IProps) {
+export default function UploadPrompt({ proposalId, selectedFiles, onCancel, invoicesTotal, proposalRequest }: IProps) {
   const [uploadState, setUploadState] = useState<UploadState>(UploadState.PreUpload);
 
   const renderContent = (uploadState: UploadState) => {
@@ -25,14 +27,16 @@ export default function UploadPrompt({ onUpload, onCancel, invoicesTotal, propos
       case UploadState.PreUpload:
         return (
           <PreUpload
-            onUpload={onUpload}
             onCancel={onCancel}
             updateUploadState={() => setUploadState(UploadState.Pending)}
             invoicesTotal={invoicesTotal}
             proposalRequest={proposalRequest} />
         )
       case UploadState.Pending:
-        return <PendingUpload updateUploadState={() => setUploadState(UploadState.Success)} />
+        return <PendingUpload
+          proposalId={proposalId}
+          selectedFiles={selectedFiles}
+          updateUploadState={setUploadState} />
       case UploadState.Success:
         return <UploadSuccess closePrompt={onCancel} />
     }
