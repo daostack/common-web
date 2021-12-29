@@ -18,8 +18,8 @@ import {
 } from "../../../../shared/hooks";
 
 import { Discussion, Proposal, ProposalState } from "../../../../shared/models";
-import { getScreenSize } from "../../../../shared/store/selectors";
-import { formatPrice } from "../../../../shared/utils";
+import { getScreenSize } from "@/shared/store/selectors";
+import { formatPrice } from "@/shared/utils";
 import {
   AboutTabComponent,
   PreviewInformationList,
