@@ -25,7 +25,7 @@ export enum ProposalState {
   ACCEPTED = "Accepted",
   COUNTDOWN = "countdown",
   FINALIZING = "Finalizing",
-  REJECTED = "Rejected",
+  REJECTED = "failed",
 }
 
 export enum ProposalType {
@@ -98,4 +98,6 @@ export interface Proposal {
   /** Details about the join request. Exists only on join request proposals */
   join?: ProposalJoin;
   votes?: ProposalVote[];
+
+  legalDocsInfo?: LegalDocInfo[];
 }

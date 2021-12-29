@@ -5,3 +5,4 @@ export * from "./shared";
 export * from "./Proposals";
 export * from "./DiscussionMessage";
 export * from "./Discussion";
+export * from "./Invoices";
