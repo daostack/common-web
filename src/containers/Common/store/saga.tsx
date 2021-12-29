@@ -96,20 +96,19 @@ export function* loadDiscussionDetail(
   try {
     yield put(startLoading());
     const discussion = { ...action.payload };
-    if (!discussion.isLoaded) {
-      const { discussionMessage } = action.payload;
 
-      const ownerIds = Array.from(
-        new Set(discussionMessage?.map((d) => d.ownerId))
-      );
-      const owners = (yield fetchOwners(ownerIds)) as User[];
+    const { discussionMessage } = action.payload;
 
-      const loadedDisscussionMessage = discussionMessage?.map((d) => {
-        d.owner = owners.find((o) => o.uid === d.ownerId);
-        return d;
-      });
-      discussion.discussionMessage = loadedDisscussionMessage;
-    }
+    const ownerIds = Array.from(
+      new Set(discussionMessage?.map((d) => d.ownerId))
+    );
+    const owners = (yield fetchOwners(ownerIds)) as User[];
+
+    const loadedDisscussionMessage = discussionMessage?.map((d) => {
+      d.owner = owners.find((o) => o.uid === d.ownerId);
+      return d;
+    });
+    discussion.discussionMessage = loadedDisscussionMessage;
 
     yield put(actions.loadDisscussionDetail.success(discussion));
     yield put(stopLoading());
@@ -157,19 +156,18 @@ export function* loadProposalDetail(
   try {
     yield put(startLoading());
     const proposal = { ...action.payload };
-    if (!proposal.isLoaded) {
-      const { discussionMessage } = action.payload;
 
-      const ownerIds = Array.from(
-        new Set(discussionMessage?.map((d) => d.ownerId))
-      );
-      const owners = (yield fetchOwners(ownerIds)) as User[];
-      const loadedDisscussionMessage = discussionMessage?.map((d) => {
-        d.owner = owners.find((o) => o.uid === d.ownerId);
-        return d;
-      });
-      proposal.discussionMessage = loadedDisscussionMessage;
-    }
+    const { discussionMessage } = action.payload;
+
+    const ownerIds = Array.from(
+      new Set(discussionMessage?.map((d) => d.ownerId))
+    );
+    const owners = (yield fetchOwners(ownerIds)) as User[];
+    const loadedDisscussionMessage = discussionMessage?.map((d) => {
+      d.owner = owners.find((o) => o.uid === d.ownerId);
+      return d;
+    });
+    proposal.discussionMessage = loadedDisscussionMessage;
 
     yield put(actions.loadProposalDetail.success(proposal));
     yield put(stopLoading());
@@ -243,9 +241,13 @@ export function* addMessageToDiscussionSaga(
       subscribeToDiscussionMessages,
       action.payload.payload.discussionId,
       async (data) => {
-        store.dispatch(
-          actions.loadDisscussionDetail.request(action.payload.discussion)
+        const { discussion } = action.payload;
+
+        discussion.discussionMessage = data.sort(
+          (m: DiscussionMessage, mP: DiscussionMessage) =>
+            m.createTime?.seconds - mP.createTime?.seconds
         );
+        store.dispatch(actions.loadDisscussionDetail.request(discussion));
       }
     );
 

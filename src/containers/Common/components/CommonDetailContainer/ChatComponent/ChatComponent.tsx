@@ -1,17 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Share } from "../../../../../shared/components";
-import { DiscussionMessage } from "../../../../../shared/models";
+import { DiscussionMessage } from "@/shared/models";
 import ChatMessage from "./ChatMessage";
 import "./index.scss";
-import { formatDate } from "../../../../../shared/utils";
-import { Colors } from "../../../../../shared/constants";
+import { formatDate } from "@/shared/utils";
+import { Colors } from "@/shared/constants";
 
 interface ChatComponentInterface {
   discussionMessage: DiscussionMessage[];
   onOpenJoinModal: () => void;
   isCommonMember?: boolean;
   isJoiningPending: boolean;
+  isAuthorized?: boolean;
+  sendMessage?: (text: string) => void;
 }
 
 function groupday(acc: any, currentValue: DiscussionMessage): Messages {
@@ -41,7 +43,10 @@ export default function ChatComponent({
   onOpenJoinModal,
   isCommonMember,
   isJoiningPending,
+  isAuthorized,
+  sendMessage,
 }: ChatComponentInterface) {
+  const [message, setMessage] = useState("");
   const shouldAllowJoiningToCommon = !isCommonMember && !isJoiningPending;
   const messages = discussionMessage.reduce(groupday, {});
 
@@ -66,17 +71,42 @@ export default function ChatComponent({
           );
         })}
       </div>
-      <div className="bottom-chat-wrapper">
-        <div className="text">Download the Common app to join the discussion</div>
-        <div className="button-wrapper">
-          {shouldAllowJoiningToCommon && (
-            <button className="button-blue join-the-effort-btn" onClick={onOpenJoinModal}>
-              Join the effort
-            </button>
-          )}
-          <Share type="popup" color={Colors.lightPurple} top="-130px" />
+      {!isAuthorized ? (
+        <div className="bottom-chat-wrapper">
+          <div className="text">
+            Download the Common app to join the discussion
+          </div>
+          <div className="button-wrapper">
+            {shouldAllowJoiningToCommon && (
+              <button
+                className="button-blue join-the-effort-btn"
+                onClick={onOpenJoinModal}
+              >
+                Join the effort
+              </button>
+            )}
+            <Share type="popup" color={Colors.lightPurple} top="-130px" />
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="bottom-chat-wrapper">
+          <input
+            className="message-input"
+            placeholder="What do you think?"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+          <div
+            className="button-blue send"
+            onClick={() => {
+              sendMessage && sendMessage(message);
+              setMessage("");
+            }}
+          >
+            Send
+          </div>
+        </div>
+      )}
     </div>
   );
 }

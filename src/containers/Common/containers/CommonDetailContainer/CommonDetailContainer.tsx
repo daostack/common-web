@@ -189,6 +189,7 @@ export default function CommonDetail() {
     onClose();
     dispatch(clearCurrentDiscussion());
     dispatch(clearCurrentProposal());
+    dispatch(loadCommonDiscussionList.request());
   }, [onClose, dispatch]);
 
   const clickPreviewDisscusionHandler = useCallback(

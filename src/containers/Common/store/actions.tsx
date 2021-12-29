@@ -91,7 +91,6 @@ export const addMessageToDiscussion = createAsyncAction(
   {
     payload: AddMessageToDiscussionDto;
     discussion: Discussion;
-    callback: (payload: Discussion) => void;
   },
   Discussion,
   Error
