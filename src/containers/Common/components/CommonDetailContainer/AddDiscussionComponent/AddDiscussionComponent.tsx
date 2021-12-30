@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
-
+import { TextField } from "@/shared/components/Form/Formik";
 import { Modal } from "../../../../../shared/components";
 import { ModalProps } from "@/shared/interfaces";
 
@@ -45,44 +45,39 @@ const AddDiscussionComponent = ({
             <div className="add-discussion-title">New Post</div>
             <div className="discussion-form-wrapper">
               <div className="input-wrapper">
-                <label>
-                  Post Title <span className="required">Required</span>
-                </label>
                 <div
                   className={`text-area-wrapper ${
                     formikProps.errors.title ? "error" : ""
                   }`}
                 >
-                  <textarea
-                    name="title"
+                  <TextField
+                    id="title"
+                    label="Post Title"
+                    name={"title"}
                     value={formikProps.values.title}
                     onChange={formikProps.handleChange}
                     onBlur={formikProps.handleBlur}
+                    isRequired={true}
                   />
-                  <div className="error-message">
-                    {formikProps.errors.title}
-                  </div>
                 </div>
               </div>
               <div className="input-wrapper">
-                <label>
-                  Message <span className="required">Required</span>
-                </label>
                 <div
                   className={`text-area-wrapper ${
                     formikProps.errors.message ? "error" : ""
                   }`}
                 >
-                  <textarea
+                  <TextField
                     className="big"
-                    name="message"
+                    label="Message"
+                    id="message"
+                    name={"message"}
+                    value={formikProps.values.message}
                     onChange={formikProps.handleChange}
                     onBlur={formikProps.handleBlur}
-                    value={formikProps.values.message}
+                    isRequired={true}
+                    isTextarea={true}
                   />
-                  <div className="error-message">
-                    {formikProps.errors.message}
-                  </div>
                 </div>
               </div>
 

@@ -13,6 +13,10 @@
     height: 100%;
     overflow: auto;
     scrollbar-width: none;
+    &.empty{
+      display: flex;
+      justify-content: center;
+    }
     .date {
       .title {
         text-align: center;

@@ -6,6 +6,7 @@ import ChatMessage from "./ChatMessage";
 import "./index.scss";
 import { formatDate } from "@/shared/utils";
 import { Colors } from "@/shared/constants";
+import { EmptyTabComponent } from "@/containers/Common/components/CommonDetailContainer";
 
 interface ChatComponentInterface {
   discussionMessage: DiscussionMessage[];
@@ -54,7 +55,7 @@ export default function ChatComponent({
 
   return (
     <div className="chat-wrapper">
-      <div className="messages">
+      <div className={`messages ${!dateList.length ? "empty" : ""}`}>
         {dateList.map((day) => {
           const date = new Date(Number(day));
           return (
@@ -70,6 +71,18 @@ export default function ChatComponent({
             </div>
           );
         })}
+
+        {!dateList.length ? (
+          <EmptyTabComponent
+            currentTab="messages"
+            message={
+              "Have any thoughts? Share them with other members by adding the first comment."
+            }
+            title="No comments yet"
+            isCommonMember={isCommonMember}
+            isJoiningPending={isJoiningPending}
+          />
+        ) : null}
       </div>
       {!isAuthorized ? (
         <div className="bottom-chat-wrapper">

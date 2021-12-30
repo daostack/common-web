@@ -28,7 +28,8 @@ export default function EmptyTabComponent({
     onOpen: onJoinModalOpen,
     onClose: onCloseJoinModal,
   } = useAuthorizedModal();
-  const shouldAllowJoiningToCommon = Boolean(common) && !isCommonMember && !isJoiningPending;
+  const shouldAllowJoiningToCommon =
+    Boolean(common) && !isCommonMember && !isJoiningPending;
 
   useEffect(() => {
     if (showJoinModal && !shouldAllowJoiningToCommon) {
@@ -45,7 +46,7 @@ export default function EmptyTabComponent({
           common={common}
         />
       )}
-      <div className="empty-tab-component-wrapper">
+      <div className={`empty-tab-component-wrapper `}>
         <div className="img-wrapper">
           {currentTab === "proposals" && (
             <img alt={currentTab} src="/icons/proposals-empty.svg" />
@@ -60,6 +61,12 @@ export default function EmptyTabComponent({
             <img
               alt={currentTab}
               src="/assets/images/membership-request-membership.svg"
+            />
+          )}
+          {currentTab === "messages" && (
+            <img
+              alt={currentTab}
+              src="/assets/images/illustrations-full-page-common.svg"
             />
           )}
         </div>

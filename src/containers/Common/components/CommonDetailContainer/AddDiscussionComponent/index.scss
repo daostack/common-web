@@ -21,6 +21,7 @@
   .discussion-form-wrapper {
     .input-wrapper {
       margin-bottom: 24px;
+
       label {
         font-family: NunitoSans;
         font-size: 0.75rem;
@@ -45,25 +46,20 @@
       }
 
       .text-area-wrapper {
-        &.error{
-          textarea{
+        &.error {
+          input {
             border: 1px solid $error;
           }
         }
-        textarea {
-          width: 100%;
-          padding: 0.8rem;
-          border-radius: 3px;
-          border: solid 1px #eee;
-          resize: none;
-          box-sizing: border-box;
-          outline: none;
 
-          &.big{
+
+        .big {
+          textarea {
             height: 224px;
           }
         }
-        .error-message{
+
+        .error-message {
           font-family: NunitoSans;
           font-size: 0.875rem;
           line-height: 1.43;
@@ -73,7 +69,7 @@
       }
     }
 
-    .action-wrapper{
+    .action-wrapper {
       width: 100%;
       box-sizing: border-box;
       display: block;
