@@ -87,10 +87,10 @@ export function MembershipRequestModal(props: IProps) {
    * Until implementing a robust way to handle the saving of the data the user will be notified of losing the data.
    */
   useEffect(() => {
-    if (isShowing) {
-      const payload = {
+    if (!isShowing) {
+      const payload: IMembershipRequestData = {
         ...initData,
-        transactionId: uuidv4(),
+        cardId: uuidv4(),
       };
 
       if (user) {
