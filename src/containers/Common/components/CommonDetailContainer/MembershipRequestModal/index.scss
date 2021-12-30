@@ -311,6 +311,11 @@ $payment-iframe-height-mobile: 672px;
       }
     }
   }
+
+  .membership-request-billing__loader-wrapper {
+    padding-top: 30px;
+    display: flex;
+  }
 }
 
 .membership-request-payment {
