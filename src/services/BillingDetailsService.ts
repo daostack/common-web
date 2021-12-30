@@ -1,4 +1,5 @@
 import axios from "axios";
+import { StatusCodes } from "http-status-codes";
 
 import getFirebaseToken from "../helpers/getFirebaseToken";
 import { BillingDetails } from "../shared/models/BillingDetails";
@@ -24,7 +25,7 @@ const getBillingDetails = async (): Promise<BillingDetails | null> => {
 
     return data;
   } catch (error) {
-    if (error.response?.status === 404) {
+    if (error.response?.status === StatusCodes.NOT_FOUND) {
       return null;
     }
 
