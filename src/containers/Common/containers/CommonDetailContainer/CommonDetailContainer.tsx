@@ -134,12 +134,12 @@ export default function CommonDetail() {
   }, [dispatch, id]);
 
   const activeProposals = useMemo(
-    () => [...proposals].filter((d) => d.state === "countdown"),
+    () => [...proposals].filter((d) => d.state === ProposalState.COUNTDOWN),
     [proposals]
   );
 
   const historyProposals = useMemo(
-    () => [...proposals].filter((d) => d.state !== "countdown"),
+    () => [...proposals].filter((d) => d.state !== ProposalState.COUNTDOWN),
     [proposals]
   );
 
