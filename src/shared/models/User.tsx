@@ -14,6 +14,6 @@ export interface User {
   tokens?: string[];
   permissions?: string[];
   proposals?: Proposal[];
-  uid?: string;
+  uid: string;
   //  subscriptions?: Subscription[];
 }

@@ -12,6 +12,8 @@ import {
   transformFirebaseDataSingle,
 } from "../../../shared/utils";
 import firebase from "../../../shared/utils/firebase";
+import { CreateDiscussionDto } from "@/containers/Common/interfaces";
+import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
 
 export async function fetchCommonDiscussions(commonId: string) {
   const commons = await firebase
@@ -134,7 +136,7 @@ export async function fetchDiscussionsMessages(dIds: string[]) {
 
 export function subscribeToCardChange(
   cardId: string,
-  callback: (card?: Card) => void,
+  callback: (card?: Card) => void
 ): () => void {
   return firebase
     .firestore()
@@ -143,4 +145,60 @@ export function subscribeToCardChange(
     .onSnapshot((snapshot) => {
       callback(transformFirebaseDataSingle<Card>(snapshot));
     });
+}
+
+export function createDiscussion(payload: CreateDiscussionDto) {
+  try {
+    return firebase
+      .firestore()
+      .collection("discussion")
+      .doc()
+      .set(payload)
+      .then((value) => {
+        return value;
+      });
+  } catch (e) {
+    console.log("createDiscussion", e);
+  }
+}
+
+export function addMessageToDiscussion(payload: AddMessageToDiscussionDto) {
+  try {
+    return firebase
+      .firestore()
+      .collection("discussionMessage")
+      .doc()
+      .set(payload)
+      .then((value) => {
+        return value;
+      });
+  } catch (e) {
+    console.log("addMessageToDiscussion", e);
+  }
+}
+
+export function subscribeToCommonDiscussion(
+  commonId: string,
+  callback: (payload: any) => void
+): () => void {
+  const query = firebase
+    .firestore()
+    .collection("discussion")
+    .where("commonId", "==", commonId);
+  return query.onSnapshot((snapshot) => {
+    callback(transformFirebaseDataList(snapshot));
+  });
+}
+export function subscribeToDiscussionMessages(
+  discussionId: string,
+  callback: (payload: any) => void
+): () => void {
+  const query = firebase
+    .firestore()
+    .collection("discussionMessage")
+    .where("discussionId", "==", discussionId);
+
+  return query.onSnapshot((snapshot) => {
+    callback(transformFirebaseDataList(snapshot));
+  });
 }

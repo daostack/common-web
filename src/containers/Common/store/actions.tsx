@@ -2,6 +2,10 @@ import { createAsyncAction, createStandardAction } from "typesafe-actions";
 
 import { Common, Proposal, Discussion } from "../../../shared/models";
 import { CommonsActionTypes } from "./constants";
+import {
+  CreateDiscussionDto,
+  AddMessageToDiscussionDto,
+} from "@/containers/Common/interfaces";
 
 export const getCommonsList = createAsyncAction(
   CommonsActionTypes.GET_COMMONS_LIST,
@@ -68,3 +72,26 @@ export const loadUserProposalList = createAsyncAction(
   CommonsActionTypes.LOAD_USER_PROPOSAL_LIST_SUCCESS,
   CommonsActionTypes.LOAD_USER_PROPOSAL_LIST_FAILURE
 )<string, Proposal[], Error>();
+
+export const createDiscussion = createAsyncAction(
+  CommonsActionTypes.CREATE_DISCUSSION,
+  CommonsActionTypes.CREATE_DISCUSSION_SUCCESS,
+  CommonsActionTypes.CREATE_DISCUSSION_FAILURE
+)<
+  { payload: CreateDiscussionDto; callback: (payload: Discussion) => void },
+  Discussion[],
+  Error
+>();
+
+export const addMessageToDiscussion = createAsyncAction(
+  CommonsActionTypes.ADD_MESSAGE_TO_DISCUSSION,
+  CommonsActionTypes.ADD_MESSAGE_TO_DISCUSSION_SUCCESS,
+  CommonsActionTypes.ADD_MESSAGE_TO_DISCUSSION_FAILURE
+)<
+  {
+    payload: AddMessageToDiscussionDto;
+    discussion: Discussion;
+  },
+  Discussion,
+  Error
+>();

@@ -17,13 +17,9 @@ import {
   useViewPortHook,
 } from "../../../../shared/hooks";
 
-import {
-  Discussion,
-  Proposal,
-  ProposalState,
-} from "../../../../shared/models";
-import { getScreenSize } from "../../../../shared/store/selectors";
-import { formatPrice } from "../../../../shared/utils";
+import { Discussion, Proposal, ProposalState } from "../../../../shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
+import { formatPrice } from "@/shared/utils";
 import {
   AboutTabComponent,
   PreviewInformationList,
@@ -32,6 +28,7 @@ import {
   ProposalsComponent,
   ProposalsHistory,
   AboutSidebarComponent,
+  AddDiscussionComponent,
 } from "../../components/CommonDetailContainer";
 import { MembershipRequestModal } from "../../components/CommonDetailContainer/MembershipRequestModal";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
@@ -56,6 +53,7 @@ import {
   loadDisscussionDetail,
   loadProposalDetail,
   loadProposalList,
+  createDiscussion,
 } from "../../store/actions";
 import CheckIcon from "../../../../shared/icons/check.icon";
 import { selectUser } from "../../../Auth/store/selectors";
@@ -119,6 +117,11 @@ export default function CommonDetail() {
   const dispatch = useDispatch();
 
   const { isShowing, onOpen, onClose } = useModal(false);
+  const {
+    isShowing: isShowingNewD,
+    onOpen: onOpenNewD,
+    onClose: onCloseNewD,
+  } = useModal(false);
   const {
     isModalOpen: showJoinModal,
     onOpen: onOpenJoinModal,
@@ -186,6 +189,7 @@ export default function CommonDetail() {
     onClose();
     dispatch(clearCurrentDiscussion());
     dispatch(clearCurrentProposal());
+    dispatch(loadCommonDiscussionList.request());
   }, [onClose, dispatch]);
 
   const clickPreviewDisscusionHandler = useCallback(
@@ -210,6 +214,29 @@ export default function CommonDetail() {
     [proposals, changeTabHandler, getProposalDetail]
   );
 
+  const addDiscussion = useCallback(
+    (payload) => {
+      dispatch(
+        createDiscussion.request({
+          payload: {
+            ...payload,
+            createTime: new Date(),
+            lastMessage: new Date(),
+            ownerId: user?.uid,
+            commonId: common?.id,
+          },
+          callback: (discussion: Discussion) => {
+            onCloseNewD();
+            setTimeout(() => {
+              getDisscussionDetail(discussion);
+            }, 0);
+          },
+        })
+      );
+    },
+    [dispatch, user, common, onCloseNewD, getDisscussionDetail]
+  );
+
   const openJoinModal = useCallback(() => {
     onClose();
     setTimeout(onOpenJoinModal, 0);
@@ -221,6 +248,11 @@ export default function CommonDetail() {
       setTimeout(onOpen, 0);
     }
   }, [onOpen, currentProposal, currentDisscussion, onCloseJoinModal]);
+
+  const addPost = useCallback(() => {
+    if (!user) return setTimeout(onOpenJoinModal, 0);
+    onOpenNewD();
+  }, [onOpenJoinModal, onOpenNewD, user]);
 
   const renderSidebarContent = () => {
     if (!common) return null;
@@ -373,6 +405,11 @@ export default function CommonDetail() {
         onClose={closeJoinModal}
         common={common}
       />
+      <AddDiscussionComponent
+        isShowing={isShowingNewD}
+        onClose={onCloseNewD}
+        onDiscussionAdd={addDiscussion}
+      />
       <div className="common-detail-wrapper">
         <div className="main-information-block">
           <div className="main-information-wrapper">
@@ -490,6 +527,7 @@ export default function CommonDetail() {
               )}
               {tab === "discussions" && (
                 <DiscussionsComponent
+                  onAddNewPost={addPost}
                   common={common}
                   discussions={discussions || []}
                   loadDisscussionDetail={getDisscussionDetail}
