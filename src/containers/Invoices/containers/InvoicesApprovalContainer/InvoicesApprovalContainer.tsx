@@ -1,4 +1,5 @@
-import React, { useMemo, useState, FC } from "react";
+import React, { useCallback, useMemo, useState, FC } from "react";
+import { DeclineSubmissionPrompt } from "../../components/DeclineSubmissionPrompt";
 import { FilePreview } from "../../components/FilePreview";
 import { InvoiceApprovalItem } from "../../components/InvoiceApprovalItem";
 import { Colors } from "../../../../shared/constants";
@@ -9,7 +10,22 @@ import "./index.scss";
 
 const InvoicesApprovalContainer: FC = () => {
   const [docForPreview, setDocForPreview] = useState<LegalDocInfo | null>(null);
+  const [
+    proposalToBeDeclined,
+    setProposalToBeDeclined,
+  ] = useState<Proposal | null>(null);
   const [proposals, setProposals] = useState<Proposal[]>([]);
+
+  const handleDeclinePromptCancel = useCallback(() => {
+    setProposalToBeDeclined(null);
+  }, []);
+
+  const handleSubmissionDecline = useCallback(
+    (note: string) => {
+      handleDeclinePromptCancel();
+    },
+    [handleDeclinePromptCancel]
+  );
 
   const topFilePreviewContent = useMemo(
     () => (
@@ -37,6 +53,7 @@ const InvoicesApprovalContainer: FC = () => {
                 amount={proposal.fundingRequest?.amount || 0}
                 legalDocsInfo={proposal.legalDocsInfo || []}
                 onInvoiceClick={setDocForPreview}
+                onDecline={() => setProposalToBeDeclined(proposal)}
               />
             </li>
           ))}
@@ -52,6 +69,12 @@ const InvoicesApprovalContainer: FC = () => {
           fileName={docForPreview.name}
           isImage={docForPreview.mimeType.startsWith("image/")}
           topContent={topFilePreviewContent}
+        />
+      )}
+      {proposalToBeDeclined && (
+        <DeclineSubmissionPrompt
+          onContinue={handleSubmissionDecline}
+          onCancel={handleDeclinePromptCancel}
         />
       )}
     </div>

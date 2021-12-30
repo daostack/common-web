@@ -11,12 +11,20 @@ interface InvoiceApprovalItemProps {
   title: string;
   description: string;
   amount: number;
-  onInvoiceClick: (legalDocInfo: LegalDocInfo) => void;
   legalDocsInfo: LegalDocInfo[];
+  onInvoiceClick: (legalDocInfo: LegalDocInfo) => void;
+  onDecline: () => void;
 }
 
 const InvoiceApprovalItem: FC<InvoiceApprovalItemProps> = (props) => {
-  const { title, description, amount, onInvoiceClick, legalDocsInfo } = props;
+  const {
+    title,
+    description,
+    amount,
+    legalDocsInfo,
+    onInvoiceClick,
+    onDecline,
+  } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
@@ -56,7 +64,10 @@ const InvoiceApprovalItem: FC<InvoiceApprovalItemProps> = (props) => {
         <button className="button-blue invoice-approval-item-wrapper__accept-button">
           Accept
         </button>
-        <button className="button-blue invoice-approval-item-wrapper__decline-button">
+        <button
+          className="button-blue invoice-approval-item-wrapper__decline-button"
+          onClick={onDecline}
+        >
           Decline
         </button>
       </div>
