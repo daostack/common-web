@@ -99,5 +99,7 @@ export interface Proposal {
   join?: ProposalJoin;
   votes?: ProposalVote[];
 
+  approvalDate?: Time;
+  hasLegalDocs?: boolean;
   legalDocsInfo?: LegalDocInfo[];
 }

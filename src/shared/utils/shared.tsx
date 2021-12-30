@@ -25,6 +25,14 @@ export const formatDate = (date: string | Date) => {
   return moment(date).format("YYYY-MM-DD");
 };
 
+/**
+ * Returns the date in a format of DD-MM-YYYY HH:mm
+ * @param {Time} time
+ */
+ export const formatEpochTime = (time: Time) => {
+  return moment.unix(time.seconds).local().format('DD-MM-YYYY HH:mm');
+}
+
 export const getUserName = (user: User | undefined) => {
   if (!user) return "";
   return user.displayName || `${user.firstName} ${user.lastName}`;

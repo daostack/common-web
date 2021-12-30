@@ -11,6 +11,7 @@ interface IProps {
   onCancel: () => void
   invoicesTotal: string
   proposalRequest: string
+  updateSubmissionStatus: () => void
 }
 
 export enum UploadState {
@@ -19,7 +20,7 @@ export enum UploadState {
   Success
 }
 
-export default function UploadPrompt({ proposalId, selectedFiles, onCancel, invoicesTotal, proposalRequest }: IProps) {
+export default function UploadPrompt({ proposalId, selectedFiles, onCancel, invoicesTotal, proposalRequest, updateSubmissionStatus }: IProps) {
   const [uploadState, setUploadState] = useState<UploadState>(UploadState.PreUpload);
 
   const renderContent = (uploadState: UploadState) => {
@@ -38,7 +39,7 @@ export default function UploadPrompt({ proposalId, selectedFiles, onCancel, invo
           selectedFiles={selectedFiles}
           updateUploadState={setUploadState} />
       case UploadState.Success:
-        return <UploadSuccess closePrompt={onCancel} />
+        return <UploadSuccess closePrompt={onCancel} updateSubmissionStatus={updateSubmissionStatus} />
     }
   }
 

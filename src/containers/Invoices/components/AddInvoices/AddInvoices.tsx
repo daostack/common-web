@@ -22,6 +22,7 @@ const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png, .pdf";
 interface AddInvoicesProps {
   proposalId: string
   proposalRequest: number | undefined;
+  updateSubmissionStatus: () => void;
   className?: string;
 }
 
@@ -34,7 +35,7 @@ const removeInvoice = (invoices: IFile[], indexToRemove: number) =>
   invoices.filter((invoice, index) => index !== indexToRemove);
 
 export default function AddInvoices(props: AddInvoicesProps): ReactElement {
-  const { proposalId, proposalRequest, className } = props;
+  const { proposalId, proposalRequest, updateSubmissionStatus, className } = props;
   const [selectedFiles, setSelectedFiles] = useState<IFile[]>([]);
   console.log(selectedFiles);
   const [showFilePreview, setShowFilePreview] = useState(false);
@@ -219,6 +220,7 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
           onCancel={() => setShowUploadPrompt(false)}
           invoicesTotal={formatPrice(totalAmount * 100)}
           proposalRequest={formatPrice(proposalRequest)}
+          updateSubmissionStatus={updateSubmissionStatus}
         />
       )}
     </div>

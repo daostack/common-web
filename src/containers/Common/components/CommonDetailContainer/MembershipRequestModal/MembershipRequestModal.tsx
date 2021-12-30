@@ -72,7 +72,6 @@ interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
 }
 
 export function MembershipRequestModal(props: IProps) {
-  // TODO: should be saved in the localstorage for saving the progress?
   const [userData, setUserData] = useState(initData);
   const user = useSelector(selectUser());
   const { stage } = userData;

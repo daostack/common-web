@@ -7,9 +7,9 @@ import { useParams } from "react-router-dom";
 import { fetchProposal } from "../../api";
 import { Loader } from "../../../../shared/components";
 import { Proposal } from "../../../../shared/models";
-import { formatPrice } from "../../../../shared/utils";
-import "./index.scss";
+import { formatPrice, formatEpochTime } from "../../../../shared/utils";
 import { fetchCommonDetail } from "../../../Common/store/api";
+import "./index.scss";
 
 interface AddInvoicesRouterParams {
   proposalId: string;
@@ -38,16 +38,9 @@ export default function SubmitInvoicesContainer() {
       try {
         const proposal = await fetchProposal(proposalId);
         console.log(proposal);
-        if (proposal.legalDocsInfo) {
-          if (proposal.legalDocsInfo.length > 0) {
-            setSubmissionStatus(SubmissionStatus.Submitted);
-          } else {
-            setProposal(proposal);
-            const commonProposal = await fetchCommonDetail(proposal.commonId);
-            setCommonName(commonProposal.name);
-            setSubmissionStatus(SubmissionStatus.PendingUser);
-          }
-        } else { // TODO: temporary until the legalDocsInfo will be updated in the backend
+        if (proposal.hasLegalDocs || (proposal.legalDocsInfo && proposal.legalDocsInfo?.length > 0)) {
+          setSubmissionStatus(SubmissionStatus.Submitted);
+        } else {
           setProposal(proposal);
           const commonProposal = await fetchCommonDetail(proposal.commonId);
           setCommonName(commonProposal.name);
@@ -69,7 +62,7 @@ export default function SubmitInvoicesContainer() {
           <div className="submit-invoices-wrapper__description-wrapper">
             <span className="submit-invoices-wrapper__description-header">
               <ApprovedIcon className="submit-invoices-wrapper__description-approved-icon" />
-              <span>{`Approved on ${"APPROVAL_DATE"}`}</span>
+              <span>{`Approved on ${proposal?.approvalDate ? formatEpochTime(proposal.approvalDate) : "UNKNOWN"}`}</span>
             </span>
             <div className="submit-invoices-wrapper__description-content">
               <span className="submit-invoices-wrapper__description">{`${proposal?.description.description}`}</span>
@@ -81,7 +74,8 @@ export default function SubmitInvoicesContainer() {
           <AddInvoices
             proposalId={proposalId}
             className="submit-invoices-wrapper__add-invoice"
-            proposalRequest={proposal?.fundingRequest?.amount} />
+            proposalRequest={proposal?.fundingRequest?.amount}
+            updateSubmissionStatus={() => setSubmissionStatus(SubmissionStatus.Submitted)} />
         </>
       ) : "Already submitted"}
     </div>
