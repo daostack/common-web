@@ -9,6 +9,7 @@ import {
 } from "../../../shared/models";
 import { startLoading, stopLoading } from "../../../shared/store/actions";
 import {
+  createRequestToJoin as createRequestToJoinApi,
   fetchCommonList,
   fetchCommonDetail,
   fetchCommonDiscussions,
@@ -191,6 +192,21 @@ export function* loadUserProposalList(
   }
 }
 
+export function* createRequestToJoin(
+  action: ReturnType<typeof actions.createRequestToJoin.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    const proposal = yield createRequestToJoinApi(action.payload);
+
+    yield put(actions.createRequestToJoin.success(proposal as Proposal));
+    yield put(stopLoading());
+  } catch (e) {
+    yield put(actions.createRequestToJoin.failure(e));
+    yield put(stopLoading());
+  }
+}
+
 function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
@@ -202,6 +218,7 @@ function* commonsSaga() {
   yield takeLatest(actions.loadProposalList.request, loadProposalList);
   yield takeLatest(actions.loadProposalDetail.request, loadProposalDetail);
   yield takeLatest(actions.loadUserProposalList.request, loadUserProposalList);
+  yield takeLatest(actions.createRequestToJoin.request, createRequestToJoin);
 }
 
 export default commonsSaga;

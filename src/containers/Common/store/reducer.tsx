@@ -102,6 +102,11 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       nextState.proposals = proposals;
       nextState.currentProposal = proposal;
     })
+  )
+  .handleAction(actions.createRequestToJoin.success, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.proposals = [{ ...action.payload }, ...nextState.proposals];
+    })
   );
 
 export default reducer;

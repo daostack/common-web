@@ -1,5 +1,6 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 
+import { ProposalJoinRequestData } from "../../../shared/interfaces/api/proposal";
 import { Common, Proposal, Discussion } from "../../../shared/models";
 import { CommonsActionTypes } from "./constants";
 
@@ -68,3 +69,9 @@ export const loadUserProposalList = createAsyncAction(
   CommonsActionTypes.LOAD_USER_PROPOSAL_LIST_SUCCESS,
   CommonsActionTypes.LOAD_USER_PROPOSAL_LIST_FAILURE
 )<string, Proposal[], Error>();
+
+export const createRequestToJoin = createAsyncAction(
+  CommonsActionTypes.CREATE_REQUEST_TO_JOIN,
+  CommonsActionTypes.CREATE_REQUEST_TO_JOIN_SUCCESS,
+  CommonsActionTypes.CREATE_REQUEST_TO_JOIN_FAILURE
+)<ProposalJoinRequestData, Proposal, Error>();

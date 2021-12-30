@@ -1,3 +1,7 @@
+import axios from "axios";
+import config from '../../../config';
+import getFirebaseToken from '../../../helpers/getFirebaseToken';
+import { ProposalJoinRequestData } from "../../../shared/interfaces/api/proposal";
 import {
   Card,
   Collection,
@@ -12,6 +16,14 @@ import {
   transformFirebaseDataSingle,
 } from "../../../shared/utils";
 import firebase from "../../../shared/utils/firebase";
+
+const axiosClient = axios.create({
+  timeout: 1000000,
+});
+
+const endpoints = {
+  createRequestToJoin: `${config.cloudFunctionUrl}/proposals/create/join`,
+};
 
 export async function fetchCommonDiscussions(commonId: string) {
   const commons = await firebase
@@ -143,4 +155,14 @@ export function subscribeToCardChange(
     .onSnapshot((snapshot) => {
       callback(transformFirebaseDataSingle<Card>(snapshot));
     });
+}
+
+export async function createRequestToJoin(requestData: ProposalJoinRequestData): Promise<Proposal> {
+  const { data } = await axiosClient.post<Proposal>(endpoints.createRequestToJoin, requestData, {
+    headers: {
+      Authorization: await getFirebaseToken(),
+    },
+  });
+
+  return data;
 }
