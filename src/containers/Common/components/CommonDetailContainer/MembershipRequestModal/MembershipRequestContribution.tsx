@@ -129,12 +129,12 @@ export default function MembershipRequestContribution(props: IStageProps) {
     const contributionAmount =
       selectedContribution === "other"
         ? Number(enteredContribution) * 100
-        : selectedContribution;
+        : (selectedContribution || 0);
 
     setUserData((nextUserData) => ({
       ...nextUserData,
-      contributionAmount: contributionAmount ?? undefined,
-      stage: 4,
+      contributionAmount,
+      stage: contributionAmount === 0 ? 6 : 4,
     }));
   }, [setUserData, selectedContribution, enteredContribution]);
 
