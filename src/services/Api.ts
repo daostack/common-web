@@ -21,8 +21,9 @@ class Api {
     return {
       get: apiEngine.get,
       post: apiEngine.post,
-      delete: apiEngine.delete,
       put: apiEngine.put,
+      patch: apiEngine.patch,
+      delete: apiEngine.delete,
     };
   };
 
@@ -55,6 +56,17 @@ class Api {
     config?: RequestConfig
   ): Promise<AxiosResponse<T>> => {
     return this.apiEngine.put<T>(url, data, {
+      ...config,
+      ...(await this.getHeaders(config)),
+    });
+  };
+
+  public patch = async <T>(
+    url: string,
+    data?: unknown,
+    config?: RequestConfig
+  ): Promise<AxiosResponse<T>> => {
+    return this.apiEngine.patch<T>(url, data, {
       ...config,
       ...(await this.getHeaders(config)),
     });
