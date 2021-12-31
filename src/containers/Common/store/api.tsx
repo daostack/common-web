@@ -1,6 +1,6 @@
 import axios from "axios";
-import config from '../../../config';
-import getFirebaseToken from '../../../helpers/getFirebaseToken';
+import config from "../../../config";
+import getFirebaseToken from "../../../helpers/getFirebaseToken";
 import { ProposalJoinRequestData } from "../../../shared/interfaces/api/proposal";
 import {
   Card,
@@ -146,7 +146,7 @@ export async function fetchDiscussionsMessages(dIds: string[]) {
 
 export function subscribeToCardChange(
   cardId: string,
-  callback: (card?: Card) => void,
+  callback: (card?: Card) => void
 ): () => void {
   return firebase
     .firestore()
@@ -157,12 +157,18 @@ export function subscribeToCardChange(
     });
 }
 
-export async function createRequestToJoin(requestData: ProposalJoinRequestData): Promise<Proposal> {
-  const { data } = await axiosClient.post<Proposal>(endpoints.createRequestToJoin, requestData, {
-    headers: {
-      Authorization: await getFirebaseToken(),
-    },
-  });
+export async function createRequestToJoin(
+  requestData: ProposalJoinRequestData
+): Promise<Proposal> {
+  const { data } = await axiosClient.post<Proposal>(
+    endpoints.createRequestToJoin,
+    requestData,
+    {
+      headers: {
+        Authorization: await getFirebaseToken(),
+      },
+    }
+  );
 
   return data;
 }

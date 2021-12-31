@@ -201,8 +201,8 @@ export function* createRequestToJoin(
 
     yield put(actions.createRequestToJoin.success(proposal as Proposal));
     yield put(stopLoading());
-  } catch (e) {
-    yield put(actions.createRequestToJoin.failure(e));
+  } catch (error) {
+    yield put(actions.createRequestToJoin.failure(error));
     yield put(stopLoading());
   }
 }
