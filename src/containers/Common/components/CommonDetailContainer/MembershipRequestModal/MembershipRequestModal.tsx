@@ -78,7 +78,6 @@ export function MembershipRequestModal(props: IProps) {
   const user = useSelector(selectUser());
   const { stage } = userData;
   const { isShowing, onClose, common, onCreationStageReach } = props;
-  const shouldDisplayBackButton = stage > 0 && stage < 5;
   const shouldDisplayProgressBar = stage > 0 && stage < 6;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -206,7 +205,7 @@ export function MembershipRequestModal(props: IProps) {
       mobileFullScreen
       closePrompt={stage !== 7}
       title={renderedTitle}
-      onGoBack={shouldDisplayBackButton ? moveStageBack : undefined}
+      onGoBack={shouldDisplayProgressBar ? moveStageBack : undefined}
       styles={{
         header:
           stage === 0

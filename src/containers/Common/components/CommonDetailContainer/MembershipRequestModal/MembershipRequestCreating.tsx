@@ -17,12 +17,14 @@ export default function MembershipRequestCreating(props: IStageProps) {
         return;
       }
 
+      const funding = userData.contributionAmount || 0;
+
       dispatch(
         createRequestToJoin.request({
+          funding,
           commonId: common.id,
           description: userData.intro,
-          funding: userData.contributionAmount || 0,
-          cardId: userData.cardId,
+          cardId: funding !== 0 ? userData.cardId : undefined,
         })
       );
 
