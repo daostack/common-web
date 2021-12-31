@@ -69,6 +69,7 @@ const initData: IMembershipRequestData = {
 
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
   common: Common;
+  onCreationStageReach: (reached: boolean) => void;
 }
 
 export function MembershipRequestModal(props: IProps) {
@@ -76,7 +77,7 @@ export function MembershipRequestModal(props: IProps) {
   const [userData, setUserData] = useState(initData);
   const user = useSelector(selectUser());
   const { stage } = userData;
-  const { isShowing, onClose, common } = props;
+  const { isShowing, onClose, common, onCreationStageReach } = props;
   const shouldDisplayBackButton = stage > 0 && stage < 5;
   const shouldDisplayProgressBar = stage > 0 && stage < 6;
   const screenSize = useSelector(getScreenSize());
@@ -102,8 +103,9 @@ export function MembershipRequestModal(props: IProps) {
       }
 
       setUserData(payload);
+      onCreationStageReach(false);
     }
-  }, [isShowing, user]);
+  }, [isShowing, user, onCreationStageReach]);
 
   const renderCurrentStage = (stage: number) => {
     switch (stage) {
@@ -189,6 +191,12 @@ export function MembershipRequestModal(props: IProps) {
       stage: data.stage - 1,
     }));
   }, []);
+
+  useEffect(() => {
+    if (stage === 6) {
+      onCreationStageReach(true);
+    }
+  }, [stage, onCreationStageReach]);
 
   return (
     <Modal
