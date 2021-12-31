@@ -16,11 +16,13 @@ export default function MembershipRequestCreating(props: IStageProps) {
       setIsLoading(true);
 
       try {
+        const funding = userData.contributionAmount || 0;
+
         await ProposalService.createRequestToJoin({
+          funding,
           commonId: common.id,
           description: userData.intro,
-          funding: userData.contributionAmount || 0,
-          cardId: userData.cardId,
+          cardId: funding !== 0 ? userData.cardId : undefined,
         });
 
         setUserData((nextUserData) => ({ ...nextUserData, stage: 7 }));
