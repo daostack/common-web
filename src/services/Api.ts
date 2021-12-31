@@ -33,10 +33,7 @@ class Api {
     url: string,
     config?: RequestConfig
   ): Promise<AxiosResponse<T>> => {
-    return this.apiEngine.get<T>(url, {
-      ...config,
-      ...(await this.getHeaders(config)),
-    });
+    return this.apiEngine.get<T>(url, await this.expandConfig(config));
   };
 
   public post = async <T>(
@@ -44,10 +41,7 @@ class Api {
     data?: unknown,
     config?: RequestConfig
   ): Promise<AxiosResponse<T>> => {
-    return this.apiEngine.post<T>(url, data, {
-      ...config,
-      ...(await this.getHeaders(config)),
-    });
+    return this.apiEngine.post<T>(url, data, await this.expandConfig(config));
   };
 
   public put = async <T>(
@@ -55,10 +49,7 @@ class Api {
     data?: unknown,
     config?: RequestConfig
   ): Promise<AxiosResponse<T>> => {
-    return this.apiEngine.put<T>(url, data, {
-      ...config,
-      ...(await this.getHeaders(config)),
-    });
+    return this.apiEngine.put<T>(url, data, await this.expandConfig(config));
   };
 
   public patch = async <T>(
@@ -66,20 +57,14 @@ class Api {
     data?: unknown,
     config?: RequestConfig
   ): Promise<AxiosResponse<T>> => {
-    return this.apiEngine.patch<T>(url, data, {
-      ...config,
-      ...(await this.getHeaders(config)),
-    });
+    return this.apiEngine.patch<T>(url, data, await this.expandConfig(config));
   };
 
   public delete = async <T>(
     url: string,
     config?: RequestConfig
   ): Promise<AxiosResponse<T>> => {
-    return this.apiEngine.delete<T>(url, {
-      ...config,
-      ...(await this.getHeaders(config)),
-    });
+    return this.apiEngine.delete<T>(url, await this.expandConfig(config));
   };
 
   private getHeaders = async ({
@@ -94,6 +79,13 @@ class Api {
 
     return { headers: newHeaders };
   };
+
+  private expandConfig = async (
+    config: RequestConfig = {}
+  ): Promise<RequestConfig> => ({
+    ...config,
+    ...(await this.getHeaders(config)),
+  });
 }
 
 export const isRequestError = (error: unknown): error is AxiosError => {
