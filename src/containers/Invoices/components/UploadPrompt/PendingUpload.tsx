@@ -34,8 +34,7 @@ export default function PendingUpload({ proposalId, selectedFiles, updateUploadS
             downloadURL: downloadURL
           })
         }
-        const res = await uploadInvoices(invoicesData);
-        console.log(res);
+        await uploadInvoices(invoicesData);
         updateUploadState(UploadState.Success);
       } catch (error) {
         console.error(error);

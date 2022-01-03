@@ -37,7 +37,6 @@ const removeInvoice = (invoices: IFile[], indexToRemove: number) =>
 export default function AddInvoices(props: AddInvoicesProps): ReactElement {
   const { proposalId, proposalRequest, updateSubmissionStatus, className } = props;
   const [selectedFiles, setSelectedFiles] = useState<IFile[]>([]);
-  console.log(selectedFiles);
   const [showFilePreview, setShowFilePreview] = useState(false);
   const screenSize = useSelector(getScreenSize());
   const totalAmount = selectedFiles

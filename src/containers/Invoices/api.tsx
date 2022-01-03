@@ -29,6 +29,5 @@ export async function uploadInvoices(invoicesData: InvoicesSubmission) {
       }
     }
   )
-  console.log(data);
   return data;
 }

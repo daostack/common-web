@@ -37,7 +37,6 @@ export default function SubmitInvoicesContainer() {
     (async () => {
       try {
         const proposal = await fetchProposal(proposalId);
-        console.log(proposal);
         if (proposal.hasLegalDocs || (proposal.payoutDocs && proposal.payoutDocs?.length > 0)) {
           setSubmissionStatus(SubmissionStatus.Submitted);
         } else {
