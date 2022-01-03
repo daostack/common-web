@@ -10,21 +10,23 @@ interface IProps {
   proposalId: string
   selectedFiles: IFile[]
   updateUploadState: Function
+  payoutDocsComment?: string
 }
 
-export default function PendingUpload({ proposalId, selectedFiles, updateUploadState }: IProps) {
+export default function PendingUpload({ proposalId, selectedFiles, updateUploadState, payoutDocsComment }: IProps) {
 
   useEffect(() => {
     (async () => {
       try {
         const invoicesData: InvoicesSubmission = {
           proposalID: proposalId,
-          legalDocsInfo: []
+          payoutDocs: [],
+          payoutDocsComment: payoutDocsComment
         };
 
         for (const file of selectedFiles) {
           const downloadURL = await uploadFile(file.data.name, "public_img", file.data);
-          invoicesData.legalDocsInfo.push({
+          invoicesData.payoutDocs.push({
             name: file.data.name,
             legalType: PAYME_TYPE_CODES.Invoice,
             amount: file.amount,
@@ -41,7 +43,7 @@ export default function PendingUpload({ proposalId, selectedFiles, updateUploadS
         updateUploadState(UploadState.PreUpload);
       }
     })();
-  }, [selectedFiles, updateUploadState, proposalId])
+  }, [selectedFiles, updateUploadState, proposalId, payoutDocsComment])
 
   return (
     <div className="pending-upload-wrapper">

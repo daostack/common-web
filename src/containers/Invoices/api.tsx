@@ -20,7 +20,7 @@ export async function fetchProposal(proposalId: string) {
 }
 
 export async function uploadInvoices(invoicesData: InvoicesSubmission) {
-  const endpoint = `${config.cloudFunctionUrl}/payments/payme/payout/save-legal-docs-info`;
+  const endpoint = `${config.cloudFunctionUrl}/payments/payout-docs/add`;
   const { data } = await axiosClient.post(
     endpoint,
     invoicesData, {

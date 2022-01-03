@@ -45,7 +45,6 @@ const App = () => {
           <PrivateRoute path={ROUTE_PATHS.COMMON_LIST} component={CommonContainer} authentificated={true} />
           <PrivateRoute path={ROUTE_PATHS.MY_COMMONS} component={MyCommonsContainer} authentificated={true} />
           <PrivateRoute path={ROUTE_PATHS.SUBMIT_INVOICES} component={SubmitInvoicesContainer} authentificated={true} />
-
           <Route component={NotFound} />
         </Switch>
       </Content>

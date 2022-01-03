@@ -22,6 +22,7 @@ export enum UploadState {
 
 export default function UploadPrompt({ proposalId, selectedFiles, onCancel, invoicesTotal, proposalRequest, updateSubmissionStatus }: IProps) {
   const [uploadState, setUploadState] = useState<UploadState>(UploadState.PreUpload);
+  const [payoutDocsComment, setPayoutDocsComment] = useState(""); 
 
   const renderContent = (uploadState: UploadState) => {
     switch (uploadState) {
@@ -31,13 +32,16 @@ export default function UploadPrompt({ proposalId, selectedFiles, onCancel, invo
             onCancel={onCancel}
             updateUploadState={() => setUploadState(UploadState.Pending)}
             invoicesTotal={invoicesTotal}
-            proposalRequest={proposalRequest} />
+            proposalRequest={proposalRequest}
+            payoutDocsComment={payoutDocsComment}
+            setPayoutDocsComment={setPayoutDocsComment} />
         )
       case UploadState.Pending:
         return <PendingUpload
           proposalId={proposalId}
           selectedFiles={selectedFiles}
-          updateUploadState={setUploadState} />
+          updateUploadState={setUploadState}
+          payoutDocsComment={payoutDocsComment} />
       case UploadState.Success:
         return <UploadSuccess closePrompt={onCancel} updateSubmissionStatus={updateSubmissionStatus} />
     }

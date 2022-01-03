@@ -101,5 +101,5 @@ export interface Proposal {
 
   approvalDate?: Time;
   hasLegalDocs?: boolean;
-  legalDocsInfo?: LegalDocInfo[];
+  payoutDocs?: LegalDocInfo[];
 }
