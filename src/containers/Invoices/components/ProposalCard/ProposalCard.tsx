@@ -7,10 +7,11 @@ import "./index.scss";
 
 interface ProposalCardProps {
   proposal: Proposal;
+  onClick: () => void;
 }
 
 const ProposalCard: FC<ProposalCardProps> = (props) => {
-  const { proposal } = props;
+  const { proposal, onClick } = props;
   const isApproved = false;
   const isDeclined = false;
   const note = "I was able to get some discount :)";
@@ -62,7 +63,10 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
             </p>
           )}
         </div>
-        <button className="button-blue trustee-proposal-card__view-button">
+        <button
+          className="button-blue trustee-proposal-card__view-button"
+          onClick={onClick}
+        >
           View Invoices
         </button>
       </div>
