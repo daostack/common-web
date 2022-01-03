@@ -77,7 +77,6 @@ export function MembershipRequestModal(props: IProps) {
   const user = useSelector(selectUser());
   const { stage } = userData;
   const { isShowing, onClose, common } = props;
-  const shouldDisplayBackButton = stage > 0 && stage < 5;
   const shouldDisplayProgressBar = stage > 0 && stage < 6;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -87,10 +86,10 @@ export function MembershipRequestModal(props: IProps) {
    * Until implementing a robust way to handle the saving of the data the user will be notified of losing the data.
    */
   useEffect(() => {
-    if (isShowing) {
-      const payload = {
+    if (!isShowing) {
+      const payload: IMembershipRequestData = {
         ...initData,
-        transactionId: uuidv4(),
+        cardId: uuidv4(),
       };
 
       if (user) {
@@ -198,7 +197,7 @@ export function MembershipRequestModal(props: IProps) {
       mobileFullScreen
       closePrompt={stage !== 7}
       title={renderedTitle}
-      onGoBack={shouldDisplayBackButton ? moveStageBack : undefined}
+      onGoBack={shouldDisplayProgressBar ? moveStageBack : undefined}
       styles={{
         header:
           stage === 0
