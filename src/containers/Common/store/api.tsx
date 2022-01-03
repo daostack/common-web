@@ -58,6 +58,17 @@ export async function fetchUserProposals(userId: string) {
   );
 }
 
+export async function fetchProposal(proposalId: string): Promise<Proposal | null> {
+  const proposal = await firebase
+    .firestore()
+    .collection("proposals")
+    .doc(proposalId)
+    .get();
+  const data = transformFirebaseDataSingle<Proposal>(proposal);
+
+  return data || null;
+}
+
 export async function fetchCommonList(): Promise<Common[]> {
   const commons = await firebase.firestore().collection("daos").get();
   const data = transformFirebaseDataList<Common>(commons);

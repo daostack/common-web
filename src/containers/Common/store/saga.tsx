@@ -14,6 +14,7 @@ import {
   fetchCommonDetail,
   fetchCommonDiscussions,
   fetchCommonProposals,
+  fetchProposal,
   fetchOwners,
   fetchDiscussionsMessages,
   fetchUserProposals,
@@ -197,9 +198,16 @@ export function* createRequestToJoin(
 ): Generator {
   try {
     yield put(startLoading());
-    const proposal = yield createRequestToJoinApi(action.payload);
+    const { id: proposalId } = (yield createRequestToJoinApi(
+      action.payload
+    )) as Proposal;
+    const proposal = (yield fetchProposal(proposalId)) as Proposal | null;
 
-    yield put(actions.createRequestToJoin.success(proposal as Proposal));
+    if (!proposal) {
+      throw new Error("Proposal for joining was not found");
+    }
+
+    yield put(actions.createRequestToJoin.success(proposal));
     yield put(stopLoading());
   } catch (error) {
     yield put(actions.createRequestToJoin.failure(error));
