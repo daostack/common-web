@@ -1,7 +1,7 @@
 export const LOGIN_REDIRECT_LINK = "/auth/";
 export const SMALL_SCREEN_BREAKPOINT = "770px";
 
-export const BASE_URL = "https://web.common.io";
+export const BASE_URL = window.location.origin;
 
 export enum ScreenSize {
   Mobile = "MOBILE",
