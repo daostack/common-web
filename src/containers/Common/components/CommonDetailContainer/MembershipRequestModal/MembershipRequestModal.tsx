@@ -183,7 +183,7 @@ export function MembershipRequestModal(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (stage === 6) {
+    if (stage === 5) {
       onCreationStageReach(true);
     }
   }, [stage, onCreationStageReach]);
