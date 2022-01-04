@@ -80,7 +80,7 @@ export default function MembershipRequestPayment(
     try {
       return subscribeToCardChange(userData.cardId, (card) => {
         if (card) {
-          setUserData((nextUserData) => ({ ...nextUserData, stage: 6 }));
+          setUserData((nextUserData) => ({ ...nextUserData, stage: 5 }));
         }
       });
     } catch (error) {

@@ -23,11 +23,6 @@ const STEPS: StepProgressItem[] = [
     inactiveImageSource: "/icons/membership-request/contribution-gray.svg",
   },
   {
-    title: "Billing",
-    activeImageSource: "/icons/membership-request/billing-current.svg",
-    inactiveImageSource: "/icons/membership-request/billing-gray.svg",
-  },
-  {
     title: "Payment",
     activeImageSource: "/icons/membership-request/payment-current.svg",
     inactiveImageSource: "/icons/membership-request/payment-gray.svg",
