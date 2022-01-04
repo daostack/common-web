@@ -11,6 +11,7 @@ import {
   User,
 } from "../../../shared/models";
 import {
+  convertObjectDatesToFirestoreTimestamps,
   transformFirebaseDataList,
   transformFirebaseDataSingle,
 } from "../../../shared/utils";
@@ -56,17 +57,6 @@ export async function fetchUserProposals(userId: string) {
     (proposal: Proposal, prevProposal: Proposal) =>
       prevProposal.createdAt?.seconds - proposal.createdAt?.seconds
   );
-}
-
-export async function fetchProposal(proposalId: string): Promise<Proposal | null> {
-  const proposal = await firebase
-    .firestore()
-    .collection("proposals")
-    .doc(proposalId)
-    .get();
-  const data = transformFirebaseDataSingle<Proposal>(proposal);
-
-  return data || null;
 }
 
 export async function fetchCommonList(): Promise<Common[]> {
@@ -167,5 +157,5 @@ export async function createRequestToJoin(
     requestData
   );
 
-  return data;
+  return convertObjectDatesToFirestoreTimestamps(data);
 }
