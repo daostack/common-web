@@ -1,40 +1,49 @@
 import React, { useEffect, useState } from "react";
-import ProposalService from "../../../../../services/ProposalService";
+import { useDispatch, useSelector } from "react-redux";
 import { Loader } from "../../../../../shared/components";
+import { getLoading } from "../../../../../shared/store/selectors";
+import { createRequestToJoin } from "../../../store/actions";
 import { IStageProps } from "./MembershipRequestModal";
 
 export default function MembershipRequestCreating(props: IStageProps) {
   const { userData, setUserData, common } = props;
-  const [isLoading, setIsLoading] = useState(false);
+  const [isCreationSubmitted, setIsCreationSubmitted] = useState(false);
+  const dispatch = useDispatch();
+  const isLoading = useSelector(getLoading());
 
   useEffect(() => {
     (async () => {
-      if (isLoading || !common) {
+      if (isCreationSubmitted || !common) {
         return;
       }
 
-      setIsLoading(true);
+      const funding = userData.contributionAmount || 0;
 
-      try {
-        const funding = userData.contributionAmount || 0;
-
-        await ProposalService.createRequestToJoin({
+      dispatch(
+        createRequestToJoin.request({
           funding,
           commonId: common.id,
           description: userData.intro,
           cardId: funding !== 0 ? userData.cardId : undefined,
-        });
+        })
+      );
 
-        setUserData((nextUserData) => ({ ...nextUserData, stage: 7 }));
-      } catch (error) {
-        console.error("Error during request to join creation");
-      }
+      setIsCreationSubmitted(true);
     })();
-  }, [isLoading, common, userData, setUserData]);
+  }, [isCreationSubmitted, common, dispatch, userData]);
+
+  useEffect(() => {
+    if (isCreationSubmitted && !isLoading) {
+      setUserData((nextUserData) => ({ ...nextUserData, stage: 7 }));
+    }
+  }, [isCreationSubmitted, isLoading, setUserData]);
 
   return (
     <div className="membership-request-content membership-request-creating">
-      <img src="/assets/images/membership-request-creating.svg" alt="introduce" />
+      <img
+        src="/assets/images/membership-request-creating.svg"
+        alt="introduce"
+      />
       <div className="title">Creating your membership request</div>
       <div className="loader-container">
         <Loader />
