@@ -16,7 +16,6 @@ import { Common } from "../../../../../shared/models";
 import { getScreenSize } from "../../../../../shared/store/selectors";
 import { ScreenSize } from "../../../../../shared/constants";
 import "./index.scss";
-import MembershipRequestBilling from "./MembershipRequestBilling";
 import MembershipRequestContribution from "./MembershipRequestContribution";
 import MembershipRequestCreated from "./MembershipRequestCreated";
 import MembershipRequestCreating from "./MembershipRequestCreating";
@@ -77,7 +76,7 @@ export function MembershipRequestModal(props: IProps) {
   const user = useSelector(selectUser());
   const { stage } = userData;
   const { isShowing, onClose, common } = props;
-  const shouldDisplayProgressBar = stage > 0 && stage < 6;
+  const shouldDisplayProgressBar = stage > 0 && stage < 5;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
@@ -137,7 +136,7 @@ export function MembershipRequestModal(props: IProps) {
         );
       case 4:
         return (
-          <MembershipRequestBilling
+          <MembershipRequestPayment
             userData={userData}
             setUserData={setUserData}
             common={common}
@@ -145,27 +144,19 @@ export function MembershipRequestModal(props: IProps) {
         );
       case 5:
         return (
-          <MembershipRequestPayment
-            userData={userData}
-            setUserData={setUserData}
-            common={common}
-          />
-        );
-      case 6:
-        return (
           <MembershipRequestCreating
             userData={userData}
             setUserData={setUserData}
             common={common}
           />
         );
-      case 7:
+      case 6:
         return <MembershipRequestCreated closeModal={onClose} />;
     }
   };
 
   const renderedTitle = useMemo((): ReactNode => {
-    if (stage >= 6) {
+    if (stage >= 5) {
       return null;
     }
 
@@ -195,7 +186,7 @@ export function MembershipRequestModal(props: IProps) {
       onClose={onClose}
       className="mobile-full-screen membership-request-modal"
       mobileFullScreen
-      closePrompt={stage !== 7}
+      closePrompt={stage !== 6}
       title={renderedTitle}
       onGoBack={shouldDisplayProgressBar ? moveStageBack : undefined}
       styles={{

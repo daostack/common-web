@@ -25,7 +25,7 @@ export default function MembershipRequestCreating(props: IStageProps) {
           cardId: funding !== 0 ? userData.cardId : undefined,
         });
 
-        setUserData((nextUserData) => ({ ...nextUserData, stage: 7 }));
+        setUserData((nextUserData) => ({ ...nextUserData, stage: 6 }));
       } catch (error) {
         console.error("Error during request to join creation");
       }
