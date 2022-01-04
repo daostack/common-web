@@ -19,10 +19,13 @@ export async function fetchProposal(proposalId: string) {
   return data[0];
 }
 
+const endpoints = {
+  uploadInvoices: `${config.cloudFunctionUrl}/payments/payout-docs/add`,
+};
+
 export async function uploadInvoices(invoicesData: InvoicesSubmission) {
-  const endpoint = `${config.cloudFunctionUrl}/payments/payout-docs/add`;
   const { data } = await axiosClient.post(
-    endpoint,
+    endpoints.uploadInvoices,
     invoicesData, {
       headers: {
         Authorization: await getFirebaseToken(),
