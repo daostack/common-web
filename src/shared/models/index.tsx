@@ -1,5 +1,4 @@
 export * from "./User";
-export * from "./BillingDetails";
 export * from "./Card";
 export * from "./Common";
 export * from "./shared";

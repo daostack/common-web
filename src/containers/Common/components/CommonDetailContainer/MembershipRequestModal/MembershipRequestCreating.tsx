@@ -34,7 +34,7 @@ export default function MembershipRequestCreating(props: IStageProps) {
 
   useEffect(() => {
     if (isCreationSubmitted && !isLoading) {
-      setUserData((nextUserData) => ({ ...nextUserData, stage: 7 }));
+      setUserData((nextUserData) => ({ ...nextUserData, stage: 6 }));
     }
   }, [isCreationSubmitted, isLoading, setUserData]);
 
