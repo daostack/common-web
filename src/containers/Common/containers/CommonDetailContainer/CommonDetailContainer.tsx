@@ -17,11 +17,7 @@ import {
   useViewPortHook,
 } from "../../../../shared/hooks";
 
-import {
-  Discussion,
-  Proposal,
-  ProposalState,
-} from "../../../../shared/models";
+import { Discussion, Proposal, ProposalState } from "../../../../shared/models";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
 import {
@@ -116,7 +112,8 @@ export default function CommonDetail() {
       proposal.proposerId === user?.uid
   );
   const shouldShowJoinToCommonButton = !isCommonMember && !isJoiningPending;
-  const shouldAllowJoiningToCommon = !isCommonMember && (isCreationStageReached || !isJoiningPending);
+  const shouldAllowJoiningToCommon =
+    !isCommonMember && (isCreationStageReached || !isJoiningPending);
 
   const dispatch = useDispatch();
 
@@ -524,7 +521,7 @@ export default function CommonDetail() {
               )}
             </div>
             {screenSize === ScreenSize.Mobile &&
-              !isCommonMember &&
+              shouldShowJoinToCommonButton &&
               !inViewport && (
                 <button
                   className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
