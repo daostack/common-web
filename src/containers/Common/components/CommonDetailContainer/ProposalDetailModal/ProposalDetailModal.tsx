@@ -15,6 +15,7 @@ import "./index.scss";
 
 interface DiscussionDetailModalProps {
   proposal: Proposal | null;
+  commonId: string;
   onOpenJoinModal: () => void;
   isCommonMember: boolean;
   isJoiningPending: boolean;
@@ -22,6 +23,7 @@ interface DiscussionDetailModalProps {
 
 export default function ProposalDetailModal({
   proposal,
+  commonId,
   onOpenJoinModal,
   isCommonMember,
   isJoiningPending,
@@ -100,6 +102,7 @@ export default function ProposalDetailModal({
       </div>
       <div className="right-side">
         <ChatComponent
+          commonId={commonId}
           discussionMessage={proposal.discussionMessage || []}
           onOpenJoinModal={onOpenJoinModal}
           isCommonMember={isCommonMember}
