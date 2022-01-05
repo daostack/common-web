@@ -1,15 +1,10 @@
-import axios from "axios";
-import config from "../../config";
-import getFirebaseToken from "../../helpers/getFirebaseToken";
+import Api from "../../services/Api";
+import { ApiEndpoint } from "../../shared/constants";
 import { InvoicesSubmission, Proposal } from "../../shared/models";
 import { transformFirebaseDataList } from "../../shared/utils";
 import firebase from "../../shared/utils/firebase";
 
-const axiosClient = axios.create({
-  timeout: 1000000,
-});
-
-export async function fetchProposal(proposalId: string) {
+export async function fetchProposal(proposalId: string): Promise<Proposal> {
   const proposal = await firebase
     .firestore()
     .collection("proposals")
@@ -19,18 +14,10 @@ export async function fetchProposal(proposalId: string) {
   return data[0];
 }
 
-const endpoints = {
-  uploadInvoices: `${config.cloudFunctionUrl}/payments/payout-docs/add`,
-};
-
 export async function uploadInvoices(invoicesData: InvoicesSubmission) {
-  const { data } = await axiosClient.post(
-    endpoints.uploadInvoices,
-    invoicesData, {
-      headers: {
-        Authorization: await getFirebaseToken(),
-      }
-    }
+  const { data } = await Api.post(
+    ApiEndpoint.UploadInvoices,
+    invoicesData
   )
   return data;
 }

@@ -3,7 +3,7 @@ import { CurrencyInput } from "../../../../shared/components/Form";
 import "./index.scss";
 
 interface IProps {
-  onContinue: (amount: number | undefined) => void
+  onContinue: (amount?: number) => void
 }
 
 export default function AmountPrompt({ onContinue }: IProps) {

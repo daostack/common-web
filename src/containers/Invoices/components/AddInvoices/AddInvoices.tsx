@@ -20,8 +20,8 @@ import "./index.scss";
 const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png, .pdf";
 
 interface AddInvoicesProps {
-  proposalId: string
-  proposalRequest: number | undefined;
+  proposalId: string;
+  proposalRequest?: number;
   updateSubmissionStatus: () => void;
   className?: string;
 }

@@ -1,11 +1,11 @@
-import { LegalDocInfo } from "./Proposals";
+import { DocInfo } from "./Proposals";
 
 export interface InvoicesSubmission {
   proposalID: string;
-  payoutDocs: LegalDocInfo[];
+  payoutDocs: DocInfo[];
   payoutDocsComment?: string;
 }
 
-export enum PAYME_TYPE_CODES {
+export enum PayMeTypeCodes {
   Invoice = 29
 }

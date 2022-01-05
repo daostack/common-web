@@ -19,3 +19,5 @@ export interface File {
 export enum Collection {
   Cards = "cards",
 }
+
+export type DateFormat = "DD-MM-YYYY HH:mm" | "YYYY-MM-DD";

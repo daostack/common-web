@@ -1,16 +1,16 @@
 import React, { useEffect } from "react";
 import { Loader } from "../../../../shared/components";
-import { InvoicesSubmission, PAYME_TYPE_CODES } from "../../../../shared/models";
+import { InvoicesSubmission, PayMeTypeCodes } from "../../../../shared/models";
 import { uploadFile } from "../../../../shared/utils/firebaseUploadFile";
 import { uploadInvoices } from "../../api";
 import { IFile } from "../AddInvoices/AddInvoices";
 import { UploadState } from "./UploadPrompt";
 
 interface IProps {
-  proposalId: string
-  selectedFiles: IFile[]
-  updateUploadState: Function
-  payoutDocsComment?: string
+  proposalId: string;
+  selectedFiles: IFile[];
+  updateUploadState: (uploadState: UploadState) => void;
+  payoutDocsComment?: string;
 }
 
 export default function PendingUpload({ proposalId, selectedFiles, updateUploadState, payoutDocsComment }: IProps) {
@@ -28,7 +28,7 @@ export default function PendingUpload({ proposalId, selectedFiles, updateUploadS
           const downloadURL = await uploadFile(file.data.name, "public_img", file.data);
           invoicesData.payoutDocs.push({
             name: file.data.name,
-            legalType: PAYME_TYPE_CODES.Invoice,
+            legalType: PayMeTypeCodes.Invoice,
             amount: file.amount,
             mimeType: file.data.type,
             downloadURL: downloadURL

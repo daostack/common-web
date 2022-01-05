@@ -6,12 +6,12 @@ import UploadSuccess from "./UploadSuccess";
 import "./index.scss";
 
 interface IProps {
-  proposalId: string
-  selectedFiles: IFile[]
-  onCancel: () => void
-  invoicesTotal: string
-  proposalRequest: string
-  updateSubmissionStatus: () => void
+  proposalId: string;
+  selectedFiles: IFile[];
+  onCancel: () => void;
+  invoicesTotal: string;
+  proposalRequest: string;
+  updateSubmissionStatus: () => void;
 }
 
 export enum UploadState {
