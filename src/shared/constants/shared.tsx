@@ -34,3 +34,5 @@ export enum Colors {
   lightPurple = "#F1F2FF",
   transparent = "transparent",
 }
+
+export const AXIOS_TIMEOUT = 1000000;
