@@ -1,6 +1,8 @@
 export const LOGIN_REDIRECT_LINK = "/auth/";
 export const SMALL_SCREEN_BREAKPOINT = "770px";
 
+export const BASE_URL = window.location.origin;
+
 export enum ScreenSize {
   Mobile = "MOBILE",
   Desktop = "DESKTOP",
@@ -12,8 +14,6 @@ export const COMMON_APP_GOOGLE_PLAY_LINK =
   "https://play.google.com/store/apps/details?id=com.daostack.common";
 
 export const CONTACT_EMAIL = "hi@common.io";
-
-export const CIRCLE_PAY_URL = "https://api-sandbox.circle.com/v1";
 
 export const MIN_CONTRIBUTION_ILS_AMOUNT = 1000; // ₪10 * 100
 export const MAX_CONTRIBUTION_ILS_AMOUNT = 250000; // ₪2500 * 100

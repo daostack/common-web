@@ -32,7 +32,7 @@ import {
 import { MembershipRequestModal } from "../../components/CommonDetailContainer/MembershipRequestModal";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
 import "./index.scss";
-import { Colors, ScreenSize } from "../../../../shared/constants";
+import { BASE_URL, Colors, ROUTE_PATHS, ScreenSize } from "../../../../shared/constants";
 import { MobileLinks } from "../../../../shared/components/MobileLinks";
 import {
   selectCommonDetail,
@@ -343,6 +343,7 @@ export default function CommonDetail() {
         {!isMobileView && tab === "discussions" && (
           <DiscussionDetailModal
             disscussion={currentDisscussion}
+            commonId={common.id}
             onOpenJoinModal={openJoinModal}
             isCommonMember={isCommonMember}
             isJoiningPending={isJoiningPending}
@@ -351,6 +352,7 @@ export default function CommonDetail() {
         {!isMobileView && (tab === "proposals" || tab === "history") && (
           <ProposalDetailModal
             proposal={currentProposal}
+            commonId={common.id}
             onOpenJoinModal={openJoinModal}
             isCommonMember={isCommonMember}
             isJoiningPending={isJoiningPending}
@@ -394,7 +396,7 @@ export default function CommonDetail() {
                   <div className="tagline">{common?.metadata.byline}</div>
                 </div>
                 {screenSize === ScreenSize.Mobile && (
-                  <Share type="modal" color={Colors.transparent} />
+                  <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`} text="Hey checkout this common!" type="modal" color={Colors.transparent} />
                 )}
               </div>
               <div className="numbers">
@@ -460,7 +462,7 @@ export default function CommonDetail() {
                       </div>
                     )}
                   {screenSize === ScreenSize.Desktop && (
-                    <Share type="popup" color={Colors.lightPurple} />
+                    <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`} text="Hey checkout this common!"  type="popup" color={Colors.lightPurple} />
                   )}
                 </div>
               </div>

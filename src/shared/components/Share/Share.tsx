@@ -8,13 +8,15 @@ import "./index.scss";
 type ViewType = "popup" | "modal";
 
 interface IProps {
+  url: string;
+  text: string;
   color: Colors;
   type: ViewType;
   top?: string;
 }
 
 export default function Share(props: IProps) {
-  const { color, type, top } = props;
+  const { url, text, color, type, top } = props;
   const wrapperRef = useRef(null);
   const [isShown, setShown] = useState(false);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
@@ -41,10 +43,10 @@ export default function Share(props: IProps) {
     <div className="social-buttons-wrapper" style={{ top: `${top ?? "64px"}` }}>
       <div className="title">Share with</div>
       <div className="social-buttons">
-        <button className="facebook" />
-        <button className="linkedin" />
-        <button className="telegram" />
-        <button className="twitter" />
+        <button className="facebook" onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}"`)} />
+        <button className="linkedin" onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`)} />
+        <button className="telegram" onClick={() => window.open(`https://t.me/share/url?url=${url}&text=${text}`)} />
+        <button className="twitter" onClick={() => window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`)} />
       </div>
     </div>
   );

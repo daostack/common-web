@@ -5,9 +5,10 @@ import { DiscussionMessage } from "../../../../../shared/models";
 import ChatMessage from "./ChatMessage";
 import "./index.scss";
 import { formatDate } from "../../../../../shared/utils";
-import { Colors } from "../../../../../shared/constants";
+import { BASE_URL, Colors, ROUTE_PATHS } from "../../../../../shared/constants";
 
 interface ChatComponentInterface {
+  commonId: string
   discussionMessage: DiscussionMessage[];
   onOpenJoinModal: () => void;
   isCommonMember?: boolean;
@@ -37,6 +38,7 @@ interface Messages {
 }
 
 export default function ChatComponent({
+  commonId,
   discussionMessage,
   onOpenJoinModal,
   isCommonMember,
@@ -74,7 +76,7 @@ export default function ChatComponent({
               Join the effort
             </button>
           )}
-          <Share type="popup" color={Colors.lightPurple} top="-130px" />
+          <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${commonId}`} text="Hey checkout this common!" type="popup" color={Colors.lightPurple} top="-130px" />
         </div>
       </div>
     </div>
