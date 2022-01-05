@@ -6,6 +6,7 @@ import axios, {
 } from "axios";
 import config from "../config";
 import getFirebaseToken from "../helpers/getFirebaseToken";
+import { AXIOS_TIMEOUT } from "../shared/constants";
 
 interface RequestConfig extends AxiosRequestConfig {
   isAuthorizedRequest?: boolean;
@@ -15,7 +16,7 @@ class Api {
   private createApiEngine = () => {
     const apiEngine = axios.create({
       baseURL: config.cloudFunctionUrl,
-      timeout: 1000000,
+      timeout: AXIOS_TIMEOUT,
     });
 
     return {

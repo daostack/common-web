@@ -4,9 +4,10 @@ import getFirebaseToken from "../helpers/getFirebaseToken";
 import { BuyerTokenPageCreationData } from "../shared/interfaces/api/payMe";
 import { CommonPayment } from "../shared/models";
 import config from "../config";
+import { AXIOS_TIMEOUT } from "../shared/constants";
 
 const axiosClient = axios.create({
-  timeout: 1000000,
+  timeout: AXIOS_TIMEOUT,
 });
 
 const endpoints = {
