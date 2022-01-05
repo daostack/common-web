@@ -33,6 +33,7 @@
       margin-bottom: 16px;
       width: 400px;
       .icon-wrapper {
+        flex-shrink: 0;
         width: 32px;
         height: 32px;
         border-radius: 50%;
@@ -45,11 +46,9 @@
         justify-content: center;
         align-items: center;
         margin-right: 12px;
-        width: 32px;
-        height: 32px;
         position: relative;
         margin-bottom: 8px;
-        position: relative;
+        overflow: hidden;
         img {
           position: absolute;
           right: 0;
