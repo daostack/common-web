@@ -14,10 +14,9 @@ export async function fetchProposal(proposalId: string): Promise<Proposal> {
   return data[0];
 }
 
-export async function uploadInvoices(invoicesData: InvoicesSubmission) {
-  const { data } = await Api.post(
+export async function uploadInvoices(invoicesData: InvoicesSubmission): Promise<void> {
+  await Api.post(
     ApiEndpoint.UploadInvoices,
     invoicesData
   )
-  return data;
 }

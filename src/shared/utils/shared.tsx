@@ -30,7 +30,7 @@ export const formatDate = (date: string | Date) => {
  * @param {Time} time
  * @param {DateFormat} format the desired format
  */
- export const formatEpochTime = (time: Time, format: DateFormat = "DD-MM-YYYY HH:mm") => {
+ export const formatEpochTime = (time: Time, format: DateFormat = DateFormat.Long) => {
   return moment.unix(time.seconds).local().format(format);
 }
 

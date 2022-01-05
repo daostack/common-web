@@ -100,6 +100,5 @@ export interface Proposal {
   votes?: ProposalVote[];
 
   approvalDate?: Time;
-  hasLegalDocs?: boolean;
   payoutDocs?: DocInfo[];
 }

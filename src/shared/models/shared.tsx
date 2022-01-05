@@ -20,4 +20,7 @@ export enum Collection {
   Cards = "cards",
 }
 
-export type DateFormat = "DD-MM-YYYY HH:mm" | "YYYY-MM-DD";
+export enum DateFormat {
+  Long = "DD-MM-YYYY HH:mm",
+  Short = "YYYY-MM-DD"
+}

@@ -192,9 +192,9 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
               }}
             />
           )}
-          <span className="add-invoices__total-amount-label">{`Total invoices amount: ${formatPrice(
-            totalAmount * 100
-          )}`}</span>
+          <span className="add-invoices__total-amount-label">
+            Total invoices amount: {formatPrice(totalAmount * 100)}
+          </span>
           <button
             className="button-blue"
             disabled={!selectedFiles}
