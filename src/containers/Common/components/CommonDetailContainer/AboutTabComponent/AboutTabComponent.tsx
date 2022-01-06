@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Share } from "../../../../../shared/components";
-import { Colors, ScreenSize } from "../../../../../shared/constants";
+import { BASE_URL, Colors, ROUTE_PATHS, ScreenSize } from "../../../../../shared/constants";
 import { Common } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import "./index.scss";
@@ -21,7 +21,7 @@ export default function AboutTabComponent({
   isCommonMember,
   isJoiningPending,
 }: AboutTabComponentProps) {
-  const shouldAllowJoiningToCommon = screenSize === ScreenSize.Desktop && !isCommonMember && !isJoiningPending;
+  const shouldShowJoinToCommonButton = screenSize === ScreenSize.Desktop && !isCommonMember && !isJoiningPending;
 
   const renderContributionType = (type: string) => {
     return <b>{type}</b>;
@@ -48,12 +48,12 @@ export default function AboutTabComponent({
           {formatPrice(common.metadata.minFeeToJoin) + " "}
           {renderContributionType(common.metadata.contributionType || "")} contribution
         </div>
-        {shouldAllowJoiningToCommon && (
+        {shouldShowJoinToCommonButton && (
           <div className="social-wrapper">
             <button className={`button-blue`} onClick={onOpenJoinModal}>
               Join the effort
             </button>
-            <Share type="popup" color={Colors.lightPurple} />
+            <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`} text="Hey checkout this common!" type="popup" color={Colors.lightPurple} />
           </div>
         )}
       </div>
