@@ -7,12 +7,18 @@ import {
 } from "../../constants";
 import { useOutsideClick } from "../../hooks";
 
-import { getMobileOperatingSystem } from "../../utils";
+import { Image } from "../../../shared/components";
+import { User } from "../../../shared/models";
+import {
+  getMobileOperatingSystem,
+  getUserName,
+  getRandomUserAvatarURL,
+} from "../../utils";
 
 import "./index.scss";
 
 interface AccountProps {
-  user: any;
+  user: User | null;
   logOut: () => void;
 }
 
@@ -29,39 +35,23 @@ const Account = ({ user, logOut }: AccountProps) => {
     }
   }, [isOutside, setShowMenu, setOusideValue]);
 
-  const userPic = user.photoURL
-    ? user.photoURL
-    : `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${user?.email}&rounded=true`;
-
-  const getUserName = () => {
-    let name = "";
-    if (user?.displayName) {
-      name = user?.displayName;
-    }
-
-    if (!name) {
-      name = `${user.firstName} ${user.lastName}`;
-    }
-
-    return name;
-  };
+  const randomUserAvatarURL = getRandomUserAvatarURL(user?.email);
+  const userPic = user?.photoURL || randomUserAvatarURL;
 
   return (
     <div className="account-wrapper" onClick={() => setShowMenu(!showMenu)}>
-      {!imageError ? (
-        <img
-          src={userPic}
-          className="avatar"
-          alt="user avatar"
-          onError={() => setImageError(true)}
-        />
-      ) : (
-        <img
-          src={`https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${user?.email}&rounded=true`}
-          className="avatar"
-          alt="user avatar"
-        />
-      )}
+      <Image
+        className="avatar"
+        src={userPic}
+        alt="user avatar"
+        placeholderElement={
+          <Image
+            className="avatar"
+            src={randomUserAvatarURL}
+            alt="user avatar"
+          />
+        }
+      />
       <div>{getUserName()}</div>
       <div className="vertical-menu" />
       {showMenu && (
