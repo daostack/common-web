@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { MembershipRequestModal } from "../MembershipRequestModal";
 import { useAuthorizedModal } from "../../../../../shared/hooks";
@@ -23,13 +23,14 @@ export default function EmptyTabComponent({
   isCommonMember,
   isJoiningPending,
 }: EmptyTabComponentProps) {
+  const [isCreationStageReached, setIsCreationStageReached] = useState(false);
   const {
     isModalOpen: showJoinModal,
     onOpen: onJoinModalOpen,
     onClose: onCloseJoinModal,
   } = useAuthorizedModal();
-  const shouldAllowJoiningToCommon =
-    Boolean(common) && !isCommonMember && !isJoiningPending;
+  const shouldShowJoinToCommonButton = Boolean(common) && !isCommonMember && !isJoiningPending;
+  const shouldAllowJoiningToCommon = Boolean(common) && !isCommonMember && (isCreationStageReached || !isJoiningPending);
 
   useEffect(() => {
     if (showJoinModal && !shouldAllowJoiningToCommon) {
@@ -44,6 +45,7 @@ export default function EmptyTabComponent({
           isShowing={showJoinModal}
           onClose={onCloseJoinModal}
           common={common}
+          onCreationStageReach={setIsCreationStageReached}
         />
       )}
       <div className={`empty-tab-component-wrapper `}>
@@ -75,7 +77,7 @@ export default function EmptyTabComponent({
           <div className="message">{message}</div>
 
           <div className="empty-tab-content-wrapper__buttons-wrapper">
-            {shouldAllowJoiningToCommon && (
+            {shouldShowJoinToCommonButton && (
               <button
                 className="button-blue empty-tab-content-wrapper__button"
                 onClick={onJoinModalOpen}

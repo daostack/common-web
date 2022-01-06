@@ -1,3 +1,6 @@
+import { ApiEndpoint } from "../../../shared/constants";
+import Api from "../../../services/Api";
+import { ProposalJoinRequestData } from "../../../shared/interfaces/api/proposal";
 import {
   Card,
   Collection,
@@ -8,6 +11,7 @@ import {
   User,
 } from "../../../shared/models";
 import {
+  convertObjectDatesToFirestoreTimestamps,
   transformFirebaseDataList,
   transformFirebaseDataSingle,
 } from "../../../shared/utils";
@@ -201,4 +205,15 @@ export function subscribeToDiscussionMessages(
   return query.onSnapshot((snapshot) => {
     callback(transformFirebaseDataList(snapshot));
   });
+}
+
+export async function createRequestToJoin(
+  requestData: ProposalJoinRequestData
+): Promise<Proposal> {
+  const { data } = await Api.post<Proposal>(
+    ApiEndpoint.CreateRequestToJoin,
+    requestData
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
 }

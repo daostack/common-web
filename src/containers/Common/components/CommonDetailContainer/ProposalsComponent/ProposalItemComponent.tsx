@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { ProposalCountDown } from "..";
 import { useCalculateReadMoreLength } from "../../../../../shared/hooks";
-import { Proposal } from "../../../../../shared/models";
+import { Proposal, ProposalState } from "../../../../../shared/models";
 import { formatPrice, getUserName, getDaysAgo } from "../../../../../shared/utils";
 import { VotesComponent } from "../VotesComponent";
 
@@ -23,7 +23,7 @@ export default function ProposalItemComponent({
 
   return (
     <div className="discussion-item-wrapper">
-      {proposal.state === "countdown" ? (
+      {proposal.state === ProposalState.COUNTDOWN ? (
         <ProposalCountDown
           date={
             new Date(
@@ -36,14 +36,14 @@ export default function ProposalItemComponent({
           <div className="state-inner-wrapper">
             <img
               src={
-                proposal.state === "failed"
+                proposal.state === ProposalState.REJECTED
                   ? "/icons/declined.svg"
                   : "/icons/approved.svg"
               }
               alt="state-wrapper"
             />
             <span className="state-name">
-              {proposal.state === "failed" ? "Rejected" : "Approved"}
+              {proposal.state === ProposalState.REJECTED ? "Rejected" : "Approved"}
             </span>
           </div>
         </div>

@@ -11,6 +11,7 @@ import { addMessageToDiscussion } from "@/containers/Common/store/actions";
 
 interface DiscussionDetailModalProps {
   disscussion: Discussion | null;
+  commonId: string;
   onOpenJoinModal: () => void;
   isCommonMember?: boolean;
   isJoiningPending: boolean;
@@ -18,6 +19,7 @@ interface DiscussionDetailModalProps {
 
 export default function DiscussionDetailModal({
   disscussion,
+  commonId,
   onOpenJoinModal,
   isCommonMember,
   isJoiningPending,
@@ -86,6 +88,7 @@ export default function DiscussionDetailModal({
       </div>
       <div className="right-side">
         <ChatComponent
+          commonId={commonId}
           discussionMessage={disscussion.discussionMessage || []}
           onOpenJoinModal={onOpenJoinModal}
           isCommonMember={isCommonMember}
