@@ -23,7 +23,6 @@ interface AccountProps {
 }
 
 const Account = ({ user, logOut }: AccountProps) => {
-  const [imageError, setImageError] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const wrapperRef = useRef(null);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
