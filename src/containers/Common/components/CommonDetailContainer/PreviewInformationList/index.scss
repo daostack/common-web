@@ -45,7 +45,7 @@
   }
   .information-content {
     .item {
-      height: 64px;
+      min-height: 64px;
       padding: 16px;
       font-size: 16px;
       font-weight: normal;
@@ -61,7 +61,7 @@
       flex-direction: column;
       justify-content: center;
       &:hover {
-        background-color: $light-purple;
+        background-color: #{$purple}0A;
         &::after {
           content: "";
           width: 24px;
