@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Link, useLocation, useHistory } from "react-router-dom";
 import classNames from "classnames";
 
+import { Image } from "../../../shared/components";
 import { Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
@@ -17,10 +18,13 @@ import {
   selectUser,
   selectIsLoginModalShowing,
 } from "../../../containers/Auth/store/selectors";
-import { isMobile } from "../../utils";
+import { isMobile, getUserName, getRandomUserAvatarURL } from "../../utils";
 import { Modal } from "../Modal";
 import { LoginContainer } from "../../../containers/Login/containers/LoginContainer";
-import { logOut, setIsLoginModalShowing } from "../../../containers/Auth/store/actions";
+import {
+  logOut,
+  setIsLoginModalShowing,
+} from "../../../containers/Auth/store/actions";
 
 const Header = () => {
   const location = useLocation();
@@ -33,6 +37,10 @@ const Header = () => {
   const user = useSelector(selectUser());
   const isNewUser = useSelector(selectIsNewUser());
   const isLoginModalShowing = useSelector(selectIsLoginModalShowing());
+  const randomUserAvatarURL = getRandomUserAvatarURL(user?.email);
+  const userAvatarURL = user?.photoURL || randomUserAvatarURL;
+  const userAvatarAlt = `${getUserName(user) || "user"} avatar`;
+  const shouldDisplayAvatar = Boolean(screenSize === ScreenSize.Mobile && user);
 
   const handleOpen = useCallback(() => {
     dispatch(setIsLoginModalShowing(true));
@@ -65,6 +73,10 @@ const Header = () => {
     }
   }, [user, isNewUser, isLoginModalShowing, handleClose]);
 
+  const toggleMenuShowing = () => {
+    setShowMenu((shouldShow) => !shouldShow);
+  };
+
   const handleNavLinkClick = () => {
     if (showMenu) {
       setShowMenu(false);
@@ -89,7 +101,9 @@ const Header = () => {
         </NavLink>
       )}
 
-      {isAuthorized && isMobile() && <button onClick={logOutUser}>Log out</button>}
+      {isAuthorized && isMobile() && (
+        <button onClick={logOutUser}>Log out</button>
+      )}
       {!isAuthorized && (
         <button className="login-button" onClick={handleOpen}>
           Login / Sign up
@@ -107,7 +121,28 @@ const Header = () => {
 
   return (
     <section className={headerWrapperClassName}>
-      <Link to="/" className="common-logo">
+      {shouldDisplayAvatar && (
+        <Image
+          className="hamburger-menu__user-avatar"
+          src={userAvatarURL}
+          alt={userAvatarAlt}
+          onClick={toggleMenuShowing}
+          placeholderElement={
+            <Image
+              className="hamburger-menu__user-avatar"
+              src={randomUserAvatarURL}
+              alt={userAvatarAlt}
+              onClick={toggleMenuShowing}
+            />
+          }
+        />
+      )}
+      <Link
+        to="/"
+        className={classNames("common-logo", {
+          "common-logo--without-avatar": !shouldDisplayAvatar,
+        })}
+      >
         <img src="/icons/logo.svg" alt="logo" className="logo" />
       </Link>
       {screenSize === ScreenSize.Desktop ? (
@@ -122,10 +157,7 @@ const Header = () => {
         </>
       ) : (
         <>
-          <div
-            className="humburger-menu"
-            onClick={() => setShowMenu(!showMenu)}
-          >
+          <div className="humburger-menu" onClick={toggleMenuShowing}>
             {showMenu ? (
               <CloseIcon width="24" height="24" />
             ) : (

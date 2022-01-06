@@ -84,16 +84,31 @@
     .logo {
       height: 40px;
     }
-    .humburger-menu,
     .common-logo {
-      margin-right: auto;
+      margin: 0 auto;
       align-items: center;
       display: flex;
+    }
+    .common-logo--without-avatar {
+      padding-right: 2.5rem;
+    }
+
+    .humburger-menu {
+      margin-right: 1rem;
+      display: flex;
+      align-items: center;
     }
     .humburger-menu:hover {
       cursor: pointer;
       opacity: 0.9;
     }
+
+    .hamburger-menu__user-avatar {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+    }
+
     .menu-wrapper {
       position: fixed;
       top: $header-height-mobile;
