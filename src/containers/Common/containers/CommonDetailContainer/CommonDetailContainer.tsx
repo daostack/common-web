@@ -32,7 +32,12 @@ import {
 import { MembershipRequestModal } from "../../components/CommonDetailContainer/MembershipRequestModal";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
 import "./index.scss";
-import { BASE_URL, Colors, ROUTE_PATHS, ScreenSize } from "../../../../shared/constants";
+import {
+  BASE_URL,
+  Colors,
+  ROUTE_PATHS,
+  ScreenSize,
+} from "../../../../shared/constants";
 import { MobileLinks } from "../../../../shared/components/MobileLinks";
 import {
   selectCommonDetail,
@@ -78,6 +83,8 @@ const tabs = [
     key: "history",
   },
 ];
+
+const SHARING_TEXT = "Hey checkout this common!";
 
 export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
@@ -318,9 +325,13 @@ export default function CommonDetail() {
     }
   }, [showJoinModal, shouldAllowJoiningToCommon, closeJoinModal]);
 
-  return !common ? (
-    <Loader />
-  ) : common ? (
+  if (!common) {
+    return <Loader />;
+  }
+
+  const sharingURL = `${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`;
+
+  return (
     <>
       <Modal
         isShowing={isShowing}
@@ -391,13 +402,20 @@ export default function CommonDetail() {
             </div>
             <div className="content-element text-information-wrapper">
               <div className="text">
-                <div>
-                  <div className="name">{common?.name}</div>
+                <div className="text-information-wrapper__info-wrapper">
+                  <div className="name">
+                    {common?.name}
+                    {screenSize === ScreenSize.Mobile && (
+                      <Share
+                        url={sharingURL}
+                        text={SHARING_TEXT}
+                        type="modal"
+                        color={Colors.transparent}
+                      />
+                    )}
+                  </div>
                   <div className="tagline">{common?.metadata.byline}</div>
                 </div>
-                {screenSize === ScreenSize.Mobile && (
-                  <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`} text="Hey checkout this common!" type="modal" color={Colors.transparent} />
-                )}
               </div>
               <div className="numbers">
                 <div className="item">
@@ -462,7 +480,12 @@ export default function CommonDetail() {
                       </div>
                     )}
                   {screenSize === ScreenSize.Desktop && (
-                    <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`} text="Hey checkout this common!"  type="popup" color={Colors.lightPurple} />
+                    <Share
+                      url={sharingURL}
+                      text={SHARING_TEXT}
+                      type="popup"
+                      color={Colors.lightPurple}
+                    />
                   )}
                 </div>
               </div>
@@ -539,7 +562,5 @@ export default function CommonDetail() {
         </div>
       </div>
     </>
-  ) : (
-    <Loader />
   );
 }

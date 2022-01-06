@@ -158,9 +158,18 @@
           border-bottom: none;
           flex-direction: column;
           .text {
+            .text-information-wrapper__info-wrapper {
+              width: 100%;
+            }
+
             .name {
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-start;
               font-size: $medium;
-              margin-right: 15px;
+            }
+            .social-wrapper {
+              align-self: unset;
             }
             .tagline {
               margin-bottom: 1.7rem;
