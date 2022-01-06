@@ -62,17 +62,18 @@
       justify-content: center;
       &:hover {
         background-color: #{$purple}0A;
-        &::after {
-          content: "";
-          width: 24px;
-          height: 24px;
-          background-image: url("/icons/right-arrow.svg");
-          background-repeat: no-repeat;
-          position: absolute;
-          right: 16px;
-          background-size: contain;
+
+        .item__right-arrow-icon {
+          visibility: unset;
         }
       }
+
+      .item__title-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
       .item-title {
         overflow-wrap: break-word;
         display: -webkit-box;
@@ -82,6 +83,12 @@
         text-overflow: ellipsis;
         width: 90%;
       }
+
+      .item__right-arrow-icon {
+        margin-left: .5rem;
+        visibility: hidden;
+      }
+
       .item-bottom {
         display: flex;
         align-items: center;
