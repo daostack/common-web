@@ -1,0 +1,78 @@
+@import "../../../../../constants.scss";
+
+.add-proposal-wrapper{
+  width: 576px;
+  margin: 0 auto;
+  .common-title{
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: 1.125rem;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.22;
+    letter-spacing: normal;
+    text-align: center;
+    color: $secondary-blue;
+    margin-top: -24px;
+  }
+
+  .add-proposal-title {
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: center;
+    color: $secondary-blue;
+    margin-top: 2rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .add-proposal-description{
+    font-family: NunitoSans, sans-serif;
+    font-size: 0.875rem;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    text-align: center;
+    color: $light-gray-2;
+    width: 23rem;
+    margin: 0 auto;
+  }
+
+  .add-proposal-form-wrapper{
+    margin-top: 3.5rem;
+
+    .funding-request-wrapper{
+      margin-top: 1.5rem;
+      display: flex;
+      align-items: center;
+      .funding-input-wrapper,
+      .funding-description{
+        display: flex;
+        flex: 50%;
+      }
+      .funding-input-wrapper{
+        .custom-input{
+          width: 100%;
+        }
+      }
+      .funding-description{
+        font-family: NunitoSans;
+        font-size: 0.75rem;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        color: $light-gray-2;
+        margin-left: 2rem;
+      }
+    }
+  }
+
+}

@@ -33,7 +33,12 @@ import {
 import { MembershipRequestModal } from "../../components/CommonDetailContainer/MembershipRequestModal";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
 import "./index.scss";
-import { BASE_URL, Colors, ROUTE_PATHS, ScreenSize } from "../../../../shared/constants";
+import {
+  BASE_URL,
+  Colors,
+  ROUTE_PATHS,
+  ScreenSize,
+} from "../../../../shared/constants";
 import { MobileLinks } from "../../../../shared/components/MobileLinks";
 import {
   selectCommonDetail,
@@ -57,6 +62,7 @@ import {
 } from "../../store/actions";
 import CheckIcon from "../../../../shared/icons/check.icon";
 import { selectUser } from "../../../Auth/store/selectors";
+import { AddProposalComponent } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 
 interface CommonDetailRouterParams {
   id: string;
@@ -125,6 +131,13 @@ export default function CommonDetail() {
     onOpen: onOpenNewD,
     onClose: onCloseNewD,
   } = useModal(false);
+
+  const {
+    isShowing: isShowingNewP,
+    onOpen: onOpenNewP,
+    onClose: onCloseNewP,
+  } = useModal(false);
+
   const {
     isModalOpen: showJoinModal,
     onOpen: onOpenJoinModal,
@@ -240,6 +253,8 @@ export default function CommonDetail() {
     [dispatch, user, common, onCloseNewD, getDisscussionDetail]
   );
 
+  const addProposal = useCallback(() => {}, []);
+
   const openJoinModal = useCallback(() => {
     onClose();
     setTimeout(onOpenJoinModal, 0);
@@ -256,6 +271,11 @@ export default function CommonDetail() {
     if (!user) return setTimeout(onOpenJoinModal, 0);
     onOpenNewD();
   }, [onOpenJoinModal, onOpenNewD, user]);
+
+  const addNewProposal = useCallback(() => {
+    if (!user) return setTimeout(onOpenJoinModal, 0);
+    onOpenNewP();
+  }, [onOpenJoinModal, onOpenNewP, user]);
 
   const renderSidebarContent = () => {
     if (!common) return null;
@@ -416,6 +436,12 @@ export default function CommonDetail() {
         onClose={onCloseNewD}
         onDiscussionAdd={addDiscussion}
       />
+      <AddProposalComponent
+        isShowing={isShowingNewP}
+        onClose={onCloseNewP}
+        onProposalAdd={addProposal}
+        common={common}
+      />
       <div className="common-detail-wrapper">
         <div className="main-information-block">
           <div className="main-information-wrapper">
@@ -437,7 +463,12 @@ export default function CommonDetail() {
                   <div className="tagline">{common?.metadata.byline}</div>
                 </div>
                 {screenSize === ScreenSize.Mobile && (
-                  <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`} text="Hey checkout this common!" type="modal" color={Colors.transparent} />
+                  <Share
+                    url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`}
+                    text="Hey checkout this common!"
+                    type="modal"
+                    color={Colors.transparent}
+                  />
                 )}
               </div>
               <div className="numbers">
@@ -503,7 +534,12 @@ export default function CommonDetail() {
                       </div>
                     )}
                   {screenSize === ScreenSize.Desktop && (
-                    <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`} text="Hey checkout this common!"  type="popup" color={Colors.lightPurple} />
+                    <Share
+                      url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`}
+                      text="Hey checkout this common!"
+                      type="popup"
+                      color={Colors.lightPurple}
+                    />
                   )}
                 </div>
               </div>
@@ -544,6 +580,7 @@ export default function CommonDetail() {
 
               {tab === "proposals" && (
                 <ProposalsComponent
+                  onAddNewProposal={addNewProposal}
                   common={common}
                   currentTab={tab}
                   proposals={activeProposals}
@@ -555,6 +592,7 @@ export default function CommonDetail() {
 
               {tab === "history" && (
                 <ProposalsComponent
+                  onAddNewProposal={addNewProposal}
                   common={common}
                   currentTab={tab}
                   proposals={historyProposals}
