@@ -154,6 +154,23 @@ const updateUserData = async (user: any) => {
 
   const updatedCurrentUser = await firebase.auth().currentUser;
 
+  if (updatedCurrentUser) {
+    await firebase
+      .firestore()
+      .collection("users")
+      .doc(updatedCurrentUser?.uid)
+      .update({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        photoURL: user.photo,
+      })
+      .then(() => {
+        console.log("User updated");
+      })
+      .catch((err) => console.error(err));
+  }
+
   return getUserData(updatedCurrentUser?.uid ?? "");
 };
 
