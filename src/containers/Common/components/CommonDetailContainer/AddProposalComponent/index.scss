@@ -1,9 +1,10 @@
 @import "../../../../../constants.scss";
 
-.add-proposal-wrapper{
+.add-proposal-wrapper {
   width: 576px;
   margin: 0 auto;
-  .common-title{
+
+  .common-title {
     font-family: NunitoSans-Bold, sans-serif;
     font-size: 1.125rem;
     font-weight: bold;
@@ -30,7 +31,7 @@
     margin-bottom: 0.25rem;
   }
 
-  .add-proposal-description{
+  .add-proposal-description {
     font-family: NunitoSans, sans-serif;
     font-size: 0.875rem;
     font-weight: normal;
@@ -44,25 +45,28 @@
     margin: 0 auto;
   }
 
-  .add-proposal-form-wrapper{
+  .add-proposal-form-wrapper {
     margin-top: 3.5rem;
 
-    .funding-request-wrapper{
+    .funding-request-wrapper {
       margin-top: 1.5rem;
       display: flex;
       align-items: center;
+
       .funding-input-wrapper,
-      .funding-description{
+      .funding-description {
         display: flex;
         flex: 50%;
       }
-      .funding-input-wrapper{
-        .custom-input{
+
+      .funding-input-wrapper {
+        .custom-input {
           width: 100%;
         }
       }
-      .funding-description{
-        font-family: NunitoSans;
+
+      .funding-description {
+        font-family: NunitoSans,sans-serif;
         font-size: 0.75rem;
         font-weight: normal;
         font-stretch: normal;
@@ -72,6 +76,64 @@
         color: $light-gray-2;
         margin-left: 2rem;
       }
+    }
+
+    .proposal-description-wrapper {
+      margin-top: 1rem;
+
+      textarea {
+        height: 9rem;
+      }
+    }
+
+    .add-additional-information {
+      display: flex;
+      margin: 1.5rem 0;
+      .link {
+        font-family: NunitoSans,sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.25;
+        letter-spacing: normal;
+        color: $purple;
+        margin-right: 1.5rem;
+      }
+    }
+
+    .proposal-note-wrapper{
+      padding: 0.5rem 3rem;
+      border-radius: 14px;
+      background-color: $light-purple;
+      height: 6rem;
+      .note-title{
+        margin-top: 0.5rem;
+        font-family: NunitoSans-Bold, sans-serif;
+        font-size: 0.875rem;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.43;
+        letter-spacing: normal;
+        color: $blue-2;
+      }
+      .note-text{
+        font-family: NunitoSans, sans-serif;
+        font-size: 0.875rem;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.43;
+        letter-spacing: normal;
+        color: $blue-2;
+      }
+    }
+
+    .action-wrapper {
+      width: 100%;
+      box-sizing: border-box;
+      display: block;
+      margin: 2.8rem auto 0;
+      text-align: center;
     }
   }
 

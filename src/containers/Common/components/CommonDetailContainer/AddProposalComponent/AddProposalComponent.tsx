@@ -81,6 +81,40 @@ const AddProposalComponent = ({
                   {formatPrice(common.balance)}
                 </div>
               </div>
+              <div className="proposal-description-wrapper">
+                <TextField
+                  id="description"
+                  label="Description"
+                  name={"description"}
+                  placeholder={
+                    "What exactly do you plan to do and how? How does it align with the Common's agenda and goals?"
+                  }
+                  value={formikProps.values.title}
+                  onChange={formikProps.handleChange}
+                  onBlur={formikProps.handleBlur}
+                  isTextarea={true}
+                />
+              </div>
+              <div className="add-additional-information">
+                <div className="link">Add link</div>
+                <div className="link">Add image</div>
+              </div>
+              <div className="proposal-note-wrapper">
+                <div className="note-title">Please note:</div>
+                <div className="note-text">
+                  Other proposals might be accepted and make the balance
+                  insufficient for the amount requested.
+                </div>
+              </div>
+              <div className="action-wrapper">
+                <button
+                  className="button-blue"
+                  disabled={!formikProps.isValid}
+                  onClick={formikProps.submitForm}
+                >
+                  Create proposal
+                </button>
+              </div>
             </div>
           </div>
         )}
