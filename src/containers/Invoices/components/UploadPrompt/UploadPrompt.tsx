@@ -1,40 +1,49 @@
 import React, { useState } from "react";
-import "./index.scss";
+import { IFile } from "../AddInvoices/AddInvoices";
 import PendingUpload from "./PendingUpload";
 import PreUpload from "./PreUpload";
 import UploadSuccess from "./UploadSuccess";
+import "./index.scss";
 
 interface IProps {
-  onUpload: () => void
-  onCancel: () => void
-  invoicesTotal: string
-  proposalRequest: string
+  proposalId: string;
+  selectedFiles: IFile[];
+  onCancel: () => void;
+  invoicesTotal: string;
+  proposalRequest: string;
+  updateSubmissionStatus: () => void;
 }
 
-enum UploadState {
+export enum UploadState {
   PreUpload,
   Pending,
   Success
 }
 
-export default function UploadPrompt({ onUpload, onCancel, invoicesTotal, proposalRequest }: IProps) {
+export default function UploadPrompt({ proposalId, selectedFiles, onCancel, invoicesTotal, proposalRequest, updateSubmissionStatus }: IProps) {
   const [uploadState, setUploadState] = useState<UploadState>(UploadState.PreUpload);
+  const [payoutDocsComment, setPayoutDocsComment] = useState(""); 
 
   const renderContent = (uploadState: UploadState) => {
     switch (uploadState) {
       case UploadState.PreUpload:
         return (
           <PreUpload
-            onUpload={onUpload}
             onCancel={onCancel}
             updateUploadState={() => setUploadState(UploadState.Pending)}
             invoicesTotal={invoicesTotal}
-            proposalRequest={proposalRequest} />
+            proposalRequest={proposalRequest}
+            payoutDocsComment={payoutDocsComment}
+            setPayoutDocsComment={setPayoutDocsComment} />
         )
       case UploadState.Pending:
-        return <PendingUpload updateUploadState={() => setUploadState(UploadState.Success)} />
+        return <PendingUpload
+          proposalId={proposalId}
+          selectedFiles={selectedFiles}
+          updateUploadState={setUploadState}
+          payoutDocsComment={payoutDocsComment} />
       case UploadState.Success:
-        return <UploadSuccess closePrompt={onCancel} />
+        return <UploadSuccess closePrompt={onCancel} updateSubmissionStatus={updateSubmissionStatus} />
     }
   }
 

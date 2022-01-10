@@ -16,7 +16,6 @@ import { Common } from "../../../../../shared/models";
 import { getScreenSize } from "../../../../../shared/store/selectors";
 import { ScreenSize } from "../../../../../shared/constants";
 import "./index.scss";
-import MembershipRequestBilling from "./MembershipRequestBilling";
 import MembershipRequestContribution from "./MembershipRequestContribution";
 import MembershipRequestCreated from "./MembershipRequestCreated";
 import MembershipRequestCreating from "./MembershipRequestCreating";
@@ -69,15 +68,15 @@ const initData: IMembershipRequestData = {
 
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
   common: Common;
+  onCreationStageReach: (reached: boolean) => void;
 }
 
 export function MembershipRequestModal(props: IProps) {
-  // TODO: should be saved in the localstorage for saving the progress?
   const [userData, setUserData] = useState(initData);
   const user = useSelector(selectUser());
   const { stage } = userData;
-  const { isShowing, onClose, common } = props;
-  const shouldDisplayProgressBar = stage > 0 && stage < 6;
+  const { isShowing, onClose, common, onCreationStageReach } = props;
+  const shouldDisplayProgressBar = stage > 0 && stage < 5;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
@@ -101,8 +100,9 @@ export function MembershipRequestModal(props: IProps) {
       }
 
       setUserData(payload);
+      onCreationStageReach(false);
     }
-  }, [isShowing, user]);
+  }, [isShowing, user, onCreationStageReach]);
 
   const renderCurrentStage = (stage: number) => {
     switch (stage) {
@@ -137,7 +137,7 @@ export function MembershipRequestModal(props: IProps) {
         );
       case 4:
         return (
-          <MembershipRequestBilling
+          <MembershipRequestPayment
             userData={userData}
             setUserData={setUserData}
             common={common}
@@ -145,27 +145,19 @@ export function MembershipRequestModal(props: IProps) {
         );
       case 5:
         return (
-          <MembershipRequestPayment
-            userData={userData}
-            setUserData={setUserData}
-            common={common}
-          />
-        );
-      case 6:
-        return (
           <MembershipRequestCreating
             userData={userData}
             setUserData={setUserData}
             common={common}
           />
         );
-      case 7:
+      case 6:
         return <MembershipRequestCreated closeModal={onClose} />;
     }
   };
 
   const renderedTitle = useMemo((): ReactNode => {
-    if (stage >= 6) {
+    if (stage >= 5) {
       return null;
     }
 
@@ -189,13 +181,19 @@ export function MembershipRequestModal(props: IProps) {
     }));
   }, []);
 
+  useEffect(() => {
+    if (stage === 5) {
+      onCreationStageReach(true);
+    }
+  }, [stage, onCreationStageReach]);
+
   return (
     <Modal
       isShowing={isShowing}
       onClose={onClose}
       className="mobile-full-screen membership-request-modal"
       mobileFullScreen
-      closePrompt={stage !== 7}
+      closePrompt={stage !== 6}
       title={renderedTitle}
       onGoBack={shouldDisplayProgressBar ? moveStageBack : undefined}
       styles={{

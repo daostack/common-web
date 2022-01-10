@@ -17,11 +17,7 @@ import {
   useViewPortHook,
 } from "../../../../shared/hooks";
 
-import {
-  Discussion,
-  Proposal,
-  ProposalState,
-} from "../../../../shared/models";
+import { Discussion, Proposal, ProposalState } from "../../../../shared/models";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
 import {
@@ -36,7 +32,7 @@ import {
 import { MembershipRequestModal } from "../../components/CommonDetailContainer/MembershipRequestModal";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
 import "./index.scss";
-import { Colors, ScreenSize } from "../../../../shared/constants";
+import { BASE_URL, Colors, ROUTE_PATHS, ScreenSize } from "../../../../shared/constants";
 import { MobileLinks } from "../../../../shared/components/MobileLinks";
 import {
   selectCommonDetail,
@@ -95,6 +91,7 @@ export default function CommonDetail() {
   const [footerClass, setFooterClass] = useState("");
   const [tab, setTab] = useState("about");
   const [imageError, setImageError] = useState(false);
+  const [isCreationStageReached, setIsCreationStageReached] = useState(false);
 
   const common = useSelector(selectCommonDetail());
   const currentDisscussion = useSelector(selectCurrentDisscussion());
@@ -114,7 +111,9 @@ export default function CommonDetail() {
       proposal.state === ProposalState.COUNTDOWN &&
       proposal.proposerId === user?.uid
   );
-  const shouldAllowJoiningToCommon = !isCommonMember && !isJoiningPending;
+  const shouldShowJoinToCommonButton = !isCommonMember && !isJoiningPending;
+  const shouldAllowJoiningToCommon =
+    !isCommonMember && (isCreationStageReached || !isJoiningPending);
 
   const dispatch = useDispatch();
 
@@ -134,12 +133,12 @@ export default function CommonDetail() {
   }, [dispatch, id]);
 
   const activeProposals = useMemo(
-    () => [...proposals].filter((d) => d.state === "countdown"),
+    () => [...proposals].filter((d) => d.state === ProposalState.COUNTDOWN),
     [proposals]
   );
 
   const historyProposals = useMemo(
-    () => [...proposals].filter((d) => d.state !== "countdown"),
+    () => [...proposals].filter((d) => d.state !== ProposalState.COUNTDOWN),
     [proposals]
   );
 
@@ -344,6 +343,7 @@ export default function CommonDetail() {
         {!isMobileView && tab === "discussions" && (
           <DiscussionDetailModal
             disscussion={currentDisscussion}
+            commonId={common.id}
             onOpenJoinModal={openJoinModal}
             isCommonMember={isCommonMember}
             isJoiningPending={isJoiningPending}
@@ -352,6 +352,7 @@ export default function CommonDetail() {
         {!isMobileView && (tab === "proposals" || tab === "history") && (
           <ProposalDetailModal
             proposal={currentProposal}
+            commonId={common.id}
             onOpenJoinModal={openJoinModal}
             isCommonMember={isCommonMember}
             isJoiningPending={isJoiningPending}
@@ -372,6 +373,7 @@ export default function CommonDetail() {
         isShowing={showJoinModal}
         onClose={closeJoinModal}
         common={common}
+        onCreationStageReach={setIsCreationStageReached}
       />
       <div className="common-detail-wrapper">
         <div className="main-information-block">
@@ -394,7 +396,7 @@ export default function CommonDetail() {
                   <div className="tagline">{common?.metadata.byline}</div>
                 </div>
                 {screenSize === ScreenSize.Mobile && (
-                  <Share type="modal" color={Colors.transparent} />
+                  <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`} text="Hey checkout this common!" type="modal" color={Colors.transparent} />
                 )}
               </div>
               <div className="numbers">
@@ -436,7 +438,7 @@ export default function CommonDetail() {
                   ))}
                 </div>
                 <div className="social-wrapper" ref={joinEffort}>
-                  {shouldAllowJoiningToCommon && (
+                  {shouldShowJoinToCommonButton && (
                     <button
                       className={`button-blue join-the-effort-btn`}
                       onClick={onOpenJoinModal}
@@ -460,7 +462,7 @@ export default function CommonDetail() {
                       </div>
                     )}
                   {screenSize === ScreenSize.Desktop && (
-                    <Share type="popup" color={Colors.lightPurple} />
+                    <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`} text="Hey checkout this common!"  type="popup" color={Colors.lightPurple} />
                   )}
                 </div>
               </div>
@@ -521,7 +523,7 @@ export default function CommonDetail() {
               )}
             </div>
             {screenSize === ScreenSize.Mobile &&
-              !isCommonMember &&
+              shouldShowJoinToCommonButton &&
               !inViewport && (
                 <button
                   className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}

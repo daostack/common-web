@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 
 interface IProps {
-  onUpload: () => void
-  onCancel: () => void
-  updateUploadState: () => void
-  invoicesTotal: string
-  proposalRequest: string
+  onCancel: () => void;
+  updateUploadState: () => void;
+  invoicesTotal: string;
+  proposalRequest: string;
+  payoutDocsComment: string;
+  setPayoutDocsComment: (value: string) => void;
 }
 
-export default function PreUpload({ onUpload, onCancel, updateUploadState, invoicesTotal, proposalRequest }: IProps) {
-  const [note, setNote] = useState("");
-
+export default function PreUpload({ onCancel, updateUploadState, invoicesTotal, proposalRequest, payoutDocsComment, setPayoutDocsComment }: IProps) {
   return (
     <div className="pre-upload-wrapper">
       <span className="pre-upload__title">Please, make sure you've uploaded all invoices</span>
@@ -25,8 +24,8 @@ export default function PreUpload({ onUpload, onCancel, updateUploadState, invoi
           <span className="summary-item__value">{invoicesTotal}</span>
         </div>
       </div>
-      <textarea value={note} onChange={(e) => setNote(e.target.value)} rows={5} placeholder="Add Note" />
-      <button className="button-blue upload-btn" onClick={() => { onUpload(); updateUploadState(); }} >Upload Invoices</button>
+      <textarea value={payoutDocsComment} onChange={(e) => setPayoutDocsComment(e.target.value)} rows={5} placeholder="Add Note" />
+      <button className="button-blue upload-btn" onClick={updateUploadState} >Upload Invoices</button>
       <button className="button-blue transparent" onClick={onCancel}>I have more invoices to upload</button>
     </div>
   )

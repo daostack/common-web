@@ -2,8 +2,8 @@ import React from "react";
 import "./index.scss";
 
 interface IProps {
-  onCancel: () => void
-  onDelete: () => void
+  onCancel: () => void;
+  onDelete: () => void;
 }
 
 export default function DeletePrompt({ onCancel, onDelete }: IProps) {

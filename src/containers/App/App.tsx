@@ -44,11 +44,8 @@ const App = () => {
           <Route path="/" exact component={LandingContainer} />
           <PrivateRoute path={ROUTE_PATHS.COMMON_LIST} component={CommonContainer} authentificated={true} />
           <PrivateRoute path={ROUTE_PATHS.MY_COMMONS} component={MyCommonsContainer} authentificated={true} />
-
-          {/* TODO: According the desgin it should be displayed without showing the Header and the Footer. Need to discuss about that. */}
           <PrivateRoute path={ROUTE_PATHS.SUBMIT_INVOICES} component={SubmitInvoicesContainer} authentificated={true} />
           <PrivateRoute path={ROUTE_PATHS.INVOICES_APPROVAL} component={InvoicesApprovalContainer} authentificated />
-
           <Route component={NotFound} />
         </Switch>
       </Content>

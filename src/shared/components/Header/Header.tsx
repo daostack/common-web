@@ -89,7 +89,7 @@ const Header = () => {
         </NavLink>
       )}
 
-      {isAuthorized && isMobile() && <button>Log out</button>}
+      {isAuthorized && isMobile() && <button onClick={logOutUser}>Log out</button>}
       {!isAuthorized && (
         <button className="login-button" onClick={handleOpen}>
           Login / Sign up

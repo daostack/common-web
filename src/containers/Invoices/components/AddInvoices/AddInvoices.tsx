@@ -20,11 +20,13 @@ import "./index.scss";
 const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png, .pdf";
 
 interface AddInvoicesProps {
-  proposalRequest: number | undefined;
+  proposalId: string;
+  proposalRequest?: number;
+  updateSubmissionStatus: () => void;
   className?: string;
 }
 
-interface IFile {
+export interface IFile {
   data: File;
   amount: number;
 }
@@ -33,7 +35,7 @@ const removeInvoice = (invoices: IFile[], indexToRemove: number) =>
   invoices.filter((invoice, index) => index !== indexToRemove);
 
 export default function AddInvoices(props: AddInvoicesProps): ReactElement {
-  const { className, proposalRequest } = props;
+  const { proposalId, proposalRequest, updateSubmissionStatus, className } = props;
   const [selectedFiles, setSelectedFiles] = useState<IFile[]>([]);
   const [showFilePreview, setShowFilePreview] = useState(false);
   const screenSize = useSelector(getScreenSize());
@@ -190,9 +192,9 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
               }}
             />
           )}
-          <span className="add-invoices__total-amount-label">{`Total invoices amount: ${formatPrice(
-            totalAmount * 100
-          )}`}</span>
+          <span className="add-invoices__total-amount-label">
+            Total invoices amount: {formatPrice(totalAmount * 100)}
+          </span>
           <button
             className="button-blue"
             disabled={!selectedFiles}
@@ -212,12 +214,12 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
       )}
       {showUploadPrompt && (
         <UploadPrompt
-          onUpload={() => {
-            return;
-          }}
+          proposalId={proposalId}
+          selectedFiles={selectedFiles}
           onCancel={() => setShowUploadPrompt(false)}
           invoicesTotal={formatPrice(totalAmount * 100)}
           proposalRequest={formatPrice(proposalRequest)}
+          updateSubmissionStatus={updateSubmissionStatus}
         />
       )}
     </div>

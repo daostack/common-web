@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { Loader } from "../../../../../shared/components";
-import { Proposal } from "../../../../../shared/models";
+import { Proposal, ProposalState } from "../../../../../shared/models";
 import {
   formatPrice,
   getDaysAgo,
@@ -15,6 +15,7 @@ import "./index.scss";
 
 interface DiscussionDetailModalProps {
   proposal: Proposal | null;
+  commonId: string;
   onOpenJoinModal: () => void;
   isCommonMember: boolean;
   isJoiningPending: boolean;
@@ -22,6 +23,7 @@ interface DiscussionDetailModalProps {
 
 export default function ProposalDetailModal({
   proposal,
+  commonId,
   onOpenJoinModal,
   isCommonMember,
   isJoiningPending,
@@ -35,7 +37,7 @@ export default function ProposalDetailModal({
     <div className="discussion-detail-modal-wrapper">
       <div className="left-side">
         <div className="top-side">
-          {proposal.state === "countdown" ? (
+          {proposal.state === ProposalState.COUNTDOWN ? (
             <ProposalCountDown date={getProposalExpirationDate(proposal)} />
           ) : (
             <div
@@ -44,14 +46,14 @@ export default function ProposalDetailModal({
               <div className="state-inner-wrapper">
                 <img
                   src={
-                    proposal.state === "failed"
+                    proposal.state === ProposalState.REJECTED
                       ? "/icons/declined.svg"
                       : "/icons/approved.svg"
                   }
                   alt="state-wrapper"
                 />
                 <span className="state-name">
-                  {proposal.state === "failed" ? "Rejected" : "Approved"}
+                  {proposal.state === ProposalState.REJECTED ? "Rejected" : "Approved"}
                 </span>
               </div>
             </div>
@@ -100,6 +102,7 @@ export default function ProposalDetailModal({
       </div>
       <div className="right-side">
         <ChatComponent
+          commonId={commonId}
           discussionMessage={proposal.discussionMessage || []}
           onOpenJoinModal={onOpenJoinModal}
           isCommonMember={isCommonMember}

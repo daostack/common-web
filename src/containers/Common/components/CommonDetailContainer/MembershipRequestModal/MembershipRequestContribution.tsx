@@ -134,7 +134,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
     setUserData((nextUserData) => ({
       ...nextUserData,
       contributionAmount,
-      stage: contributionAmount === 0 ? 6 : 4,
+      stage: contributionAmount === 0 ? 5 : 4,
     }));
   }, [setUserData, selectedContribution, enteredContribution]);
 

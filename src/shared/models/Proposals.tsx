@@ -48,7 +48,7 @@ export type ProposalVote = {
   voter?: User;
 };
 
-export interface LegalDocInfo {
+export interface DocInfo {
   name: string;
   legalType: number;
   amount?: number;
@@ -99,5 +99,6 @@ export interface Proposal {
   join?: ProposalJoin;
   votes?: ProposalVote[];
 
-  legalDocsInfo?: LegalDocInfo[];
+  approvalDate?: Time;
+  payoutDocs?: DocInfo[];
 }

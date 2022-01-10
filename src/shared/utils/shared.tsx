@@ -2,7 +2,7 @@ import millify from "millify";
 import moment from "moment";
 
 import { MobileOperatingSystem } from "../constants";
-import { Proposal, Time, User } from "../models";
+import { DateFormat, Proposal, Time, User } from "../models";
 
 /**
  * Backend stores the price in cents, that's why we divide by 100
@@ -24,6 +24,15 @@ export const formatPrice = (price?: number, shouldMillify = true): string => {
 export const formatDate = (date: string | Date) => {
   return moment(date).format("YYYY-MM-DD");
 };
+
+/**
+ * Returns the date in a given format. Default is DD-MM-YYYY HH:mm
+ * @param {Time} time
+ * @param {DateFormat} format the desired format
+ */
+ export const formatEpochTime = (time: Time, format: DateFormat = DateFormat.Long) => {
+  return moment.unix(time.seconds).local().format(format);
+}
 
 export const getUserName = (user: User | undefined) => {
   if (!user) return "";

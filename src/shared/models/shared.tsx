@@ -19,3 +19,8 @@ export interface File {
 export enum Collection {
   Cards = "cards",
 }
+
+export enum DateFormat {
+  Long = "DD-MM-YYYY HH:mm",
+  Short = "YYYY-MM-DD"
+}
