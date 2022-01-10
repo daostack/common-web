@@ -129,7 +129,14 @@ const authorizeUser = async (payload: string) => {
               tokenHandler.set(tk);
 
               if (currentUser) {
-                const databaseUser = await getUserData(currentUser.uid);
+                let databaseUser = await getUserData(currentUser.uid);
+
+                if (!databaseUser) {
+                  store.dispatch(actions.setIsUserNew(true));
+                  await createUser(currentUser);
+                  databaseUser = await getUserData(currentUser.uid);
+                }
+
                 if (databaseUser) {
                   loginedUser = databaseUser;
                   store.dispatch(actions.socialLogin.success(databaseUser));
