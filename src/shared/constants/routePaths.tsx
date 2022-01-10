@@ -4,5 +4,4 @@ export enum ROUTE_PATHS {
   CONTACT = "/contact",
   MY_COMMONS = "/my-commons",
   SUBMIT_INVOICES = "/invoices/submission/:proposalId",
-  INVOICES_APPROVAL = "/invoices/approval",
 }
