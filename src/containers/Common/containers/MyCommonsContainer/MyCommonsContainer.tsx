@@ -26,6 +26,7 @@ export default function MyCommonsContainer() {
   const loading = useSelector(getLoading());
   const [pendingCommons, setPendingCommons] = useState<Common[]>([]);
   const [myCommons, setMyCommons] = useState<Common[]>([]);
+  const [isProposalLoaded, setProposalLoaded] = useState<boolean>(false);
 
   const [hasClosedPopup, setHasClosedPopup] = useState(
     sessionStorage.getItem("hasClosedPopup")
@@ -38,10 +39,11 @@ export default function MyCommonsContainer() {
   }, [dispatch, commons]);
 
   useEffect(() => {
-    if (myProposals.length === 0 && user?.uid) {
+    if (myProposals.length === 0 && user?.uid && !isProposalLoaded) {
       dispatch(loadUserProposalList.request(user?.uid));
+      setProposalLoaded(true);
     }
-  }, [dispatch, myProposals, user]);
+  }, [dispatch, isProposalLoaded, myProposals, user]);
 
   useEffect(() => {
     const myCommons = commons.filter((c) =>
