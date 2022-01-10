@@ -17,10 +17,13 @@ import {
   selectUser,
   selectIsLoginModalShowing,
 } from "../../../containers/Auth/store/selectors";
-import { isMobile } from "../../utils";
+import { isMobile, matchRoute } from "../../utils";
 import { Modal } from "../Modal";
 import { LoginContainer } from "../../../containers/Login/containers/LoginContainer";
-import { logOut, setIsLoginModalShowing } from "../../../containers/Auth/store/actions";
+import {
+  logOut,
+  setIsLoginModalShowing,
+} from "../../../containers/Auth/store/actions";
 
 const Header = () => {
   const location = useLocation();
@@ -33,6 +36,9 @@ const Header = () => {
   const user = useSelector(selectUser());
   const isNewUser = useSelector(selectIsNewUser());
   const isLoginModalShowing = useSelector(selectIsLoginModalShowing());
+  const isTrusteeRoute = matchRoute(location.pathname, ROUTE_PATHS.TRUSTEE, {
+    exact: false,
+  });
 
   const handleOpen = useCallback(() => {
     dispatch(setIsLoginModalShowing(true));
@@ -77,20 +83,26 @@ const Header = () => {
 
   const links = (
     <div className="navigation-wrapper" onClick={handleNavLinkClick}>
-      <NavLink to="/" exact activeClassName="active">
-        About
-      </NavLink>
-      <NavLink to={ROUTE_PATHS.COMMON_LIST} activeClassName="active">
-        Explore
-      </NavLink>
-      {isAuthorized && (
-        <NavLink to={ROUTE_PATHS.MY_COMMONS} exact activeClassName="active">
-          My Commons
-        </NavLink>
+      {!isTrusteeRoute && (
+        <>
+          <NavLink to="/" exact activeClassName="active">
+            About
+          </NavLink>
+          <NavLink to={ROUTE_PATHS.COMMON_LIST} activeClassName="active">
+            Explore
+          </NavLink>
+          {isAuthorized && (
+            <NavLink to={ROUTE_PATHS.MY_COMMONS} exact activeClassName="active">
+              My Commons
+            </NavLink>
+          )}
+        </>
       )}
 
-      {isAuthorized && isMobile() && <button onClick={logOutUser}>Log out</button>}
-      {!isAuthorized && (
+      {isAuthorized && isMobile() && (
+        <button onClick={logOutUser}>Log out</button>
+      )}
+      {!isAuthorized && !isTrusteeRoute && (
         <button className="login-button" onClick={handleOpen}>
           Login / Sign up
         </button>
@@ -107,14 +119,20 @@ const Header = () => {
 
   return (
     <section className={headerWrapperClassName}>
-      <Link to="/" className="common-logo">
+      <Link to={isTrusteeRoute ? ROUTE_PATHS.TRUSTEE : "/"} className="common-logo">
         <img src="/icons/logo.svg" alt="logo" className="logo" />
       </Link>
       {screenSize === ScreenSize.Desktop ? (
         <>
           {links}
-          {user && <Account user={user} logOut={logOutUser} />}
-          {!isAuthorized ? (
+          {user && (
+            <Account
+              user={user}
+              logOut={logOutUser}
+              isTrusteeRoute={isTrusteeRoute}
+            />
+          )}
+          {!isAuthorized && !isTrusteeRoute ? (
             <div className="mobile-links-container">
               <MobileLinks color={Colors.black} />
             </div>
@@ -134,12 +152,14 @@ const Header = () => {
           </div>
           {showMenu && (
             <div className="menu-wrapper">
-              <DownloadCommonApp
-                setHasClosedPopup={() => {
-                  return true;
-                }}
-                inMenu={true}
-              />
+              {!isTrusteeRoute && (
+                <DownloadCommonApp
+                  setHasClosedPopup={() => {
+                    return true;
+                  }}
+                  inMenu={true}
+                />
+              )}
               {links}
             </div>
           )}

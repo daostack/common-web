@@ -14,9 +14,10 @@ import "./index.scss";
 interface AccountProps {
   user: any;
   logOut: () => void;
+  isTrusteeRoute: boolean;
 }
 
-const Account = ({ user, logOut }: AccountProps) => {
+const Account = ({ user, logOut, isTrusteeRoute }: AccountProps) => {
   const [imageError, setImageError] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const wrapperRef = useRef(null);
@@ -66,20 +67,26 @@ const Account = ({ user, logOut }: AccountProps) => {
       <div className="vertical-menu" />
       {showMenu && (
         <div className="menu-wrapper" ref={wrapperRef}>
-          <div onClick={() => (window.location.href = ROUTE_PATHS.MY_COMMONS)}>
-            My Commons
-          </div>
-          <div
-            onClick={() =>
-              window.open(
-                getMobileOperatingSystem() === MobileOperatingSystem.iOS
-                  ? COMMON_APP_APP_STORE_LINK
-                  : COMMON_APP_GOOGLE_PLAY_LINK
-              )
-            }
-          >
-            Download Common app
-          </div>
+          {!isTrusteeRoute && (
+            <>
+              <div
+                onClick={() => (window.location.href = ROUTE_PATHS.MY_COMMONS)}
+              >
+                My Commons
+              </div>
+              <div
+                onClick={() =>
+                  window.open(
+                    getMobileOperatingSystem() === MobileOperatingSystem.iOS
+                      ? COMMON_APP_APP_STORE_LINK
+                      : COMMON_APP_GOOGLE_PLAY_LINK
+                  )
+                }
+              >
+                Download Common app
+              </div>
+            </>
+          )}
           <div onClick={() => logOut()}>Log out</div>
         </div>
       )}
