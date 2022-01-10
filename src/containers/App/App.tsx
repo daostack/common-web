@@ -10,6 +10,7 @@ import { ROUTE_PATHS, SMALL_SCREEN_BREAKPOINT, ScreenSize } from "../../shared/c
 import { changeScreenSize } from "../../shared/store/actions";
 import { MyCommonsContainer } from "../Common/containers/MyCommonsContainer";
 import { SubmitInvoicesContainer } from "../Invoices/containers";
+import { TrusteeContainer } from "../Trustee/containers";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -45,6 +46,7 @@ const App = () => {
           <PrivateRoute path={ROUTE_PATHS.COMMON_LIST} component={CommonContainer} authentificated={true} />
           <PrivateRoute path={ROUTE_PATHS.MY_COMMONS} component={MyCommonsContainer} authentificated={true} />
           <PrivateRoute path={ROUTE_PATHS.SUBMIT_INVOICES} component={SubmitInvoicesContainer} authentificated={true} />
+          <Route path={ROUTE_PATHS.TRUSTEE} component={TrusteeContainer} />
           <Route component={NotFound} />
         </Switch>
       </Content>
