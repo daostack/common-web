@@ -397,7 +397,7 @@ export default function CommonDetail() {
                   onError={() => setImageError(true)}
                 />
               ) : (
-                <img src="/icons/logo-white.svg" alt={common.name} />
+                <img className="default-image" src="/icons/logo-white.svg" alt={common.name} />
               )}
             </div>
             <div className="content-element text-information-wrapper">
