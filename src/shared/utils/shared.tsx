@@ -34,7 +34,7 @@ export const formatDate = (date: string | Date) => {
   return moment.unix(time.seconds).local().format(format);
 }
 
-export const getUserName = (user: User | undefined) => {
+export const getUserName = (user?: User | null) => {
   if (!user) return "";
   return user.displayName || `${user.firstName} ${user.lastName}`;
 };
@@ -43,6 +43,10 @@ export const getUserInitials = (user: User | undefined) => {
   if (!user) return "";
   return user.displayName || `${user.firstName[0]}${user.lastName[0]}`;
 };
+
+export const getRandomUserAvatarURL = (name?: string): string => (
+  `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${name}&rounded=true`
+);
 
 export const getDaysAgo = (currentDate: Date, time: Time) => {
   const previousDate = new Date(time.seconds * 1000);

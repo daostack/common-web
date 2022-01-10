@@ -153,14 +153,29 @@
       .main-information-wrapper {
         .img-wrapper {
           margin: 0px -#{$content-padding-mobile};
+
+          .default-image {
+            width: 100%;
+            transform: none;
+            object-fit: contain;
+          }
         }
         .text-information-wrapper {
           border-bottom: none;
           flex-direction: column;
           .text {
+            .text-information-wrapper__info-wrapper {
+              width: 100%;
+            }
+
             .name {
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-start;
               font-size: $medium;
-              margin-right: 15px;
+            }
+            .social-wrapper {
+              align-self: unset;
             }
             .tagline {
               margin-bottom: 1.7rem;
