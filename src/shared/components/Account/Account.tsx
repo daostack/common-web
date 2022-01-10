@@ -51,7 +51,7 @@ const Account = ({ user, logOut }: AccountProps) => {
           />
         }
       />
-      <div>{getUserName()}</div>
+      <div>{getUserName(user)}</div>
       <div className="vertical-menu" />
       {showMenu && (
         <div className="menu-wrapper" ref={wrapperRef}>
