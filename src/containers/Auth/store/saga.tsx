@@ -119,6 +119,9 @@ const authorizeUser = async (payload: string) => {
           let loginedUser: any;
           if (result.additionalUserInfo?.isNewUser) {
             store.dispatch(actions.setIsUserNew(true));
+            if (currentUser) {
+              await createUser(currentUser);
+            }
           }
           if (credentials && user) {
             const tk = await currentUser?.getIdToken(true);
@@ -126,9 +129,12 @@ const authorizeUser = async (payload: string) => {
               tokenHandler.set(tk);
 
               if (currentUser) {
-                loginedUser = currentUser;
-                store.dispatch(actions.socialLogin.success(currentUser));
-                tokenHandler.setUser(currentUser);
+                const databaseUser = await getUserData(currentUser.uid);
+                if (databaseUser) {
+                  loginedUser = databaseUser;
+                  store.dispatch(actions.socialLogin.success(databaseUser));
+                  tokenHandler.setUser(databaseUser);
+                }
               }
             }
           }
@@ -148,10 +154,21 @@ const updateUserData = async (user: any) => {
 
   const updatedCurrentUser = await firebase.auth().currentUser;
 
-  if (store.getState().auth.isNewUser) {
-    if (updatedCurrentUser) {
-      await createUser(updatedCurrentUser);
-    }
+  if (updatedCurrentUser) {
+    await firebase
+      .firestore()
+      .collection("users")
+      .doc(updatedCurrentUser?.uid)
+      .update({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        photoURL: user.photo,
+      })
+      .then(() => {
+        console.log("User updated");
+      })
+      .catch((err) => console.error(err));
   }
 
   return getUserData(updatedCurrentUser?.uid ?? "");
