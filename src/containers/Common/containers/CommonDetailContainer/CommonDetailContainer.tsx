@@ -117,6 +117,11 @@ export default function CommonDetail() {
   const shouldShowJoinToCommonButton = !isCommonMember && !isJoiningPending;
   const shouldAllowJoiningToCommon =
     !isCommonMember && (isCreationStageReached || !isJoiningPending);
+  const shouldShowStickyJoinEffortButton =
+    screenSize === ScreenSize.Mobile &&
+    shouldShowJoinToCommonButton &&
+    !inViewport &&
+    (stickyClass || footerClass);
 
   const dispatch = useDispatch();
 
@@ -545,16 +550,14 @@ export default function CommonDetail() {
                 />
               )}
             </div>
-            {screenSize === ScreenSize.Mobile &&
-              shouldShowJoinToCommonButton &&
-              !inViewport && (
-                <button
-                  className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
-                  onClick={onOpenJoinModal}
-                >
-                  Join the effort
-                </button>
-              )}
+            {shouldShowStickyJoinEffortButton && (
+              <button
+                className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
+                onClick={onOpenJoinModal}
+              >
+                Join the effort
+              </button>
+            )}
             {(screenSize === ScreenSize.Desktop || tab !== "about") && (
               <div className="sidebar-wrapper">{renderSidebarContent()}</div>
             )}
