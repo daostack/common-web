@@ -307,7 +307,7 @@ export default function CommonDetail() {
         }
       }
     }
-  }, [inViewport, activeProposals, tab, discussions, setStickyClass]);
+  }, [inViewport, activeProposals, tab, discussions, setStickyClass, joinEffortRef]);
 
   useEffect(() => {
     if (inViewPortFooter) {
