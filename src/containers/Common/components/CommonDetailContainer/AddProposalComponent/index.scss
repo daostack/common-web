@@ -66,7 +66,7 @@
       }
 
       .funding-description {
-        font-family: NunitoSans,sans-serif;
+        font-family: NunitoSans, sans-serif;
         font-size: 0.75rem;
         font-weight: normal;
         font-stretch: normal;
@@ -89,8 +89,9 @@
     .add-additional-information {
       display: flex;
       margin: 1.5rem 0;
+
       .link {
-        font-family: NunitoSans,sans-serif;
+        font-family: NunitoSans, sans-serif;
         font-size: 1rem;
         font-weight: 600;
         font-stretch: normal;
@@ -102,12 +103,13 @@
       }
     }
 
-    .proposal-note-wrapper{
+    .proposal-note-wrapper {
       padding: 0.5rem 3rem;
       border-radius: 14px;
       background-color: $light-purple;
       height: 6rem;
-      .note-title{
+
+      .note-title {
         margin-top: 0.5rem;
         font-family: NunitoSans-Bold, sans-serif;
         font-size: 0.875rem;
@@ -117,7 +119,8 @@
         letter-spacing: normal;
         color: $blue-2;
       }
-      .note-text{
+
+      .note-text {
         font-family: NunitoSans, sans-serif;
         font-size: 0.875rem;
         font-stretch: normal;
@@ -128,13 +131,109 @@
       }
     }
 
-    .action-wrapper {
-      width: 100%;
-      box-sizing: border-box;
-      display: block;
-      margin: 2.8rem auto 0;
-      text-align: center;
-    }
+
   }
 
+}
+.action-wrapper {
+  width: 100%;
+  box-sizing: border-box;
+  display: block;
+  margin: 2.8rem auto 0;
+  text-align: center;
+}
+
+.app-proposal-confirm-wrapper {
+  display: flex;
+  align-items: center;
+  height: 40rem;
+  flex-direction: column;
+
+  img {
+    width: 7.25rem;
+    height: 7.25rem;
+    margin: 0 auto;
+  }
+
+  .add-proposal-confirm-title {
+    font-family: NunitoSans, sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: center;
+    color: $secondary-blue;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .add-proposal-confirm-description {
+    font-family: NunitoSans, sans-serif;
+    font-size: 1rem;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: center;
+    color: $secondary-blue;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid $light-gray-1;
+  }
+
+  .add-proposal-confirm-checkboxes {
+    width: 70%;
+
+    .checkboxes-title {
+      font-family: NunitoSans-Bold, sans-serif;
+      font-size: 1rem;
+      font-weight: bold;
+      line-height: 1.5;
+      color: $secondary-blue;
+      padding-bottom: 1.5rem;
+    }
+
+    .confirm-checkboxes {
+      display: flex;
+      flex-direction: column;
+      .checkbox {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 1.5rem;
+        img {
+          width: 24px;
+          height: 24px;
+          margin: 0;
+          padding-right: 1rem;
+        }
+        span{
+
+        }
+      }
+    }
+
+    .confirm-notes-wrapper{
+      padding: 1rem 1.5rem;
+      border-radius: 14px;
+      background-color: #f4f6ff;
+      font-family: NunitoSans,sans-serif;
+      font-size: 0.875rem;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.43;
+      letter-spacing: normal;
+      text-align: center;
+      color: $secondary-blue;
+    }
+    .action-wrapper{
+      button{
+        width: 19rem;
+      }
+    }
+  }
 }
