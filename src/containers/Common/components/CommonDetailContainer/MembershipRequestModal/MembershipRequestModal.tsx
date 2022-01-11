@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
 import { Modal } from "../../../../../shared/components";
+import { useZoomDisabling } from "../../../../../shared/hooks";
 import { ModalProps } from "../../../../../shared/interfaces";
 import { Common } from "../../../../../shared/models";
 import { getScreenSize } from "../../../../../shared/store/selectors";
@@ -73,6 +74,9 @@ interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
 
 export function MembershipRequestModal(props: IProps) {
   // TODO: should be saved in the localstorage for saving the progress?
+  const { disableZoom, resetZoom } = useZoomDisabling({
+    shouldDisableAutomatically: false,
+  });
   const [userData, setUserData] = useState(initData);
   const user = useSelector(selectUser());
   const { stage } = userData;
@@ -86,24 +90,28 @@ export function MembershipRequestModal(props: IProps) {
    * Until implementing a robust way to handle the saving of the data the user will be notified of losing the data.
    */
   useEffect(() => {
-    if (!isShowing) {
-      const payload: IMembershipRequestData = {
-        ...initData,
-        cardId: uuidv4(),
-      };
-
-      if (user) {
-        payload.fullname = user.displayName ?? "";
-        if (!payload.fullname) {
-          payload.fullname = `${user.firstName} ${user.lastName}`;
-        }
-        payload.country = user.country ?? "";
-      }
-
-      setUserData(payload);
-      onCreationStageReach(false);
+    if (isShowing) {
+      disableZoom();
+      return;
     }
-  }, [isShowing, user, onCreationStageReach]);
+
+    const payload: IMembershipRequestData = {
+      ...initData,
+      cardId: uuidv4(),
+    };
+
+    if (user) {
+      payload.fullname = user.displayName ?? "";
+      if (!payload.fullname) {
+        payload.fullname = `${user.firstName} ${user.lastName}`;
+      }
+      payload.country = user.country ?? "";
+    }
+
+    setUserData(payload);
+    onCreationStageReach(false);
+    resetZoom();
+  }, [isShowing, user, onCreationStageReach, disableZoom, resetZoom]);
 
   const renderCurrentStage = (stage: number) => {
     switch (stage) {
