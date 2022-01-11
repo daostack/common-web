@@ -24,7 +24,7 @@ export default function PendingUpload({ proposalId, selectedFiles, updateUploadS
           payoutDocsComment: payoutDocsComment
         };
 
-        for (const file of selectedFiles) {
+        await Promise.all(selectedFiles.map(async (file: IFile) => {
           const downloadURL = await uploadFile(file.data.name, "public_img", file.data);
           invoicesData.payoutDocs.push({
             name: file.data.name,
@@ -33,7 +33,8 @@ export default function PendingUpload({ proposalId, selectedFiles, updateUploadS
             mimeType: file.data.type,
             downloadURL: downloadURL
           })
-        }
+        }));
+
         await uploadInvoices(invoicesData);
         updateUploadState(UploadState.Success);
       } catch (error) {
