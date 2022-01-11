@@ -1,0 +1,9 @@
+@import "../../../constants";
+
+.linkify-link {
+  color: $purple;
+
+  &:hover {
+    color: $purple-2;
+  }
+}
