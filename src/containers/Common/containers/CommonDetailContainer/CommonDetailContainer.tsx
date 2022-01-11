@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import classNames from "classnames";
@@ -90,8 +84,10 @@ const SHARING_TEXT = "Hey checkout this common!";
 
 export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
-  const joinEffort = useRef(null);
-  const inViewport = useViewPortHook(joinEffort.current, "-20px");
+  const [joinEffortRef, setJoinEffortRef] = useState<HTMLDivElement | null>(
+    null
+  );
+  const inViewport = useViewPortHook(joinEffortRef, "-50px");
   const inViewPortFooter = useViewPortHook(
     document.querySelector(".footer-wrapper"),
     "0px"
@@ -123,6 +119,11 @@ export default function CommonDetail() {
   const shouldShowJoinToCommonButton = !isCommonMember && !isJoiningPending;
   const shouldAllowJoiningToCommon =
     !isCommonMember && (isCreationStageReached || !isJoiningPending);
+  const shouldShowStickyJoinEffortButton =
+    screenSize === ScreenSize.Mobile &&
+    shouldShowJoinToCommonButton &&
+    !inViewport &&
+    (stickyClass || footerClass);
 
   const dispatch = useDispatch();
 
@@ -332,7 +333,7 @@ export default function CommonDetail() {
     if (inViewport) {
       setStickyClass("");
     } else {
-      if ((joinEffort?.current as any)?.offsetTop < window.scrollY) {
+      if (joinEffortRef && joinEffortRef.offsetTop < window.scrollY) {
         if (tab === "discussions" && discussions?.length) {
           setStickyClass("sticky");
         } else if (tab === "proposals" && activeProposals.length) {
@@ -342,7 +343,7 @@ export default function CommonDetail() {
         }
       }
     }
-  }, [inViewport, activeProposals, tab, discussions, setStickyClass]);
+  }, [inViewport, activeProposals, tab, discussions, setStickyClass, joinEffortRef]);
 
   useEffect(() => {
     if (inViewPortFooter) {
@@ -438,7 +439,11 @@ export default function CommonDetail() {
                   onError={() => setImageError(true)}
                 />
               ) : (
-                <img className="default-image" src="/icons/logo-white.svg" alt={common.name} />
+                <img
+                  className="default-image"
+                  src="/icons/logo-white.svg"
+                  alt={common.name}
+                />
               )}
             </div>
             <div className="content-element text-information-wrapper">
@@ -496,7 +501,7 @@ export default function CommonDetail() {
                     </div>
                   ))}
                 </div>
-                <div className="social-wrapper" ref={joinEffort}>
+                <div className="social-wrapper" ref={setJoinEffortRef}>
                   {shouldShowJoinToCommonButton && (
                     <button
                       className={`button-blue join-the-effort-btn`}
@@ -587,16 +592,14 @@ export default function CommonDetail() {
                 />
               )}
             </div>
-            {screenSize === ScreenSize.Mobile &&
-              shouldShowJoinToCommonButton &&
-              !inViewport && (
-                <button
-                  className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
-                  onClick={onOpenJoinModal}
-                >
-                  Join the effort
-                </button>
-              )}
+            {shouldShowStickyJoinEffortButton && (
+              <button
+                className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
+                onClick={onOpenJoinModal}
+              >
+                Join the effort
+              </button>
+            )}
             {(screenSize === ScreenSize.Desktop || tab !== "about") && (
               <div className="sidebar-wrapper">{renderSidebarContent()}</div>
             )}
