@@ -41,7 +41,7 @@ export default function Share(props: PropsWithChildren<IProps>) {
 
   const links = (
     <div className="social-buttons-wrapper" style={{ top: `${top ?? "64px"}` }}>
-      <div className="title">Share with</div>
+      {type === "popup" && <div className="title">Share with</div>}
       <div className="social-buttons">
         <button className="facebook" onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}"`)} />
         <button className="linkedin" onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`)} />
@@ -62,7 +62,18 @@ export default function Share(props: PropsWithChildren<IProps>) {
       )}
       {type === "popup" && isShown && links}
       {type === "modal" && (
-        <Modal isShowing={isShowing} onClose={onClose} closeColor={Colors.black}>
+        <Modal
+          className="social-wrapper__modal"
+          isShowing={isShowing}
+          title="Share with"
+          onClose={onClose}
+          closeColor={Colors.black}
+          closeIconSize={16}
+          styles={{
+            header: "social-wrapper__modal-header",
+            content: "social-wrapper__modal-content",
+          }}
+        >
           {links}
         </Modal>
       )}

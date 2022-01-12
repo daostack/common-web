@@ -89,6 +89,16 @@
   }
 }
 
+.social-wrapper__modal {
+  .social-wrapper__modal-header {
+    padding-top: 1rem;
+  }
+
+  .social-wrapper__modal-content {
+    padding: 0 .5rem .5rem;
+  }
+}
+
 @media only screen and (max-width: $mobile-breakpoint) {
   .social-wrapper {
     align-self: self-end;
