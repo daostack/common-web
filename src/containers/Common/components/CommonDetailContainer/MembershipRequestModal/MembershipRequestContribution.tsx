@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
+import classNames from "classnames";
 import { ButtonLink } from "../../../../../shared/components";
 import {
   CurrencyInput,
@@ -154,7 +155,12 @@ export default function MembershipRequestContribution(props: IStageProps) {
       </div>
       {selectedContribution !== "other" && (
         <ToggleButtonGroup
-          className="membership-request-contribution__toggle-button-group"
+          className={classNames(
+            "membership-request-contribution__toggle-button-group",
+            {
+              "membership-request-contribution__toggle-button-group--one-time": !isMonthlyContribution,
+            }
+          )}
           value={selectedContribution}
           onChange={handleChange}
           variant={ToggleButtonGroupVariant.Vertical}
@@ -206,7 +212,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
         <div className="membership-request-contribution__modal-footer">
           <button
             disabled={isSubmitDisabled}
-            className="button-blue"
+            className="button-blue membership-request-contribution__submit-button"
             onClick={handleSubmit}
           >
             Submit
