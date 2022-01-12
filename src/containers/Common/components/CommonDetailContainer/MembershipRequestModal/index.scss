@@ -236,6 +236,9 @@ $payment-iframe-height-mobile: 672px;
       margin-top: 0;
     }
   }
+  .membership-request-contribution__toggle-button-group--one-time {
+    margin-bottom: 2.375rem;
+  }
 
   .membership-request-contribution__toggle-button {
     padding: 22px;
@@ -260,7 +263,7 @@ $payment-iframe-height-mobile: 672px;
   }
 
   .membership-request-contribution__hint {
-    margin-top: 16px;
+    margin: 1rem 0 .625rem;
     font-size: $xsmall;
     line-height: 1.42;
     text-align: center;
