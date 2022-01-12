@@ -60,6 +60,7 @@ export default function Share(props: PropsWithChildren<IProps>) {
       ) : (
         <div className="share-button" onClick={handleClick} />
       )}
+      {type === "popup" && isShown && links}
       {type === "modal" && (
         <Modal isShowing={isShowing} onClose={onClose} closeColor={Colors.black}>
           {links}
