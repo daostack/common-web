@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, PropsWithChildren } from "react";
+import classNames from "classnames";
 
 import { Colors } from "../../constants";
 import { useModal, useOutsideClick } from "../../hooks";
@@ -15,8 +16,8 @@ interface IProps {
   top?: string;
 }
 
-export default function Share(props: IProps) {
-  const { url, text, color, type, top } = props;
+export default function Share(props: PropsWithChildren<IProps>) {
+  const { url, text, color, type, top, children } = props;
   const wrapperRef = useRef(null);
   const [isShown, setShown] = useState(false);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
@@ -40,23 +41,49 @@ export default function Share(props: IProps) {
   };
 
   const links = (
-    <div className="social-buttons-wrapper" style={{ top: `${top ?? "64px"}` }}>
-      <div className="title">Share with</div>
-      <div className="social-buttons">
+    <div
+      className={classNames("social-buttons-wrapper", {
+        "social-buttons-wrapper--modal": type === "modal",
+      })}
+      style={{ top: `${top ?? "64px"}` }}
+    >
+      {type === "popup" && <div className="title">Share with</div>}
+      <div
+        className={classNames("social-buttons", {
+          "social-buttons--modal": type === "modal",
+        })}
+      >
         <button className="facebook" onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}"`)} />
+        <button className="twitter" onClick={() => window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`)} />
         <button className="linkedin" onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`)} />
         <button className="telegram" onClick={() => window.open(`https://t.me/share/url?url=${url}&text=${text}`)} />
-        <button className="twitter" onClick={() => window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`)} />
       </div>
     </div>
   );
 
   return (
     <div className="social-wrapper" ref={wrapperRef}>
-      <div className="share-button" onClick={handleClick} />
+      {children ? (
+        <div className="social-wrapper__children-wrapper" onClick={handleClick}>
+          {children}
+        </div>
+      ) : (
+        <div className="share-button" onClick={handleClick} />
+      )}
       {type === "popup" && isShown && links}
       {type === "modal" && (
-        <Modal isShowing={isShowing} onClose={onClose} closeColor={Colors.black}>
+        <Modal
+          className="social-wrapper__modal"
+          isShowing={isShowing}
+          title="Share with"
+          onClose={onClose}
+          closeColor={Colors.black}
+          closeIconSize={16}
+          styles={{
+            header: "social-wrapper__modal-header",
+            content: "social-wrapper__modal-content",
+          }}
+        >
           {links}
         </Modal>
       )}

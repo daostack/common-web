@@ -32,6 +32,7 @@ const Modal: FC<ModalProps> = (props) => {
     onHeaderScrolledToTop,
     styles,
     hideCloseButton = false,
+    closeIconSize = 24,
     isHeaderSticky = false,
     shouldShowHeaderShadow = true,
     closePrompt = false,
@@ -155,8 +156,8 @@ const Modal: FC<ModalProps> = (props) => {
             onClick={handleClose}
           >
             <CloseIcon
-              width="24"
-              height="24"
+              width={closeIconSize}
+              height={closeIconSize}
               fill={closeColor ?? Colors.black}
             />
           </div>
