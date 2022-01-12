@@ -195,14 +195,14 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
             </form>
             <div className="actions-wrapper">
               <button
-                className="button-blue white"
+                className="button-blue details-wrapper__skip-button"
                 type="submit"
                 onClick={() => closeModal()}
               >
                 Skip
               </button>
               <button
-                className="button-blue"
+                className="button-blue details-wrapper__continue-button"
                 type="submit"
                 onClick={() => handleSubmit()}
               >

@@ -77,16 +77,9 @@
   .actions-wrapper{
     margin-top: 156px;
     margin-bottom: 20px;
-    .button-blue{
-      width: 130px;
-      &.white{
-        border: solid 1px #eee;
-        background-color: #fff;
-        color: #001a36;
-        font-weight: normal;
-        min-width: 	96px;
-        margin-right: 16px;
-      }
+
+    @include big-phone {
+      width: 100%;
     }
   }
 
@@ -110,7 +103,35 @@
   .details-wrapper__label {
     margin-bottom: .625rem;
     font-size: $xsmall;
+    color: $secondary-blue;
     text-align: left;
+  }
+
+  .details-wrapper__skip-button {
+    min-width: unset;
+    width: 6.063rem;
+    font-family: NunitoSans-Regular, sans-serif;
+    font-weight: normal;
+    color: $secondary-blue;
+    border: 1px solid $light-gray-1;
+    background-color: $white;
+
+    @include big-phone {
+      width: 100%;
+    }
+  }
+
+  .details-wrapper__continue-button {
+    min-width: unset;
+    width: 8.188rem;
+    margin-left: 1rem;
+    font-family: NunitoSans-Regular, sans-serif;
+    font-weight: normal;
+
+    @include big-phone {
+      width: 100%;
+      margin: 1rem 0 0;
+    }
   }
 }
 
