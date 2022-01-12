@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, PropsWithChildren } from "react";
+import classNames from "classnames";
 
 import { Colors } from "../../constants";
 import { useModal, useOutsideClick } from "../../hooks";
@@ -40,13 +41,22 @@ export default function Share(props: PropsWithChildren<IProps>) {
   };
 
   const links = (
-    <div className="social-buttons-wrapper" style={{ top: `${top ?? "64px"}` }}>
+    <div
+      className={classNames("social-buttons-wrapper", {
+        "social-buttons-wrapper--modal": type === "modal",
+      })}
+      style={{ top: `${top ?? "64px"}` }}
+    >
       {type === "popup" && <div className="title">Share with</div>}
-      <div className="social-buttons">
+      <div
+        className={classNames("social-buttons", {
+          "social-buttons--modal": type === "modal",
+        })}
+      >
         <button className="facebook" onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}"`)} />
+        <button className="twitter" onClick={() => window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`)} />
         <button className="linkedin" onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`)} />
         <button className="telegram" onClick={() => window.open(`https://t.me/share/url?url=${url}&text=${text}`)} />
-        <button className="twitter" onClick={() => window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`)} />
       </div>
     </div>
   );
