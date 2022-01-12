@@ -11,6 +11,7 @@ import {
   useViewPortHook,
 } from "../../../../shared/hooks";
 import PurpleCheckIcon from "../../../../shared/icons/purpleCheck.icon";
+import ShareIcon from "../../../../shared/icons/share.icon";
 import { Discussion, Proposal, ProposalState } from "../../../../shared/models";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import { formatPrice, getUserName } from "../../../../shared/utils";
@@ -504,6 +505,19 @@ export default function CommonDetail() {
                     />
                   )}
                 </div>
+                {isCommonMember && isMobileView && (
+                  <Share
+                    url={sharingURL}
+                    text={SHARING_TEXT}
+                    type="modal"
+                    color={Colors.transparent}
+                  >
+                    <button className="button-blue common-content-selector__long-share-button">
+                      <ShareIcon className="common-content-selector__share-icon" />
+                      Share Common
+                    </button>
+                  </Share>
+                )}
               </div>
             </div>
           </div>
