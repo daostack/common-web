@@ -206,7 +206,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
         <div className="membership-request-contribution__modal-footer">
           <button
             disabled={isSubmitDisabled}
-            className="button-blue"
+            className="button-blue membership-request-contribution__submit-button"
             onClick={handleSubmit}
           >
             Submit

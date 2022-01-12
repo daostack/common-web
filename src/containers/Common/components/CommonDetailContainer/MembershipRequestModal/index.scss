@@ -282,6 +282,13 @@ $payment-iframe-height-mobile: 672px;
   display: flex;
   justify-content: center;
   padding: 24px 0;
+
+  .membership-request-contribution__submit-button {
+    min-width: 11.25rem;
+    min-height: 3rem;
+    font-family: NunitoSans-Regular, sans-serif;
+    font-weight: normal;
+  }
 }
 
 .membership-request-billing {
