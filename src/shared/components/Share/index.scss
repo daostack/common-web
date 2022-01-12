@@ -20,6 +20,10 @@
   .share-button:active {
     background-color: $purple-pressed;
   }
+
+  .social-wrapper__children-wrapper {
+    width: 100%;
+  }
 }
 .social-buttons-wrapper {
   z-index: 2;

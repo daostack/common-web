@@ -178,6 +178,20 @@
             .social-wrapper {
               align-self: unset;
             }
+            .text-information-wrapper__connected-user-avatar-wrapper {
+              position: relative;
+              padding-top: .375rem;
+              display: flex;
+            }
+            .text-information-wrapper__user-avatar {
+              width: 1.75rem;
+              height: 1.75rem;
+            }
+            .text-information-wrapper__connected-user-avatar-icon {
+              position: absolute;
+              right: 0;
+              bottom: 0;
+            }
             .tagline {
               margin-bottom: 1.7rem;
             }
@@ -215,6 +229,21 @@
             .join-the-effort-btn {
               height: 56px;
             }
+          }
+
+          .common-content-selector__long-share-button {
+            height: unset;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: $moderate;
+            color: $secondary-blue;
+            background-color: #{$purple}26;
+            box-sizing: border-box;
+          }
+          .common-content-selector__share-icon {
+            margin-right: 1rem;
           }
         }
       }

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Link, useLocation, useHistory } from "react-router-dom";
 import classNames from "classnames";
 
-import { Image } from "../../../shared/components";
+import { UserAvatar } from "../../../shared/components";
 import { Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
@@ -18,7 +18,7 @@ import {
   selectUser,
   selectIsLoginModalShowing,
 } from "../../../containers/Auth/store/selectors";
-import { isMobile, getUserName, getRandomUserAvatarURL } from "../../utils";
+import { isMobile, getUserName } from "../../utils";
 import { Modal } from "../Modal";
 import { LoginContainer } from "../../../containers/Login/containers/LoginContainer";
 import {
@@ -37,9 +37,6 @@ const Header = () => {
   const user = useSelector(selectUser());
   const isNewUser = useSelector(selectIsNewUser());
   const isLoginModalShowing = useSelector(selectIsLoginModalShowing());
-  const randomUserAvatarURL = getRandomUserAvatarURL(user?.email);
-  const userAvatarURL = user?.photoURL || randomUserAvatarURL;
-  const userAvatarAlt = `${getUserName(user) || "user"} avatar`;
   const shouldDisplayAvatar = Boolean(screenSize === ScreenSize.Mobile && user);
 
   const handleOpen = useCallback(() => {
@@ -122,19 +119,11 @@ const Header = () => {
   return (
     <section className={headerWrapperClassName}>
       {shouldDisplayAvatar && (
-        <Image
-          className="hamburger-menu__user-avatar"
-          src={userAvatarURL}
-          alt={userAvatarAlt}
+        <UserAvatar
+          photoURL={user?.photoURL}
+          nameForRandomAvatar={user?.email}
+          userName={getUserName(user)}
           onClick={toggleMenuShowing}
-          placeholderElement={
-            <Image
-              className="hamburger-menu__user-avatar"
-              src={randomUserAvatarURL}
-              alt={userAvatarAlt}
-              onClick={toggleMenuShowing}
-            />
-          }
         />
       )}
       <Link

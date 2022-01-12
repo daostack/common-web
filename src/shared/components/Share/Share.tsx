@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, PropsWithChildren } from "react";
 
 import { Colors } from "../../constants";
 import { useModal, useOutsideClick } from "../../hooks";
@@ -15,8 +15,8 @@ interface IProps {
   top?: string;
 }
 
-export default function Share(props: IProps) {
-  const { url, text, color, type, top } = props;
+export default function Share(props: PropsWithChildren<IProps>) {
+  const { url, text, color, type, top, children } = props;
   const wrapperRef = useRef(null);
   const [isShown, setShown] = useState(false);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
@@ -53,7 +53,13 @@ export default function Share(props: IProps) {
 
   return (
     <div className="social-wrapper" ref={wrapperRef}>
-      <div className="share-button" onClick={handleClick} />
+      {children ? (
+        <div className="social-wrapper__children-wrapper" onClick={handleClick}>
+          {children}
+        </div>
+      ) : (
+        <div className="share-button" onClick={handleClick} />
+      )}
       {type === "popup" && isShown && links}
       {type === "modal" && (
         <Modal isShowing={isShowing} onClose={onClose} closeColor={Colors.black}>
