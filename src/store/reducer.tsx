@@ -8,7 +8,7 @@ import { SharedReducer } from "../shared/store/reducer";
 import { commonsReducer } from "../containers/Common/store";
 
 export default (history: History) => {
-  const appReducer = combineReducers({
+  const appReducer = combineReducers<AppState>({
     auth: AuthReducer,
     shared: SharedReducer,
     commons: commonsReducer,

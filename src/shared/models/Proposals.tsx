@@ -8,6 +8,14 @@ export enum ProposalFundingState {
   Available = "available",
   Funded = "funded",
 }
+
+export enum FundingProcessStage {
+  PendingInvoiceUpload = "pendingInvoiceUpload",
+  PendingInvoiceApproval = "pendingInvoiceApproval",
+  FundsTransferInProgress = "fundsTransferInProgress",
+  Completed = "completed",
+}
+
 export enum ProposalPaymentState {
   NotAttempted = "notAttempted",
   NotRelevant = "notRelevant",
@@ -22,10 +30,10 @@ export enum ProposalVoteOutcome {
 }
 
 export enum ProposalState {
-  ACCEPTED = "Accepted",
   COUNTDOWN = "countdown",
-  FINALIZING = "Finalizing",
+  PASSED = "passed",
   REJECTED = "failed",
+  PASSED_INSUFFICIENT_BALANCE = "passedInsufficientBalance",
 }
 
 export enum ProposalType {
@@ -91,6 +99,7 @@ export interface Proposal {
   type: ProposalType;
   paymentState?: ProposalPaymentState;
   fundingState?: ProposalFundingState;
+  fundingProcessStage?: FundingProcessStage;
   /** Details about the funding request. Exists only on funding request proposals */
   funding?: {
     amount: number;
@@ -101,4 +110,5 @@ export interface Proposal {
 
   approvalDate?: Time;
   payoutDocs?: DocInfo[];
+  payoutDocsRejectionReason?: string;
 }
