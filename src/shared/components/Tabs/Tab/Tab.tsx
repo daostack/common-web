@@ -1,7 +1,7 @@
 import React, { useCallback, FC } from "react";
 import classNames from "classnames";
-import { DEFAULT_PANEL_ID_TEMPLATE } from "../constants";
 import { useTabContext } from "../context";
+import { getPanelId } from "../helpers";
 import "./index.scss";
 
 interface TabProps {
@@ -14,7 +14,7 @@ const Tab: FC<TabProps> = (props) => {
   const { className, label, value } = props;
   const { value: currentValue, onChange, panelIdTemplate } = useTabContext();
   const isActive = value === currentValue;
-  const panelId = `${panelIdTemplate || DEFAULT_PANEL_ID_TEMPLATE}-${value}`;
+  const panelId = getPanelId(value, panelIdTemplate);
 
   const handleChange = useCallback(() => {
     onChange(value);
