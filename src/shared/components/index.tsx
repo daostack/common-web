@@ -7,6 +7,7 @@ export { default as NotFound } from "./NotFound";
 export * from "./SocialLogin";
 export * from "./Footer";
 export * from "./Header";
+export * from "./InvoiceTile";
 export * from "./Image";
 export * from "./Linkify";
 export * from "./Loader";

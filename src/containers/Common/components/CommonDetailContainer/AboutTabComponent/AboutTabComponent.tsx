@@ -55,7 +55,7 @@ export default function AboutTabComponent({
             <button className={`button-blue`} onClick={onOpenJoinModal}>
               Join the effort
             </button>
-            <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`} text="Hey checkout this common!" type="popup" color={Colors.lightPurple} />
+            <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`} type="popup" color={Colors.lightPurple} />
           </div>
         )}
       </div>

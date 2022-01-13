@@ -81,8 +81,6 @@ const tabs = [
   },
 ];
 
-const SHARING_TEXT = "Hey checkout this common!";
-
 export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
   const [joinEffortRef, setJoinEffortRef] = useState<HTMLDivElement | null>(
@@ -455,7 +453,6 @@ export default function CommonDetail() {
                     {isMobileView && !isCommonMember && (
                       <Share
                         url={sharingURL}
-                        text={SHARING_TEXT}
                         type="modal"
                         color={Colors.transparent}
                       />
@@ -540,7 +537,6 @@ export default function CommonDetail() {
                   {screenSize === ScreenSize.Desktop && (
                     <Share
                       url={sharingURL}
-                      text={SHARING_TEXT}
                       type="popup"
                       color={Colors.lightPurple}
                     />
@@ -549,7 +545,6 @@ export default function CommonDetail() {
                 {isCommonMember && isMobileView && (
                   <Share
                     url={sharingURL}
-                    text={SHARING_TEXT}
                     type="modal"
                     color={Colors.transparent}
                   >

@@ -1,0 +1,15 @@
+@import "../../../../constants.scss";
+@import "../../../../styles/sizes.scss";
+
+.amount-prompt-wrapper {
+  display: flex;
+  flex-direction: column;
+  background-color: $white;
+  align-items: center;
+  box-shadow: $secondary-modal-shadow;
+  border-radius: 30px;
+  padding: 45px;
+  .amount-prompt-wrapper__amount-input {
+    margin: 10px 0;
+  }
+}

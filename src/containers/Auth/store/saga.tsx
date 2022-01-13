@@ -6,7 +6,7 @@ import { tokenHandler } from "../../../shared/utils";
 import * as actions from "./actions";
 import firebase from "../../../shared/utils/firebase";
 import { startLoading, stopLoading } from "../../../shared/store/actions";
-import { User } from "../../../shared/models";
+import { Collection, User } from "../../../shared/models";
 import { GoogleAuthResultInterface } from "../interface";
 
 import { ROUTE_PATHS } from "../../../shared/constants";
@@ -15,7 +15,7 @@ import history from "../../../shared/history";
 const getUserData = async (userId: string) => {
   const userSnapshot = await firebase
     .firestore()
-    .collection("users")
+    .collection(Collection.Users)
     .where("uid", "==", userId)
     .get();
 
@@ -31,7 +31,7 @@ const saveTokenToDatabase = async (token: string) => {
   if (currentUser) {
     await firebase
       .firestore()
-      .collection("users")
+      .collection(Collection.Users)
       .doc(currentUser?.uid)
       .update({
         tokens: firebase.firestore.FieldValue.arrayUnion(token),
@@ -66,7 +66,7 @@ const createUser = async (user: firebase.User) => {
 
   const userSnapshot = await firebase
     .firestore()
-    .collection("users")
+    .collection(Collection.Users)
     .doc(user.uid)
     .get();
   if (userSnapshot.exists) {
@@ -75,7 +75,7 @@ const createUser = async (user: firebase.User) => {
 
   return await firebase
     .firestore()
-    .collection("users")
+    .collection(Collection.Users)
     .doc(user.uid)
     .set(userPublicData);
 };
@@ -164,7 +164,7 @@ const updateUserData = async (user: any) => {
   if (updatedCurrentUser) {
     await firebase
       .firestore()
-      .collection("users")
+      .collection(Collection.Users)
       .doc(updatedCurrentUser?.uid)
       .update({
         firstName: user.firstName,
