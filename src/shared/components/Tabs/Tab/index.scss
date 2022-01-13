@@ -19,9 +19,12 @@ $active-color: $purple-2;
   cursor: pointer;
   transition: color .2s, border-bottom-color .2s;
 
-  &:active,
-  &:hover {
+  &:active {
     border-bottom-color: $inactive-hover-color;
+    color: $inactive-hover-color;
+  }
+
+  &:hover {
     color: $inactive-hover-color;
   }
 
