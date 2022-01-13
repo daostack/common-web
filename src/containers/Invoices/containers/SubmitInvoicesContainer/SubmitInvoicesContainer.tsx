@@ -41,21 +41,22 @@ export default function SubmitInvoicesContainer() {
   useEffect(() => {
     (async () => {
       try {
-        if (isAuthenticated) {
-          const proposal = await fetchProposal(proposalId);
-          if (!(proposal.proposerId === user?.uid)) {
-            setSubmissionStatus(SubmissionStatus.NotAuthorized);
-          } else {
-            if (proposal.payoutDocs && proposal.payoutDocs?.length > 0) {
-              setSubmissionStatus(SubmissionStatus.Submitted);
-            } else {
-              setProposal(proposal);
-              const commonProposal = await fetchCommonDetail(proposal.commonId);
-              setCommonName(commonProposal.name);
-              setSubmissionStatus(SubmissionStatus.PendingUser);
-            }
-          }
+        if (!isAuthenticated) {
+          return;
         }
+        const proposal = await fetchProposal(proposalId);
+        if (!(proposal.proposerId === user?.uid)) {
+          setSubmissionStatus(SubmissionStatus.NotAuthorized);
+          return;
+        }
+        if (proposal.payoutDocs && proposal.payoutDocs?.length > 0) {
+          setSubmissionStatus(SubmissionStatus.Submitted);
+          return;
+        }
+        setProposal(proposal);
+        const commonProposal = await fetchCommonDetail(proposal.commonId);
+        setCommonName(commonProposal.name);
+        setSubmissionStatus(SubmissionStatus.PendingUser);
       } catch (error) {
         console.error(error);
       }
