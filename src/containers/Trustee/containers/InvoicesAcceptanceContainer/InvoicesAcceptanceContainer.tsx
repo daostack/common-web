@@ -2,6 +2,8 @@ import React, { useCallback, useState, FC } from "react";
 import { useHistory } from "react-router";
 import { Separator, Tabs, Tab, TabPanel } from "../../../../shared/components";
 import { useQueryParams } from "../../../../shared/hooks";
+import { Proposal } from "../../../../shared/models";
+import { ProposalList } from "../../components/ProposalList";
 import { StickyInfo } from "../../components/StickyInfo";
 import "./index.scss";
 
@@ -29,6 +31,10 @@ const InvoicesAcceptanceContainer: FC = () => {
     [history]
   );
 
+  const handleProposalView = useCallback((proposal: Proposal) => {
+    console.log(proposal);
+  }, []);
+
   return (
     <>
       <StickyInfo className="invoices-acceptance-container__sticky-info">
@@ -40,10 +46,26 @@ const InvoicesAcceptanceContainer: FC = () => {
       </StickyInfo>
       <div className="invoices-acceptance-container">
         <TabPanel value={tab} panelValue={TabState.InProgress}>
-          In progress
+          <ProposalList
+            title="Pending approval (3)"
+            emptyListText="There are no pending approval invoices"
+            proposals={[]}
+            onProposalView={handleProposalView}
+          />
+          <ProposalList
+            title="Declined (2)"
+            emptyListText="There are no declined invoices"
+            proposals={[]}
+            onProposalView={handleProposalView}
+          />
         </TabPanel>
         <TabPanel value={tab} panelValue={TabState.Approved}>
-          Approved
+          <ProposalList
+            title="Approved Invoices"
+            emptyListText="There are no approved invoices"
+            proposals={[]}
+            onProposalView={handleProposalView}
+          />
         </TabPanel>
       </div>
     </>
