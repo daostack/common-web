@@ -10,9 +10,9 @@ type ViewType = "popup" | "modal";
 
 interface IProps {
   url: string;
-  text: string;
   color: Colors;
   type: ViewType;
+  text?: string;
   top?: string;
 }
 
