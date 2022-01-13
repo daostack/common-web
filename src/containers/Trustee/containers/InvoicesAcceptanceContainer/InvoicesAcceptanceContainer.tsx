@@ -1,6 +1,6 @@
 import React, { useCallback, useState, FC } from "react";
 import { useHistory } from "react-router";
-import { Separator, Tabs, Tab } from "../../../../shared/components";
+import { Separator, Tabs, Tab, TabPanel } from "../../../../shared/components";
 import { useQueryParams } from "../../../../shared/hooks";
 import { StickyInfo } from "../../components/StickyInfo";
 import "./index.scss";
@@ -39,7 +39,12 @@ const InvoicesAcceptanceContainer: FC = () => {
         </Tabs>
       </StickyInfo>
       <div className="invoices-acceptance-container">
-        InvoicesAcceptanceContainer
+        <TabPanel value={tab} panelValue={TabState.InProgress}>
+          In progress
+        </TabPanel>
+        <TabPanel value={tab} panelValue={TabState.Approved}>
+          Approved
+        </TabPanel>
       </div>
     </>
   );
