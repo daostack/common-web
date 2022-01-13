@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Share } from "../../../../../shared/components";
+import { Linkify, Share } from "../../../../../shared/components";
 import { BASE_URL, Colors, ROUTE_PATHS, ScreenSize } from "../../../../../shared/constants";
 import { Common } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
@@ -28,7 +28,9 @@ export default function AboutTabComponent({
   };
   return (
     <div className="about-name-wrapper">
-      <div className="description">{common.metadata.description}</div>
+      <div className="description">
+        <Linkify>{common.metadata.description}</Linkify>
+      </div>
       {common?.links?.length > 0 && (
         <div className="links">
           <div className="title">Links</div>
