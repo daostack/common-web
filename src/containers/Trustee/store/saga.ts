@@ -7,45 +7,33 @@ import {
   fetchDeclinedProposals,
 } from "./api";
 
-export function* getPendingApprovalProposals(
-  action: ReturnType<typeof actions.getPendingApprovalProposals.request>
-): Generator {
+export function* getPendingApprovalProposals(): Generator {
   try {
     const proposals = (yield call(fetchPendingApprovalProposals)) as Proposal[];
 
     yield put(actions.getPendingApprovalProposals.success(proposals));
-    action.payload.callback(null, proposals);
   } catch (error) {
     yield put(actions.getPendingApprovalProposals.failure(error));
-    action.payload.callback(error);
   }
 }
 
-export function* getApprovedProposals(
-  action: ReturnType<typeof actions.getApprovedProposals.request>
-): Generator {
+export function* getApprovedProposals(): Generator {
   try {
     const proposals = (yield call(fetchApprovedProposals)) as Proposal[];
 
     yield put(actions.getApprovedProposals.success(proposals));
-    action.payload.callback(null, proposals);
   } catch (error) {
     yield put(actions.getApprovedProposals.failure(error));
-    action.payload.callback(error);
   }
 }
 
-export function* getDeclinedProposals(
-  action: ReturnType<typeof actions.getDeclinedProposals.request>
-): Generator {
+export function* getDeclinedProposals(): Generator {
   try {
     const proposals = (yield call(fetchDeclinedProposals)) as Proposal[];
 
     yield put(actions.getDeclinedProposals.success(proposals));
-    action.payload.callback(null, proposals);
   } catch (error) {
     yield put(actions.getDeclinedProposals.failure(error));
-    action.payload.callback(error);
   }
 }
 

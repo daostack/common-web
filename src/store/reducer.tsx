@@ -6,6 +6,7 @@ import { AuthReducer } from "../containers/Auth/store/reducer";
 import { AppState } from "../shared/interfaces";
 import { SharedReducer } from "../shared/store/reducer";
 import { commonsReducer } from "../containers/Common/store";
+import { trusteeReducer } from "../containers/Trustee/store";
 
 export default (history: History) => {
   const appReducer = combineReducers<AppState>({
@@ -13,6 +14,7 @@ export default (history: History) => {
     shared: SharedReducer,
     commons: commonsReducer,
     router: connectRouter(history),
+    trustee: trusteeReducer,
   });
 
   return (state: AppState | undefined, action: AnyAction) => {

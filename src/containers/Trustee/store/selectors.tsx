@@ -1,0 +1,17 @@
+import { createSelector } from "reselect";
+import { AppState } from "../../../shared/interfaces";
+
+const selectTrustee = (state: AppState) => state.trustee;
+
+export const selectPendingApprovalProposals = () =>
+  createSelector(selectTrustee, (state) => state.pendingApprovalProposals);
+export const selectArePendingApprovalProposalsLoaded = () =>
+  createSelector(selectTrustee, (state) => state.arePendingApprovalProposalsLoaded);
+export const selectApprovedProposals = () =>
+  createSelector(selectTrustee, (state) => state.approvedProposals);
+export const selectAreApprovedProposalLoaded = () =>
+  createSelector(selectTrustee, (state) => state.areApprovedProposalLoaded);
+export const selectDeclinedProposals = () =>
+  createSelector(selectTrustee, (state) => state.declinedProposals);
+export const selectAreDeclinedProposalsLoaded = () =>
+  createSelector(selectTrustee, (state) => state.areDeclinedProposalsLoaded);
