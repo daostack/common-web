@@ -15,3 +15,7 @@ export const selectDeclinedProposals = () =>
   createSelector(selectTrustee, (state) => state.declinedProposals);
 export const selectAreDeclinedProposalsLoaded = () =>
   createSelector(selectTrustee, (state) => state.areDeclinedProposalsLoaded);
+export const selectProposalForApproval = () =>
+  createSelector(selectTrustee, (state) => state.proposalForApproval);
+export const selectIsProposalForApprovalLoaded = () =>
+  createSelector(selectTrustee, (state) => state.isProposalForApprovalLoaded);

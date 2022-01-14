@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState, FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { Separator, Tabs, Tab, TabPanel } from "../../../../shared/components";
+import { ROUTE_PATHS } from "../../../../shared/constants";
 import { useQueryParams } from "../../../../shared/hooks";
 import { Proposal } from "../../../../shared/models";
 import { ProposalList } from "../../components/ProposalList";
@@ -10,6 +11,7 @@ import {
   getPendingApprovalProposals,
   getApprovedProposals,
   getDeclinedProposals,
+  getProposalForApproval,
 } from "../../store/actions";
 import {
   selectPendingApprovalProposals,
@@ -61,8 +63,9 @@ const InvoicesAcceptanceContainer: FC = () => {
   );
 
   const handleProposalView = useCallback((proposal: Proposal) => {
-    console.log(proposal);
-  }, []);
+    dispatch(getProposalForApproval.success(proposal));
+    history.push(ROUTE_PATHS.TRUSTEE_INVOICE.replace(":proposalId", proposal.id));
+  }, [dispatch, history]);
 
   useEffect(() => {
     if (!arePendingApprovalProposalsLoaded) {

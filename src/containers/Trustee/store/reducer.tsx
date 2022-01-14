@@ -10,6 +10,8 @@ const initialState: TrusteeStateType = {
   areApprovedProposalLoaded: false,
   declinedProposals: [],
   areDeclinedProposalsLoaded: false,
+  proposalForApproval: null,
+  isProposalForApprovalLoaded: false,
 };
 
 type Action = ActionType<typeof actions>;
@@ -31,6 +33,12 @@ const reducer = createReducer<TrusteeStateType, Action>(initialState)
     produce(state, (nextState) => {
       nextState.declinedProposals = action.payload;
       nextState.areDeclinedProposalsLoaded = true;
+    })
+  )
+  .handleAction(actions.getProposalForApproval.success, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.proposalForApproval = action.payload;
+      nextState.isProposalForApprovalLoaded = true;
     })
   );
 

@@ -19,3 +19,9 @@ export const getDeclinedProposals = createAsyncAction(
   TrusteeActionTypes.GET_DECLINED_PROPOSALS_SUCCESS,
   TrusteeActionTypes.GET_DECLINED_PROPOSALS_FAILURE
 )<void, Proposal[], Error>();
+
+export const getProposalForApproval = createAsyncAction(
+  TrusteeActionTypes.GET_PROPOSAL_FOR_APPROVAL,
+  TrusteeActionTypes.GET_PROPOSAL_FOR_APPROVAL_SUCCESS,
+  TrusteeActionTypes.GET_PROPOSAL_FOR_APPROVAL_FAILURE
+)<void, Proposal, Error>();

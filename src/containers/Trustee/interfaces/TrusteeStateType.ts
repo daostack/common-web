@@ -7,4 +7,6 @@ export interface TrusteeStateType {
   areApprovedProposalLoaded: boolean;
   declinedProposals: Proposal[];
   areDeclinedProposalsLoaded: boolean;
+  proposalForApproval: Proposal | null;
+  isProposalForApprovalLoaded: boolean;
 }
