@@ -110,15 +110,17 @@ const InvoicesAcceptanceContainer: FC = () => {
       <div className="invoices-acceptance-container">
         <TabPanel value={tab} panelValue={TabState.InProgress}>
           <ProposalList
-            title="Pending approval (3)"
+            title={`Pending approval (${pendingApprovalProposals.data.length})`}
             emptyListText="There are no pending approval invoices"
             proposals={pendingApprovalProposals.data}
+            isLoading={!pendingApprovalProposals.fetched}
             onProposalView={handleProposalView}
           />
           <ProposalList
-            title="Declined (2)"
+            title={`Declined (${declinedProposals.data.length})`}
             emptyListText="There are no declined invoices"
             proposals={declinedProposals.data}
+            isLoading={!declinedProposals.fetched}
             onProposalView={handleProposalView}
           />
         </TabPanel>
@@ -127,6 +129,7 @@ const InvoicesAcceptanceContainer: FC = () => {
             title="Approved Invoices"
             emptyListText="There are no approved invoices"
             proposals={approvedProposals.data}
+            isLoading={!approvedProposals.fetched}
             onProposalView={handleProposalView}
           />
         </TabPanel>
