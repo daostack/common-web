@@ -107,8 +107,14 @@ $approved-bg-color: $secondary-green;
   }
 
   .trustee-proposal-card__note {
+    height: 2rem;
     margin: 8px 0 0;
+    display: -webkit-box;
     font-size: $xxsmall;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
     word-break: break-word;
   }
 

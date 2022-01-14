@@ -71,12 +71,14 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
               </span>
             </div>
           </div>
-          {proposal.payoutDocsComment && (
-            <p className="trustee-proposal-card__note">
-              <strong>Note: </strong>
-              {proposal.payoutDocsComment}
-            </p>
-          )}
+          <p className="trustee-proposal-card__note">
+            {proposal.payoutDocsComment && (
+              <>
+                <strong>Note: </strong>
+                {proposal.payoutDocsComment}
+              </>
+            )}
+          </p>
         </div>
         <button
           className="button-blue trustee-proposal-card__view-button"
