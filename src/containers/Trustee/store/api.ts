@@ -10,14 +10,14 @@ import firebase from "../../../shared/utils/firebase";
 
 function sortByCreateTime(data: Proposal[]) {
   return data.sort((itemA, itemB) => {
-    if (!itemB.createTime) {
+    if (!itemB.createdAt) {
       return -1;
     }
-    if (!itemA.createTime) {
+    if (!itemA.createdAt) {
       return 1;
     }
 
-    return itemB.createTime.seconds - itemA.createTime.seconds;
+    return itemB.createdAt.seconds - itemA.createdAt.seconds;
   });
 }
 
