@@ -49,11 +49,16 @@ $approved-bg-color: $secondary-green;
 
   .trustee-proposal-card__content-wrapper {
     flex: 1 0;
-    padding: 16px 52px 24px;
+    padding: 1rem 3.25rem 1.5rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     box-sizing: border-box;
+
+    @include big-phone {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
   }
 
   .trustee-proposal-card__content {

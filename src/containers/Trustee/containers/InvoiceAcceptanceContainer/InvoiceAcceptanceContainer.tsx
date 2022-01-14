@@ -75,6 +75,14 @@ const InvoiceAcceptanceContainer: FC = () => {
               className="invoice-acceptance-container__invoice-tile-list"
               payoutDocs={proposalForApproval.payoutDocs || []}
             />
+            <div className="invoice-acceptance-container__actions-wrapper">
+              <button className="button-blue invoice-acceptance-container__approve-button">
+                Approve All
+              </button>
+              <button className="button-blue invoice-acceptance-container__decline-button">
+                Decline
+              </button>
+            </div>
           </>
         )}
       </div>
