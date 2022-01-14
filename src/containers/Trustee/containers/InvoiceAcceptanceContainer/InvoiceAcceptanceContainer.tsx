@@ -4,6 +4,7 @@ import { useHistory, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { Loader, Separator } from "../../../../shared/components";
 import { ROUTE_PATHS } from "../../../../shared/constants";
+import DownloadIcon from "../../../../shared/icons/download.icon";
 import LeftArrowIcon from "../../../../shared/icons/leftArrow.icon";
 import { ProposalState } from "../../../../shared/models";
 import { ProposalCard } from "../../components/ProposalCard";
@@ -27,6 +28,7 @@ const InvoiceAcceptanceContainer: FC = () => {
   const isProposalForApprovalLoaded = useSelector(
     selectIsProposalForApprovalLoaded()
   );
+  const payoutDocs = proposalForApproval?.payoutDocs || [];
   const backLink = `${ROUTE_PATHS.TRUSTEE_INVOICES}${
     proposalForApproval?.state === ProposalState.PASSED
       ? `?${INVOICES_PAGE_TAB_QUERY_PARAM}=${InvoicesPageTabState.Approved}`
@@ -70,6 +72,27 @@ const InvoiceAcceptanceContainer: FC = () => {
               </h2>
             )}
             <ProposalCard proposal={proposalForApproval} />
+            <section className="invoice-acceptance-container__invoices-section">
+              {payoutDocs.length > 0 && (
+                <>
+                  <div className="invoice-acceptance-container__invoices-header">
+                    <span>
+                      {payoutDocs.length}
+                      {` Invoice${payoutDocs.length === 1 ? "" : "s"}`}
+                    </span>
+                    <span className="invoice-acceptance-container__download-all-link">
+                      <DownloadIcon />
+                      Download all invoices
+                    </span>
+                  </div>
+                </>
+              )}
+              {payoutDocs.length === 0 && (
+                <span className="invoice-acceptance-container__no-uploaded-docs-text">
+                  There are no uploaded invoices
+                </span>
+              )}
+            </section>
           </>
         )}
       </div>
