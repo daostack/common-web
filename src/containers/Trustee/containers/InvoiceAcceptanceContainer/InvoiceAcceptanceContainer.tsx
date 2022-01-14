@@ -6,6 +6,7 @@ import { Loader, Separator } from "../../../../shared/components";
 import { ROUTE_PATHS } from "../../../../shared/constants";
 import LeftArrowIcon from "../../../../shared/icons/leftArrow.icon";
 import { ProposalState } from "../../../../shared/models";
+import { ProposalCard } from "../../components/ProposalCard";
 import { StickyInfo } from "../../components/StickyInfo";
 import { getProposalForApproval } from "../../store/actions";
 import {
@@ -68,6 +69,7 @@ const InvoiceAcceptanceContainer: FC = () => {
                 {proposalForApproval.title}
               </h2>
             )}
+            <ProposalCard proposal={proposalForApproval} />
           </>
         )}
       </div>

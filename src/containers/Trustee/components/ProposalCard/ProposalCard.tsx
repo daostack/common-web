@@ -7,7 +7,7 @@ import "./index.scss";
 
 interface ProposalCardProps {
   proposal: Proposal;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const ProposalCard: FC<ProposalCardProps> = (props) => {
@@ -23,6 +23,9 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
     [proposal.payoutDocs]
   );
 
+  const containerClassName = classNames("trustee-proposal-card", {
+    "trustee-proposal-card--without-action": !onClick,
+  });
   const approvalDateClassName = classNames(
     "trustee-proposal-card__approval-date",
     {
@@ -39,7 +42,7 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
   );
 
   return (
-    <div className="trustee-proposal-card">
+    <div className={containerClassName}>
       <span className={approvalDateClassName}>
         <ApprovedIcon className="trustee-proposal-card__approval-icon" />
         <span>
@@ -71,7 +74,10 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
               </span>
             </div>
           </div>
-          <p className="trustee-proposal-card__note">
+          <p
+            className="trustee-proposal-card__note"
+            title={proposal.payoutDocsComment}
+          >
             {proposal.payoutDocsComment && (
               <>
                 <strong>Note: </strong>
@@ -80,12 +86,14 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
             )}
           </p>
         </div>
-        <button
-          className="button-blue trustee-proposal-card__view-button"
-          onClick={onClick}
-        >
-          View Invoices
-        </button>
+        {onClick && (
+          <button
+            className="button-blue trustee-proposal-card__view-button"
+            onClick={onClick}
+          >
+            View Invoices
+          </button>
+        )}
       </div>
     </div>
   );
