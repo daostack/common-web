@@ -23,6 +23,12 @@ $sticky-info-mobile-height: 3.75rem;
 .invoice-acceptance-container {
   padding-top: $sticky-info-height + 3.5rem;
 
+  .invoice-acceptance-container__not-loaded-proposal {
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+  }
+
   @include big-phone {
     padding-top: $sticky-info-mobile-height + 2rem;
   }

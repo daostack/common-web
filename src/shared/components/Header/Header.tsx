@@ -18,7 +18,7 @@ import {
   selectUser,
   selectIsLoginModalShowing,
 } from "../../../containers/Auth/store/selectors";
-import { isMobile, getUserName } from "../../utils";
+import { isMobile, getUserName, matchRoute } from "../../utils";
 import { Modal } from "../Modal";
 import { LoginContainer } from "../../../containers/Login/containers/LoginContainer";
 import {

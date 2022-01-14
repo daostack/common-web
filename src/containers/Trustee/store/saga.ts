@@ -5,6 +5,7 @@ import {
   fetchPendingApprovalProposals,
   fetchApprovedProposals,
   fetchDeclinedProposals,
+  fetchProposalById,
 } from "./api";
 
 export function* getPendingApprovalProposals(): Generator {
@@ -37,6 +38,25 @@ export function* getDeclinedProposals(): Generator {
   }
 }
 
+export function* getProposalForApproval(
+  action: ReturnType<typeof actions.getProposalForApproval.request>
+): Generator {
+  try {
+    const proposal = (yield call(
+      fetchProposalById,
+      action.payload
+    )) as Proposal | null;
+
+    if (!proposal) {
+      throw new Error(`There is no proposal with id="${action.payload}"`);
+    }
+
+    yield put(actions.getProposalForApproval.success(proposal));
+  } catch (error) {
+    yield put(actions.getProposalForApproval.failure(error));
+  }
+}
+
 function* trusteeSaga(): Generator {
   yield takeLatest(
     actions.getPendingApprovalProposals.request,
@@ -44,6 +64,10 @@ function* trusteeSaga(): Generator {
   );
   yield takeLatest(actions.getApprovedProposals.request, getApprovedProposals);
   yield takeLatest(actions.getDeclinedProposals.request, getDeclinedProposals);
+  yield takeLatest(
+    actions.getProposalForApproval.request,
+    getProposalForApproval
+  );
 }
 
 export default trusteeSaga;

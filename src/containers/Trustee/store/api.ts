@@ -5,7 +5,7 @@ import {
   ProposalType,
   ProposalState,
 } from "../../../shared/models";
-import { transformFirebaseDataList } from "../../../shared/utils";
+import { transformFirebaseDataList, transformFirebaseDataSingle } from "../../../shared/utils";
 import firebase from "../../../shared/utils/firebase";
 
 function sortByCreateTime(data: Proposal[]) {
@@ -60,4 +60,14 @@ export async function fetchDeclinedProposals(): Promise<Proposal[]> {
   );
 
   return sortByCreateTime(data);
+}
+
+export async function fetchProposalById(proposalId: string): Promise<Proposal | null> {
+  const proposal = await firebase
+    .firestore()
+    .collection(Collection.Proposals)
+    .doc(proposalId)
+    .get();
+
+  return proposal && transformFirebaseDataSingle<Proposal>(proposal);
 }

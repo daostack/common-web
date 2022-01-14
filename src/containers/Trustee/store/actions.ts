@@ -24,4 +24,4 @@ export const getProposalForApproval = createAsyncAction(
   TrusteeActionTypes.GET_PROPOSAL_FOR_APPROVAL,
   TrusteeActionTypes.GET_PROPOSAL_FOR_APPROVAL_SUCCESS,
   TrusteeActionTypes.GET_PROPOSAL_FOR_APPROVAL_FAILURE
-)<void, Proposal, Error>();
+)<string, Proposal, Error>();

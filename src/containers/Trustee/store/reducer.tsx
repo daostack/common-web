@@ -40,6 +40,12 @@ const reducer = createReducer<TrusteeStateType, Action>(initialState)
       nextState.proposalForApproval = action.payload;
       nextState.isProposalForApprovalLoaded = true;
     })
+  )
+  .handleAction(actions.getProposalForApproval.failure, (state) =>
+    produce(state, (nextState) => {
+      nextState.proposalForApproval = null;
+      nextState.isProposalForApprovalLoaded = true;
+    })
   );
 
 export default reducer;
