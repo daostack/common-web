@@ -237,3 +237,36 @@
     }
   }
 }
+
+.add-proposal-loader-wrapper{
+  display: flex;
+  align-items: center;
+  height: 40rem;
+  flex-direction: column;
+
+  img {
+    width: 14.5rem;
+    height: 14.5rem;
+    margin: 0 auto;
+  }
+  .loader-title{
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.33;
+    letter-spacing: normal;
+    text-align: center;
+    color: #001a36;
+    margin-top: 2.5rem;
+  }
+  .loader{
+    text-align: center;
+    margin: 5rem auto 0;
+    .loader-wrapper{
+      width: 3rem;
+      height: 3rem;
+    }
+  }
+}

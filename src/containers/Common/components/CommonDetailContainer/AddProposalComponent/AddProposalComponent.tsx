@@ -7,6 +7,7 @@ import "./index.scss";
 import { Common } from "@/shared/models";
 import { AddProposalForm } from "./AddProposalForm";
 import { AddProposalConfirm } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalConfirm";
+import AddProposalLoader from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalLoader";
 
 interface AddDiscussionComponentProps
   extends Pick<ModalProps, "isShowing" | "onClose"> {
@@ -20,9 +21,7 @@ const AddProposalComponent = ({
   onProposalAdd,
   common,
 }: AddDiscussionComponentProps) => {
-  const [proposalCreationStep, changeCreationProposalStep] = useState(
-    "confirm"
-  );
+  const [proposalCreationStep, changeCreationProposalStep] = useState("loader");
 
   const renderProposalStep = useMemo(() => {
     switch (proposalCreationStep) {
@@ -32,6 +31,8 @@ const AddProposalComponent = ({
         );
       case "confirm":
         return <AddProposalConfirm />;
+      case "loader":
+        return <AddProposalLoader />;
       default:
         return (
           <AddProposalForm onProposalAdd={onProposalAdd} common={common} />
