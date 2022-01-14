@@ -48,6 +48,15 @@ $sticky-info-mobile-height: 3.75rem;
     display: flex;
   }
 
+  .invoice-acceptance-container__title {
+    margin-bottom: 2rem;
+    font-family: NotoSerifSC-Bold, serif;
+    font-size: $moderate;
+    font-weight: bold;
+    text-align: center;
+    color: $secondary-blue;
+  }
+
   @include big-phone {
     padding-top: $sticky-info-mobile-height + 1.75rem;
   }

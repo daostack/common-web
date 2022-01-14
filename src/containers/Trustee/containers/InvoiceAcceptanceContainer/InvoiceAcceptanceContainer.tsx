@@ -62,7 +62,13 @@ const InvoiceAcceptanceContainer: FC = () => {
           <span>Something wrong with the invoice</span>
         )}
         {proposalForApproval && isProposalForApprovalLoaded && (
-          <>InvoiceAcceptanceContainer</>
+          <>
+            {proposalForApproval.title && (
+              <h2 className="invoice-acceptance-container__title">
+                {proposalForApproval.title}
+              </h2>
+            )}
+          </>
         )}
       </div>
     </>
