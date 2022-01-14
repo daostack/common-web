@@ -8,7 +8,7 @@
   align-items: center;
   position: fixed;
   top: 0;
-  z-index: $header-z-index;
+  z-index: 10;
   box-sizing: border-box;
   width: 100%;
   height: $header-height;
@@ -66,6 +66,10 @@
       top: -$header-height;
     }
   }
+}
+
+.header-wrapper--without-shadow {
+  box-shadow: unset;
 }
 
 @media only screen and (max-width: $small-screen) {

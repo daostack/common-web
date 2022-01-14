@@ -116,8 +116,8 @@ const Header = () => {
     </div>
   );
 
-  const headerWrapperClassName = classNames({
-    "header-wrapper": true,
+  const headerWrapperClassName = classNames("header-wrapper", {
+    "header-wrapper--without-shadow": isTrusteeRoute,
     init: location.pathname === "/" && isTop === undefined,
     hide: location.pathname === "/" && isTop,
     show: location.pathname === "/" && isTop === false,
