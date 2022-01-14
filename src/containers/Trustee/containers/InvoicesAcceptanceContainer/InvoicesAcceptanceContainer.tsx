@@ -21,23 +21,20 @@ import {
   selectDeclinedProposals,
   selectAreDeclinedProposalsLoaded,
 } from "../../store/selectors";
+import {
+  InvoicesPageTabState,
+  INVOICES_PAGE_TAB_QUERY_PARAM,
+} from "../constants";
 import "./index.scss";
-
-enum TabState {
-  InProgress = "in-progress",
-  Approved = "approved",
-}
-
-const TAB_QUERY_PARAM = "tab";
 
 const InvoicesAcceptanceContainer: FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const queryParams = useQueryParams();
-  const [tab, setTab] = useState<TabState>(() =>
-    queryParams[TAB_QUERY_PARAM] === TabState.Approved
-      ? TabState.Approved
-      : TabState.InProgress
+  const [tab, setTab] = useState<InvoicesPageTabState>(() =>
+    queryParams[INVOICES_PAGE_TAB_QUERY_PARAM] === InvoicesPageTabState.Approved
+      ? InvoicesPageTabState.Approved
+      : InvoicesPageTabState.InProgress
   );
   const pendingApprovalProposals = useSelector(
     selectPendingApprovalProposals()
@@ -56,16 +53,21 @@ const InvoicesAcceptanceContainer: FC = () => {
 
   const handleTabChange = useCallback(
     (value: unknown) => {
-      history.replace({ search: `?${TAB_QUERY_PARAM}=${value}` });
-      setTab(value as TabState);
+      history.replace({ search: `?${INVOICES_PAGE_TAB_QUERY_PARAM}=${value}` });
+      setTab(value as InvoicesPageTabState);
     },
     [history]
   );
 
-  const handleProposalView = useCallback((proposal: Proposal) => {
-    dispatch(getProposalForApproval.success(proposal));
-    history.push(ROUTE_PATHS.TRUSTEE_INVOICE.replace(":proposalId", proposal.id));
-  }, [dispatch, history]);
+  const handleProposalView = useCallback(
+    (proposal: Proposal) => {
+      dispatch(getProposalForApproval.success(proposal));
+      history.push(
+        ROUTE_PATHS.TRUSTEE_INVOICE.replace(":proposalId", proposal.id)
+      );
+    },
+    [dispatch, history]
+  );
 
   useEffect(() => {
     if (!arePendingApprovalProposalsLoaded) {
@@ -90,12 +92,12 @@ const InvoicesAcceptanceContainer: FC = () => {
       <StickyInfo className="invoices-acceptance-container__sticky-info">
         <Separator className="invoices-acceptance-container__separator" />
         <Tabs value={tab} onChange={handleTabChange}>
-          <Tab label="In progress" value={TabState.InProgress} />
-          <Tab label="Approved" value={TabState.Approved} />
+          <Tab label="In progress" value={InvoicesPageTabState.InProgress} />
+          <Tab label="Approved" value={InvoicesPageTabState.Approved} />
         </Tabs>
       </StickyInfo>
       <div className="invoices-acceptance-container">
-        <TabPanel value={tab} panelValue={TabState.InProgress}>
+        <TabPanel value={tab} panelValue={InvoicesPageTabState.InProgress}>
           <ProposalList
             title={`Pending approval (${pendingApprovalProposals.length})`}
             emptyListText="There are no pending approval invoices"
@@ -111,7 +113,7 @@ const InvoicesAcceptanceContainer: FC = () => {
             onProposalView={handleProposalView}
           />
         </TabPanel>
-        <TabPanel value={tab} panelValue={TabState.Approved}>
+        <TabPanel value={tab} panelValue={InvoicesPageTabState.Approved}>
           <ProposalList
             title="Approved Invoices"
             emptyListText="There are no approved invoices"

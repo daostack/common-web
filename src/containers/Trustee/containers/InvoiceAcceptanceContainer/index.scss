@@ -5,31 +5,50 @@ $sticky-info-height: 4.75rem;
 $sticky-info-mobile-height: 3.75rem;
 
 .invoice-acceptance-container__sticky-info {
+  height: 4.688rem;
   padding: 0 5rem;
 
   @include big-phone {
+    height: 3.6875rem;
     padding: 0 1.25rem;
   }
 }
 
-.invoice-acceptance-container__separator {
-  margin-bottom: 1.625rem;
+.invoice-acceptance-container__back-link-wrapper {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
 
-  @include big-phone {
-    margin-bottom: 1.125rem;
+.invoice-acceptance-container__back-link {
+  display: flex;
+  align-items: center;
+  font-family: NunitoSans-Bold, sans-serif;
+  font-size: $moderate;
+  font-weight: bold;
+  color: $black;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
   }
 }
 
-.invoice-acceptance-container {
-  padding-top: $sticky-info-height + 3.5rem;
+.invoice-acceptance-container__left-arrow-icon {
+  margin-right: .5rem;
+}
 
-  .invoice-acceptance-container__not-loaded-proposal {
-    width: 100%;
-    display: inline-block;
-    text-align: center;
+.invoice-acceptance-container {
+  padding-top: $sticky-info-height + 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .invoice-acceptance-container__loader-wrapper {
+    display: flex;
   }
 
   @include big-phone {
-    padding-top: $sticky-info-mobile-height + 2rem;
+    padding-top: $sticky-info-mobile-height + 1.75rem;
   }
 }
