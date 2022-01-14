@@ -18,6 +18,11 @@ enum TabState {
   Approved = "approved",
 }
 
+interface ProposalsFetch {
+  data: Proposal[];
+  fetched: boolean;
+}
+
 const TAB_QUERY_PARAM = "tab";
 
 const InvoicesAcceptanceContainer: FC = () => {
@@ -29,6 +34,18 @@ const InvoicesAcceptanceContainer: FC = () => {
       ? TabState.Approved
       : TabState.InProgress
   );
+  const [
+    pendingApprovalProposals,
+    setPendingApprovalProposals,
+  ] = useState<ProposalsFetch>({ data: [], fetched: false });
+  const [
+    approvedProposals,
+    setApprovedProposals,
+  ] = useState<ProposalsFetch>({ data: [], fetched: false });
+  const [
+    declinedProposals,
+    setDeclinedProposals,
+  ] = useState<ProposalsFetch>({ data: [], fetched: false });
 
   const handleTabChange = useCallback(
     (value: unknown) => {
@@ -46,21 +63,36 @@ const InvoicesAcceptanceContainer: FC = () => {
     dispatch(
       getPendingApprovalProposals.request({
         callback: (error, proposals) => {
-          console.log(error, proposals);
+          if (!error) {
+            setPendingApprovalProposals({
+              data: proposals || [],
+              fetched: true,
+            });
+          }
         },
       })
     );
     dispatch(
       getApprovedProposals.request({
         callback: (error, proposals) => {
-          console.log(error, proposals);
+          if (!error) {
+            setApprovedProposals({
+              data: proposals || [],
+              fetched: true,
+            });
+          }
         },
       })
     );
     dispatch(
       getDeclinedProposals.request({
         callback: (error, proposals) => {
-          console.log(error, proposals);
+          if (!error) {
+            setDeclinedProposals({
+              data: proposals || [],
+              fetched: true,
+            });
+          }
         },
       })
     );
@@ -80,13 +112,13 @@ const InvoicesAcceptanceContainer: FC = () => {
           <ProposalList
             title="Pending approval (3)"
             emptyListText="There are no pending approval invoices"
-            proposals={[]}
+            proposals={pendingApprovalProposals.data}
             onProposalView={handleProposalView}
           />
           <ProposalList
             title="Declined (2)"
             emptyListText="There are no declined invoices"
-            proposals={[]}
+            proposals={declinedProposals.data}
             onProposalView={handleProposalView}
           />
         </TabPanel>
@@ -94,7 +126,7 @@ const InvoicesAcceptanceContainer: FC = () => {
           <ProposalList
             title="Approved Invoices"
             emptyListText="There are no approved invoices"
-            proposals={[]}
+            proposals={approvedProposals.data}
             onProposalView={handleProposalView}
           />
         </TabPanel>

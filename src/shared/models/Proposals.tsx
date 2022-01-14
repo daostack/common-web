@@ -110,5 +110,6 @@ export interface Proposal {
 
   approvalDate?: Time;
   payoutDocs?: DocInfo[];
+  payoutDocsComment?: string
   payoutDocsRejectionReason?: string;
 }

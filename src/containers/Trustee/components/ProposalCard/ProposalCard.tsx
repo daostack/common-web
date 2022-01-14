@@ -1,9 +1,8 @@
-import React, { FC } from "react";
+import React, { useMemo, FC } from "react";
 import classNames from "classnames";
-import ApprovedIcon from "../../../../shared/icons/close.icon";
-// import ApprovedIcon from "../../../../shared/icons/approved.icon";
-import { Proposal } from "../../../../shared/models";
-import { formatPrice } from "../../../../shared/utils";
+import ApprovedIcon from "../../../../shared/icons/approved.icon";
+import { DateFormat, Proposal } from "../../../../shared/models";
+import { formatEpochTime, formatPrice } from "../../../../shared/utils";
 import "./index.scss";
 
 interface ProposalCardProps {
@@ -15,7 +14,14 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
   const { proposal, onClick } = props;
   const isApproved = false;
   const isDeclined = false;
-  const note = "I was able to get some discount :)";
+  const invoicesTotal = useMemo(
+    () =>
+      (proposal.payoutDocs || []).reduce(
+        (acc, doc) => acc + (doc.amount || 0),
+        0
+      ),
+    [proposal.payoutDocs]
+  );
 
   const approvalDateClassName = classNames(
     "trustee-proposal-card__approval-date",
@@ -36,7 +42,12 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
     <div className="trustee-proposal-card">
       <span className={approvalDateClassName}>
         <ApprovedIcon className="trustee-proposal-card__approval-icon" />
-        <span>Approved on Nov, 21 2021</span>
+        <span>
+          Approved on{" "}
+          {proposal.createdAt
+            ? formatEpochTime(proposal.createdAt, DateFormat.Human)
+            : "UNKNOWN"}
+        </span>
       </span>
       <div className="trustee-proposal-card__content-wrapper">
         <div className="trustee-proposal-card__content">
@@ -47,20 +58,20 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
             <div className={priceWrapperClassName}>
               <span>Proposal Requested</span>
               <span className="trustee-proposal-card__price">
-                {formatPrice(proposal.funding?.amount)}
+                {formatPrice(proposal.fundingRequest?.amount)}
               </span>
             </div>
             <div className={priceWrapperClassName}>
               <span>Invoices Total</span>
               <span className="trustee-proposal-card__price">
-                {formatPrice(87078)}
+                {formatPrice(invoicesTotal)}
               </span>
             </div>
           </div>
-          {note && (
+          {proposal.payoutDocsComment && (
             <p className="trustee-proposal-card__note">
               <strong>Note: </strong>
-              {note}
+              {proposal.payoutDocsComment}
             </p>
           )}
         </div>
