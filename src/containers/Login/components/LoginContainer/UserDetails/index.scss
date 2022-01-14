@@ -17,21 +17,7 @@
     width: 25rem;
     margin-bottom: 30px;
 
-    label {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.6rem;
-      margin-top: 0.8rem;
-      font-size: 0.875rem;
-      font-family: NunitoSans-Regular;
-
-      > span:nth-child(2) {
-        color: $light-gray-2;
-      }
-    }
-
-    select,
-    input {
+    select {
       border: 1px solid $light-gray-1;
       border-radius: 3px;
       height: 50px;
@@ -89,18 +75,61 @@
     }
   }
   .actions-wrapper{
-    margin-top: 156px;
-    margin-bottom: 20px;
-    .button-blue{
-      width: 130px;
-      &.white{
-        border: solid 1px #eee;
-        background-color: #fff;
-        color: #001a36;
-        font-weight: normal;
-        min-width: 	96px;
-        margin-right: 16px;
-      }
+    margin: 1.25rem 0;
+
+    @include big-phone {
+      width: 100%;
+    }
+  }
+
+  .details-wrapper__text-field {
+    margin-bottom: .875rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .details-wrapper__text-field-label-wrapper {
+    font-size: $xsmall;
+  }
+
+  .details-wrapper__text-field-input {
+    padding-left:  .75rem;
+    padding-right: .875rem;
+  }
+
+  .details-wrapper__label {
+    margin-bottom: .625rem;
+    font-size: $xsmall;
+    color: $secondary-blue;
+    text-align: left;
+  }
+
+  .details-wrapper__skip-button {
+    min-width: unset;
+    width: 6.063rem;
+    font-family: NunitoSans-Regular, sans-serif;
+    font-weight: normal;
+    color: $secondary-blue;
+    border: 1px solid $light-gray-1;
+    background-color: $white;
+
+    @include big-phone {
+      width: 100%;
+    }
+  }
+
+  .details-wrapper__continue-button {
+    min-width: unset;
+    width: 8.188rem;
+    margin-left: 1rem;
+    font-family: NunitoSans-Regular, sans-serif;
+    font-weight: normal;
+
+    @include big-phone {
+      width: 100%;
+      margin: 1rem 0 0;
     }
   }
 }

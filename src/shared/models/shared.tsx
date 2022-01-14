@@ -19,6 +19,10 @@ export interface File {
 export enum Collection {
   Cards = "cards",
   Proposals = "proposals",
+  Discussion = "discussion",
+  Users = "users",
+  Daos = "daos",
+  DiscussionMessage = "discussionMessage",
 }
 
 export enum DateFormat {

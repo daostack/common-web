@@ -40,8 +40,8 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
   const [showFilePreview, setShowFilePreview] = useState(false);
   const screenSize = useSelector(getScreenSize());
   const totalAmount = selectedFiles
-    .map((file: IFile) => file.amount)
-    .reduce((a: number, b: number) => a + b, 0);
+    .map((file) => file.amount)
+    .reduce((a, b) => a + b, 0);
   const [showDeletePrompt, setShowDeletePrompt] = useState(false);
   const [
     selectedInvoiceIndexToDelete,

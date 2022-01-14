@@ -14,3 +14,4 @@ export * from "./Share";
 export * from "./Modal";
 export * from "./Separator";
 export * from "./Tabs";
+export * from "./UserAvatar";

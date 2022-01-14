@@ -3,17 +3,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import classNames from "classnames";
 
-import { Loader, Share } from "../../../../shared/components";
+import { Loader, Share, UserAvatar } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
 import {
   useAuthorizedModal,
   useModal,
   useViewPortHook,
 } from "../../../../shared/hooks";
-
+import PurpleCheckIcon from "../../../../shared/icons/purpleCheck.icon";
+import ShareIcon from "../../../../shared/icons/share.icon";
 import { Discussion, Proposal, ProposalState } from "../../../../shared/models";
 import { getScreenSize } from "../../../../shared/store/selectors";
-import { formatPrice } from "../../../../shared/utils";
+import { formatPrice, getUserName } from "../../../../shared/utils";
 import {
   AboutTabComponent,
   PreviewInformationList,
@@ -77,8 +78,6 @@ const tabs = [
     key: "history",
   },
 ];
-
-const SHARING_TEXT = "Hey checkout this common!";
 
 export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
@@ -410,13 +409,23 @@ export default function CommonDetail() {
                 <div className="text-information-wrapper__info-wrapper">
                   <div className="name">
                     {common?.name}
-                    {screenSize === ScreenSize.Mobile && (
+                    {isMobileView && !isCommonMember && (
                       <Share
                         url={sharingURL}
-                        text={SHARING_TEXT}
                         type="modal"
                         color={Colors.transparent}
                       />
+                    )}
+                    {isMobileView && isCommonMember && (
+                      <div className="text-information-wrapper__connected-user-avatar-wrapper">
+                        <UserAvatar
+                          className="text-information-wrapper__user-avatar"
+                          photoURL={user?.photoURL}
+                          nameForRandomAvatar={user?.email}
+                          userName={getUserName(user)}
+                        />
+                        <PurpleCheckIcon className="text-information-wrapper__connected-user-avatar-icon" />
+                      </div>
                     )}
                   </div>
                   <div className="tagline">{common?.metadata.byline}</div>
@@ -487,12 +496,23 @@ export default function CommonDetail() {
                   {screenSize === ScreenSize.Desktop && (
                     <Share
                       url={sharingURL}
-                      text={SHARING_TEXT}
                       type="popup"
                       color={Colors.lightPurple}
                     />
                   )}
                 </div>
+                {isCommonMember && isMobileView && (
+                  <Share
+                    url={sharingURL}
+                    type="modal"
+                    color={Colors.transparent}
+                  >
+                    <button className="button-blue common-content-selector__long-share-button">
+                      <ShareIcon className="common-content-selector__share-icon" />
+                      Share Common
+                    </button>
+                  </Share>
+                )}
               </div>
             </div>
           </div>
