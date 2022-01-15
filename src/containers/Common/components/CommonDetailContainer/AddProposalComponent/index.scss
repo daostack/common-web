@@ -270,3 +270,117 @@
     }
   }
 }
+
+.add-proposal-success-wrapper{
+  display: flex;
+  align-items: center;
+  height: 40rem;
+  flex-direction: column;
+
+  img {
+    width: 14.5rem;
+    height: 14.5rem;
+    margin: 3.5rem auto 0 ;
+  }
+  .add-proposal-success-title{
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.33;
+    letter-spacing: normal;
+    text-align: center;
+    color: #001a36;
+    margin-top: 3.5rem;
+  }
+  .add-proposal-success-description{
+    font-family: NunitoSans,sans-serif;
+    font-size: 0.875rem;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    text-align: center;
+    color: #001a36;
+    margin-top: 1rem;
+  }
+  .actions-wrapper{
+    margin-top: 3.5rem;
+    .button-blue{
+      font-weight: normal;
+      &.white{
+        border: solid 1px #eee;
+        background-color: #fff;
+        color: #001a36;
+        font-weight: normal;
+        margin-right: 16px;
+      }
+    }
+  }
+}
+
+.add-proposal-failure-wrapper{
+  display: flex;
+  align-items: center;
+  height: 40rem;
+  flex-direction: column;
+
+  img {
+    width: 14.5rem;
+    height: 14.5rem;
+    margin: 3.5rem auto 0 ;
+  }
+  .add-proposal-failure-title{
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.33;
+    letter-spacing: normal;
+    text-align: center;
+    color: #001a36;
+    margin-top: 3.5rem;
+  }
+  .add-proposal-failure-description{
+    font-family: NunitoSans,sans-serif;
+    font-size: 0.875rem;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    text-align: center;
+    color: #001a36;
+    margin-top: 1rem;
+  }
+
+  .actions-wrapper{
+    margin-top: 3.5rem;
+    .button-blue{
+      font-weight: normal;
+      &.white{
+        width: 23rem;
+        border: solid 1px #eee;
+        background-color: #fff;
+        color: #001a36;
+        font-weight: normal;
+        margin-right: 16px;
+      }
+    }
+    .error-details{
+      margin-top: 1.5rem;
+      font-family: NunitoSans,sans-serif;
+      font-size: 0.875rem;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      color: $light-gray-2;
+      text-align: center;
+    }
+  }
+}

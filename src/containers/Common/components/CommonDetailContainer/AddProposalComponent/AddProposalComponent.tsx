@@ -8,6 +8,8 @@ import { Common } from "@/shared/models";
 import { AddProposalForm } from "./AddProposalForm";
 import { AddProposalConfirm } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalConfirm";
 import AddProposalLoader from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalLoader";
+import { AdProposalSuccess } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalSuccess";
+import { AdProposalFailure } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalFailure";
 
 interface AddDiscussionComponentProps
   extends Pick<ModalProps, "isShowing" | "onClose"> {
@@ -21,7 +23,9 @@ const AddProposalComponent = ({
   onProposalAdd,
   common,
 }: AddDiscussionComponentProps) => {
-  const [proposalCreationStep, changeCreationProposalStep] = useState("loader");
+  const [proposalCreationStep, changeCreationProposalStep] = useState(
+    "failure"
+  );
 
   const renderProposalStep = useMemo(() => {
     switch (proposalCreationStep) {
@@ -33,6 +37,10 @@ const AddProposalComponent = ({
         return <AddProposalConfirm />;
       case "loader":
         return <AddProposalLoader />;
+      case "success":
+        return <AdProposalSuccess />;
+      case "failure":
+        return <AdProposalFailure />;
       default:
         return (
           <AddProposalForm onProposalAdd={onProposalAdd} common={common} />
