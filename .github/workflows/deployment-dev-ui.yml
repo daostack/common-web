@@ -2,7 +2,7 @@ name: web staging cd
 
 on:
   push:
-    branches: [ master ]
+    branches: [ staging ]
 
 jobs:
   deploy:
