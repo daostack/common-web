@@ -10,6 +10,10 @@ export enum InvoiceTileVariant {
   FullWidth,
 }
 
+interface Styles {
+  image?: string;
+}
+
 interface InvoiceTileProps {
   className?: string;
   fileURL: string;
@@ -20,6 +24,7 @@ interface InvoiceTileProps {
   shouldDownloadOnClick?: boolean;
   amount?: number | null;
   variant?: InvoiceTileVariant;
+  styles?: Styles;
 }
 
 const InvoiceTile: FC<InvoiceTileProps> = (props) => {
@@ -33,6 +38,7 @@ const InvoiceTile: FC<InvoiceTileProps> = (props) => {
     shouldDownloadOnClick = false,
     amount = null,
     variant = InvoiceTileVariant.Square,
+    styles,
   } = props;
   const isFullWidthVariant = variant === InvoiceTileVariant.FullWidth;
 
@@ -69,7 +75,7 @@ const InvoiceTile: FC<InvoiceTileProps> = (props) => {
   const shouldDisplayTopContent =
     isFullWidthVariant && (amountEl || deleteButtonEl);
 
-  const imageClassName = classNames("invoice-tile__image", {
+  const imageClassName = classNames("invoice-tile__image", styles?.image, {
     "invoice-tile__image--full-width": isFullWidthVariant,
     "invoice-tile__image--general-file": !isImage,
   });

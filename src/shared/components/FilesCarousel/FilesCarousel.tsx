@@ -1,15 +1,20 @@
-import React, { FC, useEffect } from "react";
-import CloseIcon from "../../../shared/icons/close.icon";
-import DownloadIcon from "../../../shared/icons/download.icon";
+import React, { useEffect, useState, FC } from "react";
+import classNames from "classnames";
+import CloseIcon from "../../icons/close.icon";
+import DownloadIcon from "../../icons/download.icon";
+import { DocInfo } from "../../models";
+import { ButtonIcon } from "../ButtonIcon";
+import { AllFilesCarousel } from "./AllFilesCarousel";
 import "./index.scss";
 
 interface FilesCarouselProps {
-  // fileName: string;
-  // mimeType: string;
-  // downloadURL: string;
+  payoutDocs: DocInfo[];
 }
 
 const FilesCarousel: FC<FilesCarouselProps> = (props) => {
+  const { payoutDocs } = props;
+  const [isZoomed, setIsZoomed] = useState(false);
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
 
@@ -18,14 +23,28 @@ const FilesCarousel: FC<FilesCarouselProps> = (props) => {
     };
   }, []);
 
+  const handleZoomIn = () => {
+    setIsZoomed(true);
+  };
+  const handleZoomOut = () => {
+    setIsZoomed(false);
+  };
+
   return (
     <div className="files-carousel-wrapper">
       <div className="files-carousel-wrapper__overlay" />
       <div className="files-carousel-wrapper__content">
-        {/*<div className="files-carousel-wrapper__top-content">*/}
-        {/*  Top Content*/}
-        {/*</div>*/}
-        <div className="files-carousel-wrapper__preview-wrapper">
+        {!isZoomed && (
+          <AllFilesCarousel
+            className="files-carousel-wrapper__top-content"
+            payoutDocs={payoutDocs}
+          />
+        )}
+        <div
+          className={classNames("files-carousel-wrapper__preview-wrapper", {
+            "files-carousel-wrapper__preview-wrapper--zoomed": isZoomed,
+          })}
+        >
           <div className="files-carousel-wrapper__preview-image-wrapper">
             <img
               className="files-carousel-wrapper__preview-image"
@@ -33,8 +52,15 @@ const FilesCarousel: FC<FilesCarouselProps> = (props) => {
               alt="alt"
             />
             <div className="files-carousel-wrapper__preview-image-icons-wrapper">
-              <DownloadIcon className="files-carousel-wrapper__icon" />
-              <DownloadIcon className="files-carousel-wrapper__icon" />
+              <ButtonIcon className="files-carousel-wrapper__icon-wrapper">
+                <DownloadIcon className="files-carousel-wrapper__icon" />
+              </ButtonIcon>
+              <ButtonIcon
+                className="files-carousel-wrapper__icon-wrapper"
+                onClick={isZoomed ? handleZoomOut : handleZoomIn}
+              >
+                <DownloadIcon className="files-carousel-wrapper__icon" />
+              </ButtonIcon>
             </div>
           </div>
         </div>

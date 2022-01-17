@@ -1,5 +1,4 @@
 @import "../../../constants";
-@import "../../../styles/sizes";
 
 .files-carousel-wrapper {
   position: fixed;
@@ -29,12 +28,17 @@
 
   .files-carousel-wrapper__top-content {
     flex-shrink: 0;
+    margin: 1.5rem 7.5rem 1rem;
   }
 
   .files-carousel-wrapper__preview-wrapper {
     flex: 1 0;
     height: 100%;
+    padding-bottom: 1.5rem;
     display: flex;
+  }
+  .files-carousel-wrapper__preview-wrapper--zoomed {
+    padding-bottom: 0;
   }
 
   .files-carousel-wrapper__preview-image-wrapper {
@@ -56,19 +60,22 @@
     flex-wrap: wrap;
   }
 
+  .files-carousel-wrapper__icon-wrapper {
+    margin-right: 0.5rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
   .files-carousel-wrapper__icon {
     width: 3rem;
     height: 3rem;
-    margin-right: .5rem;
     padding: .75rem;
     background-color: $black-gray;
     border-radius: 50%;
     color: $white;
     box-sizing: border-box;
-
-    &:last-child {
-      margin-right: 0;
-    }
 
     &:hover {
       cursor: pointer;

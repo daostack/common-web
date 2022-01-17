@@ -1,0 +1,97 @@
+@import "../../../../constants";
+
+$invoice-tile-border-radius: 14px;
+
+.all-files-carousel-wrapper {
+  padding: 0.5rem 0 1rem;
+  background-color: $carousel-overlay-shadow;
+  border-radius: 0.5rem;
+
+  .all-files-carousel-wrapper__header {
+    margin-bottom: 1rem;
+    padding: 0 4.875rem;
+    display: flex;
+    justify-content: space-between;
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: $moderate;
+    font-weight: bold;
+    color: $white;
+  }
+
+  .all-files-carousel-wrapper__download-all {
+    display: flex;
+    align-items: center;
+    font-size: $xxsmall;
+  }
+
+  .all-files-carousel-wrapper__content-wrapper {
+    display: flex;
+  }
+  .all-files-carousel-wrapper__content-wrapper--without-actions {
+    padding: 0 4.875rem;
+  }
+
+  .all-files-carousel-wrapper__button-icon {
+    flex-shrink: 0;
+    padding-left: 1.375rem;
+    padding-right: 1.5rem;
+    color: $white;
+
+    &:last-child {
+      padding-left: 1.5rem;
+      padding-right: 1.375rem;
+    }
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  .all-files-carousel-wrapper__icon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .all-files-carousel-wrapper__content {
+    flex: 1 0;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .all-files-carousel-wrapper__invoice-tile {
+    flex-shrink: 0;
+    width: 9.625rem;
+    height: 9.625rem;
+    margin-right: 1.5rem;
+    box-sizing: border-box;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+  .all-files-carousel-wrapper__invoice-tile--active {
+    &:after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: block;
+      background-color: $black-gray-2;
+      border: 0.125rem solid $light-gray-2;
+      border-radius: 0.5rem;
+      cursor: pointer;
+    }
+  }
+
+  .all-files-carousel-wrapper__invoice-tile-image {
+    border: 0.125rem solid $light-gray-3;
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+  }
+  .all-files-carousel-wrapper__invoice-tile-image--active {
+    border: unset;
+  }
+}
