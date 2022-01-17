@@ -1,4 +1,4 @@
-name: web batch 1 continuous delivery
+name: web prod CD
 
 on:
   push:
