@@ -57,6 +57,12 @@ $invoice-tile-border-radius: 14px;
     display: flex;
     overflow-x: auto;
     overflow-y: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   .all-files-carousel-wrapper__invoice-tile {
