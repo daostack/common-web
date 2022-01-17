@@ -1,11 +1,15 @@
-import React, { useEffect, FC } from "react";
+import React, { useEffect, useState, FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { Loader, Separator } from "../../../../shared/components";
+import {
+  FilesCarousel,
+  Loader,
+  Separator,
+} from "../../../../shared/components";
 import { ROUTE_PATHS } from "../../../../shared/constants";
 import LeftArrowIcon from "../../../../shared/icons/leftArrow.icon";
-import { ProposalState } from "../../../../shared/models";
+import { DocInfo, ProposalState } from "../../../../shared/models";
 import { InvoiceTileList } from "../../components/InvoiceTileList";
 import { ProposalCard } from "../../components/ProposalCard";
 import { StickyInfo } from "../../components/StickyInfo";
@@ -21,6 +25,7 @@ import {
 import "./index.scss";
 
 const InvoiceAcceptanceContainer: FC = () => {
+  const [selectedDocIndex, setSelectedDocIndex] = useState<number | null>(null);
   const dispatch = useDispatch();
   const history = useHistory();
   const { proposalId } = useParams<{ proposalId: string }>();
@@ -28,11 +33,20 @@ const InvoiceAcceptanceContainer: FC = () => {
   const isProposalForApprovalLoaded = useSelector(
     selectIsProposalForApprovalLoaded()
   );
+  const payoutDocs = proposalForApproval?.payoutDocs || [];
   const backLink = `${ROUTE_PATHS.TRUSTEE_INVOICES}${
     proposalForApproval?.state === ProposalState.PASSED
       ? `?${INVOICES_PAGE_TAB_QUERY_PARAM}=${InvoicesPageTabState.Approved}`
       : ""
   }`;
+
+  const handleInvoiceTileClick = (doc: DocInfo, index: number) => {
+    setSelectedDocIndex(index);
+  };
+
+  const handleFileCarouselClose = () => {
+    setSelectedDocIndex(null);
+  };
 
   useEffect(() => {
     if (!isProposalForApprovalLoaded) {
@@ -73,7 +87,8 @@ const InvoiceAcceptanceContainer: FC = () => {
             <ProposalCard proposal={proposalForApproval} />
             <InvoiceTileList
               className="invoice-acceptance-container__invoice-tile-list"
-              payoutDocs={proposalForApproval.payoutDocs || []}
+              payoutDocs={payoutDocs}
+              onDocClick={handleInvoiceTileClick}
             />
             <div className="invoice-acceptance-container__actions-wrapper">
               <button className="button-blue invoice-acceptance-container__approve-button">
@@ -84,6 +99,13 @@ const InvoiceAcceptanceContainer: FC = () => {
               </button>
             </div>
           </>
+        )}
+        {selectedDocIndex !== null && (
+          <FilesCarousel
+            payoutDocs={payoutDocs}
+            defaultDocIndex={selectedDocIndex}
+            onClose={handleFileCarouselClose}
+          />
         )}
       </div>
     </>

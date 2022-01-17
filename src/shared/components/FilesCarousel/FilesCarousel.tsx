@@ -4,6 +4,8 @@ import CloseIcon from "../../icons/close.icon";
 import DownloadIcon from "../../icons/download.icon";
 import LeftArrowIcon from "../../icons/leftArrow.icon";
 import RightArrowIcon from "../../icons/rightArrow.icon";
+import ZoomInIcon from "../../icons/zoomIn.icon";
+import ZoomOutIcon from "../../icons/zoomOut.icon";
 import { DocInfo } from "../../models";
 import { ButtonIcon } from "../ButtonIcon";
 import { AllFilesCarousel } from "./AllFilesCarousel";
@@ -89,7 +91,12 @@ const FilesCarousel: FC<FilesCarouselProps> = (props) => {
               )}
               <div className="files-carousel-wrapper__preview-image-wrapper">
                 <img
-                  className="files-carousel-wrapper__preview-image"
+                  className={classNames(
+                    "files-carousel-wrapper__preview-image",
+                    {
+                      "files-carousel-wrapper__preview-image--contain": isZoomed,
+                    }
+                  )}
                   src={currentDoc.downloadURL}
                   alt={currentDoc.name}
                 />
@@ -101,7 +108,11 @@ const FilesCarousel: FC<FilesCarouselProps> = (props) => {
                     className="files-carousel-wrapper__icon-wrapper"
                     onClick={isZoomed ? handleZoomOut : handleZoomIn}
                   >
-                    <DownloadIcon className="files-carousel-wrapper__icon" />
+                    {isZoomed ? (
+                      <ZoomOutIcon className="files-carousel-wrapper__icon" />
+                    ) : (
+                      <ZoomInIcon className="files-carousel-wrapper__icon" />
+                    )}
                   </ButtonIcon>
                 </div>
               </div>
