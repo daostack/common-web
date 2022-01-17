@@ -1,125 +1,122 @@
-import React, { useState } from "react";
-
-import {
-  createCard,
-  createRequestToJoin,
-} from "../../../../../services/CirclePayService";
+import React, { useCallback, useEffect, useState, ReactElement } from "react";
+import { useSelector } from "react-redux";
 
 import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
-import {
-  formatPrice,
-  getTodayDate,
-  luhnAlgo,
-  validateCreditCardProvider,
-  validateCVV,
-} from "../../../../../shared/utils";
+import { selectUser } from "../../../../Auth/store/selectors";
+import PayMeService from "../../../../../services/PayMeService";
+import { Loader } from "../../../../../shared/components";
+import { CommonPayment } from "../../../../../shared/models";
+import { formatPrice } from "../../../../../shared/utils";
+import { CommonContributionType } from "../../../../../shared/models";
+import { subscribeToCardChange } from "../../../store/api";
 
-export default function MembershipRequestPayment(props: IStageProps) {
-  const { userData, setUserData } = props;
-  const [card_number, setCardNumber] = useState(0); // 4007400000000007
-  const [expiration_date, setExpirationDate] = useState("");
-  const [cvv, setCvv] = useState(0);
-  const [showCCNumberError, setShowCCNumberError] = useState(false);
+interface State {
+  commonPayment: CommonPayment | null;
+  isCommonPaymentLoading: boolean;
+  isPaymentIframeLoaded: boolean;
+}
 
-  const onCCNumberChange = (value: string) => {
-    setCardNumber(Number(value));
-    if (!validateCreditCardProvider(value) || !luhnAlgo(value)) {
-      setShowCCNumberError(true);
-    } else {
-      setShowCCNumberError(false);
+const INITIAL_STATE: State = {
+  commonPayment: null,
+  isCommonPaymentLoading: false,
+  isPaymentIframeLoaded: false,
+};
+
+export default function MembershipRequestPayment(
+  props: IStageProps
+): ReactElement {
+  const { userData, setUserData, common } = props;
+  const user = useSelector(selectUser());
+  const [
+    {
+      commonPayment,
+      isCommonPaymentLoading,
+      isPaymentIframeLoaded,
+    },
+    setState,
+  ] = useState<State>(INITIAL_STATE);
+  const contributionTypeText =
+    common?.metadata.contributionType === CommonContributionType.Monthly
+      ? "monthly"
+      : "one-time";
+
+  const handleIframeLoad = useCallback(() => {
+    setState((nextState) => ({ ...nextState, isPaymentIframeLoaded: true }));
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (commonPayment || isCommonPaymentLoading || !common || !user?.uid) {
+        return;
+      }
+
+      try {
+        setState((nextState) => ({
+          ...nextState,
+          isCommonPaymentLoading: true,
+        }));
+
+        const createdCommonPayment = await PayMeService.createBuyerTokenPage({
+          cardId: userData.cardId,
+        });
+
+        setState((nextState) => ({
+          ...nextState,
+          commonPayment: createdCommonPayment,
+          isCommonPaymentLoading: false,
+        }));
+      } catch (error) {
+        console.error("Error during payment page creation");
+      }
+    })();
+  }, [commonPayment, isCommonPaymentLoading, userData, common, user]);
+
+  useEffect(() => {
+    if (!isPaymentIframeLoaded) {
+      return;
     }
-  };
 
-  const pay = async () => {
     try {
-      const formData = {
-        ...userData,
-        card_number,
-        expiration_date,
-        cvv,
-      };
-
-      const data = {
-        description: formData.intro,
-        funding: (formData?.contribution_amount || 0) * 100,
-        commonId: `${window.location.pathname.split("/")[2]}`,
-      };
-
-      setUserData({ ...userData, stage: 6 });
-
-      const createdCard = await createCard({
-        ...formData,
+      return subscribeToCardChange(userData.cardId, (card) => {
+        if (card) {
+          setUserData((nextUserData) => ({ ...nextUserData, stage: 5 }));
+        }
       });
-
-      await createRequestToJoin({
-        ...data,
-        cardId: createdCard.id as string,
-      });
-
-      setUserData({ ...userData, stage: 7 });
-      // TODO: show the proposalId somewhere?
-    } catch (e) {
-      console.error("We couldn't create your proposal");
+    } catch (error) {
+      console.error("Error during subscription to payment status change");
     }
-  };
+  }, [isPaymentIframeLoaded, userData.cardId, setUserData]);
 
   return (
     <div className="membership-request-content membership-request-payment">
       <div className="sub-title">Payment Details</div>
-      <div className="sub-text">{`You are contributing ${formatPrice(
-        userData.contribution_amount
-      )} (monthly or one-time) to this Common`}</div>
-      <label>Card Number</label>
-      <input
-        type="number"
-        value={card_number}
-        onChange={(e) => onCCNumberChange(e.target.value)}
-      />
-      {showCCNumberError && (
-        <span className="error">
-          Enter a valid credit card number. Only Visa is currently supported.
-        </span>
-      )}
-      <div className="expiration-cvv-wrapper">
-        <div>
-          <label>Expiration date</label>
-          <input
-            type="date"
-            min={getTodayDate()}
-            value={expiration_date}
-            onChange={(e) => setExpirationDate(e.target.value)}
+      <div className="sub-text">
+        You are contributing{" "}
+        <strong className="membership-request-payment__amount">
+          {formatPrice(userData.contributionAmount, false)} (
+          {contributionTypeText})
+        </strong>{" "}
+        to this Common.
+      </div>
+      <div className="membership-request-payment__content">
+        {!isPaymentIframeLoaded && (
+          <Loader className="membership-request-payment__loader" />
+        )}
+        {commonPayment && (
+          <iframe
+            className="membership-request-payment__payment-iframe"
+            src={commonPayment.link}
+            frameBorder="0"
+            title="Payment Details"
+            onLoad={handleIframeLoad}
           />
-        </div>
-        <div>
-          <label>CVV</label>
-          <input
-            type="number"
-            value={cvv}
-            onChange={(e) => setCvv(Number(e.target.value))}
-          />
-        </div>
+        )}
       </div>
       <span className="membership-rejected-text">
         If your membership request will not be accepted, you will not be
         charged.
       </span>
-      <button
-        disabled={
-          !validateCreditCardProvider(card_number) ||
-          !luhnAlgo(card_number) ||
-          !validateCVV(cvv) ||
-          !expiration_date
-        }
-        className="button-blue"
-        onClick={() => pay()}
-      >
-        Pay Now
-      </button>
-      <div className="circle-wrapper">
-        <span>Powered by</span>
-        <img src="/icons/membership-request/circle-pay.png" alt="circle pay" />
-      </div>
     </div>
   );
 }

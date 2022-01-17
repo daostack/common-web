@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 
 import { Loader } from "../../../../../shared/components";
-import { Proposal } from "../../../../../shared/models";
+import { Proposal, ProposalState } from "../../../../../shared/models";
 import {
   formatPrice,
   getDaysAgo,
   getUserName,
+  getProposalExpirationDate,
 } from "../../../../../shared/utils";
 import { ChatComponent } from "../ChatComponent";
 import { ProposalCountDown } from "../ProposalCountDown";
@@ -14,35 +15,30 @@ import "./index.scss";
 
 interface DiscussionDetailModalProps {
   proposal: Proposal | null;
+  commonId: string;
   onOpenJoinModal: () => void;
   isCommonMember: boolean;
+  isJoiningPending: boolean;
 }
 
 export default function ProposalDetailModal({
   proposal,
+  commonId,
   onOpenJoinModal,
   isCommonMember,
+  isJoiningPending,
 }: DiscussionDetailModalProps) {
   const date = new Date();
   const [imageError, setImageError] = useState(false);
-  const requestedAmount = formatPrice(
-    proposal?.fundingRequest?.amount || proposal?.join?.funding
-  );
+  const rawRequestedAmount = proposal?.fundingRequest?.amount || proposal?.join?.funding;
   return !proposal ? (
     <Loader />
   ) : (
     <div className="discussion-detail-modal-wrapper">
       <div className="left-side">
         <div className="top-side">
-          {proposal.state === "countdown" ? (
-            <ProposalCountDown
-              date={
-                new Date(
-                  (proposal?.createdAt.seconds + proposal.countdownPeriod) *
-                    1000
-                )
-              }
-            />
+          {proposal.state === ProposalState.COUNTDOWN ? (
+            <ProposalCountDown date={getProposalExpirationDate(proposal)} />
           ) : (
             <div
               className={`state-wrapper ${proposal.state.toLocaleLowerCase()}`}
@@ -50,14 +46,14 @@ export default function ProposalDetailModal({
               <div className="state-inner-wrapper">
                 <img
                   src={
-                    proposal.state === "failed"
+                    proposal.state === ProposalState.REJECTED
                       ? "/icons/declined.svg"
                       : "/icons/approved.svg"
                   }
                   alt="state-wrapper"
                 />
                 <span className="state-name">
-                  {proposal.state === "failed" ? "Rejected" : "Approved"}
+                  {proposal.state === ProposalState.REJECTED ? "Rejected" : "Approved"}
                 </span>
               </div>
             </div>
@@ -87,12 +83,12 @@ export default function ProposalDetailModal({
               {proposal.description.title}
             </div>
             <div className="requested-amount">
-              {requestedAmount === "$0" ? (
+              {!rawRequestedAmount ? (
                 "No funding requested"
               ) : (
                 <>
                   Requested amount
-                  <span className="amount">{requestedAmount}</span>
+                  <span className="amount">{formatPrice(rawRequestedAmount)}</span>
                 </>
               )}
             </div>
@@ -106,9 +102,11 @@ export default function ProposalDetailModal({
       </div>
       <div className="right-side">
         <ChatComponent
+          commonId={commonId}
           discussionMessage={proposal.discussionMessage || []}
           onOpenJoinModal={onOpenJoinModal}
           isCommonMember={isCommonMember}
+          isJoiningPending={isJoiningPending}
         />
       </div>
     </div>

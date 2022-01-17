@@ -3,6 +3,7 @@ import { Formik } from "formik";
 // eslint-disable-next-line import/order
 import * as Yup from "yup";
 
+import { TextField } from "../../../../../shared/components/Form/Formik";
 import "./index.scss";
 import "../../../containers/LoginContainer/index.scss";
 import { useDispatch } from "react-redux";
@@ -45,7 +46,10 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
   const dispatch = useDispatch();
 
   const countries = countryList.map((country) => (
-    <option key={country.name} value={country.value}>{`${country.name} `}</option>
+    <option
+      key={country.name}
+      value={country.value}
+    >{`${country.name} `}</option>
   ));
 
   useEffect(() => {
@@ -74,7 +78,7 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
 
   const uploadAvatar = (
     files: FileList | null,
-    setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void,
+    setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
   ) => {
     if (files) {
       setLoading(true);
@@ -91,25 +95,45 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
   return (
     <div className="details-wrapper">
       <span className="title">Complete your account</span>
-      <span className="sub-text">Help the community to get to know you better</span>
+      <span className="sub-text">
+        Help the community to get to know you better
+      </span>
       <Formik
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
           setSubmitting(false);
 
-          dispatch(updateUserDetails.request({ user: { ...user, ...values }, callback: closeModal }));
+          dispatch(
+            updateUserDetails.request({
+              user: { ...user, ...values },
+              callback: closeModal,
+            })
+          );
         }}
         initialValues={formValues}
         enableReinitialize={true}
       >
-        {({ values, setFieldValue, errors, touched, handleChange, handleBlur, handleSubmit }) => (
+        {({
+          values,
+          setFieldValue,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+        }) => (
           <>
             <form>
               <div className="avatar-wrapper">
                 <div className="avatar">
                   <img src={values.photo} alt="avatar" />
                   {!loading ? (
-                    <div className="edit-avatar" onClick={() => inputFile?.current && inputFile?.current?.click()}>
+                    <div
+                      className="edit-avatar"
+                      onClick={() =>
+                        inputFile?.current && inputFile?.current?.click()
+                      }
+                    >
                       <img src="/icons/edit-avatar.svg" alt="edit-avatar" />
                     </div>
                   ) : null}
@@ -117,41 +141,71 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
                     type="file"
                     accept="image/*"
                     ref={inputFile}
-                    onChange={(value) => uploadAvatar(value.target.files, setFieldValue)}
+                    onChange={(value) =>
+                      uploadAvatar(value.target.files, setFieldValue)
+                    }
                   />
                 </div>
-                <div className="user-account-name">{user.email}</div>
+                <div className="user-account-name">{user?.email} </div>
                 {loading ? <Loader /> : null}
               </div>
-              <label>
-                <span>First name</span>
-                <span>Required</span>
-              </label>
-              <input
-                type="text"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.firstName}
+              <TextField
+                className="details-wrapper__text-field"
+                id="firstName"
                 name="firstName"
+                label="First name"
+                placeholder="Ashley"
+                isRequired
+                styles={{
+                  labelWrapper: "details-wrapper__text-field-label-wrapper",
+                  input: {
+                    default: "details-wrapper__text-field-input",
+                  },
+                }}
               />
-              <label>
-                <span>Last name</span>
-                <span>Required</span>
-              </label>
-              <input type="text" onChange={handleChange} onBlur={handleBlur} value={values.lastName} name="lastName" />
-              <label>Country</label>
-              <select name="country" onChange={handleChange} onBlur={handleBlur} value={values.country}>
-                <option value="" disabled>
-                  --- select country ---
-                </option>
-                {countries}
-              </select>
+              <TextField
+                className="details-wrapper__text-field"
+                id="lastName"
+                name="lastName"
+                label="Last name"
+                placeholder="Johnson"
+                isRequired
+                styles={{
+                  labelWrapper: "details-wrapper__text-field-label-wrapper",
+                  input: {
+                    default: "details-wrapper__text-field-input",
+                  },
+                }}
+              />
+              <label className="details-wrapper__label">Country</label>
+
+              <div className="country">
+                <select
+                  name="country"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.country}
+                >
+                  <option value="" disabled>
+                    --- select country ---
+                  </option>
+                  {countries}
+                </select>
+              </div>
             </form>
             <div className="actions-wrapper">
-              <button className="button-blue white" type="submit" onClick={() => closeModal()}>
+              <button
+                className="button-blue details-wrapper__skip-button"
+                type="submit"
+                onClick={() => closeModal()}
+              >
                 Skip
               </button>
-              <button className="button-blue" type="submit" onClick={() => handleSubmit()}>
+              <button
+                className="button-blue details-wrapper__continue-button"
+                type="submit"
+                onClick={() => handleSubmit()}
+              >
                 Continue
               </button>
             </div>

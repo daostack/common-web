@@ -1,24 +1,54 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import { Loader } from "../../../../../shared/components";
 import { Discussion } from "../../../../../shared/models";
 import { getDaysAgo, getUserName } from "../../../../../shared/utils";
 import { ChatComponent } from "../ChatComponent";
 import "./index.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUser } from "@/containers/Auth/store/selectors";
+import { addMessageToDiscussion } from "@/containers/Common/store/actions";
 
 interface DiscussionDetailModalProps {
   disscussion: Discussion | null;
+  commonId: string;
   onOpenJoinModal: () => void;
-  isCommonMember: boolean | undefined;
+  isCommonMember?: boolean;
+  isJoiningPending: boolean;
 }
 
 export default function DiscussionDetailModal({
   disscussion,
+  commonId,
   onOpenJoinModal,
   isCommonMember,
+  isJoiningPending,
 }: DiscussionDetailModalProps) {
+  const dispatch = useDispatch();
   const date = new Date();
+  const user = useSelector(selectUser());
   const [imageError, setImageError] = useState(false);
+
+  const sendMessage = useCallback(
+    (message: string) => {
+      if (disscussion && user) {
+        const d = new Date();
+        const payload = {
+          text: message,
+          createTime: d,
+          ownerId: user.uid,
+          commonId: disscussion.commonId,
+          discussionId: disscussion.id,
+        };
+
+        dispatch(
+          addMessageToDiscussion.request({ payload, discussion: disscussion })
+        );
+      }
+    },
+    [dispatch, user, disscussion]
+  );
+
   return !disscussion ? (
     <Loader />
   ) : (
@@ -58,9 +88,13 @@ export default function DiscussionDetailModal({
       </div>
       <div className="right-side">
         <ChatComponent
+          commonId={commonId}
           discussionMessage={disscussion.discussionMessage || []}
           onOpenJoinModal={onOpenJoinModal}
           isCommonMember={isCommonMember}
+          isJoiningPending={isJoiningPending}
+          isAuthorized={Boolean(user)}
+          sendMessage={sendMessage}
         />
       </div>
     </div>

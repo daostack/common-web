@@ -1,6 +1,8 @@
 export const LOGIN_REDIRECT_LINK = "/auth/";
 export const SMALL_SCREEN_BREAKPOINT = "770px";
 
+export const BASE_URL = window.location.origin;
+
 export enum ScreenSize {
   Mobile = "MOBILE",
   Desktop = "DESKTOP",
@@ -13,7 +15,8 @@ export const COMMON_APP_GOOGLE_PLAY_LINK =
 
 export const CONTACT_EMAIL = "hi@common.io";
 
-export const CIRCLE_PAY_URL = "https://api-sandbox.circle.com/v1";
+export const MIN_CONTRIBUTION_ILS_AMOUNT = 1000; // ₪10 * 100
+export const MAX_CONTRIBUTION_ILS_AMOUNT = 250000; // ₪2500 * 100
 
 export enum MobileOperatingSystem {
   WindowsPhone = "Windows Phone",
@@ -31,3 +34,8 @@ export enum Colors {
   lightPurple = "#F1F2FF",
   transparent = "transparent",
 }
+
+export const AXIOS_TIMEOUT = 1000000;
+
+export const DEFAULT_VIEWPORT_CONFIG = "width=device-width, initial-scale=1";
+export const VIEWPORT_CONFIG_TO_BLOCK_AUTO_ZOOM = `${DEFAULT_VIEWPORT_CONFIG}, maximum-scale=1.0, user-scalable=0`;

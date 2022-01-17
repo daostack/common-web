@@ -12,7 +12,15 @@ export interface ModalProps {
   mobileFullScreen?: boolean;
   title?: ReactNode;
   hideCloseButton?: boolean;
+  closeIconSize?: number;
   isHeaderSticky?: boolean;
+  shouldShowHeaderShadow?: boolean;
   onHeaderScrolledToTop?: (isHeaderScrolledToTop: boolean) => void;
   closePrompt?: boolean;
+  styles?: {
+    headerWrapper?: string;
+    header?: string;
+    closeWrapper?: string;
+    content?: string;
+  };
 }

@@ -10,11 +10,12 @@ import "./index.scss";
 
 interface DiscussionDetailModalProps {
   proposal: Proposal | null;
+  commonId: string;
   onOpenJoinModal: () => void;
   isCommonMember: boolean | undefined;
 }
 
-export default function ProposalDetailModal({ proposal, onOpenJoinModal, isCommonMember }: DiscussionDetailModalProps) {
+export default function ProposalDetailModal({ proposal, commonId, onOpenJoinModal, isCommonMember }: DiscussionDetailModalProps) {
   const date = new Date();
   const [imageError, setImageError] = useState(false);
   const requestedAmount = formatPrice(proposal?.fundingRequest?.amount || proposal?.join?.funding);
@@ -71,6 +72,7 @@ export default function ProposalDetailModal({ proposal, onOpenJoinModal, isCommo
       </div>
       <div className="right-side">
         <ChatComponent
+          commonId={commonId}
           discussionMessage={proposal.discussionMessage || []}
           onOpenJoinModal={onOpenJoinModal}
           isCommonMember={isCommonMember}

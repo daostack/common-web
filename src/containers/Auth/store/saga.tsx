@@ -6,18 +6,32 @@ import { tokenHandler } from "../../../shared/utils";
 import * as actions from "./actions";
 import firebase from "../../../shared/utils/firebase";
 import { startLoading, stopLoading } from "../../../shared/store/actions";
-import { User } from "../../../shared/models";
+import { Collection, User } from "../../../shared/models";
 import { GoogleAuthResultInterface } from "../interface";
 
 import { ROUTE_PATHS } from "../../../shared/constants";
 import history from "../../../shared/history";
+
+const getUserData = async (userId: string) => {
+  const userSnapshot = await firebase
+    .firestore()
+    .collection(Collection.Users)
+    .where("uid", "==", userId)
+    .get();
+
+  if (userSnapshot.docs.length) {
+    const user: User = (userSnapshot.docs[0].data() as unknown) as User;
+    return user;
+  }
+  return null;
+};
 
 const saveTokenToDatabase = async (token: string) => {
   const currentUser = await firebase.auth().currentUser;
   if (currentUser) {
     await firebase
       .firestore()
-      .collection("users")
+      .collection(Collection.Users)
       .doc(currentUser?.uid)
       .update({
         tokens: firebase.firestore.FieldValue.arrayUnion(token),
@@ -52,7 +66,7 @@ const createUser = async (user: firebase.User) => {
 
   const userSnapshot = await firebase
     .firestore()
-    .collection("users")
+    .collection(Collection.Users)
     .doc(user.uid)
     .get();
   if (userSnapshot.exists) {
@@ -61,7 +75,7 @@ const createUser = async (user: firebase.User) => {
 
   return await firebase
     .firestore()
-    .collection("users")
+    .collection(Collection.Users)
     .doc(user.uid)
     .set(userPublicData);
 };
@@ -105,6 +119,9 @@ const authorizeUser = async (payload: string) => {
           let loginedUser: any;
           if (result.additionalUserInfo?.isNewUser) {
             store.dispatch(actions.setIsUserNew(true));
+            if (currentUser) {
+              await createUser(currentUser);
+            }
           }
           if (credentials && user) {
             const tk = await currentUser?.getIdToken(true);
@@ -112,9 +129,19 @@ const authorizeUser = async (payload: string) => {
               tokenHandler.set(tk);
 
               if (currentUser) {
-                loginedUser = currentUser;
-                store.dispatch(actions.socialLogin.success(currentUser));
-                tokenHandler.setUser(currentUser);
+                let databaseUser = await getUserData(currentUser.uid);
+
+                if (!databaseUser) {
+                  store.dispatch(actions.setIsUserNew(true));
+                  await createUser(currentUser);
+                  databaseUser = await getUserData(currentUser.uid);
+                }
+
+                if (databaseUser) {
+                  loginedUser = databaseUser;
+                  store.dispatch(actions.socialLogin.success(databaseUser));
+                  tokenHandler.setUser(databaseUser);
+                }
               }
             }
           }
@@ -134,13 +161,24 @@ const updateUserData = async (user: any) => {
 
   const updatedCurrentUser = await firebase.auth().currentUser;
 
-  if (store.getState().auth.isNewUser) {
-    if (updatedCurrentUser) {
-      await createUser(updatedCurrentUser);
-    }
+  if (updatedCurrentUser) {
+    await firebase
+      .firestore()
+      .collection(Collection.Users)
+      .doc(updatedCurrentUser?.uid)
+      .update({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        photoURL: user.photo,
+      })
+      .then(() => {
+        console.log("User updated");
+      })
+      .catch((err) => console.error(err));
   }
 
-  return updatedCurrentUser;
+  return getUserData(updatedCurrentUser?.uid ?? "");
 };
 
 function* socialLoginSaga({ payload }: AnyAction & { payload: string }) {
@@ -148,8 +186,9 @@ function* socialLoginSaga({ payload }: AnyAction & { payload: string }) {
     yield put(startLoading());
 
     const user: User = yield call(authorizeUser, payload);
-    if (user) {
-      yield put(actions.socialLogin.success(user));
+    const firebaseUser: User = yield call(getUserData, user.uid ?? "");
+    if (firebaseUser) {
+      yield put(actions.socialLogin.success(firebaseUser));
     }
   } catch (error) {
     yield put(actions.socialLogin.failure(error));
@@ -194,7 +233,7 @@ function* authSagas() {
 }
 
 (async () => {
-  firebase.auth().onAuthStateChanged(async (data) => {
+  firebase.auth().onIdTokenChanged(async (data) => {
     const newToken = await data?.getIdToken();
     const currentToken = tokenHandler.get();
     if (newToken !== currentToken && currentToken) {
@@ -211,9 +250,14 @@ function* authSagas() {
     try {
       if (tokenHandler.get()) {
         const currentUser: User | undefined = res?.toJSON() as any;
+
         if (currentUser) {
-          store.dispatch(actions.updateUserDetails.success(currentUser));
-          tokenHandler.setUser(currentUser);
+          const user = await getUserData(currentUser.uid ?? "");
+
+          if (user) {
+            store.dispatch(actions.updateUserDetails.success(user));
+            tokenHandler.setUser(user);
+          }
         }
       }
     } catch (e) {

@@ -1,4 +1,9 @@
+import { ApiEndpoint } from "../../../shared/constants";
+import Api from "../../../services/Api";
+import { ProposalJoinRequestData } from "../../../shared/interfaces/api/proposal";
 import {
+  Card,
+  Collection,
   Common,
   Discussion,
   DiscussionMessage,
@@ -6,15 +11,18 @@ import {
   User,
 } from "../../../shared/models";
 import {
+  convertObjectDatesToFirestoreTimestamps,
   transformFirebaseDataList,
   transformFirebaseDataSingle,
 } from "../../../shared/utils";
 import firebase from "../../../shared/utils/firebase";
+import { CreateDiscussionDto } from "@/containers/Common/interfaces";
+import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
 
 export async function fetchCommonDiscussions(commonId: string) {
   const commons = await firebase
     .firestore()
-    .collection("discussion")
+    .collection(Collection.Discussion)
     .where("commonId", "==", commonId)
     .get();
   const data = transformFirebaseDataList<Discussion>(commons);
@@ -28,7 +36,7 @@ export async function fetchCommonDiscussions(commonId: string) {
 export async function fetchCommonProposals(commonId: string) {
   const commons = await firebase
     .firestore()
-    .collection("proposals")
+    .collection(Collection.Proposals)
     .where("commonId", "==", commonId)
     .get();
   const data = transformFirebaseDataList<Proposal>(commons);
@@ -42,7 +50,7 @@ export async function fetchCommonProposals(commonId: string) {
 export async function fetchUserProposals(userId: string) {
   const commons = await firebase
     .firestore()
-    .collection("proposals")
+    .collection(Collection.Proposals)
     .where("proposerId", "==", userId)
     .get();
   const data = transformFirebaseDataList<Proposal>(commons);
@@ -54,13 +62,13 @@ export async function fetchUserProposals(userId: string) {
 }
 
 export async function fetchCommonList(): Promise<Common[]> {
-  const commons = await firebase.firestore().collection("daos").get();
+  const commons = await firebase.firestore().collection(Collection.Daos).get();
   const data = transformFirebaseDataList<Common>(commons);
   return data;
 }
 
 export async function fetchCommonDetail(id: string): Promise<Common> {
-  const common = await firebase.firestore().collection("daos").doc(id).get();
+  const common = await firebase.firestore().collection(Collection.Daos).doc(id).get();
   const data = transformFirebaseDataSingle<Common>(common);
   return data;
 }
@@ -80,7 +88,7 @@ export async function fetchOwners(ownerids: string[]) {
 
   const users = await Promise.all(
     idsChunks.map((ids: string[]) =>
-      firebase.firestore().collection("users").where("uid", "in", ids).get()
+      firebase.firestore().collection(Collection.Users).where("uid", "in", ids).get()
     )
   );
 
@@ -111,7 +119,7 @@ export async function fetchDiscussionsMessages(dIds: string[]) {
     idsChunks.map((ids: string[]) =>
       firebase
         .firestore()
-        .collection("discussionMessage")
+        .collection(Collection.DiscussionMessage)
         .where("discussionId", "in", ids)
         .get()
     )
@@ -128,4 +136,84 @@ export async function fetchDiscussionsMessages(dIds: string[]) {
     );
 
   return data;
+}
+
+export function subscribeToCardChange(
+  cardId: string,
+  callback: (card?: Card) => void
+): () => void {
+  return firebase
+    .firestore()
+    .collection(Collection.Cards)
+    .doc(cardId)
+    .onSnapshot((snapshot) => {
+      callback(transformFirebaseDataSingle<Card>(snapshot));
+    });
+}
+
+export function createDiscussion(payload: CreateDiscussionDto) {
+  try {
+    return firebase
+      .firestore()
+      .collection("discussion")
+      .doc()
+      .set(payload)
+      .then((value) => {
+        return value;
+      });
+  } catch (e) {
+    console.log("createDiscussion", e);
+  }
+}
+
+export function addMessageToDiscussion(payload: AddMessageToDiscussionDto) {
+  try {
+    return firebase
+      .firestore()
+      .collection("discussionMessage")
+      .doc()
+      .set(payload)
+      .then((value) => {
+        return value;
+      });
+  } catch (e) {
+    console.log("addMessageToDiscussion", e);
+  }
+}
+
+export function subscribeToCommonDiscussion(
+  commonId: string,
+  callback: (payload: any) => void
+): () => void {
+  const query = firebase
+    .firestore()
+    .collection("discussion")
+    .where("commonId", "==", commonId);
+  return query.onSnapshot((snapshot) => {
+    callback(transformFirebaseDataList(snapshot));
+  });
+}
+export function subscribeToDiscussionMessages(
+  discussionId: string,
+  callback: (payload: any) => void
+): () => void {
+  const query = firebase
+    .firestore()
+    .collection("discussionMessage")
+    .where("discussionId", "==", discussionId);
+
+  return query.onSnapshot((snapshot) => {
+    callback(transformFirebaseDataList(snapshot));
+  });
+}
+
+export async function createRequestToJoin(
+  requestData: ProposalJoinRequestData
+): Promise<Proposal> {
+  const { data } = await Api.post<Proposal>(
+    ApiEndpoint.CreateRequestToJoin,
+    requestData
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
 }

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { ProposalCountDown } from "..";
 import { useCalculateReadMoreLength } from "../../../../../shared/hooks";
-import { Proposal } from "../../../../../shared/models";
+import { Proposal, ProposalState } from "../../../../../shared/models";
 import { formatPrice, getUserName, getDaysAgo } from "../../../../../shared/utils";
 import { VotesComponent } from "../VotesComponent";
 
@@ -18,14 +18,12 @@ export default function ProposalItemComponent({
   const [imageError, setImageError] = useState(false);
   //  const [readMore, setReadMore] = useState("");
   const date = new Date();
-  const requestedAmount = formatPrice(
-    proposal.fundingRequest?.amount || proposal.join?.funding
-  );
+  const rawRequestedAmount = proposal.fundingRequest?.amount || proposal.join?.funding;
   const textLength = useCalculateReadMoreLength();
 
   return (
     <div className="discussion-item-wrapper">
-      {proposal.state === "countdown" ? (
+      {proposal.state === ProposalState.COUNTDOWN ? (
         <ProposalCountDown
           date={
             new Date(
@@ -38,14 +36,14 @@ export default function ProposalItemComponent({
           <div className="state-inner-wrapper">
             <img
               src={
-                proposal.state === "failed"
+                proposal.state === ProposalState.REJECTED
                   ? "/icons/declined.svg"
                   : "/icons/approved.svg"
               }
               alt="state-wrapper"
             />
             <span className="state-name">
-              {proposal.state === "failed" ? "Rejected" : "Approved"}
+              {proposal.state === ProposalState.REJECTED ? "Rejected" : "Approved"}
             </span>
           </div>
         </div>
@@ -59,11 +57,11 @@ export default function ProposalItemComponent({
           {proposal.description.title}
         </div>
         <div className="requested-amount">
-          {requestedAmount === "$0" ? (
+          {!rawRequestedAmount ? (
             "No funding requested"
           ) : (
             <>
-              Requested amount <span className="amount">{requestedAmount}</span>
+              Requested amount <span className="amount">{formatPrice(rawRequestedAmount)}</span>
             </>
           )}
         </div>

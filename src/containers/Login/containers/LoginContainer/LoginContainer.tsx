@@ -14,7 +14,9 @@ const LoginContainer = ({ closeModal }: LoginContainerProps) => {
   const user = useSelector(selectUser());
 
   return (
-    <div className="login-wrapper">{user ? <UserDetails user={user} closeModal={closeModal} /> : <Connect />}</div>
+    <div className="login-wrapper">
+      {user ? <UserDetails user={user} closeModal={closeModal} /> : <Connect />}
+    </div>
   );
 };
 

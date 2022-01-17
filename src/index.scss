@@ -39,17 +39,28 @@ body {
   #root {
     overflow-x: hidden;
   }
+
+  .App {
+    min-height: 100vh;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
   // Disable highlight when Touch/Press
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
   margin: 0;
   font-family: NunitoSans-Regular, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
   .content-wrapper {
+    flex: 1 0 auto;
     padding: 0px $content-padding;
     padding-bottom: 20px;
     min-height: 350px;
     margin-top: $header-height;
+
     .page-title {
       color: $deep-blue;
     }
@@ -68,6 +79,7 @@ body {
       outline: none;
     }
   }
+
   /* TODO: need to eliminate the use of button-blue across the project and either create a button component or better global styles. */
   .button-blue {
     font-family: NunitoSans-Bold, sans-serif;
@@ -85,29 +97,36 @@ body {
     width: fit-content;
     min-width: 200px;
     user-select: none;
+
     &:hover {
       opacity: 0.9;
     }
+
     &:disabled {
-      pointer-events: none;
+      cursor: not-allowed;
       opacity: 0.5;
     }
+
     &.transparent {
       background-color: transparent;
       color: $secondary-blue;
       border: 1px solid $light-gray-1;
     }
   }
+
   h1 {
     font-size: $large;
   }
+
   h2,
   h1 {
     font-family: NotoSerifSC-SemiBold, serif;
   }
+
   p {
     font-size: $moderate;
   }
+
   textarea {
     font-family: NunitoSans-Regular, sans-serif;
   }
@@ -135,23 +154,29 @@ body {
     .desktop-break {
       display: none;
     }
+
     h1 {
       font-size: $medium;
     }
+
     h2 {
       font-size: $medium;
     }
+
     .content-wrapper {
       padding: 0px $content-padding-mobile;
       padding-bottom: 20px;
       margin-top: $header-height-mobile;
+
       .page-title {
         text-align: center;
       }
+
       .line {
         margin: 0 -20px;
       }
     }
+
     .button-blue {
       width: 100%;
     }

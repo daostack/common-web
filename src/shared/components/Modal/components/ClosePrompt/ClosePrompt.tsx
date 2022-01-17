@@ -21,5 +21,5 @@ export default function ClosePrompt({ onClose, onContinue }: IProps) {
         <button className="button-blue transparent" onClick={onContinue}>Continue editing</button>
       </div>
     </div>
-  )
+  );
 }

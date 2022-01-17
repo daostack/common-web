@@ -6,9 +6,11 @@ interface DotsProps {
   className?: string;
   currentStep: number;
   stepsAmount: number;
+  shouldHighlightUnfinishedSteps?: boolean;
 }
 
-const Dots: FC<DotsProps> = ({ className, currentStep, stepsAmount }) => {
+const Dots: FC<DotsProps> = (props) => {
+  const { className, currentStep, stepsAmount, shouldHighlightUnfinishedSteps = false } = props;
   const dots = Array(stepsAmount).fill(null);
 
   return (
@@ -17,6 +19,7 @@ const Dots: FC<DotsProps> = ({ className, currentStep, stepsAmount }) => {
         <span
           key={index}
           className={classNames("dots__item", {
+            "dots__item--unfinished": shouldHighlightUnfinishedSteps && (currentStep < index + 1),
             "dots__item--active": currentStep === index + 1,
           })}
         />
