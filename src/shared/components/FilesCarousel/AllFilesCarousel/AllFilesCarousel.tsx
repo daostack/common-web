@@ -11,10 +11,12 @@ import "./index.scss";
 interface AllFilesCarouselProps {
   className?: string;
   payoutDocs: DocInfo[];
+  currentDocIndex?: number | null;
+  onDocClick?: (doc: DocInfo, index: number) => void;
 }
 
 const AllFilesCarousel: FC<AllFilesCarouselProps> = (props) => {
-  const { className, payoutDocs } = props;
+  const { className, payoutDocs, currentDocIndex, onDocClick } = props;
 
   const contentWrapperClassName = classNames(
     "all-files-carousel-wrapper__content-wrapper",
@@ -40,7 +42,7 @@ const AllFilesCarousel: FC<AllFilesCarouselProps> = (props) => {
         </ButtonIcon>
         <div className="all-files-carousel-wrapper__content">
           {payoutDocs.map((doc, index) => {
-            const isActive = index === 1;
+            const isActive = currentDocIndex === index;
             const className = classNames(
               "all-files-carousel-wrapper__invoice-tile",
               {
@@ -64,6 +66,7 @@ const AllFilesCarousel: FC<AllFilesCarouselProps> = (props) => {
                 styles={{
                   image: imageClassName,
                 }}
+                onClick={() => onDocClick && onDocClick(doc, index)}
               />
             );
           })}

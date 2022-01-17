@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { useCallback, FC } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { InvoiceTile, InvoiceTileVariant } from "../../../../shared/components";
@@ -11,13 +11,19 @@ import "./index.scss";
 interface InvoiceTileListProps {
   className?: string;
   payoutDocs: DocInfo[];
-  onDocClick?: (doc: DocInfo) => void;
+  onDocClick?: (doc: DocInfo, index: number) => void;
 }
 
 const InvoiceTileList: FC<InvoiceTileListProps> = (props) => {
   const { className, payoutDocs, onDocClick } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+
+  const handleInvoiceTileClick = useCallback((doc: DocInfo, index: number) => {
+    if (onDocClick) {
+      onDocClick(doc, index);
+    }
+  }, [onDocClick]);
 
   return (
     <section className={classNames("invoice-tile-list-wrapper", className)}>
@@ -52,6 +58,7 @@ const InvoiceTileList: FC<InvoiceTileListProps> = (props) => {
                     ? InvoiceTileVariant.FullWidth
                     : InvoiceTileVariant.Square
                 }
+                onClick={() => handleInvoiceTileClick(doc, index)}
               />
             ))}
           </div>
