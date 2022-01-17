@@ -12,13 +12,18 @@ import "./index.scss";
 interface FilesCarouselProps {
   payoutDocs: DocInfo[];
   defaultDocIndex?: number | null;
+  onClose: () => void;
 }
 
 const FilesCarousel: FC<FilesCarouselProps> = (props) => {
-  const { payoutDocs, defaultDocIndex } = props;
-  const [currentDocIndex, setCurrentDocIndex] = useState<number | null>(defaultDocIndex ?? null);
+  const { payoutDocs, defaultDocIndex, onClose } = props;
+  const [currentDocIndex, setCurrentDocIndex] = useState<number | null>(
+    defaultDocIndex ?? null
+  );
   const [isZoomed, setIsZoomed] = useState(false);
-  const currentDoc = (typeof currentDocIndex === "number" && payoutDocs[currentDocIndex]) || null;
+  const currentDoc =
+    (typeof currentDocIndex === "number" && payoutDocs[currentDocIndex]) ||
+    null;
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -38,8 +43,22 @@ const FilesCarousel: FC<FilesCarouselProps> = (props) => {
   const handleZoomOut = () => {
     setIsZoomed(false);
   };
-  const handleLeftClick = () => {};
-  const handleRightClick = () => {};
+  const handleLeftClick = () => {
+    if (currentDocIndex === null) {
+      return;
+    }
+
+    const index = currentDocIndex - 1;
+    setCurrentDocIndex(index < 0 ? payoutDocs.length - 1 : index);
+  };
+  const handleRightClick = () => {
+    if (currentDocIndex === null) {
+      return;
+    }
+
+    const index = currentDocIndex + 1;
+    setCurrentDocIndex(index >= payoutDocs.length ? 0 : index);
+  };
 
   return (
     <div className="files-carousel-wrapper">
@@ -59,46 +78,50 @@ const FilesCarousel: FC<FilesCarouselProps> = (props) => {
               "files-carousel-wrapper__preview-wrapper--zoomed": isZoomed,
             })}
           >
-            {!isZoomed && (
-              <ButtonIcon
-                className="files-carousel-wrapper__preview-icon-wrapper"
-                onClick={handleLeftClick}
-              >
-                <LeftArrowIcon className="files-carousel-wrapper__icon files-carousel-wrapper__preview-icon" />
-              </ButtonIcon>
-            )}
-            <div className="files-carousel-wrapper__preview-image-wrapper">
-              <img
-                className="files-carousel-wrapper__preview-image"
-                src={currentDoc.downloadURL}
-                alt={currentDoc.name}
-              />
-              <div className="files-carousel-wrapper__preview-image-icons-wrapper">
-                <ButtonIcon className="files-carousel-wrapper__icon-wrapper">
-                  <DownloadIcon className="files-carousel-wrapper__icon" />
-                </ButtonIcon>
+            <div className="files-carousel-wrapper__preview-wrapper-content">
+              {!isZoomed && (
                 <ButtonIcon
-                  className="files-carousel-wrapper__icon-wrapper"
-                  onClick={isZoomed ? handleZoomOut : handleZoomIn}
+                  className="files-carousel-wrapper__preview-icon-wrapper"
+                  onClick={handleLeftClick}
                 >
-                  <DownloadIcon className="files-carousel-wrapper__icon" />
+                  <LeftArrowIcon className="files-carousel-wrapper__icon files-carousel-wrapper__preview-icon" />
                 </ButtonIcon>
+              )}
+              <div className="files-carousel-wrapper__preview-image-wrapper">
+                <img
+                  className="files-carousel-wrapper__preview-image"
+                  src={currentDoc.downloadURL}
+                  alt={currentDoc.name}
+                />
+                <div className="files-carousel-wrapper__preview-image-icons-wrapper">
+                  <ButtonIcon className="files-carousel-wrapper__icon-wrapper">
+                    <DownloadIcon className="files-carousel-wrapper__icon" />
+                  </ButtonIcon>
+                  <ButtonIcon
+                    className="files-carousel-wrapper__icon-wrapper"
+                    onClick={isZoomed ? handleZoomOut : handleZoomIn}
+                  >
+                    <DownloadIcon className="files-carousel-wrapper__icon" />
+                  </ButtonIcon>
+                </div>
               </div>
+              {!isZoomed && (
+                <ButtonIcon
+                  className="files-carousel-wrapper__preview-icon-wrapper"
+                  onClick={handleRightClick}
+                >
+                  <RightArrowIcon className="files-carousel-wrapper__icon files-carousel-wrapper__preview-icon" />
+                </ButtonIcon>
+              )}
             </div>
-            {!isZoomed && (
-              <ButtonIcon
-                className="files-carousel-wrapper__preview-icon-wrapper"
-                onClick={handleRightClick}
-              >
-                <RightArrowIcon className="files-carousel-wrapper__icon files-carousel-wrapper__preview-icon" />
-              </ButtonIcon>
-            )}
           </div>
         )}
-        <CloseIcon
-          className="files-carousel-wrapper__icon files-carousel-wrapper__icon--close"
-          fill="currentColor"
-        />
+        <ButtonIcon onClick={onClose}>
+          <CloseIcon
+            className="files-carousel-wrapper__icon files-carousel-wrapper__icon--close"
+            fill="currentColor"
+          />
+        </ButtonIcon>
       </div>
     </div>
   );
