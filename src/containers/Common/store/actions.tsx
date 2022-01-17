@@ -1,6 +1,9 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 
-import { ProposalJoinRequestData } from "../../../shared/interfaces/api/proposal";
+import {
+  CreateFundingRequestProposalPayload,
+  ProposalJoinRequestData,
+} from "../../../shared/interfaces/api/proposal";
 import { Common, Proposal, Discussion } from "../../../shared/models";
 import { CommonsActionTypes } from "./constants";
 import {
@@ -102,3 +105,9 @@ export const createRequestToJoin = createAsyncAction(
   CommonsActionTypes.CREATE_REQUEST_TO_JOIN_SUCCESS,
   CommonsActionTypes.CREATE_REQUEST_TO_JOIN_FAILURE
 )<ProposalJoinRequestData, Proposal, Error>();
+
+export const createFundingProposal = createAsyncAction(
+  CommonsActionTypes.CREATE_FUNDING_PROPOSAL,
+  CommonsActionTypes.CREATE_FUNDING_PROPOSAL_SUCCESS,
+  CommonsActionTypes.CREATE_FUNDING_PROPOSAL_FAILURE
+)<CreateFundingRequestProposalPayload, Proposal, Error>();

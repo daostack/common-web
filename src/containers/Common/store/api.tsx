@@ -1,6 +1,9 @@
 import { ApiEndpoint } from "../../../shared/constants";
 import Api from "../../../services/Api";
-import { ProposalJoinRequestData } from "../../../shared/interfaces/api/proposal";
+import {
+  CreateFundingRequestProposalPayload,
+  ProposalJoinRequestData,
+} from "../../../shared/interfaces/api/proposal";
 import {
   Card,
   Collection,
@@ -22,7 +25,7 @@ import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMes
 export async function fetchCommonDiscussions(commonId: string) {
   const commons = await firebase
     .firestore()
-    .collection("discussion")
+    .collection(Collection.Discussion)
     .where("commonId", "==", commonId)
     .get();
   const data = transformFirebaseDataList<Discussion>(commons);
@@ -36,7 +39,7 @@ export async function fetchCommonDiscussions(commonId: string) {
 export async function fetchCommonProposals(commonId: string) {
   const commons = await firebase
     .firestore()
-    .collection("proposals")
+    .collection(Collection.Proposals)
     .where("commonId", "==", commonId)
     .get();
   const data = transformFirebaseDataList<Proposal>(commons);
@@ -50,7 +53,7 @@ export async function fetchCommonProposals(commonId: string) {
 export async function fetchUserProposals(userId: string) {
   const commons = await firebase
     .firestore()
-    .collection("proposals")
+    .collection(Collection.Proposals)
     .where("proposerId", "==", userId)
     .get();
   const data = transformFirebaseDataList<Proposal>(commons);
@@ -62,13 +65,17 @@ export async function fetchUserProposals(userId: string) {
 }
 
 export async function fetchCommonList(): Promise<Common[]> {
-  const commons = await firebase.firestore().collection("daos").get();
+  const commons = await firebase.firestore().collection(Collection.Daos).get();
   const data = transformFirebaseDataList<Common>(commons);
   return data;
 }
 
 export async function fetchCommonDetail(id: string): Promise<Common> {
-  const common = await firebase.firestore().collection("daos").doc(id).get();
+  const common = await firebase
+    .firestore()
+    .collection(Collection.Daos)
+    .doc(id)
+    .get();
   const data = transformFirebaseDataSingle<Common>(common);
   return data;
 }
@@ -88,7 +95,11 @@ export async function fetchOwners(ownerids: string[]) {
 
   const users = await Promise.all(
     idsChunks.map((ids: string[]) =>
-      firebase.firestore().collection("users").where("uid", "in", ids).get()
+      firebase
+        .firestore()
+        .collection(Collection.Users)
+        .where("uid", "in", ids)
+        .get()
     )
   );
 
@@ -119,7 +130,7 @@ export async function fetchDiscussionsMessages(dIds: string[]) {
     idsChunks.map((ids: string[]) =>
       firebase
         .firestore()
-        .collection("discussionMessage")
+        .collection(Collection.DiscussionMessage)
         .where("discussionId", "in", ids)
         .get()
     )
@@ -212,6 +223,17 @@ export async function createRequestToJoin(
 ): Promise<Proposal> {
   const { data } = await Api.post<Proposal>(
     ApiEndpoint.CreateRequestToJoin,
+    requestData
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
+}
+
+export async function createFundingProposal(
+  requestData: CreateFundingRequestProposalPayload
+): Promise<Proposal> {
+  const { data } = await Api.post<Proposal>(
+    ApiEndpoint.CreateFunding,
     requestData
   );
 

@@ -7,6 +7,7 @@ import "./index.scss";
 interface InputStyles {
   label?: string;
   description?: string;
+  labelWrapper?: string;
   input?: {
     default?: string;
   };
@@ -60,7 +61,7 @@ const Input: FC<FullInputProps> = (props) => {
   return (
     <div className={classNames("custom-input", className)}>
       {(label || hint) && (
-        <div className={labelWrapperClassName}>
+        <div className={classNames("custom-input__label-wrapper", styles?.labelWrapper)}>
           {label && (
             <label
               htmlFor={id}

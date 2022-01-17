@@ -1,25 +1,20 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import classNames from "classnames";
 
-import { Loader, Share } from "../../../../shared/components";
+import { Loader, Share, UserAvatar } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
 import {
   useAuthorizedModal,
   useModal,
   useViewPortHook,
 } from "../../../../shared/hooks";
-
+import PurpleCheckIcon from "../../../../shared/icons/purpleCheck.icon";
+import ShareIcon from "../../../../shared/icons/share.icon";
 import { Discussion, Proposal, ProposalState } from "../../../../shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { formatPrice } from "@/shared/utils";
+import { formatPrice, getUserName } from "@/shared/utils";
 import {
   AboutTabComponent,
   PreviewInformationList,
@@ -89,8 +84,10 @@ const tabs = [
 
 export default function CommonDetail() {
   const { id } = useParams<CommonDetailRouterParams>();
-  const joinEffort = useRef(null);
-  const inViewport = useViewPortHook(joinEffort.current, "-20px");
+  const [joinEffortRef, setJoinEffortRef] = useState<HTMLDivElement | null>(
+    null
+  );
+  const inViewport = useViewPortHook(joinEffortRef, "-50px");
   const inViewPortFooter = useViewPortHook(
     document.querySelector(".footer-wrapper"),
     "0px"
@@ -122,6 +119,11 @@ export default function CommonDetail() {
   const shouldShowJoinToCommonButton = !isCommonMember && !isJoiningPending;
   const shouldAllowJoiningToCommon =
     !isCommonMember && (isCreationStageReached || !isJoiningPending);
+  const shouldShowStickyJoinEffortButton =
+    screenSize === ScreenSize.Mobile &&
+    shouldShowJoinToCommonButton &&
+    !inViewport &&
+    (stickyClass || footerClass);
 
   const dispatch = useDispatch();
 
@@ -345,7 +347,7 @@ export default function CommonDetail() {
     if (inViewport) {
       setStickyClass("");
     } else {
-      if ((joinEffort?.current as any)?.offsetTop < window.scrollY) {
+      if (joinEffortRef && joinEffortRef.offsetTop < window.scrollY) {
         if (tab === "discussions" && discussions?.length) {
           setStickyClass("sticky");
         } else if (tab === "proposals" && activeProposals.length) {
@@ -355,7 +357,7 @@ export default function CommonDetail() {
         }
       }
     }
-  }, [inViewport, activeProposals, tab, discussions, setStickyClass]);
+  }, [inViewport, activeProposals, tab, discussions, setStickyClass, joinEffortRef]);
 
   useEffect(() => {
     if (inViewPortFooter) {
@@ -374,9 +376,13 @@ export default function CommonDetail() {
     }
   }, [showJoinModal, shouldAllowJoiningToCommon, closeJoinModal]);
 
-  return !common ? (
-    <Loader />
-  ) : common ? (
+  if (!common) {
+    return <Loader />;
+  }
+
+  const sharingURL = `${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`;
+
+  return (
     <>
       <Modal
         isShowing={isShowing}
@@ -453,23 +459,39 @@ export default function CommonDetail() {
                   onError={() => setImageError(true)}
                 />
               ) : (
-                <img src="/icons/logo-white.svg" alt={common.name} />
+                <img
+                  className="default-image"
+                  src="/icons/logo-white.svg"
+                  alt={common.name}
+                />
               )}
             </div>
             <div className="content-element text-information-wrapper">
               <div className="text">
-                <div>
-                  <div className="name">{common?.name}</div>
+                <div className="text-information-wrapper__info-wrapper">
+                  <div className="name">
+                    {common?.name}
+                    {isMobileView && !isCommonMember && (
+                      <Share
+                        url={sharingURL}
+                        type="modal"
+                        color={Colors.transparent}
+                      />
+                    )}
+                    {isMobileView && isCommonMember && (
+                      <div className="text-information-wrapper__connected-user-avatar-wrapper">
+                        <UserAvatar
+                          className="text-information-wrapper__user-avatar"
+                          photoURL={user?.photoURL}
+                          nameForRandomAvatar={user?.email}
+                          userName={getUserName(user)}
+                        />
+                        <PurpleCheckIcon className="text-information-wrapper__connected-user-avatar-icon" />
+                      </div>
+                    )}
+                  </div>
                   <div className="tagline">{common?.metadata.byline}</div>
                 </div>
-                {screenSize === ScreenSize.Mobile && (
-                  <Share
-                    url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`}
-                    text="Hey checkout this common!"
-                    type="modal"
-                    color={Colors.transparent}
-                  />
-                )}
               </div>
               <div className="numbers">
                 <div className="item">
@@ -509,7 +531,7 @@ export default function CommonDetail() {
                     </div>
                   ))}
                 </div>
-                <div className="social-wrapper" ref={joinEffort}>
+                <div className="social-wrapper" ref={setJoinEffortRef}>
                   {shouldShowJoinToCommonButton && (
                     <button
                       className={`button-blue join-the-effort-btn`}
@@ -535,13 +557,24 @@ export default function CommonDetail() {
                     )}
                   {screenSize === ScreenSize.Desktop && (
                     <Share
-                      url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`}
-                      text="Hey checkout this common!"
+                      url={sharingURL}
                       type="popup"
                       color={Colors.lightPurple}
                     />
                   )}
                 </div>
+                {isCommonMember && isMobileView && (
+                  <Share
+                    url={sharingURL}
+                    type="modal"
+                    color={Colors.transparent}
+                  >
+                    <button className="button-blue common-content-selector__long-share-button">
+                      <ShareIcon className="common-content-selector__share-icon" />
+                      Share Common
+                    </button>
+                  </Share>
+                )}
               </div>
             </div>
           </div>
@@ -602,16 +635,14 @@ export default function CommonDetail() {
                 />
               )}
             </div>
-            {screenSize === ScreenSize.Mobile &&
-              shouldShowJoinToCommonButton &&
-              !inViewport && (
-                <button
-                  className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
-                  onClick={onOpenJoinModal}
-                >
-                  Join the effort
-                </button>
-              )}
+            {shouldShowStickyJoinEffortButton && (
+              <button
+                className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
+                onClick={onOpenJoinModal}
+              >
+                Join the effort
+              </button>
+            )}
             {(screenSize === ScreenSize.Desktop || tab !== "about") && (
               <div className="sidebar-wrapper">{renderSidebarContent()}</div>
             )}
@@ -619,7 +650,5 @@ export default function CommonDetail() {
         </div>
       </div>
     </>
-  ) : (
-    <Loader />
   );
 }

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Share } from "../../../../../shared/components";
+import { Linkify, Share } from "../../../../../shared/components";
 import { BASE_URL, Colors, ROUTE_PATHS, ScreenSize } from "../../../../../shared/constants";
 import { Common } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
@@ -28,7 +28,9 @@ export default function AboutTabComponent({
   };
   return (
     <div className="about-name-wrapper">
-      <div className="description">{common.metadata.description}</div>
+      <div className="description">
+        <Linkify>{common.metadata.description}</Linkify>
+      </div>
       {common?.links?.length > 0 && (
         <div className="links">
           <div className="title">Links</div>
@@ -53,7 +55,7 @@ export default function AboutTabComponent({
             <button className={`button-blue`} onClick={onOpenJoinModal}>
               Join the effort
             </button>
-            <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`} text="Hey checkout this common!" type="popup" color={Colors.lightPurple} />
+            <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`} type="popup" color={Colors.lightPurple} />
           </div>
         )}
       </div>

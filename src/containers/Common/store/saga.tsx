@@ -21,6 +21,7 @@ import {
   subscribeToCommonDiscussion,
   addMessageToDiscussion,
   subscribeToDiscussionMessages,
+  createFundingProposal,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -274,6 +275,21 @@ export function* createRequestToJoin(
   }
 }
 
+export function* createFundingProposalSaga(
+  action: ReturnType<typeof actions.createFundingProposal.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    const proposal = (yield createFundingProposal(action.payload)) as Proposal;
+
+    yield put(actions.createFundingProposal.success(proposal));
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(actions.createFundingProposal.failure(error));
+    yield put(stopLoading());
+  }
+}
+
 function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
@@ -291,6 +307,10 @@ function* commonsSaga() {
     addMessageToDiscussionSaga
   );
   yield takeLatest(actions.createRequestToJoin.request, createRequestToJoin);
+  yield takeLatest(
+    actions.createFundingProposal.request,
+    createFundingProposalSaga
+  );
 }
 
 export default commonsSaga;
