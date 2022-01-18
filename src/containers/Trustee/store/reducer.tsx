@@ -46,6 +46,12 @@ const reducer = createReducer<TrusteeStateType, Action>(initialState)
       nextState.proposalForApproval = null;
       nextState.isProposalForApprovalLoaded = true;
     })
+  )
+  .handleAction(actions.clearProposalForApproval, (state) =>
+    produce(state, (nextState) => {
+      nextState.proposalForApproval = null;
+      nextState.isProposalForApprovalLoaded = false;
+    })
   );
 
 export default reducer;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, FC } from "react";
+import React, { useCallback, useEffect, useState, FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
 import { Link } from "react-router-dom";
@@ -8,6 +8,7 @@ import {
   Separator,
 } from "../../../../shared/components";
 import { ROUTE_PATHS } from "../../../../shared/constants";
+import { useComponentWillUnmount } from "../../../../shared/hooks";
 import LeftArrowIcon from "../../../../shared/icons/leftArrow.icon";
 import {
   DocInfo,
@@ -20,8 +21,9 @@ import { InvoiceTileList } from "../../components/InvoiceTileList";
 import { ProposalCard } from "../../components/ProposalCard";
 import { StickyInfo } from "../../components/StickyInfo";
 import {
-  getProposalForApproval,
   approveOrDeclineProposal,
+  clearProposalForApproval,
+  getProposalForApproval,
 } from "../../store/actions";
 import {
   selectProposalForApproval,
@@ -110,11 +112,17 @@ const InvoiceAcceptanceContainer: FC = () => {
     );
   };
 
+  const handleUnmount = useCallback(() => {
+    dispatch(clearProposalForApproval());
+  }, [dispatch]);
+
   useEffect(() => {
     if (!isProposalForApprovalLoaded) {
       dispatch(getProposalForApproval.request(proposalId));
     }
   }, [dispatch, isProposalForApprovalLoaded, proposalId]);
+
+  useComponentWillUnmount(handleUnmount);
 
   return (
     <>

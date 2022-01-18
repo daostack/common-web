@@ -1,4 +1,4 @@
-import { createAsyncAction } from "typesafe-actions";
+import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { PayloadWithCallback } from "../../../shared/interfaces";
 import { Proposal } from "../../../shared/models";
 import { ApproveOrDeclineProposalDto } from "../interfaces";
@@ -27,6 +27,10 @@ export const getProposalForApproval = createAsyncAction(
   TrusteeActionTypes.GET_PROPOSAL_FOR_APPROVAL_SUCCESS,
   TrusteeActionTypes.GET_PROPOSAL_FOR_APPROVAL_FAILURE
 )<string, Proposal, Error>();
+
+export const clearProposalForApproval = createStandardAction(
+  TrusteeActionTypes.CLEAR_PROPOSAL_FOR_APPROVAL
+)();
 
 export const approveOrDeclineProposal = createAsyncAction(
   TrusteeActionTypes.APPROVE_OR_DECLINE_PROPOSAL,
