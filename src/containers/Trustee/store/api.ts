@@ -1,3 +1,5 @@
+import Api from "../../../services/Api";
+import { ApiEndpoint } from "../../../shared/constants";
 import {
   Collection,
   FundingProcessStage,
@@ -7,6 +9,7 @@ import {
 } from "../../../shared/models";
 import { transformFirebaseDataList, transformFirebaseDataSingle } from "../../../shared/utils";
 import firebase from "../../../shared/utils/firebase";
+import { ApproveOrDeclineProposalDto } from "../interfaces";
 
 function sortByCreateTime(data: Proposal[]) {
   return data.sort((itemA, itemB) => {
@@ -62,7 +65,9 @@ export async function fetchDeclinedProposals(): Promise<Proposal[]> {
   return sortByCreateTime(data);
 }
 
-export async function fetchProposalById(proposalId: string): Promise<Proposal | null> {
+export async function fetchProposalById(
+  proposalId: string
+): Promise<Proposal | null> {
   const proposal = await firebase
     .firestore()
     .collection(Collection.Proposals)
@@ -70,4 +75,10 @@ export async function fetchProposalById(proposalId: string): Promise<Proposal | 
     .get();
 
   return proposal && transformFirebaseDataSingle<Proposal>(proposal);
+}
+
+export async function approveOrDeclineProposal(
+  data: ApproveOrDeclineProposalDto
+): Promise<void> {
+  await Api.post(ApiEndpoint.ApproveOrDeclineProposal, data);
 }

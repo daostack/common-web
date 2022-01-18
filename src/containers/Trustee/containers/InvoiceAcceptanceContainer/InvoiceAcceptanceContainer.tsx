@@ -19,7 +19,10 @@ import { DeclineInvoicesPrompt } from "../../components/DeclineInvoicesPrompt";
 import { InvoiceTileList } from "../../components/InvoiceTileList";
 import { ProposalCard } from "../../components/ProposalCard";
 import { StickyInfo } from "../../components/StickyInfo";
-import { getProposalForApproval } from "../../store/actions";
+import {
+  getProposalForApproval,
+  approveOrDeclineProposal,
+} from "../../store/actions";
 import {
   selectProposalForApproval,
   selectIsProposalForApprovalLoaded,
@@ -30,11 +33,18 @@ import {
 } from "../constants";
 import "./index.scss";
 
+interface SubmissionState {
+  loading: boolean;
+  finished: boolean;
+}
+
 const InvoiceAcceptanceContainer: FC = () => {
   const [selectedDocIndex, setSelectedDocIndex] = useState<number | null>(null);
   const [isApprovePromptOpen, setIsApprovePromptOpen] = useState(false);
-  const [isApprovalLoading, setIsApprovalLoading] = useState(false);
-  const [isApprovalFinished, setIsApprovalFinished] = useState(false);
+  const [submissionState, setSubmissionState] = useState<SubmissionState>({
+    loading: false,
+    finished: false,
+  });
   const [isDeclinePromptOpen, setIsDeclinePromptOpen] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -64,13 +74,6 @@ const InvoiceAcceptanceContainer: FC = () => {
   const handleApproveClick = () => {
     setIsApprovePromptOpen(true);
   };
-  const handleApprove = () => {
-    setIsApprovalLoading(true);
-    setTimeout(() => {
-      setIsApprovalFinished(true);
-      setIsApprovalLoading(false);
-    }, 2000);
-  };
   const handleApprovePromptClose = () => {
     setIsApprovePromptOpen(false);
   };
@@ -78,11 +81,33 @@ const InvoiceAcceptanceContainer: FC = () => {
   const handleDeclineClick = () => {
     setIsDeclinePromptOpen(true);
   };
-  const handleDecline = (note: string) => {
-    console.log(note);
-  };
   const handleDeclinePromptClose = () => {
     setIsDeclinePromptOpen(false);
+  };
+
+  const handleSubmit = (note?: string) => {
+    if (!proposalForApproval) {
+      return;
+    }
+
+    setSubmissionState((state) => ({ ...state, loading: true }));
+
+    dispatch(
+      approveOrDeclineProposal.request({
+        payload: {
+          approved: !note,
+          proposalId: proposalForApproval.id,
+          declineReason: note,
+        },
+        callback: (error) => {
+          setSubmissionState((state) => ({
+            ...state,
+            loading: Boolean(error),
+            finished: true,
+          }));
+        },
+      })
+    );
   };
 
   useEffect(() => {
@@ -154,14 +179,14 @@ const InvoiceAcceptanceContainer: FC = () => {
         )}
         <ApproveInvoicesPrompt
           isOpen={isApprovePromptOpen}
-          isApproved={isApprovalFinished}
-          isLoading={isApprovalLoading}
-          onApprove={handleApprove}
+          isLoading={submissionState.loading}
+          isFinished={submissionState.finished}
+          onApprove={handleSubmit}
           onClose={handleApprovePromptClose}
         />
         <DeclineInvoicesPrompt
           isOpen={isDeclinePromptOpen}
-          onDecline={handleDecline}
+          onDecline={handleSubmit}
           onClose={handleDeclinePromptClose}
         />
       </div>

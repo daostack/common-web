@@ -6,6 +6,7 @@ import {
   fetchApprovedProposals,
   fetchDeclinedProposals,
   fetchProposalById,
+  approveOrDeclineProposal as approveOrDeclineProposalApi,
 } from "./api";
 
 export function* getPendingApprovalProposals(): Generator {
@@ -57,6 +58,19 @@ export function* getProposalForApproval(
   }
 }
 
+export function* approveOrDeclineProposal(
+  action: ReturnType<typeof actions.approveOrDeclineProposal.request>
+): Generator {
+  try {
+    yield call(approveOrDeclineProposalApi, action.payload.payload);
+    yield put(actions.approveOrDeclineProposal.success());
+    action.payload.callback(null);
+  } catch (error) {
+    yield put(actions.approveOrDeclineProposal.failure(error));
+    action.payload.callback(error);
+  }
+}
+
 function* trusteeSaga(): Generator {
   yield takeLatest(
     actions.getPendingApprovalProposals.request,
@@ -67,6 +81,10 @@ function* trusteeSaga(): Generator {
   yield takeLatest(
     actions.getProposalForApproval.request,
     getProposalForApproval
+  );
+  yield takeLatest(
+    actions.approveOrDeclineProposal.request,
+    approveOrDeclineProposal
   );
 }
 

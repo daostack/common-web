@@ -6,14 +6,14 @@ import "./index.scss";
 
 interface ApproveInvoicesPromptProps {
   isOpen: boolean;
-  isApproved: boolean;
   isLoading: boolean;
+  isFinished: boolean;
   onApprove: () => void;
   onClose: () => void;
 }
 
 const ApproveInvoicesPrompt: FC<ApproveInvoicesPromptProps> = (props) => {
-  const { isOpen, isApproved, isLoading, onApprove, onClose } = props;
+  const { isOpen, isFinished, isLoading, onApprove, onClose } = props;
 
   const handleClose = () => {
     if (!isLoading) {
@@ -38,7 +38,7 @@ const ApproveInvoicesPrompt: FC<ApproveInvoicesPromptProps> = (props) => {
           <Loader />
         </div>
       )}
-      {!isLoading && !isApproved && (
+      {!isLoading && !isFinished && (
         <>
           <ConfirmationIcon className="approve-invoices-prompt-wrapper__confirmation-icon" />
           <h3 className="approve-invoices-prompt-wrapper__title">
@@ -60,7 +60,7 @@ const ApproveInvoicesPrompt: FC<ApproveInvoicesPromptProps> = (props) => {
           </div>
         </>
       )}
-      {!isLoading && isApproved && (
+      {!isLoading && isFinished && (
         <>
           <CheckIcon
             className="approve-invoices-prompt-wrapper__check-icon"
