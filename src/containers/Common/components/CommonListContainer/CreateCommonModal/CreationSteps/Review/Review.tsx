@@ -15,6 +15,7 @@ interface ReviewProps {
 
 export default function Review({ currentStep, onFinish }: ReviewProps): ReactElement {
   const isMobileView = isMobile();
+  const coverImageTitle = "Select or upload cover image"
   const commonName = "Amazon Network";
   const tagline = "If you wanna save the Amazon, own it.";
   const minimumContribution = 10;
@@ -39,6 +40,18 @@ export default function Review({ currentStep, onFinish }: ReviewProps): ReactEle
       )}
       <div className="create-common-review">
         {isMobileView && progressEl}
+        <div className="create-common-review__upload-cover-image">
+          <label htmlFor="cover-image" className="create-common-review__input-bg-image-label">
+            <img src="assets/images/create-common-review__add-bg-image.jpg"alt=""/></label>
+          <input type="file" className="create-common-review__input-bg-image-input" id="cover-image" accept=".jpg, .jpeg, .png"/>
+          <div className="create-common-review__title-and-arrows">
+            <button className="create-common-review__arrow"><img
+                src="assets/images/icons-general-left-arrow.svg" alt="arrow-to-left"/></button>
+            <span className="create-common-review__upload-cover-image__title">{coverImageTitle}</span>
+            <button className="create-common-review__arrow"><img
+                src="assets/images/icons-general-right-arrow.svg" alt="arrow-to-right"/></button>
+          </div>
+        </div>
         <div className="create-common-review__main-info-wrapper">
           <div>
             <h4 className="create-common-review__common-name">{commonName}</h4>
@@ -68,6 +81,40 @@ export default function Review({ currentStep, onFinish }: ReviewProps): ReactEle
               <LinkIcon className="create-common-review__link-icon" />{link.title}
             </ButtonLink>
           ))}
+        </div>
+        <div className="create-common-review__rules">
+          <div className="create-common-review__rule">
+              <p className="create-common-review__rule-number">
+            Rule #1
+          </p>
+            <h5 className="create-common-review__rule-title">
+              No promotions or spam
+            </h5>
+            <p className="create-common-review__rule-description">
+              We created this community to help you along your journey. Links to sponsored content or
+              brands will vote you out.
+            </p>
+          </div>
+          <div className="create-common-review__rule">
+              <p className="create-common-review__rule-number">
+            Rule #1
+          </p>
+            <h5 className="create-common-review__rule-title">
+              Be courteous and kind to others
+            </h5>
+            <p className="create-common-review__rule-description">
+              We're all in this together to create a nurturing enviroment. Let's teat everyone with resprct. Healthy debates are natural, but kindness is required.
+            </p>
+            <h5 className="create-common-review__rule__contribution-title">Minimum Contribution</h5>
+            <p className="create-common-review__rule__contribution-description">
+                $10 <span>one-time</span> contribution
+            </p>
+          </div>
+          <div className="create-common-review__additional-info-container">
+            <div className="create-common-review__additional-info-text">To publish the Common, add a personal contribution. <span>Don't worry, you will be able to make
+            changes</span> to the Common info after it is published.
+            </div>
+          </div>
         </div>
         <ModalFooter sticky>
           <div className="create-common-review__modal-footer">
