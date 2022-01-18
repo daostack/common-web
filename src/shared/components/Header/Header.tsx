@@ -134,7 +134,7 @@ const Header = () => {
         />
       )}
       <Link
-        to={isTrusteeRoute ? ROUTE_PATHS.TRUSTEE : "/"}
+        to="/"
         className={classNames("common-logo", {
           "common-logo--without-avatar": !shouldDisplayAvatar,
         })}
