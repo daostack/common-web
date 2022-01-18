@@ -9,7 +9,11 @@ import {
 } from "../../../../shared/components";
 import { ROUTE_PATHS } from "../../../../shared/constants";
 import LeftArrowIcon from "../../../../shared/icons/leftArrow.icon";
-import { DocInfo, ProposalState } from "../../../../shared/models";
+import {
+  DocInfo,
+  FundingProcessStage,
+  ProposalState,
+} from "../../../../shared/models";
 import { ApproveInvoicesPrompt } from "../../components/ApproveInvoicesPrompt";
 import { DeclineInvoicesPrompt } from "../../components/DeclineInvoicesPrompt";
 import { InvoiceTileList } from "../../components/InvoiceTileList";
@@ -45,6 +49,9 @@ const InvoiceAcceptanceContainer: FC = () => {
       ? `?${INVOICES_PAGE_TAB_QUERY_PARAM}=${InvoicesPageTabState.Approved}`
       : ""
   }`;
+  const isPendingApprovalProposal =
+    proposalForApproval?.fundingProcessStage ===
+    FundingProcessStage.PendingInvoiceApproval;
 
   const handleInvoiceTileClick = (doc: DocInfo, index: number) => {
     setSelectedDocIndex(index);
@@ -120,20 +127,22 @@ const InvoiceAcceptanceContainer: FC = () => {
               payoutDocs={payoutDocs}
               onDocClick={handleInvoiceTileClick}
             />
-            <div className="invoice-acceptance-container__actions-wrapper">
-              <button
-                className="button-blue invoice-acceptance-container__approve-button"
-                onClick={handleApproveClick}
-              >
-                Approve All
-              </button>
-              <button
-                className="button-blue invoice-acceptance-container__decline-button"
-                onClick={handleDeclineClick}
-              >
-                Decline
-              </button>
-            </div>
+            {isPendingApprovalProposal && (
+              <div className="invoice-acceptance-container__actions-wrapper">
+                <button
+                  className="button-blue invoice-acceptance-container__approve-button"
+                  onClick={handleApproveClick}
+                >
+                  Approve All
+                </button>
+                <button
+                  className="button-blue invoice-acceptance-container__decline-button"
+                  onClick={handleDeclineClick}
+                >
+                  Decline
+                </button>
+              </div>
+            )}
           </>
         )}
         {selectedDocIndex !== null && (
