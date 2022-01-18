@@ -96,6 +96,10 @@ $invoice-tile-border-radius: 14px;
     border: 0.125rem solid $light-gray-3;
     border-radius: 0.5rem;
     box-sizing: border-box;
+
+    &:hover {
+      border-color: $light-gray-2;
+    }
   }
   .all-files-carousel-wrapper__invoice-tile-image--active {
     border: unset;
