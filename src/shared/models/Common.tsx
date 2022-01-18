@@ -28,6 +28,7 @@ export interface Common {
   updatedAt: Date;
   name: string;
   balance: number;
+  reservedBalance?: number;
   raised: number;
   links: Rules[];
   image: string;

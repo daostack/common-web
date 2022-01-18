@@ -1,24 +1,36 @@
 import React, { useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import PrivateRoute from "./PrivateRoute";
 import { Content, NotFound, Footer, Header } from "../../shared/components";
 import { CommonContainer } from "../Common";
 import { LandingContainer } from "../Landing";
-import { ROUTE_PATHS, SMALL_SCREEN_BREAKPOINT, ScreenSize } from "../../shared/constants";
+import {
+  ROUTE_PATHS,
+  SMALL_SCREEN_BREAKPOINT,
+  ScreenSize,
+} from "../../shared/constants";
 import { changeScreenSize } from "../../shared/store/actions";
+import { authentificated } from "../Auth/store/selectors";
 import { MyCommonsContainer } from "../Common/containers/MyCommonsContainer";
 import { SubmitInvoicesContainer } from "../Invoices/containers";
 import { TrusteeContainer } from "../Trustee/containers";
 
 const App = () => {
   const dispatch = useDispatch();
+  const isAuthenticated = useSelector(authentificated());
 
   useEffect(() => {
-    const screenSize = window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`);
+    const screenSize = window.matchMedia(
+      `(min-width: ${SMALL_SCREEN_BREAKPOINT})`
+    );
     const handleScreenSizeChange = (screenSize: MediaQueryListEvent) => {
-      dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile));
+      dispatch(
+        changeScreenSize(
+          screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile
+        )
+      );
     };
 
     // Condition is added to solve issue https://www.designcise.com/web/tutorial/how-to-fix-the-javascript-typeerror-matchmedia-addeventlistener-is-not-a-function
@@ -43,9 +55,17 @@ const App = () => {
       <Content>
         <Switch>
           <Route path="/" exact component={LandingContainer} />
-          <PrivateRoute path={ROUTE_PATHS.COMMON_LIST} component={CommonContainer} authentificated={true} />
-          <PrivateRoute path={ROUTE_PATHS.MY_COMMONS} component={MyCommonsContainer} authentificated={true} />
-          <PrivateRoute path={ROUTE_PATHS.SUBMIT_INVOICES} component={SubmitInvoicesContainer} authentificated={true} />
+          <Route path={ROUTE_PATHS.COMMON_LIST} component={CommonContainer} />
+          <PrivateRoute
+            path={ROUTE_PATHS.MY_COMMONS}
+            component={MyCommonsContainer}
+            authenticated={isAuthenticated}
+          />
+          <PrivateRoute
+            path={ROUTE_PATHS.SUBMIT_INVOICES}
+            component={SubmitInvoicesContainer}
+            authenticated={isAuthenticated}
+          />
           <Route path={ROUTE_PATHS.TRUSTEE} component={TrusteeContainer} />
           <Route component={NotFound} />
         </Switch>
