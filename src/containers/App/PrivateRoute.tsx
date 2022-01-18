@@ -1,8 +1,6 @@
 import React from "react";
 import { Route, Redirect, RouteProps } from "react-router-dom";
 
-import { ROUTE_PATHS } from "../../shared/constants";
-
 interface PrivateRouteProps extends RouteProps {
   component: React.JSXElementConstructor<any>;
   authenticated: boolean;
@@ -24,7 +22,7 @@ const PrivateRoute: React.FunctionComponent<PrivateRouteProps> = ({
       return (
         <Redirect
           to={{
-            pathname: ROUTE_PATHS.COMMON_LIST,
+            pathname: "/",
             state: { from: props.location },
           }}
         />
