@@ -101,9 +101,15 @@ const FilesCarousel: FC<FilesCarouselProps> = (props) => {
                   alt={currentDoc.name}
                 />
                 <div className="files-carousel-wrapper__preview-image-icons-wrapper">
-                  <ButtonIcon className="files-carousel-wrapper__icon-wrapper">
+                  <a
+                    className="files-carousel-wrapper__icon-wrapper"
+                    href={currentDoc.downloadURL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    download
+                  >
                     <DownloadIcon className="files-carousel-wrapper__icon" />
-                  </ButtonIcon>
+                  </a>
                   <ButtonIcon
                     className="files-carousel-wrapper__icon-wrapper"
                     onClick={isZoomed ? handleZoomOut : handleZoomIn}
