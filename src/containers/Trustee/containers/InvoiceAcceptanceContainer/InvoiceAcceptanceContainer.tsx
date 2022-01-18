@@ -10,6 +10,7 @@ import {
 import { ROUTE_PATHS } from "../../../../shared/constants";
 import LeftArrowIcon from "../../../../shared/icons/leftArrow.icon";
 import { DocInfo, ProposalState } from "../../../../shared/models";
+import { ApproveInvoicesPrompt } from "../../components/ApproveInvoicesPrompt";
 import { DeclineInvoicesPrompt } from "../../components/DeclineInvoicesPrompt";
 import { InvoiceTileList } from "../../components/InvoiceTileList";
 import { ProposalCard } from "../../components/ProposalCard";
@@ -27,6 +28,9 @@ import "./index.scss";
 
 const InvoiceAcceptanceContainer: FC = () => {
   const [selectedDocIndex, setSelectedDocIndex] = useState<number | null>(null);
+  const [isApprovePromptOpen, setIsApprovePromptOpen] = useState(false);
+  const [isApprovalLoading, setIsApprovalLoading] = useState(false);
+  const [isApprovalFinished, setIsApprovalFinished] = useState(false);
   const [isDeclinePromptOpen, setIsDeclinePromptOpen] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -50,7 +54,21 @@ const InvoiceAcceptanceContainer: FC = () => {
     setSelectedDocIndex(null);
   };
 
-  const handleDeclineClose = () => {
+  const handleApproveClick = () => {
+    setIsApprovePromptOpen(true);
+  };
+  const handleApprove = () => {
+    setIsApprovalLoading(true);
+    setTimeout(() => {
+      setIsApprovalFinished(true);
+      setIsApprovalLoading(false);
+    }, 2000);
+  };
+  const handleApprovePromptClose = () => {
+    setIsApprovePromptOpen(false);
+  };
+
+  const handleDeclineClick = () => {
     setIsDeclinePromptOpen(true);
   };
   const handleDecline = (note: string) => {
@@ -103,12 +121,15 @@ const InvoiceAcceptanceContainer: FC = () => {
               onDocClick={handleInvoiceTileClick}
             />
             <div className="invoice-acceptance-container__actions-wrapper">
-              <button className="button-blue invoice-acceptance-container__approve-button">
+              <button
+                className="button-blue invoice-acceptance-container__approve-button"
+                onClick={handleApproveClick}
+              >
                 Approve All
               </button>
               <button
                 className="button-blue invoice-acceptance-container__decline-button"
-                onClick={handleDeclineClose}
+                onClick={handleDeclineClick}
               >
                 Decline
               </button>
@@ -122,6 +143,13 @@ const InvoiceAcceptanceContainer: FC = () => {
             onClose={handleFileCarouselClose}
           />
         )}
+        <ApproveInvoicesPrompt
+          isOpen={isApprovePromptOpen}
+          isApproved={isApprovalFinished}
+          isLoading={isApprovalLoading}
+          onApprove={handleApprove}
+          onClose={handleApprovePromptClose}
+        />
         <DeclineInvoicesPrompt
           isOpen={isDeclinePromptOpen}
           onDecline={handleDecline}

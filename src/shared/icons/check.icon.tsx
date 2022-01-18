@@ -1,10 +1,15 @@
 import React from "react";
 
-export default function CheckIcon() {
+interface CheckIconProps {
+  className?: string;
+  fill?: string;
+}
+
+export default function CheckIcon({ className, fill = "#7786FF" }: CheckIconProps) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
       <g fill="none" fillRule="evenodd">
-        <g fill="#7786FF" fillRule="nonzero">
+        <g fill={fill} fillRule="nonzero">
           <g>
             <g>
               <g>

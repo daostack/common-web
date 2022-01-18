@@ -1,0 +1,91 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+.approve-invoices-prompt-wrapper {
+  max-width: 26.438rem;
+  width: 100%;
+  min-height: 24.375rem;
+  margin: auto;
+  color: $secondary-blue;
+
+  .approve-invoices-prompt-wrapper__content {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .approve-invoices-prompt-wrapper__header-wrapper {
+    display: none;
+  }
+
+  .approve-invoices-prompt-wrapper__loader-wrapper {
+    height: 100%;
+    margin: auto;
+  }
+
+  .approve-invoices-prompt-wrapper__icon {
+    flex-shrink: 0;
+    width: 5.75rem;
+    height: 5.75rem;
+    margin: 0 auto 0;
+  }
+
+  .approve-invoices-prompt-wrapper__check-icon {
+    color: $green;
+
+    @extend .approve-invoices-prompt-wrapper__icon;
+  }
+
+  .approve-invoices-prompt-wrapper__title {
+    margin: 1rem 0 0;
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: $moderate-med;
+    font-weight: bold;
+    text-align: center;
+    word-break: break-word;
+  }
+
+  .approve-invoices-prompt-wrapper__actions-wrapper {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .approve-invoices-prompt-wrapper__button {
+    min-width: 8rem;
+    height: 3rem;
+    font-family: NunitoSans-Regular, sans-serif;
+    font-weight: normal;
+  }
+
+  .approve-invoices-prompt-wrapper__cancel-button {
+    flex: 1;
+    border: 1px solid $light-gray-1;
+    background-color: $white;
+    color: $black;
+    transition: all .2s;
+
+    &:hover {
+      background-color: $light-gray-1;
+    }
+
+    @extend .approve-invoices-prompt-wrapper__button;
+  }
+
+  .approve-invoices-prompt-wrapper__approve-button {
+    flex: 1;
+
+    @extend .approve-invoices-prompt-wrapper__button;
+  }
+
+  .approve-invoices-prompt-wrapper__done-button {
+    width: 100%;
+
+    @extend .approve-invoices-prompt-wrapper__button;
+  }
+}
+
+.approve-invoices-prompt-wrapper__modal-wrapper {
+  display: flex;
+}
