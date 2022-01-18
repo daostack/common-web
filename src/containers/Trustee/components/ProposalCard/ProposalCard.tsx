@@ -47,8 +47,8 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
         <ApprovedIcon className="trustee-proposal-card__approval-icon" />
         <span>
           Approved on{" "}
-          {proposal.createdAt
-            ? formatEpochTime(proposal.createdAt, DateFormat.Human)
+          {proposal.approvalDate
+            ? formatEpochTime(proposal.approvalDate, DateFormat.Human)
             : "UNKNOWN"}
         </span>
       </span>
