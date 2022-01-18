@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Redirect, RouteProps } from "react-router-dom";
 
-import { LOGIN_REDIRECT_LINK } from "../../shared/constants";
+import { ROUTE_PATHS } from "../../shared/constants";
 
 interface PrivateRouteProps extends RouteProps {
   component: React.JSXElementConstructor<any>;
@@ -20,10 +20,11 @@ const PrivateRoute: React.FunctionComponent<PrivateRouteProps> = ({
       if (authenticated) {
         return <Component {...props} />;
       }
+
       return (
         <Redirect
           to={{
-            pathname: LOGIN_REDIRECT_LINK,
+            pathname: ROUTE_PATHS.COMMON_LIST,
             state: { from: props.location },
           }}
         />
