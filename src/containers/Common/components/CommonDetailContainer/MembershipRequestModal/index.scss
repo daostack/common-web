@@ -1,6 +1,9 @@
 @import "../../../../../constants";
 @import "../../../../../styles/sizes";
 
+$payment-iframe-height: 424px;
+$payment-iframe-height-mobile: 672px;
+
 .membership-request-modal {
   color: $secondary-blue;
 
@@ -233,6 +236,9 @@
       margin-top: 0;
     }
   }
+  .membership-request-contribution__toggle-button-group--one-time {
+    margin-bottom: 2.375rem;
+  }
 
   .membership-request-contribution__toggle-button {
     padding: 22px;
@@ -257,7 +263,7 @@
   }
 
   .membership-request-contribution__hint {
-    margin-top: 16px;
+    margin: 1rem 0 .625rem;
     font-size: $xsmall;
     line-height: 1.42;
     text-align: center;
@@ -279,6 +285,13 @@
   display: flex;
   justify-content: center;
   padding: 24px 0;
+
+  .membership-request-contribution__submit-button {
+    min-width: 11.25rem;
+    min-height: 3rem;
+    font-family: NunitoSans-Regular, sans-serif;
+    font-weight: normal;
+  }
 }
 
 .membership-request-billing {
@@ -308,9 +321,16 @@
       }
     }
   }
+
+  .membership-request-billing__loader-wrapper {
+    padding-top: 30px;
+    display: flex;
+  }
 }
 
 .membership-request-payment {
+  min-height: 400px;
+
   input {
     width: 100%;
   }
@@ -328,7 +348,7 @@
 
   .membership-rejected-text {
     color: $light-gray-2;
-    margin: 1.5rem 0;
+    margin-top: 1.5rem;
     text-align: center;
   }
 
@@ -346,6 +366,88 @@
 
   .membership-request-payment__amount {
     color: $purple;
+  }
+
+  @include big-phone {
+    min-height: unset;
+  }
+}
+
+.membership-request-payment__content {
+  flex: 1 0;
+  position: relative;
+  max-width: 400px;
+  width: 100%;
+  min-height: $payment-iframe-height;
+  display: flex;
+
+  @include big-phone {
+    min-height: 50px;
+  }
+}
+
+.membership-request-payment__loader {
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+
+  @include big-phone {
+    top: unset;
+    transform: translateX(-50%);
+  }
+}
+
+.membership-request-payment__payment-iframe {
+  width: 100%;
+  height: $payment-iframe-height;
+
+  @include big-phone {
+    height: $payment-iframe-height-mobile;
+  }
+}
+
+.membership-request-payment-method {
+  width: 100%;
+  color: $secondary-blue;
+
+  .membership-request-payment-method__title {
+    margin-top: 0;
+    margin-bottom: 14px;
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: $small;
+    font-weight: bold;
+    line-height: 1.5;
+  }
+
+  .membership-request-payment-method__payment-logo {
+    width: 64px;
+    height: 32px;
+    object-fit: contain;
+  }
+
+  .membership-request-payment-method__content-wrapper {
+    display: flex;
+    align-items: center;
+    font-size: $xsmall;
+    line-height: 1.42;
+  }
+
+  .membership-request-payment-method__card-info-wrapper {
+    margin-left: 16px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .membership-request-payment-method__card-holder {
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: $small;
+    font-weight: bold;
+    line-height: 1.5;
+  }
+
+  .membership-request-payment-method__expiration {
+    margin-top: auto;
+    margin-left: auto;
   }
 }
 
@@ -369,8 +471,10 @@
     border: solid 1px $light-gray-1;
     background-color: transparent;
     cursor: pointer;
+    transition: background-color .2s;
+
     &:hover {
-      opacity: 0.9;
+      background-color: $light-gray-1;
     }
   }
 }

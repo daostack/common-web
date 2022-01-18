@@ -5,12 +5,14 @@ import { DiscussionMessage } from "../../../../../shared/models";
 import ChatMessage from "./ChatMessage";
 import "./index.scss";
 import { formatDate } from "../../../../../shared/utils";
-import { Colors } from "../../../../../shared/constants";
+import { BASE_URL, Colors, ROUTE_PATHS } from "../../../../../shared/constants";
 
 interface ChatComponentInterface {
+  commonId: string
   discussionMessage: DiscussionMessage[];
   onOpenJoinModal: () => void;
-  isCommonMember: boolean | undefined;
+  isCommonMember?: boolean;
+  isJoiningPending: boolean;
 }
 
 function groupday(acc: any, currentValue: DiscussionMessage): Messages {
@@ -36,10 +38,13 @@ interface Messages {
 }
 
 export default function ChatComponent({
+  commonId,
   discussionMessage,
   onOpenJoinModal,
-                                        isCommonMember,
+  isCommonMember,
+  isJoiningPending,
 }: ChatComponentInterface) {
+  const shouldShowJoinToCommonButton = !isCommonMember && !isJoiningPending;
   const messages = discussionMessage.reduce(groupday, {});
 
   const dateList = Object.keys(messages);
@@ -66,12 +71,12 @@ export default function ChatComponent({
       <div className="bottom-chat-wrapper">
         <div className="text">Download the Common app to join the discussion</div>
         <div className="button-wrapper">
-          {!isCommonMember && (
+          {shouldShowJoinToCommonButton && (
             <button className="button-blue join-the-effort-btn" onClick={onOpenJoinModal}>
               Join the effort
             </button>
           )}
-          <Share type="popup" color={Colors.lightPurple} top="-130px" />
+          <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${commonId}`} type="popup" color={Colors.lightPurple} top="-130px" />
         </div>
       </div>
     </div>

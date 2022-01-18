@@ -12,6 +12,7 @@ const initialState: AuthStateType = {
     ? JSON.parse(localStorage.getItem("user") || "")
     : false,
   isNewUser: false,
+  isLoginModalShowing: false,
 };
 
 const reducer = createReducer<AuthStateType, Action>(initialState)
@@ -30,6 +31,11 @@ const reducer = createReducer<AuthStateType, Action>(initialState)
   .handleAction(actions.setIsUserNew, (state, action) =>
     produce(state, (nextState) => {
       nextState.isNewUser = action.payload;
+    })
+  )
+  .handleAction(actions.setIsLoginModalShowing, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.isLoginModalShowing = action.payload;
     })
   );
 

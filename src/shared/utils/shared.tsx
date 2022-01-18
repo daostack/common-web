@@ -2,26 +2,39 @@ import millify from "millify";
 import moment from "moment";
 
 import { MobileOperatingSystem } from "../constants";
-import { Time, User } from "../models";
+import { DateFormat, Proposal, Time, User } from "../models";
 
 /**
  * Backend stores the price in cents, that's why we divide by 100
  **/
 export const formatPrice = (price?: number, shouldMillify = true): string => {
   if (!price) {
-    return "₪0";
+    return "0";
   }
 
   const convertedPrice = price / 100;
 
-  return `₪${shouldMillify ? millify(convertedPrice) : convertedPrice.toLocaleString("en-US")}`;
+  return `₪${
+    shouldMillify
+      ? millify(convertedPrice)
+      : convertedPrice.toLocaleString("en-US")
+  }`;
 };
 
 export const formatDate = (date: string | Date) => {
   return moment(date).format("YYYY-MM-DD");
 };
 
-export const getUserName = (user: User | undefined) => {
+/**
+ * Returns the date in a given format. Default is DD-MM-YYYY HH:mm
+ * @param {Time} time
+ * @param {DateFormat} format the desired format
+ */
+ export const formatEpochTime = (time: Time, format: DateFormat = DateFormat.Long) => {
+  return moment.unix(time.seconds).local().format(format);
+}
+
+export const getUserName = (user?: User | null) => {
   if (!user) return "";
   return user.displayName || `${user.firstName} ${user.lastName}`;
 };
@@ -30,6 +43,10 @@ export const getUserInitials = (user: User | undefined) => {
   if (!user) return "";
   return user.displayName || `${user.firstName[0]}${user.lastName[0]}`;
 };
+
+export const getRandomUserAvatarURL = (name?: string): string => (
+  `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${name}&rounded=true`
+);
 
 export const getDaysAgo = (currentDate: Date, time: Time) => {
   const previousDate = new Date(time.seconds * 1000);
@@ -166,6 +183,11 @@ export const getTodayDate = () => {
  *   value = 24 -> 30 will be returned
  *   value = 36 -> 40 will be returned
  **/
-export const roundNumberToNextTenths = (value: number, valueForRounding = 10): number => (
-  Math.floor((value + valueForRounding) / valueForRounding) * valueForRounding
-);
+export const roundNumberToNextTenths = (
+  value: number,
+  valueForRounding = 10
+): number =>
+  Math.floor((value + valueForRounding) / valueForRounding) * valueForRounding;
+
+export const getProposalExpirationDate = (proposal: Proposal): Date =>
+  new Date((proposal.createdAt.seconds + proposal.countdownPeriod) * 1000);

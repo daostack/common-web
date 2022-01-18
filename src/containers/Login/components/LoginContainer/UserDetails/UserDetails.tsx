@@ -3,6 +3,7 @@ import { Formik } from "formik";
 // eslint-disable-next-line import/order
 import * as Yup from "yup";
 
+import { TextField } from "../../../../../shared/components/Form/Formik";
 import "./index.scss";
 import "../../../containers/LoginContainer/index.scss";
 import { useDispatch } from "react-redux";
@@ -148,29 +149,35 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
                 <div className="user-account-name">{user?.email} </div>
                 {loading ? <Loader /> : null}
               </div>
-              <label>
-                <span>First name</span>
-                <span>Required</span>
-              </label>
-              <input
-                type="text"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.firstName}
+              <TextField
+                className="details-wrapper__text-field"
+                id="firstName"
                 name="firstName"
+                label="First name"
+                placeholder="Ashley"
+                isRequired
+                styles={{
+                  labelWrapper: "details-wrapper__text-field-label-wrapper",
+                  input: {
+                    default: "details-wrapper__text-field-input",
+                  },
+                }}
               />
-              <label>
-                <span>Last name</span>
-                <span>Required</span>
-              </label>
-              <input
-                type="text"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.lastName}
+              <TextField
+                className="details-wrapper__text-field"
+                id="lastName"
                 name="lastName"
+                label="Last name"
+                placeholder="Johnson"
+                isRequired
+                styles={{
+                  labelWrapper: "details-wrapper__text-field-label-wrapper",
+                  input: {
+                    default: "details-wrapper__text-field-input",
+                  },
+                }}
               />
-              <label>Country</label>
+              <label className="details-wrapper__label">Country</label>
 
               <div className="country">
                 <select
@@ -188,14 +195,14 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
             </form>
             <div className="actions-wrapper">
               <button
-                className="button-blue white"
+                className="button-blue details-wrapper__skip-button"
                 type="submit"
                 onClick={() => closeModal()}
               >
                 Skip
               </button>
               <button
-                className="button-blue"
+                className="button-blue details-wrapper__continue-button"
                 type="submit"
                 onClick={() => handleSubmit()}
               >

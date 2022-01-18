@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 
 import { ProposalCountDown } from "..";
+import RightArrowIcon from "../../../../../shared/icons/rightArrow.icon";
 import { Proposal, Discussion } from "../../../../../shared/models";
+import { getProposalExpirationDate } from "../../../../../shared/utils";
 import { VotesComponent } from "../VotesComponent";
 import "./index.scss";
 
@@ -74,7 +76,10 @@ export default function PreviewInformationList(
                 key={d.id}
                 onClick={() => props.onClickItem(d.id)}
               >
-                <div className="item-title">{d.value}</div>
+                <div className="item__title-wrapper">
+                  <div className="item-title">{d.value}</div>
+                  <RightArrowIcon className="item__right-arrow-icon" />
+                </div>
                 {type === "proposals" && proposal ? (
                   <div className="item-bottom">
                     <div className="votes">
@@ -89,7 +94,7 @@ export default function PreviewInformationList(
                     <div className="countdown">
                       <ProposalCountDown
                         type="preview"
-                        date={new Date(proposal?.expiresAt)}
+                        date={getProposalExpirationDate(proposal)}
                       />
                     </div>
                   </div>

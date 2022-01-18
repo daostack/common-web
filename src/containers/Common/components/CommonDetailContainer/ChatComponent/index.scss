@@ -1,10 +1,11 @@
 @import "../../../../../constants.scss";
 
 .chat-wrapper {
+  margin-top: 32px;
   padding: 32px;
   padding-top: unset;
   background-color: #f3f4ff;
-  height: calc(100% - 74px);
+  height: calc(100% - 90px);
   border-radius: 0 12px 12px 0;
   position: relative;
   box-sizing: border-box;
@@ -32,6 +33,7 @@
       margin-bottom: 16px;
       width: 400px;
       .icon-wrapper {
+        flex-shrink: 0;
         width: 32px;
         height: 32px;
         border-radius: 50%;
@@ -44,11 +46,9 @@
         justify-content: center;
         align-items: center;
         margin-right: 12px;
-        width: 32px;
-        height: 32px;
         position: relative;
         margin-bottom: 8px;
-        position: relative;
+        overflow: hidden;
         img {
           position: absolute;
           right: 0;
@@ -74,6 +74,7 @@
         .message-content {
           font-size: 16px;
           color: #001a36;
+          word-wrap: break-word;
         }
       }
       .time-wrapper {
@@ -91,7 +92,7 @@
     box-shadow: 0 -5px 5px -2px #4f5c6919;
     background-color: #ffffff;
     width: 100%;
-    margin: 24px -32px;
+    margin: 0 -32px 24px;
     bottom: 0px;
     height: 50px;
     display: flex;

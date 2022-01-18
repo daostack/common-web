@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Share } from "../../../../../shared/components";
-import { Colors, ScreenSize } from "../../../../../shared/constants";
+import { Linkify, Share } from "../../../../../shared/components";
+import { BASE_URL, Colors, ROUTE_PATHS, ScreenSize } from "../../../../../shared/constants";
 import { Common } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import "./index.scss";
@@ -10,7 +10,8 @@ interface AboutTabComponentProps {
   common: Common;
   screenSize: string;
   onOpenJoinModal: () => void;
-  isCommonMember: boolean | undefined;
+  isCommonMember?: boolean;
+  isJoiningPending: boolean;
 }
 
 export default function AboutTabComponent({
@@ -18,13 +19,18 @@ export default function AboutTabComponent({
   screenSize,
   onOpenJoinModal,
   isCommonMember,
+  isJoiningPending,
 }: AboutTabComponentProps) {
+  const shouldShowJoinToCommonButton = screenSize === ScreenSize.Desktop && !isCommonMember && !isJoiningPending;
+
   const renderContributionType = (type: string) => {
     return <b>{type}</b>;
   };
   return (
     <div className="about-name-wrapper">
-      <div className="description">{common.metadata.description}</div>
+      <div className="description">
+        <Linkify>{common.metadata.description}</Linkify>
+      </div>
       {common?.links?.length > 0 && (
         <div className="links">
           <div className="title">Links</div>
@@ -44,12 +50,12 @@ export default function AboutTabComponent({
           {formatPrice(common.metadata.minFeeToJoin) + " "}
           {renderContributionType(common.metadata.contributionType || "")} contribution
         </div>
-        {screenSize === ScreenSize.Desktop && !isCommonMember && (
+        {shouldShowJoinToCommonButton && (
           <div className="social-wrapper">
             <button className={`button-blue`} onClick={onOpenJoinModal}>
               Join the effort
             </button>
-            <Share type="popup" color={Colors.lightPurple} />
+            <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`} type="popup" color={Colors.lightPurple} />
           </div>
         )}
       </div>

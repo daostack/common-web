@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
+import classNames from "classnames";
 import { ButtonLink } from "../../../../../shared/components";
 import {
   CurrencyInput,
@@ -81,19 +82,19 @@ export default function MembershipRequestContribution(props: IStageProps) {
   const [selectedContribution, setSelectedContribution] = useState<
     number | "other" | null
   >(() => {
-    if (userData.contribution_amount === undefined) {
+    if (userData.contributionAmount === undefined) {
       return null;
     }
 
-    return amountsForSelection.includes(userData.contribution_amount)
-      ? userData.contribution_amount
+    return amountsForSelection.includes(userData.contributionAmount)
+      ? userData.contributionAmount
       : "other";
   });
   const [enteredContribution, setEnteredContribution] = useState<
     string | undefined
   >(() =>
     selectedContribution === "other"
-      ? String((userData.contribution_amount || 0) / 100)
+      ? String((userData.contributionAmount || 0) / 100)
       : undefined
   );
   const [isCurrencyInputTouched, setIsCurrencyInputTouched] = useState(false);
@@ -129,14 +130,14 @@ export default function MembershipRequestContribution(props: IStageProps) {
     const contributionAmount =
       selectedContribution === "other"
         ? Number(enteredContribution) * 100
-        : selectedContribution;
+        : (selectedContribution || 0);
 
-    setUserData({
-      ...userData,
-      contribution_amount: contributionAmount,
-      stage: 4,
-    });
-  }, [setUserData, userData, selectedContribution, enteredContribution]);
+    setUserData((nextUserData) => ({
+      ...nextUserData,
+      contributionAmount,
+      stage: contributionAmount === 0 ? 5 : 4,
+    }));
+  }, [setUserData, selectedContribution, enteredContribution]);
 
   const toggleButtonStyles = {
     default: "membership-request-contribution__toggle-button",
@@ -154,7 +155,12 @@ export default function MembershipRequestContribution(props: IStageProps) {
       </div>
       {selectedContribution !== "other" && (
         <ToggleButtonGroup
-          className="membership-request-contribution__toggle-button-group"
+          className={classNames(
+            "membership-request-contribution__toggle-button-group",
+            {
+              "membership-request-contribution__toggle-button-group--one-time": !isMonthlyContribution,
+            }
+          )}
           value={selectedContribution}
           onChange={handleChange}
           variant={ToggleButtonGroupVariant.Vertical}
@@ -206,7 +212,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
         <div className="membership-request-contribution__modal-footer">
           <button
             disabled={isSubmitDisabled}
-            className="button-blue"
+            className="button-blue membership-request-contribution__submit-button"
             onClick={handleSubmit}
           >
             Submit

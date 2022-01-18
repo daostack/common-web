@@ -9,6 +9,8 @@ interface DiscussionsComponentProps {
   loadProposalDetail: (payload: Proposal) => void;
   currentTab: string;
   common: Common;
+  isCommonMember: boolean;
+  isJoiningPending: boolean;
 }
 
 export default function ProposalsComponent({
@@ -16,6 +18,8 @@ export default function ProposalsComponent({
   loadProposalDetail,
   currentTab,
   common,
+  isCommonMember,
+  isJoiningPending,
 }: DiscussionsComponentProps) {
   return (
     <div className="proposals-component-wrapper">
@@ -35,6 +39,8 @@ export default function ProposalsComponent({
               : "This is where you will find approved/rejected proposals."
           }
           title={currentTab === "proposals" ? "No proposals yet" : "No past activity"}
+          isCommonMember={isCommonMember}
+          isJoiningPending={isJoiningPending}
         />
       )}
     </div>

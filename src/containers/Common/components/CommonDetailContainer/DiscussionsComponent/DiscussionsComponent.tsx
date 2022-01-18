@@ -9,12 +9,16 @@ interface DiscussionsComponentProps {
   discussions: Discussion[];
   loadDisscussionDetail: (payload: Discussion) => void;
   common: Common;
+  isCommonMember: boolean;
+  isJoiningPending: boolean;
 }
 
 export default function DiscussionsComponent({
   discussions,
   loadDisscussionDetail,
   common,
+  isCommonMember,
+  isJoiningPending,
 }: DiscussionsComponentProps) {
   return (
     <div className="discussions-component-wrapper">
@@ -30,6 +34,8 @@ export default function DiscussionsComponent({
           currentTab="discussions"
           message={"This is where members can discuss and share their thoughts and ideas."}
           title="No discussions yet"
+          isCommonMember={isCommonMember}
+          isJoiningPending={isJoiningPending}
         />
       )}
     </div>

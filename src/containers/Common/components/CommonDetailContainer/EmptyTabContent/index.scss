@@ -29,6 +29,32 @@
       justify-content: center;
       align-items: center;
     }
+
+    .empty-tab-content-wrapper__buttons-wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .empty-tab-content-wrapper__browse-commons-button {
+      margin-top: 8px;
+      text-decoration: none;
+    }
+  }
+
+  .empty-tab-content-wrapper__buttons-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .empty-tab-content-wrapper__button {
+    margin-top: 8px;
+    text-decoration: none;
+
+    &:first-child {
+      margin-top: 0;
+    }
   }
 }
 
