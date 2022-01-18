@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { Loader, Modal } from "../../../../shared/components";
 import CheckIcon from "../../../../shared/icons/check.icon";
+import ConfirmationIcon from "../../../../shared/icons/confirmation.icon";
 import "./index.scss";
 
 interface ApproveInvoicesPromptProps {
@@ -39,10 +40,7 @@ const ApproveInvoicesPrompt: FC<ApproveInvoicesPromptProps> = (props) => {
       )}
       {!isLoading && !isApproved && (
         <>
-          <CheckIcon
-            className="approve-invoices-prompt-wrapper__check-icon"
-            fill="currentColor"
-          />
+          <ConfirmationIcon className="approve-invoices-prompt-wrapper__confirmation-icon" />
           <h3 className="approve-invoices-prompt-wrapper__title">
             Are you sure you want to approve all invoices
           </h3>

@@ -30,6 +30,12 @@
     margin: 0 auto 0;
   }
 
+  .approve-invoices-prompt-wrapper__confirmation-icon {
+    color: $purple;
+
+    @extend .approve-invoices-prompt-wrapper__icon;
+  }
+
   .approve-invoices-prompt-wrapper__check-icon {
     color: $green;
 
