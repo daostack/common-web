@@ -1,6 +1,7 @@
 import React, { useCallback, FC } from "react";
 import { Formik, FormikConfig } from "formik";
 import { Form, TextField } from "../../../../shared/components/Form/Formik";
+import { SUPPORT_EMAIL } from "../../../../shared/constants";
 import validationSchema from "./validationSchema";
 import "./index.scss";
 
@@ -68,9 +69,12 @@ const AuthenticationContainer: FC = () => {
         )}
       </Formik>
       <span className="trustee-authentication-container__hint">
-        Forgot password? Contact{" "}
-        <a className="trustee-authentication-container__service-link" href="#">
-          Common Customer Service
+        Forgot password? Contact us at{" "}
+        <a
+          className="trustee-authentication-container__support-email"
+          href={`mailto:${SUPPORT_EMAIL}`}
+        >
+          {SUPPORT_EMAIL}
         </a>
       </span>
     </div>
