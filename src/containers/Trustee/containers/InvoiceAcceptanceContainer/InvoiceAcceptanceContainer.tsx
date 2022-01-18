@@ -10,6 +10,7 @@ import {
 import { ROUTE_PATHS } from "../../../../shared/constants";
 import LeftArrowIcon from "../../../../shared/icons/leftArrow.icon";
 import { DocInfo, ProposalState } from "../../../../shared/models";
+import { DeclineInvoicesPrompt } from "../../components/DeclineInvoicesPrompt";
 import { InvoiceTileList } from "../../components/InvoiceTileList";
 import { ProposalCard } from "../../components/ProposalCard";
 import { StickyInfo } from "../../components/StickyInfo";
@@ -26,6 +27,7 @@ import "./index.scss";
 
 const InvoiceAcceptanceContainer: FC = () => {
   const [selectedDocIndex, setSelectedDocIndex] = useState<number | null>(null);
+  const [isDeclinePromptOpen, setIsDeclinePromptOpen] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
   const { proposalId } = useParams<{ proposalId: string }>();
@@ -46,6 +48,16 @@ const InvoiceAcceptanceContainer: FC = () => {
 
   const handleFileCarouselClose = () => {
     setSelectedDocIndex(null);
+  };
+
+  const handleDeclineClose = () => {
+    setIsDeclinePromptOpen(true);
+  };
+  const handleDecline = (note: string) => {
+    console.log(note);
+  };
+  const handleDeclinePromptClose = () => {
+    setIsDeclinePromptOpen(false);
   };
 
   useEffect(() => {
@@ -94,7 +106,10 @@ const InvoiceAcceptanceContainer: FC = () => {
               <button className="button-blue invoice-acceptance-container__approve-button">
                 Approve All
               </button>
-              <button className="button-blue invoice-acceptance-container__decline-button">
+              <button
+                className="button-blue invoice-acceptance-container__decline-button"
+                onClick={handleDeclineClose}
+              >
                 Decline
               </button>
             </div>
@@ -107,6 +122,11 @@ const InvoiceAcceptanceContainer: FC = () => {
             onClose={handleFileCarouselClose}
           />
         )}
+        <DeclineInvoicesPrompt
+          isOpen={isDeclinePromptOpen}
+          onDecline={handleDecline}
+          onClose={handleDeclinePromptClose}
+        />
       </div>
     </>
   );
