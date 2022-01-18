@@ -5,19 +5,19 @@ import { LOGIN_REDIRECT_LINK } from "../../shared/constants";
 
 interface PrivateRouteProps extends RouteProps {
   component: React.JSXElementConstructor<any>;
-  authentificated: boolean;
+  authenticated: boolean;
 }
 
 /* eslint-disable */
 const PrivateRoute: React.FunctionComponent<PrivateRouteProps> = ({
   component: Component,
-  authentificated,
+  authenticated,
   ...rest
 }) => (
   <Route
     {...rest}
     render={(props) => {
-      if (authentificated) {
+      if (authenticated) {
         return <Component {...props} />;
       }
       return (
