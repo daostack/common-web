@@ -1,11 +1,25 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { FC } from "react";
+import { Link, useLocation } from "react-router-dom";
 
-import { COMMON_APP_APP_STORE_LINK, COMMON_APP_GOOGLE_PLAY_LINK, ROUTE_PATHS } from "../../constants";
+import {
+  COMMON_APP_APP_STORE_LINK,
+  COMMON_APP_GOOGLE_PLAY_LINK,
+  ROUTE_PATHS,
+} from "../../constants";
+import { matchRoute } from "../../utils";
 import "./index.scss";
 
-const Footer = () => {
+const Footer: FC = () => {
+  const location = useLocation();
   const date = new Date();
+  const isTrusteeRoute = matchRoute(location.pathname, ROUTE_PATHS.TRUSTEE, {
+    exact: false,
+  });
+
+  if (isTrusteeRoute) {
+    return null;
+  }
+
   return (
     <section className="footer-wrapper">
       <div className="footer-top">
