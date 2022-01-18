@@ -22,6 +22,7 @@ import { ProposalCard } from "../../components/ProposalCard";
 import { StickyInfo } from "../../components/StickyInfo";
 import {
   approveOrDeclineProposal,
+  clearProposals,
   clearProposalForApproval,
   getProposalForApproval,
 } from "../../store/actions";
@@ -65,6 +66,11 @@ const InvoiceAcceptanceContainer: FC = () => {
     proposalForApproval?.fundingProcessStage ===
     FundingProcessStage.PendingInvoiceApproval;
 
+  const goToAllInvoices = () => {
+    dispatch(clearProposals());
+    history.push(ROUTE_PATHS.TRUSTEE_INVOICES);
+  };
+
   const handleInvoiceTileClick = (doc: DocInfo, index: number) => {
     setSelectedDocIndex(index);
   };
@@ -77,6 +83,11 @@ const InvoiceAcceptanceContainer: FC = () => {
     setIsApprovePromptOpen(true);
   };
   const handleApprovePromptClose = () => {
+    if (submissionState.finished) {
+      goToAllInvoices();
+      return;
+    }
+
     setIsApprovePromptOpen(false);
   };
 
@@ -93,11 +104,12 @@ const InvoiceAcceptanceContainer: FC = () => {
     }
 
     setSubmissionState((state) => ({ ...state, loading: true }));
+    const isApproved = !note;
 
     dispatch(
       approveOrDeclineProposal.request({
         payload: {
-          approved: !note,
+          approved: isApproved,
           proposalId: proposalForApproval.id,
           declineReason: note,
         },
@@ -107,6 +119,10 @@ const InvoiceAcceptanceContainer: FC = () => {
             loading: Boolean(error),
             finished: true,
           }));
+
+          if (!error && !isApproved) {
+            goToAllInvoices();
+          }
         },
       })
     );
@@ -194,6 +210,8 @@ const InvoiceAcceptanceContainer: FC = () => {
         />
         <DeclineInvoicesPrompt
           isOpen={isDeclinePromptOpen}
+          isLoading={submissionState.loading}
+          isFinished={submissionState.finished}
           onDecline={handleSubmit}
           onClose={handleDeclinePromptClose}
         />

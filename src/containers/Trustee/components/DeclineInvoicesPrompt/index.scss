@@ -4,15 +4,23 @@
 .decline-invoices-prompt-wrapper {
   max-width: 26.563rem;
   width: 100%;
+  min-height: 31.563rem;
   margin: auto;
   color: $secondary-blue;
 
   .decline-invoices-prompt-wrapper__content {
     padding: 3rem;
+    display: flex;
+    flex-direction: column;
   }
 
   .decline-invoices-prompt-wrapper__header-wrapper {
     display: none;
+  }
+
+  .decline-invoices-prompt-wrapper__loader-wrapper {
+    height: 100%;
+    margin: auto;
   }
 
   .decline-invoices-prompt-wrapper__title {

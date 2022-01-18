@@ -35,6 +35,16 @@ const reducer = createReducer<TrusteeStateType, Action>(initialState)
       nextState.areDeclinedProposalsLoaded = true;
     })
   )
+  .handleAction(actions.clearProposals, (state) =>
+    produce(state, (nextState) => {
+      nextState.pendingApprovalProposals = [];
+      nextState.arePendingApprovalProposalsLoaded = false;
+      nextState.approvedProposals = [];
+      nextState.areApprovedProposalLoaded = false;
+      nextState.declinedProposals = [];
+      nextState.areDeclinedProposalsLoaded = false;
+    })
+  )
   .handleAction(actions.getProposalForApproval.success, (state, action) =>
     produce(state, (nextState) => {
       nextState.proposalForApproval = action.payload;

@@ -15,6 +15,9 @@ interface ApproveInvoicesPromptProps {
 const ApproveInvoicesPrompt: FC<ApproveInvoicesPromptProps> = (props) => {
   const { isOpen, isFinished, isLoading, onApprove, onClose } = props;
 
+  const handleApprove = () => {
+    onApprove();
+  };
   const handleClose = () => {
     if (!isLoading) {
       onClose();
@@ -53,7 +56,7 @@ const ApproveInvoicesPrompt: FC<ApproveInvoicesPromptProps> = (props) => {
             </button>
             <button
               className="button-blue approve-invoices-prompt-wrapper__approve-button"
-              onClick={onApprove}
+              onClick={handleApprove}
             >
               Approve all
             </button>
