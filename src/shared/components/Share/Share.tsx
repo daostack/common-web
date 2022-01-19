@@ -10,14 +10,14 @@ type ViewType = "popup" | "modal";
 
 interface IProps {
   url: string;
-  text: string;
   color: Colors;
   type: ViewType;
+  text?: string;
   top?: string;
 }
 
 export default function Share(props: PropsWithChildren<IProps>) {
-  const { url, text, color, type, top, children } = props;
+  const { url, text = "", color, type, top, children } = props;
   const wrapperRef = useRef(null);
   const [isShown, setShown] = useState(false);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);

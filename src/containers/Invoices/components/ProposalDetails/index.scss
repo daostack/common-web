@@ -1,0 +1,92 @@
+@import "../../../../constants.scss";
+@import "../../../../styles/sizes.scss";
+
+.proposal-detailes-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: NunitoSans-Bold, sans-serif;
+  color: $secondary-blue;
+  .submit-invoices-wrapper__common-name {
+    margin: 0 0 36px;
+    font-family: NotoSerifSC-Bold, serif;
+    font-size: $moderate;
+    text-align: center;
+
+    @include big-phone {
+      margin-bottom: 48px;
+    }
+  }
+
+  .submit-invoices-wrapper__welcome-text {
+    font-size: $moderate;
+    font-weight: bold;
+    text-align: center;
+
+    @include big-phone {
+      font-size: $small;
+    }
+  }
+
+  .submit-invoices-wrapper__description-wrapper {
+    max-width: 400px;
+    width: 100%;
+    margin: 36px auto 0;
+    display: flex;
+    flex-direction: column;
+    font-size: $small;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 14px;
+    box-shadow: 0 3px 8px 0 $invoice-description-card-shadow;
+    background-color: $white;
+  }
+
+  .submit-invoices-wrapper__description-header {
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: $xxsmall;
+    color: $green;
+    border-top-right-radius: inherit;
+    border-top-left-radius: inherit;
+    background-color: $secondary-green;
+    box-sizing: border-box;
+  }
+
+  .submit-invoices-wrapper__description-approved-icon {
+    flex-shrink: 0;
+    margin-right: 4px;
+  }
+
+  .submit-invoices-wrapper__description-content {
+    padding: 16px 60px;
+    display: flex;
+    flex-direction: column;
+
+    @include big-phone {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+  }
+
+  .submit-invoices-wrapper__description {
+    overflow-wrap: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .submit-invoices-wrapper__description-amount {
+    margin-top: 16px;
+  }
+
+  .submit-invoices-wrapper__add-invoice {
+    margin-top: 36px;
+
+    @include big-phone {
+      margin-top: 24px;
+    }
+  }
+}

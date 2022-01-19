@@ -7,6 +7,7 @@ type ButtonIconProps = JSX.IntrinsicElements['button'];
 const ButtonIcon: FC<ButtonIconProps> = (props) => {
   return (
     <button
+      tabIndex={0}
       {...props}
       className={classNames("button-icon", props.className)}
     />

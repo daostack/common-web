@@ -21,8 +21,7 @@ export default function AboutTabComponent({
   isCommonMember,
   isJoiningPending,
 }: AboutTabComponentProps) {
-  const shouldShowJoinToCommonButton = screenSize === ScreenSize.Desktop && !isCommonMember && !isJoiningPending;
-
+  const shouldShowJoinToCommonButton = screenSize === ScreenSize.Desktop && !isCommonMember;
   const renderContributionType = (type: string) => {
     return <b>{type}</b>;
   };
@@ -52,10 +51,10 @@ export default function AboutTabComponent({
         </div>
         {shouldShowJoinToCommonButton && (
           <div className="social-wrapper">
-            <button className={`button-blue`} onClick={onOpenJoinModal}>
-              Join the effort
+            <button className={`button-blue`} onClick={onOpenJoinModal} disabled={isJoiningPending}>
+              {isJoiningPending ? "Pending approval" : "Join the effort"}
             </button>
-            <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`} text="Hey checkout this common!" type="popup" color={Colors.lightPurple} />
+            <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`} type="popup" color={Colors.lightPurple} />
           </div>
         )}
       </div>
