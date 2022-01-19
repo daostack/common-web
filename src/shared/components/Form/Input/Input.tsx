@@ -46,9 +46,6 @@ const Input: FC<FullInputProps> = (props) => {
   const inputStyles = shouldDisplayCountToUse && inputLengthRef
     ? { paddingRight: inputLengthRef.clientWidth + 14 }
     : undefined;
-  const labelWrapperClassName = classNames("custom-input__label-wrapper", {
-    "custom-input__label-wrapper--with-description": description,
-  });
   const inputClassName = classNames("custom-input__input", styles?.input?.default, {
     "custom-input__input--error": error,
   });
