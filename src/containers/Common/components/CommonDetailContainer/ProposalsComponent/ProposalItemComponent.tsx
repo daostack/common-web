@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { ProposalCountDown } from "..";
+import { UserAvatar } from "../../../../../shared/components";
 import { useCalculateReadMoreLength } from "../../../../../shared/hooks";
 import { Proposal, ProposalState } from "../../../../../shared/models";
 import { formatPrice, getUserName, getDaysAgo } from "../../../../../shared/utils";
@@ -15,7 +16,6 @@ export default function ProposalItemComponent({
   proposal,
   loadProposalDetail,
 }: ProposalItemComponentProps) {
-  const [imageError, setImageError] = useState(false);
   //  const [readMore, setReadMore] = useState("");
   const date = new Date();
   const rawRequestedAmount = proposal.fundingRequest?.amount || proposal.join?.funding;
@@ -72,18 +72,11 @@ export default function ProposalItemComponent({
       <div className="line" />
       <div className="discussion-top-bar">
         <div className="img-wrapper">
-          {!imageError ? (
-            <img
-              src={proposal.proposer?.photoURL}
-              alt={getUserName(proposal.proposer)}
-              onError={() => setImageError(true)}
-            />
-          ) : (
-            <img
-              src="/icons/default_user.svg"
-              alt={getUserName(proposal.proposer)}
-            />
-          )}
+          <UserAvatar
+            photoURL={proposal.proposer?.photoURL}
+            nameForRandomAvatar={proposal.proposer?.email}
+            userName={getUserName(proposal.proposer)}
+          />
         </div>
         <div className="creator-information">
           <div className="name">{getUserName(proposal.proposer)}</div>
