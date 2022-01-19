@@ -1,4 +1,4 @@
-import React, { useCallback, ReactElement } from "react";
+import React, { ReactElement, useCallback } from "react";
 
 import { isMobile } from "@/shared/utils";
 import { ButtonLink } from "@/shared/components";
@@ -6,6 +6,10 @@ import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
 import LinkIcon from "@/shared/icons/link.icon";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
+import LeftArrowIcon from "@/shared/icons/leftArrow.icon";
+import RightArrowIcon from "@/shared/icons/rightArrow.icon";
+import { RulesArrayItem } from "@/shared/components/Form/Formik";
+import { RuleList } from "./RuleList";
 import "./index.scss";
 
 interface ReviewProps {
@@ -13,16 +17,32 @@ interface ReviewProps {
   onFinish: () => void;
 }
 
-export default function Review({ currentStep, onFinish }: ReviewProps): ReactElement {
+export default function Review({
+  currentStep,
+  onFinish,
+}: ReviewProps): ReactElement {
   const isMobileView = isMobile();
-  const coverImageTitle = "Select or upload cover image"
+  const coverImageTitle = "Select or upload cover image";
   const commonName = "Amazon Network";
   const tagline = "If you wanna save the Amazon, own it.";
   const minimumContribution = 10;
-  const about = "We aim to ba a global non-profit initiative. Only small percentage of creative directors are women and we want to help change this through mentorship circles, portfolio reviews, talks & creative meetups.";
+  const about =
+    "We aim to ba a global non-profit initiative. Only small percentage of creative directors are women and we want to help change this through mentorship circles, portfolio reviews, talks & creative meetups.";
   const links = [
     { title: "Amazon Facebook group", link: "https://www.google.com" },
     { title: "LinkedIn", link: "https://www.linkedin.com" },
+  ];
+  const rules: RulesArrayItem[] = [
+    {
+      title: "No promotions or spam",
+      description:
+        "We created this community to help you along your journey. Links to sponsored content or brands will vote you out.",
+    },
+    {
+      title: "Be courteous and kind to others",
+      description:
+        "We're all in this together to create a nurturing environment. Let's teat everyone with respect. Healthy debates are natural, but kindness is required.",
+    },
   ];
 
   const handleContinueClick = useCallback(() => {
@@ -33,33 +53,48 @@ export default function Review({ currentStep, onFinish }: ReviewProps): ReactEle
 
   return (
     <>
-      {!isMobileView && (
-        <ModalHeaderContent>
-          {progressEl}
-        </ModalHeaderContent>
-      )}
+      {!isMobileView && <ModalHeaderContent>{progressEl}</ModalHeaderContent>}
       <div className="create-common-review">
         {isMobileView && progressEl}
         <div className="create-common-review__upload-cover-image">
-          <label htmlFor="cover-image" className="create-common-review__input-bg-image-label">
-            <img src="assets/images/create-common-review__add-bg-image.jpg"alt=""/></label>
-          <input type="file" className="create-common-review__input-bg-image-input" id="cover-image" accept=".jpg, .jpeg, .png"/>
+          <label
+            htmlFor="cover-image"
+            className="create-common-review__selection-input-label"
+          >
+            <img
+              className="create-common-review__input-bg-image"
+              src="assets/images/create-common-review__add-bg-image.jpg"
+              alt=""
+            />
+          </label>
+          <input
+            type="file"
+            className="create-common-review__selection-input"
+            id="cover-image"
+            accept=".jpg, .jpeg, .png"
+          />
           <div className="create-common-review__title-and-arrows">
-            <button className="create-common-review__arrow"><img
-                src="assets/images/icons-general-left-arrow.svg" alt="arrow-to-left"/></button>
-            <span className="create-common-review__upload-cover-image__title">{coverImageTitle}</span>
-            <button className="create-common-review__arrow"><img
-                src="assets/images/icons-general-right-arrow.svg" alt="arrow-to-right"/></button>
+            <LeftArrowIcon className="create-common-review__arrow-icon" />
+            <span className="create-common-review__cover-image-title">
+              {coverImageTitle}
+            </span>
+            <RightArrowIcon className="create-common-review__arrow-icon" />
           </div>
         </div>
         <div className="create-common-review__main-info-wrapper">
           <div>
             <h4 className="create-common-review__common-name">{commonName}</h4>
-            {tagline && <p className="create-common-review__tagline">{tagline}</p>}
+            {tagline && (
+              <p className="create-common-review__tagline">{tagline}</p>
+            )}
           </div>
           <div className="create-common-review__price-wrapper">
-            <span className="create-common-review__minimum-contribution">${minimumContribution}</span>
-            <span className="create-common-review__minimum-contribution-text">Min. Contribution</span>
+            <span className="create-common-review__minimum-contribution">
+              ${minimumContribution}
+            </span>
+            <span className="create-common-review__minimum-contribution-text">
+              Min. Contribution
+            </span>
           </div>
         </div>
         <Separator className="create-common-review__separator" />
@@ -78,41 +113,30 @@ export default function Review({ currentStep, onFinish }: ReviewProps): ReactEle
               href={link.link}
               target="_blank"
             >
-              <LinkIcon className="create-common-review__link-icon" />{link.title}
+              <LinkIcon className="create-common-review__link-icon" />
+              {link.title}
             </ButtonLink>
           ))}
         </div>
         <div className="create-common-review__rules">
-          <div className="create-common-review__rule">
-              <p className="create-common-review__rule-number">
-            Rule #1
+          <RuleList rules={rules} />
+          <h5 className="create-common-review__contribution-title">
+            Minimum Contribution
+          </h5>
+          <p className="create-common-review__contribution-text">
+            $10{" "}
+            <span className="create-common-review__contribution-text-bold">
+              one-time
+            </span>{" "}
+            contribution
           </p>
-            <h5 className="create-common-review__rule-title">
-              No promotions or spam
-            </h5>
-            <p className="create-common-review__rule-description">
-              We created this community to help you along your journey. Links to sponsored content or
-              brands will vote you out.
-            </p>
-          </div>
-          <div className="create-common-review__rule">
-              <p className="create-common-review__rule-number">
-            Rule #1
-          </p>
-            <h5 className="create-common-review__rule-title">
-              Be courteous and kind to others
-            </h5>
-            <p className="create-common-review__rule-description">
-              We're all in this together to create a nurturing enviroment. Let's teat everyone with resprct. Healthy debates are natural, but kindness is required.
-            </p>
-            <h5 className="create-common-review__rule__contribution-title">Minimum Contribution</h5>
-            <p className="create-common-review__rule__contribution-description">
-                $10 <span>one-time</span> contribution
-            </p>
-          </div>
           <div className="create-common-review__additional-info-container">
-            <div className="create-common-review__additional-info-text">To publish the Common, add a personal contribution. <span>Don't worry, you will be able to make
-            changes</span> to the Common info after it is published.
+            <div className="create-common-review__additional-info-text">
+              To publish the Common, add a personal contribution.
+              <span className="create-common-review__additional-info-text-bold">
+                Don't worry, you will be able to make changes
+              </span>{" "}
+              to the Common info after it is published.
             </div>
           </div>
         </div>

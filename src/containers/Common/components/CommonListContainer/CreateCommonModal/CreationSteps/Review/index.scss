@@ -1,11 +1,13 @@
 @import "../../../../../../../constants";
 @import "../../../../../../../styles/sizes";
 
+$bg-img: url("/assets/images/review-bg-image.jpg");
+
 .create-common-review {
   width: 100%;
-  max-width: 584px;
+  max-width: 36.5rem;
   margin: 0 auto;
-  padding-bottom: 32px;
+  padding-bottom: 2rem;
 
   .create-common-review__main-info-wrapper {
     display: flex;
@@ -16,63 +18,60 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-image: url("./unpload-cover-image-in-modal.jpg");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
     max-width: 36.5rem;
     max-height: 14rem;
     margin-bottom: 1.8rem;
+    background-image: $bg-img;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
 
-    .create-common-review__input-bg-image-input {
-      width: 0.1px;
-      height: 0.1px;
-      opacity: 0;
-      overflow: hidden;
-      position: absolute;
-      z-index: -1;
-    }
+  .create-common-review__selection-input {
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
 
-    .create-common-review__input-bg-image-label {
+  .create-common-review__selection-input-label {
+    margin: 1rem 1rem 2.875rem 0;
+    align-self: self-end;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.875rem;
+    cursor: pointer;
+    -webkit-backdrop-filter: blur(0.625rem);
+    backdrop-filter: blur(0.625rem);
+    background-color: $black-gray-2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-      margin: 1rem 1rem 2.875rem 0;
-      align-self: self-end;
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 0.875rem;
-      cursor: pointer;
-      -webkit-backdrop-filter: blur(10px);
-      backdrop-filter: blur(10px);
-      background-color: rgba(0, 0, 0, 0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  .create-common-review__input-bg-image {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
 
-    .create-common-review__input-bg-image-label img {
-      width: 1.5rem;
-      height: 1.5rem;
-    }
+  .create-common-review__title-and-arrows {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 6rem;
+  }
 
-    .create-common-review__title-and-arrows {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      margin-bottom: 6rem;
+  .create-common-review__arrow-icon {
+    width: 2rem;
+    height: 2rem;
+    color: $gray;
+  }
 
-      .create-common-review__upload-cover-image__title {
-        padding-top: 6px;
-        font-size: 0.875rem;
-        line-height: 1.43;
-        color: #fff;
-      }
-
-      .create-common-review__arrow {
-        border: none;
-        background-color: transparent;
-        cursor: pointer;
-      }
-    }
+  .create-common-review__cover-image-title {
+    padding-top: 0.375rem;
+    font-size: $xsmall;
+    line-height: 1.43;
+    color: $white;
   }
 
   .create-common-review__common-name {
@@ -84,7 +83,7 @@
   }
 
   .create-common-review__tagline {
-    margin: 8px 0 0;
+    margin: 0.5rem 0 0;
     font-size: $small;
     line-height: 1.5;
   }
@@ -98,7 +97,7 @@
   }
 
   .create-common-review__minimum-contribution {
-    margin-top: 6px;
+    margin-top: 0.375rem;
     font-family: NunitoSans-Bold, sans-serif;
     font-size: $moderate-med;
     font-weight: bold;
@@ -112,7 +111,7 @@
   }
 
   .create-common-review__separator {
-    margin: 16px 0;
+    margin: 1rem 0;
   }
 
   .create-common-review__section {
@@ -121,7 +120,7 @@
 
   .create-common-review__section-title {
     margin-top: 0;
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
     font-family: NunitoSans-Bold, sans-serif;
     font-size: $moderate;
     font-weight: bold;
@@ -142,53 +141,29 @@
 
   .create-common-review__link-icon {
     flex-shrink: 0;
-    margin-right: 8px;
+    margin-right: 0.5rem;
   }
 
   .create-common-review__rules {
     margin: 0 0 1.5rem 0;
+  }
 
-    .create-common-review__rule {
-      margin-bottom: 1rem;
-    }
+  .create-common-review__contribution-title {
+    margin: 1.5rem 0 0;
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: $moderate;
+    font-weight: bold;
+    line-height: 1.22;
+  }
 
-    .create-common-review__rule-number {
-      font-size: 0.875rem;
-      line-height: 1.43;
-      color: #979bba;
-      margin-bottom: 0.25rem;
-    }
+  .create-common-review__contribution-text {
+    margin: 0.5rem 0 0;
+    font-size: $xsmall;
+    line-height: 1.43;
+  }
 
-    .create-common-review__rule-title {
-      margin: 0 0 0.25rem 0;
-      font-size: 1rem;
-      font-weight: bold;
-      line-height: 1.5;
-    }
-
-    .create-common-review__rule-description {
-      margin: 0;
-      font-size: 0.875rem;
-      line-height: 1.43;
-    }
-
-    .create-common-review__rule__contribution-title {
-      margin: 1.5rem 0 0;
-      font-family: NunitoSans-Bold, sans-serif;
-      font-size: $moderate;
-      font-weight: bold;
-      line-height: 1.22;
-    }
-
-    .create-common-review__rule__contribution-description {
-      margin: 0.5rem 0 0;
-      font-size: 0.875rem;
-      line-height: 1.43;
-    }
-
-    .create-common-review__rule__contribution-description span {
-      font-weight: bold;
-    }
+  .create-common-review__contribution-text-bold {
+    font-weight: bold;
   }
 
   .create-common-review__additional-info-container {
@@ -196,18 +171,18 @@
     max-width: 36.375rem;
     max-height: 4.5rem;
     padding: 1rem 1.5rem;
-    border-radius: 14px;
-    background-color: rgba(119, 134, 255, 0.1);
+    border-radius: 0.875rem;
+    background-color: $black-gray-3;
   }
 
   .create-common-review__additional-info-text {
-    font-size: 0.875rem;
+    font-size: $xsmall;
     line-height: 1.43;
     text-align: center;
-    color: #4f5c69;
+    color: $blue-2;
   }
 
-  .create-common-review__additional-info-text span {
+  .create-common-review__additional-info-text-bold {
     font-weight: bold;
   }
 }
@@ -215,9 +190,9 @@
 .create-common-review__modal-footer {
   display: flex;
   justify-content: center;
-  padding: 28px 0;
+  padding: 1.75rem 0;
 
   @include big-phone {
-    padding: 24px 0;
+    padding: 1.5rem 0;
   }
 }
