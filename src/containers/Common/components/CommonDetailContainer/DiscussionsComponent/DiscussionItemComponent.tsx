@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import classNames from "classnames";
 
-import { useCalculateReadMoreLength } from "../../../../../shared/hooks";
+import { useFullText } from "../../../../../shared/hooks";
 import { Discussion } from "../../../../../shared/models";
 import { getUserName, getDaysAgo } from "../../../../../shared/utils";
 
@@ -14,9 +15,13 @@ export default function DiscussionItemComponent({
   loadDisscussionDetail,
 }: DiscussionItemComponentProps) {
   const [imageError, setImageError] = useState(false);
-  // const [readMore, setReadMore] = useState("");
+  const {
+    ref: messageRef,
+    isFullTextShowing,
+    shouldShowFullText,
+    showFullText,
+  } = useFullText();
   const date = new Date();
-  const textLength = useCalculateReadMoreLength();
   return (
     <div className="discussion-item-wrapper">
       <div className="discussion-top-bar">
@@ -49,12 +54,14 @@ export default function DiscussionItemComponent({
         >
           {discussion.title}
         </div>
-        <div className={`description `}>{discussion.message}</div>
-        {discussion.message.length > textLength ? (
-          <div
-            className="read-more"
-            onClick={() => loadDisscussionDetail(discussion)}
-          >
+        <div
+          className={classNames("description", { full: shouldShowFullText })}
+          ref={messageRef}
+        >
+          {discussion.message}
+        </div>
+        {!isFullTextShowing ? (
+          <div className="read-more" onClick={showFullText}>
             Read More
           </div>
         ) : null}
