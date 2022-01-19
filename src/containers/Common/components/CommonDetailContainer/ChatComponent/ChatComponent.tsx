@@ -96,7 +96,7 @@ export default function ChatComponent({
                 {isJoiningPending ? "Pending approval" : "Join the effort"}
               </button>
             )}
-            <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${commonId}`} text="Hey checkout this common!" type="popup" color={Colors.lightPurple} top="-130px" />
+            <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${commonId}`} type="popup" color={Colors.lightPurple} top="-130px" />
           </div>
         </div>
       ) : (
