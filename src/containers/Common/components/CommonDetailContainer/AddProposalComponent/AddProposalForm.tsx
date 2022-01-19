@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { ChangeEventHandler, useEffect, useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { TextField } from "@/shared/components/Form/Formik";
 import { formatPrice } from "@/shared/utils";
 import { Common } from "@/shared/models";
+import { uploadFile } from "@/shared/utils/firebaseUploadFile";
 
 const validationSchema = Yup.object({
   message: Yup.string().required("Field required"),
   title: Yup.string().required("Field required").max(49, "Title too long"),
 });
+
+const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png, .pdf";
+
 interface AddProposalFormInterface {
   onProposalAdd: (payload: any) => void;
   common: Common;
@@ -18,10 +22,42 @@ export const AddProposalForm = ({
   common,
   onProposalAdd,
 }: AddProposalFormInterface) => {
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [uploadedFiles, setUploadedFile] = useState<string[]>([]);
+
   const [formValues] = useState({
     title: "",
     message: "",
   });
+
+  const selectFiles: ChangeEventHandler<HTMLInputElement> = (event) => {
+    const file = event.target.files ? event.target.files[0] : null;
+
+    if (!file) {
+      return;
+    }
+
+    setSelectedFiles((selectedFiles) => [...selectedFiles, file]);
+  };
+
+  useEffect(() => {
+    (async () => {
+      if (selectedFiles.length) {
+        const files = await Promise.all(
+          selectedFiles.map(async (file: File) => {
+            const downloadURL = await uploadFile(file.name, "public_img", file);
+            return downloadURL;
+          })
+        );
+
+        setUploadedFile((f) => [...f, ...files]);
+        setSelectedFiles([]);
+      }
+    })();
+  }, [selectedFiles]);
+
+  console.log(uploadedFiles);
+
   return (
     <Formik
       validationSchema={validationSchema}
@@ -87,8 +123,20 @@ export const AddProposalForm = ({
               />
             </div>
             <div className="add-additional-information">
+              <input
+                id="file"
+                type="file"
+                onChange={selectFiles}
+                accept={ACCEPTED_EXTENSIONS}
+                style={{ display: "none" }}
+              />
               <div className="link">Add link</div>
-              <div className="link">Add image</div>
+              <div
+                className="link"
+                onClick={() => document.getElementById("file")?.click()}
+              >
+                Add image
+              </div>
             </div>
             <div className="proposal-note-wrapper">
               <div className="note-title">Please note:</div>

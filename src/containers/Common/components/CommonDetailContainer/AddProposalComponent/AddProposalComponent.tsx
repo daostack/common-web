@@ -23,9 +23,7 @@ const AddProposalComponent = ({
   onProposalAdd,
   common,
 }: AddDiscussionComponentProps) => {
-  const [proposalCreationStep, changeCreationProposalStep] = useState(
-    "failure"
-  );
+  const [proposalCreationStep, changeCreationProposalStep] = useState("create");
 
   const renderProposalStep = useMemo(() => {
     switch (proposalCreationStep) {
