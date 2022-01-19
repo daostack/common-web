@@ -29,7 +29,7 @@ export default function PendingUpload({ proposalId, selectedFiles, updateUploadS
           invoicesData.payoutDocs.push({
             name: file.data.name,
             legalType: PayMeTypeCodes.Invoice,
-            amount: file.amount,
+            amount: file.amount * 100,
             mimeType: file.data.type,
             downloadURL: downloadURL
           })
