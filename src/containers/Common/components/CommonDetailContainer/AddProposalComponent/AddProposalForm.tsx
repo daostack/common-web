@@ -1,17 +1,18 @@
 import React, { ChangeEventHandler, useEffect, useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { TextField } from "@/shared/components/Form/Formik";
+import { LinksArray, TextField } from "@/shared/components/Form/Formik";
 import { formatPrice } from "@/shared/utils";
 import { Common } from "@/shared/models";
 import { uploadFile } from "@/shared/utils/firebaseUploadFile";
+import { MAX_LINK_TITLE_LENGTH } from "@/containers/Common/components/CommonListContainer/CreateCommonModal/CreationSteps/GeneralInfo/constants";
 
 const validationSchema = Yup.object({
   message: Yup.string().required("Field required"),
   title: Yup.string().required("Field required").max(49, "Title too long"),
 });
 
-const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png, .pdf";
+const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png";
 
 interface AddProposalFormInterface {
   onProposalAdd: (payload: any) => void;
@@ -28,6 +29,7 @@ export const AddProposalForm = ({
   const [formValues] = useState({
     title: "",
     message: "",
+    links: [],
   });
 
   const selectFiles: ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -55,8 +57,6 @@ export const AddProposalForm = ({
       }
     })();
   }, [selectedFiles]);
-
-  console.log(uploadedFiles);
 
   return (
     <Formik
@@ -123,19 +123,50 @@ export const AddProposalForm = ({
               />
             </div>
             <div className="add-additional-information">
-              <input
-                id="file"
-                type="file"
-                onChange={selectFiles}
-                accept={ACCEPTED_EXTENSIONS}
-                style={{ display: "none" }}
-              />
-              <div className="link">Add link</div>
-              <div
-                className="link"
-                onClick={() => document.getElementById("file")?.click()}
-              >
-                Add image
+              <div className="links-wrapper">
+                <input
+                  id="file"
+                  type="file"
+                  onChange={selectFiles}
+                  accept={ACCEPTED_EXTENSIONS}
+                  style={{ display: "none" }}
+                />
+                <div
+                  className="link"
+                  onClick={() =>
+                    formikProps.setFieldValue("links", [
+                      ...formikProps.values.links,
+                      { title: "", link: "" },
+                    ])
+                  }
+                >
+                  Add link
+                </div>
+                <div
+                  className="link"
+                  onClick={() => document.getElementById("file")?.click()}
+                >
+                  Add image
+                </div>
+              </div>
+              <div className="additional-content-wrapper">
+                <div className="files-preview">
+                  {uploadedFiles.map((f, i) => (
+                    <img src={f} alt={i.toString()} key={f} />
+                  ))}
+                </div>
+                <div className="additional-links">
+                  <LinksArray
+                    hideAddButton={true}
+                    name="links"
+                    values={formikProps.values.links}
+                    errors={formikProps.errors.links}
+                    touched={formikProps.touched.links}
+                    maxTitleLength={MAX_LINK_TITLE_LENGTH}
+                    className="create-common-general-info__text-field"
+                    itemClassName="create-common-general-info__links-array-item"
+                  />
+                </div>
               </div>
             </div>
             <div className="proposal-note-wrapper">
