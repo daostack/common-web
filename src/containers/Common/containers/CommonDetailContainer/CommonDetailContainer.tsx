@@ -118,6 +118,7 @@ export default function CommonDetail() {
   const shouldShowStickyJoinEffortButton =
     screenSize === ScreenSize.Mobile &&
     !isCommonMember &&
+    !isJoiningPending &&
     !inViewport &&
     (stickyClass || footerClass);
 
@@ -329,7 +330,6 @@ export default function CommonDetail() {
   }
 
   const sharingURL = `${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`;
-  const joinButtonText = isJoiningPending ? "Pending approval" : "Join the effort";
 
   return (
     <>
@@ -478,7 +478,7 @@ export default function CommonDetail() {
                       onClick={onOpenJoinModal}
                       disabled={isJoiningPending}
                     >
-                      {joinButtonText}
+                      {isJoiningPending ? "Pending approval" : "Join the effort"}
                     </button>
                   )}
                   {isCommonMember && screenSize === ScreenSize.Desktop && (
@@ -569,9 +569,8 @@ export default function CommonDetail() {
               <button
                 className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
                 onClick={onOpenJoinModal}
-                disabled={isJoiningPending}
               >
-                {joinButtonText}
+                Join the effort
               </button>
             )}
             {(screenSize === ScreenSize.Desktop || tab !== "about") && (

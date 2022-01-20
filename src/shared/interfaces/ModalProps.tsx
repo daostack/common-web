@@ -25,3 +25,7 @@ export interface ModalProps {
     content?: string;
   };
 }
+
+export interface ModalRef {
+  scrollToTop: () => void;
+}
