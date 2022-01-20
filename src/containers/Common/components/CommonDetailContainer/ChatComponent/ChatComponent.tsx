@@ -44,6 +44,7 @@ export default function ChatComponent({
   isCommonMember,
   isJoiningPending,
 }: ChatComponentInterface) {
+  const shouldShowJoinToCommonButton = !isCommonMember && !isJoiningPending;
   const messages = discussionMessage.reduce(groupday, {});
 
   const dateList = Object.keys(messages);
@@ -70,9 +71,9 @@ export default function ChatComponent({
       <div className="bottom-chat-wrapper">
         <div className="text">Download the Common app to join the discussion</div>
         <div className="button-wrapper">
-          {!isCommonMember && (
-            <button className="button-blue join-the-effort-btn" onClick={onOpenJoinModal} disabled={isJoiningPending}>
-              {isJoiningPending ? "Pending approval" : "Join the effort"}
+          {shouldShowJoinToCommonButton && (
+            <button className="button-blue join-the-effort-btn" onClick={onOpenJoinModal}>
+              Join the effort
             </button>
           )}
           <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${commonId}`} type="popup" color={Colors.lightPurple} top="-130px" />
