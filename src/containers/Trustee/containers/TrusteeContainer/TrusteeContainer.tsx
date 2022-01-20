@@ -1,8 +1,9 @@
 import React, { FC } from "react";
-import { Route } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { ROUTE_PATHS } from "../../../../shared/constants";
 import { UserRole } from "../../../../shared/models";
+import OnlyPublicRoute from "../../../App/OnlyPublicRoute";
 import PrivateRoute from "../../../App/PrivateRoute";
 import { authentificated, selectUser } from "../../../Auth/store/selectors";
 import { AuthenticationContainer } from "../AuthenticationContainer";
@@ -21,10 +22,12 @@ const TrusteeContainer: FC = () => {
 
   return (
     <>
-      <Route
+      <OnlyPublicRoute
         path={ROUTE_PATHS.TRUSTEE_AUTH}
         exact
         component={AuthenticationContainer}
+        authenticated={isAuthenticated}
+        redirectPath={ROUTE_PATHS.TRUSTEE_INVOICES}
       />
       <PrivateRoute
         path={ROUTE_PATHS.TRUSTEE_INVOICE}
@@ -38,6 +41,7 @@ const TrusteeContainer: FC = () => {
         component={InvoicesAcceptanceContainer}
         {...generalPrivateProps}
       />
+      <Redirect to={ROUTE_PATHS.TRUSTEE_AUTH} />
     </>
   );
 };
