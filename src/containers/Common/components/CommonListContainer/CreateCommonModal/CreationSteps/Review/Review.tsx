@@ -4,12 +4,13 @@ import { isMobile } from "@/shared/utils";
 import { ButtonLink } from "@/shared/components";
 import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
 import LinkIcon from "@/shared/icons/link.icon";
-import { Separator } from "../../Separator";
-import { Progress } from "../Progress";
 import LeftArrowIcon from "@/shared/icons/leftArrow.icon";
 import RightArrowIcon from "@/shared/icons/rightArrow.icon";
 import { RulesArrayItem } from "@/shared/components/Form/Formik";
+import { Separator } from "../../Separator";
+import { Progress } from "../Progress";
 import { RuleList } from "./RuleList";
+import { SelectFile } from "./SelectFile";
 import "./index.scss";
 
 interface ReviewProps {
@@ -57,22 +58,7 @@ export default function Review({
       <div className="create-common-review">
         {isMobileView && progressEl}
         <div className="create-common-review__upload-cover-image">
-          <label
-            htmlFor="cover-image"
-            className="create-common-review__selection-input-label"
-          >
-            <img
-              className="create-common-review__input-bg-image"
-              src="assets/images/create-common-review__add-bg-image.jpg"
-              alt=""
-            />
-          </label>
-          <input
-            type="file"
-            className="create-common-review__selection-input"
-            id="cover-image"
-            accept=".jpg, .jpeg, .png"
-          />
+          <SelectFile className="create-common-review__select-file" />
           <div className="create-common-review__title-and-arrows">
             <LeftArrowIcon className="create-common-review__arrow-icon" />
             <span className="create-common-review__cover-image-title">
@@ -118,26 +104,26 @@ export default function Review({
             </ButtonLink>
           ))}
         </div>
-        <div className="create-common-review__rules">
-          <RuleList rules={rules} />
+        <RuleList rules={rules} className="create-common-review__rules" />
+        <div className="create-common-review__contribution-container">
           <h5 className="create-common-review__contribution-title">
             Minimum Contribution
           </h5>
           <p className="create-common-review__contribution-text">
             $10{" "}
-            <span className="create-common-review__contribution-text-bold">
+            <span className="create-common-review__contribution-text--bold">
               one-time
             </span>{" "}
             contribution
           </p>
-          <div className="create-common-review__additional-info-container">
-            <div className="create-common-review__additional-info-text">
-              To publish the Common, add a personal contribution.
-              <span className="create-common-review__additional-info-text-bold">
-                Don't worry, you will be able to make changes
-              </span>{" "}
-              to the Common info after it is published.
-            </div>
+        </div>
+        <div className="create-common-review__additional-info-container">
+          <div className="create-common-review__additional-info-text">
+            To publish the Common, add a personal contribution.
+            <span className="create-common-review__additional-info-text--bold">
+              Don't worry, you will be able to make changes
+            </span>{" "}
+            to the Common info after it is published.
           </div>
         </div>
         <ModalFooter sticky>

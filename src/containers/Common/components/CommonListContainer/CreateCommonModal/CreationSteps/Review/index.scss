@@ -27,31 +27,9 @@ $bg-img: url("/assets/images/review-bg-image.jpg");
     background-position: center;
   }
 
-  .create-common-review__selection-input {
-    opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    z-index: -1;
-  }
-
-  .create-common-review__selection-input-label {
+  .create-common-review__select-file {
     margin: 1rem 1rem 2.875rem 0;
     align-self: self-end;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 0.875rem;
-    cursor: pointer;
-    -webkit-backdrop-filter: blur(0.625rem);
-    backdrop-filter: blur(0.625rem);
-    background-color: $black-gray-2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .create-common-review__input-bg-image {
-    width: 1.5rem;
-    height: 1.5rem;
   }
 
   .create-common-review__title-and-arrows {
@@ -162,7 +140,7 @@ $bg-img: url("/assets/images/review-bg-image.jpg");
     line-height: 1.43;
   }
 
-  .create-common-review__contribution-text-bold {
+  .create-common-review__contribution-text--bold {
     font-weight: bold;
   }
 
@@ -182,7 +160,7 @@ $bg-img: url("/assets/images/review-bg-image.jpg");
     color: $blue-2;
   }
 
-  .create-common-review__additional-info-text-bold {
+  .create-common-review__additional-info-text--bold {
     font-weight: bold;
   }
 }
