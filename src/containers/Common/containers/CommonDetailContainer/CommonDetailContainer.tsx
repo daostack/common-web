@@ -113,12 +113,12 @@ export default function CommonDetail() {
       proposal.state === ProposalState.COUNTDOWN &&
       proposal.proposerId === user?.uid
   );
-  const shouldShowJoinToCommonButton = !isCommonMember && !isJoiningPending;
   const shouldAllowJoiningToCommon =
     !isCommonMember && (isCreationStageReached || !isJoiningPending);
   const shouldShowStickyJoinEffortButton =
     screenSize === ScreenSize.Mobile &&
-    shouldShowJoinToCommonButton &&
+    !isCommonMember &&
+    !isJoiningPending &&
     !inViewport &&
     (stickyClass || footerClass);
 
@@ -472,12 +472,13 @@ export default function CommonDetail() {
                   ))}
                 </div>
                 <div className="social-wrapper" ref={setJoinEffortRef}>
-                  {shouldShowJoinToCommonButton && (
+                  {!isCommonMember && (
                     <button
                       className={`button-blue join-the-effort-btn`}
                       onClick={onOpenJoinModal}
+                      disabled={isJoiningPending}
                     >
-                      Join the effort
+                      {isJoiningPending ? "Pending approval" : "Join the effort"}
                     </button>
                   )}
                   {isCommonMember && screenSize === ScreenSize.Desktop && (
