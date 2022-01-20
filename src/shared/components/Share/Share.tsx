@@ -8,6 +8,13 @@ import "./index.scss";
 
 type ViewType = "popup" | "modal";
 
+enum Social {
+  Facebook = "facebook",
+  Twitter = "twitter",
+  LinkedIn = "linkedin",
+  Telegram = "telegram",
+}
+
 interface IProps {
   url: string;
   color: Colors;
@@ -16,12 +23,27 @@ interface IProps {
   top?: string;
 }
 
+const generateShareQuery = (social: Social, { url, text }: { url: string, text?: string }) => {
+  switch (social) {
+    case Social.Facebook:
+      return `?u=${url}${text ? `&quote=${text}` : ""}`;
+    case Social.Twitter:
+    case Social.Telegram:
+      return `?url=${url}${text ? `&text=${text}` : ""}`;
+    case Social.LinkedIn:
+      return `?url=${url}`;
+    default:
+      return "";
+  }
+};
+
 export default function Share(props: PropsWithChildren<IProps>) {
   const { url, text = "", color, type, top, children } = props;
   const wrapperRef = useRef(null);
   const [isShown, setShown] = useState(false);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
   const { isShowing, onOpen, onClose } = useModal(false);
+  const queryData = { url, text };
 
   document.documentElement.style.setProperty("--share-button-bg", color);
 
@@ -53,10 +75,10 @@ export default function Share(props: PropsWithChildren<IProps>) {
           "social-buttons--modal": type === "modal",
         })}
       >
-        <button className="facebook" onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}"`)} />
-        <button className="twitter" onClick={() => window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`)} />
-        <button className="linkedin" onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`)} />
-        <button className="telegram" onClick={() => window.open(`https://t.me/share/url?url=${url}&text=${text}`)} />
+        <button className="facebook" onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php${generateShareQuery(Social.Facebook, queryData)}`)} />
+        <button className="twitter" onClick={() => window.open(`https://twitter.com/intent/tweet${generateShareQuery(Social.Twitter, queryData)}`)} />
+        <button className="linkedin" onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/${generateShareQuery(Social.LinkedIn, queryData)}`)} />
+        <button className="telegram" onClick={() => window.open(`https://t.me/share/url${generateShareQuery(Social.Telegram, queryData)}`)} />
       </div>
     </div>
   );
