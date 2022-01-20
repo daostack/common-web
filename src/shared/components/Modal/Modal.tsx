@@ -11,7 +11,7 @@ import React, {
 import ReactDOM from "react-dom";
 import classNames from "classnames";
 
-import { useOutsideClick } from "../../hooks";
+import { useComponentWillUnmount, useOutsideClick } from "../../hooks";
 import { ModalProps } from "../../interfaces";
 import CloseIcon from "../../icons/close.icon";
 import LeftArrowIcon from "../../icons/leftArrow.icon";
@@ -19,6 +19,8 @@ import { Colors } from "../../constants";
 import { ModalContext, FooterOptions, ModalContextValue } from "./context";
 import { ClosePrompt } from "./components/ClosePrompt";
 import "./index.scss";
+
+const MODAL_ID = "modal";
 
 const Modal: FC<ModalProps> = (props) => {
   const {
@@ -68,6 +70,19 @@ const Modal: FC<ModalProps> = (props) => {
     onClose();
   }, [onClose]);
 
+  const handleUnmount = useCallback(() => {
+    if (!isShowing) {
+      return;
+    }
+
+    const modalRoot = document.getElementById(MODAL_ID);
+    document.body.style.overflow = "initial";
+
+    if (modalRoot) {
+      document.body.removeChild(modalRoot);
+    }
+  }, [isShowing]);
+
   useEffect(() => {
     if (isOutside) {
       handleClose();
@@ -76,7 +91,7 @@ const Modal: FC<ModalProps> = (props) => {
 
   useEffect(() => {
     if (!isShowing) {
-      const modalRoot = document.getElementById("modal");
+      const modalRoot = document.getElementById(MODAL_ID);
       document.body.style.overflow = "initial";
       if (modalRoot) {
         document.body.removeChild(modalRoot);
@@ -91,6 +106,8 @@ const Modal: FC<ModalProps> = (props) => {
       onHeaderScrolledToTop(!isHeaderSticky || isFullyScrolledToTop);
     }
   }, [onHeaderScrolledToTop, isHeaderSticky, isFullyScrolledToTop]);
+
+  useComponentWillUnmount(handleUnmount);
 
   const handleScroll = useCallback(() => {
     const { current } = contentRef;
@@ -185,7 +202,7 @@ const Modal: FC<ModalProps> = (props) => {
 
   return isShowing
     ? ReactDOM.createPortal(
-        <div id="modal">
+        <div id={MODAL_ID}>
           <div className="modal-overlay" />
           <div className={modalWrapperClassName}>
             <div ref={wrapperRef} className={`modal ${props.className}`}>
