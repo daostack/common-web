@@ -1,7 +1,11 @@
-import React, { useCallback, FC } from "react";
+import React, { useCallback, useState, FC } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
+import { ErrorText } from "../../../../shared/components/Form";
 import { Form, TextField } from "../../../../shared/components/Form/Formik";
 import { SUPPORT_EMAIL } from "../../../../shared/constants";
+import { getLoading } from "../../../../shared/store/selectors";
+import { loginUsingEmailAndPassword } from "../../../Auth/store/actions";
 import validationSchema from "./validationSchema";
 import "./index.scss";
 
@@ -16,11 +20,25 @@ const INITIAL_VALUES: FormValues = {
 };
 
 const AuthenticationContainer: FC = () => {
+  const dispatch = useDispatch();
+  const loading = useSelector(getLoading());
+  const [error, setError] = useState("");
+
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
-      console.log(values);
+      setError("");
+      dispatch(
+        loginUsingEmailAndPassword.request({
+          payload: values,
+          callback: (error) => {
+            if (error) {
+              setError("Invalid email or password");
+            }
+          },
+        })
+      );
     },
-    []
+    [dispatch]
   );
 
   return (
@@ -58,10 +76,11 @@ const AuthenticationContainer: FC = () => {
                   "trustee-authentication-container__text-field-label-wrapper",
               }}
             />
+            {error && <ErrorText>{error}</ErrorText>}
             <button
               className="button-blue trustee-authentication-container__submit-button"
               type="submit"
-              disabled={!isValid}
+              disabled={!isValid || loading}
             >
               Login
             </button>
