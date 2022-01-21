@@ -46,6 +46,17 @@ $invoice-tile-border-radius: 14px;
     &:hover {
       opacity: 0.8;
     }
+
+    &:disabled {
+      color: $light-gray-2;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+  .all-files-carousel-wrapper__button-icon--hidden {
+    visibility: hidden;
   }
 
   .all-files-carousel-wrapper__icon {
@@ -53,17 +64,13 @@ $invoice-tile-border-radius: 14px;
     height: 2rem;
   }
 
-  .all-files-carousel-wrapper__content {
-    flex: 1 0;
-    display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  .all-files-carousel-wrapper__swiper-wrapper {
+    width: 100%;
+    overflow: hidden;
+  }
 
-    &::-webkit-scrollbar {
-      display: none;
-    }
+  .all-files-carousel-wrapper__swiper {
+    width: 100%;
   }
 
   .all-files-carousel-wrapper__invoice-tile {
@@ -72,6 +79,7 @@ $invoice-tile-border-radius: 14px;
     height: 9.625rem;
     margin-right: 1.5rem;
     box-sizing: border-box;
+    user-select: none;
 
     &:last-child {
       margin-right: 0;
