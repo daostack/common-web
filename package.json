@@ -9,6 +9,7 @@
     "axios": "^0.21.0",
     "classnames": "^2.3.1",
     "connected-react-router": "^6.8.0",
+    "file-saver": "^2.0.5",
     "firebase": "^8.3.2",
     "formik": "^2.2.1",
     "graphql": "^15.5.1",
@@ -63,6 +64,7 @@
   },
   "devDependencies": {
     "@types/enzyme": "^3.10.8",
+    "@types/file-saver": "^2.0.5",
     "@types/lodash": "^4.14.163",
     "@types/node": "^12.19.3",
     "@types/openpgp": "4.4.12",

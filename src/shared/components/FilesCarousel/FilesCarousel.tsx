@@ -7,6 +7,7 @@ import RightArrowIcon from "../../icons/rightArrow.icon";
 import ZoomInIcon from "../../icons/zoomIn.icon";
 import ZoomOutIcon from "../../icons/zoomOut.icon";
 import { DocInfo } from "../../models";
+import { downloadByURL } from "../../utils";
 import { ButtonIcon } from "../ButtonIcon";
 import { AllFilesCarousel } from "./AllFilesCarousel";
 import "./index.scss";
@@ -62,6 +63,12 @@ const FilesCarousel: FC<FilesCarouselProps> = (props) => {
     setCurrentDocIndex(index >= payoutDocs.length ? 0 : index);
   };
 
+  const handleDownload = () => {
+    if (currentDoc) {
+      downloadByURL(currentDoc.downloadURL, currentDoc.name);
+    }
+  };
+
   return (
     <div className="files-carousel-wrapper">
       <div className="files-carousel-wrapper__overlay" />
@@ -101,15 +108,12 @@ const FilesCarousel: FC<FilesCarouselProps> = (props) => {
                   alt={currentDoc.name}
                 />
                 <div className="files-carousel-wrapper__preview-image-icons-wrapper">
-                  <a
+                  <ButtonIcon
                     className="files-carousel-wrapper__icon-wrapper"
-                    href={currentDoc.downloadURL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    download
+                    onClick={handleDownload}
                   >
                     <DownloadIcon className="files-carousel-wrapper__icon" />
-                  </a>
+                  </ButtonIcon>
                   <ButtonIcon
                     className="files-carousel-wrapper__icon-wrapper"
                     onClick={isZoomed ? handleZoomOut : handleZoomIn}
