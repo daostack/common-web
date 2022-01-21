@@ -1,7 +1,8 @@
 import React, { FC } from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, RouteProps } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { ROUTE_PATHS } from "../../../../shared/constants";
+import { useMatchRoute } from "../../../../shared/hooks";
 import { UserRole } from "../../../../shared/models";
 import OnlyPublicRoute from "../../../App/OnlyPublicRoute";
 import PrivateRoute from "../../../App/PrivateRoute";
@@ -10,7 +11,15 @@ import { AuthenticationContainer } from "../AuthenticationContainer";
 import { InvoiceAcceptanceContainer } from "../InvoiceAcceptanceContainer";
 import { InvoicesAcceptanceContainer } from "../InvoicesAcceptanceContainer";
 
+const TRUSTEE_MATCH_ROUTE_PROPS: RouteProps = {
+  exact: true,
+};
+
 const TrusteeContainer: FC = () => {
+  const isParentTrusteeRoute = useMatchRoute(
+    ROUTE_PATHS.TRUSTEE,
+    TRUSTEE_MATCH_ROUTE_PROPS
+  );
   const isAuthenticated = useSelector(authentificated());
   const user = useSelector(selectUser());
   const generalPrivateProps = {
@@ -22,6 +31,7 @@ const TrusteeContainer: FC = () => {
 
   return (
     <>
+      {isParentTrusteeRoute && <Redirect to={ROUTE_PATHS.TRUSTEE_AUTH} />}
       <OnlyPublicRoute
         path={ROUTE_PATHS.TRUSTEE_AUTH}
         exact
@@ -41,7 +51,6 @@ const TrusteeContainer: FC = () => {
         component={InvoicesAcceptanceContainer}
         {...generalPrivateProps}
       />
-      <Redirect to={ROUTE_PATHS.TRUSTEE_AUTH} />
     </>
   );
 };
