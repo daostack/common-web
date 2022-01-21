@@ -1,11 +1,16 @@
 import React, { useCallback, FC } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
-import { InvoiceTile, InvoiceTileVariant } from "../../../../shared/components";
+import {
+  ButtonIcon,
+  InvoiceTile,
+  InvoiceTileVariant,
+} from "../../../../shared/components";
 import { ScreenSize } from "../../../../shared/constants";
 import DownloadIcon from "../../../../shared/icons/download.icon";
 import { DocInfo } from "../../../../shared/models";
 import { getScreenSize } from "../../../../shared/store/selectors";
+import { saveZip } from "../../../../shared/utils";
 import "./index.scss";
 
 interface InvoiceTileListProps {
@@ -19,11 +24,23 @@ const InvoiceTileList: FC<InvoiceTileListProps> = (props) => {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
-  const handleInvoiceTileClick = useCallback((doc: DocInfo, index: number) => {
-    if (onDocClick) {
-      onDocClick(doc, index);
-    }
-  }, [onDocClick]);
+  const handleInvoiceTileClick = useCallback(
+    (doc: DocInfo, index: number) => {
+      if (onDocClick) {
+        onDocClick(doc, index);
+      }
+    },
+    [onDocClick]
+  );
+
+  const handleDownloadAll = useCallback(() => {
+    const files = payoutDocs.map((doc) => ({
+      url: doc.downloadURL,
+      fileName: doc.name,
+    }));
+
+    saveZip("invoices", files);
+  }, [payoutDocs]);
 
   return (
     <section className={classNames("invoice-tile-list-wrapper", className)}>
@@ -39,10 +56,13 @@ const InvoiceTileList: FC<InvoiceTileListProps> = (props) => {
               {payoutDocs.length}
               {` Invoice${payoutDocs.length === 1 ? "" : "s"}`}
             </span>
-            <span className="invoice-tile-list-wrapper__download-all-link">
+            <ButtonIcon
+              className="invoice-tile-list-wrapper__download-all-link"
+              onClick={handleDownloadAll}
+            >
               <DownloadIcon />
               Download all invoices
-            </span>
+            </ButtonIcon>
           </div>
           <div className="invoice-tile-list-wrapper__invoices-wrapper">
             {payoutDocs.map((doc, index) => (

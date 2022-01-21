@@ -7,7 +7,7 @@ import RightArrowIcon from "../../icons/rightArrow.icon";
 import ZoomInIcon from "../../icons/zoomIn.icon";
 import ZoomOutIcon from "../../icons/zoomOut.icon";
 import { DocInfo } from "../../models";
-import { downloadByURL } from "../../utils";
+import { saveByURL } from "../../utils";
 import { ButtonIcon } from "../ButtonIcon";
 import { AllFilesCarousel } from "./AllFilesCarousel";
 import "./index.scss";
@@ -65,7 +65,7 @@ const FilesCarousel: FC<FilesCarouselProps> = (props) => {
 
   const handleDownload = () => {
     if (currentDoc) {
-      downloadByURL(currentDoc.downloadURL, currentDoc.name);
+      saveByURL(currentDoc.downloadURL, currentDoc.name);
     }
   };
 

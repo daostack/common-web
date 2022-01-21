@@ -19,9 +19,10 @@ $invoice-tile-border-radius: 14px;
   }
 
   .all-files-carousel-wrapper__download-all {
-    display: flex;
-    align-items: center;
+    font-family: inherit;
     font-size: $xxsmall;
+    font-weight: inherit;
+    color: inherit;
   }
 
   .all-files-carousel-wrapper__content-wrapper {

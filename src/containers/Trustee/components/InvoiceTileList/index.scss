@@ -25,9 +25,10 @@ $invoices-horizontal-gap: 1.5rem;
   }
 
   .invoice-tile-list-wrapper__download-all-link {
-    display: flex;
-    align-items: center;
+    font-family: inherit;
     font-size: $xxsmall;
+    font-weight: inherit;
+    color: inherit;
   }
 
   .invoice-tile-list-wrapper__invoices-wrapper {

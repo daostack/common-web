@@ -3,6 +3,7 @@ import classNames from "classnames";
 import DownloadIcon from "../../../icons/download.icon";
 import LeftArrowIcon from "../../../icons/leftArrow.icon";
 import RightArrowIcon from "../../../icons/rightArrow.icon";
+import { saveZip } from "../../../utils";
 import { DocInfo } from "../../../models";
 import { ButtonIcon } from "../../ButtonIcon";
 import { InvoiceTile } from "../../InvoiceTile";
@@ -18,6 +19,15 @@ interface AllFilesCarouselProps {
 const AllFilesCarousel: FC<AllFilesCarouselProps> = (props) => {
   const { className, payoutDocs, currentDocIndex, onDocClick } = props;
 
+  const handleDownloadAll = () => {
+    const files = payoutDocs.map((doc) => ({
+      url: doc.downloadURL,
+      fileName: doc.name,
+    }));
+
+    saveZip("invoices", files);
+  };
+
   const contentWrapperClassName = classNames(
     "all-files-carousel-wrapper__content-wrapper",
     {
@@ -31,10 +41,13 @@ const AllFilesCarousel: FC<AllFilesCarouselProps> = (props) => {
           {payoutDocs.length}
           {` Invoice${payoutDocs.length === 1 ? "" : "s"}`}
         </span>
-        <span className="all-files-carousel-wrapper__download-all">
+        <ButtonIcon
+          className="all-files-carousel-wrapper__download-all"
+          onClick={handleDownloadAll}
+        >
           <DownloadIcon />
           Download all invoices
-        </span>
+        </ButtonIcon>
       </div>
       <div className={contentWrapperClassName}>
         <ButtonIcon className="all-files-carousel-wrapper__button-icon">
