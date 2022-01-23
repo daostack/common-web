@@ -1,6 +1,6 @@
 import React, { useCallback, FC, MouseEventHandler } from "react";
 import classNames from "classnames";
-import { ButtonIcon } from "../../../shared/components";
+import { ButtonIcon, Image } from "../../../shared/components";
 import TrashIcon from "../../../shared/icons/trash.icon";
 import { formatPrice } from "../../../shared/utils";
 import "./index.scss";
@@ -77,8 +77,11 @@ const InvoiceTile: FC<InvoiceTileProps> = (props) => {
 
   const imageClassName = classNames("invoice-tile__image", styles?.image, {
     "invoice-tile__image--full-width": isFullWidthVariant,
-    "invoice-tile__image--general-file": !isImage,
   });
+  const generalFileClassName = classNames(
+    imageClassName,
+    "invoice-tile__image--general-file"
+  );
 
   const additionalProps = shouldDownloadOnClick
     ? {
@@ -107,9 +110,16 @@ const InvoiceTile: FC<InvoiceTileProps> = (props) => {
         {...additionalProps}
       >
         {isImage ? (
-          <img className={imageClassName} src={fileURL} alt={fileName} />
+          <Image
+            className={imageClassName}
+            src={fileURL}
+            alt={fileName}
+            placeholderElement={
+              <div className={generalFileClassName}>{fileName}</div>
+            }
+          />
         ) : (
-          <div className={imageClassName}>{fileName}</div>
+          <div className={generalFileClassName}>{fileName}</div>
         )}
       </a>
       {!isFullWidthVariant && (
