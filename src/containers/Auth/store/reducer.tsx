@@ -16,11 +16,13 @@ const initialState: AuthStateType = {
 };
 
 const reducer = createReducer<AuthStateType, Action>(initialState)
-  .handleAction(actions.socialLogin.success, (state, action) =>
-    produce(state, (nextState) => {
-      nextState.authentificated = true;
-      nextState.user = action.payload;
-    })
+  .handleAction(
+    [actions.socialLogin.success, actions.loginUsingEmailAndPassword.success],
+    (state, action) =>
+      produce(state, (nextState) => {
+        nextState.authentificated = true;
+        nextState.user = action.payload;
+      })
   )
   .handleAction(actions.logOut, (state) =>
     produce(state, (nextState) => {
