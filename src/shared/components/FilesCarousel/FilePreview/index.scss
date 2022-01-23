@@ -30,6 +30,18 @@
     object-fit: contain;
   }
 
+  .carousel-file-preview-wrapper__general-file {
+    width: 20rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $light-gray-1;
+    text-align: center;
+    word-break: break-word;
+    user-select: none;
+    overflow: hidden;
+  }
+
   .carousel-file-preview-wrapper__icons-wrapper {
     position: absolute;
     top: 1.5rem;
