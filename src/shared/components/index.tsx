@@ -12,4 +12,5 @@ export * from "./Linkify";
 export * from "./Loader";
 export * from "./Share";
 export * from "./Modal";
+export * from "./Separator";
 export * from "./UserAvatar";
