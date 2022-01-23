@@ -6,7 +6,10 @@ interface SwiperConfig {
   scrollable: boolean;
 }
 
-export const getSwiperConfig = (itemsAmount: number, containerWidth: number): SwiperConfig => {
+export const getSwiperConfig = (
+  itemsAmount: number,
+  containerWidth: number
+): SwiperConfig => {
   if ([0, 1].includes(itemsAmount) || !containerWidth) {
     return {
       slidesPerView: 1,
@@ -21,7 +24,7 @@ export const getSwiperConfig = (itemsAmount: number, containerWidth: number): Sw
 
   if (
     itemsAmount * ITEM_WIDTH +
-    (itemsAmount - 1) * MINIMAL_SLIDES_SPACE_BETWEEN <=
+      (itemsAmount - 1) * MINIMAL_SLIDES_SPACE_BETWEEN <=
     containerWidth
   ) {
     return {
@@ -31,12 +34,14 @@ export const getSwiperConfig = (itemsAmount: number, containerWidth: number): Sw
     };
   }
 
-  const slidesPerView = Math.floor(basicSlidePerView);
+  const slidesPerView = Math.floor(basicSlidePerView) || 1;
 
   return {
     slidesPerView,
     spaceBetween:
-      (containerWidth - slidesPerView * ITEM_WIDTH) / (slidesPerView - 1),
+      slidesPerView > 1
+        ? (containerWidth - slidesPerView * ITEM_WIDTH) / (slidesPerView - 1)
+        : 0,
     scrollable: true,
   };
 };

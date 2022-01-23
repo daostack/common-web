@@ -1,7 +1,8 @@
-import React, { useCallback, useMemo, useRef, useState, FC } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState, FC } from "react";
 import classNames from "classnames";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperClass from "swiper/types/swiper-class";
+import throttle from "lodash/throttle";
 import DownloadIcon from "../../../icons/download.icon";
 import LeftArrowIcon from "../../../icons/leftArrow.icon";
 import RightArrowIcon from "../../../icons/rightArrow.icon";
@@ -29,6 +30,7 @@ const AllFilesCarousel: FC<AllFilesCarouselProps> = (props) => {
     isBeginning: boolean;
     isEnd: boolean;
   }>({ isBeginning: false, isEnd: false });
+  const [, setCurrentWindowWidth] = useState(window.innerWidth);
   const swiperRef = useRef<SwiperClass>();
   const swiperClientWidth = swiperWrapperRef?.clientWidth || 0;
   const swiperConfig = useMemo(
@@ -76,6 +78,16 @@ const AllFilesCarousel: FC<AllFilesCarouselProps> = (props) => {
 
     saveZip("invoices", files);
   };
+
+  useEffect(() => {
+    const handleResize = throttle(() => {
+      setCurrentWindowWidth(window.innerWidth);
+    }, 100);
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const contentWrapperClassName = classNames(
     "all-files-carousel-wrapper__content-wrapper",
