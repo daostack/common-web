@@ -1,15 +1,10 @@
 import React, { useEffect, useState, FC } from "react";
 import classNames from "classnames";
 import CloseIcon from "../../icons/close.icon";
-import DownloadIcon from "../../icons/download.icon";
-import LeftArrowIcon from "../../icons/leftArrow.icon";
-import RightArrowIcon from "../../icons/rightArrow.icon";
-import ZoomInIcon from "../../icons/zoomIn.icon";
-import ZoomOutIcon from "../../icons/zoomOut.icon";
 import { DocInfo } from "../../models";
-import { saveByURL } from "../../utils";
 import { ButtonIcon } from "../ButtonIcon";
 import { AllFilesCarousel } from "./AllFilesCarousel";
+import { FilePreview } from "./FilePreview";
 import "./index.scss";
 
 interface FilesCarouselProps {
@@ -63,12 +58,6 @@ const FilesCarousel: FC<FilesCarouselProps> = (props) => {
     setCurrentDocIndex(index >= payoutDocs.length ? 0 : index);
   };
 
-  const handleDownload = () => {
-    if (currentDoc) {
-      saveByURL(currentDoc.downloadURL, currentDoc.name);
-    }
-  };
-
   return (
     <div className="files-carousel-wrapper">
       <div className="files-carousel-wrapper__overlay" />
@@ -82,64 +71,21 @@ const FilesCarousel: FC<FilesCarouselProps> = (props) => {
           />
         )}
         {currentDoc && (
-          <div
-            className={classNames("files-carousel-wrapper__preview-wrapper", {
-              "files-carousel-wrapper__preview-wrapper--zoomed": isZoomed,
+          <FilePreview
+            className={classNames("files-carousel-wrapper__file-preview", {
+              "files-carousel-wrapper__file-preview--zoomed": isZoomed,
             })}
-          >
-            <div className="files-carousel-wrapper__preview-wrapper-content">
-              {!isZoomed && (
-                <ButtonIcon
-                  className="files-carousel-wrapper__preview-icon-wrapper"
-                  onClick={handleLeftClick}
-                >
-                  <LeftArrowIcon className="files-carousel-wrapper__icon files-carousel-wrapper__preview-icon" />
-                </ButtonIcon>
-              )}
-              <div className="files-carousel-wrapper__preview-image-wrapper">
-                <img
-                  className={classNames(
-                    "files-carousel-wrapper__preview-image",
-                    {
-                      "files-carousel-wrapper__preview-image--contain": isZoomed,
-                    }
-                  )}
-                  src={currentDoc.downloadURL}
-                  alt={currentDoc.name}
-                />
-                <div className="files-carousel-wrapper__preview-image-icons-wrapper">
-                  <ButtonIcon
-                    className="files-carousel-wrapper__icon-wrapper"
-                    onClick={handleDownload}
-                  >
-                    <DownloadIcon className="files-carousel-wrapper__icon" />
-                  </ButtonIcon>
-                  <ButtonIcon
-                    className="files-carousel-wrapper__icon-wrapper"
-                    onClick={isZoomed ? handleZoomOut : handleZoomIn}
-                  >
-                    {isZoomed ? (
-                      <ZoomOutIcon className="files-carousel-wrapper__icon" />
-                    ) : (
-                      <ZoomInIcon className="files-carousel-wrapper__icon" />
-                    )}
-                  </ButtonIcon>
-                </div>
-              </div>
-              {!isZoomed && (
-                <ButtonIcon
-                  className="files-carousel-wrapper__preview-icon-wrapper"
-                  onClick={handleRightClick}
-                >
-                  <RightArrowIcon className="files-carousel-wrapper__icon files-carousel-wrapper__preview-icon" />
-                </ButtonIcon>
-              )}
-            </div>
-          </div>
+            doc={currentDoc}
+            isZoomed={isZoomed}
+            onLeftClick={handleLeftClick}
+            onRightClick={handleRightClick}
+            onZoomIn={handleZoomIn}
+            onZoomOut={handleZoomOut}
+          />
         )}
         <ButtonIcon onClick={onClose}>
           <CloseIcon
-            className="files-carousel-wrapper__icon files-carousel-wrapper__icon--close"
+            className="files-carousel-wrapper__close-icon"
             fill="currentColor"
           />
         </ButtonIcon>
