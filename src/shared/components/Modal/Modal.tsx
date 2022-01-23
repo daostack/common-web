@@ -126,7 +126,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (props, modalRef) 
     );
   }, [isHeaderSticky, isFooterSticky]);
 
-  const modalWrapperClassName = classNames("modal-wrapper", {
+  const modalWrapperClassName = classNames("modal-wrapper", styles?.modalWrapper, {
     "mobile-full-screen": mobileFullScreen,
   });
   const headerWrapperClassName = classNames(
