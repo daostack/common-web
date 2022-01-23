@@ -82,6 +82,7 @@ const DeclineInvoicesPrompt: FC<DeclineInvoicesPromptProps> = (props) => {
             id="note"
             name="note"
             placeholder="Add Note"
+            autoFocus
             isTextarea
             rows={6}
             value={note}
