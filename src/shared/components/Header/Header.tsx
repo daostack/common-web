@@ -1,9 +1,16 @@
 import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, Link, useLocation, useHistory } from "react-router-dom";
+import {
+  NavLink,
+  Link,
+  useLocation,
+  useHistory,
+  RouteProps,
+} from "react-router-dom";
 import classNames from "classnames";
 
 import { UserAvatar } from "../../../shared/components";
+import { useMatchRoute } from "../../../shared/hooks";
 import { Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
@@ -18,13 +25,21 @@ import {
   selectUser,
   selectIsLoginModalShowing,
 } from "../../../containers/Auth/store/selectors";
-import { isMobile, getUserName, matchRoute } from "../../utils";
+import { isMobile, getUserName } from "../../utils";
 import { Modal } from "../Modal";
 import { LoginContainer } from "../../../containers/Login/containers/LoginContainer";
 import {
   logOut,
   setIsLoginModalShowing,
 } from "../../../containers/Auth/store/actions";
+
+const NON_EXACT_MATCH_ROUTE_PROPS: RouteProps = {
+  exact: false,
+};
+
+const EXACT_MATCH_ROUTE_PROPS: RouteProps = {
+  exact: true,
+};
 
 const Header = () => {
   const location = useLocation();
@@ -38,9 +53,14 @@ const Header = () => {
   const isNewUser = useSelector(selectIsNewUser());
   const isLoginModalShowing = useSelector(selectIsLoginModalShowing());
   const shouldDisplayAvatar = Boolean(screenSize === ScreenSize.Mobile && user);
-  const isTrusteeRoute = matchRoute(location.pathname, ROUTE_PATHS.TRUSTEE, {
-    exact: false,
-  });
+  const isTrusteeRoute = useMatchRoute(
+    ROUTE_PATHS.TRUSTEE,
+    NON_EXACT_MATCH_ROUTE_PROPS
+  );
+  const isTrusteeAuthRoute = useMatchRoute(
+    ROUTE_PATHS.TRUSTEE_AUTH,
+    EXACT_MATCH_ROUTE_PROPS
+  );
 
   const handleOpen = useCallback(() => {
     dispatch(setIsLoginModalShowing(true));
@@ -117,7 +137,7 @@ const Header = () => {
   );
 
   const headerWrapperClassName = classNames("header-wrapper", {
-    "header-wrapper--without-shadow": isTrusteeRoute,
+    "header-wrapper--without-shadow": isTrusteeRoute && !isTrusteeAuthRoute,
     init: location.pathname === "/" && isTop === undefined,
     hide: location.pathname === "/" && isTop,
     show: location.pathname === "/" && isTop === false,
