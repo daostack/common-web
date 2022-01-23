@@ -29,7 +29,7 @@ export default function EmptyTabComponent({
     onOpen: onJoinModalOpen,
     onClose: onCloseJoinModal,
   } = useAuthorizedModal();
-  const shouldShowJoinToCommonButton = Boolean(common) && !isCommonMember && !isJoiningPending;
+  const shouldShowJoinToCommonButton = Boolean(common) && !isCommonMember;
   const shouldAllowJoiningToCommon = Boolean(common) && !isCommonMember && (isCreationStageReached || !isJoiningPending);
 
   useEffect(() => {
@@ -81,8 +81,9 @@ export default function EmptyTabComponent({
               <button
                 className="button-blue empty-tab-content-wrapper__button"
                 onClick={onJoinModalOpen}
+                disabled={isJoiningPending}
               >
-                Join the effort
+                {isJoiningPending ? "Pending approval" : "Join the effort"}
               </button>
             )}
             {currentTab === "my-commons" && (

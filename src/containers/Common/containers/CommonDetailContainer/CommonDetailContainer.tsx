@@ -116,12 +116,11 @@ export default function CommonDetail() {
       proposal.state === ProposalState.COUNTDOWN &&
       proposal.proposerId === user?.uid
   );
-  const shouldShowJoinToCommonButton = !isCommonMember && !isJoiningPending;
   const shouldAllowJoiningToCommon =
     !isCommonMember && (isCreationStageReached || !isJoiningPending);
   const shouldShowStickyJoinEffortButton =
     screenSize === ScreenSize.Mobile &&
-    shouldShowJoinToCommonButton &&
+    !isCommonMember &&
     !inViewport &&
     (stickyClass || footerClass);
 
@@ -381,6 +380,7 @@ export default function CommonDetail() {
   }
 
   const sharingURL = `${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`;
+  const joinButtonText = isJoiningPending ? "Pending approval" : "Join the effort";
 
   return (
     <>
@@ -496,15 +496,18 @@ export default function CommonDetail() {
               <div className="numbers">
                 <div className="item">
                   <div className="value">{formatPrice(common?.balance)}</div>
-                  <div className="name">{`Available ${
-                    screenSize === ScreenSize.Desktop ? "Funds" : ""
-                  }`}</div>
+                  <div className="name">{`Available ${screenSize === ScreenSize.Desktop ? "Funds" : ""
+                    }`}</div>
+                  {common.reservedBalance && (
+                    <div className="text-information-wrapper__secondary-text">
+                      In process: {formatPrice(common.reservedBalance)}
+                    </div>
+                  )}
                 </div>
                 <div className="item">
                   <div className="value">{formatPrice(common?.raised)}</div>
-                  <div className="name">{`${
-                    screenSize === ScreenSize.Desktop ? "Total" : ""
-                  } Raised`}</div>
+                  <div className="name">{`${screenSize === ScreenSize.Desktop ? "Total" : ""
+                    } Raised`}</div>
                 </div>
                 <div className="item">
                   <div className="value">{common?.members.length}</div>
@@ -512,9 +515,8 @@ export default function CommonDetail() {
                 </div>
                 <div className="item">
                   <div className="value">{activeProposals.length}</div>
-                  <div className="name">{`${
-                    screenSize === ScreenSize.Desktop ? "Active" : ""
-                  } Proposals`}</div>
+                  <div className="name">{`${screenSize === ScreenSize.Desktop ? "Active" : ""
+                    } Proposals`}</div>
                 </div>
               </div>
             </div>
@@ -532,12 +534,13 @@ export default function CommonDetail() {
                   ))}
                 </div>
                 <div className="social-wrapper" ref={setJoinEffortRef}>
-                  {shouldShowJoinToCommonButton && (
+                  {!isCommonMember && (
                     <button
                       className={`button-blue join-the-effort-btn`}
                       onClick={onOpenJoinModal}
+                      disabled={isJoiningPending}
                     >
-                      Join the effort
+                      {joinButtonText}
                     </button>
                   )}
                   {isCommonMember && screenSize === ScreenSize.Desktop && (
@@ -547,14 +550,6 @@ export default function CommonDetail() {
                     </div>
                   )}
 
-                  {!isCommonMember &&
-                    isJoiningPending &&
-                    screenSize === ScreenSize.Desktop && (
-                      <div className="member-label">
-                        <CheckIcon className="member-label__icon" />
-                        Pending
-                      </div>
-                    )}
                   {screenSize === ScreenSize.Desktop && (
                     <Share
                       url={sharingURL}
@@ -639,8 +634,9 @@ export default function CommonDetail() {
               <button
                 className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
                 onClick={onOpenJoinModal}
+                disabled={isJoiningPending}
               >
-                Join the effort
+                {joinButtonText}
               </button>
             )}
             {(screenSize === ScreenSize.Desktop || tab !== "about") && (

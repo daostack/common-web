@@ -464,10 +464,13 @@ $payment-iframe-height-mobile: 672px;
     margin-bottom: 3.5rem;
   }
   button {
-    font-family: NunitoSans-Regular;
-    width: 180px;
-    height: 48px;
-    border-radius: 32px;
+    width: 11.25rem;
+    height: 3rem;
+    font-family: NunitoSans-Regular, sans-serif;
+    font-size: $small;
+    text-align: center;
+    color: $secondary-blue;
+    border-radius: 2rem;
     border: solid 1px $light-gray-1;
     background-color: transparent;
     cursor: pointer;

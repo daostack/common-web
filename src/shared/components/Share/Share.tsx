@@ -17,7 +17,7 @@ interface IProps {
 }
 
 export default function Share(props: PropsWithChildren<IProps>) {
-  const { url, text, color, type, top, children } = props;
+  const { url, text = "", color, type, top, children } = props;
   const wrapperRef = useRef(null);
   const [isShown, setShown] = useState(false);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);

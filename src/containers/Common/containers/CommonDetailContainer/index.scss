@@ -1,4 +1,5 @@
-@import "../../../../constants.scss";
+@import "../../../../constants";
+@import "../../../../styles/sizes";
 
 .common-detail-wrapper {
   margin-bottom: -100px;
@@ -63,6 +64,20 @@
               display: flex;
               justify-content: center;
             }
+          }
+        }
+
+        .text-information-wrapper__secondary-text {
+          margin-top: 0.25rem;
+          font-size: $xsmall;
+          line-height: 1.42;
+          color: $light-gray-2;
+          text-align: center;
+
+          @include big-phone {
+            margin-top: 0;
+            font-size: $xxsmall;
+            line-height: 1.44;
           }
         }
       }
