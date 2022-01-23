@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { Route, Redirect, RouteProps } from "react-router-dom";
 import { ROUTE_PATHS } from "../../shared/constants";
 
@@ -10,9 +10,7 @@ interface OnlyPublicRouteProps extends RouteProps {
 
 const DEFAULT_REDIRECT_PATH = ROUTE_PATHS.HOME;
 
-const OnlyPublicRoute: React.FunctionComponent<OnlyPublicRouteProps> = (
-  props
-) => {
+const OnlyPublicRoute: FC<OnlyPublicRouteProps> = (props) => {
   const { component: Component, authenticated, redirectPath, ...rest } = props;
 
   return (

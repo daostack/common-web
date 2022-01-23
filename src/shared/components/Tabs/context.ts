@@ -9,7 +9,9 @@ export interface TabContextValue {
 
 export const TabContext = React.createContext<TabContextValue>({
   onChange: () => {
-    throw new Error("Please use tab related components inside \"Tabs\" component");
+    throw new Error(
+      'Please use tab related components inside "Tabs" component'
+    );
   },
   panelIdTemplate: DEFAULT_PANEL_ID_TEMPLATE,
 });
