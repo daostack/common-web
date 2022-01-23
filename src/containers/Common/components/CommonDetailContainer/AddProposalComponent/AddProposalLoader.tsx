@@ -1,7 +1,7 @@
 import React from "react";
 import { Loader } from "@/shared/components";
 
-const AddProposalLoader = () => {
+export const AddProposalLoader = () => {
   return (
     <div className="add-proposal-loader-wrapper">
       <img
@@ -15,5 +15,3 @@ const AddProposalLoader = () => {
     </div>
   );
 };
-
-export default AddProposalLoader;

@@ -10,6 +10,7 @@ import {
   CreateDiscussionDto,
   AddMessageToDiscussionDto,
 } from "@/containers/Common/interfaces";
+import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 
 export const getCommonsList = createAsyncAction(
   CommonsActionTypes.GET_COMMONS_LIST,
@@ -110,4 +111,11 @@ export const createFundingProposal = createAsyncAction(
   CommonsActionTypes.CREATE_FUNDING_PROPOSAL,
   CommonsActionTypes.CREATE_FUNDING_PROPOSAL_SUCCESS,
   CommonsActionTypes.CREATE_FUNDING_PROPOSAL_FAILURE
-)<CreateFundingRequestProposalPayload, Proposal, Error>();
+)<
+  {
+    payload: CreateFundingRequestProposalPayload;
+    callback: (step: AddProposalSteps) => void;
+  },
+  Proposal,
+  Error
+>();

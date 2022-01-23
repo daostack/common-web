@@ -204,6 +204,20 @@ export function subscribeToCommonDiscussion(
     callback(transformFirebaseDataList(snapshot));
   });
 }
+
+export function subscribeToCommonProposal(
+  commonId: string,
+  callback: (payload: any) => void
+): () => void {
+  const query = firebase
+    .firestore()
+    .collection("proposals")
+    .where("commonId", "==", commonId);
+  return query.onSnapshot((snapshot) => {
+    callback(transformFirebaseDataList(snapshot));
+  });
+}
+
 export function subscribeToDiscussionMessages(
   discussionId: string,
   callback: (payload: any) => void
@@ -232,10 +246,14 @@ export async function createRequestToJoin(
 export async function createFundingProposal(
   requestData: CreateFundingRequestProposalPayload
 ): Promise<Proposal> {
-  const { data } = await Api.post<Proposal>(
-    ApiEndpoint.CreateFunding,
-    requestData
-  );
+  try {
+    const { data } = await Api.post<Proposal>(
+      ApiEndpoint.CreateFunding,
+      requestData
+    );
 
-  return convertObjectDatesToFirestoreTimestamps(data);
+    return convertObjectDatesToFirestoreTimestamps(data);
+  } catch (e) {
+    throw e;
+  }
 }

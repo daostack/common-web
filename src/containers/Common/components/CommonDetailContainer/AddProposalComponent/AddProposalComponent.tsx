@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 import { Modal } from "../../../../../shared/components";
 import { ModalProps } from "@/shared/interfaces";
@@ -6,45 +6,97 @@ import { ModalProps } from "@/shared/interfaces";
 import "./index.scss";
 import { Common } from "@/shared/models";
 import { AddProposalForm } from "./AddProposalForm";
-import { AddProposalConfirm } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalConfirm";
-import AddProposalLoader from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalLoader";
-import { AdProposalSuccess } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalSuccess";
-import { AdProposalFailure } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalFailure";
+import { AddProposalConfirm } from "./AddProposalConfirm";
+import { AddProposalLoader } from "./AddProposalLoader";
+import { AdProposalSuccess } from "./AddProposalSuccess";
+import { AdProposalFailure } from "./AddProposalFailure";
+import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
+
+export enum AddProposalSteps {
+  CREATE = "create",
+  CONFIRM = "confirm",
+  LOADER = "loader",
+  SUCCESS = "success",
+  FAILURE = "failure",
+}
 
 interface AddDiscussionComponentProps
   extends Pick<ModalProps, "isShowing" | "onClose"> {
-  onProposalAdd: (payload: any) => void;
+  onProposalAdd: (
+    payload: CreateFundingRequestProposalPayload,
+    callback: (step: AddProposalSteps) => void
+  ) => void;
   common: Common;
 }
 
-const AddProposalComponent = ({
+export const AddProposalComponent = ({
   isShowing,
   onClose,
   onProposalAdd,
   common,
 }: AddDiscussionComponentProps) => {
-  const [proposalCreationStep, changeCreationProposalStep] = useState("create");
+  const [
+    fundingRequest,
+    setFundingRequest,
+  ] = useState<CreateFundingRequestProposalPayload>({
+    title: "",
+    description: "",
+    links: [],
+    images: [],
+    amount: 0,
+    commonId: common.id,
+  });
+  const [proposalCreationStep, changeCreationProposalStep] = useState(
+    AddProposalSteps.CREATE
+  );
+
+  const saveProposalState = useCallback(
+    (payload: Partial<CreateFundingRequestProposalPayload>) => {
+      setFundingRequest({ ...fundingRequest, ...payload });
+      changeCreationProposalStep(AddProposalSteps.CONFIRM);
+    },
+    [fundingRequest]
+  );
+
+  const confirmProposal = useCallback(() => {
+    changeCreationProposalStep(AddProposalSteps.LOADER);
+    fundingRequest.links = fundingRequest.links?.map((i: any) => {
+      return {
+        title: i.title,
+        value: i.link,
+      };
+    });
+    onProposalAdd(fundingRequest, changeCreationProposalStep);
+  }, [onProposalAdd, fundingRequest]);
 
   const renderProposalStep = useMemo(() => {
     switch (proposalCreationStep) {
-      case "create":
+      case AddProposalSteps.CREATE:
         return (
-          <AddProposalForm onProposalAdd={onProposalAdd} common={common} />
+          <AddProposalForm
+            common={common}
+            saveProposalState={saveProposalState}
+          />
         );
-      case "confirm":
-        return <AddProposalConfirm />;
-      case "loader":
+      case AddProposalSteps.CONFIRM:
+        return <AddProposalConfirm onConfirm={confirmProposal} />;
+      case AddProposalSteps.LOADER:
         return <AddProposalLoader />;
-      case "success":
+      case AddProposalSteps.SUCCESS:
         return <AdProposalSuccess />;
-      case "failure":
+      case AddProposalSteps.FAILURE:
         return <AdProposalFailure />;
       default:
         return (
-          <AddProposalForm onProposalAdd={onProposalAdd} common={common} />
+          <AddProposalForm
+            saveProposalState={saveProposalState}
+            common={common}
+          />
         );
     }
-  }, [onProposalAdd, proposalCreationStep, common]);
+  }, [proposalCreationStep, saveProposalState, confirmProposal, common]);
+
+  console.log(fundingRequest);
 
   return (
     <Modal isShowing={isShowing} onClose={onClose}>
@@ -52,5 +104,3 @@ const AddProposalComponent = ({
     </Modal>
   );
 };
-
-export default AddProposalComponent;

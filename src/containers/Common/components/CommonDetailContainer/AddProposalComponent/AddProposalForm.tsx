@@ -5,31 +5,54 @@ import { LinksArray, TextField } from "@/shared/components/Form/Formik";
 import { formatPrice } from "@/shared/utils";
 import { Common } from "@/shared/models";
 import { uploadFile } from "@/shared/utils/firebaseUploadFile";
-import { MAX_LINK_TITLE_LENGTH } from "@/containers/Common/components/CommonListContainer/CreateCommonModal/CreationSteps/GeneralInfo/constants";
+import {
+  HTTPS_URL_REGEXP,
+  MAX_LINK_TITLE_LENGTH,
+} from "@/containers/Common/components/CommonListContainer/CreateCommonModal/CreationSteps/GeneralInfo/constants";
+import { ButtonIcon, Loader } from "@/shared/components";
+import DeleteIcon from "@/shared/icons/delete.icon";
+import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
 
 const validationSchema = Yup.object({
-  message: Yup.string().required("Field required"),
+  description: Yup.string().required("Field required"),
   title: Yup.string().required("Field required").max(49, "Title too long"),
+  links: Yup.array().of(
+    Yup.object().shape({
+      title: Yup.string()
+        .max(MAX_LINK_TITLE_LENGTH, "Entered title is too long")
+        .required("Please enter link title"),
+      link: Yup.string()
+        .matches(HTTPS_URL_REGEXP, "Please enter correct URL")
+        .required("Please enter a link"),
+    })
+  ),
 });
 
 const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png";
 
 interface AddProposalFormInterface {
-  onProposalAdd: (payload: any) => void;
   common: Common;
+  saveProposalState: (
+    payload: Partial<CreateFundingRequestProposalPayload>
+  ) => void;
 }
 
 export const AddProposalForm = ({
   common,
-  onProposalAdd,
+  saveProposalState,
 }: AddProposalFormInterface) => {
+  const [showFileLoader, setShowFileLoader] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [uploadedFiles, setUploadedFile] = useState<string[]>([]);
+  const [uploadedFiles, setUploadedFile] = useState<
+    { title: string; value: string }[]
+  >([]);
 
   const [formValues] = useState({
     title: "",
-    message: "",
+    description: "",
     links: [],
+    images: [],
+    amount: 0,
   });
 
   const selectFiles: ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -42,17 +65,25 @@ export const AddProposalForm = ({
     setSelectedFiles((selectedFiles) => [...selectedFiles, file]);
   };
 
+  const removeFile = (index: number) => {
+    const f = [...uploadedFiles];
+    f.splice(index, 1);
+    setUploadedFile(f);
+  };
+
   useEffect(() => {
     (async () => {
       if (selectedFiles.length) {
+        setShowFileLoader(true);
         const files = await Promise.all(
           selectedFiles.map(async (file: File) => {
             const downloadURL = await uploadFile(file.name, "public_img", file);
-            return downloadURL;
+            return { title: file.name, value: downloadURL };
           })
         );
 
         setUploadedFile((f) => [...f, ...files]);
+        setShowFileLoader(false);
         setSelectedFiles([]);
       }
     })();
@@ -63,7 +94,7 @@ export const AddProposalForm = ({
       validationSchema={validationSchema}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(false);
-        onProposalAdd(values);
+        saveProposalState({ ...values, images: uploadedFiles });
       }}
       initialValues={formValues}
       validateOnChange={true}
@@ -96,9 +127,9 @@ export const AddProposalForm = ({
                 <TextField
                   id="funding"
                   label="Funding amount requested"
-                  name={"funding"}
+                  name={"amount"}
                   placeholder={"₪0"}
-                  value={formikProps.values.title}
+                  value={formikProps.values.amount}
                   onChange={formikProps.handleChange}
                   onBlur={formikProps.handleBlur}
                 />
@@ -116,7 +147,7 @@ export const AddProposalForm = ({
                 placeholder={
                   "What exactly do you plan to do and how? How does it align with the Common's agenda and goals?"
                 }
-                value={formikProps.values.title}
+                value={formikProps.values.description}
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
                 isTextarea={true}
@@ -140,20 +171,41 @@ export const AddProposalForm = ({
                     ])
                   }
                 >
-                  Add link
+                  <img
+                    src="/icons/add-proposal/icons-link.svg"
+                    alt="icons-link"
+                  />
+                  <span>Add link</span>
                 </div>
                 <div
                   className="link"
                   onClick={() => document.getElementById("file")?.click()}
                 >
-                  Add image
+                  <img
+                    src="/icons/add-proposal/icons-picture.svg"
+                    alt="icons-pic"
+                  />
+                  <span>Add image</span>
                 </div>
               </div>
               <div className="additional-content-wrapper">
                 <div className="files-preview">
                   {uploadedFiles.map((f, i) => (
-                    <img src={f} alt={i.toString()} key={f} />
+                    <div className="file-item" key={f.value}>
+                      <img src={f.value} alt={i.toString()} />
+                      <ButtonIcon
+                        className="file-item__remove-button"
+                        onClick={() => removeFile(i)}
+                      >
+                        <DeleteIcon className="file-item__delete-icon" />
+                      </ButtonIcon>
+                    </div>
                   ))}
+                  {showFileLoader && (
+                    <div className="file-item">
+                      <Loader />
+                    </div>
+                  )}
                 </div>
                 <div className="additional-links">
                   <LinksArray
@@ -172,6 +224,10 @@ export const AddProposalForm = ({
             <div className="proposal-note-wrapper">
               <div className="note-title">Please note:</div>
               <div className="note-text">
+                <img
+                  src="/icons/add-proposal/icons-warning.svg"
+                  alt="icons-warning"
+                />
                 Other proposals might be accepted and make the balance
                 insufficient for the amount requested.
               </div>

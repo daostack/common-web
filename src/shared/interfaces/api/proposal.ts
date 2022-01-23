@@ -16,5 +16,5 @@ export interface CreateFundingRequestProposalPayload {
   amount: number;
   links?: ICommonLink[];
   files?: string[];
-  images?: string[];
+  images?: ICommonLink[];
 }

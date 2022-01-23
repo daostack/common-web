@@ -1,6 +1,10 @@
 import React from "react";
 
-export const AddProposalConfirm = () => {
+export const AddProposalConfirm = ({
+  onConfirm,
+}: {
+  onConfirm: () => void;
+}) => {
   return (
     <div className="app-proposal-confirm-wrapper">
       <img
@@ -20,14 +24,14 @@ export const AddProposalConfirm = () => {
 
         <div className="confirm-checkboxes">
           <div className="checkbox">
-            <img src="/icons/check.png" />
+            <img src="/icons/check.png" alt="" />
             <span>
               Pay properly registered businesses, with a valid tax withholding
               exemption, for their products or services.
             </span>
           </div>
           <div className="checkbox">
-            <img src="/icons/check.png" />
+            <img src="/icons/check.png" alt="" />
             <span>Contribute to registered non-profits.</span>
           </div>
         </div>
@@ -37,7 +41,7 @@ export const AddProposalConfirm = () => {
         </div>
       </div>
       <div className="action-wrapper">
-        <button className="button-blue">
+        <button className="button-blue" onClick={onConfirm}>
           I agree with the above statement
         </button>
       </div>

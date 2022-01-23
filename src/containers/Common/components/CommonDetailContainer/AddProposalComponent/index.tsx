@@ -1,1 +1,1 @@
-export { default as AddProposalComponent } from "./AddProposalComponent";
+export * from "./AddProposalComponent";

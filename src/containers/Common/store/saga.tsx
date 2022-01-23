@@ -22,10 +22,12 @@ import {
   addMessageToDiscussion,
   subscribeToDiscussionMessages,
   createFundingProposal,
+  subscribeToCommonProposal,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
 import store from "@/index";
+import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
 
 export function* getCommonsList(): Generator {
   try {
@@ -280,11 +282,27 @@ export function* createFundingProposalSaga(
 ): Generator {
   try {
     yield put(startLoading());
-    const proposal = (yield createFundingProposal(action.payload)) as Proposal;
+    const proposal = (yield createFundingProposal(
+      action.payload.payload
+    )) as Proposal;
+
+    yield call(
+      subscribeToCommonProposal,
+      action.payload.payload.commonId,
+      async (data) => {
+        const ds = await fetchCommonProposals(action.payload.payload.commonId);
+
+        store.dispatch(actions.setProposals(ds));
+        store.dispatch(actions.loadProposalList.request());
+        store.dispatch(stopLoading());
+        action.payload.callback(AddProposalSteps.SUCCESS);
+      }
+    );
 
     yield put(actions.createFundingProposal.success(proposal));
     yield put(stopLoading());
   } catch (error) {
+    action.payload.callback(AddProposalSteps.FAILURE);
     yield put(actions.createFundingProposal.failure(error));
     yield put(stopLoading());
   }
