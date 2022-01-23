@@ -3,19 +3,20 @@ $content-padding: 80px;
 $content-padding-mobile: 20px;
 $header-height: 80px;
 $header-height-mobile: 60px;
+$header-z-index: 10;
 $element-max-width: 1400px;
 $element-max-height: 850px;
 
 /* font sizes */
-$xlarge: 46px;
-$large: 35px;
-$medium: 26px;
-$moderate-med: 24px;
-$moderate-small: 20px;
-$moderate: 18px;
-$small: 16px;
-$xsmall: 14px;
-$xxsmall: 12px;
+$xlarge: 46px; // 2.875rem
+$large: 35px; // 2.1875rem
+$medium: 26px; // 1.625rem
+$moderate-med: 24px; // 1.5rem
+$moderate-small: 20px; // 1.25rem
+$moderate: 18px; // 1.125rem
+$small: 16px; // 1rem
+$xsmall: 14px; // 0.875rem
+$xxsmall: 12px; // 0.75rem
 
 /* colors */
 $purple: #7786ff;
@@ -44,14 +45,19 @@ $secondary-green: #f1fdf0;
 $shadow: rgba(0, 0, 0, 0.14);
 $black: #000000;
 $black-gray: rgba(0, 0, 0, 0.5);
+$black-gray-2: rgba(0, 0, 0, 0.4);
 $red: #ff603e;
+$secondary-red: #ffefec;
 $error: #ef5456;
-$fixed-button-shadow: rgba(0, 26, 54, .14);
-$fixed-modal-element-shadow: rgba(0, 26, 54, .07);
+$fixed-button-shadow: rgba(0, 26, 54, 0.14);
+$fixed-modal-element-shadow: rgba(0, 26, 54, 0.07);
 $fixed-modal-shadow: rgba(0, 26, 54, 0.2);
-$invoice-description-card-shadow: rgba(0, 26, 54, .08);
-$blue-button-disabled-second-option:#d5dee4;
+$invoice-description-card-shadow: rgba(0, 26, 54, 0.08);
+$blue-button-disabled-second-option: #d5dee4;
 $secondary-modal-shadow: 0 2px 34px 0 rgba(0, 0, 0, 0.3);
+$invoice-approval-item-shadow: rgba(0, 26, 54, 0.08);
+$sticky-info-shadow: rgba(0, 0, 0, 0.02);
+$carousel-overlay-shadow: rgba(0, 26, 54, 0.4);
 
 /* breakpoints */
 $small-screen: 1240px;
