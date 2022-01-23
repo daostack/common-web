@@ -4,6 +4,7 @@ interface SwiperConfig {
   slidesPerView: number;
   spaceBetween: number;
   scrollable: boolean;
+  initialized: boolean;
 }
 
 export const getSwiperConfig = (
@@ -15,6 +16,7 @@ export const getSwiperConfig = (
       slidesPerView: 1,
       spaceBetween: 0,
       scrollable: false,
+      initialized: Boolean(containerWidth),
     };
   }
 
@@ -31,6 +33,7 @@ export const getSwiperConfig = (
       slidesPerView: basicSlidePerView,
       spaceBetween: MINIMAL_SLIDES_SPACE_BETWEEN,
       scrollable: false,
+      initialized: true,
     };
   }
 
@@ -43,5 +46,6 @@ export const getSwiperConfig = (
         ? (containerWidth - slidesPerView * ITEM_WIDTH) / (slidesPerView - 1)
         : 0,
     scrollable: true,
+    initialized: true,
   };
 };

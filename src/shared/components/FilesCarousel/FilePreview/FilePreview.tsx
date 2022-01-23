@@ -42,9 +42,7 @@ const FilePreview: FC<FilePreviewProps> = (props) => {
     setHasError(true);
   };
 
-  const imageClassName = classNames("carousel-file-preview-wrapper__image", {
-    "carousel-file-preview-wrapper__image--contain": isZoomed,
-  });
+  const imageClassName = "carousel-file-preview-wrapper__image";
   const generalFileClassName = classNames(
     imageClassName,
     "carousel-file-preview-wrapper__general-file"
@@ -74,7 +72,9 @@ const FilePreview: FC<FilePreviewProps> = (props) => {
               alt={doc.name}
               onError={handleImageError}
               placeholderElement={
-                <div className={generalFileClassName}>Error with file "{doc.name}"</div>
+                <div className={generalFileClassName}>
+                  Error with file "{doc.name}"
+                </div>
               }
             />
           ) : (

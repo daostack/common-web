@@ -1,4 +1,13 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState, FC } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+  forwardRef,
+  ForwardRefRenderFunction,
+} from "react";
 import classNames from "classnames";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperClass from "swiper/types/swiper-class";
@@ -13,15 +22,23 @@ import { InvoiceTile } from "../../InvoiceTile";
 import { getSwiperConfig } from "./helpers";
 import "./index.scss";
 
+export interface AllFilesCarouselRef {
+  slideTo: (index: number) => void;
+}
+
 interface AllFilesCarouselProps {
   className?: string;
   payoutDocs: DocInfo[];
   currentDocIndex?: number | null;
+  initialDocIndex?: number | null;
   onDocClick?: (doc: DocInfo, index: number) => void;
 }
 
-const AllFilesCarousel: FC<AllFilesCarouselProps> = (props) => {
-  const { className, payoutDocs, currentDocIndex, onDocClick } = props;
+const AllFilesCarousel: ForwardRefRenderFunction<
+  AllFilesCarouselRef,
+  AllFilesCarouselProps
+> = (props, carouselRef) => {
+  const { className, payoutDocs, currentDocIndex, initialDocIndex, onDocClick } = props;
   const [
     swiperWrapperRef,
     setSwiperWrapperRef,
@@ -30,6 +47,7 @@ const AllFilesCarousel: FC<AllFilesCarouselProps> = (props) => {
     isBeginning: boolean;
     isEnd: boolean;
   }>({ isBeginning: false, isEnd: false });
+  const [isInitialDocSet, setIsInitialDocSet] = useState(false);
   const [, setCurrentWindowWidth] = useState(window.innerWidth);
   const swiperRef = useRef<SwiperClass>();
   const swiperClientWidth = swiperWrapperRef?.clientWidth || 0;
@@ -88,6 +106,23 @@ const AllFilesCarousel: FC<AllFilesCarouselProps> = (props) => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+    if (!isInitialDocSet && swiperConfig.initialized && typeof initialDocIndex === "number") {
+      setIsInitialDocSet(true);
+      swiperRef.current?.slideTo(initialDocIndex);
+    }
+  }, [isInitialDocSet, swiperConfig.initialized, initialDocIndex]);
+
+  useImperativeHandle(
+    carouselRef,
+    () => ({
+      slideTo: (index) => {
+        swiperRef.current?.slideTo(index);
+      },
+    }),
+    []
+  );
 
   const contentWrapperClassName = classNames(
     "all-files-carousel-wrapper__content-wrapper",
@@ -179,4 +214,4 @@ const AllFilesCarousel: FC<AllFilesCarouselProps> = (props) => {
   );
 };
 
-export default AllFilesCarousel;
+export default forwardRef(AllFilesCarousel);

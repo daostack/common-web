@@ -1,9 +1,9 @@
-import React, { useEffect, useState, FC } from "react";
+import React, { useEffect, useRef, useState, FC } from "react";
 import classNames from "classnames";
 import CloseIcon from "../../icons/close.icon";
 import { DocInfo } from "../../models";
 import { ButtonIcon } from "../ButtonIcon";
-import { AllFilesCarousel } from "./AllFilesCarousel";
+import { AllFilesCarousel, AllFilesCarouselRef } from "./AllFilesCarousel";
 import { FilePreview } from "./FilePreview";
 import "./index.scss";
 
@@ -15,6 +15,7 @@ interface FilesCarouselProps {
 
 const FilesCarousel: FC<FilesCarouselProps> = (props) => {
   const { payoutDocs, defaultDocIndex, onClose } = props;
+  const allFilesCarouselRef = useRef<AllFilesCarouselRef>(null);
   const [currentDocIndex, setCurrentDocIndex] = useState<number | null>(
     defaultDocIndex ?? null
   );
@@ -47,7 +48,9 @@ const FilesCarousel: FC<FilesCarouselProps> = (props) => {
     }
 
     const index = currentDocIndex - 1;
-    setCurrentDocIndex(index < 0 ? payoutDocs.length - 1 : index);
+    const nextIndex = index < 0 ? payoutDocs.length - 1 : index;
+    setCurrentDocIndex(nextIndex);
+    allFilesCarouselRef.current?.slideTo(nextIndex);
   };
   const handleRightClick = () => {
     if (currentDocIndex === null) {
@@ -55,26 +58,32 @@ const FilesCarousel: FC<FilesCarouselProps> = (props) => {
     }
 
     const index = currentDocIndex + 1;
-    setCurrentDocIndex(index >= payoutDocs.length ? 0 : index);
+    const nextIndex = index >= payoutDocs.length ? 0 : index;
+    setCurrentDocIndex(nextIndex);
+    allFilesCarouselRef.current?.slideTo(nextIndex);
   };
 
   return (
     <div className="files-carousel-wrapper">
       <div className="files-carousel-wrapper__overlay" />
-      <div className="files-carousel-wrapper__content">
+      <div
+        className={classNames("files-carousel-wrapper__content", {
+          "files-carousel-wrapper__content--zoomed": isZoomed,
+        })}
+      >
         {!isZoomed && (
           <AllFilesCarousel
+            ref={allFilesCarouselRef}
             className="files-carousel-wrapper__top-content"
             payoutDocs={payoutDocs}
             currentDocIndex={currentDocIndex}
+            initialDocIndex={currentDocIndex}
             onDocClick={handleDocClick}
           />
         )}
         {currentDoc && (
           <FilePreview
-            className={classNames("files-carousel-wrapper__file-preview", {
-              "files-carousel-wrapper__file-preview--zoomed": isZoomed,
-            })}
+            className="files-carousel-wrapper__file-preview"
             doc={currentDoc}
             isZoomed={isZoomed}
             onLeftClick={handleLeftClick}

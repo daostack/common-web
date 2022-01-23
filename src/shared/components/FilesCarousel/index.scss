@@ -23,10 +23,13 @@
     left: 0;
     max-width: 100%;
     max-height: 100%;
-    padding: 1.5rem;
+    padding: 1.5rem 1.5rem 3rem;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+  }
+  .files-carousel-wrapper__content--zoomed {
+    padding-bottom: 1.5rem;
   }
 
   .files-carousel-wrapper__top-content {
@@ -36,10 +39,6 @@
 
   .files-carousel-wrapper__file-preview {
     flex: 1 0;
-    padding-bottom: 1.5rem;
-  }
-  .files-carousel-wrapper__file-preview--zoomed {
-    padding-bottom: 0;
   }
 
   .files-carousel-wrapper__close-icon {
