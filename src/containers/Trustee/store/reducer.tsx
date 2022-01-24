@@ -7,7 +7,7 @@ const initialState: TrusteeStateType = {
   pendingApprovalProposals: [],
   arePendingApprovalProposalsLoaded: false,
   approvedProposals: [],
-  areApprovedProposalLoaded: false,
+  areApprovedProposalsLoaded: false,
   declinedProposals: [],
   areDeclinedProposalsLoaded: false,
   proposalForApproval: null,
@@ -26,7 +26,7 @@ const reducer = createReducer<TrusteeStateType, Action>(initialState)
   .handleAction(actions.getApprovedProposals.success, (state, action) =>
     produce(state, (nextState) => {
       nextState.approvedProposals = action.payload;
-      nextState.areApprovedProposalLoaded = true;
+      nextState.areApprovedProposalsLoaded = true;
     })
   )
   .handleAction(actions.getDeclinedProposals.success, (state, action) =>
@@ -40,7 +40,7 @@ const reducer = createReducer<TrusteeStateType, Action>(initialState)
       nextState.pendingApprovalProposals = [];
       nextState.arePendingApprovalProposalsLoaded = false;
       nextState.approvedProposals = [];
-      nextState.areApprovedProposalLoaded = false;
+      nextState.areApprovedProposalsLoaded = false;
       nextState.declinedProposals = [];
       nextState.areDeclinedProposalsLoaded = false;
     })

@@ -17,7 +17,7 @@ import {
   selectPendingApprovalProposals,
   selectArePendingApprovalProposalsLoaded,
   selectApprovedProposals,
-  selectAreApprovedProposalLoaded,
+  selectAreApprovedProposalsLoaded,
   selectDeclinedProposals,
   selectAreDeclinedProposalsLoaded,
 } from "../../store/selectors";
@@ -43,8 +43,8 @@ const InvoicesAcceptanceContainer: FC = () => {
     selectArePendingApprovalProposalsLoaded()
   );
   const approvedProposals = useSelector(selectApprovedProposals());
-  const areApprovedProposalLoaded = useSelector(
-    selectAreApprovedProposalLoaded()
+  const areApprovedProposalsLoaded = useSelector(
+    selectAreApprovedProposalsLoaded()
   );
   const declinedProposals = useSelector(selectDeclinedProposals());
   const areDeclinedProposalsLoaded = useSelector(
@@ -76,10 +76,10 @@ const InvoicesAcceptanceContainer: FC = () => {
   }, [dispatch, arePendingApprovalProposalsLoaded]);
 
   useEffect(() => {
-    if (!areApprovedProposalLoaded) {
+    if (!areApprovedProposalsLoaded) {
       dispatch(getApprovedProposals.request());
     }
-  }, [dispatch, areApprovedProposalLoaded]);
+  }, [dispatch, areApprovedProposalsLoaded]);
 
   useEffect(() => {
     if (!areDeclinedProposalsLoaded) {
@@ -118,7 +118,7 @@ const InvoicesAcceptanceContainer: FC = () => {
             title="Approved Invoices"
             emptyListText="There are no approved invoices"
             proposals={approvedProposals}
-            isLoading={!areApprovedProposalLoaded}
+            isLoading={!areApprovedProposalsLoaded}
             onProposalView={handleProposalView}
           />
         </TabPanel>

@@ -9,8 +9,8 @@ export const selectArePendingApprovalProposalsLoaded = () =>
   createSelector(selectTrustee, (state) => state.arePendingApprovalProposalsLoaded);
 export const selectApprovedProposals = () =>
   createSelector(selectTrustee, (state) => state.approvedProposals);
-export const selectAreApprovedProposalLoaded = () =>
-  createSelector(selectTrustee, (state) => state.areApprovedProposalLoaded);
+export const selectAreApprovedProposalsLoaded = () =>
+  createSelector(selectTrustee, (state) => state.areApprovedProposalsLoaded);
 export const selectDeclinedProposals = () =>
   createSelector(selectTrustee, (state) => state.declinedProposals);
 export const selectAreDeclinedProposalsLoaded = () =>
