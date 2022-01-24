@@ -1,4 +1,5 @@
 import React from "react";
+import { Colors } from "../constants/shared";
 
 interface CheckIconProps {
   className?: string;
@@ -7,7 +8,7 @@ interface CheckIconProps {
 
 export default function CheckIcon({
   className,
-  fill = "#7786FF",
+  fill = Colors.purple,
 }: CheckIconProps) {
   return (
     <svg
