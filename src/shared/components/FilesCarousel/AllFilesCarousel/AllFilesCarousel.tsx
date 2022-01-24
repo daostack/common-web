@@ -38,7 +38,13 @@ const AllFilesCarousel: ForwardRefRenderFunction<
   AllFilesCarouselRef,
   AllFilesCarouselProps
 > = (props, carouselRef) => {
-  const { className, payoutDocs, currentDocIndex, initialDocIndex, onDocClick } = props;
+  const {
+    className,
+    payoutDocs,
+    currentDocIndex,
+    initialDocIndex,
+    onDocClick,
+  } = props;
   const [
     swiperWrapperRef,
     setSwiperWrapperRef,
@@ -108,7 +114,11 @@ const AllFilesCarousel: ForwardRefRenderFunction<
   }, []);
 
   useEffect(() => {
-    if (!isInitialDocSet && swiperConfig.initialized && typeof initialDocIndex === "number") {
+    if (
+      !isInitialDocSet &&
+      swiperConfig.initialized &&
+      typeof initialDocIndex === "number"
+    ) {
       setIsInitialDocSet(true);
       swiperRef.current?.slideTo(initialDocIndex);
     }
