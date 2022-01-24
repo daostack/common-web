@@ -27,9 +27,11 @@ export default function ProposalsComponent({
     <>
       <div className="proposal-title-wrapper">
         <div className="title">Proposals</div>
-        <div className="add-button" onClick={onAddNewProposal}>
-          Add New Proposal
-        </div>
+        {isCommonMember && (
+          <div className="add-button" onClick={onAddNewProposal}>
+            Add New Proposal
+          </div>
+        )}
       </div>
       <div className="proposals-component-wrapper">
         {proposals.length > 0 ? (

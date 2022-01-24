@@ -66,6 +66,7 @@ export const AddProposalComponent = ({
         value: i.link,
       };
     });
+    fundingRequest.amount = fundingRequest.amount * 100;
     onProposalAdd(fundingRequest, changeCreationProposalStep);
   }, [onProposalAdd, fundingRequest]);
 
