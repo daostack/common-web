@@ -1,8 +1,9 @@
 @import "../../../../../../../../constants";
 
-.review-select-file-wrapper {
+.review-select-file {
   width: 2.5rem;
   height: 2.5rem;
+  position: relative;
   border-radius: 0.875rem;
   cursor: pointer;
   -webkit-backdrop-filter: blur(0.625rem);

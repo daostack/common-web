@@ -1,7 +1,6 @@
 import React from "react";
-
-import { RulesArrayItem } from "@/shared/components/Form/Formik";
 import classNames from "classnames";
+import { RulesArrayItem } from "@/shared/components/Form/Formik";
 import "./index.scss";
 
 interface RuleListProps {

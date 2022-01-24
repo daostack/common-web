@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback } from "react";
+import React, { ReactElement, useCallback, useRef, useState } from "react";
 
 import { isMobile } from "@/shared/utils";
 import { ButtonLink } from "@/shared/components";
@@ -7,6 +7,8 @@ import LinkIcon from "@/shared/icons/link.icon";
 import LeftArrowIcon from "@/shared/icons/leftArrow.icon";
 import RightArrowIcon from "@/shared/icons/rightArrow.icon";
 import { RulesArrayItem } from "@/shared/components/Form/Formik";
+import SwiperClass from "swiper/types/swiper-class";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
 import { RuleList } from "./RuleList";
@@ -23,6 +25,12 @@ export default function Review({
   onFinish,
 }: ReviewProps): ReactElement {
   const isMobileView = isMobile();
+  const swiperRef = useRef<SwiperClass>();
+  const [slideNumber, setSlideNumber] = useState(1);
+  const defaultSliderImgs = [
+    "/assets/images/review-bg-image.jpg",
+    "/assets/images/review-bg-image.jpg",
+  ];
   const coverImageTitle = "Select or upload cover image";
   const commonName = "Amazon Network";
   const tagline = "If you wanna save the Amazon, own it.";
@@ -45,6 +53,12 @@ export default function Review({
         "We're all in this together to create a nurturing environment. Let's teat everyone with respect. Healthy debates are natural, but kindness is required.",
     },
   ];
+  const handleSwiper = useCallback(
+    (swiper: SwiperClass) => {
+      swiperRef.current = swiper;
+    },
+    [swiperRef]
+  );
 
   const handleContinueClick = useCallback(() => {
     onFinish();
@@ -52,19 +66,65 @@ export default function Review({
 
   const progressEl = <Progress creationStep={currentStep} />;
 
+  const handlePrevSlide = () => {
+    if (slideNumber > 1) {
+      setSlideNumber((prevState) => prevState - 1);
+      swiperRef.current?.slidePrev();
+    }
+  };
+  const handleNextSlide = () => {
+    if (slideNumber < defaultSliderImgs.length) {
+      setSlideNumber((prevState) => prevState + 1);
+      swiperRef.current?.slideNext();
+    }
+  };
+
   return (
     <>
       {!isMobileView && <ModalHeaderContent>{progressEl}</ModalHeaderContent>}
       <div className="create-common-review">
         {isMobileView && progressEl}
-        <div className="create-common-review__upload-cover-image">
+        <div className="create-common-review__slider">
+          <Swiper
+            navigation
+            onSwiper={handleSwiper}
+            allowTouchMove={isMobileView ? true : false}
+          >
+            {defaultSliderImgs.map((slide, index) => (
+              <SwiperSlide key={index}>
+                <figure className="create-common-review__slide">
+                  <img
+                    className="create-common-review__slide-img"
+                    src={slide}
+                    alt={slide}
+                  />
+                </figure>
+              </SwiperSlide>
+            ))}
+          </Swiper>
           <SelectFile className="create-common-review__select-file" />
           <div className="create-common-review__title-and-arrows">
-            <LeftArrowIcon className="create-common-review__arrow-icon" />
+            <span onClick={handlePrevSlide}>
+              <LeftArrowIcon
+                className={
+                  slideNumber > 1
+                    ? "create-common-review__arrow-icon"
+                    : "create-common-review__arrow-icon-disable"
+                }
+              />
+            </span>
             <span className="create-common-review__cover-image-title">
               {coverImageTitle}
             </span>
-            <RightArrowIcon className="create-common-review__arrow-icon" />
+            <span onClick={handleNextSlide}>
+              <RightArrowIcon
+                className={
+                  slideNumber === defaultSliderImgs.length
+                    ? "create-common-review__arrow-icon-disable"
+                    : "create-common-review__arrow-icon"
+                }
+              />
+            </span>
           </div>
         </div>
         <div className="create-common-review__main-info-wrapper">
