@@ -91,10 +91,7 @@ export interface Proposal {
   type: ProposalType;
   paymentState?: ProposalPaymentState;
   fundingState?: ProposalFundingState;
-  /** Details about the funding request. Exists only on funding request proposals */
-  funding?: {
-    amount: number;
-  };
+
   /** Details about the join request. Exists only on join request proposals */
   join?: ProposalJoin;
   votes?: ProposalVote[];

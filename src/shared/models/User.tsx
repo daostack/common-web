@@ -1,5 +1,9 @@
 import { Proposal } from ".";
 
+export enum UserRole {
+  Trustee = "trustee",
+}
+
 export interface User {
   id: string;
   displayName?: string;
@@ -15,5 +19,6 @@ export interface User {
   permissions?: string[];
   proposals?: Proposal[];
   uid?: string;
+  roles?: UserRole[];
   //  subscriptions?: Subscription[];
 }

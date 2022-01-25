@@ -2,6 +2,7 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   Dispatch,
   ReactNode,
@@ -12,7 +13,7 @@ import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
 import { Modal } from "../../../../../shared/components";
 import { useZoomDisabling } from "../../../../../shared/hooks";
-import { ModalProps } from "../../../../../shared/interfaces";
+import { ModalProps, ModalRef } from "../../../../../shared/interfaces";
 import { Common } from "../../../../../shared/models";
 import { getScreenSize } from "../../../../../shared/store/selectors";
 import { ScreenSize } from "../../../../../shared/constants";
@@ -77,6 +78,7 @@ export function MembershipRequestModal(props: IProps) {
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
+  const modalRef = useRef<ModalRef>(null);
   const [userData, setUserData] = useState(initData);
   const user = useSelector(selectUser());
   const { stage } = userData;
@@ -196,8 +198,13 @@ export function MembershipRequestModal(props: IProps) {
     }
   }, [stage, onCreationStageReach]);
 
+  useEffect(() => {
+    modalRef.current?.scrollToTop();
+  }, [stage]);
+
   return (
     <Modal
+      ref={modalRef}
       isShowing={isShowing}
       onClose={onClose}
       className="mobile-full-screen membership-request-modal"

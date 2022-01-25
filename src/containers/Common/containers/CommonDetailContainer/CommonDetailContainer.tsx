@@ -105,6 +105,16 @@ export default function CommonDetail() {
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
 
+  const activeProposals = useMemo(
+    () => [...proposals].filter((d) => d.state === ProposalState.COUNTDOWN),
+    [proposals]
+  );
+
+  const historyProposals = useMemo(
+    () => [...proposals].filter((d) => d.state !== ProposalState.COUNTDOWN),
+    [proposals]
+  );
+
   const isCommonMember = Boolean(
     common?.members.some((member) => member.userId === user?.uid)
   );
@@ -113,12 +123,15 @@ export default function CommonDetail() {
       proposal.state === ProposalState.COUNTDOWN &&
       proposal.proposerId === user?.uid
   );
-  const shouldShowJoinToCommonButton = !isCommonMember && !isJoiningPending;
   const shouldAllowJoiningToCommon =
     !isCommonMember && (isCreationStageReached || !isJoiningPending);
   const shouldShowStickyJoinEffortButton =
     screenSize === ScreenSize.Mobile &&
-    shouldShowJoinToCommonButton &&
+    ((tab === "discussions" && discussions?.length > 0) ||
+      (tab === "proposals" && activeProposals.length > 0) ||
+      (tab === "history" && historyProposals.length > 0)) &&
+    !isCommonMember &&
+    !isJoiningPending &&
     !inViewport &&
     (stickyClass || footerClass);
 
@@ -138,16 +151,6 @@ export default function CommonDetail() {
       dispatch(closeCurrentCommon());
     };
   }, [dispatch, id]);
-
-  const activeProposals = useMemo(
-    () => [...proposals].filter((d) => d.state === ProposalState.COUNTDOWN),
-    [proposals]
-  );
-
-  const historyProposals = useMemo(
-    () => [...proposals].filter((d) => d.state !== ProposalState.COUNTDOWN),
-    [proposals]
-  );
 
   const changeTabHandler = useCallback(
     (tab: string) => {
@@ -306,7 +309,14 @@ export default function CommonDetail() {
         }
       }
     }
-  }, [inViewport, activeProposals, tab, discussions, setStickyClass, joinEffortRef]);
+  }, [
+    inViewport,
+    activeProposals,
+    tab,
+    discussions,
+    setStickyClass,
+    joinEffortRef,
+  ]);
 
   useEffect(() => {
     if (inViewPortFooter) {
@@ -475,12 +485,15 @@ export default function CommonDetail() {
                   ))}
                 </div>
                 <div className="social-wrapper" ref={setJoinEffortRef}>
-                  {shouldShowJoinToCommonButton && (
+                  {!isCommonMember && (
                     <button
                       className={`button-blue join-the-effort-btn`}
                       onClick={onOpenJoinModal}
+                      disabled={isJoiningPending}
                     >
-                      Join the effort
+                      {isJoiningPending
+                        ? "Pending approval"
+                        : "Join the effort"}
                     </button>
                   )}
                   {isCommonMember && screenSize === ScreenSize.Desktop && (
@@ -490,14 +503,6 @@ export default function CommonDetail() {
                     </div>
                   )}
 
-                  {!isCommonMember &&
-                    isJoiningPending &&
-                    screenSize === ScreenSize.Desktop && (
-                      <div className="member-label">
-                        <CheckIcon />
-                        &nbsp;Pending
-                      </div>
-                    )}
                   {screenSize === ScreenSize.Desktop && (
                     <Share
                       url={sharingURL}

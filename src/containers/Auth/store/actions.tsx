@@ -1,6 +1,7 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 
 import { AuthActionTypes } from "./constants";
+import { PayloadWithOptionalCallback } from "../../../shared/interfaces";
 import { User } from "../../../shared/models";
 
 export const socialLogin = createAsyncAction(
@@ -8,6 +9,16 @@ export const socialLogin = createAsyncAction(
   AuthActionTypes.SOCIAL_LOGIN_SUCCESS,
   AuthActionTypes.SOCIAL_LOGIN_FAILURE
 )<string, User, Error>();
+
+export const loginUsingEmailAndPassword = createAsyncAction(
+  AuthActionTypes.LOGIN_USING_EMAIL_AND_PASSWORD,
+  AuthActionTypes.LOGIN_USING_EMAIL_AND_PASSWORD_SUCCESS,
+  AuthActionTypes.LOGIN_USING_EMAIL_AND_PASSWORD_FAILURE
+)<
+  PayloadWithOptionalCallback<{ email: string; password: string }, User, Error>,
+  User,
+  Error
+>();
 
 export const logOut = createStandardAction(AuthActionTypes.LOG_OUT)();
 

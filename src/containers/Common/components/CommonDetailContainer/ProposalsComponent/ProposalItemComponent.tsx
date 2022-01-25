@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
+import classNames from "classnames";
 
 import { ProposalCountDown } from "..";
 import { UserAvatar } from "../../../../../shared/components";
-import { useCalculateReadMoreLength } from "../../../../../shared/hooks";
+import { useFullText } from "../../../../../shared/hooks";
 import { Proposal, ProposalState } from "../../../../../shared/models";
 import { formatPrice, getUserName, getDaysAgo } from "../../../../../shared/utils";
 import { VotesComponent } from "../VotesComponent";
@@ -16,10 +17,15 @@ export default function ProposalItemComponent({
   proposal,
   loadProposalDetail,
 }: ProposalItemComponentProps) {
-  //  const [readMore, setReadMore] = useState("");
+  const [imageError, setImageError] = useState(false);
+  const {
+    ref: descriptionRef,
+    isFullTextShowing,
+    shouldShowFullText,
+    showFullText,
+  } = useFullText();
   const date = new Date();
   const rawRequestedAmount = proposal.fundingRequest?.amount || proposal.join?.funding;
-  const textLength = useCalculateReadMoreLength();
 
   return (
     <div className="discussion-item-wrapper">
@@ -84,12 +90,14 @@ export default function ProposalItemComponent({
         </div>
       </div>
       <div className="discussion-content">
-        <div className={`description `}>{proposal.description.description}</div>
-        {proposal.description.description.length > textLength ? (
-          <div
-            className="read-more"
-            onClick={() => loadProposalDetail(proposal)}
-          >
+        <div
+          className={classNames("description", { full: shouldShowFullText })}
+          ref={descriptionRef}
+        >
+          {proposal.description.description}
+        </div>
+        {!isFullTextShowing ? (
+          <div className="read-more" onClick={showFullText}>
             Read More
           </div>
         ) : null}

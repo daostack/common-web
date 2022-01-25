@@ -18,9 +18,14 @@ export interface ModalProps {
   onHeaderScrolledToTop?: (isHeaderScrolledToTop: boolean) => void;
   closePrompt?: boolean;
   styles?: {
+    modalWrapper?: string;
     headerWrapper?: string;
     header?: string;
     closeWrapper?: string;
     content?: string;
   };
+}
+
+export interface ModalRef {
+  scrollToTop: () => void;
 }
