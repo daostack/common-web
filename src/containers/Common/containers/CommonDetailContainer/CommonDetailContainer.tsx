@@ -105,6 +105,16 @@ export default function CommonDetail() {
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
 
+  const activeProposals = useMemo(
+    () => [...proposals].filter((d) => d.state === ProposalState.COUNTDOWN),
+    [proposals]
+  );
+
+  const historyProposals = useMemo(
+    () => [...proposals].filter((d) => d.state !== ProposalState.COUNTDOWN),
+    [proposals]
+  );
+
   const isCommonMember = Boolean(
     common?.members.some((member) => member.userId === user?.uid)
   );
@@ -117,6 +127,9 @@ export default function CommonDetail() {
     !isCommonMember && (isCreationStageReached || !isJoiningPending);
   const shouldShowStickyJoinEffortButton =
     screenSize === ScreenSize.Mobile &&
+    ((tab === "discussions" && discussions?.length > 0) ||
+      (tab === "proposals" && activeProposals.length > 0) ||
+      (tab === "history" && historyProposals.length > 0)) &&
     !isCommonMember &&
     !isJoiningPending &&
     !inViewport &&
@@ -138,16 +151,6 @@ export default function CommonDetail() {
       dispatch(closeCurrentCommon());
     };
   }, [dispatch, id]);
-
-  const activeProposals = useMemo(
-    () => [...proposals].filter((d) => d.state === ProposalState.COUNTDOWN),
-    [proposals]
-  );
-
-  const historyProposals = useMemo(
-    () => [...proposals].filter((d) => d.state !== ProposalState.COUNTDOWN),
-    [proposals]
-  );
 
   const changeTabHandler = useCallback(
     (tab: string) => {
@@ -306,7 +309,14 @@ export default function CommonDetail() {
         }
       }
     }
-  }, [inViewport, activeProposals, tab, discussions, setStickyClass, joinEffortRef]);
+  }, [
+    inViewport,
+    activeProposals,
+    tab,
+    discussions,
+    setStickyClass,
+    joinEffortRef,
+  ]);
 
   useEffect(() => {
     if (inViewPortFooter) {
@@ -434,8 +444,9 @@ export default function CommonDetail() {
               <div className="numbers">
                 <div className="item">
                   <div className="value">{formatPrice(common?.balance)}</div>
-                  <div className="name">{`Available ${screenSize === ScreenSize.Desktop ? "Funds" : ""
-                    }`}</div>
+                  <div className="name">{`Available ${
+                    screenSize === ScreenSize.Desktop ? "Funds" : ""
+                  }`}</div>
                   {common.reservedBalance && (
                     <div className="text-information-wrapper__secondary-text">
                       In process: {formatPrice(common.reservedBalance)}
@@ -444,8 +455,9 @@ export default function CommonDetail() {
                 </div>
                 <div className="item">
                   <div className="value">{formatPrice(common?.raised)}</div>
-                  <div className="name">{`${screenSize === ScreenSize.Desktop ? "Total" : ""
-                    } Raised`}</div>
+                  <div className="name">{`${
+                    screenSize === ScreenSize.Desktop ? "Total" : ""
+                  } Raised`}</div>
                 </div>
                 <div className="item">
                   <div className="value">{common?.members.length}</div>
@@ -453,8 +465,9 @@ export default function CommonDetail() {
                 </div>
                 <div className="item">
                   <div className="value">{activeProposals.length}</div>
-                  <div className="name">{`${screenSize === ScreenSize.Desktop ? "Active" : ""
-                    } Proposals`}</div>
+                  <div className="name">{`${
+                    screenSize === ScreenSize.Desktop ? "Active" : ""
+                  } Proposals`}</div>
                 </div>
               </div>
             </div>
@@ -478,7 +491,9 @@ export default function CommonDetail() {
                       onClick={onOpenJoinModal}
                       disabled={isJoiningPending}
                     >
-                      {isJoiningPending ? "Pending approval" : "Join the effort"}
+                      {isJoiningPending
+                        ? "Pending approval"
+                        : "Join the effort"}
                     </button>
                   )}
                   {isCommonMember && screenSize === ScreenSize.Desktop && (
