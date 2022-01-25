@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import classNames from "classnames";
 
 import { ProposalCountDown } from "..";
@@ -17,7 +17,6 @@ export default function ProposalItemComponent({
   proposal,
   loadProposalDetail,
 }: ProposalItemComponentProps) {
-  const [imageError, setImageError] = useState(false);
   const {
     ref: descriptionRef,
     isFullTextShowing,
