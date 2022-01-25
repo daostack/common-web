@@ -28,7 +28,7 @@ export default function AmountPrompt({ proposalRequest, totalAmount, onContinue 
         value={amount}
         onValueChange={setAmount}
         className="amount-prompt-wrapper__amount-input"
-        error={totalAmountExceeded ? "The total amount is more then proposal request!" : ""}
+        error={totalAmountExceeded ? "The total amount is more than proposal request!" : ""}
         allowDecimals={true}
       />
       <button
