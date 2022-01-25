@@ -7,7 +7,10 @@ import {
   ProposalType,
   ProposalState,
 } from "../../../shared/models";
-import { transformFirebaseDataList, transformFirebaseDataSingle } from "../../../shared/utils";
+import {
+  transformFirebaseDataList,
+  transformFirebaseDataSingle,
+} from "../../../shared/utils";
 import firebase from "../../../shared/utils/firebase";
 import { ApproveOrDeclineProposalDto } from "../interfaces";
 
@@ -40,13 +43,27 @@ export async function fetchPendingApprovalProposals(): Promise<Proposal[]> {
 }
 
 export async function fetchApprovedProposals(): Promise<Proposal[]> {
-  const proposals = await firebase
-    .firestore()
-    .collection(Collection.Proposals)
-    .where("type", "==", ProposalType.FundingRequest)
-    .where("state", "==", ProposalState.PASSED)
-    .get();
-  const data = transformFirebaseDataList<Proposal>(proposals);
+  const results = await Promise.all([
+    await firebase
+      .firestore()
+      .collection(Collection.Proposals)
+      .where("type", "==", ProposalType.FundingRequest)
+      .where("state", "==", ProposalState.PASSED)
+      .get(),
+    await firebase
+      .firestore()
+      .collection(Collection.Proposals)
+      .where(
+        "fundingProcessStage",
+        "==",
+        FundingProcessStage.FundsTransferInProgress
+      )
+      .get(),
+  ]);
+  const data = [
+    ...transformFirebaseDataList<Proposal>(results[0]),
+    ...transformFirebaseDataList<Proposal>(results[1]),
+  ];
 
   return sortByCreateTime(data);
 }

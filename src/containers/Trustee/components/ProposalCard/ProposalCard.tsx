@@ -1,7 +1,11 @@
 import React, { useMemo, FC } from "react";
 import classNames from "classnames";
 import ApprovedIcon from "../../../../shared/icons/approved.icon";
-import { DateFormat, Proposal, ProposalState } from "../../../../shared/models";
+import {
+  DateFormat,
+  FundingProcessStage,
+  Proposal,
+} from "../../../../shared/models";
 import { formatEpochTime, formatPrice } from "../../../../shared/utils";
 import "./index.scss";
 
@@ -12,8 +16,10 @@ interface ProposalCardProps {
 
 const ProposalCard: FC<ProposalCardProps> = (props) => {
   const { proposal, onClick } = props;
-  const isApproved = proposal.state === ProposalState.PASSED;
+  const isPendingApproval =
+    proposal.fundingProcessStage === FundingProcessStage.PendingInvoiceApproval;
   const isDeclined = Boolean(proposal.payoutDocsRejectionReason);
+  const isApproved = !isPendingApproval && !isDeclined;
   const invoicesTotal = useMemo(
     () =>
       (proposal.payoutDocs || []).reduce(
