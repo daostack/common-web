@@ -3,12 +3,15 @@ import { CurrencyInput } from "../../../../shared/components/Form";
 import "./index.scss";
 
 interface IProps {
-  onContinue: (amount?: number) => void
+  proposalRequest: number;
+  totalAmount: number;
+  onContinue: (amount?: number) => void;
 }
 
-export default function AmountPrompt({ onContinue }: IProps) {
+export default function AmountPrompt({ proposalRequest, totalAmount, onContinue }: IProps) {
   const [amount, setAmount] = useState<number | undefined>();
-
+  console.log("proposalRequest " + proposalRequest);
+  console.log("totalAmount " + totalAmount);
   return (
     <div className="amount-prompt-wrapper">
       <span>Invoice amount</span>
@@ -17,8 +20,11 @@ export default function AmountPrompt({ onContinue }: IProps) {
         value={amount}
         onValueChange={(value) => setAmount(value ? Number(value) : undefined)}
         className="amount-prompt-wrapper__amount-input"
+        max={proposalRequest - totalAmount}
+        error="The total is more than proposal request!"
+        allowDecimals={true}
       />
-      <button disabled={!amount} className="button-blue" onClick={() => onContinue(amount)}>Done</button>
+      <button disabled={!amount || amount + totalAmount > proposalRequest} className="button-blue" onClick={() => onContinue(amount)}>Done</button>
     </div>
   )
 }
