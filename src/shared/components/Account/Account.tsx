@@ -7,13 +7,9 @@ import {
 } from "../../constants";
 import { useOutsideClick } from "../../hooks";
 
-import { Image } from "../../../shared/components";
+import { UserAvatar } from "../../../shared/components";
 import { User } from "../../../shared/models";
-import {
-  getMobileOperatingSystem,
-  getUserName,
-  getRandomUserAvatarURL,
-} from "../../utils";
+import { getMobileOperatingSystem, getUserName } from "../../utils";
 
 import "./index.scss";
 
@@ -35,22 +31,13 @@ const Account = ({ user, logOut, isTrusteeRoute }: AccountProps) => {
     }
   }, [isOutside, setShowMenu, setOusideValue]);
 
-  const randomUserAvatarURL = getRandomUserAvatarURL(user?.email);
-  const userPic = user?.photoURL || randomUserAvatarURL;
-
   return (
     <div className="account-wrapper" onClick={() => setShowMenu(!showMenu)}>
-      <Image
+      <UserAvatar
         className="avatar"
-        src={userPic}
-        alt="user avatar"
-        placeholderElement={
-          <Image
-            className="avatar"
-            src={randomUserAvatarURL}
-            alt="user avatar"
-          />
-        }
+        photoURL={user?.photoURL}
+        nameForRandomAvatar={user?.email}
+        userName={getUserName(user)}
       />
       <div>{getUserName(user)}</div>
       <div className="vertical-menu" />

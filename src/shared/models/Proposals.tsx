@@ -99,14 +99,10 @@ export interface Proposal {
   type: ProposalType;
   paymentState?: ProposalPaymentState;
   fundingState?: ProposalFundingState;
-  fundingProcessStage?: FundingProcessStage;
-  /** Details about the funding request. Exists only on funding request proposals */
-  funding?: {
-    amount: number;
-  };
   /** Details about the join request. Exists only on join request proposals */
   join?: ProposalJoin;
   votes?: ProposalVote[];
+  fundingProcessStage?: FundingProcessStage;
 
   approvalDate?: Time;
   payoutDocs?: DocInfo[];
