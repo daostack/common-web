@@ -35,6 +35,7 @@ interface AddProposalFormInterface {
   saveProposalState: (
     payload: Partial<CreateFundingRequestProposalPayload>
   ) => void;
+  hasPaymentMethod: boolean;
 }
 
 export const AddProposalForm = ({

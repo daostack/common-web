@@ -1,9 +1,9 @@
-import { ApiEndpoint } from "../../../shared/constants";
+import { ApiEndpoint } from "@/shared/constants";
 import Api from "../../../services/Api";
 import {
   CreateFundingRequestProposalPayload,
   ProposalJoinRequestData,
-} from "../../../shared/interfaces/api/proposal";
+} from "@/shared/interfaces/api/proposal";
 import {
   Card,
   Collection,
@@ -256,4 +256,16 @@ export async function createFundingProposal(
   } catch (e) {
     throw e;
   }
+}
+
+export async function checkUserPaymentMethod(userId: string) {
+  const cards = await firebase
+    .firestore()
+    .collection(Collection.Cards)
+    .where("ownerId", "==", userId)
+    .get();
+
+  console.log(cards);
+
+  return !!cards.docs.length;
 }

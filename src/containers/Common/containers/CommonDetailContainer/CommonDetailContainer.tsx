@@ -43,6 +43,7 @@ import {
   selectIsDiscussionsLoaded,
   selectIsProposalLoaded,
   selectProposals,
+  selectUserPaymentMethod,
 } from "../../store/selectors";
 import {
   clearCurrentDiscussion,
@@ -55,6 +56,7 @@ import {
   loadProposalList,
   createDiscussion,
   createFundingProposal,
+  checkUserPaymentMethod,
 } from "../../store/actions";
 import CheckIcon from "../../../../shared/icons/check.icon";
 import { selectUser } from "../../../Auth/store/selectors";
@@ -112,6 +114,7 @@ export default function CommonDetail() {
   const currentProposal = useSelector(selectCurrentProposal());
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
+  const hasPaymentMethod = useSelector(selectUserPaymentMethod());
 
   const isCommonMember = Boolean(
     common?.members.some((member) => member.userId === user?.uid)
@@ -153,6 +156,7 @@ export default function CommonDetail() {
 
   useEffect(() => {
     dispatch(getCommonDetail.request(id));
+    dispatch(checkUserPaymentMethod.request());
     return () => {
       dispatch(closeCurrentCommon());
     };
@@ -481,6 +485,7 @@ export default function CommonDetail() {
           onClose={onCloseNewP}
           onProposalAdd={addProposal}
           common={common}
+          hasPaymentMethod={hasPaymentMethod}
         />
       )}
       <div className="common-detail-wrapper">

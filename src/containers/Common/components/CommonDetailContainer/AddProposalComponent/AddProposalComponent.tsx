@@ -27,6 +27,7 @@ interface AddDiscussionComponentProps
     callback: (step: AddProposalSteps) => void
   ) => void;
   common: Common;
+  hasPaymentMethod: boolean;
 }
 
 export const AddProposalComponent = ({
@@ -34,6 +35,7 @@ export const AddProposalComponent = ({
   onClose,
   onProposalAdd,
   common,
+  hasPaymentMethod,
 }: AddDiscussionComponentProps) => {
   const [
     fundingRequest,
@@ -77,6 +79,7 @@ export const AddProposalComponent = ({
           <AddProposalForm
             common={common}
             saveProposalState={saveProposalState}
+            hasPaymentMethod={hasPaymentMethod}
           />
         );
       case AddProposalSteps.CONFIRM:
@@ -92,12 +95,17 @@ export const AddProposalComponent = ({
           <AddProposalForm
             saveProposalState={saveProposalState}
             common={common}
+            hasPaymentMethod={hasPaymentMethod}
           />
         );
     }
-  }, [proposalCreationStep, saveProposalState, confirmProposal, common]);
-
-  console.log(fundingRequest);
+  }, [
+    proposalCreationStep,
+    saveProposalState,
+    confirmProposal,
+    hasPaymentMethod,
+    common,
+  ]);
 
   return (
     <Modal isShowing={isShowing} onClose={onClose}>

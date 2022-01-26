@@ -23,6 +23,7 @@ import {
   subscribeToDiscussionMessages,
   createFundingProposal,
   subscribeToCommonProposal,
+  checkUserPaymentMethod,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -308,7 +309,28 @@ export function* createFundingProposalSaga(
   }
 }
 
-function* commonsSaga() {
+export function* checkUserPaymentMethodSaga(
+  action: ReturnType<typeof actions.checkUserPaymentMethod.request>
+): Generator {
+  try {
+    const { user } = store.getState().auth;
+    if (user) {
+      yield put(startLoading());
+
+      const hasPaymentMethod = yield checkUserPaymentMethod(user.uid);
+      console.log(hasPaymentMethod);
+
+      yield put(actions.checkUserPaymentMethod.success(!!hasPaymentMethod));
+
+      yield put(stopLoading());
+    }
+  } catch (e) {
+    yield put(actions.checkUserPaymentMethod.failure(e));
+    yield put(stopLoading());
+  }
+}
+
+export function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
   yield takeLatest(
@@ -328,6 +350,10 @@ function* commonsSaga() {
   yield takeLatest(
     actions.createFundingProposal.request,
     createFundingProposalSaga
+  );
+  yield takeLatest(
+    actions.checkUserPaymentMethod.request,
+    checkUserPaymentMethodSaga
   );
 }
 

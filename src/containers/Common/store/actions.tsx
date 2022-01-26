@@ -119,3 +119,9 @@ export const createFundingProposal = createAsyncAction(
   Proposal,
   Error
 >();
+
+export const checkUserPaymentMethod = createAsyncAction(
+  CommonsActionTypes.CHECK_USER_PAYMENT_METHOD,
+  CommonsActionTypes.CHECK_USER_PAYMENT_METHOD_SUCCESS,
+  CommonsActionTypes.CHECK_USER_PAYMENT_METHOD_FAILURE
+)<void, boolean, Error>();
