@@ -8,8 +8,14 @@ const downloadBlobByURL = async (url: string): Promise<Blob> => {
   return new Blob([response.data]);
 };
 
-export const saveByURL = (url: string, fileName?: string): void => {
-  saveAs(url, fileName);
+export const saveByURL = async (url: string, fileName: string): Promise<void> => {
+  try {
+    const blob = await downloadBlobByURL(url);
+
+    saveAs(blob, fileName);
+  } catch (error) {
+    saveAs(url, fileName);
+  }
 };
 
 export const saveZip = async (
