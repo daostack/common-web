@@ -12,7 +12,12 @@ import {
 } from "../../../../shared/hooks";
 import PurpleCheckIcon from "../../../../shared/icons/purpleCheck.icon";
 import ShareIcon from "../../../../shared/icons/share.icon";
-import { Discussion, Proposal, ProposalState } from "../../../../shared/models";
+import {
+  Discussion,
+  Proposal,
+  ProposalState,
+  ProposalType,
+} from "../../../../shared/models";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import { formatPrice, getUserName } from "../../../../shared/utils";
 import {
@@ -105,14 +110,22 @@ export default function CommonDetail() {
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
 
-  const activeProposals = useMemo(
-    () => [...proposals].filter((d) => d.state === ProposalState.COUNTDOWN),
+  const fundingProposals = useMemo(
+    () =>
+      proposals.filter(
+        (proposal) => proposal.type === ProposalType.FundingRequest
+      ),
     [proposals]
   );
 
+  const activeProposals = useMemo(
+    () => fundingProposals.filter((d) => d.state === ProposalState.COUNTDOWN),
+    [fundingProposals]
+  );
+
   const historyProposals = useMemo(
-    () => [...proposals].filter((d) => d.state !== ProposalState.COUNTDOWN),
-    [proposals]
+    () => fundingProposals.filter((d) => d.state !== ProposalState.COUNTDOWN),
+    [fundingProposals]
   );
 
   const isCommonMember = Boolean(
