@@ -6,4 +6,6 @@ export { default as useApollo } from "./useApollo";
 export { default as useAuthorizedModal } from "./useAuthorizedModal";
 export { useComponentWillUnmount } from "./useComponentWillUnmount";
 export { default as useFullText } from "./useFullText";
+export { default as useMatchRoute } from "./useMatchRoute";
 export { default as useZoomDisabling } from "./useZoomDisabling";
+export { default as useQueryParams } from "./useQueryParams";

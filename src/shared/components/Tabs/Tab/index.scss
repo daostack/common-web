@@ -1,0 +1,49 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+$inactive-color: $light-gray-2;
+$inactive-hover-color: $purple;
+$active-color: $purple-2;
+
+.custom-tab {
+  margin: 0 0 0 2rem;
+  padding: 0 0 1.25rem 0;
+  font-family: NunitoSans-Bold, sans-serif;
+  font-size: $moderate;
+  font-weight: bold;
+  text-align: center;
+  color: $inactive-color;
+  background-color: transparent;
+  border: 0;
+  border-bottom: .25rem solid transparent;
+  cursor: pointer;
+  transition: color .2s, border-bottom-color .2s;
+
+  &:active {
+    border-bottom-color: $inactive-hover-color;
+    color: $inactive-hover-color;
+  }
+
+  &:hover {
+    color: $inactive-hover-color;
+  }
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  @include big-phone {
+    margin-left: 1.5rem;
+    padding-bottom: .75rem;
+  }
+}
+.custom-tab--active {
+  border-bottom-color: $active-color;
+  color: $active-color;
+
+  &:active,
+  &:hover {
+    border-bottom-color: $active-color;
+    color: $active-color;
+  }
+}
