@@ -437,3 +437,38 @@
     }
   }
 }
+.add-payment-method-wrapper{
+  display: flex;
+  align-items: center;
+  height: 40rem;
+  flex-direction: column;
+  .add-payment-title {
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.33;
+    letter-spacing: normal;
+    text-align: center;
+    color: #001a36;
+    margin-top: -1.5rem;
+  }
+  .add-payment-description{
+    margin-top: 2rem;
+    font-size: 0.875rem;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    text-align: center;
+    color: #001a36;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid $light-gray-1;
+    margin-bottom: 2rem;
+  }
+  .add-payment-content{
+    width: 60%;
+  }
+}

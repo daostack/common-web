@@ -11,6 +11,7 @@ import { AddProposalLoader } from "./AddProposalLoader";
 import { AdProposalSuccess } from "./AddProposalSuccess";
 import { AdProposalFailure } from "./AddProposalFailure";
 import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
+import { AddPaymentMethod } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddPaymentMethod";
 
 export enum AddProposalSteps {
   CREATE = "create",
@@ -18,6 +19,7 @@ export enum AddProposalSteps {
   LOADER = "loader",
   SUCCESS = "success",
   FAILURE = "failure",
+  PAYMENT_METHOD = "payment_method",
 }
 
 interface AddDiscussionComponentProps
@@ -49,7 +51,7 @@ export const AddProposalComponent = ({
     commonId: common.id,
   });
   const [proposalCreationStep, changeCreationProposalStep] = useState(
-    AddProposalSteps.CREATE
+    AddProposalSteps.PAYMENT_METHOD
   );
 
   const saveProposalState = useCallback(
@@ -59,6 +61,10 @@ export const AddProposalComponent = ({
     },
     [fundingRequest]
   );
+
+  const onPaymentLoad = useCallback(() => {
+    changeCreationProposalStep(AddProposalSteps.CREATE);
+  }, []);
 
   const confirmProposal = useCallback(() => {
     changeCreationProposalStep(AddProposalSteps.LOADER);
@@ -82,6 +88,8 @@ export const AddProposalComponent = ({
             hasPaymentMethod={hasPaymentMethod}
           />
         );
+      case AddProposalSteps.PAYMENT_METHOD:
+        return <AddPaymentMethod onPaymentMethod={onPaymentLoad} />;
       case AddProposalSteps.CONFIRM:
         return <AddProposalConfirm onConfirm={confirmProposal} />;
       case AddProposalSteps.LOADER:
@@ -103,6 +111,7 @@ export const AddProposalComponent = ({
     proposalCreationStep,
     saveProposalState,
     confirmProposal,
+    onPaymentLoad,
     hasPaymentMethod,
     common,
   ]);

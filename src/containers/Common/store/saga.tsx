@@ -314,11 +314,10 @@ export function* checkUserPaymentMethodSaga(
 ): Generator {
   try {
     const { user } = store.getState().auth;
-    if (user) {
+    if (user && user.uid) {
       yield put(startLoading());
 
       const hasPaymentMethod = yield checkUserPaymentMethod(user.uid);
-      console.log(hasPaymentMethod);
 
       yield put(actions.checkUserPaymentMethod.success(!!hasPaymentMethod));
 
