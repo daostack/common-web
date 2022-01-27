@@ -21,6 +21,10 @@ import { InvoiceTileList } from "../../components/InvoiceTileList";
 import { ProposalCard } from "../../components/ProposalCard";
 import { StickyInfo } from "../../components/StickyInfo";
 import {
+  checkDeclinedProposal,
+  checkPendingApprovalProposal,
+} from "../../helpers";
+import {
   approveOrDeclineProposal,
   clearProposals,
   clearProposalForApproval,
@@ -57,8 +61,13 @@ const InvoiceAcceptanceContainer: FC = () => {
     selectIsProposalForApprovalLoaded()
   );
   const payoutDocs = proposalForApproval?.payoutDocs || [];
+  const isApprovedProposal = Boolean(
+    proposalForApproval &&
+      !checkDeclinedProposal(proposalForApproval) &&
+      !checkPendingApprovalProposal(proposalForApproval)
+  );
   const backLink = `${ROUTE_PATHS.TRUSTEE_INVOICES}${
-    proposalForApproval?.state === ProposalState.PASSED
+    isApprovedProposal
       ? `?${INVOICES_PAGE_TAB_QUERY_PARAM}=${InvoicesPageTabState.Approved}`
       : ""
   }`;
