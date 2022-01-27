@@ -86,6 +86,7 @@ const FilesCarousel: FC<FilesCarouselProps> = (props) => {
             className="files-carousel-wrapper__file-preview"
             doc={currentDoc}
             isZoomed={isZoomed}
+            shouldHideSwitchActions={payoutDocs.length === 1}
             onLeftClick={handleLeftClick}
             onRightClick={handleRightClick}
             onZoomIn={handleZoomIn}

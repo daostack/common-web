@@ -15,6 +15,7 @@ interface FilePreviewProps {
   className?: string;
   doc: DocInfo;
   isZoomed: boolean;
+  shouldHideSwitchActions?: boolean;
   onLeftClick: () => void;
   onRightClick: () => void;
   onZoomIn: () => void;
@@ -30,9 +31,11 @@ const FilePreview: FC<FilePreviewProps> = (props) => {
     onRightClick,
     onZoomIn,
     onZoomOut,
+    shouldHideSwitchActions = false,
   } = props;
   const [hasError, setHasError] = useState(false);
   const isImage = doc.mimeType.startsWith("image/");
+  const shouldShowSwitchActions = !shouldHideSwitchActions && !isZoomed;
 
   const handleDownload = () => {
     saveByURL(doc.downloadURL, doc.name);
@@ -55,7 +58,7 @@ const FilePreview: FC<FilePreviewProps> = (props) => {
   return (
     <div className={classNames("carousel-file-preview-wrapper", className)}>
       <div className="carousel-file-preview-wrapper__content">
-        {!isZoomed && (
+        {shouldShowSwitchActions && (
           <ButtonIcon
             className="carousel-file-preview-wrapper__switch-icon-wrapper"
             onClick={onLeftClick}
@@ -103,7 +106,7 @@ const FilePreview: FC<FilePreviewProps> = (props) => {
             </div>
           )}
         </div>
-        {!isZoomed && (
+        {shouldShowSwitchActions && (
           <ButtonIcon
             className="carousel-file-preview-wrapper__switch-icon-wrapper"
             onClick={onRightClick}

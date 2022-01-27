@@ -14,7 +14,8 @@ import {
 import { changeScreenSize } from "../../shared/store/actions";
 import { authentificated } from "../Auth/store/selectors";
 import { MyCommonsContainer } from "../Common/containers/MyCommonsContainer";
-import { SubmitInvoicesContainer } from "../Invoices/containers/SubmitInvoicesContainer";
+import { SubmitInvoicesContainer } from "../Invoices/containers";
+import { TrusteeContainer } from "../Trustee/containers";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -65,6 +66,7 @@ const App = () => {
             component={SubmitInvoicesContainer}
             authenticated={isAuthenticated}
           />
+          <Route path={ROUTE_PATHS.TRUSTEE} component={TrusteeContainer} />
           <Route component={NotFound} />
         </Switch>
       </Content>

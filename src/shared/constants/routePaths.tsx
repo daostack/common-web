@@ -5,4 +5,8 @@ export enum ROUTE_PATHS {
   CONTACT = "/contact",
   MY_COMMONS = "/my-commons",
   SUBMIT_INVOICES = "/invoices/submission/:proposalId",
+  TRUSTEE = "/trustee",
+  TRUSTEE_AUTH = "/trustee/auth",
+  TRUSTEE_INVOICES = "/trustee/invoices",
+  TRUSTEE_INVOICE = "/trustee/invoices/:proposalId",
 }
