@@ -10,11 +10,7 @@ import {
 import { ROUTE_PATHS } from "../../../../shared/constants";
 import { useComponentWillUnmount } from "../../../../shared/hooks";
 import LeftArrowIcon from "../../../../shared/icons/leftArrow.icon";
-import {
-  DocInfo,
-  FundingProcessStage,
-  ProposalState,
-} from "../../../../shared/models";
+import { DocInfo } from "../../../../shared/models";
 import { ApproveInvoicesPrompt } from "../../components/ApproveInvoicesPrompt";
 import { DeclineInvoicesPrompt } from "../../components/DeclineInvoicesPrompt";
 import { InvoiceTileList } from "../../components/InvoiceTileList";
@@ -61,19 +57,19 @@ const InvoiceAcceptanceContainer: FC = () => {
     selectIsProposalForApprovalLoaded()
   );
   const payoutDocs = proposalForApproval?.payoutDocs || [];
+  const isPendingApprovalProposal = Boolean(
+    proposalForApproval && checkPendingApprovalProposal(proposalForApproval)
+  );
   const isApprovedProposal = Boolean(
     proposalForApproval &&
       !checkDeclinedProposal(proposalForApproval) &&
-      !checkPendingApprovalProposal(proposalForApproval)
+      !isPendingApprovalProposal
   );
   const backLink = `${ROUTE_PATHS.TRUSTEE_INVOICES}${
     isApprovedProposal
       ? `?${INVOICES_PAGE_TAB_QUERY_PARAM}=${InvoicesPageTabState.Approved}`
       : ""
   }`;
-  const isPendingApprovalProposal =
-    proposalForApproval?.fundingProcessStage ===
-    FundingProcessStage.PendingInvoiceApproval;
 
   const goToAllInvoices = () => {
     dispatch(clearProposals());
