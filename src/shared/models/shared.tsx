@@ -27,5 +27,6 @@ export enum Collection {
 
 export enum DateFormat {
   Long = "DD-MM-YYYY HH:mm",
-  Short = "YYYY-MM-DD"
+  Short = "YYYY-MM-DD",
+  Human = "MMM, D YYYY",
 }

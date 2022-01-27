@@ -13,6 +13,7 @@ export const COMMON_APP_GOOGLE_PLAY_LINK =
   "https://play.google.com/store/apps/details?id=com.daostack.common";
 
 export const CONTACT_EMAIL = "hi@common.io";
+export const SUPPORT_EMAIL = "support@common.io";
 
 export const MIN_CONTRIBUTION_ILS_AMOUNT = 1000; // ₪10 * 100
 export const MAX_CONTRIBUTION_ILS_AMOUNT = 250000; // ₪2500 * 100

@@ -153,11 +153,14 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
             Add invoice amount
           </button>
         ) : (
-          <AmountPrompt onContinue={onFileUploadFinish} />
+          <AmountPrompt
+            onContinue={onFileUploadFinish}
+            proposalRequest={proposalRequest ? proposalRequest / 100 : 0}
+            totalAmount={totalAmount} />
         )}
       </div>
     ),
-    [showInsertAmountPrompt, onFileUploadFinish]
+    [showInsertAmountPrompt, onFileUploadFinish, totalAmount, proposalRequest]
   );
 
   return (

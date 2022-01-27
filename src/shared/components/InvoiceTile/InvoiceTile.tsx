@@ -1,6 +1,6 @@
 import React, { useCallback, FC, MouseEventHandler } from "react";
 import classNames from "classnames";
-import { ButtonIcon } from "../../../shared/components";
+import { ButtonIcon, Image } from "../../../shared/components";
 import TrashIcon from "../../../shared/icons/trash.icon";
 import { formatPrice } from "../../../shared/utils";
 import "./index.scss";
@@ -8,6 +8,10 @@ import "./index.scss";
 export enum InvoiceTileVariant {
   Square,
   FullWidth,
+}
+
+interface Styles {
+  image?: string;
 }
 
 interface InvoiceTileProps {
@@ -20,6 +24,7 @@ interface InvoiceTileProps {
   shouldDownloadOnClick?: boolean;
   amount?: number | null;
   variant?: InvoiceTileVariant;
+  styles?: Styles;
 }
 
 const InvoiceTile: FC<InvoiceTileProps> = (props) => {
@@ -33,6 +38,7 @@ const InvoiceTile: FC<InvoiceTileProps> = (props) => {
     shouldDownloadOnClick = false,
     amount = null,
     variant = InvoiceTileVariant.Square,
+    styles,
   } = props;
   const isFullWidthVariant = variant === InvoiceTileVariant.FullWidth;
 
@@ -69,10 +75,13 @@ const InvoiceTile: FC<InvoiceTileProps> = (props) => {
   const shouldDisplayTopContent =
     isFullWidthVariant && (amountEl || deleteButtonEl);
 
-  const imageClassName = classNames("invoice-tile__image", {
+  const imageClassName = classNames("invoice-tile__image", styles?.image, {
     "invoice-tile__image--full-width": isFullWidthVariant,
-    "invoice-tile__image--general-file": !isImage,
   });
+  const generalFileClassName = classNames(
+    imageClassName,
+    "invoice-tile__image--general-file"
+  );
 
   const additionalProps = shouldDownloadOnClick
     ? {
@@ -101,9 +110,16 @@ const InvoiceTile: FC<InvoiceTileProps> = (props) => {
         {...additionalProps}
       >
         {isImage ? (
-          <img className={imageClassName} src={fileURL} alt={fileName} />
+          <Image
+            className={imageClassName}
+            src={fileURL}
+            alt={fileName}
+            placeholderElement={
+              <div className={generalFileClassName}>{fileName}</div>
+            }
+          />
         ) : (
-          <div className={imageClassName}>{fileName}</div>
+          <div className={generalFileClassName}>{fileName}</div>
         )}
       </a>
       {!isFullWidthVariant && (

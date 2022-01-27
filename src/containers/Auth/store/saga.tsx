@@ -152,6 +152,41 @@ const authorizeUser = async (payload: string) => {
     .catch((e) => console.log(e));
 };
 
+const loginUsingEmailAndPassword = async (
+  email: string,
+  password: string
+): Promise<User> => {
+  await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+  const { user } = await firebase
+    .auth()
+    .signInWithEmailAndPassword(email, password);
+
+  if (!user) {
+    await firebase.auth().signOut();
+    throw new Error("User is not logged in");
+  }
+
+  const token = await user.getIdToken(true);
+
+  if (!token) {
+    await firebase.auth().signOut();
+    throw new Error("User is not logged in");
+  }
+
+  const databaseUser = await getUserData(user.uid);
+
+  if (!databaseUser) {
+    await firebase.auth().signOut();
+    throw new Error("User is not logged in");
+  }
+
+  tokenHandler.set(token);
+  tokenHandler.setUser(databaseUser);
+
+  return databaseUser;
+};
+
 const updateUserData = async (user: any) => {
   const currentUser = await firebase.auth().currentUser;
   await currentUser?.updateProfile({
@@ -197,6 +232,33 @@ function* socialLoginSaga({ payload }: AnyAction & { payload: string }) {
   }
 }
 
+function* loginUsingEmailAndPasswordSaga({
+  payload,
+}: ReturnType<typeof actions.loginUsingEmailAndPassword.request>) {
+  try {
+    yield put(startLoading());
+
+    const user: User = yield call(
+      loginUsingEmailAndPassword,
+      payload.payload.email,
+      payload.payload.password
+    );
+    yield put(actions.loginUsingEmailAndPassword.success(user));
+
+    if (payload.callback) {
+      payload.callback(null, user);
+    }
+  } catch (error) {
+    yield put(actions.loginUsingEmailAndPassword.failure(error));
+
+    if (payload.callback) {
+      payload.callback(error);
+    }
+  } finally {
+    yield put(stopLoading());
+  }
+}
+
 function* logOut() {
   localStorage.clear();
   firebase.auth().signOut();
@@ -228,6 +290,10 @@ function* updateUserDetails({
 
 function* authSagas() {
   yield takeLatest(actions.socialLogin.request, socialLoginSaga);
+  yield takeLatest(
+    actions.loginUsingEmailAndPassword.request,
+    loginUsingEmailAndPasswordSaga
+  );
   yield takeLatest(actions.logOut, logOut);
   yield takeLatest(actions.updateUserDetails.request, updateUserDetails);
 }

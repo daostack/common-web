@@ -1,0 +1,45 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+$invoices-vertical-gap: 2rem;
+$invoices-horizontal-gap: 1.5rem;
+
+.invoice-tile-list-wrapper {
+  max-width: 33rem;
+  width: 100%;
+
+  .invoice-tile-list-wrapper__no-uploaded-docs-text {
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .invoice-tile-list-wrapper__header-info {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: $moderate;
+    font-weight: bold;
+    color: $secondary-blue;
+  }
+
+  .invoice-tile-list-wrapper__download-all-link {
+    font-family: inherit;
+    font-size: $xxsmall;
+    font-weight: inherit;
+    color: inherit;
+  }
+
+  .invoice-tile-list-wrapper__invoices-wrapper {
+    width: calc(100% + #{$invoices-horizontal-gap});
+    margin: -#{$invoices-vertical-gap} 0 0 -#{$invoices-horizontal-gap};
+    display: inline-flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .invoice-tile-list-wrapper__invoice-tile {
+    margin: $invoices-vertical-gap 0 0 $invoices-horizontal-gap;
+  }
+}

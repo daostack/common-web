@@ -7,22 +7,19 @@ import {
 } from "../../constants";
 import { useOutsideClick } from "../../hooks";
 
-import { Image } from "../../../shared/components";
+import { UserAvatar } from "../../../shared/components";
 import { User } from "../../../shared/models";
-import {
-  getMobileOperatingSystem,
-  getUserName,
-  getRandomUserAvatarURL,
-} from "../../utils";
+import { getMobileOperatingSystem, getUserName } from "../../utils";
 
 import "./index.scss";
 
 interface AccountProps {
   user: User | null;
   logOut: () => void;
+  isTrusteeRoute: boolean;
 }
 
-const Account = ({ user, logOut }: AccountProps) => {
+const Account = ({ user, logOut, isTrusteeRoute }: AccountProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const wrapperRef = useRef(null);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
@@ -34,41 +31,38 @@ const Account = ({ user, logOut }: AccountProps) => {
     }
   }, [isOutside, setShowMenu, setOusideValue]);
 
-  const randomUserAvatarURL = getRandomUserAvatarURL(user?.email);
-  const userPic = user?.photoURL || randomUserAvatarURL;
-
   return (
     <div className="account-wrapper" onClick={() => setShowMenu(!showMenu)}>
-      <Image
+      <UserAvatar
         className="avatar"
-        src={userPic}
-        alt="user avatar"
-        placeholderElement={
-          <Image
-            className="avatar"
-            src={randomUserAvatarURL}
-            alt="user avatar"
-          />
-        }
+        photoURL={user?.photoURL}
+        nameForRandomAvatar={user?.email}
+        userName={getUserName(user)}
       />
       <div>{getUserName(user)}</div>
       <div className="vertical-menu" />
       {showMenu && (
         <div className="menu-wrapper" ref={wrapperRef}>
-          <div onClick={() => (window.location.href = ROUTE_PATHS.MY_COMMONS)}>
-            My Commons
-          </div>
-          <div
-            onClick={() =>
-              window.open(
-                getMobileOperatingSystem() === MobileOperatingSystem.iOS
-                  ? COMMON_APP_APP_STORE_LINK
-                  : COMMON_APP_GOOGLE_PLAY_LINK
-              )
-            }
-          >
-            Download Common app
-          </div>
+          {!isTrusteeRoute && (
+            <>
+              <div
+                onClick={() => (window.location.href = ROUTE_PATHS.MY_COMMONS)}
+              >
+                My Commons
+              </div>
+              <div
+                onClick={() =>
+                  window.open(
+                    getMobileOperatingSystem() === MobileOperatingSystem.iOS
+                      ? COMMON_APP_APP_STORE_LINK
+                      : COMMON_APP_GOOGLE_PLAY_LINK
+                  )
+                }
+              >
+                Download Common app
+              </div>
+            </>
+          )}
           <div onClick={() => logOut()}>Log out</div>
         </div>
       )}

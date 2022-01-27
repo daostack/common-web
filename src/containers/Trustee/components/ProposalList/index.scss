@@ -1,0 +1,38 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+$cards-gap: 24px;
+
+.invoice-list-wrapper {
+  margin-bottom: 32px;
+
+  .invoice-list-wrapper__title {
+    margin: 0 0 32px;
+    font-family: NunitoSans-Bold, sans-serif;
+  }
+
+  .invoice-list-wrapper__empty-text {
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .invoice-list-wrapper__cards {
+    width: calc(100% + #{$cards-gap});
+    margin: -#{$cards-gap} 0 0 -#{$cards-gap};
+    padding: 0;
+    display: inline-flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+  }
+
+  .invoice-list-wrapper__card-wrapper {
+    margin: $cards-gap 0 0 $cards-gap;
+    max-width: 384px;
+    width: 100%;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

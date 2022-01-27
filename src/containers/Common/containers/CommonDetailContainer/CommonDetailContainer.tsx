@@ -12,7 +12,12 @@ import {
 } from "../../../../shared/hooks";
 import PurpleCheckIcon from "../../../../shared/icons/purpleCheck.icon";
 import ShareIcon from "../../../../shared/icons/share.icon";
-import { Discussion, Proposal, ProposalState } from "../../../../shared/models";
+import {
+  Discussion,
+  Proposal,
+  ProposalState,
+  ProposalType,
+} from "../../../../shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice, getUserName } from "@/shared/utils";
 import {
@@ -107,6 +112,24 @@ export default function CommonDetail() {
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
 
+  const fundingProposals = useMemo(
+    () =>
+      proposals.filter(
+        (proposal) => proposal.type === ProposalType.FundingRequest
+      ),
+    [proposals]
+  );
+
+  const activeProposals = useMemo(
+    () => fundingProposals.filter((d) => d.state === ProposalState.COUNTDOWN),
+    [fundingProposals]
+  );
+
+  const historyProposals = useMemo(
+    () => fundingProposals.filter((d) => d.state !== ProposalState.COUNTDOWN),
+    [fundingProposals]
+  );
+
   const isCommonMember = Boolean(
     common?.members.some((member) => member.userId === user?.uid)
   );
@@ -119,7 +142,11 @@ export default function CommonDetail() {
     !isCommonMember && (isCreationStageReached || !isJoiningPending);
   const shouldShowStickyJoinEffortButton =
     screenSize === ScreenSize.Mobile &&
+    ((tab === "discussions" && discussions?.length > 0) ||
+      (tab === "proposals" && activeProposals.length > 0) ||
+      (tab === "history" && historyProposals.length > 0)) &&
     !isCommonMember &&
+    !isJoiningPending &&
     !inViewport &&
     (stickyClass || footerClass);
 
@@ -144,16 +171,6 @@ export default function CommonDetail() {
       dispatch(closeCurrentCommon());
     };
   }, [dispatch, id]);
-
-  const activeProposals = useMemo(
-    () => [...proposals].filter((d) => d.state === ProposalState.COUNTDOWN),
-    [proposals]
-  );
-
-  const historyProposals = useMemo(
-    () => [...proposals].filter((d) => d.state !== ProposalState.COUNTDOWN),
-    [proposals]
-  );
 
   const changeTabHandler = useCallback(
     (tab: string) => {
@@ -341,7 +358,14 @@ export default function CommonDetail() {
         }
       }
     }
-  }, [inViewport, activeProposals, tab, discussions, setStickyClass, joinEffortRef]);
+  }, [
+    inViewport,
+    activeProposals,
+    tab,
+    discussions,
+    setStickyClass,
+    joinEffortRef,
+  ]);
 
   useEffect(() => {
     if (inViewPortFooter) {
@@ -365,7 +389,6 @@ export default function CommonDetail() {
   }
 
   const sharingURL = `${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`;
-  const joinButtonText = isJoiningPending ? "Pending approval" : "Join the effort";
 
   return (
     <>
@@ -475,8 +498,9 @@ export default function CommonDetail() {
               <div className="numbers">
                 <div className="item">
                   <div className="value">{formatPrice(common?.balance)}</div>
-                  <div className="name">{`Available ${screenSize === ScreenSize.Desktop ? "Funds" : ""
-                    }`}</div>
+                  <div className="name">{`Available ${
+                    screenSize === ScreenSize.Desktop ? "Funds" : ""
+                  }`}</div>
                   {common.reservedBalance && (
                     <div className="text-information-wrapper__secondary-text">
                       In process: {formatPrice(common.reservedBalance)}
@@ -485,8 +509,9 @@ export default function CommonDetail() {
                 </div>
                 <div className="item">
                   <div className="value">{formatPrice(common?.raised)}</div>
-                  <div className="name">{`${screenSize === ScreenSize.Desktop ? "Total" : ""
-                    } Raised`}</div>
+                  <div className="name">{`${
+                    screenSize === ScreenSize.Desktop ? "Total" : ""
+                  } Raised`}</div>
                 </div>
                 <div className="item">
                   <div className="value">{common?.members.length}</div>
@@ -494,8 +519,9 @@ export default function CommonDetail() {
                 </div>
                 <div className="item">
                   <div className="value">{activeProposals.length}</div>
-                  <div className="name">{`${screenSize === ScreenSize.Desktop ? "Active" : ""
-                    } Proposals`}</div>
+                  <div className="name">{`${
+                    screenSize === ScreenSize.Desktop ? "Active" : ""
+                  } Proposals`}</div>
                 </div>
               </div>
             </div>
@@ -519,7 +545,9 @@ export default function CommonDetail() {
                       onClick={onOpenJoinModal}
                       disabled={isJoiningPending}
                     >
-                      {joinButtonText}
+                      {isJoiningPending
+                        ? "Pending approval"
+                        : "Join the effort"}
                     </button>
                   )}
                   {isCommonMember && screenSize === ScreenSize.Desktop && (
@@ -611,9 +639,8 @@ export default function CommonDetail() {
               <button
                 className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
                 onClick={onOpenJoinModal}
-                disabled={isJoiningPending}
               >
-                {joinButtonText}
+                Join the effort
               </button>
             )}
             {(screenSize === ScreenSize.Desktop || tab !== "about") && (
