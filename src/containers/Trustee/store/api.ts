@@ -60,8 +60,19 @@ export async function fetchApprovedProposals(): Promise<Proposal[]> {
       )
       .get(),
   ]);
+  const filteredProposals = transformFirebaseDataList<Proposal>(
+    results[0]
+  ).filter(
+    (proposal) =>
+      !proposal.fundingProcessStage ||
+      ![
+        FundingProcessStage.PendingInvoiceUpload,
+        FundingProcessStage.PendingInvoiceApproval,
+      ].includes(proposal.fundingProcessStage)
+  );
+
   const data = [
-    ...transformFirebaseDataList<Proposal>(results[0]),
+    ...filteredProposals,
     ...transformFirebaseDataList<Proposal>(results[1]),
   ];
 

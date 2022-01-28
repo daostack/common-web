@@ -1,6 +1,8 @@
 @import "../../../../constants";
 @import "../../../../styles/sizes";
 
+$gap: 1rem;
+
 .approve-invoices-prompt-wrapper {
   max-width: 26.438rem;
   width: 100%;
@@ -43,7 +45,7 @@
   }
 
   .approve-invoices-prompt-wrapper__title {
-    margin: 1rem 0 0;
+    margin: 1rem 0 auto;
     font-family: NunitoSans-Bold, sans-serif;
     font-size: $moderate-med;
     font-weight: bold;
@@ -52,10 +54,10 @@
   }
 
   .approve-invoices-prompt-wrapper__actions-wrapper {
-    margin-top: auto;
+    width: calc(100% + #{$gap});
+    margin: -#{$gap} 0 0 -#{$gap};
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
   }
 
   .approve-invoices-prompt-wrapper__button {
@@ -67,6 +69,7 @@
 
   .approve-invoices-prompt-wrapper__cancel-button {
     flex: 1;
+    margin: $gap 0 0 $gap;
     border: 1px solid $light-gray-1;
     background-color: $white;
     color: $black;
@@ -81,6 +84,7 @@
 
   .approve-invoices-prompt-wrapper__approve-button {
     flex: 1;
+    margin: $gap 0 0 $gap;
 
     @extend .approve-invoices-prompt-wrapper__button;
   }
