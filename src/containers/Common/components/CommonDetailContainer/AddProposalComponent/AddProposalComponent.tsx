@@ -51,7 +51,7 @@ export const AddProposalComponent = ({
     commonId: common.id,
   });
   const [proposalCreationStep, changeCreationProposalStep] = useState(
-    AddProposalSteps.PAYMENT_METHOD
+    AddProposalSteps.CREATE
   );
 
   const saveProposalState = useCallback(
@@ -64,6 +64,10 @@ export const AddProposalComponent = ({
 
   const onPaymentLoad = useCallback(() => {
     changeCreationProposalStep(AddProposalSteps.CREATE);
+  }, []);
+
+  const addPaymentMethod = useCallback(() => {
+    changeCreationProposalStep(AddProposalSteps.PAYMENT_METHOD);
   }, []);
 
   const confirmProposal = useCallback(() => {
@@ -86,6 +90,7 @@ export const AddProposalComponent = ({
             common={common}
             saveProposalState={saveProposalState}
             hasPaymentMethod={hasPaymentMethod}
+            addPaymentMethod={addPaymentMethod}
           />
         );
       case AddProposalSteps.PAYMENT_METHOD:
@@ -104,6 +109,7 @@ export const AddProposalComponent = ({
             saveProposalState={saveProposalState}
             common={common}
             hasPaymentMethod={hasPaymentMethod}
+            addPaymentMethod={addPaymentMethod}
           />
         );
     }
@@ -112,6 +118,7 @@ export const AddProposalComponent = ({
     saveProposalState,
     confirmProposal,
     onPaymentLoad,
+    addPaymentMethod,
     hasPaymentMethod,
     common,
   ]);

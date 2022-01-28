@@ -36,11 +36,14 @@ interface AddProposalFormInterface {
     payload: Partial<CreateFundingRequestProposalPayload>
   ) => void;
   hasPaymentMethod: boolean;
+  addPaymentMethod: () => void;
 }
 
 export const AddProposalForm = ({
   common,
   saveProposalState,
+  hasPaymentMethod,
+  addPaymentMethod,
 }: AddProposalFormInterface) => {
   const [showFileLoader, setShowFileLoader] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -140,6 +143,21 @@ export const AddProposalForm = ({
                 {formatPrice(common.balance)}
               </div>
             </div>
+            {!hasPaymentMethod && (
+              <div className="add-payment-method-wrapper">
+                <img
+                  src="/icons/add-proposal/illustrations-full-page-transparent.svg"
+                  alt=""
+                />
+                <div className="add-payment-content">
+                  <div className="add-payment-content-text">
+                    You must provide bank account details in order to receive
+                    funds
+                  </div>
+                  <button onClick={addPaymentMethod}>Add Bank Account</button>
+                </div>
+              </div>
+            )}
             <div className="proposal-description-wrapper">
               <TextField
                 id="description"
