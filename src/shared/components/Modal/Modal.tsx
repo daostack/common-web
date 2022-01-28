@@ -1,18 +1,20 @@
 import React, {
   useCallback,
   useEffect,
+  useImperativeHandle,
   useLayoutEffect,
   useMemo,
   useRef,
   useState,
-  FC,
+  forwardRef,
+  ForwardRefRenderFunction,
   ReactNode,
 } from "react";
 import ReactDOM from "react-dom";
 import classNames from "classnames";
 
 import { useComponentWillUnmount, useOutsideClick } from "../../hooks";
-import { ModalProps } from "../../interfaces";
+import { ModalProps, ModalRef } from "../../interfaces";
 import CloseIcon from "../../icons/close.icon";
 import LeftArrowIcon from "../../icons/leftArrow.icon";
 import { Colors } from "../../constants";
@@ -22,7 +24,7 @@ import "./index.scss";
 
 const MODAL_ID = "modal";
 
-const Modal: FC<ModalProps> = (props) => {
+const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (props, modalRef) => {
   const {
     isShowing,
     onGoBack,
@@ -124,7 +126,7 @@ const Modal: FC<ModalProps> = (props) => {
     );
   }, [isHeaderSticky, isFooterSticky]);
 
-  const modalWrapperClassName = classNames("modal-wrapper", {
+  const modalWrapperClassName = classNames("modal-wrapper", styles?.modalWrapper, {
     "mobile-full-screen": mobileFullScreen,
   });
   const headerWrapperClassName = classNames(
@@ -187,6 +189,16 @@ const Modal: FC<ModalProps> = (props) => {
     <footer className={footerClassName}>{footer}</footer>
   );
 
+  useImperativeHandle(modalRef, () => ({
+    scrollToTop: () => {
+      if (contentRef.current) {
+        contentRef.current.scrollTo({
+          top: 0,
+        });
+      }
+    },
+  }), []);
+
   useLayoutEffect(() => {
     handleScroll();
   }, [handleScroll, isHeaderSticky, headerContent, isFooterSticky, footer]);
@@ -233,4 +245,4 @@ const Modal: FC<ModalProps> = (props) => {
     : null;
 };
 
-export default Modal;
+export default forwardRef(Modal);
