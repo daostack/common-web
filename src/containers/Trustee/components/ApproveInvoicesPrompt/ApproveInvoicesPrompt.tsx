@@ -72,14 +72,12 @@ const ApproveInvoicesPrompt: FC<ApproveInvoicesPromptProps> = (props) => {
           <h3 className="approve-invoices-prompt-wrapper__title">
             Invoices are successfully approved!
           </h3>
-          <div className="approve-invoices-prompt-wrapper__actions-wrapper">
-            <button
-              className="button-blue approve-invoices-prompt-wrapper__done-button"
-              onClick={handleClose}
-            >
-              Done
-            </button>
-          </div>
+          <button
+            className="button-blue approve-invoices-prompt-wrapper__done-button"
+            onClick={handleClose}
+          >
+            Done
+          </button>
         </>
       )}
     </Modal>
