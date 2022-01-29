@@ -1,6 +1,12 @@
 import React from "react";
 
-export const AdProposalSuccess = () => {
+export const AdProposalSuccess = ({
+  closePopup,
+  openProposal,
+}: {
+  closePopup: () => void;
+  openProposal: () => void;
+}) => {
   return (
     <div className="add-proposal-success-wrapper">
       <img
@@ -13,10 +19,14 @@ export const AdProposalSuccess = () => {
         accept or reject it. You will be notified when the <br /> voting ends.
       </div>
       <div className="actions-wrapper">
-        <button className="button-blue white" type="submit">
+        <button
+          className="button-blue white"
+          type="button"
+          onClick={closePopup}
+        >
           Back to Common
         </button>
-        <button className="button-blue" type="submit">
+        <button className="button-blue" type="button" onClick={openProposal}>
           View proposal
         </button>
       </div>

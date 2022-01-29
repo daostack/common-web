@@ -500,6 +500,8 @@ export default function CommonDetail() {
           onProposalAdd={addProposal}
           common={common}
           hasPaymentMethod={hasPaymentMethod}
+          proposals={proposals}
+          getProposalDetail={getProposalDetail}
         />
       )}
       <div className="common-detail-wrapper">

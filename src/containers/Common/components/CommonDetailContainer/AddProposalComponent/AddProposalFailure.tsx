@@ -1,6 +1,10 @@
 import React from "react";
 
-export const AdProposalFailure = () => {
+export const AdProposalFailure = ({
+  closePopup,
+}: {
+  closePopup: () => void;
+}) => {
   return (
     <div className="add-proposal-failure-wrapper">
       <img
@@ -12,7 +16,11 @@ export const AdProposalFailure = () => {
         This took longer than expected, please try again later
       </div>
       <div className="actions-wrapper">
-        <button className="button-blue white" type="submit">
+        <button
+          className="button-blue white"
+          type="submit"
+          onClick={closePopup}
+        >
           Ok
         </button>
         <div className="error-details">View error details</div>

@@ -4,7 +4,7 @@ import { Modal } from "../../../../../shared/components";
 import { ModalProps } from "@/shared/interfaces";
 
 import "./index.scss";
-import { Common } from "@/shared/models";
+import { Common, Proposal } from "@/shared/models";
 import { AddProposalForm } from "./AddProposalForm";
 import { AddProposalConfirm } from "./AddProposalConfirm";
 import { AddProposalLoader } from "./AddProposalLoader";
@@ -30,6 +30,8 @@ interface AddDiscussionComponentProps
   ) => void;
   common: Common;
   hasPaymentMethod: boolean;
+  proposals: Proposal[];
+  getProposalDetail: (payload: Proposal) => void;
 }
 
 export const AddProposalComponent = ({
@@ -38,6 +40,8 @@ export const AddProposalComponent = ({
   onProposalAdd,
   common,
   hasPaymentMethod,
+  proposals,
+  getProposalDetail,
 }: AddDiscussionComponentProps) => {
   const [
     fundingRequest,
@@ -53,6 +57,20 @@ export const AddProposalComponent = ({
   const [proposalCreationStep, changeCreationProposalStep] = useState(
     AddProposalSteps.CREATE
   );
+
+  const createdProposals = useMemo(
+    () => (proposals.length ? proposals[0] : null),
+    [proposals]
+  );
+
+  const handleProposalCreatedSuccess = useCallback(() => {
+    onClose();
+    if (createdProposals) {
+      setTimeout(() => {
+        getProposalDetail(createdProposals);
+      }, 0);
+    }
+  }, [createdProposals, getProposalDetail, onClose]);
 
   const saveProposalState = useCallback(
     (payload: Partial<CreateFundingRequestProposalPayload>) => {
@@ -100,9 +118,14 @@ export const AddProposalComponent = ({
       case AddProposalSteps.LOADER:
         return <AddProposalLoader />;
       case AddProposalSteps.SUCCESS:
-        return <AdProposalSuccess />;
+        return (
+          <AdProposalSuccess
+            closePopup={onClose}
+            openProposal={handleProposalCreatedSuccess}
+          />
+        );
       case AddProposalSteps.FAILURE:
-        return <AdProposalFailure />;
+        return <AdProposalFailure closePopup={onClose} />;
       default:
         return (
           <AddProposalForm
@@ -119,8 +142,10 @@ export const AddProposalComponent = ({
     confirmProposal,
     onPaymentLoad,
     addPaymentMethod,
+    handleProposalCreatedSuccess,
     hasPaymentMethod,
     common,
+    onClose,
   ]);
 
   return (

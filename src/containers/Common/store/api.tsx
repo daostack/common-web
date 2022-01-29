@@ -265,7 +265,5 @@ export async function checkUserPaymentMethod(userId: string) {
     .where("ownerId", "==", userId)
     .get();
 
-  console.log(cards);
-
   return !!cards.docs.length;
 }
