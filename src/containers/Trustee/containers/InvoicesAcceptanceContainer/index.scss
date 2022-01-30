@@ -1,0 +1,29 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+$sticky-info-height: 4.75rem;
+$sticky-info-mobile-height: 3.75rem;
+
+.invoices-acceptance-container__sticky-info {
+  padding: 0 5rem;
+
+  @include big-phone {
+    padding: 0 1.25rem;
+  }
+}
+
+.invoices-acceptance-container__separator {
+  margin-bottom: 1.625rem;
+
+  @include big-phone {
+    margin-bottom: 1.125rem;
+  }
+}
+
+.invoices-acceptance-container {
+  padding-top: $sticky-info-height + 3.5rem;
+
+  @include big-phone {
+    padding-top: $sticky-info-mobile-height + 2rem;
+  }
+}

@@ -1,9 +1,16 @@
 import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, Link, useLocation, useHistory } from "react-router-dom";
+import {
+  NavLink,
+  Link,
+  useLocation,
+  useHistory,
+  RouteProps,
+} from "react-router-dom";
 import classNames from "classnames";
 
 import { UserAvatar } from "../../../shared/components";
+import { useMatchRoute } from "../../../shared/hooks";
 import { Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
@@ -26,6 +33,14 @@ import {
   setIsLoginModalShowing,
 } from "../../../containers/Auth/store/actions";
 
+const NON_EXACT_MATCH_ROUTE_PROPS: RouteProps = {
+  exact: false,
+};
+
+const EXACT_MATCH_ROUTE_PROPS: RouteProps = {
+  exact: true,
+};
+
 const Header = () => {
   const location = useLocation();
   const history = useHistory();
@@ -38,6 +53,14 @@ const Header = () => {
   const isNewUser = useSelector(selectIsNewUser());
   const isLoginModalShowing = useSelector(selectIsLoginModalShowing());
   const shouldDisplayAvatar = Boolean(screenSize === ScreenSize.Mobile && user);
+  const isTrusteeRoute = useMatchRoute(
+    ROUTE_PATHS.TRUSTEE,
+    NON_EXACT_MATCH_ROUTE_PROPS
+  );
+  const isTrusteeAuthRoute = useMatchRoute(
+    ROUTE_PATHS.TRUSTEE_AUTH,
+    EXACT_MATCH_ROUTE_PROPS
+  );
 
   const handleOpen = useCallback(() => {
     dispatch(setIsLoginModalShowing(true));
@@ -86,22 +109,26 @@ const Header = () => {
 
   const links = (
     <div className="navigation-wrapper" onClick={handleNavLinkClick}>
-      <NavLink to="/" exact activeClassName="active">
-        About
-      </NavLink>
-      <NavLink to={ROUTE_PATHS.COMMON_LIST} activeClassName="active">
-        Explore
-      </NavLink>
-      {isAuthorized && (
-        <NavLink to={ROUTE_PATHS.MY_COMMONS} exact activeClassName="active">
-          My Commons
-        </NavLink>
+      {!isTrusteeRoute && (
+        <>
+          <NavLink to="/" exact activeClassName="active">
+            About
+          </NavLink>
+          <NavLink to={ROUTE_PATHS.COMMON_LIST} activeClassName="active">
+            Explore
+          </NavLink>
+          {isAuthorized && (
+            <NavLink to={ROUTE_PATHS.MY_COMMONS} exact activeClassName="active">
+              My Commons
+            </NavLink>
+          )}
+        </>
       )}
 
       {isAuthorized && isMobile() && (
         <button onClick={logOutUser}>Log out</button>
       )}
-      {!isAuthorized && (
+      {!isAuthorized && !isTrusteeRoute && (
         <button className="login-button" onClick={handleOpen}>
           Login / Sign up
         </button>
@@ -109,8 +136,8 @@ const Header = () => {
     </div>
   );
 
-  const headerWrapperClassName = classNames({
-    "header-wrapper": true,
+  const headerWrapperClassName = classNames("header-wrapper", {
+    "header-wrapper--without-shadow": isTrusteeRoute && !isTrusteeAuthRoute,
     init: location.pathname === "/" && isTop === undefined,
     hide: location.pathname === "/" && isTop,
     show: location.pathname === "/" && isTop === false,
@@ -137,8 +164,14 @@ const Header = () => {
       {screenSize === ScreenSize.Desktop ? (
         <>
           {links}
-          {user && <Account user={user} logOut={logOutUser} />}
-          {!isAuthorized ? (
+          {user && (
+            <Account
+              user={user}
+              logOut={logOutUser}
+              isTrusteeRoute={isTrusteeRoute}
+            />
+          )}
+          {!isAuthorized && !isTrusteeRoute ? (
             <div className="mobile-links-container">
               <MobileLinks color={Colors.black} />
             </div>
@@ -155,12 +188,14 @@ const Header = () => {
           </div>
           {showMenu && (
             <div className="menu-wrapper">
-              <DownloadCommonApp
-                setHasClosedPopup={() => {
-                  return true;
-                }}
-                inMenu={true}
-              />
+              {!isTrusteeRoute && (
+                <DownloadCommonApp
+                  setHasClosedPopup={() => {
+                    return true;
+                  }}
+                  inMenu={true}
+                />
+              )}
               {links}
             </div>
           )}

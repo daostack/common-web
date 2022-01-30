@@ -2,7 +2,7 @@ name: web prod CD
 
 on:
   push:
-    branches: [ master ]
+    branches: [ staging ]
 
 jobs:
   deploy:
