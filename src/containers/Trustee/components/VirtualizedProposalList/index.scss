@@ -1,0 +1,22 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+.virtualized-invoice-list-wrapper {
+  flex: 1;
+  margin-bottom: 32px;
+
+  .virtualized-invoice-list-wrapper__title {
+    margin: 0 0 32px;
+    font-family: NunitoSans-Bold, sans-serif;
+  }
+
+  .virtualized-invoice-list-wrapper__empty-text {
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

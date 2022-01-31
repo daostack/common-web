@@ -1,4 +1,4 @@
-import React, { useMemo, FC } from "react";
+import React, { useMemo, CSSProperties, FC } from "react";
 import classNames from "classnames";
 import ApprovedIcon from "../../../../shared/icons/approved.icon";
 import { DateFormat, Proposal } from "../../../../shared/models";
@@ -12,10 +12,11 @@ import "./index.scss";
 interface ProposalCardProps {
   proposal: Proposal;
   onClick?: () => void;
+  style?: CSSProperties;
 }
 
 const ProposalCard: FC<ProposalCardProps> = (props) => {
-  const { proposal, onClick } = props;
+  const { proposal, onClick, style } = props;
   const isPendingApproval = checkPendingApprovalProposal(proposal);
   const isDeclined = checkDeclinedProposal(proposal);
   const isApproved = !isPendingApproval && !isDeclined;
@@ -47,7 +48,7 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
   );
 
   return (
-    <div className={containerClassName}>
+    <div className={containerClassName} style={style}>
       <span className={approvalDateClassName}>
         <ApprovedIcon className="trustee-proposal-card__approval-icon" />
         <span>
