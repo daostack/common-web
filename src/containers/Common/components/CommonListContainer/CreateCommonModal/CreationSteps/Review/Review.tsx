@@ -2,7 +2,7 @@ import React, { ReactElement, useCallback, useRef, useState } from "react";
 
 import { isMobile } from "@/shared/utils";
 import { ButtonLink } from "@/shared/components";
-import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
+import { ModalHeaderContent } from "@/shared/components/Modal";
 import LinkIcon from "@/shared/icons/link.icon";
 import LeftArrowIcon from "@/shared/icons/leftArrow.icon";
 import RightArrowIcon from "@/shared/icons/rightArrow.icon";
@@ -179,24 +179,22 @@ export default function Review({
         </div>
         <div className="create-common-review__additional-info-container">
           <div className="create-common-review__additional-info-text">
-            To publish the Common, add a personal contribution.
+            To publish the Common, add a personal contribution.{" "}
             <span className="create-common-review__additional-info-text--bold">
               Don't worry, you will be able to make changes
             </span>{" "}
             to the Common info after it is published.
           </div>
         </div>
-        <ModalFooter sticky>
-          <div className="create-common-review__modal-footer">
-            <button
-              key="rules-continue"
-              className="button-blue"
-              onClick={handleContinueClick}
-            >
-              Personal Contribution
-            </button>
-          </div>
-        </ModalFooter>
+        <div className="create-common-review__modal-footer">
+          <button
+            key="rules-continue"
+            className="button-blue"
+            onClick={handleContinueClick}
+          >
+            Personal Contribution
+          </button>
+        </div>
       </div>
     </>
   );
