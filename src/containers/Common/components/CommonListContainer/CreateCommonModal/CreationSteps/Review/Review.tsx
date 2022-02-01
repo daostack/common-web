@@ -1,7 +1,7 @@
 import React, { ReactElement, useCallback, useRef, useState } from "react";
 
 import { isMobile } from "@/shared/utils";
-import { ButtonLink } from "@/shared/components";
+import { Button, ButtonLink } from "@/shared/components";
 import { ModalHeaderContent } from "@/shared/components/Modal";
 import LinkIcon from "@/shared/icons/link.icon";
 import LeftArrowIcon from "@/shared/icons/leftArrow.icon";
@@ -187,13 +187,9 @@ export default function Review({
           </div>
         </div>
         <div className="create-common-review__modal-footer">
-          <button
-            key="rules-continue"
-            className="button-blue"
-            onClick={handleContinueClick}
-          >
+          <Button key="rules-continue" onClick={handleContinueClick}>
             Personal Contribution
-          </button>
+          </Button>
         </div>
       </div>
     </>
