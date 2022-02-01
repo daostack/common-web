@@ -20,6 +20,7 @@ $xxsmall: 12px; // 0.75rem
 
 /* colors */
 $purple: #7786ff;
+$purple-alpha-10: rgba(119, 134, 255, 0.1);
 $purple-2: #5666f5;
 $purple-hover: #e4e7ff;
 $purple-pressed: #d6daff;
@@ -47,7 +48,6 @@ $black: #000000;
 $black-gray: rgba(0, 0, 0, 0.5);
 $black-gray-2: rgba(0, 0, 0, 0.4);
 $black-gray-3: rgba(0, 0, 0, 0.15);
-$black-gray-4: rgba(119, 134, 255, 0.1);
 $red: #ff603e;
 $secondary-red: #ffefec;
 $error: #ef5456;
