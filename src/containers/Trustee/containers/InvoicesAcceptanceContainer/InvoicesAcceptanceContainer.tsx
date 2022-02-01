@@ -7,6 +7,7 @@ import { useQueryParams } from "../../../../shared/hooks";
 import { Proposal } from "../../../../shared/models";
 import { ProposalList } from "../../components/ProposalList";
 import { StickyInfo } from "../../components/StickyInfo";
+import { VirtualizedProposalList } from "../../components/VirtualizedProposalList";
 import {
   getPendingApprovalProposals,
   getApprovedProposals,
@@ -114,7 +115,7 @@ const InvoicesAcceptanceContainer: FC = () => {
           />
         </TabPanel>
         <TabPanel value={tab} panelValue={InvoicesPageTabState.Approved}>
-          <ProposalList
+          <VirtualizedProposalList
             title="Approved Invoices"
             emptyListText="There are no approved invoices"
             proposals={approvedProposals}

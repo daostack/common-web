@@ -570,3 +570,5 @@ packages/core/src/domain/constants/secrets/*
 
 **/secrets/*
 
+#github actions workflow
+.github/workflows/*
