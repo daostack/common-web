@@ -1,12 +1,15 @@
 @import "../../../../constants";
 @import "../../../../styles/sizes";
 
+$cards-v-half-gap: 1rem;
+$cards-h-half-gap: 0.75rem;
+
 .virtualized-invoice-list-wrapper {
   flex: 1;
-  margin-bottom: 32px;
+  margin-bottom: 2rem;
 
   .virtualized-invoice-list-wrapper__title {
-    margin: 0 0 32px;
+    margin: 0 0 2rem;
     font-family: NunitoSans-Bold, sans-serif;
   }
 
@@ -14,6 +17,22 @@
     width: 100%;
     display: inline-block;
     text-align: center;
+  }
+
+  .virtualized-invoice-list-wrapper__window-scroller-wrapper {
+    margin: -#{$cards-v-half-gap} -#{$cards-h-half-gap};
+  }
+
+  .virtualized-invoice-list-wrapper__grid {
+    outline: none;
+  }
+
+  .virtualized-invoice-list-wrapper__card-wrapper {
+    padding: $cards-v-half-gap $cards-h-half-gap;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
   }
 
   &:last-child {

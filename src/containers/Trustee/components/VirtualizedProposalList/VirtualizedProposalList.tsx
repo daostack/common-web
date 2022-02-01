@@ -7,6 +7,8 @@ import "./index.scss";
 
 const CARD_WIDTH = 384;
 const CARD_HEIGHT = 328;
+const CARDS_V_GAP = 32;
+const CARDS_H_GAP = 24;
 
 interface VirtualizedProposalListProps {
   title: string;
@@ -29,50 +31,60 @@ const VirtualizedProposalList: FC<VirtualizedProposalListProps> = (props) => {
         </span>
       )}
       {proposals.length > 0 && !isLoading && (
-        <WindowScroller>
-          {({ height, isScrolling, onChildScroll, scrollTop }) => (
-            <AutoSizer disableHeight>
-              {({ width }) => {
-                const rawColumnCount = Math.floor(width / CARD_WIDTH);
-                const columnCount = rawColumnCount || 1;
-                const columnWidth = rawColumnCount === 0 ? width : CARD_WIDTH;
-                const rowCount = Math.ceil(proposals.length / columnCount);
+        <div className="virtualized-invoice-list-wrapper__window-scroller-wrapper">
+          <WindowScroller>
+            {({ height, isScrolling, onChildScroll, scrollTop }) => (
+              <AutoSizer disableHeight>
+                {({ width }) => {
+                  const columnWidthWithGap = CARD_WIDTH + CARDS_H_GAP;
+                  const rawColumnCount = Math.floor(width / columnWidthWithGap);
+                  const columnCount = rawColumnCount || 1;
+                  const columnWidth =
+                    rawColumnCount === 0 ? width : columnWidthWithGap;
+                  const rowCount = Math.ceil(proposals.length / columnCount);
+                  const rowHeight = CARD_HEIGHT + CARDS_V_GAP;
 
-                return (
-                  <Grid
-                    width={width}
-                    height={height}
-                    autoHeight
-                    isScrolling={isScrolling}
-                    onScroll={onChildScroll}
-                    scrollTop={scrollTop}
-                    columnCount={columnCount}
-                    columnWidth={columnWidth}
-                    rowCount={rowCount}
-                    rowHeight={CARD_HEIGHT}
-                    cellRenderer={({ columnIndex, key, rowIndex, style }) => {
-                      const index = rowIndex * columnCount + columnIndex;
-                      const proposal = proposals[index];
+                  return (
+                    <Grid
+                      className="virtualized-invoice-list-wrapper__grid"
+                      width={width}
+                      height={height}
+                      autoHeight
+                      isScrolling={isScrolling}
+                      onScroll={onChildScroll}
+                      scrollTop={scrollTop}
+                      columnCount={columnCount}
+                      columnWidth={columnWidth}
+                      rowCount={rowCount}
+                      rowHeight={rowHeight}
+                      cellRenderer={({ columnIndex, key, rowIndex, style }) => {
+                        const index = rowIndex * columnCount + columnIndex;
+                        const proposal = proposals[index];
 
-                      if (!proposal) {
-                        return null;
-                      }
+                        if (!proposal) {
+                          return null;
+                        }
 
-                      return (
-                        <ProposalCard
-                          key={key}
-                          style={style}
-                          proposal={proposal}
-                          onClick={() => onProposalView(proposal)}
-                        />
-                      );
-                    }}
-                  />
-                );
-              }}
-            </AutoSizer>
-          )}
-        </WindowScroller>
+                        return (
+                          <div
+                            key={key}
+                            style={style}
+                            className="virtualized-invoice-list-wrapper__card-wrapper"
+                          >
+                            <ProposalCard
+                              proposal={proposal}
+                              onClick={() => onProposalView(proposal)}
+                            />
+                          </div>
+                        );
+                      }}
+                    />
+                  );
+                }}
+              </AutoSizer>
+            )}
+          </WindowScroller>
+        </div>
       )}
     </section>
   );
