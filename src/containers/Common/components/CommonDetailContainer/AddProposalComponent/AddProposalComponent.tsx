@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 
-import { Modal } from "../../../../../shared/components";
+import { Modal } from "@/shared/components";
 import { ModalProps } from "@/shared/interfaces";
 
 import "./index.scss";
@@ -11,7 +11,7 @@ import { AddProposalLoader } from "./AddProposalLoader";
 import { AdProposalSuccess } from "./AddProposalSuccess";
 import { AdProposalFailure } from "./AddProposalFailure";
 import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
-import { AddPaymentMethod } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddPaymentMethod";
+import { AddPaymentMethod } from "./AddPaymentMethod";
 
 export enum AddProposalSteps {
   CREATE = "create",
@@ -58,19 +58,19 @@ export const AddProposalComponent = ({
     AddProposalSteps.CREATE
   );
 
-  const createdProposals = useMemo(
+  const createdProposal = useMemo(
     () => (proposals.length ? proposals[0] : null),
     [proposals]
   );
 
   const handleProposalCreatedSuccess = useCallback(() => {
     onClose();
-    if (createdProposals) {
+    if (createdProposal) {
       setTimeout(() => {
-        getProposalDetail(createdProposals);
+        getProposalDetail(createdProposal);
       }, 0);
     }
-  }, [createdProposals, getProposalDetail, onClose]);
+  }, [createdProposal, getProposalDetail, onClose]);
 
   const saveProposalState = useCallback(
     (payload: Partial<CreateFundingRequestProposalPayload>) => {

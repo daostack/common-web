@@ -166,7 +166,7 @@ export function createDiscussion(payload: CreateDiscussionDto) {
   try {
     return firebase
       .firestore()
-      .collection("discussion")
+      .collection(Collection.Discussion)
       .doc()
       .set(payload)
       .then((value) => {
@@ -181,7 +181,7 @@ export function addMessageToDiscussion(payload: AddMessageToDiscussionDto) {
   try {
     return firebase
       .firestore()
-      .collection("discussionMessage")
+      .collection(Collection.DiscussionMessage)
       .doc()
       .set(payload)
       .then((value) => {
@@ -198,7 +198,7 @@ export function subscribeToCommonDiscussion(
 ): () => void {
   const query = firebase
     .firestore()
-    .collection("discussion")
+    .collection(Collection.Discussion)
     .where("commonId", "==", commonId);
   return query.onSnapshot((snapshot) => {
     callback(transformFirebaseDataList(snapshot));
@@ -211,11 +211,13 @@ export function subscribeToCommonProposal(
 ): () => void {
   const query = firebase
     .firestore()
-    .collection("proposals")
+    .collection(Collection.Proposals)
     .where("commonId", "==", commonId);
-  return query.onSnapshot((snapshot) => {
+  const subscribe = query.onSnapshot((snapshot) => {
     callback(transformFirebaseDataList(snapshot));
+    setTimeout(subscribe, 0);
   });
+  return subscribe;
 }
 
 export function subscribeToDiscussionMessages(
@@ -224,7 +226,7 @@ export function subscribeToDiscussionMessages(
 ): () => void {
   const query = firebase
     .firestore()
-    .collection("discussionMessage")
+    .collection(Collection.DiscussionMessage)
     .where("discussionId", "==", discussionId);
 
   return query.onSnapshot((snapshot) => {
@@ -246,19 +248,15 @@ export async function createRequestToJoin(
 export async function createFundingProposal(
   requestData: CreateFundingRequestProposalPayload
 ): Promise<Proposal> {
-  try {
-    const { data } = await Api.post<Proposal>(
-      ApiEndpoint.CreateFunding,
-      requestData
-    );
+  const { data } = await Api.post<Proposal>(
+    ApiEndpoint.CreateFunding,
+    requestData
+  );
 
-    return convertObjectDatesToFirestoreTimestamps(data);
-  } catch (e) {
-    throw e;
-  }
+  return convertObjectDatesToFirestoreTimestamps(data);
 }
 
-export async function checkUserPaymentMethod(userId: string) {
+export async function checkUserPaymentMethod(userId: string): Promise<boolean> {
   const cards = await firebase
     .firestore()
     .collection(Collection.Cards)
