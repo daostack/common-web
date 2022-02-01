@@ -6,21 +6,26 @@ import { DateFormat, Proposal, Time, User } from "../models";
 
 interface FormatPriceOptions {
   shouldMillify?: boolean;
+  shouldRemovePrefixFromZero?: boolean;
 }
 
 /**
  * Backend stores the price in cents, that's why we divide by 100
  **/
-export const formatPrice = (price?: number, options: FormatPriceOptions = {}): string => {
-  const { shouldMillify = true } = options;
+export const formatPrice = (
+  price?: number,
+  options: FormatPriceOptions = {}
+): string => {
+  const { shouldMillify = true, shouldRemovePrefixFromZero = true } = options;
+  const prefix = "₪";
 
   if (!price) {
-    return "0";
+    return shouldRemovePrefixFromZero ? "0" : `${prefix}0`;
   }
 
   const convertedPrice = price / 100;
 
-  return `₪${
+  return `${prefix}${
     shouldMillify
       ? millify(convertedPrice)
       : convertedPrice.toLocaleString("en-US")
