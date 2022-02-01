@@ -32,7 +32,7 @@ export default function ProposalDetails({ commonName, user, proposal, updateSubm
         <div className="submit-invoices-wrapper__description-content">
           <span className="submit-invoices-wrapper__description">{`${proposal?.description.description}`}</span>
           <span className="submit-invoices-wrapper__description-amount">
-            {`${formatPrice(proposal?.fundingRequest?.amount, true)}`}
+            {`${formatPrice(proposal?.fundingRequest?.amount, { shouldMillify: true })}`}
           </span>
         </div>
       </div>

@@ -4,10 +4,16 @@ import moment from "moment";
 import { MobileOperatingSystem } from "../constants";
 import { DateFormat, Proposal, Time, User } from "../models";
 
+interface FormatPriceOptions {
+  shouldMillify?: boolean;
+}
+
 /**
  * Backend stores the price in cents, that's why we divide by 100
  **/
-export const formatPrice = (price?: number, shouldMillify = true): string => {
+export const formatPrice = (price?: number, options: FormatPriceOptions = {}): string => {
+  const { shouldMillify = true } = options;
+
   if (!price) {
     return "0";
   }
