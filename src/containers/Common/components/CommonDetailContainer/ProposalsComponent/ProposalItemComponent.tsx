@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
+import classNames from "classnames";
 
 import { ProposalCountDown } from "..";
-import { useCalculateReadMoreLength } from "../../../../../shared/hooks";
+import { UserAvatar } from "../../../../../shared/components";
+import { useFullText } from "../../../../../shared/hooks";
 import { Proposal, ProposalState } from "../../../../../shared/models";
 import { formatPrice, getUserName, getDaysAgo } from "../../../../../shared/utils";
 import { VotesComponent } from "../VotesComponent";
@@ -15,11 +17,14 @@ export default function ProposalItemComponent({
   proposal,
   loadProposalDetail,
 }: ProposalItemComponentProps) {
-  const [imageError, setImageError] = useState(false);
-  //  const [readMore, setReadMore] = useState("");
+  const {
+    ref: descriptionRef,
+    isFullTextShowing,
+    shouldShowFullText,
+    showFullText,
+  } = useFullText();
   const date = new Date();
   const rawRequestedAmount = proposal.fundingRequest?.amount || proposal.join?.funding;
-  const textLength = useCalculateReadMoreLength();
 
   return (
     <div className="discussion-item-wrapper">
@@ -72,18 +77,11 @@ export default function ProposalItemComponent({
       <div className="line" />
       <div className="discussion-top-bar">
         <div className="img-wrapper">
-          {!imageError ? (
-            <img
-              src={proposal.proposer?.photoURL}
-              alt={getUserName(proposal.proposer)}
-              onError={() => setImageError(true)}
-            />
-          ) : (
-            <img
-              src="/icons/default_user.svg"
-              alt={getUserName(proposal.proposer)}
-            />
-          )}
+          <UserAvatar
+            photoURL={proposal.proposer?.photoURL}
+            nameForRandomAvatar={proposal.proposer?.email}
+            userName={getUserName(proposal.proposer)}
+          />
         </div>
         <div className="creator-information">
           <div className="name">{getUserName(proposal.proposer)}</div>
@@ -91,12 +89,14 @@ export default function ProposalItemComponent({
         </div>
       </div>
       <div className="discussion-content">
-        <div className={`description `}>{proposal.description.description}</div>
-        {proposal.description.description.length > textLength ? (
-          <div
-            className="read-more"
-            onClick={() => loadProposalDetail(proposal)}
-          >
+        <div
+          className={classNames("description", { full: shouldShowFullText })}
+          ref={descriptionRef}
+        >
+          {proposal.description.description}
+        </div>
+        {!isFullTextShowing ? (
+          <div className="read-more" onClick={showFullText}>
             Read More
           </div>
         ) : null}

@@ -1,0 +1,50 @@
+@import "../../../../constants";
+
+.trustee-authentication-container {
+  margin: 5rem auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: $secondary-blue;
+
+  .trustee-authentication-container__title {
+    margin: 0 0 1.5rem;
+    font-family: NotoSerifSC-Bold, serif;
+    font-size: $moderate-small;
+    text-align: center;
+  }
+
+  .trustee-authentication-container__form {
+    max-width: 20.438rem;
+    width: 100%;
+  }
+
+  .trustee-authentication-container__text-field {
+    margin-top: 1.5rem;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  .trustee-authentication-container__text-field-label-wrapper {
+    font-size: $xsmall;
+  }
+
+  .trustee-authentication-container__submit-button {
+    width: 100%;
+    margin-top: 1.5rem;
+  }
+
+  .trustee-authentication-container__hint {
+    margin-top: 1.5rem;
+    font-family: NunitoSans-Bold, sans-serif;
+    font-weight: bold;
+    text-align: center;
+    color: $light-gray-2;
+  }
+
+  .trustee-authentication-container__support-email {
+    color: $purple-2;
+  }
+}

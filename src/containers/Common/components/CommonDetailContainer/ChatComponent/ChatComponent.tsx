@@ -93,10 +93,7 @@ export default function ChatComponent({
           </div>
           <div className="button-wrapper">
             {shouldShowJoinToCommonButton && (
-              <button
-                className="button-blue join-the-effort-btn"
-                onClick={onOpenJoinModal}
-              >
+              <button className="button-blue join-the-effort-btn" onClick={onOpenJoinModal}>
                 Join the effort
               </button>
             )}

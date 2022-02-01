@@ -9,6 +9,9 @@
   box-shadow: $secondary-modal-shadow;
   border-radius: 30px;
   padding: 45px;
+  button {
+    width: 200px;
+  }
   .amount-prompt-wrapper__amount-input {
     margin: 10px 0;
   }
