@@ -65,10 +65,7 @@ export async function fetchApprovedProposals(): Promise<Proposal[]> {
   ).filter(
     (proposal) =>
       !proposal.fundingProcessStage ||
-      ![
-        FundingProcessStage.PendingInvoiceUpload,
-        FundingProcessStage.PendingInvoiceApproval,
-      ].includes(proposal.fundingProcessStage)
+      proposal.fundingProcessStage === FundingProcessStage.Completed
   );
 
   const data = [
