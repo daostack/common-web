@@ -94,7 +94,7 @@ export default function MembershipRequestPayment(
       <div className="sub-text">
         You are contributing{" "}
         <strong className="membership-request-payment__amount">
-          {formatPrice(userData.contributionAmount, false)} (
+          {formatPrice(userData.contributionAmount, { shouldMillify: false })} (
           {contributionTypeText})
         </strong>{" "}
         to this Common.
