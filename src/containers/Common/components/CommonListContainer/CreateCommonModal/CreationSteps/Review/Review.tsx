@@ -1,14 +1,14 @@
 import React, { ReactElement, useCallback, useRef, useState } from "react";
-
+import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperClass from "swiper/types/swiper-class";
 import { isMobile } from "@/shared/utils";
 import { Button, ButtonLink } from "@/shared/components";
+import { RulesArrayItem } from "@/shared/components/Form/Formik";
 import { ModalHeaderContent } from "@/shared/components/Modal";
 import LinkIcon from "@/shared/icons/link.icon";
 import LeftArrowIcon from "@/shared/icons/leftArrow.icon";
 import RightArrowIcon from "@/shared/icons/rightArrow.icon";
-import { RulesArrayItem } from "@/shared/components/Form/Formik";
-import SwiperClass from "swiper/types/swiper-class";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { formatPrice } from "@/shared/utils/shared";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
 import { RuleList } from "./RuleList";
@@ -34,7 +34,7 @@ export default function Review({
   const coverImageTitle = "Select or upload cover image";
   const commonName = "Amazon Network";
   const tagline = "If you wanna save the Amazon, own it.";
-  const minimumContribution = 10;
+  const minimumContribution = 1000;
   const about =
     "We aim to ba a global non-profit initiative. Only small percentage of creative directors are women and we want to help change this through mentorship circles, portfolio reviews, talks & creative meetups.";
   const links = [
@@ -136,7 +136,9 @@ export default function Review({
           </div>
           <div className="create-common-review__price-wrapper">
             <span className="create-common-review__minimum-contribution">
-              ${minimumContribution}
+              {formatPrice(minimumContribution, {
+                shouldRemovePrefixFromZero: false,
+              })}
             </span>
             <span className="create-common-review__minimum-contribution-text">
               Min. Contribution
