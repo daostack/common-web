@@ -181,7 +181,7 @@ export default function Review({
           <div className="create-common-review__additional-info-text">
             To publish the Common, add a personal contribution.{" "}
             <span className="create-common-review__additional-info-text--bold">
-              Don't worry, you will be able to make changes
+              Don’t worry, you will be able to make changes
             </span>{" "}
             to the Common info after it is published.
           </div>
