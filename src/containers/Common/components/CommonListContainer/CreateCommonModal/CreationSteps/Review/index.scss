@@ -145,6 +145,9 @@ $bg-img: url("/assets/images/review-bg-image.jpg");
     font-size: $xsmall;
     line-height: 1.42;
   }
+  .create-common-review__section-description--bold {
+    font-weight: bold;
+  }
 
   .create-common-review__link {
     display: flex;
@@ -159,24 +162,6 @@ $bg-img: url("/assets/images/review-bg-image.jpg");
 
   .create-common-review__rules {
     margin: 0 0 1.5rem 0;
-  }
-
-  .create-common-review__contribution-title {
-    margin: 1.5rem 0 0;
-    font-family: NunitoSans-Bold, sans-serif;
-    font-size: $moderate;
-    font-weight: bold;
-    line-height: 1.22;
-  }
-
-  .create-common-review__contribution-text {
-    margin: 0.5rem 0 0;
-    font-size: $xsmall;
-    line-height: 1.43;
-  }
-
-  .create-common-review__contribution-text--bold {
-    font-weight: bold;
   }
 
   .create-common-review__additional-info-container {

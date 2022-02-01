@@ -1,4 +1,10 @@
-import React, { ReactElement, useCallback, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useRef,
+  useState,
+  ReactElement,
+  ReactNode,
+} from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperClass from "swiper/types/swiper-class";
 import { isMobile } from "@/shared/utils";
@@ -8,6 +14,7 @@ import { ModalHeaderContent } from "@/shared/components/Modal";
 import LinkIcon from "@/shared/icons/link.icon";
 import LeftArrowIcon from "@/shared/icons/leftArrow.icon";
 import RightArrowIcon from "@/shared/icons/rightArrow.icon";
+import { CommonContributionType } from "@/shared/models";
 import { formatPrice } from "@/shared/utils/shared";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
@@ -34,7 +41,12 @@ export default function Review({
   const coverImageTitle = "Select or upload cover image";
   const commonName = "Amazon Network";
   const tagline = "If you wanna save the Amazon, own it.";
-  const minimumContribution = 1000;
+  const minFeeToJoin = 1000;
+  const formattedMinFeeToJoin = formatPrice(minFeeToJoin, {
+    shouldRemovePrefixFromZero: false,
+  });
+  const contributionType: CommonContributionType =
+    CommonContributionType.OneTime;
   const about =
     "We aim to ba a global non-profit initiative. Only small percentage of creative directors are women and we want to help change this through mentorship circles, portfolio reviews, talks & creative meetups.";
   const links = [
@@ -77,6 +89,27 @@ export default function Review({
       setSlideNumber((prevState) => prevState + 1);
       swiperRef.current?.slideNext();
     }
+  };
+
+  const getMinimumContributionText = (): ReactNode => {
+    let text: ReactNode =
+      "Members will be able to join the Common without a personal contribution";
+
+    if (minFeeToJoin || contributionType !== CommonContributionType.OneTime) {
+      text = (
+        <>
+          {formattedMinFeeToJoin}{" "}
+          <span className="create-common-review__section-description--bold">
+            {contributionType === CommonContributionType.OneTime
+              ? "one-time"
+              : "monthly"}
+          </span>{" "}
+          contribution
+        </>
+      );
+    }
+
+    return <p className="create-common-review__section-description">{text}</p>;
   };
 
   return (
@@ -136,9 +169,7 @@ export default function Review({
           </div>
           <div className="create-common-review__price-wrapper">
             <span className="create-common-review__minimum-contribution">
-              {formatPrice(minimumContribution, {
-                shouldRemovePrefixFromZero: false,
-              })}
+              {formattedMinFeeToJoin}
             </span>
             <span className="create-common-review__minimum-contribution-text">
               Min. Contribution
@@ -168,16 +199,10 @@ export default function Review({
         </div>
         <RuleList rules={rules} className="create-common-review__rules" />
         <div className="create-common-review__contribution-container">
-          <h5 className="create-common-review__contribution-title">
+          <h5 className="create-common-review__section-title">
             Minimum Contribution
           </h5>
-          <p className="create-common-review__contribution-text">
-            $10{" "}
-            <span className="create-common-review__contribution-text--bold">
-              one-time
-            </span>{" "}
-            contribution
-          </p>
+          {getMinimumContributionText()}
         </div>
         <div className="create-common-review__additional-info-container">
           <div className="create-common-review__additional-info-text">
