@@ -1,0 +1,506 @@
+@import "../../../../../constants.scss";
+
+.add-proposal-wrapper {
+  width: 576px;
+  margin: 0 auto;
+
+  .common-title {
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: 1.125rem;
+    font-weight: bold;
+
+    line-height: 1.22;
+    letter-spacing: normal;
+    text-align: center;
+    color: $secondary-blue;
+    margin-top: -24px;
+  }
+
+  .add-proposal-title {
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: center;
+    color: $secondary-blue;
+    margin-top: 2rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .add-payment-method-wrapper {
+    border-radius: 14px;
+    background-color: $light-gray-4;
+    padding: 1.5rem;
+    height: 10rem;
+    margin: 1.5rem 0;
+    display: flex;
+    flex-direction: row;
+    img {
+      width: 8.813rem;
+      height: 8.813rem;
+      margin: 0 2rem;
+    }
+
+    .add-payment-content {
+      margin: 0 auto;
+      text-align: center;
+      .add-payment-content-text {
+        font-family: NunitoSans;
+        font-size: 0.875rem;
+        line-height: 1.43;
+        letter-spacing: normal;
+        text-align: center;
+        color: $secondary-blue;
+      }
+      button{
+        margin-top: 1.5rem;
+        width: 17.25rem;
+        height: 3rem;
+        color:$purple;
+        border-radius: 14px;
+        border: none;
+        outline: none;
+        background: #fff;
+        cursor: pointer;
+        font-family: NunitoSans;
+        font-size: 0.875rem;
+
+        line-height: 1.43;
+        letter-spacing: normal;
+      }
+    }
+  }
+
+  .add-proposal-description {
+    font-family: NunitoSans, sans-serif;
+    font-size: 0.875rem;
+
+    line-height: 1.43;
+    letter-spacing: normal;
+    text-align: center;
+    color: $light-gray-2;
+    width: 23rem;
+    margin: 0 auto;
+  }
+
+  .add-proposal-form-wrapper {
+    margin-top: 3.5rem;
+
+    .funding-request-wrapper {
+      margin-top: 1.5rem;
+      display: flex;
+      align-items: center;
+
+      .funding-input-wrapper,
+      .funding-description {
+        display: flex;
+        flex: 50%;
+      }
+
+      .funding-input-wrapper {
+        .custom-input {
+          width: 100%;
+        }
+      }
+
+      .funding-description {
+        font-family: NunitoSans, sans-serif;
+        font-size: 0.75rem;
+        letter-spacing: normal;
+        color: $light-gray-2;
+        margin-left: 2rem;
+      }
+    }
+
+    .proposal-description-wrapper {
+      margin-top: 1rem;
+
+      textarea {
+        height: 9rem;
+      }
+    }
+
+    .add-additional-information {
+      display: flex;
+      margin: 1.5rem 0;
+      flex-direction: column;
+
+      .links-wrapper {
+        display: flex;
+
+        .link {
+          cursor: pointer;
+          font-family: NunitoSans, sans-serif;
+          font-size: 1rem;
+          font-weight: 600;
+          line-height: 1.25;
+          letter-spacing: normal;
+          color: $purple;
+          margin-right: 1.5rem;
+
+          img {
+            margin-right: 0.5rem;
+          }
+        }
+      }
+
+      .additional-content-wrapper {
+        display: flex;
+        align-items: flex-start;
+        margin-top: 16px;
+        flex-direction: column;
+
+        .files-preview {
+          display: flex;
+          flex-wrap: wrap;
+
+          .file-item {
+            flex-grow: 1;
+            position: relative;
+
+            img {
+              width: 50px;
+              height: 50px;
+              margin-bottom: 16px;
+              margin-right: 16px;
+            }
+
+            button {
+              position: absolute;
+              top: 0;
+              right: 0;
+            }
+          }
+        }
+
+        .additional-links {
+          width: 100%;
+
+          .links-array {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+
+            .links-array__item {
+              width: 45%;
+              margin-bottom: 16px;
+              margin-right: 16px;
+            }
+          }
+        }
+      }
+    }
+
+    .proposal-note-wrapper {
+      padding: 0.5rem 3rem;
+      border-radius: 14px;
+      background-color: $light-purple;
+      height: 6rem;
+
+      .note-title {
+        margin-top: 0.5rem;
+        font-family: NunitoSans-Bold, sans-serif;
+        font-size: 0.875rem;
+        line-height: 1.43;
+        letter-spacing: normal;
+        color: $blue-2;
+      }
+
+      .note-text {
+        position: relative;
+        font-family: NunitoSans, sans-serif;
+        font-size: 0.875rem;
+        line-height: 1.43;
+        letter-spacing: normal;
+        color: $blue-2;
+
+        img {
+          position: absolute;
+          left: -30px;
+          top: 10px;
+        }
+      }
+    }
+
+
+  }
+
+}
+
+.action-wrapper {
+  width: 100%;
+  box-sizing: border-box;
+  display: block;
+  margin: 2.8rem auto 0;
+  text-align: center;
+}
+
+.app-proposal-confirm-wrapper {
+  display: flex;
+  align-items: center;
+  height: 40rem;
+  flex-direction: column;
+
+  img {
+    width: 7.25rem;
+    height: 7.25rem;
+    margin: 0 auto;
+  }
+
+  .add-proposal-confirm-title {
+    font-family: NunitoSans, sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: center;
+    color: $secondary-blue;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .add-proposal-confirm-description {
+    font-family: NunitoSans, sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: center;
+    color: $secondary-blue;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid $light-gray-1;
+  }
+
+  .add-proposal-confirm-checkboxes {
+    width: 70%;
+
+    .checkboxes-title {
+      font-family: NunitoSans-Bold, sans-serif;
+      font-size: 1rem;
+      font-weight: bold;
+      line-height: 1.5;
+      color: $secondary-blue;
+      padding-bottom: 1.5rem;
+    }
+
+    .confirm-checkboxes {
+      display: flex;
+      flex-direction: column;
+
+      .checkbox {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 1.5rem;
+
+        img {
+          width: 24px;
+          height: 24px;
+          margin: 0;
+          padding-right: 1rem;
+        }
+
+        span {
+
+        }
+      }
+    }
+
+    .confirm-notes-wrapper {
+      padding: 1rem 1.5rem;
+      border-radius: 14px;
+      background-color: #f4f6ff;
+      font-family: NunitoSans, sans-serif;
+      font-size: 0.875rem;
+      line-height: 1.43;
+      letter-spacing: normal;
+      text-align: center;
+      color: $secondary-blue;
+    }
+
+  }
+
+  .action-wrapper {
+    button {
+      min-width: 19rem;
+    }
+  }
+}
+
+.add-proposal-loader-wrapper {
+  display: flex;
+  align-items: center;
+  height: 40rem;
+  flex-direction: column;
+
+  img {
+    width: 14.5rem;
+    height: 14.5rem;
+    margin: 0 auto;
+  }
+
+  .loader-title {
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 1.33;
+    letter-spacing: normal;
+    text-align: center;
+    color: #001a36;
+    margin-top: 2.5rem;
+  }
+
+  .loader {
+    text-align: center;
+    margin: 5rem auto 0;
+
+    .loader-wrapper {
+      width: 3rem;
+      height: 3rem;
+    }
+  }
+}
+
+.add-proposal-success-wrapper {
+  display: flex;
+  align-items: center;
+  height: 40rem;
+  flex-direction: column;
+
+  img {
+    width: 14.5rem;
+    height: 14.5rem;
+    margin: 3.5rem auto 0;
+  }
+
+  .add-proposal-success-title {
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 1.33;
+    letter-spacing: normal;
+    text-align: center;
+    color: #001a36;
+    margin-top: 3.5rem;
+  }
+
+  .add-proposal-success-description {
+    font-family: NunitoSans, sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.43;
+    letter-spacing: normal;
+    text-align: center;
+    color: #001a36;
+    margin-top: 1rem;
+  }
+
+  .actions-wrapper {
+    margin-top: 3.5rem;
+
+    .button-blue {
+      font-weight: normal;
+
+      &.white {
+        border: solid 1px #eee;
+        background-color: #fff;
+        color: #001a36;
+        font-weight: normal;
+        margin-right: 16px;
+      }
+    }
+  }
+}
+
+.add-proposal-failure-wrapper {
+  display: flex;
+  align-items: center;
+  height: 40rem;
+  flex-direction: column;
+
+  img {
+    width: 14.5rem;
+    height: 14.5rem;
+    margin: 3.5rem auto 0;
+  }
+
+  .add-proposal-failure-title {
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 1.33;
+    letter-spacing: normal;
+    text-align: center;
+    color: #001a36;
+    margin-top: 3.5rem;
+  }
+
+  .add-proposal-failure-description {
+    font-family: NunitoSans, sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.43;
+    letter-spacing: normal;
+    text-align: center;
+    color: #001a36;
+    margin-top: 1rem;
+  }
+
+  .actions-wrapper {
+    margin-top: 3.5rem;
+
+    .button-blue {
+      font-weight: normal;
+
+      &.white {
+        width: 23rem;
+        border: solid 1px #eee;
+        background-color: #fff;
+        color: $secondary-blue;
+        font-weight: normal;
+        margin-right: 16px;
+      }
+    }
+
+    .error-details {
+      margin-top: 1.5rem;
+      font-family: NunitoSans, sans-serif;
+      font-size: 0.875rem;
+      color: $light-gray-2;
+      text-align: center;
+    }
+  }
+}
+
+.add-payment-method-wrapper {
+  display: flex;
+  align-items: center;
+  height: 40rem;
+  flex-direction: column;
+
+  .add-payment-title {
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 1.33;
+    letter-spacing: normal;
+    text-align: center;
+    color: $secondary-blue;
+    margin-top: -1.5rem;
+  }
+
+  .add-payment-description {
+    margin-top: 2rem;
+    font-size: 0.875rem;
+    line-height: 1.43;
+    letter-spacing: normal;
+    text-align: center;
+    color: $secondary-blue;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid $light-gray-1;
+    margin-bottom: 2rem;
+  }
+
+  .add-payment-content {
+    width: 60%;
+  }
+}

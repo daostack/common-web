@@ -14,6 +14,7 @@ const initialState: CommonsStateType = {
   isProposalsLoaded: false,
   currentDiscussion: null,
   currentProposal: null,
+  doesUserHasPaymentMethod: false,
 };
 
 type Action = ActionType<typeof actions>;
@@ -106,6 +107,11 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
   .handleAction(actions.createRequestToJoin.success, (state, action) =>
     produce(state, (nextState) => {
       nextState.proposals = [{ ...action.payload }, ...nextState.proposals];
+    })
+  )
+  .handleAction(actions.checkUserPaymentMethod.success, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.doesUserHasPaymentMethod = action.payload;
     })
   );
 

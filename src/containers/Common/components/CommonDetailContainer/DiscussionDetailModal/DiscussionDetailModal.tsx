@@ -31,7 +31,7 @@ export default function DiscussionDetailModal({
 
   const sendMessage = useCallback(
     (message: string) => {
-      if (disscussion && user) {
+      if (disscussion && user && user.uid) {
         const d = new Date();
         const payload = {
           text: message,

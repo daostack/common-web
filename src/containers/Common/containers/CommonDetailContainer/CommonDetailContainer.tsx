@@ -48,6 +48,7 @@ import {
   selectIsDiscussionsLoaded,
   selectIsProposalLoaded,
   selectProposals,
+  selectUserPaymentMethod,
 } from "../../store/selectors";
 import {
   clearCurrentDiscussion,
@@ -59,9 +60,16 @@ import {
   loadProposalDetail,
   loadProposalList,
   createDiscussion,
+  createFundingProposal,
+  checkUserPaymentMethod,
 } from "../../store/actions";
 import CheckIcon from "../../../../shared/icons/check.icon";
 import { selectUser } from "../../../Auth/store/selectors";
+import {
+  AddProposalComponent,
+  AddProposalSteps,
+} from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
+import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
 
 interface CommonDetailRouterParams {
   id: string;
@@ -111,6 +119,7 @@ export default function CommonDetail() {
   const currentProposal = useSelector(selectCurrentProposal());
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
+  const hasPaymentMethod = useSelector(selectUserPaymentMethod());
 
   const fundingProposals = useMemo(
     () =>
@@ -158,6 +167,13 @@ export default function CommonDetail() {
     onOpen: onOpenNewD,
     onClose: onCloseNewD,
   } = useModal(false);
+
+  const {
+    isShowing: isShowingNewP,
+    onOpen: onOpenNewP,
+    onClose: onCloseNewP,
+  } = useModal(false);
+
   const {
     isModalOpen: showJoinModal,
     onOpen: onOpenJoinModal,
@@ -167,6 +183,7 @@ export default function CommonDetail() {
 
   useEffect(() => {
     dispatch(getCommonDetail.request(id));
+    dispatch(checkUserPaymentMethod.request());
     return () => {
       dispatch(closeCurrentCommon());
     };
@@ -263,6 +280,16 @@ export default function CommonDetail() {
     [dispatch, user, common, onCloseNewD, getDisscussionDetail]
   );
 
+  const addProposal = useCallback(
+    (
+      payload: CreateFundingRequestProposalPayload,
+      callback: (step: AddProposalSteps) => void
+    ) => {
+      dispatch(createFundingProposal.request({ payload, callback }));
+    },
+    [dispatch]
+  );
+
   const openJoinModal = useCallback(() => {
     onClose();
     setTimeout(onOpenJoinModal, 0);
@@ -279,6 +306,11 @@ export default function CommonDetail() {
     if (!user) return setTimeout(onOpenJoinModal, 0);
     onOpenNewD();
   }, [onOpenJoinModal, onOpenNewD, user]);
+
+  const addNewProposal = useCallback(() => {
+    if (!user) return setTimeout(onOpenJoinModal, 0);
+    onOpenNewP();
+  }, [onOpenJoinModal, onOpenNewP, user]);
 
   const renderSidebarContent = () => {
     if (!common) return null;
@@ -392,64 +424,86 @@ export default function CommonDetail() {
 
   return (
     <>
-      <Modal
-        isShowing={isShowing}
-        onClose={closeModalHandler}
-        closeColor={
-          screenSize === ScreenSize.Mobile ? Colors.white : Colors.gray
-        }
-        className={classNames(tab, {
-          "common-detail-container__detail-modal--mobile": isMobileView,
-        })}
-        isHeaderSticky
-        shouldShowHeaderShadow={false}
-        styles={{
-          headerWrapper: "common-detail-container__detail-modal-header-wrapper",
-          header: "common-detail-container__detail-modal-header",
-          closeWrapper: "common-detail-container__detail-modal-close-wrapper",
-          content: "common-detail-container__detail-modal-content",
-        }}
-      >
-        {!isMobileView && tab === "discussions" && (
-          <DiscussionDetailModal
-            disscussion={currentDisscussion}
-            commonId={common.id}
-            onOpenJoinModal={openJoinModal}
-            isCommonMember={isCommonMember}
-            isJoiningPending={isJoiningPending}
-          />
-        )}
-        {!isMobileView && (tab === "proposals" || tab === "history") && (
-          <ProposalDetailModal
-            proposal={currentProposal}
-            commonId={common.id}
-            onOpenJoinModal={openJoinModal}
-            isCommonMember={isCommonMember}
-            isJoiningPending={isJoiningPending}
-          />
-        )}
-        {isMobileView && (
-          <div className="get-common-app-wrapper">
-            <img src="/icons/logo-all-white.svg" alt="logo" className="logo" />
-            <span className="text">
-              Download the Common app to participate in discussions and join the
-              community
-            </span>
-            <MobileLinks color={Colors.black} detectOS={true} />
-          </div>
-        )}
-      </Modal>
-      <MembershipRequestModal
-        isShowing={showJoinModal}
-        onClose={closeJoinModal}
-        common={common}
-        onCreationStageReach={setIsCreationStageReached}
-      />
-      <AddDiscussionComponent
-        isShowing={isShowingNewD}
-        onClose={onCloseNewD}
-        onDiscussionAdd={addDiscussion}
-      />
+      {isShowing && (
+        <Modal
+          isShowing={isShowing}
+          onClose={closeModalHandler}
+          closeColor={
+            screenSize === ScreenSize.Mobile ? Colors.white : Colors.gray
+          }
+          className={classNames(tab, {
+            "common-detail-container__detail-modal--mobile": isMobileView,
+          })}
+          isHeaderSticky
+          shouldShowHeaderShadow={false}
+          styles={{
+            headerWrapper:
+              "common-detail-container__detail-modal-header-wrapper",
+            header: "common-detail-container__detail-modal-header",
+            closeWrapper: "common-detail-container__detail-modal-close-wrapper",
+            content: "common-detail-container__detail-modal-content",
+          }}
+        >
+          {!isMobileView && tab === "discussions" && (
+            <DiscussionDetailModal
+              disscussion={currentDisscussion}
+              commonId={common.id}
+              onOpenJoinModal={openJoinModal}
+              isCommonMember={isCommonMember}
+              isJoiningPending={isJoiningPending}
+            />
+          )}
+          {!isMobileView && (tab === "proposals" || tab === "history") && (
+            <ProposalDetailModal
+              proposal={currentProposal}
+              commonId={common.id}
+              onOpenJoinModal={openJoinModal}
+              isCommonMember={isCommonMember}
+              isJoiningPending={isJoiningPending}
+            />
+          )}
+          {isMobileView && (
+            <div className="get-common-app-wrapper">
+              <img
+                src="/icons/logo-all-white.svg"
+                alt="logo"
+                className="logo"
+              />
+              <span className="text">
+                Download the Common app to participate in discussions and join
+                the community
+              </span>
+              <MobileLinks color={Colors.black} detectOS={true} />
+            </div>
+          )}
+        </Modal>
+      )}
+      {showJoinModal && (
+        <MembershipRequestModal
+          isShowing={showJoinModal}
+          onClose={closeJoinModal}
+          common={common}
+          onCreationStageReach={setIsCreationStageReached}
+        />
+      )}
+      {isShowingNewD && (
+        <AddDiscussionComponent
+          isShowing={isShowingNewD}
+          onClose={onCloseNewD}
+          onDiscussionAdd={addDiscussion}
+        />
+      )}
+      {isShowingNewP && (
+        <AddProposalComponent
+          isShowing={isShowingNewP}
+          onClose={onCloseNewP}
+          onProposalAdd={addProposal}
+          common={common}
+          hasPaymentMethod={hasPaymentMethod}
+          proposals={proposals}
+          getProposalDetail={getProposalDetail}
+        />
+      )}
       <div className="common-detail-wrapper">
         <div className="main-information-block">
           <div className="main-information-wrapper">
@@ -615,6 +669,7 @@ export default function CommonDetail() {
 
               {tab === "proposals" && (
                 <ProposalsComponent
+                  onAddNewProposal={addNewProposal}
                   common={common}
                   currentTab={tab}
                   proposals={activeProposals}
@@ -626,6 +681,7 @@ export default function CommonDetail() {
 
               {tab === "history" && (
                 <ProposalsComponent
+                  onAddNewProposal={addNewProposal}
                   common={common}
                   currentTab={tab}
                   proposals={historyProposals}
