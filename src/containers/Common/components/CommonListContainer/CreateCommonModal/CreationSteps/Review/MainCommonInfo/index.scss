@@ -19,26 +19,72 @@
     line-height: 1.5;
   }
 
-  .create-common-review-main-info__price-wrapper {
+  .create-common-review-main-info__half {
+    flex: 1 0;
+    margin-right: 1rem;
+    display: flex;
+    justify-content: flex-end;
+
+    &:last-child {
+      margin-right: 0;
+      margin-left: 1rem;
+      justify-content: flex-start;
+    }
+
+    @include viewport-breakpoint(300px) {
+      margin-right: 0.25rem;
+
+      &:last-child {
+        margin-left: 0.25rem;
+      }
+    }
+  }
+
+  .create-common-review-main-info__part-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     white-space: nowrap;
     word-break: keep-all;
+
+    @include big-phone {
+      white-space: initial;
+      word-break: break-word;
+    }
   }
 
-  .create-common-review-main-info__minimum-contribution {
+  .create-common-review-main-info__value {
     margin: 0.375rem 0 0.5rem;
     font-family: NunitoSans-Bold, sans-serif;
     font-size: $moderate-med;
     font-weight: bold;
     line-height: 0.96;
+
+    @include big-phone {
+      margin: 0;
+      font-size: $moderate-xmed;
+      line-height: 1.27;
+    }
   }
 
-  .create-common-review-main-info__minimum-contribution-text {
+  .create-common-review-main-info__value-text {
     font-size: $small;
     line-height: 1.5;
     color: $light-gray-2;
+
+    @include big-phone {
+      font-family: NunitoSans-SemiBold, sans-serif;
+      font-size: $xxsmall;
+      font-weight: 600;
+      line-height: normal;
+    }
+  }
+
+  .create-common-review-main-info__date {
+    display: block;
+    font-family: NunitoSans-Regular, sans-serif;
+    font-size: $xxsmall;
+    font-weight: normal;
   }
 }

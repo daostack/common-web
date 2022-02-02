@@ -93,6 +93,7 @@ export default function Review({
       <div className="create-common-review">
         {isMobileView && progressEl}
         <MainCommonInfo
+          className="create-common-review__main-info"
           commonName={commonName}
           tagline={tagline}
           formattedMinFeeToJoin={formattedMinFeeToJoin}
