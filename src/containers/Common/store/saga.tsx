@@ -159,7 +159,6 @@ export function* loadProposalDetail(
   action: ReturnType<typeof actions.loadProposalDetail.request>
 ): Generator {
   try {
-    console.log(action.payload);
     yield put(startLoading());
     const proposal = { ...action.payload };
 
