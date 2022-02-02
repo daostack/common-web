@@ -184,14 +184,14 @@ $bg-img: url("/assets/images/review-bg-image.jpg");
   .create-common-review__additional-info-text--bold {
     font-weight: bold;
   }
-}
 
-.create-common-review__modal-footer {
-  display: flex;
-  justify-content: center;
-  padding-top: 1.75rem;
+  .create-common-review__submit-button-wrapper {
+    display: flex;
+    justify-content: center;
+    padding-top: 1.75rem;
 
-  @include big-phone {
-    padding: 1.5rem 0;
+    @include big-phone {
+      padding: 1.5rem 0 0;
+    }
   }
 }

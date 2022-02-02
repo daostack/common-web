@@ -5,11 +5,12 @@ import React, {
   ReactElement,
   ReactNode,
 } from "react";
+import { useSelector } from "react-redux";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperClass from "swiper/types/swiper-class";
-import { isMobile } from "@/shared/utils";
 import { Button } from "@/shared/components";
 import { ModalHeaderContent } from "@/shared/components/Modal";
+import { ScreenSize } from "@/shared/constants";
 import LeftArrowIcon from "@/shared/icons/leftArrow.icon";
 import RightArrowIcon from "@/shared/icons/rightArrow.icon";
 import {
@@ -17,6 +18,7 @@ import {
   CommonLink,
   CommonRule,
 } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice } from "@/shared/utils/shared";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
@@ -34,7 +36,8 @@ export default function Review({
   currentStep,
   onFinish,
 }: ReviewProps): ReactElement {
-  const isMobileView = isMobile();
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
   const swiperRef = useRef<SwiperClass>();
   const [slideNumber, setSlideNumber] = useState(1);
   const defaultSliderImgs = [
@@ -217,8 +220,12 @@ export default function Review({
             to the Common info after it is published.
           </div>
         </div>
-        <div className="create-common-review__modal-footer">
-          <Button key="rules-continue" onClick={handleContinueClick}>
+        <div className="create-common-review__submit-button-wrapper">
+          <Button
+            key="rules-continue"
+            onClick={handleContinueClick}
+            shouldUseFullWidth={isMobileView}
+          >
             Personal Contribution
           </Button>
         </div>
