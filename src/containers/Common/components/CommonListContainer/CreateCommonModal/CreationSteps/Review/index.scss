@@ -149,15 +149,14 @@ $bg-img: url("/assets/images/review-bg-image.jpg");
     font-weight: bold;
   }
 
-  .create-common-review__link {
-    display: flex;
-    align-items: center;
-    color: inherit;
+  .create-common-review__links-section-title {
+    @extend .create-common-review__section-title;
+    margin-bottom: 0;
   }
 
-  .create-common-review__link-icon {
-    flex-shrink: 0;
-    margin-right: 0.5rem;
+  .create-common-review__empty-links-text {
+    font-size: $xsmall;
+    color: $light-gray-2;
   }
 
   .create-common-review__rules {

@@ -8,15 +8,19 @@ import React, {
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperClass from "swiper/types/swiper-class";
 import { isMobile } from "@/shared/utils";
-import { Button, ButtonLink } from "@/shared/components";
+import { Button } from "@/shared/components";
 import { ModalHeaderContent } from "@/shared/components/Modal";
-import LinkIcon from "@/shared/icons/link.icon";
 import LeftArrowIcon from "@/shared/icons/leftArrow.icon";
 import RightArrowIcon from "@/shared/icons/rightArrow.icon";
-import { CommonContributionType, CommonRule } from "@/shared/models";
+import {
+  CommonContributionType,
+  CommonLink,
+  CommonRule,
+} from "@/shared/models";
 import { formatPrice } from "@/shared/utils/shared";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
+import { LinkList } from "./LinkList";
 import { RuleList } from "./RuleList";
 import { SelectFile } from "./SelectFile";
 import "./index.scss";
@@ -48,9 +52,9 @@ export default function Review({
     CommonContributionType.OneTime;
   const about =
     "We aim to ba a global non-profit initiative. Only small percentage of creative directors are women and we want to help change this through mentorship circles, portfolio reviews, talks & creative meetups.";
-  const links = [
-    { title: "Amazon Facebook group", link: "https://www.google.com" },
-    { title: "LinkedIn", link: "https://www.linkedin.com" },
+  const links: CommonLink[] = [
+    { title: "Amazon Facebook group", value: "https://www.google.com" },
+    { title: "LinkedIn", value: "https://www.linkedin.com" },
   ];
   const rules: CommonRule[] = [
     {
@@ -188,18 +192,14 @@ export default function Review({
           </div>
         )}
         <div className="create-common-review__section">
-          <h5 className="create-common-review__section-title">Links</h5>
-          {links.map((link, index) => (
-            <ButtonLink
-              key={index}
-              className="create-common-review__link"
-              href={link.link}
-              target="_blank"
-            >
-              <LinkIcon className="create-common-review__link-icon" />
-              {link.title}
-            </ButtonLink>
-          ))}
+          <h5 className="create-common-review__links-section-title">Links</h5>
+          {links.length > 0 ? (
+            <LinkList links={links} />
+          ) : (
+            <span className="create-common-review__empty-links-text">
+              There are no links
+            </span>
+          )}
         </div>
         <RuleList rules={rules} className="create-common-review__rules" />
         <div className="create-common-review__contribution-container">
