@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import { Loader } from "../../../../../shared/components";
 import { Proposal, ProposalState } from "../../../../../shared/models";
@@ -12,6 +12,9 @@ import { ChatComponent } from "../ChatComponent";
 import { ProposalCountDown } from "../ProposalCountDown";
 import { VotesComponent } from "../VotesComponent";
 import "./index.scss";
+import { addMessageToProposal } from "@/containers/Common/store/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUser } from "@/containers/Auth/store/selectors";
 
 interface DiscussionDetailModalProps {
   proposal: Proposal | null;
@@ -29,8 +32,30 @@ export default function ProposalDetailModal({
   isJoiningPending,
 }: DiscussionDetailModalProps) {
   const date = new Date();
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser());
   const [imageError, setImageError] = useState(false);
-  const rawRequestedAmount = proposal?.fundingRequest?.amount || proposal?.join?.funding;
+  const rawRequestedAmount =
+    proposal?.fundingRequest?.amount || proposal?.join?.funding;
+
+  const sendMessage = useCallback(
+    (message: string) => {
+      if (proposal && user && user.uid) {
+        const d = new Date();
+        const payload = {
+          text: message,
+          createTime: d,
+          ownerId: user.uid,
+          commonId: proposal.commonId,
+          discussionId: proposal.id,
+        };
+
+        dispatch(addMessageToProposal.request({ payload, proposal: proposal }));
+      }
+    },
+    [dispatch, user, proposal]
+  );
+
   return !proposal ? (
     <Loader />
   ) : (
@@ -53,7 +78,9 @@ export default function ProposalDetailModal({
                   alt="state-wrapper"
                 />
                 <span className="state-name">
-                  {proposal.state === ProposalState.REJECTED ? "Rejected" : "Approved"}
+                  {proposal.state === ProposalState.REJECTED
+                    ? "Rejected"
+                    : "Approved"}
                 </span>
               </div>
             </div>
@@ -88,7 +115,9 @@ export default function ProposalDetailModal({
               ) : (
                 <>
                   Requested amount
-                  <span className="amount">{formatPrice(rawRequestedAmount)}</span>
+                  <span className="amount">
+                    {formatPrice(rawRequestedAmount)}
+                  </span>
                 </>
               )}
             </div>
@@ -107,6 +136,8 @@ export default function ProposalDetailModal({
           onOpenJoinModal={onOpenJoinModal}
           isCommonMember={isCommonMember}
           isJoiningPending={isJoiningPending}
+          isAuthorized={Boolean(user)}
+          sendMessage={sendMessage}
         />
       </div>
     </div>

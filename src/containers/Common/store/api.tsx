@@ -19,7 +19,10 @@ import {
   transformFirebaseDataSingle,
 } from "../../../shared/utils";
 import firebase from "../../../shared/utils/firebase";
-import { CreateDiscussionDto } from "@/containers/Common/interfaces";
+import {
+  AddMessageToProposalDto,
+  CreateDiscussionDto,
+} from "@/containers/Common/interfaces";
 import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
 
 export async function fetchCommonDiscussions(commonId: string) {
@@ -177,7 +180,9 @@ export function createDiscussion(payload: CreateDiscussionDto) {
   }
 }
 
-export function addMessageToDiscussion(payload: AddMessageToDiscussionDto) {
+export function addMessageToDiscussion(
+  payload: AddMessageToDiscussionDto | AddMessageToProposalDto
+) {
   try {
     return firebase
       .firestore()
@@ -220,7 +225,7 @@ export function subscribeToCommonProposal(
   return subscribe;
 }
 
-export function subscribeToDiscussionMessages(
+export function subscribeToMessages(
   discussionId: string,
   callback: (payload: any) => void
 ): () => void {
