@@ -20,7 +20,7 @@ import {
   createDiscussion,
   subscribeToCommonDiscussion,
   addMessageToDiscussion,
-  subscribeToDiscussionMessages,
+  subscribeToMessages,
   createFundingProposal,
   subscribeToCommonProposal,
   checkUserPaymentMethod,
@@ -243,7 +243,7 @@ export function* addMessageToDiscussionSaga(
     yield addMessageToDiscussion(action.payload.payload);
 
     yield call(
-      subscribeToDiscussionMessages,
+      subscribeToMessages,
       action.payload.payload.discussionId,
       async (data) => {
         const { discussion } = action.payload;
@@ -259,6 +259,36 @@ export function* addMessageToDiscussionSaga(
     yield put(stopLoading());
   } catch (e) {
     yield put(actions.addMessageToDiscussion.failure(e));
+    yield put(stopLoading());
+  }
+}
+
+export function* addMessageToProposalSaga(
+  action: ReturnType<typeof actions.addMessageToProposal.request>
+): Generator {
+  try {
+    yield put(startLoading());
+
+    yield addMessageToDiscussion(action.payload.payload);
+
+    yield call(
+      subscribeToMessages,
+      action.payload.payload.discussionId,
+      async (data) => {
+        const { proposal } = action.payload;
+
+        proposal.discussionMessage = data.sort(
+          (m: DiscussionMessage, mP: DiscussionMessage) =>
+            m.createTime?.seconds - mP.createTime?.seconds
+        );
+
+        store.dispatch(actions.loadProposalDetail.request(proposal));
+      }
+    );
+
+    yield put(stopLoading());
+  } catch (e) {
+    yield put(actions.addMessageToProposal.failure(e));
     yield put(stopLoading());
   }
 }
@@ -353,6 +383,10 @@ export function* commonsSaga() {
   yield takeLatest(
     actions.checkUserPaymentMethod.request,
     checkUserPaymentMethodSaga
+  );
+  yield takeLatest(
+    actions.addMessageToProposal.request,
+    addMessageToProposalSaga
   );
 }
 

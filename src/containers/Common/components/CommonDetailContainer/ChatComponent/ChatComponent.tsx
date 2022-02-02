@@ -9,7 +9,7 @@ import { BASE_URL, Colors, ROUTE_PATHS } from "@/shared/constants";
 import { EmptyTabComponent } from "@/containers/Common/components/CommonDetailContainer";
 
 interface ChatComponentInterface {
-  commonId: string
+  commonId: string;
   discussionMessage: DiscussionMessage[];
   onOpenJoinModal: () => void;
   isCommonMember?: boolean;
@@ -93,11 +93,19 @@ export default function ChatComponent({
           </div>
           <div className="button-wrapper">
             {shouldShowJoinToCommonButton && (
-              <button className="button-blue join-the-effort-btn" onClick={onOpenJoinModal}>
+              <button
+                className="button-blue join-the-effort-btn"
+                onClick={onOpenJoinModal}
+              >
                 Join the effort
               </button>
             )}
-            <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${commonId}`} type="popup" color={Colors.lightPurple} top="-130px" />
+            <Share
+              url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${commonId}`}
+              type="popup"
+              color={Colors.lightPurple}
+              top="-130px"
+            />
           </div>
         </div>
       ) : (
@@ -108,15 +116,16 @@ export default function ChatComponent({
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
-          <div
+          <button
             className="button-blue send"
             onClick={() => {
               sendMessage && sendMessage(message);
               setMessage("");
             }}
+            disabled={!message.length}
           >
             Send
-          </div>
+          </button>
         </div>
       )}
     </div>
