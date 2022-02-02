@@ -25,6 +25,7 @@ $bg-img: url("/assets/images/review-bg-image.jpg");
   width: 100%;
   max-width: 36.5rem;
   margin: 0 auto;
+  word-break: break-word;
 
   .create-common-review__main-info-wrapper {
     display: flex;
