@@ -9,12 +9,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperClass from "swiper/types/swiper-class";
 import { isMobile } from "@/shared/utils";
 import { Button, ButtonLink } from "@/shared/components";
-import { RulesArrayItem } from "@/shared/components/Form/Formik";
 import { ModalHeaderContent } from "@/shared/components/Modal";
 import LinkIcon from "@/shared/icons/link.icon";
 import LeftArrowIcon from "@/shared/icons/leftArrow.icon";
 import RightArrowIcon from "@/shared/icons/rightArrow.icon";
-import { CommonContributionType } from "@/shared/models";
+import { CommonContributionType, Rules } from "@/shared/models";
 import { formatPrice } from "@/shared/utils/shared";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
@@ -53,15 +52,15 @@ export default function Review({
     { title: "Amazon Facebook group", link: "https://www.google.com" },
     { title: "LinkedIn", link: "https://www.linkedin.com" },
   ];
-  const rules: RulesArrayItem[] = [
+  const rules: Rules[] = [
     {
       title: "No promotions or spam",
-      description:
+      value:
         "We created this community to help you along your journey. Links to sponsored content or brands will vote you out.",
     },
     {
       title: "Be courteous and kind to others",
-      description:
+      value:
         "We're all in this together to create a nurturing environment. Let's teat everyone with respect. Healthy debates are natural, but kindness is required.",
     },
   ];

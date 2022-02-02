@@ -1,10 +1,10 @@
 import React from "react";
 import classNames from "classnames";
-import { RulesArrayItem } from "@/shared/components/Form/Formik";
+import { Rules } from "@/shared/models";
 import "./index.scss";
 
 interface RuleListProps {
-  rules: RulesArrayItem[];
+  rules: Rules[];
   className?: string;
 }
 
@@ -15,7 +15,7 @@ export default function RuleList({ rules, className }: RuleListProps) {
         <li className="review-rule-list__item" key={index}>
           <span className="review-rule-list__number">Rule #{index + 1}</span>
           <h5 className="review-rule-list__title">{rule.title}</h5>
-          <p className="review-rule-list__description">{rule.description}</p>
+          <p className="review-rule-list__description">{rule.value}</p>
         </li>
       ))}
     </ul>
