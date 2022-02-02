@@ -50,7 +50,7 @@ export default function ProposalDetailModal({
           discussionId: proposal.id,
         };
 
-        dispatch(addMessageToProposal.request({ payload, proposal: proposal }));
+        dispatch(addMessageToProposal.request({ payload, proposal }));
       }
     },
     [dispatch, user, proposal]
