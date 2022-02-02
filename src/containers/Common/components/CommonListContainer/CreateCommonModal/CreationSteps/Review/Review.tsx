@@ -23,6 +23,7 @@ import { formatPrice } from "@/shared/utils/shared";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
 import { LinkList } from "./LinkList";
+import { MainCommonInfo } from "./MainCommonInfo";
 import { RuleList } from "./RuleList";
 import { SelectFile } from "./SelectFile";
 import "./index.scss";
@@ -171,22 +172,11 @@ export default function Review({
             </span>
           </div>
         </div>
-        <div className="create-common-review__main-info-wrapper">
-          <div>
-            <h4 className="create-common-review__common-name">{commonName}</h4>
-            {tagline && (
-              <p className="create-common-review__tagline">{tagline}</p>
-            )}
-          </div>
-          <div className="create-common-review__price-wrapper">
-            <span className="create-common-review__minimum-contribution">
-              {formattedMinFeeToJoin}
-            </span>
-            <span className="create-common-review__minimum-contribution-text">
-              Min. Contribution
-            </span>
-          </div>
-        </div>
+        <MainCommonInfo
+          commonName={commonName}
+          tagline={tagline}
+          formattedMinFeeToJoin={formattedMinFeeToJoin}
+        />
         {!isMobileView && (
           <Separator className="create-common-review__separator" />
         )}
