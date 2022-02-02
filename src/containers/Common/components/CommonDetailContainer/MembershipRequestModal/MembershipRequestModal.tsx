@@ -188,11 +188,19 @@ export function MembershipRequestModal(props: IProps) {
   }, [stage, isMobileView]);
 
   const moveStageBack = useCallback(() => {
-    setUserData((data) => ({
-      ...data,
-      stage: data.stage - 1,
-    }));
-  }, []);
+    setUserData((data) => {
+      const isContributionStage = data.stage === 3;
+      const prevStage =
+        isContributionStage && common.rules.length === 0
+          ? data.stage - 2
+          : data.stage - 1;
+
+      return {
+        ...data,
+        stage: prevStage,
+      };
+    });
+  }, [common]);
 
   useEffect(() => {
     if (stage === 5) {
