@@ -101,21 +101,13 @@ export default function Review({
         {!isMobileView && (
           <Separator className="create-common-review__separator" />
         )}
-        {about && (
-          <div className="create-common-review__section">
-            <h5 className="create-common-review__section-title">About</h5>
-            <p className="create-common-review__section-description">{about}</p>
-          </div>
-        )}
+        <div className="create-common-review__section">
+          <h5 className="create-common-review__section-title">About</h5>
+          <p className="create-common-review__section-description">{about}</p>
+        </div>
         <div className="create-common-review__section">
           <h5 className="create-common-review__links-section-title">Links</h5>
-          {links.length > 0 ? (
-            <LinkList links={links} />
-          ) : (
-            <span className="create-common-review__empty-links-text">
-              There are no links
-            </span>
-          )}
+          <LinkList links={links} />
         </div>
         <RuleList rules={rules} className="create-common-review__rules" />
         <div className="create-common-review__contribution-container">
