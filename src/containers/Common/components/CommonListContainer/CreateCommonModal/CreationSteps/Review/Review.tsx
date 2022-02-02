@@ -12,6 +12,7 @@ import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice } from "@/shared/utils/shared";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
+import { CommonImageSlider } from "./CommonImageSlider";
 import { LinkList } from "./LinkList";
 import { MainCommonInfo } from "./MainCommonInfo";
 import { RuleList } from "./RuleList";
@@ -92,6 +93,7 @@ export default function Review({
       {!isMobileView && <ModalHeaderContent>{progressEl}</ModalHeaderContent>}
       <div className="create-common-review">
         {isMobileView && progressEl}
+        <CommonImageSlider className="create-common-review__image-slider" />
         <MainCommonInfo
           className="create-common-review__main-info"
           commonName={commonName}

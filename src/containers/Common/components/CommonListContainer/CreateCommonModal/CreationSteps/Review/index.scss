@@ -7,6 +7,14 @@
   margin: 0 auto;
   word-break: break-word;
 
+  .create-common-review__image-slider {
+    margin-bottom: 1.813rem;
+
+    @include big-phone {
+      margin-bottom: 2rem;
+    }
+  }
+
   .create-common-review__main-info {
     @include big-phone {
       margin-bottom: 2rem;
