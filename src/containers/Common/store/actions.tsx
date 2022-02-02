@@ -9,6 +9,7 @@ import { CommonsActionTypes } from "./constants";
 import {
   CreateDiscussionDto,
   AddMessageToDiscussionDto,
+  AddMessageToProposalDto,
 } from "@/containers/Common/interfaces";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 
@@ -125,3 +126,16 @@ export const checkUserPaymentMethod = createAsyncAction(
   CommonsActionTypes.CHECK_USER_PAYMENT_METHOD_SUCCESS,
   CommonsActionTypes.CHECK_USER_PAYMENT_METHOD_FAILURE
 )<void, boolean, Error>();
+
+export const addMessageToProposal = createAsyncAction(
+  CommonsActionTypes.ADD_MESSAGE_TO_PROPOSAL,
+  CommonsActionTypes.ADD_MESSAGE_TO_PROPOSAL_SUCCESS,
+  CommonsActionTypes.ADD_MESSAGE_TO_PROPOSAL_FAILURE
+)<
+  {
+    payload: AddMessageToDiscussionDto;
+    proposal: Proposal;
+  },
+  Proposal,
+  Error
+>();
