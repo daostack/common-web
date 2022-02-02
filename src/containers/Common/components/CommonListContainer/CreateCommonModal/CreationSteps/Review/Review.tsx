@@ -13,7 +13,7 @@ import { ModalHeaderContent } from "@/shared/components/Modal";
 import LinkIcon from "@/shared/icons/link.icon";
 import LeftArrowIcon from "@/shared/icons/leftArrow.icon";
 import RightArrowIcon from "@/shared/icons/rightArrow.icon";
-import { CommonContributionType, Rules } from "@/shared/models";
+import { CommonContributionType, CommonRule } from "@/shared/models";
 import { formatPrice } from "@/shared/utils/shared";
 import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
@@ -52,7 +52,7 @@ export default function Review({
     { title: "Amazon Facebook group", link: "https://www.google.com" },
     { title: "LinkedIn", link: "https://www.linkedin.com" },
   ];
-  const rules: Rules[] = [
+  const rules: CommonRule[] = [
     {
       title: "No promotions or spam",
       value:

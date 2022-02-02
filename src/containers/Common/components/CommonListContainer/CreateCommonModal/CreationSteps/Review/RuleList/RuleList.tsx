@@ -1,14 +1,18 @@
 import React from "react";
 import classNames from "classnames";
-import { Rules } from "@/shared/models";
+import { CommonRule } from "@/shared/models";
 import "./index.scss";
 
 interface RuleListProps {
-  rules: Rules[];
+  rules: CommonRule[];
   className?: string;
 }
 
 export default function RuleList({ rules, className }: RuleListProps) {
+  if (rules.length === 0) {
+    return null;
+  }
+
   return (
     <ul className={classNames("review-rule-list", className)}>
       {rules.map((rule, index) => (
