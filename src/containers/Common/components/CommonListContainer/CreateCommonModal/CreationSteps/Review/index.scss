@@ -140,6 +140,10 @@ $bg-img: url("/assets/images/review-bg-image.jpg");
     font-size: $moderate;
     font-weight: bold;
     line-height: 1.22;
+
+    @include big-phone {
+      font-size: $small;
+    }
   }
 
   .create-common-review__section-description {
@@ -154,6 +158,11 @@ $bg-img: url("/assets/images/review-bg-image.jpg");
   .create-common-review__links-section-title {
     @extend .create-common-review__section-title;
     margin-bottom: 0;
+
+    @include big-phone {
+      margin-bottom: 0.5rem;
+      font-size: $xsmall;
+    }
   }
 
   .create-common-review__empty-links-text {
@@ -167,11 +176,13 @@ $bg-img: url("/assets/images/review-bg-image.jpg");
 
   .create-common-review__additional-info-container {
     margin: 1.5rem 0 0;
-    max-width: 36.375rem;
-    max-height: 4.5rem;
     padding: 1rem 1.5rem;
     border-radius: 0.875rem;
     background-color: $purple-alpha-10;
+
+    @include big-phone {
+      padding: 0.5rem 1rem;
+    }
   }
 
   .create-common-review__additional-info-text {

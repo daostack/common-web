@@ -1,4 +1,5 @@
 @import "../../../../../../../../constants";
+@import "../../../../../../../../styles/sizes";
 
 .create-common-review-link-list {
   display: flex;
@@ -10,16 +11,26 @@
   .create-common-review-link-list__link {
     display: flex;
     align-items: center;
+    font-size: $xsmall;
     color: $secondary-blue;
     transition: all 0.2s;
 
     &:hover {
       color: $purple;
     }
+
+    @include big-phone {
+      font-family: NunitoSans-Bold, sans-serif;
+      font-weight: bold;
+    }
   }
 
   .create-common-review-link-list__link-icon {
     flex-shrink: 0;
     margin-right: 0.5rem;
+
+    @include big-phone {
+      margin-right: 0.75rem;
+    }
   }
 }

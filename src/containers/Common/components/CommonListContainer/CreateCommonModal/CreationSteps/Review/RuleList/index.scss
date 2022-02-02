@@ -1,4 +1,5 @@
 @import "../../../../../../../../constants";
+@import "../../../../../../../../styles/sizes";
 
 .create-common-review-rule-list {
   display: flex;
@@ -16,10 +17,15 @@
   }
 
   .create-common-review-rule-list__number {
+    margin-bottom: 0.25rem;
+    display: block;
     font-size: $xsmall;
     line-height: 1.43;
     color: $light-gray-2;
-    margin-bottom: 0.25rem;
+
+    @include big-phone {
+      margin-bottom: 0.313rem;
+    }
   }
 
   .create-common-review-rule-list__title {
@@ -27,6 +33,11 @@
     font-size: $small;
     font-weight: bold;
     line-height: 1.5;
+
+    @include big-phone {
+      margin-bottom: 0.5rem;
+      font-size: $xsmall;
+    }
   }
 
   .create-common-review-rule-list__description {

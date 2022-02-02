@@ -187,7 +187,9 @@ export default function Review({
             </span>
           </div>
         </div>
-        <Separator className="create-common-review__separator" />
+        {!isMobileView && (
+          <Separator className="create-common-review__separator" />
+        )}
         {about && (
           <div className="create-common-review__section">
             <h5 className="create-common-review__section-title">About</h5>
