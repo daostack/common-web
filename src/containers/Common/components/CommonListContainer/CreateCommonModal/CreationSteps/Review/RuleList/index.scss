@@ -1,33 +1,37 @@
 @import "../../../../../../../../constants";
 
-.review-rule-list {
+.create-common-review-rule-list {
   display: flex;
   flex-direction: column;
   padding: 0;
   margin: 0;
   list-style: none;
-}
 
-.review-rule-list__item:nth-child(1) {
-  margin: 0 0 1rem;
-}
+  .create-common-review-rule-list__item {
+    margin: 0 0 1rem;
 
-.review-rule-list__number {
-  font-size: $xsmall;
-  line-height: 1.43;
-  color: $light-gray-2;
-  margin-bottom: 0.25rem;
-}
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 
-.review-rule-list__title {
-  margin: 0 0 0.25rem 0;
-  font-size: $small;
-  font-weight: bold;
-  line-height: 1.5;
-}
+  .create-common-review-rule-list__number {
+    font-size: $xsmall;
+    line-height: 1.43;
+    color: $light-gray-2;
+    margin-bottom: 0.25rem;
+  }
 
-.review-rule-list__description {
-  margin: 0;
-  font-size: $xsmall;
-  line-height: 1.43;
+  .create-common-review-rule-list__title {
+    margin: 0 0 0.25rem 0;
+    font-size: $small;
+    font-weight: bold;
+    line-height: 1.5;
+  }
+
+  .create-common-review-rule-list__description {
+    margin: 0;
+    font-size: $xsmall;
+    line-height: 1.43;
+  }
 }

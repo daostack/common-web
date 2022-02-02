@@ -63,6 +63,11 @@ export default function Review({
       value:
         "We're all in this together to create a nurturing environment. Let's teat everyone with respect. Healthy debates are natural, but kindness is required.",
     },
+    {
+      title: "Be courteous and kind to others",
+      value:
+        "We're all in this together to create a nurturing environment. Let's teat everyone with respect. Healthy debates are natural, but kindness is required.",
+    },
   ];
   const handleSwiper = useCallback(
     (swiper: SwiperClass) => {
