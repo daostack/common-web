@@ -21,10 +21,14 @@ import {
   subscribeToCommonDiscussion,
   addMessageToDiscussion,
   subscribeToDiscussionMessages,
+  createFundingProposal,
+  subscribeToCommonProposal,
+  checkUserPaymentMethod,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
 import store from "@/index";
+import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
 
 export function* getCommonsList(): Generator {
   try {
@@ -274,7 +278,58 @@ export function* createRequestToJoin(
   }
 }
 
-function* commonsSaga() {
+export function* createFundingProposalSaga(
+  action: ReturnType<typeof actions.createFundingProposal.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    const proposal = (yield createFundingProposal(
+      action.payload.payload
+    )) as Proposal;
+
+    yield call(
+      subscribeToCommonProposal,
+      action.payload.payload.commonId,
+      async (data) => {
+        const ds = await fetchCommonProposals(action.payload.payload.commonId);
+
+        store.dispatch(actions.setProposals(ds));
+        store.dispatch(actions.loadProposalList.request());
+        store.dispatch(stopLoading());
+        action.payload.callback(AddProposalSteps.SUCCESS);
+      }
+    );
+
+    yield put(actions.createFundingProposal.success(proposal));
+    yield put(stopLoading());
+  } catch (error) {
+    action.payload.callback(AddProposalSteps.FAILURE);
+    yield put(actions.createFundingProposal.failure(error));
+    yield put(stopLoading());
+  }
+}
+
+export function* checkUserPaymentMethodSaga(
+  action: ReturnType<typeof actions.checkUserPaymentMethod.request>
+): Generator {
+  try {
+    const { user } = store.getState().auth;
+    if (user && user.uid) {
+      yield put(startLoading());
+
+      const hasPaymentMethod = yield checkUserPaymentMethod(user.uid);
+
+      yield put(actions.checkUserPaymentMethod.success(!!hasPaymentMethod));
+
+      yield put(stopLoading());
+    }
+  } catch (e) {
+    yield put(actions.checkUserPaymentMethod.failure(e));
+    yield put(stopLoading());
+  }
+}
+
+export function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
   yield takeLatest(
@@ -291,6 +346,14 @@ function* commonsSaga() {
     addMessageToDiscussionSaga
   );
   yield takeLatest(actions.createRequestToJoin.request, createRequestToJoin);
+  yield takeLatest(
+    actions.createFundingProposal.request,
+    createFundingProposalSaga
+  );
+  yield takeLatest(
+    actions.checkUserPaymentMethod.request,
+    checkUserPaymentMethodSaga
+  );
 }
 
 export default commonsSaga;

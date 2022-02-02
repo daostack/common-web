@@ -1,12 +1,16 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 
-import { ProposalJoinRequestData } from "../../../shared/interfaces/api/proposal";
+import {
+  CreateFundingRequestProposalPayload,
+  ProposalJoinRequestData,
+} from "../../../shared/interfaces/api/proposal";
 import { Common, Proposal, Discussion } from "../../../shared/models";
 import { CommonsActionTypes } from "./constants";
 import {
   CreateDiscussionDto,
   AddMessageToDiscussionDto,
 } from "@/containers/Common/interfaces";
+import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 
 export const getCommonsList = createAsyncAction(
   CommonsActionTypes.GET_COMMONS_LIST,
@@ -102,3 +106,22 @@ export const createRequestToJoin = createAsyncAction(
   CommonsActionTypes.CREATE_REQUEST_TO_JOIN_SUCCESS,
   CommonsActionTypes.CREATE_REQUEST_TO_JOIN_FAILURE
 )<ProposalJoinRequestData, Proposal, Error>();
+
+export const createFundingProposal = createAsyncAction(
+  CommonsActionTypes.CREATE_FUNDING_PROPOSAL,
+  CommonsActionTypes.CREATE_FUNDING_PROPOSAL_SUCCESS,
+  CommonsActionTypes.CREATE_FUNDING_PROPOSAL_FAILURE
+)<
+  {
+    payload: CreateFundingRequestProposalPayload;
+    callback: (step: AddProposalSteps) => void;
+  },
+  Proposal,
+  Error
+>();
+
+export const checkUserPaymentMethod = createAsyncAction(
+  CommonsActionTypes.CHECK_USER_PAYMENT_METHOD,
+  CommonsActionTypes.CHECK_USER_PAYMENT_METHOD_SUCCESS,
+  CommonsActionTypes.CHECK_USER_PAYMENT_METHOD_FAILURE
+)<void, boolean, Error>();
