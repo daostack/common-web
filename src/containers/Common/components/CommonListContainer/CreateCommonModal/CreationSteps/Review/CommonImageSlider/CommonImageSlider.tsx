@@ -7,6 +7,7 @@ import { Image } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
 import { getCommonExampleImageURL } from "@/shared/utils";
+import { GalleryButton } from "../GalleryButton";
 import "./index.scss";
 
 const SLIDES = Array(8).fill(null);
@@ -32,6 +33,10 @@ const CommonImageSlider: FC<CommonImageSliderProps> = (props) => {
     [swiperRef]
   );
 
+  const handleImageSelect = (file: File) => {
+    console.log(file);
+  };
+
   return (
     <div className={className}>
       <Swiper onSwiper={handleSwiper}>
@@ -45,6 +50,11 @@ const CommonImageSlider: FC<CommonImageSliderProps> = (props) => {
           </SwiperSlide>
         ))}
       </Swiper>
+      <GalleryButton
+        className="create-common-review-image-slider__gallery-button"
+        onImageSelect={handleImageSelect}
+        ariaLabel="Select common image"
+      />
     </div>
   );
 };
