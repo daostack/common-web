@@ -1,6 +1,6 @@
 import React, { useCallback, useState, ReactElement, ReactNode } from "react";
 import { useSelector } from "react-redux";
-import { Button } from "@/shared/components";
+import { Button, Separator } from "@/shared/components";
 import { ModalHeaderContent } from "@/shared/components/Modal";
 import { ScreenSize } from "@/shared/constants";
 import {
@@ -10,7 +10,6 @@ import {
 } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice } from "@/shared/utils/shared";
-import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
 import { CommonImageSlider } from "./CommonImageSlider";
 import { LinkList } from "./LinkList";
