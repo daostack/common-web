@@ -64,7 +64,7 @@ const CommonImageSlider: FC<CommonImageSliderProps> = (props) => {
   const handleImageSelect = useCallback((file: File | null) => {
     setSelectedFile(file);
     onImageChange(file || EXAMPLE_IMAGES[0]);
-  }, []);
+  }, [onImageChange]);
 
   const renderTextWrapper = (shouldHideHint = false) => (
     <div className="create-common-review-image-slider__text-wrapper">
