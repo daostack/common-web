@@ -1,8 +1,8 @@
 import React, { ChangeEventHandler, FC } from "react";
 import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components";
+import GalleryIcon from "@/shared/icons/gallery.icon";
 import TrashIcon from "@/shared/icons/trash.icon";
-import ShareIcon from "@/shared/icons/share.icon";
 import "./index.scss";
 
 const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png";
@@ -43,7 +43,7 @@ const GalleryButton: FC<GalleryButtonProps> = (props) => {
 
   return (
     <label className={className} htmlFor="file-selection-input">
-      <ShareIcon />
+      <GalleryIcon className="create-common-review-gallery-button__icon" />
       <input
         id="file-selection-input"
         className="create-common-review-gallery-button__file-input"
