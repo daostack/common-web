@@ -10,13 +10,19 @@ export enum ButtonVariant {
 
 type ButtonProps = JSX.IntrinsicElements["button"] & {
   variant?: ButtonVariant;
+  shouldUseFullWidth?: boolean;
 };
 
 const Button: FC<ButtonProps> = (props) => {
-  const { variant = ButtonVariant.Primary, ...restProps } = props;
+  const {
+    variant = ButtonVariant.Primary,
+    shouldUseFullWidth = false,
+    ...restProps
+  } = props;
   const variantToUse = restProps.disabled ? ButtonVariant.Disabled : variant;
 
   const className = classNames("custom-button", props.className, {
+    "custom-button--full-width": shouldUseFullWidth,
     "custom-button--primary": variantToUse === ButtonVariant.Primary,
     "custom-button--secondary": variantToUse === ButtonVariant.Secondary,
     "custom-button--disabled": variantToUse === ButtonVariant.Disabled,
