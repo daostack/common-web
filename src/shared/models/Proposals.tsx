@@ -1,6 +1,6 @@
 import { Moderation, Time } from "./shared";
 
-import { CommonContributionType, DiscussionMessage, Rules, User } from ".";
+import { CommonContributionType, DiscussionMessage, User } from ".";
 
 export enum ProposalFundingState {
   NotRelevant = "notRelevant",
@@ -64,6 +64,11 @@ export interface DocInfo {
   downloadURL: string;
 }
 
+export interface ProposalLink {
+  title?: string;
+  value: string;
+}
+
 export interface Proposal {
   commonId: string;
   proposerId: string;
@@ -91,7 +96,7 @@ export interface Proposal {
   state: string;
   description: {
     description: string;
-    links: Rules[];
+    links: ProposalLink[];
     images: File[];
     files: File[];
     title: string;
