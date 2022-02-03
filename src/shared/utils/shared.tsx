@@ -35,9 +35,7 @@ export const formatPrice = (
 export const formatDate = (
   date: string | Date | Moment,
   format: DateFormat = DateFormat.Short
-) => {
-  return moment(date).format(format);
-};
+): string => moment(date).format(format);
 
 /**
  * Returns the date in a given format. Default is DD-MM-YYYY HH:mm
