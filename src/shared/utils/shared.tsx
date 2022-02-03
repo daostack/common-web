@@ -202,3 +202,9 @@ export const roundNumberToNextTenths = (
 
 export const getProposalExpirationDate = (proposal: Proposal): Date =>
   new Date((proposal.createdAt.seconds + proposal.countdownPeriod) * 1000);
+
+/**
+ * Allowed {index}: 1 <= index <= 8
+ **/
+export const getCommonExampleImageURL = (index: number): string =>
+  `https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_0${index}.png?alt=media`;
