@@ -1,4 +1,4 @@
-import React, { useCallback, ReactElement, ReactNode } from "react";
+import React, { useCallback, useState, ReactElement, ReactNode } from "react";
 import { useSelector } from "react-redux";
 import { Button } from "@/shared/components";
 import { ModalHeaderContent } from "@/shared/components/Modal";
@@ -28,6 +28,7 @@ export default function Review({
   onFinish,
 }: ReviewProps): ReactElement {
   const screenSize = useSelector(getScreenSize());
+  const [selectedCommonImage, setSelectedCommonImage] = useState<string | File | null>(null);
   const isMobileView = screenSize === ScreenSize.Mobile;
   const commonName = "Amazon Network";
   const tagline = "If you wanna save the Amazon, own it.";
@@ -93,7 +94,11 @@ export default function Review({
       {!isMobileView && <ModalHeaderContent>{progressEl}</ModalHeaderContent>}
       <div className="create-common-review">
         {isMobileView && progressEl}
-        <CommonImageSlider className="create-common-review__image-slider" />
+        <CommonImageSlider
+          className="create-common-review__image-slider"
+          initialImage={null}
+          onImageChange={setSelectedCommonImage}
+        />
         <MainCommonInfo
           className="create-common-review__main-info"
           commonName={commonName}

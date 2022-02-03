@@ -1,5 +1,7 @@
 import React, { ChangeEventHandler, FC } from "react";
 import classNames from "classnames";
+import { ButtonIcon } from "@/shared/components";
+import TrashIcon from "@/shared/icons/trash.icon";
 import ShareIcon from "@/shared/icons/share.icon";
 import "./index.scss";
 
@@ -7,12 +9,13 @@ const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png";
 
 interface GalleryButtonProps {
   className?: string;
-  onImageSelect: (file: File) => void;
+  onImageSelect: (file: File | null) => void;
   ariaLabel?: string;
+  shouldDeleteFile?: boolean;
 }
 
 const GalleryButton: FC<GalleryButtonProps> = (props) => {
-  const { onImageSelect, ariaLabel } = props;
+  const { onImageSelect, ariaLabel, shouldDeleteFile = false } = props;
   const className = classNames(
     "create-common-review-gallery-button",
     props.className
@@ -25,6 +28,18 @@ const GalleryButton: FC<GalleryButtonProps> = (props) => {
       onImageSelect(files[0]);
     }
   };
+
+  const handleDeleteFile = () => {
+    onImageSelect(null);
+  };
+
+  if (shouldDeleteFile) {
+    return (
+      <ButtonIcon className={className} onClick={handleDeleteFile}>
+        <TrashIcon className="create-common-review-gallery-button__icon" />
+      </ButtonIcon>
+    );
+  }
 
   return (
     <label className={className} htmlFor="file-selection-input">
