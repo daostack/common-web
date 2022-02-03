@@ -18,12 +18,14 @@ const EXAMPLE_IMAGES = Array(8)
 
 interface CommonImageSliderProps {
   className?: string;
+  commonName: string;
+  tagline?: string;
   initialImage: string | File | null;
   onImageChange: (image: string | File) => void;
 }
 
 const CommonImageSlider: FC<CommonImageSliderProps> = (props) => {
-  const { initialImage, onImageChange } = props;
+  const { commonName, tagline, initialImage, onImageChange } = props;
   const [swiperRef, setSwiperRef] = useState<SwiperClass | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(() =>
     !initialImage || typeof initialImage === "string" ? null : initialImage
@@ -63,6 +65,33 @@ const CommonImageSlider: FC<CommonImageSliderProps> = (props) => {
     setSelectedFile(file);
     onImageChange(file || EXAMPLE_IMAGES[0]);
   }, []);
+
+  const renderTextWrapper = (shouldHideHint = false) => (
+    <div className="create-common-review-image-slider__text-wrapper">
+      {shouldHideHint ? (
+        <div />
+      ) : (
+        <span className="create-common-review-image-slider__hint-text">
+          Select or upload cover image
+        </span>
+      )}
+      {isMobileView && (
+        <>
+          <div>
+            <h4 className="create-common-review-image-slider__common-name">
+              {commonName}
+            </h4>
+            {tagline && (
+              <p className="create-common-review-image-slider__hint-text">
+                {tagline}
+              </p>
+            )}
+          </div>
+          <div />
+        </>
+      )}
+    </div>
+  );
 
   useEffect(() => {
     if (isInitialSlideSet || !swiperRef) {
@@ -120,14 +149,18 @@ const CommonImageSlider: FC<CommonImageSliderProps> = (props) => {
           >
             <RightArrowIcon className="create-common-review-image-slider__arrow-icon" />
           </ButtonIcon>
+          {renderTextWrapper()}
         </>
       )}
       {selectedFile && (
-        <Image
-          className="create-common-review-image-slider__image"
-          src={URL.createObjectURL(selectedFile)}
-          alt={selectedFile.name}
-        />
+        <>
+          <Image
+            className="create-common-review-image-slider__image"
+            src={URL.createObjectURL(selectedFile)}
+            alt={selectedFile.name}
+          />
+          {renderTextWrapper(true)}
+        </>
       )}
       <GalleryButton
         className="create-common-review-image-slider__gallery-button"

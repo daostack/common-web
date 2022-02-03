@@ -96,6 +96,8 @@ export default function Review({
         {isMobileView && progressEl}
         <CommonImageSlider
           className="create-common-review__image-slider"
+          commonName={commonName}
+          tagline={tagline}
           initialImage={null}
           onImageChange={setSelectedCommonImage}
         />
