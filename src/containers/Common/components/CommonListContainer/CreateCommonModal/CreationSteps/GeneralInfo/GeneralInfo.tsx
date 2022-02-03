@@ -2,10 +2,10 @@ import React, { useCallback, useRef, ReactElement } from "react";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
 
-import { isMobile } from "../../../../../../../shared/utils";
-import { ModalFooter, ModalHeaderContent } from "../../../../../../../shared/components/Modal";
-import { Form, TextField, LinksArray, LinksArrayItem } from "../../../../../../../shared/components/Form/Formik";
-import { Separator } from "../../Separator";
+import { isMobile } from "@/shared/utils";
+import { Separator } from "@/shared/components";
+import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
+import { Form, TextField, LinksArray, LinksArrayItem } from "@/shared/components/Form/Formik";
 import { Progress } from "../Progress";
 import {
   MAX_COMMON_NAME_LENGTH,
@@ -60,7 +60,7 @@ export default function GeneralInfo({ currentStep, onFinish }: GeneralInfoProps)
       )}
       <div className="create-common-general-info">
         {isMobileView && progressEl}
-        <Separator />
+        <Separator className="create-common-general-info__separator" />
         <Formik
           initialValues={INITIAL_VALUES}
           onSubmit={handleSubmit}

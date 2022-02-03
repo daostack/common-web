@@ -1,11 +1,10 @@
 import React, { useCallback, useMemo, useState, ReactElement } from "react";
 
 import { isMobile } from "../../../../../../../shared/utils";
-import { ButtonLink } from "../../../../../../../shared/components";
+import { ButtonLink, Separator } from "../../../../../../../shared/components";
 import { Checkbox } from "../../../../../../../shared/components/Form";
 import { ModalFooter, ModalHeaderContent } from "../../../../../../../shared/components/Modal";
 import ExplanationIcon from "../../../../../../../shared/icons/explanation.icon";
-import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
 import { CheckedList } from "./CheckedList";
 import "./index.scss";
@@ -59,7 +58,7 @@ export default function UserAcknowledgment({ currentStep, onFinish }: UserAcknow
       )}
       <div className="create-common-user-acknowledgment">
         {isMobileView && headerEl}
-        <Separator />
+        <Separator className="create-common-user-acknowledgment__separator" />
         <CheckedList
           className="create-common-user-acknowledgment__checked-list"
           items={listItems}
