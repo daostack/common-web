@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo, useState, ReactElement } from "react";
 
-import { isMobile } from "../../../../../../../shared/utils";
-import { ButtonLink, Separator } from "../../../../../../../shared/components";
-import { Checkbox } from "../../../../../../../shared/components/Form";
-import { ModalFooter, ModalHeaderContent } from "../../../../../../../shared/components/Modal";
-import ExplanationIcon from "../../../../../../../shared/icons/explanation.icon";
+import { isMobile } from "@/shared/utils";
+import { ButtonLink, Separator } from "@/shared/components";
+import { Checkbox } from "@/shared/components/Form";
+import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
+import ExplanationIcon from "@/shared/icons/explanation.icon";
 import { Progress } from "../Progress";
 import { CheckedList } from "./CheckedList";
 import "./index.scss";
