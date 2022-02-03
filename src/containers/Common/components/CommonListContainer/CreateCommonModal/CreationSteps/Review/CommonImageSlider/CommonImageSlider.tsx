@@ -76,19 +76,16 @@ const CommonImageSlider: FC<CommonImageSliderProps> = (props) => {
         </span>
       )}
       {isMobileView && (
-        <>
-          <div>
-            <h4 className="create-common-review-image-slider__common-name">
-              {commonName}
-            </h4>
-            {tagline && (
-              <p className="create-common-review-image-slider__hint-text">
-                {tagline}
-              </p>
-            )}
-          </div>
-          <div />
-        </>
+        <div className="create-common-review-image-slider__common-info-wrapper">
+          <h4 className="create-common-review-image-slider__common-name">
+            {commonName}
+          </h4>
+          {tagline && (
+            <p className="create-common-review-image-slider__hint-text">
+              {tagline}
+            </p>
+          )}
+        </div>
       )}
     </div>
   );

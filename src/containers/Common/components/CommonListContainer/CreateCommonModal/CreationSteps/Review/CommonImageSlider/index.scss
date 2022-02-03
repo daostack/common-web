@@ -81,8 +81,14 @@
     @include big-phone {
       left: 3.75rem;
       right: 3.75rem;
-      justify-content: space-between;
+      justify-content: flex-start;
     }
+  }
+
+  .create-common-review-image-slider__common-info-wrapper {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
   .create-common-review-image-slider__hint-text {
