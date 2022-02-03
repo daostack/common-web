@@ -175,15 +175,47 @@ $payment-iframe-height-mobile: 672px;
 }
 
 .membership-request-rules {
-  ol {
-    margin: 0;
-    margin-bottom: 46px;
-    padding-left: 10px;
-    li {
-      font-weight: bold;
-      margin-top: 1.5rem;
-      margin-bottom: 0.3rem;
+  .membership-request-rules__rules-wrapper {
+    max-width: 36.5rem;
+    margin: 0 0 2.875rem;
+    padding: 0;
+  }
+
+  .membership-request-rules__rules-item-wrapper {
+    margin-bottom: 0.875rem;
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: $small;
+    font-weight: bold;
+    color: $secondary-blue;
+    list-style-position: inside;
+    white-space: nowrap;
+
+    &:last-child {
+      margin-bottom: 0;
     }
+
+    &::marker {
+      color: inherit;
+    }
+  }
+
+  .membership-request-rules__rules-item {
+    padding-left: 0.5rem;
+    display: inline-flex;
+    flex-direction: column;
+    white-space: initial;
+    word-break: break-word;
+  }
+
+  .membership-request-rules__rules-item-title {
+    margin: 0 0 0.25rem;
+  }
+
+  .membership-request-rules__rules-item-description {
+    margin: 0;
+    font-family: NunitoSans-Regular, sans-serif;
+    font-size: $xsmall;
+    font-weight: normal;
   }
 
   .button-blue{
