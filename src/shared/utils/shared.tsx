@@ -1,5 +1,5 @@
 import millify from "millify";
-import moment from "moment";
+import moment, { Moment } from "moment";
 
 import { MobileOperatingSystem } from "../constants";
 import { DateFormat, Proposal, Time, User } from "../models";
@@ -32,8 +32,11 @@ export const formatPrice = (
   }`;
 };
 
-export const formatDate = (date: string | Date) => {
-  return moment(date).format("YYYY-MM-DD");
+export const formatDate = (
+  date: string | Date | Moment,
+  format: DateFormat = DateFormat.Short
+) => {
+  return moment(date).format(format);
 };
 
 /**
