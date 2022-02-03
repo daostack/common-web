@@ -3,10 +3,10 @@ import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
 
 import { isMobile } from "@/shared/utils";
+import { Separator } from "@/shared/components";
 import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
 import { Checkbox, CurrencyInput, Form, ToggleButtonGroup, ToggleButton } from "@/shared/components/Form/Formik";
 import { CommonContributionType } from "@/shared/models";
-import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
 import { MIN_CONTRIBUTION_VALUE } from "./constants";
 import validationSchema from "./validationSchema";
@@ -72,7 +72,7 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
       )}
       <div className="create-common-funding">
         {isMobileView && progressEl}
-        <Separator />
+        <Separator className="create-common-funding__separator" />
         <Formik
           initialValues={INITIAL_VALUES}
           onSubmit={handleSubmit}

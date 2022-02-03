@@ -3,9 +3,9 @@ import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
 
 import { isMobile } from "@/shared/utils";
+import { Separator } from "@/shared/components";
 import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
 import { Form, RulesArray, RulesArrayItem } from "@/shared/components/Form/Formik";
-import { Separator } from "../../Separator";
 import { Progress } from "../Progress";
 import { MAX_RULE_TITLE_LENGTH } from "./constants";
 import validationSchema from "./validationSchema";
@@ -49,7 +49,7 @@ export default function Rules({ currentStep, onFinish }: RulesProps): ReactEleme
       )}
       <div className="create-common-rules">
         {isMobileView && progressEl}
-        <Separator />
+        <Separator className="create-common-rules__separator" />
         <Formik
           initialValues={INITIAL_VALUES}
           onSubmit={handleSubmit}
