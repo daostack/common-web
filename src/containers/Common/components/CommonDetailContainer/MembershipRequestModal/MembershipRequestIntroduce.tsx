@@ -3,7 +3,13 @@ import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
 
 export default function MembershipRequestIntroduce(props: IStageProps) {
-  const { userData, setUserData } = props;
+  const { userData, setUserData, common } = props;
+
+  const handleContinue = () => {
+    const nextStage = common && common.rules.length > 0 ? 2 : 3;
+
+    setUserData((nextUserData) => ({ ...nextUserData, stage: nextStage }));
+  };
 
   return (
     <div className="membership-request-content membership-request-introduce">
@@ -22,7 +28,7 @@ export default function MembershipRequestIntroduce(props: IStageProps) {
         placeholder="Why do you want to join this Common?"
       />
       <button
-        onClick={() => setUserData({ ...userData, stage: 2 })}
+        onClick={handleContinue}
         className="button-blue"
         disabled={!userData.intro || !userData.notes}
       >

@@ -460,7 +460,7 @@ export default function CommonDetail() {
                   <div className="name">{`Available ${
                     screenSize === ScreenSize.Desktop ? "Funds" : ""
                   }`}</div>
-                  {common.reservedBalance && (
+                  {Boolean(common.reservedBalance) && (
                     <div className="text-information-wrapper__secondary-text">
                       In process: {formatPrice(common.reservedBalance)}
                     </div>

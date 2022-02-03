@@ -40,14 +40,14 @@ const validateContributionAmount = (
   if (minFeeToJoin === 0) {
     errorTexts.push("0, or");
     errorTexts.push(
-      `at least ${formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT, false)}`
+      `at least ${formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT, { shouldMillify: false })}`
     );
   } else {
-    errorTexts.push(`at least ${formatPrice(minFeeToJoin, false)}`);
+    errorTexts.push(`at least ${formatPrice(minFeeToJoin, { shouldMillify: false })}`);
   }
 
   errorTexts.push(
-    `and at most ${formatPrice(MAX_CONTRIBUTION_ILS_AMOUNT, false)}`
+    `and at most ${formatPrice(MAX_CONTRIBUTION_ILS_AMOUNT, { shouldMillify: false })}`
   );
 
   return errorTexts.join(" ");
@@ -98,7 +98,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
       : undefined
   );
   const [isCurrencyInputTouched, setIsCurrencyInputTouched] = useState(false);
-  const formattedMinFeeToJoin = formatPrice(minFeeToJoin, false);
+  const formattedMinFeeToJoin = formatPrice(minFeeToJoin, { shouldMillify: false });
   const pricePostfix = isMonthlyContribution ? "/mo" : "";
   const currencyInputError = validateContributionAmount(
     minFeeToJoin,
@@ -171,7 +171,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
               styles={toggleButtonStyles}
               value={amount}
             >
-              {formatPrice(amount, false)}
+              {formatPrice(amount, { shouldMillify: false })}
               {pricePostfix}
             </ToggleButton>
           ))}
