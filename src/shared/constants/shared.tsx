@@ -18,6 +18,8 @@ export const SUPPORT_EMAIL = "support@common.io";
 export const MIN_CONTRIBUTION_ILS_AMOUNT = 1000; // ₪10 * 100
 export const MAX_CONTRIBUTION_ILS_AMOUNT = 250000; // ₪2500 * 100
 
+export const COMMON_SAFETY_DAYS_AMOUNT = 32;
+
 export enum MobileOperatingSystem {
   WindowsPhone = "Windows Phone",
   Android = "Android",
