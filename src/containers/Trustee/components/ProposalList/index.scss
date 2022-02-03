@@ -1,13 +1,14 @@
 @import "../../../../constants";
 @import "../../../../styles/sizes";
 
-$cards-gap: 24px;
+$cards-v-gap: 2rem;
+$cards-h-gap: 1.5rem;
 
 .invoice-list-wrapper {
-  margin-bottom: 32px;
+  margin-bottom: 2rem;
 
   .invoice-list-wrapper__title {
-    margin: 0 0 32px;
+    margin: 0 0 2rem;
     font-family: NunitoSans-Bold, sans-serif;
   }
 
@@ -18,8 +19,8 @@ $cards-gap: 24px;
   }
 
   .invoice-list-wrapper__cards {
-    width: calc(100% + #{$cards-gap});
-    margin: -#{$cards-gap} 0 0 -#{$cards-gap};
+    width: calc(100% + #{$cards-h-gap});
+    margin: -#{$cards-v-gap} 0 0 -#{$cards-h-gap};
     padding: 0;
     display: inline-flex;
     flex-wrap: wrap;
@@ -27,7 +28,7 @@ $cards-gap: 24px;
   }
 
   .invoice-list-wrapper__card-wrapper {
-    margin: $cards-gap 0 0 $cards-gap;
+    margin: $cards-v-gap 0 0 $cards-h-gap;
     max-width: 384px;
     width: 100%;
   }
