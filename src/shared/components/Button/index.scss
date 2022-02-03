@@ -1,0 +1,45 @@
+@import "../../../constants";
+
+.custom-button {
+  height: 3rem;
+  padding: 0 1.25rem;
+  font-family: NunitoSans-Regular, sans-serif;
+  font-size: $small;
+  text-align: center;
+  border: none;
+  border-radius: 6.25rem;
+  transition: all 0.2s;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+.custom-button--disabled:disabled {
+  background-color: $light-gray-3;
+  color: $light-gray-2;
+
+  &:hover {
+    cursor: not-allowed;
+  }
+}
+.custom-button--primary {
+  background-color: $purple;
+  color: $white;
+
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: $purple-2;
+  }
+}
+.custom-button--secondary {
+  border: 1px solid $light-gray-1;
+  background-color: $white;
+  color: $secondary-blue;
+
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: $light-gray-1;
+  }
+}
