@@ -7,6 +7,7 @@ import { Separator } from "@/shared/components";
 import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
 import { Checkbox, CurrencyInput, Form, ToggleButtonGroup, ToggleButton } from "@/shared/components/Form/Formik";
 import { CommonContributionType } from "@/shared/models";
+import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import { MIN_CONTRIBUTION_VALUE } from "./constants";
 import validationSchema from "./validationSchema";
@@ -14,7 +15,8 @@ import "./index.scss";
 
 interface FundingProps {
   currentStep: number;
-  onFinish: () => void;
+  onFinish: (data: Partial<IntermediateCreateCommonPayload>) => void;
+  creationData: IntermediateCreateCommonPayload;
 }
 
 interface FormValues {
@@ -23,10 +25,13 @@ interface FormValues {
   isCommonJoinFree: boolean;
 }
 
-const INITIAL_VALUES: FormValues = {
-  contributionType: CommonContributionType.OneTime,
-  isCommonJoinFree: false,
-};
+const getInitialValues = (
+  data: IntermediateCreateCommonPayload
+): FormValues => ({
+  contributionType: data.contributionType,
+  minimumContribution: data.contributionAmount || undefined,
+  isCommonJoinFree: data.zeroContribution || false,
+});
 
 const getCurrencyInputLabel = (contributionType: CommonContributionType, isMobileView: boolean): ReactNode => {
   const contributionText = contributionType === CommonContributionType.OneTime ? "one-time" : "monthly";
@@ -47,7 +52,7 @@ const getCurrencyInputDescription = (contributionType: CommonContributionType, i
   return descriptionPieces.join(" ");
 };
 
-export default function Funding({ currentStep, onFinish }: FundingProps): ReactElement {
+export default function Funding({ currentStep, onFinish, creationData }: FundingProps): ReactElement {
   const formRef = useRef<FormikProps<FormValues>>(null);
   const isMobileView = isMobile();
 
@@ -58,7 +63,11 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
   }, []);
 
   const handleSubmit = useCallback<FormikConfig<FormValues>['onSubmit']>((values) => {
-    onFinish();
+    onFinish({
+      contributionType: values.contributionType,
+      contributionAmount: values.minimumContribution || 0,
+      zeroContribution: values.isCommonJoinFree,
+    });
   }, [onFinish]);
 
   const progressEl = <Progress creationStep={currentStep} />;
@@ -74,7 +83,7 @@ export default function Funding({ currentStep, onFinish }: FundingProps): ReactE
         {isMobileView && progressEl}
         <Separator className="create-common-funding__separator" />
         <Formik
-          initialValues={INITIAL_VALUES}
+          initialValues={getInitialValues(creationData)}
           onSubmit={handleSubmit}
           innerRef={formRef}
           validationSchema={validationSchema}

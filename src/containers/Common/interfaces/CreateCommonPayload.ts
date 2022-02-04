@@ -21,7 +21,7 @@ export interface CreateCommonPayload {
 export interface IntermediateCreateCommonPayload
   extends Omit<
     CreateCommonPayload,
-    "userId" | "zeroContribution" | "searchable"
+    "userId" | "searchable"
   > {
   agreementAccepted: boolean;
 }
