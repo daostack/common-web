@@ -3,13 +3,10 @@ import { useSelector } from "react-redux";
 import { Button, Separator } from "@/shared/components";
 import { ModalHeaderContent } from "@/shared/components/Modal";
 import { ScreenSize } from "@/shared/constants";
-import {
-  CommonContributionType,
-  CommonLink,
-  CommonRule,
-} from "@/shared/models";
+import { CommonContributionType } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice } from "@/shared/utils/shared";
+import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import { CommonImageSlider } from "./CommonImageSlider";
 import { LinkList } from "./LinkList";
@@ -19,51 +16,38 @@ import "./index.scss";
 
 interface ReviewProps {
   currentStep: number;
-  onFinish: () => void;
+  onFinish: (data: Partial<IntermediateCreateCommonPayload>) => void;
+  creationData: IntermediateCreateCommonPayload;
 }
 
 export default function Review({
   currentStep,
   onFinish,
+  creationData,
 }: ReviewProps): ReactElement {
+  const {
+    contributionType,
+    name: commonName,
+    description: about,
+    byline: tagline,
+    links = [],
+    rules = [],
+  } = creationData;
   const screenSize = useSelector(getScreenSize());
-  const [selectedCommonImage, setSelectedCommonImage] = useState<string | File | null>(null);
+  const [selectedCommonImage, setSelectedCommonImage] = useState<
+    string | File | null
+  >(creationData.image);
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const commonName = "Amazon Network";
-  const tagline = "If you wanna save the Amazon, own it.";
-  const minFeeToJoin = 1000;
+  const minFeeToJoin = creationData.contributionAmount * 100;
   const formattedMinFeeToJoin = formatPrice(minFeeToJoin, {
     shouldRemovePrefixFromZero: false,
   });
-  const contributionType: CommonContributionType =
-    CommonContributionType.OneTime;
-  const about =
-    "We aim to ba a global non-profit initiative. Only small percentage of creative directors are women and we want to help change this through mentorship circles, portfolio reviews, talks & creative meetups.";
-  const links: CommonLink[] = [
-    { title: "Amazon Facebook group", value: "https://www.google.com" },
-    { title: "LinkedIn", value: "https://www.linkedin.com" },
-  ];
-  const rules: CommonRule[] = [
-    {
-      title: "No promotions or spam",
-      value:
-        "We created this community to help you along your journey. Links to sponsored content or brands will vote you out.",
-    },
-    {
-      title: "Be courteous and kind to others",
-      value:
-        "We're all in this together to create a nurturing environment. Let's teat everyone with respect. Healthy debates are natural, but kindness is required.",
-    },
-    {
-      title: "Be courteous and kind to others",
-      value:
-        "We're all in this together to create a nurturing environment. Let's teat everyone with respect. Healthy debates are natural, but kindness is required.",
-    },
-  ];
 
   const handleContinueClick = useCallback(() => {
-    onFinish();
-  }, [onFinish]);
+    if (selectedCommonImage) {
+      onFinish({ image: selectedCommonImage });
+    }
+  }, [onFinish, selectedCommonImage]);
 
   const progressEl = <Progress creationStep={currentStep} />;
 
@@ -97,7 +81,7 @@ export default function Review({
           className="create-common-review__image-slider"
           commonName={commonName}
           tagline={tagline}
-          initialImage={null}
+          initialImage={creationData.image}
           onImageChange={setSelectedCommonImage}
         />
         <MainCommonInfo
