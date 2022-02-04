@@ -75,11 +75,6 @@ export default function CreationSteps(props: CreationStepsProps) {
     [step, setCreationData]
   );
 
-  const shouldShowCloseButton = useCallback(
-    (): boolean => step !== CreationStep.UserAcknowledgment || !isMobileView,
-    [step, isMobileView]
-  );
-
   const shouldShowTitle = useCallback(
     (): boolean => step !== CreationStep.UserAcknowledgment || isMobileView,
     [step, isMobileView]
@@ -120,8 +115,8 @@ export default function CreationSteps(props: CreationStepsProps) {
   }, [setGoBackHandler, handleGoBack]);
 
   useEffect(() => {
-    setShouldShowCloseButton(shouldShowCloseButton());
-  }, [setShouldShowCloseButton, shouldShowCloseButton]);
+    setShouldShowCloseButton(true);
+  }, [setShouldShowCloseButton]);
 
   const content = useMemo(() => {
     switch (step) {
