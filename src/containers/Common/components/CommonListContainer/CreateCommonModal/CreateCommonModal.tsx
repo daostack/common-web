@@ -11,9 +11,18 @@ import classNames from "classnames";
 import { Modal } from "@/shared/components";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ScreenSize } from "@/shared/constants";
+import { CommonContributionType } from "@/shared/models";
+import { IntermediateCreateCommonPayload } from "../../../interfaces/CreateCommonPayload";
 import { CreationSteps } from "./CreationSteps";
 import { Introduction } from "./Introduction";
 import "./index.scss";
+
+const INITIAL_DATA: IntermediateCreateCommonPayload = {
+  name: "",
+  image: "",
+  contributionAmount: 0,
+  contributionType: CommonContributionType.OneTime,
+};
 
 enum CreateCommonStage {
   Introduction,
@@ -27,6 +36,10 @@ interface CreateCommonModalProps {
 
 export default function CreateCommonModal(props: CreateCommonModalProps) {
   const [stage, setStage] = useState(CreateCommonStage.Introduction);
+  const [
+    creationData,
+    setCreationData,
+  ] = useState<IntermediateCreateCommonPayload>(INITIAL_DATA);
   const [title, setTitle] = useState<ReactNode>("");
   const [isBigTitle, setIsBigTitle] = useState(true);
   const [isHeaderScrolledToTop, setIsHeaderScrolledToTop] = useState(true);
@@ -98,6 +111,8 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             setGoBackHandler={setGoBackHandler}
             setShouldShowCloseButton={setShouldShowCloseButton}
             onFinish={handleCreationStepsFinish}
+            creationData={creationData}
+            setCreationData={setCreationData}
           />
         );
       default:
@@ -112,6 +127,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     setGoBackHandler,
     moveStageForward,
     handleCreationStepsFinish,
+    creationData,
   ]);
 
   useEffect(() => {

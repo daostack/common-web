@@ -1,11 +1,14 @@
 import React, { useCallback, useRef, ReactElement } from "react";
+import { useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
-
-import { isMobile } from "@/shared/utils";
-import { Separator } from "@/shared/components";
+import { Button, Separator } from "@/shared/components";
 import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
-import { Form, TextField, LinksArray, LinksArrayItem } from "@/shared/components/Form/Formik";
+import { Form, TextField, LinksArray } from "@/shared/components/Form/Formik";
+import { ScreenSize } from "@/shared/constants";
+import { CommonLink } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
+import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import {
   MAX_COMMON_NAME_LENGTH,
@@ -18,26 +21,31 @@ import "./index.scss";
 
 interface GeneralInfoProps {
   currentStep: number;
-  onFinish: () => void;
+  onFinish: (data: Partial<IntermediateCreateCommonPayload>) => void;
+  creationData: IntermediateCreateCommonPayload;
 }
 
 interface FormValues {
   commonName: string;
   tagline: string;
   about: string;
-  links: LinksArrayItem[];
+  links: CommonLink[];
 }
 
-const INITIAL_VALUES: FormValues = {
-  commonName: "",
-  tagline: "",
-  about: "",
-  links: [{ title: "", link: "" }],
-};
+const getInitialValues = (
+  data: IntermediateCreateCommonPayload
+): FormValues => ({
+  commonName: data.name,
+  tagline: data.byline || "",
+  about: data.description || "",
+  links: data.links || [{ title: "", value: "" }],
+});
 
-export default function GeneralInfo({ currentStep, onFinish }: GeneralInfoProps): ReactElement {
+export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
+  const { currentStep, onFinish, creationData } = props;
   const formRef = useRef<FormikProps<FormValues>>(null);
-  const isMobileView = isMobile();
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   const handleContinueClick = useCallback(() => {
     if (formRef.current) {
@@ -45,24 +53,28 @@ export default function GeneralInfo({ currentStep, onFinish }: GeneralInfoProps)
     }
   }, []);
 
-  const handleSubmit = useCallback<FormikConfig<FormValues>['onSubmit']>((values) => {
-    onFinish();
-  }, [onFinish]);
+  const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
+    (values) => {
+      onFinish({
+        name: values.commonName,
+        byline: values.tagline,
+        description: values.about,
+        links: values.links,
+      });
+    },
+    [onFinish]
+  );
 
   const progressEl = <Progress creationStep={currentStep} />;
 
   return (
     <>
-      {!isMobileView && (
-        <ModalHeaderContent>
-          {progressEl}
-        </ModalHeaderContent>
-      )}
+      {!isMobileView && <ModalHeaderContent>{progressEl}</ModalHeaderContent>}
       <div className="create-common-general-info">
         {isMobileView && progressEl}
         <Separator className="create-common-general-info__separator" />
         <Formik
-          initialValues={INITIAL_VALUES}
+          initialValues={getInitialValues(creationData)}
           onSubmit={handleSubmit}
           innerRef={formRef}
           validationSchema={validationSchema}
@@ -109,13 +121,13 @@ export default function GeneralInfo({ currentStep, onFinish }: GeneralInfoProps)
               />
               <ModalFooter sticky={!isMobileView}>
                 <div className="create-common-general-info__modal-footer">
-                  <button
-                    className="button-blue"
+                  <Button
                     onClick={handleContinueClick}
+                    shouldUseFullWidth={isMobileView}
                     disabled={!isValid}
                   >
                     Continue to Funding
-                  </button>
+                  </Button>
                 </div>
               </ModalFooter>
             </Form>

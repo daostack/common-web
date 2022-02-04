@@ -3,15 +3,17 @@ import React, {
   useEffect,
   useMemo,
   useState,
+  Dispatch,
   ReactNode,
+  SetStateAction,
 } from "react";
-
 import { isMobile } from "@/shared/utils";
 import { Dots } from "@/shared/components";
+import { IntermediateCreateCommonPayload } from "../../../../interfaces";
 import { Funding } from "./Funding";
 import { GeneralInfo } from "./GeneralInfo";
 import { PROGRESS_RELATED_STEPS } from "./Progress";
-import { Review } from './Review';
+import { Review } from "./Review";
 import { Rules } from "./Rules";
 import { UserAcknowledgment } from "./UserAcknowledgment";
 import { CreationStep } from "./constants";
@@ -23,6 +25,8 @@ interface CreationStepsProps {
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
   setShouldShowCloseButton: (shouldShow: boolean) => void;
   onFinish: () => void;
+  creationData: IntermediateCreateCommonPayload;
+  setCreationData: Dispatch<SetStateAction<IntermediateCreateCommonPayload>>;
 }
 
 export default function CreationSteps(props: CreationStepsProps) {
@@ -31,6 +35,8 @@ export default function CreationSteps(props: CreationStepsProps) {
     setTitle,
     setGoBackHandler,
     setShouldShowCloseButton,
+    creationData,
+    setCreationData,
   } = props;
   const [step, setStep] = useState(CreationStep.GeneralInfo);
   const isMobileView = isMobile();
@@ -49,13 +55,22 @@ export default function CreationSteps(props: CreationStepsProps) {
     setStep((step) => step - 1);
   }, [step]);
 
-  const handleFinish = useCallback(() => {
-    if (step === CreationStep.Review) {
-      return;
-    }
-    scrollTop();
-    setStep((step) => step + 1);
-  }, [step]);
+  const handleFinish = useCallback(
+    (data?: Partial<IntermediateCreateCommonPayload>) => {
+      if (data) {
+        setCreationData((nextData) => ({
+          ...nextData,
+          ...data,
+        }));
+      }
+      if (step === CreationStep.Review) {
+        return;
+      }
+      scrollTop();
+      setStep((step) => step + 1);
+    },
+    [step, setCreationData]
+  );
 
   const shouldShowGoBackButton = useCallback(
     (): boolean => step !== CreationStep.UserAcknowledgment || isMobileView,
@@ -113,7 +128,13 @@ export default function CreationSteps(props: CreationStepsProps) {
   const content = useMemo(() => {
     switch (step) {
       case CreationStep.GeneralInfo:
-        return <GeneralInfo currentStep={step} onFinish={handleFinish} />;
+        return (
+          <GeneralInfo
+            currentStep={step}
+            onFinish={handleFinish}
+            creationData={creationData}
+          />
+        );
       case CreationStep.UserAcknowledgment:
         return (
           <UserAcknowledgment currentStep={step} onFinish={handleFinish} />
@@ -127,7 +148,7 @@ export default function CreationSteps(props: CreationStepsProps) {
       default:
         return null;
     }
-  }, [step, handleFinish]);
+  }, [step, handleFinish, creationData]);
 
   return content;
 }
