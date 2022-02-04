@@ -111,7 +111,10 @@ export default function MembershipRequestContribution(props: IStageProps) {
       : undefined
   );
   const [isCurrencyInputTouched, setIsCurrencyInputTouched] = useState(false);
-  const formattedMinFeeToJoin = formatPrice(minFeeToJoin, { shouldMillify: false });
+  const formattedMinFeeToJoin = formatPrice(
+    zeroContribution ? 0 : minFeeToJoin,
+    { shouldMillify: false, shouldRemovePrefixFromZero: false }
+  );
   const pricePostfix = isMonthlyContribution ? "/mo" : "";
   const currencyInputError = validateContributionAmount(
     minFeeToJoin,
