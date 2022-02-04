@@ -145,7 +145,13 @@ export default function CreationSteps(props: CreationStepsProps) {
           />
         );
       case CreationStep.Rules:
-        return <Rules currentStep={step} onFinish={handleFinish} />;
+        return (
+          <Rules
+            currentStep={step}
+            onFinish={handleFinish}
+            creationData={creationData}
+          />
+        );
       case CreationStep.Review:
         return <Review currentStep={step} onFinish={handleFinish} />;
       default:

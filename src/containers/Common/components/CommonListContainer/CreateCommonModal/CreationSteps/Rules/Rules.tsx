@@ -1,11 +1,12 @@
 import React, { useCallback, useRef, ReactElement } from "react";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
-
 import { isMobile } from "@/shared/utils";
 import { Separator } from "@/shared/components";
 import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
-import { Form, RulesArray, RulesArrayItem } from "@/shared/components/Form/Formik";
+import { Form, RulesArray } from "@/shared/components/Form/Formik";
+import { CommonRule } from "@/shared/models";
+import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import { MAX_RULE_TITLE_LENGTH } from "./constants";
 import validationSchema from "./validationSchema";
@@ -13,18 +14,21 @@ import "./index.scss";
 
 interface RulesProps {
   currentStep: number;
-  onFinish: () => void;
+  onFinish: (data: Partial<IntermediateCreateCommonPayload>) => void;
+  creationData: IntermediateCreateCommonPayload;
 }
 
 interface FormValues {
-  rules: RulesArrayItem[],
+  rules: CommonRule[];
 }
 
-const INITIAL_VALUES: FormValues = {
-  rules: [{ title: "", description: "" }],
-};
+const getInitialValues = (
+  data: IntermediateCreateCommonPayload
+): FormValues => ({
+  rules: data.rules || [{ title: "", value: "" }],
+});
 
-export default function Rules({ currentStep, onFinish }: RulesProps): ReactElement {
+export default function Rules({ currentStep, onFinish, creationData }: RulesProps): ReactElement {
   const formRef = useRef<FormikProps<FormValues>>(null);
   const isMobileView = isMobile();
 
@@ -35,7 +39,7 @@ export default function Rules({ currentStep, onFinish }: RulesProps): ReactEleme
   }, []);
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>((values) => {
-    onFinish();
+    onFinish({ rules: values.rules });
   }, [onFinish]);
 
   const progressEl = <Progress creationStep={currentStep} />;
@@ -51,7 +55,7 @@ export default function Rules({ currentStep, onFinish }: RulesProps): ReactEleme
         {isMobileView && progressEl}
         <Separator className="create-common-rules__separator" />
         <Formik
-          initialValues={INITIAL_VALUES}
+          initialValues={getInitialValues(creationData)}
           onSubmit={handleSubmit}
           innerRef={formRef}
           validationSchema={validationSchema}
