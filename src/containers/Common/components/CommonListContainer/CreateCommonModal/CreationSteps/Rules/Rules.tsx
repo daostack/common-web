@@ -1,11 +1,13 @@
 import React, { useCallback, useRef, ReactElement } from "react";
+import { useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
-import { isMobile } from "@/shared/utils";
-import { Separator } from "@/shared/components";
+import { Button, Separator } from "@/shared/components";
 import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
 import { Form, RulesArray } from "@/shared/components/Form/Formik";
+import { ScreenSize } from "@/shared/constants";
 import { CommonRule } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import { MAX_RULE_TITLE_LENGTH } from "./constants";
@@ -28,9 +30,14 @@ const getInitialValues = (
   rules: data.rules || [{ title: "", value: "" }],
 });
 
-export default function Rules({ currentStep, onFinish, creationData }: RulesProps): ReactElement {
+export default function Rules({
+  currentStep,
+  onFinish,
+  creationData,
+}: RulesProps): ReactElement {
   const formRef = useRef<FormikProps<FormValues>>(null);
-  const isMobileView = isMobile();
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   const handleContinueClick = useCallback(() => {
     if (formRef.current) {
@@ -38,19 +45,18 @@ export default function Rules({ currentStep, onFinish, creationData }: RulesProp
     }
   }, []);
 
-  const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>((values) => {
-    onFinish({ rules: values.rules });
-  }, [onFinish]);
+  const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
+    (values) => {
+      onFinish({ rules: values.rules });
+    },
+    [onFinish]
+  );
 
   const progressEl = <Progress creationStep={currentStep} />;
 
   return (
     <>
-      {!isMobileView && (
-        <ModalHeaderContent>
-          {progressEl}
-        </ModalHeaderContent>
-      )}
+      {!isMobileView && <ModalHeaderContent>{progressEl}</ModalHeaderContent>}
       <div className="create-common-rules">
         {isMobileView && progressEl}
         <Separator className="create-common-rules__separator" />
@@ -75,14 +81,14 @@ export default function Rules({ currentStep, onFinish, creationData }: RulesProp
               />
               <ModalFooter sticky>
                 <div className="create-common-rules__modal-footer">
-                  <button
+                  <Button
                     key="rules-continue"
-                    className="button-blue"
                     onClick={handleContinueClick}
+                    shouldUseFullWidth={isMobileView}
                     disabled={!isValid}
                   >
                     Continue to Review
-                  </button>
+                  </Button>
                 </div>
               </ModalFooter>
             </Form>
