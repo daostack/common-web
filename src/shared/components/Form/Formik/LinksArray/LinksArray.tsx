@@ -2,24 +2,19 @@ import React, { FC } from "react";
 import classNames from "classnames";
 import { FieldArray, FieldArrayConfig, FormikErrors } from "formik";
 import { FormikTouched } from "formik/dist/types";
-
-import DeleteIcon from "../../../../../shared/icons/delete.icon";
+import { CommonLink } from "@/shared/models";
+import DeleteIcon from "@/shared/icons/delete.icon";
 import { ButtonIcon } from "../../../ButtonIcon";
 import { ButtonLink } from "../../../ButtonLink";
 import { ErrorText } from "../../ErrorText";
 import { TextField } from "../TextField";
 import "./index.scss";
 
-export interface LinksArrayItem {
-  title: string;
-  link: string;
-}
-
-type Errors = string | string[] | FormikErrors<LinksArrayItem[]> | undefined;
-type Touched = FormikTouched<LinksArrayItem>[] | undefined;
+type Errors = string | string[] | FormikErrors<CommonLink[]> | undefined;
+type Touched = FormikTouched<CommonLink>[] | undefined;
 
 interface LinksArrayProps extends FieldArrayConfig {
-  values: LinksArrayItem[];
+  values: CommonLink[];
   errors: Errors;
   touched: Touched;
   maxTitleLength?: number;
@@ -31,7 +26,7 @@ interface LinksArrayProps extends FieldArrayConfig {
 const getInputError = (
   errors: Errors,
   index: number,
-  key: keyof LinksArrayItem
+  key: keyof CommonLink
 ): string => {
   if (!errors || typeof errors !== "object") {
     return "";
@@ -49,7 +44,7 @@ const getInputError = (
 const isTouched = (
   touched: Touched,
   index: number,
-  key: keyof LinksArrayItem
+  key: keyof CommonLink
 ): boolean => Boolean(touched && touched[index] && touched[index][key]);
 
 const LinksArray: FC<LinksArrayProps> = (props) => {
@@ -73,12 +68,12 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
             const titleError = isTouched(touched, index, "title")
               ? getInputError(errors, index, "title")
               : "";
-            const linkError = isTouched(touched, index, "link")
-              ? getInputError(errors, index, "link")
+            const valueError = isTouched(touched, index, "value")
+              ? getInputError(errors, index, "value")
               : "";
-            const error = titleError || linkError;
+            const error = titleError || valueError;
             const shouldDisplayDeleteButton =
-              values.length > 1 && Boolean(value.title && value.link);
+              values.length > 1 && Boolean(value.title && value.value);
 
             return (
               <div
@@ -100,7 +95,7 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
                     input: {
                       default: classNames("links-array__title-input", {
                         "links-array__title-input--without-bottom-border":
-                          !titleError && linkError,
+                          !titleError && valueError,
                       }),
                     },
                     error: "links-array__title-error",
@@ -108,14 +103,14 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
                 />
                 <div className="links-array__link-input-wrapper">
                   <TextField
-                    id={`${restProps.name}.${index}.link`}
-                    name={`${restProps.name}.${index}.link`}
+                    id={`${restProps.name}.${index}.value`}
+                    name={`${restProps.name}.${index}.value`}
                     placeholder={`Link #${index + 1}`}
                     styles={{
                       input: {
                         default: classNames("links-array__link-input", {
                           "links-array__link-input--without-top-border":
-                            titleError || !linkError,
+                            titleError || !valueError,
                           "links-array__link-input--with-delete-button": shouldDisplayDeleteButton,
                         }),
                       },
@@ -138,7 +133,7 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
           {!hideAddButton && (
             <ButtonLink
               className="links-array__add-button"
-              onClick={() => push({ title: "", link: "" })}
+              onClick={() => push({ title: "", value: "" } as CommonLink)}
             >
               Add link
             </ButtonLink>

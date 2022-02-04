@@ -3,15 +3,19 @@ import React, {
   useEffect,
   useMemo,
   useState,
+  Dispatch,
   ReactNode,
+  SetStateAction,
 } from "react";
-
-import { isMobile } from "@/shared/utils";
+import { useSelector } from "react-redux";
 import { Dots } from "@/shared/components";
+import { ScreenSize } from "@/shared/constants";
+import { getScreenSize } from "@/shared/store/selectors";
+import { IntermediateCreateCommonPayload } from "../../../../interfaces";
 import { Funding } from "./Funding";
 import { GeneralInfo } from "./GeneralInfo";
 import { PROGRESS_RELATED_STEPS } from "./Progress";
-import { Review } from './Review';
+import { Review } from "./Review";
 import { Rules } from "./Rules";
 import { UserAcknowledgment } from "./UserAcknowledgment";
 import { CreationStep } from "./constants";
@@ -23,6 +27,8 @@ interface CreationStepsProps {
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
   setShouldShowCloseButton: (shouldShow: boolean) => void;
   onFinish: () => void;
+  creationData: IntermediateCreateCommonPayload;
+  setCreationData: Dispatch<SetStateAction<IntermediateCreateCommonPayload>>;
 }
 
 export default function CreationSteps(props: CreationStepsProps) {
@@ -31,9 +37,12 @@ export default function CreationSteps(props: CreationStepsProps) {
     setTitle,
     setGoBackHandler,
     setShouldShowCloseButton,
+    creationData,
+    setCreationData,
   } = props;
   const [step, setStep] = useState(CreationStep.GeneralInfo);
-  const isMobileView = isMobile();
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   const scrollTop = () => {
     const content = document.getElementById("content");
@@ -49,22 +58,21 @@ export default function CreationSteps(props: CreationStepsProps) {
     setStep((step) => step - 1);
   }, [step]);
 
-  const handleFinish = useCallback(() => {
-    if (step === CreationStep.Review) {
-      return;
-    }
-    scrollTop();
-    setStep((step) => step + 1);
-  }, [step]);
-
-  const shouldShowGoBackButton = useCallback(
-    (): boolean => step !== CreationStep.UserAcknowledgment || isMobileView,
-    [step, isMobileView]
-  );
-
-  const shouldShowCloseButton = useCallback(
-    (): boolean => step !== CreationStep.UserAcknowledgment || !isMobileView,
-    [step, isMobileView]
+  const handleFinish = useCallback(
+    (data?: Partial<IntermediateCreateCommonPayload>) => {
+      if (data) {
+        setCreationData((nextData) => ({
+          ...nextData,
+          ...data,
+        }));
+      }
+      if (step === CreationStep.Review) {
+        return;
+      }
+      scrollTop();
+      setStep((step) => step + 1);
+    },
+    [step, setCreationData]
   );
 
   const shouldShowTitle = useCallback(
@@ -103,23 +111,39 @@ export default function CreationSteps(props: CreationStepsProps) {
   }, [setTitle, title]);
 
   useEffect(() => {
-    setGoBackHandler(shouldShowGoBackButton() ? handleGoBack : null);
-  }, [setGoBackHandler, shouldShowGoBackButton, handleGoBack]);
+    setGoBackHandler(handleGoBack);
+  }, [setGoBackHandler, handleGoBack]);
 
   useEffect(() => {
-    setShouldShowCloseButton(shouldShowCloseButton());
-  }, [setShouldShowCloseButton, shouldShowCloseButton]);
+    setShouldShowCloseButton(true);
+  }, [setShouldShowCloseButton]);
 
   const content = useMemo(() => {
     switch (step) {
       case CreationStep.GeneralInfo:
-        return <GeneralInfo currentStep={step} onFinish={handleFinish} />;
+        return (
+          <GeneralInfo
+            currentStep={step}
+            onFinish={handleFinish}
+            creationData={creationData}
+          />
+        );
       case CreationStep.UserAcknowledgment:
         return (
-          <UserAcknowledgment currentStep={step} onFinish={handleFinish} />
+          <UserAcknowledgment
+            currentStep={step}
+            onFinish={handleFinish}
+            creationData={creationData}
+          />
         );
       case CreationStep.Funding:
-        return <Funding currentStep={step} onFinish={handleFinish} />;
+        return (
+          <Funding
+            currentStep={step}
+            onFinish={handleFinish}
+            creationData={creationData}
+          />
+        );
       case CreationStep.Rules:
         return <Rules currentStep={step} onFinish={handleFinish} />;
       case CreationStep.Review:
@@ -127,7 +151,7 @@ export default function CreationSteps(props: CreationStepsProps) {
       default:
         return null;
     }
-  }, [step, handleFinish]);
+  }, [step, handleFinish, creationData]);
 
   return content;
 }
