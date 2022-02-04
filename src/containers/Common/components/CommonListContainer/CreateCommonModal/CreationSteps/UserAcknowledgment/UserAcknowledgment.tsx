@@ -1,10 +1,11 @@
 import React, { useCallback, useMemo, useState, ReactElement } from "react";
-import { isMobile } from "@/shared/utils";
-import { ButtonLink, Separator } from "@/shared/components";
+import { useSelector } from "react-redux";
+import { Button, ButtonLink, Separator } from "@/shared/components";
 import { Checkbox } from "@/shared/components/Form";
 import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
-import { TERMS_OF_USE_URL } from "@/shared/constants";
+import { ScreenSize, TERMS_OF_USE_URL } from "@/shared/constants";
 import ExplanationIcon from "@/shared/icons/explanation.icon";
+import { getScreenSize } from "@/shared/store/selectors";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import { CheckedList } from "./CheckedList";
@@ -28,7 +29,8 @@ export default function UserAcknowledgment({
   const [areTermsConfirmed, setAreTermsConfirmed] = useState(
     creationData.agreementAccepted
   );
-  const isMobileView = isMobile();
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   const toggleCausesBoxShowing = useCallback(() => {
     setShowCausesBox((shouldShow) => !shouldShow);
@@ -123,14 +125,14 @@ export default function UserAcknowledgment({
         />
         <ModalFooter sticky={!isMobileView}>
           <div className="create-common-user-acknowledgment__modal-footer">
-            <button
+            <Button
               key="user-acknowledgement-continue"
-              className="button-blue"
               onClick={handleContinue}
+              shouldUseFullWidth={isMobileView}
               disabled={!areTermsConfirmed}
             >
               Continue to Funding
-            </button>
+            </Button>
           </div>
         </ModalFooter>
       </div>
