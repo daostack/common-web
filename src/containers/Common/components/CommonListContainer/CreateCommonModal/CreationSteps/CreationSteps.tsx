@@ -135,7 +135,11 @@ export default function CreationSteps(props: CreationStepsProps) {
         );
       case CreationStep.UserAcknowledgment:
         return (
-          <UserAcknowledgment currentStep={step} onFinish={handleFinish} />
+          <UserAcknowledgment
+            currentStep={step}
+            onFinish={handleFinish}
+            creationData={creationData}
+          />
         );
       case CreationStep.Funding:
         return <Funding currentStep={step} onFinish={handleFinish} />;

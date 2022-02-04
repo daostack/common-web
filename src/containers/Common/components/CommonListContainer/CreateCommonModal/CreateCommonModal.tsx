@@ -22,6 +22,7 @@ const INITIAL_DATA: IntermediateCreateCommonPayload = {
   image: "",
   contributionAmount: 0,
   contributionType: CommonContributionType.OneTime,
+  agreementAccepted: false,
 };
 
 enum CreateCommonStage {

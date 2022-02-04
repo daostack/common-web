@@ -1,18 +1,19 @@
 import React, { useCallback, useMemo, useState, ReactElement } from "react";
-
 import { isMobile } from "@/shared/utils";
 import { ButtonLink, Separator } from "@/shared/components";
 import { Checkbox } from "@/shared/components/Form";
 import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
 import { TERMS_OF_USE_URL } from "@/shared/constants";
 import ExplanationIcon from "@/shared/icons/explanation.icon";
+import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import { CheckedList } from "./CheckedList";
 import "./index.scss";
 
 interface UserAcknowledgmentProps {
   currentStep: number;
-  onFinish: () => void;
+  onFinish: (data: Partial<IntermediateCreateCommonPayload>) => void;
+  creationData: IntermediateCreateCommonPayload;
 }
 
 const CAUSES_TEXT =
@@ -21,9 +22,12 @@ const CAUSES_TEXT =
 export default function UserAcknowledgment({
   currentStep,
   onFinish,
+  creationData,
 }: UserAcknowledgmentProps): ReactElement {
   const [showCausesBox, setShowCausesBox] = useState(false);
-  const [areTermsConfirmed, setAreTermsConfirmed] = useState(false);
+  const [areTermsConfirmed, setAreTermsConfirmed] = useState(
+    creationData.agreementAccepted
+  );
   const isMobileView = isMobile();
 
   const toggleCausesBoxShowing = useCallback(() => {
@@ -33,6 +37,14 @@ export default function UserAcknowledgment({
   const handleTermsChange = useCallback(() => {
     setAreTermsConfirmed((checked) => !checked);
   }, []);
+
+  const handleContinue = () => {
+    if (areTermsConfirmed) {
+      onFinish({
+        agreementAccepted: true,
+      });
+    }
+  };
 
   const listItems = useMemo(
     () => [
@@ -114,7 +126,7 @@ export default function UserAcknowledgment({
             <button
               key="user-acknowledgement-continue"
               className="button-blue"
-              onClick={onFinish}
+              onClick={handleContinue}
               disabled={!areTermsConfirmed}
             >
               Continue to Funding
