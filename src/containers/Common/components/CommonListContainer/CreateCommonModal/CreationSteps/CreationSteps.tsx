@@ -7,8 +7,10 @@ import React, {
   ReactNode,
   SetStateAction,
 } from "react";
-import { isMobile } from "@/shared/utils";
+import { useSelector } from "react-redux";
 import { Dots } from "@/shared/components";
+import { ScreenSize } from "@/shared/constants";
+import { getScreenSize } from "@/shared/store/selectors";
 import { IntermediateCreateCommonPayload } from "../../../../interfaces";
 import { Funding } from "./Funding";
 import { GeneralInfo } from "./GeneralInfo";
@@ -39,7 +41,8 @@ export default function CreationSteps(props: CreationStepsProps) {
     setCreationData,
   } = props;
   const [step, setStep] = useState(CreationStep.GeneralInfo);
-  const isMobileView = isMobile();
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   const scrollTop = () => {
     const content = document.getElementById("content");
@@ -70,11 +73,6 @@ export default function CreationSteps(props: CreationStepsProps) {
       setStep((step) => step + 1);
     },
     [step, setCreationData]
-  );
-
-  const shouldShowGoBackButton = useCallback(
-    (): boolean => step !== CreationStep.UserAcknowledgment || isMobileView,
-    [step, isMobileView]
   );
 
   const shouldShowCloseButton = useCallback(
@@ -118,8 +116,8 @@ export default function CreationSteps(props: CreationStepsProps) {
   }, [setTitle, title]);
 
   useEffect(() => {
-    setGoBackHandler(shouldShowGoBackButton() ? handleGoBack : null);
-  }, [setGoBackHandler, shouldShowGoBackButton, handleGoBack]);
+    setGoBackHandler(handleGoBack);
+  }, [setGoBackHandler, handleGoBack]);
 
   useEffect(() => {
     setShouldShowCloseButton(shouldShowCloseButton());
