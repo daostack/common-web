@@ -22,12 +22,14 @@ import { IStageProps } from "./MembershipRequestModal";
 
 const validateContributionAmount = (
   minFeeToJoin: number,
+  zeroContribution: boolean,
   value?: string
 ): string => {
+  const minFeeToJoinForUsage = zeroContribution ? 0 : minFeeToJoin;
   const convertedValue = Number(value) * 100;
 
   if (
-    convertedValue >= minFeeToJoin &&
+    convertedValue >= minFeeToJoinForUsage &&
     (convertedValue === 0 ||
       (convertedValue >= MIN_CONTRIBUTION_ILS_AMOUNT &&
         convertedValue <= MAX_CONTRIBUTION_ILS_AMOUNT))
@@ -37,17 +39,23 @@ const validateContributionAmount = (
 
   const errorTexts = ["The amount must be"];
 
-  if (minFeeToJoin === 0) {
+  if (minFeeToJoinForUsage === 0) {
     errorTexts.push("0, or");
     errorTexts.push(
-      `at least ${formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT, { shouldMillify: false })}`
+      `at least ${formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT, {
+        shouldMillify: false,
+      })}`
     );
   } else {
-    errorTexts.push(`at least ${formatPrice(minFeeToJoin, { shouldMillify: false })}`);
+    errorTexts.push(
+      `at least ${formatPrice(minFeeToJoinForUsage, { shouldMillify: false })}`
+    );
   }
 
   errorTexts.push(
-    `and at most ${formatPrice(MAX_CONTRIBUTION_ILS_AMOUNT, { shouldMillify: false })}`
+    `and at most ${formatPrice(MAX_CONTRIBUTION_ILS_AMOUNT, {
+      shouldMillify: false,
+    })}`
   );
 
   return errorTexts.join(" ");
@@ -107,6 +115,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
   const pricePostfix = isMonthlyContribution ? "/mo" : "";
   const currencyInputError = validateContributionAmount(
     minFeeToJoin,
+    zeroContribution,
     enteredContribution
   );
   const isSubmitDisabled = Boolean(
