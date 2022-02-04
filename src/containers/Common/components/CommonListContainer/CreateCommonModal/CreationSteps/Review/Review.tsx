@@ -81,7 +81,7 @@ export default function Review({
           className="create-common-review__image-slider"
           commonName={commonName}
           tagline={tagline}
-          initialImage={null}
+          initialImage={creationData.image}
           onImageChange={setSelectedCommonImage}
         />
         <MainCommonInfo
