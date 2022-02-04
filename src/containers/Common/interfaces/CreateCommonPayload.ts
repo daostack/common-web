@@ -19,9 +19,7 @@ export interface CreateCommonPayload {
 }
 
 export interface IntermediateCreateCommonPayload
-  extends Omit<
-    CreateCommonPayload,
-    "userId" | "searchable"
-  > {
+  extends Omit<CreateCommonPayload, "userId" | "image" | "searchable"> {
+  image: string | File | null;
   agreementAccepted: boolean;
 }

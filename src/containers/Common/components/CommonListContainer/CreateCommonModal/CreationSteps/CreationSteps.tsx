@@ -119,41 +119,23 @@ export default function CreationSteps(props: CreationStepsProps) {
   }, [setShouldShowCloseButton]);
 
   const content = useMemo(() => {
+    const stepProps = {
+      creationData,
+      currentStep: step,
+      onFinish: handleFinish,
+    };
+
     switch (step) {
       case CreationStep.GeneralInfo:
-        return (
-          <GeneralInfo
-            currentStep={step}
-            onFinish={handleFinish}
-            creationData={creationData}
-          />
-        );
+        return <GeneralInfo {...stepProps} />;
       case CreationStep.UserAcknowledgment:
-        return (
-          <UserAcknowledgment
-            currentStep={step}
-            onFinish={handleFinish}
-            creationData={creationData}
-          />
-        );
+        return <UserAcknowledgment {...stepProps} />;
       case CreationStep.Funding:
-        return (
-          <Funding
-            currentStep={step}
-            onFinish={handleFinish}
-            creationData={creationData}
-          />
-        );
+        return <Funding {...stepProps} />;
       case CreationStep.Rules:
-        return (
-          <Rules
-            currentStep={step}
-            onFinish={handleFinish}
-            creationData={creationData}
-          />
-        );
+        return <Rules {...stepProps} />;
       case CreationStep.Review:
-        return <Review currentStep={step} onFinish={handleFinish} />;
+        return <Review {...stepProps} />;
       default:
         return null;
     }

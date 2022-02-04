@@ -19,7 +19,7 @@ import "./index.scss";
 
 const INITIAL_DATA: IntermediateCreateCommonPayload = {
   name: "",
-  image: "",
+  image: null,
   contributionAmount: 0,
   contributionType: CommonContributionType.OneTime,
   agreementAccepted: false,
