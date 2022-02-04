@@ -22,12 +22,14 @@ import { IStageProps } from "./MembershipRequestModal";
 
 const validateContributionAmount = (
   minFeeToJoin: number,
+  zeroContribution: boolean,
   value?: string
 ): string => {
+  const minFeeToJoinForUsage = zeroContribution ? 0 : minFeeToJoin;
   const convertedValue = Number(value) * 100;
 
   if (
-    convertedValue >= minFeeToJoin &&
+    convertedValue >= minFeeToJoinForUsage &&
     (convertedValue === 0 ||
       (convertedValue >= MIN_CONTRIBUTION_ILS_AMOUNT &&
         convertedValue <= MAX_CONTRIBUTION_ILS_AMOUNT))
@@ -37,30 +39,44 @@ const validateContributionAmount = (
 
   const errorTexts = ["The amount must be"];
 
-  if (minFeeToJoin === 0) {
+  if (minFeeToJoinForUsage === 0) {
     errorTexts.push("0, or");
     errorTexts.push(
-      `at least ${formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT, { shouldMillify: false })}`
+      `at least ${formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT, {
+        shouldMillify: false,
+      })}`
     );
   } else {
-    errorTexts.push(`at least ${formatPrice(minFeeToJoin, { shouldMillify: false })}`);
+    errorTexts.push(
+      `at least ${formatPrice(minFeeToJoinForUsage, { shouldMillify: false })}`
+    );
   }
 
   errorTexts.push(
-    `and at most ${formatPrice(MAX_CONTRIBUTION_ILS_AMOUNT, { shouldMillify: false })}`
+    `and at most ${formatPrice(MAX_CONTRIBUTION_ILS_AMOUNT, {
+      shouldMillify: false,
+    })}`
   );
 
   return errorTexts.join(" ");
 };
 
-const getAmountsForSelection = (minFeeToJoin: number): number[] => {
-  const initialAmount = (minFeeToJoin * 2) / 100;
+const getAmountsForSelection = (
+  minFeeToJoin: number,
+  zeroContribution: boolean
+): number[] => {
+  if (minFeeToJoin === 0 || zeroContribution) {
+    return [0, MIN_CONTRIBUTION_ILS_AMOUNT, MIN_CONTRIBUTION_ILS_AMOUNT * 2];
+  }
+
+  const minFeeToJoinForUsage = minFeeToJoin / 100;
+  const initialAmount = minFeeToJoinForUsage * 2;
   const firstAmount =
-    initialAmount !== 0 && initialAmount % 10 === 0
+    initialAmount % 10 === 0
       ? initialAmount
       : roundNumberToNextTenths(initialAmount);
 
-  return [firstAmount, firstAmount * 2]
+  return [minFeeToJoinForUsage, firstAmount, firstAmount * 2]
     .map((amount) => amount * 100)
     .filter((amount) => amount <= MAX_CONTRIBUTION_ILS_AMOUNT);
 };
@@ -70,14 +86,11 @@ export default function MembershipRequestContribution(props: IStageProps) {
   const isMonthlyContribution =
     common?.metadata.contributionType === CommonContributionType.Monthly;
   const minFeeToJoin = common?.metadata.minFeeToJoin || 0;
+  const zeroContribution = common?.metadata.zeroContribution || false;
 
   const amountsForSelection = useMemo(
-    () =>
-      [
-        minFeeToJoin ? minFeeToJoin : 0,
-        ...getAmountsForSelection(minFeeToJoin),
-      ].filter((v) => v),
-    [minFeeToJoin]
+    () => getAmountsForSelection(minFeeToJoin, zeroContribution),
+    [minFeeToJoin, zeroContribution]
   );
   const [selectedContribution, setSelectedContribution] = useState<
     number | "other" | null
@@ -98,10 +111,14 @@ export default function MembershipRequestContribution(props: IStageProps) {
       : undefined
   );
   const [isCurrencyInputTouched, setIsCurrencyInputTouched] = useState(false);
-  const formattedMinFeeToJoin = formatPrice(minFeeToJoin, { shouldMillify: false });
+  const formattedMinFeeToJoin = formatPrice(
+    zeroContribution ? 0 : minFeeToJoin,
+    { shouldMillify: false, shouldRemovePrefixFromZero: false }
+  );
   const pricePostfix = isMonthlyContribution ? "/mo" : "";
   const currencyInputError = validateContributionAmount(
     minFeeToJoin,
+    zeroContribution,
     enteredContribution
   );
   const isSubmitDisabled = Boolean(
@@ -171,7 +188,10 @@ export default function MembershipRequestContribution(props: IStageProps) {
               styles={toggleButtonStyles}
               value={amount}
             >
-              {formatPrice(amount, { shouldMillify: false })}
+              {formatPrice(amount, {
+                shouldMillify: false,
+                shouldRemovePrefixFromZero: false,
+              })}
               {pricePostfix}
             </ToggleButton>
           ))}
