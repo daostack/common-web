@@ -2,26 +2,21 @@ import React, { FC } from "react";
 import classNames from "classnames";
 import { FieldArray, FieldArrayConfig, FormikErrors } from "formik";
 import { FormikTouched } from "formik/dist/types";
-
-import DeleteIcon from "../../../../../shared/icons/delete.icon";
+import DeleteIcon from "@/shared/icons/delete.icon";
+import { CommonRule } from "@/shared/models";
 import { ButtonIcon } from "../../../ButtonIcon";
 import { ButtonLink } from "../../../ButtonLink";
 import { ErrorText } from "../../ErrorText";
 import { TextField } from "../TextField";
 import "./index.scss";
 
-export interface RulesArrayItem {
-  title: string;
-  description: string;
-}
-
-type Errors = string | string[] | FormikErrors<RulesArrayItem[]> | undefined;
-type Touched = FormikTouched<RulesArrayItem>[] | undefined;
+type Errors = string | string[] | FormikErrors<CommonRule[]> | undefined;
+type Touched = FormikTouched<CommonRule>[] | undefined;
 
 interface RulesArrayProps extends FieldArrayConfig {
   title?: string;
   description?: string;
-  values: RulesArrayItem[];
+  values: CommonRule[];
   errors: Errors;
   touched: Touched;
   maxTitleLength?: number;
@@ -29,7 +24,11 @@ interface RulesArrayProps extends FieldArrayConfig {
   itemClassName?: string;
 }
 
-const getInputError = (errors: Errors, index: number, key: keyof RulesArrayItem): string => {
+const getInputError = (
+  errors: Errors,
+  index: number,
+  key: keyof CommonRule
+): string => {
   if (!errors || typeof errors !== "object") {
     return "";
   }
@@ -43,12 +42,24 @@ const getInputError = (errors: Errors, index: number, key: keyof RulesArrayItem)
   return error[key] || "";
 };
 
-const isTouched = (touched: Touched, index: number, key: keyof RulesArrayItem): boolean => (
-  Boolean(touched && touched[index] && touched[index][key])
-);
+const isTouched = (
+  touched: Touched,
+  index: number,
+  key: keyof CommonRule
+): boolean => Boolean(touched && touched[index] && touched[index][key]);
 
 const RulesArray: FC<RulesArrayProps> = (props) => {
-  const { title, description, values, errors, touched, maxTitleLength, className, itemClassName, ...restProps } = props;
+  const {
+    title,
+    description,
+    values,
+    errors,
+    touched,
+    maxTitleLength,
+    className,
+    itemClassName,
+    ...restProps
+  } = props;
 
   return (
     <FieldArray
@@ -56,15 +67,21 @@ const RulesArray: FC<RulesArrayProps> = (props) => {
       render={({ remove, push }) => (
         <div className={classNames("description-array", className)}>
           {values.map((value, index) => {
-            const titleError = isTouched(touched, index, "title") ? getInputError(errors, index, "title") : "";
-            const descriptionError = isTouched(touched, index, "description")
-              ? getInputError(errors, index, "description")
+            const titleError = isTouched(touched, index, "title")
+              ? getInputError(errors, index, "title")
               : "";
-            const error = titleError || descriptionError;
-            const shouldDisplayDeleteButton = values.length > 1 && Boolean(value.title && value.description);
+            const valueError = isTouched(touched, index, "value")
+              ? getInputError(errors, index, "value")
+              : "";
+            const error = titleError || valueError;
+            const shouldDisplayDeleteButton =
+              values.length > 1 && Boolean(value.title && value.value);
 
             return (
-              <div key={index} className={classNames("description-array__item", itemClassName)}>
+              <div
+                key={index}
+                className={classNames("description-array__item", itemClassName)}
+              >
                 <TextField
                   id={`${restProps.name}.${index}.title`}
                   name={`${restProps.name}.${index}.title`}
@@ -77,7 +94,8 @@ const RulesArray: FC<RulesArrayProps> = (props) => {
                     description: "description-array__title-description",
                     input: {
                       default: classNames("description-array__title-input", {
-                        "description-array__title-input--without-bottom-border": !titleError && descriptionError,
+                        "description-array__title-input--without-bottom-border":
+                          !titleError && valueError,
                       }),
                     },
                     error: "description-array__title-error",
@@ -85,17 +103,21 @@ const RulesArray: FC<RulesArrayProps> = (props) => {
                 />
                 <div className="description-array__description-input-wrapper">
                   <TextField
-                    id={`${restProps.name}.${index}.description`}
-                    name={`${restProps.name}.${index}.description`}
+                    id={`${restProps.name}.${index}.value`}
+                    name={`${restProps.name}.${index}.value`}
                     placeholder="Rule description"
                     rows={5}
                     isTextarea
                     styles={{
                       input: {
-                        default: classNames("description-array__description-input", {
-                          "description-array__description-input--without-top-border": titleError || !descriptionError,
-                          "description-array__description-input--with-delete-button": shouldDisplayDeleteButton,
-                        }),
+                        default: classNames(
+                          "description-array__description-input",
+                          {
+                            "description-array__description-input--without-top-border":
+                              titleError || !valueError,
+                            "description-array__description-input--with-delete-button": shouldDisplayDeleteButton,
+                          }
+                        ),
                       },
                       error: "description-array__description-error",
                     }}
@@ -115,7 +137,7 @@ const RulesArray: FC<RulesArrayProps> = (props) => {
           })}
           <ButtonLink
             className="description-array__add-button"
-            onClick={() => push({ title: "", description: "" })}
+            onClick={() => push({ title: "", value: "" } as CommonRule)}
           >
             Add rule
           </ButtonLink>
