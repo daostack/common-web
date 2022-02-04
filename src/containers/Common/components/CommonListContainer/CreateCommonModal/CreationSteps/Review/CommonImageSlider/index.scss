@@ -103,5 +103,9 @@
     font-size: $moderate;
     font-weight: bold;
     line-height: 1.22;
+
+    &:last-child {
+      margin: 0;
+    }
   }
 }
