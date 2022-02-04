@@ -134,6 +134,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   useEffect(() => {
     if (!props.isShowing) {
       setStage(CreateCommonStage.Introduction);
+      setCreationData(INITIAL_DATA);
     }
   }, [props.isShowing]);
 
