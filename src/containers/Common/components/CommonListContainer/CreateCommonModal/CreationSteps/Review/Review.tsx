@@ -44,7 +44,9 @@ export default function Review({
   });
 
   const handleContinueClick = useCallback(() => {
-    onFinish({ image: selectedCommonImage });
+    if (selectedCommonImage) {
+      onFinish({ image: selectedCommonImage });
+    }
   }, [onFinish, selectedCommonImage]);
 
   const progressEl = <Progress creationStep={currentStep} />;
