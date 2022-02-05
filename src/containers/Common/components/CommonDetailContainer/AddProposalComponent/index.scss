@@ -504,3 +504,27 @@
     width: 60%;
   }
 }
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .add-proposal-wrapper,
+  .app-proposal-confirm-wrapper,
+  .add-proposal-loader-wrapper,
+  .add-proposal-success-wrapper,
+  .add-proposal-failure-wrapper,
+  .add-payment-method-wrapper ,
+  {
+    height: auto;
+    width: 350px;
+  }
+  .add-payment-method-wrapper{
+    min-height: 350px;
+  }
+
+   .add-proposal-success-wrapper{
+    .actions-wrapper{
+      .white{
+        margin-bottom: 24px;
+      }
+    }
+  }
+}

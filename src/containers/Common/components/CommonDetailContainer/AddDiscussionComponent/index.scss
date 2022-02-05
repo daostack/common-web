@@ -78,3 +78,10 @@
     }
   }
 }
+
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .add-discussion-wrapper {
+    width: 350px;
+  }
+}
