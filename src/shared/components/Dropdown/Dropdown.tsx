@@ -63,7 +63,10 @@ const Dropdown: FC<DropdownProps> = (props) => {
           {options.map((option) => (
             <MenuItem
               key={String(option.value)}
-              className="custom-dropdown-wrapper__menu-item"
+              className={classNames("custom-dropdown-wrapper__menu-item", {
+                "custom-dropdown-wrapper__menu-item--active":
+                  option.value === selectedOption?.value,
+              })}
               tag="li"
               value={option.value}
               text={option.text}
