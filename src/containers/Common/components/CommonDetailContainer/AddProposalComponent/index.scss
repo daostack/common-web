@@ -514,10 +514,14 @@
   .add-payment-method-wrapper ,
   {
     height: auto;
-    width: 350px;
+    width: 330px;
   }
-  .add-payment-method-wrapper{
-    min-height: 350px;
+
+
+  .add-proposal-wrapper{
+      .add-proposal-description{
+        width: auto;
+      }
   }
 
    .add-proposal-success-wrapper{

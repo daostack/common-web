@@ -6,6 +6,10 @@ import { Modal } from "../../../../../shared/components";
 import { ModalProps } from "@/shared/interfaces";
 
 import "./index.scss";
+import { useSelector } from "react-redux";
+import { getScreenSize } from "@/shared/store/selectors";
+import { ScreenSize } from "@/shared/constants";
+import classNames from "classnames";
 
 interface AddDiscussionComponentProps
   extends Pick<ModalProps, "isShowing" | "onClose"> {
@@ -26,8 +30,19 @@ const AddDiscussionComponent = ({
     title: "",
     message: "",
   });
+
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
+
   return (
-    <Modal isShowing={isShowing} onClose={onClose}>
+    <Modal
+      isShowing={isShowing}
+      onClose={onClose}
+      className={classNames("create-discussion-modal", {
+        "mobile-full-screen": isMobileView,
+      })}
+      mobileFullScreen={isMobileView}
+    >
       <Formik
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
