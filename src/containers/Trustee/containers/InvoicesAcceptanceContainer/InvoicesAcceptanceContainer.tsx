@@ -113,7 +113,7 @@ const InvoicesAcceptanceContainer: FC = () => {
             <Dropdown
               className="invoices-acceptance-container__report-dropdown"
               value={reportType}
-              options={[]}
+              options={[{text: "Text 1", value: "Option 1"}, {text: "Text 1", value: "Option 2"}, {text: "Text 1", value: "Option 3"}, {text: "Text 1", value: "Option 4"}, {text: "Text 1", value: "Option 5"}, {text: "Text 1", value: "Option 6"}]}
               onSelect={setReportType}
             />
             <Button>Generate Report</Button>

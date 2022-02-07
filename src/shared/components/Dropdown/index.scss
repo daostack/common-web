@@ -24,6 +24,7 @@
 
   .custom-dropdown-wrapper__placeholder {
     flex: 1;
+    margin-right: 0.5rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -33,7 +34,6 @@
     flex-shrink: 0;
     width: 1.5rem;
     height: 1.5rem;
-    margin-left: 0.5rem;
     transform: rotate(90deg);
     transition: all 0.2s;
   }
@@ -60,6 +60,12 @@
     padding: 0;
     overflow-y: auto;
     list-style: none;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   .custom-dropdown-wrapper__menu-item {
