@@ -1,7 +1,13 @@
 import React, { useCallback, useEffect, useState, FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { Separator, Tabs, Tab, TabPanel } from "../../../../shared/components";
+import {
+  Button,
+  Separator,
+  Tabs,
+  Tab,
+  TabPanel,
+} from "../../../../shared/components";
 import { ROUTE_PATHS } from "../../../../shared/constants";
 import { useQueryParams } from "../../../../shared/hooks";
 import { Proposal } from "../../../../shared/models";
@@ -91,11 +97,18 @@ const InvoicesAcceptanceContainer: FC = () => {
   return (
     <>
       <StickyInfo className="invoices-acceptance-container__sticky-info">
-        <Separator className="invoices-acceptance-container__separator" />
-        <Tabs value={tab} onChange={handleTabChange}>
-          <Tab label="In progress" value={InvoicesPageTabState.InProgress} />
-          <Tab label="Approved" value={InvoicesPageTabState.Approved} />
-        </Tabs>
+        <Separator />
+        <div className="invoices-acceptance-container__sticky-info-content">
+          <Tabs
+            className="invoices-acceptance-container__tabs"
+            value={tab}
+            onChange={handleTabChange}
+          >
+            <Tab label="In progress" value={InvoicesPageTabState.InProgress} />
+            <Tab label="Approved" value={InvoicesPageTabState.Approved} />
+          </Tabs>
+          <Button>Generate Report</Button>
+        </div>
       </StickyInfo>
       <div className="invoices-acceptance-container">
         <TabPanel value={tab} panelValue={InvoicesPageTabState.InProgress}>

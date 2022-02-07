@@ -12,11 +12,17 @@ $sticky-info-mobile-height: 3.75rem;
   }
 }
 
-.invoices-acceptance-container__separator {
-  margin-bottom: 1.625rem;
+.invoices-acceptance-container__sticky-info-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.invoices-acceptance-container__tabs {
+  padding-top: 1.625rem;
 
   @include big-phone {
-    margin-bottom: 1.125rem;
+    padding-top: 1.125rem;
   }
 }
 
