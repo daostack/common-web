@@ -1,5 +1,5 @@
 @import "../../../../../constants.scss";
-
+@import "../../../../../styles/sizes";
 .add-proposal-wrapper {
   width: 576px;
   margin: 0 auto;
@@ -505,7 +505,7 @@
   }
 }
 
-@media only screen and (max-width: $mobile-breakpoint) {
+@include big-phone {
   .add-proposal-wrapper,
   .app-proposal-confirm-wrapper,
   .add-proposal-loader-wrapper,
