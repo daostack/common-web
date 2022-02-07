@@ -9,7 +9,6 @@ import { CommonsActionTypes } from "./constants";
 import {
   CreateDiscussionDto,
   AddMessageToDiscussionDto,
-  AddMessageToProposalDto,
 } from "@/containers/Common/interfaces";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 
