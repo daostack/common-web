@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import {
   Button,
+  Dropdown,
   Separator,
   Tabs,
   Tab,
@@ -43,6 +44,7 @@ const InvoicesAcceptanceContainer: FC = () => {
       ? InvoicesPageTabState.Approved
       : InvoicesPageTabState.InProgress
   );
+  const [reportType, setReportType] = useState<unknown | undefined>();
   const pendingApprovalProposals = useSelector(
     selectPendingApprovalProposals()
   );
@@ -107,7 +109,15 @@ const InvoicesAcceptanceContainer: FC = () => {
             <Tab label="In progress" value={InvoicesPageTabState.InProgress} />
             <Tab label="Approved" value={InvoicesPageTabState.Approved} />
           </Tabs>
-          <Button>Generate Report</Button>
+          <div className="invoices-acceptance-container__sticky-actions-wrapper">
+            <Dropdown
+              className="invoices-acceptance-container__report-dropdown"
+              value={reportType}
+              options={[]}
+              onSelect={setReportType}
+            />
+            <Button>Generate Report</Button>
+          </div>
         </div>
       </StickyInfo>
       <div className="invoices-acceptance-container">

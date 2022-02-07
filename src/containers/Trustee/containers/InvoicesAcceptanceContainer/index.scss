@@ -26,6 +26,16 @@ $sticky-info-mobile-height: 3.75rem;
   }
 }
 
+.invoices-acceptance-container__sticky-actions-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.invoices-acceptance-container__report-dropdown {
+  min-width: 9rem;
+  margin-right: 0.5rem;
+}
+
 .invoices-acceptance-container {
   padding-top: $sticky-info-height + 3.5rem;
 
