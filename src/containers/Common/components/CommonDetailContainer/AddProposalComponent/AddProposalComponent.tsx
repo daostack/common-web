@@ -12,6 +12,10 @@ import { AdProposalSuccess } from "./AddProposalSuccess";
 import { AdProposalFailure } from "./AddProposalFailure";
 import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
 import { AddPaymentMethod } from "./AddPaymentMethod";
+import { useSelector } from "react-redux";
+import { getScreenSize } from "@/shared/store/selectors";
+import { ScreenSize } from "@/shared/constants";
+import classNames from "classnames";
 
 export enum AddProposalSteps {
   CREATE = "create",
@@ -57,6 +61,9 @@ export const AddProposalComponent = ({
   const [proposalCreationStep, changeCreationProposalStep] = useState(
     AddProposalSteps.CREATE
   );
+
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   const createdProposal = useMemo(
     () => (proposals.length ? proposals[0] : null),
@@ -149,7 +156,14 @@ export const AddProposalComponent = ({
   ]);
 
   return (
-    <Modal isShowing={isShowing} onClose={onClose}>
+    <Modal
+      isShowing={isShowing}
+      onClose={onClose}
+      className={classNames("create-proposal-modal", {
+        "mobile-full-screen": isMobileView,
+      })}
+      mobileFullScreen={isMobileView}
+    >
       {renderProposalStep}
     </Modal>
   );

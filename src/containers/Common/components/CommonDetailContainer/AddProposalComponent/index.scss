@@ -1,5 +1,5 @@
 @import "../../../../../constants.scss";
-
+@import "../../../../../styles/sizes";
 .add-proposal-wrapper {
   width: 576px;
   margin: 0 auto;
@@ -502,5 +502,33 @@
 
   .add-payment-content {
     width: 60%;
+  }
+}
+
+@include big-phone {
+  .add-proposal-wrapper,
+  .app-proposal-confirm-wrapper,
+  .add-proposal-loader-wrapper,
+  .add-proposal-success-wrapper,
+  .add-proposal-failure-wrapper,
+  .add-payment-method-wrapper ,
+  {
+    height: auto;
+    width: 330px;
+  }
+
+
+  .add-proposal-wrapper{
+      .add-proposal-description{
+        width: auto;
+      }
+  }
+
+   .add-proposal-success-wrapper{
+    .actions-wrapper{
+      .white{
+        margin-bottom: 24px;
+      }
+    }
   }
 }

@@ -1,5 +1,5 @@
 @import "../../../../../constants.scss";
-
+@import "../../../../../styles/sizes";
 .add-discussion-wrapper {
   width: 576px;
   margin: 0 auto;
@@ -76,5 +76,16 @@
       margin: 66px auto 0;
       text-align: center;
     }
+  }
+}
+
+
+@include big-phone {
+  .add-discussion-wrapper {
+    width: 330px;
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+    justify-content: center;
   }
 }
