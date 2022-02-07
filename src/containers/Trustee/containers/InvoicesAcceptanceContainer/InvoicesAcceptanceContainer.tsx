@@ -4,12 +4,13 @@ import { useHistory } from "react-router";
 import {
   Button,
   Dropdown,
+  DropdownOption,
   Separator,
   Tabs,
   Tab,
   TabPanel,
 } from "../../../../shared/components";
-import { ROUTE_PATHS } from "../../../../shared/constants";
+import { Reports, ROUTE_PATHS } from "../../../../shared/constants";
 import { useQueryParams } from "../../../../shared/hooks";
 import { Proposal } from "../../../../shared/models";
 import { ProposalList } from "../../components/ProposalList";
@@ -35,6 +36,25 @@ import {
 } from "../constants";
 import "./index.scss";
 
+const OPTIONS: DropdownOption[] = [
+  {
+    text: "Payments In",
+    value: Reports.PayIns,
+  },
+  {
+    text: "Commons",
+    value: Reports.Commons,
+  },
+  {
+    text: "Payments Out",
+    value: Reports.PayOuts,
+  },
+  {
+    text: "Users",
+    value: Reports.Users,
+  },
+];
+
 const InvoicesAcceptanceContainer: FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -44,7 +64,7 @@ const InvoicesAcceptanceContainer: FC = () => {
       ? InvoicesPageTabState.Approved
       : InvoicesPageTabState.InProgress
   );
-  const [reportType, setReportType] = useState<unknown | undefined>();
+  const [reportType, setReportType] = useState<Reports>(Reports.PayIns);
   const pendingApprovalProposals = useSelector(
     selectPendingApprovalProposals()
   );
@@ -67,6 +87,10 @@ const InvoicesAcceptanceContainer: FC = () => {
     },
     [history]
   );
+
+  const handleReportTypeSelect = useCallback((value: unknown) => {
+    setReportType(value as Reports);
+  }, []);
 
   const handleProposalView = useCallback(
     (proposal: Proposal) => {
@@ -113,8 +137,8 @@ const InvoicesAcceptanceContainer: FC = () => {
             <Dropdown
               className="invoices-acceptance-container__report-dropdown"
               value={reportType}
-              options={[{text: "Text 1", value: "Option 1"}, {text: "Text 1", value: "Option 2"}, {text: "Text 1", value: "Option 3"}, {text: "Text 1", value: "Option 4"}, {text: "Text 1", value: "Option 5"}, {text: "Text 1", value: "Option 6"}]}
-              onSelect={setReportType}
+              options={OPTIONS}
+              onSelect={handleReportTypeSelect}
             />
             <Button>Generate Report</Button>
           </div>

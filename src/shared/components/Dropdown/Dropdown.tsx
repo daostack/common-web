@@ -10,7 +10,7 @@ import classNames from "classnames";
 import RightArrowIcon from "../../icons/rightArrow.icon";
 import "./index.scss";
 
-interface Option {
+export interface Option {
   text: string;
   value: unknown;
 }
