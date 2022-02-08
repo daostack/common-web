@@ -129,17 +129,19 @@ const Header = () => {
         </>
       )}
 
-      {hasAdminAccess && (
-        <ButtonLink
-          href="https://www.google.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Download Reports
-        </ButtonLink>
-      )}
       {isAuthorized && isMobile() && (
-        <button onClick={logOutUser}>Log out</button>
+        <>
+          {hasAdminAccess && (
+            <ButtonLink
+              href="https://www.google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download Reports
+            </ButtonLink>
+          )}
+          <button onClick={logOutUser}>Log out</button>
+        </>
       )}
       {!isAuthorized && !isTrusteeRoute && (
         <button className="login-button" onClick={handleOpen}>
