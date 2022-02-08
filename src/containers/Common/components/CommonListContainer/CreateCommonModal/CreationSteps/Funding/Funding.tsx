@@ -94,6 +94,18 @@ export default function Funding({
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
+  const handleContributionTypeChange = useCallback((value: unknown) => {
+    if (
+      value === CommonContributionType.OneTime &&
+      formRef.current?.values.isCommonJoinFree
+    ) {
+      formRef.current.setFieldValue(
+        "minimumContribution",
+        MIN_CONTRIBUTION_ILS_AMOUNT / 100
+      );
+    }
+  }, []);
+
   const handleCheckboxChange = useCallback<
     ChangeEventHandler<HTMLInputElement>
   >((event) => {
@@ -143,6 +155,7 @@ export default function Funding({
                 className="create-common-funding__field"
                 name="contributionType"
                 label="Contribution type"
+                onChange={handleContributionTypeChange}
                 styles={{ label: "create-common-funding__field-label" }}
               >
                 <ToggleButton value={CommonContributionType.OneTime}>
