@@ -15,7 +15,7 @@ const schema = Yup.object().shape({
     )
     .required("Please select a contribution type"),
   minimumContribution: Yup.number()
-    .min(MIN_CONTRIBUTION_ILS_AMOUNT, REQUIRED_MINIMUM_CONTRIBUTION_ERROR)
+    .min(MIN_CONTRIBUTION_ILS_AMOUNT / 100, REQUIRED_MINIMUM_CONTRIBUTION_ERROR)
     .required(REQUIRED_MINIMUM_CONTRIBUTION_ERROR),
   isCommonJoinFree: Yup.boolean(),
 });
