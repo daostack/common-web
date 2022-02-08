@@ -1,4 +1,10 @@
-import React, { useCallback, useRef, ReactElement, ReactNode } from "react";
+import React, {
+  useCallback,
+  useRef,
+  ChangeEventHandler,
+  ReactElement,
+  ReactNode,
+} from "react";
 import { useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
@@ -88,6 +94,17 @@ export default function Funding({
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
+  const handleCheckboxChange = useCallback<
+    ChangeEventHandler<HTMLInputElement>
+  >((event) => {
+    if (event.target.checked && formRef.current) {
+      formRef.current.setFieldValue(
+        "minimumContribution",
+        MIN_CONTRIBUTION_ILS_AMOUNT / 100
+      );
+    }
+  }, []);
+
   const handleContinueClick = useCallback(() => {
     if (formRef.current) {
       formRef.current.submitForm();
@@ -163,6 +180,7 @@ export default function Funding({
                   id="isCommonJoinFree"
                   name="isCommonJoinFree"
                   label="Let users join the Common without a personal contribution"
+                  onChange={handleCheckboxChange}
                   styles={{
                     label: "create-common-funding__checkbox-label",
                   }}
