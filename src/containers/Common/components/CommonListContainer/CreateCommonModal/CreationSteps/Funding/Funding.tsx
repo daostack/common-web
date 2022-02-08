@@ -11,12 +11,12 @@ import {
   ToggleButtonGroup,
   ToggleButton,
 } from "@/shared/components/Form/Formik";
-import { ScreenSize } from "@/shared/constants";
+import { ScreenSize, MIN_CONTRIBUTION_ILS_AMOUNT } from "@/shared/constants";
 import { CommonContributionType } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { formatPrice } from "@/shared/utils";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
-import { MIN_CONTRIBUTION_VALUE } from "./constants";
 import validationSchema from "./validationSchema";
 import "./index.scss";
 
@@ -50,7 +50,7 @@ const getCurrencyInputLabel = (
       : "monthly";
   const additionalText =
     isMobileView && contributionType === CommonContributionType.Monthly
-      ? ` (min. $${MIN_CONTRIBUTION_VALUE})`
+      ? ` (min. ${formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT)})`
       : "";
 
   return (
@@ -70,7 +70,7 @@ const getCurrencyInputDescription = (
 
   if (!isMobileView || contributionType !== CommonContributionType.Monthly) {
     descriptionPieces.push(
-      `The minimum contribution allowed by credit card is $${MIN_CONTRIBUTION_VALUE}.`
+      `The minimum contribution allowed by credit card is ${formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT)}.`
     );
   }
 
@@ -142,7 +142,7 @@ export default function Funding({
                   contributionType,
                   isMobileView
                 )}
-                placeholder={`$${MIN_CONTRIBUTION_VALUE}`}
+                placeholder={formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT)}
                 allowDecimals={false}
                 styles={{
                   label: "create-common-funding__field-label",
