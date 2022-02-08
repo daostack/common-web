@@ -7,7 +7,7 @@ import {
 } from "../../constants";
 import { useOutsideClick } from "../../hooks";
 
-import { UserAvatar } from "../../../shared/components";
+import { ButtonLink, UserAvatar } from "../../../shared/components";
 import { User } from "../../../shared/models";
 import { getMobileOperatingSystem, getUserName } from "../../utils";
 
@@ -46,11 +46,13 @@ const Account = ({ user, logOut, isTrusteeRoute }: AccountProps) => {
           {!isTrusteeRoute && (
             <>
               <div
+                className="account-wrapper__menu-item"
                 onClick={() => (window.location.href = ROUTE_PATHS.MY_COMMONS)}
               >
                 My Commons
               </div>
               <div
+                className="account-wrapper__menu-item"
                 onClick={() =>
                   window.open(
                     getMobileOperatingSystem() === MobileOperatingSystem.iOS
@@ -63,7 +65,17 @@ const Account = ({ user, logOut, isTrusteeRoute }: AccountProps) => {
               </div>
             </>
           )}
-          <div onClick={() => logOut()}>Log out</div>
+          <ButtonLink
+            className="account-wrapper__menu-item"
+            href="https://www.google.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Download Reports
+          </ButtonLink>
+          <div className="account-wrapper__menu-item" onClick={() => logOut()}>
+            Log out
+          </div>
         </div>
       )}
     </div>

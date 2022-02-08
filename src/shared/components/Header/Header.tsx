@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import classNames from "classnames";
 
-import { UserAvatar } from "../../../shared/components";
+import { ButtonLink, UserAvatar } from "../../../shared/components";
 import { useMatchRoute } from "../../../shared/hooks";
 import { Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
@@ -125,6 +125,13 @@ const Header = () => {
         </>
       )}
 
+      <ButtonLink
+        href="https://www.google.com"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Download Reports
+      </ButtonLink>
       {isAuthorized && isMobile() && (
         <button onClick={logOutUser}>Log out</button>
       )}
