@@ -17,9 +17,15 @@ interface AccountProps {
   user: User | null;
   logOut: () => void;
   isTrusteeRoute: boolean;
+  hasAdminAccess: boolean;
 }
 
-const Account = ({ user, logOut, isTrusteeRoute }: AccountProps) => {
+const Account = ({
+  user,
+  logOut,
+  isTrusteeRoute,
+  hasAdminAccess,
+}: AccountProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const wrapperRef = useRef(null);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
@@ -65,14 +71,16 @@ const Account = ({ user, logOut, isTrusteeRoute }: AccountProps) => {
               </div>
             </>
           )}
-          <ButtonLink
-            className="account-wrapper__menu-item"
-            href="https://www.google.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Download Reports
-          </ButtonLink>
+          {hasAdminAccess && (
+            <ButtonLink
+              className="account-wrapper__menu-item"
+              href="https://www.google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download Reports
+            </ButtonLink>
+          )}
           <div className="account-wrapper__menu-item" onClick={() => logOut()}>
             Log out
           </div>

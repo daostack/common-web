@@ -10,7 +10,8 @@ import {
 import classNames from "classnames";
 
 import { ButtonLink, UserAvatar } from "../../../shared/components";
-import { useMatchRoute } from "../../../shared/hooks";
+import { useAnyMandatoryRoles, useMatchRoute } from "../../../shared/hooks";
+import { UserRole } from "../../../shared/models";
 import { Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
@@ -33,6 +34,8 @@ import {
   setIsLoginModalShowing,
 } from "../../../containers/Auth/store/actions";
 
+const ADMIN_ACCESS_ROLES: UserRole[] = [UserRole.Trustee];
+
 const NON_EXACT_MATCH_ROUTE_PROPS: RouteProps = {
   exact: false,
 };
@@ -53,6 +56,7 @@ const Header = () => {
   const isNewUser = useSelector(selectIsNewUser());
   const isLoginModalShowing = useSelector(selectIsLoginModalShowing());
   const shouldDisplayAvatar = Boolean(screenSize === ScreenSize.Mobile && user);
+  const hasAdminAccess = useAnyMandatoryRoles(ADMIN_ACCESS_ROLES, user?.roles);
   const isTrusteeRoute = useMatchRoute(
     ROUTE_PATHS.TRUSTEE,
     NON_EXACT_MATCH_ROUTE_PROPS
@@ -125,13 +129,15 @@ const Header = () => {
         </>
       )}
 
-      <ButtonLink
-        href="https://www.google.com"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Download Reports
-      </ButtonLink>
+      {hasAdminAccess && (
+        <ButtonLink
+          href="https://www.google.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Download Reports
+        </ButtonLink>
+      )}
       {isAuthorized && isMobile() && (
         <button onClick={logOutUser}>Log out</button>
       )}
@@ -176,6 +182,7 @@ const Header = () => {
               user={user}
               logOut={logOutUser}
               isTrusteeRoute={isTrusteeRoute}
+              hasAdminAccess={hasAdminAccess}
             />
           )}
           {!isAuthorized && !isTrusteeRoute ? (
