@@ -45,7 +45,9 @@ export const AddProposalForm = ({
   hasPaymentMethod,
   addPaymentMethod,
 }: AddProposalFormInterface) => {
+  const [isAmountAdded, addAmountToValidation] = useState(false);
   const [showFileLoader, setShowFileLoader] = useState(false);
+  const [schema, setSchema] = useState(validationSchema);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [uploadedFiles, setUploadedFile] = useState<
     { title: string; value: string }[]
@@ -58,6 +60,22 @@ export const AddProposalForm = ({
     images: [],
     amount: 0,
   });
+
+  useEffect(() => {
+    if (common && common.balance && !isAmountAdded) {
+      const amount = Yup.object({
+        amount: Yup.number().max(
+          common.balance / 100,
+          `This amount exceeds the current balance of the Common (${formatPrice(
+            common?.balance
+          )}). Please select a lower amount or wait for the Common to raise more funds.`
+        ),
+      });
+      const validationSchema = schema.concat(amount);
+      setSchema(validationSchema);
+      addAmountToValidation(true);
+    }
+  }, [common, schema, isAmountAdded]);
 
   const selectFiles: ChangeEventHandler<HTMLInputElement> = (event) => {
     const file = event.target.files ? event.target.files[0] : null;
@@ -95,7 +113,7 @@ export const AddProposalForm = ({
 
   return (
     <Formik
-      validationSchema={validationSchema}
+      validationSchema={schema}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(false);
         saveProposalState({ ...values, images: uploadedFiles });
