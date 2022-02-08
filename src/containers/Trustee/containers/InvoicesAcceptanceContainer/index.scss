@@ -12,28 +12,12 @@ $sticky-info-mobile-height: 3.75rem;
   }
 }
 
-.invoices-acceptance-container__sticky-info-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.invoices-acceptance-container__tabs {
-  padding-top: 1.625rem;
+.invoices-acceptance-container__separator {
+  margin-bottom: 1.625rem;
 
   @include big-phone {
-    padding-top: 1.125rem;
+    margin-bottom: 1.125rem;
   }
-}
-
-.invoices-acceptance-container__sticky-actions-wrapper {
-  display: flex;
-  align-items: center;
-}
-
-.invoices-acceptance-container__report-dropdown {
-  min-width: 9.375rem;
-  margin-right: 0.5rem;
 }
 
 .invoices-acceptance-container {

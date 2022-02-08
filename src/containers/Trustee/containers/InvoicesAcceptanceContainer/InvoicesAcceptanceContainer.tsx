@@ -1,16 +1,8 @@
 import React, { useCallback, useEffect, useState, FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import {
-  Button,
-  Dropdown,
-  DropdownOption,
-  Separator,
-  Tabs,
-  Tab,
-  TabPanel,
-} from "../../../../shared/components";
-import { Reports, ROUTE_PATHS } from "../../../../shared/constants";
+import { Separator, Tabs, Tab, TabPanel } from "../../../../shared/components";
+import { ROUTE_PATHS } from "../../../../shared/constants";
 import { useQueryParams } from "../../../../shared/hooks";
 import { Proposal } from "../../../../shared/models";
 import { ProposalList } from "../../components/ProposalList";
@@ -36,25 +28,6 @@ import {
 } from "../constants";
 import "./index.scss";
 
-const OPTIONS: DropdownOption[] = [
-  {
-    text: "Payments In",
-    value: Reports.PayIns,
-  },
-  {
-    text: "Commons",
-    value: Reports.Commons,
-  },
-  {
-    text: "Payments Out",
-    value: Reports.PayOuts,
-  },
-  {
-    text: "Users",
-    value: Reports.Users,
-  },
-];
-
 const InvoicesAcceptanceContainer: FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -64,7 +37,6 @@ const InvoicesAcceptanceContainer: FC = () => {
       ? InvoicesPageTabState.Approved
       : InvoicesPageTabState.InProgress
   );
-  const [reportType, setReportType] = useState<Reports>(Reports.PayIns);
   const pendingApprovalProposals = useSelector(
     selectPendingApprovalProposals()
   );
@@ -87,10 +59,6 @@ const InvoicesAcceptanceContainer: FC = () => {
     },
     [history]
   );
-
-  const handleReportTypeSelect = useCallback((value: unknown) => {
-    setReportType(value as Reports);
-  }, []);
 
   const handleProposalView = useCallback(
     (proposal: Proposal) => {
@@ -123,26 +91,11 @@ const InvoicesAcceptanceContainer: FC = () => {
   return (
     <>
       <StickyInfo className="invoices-acceptance-container__sticky-info">
-        <Separator />
-        <div className="invoices-acceptance-container__sticky-info-content">
-          <Tabs
-            className="invoices-acceptance-container__tabs"
-            value={tab}
-            onChange={handleTabChange}
-          >
-            <Tab label="In progress" value={InvoicesPageTabState.InProgress} />
-            <Tab label="Approved" value={InvoicesPageTabState.Approved} />
-          </Tabs>
-          <div className="invoices-acceptance-container__sticky-actions-wrapper">
-            <Dropdown
-              className="invoices-acceptance-container__report-dropdown"
-              value={reportType}
-              options={OPTIONS}
-              onSelect={handleReportTypeSelect}
-            />
-            <Button>Generate Report</Button>
-          </div>
-        </div>
+        <Separator className="invoices-acceptance-container__separator" />
+        <Tabs value={tab} onChange={handleTabChange}>
+          <Tab label="In progress" value={InvoicesPageTabState.InProgress} />
+          <Tab label="Approved" value={InvoicesPageTabState.Approved} />
+        </Tabs>
       </StickyInfo>
       <div className="invoices-acceptance-container">
         <TabPanel value={tab} panelValue={InvoicesPageTabState.InProgress}>
