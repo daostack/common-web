@@ -1,4 +1,4 @@
-export enum Reports {
+export enum Report {
   PayIns = "payins",
   PayOuts = "payouts",
   Users = "users",
