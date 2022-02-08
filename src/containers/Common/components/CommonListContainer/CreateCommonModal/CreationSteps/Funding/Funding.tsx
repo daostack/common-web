@@ -26,6 +26,8 @@ import { Progress } from "../Progress";
 import validationSchema from "./validationSchema";
 import "./index.scss";
 
+const DEFAULT_CONTRIBUTION_AMOUNT = MIN_CONTRIBUTION_ILS_AMOUNT / 100;
+
 interface FundingProps {
   currentStep: number;
   onFinish: (data: Partial<IntermediateCreateCommonPayload>) => void;
@@ -101,7 +103,7 @@ export default function Funding({
     ) {
       formRef.current.setFieldValue(
         "minimumContribution",
-        MIN_CONTRIBUTION_ILS_AMOUNT / 100
+        DEFAULT_CONTRIBUTION_AMOUNT
       );
     }
   }, []);
@@ -112,7 +114,7 @@ export default function Funding({
     if (event.target.checked && formRef.current) {
       formRef.current.setFieldValue(
         "minimumContribution",
-        MIN_CONTRIBUTION_ILS_AMOUNT / 100
+        DEFAULT_CONTRIBUTION_AMOUNT
       );
     }
   }, []);
@@ -127,8 +129,12 @@ export default function Funding({
     (values) => {
       onFinish({
         contributionType: values.contributionType,
-        contributionAmount: values.minimumContribution || 0,
-        zeroContribution: values.isCommonJoinFree,
+        contributionAmount:
+          Number(values.minimumContribution) || DEFAULT_CONTRIBUTION_AMOUNT,
+        zeroContribution:
+          values.contributionType === CommonContributionType.OneTime
+            ? values.isCommonJoinFree
+            : false,
       });
     },
     [onFinish]
