@@ -16,6 +16,7 @@ import { Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
 import { getScreenSize } from "../../store/selectors";
+import { getReportsDownloadURL } from "../../utils";
 import DownloadCommonApp from "../DownloadCommonApp/DownloadCommonApp";
 import MobileLinks from "../MobileLinks/MobileLinks";
 import "./index.scss";
@@ -133,7 +134,7 @@ const Header = () => {
         <>
           {hasAdminAccess && (
             <ButtonLink
-              href="https://www.google.com"
+              href={getReportsDownloadURL()}
               target="_blank"
               rel="noopener noreferrer"
             >

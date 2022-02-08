@@ -9,7 +9,7 @@ import { useOutsideClick } from "../../hooks";
 
 import { ButtonLink, UserAvatar } from "../../../shared/components";
 import { User } from "../../../shared/models";
-import { getMobileOperatingSystem, getUserName } from "../../utils";
+import { getMobileOperatingSystem, getReportsDownloadURL, getUserName } from "../../utils";
 
 import "./index.scss";
 
@@ -74,7 +74,7 @@ const Account = ({
           {hasAdminAccess && (
             <ButtonLink
               className="account-wrapper__menu-item"
-              href="https://www.google.com"
+              href={getReportsDownloadURL()}
               target="_blank"
               rel="noopener noreferrer"
             >
