@@ -1,4 +1,10 @@
-import React, { useCallback, useRef, ReactElement, ReactNode } from "react";
+import React, {
+  useCallback,
+  useRef,
+  ChangeEventHandler,
+  ReactElement,
+  ReactNode,
+} from "react";
 import { useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
@@ -11,14 +17,16 @@ import {
   ToggleButtonGroup,
   ToggleButton,
 } from "@/shared/components/Form/Formik";
-import { ScreenSize } from "@/shared/constants";
+import { ScreenSize, MIN_CONTRIBUTION_ILS_AMOUNT } from "@/shared/constants";
 import { CommonContributionType } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { formatPrice } from "@/shared/utils";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
-import { MIN_CONTRIBUTION_VALUE } from "./constants";
 import validationSchema from "./validationSchema";
 import "./index.scss";
+
+const DEFAULT_CONTRIBUTION_AMOUNT = MIN_CONTRIBUTION_ILS_AMOUNT / 100;
 
 interface FundingProps {
   currentStep: number;
@@ -50,7 +58,7 @@ const getCurrencyInputLabel = (
       : "monthly";
   const additionalText =
     isMobileView && contributionType === CommonContributionType.Monthly
-      ? ` (min. $${MIN_CONTRIBUTION_VALUE})`
+      ? ` (min. ${formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT)})`
       : "";
 
   return (
@@ -70,7 +78,9 @@ const getCurrencyInputDescription = (
 
   if (!isMobileView || contributionType !== CommonContributionType.Monthly) {
     descriptionPieces.push(
-      `The minimum contribution allowed by credit card is $${MIN_CONTRIBUTION_VALUE}.`
+      `The minimum contribution allowed by credit card is ${formatPrice(
+        MIN_CONTRIBUTION_ILS_AMOUNT
+      )}.`
     );
   }
 
@@ -86,6 +96,29 @@ export default function Funding({
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
+  const handleContributionTypeChange = useCallback((value: unknown) => {
+    if (
+      value === CommonContributionType.OneTime &&
+      formRef.current?.values.isCommonJoinFree
+    ) {
+      formRef.current.setFieldValue(
+        "minimumContribution",
+        DEFAULT_CONTRIBUTION_AMOUNT
+      );
+    }
+  }, []);
+
+  const handleCheckboxChange = useCallback<
+    ChangeEventHandler<HTMLInputElement>
+  >((event) => {
+    if (event.target.checked && formRef.current) {
+      formRef.current.setFieldValue(
+        "minimumContribution",
+        DEFAULT_CONTRIBUTION_AMOUNT
+      );
+    }
+  }, []);
+
   const handleContinueClick = useCallback(() => {
     if (formRef.current) {
       formRef.current.submitForm();
@@ -96,8 +129,12 @@ export default function Funding({
     (values) => {
       onFinish({
         contributionType: values.contributionType,
-        contributionAmount: values.minimumContribution || 0,
-        zeroContribution: values.isCommonJoinFree,
+        contributionAmount:
+          Number(values.minimumContribution) || DEFAULT_CONTRIBUTION_AMOUNT,
+        zeroContribution:
+          values.contributionType === CommonContributionType.OneTime
+            ? values.isCommonJoinFree
+            : false,
       });
     },
     [onFinish]
@@ -118,12 +155,13 @@ export default function Funding({
           validationSchema={validationSchema}
           validateOnMount
         >
-          {({ values: { contributionType }, isValid }) => (
+          {({ values: { contributionType, isCommonJoinFree }, isValid }) => (
             <Form className="create-common-funding__form">
               <ToggleButtonGroup
                 className="create-common-funding__field"
                 name="contributionType"
                 label="Contribution type"
+                onChange={handleContributionTypeChange}
                 styles={{ label: "create-common-funding__field-label" }}
               >
                 <ToggleButton value={CommonContributionType.OneTime}>
@@ -142,7 +180,11 @@ export default function Funding({
                   contributionType,
                   isMobileView
                 )}
-                placeholder={`$${MIN_CONTRIBUTION_VALUE}`}
+                placeholder={formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT)}
+                disabled={
+                  contributionType === CommonContributionType.OneTime &&
+                  isCommonJoinFree
+                }
                 allowDecimals={false}
                 styles={{
                   label: "create-common-funding__field-label",
@@ -157,6 +199,7 @@ export default function Funding({
                   id="isCommonJoinFree"
                   name="isCommonJoinFree"
                   label="Let users join the Common without a personal contribution"
+                  onChange={handleCheckboxChange}
                   styles={{
                     label: "create-common-funding__checkbox-label",
                   }}
