@@ -70,7 +70,9 @@ const getCurrencyInputDescription = (
 
   if (!isMobileView || contributionType !== CommonContributionType.Monthly) {
     descriptionPieces.push(
-      `The minimum contribution allowed by credit card is ${formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT)}.`
+      `The minimum contribution allowed by credit card is ${formatPrice(
+        MIN_CONTRIBUTION_ILS_AMOUNT
+      )}.`
     );
   }
 
@@ -143,7 +145,10 @@ export default function Funding({
                   isMobileView
                 )}
                 placeholder={formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT)}
-                disabled={contributionType === CommonContributionType.OneTime && isCommonJoinFree}
+                disabled={
+                  contributionType === CommonContributionType.OneTime &&
+                  isCommonJoinFree
+                }
                 allowDecimals={false}
                 styles={{
                   label: "create-common-funding__field-label",
