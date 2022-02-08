@@ -10,14 +10,7 @@ const schema = Yup.object().shape({
     .required("Please select a contribution type"),
   minimumContribution: Yup.number()
     .min(MIN_CONTRIBUTION_ILS_AMOUNT, REQUIRED_MINIMUM_CONTRIBUTION_ERROR)
-    .when("isCommonJoinFree", {
-      is: false,
-      then: Yup.number().required(REQUIRED_MINIMUM_CONTRIBUTION_ERROR),
-    })
-    .when("contributionType", {
-      is: CommonContributionType.Monthly,
-      then: Yup.number().required(REQUIRED_MINIMUM_CONTRIBUTION_ERROR),
-    }),
+    .required(REQUIRED_MINIMUM_CONTRIBUTION_ERROR),
   isCommonJoinFree: Yup.boolean(),
 });
 
