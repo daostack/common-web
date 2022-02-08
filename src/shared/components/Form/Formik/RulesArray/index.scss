@@ -1,0 +1,75 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.description-array {
+  .description-array__item {
+    position: relative;
+  }
+
+  .description-array__title-label {
+    font-size: $xsmall;
+  }
+
+  .description-array__title-description {
+    max-width: 376px;
+    margin-bottom: 16px;
+    font-size: $xsmall;
+
+    @include big-phone {
+      font-size: $xxsmall;
+    }
+  }
+
+  .description-array__title-input {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .description-array__title-input--without-bottom-border {
+    border-bottom: 0;
+  }
+
+  .description-array__title-error {
+    display: none;
+  }
+
+  .description-array__description-input-wrapper {
+    position: relative;
+  }
+
+  .description-array__description-input {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  .description-array__description-input--without-top-border {
+    border-top: 0;
+  }
+  .description-array__description-input--with-delete-button {
+    padding-right: 32px;
+  }
+
+  .description-array__description-error {
+    display: none;
+  }
+
+  .description-array__remove-button {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: 8px;
+    border-radius: 50%;
+    transition: opacity .2s;
+
+    &:hover {
+      opacity: .8;
+    }
+  }
+
+  .description-array__delete-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .description-array__add-button {
+    margin-top: 16px;
+  }
+}

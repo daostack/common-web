@@ -7,7 +7,7 @@ import {
   DiscussionMessage,
   Proposal,
 } from "../../../shared/models";
-import { startLoading, stopLoading } from "../../../shared/store/actions";
+import { startLoading, stopLoading } from "@/shared/store/actions";
 import {
   createRequestToJoin as createRequestToJoinApi,
   fetchCommonList,
@@ -17,9 +17,18 @@ import {
   fetchOwners,
   fetchDiscussionsMessages,
   fetchUserProposals,
+  createDiscussion,
+  subscribeToCommonDiscussion,
+  addMessageToDiscussion,
+  subscribeToMessages,
+  createFundingProposal,
+  subscribeToCommonProposal,
+  checkUserPaymentMethod,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
+import store from "@/index";
+import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
 
 export function* getCommonsList(): Generator {
   try {
@@ -57,9 +66,7 @@ export function* getCommonDetail(
   }
 }
 
-export function* loadCommonDiscussionList(
-  action: ReturnType<typeof actions.loadCommonDiscussionList.request>
-): Generator {
+export function* loadCommonDiscussionList(): Generator {
   try {
     yield put(startLoading());
     const discussions: Discussion[] = (yield select(
@@ -94,20 +101,19 @@ export function* loadDiscussionDetail(
   try {
     yield put(startLoading());
     const discussion = { ...action.payload };
-    if (!discussion.isLoaded) {
-      const { discussionMessage } = action.payload;
 
-      const ownerIds = Array.from(
-        new Set(discussionMessage?.map((d) => d.ownerId))
-      );
-      const owners = (yield fetchOwners(ownerIds)) as User[];
+    const { discussionMessage } = action.payload;
 
-      const loadedDisscussionMessage = discussionMessage?.map((d) => {
-        d.owner = owners.find((o) => o.uid === d.ownerId);
-        return d;
-      });
-      discussion.discussionMessage = loadedDisscussionMessage;
-    }
+    const ownerIds = Array.from(
+      new Set(discussionMessage?.map((d) => d.ownerId))
+    );
+    const owners = (yield fetchOwners(ownerIds)) as User[];
+
+    const loadedDisscussionMessage = discussionMessage?.map((d) => {
+      d.owner = owners.find((o) => o.uid === d.ownerId);
+      return d;
+    });
+    discussion.discussionMessage = loadedDisscussionMessage;
 
     yield put(actions.loadDisscussionDetail.success(discussion));
     yield put(stopLoading());
@@ -155,19 +161,18 @@ export function* loadProposalDetail(
   try {
     yield put(startLoading());
     const proposal = { ...action.payload };
-    if (!proposal.isLoaded) {
-      const { discussionMessage } = action.payload;
 
-      const ownerIds = Array.from(
-        new Set(discussionMessage?.map((d) => d.ownerId))
-      );
-      const owners = (yield fetchOwners(ownerIds)) as User[];
-      const loadedDisscussionMessage = discussionMessage?.map((d) => {
-        d.owner = owners.find((o) => o.uid === d.ownerId);
-        return d;
-      });
-      proposal.discussionMessage = loadedDisscussionMessage;
-    }
+    const { discussionMessage } = action.payload;
+
+    const ownerIds = Array.from(
+      new Set(discussionMessage?.map((d) => d.ownerId))
+    );
+    const owners = (yield fetchOwners(ownerIds)) as User[];
+    const loadedDisscussionMessage = discussionMessage?.map((d) => {
+      d.owner = owners.find((o) => o.uid === d.ownerId);
+      return d;
+    });
+    proposal.discussionMessage = loadedDisscussionMessage;
 
     yield put(actions.loadProposalDetail.success(proposal));
     yield put(stopLoading());
@@ -192,6 +197,102 @@ export function* loadUserProposalList(
   }
 }
 
+export function* createDiscussionSaga(
+  action: ReturnType<typeof actions.createDiscussion.request>
+): Generator {
+  try {
+    yield put(startLoading());
+
+    yield createDiscussion(action.payload.payload);
+
+    yield call(
+      subscribeToCommonDiscussion,
+      action.payload.payload.commonId,
+      async (data) => {
+        const d = data.find(
+          (d: Discussion) => d.title === action.payload.payload.title
+        );
+
+        if (d) {
+          d.owner = store.getState().auth.user;
+          action.payload.callback(d);
+        }
+
+        const ds = await fetchCommonDiscussions(
+          action.payload.payload.commonId
+        );
+
+        store.dispatch(actions.setDiscussion(ds));
+        store.dispatch(actions.loadCommonDiscussionList.request());
+      }
+    );
+
+    yield put(stopLoading());
+  } catch (e) {
+    yield put(actions.createDiscussion.failure(e));
+    yield put(stopLoading());
+  }
+}
+
+export function* addMessageToDiscussionSaga(
+  action: ReturnType<typeof actions.addMessageToDiscussion.request>
+): Generator {
+  try {
+    yield put(startLoading());
+
+    yield addMessageToDiscussion(action.payload.payload);
+
+    yield call(
+      subscribeToMessages,
+      action.payload.payload.discussionId,
+      async (data) => {
+        const { discussion } = action.payload;
+
+        discussion.discussionMessage = data.sort(
+          (m: DiscussionMessage, mP: DiscussionMessage) =>
+            m.createTime?.seconds - mP.createTime?.seconds
+        );
+        store.dispatch(actions.loadDisscussionDetail.request(discussion));
+      }
+    );
+
+    yield put(stopLoading());
+  } catch (e) {
+    yield put(actions.addMessageToDiscussion.failure(e));
+    yield put(stopLoading());
+  }
+}
+
+export function* addMessageToProposalSaga(
+  action: ReturnType<typeof actions.addMessageToProposal.request>
+): Generator {
+  try {
+    yield put(startLoading());
+
+    yield addMessageToDiscussion(action.payload.payload);
+
+    yield call(
+      subscribeToMessages,
+      action.payload.payload.discussionId,
+      async (data) => {
+        const { proposal } = action.payload;
+
+        proposal.discussionMessage = data.sort(
+          (m: DiscussionMessage, mP: DiscussionMessage) =>
+            m.createTime?.seconds - mP.createTime?.seconds
+        );
+
+        store.dispatch(actions.loadProposalDetail.request(proposal));
+      }
+    );
+
+    yield put(stopLoading());
+  } catch (e) {
+    yield put(actions.addMessageToProposal.failure(e));
+    yield put(stopLoading());
+  }
+}
+
 export function* createRequestToJoin(
   action: ReturnType<typeof actions.createRequestToJoin.request>
 ): Generator {
@@ -207,7 +308,58 @@ export function* createRequestToJoin(
   }
 }
 
-function* commonsSaga() {
+export function* createFundingProposalSaga(
+  action: ReturnType<typeof actions.createFundingProposal.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    const proposal = (yield createFundingProposal(
+      action.payload.payload
+    )) as Proposal;
+
+    yield call(
+      subscribeToCommonProposal,
+      action.payload.payload.commonId,
+      async (data) => {
+        const ds = await fetchCommonProposals(action.payload.payload.commonId);
+
+        store.dispatch(actions.setProposals(ds));
+        store.dispatch(actions.loadProposalList.request());
+        store.dispatch(stopLoading());
+        action.payload.callback(AddProposalSteps.SUCCESS);
+      }
+    );
+
+    yield put(actions.createFundingProposal.success(proposal));
+    yield put(stopLoading());
+  } catch (error) {
+    action.payload.callback(AddProposalSteps.FAILURE);
+    yield put(actions.createFundingProposal.failure(error));
+    yield put(stopLoading());
+  }
+}
+
+export function* checkUserPaymentMethodSaga(
+  action: ReturnType<typeof actions.checkUserPaymentMethod.request>
+): Generator {
+  try {
+    const { user } = store.getState().auth;
+    if (user && user.uid) {
+      yield put(startLoading());
+
+      const hasPaymentMethod = yield checkUserPaymentMethod(user.uid);
+
+      yield put(actions.checkUserPaymentMethod.success(!!hasPaymentMethod));
+
+      yield put(stopLoading());
+    }
+  } catch (e) {
+    yield put(actions.checkUserPaymentMethod.failure(e));
+    yield put(stopLoading());
+  }
+}
+
+export function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
   yield takeLatest(
@@ -218,7 +370,24 @@ function* commonsSaga() {
   yield takeLatest(actions.loadProposalList.request, loadProposalList);
   yield takeLatest(actions.loadProposalDetail.request, loadProposalDetail);
   yield takeLatest(actions.loadUserProposalList.request, loadUserProposalList);
+  yield takeLatest(actions.createDiscussion.request, createDiscussionSaga);
+  yield takeLatest(
+    actions.addMessageToDiscussion.request,
+    addMessageToDiscussionSaga
+  );
   yield takeLatest(actions.createRequestToJoin.request, createRequestToJoin);
+  yield takeLatest(
+    actions.createFundingProposal.request,
+    createFundingProposalSaga
+  );
+  yield takeLatest(
+    actions.checkUserPaymentMethod.request,
+    checkUserPaymentMethodSaga
+  );
+  yield takeLatest(
+    actions.addMessageToProposal.request,
+    addMessageToProposalSaga
+  );
 }
 
 export default commonsSaga;

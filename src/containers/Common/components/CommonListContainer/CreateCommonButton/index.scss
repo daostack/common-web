@@ -1,0 +1,41 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.create-common-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .create-common-button-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .create-common-button-text {
+    margin-left: 8px;
+  }
+
+  @include big-phone {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 2;
+    box-shadow: 0 0 6px 0 $fixed-button-shadow;
+
+    &.button-blue {
+      width: 64px;
+      height: 64px;
+      min-width: unset;
+      border-radius: 50%;
+    }
+
+    .create-common-button-icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    .create-common-button-text {
+      display: none;
+    }
+  }
+}

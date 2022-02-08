@@ -1,6 +1,9 @@
-import { ApiEndpoint } from "../../../shared/constants";
+import { ApiEndpoint } from "@/shared/constants";
 import Api from "../../../services/Api";
-import { ProposalJoinRequestData } from "../../../shared/interfaces/api/proposal";
+import {
+  CreateFundingRequestProposalPayload,
+  ProposalJoinRequestData,
+} from "@/shared/interfaces/api/proposal";
 import {
   Card,
   Collection,
@@ -16,6 +19,11 @@ import {
   transformFirebaseDataSingle,
 } from "../../../shared/utils";
 import firebase from "../../../shared/utils/firebase";
+import {
+  AddMessageToProposalDto,
+  CreateDiscussionDto,
+} from "@/containers/Common/interfaces";
+import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
 
 export async function fetchCommonDiscussions(commonId: string) {
   const commons = await firebase
@@ -66,7 +74,11 @@ export async function fetchCommonList(): Promise<Common[]> {
 }
 
 export async function fetchCommonDetail(id: string): Promise<Common> {
-  const common = await firebase.firestore().collection(Collection.Daos).doc(id).get();
+  const common = await firebase
+    .firestore()
+    .collection(Collection.Daos)
+    .doc(id)
+    .get();
   const data = transformFirebaseDataSingle<Common>(common);
   return data;
 }
@@ -86,7 +98,11 @@ export async function fetchOwners(ownerids: string[]) {
 
   const users = await Promise.all(
     idsChunks.map((ids: string[]) =>
-      firebase.firestore().collection(Collection.Users).where("uid", "in", ids).get()
+      firebase
+        .firestore()
+        .collection(Collection.Users)
+        .where("uid", "in", ids)
+        .get()
     )
   );
 
@@ -149,6 +165,80 @@ export function subscribeToCardChange(
     });
 }
 
+export function createDiscussion(payload: CreateDiscussionDto) {
+  try {
+    return firebase
+      .firestore()
+      .collection(Collection.Discussion)
+      .doc()
+      .set(payload)
+      .then((value) => {
+        return value;
+      });
+  } catch (e) {
+    console.log("createDiscussion", e);
+  }
+}
+
+export function addMessageToDiscussion(
+  payload: AddMessageToDiscussionDto | AddMessageToProposalDto
+) {
+  try {
+    return firebase
+      .firestore()
+      .collection(Collection.DiscussionMessage)
+      .doc()
+      .set(payload)
+      .then((value) => {
+        return value;
+      });
+  } catch (e) {
+    console.log("addMessageToDiscussion", e);
+  }
+}
+
+export function subscribeToCommonDiscussion(
+  commonId: string,
+  callback: (payload: any) => void
+): () => void {
+  const query = firebase
+    .firestore()
+    .collection(Collection.Discussion)
+    .where("commonId", "==", commonId);
+  return query.onSnapshot((snapshot) => {
+    callback(transformFirebaseDataList(snapshot));
+  });
+}
+
+export function subscribeToCommonProposal(
+  commonId: string,
+  callback: (payload: any) => void
+): () => void {
+  const query = firebase
+    .firestore()
+    .collection(Collection.Proposals)
+    .where("commonId", "==", commonId);
+  const subscribe = query.onSnapshot((snapshot) => {
+    callback(transformFirebaseDataList(snapshot));
+    setTimeout(subscribe, 0);
+  });
+  return subscribe;
+}
+
+export function subscribeToMessages(
+  discussionId: string,
+  callback: (payload: any) => void
+): () => void {
+  const query = firebase
+    .firestore()
+    .collection(Collection.DiscussionMessage)
+    .where("discussionId", "==", discussionId);
+
+  return query.onSnapshot((snapshot) => {
+    callback(transformFirebaseDataList(snapshot));
+  });
+}
+
 export async function createRequestToJoin(
   requestData: ProposalJoinRequestData
 ): Promise<Proposal> {
@@ -158,4 +248,25 @@ export async function createRequestToJoin(
   );
 
   return convertObjectDatesToFirestoreTimestamps(data);
+}
+
+export async function createFundingProposal(
+  requestData: CreateFundingRequestProposalPayload
+): Promise<Proposal> {
+  const { data } = await Api.post<Proposal>(
+    ApiEndpoint.CreateFunding,
+    requestData
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
+}
+
+export async function checkUserPaymentMethod(userId: string): Promise<boolean> {
+  const cards = await firebase
+    .firestore()
+    .collection(Collection.Cards)
+    .where("ownerId", "==", userId)
+    .get();
+
+  return !!cards.docs.length;
 }

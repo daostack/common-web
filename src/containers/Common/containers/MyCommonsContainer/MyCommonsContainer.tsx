@@ -92,7 +92,7 @@ export default function MyCommonsContainer() {
         </div>
       ) : null}
 
-      {myCommons.length === 0 && !loading && (
+      {myCommons.length === 0 && pendingCommons.length === 0 && !loading && (
         <EmptyTabComponent
           currentTab={"my-commons"}
           message={"This is where you can find your future commons"}

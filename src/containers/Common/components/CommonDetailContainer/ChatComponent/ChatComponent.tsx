@@ -1,18 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Share } from "../../../../../shared/components";
-import { DiscussionMessage } from "../../../../../shared/models";
+import { DiscussionMessage } from "@/shared/models";
 import ChatMessage from "./ChatMessage";
 import "./index.scss";
-import { formatDate } from "../../../../../shared/utils";
-import { BASE_URL, Colors, ROUTE_PATHS } from "../../../../../shared/constants";
+import { formatDate } from "@/shared/utils";
+import { BASE_URL, Colors, ROUTE_PATHS } from "@/shared/constants";
+import { EmptyTabComponent } from "@/containers/Common/components/CommonDetailContainer";
 
 interface ChatComponentInterface {
-  commonId: string
+  commonId: string;
   discussionMessage: DiscussionMessage[];
   onOpenJoinModal: () => void;
   isCommonMember?: boolean;
   isJoiningPending: boolean;
+  isAuthorized?: boolean;
+  sendMessage?: (text: string) => void;
 }
 
 function groupday(acc: any, currentValue: DiscussionMessage): Messages {
@@ -43,7 +46,10 @@ export default function ChatComponent({
   onOpenJoinModal,
   isCommonMember,
   isJoiningPending,
+  isAuthorized,
+  sendMessage,
 }: ChatComponentInterface) {
+  const [message, setMessage] = useState("");
   const shouldShowJoinToCommonButton = !isCommonMember && !isJoiningPending;
   const messages = discussionMessage.reduce(groupday, {});
 
@@ -51,7 +57,7 @@ export default function ChatComponent({
 
   return (
     <div className="chat-wrapper">
-      <div className="messages">
+      <div className={`messages ${!dateList.length ? "empty" : ""}`}>
         {dateList.map((day) => {
           const date = new Date(Number(day));
           return (
@@ -67,18 +73,61 @@ export default function ChatComponent({
             </div>
           );
         })}
+
+        {!dateList.length ? (
+          <EmptyTabComponent
+            currentTab="messages"
+            message={
+              "Have any thoughts? Share them with other members by adding the first comment."
+            }
+            title="No comments yet"
+            isCommonMember={isCommonMember}
+            isJoiningPending={isJoiningPending}
+          />
+        ) : null}
       </div>
-      <div className="bottom-chat-wrapper">
-        <div className="text">Download the Common app to join the discussion</div>
-        <div className="button-wrapper">
-          {shouldShowJoinToCommonButton && (
-            <button className="button-blue join-the-effort-btn" onClick={onOpenJoinModal}>
-              Join the effort
-            </button>
-          )}
-          <Share url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${commonId}`} type="popup" color={Colors.lightPurple} top="-130px" />
+      {!isAuthorized ? (
+        <div className="bottom-chat-wrapper">
+          <div className="text">
+            Download the Common app to join the discussion
+          </div>
+          <div className="button-wrapper">
+            {shouldShowJoinToCommonButton && (
+              <button
+                className="button-blue join-the-effort-btn"
+                onClick={onOpenJoinModal}
+              >
+                Join the effort
+              </button>
+            )}
+            <Share
+              url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${commonId}`}
+              type="popup"
+              color={Colors.lightPurple}
+              top="-130px"
+            />
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="bottom-chat-wrapper">
+          <input
+            className="message-input"
+            placeholder="What do you think?"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+          <button
+            className="button-blue send"
+            onClick={() => {
+              sendMessage && sendMessage(message);
+              setMessage("");
+            }}
+            disabled={!message.length}
+          >
+            Send
+          </button>
+        </div>
+      )}
     </div>
   );
 }

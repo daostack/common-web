@@ -127,6 +127,13 @@
             display: flex;
             align-items: center;
             margin-right: 1.5rem;
+
+            .member-label__icon {
+              flex-shrink: 0;
+              width: 12px;
+              height: 12px;
+              margin-right: 6px;
+            }
           }
         }
       }

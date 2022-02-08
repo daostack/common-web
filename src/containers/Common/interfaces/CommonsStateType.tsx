@@ -11,4 +11,5 @@ export interface CommonsStateType {
   currentDiscussion: Discussion | null;
   currentProposal: Proposal | null;
   userProposals: Proposal[];
+  doesUserHasPaymentMethod: boolean;
 }

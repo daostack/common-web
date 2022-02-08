@@ -1,0 +1,91 @@
+@import "../../../../../constants.scss";
+@import "../../../../../styles/sizes";
+.add-discussion-wrapper {
+  width: 576px;
+  margin: 0 auto;
+
+  .add-discussion-title {
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: 1.125rem;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.22;
+    letter-spacing: normal;
+    text-align: center;
+    color: $secondary-blue;
+    margin-top: -22px;
+    margin-bottom: 40px;
+  }
+
+  .discussion-form-wrapper {
+    .input-wrapper {
+      margin-bottom: 24px;
+
+      label {
+        font-family: NunitoSans;
+        font-size: 0.75rem;
+        line-height: 1.33;
+        letter-spacing: normal;
+        color: $secondary-blue;
+        margin-bottom: 10px;
+        position: relative;
+        width: 100%;
+        box-sizing: border-box;
+        display: block;
+
+        .required {
+          font-family: NunitoSans;
+          position: absolute;
+          right: 0;
+          font-size: 0.875rem;
+          font-style: italic;
+          text-align: right;
+          color: $light-gray-3;
+        }
+      }
+
+      .text-area-wrapper {
+        &.error {
+          input {
+            border: 1px solid $error;
+          }
+        }
+
+
+        .big {
+          textarea {
+            height: 224px;
+          }
+        }
+
+        .error-message {
+          font-family: NunitoSans;
+          font-size: 0.875rem;
+          line-height: 1.43;
+          letter-spacing: normal;
+          color: $error;
+        }
+      }
+    }
+
+    .action-wrapper {
+      width: 100%;
+      box-sizing: border-box;
+      display: block;
+      margin: 66px auto 0;
+      text-align: center;
+    }
+  }
+}
+
+
+@include big-phone {
+  .add-discussion-wrapper {
+    width: 330px;
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+    justify-content: center;
+  }
+}
