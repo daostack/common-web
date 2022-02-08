@@ -1,27 +1,36 @@
-import React, { useCallback, FC } from "react";
+import React, { useCallback, ChangeEventHandler, FC } from "react";
 import { useField } from "formik";
-
 import {
   Checkbox as BaseCheckbox,
   CheckboxProps as BaseCheckboxProps,
 } from "../../Checkbox";
 
-type CheckboxProps = Omit<BaseCheckboxProps, "type" | "error" | "checked" | "onChange">;
+type CheckboxProps = Omit<BaseCheckboxProps, "type" | "error" | "checked">;
 
 const Checkbox: FC<CheckboxProps> = (props) => {
-  const [{ value }, { touched, error }, { setTouched, setValue }] = useField(props.name);
+  const { onChange, ...restProps } = props;
+  const [{ value }, { touched, error }, { setTouched, setValue }] = useField(
+    props.name
+  );
 
-  const handleChange = useCallback(() => {
-    setTouched(true);
-    setValue(!value);
-  }, [setTouched, setValue, value]);
+  const handleChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    (event) => {
+      setTouched(true);
+      setValue(event.target.checked);
+
+      if (onChange) {
+        onChange(event);
+      }
+    },
+    [setTouched, setValue, onChange]
+  );
 
   return (
     <BaseCheckbox
-      {...props}
+      {...restProps}
       checked={value}
       onChange={handleChange}
-      error={touched ? error : ''}
+      error={touched ? error : ""}
     />
   );
 };
