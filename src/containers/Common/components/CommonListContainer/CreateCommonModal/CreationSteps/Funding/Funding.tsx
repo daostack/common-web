@@ -118,7 +118,7 @@ export default function Funding({
           validationSchema={validationSchema}
           validateOnMount
         >
-          {({ values: { contributionType }, isValid }) => (
+          {({ values: { contributionType, isCommonJoinFree }, isValid }) => (
             <Form className="create-common-funding__form">
               <ToggleButtonGroup
                 className="create-common-funding__field"
@@ -143,6 +143,7 @@ export default function Funding({
                   isMobileView
                 )}
                 placeholder={formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT)}
+                disabled={contributionType === CommonContributionType.OneTime && isCommonJoinFree}
                 allowDecimals={false}
                 styles={{
                   label: "create-common-funding__field-label",
