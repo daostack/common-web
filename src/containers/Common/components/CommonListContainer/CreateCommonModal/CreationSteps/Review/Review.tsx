@@ -32,6 +32,7 @@ export default function Review({
     byline: tagline,
     links = [],
     rules = [],
+    zeroContribution,
   } = creationData;
   const screenSize = useSelector(getScreenSize());
   const [selectedCommonImage, setSelectedCommonImage] = useState<
@@ -55,7 +56,7 @@ export default function Review({
     let text: ReactNode =
       "Members will be able to join the Common without a personal contribution";
 
-    if (minFeeToJoin || contributionType !== CommonContributionType.OneTime) {
+    if (!zeroContribution) {
       text = (
         <>
           {formattedMinFeeToJoin}{" "}
