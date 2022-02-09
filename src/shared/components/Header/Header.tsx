@@ -9,14 +9,14 @@ import {
 } from "react-router-dom";
 import classNames from "classnames";
 
-import { ButtonLink, UserAvatar } from "../../../shared/components";
+import { UserAvatar } from "../../../shared/components";
 import { useAnyMandatoryRoles, useMatchRoute } from "../../../shared/hooks";
 import { UserRole } from "../../../shared/models";
-import { Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
+import { ApiEndpoint, Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
 import { getScreenSize } from "../../store/selectors";
-import { getReportsDownloadURL } from "../../utils";
+import { saveByURL } from "../../utils";
 import DownloadCommonApp from "../DownloadCommonApp/DownloadCommonApp";
 import MobileLinks from "../MobileLinks/MobileLinks";
 import "./index.scss";
@@ -74,6 +74,10 @@ const Header = () => {
   const handleClose = useCallback(() => {
     dispatch(setIsLoginModalShowing(false));
   }, [dispatch]);
+
+  const handleReportsDownload = () => {
+    saveByURL(ApiEndpoint.GetReports, "reports.zip");
+  };
 
   React.useEffect(() => {
     window.addEventListener("scroll", () => {
@@ -133,13 +137,7 @@ const Header = () => {
       {isAuthorized && isMobile() && (
         <>
           {hasAdminAccess && (
-            <ButtonLink
-              href={getReportsDownloadURL()}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Download Reports
-            </ButtonLink>
+            <button onClick={handleReportsDownload}>Download Reports</button>
           )}
           <button onClick={logOutUser}>Log out</button>
         </>

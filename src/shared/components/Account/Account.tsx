@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
+  ApiEndpoint,
   COMMON_APP_APP_STORE_LINK,
   COMMON_APP_GOOGLE_PLAY_LINK,
   MobileOperatingSystem,
@@ -7,9 +8,9 @@ import {
 } from "../../constants";
 import { useOutsideClick } from "../../hooks";
 
-import { ButtonLink, UserAvatar } from "../../../shared/components";
+import { UserAvatar } from "../../../shared/components";
 import { User } from "../../../shared/models";
-import { getMobileOperatingSystem, getReportsDownloadURL, getUserName } from "../../utils";
+import { getMobileOperatingSystem, getUserName, saveByURL } from "../../utils";
 
 import "./index.scss";
 
@@ -29,6 +30,10 @@ const Account = ({
   const [showMenu, setShowMenu] = useState(false);
   const wrapperRef = useRef(null);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
+
+  const handleReportsDownload = () => {
+    saveByURL(ApiEndpoint.GetReports, "reports.zip");
+  };
 
   useEffect(() => {
     if (isOutside) {
@@ -72,14 +77,12 @@ const Account = ({
             </>
           )}
           {hasAdminAccess && (
-            <ButtonLink
+            <div
               className="account-wrapper__menu-item"
-              href={getReportsDownloadURL()}
-              target="_blank"
-              rel="noopener noreferrer"
+              onClick={handleReportsDownload}
             >
               Download Reports
-            </ButtonLink>
+            </div>
           )}
           <div className="account-wrapper__menu-item" onClick={() => logOut()}>
             Log out

@@ -1,5 +1,4 @@
 export * from "./download";
-export * from "./getReportsDownloadURL";
 export * from "./matchRoute";
 export { default as request } from "./request";
 export { default as tokenHandler } from "./tokenHandler";
