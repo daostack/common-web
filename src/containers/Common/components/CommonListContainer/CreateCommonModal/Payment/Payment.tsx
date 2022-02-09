@@ -12,9 +12,9 @@ import { Dots } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
 import { IntermediateCreateCommonPayload } from "../../../../interfaces";
+import { PersonalContribution } from "./PersonalContribution";
 import { PROGRESS_RELATED_STEPS } from "./Progress";
 import { PaymentStep } from "./constants";
-import { PersonalContribution } from "./PersonalContribution";
 import "./index.scss";
 
 interface CreationStepsProps {
@@ -25,7 +25,9 @@ interface CreationStepsProps {
   onFinish: () => void;
   creationData: IntermediateCreateCommonPayload;
   setCreationData: Dispatch<SetStateAction<IntermediateCreateCommonPayload>>;
-  setShouldContinueFromReviewStep: (ShouldContinueFromReviewStep: boolean) => void
+  setShouldContinueFromReviewStep: (
+    ShouldContinueFromReviewStep: boolean
+  ) => void;
 }
 
 export default function Payment(props: CreationStepsProps) {
@@ -36,13 +38,13 @@ export default function Payment(props: CreationStepsProps) {
     setShouldShowCloseButton,
     creationData,
     setCreationData,
-    setShouldContinueFromReviewStep
+    setShouldContinueFromReviewStep,
   } = props;
-  const [stage, setStage] = useState(PaymentStep.PersonalContribution);
+  const [step, setStep] = useState(PaymentStep.PersonalContribution);
   const [selectedAmount, setSelectedAmount] = useState<number>(0);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const commonTitle = creationData.name ? creationData.name : "Create a Common";
+  const commonTitle = creationData.name;
 
   const scrollTop = () => {
     const content = document.getElementById("content");
@@ -51,15 +53,15 @@ export default function Payment(props: CreationStepsProps) {
   };
 
   const handleGoBack = useCallback(() => {
-    if (stage === PaymentStep.PersonalContribution) {
+    if (step === PaymentStep.PersonalContribution) {
       return true;
     }
     scrollTop();
-    setStage((step) => step - 1);
-  }, [stage]);
+    setStep((step) => step - 1);
+  }, [step]);
 
   const moveStageForward = useCallback(() => {
-    setStage((stage) => stage + 1);
+    setStep((stage) => stage + 1);
   }, []);
 
   const handleFinish = useCallback(
@@ -70,18 +72,18 @@ export default function Payment(props: CreationStepsProps) {
           ...data,
         }));
       }
-      if (stage === PaymentStep.PaymentDetails) {
+      if (step === PaymentStep.PaymentDetails) {
         return;
       }
       scrollTop();
-      setStage((stage) => stage + 1);
+      setStep((stage) => stage + 1);
     },
-    [stage, setCreationData]
+    [step, setCreationData]
   );
 
   const title = useMemo(() => {
     const stepIndex = PROGRESS_RELATED_STEPS.findIndex(
-      (progressStep) => progressStep === stage
+      (progressStep) => progressStep === step
     );
 
     return (
@@ -99,7 +101,7 @@ export default function Payment(props: CreationStepsProps) {
         </h3>
       </div>
     );
-  }, [commonTitle, isMobileView, isHeaderScrolledToTop, stage]);
+  }, [commonTitle, isMobileView, isHeaderScrolledToTop, step]);
 
   useEffect(() => {
     setTitle(title);
@@ -120,11 +122,11 @@ export default function Payment(props: CreationStepsProps) {
   const content = useMemo(() => {
     const stepProps = {
       creationData,
-      currentStep: stage,
+      currentStep: step,
       onFinish: moveStageForward,
     };
 
-    switch (stage) {
+    switch (step) {
       case PaymentStep.PersonalContribution:
         return (
           <PersonalContribution
@@ -139,7 +141,7 @@ export default function Payment(props: CreationStepsProps) {
       default:
         return null;
     }
-  }, [moveStageForward, selectedAmount, stage, creationData]);
+  }, [moveStageForward, selectedAmount, step, creationData]);
 
   return content;
 }

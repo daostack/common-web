@@ -1,6 +1,4 @@
 export enum PaymentStep {
-  PersonalContribution,
+  PersonalContribution = 1,
   PaymentDetails,
 }
-
-
