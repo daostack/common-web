@@ -73,11 +73,14 @@ export default function CreationSteps(props: CreationStepsProps) {
           ...data,
         }));
       }
+
+      scrollTop();
+
       if (step === CreationStep.Review) {
         onFinish();
+      } else {
+        setStep((step) => step + 1);
       }
-      scrollTop();
-      setStep((step) => step + 1);
     },
     [onFinish, step, setCreationData]
   );
