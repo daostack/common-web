@@ -15,9 +15,10 @@ import { IntermediateCreateCommonPayload } from "../../../../interfaces";
 import { PersonalContribution } from "./PersonalContribution";
 import { PROGRESS_RELATED_STEPS } from "./Progress";
 import { PaymentStep } from "./constants";
+import { RequestPayment } from "./RequestPayment";
 import "./index.scss";
 
-interface CreationStepsProps {
+interface PaymentProps {
   isHeaderScrolledToTop: boolean;
   setTitle: (title: ReactNode) => void;
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
@@ -27,7 +28,7 @@ interface CreationStepsProps {
   setCreationData: Dispatch<SetStateAction<IntermediateCreateCommonPayload>>;
 }
 
-export default function Payment(props: CreationStepsProps) {
+export default function Payment(props: PaymentProps) {
   const {
     isHeaderScrolledToTop,
     setTitle,
@@ -129,7 +130,14 @@ export default function Payment(props: CreationStepsProps) {
           />
         );
       case PaymentStep.PaymentDetails:
-        return <></>;
+        return (
+          <RequestPayment
+            {...stepProps}
+            onFinish={moveStageForward}
+            selectedAmount={selectedAmount}
+            setSelectedAmount={setSelectedAmount}
+          />
+        );
       default:
         return null;
     }
