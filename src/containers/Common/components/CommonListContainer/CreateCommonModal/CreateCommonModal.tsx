@@ -11,11 +11,11 @@ import { Modal } from "@/shared/components";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ScreenSize } from "@/shared/constants";
 import { CommonContributionType } from "@/shared/models";
-import { IntermediateCreateCommonPayload } from '@/containers/Common/interfaces';
+import { IntermediateCreateCommonPayload } from "../../../interfaces";
 import { CreationSteps } from "./CreationSteps";
 import { Introduction } from "./Introduction";
 import { Payment } from "./Payment";
-import { CreateCommonStage } from './constants';
+import { CreateCommonStage } from "./constants";
 import "./index.scss";
 
 const INITIAL_DATA: IntermediateCreateCommonPayload = {
@@ -46,8 +46,14 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   const [shouldShowCloseButton, setShouldShowCloseButton] = useState(true);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const isHeaderSticky = stage === CreateCommonStage.CreationSteps || Boolean(CreateCommonStage.Payment);
-  const [shouldContinueFromReviewStep, setShouldContinueFromReviewStep] = useState(false)
+  const isHeaderSticky = [
+    CreateCommonStage.CreationSteps,
+    CreateCommonStage.Payment,
+  ].includes(stage);
+  const [
+    shouldContinueFromReviewStep,
+    setShouldContinueFromReviewStep,
+  ] = useState(false);
   const setBigTitle = useCallback((title: string) => {
     setTitle(title);
     setIsBigTitle(true);
@@ -115,14 +121,16 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
         );
       case CreateCommonStage.Payment:
         return (
-            <Payment isHeaderScrolledToTop={isHeaderScrolledToTop}
-                           setTitle={setSmallTitle}
-                           setGoBackHandler={setGoBackHandler}
-                           setShouldShowCloseButton={setShouldShowCloseButton}
-                           onFinish={handleCreationStepsFinish}
-                           creationData={creationData}
-                           setCreationData={setCreationData}
-                           setShouldContinueFromReviewStep={setShouldContinueFromReviewStep}/>
+          <Payment
+            isHeaderScrolledToTop={isHeaderScrolledToTop}
+            setTitle={setSmallTitle}
+            setGoBackHandler={setGoBackHandler}
+            setShouldShowCloseButton={setShouldShowCloseButton}
+            onFinish={handleCreationStepsFinish}
+            creationData={creationData}
+            setCreationData={setCreationData}
+            setShouldContinueFromReviewStep={setShouldContinueFromReviewStep}
+          />
         );
       default:
         return null;
