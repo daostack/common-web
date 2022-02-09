@@ -147,6 +147,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     moveStageForward,
     handleCreationStepsFinish,
     creationData,
+    shouldStartFromLastStep,
   ]);
 
   useEffect(() => {
