@@ -7,14 +7,15 @@ import React, {
 } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
-
 import { Modal } from "@/shared/components";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ScreenSize } from "@/shared/constants";
 import { CommonContributionType } from "@/shared/models";
-import { IntermediateCreateCommonPayload } from "../../../interfaces/CreateCommonPayload";
+import { IntermediateCreateCommonPayload } from '@/containers/Common/interfaces';
 import { CreationSteps } from "./CreationSteps";
 import { Introduction } from "./Introduction";
+import { Payment } from "./Payment";
+import { CreateCommonStage } from './constants';
 import "./index.scss";
 
 const INITIAL_DATA: IntermediateCreateCommonPayload = {
@@ -24,11 +25,6 @@ const INITIAL_DATA: IntermediateCreateCommonPayload = {
   contributionType: CommonContributionType.OneTime,
   agreementAccepted: false,
 };
-
-enum CreateCommonStage {
-  Introduction,
-  CreationSteps,
-}
 
 interface CreateCommonModalProps {
   isShowing: boolean;
@@ -50,8 +46,8 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   const [shouldShowCloseButton, setShouldShowCloseButton] = useState(true);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const isHeaderSticky = stage === CreateCommonStage.CreationSteps;
-
+  const isHeaderSticky = stage === CreateCommonStage.CreationSteps || Boolean(CreateCommonStage.Payment);
+  const [shouldContinueFromReviewStep, setShouldContinueFromReviewStep] = useState(false)
   const setBigTitle = useCallback((title: string) => {
     setTitle(title);
     setIsBigTitle(true);
@@ -111,10 +107,22 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
             setShouldShowCloseButton={setShouldShowCloseButton}
-            onFinish={handleCreationStepsFinish}
+            onFinish={moveStageForward}
             creationData={creationData}
             setCreationData={setCreationData}
+            shouldContinueFromReviewStep={shouldContinueFromReviewStep}
           />
+        );
+      case CreateCommonStage.Payment:
+        return (
+            <Payment isHeaderScrolledToTop={isHeaderScrolledToTop}
+                           setTitle={setSmallTitle}
+                           setGoBackHandler={setGoBackHandler}
+                           setShouldShowCloseButton={setShouldShowCloseButton}
+                           onFinish={handleCreationStepsFinish}
+                           creationData={creationData}
+                           setCreationData={setCreationData}
+                           setShouldContinueFromReviewStep={setShouldContinueFromReviewStep}/>
         );
       default:
         return null;

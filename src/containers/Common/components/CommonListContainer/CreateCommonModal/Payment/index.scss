@@ -1,0 +1,28 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+
+.create-common-payment-steps__modal-title-wrapper {
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .create-common-payment-steps__modal-title-dots {
+    margin: 6px 0;
+  }
+
+  .create-common-payment-steps__modal-title {
+    margin: 0;
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: $small;
+    font-weight: bold;
+    line-height: 1.38;
+    text-align: center;
+    color: $secondary-blue;
+  }
+
+  @include big-phone {
+    height: 64px;
+  }
+}

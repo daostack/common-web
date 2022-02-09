@@ -1,24 +1,20 @@
 import React, {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
   useCallback,
   useEffect,
   useMemo,
   useState,
-  Dispatch,
-  ReactNode,
-  SetStateAction,
 } from "react";
 import { useSelector } from "react-redux";
 import { Dots } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
 import { IntermediateCreateCommonPayload } from "../../../../interfaces";
-import { Funding } from "./Funding";
-import { GeneralInfo } from "./GeneralInfo";
 import { PROGRESS_RELATED_STEPS } from "./Progress";
-import { Review } from "./Review";
-import { Rules } from "./Rules";
-import { UserAcknowledgment } from "./UserAcknowledgment";
-import { CreationStep } from "./constants";
+import { PaymentStep } from "./constants";
+import { PersonalContribution } from "./PersonalContribution";
 import "./index.scss";
 
 interface CreationStepsProps {
@@ -29,10 +25,10 @@ interface CreationStepsProps {
   onFinish: () => void;
   creationData: IntermediateCreateCommonPayload;
   setCreationData: Dispatch<SetStateAction<IntermediateCreateCommonPayload>>;
-  shouldContinueFromReviewStep: boolean;
+  setShouldContinueFromReviewStep: (ShouldContinueFromReviewStep: boolean) => void
 }
 
-export default function CreationSteps(props: CreationStepsProps) {
+export default function Payment(props: CreationStepsProps) {
   const {
     isHeaderScrolledToTop,
     setTitle,
@@ -40,16 +36,13 @@ export default function CreationSteps(props: CreationStepsProps) {
     setShouldShowCloseButton,
     creationData,
     setCreationData,
-    onFinish,
-    shouldContinueFromReviewStep,
+    setShouldContinueFromReviewStep
   } = props;
-  const [step, setStep] = useState(() =>
-    shouldContinueFromReviewStep
-      ? CreationStep.Review
-      : CreationStep.GeneralInfo
-  );
+  const [stage, setStage] = useState(PaymentStep.PersonalContribution);
+  const [selectedAmount, setSelectedAmount] = useState<number>(0);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const commonTitle = creationData.name ? creationData.name : "Create a Common";
 
   const scrollTop = () => {
     const content = document.getElementById("content");
@@ -58,12 +51,16 @@ export default function CreationSteps(props: CreationStepsProps) {
   };
 
   const handleGoBack = useCallback(() => {
-    if (step === CreationStep.GeneralInfo) {
+    if (stage === PaymentStep.PersonalContribution) {
       return true;
     }
     scrollTop();
-    setStep((step) => step - 1);
-  }, [step]);
+    setStage((step) => step - 1);
+  }, [stage]);
+
+  const moveStageForward = useCallback(() => {
+    setStage((stage) => stage + 1);
+  }, []);
 
   const handleFinish = useCallback(
     (data?: Partial<IntermediateCreateCommonPayload>) => {
@@ -73,45 +70,36 @@ export default function CreationSteps(props: CreationStepsProps) {
           ...data,
         }));
       }
-      if (step === CreationStep.Review) {
-        onFinish();
+      if (stage === PaymentStep.PaymentDetails) {
+        return;
       }
       scrollTop();
-      setStep((step) => step + 1);
+      setStage((stage) => stage + 1);
     },
-    [onFinish, step, setCreationData]
-  );
-
-  const shouldShowTitle = useCallback(
-    (): boolean => step !== CreationStep.UserAcknowledgment || isMobileView,
-    [step, isMobileView]
+    [stage, setCreationData]
   );
 
   const title = useMemo(() => {
-    if (!shouldShowTitle()) {
-      return "";
-    }
-
     const stepIndex = PROGRESS_RELATED_STEPS.findIndex(
-      (progressStep) => progressStep === step
+      (progressStep) => progressStep === stage
     );
 
     return (
-      <div className="create-common-creation-steps__modal-title-wrapper">
+      <div className="create-common-payment-steps__modal-title-wrapper">
         {isMobileView && !isHeaderScrolledToTop && stepIndex !== -1 && (
           <Dots
-            className="create-common-creation-steps__modal-title-dots"
+            className="create-common-payment-steps__modal-title-dots"
             currentStep={stepIndex + 1}
             stepsAmount={PROGRESS_RELATED_STEPS.length}
             shouldHighlightUnfinishedSteps
           />
         )}
-        <h3 className="create-common-creation-steps__modal-title">
-          Create a Common
+        <h3 className="create-common-payment-steps__modal-title">
+          {commonTitle}
         </h3>
       </div>
     );
-  }, [shouldShowTitle, isMobileView, isHeaderScrolledToTop, step]);
+  }, [commonTitle, isMobileView, isHeaderScrolledToTop, stage]);
 
   useEffect(() => {
     setTitle(title);
@@ -125,28 +113,33 @@ export default function CreationSteps(props: CreationStepsProps) {
     setShouldShowCloseButton(true);
   }, [setShouldShowCloseButton]);
 
+  useEffect(() => {
+    setShouldContinueFromReviewStep(true);
+  }, [setShouldContinueFromReviewStep]);
+
   const content = useMemo(() => {
     const stepProps = {
       creationData,
-      currentStep: step,
-      onFinish: handleFinish,
+      currentStep: stage,
+      onFinish: moveStageForward,
     };
 
-    switch (step) {
-      case CreationStep.GeneralInfo:
-        return <GeneralInfo {...stepProps} />;
-      case CreationStep.UserAcknowledgment:
-        return <UserAcknowledgment {...stepProps} />;
-      case CreationStep.Funding:
-        return <Funding {...stepProps} />;
-      case CreationStep.Rules:
-        return <Rules {...stepProps} />;
-      case CreationStep.Review:
-        return <Review {...stepProps} />;
+    switch (stage) {
+      case PaymentStep.PersonalContribution:
+        return (
+          <PersonalContribution
+            {...stepProps}
+            onFinish={moveStageForward}
+            selectedAmount={selectedAmount}
+            setSelectedAmount={setSelectedAmount}
+          />
+        );
+      case PaymentStep.PaymentDetails:
+        return <></>;
       default:
         return null;
     }
-  }, [step, handleFinish, creationData]);
+  }, [moveStageForward, selectedAmount, stage, creationData]);
 
   return content;
 }

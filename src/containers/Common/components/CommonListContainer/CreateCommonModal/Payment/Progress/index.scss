@@ -1,0 +1,21 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.create-common-payment-steps-progress {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 16px;
+
+  .create-common-payment-steps-progress__stepper {
+    width: 6.5rem;
+
+    margin: 16px 0 24px;
+  }
+
+  @include big-phone {
+    width: 6.5rem;
+    padding-bottom: 20px;
+  }
+}
