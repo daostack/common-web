@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
+  ApiEndpoint,
   COMMON_APP_APP_STORE_LINK,
   COMMON_APP_GOOGLE_PLAY_LINK,
   MobileOperatingSystem,
@@ -9,7 +10,7 @@ import { useOutsideClick } from "../../hooks";
 
 import { UserAvatar } from "../../../shared/components";
 import { User } from "../../../shared/models";
-import { getMobileOperatingSystem, getUserName } from "../../utils";
+import { getMobileOperatingSystem, getUserName, saveByURL } from "../../utils";
 
 import "./index.scss";
 
@@ -17,12 +18,22 @@ interface AccountProps {
   user: User | null;
   logOut: () => void;
   isTrusteeRoute: boolean;
+  hasAdminAccess: boolean;
 }
 
-const Account = ({ user, logOut, isTrusteeRoute }: AccountProps) => {
+const Account = ({
+  user,
+  logOut,
+  isTrusteeRoute,
+  hasAdminAccess,
+}: AccountProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const wrapperRef = useRef(null);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
+
+  const handleReportsDownload = () => {
+    saveByURL(ApiEndpoint.GetReports, "reports.zip");
+  };
 
   useEffect(() => {
     if (isOutside) {
@@ -46,11 +57,13 @@ const Account = ({ user, logOut, isTrusteeRoute }: AccountProps) => {
           {!isTrusteeRoute && (
             <>
               <div
+                className="account-wrapper__menu-item"
                 onClick={() => (window.location.href = ROUTE_PATHS.MY_COMMONS)}
               >
                 My Commons
               </div>
               <div
+                className="account-wrapper__menu-item"
                 onClick={() =>
                   window.open(
                     getMobileOperatingSystem() === MobileOperatingSystem.iOS
@@ -63,7 +76,17 @@ const Account = ({ user, logOut, isTrusteeRoute }: AccountProps) => {
               </div>
             </>
           )}
-          <div onClick={() => logOut()}>Log out</div>
+          {hasAdminAccess && (
+            <div
+              className="account-wrapper__menu-item"
+              onClick={handleReportsDownload}
+            >
+              Download Reports
+            </div>
+          )}
+          <div className="account-wrapper__menu-item" onClick={() => logOut()}>
+            Log out
+          </div>
         </div>
       )}
     </div>

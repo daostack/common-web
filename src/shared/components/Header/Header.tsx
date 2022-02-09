@@ -10,11 +10,13 @@ import {
 import classNames from "classnames";
 
 import { UserAvatar } from "../../../shared/components";
-import { useMatchRoute } from "../../../shared/hooks";
-import { Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
+import { useAnyMandatoryRoles, useMatchRoute } from "../../../shared/hooks";
+import { UserRole } from "../../../shared/models";
+import { ApiEndpoint, Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
 import { getScreenSize } from "../../store/selectors";
+import { saveByURL } from "../../utils";
 import DownloadCommonApp from "../DownloadCommonApp/DownloadCommonApp";
 import MobileLinks from "../MobileLinks/MobileLinks";
 import "./index.scss";
@@ -32,6 +34,8 @@ import {
   logOut,
   setIsLoginModalShowing,
 } from "../../../containers/Auth/store/actions";
+
+const ADMIN_ACCESS_ROLES: UserRole[] = [UserRole.Trustee];
 
 const NON_EXACT_MATCH_ROUTE_PROPS: RouteProps = {
   exact: false,
@@ -53,6 +57,7 @@ const Header = () => {
   const isNewUser = useSelector(selectIsNewUser());
   const isLoginModalShowing = useSelector(selectIsLoginModalShowing());
   const shouldDisplayAvatar = Boolean(screenSize === ScreenSize.Mobile && user);
+  const hasAdminAccess = useAnyMandatoryRoles(ADMIN_ACCESS_ROLES, user?.roles);
   const isTrusteeRoute = useMatchRoute(
     ROUTE_PATHS.TRUSTEE,
     NON_EXACT_MATCH_ROUTE_PROPS
@@ -69,6 +74,10 @@ const Header = () => {
   const handleClose = useCallback(() => {
     dispatch(setIsLoginModalShowing(false));
   }, [dispatch]);
+
+  const handleReportsDownload = () => {
+    saveByURL(ApiEndpoint.GetReports, "reports.zip");
+  };
 
   React.useEffect(() => {
     window.addEventListener("scroll", () => {
@@ -126,7 +135,12 @@ const Header = () => {
       )}
 
       {isAuthorized && isMobile() && (
-        <button onClick={logOutUser}>Log out</button>
+        <>
+          {hasAdminAccess && (
+            <button onClick={handleReportsDownload}>Download Reports</button>
+          )}
+          <button onClick={logOutUser}>Log out</button>
+        </>
       )}
       {!isAuthorized && !isTrusteeRoute && (
         <button className="login-button" onClick={handleOpen}>
@@ -169,6 +183,7 @@ const Header = () => {
               user={user}
               logOut={logOutUser}
               isTrusteeRoute={isTrusteeRoute}
+              hasAdminAccess={hasAdminAccess}
             />
           )}
           {!isAuthorized && !isTrusteeRoute ? (
