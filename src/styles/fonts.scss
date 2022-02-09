@@ -17,6 +17,15 @@ $openTypeFontFormat: "opentype";
 @font-face {
   font-family: $nunitoSansFontName;
   src: local($nunitoSansFontName),
+    url(../shared/assets/fonts/NunitoSans-Italic.ttf)
+      format($trueTypeFontFormat);
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: $nunitoSansFontName;
+  src: local($nunitoSansFontName),
     url(../shared/assets/fonts/NunitoSans-SemiBold.ttf)
       format($trueTypeFontFormat);
   font-weight: 600;
