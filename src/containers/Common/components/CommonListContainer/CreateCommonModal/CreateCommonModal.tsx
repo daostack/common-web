@@ -32,7 +32,10 @@ interface CreateCommonModalProps {
 }
 
 export default function CreateCommonModal(props: CreateCommonModalProps) {
-  const [stage, setStage] = useState(CreateCommonStage.Introduction);
+  const [{ stage, shouldStartFromLastStep }, setStageState] = useState({
+    stage: CreateCommonStage.Introduction,
+    shouldStartFromLastStep: false,
+  });
   const [
     creationData,
     setCreationData,
@@ -50,10 +53,6 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     CreateCommonStage.CreationSteps,
     CreateCommonStage.Payment,
   ].includes(stage);
-  const [
-    shouldContinueFromReviewStep,
-    setShouldContinueFromReviewStep,
-  ] = useState(false);
   const setBigTitle = useCallback((title: string) => {
     setTitle(title);
     setIsBigTitle(true);
@@ -70,12 +69,16 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     []
   );
   const moveStageBack = useCallback(() => {
-    setStage((stage) =>
-      stage === CreateCommonStage.Introduction ? stage : stage - 1
-    );
+    setStageState(({ stage }) => ({
+      stage: stage === CreateCommonStage.Introduction ? stage : stage - 1,
+      shouldStartFromLastStep: true,
+    }));
   }, []);
   const moveStageForward = useCallback(() => {
-    setStage((stage) => stage + 1);
+    setStageState(({ stage }) => ({
+      stage: stage + 1,
+      shouldStartFromLastStep: false,
+    }));
   }, []);
   const handleGoBack = useCallback(() => {
     if (onGoBack && onGoBack()) {
@@ -116,7 +119,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             onFinish={moveStageForward}
             creationData={creationData}
             setCreationData={setCreationData}
-            shouldContinueFromReviewStep={shouldContinueFromReviewStep}
+            shouldStartFromLastStep={shouldStartFromLastStep}
           />
         );
       case CreateCommonStage.Payment:
@@ -129,7 +132,6 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             onFinish={handleCreationStepsFinish}
             creationData={creationData}
             setCreationData={setCreationData}
-            setShouldContinueFromReviewStep={setShouldContinueFromReviewStep}
           />
         );
       default:
@@ -149,7 +151,10 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
 
   useEffect(() => {
     if (!props.isShowing) {
-      setStage(CreateCommonStage.Introduction);
+      setStageState({
+        stage: CreateCommonStage.Introduction,
+        shouldStartFromLastStep: false,
+      });
       setCreationData(INITIAL_DATA);
     }
   }, [props.isShowing]);

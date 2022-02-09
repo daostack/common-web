@@ -25,9 +25,6 @@ interface CreationStepsProps {
   onFinish: () => void;
   creationData: IntermediateCreateCommonPayload;
   setCreationData: Dispatch<SetStateAction<IntermediateCreateCommonPayload>>;
-  setShouldContinueFromReviewStep: (
-    ShouldContinueFromReviewStep: boolean
-  ) => void;
 }
 
 export default function Payment(props: CreationStepsProps) {
@@ -38,7 +35,6 @@ export default function Payment(props: CreationStepsProps) {
     setShouldShowCloseButton,
     creationData,
     setCreationData,
-    setShouldContinueFromReviewStep,
   } = props;
   const [step, setStep] = useState(PaymentStep.PersonalContribution);
   const [selectedAmount, setSelectedAmount] = useState<number>(0);
@@ -114,10 +110,6 @@ export default function Payment(props: CreationStepsProps) {
   useEffect(() => {
     setShouldShowCloseButton(true);
   }, [setShouldShowCloseButton]);
-
-  useEffect(() => {
-    setShouldContinueFromReviewStep(true);
-  }, [setShouldContinueFromReviewStep]);
 
   const content = useMemo(() => {
     const stepProps = {

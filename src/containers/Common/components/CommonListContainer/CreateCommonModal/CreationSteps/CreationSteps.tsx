@@ -29,7 +29,7 @@ interface CreationStepsProps {
   onFinish: () => void;
   creationData: IntermediateCreateCommonPayload;
   setCreationData: Dispatch<SetStateAction<IntermediateCreateCommonPayload>>;
-  shouldContinueFromReviewStep: boolean;
+  shouldStartFromLastStep: boolean;
 }
 
 export default function CreationSteps(props: CreationStepsProps) {
@@ -38,15 +38,13 @@ export default function CreationSteps(props: CreationStepsProps) {
     setTitle,
     setGoBackHandler,
     setShouldShowCloseButton,
+    onFinish,
     creationData,
     setCreationData,
-    onFinish,
-    shouldContinueFromReviewStep,
+    shouldStartFromLastStep,
   } = props;
   const [step, setStep] = useState(() =>
-    shouldContinueFromReviewStep
-      ? CreationStep.Review
-      : CreationStep.GeneralInfo
+    shouldStartFromLastStep ? CreationStep.Review : CreationStep.GeneralInfo
   );
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
