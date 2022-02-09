@@ -1,0 +1,69 @@
+$nunitoSansFontName: "NunitoSans";
+$notoSerifSCFontName: "NotoSerifSC";
+$assistantFontName: "Assistant";
+
+$trueTypeFontFormat: "truetype";
+$openTypeFontFormat: "opentype";
+
+// NunitoSans
+@font-face {
+  font-family: $nunitoSansFontName;
+  src: local($nunitoSansFontName),
+    url(../shared/assets/fonts/NunitoSans-Regular.ttf)
+      format($trueTypeFontFormat);
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: $nunitoSansFontName;
+  src: local($nunitoSansFontName),
+    url(../shared/assets/fonts/NunitoSans-SemiBold.ttf)
+      format($trueTypeFontFormat);
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: $nunitoSansFontName;
+  src: local($nunitoSansFontName),
+    url(../shared/assets/fonts/NunitoSans-Bold.ttf) format($trueTypeFontFormat);
+  font-weight: bold;
+}
+
+// NotoSerifSC
+@font-face {
+  font-family: $notoSerifSCFontName;
+  src: local($notoSerifSCFontName),
+    url(../shared/assets/fonts/NotoSerifSC-SemiBold.otf)
+      format($openTypeFontFormat);
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: $notoSerifSCFontName;
+  src: local($notoSerifSCFontName),
+    url(../shared/assets/fonts/NotoSerifSC-Bold.otf) format($openTypeFontFormat);
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: $notoSerifSCFontName;
+  src: local($notoSerifSCFontName),
+    url(../shared/assets/fonts/NotoSerifSC-Black.otf)
+      format($openTypeFontFormat);
+  font-weight: 900;
+}
+
+// Assistant
+@font-face {
+  font-family: $assistantFontName;
+  src: local($assistantFontName),
+    url(../shared/assets/fonts/Assistant-Light.ttf) format($trueTypeFontFormat);
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: $assistantFontName;
+  src: local($assistantFontName),
+    url(../shared/assets/fonts/Assistant-Bold.ttf) format($trueTypeFontFormat);
+  font-weight: bold;
+}
