@@ -1,23 +1,24 @@
 @import "../../../../../../../constants";
 @import "../../../../../../../styles/sizes";
 
-$payment-iframe-height: 424px;
-$payment-iframe-height-mobile: 672px;
-
+$payment-iframe-height: 26.5rem;
+$payment-iframe-height-mobile: 42rem;
 
 .create-common-contribution {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%;
+  min-height: 29.125rem;
+  max-width: 36.5rem;
+  margin: 0 auto;
 
-  .sub-title {
+  .create-common-contribution__sub-title {
     font-weight: bold;
     font-family: NunitoSans-Bold, sans-serif;
     margin-bottom: 0.2rem;
   }
 
-  .sub-text-wrapper {
+  .create-common-contribution__sub-text-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -27,113 +28,41 @@ $payment-iframe-height-mobile: 672px;
     padding-bottom: 1.5rem;
   }
 
-  .sub-text__item {
+  .create-common-contribution__sub-text-item {
     text-align: center;
     font-size: $xsmall;
     max-width: 23.7rem;
     color: $light-gray-2;
   }
 
-  .sub-text__item:nth-child(1) {
+  .create-common-contribution__sub-text-item:nth-child(1) {
     margin-bottom: 1.5rem;
   }
 
-  .button-blue {
-    font-weight: normal;
-    min-width: 180px;
-    height: 48px;
-    font-family: NunitoSans-Regular;
-  }
-
-  .sub-text--bold {
+  .create-common-contribution__sub-text-item--bold {
     font-weight: bold
-  }
-
-  label {
-    margin-bottom: 0.6rem;
-    align-self: flex-start;
-  }
-
-  select,
-  input {
-    height: 40px;
-    padding: 0 0.7rem;
-    border-radius: 3px;
-    border: 1px solid $light-gray-1;
-    box-sizing: border-box;
-  }
-}
-
-
-.create-common-content {
-  min-height: 29.125rem;
-
-  .create-common-contribution__toggle-button-group {
-    max-width: 380px;
-    width: 100%;
-    margin-top: 1rem;
-    font-size: $small;
-
-    @include big-phone {
-      margin-top: 1rem;
-    }
-  }
-
-  .create-common-contribution__toggle-button-group--one-time {
-    margin-bottom: 2.375rem;
-  }
-
-  .create-common-contribution__toggle-button {
-    padding: 22px;
-
-    @include big-phone {
-      padding: 20px;
-    }
-  }
-
-  .create-common-contribution__currency-input-wrapper {
-    max-width: 380px;
-    width: 100%;
-    margin-top: 1rem;
-  }
-
-  .create-common-contribution__currency-input-label {
-    margin: 0;
-    font-size: $xsmall;
-  }
-
-  .create-common-contribution__back-to-selection {
-    margin-top: 8px;
-  }
-
-  .create-common-contribution__hint {
-    margin: 1rem 0 .625rem;
-    font-size: $xsmall;
-    line-height: 1.42;
-    text-align: center;
-    color: $blue-2;
   }
 
   @include big-phone {
     min-height: unset;
   }
-
-  .button-blue {
-    font-weight: normal;
-    min-width: 180px;
-    font-family: NunitoSans-Regular;
-  }
 }
 
-.create-common-contribution__modal-footer {
+.create-common-contribution__hint {
+  margin: 1rem 0 .625rem;
+  font-size: $xsmall;
+  line-height: 1.42;
+  text-align: center;
+  color: $blue-2;
+}
+
+.create-common-contribution__submit-button {
   display: flex;
   justify-content: center;
-  padding: 24px 0;
-
-  .create-common-contribution__submit-button {
-    min-width: 11.25rem;
-    min-height: 3rem;
-    font-family: NunitoSans-Regular, sans-serif;
-    font-weight: normal;
+  padding-bottom: 1.75rem;
+  max-width: 36.5rem;
+  margin: 0 auto;
+  @include big-phone {
+    padding-bottom: 1.75rem;
   }
 }

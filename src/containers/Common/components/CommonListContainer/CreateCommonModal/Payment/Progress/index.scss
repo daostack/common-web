@@ -6,16 +6,15 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-bottom: 16px;
+  padding-bottom: 1rem;
 
   .create-common-payment-steps-progress__stepper {
     width: 6.5rem;
-
-    margin: 16px 0 24px;
+    margin: 1rem 0 1.5rem;
   }
 
   @include big-phone {
     width: 6.5rem;
-    padding-bottom: 20px;
+    padding-bottom: 1.25rem;
   }
 }
