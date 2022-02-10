@@ -1,23 +1,29 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useMemo,
+  useState,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { useSelector } from "react-redux";
-import { CommonContributionType } from "@/shared/models";
-import { formatPrice } from "@/shared/utils";
-import { Button, ModalFooter } from "@/shared/components";
-import { Progress } from "../Progress";
-import { IntermediateCreateCommonPayload } from "@/containers/Common/interfaces";
-import { ContributionAmountSelection } from "@/shared/components/ContributionAmountSelection";
 import {
-  getAmountsForSelection,
-  validateContributionAmount,
-} from "../helpers/helpers";
-import { getScreenSize } from "@/shared/store/selectors";
+  Button,
+  ContributionAmountSelection,
+  ModalFooter,
+} from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
+import { CommonContributionType } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
+import { formatPrice } from "@/shared/utils";
+import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
+import { getAmountsForSelection, validateContributionAmount } from "../helpers";
 import { PaymentInitDataType } from "../Payment";
+import { Progress } from "../Progress";
 import "./index.scss";
 
 interface IStageProps {
   paymentData: PaymentInitDataType;
-  setPaymentData: (paymentData: PaymentInitDataType) => void;
+  setPaymentData: Dispatch<SetStateAction<PaymentInitDataType>>;
   currentStep: number;
   onFinish: () => void;
   creationData: IntermediateCreateCommonPayload;
@@ -33,17 +39,10 @@ export default function PersonalContribution(props: IStageProps) {
   } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const selectedAmount = paymentData.selectedAmount
-    ? paymentData.selectedAmount
-    : 0;
+  const selectedAmount = paymentData.selectedAmount || 0;
   const isMonthlyContribution =
     creationData.contributionType === CommonContributionType.Monthly;
-
-  /**
-   * Backend stores the price in cents, that's why we multiply by 100
-   **/
-
-  const minFeeToJoin = creationData.contributionAmount * 100 || 0;
+  const minFeeToJoin = creationData.contributionAmount * 100;
   const zeroContribution = creationData.zeroContribution || false;
 
   const amountsForSelection = useMemo(
@@ -90,17 +89,15 @@ export default function PersonalContribution(props: IStageProps) {
       selectedContribution === "other"
         ? Number(enteredContribution) * 100
         : selectedContribution || 0;
-    setPaymentData({ ...paymentData, selectedAmount: contributionAmount });
+    setPaymentData((nextPaymentData) => ({
+      ...nextPaymentData,
+      selectedAmount: contributionAmount,
+    }));
     onFinish();
-  }, [
-    onFinish,
-    paymentData,
-    setPaymentData,
-    selectedContribution,
-    enteredContribution,
-  ]);
+  }, [onFinish, setPaymentData, selectedContribution, enteredContribution]);
 
   const progressEl = <Progress creationStep={currentStep} />;
+
   return (
     <div className="create-common-contribution">
       {progressEl}
