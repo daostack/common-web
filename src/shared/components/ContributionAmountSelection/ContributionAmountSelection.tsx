@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from "react";
+import classNames from "classnames";
+import { ButtonLink } from "@/shared/components";
 import {
   CurrencyInput,
   ToggleButton,
   ToggleButtonGroup,
   ToggleButtonGroupVariant,
 } from "@/shared/components/Form";
-import classNames from "classnames";
 import { formatPrice } from "@/shared/utils";
-import { ButtonLink } from "@/shared/components";
 import "./index.scss";
 
 interface IProps {
