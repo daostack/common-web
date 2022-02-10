@@ -1,5 +1,5 @@
 export enum CreateCommonStage {
-    Introduction,
-    CreationSteps,
-    Payment,
+  Introduction,
+  CreationSteps,
+  Payment,
 }
