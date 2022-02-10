@@ -16,6 +16,7 @@ import { IntermediateCreateCommonPayload } from "../../../../interfaces";
 import { PersonalContribution } from "./PersonalContribution";
 import { PROGRESS_RELATED_STEPS } from "./Progress";
 import { PaymentStep } from "./constants";
+import { RequestPayment } from "./RequestPayment";
 import "./index.scss";
 
 interface PaymentProps {
@@ -142,7 +143,14 @@ export default function Payment(props: PaymentProps) {
           />
         );
       case PaymentStep.PaymentDetails:
-        return <></>;
+        return (
+          <RequestPayment
+            {...stepProps}
+            onFinish={moveStageForward}
+            paymentData={paymentData}
+            setPaymentData={setPaymentData}
+          />
+        );
       default:
         return null;
     }
