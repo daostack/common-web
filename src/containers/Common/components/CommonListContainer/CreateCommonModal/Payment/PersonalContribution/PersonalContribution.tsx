@@ -1,7 +1,8 @@
 import React, { useCallback, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import { CommonContributionType } from "@/shared/models";
 import { formatPrice } from "@/shared/utils";
-import {Button, ModalFooter} from '@/shared/components';
+import { Button, ModalFooter } from "@/shared/components";
 import { Progress } from "../Progress";
 import { IntermediateCreateCommonPayload } from "@/containers/Common/interfaces";
 import { ContributionAmountSelection } from "@/shared/components/ContributionAmountSelection";
@@ -9,14 +10,14 @@ import {
   getAmountsForSelection,
   validateContributionAmount,
 } from "../helpers/helpers";
-import {useSelector} from 'react-redux';
-import {getScreenSize} from '@/shared/store/selectors';
-import {ScreenSize} from '@/shared/constants';
+import { getScreenSize } from "@/shared/store/selectors";
+import { ScreenSize } from "@/shared/constants";
+import { PaymentInitDataType } from "../Payment";
 import "./index.scss";
 
-export interface IStageProps {
-  selectedAmount: number;
-  setSelectedAmount?: (amount: number) => void;
+interface IStageProps {
+  paymentData: PaymentInitDataType;
+  setPaymentData: (paymentData: PaymentInitDataType) => void;
   currentStep: number;
   onFinish: () => void;
   creationData: IntermediateCreateCommonPayload;
@@ -27,11 +28,14 @@ export default function PersonalContribution(props: IStageProps) {
     creationData,
     currentStep,
     onFinish,
-    selectedAmount,
-    setSelectedAmount,
+    paymentData,
+    setPaymentData,
   } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const selectedAmount = paymentData.selectedAmount
+    ? paymentData.selectedAmount
+    : 0;
   const isMonthlyContribution =
     creationData.contributionType === CommonContributionType.Monthly;
 
@@ -86,11 +90,15 @@ export default function PersonalContribution(props: IStageProps) {
       selectedContribution === "other"
         ? Number(enteredContribution) * 100
         : selectedContribution || 0;
-    if (setSelectedAmount) {
-      setSelectedAmount(contributionAmount);
-    }
+    setPaymentData({ ...paymentData, selectedAmount: contributionAmount });
     onFinish();
-  }, [onFinish, setSelectedAmount, selectedContribution, enteredContribution]);
+  }, [
+    onFinish,
+    paymentData,
+    setPaymentData,
+    selectedContribution,
+    enteredContribution,
+  ]);
 
   const progressEl = <Progress creationStep={currentStep} />;
   return (
@@ -129,16 +137,16 @@ export default function PersonalContribution(props: IStageProps) {
         </span>
       )}
       <ModalFooter sticky>
-          <div className="create-common-contribution__submit-button">
-            <Button
-                key="personal-contribution-continue"
-                disabled={isSubmitDisabled}
-                onClick={handleSubmit}
-                shouldUseFullWidth={isMobileView}
-            >
-              Submit
-            </Button>
-          </div>
+        <div className="create-common-contribution__submit-button">
+          <Button
+            key="personal-contribution-continue"
+            disabled={isSubmitDisabled}
+            onClick={handleSubmit}
+            shouldUseFullWidth={isMobileView}
+          >
+            Submit
+          </Button>
+        </div>
       </ModalFooter>
     </div>
   );

@@ -7,6 +7,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { useSelector } from "react-redux";
 import { Dots } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
@@ -15,7 +16,6 @@ import { IntermediateCreateCommonPayload } from "../../../../interfaces";
 import { PersonalContribution } from "./PersonalContribution";
 import { PROGRESS_RELATED_STEPS } from "./Progress";
 import { PaymentStep } from "./constants";
-import { RequestPayment } from "./RequestPayment";
 import "./index.scss";
 
 interface PaymentProps {
@@ -28,6 +28,16 @@ interface PaymentProps {
   setCreationData: Dispatch<SetStateAction<IntermediateCreateCommonPayload>>;
 }
 
+export interface PaymentInitDataType {
+  selectedAmount: number | undefined;
+  cardId: string;
+}
+
+const INITIAL_DATA: PaymentInitDataType = {
+  selectedAmount: undefined,
+  cardId: uuidv4(),
+};
+
 export default function Payment(props: PaymentProps) {
   const {
     isHeaderScrolledToTop,
@@ -37,8 +47,10 @@ export default function Payment(props: PaymentProps) {
     creationData,
     setCreationData,
   } = props;
+  const [paymentData, setPaymentData] = useState<PaymentInitDataType>(
+    INITIAL_DATA
+  );
   const [step, setStep] = useState(PaymentStep.PersonalContribution);
-  const [selectedAmount, setSelectedAmount] = useState<number>(0);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const commonTitle = creationData.name;
@@ -125,23 +137,16 @@ export default function Payment(props: PaymentProps) {
           <PersonalContribution
             {...stepProps}
             onFinish={moveStageForward}
-            selectedAmount={selectedAmount}
-            setSelectedAmount={setSelectedAmount}
+            paymentData={paymentData}
+            setPaymentData={setPaymentData}
           />
         );
       case PaymentStep.PaymentDetails:
-        return (
-          <RequestPayment
-            {...stepProps}
-            onFinish={moveStageForward}
-            selectedAmount={selectedAmount}
-            setSelectedAmount={setSelectedAmount}
-          />
-        );
+        return <></>;
       default:
         return null;
     }
-  }, [moveStageForward, selectedAmount, step, creationData]);
+  }, [moveStageForward, paymentData, setPaymentData, step, creationData]);
 
   return content;
 }
