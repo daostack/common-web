@@ -39,7 +39,7 @@ const InvoiceTileList: FC<InvoiceTileListProps> = (props) => {
       fileName: doc.name,
     }));
 
-    saveZip("invoices", files);
+    saveZip("invoices.zip", files);
   }, [payoutDocs]);
 
   return (
