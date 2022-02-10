@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 import { StepProgress } from "@/shared/components/StepProgress";
-import { PaymentStep } from "@/containers/Common/components/CommonListContainer/CreateCommonModal/Payment/constants";
+import { PaymentStep } from "../constants";
 import "./index.scss";
 
 interface ProgressProps {

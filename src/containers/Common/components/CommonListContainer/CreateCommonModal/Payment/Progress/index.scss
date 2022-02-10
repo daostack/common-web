@@ -2,11 +2,11 @@
 @import "../../../../../../../styles/sizes";
 
 .create-common-payment-steps-progress {
+  padding-bottom: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-bottom: 1rem;
 
   .create-common-payment-steps-progress__stepper {
     width: 6.5rem;
