@@ -4,7 +4,8 @@ import JSZip from "jszip";
 import Api from "../../services/Api";
 
 const downloadBlobByURL = async (url: string): Promise<Blob> => {
-  const response = url.startsWith("/")
+  const isApiCall = url.startsWith("/");
+  const response = isApiCall
     ? await Api.get<Blob>(url, { responseType: "blob" })
     : await axios.get(url, { responseType: "blob" });
 
