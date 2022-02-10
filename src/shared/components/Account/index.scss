@@ -37,21 +37,25 @@
     box-shadow: 0 4px 15px 0 $shadow;
     display: flex;
     flex-direction: column;
-    > div {
-      cursor: pointer;
-      padding: 0.7rem 2rem;
-      width: 200px;
-      &:first-child {
-        border-top-right-radius: 12px;
-        border-top-left-radius: 12px;
-      }
-      &:last-child {
-        border-bottom-right-radius: 12px;
-        border-bottom-left-radius: 12px;
-      }
-      &:hover {
-        background-color: $purple-hover;
-      }
+  }
+
+  .account-wrapper__menu-item {
+    cursor: pointer;
+    padding: 0.7rem 2rem;
+    width: 200px;
+    text-decoration: none;
+    color: inherit;
+
+    &:first-child {
+      border-top-right-radius: 12px;
+      border-top-left-radius: 12px;
+    }
+    &:last-child {
+      border-bottom-right-radius: 12px;
+      border-bottom-left-radius: 12px;
+    }
+    &:hover {
+      background-color: $purple-hover;
     }
   }
 }
