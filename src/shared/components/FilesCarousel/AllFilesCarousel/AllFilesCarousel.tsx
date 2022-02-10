@@ -100,7 +100,7 @@ const AllFilesCarousel: ForwardRefRenderFunction<
       fileName: doc.name,
     }));
 
-    saveZip("invoices", files);
+    saveZip("invoices.zip", files);
   };
 
   useEffect(() => {
