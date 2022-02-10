@@ -29,12 +29,11 @@ interface PaymentProps {
 }
 
 export interface PaymentInitDataType {
-  selectedAmount: number | undefined;
+  selectedAmount?: number;
   cardId: string;
 }
 
 const INITIAL_DATA: PaymentInitDataType = {
-  selectedAmount: undefined,
   cardId: uuidv4(),
 };
 
@@ -70,7 +69,7 @@ export default function Payment(props: PaymentProps) {
   }, [step]);
 
   const moveStageForward = useCallback(() => {
-    setStep((stage) => stage + 1);
+    setStep((step) => step + 1);
   }, []);
 
   const handleFinish = useCallback(
@@ -127,20 +126,15 @@ export default function Payment(props: PaymentProps) {
   const content = useMemo(() => {
     const stepProps = {
       creationData,
+      paymentData,
+      setPaymentData,
       currentStep: step,
       onFinish: moveStageForward,
     };
 
     switch (step) {
       case PaymentStep.PersonalContribution:
-        return (
-          <PersonalContribution
-            {...stepProps}
-            onFinish={moveStageForward}
-            paymentData={paymentData}
-            setPaymentData={setPaymentData}
-          />
-        );
+        return <PersonalContribution {...stepProps} />;
       case PaymentStep.PaymentDetails:
         return <></>;
       default:
