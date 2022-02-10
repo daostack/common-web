@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   NavLink,
   Link,
-  useLocation,
   useHistory,
   RouteProps,
 } from "react-router-dom";
@@ -46,12 +45,10 @@ const EXACT_MATCH_ROUTE_PROPS: RouteProps = {
 };
 
 const Header = () => {
-  const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
   const [showMenu, setShowMenu] = useState(false);
-  const [isTop, setIsTop] = useState<boolean | undefined>(undefined);
   const isAuthorized = useSelector(authentificated());
   const user = useSelector(selectUser());
   const isNewUser = useSelector(selectIsNewUser());
@@ -78,12 +75,6 @@ const Header = () => {
   const handleReportsDownload = () => {
     saveByURL(ApiEndpoint.GetReports, "reports.zip");
   };
-
-  React.useEffect(() => {
-    window.addEventListener("scroll", () => {
-      setIsTop(window.scrollY === 0 ? true : false);
-    });
-  }, [isTop]);
 
   React.useEffect(() => {
     const unlisten = history.listen(() => {
@@ -152,9 +143,6 @@ const Header = () => {
 
   const headerWrapperClassName = classNames("header-wrapper", {
     "header-wrapper--without-shadow": isTrusteeRoute && !isTrusteeAuthRoute,
-    init: location.pathname === "/" && isTop === undefined,
-    hide: location.pathname === "/" && isTop,
-    show: location.pathname === "/" && isTop === false,
   });
 
   return (

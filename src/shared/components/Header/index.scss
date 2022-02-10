@@ -44,28 +44,6 @@
     margin-left: auto;
     white-space: nowrap;
   }
-  &.init {
-    top: -$header-height;
-  }
-  &.hide {
-    animation: hideHeader .5s forwards;
-  }
-  &.show {
-    animation: showHeader .5s forwards;
-  }
-  @keyframes showHeader {
-    from {
-      top: -$header-height;
-    }
-    to {
-      top: 0;
-    }
-  }
-  @keyframes hideHeader {
-    to {
-      top: -$header-height;
-    }
-  }
 }
 
 .header-wrapper--without-shadow {
