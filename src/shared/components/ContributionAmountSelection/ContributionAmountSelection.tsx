@@ -1,42 +1,66 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import classNames from "classnames";
-import { ButtonLink } from "@/shared/components";
+import { ButtonLink } from "../ButtonLink";
 import {
   CurrencyInput,
   ToggleButton,
   ToggleButtonGroup,
   ToggleButtonGroupVariant,
-} from "@/shared/components/Form";
-import { formatPrice } from "@/shared/utils";
+} from "../Form";
+import { formatPrice } from "../../utils";
+import { getAmountsForSelection, validateContributionAmount } from "./helpers";
 import "./index.scss";
 
 interface IProps {
-  enteredContribution: string | undefined;
-  setEnteredContribution: (enteredContribution: string | undefined) => void;
-  selectedContribution: number | "other" | null;
-  setSelectedContribution: (
-    selectedContribution: number | "other" | null
-  ) => void;
+  className?: string;
+  contributionAmount?: number;
+  minFeeToJoin: number;
+  zeroContribution: boolean;
   isMonthlyContribution: boolean;
-  amountsForSelection: number[];
-  pricePostfix: string;
-  formattedMinFeeToJoin: string;
-  currencyInputError: string;
 }
 
 export default function ContributionAmountSelection(props: IProps) {
   const {
-    enteredContribution,
-    setEnteredContribution,
-    selectedContribution,
-    setSelectedContribution,
+    className,
+    contributionAmount,
+    minFeeToJoin,
+    zeroContribution,
     isMonthlyContribution,
-    amountsForSelection,
-    pricePostfix,
-    formattedMinFeeToJoin,
-    currencyInputError,
   } = props;
   const [isCurrencyInputTouched, setIsCurrencyInputTouched] = useState(false);
+  const amountsForSelection = useMemo(
+    () => getAmountsForSelection(minFeeToJoin, zeroContribution),
+    [minFeeToJoin, zeroContribution]
+  );
+  const [selectedContribution, setSelectedContribution] = useState<
+    number | "other" | null
+  >(() => {
+    if (contributionAmount === undefined) {
+      return null;
+    }
+
+    return amountsForSelection.includes(contributionAmount)
+      ? contributionAmount
+      : "other";
+  });
+  const [enteredContribution, setEnteredContribution] = useState<
+    string | undefined
+  >(() =>
+    selectedContribution === "other" && contributionAmount
+      ? String(contributionAmount / 100)
+      : undefined
+  );
+  const formattedMinFeeToJoin = formatPrice(
+    zeroContribution ? 0 : minFeeToJoin,
+    { shouldMillify: false, shouldRemovePrefixFromZero: false }
+  );
+  const pricePostfix = isMonthlyContribution ? "/mo" : "";
+  const currencyInputError = validateContributionAmount(
+    minFeeToJoin,
+    zeroContribution,
+    enteredContribution
+  );
+
   const handleBackToSelectionClick = useCallback(() => {
     setSelectedContribution(null);
     setEnteredContribution(undefined);
@@ -55,15 +79,10 @@ export default function ContributionAmountSelection(props: IProps) {
     default: "contribution-amount-selection__toggle-button",
   };
   return (
-    <div className="contribution-amount-selection">
+    <div className={classNames("contribution-amount-selection", className)}>
       {selectedContribution !== "other" && (
         <ToggleButtonGroup
-          className={classNames(
-            "contribution-amount-selection__toggle-button-group",
-            {
-              "contribution-amount-selection__toggle-button-group--one-time": !isMonthlyContribution,
-            }
-          )}
+          className="contribution-amount-selection__toggle-button-group"
           value={selectedContribution}
           onChange={handleChange}
           variant={ToggleButtonGroupVariant.Vertical}

@@ -3,4 +3,5 @@ export const ApiEndpoint = {
   CreateFunding: "/proposals/create/funding",
   UploadInvoices: "/payments/payout-docs/add",
   ApproveOrDeclineProposal: "/payments/payout-docs/trustee-decision",
+  GetReports: "/reports",
 };
