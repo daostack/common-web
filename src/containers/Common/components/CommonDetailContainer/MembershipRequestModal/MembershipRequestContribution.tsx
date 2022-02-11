@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import classNames from "classnames";
-import { ButtonLink } from "../../../../../shared/components";
+import { useSelector } from "react-redux";
+import { Button, ButtonLink } from "../../../../../shared/components";
 import {
   CurrencyInput,
   ToggleButtonGroup,
@@ -9,16 +10,18 @@ import {
 } from "../../../../../shared/components/Form";
 import { ModalFooter } from "../../../../../shared/components/Modal";
 import {
+  ScreenSize,
   MIN_CONTRIBUTION_ILS_AMOUNT,
   MAX_CONTRIBUTION_ILS_AMOUNT,
-} from "../../../../../shared/constants/shared";
+} from "../../../../../shared/constants";
 import {
   formatPrice,
   roundNumberToNextTenths,
 } from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
-import "./index.scss";
+import { getScreenSize } from "../../../../../shared/store/selectors";
 import { IStageProps } from "./MembershipRequestModal";
+import "./index.scss";
 
 const validateContributionAmount = (
   minFeeToJoin: number,
@@ -83,6 +86,8 @@ const getAmountsForSelection = (
 
 export default function MembershipRequestContribution(props: IStageProps) {
   const { userData, setUserData, common } = props;
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
   const isMonthlyContribution =
     common?.metadata.contributionType === CommonContributionType.Monthly;
   const minFeeToJoin = common?.metadata.minFeeToJoin || 0;
@@ -147,7 +152,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
     const contributionAmount =
       selectedContribution === "other"
         ? Number(enteredContribution) * 100
-        : (selectedContribution || 0);
+        : selectedContribution || 0;
 
     setUserData((nextUserData) => ({
       ...nextUserData,
@@ -230,13 +235,14 @@ export default function MembershipRequestContribution(props: IStageProps) {
       )}
       <ModalFooter sticky>
         <div className="membership-request-contribution__modal-footer">
-          <button
-            disabled={isSubmitDisabled}
-            className="button-blue membership-request-contribution__submit-button"
+          <Button
+            className="membership-request-contribution__submit-button"
             onClick={handleSubmit}
+            disabled={isSubmitDisabled}
+            shouldUseFullWidth={isMobileView}
           >
             Submit
-          </button>
+          </Button>
         </div>
       </ModalFooter>
     </div>
