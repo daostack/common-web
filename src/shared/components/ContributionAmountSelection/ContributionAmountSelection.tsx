@@ -8,7 +8,12 @@ import {
   ToggleButtonGroupVariant,
 } from "../Form";
 import { formatPrice } from "../../utils";
-import { getAmountsForSelection, validateContributionAmount } from "./helpers";
+import {
+  getAmountsForSelection,
+  getInitialEnteredContributionValue,
+  getInitialSelectedContributionValue,
+  validateContributionAmount,
+} from "./helpers";
 import "./index.scss";
 
 interface IProps {
@@ -34,21 +39,13 @@ export default function ContributionAmountSelection(props: IProps) {
   );
   const [selectedContribution, setSelectedContribution] = useState<
     number | "other" | null
-  >(() => {
-    if (contributionAmount === undefined) {
-      return null;
-    }
-
-    return amountsForSelection.includes(contributionAmount)
-      ? contributionAmount
-      : "other";
-  });
+  >(() =>
+    getInitialSelectedContributionValue(amountsForSelection, contributionAmount)
+  );
   const [enteredContribution, setEnteredContribution] = useState<
     string | undefined
   >(() =>
-    selectedContribution === "other" && contributionAmount
-      ? String(contributionAmount / 100)
-      : undefined
+    getInitialEnteredContributionValue(selectedContribution, contributionAmount)
   );
   const formattedMinFeeToJoin = formatPrice(
     zeroContribution ? 0 : minFeeToJoin,

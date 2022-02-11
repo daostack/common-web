@@ -64,3 +64,24 @@ export const validateContributionAmount = (
 
   return errorTexts.join(" ");
 };
+
+export const getInitialSelectedContributionValue = (
+  amountsForSelection: number[],
+  contributionAmount?: number
+): number | "other" | null => {
+  if (contributionAmount === undefined) {
+    return null;
+  }
+
+  return amountsForSelection.includes(contributionAmount)
+    ? contributionAmount
+    : "other";
+};
+
+export const getInitialEnteredContributionValue = (
+  selectedContribution: number | "other" | null,
+  contributionAmount?: number
+): string | undefined =>
+  selectedContribution === "other" && contributionAmount
+    ? String(contributionAmount / 100)
+    : undefined;
