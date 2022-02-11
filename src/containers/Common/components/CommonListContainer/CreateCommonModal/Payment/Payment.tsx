@@ -1,7 +1,5 @@
 import React, {
-  Dispatch,
   ReactNode,
-  SetStateAction,
   useCallback,
   useEffect,
   useMemo,
@@ -12,7 +10,10 @@ import { useSelector } from "react-redux";
 import { Dots } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
-import { IntermediateCreateCommonPayload } from "../../../../interfaces";
+import {
+  IntermediateCreateCommonPayload,
+  PaymentPayload,
+} from "../../../../interfaces";
 import { PersonalContribution } from "./PersonalContribution";
 import { PROGRESS_RELATED_STEPS } from "./Progress";
 import { PaymentStep } from "./constants";
@@ -25,15 +26,9 @@ interface PaymentProps {
   setShouldShowCloseButton: (shouldShow: boolean) => void;
   onFinish: () => void;
   creationData: IntermediateCreateCommonPayload;
-  setCreationData: Dispatch<SetStateAction<IntermediateCreateCommonPayload>>;
 }
 
-export interface PaymentInitDataType {
-  selectedAmount?: number;
-  cardId: string;
-}
-
-const INITIAL_DATA: PaymentInitDataType = {
+const INITIAL_DATA: PaymentPayload = {
   cardId: uuidv4(),
 };
 
@@ -44,11 +39,8 @@ export default function Payment(props: PaymentProps) {
     setGoBackHandler,
     setShouldShowCloseButton,
     creationData,
-    setCreationData,
   } = props;
-  const [paymentData, setPaymentData] = useState<PaymentInitDataType>(
-    INITIAL_DATA
-  );
+  const [paymentData, setPaymentData] = useState<PaymentPayload>(INITIAL_DATA);
   const [step, setStep] = useState(PaymentStep.PersonalContribution);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -68,14 +60,10 @@ export default function Payment(props: PaymentProps) {
     setStep((step) => step - 1);
   }, [step]);
 
-  const moveStageForward = useCallback(() => {
-    setStep((step) => step + 1);
-  }, []);
-
   const handleFinish = useCallback(
-    (data?: Partial<IntermediateCreateCommonPayload>) => {
+    (data?: Partial<PaymentPayload>) => {
       if (data) {
-        setCreationData((nextData) => ({
+        setPaymentData((nextData) => ({
           ...nextData,
           ...data,
         }));
@@ -86,7 +74,7 @@ export default function Payment(props: PaymentProps) {
       scrollTop();
       setStep((stage) => stage + 1);
     },
-    [step, setCreationData]
+    [step]
   );
 
   const title = useMemo(() => {
@@ -125,11 +113,10 @@ export default function Payment(props: PaymentProps) {
 
   const content = useMemo(() => {
     const stepProps = {
-      creationData,
       paymentData,
-      setPaymentData,
+      creationData,
       currentStep: step,
-      onFinish: moveStageForward,
+      onFinish: handleFinish,
     };
 
     switch (step) {
@@ -140,7 +127,7 @@ export default function Payment(props: PaymentProps) {
       default:
         return null;
     }
-  }, [moveStageForward, paymentData, setPaymentData, step, creationData]);
+  }, [paymentData, creationData, step, handleFinish]);
 
   return content;
 }

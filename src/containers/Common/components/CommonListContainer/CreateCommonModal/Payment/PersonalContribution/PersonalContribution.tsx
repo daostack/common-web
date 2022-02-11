@@ -1,4 +1,4 @@
-import React, { useCallback, useState, Dispatch, SetStateAction } from "react";
+import React, { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   Button,
@@ -10,37 +10,32 @@ import { ScreenSize } from "@/shared/constants";
 import { CommonContributionType } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice } from "@/shared/utils";
-import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
-import { PaymentInitDataType } from "../Payment";
+import {
+  IntermediateCreateCommonPayload,
+  PaymentPayload,
+} from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import "./index.scss";
 
 interface IStageProps {
-  paymentData: PaymentInitDataType;
-  setPaymentData: Dispatch<SetStateAction<PaymentInitDataType>>;
   currentStep: number;
-  onFinish: () => void;
+  onFinish: (data: Partial<PaymentPayload>) => void;
+  paymentData: PaymentPayload;
   creationData: IntermediateCreateCommonPayload;
 }
 
 export default function PersonalContribution(props: IStageProps) {
-  const {
-    creationData,
-    currentStep,
-    onFinish,
-    paymentData,
-    setPaymentData,
-  } = props;
+  const { currentStep, onFinish, paymentData, creationData } = props;
   const [
     [selectedContribution, hasSelectedContributionError],
     setSelectedContributionState,
   ] = useState<[number | null, boolean]>([
-    paymentData.selectedAmount ?? null,
-    !paymentData.selectedAmount,
+    paymentData.contributionAmount ?? null,
+    !paymentData.contributionAmount,
   ]);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const selectedAmount = paymentData.selectedAmount || 0;
+  const selectedAmount = paymentData.contributionAmount || 0;
   const isMonthlyContribution =
     creationData.contributionType === CommonContributionType.Monthly;
   const minFeeToJoin = creationData.contributionAmount * 100;
@@ -65,17 +60,10 @@ export default function PersonalContribution(props: IStageProps) {
       return;
     }
 
-    setPaymentData((nextPaymentData) => ({
-      ...nextPaymentData,
-      selectedAmount: selectedContribution,
-    }));
-    onFinish();
-  }, [
-    onFinish,
-    setPaymentData,
-    selectedContribution,
-    hasSelectedContributionError,
-  ]);
+    onFinish({
+      contributionAmount: selectedContribution,
+    });
+  }, [hasSelectedContributionError, selectedContribution, onFinish]);
 
   const progressEl = <Progress creationStep={currentStep} />;
 
