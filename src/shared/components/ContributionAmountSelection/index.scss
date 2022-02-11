@@ -1,7 +1,13 @@
 @import "../../../constants";
 @import "../../../styles/sizes";
 
-.create-common-contribution__toggle-button {
+.contribution-amount-selection {
+  max-width: 23.75rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.contribution-amount-selection__toggle-button {
   padding: 1.375rem;
 
   @include big-phone {
@@ -9,32 +15,19 @@
   }
 }
 
-.create-common-contribution__toggle-button-group {
-  max-width: 23.75rem;
-  width: 100%;
-  margin-top: 1rem;
+.contribution-amount-selection__toggle-button-group {
   font-size: $small;
-
-  @include big-phone {
-    margin-top: 1rem;
-  }
 }
 
-.create-common-contribution__toggle-button-group--one-time {
+.contribution-amount-selection__toggle-button-group--one-time {
   margin-bottom: 2.375rem;
 }
 
-.create-common-contribution__currency-input-wrapper {
-  max-width: 23.75rem;
-  width: 100%;
-  margin-top: 1rem;
-}
-
-.create-common-contribution__currency-input-label {
+.contribution-amount-selection__currency-input-label {
   margin: 0;
   font-size: $xsmall;
 }
 
-.create-common-contribution__back-to-selection {
+.contribution-amount-selection__back-to-selection {
   margin-top: 0.5rem;
 }

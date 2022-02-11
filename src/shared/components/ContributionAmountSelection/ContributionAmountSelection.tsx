@@ -52,16 +52,16 @@ export default function ContributionAmountSelection(props: IProps) {
     );
   }, []);
   const toggleButtonStyles = {
-    default: "create-common-contribution__toggle-button",
+    default: "contribution-amount-selection__toggle-button",
   };
   return (
-    <>
+    <div className="contribution-amount-selection">
       {selectedContribution !== "other" && (
         <ToggleButtonGroup
           className={classNames(
-            "create-common-contribution__toggle-button-group",
+            "contribution-amount-selection__toggle-button-group",
             {
-              "create-common-contribution__toggle-button-group--one-time": !isMonthlyContribution,
+              "contribution-amount-selection__toggle-button-group--one-time": !isMonthlyContribution,
             }
           )}
           value={selectedContribution}
@@ -87,7 +87,7 @@ export default function ContributionAmountSelection(props: IProps) {
         </ToggleButtonGroup>
       )}
       {selectedContribution === "other" && (
-        <div className="create-common-contribution__currency-input-wrapper">
+        <>
           <CurrencyInput
             name="contributionAmount"
             label="Contribution amount"
@@ -97,18 +97,18 @@ export default function ContributionAmountSelection(props: IProps) {
             onBlur={handleCurrencyInputBlur}
             error={isCurrencyInputTouched ? currencyInputError : ""}
             styles={{
-              label: "create-common-contribution__currency-input-label",
+              label: "contribution-amount-selection__currency-input-label",
             }}
             allowDecimals={false}
           />
           <ButtonLink
-            className="create-common-contribution__back-to-selection"
+            className="contribution-amount-selection__back-to-selection"
             onClick={handleBackToSelectionClick}
           >
             Back to amount selection
           </ButtonLink>
-        </div>
+        </>
       )}
-    </>
+    </div>
   );
 }
