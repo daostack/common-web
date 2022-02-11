@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useMemo,
-  useState,
-  Dispatch,
-  SetStateAction,
-} from "react";
+import React, { useCallback, useState, Dispatch, SetStateAction } from "react";
 import { useSelector } from "react-redux";
 import {
   Button,
@@ -16,7 +10,6 @@ import { CommonContributionType } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice } from "@/shared/utils";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
-import { getAmountsForSelection, validateContributionAmount } from "../helpers";
 import { PaymentInitDataType } from "../Payment";
 import { Progress } from "../Progress";
 import "./index.scss";
