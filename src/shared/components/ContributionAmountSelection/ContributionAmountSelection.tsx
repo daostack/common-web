@@ -22,6 +22,7 @@ interface IProps {
   minFeeToJoin: number;
   zeroContribution: boolean;
   pricePostfix: string;
+  onChange: (amount: number | null, hasError: boolean) => void;
 }
 
 export default function ContributionAmountSelection(props: IProps) {
@@ -31,6 +32,7 @@ export default function ContributionAmountSelection(props: IProps) {
     minFeeToJoin,
     zeroContribution,
     pricePostfix,
+    onChange,
   } = props;
   const [isCurrencyInputTouched, setIsCurrencyInputTouched] = useState(false);
   const amountsForSelection = useMemo(
@@ -60,18 +62,44 @@ export default function ContributionAmountSelection(props: IProps) {
   const handleBackToSelectionClick = useCallback(() => {
     setSelectedContribution(null);
     setEnteredContribution(undefined);
-  }, []);
+    onChange(null, true);
+  }, [onChange]);
 
   const handleCurrencyInputBlur = useCallback(() => {
     setIsCurrencyInputTouched(true);
   }, []);
 
-  const handleChange = useCallback((value: unknown) => {
-    const convertedValue = Number(value);
-    setSelectedContribution(
-      !Number.isNaN(convertedValue) ? convertedValue : "other"
-    );
-  }, []);
+  const handleChange = useCallback(
+    (value: unknown) => {
+      const convertedValue = Number(value);
+
+      if (Number.isNaN(convertedValue)) {
+        setSelectedContribution("other");
+        onChange(null, true);
+        return;
+      }
+
+      setSelectedContribution(convertedValue);
+      onChange(convertedValue, false);
+    },
+    [onChange]
+  );
+
+  const handleCurrencyInputChange = useCallback(
+    (value: string | undefined) => {
+      const hasError = Boolean(
+        validateContributionAmount(minFeeToJoin, zeroContribution, value)
+      );
+      const convertedValue = Number(value);
+
+      setEnteredContribution(value);
+      onChange(
+        !Number.isNaN(convertedValue) ? convertedValue * 100 : null,
+        hasError
+      );
+    },
+    [minFeeToJoin, zeroContribution, onChange]
+  );
 
   const toggleButtonStyles = {
     default: "contribution-amount-selection__toggle-button",
@@ -111,7 +139,7 @@ export default function ContributionAmountSelection(props: IProps) {
             label="Contribution amount"
             placeholder={formattedMinFeeToJoin}
             value={enteredContribution}
-            onValueChange={setEnteredContribution}
+            onValueChange={handleCurrencyInputChange}
             onBlur={handleCurrencyInputBlur}
             error={isCurrencyInputTouched ? currencyInputError : ""}
             styles={{
