@@ -258,6 +258,13 @@ $payment-iframe-height-mobile: 672px;
     font-size: $xsmall;
   }
 
+  .membership-request-contribution__contribution-amount-selection {
+    margin-top: 8px;
+  }
+  .membership-request-contribution__contribution-amount-selection--one-time {
+    margin-bottom: 2.375rem;
+  }
+
   .membership-request-contribution__toggle-button-group {
     max-width: 380px;
     width: 100%;
