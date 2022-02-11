@@ -29,20 +29,20 @@ export const PROGRESS_RELATED_STEPS = [
 
 export default function Progress({
   creationStep,
-}: ProgressProps): ReactElement {
+}: ProgressProps): ReactElement | null {
   const stepIndex = PROGRESS_RELATED_STEPS.findIndex(
     (step) => step === creationStep
   );
 
+  if (stepIndex === -1) {
+    return null;
+  }
+
   return (
-    <div className="create-common-payment-steps-progress">
-      {stepIndex !== -1 && (
-        <StepProgress
-          className="create-common-payment-steps-progress__stepper"
-          currentStep={stepIndex + 1}
-          items={ITEMS}
-        />
-      )}
-    </div>
+    <StepProgress
+      className="create-common-payment-steps-progress"
+      currentStep={stepIndex + 1}
+      items={ITEMS}
+    />
   );
 }
