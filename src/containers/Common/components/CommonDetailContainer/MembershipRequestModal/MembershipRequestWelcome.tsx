@@ -6,6 +6,7 @@ import { ScreenSize } from "../../../../../shared/constants";
 import { getScreenSize } from "../../../../../shared/store/selectors";
 import { ModalFooter } from "../../../../../shared/components/Modal";
 import { IStageProps } from "./MembershipRequestModal";
+import {Button} from '../../../../../shared/components';
 import "./index.scss";
 
 export default function MembershipRequestWelcome(props: IStageProps) {
@@ -87,10 +88,15 @@ export default function MembershipRequestWelcome(props: IStageProps) {
       </div>
       <ModalFooter sticky>
         <div className="membership-request-welcome__modal-footer">
-          <button className="button-blue" onClick={handleContinueClick}>
-            {continueButtonText}
-          </button>
+            <Button
+                onClick={handleContinueClick}
+                className="membership-request__submit-button"
+                shouldUseFullWidth={isMobileView}
+            >
+                {continueButtonText}
+            </Button>
         </div>
+
       </ModalFooter>
     </div>
   );

@@ -1,10 +1,15 @@
 import React from "react";
-import "./index.scss";
+import { useSelector } from "react-redux";
 import { IStageProps } from "./MembershipRequestModal";
+import { Button } from "../../../../../shared/components";
+import { getScreenSize } from "../../../../../shared/store/selectors";
+import { ScreenSize } from "../../../../../shared/constants";
+import "./index.scss";
 
 export default function MembershipRequestIntroduce(props: IStageProps) {
   const { userData, setUserData, common } = props;
-
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
   const handleContinue = () => {
     const nextStage = common && common.rules.length > 0 ? 2 : 3;
 
@@ -14,7 +19,10 @@ export default function MembershipRequestIntroduce(props: IStageProps) {
   return (
     <div className="membership-request-content membership-request-introduce">
       <div className="sub-title">Introduce Yourself</div>
-      <div className="sub-text">Let the Common members learn more about you and how you relate to the cause.</div>
+      <div className="sub-text">
+        Let the Common members learn more about you and how you relate to the
+        cause.
+      </div>
       <label>Intro</label>
       <textarea
         value={userData.intro}
@@ -27,13 +35,14 @@ export default function MembershipRequestIntroduce(props: IStageProps) {
         onChange={(e) => setUserData({ ...userData, notes: e.target.value })}
         placeholder="Why do you want to join this Common?"
       />
-      <button
+      <Button
         onClick={handleContinue}
-        className="button-blue"
+        className="membership-request__submit-button"
         disabled={!userData.intro || !userData.notes}
+        shouldUseFullWidth={isMobileView}
       >
         Continue
-      </button>
+      </Button>
     </div>
   );
 }
