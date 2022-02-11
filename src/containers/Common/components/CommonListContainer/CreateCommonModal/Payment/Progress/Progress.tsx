@@ -1,15 +1,13 @@
 import React, { ReactElement } from "react";
-import { StepProgress } from "@/shared/components/StepProgress";
+import {
+  StepProgress,
+  StepProgressItem,
+} from "@/shared/components/StepProgress";
 import { PaymentStep } from "../constants";
 import "./index.scss";
 
 interface ProgressProps {
-  creationStep: PaymentStep;
-}
-
-interface StepProgressItem {
-  activeImageSource: string;
-  inactiveImageSource: string;
+  paymentStep: PaymentStep;
 }
 
 const ITEMS: StepProgressItem[] = [
@@ -28,10 +26,10 @@ export const PROGRESS_RELATED_STEPS = [
 ];
 
 export default function Progress({
-  creationStep,
+  paymentStep,
 }: ProgressProps): ReactElement | null {
   const stepIndex = PROGRESS_RELATED_STEPS.findIndex(
-    (step) => step === creationStep
+    (step) => step === paymentStep
   );
 
   if (stepIndex === -1) {

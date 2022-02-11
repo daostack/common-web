@@ -64,7 +64,7 @@ export default function PersonalContribution(props: IStageProps) {
     });
   }, [hasSelectedContributionError, selectedContribution, onFinish]);
 
-  const progressEl = <Progress creationStep={currentStep} />;
+  const progressEl = <Progress paymentStep={currentStep} />;
 
   return (
     <div className="create-common-contribution">
