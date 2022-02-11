@@ -4,6 +4,7 @@ import {
   Button,
   ContributionAmountSelection,
   ModalFooter,
+  Separator,
 } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { CommonContributionType } from "@/shared/models";
@@ -81,22 +82,23 @@ export default function PersonalContribution(props: IStageProps) {
   return (
     <div className="create-common-contribution">
       {progressEl}
-      <div className="create-common-contribution__sub-title">
+      <h4 className="create-common-contribution__sub-title">
         {isMonthlyContribution ? "Monthly" : "Personal"} Contribution
-      </div>
+      </h4>
       <div className="create-common-contribution__sub-text-wrapper">
-        <div className="create-common-contribution__sub-text-item">
+        <p className="create-common-contribution__sub-text-item">
           Select the amount you would like to contribute to this Common.
-        </div>
-        <div className="create-common-contribution__sub-text-item">
+        </p>
+        <p className="create-common-contribution__sub-text-item">
           Contribution to this Common ({formattedMinFeeToJoin}
           {pricePostfix} min.){" "}
           <span className="create-common-contribution__sub-text-item--bold">
             You will not be charged until another member joins{" "}
           </span>{" "}
           the Common.
-        </div>
+        </p>
       </div>
+      <Separator className="create-common-contribution__separator" />
       <ContributionAmountSelection
         contributionAmount={selectedAmount}
         minFeeToJoin={minFeeToJoin}

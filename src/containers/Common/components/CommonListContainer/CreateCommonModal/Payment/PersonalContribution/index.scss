@@ -9,25 +9,24 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-family: NunitoSans, sans-serif;
 
   .create-common-contribution__sub-title {
-    margin-bottom: 0.25rem;
-    font-family: NunitoSans, sans-serif;
+    margin: 0 0 0.25rem;
+    font-family: inherit;
     font-weight: bold;
   }
 
   .create-common-contribution__sub-text-wrapper {
     width: 100%;
-    padding-bottom: 1.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-bottom: 1px solid $light-gray-1;
   }
 
   .create-common-contribution__sub-text-item {
     max-width: 23.7rem;
-    margin-bottom: 1.5rem;
+    margin: 0 0 1.5rem;
     font-size: $xsmall;
     text-align: center;
     color: $light-gray-2;
@@ -40,13 +39,17 @@
     font-weight: bold;
   }
 
+  .create-common-contribution__separator {
+    margin: 1.5rem 0 1rem;
+  }
+
   @include big-phone {
     min-height: unset;
   }
 }
 
 .create-common-contribution__hint {
-  margin: 1rem 0 0.625rem;
+  margin: 1.5rem 0 0;
   font-size: $xsmall;
   line-height: 1.42;
   text-align: center;
@@ -55,12 +58,16 @@
 
 .create-common-contribution__submit-button-wrapper {
   margin: 0 auto;
-  padding-bottom: 1.75rem;
+  padding: 1.75rem 0;
   display: flex;
   justify-content: center;
 
   .create-common-contribution__submit-button {
     min-width: 11.25rem;
+
+    @include big-phone {
+      min-width: unset;
+    }
   }
 
   @include big-phone {
