@@ -31,11 +31,10 @@ export default function PersonalContribution(props: IStageProps) {
     setSelectedContributionState,
   ] = useState<[number | null, boolean]>([
     paymentData.contributionAmount ?? null,
-    !paymentData.contributionAmount,
+    typeof paymentData.contributionAmount !== "number",
   ]);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const selectedAmount = paymentData.contributionAmount || 0;
   const isMonthlyContribution =
     creationData.contributionType === CommonContributionType.Monthly;
   const minFeeToJoin = creationData.contributionAmount * 100;
@@ -88,7 +87,7 @@ export default function PersonalContribution(props: IStageProps) {
       </div>
       <Separator className="create-common-contribution__separator" />
       <ContributionAmountSelection
-        contributionAmount={selectedAmount}
+        contributionAmount={paymentData.contributionAmount}
         minFeeToJoin={minFeeToJoin}
         zeroContribution={zeroContribution}
         pricePostfix={pricePostfix}
