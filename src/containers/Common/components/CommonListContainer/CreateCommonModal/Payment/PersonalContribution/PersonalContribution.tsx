@@ -37,6 +37,13 @@ export default function PersonalContribution(props: IStageProps) {
     paymentData,
     setPaymentData,
   } = props;
+  const [
+    [selectedContribution, hasSelectedContributionError],
+    setSelectedContributionState,
+  ] = useState<[number | null, boolean]>([
+    paymentData.selectedAmount ?? null,
+    !paymentData.selectedAmount,
+  ]);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const selectedAmount = paymentData.selectedAmount || 0;
@@ -44,57 +51,37 @@ export default function PersonalContribution(props: IStageProps) {
     creationData.contributionType === CommonContributionType.Monthly;
   const minFeeToJoin = creationData.contributionAmount * 100;
   const zeroContribution = creationData.zeroContribution || false;
-
-  const amountsForSelection = useMemo(
-    () => getAmountsForSelection(minFeeToJoin, zeroContribution),
-    [minFeeToJoin, zeroContribution]
-  );
-  const [selectedContribution, setSelectedContribution] = useState<
-    number | "other" | null
-  >(() => {
-    if (selectedAmount === 0) {
-      return null;
-    }
-
-    return amountsForSelection.includes(selectedAmount)
-      ? selectedAmount
-      : "other";
-  });
-  const [enteredContribution, setEnteredContribution] = useState<
-    string | undefined
-  >(() =>
-    selectedContribution === "other"
-      ? String((creationData.contributionAmount || 0) / 100)
-      : undefined
-  );
-
   const formattedMinFeeToJoin = formatPrice(
     zeroContribution ? 0 : minFeeToJoin,
     { shouldMillify: false, shouldRemovePrefixFromZero: false }
   );
   const pricePostfix = isMonthlyContribution ? "/mo" : "";
-  const currencyInputError = validateContributionAmount(
-    minFeeToJoin,
-    zeroContribution,
-    enteredContribution
-  );
-  const isSubmitDisabled = Boolean(
-    selectedContribution === "other"
-      ? currencyInputError
-      : selectedContribution === null
+  const isSubmitDisabled =
+    hasSelectedContributionError || selectedContribution === null;
+
+  const handleChange = useCallback(
+    (amount: number | null, hasError: boolean) => {
+      setSelectedContributionState([amount, hasError]);
+    },
+    []
   );
 
   const handleSubmit = useCallback(() => {
-    const contributionAmount =
-      selectedContribution === "other"
-        ? Number(enteredContribution) * 100
-        : selectedContribution || 0;
+    if (hasSelectedContributionError || selectedContribution === null) {
+      return;
+    }
+
     setPaymentData((nextPaymentData) => ({
       ...nextPaymentData,
-      selectedAmount: contributionAmount,
+      selectedAmount: selectedContribution,
     }));
     onFinish();
-  }, [onFinish, setPaymentData, selectedContribution, enteredContribution]);
+  }, [
+    onFinish,
+    setPaymentData,
+    selectedContribution,
+    hasSelectedContributionError,
+  ]);
 
   const progressEl = <Progress creationStep={currentStep} />;
 
@@ -118,15 +105,11 @@ export default function PersonalContribution(props: IStageProps) {
         </div>
       </div>
       <ContributionAmountSelection
-        selectedContribution={selectedContribution}
-        setSelectedContribution={setSelectedContribution}
-        enteredContribution={enteredContribution}
-        setEnteredContribution={setEnteredContribution}
-        amountsForSelection={amountsForSelection}
-        isMonthlyContribution={isMonthlyContribution}
+        contributionAmount={selectedAmount}
+        minFeeToJoin={minFeeToJoin}
+        zeroContribution={zeroContribution}
         pricePostfix={pricePostfix}
-        currencyInputError={currencyInputError}
-        formattedMinFeeToJoin={formattedMinFeeToJoin}
+        onChange={handleChange}
       />
       {isMonthlyContribution && (
         <span className="create-common-contribution__hint">
