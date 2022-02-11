@@ -16,7 +16,7 @@ interface IProps {
   contributionAmount?: number;
   minFeeToJoin: number;
   zeroContribution: boolean;
-  isMonthlyContribution: boolean;
+  pricePostfix: string;
 }
 
 export default function ContributionAmountSelection(props: IProps) {
@@ -25,7 +25,7 @@ export default function ContributionAmountSelection(props: IProps) {
     contributionAmount,
     minFeeToJoin,
     zeroContribution,
-    isMonthlyContribution,
+    pricePostfix,
   } = props;
   const [isCurrencyInputTouched, setIsCurrencyInputTouched] = useState(false);
   const amountsForSelection = useMemo(
@@ -54,7 +54,6 @@ export default function ContributionAmountSelection(props: IProps) {
     zeroContribution ? 0 : minFeeToJoin,
     { shouldMillify: false, shouldRemovePrefixFromZero: false }
   );
-  const pricePostfix = isMonthlyContribution ? "/mo" : "";
   const currencyInputError = validateContributionAmount(
     minFeeToJoin,
     zeroContribution,
@@ -65,6 +64,7 @@ export default function ContributionAmountSelection(props: IProps) {
     setSelectedContribution(null);
     setEnteredContribution(undefined);
   }, []);
+
   const handleCurrencyInputBlur = useCallback(() => {
     setIsCurrencyInputTouched(true);
   }, []);
@@ -75,9 +75,11 @@ export default function ContributionAmountSelection(props: IProps) {
       !Number.isNaN(convertedValue) ? convertedValue : "other"
     );
   }, []);
+
   const toggleButtonStyles = {
     default: "contribution-amount-selection__toggle-button",
   };
+
   return (
     <div className={classNames("contribution-amount-selection", className)}>
       {selectedContribution !== "other" && (
