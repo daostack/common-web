@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "../../../../../shared/components";
 import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
 
@@ -29,12 +30,12 @@ export default function MembershipRequestRules(props: IStageProps) {
           </li>
         ))}
       </ol>
-      <button
+      <Button
         onClick={() => setUserData({ ...userData, stage: 3 })}
-        className="button-blue"
+        className="membership-request-rules__submit-button"
       >
         Accept Rules
-      </button>
+      </Button>
     </div>
   );
 }

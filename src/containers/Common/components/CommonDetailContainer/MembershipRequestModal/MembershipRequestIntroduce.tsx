@@ -1,9 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { IStageProps } from "./MembershipRequestModal";
 import { Button } from "../../../../../shared/components";
-import { getScreenSize } from "../../../../../shared/store/selectors";
 import { ScreenSize } from "../../../../../shared/constants";
+import { getScreenSize } from "../../../../../shared/store/selectors";
+import { IStageProps } from "./MembershipRequestModal";
 import "./index.scss";
 
 export default function MembershipRequestIntroduce(props: IStageProps) {
@@ -36,8 +36,8 @@ export default function MembershipRequestIntroduce(props: IStageProps) {
         placeholder="Why do you want to join this Common?"
       />
       <Button
+        className="membership-request-introduce__submit-button"
         onClick={handleContinue}
-        className="membership-request__submit-button"
         disabled={!userData.intro || !userData.notes}
         shouldUseFullWidth={isMobileView}
       >

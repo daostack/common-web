@@ -14,11 +14,9 @@
     cursor: pointer;
   }
 }
-
 .custom-button--full-width {
   width: 100%;
 }
-
 .custom-button--disabled:disabled {
   background-color: $light-gray-3;
   color: $light-gray-2;
@@ -27,7 +25,6 @@
     cursor: not-allowed;
   }
 }
-
 .custom-button--primary {
   background-color: $purple;
   color: $white;
@@ -38,7 +35,6 @@
     background-color: $purple-2;
   }
 }
-
 .custom-button--secondary {
   border: 1px solid $light-gray-1;
   background-color: $white;

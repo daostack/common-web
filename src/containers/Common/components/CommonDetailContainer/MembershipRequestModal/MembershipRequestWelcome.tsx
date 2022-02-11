@@ -2,11 +2,11 @@ import React, { useCallback, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperClass from "swiper/types/swiper-class";
+import { Button } from "../../../../../shared/components";
 import { ScreenSize } from "../../../../../shared/constants";
 import { getScreenSize } from "../../../../../shared/store/selectors";
 import { ModalFooter } from "../../../../../shared/components/Modal";
 import { IStageProps } from "./MembershipRequestModal";
-import {Button} from '../../../../../shared/components';
 import "./index.scss";
 
 export default function MembershipRequestWelcome(props: IStageProps) {
@@ -88,15 +88,14 @@ export default function MembershipRequestWelcome(props: IStageProps) {
       </div>
       <ModalFooter sticky>
         <div className="membership-request-welcome__modal-footer">
-            <Button
-                onClick={handleContinueClick}
-                className="membership-request__submit-button"
-                shouldUseFullWidth={isMobileView}
-            >
-                {continueButtonText}
-            </Button>
+          <Button
+            className="membership-request-welcome__submit-button"
+            onClick={handleContinueClick}
+            shouldUseFullWidth={isMobileView}
+          >
+            {continueButtonText}
+          </Button>
         </div>
-
       </ModalFooter>
     </div>
   );

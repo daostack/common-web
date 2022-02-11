@@ -159,6 +159,14 @@ $payment-iframe-height-mobile: 672px;
   }
 }
 
+.membership-request-welcome__submit-button {
+  min-width: 11.25rem;
+
+  @include big-phone {
+    min-width: unset;
+  }
+}
+
 .membership-request-introduce {
   label {
     align-self: self-start;
@@ -187,6 +195,14 @@ $payment-iframe-height-mobile: 672px;
     font-weight: normal;
     min-width: 128px;
     font-family: NunitoSans-Regular;
+  }
+
+  .membership-request-introduce__submit-button {
+    min-width: 11.25rem;
+
+    @include big-phone {
+      min-width: unset;
+    }
   }
 }
 
@@ -234,11 +250,12 @@ $payment-iframe-height-mobile: 672px;
     font-weight: normal;
   }
 
-  .button-blue {
-    font-weight: normal;
-    min-width: 180px;
-    height: 48px;
-    font-family: NunitoSans-Regular;
+  .membership-request-rules__submit-button {
+    min-width: 11.25rem;
+
+    @include big-phone {
+      min-width: unset;
+    }
   }
 }
 
@@ -339,9 +356,8 @@ $payment-iframe-height-mobile: 672px;
   padding: 1.5rem 0;
 }
 
-.membership-request__submit-button {
+.membership-request-contribution__submit-button {
   min-width: 11.25rem;
-  min-height: 3rem;
 
   @include big-phone {
     min-width: unset;

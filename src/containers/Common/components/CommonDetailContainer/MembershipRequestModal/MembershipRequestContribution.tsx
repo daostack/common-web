@@ -10,17 +10,17 @@ import {
 } from "../../../../../shared/components/Form";
 import { ModalFooter } from "../../../../../shared/components/Modal";
 import {
+  ScreenSize,
   MIN_CONTRIBUTION_ILS_AMOUNT,
   MAX_CONTRIBUTION_ILS_AMOUNT,
-  ScreenSize,
 } from "../../../../../shared/constants";
 import {
   formatPrice,
   roundNumberToNextTenths,
 } from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
-import { IStageProps } from "./MembershipRequestModal";
 import { getScreenSize } from "../../../../../shared/store/selectors";
+import { IStageProps } from "./MembershipRequestModal";
 import "./index.scss";
 
 const validateContributionAmount = (
@@ -236,8 +236,8 @@ export default function MembershipRequestContribution(props: IStageProps) {
       <ModalFooter sticky>
         <div className="membership-request-contribution__modal-footer">
           <Button
+            className="membership-request-contribution__submit-button"
             onClick={handleSubmit}
-            className="membership-request__submit-button"
             disabled={isSubmitDisabled}
             shouldUseFullWidth={isMobileView}
           >
