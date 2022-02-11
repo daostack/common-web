@@ -110,9 +110,10 @@ export default function PersonalContribution(props: IStageProps) {
         </span>
       )}
       <ModalFooter sticky>
-        <div className="create-common-contribution__submit-button">
+        <div className="create-common-contribution__submit-button-wrapper">
           <Button
             key="personal-contribution-continue"
+            className="create-common-contribution__submit-button"
             disabled={isSubmitDisabled}
             onClick={handleSubmit}
             shouldUseFullWidth={isMobileView}

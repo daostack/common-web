@@ -53,11 +53,15 @@
   color: $blue-2;
 }
 
-.create-common-contribution__submit-button {
+.create-common-contribution__submit-button-wrapper {
   margin: 0 auto;
   padding-bottom: 1.75rem;
   display: flex;
   justify-content: center;
+
+  .create-common-contribution__submit-button {
+    min-width: 11.25rem;
+  }
 
   @include big-phone {
     padding-bottom: 1.75rem;
