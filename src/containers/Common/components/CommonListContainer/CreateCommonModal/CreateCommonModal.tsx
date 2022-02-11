@@ -7,14 +7,15 @@ import React, {
 } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
-
 import { Modal } from "@/shared/components";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ScreenSize } from "@/shared/constants";
 import { CommonContributionType } from "@/shared/models";
-import { IntermediateCreateCommonPayload } from "../../../interfaces/CreateCommonPayload";
+import { IntermediateCreateCommonPayload } from "../../../interfaces";
 import { CreationSteps } from "./CreationSteps";
 import { Introduction } from "./Introduction";
+import { Payment } from "./Payment";
+import { CreateCommonStage } from "./constants";
 import "./index.scss";
 
 const INITIAL_DATA: IntermediateCreateCommonPayload = {
@@ -25,18 +26,16 @@ const INITIAL_DATA: IntermediateCreateCommonPayload = {
   agreementAccepted: false,
 };
 
-enum CreateCommonStage {
-  Introduction,
-  CreationSteps,
-}
-
 interface CreateCommonModalProps {
   isShowing: boolean;
   onClose: () => void;
 }
 
 export default function CreateCommonModal(props: CreateCommonModalProps) {
-  const [stage, setStage] = useState(CreateCommonStage.Introduction);
+  const [{ stage, shouldStartFromLastStep }, setStageState] = useState({
+    stage: CreateCommonStage.Introduction,
+    shouldStartFromLastStep: false,
+  });
   const [
     creationData,
     setCreationData,
@@ -50,8 +49,10 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   const [shouldShowCloseButton, setShouldShowCloseButton] = useState(true);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const isHeaderSticky = stage === CreateCommonStage.CreationSteps;
-
+  const isHeaderSticky = [
+    CreateCommonStage.CreationSteps,
+    CreateCommonStage.Payment,
+  ].includes(stage);
   const setBigTitle = useCallback((title: string) => {
     setTitle(title);
     setIsBigTitle(true);
@@ -68,12 +69,16 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     []
   );
   const moveStageBack = useCallback(() => {
-    setStage((stage) =>
-      stage === CreateCommonStage.Introduction ? stage : stage - 1
-    );
+    setStageState(({ stage }) => ({
+      stage: stage === CreateCommonStage.Introduction ? stage : stage - 1,
+      shouldStartFromLastStep: true,
+    }));
   }, []);
   const moveStageForward = useCallback(() => {
-    setStage((stage) => stage + 1);
+    setStageState(({ stage }) => ({
+      stage: stage + 1,
+      shouldStartFromLastStep: false,
+    }));
   }, []);
   const handleGoBack = useCallback(() => {
     if (onGoBack && onGoBack()) {
@@ -111,9 +116,21 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
             setShouldShowCloseButton={setShouldShowCloseButton}
-            onFinish={handleCreationStepsFinish}
+            onFinish={moveStageForward}
             creationData={creationData}
             setCreationData={setCreationData}
+            shouldStartFromLastStep={shouldStartFromLastStep}
+          />
+        );
+      case CreateCommonStage.Payment:
+        return (
+          <Payment
+            isHeaderScrolledToTop={isHeaderScrolledToTop}
+            setTitle={setSmallTitle}
+            setGoBackHandler={setGoBackHandler}
+            setShouldShowCloseButton={setShouldShowCloseButton}
+            onFinish={handleCreationStepsFinish}
+            creationData={creationData}
           />
         );
       default:
@@ -129,11 +146,15 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     moveStageForward,
     handleCreationStepsFinish,
     creationData,
+    shouldStartFromLastStep,
   ]);
 
   useEffect(() => {
     if (!props.isShowing) {
-      setStage(CreateCommonStage.Introduction);
+      setStageState({
+        stage: CreateCommonStage.Introduction,
+        shouldStartFromLastStep: false,
+      });
       setCreationData(INITIAL_DATA);
     }
   }, [props.isShowing]);
