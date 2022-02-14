@@ -1,12 +1,14 @@
 import React, {
-  ReactNode,
   useCallback,
   useEffect,
   useMemo,
   useState,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
 } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 import { Dots } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
@@ -17,6 +19,7 @@ import {
 import { PersonalContribution } from "./PersonalContribution";
 import { PROGRESS_RELATED_STEPS } from "./Progress";
 import { PaymentStep } from "./constants";
+import { RequestPayment } from "./RequestPayment";
 import "./index.scss";
 
 interface PaymentProps {
@@ -26,11 +29,9 @@ interface PaymentProps {
   setShouldShowCloseButton: (shouldShow: boolean) => void;
   onFinish: () => void;
   creationData: IntermediateCreateCommonPayload;
+  paymentData: PaymentPayload;
+  setPaymentData: Dispatch<SetStateAction<PaymentPayload>>;
 }
-
-const INITIAL_DATA: PaymentPayload = {
-  cardId: uuidv4(),
-};
 
 export default function Payment(props: PaymentProps) {
   const {
@@ -38,9 +39,11 @@ export default function Payment(props: PaymentProps) {
     setTitle,
     setGoBackHandler,
     setShouldShowCloseButton,
+    onFinish,
     creationData,
+    paymentData,
+    setPaymentData,
   } = props;
-  const [paymentData, setPaymentData] = useState<PaymentPayload>(INITIAL_DATA);
   const [step, setStep] = useState(PaymentStep.PersonalContribution);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -54,11 +57,12 @@ export default function Payment(props: PaymentProps) {
 
   const handleGoBack = useCallback(() => {
     if (step === PaymentStep.PersonalContribution) {
+      setPaymentData({ cardId: uuidv4() });
       return true;
     }
     scrollTop();
     setStep((step) => step - 1);
-  }, [step]);
+  }, [step, setPaymentData]);
 
   const handleFinish = useCallback(
     (data?: Partial<PaymentPayload>) => {
@@ -68,13 +72,16 @@ export default function Payment(props: PaymentProps) {
           ...data,
         }));
       }
-      if (step === PaymentStep.PaymentDetails) {
-        return;
-      }
+
       scrollTop();
-      setStep((stage) => stage + 1);
+
+      if (step === PaymentStep.PaymentDetails) {
+        onFinish();
+      } else {
+        setStep((stage) => stage + 1);
+      }
     },
-    [step]
+    [onFinish, step, setPaymentData]
   );
 
   const title = useMemo(() => {
@@ -123,7 +130,7 @@ export default function Payment(props: PaymentProps) {
       case PaymentStep.PersonalContribution:
         return <PersonalContribution {...stepProps} />;
       case PaymentStep.PaymentDetails:
-        return <></>;
+        return <RequestPayment {...stepProps} />;
       default:
         return null;
     }

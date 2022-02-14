@@ -17,14 +17,14 @@ import {
 import { Progress } from "../Progress";
 import "./index.scss";
 
-interface IStageProps {
+interface PersonalContributionProps {
   currentStep: number;
   onFinish: (data: Partial<PaymentPayload>) => void;
   paymentData: PaymentPayload;
   creationData: IntermediateCreateCommonPayload;
 }
 
-export default function PersonalContribution(props: IStageProps) {
+export default function PersonalContribution(props: PersonalContributionProps) {
   const { currentStep, onFinish, paymentData, creationData } = props;
   const [
     [selectedContribution, hasSelectedContributionError],
