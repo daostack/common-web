@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Button } from "../../../../../shared/components";
 import { CONTACT_EMAIL } from "../../../../../shared/constants";
 import "./index.scss";
 
@@ -20,9 +21,9 @@ export default function ContactUs() {
         <input type="text" placeholder="Your Name" onChange={(e) => setName(e.target.value)} />
         <input type="email" placeholder="Your Email" onChange={(e) => setEmail(e.target.value)} />
         <textarea placeholder="Notes" onChange={(e) => setDescription(e.target.value)} />
-        <button className="button-blue send" disabled={!name || !email || !description}>
+        <Button className="send" disabled={!name || !email || !description}>
           Send
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -50,6 +50,7 @@
       margin-left: auto;
       margin-top: 20px;
       height: 56px;
+      width: 200px;
     }
   }
 }
@@ -65,6 +66,9 @@
       margin-bottom: 1.5rem;
     }
     .form-wrapper {
+      .send {
+        width: 100%;
+      }
       textarea {
         width: 300px;
       }
