@@ -127,7 +127,7 @@ export default function Payment(props: PaymentProps) {
         return (
           <RequestPayment
             {...stepProps}
-            onFinish={moveStageForward}
+            onFinish={handleFinish}
             paymentData={paymentData}
             setPaymentData={setPaymentData}
           />

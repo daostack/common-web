@@ -9,8 +9,7 @@ import { ScreenSize } from "@/shared/constants";
 import { formatPrice } from "@/shared/utils";
 import PayMeService from "@/services/PayMeService";
 import { subscribeToCardChange } from "@/containers/Common/store/api";
-import { PaymentInitDataType } from "../Payment";
-import { IntermediateCreateCommonPayload } from "@/containers/Common/interfaces";
+import {IntermediateCreateCommonPayload, PaymentPayload} from '@/containers/Common/interfaces';
 import "./index.scss";
 
 interface State {
@@ -26,8 +25,8 @@ const INITIAL_STATE: State = {
 };
 
 interface IStageProps {
-  paymentData: PaymentInitDataType;
-  setPaymentData: (paymentData: PaymentInitDataType) => void;
+  paymentData: PaymentPayload;
+  setPaymentData: (paymentData: PaymentPayload) => void;
   currentStep: number;
   onFinish?: () => void;
   creationData: IntermediateCreateCommonPayload;
@@ -37,7 +36,7 @@ export default function RequestPayment(props: IStageProps): ReactElement {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const { creationData, currentStep, paymentData } = props;
-  const selectedAmount = paymentData.selectedAmount;
+  const selectedAmount = paymentData.contributionAmount;
   const user = useSelector(selectUser());
   const [
     { commonPayment, isCommonPaymentLoading, isPaymentIframeLoaded },
@@ -94,7 +93,7 @@ export default function RequestPayment(props: IStageProps): ReactElement {
       console.error("Error during subscription to payment status change");
     }
   }, [isPaymentIframeLoaded, paymentData.cardId]);
-  const progressEl = <Progress creationStep={currentStep} />;
+  const progressEl = <Progress paymentStep={currentStep} />;
   return (
     <div className="create-common-payment">
       {!isMobileView && <ModalHeaderContent>{progressEl}</ModalHeaderContent>}
