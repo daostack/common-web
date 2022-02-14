@@ -7,12 +7,12 @@ import { ScreenSize } from "@/shared/constants";
 import { CommonContributionType, CommonPayment } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice } from "@/shared/utils";
-import { Progress } from "../Progress";
-import { subscribeToCardChange } from "../../../../../store/api";
 import {
   IntermediateCreateCommonPayload,
   PaymentPayload,
 } from "../../../../../interfaces";
+import { subscribeToCardChange } from "../../../../../store/api";
+import { Progress } from "../Progress";
 import "./index.scss";
 
 interface State {
