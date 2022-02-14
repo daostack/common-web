@@ -90,13 +90,13 @@ export default function RequestPayment(
     try {
       return subscribeToCardChange(paymentData.cardId, (card) => {
         if (card) {
-          // Move to the next step
+          onFinish();
         }
       });
     } catch (error) {
       console.error("Error during subscription to payment status change");
     }
-  }, [isPaymentIframeLoaded, paymentData.cardId]);
+  }, [isPaymentIframeLoaded, paymentData.cardId, onFinish]);
 
   const progressEl = <Progress paymentStep={currentStep} />;
 
@@ -111,8 +111,7 @@ export default function RequestPayment(
           {formatPrice(selectedAmount, { shouldMillify: false })} (
           {contributionTypeText})
         </strong>{" "}
-        to this Common. You will not be charged until another member joins the
-        Common.
+        to this Common.
       </p>
       <Separator className="create-common-payment__separator" />
       <div className="create-common-payment__content">

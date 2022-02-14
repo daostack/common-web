@@ -7,11 +7,15 @@ import React, {
 } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
+import { v4 as uuidv4 } from "uuid";
 import { Modal } from "@/shared/components";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ScreenSize } from "@/shared/constants";
 import { CommonContributionType } from "@/shared/models";
-import { IntermediateCreateCommonPayload } from "../../../interfaces";
+import {
+  IntermediateCreateCommonPayload,
+  PaymentPayload,
+} from "../../../interfaces";
 import { CreationSteps } from "./CreationSteps";
 import { Introduction } from "./Introduction";
 import { Payment } from "./Payment";
@@ -24,6 +28,10 @@ const INITIAL_DATA: IntermediateCreateCommonPayload = {
   contributionAmount: 0,
   contributionType: CommonContributionType.OneTime,
   agreementAccepted: false,
+};
+
+const INITIAL_PAYMENT_DATA: PaymentPayload = {
+  cardId: uuidv4(),
 };
 
 interface CreateCommonModalProps {
@@ -40,6 +48,9 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     creationData,
     setCreationData,
   ] = useState<IntermediateCreateCommonPayload>(INITIAL_DATA);
+  const [paymentData, setPaymentData] = useState<PaymentPayload>(
+    INITIAL_PAYMENT_DATA
+  );
   const [title, setTitle] = useState<ReactNode>("");
   const [isBigTitle, setIsBigTitle] = useState(true);
   const [isHeaderScrolledToTop, setIsHeaderScrolledToTop] = useState(true);
@@ -85,9 +96,6 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       moveStageBack();
     }
   }, [onGoBack, moveStageBack]);
-  const handleCreationStepsFinish = useCallback(() => {
-    console.log("handleCreationStepsFinish");
-  }, []);
 
   const renderedTitle = useMemo((): ReactNode => {
     if (!title) {
@@ -129,8 +137,10 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
             setShouldShowCloseButton={setShouldShowCloseButton}
-            onFinish={handleCreationStepsFinish}
+            onFinish={moveStageForward}
             creationData={creationData}
+            paymentData={paymentData}
+            setPaymentData={setPaymentData}
           />
         );
       default:
@@ -144,9 +154,9 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     setBigTitle,
     setGoBackHandler,
     moveStageForward,
-    handleCreationStepsFinish,
     creationData,
     shouldStartFromLastStep,
+    paymentData,
   ]);
 
   useEffect(() => {
