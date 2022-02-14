@@ -9,7 +9,6 @@ import { formatPrice } from "@/shared/utils";
 import { CommonContributionType } from "@/shared/models";
 import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
-import "./index.scss";
 
 export default function MembershipRequestContribution(props: IStageProps) {
   const { userData, setUserData, common } = props;
