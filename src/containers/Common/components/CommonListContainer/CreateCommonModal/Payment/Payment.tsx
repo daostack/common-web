@@ -124,14 +124,7 @@ export default function Payment(props: PaymentProps) {
       case PaymentStep.PersonalContribution:
         return <PersonalContribution {...stepProps} />;
       case PaymentStep.PaymentDetails:
-        return (
-          <RequestPayment
-            {...stepProps}
-            onFinish={handleFinish}
-            paymentData={paymentData}
-            setPaymentData={setPaymentData}
-          />
-        );
+        return <RequestPayment {...stepProps} />;
       default:
         return null;
     }

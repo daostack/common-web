@@ -2,34 +2,34 @@
 @import "../../../../../../../styles/sizes";
 
 $payment-iframe-height: 26.5rem;
+$payment-iframe-height-mobile: 42rem;
 
 .create-common-payment {
+  max-width: 36.5rem;
+  width: 100%;
+  min-height: 25rem;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 auto;
-  min-height: 25rem;
+  font-family: NunitoSans, sans-serif;
 
-  .create-common-payment__sub-title {
-    font-weight: bold;
-    font-family: NunitoSans-Bold, sans-serif;
-    margin-bottom: 0.2rem;
+  @include big-phone {
+    min-height: unset;
   }
 
-  .create-common-payment__sub-text-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 36.5rem;
-    width: 100%;
-    border-bottom: 1px solid $light-gray-1;
-    padding-bottom: 1.5rem;
+  .create-common-payment__sub-title {
+    margin: 0 0 0.25rem;
+    font-family: inherit;
+    font-weight: bold;
   }
 
   .create-common-payment__sub-text {
-    text-align: center;
-    font-size: $xsmall;
     max-width: 23.7rem;
+    width: 100%;
+    margin: 0;
+    font-size: $xsmall;
+    text-align: center;
     color: $light-gray-2;
   }
 
@@ -37,8 +37,8 @@ $payment-iframe-height: 26.5rem;
     color: $purple;
   }
 
-  @include big-phone {
-    min-height: unset;
+  .create-common-payment__separator {
+    margin: 1.5rem 0 0.625rem;
   }
 
   .create-common-payment__content {
@@ -68,5 +68,9 @@ $payment-iframe-height: 26.5rem;
   .create-common-payment__iframe {
     width: 100%;
     height: $payment-iframe-height;
+
+    @include big-phone {
+      height: $payment-iframe-height-mobile;
+    }
   }
 }

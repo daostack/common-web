@@ -1,15 +1,18 @@
 import React, { ReactElement, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { CommonContributionType, CommonPayment } from "@/shared/models";
-import { Loader, ModalHeaderContent } from "@/shared/components";
 import { selectUser } from "@/containers/Auth/store/selectors";
-import { Progress } from "../Progress";
-import { getScreenSize } from "@/shared/store/selectors";
-import { ScreenSize } from "@/shared/constants";
-import { formatPrice } from "@/shared/utils";
 import PayMeService from "@/services/PayMeService";
-import { subscribeToCardChange } from "@/containers/Common/store/api";
-import {IntermediateCreateCommonPayload, PaymentPayload} from '@/containers/Common/interfaces';
+import { Loader, ModalHeaderContent, Separator } from "@/shared/components";
+import { ScreenSize } from "@/shared/constants";
+import { CommonContributionType, CommonPayment } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
+import { formatPrice } from "@/shared/utils";
+import { Progress } from "../Progress";
+import { subscribeToCardChange } from "../../../../../store/api";
+import {
+  IntermediateCreateCommonPayload,
+  PaymentPayload,
+} from "../../../../../interfaces";
 import "./index.scss";
 
 interface State {
@@ -24,24 +27,25 @@ const INITIAL_STATE: State = {
   isPaymentIframeLoaded: false,
 };
 
-interface IStageProps {
-  paymentData: PaymentPayload;
-  setPaymentData: (paymentData: PaymentPayload) => void;
+interface RequestPaymentProps {
   currentStep: number;
-  onFinish?: () => void;
+  onFinish: () => void;
+  paymentData: PaymentPayload;
   creationData: IntermediateCreateCommonPayload;
 }
 
-export default function RequestPayment(props: IStageProps): ReactElement {
-  const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
-  const { creationData, currentStep, paymentData } = props;
-  const selectedAmount = paymentData.contributionAmount;
-  const user = useSelector(selectUser());
+export default function RequestPayment(
+  props: RequestPaymentProps
+): ReactElement {
+  const { creationData, currentStep, paymentData, onFinish } = props;
   const [
     { commonPayment, isCommonPaymentLoading, isPaymentIframeLoaded },
     setState,
   ] = useState<State>(INITIAL_STATE);
+  const user = useSelector(selectUser());
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
+  const selectedAmount = paymentData.contributionAmount;
   const contributionTypeText =
     creationData.contributionType === CommonContributionType.Monthly
       ? "monthly"
@@ -86,30 +90,31 @@ export default function RequestPayment(props: IStageProps): ReactElement {
     try {
       return subscribeToCardChange(paymentData.cardId, (card) => {
         if (card) {
-          // setUserData((nextUserData) => ({ ...nextUserData, stage: 5 }));
+          // Move to the next step
         }
       });
     } catch (error) {
       console.error("Error during subscription to payment status change");
     }
   }, [isPaymentIframeLoaded, paymentData.cardId]);
+
   const progressEl = <Progress paymentStep={currentStep} />;
+
   return (
     <div className="create-common-payment">
       {!isMobileView && <ModalHeaderContent>{progressEl}</ModalHeaderContent>}
       {isMobileView && progressEl}
-      <div className="create-common-payment__sub-title">Payment Details</div>
-      <div className="create-common-payment__sub-text-wrapper">
-        <div className="create-common-payment__sub-text">
-          You are contributing{" "}
-          <strong className="create-common-payment__amount">
-            {formatPrice(selectedAmount, { shouldMillify: false })} (
-            {contributionTypeText})
-          </strong>{" "}
-          to this Common. You will not be charged until another member joins the
-          Common.
-        </div>
-      </div>
+      <h4 className="create-common-payment__sub-title">Payment Details</h4>
+      <p className="create-common-payment__sub-text">
+        You are contributing{" "}
+        <strong className="create-common-payment__amount">
+          {formatPrice(selectedAmount, { shouldMillify: false })} (
+          {contributionTypeText})
+        </strong>{" "}
+        to this Common. You will not be charged until another member joins the
+        Common.
+      </p>
+      <Separator className="create-common-payment__separator" />
       <div className="create-common-payment__content">
         {!isPaymentIframeLoaded && (
           <Loader className="create-common-payment__loader" />
