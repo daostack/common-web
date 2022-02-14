@@ -1,14 +1,20 @@
 import axios from "axios";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
+import Api from "../../services/Api";
 
 const downloadBlobByURL = async (url: string): Promise<Blob> => {
-  const response = await axios.get(url, { responseType: "blob" });
+  const response = url.startsWith("/")
+    ? await Api.get<Blob>(url, { responseType: "blob" })
+    : await axios.get(url, { responseType: "blob" });
 
   return new Blob([response.data]);
 };
 
-export const saveByURL = async (url: string, fileName: string): Promise<void> => {
+export const saveByURL = async (
+  url: string,
+  fileName: string
+): Promise<void> => {
   try {
     const blob = await downloadBlobByURL(url);
 

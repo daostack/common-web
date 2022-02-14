@@ -131,7 +131,6 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             setShouldShowCloseButton={setShouldShowCloseButton}
             onFinish={handleCreationStepsFinish}
             creationData={creationData}
-            setCreationData={setCreationData}
           />
         );
       default:

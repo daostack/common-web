@@ -1,164 +1,59 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import classNames from "classnames";
-import { ButtonLink } from "../../../../../shared/components";
-import {
-  CurrencyInput,
-  ToggleButtonGroup,
-  ToggleButton,
-  ToggleButtonGroupVariant,
-} from "../../../../../shared/components/Form";
-import { ModalFooter } from "../../../../../shared/components/Modal";
-import {
-  MIN_CONTRIBUTION_ILS_AMOUNT,
-  MAX_CONTRIBUTION_ILS_AMOUNT,
-} from "../../../../../shared/constants/shared";
-import {
-  formatPrice,
-  roundNumberToNextTenths,
-} from "../../../../../shared/utils";
-import { CommonContributionType } from "../../../../../shared/models";
+import { ContributionAmountSelection } from "@/shared/components";
+import { ModalFooter } from "@/shared/components/Modal";
+import { formatPrice } from "@/shared/utils";
+import { CommonContributionType } from "@/shared/models";
 import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
 
-const validateContributionAmount = (
-  minFeeToJoin: number,
-  zeroContribution: boolean,
-  value?: string
-): string => {
-  const minFeeToJoinForUsage = zeroContribution ? 0 : minFeeToJoin;
-  const convertedValue = Number(value) * 100;
-
-  if (
-    convertedValue >= minFeeToJoinForUsage &&
-    (convertedValue === 0 ||
-      (convertedValue >= MIN_CONTRIBUTION_ILS_AMOUNT &&
-        convertedValue <= MAX_CONTRIBUTION_ILS_AMOUNT))
-  ) {
-    return "";
-  }
-
-  const errorTexts = ["The amount must be"];
-
-  if (minFeeToJoinForUsage === 0) {
-    errorTexts.push("0, or");
-    errorTexts.push(
-      `at least ${formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT, {
-        shouldMillify: false,
-      })}`
-    );
-  } else {
-    errorTexts.push(
-      `at least ${formatPrice(minFeeToJoinForUsage, { shouldMillify: false })}`
-    );
-  }
-
-  errorTexts.push(
-    `and at most ${formatPrice(MAX_CONTRIBUTION_ILS_AMOUNT, {
-      shouldMillify: false,
-    })}`
-  );
-
-  return errorTexts.join(" ");
-};
-
-const getAmountsForSelection = (
-  minFeeToJoin: number,
-  zeroContribution: boolean
-): number[] => {
-  if (minFeeToJoin === 0 || zeroContribution) {
-    return [0, MIN_CONTRIBUTION_ILS_AMOUNT, MIN_CONTRIBUTION_ILS_AMOUNT * 2];
-  }
-
-  const minFeeToJoinForUsage = minFeeToJoin / 100;
-  const initialAmount = minFeeToJoinForUsage * 2;
-  const firstAmount =
-    initialAmount % 10 === 0
-      ? initialAmount
-      : roundNumberToNextTenths(initialAmount);
-
-  return [minFeeToJoinForUsage, firstAmount, firstAmount * 2]
-    .map((amount) => amount * 100)
-    .filter((amount) => amount <= MAX_CONTRIBUTION_ILS_AMOUNT);
-};
-
 export default function MembershipRequestContribution(props: IStageProps) {
   const { userData, setUserData, common } = props;
+  const [
+    [selectedContribution, hasSelectedContributionError],
+    setSelectedContributionState,
+  ] = useState<[number | null, boolean]>([
+    userData.contributionAmount ?? null,
+    !userData.contributionAmount,
+  ]);
   const isMonthlyContribution =
     common?.metadata.contributionType === CommonContributionType.Monthly;
   const minFeeToJoin = common?.metadata.minFeeToJoin || 0;
   const zeroContribution = common?.metadata.zeroContribution || false;
 
-  const amountsForSelection = useMemo(
-    () => getAmountsForSelection(minFeeToJoin, zeroContribution),
-    [minFeeToJoin, zeroContribution]
-  );
-  const [selectedContribution, setSelectedContribution] = useState<
-    number | "other" | null
-  >(() => {
-    if (userData.contributionAmount === undefined) {
-      return null;
-    }
-
-    return amountsForSelection.includes(userData.contributionAmount)
-      ? userData.contributionAmount
-      : "other";
-  });
-  const [enteredContribution, setEnteredContribution] = useState<
-    string | undefined
-  >(() =>
-    selectedContribution === "other"
-      ? String((userData.contributionAmount || 0) / 100)
-      : undefined
-  );
-  const [isCurrencyInputTouched, setIsCurrencyInputTouched] = useState(false);
   const formattedMinFeeToJoin = formatPrice(
     zeroContribution ? 0 : minFeeToJoin,
     { shouldMillify: false, shouldRemovePrefixFromZero: false }
   );
   const pricePostfix = isMonthlyContribution ? "/mo" : "";
-  const currencyInputError = validateContributionAmount(
-    minFeeToJoin,
-    zeroContribution,
-    enteredContribution
+  const isSubmitDisabled =
+    hasSelectedContributionError || selectedContribution === null;
+
+  const handleChange = useCallback(
+    (amount: number | null, hasError: boolean) => {
+      setSelectedContributionState([amount, hasError]);
+    },
+    []
   );
-  const isSubmitDisabled = Boolean(
-    selectedContribution === "other"
-      ? currencyInputError
-      : selectedContribution === null
-  );
-
-  const handleCurrencyInputBlur = useCallback(() => {
-    setIsCurrencyInputTouched(true);
-  }, []);
-
-  const handleChange = useCallback((value: unknown) => {
-    const convertedValue = Number(value);
-    setSelectedContribution(
-      !Number.isNaN(convertedValue) ? convertedValue : "other"
-    );
-  }, []);
-
-  const handleBackToSelectionClick = useCallback(() => {
-    setSelectedContribution(null);
-    setEnteredContribution(undefined);
-  }, []);
 
   const handleSubmit = useCallback(() => {
-    const contributionAmount =
-      selectedContribution === "other"
-        ? Number(enteredContribution) * 100
-        : (selectedContribution || 0);
+    if (hasSelectedContributionError || selectedContribution === null) {
+      return;
+    }
 
     setUserData((nextUserData) => ({
       ...nextUserData,
-      contributionAmount,
-      stage: contributionAmount === 0 ? 5 : 4,
+      contributionAmount: selectedContribution,
+      stage: selectedContribution === 0 ? 5 : 4,
     }));
-  }, [setUserData, selectedContribution, enteredContribution]);
+  }, [setUserData, selectedContribution, hasSelectedContributionError]);
 
-  const toggleButtonStyles = {
-    default: "membership-request-contribution__toggle-button",
-  };
+  const contributionAmountSelectionClassName = classNames(
+    "membership-request-contribution__contribution-amount-selection",
+    {
+      "membership-request-contribution__contribution-amount-selection--one-time": !isMonthlyContribution,
+    }
+  );
 
   return (
     <div className="membership-request-content membership-request-contribution">
@@ -170,59 +65,14 @@ export default function MembershipRequestContribution(props: IStageProps) {
         {isMonthlyContribution ? " each month" : ""} ({formattedMinFeeToJoin}
         {pricePostfix} min.)
       </div>
-      {selectedContribution !== "other" && (
-        <ToggleButtonGroup
-          className={classNames(
-            "membership-request-contribution__toggle-button-group",
-            {
-              "membership-request-contribution__toggle-button-group--one-time": !isMonthlyContribution,
-            }
-          )}
-          value={selectedContribution}
-          onChange={handleChange}
-          variant={ToggleButtonGroupVariant.Vertical}
-        >
-          {amountsForSelection.map((amount) => (
-            <ToggleButton
-              key={amount}
-              styles={toggleButtonStyles}
-              value={amount}
-            >
-              {formatPrice(amount, {
-                shouldMillify: false,
-                shouldRemovePrefixFromZero: false,
-              })}
-              {pricePostfix}
-            </ToggleButton>
-          ))}
-          <ToggleButton styles={toggleButtonStyles} value="other">
-            Other
-          </ToggleButton>
-        </ToggleButtonGroup>
-      )}
-      {selectedContribution === "other" && (
-        <div className="membership-request-contribution__currency-input-wrapper">
-          <CurrencyInput
-            name="contributionAmount"
-            label="Contribution amount"
-            placeholder={formattedMinFeeToJoin}
-            value={enteredContribution}
-            onValueChange={setEnteredContribution}
-            onBlur={handleCurrencyInputBlur}
-            error={isCurrencyInputTouched ? currencyInputError : ""}
-            styles={{
-              label: "membership-request-contribution__currency-input-label",
-            }}
-            allowDecimals={false}
-          />
-          <ButtonLink
-            className="membership-request-contribution__back-to-selection"
-            onClick={handleBackToSelectionClick}
-          >
-            Back to amount selection
-          </ButtonLink>
-        </div>
-      )}
+      <ContributionAmountSelection
+        className={contributionAmountSelectionClassName}
+        contributionAmount={userData.contributionAmount}
+        minFeeToJoin={minFeeToJoin}
+        zeroContribution={zeroContribution}
+        pricePostfix={pricePostfix}
+        onChange={handleChange}
+      />
       {isMonthlyContribution && (
         <span className="membership-request-contribution__hint">
           You can cancel the recurring payment at any time
