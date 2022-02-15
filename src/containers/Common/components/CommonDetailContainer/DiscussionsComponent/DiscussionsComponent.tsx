@@ -27,6 +27,7 @@ export default function DiscussionsComponent({
       <div className="discussion-title-wrapper">
         <div className="title">Discussions</div>
         <div className="add-button" onClick={onAddNewPost}>
+          <img src="/icons/add-discussion.svg" alt="add-post" />
           Add New Post
         </div>
       </div>

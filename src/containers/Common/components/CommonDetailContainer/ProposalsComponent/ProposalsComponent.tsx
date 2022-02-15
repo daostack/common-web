@@ -29,6 +29,7 @@ export default function ProposalsComponent({
         <div className="title">Proposals</div>
         {isCommonMember && (
           <div className="add-button" onClick={onAddNewProposal}>
+            <img src="/icons/add-proposal.svg" alt="add-proposal" />
             Add New Proposal
           </div>
         )}
