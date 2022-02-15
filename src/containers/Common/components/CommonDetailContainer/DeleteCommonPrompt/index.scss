@@ -17,6 +17,10 @@
       color: $red;
     }
   }
+  .error-message {
+    color: $red;
+    font-size: $xxsmall;
+  }
 }
 
 @include big-phone {

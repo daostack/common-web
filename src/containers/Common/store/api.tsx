@@ -273,8 +273,8 @@ export async function checkUserPaymentMethod(userId: string): Promise<boolean> {
   return !!cards.docs.length;
 }
 
-export async function deleteCommon(requestData: DeleteCommon): Promise<any> {
-  const { data } = await Api.post<any>(
+export async function deleteCommon(requestData: DeleteCommon): Promise<void> {
+  const { data } = await Api.post<void>(
     ApiEndpoint.DeleteCommon,
     requestData
   );

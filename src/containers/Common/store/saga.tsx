@@ -313,12 +313,14 @@ export function* deleteCommon(
   action: ReturnType<typeof actions.deleteCommon.request>
 ): Generator {
   try {
-    const data = yield deleteCommonApi(action.payload);
+    yield deleteCommonApi(action.payload.payload);
 
-    yield put(actions.deleteCommon.success(data));
+    yield put(actions.deleteCommon.success());
+    action.payload.callback(null);
     yield put(stopLoading());
   } catch (error) {
     yield put(actions.deleteCommon.failure(error));
+    action.payload.callback(error);
     yield put(stopLoading());
   }
 }
