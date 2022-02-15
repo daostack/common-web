@@ -22,6 +22,7 @@ import firebase from "../../../shared/utils/firebase";
 import {
   AddMessageToProposalDto,
   CreateDiscussionDto,
+  DeleteCommon,
 } from "@/containers/Common/interfaces";
 import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
 
@@ -269,4 +270,13 @@ export async function checkUserPaymentMethod(userId: string): Promise<boolean> {
     .get();
 
   return !!cards.docs.length;
+}
+
+export async function deleteCommon(requestData: DeleteCommon): Promise<any> {
+  const { data } = await Api.post<any>(
+    ApiEndpoint.DeleteCommon,
+    requestData
+  );
+
+  return data;
 }

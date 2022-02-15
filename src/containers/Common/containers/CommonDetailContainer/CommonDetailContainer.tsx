@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import classNames from "classnames";
 
-import { Loader, Share, UserAvatar } from "../../../../shared/components";
+import { Button, ButtonVariant, Loader, Share, UserAvatar } from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
 import {
   useAuthorizedModal,
@@ -70,6 +70,7 @@ import {
   AddProposalSteps,
 } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
+import { DeleteCommonPrompt } from "../../components/CommonDetailContainer/DeleteCommonPrompt";
 
 interface CommonDetailRouterParams {
   id: string;
@@ -166,6 +167,12 @@ export default function CommonDetail() {
     isShowing: isShowingNewD,
     onOpen: onOpenNewD,
     onClose: onCloseNewD,
+  } = useModal(false);
+
+  const {
+    isShowing: showDeleteCommonPrompt,
+    onOpen: onOpenDeteleCommonPrompt,
+    onClose: onCloseDeleteCommonPrompt
   } = useModal(false);
 
   const {
@@ -311,6 +318,10 @@ export default function CommonDetail() {
     if (!user) return setTimeout(onOpenJoinModal, 0);
     onOpenNewP();
   }, [onOpenJoinModal, onOpenNewP, user]);
+
+  const deleteCommon = useCallback(() => {
+    onOpenDeteleCommonPrompt();
+  }, [onOpenDeteleCommonPrompt])
 
   const renderSidebarContent = () => {
     if (!common) return null;
@@ -504,6 +515,12 @@ export default function CommonDetail() {
           getProposalDetail={getProposalDetail}
         />
       )}
+      {showDeleteCommonPrompt && (
+        <DeleteCommonPrompt
+          isShowing={showDeleteCommonPrompt}
+          onClose={onCloseDeleteCommonPrompt}
+          commonId={common.id} />
+      )}
       <div className="common-detail-wrapper">
         <div className="main-information-block">
           <div className="main-information-wrapper">
@@ -552,9 +569,8 @@ export default function CommonDetail() {
               <div className="numbers">
                 <div className="item">
                   <div className="value">{formatPrice(common?.balance)}</div>
-                  <div className="name">{`Available ${
-                    screenSize === ScreenSize.Desktop ? "Funds" : ""
-                  }`}</div>
+                  <div className="name">{`Available ${screenSize === ScreenSize.Desktop ? "Funds" : ""
+                    }`}</div>
                   {Boolean(common.reservedBalance) && (
                     <div className="text-information-wrapper__secondary-text">
                       In process: {formatPrice(common.reservedBalance)}
@@ -563,9 +579,8 @@ export default function CommonDetail() {
                 </div>
                 <div className="item">
                   <div className="value">{formatPrice(common?.raised)}</div>
-                  <div className="name">{`${
-                    screenSize === ScreenSize.Desktop ? "Total" : ""
-                  } Raised`}</div>
+                  <div className="name">{`${screenSize === ScreenSize.Desktop ? "Total" : ""
+                    } Raised`}</div>
                 </div>
                 <div className="item">
                   <div className="value">{common?.members.length}</div>
@@ -573,9 +588,8 @@ export default function CommonDetail() {
                 </div>
                 <div className="item">
                   <div className="value">{activeProposals.length}</div>
-                  <div className="name">{`${
-                    screenSize === ScreenSize.Desktop ? "Active" : ""
-                  } Proposals`}</div>
+                  <div className="name">{`${screenSize === ScreenSize.Desktop ? "Active" : ""
+                    } Proposals`}</div>
                 </div>
               </div>
             </div>
@@ -604,11 +618,21 @@ export default function CommonDetail() {
                         : "Join the effort"}
                     </button>
                   )}
+
                   {isCommonMember && screenSize === ScreenSize.Desktop && (
                     <div className="member-label">
                       <CheckIcon className="member-label__icon" />
                       You are a member
                     </div>
+                  )}
+
+                  {isCommonMember && common.members.length === 1 && (
+                    <Button
+                      variant={ButtonVariant.Secondary}
+                      className="delete-common-btn"
+                      onClick={deleteCommon}>
+                      Delete this Common
+                    </Button>
                   )}
 
                   {screenSize === ScreenSize.Desktop && (

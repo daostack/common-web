@@ -135,6 +135,10 @@
               margin-right: 6px;
             }
           }
+          .delete-common-btn {
+            color: $red;
+            margin: 0 5px;
+          }
         }
       }
     }
@@ -251,6 +255,10 @@
             .join-the-effort-btn {
               height: 56px;
               margin-right: unset;
+            }
+            .delete-common-btn {
+              width: 100%;
+              margin: 10px 0;
             }
           }
 

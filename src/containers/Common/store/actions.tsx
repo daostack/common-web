@@ -9,6 +9,7 @@ import { CommonsActionTypes } from "./constants";
 import {
   CreateDiscussionDto,
   AddMessageToDiscussionDto,
+  DeleteCommon,
 } from "@/containers/Common/interfaces";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 
@@ -138,3 +139,9 @@ export const addMessageToProposal = createAsyncAction(
   Proposal,
   Error
 >();
+
+export const deleteCommon = createAsyncAction(
+  CommonsActionTypes.DELETE_COMMON,
+  CommonsActionTypes.DELETE_COMMON_SUCCESS,
+  CommonsActionTypes.DELETE_COMMON_FAILURE
+)<DeleteCommon, any, Error>();
