@@ -155,8 +155,15 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-width: 100px;
+      min-width: 40px;
       margin-left: 16px;
+      border: none;
+      outline: none;
+      background: white;
+      &:disabled{
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
     }
   }
   ::-webkit-scrollbar {
