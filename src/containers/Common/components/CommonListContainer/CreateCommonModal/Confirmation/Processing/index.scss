@@ -1,0 +1,37 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+
+.create-common-processing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .create-common-processing__image {
+    width: 14.75rem;
+    height: 14.75rem;
+    @include big-phone {
+      width: 23.25rem;
+      height: 23.25rem;
+    }
+  }
+
+  .create-common-processing__title {
+    margin: 2.625rem 0 5rem;
+    font-family: NotoSerifSC, serif;
+    font-size: $moderate-med;
+    font-weight: bold;
+    line-height: 1.33;
+    @include big-phone {
+      margin: 1rem 0 5.625rem;
+      line-height: 1.63;
+    }
+  }
+
+  .create-common-processing__loader {
+    margin-bottom: 5.375rem;
+    @include big-phone {
+      margin-bottom: 0;
+    }
+  }
+}

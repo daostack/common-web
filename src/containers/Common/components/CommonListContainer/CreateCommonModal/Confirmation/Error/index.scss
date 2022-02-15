@@ -1,0 +1,65 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+
+.create-common-error {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .create-common-error__image {
+    margin-top: 2.5rem;
+    width: 10.825rem;
+    height: 10.825rem;
+    @include big-phone {
+      margin-top: 0;
+      width: 16.75rem;
+      height: 16.75rem;
+    }
+  }
+
+  .create-common-error__title {
+    margin: 4.625rem 0 1rem;
+    font-family: NotoSerifSC, serif;
+    font-size: $moderate-med;
+    font-weight: bold;
+    line-height: 1.33;
+    @include big-phone {
+      margin: 1.5rem 0 2rem;
+      font-size: $moderate-xmed;
+      line-height: 1.27;
+    }
+  }
+
+  .create-common-error__sub-title {
+    margin: 0;
+    font-family: NunitoSans, serif;
+    font-size: $xsmall;
+    line-height: 1.43;
+    text-align: center;
+    @include big-phone {
+      max-width: 17.5rem;
+    }
+  }
+
+  .create-common-error__submit-button {
+    margin-top: 3.5rem;
+    min-width: 11.25rem;
+    @include big-phone {
+      margin-top: 5rem;
+    }
+  }
+
+  .create-common-error__view-details {
+    margin: 1.5rem 0 0;
+    font-family: NunitoSans, serif;
+    font-size: $xsmall;
+    color: $light-gray-2;
+    cursor: pointer;
+  }
+
+  @include big-phone {
+    max-width: 20.5rem;
+  }
+}

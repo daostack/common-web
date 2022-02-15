@@ -1,0 +1,72 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+
+.create-common-success__logo {
+  width: 5.5rem;
+  height: 2.5rem;
+  margin: 0.75rem 0;
+}
+
+.create-common-success {
+  max-width: 24rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .create-common-success__image {
+    width: 15rem;
+    height: 15rem;
+    object-fit: contain;
+    @include big-phone {
+      width: 13.25rem;
+      height: 13.25rem;
+    }
+  }
+
+  .create-common-success__title {
+    margin: 2.625rem 0 1rem;
+    font-family: NotoSerifSC, serif;
+    font-size: $moderate-med;
+    font-weight: bold;
+    line-height: 1.33;
+    text-align: center;
+    @include big-phone {
+      margin: 2.5rem 0 3rem;
+      font-size: $moderate-xmed;
+      line-height: 1.63;
+    }
+  }
+
+  .create-common-success__sub-title {
+    margin: 0;
+    font-family: NunitoSans, serif;
+    font-size: $xsmall;
+    line-height: 1.43;
+    text-align: center;
+  }
+
+  .create-common-success__buttons {
+    display: flex;
+    min-width: 23.5rem;
+    margin: 5.25rem 0 1.625rem;
+    padding: 0 0.5rem;
+    justify-content: space-between;
+    @include big-phone {
+      margin: 3.125rem 0 0;
+      flex-direction: column;
+      min-height: 7rem;
+      min-width: 100%;
+    }
+  }
+
+  .create-common-success__button-item {
+    min-width: 11.25rem;
+    min-height: 3rem;
+  }
+
+  @include big-phone {
+    max-width: 20.375rem;
+  }
+}

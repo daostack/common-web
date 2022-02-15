@@ -20,6 +20,7 @@ import { CreationSteps } from "./CreationSteps";
 import { Introduction } from "./Introduction";
 import { Payment } from "./Payment";
 import { CreateCommonStage } from "./constants";
+import Confirmation from "./Confirmation/Confirmation";
 import "./index.scss";
 
 const INITIAL_DATA: IntermediateCreateCommonPayload = {
@@ -72,6 +73,17 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     setTitle(title);
     setIsBigTitle(false);
   }, []);
+  const setLogoTitle = useCallback((shouldShowLogo: boolean) => {
+    shouldShowLogo
+      ? setTitle(
+          <img
+            className="create-common-success__logo"
+            src="/icons/common-creation/assets-logo-header-web-new-logo.svg"
+            alt="common-logo"
+          />
+        )
+      : setTitle("");
+  }, []);
 
   const setGoBackHandler = useCallback(
     (handler?: (() => boolean | undefined) | null) => {
@@ -96,6 +108,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       moveStageBack();
     }
   }, [onGoBack, moveStageBack]);
+  const emptyFunction = useCallback(() => {}, []);
 
   const renderedTitle = useMemo((): ReactNode => {
     if (!title) {
@@ -143,6 +156,13 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             setPaymentData={setPaymentData}
           />
         );
+      case CreateCommonStage.Confirmation:
+        return (
+          <Confirmation
+            setShouldShowCloseButton={setShouldShowCloseButton}
+            setLogoTitle={setLogoTitle}
+          />
+        );
       default:
         return null;
     }
@@ -157,6 +177,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     creationData,
     shouldStartFromLastStep,
     paymentData,
+    setLogoTitle,
   ]);
 
   useEffect(() => {
@@ -173,7 +194,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     <Modal
       isShowing={props.isShowing}
       onGoBack={onGoBack && handleGoBack}
-      onClose={props.onClose}
+      onClose={shouldShowCloseButton ? props.onClose : emptyFunction}
       className={classNames("create-common-modal", {
         "mobile-full-screen": isMobileView,
       })}
@@ -182,7 +203,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       hideCloseButton={!shouldShowCloseButton}
       isHeaderSticky={isHeaderSticky}
       onHeaderScrolledToTop={setIsHeaderScrolledToTop}
-      closePrompt
+      closePrompt={shouldShowCloseButton}
     >
       <div id="content">{content}</div>
     </Modal>
