@@ -117,14 +117,14 @@ export default function ChatComponent({
             onChange={(e) => setMessage(e.target.value)}
           />
           <button
-            className="button-blue send"
+            className="send"
             onClick={() => {
               sendMessage && sendMessage(message);
               setMessage("");
             }}
             disabled={!message.length}
           >
-            Send
+            <img src="/icons/send-message.svg" alt="send-message" />
           </button>
         </div>
       )}
