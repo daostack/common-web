@@ -2,7 +2,7 @@
 @import "../../../../../styles/sizes";
 
 .delete-prompt-modal {
-  width: 500px;
+  width: 30rem;
 }
 
 .delete-common-prompt-wrapper {
@@ -11,8 +11,8 @@
   align-items: center;
   text-align: center;
   button {
-    margin: 10px 0px;
-    width: 300px;
+    margin: 0.6rem 0px;
+    width: 18.5rem;
     &.delete-btn {
       color: $red;
     }

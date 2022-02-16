@@ -74,15 +74,15 @@ export async function fetchCommonList(): Promise<Common[]> {
   return data;
 }
 
-// TODO: Need to filter only active commons
 export async function fetchCommonDetail(id: string): Promise<Common> {
   const common = await firebase
     .firestore()
     .collection(Collection.Daos)
-    .doc(id)
+    .where("id", "==", id)
+    .where("active", "==", true)
     .get();
-  const data = transformFirebaseDataSingle<Common>(common);
-  return data;
+  const data = transformFirebaseDataList<Common>(common);
+  return data[0];
 }
 
 export async function fetchOwners(ownerids: string[]) {

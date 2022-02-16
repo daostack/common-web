@@ -4,6 +4,7 @@ import { ROUTE_PATHS } from "@/shared/constants";
 import { ModalProps } from "@/shared/interfaces";
 import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import "./index.scss";
 
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
@@ -12,29 +13,27 @@ interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
 
 export default function DeleteCommonPrompt({ isShowing, onClose, commonId }: IProps) {
   const dispatch = useDispatch();
+  const history = useHistory();
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<undefined | string>(undefined);
 
-  const handleDelete = useCallback(
-    async () => {
-      setDeleting(true);
-      setError(undefined);
-      dispatch(deleteCommon.request({
-        payload: { commonId: commonId },
-        callback: (error) => {
-          if (error) {
-            console.error(error);
-            setDeleting(false);
-            setError(error?.message ?? "Something went wrong :/");
-            return;
-          }
-          console.log("success");
-          window.location.href = ROUTE_PATHS.MY_COMMONS;
+  const handleDelete = useCallback(() => {
+    setDeleting(true);
+    setError(undefined);
+    dispatch(deleteCommon.request({
+      payload: { commonId: commonId },
+      callback: (error) => {
+        if (error) {
+          console.error(error);
+          setDeleting(false);
+          setError(error?.message ?? "Something went wrong :/");
+          return;
         }
-      }));
-    },
-    [dispatch, commonId]
-  );
+        // TODO: maybe need to show success notification for the user?
+        history.push(ROUTE_PATHS.MY_COMMONS);
+      }
+    }));
+  }, [dispatch, history, commonId]);
 
   return (
     <Modal isShowing={isShowing} onClose={onClose} className="delete-prompt-modal">
