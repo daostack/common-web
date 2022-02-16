@@ -15,6 +15,11 @@ enum Social {
   Telegram = "telegram",
 }
 
+export enum PopupVariant {
+  bottomLeft = "bottom-left",
+  topCenter = "top-center",
+}
+
 interface IProps {
   className?: string;
   url: string;
@@ -22,6 +27,7 @@ interface IProps {
   type: ViewType;
   text?: string;
   top?: string;
+  popupVariant?: PopupVariant;
 }
 
 const generateShareQuery = (social: Social, { url, text }: { url: string, text?: string }) => {
@@ -39,12 +45,22 @@ const generateShareQuery = (social: Social, { url, text }: { url: string, text?:
 };
 
 export default function Share(props: PropsWithChildren<IProps>) {
-  const { className, url, text = "", color, type, top, children } = props;
+  const {
+    className,
+    url,
+    text = "",
+    color,
+    type,
+    top,
+    children,
+    popupVariant = PopupVariant.bottomLeft,
+  } = props;
   const wrapperRef = useRef(null);
   const [isShown, setShown] = useState(false);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
   const { isShowing, onOpen, onClose } = useModal(false);
   const queryData = { url, text };
+  const isPopup = type === "popup";
 
   document.documentElement.style.setProperty("--share-button-bg", color);
 
@@ -67,6 +83,7 @@ export default function Share(props: PropsWithChildren<IProps>) {
     <div
       className={classNames("social-buttons-wrapper", {
         "social-buttons-wrapper--modal": type === "modal",
+        "social-buttons-wrapper--top-center": isPopup && popupVariant === PopupVariant.topCenter,
       })}
       style={{ top: `${top ?? "64px"}` }}
     >

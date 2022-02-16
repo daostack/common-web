@@ -46,6 +46,11 @@
   padding-top: .5rem;
   padding-bottom: 2.5rem;
 }
+.social-buttons-wrapper--top-center {
+  top: -1rem;
+  transform: translateX(50%) translateY(-100%);
+  right: 50%;
+}
 
 .social-buttons {
   display: flex;

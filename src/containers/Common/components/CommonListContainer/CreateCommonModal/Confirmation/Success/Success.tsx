@@ -1,13 +1,23 @@
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
-import { Button, ButtonVariant, Share } from "@/shared/components";
-import { Colors, ScreenSize } from "@/shared/constants";
+import {
+  Button,
+  ButtonVariant,
+  Share,
+  SharePopupVariant,
+} from "@/shared/components";
+import { Colors, ScreenSize, ROUTE_PATHS } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
+import { getSharingURL } from "@/shared/utils";
 import "./index.scss";
 
 const Success: FC = () => {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const commonId = "commonId";
+  const sharingURL = getSharingURL(
+    ROUTE_PATHS.COMMON_DETAIL.replace(":id", commonId)
+  );
 
   return (
     <div className="create-common-confirmation-success">
@@ -26,9 +36,11 @@ const Success: FC = () => {
       <div className="create-common-confirmation-success__buttons">
         <Share
           className="create-common-confirmation-success__button-wrapper"
-          url=""
-          type={isMobileView ? "modal" : "popup"}
-          color={isMobileView ? Colors.transparent : Colors.lightPurple}
+          url={sharingURL}
+          type="popup"
+          color={Colors.lightPurple}
+          top=""
+          popupVariant={SharePopupVariant.topCenter}
         >
           <Button
             key="create-common-confirmation-success-share-btn"
