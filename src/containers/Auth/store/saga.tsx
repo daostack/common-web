@@ -11,6 +11,7 @@ import { GoogleAuthResultInterface } from "../interface";
 
 import { ROUTE_PATHS } from "../../../shared/constants";
 import history from "../../../shared/history";
+import { createdUserApi } from "./api";
 
 const getUserData = async (userId: string) => {
   const userSnapshot = await firebase
@@ -56,12 +57,11 @@ const createUser = async (user: firebase.User) => {
       }&rounded=true`;
 
   const userPublicData = {
-    createdAt: new Date(),
     firstName: splittedDisplayName[0] || "",
     lastName: splittedDisplayName[1] || "",
-    email: user.email,
+    // email: user.email,
     photoURL: userPhotoUrl,
-    uid: user.uid,
+    displayName: user?.displayName ?? "",
   };
 
   const userSnapshot = await firebase
@@ -73,11 +73,7 @@ const createUser = async (user: firebase.User) => {
     return;
   }
 
-  return await firebase
-    .firestore()
-    .collection(Collection.Users)
-    .doc(user.uid)
-    .set(userPublicData);
+  return await createdUserApi(userPublicData);
 };
 
 export const uploadImage = async (imageUri: any) => {
@@ -206,9 +202,18 @@ const updateUserData = async (user: any) => {
         lastName: user.lastName,
         email: user.email,
         photoURL: user.photo,
+        displayName: `${user.firstName} ${user.lastName}`,
       })
-      .then(() => {
-        console.log("User updated");
+      .then(async () => {
+        const updatedCurrentUser = await firebase.auth().currentUser;
+
+        if (updatedCurrentUser) {
+          store.dispatch(
+            actions.socialLogin.success(updatedCurrentUser as any)
+          );
+        }
+
+        return updatedCurrentUser;
       })
       .catch((err) => console.error(err));
   }
