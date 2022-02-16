@@ -1,4 +1,5 @@
 import React from "react";
+import { Button, ButtonVariant } from "../../../../shared/components";
 
 interface IProps {
   onCancel: () => void;
@@ -25,8 +26,17 @@ export default function PreUpload({ onCancel, updateUploadState, invoicesTotal, 
         </div>
       </div>
       <textarea value={payoutDocsComment} onChange={(e) => setPayoutDocsComment(e.target.value)} rows={5} placeholder="Add Note" />
-      <button className="button-blue upload-btn" onClick={updateUploadState} >Upload Invoices</button>
-      <button className="button-blue transparent" onClick={onCancel}>I have more invoices to upload</button>
+      <Button onClick={updateUploadState} shouldUseFullWidth>
+        Upload Invoices
+      </Button>
+      <Button
+        className="pre-upload-wrapper__cancel-button"
+        onClick={onCancel}
+        variant={ButtonVariant.Secondary}
+        shouldUseFullWidth
+      >
+        I have more invoices to upload
+      </Button>
     </div>
-  )
+  );
 }
