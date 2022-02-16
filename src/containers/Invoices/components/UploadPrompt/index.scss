@@ -76,11 +76,12 @@
           padding: 10px 0;
           margin: 1rem 0;
         }
-        .upload-btn {
-          margin-bottom: 1rem;
-        }
-        button {
-          width: 100%;
+        .pre-upload-wrapper__cancel-button {
+          margin-top: 1.5rem;
+
+          @include big-phone {
+            margin-top: 1rem;
+          }
         }
       }
       .pending-upload-wrapper {
