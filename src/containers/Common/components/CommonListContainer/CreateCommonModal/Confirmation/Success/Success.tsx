@@ -6,18 +6,18 @@ import {
   Share,
   SharePopupVariant,
 } from "@/shared/components";
-import { Colors, ScreenSize, ROUTE_PATHS } from "@/shared/constants";
+import { Colors, ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
-import { getSharingURL } from "@/shared/utils";
 import "./index.scss";
 
-const Success: FC = () => {
+interface SuccessProps {
+  sharingURL: string;
+  onGoToCommon: () => void;
+}
+
+const Success: FC<SuccessProps> = ({ sharingURL, onGoToCommon }) => {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const commonId = "commonId";
-  const sharingURL = getSharingURL(
-    ROUTE_PATHS.COMMON_DETAIL.replace(":id", commonId)
-  );
 
   return (
     <div className="create-common-confirmation-success">
@@ -59,6 +59,7 @@ const Success: FC = () => {
           variant={
             isMobileView ? ButtonVariant.Secondary : ButtonVariant.Primary
           }
+          onClick={onGoToCommon}
           shouldUseFullWidth
         >
           Go to Common

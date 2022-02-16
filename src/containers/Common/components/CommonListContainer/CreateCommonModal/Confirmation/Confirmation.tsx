@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo, useState, FC, ReactNode } from "react";
 import { useSelector } from "react-redux";
-import { ScreenSize } from "@/shared/constants";
+import { useHistory } from "react-router-dom";
+import { ScreenSize, ROUTE_PATHS } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
+import { getSharingURL } from "@/shared/utils";
 import { Error } from "./Error";
 import { Processing } from "./Processing";
 import { Success } from "./Success";
@@ -16,8 +18,16 @@ interface ConfirmationProps {
 const Confirmation: FC<ConfirmationProps> = (props) => {
   const { setShouldShowCloseButton, setTitle } = props;
   const [step, setStep] = useState(ConfirmationStep.Processing);
+  const history = useHistory();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const commonId = "commonId";
+  const commonPath = ROUTE_PATHS.COMMON_DETAIL.replace(":id", commonId);
+  const sharingURL = getSharingURL(commonPath);
+
+  const handleGoToCommon = () => {
+    history.push(commonPath);
+  };
 
   const title = useMemo((): ReactNode => {
     if (!isMobileView || step !== ConfirmationStep.Success) {
@@ -46,13 +56,15 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
       case ConfirmationStep.Processing:
         return <Processing />;
       case ConfirmationStep.Success:
-        return <Success />;
+        return (
+          <Success sharingURL={sharingURL} onGoToCommon={handleGoToCommon} />
+        );
       case ConfirmationStep.Error:
         return <Error />;
       default:
         return null;
     }
-  }, [step]);
+  }, [step, sharingURL, handleGoToCommon]);
 
   return content;
 };
