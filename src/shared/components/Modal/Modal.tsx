@@ -8,12 +8,13 @@ import React, {
   useState,
   forwardRef,
   ForwardRefRenderFunction,
+  MouseEventHandler,
   ReactNode,
 } from "react";
 import ReactDOM from "react-dom";
 import classNames from "classnames";
-
-import { useComponentWillUnmount, useOutsideClick } from "../../hooks";
+import { v4 as uuidv4 } from "uuid";
+import { useComponentWillUnmount } from "../../hooks";
 import { ModalProps, ModalRef } from "../../interfaces";
 import CloseIcon from "../../icons/close.icon";
 import LeftArrowIcon from "../../icons/leftArrow.icon";
@@ -22,9 +23,10 @@ import { ModalContext, FooterOptions, ModalContextValue } from "./context";
 import { ClosePrompt } from "./components/ClosePrompt";
 import "./index.scss";
 
-const MODAL_ID = "modal";
-
-const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (props, modalRef) => {
+const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
+  props,
+  modalRef
+) => {
   const {
     isShowing,
     onGoBack,
@@ -41,27 +43,27 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (props, modalRef) 
     shouldShowHeaderShadow = true,
     closePrompt = false,
   } = props;
-  const wrapperRef = useRef(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [footer, setFooter] = useState<ReactNode>(null);
   const [footerOptions, setFooterOptions] = useState<FooterOptions>({});
   const [headerContent, setHeaderContent] = useState<ReactNode>(null);
   const [isFullyScrolledToTop, setIsFullyScrolledToTop] = useState(true);
   const [isFullyScrolledToBottom, setIsFullyScrolledToBottom] = useState(false);
-  const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
   const { sticky: isFooterSticky = false } = footerOptions;
   const [showClosePrompt, setShowClosePrompt] = useState(false);
+  const modalId = useMemo(() => `modal-${uuidv4()}`, []);
+
+  const handleModalContainerClick: MouseEventHandler = (event) => {
+    event.stopPropagation();
+  };
 
   const handleClose = useCallback(() => {
     if (closePrompt) {
       setShowClosePrompt(true);
     } else {
       onClose();
-      if (isOutside) {
-        setOusideValue();
-      }
     }
-  }, [isOutside, closePrompt, onClose, setOusideValue]);
+  }, [closePrompt, onClose]);
 
   const handleClosePromptContinue = useCallback(() => {
     setShowClosePrompt(false);
@@ -77,23 +79,17 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (props, modalRef) 
       return;
     }
 
-    const modalRoot = document.getElementById(MODAL_ID);
+    const modalRoot = document.getElementById(modalId);
     document.body.style.overflow = "initial";
 
     if (modalRoot) {
       document.body.removeChild(modalRoot);
     }
-  }, [isShowing]);
-
-  useEffect(() => {
-    if (isOutside) {
-      handleClose();
-    }
-  }, [isOutside, handleClose]);
+  }, [isShowing, modalId]);
 
   useEffect(() => {
     if (!isShowing) {
-      const modalRoot = document.getElementById(MODAL_ID);
+      const modalRoot = document.getElementById(modalId);
       document.body.style.overflow = "initial";
       if (modalRoot) {
         document.body.removeChild(modalRoot);
@@ -101,7 +97,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (props, modalRef) 
     } else {
       document.body.style.overflow = "hidden";
     }
-  }, [isShowing]);
+  }, [isShowing, modalId]);
 
   useEffect(() => {
     if (onHeaderScrolledToTop) {
@@ -214,10 +210,13 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (props, modalRef) 
 
   return isShowing
     ? ReactDOM.createPortal(
-        <div id={MODAL_ID}>
+        <div id={modalId}>
           <div className="modal-overlay" />
-          <div className={modalWrapperClassName}>
-            <div ref={wrapperRef} className={`modal ${props.className}`}>
+          <div className={modalWrapperClassName} onClick={handleClose}>
+            <div
+              className={`modal ${props.className}`}
+              onClick={handleModalContainerClick}
+            >
               {isHeaderSticky && headerEl}
               <ModalContext.Provider value={contextValue}>
                 <div
