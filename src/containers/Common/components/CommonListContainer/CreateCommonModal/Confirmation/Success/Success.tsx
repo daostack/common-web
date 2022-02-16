@@ -37,7 +37,7 @@ const Success: FC<SuccessProps> = ({ sharingURL, onGoToCommon }) => {
         <Share
           className="create-common-confirmation-success__button-wrapper"
           url={sharingURL}
-          type="popup"
+          type={isMobileView ? "modal" : "popup"}
           color={Colors.lightPurple}
           top=""
           popupVariant={SharePopupVariant.topCenter}
