@@ -27,9 +27,9 @@
     .content {
       background-color: $white;
       box-shadow: $secondary-modal-shadow;
-      border-radius: 30px;
-      padding: 45px;
-      width: 280px;
+      border-radius: 1.875rem;
+      padding: 3rem;
+      width: 17.5rem;
       text-align: center;
       > div {
         display: flex;
@@ -101,16 +101,17 @@
           margin: 1rem 0;
         }
       }
-    }
-  }
-}
 
-@include big-phone {
-  .upload-prompt-wrapper {
-    .content-container {
-      .content {
+      @include big-phone {
         margin-top: auto;
-        border-radius: 30px 30px 0 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      @include phone-portrait {
+        width: 100%;
+        padding: 2.5rem 1.5rem;
+        box-sizing: border-box;
       }
     }
   }
