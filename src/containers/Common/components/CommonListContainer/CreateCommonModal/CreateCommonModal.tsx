@@ -16,11 +16,11 @@ import {
   IntermediateCreateCommonPayload,
   PaymentPayload,
 } from "../../../interfaces";
+import { Confirmation } from "./Confirmation";
 import { CreationSteps } from "./CreationSteps";
 import { Introduction } from "./Introduction";
 import { Payment } from "./Payment";
 import { CreateCommonStage } from "./constants";
-import Confirmation from "./Confirmation/Confirmation";
 import "./index.scss";
 
 const INITIAL_DATA: IntermediateCreateCommonPayload = {
@@ -39,6 +39,10 @@ interface CreateCommonModalProps {
   isShowing: boolean;
   onClose: () => void;
 }
+
+const emptyFunction = () => {
+  return;
+};
 
 export default function CreateCommonModal(props: CreateCommonModalProps) {
   const [{ stage, shouldStartFromLastStep }, setStageState] = useState({
@@ -73,17 +77,6 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     setTitle(title);
     setIsBigTitle(false);
   }, []);
-  const setLogoTitle = useCallback((shouldShowLogo: boolean) => {
-    shouldShowLogo
-      ? setTitle(
-          <img
-            className="create-common-success__logo"
-            src="/icons/common-creation/assets-logo-header-web-new-logo.svg"
-            alt="common-logo"
-          />
-        )
-      : setTitle("");
-  }, []);
 
   const setGoBackHandler = useCallback(
     (handler?: (() => boolean | undefined) | null) => {
@@ -108,7 +101,6 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       moveStageBack();
     }
   }, [onGoBack, moveStageBack]);
-  const emptyFunction = useCallback(() => {}, []);
 
   const renderedTitle = useMemo((): ReactNode => {
     if (!title) {
@@ -160,7 +152,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
         return (
           <Confirmation
             setShouldShowCloseButton={setShouldShowCloseButton}
-            setLogoTitle={setLogoTitle}
+            setTitle={setSmallTitle}
           />
         );
       default:
@@ -177,7 +169,6 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     creationData,
     shouldStartFromLastStep,
     paymentData,
-    setLogoTitle,
   ]);
 
   useEffect(() => {
@@ -203,7 +194,9 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       hideCloseButton={!shouldShowCloseButton}
       isHeaderSticky={isHeaderSticky}
       onHeaderScrolledToTop={setIsHeaderScrolledToTop}
-      closePrompt={shouldShowCloseButton}
+      closePrompt={
+        shouldShowCloseButton && stage !== CreateCommonStage.Confirmation
+      }
     >
       <div id="content">{content}</div>
     </Modal>

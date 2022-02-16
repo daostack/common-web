@@ -1,65 +1,64 @@
 @import "../../../../../../../constants";
 @import "../../../../../../../styles/sizes";
 
-
-.create-common-error {
+.create-common-confirmation-error {
+  width: 100%;
+  max-width: 36.5rem;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-family: NunitoSans, sans-serif;
 
-  .create-common-error__image {
-    margin-top: 2.5rem;
+  .create-common-confirmation-error__image {
     width: 10.825rem;
     height: 10.825rem;
+    margin-top: 2rem;
+
     @include big-phone {
+      max-width: 16.75rem;
+      width: 100%;
+      max-height: 16.75rem;
+      height: 100%;
       margin-top: 0;
-      width: 16.75rem;
-      height: 16.75rem;
     }
   }
 
-  .create-common-error__title {
+  .create-common-confirmation-error__title {
     margin: 4.625rem 0 1rem;
     font-family: NotoSerifSC, serif;
     font-size: $moderate-med;
     font-weight: bold;
-    line-height: 1.33;
+    text-align: center;
+
     @include big-phone {
       margin: 1.5rem 0 2rem;
-      font-size: $moderate-xmed;
-      line-height: 1.27;
     }
   }
 
-  .create-common-error__sub-title {
+  .create-common-confirmation-error__sub-title {
     margin: 0;
-    font-family: NunitoSans, serif;
     font-size: $xsmall;
-    line-height: 1.43;
     text-align: center;
-    @include big-phone {
-      max-width: 17.5rem;
-    }
   }
 
-  .create-common-error__submit-button {
+  .create-common-confirmation-error__submit-button {
+    max-width: 11.25rem;
     margin-top: 3.5rem;
-    min-width: 11.25rem;
+
     @include big-phone {
+      max-width: unset;
       margin-top: 5rem;
     }
   }
 
-  .create-common-error__view-details {
-    margin: 1.5rem 0 0;
-    font-family: NunitoSans, serif;
+  .create-common-confirmation-error__view-details {
+    margin: 1.5rem 0 2rem;
     font-size: $xsmall;
     color: $light-gray-2;
-    cursor: pointer;
-  }
 
-  @include big-phone {
-    max-width: 20.5rem;
+    @include big-phone {
+      margin-bottom: 1rem;
+    }
   }
 }

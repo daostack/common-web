@@ -16,6 +16,7 @@ enum Social {
 }
 
 interface IProps {
+  className?: string;
   url: string;
   color: Colors;
   type: ViewType;
@@ -38,7 +39,7 @@ const generateShareQuery = (social: Social, { url, text }: { url: string, text?:
 };
 
 export default function Share(props: PropsWithChildren<IProps>) {
-  const { url, text = "", color, type, top, children } = props;
+  const { className, url, text = "", color, type, top, children } = props;
   const wrapperRef = useRef(null);
   const [isShown, setShown] = useState(false);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
@@ -84,7 +85,7 @@ export default function Share(props: PropsWithChildren<IProps>) {
   );
 
   return (
-    <div className="social-wrapper" ref={wrapperRef}>
+    <div className={classNames("social-wrapper", className)} ref={wrapperRef}>
       {children ? (
         <div className="social-wrapper__children-wrapper" onClick={handleClick}>
           {children}
