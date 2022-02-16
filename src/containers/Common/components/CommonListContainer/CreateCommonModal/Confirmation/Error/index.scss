@@ -3,7 +3,7 @@
 
 .create-common-confirmation-error {
   width: 100%;
-  max-width: 36.5rem;
+  max-width: 23.75rem;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -53,12 +53,31 @@
   }
 
   .create-common-confirmation-error__view-details {
-    margin: 1.5rem 0 2rem;
+    margin: 1.5rem 0 1rem;
     font-size: $xsmall;
     color: $light-gray-2;
+    text-align: center;
+    text-decoration: none;
 
     @include big-phone {
-      margin-bottom: 1rem;
+      width: 100%;
+      margin: 0.5rem 0 0;
+      padding: 1rem 0;
+    }
+  }
+
+  .create-common-confirmation-error__error {
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 1rem 1.5rem;
+    background-color: $purple-alpha-10;
+    border-radius: 0.875rem;
+    color: $error;
+    text-align: center;
+    word-break: break-word;
+
+    @include big-phone {
+      padding: 0.5rem 1rem;
     }
   }
 }
