@@ -52,7 +52,7 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
     setTitle(title);
   }, [setTitle, title]);
 
-  const content = useMemo(() => {
+  const renderContent = () => {
     switch (step) {
       case ConfirmationStep.Processing:
         return <Processing />;
@@ -65,9 +65,9 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
       default:
         return null;
     }
-  }, [step, sharingURL, handleGoToCommon]);
+  };
 
-  return content;
+  return renderContent();
 };
 
 export default Confirmation;
