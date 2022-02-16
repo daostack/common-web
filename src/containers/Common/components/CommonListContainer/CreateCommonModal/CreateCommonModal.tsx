@@ -153,6 +153,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
           <Confirmation
             setShouldShowCloseButton={setShouldShowCloseButton}
             setTitle={setSmallTitle}
+            onFinish={props.onClose}
           />
         );
       default:
@@ -169,6 +170,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     creationData,
     shouldStartFromLastStep,
     paymentData,
+    props.onClose,
   ]);
 
   useEffect(() => {

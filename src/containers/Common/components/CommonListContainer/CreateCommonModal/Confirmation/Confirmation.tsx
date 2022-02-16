@@ -13,10 +13,11 @@ import "./index.scss";
 interface ConfirmationProps {
   setShouldShowCloseButton: (shouldShow: boolean) => void;
   setTitle: (title: ReactNode) => void;
+  onFinish: () => void;
 }
 
 const Confirmation: FC<ConfirmationProps> = (props) => {
-  const { setShouldShowCloseButton, setTitle } = props;
+  const { setShouldShowCloseButton, setTitle, onFinish } = props;
   const [step, setStep] = useState(ConfirmationStep.Processing);
   const history = useHistory();
   const screenSize = useSelector(getScreenSize());
@@ -60,7 +61,7 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
           <Success sharingURL={sharingURL} onGoToCommon={handleGoToCommon} />
         );
       case ConfirmationStep.Error:
-        return <Error />;
+        return <Error onFinish={onFinish} />;
       default:
         return null;
     }

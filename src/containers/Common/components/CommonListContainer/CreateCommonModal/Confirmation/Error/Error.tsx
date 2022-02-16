@@ -2,7 +2,11 @@ import React, { FC } from "react";
 import { Button, ButtonVariant } from "@/shared/components";
 import "./index.scss";
 
-const Error: FC = () => (
+interface ErrorProps {
+  onFinish: () => void;
+}
+
+const Error: FC<ErrorProps> = ({ onFinish }) => (
   <div className="create-common-confirmation-error">
     <img
       className="create-common-confirmation-error__image"
@@ -19,6 +23,7 @@ const Error: FC = () => (
       key="personal-contribution-continue"
       className="create-common-confirmation-error__submit-button"
       variant={ButtonVariant.Secondary}
+      onClick={onFinish}
       shouldUseFullWidth
     >
       OK
