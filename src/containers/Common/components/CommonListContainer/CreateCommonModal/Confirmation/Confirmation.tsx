@@ -154,7 +154,7 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
           <Success sharingURL={sharingURL} onGoToCommon={handleGoToCommon} />
         );
       case ConfirmationStep.Error:
-        return <Error onFinish={onFinish} />;
+        return <Error errorText={error} onFinish={onFinish} />;
       default:
         return null;
     }
