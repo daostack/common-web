@@ -154,6 +154,8 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             setShouldShowCloseButton={setShouldShowCloseButton}
             setTitle={setSmallTitle}
             onFinish={props.onClose}
+            creationData={creationData}
+            paymentData={paymentData}
           />
         );
       default:
