@@ -16,6 +16,7 @@ import {
   IntermediateCreateCommonPayload,
   PaymentPayload,
 } from "../../../interfaces";
+import { Confirmation } from "./Confirmation";
 import { CreationSteps } from "./CreationSteps";
 import { Introduction } from "./Introduction";
 import { Payment } from "./Payment";
@@ -38,6 +39,10 @@ interface CreateCommonModalProps {
   isShowing: boolean;
   onClose: () => void;
 }
+
+const emptyFunction = () => {
+  return;
+};
 
 export default function CreateCommonModal(props: CreateCommonModalProps) {
   const [{ stage, shouldStartFromLastStep }, setStageState] = useState({
@@ -143,6 +148,14 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             setPaymentData={setPaymentData}
           />
         );
+      case CreateCommonStage.Confirmation:
+        return (
+          <Confirmation
+            setShouldShowCloseButton={setShouldShowCloseButton}
+            setTitle={setSmallTitle}
+            onFinish={props.onClose}
+          />
+        );
       default:
         return null;
     }
@@ -157,6 +170,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     creationData,
     shouldStartFromLastStep,
     paymentData,
+    props.onClose,
   ]);
 
   useEffect(() => {
@@ -173,7 +187,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     <Modal
       isShowing={props.isShowing}
       onGoBack={onGoBack && handleGoBack}
-      onClose={props.onClose}
+      onClose={shouldShowCloseButton ? props.onClose : emptyFunction}
       className={classNames("create-common-modal", {
         "mobile-full-screen": isMobileView,
       })}
@@ -182,7 +196,9 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       hideCloseButton={!shouldShowCloseButton}
       isHeaderSticky={isHeaderSticky}
       onHeaderScrolledToTop={setIsHeaderScrolledToTop}
-      closePrompt
+      closePrompt={
+        shouldShowCloseButton && stage !== CreateCommonStage.Confirmation
+      }
     >
       <div id="content">{content}</div>
     </Modal>

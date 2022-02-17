@@ -1,7 +1,7 @@
 import millify from "millify";
 import moment, { Moment } from "moment";
 
-import { MobileOperatingSystem } from "../constants";
+import { MobileOperatingSystem, BASE_URL } from "../constants";
 import { DateFormat, Proposal, Time, User } from "../models";
 
 interface FormatPriceOptions {
@@ -209,3 +209,5 @@ export const getProposalExpirationDate = (proposal: Proposal): Date =>
  **/
 export const getCommonExampleImageURL = (index: number): string =>
   `https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_0${index}.png?alt=media`;
+
+export const getSharingURL = (path: string): string => `${BASE_URL}${path}`;
