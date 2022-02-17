@@ -319,10 +319,6 @@ export default function CommonDetail() {
     onOpenNewP();
   }, [onOpenJoinModal, onOpenNewP, user]);
 
-  const deleteCommon = useCallback(() => {
-    onOpenDeteleCommonPrompt();
-  }, [onOpenDeteleCommonPrompt])
-
   const renderSidebarContent = () => {
     if (!common) return null;
     switch (tab) {
@@ -630,7 +626,7 @@ export default function CommonDetail() {
                     <Button
                       variant={ButtonVariant.Secondary}
                       className="delete-common-btn"
-                      onClick={deleteCommon}>
+                      onClick={onOpenDeteleCommonPrompt}>
                       Delete this Common
                     </Button>
                   )}

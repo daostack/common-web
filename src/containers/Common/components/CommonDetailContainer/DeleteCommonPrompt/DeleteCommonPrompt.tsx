@@ -1,10 +1,10 @@
+import React, { useCallback, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { deleteCommon } from "@/containers/Common/store/actions";
 import { Button, ButtonVariant, Modal } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { ModalProps } from "@/shared/interfaces";
-import React, { useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
 import "./index.scss";
 
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
@@ -15,13 +15,13 @@ export default function DeleteCommonPrompt({ isShowing, onClose, commonId }: IPr
   const dispatch = useDispatch();
   const history = useHistory();
   const [deleting, setDeleting] = useState(false);
-  const [error, setError] = useState<undefined | string>(undefined);
+  const [error, setError] = useState<undefined | string>();
 
   const handleDelete = useCallback(() => {
     setDeleting(true);
     setError(undefined);
     dispatch(deleteCommon.request({
-      payload: { commonId: commonId },
+      payload: { commonId },
       callback: (error) => {
         if (error) {
           console.error(error);
