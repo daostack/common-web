@@ -44,6 +44,7 @@ export interface Common {
   fundingGoalDeadline: number;
 
   metadata: Metadata;
+  active: boolean;
 }
 
 export interface CommonPayment {
