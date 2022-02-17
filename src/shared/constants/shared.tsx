@@ -15,8 +15,8 @@ export const COMMON_APP_GOOGLE_PLAY_LINK =
 export const CONTACT_EMAIL = "hi@common.io";
 export const SUPPORT_EMAIL = "support@common.io";
 
-export const MIN_CONTRIBUTION_ILS_AMOUNT = 1000; // ₪10 * 100
-export const MAX_CONTRIBUTION_ILS_AMOUNT = 250000; // ₪2500 * 100
+export const MIN_CONTRIBUTION_ILS_AMOUNT = 10_00; // ₪10 * 100
+export const MAX_CONTRIBUTION_ILS_AMOUNT = 5000_00; // ₪5000 * 100
 
 export enum MobileOperatingSystem {
   WindowsPhone = "Windows Phone",
