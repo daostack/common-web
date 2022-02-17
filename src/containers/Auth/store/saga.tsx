@@ -208,9 +208,10 @@ const updateUserData = async (user: any) => {
         const updatedCurrentUser = await firebase.auth().currentUser;
 
         if (updatedCurrentUser) {
-          store.dispatch(
-            actions.socialLogin.success(updatedCurrentUser as any)
-          );
+          const databaseUser = await getUserData(updatedCurrentUser?.uid ?? "");
+          if (databaseUser) {
+            store.dispatch(actions.socialLogin.success(databaseUser));
+          }
         }
 
         return updatedCurrentUser;
