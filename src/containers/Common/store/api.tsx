@@ -22,6 +22,7 @@ import firebase from "../../../shared/utils/firebase";
 import {
   AddMessageToProposalDto,
   CreateDiscussionDto,
+  DeleteCommon,
 } from "@/containers/Common/interfaces";
 import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
 
@@ -68,7 +69,7 @@ export async function fetchUserProposals(userId: string) {
 }
 
 export async function fetchCommonList(): Promise<Common[]> {
-  const commons = await firebase.firestore().collection(Collection.Daos).get();
+  const commons = await firebase.firestore().collection(Collection.Daos).where("active", "==", true).get();
   const data = transformFirebaseDataList<Common>(commons);
   return data;
 }
@@ -77,10 +78,11 @@ export async function fetchCommonDetail(id: string): Promise<Common> {
   const common = await firebase
     .firestore()
     .collection(Collection.Daos)
-    .doc(id)
+    .where("id", "==", id)
+    .where("active", "==", true)
     .get();
-  const data = transformFirebaseDataSingle<Common>(common);
-  return data;
+  const data = transformFirebaseDataList<Common>(common);
+  return data[0];
 }
 
 export async function fetchOwners(ownerids: string[]) {
@@ -269,4 +271,13 @@ export async function checkUserPaymentMethod(userId: string): Promise<boolean> {
     .get();
 
   return !!cards.docs.length;
+}
+
+export async function deleteCommon(requestData: DeleteCommon): Promise<void> {
+  const { data } = await Api.post<void>(
+    ApiEndpoint.DeleteCommon,
+    requestData
+  );
+
+  return data;
 }
