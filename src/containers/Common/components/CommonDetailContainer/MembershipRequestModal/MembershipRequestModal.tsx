@@ -8,7 +8,7 @@ import React, {
   ReactNode,
   SetStateAction,
 } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
 import { Modal } from "../../../../../shared/components";
@@ -27,6 +27,8 @@ import MembershipRequestProgressBar from "./MembershipRequestProgressBar";
 import MembershipRequestRules from "./MembershipRequestRules";
 import MembershipRequestWelcome from "./MembershipRequestWelcome";
 import { selectUser } from "../../../../Auth/store/selectors";
+import { selectCommonList } from "../../../store/selectors";
+import { getCommonsList } from "../../../store/actions";
 
 export interface IStageProps {
   setUserData: Dispatch<SetStateAction<IMembershipRequestData>>;
@@ -74,6 +76,7 @@ interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
 }
 
 export function MembershipRequestModal(props: IProps) {
+  const dispatch = useDispatch();
   // TODO: should be saved in the localstorage for saving the progress?
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
@@ -86,6 +89,7 @@ export function MembershipRequestModal(props: IProps) {
   const shouldDisplayProgressBar = stage > 0 && stage < 5;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const commons = useSelector(selectCommonList());
 
   /**
    * The data is saved only when we are on the Common Details Page.
@@ -97,9 +101,18 @@ export function MembershipRequestModal(props: IProps) {
       return;
     }
 
+    if (commons.length === 0) {
+      dispatch(getCommonsList.request());
+    }
+
+    const myCommons = commons.filter((c) =>
+      c.members.some((m) => m.userId === user?.uid)
+    );
+
     const payload: IMembershipRequestData = {
       ...initData,
       cardId: uuidv4(),
+      stage: myCommons.length > 0 ? 1 : 0,
     };
 
     if (user) {
@@ -113,7 +126,7 @@ export function MembershipRequestModal(props: IProps) {
     setUserData(payload);
     onCreationStageReach(false);
     resetZoom();
-  }, [isShowing, user, onCreationStageReach, disableZoom, resetZoom]);
+  }, [isShowing, user, onCreationStageReach, disableZoom, resetZoom, commons, dispatch]);
 
   const renderCurrentStage = (stage: number) => {
     switch (stage) {
