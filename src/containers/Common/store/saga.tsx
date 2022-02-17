@@ -9,6 +9,7 @@ import {
 } from "../../../shared/models";
 import { startLoading, stopLoading } from "@/shared/store/actions";
 import {
+  createCommon as createCommonApi,
   createRequestToJoin as createRequestToJoinApi,
   fetchCommonList,
   fetchCommonDetail,
@@ -359,6 +360,23 @@ export function* checkUserPaymentMethodSaga(
   }
 }
 
+export function* createCommon(
+  action: ReturnType<typeof actions.createCommon.request>
+): Generator {
+  try {
+    const common = (yield call(
+      createCommonApi,
+      action.payload.payload
+    )) as Common;
+
+    yield put(actions.createCommon.success(common));
+    action.payload.callback(null, common);
+  } catch (error) {
+    yield put(actions.createCommon.failure(error));
+    action.payload.callback(error);
+  }
+}
+
 export function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
@@ -388,6 +406,7 @@ export function* commonsSaga() {
     actions.addMessageToProposal.request,
     addMessageToProposalSaga
   );
+  yield takeLatest(actions.createCommon.request, createCommon);
 }
 
 export default commonsSaga;
