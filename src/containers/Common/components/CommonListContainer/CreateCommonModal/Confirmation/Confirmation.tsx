@@ -123,11 +123,13 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
   }, [isCommonCreationStarted, user, dispatch, creationData, paymentData]);
 
   useEffect(() => {
-    if (step !== ConfirmationStep.Processing) {
+    if (step !== ConfirmationStep.Processing || (!common && !error)) {
       return;
     }
 
-    setStep(error || !common ? ConfirmationStep.Error : ConfirmationStep.Success);
+    setStep(
+      error || !common ? ConfirmationStep.Error : ConfirmationStep.Success
+    );
   }, [step, common, error]);
 
   useEffect(() => {
