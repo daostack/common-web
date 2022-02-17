@@ -68,10 +68,11 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
   }, [isMobileView, step]);
 
   useEffect(() => {
-    if (isCommonCreationStarted || !user?.id) {
+    if (isCommonCreationStarted || !user?.uid) {
       return;
     }
 
+    const userId = user.uid;
     setIsCommonCreationStarted(true);
 
     (async () => {
@@ -98,7 +99,7 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
       dispatch(
         createCommon.request({
           payload: {
-            userId: user.id,
+            userId,
             name: creationData.name,
             image: commonImageURL,
             byline: creationData.byline,
