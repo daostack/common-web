@@ -24,6 +24,7 @@ import "./index.scss";
 interface ConfirmationProps {
   setShouldShowCloseButton: (shouldShow: boolean) => void;
   setTitle: (title: ReactNode) => void;
+  setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
   onFinish: () => void;
   creationData: IntermediateCreateCommonPayload;
   paymentData: PaymentPayload;
@@ -33,6 +34,7 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
   const {
     setShouldShowCloseButton,
     setTitle,
+    setGoBackHandler,
     onFinish,
     creationData,
     paymentData,
@@ -138,6 +140,10 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
   useEffect(() => {
     setTitle(title);
   }, [setTitle, title]);
+
+  useEffect(() => {
+    setGoBackHandler(null);
+  }, [setGoBackHandler]);
 
   const renderContent = () => {
     switch (step) {

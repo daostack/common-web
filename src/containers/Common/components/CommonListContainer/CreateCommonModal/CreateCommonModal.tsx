@@ -153,6 +153,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
           <Confirmation
             setShouldShowCloseButton={setShouldShowCloseButton}
             setTitle={setSmallTitle}
+            setGoBackHandler={setGoBackHandler}
             onFinish={props.onClose}
             creationData={creationData}
             paymentData={paymentData}
