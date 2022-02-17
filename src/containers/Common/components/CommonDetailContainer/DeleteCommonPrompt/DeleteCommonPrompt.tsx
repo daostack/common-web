@@ -15,11 +15,11 @@ export default function DeleteCommonPrompt({ isShowing, onClose, commonId }: IPr
   const dispatch = useDispatch();
   const history = useHistory();
   const [deleting, setDeleting] = useState(false);
-  const [error, setError] = useState<undefined | string>();
+  const [error, setError] = useState("");
 
   const handleDelete = useCallback(() => {
     setDeleting(true);
-    setError(undefined);
+    setError("");
     dispatch(deleteCommon.request({
       payload: { commonId },
       callback: (error) => {
