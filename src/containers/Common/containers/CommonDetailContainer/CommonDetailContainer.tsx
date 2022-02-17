@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import classNames from "classnames";
@@ -8,6 +14,7 @@ import { Modal } from "../../../../shared/components/Modal";
 import {
   useAuthorizedModal,
   useModal,
+  useOutsideClick,
   useViewPortHook,
 } from "../../../../shared/hooks";
 import PurpleCheckIcon from "../../../../shared/icons/purpleCheck.icon";
@@ -111,6 +118,10 @@ export default function CommonDetail() {
   const [imageError, setImageError] = useState(false);
   const [isCreationStageReached, setIsCreationStageReached] = useState(false);
 
+  const [showActions, setShowActions] = useState(false);
+  const actionsRef = useRef(null);
+  const { isOutside, setOusideValue } = useOutsideClick(actionsRef);
+
   const common = useSelector(selectCommonDetail());
   const currentDisscussion = useSelector(selectCurrentDisscussion());
   const proposals = useSelector(selectProposals());
@@ -121,6 +132,13 @@ export default function CommonDetail() {
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
   const hasPaymentMethod = useSelector(selectUserPaymentMethod());
+
+  useEffect(() => {
+    if (isOutside) {
+      setShowActions(false);
+      setOusideValue();
+    }
+  }, [isOutside, setShowActions, setOusideValue]);
 
   const fundingProposals = useMemo(
     () =>
@@ -603,6 +621,30 @@ export default function CommonDetail() {
                   ))}
                 </div>
                 <div className="social-wrapper" ref={setJoinEffortRef}>
+                  <div className="common-actions-wrapper" ref={actionsRef}>
+                    <button
+                      className={`add-action ${showActions ? "opened" : ""}`}
+                      onClick={() => setShowActions((v) => !v)}
+                    >
+                      <img src="/icons/common-action.svg" alt="common-action" />
+                      Add
+                    </button>
+
+                    {showActions && (
+                      <div className="common-actions">
+                        <div className="add-button" onClick={onOpenNewD}>
+                          <img src="/icons/add-discussion.svg" alt="add-post" />
+                          Add New Post
+                        </div>
+                        {isCommonMember && (
+                          <div className="add-button" onClick={onOpenNewP}>
+                            <img src="/icons/add-proposal.svg" alt="add-post" />
+                            Add New Proposal
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                   {!isCommonMember && (
                     <button
                       className={`button-blue join-the-effort-btn`}
