@@ -15,7 +15,7 @@ interface Return {
   isCommonCreationLoading: boolean;
   common: Common | null;
   error: string;
-  createCommon: (creationData: IntermediateCreateCommonPayload) => void;
+  createCommon: (creationData: IntermediateCreateCommonPayload) => Promise<void>;
 }
 
 const getCommonImageURL = async (
