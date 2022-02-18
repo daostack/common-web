@@ -11,8 +11,10 @@ import {
   CreateDiscussionDto,
   CreateCommonPayload,
   AddMessageToDiscussionDto,
+  DeleteCommon,
 } from "@/containers/Common/interfaces";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
+import { PayloadWithCallback } from "@/shared/interfaces";
 
 export const getCommonsList = createAsyncAction(
   CommonsActionTypes.GET_COMMONS_LIST,
@@ -140,6 +142,12 @@ export const addMessageToProposal = createAsyncAction(
   Proposal,
   Error
 >();
+
+export const deleteCommon = createAsyncAction(
+  CommonsActionTypes.DELETE_COMMON,
+  CommonsActionTypes.DELETE_COMMON_SUCCESS,
+  CommonsActionTypes.DELETE_COMMON_FAILURE
+)<PayloadWithCallback<DeleteCommon, void, Error>, void, Error>();
 
 export const createCommon = createAsyncAction(
   CommonsActionTypes.CREATE_COMMON,
