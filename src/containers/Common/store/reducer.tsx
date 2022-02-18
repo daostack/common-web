@@ -114,6 +114,11 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
     produce(state, (nextState) => {
       nextState.doesUserHasPaymentMethod = action.payload;
     })
+  )
+  .handleAction(actions.createCommon.success, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.commons = [action.payload, ...nextState.commons];
+    })
   );
 
 export default reducer;
