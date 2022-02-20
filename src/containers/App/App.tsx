@@ -61,10 +61,9 @@ const App = () => {
             component={MyCommonsContainer}
             authenticated={isAuthenticated}
           />
-          <PrivateRoute
+          <Route
             path={ROUTE_PATHS.SUBMIT_INVOICES}
             component={SubmitInvoicesContainer}
-            authenticated={isAuthenticated}
           />
           <Route path={ROUTE_PATHS.TRUSTEE} component={TrusteeContainer} />
           <Route component={NotFound} />
