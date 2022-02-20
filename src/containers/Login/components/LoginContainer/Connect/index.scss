@@ -1,7 +1,8 @@
-@import "../../../../../constants.scss";
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
 
 .connect-wrapper {
-  padding: 90px 0;
+  padding: 0.5rem 0 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,14 +18,12 @@
     }
   }
 
-
   .terms-of-use {
     color: $purple;
     text-decoration: none;
   }
-}
 
-@media only screen and (max-width: $mobile-breakpoint) {
-  .connect-wrapper {
+  @include big-phone {
+    padding-top: 1rem;
   }
 }
