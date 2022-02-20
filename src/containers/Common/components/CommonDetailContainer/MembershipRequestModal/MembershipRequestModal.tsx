@@ -105,14 +105,14 @@ export function MembershipRequestModal(props: IProps) {
       dispatch(getCommonsList.request());
     }
 
-    const myCommons = commons.filter((c) =>
+    const isMember = commons.some((c) =>
       c.members.some((m) => m.userId === user?.uid)
     );
 
     const payload: IMembershipRequestData = {
       ...initData,
       cardId: uuidv4(),
-      stage: myCommons.length > 0 ? 1 : 0,
+      stage: isMember ? 1 : 0,
     };
 
     if (user) {
