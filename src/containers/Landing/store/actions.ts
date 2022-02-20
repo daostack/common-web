@@ -1,4 +1,3 @@
-
 import { createAsyncAction } from "typesafe-actions";
 import { PayloadWithCallback } from "../../../shared/interfaces";
 import { SendEmail } from "../../../shared/interfaces/SendEmail";

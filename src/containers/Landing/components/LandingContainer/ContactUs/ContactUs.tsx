@@ -23,7 +23,7 @@ export default function ContactUs() {
         type: EmailType.ContactUsAdmin,
         text: description
       },
-      callback: (error: any) => {
+      callback: (error: Error | null) => {
         if (error) {
           setError(error?.message ?? "Something went wrong :/");
           setSending(false);
