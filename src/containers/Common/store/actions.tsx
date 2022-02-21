@@ -1,18 +1,19 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 
+import { PayloadWithCallback } from "@/shared/interfaces";
 import {
   CreateFundingRequestProposalPayload,
   ProposalJoinRequestData,
-} from "../../../shared/interfaces/api/proposal";
-import { Common, Proposal, Discussion } from "../../../shared/models";
+} from "@/shared/interfaces/api/proposal";
+import { Common, Proposal, Discussion } from "@/shared/models";
 import { CommonsActionTypes } from "./constants";
 import {
   CreateDiscussionDto,
+  CreateCommonPayload,
   AddMessageToDiscussionDto,
   DeleteCommon,
 } from "@/containers/Common/interfaces";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
-import { PayloadWithCallback } from "@/shared/interfaces";
 
 export const getCommonsList = createAsyncAction(
   CommonsActionTypes.GET_COMMONS_LIST,
@@ -146,3 +147,9 @@ export const deleteCommon = createAsyncAction(
   CommonsActionTypes.DELETE_COMMON_SUCCESS,
   CommonsActionTypes.DELETE_COMMON_FAILURE
 )<PayloadWithCallback<DeleteCommon, void, Error>, void, Error>();
+
+export const createCommon = createAsyncAction(
+  CommonsActionTypes.CREATE_COMMON,
+  CommonsActionTypes.CREATE_COMMON_SUCCESS,
+  CommonsActionTypes.CREATE_COMMON_FAILURE
+)<PayloadWithCallback<CreateCommonPayload, Common, Error>, Common, Error>();

@@ -66,22 +66,30 @@ export default function Payment(props: PaymentProps) {
 
   const handleFinish = useCallback(
     (data?: Partial<PaymentPayload>) => {
+      const nextStep = step + 1;
+      const nextData = {
+        ...paymentData,
+        ...(data || {}),
+      };
+
       if (data) {
-        setPaymentData((nextData) => ({
-          ...nextData,
-          ...data,
-        }));
+        setPaymentData(nextData);
       }
 
       scrollTop();
 
-      if (step === PaymentStep.PaymentDetails) {
+      if (
+        step === PaymentStep.PaymentDetails ||
+        (nextStep === PaymentStep.PaymentDetails &&
+          nextData.contributionAmount === 0)
+      ) {
         onFinish();
-      } else {
-        setStep((stage) => stage + 1);
+        return;
       }
+
+      setStep(nextStep);
     },
-    [onFinish, step, setPaymentData]
+    [onFinish, step, paymentData, setPaymentData]
   );
 
   const title = useMemo(() => {

@@ -1,5 +1,5 @@
 import { ApiEndpoint } from "@/shared/constants";
-import Api from "../../../services/Api";
+import Api from "@/services/Api";
 import {
   CreateFundingRequestProposalPayload,
   ProposalJoinRequestData,
@@ -12,15 +12,16 @@ import {
   DiscussionMessage,
   Proposal,
   User,
-} from "../../../shared/models";
+} from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
   transformFirebaseDataList,
   transformFirebaseDataSingle,
-} from "../../../shared/utils";
-import firebase from "../../../shared/utils/firebase";
+} from "@/shared/utils";
+import firebase from "@/shared/utils/firebase";
 import {
   AddMessageToProposalDto,
+  CreateCommonPayload,
   CreateDiscussionDto,
   DeleteCommon,
 } from "@/containers/Common/interfaces";
@@ -280,4 +281,15 @@ export async function deleteCommon(requestData: DeleteCommon): Promise<void> {
   );
 
   return data;
+}
+
+export async function createCommon(
+  requestData: CreateCommonPayload
+): Promise<Common> {
+  const { data } = await Api.post<Common>(
+    ApiEndpoint.CreateCommon,
+    requestData
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
 }

@@ -5,7 +5,6 @@ import {
 } from "@/shared/models";
 
 export interface CreateCommonPayload {
-  userId: string;
   name: string;
   image: string;
   byline?: string;
@@ -19,7 +18,7 @@ export interface CreateCommonPayload {
 }
 
 export interface IntermediateCreateCommonPayload
-  extends Omit<CreateCommonPayload, "userId" | "image" | "searchable"> {
+  extends Omit<CreateCommonPayload, "image" | "searchable"> {
   image: string | File | null;
   agreementAccepted: boolean;
 }

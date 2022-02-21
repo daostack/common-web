@@ -3,10 +3,11 @@ import { Button, ButtonLink, ButtonVariant } from "@/shared/components";
 import "./index.scss";
 
 interface ErrorProps {
+  errorText: string;
   onFinish: () => void;
 }
 
-const Error: FC<ErrorProps> = ({ onFinish }) => {
+const Error: FC<ErrorProps> = ({ errorText, onFinish }) => {
   const [shouldShowError, setShouldShowError] = useState(false);
 
   const handleErrorDetailsButtonClick = () => {
@@ -43,7 +44,7 @@ const Error: FC<ErrorProps> = ({ onFinish }) => {
       </ButtonLink>
       {shouldShowError && (
         <span className="create-common-confirmation-error__error">
-          Error text long long long long long long long long long long long long
+          {errorText}
         </span>
       )}
     </div>
