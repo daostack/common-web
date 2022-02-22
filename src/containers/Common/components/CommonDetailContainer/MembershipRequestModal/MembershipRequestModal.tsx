@@ -9,15 +9,11 @@ import React, {
   SetStateAction,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
 import { Modal } from "../../../../../shared/components";
 import { useZoomDisabling } from "../../../../../shared/hooks";
 import { ModalProps, ModalRef } from "../../../../../shared/interfaces";
 import { Common } from "../../../../../shared/models";
-import { getScreenSize } from "../../../../../shared/store/selectors";
-import { ScreenSize } from "../../../../../shared/constants";
-import "./index.scss";
 import MembershipRequestContribution from "./MembershipRequestContribution";
 import MembershipRequestCreated from "./MembershipRequestCreated";
 import MembershipRequestCreating from "./MembershipRequestCreating";
@@ -29,6 +25,7 @@ import MembershipRequestWelcome from "./MembershipRequestWelcome";
 import { selectUser } from "../../../../Auth/store/selectors";
 import { selectCommonList } from "../../../store/selectors";
 import { getCommonsList } from "../../../store/actions";
+import "./index.scss";
 
 export interface IStageProps {
   setUserData: Dispatch<SetStateAction<IMembershipRequestData>>;
@@ -87,8 +84,6 @@ export function MembershipRequestModal(props: IProps) {
   const { stage } = userData;
   const { isShowing, onClose, common, onCreationStageReach } = props;
   const shouldDisplayProgressBar = stage > 0 && stage < 5;
-  const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
   const commons = useSelector(selectCommonList());
 
   /**
@@ -183,22 +178,11 @@ export function MembershipRequestModal(props: IProps) {
   };
 
   const renderedTitle = useMemo((): ReactNode => {
-    if (stage >= 5) {
+    if (stage >= 5 || stage === 0) {
       return null;
     }
-
-    const shouldBeBigTitle = stage === 0;
-    const text = shouldBeBigTitle
-      ? "Membership Request Process"
-      : "Membership Request";
-    const className = classNames("membership-request-modal__title", {
-      "membership-request-modal__title--big": shouldBeBigTitle && !isMobileView,
-      "membership-request-modal__title--short":
-        shouldBeBigTitle && isMobileView,
-    });
-
-    return <h3 className={className}>{text}</h3>;
-  }, [stage, isMobileView]);
+    return <h3 className="membership-request-modal__title">Membership Request</h3>;
+  }, [stage]);
 
   const moveStageBack = useCallback(() => {
     setUserData((data) => {
@@ -236,10 +220,7 @@ export function MembershipRequestModal(props: IProps) {
       title={renderedTitle}
       onGoBack={shouldDisplayProgressBar ? moveStageBack : undefined}
       styles={{
-        header:
-          stage === 0
-            ? "membership-request-modal__header-wrapper--introduction"
-            : "",
+        content: stage === 0 ? "membership-request-modal__content--introduction" : ""
       }}
     >
       <div className="membership-request-wrapper">
