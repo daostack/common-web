@@ -13,17 +13,20 @@ export default function ContactUs() {
   const [description, setDescription] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const handleSend = useCallback(() => {
     setSending(true);
+    setSuccess(false);
     setError("");
     dispatch(sendEmail.request({
       payload: {
-        receiver: email,
+        senderEmail: email,
+        senderName: name,
         type: EmailType.ContactUsAdmin,
         text: description
       },
-      callback: (error: Error | null) => {
+      callback: (error) => {
         if (error) {
           setError(error?.message ?? "Something went wrong :/");
           setSending(false);
@@ -31,11 +34,11 @@ export default function ContactUs() {
           return;
         }
         setSending(false);
-        // TODO: need to show success. There is no design for that.
-        console.log("success");
+        // TODO: Check with brio for a desgin on success
+        setSuccess(true);
       }
     }))
-  }, [dispatch, email, description])
+  }, [dispatch, email, name, description])
 
   return (
     <div className="contact-us-wrapper">
@@ -43,7 +46,7 @@ export default function ContactUs() {
         <h1>Contact us</h1>
         <div className="email-wrapper">
           <img src={"/icons/email.svg"} alt="envelope" />
-          <a href={`mailto:${CONTACT_EMAIL}`}>hi@common.io</a>
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
         </div>
       </div>
       <div className="form-wrapper">
@@ -51,6 +54,7 @@ export default function ContactUs() {
         <input disabled={sending} type="email" placeholder="Your Email" onChange={(e) => setEmail(e.target.value)} />
         <textarea disabled={sending} placeholder="Notes" onChange={(e) => setDescription(e.target.value)} />
         {error && <span className="error-message">{error}</span>}
+        {success && <span className="success-message">Thanks for contacting us!</span>}
         <Button
           className="send"
           disabled={!name || !email || !description || sending}

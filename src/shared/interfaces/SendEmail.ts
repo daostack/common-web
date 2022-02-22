@@ -3,7 +3,8 @@ export enum EmailType {
 }
 
 export interface SendEmail {
-  receiver: string;
+  senderEmail: string;
+  senderName: string;
   type: EmailType;
   text: string;
 }
