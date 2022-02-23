@@ -7,10 +7,9 @@ $payment-iframe-height-mobile: 672px;
 .membership-request-modal {
   color: $secondary-blue;
 
-  .membership-request-modal__header-wrapper--introduction {
-    @include big-phone {
-      padding-top: 24px;
-    }
+  .membership-request-modal__content--introduction {
+    background: url("/assets/images/membership-request-layers.svg") no-repeat;
+    background-size: cover;
   }
 
   .membership-request-modal__title {
@@ -27,17 +26,6 @@ $payment-iframe-height-mobile: 672px;
     @include big-phone {
       height: 64px;
       font-size: $small;
-    }
-  }
-
-  .membership-request-modal__title--big {
-    font-family: NotoSerifSC-Bold, serif;
-    font-size: $moderate-med;
-  }
-
-  .membership-request-modal__title--short {
-    @include big-phone {
-      max-width: 176px;
     }
   }
 }
@@ -112,25 +100,36 @@ $payment-iframe-height-mobile: 672px;
 }
 
 .membership-request-welcome-wrapper {
+  &__title {
+    font-size: $xlarge;
+    color: $white;
+    font-family: NunitoSans-Bold;
+  }
   .illustrations-container {
     display: flex;
     margin: 5rem 0;
 
     figure {
+      border-radius: 34px;
+      background-color: $transparent-white;
+      box-shadow: 0 2px 34px 0 $fixed-modal-shadow;
+      padding: 0 1.5rem 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin: 0;
+      margin: 0 1.5rem 0 0;
+      font-size: $small;
+      text-align: center;
+      width: 10rem;
+      color: $secondary-blue;
 
-      figcaption {
-        text-align: center;
+      img {
+        margin-bottom: 15px;
       }
+    }
 
-      figcaption:nth-child(2) {
-        font-family: NotoSerifSC-Bold;
-        font-size: $moderate-small;
-        margin-bottom: 0.5rem;
-      }
+    figure:last-child {
+      margin-right: unset;
     }
 
     .arrow {
@@ -141,18 +140,13 @@ $payment-iframe-height-mobile: 672px;
   .button-blue {
     min-width: 174px !important;
   }
-
-  .membership-request-welcome-wrapper__slide {
-    @include big-phone {
-      padding-bottom: 24px;
-    }
-  }
 }
 
 .membership-request-welcome__modal-footer {
   display: flex;
   justify-content: center;
   padding-bottom: 2.5rem;
+  padding-top: 1rem;
 
   @include big-phone {
     padding-bottom: 2rem;
@@ -302,7 +296,7 @@ $payment-iframe-height-mobile: 672px;
   }
 
   .membership-request-contribution__hint {
-    margin: 1rem 0 .625rem;
+    margin: 1rem 0 0.625rem;
     font-size: $xsmall;
     line-height: 1.42;
     text-align: center;
@@ -521,7 +515,7 @@ $payment-iframe-height-mobile: 672px;
     border: solid 1px $light-gray-1;
     background-color: transparent;
     cursor: pointer;
-    transition: background-color .2s;
+    transition: background-color 0.2s;
 
     &:hover {
       background-color: $light-gray-1;
@@ -548,22 +542,47 @@ $payment-iframe-height-mobile: 672px;
   .membership-request-welcome-wrapper {
     align-items: unset;
 
+    &__title {
+      line-height: 0.82;
+    }
+
     .illustrations-container {
       margin: 0 0 1rem;
+      flex-direction: column;
 
       figure {
-        > img {
-          width: 300px;
+        width: 100%;
+        box-sizing: border-box;
+        margin-right: unset;
+        margin-bottom: 1rem;
+        flex-direction: row;
+        padding: 0;
+
+        img {
+          margin-bottom: unset;
         }
 
-        figcaption:nth-child(2) {
-          font-family: NotoSerifSC-Bold;
-          font-size: $moderate;
+        figcaption {
+          text-align: left;
         }
+      }
 
-        figcaption:nth-child(3) {
-          font-size: $xsmall;
-          margin-bottom: 2rem;
+      figure:first-child {
+        margin-top: 1.75rem;
+      }
+
+      figure:nth-child(even) {
+        figcaption {
+          margin-right: 2rem;
+          margin-left: auto;
+        }
+      }
+
+      figure:nth-child(odd) {
+        flex-direction: row-reverse;
+        figcaption {
+          margin-left: 2rem;
+          margin-right: auto;
         }
       }
     }

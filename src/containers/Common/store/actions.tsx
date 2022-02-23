@@ -6,6 +6,7 @@ import {
   ProposalJoinRequestData,
 } from "@/shared/interfaces/api/proposal";
 import { Common, Proposal, Discussion } from "@/shared/models";
+import { PayloadWithOptionalCallback } from "../../../shared/interfaces";
 import { CommonsActionTypes } from "./constants";
 import {
   CreateDiscussionDto,
@@ -25,7 +26,11 @@ export const getCommonDetail = createAsyncAction(
   CommonsActionTypes.GET_COMMON_DETAIL,
   CommonsActionTypes.GET_COMMON_DETAIL_SUCCESS,
   CommonsActionTypes.GET_COMMON_DETAIL_FAILURE
-)<string, Common | null, Error>();
+)<
+  PayloadWithOptionalCallback<string, Common | null, Error>,
+  Common | null,
+  Error
+>();
 
 export const updatePage = createStandardAction(
   CommonsActionTypes.UPDATE_PAGE

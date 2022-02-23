@@ -7,7 +7,7 @@ export * from "./ContributionAmountSelection";
 export * from "./Dots";
 export * from "./Dropdown";
 export * from "./FilesCarousel";
-export { default as NotFound } from "./NotFound";
+export * from "./NotFound";
 export * from "./SocialLogin";
 export * from "./Footer";
 export * from "./Header";

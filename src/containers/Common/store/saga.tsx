@@ -45,25 +45,32 @@ export function* getCommonsList(): Generator {
   }
 }
 
-export function* getCommonDetail(
-  action: ReturnType<typeof actions.getCommonDetail.request>
-): Generator {
+export function* getCommonDetail({
+  payload,
+}: ReturnType<typeof actions.getCommonDetail.request>): Generator {
   try {
     yield put(startLoading());
-    const common = yield call(fetchCommonDetail, action.payload);
+    const common = (yield call(fetchCommonDetail, payload.payload)) as Common;
 
     const [discussions, proposals] = (yield Promise.all([
-      fetchCommonDiscussions((common as Common).id),
-      fetchCommonProposals((common as Common).id),
+      fetchCommonDiscussions(common.id),
+      fetchCommonProposals(common.id),
     ])) as any[];
 
-    yield put(actions.getCommonDetail.success(common as Common));
+    yield put(actions.getCommonDetail.success(common));
     yield put(actions.setDiscussion(discussions));
     yield put(actions.setProposals(proposals));
 
-    yield put(stopLoading());
+    if (payload.callback) {
+      payload.callback(null, common);
+    }
   } catch (e) {
     yield put(actions.getCommonDetail.failure(e));
+
+    if (payload.callback) {
+      payload.callback(e);
+    }
+  } finally {
     yield put(stopLoading());
   }
 }

@@ -62,7 +62,7 @@ export default function EmptyTabComponent({
           {currentTab === "my-commons" && (
             <img
               alt={currentTab}
-              src="/assets/images/membership-request-membership.svg"
+              src="/assets/images/human-pyramid.svg"
             />
           )}
           {currentTab === "messages" && (

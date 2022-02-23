@@ -68,12 +68,12 @@
 
             .value {
               font-size: 23px;
-              font-family: NunitoSans-Bold;
+              font-family: NunitoSans, sans-serif;
+              font-weight: bold;
               color: #001a36;
               justify-content: center;
               align-items: center;
               display: flex;
-              justify-content: center;
             }
           }
         }
@@ -109,7 +109,9 @@
             display: flex;
             align-items: flex-end;
             padding-top: 30px;
-            font-family: NunitoSans-Bold;
+            font-family: NunitoSans, sans-serif;
+            font-weight: bold;
+            overflow-x: auto;
 
             .tab-item {
               font-weight: bold;
@@ -260,7 +262,7 @@
         width: 60%;
 
         .about-title {
-          font-family: NunitoSans-Bold;
+          font-family: NunitoSans, sans-serif;
           font-size: $moderate-med;
           font-weight: bold;
           color: $blue-text;
@@ -303,7 +305,8 @@
               display: flex;
               justify-content: space-between;
               align-items: flex-start;
-              font-size: $medium;
+              font-size: $moderate-med;
+              font-weight: bold;
             }
 
             .social-wrapper {
@@ -359,6 +362,7 @@
             .tabs-wrapper {
               justify-content: space-between;
               width: 100%;
+              font-size: $xsmall;
 
               .tab-item {
                 margin-right: unset;

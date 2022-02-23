@@ -8,8 +8,14 @@ import React, {
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import classNames from "classnames";
-
-import { Button, ButtonVariant, Loader, Share, UserAvatar } from "../../../../shared/components";
+import {
+  Button,
+  ButtonVariant,
+  Loader,
+  NotFound,
+  Share,
+  UserAvatar,
+} from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
 import {
   useAuthorizedModal,
@@ -39,7 +45,6 @@ import {
 } from "../../components/CommonDetailContainer";
 import { MembershipRequestModal } from "../../components/CommonDetailContainer/MembershipRequestModal";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
-import "./index.scss";
 import {
   BASE_URL,
   Colors,
@@ -78,6 +83,7 @@ import {
 } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
 import { DeleteCommonPrompt } from "../../components/CommonDetailContainer/DeleteCommonPrompt";
+import "./index.scss";
 
 interface CommonDetailRouterParams {
   id: string;
@@ -117,6 +123,7 @@ export default function CommonDetail() {
   const [tab, setTab] = useState("about");
   const [imageError, setImageError] = useState(false);
   const [isCreationStageReached, setIsCreationStageReached] = useState(false);
+  const [isCommonFetched, setIsCommonFetched] = useState(false);
 
   const [showActions, setShowActions] = useState(false);
   const actionsRef = useRef(null);
@@ -207,8 +214,15 @@ export default function CommonDetail() {
   const isMobileView = screenSize === ScreenSize.Mobile;
 
   useEffect(() => {
-    dispatch(getCommonDetail.request(id));
     dispatch(checkUserPaymentMethod.request());
+    dispatch(
+      getCommonDetail.request({
+        payload: id,
+        callback: () => {
+          setIsCommonFetched(true);
+        },
+      })
+    );
     return () => {
       dispatch(closeCurrentCommon());
     };
@@ -442,7 +456,7 @@ export default function CommonDetail() {
   }, [showJoinModal, shouldAllowJoiningToCommon, closeJoinModal]);
 
   if (!common) {
-    return <Loader />;
+    return isCommonFetched ? <NotFound /> : <Loader />;
   }
 
   const sharingURL = `${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`;
