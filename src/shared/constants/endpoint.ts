@@ -4,4 +4,5 @@ export const ApiEndpoint = {
   ApproveOrDeclineProposal: "/payments/payout-docs/trustee-decision",
   GetReports: "/reports",
   CreateUser: "/users/create",
+  SendEmail: "/notifications/send-email",
 };
