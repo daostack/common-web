@@ -3,7 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import classNames from "classnames";
 
-import { Loader, Share, UserAvatar } from "../../../../shared/components";
+import {
+  Loader,
+  NotFound,
+  Share,
+  UserAvatar,
+} from "../../../../shared/components";
 import { Modal } from "../../../../shared/components/Modal";
 import {
   useAuthorizedModal,
@@ -31,7 +36,6 @@ import {
 } from "../../components/CommonDetailContainer";
 import { MembershipRequestModal } from "../../components/CommonDetailContainer/MembershipRequestModal";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
-import "./index.scss";
 import {
   BASE_URL,
   Colors,
@@ -60,6 +64,7 @@ import {
 } from "../../store/actions";
 import CheckIcon from "../../../../shared/icons/check.icon";
 import { selectUser } from "../../../Auth/store/selectors";
+import "./index.scss";
 
 interface CommonDetailRouterParams {
   id: string;
@@ -99,6 +104,7 @@ export default function CommonDetail() {
   const [tab, setTab] = useState("about");
   const [imageError, setImageError] = useState(false);
   const [isCreationStageReached, setIsCreationStageReached] = useState(false);
+  const [isCommonFetched, setIsCommonFetched] = useState(false);
 
   const common = useSelector(selectCommonDetail());
   const currentDisscussion = useSelector(selectCurrentDisscussion());
@@ -159,7 +165,14 @@ export default function CommonDetail() {
   const isMobileView = screenSize === ScreenSize.Mobile;
 
   useEffect(() => {
-    dispatch(getCommonDetail.request(id));
+    dispatch(
+      getCommonDetail.request({
+        payload: id,
+        callback: () => {
+          setIsCommonFetched(true);
+        },
+      })
+    );
     return () => {
       dispatch(closeCurrentCommon());
     };
@@ -349,7 +362,7 @@ export default function CommonDetail() {
   }, [showJoinModal, shouldAllowJoiningToCommon, closeJoinModal]);
 
   if (!common) {
-    return <Loader />;
+    return isCommonFetched ? <NotFound /> : <Loader />;
   }
 
   const sharingURL = `${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`;
