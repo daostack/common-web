@@ -7,11 +7,9 @@ $payment-iframe-height-mobile: 672px;
 .membership-request-modal {
   color: $secondary-blue;
 
-  &__content {
-    &--introduction {
-      background: url("/assets/images/membership-request-layers.svg") no-repeat;
-      background-size: cover;
-    }
+  .membership-request-modal__content--introduction {
+    background: url("/assets/images/membership-request-layers.svg") no-repeat;
+    background-size: cover;
   }
 
   .membership-request-modal__title {
@@ -575,7 +573,7 @@ $payment-iframe-height-mobile: 672px;
     align-items: unset;
 
     &__title {
-    line-height: 0.82;
+      line-height: 0.82;
     }
 
     .illustrations-container {
