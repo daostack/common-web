@@ -144,7 +144,7 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
                     }
                   />
                 </div>
-                <div className="user-details__account-name">{user?.email} </div>
+                <div className="user-details__account-name">{user?.email}</div>
                 {loading ? <Loader /> : null}
               </div>
               <div className="user-details__text-field-container">
