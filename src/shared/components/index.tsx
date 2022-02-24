@@ -5,7 +5,7 @@ export * from "./Common";
 export { default as Content } from "./Content";
 export * from "./FilesCarousel";
 export * from "./NotFound";
-export * from "./SocialLogin";
+export * from "./SocialLoginButton";
 export * from "./Footer";
 export * from "./Header";
 export * from "./InvoiceTile";

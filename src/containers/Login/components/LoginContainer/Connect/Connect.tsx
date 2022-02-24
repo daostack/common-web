@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { LoginButtonsList } from "../LoginButtonsList";
+import { LoginButtons } from "../LoginButtons";
 import { getScreenSize } from "../../../../../shared/store/selectors";
 import { ScreenSize } from "../../../../../shared/constants";
 import { LoginError } from "../LoginError";
@@ -40,7 +40,7 @@ const Connect = () => {
           {error ? <LoginError /> : null}
         </div>
       )}
-      <LoginButtonsList />
+      <LoginButtons />
       <p className="connect__sub-text">
         By using Common you agree to the app’s&nbsp; <br />
         <a

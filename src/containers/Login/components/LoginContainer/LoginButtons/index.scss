@@ -1,14 +1,16 @@
 @import "../../../../../constants";
 @import "../../../../../styles/sizes";
 
+$gap: 1rem;
+
 .login-buttons-wrapper {
-  margin-bottom: 2.625rem;
+  width: calc(100% + #{$gap});
+  margin: -#{$gap} 0 0 -#{$gap};
   display: flex;
   justify-content: center;
-  gap: 1rem;
   flex-wrap: wrap;
 
-  @include big-phone {
-    margin: 1rem 0 2rem;
+  .login-buttons-wrapper__button {
+    margin: $gap 0 0 $gap;
   }
 }

@@ -1,0 +1,20 @@
+@import "../../../constants";
+
+.social-login-button {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: 0 6.8px 25.4px 0 rgba(0, 0, 0, 0.15);
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: $light-gray-1;
+    cursor: pointer;
+  }
+
+  .social-login-button__img {
+    width: 2.625rem;
+    height: 2.625rem;
+  }
+}
