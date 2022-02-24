@@ -1,18 +1,20 @@
 import React, { FC } from "react";
 import { Country } from "react-phone-number-input";
 import { getCountryCallingCode } from "react-phone-number-input/input";
+import classNames from "classnames";
 import { Dropdown } from "../../../Dropdown";
 import { CountrySelectOption } from "../types";
 import "./index.scss";
 
 interface CustomSelectProps {
+  className?: string;
   countryCode: Country;
   options: CountrySelectOption[];
   onChange: (countryCode: Country) => void;
 }
 
 const CustomSelect: FC<CustomSelectProps> = (props) => {
-  const { countryCode, options, onChange } = props;
+  const { className, countryCode, options, onChange } = props;
 
   const handleSelect = (value: unknown) => {
     onChange(value as Country);
@@ -20,7 +22,7 @@ const CustomSelect: FC<CustomSelectProps> = (props) => {
 
   return (
     <Dropdown
-      className="custom-phone-input-custom-select"
+      className={classNames("custom-phone-input-custom-select", className)}
       value={countryCode}
       options={options}
       onSelect={handleSelect}
