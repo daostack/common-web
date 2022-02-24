@@ -23,7 +23,7 @@ export interface Option {
   value: unknown;
 }
 
-interface DropdownProps {
+export interface DropdownProps {
   className?: string;
   value?: unknown;
   options: Option[];
