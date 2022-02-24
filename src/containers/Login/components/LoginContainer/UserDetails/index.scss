@@ -1,49 +1,61 @@
 @import "../../../../../constants.scss";
 @import "../../../../../styles/sizes";
 
-.details-wrapper {
+.user-details {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 
-  .title {
-    margin-top: 0;
+  .user-details__title {
+    margin: 0;
+    font-family: NotoSerif, serif;
+
+    @include big-phone {
+      font-size: $moderate-med;
+      font-weight: 600;
+    }
   }
 
-  form {
+  .user-details__sub-title {
+    margin: 0.5rem 0 0;
+    font-size: $small;
+    color: $light-gray-2;
+
+    @include big-phone {
+      font-size: $xsmall;
+    }
+  }
+
+  .user-details__form {
     display: flex;
     flex-direction: column;
-    width: 25rem;
-    margin-bottom: 30px;
+    max-width: 36.125rem;
 
-    select {
+    .user-details__select {
       border: 1px solid $light-gray-1;
       border-radius: 3px;
-      height: 50px;
+      height: 3.125rem;
       text-indent: 0.75rem;
       outline: none;
       padding: 0;
+      background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNSIgaGVpZ2h0PSIyNSIgdmlld0JveD0iMCAwIDI1IDI1Ij4KICAgIDxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgZmlsbD0iIzAwMUEzNiI+CiAgICAgICAgICAgIDxnPgogICAgICAgICAgICAgICAgPGc+CiAgICAgICAgICAgICAgICAgICAgPGc+CiAgICAgICAgICAgICAgICAgICAgICAgIDxnPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPHBhdGggZD0iTTEzLjgyMiAxMi41bC00LjAzNCAzLjkxNmMtLjU1LjUzNC0uNTUgMS40MDYgMCAxLjk0LjU0LjUyNSAxLjQxMi41MjUgMS45NTMgMGw1LjAzNC00Ljg4NmMuMjY3LS4yNTkuNDEzLS42MDguNDEzLS45N3MtLjE0Ni0uNzExLS40MTMtLjk3bC01LjAzNC00Ljg4NmMtLjU0Mi0uNTI1LTEuNDEzLS41MjUtMS45NTMgMC0uNTUuNTM0LS41NSAxLjQwNiAwIDEuOTRsNC4wMzQgMy45MTZ6IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtODY4LjAwMDAwMCwgLTUzNy4wMDAwMDApIHRyYW5zbGF0ZSg1MzEuMDAwMDAwLCAxMTEuMDAwMDAwKSB0cmFuc2xhdGUoMC4wMDAwMDAsIDM4NC4wMDAwMDApIHRyYW5zbGF0ZSgwLjAwMDAwMCwgMzAuMDAwMDAwKSB0cmFuc2xhdGUoMzM3LjAwMDAwMCwgMTIuMDAwMDAwKSB0cmFuc2xhdGUoMTMuMjgxMjUwLCAxMi41MDAwMDApIHJvdGF0ZSg5MC4wMDAwMDApIHRyYW5zbGF0ZSgtMTMuMjgxMjUwLCAtMTIuNTAwMDAwKSIvPgogICAgICAgICAgICAgICAgICAgICAgICA8L2c+CiAgICAgICAgICAgICAgICAgICAgPC9nPgogICAgICAgICAgICAgICAgPC9nPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K) no-repeat 97% 51%;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      width: 100%;
     }
-
-      select {
-        background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNSIgaGVpZ2h0PSIyNSIgdmlld0JveD0iMCAwIDI1IDI1Ij4KICAgIDxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgZmlsbD0iIzAwMUEzNiI+CiAgICAgICAgICAgIDxnPgogICAgICAgICAgICAgICAgPGc+CiAgICAgICAgICAgICAgICAgICAgPGc+CiAgICAgICAgICAgICAgICAgICAgICAgIDxnPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgPHBhdGggZD0iTTEzLjgyMiAxMi41bC00LjAzNCAzLjkxNmMtLjU1LjUzNC0uNTUgMS40MDYgMCAxLjk0LjU0LjUyNSAxLjQxMi41MjUgMS45NTMgMGw1LjAzNC00Ljg4NmMuMjY3LS4yNTkuNDEzLS42MDguNDEzLS45N3MtLjE0Ni0uNzExLS40MTMtLjk3bC01LjAzNC00Ljg4NmMtLjU0Mi0uNTI1LTEuNDEzLS41MjUtMS45NTMgMC0uNTUuNTM0LS41NSAxLjQwNiAwIDEuOTRsNC4wMzQgMy45MTZ6IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtODY4LjAwMDAwMCwgLTUzNy4wMDAwMDApIHRyYW5zbGF0ZSg1MzEuMDAwMDAwLCAxMTEuMDAwMDAwKSB0cmFuc2xhdGUoMC4wMDAwMDAsIDM4NC4wMDAwMDApIHRyYW5zbGF0ZSgwLjAwMDAwMCwgMzAuMDAwMDAwKSB0cmFuc2xhdGUoMzM3LjAwMDAwMCwgMTIuMDAwMDAwKSB0cmFuc2xhdGUoMTMuMjgxMjUwLCAxMi41MDAwMDApIHJvdGF0ZSg5MC4wMDAwMDApIHRyYW5zbGF0ZSgtMTMuMjgxMjUwLCAtMTIuNTAwMDAwKSIvPgogICAgICAgICAgICAgICAgICAgICAgICA8L2c+CiAgICAgICAgICAgICAgICAgICAgPC9nPgogICAgICAgICAgICAgICAgPC9nPgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K) no-repeat 97% 51%;
-        height: 52px;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        width: 100%;
-      }
-
   }
 
   .avatar-wrapper {
     position: relative;
+
     .avatar {
       position: relative;
       text-align: center;
+      margin-top: 24px;
 
-      input {
+      .avatar_input-file {
         display: none;
       }
 
@@ -66,70 +78,90 @@
         }
       }
     }
-    .loader-wrapper{
-      position: absolute;
-      width: 61px;
-      height: 61px;
-      top: 23px;
-      border-radius: 50%;
+
+    .user-details__account-name {
+      font-family: NunitoSans, sans-serif;
+      font-size: $xsmall;
+      text-align: center;
+      color: $purple-2;
+      margin: 0.75rem 0 2.5rem;
+      letter-spacing: 0.28px;
+
+      @include big-phone {
+        margin-bottom: 2rem;
+      }
     }
   }
-  .actions-wrapper{
-    margin: 1.25rem 0;
 
-    @include big-phone {
-      width: 100%;
-    }
-  }
-
-  .details-wrapper__text-field {
+  .user-details__text-field {
     margin-bottom: .875rem;
+    min-width: 17.25rem;
 
     &:last-child {
       margin-bottom: 0;
     }
+
+    @include big-phone {
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
   }
 
-  .details-wrapper__text-field-label-wrapper {
+  .user-details__textarea {
+    width: 100%;
+    min-height: 4.25rem;
+  }
+
+  .user-details__text-field-label-wrapper {
     font-size: $xsmall;
   }
 
-  .details-wrapper__text-field-input {
-    padding-left:  .75rem;
+  .user-details__text-field-container {
+    max-width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    @include big-phone {
+      justify-content: center;
+    }
+  }
+
+  .user-details__input-country-container {
+    margin-bottom: 0.875rem;
+    display: flex;
+    flex-direction: column;
+    width: 17.25rem;
+
+    @include big-phone {
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  .user-details__text-field-input {
+    padding-left: .75rem;
     padding-right: .875rem;
   }
 
-  .details-wrapper__label {
+  .user-details__text-field-label {
     margin-bottom: .625rem;
     font-size: $xsmall;
     color: $secondary-blue;
     text-align: left;
   }
 
-  .details-wrapper__skip-button {
+  .user-details__save-button {
+    margin: 2.5rem 0 0;
     min-width: unset;
-    width: 6.063rem;
-    font-family: NunitoSans-Regular, sans-serif;
-    font-weight: normal;
-    color: $secondary-blue;
-    border: 1px solid $light-gray-1;
-    background-color: $white;
-
-    @include big-phone {
-      width: 100%;
-    }
-  }
-
-  .details-wrapper__continue-button {
-    min-width: unset;
-    width: 8.188rem;
-    margin-left: 1rem;
+    width: 20.5rem;
+    height: 3rem;
     font-family: NunitoSans-Regular, sans-serif;
     font-weight: normal;
 
     @include big-phone {
       width: 100%;
-      margin: 1rem 0 0;
+      margin: 3.5rem 0 0;
     }
   }
 }

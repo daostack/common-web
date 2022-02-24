@@ -8,18 +8,43 @@
   align-items: center;
   text-align: center;
 
-  .login-buttons-wrapper {
-    width: 100%;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    button:first-child {
-      margin-top: 2rem;
+  .connect-wrapper__img {
+    width: 12.5rem;
+    height: 12.5rem;
+
+    @include big-phone {
+      width: 10rem;
+      height: 10rem;
+      margin-bottom: 2rem;
     }
   }
 
-  .terms-of-use {
-    color: $purple;
+  .connect__title {
+    margin: 2.625rem 0 0.5rem;
+    font-family: NotoSerif, serif;
+    font-size: $moderate-med;
+    font-weight: bold;
+  }
+
+  .connect__sub-title {
+    margin: 0;
+    font-size: $small;
+    color: $light-gray-2;
+    text-align: center;
+
+    @include big-phone {
+      font-size: $xsmall;
+    }
+  }
+
+  .connect__sub-text {
+    margin: 0;
+    font-size: $xsmall;
+    color: $light-gray-2;
+  }
+
+  .connect__terms-of-use {
+    color: $secondary-blue;
     text-decoration: none;
   }
 
