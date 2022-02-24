@@ -1,5 +1,6 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 
+import { PayloadWithOptionalCallback } from "../../../shared/interfaces";
 import { ProposalJoinRequestData } from "../../../shared/interfaces/api/proposal";
 import { Common, Proposal, Discussion } from "../../../shared/models";
 import { CommonsActionTypes } from "./constants";
@@ -14,7 +15,11 @@ export const getCommonDetail = createAsyncAction(
   CommonsActionTypes.GET_COMMON_DETAIL,
   CommonsActionTypes.GET_COMMON_DETAIL_SUCCESS,
   CommonsActionTypes.GET_COMMON_DETAIL_FAILURE
-)<string, Common | null, Error>();
+)<
+  PayloadWithOptionalCallback<string, Common | null, Error>,
+  Common | null,
+  Error
+>();
 
 export const updatePage = createStandardAction(
   CommonsActionTypes.UPDATE_PAGE

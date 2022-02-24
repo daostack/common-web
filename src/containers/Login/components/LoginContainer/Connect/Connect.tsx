@@ -21,7 +21,7 @@ const Connect = () => {
         className="connect-wrapper__img"
         src={
           isMobileView
-            ? "/icons/social-login/account_avatar.svg"
+            ? "/icons/social-login/account-avatar.svg"
             : "/assets/images/human-pyramid.svg"
         }
         alt={isMobileView ? "account_avatar" : "human pyramid"}

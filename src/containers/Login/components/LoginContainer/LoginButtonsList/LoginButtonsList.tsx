@@ -1,6 +1,5 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import "../../../containers/LoginContainer/index.scss";
 import { SocialLoginButton } from "../../../../../shared/components";
 import { socialLogin } from "../../../../Auth/store/actions";
 import "./index.scss";

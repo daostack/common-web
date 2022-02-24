@@ -8,16 +8,12 @@ import React, {
   ReactNode,
   SetStateAction,
 } from "react";
-import { useSelector } from "react-redux";
-import classNames from "classnames";
+import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import { Modal } from "../../../../../shared/components";
 import { useZoomDisabling } from "../../../../../shared/hooks";
 import { ModalProps, ModalRef } from "../../../../../shared/interfaces";
 import { Common } from "../../../../../shared/models";
-import { getScreenSize } from "../../../../../shared/store/selectors";
-import { ScreenSize } from "../../../../../shared/constants";
-import "./index.scss";
 import MembershipRequestContribution from "./MembershipRequestContribution";
 import MembershipRequestCreated from "./MembershipRequestCreated";
 import MembershipRequestCreating from "./MembershipRequestCreating";
@@ -27,6 +23,9 @@ import MembershipRequestProgressBar from "./MembershipRequestProgressBar";
 import MembershipRequestRules from "./MembershipRequestRules";
 import MembershipRequestWelcome from "./MembershipRequestWelcome";
 import { selectUser } from "../../../../Auth/store/selectors";
+import { selectCommonList } from "../../../store/selectors";
+import { getCommonsList } from "../../../store/actions";
+import "./index.scss";
 
 export interface IStageProps {
   setUserData: Dispatch<SetStateAction<IMembershipRequestData>>;
@@ -74,6 +73,7 @@ interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
 }
 
 export function MembershipRequestModal(props: IProps) {
+  const dispatch = useDispatch();
   // TODO: should be saved in the localstorage for saving the progress?
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
@@ -84,8 +84,7 @@ export function MembershipRequestModal(props: IProps) {
   const { stage } = userData;
   const { isShowing, onClose, common, onCreationStageReach } = props;
   const shouldDisplayProgressBar = stage > 0 && stage < 5;
-  const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
+  const commons = useSelector(selectCommonList());
 
   /**
    * The data is saved only when we are on the Common Details Page.
@@ -97,9 +96,18 @@ export function MembershipRequestModal(props: IProps) {
       return;
     }
 
+    if (commons.length === 0) {
+      dispatch(getCommonsList.request());
+    }
+
+    const isMember = commons.some((c) =>
+      c.members.some((m) => m.userId === user?.uid)
+    );
+
     const payload: IMembershipRequestData = {
       ...initData,
       cardId: uuidv4(),
+      stage: isMember ? 1 : 0,
     };
 
     if (user) {
@@ -113,7 +121,7 @@ export function MembershipRequestModal(props: IProps) {
     setUserData(payload);
     onCreationStageReach(false);
     resetZoom();
-  }, [isShowing, user, onCreationStageReach, disableZoom, resetZoom]);
+  }, [isShowing, user, onCreationStageReach, disableZoom, resetZoom, commons, dispatch]);
 
   const renderCurrentStage = (stage: number) => {
     switch (stage) {
@@ -170,22 +178,11 @@ export function MembershipRequestModal(props: IProps) {
   };
 
   const renderedTitle = useMemo((): ReactNode => {
-    if (stage >= 5) {
+    if (stage >= 5 || stage === 0) {
       return null;
     }
-
-    const shouldBeBigTitle = stage === 0;
-    const text = shouldBeBigTitle
-      ? "Membership Request Process"
-      : "Membership Request";
-    const className = classNames("membership-request-modal__title", {
-      "membership-request-modal__title--big": shouldBeBigTitle && !isMobileView,
-      "membership-request-modal__title--short":
-        shouldBeBigTitle && isMobileView,
-    });
-
-    return <h3 className={className}>{text}</h3>;
-  }, [stage, isMobileView]);
+    return <h3 className="membership-request-modal__title">Membership Request</h3>;
+  }, [stage]);
 
   const moveStageBack = useCallback(() => {
     setUserData((data) => {
@@ -223,10 +220,7 @@ export function MembershipRequestModal(props: IProps) {
       title={renderedTitle}
       onGoBack={shouldDisplayProgressBar ? moveStageBack : undefined}
       styles={{
-        header:
-          stage === 0
-            ? "membership-request-modal__header-wrapper--introduction"
-            : "",
+        content: stage === 0 ? "membership-request-modal__content--introduction" : ""
       }}
     >
       <div className="membership-request-wrapper">

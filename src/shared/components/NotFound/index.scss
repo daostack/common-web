@@ -1,0 +1,27 @@
+@import "../../../constants";
+@import "../../../styles/sizes";
+
+.page-not-found {
+  margin-top: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $secondary-blue;
+
+  .page-not-found__code {
+    padding: 0.5rem 1.5rem 0.5rem 0;
+    font-size: $moderate-med;
+    font-weight: bold;
+    border-right: 2px solid $light-gray-3;
+  }
+
+  .page-not-found__message {
+    margin: 0 0 0 1.5rem;
+    font-size: $small;
+    font-weight: normal;
+  }
+
+  @include big-phone {
+    margin-top: 2.5rem;
+  }
+}
