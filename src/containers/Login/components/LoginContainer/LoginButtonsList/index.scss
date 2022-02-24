@@ -1,0 +1,14 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.login-buttons-wrapper {
+  margin-bottom: 2.625rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  @include big-phone {
+    margin: 1rem 0 2rem;
+  }
+}

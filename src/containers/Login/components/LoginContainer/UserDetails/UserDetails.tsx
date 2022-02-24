@@ -1,19 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Formik } from "formik";
-// eslint-disable-next-line import/order
-import * as Yup from "yup";
-
-import { TextField } from "../../../../../shared/components/Form/Formik";
-import "./index.scss";
-import "../../../containers/LoginContainer/index.scss";
 import { useDispatch } from "react-redux";
-
+import { Formik } from "formik";
+import * as Yup from "yup";
+import { TextField } from "../../../../../shared/components/Form/Formik";
+import "../../../containers/LoginContainer/index.scss";
 import { User } from "../../../../../shared/models";
 import { FORM_ERROR_MESSAGES } from "../../../../../shared/constants";
 import { countryList } from "../../../../../shared/assets/countries";
 import { updateUserDetails } from "../../../../Auth/store/actions";
 import { uploadImage } from "../../../../Auth/store/saga";
-import { Loader } from "../../../../../shared/components";
+import { Button, Loader } from "../../../../../shared/components";
+import "./index.scss";
 
 interface UserDetailsProps {
   user: User;
@@ -93,11 +90,11 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
   };
 
   return (
-    <div className="details-wrapper">
-      <span className="title">Complete your account</span>
-      <span className="sub-text">
+    <div className="user-details">
+      <h2 className="user-details__title">Complete your account</h2>
+      <p className="user-details__sub-title">
         Help the community to get to know you better
-      </span>
+      </p>
       <Formik
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
@@ -123,7 +120,7 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
           handleSubmit,
         }) => (
           <>
-            <form>
+            <form className="user-details__form">
               <div className="avatar-wrapper">
                 <div className="avatar">
                   <img src={values.photo} alt="avatar" />
@@ -138,6 +135,7 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
                     </div>
                   ) : null}
                   <input
+                    className="avatar_input-file"
                     type="file"
                     accept="image/*"
                     ref={inputFile}
@@ -146,69 +144,91 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
                     }
                   />
                 </div>
-                <div className="user-account-name">{user?.email} </div>
+                <div className="user-details__account-name">{user?.email} </div>
                 {loading ? <Loader /> : null}
               </div>
-              <TextField
-                className="details-wrapper__text-field"
-                id="firstName"
-                name="firstName"
-                label="First name"
-                placeholder="Ashley"
-                isRequired
-                styles={{
-                  labelWrapper: "details-wrapper__text-field-label-wrapper",
-                  input: {
-                    default: "details-wrapper__text-field-input",
-                  },
-                }}
-              />
-              <TextField
-                className="details-wrapper__text-field"
-                id="lastName"
-                name="lastName"
-                label="Last name"
-                placeholder="Johnson"
-                isRequired
-                styles={{
-                  labelWrapper: "details-wrapper__text-field-label-wrapper",
-                  input: {
-                    default: "details-wrapper__text-field-input",
-                  },
-                }}
-              />
-              <label className="details-wrapper__label">Country</label>
-
-              <div className="country">
-                <select
-                  name="country"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.country}
-                >
-                  <option value="" disabled>
-                    --- select country ---
-                  </option>
-                  {countries}
-                </select>
+              <div className="user-details__text-field-container">
+                <TextField
+                  className="user-details__text-field"
+                  id="firstName"
+                  name="firstName"
+                  label="First name"
+                  placeholder="Ashley"
+                  isRequired
+                  styles={{
+                    labelWrapper: "user-details__text-field-label-wrapper",
+                    input: {
+                      default: "user-details__text-field-input",
+                    },
+                  }}
+                />
+                <TextField
+                  className="user-details__text-field"
+                  id="lastName"
+                  name="lastName"
+                  label="Last name"
+                  placeholder="Johnson"
+                  isRequired
+                  styles={{
+                    labelWrapper: "user-details__text-field-label-wrapper",
+                    input: {
+                      default: "user-details__text-field-input",
+                    },
+                  }}
+                />
+                <TextField
+                  className="user-details__text-field"
+                  id="email"
+                  name="email"
+                  label="Email"
+                  placeholder="user@gmail.com"
+                  isRequired
+                  styles={{
+                    labelWrapper: "user-details__text-field-label-wrapper",
+                    input: {
+                      default: "user-details__text-field-input",
+                    },
+                  }}
+                />
+                <div className="user-details__input-country-container">
+                  <label className="user-details__text-field-label">
+                    Country
+                  </label>
+                  <select
+                    className="user-details__select"
+                    name="country"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.country}
+                  >
+                    <option value="" disabled>
+                      --- select country ---
+                    </option>
+                    {countries}
+                  </select>
+                </div>
+                <TextField
+                  className="user-details__textarea"
+                  id="email"
+                  name="email"
+                  label="Intro"
+                  placeholder="What are you most passionate about, really good at, or love"
+                  styles={{
+                    labelWrapper: "user-details__text-field-label-wrapper",
+                    input: {
+                      default: "user-details__text-field-input",
+                    },
+                  }}
+                />
               </div>
             </form>
-            <div className="actions-wrapper">
-              <button
-                className="button-blue details-wrapper__skip-button"
-                type="submit"
-                onClick={() => closeModal()}
-              >
-                Skip
-              </button>
-              <button
-                className="button-blue details-wrapper__continue-button"
-                type="submit"
-                onClick={() => handleSubmit()}
-              >
-                Continue
-              </button>
-            </div>
+            <Button
+              className="user-details__save-button"
+              type="submit"
+              onClick={() => handleSubmit()}
+            >
+              Save
+            </Button>
           </>
         )}
       </Formik>

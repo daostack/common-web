@@ -3,15 +3,13 @@ import "./index.scss";
 
 type Props = {
   provider: string;
-  text: string;
   loginHandler: (provider: string) => void;
 };
 
-const SocialLoginButton: React.FC<Props> = ({ provider, text, loginHandler }) => {
+const SocialLoginButton: React.FC<Props> = ({ provider, loginHandler }) => {
   return (
     <button className="connect-button" onClick={() => loginHandler(provider)}>
-      <img src={`/icons/social-login/${provider}.svg`} alt={provider} />
-      <span>{text}</span>
+      <img className="connect-button__img" src={`/icons/social-login/${provider}.svg`} alt={provider} />
     </button>
   );
 };
