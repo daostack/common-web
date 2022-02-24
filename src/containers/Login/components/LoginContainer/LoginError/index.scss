@@ -2,14 +2,14 @@
 @import "../../../../../styles/sizes";
 
 .login-error {
+  max-width: 20.5rem;
+  width: 100%;
+  padding: 0.625rem 0.75rem;
   font-family: NunitoSans, sans-serif;
   font-size: $xsmall;
   letter-spacing: 0.28px;
+  color: $red;
   text-align: center;
-  color: #ff603e;
-  width: 20.5rem;
-  margin: 0.5rem 0 0;
-  padding: 0.625rem 0.75rem;
   border-radius: 0.5rem;
-  background-color: #ffefec;
+  background-color: $secondary-red;
 }
