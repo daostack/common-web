@@ -1,17 +1,19 @@
 import React, { useState, FC } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { Loader } from "../../../../../shared/components";
-import { ScreenSize } from "../../../../../shared/constants";
+import { AuthProvider, ScreenSize } from "../../../../../shared/constants";
 import {
   getLoading,
   getScreenSize,
 } from "../../../../../shared/store/selectors";
+import { socialLogin } from "../../../../Auth/store/actions";
 import { LoginButtons } from "../LoginButtons";
 import { LoginError } from "../LoginError";
 import "./index.scss";
 
 const Connect: FC = () => {
+  const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
   const isLoading = useSelector(getLoading());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -28,6 +30,10 @@ const Connect: FC = () => {
       </div>
     );
   }
+
+  const handleSocialLogin = (provider: AuthProvider) => {
+    dispatch(socialLogin.request(provider));
+  };
 
   return (
     <div className="connect-wrapper">
@@ -51,7 +57,7 @@ const Connect: FC = () => {
         {subTitleText}
       </p>
       {hasError && <LoginError className="connect-wrapper__error" />}
-      <LoginButtons />
+      <LoginButtons onLogin={handleSocialLogin} />
       <p className="connect-wrapper__sub-text">
         By using Common you agree to the app’s
         <br />

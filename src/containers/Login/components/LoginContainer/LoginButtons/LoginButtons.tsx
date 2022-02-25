@@ -1,41 +1,28 @@
 import React, { FC } from "react";
-import { useDispatch } from "react-redux";
 import { SocialLoginButton } from "../../../../../shared/components";
 import { AuthProvider } from "../../../../../shared/constants";
-import { socialLogin } from "../../../../Auth/store/actions";
 import "./index.scss";
 
-const LoginButtons: FC = () => {
-  const dispatch = useDispatch();
+const PROVIDERS = [
+  AuthProvider.Apple,
+  AuthProvider.Google,
+];
 
-  const handleSocialLogin = (provider: AuthProvider) => {
-    dispatch(socialLogin.request(provider));
-  };
+interface LoginButtonsProps {
+  onLogin: (provider: AuthProvider) => void;
+}
 
-  return (
-    <div className="login-buttons-wrapper">
+const LoginButtons: FC<LoginButtonsProps> = ({ onLogin }) => (
+  <div className="login-buttons-wrapper">
+    {PROVIDERS.map((provider) => (
       <SocialLoginButton
+        key={provider}
         className="login-buttons-wrapper__button"
-        provider={AuthProvider.Apple}
-        onClick={handleSocialLogin}
+        provider={provider}
+        onClick={onLogin}
       />
-      <SocialLoginButton
-        className="login-buttons-wrapper__button"
-        provider={AuthProvider.Google}
-        onClick={handleSocialLogin}
-      />
-      {/*<SocialLoginButton*/}
-      {/*  className="login-buttons-wrapper__button"*/}
-      {/*  provider={AuthProvider.Facebook}*/}
-      {/*  onClick={handleSocialLogin}*/}
-      {/*/>*/}
-      {/*<SocialLoginButton*/}
-      {/*  className="login-buttons-wrapper__button"*/}
-      {/*  provider={AuthProvider.Phone}*/}
-      {/*  onClick={handleSocialLogin}*/}
-      {/*/>*/}
-    </div>
-  );
-};
+    ))}
+  </div>
+);
 
 export default LoginButtons;
