@@ -1,6 +1,4 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { AnyAction } from "redux";
-
 import { default as store } from "../../../index";
 import { tokenHandler } from "../../../shared/utils";
 import * as actions from "./actions";
@@ -8,10 +6,32 @@ import firebase from "../../../shared/utils/firebase";
 import { startLoading, stopLoading } from "../../../shared/store/actions";
 import { Collection, User } from "../../../shared/models";
 import { GoogleAuthResultInterface } from "../interface";
-
-import { ROUTE_PATHS } from "../../../shared/constants";
+import { AuthProvider, ROUTE_PATHS } from "../../../shared/constants";
 import history from "../../../shared/history";
 import { createdUserApi } from "./api";
+
+const getAuthProviderFromProviderData = (
+  providerData?: firebase.User["providerData"]
+): AuthProvider | null => {
+  if (!providerData) {
+    return null;
+  }
+
+  const item = providerData.find((item) => Boolean(item?.providerId));
+
+  switch (item?.providerId) {
+    case "apple.com":
+      return AuthProvider.Apple;
+    case "facebook.com":
+      return AuthProvider.Facebook;
+    case "google.com":
+      return AuthProvider.Google;
+    case "phone":
+      return AuthProvider.Phone;
+    default:
+      return null;
+  }
+};
 
 const getUserData = async (userId: string) => {
   const userSnapshot = await firebase
@@ -89,16 +109,24 @@ export const uploadImage = async (imageUri: any) => {
   return await ref.getDownloadURL();
 };
 
-const authorizeUser = async (payload: string) => {
-  const provider =
-    payload === "google"
-      ? new firebase.auth.GoogleAuthProvider()
-      : new firebase.auth.OAuthProvider("apple.com");
+const getFirebaseAuthProvider = (
+  authProvider: AuthProvider
+): firebase.auth.GoogleAuthProvider | firebase.auth.OAuthProvider => {
+  switch (authProvider) {
+    case AuthProvider.Apple: {
+      const provider = new firebase.auth.OAuthProvider("apple.com");
+      provider.addScope("email");
+      provider.addScope("name");
 
-  if (payload !== "google") {
-    provider.addScope("email");
-    provider.addScope("name");
+      return provider;
+    }
+    default:
+      return new firebase.auth.GoogleAuthProvider();
   }
+};
+
+const authorizeUser = async (authProvider: AuthProvider) => {
+  const provider = getFirebaseAuthProvider(authProvider);
 
   return await firebase
     .auth()
@@ -222,7 +250,9 @@ const updateUserData = async (user: any) => {
   return getUserData(updatedCurrentUser?.uid ?? "");
 };
 
-function* socialLoginSaga({ payload }: AnyAction & { payload: string }) {
+function* socialLoginSaga({
+  payload,
+}: ReturnType<typeof actions.socialLogin.request>) {
   try {
     yield put(startLoading());
 
@@ -320,6 +350,12 @@ function* authSagas() {
 
   firebase.auth().onAuthStateChanged(async (res) => {
     try {
+      store.dispatch(
+        actions.setAuthProvider(
+          getAuthProviderFromProviderData(res?.providerData)
+        )
+      );
+
       if (tokenHandler.get()) {
         const currentUser: User | undefined = res?.toJSON() as any;
 
