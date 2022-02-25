@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
 import { DropdownOption } from "../../../../../shared/components";
 import {
@@ -17,7 +17,9 @@ import { User } from "../../../../../shared/models";
 import { countryList } from "../../../../../shared/assets/countries";
 import { updateUserDetails } from "../../../../Auth/store/actions";
 import { uploadImage } from "../../../../Auth/store/saga";
+import { selectAuthProvider } from "../../../../Auth/store/selectors";
 import { Button, Loader } from "../../../../../shared/components";
+import { UserAuthInfo } from "../UserAuthInfo";
 import { validationSchema } from "./validationSchema";
 import "./index.scss";
 
@@ -45,6 +47,7 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
 
   const [loading, setLoading] = useState(false);
   const inputFile: any = useRef(null);
+  const authProvider = useSelector(selectAuthProvider());
 
   const dispatch = useDispatch();
 
@@ -155,7 +158,11 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
                     }
                   />
                 </div>
-                <div className="user-details__account-name">{user?.email}</div>
+                <UserAuthInfo
+                  className="user-details__auth-info"
+                  user={user}
+                  authProvider={authProvider}
+                />
                 {loading ? <Loader /> : null}
               </div>
               <div className="user-details__text-field-container">

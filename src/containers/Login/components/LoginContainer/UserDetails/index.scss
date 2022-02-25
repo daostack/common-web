@@ -85,13 +85,8 @@
       }
     }
 
-    .user-details__account-name {
+    .user-details__auth-info {
       margin: 0.75rem 0 2.5rem;
-      font-family: NunitoSans, sans-serif;
-      font-size: $xsmall;
-      text-align: center;
-      color: $purple-2;
-      letter-spacing: 0.28px;
 
       @include big-phone {
         margin-bottom: 2rem;
