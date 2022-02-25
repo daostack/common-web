@@ -211,7 +211,7 @@ const loginUsingEmailAndPassword = async (
   return databaseUser;
 };
 
-const updateUserData = async (user: any) => {
+const updateUserData = async (user: User) => {
   const currentUser = await firebase.auth().currentUser;
   await currentUser?.updateProfile({
     displayName: `${user.firstName} ${user.lastName}`,
@@ -231,6 +231,7 @@ const updateUserData = async (user: any) => {
         email: user.email,
         photoURL: user.photo,
         displayName: `${user.firstName} ${user.lastName}`,
+        country: user.country,
       })
       .then(async () => {
         const updatedCurrentUser = await firebase.auth().currentUser;
