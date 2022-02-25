@@ -6,6 +6,7 @@ import "./index.scss";
 const PROVIDERS = [
   AuthProvider.Apple,
   AuthProvider.Google,
+  AuthProvider.Facebook,
 ];
 
 interface LoginButtonsProps {
