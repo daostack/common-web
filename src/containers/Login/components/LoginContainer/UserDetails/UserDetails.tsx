@@ -1,7 +1,15 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useDispatch } from "react-redux";
-import { Form, Formik, FormikConfig } from "formik";
+import { Formik, FormikConfig } from "formik";
+import { DropdownOption } from "../../../../../shared/components";
 import {
+  Form,
   Dropdown,
   TextField,
 } from "../../../../../shared/components/Form/Formik";
@@ -39,6 +47,15 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
   const inputFile: any = useRef(null);
 
   const dispatch = useDispatch();
+
+  const options = useMemo<DropdownOption[]>(
+    () =>
+      countryList.map((item) => ({
+        text: item.name,
+        value: item.value,
+      })),
+    []
+  );
 
   useEffect(() => {
     if (user) {
@@ -187,8 +204,8 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
                 <Dropdown
                   className="user-details__text-field user-details__dropdown"
                   name="country"
-                  options={countryList}
                   label="Country"
+                  options={options}
                 />
                 <TextField
                   className="user-details__textarea"

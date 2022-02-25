@@ -1,4 +1,4 @@
-import React, { useState, FC, useMemo } from "react";
+import React, { useState, FC } from "react";
 import {
   Button as MenuButton,
   Menu,

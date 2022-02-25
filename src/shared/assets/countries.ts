@@ -5,1377 +5,1377 @@
 export const countryList = [
   {
     value: "AD",
-    text: "Andorra 🇦🇩",
+    name: "Andorra 🇦🇩",
     payin: true,
     payout: true,
   },
   {
     value: "AE",
-    text: "United Arab Emirates 🇦🇪",
+    name: "United Arab Emirates 🇦🇪",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "AG",
-    text: "Antigua & Barbuda 🇦🇬",
+    name: "Antigua & Barbuda 🇦🇬",
     payin: true,
     payout: false,
   },
   {
     value: "AI",
-    text: "Anguilla 🇦🇮",
+    name: "Anguilla 🇦🇮",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "AM",
-    text: "Armenia 🇦🇲",
+    name: "Armenia 🇦🇲",
     payin: true,
     payout: false,
   },
   {
     value: "AO",
-    text: "Angola 🇦🇴",
+    name: "Angola 🇦🇴",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "AQ",
-    text: "Antarctica 🇦🇶",
+    name: "Antarctica 🇦🇶",
     payin: true,
     payout: false,
   },
   {
     value: "AR",
-    text: "Argentina 🇦🇷",
+    name: "Argentina 🇦🇷",
     payin: true,
     payout: true,
   },
   {
     value: "AS",
-    text: "American Samoa 🇦🇸",
+    name: "American Samoa 🇦🇸",
     payin: true,
     payout: true,
   },
   {
     value: "AT",
-    text: "Austria 🇦🇹",
+    name: "Austria 🇦🇹",
     payin: true,
     payout: true,
   },
   {
     value: "AU",
-    text: "Australia 🇦🇺",
+    name: "Australia 🇦🇺",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "AW",
-    text: "Aruba 🇦🇼",
+    name: "Aruba 🇦🇼",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "AX",
-    text: "Åland Islands 🇦🇽",
+    name: "Åland Islands 🇦🇽",
     payin: true,
     payout: false,
   },
   {
     value: "AZ",
-    text: "Azerbaijan 🇦🇿",
+    name: "Azerbaijan 🇦🇿",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "BD",
-    text: "Bangladesh 🇧🇩",
+    name: "Bangladesh 🇧🇩",
     payin: true,
     payout: false,
   },
   {
     value: "BE",
-    text: "Belgium 🇧🇪",
+    name: "Belgium 🇧🇪",
     payin: true,
     payout: true,
   },
   {
     value: "BF",
-    text: "Burkina Faso 🇧🇫",
+    name: "Burkina Faso 🇧🇫",
     payin: true,
     payout: true,
   },
   {
     value: "BG",
-    text: "Bulgaria 🇧🇬",
+    name: "Bulgaria 🇧🇬",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "BH",
-    text: "Bahrain 🇧🇭",
+    name: "Bahrain 🇧🇭",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "BI",
-    text: "Burundi 🇧🇮",
+    name: "Burundi 🇧🇮",
     payin: true,
     payout: false,
   },
   {
     value: "BJ",
-    text: "Benin 🇧🇯",
+    name: "Benin 🇧🇯",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "BL",
-    text: "St. Barthélemy 🇧🇱",
+    name: "St. Barthélemy 🇧🇱",
     payin: true,
     payout: false,
   },
   {
     value: "BM",
-    text: "Bermuda 🇧🇲",
+    name: "Bermuda 🇧🇲",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "BN",
-    text: "Brunei 🇧🇳",
+    name: "Brunei 🇧🇳",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "BO",
-    text: "Bolivia 🇧🇴",
+    name: "Bolivia 🇧🇴",
     payin: true,
     payout: false,
   },
   {
     value: "BQ",
-    text: "Bonaire 🇧🇶",
+    name: "Bonaire 🇧🇶",
     payin: true,
     payout: false,
   },
   {
     value: "BR",
-    text: "Brazil 🇧🇷",
+    name: "Brazil 🇧🇷",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "BT",
-    text: "Bhutan 🇧🇹",
+    name: "Bhutan 🇧🇹",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "BV",
-    text: "Bouvet Island 🇧🇻",
+    name: "Bouvet Island 🇧🇻",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "BY",
-    text: "Belarus 🇧🇾",
+    name: "Belarus 🇧🇾",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "BZ",
-    text: "Belize 🇧🇿",
+    name: "Belize 🇧🇿",
     payin: true,
     payout: false,
   },
   {
     value: "CA",
-    text: "Canada 🇨🇦",
+    name: "Canada 🇨🇦",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "CC",
-    text: "Cocos (Keeling) Islands 🇨🇨",
+    name: "Cocos (Keeling) Islands 🇨🇨",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "CD",
-    text: "Congo - Kinshasa 🇨🇩",
+    name: "Congo - Kinshasa 🇨🇩",
     payin: true,
     payout: false,
   },
   {
     value: "CH",
-    text: "Switzerland 🇨🇭",
+    name: "Switzerland 🇨🇭",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "CI",
-    text: "Côte d’Ivoire 🇨🇮",
+    name: "Côte d’Ivoire 🇨🇮",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "CK",
-    text: "Cook Islands 🇨🇰",
+    name: "Cook Islands 🇨🇰",
     payin: true,
     payout: false,
   },
   {
     value: "CL",
-    text: "Chile 🇨🇱",
+    name: "Chile 🇨🇱",
     payin: true,
     payout: true,
   },
   {
     value: "CM",
-    text: "Cameroon 🇨🇲",
+    name: "Cameroon 🇨🇲",
     payin: true,
     payout: true,
   },
   {
     value: "CN",
-    text: "China 🇨🇳",
+    name: "China 🇨🇳",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "CO",
-    text: "Colombia 🇨🇴",
+    name: "Colombia 🇨🇴",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "CR",
-    text: "Costa Rica 🇨🇷",
+    name: "Costa Rica 🇨🇷",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "CV",
-    text: "Cape Verde 🇨🇻",
+    name: "Cape Verde 🇨🇻",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "CW",
-    text: "Curaçao 🇨🇼",
+    name: "Curaçao 🇨🇼",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "CX",
-    text: "Christmas Island 🇨🇽",
+    name: "Christmas Island 🇨🇽",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "CY",
-    text: "Cyprus 🇨🇾",
+    name: "Cyprus 🇨🇾",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "CZ",
-    text: "Czechia 🇨🇿",
+    name: "Czechia 🇨🇿",
     payin: true,
     payout: false,
   },
   {
     value: "DE",
-    text: "Germany 🇩🇪",
+    name: "Germany 🇩🇪",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "DJ",
-    text: "Djibouti 🇩🇯",
+    name: "Djibouti 🇩🇯",
   },
   {
     value: "DK",
-    text: "Denmark 🇩🇰",
+    name: "Denmark 🇩🇰",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "DM",
-    text: "Dominica 🇩🇲",
+    name: "Dominica 🇩🇲",
     payin: true,
     payout: false,
   },
   {
     value: "DO",
-    text: "Dominican Republic 🇩🇴",
+    name: "Dominican Republic 🇩🇴",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "DZ",
-    text: "Algeria 🇩🇿",
+    name: "Algeria 🇩🇿",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "EC",
-    text: "Ecuador 🇪🇨",
+    name: "Ecuador 🇪🇨",
     payin: true,
     payout: false,
   },
   {
     value: "EE",
-    text: "Estonia 🇪🇪",
+    name: "Estonia 🇪🇪",
     payin: true,
     payout: true,
   },
   {
     value: "SZ",
-    text: "Eswatini 🇸🇿",
+    name: "Eswatini 🇸🇿",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "EG",
-    text: "Egypt 🇪🇬",
+    name: "Egypt 🇪🇬",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "EH",
-    text: "Western Sahara 🇪🇭",
+    name: "Western Sahara 🇪🇭",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "ER",
-    text: "Eritrea 🇪🇷",
+    name: "Eritrea 🇪🇷",
     payin: true,
     payout: false,
   },
   {
     value: "ES",
-    text: "Spain 🇪🇸",
+    name: "Spain 🇪🇸",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "ET",
-    text: "Ethiopia 🇪🇹",
+    name: "Ethiopia 🇪🇹",
     payin: true,
     payout: false,
   },
   {
     value: "FI",
-    text: "Finland 🇫🇮",
+    name: "Finland 🇫🇮",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "FJ",
-    text: "Fiji 🇫🇯",
+    name: "Fiji 🇫🇯",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "FK",
-    text: "Falkland Islands 🇫🇰",
+    name: "Falkland Islands 🇫🇰",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "FM",
-    text: "Micronesia 🇫🇲",
+    name: "Micronesia 🇫🇲",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "FO",
-    text: "Faroe Islands 🇫🇴",
+    name: "Faroe Islands 🇫🇴",
     payin: true,
     payout: false,
   },
   {
     value: "FR",
-    text: "France 🇫🇷",
+    name: "France 🇫🇷",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "GA",
-    text: "Gabon 🇬🇦",
+    name: "Gabon 🇬🇦",
     payin: true,
     payout: false,
   },
   {
     value: "GB",
-    text: "United Kingdom 🇬🇧",
+    name: "United Kingdom 🇬🇧",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "GD",
-    text: "Grenada 🇬🇩",
+    name: "Grenada 🇬🇩",
     payin: true,
     payout: false,
   },
   {
     value: "GE",
-    text: "Georgia 🇬🇪",
+    name: "Georgia 🇬🇪",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "GF",
-    text: "French Guiana 🇬🇫",
+    name: "French Guiana 🇬🇫",
     payin: true,
     payout: false,
   },
   {
     value: "GG",
-    text: "Guernsey 🇬🇬",
+    name: "Guernsey 🇬🇬",
     payin: true,
     payout: true,
   },
   {
     value: "GI",
-    text: "Gibraltar 🇬🇮",
+    name: "Gibraltar 🇬🇮",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "GL",
-    text: "Greenland 🇬🇱",
+    name: "Greenland 🇬🇱",
     payin: true,
     payout: false,
   },
   {
     value: "GM",
-    text: "Gambia 🇬🇲",
+    name: "Gambia 🇬🇲",
     payin: true,
     payout: false,
   },
   {
     value: "GN",
-    text: "Guinea 🇬🇳",
+    name: "Guinea 🇬🇳",
     payin: true,
     payout: false,
   },
   {
     value: "GP",
-    text: "Guadeloupe 🇬🇵",
+    name: "Guadeloupe 🇬🇵",
     payin: true,
     payout: false,
   },
   {
     value: "GQ",
-    text: "Equatorial Guinea 🇬🇶",
+    name: "Equatorial Guinea 🇬🇶",
     payin: true,
     payout: false,
   },
   {
     value: "GR",
-    text: "Greece 🇬🇷",
+    name: "Greece 🇬🇷",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "GS",
-    text: "South Georgia & South Sandwich Islands 🇬🇸",
+    name: "South Georgia & South Sandwich Islands 🇬🇸",
     payin: true,
     payout: false,
   },
   {
     value: "GT",
-    text: "Guatemala 🇬🇹",
+    name: "Guatemala 🇬🇹",
     payin: true,
     payout: true,
   },
   {
     value: "GU",
-    text: "Guam 🇬🇺",
+    name: "Guam 🇬🇺",
     payin: true,
     payout: true,
   },
   {
     // ?
     value: "GW",
-    text: "Guinea-Bissau 🇬🇼",
+    name: "Guinea-Bissau 🇬🇼",
   },
   {
     value: "HK",
-    text: "Hong Kong SAR China 🇭🇰",
+    name: "Hong Kong SAR China 🇭🇰",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "HM",
-    text: "Heard & McDonald Islands 🇭🇲",
+    name: "Heard & McDonald Islands 🇭🇲",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "HN",
-    text: "Honduras 🇭🇳",
+    name: "Honduras 🇭🇳",
     payin: true,
     payout: false,
   },
   {
     value: "VA",
-    text: "Holy See 🇻🇦",
+    name: "Holy See 🇻🇦",
     payin: true,
     payout: true,
   },
   {
     value: "HR",
-    text: "Croatia 🇭🇷",
+    name: "Croatia 🇭🇷",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "HT",
-    text: "Haiti 🇭🇹",
+    name: "Haiti 🇭🇹",
     payin: true,
     payout: false,
   },
   {
     value: "HU",
-    text: "Hungary 🇭🇺",
+    name: "Hungary 🇭🇺",
     payin: true,
     payout: true,
   },
   {
     value: "ID",
-    text: "Indonesia 🇮🇩",
+    name: "Indonesia 🇮🇩",
     payin: true,
     payout: true,
   },
   {
     value: "IE",
-    text: "Ireland 🇮🇪",
+    name: "Ireland 🇮🇪",
     payin: true,
     payout: true,
   },
   {
     value: "IL",
-    text: "Israel 🇮🇱",
+    name: "Israel 🇮🇱",
     payin: true,
     payout: true,
   },
   {
     value: "IM",
-    text: "Isle of Man 🇮🇲",
+    name: "Isle of Man 🇮🇲",
     payin: true,
     payout: true,
   },
   {
     value: "IN",
-    text: "India 🇮🇳",
+    name: "India 🇮🇳",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "IO",
-    text: "British Indian Ocean Territory 🇮🇴",
+    name: "British Indian Ocean Territory 🇮🇴",
     payin: true,
     payout: false,
   },
   {
     // only wire transfer & payouts
     value: "IS",
-    text: "Iceland 🇮🇸",
+    name: "Iceland 🇮🇸",
     payin: false,
     payout: true,
   },
   {
     value: "IT",
-    text: "Italy 🇮🇹",
+    name: "Italy 🇮🇹",
     payin: true,
     payout: true,
   },
   {
     value: "JE",
-    text: "Jersey 🇯🇪",
+    name: "Jersey 🇯🇪",
     payin: true,
     payout: true,
   },
   {
     value: "JO",
-    text: "Jordan 🇯🇴",
+    name: "Jordan 🇯🇴",
     payin: true,
     payout: true,
   },
   {
     value: "JP",
-    text: "Japan 🇯🇵",
+    name: "Japan 🇯🇵",
     payin: true,
     payout: true,
   },
   {
     value: "KE",
-    text: "Kenya 🇰🇪",
+    name: "Kenya 🇰🇪",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "KG",
-    text: "Kyrgyzstan 🇰🇬",
+    name: "Kyrgyzstan 🇰🇬",
     payin: true,
     payout: false,
   },
   {
     // only wire transfer & payouts
     value: "KH",
-    text: "Cambodia 🇰🇭",
+    name: "Cambodia 🇰🇭",
     payin: false,
     payout: true,
   },
   {
     // only payin
     value: "KI",
-    text: "Kiribati 🇰🇮",
+    name: "Kiribati 🇰🇮",
     payin: true,
     payout: false,
   },
   {
     // // only payin
     value: "KM",
-    text: "Comoros 🇰🇲",
+    name: "Comoros 🇰🇲",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "KN",
-    text: "St. Kitts & Nevis 🇰🇳",
+    name: "St. Kitts & Nevis 🇰🇳",
     payin: true,
     payout: false,
   },
   {
     value: "KR",
-    text: "South Korea 🇰🇷",
+    name: "South Korea 🇰🇷",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "KW",
-    text: "Kuwait 🇰🇼",
+    name: "Kuwait 🇰🇼",
     payin: true,
     payout: false,
   },
   {
     value: "KY",
-    text: "Cayman Islands 🇰🇾",
+    name: "Cayman Islands 🇰🇾",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "KZ",
-    text: "Kazakhstan 🇰🇿",
+    name: "Kazakhstan 🇰🇿",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "LC",
-    text: "St. Lucia 🇱🇨",
+    name: "St. Lucia 🇱🇨",
     payin: true,
     payout: false,
   },
   {
     value: "LI",
-    text: "Liechtenstein 🇱🇮",
+    name: "Liechtenstein 🇱🇮",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "LR",
-    text: "Liberia 🇱🇷",
+    name: "Liberia 🇱🇷",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "LS",
-    text: "Lesotho 🇱🇸",
+    name: "Lesotho 🇱🇸",
     payin: true,
     payout: false,
   },
   {
     value: "LT",
-    text: "Lithuania 🇱🇹",
+    name: "Lithuania 🇱🇹",
     payin: true,
     payout: true,
   },
   {
     value: "LU",
-    text: "Luxembourg 🇱🇺",
+    name: "Luxembourg 🇱🇺",
     payin: true,
     payout: true,
   },
   {
     value: "LV",
-    text: "Latvia 🇱🇻",
+    name: "Latvia 🇱🇻",
     payin: true,
     payout: true,
   },
   {
     value: "MO",
-    text: "Macao 🇲🇴",
+    name: "Macao 🇲🇴",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "MA",
-    text: "Morocco 🇲🇦",
+    name: "Morocco 🇲🇦",
     payin: true,
     payout: false,
   },
   {
     value: "MC",
-    text: "Monaco 🇲🇨",
+    name: "Monaco 🇲🇨",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "MD",
-    text: "Moldova 🇲🇩",
+    name: "Moldova 🇲🇩",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "ME",
-    text: "Montenegro 🇲🇪",
+    name: "Montenegro 🇲🇪",
     payin: true,
     payout: false,
   },
   {
     //onyl payin
     value: "MF",
-    text: "St. Martin 🇲🇫",
+    name: "St. Martin 🇲🇫",
     payin: true,
     payout: false,
   },
   {
     value: "MG",
-    text: "Madagascar 🇲🇬",
+    name: "Madagascar 🇲🇬",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "MH",
-    text: "Marshall Islands 🇲🇭",
+    name: "Marshall Islands 🇲🇭",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "MK",
-    text: "Macedonia 🇲🇰",
+    name: "Macedonia 🇲🇰",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "MP",
-    text: "Northern Mariana Islands 🇲🇵",
+    name: "Northern Mariana Islands 🇲🇵",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "MQ",
-    text: "Martinique 🇲🇶",
+    name: "Martinique 🇲🇶",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "MR",
-    text: "Mauritania 🇲🇷",
+    name: "Mauritania 🇲🇷",
     payin: true,
     payout: false,
   },
   {
     //only payin
     value: "MS",
-    text: "Montserrat 🇲🇸",
+    name: "Montserrat 🇲🇸",
     payin: true,
     payout: false,
   },
   {
     value: "MT",
-    text: "Malta 🇲🇹",
+    name: "Malta 🇲🇹",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "MV",
-    text: "Maldives 🇲🇻",
+    name: "Maldives 🇲🇻",
     payin: true,
     payout: false,
   },
   {
     value: "MW",
-    text: "Malawi 🇲🇼",
+    name: "Malawi 🇲🇼",
     payin: true,
     payout: true,
   },
   {
     value: "MX",
-    text: "Mexico 🇲🇽",
+    name: "Mexico 🇲🇽",
     payin: true,
     payout: true,
   },
   {
     value: "MY",
-    text: "Malaysia 🇲🇾",
+    name: "Malaysia 🇲🇾",
     payin: true,
     payout: true,
   },
   {
     value: "MZ",
-    text: "Mozambique 🇲🇿",
+    name: "Mozambique 🇲🇿",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "NA",
-    text: "Namibia 🇳🇦",
+    name: "Namibia 🇳🇦",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "NC",
-    text: "New Caledonia 🇳🇨",
+    name: "New Caledonia 🇳🇨",
     payin: true,
     payout: false,
   },
   {
     value: "NE",
-    text: "Niger 🇳🇪",
+    name: "Niger 🇳🇪",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "NF",
-    text: "Norfolk Island 🇳🇫",
+    name: "Norfolk Island 🇳🇫",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "NG",
-    text: "Nigeria 🇳🇬",
+    name: "Nigeria 🇳🇬",
     payin: true,
     payout: false,
   },
   {
     value: "NL",
-    text: "Netherlands 🇳🇱",
+    name: "Netherlands 🇳🇱",
     payin: true,
     payout: true,
   },
   {
     value: "NO",
-    text: "Norway 🇳🇴",
+    name: "Norway 🇳🇴",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "NP",
-    text: "Nepal 🇳🇵",
+    name: "Nepal 🇳🇵",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "NR",
-    text: "Nauru 🇳🇷",
+    name: "Nauru 🇳🇷",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "NU",
-    text: "Niue 🇳🇺",
+    name: "Niue 🇳🇺",
     payin: true,
     payout: false,
   },
   {
     value: "NZ",
-    text: "New Zealand 🇳🇿",
+    name: "New Zealand 🇳🇿",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "OM",
-    text: "Oman 🇴🇲",
+    name: "Oman 🇴🇲",
     payin: true,
     payout: false,
   },
   {
     value: "PE",
-    text: "Peru 🇵🇪",
+    name: "Peru 🇵🇪",
     payin: true,
     payout: true,
   },
   {
     // only paying
     value: "PF",
-    text: "French Polynesia 🇵🇫",
+    name: "French Polynesia 🇵🇫",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "PG",
-    text: "Papua New Guinea 🇵🇬",
+    name: "Papua New Guinea 🇵🇬",
     payin: true,
     payout: false,
   },
   {
     value: "PH",
-    text: "Philippines 🇵🇭",
+    name: "Philippines 🇵🇭",
     payin: true,
     payout: true,
   },
   {
     value: "PL",
-    text: "Poland 🇵🇱",
+    name: "Poland 🇵🇱",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "PM",
-    text: "St. Pierre & Miquelon 🇵🇲",
+    name: "St. Pierre & Miquelon 🇵🇲",
     payin: true,
     payout: false,
   },
   {
     value: "PN",
-    text: "Pitcairn Islands 🇵🇳",
+    name: "Pitcairn Islands 🇵🇳",
     payin: true,
     payout: true,
   },
   {
     value: "PR",
-    text: "Puerto Rico 🇵🇷",
+    name: "Puerto Rico 🇵🇷",
     payin: true,
     payout: true,
   },
   {
     value: "PT",
-    text: "Portugal 🇵🇹",
+    name: "Portugal 🇵🇹",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "PW",
-    text: "Palau 🇵🇼",
+    name: "Palau 🇵🇼",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "PY",
-    text: "Paraguay 🇵🇾",
+    name: "Paraguay 🇵🇾",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "QA",
-    text: "Qatar 🇶🇦",
+    name: "Qatar 🇶🇦",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "RE",
-    text: "Réunion 🇷🇪",
+    name: "Réunion 🇷🇪",
     payin: true,
     payout: false,
   },
   {
     value: "RO",
-    text: "Romania 🇷🇴",
+    name: "Romania 🇷🇴",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "RS",
-    text: "Serbia 🇷🇸",
+    name: "Serbia 🇷🇸",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "RU",
-    text: "Russia 🇷🇺",
+    name: "Russia 🇷🇺",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "RW",
-    text: "Rwanda 🇷🇼",
+    name: "Rwanda 🇷🇼",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "SA",
-    text: "Saudi Arabia 🇸🇦",
+    name: "Saudi Arabia 🇸🇦",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "SB",
-    text: "Solomon Islands 🇸🇧",
+    name: "Solomon Islands 🇸🇧",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "SC",
-    text: "Seychelles 🇸🇨",
+    name: "Seychelles 🇸🇨",
     payin: true,
     payout: false,
   },
   {
     value: "SE",
-    text: "Sweden 🇸🇪",
+    name: "Sweden 🇸🇪",
     payin: true,
     payout: true,
   },
   {
     value: "SG",
-    text: "Singapore 🇸🇬",
+    name: "Singapore 🇸🇬",
     payin: true,
     payout: true,
   },
   {
     // only paying
     value: "SH",
-    text: "St. Helena 🇸🇭",
+    name: "St. Helena 🇸🇭",
     payin: true,
     payout: false,
   },
   {
     value: "SI",
-    text: "Slovenia 🇸🇮",
+    name: "Slovenia 🇸🇮",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "SJ",
-    text: "Svalbard & Jan Mayen 🇸🇯",
+    name: "Svalbard & Jan Mayen 🇸🇯",
     payin: true,
     payout: false,
   },
   {
     value: "SK",
-    text: "Slovakia 🇸🇰",
+    name: "Slovakia 🇸🇰",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "SL",
-    text: "Sierra Leone 🇸🇱",
+    name: "Sierra Leone 🇸🇱",
     payin: true,
     payout: false,
   },
   {
     value: "ST",
-    text: "Sao Tome and Principe 🇸🇹",
+    name: "Sao Tome and Principe 🇸🇹",
     payin: true,
     payout: false,
   },
   {
     value: "SM",
-    text: "San Marino 🇸🇲",
+    name: "San Marino 🇸🇲",
     payin: true,
     payout: true,
   },
   {
     value: "SN",
-    text: "Senegal 🇸🇳",
+    name: "Senegal 🇸🇳",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "SR",
-    text: "Suritext 🇸🇷",
+    name: "Suriname 🇸🇷",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "SV",
-    text: "El Salvador 🇸🇻",
+    name: "El Salvador 🇸🇻",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "SX",
-    text: "Sint Maarten 🇸🇽",
+    name: "Sint Maarten 🇸🇽",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "TA",
-    text: "Tristan da Cunha 🇹🇦",
+    name: "Tristan da Cunha 🇹🇦",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "TC",
-    text: "Turks & Caicos Islands 🇹🇨",
+    name: "Turks & Caicos Islands 🇹🇨",
     payin: true,
     payout: false,
   },
   {
     value: "TD",
-    text: "Chad 🇹🇩",
+    name: "Chad 🇹🇩",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "TF",
-    text: "French Southern Territories 🇹🇫",
+    name: "French Southern Territories 🇹🇫",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "TG",
-    text: "Togo 🇹🇬",
+    name: "Togo 🇹🇬",
     payin: true,
     payout: false,
   },
   {
     value: "TH",
-    text: "Thailand 🇹🇭",
+    name: "Thailand 🇹🇭",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "TJ",
-    text: "Tajikistan 🇹🇯",
+    name: "Tajikistan 🇹🇯",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "TK",
-    text: "Tokelau 🇹🇰",
+    name: "Tokelau 🇹🇰",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "TL",
-    text: "Timor-Leste 🇹🇱",
+    name: "Timor-Leste 🇹🇱",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "TM",
-    text: "Turkmenistan 🇹🇲",
+    name: "Turkmenistan 🇹🇲",
     payin: true,
     payout: false,
   },
   {
     value: "TR",
-    text: "Turkey 🇹🇷",
+    name: "Turkey 🇹🇷",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "TO",
-    text: "Tonga 🇹🇴",
+    name: "Tonga 🇹🇴",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "TV",
-    text: "Tuvalu 🇹🇻",
+    name: "Tuvalu 🇹🇻",
     payin: true,
     payout: false,
   },
   {
     value: "TW",
-    text: "Taiwan 🇹🇼",
+    name: "Taiwan 🇹🇼",
     payin: true,
     payout: true,
   },
   {
     value: "TZ",
-    text: "Tanzania 🇹🇿",
+    name: "Tanzania 🇹🇿",
     payin: true,
     payout: true,
   },
   {
     value: "UM",
-    text: "U.S. Outlying Islands 🇺🇲",
+    name: "U.S. Outlying Islands 🇺🇲",
     payin: true,
     payout: true,
   },
   {
     value: "US",
-    text: "United States 🇺🇸",
+    name: "United States 🇺🇸",
     payin: true,
     payout: true,
   },
   {
     value: "UY",
-    text: "Uruguay 🇺🇾",
+    name: "Uruguay 🇺🇾",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "UZ",
-    text: "Uzbekistan 🇺🇿",
+    name: "Uzbekistan 🇺🇿",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "VC",
-    text: "St. Vincent & Grenadines 🇻🇨",
+    name: "St. Vincent & Grenadines 🇻🇨",
     payin: true,
     payout: false,
   },
   {
     value: "VG",
-    text: "British Virgin Islands 🇻🇬",
+    name: "British Virgin Islands 🇻🇬",
     payin: true,
     payout: true,
   },
   {
     // payout & wire transfer only
     value: "VI",
-    text: "U.S. Virgin Islands 🇻🇮",
+    name: "U.S. Virgin Islands 🇻🇮",
     payin: false,
     payout: true,
   },
   {
     value: "VN",
-    text: "Vietnam 🇻🇳",
+    name: "Vietnam 🇻🇳",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "WF",
-    text: "Wallis & Futuna 🇼🇫",
+    name: "Wallis & Futuna 🇼🇫",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "WS",
-    text: "Samoa 🇼🇸",
+    name: "Samoa 🇼🇸",
     payin: true,
     payout: false,
   },
   {
     // only payin
     value: "YT",
-    text: "Mayotte 🇾🇹",
+    name: "Mayotte 🇾🇹",
     payin: true,
     payout: false,
   },
   {
     value: "ZA",
-    text: "South Africa 🇿🇦",
+    name: "South Africa 🇿🇦",
     payin: true,
     payout: true,
   },
   {
     // only payin
     value: "ZM",
-    text: "Zambia 🇿🇲",
+    name: "Zambia 🇿🇲",
     payin: true,
     payout: false,
   },
@@ -1388,8 +1388,8 @@ export const countryList = [
  *
  * @returns { string } - The ISO country code
  */
-export const getCountryCodeFromName = (text: string) => {
-  const countryObj = countryList.find((x) => x.text === text);
+export const getCountryCodeFromName = (name: string) => {
+  const countryObj = countryList.find((x) => x.name === name);
 
   return countryObj?.value;
 };
