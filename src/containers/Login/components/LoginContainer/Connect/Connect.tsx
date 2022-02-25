@@ -1,20 +1,33 @@
 import React, { useState, FC } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
+import { Loader } from "../../../../../shared/components";
 import { ScreenSize } from "../../../../../shared/constants";
-import { getScreenSize } from "../../../../../shared/store/selectors";
+import {
+  getLoading,
+  getScreenSize,
+} from "../../../../../shared/store/selectors";
 import { LoginButtons } from "../LoginButtons";
 import { LoginError } from "../LoginError";
 import "./index.scss";
 
 const Connect: FC = () => {
   const screenSize = useSelector(getScreenSize());
+  const isLoading = useSelector(getLoading());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const [hasError, setHasError] = useState(false);
 
   const subTitleText = isMobileView
     ? "Connect with"
     : "Connect your account to join this Common";
+
+  if (isLoading) {
+    return (
+      <div className="connect-wrapper connect-wrapper--loading">
+        <Loader className="connect-wrapper__loader" />
+      </div>
+    );
+  }
 
   return (
     <div className="connect-wrapper">

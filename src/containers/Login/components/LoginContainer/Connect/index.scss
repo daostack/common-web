@@ -9,6 +9,19 @@
   text-align: center;
   font-family: NunitoSans, sans-serif;
 
+  .connect-wrapper__loader {
+    left: 0;
+    margin: auto 0;
+    transform: unset;
+
+    @include big-phone {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%);
+    }
+  }
+
   .connect-wrapper__img {
     width: 12.5rem;
     height: 12.5rem;
@@ -64,5 +77,13 @@
 
   @include big-phone {
     padding-top: 0;
+  }
+}
+.connect-wrapper--loading {
+  min-height: 32.75rem;
+  box-sizing: border-box;
+
+  @include big-phone {
+    min-height: unset;
   }
 }
