@@ -24,16 +24,16 @@ const LoginButtons: FC = () => {
         provider={AuthProvider.Google}
         onClick={handleSocialLogin}
       />
-      <SocialLoginButton
-        className="login-buttons-wrapper__button"
-        provider={AuthProvider.Facebook}
-        onClick={handleSocialLogin}
-      />
-      <SocialLoginButton
-        className="login-buttons-wrapper__button"
-        provider={AuthProvider.Phone}
-        onClick={handleSocialLogin}
-      />
+      {/*<SocialLoginButton*/}
+      {/*  className="login-buttons-wrapper__button"*/}
+      {/*  provider={AuthProvider.Facebook}*/}
+      {/*  onClick={handleSocialLogin}*/}
+      {/*/>*/}
+      {/*<SocialLoginButton*/}
+      {/*  className="login-buttons-wrapper__button"*/}
+      {/*  provider={AuthProvider.Phone}*/}
+      {/*  onClick={handleSocialLogin}*/}
+      {/*/>*/}
     </div>
   );
 };
