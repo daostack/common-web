@@ -23,7 +23,7 @@ export interface Option {
   value: unknown;
 }
 
-interface DropdownProps {
+export interface DropdownProps {
   className?: string;
   value?: unknown;
   options: Option[];
@@ -31,6 +31,7 @@ interface DropdownProps {
   onSelect: (value: unknown) => void;
   menuButtonText?: string;
   styles?: Styles;
+  label?: string;
 }
 
 const Dropdown: FC<DropdownProps> = (props) => {
@@ -42,6 +43,7 @@ const Dropdown: FC<DropdownProps> = (props) => {
     onSelect,
     menuButtonText,
     styles,
+    label,
   } = props;
   const [isOpen, setIsOpen] = useState(false);
   const selectedOption = options.find((option) => option.value === value);
@@ -66,6 +68,11 @@ const Dropdown: FC<DropdownProps> = (props) => {
       onSelection={handleSelection}
       onMenuToggle={handleMenuToggle}
     >
+      {label && (
+        <div className="custom-dropdown-wrapper__label-wrapper">
+          <span className="custom-dropdown-wrapper__label">{label}</span>
+        </div>
+      )}
       <MenuButton
         className={classNames(
           "custom-dropdown-wrapper__menu-button",
