@@ -120,6 +120,8 @@ const getFirebaseAuthProvider = (
 
       return provider;
     }
+    case AuthProvider.Facebook:
+      return new firebase.auth.FacebookAuthProvider();
     default:
       return new firebase.auth.GoogleAuthProvider();
   }
