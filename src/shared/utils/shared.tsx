@@ -45,7 +45,9 @@ export const formatDate = (date: string | Date) => {
   return moment.unix(time.seconds).local().format(format);
 }
 
-export const getUserName = (user?: User | null) => {
+export const getUserName = (
+  user?: Pick<User, "firstName" | "lastName" | "displayName"> | null
+) => {
   if (!user) return "";
   return user.displayName || `${user.firstName} ${user.lastName}`;
 };
