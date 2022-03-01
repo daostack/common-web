@@ -14,6 +14,7 @@ export enum FundingProcessStage {
   PendingInvoiceApproval = "pendingInvoiceApproval",
   FundsTransferInProgress = "fundsTransferInProgress",
   Completed = "completed",
+  ExpiredInvociesNotUploaded = "expiredInvociesNotUploaded",
 }
 
 export enum ProposalPaymentState {
