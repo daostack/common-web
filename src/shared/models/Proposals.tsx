@@ -14,7 +14,6 @@ export enum FundingProcessStage {
   PendingInvoiceApproval = "pendingInvoiceApproval",
   FundsTransferInProgress = "fundsTransferInProgress",
   Completed = "completed",
-  ExpiredInvociesNotUploaded = "expiredInvociesNotUploaded",
 }
 
 export enum ProposalPaymentState {
@@ -30,6 +29,7 @@ export enum ProposalState {
   PASSED = "passed",
   REJECTED = "failed",
   PASSED_INSUFFICIENT_BALANCE = "passedInsufficientBalance",
+  EXPIRED_INVOCIES_NOT_UPLOADED = "expiredInvociesNotUploaded",
 }
 
 export enum ProposalType {

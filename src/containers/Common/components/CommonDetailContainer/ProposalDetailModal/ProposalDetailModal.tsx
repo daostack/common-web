@@ -1,20 +1,19 @@
 import React, { useCallback, useState } from "react";
 
 import { Loader } from "../../../../../shared/components";
-import { FundingProcessStage, Proposal, ProposalState } from "../../../../../shared/models";
+import { Proposal } from "../../../../../shared/models";
 import {
   formatPrice,
   getDaysAgo,
   getUserName,
-  getProposalExpirationDate,
 } from "../../../../../shared/utils";
 import { ChatComponent } from "../ChatComponent";
-import { ProposalCountDown } from "../ProposalCountDown";
 import { VotesComponent } from "../VotesComponent";
-import "./index.scss";
+import { ProposalState } from "../ProposalState";
 import { addMessageToProposal } from "@/containers/Common/store/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/containers/Auth/store/selectors";
+import "./index.scss";
 
 interface DiscussionDetailModalProps {
   proposal: Proposal | null;
@@ -62,29 +61,7 @@ export default function ProposalDetailModal({
     <div className="discussion-detail-modal-wrapper">
       <div className="left-side">
         <div className="top-side">
-          {proposal.state === ProposalState.COUNTDOWN ? (
-            <ProposalCountDown date={getProposalExpirationDate(proposal)} />
-          ) : (
-            <div
-              className={`state-wrapper ${proposal.state.toLocaleLowerCase()}`}
-            >
-              <div className="state-inner-wrapper">
-                <img
-                  src={
-                    proposal.state === ProposalState.REJECTED
-                      ? "/icons/declined.svg"
-                      : "/icons/approved.svg"
-                  }
-                  alt="state-wrapper"
-                />
-                <span className="state-name">
-                  {proposal.state === ProposalState.REJECTED
-                    ? "Rejected"
-                    : <span>Approved {proposal?.fundingProcessStage === FundingProcessStage.ExpiredInvociesNotUploaded && <span className="unclaimed-label">unclaimed</span>}</span>}
-                </span>
-              </div>
-            </div>
-          )}
+          <ProposalState proposal={proposal} />
           <div className="owner-wrapper">
             <div className="owner-icon-wrapper">
               {!imageError ? (
