@@ -25,11 +25,6 @@ export enum ProposalPaymentState {
   Failed = "failed",
 }
 
-export enum ProposalVoteOutcome {
-  Approved = "approved",
-  Rejected = "rejected",
-}
-
 export enum ProposalState {
   COUNTDOWN = "countdown",
   PASSED = "passed",
@@ -48,14 +43,6 @@ interface ProposalJoin {
   funding: number;
   fundingType?: CommonContributionType;
 }
-
-export type ProposalVote = {
-  __typename?: "ProposalVote";
-  voteId: string;
-  voterId: string;
-  outcome: ProposalVoteOutcome;
-  voter?: User;
-};
 
 export interface DocInfo {
   name: string;
@@ -107,7 +94,6 @@ export interface Proposal {
   fundingState?: ProposalFundingState;
   /** Details about the join request. Exists only on join request proposals */
   join?: ProposalJoin;
-  votes?: ProposalVote[];
   fundingProcessStage?: FundingProcessStage;
 
   approvalDate?: Time;

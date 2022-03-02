@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 
 import { Loader } from "../../../../../shared/components";
-import { Proposal, ProposalState } from "../../../../../shared/models";
+import { FundingProcessStage, Proposal, ProposalState } from "../../../../../shared/models";
 import {
   formatPrice,
   getDaysAgo,
@@ -80,7 +80,7 @@ export default function ProposalDetailModal({
                 <span className="state-name">
                   {proposal.state === ProposalState.REJECTED
                     ? "Rejected"
-                    : "Approved"}
+                    : <span>Approved {proposal?.fundingProcessStage === FundingProcessStage.ExpiredInvociesNotUploaded && <span className="unclaimed-label">unclaimed</span>}</span>}
                 </span>
               </div>
             </div>

@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { ProposalCountDown } from "..";
 import { UserAvatar } from "../../../../../shared/components";
 import { useFullText } from "../../../../../shared/hooks";
-import { Proposal, ProposalState } from "../../../../../shared/models";
+import { FundingProcessStage, Proposal, ProposalState } from "../../../../../shared/models";
 import { formatPrice, getUserName, getDaysAgo } from "../../../../../shared/utils";
 import { VotesComponent } from "../VotesComponent";
 
@@ -48,7 +48,7 @@ export default function ProposalItemComponent({
               alt="state-wrapper"
             />
             <span className="state-name">
-              {proposal.state === ProposalState.REJECTED ? "Rejected" : "Approved"}
+              {proposal.state === ProposalState.REJECTED ? "Rejected" : <span>Approved {proposal?.fundingProcessStage === FundingProcessStage.ExpiredInvociesNotUploaded && <span className="unclaimed-label">unclaimed</span>}</span>}
             </span>
           </div>
         </div>
