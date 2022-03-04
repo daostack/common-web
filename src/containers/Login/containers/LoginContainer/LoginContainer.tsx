@@ -25,6 +25,10 @@ const LoginContainer: FC = () => {
   const isShowing = useSelector(selectIsLoginModalShowing());
   const shouldShowBackButton = stage === AuthStage.PhoneAuth;
 
+  const handleClose = useCallback(() => {
+    dispatch(setIsLoginModalShowing(false));
+  }, [dispatch]);
+
   const handleAuthButtonClick = useCallback(
     (provider: AuthProvider) => {
       if (provider === AuthProvider.Phone) {
@@ -32,9 +36,20 @@ const LoginContainer: FC = () => {
         return;
       }
 
-      dispatch(socialLogin.request(provider));
+      dispatch(
+        socialLogin.request({
+          payload: provider,
+          callback: (error, data) => {
+            if (!error && data?.isNewUser) {
+              setStage(AuthStage.CompleteAccountDetails);
+            } else {
+              handleClose();
+            }
+          },
+        })
+      );
     },
-    [dispatch]
+    [dispatch, handleClose]
   );
 
   const handleGoBack = useCallback(() => {
@@ -42,10 +57,6 @@ const LoginContainer: FC = () => {
       stage === AuthStage.PhoneAuth ? AuthStage.AuthMethodSelect : stage - 1
     );
   }, []);
-
-  const handleClose = useCallback(() => {
-    dispatch(setIsLoginModalShowing(false));
-  }, [dispatch]);
 
   const handlePhoneStageFinish = useCallback(() => {
     setStage(AuthStage.CompleteAccountDetails);

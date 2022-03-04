@@ -141,10 +141,13 @@ const authorizeUser = async (authProvider: AuthProvider) => {
           const credentials = result.credential?.toJSON() as GoogleAuthResultInterface;
           const user = result.user?.toJSON() as User;
           const currentUser = (await firebase.auth().currentUser) as any;
+          let isNewUser = false;
 
           let loginedUser: any;
           if (result.additionalUserInfo?.isNewUser) {
             store.dispatch(actions.setIsUserNew(true));
+            isNewUser = true;
+
             if (currentUser) {
               await createUser(currentUser);
             }
@@ -159,6 +162,7 @@ const authorizeUser = async (authProvider: AuthProvider) => {
 
                 if (!databaseUser) {
                   store.dispatch(actions.setIsUserNew(true));
+                  isNewUser = true;
                   await createUser(currentUser);
                   databaseUser = await getUserData(currentUser.uid);
                 }
@@ -172,7 +176,7 @@ const authorizeUser = async (authProvider: AuthProvider) => {
             }
           }
 
-          return loginedUser;
+          return { user: loginedUser, isNewUser };
         });
     })
     .catch((e) => console.log(e));
@@ -259,13 +263,24 @@ function* socialLoginSaga({
   try {
     yield put(startLoading());
 
-    const user: User = yield call(authorizeUser, payload);
+    const { user, isNewUser }: { user: User; isNewUser: boolean } = yield call(
+      authorizeUser,
+      payload.payload
+    );
     const firebaseUser: User = yield call(getUserData, user.uid ?? "");
     if (firebaseUser) {
       yield put(actions.socialLogin.success(firebaseUser));
     }
+
+    if (payload.callback) {
+      payload.callback(null, { user, isNewUser });
+    }
   } catch (error) {
     yield put(actions.socialLogin.failure(error));
+
+    if (payload.callback) {
+      payload.callback(error);
+    }
   } finally {
     yield put(stopLoading());
   }

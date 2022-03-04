@@ -35,11 +35,8 @@
   }
 
   .phone-auth__phone-input {
+    width: 100%;
     margin: 4.625rem 0 5.125rem;
-
-    @include big-phone {
-      margin: 4.625rem 0 5.125rem;
-    }
   }
 
   .phone-auth__submit-button {

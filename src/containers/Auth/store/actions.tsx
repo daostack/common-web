@@ -9,7 +9,15 @@ export const socialLogin = createAsyncAction(
   AuthActionTypes.SOCIAL_LOGIN,
   AuthActionTypes.SOCIAL_LOGIN_SUCCESS,
   AuthActionTypes.SOCIAL_LOGIN_FAILURE
-)<AuthProvider, User, Error>();
+)<
+  PayloadWithOptionalCallback<
+    AuthProvider,
+    { user: User; isNewUser: boolean },
+    Error
+  >,
+  User,
+  Error
+>();
 
 export const loginUsingEmailAndPassword = createAsyncAction(
   AuthActionTypes.LOGIN_USING_EMAIL_AND_PASSWORD,
