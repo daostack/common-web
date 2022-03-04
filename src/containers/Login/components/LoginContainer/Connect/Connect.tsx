@@ -1,4 +1,4 @@
-import React, { useState, FC } from "react";
+import React, { FC, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { Loader } from "../../../../../shared/components";
@@ -12,7 +12,11 @@ import { LoginButtons } from "../LoginButtons";
 import { LoginError } from "../LoginError";
 import "./index.scss";
 
-const Connect: FC = () => {
+type ConnectProps = {
+  setPhoneAuthStage: () => void;
+};
+
+const Connect: FC<ConnectProps> = ({ setPhoneAuthStage }) => {
   const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
   const isLoading = useSelector(getLoading());
@@ -32,7 +36,11 @@ const Connect: FC = () => {
   }
 
   const handleSocialLogin = (provider: AuthProvider) => {
-    dispatch(socialLogin.request(provider));
+    if (provider === AuthProvider.Phone) {
+      setPhoneAuthStage();
+    } else {
+      dispatch(socialLogin.request(provider));
+    }
   };
 
   return (

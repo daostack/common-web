@@ -1,11 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  NavLink,
-  Link,
-  useHistory,
-  RouteProps,
-} from "react-router-dom";
+import { Link, NavLink, RouteProps, useHistory } from "react-router-dom";
 import classNames from "classnames";
 
 import { UserAvatar } from "../../../shared/components";
@@ -15,24 +10,22 @@ import { ApiEndpoint, Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
 import { getScreenSize } from "../../store/selectors";
-import { saveByURL } from "../../utils";
+import { getUserName, isMobile, saveByURL } from "../../utils";
 import DownloadCommonApp from "../DownloadCommonApp/DownloadCommonApp";
 import MobileLinks from "../MobileLinks/MobileLinks";
-import "./index.scss";
 import { Account } from "../Account";
 import {
   authentificated,
+  selectIsLoginModalShowing,
   selectIsNewUser,
   selectUser,
-  selectIsLoginModalShowing,
 } from "../../../containers/Auth/store/selectors";
-import { isMobile, getUserName } from "../../utils";
-import { Modal } from "../Modal";
 import { LoginContainer } from "../../../containers/Login/containers/LoginContainer";
 import {
   logOut,
   setIsLoginModalShowing,
 } from "../../../containers/Auth/store/actions";
+import "./index.scss";
 
 const ADMIN_ACCESS_ROLES: UserRole[] = [UserRole.Trustee];
 
@@ -204,14 +197,11 @@ const Header = () => {
           )}
         </>
       )}
-      <Modal
+      <LoginContainer
+        closeModal={handleClose}
         isShowing={isLoginModalShowing}
         onClose={handleClose}
-        className="mobile-full-screen"
-        mobileFullScreen
-      >
-        <LoginContainer closeModal={handleClose} />
-      </Modal>
+      />
     </section>
   );
 };

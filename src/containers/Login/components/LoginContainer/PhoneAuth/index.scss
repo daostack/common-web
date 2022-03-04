@@ -1,0 +1,56 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.phone-auth {
+  padding: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-family: NunitoSans, sans-serif;
+
+  .phone-auth__img {
+    width: 12.5rem;
+    height: 12.5rem;
+
+    @include big-phone {
+      width: 10rem;
+      height: 10rem;
+      margin-bottom: 2rem;
+    }
+  }
+
+  .phone-auth__title {
+    margin: 2.625rem 0 0.5rem;
+    font-family: NotoSerif, serif;
+    font-size: $moderate-med;
+    font-weight: bold;
+
+    @include big-phone {
+      margin: 3.375rem 0 1rem;
+      font-family: NunitoSans, sans-serif;
+      font-size: $moderate;
+    }
+  }
+
+  .phone-auth__phone-input {
+    margin: 4.625rem 0 5.125rem;
+
+    @include big-phone {
+      margin: 4.625rem 0 5.125rem;
+    }
+  }
+
+  .phone-auth__submit-button {
+    min-width: unset;
+    width: 20.5rem;
+    height: 3rem;
+    font-family: NunitoSans-Regular, sans-serif;
+    font-weight: normal;
+
+    @include big-phone {
+      width: 100%;
+      margin: 0;
+    }
+  }
+}
