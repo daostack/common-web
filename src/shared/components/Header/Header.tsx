@@ -22,7 +22,6 @@ import "./index.scss";
 import { Account } from "../Account";
 import {
   authentificated,
-  selectIsNewUser,
   selectUser,
   selectIsLoginModalShowing,
 } from "../../../containers/Auth/store/selectors";
@@ -51,7 +50,6 @@ const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const isAuthorized = useSelector(authentificated());
   const user = useSelector(selectUser());
-  const isNewUser = useSelector(selectIsNewUser());
   const isLoginModalShowing = useSelector(selectIsLoginModalShowing());
   const shouldDisplayAvatar = Boolean(screenSize === ScreenSize.Mobile && user);
   const hasAdminAccess = useAnyMandatoryRoles(ADMIN_ACCESS_ROLES, user?.roles);
@@ -84,14 +82,6 @@ const Header = () => {
       unlisten();
     };
   }, [history]);
-
-  React.useEffect(() => {
-    if (!isNewUser && user) {
-      if (isLoginModalShowing) {
-        handleClose();
-      }
-    }
-  }, [user, isNewUser, isLoginModalShowing, handleClose]);
 
   const toggleMenuShowing = () => {
     setShowMenu((shouldShow) => !shouldShow);
@@ -127,6 +117,7 @@ const Header = () => {
 
       {isAuthorized && isMobile() && (
         <>
+          <button onClick={handleOpen}>My Account</button>
           {hasAdminAccess && (
             <button onClick={handleReportsDownload}>Download Reports</button>
           )}
@@ -172,6 +163,7 @@ const Header = () => {
               logOut={logOutUser}
               isTrusteeRoute={isTrusteeRoute}
               hasAdminAccess={hasAdminAccess}
+              showMyAccount={handleOpen}
             />
           )}
           {!isAuthorized && !isTrusteeRoute ? (
