@@ -38,7 +38,7 @@ const getInitialValues = (
   commonName: data.name,
   tagline: data.byline || "",
   about: data.description || "",
-  links: data.links || [{ title: "", value: "" }],
+  links: data.links?.length ? data.links : [{ title: "", value: "" }],
 });
 
 export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
@@ -59,7 +59,7 @@ export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
         name: values.commonName,
         byline: values.tagline,
         description: values.about,
-        links: values.links,
+        links: [...(values.links[0].title ? values.links : [])],
       });
     },
     [onFinish]
@@ -109,6 +109,7 @@ export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
                 shouldDisplayCount={!isMobileView}
                 rows={isMobileView ? 4 : 3}
                 isTextarea
+                isRequired
               />
               <LinksArray
                 name="links"
