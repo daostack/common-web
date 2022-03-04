@@ -8,6 +8,7 @@
   align-items: center;
   text-align: center;
   font-family: NunitoSans, sans-serif;
+  color: $secondary-blue;
 
   .phone-auth__img {
     width: 12.5rem;
@@ -21,7 +22,7 @@
   }
 
   .phone-auth__title {
-    margin: 2.625rem 0 0.5rem;
+    margin: 2.625rem 0 0;
     font-family: NotoSerif, serif;
     font-size: $moderate-med;
     font-weight: bold;
@@ -42,15 +43,13 @@
   }
 
   .phone-auth__submit-button {
-    min-width: unset;
-    width: 20.5rem;
-    height: 3rem;
-    font-family: NunitoSans-Regular, sans-serif;
-    font-weight: normal;
+    max-width: 20.5rem;
+    width: 100%;
+    font-family: NunitoSans, sans-serif;
 
     @include big-phone {
+      max-width: unset;
       width: 100%;
-      margin: 0;
     }
   }
 }

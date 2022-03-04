@@ -1,3 +1,5 @@
+import { Colors } from "../../../../../shared/constants";
+
 export const verificationCodeStyle = {
   wrapperStyle: {
     margin: "1.5rem 0 3rem",
@@ -8,17 +10,18 @@ export const verificationCodeStyle = {
   inputStyle: {
     width: "3.5rem",
     height: "4.5rem",
+    margin: "0",
     display: "flex",
     FlexDirection: "column",
     justifyContent: "center",
     alignItems: "stretch",
-    borderRadius: "12px",
-    boxShadow: "0 3px 8px 0 rgba(0, 26, 54, 0.08)",
-    border: "solid 1px #d5d5e4",
-    backgroundColor: "#fff",
+    borderRadius: "0.75rem",
+    boxShadow: `0 3px 8px 0 ${Colors.shadow2}`,
+    border: `1px solid ${Colors.lightGray3}`,
+    backgroundColor: Colors.white,
     fonFamily: "NunitoSans, sans-serif",
     fontSize: "2.25rem",
     TextAlign: "center",
-    color: "#001a36",
+    color: Colors.secondaryBlue,
   },
 };

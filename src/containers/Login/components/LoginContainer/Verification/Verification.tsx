@@ -1,7 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState, FC } from "react";
 import PinInput from "react-pin-input";
+import { formatPhoneNumberIntl } from "react-phone-number-input";
 import moment from "moment";
-import { Button, ButtonVariant } from "../../../../../shared/components";
+import {
+  Button,
+  ButtonIcon,
+  ButtonVariant,
+} from "../../../../../shared/components";
 import { PhoneInputValue } from "../../../../../shared/components/Form";
 import { useCountdown } from "../../../../../shared/hooks";
 import { formatCountdownValue } from "../../../../../shared/utils";
@@ -87,14 +92,19 @@ const Verification: FC<VerificationProps> = ({
         We have sent the code to the following number
       </p>
       <div className="verification__phone-wrapper">
-        <p className="verification__phone-wrapper-number">{phoneNumber}</p>
-        <div className="verification__phone-wrapper-edit" onClick={goBack}>
+        <p className="verification__phone-wrapper-number">
+          {phoneNumber && formatPhoneNumberIntl(phoneNumber)}
+        </p>
+        <ButtonIcon
+          className="verification__phone-wrapper-edit"
+          onClick={goBack}
+        >
           <img
             className="verification__phone-wrapper-edit-img"
             src="/icons/edit-avatar.svg"
             alt="edit-avatar"
           />
-        </div>
+        </ButtonIcon>
       </div>
       <PinInput
         length={CODE_LENGTH}

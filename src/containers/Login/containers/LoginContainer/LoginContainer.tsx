@@ -23,6 +23,7 @@ const LoginContainer: FC = () => {
   const user = useSelector(selectUser());
   const isNewUser = useSelector(selectIsNewUser());
   const isShowing = useSelector(selectIsLoginModalShowing());
+  const shouldShowBackButton = stage === AuthStage.PhoneAuth;
 
   const handleAuthButtonClick = useCallback(
     (provider: AuthProvider) => {
@@ -35,6 +36,12 @@ const LoginContainer: FC = () => {
     },
     [dispatch]
   );
+
+  const handleGoBack = useCallback(() => {
+    setStage((stage) =>
+      stage === AuthStage.PhoneAuth ? AuthStage.AuthMethodSelect : stage - 1
+    );
+  }, []);
 
   const handleClose = useCallback(() => {
     dispatch(setIsLoginModalShowing(false));
@@ -77,6 +84,7 @@ const LoginContainer: FC = () => {
       onClose={handleClose}
       className="mobile-full-screen"
       mobileFullScreen
+      onGoBack={shouldShowBackButton ? handleGoBack : undefined}
     >
       {content}
     </Modal>
