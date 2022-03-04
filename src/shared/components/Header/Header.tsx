@@ -104,6 +104,7 @@ const Header = () => {
 
       {isAuthorized && isMobile() && (
         <>
+          <button onClick={handleOpen}>My Account</button>
           {hasAdminAccess && (
             <button onClick={handleReportsDownload}>Download Reports</button>
           )}
@@ -149,6 +150,7 @@ const Header = () => {
               logOut={logOutUser}
               isTrusteeRoute={isTrusteeRoute}
               hasAdminAccess={hasAdminAccess}
+              showMyAccount={handleOpen}
             />
           )}
           {!isAuthorized && !isTrusteeRoute ? (
