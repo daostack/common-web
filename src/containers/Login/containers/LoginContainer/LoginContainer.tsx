@@ -12,16 +12,16 @@ import { PhoneAuth } from "../../components/LoginContainer/PhoneAuth";
 import { AuthStage } from "../../components/LoginContainer/constants";
 import {
   selectIsLoginModalShowing,
-  selectIsNewUser,
   selectUser,
 } from "../../../Auth/store/selectors";
 import "./index.scss";
 
 const LoginContainer: FC = () => {
-  const [stage, setStage] = useState(AuthStage.AuthMethodSelect);
   const dispatch = useDispatch();
   const user = useSelector(selectUser());
-  const isNewUser = useSelector(selectIsNewUser());
+  const [stage, setStage] = useState(
+    user ? AuthStage.CompleteAccountDetails : AuthStage.AuthMethodSelect
+  );
   const isShowing = useSelector(selectIsLoginModalShowing());
   const shouldShowBackButton = stage === AuthStage.PhoneAuth;
 
@@ -53,15 +53,11 @@ const LoginContainer: FC = () => {
 
   useEffect(() => {
     if (!isShowing) {
-      setStage(AuthStage.AuthMethodSelect);
+      setStage(
+        user ? AuthStage.CompleteAccountDetails : AuthStage.AuthMethodSelect
+      );
     }
-  }, [isShowing]);
-
-  useEffect(() => {
-    if (!isNewUser && user && isShowing) {
-      handleClose();
-    }
-  }, [isNewUser, user, isShowing, handleClose]);
+  }, [isShowing, user]);
 
   const content = useMemo(() => {
     switch (stage) {
