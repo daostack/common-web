@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface Difference {
   isFinished: boolean;
@@ -8,17 +8,23 @@ interface Difference {
   seconds: number;
 }
 
+interface Return extends Difference {
+  startCountdown: (date: Date) => void;
+}
+
+const INITIAL_DIFFERENCE: Difference = {
+  days: 0,
+  hours: 0,
+  minutes: 0,
+  seconds: 0,
+  isFinished: false,
+};
+
 const calculateDifference = (finalDate: Date): Difference => {
   let milliseconds = finalDate.getTime() - new Date().getTime();
 
   if (Math.floor(milliseconds / 1000) <= 0) {
-    return {
-      days: 0,
-      hours: 0,
-      minutes: 0,
-      seconds: 0,
-      isFinished: true,
-    };
+    return { ...INITIAL_DIFFERENCE, isFinished: true };
   }
 
   const days = Math.floor(milliseconds / 1000 / 60 / 60 / 24);
@@ -41,26 +47,34 @@ const calculateDifference = (finalDate: Date): Difference => {
   };
 };
 
-const useCountdown = (finalDate: Date): Difference => {
+const useCountdown = (): Return => {
+  const [countdownDate, setCountdownDate] = useState<Date | null>(null);
   const [difference, setDifference] = useState<Difference>(
-    calculateDifference(finalDate)
+    countdownDate ? calculateDifference(countdownDate) : INITIAL_DIFFERENCE
   );
 
+  const startCountdown = useCallback((date: Date) => {
+    setCountdownDate(date);
+    setTimeout(() => {
+      setDifference(calculateDifference(date));
+    }, 0);
+  }, []);
+
   useEffect(() => {
-    if (difference.isFinished) {
+    if (difference.isFinished || !countdownDate) {
       return;
     }
 
     const timer = setTimeout(() => {
-      setDifference(calculateDifference(finalDate));
+      setDifference(calculateDifference(countdownDate));
     }, 1000);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [difference, finalDate]);
+  }, [difference, countdownDate]);
 
-  return difference;
+  return { ...difference, startCountdown };
 };
 
 export default useCountdown;

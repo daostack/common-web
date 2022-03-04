@@ -204,3 +204,9 @@ export const roundNumberToNextTenths = (
 
 export const getProposalExpirationDate = (proposal: Proposal): Date =>
   new Date((proposal.createdAt.seconds + proposal.countdownPeriod) * 1000);
+
+export const formatCountdownValue = (value: number): string => {
+  const convertedValue = String(value);
+
+  return convertedValue.length === 1 ? `0${convertedValue}` : convertedValue;
+};

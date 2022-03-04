@@ -1,52 +1,84 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState, FC } from "react";
 import PinInput from "react-pin-input";
-import { Button } from "../../../../../shared/components";
+import moment from "moment";
+import { Button, ButtonVariant } from "../../../../../shared/components";
 import { PhoneInputValue } from "../../../../../shared/components/Form";
+import { useCountdown } from "../../../../../shared/hooks";
+import { formatCountdownValue } from "../../../../../shared/utils";
 import { verificationCodeStyle } from "./constants";
 import "./index.scss";
 
-type VerificationProps = {
+const CODE_LENGTH = 4;
+
+interface SubmitButtonState {
+  text: string;
+  handler?: () => void;
+  variant: ButtonVariant;
+  disabled: boolean;
+}
+
+interface VerificationProps {
   phoneNumber: PhoneInputValue;
   goBack: () => void;
   onFinish: () => void;
-};
+}
 
 const Verification: FC<VerificationProps> = ({
   phoneNumber,
   onFinish,
   goBack,
 }) => {
-  const [timer, setTimer] = useState(60);
-  const [buttonText, setButtonText] = useState("");
-  const [buttonDisabled, setButtonDisabled] = useState(true);
   const [verificationCode, setVerificationCode] = useState("");
+  const {
+    isFinished: isCountdownFinished,
+    minutes,
+    seconds,
+    startCountdown,
+  } = useCountdown();
+  const isCodeValid = verificationCode.length === CODE_LENGTH;
+
+  const handleCodeResend = useCallback(() => {
+    startCountdown(moment().add(1, "minute").toDate());
+  }, [startCountdown]);
+
+  const handleFinish = useCallback(() => {
+    onFinish();
+  }, [onFinish]);
+
+  const submitButtonState = useMemo((): SubmitButtonState => {
+    if (isCountdownFinished && !isCodeValid) {
+      return {
+        text: "Resend code",
+        handler: handleCodeResend,
+        variant: ButtonVariant.Secondary,
+        disabled: false,
+      };
+    }
+    if (isCodeValid) {
+      return {
+        text: "Submit",
+        handler: handleFinish,
+        variant: ButtonVariant.Primary,
+        disabled: false,
+      };
+    }
+
+    return {
+      text: `${formatCountdownValue(minutes)}:${formatCountdownValue(seconds)}`,
+      variant: ButtonVariant.Primary,
+      disabled: true,
+    };
+  }, [
+    isCountdownFinished,
+    isCodeValid,
+    handleCodeResend,
+    handleFinish,
+    seconds,
+  ]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTimer((clock) => clock - 1);
-    }, 1000);
-    setButtonText(`00:${timer}`);
-    if (timer === 0) {
-      clearInterval(interval);
-      setButtonDisabled(false);
-      setButtonText("Resend Code");
-    }
-    return () => clearInterval(interval);
-  }, [setButtonText, timer, buttonDisabled]);
-
-  const resendCodeHandler = () => {
-    setButtonDisabled(true);
-    setTimer(10);
-    setButtonText(`00:${timer}`);
-  };
-
-  const goBackHandler = () => goBack();
-
-  const inputOnChangeHandler = (value: string, index: number) => {
-    setVerificationCode(value);
-  };
-
-  const disableCondition = verificationCode.length === 4;
+    handleCodeResend();
+  }, [handleCodeResend]);
 
   return (
     <>
@@ -56,10 +88,7 @@ const Verification: FC<VerificationProps> = ({
       </p>
       <div className="verification__phone-wrapper">
         <p className="verification__phone-wrapper-number">{phoneNumber}</p>
-        <div
-          className="verification__phone-wrapper-edit"
-          onClick={goBackHandler}
-        >
+        <div className="verification__phone-wrapper-edit" onClick={goBack}>
           <img
             className="verification__phone-wrapper-edit-img"
             src="/icons/edit-avatar.svg"
@@ -68,22 +97,21 @@ const Verification: FC<VerificationProps> = ({
         </div>
       </div>
       <PinInput
-        length={4}
-        onChange={inputOnChangeHandler}
+        length={CODE_LENGTH}
+        onChange={setVerificationCode}
         type="numeric"
         inputMode="number"
         style={verificationCodeStyle.wrapperStyle}
         inputStyle={verificationCodeStyle.inputStyle}
-        // onComplete={(value, index) => {}}
-        autoSelect={true}
+        autoSelect
       />
       <Button
         className="verification__submit-button"
-        type="submit"
-        onClick={disableCondition ? onFinish : resendCodeHandler}
-        disabled={disableCondition ? false : buttonDisabled}
+        onClick={submitButtonState.handler}
+        disabled={submitButtonState.disabled}
+        variant={submitButtonState.variant}
       >
-        {disableCondition ? "Submit" : `${buttonText}`}
+        {submitButtonState.text}
       </Button>
     </>
   );
