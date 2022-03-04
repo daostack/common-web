@@ -40,6 +40,10 @@ const LoginContainer: FC = () => {
     dispatch(setIsLoginModalShowing(false));
   }, [dispatch]);
 
+  const handlePhoneStageFinish = useCallback(() => {
+    setStage(AuthStage.CompleteAccountDetails);
+  }, []);
+
   useEffect(() => {
     if (!isShowing) {
       setStage(AuthStage.AuthMethodSelect);
@@ -57,7 +61,7 @@ const LoginContainer: FC = () => {
       case AuthStage.AuthMethodSelect:
         return <Connect onAuthButtonClick={handleAuthButtonClick} />;
       case AuthStage.PhoneAuth:
-        return <PhoneAuth setStage={setStage} />;
+        return <PhoneAuth onFinish={handlePhoneStageFinish} />;
       case AuthStage.CompleteAccountDetails:
         return user ? (
           <UserDetails user={user} closeModal={handleClose} />
@@ -65,7 +69,7 @@ const LoginContainer: FC = () => {
       default:
         return null;
     }
-  }, [stage, handleClose, user, handleAuthButtonClick]);
+  }, [stage, handleClose, user, handleAuthButtonClick, handlePhoneStageFinish]);
 
   return (
     <Modal

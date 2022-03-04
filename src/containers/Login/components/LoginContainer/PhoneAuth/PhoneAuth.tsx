@@ -1,62 +1,48 @@
-import React, { FC, useCallback, useMemo, useState } from "react";
-import { Value } from "react-phone-number-input";
+import React, { useState, FC, ReactElement } from "react";
+import { isValidPhoneNumber } from "react-phone-number-input";
 import { useSelector } from "react-redux";
+import { Button } from "../../../../../shared/components";
+import {
+  PhoneInput,
+  PhoneInputValue,
+} from "../../../../../shared/components/Form";
 import { ScreenSize } from "../../../../../shared/constants";
 import { getScreenSize } from "../../../../../shared/store/selectors";
-import { Button } from "../../../../../shared/components";
-import { PhoneAuthStep } from "./constants";
-import { PhoneInput } from "../../../../../shared/components/Form";
 import { Verification } from "../Verification";
-import { AuthStage } from "../constants";
+import { PhoneAuthStep } from "./constants";
 import "./index.scss";
 
-type PhoneAuthProps = {
-  setStage: (stage: AuthStage) => void;
-};
+interface PhoneAuthProps {
+  onFinish: () => void;
+}
 
-const PhoneAuth: FC<PhoneAuthProps> = ({ setStage }) => {
+const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish }) => {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const [step, setStep] = useState(PhoneAuthStep.PhoneInput);
-  const [phoneNumber, setPhoneNumber] = useState<Value | undefined>(undefined);
-
-  const onChangeHandler = useCallback(
-    (value) => {
-      setPhoneNumber(value);
-    },
-    [setPhoneNumber]
-  );
+  const [phoneNumber, setPhoneNumber] = useState<PhoneInputValue>();
 
   const nextStep = () => {
-    setStep(PhoneAuthStep.Verification);
+    setStep((step) => step + 1);
   };
 
-  const goBack = useCallback(() => {
+  const goBack = () => {
     setStep((prev) => prev - 1);
-  }, []);
+  };
 
-  const onFinish = useCallback(() => {
-    setStage(AuthStage.CompleteAccountDetails);
-  }, [setStage]);
-
-  const content = useMemo(() => {
+  const renderContent = (): ReactElement | null => {
     switch (step) {
       case PhoneAuthStep.PhoneInput:
         return (
           <>
             <h2 className="phone-auth__title">Enter your phone number</h2>
             <div className="phone-auth__phone-input">
-              <PhoneInput
-                value={phoneNumber}
-                onChange={onChangeHandler}
-                error={""}
-              />
+              <PhoneInput value={phoneNumber} onChange={setPhoneNumber} />
             </div>
             <Button
               className="phone-auth__submit-button"
-              type="submit"
               onClick={nextStep}
-              disabled={!phoneNumber}
+              disabled={!phoneNumber || !isValidPhoneNumber(phoneNumber)}
             >
               Send Code
             </Button>
@@ -73,7 +59,7 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ setStage }) => {
       default:
         return null;
     }
-  }, [step, goBack, onChangeHandler, phoneNumber, onFinish]);
+  };
 
   return (
     <div className="phone-auth">
@@ -81,10 +67,10 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ setStage }) => {
         <img
           className="phone-auth__img"
           src="/assets/images/human-pyramid-transparent.svg"
-          alt={isMobileView ? "Account avatar" : "Human pyramid"}
+          alt="Human pyramid"
         />
       )}
-      {content}
+      {renderContent()}
     </div>
   );
 };

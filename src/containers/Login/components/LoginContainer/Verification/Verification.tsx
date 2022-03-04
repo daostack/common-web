@@ -1,12 +1,12 @@
 import React, { FC, useEffect, useState } from "react";
-import { Value } from "react-phone-number-input";
 import PinInput from "react-pin-input";
 import { Button } from "../../../../../shared/components";
+import { PhoneInputValue } from "../../../../../shared/components/Form";
 import { verificationCodeStyle } from "./constants";
 import "./index.scss";
 
 type VerificationProps = {
-  phoneNumber: Value | undefined;
+  phoneNumber: PhoneInputValue;
   goBack: () => void;
   onFinish: () => void;
 };
