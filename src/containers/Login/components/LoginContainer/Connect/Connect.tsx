@@ -1,5 +1,5 @@
-import React, { FC, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState, FC } from "react";
+import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { Loader } from "../../../../../shared/components";
 import { AuthProvider, ScreenSize } from "../../../../../shared/constants";
@@ -7,17 +7,15 @@ import {
   getLoading,
   getScreenSize,
 } from "../../../../../shared/store/selectors";
-import { socialLogin } from "../../../../Auth/store/actions";
 import { LoginButtons } from "../LoginButtons";
 import { LoginError } from "../LoginError";
 import "./index.scss";
 
-type ConnectProps = {
-  setPhoneAuthStage: () => void;
-};
+interface ConnectProps {
+  onAuthButtonClick: (provider: AuthProvider) => void;
+}
 
-const Connect: FC<ConnectProps> = ({ setPhoneAuthStage }) => {
-  const dispatch = useDispatch();
+const Connect: FC<ConnectProps> = ({ onAuthButtonClick }) => {
   const screenSize = useSelector(getScreenSize());
   const isLoading = useSelector(getLoading());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -34,14 +32,6 @@ const Connect: FC<ConnectProps> = ({ setPhoneAuthStage }) => {
       </div>
     );
   }
-
-  const handleSocialLogin = (provider: AuthProvider) => {
-    if (provider === AuthProvider.Phone) {
-      setPhoneAuthStage();
-    } else {
-      dispatch(socialLogin.request(provider));
-    }
-  };
 
   return (
     <div className="connect-wrapper">
@@ -65,7 +55,7 @@ const Connect: FC<ConnectProps> = ({ setPhoneAuthStage }) => {
         {subTitleText}
       </p>
       {hasError && <LoginError className="connect-wrapper__error" />}
-      <LoginButtons onLogin={handleSocialLogin} />
+      <LoginButtons onLogin={onAuthButtonClick} />
       <p className="connect-wrapper__sub-text">
         By using Common you agree to the app’s
         <br />

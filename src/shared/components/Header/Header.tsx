@@ -16,8 +16,6 @@ import MobileLinks from "../MobileLinks/MobileLinks";
 import { Account } from "../Account";
 import {
   authentificated,
-  selectIsLoginModalShowing,
-  selectIsNewUser,
   selectUser,
 } from "../../../containers/Auth/store/selectors";
 import { LoginContainer } from "../../../containers/Login/containers/LoginContainer";
@@ -44,8 +42,6 @@ const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const isAuthorized = useSelector(authentificated());
   const user = useSelector(selectUser());
-  const isNewUser = useSelector(selectIsNewUser());
-  const isLoginModalShowing = useSelector(selectIsLoginModalShowing());
   const shouldDisplayAvatar = Boolean(screenSize === ScreenSize.Mobile && user);
   const hasAdminAccess = useAnyMandatoryRoles(ADMIN_ACCESS_ROLES, user?.roles);
   const isTrusteeRoute = useMatchRoute(
@@ -61,10 +57,6 @@ const Header = () => {
     dispatch(setIsLoginModalShowing(true));
   }, [dispatch]);
 
-  const handleClose = useCallback(() => {
-    dispatch(setIsLoginModalShowing(false));
-  }, [dispatch]);
-
   const handleReportsDownload = () => {
     saveByURL(ApiEndpoint.GetReports, "reports.zip");
   };
@@ -77,14 +69,6 @@ const Header = () => {
       unlisten();
     };
   }, [history]);
-
-  React.useEffect(() => {
-    if (!isNewUser && user) {
-      if (isLoginModalShowing) {
-        handleClose();
-      }
-    }
-  }, [user, isNewUser, isLoginModalShowing, handleClose]);
 
   const toggleMenuShowing = () => {
     setShowMenu((shouldShow) => !shouldShow);
@@ -197,11 +181,7 @@ const Header = () => {
           )}
         </>
       )}
-      <LoginContainer
-        closeModal={handleClose}
-        isShowing={isLoginModalShowing}
-        onClose={handleClose}
-      />
+      <LoginContainer />
     </section>
   );
 };
