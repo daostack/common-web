@@ -16,6 +16,7 @@ import { authentificated } from "../Auth/store/selectors";
 import { MyCommonsContainer } from "../Common/containers/MyCommonsContainer";
 import { SubmitInvoicesContainer } from "../Invoices/containers";
 import { TrusteeContainer } from "../Trustee/containers";
+import NotificationManager from "@/shared/components/Notification/NotificationManager";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -70,6 +71,7 @@ const App = () => {
         </Switch>
       </Content>
       <Footer />
+      <NotificationManager />
     </div>
   );
 };

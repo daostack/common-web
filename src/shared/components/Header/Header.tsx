@@ -9,7 +9,7 @@ import {
 import classNames from "classnames";
 
 import { UserAvatar } from "../../../shared/components";
-import { useAnyMandatoryRoles, useMatchRoute } from "../../../shared/hooks";
+import { useAnyMandatoryRoles, useMatchRoute, useNotification } from "../../../shared/hooks";
 import { UserRole } from "../../../shared/models";
 import { ApiEndpoint, Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
@@ -63,6 +63,8 @@ const Header = () => {
     ROUTE_PATHS.TRUSTEE_AUTH,
     EXACT_MATCH_ROUTE_PROPS
   );
+
+  const { notify } = useNotification();
 
   const handleOpen = useCallback(() => {
     dispatch(setIsLoginModalShowing(true));
@@ -155,6 +157,7 @@ const Header = () => {
           onClick={toggleMenuShowing}
         />
       )}
+      <button onClick={() => notify(<span>some link</span>)}>notify</button>
       <Link
         to="/"
         className={classNames("common-logo", {
