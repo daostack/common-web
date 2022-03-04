@@ -104,7 +104,7 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
 
   return (
     <div className="user-details">
-      <h2 className="user-details__title">Complete your account</h2>
+      <h2 className="user-details__title">My Account</h2>
       <p className="user-details__sub-title">
         Help the community to get to know you better
       </p>
