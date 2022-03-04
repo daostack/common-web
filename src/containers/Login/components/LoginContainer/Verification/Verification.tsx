@@ -78,6 +78,7 @@ const Verification: FC<VerificationProps> = ({
     isCodeValid,
     handleCodeResend,
     handleFinish,
+    minutes,
     seconds,
   ]);
 
