@@ -16,37 +16,37 @@ const Verification: FC<VerificationProps> = ({
   onFinish,
   goBack,
 }) => {
-  const [clock, setClock] = useState(10);
+  const [timer, setTimer] = useState(60);
   const [buttonText, setButtonText] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(true);
-  const [code, setCode] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setClock((clock) => clock - 1);
+      setTimer((clock) => clock - 1);
     }, 1000);
-    setButtonText(`00:${clock}`);
-    if (clock === 0) {
+    setButtonText(`00:${timer}`);
+    if (timer === 0) {
       clearInterval(interval);
       setButtonDisabled(false);
       setButtonText("Resend Code");
     }
     return () => clearInterval(interval);
-  }, [setButtonText, clock, buttonDisabled]);
+  }, [setButtonText, timer, buttonDisabled]);
 
   const resendCodeHandler = () => {
     setButtonDisabled(true);
-    setClock(10);
-    setButtonText(`00:${clock}`);
+    setTimer(10);
+    setButtonText(`00:${timer}`);
   };
 
   const goBackHandler = () => goBack();
 
   const inputOnChangeHandler = (value: string, index: number) => {
-    setCode(value);
+    setVerificationCode(value);
   };
 
-  const disableCondition = code.length === 4;
+  const disableCondition = verificationCode.length === 4;
 
   return (
     <>
