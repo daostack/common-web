@@ -1,4 +1,4 @@
-import React, { useState, FC, ReactElement } from "react";
+import React, { useMemo, useState, FC, ReactElement } from "react";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { useSelector } from "react-redux";
 import { Button } from "../../../../../shared/components";
@@ -25,6 +25,14 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish }) => {
     PhoneInputCountryCode | undefined
   >();
   const [phoneNumber, setPhoneNumber] = useState<PhoneInputValue>();
+  const [isPhoneNumberTouched, setIsPhoneNumberTouched] = useState(false);
+  const phoneNumberError = useMemo(
+    () =>
+      !phoneNumber || !isValidPhoneNumber(phoneNumber)
+        ? "Please enter valid phone number"
+        : "",
+    [phoneNumber]
+  );
 
   const nextStep = () => {
     setStep((step) => step + 1);
@@ -32,6 +40,10 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish }) => {
 
   const goBack = () => {
     setStep((prev) => prev - 1);
+  };
+
+  const handlePhoneInputBlur = () => {
+    setIsPhoneNumberTouched(true);
   };
 
   const renderContent = (): ReactElement | null => {
@@ -44,14 +56,17 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish }) => {
               <PhoneInput
                 value={phoneNumber}
                 onChange={setPhoneNumber}
+                onBlur={handlePhoneInputBlur}
                 onCountryCodeChange={setCountryCode}
                 initialCountryCode={countryCode}
+                error={isPhoneNumberTouched ? phoneNumberError : ""}
               />
             </div>
             <Button
               className="phone-auth__submit-button"
               onClick={nextStep}
               disabled={!phoneNumber || !isValidPhoneNumber(phoneNumber)}
+              shouldUseFullWidth
             >
               Send Code
             </Button>

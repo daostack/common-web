@@ -17,6 +17,7 @@ export type PhoneInputCountryCode = Country;
 interface PhoneInputProps {
   value: PhoneInputValue;
   onChange: (value: PhoneInputValue) => void;
+  onBlur?: () => void;
   error?: string;
   onCountryCodeChange?: (country: Country) => void;
   initialCountryCode?: Country;
@@ -26,6 +27,7 @@ const PhoneInput: FC<PhoneInputProps> = (props) => {
   const {
     value,
     onChange,
+    onBlur,
     error,
     onCountryCodeChange,
     initialCountryCode,
@@ -63,6 +65,7 @@ const PhoneInput: FC<PhoneInputProps> = (props) => {
           international
           value={value}
           onChange={onChange}
+          onBlur={onBlur}
         />
       </div>
       {Boolean(error) && <ErrorText>{error}</ErrorText>}

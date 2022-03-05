@@ -35,18 +35,21 @@
   }
 
   .phone-auth__phone-input {
+    max-width: 20.5rem;
     width: 100%;
     margin: 4.625rem 0 5.125rem;
+
+    @include big-phone {
+      max-width: unset;
+    }
   }
 
   .phone-auth__submit-button {
     max-width: 20.5rem;
-    width: 100%;
     font-family: NunitoSans, sans-serif;
 
     @include big-phone {
       max-width: unset;
-      width: 100%;
     }
   }
 }
