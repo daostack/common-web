@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { Button } from "../../../../../shared/components";
 import {
   PhoneInput,
+  PhoneInputCountryCode,
   PhoneInputValue,
 } from "../../../../../shared/components/Form";
 import { ScreenSize } from "../../../../../shared/constants";
@@ -20,6 +21,9 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish }) => {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const [step, setStep] = useState(PhoneAuthStep.PhoneInput);
+  const [countryCode, setCountryCode] = useState<
+    PhoneInputCountryCode | undefined
+  >();
   const [phoneNumber, setPhoneNumber] = useState<PhoneInputValue>();
 
   const nextStep = () => {
@@ -37,7 +41,12 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish }) => {
           <>
             <h2 className="phone-auth__title">Enter your phone number</h2>
             <div className="phone-auth__phone-input">
-              <PhoneInput value={phoneNumber} onChange={setPhoneNumber} />
+              <PhoneInput
+                value={phoneNumber}
+                onChange={setPhoneNumber}
+                onCountryCodeChange={setCountryCode}
+                initialCountryCode={countryCode}
+              />
             </div>
             <Button
               className="phone-auth__submit-button"

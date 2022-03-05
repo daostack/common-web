@@ -1,4 +1,4 @@
-import React, { useState, FC } from "react";
+import React, { useCallback, useState, FC } from "react";
 import { Country, Value } from "react-phone-number-input";
 import Input from "react-phone-number-input/input";
 import { isMobile } from "../../../utils";
@@ -12,21 +12,41 @@ import "./index.scss";
 const COUNTRY_OPTIONS = getCountryOptions();
 
 export type PhoneInputValue = Value | undefined;
+export type PhoneInputCountryCode = Country;
 
 interface PhoneInputProps {
   value: PhoneInputValue;
   onChange: (value: PhoneInputValue) => void;
   error?: string;
+  onCountryCodeChange?: (country: Country) => void;
+  initialCountryCode?: Country;
 }
 
 const PhoneInput: FC<PhoneInputProps> = (props) => {
-  const { value, onChange, error } = props;
-  const [countryCode, setCountryCode] = useState<Country>(INITIAL_COUNTRY_CODE);
+  const {
+    value,
+    onChange,
+    error,
+    onCountryCodeChange,
+    initialCountryCode,
+  } = props;
+  const [countryCode, setCountryCode] = useState<Country>(
+    initialCountryCode || INITIAL_COUNTRY_CODE
+  );
+
+  const handleCountryCodeChange = useCallback((country: Country) => {
+    setCountryCode(country);
+
+    if (onCountryCodeChange) {
+      onCountryCodeChange(country);
+    }
+  }, [onCountryCodeChange]);
+
   const selectProps = {
     countryCode,
     className: "custom-phone-input__select",
     options: COUNTRY_OPTIONS,
-    onChange: setCountryCode,
+    onChange: handleCountryCodeChange,
   };
 
   return (
