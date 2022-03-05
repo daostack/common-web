@@ -27,7 +27,7 @@ interface FormValues {
 const getInitialValues = (
   data: IntermediateCreateCommonPayload
 ): FormValues => ({
-  rules: data.rules || [{ title: "", value: "" }],
+  rules: data.rules?.length ? data.rules : [{ title: "", value: "" }],
 });
 
 export default function Rules({
@@ -47,7 +47,7 @@ export default function Rules({
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
-      onFinish({ rules: values.rules });
+      onFinish({ rules: values.rules[0].title ? values.rules : [] });
     },
     [onFinish]
   );
