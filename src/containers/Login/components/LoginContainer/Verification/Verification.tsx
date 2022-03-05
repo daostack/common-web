@@ -1,4 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useState, FC } from "react";
+import React, {
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  FC,
+} from "react";
 import PinInput from "react-pin-input";
 import { formatPhoneNumberIntl } from "react-phone-number-input";
 import moment from "moment";
@@ -33,6 +40,7 @@ const Verification: FC<VerificationProps> = ({
   onFinish,
   goBack,
 }) => {
+  const pinInputRef = useRef<PinInput>(null);
   const [verificationCode, setVerificationCode] = useState("");
   const {
     isFinished: isCountdownFinished,
@@ -44,6 +52,12 @@ const Verification: FC<VerificationProps> = ({
 
   const handleCodeResend = useCallback(() => {
     startCountdown(moment().add(1, "minute").toDate());
+
+    if (pinInputRef.current) {
+      pinInputRef.current.clear();
+      pinInputRef.current.focus();
+      setVerificationCode("");
+    }
   }, [startCountdown]);
 
   const handleFinish = useCallback(() => {
@@ -82,7 +96,7 @@ const Verification: FC<VerificationProps> = ({
     seconds,
   ]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     handleCodeResend();
   }, [handleCodeResend]);
 
@@ -108,6 +122,7 @@ const Verification: FC<VerificationProps> = ({
         </ButtonIcon>
       </div>
       <PinInput
+        ref={pinInputRef}
         length={CODE_LENGTH}
         onChange={setVerificationCode}
         type="numeric"

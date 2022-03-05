@@ -8,6 +8,9 @@ export const verificationCodeStyle = {
     justifyContent: "space-between",
   },
   inputStyle: {
+    "-webkit-appearance": "none",
+    "-moz-appearance": "none",
+    Appearance: "none",
     width: "3.5rem",
     height: "4.5rem",
     margin: "0",
