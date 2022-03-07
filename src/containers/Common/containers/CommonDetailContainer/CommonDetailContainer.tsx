@@ -635,30 +635,29 @@ export default function CommonDetail() {
                   ))}
                 </div>
                 <div className="social-wrapper" ref={setJoinEffortRef}>
-                  <div className="common-actions-wrapper" ref={actionsRef}>
-                    <button
-                      className={`add-action ${showActions ? "opened" : ""}`}
-                      onClick={() => setShowActions((v) => !v)}
-                    >
-                      <img src="/icons/common-action.svg" alt="common-action" />
-                      Add
-                    </button>
+                  {isCommonMember && (
+                    <div className="common-actions-wrapper" ref={actionsRef}>
+                      <button
+                        className={`add-action ${showActions ? "opened" : ""}`}
+                        onClick={() => setShowActions((v) => !v)}
+                      >
+                        <img src="/icons/common-action.svg" alt="common-action" />
+                        Add
+                      </button>
 
-                    {showActions && (
-                      <div className="common-actions">
-                        <div className="add-button" onClick={onOpenNewD}>
-                          <img src="/icons/add-discussion.svg" alt="add-post" />
-                          Add New Post
-                        </div>
-                        {isCommonMember && (
+                      {showActions && (
+                        <div className="common-actions">
+                          <div className="add-button" onClick={onOpenNewD}>
+                            <img src="/icons/add-discussion.svg" alt="add-post" />
+                            Add New Post
+                          </div>
                           <div className="add-button" onClick={onOpenNewP}>
                             <img src="/icons/add-proposal.svg" alt="add-post" />
                             Add New Proposal
                           </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
+                        </div>
+                      )}
+                    </div>)}
                   {!isCommonMember && (
                     <button
                       className={`button-blue join-the-effort-btn`}
