@@ -1,5 +1,6 @@
 @import "../../../../../constants.scss";
 @import "../../../../../styles/sizes";
+
 .add-discussion-wrapper {
   width: 576px;
   margin: 0 auto;
@@ -82,7 +83,7 @@
 
 @include big-phone {
   .add-discussion-wrapper {
-    width: 330px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     height: 90vh;

@@ -1,20 +1,22 @@
 @import "../../../../../constants.scss";
+@import "../../../../../styles/sizes";
 
 .discussion-detail-modal-wrapper {
   width: 75wh;
   height: 80vh;
   display: flex;
-  .left-side {
+  .discussion-details-container {
     flex: 40;
     margin-right: 48px;
     overflow: hidden;
     overflow-y: auto;
     scrollbar-width: none;
+    margin-top: 4rem;
     ::-webkit-scrollbar {
       width: 0; /* Remove scrollbar space */
       background: transparent; /* Optional: just make scrollbar invisible */
     }
-    .top-side {
+    .user-and-tile-container {
       justify-content: center;
       display: flex;
       flex-direction: column;
@@ -121,7 +123,7 @@
         }
       }
     }
-    .down-side {
+    .description-container {
       margin-top: 24px;
       .description {
         font-size: 16px;
@@ -130,7 +132,17 @@
       }
     }
   }
-  .right-side {
+  .chat-container {
     flex: 60;
+    margin: -30px;
+  }
+}
+
+@include big-phone {
+  .discussion-detail-modal-wrapper {
+    flex-direction: column;
+    .discussion-details-container {
+      margin-right: unset;
+    }
   }
 }

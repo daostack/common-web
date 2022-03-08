@@ -58,7 +58,7 @@ export default function ProposalDetailModal({
   return !proposal ? (
     <Loader />
   ) : (
-    <div className="discussion-detail-modal-wrapper">
+    <div className="proposal-detail-modal-wrapper">
       <div className="left-side">
         <div className="top-side">
           <ProposalState proposal={proposal} />

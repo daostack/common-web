@@ -53,8 +53,8 @@ export default function DiscussionDetailModal({
     <Loader />
   ) : (
     <div className="discussion-detail-modal-wrapper">
-      <div className="left-side">
-        <div className="top-side">
+      <div className="discussion-details-container">
+        <div className="user-and-tile-container">
           <div className="owner-wrapper">
             <div className="owner-icon-wrapper">
               {!imageError ? (
@@ -82,11 +82,11 @@ export default function DiscussionDetailModal({
           </div>
           <div className="line"></div>
         </div>
-        <div className="down-side">
+        <div className="description-container">
           <p className="description">{disscussion.message}</p>
         </div>
       </div>
-      <div className="right-side">
+      <div className="chat-container">
         <ChatComponent
           commonId={commonId}
           discussionMessage={disscussion.discussionMessage || []}

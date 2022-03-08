@@ -1,3 +1,4 @@
+import { Tabs } from "@/containers/Common/containers/CommonDetailContainer/CommonDetailContainer";
 import React from "react";
 
 import { Common, Proposal } from "../../../../../shared/models";
@@ -27,10 +28,10 @@ export default function ProposalsComponent({
     <>
       <div className="proposal-title-wrapper">
         <div className="title">Proposals</div>
-        {isCommonMember && (
+        {isCommonMember && currentTab === Tabs.Proposals && (
           <div className="add-button" onClick={onAddNewProposal}>
             <img src="/icons/add-proposal.svg" alt="add-proposal" />
-            Add New Proposal
+            <span>Add New Proposal</span>
           </div>
         )}
       </div>
@@ -50,12 +51,12 @@ export default function ProposalsComponent({
             common={common}
             currentTab={currentTab}
             message={
-              currentTab === "proposals"
+              currentTab === Tabs.Proposals
                 ? "This is where members can propose actions or request funding by creating proposals."
                 : "This is where you will find approved/rejected proposals."
             }
             title={
-              currentTab === "proposals"
+              currentTab === Tabs.Proposals
                 ? "No proposals yet"
                 : "No past activity"
             }
