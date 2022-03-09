@@ -14,7 +14,10 @@ import {
   ButtonIcon,
   ButtonVariant,
 } from "../../../../../shared/components";
-import { PhoneInputValue } from "../../../../../shared/components/Form";
+import {
+  ErrorText,
+  PhoneInputValue,
+} from "../../../../../shared/components/Form";
 import { useCountdown } from "../../../../../shared/hooks";
 import { formatCountdownValue } from "../../../../../shared/utils";
 import { verificationCodeStyle } from "./constants";
@@ -31,17 +34,14 @@ interface SubmitButtonState {
 
 interface VerificationProps {
   phoneNumber: PhoneInputValue;
+  isCodeInvalid: boolean;
   goBack: () => void;
   onFinish: (code: string) => void;
   onCodeResend: () => void;
 }
 
-const Verification: FC<VerificationProps> = ({
-  phoneNumber,
-  goBack,
-  onFinish,
-  onCodeResend,
-}) => {
+const Verification: FC<VerificationProps> = (props) => {
+  const { phoneNumber, isCodeInvalid, goBack, onFinish, onCodeResend } = props;
   const pinInputRef = useRef<PinInput>(null);
   const [verificationCode, setVerificationCode] = useState("");
   const {
@@ -131,6 +131,11 @@ const Verification: FC<VerificationProps> = ({
         inputStyle={verificationCodeStyle.inputStyle}
         autoSelect
       />
+      {isCodeInvalid && (
+        <ErrorText className="verification__error">
+          Verification code is invalid
+        </ErrorText>
+      )}
       <Button
         className="verification__submit-button"
         onClick={submitButtonState.handler}

@@ -13,7 +13,9 @@ import {
   RECAPTCHA_CONTAINER_ID,
 } from "../../../../../shared/constants";
 import { getScreenSize } from "../../../../../shared/store/selectors";
-import firebase from "../../../../../shared/utils/firebase";
+import firebase, {
+  isFirebaseError,
+} from "../../../../../shared/utils/firebase";
 import {
   confirmVerificationCode,
   sendVerificationCode,
@@ -24,9 +26,10 @@ import "./index.scss";
 
 interface PhoneAuthProps {
   onFinish: () => void;
+  onError: () => void;
 }
 
-const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish }) => {
+const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish, onError }) => {
   const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -46,6 +49,7 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish }) => {
   const [isCodeVerificationLoading, setIsCodeVerificationLoading] = useState(
     false
   );
+  const [isCodeInvalid, setIsCodeInvalid] = useState(false);
   const [recaptchaContainerKey, setRecaptchaContainerKey] = useState(
     String(Math.random())
   );
@@ -70,17 +74,18 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish }) => {
       sendVerificationCode.request({
         payload: phoneNumber,
         callback: (error, confirmationResult) => {
-          if (!error && confirmationResult) {
-            setConfirmation(confirmationResult);
-            setStep((step) =>
-              step === PhoneAuthStep.Verification
-                ? step
-                : PhoneAuthStep.Verification
-            );
-            setIsCodeSending(false);
-          } else {
-            console.log(error, confirmationResult);
+          if (error || !confirmationResult) {
+            onError();
+            return;
           }
+
+          setConfirmation(confirmationResult);
+          setStep((step) =>
+            step === PhoneAuthStep.Verification
+              ? step
+              : PhoneAuthStep.Verification
+          );
+          setIsCodeSending(false);
         },
       })
     );
@@ -92,6 +97,7 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish }) => {
     }
 
     setIsCodeVerificationLoading(true);
+    setIsCodeInvalid(false);
 
     dispatch(
       confirmVerificationCode.request({
@@ -102,16 +108,26 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish }) => {
         callback: (error, user) => {
           if (!error && user) {
             onFinish();
-          } else {
-            console.log(error);
+            return;
           }
+          if (
+            !isFirebaseError(error) ||
+            error.code !== "auth/invalid-verification-code"
+          ) {
+            onError();
+            return;
+          }
+
+          setIsCodeInvalid(true);
+          setIsCodeVerificationLoading(false);
         },
       })
     );
   };
 
-  const goBack = () => {
-    setStep((prev) => prev - 1);
+  const goToPhoneInputStep = () => {
+    setIsCodeInvalid(false);
+    setStep(PhoneAuthStep.PhoneInput);
   };
 
   const handlePhoneInputBlur = () => {
@@ -148,7 +164,8 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish }) => {
         return (
           <Verification
             phoneNumber={phoneNumber}
-            goBack={goBack}
+            isCodeInvalid={isCodeInvalid}
+            goBack={goToPhoneInputStep}
             onFinish={onVerificationCodeSubmit}
             onCodeResend={onPhoneNumberSubmit}
           />

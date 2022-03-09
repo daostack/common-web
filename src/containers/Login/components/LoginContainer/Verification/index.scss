@@ -64,6 +64,7 @@
   min-width: unset;
   width: 20.5rem;
   height: 3rem;
+  margin-top: 3rem;
   font-family: NunitoSans-Regular, sans-serif;
   font-weight: normal;
 
@@ -71,4 +72,8 @@
     width: 100%;
     margin: 0;
   }
+}
+
+.verification__error {
+  font-size: $xsmall;
 }

@@ -1,4 +1,4 @@
-import React, { useState, FC } from "react";
+import React, { FC } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { Loader } from "../../../../../shared/components";
@@ -12,14 +12,14 @@ import { LoginError } from "../LoginError";
 import "./index.scss";
 
 interface ConnectProps {
+  hasError: boolean;
   onAuthButtonClick: (provider: AuthProvider) => void;
 }
 
-const Connect: FC<ConnectProps> = ({ onAuthButtonClick }) => {
+const Connect: FC<ConnectProps> = ({ hasError, onAuthButtonClick }) => {
   const screenSize = useSelector(getScreenSize());
   const isLoading = useSelector(getLoading());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const [hasError, setHasError] = useState(false);
 
   const subTitleText = isMobileView
     ? "Connect with"
