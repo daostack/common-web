@@ -20,7 +20,7 @@ import { formatCountdownValue } from "../../../../../shared/utils";
 import { verificationCodeStyle } from "./constants";
 import "./index.scss";
 
-const CODE_LENGTH = 4;
+const CODE_LENGTH = 6;
 
 interface SubmitButtonState {
   text: string;
@@ -32,13 +32,15 @@ interface SubmitButtonState {
 interface VerificationProps {
   phoneNumber: PhoneInputValue;
   goBack: () => void;
-  onFinish: () => void;
+  onFinish: (code: string) => void;
+  onCodeResend: () => void;
 }
 
 const Verification: FC<VerificationProps> = ({
   phoneNumber,
-  onFinish,
   goBack,
+  onFinish,
+  onCodeResend,
 }) => {
   const pinInputRef = useRef<PinInput>(null);
   const [verificationCode, setVerificationCode] = useState("");
@@ -50,25 +52,17 @@ const Verification: FC<VerificationProps> = ({
   } = useCountdown();
   const isCodeValid = verificationCode.length === CODE_LENGTH;
 
-  const handleCodeResend = useCallback(() => {
-    startCountdown(moment().add(1, "minute").toDate());
-
-    if (pinInputRef.current) {
-      pinInputRef.current.clear();
-      pinInputRef.current.focus();
-      setVerificationCode("");
-    }
-  }, [startCountdown]);
-
   const handleFinish = useCallback(() => {
-    onFinish();
-  }, [onFinish]);
+    if (verificationCode.length === CODE_LENGTH) {
+      onFinish(verificationCode);
+    }
+  }, [onFinish, verificationCode]);
 
   const submitButtonState = useMemo((): SubmitButtonState => {
     if (isCountdownFinished && !isCodeValid) {
       return {
         text: "Resend code",
-        handler: handleCodeResend,
+        handler: onCodeResend,
         variant: ButtonVariant.Secondary,
         disabled: false,
       };
@@ -90,15 +84,21 @@ const Verification: FC<VerificationProps> = ({
   }, [
     isCountdownFinished,
     isCodeValid,
-    handleCodeResend,
+    onCodeResend,
     handleFinish,
     minutes,
     seconds,
   ]);
 
   useLayoutEffect(() => {
-    handleCodeResend();
-  }, [handleCodeResend]);
+    startCountdown(moment().add(1, "minute").toDate());
+
+    if (pinInputRef.current) {
+      pinInputRef.current.clear();
+      pinInputRef.current.focus();
+      setVerificationCode("");
+    }
+  }, [startCountdown]);
 
   return (
     <>

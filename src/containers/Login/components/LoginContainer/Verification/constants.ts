@@ -5,7 +5,7 @@ export const verificationCodeStyle: Record<string, CSSProperties> = {
   wrapperStyle: {
     margin: "1.5rem 0 3rem",
     display: "flex",
-    minWidth: "17rem",
+    minWidth: "25rem",
     justifyContent: "space-between",
   },
   inputStyle: {

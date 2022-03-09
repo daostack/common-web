@@ -6,7 +6,11 @@ import firebase from "../../../shared/utils/firebase";
 import { startLoading, stopLoading } from "../../../shared/store/actions";
 import { Collection, User } from "../../../shared/models";
 import { GoogleAuthResultInterface } from "../interface";
-import { AuthProvider, ROUTE_PATHS } from "../../../shared/constants";
+import {
+  AuthProvider,
+  RECAPTCHA_CONTAINER_ID,
+  ROUTE_PATHS,
+} from "../../../shared/constants";
 import history from "../../../shared/history";
 import { createdUserApi } from "./api";
 
@@ -182,16 +186,9 @@ const authorizeUser = async (authProvider: AuthProvider) => {
     .catch((e) => console.log(e));
 };
 
-const loginUsingEmailAndPassword = async (
-  email: string,
-  password: string
+const verifyLoggedInUser = async (
+  user: firebase.User | null
 ): Promise<User> => {
-  await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-
-  const { user } = await firebase
-    .auth()
-    .signInWithEmailAndPassword(email, password);
-
   if (!user) {
     await firebase.auth().signOut();
     throw new Error("User is not logged in");
@@ -215,6 +212,50 @@ const loginUsingEmailAndPassword = async (
   tokenHandler.setUser(databaseUser);
 
   return databaseUser;
+};
+
+const loginUsingEmailAndPassword = async (
+  email: string,
+  password: string
+): Promise<User> => {
+  await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+  const { user } = await firebase
+    .auth()
+    .signInWithEmailAndPassword(email, password);
+
+  return verifyLoggedInUser(user);
+};
+
+const sendVerificationCode = async (
+  phoneNumber: string
+): Promise<firebase.auth.ConfirmationResult> => {
+  firebase.auth().languageCode = "en";
+
+  const recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+    RECAPTCHA_CONTAINER_ID,
+    {
+      size: "invisible",
+    }
+  );
+
+  const result = await firebase
+    .auth()
+    .signInWithPhoneNumber(phoneNumber, recaptchaVerifier);
+  recaptchaVerifier.clear();
+
+  return result;
+};
+
+const confirmVerificationCode = async (
+  confirmation: firebase.auth.ConfirmationResult,
+  code: string
+): Promise<User> => {
+  await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+  const { user } = await confirmation.confirm(code);
+
+  return verifyLoggedInUser(user);
 };
 
 const updateUserData = async (user: User) => {
@@ -313,6 +354,59 @@ function* loginUsingEmailAndPasswordSaga({
   }
 }
 
+function* sendVerificationCodeSaga({
+  payload,
+}: ReturnType<typeof actions.sendVerificationCode.request>) {
+  try {
+    yield put(startLoading());
+
+    const confirmationResult: firebase.auth.ConfirmationResult = yield call(
+      sendVerificationCode,
+      payload.payload
+    );
+    yield put(actions.sendVerificationCode.success(confirmationResult));
+
+    if (payload.callback) {
+      payload.callback(null, confirmationResult);
+    }
+  } catch (error) {
+    yield put(actions.sendVerificationCode.failure(error));
+
+    if (payload.callback) {
+      payload.callback(error);
+    }
+  } finally {
+    yield put(stopLoading());
+  }
+}
+
+function* confirmVerificationCodeSaga({
+  payload,
+}: ReturnType<typeof actions.confirmVerificationCode.request>) {
+  try {
+    yield put(startLoading());
+
+    const user: User = yield call(
+      confirmVerificationCode,
+      payload.payload.confirmation,
+      payload.payload.code
+    );
+    yield put(actions.confirmVerificationCode.success(user));
+
+    if (payload.callback) {
+      payload.callback(null, user);
+    }
+  } catch (error) {
+    yield put(actions.confirmVerificationCode.failure(error));
+
+    if (payload.callback) {
+      payload.callback(error);
+    }
+  } finally {
+    yield put(stopLoading());
+  }
+}
+
 function* logOut() {
   localStorage.clear();
   firebase.auth().signOut();
@@ -347,6 +441,14 @@ function* authSagas() {
   yield takeLatest(
     actions.loginUsingEmailAndPassword.request,
     loginUsingEmailAndPasswordSaga
+  );
+  yield takeLatest(
+    actions.sendVerificationCode.request,
+    sendVerificationCodeSaga
+  );
+  yield takeLatest(
+    actions.confirmVerificationCode.request,
+    confirmVerificationCodeSaga
   );
   yield takeLatest(actions.logOut, logOut);
   yield takeLatest(actions.updateUserDetails.request, updateUserDetails);

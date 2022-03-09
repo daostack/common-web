@@ -1,14 +1,23 @@
 import React, { useMemo, useState, FC, ReactElement } from "react";
 import { isValidPhoneNumber } from "react-phone-number-input";
-import { useSelector } from "react-redux";
-import { Button } from "../../../../../shared/components";
+import { useDispatch, useSelector } from "react-redux";
+import classNames from "classnames";
+import { Button, Loader } from "../../../../../shared/components";
 import {
   PhoneInput,
   PhoneInputCountryCode,
   PhoneInputValue,
 } from "../../../../../shared/components/Form";
-import { ScreenSize } from "../../../../../shared/constants";
+import {
+  ScreenSize,
+  RECAPTCHA_CONTAINER_ID,
+} from "../../../../../shared/constants";
 import { getScreenSize } from "../../../../../shared/store/selectors";
+import firebase from "../../../../../shared/utils/firebase";
+import {
+  confirmVerificationCode,
+  sendVerificationCode,
+} from "../../../../Auth/store/actions";
 import { Verification } from "../Verification";
 import { PhoneAuthStep } from "./constants";
 import "./index.scss";
@@ -18,14 +27,28 @@ interface PhoneAuthProps {
 }
 
 const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish }) => {
+  const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const [step, setStep] = useState(PhoneAuthStep.PhoneInput);
   const [countryCode, setCountryCode] = useState<
     PhoneInputCountryCode | undefined
-  >();
-  const [phoneNumber, setPhoneNumber] = useState<PhoneInputValue>();
+  >("GE");
+  const [phoneNumber, setPhoneNumber] = useState<PhoneInputValue>(
+    "+995598793309"
+  );
   const [isPhoneNumberTouched, setIsPhoneNumberTouched] = useState(false);
+  const [
+    confirmation,
+    setConfirmation,
+  ] = useState<firebase.auth.ConfirmationResult | null>(null);
+  const [isCodeSending, setIsCodeSending] = useState(false);
+  const [isCodeVerificationLoading, setIsCodeVerificationLoading] = useState(
+    false
+  );
+  const [recaptchaContainerKey, setRecaptchaContainerKey] = useState(
+    String(Math.random())
+  );
   const phoneNumberError = useMemo(
     () =>
       !phoneNumber || !isValidPhoneNumber(phoneNumber)
@@ -33,9 +56,58 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish }) => {
         : "",
     [phoneNumber]
   );
+  const isLoading = isCodeSending || isCodeVerificationLoading;
 
-  const nextStep = () => {
-    setStep((step) => step + 1);
+  const onPhoneNumberSubmit = () => {
+    if (!phoneNumber || isCodeSending) {
+      return;
+    }
+
+    setRecaptchaContainerKey(String(Math.random()));
+    setIsCodeSending(true);
+
+    dispatch(
+      sendVerificationCode.request({
+        payload: phoneNumber,
+        callback: (error, confirmationResult) => {
+          if (!error && confirmationResult) {
+            setConfirmation(confirmationResult);
+            setStep((step) =>
+              step === PhoneAuthStep.Verification
+                ? step
+                : PhoneAuthStep.Verification
+            );
+            setIsCodeSending(false);
+          } else {
+            console.log(error, confirmationResult);
+          }
+        },
+      })
+    );
+  };
+
+  const onVerificationCodeSubmit = (code: string) => {
+    if (!confirmation) {
+      return;
+    }
+
+    setIsCodeVerificationLoading(true);
+
+    dispatch(
+      confirmVerificationCode.request({
+        payload: {
+          confirmation,
+          code,
+        },
+        callback: (error, user) => {
+          if (!error && user) {
+            onFinish();
+          } else {
+            console.log(error);
+          }
+        },
+      })
+    );
   };
 
   const goBack = () => {
@@ -64,7 +136,7 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish }) => {
             </div>
             <Button
               className="phone-auth__submit-button"
-              onClick={nextStep}
+              onClick={onPhoneNumberSubmit}
               disabled={!phoneNumber || !isValidPhoneNumber(phoneNumber)}
               shouldUseFullWidth
             >
@@ -77,7 +149,8 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish }) => {
           <Verification
             phoneNumber={phoneNumber}
             goBack={goBack}
-            onFinish={onFinish}
+            onFinish={onVerificationCodeSubmit}
+            onCodeResend={onPhoneNumberSubmit}
           />
         );
       default:
@@ -86,15 +159,30 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish }) => {
   };
 
   return (
-    <div className="phone-auth">
-      {!isMobileView && (
-        <img
-          className="phone-auth__img"
-          src="/assets/images/human-pyramid-transparent.svg"
-          alt="Human pyramid"
-        />
+    <div
+      className={classNames("phone-auth", { "phone-auth--loading": isLoading })}
+    >
+      {isLoading ? (
+        <div>
+          <Loader className="phone-auth__loader" />
+        </div>
+      ) : (
+        <>
+          {!isMobileView && (
+            <img
+              className="phone-auth__img"
+              src="/assets/images/human-pyramid-transparent.svg"
+              alt="Human pyramid"
+            />
+          )}
+          {renderContent()}
+        </>
       )}
-      {renderContent()}
+      <div
+        id={RECAPTCHA_CONTAINER_ID}
+        key={recaptchaContainerKey}
+        className="phone-auth__recaptcha-container"
+      />
     </div>
   );
 };

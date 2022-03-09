@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { UserDetails } from "../../components/LoginContainer/UserDetails";
 import { Modal } from "../../../../shared/components";
 import { AuthProvider } from "../../../../shared/constants";
+import { getLoading } from "../../../../shared/store/selectors";
 import {
   setIsLoginModalShowing,
   socialLogin,
@@ -18,12 +19,13 @@ import "./index.scss";
 
 const LoginContainer: FC = () => {
   const dispatch = useDispatch();
+  const isLoading = useSelector(getLoading());
   const user = useSelector(selectUser());
   const [stage, setStage] = useState(
     user ? AuthStage.CompleteAccountDetails : AuthStage.AuthMethodSelect
   );
   const isShowing = useSelector(selectIsLoginModalShowing());
-  const shouldShowBackButton = stage === AuthStage.PhoneAuth;
+  const shouldShowBackButton = stage === AuthStage.PhoneAuth && !isLoading;
 
   const handleClose = useCallback(() => {
     dispatch(setIsLoginModalShowing(false));

@@ -18,7 +18,11 @@ const initialState: AuthStateType = {
 
 const reducer = createReducer<AuthStateType, Action>(initialState)
   .handleAction(
-    [actions.socialLogin.success, actions.loginUsingEmailAndPassword.success],
+    [
+      actions.socialLogin.success,
+      actions.loginUsingEmailAndPassword.success,
+      actions.confirmVerificationCode.success,
+    ],
     (state, action) =>
       produce(state, (nextState) => {
         nextState.authentificated = true;

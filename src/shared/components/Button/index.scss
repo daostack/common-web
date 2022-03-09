@@ -19,6 +19,7 @@
 .custom-button--full-width {
   width: 100%;
 }
+.custom-button--disabled,
 .custom-button--disabled:disabled {
   background-color: $light-gray-3;
   color: $light-gray-2;

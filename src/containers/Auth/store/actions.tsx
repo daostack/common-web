@@ -4,6 +4,7 @@ import { AuthActionTypes } from "./constants";
 import { AuthProvider } from "../../../shared/constants";
 import { PayloadWithOptionalCallback } from "../../../shared/interfaces";
 import { User } from "../../../shared/models";
+import firebase from "../../../shared/utils/firebase";
 
 export const socialLogin = createAsyncAction(
   AuthActionTypes.SOCIAL_LOGIN,
@@ -25,6 +26,30 @@ export const loginUsingEmailAndPassword = createAsyncAction(
   AuthActionTypes.LOGIN_USING_EMAIL_AND_PASSWORD_FAILURE
 )<
   PayloadWithOptionalCallback<{ email: string; password: string }, User, Error>,
+  User,
+  Error
+>();
+
+export const sendVerificationCode = createAsyncAction(
+  AuthActionTypes.SEND_VERIFICATION_CODE,
+  AuthActionTypes.SEND_VERIFICATION_CODE_SUCCESS,
+  AuthActionTypes.SEND_VERIFICATION_CODE_FAILURE
+)<
+  PayloadWithOptionalCallback<string, firebase.auth.ConfirmationResult, Error>,
+  firebase.auth.ConfirmationResult,
+  Error
+>();
+
+export const confirmVerificationCode = createAsyncAction(
+  AuthActionTypes.CONFIRM_VERIFICATION_CODE,
+  AuthActionTypes.CONFIRM_VERIFICATION_CODE_SUCCESS,
+  AuthActionTypes.CONFIRM_VERIFICATION_CODE_FAILURE
+)<
+  PayloadWithOptionalCallback<
+    { confirmation: firebase.auth.ConfirmationResult; code: string },
+    User,
+    Error
+  >,
   User,
   Error
 >();
