@@ -6,6 +6,7 @@ import React, {
   useState,
   FC,
 } from "react";
+import { useSelector } from "react-redux";
 import PinInput from "react-pin-input";
 import { formatPhoneNumberIntl } from "react-phone-number-input";
 import moment from "moment";
@@ -18,7 +19,9 @@ import {
   ErrorText,
   PhoneInputValue,
 } from "../../../../../shared/components/Form";
+import { ScreenSize } from "../../../../../shared/constants";
 import { useCountdown } from "../../../../../shared/hooks";
+import { getScreenSize } from "../../../../../shared/store/selectors";
 import { formatCountdownValue } from "../../../../../shared/utils";
 import { verificationCodeStyle } from "./constants";
 import "./index.scss";
@@ -44,6 +47,8 @@ const Verification: FC<VerificationProps> = (props) => {
   const { phoneNumber, isCodeInvalid, goBack, onFinish, onCodeResend } = props;
   const pinInputRef = useRef<PinInput>(null);
   const [verificationCode, setVerificationCode] = useState("");
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
   const {
     isFinished: isCountdownFinished,
     minutes,
@@ -128,7 +133,11 @@ const Verification: FC<VerificationProps> = (props) => {
         type="numeric"
         inputMode="number"
         style={verificationCodeStyle.wrapperStyle}
-        inputStyle={verificationCodeStyle.inputStyle}
+        inputStyle={
+          isMobileView
+            ? verificationCodeStyle.mobileInputStyle
+            : verificationCodeStyle.inputStyle
+        }
         autoSelect
       />
       {isCodeInvalid && (
