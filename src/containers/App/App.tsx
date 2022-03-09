@@ -3,7 +3,8 @@ import { Route, Switch } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import PrivateRoute from "./PrivateRoute";
-import { Content, NotFound, Footer, Header } from "../../shared/components";
+import { Content, NotFound, Footer, Header } from "@/shared/components";
+import { NotificationProvider } from "@/shared/components/Notification";
 import { CommonContainer } from "../Common";
 import { LandingContainer } from "../Landing";
 import {
@@ -16,7 +17,6 @@ import { authentificated } from "../Auth/store/selectors";
 import { MyCommonsContainer } from "../Common/containers/MyCommonsContainer";
 import { SubmitInvoicesContainer } from "../Invoices/containers";
 import { TrusteeContainer } from "../Trustee/containers";
-import NotificationManager from "@/shared/components/Notification/NotificationManager";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -71,7 +71,7 @@ const App = () => {
         </Switch>
       </Content>
       <Footer />
-      <NotificationManager />
+      <NotificationProvider />
     </div>
   );
 };

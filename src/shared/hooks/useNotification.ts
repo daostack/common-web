@@ -1,15 +1,20 @@
-import React from "react";
-import { useNotificationContext } from "../components/Notification/context";
+import {
+  useNotificationContext,
+  NotificationContextValue,
+} from "../components/Notification/context";
 
-const useNotification = () => {
+interface Return {
+  notify: NotificationContextValue["addNotification"];
+}
+
+const useNotification = (): Return => {
   const { addNotification } = useNotificationContext();
 
-
-  const notify = (value: React.ReactNode) => {
+  const notify: Return["notify"] = (value) => {
     addNotification(value);
-  }
+  };
 
   return { notify };
-}
+};
 
 export default useNotification;
