@@ -57,7 +57,7 @@ export const getUserInitials = (user: User | undefined) => {
   return user.displayName || `${user.firstName[0]}${user.lastName[0]}`;
 };
 
-export const getRandomUserAvatarURL = (name?: string): string => (
+export const getRandomUserAvatarURL = (name?: string | null): string => (
   `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${name}&rounded=true`
 );
 

@@ -1,6 +1,10 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { default as store } from "../../../index";
-import { tokenHandler } from "../../../shared/utils";
+import {
+  getRandomUserAvatarURL,
+  tokenHandler,
+  transformFirebaseDataSingle,
+} from "../../../shared/utils";
 import * as actions from "./actions";
 import firebase from "../../../shared/utils/firebase";
 import { startLoading, stopLoading } from "../../../shared/store/actions";
@@ -68,17 +72,29 @@ const saveTokenToDatabase = async (token: string) => {
   }
 };
 
-const createUser = async (user: firebase.User) => {
-  if (!user) return;
+const createUser = async (
+  user: firebase.User
+): Promise<{ user: User; isNewUser: boolean }> => {
+  const userSnapshot = await firebase
+    .firestore()
+    .collection(Collection.Users)
+    .doc(user.uid)
+    .get();
+
+  if (userSnapshot.exists) {
+    return {
+      user: transformFirebaseDataSingle<User>(userSnapshot),
+      isNewUser: false,
+    };
+  }
+
   const splittedDisplayName = user?.displayName?.split(" ") || [
     user?.email?.split("@")[0],
   ];
 
-  const userPhotoUrl = user.photoURL
-    ? user.photoURL
-    : `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${
-        user.displayName ? user.displayName : user.email
-      }&rounded=true`;
+  const userPhotoUrl =
+    user.photoURL ||
+    getRandomUserAvatarURL(user.displayName ? user.displayName : user.email);
 
   const userPublicData = {
     firstName: splittedDisplayName[0] || "",
@@ -87,17 +103,12 @@ const createUser = async (user: firebase.User) => {
     photoURL: userPhotoUrl,
     displayName: user?.displayName ?? "",
   };
+  const createdUser = await createdUserApi(userPublicData);
 
-  const userSnapshot = await firebase
-    .firestore()
-    .collection(Collection.Users)
-    .doc(user.uid)
-    .get();
-  if (userSnapshot.exists) {
-    return;
-  }
-
-  return await createdUserApi(userPublicData);
+  return {
+    user: createdUser,
+    isNewUser: true,
+  };
 };
 
 export const uploadImage = async (imageUri: any) => {
@@ -190,8 +201,9 @@ const authorizeUser = async (authProvider: AuthProvider) => {
 };
 
 const verifyLoggedInUser = async (
-  user: firebase.User | null
-): Promise<User> => {
+  user: firebase.User | null,
+  shouldCreateUserIfNotExist = false
+): Promise<{ user: User; isNewUser: boolean }> => {
   if (!user) {
     await firebase.auth().signOut();
     throw new Error("User is not logged in");
@@ -204,17 +216,25 @@ const verifyLoggedInUser = async (
     throw new Error("User is not logged in");
   }
 
-  const databaseUser = await getUserData(user.uid);
+  const result = shouldCreateUserIfNotExist
+    ? await createUser(user)
+    : {
+        user: await getUserData(user.uid),
+        isNewUser: false,
+      };
 
-  if (!databaseUser) {
+  if (!result.user) {
     await firebase.auth().signOut();
     throw new Error("User is not logged in");
   }
 
   tokenHandler.set(token);
-  tokenHandler.setUser(databaseUser);
+  tokenHandler.setUser(result.user);
 
-  return databaseUser;
+  return {
+    user: result.user,
+    isNewUser: result.isNewUser,
+  };
 };
 
 const loginUsingEmailAndPassword = async (
@@ -226,8 +246,9 @@ const loginUsingEmailAndPassword = async (
   const { user } = await firebase
     .auth()
     .signInWithEmailAndPassword(email, password);
+  const data = await verifyLoggedInUser(user);
 
-  return verifyLoggedInUser(user);
+  return data.user;
 };
 
 const sendVerificationCode = async (
@@ -253,12 +274,12 @@ const sendVerificationCode = async (
 const confirmVerificationCode = async (
   confirmation: firebase.auth.ConfirmationResult,
   code: string
-): Promise<User> => {
+): Promise<{ user: User; isNewUser: boolean }> => {
   await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
   const { user } = await confirmation.confirm(code);
 
-  return verifyLoggedInUser(user);
+  return verifyLoggedInUser(user, true);
 };
 
 const updateUserData = async (user: User) => {
@@ -389,7 +410,7 @@ function* confirmVerificationCodeSaga({
   try {
     yield put(startLoading());
 
-    const user: User = yield call(
+    const { user, isNewUser }: { user: User; isNewUser: boolean } = yield call(
       confirmVerificationCode,
       payload.payload.confirmation,
       payload.payload.code
@@ -397,7 +418,7 @@ function* confirmVerificationCodeSaga({
     yield put(actions.confirmVerificationCode.success(user));
 
     if (payload.callback) {
-      payload.callback(null, user);
+      payload.callback(null, { user, isNewUser });
     }
   } catch (error) {
     yield put(actions.confirmVerificationCode.failure(error));

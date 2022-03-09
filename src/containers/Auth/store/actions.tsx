@@ -47,7 +47,7 @@ export const confirmVerificationCode = createAsyncAction(
 )<
   PayloadWithOptionalCallback<
     { confirmation: firebase.auth.ConfirmationResult; code: string },
-    User,
+    { user: User; isNewUser: boolean },
     Error
   >,
   User,
