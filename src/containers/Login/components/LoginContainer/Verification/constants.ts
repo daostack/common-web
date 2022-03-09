@@ -3,9 +3,10 @@ import { Colors } from "../../../../../shared/constants";
 
 export const verificationCodeStyle: Record<string, CSSProperties> = {
   wrapperStyle: {
+    maxWidth: "25rem",
+    width: "100%",
     margin: "1.5rem 0 0",
     display: "flex",
-    minWidth: "25rem",
     justifyContent: "space-between",
   },
   inputStyle: {
