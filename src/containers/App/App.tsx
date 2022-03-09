@@ -52,26 +52,27 @@ const App = () => {
 
   return (
     <div className="App">
-      <Header />
-      <Content>
-        <Switch>
-          <Route path="/" exact component={LandingContainer} />
-          <Route path={ROUTE_PATHS.COMMON_LIST} component={CommonContainer} />
-          <PrivateRoute
-            path={ROUTE_PATHS.MY_COMMONS}
-            component={MyCommonsContainer}
-            authenticated={isAuthenticated}
-          />
-          <Route
-            path={ROUTE_PATHS.SUBMIT_INVOICES}
-            component={SubmitInvoicesContainer}
-          />
-          <Route path={ROUTE_PATHS.TRUSTEE} component={TrusteeContainer} />
-          <Route component={NotFound} />
-        </Switch>
-      </Content>
-      <Footer />
-      <NotificationProvider />
+      <NotificationProvider>
+        <Header />
+        <Content>
+          <Switch>
+            <Route path="/" exact component={LandingContainer} />
+            <Route path={ROUTE_PATHS.COMMON_LIST} component={CommonContainer} />
+            <PrivateRoute
+              path={ROUTE_PATHS.MY_COMMONS}
+              component={MyCommonsContainer}
+              authenticated={isAuthenticated}
+            />
+            <Route
+              path={ROUTE_PATHS.SUBMIT_INVOICES}
+              component={SubmitInvoicesContainer}
+            />
+            <Route path={ROUTE_PATHS.TRUSTEE} component={TrusteeContainer} />
+            <Route component={NotFound} />
+          </Switch>
+        </Content>
+        <Footer />
+      </NotificationProvider>
     </div>
   );
 };
