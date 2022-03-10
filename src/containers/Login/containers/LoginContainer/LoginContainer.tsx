@@ -96,7 +96,7 @@ const LoginContainer: FC = () => {
     } else {
       handleClose();
     }
-  }, []);
+  }, [handleClose]);
 
   useEffect(() => {
     if (!isShowing) {

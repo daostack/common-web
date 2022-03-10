@@ -1,9 +1,7 @@
 import React, { useCallback, useState, FC } from "react";
 import { Country, Value } from "react-phone-number-input";
 import Input from "react-phone-number-input/input";
-import { isMobile } from "../../../utils";
 import { ErrorText } from "../ErrorText";
-import { CustomSelect } from "./CustomSelect";
 import { NativeSelect } from "./NativeSelect";
 import { INITIAL_COUNTRY_CODE } from "./constants";
 import { getCountryOptions } from "./helpers";
@@ -54,11 +52,7 @@ const PhoneInput: FC<PhoneInputProps> = (props) => {
   return (
     <div className="custom-phone-input">
       <div className="custom-phone-input__wrapper">
-        {isMobile() ? (
-          <NativeSelect {...selectProps} />
-        ) : (
-          <CustomSelect {...selectProps} />
-        )}
+        <NativeSelect {...selectProps} />
         <Input
           className="custom-phone-input__input"
           country={countryCode}
