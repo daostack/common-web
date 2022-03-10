@@ -39,10 +39,8 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish, onError }) => {
   const [step, setStep] = useState(PhoneAuthStep.PhoneInput);
   const [countryCode, setCountryCode] = useState<
     PhoneInputCountryCode | undefined
-  >("GE");
-  const [phoneNumber, setPhoneNumber] = useState<PhoneInputValue>(
-    "+995598793309"
-  );
+  >();
+  const [phoneNumber, setPhoneNumber] = useState<PhoneInputValue>();
   const [isPhoneNumberTouched, setIsPhoneNumberTouched] = useState(false);
   const [
     confirmation,
