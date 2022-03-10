@@ -8,7 +8,7 @@ import {
 import * as actions from "./actions";
 import firebase from "../../../shared/utils/firebase";
 import { Collection, User } from "../../../shared/models";
-import { GoogleAuthResultInterface } from "../interface";
+import { UserCreationDto } from "../interface";
 import {
   AuthProvider,
   RECAPTCHA_CONTAINER_ID,
@@ -88,18 +88,21 @@ const createUser = async (
   }
 
   const splittedDisplayName = user.displayName?.split(" ") || [
-    user.email?.split("@")[0],
+    user.email?.split("@")[0] || user.phoneNumber,
   ];
 
   const userPhotoUrl =
     user.photoURL || getRandomUserAvatarURL(user.displayName || user.email);
 
-  const userPublicData = {
+  const userPublicData: UserCreationDto = {
     firstName: splittedDisplayName[0] || "",
-    lastName: splittedDisplayName[1] || "",
-    email: user.email || "",
+    lastName:
+      (splittedDisplayName.length >= 2
+        ? splittedDisplayName[1]
+        : splittedDisplayName[0]) || "",
+    displayName: user.displayName || "",
+    phoneNumber: user.phoneNumber || "",
     photoURL: userPhotoUrl,
-    displayName: user?.displayName ?? "",
   };
   const createdUser = await createdUserApi(userPublicData);
 
