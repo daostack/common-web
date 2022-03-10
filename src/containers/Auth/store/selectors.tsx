@@ -14,3 +14,5 @@ export const selectIsLoginModalShowing = () =>
   createSelector(selectAuth, (state) => state.isLoginModalShowing);
 export const selectAuthProvider = () =>
   createSelector(selectAuth, (state) => state.authProvider);
+export const selectUserPhoneNumber = () =>
+  createSelector(selectAuth, (state) => state.userPhoneNumber);

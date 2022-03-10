@@ -73,3 +73,7 @@ export const setIsLoginModalShowing = createStandardAction(
 export const setAuthProvider = createStandardAction(
   AuthActionTypes.SET_AUTH_PROVIDER
 )<AuthProvider | null>();
+
+export const setUserPhoneNumber = createStandardAction(
+  AuthActionTypes.SET_USER_PHONE_NUMBER
+)<string | null>();

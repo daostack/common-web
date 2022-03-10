@@ -17,7 +17,10 @@ import { countryList } from "../../../../../shared/assets/countries";
 import { getUserName } from "../../../../../shared/utils";
 import { updateUserDetails } from "../../../../Auth/store/actions";
 import { uploadImage } from "../../../../Auth/store/saga";
-import { selectAuthProvider } from "../../../../Auth/store/selectors";
+import {
+  selectAuthProvider,
+  selectUserPhoneNumber,
+} from "../../../../Auth/store/selectors";
 import { UserAuthInfo } from "../UserAuthInfo";
 import { validationSchema } from "./validationSchema";
 import "./index.scss";
@@ -53,6 +56,7 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
   const [loading, setLoading] = useState(false);
   const inputFile: any = useRef(null);
   const authProvider = useSelector(selectAuthProvider());
+  const userPhoneNumber = useSelector(selectUserPhoneNumber());
 
   const dispatch = useDispatch();
 
@@ -148,6 +152,7 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
                 <UserAuthInfo
                   className="user-details__auth-info"
                   user={user}
+                  userPhoneNumber={userPhoneNumber}
                   authProvider={authProvider}
                 />
                 {loading ? <Loader /> : null}

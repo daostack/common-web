@@ -499,6 +499,7 @@ function* authSagas() {
           getAuthProviderFromProviderData(res?.providerData)
         )
       );
+      store.dispatch(actions.setUserPhoneNumber(res?.phoneNumber || null));
 
       if (tokenHandler.get()) {
         const currentUser: User | undefined = res?.toJSON() as any;
