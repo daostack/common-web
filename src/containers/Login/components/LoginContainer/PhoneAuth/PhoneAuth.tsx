@@ -73,6 +73,7 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish, onError }) => {
 
     setRecaptchaContainerKey(String(Math.random()));
     setIsCodeSending(true);
+    setIsCodeInvalid(false);
 
     dispatch(
       sendVerificationCode.request({
