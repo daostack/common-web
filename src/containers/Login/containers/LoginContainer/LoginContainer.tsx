@@ -89,8 +89,12 @@ const LoginContainer: FC = () => {
     );
   }, []);
 
-  const handlePhoneStageFinish = useCallback(() => {
-    setStage(AuthStage.CompleteAccountDetails);
+  const handlePhoneStageFinish = useCallback((isNewUser: boolean) => {
+    if (isNewUser) {
+      setStage(AuthStage.CompleteAccountDetails);
+    } else {
+      handleClose();
+    }
   }, []);
 
   useEffect(() => {

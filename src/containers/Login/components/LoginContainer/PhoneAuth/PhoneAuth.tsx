@@ -26,7 +26,7 @@ import { PhoneAuthStep } from "./constants";
 import "./index.scss";
 
 interface PhoneAuthProps {
-  onFinish: () => void;
+  onFinish: (isNewUser: boolean) => void;
   onError: () => void;
 }
 
@@ -111,9 +111,9 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish, onError }) => {
           confirmation,
           code,
         },
-        callback: (error, user) => {
-          if (!error && user) {
-            onFinish();
+        callback: (error, data) => {
+          if (!error && data) {
+            onFinish(data.isNewUser);
             return;
           }
           if (
