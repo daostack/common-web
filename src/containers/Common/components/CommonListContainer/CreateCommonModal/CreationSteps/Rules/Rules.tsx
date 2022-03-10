@@ -47,7 +47,8 @@ export default function Rules({
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
-      const rules = values.rules[0].title ? values.rules : [];
+      const rules = values.rules.filter((rule) => rule.title && rule.value);
+
       onFinish({ rules });
     },
     [onFinish]

@@ -55,7 +55,8 @@ export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
-      const links = values.links[0].title ? values.links : [];
+      const links = values.links.filter((link) => link.title && link.value);
+
       onFinish({
         name: values.commonName,
         byline: values.tagline,
