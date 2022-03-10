@@ -3,10 +3,8 @@ import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { Loader } from "../../../../../shared/components";
 import { AuthProvider, ScreenSize } from "../../../../../shared/constants";
-import {
-  getLoading,
-  getScreenSize,
-} from "../../../../../shared/store/selectors";
+import { getScreenSize } from "../../../../../shared/store/selectors";
+import { selectIsAuthLoading } from "../../../../Auth/store/selectors";
 import { LoginButtons } from "../LoginButtons";
 import { LoginError } from "../LoginError";
 import "./index.scss";
@@ -18,7 +16,7 @@ interface ConnectProps {
 
 const Connect: FC<ConnectProps> = ({ hasError, onAuthButtonClick }) => {
   const screenSize = useSelector(getScreenSize());
-  const isLoading = useSelector(getLoading());
+  const isLoading = useSelector(selectIsAuthLoading());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
   const subTitleText = isMobileView

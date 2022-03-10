@@ -70,6 +70,14 @@ export const setIsLoginModalShowing = createStandardAction(
   AuthActionTypes.SET_IS_LOGIN_MODAL_SHOWING
 )<boolean>();
 
+export const startAuthLoading = createStandardAction(
+  AuthActionTypes.START_AUTH_LOADING
+)();
+
+export const stopAuthLoading = createStandardAction(
+  AuthActionTypes.STOP_AUTH_LOADING
+)();
+
 export const setAuthProvider = createStandardAction(
   AuthActionTypes.SET_AUTH_PROVIDER
 )<AuthProvider | null>();

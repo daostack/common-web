@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { UserDetails } from "../../components/LoginContainer/UserDetails";
 import { Modal } from "../../../../shared/components";
 import { AuthProvider, ScreenSize } from "../../../../shared/constants";
-import { getLoading, getScreenSize } from "../../../../shared/store/selectors";
+import { getScreenSize } from "../../../../shared/store/selectors";
 import { isFirebaseError } from "../../../../shared/utils/firebase";
 import {
   setIsLoginModalShowing,
@@ -18,6 +18,7 @@ import {
 } from "../../../Auth/store/actions";
 import {
   selectIsLoginModalShowing,
+  selectIsAuthLoading,
   selectUser,
 } from "../../../Auth/store/selectors";
 import { Connect } from "../../components/LoginContainer/Connect";
@@ -27,7 +28,7 @@ import "./index.scss";
 
 const LoginContainer: FC = () => {
   const dispatch = useDispatch();
-  const isLoading = useSelector(getLoading());
+  const isLoading = useSelector(selectIsAuthLoading());
   const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;

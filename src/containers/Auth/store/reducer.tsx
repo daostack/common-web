@@ -14,6 +14,7 @@ const initialState: AuthStateType = {
   userPhoneNumber: null,
   isNewUser: false,
   isLoginModalShowing: false,
+  isAuthLoading: false,
   authProvider: null,
 };
 
@@ -44,6 +45,16 @@ const reducer = createReducer<AuthStateType, Action>(initialState)
   .handleAction(actions.setIsLoginModalShowing, (state, action) =>
     produce(state, (nextState) => {
       nextState.isLoginModalShowing = action.payload;
+    })
+  )
+  .handleAction(actions.startAuthLoading, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.isAuthLoading = true;
+    })
+  )
+  .handleAction(actions.stopAuthLoading, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.isAuthLoading = false;
     })
   )
   .handleAction(actions.setAuthProvider, (state, action) =>

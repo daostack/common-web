@@ -7,5 +7,6 @@ export interface AuthStateType {
   authentificated: boolean;
   isNewUser: boolean;
   isLoginModalShowing: boolean;
+  isAuthLoading: boolean;
   authProvider: AuthProvider | null;
 }

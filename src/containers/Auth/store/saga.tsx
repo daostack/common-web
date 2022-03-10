@@ -7,7 +7,6 @@ import {
 } from "../../../shared/utils";
 import * as actions from "./actions";
 import firebase from "../../../shared/utils/firebase";
-import { startLoading, stopLoading } from "../../../shared/store/actions";
 import { Collection, User } from "../../../shared/models";
 import { GoogleAuthResultInterface } from "../interface";
 import {
@@ -326,7 +325,7 @@ function* socialLoginSaga({
   payload,
 }: ReturnType<typeof actions.socialLogin.request>) {
   try {
-    yield put(startLoading());
+    yield put(actions.startAuthLoading());
 
     const { user, isNewUser }: { user: User; isNewUser: boolean } = yield call(
       authorizeUser,
@@ -347,7 +346,7 @@ function* socialLoginSaga({
       payload.callback(error);
     }
   } finally {
-    yield put(stopLoading());
+    yield put(actions.stopAuthLoading());
   }
 }
 
@@ -355,7 +354,7 @@ function* loginUsingEmailAndPasswordSaga({
   payload,
 }: ReturnType<typeof actions.loginUsingEmailAndPassword.request>) {
   try {
-    yield put(startLoading());
+    yield put(actions.startAuthLoading());
 
     const user: User = yield call(
       loginUsingEmailAndPassword,
@@ -374,7 +373,7 @@ function* loginUsingEmailAndPasswordSaga({
       payload.callback(error);
     }
   } finally {
-    yield put(stopLoading());
+    yield put(actions.stopAuthLoading());
   }
 }
 
@@ -382,7 +381,7 @@ function* sendVerificationCodeSaga({
   payload,
 }: ReturnType<typeof actions.sendVerificationCode.request>) {
   try {
-    yield put(startLoading());
+    yield put(actions.startAuthLoading());
 
     const confirmationResult: firebase.auth.ConfirmationResult = yield call(
       sendVerificationCode,
@@ -400,7 +399,7 @@ function* sendVerificationCodeSaga({
       payload.callback(error);
     }
   } finally {
-    yield put(stopLoading());
+    yield put(actions.stopAuthLoading());
   }
 }
 
@@ -408,7 +407,7 @@ function* confirmVerificationCodeSaga({
   payload,
 }: ReturnType<typeof actions.confirmVerificationCode.request>) {
   try {
-    yield put(startLoading());
+    yield put(actions.startAuthLoading());
 
     const { user, isNewUser }: { user: User; isNewUser: boolean } = yield call(
       confirmVerificationCode,
@@ -427,7 +426,7 @@ function* confirmVerificationCodeSaga({
       payload.callback(error);
     }
   } finally {
-    yield put(stopLoading());
+    yield put(actions.stopAuthLoading());
   }
 }
 
@@ -445,7 +444,7 @@ function* updateUserDetails({
   payload,
 }: ReturnType<typeof actions.updateUserDetails.request>) {
   try {
-    yield put(startLoading());
+    yield put(actions.startAuthLoading());
     const user: User = yield call(updateUserData, payload.user);
 
     yield put(actions.updateUserDetails.success(user));
@@ -456,7 +455,7 @@ function* updateUserDetails({
     yield put(actions.updateUserDetails.failure(error));
     yield payload.callback();
   } finally {
-    yield put(stopLoading());
+    yield put(actions.stopAuthLoading());
   }
 }
 
