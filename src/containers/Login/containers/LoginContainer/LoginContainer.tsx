@@ -1,9 +1,16 @@
-import React, { useCallback, useEffect, useMemo, useState, FC } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  FC,
+  ReactNode,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { UserDetails } from "../../components/LoginContainer/UserDetails";
 import { Modal } from "../../../../shared/components";
-import { AuthProvider } from "../../../../shared/constants";
-import { getLoading } from "../../../../shared/store/selectors";
+import { AuthProvider, ScreenSize } from "../../../../shared/constants";
+import { getLoading, getScreenSize } from "../../../../shared/store/selectors";
 import { isFirebaseError } from "../../../../shared/utils/firebase";
 import {
   setIsLoginModalShowing,
@@ -22,6 +29,8 @@ const LoginContainer: FC = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector(getLoading());
   const user = useSelector(selectUser());
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
   const [stage, setStage] = useState(
     user ? AuthStage.CompleteAccountDetails : AuthStage.AuthMethodSelect
   );
@@ -92,6 +101,20 @@ const LoginContainer: FC = () => {
     }
   }, [isShowing, user]);
 
+  const title = useMemo((): ReactNode => {
+    if (!isMobileView || stage !== AuthStage.CompleteAccountDetails) {
+      return null;
+    }
+
+    return (
+      <img
+        className="login-container__title-logo"
+        src="/icons/logo.svg"
+        alt="Common Logo"
+      />
+    );
+  }, [isMobileView, stage]);
+
   const content = useMemo(() => {
     switch (stage) {
       case AuthStage.AuthMethodSelect:
@@ -129,6 +152,7 @@ const LoginContainer: FC = () => {
       className="mobile-full-screen"
       mobileFullScreen
       onGoBack={shouldShowBackButton ? handleGoBack : undefined}
+      title={title}
     >
       {content}
     </Modal>

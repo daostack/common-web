@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from "react";
+import React, { FC, ReactNode } from "react";
 import { formatPhoneNumberIntl } from "react-phone-number-input";
 import classNames from "classnames";
 import { AuthProvider } from "../../../../../shared/constants";
@@ -25,9 +25,7 @@ const getUserInfoForAuthProvider = (
   return user.email || null;
 };
 
-const getAuthProviderIcon = (
-  authProvider: AuthProvider | null
-): ReactElement | null => {
+const getAuthProviderIcon = (authProvider: AuthProvider | null): ReactNode => {
   if (!authProvider) {
     return null;
   }
