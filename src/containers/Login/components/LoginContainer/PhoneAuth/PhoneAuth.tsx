@@ -2,6 +2,7 @@ import React, { useMemo, useState, FC, ReactElement } from "react";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
+import moment from "moment";
 import { Button, Loader } from "../../../../../shared/components";
 import {
   PhoneInput,
@@ -29,6 +30,8 @@ interface PhoneAuthProps {
   onError: () => void;
 }
 
+const getCountdownDate = (): Date => moment().add(1, "minute").toDate();
+
 const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish, onError }) => {
   const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
@@ -53,6 +56,7 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish, onError }) => {
   const [recaptchaContainerKey, setRecaptchaContainerKey] = useState(
     String(Math.random())
   );
+  const [countdownDate, setCountdownDate] = useState(getCountdownDate);
   const phoneNumberError = useMemo(
     () =>
       !phoneNumber || !isValidPhoneNumber(phoneNumber)
@@ -80,6 +84,7 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish, onError }) => {
           }
 
           setConfirmation(confirmationResult);
+          setCountdownDate(getCountdownDate());
           setStep((step) =>
             step === PhoneAuthStep.Verification
               ? step
@@ -165,6 +170,7 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish, onError }) => {
           <Verification
             phoneNumber={phoneNumber}
             isCodeInvalid={isCodeInvalid}
+            countdownDate={countdownDate}
             goBack={goToPhoneInputStep}
             onFinish={onVerificationCodeSubmit}
             onCodeResend={onPhoneNumberSubmit}

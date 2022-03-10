@@ -9,7 +9,6 @@ import React, {
 import { useSelector } from "react-redux";
 import PinInput from "react-pin-input";
 import { formatPhoneNumberIntl } from "react-phone-number-input";
-import moment from "moment";
 import {
   Button,
   ButtonIcon,
@@ -38,13 +37,21 @@ interface SubmitButtonState {
 interface VerificationProps {
   phoneNumber: PhoneInputValue;
   isCodeInvalid: boolean;
+  countdownDate: Date;
   goBack: () => void;
   onFinish: (code: string) => void;
   onCodeResend: () => void;
 }
 
 const Verification: FC<VerificationProps> = (props) => {
-  const { phoneNumber, isCodeInvalid, goBack, onFinish, onCodeResend } = props;
+  const {
+    phoneNumber,
+    isCodeInvalid,
+    countdownDate,
+    goBack,
+    onFinish,
+    onCodeResend,
+  } = props;
   const pinInputRef = useRef<PinInput>(null);
   const [verificationCode, setVerificationCode] = useState("");
   const screenSize = useSelector(getScreenSize());
@@ -96,14 +103,14 @@ const Verification: FC<VerificationProps> = (props) => {
   ]);
 
   useLayoutEffect(() => {
-    startCountdown(moment().add(1, "minute").toDate());
+    startCountdown(countdownDate);
 
     if (pinInputRef.current) {
       pinInputRef.current.clear();
       pinInputRef.current.focus();
       setVerificationCode("");
     }
-  }, [startCountdown]);
+  }, [startCountdown, countdownDate]);
 
   return (
     <>
