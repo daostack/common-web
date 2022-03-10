@@ -62,10 +62,6 @@ export const updateUserDetails = createAsyncAction(
   AuthActionTypes.UPDATE_USER_DATA_FAILURE
 )<{ user: User; callback: () => void }, User, Error>();
 
-export const setIsUserNew = createStandardAction(
-  AuthActionTypes.SET_IS_NEW_USER
-)<boolean>();
-
 export const setIsLoginModalShowing = createStandardAction(
   AuthActionTypes.SET_IS_LOGIN_MODAL_SHOWING
 )<boolean>();

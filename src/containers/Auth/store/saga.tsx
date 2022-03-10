@@ -87,18 +87,17 @@ const createUser = async (
     };
   }
 
-  const splittedDisplayName = user?.displayName?.split(" ") || [
-    user?.email?.split("@")[0],
+  const splittedDisplayName = user.displayName?.split(" ") || [
+    user.email?.split("@")[0],
   ];
 
   const userPhotoUrl =
-    user.photoURL ||
-    getRandomUserAvatarURL(user.displayName ? user.displayName : user.email);
+    user.photoURL || getRandomUserAvatarURL(user.displayName || user.email);
 
   const userPublicData = {
     firstName: splittedDisplayName[0] || "",
     lastName: splittedDisplayName[1] || "",
-    // email: user.email,
+    email: user.email || "",
     photoURL: userPhotoUrl,
     displayName: user?.displayName ?? "",
   };
@@ -141,64 +140,6 @@ const getFirebaseAuthProvider = (
   }
 };
 
-const authorizeUser = async (authProvider: AuthProvider) => {
-  const provider = getFirebaseAuthProvider(authProvider);
-
-  return await firebase
-    .auth()
-    .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-    .then(async () => {
-      return await firebase
-        .auth()
-        .signInWithPopup(provider)
-        .then(async (result) => {
-          const credentials = result.credential?.toJSON() as GoogleAuthResultInterface;
-          const user = result.user?.toJSON() as User;
-          const currentUser = (await firebase.auth().currentUser) as any;
-          let isNewUser = false;
-
-          let loginedUser: any;
-          if (result.additionalUserInfo?.isNewUser) {
-            store.dispatch(actions.setIsUserNew(true));
-            isNewUser = true;
-
-            if (currentUser) {
-              await createUser(currentUser);
-            }
-          }
-          if (credentials && user) {
-            const tk = await currentUser?.getIdToken(true);
-            if (tk) {
-              tokenHandler.set(tk);
-
-              if (currentUser) {
-                let databaseUser = await getUserData(currentUser.uid);
-
-                if (!databaseUser) {
-                  store.dispatch(actions.setIsUserNew(true));
-                  isNewUser = true;
-                  await createUser(currentUser);
-                  databaseUser = await getUserData(currentUser.uid);
-                }
-
-                if (databaseUser) {
-                  loginedUser = databaseUser;
-                  store.dispatch(actions.socialLogin.success(databaseUser));
-                  tokenHandler.setUser(databaseUser);
-                }
-              }
-            }
-          }
-
-          return { user: loginedUser, isNewUser };
-        });
-    })
-    .catch((e) => {
-      console.log(e);
-      throw e;
-    });
-};
-
 const verifyLoggedInUser = async (
   user: firebase.User | null,
   shouldCreateUserIfNotExist = false
@@ -234,6 +175,17 @@ const verifyLoggedInUser = async (
     user: result.user,
     isNewUser: result.isNewUser,
   };
+};
+
+const authorizeUser = async (
+  authProvider: AuthProvider
+): Promise<{ user: User; isNewUser: boolean }> => {
+  await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+  const provider = getFirebaseAuthProvider(authProvider);
+  const { user } = await firebase.auth().signInWithPopup(provider);
+
+  return verifyLoggedInUser(user, true);
 };
 
 const loginUsingEmailAndPassword = async (
@@ -449,7 +401,6 @@ function* updateUserDetails({
 
     yield put(actions.updateUserDetails.success(user));
     tokenHandler.setUser(user);
-    yield put(actions.setIsUserNew(false));
     yield payload.callback();
   } catch (error) {
     yield put(actions.updateUserDetails.failure(error));
