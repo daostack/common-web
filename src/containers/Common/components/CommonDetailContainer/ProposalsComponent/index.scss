@@ -1,11 +1,11 @@
 @import "../../../../../constants.scss";
 
-.proposal-title-wrapper{
+.proposal-title-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
-  .title{
+  .title {
     font-size: 1.5rem;
     font-weight: bold;
     line-height: 1.17;
@@ -13,11 +13,11 @@
     color: $secondary-blue;
     font-family: NunitoSans-Bold, sans-serif;
   }
-  .add-button{
+  .add-button {
     display: flex;
     padding: 0.5rem 1.5rem;
     border-radius: 30.5px;
-    background-color:#E6EAFB;
+    background-color: $light-gray-7;
     font-size: 1rem;
     font-weight: bold;
     line-height: 1.5;
@@ -30,7 +30,7 @@
     justify-content: center;
     font-family: NunitoSans-Bold;
 
-    img{
+    img {
       width: 1.5rem;
       height: 1.5rem;
       margin-right: 0.5rem;
@@ -74,17 +74,17 @@
       }
       &.passed {
         .state-inner-wrapper {
-          background: #f0fdf0;
+          background: $light-green;
           .state-name {
-            color: #6ee569;
+            color: $green;
           }
         }
       }
       &.failed {
         .state-inner-wrapper {
-          background: #feefec;
+          background: $light-red;
           .state-name {
-            color: #ff603e;
+            color: $red;
           }
         }
       }

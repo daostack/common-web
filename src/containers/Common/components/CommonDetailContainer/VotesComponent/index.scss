@@ -19,13 +19,13 @@
       font-size: 18px;
       font-weight: bold;
       text-align: right;
-      color: #ff603e;
+      color: $red;
     }
     .for {
       font-size: 18px;
       font-weight: bold;
       text-align: right;
-      color: #6ee569;
+      color: $green;
     }
     .count {
       font-size: 14px;
@@ -40,7 +40,7 @@
       display: inline-block;
     }
     .for {
-      background-color: #6ee569;
+      background-color: $green;
       border-radius: 100px 0px 0px 100px;
 
       // To create a white gap between the "for" and "against" bars.
@@ -54,7 +54,7 @@
       }
     }
     .against {
-      background-color: #ff603e;
+      background-color: $red;
       border-radius: 0px 100px 100px 0px;
       &.rounded {
         border-radius: 100px;

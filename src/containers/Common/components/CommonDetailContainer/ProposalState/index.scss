@@ -1,0 +1,53 @@
+@import "../../../../../constants.scss";
+
+.proposal-state-wrapper {
+  .state-wrapper {
+    margin-bottom: 24px;
+    .state-inner-wrapper {
+      width: 100%;
+      margin: 0;
+      border-radius: 6px;
+      display: flex;
+      margin-bottom: 24px;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      img {
+        width: 17px;
+        height: 17px;
+        margin-right: 4px;
+      }
+      .state-name {
+        font-size: 14px;
+        font-weight: bold;
+        font-stretch: normal;
+        font-style: normal;
+        letter-spacing: normal;
+      }
+    }
+    &.approved {
+      .state-inner-wrapper {
+        background: $light-green;
+        .state-name {
+          color: $green;
+        }
+      }
+    }
+    &.rejected {
+      .state-inner-wrapper {
+        background: $light-red;
+        .state-name {
+          color: $red;
+        }
+      }
+    }
+    &.unclaimed {
+      .state-inner-wrapper {
+        background: $light-gray-3;
+        .state-name {
+          color: $blue;
+        }
+      }
+    }
+  }
+}
