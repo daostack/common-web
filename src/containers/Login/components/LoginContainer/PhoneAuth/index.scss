@@ -58,6 +58,7 @@
 
     @include big-phone {
       max-width: unset;
+      margin-bottom: 0;
     }
   }
 }
@@ -74,7 +75,7 @@
 .phone-auth__modal-footer {
   display: flex;
   justify-content: center;
-  padding: 1rem 0 2rem;
+  padding: 2rem 0;
 }
 
 .phone-auth__submit-button {

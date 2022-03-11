@@ -13,6 +13,7 @@ import {
   Button,
   ButtonIcon,
   ButtonVariant,
+  ModalFooter,
 } from "../../../../../shared/components";
 import {
   ErrorText,
@@ -116,6 +117,18 @@ const Verification: FC<VerificationProps> = (props) => {
     ? verificationCodeStyle.mobileInputStyle
     : verificationCodeStyle.inputStyle;
 
+  const buttonEl = (
+    <Button
+      className="verification__submit-button"
+      onClick={submitButtonState.handler}
+      disabled={submitButtonState.disabled}
+      variant={submitButtonState.variant}
+      shouldUseFullWidth
+    >
+      {submitButtonState.text}
+    </Button>
+  );
+
   return (
     <>
       <h2 className="verification__title">Enter verification code</h2>
@@ -137,30 +150,31 @@ const Verification: FC<VerificationProps> = (props) => {
           />
         </ButtonIcon>
       </div>
-      <PinInput
-        ref={pinInputRef}
-        length={CODE_LENGTH}
-        onChange={setVerificationCode}
-        type="numeric"
-        inputMode="number"
-        style={verificationCodeStyle.wrapperStyle}
-        inputStyle={inputStyle}
-        inputFocusStyle={inputStyle}
-        autoSelect
-      />
+      <div className="verification__code-wrapper">
+        <PinInput
+          ref={pinInputRef}
+          length={CODE_LENGTH}
+          onChange={setVerificationCode}
+          type="numeric"
+          inputMode="number"
+          style={verificationCodeStyle.wrapperStyle}
+          inputStyle={inputStyle}
+          inputFocusStyle={inputStyle}
+          autoSelect
+        />
+      </div>
       {isCodeInvalid && (
         <ErrorText className="verification__error">
           Verification code is invalid
         </ErrorText>
       )}
-      <Button
-        className="verification__submit-button"
-        onClick={submitButtonState.handler}
-        disabled={submitButtonState.disabled}
-        variant={submitButtonState.variant}
-      >
-        {submitButtonState.text}
-      </Button>
+      {isMobileView ? (
+        <ModalFooter sticky>
+          <div className="verification__modal-footer">{buttonEl}</div>
+        </ModalFooter>
+      ) : (
+        buttonEl
+      )}
     </>
   );
 };

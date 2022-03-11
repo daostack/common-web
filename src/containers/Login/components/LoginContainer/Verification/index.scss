@@ -59,15 +59,29 @@
   border-radius: 50%;
 }
 
+.verification__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
 .verification__submit-button {
-  min-width: unset;
-  width: 20.5rem;
-  height: 3rem;
+  max-width: 20.5rem;
   margin-top: 3rem;
 
   @include big-phone {
-    width: 100%;
-    margin-top: 2rem;
+    max-width: unset;
+    margin-top: 0;
+  }
+}
+
+.verification__code-wrapper {
+  max-width: 25rem;
+  width: 100%;
+  margin: 1.5rem 0 0;
+
+  @include big-phone {
+    max-width: unset;
   }
 }
 
