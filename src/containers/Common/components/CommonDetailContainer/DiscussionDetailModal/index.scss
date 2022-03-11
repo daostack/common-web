@@ -161,6 +161,12 @@
             margin-bottom: unset;
             margin-right: 0.5rem;
           }
+          .owner-name-and-days-container {
+            .days-ago {
+              width: 100%;
+              text-align: left;
+            }
+          }
         }
       }
       .expand-btn-container {

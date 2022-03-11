@@ -70,6 +70,7 @@
         background-color: #e0e3ff;
         flex-direction: row;
         width: 85%;
+        box-sizing: border-box;
         .message-name {
           font-size: 14px;
           font-weight: bold;
@@ -80,15 +81,13 @@
           font-size: 16px;
           color: #001a36;
           word-wrap: break-word;
+          .time-wrapper {
+            font-size: 10px;
+            font-weight: bold;
+            color: $light-gray-2;
+            text-align: right;
+          }
         }
-      }
-      .time-wrapper {
-        position: absolute;
-        font-size: 10px;
-        font-weight: bold;
-        color: $light-gray-2;
-        right: 0.9rem;
-        bottom: 0.5rem;
       }
     }
   }
