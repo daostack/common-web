@@ -40,6 +40,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (props, modalRef) 
     isHeaderSticky = false,
     shouldShowHeaderShadow = true,
     closePrompt = false,
+    withoutHorizontalPadding = false,
   } = props;
   const wrapperRef = useRef(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -133,7 +134,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (props, modalRef) 
     "modal__header-wrapper",
     styles?.headerWrapper,
     {
-      "modal__header-wrapper--fixed": isHeaderSticky,
+      "modal__header-wrapper--with-modal-padding": isHeaderSticky || withoutHorizontalPadding,
       "modal__header-wrapper--shadowed":
         isHeaderSticky && !isFullyScrolledToTop && shouldShowHeaderShadow,
     }
@@ -144,6 +145,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (props, modalRef) 
   });
   const modalContentClassName = classNames("modal__content", styles?.content, {
     "modal__content--without-footer": !footer,
+    "modal__content--without-h-padding": withoutHorizontalPadding,
   });
   const footerClassName = classNames("modal__footer", {
     "modal__footer--fixed": isFooterSticky,

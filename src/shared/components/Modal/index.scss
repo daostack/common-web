@@ -60,7 +60,7 @@ $modal-mobile-padding: 24px;
     flex: 0 0;
     transition: box-shadow .1s;
   }
-  .modal__header-wrapper--fixed {
+  .modal__header-wrapper--with-modal-padding {
     padding-left: $modal-padding;
     padding-right: $modal-padding;
 
@@ -151,6 +151,10 @@ $modal-mobile-padding: 24px;
     @include big-phone {
       padding-bottom: $modal-mobile-padding;
     }
+  }
+  .modal__content--without-h-padding {
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .modal__footer {
