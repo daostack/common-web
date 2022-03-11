@@ -34,7 +34,11 @@ export const verificationCodeStyle: Record<string, CSSProperties> = {
   inputStyle: INPUT_STYLE,
   mobileInputStyle: {
     ...INPUT_STYLE,
-    width: "3rem",
-    height: "4rem",
+    flex: "1 1",
+    maxWidth: "2.5rem",
+    minWidth: "1.75rem",
+    width: "100%",
+    height: "3.25rem",
+    fontSize: "1.75rem",
   },
 };

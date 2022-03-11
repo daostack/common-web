@@ -112,6 +112,10 @@ const Verification: FC<VerificationProps> = (props) => {
     }
   }, [startCountdown, countdownDate]);
 
+  const inputStyle = isMobileView
+    ? verificationCodeStyle.mobileInputStyle
+    : verificationCodeStyle.inputStyle;
+
   return (
     <>
       <h2 className="verification__title">Enter verification code</h2>
@@ -140,11 +144,8 @@ const Verification: FC<VerificationProps> = (props) => {
         type="numeric"
         inputMode="number"
         style={verificationCodeStyle.wrapperStyle}
-        inputStyle={
-          isMobileView
-            ? verificationCodeStyle.mobileInputStyle
-            : verificationCodeStyle.inputStyle
-        }
+        inputStyle={inputStyle}
+        inputFocusStyle={inputStyle}
         autoSelect
       />
       {isCodeInvalid && (
