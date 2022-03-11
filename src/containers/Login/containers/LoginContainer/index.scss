@@ -1,5 +1,17 @@
-.login-container__title-logo {
-  width: 5.5rem;
-  height: 2.5rem;
-  margin: 1.5rem 0;
+@import "../../../../styles/sizes";
+
+.modal.login-container__modal {
+  .login-container__title-logo {
+    width: 5.5rem;
+    height: 2.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .login-container__modal-content {
+    @include big-phone {
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 0;
+    }
+  }
 }

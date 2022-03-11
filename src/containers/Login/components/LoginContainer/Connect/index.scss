@@ -5,9 +5,24 @@
   padding: 0.5rem 0 2rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
   text-align: center;
   font-family: NunitoSans, sans-serif;
+
+  @include big-phone {
+    flex: 1 0;
+    padding-bottom: 0;
+    justify-content: space-between;
+  }
+
+  .connect-wrapper__content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    @include big-phone {
+      padding: 0 1.5rem;
+    }
+  }
 
   .connect-wrapper__loader {
     left: 0;

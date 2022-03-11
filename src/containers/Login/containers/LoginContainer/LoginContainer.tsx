@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { UserDetails } from "../../components/LoginContainer/UserDetails";
 import { Modal } from "../../../../shared/components";
 import { AuthProvider, ScreenSize } from "../../../../shared/constants";
+import { ModalProps } from "../../../../shared/interfaces";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import { isFirebaseError } from "../../../../shared/utils/firebase";
 import {
@@ -38,6 +39,8 @@ const LoginContainer: FC = () => {
   const [hasError, setHasError] = useState(false);
   const isShowing = useSelector(selectIsLoginModalShowing());
   const shouldShowBackButton = stage === AuthStage.PhoneAuth && !isLoading;
+  const shouldRemoveHorizontalPadding =
+    isMobileView && stage === AuthStage.AuthMethodSelect;
 
   const handleClose = useCallback(() => {
     dispatch(setIsLoginModalShowing(false));
@@ -90,13 +93,16 @@ const LoginContainer: FC = () => {
     );
   }, []);
 
-  const handlePhoneStageFinish = useCallback((isNewUser: boolean) => {
-    if (isNewUser) {
-      setStage(AuthStage.CompleteAccountDetails);
-    } else {
-      handleClose();
-    }
-  }, [handleClose]);
+  const handlePhoneStageFinish = useCallback(
+    (isNewUser: boolean) => {
+      if (isNewUser) {
+        setStage(AuthStage.CompleteAccountDetails);
+      } else {
+        handleClose();
+      }
+    },
+    [handleClose]
+  );
 
   useEffect(() => {
     if (!isShowing) {
@@ -118,6 +124,14 @@ const LoginContainer: FC = () => {
         alt="Common Logo"
       />
     );
+  }, [isMobileView, stage]);
+
+  const styles = useMemo<ModalProps["styles"]>(() => {
+    if (isMobileView && stage === AuthStage.AuthMethodSelect) {
+      return {
+        content: "login-container__modal-content",
+      };
+    }
   }, [isMobileView, stage]);
 
   const content = useMemo(() => {
@@ -154,10 +168,12 @@ const LoginContainer: FC = () => {
     <Modal
       isShowing={isShowing}
       onClose={handleClose}
-      className="mobile-full-screen"
+      className="mobile-full-screen login-container__modal"
       mobileFullScreen
       onGoBack={shouldShowBackButton ? handleGoBack : undefined}
       title={title}
+      withoutHorizontalPadding={shouldRemoveHorizontalPadding}
+      styles={styles}
     >
       {content}
     </Modal>
