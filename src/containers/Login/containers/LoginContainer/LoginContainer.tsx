@@ -113,6 +113,7 @@ const LoginContainer: FC = () => {
       setStage(
         user ? AuthStage.CompleteAccountDetails : AuthStage.AuthMethodSelect
       );
+      setHasError(false);
     }
   }, [isShowing, user]);
 

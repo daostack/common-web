@@ -38,7 +38,7 @@ const Connect: FC<ConnectProps> = (props) => {
   return (
     <div className="connect-wrapper">
       <div className="connect-wrapper__content-wrapper">
-        {!isJoinRequestType && (
+        {(!isMobileView || !isJoinRequestType) && (
           <img
             className="connect-wrapper__img"
             src={
