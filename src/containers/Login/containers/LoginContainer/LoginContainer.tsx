@@ -13,13 +13,10 @@ import { AuthProvider, ScreenSize } from "../../../../shared/constants";
 import { ModalProps } from "../../../../shared/interfaces";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import { isFirebaseError } from "../../../../shared/utils/firebase";
+import { setLoginModalState, socialLogin } from "../../../Auth/store/actions";
 import {
-  setIsLoginModalShowing,
-  socialLogin,
-} from "../../../Auth/store/actions";
-import {
-  selectIsLoginModalShowing,
   selectIsAuthLoading,
+  selectLoginModalState,
   selectUser,
 } from "../../../Auth/store/selectors";
 import { Connect } from "../../components/LoginContainer/Connect";
@@ -37,13 +34,13 @@ const LoginContainer: FC = () => {
     user ? AuthStage.CompleteAccountDetails : AuthStage.AuthMethodSelect
   );
   const [hasError, setHasError] = useState(false);
-  const isShowing = useSelector(selectIsLoginModalShowing());
+  const { isShowing, type } = useSelector(selectLoginModalState());
   const shouldShowBackButton = stage === AuthStage.PhoneAuth && !isLoading;
   const shouldRemoveHorizontalPadding =
     isMobileView && stage === AuthStage.AuthMethodSelect;
 
   const handleClose = useCallback(() => {
-    dispatch(setIsLoginModalShowing(false));
+    dispatch(setLoginModalState({ isShowing: false }));
   }, [dispatch]);
 
   const handleError = useCallback(() => {

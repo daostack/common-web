@@ -21,7 +21,7 @@ import {
 import { LoginContainer } from "../../../containers/Login/containers/LoginContainer";
 import {
   logOut,
-  setIsLoginModalShowing,
+  setLoginModalState,
 } from "../../../containers/Auth/store/actions";
 import "./index.scss";
 
@@ -54,7 +54,7 @@ const Header = () => {
   );
 
   const handleOpen = useCallback(() => {
-    dispatch(setIsLoginModalShowing(true));
+    dispatch(setLoginModalState({ isShowing: true }));
   }, [dispatch]);
 
   const handleReportsDownload = () => {
