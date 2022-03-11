@@ -3,7 +3,7 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import moment from "moment";
-import { Button, Loader } from "../../../../../shared/components";
+import { Button, Loader, ModalFooter } from "../../../../../shared/components";
 import {
   PhoneInput,
   PhoneInputCountryCode,
@@ -140,7 +140,18 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish, onError }) => {
 
   const renderContent = (): ReactElement | null => {
     switch (step) {
-      case PhoneAuthStep.PhoneInput:
+      case PhoneAuthStep.PhoneInput: {
+        const buttonEl = (
+          <Button
+            className="phone-auth__submit-button"
+            onClick={onPhoneNumberSubmit}
+            disabled={!phoneNumber || !isValidPhoneNumber(phoneNumber)}
+            shouldUseFullWidth
+          >
+            Send Code
+          </Button>
+        );
+
         return (
           <>
             <h2 className="phone-auth__title">Enter your phone number</h2>
@@ -154,16 +165,16 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish, onError }) => {
                 error={isPhoneNumberTouched ? phoneNumberError : ""}
               />
             </div>
-            <Button
-              className="phone-auth__submit-button"
-              onClick={onPhoneNumberSubmit}
-              disabled={!phoneNumber || !isValidPhoneNumber(phoneNumber)}
-              shouldUseFullWidth
-            >
-              Send Code
-            </Button>
+            {isMobileView ? (
+              <ModalFooter sticky>
+                <div className="phone-auth__modal-footer">{buttonEl}</div>
+              </ModalFooter>
+            ) : (
+              buttonEl
+            )}
           </>
         );
+      }
       case PhoneAuthStep.Verification:
         return (
           <Verification

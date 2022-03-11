@@ -60,14 +60,6 @@
       max-width: unset;
     }
   }
-
-  .phone-auth__submit-button {
-    max-width: 20.5rem;
-
-    @include big-phone {
-      max-width: unset;
-    }
-  }
 }
 .phone-auth--loading {
   min-height: 34rem;
@@ -76,5 +68,19 @@
 
   @include big-phone {
     min-height: unset;
+  }
+}
+
+.phone-auth__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0 2rem;
+}
+
+.phone-auth__submit-button {
+  max-width: 20.5rem;
+
+  @include big-phone {
+    max-width: unset;
   }
 }
