@@ -5,6 +5,7 @@ import { AuthProvider } from "../../../shared/constants";
 import { PayloadWithOptionalCallback } from "../../../shared/interfaces";
 import { User } from "../../../shared/models";
 import firebase from "../../../shared/utils/firebase";
+import { LoginModalState } from "../../Auth/interface/LoginModalState";
 
 export const socialLogin = createAsyncAction(
   AuthActionTypes.SOCIAL_LOGIN,
@@ -62,9 +63,9 @@ export const updateUserDetails = createAsyncAction(
   AuthActionTypes.UPDATE_USER_DATA_FAILURE
 )<{ user: User; callback: () => void }, User, Error>();
 
-export const setIsLoginModalShowing = createStandardAction(
-  AuthActionTypes.SET_IS_LOGIN_MODAL_SHOWING
-)<boolean>();
+export const setLoginModalState = createStandardAction(
+  AuthActionTypes.SET_LOGIN_MODAL_STATE
+)<LoginModalState>();
 
 export const startAuthLoading = createStandardAction(
   AuthActionTypes.START_AUTH_LOADING

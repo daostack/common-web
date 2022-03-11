@@ -1,0 +1,32 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.login-help-buttons {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  color: $secondary-blue;
+  text-align: left;
+  list-style-type: none;
+  box-sizing: border-box;
+
+  .login-help-buttons__item {
+    border-bottom: 1px solid $light-gray-1;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  .login-help-buttons__link {
+    padding: 1.125rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: NunitoSans, sans-serif;
+    font-size: $small;
+    font-weight: 600;
+    color: inherit;
+    text-decoration: none;
+  }
+}

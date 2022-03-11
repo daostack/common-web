@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { MembershipRequestModal } from "../MembershipRequestModal";
 import { useAuthorizedModal } from "../../../../../shared/hooks";
 import { Common } from "../../../../../shared/models";
 import { ROUTE_PATHS } from "../../../../../shared/constants";
+import { LoginModalType } from "../../../../Auth/interface";
 import "./index.scss";
 
 interface EmptyTabComponentProps {
@@ -31,6 +32,10 @@ export default function EmptyTabComponent({
   } = useAuthorizedModal();
   const shouldShowJoinToCommonButton = Boolean(common) && !isCommonMember && !isJoiningPending;
   const shouldAllowJoiningToCommon = Boolean(common) && !isCommonMember && (isCreationStageReached || !isJoiningPending);
+
+  const handleModalOpen = useCallback(() => {
+    onJoinModalOpen(LoginModalType.RequestToJoin);
+  }, [onJoinModalOpen]);
 
   useEffect(() => {
     if (showJoinModal && !shouldAllowJoiningToCommon) {
@@ -74,7 +79,7 @@ export default function EmptyTabComponent({
             {shouldShowJoinToCommonButton && (
               <button
                 className="button-blue empty-tab-content-wrapper__button"
-                onClick={onJoinModalOpen}
+                onClick={handleModalOpen}
               >
                 Join the effort
               </button>

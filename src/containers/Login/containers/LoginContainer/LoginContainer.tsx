@@ -10,15 +10,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { UserDetails } from "../../components/LoginContainer/UserDetails";
 import { Modal } from "../../../../shared/components";
 import { AuthProvider, ScreenSize } from "../../../../shared/constants";
+import { ModalProps, ModalType } from "../../../../shared/interfaces";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import { isFirebaseError } from "../../../../shared/utils/firebase";
+import { LoginModalType } from "../../../Auth/interface";
+import { setLoginModalState, socialLogin } from "../../../Auth/store/actions";
 import {
-  setIsLoginModalShowing,
-  socialLogin,
-} from "../../../Auth/store/actions";
-import {
-  selectIsLoginModalShowing,
   selectIsAuthLoading,
+  selectLoginModalState,
   selectUser,
 } from "../../../Auth/store/selectors";
 import { Connect } from "../../components/LoginContainer/Connect";
@@ -36,11 +35,19 @@ const LoginContainer: FC = () => {
     user ? AuthStage.CompleteAccountDetails : AuthStage.AuthMethodSelect
   );
   const [hasError, setHasError] = useState(false);
-  const isShowing = useSelector(selectIsLoginModalShowing());
+  const { isShowing, type } = useSelector(selectLoginModalState());
   const shouldShowBackButton = stage === AuthStage.PhoneAuth && !isLoading;
+  const shouldRemoveHorizontalPadding =
+    isMobileView && stage === AuthStage.AuthMethodSelect;
+  const modalType =
+    type === LoginModalType.RequestToJoin &&
+    stage === AuthStage.AuthMethodSelect &&
+    !isLoading
+      ? ModalType.MobilePopUp
+      : ModalType.Default;
 
   const handleClose = useCallback(() => {
-    dispatch(setIsLoginModalShowing(false));
+    dispatch(setLoginModalState({ isShowing: false }));
   }, [dispatch]);
 
   const handleError = useCallback(() => {
@@ -90,19 +97,23 @@ const LoginContainer: FC = () => {
     );
   }, []);
 
-  const handlePhoneStageFinish = useCallback((isNewUser: boolean) => {
-    if (isNewUser) {
-      setStage(AuthStage.CompleteAccountDetails);
-    } else {
-      handleClose();
-    }
-  }, [handleClose]);
+  const handlePhoneStageFinish = useCallback(
+    (isNewUser: boolean) => {
+      if (isNewUser) {
+        setStage(AuthStage.CompleteAccountDetails);
+      } else {
+        handleClose();
+      }
+    },
+    [handleClose]
+  );
 
   useEffect(() => {
     if (!isShowing) {
       setStage(
         user ? AuthStage.CompleteAccountDetails : AuthStage.AuthMethodSelect
       );
+      setHasError(false);
     }
   }, [isShowing, user]);
 
@@ -120,12 +131,21 @@ const LoginContainer: FC = () => {
     );
   }, [isMobileView, stage]);
 
+  const styles = useMemo<ModalProps["styles"]>(() => {
+    if (isMobileView && stage === AuthStage.AuthMethodSelect) {
+      return {
+        content: "login-container__modal-content",
+      };
+    }
+  }, [isMobileView, stage]);
+
   const content = useMemo(() => {
     switch (stage) {
       case AuthStage.AuthMethodSelect:
         return (
           <Connect
             hasError={hasError}
+            isJoinRequestType={type === LoginModalType.RequestToJoin}
             onAuthButtonClick={handleAuthButtonClick}
           />
         );
@@ -145,6 +165,7 @@ const LoginContainer: FC = () => {
     hasError,
     handleClose,
     user,
+    type,
     handleAuthButtonClick,
     handlePhoneStageFinish,
     handleError,
@@ -154,10 +175,13 @@ const LoginContainer: FC = () => {
     <Modal
       isShowing={isShowing}
       onClose={handleClose}
-      className="mobile-full-screen"
+      type={modalType}
+      className="login-container__modal"
       mobileFullScreen
       onGoBack={shouldShowBackButton ? handleGoBack : undefined}
       title={title}
+      withoutHorizontalPadding={shouldRemoveHorizontalPadding}
+      styles={styles}
     >
       {content}
     </Modal>
