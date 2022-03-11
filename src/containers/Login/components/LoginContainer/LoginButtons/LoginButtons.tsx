@@ -7,6 +7,7 @@ const PROVIDERS = [
   AuthProvider.Apple,
   AuthProvider.Google,
   AuthProvider.Facebook,
+  AuthProvider.Phone,
 ];
 
 interface LoginButtonsProps {

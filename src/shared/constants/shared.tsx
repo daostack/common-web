@@ -31,7 +31,10 @@ export enum Colors {
   white = "#FFFFFF",
   black = "#000000",
   purple = "#7786ff",
+  secondaryBlue = "#001a36",
   lightPurple = "#F1F2FF",
+  lightGray3 = "#d5d5e4",
+  shadow2 = "rgba(0, 26, 54, 0.08)",
   transparent = "transparent",
 }
 
@@ -39,3 +42,5 @@ export const AXIOS_TIMEOUT = 1000000;
 
 export const DEFAULT_VIEWPORT_CONFIG = "width=device-width, initial-scale=1";
 export const VIEWPORT_CONFIG_TO_BLOCK_AUTO_ZOOM = `${DEFAULT_VIEWPORT_CONFIG}, maximum-scale=1.0, user-scalable=0`;
+
+export const RECAPTCHA_CONTAINER_ID = "recaptcha-container-id";

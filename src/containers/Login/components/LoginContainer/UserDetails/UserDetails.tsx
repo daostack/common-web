@@ -17,7 +17,10 @@ import { countryList } from "../../../../../shared/assets/countries";
 import { getUserName } from "../../../../../shared/utils";
 import { updateUserDetails } from "../../../../Auth/store/actions";
 import { uploadImage } from "../../../../Auth/store/saga";
-import { selectAuthProvider } from "../../../../Auth/store/selectors";
+import {
+  selectAuthProvider,
+  selectUserPhoneNumber,
+} from "../../../../Auth/store/selectors";
 import { UserAuthInfo } from "../UserAuthInfo";
 import { validationSchema } from "./validationSchema";
 import "./index.scss";
@@ -53,6 +56,7 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
   const [loading, setLoading] = useState(false);
   const inputFile: any = useRef(null);
   const authProvider = useSelector(selectAuthProvider());
+  const userPhoneNumber = useSelector(selectUserPhoneNumber());
 
   const dispatch = useDispatch();
 
@@ -104,7 +108,7 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
 
   return (
     <div className="user-details">
-      <h2 className="user-details__title">My Account</h2>
+      <h2 className="user-details__title">Complete your account</h2>
       <p className="user-details__sub-title">
         Help the community to get to know you better
       </p>
@@ -148,6 +152,7 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
                 <UserAuthInfo
                   className="user-details__auth-info"
                   user={user}
+                  userPhoneNumber={userPhoneNumber}
                   authProvider={authProvider}
                 />
                 {loading ? <Loader /> : null}

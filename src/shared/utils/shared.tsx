@@ -57,7 +57,7 @@ export const getUserInitials = (user: User | undefined) => {
   return user.displayName || `${user.firstName[0]}${user.lastName[0]}`;
 };
 
-export const getRandomUserAvatarURL = (name?: string): string => (
+export const getRandomUserAvatarURL = (name?: string | null): string => (
   `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${name}&rounded=true`
 );
 
@@ -204,3 +204,9 @@ export const roundNumberToNextTenths = (
 
 export const getProposalExpirationDate = (proposal: Proposal): Date =>
   new Date((proposal.createdAt.seconds + proposal.countdownPeriod) * 1000);
+
+export const formatCountdownValue = (value: number): string => {
+  const convertedValue = String(value);
+
+  return convertedValue.length === 1 ? `0${convertedValue}` : convertedValue;
+};

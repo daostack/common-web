@@ -11,14 +11,19 @@ const initialState: AuthStateType = {
   user: localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user") || "")
     : false,
-  isNewUser: false,
+  userPhoneNumber: null,
   isLoginModalShowing: false,
+  isAuthLoading: false,
   authProvider: null,
 };
 
 const reducer = createReducer<AuthStateType, Action>(initialState)
   .handleAction(
-    [actions.socialLogin.success, actions.loginUsingEmailAndPassword.success],
+    [
+      actions.socialLogin.success,
+      actions.loginUsingEmailAndPassword.success,
+      actions.confirmVerificationCode.success,
+    ],
     (state, action) =>
       produce(state, (nextState) => {
         nextState.authentificated = true;
@@ -31,19 +36,29 @@ const reducer = createReducer<AuthStateType, Action>(initialState)
       nextState.user = null;
     })
   )
-  .handleAction(actions.setIsUserNew, (state, action) =>
-    produce(state, (nextState) => {
-      nextState.isNewUser = action.payload;
-    })
-  )
   .handleAction(actions.setIsLoginModalShowing, (state, action) =>
     produce(state, (nextState) => {
       nextState.isLoginModalShowing = action.payload;
     })
   )
+  .handleAction(actions.startAuthLoading, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.isAuthLoading = true;
+    })
+  )
+  .handleAction(actions.stopAuthLoading, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.isAuthLoading = false;
+    })
+  )
   .handleAction(actions.setAuthProvider, (state, action) =>
     produce(state, (nextState) => {
       nextState.authProvider = action.payload;
+    })
+  )
+  .handleAction(actions.setUserPhoneNumber, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.userPhoneNumber = action.payload;
     })
   );
 
