@@ -54,6 +54,12 @@
     font-size: $moderate-med;
     font-weight: bold;
   }
+  .connect-wrapper__title--small {
+    margin: 0 0 1rem;
+    font-family: NunitoSans, sans-serif;
+    font-size: $small;
+    font-weight: bold;
+  }
 
   .connect-wrapper__sub-title {
     margin: 0 0 2.625rem;
@@ -82,6 +88,9 @@
     @include big-phone {
       margin-top: 2rem;
     }
+  }
+  .connect-wrapper__sub-text--join-request {
+    margin-bottom: 2.5rem;
   }
 
   .connect-wrapper__terms-of-use {

@@ -10,9 +10,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { UserDetails } from "../../components/LoginContainer/UserDetails";
 import { Modal } from "../../../../shared/components";
 import { AuthProvider, ScreenSize } from "../../../../shared/constants";
-import { ModalProps } from "../../../../shared/interfaces";
+import { ModalProps, ModalType } from "../../../../shared/interfaces";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import { isFirebaseError } from "../../../../shared/utils/firebase";
+import { LoginModalType } from "../../../Auth/interface";
 import { setLoginModalState, socialLogin } from "../../../Auth/store/actions";
 import {
   selectIsAuthLoading,
@@ -38,6 +39,12 @@ const LoginContainer: FC = () => {
   const shouldShowBackButton = stage === AuthStage.PhoneAuth && !isLoading;
   const shouldRemoveHorizontalPadding =
     isMobileView && stage === AuthStage.AuthMethodSelect;
+  const modalType =
+    type === LoginModalType.RequestToJoin &&
+    stage === AuthStage.AuthMethodSelect &&
+    !isLoading
+      ? ModalType.MobilePopUp
+      : ModalType.Default;
 
   const handleClose = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: false }));
@@ -137,6 +144,7 @@ const LoginContainer: FC = () => {
         return (
           <Connect
             hasError={hasError}
+            isJoinRequestType={type === LoginModalType.RequestToJoin}
             onAuthButtonClick={handleAuthButtonClick}
           />
         );
@@ -156,6 +164,7 @@ const LoginContainer: FC = () => {
     hasError,
     handleClose,
     user,
+    type,
     handleAuthButtonClick,
     handlePhoneStageFinish,
     handleError,
@@ -165,7 +174,8 @@ const LoginContainer: FC = () => {
     <Modal
       isShowing={isShowing}
       onClose={handleClose}
-      className="mobile-full-screen login-container__modal"
+      type={modalType}
+      className="login-container__modal"
       mobileFullScreen
       onGoBack={shouldShowBackButton ? handleGoBack : undefined}
       title={title}

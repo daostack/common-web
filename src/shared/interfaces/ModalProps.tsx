@@ -2,8 +2,14 @@ import React, { ReactNode } from "react";
 
 import { Colors } from "../constants";
 
+export enum ModalType {
+  Default,
+  MobilePopUp,
+}
+
 export interface ModalProps {
   isShowing: boolean;
+  type?: ModalType;
   onGoBack?: () => void;
   onClose: () => void;
   children: React.ReactNode;
