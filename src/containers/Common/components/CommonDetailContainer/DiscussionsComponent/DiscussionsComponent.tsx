@@ -26,10 +26,11 @@ export default function DiscussionsComponent({
     <>
       <div className="discussion-title-wrapper">
         <div className="title">Discussions</div>
-        <div className="add-button" onClick={onAddNewPost}>
-          <img src="/icons/add-discussion.svg" alt="add-post" />
-          Add New Post
-        </div>
+        {isCommonMember && (
+          <div className="add-button" onClick={onAddNewPost}>
+            <img src="/icons/add-discussion.svg" alt="add-post" />
+            <span>Add New Post</span>
+          </div>)}
       </div>
       <div className="discussions-component-wrapper">
         {discussions.length > 0 ? (

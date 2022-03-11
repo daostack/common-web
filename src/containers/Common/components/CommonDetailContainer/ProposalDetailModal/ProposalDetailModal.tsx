@@ -14,6 +14,9 @@ import { addMessageToProposal } from "@/containers/Common/store/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import "./index.scss";
+import { getScreenSize } from "@/shared/store/selectors";
+import { ScreenSize } from "@/shared/constants";
+import classNames from "classnames";
 
 interface DiscussionDetailModalProps {
   proposal: Proposal | null;
@@ -33,9 +36,10 @@ export default function ProposalDetailModal({
   const date = new Date();
   const dispatch = useDispatch();
   const user = useSelector(selectUser());
-  const [imageError, setImageError] = useState(false);
   const rawRequestedAmount =
     proposal?.fundingRequest?.amount || proposal?.join?.funding;
+  const screenSize = useSelector(getScreenSize());
+  const [expanded, setExpanded] = useState(true);
 
   const sendMessage = useCallback(
     (message: string) => {
@@ -58,55 +62,66 @@ export default function ProposalDetailModal({
   return !proposal ? (
     <Loader />
   ) : (
-    <div className="discussion-detail-modal-wrapper">
-      <div className="left-side">
-        <div className="top-side">
-          <ProposalState proposal={proposal} />
-          <div className="owner-wrapper">
-            <div className="owner-icon-wrapper">
-              {!imageError ? (
-                <img
-                  src={proposal.proposer?.photoURL}
-                  alt={getUserName(proposal.proposer)}
-                  onError={() => setImageError(true)}
-                />
-              ) : (
-                <img
-                  src="/icons/default_user.svg"
-                  alt={getUserName(proposal.proposer)}
-                />
-              )}
-            </div>
-            <div className="owner-name">{getUserName(proposal.proposer)}</div>
-            <div className="days-ago">
-              {getDaysAgo(date, proposal.createdAt)}
-            </div>
-          </div>
-          <div className="discussion-information-wrapper">
-            <div className="discussion-name" title={proposal.description.title}>
+    <div className="proposal-detail-modal-wrapper">
+      <div className="proposal-details-container">
+        <div className="user-and-title-container">
+          {expanded && (
+            <>
+              <ProposalState proposal={proposal} />
+              <div className="owner-wrapper">
+                <div className="owner-icon-wrapper">
+                  <img
+                    src={proposal.proposer?.photoURL}
+                    alt={getUserName(proposal.proposer)}
+                    onError={(event: any) => event.target.src = "/icons/default_user.svg"}
+                  />
+                </div>
+                <div className="owner-name-and-days-container">
+                  <div className="owner-name">{getUserName(proposal.proposer)}</div>
+                  <div className="days-ago">
+                    {getDaysAgo(date, proposal.createdAt)}
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+          <div className="proposal-information-wrapper">
+            <div className="proposal-name" title={proposal.description.title}>
               {proposal.description.title}
             </div>
-            <div className="requested-amount">
-              {!rawRequestedAmount ? (
-                "No funding requested"
-              ) : (
-                <>
-                  Requested amount
-                  <span className="amount">
-                    {formatPrice(rawRequestedAmount)}
-                  </span>
-                </>
-              )}
-            </div>
-            <VotesComponent proposal={proposal} />
+            {expanded && (
+              <>
+                <div className="requested-amount">
+                  {!rawRequestedAmount ? (
+                    "No funding requested"
+                  ) : (
+                    <>
+                      Requested amount
+                      <span className="amount">
+                        {formatPrice(rawRequestedAmount)}
+                      </span>
+                    </>
+                  )}
+                </div>
+                <VotesComponent proposal={proposal} />
+              </>)}
           </div>
-          <div className="line"></div>
         </div>
-        <div className="down-side">
-          <p className="description">{proposal.description.description}</p>
-        </div>
+
+        {expanded && (
+          <div className="description-container">
+            <p className="description">{proposal.description.description}</p>
+          </div>
+        )}
+
+        {screenSize === ScreenSize.Mobile && (
+          <div className="expand-btn-container">
+            <img className={classNames({ "expanded": expanded, "collapsed": !expanded })} onClick={() => setExpanded(!expanded)} src="/icons/expand-arrow.svg" alt="expand icon" />
+          </div>
+        )}
+
       </div>
-      <div className="right-side">
+      <div className="chat-container">
         <ChatComponent
           commonId={commonId}
           discussionMessage={proposal.discussionMessage || []}

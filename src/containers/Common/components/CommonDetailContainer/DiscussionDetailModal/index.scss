@@ -1,20 +1,22 @@
 @import "../../../../../constants.scss";
+@import "../../../../../styles/sizes";
 
 .discussion-detail-modal-wrapper {
   width: 75wh;
   height: 80vh;
   display: flex;
-  .left-side {
+  .discussion-details-container {
     flex: 40;
     margin-right: 48px;
     overflow: hidden;
     overflow-y: auto;
     scrollbar-width: none;
+    margin-top: 4rem;
     ::-webkit-scrollbar {
       width: 0; /* Remove scrollbar space */
       background: transparent; /* Optional: just make scrollbar invisible */
     }
-    .top-side {
+    .user-and-title-container {
       justify-content: center;
       display: flex;
       flex-direction: column;
@@ -68,25 +70,22 @@
             border-radius: 50%;
           }
         }
-        .owner-name {
-          font-size: 16px;
-          font-weight: normal;
-          font-stretch: normal;
-          font-style: normal;
-          line-height: 1.5;
-          letter-spacing: normal;
-          text-align: center;
-          color: #001a36;
-        }
-        .days-ago {
-          font-size: 14px;
-          font-weight: normal;
-          font-stretch: normal;
-          font-style: normal;
-          line-height: 1.43;
-          letter-spacing: normal;
-          text-align: center;
-          color: $light-gray-2;
+        .owner-name-and-days-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          .owner-name {
+            font-size: 16px;
+            line-height: 1.5;
+            text-align: center;
+            color: $secondary-blue;
+          }
+          .days-ago {
+            font-size: 14px;
+            line-height: 1.43;
+            text-align: center;
+            color: $light-gray-2;
+          }
         }
       }
       .discussion-information-wrapper {
@@ -121,7 +120,7 @@
         }
       }
     }
-    .down-side {
+    .description-container {
       margin-top: 24px;
       .description {
         font-size: 16px;
@@ -130,7 +129,60 @@
       }
     }
   }
-  .right-side {
+  .chat-container {
     flex: 60;
+    margin: -30px;
+  }
+}
+
+@include big-phone {
+  .discussion-detail-modal-wrapper {
+    flex-direction: column;
+    height: 100%;
+    .discussion-details-container {
+      margin-right: unset;
+      position: absolute;
+      left: 0;
+      z-index: 1;
+      background-color: white;
+      width: 100%;
+      margin-top: unset;
+      padding: 1.5rem;
+      box-sizing: border-box;
+      border-radius: 1.25rem;
+      box-shadow: 0 2px 4px 0 $shadow-1;
+      min-height: 7.5rem;
+      .user-and-title-container {
+        flex-direction: column-reverse;
+        .owner-wrapper {
+          flex-direction: row;
+          align-self: flex-start;
+          .owner-icon-wrapper {
+            margin-bottom: unset;
+            margin-right: 0.5rem;
+          }
+          .owner-name-and-days-container {
+            .days-ago {
+              width: 100%;
+              text-align: left;
+            }
+          }
+        }
+      }
+      .expand-btn-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        .expanded {
+          transform: rotate(0deg);
+        }
+        .collapsed {
+          transform: rotate(180deg);
+        }
+      }
+    }
+    .chat-container {
+      margin-top: 5rem;
+    }
   }
 }

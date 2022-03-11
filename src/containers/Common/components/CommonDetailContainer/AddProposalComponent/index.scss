@@ -53,11 +53,11 @@
         text-align: center;
         color: $secondary-blue;
       }
-      button{
+      button {
         margin-top: 1.5rem;
         width: 17.25rem;
         height: 3rem;
-        color:$purple;
+        color: $purple;
         border-radius: 14px;
         border: none;
         outline: none;
@@ -222,10 +222,7 @@
         }
       }
     }
-
-
   }
-
 }
 
 .action-wrapper {
@@ -302,7 +299,6 @@
         }
 
         span {
-
         }
       }
     }
@@ -318,7 +314,6 @@
       text-align: center;
       color: $secondary-blue;
     }
-
   }
 
   .action-wrapper {
@@ -511,22 +506,20 @@
   .add-proposal-loader-wrapper,
   .add-proposal-success-wrapper,
   .add-proposal-failure-wrapper,
-  .add-payment-method-wrapper ,
-  {
+  .add-payment-method-wrapper {
     height: auto;
-    width: 330px;
+    width: 100%;
   }
 
-
-  .add-proposal-wrapper{
-      .add-proposal-description{
-        width: auto;
-      }
+  .add-proposal-wrapper {
+    .add-proposal-description {
+      width: auto;
+    }
   }
 
-   .add-proposal-success-wrapper{
-    .actions-wrapper{
-      .white{
+  .add-proposal-success-wrapper {
+    .actions-wrapper {
+      .white {
         margin-bottom: 24px;
       }
     }
