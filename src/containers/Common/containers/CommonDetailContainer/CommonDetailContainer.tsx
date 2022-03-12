@@ -2,7 +2,6 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,7 +19,6 @@ import { Modal } from "../../../../shared/components/Modal";
 import {
   useAuthorizedModal,
   useModal,
-  useOutsideClick,
   useViewPortHook,
 } from "../../../../shared/hooks";
 import PurpleCheckIcon from "../../../../shared/icons/purpleCheck.icon";
@@ -51,7 +49,6 @@ import {
   ROUTE_PATHS,
   ScreenSize,
 } from "../../../../shared/constants";
-import { MobileLinks } from "../../../../shared/components/MobileLinks";
 import {
   selectCommonDetail,
   selectCurrentDisscussion,
@@ -89,22 +86,29 @@ interface CommonDetailRouterParams {
   id: string;
 }
 
+export enum Tabs {
+  About = "about",
+  Discussions = "discussions",
+  Proposals = "proposals",
+  History = "history"
+}
+
 const tabs = [
   {
     name: "Agenda",
-    key: "about",
+    key: Tabs.About,
   },
   {
     name: "Discussions",
-    key: "discussions",
+    key: Tabs.Discussions,
   },
   {
     name: "Proposals",
-    key: "proposals",
+    key: Tabs.Proposals,
   },
   {
     name: "History",
-    key: "history",
+    key: Tabs.History,
   },
 ];
 
@@ -125,10 +129,6 @@ export default function CommonDetail() {
   const [isCreationStageReached, setIsCreationStageReached] = useState(false);
   const [isCommonFetched, setIsCommonFetched] = useState(false);
 
-  const [showActions, setShowActions] = useState(false);
-  const actionsRef = useRef(null);
-  const { isOutside, setOusideValue } = useOutsideClick(actionsRef);
-
   const common = useSelector(selectCommonDetail());
   const currentDisscussion = useSelector(selectCurrentDisscussion());
   const proposals = useSelector(selectProposals());
@@ -139,13 +139,6 @@ export default function CommonDetail() {
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
   const hasPaymentMethod = useSelector(selectUserPaymentMethod());
-
-  useEffect(() => {
-    if (isOutside) {
-      setShowActions(false);
-      setOusideValue();
-    }
-  }, [isOutside, setShowActions, setOusideValue]);
 
   const fundingProposals = useMemo(
     () =>
@@ -177,9 +170,9 @@ export default function CommonDetail() {
     !isCommonMember && (isCreationStageReached || !isJoiningPending);
   const shouldShowStickyJoinEffortButton =
     screenSize === ScreenSize.Mobile &&
-    ((tab === "discussions" && discussions?.length > 0) ||
-      (tab === "proposals" && activeProposals.length > 0) ||
-      (tab === "history" && historyProposals.length > 0)) &&
+    ((tab === Tabs.Discussions && discussions?.length > 0) ||
+      (tab === Tabs.Proposals && activeProposals.length > 0) ||
+      (tab === Tabs.History && historyProposals.length > 0)) &&
     !isCommonMember &&
     !isJoiningPending &&
     !inViewport &&
@@ -420,11 +413,11 @@ export default function CommonDetail() {
       setStickyClass("");
     } else {
       if (joinEffortRef && joinEffortRef.offsetTop < window.scrollY) {
-        if (tab === "discussions" && discussions?.length) {
+        if (tab === Tabs.Discussions && discussions?.length) {
           setStickyClass("sticky");
-        } else if (tab === "proposals" && activeProposals.length) {
+        } else if (tab === Tabs.Proposals && activeProposals.length) {
           setStickyClass("sticky");
-        } else if (tab === "history" || tab === "about") {
+        } else if (tab === Tabs.History || tab === Tabs.About) {
           setStickyClass("sticky");
         }
       }
@@ -467,11 +460,9 @@ export default function CommonDetail() {
         <Modal
           isShowing={isShowing}
           onClose={closeModalHandler}
-          closeColor={
-            screenSize === ScreenSize.Mobile ? Colors.white : Colors.gray
-          }
+          mobileFullScreen
           className={classNames(tab, {
-            "common-detail-container__detail-modal--mobile": isMobileView,
+            "mobile-full-screen": isMobileView,
           })}
           isHeaderSticky
           shouldShowHeaderShadow={false}
@@ -483,7 +474,7 @@ export default function CommonDetail() {
             content: "common-detail-container__detail-modal-content",
           }}
         >
-          {!isMobileView && tab === "discussions" && (
+          {tab === Tabs.Discussions && (
             <DiscussionDetailModal
               disscussion={currentDisscussion}
               commonId={common.id}
@@ -492,7 +483,7 @@ export default function CommonDetail() {
               isJoiningPending={isJoiningPending}
             />
           )}
-          {!isMobileView && (tab === "proposals" || tab === "history") && (
+          {(tab === Tabs.Proposals || tab === Tabs.History) && (
             <ProposalDetailModal
               proposal={currentProposal}
               commonId={common.id}
@@ -500,20 +491,6 @@ export default function CommonDetail() {
               isCommonMember={isCommonMember}
               isJoiningPending={isJoiningPending}
             />
-          )}
-          {isMobileView && (
-            <div className="get-common-app-wrapper">
-              <img
-                src="/icons/logo-all-white.svg"
-                alt="logo"
-                className="logo"
-              />
-              <span className="text">
-                Download the Common app to participate in discussions and join
-                the community
-              </span>
-              <MobileLinks color={Colors.black} detectOS={true} />
-            </div>
           )}
         </Modal>
       )}
@@ -635,30 +612,6 @@ export default function CommonDetail() {
                   ))}
                 </div>
                 <div className="social-wrapper" ref={setJoinEffortRef}>
-                  <div className="common-actions-wrapper" ref={actionsRef}>
-                    <button
-                      className={`add-action ${showActions ? "opened" : ""}`}
-                      onClick={() => setShowActions((v) => !v)}
-                    >
-                      <img src="/icons/common-action.svg" alt="common-action" />
-                      Add
-                    </button>
-
-                    {showActions && (
-                      <div className="common-actions">
-                        <div className="add-button" onClick={onOpenNewD}>
-                          <img src="/icons/add-discussion.svg" alt="add-post" />
-                          Add New Post
-                        </div>
-                        {isCommonMember && (
-                          <div className="add-button" onClick={onOpenNewP}>
-                            <img src="/icons/add-proposal.svg" alt="add-post" />
-                            Add New Proposal
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
                   {!isCommonMember && (
                     <button
                       className={`button-blue join-the-effort-btn`}
@@ -714,13 +667,13 @@ export default function CommonDetail() {
         <div className="main-content-container">
           <div
             className={
-              tab === "history"
+              tab === Tabs.History
                 ? "content-element inner-main-content-wrapper history"
                 : "content-element inner-main-content-wrapper"
             }
           >
             <div className="tab-content-wrapper">
-              {tab === "about" && (
+              {tab === Tabs.About && (
                 <>
                   <div className="about-title">About</div>
                   <AboutTabComponent
@@ -732,7 +685,7 @@ export default function CommonDetail() {
                   />
                 </>
               )}
-              {tab === "discussions" && (
+              {tab === Tabs.Discussions && (
                 <DiscussionsComponent
                   onAddNewPost={addPost}
                   common={common}
@@ -743,7 +696,7 @@ export default function CommonDetail() {
                 />
               )}
 
-              {tab === "proposals" && (
+              {tab === Tabs.Proposals && (
                 <ProposalsComponent
                   onAddNewProposal={addNewProposal}
                   common={common}
@@ -755,7 +708,7 @@ export default function CommonDetail() {
                 />
               )}
 
-              {tab === "history" && (
+              {tab === Tabs.History && (
                 <ProposalsComponent
                   onAddNewProposal={addNewProposal}
                   common={common}

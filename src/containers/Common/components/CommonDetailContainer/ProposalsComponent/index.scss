@@ -1,4 +1,5 @@
 @import "../../../../../constants.scss";
+@import "../../../../../styles/sizes";
 
 .proposal-title-wrapper {
   display: flex;
@@ -249,7 +250,30 @@
   }
 }
 
-@media only screen and (max-width: $mobile-breakpoint) {
+@include big-phone {
+  .proposal-title-wrapper {
+    .add-button {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 2;
+      box-shadow: 0 0 6px 0 $fixed-button-shadow;
+      background-color: $purple;
+      width: 64px;
+      height: 64px;
+      min-width: unset;
+      border-radius: 50%;
+      padding: unset;
+      span {
+        display: none;
+      }
+      img {
+        margin-right: unset;
+        filter: invert(1);
+      }
+    }
+  }
+
   .proposals-component-wrapper {
     .discussion-item-wrapper {
       padding: 20px;

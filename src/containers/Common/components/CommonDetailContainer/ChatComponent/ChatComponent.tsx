@@ -88,9 +88,6 @@ export default function ChatComponent({
       </div>
       {!isAuthorized ? (
         <div className="bottom-chat-wrapper">
-          <div className="text">
-            Download the Common app to join the discussion
-          </div>
           <div className="button-wrapper">
             {shouldShowJoinToCommonButton && (
               <button
@@ -110,22 +107,26 @@ export default function ChatComponent({
         </div>
       ) : (
         <div className="bottom-chat-wrapper">
-          <input
-            className="message-input"
-            placeholder="What do you think?"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <button
-            className="send"
-            onClick={() => {
-              sendMessage && sendMessage(message);
-              setMessage("");
-            }}
-            disabled={!message.length}
-          >
-            <img src="/icons/send-message.svg" alt="send-message" />
-          </button>
+          {!isCommonMember ? <span className="text">Only members can send messages</span> :
+            <>
+              <input
+                className="message-input"
+                placeholder="What do you think?"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+              <button
+                className="send"
+                onClick={() => {
+                  sendMessage && sendMessage(message);
+                  setMessage("");
+                }}
+                disabled={!message.length}
+              >
+                <img src="/icons/send-message.svg" alt="send-message" />
+              </button>
+            </>
+          }
         </div>
       )}
     </div>

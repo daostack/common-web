@@ -1,4 +1,5 @@
 @import "../../../../../constants.scss";
+@import "../../../../../styles/sizes";
 
 .chat-wrapper {
   margin-top: 32px;
@@ -13,7 +14,7 @@
     height: 100%;
     overflow: auto;
     scrollbar-width: none;
-    &.empty{
+    &.empty {
       display: flex;
       justify-content: center;
     }
@@ -69,6 +70,7 @@
         background-color: #e0e3ff;
         flex-direction: row;
         width: 85%;
+        box-sizing: border-box;
         .message-name {
           font-size: 14px;
           font-weight: bold;
@@ -79,15 +81,13 @@
           font-size: 16px;
           color: #001a36;
           word-wrap: break-word;
+          .time-wrapper {
+            font-size: 10px;
+            font-weight: bold;
+            color: $light-gray-2;
+            text-align: right;
+          }
         }
-      }
-      .time-wrapper {
-        position: absolute;
-        font-size: 10px;
-        font-weight: bold;
-        color: $light-gray-2;
-        right: 0.9rem;
-        bottom: 0.5rem;
       }
     }
   }
@@ -107,6 +107,8 @@
       font-size: 14px;
       color: $light-gray-2;
       margin-right: 5px;
+      width: 100%;
+      text-align: center;
     }
     .button-wrapper {
       display: flex;
@@ -136,13 +138,13 @@
       }
     }
 
-    .message-input{
+    .message-input {
       width: 100%;
       height: 2.5rem;
-      padding: 0.25rem  1rem;
+      padding: 0.25rem 1rem;
       border-radius: 20px;
       background-color: #f0f2ff;
-      border:none;
+      border: none;
       outline: none;
       resize: none;
       font-size: 0.875rem;
@@ -151,7 +153,7 @@
       display: flex;
       align-items: center;
     }
-    .send{
+    .send {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -160,7 +162,7 @@
       border: none;
       outline: none;
       background: white;
-      &:disabled{
+      &:disabled {
         cursor: not-allowed;
         opacity: 0.5;
       }
@@ -169,5 +171,15 @@
   ::-webkit-scrollbar {
     width: 0; /* Remove scrollbar space */
     background: transparent; /* Optional: just make scrollbar invisible */
+  }
+}
+
+@include big-phone {
+  .chat-wrapper {
+    .messages {
+      .message-wrapper {
+        width: 100%;
+      }
+    }
   }
 }

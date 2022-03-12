@@ -1,11 +1,12 @@
 @import "../../../../../constants.scss";
+@import "../../../../../styles/sizes";
 
-.discussion-title-wrapper{
+.discussion-title-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
-  .title{
+  .title {
     font-size: 1.5rem;
     font-weight: bold;
     font-stretch: normal;
@@ -15,7 +16,7 @@
     color: $secondary-blue;
     font-family: NunitoSans-Bold, sans-serif;
   }
-  .add-button{
+  .add-button {
     display: flex;
     padding: 0.5rem 1.5rem;
     border-radius: 30.5px;
@@ -34,7 +35,7 @@
     justify-content: center;
     font-family: NunitoSans-Bold;
 
-    img{
+    img {
       width: 1.5rem;
       height: 1.5rem;
       margin-right: 0.5rem;
@@ -162,7 +163,30 @@
   }
 }
 
-@media only screen and (max-width: $mobile-breakpoint) {
+@include big-phone {
+  .discussion-title-wrapper {
+    .add-button {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 2;
+      box-shadow: 0 0 6px 0 $fixed-button-shadow;
+      background-color: $purple;
+      width: 64px;
+      height: 64px;
+      min-width: unset;
+      border-radius: 50%;
+      padding: unset;
+      span {
+        display: none;
+      }
+      img {
+        margin-right: unset;
+        filter: invert(1);
+      }
+    }
+  }
+
   .discussions-component-wrapper {
     .discussion-item-wrapper {
       padding: 20px;

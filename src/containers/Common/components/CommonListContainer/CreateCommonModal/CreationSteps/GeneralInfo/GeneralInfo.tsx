@@ -38,7 +38,7 @@ const getInitialValues = (
   commonName: data.name,
   tagline: data.byline || "",
   about: data.description || "",
-  links: data.links || [{ title: "", value: "" }],
+  links: data.links?.length ? data.links : [{ title: "", value: "" }],
 });
 
 export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
@@ -55,11 +55,13 @@ export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
+      const links = values.links.filter((link) => link.title && link.value);
+
       onFinish({
         name: values.commonName,
         byline: values.tagline,
         description: values.about,
-        links: values.links,
+        links,
       });
     },
     [onFinish]
@@ -109,6 +111,7 @@ export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
                 shouldDisplayCount={!isMobileView}
                 rows={isMobileView ? 4 : 3}
                 isTextarea
+                isRequired
               />
               <LinksArray
                 name="links"

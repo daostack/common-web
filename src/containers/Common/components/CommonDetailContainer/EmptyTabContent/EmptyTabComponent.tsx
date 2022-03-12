@@ -5,6 +5,7 @@ import { useAuthorizedModal } from "../../../../../shared/hooks";
 import { Common } from "../../../../../shared/models";
 import { ROUTE_PATHS } from "../../../../../shared/constants";
 import "./index.scss";
+import { Tabs } from "@/containers/Common/containers/CommonDetailContainer/CommonDetailContainer";
 
 interface EmptyTabComponentProps {
   currentTab: string;
@@ -50,13 +51,13 @@ export default function EmptyTabComponent({
       )}
       <div className={`empty-tab-component-wrapper `}>
         <div className="img-wrapper">
-          {currentTab === "proposals" && (
+          {currentTab === Tabs.Proposals && (
             <img alt={currentTab} src="/icons/proposals-empty.svg" />
           )}
-          {currentTab === "history" && (
+          {currentTab === Tabs.History && (
             <img alt={currentTab} src="/icons/proposals-empty.svg" />
           )}
-          {currentTab === "discussions" && (
+          {currentTab === Tabs.Discussions && (
             <img alt={currentTab} src="/icons/discussions-empty.svg" />
           )}
           {currentTab === "my-commons" && (
