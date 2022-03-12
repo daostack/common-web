@@ -41,7 +41,7 @@ const LandingContainer = () => {
         <p>
           Common enables large groups of people to collaborate on shared <br /> agendas by pooling funds and
           collectively making decisions. <br /> <br />
-          <b>Anyone</b> can create a Common, invite thier friends, and work <br className="desktop-break" /> together to
+          <b>Anyone</b> can create a Common, invite their friends, and work <br className="desktop-break" /> together to
           achieve a common goal.
         </p>
         <div className="content-element illustrations-wrapper-1">
