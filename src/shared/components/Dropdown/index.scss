@@ -66,6 +66,10 @@
       cursor: pointer;
     }
   }
+  .custom-dropdown-wrapper__menu--fixed {
+    position: fixed;
+    max-width: 17.125rem;
+  }
 
   .custom-dropdown-wrapper__menu-list {
     max-height: 12rem;
