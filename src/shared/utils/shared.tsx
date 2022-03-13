@@ -211,3 +211,10 @@ export const getCommonExampleImageURL = (index: number): string =>
   `https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_0${index}.png?alt=media`;
 
 export const getSharingURL = (path: string): string => `${BASE_URL}${path}`;
+
+export const percentage = (partialValue: number, totalValue: number): number => {
+  if (totalValue === 0) {
+    return 0;
+  }
+  return (100 * partialValue) / totalValue;
+}

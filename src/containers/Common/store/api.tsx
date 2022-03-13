@@ -26,7 +26,7 @@ import {
   DeleteCommon,
 } from "@/containers/Common/interfaces";
 import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
-import { CreateVotePayload } from "@/shared/interfaces/api/vote";
+import { CreateVotePayload, Vote } from "@/shared/interfaces/api/vote";
 
 export async function fetchCommonDiscussions(commonId: string) {
   const commons = await firebase
@@ -265,8 +265,8 @@ export async function createFundingProposal(
   return convertObjectDatesToFirestoreTimestamps(data);
 }
 
-export async function createVote(requestData: CreateVotePayload): Promise<void> {
-  const { data } = await Api.post<void>(
+export async function createVote(requestData: CreateVotePayload): Promise<Vote> {
+  const { data } = await Api.post<Vote>(
     ApiEndpoint.CreateVote,
     requestData
   );

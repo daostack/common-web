@@ -32,6 +32,7 @@ import {
 import { selectDiscussions, selectProposals } from "./selectors";
 import store from "@/index";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
+import { Vote } from "@/shared/interfaces/api/vote";
 
 export function* getCommonsList(): Generator {
   try {
@@ -340,8 +341,16 @@ export function* vote(
 ): Generator {
   try {
     yield put(startLoading());
-    yield createVoteApi(action.payload.payload);
+    const vote = (yield createVoteApi(action.payload.payload)) as Vote;
 
+    yield call(
+      async () => {
+        const proposals = await fetchCommonProposals(vote.commonId);
+        store.dispatch(actions.setProposals(proposals));
+        store.dispatch(actions.loadProposalList.request());
+        store.dispatch(stopLoading());
+      }
+    )
     yield put(actions.createVote.success());
     action.payload.callback(null);
     yield put(stopLoading());
