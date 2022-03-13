@@ -9,6 +9,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  .user-avatar {
+    border: 0.3rem solid;
+    &.approve {
+      border-color: $green;
+    }
+    &.reject {
+      border-color: $red;
+    }
+    &.abstain {
+      border-color: $gray;
+    }
+  }
   .vote-type {
     text-transform: capitalize;
     &.approve {

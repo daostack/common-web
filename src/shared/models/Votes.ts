@@ -1,5 +1,5 @@
 export enum VoteOutcome {
-  APPROVED = "approved",
-  REJECTED = "rejected",
-  ABSTAINED = "abstained",
+  Approved = "approved",
+  Rejected = "rejected",
+  Abstained = "abstained",
 }

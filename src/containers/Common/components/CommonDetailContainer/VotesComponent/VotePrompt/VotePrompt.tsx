@@ -1,5 +1,5 @@
 import { createVote } from "@/containers/Common/store/actions";
-import { Button, ButtonVariant, Loader } from "@/shared/components";
+import { Button, ButtonVariant, Loader, UserAvatar } from "@/shared/components";
 import { Modal } from "@/shared/components/Modal"
 import { ModalProps } from "@/shared/interfaces"
 import { VoteOutcome } from "@/shared/models";
@@ -8,14 +8,15 @@ import { useDispatch } from "react-redux";
 import "./index.scss";
 
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
-  proposalId: string
-  voteType: VoteOutcome
+  proposalId: string;
+  voteType: VoteOutcome;
+  avatarURL: string;
 }
 
-export default function VotePrompt({ isShowing, onClose, proposalId, voteType }: IProps) {
+export default function VotePrompt({ isShowing, onClose, proposalId, voteType, avatarURL }: IProps) {
   const dispatch = useDispatch();
   const [voting, setVoting] = useState(false);
-  const voteText = voteType === VoteOutcome.APPROVED ? "approve" : voteType === VoteOutcome.REJECTED ? "reject" : "abstain";
+  const voteText = voteType === VoteOutcome.Approved ? "approve" : voteType === VoteOutcome.Rejected ? "reject" : "abstain";
 
   const handleVote = useCallback((vote: VoteOutcome) => {
     setVoting(true);
@@ -35,6 +36,7 @@ export default function VotePrompt({ isShowing, onClose, proposalId, voteType }:
   return (
     <Modal isShowing={isShowing} onClose={onClose} className="vote-prompt-modal">
       <div className="vote-ptompt-wrapper">
+        <UserAvatar photoURL={avatarURL} className={`user-avatar ${voteText}`} />
         <h3 className={`vote-type ${voteText}`}>{voteText}</h3>
         {!voting ? (
           <>

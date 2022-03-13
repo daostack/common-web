@@ -3,10 +3,13 @@
 .votes-wrapper {
   display: flex;
   justify-content: space-between;
+  width: 100%;
   .vote-column {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-end;
+    font-weight: bold;
     &.approve {
       color: $green;
     }
@@ -16,74 +19,29 @@
     &.abstain {
       color: $gray;
     }
+    button {
+      background-color: transparent;
+      border: 1px solid $gray;
+      border-radius: 20px;
+      width: 6rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px 0 $shadow-1;
+      cursor: pointer;
+      &.compact {
+        border: none;
+        box-shadow: none;
+        width: 4rem;
+        height: unset;
+      }
+      &.disabled {
+        pointer-events: none;
+      }
+      &:hover {
+        opacity: 0.9;
+      }
+    }
   }
 }
-
-
-// width: 100%;
-// .top-votes-side {
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   .for,
-//   .against {
-//     display: flex;
-//     align-items: center;
-//     img {
-//       width: 24px;
-//       height: 24px;
-//     }
-//   }
-//   .against {
-//     font-size: 18px;
-//     font-weight: bold;
-//     text-align: right;
-//     color: $red;
-//   }
-//   .for {
-//     font-size: 18px;
-//     font-weight: bold;
-//     text-align: right;
-//     color: $green;
-//   }
-//   .count {
-//     font-size: 14px;
-//     text-align: center;
-//     color: #001a36;
-//   }
-// }
-// .progress {
-//   .for,
-//   .against {
-//     height: 8px;
-//     display: inline-block;
-//   }
-//   .for {
-//     background-color: $green;
-//     border-radius: 100px 0px 0px 100px;
-
-//     // To create a white gap between the "for" and "against" bars.
-//     border-right: 0.125rem solid $white;
-//     box-sizing: border-box;
-//     &.rounded {
-//       border-radius: 100px;
-//     }
-//     &.no-border {
-//       border-right: unset;
-//     }
-//   }
-//   .against {
-//     background-color: $red;
-//     border-radius: 0px 100px 100px 0px;
-//     &.rounded {
-//       border-radius: 100px;
-//     }
-//   }
-//   .gray-bar {
-//     height: 8px;
-//     display: inline-block;
-//     background-color: $light-gray-1;
-//     border-radius: 100px;
-//     width: 100%;
-//   }
-// }

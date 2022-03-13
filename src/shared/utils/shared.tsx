@@ -25,11 +25,10 @@ export const formatPrice = (
 
   const convertedPrice = price / 100;
 
-  return `${prefix}${
-    shouldMillify
+  return `${prefix}${shouldMillify
       ? millify(convertedPrice)
       : convertedPrice.toLocaleString("en-US")
-  }`;
+    }`;
 };
 
 export const formatDate = (
@@ -42,7 +41,7 @@ export const formatDate = (
  * @param {Time} time
  * @param {DateFormat} format the desired format
  */
- export const formatEpochTime = (time: Time, format: DateFormat = DateFormat.Long) => {
+export const formatEpochTime = (time: Time, format: DateFormat = DateFormat.Long) => {
   return moment.unix(time.seconds).local().format(format);
 }
 
@@ -216,5 +215,5 @@ export const percentage = (partialValue: number, totalValue: number): number => 
   if (totalValue === 0) {
     return 0;
   }
-  return (100 * partialValue) / totalValue;
+  return Math.round((100 * partialValue) / totalValue * 10) / 10;;
 }

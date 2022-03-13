@@ -356,6 +356,7 @@ export default function CommonDetail() {
               vievAllHandler={() => changeTabHandler("discussions")}
               onClickItem={clickPreviewDisscusionHandler}
               type="discussions"
+              isCommonMember={isCommonMember}
             />
             <PreviewInformationList
               title="Latest Proposals"
@@ -363,6 +364,7 @@ export default function CommonDetail() {
               vievAllHandler={() => changeTabHandler("proposals")}
               onClickItem={clickPreviewProposalHandler}
               type="proposals"
+              isCommonMember={isCommonMember}
             />
           </>
         );
@@ -381,6 +383,7 @@ export default function CommonDetail() {
               vievAllHandler={() => changeTabHandler("proposals")}
               onClickItem={clickPreviewProposalHandler}
               type="proposals"
+              isCommonMember={isCommonMember}
             />
           </>
         );
@@ -398,6 +401,7 @@ export default function CommonDetail() {
               vievAllHandler={() => changeTabHandler("discussions")}
               onClickItem={clickPreviewDisscusionHandler}
               type="discussions"
+              isCommonMember={isCommonMember}
             />
           </>
         );

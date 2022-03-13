@@ -43,6 +43,7 @@ export default function ProposalsComponent({
                 key={p.id}
                 proposal={p}
                 loadProposalDetail={loadProposalDetail}
+                isCommonMember={isCommonMember}
               />
             ))}
           </>
