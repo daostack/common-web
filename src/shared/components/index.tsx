@@ -8,6 +8,7 @@ export * from "./FilesCarousel";
 export * from "./NotFound";
 export * from "./SocialLoginButton";
 export * from "./Footer";
+export * from "./GlobalOverlay";
 export * from "./Header";
 export * from "./InvoiceTile";
 export * from "./Image";
