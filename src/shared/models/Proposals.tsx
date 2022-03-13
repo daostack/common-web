@@ -74,6 +74,7 @@ export interface Proposal {
   updatedAt: Date;
   votesAgainst?: number;
   votesFor?: number;
+  votesAbstained?: number;
   user?: User;
   proposer?: User;
   discussionMessage?: DiscussionMessage[];
