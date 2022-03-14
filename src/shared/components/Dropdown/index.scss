@@ -4,6 +4,18 @@
   position: relative;
   color: $secondary-blue;
   font-size: $xsmall;
+  z-index: $dropdown-z-index;
+
+  .custom-dropdown-wrapper__label-wrapper {
+    margin-bottom: 0.625rem;
+    display: flex;
+    font-size: $xsmall;
+    line-height: 1.32;
+  }
+
+  .custom-dropdown-wrapper__label {
+    text-align: left;
+  }
 
   .custom-dropdown-wrapper__menu-button {
     width: 100%;
@@ -37,6 +49,7 @@
     transform: rotate(90deg);
     transition: all 0.2s;
   }
+
   .custom-dropdown-wrapper__arrow-icon--opened {
     transform: rotate(-90deg);
   }
@@ -52,6 +65,10 @@
     &:hover {
       cursor: pointer;
     }
+  }
+  .custom-dropdown-wrapper__menu--fixed {
+    position: fixed;
+    max-width: 17.125rem;
   }
 
   .custom-dropdown-wrapper__menu-list {

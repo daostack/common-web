@@ -31,6 +31,7 @@ import {
 } from "../../../../shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice, getUserName } from "@/shared/utils";
+import { LoginModalType } from "../../../Auth/interface";
 import {
   AboutTabComponent,
   PreviewInformationList,
@@ -206,6 +207,10 @@ export default function CommonDetail() {
   } = useAuthorizedModal();
   const isMobileView = screenSize === ScreenSize.Mobile;
 
+  const handleOpen = useCallback(() => {
+    onOpenJoinModal(LoginModalType.RequestToJoin);
+  }, [onOpenJoinModal]);
+
   useEffect(() => {
     dispatch(checkUserPaymentMethod.request());
     dispatch(
@@ -324,8 +329,8 @@ export default function CommonDetail() {
 
   const openJoinModal = useCallback(() => {
     onClose();
-    setTimeout(onOpenJoinModal, 0);
-  }, [onOpenJoinModal, onClose]);
+    setTimeout(handleOpen, 0);
+  }, [handleOpen, onClose]);
 
   const closeJoinModal = useCallback(() => {
     onCloseJoinModal();
@@ -619,7 +624,7 @@ export default function CommonDetail() {
                   {!isCommonMember && (
                     <button
                       className={`button-blue join-the-effort-btn`}
-                      onClick={onOpenJoinModal}
+                      onClick={handleOpen}
                       disabled={isJoiningPending}
                     >
                       {isJoiningPending
@@ -683,7 +688,7 @@ export default function CommonDetail() {
                   <AboutTabComponent
                     common={common}
                     screenSize={screenSize}
-                    onOpenJoinModal={onOpenJoinModal}
+                    onOpenJoinModal={handleOpen}
                     isCommonMember={isCommonMember}
                     isJoiningPending={isJoiningPending}
                   />
@@ -727,7 +732,7 @@ export default function CommonDetail() {
             {shouldShowStickyJoinEffortButton && (
               <button
                 className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
-                onClick={onOpenJoinModal}
+                onClick={handleOpen}
               >
                 Join the effort
               </button>

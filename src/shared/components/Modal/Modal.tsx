@@ -15,7 +15,7 @@ import ReactDOM from "react-dom";
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
 import { useComponentWillUnmount } from "../../hooks";
-import { ModalProps, ModalRef } from "../../interfaces";
+import { ModalProps, ModalRef, ModalType } from "../../interfaces";
 import CloseIcon from "../../icons/close.icon";
 import LeftArrowIcon from "../../icons/leftArrow.icon";
 import { Colors } from "../../constants";
@@ -37,11 +37,13 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     title,
     onHeaderScrolledToTop,
     styles,
+    type = ModalType.Default,
     hideCloseButton = false,
     closeIconSize = 24,
     isHeaderSticky = false,
     shouldShowHeaderShadow = true,
     closePrompt = false,
+    withoutHorizontalPadding = false,
   } = props;
   const contentRef = useRef<HTMLDivElement>(null);
   const [footer, setFooter] = useState<ReactNode>(null);
@@ -122,14 +124,16 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     );
   }, [isHeaderSticky, isFooterSticky]);
 
-  const modalWrapperClassName = classNames("modal-wrapper", styles?.modalWrapper, {
-    "mobile-full-screen": mobileFullScreen,
+  const modalWrapperClassName = classNames("modal-wrapper", styles?.modalWrapper);
+  const modalClassName = classNames("modal", props.className, {
+    "modal--mobile-full-screen": mobileFullScreen && type !== ModalType.MobilePopUp,
+    "modal--mobile-pop-up": type === ModalType.MobilePopUp,
   });
   const headerWrapperClassName = classNames(
     "modal__header-wrapper",
     styles?.headerWrapper,
     {
-      "modal__header-wrapper--fixed": isHeaderSticky,
+      "modal__header-wrapper--with-modal-padding": isHeaderSticky || withoutHorizontalPadding,
       "modal__header-wrapper--shadowed":
         isHeaderSticky && !isFullyScrolledToTop && shouldShowHeaderShadow,
     }
@@ -140,6 +144,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
   });
   const modalContentClassName = classNames("modal__content", styles?.content, {
     "modal__content--without-footer": !footer,
+    "modal__content--without-h-padding": withoutHorizontalPadding,
   });
   const footerClassName = classNames("modal__footer", {
     "modal__footer--fixed": isFooterSticky,
@@ -214,7 +219,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
           <div className="modal-overlay" />
           <div className={modalWrapperClassName} onClick={handleClose}>
             <div
-              className={`modal ${props.className}`}
+              className={modalClassName}
               onClick={handleModalContainerClick}
             >
               {isHeaderSticky && headerEl}

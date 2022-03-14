@@ -1,6 +1,7 @@
 export interface UserCreationDto {
   firstName: string;
   lastName: string;
-  // email: string | null;
+  displayName?: string;
+  phoneNumber?: string;
   photoURL: string;
 }
