@@ -25,12 +25,14 @@ import {
   createFundingProposal,
   subscribeToCommonProposal,
   checkUserPaymentMethod,
-  deleteCommon as deleteCommonApi
+  deleteCommon as deleteCommonApi,
+  createVote as createVoteApi,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
 import store from "@/index";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
+import { Vote } from "@/shared/interfaces/api/vote";
 
 export function* getCommonsList(): Generator {
   try {
@@ -321,6 +323,7 @@ export function* deleteCommon(
   action: ReturnType<typeof actions.deleteCommon.request>
 ): Generator {
   try {
+    yield put(startLoading());
     yield deleteCommonApi(action.payload.payload);
 
     yield put(actions.deleteCommon.success());
@@ -328,6 +331,31 @@ export function* deleteCommon(
     yield put(stopLoading());
   } catch (error) {
     yield put(actions.deleteCommon.failure(error));
+    action.payload.callback(error);
+    yield put(stopLoading());
+  }
+}
+
+export function* vote(
+  action: ReturnType<typeof actions.createVote.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    const vote = (yield createVoteApi(action.payload.payload)) as Vote;
+
+    yield call(
+      async () => {
+        const proposals = await fetchCommonProposals(vote.commonId);
+        store.dispatch(actions.setProposals(proposals));
+        store.dispatch(actions.loadProposalList.request());
+        store.dispatch(stopLoading());
+      }
+    )
+    yield put(actions.createVote.success());
+    action.payload.callback(null);
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(actions.createVote.failure(error));
     action.payload.callback(error);
     yield put(stopLoading());
   }
@@ -432,6 +460,7 @@ export function* commonsSaga() {
     addMessageToProposalSaga
   );
   yield takeLatest(actions.createCommon.request, createCommon);
+  yield takeLatest(actions.createVote.request, vote);
 }
 
 export default commonsSaga;

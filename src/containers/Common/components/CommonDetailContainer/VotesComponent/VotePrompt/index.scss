@@ -1,0 +1,72 @@
+@import "../../../../../../constants.scss";
+@import "../../../../../../styles/sizes";
+
+.vote-prompt-modal {
+  width: 30rem;
+}
+
+.vote-ptompt-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .user-avatar {
+    border: 0.3rem solid;
+    &.approve {
+      border-color: $green;
+    }
+    &.reject {
+      border-color: $red;
+    }
+    &.abstain {
+      border-color: $gray;
+    }
+  }
+  .vote-type {
+    text-transform: capitalize;
+    &.approve {
+      color: $green;
+    }
+    &.reject {
+      color: $red;
+    }
+    &.abstain {
+      color: $gray;
+    }
+  }
+  .actions-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+    .vote-button {
+      margin-bottom: 1rem;
+      &.approve {
+        background-color: $green;
+      }
+      &.reject {
+        background-color: $red;
+      }
+      &.abstain {
+        background-color: $gray;
+      }
+    }
+  }
+}
+
+@include big-phone {
+  .vote-prompt-modal {
+    margin-top: auto;
+    margin-bottom: unset;
+    width: 100%;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .vote-ptompt-wrapper {
+    .actions-wrapper {
+      width: 100%;
+      button {
+        width: 100%;
+      }
+    }
+  }
+}

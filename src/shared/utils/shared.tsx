@@ -25,11 +25,10 @@ export const formatPrice = (
 
   const convertedPrice = price / 100;
 
-  return `${prefix}${
-    shouldMillify
+  return `${prefix}${shouldMillify
       ? millify(convertedPrice)
       : convertedPrice.toLocaleString("en-US")
-  }`;
+    }`;
 };
 
 export const formatDate = (
@@ -42,7 +41,7 @@ export const formatDate = (
  * @param {Time} time
  * @param {DateFormat} format the desired format
  */
- export const formatEpochTime = (time: Time, format: DateFormat = DateFormat.Long) => {
+export const formatEpochTime = (time: Time, format: DateFormat = DateFormat.Long) => {
   return moment.unix(time.seconds).local().format(format);
 }
 
@@ -213,6 +212,13 @@ export const getCommonExampleImageURL = (index: number): string =>
   `https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_0${index}.png?alt=media`;
 
 export const getSharingURL = (path: string): string => `${BASE_URL}${path}`;
+
+export const percentage = (partialValue: number, totalValue: number): number => {
+  if (totalValue === 0) {
+    return 0;
+  }
+  return Math.round((100 * partialValue) / totalValue * 10) / 10;;
+}
 
 export const formatCountdownValue = (value: number): string => {
   const convertedValue = String(value);

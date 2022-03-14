@@ -1,63 +1,65 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import classNames from "classnames";
-
-import { Proposal } from "../../../../../shared/models";
-
+import { Proposal, ProposalState, VoteOutcome } from "@/shared/models";
+import { percentage } from "@/shared/utils";
+import { useModal } from "@/shared/hooks";
+import VotePrompt from "./VotePrompt/VotePrompt";
+import VoteBar from "./VoteBar/VoteBar";
 import "./index.scss";
 
 interface VotesComponentProps {
   proposal: Proposal;
-  type?: string;
+  isCommonMember: boolean;
+  preview?: boolean;
+  compact?: boolean;
 }
 
-export default function VotesComponent({ proposal, type }: VotesComponentProps) {
-  const votes = (proposal.votesAgainst || 0) + (proposal.votesFor || 0);
+export default function VotesComponent({ proposal, isCommonMember, preview, compact }: VotesComponentProps) {
+  const { isShowing, onOpen, onClose } = useModal(false);
+  const votesFor = proposal.votesFor || 0;
+  const votesAgainst = proposal.votesAgainst || 0;
+  const votesAbstained = proposal.votesAbstained || 0;
+  const totalVotes = votesFor + votesAgainst + votesAbstained;
+  const [voteType, setVoteType] = useState<VoteOutcome>();
 
-  const forClassName = classNames({
-    for: true,
-    rounded: proposal.votesAgainst === 0,
-    "no-border": proposal.votesFor === 0,
-  });
+  const votingDisabled = !isCommonMember || proposal.state !== ProposalState.COUNTDOWN || preview;
 
-  const againstClassName = classNames({
-    against: true,
-    rounded: proposal.votesFor === 0,
-  });
+  const handleVote = useCallback((vote: VoteOutcome) => {
+    setVoteType(vote);
+    onOpen();
+  }, [onOpen]);
 
   return (
     <div className="votes-wrapper">
-      <div className="top-votes-side">
-        <div className="for">
-          {!type ? (
-            <img src="/icons/user-for.svg" alt="vote-for" />
-          ) : (
-            <img src="/icons/preview-approved.svg" alt="vote-for" />
-          )}
-          <span>{proposal.votesFor || 0}</span>
-        </div>
-        <div className="count">{votes === 0 ? "No votes yet" : `${votes} ${votes === 1 ? "vote" : "votes"}`}</div>
-        <div className="against">
-          <span>{proposal.votesAgainst || 0}</span>
-          {!type ? (
-            <img src="/icons/user-rejected.svg" alt="vote-against" />
-          ) : (
-            <img src="/icons/preview-declined.svg" alt="vote-against" />
-          )}
-        </div>
+      <div className="vote-column approve">
+        {percentage(votesFor, totalVotes)}%
+        {!compact && <VoteBar votes={percentage(votesFor, totalVotes)} type={VoteOutcome.Approved} />}
+        <button disabled={votingDisabled} onClick={() => handleVote(VoteOutcome.Approved)} className={classNames({ "disabled": votingDisabled, "compact": compact })}>
+          <img src="/icons/votes/approved.svg" alt="vote type symbol" />
+        </button>
       </div>
-      <div className="progress">
-        {votes === 0 ? (
-          <div className="gray-bar" />
-        ) : (
-          <>
-            <div className={forClassName} style={{ width: `${((proposal.votesFor || 0) * 100) / votes}%` }}></div>
-            <div
-              className={againstClassName}
-              style={{ width: `${((proposal.votesAgainst || 0) * 100) / votes}%` }}
-            ></div>
-          </>
-        )}
+      <div className="vote-column abstain">
+        {percentage(votesAbstained, totalVotes)}%
+        {!compact && <VoteBar votes={percentage(votesAbstained, totalVotes)} type={VoteOutcome.Abstained} />}
+        <button disabled={votingDisabled} onClick={() => handleVote(VoteOutcome.Abstained)} className={classNames({ "disabled": votingDisabled, "compact": compact })}>
+          <img src="/icons/votes/abstained.svg" alt="vote type symbol" />
+        </button>
       </div>
+      <div className="vote-column reject">
+        {percentage(votesAgainst, totalVotes)}%
+        {!compact && <VoteBar votes={percentage(votesAgainst, totalVotes)} type={VoteOutcome.Rejected} />}
+        <button disabled={votingDisabled} onClick={() => handleVote(VoteOutcome.Rejected)} className={classNames({ "disabled": votingDisabled, "compact": compact })}>
+          <img src="/icons/votes/rejected.svg" alt="vote type symbol" />
+        </button>
+      </div>
+
+      {isShowing && (
+        <VotePrompt
+          isShowing={isShowing}
+          onClose={onClose}
+          proposalId={proposal.id}
+          voteType={voteType!}
+          avatarURL={proposal.proposer?.photoURL ?? ""} />)}
     </div>
   );
 }
