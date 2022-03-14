@@ -3,19 +3,20 @@ import { useSelector } from "react-redux";
 import {
   Button,
   ButtonVariant,
-  Share,
+  CommonShare,
   SharePopupVariant,
 } from "@/shared/components";
 import { Colors, ScreenSize } from "@/shared/constants";
+import { Common } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import "./index.scss";
 
 interface SuccessProps {
-  sharingURL: string;
+  common: Common;
   onGoToCommon: () => void;
 }
 
-const Success: FC<SuccessProps> = ({ sharingURL, onGoToCommon }) => {
+const Success: FC<SuccessProps> = ({ common, onGoToCommon }) => {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
@@ -34,9 +35,9 @@ const Success: FC<SuccessProps> = ({ sharingURL, onGoToCommon }) => {
         can always share it later.
       </p>
       <div className="create-common-confirmation-success__buttons">
-        <Share
+        <CommonShare
           className="create-common-confirmation-success__button-wrapper"
-          url={sharingURL}
+          common={common}
           type={isMobileView ? "modal" : "popup"}
           color={Colors.lightPurple}
           top=""
@@ -52,7 +53,7 @@ const Success: FC<SuccessProps> = ({ sharingURL, onGoToCommon }) => {
           >
             Share now
           </Button>
-        </Share>
+        </CommonShare>
         <Button
           key="create-common-confirmation-success-go-to-common-btn"
           className="create-common-confirmation-success__continue-button"

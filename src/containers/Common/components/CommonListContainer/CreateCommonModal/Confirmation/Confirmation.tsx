@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { ROUTE_PATHS, ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
-import { getSharingURL } from "@/shared/utils";
 import {
   IntermediateCreateCommonPayload,
   PaymentPayload,
@@ -43,7 +42,6 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const commonPath = ROUTE_PATHS.COMMON_DETAIL.replace(":id", common?.id || "");
-  const sharingURL = getSharingURL(commonPath);
 
   const handleGoToCommon = () => {
     history.push(commonPath);
@@ -98,9 +96,9 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
       case ConfirmationStep.Processing:
         return <Processing />;
       case ConfirmationStep.Success:
-        return (
-          <Success sharingURL={sharingURL} onGoToCommon={handleGoToCommon} />
-        );
+        return common ? (
+          <Success common={common} onGoToCommon={handleGoToCommon} />
+        ) : null;
       case ConfirmationStep.Error:
         return <Error errorText={error} onFinish={onFinish} />;
       default:
