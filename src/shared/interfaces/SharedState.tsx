@@ -6,6 +6,6 @@ export interface SharedStateType {
   loading: boolean;
   notification: Notification | null;
   screenSize: ScreenSize;
-  shareLinks: Record<string, string>,
-  loadingShareLinks: Record<string, boolean>,
+  shareLinks: Record<string, string>;
+  loadingShareLinks: Record<string, boolean>;
 }

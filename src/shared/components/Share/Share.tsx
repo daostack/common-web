@@ -20,7 +20,7 @@ export enum PopupVariant {
   topCenter = "top-center",
 }
 
-interface IProps {
+export interface IProps {
   className?: string;
   url: string;
   color: Colors;
@@ -29,6 +29,7 @@ interface IProps {
   top?: string;
   popupVariant?: PopupVariant;
   isLoading?: boolean;
+  onOpen?: () => void;
 }
 
 const generateShareQuery = (social: Social, { url, text }: { url: string, text?: string }) => {
@@ -78,6 +79,9 @@ export default function Share(props: PropsWithChildren<IProps>) {
       onOpen();
     } else {
       setShown(true);
+    }
+    if (props.onOpen) {
+      props.onOpen();
     }
   };
 

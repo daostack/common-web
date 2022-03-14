@@ -2,6 +2,7 @@ export * from "./Button";
 export * from "./ButtonIcon";
 export * from "./ButtonLink";
 export * from "./Common";
+export * from "./CommonShare";
 export { default as Content } from "./Content";
 export * from "./ContributionAmountSelection";
 export * from "./Dots";

@@ -1,7 +1,7 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 
 import { ScreenSize } from "../constants";
-import { Notification, PayloadWithCallback } from "../interfaces";
+import { Notification, PayloadWithOptionalCallback } from "../interfaces";
 import { DynamicLinkInfo } from "../interfaces/api/dynamicLink";
 import { SharedActionTypes } from "./constants";
 
@@ -15,7 +15,7 @@ export const buildShareLink = createAsyncAction(
   SharedActionTypes.BUILD_SHARE_LINK_SUCCESS,
   SharedActionTypes.BUILD_SHARE_LINK_FAILURE
 )<
-  PayloadWithCallback<
+  PayloadWithOptionalCallback<
     { key: string; linkInfo: DynamicLinkInfo },
     string,
     Error

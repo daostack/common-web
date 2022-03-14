@@ -17,11 +17,20 @@ export function* buildShareLink({
         link: url,
       })
     );
-    payload.callback(null, url);
+
+    if (payload.callback) {
+      payload.callback(null, url);
+    }
   } catch (error) {
     console.log("Building of share links work only in production");
-    yield put(actions.buildShareLink.failure(error));
-    payload.callback(error);
+    yield put(actions.buildShareLink.failure({
+      key: payload.payload.key,
+      error,
+    }));
+
+    if (payload.callback) {
+      payload.callback(error);
+    }
   }
 }
 
