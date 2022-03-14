@@ -1,17 +1,44 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { AnyAction } from "redux";
-
 import { default as store } from "../../../index";
-import { tokenHandler } from "../../../shared/utils";
+import {
+  getRandomUserAvatarURL,
+  tokenHandler,
+  transformFirebaseDataSingle,
+} from "../../../shared/utils";
 import * as actions from "./actions";
 import firebase from "../../../shared/utils/firebase";
-import { startLoading, stopLoading } from "../../../shared/store/actions";
 import { Collection, User } from "../../../shared/models";
-import { GoogleAuthResultInterface } from "../interface";
-
-import { ROUTE_PATHS } from "../../../shared/constants";
+import { UserCreationDto } from "../interface";
+import {
+  AuthProvider,
+  RECAPTCHA_CONTAINER_ID,
+  ROUTE_PATHS,
+} from "../../../shared/constants";
 import history from "../../../shared/history";
 import { createdUserApi } from "./api";
+
+const getAuthProviderFromProviderData = (
+  providerData?: firebase.User["providerData"]
+): AuthProvider | null => {
+  if (!providerData) {
+    return null;
+  }
+
+  const item = providerData.find((item) => Boolean(item?.providerId));
+
+  switch (item?.providerId) {
+    case "apple.com":
+      return AuthProvider.Apple;
+    case "facebook.com":
+      return AuthProvider.Facebook;
+    case "google.com":
+      return AuthProvider.Google;
+    case "phone":
+      return AuthProvider.Phone;
+    default:
+      return null;
+  }
+};
 
 const getUserData = async (userId: string) => {
   const userSnapshot = await firebase
@@ -44,36 +71,45 @@ const saveTokenToDatabase = async (token: string) => {
   }
 };
 
-const createUser = async (user: firebase.User) => {
-  if (!user) return;
-  const splittedDisplayName = user?.displayName?.split(" ") || [
-    user?.email?.split("@")[0],
-  ];
-
-  const userPhotoUrl = user.photoURL
-    ? user.photoURL
-    : `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${
-        user.displayName ? user.displayName : user.email
-      }&rounded=true`;
-
-  const userPublicData = {
-    firstName: splittedDisplayName[0] || "",
-    lastName: splittedDisplayName[1] || "",
-    // email: user.email,
-    photoURL: userPhotoUrl,
-    displayName: user?.displayName ?? "",
-  };
-
+const createUser = async (
+  user: firebase.User
+): Promise<{ user: User; isNewUser: boolean }> => {
   const userSnapshot = await firebase
     .firestore()
     .collection(Collection.Users)
     .doc(user.uid)
     .get();
+
   if (userSnapshot.exists) {
-    return;
+    return {
+      user: transformFirebaseDataSingle<User>(userSnapshot),
+      isNewUser: false,
+    };
   }
 
-  return await createdUserApi(userPublicData);
+  const splittedDisplayName = user.displayName?.split(" ") || [
+    user.email?.split("@")[0] || user.phoneNumber,
+  ];
+
+  const userPhotoUrl =
+    user.photoURL || getRandomUserAvatarURL(user.displayName || user.email);
+
+  const userPublicData: UserCreationDto = {
+    firstName: splittedDisplayName[0] || "",
+    lastName:
+      (splittedDisplayName.length >= 2
+        ? splittedDisplayName[1]
+        : splittedDisplayName[0]) || "",
+    displayName: user.displayName || "",
+    phoneNumber: user.phoneNumber || "",
+    photoURL: userPhotoUrl,
+  };
+  const createdUser = await createdUserApi(userPublicData);
+
+  return {
+    user: createdUser,
+    isNewUser: true,
+  };
 };
 
 export const uploadImage = async (imageUri: any) => {
@@ -89,75 +125,28 @@ export const uploadImage = async (imageUri: any) => {
   return await ref.getDownloadURL();
 };
 
-const authorizeUser = async (payload: string) => {
-  const provider =
-    payload === "google"
-      ? new firebase.auth.GoogleAuthProvider()
-      : new firebase.auth.OAuthProvider("apple.com");
+const getFirebaseAuthProvider = (
+  authProvider: AuthProvider
+): firebase.auth.GoogleAuthProvider | firebase.auth.OAuthProvider => {
+  switch (authProvider) {
+    case AuthProvider.Apple: {
+      const provider = new firebase.auth.OAuthProvider("apple.com");
+      provider.addScope("email");
+      provider.addScope("name");
 
-  if (payload !== "google") {
-    provider.addScope("email");
-    provider.addScope("name");
+      return provider;
+    }
+    case AuthProvider.Facebook:
+      return new firebase.auth.FacebookAuthProvider();
+    default:
+      return new firebase.auth.GoogleAuthProvider();
   }
-
-  return await firebase
-    .auth()
-    .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-    .then(async () => {
-      return await firebase
-        .auth()
-        .signInWithPopup(provider)
-        .then(async (result) => {
-          const credentials = result.credential?.toJSON() as GoogleAuthResultInterface;
-          const user = result.user?.toJSON() as User;
-          const currentUser = (await firebase.auth().currentUser) as any;
-
-          let loginedUser: any;
-          if (result.additionalUserInfo?.isNewUser) {
-            store.dispatch(actions.setIsUserNew(true));
-            if (currentUser) {
-              await createUser(currentUser);
-            }
-          }
-          if (credentials && user) {
-            const tk = await currentUser?.getIdToken(true);
-            if (tk) {
-              tokenHandler.set(tk);
-
-              if (currentUser) {
-                let databaseUser = await getUserData(currentUser.uid);
-
-                if (!databaseUser) {
-                  store.dispatch(actions.setIsUserNew(true));
-                  await createUser(currentUser);
-                  databaseUser = await getUserData(currentUser.uid);
-                }
-
-                if (databaseUser) {
-                  loginedUser = databaseUser;
-                  store.dispatch(actions.socialLogin.success(databaseUser));
-                  tokenHandler.setUser(databaseUser);
-                }
-              }
-            }
-          }
-
-          return loginedUser;
-        });
-    })
-    .catch((e) => console.log(e));
 };
 
-const loginUsingEmailAndPassword = async (
-  email: string,
-  password: string
-): Promise<User> => {
-  await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-
-  const { user } = await firebase
-    .auth()
-    .signInWithEmailAndPassword(email, password);
-
+const verifyLoggedInUser = async (
+  user: firebase.User | null,
+  shouldCreateUserIfNotExist = false
+): Promise<{ user: User; isNewUser: boolean }> => {
   if (!user) {
     await firebase.auth().signOut();
     throw new Error("User is not logged in");
@@ -170,20 +159,84 @@ const loginUsingEmailAndPassword = async (
     throw new Error("User is not logged in");
   }
 
-  const databaseUser = await getUserData(user.uid);
+  const result = shouldCreateUserIfNotExist
+    ? await createUser(user)
+    : {
+        user: await getUserData(user.uid),
+        isNewUser: false,
+      };
 
-  if (!databaseUser) {
+  if (!result.user) {
     await firebase.auth().signOut();
     throw new Error("User is not logged in");
   }
 
   tokenHandler.set(token);
-  tokenHandler.setUser(databaseUser);
+  tokenHandler.setUser(result.user);
 
-  return databaseUser;
+  return {
+    user: result.user,
+    isNewUser: result.isNewUser,
+  };
 };
 
-const updateUserData = async (user: any) => {
+const authorizeUser = async (
+  authProvider: AuthProvider
+): Promise<{ user: User; isNewUser: boolean }> => {
+  await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+  const provider = getFirebaseAuthProvider(authProvider);
+  const { user } = await firebase.auth().signInWithPopup(provider);
+
+  return verifyLoggedInUser(user, true);
+};
+
+const loginUsingEmailAndPassword = async (
+  email: string,
+  password: string
+): Promise<User> => {
+  await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+  const { user } = await firebase
+    .auth()
+    .signInWithEmailAndPassword(email, password);
+  const data = await verifyLoggedInUser(user);
+
+  return data.user;
+};
+
+const sendVerificationCode = async (
+  phoneNumber: string
+): Promise<firebase.auth.ConfirmationResult> => {
+  firebase.auth().languageCode = "en";
+
+  const recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+    RECAPTCHA_CONTAINER_ID,
+    {
+      size: "invisible",
+    }
+  );
+
+  const result = await firebase
+    .auth()
+    .signInWithPhoneNumber(phoneNumber, recaptchaVerifier);
+  recaptchaVerifier.clear();
+
+  return result;
+};
+
+const confirmVerificationCode = async (
+  confirmation: firebase.auth.ConfirmationResult,
+  code: string
+): Promise<{ user: User; isNewUser: boolean }> => {
+  await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+  const { user } = await confirmation.confirm(code);
+
+  return verifyLoggedInUser(user, true);
+};
+
+const updateUserData = async (user: User) => {
   const currentUser = await firebase.auth().currentUser;
   await currentUser?.updateProfile({
     displayName: `${user.firstName} ${user.lastName}`,
@@ -203,6 +256,7 @@ const updateUserData = async (user: any) => {
         email: user.email,
         photoURL: user.photo,
         displayName: `${user.firstName} ${user.lastName}`,
+        country: user.country,
       })
       .then(async () => {
         const updatedCurrentUser = await firebase.auth().currentUser;
@@ -222,19 +276,32 @@ const updateUserData = async (user: any) => {
   return getUserData(updatedCurrentUser?.uid ?? "");
 };
 
-function* socialLoginSaga({ payload }: AnyAction & { payload: string }) {
+function* socialLoginSaga({
+  payload,
+}: ReturnType<typeof actions.socialLogin.request>) {
   try {
-    yield put(startLoading());
+    yield put(actions.startAuthLoading());
 
-    const user: User = yield call(authorizeUser, payload);
+    const { user, isNewUser }: { user: User; isNewUser: boolean } = yield call(
+      authorizeUser,
+      payload.payload
+    );
     const firebaseUser: User = yield call(getUserData, user.uid ?? "");
     if (firebaseUser) {
       yield put(actions.socialLogin.success(firebaseUser));
     }
+
+    if (payload.callback) {
+      payload.callback(null, { user, isNewUser });
+    }
   } catch (error) {
     yield put(actions.socialLogin.failure(error));
+
+    if (payload.callback) {
+      payload.callback(error);
+    }
   } finally {
-    yield put(stopLoading());
+    yield put(actions.stopAuthLoading());
   }
 }
 
@@ -242,7 +309,7 @@ function* loginUsingEmailAndPasswordSaga({
   payload,
 }: ReturnType<typeof actions.loginUsingEmailAndPassword.request>) {
   try {
-    yield put(startLoading());
+    yield put(actions.startAuthLoading());
 
     const user: User = yield call(
       loginUsingEmailAndPassword,
@@ -261,7 +328,60 @@ function* loginUsingEmailAndPasswordSaga({
       payload.callback(error);
     }
   } finally {
-    yield put(stopLoading());
+    yield put(actions.stopAuthLoading());
+  }
+}
+
+function* sendVerificationCodeSaga({
+  payload,
+}: ReturnType<typeof actions.sendVerificationCode.request>) {
+  try {
+    yield put(actions.startAuthLoading());
+
+    const confirmationResult: firebase.auth.ConfirmationResult = yield call(
+      sendVerificationCode,
+      payload.payload
+    );
+    yield put(actions.sendVerificationCode.success(confirmationResult));
+
+    if (payload.callback) {
+      payload.callback(null, confirmationResult);
+    }
+  } catch (error) {
+    yield put(actions.sendVerificationCode.failure(error));
+
+    if (payload.callback) {
+      payload.callback(error);
+    }
+  } finally {
+    yield put(actions.stopAuthLoading());
+  }
+}
+
+function* confirmVerificationCodeSaga({
+  payload,
+}: ReturnType<typeof actions.confirmVerificationCode.request>) {
+  try {
+    yield put(actions.startAuthLoading());
+
+    const { user, isNewUser }: { user: User; isNewUser: boolean } = yield call(
+      confirmVerificationCode,
+      payload.payload.confirmation,
+      payload.payload.code
+    );
+    yield put(actions.confirmVerificationCode.success(user));
+
+    if (payload.callback) {
+      payload.callback(null, { user, isNewUser });
+    }
+  } catch (error) {
+    yield put(actions.confirmVerificationCode.failure(error));
+
+    if (payload.callback) {
+      payload.callback(error);
+    }
+  } finally {
+    yield put(actions.stopAuthLoading());
   }
 }
 
@@ -279,18 +399,17 @@ function* updateUserDetails({
   payload,
 }: ReturnType<typeof actions.updateUserDetails.request>) {
   try {
-    yield put(startLoading());
+    yield put(actions.startAuthLoading());
     const user: User = yield call(updateUserData, payload.user);
 
     yield put(actions.updateUserDetails.success(user));
     tokenHandler.setUser(user);
-    yield put(actions.setIsUserNew(false));
     yield payload.callback();
   } catch (error) {
     yield put(actions.updateUserDetails.failure(error));
     yield payload.callback();
   } finally {
-    yield put(stopLoading());
+    yield put(actions.stopAuthLoading());
   }
 }
 
@@ -299,6 +418,14 @@ function* authSagas() {
   yield takeLatest(
     actions.loginUsingEmailAndPassword.request,
     loginUsingEmailAndPasswordSaga
+  );
+  yield takeLatest(
+    actions.sendVerificationCode.request,
+    sendVerificationCodeSaga
+  );
+  yield takeLatest(
+    actions.confirmVerificationCode.request,
+    confirmVerificationCodeSaga
   );
   yield takeLatest(actions.logOut, logOut);
   yield takeLatest(actions.updateUserDetails.request, updateUserDetails);
@@ -320,6 +447,13 @@ function* authSagas() {
 
   firebase.auth().onAuthStateChanged(async (res) => {
     try {
+      store.dispatch(
+        actions.setAuthProvider(
+          getAuthProviderFromProviderData(res?.providerData)
+        )
+      );
+      store.dispatch(actions.setUserPhoneNumber(res?.phoneNumber || null));
+
       if (tokenHandler.get()) {
         const currentUser: User | undefined = res?.toJSON() as any;
 

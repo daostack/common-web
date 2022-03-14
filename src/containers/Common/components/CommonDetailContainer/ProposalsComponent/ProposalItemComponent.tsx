@@ -11,11 +11,13 @@ import ProposalState from "../ProposalState/ProposalState";
 interface ProposalItemComponentProps {
   loadProposalDetail: (payload: Proposal) => void;
   proposal: Proposal;
+  isCommonMember: boolean;
 }
 
 export default function ProposalItemComponent({
   proposal,
   loadProposalDetail,
+  isCommonMember,
 }: ProposalItemComponentProps) {
   const {
     ref: descriptionRef,
@@ -47,7 +49,7 @@ export default function ProposalItemComponent({
           )}
         </div>
         <div className="votes">
-          <VotesComponent proposal={proposal} />
+          <VotesComponent proposal={proposal} isCommonMember={isCommonMember} />
         </div>
       </div>
       <div className="line" />

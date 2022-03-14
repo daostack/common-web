@@ -103,7 +103,7 @@ export default function ProposalDetailModal({
                     </>
                   )}
                 </div>
-                <VotesComponent proposal={proposal} />
+                <VotesComponent proposal={proposal} isCommonMember={isCommonMember} preview />
               </>)}
           </div>
         </div>

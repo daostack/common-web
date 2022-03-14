@@ -1,0 +1,16 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+$gap: 1rem;
+
+.login-buttons-wrapper {
+  width: calc(100% + #{$gap});
+  margin: -#{$gap} 0 0 -#{$gap};
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  .login-buttons-wrapper__button {
+    margin: $gap 0 0 $gap;
+  }
+}

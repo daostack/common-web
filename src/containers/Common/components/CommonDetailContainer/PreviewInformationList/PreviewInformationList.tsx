@@ -18,13 +18,14 @@ interface PreviewInformationListProps {
   vievAllHandler: () => void;
   onClickItem: (id: string) => void;
   type: string;
+  isCommonMember: boolean;
 }
 
 export default function PreviewInformationList(
   props: PreviewInformationListProps
 ) {
   const [data, setData] = useState<PreviedData[]>([]);
-  const { title, vievAllHandler, type, discussions, proposals } = props;
+  const { title, vievAllHandler, type, discussions, proposals, isCommonMember } = props;
 
   useEffect(() => {
     if (type === "discussions" && discussions) {
@@ -83,7 +84,7 @@ export default function PreviewInformationList(
                 {type === "proposals" && proposal ? (
                   <div className="item-bottom">
                     <div className="votes">
-                      <VotesComponent proposal={proposal} type="preview" />
+                      <VotesComponent proposal={proposal} isCommonMember={isCommonMember} preview compact />
                     </div>
                     <div className="discussion-count">
                       <img src="/icons/discussions.svg" alt="discussions" />
