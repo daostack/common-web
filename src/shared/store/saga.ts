@@ -6,9 +6,17 @@ export function* buildShareLink({
   payload,
 }: ReturnType<typeof actions.buildShareLink.request>): Generator {
   try {
-    const url = (yield call(buildShareLinkApi, payload.payload)) as string;
+    const url = (yield call(
+      buildShareLinkApi,
+      payload.payload.linkInfo
+    )) as string;
 
-    yield put(actions.buildShareLink.success(url));
+    yield put(
+      actions.buildShareLink.success({
+        key: payload.payload.key,
+        link: url,
+      })
+    );
     payload.callback(null, url);
   } catch (error) {
     console.log("Building of share links work only in production");

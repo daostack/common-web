@@ -16,3 +16,9 @@ export const selectRouter = () =>
     (state: AppState) => state,
     (state) => state,
   );
+
+export const selectShareLinks = () =>
+  createSelector(selectShared, (state) => state.shareLinks);
+
+export const selectLoadingShareLinks = () =>
+  createSelector(selectShared, (state) => state.loadingShareLinks);

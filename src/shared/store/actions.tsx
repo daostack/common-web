@@ -14,4 +14,12 @@ export const buildShareLink = createAsyncAction(
   SharedActionTypes.BUILD_SHARE_LINK,
   SharedActionTypes.BUILD_SHARE_LINK_SUCCESS,
   SharedActionTypes.BUILD_SHARE_LINK_FAILURE
-)<PayloadWithCallback<DynamicLinkInfo, string, Error>, string, Error>();
+)<
+  PayloadWithCallback<
+    { key: string; linkInfo: DynamicLinkInfo },
+    string,
+    Error
+  >,
+  { key: string; link: string },
+  { key: string; error: Error }
+>();
