@@ -1,6 +1,9 @@
 import { Configuration, ConfigurationObject } from "./shared/interfaces";
 const { REACT_APP_ENV = "dev" } = process.env;
 
+const FIREBASE_SHORT_DYNAMIC_LINKS_TEMPLATE_URL =
+  "https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=api_key";
+
 const dev: Configuration = {
   env: REACT_APP_ENV,
   baseApiUrl: "http://localhost:4000/api/v1/",
@@ -54,4 +57,10 @@ const config: ConfigurationObject = {
 };
 
 const configElement: Configuration = config[REACT_APP_ENV];
+
+export const FIREBASE_SHORT_DYNAMIC_LINKS_URL = FIREBASE_SHORT_DYNAMIC_LINKS_TEMPLATE_URL.replace(
+  "api_key",
+  configElement.firebase.apiKey
+);
+
 export default configElement;
