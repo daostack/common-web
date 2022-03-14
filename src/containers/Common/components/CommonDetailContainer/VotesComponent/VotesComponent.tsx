@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from "react";
-import { Proposal, ProposalState, VoteOutcome } from "../../../../../shared/models";
+import classNames from "classnames";
+import { Proposal, ProposalState, VoteOutcome } from "@/shared/models";
 import { percentage } from "@/shared/utils";
 import { useModal } from "@/shared/hooks";
 import VotePrompt from "./VotePrompt/VotePrompt";
-import "./index.scss";
 import VoteBar from "./VoteBar/VoteBar";
-import classNames from "classnames";
+import "./index.scss";
 
 interface VotesComponentProps {
   proposal: Proposal;

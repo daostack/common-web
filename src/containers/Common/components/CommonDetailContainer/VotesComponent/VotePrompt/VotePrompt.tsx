@@ -1,10 +1,10 @@
+import React, { useCallback, useState } from "react"
+import { useDispatch } from "react-redux";
 import { createVote } from "@/containers/Common/store/actions";
 import { Button, ButtonVariant, Loader, UserAvatar } from "@/shared/components";
 import { Modal } from "@/shared/components/Modal"
 import { ModalProps } from "@/shared/interfaces"
 import { VoteOutcome } from "@/shared/models";
-import React, { useCallback, useState } from "react"
-import { useDispatch } from "react-redux";
 import "./index.scss";
 
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
@@ -21,7 +21,7 @@ export default function VotePrompt({ isShowing, onClose, proposalId, voteType, a
   const handleVote = useCallback((vote: VoteOutcome) => {
     setVoting(true);
     dispatch(createVote.request({
-      payload: { proposalId: proposalId, outcome: vote },
+      payload: { proposalId, outcome: vote },
       callback: (error) => {
         setVoting(false);
         if (error) {

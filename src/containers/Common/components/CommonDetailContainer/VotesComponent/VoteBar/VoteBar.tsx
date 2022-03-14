@@ -1,5 +1,5 @@
-import { VoteOutcome } from "@/shared/models";
 import React from "react";
+import { VoteOutcome } from "@/shared/models";
 import "./index.scss";
 
 interface IProps {

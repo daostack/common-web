@@ -161,7 +161,7 @@ export const createCommon = createAsyncAction(
 )<PayloadWithCallback<CreateCommonPayload, Common, Error>, Common, Error>();
 
 export const createVote = createAsyncAction(
-  CommonsActionTypes.VOTE,
-  CommonsActionTypes.VOTE_SUCCESS,
-  CommonsActionTypes.VOTE_FAILURE
+  CommonsActionTypes.CREATE_VOTE,
+  CommonsActionTypes.CREATE_VOTE_SUCCESS,
+  CommonsActionTypes.CREATE_VOTE_FAILURE
 )<PayloadWithCallback<CreateVotePayload, void, Error>, void, Error>();
