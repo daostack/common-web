@@ -4,8 +4,8 @@ import { Formik, FormikConfig } from "formik";
 import { ErrorText } from "../../../../shared/components/Form";
 import { Form, TextField } from "../../../../shared/components/Form/Formik";
 import { SUPPORT_EMAIL } from "../../../../shared/constants";
-import { getLoading } from "../../../../shared/store/selectors";
 import { loginUsingEmailAndPassword } from "../../../Auth/store/actions";
+import { selectIsAuthLoading } from "../../../Auth/store/selectors";
 import validationSchema from "./validationSchema";
 import "./index.scss";
 
@@ -21,7 +21,7 @@ const INITIAL_VALUES: FormValues = {
 
 const AuthenticationContainer: FC = () => {
   const dispatch = useDispatch();
-  const loading = useSelector(getLoading());
+  const loading = useSelector(selectIsAuthLoading());
   const [error, setError] = useState("");
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(

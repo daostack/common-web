@@ -6,7 +6,7 @@ import { fetchProposal } from "../../api";
 import { Loader } from "../../../../shared/components";
 import { Proposal } from "../../../../shared/models";
 import { fetchCommonDetail } from "../../../Common/store/api";
-import { setIsLoginModalShowing } from "../../../Auth/store/actions";
+import { setLoginModalState } from "../../../Auth/store/actions";
 import { ProposalDetails } from "../../components/ProposalDetails";
 import "./index.scss";
 
@@ -33,7 +33,7 @@ export default function SubmitInvoicesContainer() {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      dispatch(setIsLoginModalShowing(true));
+      dispatch(setLoginModalState({ isShowing: true }));
       setSubmissionStatus(SubmissionStatus.NotLoggedIn);
     }
   }, [isAuthenticated, dispatch])

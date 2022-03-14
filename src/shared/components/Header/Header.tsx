@@ -1,11 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  NavLink,
-  Link,
-  useHistory,
-  RouteProps,
-} from "react-router-dom";
+import { Link, NavLink, RouteProps, useHistory } from "react-router-dom";
 import classNames from "classnames";
 
 import { UserAvatar } from "../../../shared/components";
@@ -15,24 +10,20 @@ import { ApiEndpoint, Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
 import { getScreenSize } from "../../store/selectors";
-import { saveByURL } from "../../utils";
+import { getUserName, isMobile, saveByURL } from "../../utils";
 import DownloadCommonApp from "../DownloadCommonApp/DownloadCommonApp";
 import MobileLinks from "../MobileLinks/MobileLinks";
-import "./index.scss";
 import { Account } from "../Account";
 import {
   authentificated,
-  selectIsNewUser,
   selectUser,
-  selectIsLoginModalShowing,
 } from "../../../containers/Auth/store/selectors";
-import { isMobile, getUserName } from "../../utils";
-import { Modal } from "../Modal";
 import { LoginContainer } from "../../../containers/Login/containers/LoginContainer";
 import {
   logOut,
-  setIsLoginModalShowing,
+  setLoginModalState,
 } from "../../../containers/Auth/store/actions";
+import "./index.scss";
 
 const ADMIN_ACCESS_ROLES: UserRole[] = [UserRole.Trustee];
 
@@ -51,8 +42,6 @@ const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const isAuthorized = useSelector(authentificated());
   const user = useSelector(selectUser());
-  const isNewUser = useSelector(selectIsNewUser());
-  const isLoginModalShowing = useSelector(selectIsLoginModalShowing());
   const shouldDisplayAvatar = Boolean(screenSize === ScreenSize.Mobile && user);
   const hasAdminAccess = useAnyMandatoryRoles(ADMIN_ACCESS_ROLES, user?.roles);
   const isTrusteeRoute = useMatchRoute(
@@ -65,11 +54,7 @@ const Header = () => {
   );
 
   const handleOpen = useCallback(() => {
-    dispatch(setIsLoginModalShowing(true));
-  }, [dispatch]);
-
-  const handleClose = useCallback(() => {
-    dispatch(setIsLoginModalShowing(false));
+    dispatch(setLoginModalState({ isShowing: true }));
   }, [dispatch]);
 
   const handleReportsDownload = () => {
@@ -84,14 +69,6 @@ const Header = () => {
       unlisten();
     };
   }, [history]);
-
-  React.useEffect(() => {
-    if (!isNewUser && user) {
-      if (isLoginModalShowing) {
-        handleClose();
-      }
-    }
-  }, [user, isNewUser, isLoginModalShowing, handleClose]);
 
   const toggleMenuShowing = () => {
     setShowMenu((shouldShow) => !shouldShow);
@@ -127,6 +104,7 @@ const Header = () => {
 
       {isAuthorized && isMobile() && (
         <>
+          <button onClick={handleOpen}>My Account</button>
           {hasAdminAccess && (
             <button onClick={handleReportsDownload}>Download Reports</button>
           )}
@@ -172,6 +150,7 @@ const Header = () => {
               logOut={logOutUser}
               isTrusteeRoute={isTrusteeRoute}
               hasAdminAccess={hasAdminAccess}
+              showMyAccount={handleOpen}
             />
           )}
           {!isAuthorized && !isTrusteeRoute ? (
@@ -204,14 +183,7 @@ const Header = () => {
           )}
         </>
       )}
-      <Modal
-        isShowing={isLoginModalShowing}
-        onClose={handleClose}
-        className="mobile-full-screen"
-        mobileFullScreen
-      >
-        <LoginContainer closeModal={handleClose} />
-      </Modal>
+      <LoginContainer />
     </section>
   );
 };
