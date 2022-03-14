@@ -46,7 +46,9 @@ export const formatDate = (
   return moment.unix(time.seconds).local().format(format);
 }
 
-export const getUserName = (user?: User | null) => {
+export const getUserName = (
+  user?: Pick<User, "firstName" | "lastName" | "displayName"> | null
+) => {
   if (!user) return "";
   return user.displayName || `${user.firstName} ${user.lastName}`;
 };
@@ -56,7 +58,7 @@ export const getUserInitials = (user: User | undefined) => {
   return user.displayName || `${user.firstName[0]}${user.lastName[0]}`;
 };
 
-export const getRandomUserAvatarURL = (name?: string): string => (
+export const getRandomUserAvatarURL = (name?: string | null): string => (
   `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${name}&rounded=true`
 );
 
@@ -211,3 +213,9 @@ export const getCommonExampleImageURL = (index: number): string =>
   `https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_0${index}.png?alt=media`;
 
 export const getSharingURL = (path: string): string => `${BASE_URL}${path}`;
+
+export const formatCountdownValue = (value: number): string => {
+  const convertedValue = String(value);
+
+  return convertedValue.length === 1 ? `0${convertedValue}` : convertedValue;
+};

@@ -19,6 +19,7 @@ interface AccountProps {
   logOut: () => void;
   isTrusteeRoute: boolean;
   hasAdminAccess: boolean;
+  showMyAccount: () => void;
 }
 
 const Account = ({
@@ -26,6 +27,7 @@ const Account = ({
   logOut,
   isTrusteeRoute,
   hasAdminAccess,
+  showMyAccount,
 }: AccountProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const wrapperRef = useRef(null);
@@ -56,6 +58,11 @@ const Account = ({
         <div className="menu-wrapper" ref={wrapperRef}>
           {!isTrusteeRoute && (
             <>
+              <div
+                className="account-wrapper__menu-item"
+                onClick={showMyAccount}>
+                My Account
+              </div>
               <div
                 className="account-wrapper__menu-item"
                 onClick={() => (window.location.href = ROUTE_PATHS.MY_COMMONS)}
