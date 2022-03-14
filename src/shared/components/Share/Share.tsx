@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, PropsWithChildren } from "react";
 import classNames from "classnames";
-
+import { Loader } from "@/shared/components";
 import { Colors } from "../../constants";
 import { useModal, useOutsideClick } from "../../hooks";
 import { Modal } from "../Modal";
@@ -28,6 +28,7 @@ interface IProps {
   text?: string;
   top?: string;
   popupVariant?: PopupVariant;
+  isLoading?: boolean;
 }
 
 const generateShareQuery = (social: Social, { url, text }: { url: string, text?: string }) => {
@@ -54,6 +55,7 @@ export default function Share(props: PropsWithChildren<IProps>) {
     top,
     children,
     popupVariant = PopupVariant.bottomLeft,
+    isLoading = false,
   } = props;
   const wrapperRef = useRef(null);
   const [isShown, setShown] = useState(false);
@@ -83,21 +85,67 @@ export default function Share(props: PropsWithChildren<IProps>) {
     <div
       className={classNames("social-buttons-wrapper", {
         "social-buttons-wrapper--modal": type === "modal",
-        "social-buttons-wrapper--top-center": isPopup && popupVariant === PopupVariant.topCenter,
+        "social-buttons-wrapper--top-center":
+          isPopup && popupVariant === PopupVariant.topCenter,
+        "social-buttons-wrapper--loading": isLoading,
       })}
       style={{ top: `${top ?? "64px"}` }}
     >
       {type === "popup" && <div className="title">Share with</div>}
-      <div
-        className={classNames("social-buttons", {
-          "social-buttons--modal": type === "modal",
-        })}
-      >
-        <button className="facebook" onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php${generateShareQuery(Social.Facebook, queryData)}`)} />
-        <button className="twitter" onClick={() => window.open(`https://twitter.com/intent/tweet${generateShareQuery(Social.Twitter, queryData)}`)} />
-        <button className="linkedin" onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/${generateShareQuery(Social.LinkedIn, queryData)}`)} />
-        <button className="telegram" onClick={() => window.open(`https://t.me/share/url${generateShareQuery(Social.Telegram, queryData)}`)} />
-      </div>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div
+          className={classNames("social-buttons", {
+            "social-buttons--modal": type === "modal",
+          })}
+        >
+          <button
+            className="facebook"
+            onClick={() =>
+              window.open(
+                `https://www.facebook.com/sharer/sharer.php${generateShareQuery(
+                  Social.Facebook,
+                  queryData
+                )}`
+              )
+            }
+          />
+          <button
+            className="twitter"
+            onClick={() =>
+              window.open(
+                `https://twitter.com/intent/tweet${generateShareQuery(
+                  Social.Twitter,
+                  queryData
+                )}`
+              )
+            }
+          />
+          <button
+            className="linkedin"
+            onClick={() =>
+              window.open(
+                `https://www.linkedin.com/sharing/share-offsite/${generateShareQuery(
+                  Social.LinkedIn,
+                  queryData
+                )}`
+              )
+            }
+          />
+          <button
+            className="telegram"
+            onClick={() =>
+              window.open(
+                `https://t.me/share/url${generateShareQuery(
+                  Social.Telegram,
+                  queryData
+                )}`
+              )
+            }
+          />
+        </div>
+      )}
     </div>
   );
 
