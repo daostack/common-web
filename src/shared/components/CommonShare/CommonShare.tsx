@@ -1,6 +1,6 @@
 import React, { useCallback, FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { DynamicLinksTypes, DYNAMIC_LINK_URI_PREFIX } from "@/shared/constants";
+import { DynamicLinkType, DYNAMIC_LINK_URI_PREFIX } from "@/shared/constants";
 import { Common } from "@/shared/models";
 import { buildShareLink } from "@/shared/store/actions";
 import {
@@ -16,7 +16,7 @@ interface CommonShareProps
 
 const CommonShare: FC<CommonShareProps> = (props) => {
   const { common, ...restProps } = props;
-  const linkKey = `${DynamicLinksTypes.Common}/${common.id}`;
+  const linkKey = `${DynamicLinkType.Common}/${common.id}`;
   const dispatch = useDispatch();
   const shareLinks = useSelector(selectShareLinks());
   const loadingShareLinks = useSelector(selectLoadingShareLinks());
@@ -40,7 +40,7 @@ const CommonShare: FC<CommonShareProps> = (props) => {
         payload: {
           key: linkKey,
           linkInfo: {
-            link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinksTypes.Common}/${common.id}`,
+            link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.Common}/${common.id}`,
             domainUriPrefix: DYNAMIC_LINK_URI_PREFIX,
             socialMetaTagInfo: {
               socialTitle: common.name,
