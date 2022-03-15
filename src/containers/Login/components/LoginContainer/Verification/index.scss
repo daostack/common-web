@@ -1,0 +1,90 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.verification__title {
+  margin: 2.625rem 0 0.5rem;
+  font-family: NotoSerif, serif;
+  font-size: $moderate-med;
+  font-weight: bold;
+
+  @include big-phone {
+    margin: 3.375rem 0 1rem;
+    font-family: NunitoSans, sans-serif;
+    font-size: $moderate;
+  }
+}
+
+.verification__sub-title {
+  margin: 0 0 1rem;
+  font-family: NunitoSans, sans-serif;
+  font-size: $small;
+  text-align: center;
+  color: $light-gray-2;
+
+  @include big-phone {
+    margin: 0 0 2rem;
+    font-size: $xsmall;
+    max-width: 10rem;
+  }
+}
+
+.verification__phone-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.verification__phone-wrapper-number {
+  margin: 0 1rem 0 0;
+  font-size: $small;
+  font-weight: 600;
+  letter-spacing: 0.16px;
+  color: $secondary-blue;
+}
+
+.verification__phone-wrapper-edit {
+  width: 1.125rem;
+  height: 1.125rem;
+  background-color: $purple;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.verification__phone-wrapper-edit-img {
+  width: 0.615rem;
+  height: 0.615rem;
+  background-color: $purple;
+  border-radius: 50%;
+}
+
+.verification__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.verification__submit-button {
+  max-width: 20.5rem;
+  margin-top: 3rem;
+
+  @include big-phone {
+    max-width: unset;
+    margin-top: 0;
+  }
+}
+
+.verification__code-wrapper {
+  max-width: 25rem;
+  width: 100%;
+  margin: 1.5rem 0 0;
+
+  @include big-phone {
+    max-width: unset;
+  }
+}
+
+.verification__error {
+  font-size: $xsmall;
+}
