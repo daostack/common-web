@@ -28,6 +28,13 @@ const CommonShare: FC<CommonShareProps> = (props) => {
       return;
     }
 
+    const description = [
+      common.metadata.byline || "",
+      "Download the Common app to join now.",
+    ]
+      .filter(Boolean)
+      .join(". ");
+
     dispatch(
       buildShareLink.request({
         payload: {
@@ -37,7 +44,7 @@ const CommonShare: FC<CommonShareProps> = (props) => {
             domainUriPrefix: DYNAMIC_LINK_URI_PREFIX,
             socialMetaTagInfo: {
               socialTitle: common.name,
-              socialDescription: common.metadata.description || "",
+              socialDescription: description,
               socialImageLink: common.image,
             },
           },
@@ -50,7 +57,6 @@ const CommonShare: FC<CommonShareProps> = (props) => {
     <Share
       {...restProps}
       url={linkURL}
-      text=""
       isLoading={!linkURL || isLoading}
       onOpen={handleOpen}
     />
