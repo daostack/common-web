@@ -1,46 +1,83 @@
 @import "../../../../../constants.scss";
+@import "../../../../../styles/sizes";
 
 .votes-wrapper {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   width: 100%;
-  .vote-column {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
+  .what-is-your-vote {
+    text-align: center;
     font-weight: bold;
-    &.approve {
-      color: $green;
-    }
-    &.reject {
-      color: $red;
-    }
-    &.abstain {
-      color: $gray;
-    }
-    button {
-      background-color: transparent;
-      border: 1px solid $gray;
-      border-radius: 20px;
-      width: 6rem;
-      height: 3rem;
+    margin-bottom: 1rem;
+  }
+  .votes-columns-container {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    .vote-column {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 4px 0 $shadow-1;
-      cursor: pointer;
-      &.compact {
-        border: none;
-        box-shadow: none;
-        width: 4rem;
-        height: unset;
+      justify-content: flex-end;
+      font-weight: bold;
+      &.approve {
+        color: $green;
       }
-      &.disabled {
-        pointer-events: none;
+      &.reject {
+        color: $red;
       }
-      &:hover {
-        opacity: 0.9;
+      &.abstain {
+        color: $gray;
+      }
+      button {
+        background-color: transparent;
+        border: 1px solid $gray;
+        border-radius: 20px;
+        width: 6rem;
+        height: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 4px 0 $shadow-1;
+        cursor: pointer;
+        &.compact {
+          border: none;
+          box-shadow: none;
+          width: 4rem;
+          height: unset;
+        }
+        &.disabled {
+          pointer-events: none;
+        }
+        &:hover {
+          opacity: 0.9;
+        }
+        .user-avatar {
+          border: 0.2rem solid;
+          width: 1.5rem;
+          height: 1.5rem;
+          &.approve {
+            border-color: $green;
+          }
+          &.reject {
+            border-color: $red;
+          }
+          &.abstain {
+            border-color: $gray;
+          }
+        }
+      }
+    }
+  }
+}
+
+@include big-phone {
+  .votes-wrapper {
+    .votes-columns-container {
+      .vote-column {
+        button {
+          width: 5rem;
+        }
       }
     }
   }
