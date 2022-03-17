@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { TextField } from "@/shared/components/Form/Formik";
-import { Modal } from "../../../../../shared/components";
+import { Modal } from "@/shared/components";
+import { useZoomDisabling } from '@/shared/hooks';
 import { ModalProps } from "@/shared/interfaces";
 
 import "./index.scss";
@@ -30,6 +31,9 @@ const AddDiscussionComponent = ({
   onClose,
   onDiscussionAdd,
 }: AddDiscussionComponentProps) => {
+  const { disableZoom, resetZoom } = useZoomDisabling({
+    shouldDisableAutomatically: false,
+  });
   const [formValues] = useState({
     title: "",
     message: "",
@@ -37,6 +41,14 @@ const AddDiscussionComponent = ({
 
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+
+  useEffect(() => {
+    if (isShowing) {
+      disableZoom();
+    } else {
+      resetZoom();
+    }
+  }, [isShowing, disableZoom, resetZoom]);
 
   return (
     <Modal

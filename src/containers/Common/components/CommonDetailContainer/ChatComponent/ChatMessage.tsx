@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-
-import { DiscussionMessage } from "../../../../../shared/models";
-import { getUserName, getUserInitials } from "../../../../../shared/utils";
+import { Linkify } from "@/shared/components";
+import { DiscussionMessage } from "@/shared/models";
+import { getUserName, getUserInitials } from "@/shared/utils";
 
 interface ChatMessageProps {
   disscussionMessage: DiscussionMessage;
@@ -38,7 +38,7 @@ export default function ChatMessage({ disscussionMessage }: ChatMessageProps) {
           {getUserName(disscussionMessage.owner)}
         </div>
         <div className="message-content">
-          {disscussionMessage.text}
+          <Linkify>{disscussionMessage.text}</Linkify>
           <div className="time-wrapper">
             {mDate.toLocaleTimeString([], {
               hour12: false,

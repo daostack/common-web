@@ -10,6 +10,7 @@ import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
 import { Modal } from "@/shared/components";
 import { getScreenSize } from "@/shared/store/selectors";
+import { useZoomDisabling } from "@/shared/hooks";
 import { ScreenSize } from "@/shared/constants";
 import { CommonContributionType } from "@/shared/models";
 import {
@@ -45,6 +46,9 @@ const emptyFunction = () => {
 };
 
 export default function CreateCommonModal(props: CreateCommonModalProps) {
+  const { disableZoom, resetZoom } = useZoomDisabling({
+    shouldDisableAutomatically: false,
+  });
   const [{ stage, shouldStartFromLastStep }, setStageState] = useState({
     stage: CreateCommonStage.Introduction,
     shouldStartFromLastStep: false,
@@ -177,14 +181,18 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   ]);
 
   useEffect(() => {
-    if (!props.isShowing) {
-      setStageState({
-        stage: CreateCommonStage.Introduction,
-        shouldStartFromLastStep: false,
-      });
-      setCreationData(INITIAL_DATA);
+    if (props.isShowing) {
+      disableZoom();
+      return;
     }
-  }, [props.isShowing]);
+
+    setStageState({
+      stage: CreateCommonStage.Introduction,
+      shouldStartFromLastStep: false,
+    });
+    setCreationData(INITIAL_DATA);
+    resetZoom();
+  }, [props.isShowing, disableZoom, resetZoom]);
 
   return (
     <Modal
