@@ -25,14 +25,9 @@ export default function VotesComponent({ proposal, isCommonMember, preview, comp
   const votesAbstained = proposal.votesAbstained || 0;
   const totalVotes = votesFor + votesAgainst + votesAbstained;
   const [voteType, setVoteType] = useState<VoteOutcome>();
-  const userVote = proposal.votes.find((vote) => {
-    if (vote.voterId === user?.uid) {
-      return vote;
-    }
-    return undefined;
-  })
+  const userVote = proposal.votes.find((vote) => vote.voterId === user?.uid);
 
-  const votingDisabled = !isCommonMember || proposal.state !== ProposalState.COUNTDOWN || userVote !== undefined || preview;
+  const votingDisabled = !isCommonMember || proposal.state !== ProposalState.COUNTDOWN || !!userVote || preview;
 
   const handleVote = useCallback((vote: VoteOutcome) => {
     setVoteType(vote);
