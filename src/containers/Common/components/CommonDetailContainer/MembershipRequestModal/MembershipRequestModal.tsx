@@ -91,11 +91,6 @@ export function MembershipRequestModal(props: IProps) {
    * Until implementing a robust way to handle the saving of the data the user will be notified of losing the data.
    */
   useEffect(() => {
-    if (isShowing) {
-      disableZoom();
-      return;
-    }
-
     if (commons.length === 0) {
       dispatch(getCommonsList.request());
     }
@@ -121,6 +116,11 @@ export function MembershipRequestModal(props: IProps) {
     setUserData(payload);
     onCreationStageReach(false);
     resetZoom();
+
+    if (isShowing) {
+      disableZoom();
+      return;
+    }
   }, [isShowing, user, onCreationStageReach, disableZoom, resetZoom, commons, dispatch]);
 
   const renderCurrentStage = (stage: number) => {
