@@ -1,6 +1,7 @@
 import { Moderation, Time } from "./shared";
 
 import { CommonContributionType, DiscussionMessage, User } from ".";
+import { VoteOutcome } from "./Votes";
 
 export enum ProposalFundingState {
   NotRelevant = "notRelevant",
@@ -57,6 +58,12 @@ export interface ProposalLink {
   value: string;
 }
 
+export interface Vote {
+  voteId: string;
+  voteOutcome: VoteOutcome;
+  voterId: string;
+}
+
 export interface Proposal {
   commonId: string;
   proposerId: string;
@@ -72,6 +79,7 @@ export interface Proposal {
   quietEndingPeriod: number;
 
   updatedAt: Date;
+  votes: Vote[];
   votesAgainst?: number;
   votesFor?: number;
   votesAbstained?: number;
