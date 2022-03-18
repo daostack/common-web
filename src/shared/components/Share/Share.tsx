@@ -32,7 +32,17 @@ export interface IProps {
   onOpen?: () => void;
 }
 
-const generateShareQuery = (social: Social, { url, text }: { url: string, text?: string }) => {
+const SOCIAL_LINKS: Record<Social, string> = {
+  [Social.Facebook]: "https://www.facebook.com/sharer/sharer.php",
+  [Social.Telegram]: "https://t.me/share/url",
+  [Social.Twitter]: "https://twitter.com/intent/tweet",
+  [Social.LinkedIn]: "https://www.linkedin.com/sharing/share-offsite",
+};
+
+const generateShareQuery = (
+  social: Social,
+  { url, text }: { url: string; text?: string }
+) => {
   switch (social) {
     case Social.Facebook:
       return `?u=${url}${text ? `&quote=${text}` : ""}`;
@@ -45,6 +55,9 @@ const generateShareQuery = (social: Social, { url, text }: { url: string, text?:
       return "";
   }
 };
+
+const getSocialURL = (social: Social, query: string): string =>
+  `${SOCIAL_LINKS[social]}${query}`;
 
 export default function Share(props: PropsWithChildren<IProps>) {
   const {
@@ -62,7 +75,6 @@ export default function Share(props: PropsWithChildren<IProps>) {
   const [isShown, setShown] = useState(false);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
   const { isShowing, onOpen, onClose } = useModal(false);
-  const queryData = { url, text };
   const isPopup = type === "popup";
 
   document.documentElement.style.setProperty("--share-button-bg", color);
@@ -83,6 +95,14 @@ export default function Share(props: PropsWithChildren<IProps>) {
     if (props.onOpen) {
       props.onOpen();
     }
+  };
+
+  const handleURLOpen = (social: Social) => {
+    const queryData = { url, text };
+    const query = generateShareQuery(social, queryData);
+    const socialURL = getSocialURL(social, query);
+
+    window.open(socialURL);
   };
 
   const links = (
@@ -106,47 +126,19 @@ export default function Share(props: PropsWithChildren<IProps>) {
         >
           <button
             className="facebook"
-            onClick={() =>
-              window.open(
-                `https://www.facebook.com/sharer/sharer.php${generateShareQuery(
-                  Social.Facebook,
-                  queryData
-                )}`
-              )
-            }
+            onClick={() => handleURLOpen(Social.Facebook)}
           />
           <button
             className="twitter"
-            onClick={() =>
-              window.open(
-                `https://twitter.com/intent/tweet${generateShareQuery(
-                  Social.Twitter,
-                  queryData
-                )}`
-              )
-            }
+            onClick={() => handleURLOpen(Social.Twitter)}
           />
           <button
             className="linkedin"
-            onClick={() =>
-              window.open(
-                `https://www.linkedin.com/sharing/share-offsite/${generateShareQuery(
-                  Social.LinkedIn,
-                  queryData
-                )}`
-              )
-            }
+            onClick={() => handleURLOpen(Social.LinkedIn)}
           />
           <button
             className="telegram"
-            onClick={() =>
-              window.open(
-                `https://t.me/share/url${generateShareQuery(
-                  Social.Telegram,
-                  queryData
-                )}`
-              )
-            }
+            onClick={() => handleURLOpen(Social.Telegram)}
           />
         </div>
       )}
