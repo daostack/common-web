@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, PropsWithChildren } from "react";
 import classNames from "classnames";
 import { Loader } from "@/shared/components";
+import { isMobile } from "@/shared/utils";
 import { Colors } from "../../constants";
 import { useModal, useOutsideClick } from "../../hooks";
 import { Modal } from "../Modal";
@@ -97,7 +98,27 @@ export default function Share(props: PropsWithChildren<IProps>) {
     }
   };
 
-  const handleURLOpen = (social: Social) => {
+  const shareNatively = async () => {
+    if (!navigator?.share) {
+      return;
+    }
+
+    try {
+      await navigator.share({
+        url,
+        text,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleURLOpen = async (social: Social) => {
+    if (isMobile() && navigator && Boolean(navigator.share)) {
+      await shareNatively();
+      return;
+    }
+
     const queryData = { url, text };
     const query = generateShareQuery(social, queryData);
     const socialURL = getSocialURL(social, query);
