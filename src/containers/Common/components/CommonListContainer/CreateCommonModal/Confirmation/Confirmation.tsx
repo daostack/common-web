@@ -66,7 +66,10 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
       return;
     }
 
-    createCommon(creationData);
+    createCommon({
+      ...creationData,
+      contributionAmount: creationData.contributionAmount * 100,
+    });
   }, [isCommonCreationLoading, common, error, creationData, createCommon]);
 
   useEffect(() => {

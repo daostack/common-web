@@ -1,8 +1,18 @@
 import {
   MAX_CONTRIBUTION_ILS_AMOUNT,
+  MAX_CONTRIBUTION_ILS_AMOUNT_IN_COMMON_CREATION,
   MIN_CONTRIBUTION_ILS_AMOUNT,
 } from "../../constants";
 import { formatPrice, roundNumberToNextTenths } from "../../utils";
+
+const getLastSelectionAmount = (
+  minFeeToJoin: number,
+  lastAmount: number
+): number =>
+  minFeeToJoin >= MAX_CONTRIBUTION_ILS_AMOUNT_IN_COMMON_CREATION / 100 &&
+  lastAmount < 2500
+    ? 2500
+    : lastAmount;
 
 export const getAmountsForSelection = (
   minFeeToJoin: number,
@@ -19,7 +29,11 @@ export const getAmountsForSelection = (
       ? initialAmount
       : roundNumberToNextTenths(initialAmount);
 
-  return [minFeeToJoinForUsage, firstAmount, firstAmount * 2]
+  return [
+    minFeeToJoinForUsage,
+    firstAmount,
+    getLastSelectionAmount(minFeeToJoinForUsage, firstAmount * 2),
+  ]
     .map((amount) => amount * 100)
     .filter((amount) => amount <= MAX_CONTRIBUTION_ILS_AMOUNT);
 };

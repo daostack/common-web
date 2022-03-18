@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { TextField } from "@/shared/components/Form/Formik";
-import { Modal } from "../../../../../shared/components";
+import { Modal } from "@/shared/components";
+import { useZoomDisabling } from '@/shared/hooks';
 import { ModalProps } from "@/shared/interfaces";
 
 import "./index.scss";
@@ -11,6 +12,8 @@ import { getScreenSize } from "@/shared/store/selectors";
 import { ScreenSize } from "@/shared/constants";
 import classNames from "classnames";
 
+const MAX_TITLE_LENGTH = 49;
+
 interface AddDiscussionComponentProps
   extends Pick<ModalProps, "isShowing" | "onClose"> {
   onDiscussionAdd: (payload: { title: string; message: string }) => void;
@@ -18,7 +21,9 @@ interface AddDiscussionComponentProps
 
 const validationSchema = Yup.object({
   message: Yup.string().required("Field required"),
-  title: Yup.string().required("Field required").max(49, "Title too long"),
+  title: Yup.string()
+    .required("Field required")
+    .max(MAX_TITLE_LENGTH, "Title too long"),
 });
 
 const AddDiscussionComponent = ({
@@ -26,6 +31,9 @@ const AddDiscussionComponent = ({
   onClose,
   onDiscussionAdd,
 }: AddDiscussionComponentProps) => {
+  const { disableZoom, resetZoom } = useZoomDisabling({
+    shouldDisableAutomatically: false,
+  });
   const [formValues] = useState({
     title: "",
     message: "",
@@ -33,6 +41,14 @@ const AddDiscussionComponent = ({
 
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+
+  useEffect(() => {
+    if (isShowing) {
+      disableZoom();
+    } else {
+      resetZoom();
+    }
+  }, [isShowing, disableZoom, resetZoom]);
 
   return (
     <Modal
@@ -69,6 +85,7 @@ const AddDiscussionComponent = ({
                     id="title"
                     label="Post Title"
                     name={"title"}
+                    maxLength={MAX_TITLE_LENGTH}
                     value={formikProps.values.title}
                     onChange={formikProps.handleChange}
                     onBlur={formikProps.handleBlur}

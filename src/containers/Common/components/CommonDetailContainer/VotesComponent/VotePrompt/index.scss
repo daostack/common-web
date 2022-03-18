@@ -2,7 +2,7 @@
 @import "../../../../../../styles/sizes";
 
 .vote-prompt-modal {
-  width: 30rem;
+  width: 50rem;
 }
 
 .vote-ptompt-wrapper {
@@ -35,10 +35,12 @@
   }
   .actions-wrapper {
     display: flex;
-    flex-direction: column;
     margin-top: 2rem;
+    button {
+      width: 12rem;
+    }
     .vote-button {
-      margin-bottom: 1rem;
+      margin-right: 1rem;
       &.approve {
         background-color: $green;
       }
@@ -59,13 +61,20 @@
     width: 100%;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+    border-top-left-radius: 2rem;
+    border-top-right-radius: 2rem;
   }
 
   .vote-ptompt-wrapper {
     .actions-wrapper {
+      flex-direction: column;
       width: 100%;
       button {
         width: 100%;
+      }
+      .vote-button {
+        margin-right: unset;
+        margin-bottom: 1rem;
       }
     }
   }
