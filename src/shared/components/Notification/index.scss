@@ -1,0 +1,20 @@
+@import "../../../constants";
+@import "../../../styles/sizes";
+
+.notifications-container {
+  position: fixed;
+  z-index: 100;
+  width: 20rem;
+  left: 50%;
+  right: 50%;
+  transform: translate(-50%, 50%);
+}
+
+@include big-phone {
+  .notifications-container {
+    width: 100%;
+    bottom: 0;
+    top: unset;
+    bottom: 0;
+  }
+}

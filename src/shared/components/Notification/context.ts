@@ -6,7 +6,7 @@ export interface NotificationContextValue {
 
 export const NotificationContext = createContext<NotificationContextValue>({
   addNotification: () => {
-    throw new Error("NotificationContext error");
+    throw new Error("addNotification error");
   },
 });
 

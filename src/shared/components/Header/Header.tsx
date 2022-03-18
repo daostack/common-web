@@ -135,7 +135,8 @@ const Header = () => {
           onClick={toggleMenuShowing}
         />
       )}
-      <button onClick={() => notify(<span>some link</span>)}>notify</button>
+      <button onClick={() => notify(<a href="https://www.google.com">test_1</a>)}>notify_1</button>
+      <button onClick={() => notify(<a href="https://www.google.com">test_2</a>)}>notify_2</button>
       <Link
         to="/"
         className={classNames("common-logo", {

@@ -1,13 +1,22 @@
 import React, { useCallback, useMemo, useState, FC, ReactNode } from "react";
 import { NotificationContext, NotificationContextValue } from "./context";
+import Notification from "./Notification/Notification";
+import "./index.scss";
+
+export interface INotification {
+  id: number;
+  content: React.ReactNode;
+}
 
 const NotificationProvider: FC = ({ children }) => {
-  const [notifications, setNotifications] = useState<ReactNode[]>([]);
+  const [notifications, setNotifications] = useState<INotification[]>([]);
 
-  const addNotification = useCallback<
-    NotificationContextValue["addNotification"]
-  >((value) => {
-    setNotifications((notifications) => notifications.concat(value));
+  const addNotification = useCallback<NotificationContextValue["addNotification"]>((value) => {
+    setNotifications((notifications) => notifications.concat({ id: notifications.length, content: value }));
+  }, []);
+
+  const removeNotification = useCallback((id: number) => {
+    setNotifications((notifications) => notifications.filter((notification) => notification.id !== id));
   }, []);
 
   const contextValue = useMemo<NotificationContextValue>(
@@ -17,12 +26,20 @@ const NotificationProvider: FC = ({ children }) => {
     [addNotification]
   );
 
+  if (notifications.length > 3) {
+    setNotifications((notifications) => notifications.filter((notification, index) => index !== 0));
+  }
+
   return (
     <NotificationContext.Provider value={contextValue}>
       {children}
-      <div>
-        {notifications.map((notification) => {
-          return <div>{notification}</div>;
+      <div className="notifications-container">
+        {notifications.map((notification, index) => {
+          return (
+            <Notification
+              key={index}
+              notification={notification}
+              removeNotification={() => removeNotification(notification.id)} />);
         })}
       </div>
     </NotificationContext.Provider>
