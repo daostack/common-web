@@ -81,9 +81,11 @@ export function MembershipRequestModal(props: IProps) {
   const modalRef = useRef<ModalRef>(null);
   const [userData, setUserData] = useState(initData);
   const user = useSelector(selectUser());
+  const [isMember, setIsMember] = useState<boolean>();
   const { stage } = userData;
   const { isShowing, onClose, common, onCreationStageReach } = props;
   const shouldDisplayProgressBar = stage > 0 && stage < 5;
+  const shouldDisplayGoBack = (stage > 1 && stage < 5) || (stage === 1 && !isMember);
   const commons = useSelector(selectCommonList());
 
   /**
@@ -98,6 +100,8 @@ export function MembershipRequestModal(props: IProps) {
     const isMember = commons.some((c) =>
       c.members.some((m) => m.userId === user?.uid)
     );
+
+    setIsMember(isMember);
 
     const payload: IMembershipRequestData = {
       ...initData,
@@ -218,7 +222,7 @@ export function MembershipRequestModal(props: IProps) {
       mobileFullScreen
       closePrompt={stage !== 6}
       title={renderedTitle}
-      onGoBack={shouldDisplayProgressBar ? moveStageBack : undefined}
+      onGoBack={shouldDisplayGoBack ? moveStageBack : undefined}
       styles={{
         content: stage === 0 ? "membership-request-modal__content--introduction" : ""
       }}
