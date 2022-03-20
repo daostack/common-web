@@ -1,6 +1,7 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Modal } from "@/shared/components";
+import { useZoomDisabling } from "@/shared/hooks";
 import { ModalProps } from "@/shared/interfaces";
 
 import "./index.scss";
@@ -47,6 +48,9 @@ export const AddProposalComponent = ({
   proposals,
   getProposalDetail,
 }: AddDiscussionComponentProps) => {
+  const { disableZoom, resetZoom } = useZoomDisabling({
+    shouldDisableAutomatically: false,
+  });
   const [
     fundingRequest,
     setFundingRequest,
@@ -154,6 +158,14 @@ export const AddProposalComponent = ({
     common,
     onClose,
   ]);
+
+  useEffect(() => {
+    if (isShowing) {
+      disableZoom();
+    } else {
+      resetZoom();
+    }
+  }, [isShowing, disableZoom, resetZoom]);
 
   return (
     <Modal

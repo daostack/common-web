@@ -216,10 +216,12 @@ export function* createDiscussionSaga(
 
     yield createDiscussion(action.payload.payload);
 
-    yield call(
+    const unsubscribe = (yield call(
       subscribeToCommonDiscussion,
       action.payload.payload.commonId,
       async (data) => {
+        unsubscribe();
+
         const d = data.find(
           (d: Discussion) => d.title === action.payload.payload.title
         );
@@ -236,7 +238,7 @@ export function* createDiscussionSaga(
         store.dispatch(actions.setDiscussion(ds));
         store.dispatch(actions.loadCommonDiscussionList.request());
       }
-    );
+    )) as () => void;
 
     yield put(stopLoading());
   } catch (e) {
