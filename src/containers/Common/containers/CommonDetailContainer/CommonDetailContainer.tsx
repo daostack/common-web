@@ -37,6 +37,7 @@ import {
   PreviewInformationList,
   DiscussionsComponent,
   DiscussionDetailModal,
+  EditCommonMenu,
   ProposalsComponent,
   ProposalsHistory,
   AboutSidebarComponent,
@@ -656,6 +657,7 @@ export default function CommonDetail() {
                       color={Colors.lightPurple}
                     />
                   )}
+                  <EditCommonMenu />
                 </div>
                 {isCommonMember && isMobileView && (
                   <Share

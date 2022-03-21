@@ -24,12 +24,14 @@ export interface Styles {
   arrowIcon?: string;
   menu?: string;
   menuList?: string;
+  menuItem?: string;
 }
 
 export interface Option {
   text: ReactNode;
   searchText?: string;
   value: unknown;
+  className?: string;
 }
 
 export interface DropdownProps {
@@ -179,10 +181,15 @@ const Dropdown: FC<DropdownProps> = (props) => {
             {options.map((option) => (
               <MenuItem
                 key={String(option.value)}
-                className={classNames("custom-dropdown-wrapper__menu-item", {
-                  "custom-dropdown-wrapper__menu-item--active":
-                    option.value === selectedOption?.value,
-                })}
+                className={classNames(
+                  "custom-dropdown-wrapper__menu-item",
+                  styles?.menuItem,
+                  option.className,
+                  {
+                    "custom-dropdown-wrapper__menu-item--active":
+                      option.value === selectedOption?.value,
+                  }
+                )}
                 tag="li"
                 value={option.value}
                 text={
