@@ -27,6 +27,7 @@ import {
 } from "@/containers/Common/interfaces";
 import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
 import { CreateVotePayload, Vote } from "@/shared/interfaces/api/vote";
+import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/interfaces/api/payMe";
 
 export async function fetchCommonDiscussions(commonId: string) {
   const commons = await firebase
@@ -302,4 +303,13 @@ export async function createCommon(
   );
 
   return convertObjectDatesToFirestoreTimestamps(data);
+}
+
+export async function addBankDetails(requestData: AddBankDetailsPayload): Promise<void> {
+  const { data } = await Api.post<void>(
+    ApiEndpoint.AddBankAccount,
+    requestData
+  );
+
+  return data;
 }

@@ -42,7 +42,7 @@ interface AddProposalFormInterface {
 export const AddProposalForm = ({
   common,
   saveProposalState,
-  hasPaymentMethod,
+  hasPaymentMethod, // TODO: this should be changed to Add Bank Detalis
   addPaymentMethod,
 }: AddProposalFormInterface) => {
   const [isAmountAdded, addAmountToValidation] = useState(false);

@@ -27,6 +27,7 @@ import {
   checkUserPaymentMethod,
   deleteCommon as deleteCommonApi,
   createVote as createVoteApi,
+  addBankDetails as addBankDetailsApi,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -358,6 +359,24 @@ export function* vote(
     yield put(stopLoading());
   } catch (error) {
     yield put(actions.createVote.failure(error));
+    action.payload.callback(error);
+    yield put(stopLoading());
+  }
+}
+
+export function* addBankDetails(
+  action: ReturnType<typeof actions.addBankDetails.request>
+): Generator {
+  
+  try {
+    yield put(startLoading());
+    yield addBankDetailsApi(action.payload.payload);
+
+    yield put(actions.addBankDetails.success());
+    action.payload.callback(null);
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(actions.addBankDetails.failure(error));
     action.payload.callback(error);
     yield put(stopLoading());
   }
