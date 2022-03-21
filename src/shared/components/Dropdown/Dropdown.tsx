@@ -1,4 +1,11 @@
-import React, { useRef, useState, CSSProperties, FC, RefObject } from "react";
+import React, {
+  useRef,
+  useState,
+  CSSProperties,
+  FC,
+  ReactNode,
+  RefObject,
+} from "react";
 import {
   Button as MenuButton,
   Menu,
@@ -20,7 +27,8 @@ export interface Styles {
 }
 
 export interface Option {
-  text: string;
+  text: ReactNode;
+  searchText?: string;
   value: unknown;
 }
 
@@ -159,7 +167,10 @@ const Dropdown: FC<DropdownProps> = (props) => {
                 })}
                 tag="li"
                 value={option.value}
-                text={option.text}
+                text={
+                  option.searchText ||
+                  (typeof option.text === "string" ? option.text : undefined)
+                }
               >
                 {option.text}
               </MenuItem>
