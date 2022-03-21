@@ -44,12 +44,11 @@ export interface DropdownProps {
   shouldBeFixed?: boolean;
 }
 
-const getMenuStyles = (
+const getFixedMenuStyles = (
   ref: RefObject<HTMLElement>,
-  menuRef: HTMLUListElement | null,
-  shouldBeFixed?: boolean
+  menuRef: HTMLUListElement | null
 ): CSSProperties | undefined => {
-  if (!shouldBeFixed || !ref.current || !menuRef) {
+  if (!ref.current || !menuRef) {
     return;
   }
 
@@ -71,6 +70,25 @@ const getMenuStyles = (
   }
 
   return styles;
+};
+
+const getMenuStyles = (
+  ref: RefObject<HTMLElement>,
+  menuRef: HTMLUListElement | null,
+  shouldBeFixed?: boolean
+): CSSProperties | undefined => {
+  if (!menuRef) {
+    return;
+  }
+  if (shouldBeFixed) {
+    return getFixedMenuStyles(ref, menuRef);
+  }
+
+  const { right } = menuRef.getBoundingClientRect();
+
+  if (window.innerWidth < right) {
+    return { right: 0 };
+  }
 };
 
 const Dropdown: FC<DropdownProps> = (props) => {
