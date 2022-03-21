@@ -73,7 +73,7 @@ const AddDiscussionComponent = ({
       >
         {(formikProps) => (
           <div className="add-discussion-wrapper">
-            <div className="add-discussion-title">New Post</div>
+            <div className="add-discussion-title">New Discussion</div>
             <div className="discussion-form-wrapper">
               <div className="input-wrapper">
                 <div
@@ -83,7 +83,7 @@ const AddDiscussionComponent = ({
                 >
                   <TextField
                     id="title"
-                    label="Post Title"
+                    label="Post Discussion"
                     name={"title"}
                     maxLength={MAX_TITLE_LENGTH}
                     value={formikProps.values.title}
@@ -119,7 +119,7 @@ const AddDiscussionComponent = ({
                   disabled={!formikProps.isValid}
                   onClick={formikProps.submitForm}
                 >
-                  Publish Post
+                  Publish Discussion
                 </button>
               </div>
             </div>
