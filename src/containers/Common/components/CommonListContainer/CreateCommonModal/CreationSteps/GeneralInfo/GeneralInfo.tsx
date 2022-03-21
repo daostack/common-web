@@ -108,7 +108,6 @@ export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
                 label="About"
                 placeholder="Describe your cause and let others know why they should join you. What makes you passionate about it? What does success look like?"
                 maxLength={MAX_ABOUT_LENGTH}
-                shouldDisplayCount={!isMobileView}
                 rows={isMobileView ? 4 : 3}
                 isTextarea
                 isRequired
