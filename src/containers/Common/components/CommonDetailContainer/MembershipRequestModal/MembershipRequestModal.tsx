@@ -125,7 +125,6 @@ export function MembershipRequestModal(props: IProps) {
 
     setUserData(payload);
     onCreationStageReach(false);
-    resetZoom();
   }, [isShowing, user, onCreationStageReach, disableZoom, resetZoom, commons, dispatch]);
 
   const renderCurrentStage = (stage: number) => {
