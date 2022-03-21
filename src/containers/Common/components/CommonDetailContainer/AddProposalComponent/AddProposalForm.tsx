@@ -1,4 +1,5 @@
 import React, { ChangeEventHandler, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { LinksArray, TextField } from "@/shared/components/Form/Formik";
@@ -12,6 +13,7 @@ import {
 import { ButtonIcon, Loader } from "@/shared/components";
 import DeleteIcon from "@/shared/icons/delete.icon";
 import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
+import { getBankDetails } from "@/containers/Common/store/actions";
 
 const validationSchema = Yup.object({
   description: Yup.string().required("Field required"),
@@ -35,16 +37,15 @@ interface AddProposalFormInterface {
   saveProposalState: (
     payload: Partial<CreateFundingRequestProposalPayload>
   ) => void;
-  hasPaymentMethod: boolean;
-  addPaymentMethod: () => void;
+  addBankDetails: () => void;
 }
 
 export const AddProposalForm = ({
   common,
   saveProposalState,
-  hasPaymentMethod, // TODO: this should be changed to Add Bank Detalis
-  addPaymentMethod,
+  addBankDetails,
 }: AddProposalFormInterface) => {
+  const dispatch = useDispatch();
   const [isAmountAdded, addAmountToValidation] = useState(false);
   const [showFileLoader, setShowFileLoader] = useState(false);
   const [schema, setSchema] = useState(validationSchema);
@@ -52,6 +53,27 @@ export const AddProposalForm = ({
   const [uploadedFiles, setUploadedFile] = useState<
     { title: string; value: string }[]
   >([]);
+  const [hasBankDetails, setHasBankDetails] = useState<boolean>();
+
+  /**
+   * For now we fetch the bank details only here.
+   * It's very likely that we'll need this information somewhere else in the app
+   * so maybe we can fetch this info on the app start and save it in the Redux?
+   */
+  useEffect(() => {
+    (async () => {
+      dispatch(getBankDetails.request({
+        callback: (error) => {
+          if (error) {
+            console.error(error);
+            setHasBankDetails(false);
+            return;
+          }
+          setHasBankDetails(true);
+        }
+      }))
+    })();
+  }, [dispatch])
 
   const [formValues] = useState({
     title: "",
@@ -161,18 +183,18 @@ export const AddProposalForm = ({
                 {formatPrice(common.balance)}
               </div>
             </div>
-            {!hasPaymentMethod && (
-              <div className="add-payment-method-wrapper">
+            {!hasBankDetails || true && ( // TODO: temporary - for development needs
+              <div className="add-bank-details-wrapper">
                 <img
                   src="/icons/add-proposal/illustrations-full-page-transparent.svg"
                   alt=""
                 />
-                <div className="add-payment-content">
-                  <div className="add-payment-content-text">
+                <div className="add-bank-details-content">
+                  <div className="add-bank-details-content-text">
                     You must provide bank account details in order to receive
                     funds
                   </div>
-                  <button onClick={addPaymentMethod}>Add Bank Account</button>
+                  <button onClick={addBankDetails}>Add Bank Account</button>
                 </div>
               </div>
             )}
@@ -272,7 +294,7 @@ export const AddProposalForm = ({
             <div className="action-wrapper">
               <button
                 className="button-blue"
-                disabled={!formikProps.isValid}
+                disabled={!formikProps.isValid || !hasBankDetails}
                 onClick={formikProps.submitForm}
               >
                 Create proposal

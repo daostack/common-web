@@ -1,5 +1,5 @@
-import { PAYME_TYPE_CODES } from "@/shared/interfaces/api/payMe";
 import React, { useEffect } from "react";
+import { PaymeTypeCodes } from "@/shared/interfaces/api/payMe";
 import { Loader } from "../../../../shared/components";
 import { InvoicesSubmission } from "../../../../shared/models";
 import { uploadFile } from "../../../../shared/utils/firebaseUploadFile";
@@ -29,7 +29,7 @@ export default function PendingUpload({ proposalId, selectedFiles, updateUploadS
           const downloadURL = await uploadFile(file.data.name, "public_img", file.data);
           invoicesData.payoutDocs.push({
             name: file.data.name,
-            legalType: PAYME_TYPE_CODES.Invoice,
+            legalType: PaymeTypeCodes.Invoice,
             amount: file.amount * 100,
             mimeType: file.data.type,
             downloadURL: downloadURL

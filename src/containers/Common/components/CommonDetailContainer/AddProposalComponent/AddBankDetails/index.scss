@@ -1,0 +1,41 @@
+@import "../../../../../../constants.scss";
+@import "../../../../../../styles/sizes";
+
+.add-bank-details-wrapper {
+  display: flex;
+  align-items: center;
+  height: 40rem;
+  flex-direction: column;
+
+  .add-bank-details-title {
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 1.33;
+    text-align: center;
+    color: $secondary-blue;
+    margin-top: -1.5rem;
+  }
+
+  .add-bank-details-description {
+    margin-top: 2rem;
+    font-size: 0.875rem;
+    line-height: 1.43;
+    text-align: center;
+    color: $secondary-blue;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid $light-gray-1;
+    margin-bottom: 2rem;
+  }
+
+  .add-bank-details-content {
+    width: 60%;
+  }
+}
+
+@include big-phone {
+  .add-bank-details-wrapper {
+    height: auto;
+    width: 100%;
+  }
+}

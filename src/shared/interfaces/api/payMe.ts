@@ -2,7 +2,7 @@ export interface BuyerTokenPageCreationData {
   cardId: string;
 }
 
-export enum PAYME_TYPE_CODES {
+export enum PaymeTypeCodes {
   "Social Id" = 1, //Social ID document. For additional information see Note 3 above
   "Bank Account Ownership" = 2, //Proof of bank account ownership or a cancelled cheque photo. For additional information see Note 3 above
   "Corporate Certificate" = 3, //For additional information see Note 3 above
@@ -49,7 +49,7 @@ export interface BankAccountDetails {
 
 export interface PaymeDocument {
   name: string;
-  legalType: PAYME_TYPE_CODES;
+  legalType: PaymeTypeCodes;
   amount: number;
   mimeType: string;
   downloadURL: string;

@@ -28,6 +28,7 @@ import {
   deleteCommon as deleteCommonApi,
   createVote as createVoteApi,
   addBankDetails as addBankDetailsApi,
+  getBankDetails as getBankDetailsApi,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -364,10 +365,26 @@ export function* vote(
   }
 }
 
+export function* getBankDetails(
+  action: ReturnType<typeof actions.getBankDetails.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    yield getBankDetailsApi();
+
+    yield put(actions.getBankDetails.success());
+    action.payload.callback(null);
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(actions.getBankDetails.failure(error));
+    action.payload.callback(error);
+    yield put(stopLoading());
+  }
+}
+
 export function* addBankDetails(
   action: ReturnType<typeof actions.addBankDetails.request>
 ): Generator {
-  
   try {
     yield put(startLoading());
     yield addBankDetailsApi(action.payload.payload);
@@ -482,6 +499,8 @@ export function* commonsSaga() {
   );
   yield takeLatest(actions.createCommon.request, createCommon);
   yield takeLatest(actions.createVote.request, vote);
+  yield takeLatest(actions.getBankDetails.request, getBankDetails);
+  yield takeLatest(actions.addBankDetails.request, addBankDetails);
 }
 
 export default commonsSaga;

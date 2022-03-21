@@ -305,6 +305,15 @@ export async function createCommon(
   return convertObjectDatesToFirestoreTimestamps(data);
 }
 
+export async function getBankDetails(): Promise<void> {
+  const { data } = await Api.get<void>(
+    ApiEndpoint.GetBankAccount,
+  );
+
+  console.log(data);
+  return data;
+}
+
 export async function addBankDetails(requestData: AddBankDetailsPayload): Promise<void> {
   const { data } = await Api.post<void>(
     ApiEndpoint.AddBankAccount,

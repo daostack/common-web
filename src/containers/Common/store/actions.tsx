@@ -172,3 +172,9 @@ export const addBankDetails = createAsyncAction(
   CommonsActionTypes.ADD_BANK_DETAILS_SUCCESS,
   CommonsActionTypes.ADD_BANK_DETAILS_FAILURE
 )<PayloadWithCallback<AddBankDetailsPayload, void, Error>, void, Error>();
+
+export const getBankDetails = createAsyncAction(
+  CommonsActionTypes.GET_BANK_DETAILS,
+  CommonsActionTypes.GET_BANK_DETAILS_SUCCESS,
+  CommonsActionTypes.GET_BANK_DETAILS_FAILURE
+)<PayloadWithCallback<void, void, Error>, void, Error>();
