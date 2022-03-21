@@ -84,7 +84,7 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
                   label={index === 0 ? "Add links" : ""}
                   placeholder="Link title"
                   maxLength={maxTitleLength}
-                  hint="Resources, related content, or social pages"
+                  hint={index === 0 ? "Resources, related content, or social pages" : ""}
                   styles={{
                     input: {
                       default: classNames("links-array__title-input", {
