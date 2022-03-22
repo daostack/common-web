@@ -93,6 +93,7 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                 label="Bank Name"
                 placeholder="---Select bank---"
                 options={banksOptions}
+                shouldBeFixed={false}
               />
               <TextField
                 className="field"
