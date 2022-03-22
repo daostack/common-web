@@ -28,8 +28,21 @@
     margin-bottom: 2rem;
   }
 
-  .add-bank-details-content {
+  .add-bank-details-form {
     width: 60%;
+    .field {
+      margin-bottom: 1.5rem;
+    }
+    .files-upload-wrapper {
+      display: flex;
+      margin: 2rem 0;
+    }
+    .save-button {
+      display: block;
+      margin: auto;
+      width: 11rem;
+      margin-bottom: 1rem;
+    }
   }
 }
 
@@ -37,5 +50,15 @@
   .add-bank-details-wrapper {
     height: auto;
     width: 100%;
+    .add-bank-details-form {
+      width: 100%;
+      .files-upload-wrapper {
+        display: flex;
+        flex-direction: column;
+      }
+      .save-button {
+        width: 100%;
+      }
+    }
   }
 }

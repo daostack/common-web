@@ -110,6 +110,10 @@ export const AddProposalComponent = ({
     onProposalAdd(fundingRequest, changeCreationProposalStep);
   }, [onProposalAdd, fundingRequest]);
 
+  const moveStageBack = useCallback(() => {
+    changeCreationProposalStep(AddProposalSteps.CREATE);
+  }, []);
+
   const renderProposalStep = useMemo(() => {
     switch (proposalCreationStep) {
       case AddProposalSteps.CREATE:
@@ -171,6 +175,7 @@ export const AddProposalComponent = ({
         "mobile-full-screen": isMobileView,
       })}
       mobileFullScreen={isMobileView}
+      onGoBack={(proposalCreationStep === AddProposalSteps.BANK_DETAILS || proposalCreationStep === AddProposalSteps.CONFIRM) ? moveStageBack : undefined}
     >
       {renderProposalStep}
     </Modal>
