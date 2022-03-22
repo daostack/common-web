@@ -2,7 +2,7 @@ import React, { ReactElement, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Loader, ModalHeaderContent, Separator } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
-import { Common, CommonContributionType } from "@/shared/models";
+import { Common, CommonContributionType, PaymentStatus } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice } from "@/shared/utils";
 import {
@@ -11,7 +11,7 @@ import {
   ImmediateContributionPayment,
 } from "../../../../../interfaces";
 import { makeImmediateContribution } from "../../../../../store/actions";
-import { subscribeToCardChange } from "../../../../../store/api";
+import { subscribeToPayment } from "../../../../../store/api";
 import { Progress } from "../Progress";
 import "./index.scss";
 
@@ -110,20 +110,22 @@ export default function RequestPayment(
   ]);
 
   useEffect(() => {
-    if (!isPaymentIframeLoaded) {
+    if (!isPaymentIframeLoaded || !payment) {
       return;
     }
 
-    // try {
-    //   return subscribeToCardChange(paymentData.cardId, (card) => {
-    //     if (card) {
-    //       onFinish();
-    //     }
-    //   });
-    // } catch (error) {
-    //   console.error("Error during subscription to payment status change");
-    // }
-  }, [isPaymentIframeLoaded, onFinish]);
+    try {
+      return subscribeToPayment(payment.paymentId, (payment) => {
+        if (payment?.status === PaymentStatus.Confirmed) {
+          onFinish();
+        } else if (payment?.status === PaymentStatus.Failed) {
+          onError("Payment failed");
+        }
+      });
+    } catch (error) {
+      console.error("Error during subscribing to payment status change");
+    }
+  }, [isPaymentIframeLoaded, payment, onFinish, onError]);
 
   const progressEl = <Progress paymentStep={currentStep} />;
 
