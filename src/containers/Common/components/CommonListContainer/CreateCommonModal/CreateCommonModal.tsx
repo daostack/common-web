@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
-import { v4 as uuidv4 } from "uuid";
 import { Modal } from "@/shared/components";
 import { getScreenSize } from "@/shared/store/selectors";
 import { useZoomDisabling } from "@/shared/hooks";
@@ -21,6 +20,7 @@ import { Confirmation } from "./Confirmation";
 import { CreationSteps } from "./CreationSteps";
 import { Introduction } from "./Introduction";
 import { Payment } from "./Payment";
+import { Success } from "./Success";
 import { CreateCommonStage } from "./constants";
 import "./index.scss";
 
@@ -170,6 +170,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
           <Confirmation
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
+            setShouldShowCloseButton={setShouldShowCloseButton}
             onFinish={handleCommonCreation}
             creationData={creationData}
           />
@@ -186,6 +187,15 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             common={createdCommon}
             paymentData={paymentData}
             setPaymentData={setPaymentData}
+          />
+        ) : null;
+      case CreateCommonStage.Success:
+        return createdCommon ? (
+          <Success
+            common={createdCommon}
+            setTitle={setSmallTitle}
+            setGoBackHandler={setGoBackHandler}
+            setShouldShowCloseButton={setShouldShowCloseButton}
           />
         ) : null;
       default:
@@ -235,7 +245,8 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       isHeaderSticky={isHeaderSticky}
       onHeaderScrolledToTop={setIsHeaderScrolledToTop}
       closePrompt={
-        shouldShowCloseButton && stage !== CreateCommonStage.Confirmation
+        shouldShowCloseButton &&
+        ![CreateCommonStage.Success, CreateCommonStage.Error].includes(stage)
       }
     >
       <div id="content">{content}</div>

@@ -3,17 +3,23 @@ import { Common } from "@/shared/models";
 import { IntermediateCreateCommonPayload } from "../../../../interfaces";
 import { useCommonCreation } from "../useCases";
 import { Processing } from "./Processing";
-import "./index.scss";
 
 interface ConfirmationProps {
   setTitle: (title: ReactNode) => void;
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
+  setShouldShowCloseButton: (shouldShow: boolean) => void;
   onFinish: (common: Common | null, errorText: string) => void;
   creationData: IntermediateCreateCommonPayload;
 }
 
 const Confirmation: FC<ConfirmationProps> = (props) => {
-  const { setTitle, setGoBackHandler, onFinish, creationData } = props;
+  const {
+    setTitle,
+    setGoBackHandler,
+    setShouldShowCloseButton,
+    onFinish,
+    creationData,
+  } = props;
   const {
     isCommonCreationLoading,
     common,
@@ -47,6 +53,10 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
   useEffect(() => {
     setGoBackHandler(null);
   }, [setGoBackHandler]);
+
+  useEffect(() => {
+    setShouldShowCloseButton(false);
+  }, [setShouldShowCloseButton]);
 
   return <Processing />;
 };
