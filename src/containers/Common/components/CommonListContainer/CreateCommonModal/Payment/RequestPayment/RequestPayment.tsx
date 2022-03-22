@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, ReactElement } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Loader, ModalHeaderContent, Separator } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
@@ -31,6 +31,7 @@ interface RequestPaymentProps {
   currentStep: number;
   onFinish: () => void;
   onError: (errorText: string) => void;
+  setShouldShowGoBackButton: (value: boolean) => void;
   paymentData: PaymentPayload;
   common: Common;
 }
@@ -38,7 +39,14 @@ interface RequestPaymentProps {
 export default function RequestPayment(
   props: RequestPaymentProps
 ): ReactElement {
-  const { common, currentStep, paymentData, onFinish, onError } = props;
+  const {
+    common,
+    currentStep,
+    paymentData,
+    onFinish,
+    onError,
+    setShouldShowGoBackButton,
+  } = props;
   const {
     id: commonId,
     metadata: { contributionType },
@@ -89,6 +97,7 @@ export default function RequestPayment(
               return;
             }
 
+            setShouldShowGoBackButton(true);
             setState((nextState) => ({
               ...nextState,
               payment,
@@ -107,6 +116,7 @@ export default function RequestPayment(
     paymentData.contributionAmount,
     onFinish,
     onError,
+    setShouldShowGoBackButton,
   ]);
 
   useEffect(() => {
@@ -125,7 +135,7 @@ export default function RequestPayment(
     } catch (error) {
       console.error("Error during subscribing to payment status change");
     }
-  }, [isPaymentIframeLoaded, payment, onFinish, onError]);
+  }, [isPaymentIframeLoaded, payment, onFinish, onError, dispatch]);
 
   const progressEl = <Progress paymentStep={currentStep} />;
 

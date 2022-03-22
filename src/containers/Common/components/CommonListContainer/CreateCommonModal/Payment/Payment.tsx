@@ -44,10 +44,10 @@ export default function Payment(props: PaymentProps) {
     setPaymentData,
   } = props;
   const [step, setStep] = useState(PaymentStep.PersonalContribution);
+  const [shouldShowGoBackButton, setShouldShowGoBackButton] = useState(false);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const commonTitle = common.name;
-  const shouldShowGoBackButton = step !== PaymentStep.PersonalContribution;
 
   const scrollTop = () => {
     const content = document.getElementById("content");
@@ -58,11 +58,12 @@ export default function Payment(props: PaymentProps) {
   const handleGoBack = useCallback((): boolean => {
     if (step !== PaymentStep.PersonalContribution) {
       scrollTop();
+      setShouldShowGoBackButton(false);
       setStep((step) => step - 1);
     }
 
     return false;
-  }, [step, setPaymentData]);
+  }, [step]);
 
   const handleFinish = useCallback(
     (data?: Partial<PaymentPayload>) => {
@@ -138,7 +139,13 @@ export default function Payment(props: PaymentProps) {
       case PaymentStep.PersonalContribution:
         return <PersonalContribution {...stepProps} />;
       case PaymentStep.PaymentDetails:
-        return <RequestPayment {...stepProps} onError={onError} />;
+        return (
+          <RequestPayment
+            {...stepProps}
+            onError={onError}
+            setShouldShowGoBackButton={setShouldShowGoBackButton}
+          />
+        );
       default:
         return null;
     }

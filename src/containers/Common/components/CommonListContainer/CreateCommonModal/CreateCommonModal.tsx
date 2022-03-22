@@ -227,6 +227,8 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     paymentData,
     props.onClose,
     errorText,
+    handleCommonCreation,
+    handlePaymentFinish,
   ]);
 
   useEffect(() => {
