@@ -16,5 +16,3 @@ export const BANK_NAMES_OPTIONS = [
     name: 'Israel Discount Bank',
   },
 ];
-
-export const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png, .pdf";

@@ -1,12 +1,11 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Form, Formik, FormikConfig, FormikProps } from "formik";
 import { useDispatch } from "react-redux";
-import classNames from "classnames";
 import { Dropdown, TextField } from "@/shared/components/Form/Formik";
 import { Button, DropdownOption } from "@/shared/components";
-import { FileInfo } from "../FileInfo";
+import { FileUploadButton } from "../FileUploadButton";
 import validationSchema from "./validationSchema";
-import { ACCEPTED_EXTENSIONS, BANK_NAMES_OPTIONS } from "./constans";
+import { BANK_NAMES_OPTIONS } from "./constans";
 import "./index.scss";
 
 interface IProps {
@@ -51,11 +50,7 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
     []
   );
 
-  const selectFile = (event: any, fileType: FileType) => {
-    const file = event.target.files ? event.target.files[0] : null;
-    if (!file) {
-      return;
-    }
+  const selectFile = (file: File, fileType: FileType) => {
     if (fileType === FileType.PhotoID) {
       setPhotoIdFile(file);
     } else {
@@ -125,65 +120,27 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                 isRequired
               />
               <div className="files-upload-wrapper">
-                <label
-                  className={classNames("files-upload-wrapper__upload-button", {
-                    "files-upload-wrapper__upload-button--between": photoIdFile,
-                  })}
-                >
-                  <img
-                    className="files-upload-wrapper__icon"
-                    src={`/icons/add-proposal/add-photo-id${
-                      photoIdFile ? "-done" : ""
-                    }.svg`}
-                    alt="id file"
-                  />
-                  {photoIdFile ? (
-                    <FileInfo
-                      file={photoIdFile}
-                      onDelete={handlePhotoIDDelete}
-                    />
-                  ) : (
-                    "Add photo ID"
-                  )}
-                  <input
-                    className="files-upload-wrapper__file-input"
-                    type="file"
-                    onChange={(e) => selectFile(e, FileType.PhotoID)}
-                    accept={ACCEPTED_EXTENSIONS}
-                  />
-                </label>
-                <label
-                  className={classNames("files-upload-wrapper__upload-button", {
-                    "files-upload-wrapper__upload-button--between": bankLetterFile,
-                  })}
-                >
-                  <img
-                    className="files-upload-wrapper__icon"
-                    src={`/icons/add-proposal/add-bank-account-letter${
-                      bankLetterFile ? "-done" : ""
-                    }.svg`}
-                    alt="bank letter file"
-                  />
-                  {bankLetterFile ? (
-                    <FileInfo
-                      file={bankLetterFile}
-                      onDelete={handleBankLetterDelete}
-                    />
-                  ) : (
-                    <>
-                      Add bank account letter
-                      <span className="files-upload-wrapper__button-hint">
-                        The form can be found on the bank’s website
-                      </span>
-                    </>
-                  )}
-                  <input
-                    className="files-upload-wrapper__file-input"
-                    type="file"
-                    onChange={(e) => selectFile(e, FileType.BankLetter)}
-                    accept={ACCEPTED_EXTENSIONS}
-                  />
-                </label>
+                <FileUploadButton
+                  className="files-upload-wrapper__upload-button"
+                  file={photoIdFile}
+                  text="Add photo ID"
+                  logo="/icons/add-proposal/add-photo-id.svg"
+                  logoUploaded="/icons/add-proposal/add-photo-id-done.svg"
+                  alt="ID file"
+                  onUpload={(file) => selectFile(file, FileType.PhotoID)}
+                  onDelete={handlePhotoIDDelete}
+                />
+                <FileUploadButton
+                  className="files-upload-wrapper__upload-button"
+                  file={bankLetterFile}
+                  text="Add bank account letter"
+                  hint="The form can be found on the bank’s website"
+                  logo="/icons/add-proposal/add-bank-account-letter.svg"
+                  logoUploaded="/icons/add-proposal/add-bank-account-letter-done.svg"
+                  alt="Bank letter file"
+                  onUpload={(file) => selectFile(file, FileType.BankLetter)}
+                  onDelete={handleBankLetterDelete}
+                />
               </div>
               <Button
                 //onClick={}
