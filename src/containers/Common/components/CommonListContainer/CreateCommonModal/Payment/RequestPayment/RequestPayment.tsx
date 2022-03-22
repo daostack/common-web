@@ -10,7 +10,10 @@ import {
   PaymentPayload,
   ImmediateContributionPayment,
 } from "../../../../../interfaces";
-import { makeImmediateContribution } from "../../../../../store/actions";
+import {
+  getCommonsList,
+  makeImmediateContribution,
+} from "../../../../../store/actions";
 import { subscribeToPayment } from "../../../../../store/api";
 import { Progress } from "../Progress";
 import "./index.scss";
@@ -94,6 +97,7 @@ export default function RequestPayment(
             }
             if (!isImmediateContributionPayment(payment)) {
               onFinish();
+              dispatch(getCommonsList.request());
               return;
             }
 
@@ -128,6 +132,7 @@ export default function RequestPayment(
       return subscribeToPayment(payment.paymentId, (payment) => {
         if (payment?.status === PaymentStatus.Confirmed) {
           onFinish();
+          dispatch(getCommonsList.request());
         } else if (payment?.status === PaymentStatus.Failed) {
           onError("Payment failed");
         }
