@@ -44,7 +44,7 @@
       min-width: 7.5rem;
       width: 100%;
       height: 7.5rem;
-      padding: 1rem;
+      padding: 1rem 0.5rem 0.75rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -60,6 +60,9 @@
         cursor: pointer;
         background-color: $light-gray-9;
       }
+    }
+    .files-upload-wrapper__upload-button--between {
+      justify-content: space-between;
     }
     .files-upload-wrapper__file-input {
       position: absolute;

@@ -1,8 +1,10 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Form, Formik, FormikConfig, FormikProps } from "formik";
 import { useDispatch } from "react-redux";
+import classNames from "classnames";
 import { Dropdown, TextField } from "@/shared/components/Form/Formik";
 import { Button, DropdownOption } from "@/shared/components";
+import { FileInfo } from "../FileInfo";
 import validationSchema from "./validationSchema";
 import { ACCEPTED_EXTENSIONS, BANK_NAMES_OPTIONS } from "./constans";
 import "./index.scss";
@@ -29,7 +31,7 @@ const INITIAL_VALUES: FormValues = {
   bankLetter: null,
 };
 
-enum File {
+enum FileType {
   PhotoID,
   BankLetter,
 }
@@ -37,8 +39,8 @@ enum File {
 export const AddBankDetails = ({ onBankDetails }: IProps) => {
   const dispatch = useDispatch();
   const formRef = useRef<FormikProps<FormValues>>(null);
-  const [photoIdFile, setPhotoIdFile] = useState<string | File | null>();
-  const [bankLetterFile, setBankLetterFile] = useState<string | File | null>();
+  const [photoIdFile, setPhotoIdFile] = useState<File | null>(null);
+  const [bankLetterFile, setBankLetterFile] = useState<File | null>(null);
 
   const banksOptions = useMemo<DropdownOption[]>(
     () =>
@@ -49,16 +51,22 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
     []
   );
 
-  const selectFile = (event: any, fileType: File) => {
+  const selectFile = (event: any, fileType: FileType) => {
     const file = event.target.files ? event.target.files[0] : null;
     if (!file) {
       return;
     }
-    if (fileType === File.PhotoID) {
+    if (fileType === FileType.PhotoID) {
       setPhotoIdFile(file);
     } else {
       setBankLetterFile(file);
     }
+  };
+  const handlePhotoIDDelete = () => {
+    setPhotoIdFile(null);
+  };
+  const handleBankLetterDelete = () => {
+    setBankLetterFile(null);
   };
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
@@ -117,36 +125,64 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                 isRequired
               />
               <div className="files-upload-wrapper">
-                <label className="files-upload-wrapper__upload-button">
-                  <input
-                    className="files-upload-wrapper__file-input"
-                    type="file"
-                    onChange={(e) => selectFile(e, File.PhotoID)}
-                    accept={ACCEPTED_EXTENSIONS}
-                  />
+                <label
+                  className={classNames("files-upload-wrapper__upload-button", {
+                    "files-upload-wrapper__upload-button--between": photoIdFile,
+                  })}
+                >
                   <img
                     className="files-upload-wrapper__icon"
-                    src="/icons/add-proposal/add-photo-id.svg"
+                    src={`/icons/add-proposal/add-photo-id${
+                      photoIdFile ? "-done" : ""
+                    }.svg`}
                     alt="id file"
                   />
-                  Add photo ID
-                </label>
-                <label className="files-upload-wrapper__upload-button">
+                  {photoIdFile ? (
+                    <FileInfo
+                      file={photoIdFile}
+                      onDelete={handlePhotoIDDelete}
+                    />
+                  ) : (
+                    "Add photo ID"
+                  )}
                   <input
                     className="files-upload-wrapper__file-input"
                     type="file"
-                    onChange={(e) => selectFile(e, File.BankLetter)}
+                    onChange={(e) => selectFile(e, FileType.PhotoID)}
                     accept={ACCEPTED_EXTENSIONS}
                   />
+                </label>
+                <label
+                  className={classNames("files-upload-wrapper__upload-button", {
+                    "files-upload-wrapper__upload-button--between": bankLetterFile,
+                  })}
+                >
                   <img
                     className="files-upload-wrapper__icon"
-                    src="/icons/add-proposal/add-bank-account-letter.svg"
+                    src={`/icons/add-proposal/add-bank-account-letter${
+                      bankLetterFile ? "-done" : ""
+                    }.svg`}
                     alt="bank letter file"
                   />
-                  Add bank account letter
-                  <span className="files-upload-wrapper__button-hint">
-                    The form can be found on the bank’s website
-                  </span>
+                  {bankLetterFile ? (
+                    <FileInfo
+                      file={bankLetterFile}
+                      onDelete={handleBankLetterDelete}
+                    />
+                  ) : (
+                    <>
+                      Add bank account letter
+                      <span className="files-upload-wrapper__button-hint">
+                        The form can be found on the bank’s website
+                      </span>
+                    </>
+                  )}
+                  <input
+                    className="files-upload-wrapper__file-input"
+                    type="file"
+                    onChange={(e) => selectFile(e, FileType.BankLetter)}
+                    accept={ACCEPTED_EXTENSIONS}
+                  />
                 </label>
               </div>
               <Button
