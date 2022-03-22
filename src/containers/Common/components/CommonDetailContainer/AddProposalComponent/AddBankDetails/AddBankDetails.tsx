@@ -1,11 +1,15 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Form, Formik, FormikConfig, FormikProps } from "formik";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Dropdown, TextField } from "@/shared/components/Form/Formik";
-import { Button, DropdownOption } from "@/shared/components";
+import { Button, DropdownOption, Loader } from "@/shared/components";
+import { addBankDetails } from "@/containers/Common/store/actions";
+import { uploadFile } from "@/shared/utils/firebaseUploadFile";
+import { BankAccountDetails, PaymeTypeCodes } from "@/shared/interfaces/api/payMe";
+import { selectUser } from "@/containers/Auth/store/selectors";
 import { FileUploadButton } from "../FileUploadButton";
 import validationSchema from "./validationSchema";
-import { BANK_NAMES_OPTIONS } from "./constans";
+import { BANKS_OPTIONS } from "./constans";
 import "./index.scss";
 
 interface IProps {
@@ -14,20 +18,20 @@ interface IProps {
 
 interface FormValues {
   idNumber: string;
-  bankName: string;
-  branchNumber: string;
-  accountNumber: string;
-  photoId: string | File | null;
-  bankLetter: string | File | null;
+  bankCode: number | undefined;
+  branchNumber: number | undefined;
+  accountNumber: number | undefined;
+  photoId: string;
+  bankLetter: string;
 }
 
 const INITIAL_VALUES: FormValues = {
   idNumber: "",
-  bankName: "",
-  branchNumber: "",
-  accountNumber: "",
-  photoId: null,
-  bankLetter: null,
+  bankCode: undefined,
+  branchNumber: undefined,
+  accountNumber: undefined,
+  photoId: "",
+  bankLetter: "",
 };
 
 enum FileType {
@@ -37,13 +41,17 @@ enum FileType {
 
 export const AddBankDetails = ({ onBankDetails }: IProps) => {
   const dispatch = useDispatch();
+  const user = useSelector(selectUser());
   const formRef = useRef<FormikProps<FormValues>>(null);
   const [photoIdFile, setPhotoIdFile] = useState<File | null>(null);
   const [bankLetterFile, setBankLetterFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
 
   const banksOptions = useMemo<DropdownOption[]>(
     () =>
-      BANK_NAMES_OPTIONS.map((item) => ({
+      BANKS_OPTIONS.map((item) => ({
         text: item.name,
         value: item.value,
       })),
@@ -65,10 +73,66 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
   };
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
-    (values) => {
-      console.log(values);
-    },
-    []
+    async (values) => {
+      setLoading(true);
+
+      try {
+        values.photoId = await uploadFile(`${values.idNumber}_photoId`, "public_img", photoIdFile!);
+        values.bankLetter = await uploadFile(`${values.idNumber}_bankLetter`, "public_img", bankLetterFile!);
+
+      } catch (error: any) {
+        console.error(error);
+        setError(error?.message ?? "Something went wrong :/");
+        setLoading(false);
+        return;
+      }
+
+      const bankAccountDetails: BankAccountDetails = {
+        bankName: BANKS_OPTIONS.find(bank => bank.value === values.bankCode)?.name!, // TODO: maybe save it while selecting?
+        bankCode: values.bankCode!,
+        branchNumber: Number(values.branchNumber!),
+        accountNumber: Number(values.accountNumber!),
+        identificationDocs: [
+          {
+            name: `${values.idNumber}_photoId`,
+            legalType: PaymeTypeCodes["Social Id"],
+            amount: 2000,
+            mimeType: "image/jpg",
+            downloadURL: values.photoId
+          },
+          {
+            name: `${values.idNumber}_bankLetter`,
+            legalType: PaymeTypeCodes["Bank Account Ownership"],
+            amount: 2000,
+            mimeType: "image/jpg",
+            downloadURL: values.bankLetter
+          }
+        ],
+        city: "???",
+        country: user?.country!,
+        streetAddress: "???",
+        streetNumber: 0,
+        socialId: values.idNumber,
+        socialIdIssueDate: "20/10/2019",
+        birthdate: "20/10/2019",
+        gender: 0,
+        phoneNumber: "0543955543"
+      }
+
+      dispatch(addBankDetails.request({
+        payload: { ...bankAccountDetails },
+        callback: (error) => {
+          setLoading(false);
+          if (error) {
+            console.error(error);
+            setError(error?.message ?? "Something went wrong :/");
+            return;
+          }
+          onBankDetails();
+        }
+      }))
+
+    }, [dispatch, onBankDetails, bankLetterFile, photoIdFile, user]
   );
 
   return (
@@ -78,81 +142,84 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
         The following details are required inorder to transfer funds <br /> to
         you after your proposal is approved
       </div>
-      <div className="add-bank-details-form">
-        <Formik
-          initialValues={INITIAL_VALUES}
-          onSubmit={handleSubmit}
-          innerRef={formRef}
-          validationSchema={validationSchema}
-        >
-          {({ values, isValid }) => (
-            <Form>
-              <TextField
-                className="field"
-                id="idNumber"
-                name="idNumber"
-                label="ID Number"
-                placeholder="Add your ID number"
-                isRequired
-              />
-              <Dropdown
-                className="field"
-                name="bankName"
-                label="Bank Name"
-                placeholder="---Select bank---"
-                options={banksOptions}
-                shouldBeFixed={false}
-              />
-              <TextField
-                className="field"
-                id="branchNumber"
-                name="branchNumber"
-                label="Branch Number"
-                placeholder="Exp. 867"
-                isRequired
-              />
-              <TextField
-                className="field"
-                id="accountNumber"
-                name="accountNumber"
-                label="Account Number"
-                placeholder="Add your account number"
-                isRequired
-              />
-              <div className="files-upload-wrapper">
-                <FileUploadButton
-                  className="files-upload-wrapper__upload-button"
-                  file={photoIdFile}
-                  text="Add photo ID"
-                  logo="/icons/add-proposal/add-photo-id.svg"
-                  logoUploaded="/icons/add-proposal/add-photo-id-done.svg"
-                  alt="ID file"
-                  onUpload={(file) => selectFile(file, FileType.PhotoID)}
-                  onDelete={handlePhotoIDDelete}
+      {loading ? <Loader /> : (
+        <div className="add-bank-details-form">
+          <Formik
+            initialValues={INITIAL_VALUES}
+            onSubmit={handleSubmit}
+            innerRef={formRef}
+            validationSchema={validationSchema}
+          >
+            {({ values, isValid }) => (
+              <Form>
+                <TextField
+                  className="field"
+                  id="idNumber"
+                  name="idNumber"
+                  label="ID Number"
+                  placeholder="Add your ID number"
+                  isRequired
                 />
-                <FileUploadButton
-                  className="files-upload-wrapper__upload-button"
-                  file={bankLetterFile}
-                  text="Add bank account letter"
-                  hint="The form can be found on the bank’s website"
-                  logo="/icons/add-proposal/add-bank-account-letter.svg"
-                  logoUploaded="/icons/add-proposal/add-bank-account-letter-done.svg"
-                  alt="Bank letter file"
-                  onUpload={(file) => selectFile(file, FileType.BankLetter)}
-                  onDelete={handleBankLetterDelete}
+                <Dropdown
+                  className="field"
+                  name="bankCode"
+                  label="Bank Name"
+                  placeholder="---Select bank---"
+                  options={banksOptions}
+                  shouldBeFixed={false}
                 />
-              </div>
-              <Button
-                //onClick={}
-                disabled={!isValid || !photoIdFile || !bankLetterFile}
-                className="save-button"
-              >
-                Save
-              </Button>
-            </Form>
-          )}
-        </Formik>
-      </div>
+                <TextField
+                  className="field"
+                  id="branchNumber"
+                  name="branchNumber"
+                  label="Branch Number"
+                  placeholder="Exp. 867"
+                  isRequired
+                />
+                <TextField
+                  className="field"
+                  id="accountNumber"
+                  name="accountNumber"
+                  label="Account Number"
+                  placeholder="Add your account number"
+                  isRequired
+                />
+                <div className="files-upload-wrapper">
+                  <FileUploadButton
+                    className="files-upload-wrapper__upload-button"
+                    file={photoIdFile}
+                    text="Add photo ID"
+                    logo="/icons/add-proposal/add-photo-id.svg"
+                    logoUploaded="/icons/add-proposal/add-photo-id-done.svg"
+                    alt="ID file"
+                    onUpload={(file) => selectFile(file, FileType.PhotoID)}
+                    onDelete={handlePhotoIDDelete}
+                  />
+                  <FileUploadButton
+                    className="files-upload-wrapper__upload-button"
+                    file={bankLetterFile}
+                    text="Add bank account letter"
+                    hint="The form can be found on the bank’s website"
+                    logo="/icons/add-proposal/add-bank-account-letter.svg"
+                    logoUploaded="/icons/add-proposal/add-bank-account-letter-done.svg"
+                    alt="Bank letter file"
+                    onUpload={(file) => selectFile(file, FileType.BankLetter)}
+                    onDelete={handleBankLetterDelete}
+                  />
+                </div>
+                <Button
+                  onClick={() => handleSubmit}
+                  disabled={!isValid || !photoIdFile || !bankLetterFile}
+                  className="save-button"
+                >
+                  Save
+                </Button>
+              </Form>
+            )}
+          </Formik>
+          {error && <span>{error}</span>}
+        </div>
+      )}
     </div>
   );
 };

@@ -1,18 +1,18 @@
-export const BANK_NAMES_OPTIONS = [
+export const BANKS_OPTIONS = [
   {
-    value: 'Bank Hapoalim',
+    value: 12,
     name: 'Bank Hapoalim',
   },
   {
-    value: 'Bank Leumi',
+    value: 10,
     name: 'Bank Leumi',
   },
   {
-    value: 'Bank Mizrahi-Tefahot',
+    value: 20,
     name: 'Bank Mizrahi-Tefahot',
   },
   {
-    value: 'Israel Discount Bank',
+    value: 11,
     name: 'Israel Discount Bank',
   },
 ];

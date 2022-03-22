@@ -197,7 +197,7 @@ export const AddProposalForm = ({
                 {formatPrice(common.balance)}
               </div>
             </div>
-            {!hasBankDetails || true && ( // TODO: temporary - for development needs
+            {!hasBankDetails && (
               <div className="add-bank-details-wrapper">
                 <img
                   src="/icons/add-proposal/illustrations-full-page-transparent.svg"
