@@ -76,11 +76,7 @@ export default function PersonalContribution(props: PersonalContributionProps) {
         </p>
         <p className="create-common-contribution__sub-text-item">
           Contribution to this Common ({formattedMinFeeToJoin}
-          {pricePostfix} min.){" "}
-          <span className="create-common-contribution__sub-text-item--bold">
-            You will not be charged until another member joins{" "}
-          </span>{" "}
-          the Common.
+          {pricePostfix} min.)
         </p>
       </div>
       <Separator className="create-common-contribution__separator" />
