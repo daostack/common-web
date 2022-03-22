@@ -53,7 +53,7 @@ export const AddProposalForm = ({
   const [uploadedFiles, setUploadedFile] = useState<
     { title: string; value: string }[]
   >([]);
-  const [hasBankDetails, setHasBankDetails] = useState<boolean>();
+  const [hasBankDetails, setHasBankDetails] = useState<boolean>(false);
 
   /**
    * For now we fetch the bank details only here.

@@ -27,11 +27,11 @@ const INITIAL_VALUES: FormValues = {
   accountNumber: "",
   photoId: null,
   bankLetter: null,
-}
+};
 
 enum File {
   PhotoID,
-  BankLetter
+  BankLetter,
 }
 
 export const AddBankDetails = ({ onBankDetails }: IProps) => {
@@ -41,10 +41,13 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
   const [bankLetterFile, setBankLetterFile] = useState<string | File | null>();
 
   const banksOptions = useMemo<DropdownOption[]>(
-    () => BANK_NAMES_OPTIONS.map((item) => ({
-      text: item.name,
-      value: item.value,
-    })), []);
+    () =>
+      BANK_NAMES_OPTIONS.map((item) => ({
+        text: item.name,
+        value: item.value,
+      })),
+    []
+  );
 
   const selectFile = (event: any, fileType: File) => {
     const file = event.target.files ? event.target.files[0] : null;
@@ -61,7 +64,9 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
       console.log(values);
-    }, []);
+    },
+    []
+  );
 
   return (
     <div className="add-bank-details-wrapper">
@@ -112,29 +117,43 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                 isRequired
               />
               <div className="files-upload-wrapper">
-                <label className="">
+                <label className="files-upload-wrapper__upload-button">
                   <input
+                    className="files-upload-wrapper__file-input"
                     type="file"
                     onChange={(e) => selectFile(e, File.PhotoID)}
                     accept={ACCEPTED_EXTENSIONS}
                   />
-                  <img src="" alt="id file" />
+                  <img
+                    className="files-upload-wrapper__icon"
+                    src="/icons/add-proposal/add-photo-id.svg"
+                    alt="id file"
+                  />
                   Add photo ID
                 </label>
-                <label className="">
+                <label className="files-upload-wrapper__upload-button">
                   <input
+                    className="files-upload-wrapper__file-input"
                     type="file"
                     onChange={(e) => selectFile(e, File.BankLetter)}
                     accept={ACCEPTED_EXTENSIONS}
                   />
-                  <img src="" alt="bank letter file" />
+                  <img
+                    className="files-upload-wrapper__icon"
+                    src="/icons/add-proposal/add-bank-account-letter.svg"
+                    alt="bank letter file"
+                  />
                   Add bank account letter
+                  <span className="files-upload-wrapper__button-hint">
+                    The form can be found on the bank’s website
+                  </span>
                 </label>
               </div>
               <Button
                 //onClick={}
                 disabled={!isValid || !photoIdFile || !bankLetterFile}
-                className="save-button">
+                className="save-button"
+              >
                 Save
               </Button>
             </Form>
