@@ -15,9 +15,20 @@ $custom-input-vertical-padding: 14px;
     font-size: $xxsmall;
     line-height: 1.32;
   }
+  .custom-input__label-wrapper--with-description {
+    margin-bottom: 6px;
+  }
 
   .custom-input__label {
     text-align: left;
+  }
+
+  .custom-input__description {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: $xxsmall;
+    line-height: 1.42;
+    color: $light-gray-2;
   }
 
   .custom-input__hint {

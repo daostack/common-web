@@ -6,6 +6,7 @@ import { Common } from "../../../../../shared/models";
 import { ROUTE_PATHS } from "../../../../../shared/constants";
 import { LoginModalType } from "../../../../Auth/interface";
 import "./index.scss";
+import { Tabs } from "@/containers/Common/containers/CommonDetailContainer/CommonDetailContainer";
 
 interface EmptyTabComponentProps {
   currentTab: string;
@@ -53,21 +54,27 @@ export default function EmptyTabComponent({
           onCreationStageReach={setIsCreationStageReached}
         />
       )}
-      <div className="empty-tab-component-wrapper">
+      <div className={`empty-tab-component-wrapper `}>
         <div className="img-wrapper">
-          {currentTab === "proposals" && (
+          {currentTab === Tabs.Proposals && (
             <img alt={currentTab} src="/icons/proposals-empty.svg" />
           )}
-          {currentTab === "history" && (
+          {currentTab === Tabs.History && (
             <img alt={currentTab} src="/icons/proposals-empty.svg" />
           )}
-          {currentTab === "discussions" && (
+          {currentTab === Tabs.Discussions && (
             <img alt={currentTab} src="/icons/discussions-empty.svg" />
           )}
           {currentTab === "my-commons" && (
             <img
               alt={currentTab}
               src="/assets/images/human-pyramid.svg"
+            />
+          )}
+          {currentTab === "messages" && (
+            <img
+              alt={currentTab}
+              src="/assets/images/illustrations-full-page-common.svg"
             />
           )}
         </div>

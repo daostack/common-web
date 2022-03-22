@@ -288,41 +288,11 @@ $payment-iframe-height-mobile: 672px;
     font-size: $xsmall;
   }
 
-  .membership-request-contribution__toggle-button-group {
-    max-width: 380px;
-    width: 100%;
-    margin-top: 8px;
-    font-size: $small;
-
-    @include big-phone {
-      margin-top: 0;
-    }
+  .membership-request-contribution__contribution-amount-selection {
+    margin-top: 0.5rem;
   }
-
-  .membership-request-contribution__toggle-button-group--one-time {
+  .membership-request-contribution__contribution-amount-selection--one-time {
     margin-bottom: 2.375rem;
-  }
-
-  .membership-request-contribution__toggle-button {
-    padding: 22px;
-
-    @include big-phone {
-      padding: 20px;
-    }
-  }
-
-  .membership-request-contribution__currency-input-wrapper {
-    max-width: 380px;
-    width: 100%;
-  }
-
-  .membership-request-contribution__currency-input-label {
-    margin: 0;
-    font-size: $xsmall;
-  }
-
-  .membership-request-contribution__back-to-selection {
-    margin-top: 8px;
   }
 
   .membership-request-contribution__hint {
@@ -339,7 +309,7 @@ $payment-iframe-height-mobile: 672px;
 
   .button-blue {
     font-weight: normal;
-    min-width: 180px;
+    min-width: 11.25rem;
     font-family: NunitoSans-Regular;
   }
 }

@@ -1,6 +1,7 @@
 import { Moderation, Time } from "./shared";
 
-import { CommonContributionType, DiscussionMessage, Rules, User } from ".";
+import { CommonContributionType, DiscussionMessage, User } from ".";
+import { VoteOutcome } from "./Votes";
 
 export enum ProposalFundingState {
   NotRelevant = "notRelevant",
@@ -24,16 +25,12 @@ export enum ProposalPaymentState {
   Failed = "failed",
 }
 
-export enum ProposalVoteOutcome {
-  Approved = "approved",
-  Rejected = "rejected",
-}
-
 export enum ProposalState {
   COUNTDOWN = "countdown",
   PASSED = "passed",
   REJECTED = "failed",
   PASSED_INSUFFICIENT_BALANCE = "passedInsufficientBalance",
+  EXPIRED_INVOCIES_NOT_UPLOADED = "expiredInvociesNotUploaded",
 }
 
 export enum ProposalType {
@@ -48,20 +45,23 @@ interface ProposalJoin {
   fundingType?: CommonContributionType;
 }
 
-export type ProposalVote = {
-  __typename?: "ProposalVote";
-  voteId: string;
-  voterId: string;
-  outcome: ProposalVoteOutcome;
-  voter?: User;
-};
-
 export interface DocInfo {
   name: string;
   legalType: number;
   amount?: number;
   mimeType: string;
   downloadURL: string;
+}
+
+export interface ProposalLink {
+  title?: string;
+  value: string;
+}
+
+export interface Vote {
+  voteId: string;
+  voteOutcome: VoteOutcome;
+  voterId: string;
 }
 
 export interface Proposal {
@@ -79,8 +79,10 @@ export interface Proposal {
   quietEndingPeriod: number;
 
   updatedAt: Date;
+  votes: Vote[];
   votesAgainst?: number;
   votesFor?: number;
+  votesAbstained?: number;
   user?: User;
   proposer?: User;
   discussionMessage?: DiscussionMessage[];
@@ -91,7 +93,7 @@ export interface Proposal {
   state: string;
   description: {
     description: string;
-    links: Rules[];
+    links: ProposalLink[];
     images: File[];
     files: File[];
     title: string;
@@ -101,7 +103,6 @@ export interface Proposal {
   fundingState?: ProposalFundingState;
   /** Details about the join request. Exists only on join request proposals */
   join?: ProposalJoin;
-  votes?: ProposalVote[];
   fundingProcessStage?: FundingProcessStage;
 
   approvalDate?: Time;

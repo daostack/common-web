@@ -1,0 +1,92 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.create-common-user-acknowledgment {
+  width: 100%;
+  max-width: 584px;
+  margin: 0 auto;
+
+  .create-common-user-acknowledgment__separator {
+    margin-bottom: 1.5rem;
+  }
+
+  .create-common-user-acknowledgment__checked-list {
+    margin-bottom: 8px;
+  }
+
+  .create-common-user-acknowledgment__causes-link {
+    display: inline-flex;
+    align-items: center;
+    font-weight: bold;
+
+    @include big-phone {
+      text-decoration: underline;
+    }
+  }
+  .create-common-user-acknowledgment__causes-icon {
+    margin-left: 4px;
+  }
+
+  .create-common-user-acknowledgment__causes-box {
+    padding: 16px;
+    border-radius: 14px;
+    background-color: $light-gray-4;
+    font-size: $xsmall;
+    line-height: 1.42;
+    color: $secondary-blue;
+  }
+
+  .create-common-user-acknowledgment__terms-text {
+    margin-top: 16px;
+    display: inline-block;
+    font-size: $xsmall;
+    line-height: 1.42;
+    color: $secondary-blue;
+
+    @include big-phone {
+      font-size: $xxsmall;
+      line-height: 1.32;
+    }
+  }
+
+  .create-common-user-acknowledgment__terms-link {
+    font-weight: bold;
+    color: $secondary-blue;
+    text-decoration: underline;
+  }
+
+  .create-common-user-acknowledgment__terms-checkbox {
+    margin-top: 24px;
+  }
+  .create-common-user-acknowledgment__terms-checkbox-label {
+    font-size: $small;
+    font-weight: bold;
+    line-height: 1.5;
+  }
+}
+
+.create-common-user-acknowledgment__header-image {
+  width: 116px;
+  height: 116px;
+  display: block;
+  margin: 0 auto 24px;
+
+  @include big-phone {
+    max-width: 154px;
+    width: 100%;
+    max-height: 154px;
+    height: 100%;
+    margin-top: 24px;
+    margin-bottom: 16px;
+  }
+}
+
+.create-common-user-acknowledgment__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding: 28px 0;
+
+  @include big-phone {
+    padding: 24px 0;
+  }
+}

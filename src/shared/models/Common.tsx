@@ -2,7 +2,11 @@ export interface Member {
   joinedAt: { seconds: number; nanoseconds: number };
   userId: string;
 }
-export interface Rules {
+export interface CommonLink {
+  title: string;
+  value: string;
+}
+export interface CommonRule {
   title: string;
   value: string;
 }
@@ -30,16 +34,17 @@ export interface Common {
   balance: number;
   reservedBalance?: number;
   raised: number;
-  links: Rules[];
+  links: CommonLink[];
   image: string;
 
   register: string;
   members: Member[];
 
-  rules: Rules[];
+  rules: CommonRule[];
   fundingGoalDeadline: number;
 
   metadata: Metadata;
+  active: boolean;
 }
 
 export interface CommonPayment {

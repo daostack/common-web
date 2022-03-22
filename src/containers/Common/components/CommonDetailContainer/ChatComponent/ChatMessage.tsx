@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-
-import { DiscussionMessage } from "../../../../../shared/models";
-import { getUserName, getUserInitials } from "../../../../../shared/utils";
+import { Linkify } from "@/shared/components";
+import { DiscussionMessage } from "@/shared/models";
+import { getUserName, getUserInitials } from "@/shared/utils";
 
 interface ChatMessageProps {
   disscussionMessage: DiscussionMessage;
@@ -37,14 +37,16 @@ export default function ChatMessage({ disscussionMessage }: ChatMessageProps) {
         <div className="message-name">
           {getUserName(disscussionMessage.owner)}
         </div>
-        <div className="message-content">{disscussionMessage.text}</div>
-      </div>
-      <div className="time-wrapper">
-        {mDate.toLocaleTimeString([], {
-          hour12: false,
-          hour: "2-digit",
-          minute: "2-digit",
-        })}
+        <div className="message-content">
+          <Linkify>{disscussionMessage.text}</Linkify>
+          <div className="time-wrapper">
+            {mDate.toLocaleTimeString([], {
+              hour12: false,
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );

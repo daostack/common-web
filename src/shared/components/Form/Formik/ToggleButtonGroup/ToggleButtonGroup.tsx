@@ -6,25 +6,38 @@ import {
   ToggleButtonGroupProps as BaseToggleButtonGroupProps,
 } from "../../ToggleButtonGroup";
 
-type ToggleButtonGroupProps = Pick<BaseToggleButtonGroupProps, "className" | "label" | "styles"> & {
+type ToggleButtonGroupProps = Pick<
+  BaseToggleButtonGroupProps,
+  "className" | "label" | "styles"
+> & {
   name: string;
+  onChange?: BaseToggleButtonGroupProps["onChange"];
 };
 
 const ToggleButtonGroup: FC<ToggleButtonGroupProps> = (props) => {
-  const { name, ...restProps } = props;
-  const [{ value }, { touched, error }, { setTouched, setValue }] = useField(name);
+  const { name, onChange, ...restProps } = props;
+  const [{ value }, { touched, error }, { setTouched, setValue }] = useField(
+    name
+  );
 
-  const handleChange = useCallback((newValue: unknown) => {
-    setTouched(true);
-    setValue(newValue);
-  }, [setTouched, setValue]);
+  const handleChange = useCallback(
+    (newValue: unknown) => {
+      setTouched(true);
+      setValue(newValue);
+
+      if (onChange) {
+        onChange(newValue);
+      }
+    },
+    [setTouched, setValue, onChange]
+  );
 
   return (
     <BaseToggleButtonGroup
       {...restProps}
       value={value}
       onChange={handleChange}
-      error={touched ? error : ''}
+      error={touched ? error : ""}
     />
   );
 };

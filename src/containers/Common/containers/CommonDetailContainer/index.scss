@@ -22,7 +22,7 @@
           transform: translateX(2rem);
           height: 100%;
           object-fit: cover;
-          background-color: #0b2046;
+          background-color: $blue;
         }
       }
 
@@ -40,14 +40,15 @@
           .name {
             font-size: $large;
             font-weight: 600;
-            color: #001a36;
-            font-family: NotoSerifSC, serif;
+            color: $secondary-blue;
+            font-family: NotoSerifSC-Black;
             word-break: break-word;
+
           }
 
           .tagline {
             font-size: 16px;
-            color: #001a36;
+            color: $secondary-blue;
             margin-top: 0.5rem;
           }
         }
@@ -146,6 +147,17 @@
             display: flex;
             align-items: center;
             margin-right: 1.5rem;
+
+            .member-label__icon {
+              flex-shrink: 0;
+              width: 12px;
+              height: 12px;
+              margin-right: 6px;
+            }
+          }
+          .delete-common-btn {
+            color: $red;
+            margin: 0 0.3rem;
           }
         }
       }
@@ -284,6 +296,10 @@
               height: 56px;
               margin-right: unset;
             }
+            .delete-common-btn {
+              width: 100%;
+              margin: 0.6rem 0;
+            }
           }
 
           .common-content-selector__long-share-button {
@@ -362,55 +378,4 @@
   right: 0;
   left: 0;
   background-color: transparent;
-}
-
-.common-detail-container__detail-modal--mobile {
-  &.modal {
-    max-width: 328px;
-    width: 100%;
-    max-height: 322px;
-    height: 100%;
-    border-radius: 20px;
-
-    .common-detail-container__detail-modal-header-wrapper {
-      padding-right: 16px;
-    }
-
-    .common-detail-container__detail-modal-header {
-      min-height: 16px;
-      padding-top: 16px;
-    }
-
-    .common-detail-container__detail-modal-close-wrapper {
-      width: 16px;
-      height: 16px;
-    }
-
-    .common-detail-container__detail-modal-content {
-      padding: 0;
-      background: url("/assets/images/purple-stains.svg") no-repeat top;
-      background-size: auto 84%;
-    }
-  }
-}
-
-.get-common-app-wrapper {
-  width: 100%;
-  height: 100%;
-  padding: 16px 16px 26px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: $white;
-  text-align: center;
-  box-sizing: border-box;
-
-  .logo {
-    width: 100px;
-    margin-bottom: 20px;
-  }
-
-  .text {
-    margin-bottom: auto;
-  }
 }

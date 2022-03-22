@@ -1,21 +1,23 @@
 import React from "react";
 import classNames from "classnames";
 
-import { ProposalCountDown } from "..";
 import { UserAvatar } from "../../../../../shared/components";
 import { useFullText } from "../../../../../shared/hooks";
-import { Proposal, ProposalState } from "../../../../../shared/models";
+import { Proposal } from "../../../../../shared/models";
 import { formatPrice, getUserName, getDaysAgo } from "../../../../../shared/utils";
 import { VotesComponent } from "../VotesComponent";
+import ProposalState from "../ProposalState/ProposalState";
 
 interface ProposalItemComponentProps {
   loadProposalDetail: (payload: Proposal) => void;
   proposal: Proposal;
+  isCommonMember: boolean;
 }
 
 export default function ProposalItemComponent({
   proposal,
   loadProposalDetail,
+  isCommonMember,
 }: ProposalItemComponentProps) {
   const {
     ref: descriptionRef,
@@ -28,31 +30,7 @@ export default function ProposalItemComponent({
 
   return (
     <div className="discussion-item-wrapper">
-      {proposal.state === ProposalState.COUNTDOWN ? (
-        <ProposalCountDown
-          date={
-            new Date(
-              (proposal?.createdAt.seconds + proposal.countdownPeriod) * 1000
-            )
-          }
-        />
-      ) : (
-        <div className={`state-wrapper ${proposal.state.toLocaleLowerCase()}`}>
-          <div className="state-inner-wrapper">
-            <img
-              src={
-                proposal.state === ProposalState.REJECTED
-                  ? "/icons/declined.svg"
-                  : "/icons/approved.svg"
-              }
-              alt="state-wrapper"
-            />
-            <span className="state-name">
-              {proposal.state === ProposalState.REJECTED ? "Rejected" : "Approved"}
-            </span>
-          </div>
-        </div>
-      )}
+      <ProposalState proposal={proposal} />
       <div className="proposal-charts-wrapper">
         <div
           className="proposal-title"
@@ -71,7 +49,7 @@ export default function ProposalItemComponent({
           )}
         </div>
         <div className="votes">
-          <VotesComponent proposal={proposal} />
+          <VotesComponent proposal={proposal} isCommonMember={isCommonMember} />
         </div>
       </div>
       <div className="line" />

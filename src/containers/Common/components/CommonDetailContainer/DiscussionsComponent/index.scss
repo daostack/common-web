@@ -1,4 +1,47 @@
 @import "../../../../../constants.scss";
+@import "../../../../../styles/sizes";
+
+.discussion-title-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  .title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.17;
+    letter-spacing: normal;
+    color: $secondary-blue;
+    font-family: NunitoSans-Bold, sans-serif;
+  }
+  .add-button {
+    display: flex;
+    padding: 0.5rem 1.5rem;
+    border-radius: 30.5px;
+    background-color: $light-gray-7;
+    font-size: 1rem;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: center;
+    color: $secondary-blue;
+    cursor: pointer;
+    width: 11.25rem;
+    align-items: center;
+    justify-content: center;
+    font-family: NunitoSans-Bold;
+
+    img {
+      width: 1.5rem;
+      height: 1.5rem;
+      margin-right: 0.5rem;
+    }
+  }
+}
 
 .discussions-component-wrapper {
   .discussion-item-wrapper {
@@ -120,7 +163,30 @@
   }
 }
 
-@media only screen and (max-width: $mobile-breakpoint) {
+@include big-phone {
+  .discussion-title-wrapper {
+    .add-button {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 2;
+      box-shadow: 0 0 6px 0 $fixed-button-shadow;
+      background-color: $purple;
+      width: 64px;
+      height: 64px;
+      min-width: unset;
+      border-radius: 50%;
+      padding: unset;
+      span {
+        display: none;
+      }
+      img {
+        margin-right: unset;
+        filter: invert(1);
+      }
+    }
+  }
+
   .discussions-component-wrapper {
     .discussion-item-wrapper {
       padding: 20px;

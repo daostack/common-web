@@ -1,1 +1,1 @@
-export { default as Share } from "./Share";
+export { default as Share, PopupVariant as SharePopupVariant } from "./Share";

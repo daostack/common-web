@@ -15,7 +15,7 @@ interface Styles {
 }
 
 export interface StepProgressItem {
-  title: string;
+  title?: string;
   activeImageSource: string;
   inactiveImageSource: string;
 }
@@ -27,7 +27,11 @@ interface StepProgressProps {
   styles?: Styles;
 }
 
-const getImageSource = (item: StepProgressItem, step: number, currentStep: number) => {
+const getImageSource = (
+  item: StepProgressItem,
+  step: number,
+  currentStep: number
+) => {
   if (step === currentStep) {
     return item.activeImageSource;
   }
@@ -50,23 +54,37 @@ const StepProgress: FC<StepProgressProps> = (props) => {
           result.push(
             <span
               key={`separator-${step}`}
-              className={classNames("step-progress__separator", styles?.separator?.default, {
-                [classNames("step-progress__separator--active", styles?.separator?.active)]: step <= currentStep,
-                [classNames("step-progress__separator--short", styles?.separator?.short)]: (
-                  step === currentStep
-                  || step === (currentStep + 1)
-                ),
-              })}
+              className={classNames(
+                "step-progress__separator",
+                styles?.separator?.default,
+                {
+                  [classNames(
+                    "step-progress__separator--active",
+                    styles?.separator?.active
+                  )]: step <= currentStep,
+                  [classNames(
+                    "step-progress__separator--short",
+                    styles?.separator?.short
+                  )]: step === currentStep || step === currentStep + 1,
+                }
+              )}
             />
           );
         }
 
         result.push(
           <img
-            key={item.title}
-            className={classNames("step-progress__image", styles?.image?.default, {
-              [classNames("step-progress__image--active", styles?.image?.active)]: step === currentStep,
-            })}
+            key={`separator-image-${step}`}
+            className={classNames(
+              "step-progress__image",
+              styles?.image?.default,
+              {
+                [classNames(
+                  "step-progress__image--active",
+                  styles?.image?.active
+                )]: step === currentStep,
+              }
+            )}
             src={getImageSource(item, step, currentStep)}
             alt={item.title}
           />

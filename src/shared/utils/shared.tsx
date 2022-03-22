@@ -1,7 +1,7 @@
 import millify from "millify";
-import moment from "moment";
+import moment, { Moment } from "moment";
 
-import { MobileOperatingSystem } from "../constants";
+import { MobileOperatingSystem, BASE_URL } from "../constants";
 import { DateFormat, Proposal, Time, User } from "../models";
 
 interface FormatPriceOptions {
@@ -25,23 +25,23 @@ export const formatPrice = (
 
   const convertedPrice = price / 100;
 
-  return `${prefix}${
-    shouldMillify
+  return `${prefix}${shouldMillify
       ? millify(convertedPrice)
       : convertedPrice.toLocaleString("en-US")
-  }`;
+    }`;
 };
 
-export const formatDate = (date: string | Date) => {
-  return moment(date).format("YYYY-MM-DD");
-};
+export const formatDate = (
+  date: string | Date | Moment,
+  format: DateFormat = DateFormat.Short
+): string => moment(date).format(format);
 
 /**
  * Returns the date in a given format. Default is DD-MM-YYYY HH:mm
  * @param {Time} time
  * @param {DateFormat} format the desired format
  */
- export const formatEpochTime = (time: Time, format: DateFormat = DateFormat.Long) => {
+export const formatEpochTime = (time: Time, format: DateFormat = DateFormat.Long) => {
   return moment.unix(time.seconds).local().format(format);
 }
 
@@ -204,6 +204,21 @@ export const roundNumberToNextTenths = (
 
 export const getProposalExpirationDate = (proposal: Proposal): Date =>
   new Date((proposal.createdAt.seconds + proposal.countdownPeriod) * 1000);
+
+/**
+ * Allowed {index}: 1 <= index <= 8
+ **/
+export const getCommonExampleImageURL = (index: number): string =>
+  `https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_0${index}.png?alt=media`;
+
+export const getSharingURL = (path: string): string => `${BASE_URL}${path}`;
+
+export const percentage = (partialValue: number, totalValue: number): number => {
+  if (totalValue === 0) {
+    return 0;
+  }
+  return Math.round((100 * partialValue) / totalValue * 10) / 10;;
+}
 
 export const formatCountdownValue = (value: number): string => {
   const convertedValue = String(value);

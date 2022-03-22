@@ -13,6 +13,7 @@ $xlarge: 46px; // 2.875rem
 $large: 35px; // 2.1875rem
 $medium: 26px; // 1.625rem
 $moderate-med: 24px; // 1.5rem
+$moderate-xmed: 22px; // 1.375rem
 $moderate-small: 20px; // 1.25rem
 $moderate: 18px; // 1.125rem
 $small: 16px; // 1rem
@@ -21,6 +22,7 @@ $xxsmall: 12px; // 0.75rem
 
 /* colors */
 $purple: #7786ff;
+$purple-alpha-10: rgba(119, 134, 255, 0.1);
 $purple-2: #5666f5;
 $purple-hover: #e4e7ff;
 $purple-pressed: #d6daff;
@@ -41,9 +43,11 @@ $light-gray-3: #d5d5e4;
 $light-gray-4: #f4f6ff;
 $light-gray-5: #f8f9f9;
 $light-gray-6: #f3f4f5;
-$light-gray-7: #7a8189;
+$light-gray-7: #e6eafb;
+$light-gray-8: #7a8189;
 $gray: #92a2b5;
 $green: #6ee569;
+$light-green: #f0fdf0;
 $secondary-green: #f1fdf0;
 $shadow: rgba(0, 0, 0, 0.14);
 $shadow-2: rgba(0, 26, 54, 0.08);
@@ -53,6 +57,7 @@ $black-gray-2: rgba(0, 0, 0, 0.4);
 $black-gray-3: rgba(0, 0, 0, 0.15);
 $black-gray-4: rgba(0, 0, 0, 0.2);
 $red: #ff603e;
+$light-red: #feefec;
 $secondary-red: #ffefec;
 $error: #ef5456;
 $fixed-button-shadow: rgba(0, 26, 54, 0.14);
@@ -64,6 +69,7 @@ $secondary-modal-shadow: 0 2px 34px 0 rgba(0, 0, 0, 0.3);
 $invoice-approval-item-shadow: rgba(0, 26, 54, 0.08);
 $sticky-info-shadow: rgba(0, 0, 0, 0.02);
 $carousel-overlay-shadow: rgba(0, 26, 54, 0.4);
+$shadow-1: rgba(79, 92, 105, 0.1);
 
 /* breakpoints */
 $small-screen: 1240px;

@@ -1,0 +1,17 @@
+@import "../../../../../../constants.scss";
+@import "../../../../../../styles/sizes";
+
+.vote-bar-wrapper {
+  width: 2rem;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  &.approved {
+    background-color: $green;
+  }
+  &.rejected {
+    background-color: $red;
+  }
+  &.abstained {
+    background-color: $gray;
+  }
+}

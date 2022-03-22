@@ -56,7 +56,7 @@ body {
   // Disable highlight when Touch/Press
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
   margin: 0;
-  font-family: NunitoSans-Regular;
+  font-family: NunitoSans-Regular, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
@@ -88,7 +88,7 @@ body {
 
   /* TODO: need to eliminate the use of button-blue across the project and either create a button component or better global styles. */
   .button-blue {
-    font-family: NunitoSans-Bold;
+    font-family: NunitoSans-Bold, sans-serif;
     height: 40px;
     border-radius: 30.5px;
     background-color: $purple;
@@ -102,6 +102,7 @@ body {
     text-decoration: none;
     width: fit-content;
     min-width: 200px;
+    user-select: none;
 
     &:hover {
       opacity: 0.9;
@@ -130,7 +131,7 @@ body {
 
   h2,
   h1 {
-    font-family: NotoSerifSC-SemiBold;
+    font-family: NotoSerifSC-SemiBold, serif;
   }
 
   p {
@@ -138,12 +139,12 @@ body {
   }
 
   textarea {
-    font-family: NunitoSans-Regular;
+    font-family: NunitoSans-Regular, sans-serif;
   }
 }
 
 :lang(he) {
-  font-family: Assistant-Bold;
+  font-family: Assistant-Bold, sans-serif;
 }
 
 .content-element {
@@ -189,6 +190,15 @@ body {
 
     .button-blue {
       width: 100%;
+    }
+  }
+}
+
+/* Disable hover effects globally when using a touch device */
+@media (hover: none) {
+  * {
+    :hover {
+      opacity: unset !important;
     }
   }
 }

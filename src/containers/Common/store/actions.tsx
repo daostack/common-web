@@ -1,9 +1,25 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 
+import { PayloadWithCallback } from "@/shared/interfaces";
+import {
+  CreateFundingRequestProposalPayload,
+  ProposalJoinRequestData,
+} from "@/shared/interfaces/api/proposal";
+import { Common, Proposal, Discussion } from "@/shared/models";
 import { PayloadWithOptionalCallback } from "../../../shared/interfaces";
-import { ProposalJoinRequestData } from "../../../shared/interfaces/api/proposal";
-import { Common, Proposal, Discussion } from "../../../shared/models";
 import { CommonsActionTypes } from "./constants";
+import {
+  CreateDiscussionDto,
+  CreateCommonPayload,
+  AddMessageToDiscussionDto,
+  DeleteCommon,
+} from "@/containers/Common/interfaces";
+import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
+import { CreateVotePayload } from "@/shared/interfaces/api/vote";
+import {
+  ImmediateContributionData,
+  ImmediateContributionResponse,
+} from "../interfaces";
 
 export const getCommonsList = createAsyncAction(
   CommonsActionTypes.GET_COMMONS_LIST,
@@ -75,8 +91,95 @@ export const loadUserProposalList = createAsyncAction(
   CommonsActionTypes.LOAD_USER_PROPOSAL_LIST_FAILURE
 )<string, Proposal[], Error>();
 
+export const createDiscussion = createAsyncAction(
+  CommonsActionTypes.CREATE_DISCUSSION,
+  CommonsActionTypes.CREATE_DISCUSSION_SUCCESS,
+  CommonsActionTypes.CREATE_DISCUSSION_FAILURE
+)<
+  { payload: CreateDiscussionDto; callback: (payload: Discussion) => void },
+  Discussion[],
+  Error
+>();
+
+export const addMessageToDiscussion = createAsyncAction(
+  CommonsActionTypes.ADD_MESSAGE_TO_DISCUSSION,
+  CommonsActionTypes.ADD_MESSAGE_TO_DISCUSSION_SUCCESS,
+  CommonsActionTypes.ADD_MESSAGE_TO_DISCUSSION_FAILURE
+)<
+  {
+    payload: AddMessageToDiscussionDto;
+    discussion: Discussion;
+  },
+  Discussion,
+  Error
+>();
+
 export const createRequestToJoin = createAsyncAction(
   CommonsActionTypes.CREATE_REQUEST_TO_JOIN,
   CommonsActionTypes.CREATE_REQUEST_TO_JOIN_SUCCESS,
   CommonsActionTypes.CREATE_REQUEST_TO_JOIN_FAILURE
 )<ProposalJoinRequestData, Proposal, Error>();
+
+export const createFundingProposal = createAsyncAction(
+  CommonsActionTypes.CREATE_FUNDING_PROPOSAL,
+  CommonsActionTypes.CREATE_FUNDING_PROPOSAL_SUCCESS,
+  CommonsActionTypes.CREATE_FUNDING_PROPOSAL_FAILURE
+)<
+  {
+    payload: CreateFundingRequestProposalPayload;
+    callback: (step: AddProposalSteps) => void;
+  },
+  Proposal,
+  Error
+>();
+
+export const checkUserPaymentMethod = createAsyncAction(
+  CommonsActionTypes.CHECK_USER_PAYMENT_METHOD,
+  CommonsActionTypes.CHECK_USER_PAYMENT_METHOD_SUCCESS,
+  CommonsActionTypes.CHECK_USER_PAYMENT_METHOD_FAILURE
+)<void, boolean, Error>();
+
+export const addMessageToProposal = createAsyncAction(
+  CommonsActionTypes.ADD_MESSAGE_TO_PROPOSAL,
+  CommonsActionTypes.ADD_MESSAGE_TO_PROPOSAL_SUCCESS,
+  CommonsActionTypes.ADD_MESSAGE_TO_PROPOSAL_FAILURE
+)<
+  {
+    payload: AddMessageToDiscussionDto;
+    proposal: Proposal;
+  },
+  Proposal,
+  Error
+>();
+
+export const deleteCommon = createAsyncAction(
+  CommonsActionTypes.DELETE_COMMON,
+  CommonsActionTypes.DELETE_COMMON_SUCCESS,
+  CommonsActionTypes.DELETE_COMMON_FAILURE
+)<PayloadWithCallback<DeleteCommon, void, Error>, void, Error>();
+
+export const createCommon = createAsyncAction(
+  CommonsActionTypes.CREATE_COMMON,
+  CommonsActionTypes.CREATE_COMMON_SUCCESS,
+  CommonsActionTypes.CREATE_COMMON_FAILURE
+)<PayloadWithCallback<CreateCommonPayload, Common, Error>, Common, Error>();
+
+export const createVote = createAsyncAction(
+  CommonsActionTypes.CREATE_VOTE,
+  CommonsActionTypes.CREATE_VOTE_SUCCESS,
+  CommonsActionTypes.CREATE_VOTE_FAILURE
+)<PayloadWithCallback<CreateVotePayload, void, Error>, void, Error>();
+
+export const makeImmediateContribution = createAsyncAction(
+  CommonsActionTypes.MAKE_IMMEDIATE_CONTRIBUTION,
+  CommonsActionTypes.MAKE_IMMEDIATE_CONTRIBUTION_SUCCESS,
+  CommonsActionTypes.MAKE_IMMEDIATE_CONTRIBUTION_FAILURE
+)<
+  PayloadWithCallback<
+    ImmediateContributionData,
+    ImmediateContributionResponse,
+    Error
+  >,
+  ImmediateContributionResponse,
+  Error
+>();

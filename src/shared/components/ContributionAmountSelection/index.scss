@@ -1,0 +1,28 @@
+@import "../../../constants";
+@import "../../../styles/sizes";
+
+.contribution-amount-selection {
+  max-width: 23.75rem;
+  width: 100%;
+}
+
+.contribution-amount-selection__toggle-button {
+  padding: 1.375rem;
+
+  @include big-phone {
+    padding: 1.25rem;
+  }
+}
+
+.contribution-amount-selection__toggle-button-group {
+  font-size: $small;
+}
+
+.contribution-amount-selection__currency-input-label {
+  margin: 0;
+  font-size: $xsmall;
+}
+
+.contribution-amount-selection__back-to-selection {
+  margin-top: 0.5rem;
+}
