@@ -17,6 +17,10 @@ import {
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 import { CreateVotePayload } from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/interfaces/api/payMe";
+import {
+  ImmediateContributionData,
+  ImmediateContributionResponse,
+} from "../interfaces";
 
 export const getCommonsList = createAsyncAction(
   CommonsActionTypes.GET_COMMONS_LIST,
@@ -166,6 +170,20 @@ export const createVote = createAsyncAction(
   CommonsActionTypes.CREATE_VOTE_SUCCESS,
   CommonsActionTypes.CREATE_VOTE_FAILURE
 )<PayloadWithCallback<CreateVotePayload, void, Error>, void, Error>();
+
+export const makeImmediateContribution = createAsyncAction(
+  CommonsActionTypes.MAKE_IMMEDIATE_CONTRIBUTION,
+  CommonsActionTypes.MAKE_IMMEDIATE_CONTRIBUTION_SUCCESS,
+  CommonsActionTypes.MAKE_IMMEDIATE_CONTRIBUTION_FAILURE
+)<
+  PayloadWithCallback<
+    ImmediateContributionData,
+    ImmediateContributionResponse,
+    Error
+  >,
+  ImmediateContributionResponse,
+  Error
+>();
 
 export const addBankDetails = createAsyncAction(
   CommonsActionTypes.ADD_BANK_DETAILS,

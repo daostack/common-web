@@ -23,6 +23,7 @@ export enum Collection {
   Users = "users",
   Daos = "daos",
   DiscussionMessage = "discussionMessage",
+  Payments = "payments",
 }
 
 export enum DateFormat {

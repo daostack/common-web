@@ -100,12 +100,7 @@ export const AddProposalComponent = ({
 
   const confirmProposal = useCallback(() => {
     changeCreationProposalStep(AddProposalSteps.LOADER);
-    fundingRequest.links = fundingRequest.links?.map((i: any) => {
-      return {
-        title: i.title,
-        value: i.link,
-      };
-    });
+    fundingRequest.links = fundingRequest.links?.filter((link) => link.title && link.value);
     fundingRequest.amount = fundingRequest.amount * 100;
     onProposalAdd(fundingRequest, changeCreationProposalStep);
   }, [onProposalAdd, fundingRequest]);

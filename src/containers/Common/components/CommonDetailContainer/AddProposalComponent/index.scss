@@ -180,9 +180,10 @@
             display: flex;
             flex-wrap: wrap;
             width: 100%;
+            flex-direction: column;
 
             .links-array__item {
-              width: 45%;
+              width: 100%;
               margin-bottom: 16px;
               margin-right: 16px;
             }

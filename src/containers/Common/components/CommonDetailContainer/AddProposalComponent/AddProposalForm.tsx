@@ -18,16 +18,30 @@ import { getBankDetails } from "@/containers/Common/store/actions";
 const validationSchema = Yup.object({
   description: Yup.string().required("Field required"),
   title: Yup.string().required("Field required").max(49, "Title too long"),
-  links: Yup.array().of(
-    Yup.object().shape({
-      title: Yup.string()
-        .max(MAX_LINK_TITLE_LENGTH, "Entered title is too long")
-        .required("Please enter link title"),
-      link: Yup.string()
-        .matches(HTTPS_URL_REGEXP, "Please enter correct URL")
-        .required("Please enter a link"),
-    })
-  ),
+  links: Yup.array()
+    .of(
+      Yup.object().shape(
+        {
+          title: Yup.string().when("value", (value: string) => {
+            if (value) {
+              return Yup.string()
+                .max(MAX_LINK_TITLE_LENGTH, "Entered title is too long")
+                .required("Please enter link title");
+            }
+          }),
+          value: Yup.string().when("title", (title: string) => {
+            if (title) {
+              return Yup.string()
+                .matches(HTTPS_URL_REGEXP, "Please enter correct URL")
+                .required("Please enter a link");
+            }
+          }),
+        },
+        [["title", "value"]]
+      )
+    )
+    .required("Please add at least 1 link")
+    .min(1, "Please add at least 1 link"),
 });
 
 const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png";
@@ -78,7 +92,7 @@ export const AddProposalForm = ({
   const [formValues] = useState({
     title: "",
     description: "",
-    links: [],
+    links: [{ title: "", value: "" }],
     images: [],
     amount: 0,
   });
@@ -223,21 +237,6 @@ export const AddProposalForm = ({
                 />
                 <div
                   className="link"
-                  onClick={() =>
-                    formikProps.setFieldValue("links", [
-                      ...formikProps.values.links,
-                      { title: "", link: "" },
-                    ])
-                  }
-                >
-                  <img
-                    src="/icons/add-proposal/icons-link.svg"
-                    alt="icons-link"
-                  />
-                  <span>Add link</span>
-                </div>
-                <div
-                  className="link"
                   onClick={() => document.getElementById("file")?.click()}
                 >
                   <img
@@ -268,7 +267,6 @@ export const AddProposalForm = ({
                 </div>
                 <div className="additional-links">
                   <LinksArray
-                    hideAddButton={true}
                     name="links"
                     values={formikProps.values.links}
                     errors={formikProps.errors.links}

@@ -20,7 +20,6 @@ interface LinksArrayProps extends FieldArrayConfig {
   maxTitleLength?: number;
   className?: string;
   itemClassName?: string;
-  hideAddButton?: boolean;
 }
 
 const getInputError = (
@@ -55,7 +54,6 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
     maxTitleLength,
     className,
     itemClassName,
-    hideAddButton,
     ...restProps
   } = props;
 
@@ -83,14 +81,10 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
                 <TextField
                   id={`${restProps.name}.${index}.title`}
                   name={`${restProps.name}.${index}.title`}
-                  label={index === 0 && !hideAddButton ? "Add links" : ""}
+                  label={index === 0 ? "Add links" : ""}
                   placeholder="Link title"
                   maxLength={maxTitleLength}
-                  hint={
-                    index === 0 && !hideAddButton
-                      ? "Resources, related content, or social pages"
-                      : ""
-                  }
+                  hint={index === 0 ? "Resources, related content, or social pages" : ""}
                   styles={{
                     input: {
                       default: classNames("links-array__title-input", {
@@ -130,14 +124,11 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
               </div>
             );
           })}
-          {!hideAddButton && (
-            <ButtonLink
-              className="links-array__add-button"
-              onClick={() => push({ title: "", value: "" } as CommonLink)}
-            >
-              Add link
-            </ButtonLink>
-          )}
+          <ButtonLink
+            className="links-array__add-button"
+            onClick={() => push({ title: "", value: "" } as CommonLink)}>
+            Add link
+          </ButtonLink>
         </div>
       )}
     />
