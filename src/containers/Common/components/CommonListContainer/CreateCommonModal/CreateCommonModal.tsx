@@ -32,10 +32,6 @@ const INITIAL_DATA: IntermediateCreateCommonPayload = {
   agreementAccepted: false,
 };
 
-const INITIAL_PAYMENT_DATA: PaymentPayload = {
-  cardId: uuidv4(),
-};
-
 interface CreateCommonModalProps {
   isShowing: boolean;
   onClose: () => void;
@@ -57,9 +53,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     creationData,
     setCreationData,
   ] = useState<IntermediateCreateCommonPayload>(INITIAL_DATA);
-  const [paymentData, setPaymentData] = useState<PaymentPayload>(
-    INITIAL_PAYMENT_DATA
-  );
+  const [paymentData, setPaymentData] = useState<PaymentPayload>({});
   const [title, setTitle] = useState<ReactNode>("");
   const [isBigTitle, setIsBigTitle] = useState(true);
   const [isHeaderScrolledToTop, setIsHeaderScrolledToTop] = useState(true);
@@ -131,6 +125,12 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     },
     [handleError]
   );
+  const handlePaymentFinish = useCallback(() => {
+    setStageState((state) => ({
+      ...state,
+      stage: CreateCommonStage.Success,
+    }));
+  }, []);
 
   const renderedTitle = useMemo((): ReactNode => {
     if (!title) {
@@ -181,7 +181,8 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
             setShouldShowCloseButton={setShouldShowCloseButton}
-            onFinish={moveStageForward}
+            onFinish={handlePaymentFinish}
+            onError={handleError}
             common={createdCommon}
             paymentData={paymentData}
             setPaymentData={setPaymentData}
@@ -198,6 +199,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     setBigTitle,
     setGoBackHandler,
     moveStageForward,
+    handleError,
     creationData,
     createdCommon,
     shouldStartFromLastStep,

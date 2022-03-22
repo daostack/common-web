@@ -24,6 +24,8 @@ import {
   CreateCommonPayload,
   CreateDiscussionDto,
   DeleteCommon,
+  ImmediateContributionData,
+  ImmediateContributionResponse,
 } from "@/containers/Common/interfaces";
 import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
 import { CreateVotePayload, Vote } from "@/shared/interfaces/api/vote";
@@ -302,4 +304,15 @@ export async function createCommon(
   );
 
   return convertObjectDatesToFirestoreTimestamps(data);
+}
+
+export async function makeImmediateContribution(
+  requestData: ImmediateContributionData
+): Promise<ImmediateContributionResponse> {
+  const { data } = await Api.post<ImmediateContributionResponse>(
+    ApiEndpoint.MakeImmediateContribution,
+    requestData
+  );
+
+  return data;
 }
