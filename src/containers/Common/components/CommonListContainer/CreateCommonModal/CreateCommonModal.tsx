@@ -18,6 +18,7 @@ import {
 } from "../../../interfaces";
 import { Confirmation } from "./Confirmation";
 import { CreationSteps } from "./CreationSteps";
+import { Error } from "./Error";
 import { Introduction } from "./Introduction";
 import { Payment } from "./Payment";
 import { Success } from "./Success";
@@ -198,6 +199,16 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             setShouldShowCloseButton={setShouldShowCloseButton}
           />
         ) : null;
+      case CreateCommonStage.Error:
+        return (
+          <Error
+            errorText={errorText}
+            setTitle={setSmallTitle}
+            setGoBackHandler={setGoBackHandler}
+            setShouldShowCloseButton={setShouldShowCloseButton}
+            onFinish={props.onClose}
+          />
+        );
       default:
         return null;
     }
@@ -215,6 +226,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     shouldStartFromLastStep,
     paymentData,
     props.onClose,
+    errorText,
   ]);
 
   useEffect(() => {
