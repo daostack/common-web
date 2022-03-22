@@ -6,4 +6,5 @@ export * from "./Proposals";
 export * from "./DiscussionMessage";
 export * from "./Discussion";
 export * from "./Invoices";
+export * from "./Payment";
 export * from "./Votes";

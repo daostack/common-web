@@ -1,5 +1,6 @@
 export const ApiEndpoint = {
   CreateCommon: "/commons/create",
+  MakeImmediateContribution: "/commons/immediate-contribution",
   CreateRequestToJoin: "/proposals/create/join",
   CreateFunding: "/proposals/create/funding",
   CreateVote: "/proposals/create/vote",

@@ -7,13 +7,10 @@ import {
   Separator,
 } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
-import { CommonContributionType } from "@/shared/models";
+import { Common, CommonContributionType } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice } from "@/shared/utils";
-import {
-  IntermediateCreateCommonPayload,
-  PaymentPayload,
-} from "../../../../../interfaces";
+import { PaymentPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import "./index.scss";
 
@@ -21,11 +18,14 @@ interface PersonalContributionProps {
   currentStep: number;
   onFinish: (data: Partial<PaymentPayload>) => void;
   paymentData: PaymentPayload;
-  creationData: IntermediateCreateCommonPayload;
+  common: Common;
 }
 
 export default function PersonalContribution(props: PersonalContributionProps) {
-  const { currentStep, onFinish, paymentData, creationData } = props;
+  const { currentStep, onFinish, paymentData, common } = props;
+  const {
+    metadata: { contributionType, minFeeToJoin, zeroContribution = false },
+  } = common;
   const [
     [selectedContribution, hasSelectedContributionError],
     setSelectedContributionState,
@@ -36,9 +36,7 @@ export default function PersonalContribution(props: PersonalContributionProps) {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const isMonthlyContribution =
-    creationData.contributionType === CommonContributionType.Monthly;
-  const minFeeToJoin = creationData.contributionAmount * 100;
-  const zeroContribution = creationData.zeroContribution || false;
+    contributionType === CommonContributionType.Monthly;
   const formattedMinFeeToJoin = formatPrice(
     zeroContribution ? 0 : minFeeToJoin,
     { shouldMillify: false, shouldRemovePrefixFromZero: false }
@@ -78,11 +76,7 @@ export default function PersonalContribution(props: PersonalContributionProps) {
         </p>
         <p className="create-common-contribution__sub-text-item">
           Contribution to this Common ({formattedMinFeeToJoin}
-          {pricePostfix} min.){" "}
-          <span className="create-common-contribution__sub-text-item--bold">
-            You will not be charged until another member joins{" "}
-          </span>{" "}
-          the Common.
+          {pricePostfix} min.)
         </p>
       </div>
       <Separator className="create-common-contribution__separator" />
