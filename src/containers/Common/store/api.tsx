@@ -337,7 +337,6 @@ export async function getBankDetails(): Promise<void> {
     ApiEndpoint.GetBankAccount,
   );
 
-  console.log(data);
   return data;
 }
 

@@ -10,7 +10,7 @@ import {
   HTTPS_URL_REGEXP,
   MAX_LINK_TITLE_LENGTH,
 } from "@/containers/Common/components/CommonListContainer/CreateCommonModal/CreationSteps/GeneralInfo/constants";
-import { ButtonIcon, Loader } from "@/shared/components";
+import { ButtonIcon, Loader, ModalFooter } from "@/shared/components";
 import DeleteIcon from "@/shared/icons/delete.icon";
 import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
 import { getBankDetails } from "@/containers/Common/store/actions";
@@ -46,6 +46,12 @@ const validationSchema = Yup.object({
 
 const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png";
 
+enum BankDetailsState {
+  Pending,
+  True,
+  False
+}
+
 interface AddProposalFormInterface {
   common: Common;
   saveProposalState: (
@@ -67,7 +73,7 @@ export const AddProposalForm = ({
   const [uploadedFiles, setUploadedFile] = useState<
     { title: string; value: string }[]
   >([]);
-  const [hasBankDetails, setHasBankDetails] = useState<boolean>(false);
+  const [hasBankDetails, setHasBankDetails] = useState<BankDetailsState>(BankDetailsState.Pending);
 
   /**
    * For now we fetch the bank details only here.
@@ -80,10 +86,10 @@ export const AddProposalForm = ({
         callback: (error) => {
           if (error) {
             console.error(error);
-            setHasBankDetails(false);
+            setHasBankDetails(BankDetailsState.False);
             return;
           }
-          setHasBankDetails(true);
+          setHasBankDetails(BankDetailsState.True);
         }
       }))
     })();
@@ -197,7 +203,7 @@ export const AddProposalForm = ({
                 {formatPrice(common.balance)}
               </div>
             </div>
-            {!hasBankDetails && (
+            {hasBankDetails === BankDetailsState.False && (
               <div className="add-bank-details-wrapper">
                 <img
                   src="/icons/add-proposal/illustrations-full-page-transparent.svg"
@@ -289,15 +295,17 @@ export const AddProposalForm = ({
                 insufficient for the amount requested.
               </div>
             </div>
-            <div className="action-wrapper">
-              <button
-                className="button-blue"
-                disabled={!formikProps.isValid || !hasBankDetails}
-                onClick={formikProps.submitForm}
-              >
-                Create proposal
-              </button>
-            </div>
+            <ModalFooter sticky>
+              <div className="action-wrapper">
+                <button
+                  className="button-blue"
+                  disabled={!formikProps.isValid || hasBankDetails !== BankDetailsState.True}
+                  onClick={formikProps.submitForm}
+                >
+                  Create proposal
+                </button>
+              </div>
+            </ModalFooter>
           </div>
         </div>
       )}

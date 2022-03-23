@@ -45,7 +45,7 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
   const formRef = useRef<FormikProps<FormValues>>(null);
   const [photoIdFile, setPhotoIdFile] = useState<File | null>(null);
   const [bankLetterFile, setBankLetterFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
 
@@ -74,7 +74,8 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     async (values) => {
-      setLoading(true);
+      setSending(true);
+      setError("");
 
       try {
         values.photoId = await uploadFile(`${values.idNumber}_photoId`, "public_img", photoIdFile!);
@@ -83,7 +84,7 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
       } catch (error: any) {
         console.error(error);
         setError(error?.message ?? "Something went wrong :/");
-        setLoading(false);
+        setSending(false);
         return;
       }
 
@@ -109,7 +110,7 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
           }
         ],
         city: "???",
-        country: user?.country!,
+        country: user?.country! ?? "null",
         streetAddress: "???",
         streetNumber: 0,
         socialId: values.idNumber,
@@ -122,7 +123,7 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
       dispatch(addBankDetails.request({
         payload: { ...bankAccountDetails },
         callback: (error) => {
-          setLoading(false);
+          setSending(false);
           if (error) {
             console.error(error);
             setError(error?.message ?? "Something went wrong :/");
@@ -142,8 +143,8 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
         The following details are required inorder to transfer funds <br /> to
         you after your proposal is approved
       </div>
-      {loading ? <Loader /> : (
-        <div className="add-bank-details-form">
+      <div className="add-bank-details-form">
+        {sending ? <Loader /> : (
           <Formik
             initialValues={INITIAL_VALUES}
             onSubmit={handleSubmit}
@@ -199,7 +200,7 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     className="files-upload-wrapper__upload-button"
                     file={bankLetterFile}
                     text="Add bank account letter"
-                    hint="The form can be found on the bank’s website"
+                    hint="The form can be found on the bank's website"
                     logo="/icons/add-proposal/add-bank-account-letter.svg"
                     logoUploaded="/icons/add-proposal/add-bank-account-letter-done.svg"
                     alt="Bank letter file"
@@ -217,9 +218,9 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
               </Form>
             )}
           </Formik>
-          {error && <span>{error}</span>}
-        </div>
-      )}
+        )}
+        {error && <div className="error">{error}</div>}
+      </div>
     </div>
   );
 };
