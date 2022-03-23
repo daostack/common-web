@@ -1,8 +1,7 @@
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
-import moment from "moment";
 import classNames from "classnames";
-import { ScreenSize, COMMON_SAFETY_DAYS_AMOUNT } from "@/shared/constants";
+import { ScreenSize } from "@/shared/constants";
 import { DateFormat } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatDate } from "@/shared/utils";
@@ -25,8 +24,6 @@ const MainCommonInfo: FC<MainCommonInfoProps> = (props) => {
   );
 
   if (isMobileView) {
-    const endOfSafetyPeriod = moment().add(COMMON_SAFETY_DAYS_AMOUNT, "days");
-
     return (
       <div className={className}>
         <div className="create-common-review-main-info__half">
@@ -45,9 +42,9 @@ const MainCommonInfo: FC<MainCommonInfoProps> = (props) => {
               Safety period
             </span>
             <span className="create-common-review-main-info__value">
-              <span>{COMMON_SAFETY_DAYS_AMOUNT} days</span>
+              <span>a few seconds</span>
               <span className="create-common-review-main-info__date">
-                {formatDate(endOfSafetyPeriod, DateFormat.FullHuman)}
+                {formatDate(new Date(), DateFormat.FullHuman)}
               </span>
             </span>
           </div>
