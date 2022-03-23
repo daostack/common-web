@@ -53,12 +53,16 @@
       width: 100%;
       .name {
         z-index: 1;
-        display: block;
+        display: -webkit-box;
         width: 100%;
         text-shadow: 0 2px 4px #00000033;
         font-size: 20px;
         font-weight: bold;
         color: $white;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        word-break: break-word;
       }
       .description {
         z-index: 1;
@@ -68,6 +72,9 @@
         font-size: 12px;
         font-weight: 300;
         color: $white;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         &:lang(he) {
           font-family: Assistant-Light;
         }
