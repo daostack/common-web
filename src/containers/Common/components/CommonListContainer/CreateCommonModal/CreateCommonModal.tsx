@@ -119,9 +119,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       setCreatedCommon(common);
       setStageState((state) => ({
         ...state,
-        stage: common.active
-          ? CreateCommonStage.Success
-          : CreateCommonStage.Payment,
+        stage: CreateCommonStage.Payment,
       }));
     },
     [handleError]
