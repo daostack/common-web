@@ -82,8 +82,7 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
                 ? getInputError(errors, index, "value")
                 : "";
               const error = titleError || valueError;
-              const shouldDisplayDeleteButton =
-                values.length > 1 && Boolean(value.title && value.value);
+              const shouldDisplayDeleteButton = values.length > 1;
 
               return (
                 <div
