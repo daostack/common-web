@@ -22,8 +22,6 @@ export const MIN_CONTRIBUTION_ILS_AMOUNT = 10_00; // ₪10 * 100
 export const MAX_CONTRIBUTION_ILS_AMOUNT = 5000_00; // ₪5000 * 100
 export const MAX_CONTRIBUTION_ILS_AMOUNT_IN_COMMON_CREATION = 500_00; // ₪500 * 100
 
-export const COMMON_SAFETY_DAYS_AMOUNT = 32;
-
 export enum MobileOperatingSystem {
   WindowsPhone = "Windows Phone",
   Android = "Android",

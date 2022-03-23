@@ -156,7 +156,7 @@ export const deleteCommon = createAsyncAction(
   CommonsActionTypes.DELETE_COMMON,
   CommonsActionTypes.DELETE_COMMON_SUCCESS,
   CommonsActionTypes.DELETE_COMMON_FAILURE
-)<PayloadWithCallback<DeleteCommon, void, Error>, void, Error>();
+)<PayloadWithCallback<DeleteCommon, void, Error>, string, Error>();
 
 export const createCommon = createAsyncAction(
   CommonsActionTypes.CREATE_COMMON,

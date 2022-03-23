@@ -330,7 +330,7 @@ export function* deleteCommon(
     yield put(startLoading());
     yield deleteCommonApi(action.payload.payload);
 
-    yield put(actions.deleteCommon.success());
+    yield put(actions.deleteCommon.success(action.payload.payload.commonId));
     action.payload.callback(null);
     yield put(stopLoading());
   } catch (error) {
