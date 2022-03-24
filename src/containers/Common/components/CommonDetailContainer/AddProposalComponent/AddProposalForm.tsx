@@ -1,7 +1,11 @@
 import React, { ChangeEventHandler, useEffect, useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { LinksArray, TextField } from "@/shared/components/Form/Formik";
+import {
+  CurrencyInput,
+  LinksArray,
+  TextField,
+} from "@/shared/components/Form/Formik";
 import { formatPrice } from "@/shared/utils";
 import { Common } from "@/shared/models";
 import { uploadFile } from "@/shared/utils/firebaseUploadFile";
@@ -164,14 +168,14 @@ export const AddProposalForm = ({
             />
             <div className="funding-request-wrapper">
               <div className="funding-input-wrapper">
-                <TextField
+                <CurrencyInput
+                  className="funding-request-wrapper__currency-input"
                   id="funding"
+                  name="amount"
                   label="Funding amount requested"
-                  name={"amount"}
-                  placeholder={"₪0"}
-                  value={formikProps.values.amount}
-                  onChange={formikProps.handleChange}
-                  onBlur={formikProps.handleBlur}
+                  placeholder={formatPrice(0, {
+                    shouldRemovePrefixFromZero: false,
+                  })}
                 />
               </div>
               <div className="funding-description">
@@ -206,6 +210,7 @@ export const AddProposalForm = ({
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
                 isTextarea={true}
+                isRequired
               />
             </div>
             <div className="add-additional-information">
