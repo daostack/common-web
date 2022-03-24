@@ -1,7 +1,11 @@
 import React, { ChangeEventHandler, useEffect, useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { LinksArray, TextField } from "@/shared/components/Form/Formik";
+import {
+  CurrencyInput,
+  LinksArray,
+  TextField,
+} from "@/shared/components/Form/Formik";
 import { HTTPS_URL_REGEXP, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
 import { formatPrice } from "@/shared/utils";
 import { Common } from "@/shared/models";
@@ -9,10 +13,13 @@ import { uploadFile } from "@/shared/utils/firebaseUploadFile";
 import { ButtonIcon, Loader } from "@/shared/components";
 import DeleteIcon from "@/shared/icons/delete.icon";
 import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
+import { MAX_PROPOSAL_TITLE_LENGTH } from "./constants";
 
 const validationSchema = Yup.object({
   description: Yup.string().required("Field required"),
-  title: Yup.string().required("Field required").max(49, "Title too long"),
+  title: Yup.string()
+    .required("Field required")
+    .max(MAX_PROPOSAL_TITLE_LENGTH, "Title too long"),
   links: Yup.array()
     .of(
       Yup.object().shape(
@@ -154,17 +161,18 @@ export const AddProposalForm = ({
               onChange={formikProps.handleChange}
               onBlur={formikProps.handleBlur}
               isRequired={true}
+              maxLength={MAX_PROPOSAL_TITLE_LENGTH}
             />
             <div className="funding-request-wrapper">
               <div className="funding-input-wrapper">
-                <TextField
+                <CurrencyInput
+                  className="funding-request-wrapper__currency-input"
                   id="funding"
+                  name="amount"
                   label="Funding amount requested"
-                  name={"amount"}
-                  placeholder={"₪0"}
-                  value={formikProps.values.amount}
-                  onChange={formikProps.handleChange}
-                  onBlur={formikProps.handleBlur}
+                  placeholder={formatPrice(0, {
+                    shouldRemovePrefixFromZero: false,
+                  })}
                 />
               </div>
               <div className="funding-description">
@@ -199,6 +207,7 @@ export const AddProposalForm = ({
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
                 isTextarea={true}
+                isRequired
               />
             </div>
             <div className="add-additional-information">
