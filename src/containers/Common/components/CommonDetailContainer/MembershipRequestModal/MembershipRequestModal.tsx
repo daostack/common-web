@@ -36,7 +36,6 @@ export interface IStageProps {
 export interface IMembershipRequestData {
   stage: number;
   intro: string;
-  notes: string;
   contributionAmount: number | undefined;
   fullname: string;
   city: string;
@@ -53,7 +52,6 @@ export interface IMembershipRequestData {
 const initData: IMembershipRequestData = {
   stage: 0,
   intro: "",
-  notes: "",
   contributionAmount: undefined,
   fullname: "",
   city: "",
