@@ -25,6 +25,7 @@ export default function MembershipRequestCreating(props: IStageProps) {
           commonId: common.id,
           description: userData.intro,
           cardId: funding !== 0 ? userData.cardId : undefined,
+          links: userData.links,
         })
       );
 

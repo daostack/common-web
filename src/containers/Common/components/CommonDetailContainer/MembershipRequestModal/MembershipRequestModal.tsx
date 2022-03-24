@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Modal } from "../../../../../shared/components";
 import { useZoomDisabling } from "../../../../../shared/hooks";
 import { ModalProps, ModalRef } from "../../../../../shared/interfaces";
-import { Common } from "../../../../../shared/models";
+import { Common, CommonLink } from "../../../../../shared/models";
 import MembershipRequestContribution from "./MembershipRequestContribution";
 import MembershipRequestCreated from "./MembershipRequestCreated";
 import MembershipRequestCreating from "./MembershipRequestCreating";
@@ -36,7 +36,7 @@ export interface IStageProps {
 export interface IMembershipRequestData {
   stage: number;
   intro: string;
-  notes: string;
+  links?: CommonLink[];
   contributionAmount: number | undefined;
   fullname: string;
   city: string;
@@ -53,7 +53,6 @@ export interface IMembershipRequestData {
 const initData: IMembershipRequestData = {
   stage: 0,
   intro: "",
-  notes: "",
   contributionAmount: undefined,
   fullname: "",
   city: "",
