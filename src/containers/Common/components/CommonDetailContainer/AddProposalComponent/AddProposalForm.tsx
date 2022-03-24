@@ -12,10 +12,13 @@ import {
 import { ButtonIcon, Loader } from "@/shared/components";
 import DeleteIcon from "@/shared/icons/delete.icon";
 import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
+import { MAX_PROPOSAL_TITLE_LENGTH } from "./constants";
 
 const validationSchema = Yup.object({
   description: Yup.string().required("Field required"),
-  title: Yup.string().required("Field required").max(49, "Title too long"),
+  title: Yup.string()
+    .required("Field required")
+    .max(MAX_PROPOSAL_TITLE_LENGTH, "Title too long"),
   links: Yup.array()
     .of(
       Yup.object().shape(
@@ -157,6 +160,7 @@ export const AddProposalForm = ({
               onChange={formikProps.handleChange}
               onBlur={formikProps.handleBlur}
               isRequired={true}
+              maxLength={MAX_PROPOSAL_TITLE_LENGTH}
             />
             <div className="funding-request-wrapper">
               <div className="funding-input-wrapper">
