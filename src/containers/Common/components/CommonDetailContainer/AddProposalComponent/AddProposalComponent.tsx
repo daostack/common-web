@@ -171,6 +171,7 @@ export const AddProposalComponent = ({
       })}
       mobileFullScreen={isMobileView}
       onGoBack={(proposalCreationStep === AddProposalSteps.BANK_DETAILS || proposalCreationStep === AddProposalSteps.CONFIRM) ? moveStageBack : undefined}
+      closePrompt
     >
       {renderProposalStep}
     </Modal>

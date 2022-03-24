@@ -20,6 +20,7 @@ interface RulesArrayProps extends FieldArrayConfig {
   errors: Errors;
   touched: Touched;
   maxTitleLength?: number;
+  maxDescriptionLength?: number;
   className?: string;
   itemClassName?: string;
 }
@@ -56,6 +57,7 @@ const RulesArray: FC<RulesArrayProps> = (props) => {
     errors,
     touched,
     maxTitleLength,
+    maxDescriptionLength,
     className,
     itemClassName,
     ...restProps
@@ -122,6 +124,7 @@ const RulesArray: FC<RulesArrayProps> = (props) => {
                       placeholder="Rule description"
                       rows={5}
                       isTextarea
+                      maxLength={maxDescriptionLength}
                       styles={{
                         input: {
                           default: classNames(
