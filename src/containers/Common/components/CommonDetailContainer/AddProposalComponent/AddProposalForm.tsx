@@ -206,6 +206,7 @@ export const AddProposalForm = ({
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
                 isTextarea={true}
+                isRequired
               />
             </div>
             <div className="add-additional-information">
