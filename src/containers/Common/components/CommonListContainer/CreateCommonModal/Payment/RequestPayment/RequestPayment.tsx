@@ -53,6 +53,7 @@ export default function RequestPayment(
   const {
     id: commonId,
     metadata: { contributionType },
+    active: isCommonActive,
   } = common;
   const dispatch = useDispatch();
   const [
@@ -70,6 +71,14 @@ export default function RequestPayment(
   const handleIframeLoad = useCallback(() => {
     setState((nextState) => ({ ...nextState, isPaymentIframeLoaded: true }));
   }, []);
+
+  const finishPayment = useCallback(() => {
+    onFinish();
+
+    if (!isCommonActive) {
+      dispatch(getCommonsList.request());
+    }
+  }, [isCommonActive, onFinish, dispatch]);
 
   useEffect(() => {
     (async () => {
@@ -96,8 +105,7 @@ export default function RequestPayment(
               return;
             }
             if (!isImmediateContributionPayment(payment)) {
-              onFinish();
-              dispatch(getCommonsList.request());
+              finishPayment();
               return;
             }
 
@@ -115,6 +123,7 @@ export default function RequestPayment(
     dispatch,
     commonId,
     contributionType,
+    finishPayment,
     payment,
     isPaymentLoading,
     paymentData.contributionAmount,
@@ -131,8 +140,7 @@ export default function RequestPayment(
     try {
       return subscribeToPayment(payment.paymentId, (payment) => {
         if (payment?.status === PaymentStatus.Confirmed) {
-          onFinish();
-          dispatch(getCommonsList.request());
+          finishPayment();
         } else if (payment?.status === PaymentStatus.Failed) {
           onError("Payment failed");
         }
@@ -140,7 +148,13 @@ export default function RequestPayment(
     } catch (error) {
       console.error("Error during subscribing to payment status change");
     }
-  }, [isPaymentIframeLoaded, payment, onFinish, onError, dispatch]);
+  }, [
+    isPaymentIframeLoaded,
+    payment,
+    finishPayment,
+    onFinish,
+    onError,
+  ]);
 
   const progressEl = <Progress paymentStep={currentStep} />;
 

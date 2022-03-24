@@ -14,11 +14,13 @@ export const getCountryOption = (country: Country): CountrySelectOption => ({
 
 export const getCountryOptions = (): CountrySelectOption[] => [
   getCountryOption(INITIAL_COUNTRY_CODE),
-  ...getCountries().reduce<CountrySelectOption[]>(
-    (acc, country) =>
-      country === INITIAL_COUNTRY_CODE
-        ? acc
-        : acc.concat(getCountryOption(country)),
-    []
-  ),
+  ...getCountries()
+    .reduce<CountrySelectOption[]>(
+      (acc, country) =>
+        country === INITIAL_COUNTRY_CODE
+          ? acc
+          : acc.concat(getCountryOption(country)),
+      []
+    )
+    .sort((a, b) => (a.text > b.text ? 1 : -1)),
 ];

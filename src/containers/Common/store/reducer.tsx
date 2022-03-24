@@ -121,6 +121,13 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
         nextState.commons = [action.payload, ...nextState.commons];
       }
     })
+  )
+  .handleAction(actions.deleteCommon.success, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.commons = nextState.commons.filter(
+        (common) => common.id !== action.payload
+      );
+    })
   );
 
 export default reducer;
