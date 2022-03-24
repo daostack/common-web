@@ -170,6 +170,7 @@ export const AddProposalComponent = ({
         "mobile-full-screen": isMobileView,
       })}
       mobileFullScreen={isMobileView}
+      closePrompt
     >
       {renderProposalStep}
     </Modal>

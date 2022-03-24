@@ -10,7 +10,10 @@ import { CommonRule } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
-import { MAX_RULE_TITLE_LENGTH } from "./constants";
+import {
+  MAX_RULE_TITLE_LENGTH,
+  MAX_RULE_DESCRIPTION_LENGTH,
+} from "./constants";
 import validationSchema from "./validationSchema";
 import "./index.scss";
 
@@ -79,6 +82,7 @@ export default function Rules({
                 errors={errors.rules}
                 touched={touched.rules}
                 maxTitleLength={MAX_RULE_TITLE_LENGTH}
+                maxDescriptionLength={MAX_RULE_DESCRIPTION_LENGTH}
                 itemClassName="create-common-rules__rules-array-item"
               />
               <ModalFooter sticky>
