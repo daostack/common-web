@@ -37,7 +37,7 @@ export default function MembershipRequestIntroduce(props: IStageProps) {
         stage: nextStage,
       }));
     },
-    [setUserData]
+    [setUserData, common]
   );
 
   return (
