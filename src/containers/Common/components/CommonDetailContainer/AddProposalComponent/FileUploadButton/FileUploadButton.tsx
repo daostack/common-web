@@ -45,12 +45,14 @@ const FileUploadButton: FC<FileInfoProps> = (props) => {
         src={logo}
         alt={alt}
       />
-      {text}
-      {hint && (
-        <span className="bank-account-file-info-upload__button-hint">
-          {hint}
-        </span>
-      )}
+      <div className="bank-account-file-info-upload__text-container">
+        {text}
+        {hint && (
+          <span className="bank-account-file-info-upload__button-hint">
+            {hint}
+          </span>
+        )}
+      </div>
       <input
         className="bank-account-file-info-upload__file-input"
         type="file"

@@ -1,3 +1,11 @@
+import { DropdownOption } from "@/shared/components";
+
+export enum Gender {
+  None,
+  Man,
+  Woman,
+}
+
 export const BANKS_OPTIONS = [
   {
     value: 12,
@@ -16,3 +24,14 @@ export const BANKS_OPTIONS = [
     name: 'Israel Discount Bank',
   },
 ];
+
+export const GENDER_OPTIONS: DropdownOption[] = [
+  {
+    text: "Man",
+    value: Gender.Man,
+  },
+  {
+    text: "Woman",
+    value: Gender.Woman
+  }
+]

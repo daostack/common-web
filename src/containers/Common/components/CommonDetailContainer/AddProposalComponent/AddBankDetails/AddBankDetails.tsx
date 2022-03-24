@@ -1,15 +1,15 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Form, Formik, FormikConfig, FormikProps } from "formik";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Dropdown, TextField } from "@/shared/components/Form/Formik";
 import { Button, DropdownOption, Loader } from "@/shared/components";
 import { addBankDetails } from "@/containers/Common/store/actions";
 import { uploadFile } from "@/shared/utils/firebaseUploadFile";
 import { BankAccountDetails, PaymeTypeCodes } from "@/shared/interfaces/api/payMe";
-import { selectUser } from "@/containers/Auth/store/selectors";
+import { countryList } from "@/shared/assets/countries";
 import { FileUploadButton } from "../FileUploadButton";
 import validationSchema from "./validationSchema";
-import { BANKS_OPTIONS } from "./constans";
+import { BANKS_OPTIONS, Gender, GENDER_OPTIONS } from "./constans";
 import "./index.scss";
 
 interface IProps {
@@ -18,18 +18,36 @@ interface IProps {
 
 interface FormValues {
   idNumber: string;
+  idIssuanceDay: Date;
+  birthdate: Date;
+  gender: Gender;
+  phoneNumber: string;
+  email: string;
+  accountNumber: number | undefined;
   bankCode: number | undefined;
   branchNumber: number | undefined;
-  accountNumber: number | undefined;
+  address: string;
+  streetNumber: number | undefined;
+  city: string;
+  country: string;
   photoId: string;
   bankLetter: string;
 }
 
 const INITIAL_VALUES: FormValues = {
   idNumber: "",
+  idIssuanceDay: new Date(),
+  birthdate: new Date(),
+  gender: Gender.None,
+  phoneNumber: "",
+  email: "",
+  accountNumber: undefined,
   bankCode: undefined,
   branchNumber: undefined,
-  accountNumber: undefined,
+  address: "",
+  streetNumber: undefined,
+  city: "",
+  country: "",
   photoId: "",
   bankLetter: "",
 };
@@ -41,7 +59,6 @@ enum FileType {
 
 export const AddBankDetails = ({ onBankDetails }: IProps) => {
   const dispatch = useDispatch();
-  const user = useSelector(selectUser());
   const formRef = useRef<FormikProps<FormValues>>(null);
   const [photoIdFile, setPhotoIdFile] = useState<File | null>(null);
   const [bankLetterFile, setBankLetterFile] = useState<File | null>(null);
@@ -52,6 +69,15 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
   const banksOptions = useMemo<DropdownOption[]>(
     () =>
       BANKS_OPTIONS.map((item) => ({
+        text: item.name,
+        value: item.value,
+      })),
+    []
+  );
+
+  const countriesOptions = useMemo<DropdownOption[]>(
+    () =>
+      countryList.map((item) => ({
         text: item.name,
         value: item.value,
       })),
@@ -109,15 +135,15 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
             downloadURL: values.bankLetter
           }
         ],
-        city: "???",
-        country: user?.country! ?? "null",
-        streetAddress: "???",
-        streetNumber: 0,
+        city: values.city,
+        country: values.country,
+        streetAddress: values.address,
+        streetNumber: values.streetNumber!,
         socialId: values.idNumber,
-        socialIdIssueDate: "20/10/2019",
-        birthdate: "20/10/2019",
-        gender: 0,
-        phoneNumber: "0543955543"
+        socialIdIssueDate: "",
+        birthdate: "",
+        gender: values.gender,
+        phoneNumber: values.phoneNumber!
       }
 
       dispatch(addBankDetails.request({
@@ -133,7 +159,7 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
         }
       }))
 
-    }, [dispatch, onBankDetails, bankLetterFile, photoIdFile, user]
+    }, [dispatch, onBankDetails, bankLetterFile, photoIdFile]
   );
 
   return (
@@ -153,41 +179,114 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
           >
             {({ values, isValid }) => (
               <Form>
-                <TextField
-                  className="field"
-                  id="idNumber"
-                  name="idNumber"
-                  label="ID Number"
-                  placeholder="Add your ID number"
-                  isRequired
-                />
-                <Dropdown
-                  className="field"
-                  name="bankCode"
-                  label="Bank Name"
-                  placeholder="---Select bank---"
-                  options={banksOptions}
-                  shouldBeFixed={false}
-                />
-                <TextField
-                  className="field"
-                  id="branchNumber"
-                  name="branchNumber"
-                  label="Branch Number"
-                  placeholder="Exp. 867"
-                  isRequired
-                />
-                <TextField
-                  className="field"
-                  id="accountNumber"
-                  name="accountNumber"
-                  label="Account Number"
-                  placeholder="Add your account number"
-                  isRequired
-                />
+                <h3>Personal Info</h3>
+                <div className="section personal-info">
+                  <TextField
+                    className="field"
+                    id="idNumber"
+                    name="idNumber"
+                    label="ID Number"
+                    placeholder="Add your ID number"
+                    isRequired
+                  />
+
+                  <Dropdown
+                    className="field"
+                    name="gender"
+                    label="Gender"
+                    placeholder="---Select gender---"
+                    options={GENDER_OPTIONS}
+                    shouldBeFixed={false}
+                  />
+                </div>
+
+                <h3>Contact Info</h3>
+                <div className="section contact-info">
+                  <TextField
+                    className="field"
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    label="Phone Number"
+                    placeholder="Add your phone number"
+                    isRequired
+                  />
+                  <TextField
+                    className="field"
+                    id="email"
+                    name="email"
+                    label="Email"
+                    placeholder="Add your email"
+                    isRequired
+                  />
+                </div>
+
+                <h3>Bank Details</h3>
+                <div className="section bank-details">
+                  <Dropdown
+                    className="field"
+                    name="bankCode"
+                    label="Bank Name"
+                    placeholder="---Select bank---"
+                    options={banksOptions}
+                    shouldBeFixed={false}
+                  />
+                  <TextField
+                    className="field"
+                    id="branchNumber"
+                    name="branchNumber"
+                    label="Branch Number"
+                    placeholder="Exp. 867"
+                    isRequired
+                  />
+                  <TextField
+                    className="field"
+                    id="accountNumber"
+                    name="accountNumber"
+                    label="Account Number"
+                    placeholder="Add your account number"
+                    isRequired
+                  />
+                </div>
+
+                <h3>Billing Details</h3>
+                <div className="section billing-details">
+                  <TextField
+                    className="field"
+                    id="address"
+                    name="address"
+                    label="Address"
+                    placeholder="Add your address"
+                    isRequired
+                  />
+                  <TextField
+                    className="field"
+                    id="streetNumber"
+                    name="streetNumber"
+                    label="Street Number"
+                    placeholder="Add your street number"
+                    isRequired
+                  />
+                  <TextField
+                    className="field"
+                    id="city"
+                    name="city"
+                    label="City"
+                    placeholder="Add city"
+                    isRequired
+                  />
+                  <Dropdown
+                    className="field"
+                    name="country"
+                    label="Country/Region"
+                    placeholder="---Select country---"
+                    options={countriesOptions}
+                    shouldBeFixed={false}
+                  />
+                </div>
+
                 <div className="files-upload-wrapper">
                   <FileUploadButton
-                    className="files-upload-wrapper__upload-button"
+                    className="files-upload-wrapper__upload-button add-photo-id"
                     file={photoIdFile}
                     text="Add photo ID"
                     logo="/icons/add-proposal/add-photo-id.svg"
