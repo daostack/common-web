@@ -83,7 +83,7 @@ const AddDiscussionComponent = ({
                 >
                   <TextField
                     id="title"
-                    label="Post Discussion"
+                    label="Discussion Title"
                     name={"title"}
                     maxLength={MAX_TITLE_LENGTH}
                     value={formikProps.values.title}
