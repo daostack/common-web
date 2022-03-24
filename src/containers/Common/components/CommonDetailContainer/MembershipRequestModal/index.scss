@@ -166,8 +166,24 @@ $payment-iframe-height-mobile: 672px;
     width: 100%;
   }
 
-  .membership-request-introduce__text-field-label {
+  .membership-request-introduce__field-label {
     font-size: $xsmall;
+  }
+
+  .membership-request-introduce__links-array {
+    margin-top: 2rem;
+
+    &:last-child {
+      margin-top: 0;
+    }
+  }
+
+  .membership-request-introduce__links-array-item {
+    margin-top: 1rem;
+
+    &:first-child {
+      margin-top: 0;
+    }
   }
 
   .membership-request-introduce__submit-button-wrapper {

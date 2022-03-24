@@ -1,10 +1,9 @@
 import React, { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
-import { FormikProps } from "formik/dist/types";
 import { Button } from "@/shared/components";
 import { Form, TextField, LinksArray } from "@/shared/components/Form/Formik";
-import { ScreenSize } from "@/shared/constants";
+import { ScreenSize, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
 import { CommonLink } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { IStageProps } from "./MembershipRequestModal";
@@ -18,7 +17,7 @@ interface FormValues {
 
 const getInitialValues = (data: IStageProps["userData"]): FormValues => ({
   intro: data.intro,
-  links: [{ title: "", value: "" }],
+  links: data.links?.length ? data.links : [{ title: "", value: "" }],
 });
 
 export default function MembershipRequestIntroduce(props: IStageProps) {
@@ -29,9 +28,11 @@ export default function MembershipRequestIntroduce(props: IStageProps) {
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
       const nextStage = common && common.rules.length > 0 ? 2 : 3;
+      const links = values.links.filter((link) => link.title && link.value);
 
       setUserData((nextUserData) => ({
         ...nextUserData,
+        links,
         intro: values.intro,
         stage: nextStage,
       }));
@@ -52,7 +53,7 @@ export default function MembershipRequestIntroduce(props: IStageProps) {
         validationSchema={introduceStageSchema}
         validateOnMount
       >
-        {({ isValid }) => (
+        {({ values, errors, touched, isValid }) => (
           <Form className="membership-request-introduce__form">
             <TextField
               id="intro"
@@ -63,8 +64,20 @@ export default function MembershipRequestIntroduce(props: IStageProps) {
               isTextarea
               rows={5}
               styles={{
-                label: "membership-request-introduce__text-field-label",
+                label: "membership-request-introduce__field-label",
               }}
+            />
+            <LinksArray
+              name="links"
+              values={values.links}
+              errors={errors.links}
+              touched={touched.links}
+              title="Links"
+              hint=""
+              maxTitleLength={MAX_LINK_TITLE_LENGTH}
+              className="membership-request-introduce__links-array"
+              itemClassName="membership-request-introduce__links-array-item"
+              labelClassName="membership-request-introduce__field-label"
             />
             <div className="membership-request-introduce__submit-button-wrapper">
               <Button
