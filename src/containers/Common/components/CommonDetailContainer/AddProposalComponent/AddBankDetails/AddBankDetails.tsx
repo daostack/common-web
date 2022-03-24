@@ -1,12 +1,16 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Form, Formik, FormikConfig, FormikProps } from "formik";
 import { useDispatch } from "react-redux";
+import DatePicker from "react-datepicker"
+import moment from "moment";
+import "react-datepicker/dist/react-datepicker.css";
 import { Dropdown, TextField } from "@/shared/components/Form/Formik";
 import { Button, DropdownOption, Loader } from "@/shared/components";
 import { addBankDetails } from "@/containers/Common/store/actions";
 import { uploadFile } from "@/shared/utils/firebaseUploadFile";
 import { BankAccountDetails, PaymeTypeCodes } from "@/shared/interfaces/api/payMe";
 import { countryList } from "@/shared/assets/countries";
+import { DateFormat } from "@/shared/models";
 import { FileUploadButton } from "../FileUploadButton";
 import validationSchema from "./validationSchema";
 import { BANKS_OPTIONS, Gender, GENDER_OPTIONS } from "./constans";
@@ -18,7 +22,7 @@ interface IProps {
 
 interface FormValues {
   idNumber: string;
-  idIssuanceDay: Date;
+  socialIdIssueDate: Date;
   birthdate: Date;
   gender: Gender;
   phoneNumber: string;
@@ -36,7 +40,7 @@ interface FormValues {
 
 const INITIAL_VALUES: FormValues = {
   idNumber: "",
-  idIssuanceDay: new Date(),
+  socialIdIssueDate: new Date(),
   birthdate: new Date(),
   gender: Gender.None,
   phoneNumber: "",
@@ -64,7 +68,6 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
   const [bankLetterFile, setBankLetterFile] = useState<File | null>(null);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
-
 
   const banksOptions = useMemo<DropdownOption[]>(
     () =>
@@ -140,8 +143,8 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
         streetAddress: values.address,
         streetNumber: values.streetNumber!,
         socialId: values.idNumber,
-        socialIdIssueDate: "",
-        birthdate: "",
+        socialIdIssueDate: moment(new Date(values.socialIdIssueDate)).format("dd/mm/yyyy"),
+        birthdate: moment(new Date(values.birthdate)).format("dd/mm/yyyy"),
         gender: values.gender,
         phoneNumber: values.phoneNumber!
       }
@@ -177,7 +180,7 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
             innerRef={formRef}
             validationSchema={validationSchema}
           >
-            {({ values, isValid }) => (
+            {({ values, isValid, setFieldValue }) => (
               <Form>
                 <h3>Personal Info</h3>
                 <div className="section personal-info">
@@ -189,7 +192,20 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     placeholder="Add your ID number"
                     isRequired
                   />
-
+                  <DatePicker
+                    selected={values.socialIdIssueDate}
+                    dateFormat="MMMM d, yyyy"
+                    //className=""
+                    name="socialIdIssueDate"
+                    onChange={date => setFieldValue('socialIdIssueDate', date)}
+                  />
+                  <DatePicker
+                    selected={values.birthdate}
+                    dateFormat="MMMM d, yyyy"
+                    //className="""
+                    name="birthdate"
+                    onChange={date => setFieldValue('birthdate', date)}
+                  />
                   <Dropdown
                     className="field"
                     name="gender"
@@ -314,11 +330,11 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                 >
                   Save
                 </Button>
+                {error && <div className="error">{error}</div>}
               </Form>
             )}
           </Formik>
         )}
-        {error && <div className="error">{error}</div>}
       </div>
     </div>
   );
