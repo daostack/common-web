@@ -62,7 +62,7 @@ const RulesArray: FC<RulesArrayProps> = (props) => {
     itemClassName,
     ...restProps
   } = props;
-  const isAddRuleButtonDisabled = useMemo<boolean>(
+  const isAddRuleButtonHidden = useMemo<boolean>(
     () =>
       Boolean(
         (errors && errors.length > 0) ||
@@ -152,12 +152,14 @@ const RulesArray: FC<RulesArrayProps> = (props) => {
                 </div>
               );
             })}
-            <ButtonLink
-              className="description-array__add-button"
-              onClick={!isAddRuleButtonDisabled ? handleNewRuleAdd : undefined}
-            >
-              Add rule
-            </ButtonLink>
+            {!isAddRuleButtonHidden && (
+              <ButtonLink
+                className="description-array__add-button"
+                onClick={handleNewRuleAdd}
+              >
+                Add rule
+              </ButtonLink>
+            )}
           </div>
         );
       }}
