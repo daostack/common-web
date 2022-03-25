@@ -1,16 +1,17 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Form, Formik, FormikConfig, FormikProps } from "formik";
 import { useDispatch } from "react-redux";
-import DatePicker from "react-datepicker"
 import moment from "moment";
-import "react-datepicker/dist/react-datepicker.css";
+import { DatePicker } from "@/shared/components";
 import { Dropdown, TextField } from "@/shared/components/Form/Formik";
 import { Button, DropdownOption, Loader } from "@/shared/components";
 import { addBankDetails } from "@/containers/Common/store/actions";
 import { uploadFile } from "@/shared/utils/firebaseUploadFile";
-import { BankAccountDetails, PaymeTypeCodes } from "@/shared/interfaces/api/payMe";
+import {
+  BankAccountDetails,
+  PaymeTypeCodes,
+} from "@/shared/interfaces/api/payMe";
 import { countryList } from "@/shared/assets/countries";
-import { DateFormat } from "@/shared/models";
 import { FileUploadButton } from "../FileUploadButton";
 import validationSchema from "./validationSchema";
 import { BANKS_OPTIONS, Gender, GENDER_OPTIONS } from "./constans";
@@ -107,9 +108,16 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
       setError("");
 
       try {
-        values.photoId = await uploadFile(`${values.idNumber}_photoId`, "public_img", photoIdFile!);
-        values.bankLetter = await uploadFile(`${values.idNumber}_bankLetter`, "public_img", bankLetterFile!);
-
+        values.photoId = await uploadFile(
+          `${values.idNumber}_photoId`,
+          "public_img",
+          photoIdFile!
+        );
+        values.bankLetter = await uploadFile(
+          `${values.idNumber}_bankLetter`,
+          "public_img",
+          bankLetterFile!
+        );
       } catch (error: any) {
         console.error(error);
         setError(error?.message ?? "Something went wrong :/");
@@ -118,7 +126,8 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
       }
 
       const bankAccountDetails: BankAccountDetails = {
-        bankName: BANKS_OPTIONS.find(bank => bank.value === values.bankCode)?.name!, // TODO: maybe save it while selecting?
+        bankName: BANKS_OPTIONS.find((bank) => bank.value === values.bankCode)
+          ?.name!, // TODO: maybe save it while selecting?
         bankCode: values.bankCode!,
         branchNumber: Number(values.branchNumber!),
         accountNumber: Number(values.accountNumber!),
@@ -128,41 +137,45 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
             legalType: PaymeTypeCodes["Social Id"],
             amount: 2000,
             mimeType: "image/jpg",
-            downloadURL: values.photoId
+            downloadURL: values.photoId,
           },
           {
             name: `${values.idNumber}_bankLetter`,
             legalType: PaymeTypeCodes["Bank Account Ownership"],
             amount: 2000,
             mimeType: "image/jpg",
-            downloadURL: values.bankLetter
-          }
+            downloadURL: values.bankLetter,
+          },
         ],
         city: values.city,
         country: values.country,
         streetAddress: values.address,
         streetNumber: values.streetNumber!,
         socialId: values.idNumber,
-        socialIdIssueDate: moment(new Date(values.socialIdIssueDate)).format("dd/mm/yyyy"),
+        socialIdIssueDate: moment(new Date(values.socialIdIssueDate)).format(
+          "dd/mm/yyyy"
+        ),
         birthdate: moment(new Date(values.birthdate)).format("dd/mm/yyyy"),
         gender: values.gender,
-        phoneNumber: values.phoneNumber!
-      }
+        phoneNumber: values.phoneNumber!,
+      };
 
-      dispatch(addBankDetails.request({
-        payload: { ...bankAccountDetails },
-        callback: (error) => {
-          setSending(false);
-          if (error) {
-            console.error(error);
-            setError(error?.message ?? "Something went wrong :/");
-            return;
-          }
-          onBankDetails();
-        }
-      }))
-
-    }, [dispatch, onBankDetails, bankLetterFile, photoIdFile]
+      dispatch(
+        addBankDetails.request({
+          payload: { ...bankAccountDetails },
+          callback: (error) => {
+            setSending(false);
+            if (error) {
+              console.error(error);
+              setError(error?.message ?? "Something went wrong :/");
+              return;
+            }
+            onBankDetails();
+          },
+        })
+      );
+    },
+    [dispatch, onBankDetails, bankLetterFile, photoIdFile]
   );
 
   return (
@@ -173,7 +186,9 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
         you after your proposal is approved
       </div>
       <div className="add-bank-details-form">
-        {sending ? <Loader /> : (
+        {sending ? (
+          <Loader />
+        ) : (
           <Formik
             initialValues={INITIAL_VALUES}
             onSubmit={handleSubmit}
@@ -191,20 +206,31 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     label="ID Number"
                     placeholder="Add your ID number"
                     isRequired
+                    styles={{
+                      label: "add-bank-details-form__label",
+                    }}
                   />
                   <DatePicker
-                    selected={values.socialIdIssueDate}
-                    dateFormat="MMMM d, yyyy"
-                    //className=""
+                    className="add-bank-details-form__date-picker"
                     name="socialIdIssueDate"
-                    onChange={date => setFieldValue('socialIdIssueDate', date)}
+                    label="ID Issuance day"
+                    selected={values.socialIdIssueDate}
+                    onChange={(date) =>
+                      setFieldValue("socialIdIssueDate", date)
+                    }
+                    styles={{
+                      label: "add-bank-details-form__label",
+                    }}
                   />
                   <DatePicker
-                    selected={values.birthdate}
-                    dateFormat="MMMM d, yyyy"
-                    //className="""
+                    className="add-bank-details-form__date-picker"
                     name="birthdate"
-                    onChange={date => setFieldValue('birthdate', date)}
+                    label="Birth Date"
+                    selected={values.birthdate}
+                    onChange={(date) => setFieldValue("birthdate", date)}
+                    styles={{
+                      label: "add-bank-details-form__label",
+                    }}
                   />
                   <Dropdown
                     className="field"

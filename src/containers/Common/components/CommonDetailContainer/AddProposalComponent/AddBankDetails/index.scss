@@ -46,6 +46,22 @@
         margin-bottom: 1.5rem;
       }
     }
+
+    .add-bank-details-form__label {
+      font-size: $xsmall;
+    }
+
+    .add-bank-details-form__date-picker {
+      max-width: 8.25rem;
+      margin-right: 1rem;
+
+      @include big-phone {
+        max-width: unset;
+        margin-right: 0;
+        margin-bottom: 1rem;
+      }
+    }
+
     .save-button {
       display: block;
       margin: auto;
