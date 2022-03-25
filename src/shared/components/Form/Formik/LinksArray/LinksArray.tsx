@@ -62,7 +62,7 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
     labelClassName,
     ...restProps
   } = props;
-  const isAddLinkButtonDisabled = useMemo<boolean>(
+  const isAddLinkButtonHidden = useMemo<boolean>(
     () =>
       Boolean(
         (errors && errors.length > 0) ||
@@ -142,12 +142,14 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
                 </div>
               );
             })}
-            <ButtonLink
-              className="links-array__add-button"
-              onClick={!isAddLinkButtonDisabled ? handleNewLinkAdd : undefined}
-            >
-              Add link
-            </ButtonLink>
+            {!isAddLinkButtonHidden && (
+              <ButtonLink
+                className="links-array__add-button"
+                onClick={handleNewLinkAdd}
+              >
+                Add link
+              </ButtonLink>
+            )}
           </div>
         );
       }}
