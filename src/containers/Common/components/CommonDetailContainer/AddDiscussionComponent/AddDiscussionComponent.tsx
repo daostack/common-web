@@ -61,6 +61,7 @@ const AddDiscussionComponent = ({
         "mobile-full-screen": isMobileView,
       })}
       mobileFullScreen={isMobileView}
+      closePrompt
     >
       <Formik
         validationSchema={validationSchema}
