@@ -1,12 +1,11 @@
+import { CommonLink } from "@/shared/models";
+
 export interface ProposalJoinRequestData {
   commonId: string;
   description: string;
   funding: number;
   cardId?: string;
-}
-export interface ICommonLink {
-  title: string;
-  value: string;
+  links?: CommonLink[];
 }
 
 export interface CreateFundingRequestProposalPayload {
@@ -14,7 +13,7 @@ export interface CreateFundingRequestProposalPayload {
   title: string;
   description: string;
   amount: number;
-  links?: ICommonLink[];
+  links?: CommonLink[];
   files?: string[];
-  images?: ICommonLink[];
+  images?: CommonLink[];
 }

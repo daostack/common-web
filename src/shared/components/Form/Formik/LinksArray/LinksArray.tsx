@@ -17,9 +17,12 @@ interface LinksArrayProps extends FieldArrayConfig {
   values: CommonLink[];
   errors: Errors;
   touched: Touched;
+  title?: string;
+  hint?: string;
   maxTitleLength?: number;
   className?: string;
   itemClassName?: string;
+  labelClassName?: string;
 }
 
 const getInputError = (
@@ -51,12 +54,15 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
     values,
     errors,
     touched,
+    title = "Add links",
+    hint = "Resources, related content, or social pages",
     maxTitleLength,
     className,
     itemClassName,
+    labelClassName,
     ...restProps
   } = props;
-  const isAddLinkButtonDisabled = useMemo<boolean>(
+  const isAddLinkButtonHidden = useMemo<boolean>(
     () =>
       Boolean(
         (errors && errors.length > 0) ||
@@ -92,15 +98,12 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
                   <TextField
                     id={`${restProps.name}.${index}.title`}
                     name={`${restProps.name}.${index}.title`}
-                    label={index === 0 ? "Add links" : ""}
+                    label={index === 0 ? title : ""}
                     placeholder="Link title"
                     maxLength={maxTitleLength}
-                    hint={
-                      index === 0
-                        ? "Resources, related content, or social pages"
-                        : ""
-                    }
+                    hint={index === 0 ? hint : ""}
                     styles={{
+                      label: labelClassName,
                       input: {
                         default: classNames("links-array__title-input", {
                           "links-array__title-input--without-bottom-border":
@@ -139,12 +142,14 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
                 </div>
               );
             })}
-            <ButtonLink
-              className="links-array__add-button"
-              onClick={!isAddLinkButtonDisabled ? handleNewLinkAdd : undefined}
-            >
-              Add link
-            </ButtonLink>
+            {!isAddLinkButtonHidden && (
+              <ButtonLink
+                className="links-array__add-button"
+                onClick={handleNewLinkAdd}
+              >
+                Add link
+              </ButtonLink>
+            )}
           </div>
         );
       }}
