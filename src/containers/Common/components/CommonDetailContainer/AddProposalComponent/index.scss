@@ -196,7 +196,6 @@
       padding: 0.5rem 3rem;
       border-radius: 14px;
       background-color: $light-purple;
-      height: 6rem;
 
       .note-title {
         margin-top: 0.5rem;
@@ -214,6 +213,7 @@
         line-height: 1.43;
         letter-spacing: normal;
         color: $blue-2;
+        margin-bottom: 0.5rem;
 
         img {
           position: absolute;
@@ -295,9 +295,6 @@
           height: 24px;
           margin: 0;
           padding-right: 1rem;
-        }
-
-        span {
         }
       }
     }
