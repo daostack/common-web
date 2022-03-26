@@ -51,3 +51,6 @@ export const RECAPTCHA_CONTAINER_ID = "recaptcha-container-id";
 
 export const MAX_LINK_TITLE_LENGTH = 30;
 export const HTTPS_URL_REGEXP = /^(?:https:\/\/)[\w.-]+(?:\.[\w\\.-]+)+[\w\-\\._~:/?#[\]@!\\$&'\\(\\)\\*\\+,;=.]+$/;
+export const EMIAL_REGEXP = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+export const NUMBERS_ONLY_REGEXP = /^[0-9]*$/;
+

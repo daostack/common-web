@@ -152,9 +152,7 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
         streetAddress: values.address,
         streetNumber: values.streetNumber!,
         socialId: values.idNumber,
-        socialIdIssueDate: moment(new Date(values.socialIdIssueDate)).format(
-          "dd/mm/yyyy"
-        ),
+        socialIdIssueDate: moment(new Date(values.socialIdIssueDate)).format("dd/mm/yyyy"),
         birthdate: moment(new Date(values.birthdate)).format("dd/mm/yyyy"),
         gender: values.gender,
         phoneNumber: values.phoneNumber!,
@@ -215,6 +213,7 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     name="socialIdIssueDate"
                     label="ID Issuance day"
                     selected={values.socialIdIssueDate}
+                    maxDate={moment().toDate()}
                     onChange={(date) =>
                       setFieldValue("socialIdIssueDate", date)
                     }
@@ -227,6 +226,7 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     name="birthdate"
                     label="Birth Date"
                     selected={values.birthdate}
+                    maxDate={moment().toDate()}
                     onChange={(date) => setFieldValue("birthdate", date)}
                     styles={{
                       label: "add-bank-details-form__label",
