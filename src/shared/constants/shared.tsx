@@ -48,3 +48,6 @@ export const DEFAULT_VIEWPORT_CONFIG = "width=device-width, initial-scale=1";
 export const VIEWPORT_CONFIG_TO_BLOCK_AUTO_ZOOM = `${DEFAULT_VIEWPORT_CONFIG}, maximum-scale=1.0, user-scalable=0`;
 
 export const RECAPTCHA_CONTAINER_ID = "recaptcha-container-id";
+
+export const MAX_LINK_TITLE_LENGTH = 30;
+export const HTTPS_URL_REGEXP = /^(?:https:\/\/)[\w.-]+(?:\.[\w\\.-]+)+[\w\-\\._~:/?#[\]@!\\$&'\\(\\)\\*\\+,;=.]+$/;

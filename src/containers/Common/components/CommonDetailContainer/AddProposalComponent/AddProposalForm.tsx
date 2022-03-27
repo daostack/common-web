@@ -6,13 +6,10 @@ import {
   LinksArray,
   TextField,
 } from "@/shared/components/Form/Formik";
+import { HTTPS_URL_REGEXP, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
 import { formatPrice } from "@/shared/utils";
 import { Common } from "@/shared/models";
 import { uploadFile } from "@/shared/utils/firebaseUploadFile";
-import {
-  HTTPS_URL_REGEXP,
-  MAX_LINK_TITLE_LENGTH,
-} from "@/containers/Common/components/CommonListContainer/CreateCommonModal/CreationSteps/GeneralInfo/constants";
 import { ButtonIcon, Loader } from "@/shared/components";
 import DeleteIcon from "@/shared/icons/delete.icon";
 import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
