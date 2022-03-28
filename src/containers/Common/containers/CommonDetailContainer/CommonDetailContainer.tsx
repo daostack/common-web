@@ -652,12 +652,14 @@ export default function CommonDetail() {
 
                   {screenSize === ScreenSize.Desktop && (
                     <Share
+                      shareButtonClassName="common-detail-wrapper__share-button-desktop-button"
                       url={sharingURL}
                       type="popup"
-                      color={Colors.lightPurple}
+                      color={Colors.lightGray4}
+                      withBorder
                     />
                   )}
-                  <EditCommonMenu />
+                  <EditCommonMenu className="common-detail-wrapper__edit-common-menu" />
                 </div>
                 {isCommonMember && isMobileView && (
                   <Share

@@ -1,5 +1,6 @@
 import React, { FC } from "react";
-import { Dropdown, DropdownOption } from "@/shared/components";
+import classNames from "classnames";
+import { ButtonIcon, Dropdown, DropdownOption } from "@/shared/components";
 import AgendaIcon from "@/shared/icons/agenda.icon";
 import ContributionIcon from "@/shared/icons/contribution.icon";
 import MenuIcon from "@/shared/icons/menu.icon";
@@ -56,17 +57,28 @@ const OPTIONS: DropdownOption[] = [
   },
 ];
 
-const EditCommonMenu: FC = () => {
+interface EditCommonMenuProps {
+  className?: string;
+}
+
+const EditCommonMenu: FC<EditCommonMenuProps> = (props) => {
+  const { className } = props;
+
   const handleSelect = (value: unknown) => {
     console.log(value as MenuItem);
   };
 
   return (
     <Dropdown
-      className="edit-common-menu"
+      className={classNames("edit-common-menu", className)}
       options={OPTIONS}
       onSelect={handleSelect}
       shouldBeFixed={false}
+      menuButton={
+        <ButtonIcon className="edit-common-menu__menu-button">
+          <MenuIcon className="edit-common-menu__menu-button-icon" />
+        </ButtonIcon>
+      }
       styles={{
         menu: "edit-common-menu__menu",
         menuList: "edit-common-menu__menu-list",

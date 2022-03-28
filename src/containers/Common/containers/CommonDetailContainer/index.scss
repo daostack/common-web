@@ -195,6 +195,15 @@
       }
     }
   }
+
+  .common-detail-wrapper__share-button-desktop-button {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .common-detail-wrapper__edit-common-menu {
+    margin-left: 1rem;
+  }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
