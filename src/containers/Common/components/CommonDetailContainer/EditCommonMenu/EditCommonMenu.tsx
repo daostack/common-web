@@ -59,12 +59,20 @@ const OPTIONS: DropdownOption[] = [
 
 interface EditCommonMenuProps {
   className?: string;
+  menuButtonClassName?: string;
   isCommonDeletionAvailable: boolean;
+  withBorder?: boolean;
   onMenuItemClick: (menuItem: MenuItem) => void;
 }
 
 const EditCommonMenu: FC<EditCommonMenuProps> = (props) => {
-  const { className, isCommonDeletionAvailable, onMenuItemClick } = props;
+  const {
+    className,
+    menuButtonClassName,
+    isCommonDeletionAvailable,
+    onMenuItemClick,
+    withBorder = false,
+  } = props;
   const options = useMemo(
     () =>
       OPTIONS.filter(
@@ -85,7 +93,15 @@ const EditCommonMenu: FC<EditCommonMenuProps> = (props) => {
       onSelect={handleSelect}
       shouldBeFixed={false}
       menuButton={
-        <ButtonIcon className="edit-common-menu__menu-button">
+        <ButtonIcon
+          className={classNames(
+            "edit-common-menu__menu-button",
+            menuButtonClassName,
+            {
+              "edit-common-menu__menu-button--with-border": withBorder,
+            }
+          )}
+        >
           <MenuIcon className="edit-common-menu__menu-button-icon" />
         </ButtonIcon>
       }

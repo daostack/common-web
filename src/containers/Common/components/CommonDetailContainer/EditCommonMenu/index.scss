@@ -4,18 +4,20 @@ $border-radius: 0.75rem;
 
 .edit-common-menu {
   .edit-common-menu__menu-button {
-    width: 3rem;
-    height: 3rem;
+    width: 2.5rem;
+    height: 2.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid $light-gray-1;
     border-radius: 50%;
     background-color: $light-gray-4;
 
     &:hover {
       background-color: $purple-hover;
     }
+  }
+  .edit-common-menu__menu-button--with-border {
+    border: 1px solid $light-gray-1;
   }
 
   .edit-common-menu__menu-button-icon {

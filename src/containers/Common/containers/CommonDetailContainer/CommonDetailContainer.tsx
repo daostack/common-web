@@ -657,20 +657,22 @@ export default function CommonDetail() {
 
                   {screenSize === ScreenSize.Desktop && (
                     <Share
-                      shareButtonClassName="common-detail-wrapper__share-button-desktop-button"
+                      shareButtonClassName="common-detail-wrapper__desktop-menu-button"
                       url={sharingURL}
                       type="popup"
                       color={Colors.lightGray4}
                       withBorder
                     />
                   )}
-                  {isCommonOwner && (
+                  {!isMobileView && isCommonOwner && (
                     <EditCommonMenu
                       className="common-detail-wrapper__edit-common-menu"
+                      menuButtonClassName="common-detail-wrapper__desktop-menu-button"
                       isCommonDeletionAvailable={
                         isCommonMember && common.members.length === 1
                       }
                       onMenuItemClick={handleMenuItemClick}
+                      withBorder
                     />
                   )}
                 </div>
