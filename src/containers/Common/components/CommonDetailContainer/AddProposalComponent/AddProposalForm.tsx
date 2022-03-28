@@ -6,7 +6,7 @@ import {
   LinksArray,
   TextField,
 } from "@/shared/components/Form/Formik";
-import { HTTPS_URL_REGEXP, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
+import { URL_REGEXP, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
 import { formatPrice } from "@/shared/utils";
 import { Common } from "@/shared/models";
 import { uploadFile } from "@/shared/utils/firebaseUploadFile";
@@ -34,7 +34,7 @@ const validationSchema = Yup.object({
           value: Yup.string().when("title", (title: string) => {
             if (title) {
               return Yup.string()
-                .matches(HTTPS_URL_REGEXP, "Please enter correct URL")
+                .matches(URL_REGEXP, "Please enter correct URL")
                 .required("Please enter a link");
             }
           }),
