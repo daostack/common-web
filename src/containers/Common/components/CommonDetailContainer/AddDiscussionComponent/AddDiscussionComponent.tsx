@@ -3,7 +3,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { TextField } from "@/shared/components/Form/Formik";
 import { Modal } from "@/shared/components";
-import { useZoomDisabling } from '@/shared/hooks';
+import { useZoomDisabling } from "@/shared/hooks";
 import { ModalProps } from "@/shared/interfaces";
 
 import "./index.scss";
@@ -13,6 +13,7 @@ import { ScreenSize } from "@/shared/constants";
 import classNames from "classnames";
 
 const MAX_TITLE_LENGTH = 49;
+const MAX_MESSAGE_LENGTH = 690;
 
 interface AddDiscussionComponentProps
   extends Pick<ModalProps, "isShowing" | "onClose"> {
@@ -20,7 +21,9 @@ interface AddDiscussionComponentProps
 }
 
 const validationSchema = Yup.object({
-  message: Yup.string().required("Field required"),
+  message: Yup.string()
+    .max(MAX_MESSAGE_LENGTH, "Message too long")
+    .required("Field required"),
   title: Yup.string()
     .required("Field required")
     .max(MAX_TITLE_LENGTH, "Title too long"),
@@ -58,6 +61,7 @@ const AddDiscussionComponent = ({
         "mobile-full-screen": isMobileView,
       })}
       mobileFullScreen={isMobileView}
+      closePrompt
     >
       <Formik
         validationSchema={validationSchema}
@@ -73,7 +77,7 @@ const AddDiscussionComponent = ({
       >
         {(formikProps) => (
           <div className="add-discussion-wrapper">
-            <div className="add-discussion-title">New Post</div>
+            <div className="add-discussion-title">New Discussion</div>
             <div className="discussion-form-wrapper">
               <div className="input-wrapper">
                 <div
@@ -83,7 +87,7 @@ const AddDiscussionComponent = ({
                 >
                   <TextField
                     id="title"
-                    label="Post Title"
+                    label="Discussion Title"
                     name={"title"}
                     maxLength={MAX_TITLE_LENGTH}
                     value={formikProps.values.title}
@@ -104,6 +108,7 @@ const AddDiscussionComponent = ({
                     label="Message"
                     id="message"
                     name={"message"}
+                    maxLength={MAX_MESSAGE_LENGTH}
                     value={formikProps.values.message}
                     onChange={formikProps.handleChange}
                     onBlur={formikProps.handleBlur}
@@ -119,7 +124,7 @@ const AddDiscussionComponent = ({
                   disabled={!formikProps.isValid}
                   onClick={formikProps.submitForm}
                 >
-                  Publish Post
+                  Publish Discussion
                 </button>
               </div>
             </div>

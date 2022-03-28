@@ -16,6 +16,10 @@ import {
 } from "@/containers/Common/interfaces";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 import { CreateVotePayload } from "@/shared/interfaces/api/vote";
+import {
+  ImmediateContributionData,
+  ImmediateContributionResponse,
+} from "../interfaces";
 
 export const getCommonsList = createAsyncAction(
   CommonsActionTypes.GET_COMMONS_LIST,
@@ -152,7 +156,7 @@ export const deleteCommon = createAsyncAction(
   CommonsActionTypes.DELETE_COMMON,
   CommonsActionTypes.DELETE_COMMON_SUCCESS,
   CommonsActionTypes.DELETE_COMMON_FAILURE
-)<PayloadWithCallback<DeleteCommon, void, Error>, void, Error>();
+)<PayloadWithCallback<DeleteCommon, void, Error>, string, Error>();
 
 export const createCommon = createAsyncAction(
   CommonsActionTypes.CREATE_COMMON,
@@ -165,3 +169,17 @@ export const createVote = createAsyncAction(
   CommonsActionTypes.CREATE_VOTE_SUCCESS,
   CommonsActionTypes.CREATE_VOTE_FAILURE
 )<PayloadWithCallback<CreateVotePayload, void, Error>, void, Error>();
+
+export const makeImmediateContribution = createAsyncAction(
+  CommonsActionTypes.MAKE_IMMEDIATE_CONTRIBUTION,
+  CommonsActionTypes.MAKE_IMMEDIATE_CONTRIBUTION_SUCCESS,
+  CommonsActionTypes.MAKE_IMMEDIATE_CONTRIBUTION_FAILURE
+)<
+  PayloadWithCallback<
+    ImmediateContributionData,
+    ImmediateContributionResponse,
+    Error
+  >,
+  ImmediateContributionResponse,
+  Error
+>();

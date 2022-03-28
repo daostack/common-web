@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Modal } from "../../../../../shared/components";
 import { useZoomDisabling } from "../../../../../shared/hooks";
 import { ModalProps, ModalRef } from "../../../../../shared/interfaces";
-import { Common } from "../../../../../shared/models";
+import { Common, CommonLink } from "../../../../../shared/models";
 import MembershipRequestContribution from "./MembershipRequestContribution";
 import MembershipRequestCreated from "./MembershipRequestCreated";
 import MembershipRequestCreating from "./MembershipRequestCreating";
@@ -36,7 +36,7 @@ export interface IStageProps {
 export interface IMembershipRequestData {
   stage: number;
   intro: string;
-  notes: string;
+  links?: CommonLink[];
   contributionAmount: number | undefined;
   fullname: string;
   city: string;
@@ -53,7 +53,6 @@ export interface IMembershipRequestData {
 const initData: IMembershipRequestData = {
   stage: 0,
   intro: "",
-  notes: "",
   contributionAmount: undefined,
   fullname: "",
   city: "",
@@ -81,9 +80,11 @@ export function MembershipRequestModal(props: IProps) {
   const modalRef = useRef<ModalRef>(null);
   const [userData, setUserData] = useState(initData);
   const user = useSelector(selectUser());
+  const [isMember, setIsMember] = useState<boolean>();
   const { stage } = userData;
   const { isShowing, onClose, common, onCreationStageReach } = props;
   const shouldDisplayProgressBar = stage > 0 && stage < 5;
+  const shouldDisplayGoBack = (stage > 1 && stage < 5) || (stage === 1 && !isMember);
   const commons = useSelector(selectCommonList());
 
   /**
@@ -93,7 +94,8 @@ export function MembershipRequestModal(props: IProps) {
   useEffect(() => {
     if (isShowing) {
       disableZoom();
-      return;
+    } else {
+      resetZoom();
     }
 
     if (commons.length === 0) {
@@ -103,6 +105,8 @@ export function MembershipRequestModal(props: IProps) {
     const isMember = commons.some((c) =>
       c.members.some((m) => m.userId === user?.uid)
     );
+
+    setIsMember(isMember);
 
     const payload: IMembershipRequestData = {
       ...initData,
@@ -120,7 +124,6 @@ export function MembershipRequestModal(props: IProps) {
 
     setUserData(payload);
     onCreationStageReach(false);
-    resetZoom();
   }, [isShowing, user, onCreationStageReach, disableZoom, resetZoom, commons, dispatch]);
 
   const renderCurrentStage = (stage: number) => {
@@ -218,7 +221,7 @@ export function MembershipRequestModal(props: IProps) {
       mobileFullScreen
       closePrompt={stage !== 6}
       title={renderedTitle}
-      onGoBack={shouldDisplayProgressBar ? moveStageBack : undefined}
+      onGoBack={shouldDisplayGoBack ? moveStageBack : undefined}
       styles={{
         content: stage === 0 ? "membership-request-modal__content--introduction" : ""
       }}

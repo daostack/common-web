@@ -29,7 +29,7 @@ export default function DiscussionsComponent({
         {isCommonMember && (
           <div className="add-button" onClick={onAddNewPost}>
             <img src="/icons/add-discussion.svg" alt="add-post" />
-            <span>Add New Post</span>
+            <span>Add New Discussion</span>
           </div>)}
       </div>
       <div className="discussions-component-wrapper">

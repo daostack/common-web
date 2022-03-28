@@ -98,10 +98,8 @@
         flex: 50%;
       }
 
-      .funding-input-wrapper {
-        .custom-input {
-          width: 100%;
-        }
+      .funding-request-wrapper__currency-input {
+        width: 100%;
       }
 
       .funding-description {
@@ -181,9 +179,10 @@
             display: flex;
             flex-wrap: wrap;
             width: 100%;
+            flex-direction: column;
 
             .links-array__item {
-              width: 45%;
+              width: 100%;
               margin-bottom: 16px;
               margin-right: 16px;
             }
