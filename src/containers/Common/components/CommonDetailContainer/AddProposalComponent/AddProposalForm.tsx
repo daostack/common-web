@@ -1,31 +1,49 @@
 import React, { ChangeEventHandler, useEffect, useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { LinksArray, TextField } from "@/shared/components/Form/Formik";
+import {
+  CurrencyInput,
+  LinksArray,
+  TextField,
+} from "@/shared/components/Form/Formik";
+import { HTTPS_URL_REGEXP, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
 import { formatPrice } from "@/shared/utils";
 import { Common } from "@/shared/models";
 import { uploadFile } from "@/shared/utils/firebaseUploadFile";
-import {
-  HTTPS_URL_REGEXP,
-  MAX_LINK_TITLE_LENGTH,
-} from "@/containers/Common/components/CommonListContainer/CreateCommonModal/CreationSteps/GeneralInfo/constants";
 import { ButtonIcon, Loader } from "@/shared/components";
 import DeleteIcon from "@/shared/icons/delete.icon";
 import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
+import { MAX_PROPOSAL_TITLE_LENGTH } from "./constants";
 
 const validationSchema = Yup.object({
   description: Yup.string().required("Field required"),
-  title: Yup.string().required("Field required").max(49, "Title too long"),
-  links: Yup.array().of(
-    Yup.object().shape({
-      title: Yup.string()
-        .max(MAX_LINK_TITLE_LENGTH, "Entered title is too long")
-        .required("Please enter link title"),
-      link: Yup.string()
-        .matches(HTTPS_URL_REGEXP, "Please enter correct URL")
-        .required("Please enter a link"),
-    })
-  ),
+  title: Yup.string()
+    .required("Field required")
+    .max(MAX_PROPOSAL_TITLE_LENGTH, "Title too long"),
+  links: Yup.array()
+    .of(
+      Yup.object().shape(
+        {
+          title: Yup.string().when("value", (value: string) => {
+            if (value) {
+              return Yup.string()
+                .max(MAX_LINK_TITLE_LENGTH, "Entered title is too long")
+                .required("Please enter link title");
+            }
+          }),
+          value: Yup.string().when("title", (title: string) => {
+            if (title) {
+              return Yup.string()
+                .matches(HTTPS_URL_REGEXP, "Please enter correct URL")
+                .required("Please enter a link");
+            }
+          }),
+        },
+        [["title", "value"]]
+      )
+    )
+    .required("Please add at least 1 link")
+    .min(1, "Please add at least 1 link"),
 });
 
 const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png";
@@ -56,7 +74,7 @@ export const AddProposalForm = ({
   const [formValues] = useState({
     title: "",
     description: "",
-    links: [],
+    links: [{ title: "", value: "" }],
     images: [],
     amount: 0,
   });
@@ -143,17 +161,18 @@ export const AddProposalForm = ({
               onChange={formikProps.handleChange}
               onBlur={formikProps.handleBlur}
               isRequired={true}
+              maxLength={MAX_PROPOSAL_TITLE_LENGTH}
             />
             <div className="funding-request-wrapper">
               <div className="funding-input-wrapper">
-                <TextField
+                <CurrencyInput
+                  className="funding-request-wrapper__currency-input"
                   id="funding"
+                  name="amount"
                   label="Funding amount requested"
-                  name={"amount"}
-                  placeholder={"₪0"}
-                  value={formikProps.values.amount}
-                  onChange={formikProps.handleChange}
-                  onBlur={formikProps.handleBlur}
+                  placeholder={formatPrice(0, {
+                    shouldRemovePrefixFromZero: false,
+                  })}
                 />
               </div>
               <div className="funding-description">
@@ -188,6 +207,7 @@ export const AddProposalForm = ({
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
                 isTextarea={true}
+                isRequired
               />
             </div>
             <div className="add-additional-information">
@@ -199,21 +219,6 @@ export const AddProposalForm = ({
                   accept={ACCEPTED_EXTENSIONS}
                   style={{ display: "none" }}
                 />
-                <div
-                  className="link"
-                  onClick={() =>
-                    formikProps.setFieldValue("links", [
-                      ...formikProps.values.links,
-                      { title: "", link: "" },
-                    ])
-                  }
-                >
-                  <img
-                    src="/icons/add-proposal/icons-link.svg"
-                    alt="icons-link"
-                  />
-                  <span>Add link</span>
-                </div>
                 <div
                   className="link"
                   onClick={() => document.getElementById("file")?.click()}
@@ -246,7 +251,6 @@ export const AddProposalForm = ({
                 </div>
                 <div className="additional-links">
                   <LinksArray
-                    hideAddButton={true}
                     name="links"
                     values={formikProps.values.links}
                     errors={formikProps.errors.links}

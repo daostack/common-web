@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { useMemo, FC } from "react";
 import classNames from "classnames";
 import { FieldArray, FieldArrayConfig, FormikErrors } from "formik";
 import { FormikTouched } from "formik/dist/types";
@@ -17,10 +17,12 @@ interface LinksArrayProps extends FieldArrayConfig {
   values: CommonLink[];
   errors: Errors;
   touched: Touched;
+  title?: string;
+  hint?: string;
   maxTitleLength?: number;
   className?: string;
   itemClassName?: string;
-  hideAddButton?: boolean;
+  labelClassName?: string;
 }
 
 const getInputError = (
@@ -52,94 +54,105 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
     values,
     errors,
     touched,
+    title = "Add links",
+    hint = "Resources, related content, or social pages",
     maxTitleLength,
     className,
     itemClassName,
-    hideAddButton,
+    labelClassName,
     ...restProps
   } = props;
+  const isAddLinkButtonHidden = useMemo<boolean>(
+    () =>
+      Boolean(
+        (errors && errors.length > 0) ||
+          values?.some((value) => !value.title && !value.value)
+      ),
+    [errors, values]
+  );
 
   return (
     <FieldArray
       {...restProps}
-      render={({ remove, push }) => (
-        <div className={classNames("links-array", className)}>
-          {values.map((value, index) => {
-            const titleError = isTouched(touched, index, "title")
-              ? getInputError(errors, index, "title")
-              : "";
-            const valueError = isTouched(touched, index, "value")
-              ? getInputError(errors, index, "value")
-              : "";
-            const error = titleError || valueError;
-            const shouldDisplayDeleteButton =
-              values.length > 1 && Boolean(value.title && value.value);
+      render={({ remove, push }) => {
+        const handleNewLinkAdd = () =>
+          push({ title: "", value: "" } as CommonLink);
 
-            return (
-              <div
-                key={index}
-                className={classNames("links-array__item", itemClassName)}
-              >
-                <TextField
-                  id={`${restProps.name}.${index}.title`}
-                  name={`${restProps.name}.${index}.title`}
-                  label={index === 0 && !hideAddButton ? "Add links" : ""}
-                  placeholder="Link title"
-                  maxLength={maxTitleLength}
-                  hint={
-                    index === 0 && !hideAddButton
-                      ? "Resources, related content, or social pages"
-                      : ""
-                  }
-                  styles={{
-                    input: {
-                      default: classNames("links-array__title-input", {
-                        "links-array__title-input--without-bottom-border":
-                          !titleError && valueError,
-                      }),
-                    },
-                    error: "links-array__title-error",
-                  }}
-                />
-                <div className="links-array__link-input-wrapper">
+        return (
+          <div className={classNames("links-array", className)}>
+            {values.map((value, index) => {
+              const titleError = isTouched(touched, index, "title")
+                ? getInputError(errors, index, "title")
+                : "";
+              const valueError = isTouched(touched, index, "value")
+                ? getInputError(errors, index, "value")
+                : "";
+              const error = titleError || valueError;
+              const shouldDisplayDeleteButton = values.length > 1;
+
+              return (
+                <div
+                  key={index}
+                  className={classNames("links-array__item", itemClassName)}
+                >
                   <TextField
-                    id={`${restProps.name}.${index}.value`}
-                    name={`${restProps.name}.${index}.value`}
-                    placeholder={`Link #${index + 1}`}
+                    id={`${restProps.name}.${index}.title`}
+                    name={`${restProps.name}.${index}.title`}
+                    label={index === 0 ? title : ""}
+                    placeholder="Link title"
+                    maxLength={maxTitleLength}
+                    hint={index === 0 ? hint : ""}
                     styles={{
+                      label: labelClassName,
                       input: {
-                        default: classNames("links-array__link-input", {
-                          "links-array__link-input--without-top-border":
-                            titleError || !valueError,
-                          "links-array__link-input--with-delete-button": shouldDisplayDeleteButton,
+                        default: classNames("links-array__title-input", {
+                          "links-array__title-input--without-bottom-border":
+                            !titleError && valueError,
                         }),
                       },
-                      error: "links-array__link-error",
+                      error: "links-array__title-error",
                     }}
                   />
-                  {shouldDisplayDeleteButton && (
-                    <ButtonIcon
-                      className="links-array__remove-button"
-                      onClick={() => remove(index)}
-                    >
-                      <DeleteIcon className="links-array__delete-icon" />
-                    </ButtonIcon>
-                  )}
+                  <div className="links-array__link-input-wrapper">
+                    <TextField
+                      id={`${restProps.name}.${index}.value`}
+                      name={`${restProps.name}.${index}.value`}
+                      placeholder={`Link #${index + 1}`}
+                      styles={{
+                        input: {
+                          default: classNames("links-array__link-input", {
+                            "links-array__link-input--without-top-border":
+                              titleError || !valueError,
+                            "links-array__link-input--with-delete-button": shouldDisplayDeleteButton,
+                          }),
+                        },
+                        error: "links-array__link-error",
+                      }}
+                    />
+                    {shouldDisplayDeleteButton && (
+                      <ButtonIcon
+                        className="links-array__remove-button"
+                        onClick={() => remove(index)}
+                      >
+                        <DeleteIcon className="links-array__delete-icon" />
+                      </ButtonIcon>
+                    )}
+                  </div>
+                  {error && <ErrorText>{error}</ErrorText>}
                 </div>
-                {error && <ErrorText>{error}</ErrorText>}
-              </div>
-            );
-          })}
-          {!hideAddButton && (
-            <ButtonLink
-              className="links-array__add-button"
-              onClick={() => push({ title: "", value: "" } as CommonLink)}
-            >
-              Add link
-            </ButtonLink>
-          )}
-        </div>
-      )}
+              );
+            })}
+            {!isAddLinkButtonHidden && (
+              <ButtonLink
+                className="links-array__add-button"
+                onClick={handleNewLinkAdd}
+              >
+                Add link
+              </ButtonLink>
+            )}
+          </div>
+        );
+      }}
     />
   );
 };

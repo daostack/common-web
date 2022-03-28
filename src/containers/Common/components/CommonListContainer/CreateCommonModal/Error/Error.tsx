@@ -1,18 +1,40 @@
-import React, { useState, FC } from "react";
+import React, { useEffect, useState, FC, ReactNode } from "react";
 import { Button, ButtonLink, ButtonVariant } from "@/shared/components";
 import "./index.scss";
 
 interface ErrorProps {
   errorText: string;
+  setTitle: (title: ReactNode) => void;
+  setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
+  setShouldShowCloseButton: (shouldShow: boolean) => void;
   onFinish: () => void;
 }
 
-const Error: FC<ErrorProps> = ({ errorText, onFinish }) => {
+const Error: FC<ErrorProps> = (props) => {
+  const {
+    errorText,
+    setTitle,
+    setGoBackHandler,
+    setShouldShowCloseButton,
+    onFinish,
+  } = props;
   const [shouldShowError, setShouldShowError] = useState(false);
 
   const handleErrorDetailsButtonClick = () => {
     setShouldShowError((shouldShow) => !shouldShow);
   };
+
+  useEffect(() => {
+    setGoBackHandler(null);
+  }, [setGoBackHandler]);
+
+  useEffect(() => {
+    setTitle(null);
+  }, [setTitle]);
+
+  useEffect(() => {
+    setShouldShowCloseButton(true);
+  }, [setShouldShowCloseButton]);
 
   return (
     <div className="create-common-confirmation-error">

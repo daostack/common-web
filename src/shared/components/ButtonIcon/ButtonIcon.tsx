@@ -8,6 +8,7 @@ const ButtonIcon: FC<ButtonIconProps> = (props) => {
   return (
     <button
       tabIndex={0}
+      type="button"
       {...props}
       className={classNames("button-icon", props.className)}
     />

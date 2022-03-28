@@ -5,7 +5,7 @@ import { FormikProps } from "formik/dist/types";
 import { Button, Separator } from "@/shared/components";
 import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
 import { Form, TextField, LinksArray } from "@/shared/components/Form/Formik";
-import { ScreenSize } from "@/shared/constants";
+import { ScreenSize, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
 import { CommonLink } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
@@ -14,7 +14,6 @@ import {
   MAX_COMMON_NAME_LENGTH,
   MAX_TAGLINE_LENGTH,
   MAX_ABOUT_LENGTH,
-  MAX_LINK_TITLE_LENGTH,
 } from "./constants";
 import validationSchema from "./validationSchema";
 import "./index.scss";
@@ -108,7 +107,6 @@ export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
                 label="About"
                 placeholder="Describe your cause and let others know why they should join you. What makes you passionate about it? What does success look like?"
                 maxLength={MAX_ABOUT_LENGTH}
-                shouldDisplayCount={!isMobileView}
                 rows={isMobileView ? 4 : 3}
                 isTextarea
                 isRequired

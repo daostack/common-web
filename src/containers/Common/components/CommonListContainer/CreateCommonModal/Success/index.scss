@@ -1,5 +1,5 @@
-@import "../../../../../../../constants";
-@import "../../../../../../../styles/sizes";
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
 
 .create-common-confirmation-success {
   width: 100%;
@@ -70,3 +70,9 @@
     }
   }
 }
+.create-common-confirmation-success__title-logo {
+  width: 5.5rem;
+  height: 2.5rem;
+  margin: 0.75rem 0;
+}
+

@@ -8,14 +8,11 @@ import React, {
   SetStateAction,
 } from "react";
 import { useSelector } from "react-redux";
-import { v4 as uuidv4 } from "uuid";
 import { Dots } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
+import { Common } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import {
-  IntermediateCreateCommonPayload,
-  PaymentPayload,
-} from "../../../../interfaces";
+import { PaymentPayload } from "../../../../interfaces";
 import { PersonalContribution } from "./PersonalContribution";
 import { PROGRESS_RELATED_STEPS } from "./Progress";
 import { PaymentStep } from "./constants";
@@ -28,7 +25,8 @@ interface PaymentProps {
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
   setShouldShowCloseButton: (shouldShow: boolean) => void;
   onFinish: () => void;
-  creationData: IntermediateCreateCommonPayload;
+  onError: (errorText: string) => void;
+  common: Common;
   paymentData: PaymentPayload;
   setPaymentData: Dispatch<SetStateAction<PaymentPayload>>;
 }
@@ -40,14 +38,16 @@ export default function Payment(props: PaymentProps) {
     setGoBackHandler,
     setShouldShowCloseButton,
     onFinish,
-    creationData,
+    onError,
+    common,
     paymentData,
     setPaymentData,
   } = props;
   const [step, setStep] = useState(PaymentStep.PersonalContribution);
+  const [shouldShowGoBackButton, setShouldShowGoBackButton] = useState(false);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const commonTitle = creationData.name;
+  const commonTitle = common.name;
 
   const scrollTop = () => {
     const content = document.getElementById("content");
@@ -55,14 +55,15 @@ export default function Payment(props: PaymentProps) {
     if (content) content.scrollIntoView(true);
   };
 
-  const handleGoBack = useCallback(() => {
-    if (step === PaymentStep.PersonalContribution) {
-      setPaymentData({ cardId: uuidv4() });
-      return true;
+  const handleGoBack = useCallback((): boolean => {
+    if (step !== PaymentStep.PersonalContribution) {
+      scrollTop();
+      setShouldShowGoBackButton(false);
+      setStep((step) => step - 1);
     }
-    scrollTop();
-    setStep((step) => step - 1);
-  }, [step, setPaymentData]);
+
+    return false;
+  }, [step]);
 
   const handleFinish = useCallback(
     (data?: Partial<PaymentPayload>) => {
@@ -119,17 +120,17 @@ export default function Payment(props: PaymentProps) {
   }, [setTitle, title]);
 
   useEffect(() => {
-    setGoBackHandler(handleGoBack);
-  }, [setGoBackHandler, handleGoBack]);
+    setGoBackHandler(shouldShowGoBackButton ? handleGoBack : null);
+  }, [setGoBackHandler, shouldShowGoBackButton, handleGoBack]);
 
   useEffect(() => {
-    setShouldShowCloseButton(true);
+    setShouldShowCloseButton(false);
   }, [setShouldShowCloseButton]);
 
   const content = useMemo(() => {
     const stepProps = {
       paymentData,
-      creationData,
+      common,
       currentStep: step,
       onFinish: handleFinish,
     };
@@ -138,11 +139,17 @@ export default function Payment(props: PaymentProps) {
       case PaymentStep.PersonalContribution:
         return <PersonalContribution {...stepProps} />;
       case PaymentStep.PaymentDetails:
-        return <RequestPayment {...stepProps} />;
+        return (
+          <RequestPayment
+            {...stepProps}
+            onError={onError}
+            setShouldShowGoBackButton={setShouldShowGoBackButton}
+          />
+        );
       default:
         return null;
     }
-  }, [paymentData, creationData, step, handleFinish]);
+  }, [paymentData, common, step, handleFinish, onError]);
 
   return content;
 }
