@@ -1,1 +1,4 @@
-export { default as EditCommonMenu } from "./EditCommonMenu";
+export {
+  default as EditCommonMenu,
+  MenuItem as EditCommonMenuItem,
+} from "./EditCommonMenu";

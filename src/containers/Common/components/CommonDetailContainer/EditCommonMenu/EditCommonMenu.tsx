@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { useMemo, FC } from "react";
 import classNames from "classnames";
 import { ButtonIcon, Dropdown, DropdownOption } from "@/shared/components";
 import AgendaIcon from "@/shared/icons/agenda.icon";
@@ -8,7 +8,7 @@ import MosaicIcon from "@/shared/icons/mosaic.icon";
 import TrashIcon from "@/shared/icons/trash.icon";
 import "./index.scss";
 
-enum MenuItem {
+export enum MenuItem {
   EditInfo,
   EditRules,
   MyContributions,
@@ -59,19 +59,29 @@ const OPTIONS: DropdownOption[] = [
 
 interface EditCommonMenuProps {
   className?: string;
+  isCommonDeletionAvailable: boolean;
+  onMenuItemClick: (menuItem: MenuItem) => void;
 }
 
 const EditCommonMenu: FC<EditCommonMenuProps> = (props) => {
-  const { className } = props;
+  const { className, isCommonDeletionAvailable, onMenuItemClick } = props;
+  const options = useMemo(
+    () =>
+      OPTIONS.filter(
+        (option) =>
+          option.value !== MenuItem.DeleteCommon || isCommonDeletionAvailable
+      ),
+    [isCommonDeletionAvailable]
+  );
 
   const handleSelect = (value: unknown) => {
-    console.log(value as MenuItem);
+    onMenuItemClick(value as MenuItem);
   };
 
   return (
     <Dropdown
       className={classNames("edit-common-menu", className)}
-      options={OPTIONS}
+      options={options}
       onSelect={handleSelect}
       shouldBeFixed={false}
       menuButton={

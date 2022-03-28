@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import classNames from "classnames";
@@ -38,6 +33,7 @@ import {
   DiscussionsComponent,
   DiscussionDetailModal,
   EditCommonMenu,
+  EditCommonMenuItem,
   ProposalsComponent,
   ProposalsHistory,
   AboutSidebarComponent,
@@ -92,7 +88,7 @@ export enum Tabs {
   About = "about",
   Discussions = "discussions",
   Proposals = "proposals",
-  History = "history"
+  History = "history",
 }
 
 const tabs = [
@@ -192,7 +188,7 @@ export default function CommonDetail() {
   const {
     isShowing: showDeleteCommonPrompt,
     onOpen: onOpenDeteleCommonPrompt,
-    onClose: onCloseDeleteCommonPrompt
+    onClose: onCloseDeleteCommonPrompt,
   } = useModal(false);
 
   const {
@@ -349,6 +345,15 @@ export default function CommonDetail() {
     if (!user) return setTimeout(onOpenJoinModal, 0);
     onOpenNewP();
   }, [onOpenJoinModal, onOpenNewP, user]);
+
+  const handleMenuItemClick = useCallback((menuItem: EditCommonMenuItem) => {
+    switch (menuItem) {
+      case EditCommonMenuItem.DeleteCommon:
+        return onOpenDeteleCommonPrompt();
+      default:
+        return;
+    }
+  }, []);
 
   const renderSidebarContent = () => {
     if (!common) return null;
@@ -534,7 +539,8 @@ export default function CommonDetail() {
         <DeleteCommonPrompt
           isShowing={showDeleteCommonPrompt}
           onClose={onCloseDeleteCommonPrompt}
-          commonId={common.id} />
+          commonId={common.id}
+        />
       )}
       <div className="common-detail-wrapper">
         <div className="main-information-block">
@@ -584,8 +590,9 @@ export default function CommonDetail() {
               <div className="numbers">
                 <div className="item">
                   <div className="value">{formatPrice(common?.balance)}</div>
-                  <div className="name">{`Available ${screenSize === ScreenSize.Desktop ? "Funds" : ""
-                    }`}</div>
+                  <div className="name">{`Available ${
+                    screenSize === ScreenSize.Desktop ? "Funds" : ""
+                  }`}</div>
                   {Boolean(common.reservedBalance) && (
                     <div className="text-information-wrapper__secondary-text">
                       In process: {formatPrice(common.reservedBalance)}
@@ -594,8 +601,9 @@ export default function CommonDetail() {
                 </div>
                 <div className="item">
                   <div className="value">{formatPrice(common?.raised)}</div>
-                  <div className="name">{`${screenSize === ScreenSize.Desktop ? "Total" : ""
-                    } Raised`}</div>
+                  <div className="name">{`${
+                    screenSize === ScreenSize.Desktop ? "Total" : ""
+                  } Raised`}</div>
                 </div>
                 <div className="item">
                   <div className="value">{common?.members.length}</div>
@@ -603,8 +611,9 @@ export default function CommonDetail() {
                 </div>
                 <div className="item">
                   <div className="value">{activeProposals.length}</div>
-                  <div className="name">{`${screenSize === ScreenSize.Desktop ? "Active" : ""
-                    } Proposals`}</div>
+                  <div className="name">{`${
+                    screenSize === ScreenSize.Desktop ? "Active" : ""
+                  } Proposals`}</div>
                 </div>
               </div>
             </div>
@@ -641,15 +650,6 @@ export default function CommonDetail() {
                     </div>
                   )}
 
-                  {isCommonMember && common.members.length === 1 && (
-                    <Button
-                      variant={ButtonVariant.Secondary}
-                      className="delete-common-btn"
-                      onClick={onOpenDeteleCommonPrompt}>
-                      Delete this Common
-                    </Button>
-                  )}
-
                   {screenSize === ScreenSize.Desktop && (
                     <Share
                       shareButtonClassName="common-detail-wrapper__share-button-desktop-button"
@@ -659,7 +659,13 @@ export default function CommonDetail() {
                       withBorder
                     />
                   )}
-                  <EditCommonMenu className="common-detail-wrapper__edit-common-menu" />
+                  <EditCommonMenu
+                    className="common-detail-wrapper__edit-common-menu"
+                    isCommonDeletionAvailable={
+                      isCommonMember && common.members.length === 1
+                    }
+                    onMenuItemClick={handleMenuItemClick}
+                  />
                 </div>
                 {isCommonMember && isMobileView && (
                   <Share
