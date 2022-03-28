@@ -44,6 +44,7 @@ export interface DropdownProps {
   styles?: Styles;
   label?: string;
   shouldBeFixed?: boolean;
+  menuButton?: ReactNode;
 }
 
 const getFixedMenuStyles = (
@@ -103,6 +104,7 @@ const Dropdown: FC<DropdownProps> = (props) => {
     menuButtonText,
     styles,
     label,
+    menuButton,
     shouldBeFixed = true,
   } = props;
   const menuButtonRef = useRef<HTMLElement>(null);
@@ -139,30 +141,33 @@ const Dropdown: FC<DropdownProps> = (props) => {
           </div>
         )}
         <MenuButton
-          className={classNames(
-            "custom-dropdown-wrapper__menu-button",
-            styles?.menuButton
-          )}
+          className={classNames(styles?.menuButton, {
+            "custom-dropdown-wrapper__menu-button": !menuButton,
+          })}
           ref={menuButtonRef}
         >
-          <span
-            className={classNames(
-              "custom-dropdown-wrapper__placeholder",
-              styles?.placeholder
-            )}
-          >
-            {menuButtonText ??
-              (selectedOption ? selectedOption.text : placeholder)}
-          </span>
-          <RightArrowIcon
-            className={classNames(
-              "custom-dropdown-wrapper__arrow-icon",
-              styles?.arrowIcon,
-              {
-                "custom-dropdown-wrapper__arrow-icon--opened": isOpen,
-              }
-            )}
-          />
+          {menuButton || (
+            <>
+              <span
+                className={classNames(
+                  "custom-dropdown-wrapper__placeholder",
+                  styles?.placeholder
+                )}
+              >
+                {menuButtonText ??
+                  (selectedOption ? selectedOption.text : placeholder)}
+              </span>
+              <RightArrowIcon
+                className={classNames(
+                  "custom-dropdown-wrapper__arrow-icon",
+                  styles?.arrowIcon,
+                  {
+                    "custom-dropdown-wrapper__arrow-icon--opened": isOpen,
+                  }
+                )}
+              />
+            </>
+          )}
         </MenuButton>
         <Menu
           className={classNames("custom-dropdown-wrapper__menu", styles?.menu, {
