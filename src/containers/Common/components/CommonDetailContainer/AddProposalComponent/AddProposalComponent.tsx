@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Modal } from "@/shared/components";
 import { useZoomDisabling } from "@/shared/hooks";
-import { ModalProps } from "@/shared/interfaces";
+import { ModalProps, ModalRef } from "@/shared/interfaces";
 
 import "./index.scss";
 import { Common, Proposal } from "@/shared/models";
@@ -48,6 +48,7 @@ export const AddProposalComponent = ({
   proposals,
   getProposalDetail,
 }: AddDiscussionComponentProps) => {
+  const modalRef = useRef<ModalRef>(null);
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
@@ -162,8 +163,13 @@ export const AddProposalComponent = ({
     }
   }, [isShowing, disableZoom, resetZoom]);
 
+  useEffect(() => {
+    modalRef.current?.scrollToTop();
+  }, [proposalCreationStep]);
+
   return (
     <Modal
+      ref={modalRef}
       isShowing={isShowing}
       onClose={onClose}
       className={classNames("create-proposal-modal", {
