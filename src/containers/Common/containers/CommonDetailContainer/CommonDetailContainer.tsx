@@ -23,6 +23,7 @@ import {
   Proposal,
   ProposalState,
   ProposalType,
+  MemberPermission,
 } from "../../../../shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice, getUserName } from "@/shared/utils";
@@ -156,8 +157,12 @@ export default function CommonDetail() {
     [fundingProposals]
   );
 
-  const isCommonMember = Boolean(
-    common?.members.some((member) => member.userId === user?.uid)
+  const commonMember = common?.members.find(
+    (member) => member.userId === user?.uid
+  );
+  const isCommonMember = Boolean(commonMember);
+  const isCommonOwner = Boolean(
+    commonMember?.permission === MemberPermission.Founder
   );
   const isJoiningPending = proposals.some(
     (proposal) =>
@@ -659,13 +664,15 @@ export default function CommonDetail() {
                       withBorder
                     />
                   )}
-                  <EditCommonMenu
-                    className="common-detail-wrapper__edit-common-menu"
-                    isCommonDeletionAvailable={
-                      isCommonMember && common.members.length === 1
-                    }
-                    onMenuItemClick={handleMenuItemClick}
-                  />
+                  {isCommonOwner && (
+                    <EditCommonMenu
+                      className="common-detail-wrapper__edit-common-menu"
+                      isCommonDeletionAvailable={
+                        isCommonMember && common.members.length === 1
+                      }
+                      onMenuItemClick={handleMenuItemClick}
+                    />
+                  )}
                 </div>
                 {isCommonMember && isMobileView && (
                   <Share
