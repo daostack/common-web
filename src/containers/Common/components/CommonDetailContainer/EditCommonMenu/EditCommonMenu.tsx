@@ -3,12 +3,14 @@ import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { ButtonIcon, Dropdown, DropdownOption } from "@/shared/components";
+import { ScreenSize } from "@/shared/constants";
 import AgendaIcon from "@/shared/icons/agenda.icon";
 import ContributionIcon from "@/shared/icons/contribution.icon";
 import MenuIcon from "@/shared/icons/menu.icon";
 import MosaicIcon from "@/shared/icons/mosaic.icon";
 import TrashIcon from "@/shared/icons/trash.icon";
 import { Common, MemberPermission } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
 import "./index.scss";
 
 export enum MenuItem {
@@ -76,7 +78,9 @@ const EditCommonMenu: FC<EditCommonMenuProps> = (props) => {
     onMenuItemClick,
     withBorder = false,
   } = props;
+  const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
+  const isMobileView = screenSize === ScreenSize.Mobile;
   const commonMember = common?.members.find(
     (member) => member.userId === user?.uid
   );
@@ -106,25 +110,27 @@ const EditCommonMenu: FC<EditCommonMenuProps> = (props) => {
     onMenuItemClick(value as MenuItem);
   };
 
+  const buttonElement = (
+    <ButtonIcon
+      className={classNames(
+        "edit-common-menu__menu-button",
+        menuButtonClassName,
+        {
+          "edit-common-menu__menu-button--with-border": withBorder,
+        }
+      )}
+    >
+      <MenuIcon className="edit-common-menu__menu-button-icon" />
+    </ButtonIcon>
+  );
+
   return (
     <div className={classNames("edit-common-menu", className)}>
       <Dropdown
         options={options}
         onSelect={handleSelect}
         shouldBeFixed={false}
-        menuButton={
-          <ButtonIcon
-            className={classNames(
-              "edit-common-menu__menu-button",
-              menuButtonClassName,
-              {
-                "edit-common-menu__menu-button--with-border": withBorder,
-              }
-            )}
-          >
-            <MenuIcon className="edit-common-menu__menu-button-icon" />
-          </ButtonIcon>
-        }
+        menuButton={buttonElement}
         styles={{
           menu: "edit-common-menu__dropdown-menu",
           menuList: "edit-common-menu__dropdown-menu-list",
