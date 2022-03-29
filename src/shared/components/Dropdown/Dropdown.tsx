@@ -147,7 +147,7 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
     dropdownRef,
     () => ({
       openDropdown: () => {
-        openMenu(dropdownId);
+        openMenu(dropdownId, { focusMenu: true });
       },
       closeDropdown: () => {
         closeMenu(dropdownId);

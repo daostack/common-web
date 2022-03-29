@@ -75,7 +75,6 @@ import {
   AddProposalSteps,
 } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
-import { DeleteCommonPrompt } from "../../components/CommonDetailContainer/DeleteCommonPrompt";
 import "./index.scss";
 
 interface CommonDetailRouterParams {
@@ -182,12 +181,6 @@ export default function CommonDetail() {
     isShowing: isShowingNewD,
     onOpen: onOpenNewD,
     onClose: onCloseNewD,
-  } = useModal(false);
-
-  const {
-    isShowing: showDeleteCommonPrompt,
-    onOpen: onOpenDeteleCommonPrompt,
-    onClose: onCloseDeleteCommonPrompt,
   } = useModal(false);
 
   const {
@@ -344,15 +337,6 @@ export default function CommonDetail() {
     if (!user) return setTimeout(onOpenJoinModal, 0);
     onOpenNewP();
   }, [onOpenJoinModal, onOpenNewP, user]);
-
-  const handleMenuItemClick = useCallback((menuItem: CommonMenuItem) => {
-    switch (menuItem) {
-      case CommonMenuItem.DeleteCommon:
-        return onOpenDeteleCommonPrompt();
-      default:
-        return;
-    }
-  }, []);
 
   const renderSidebarContent = () => {
     if (!common) return null;
@@ -534,13 +518,6 @@ export default function CommonDetail() {
           getProposalDetail={getProposalDetail}
         />
       )}
-      {showDeleteCommonPrompt && (
-        <DeleteCommonPrompt
-          isShowing={showDeleteCommonPrompt}
-          onClose={onCloseDeleteCommonPrompt}
-          commonId={common.id}
-        />
-      )}
       <div className="common-detail-wrapper">
         <div className="main-information-block">
           <div className="main-information-wrapper">
@@ -575,7 +552,6 @@ export default function CommonDetail() {
                           className="common-detail-wrapper__common-menu"
                           menuButtonClassName="common-detail-wrapper__menu-button--small"
                           common={common}
-                          onMenuItemClick={handleMenuItemClick}
                         />
                       </div>
                     )}
@@ -594,7 +570,6 @@ export default function CommonDetail() {
                           className="common-detail-wrapper__common-menu"
                           menuButtonClassName="common-detail-wrapper__menu-button--small"
                           common={common}
-                          onMenuItemClick={handleMenuItemClick}
                         />
                       </div>
                     )}
@@ -679,7 +654,6 @@ export default function CommonDetail() {
                       className="common-detail-wrapper__common-menu"
                       menuButtonClassName="common-detail-wrapper__menu-button--big"
                       common={common}
-                      onMenuItemClick={handleMenuItemClick}
                       withBorder
                     />
                   )}

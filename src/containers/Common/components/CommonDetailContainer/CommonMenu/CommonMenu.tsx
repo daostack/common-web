@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, FC } from "react";
+import React, { useMemo, useRef, useState, FC } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { selectUser } from "@/containers/Auth/store/selectors";
@@ -20,6 +20,7 @@ import TrashIcon from "@/shared/icons/trash.icon";
 import { ModalType } from "@/shared/interfaces";
 import { Common, MemberPermission } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { DeleteCommonPrompt } from "../DeleteCommonPrompt";
 import "./index.scss";
 
 export enum MenuItem {
@@ -76,18 +77,14 @@ interface CommonMenuProps {
   menuButtonClassName?: string;
   common: Common;
   withBorder?: boolean;
-  onMenuItemClick: (menuItem: MenuItem) => void;
 }
 
 const CommonMenu: FC<CommonMenuProps> = (props) => {
-  const {
-    className,
-    menuButtonClassName,
-    common,
-    onMenuItemClick,
-    withBorder = false,
-  } = props;
+  const { className, menuButtonClassName, common, withBorder = false } = props;
   const dropdownRef = useRef<DropdownRef>(null);
+  const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItem | null>(
+    null
+  );
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
   const {
@@ -122,7 +119,23 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   );
 
   const handleSelect = (value: unknown) => {
-    onMenuItemClick(value as MenuItem);
+    if (isMobileView) {
+      onMenuModalClose();
+    }
+
+    setSelectedMenuItem(value as MenuItem);
+  };
+
+  const handleMenuClose = () => {
+    setSelectedMenuItem(null);
+
+    if (isMobileView) {
+      onMenuModalOpen();
+    } else {
+      setTimeout(() => {
+        dropdownRef.current?.openDropdown();
+      }, 0);
+    }
   };
 
   const buttonElement = (
@@ -188,6 +201,11 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   return (
     <div className={classNames("edit-common-menu", className)}>
       {isMobileView ? renderMenuModal() : renderMenuDropdown()}
+      <DeleteCommonPrompt
+        isShowing={selectedMenuItem === MenuItem.DeleteCommon}
+        onClose={handleMenuClose}
+        commonId={common.id}
+      />
     </div>
   );
 };
