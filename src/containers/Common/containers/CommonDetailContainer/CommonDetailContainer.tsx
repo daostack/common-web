@@ -30,8 +30,8 @@ import {
   PreviewInformationList,
   DiscussionsComponent,
   DiscussionDetailModal,
-  EditCommonMenu,
-  EditCommonMenuItem,
+  CommonMenu,
+  CommonMenuItem,
   ProposalsComponent,
   ProposalsHistory,
   AboutSidebarComponent,
@@ -345,9 +345,9 @@ export default function CommonDetail() {
     onOpenNewP();
   }, [onOpenJoinModal, onOpenNewP, user]);
 
-  const handleMenuItemClick = useCallback((menuItem: EditCommonMenuItem) => {
+  const handleMenuItemClick = useCallback((menuItem: CommonMenuItem) => {
     switch (menuItem) {
-      case EditCommonMenuItem.DeleteCommon:
+      case CommonMenuItem.DeleteCommon:
         return onOpenDeteleCommonPrompt();
       default:
         return;
@@ -659,7 +659,7 @@ export default function CommonDetail() {
                     />
                   )}
                   {!isMobileView && (
-                    <EditCommonMenu
+                    <CommonMenu
                       className="common-detail-wrapper__edit-common-menu"
                       menuButtonClassName="common-detail-wrapper__desktop-menu-button"
                       common={common}

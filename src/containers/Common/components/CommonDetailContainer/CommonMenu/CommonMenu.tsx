@@ -62,7 +62,7 @@ const OPTIONS: DropdownOption[] = [
   },
 ];
 
-interface EditCommonMenuProps {
+interface CommonMenuProps {
   className?: string;
   menuButtonClassName?: string;
   common: Common;
@@ -70,7 +70,7 @@ interface EditCommonMenuProps {
   onMenuItemClick: (menuItem: MenuItem) => void;
 }
 
-const EditCommonMenu: FC<EditCommonMenuProps> = (props) => {
+const CommonMenu: FC<CommonMenuProps> = (props) => {
   const {
     className,
     menuButtonClassName,
@@ -141,4 +141,4 @@ const EditCommonMenu: FC<EditCommonMenuProps> = (props) => {
   );
 };
 
-export default EditCommonMenu;
+export default CommonMenu;
