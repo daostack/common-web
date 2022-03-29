@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import {
   ButtonIcon,
+  ButtonLink,
   Dropdown,
   DropdownOption,
   Modal,
@@ -162,7 +163,21 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         title={<h3 className="edit-common-menu__menu-modal-title">Options</h3>}
         withoutHorizontalPadding
       >
-        Modal
+        <ul className="edit-common-menu__menu-modal-list">
+          {options.map((option) => (
+            <li key={String(option.value)}>
+              <ButtonLink
+                className={classNames(
+                  "edit-common-menu__menu-modal-button",
+                  option.className
+                )}
+                onClick={() => handleSelect(option.value)}
+              >
+                {option.text}
+              </ButtonLink>
+            </li>
+          ))}
+        </ul>
       </Modal>
     </>
   );

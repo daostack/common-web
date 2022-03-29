@@ -580,14 +580,22 @@ export default function CommonDetail() {
                       </div>
                     )}
                     {isMobileView && isCommonMember && (
-                      <div className="text-information-wrapper__connected-user-avatar-wrapper">
-                        <UserAvatar
-                          className="text-information-wrapper__user-avatar"
-                          photoURL={user?.photoURL}
-                          nameForRandomAvatar={user?.email}
-                          userName={getUserName(user)}
+                      <div className="text-information-wrapper__menu-buttons">
+                        <div className="text-information-wrapper__connected-user-avatar-wrapper">
+                          <UserAvatar
+                            className="text-information-wrapper__user-avatar"
+                            photoURL={user?.photoURL}
+                            nameForRandomAvatar={user?.email}
+                            userName={getUserName(user)}
+                          />
+                          <PurpleCheckIcon className="text-information-wrapper__connected-user-avatar-icon" />
+                        </div>
+                        <CommonMenu
+                          className="common-detail-wrapper__common-menu"
+                          menuButtonClassName="common-detail-wrapper__menu-button--small"
+                          common={common}
+                          onMenuItemClick={handleMenuItemClick}
                         />
-                        <PurpleCheckIcon className="text-information-wrapper__connected-user-avatar-icon" />
                       </div>
                     )}
                   </div>
