@@ -3,8 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import classNames from "classnames";
 import {
-  Button,
-  ButtonVariant,
   Loader,
   NotFound,
   Share,
@@ -23,7 +21,6 @@ import {
   Proposal,
   ProposalState,
   ProposalType,
-  MemberPermission,
 } from "../../../../shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice, getUserName } from "@/shared/utils";
@@ -161,9 +158,6 @@ export default function CommonDetail() {
     (member) => member.userId === user?.uid
   );
   const isCommonMember = Boolean(commonMember);
-  const isCommonOwner = Boolean(
-    commonMember?.permission === MemberPermission.Founder
-  );
   const isJoiningPending = proposals.some(
     (proposal) =>
       proposal.state === ProposalState.COUNTDOWN &&
@@ -664,13 +658,11 @@ export default function CommonDetail() {
                       withBorder
                     />
                   )}
-                  {!isMobileView && isCommonOwner && (
+                  {!isMobileView && (
                     <EditCommonMenu
                       className="common-detail-wrapper__edit-common-menu"
                       menuButtonClassName="common-detail-wrapper__desktop-menu-button"
-                      isCommonDeletionAvailable={
-                        isCommonMember && common.members.length === 1
-                      }
+                      common={common}
                       onMenuItemClick={handleMenuItemClick}
                       withBorder
                     />

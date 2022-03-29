@@ -1,11 +1,14 @@
 import React, { useMemo, FC } from "react";
+import { useSelector } from "react-redux";
 import classNames from "classnames";
+import { selectUser } from "@/containers/Auth/store/selectors";
 import { ButtonIcon, Dropdown, DropdownOption } from "@/shared/components";
 import AgendaIcon from "@/shared/icons/agenda.icon";
 import ContributionIcon from "@/shared/icons/contribution.icon";
 import MenuIcon from "@/shared/icons/menu.icon";
 import MosaicIcon from "@/shared/icons/mosaic.icon";
 import TrashIcon from "@/shared/icons/trash.icon";
+import { Common, MemberPermission } from "@/shared/models";
 import "./index.scss";
 
 export enum MenuItem {
@@ -53,14 +56,14 @@ const OPTIONS: DropdownOption[] = [
     ),
     searchText: "Delete common",
     value: MenuItem.DeleteCommon,
-    className: "edit-common-menu__menu-item--red",
+    className: "edit-common-menu__dropdown-menu-item--red",
   },
 ];
 
 interface EditCommonMenuProps {
   className?: string;
   menuButtonClassName?: string;
-  isCommonDeletionAvailable: boolean;
+  common: Common;
   withBorder?: boolean;
   onMenuItemClick: (menuItem: MenuItem) => void;
 }
@@ -69,17 +72,34 @@ const EditCommonMenu: FC<EditCommonMenuProps> = (props) => {
   const {
     className,
     menuButtonClassName,
-    isCommonDeletionAvailable,
+    common,
     onMenuItemClick,
     withBorder = false,
   } = props;
+  const user = useSelector(selectUser());
+  const commonMember = common?.members.find(
+    (member) => member.userId === user?.uid
+  );
+  const isCommonOwner = Boolean(
+    commonMember?.permission === MemberPermission.Founder
+  );
+  const menuItems = useMemo<MenuItem[]>(() => {
+    const items: MenuItem[] = [
+      MenuItem.EditInfo,
+      MenuItem.EditRules,
+      MenuItem.MyContributions,
+    ];
+
+    if (isCommonOwner && common.members.length === 1) {
+      items.push(MenuItem.DeleteCommon);
+    }
+
+    return items;
+  }, [isCommonOwner, common.members]);
   const options = useMemo(
     () =>
-      OPTIONS.filter(
-        (option) =>
-          option.value !== MenuItem.DeleteCommon || isCommonDeletionAvailable
-      ),
-    [isCommonDeletionAvailable]
+      OPTIONS.filter((option) => menuItems.includes(option.value as MenuItem)),
+    [menuItems]
   );
 
   const handleSelect = (value: unknown) => {
@@ -87,30 +107,31 @@ const EditCommonMenu: FC<EditCommonMenuProps> = (props) => {
   };
 
   return (
-    <Dropdown
-      className={classNames("edit-common-menu", className)}
-      options={options}
-      onSelect={handleSelect}
-      shouldBeFixed={false}
-      menuButton={
-        <ButtonIcon
-          className={classNames(
-            "edit-common-menu__menu-button",
-            menuButtonClassName,
-            {
-              "edit-common-menu__menu-button--with-border": withBorder,
-            }
-          )}
-        >
-          <MenuIcon className="edit-common-menu__menu-button-icon" />
-        </ButtonIcon>
-      }
-      styles={{
-        menu: "edit-common-menu__menu",
-        menuList: "edit-common-menu__menu-list",
-        menuItem: "edit-common-menu__menu-item",
-      }}
-    />
+    <div className={classNames("edit-common-menu", className)}>
+      <Dropdown
+        options={options}
+        onSelect={handleSelect}
+        shouldBeFixed={false}
+        menuButton={
+          <ButtonIcon
+            className={classNames(
+              "edit-common-menu__menu-button",
+              menuButtonClassName,
+              {
+                "edit-common-menu__menu-button--with-border": withBorder,
+              }
+            )}
+          >
+            <MenuIcon className="edit-common-menu__menu-button-icon" />
+          </ButtonIcon>
+        }
+        styles={{
+          menu: "edit-common-menu__dropdown-menu",
+          menuList: "edit-common-menu__dropdown-menu-list",
+          menuItem: "edit-common-menu__dropdown-menu-item",
+        }}
+      />
+    </div>
   );
 };
 
