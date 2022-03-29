@@ -11,7 +11,7 @@ import { URL_REGEXP, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
 import { formatPrice } from "@/shared/utils";
 import { Common } from "@/shared/models";
 import { uploadFile } from "@/shared/utils/firebaseUploadFile";
-import { ButtonIcon, Loader, ModalFooter } from "@/shared/components";
+import { Button, ButtonIcon, Loader, ModalFooter } from "@/shared/components";
 import DeleteIcon from "@/shared/icons/delete.icon";
 import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
 import { getBankDetails } from "@/containers/Common/store/actions";
@@ -50,12 +50,6 @@ const validationSchema = Yup.object({
 
 const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png";
 
-enum BankDetailsState {
-  Pending,
-  True,
-  False
-}
-
 interface AddProposalFormInterface {
   common: Common;
   saveProposalState: (
@@ -77,7 +71,7 @@ export const AddProposalForm = ({
   const [uploadedFiles, setUploadedFile] = useState<
     { title: string; value: string }[]
   >([]);
-  const [hasBankDetails, setHasBankDetails] = useState<BankDetailsState>(BankDetailsState.Pending);
+  const [hasBankDetails, setHasBankDetails] = useState<boolean | null>(null);
 
   /**
    * For now we fetch the bank details only here.
@@ -85,18 +79,16 @@ export const AddProposalForm = ({
    * so maybe we can fetch this info on the app start and save it in the Redux?
    */
   useEffect(() => {
-    (async () => {
-      dispatch(getBankDetails.request({
-        callback: (error) => {
-          if (error) {
-            console.error(error);
-            setHasBankDetails(BankDetailsState.False);
-            return;
-          }
-          setHasBankDetails(BankDetailsState.True);
+    dispatch(getBankDetails.request({
+      callback: (error) => {
+        if (error) {
+          console.error(error);
+          setHasBankDetails(false);
+          return;
         }
-      }))
-    })();
+        setHasBankDetails(true);
+      }
+    }))
   }, [dispatch])
 
   const [formValues] = useState({
@@ -208,7 +200,7 @@ export const AddProposalForm = ({
                 {formatPrice(common.balance)}
               </div>
             </div>
-            {hasBankDetails === BankDetailsState.False && (
+            {hasBankDetails === false && (
               <div className="add-bank-details-wrapper">
                 <img
                   src="/icons/add-proposal/illustrations-full-page-transparent.svg"
@@ -303,13 +295,11 @@ export const AddProposalForm = ({
             </div>
             <ModalFooter sticky>
               <div className="action-wrapper">
-                <button
-                  className="button-blue"
-                  disabled={!formikProps.isValid || hasBankDetails !== BankDetailsState.True}
-                  onClick={formikProps.submitForm}
-                >
+                <Button
+                  disabled={!formikProps.isValid || hasBankDetails === false}
+                  onClick={formikProps.submitForm}>
                   Create proposal
-                </button>
+                </Button>
               </div>
             </ModalFooter>
           </div>

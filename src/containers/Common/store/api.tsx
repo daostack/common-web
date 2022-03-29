@@ -336,16 +336,12 @@ export async function getBankDetails(): Promise<void> {
   const { data } = await Api.get<void>(
     ApiEndpoint.GetBankAccount,
   );
-  // TODO: temporary for development
-  console.log(data);
   return data;
 }
 
 export async function addBankDetails(requestData: AddBankDetailsPayload): Promise<void> {
-  const { data } = await Api.post<void>(
+  await Api.post<void>(
     ApiEndpoint.AddBankAccount,
     requestData
   );
-
-  return data;
 }

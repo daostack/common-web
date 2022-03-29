@@ -16,7 +16,7 @@ import {
 } from "@/containers/Common/interfaces";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 import { CreateVotePayload } from "@/shared/interfaces/api/vote";
-import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/interfaces/api/payMe";
+import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 import {
   ImmediateContributionData,
   ImmediateContributionResponse,

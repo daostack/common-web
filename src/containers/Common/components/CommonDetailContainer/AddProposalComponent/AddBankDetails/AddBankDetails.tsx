@@ -6,15 +6,15 @@ import { DatePicker } from "@/shared/components";
 import { Dropdown, TextField } from "@/shared/components/Form/Formik";
 import { Button, DropdownOption, Loader } from "@/shared/components";
 import { addBankDetails } from "@/containers/Common/store/actions";
-import { uploadFile } from "@/shared/utils/firebaseUploadFile";
-import {
-  BankAccountDetails,
-  PaymeTypeCodes,
-} from "@/shared/interfaces/api/payMe";
+import { getFileNameForUploading, uploadFile } from "@/shared/utils/firebaseUploadFile";
+import { PaymeTypeCodes } from "@/shared/interfaces/api/payMe";
 import { countryList } from "@/shared/assets/countries";
+import { BankAccountDetails, DateFormat } from "@/shared/models";
+import { formatDate } from "@/shared/utils";
+import { BANKS_OPTIONS } from "@/shared/assets/banks";
 import { FileUploadButton } from "../FileUploadButton";
 import validationSchema from "./validationSchema";
-import { BANKS_OPTIONS, Gender, GENDER_OPTIONS } from "./constans";
+import { Gender, GENDER_OPTIONS } from "@/shared/models/Gender";
 import "./index.scss";
 
 interface IProps {
@@ -107,15 +107,18 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
       setSending(true);
       setError("");
 
+      const photoIdFileName = getFileNameForUploading(photoIdFile?.name!);
+      const bankLetterFileName = getFileNameForUploading(bankLetterFile?.name!);
+
       try {
         values.photoId = await uploadFile(
-          `${values.idNumber}_photoId`,
-          "public_img",
+          photoIdFileName,
+          "private",
           photoIdFile!
         );
         values.bankLetter = await uploadFile(
-          `${values.idNumber}_bankLetter`,
-          "public_img",
+          bankLetterFileName,
+          "private",
           bankLetterFile!
         );
       } catch (error: any) {
@@ -133,17 +136,17 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
         accountNumber: Number(values.accountNumber!),
         identificationDocs: [
           {
-            name: `${values.idNumber}_photoId`,
-            legalType: PaymeTypeCodes["Social Id"],
+            name: photoIdFileName,
+            legalType: PaymeTypeCodes.SocialId,
             amount: 2000,
-            mimeType: "image/jpg",
+            mimeType: photoIdFile?.type!,
             downloadURL: values.photoId,
           },
           {
-            name: `${values.idNumber}_bankLetter`,
-            legalType: PaymeTypeCodes["Bank Account Ownership"],
+            name: bankLetterFileName,
+            legalType: PaymeTypeCodes.BankAccountOwnership,
             amount: 2000,
-            mimeType: "image/jpg",
+            mimeType: bankLetterFile?.type!,
             downloadURL: values.bankLetter,
           },
         ],
@@ -152,15 +155,15 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
         streetAddress: values.address,
         streetNumber: values.streetNumber!,
         socialId: values.idNumber,
-        socialIdIssueDate: moment(new Date(values.socialIdIssueDate)).format("dd/mm/yyyy"),
-        birthdate: moment(new Date(values.birthdate)).format("dd/mm/yyyy"),
+        socialIdIssueDate: formatDate(values.socialIdIssueDate, DateFormat.ShortSecondary),
+        birthdate: formatDate(values.birthdate, DateFormat.ShortSecondary),
         gender: values.gender,
         phoneNumber: values.phoneNumber!,
       };
 
       dispatch(
         addBankDetails.request({
-          payload: { ...bankAccountDetails },
+          payload: bankAccountDetails,
           callback: (error) => {
             setSending(false);
             if (error) {
@@ -350,7 +353,7 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                   />
                 </div>
                 <Button
-                  onClick={() => handleSubmit}
+                  type="submit"
                   disabled={!isValid || !photoIdFile || !bankLetterFile}
                   className="save-button"
                 >
