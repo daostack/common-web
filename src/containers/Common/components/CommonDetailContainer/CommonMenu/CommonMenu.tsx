@@ -2,13 +2,20 @@ import React, { useMemo, FC } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { selectUser } from "@/containers/Auth/store/selectors";
-import { ButtonIcon, Dropdown, DropdownOption } from "@/shared/components";
+import {
+  ButtonIcon,
+  Dropdown,
+  DropdownOption,
+  Modal,
+} from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
+import { useModal } from "@/shared/hooks";
 import AgendaIcon from "@/shared/icons/agenda.icon";
 import ContributionIcon from "@/shared/icons/contribution.icon";
 import MenuIcon from "@/shared/icons/menu.icon";
 import MosaicIcon from "@/shared/icons/mosaic.icon";
 import TrashIcon from "@/shared/icons/trash.icon";
+import { ModalType } from "@/shared/interfaces";
 import { Common, MemberPermission } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import "./index.scss";
@@ -80,6 +87,11 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   } = props;
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
+  const {
+    isShowing: isModalMenuShowing,
+    onOpen: onMenuModalOpen,
+    onClose: onMenuModalClose,
+  } = useModal(false);
   const isMobileView = screenSize === ScreenSize.Mobile;
   const commonMember = common?.members.find(
     (member) => member.userId === user?.uid
@@ -119,24 +131,45 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
           "edit-common-menu__menu-button--with-border": withBorder,
         }
       )}
+      onClick={isMobileView ? onMenuModalOpen : undefined}
     >
       <MenuIcon className="edit-common-menu__menu-button-icon" />
     </ButtonIcon>
   );
 
+  const renderMenuDropdown = () => (
+    <Dropdown
+      options={options}
+      onSelect={handleSelect}
+      shouldBeFixed={false}
+      menuButton={buttonElement}
+      styles={{
+        menu: "edit-common-menu__dropdown-menu",
+        menuList: "edit-common-menu__dropdown-menu-list",
+        menuItem: "edit-common-menu__dropdown-menu-item",
+      }}
+    />
+  );
+
+  const renderMenuModal = () => (
+    <>
+      {buttonElement}
+      <Modal
+        isShowing={isModalMenuShowing}
+        onClose={onMenuModalClose}
+        type={ModalType.MobilePopUp}
+        mobileFullScreen
+        title={<h3 className="edit-common-menu__menu-modal-title">Options</h3>}
+        withoutHorizontalPadding
+      >
+        Modal
+      </Modal>
+    </>
+  );
+
   return (
     <div className={classNames("edit-common-menu", className)}>
-      <Dropdown
-        options={options}
-        onSelect={handleSelect}
-        shouldBeFixed={false}
-        menuButton={buttonElement}
-        styles={{
-          menu: "edit-common-menu__dropdown-menu",
-          menuList: "edit-common-menu__dropdown-menu-list",
-          menuItem: "edit-common-menu__dropdown-menu-item",
-        }}
-      />
+      {isMobileView ? renderMenuModal() : renderMenuDropdown()}
     </div>
   );
 };

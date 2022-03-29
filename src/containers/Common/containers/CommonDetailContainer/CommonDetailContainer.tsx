@@ -565,11 +565,19 @@ export default function CommonDetail() {
                   <div className="name">
                     {common?.name}
                     {isMobileView && !isCommonMember && (
-                      <Share
-                        url={sharingURL}
-                        type="modal"
-                        color={Colors.transparent}
-                      />
+                      <div className="text-information-wrapper__menu-buttons">
+                        <Share
+                          url={sharingURL}
+                          type="modal"
+                          color={Colors.lightGray4}
+                        />
+                        <CommonMenu
+                          className="common-detail-wrapper__common-menu"
+                          menuButtonClassName="common-detail-wrapper__menu-button--small"
+                          common={common}
+                          onMenuItemClick={handleMenuItemClick}
+                        />
+                      </div>
                     )}
                     {isMobileView && isCommonMember && (
                       <div className="text-information-wrapper__connected-user-avatar-wrapper">
@@ -651,7 +659,7 @@ export default function CommonDetail() {
 
                   {screenSize === ScreenSize.Desktop && (
                     <Share
-                      shareButtonClassName="common-detail-wrapper__desktop-menu-button"
+                      shareButtonClassName="common-detail-wrapper__menu-button--big"
                       url={sharingURL}
                       type="popup"
                       color={Colors.lightGray4}
@@ -660,8 +668,8 @@ export default function CommonDetail() {
                   )}
                   {!isMobileView && (
                     <CommonMenu
-                      className="common-detail-wrapper__edit-common-menu"
-                      menuButtonClassName="common-detail-wrapper__desktop-menu-button"
+                      className="common-detail-wrapper__common-menu"
+                      menuButtonClassName="common-detail-wrapper__menu-button--big"
                       common={common}
                       onMenuItemClick={handleMenuItemClick}
                       withBorder
