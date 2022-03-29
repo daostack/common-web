@@ -156,6 +156,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   const renderMenuDropdown = () => (
     <Dropdown
       ref={dropdownRef}
+      className="edit-common-menu__dropdown"
       options={options}
       onSelect={handleSelect}
       shouldBeFixed={false}

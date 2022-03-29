@@ -55,6 +55,10 @@ $border-radius: 0.75rem;
   height: 1.5rem;
 }
 
+.edit-common-menu__dropdown {
+  z-index: $share-z-index;
+}
+
 .edit-common-menu__dropdown-menu {
   min-width: 16.125rem;
   border: 0;
