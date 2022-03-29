@@ -31,7 +31,6 @@ import {
   DiscussionsComponent,
   DiscussionDetailModal,
   CommonMenu,
-  CommonMenuItem,
   ProposalsComponent,
   ProposalsHistory,
   AboutSidebarComponent,

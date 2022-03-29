@@ -141,7 +141,10 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
     setIsOpen(isOpen);
   };
 
-  const menuStyles = getMenuStyles(menuButtonRef, menuRef, shouldBeFixed);
+  const menuStyles = useMemo(
+    () => getMenuStyles(menuButtonRef, menuRef, shouldBeFixed),
+    [menuRef, shouldBeFixed]
+  );
 
   useImperativeHandle(
     dropdownRef,
