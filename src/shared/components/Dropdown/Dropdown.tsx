@@ -1,8 +1,11 @@
 import React, {
+  useImperativeHandle,
+  useMemo,
   useRef,
   useState,
+  forwardRef,
   CSSProperties,
-  FC,
+  ForwardRefRenderFunction,
   ReactNode,
   RefObject,
 } from "react";
@@ -12,8 +15,11 @@ import {
   MenuItem,
   Wrapper as MenuWrapper,
   WrapperProps as MenuWrapperProps,
+  openMenu,
+  closeMenu,
 } from "react-aria-menubutton";
 import classNames from "classnames";
+import { v4 as uuidv4 } from "uuid";
 import RightArrowIcon from "../../icons/rightArrow.icon";
 import { GlobalOverlay } from "../GlobalOverlay";
 import "./index.scss";
@@ -32,6 +38,11 @@ export interface Option {
   searchText?: string;
   value: unknown;
   className?: string;
+}
+
+export interface DropdownRef {
+  openDropdown: () => void;
+  closeDropdown: () => void;
 }
 
 export interface DropdownProps {
@@ -94,7 +105,10 @@ const getMenuStyles = (
   }
 };
 
-const Dropdown: FC<DropdownProps> = (props) => {
+const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
+  props,
+  dropdownRef
+) => {
   const {
     className,
     value,
@@ -111,6 +125,7 @@ const Dropdown: FC<DropdownProps> = (props) => {
   const [menuRef, setMenuRef] = useState<HTMLUListElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const selectedOption = options.find((option) => option.value === value);
+  const dropdownId = useMemo(() => `dropdown-${uuidv4()}`, []);
 
   const handleSelection: MenuWrapperProps<HTMLElement>["onSelection"] = (
     value,
@@ -128,9 +143,23 @@ const Dropdown: FC<DropdownProps> = (props) => {
 
   const menuStyles = getMenuStyles(menuButtonRef, menuRef, shouldBeFixed);
 
+  useImperativeHandle(
+    dropdownRef,
+    () => ({
+      openDropdown: () => {
+        openMenu(dropdownId);
+      },
+      closeDropdown: () => {
+        closeMenu(dropdownId);
+      },
+    }),
+    [dropdownId]
+  );
+
   return (
     <>
       <MenuWrapper
+        id={dropdownId}
         className={classNames("custom-dropdown-wrapper", className)}
         onSelection={handleSelection}
         onMenuToggle={handleMenuToggle}
@@ -213,4 +242,4 @@ const Dropdown: FC<DropdownProps> = (props) => {
   );
 };
 
-export default Dropdown;
+export default forwardRef(Dropdown);

@@ -1,4 +1,4 @@
-import React, { useMemo, FC } from "react";
+import React, { useMemo, useRef, FC } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { selectUser } from "@/containers/Auth/store/selectors";
@@ -7,6 +7,7 @@ import {
   ButtonLink,
   Dropdown,
   DropdownOption,
+  DropdownRef,
   Modal,
 } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
@@ -86,6 +87,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     onMenuItemClick,
     withBorder = false,
   } = props;
+  const dropdownRef = useRef<DropdownRef>(null);
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
   const {
@@ -140,6 +142,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
 
   const renderMenuDropdown = () => (
     <Dropdown
+      ref={dropdownRef}
       options={options}
       onSelect={handleSelect}
       shouldBeFixed={false}
