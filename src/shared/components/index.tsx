@@ -4,6 +4,7 @@ export * from "./ButtonLink";
 export * from "./Common";
 export { default as Content } from "./Content";
 export * from "./ContributionAmountSelection";
+export * from "./DatePicker";
 export * from "./Dots";
 export * from "./Dropdown";
 export * from "./FilesCarousel";

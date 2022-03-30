@@ -5,6 +5,8 @@ $header-height: 80px;
 $header-height-mobile: 60px;
 $header-z-index: 10;
 $dropdown-z-index: $header-z-index + 5;
+$date-picker-z-index: $dropdown-z-index + 1;
+$secondary-modal-z-index: 20;
 $element-max-width: 1400px;
 $element-max-height: 850px;
 
@@ -45,6 +47,8 @@ $light-gray-5: #f8f9f9;
 $light-gray-6: #f3f4f5;
 $light-gray-7: #e6eafb;
 $light-gray-8: #7a8189;
+$light-gray-9: #d2d8ff;
+$light-gray-10: #ebedff;
 $gray: #92a2b5;
 $green: #6ee569;
 $light-green: #f0fdf0;

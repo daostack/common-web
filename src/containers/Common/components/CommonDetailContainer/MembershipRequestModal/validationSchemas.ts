@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import { HTTPS_URL_REGEXP, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
+import { URL_REGEXP, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
 
 export const introduceStageSchema = Yup.object().shape({
   intro: Yup.string().required("Please enter something about yourself"),
@@ -17,7 +17,7 @@ export const introduceStageSchema = Yup.object().shape({
           value: Yup.string().when("title", (title: string) => {
             if (title) {
               return Yup.string()
-                .matches(HTTPS_URL_REGEXP, "Please enter correct URL")
+                .matches(URL_REGEXP, "Please enter correct URL")
                 .required("Please enter a link");
             }
           }),

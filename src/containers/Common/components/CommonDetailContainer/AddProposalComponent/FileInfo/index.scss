@@ -1,0 +1,26 @@
+@import "../../../../../../constants";
+
+.bank-account-file-info-wrapper {
+  max-width: 100%;
+  width: 100%;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  color: $secondary-blue;
+  border-radius: 0.25rem;
+  background-color: $light-gray-10;
+  box-sizing: border-box;
+}
+
+.bank-account-file-info-wrapper__text {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.bank-account-file-info-wrapper__icon {
+  flex-shrink: 0;
+  width: 0.75rem;
+  height: 0.875rem;
+  margin-left: 0.25rem;
+}
