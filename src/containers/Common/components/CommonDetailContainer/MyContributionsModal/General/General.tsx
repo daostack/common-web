@@ -1,4 +1,5 @@
 import React, { useMemo, FC } from "react";
+import { Button, ButtonVariant } from "@/shared/components";
 import { DateFormat, Payment, PaymentType } from "@/shared/models";
 import { formatDate, formatPrice } from "@/shared/utils";
 import { HistoryListItem } from "../HistoryListItem";
@@ -52,6 +53,21 @@ const General: FC<GeneralProps> = (props) => {
               />
             ))}
           </ul>
+          <div className="general-my-contributions-stage__buttons-wrapper">
+            <Button
+              className="general-my-contributions-stage__button"
+              variant={ButtonVariant.SecondaryPurple}
+              shouldUseFullWidth
+            >
+              Add a one-time contribution
+            </Button>
+            <Button
+              className="general-my-contributions-stage__button"
+              shouldUseFullWidth
+            >
+              Change my monthly contribution
+            </Button>
+          </div>
         </section>
       ) : (
         <div className="general-my-contributions-stage__empty-contributions">

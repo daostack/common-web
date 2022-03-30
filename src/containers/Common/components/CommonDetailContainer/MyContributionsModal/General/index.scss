@@ -45,6 +45,16 @@
   list-style-type: none;
 }
 
+.general-my-contributions-stage__buttons-wrapper {
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.general-my-contributions-stage__button {
+  max-width: 21.5rem;
+}
+
 .general-my-contributions-stage__empty-contributions {
   display: flex;
   flex-direction: column;
