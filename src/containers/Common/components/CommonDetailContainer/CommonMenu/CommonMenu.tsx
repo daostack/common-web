@@ -21,6 +21,7 @@ import { ModalType } from "@/shared/interfaces";
 import { Common, MemberPermission } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { DeleteCommonPrompt } from "../DeleteCommonPrompt";
+import { MyContributionsModal } from "../MyContributionsModal";
 import "./index.scss";
 
 export enum MenuItem {
@@ -206,6 +207,11 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         isShowing={selectedMenuItem === MenuItem.DeleteCommon}
         onClose={handleMenuClose}
         commonId={common.id}
+      />
+      <MyContributionsModal
+        isShowing={selectedMenuItem === MenuItem.MyContributions}
+        onClose={handleMenuClose}
+        common={common}
       />
     </div>
   );
