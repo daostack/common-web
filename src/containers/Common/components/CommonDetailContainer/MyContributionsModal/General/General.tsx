@@ -31,27 +31,40 @@ const General: FC<GeneralProps> = (props) => {
           To this day, I have contributed to this common
         </span>
         <span className="general-my-contributions-stage__total">
-          {formatPrice(total)}
+          {formatPrice(total, { shouldRemovePrefixFromZero: false })}
         </span>
       </div>
-      <section className="general-my-contributions-stage__history">
-        <h3 className="general-my-contributions-stage__section-title">
-          History
-        </h3>
-        <ul className="general-my-contributions-stage__list">
-          {oneTimePayments.map((payment) => (
-            <HistoryListItem
-              key={payment.id}
-              title="One-time Contribution"
-              description={formatDate(
-                new Date(payment.createdAt.seconds * 1000),
-                DateFormat.LongHuman
-              )}
-              amount={payment.amount.amount}
-            />
-          ))}
-        </ul>
-      </section>
+      {payments.length > 0 ? (
+        <section className="general-my-contributions-stage__history">
+          <h3 className="general-my-contributions-stage__section-title">
+            History
+          </h3>
+          <ul className="general-my-contributions-stage__list">
+            {oneTimePayments.map((payment) => (
+              <HistoryListItem
+                key={payment.id}
+                title="One-time Contribution"
+                description={formatDate(
+                  new Date(payment.createdAt.seconds * 1000),
+                  DateFormat.LongHuman
+                )}
+                amount={payment.amount.amount}
+              />
+            ))}
+          </ul>
+        </section>
+      ) : (
+        <div className="general-my-contributions-stage__empty-contributions">
+          <img
+            className="general-my-contributions-stage__funds-image"
+            src="/assets/images/membership-request-funds.svg"
+            alt="No contributions image"
+          />
+          <p className="general-my-contributions-stage__empty-contributions-text">
+            You don't have any active contributions yet.
+          </p>
+        </div>
+      )}
     </div>
   );
 };
