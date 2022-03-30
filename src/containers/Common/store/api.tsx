@@ -30,7 +30,7 @@ import {
 } from "@/containers/Common/interfaces";
 import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
 import { CreateVotePayload, Vote } from "@/shared/interfaces/api/vote";
-import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/interfaces/api/payMe";
+import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 
 export async function fetchCommonDiscussions(commonId: string) {
   const commons = await firebase

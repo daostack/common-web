@@ -296,7 +296,7 @@ export const AddProposalForm = ({
             <ModalFooter sticky>
               <div className="action-wrapper">
                 <Button
-                  disabled={!formikProps.isValid || hasBankDetails === false}
+                  disabled={!formikProps.isValid || !hasBankDetails}
                   onClick={formikProps.submitForm}>
                   Create proposal
                 </Button>

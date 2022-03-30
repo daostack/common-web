@@ -2,7 +2,6 @@ import React, { useRef, FC } from "react";
 import classNames from "classnames";
 import ReactDatePicker, { ReactDatePickerProps } from "react-datepicker";
 import CalendarIcon from "@/shared/icons/calendar.icon";
-import { DateFormat } from "@/shared/models";
 import { ButtonIcon } from "../ButtonIcon";
 import "./index.scss";
 
@@ -37,7 +36,7 @@ const DatePicker: FC<DatePickerProps> = (props) => {
       )}
       <div className="custom-date-picker__date-picker-wrapper">
         <ReactDatePicker
-          dateFormat={DateFormat.ShortSecondary}
+          dateFormat="dd/MM/yyyy"
           placeholderText="00/00/00"
           {...restProps}
           id={id}
