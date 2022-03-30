@@ -353,6 +353,7 @@ export function* vote(
       const proposals = await fetchCommonProposals(vote.commonId);
       store.dispatch(actions.setProposals(proposals));
       store.dispatch(actions.loadProposalList.request());
+      store.dispatch(actions.loadProposalDetail.request(proposals.filter(p => p.id === action.payload.payload.proposalId)[0]));
       store.dispatch(stopLoading());
     });
     yield put(actions.createVote.success());
