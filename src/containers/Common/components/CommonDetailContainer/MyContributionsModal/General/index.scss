@@ -1,0 +1,46 @@
+@import "../../../../../../constants";
+
+.general-my-contributions-stage {
+  display: flex;
+  flex-direction: column;
+  font-family: NunitoSans, sans-serif;
+  align-items: center;
+}
+
+.general-my-contributions-stage__total-wrapper {
+  padding: 1rem 3rem;
+  display: flex;
+  flex-direction: column;
+  font-size: $xsmall;
+  text-align: center;
+  background-color: $light-gray-4;
+  border-radius: 0.625rem;
+}
+
+.general-my-contributions-stage__total-text {
+  max-width: 14.438rem;
+}
+
+.general-my-contributions-stage__total {
+  margin-top: 1rem;
+  font-size: $moderate-med;
+  font-weight: bold;
+}
+
+.general-my-contributions-stage__history {
+  width: 100%;
+  margin-top: 2rem;
+  padding: 0 3.625rem;
+  box-sizing: border-box;
+}
+
+.general-my-contributions-stage__section-title {
+  margin: 0 0 1rem;
+}
+
+.general-my-contributions-stage__list {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}

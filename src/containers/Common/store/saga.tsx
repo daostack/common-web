@@ -6,6 +6,7 @@ import {
   User,
   DiscussionMessage,
   Proposal,
+  Payment,
 } from "../../../shared/models";
 import { startLoading, stopLoading } from "@/shared/store/actions";
 import {
@@ -28,6 +29,7 @@ import {
   deleteCommon as deleteCommonApi,
   createVote as createVoteApi,
   makeImmediateContribution as makeImmediateContributionApi,
+  getUserContributionsToCommon as getUserContributionsToCommonApi,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -448,6 +450,24 @@ export function* makeImmediateContribution(
   }
 }
 
+export function* getUserContributionsToCommon(
+  action: ReturnType<typeof actions.getUserContributionsToCommon.request>
+): Generator {
+  try {
+    const payments = (yield call(
+      getUserContributionsToCommonApi,
+      action.payload.payload.commonId,
+      action.payload.payload.userId
+    )) as Payment[];
+
+    yield put(actions.getUserContributionsToCommon.success(payments));
+    action.payload.callback(null, payments);
+  } catch (error) {
+    yield put(actions.getUserContributionsToCommon.failure(error));
+    action.payload.callback(error);
+  }
+}
+
 export function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
@@ -483,6 +503,10 @@ export function* commonsSaga() {
   yield takeLatest(
     actions.makeImmediateContribution.request,
     makeImmediateContribution
+  );
+  yield takeLatest(
+    actions.getUserContributionsToCommon.request,
+    getUserContributionsToCommon
   );
 }
 

@@ -330,3 +330,28 @@ export function subscribeToPayment(
       callback(transformFirebaseDataSingle<Payment>(snapshot));
     });
 }
+
+export async function getUserContributionsToCommon(
+  commonId: string,
+  userId: string
+): Promise<Payment[]> {
+  const result = await firebase
+    .firestore()
+    .collection(Collection.Payments)
+    .where("userId", "==", userId)
+    .where("commonId", "==", commonId)
+    .get();
+  const payments = transformFirebaseDataList<Payment>(result);
+  payments.sort((a, b) => {
+    if (!b.createdAt) {
+      return -1;
+    }
+    if (!a.createdAt) {
+      return 1;
+    }
+
+    return b.createdAt.seconds - a.createdAt.seconds;
+  });
+
+  return payments;
+}

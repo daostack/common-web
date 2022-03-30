@@ -5,7 +5,7 @@ import {
   CreateFundingRequestProposalPayload,
   ProposalJoinRequestData,
 } from "@/shared/interfaces/api/proposal";
-import { Common, Proposal, Discussion } from "@/shared/models";
+import { Common, Proposal, Discussion, Payment } from "@/shared/models";
 import { PayloadWithOptionalCallback } from "../../../shared/interfaces";
 import { CommonsActionTypes } from "./constants";
 import {
@@ -181,5 +181,15 @@ export const makeImmediateContribution = createAsyncAction(
     Error
   >,
   ImmediateContributionResponse,
+  Error
+>();
+
+export const getUserContributionsToCommon = createAsyncAction(
+  CommonsActionTypes.GET_USER_CONTRIBUTIONS_TO_COMMON,
+  CommonsActionTypes.GET_USER_CONTRIBUTIONS_TO_COMMON_SUCCESS,
+  CommonsActionTypes.GET_USER_CONTRIBUTIONS_TO_COMMON_FAILURE
+)<
+  PayloadWithCallback<{ commonId: string; userId: string }, Payment[], Error>,
+  Payment[],
   Error
 >();
