@@ -8,3 +8,4 @@ export * from "./Discussion";
 export * from "./Invoices";
 export * from "./Payment";
 export * from "./Votes";
+export * from "./BankAccountDetails";
