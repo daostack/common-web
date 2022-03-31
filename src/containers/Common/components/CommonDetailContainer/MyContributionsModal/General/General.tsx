@@ -25,6 +25,10 @@ const General: FC<GeneralProps> = (props) => {
     [payments]
   );
 
+  const handleMonthlyItemClick = () => {
+    console.log("handleMonthlyItemClick");
+  };
+
   return (
     <div className="general-my-contributions-stage">
       <div className="general-my-contributions-stage__total-wrapper">
@@ -41,6 +45,12 @@ const General: FC<GeneralProps> = (props) => {
             History
           </h3>
           <ul className="general-my-contributions-stage__list">
+            <HistoryListItem
+              title="Monthly Contribution"
+              description={`Next payment: 20 March 2022`}
+              amount={`₪10/mo`}
+              onClick={handleMonthlyItemClick}
+            />
             {oneTimePayments.map((payment) => (
               <HistoryListItem
                 key={payment.id}
@@ -49,7 +59,9 @@ const General: FC<GeneralProps> = (props) => {
                   new Date(payment.createdAt.seconds * 1000),
                   DateFormat.LongHuman
                 )}
-                amount={payment.amount.amount}
+                amount={formatPrice(payment.amount.amount, {
+                  shouldRemovePrefixFromZero: false,
+                })}
               />
             ))}
           </ul>

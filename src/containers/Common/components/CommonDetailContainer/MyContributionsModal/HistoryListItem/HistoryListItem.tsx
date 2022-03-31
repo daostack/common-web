@@ -1,18 +1,20 @@
 import React, { FC } from "react";
-import { formatPrice } from "@/shared/utils";
+import { ButtonLink } from "@/shared/components";
+import RightArrowIcon from "@/shared/icons/rightArrow.icon";
 import "./index.scss";
 
 interface HistoryListItemProps {
   title: string;
   description?: string;
-  amount: number;
+  amount: string;
+  onClick?: () => void;
 }
 
 const HistoryListItem: FC<HistoryListItemProps> = (props) => {
-  const { title, description, amount } = props;
+  const { title, description, amount, onClick } = props;
 
-  return (
-    <li className="my-contributions-stage-history-list-item">
+  const contentEl = (
+    <>
       <div className="my-contributions-stage-history-list-item__content">
         <p className="my-contributions-stage-history-list-item__title">
           {title}
@@ -23,7 +25,29 @@ const HistoryListItem: FC<HistoryListItemProps> = (props) => {
           </span>
         )}
       </div>
-      <span>{formatPrice(amount, { shouldRemovePrefixFromZero: false })}</span>
+      <span className="my-contributions-stage-history-list-item__amount">
+        {amount}
+        {onClick && (
+          <RightArrowIcon className="my-contributions-stage-history-list-item__right-arrow" />
+        )}
+      </span>
+    </>
+  );
+
+  return (
+    <li className="my-contributions-stage-history-list-item-wrapper">
+      {onClick ? (
+        <ButtonLink
+          className="my-contributions-stage-history-list-item my-contributions-stage-history-list-item--clickable"
+          onClick={onClick}
+        >
+          {contentEl}
+        </ButtonLink>
+      ) : (
+        <div className="my-contributions-stage-history-list-item">
+          {contentEl}
+        </div>
+      )}
     </li>
   );
 };
