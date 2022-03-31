@@ -7,10 +7,12 @@ interface IProps {
   removeNotification: () => void;
 }
 
+const DISPLAY_DURATION = 5000;
+
 export default function Notification({ notification, removeNotification }: IProps) {
   
   useEffect(() => {
-    const removeTimeout = setTimeout(() => removeNotification(), 5000);
+    const removeTimeout = setTimeout(() => removeNotification(), DISPLAY_DURATION);
     return () => {
       clearTimeout(removeTimeout);
     };

@@ -3,11 +3,10 @@
 
 .notifications-container {
   position: fixed;
-  z-index: 100;
+  z-index: $notifications-container-z-index;
   width: 20rem;
-  left: 50%;
   right: 50%;
-  transform: translate(-50%, 50%);
+  transform: translateX(50%);
 }
 
 @include big-phone {

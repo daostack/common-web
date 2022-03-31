@@ -4,7 +4,7 @@ import { Link, NavLink, RouteProps, useHistory } from "react-router-dom";
 import classNames from "classnames";
 
 import { UserAvatar } from "../../../shared/components";
-import { useAnyMandatoryRoles, useMatchRoute, useNotification } from "../../../shared/hooks";
+import { useAnyMandatoryRoles, useMatchRoute } from "../../../shared/hooks";
 import { UserRole } from "../../../shared/models";
 import { ApiEndpoint, Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
@@ -52,8 +52,6 @@ const Header = () => {
     ROUTE_PATHS.TRUSTEE_AUTH,
     EXACT_MATCH_ROUTE_PROPS
   );
-
-  const { notify } = useNotification();
 
   const handleOpen = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: true }));
@@ -135,8 +133,6 @@ const Header = () => {
           onClick={toggleMenuShowing}
         />
       )}
-      <button onClick={() => notify(<a href="https://www.google.com">test_1</a>)}>notify_1</button>
-      <button onClick={() => notify(<a href="https://www.google.com">test_2</a>)}>notify_2</button>
       <Link
         to="/"
         className={classNames("common-logo", {

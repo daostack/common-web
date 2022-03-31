@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, FC, ReactNode } from "react";
+import React, { useCallback, useMemo, useState, FC } from "react";
 import { NotificationContext, NotificationContextValue } from "./context";
 import Notification from "./Notification/Notification";
 import "./index.scss";
@@ -7,6 +7,8 @@ export interface INotification {
   id: number;
   content: React.ReactNode;
 }
+
+const MAX_NOTIFICATIONS_DISPLAY = 3;
 
 const NotificationProvider: FC = ({ children }) => {
   const [notifications, setNotifications] = useState<INotification[]>([]);
@@ -26,7 +28,7 @@ const NotificationProvider: FC = ({ children }) => {
     [addNotification]
   );
 
-  if (notifications.length > 3) {
+  if (notifications.length > MAX_NOTIFICATIONS_DISPLAY) {
     setNotifications((notifications) => notifications.filter((notification, index) => index !== 0));
   }
 
