@@ -12,7 +12,7 @@ interface AmountSelectionProps {
 const AmountSelection: FC<AmountSelectionProps> = (props) => {
   const { common, contributionAmount, onSelect } = props;
   const {
-    metadata: { minFeeToJoin, zeroContribution = false },
+    metadata: { minFeeToJoin },
   } = common;
 
   const handleChange = (
@@ -41,7 +41,7 @@ const AmountSelection: FC<AmountSelectionProps> = (props) => {
       <ContributionAmountSelection
         contributionAmount={contributionAmount}
         minFeeToJoin={minFeeToJoin}
-        zeroContribution={zeroContribution}
+        zeroContribution={false}
         onChange={handleChange}
         showFinishButton
       />

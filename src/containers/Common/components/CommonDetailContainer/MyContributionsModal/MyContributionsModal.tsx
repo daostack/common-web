@@ -15,6 +15,7 @@ enum MyContributionsStage {
   General,
   MonthlyContributionCharges,
   OneTimeContribution,
+  Error,
 }
 
 interface MyContributionsModalProps
@@ -35,6 +36,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
     setIsUserContributionsFetchStarted,
   ] = useState(false);
   const [userPayments, setUserPayments] = useState<Payment[] | null>(null);
+  const [errorText, setErrorText] = useState("");
   const user = useSelector(selectUser());
   const isLoading = !userPayments;
 
@@ -57,6 +59,11 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
     setGoBackHandler(goToGeneralStage);
   };
 
+  const handleError = (errorText: string) => {
+    setErrorText(errorText);
+    setStage(MyContributionsStage.Error);
+  };
+
   useEffect(() => {
     if (!isShowing || isUserContributionsFetchStarted || !user?.uid) {
       return;
@@ -71,7 +78,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
         },
         callback: (error, payments) => {
           if (error || !payments) {
-            // Error screen
+            handleError("Something went wrong");
           } else {
             setUserPayments(payments);
           }
@@ -84,12 +91,14 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
     isUserContributionsFetchStarted,
     user?.uid,
     common.id,
+    handleError,
   ]);
 
   useEffect(() => {
     if (!isShowing) {
       setUserPayments(null);
       setIsUserContributionsFetchStarted(false);
+      // setStage(MyContributionsStage.General);
     }
   }, [isShowing]);
 
@@ -114,7 +123,13 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
           />
         ) : null;
       case MyContributionsStage.OneTimeContribution:
-        return <OneTimeContribution common={common} setTitle={setTitle} />;
+        return (
+          <OneTimeContribution
+            common={common}
+            setTitle={setTitle}
+            onError={handleError}
+          />
+        );
       default:
         return null;
     }
