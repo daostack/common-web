@@ -7,12 +7,14 @@ import { Common, Payment } from "@/shared/models";
 import { getUserContributionsToCommon } from "../../../store/actions";
 import { General } from "./General";
 import { MonthlyContributionCharges } from "./MonthlyContributionCharges";
+import { OneTimeContribution } from "./OneTimeContribution";
 import { GoBackHandler } from "./types";
 import "./index.scss";
 
 enum MyContributionsStage {
   General,
   MonthlyContributionCharges,
+  OneTimeContribution,
 }
 
 interface MyContributionsModalProps
@@ -47,6 +49,11 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
 
   const goToMonthlyContributionStage = () => {
     setStage(MyContributionsStage.MonthlyContributionCharges);
+    setGoBackHandler(goToGeneralStage);
+  };
+
+  const goToOneTimeContributionStage = () => {
+    setStage(MyContributionsStage.OneTimeContribution);
     setGoBackHandler(goToGeneralStage);
   };
 
@@ -95,6 +102,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
             setTitle={setTitle}
             commonName={common.name}
             goToMonthlyContribution={goToMonthlyContributionStage}
+            goToOneTimeContribution={goToOneTimeContributionStage}
           />
         ) : null;
       case MyContributionsStage.MonthlyContributionCharges:
@@ -102,8 +110,11 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
           <MonthlyContributionCharges
             payments={userPayments}
             setTitle={setTitle}
+            goToOneTimeContribution={goToOneTimeContributionStage}
           />
         ) : null;
+      case MyContributionsStage.OneTimeContribution:
+        return <OneTimeContribution setTitle={setTitle} />;
       default:
         return null;
     }

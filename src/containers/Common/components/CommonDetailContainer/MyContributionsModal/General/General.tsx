@@ -10,10 +10,11 @@ interface GeneralProps {
   commonName: string;
   setTitle: (title: ReactNode) => void;
   goToMonthlyContribution: () => void;
+  goToOneTimeContribution: () => void;
 }
 
 const General: FC<GeneralProps> = (props) => {
-  const { payments, commonName, setTitle, goToMonthlyContribution } = props;
+  const { payments, commonName, setTitle, goToMonthlyContribution, goToOneTimeContribution } = props;
   const total = useMemo(
     () => payments.reduce((acc, payment) => acc + payment.amount.amount, 0),
     [payments]
@@ -66,6 +67,7 @@ const General: FC<GeneralProps> = (props) => {
           <div className="general-my-contributions-stage__buttons-wrapper">
             <Button
               className="general-my-contributions-stage__button"
+              onClick={goToOneTimeContribution}
               variant={ButtonVariant.SecondaryPurple}
               shouldUseFullWidth
             >

@@ -8,12 +8,13 @@ import "./index.scss";
 interface MonthlyContributionChargesProps {
   payments: Payment[];
   setTitle: (title: ReactNode) => void;
+  goToOneTimeContribution: () => void;
 }
 
 const MonthlyContributionCharges: FC<MonthlyContributionChargesProps> = (
   props
 ) => {
-  const { payments, setTitle } = props;
+  const { payments, setTitle, goToOneTimeContribution } = props;
   const monthlyPayments = useMemo(
     () =>
       payments.filter((payment) => payment.type === PaymentType.Subscription),
@@ -51,6 +52,7 @@ const MonthlyContributionCharges: FC<MonthlyContributionChargesProps> = (
       <div className="monthly-contribution-my-contributions-stage__buttons-wrapper">
         <Button
           className="monthly-contribution-my-contributions-stage__button"
+          onClick={goToOneTimeContribution}
           variant={ButtonVariant.SecondaryPurple}
           shouldUseFullWidth
         >
