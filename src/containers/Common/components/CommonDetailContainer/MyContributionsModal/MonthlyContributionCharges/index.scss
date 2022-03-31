@@ -1,0 +1,33 @@
+@import "../../../../../../constants";
+
+.monthly-contribution-my-contributions-stage {
+  padding: 1.75rem 3.625rem 0;
+}
+
+.monthly-contribution-my-contributions-stage__section-title {
+  margin: 0 0 2rem;
+  font-size: $moderate-small;
+  font-weight: bold;
+  color: #001a36;
+}
+
+.monthly-contribution-my-contributions-stage__list {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.monthly-contribution-my-contributions-stage__edit-link {
+  margin-top: 1rem;
+}
+
+.monthly-contribution-my-contributions-stage__buttons-wrapper {
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.monthly-contribution-my-contributions-stage__button {
+  max-width: 21.5rem;
+}

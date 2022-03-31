@@ -1,4 +1,4 @@
-import React, { useEffect, useState, FC } from "react";
+import React, { useEffect, useState, FC, ReactNode } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { Loader, Modal } from "@/shared/components";
@@ -6,10 +6,13 @@ import { ModalProps } from "@/shared/interfaces";
 import { Common, Payment } from "@/shared/models";
 import { getUserContributionsToCommon } from "../../../store/actions";
 import { General } from "./General";
+import { MonthlyContributionCharges } from "./MonthlyContributionCharges";
+import { GoBackHandler } from "./types";
 import "./index.scss";
 
 enum MyContributionsStage {
   General,
+  MonthlyContributionCharges,
 }
 
 interface MyContributionsModalProps
@@ -23,6 +26,8 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
   const [stage, setStage] = useState<MyContributionsStage>(
     MyContributionsStage.General
   );
+  const [title, setTitle] = useState<ReactNode>(common.name);
+  const [onGoBack, setOnGoBack] = useState<GoBackHandler>(() => onClose);
   const [
     isUserContributionsFetchStarted,
     setIsUserContributionsFetchStarted,
@@ -30,6 +35,20 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
   const [userPayments, setUserPayments] = useState<Payment[] | null>(null);
   const user = useSelector(selectUser());
   const isLoading = !userPayments;
+
+  const setGoBackHandler = (handler: GoBackHandler | null) => {
+    setOnGoBack(() => handler ?? undefined);
+  };
+
+  const goToGeneralStage = () => {
+    setStage(MyContributionsStage.General);
+    setGoBackHandler(onClose);
+  };
+
+  const goToMonthlyContributionStage = () => {
+    setStage(MyContributionsStage.MonthlyContributionCharges);
+    setGoBackHandler(goToGeneralStage);
+  };
 
   useEffect(() => {
     if (!isShowing || isUserContributionsFetchStarted || !user?.uid) {
@@ -70,7 +89,21 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
   const renderContent = () => {
     switch (stage) {
       case MyContributionsStage.General:
-        return userPayments ? <General payments={userPayments} /> : null;
+        return userPayments ? (
+          <General
+            payments={userPayments}
+            setTitle={setTitle}
+            commonName={common.name}
+            goToMonthlyContribution={goToMonthlyContributionStage}
+          />
+        ) : null;
+      case MyContributionsStage.MonthlyContributionCharges:
+        return userPayments ? (
+          <MonthlyContributionCharges
+            payments={userPayments}
+            setTitle={setTitle}
+          />
+        ) : null;
       default:
         return null;
     }
@@ -80,14 +113,12 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
     <Modal
       className="my-contribution-modal"
       isShowing={isShowing}
-      title={common.name}
+      title={title}
       onClose={onClose}
-      onGoBack={onClose}
+      onGoBack={onGoBack}
       mobileFullScreen
     >
-      <div className="my-contribution-modal__content">
-        {isLoading ? <Loader /> : renderContent()}
-      </div>
+      {isLoading ? <Loader /> : renderContent()}
     </Modal>
   );
 };

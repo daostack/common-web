@@ -1,4 +1,4 @@
-import React, { useMemo, FC } from "react";
+import React, { useEffect, useMemo, FC, ReactNode } from "react";
 import { Button, ButtonVariant } from "@/shared/components";
 import { DateFormat, Payment, PaymentType } from "@/shared/models";
 import { formatDate, formatPrice } from "@/shared/utils";
@@ -7,10 +7,13 @@ import "./index.scss";
 
 interface GeneralProps {
   payments: Payment[];
+  commonName: string;
+  setTitle: (title: ReactNode) => void;
+  goToMonthlyContribution: () => void;
 }
 
 const General: FC<GeneralProps> = (props) => {
-  const { payments } = props;
+  const { payments, commonName, setTitle, goToMonthlyContribution } = props;
   const total = useMemo(
     () => payments.reduce((acc, payment) => acc + payment.amount.amount, 0),
     [payments]
@@ -19,15 +22,10 @@ const General: FC<GeneralProps> = (props) => {
     () => payments.filter((payment) => payment.type === PaymentType.OneTime),
     [payments]
   );
-  const monthlyPayments = useMemo(
-    () =>
-      payments.filter((payment) => payment.type === PaymentType.Subscription),
-    [payments]
-  );
 
-  const handleMonthlyItemClick = () => {
-    console.log("handleMonthlyItemClick");
-  };
+  useEffect(() => {
+    setTitle(commonName);
+  }, [setTitle, commonName]);
 
   return (
     <div className="general-my-contributions-stage">
@@ -49,7 +47,7 @@ const General: FC<GeneralProps> = (props) => {
               title="Monthly Contribution"
               description={`Next payment: 20 March 2022`}
               amount={`₪10/mo`}
-              onClick={handleMonthlyItemClick}
+              onClick={goToMonthlyContribution}
             />
             {oneTimePayments.map((payment) => (
               <HistoryListItem
