@@ -1,20 +1,21 @@
-import React, { useEffect, useMemo, FC, ReactNode } from "react";
+import React, { useEffect, useMemo, FC } from "react";
 import { Button, ButtonLink, ButtonVariant } from "@/shared/components";
 import { DateFormat, Payment, PaymentType } from "@/shared/models";
 import { formatDate, formatPrice } from "@/shared/utils";
 import { HistoryListItem } from "../HistoryListItem";
+import { useMyContributionsContext } from "../context";
 import "./index.scss";
 
 interface MonthlyContributionChargesProps {
   payments: Payment[];
-  setTitle: (title: ReactNode) => void;
   goToOneTimeContribution: () => void;
 }
 
 const MonthlyContributionCharges: FC<MonthlyContributionChargesProps> = (
   props
 ) => {
-  const { payments, setTitle, goToOneTimeContribution } = props;
+  const { payments, goToOneTimeContribution } = props;
+  const { setTitle } = useMyContributionsContext();
   const monthlyPayments = useMemo(
     () =>
       payments.filter((payment) => payment.type === PaymentType.Subscription),

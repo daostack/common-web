@@ -1,20 +1,26 @@
-import React, { useEffect, useMemo, FC, ReactNode } from "react";
+import React, { useEffect, useMemo, FC } from "react";
 import { Button, ButtonVariant } from "@/shared/components";
 import { DateFormat, Payment, PaymentType } from "@/shared/models";
 import { formatDate, formatPrice } from "@/shared/utils";
 import { HistoryListItem } from "../HistoryListItem";
+import { useMyContributionsContext } from "../context";
 import "./index.scss";
 
 interface GeneralProps {
   payments: Payment[];
   commonName: string;
-  setTitle: (title: ReactNode) => void;
   goToMonthlyContribution: () => void;
   goToOneTimeContribution: () => void;
 }
 
 const General: FC<GeneralProps> = (props) => {
-  const { payments, commonName, setTitle, goToMonthlyContribution, goToOneTimeContribution } = props;
+  const {
+    payments,
+    commonName,
+    goToMonthlyContribution,
+    goToOneTimeContribution,
+  } = props;
+  const { setTitle } = useMyContributionsContext();
   const total = useMemo(
     () => payments.reduce((acc, payment) => acc + payment.amount.amount, 0),
     [payments]

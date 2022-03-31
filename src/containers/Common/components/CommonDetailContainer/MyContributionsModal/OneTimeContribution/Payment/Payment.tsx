@@ -1,7 +1,12 @@
 import React, { useEffect, useState, FC } from "react";
 import { useDispatch } from "react-redux";
 import { Loader, Separator } from "@/shared/components";
-import { Common, CommonContributionType, PaymentStatus } from "@/shared/models";
+import {
+  Common,
+  CommonContributionType,
+  Payment,
+  PaymentStatus,
+} from "@/shared/models";
 import {
   isImmediateContributionPayment,
   ImmediateContributionPayment,
@@ -22,15 +27,22 @@ const INITIAL_STATE: State = {
   isPaymentIframeLoaded: false,
 };
 
-interface PaymentProps {
+interface PaymentStepProps {
   common: Common;
   contributionAmount: number;
-  onFinish: () => void;
+  onFinish: (payment: Payment) => void;
   onError: (errorText: string) => void;
+  setShouldShowGoBackButton: (value: boolean) => void;
 }
 
-const Payment: FC<PaymentProps> = (props) => {
-  const { common, contributionAmount, onFinish, onError } = props;
+const PaymentStep: FC<PaymentStepProps> = (props) => {
+  const {
+    common,
+    contributionAmount,
+    onFinish,
+    onError,
+    setShouldShowGoBackButton,
+  } = props;
   const { id: commonId } = common;
   const dispatch = useDispatch();
   const [
@@ -67,11 +79,10 @@ const Payment: FC<PaymentProps> = (props) => {
               return;
             }
             if (!isImmediateContributionPayment(payment)) {
-              onFinish();
+              onFinish(payment);
               return;
             }
 
-            // TODO: setShouldShowGoBackButton(true);
             setState((nextState) => ({
               ...nextState,
               payment,
@@ -89,7 +100,6 @@ const Payment: FC<PaymentProps> = (props) => {
     contributionAmount,
     onFinish,
     onError,
-    // setShouldShowGoBackButton,
   ]);
 
   useEffect(() => {
@@ -100,7 +110,7 @@ const Payment: FC<PaymentProps> = (props) => {
     try {
       return subscribeToPayment(payment.paymentId, (payment) => {
         if (payment?.status === PaymentStatus.Confirmed) {
-          onFinish();
+          onFinish(payment);
         } else if (payment?.status === PaymentStatus.Failed) {
           onError("Payment failed");
         }
@@ -109,6 +119,10 @@ const Payment: FC<PaymentProps> = (props) => {
       console.error("Error during subscribing to payment status change");
     }
   }, [isPaymentIframeLoaded, payment, onFinish, onError]);
+
+  useEffect(() => {
+    setShouldShowGoBackButton(Boolean(isPaymentIframeLoaded && payment));
+  }, [setShouldShowGoBackButton, isPaymentIframeLoaded, payment]);
 
   return (
     <section className="one-time-payment-my-contributions-stage">
@@ -137,4 +151,4 @@ const Payment: FC<PaymentProps> = (props) => {
   );
 };
 
-export default Payment;
+export default PaymentStep;

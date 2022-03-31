@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { useEffect, FC } from "react";
 import { ContributionAmountSelection, Separator } from "@/shared/components";
 import { Common } from "@/shared/models";
 import "./index.scss";
@@ -7,10 +7,16 @@ interface AmountSelectionProps {
   common: Common;
   contributionAmount?: number;
   onSelect: (amount: number) => void;
+  setShouldShowGoBackButton: (value: boolean) => void;
 }
 
 const AmountSelection: FC<AmountSelectionProps> = (props) => {
-  const { common, contributionAmount, onSelect } = props;
+  const {
+    common,
+    contributionAmount,
+    onSelect,
+    setShouldShowGoBackButton,
+  } = props;
   const {
     metadata: { minFeeToJoin },
   } = common;
@@ -24,6 +30,10 @@ const AmountSelection: FC<AmountSelectionProps> = (props) => {
       onSelect(amount);
     }
   };
+
+  useEffect(() => {
+    setShouldShowGoBackButton(true);
+  }, [setShouldShowGoBackButton]);
 
   return (
     <section className="one-time-amount-selection-my-contributions-stage">
