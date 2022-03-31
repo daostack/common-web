@@ -4,10 +4,11 @@ import BaseCurrencyInput, {
   CurrencyInputProps as BaseCurrencyInputProps,
 } from "react-currency-input-field";
 import { ErrorText } from "../ErrorText";
+import { MiddleVariant } from "./MiddleVariant";
 import { DEFAULT_INTL_CONFIG } from "./constants";
 import "./index.scss";
 
-enum CurrencyInputVariant {
+export enum CurrencyInputVariant {
   Default,
   Middle,
 }
@@ -28,14 +29,15 @@ export interface CurrencyInputProps extends BaseCurrencyInputProps {
   hint?: string;
   error?: string;
   variant?: CurrencyInputVariant;
+  onCloseClick?: () => void;
   styles?: CurrencyInputStyles;
 }
 
-const DEFAULT_INTL_CONFIG: IntlConfig = {
-  locale: "en-US",
-};
-
 const CurrencyInput: FC<CurrencyInputProps> = (props) => {
+  if (props.variant === CurrencyInputVariant.Middle) {
+    return <MiddleVariant {...props} />;
+  }
+
   const {
     className,
     label,
@@ -46,7 +48,6 @@ const CurrencyInput: FC<CurrencyInputProps> = (props) => {
     allowNegativeValue,
     intlConfig,
     prefix,
-    variant = CurrencyInputVariant.Default,
     ...restProps
   } = props;
   const id = restProps.id || restProps.name;
