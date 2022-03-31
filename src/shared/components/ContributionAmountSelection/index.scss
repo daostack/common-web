@@ -23,6 +23,10 @@
   font-size: $xsmall;
 }
 
-.contribution-amount-selection__back-to-selection {
-  margin-top: 0.5rem;
+.contribution-amount-selection__continue-button {
+  margin-top: 2.5rem;
+
+  @include big-phone {
+    margin-top: 2.25rem;
+  }
 }
