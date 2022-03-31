@@ -1,33 +1,37 @@
-import React, { useEffect, useMemo, FC, ReactNode } from "react";
-import { Separator } from "@/shared/components";
-import { DateFormat, Payment, PaymentType } from "@/shared/models";
-import { formatDate, formatPrice } from "@/shared/utils";
-import { HistoryListItem } from "../HistoryListItem";
-import "./index.scss";
+import React, { useEffect, useState, FC, ReactNode } from "react";
+import { Common } from "@/shared/models";
+import { AmountSelection } from "./AmountSelection";
 
 interface OneTimeContributionProps {
+  common: Common;
   setTitle: (title: ReactNode) => void;
 }
 
 const OneTimeContribution: FC<OneTimeContributionProps> = (props) => {
-  const { setTitle } = props;
+  const { common, setTitle } = props;
+  const [contributionAmount, setContributionAmount] = useState<
+    number | undefined
+  >();
+
+  const handleAmountSelect = (amount: number) => {
+    console.log(amount);
+  };
 
   useEffect(() => {
     setTitle("My contributions");
   }, [setTitle]);
 
-  return (
-    <section className="one-time-my-contributions-stage">
-      <h3 className="one-time-my-contributions-stage__title">
-        Make one-time contribution
-      </h3>
-      <p className="one-time-my-contributions-stage__description">
-        Select the amount for your one-time contribution to this Common. The
-        funds will be added to the Common balance.
-      </p>
-      <Separator className="one-time-my-contributions-stage__separator" />
-    </section>
-  );
+  const renderContent = () => {
+    return (
+      <AmountSelection
+        common={common}
+        contributionAmount={contributionAmount}
+        onSelect={handleAmountSelect}
+      />
+    );
+  };
+
+  return renderContent();
 };
 
 export default OneTimeContribution;

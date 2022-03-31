@@ -114,7 +114,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
           />
         ) : null;
       case MyContributionsStage.OneTimeContribution:
-        return <OneTimeContribution setTitle={setTitle} />;
+        return <OneTimeContribution common={common} setTitle={setTitle} />;
       default:
         return null;
     }
