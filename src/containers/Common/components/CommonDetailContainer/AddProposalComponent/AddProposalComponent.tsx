@@ -12,19 +12,19 @@ import { AddProposalLoader } from "./AddProposalLoader";
 import { AdProposalSuccess } from "./AddProposalSuccess";
 import { AdProposalFailure } from "./AddProposalFailure";
 import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
-import { AddPaymentMethod } from "./AddPaymentMethod";
+import { AddBankDetails } from "./AddBankDetails/AddBankDetails";
 import { useSelector } from "react-redux";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ScreenSize } from "@/shared/constants";
 import classNames from "classnames";
 
 export enum AddProposalSteps {
-  CREATE = "create",
-  CONFIRM = "confirm",
-  LOADER = "loader",
-  SUCCESS = "success",
-  FAILURE = "failure",
-  PAYMENT_METHOD = "payment_method",
+  CREATE,
+  CONFIRM,
+  LOADER,
+  SUCCESS,
+  FAILURE,
+  BANK_DETAILS,
 }
 
 interface AddDiscussionComponentProps
@@ -44,7 +44,6 @@ export const AddProposalComponent = ({
   onClose,
   onProposalAdd,
   common,
-  hasPaymentMethod,
   proposals,
   getProposalDetail,
 }: AddDiscussionComponentProps) => {
@@ -92,12 +91,12 @@ export const AddProposalComponent = ({
     [fundingRequest]
   );
 
-  const onPaymentLoad = useCallback(() => {
+  const onBankDetails = useCallback(() => {
     changeCreationProposalStep(AddProposalSteps.CREATE);
   }, []);
 
-  const addPaymentMethod = useCallback(() => {
-    changeCreationProposalStep(AddProposalSteps.PAYMENT_METHOD);
+  const addBankDetails = useCallback(() => {
+    changeCreationProposalStep(AddProposalSteps.BANK_DETAILS);
   }, []);
 
   const confirmProposal = useCallback(() => {
@@ -107,6 +106,10 @@ export const AddProposalComponent = ({
     onProposalAdd(fundingRequest, changeCreationProposalStep);
   }, [onProposalAdd, fundingRequest]);
 
+  const moveStageBack = useCallback(() => {
+    changeCreationProposalStep(AddProposalSteps.CREATE);
+  }, []);
+
   const renderProposalStep = useMemo(() => {
     switch (proposalCreationStep) {
       case AddProposalSteps.CREATE:
@@ -114,12 +117,11 @@ export const AddProposalComponent = ({
           <AddProposalForm
             common={common}
             saveProposalState={saveProposalState}
-            hasPaymentMethod={hasPaymentMethod}
-            addPaymentMethod={addPaymentMethod}
+            addBankDetails={addBankDetails}
           />
         );
-      case AddProposalSteps.PAYMENT_METHOD:
-        return <AddPaymentMethod onPaymentMethod={onPaymentLoad} />;
+      case AddProposalSteps.BANK_DETAILS:
+        return <AddBankDetails onBankDetails={onBankDetails} />;
       case AddProposalSteps.CONFIRM:
         return <AddProposalConfirm onConfirm={confirmProposal} />;
       case AddProposalSteps.LOADER:
@@ -138,8 +140,7 @@ export const AddProposalComponent = ({
           <AddProposalForm
             saveProposalState={saveProposalState}
             common={common}
-            hasPaymentMethod={hasPaymentMethod}
-            addPaymentMethod={addPaymentMethod}
+            addBankDetails={addBankDetails}
           />
         );
     }
@@ -147,10 +148,9 @@ export const AddProposalComponent = ({
     proposalCreationStep,
     saveProposalState,
     confirmProposal,
-    onPaymentLoad,
-    addPaymentMethod,
+    onBankDetails,
+    addBankDetails,
     handleProposalCreatedSuccess,
-    hasPaymentMethod,
     common,
     onClose,
   ]);
@@ -176,6 +176,7 @@ export const AddProposalComponent = ({
         "mobile-full-screen": isMobileView,
       })}
       mobileFullScreen={isMobileView}
+      onGoBack={(proposalCreationStep === AddProposalSteps.BANK_DETAILS || proposalCreationStep === AddProposalSteps.CONFIRM) ? moveStageBack : undefined}
       closePrompt
     >
       {renderProposalStep}

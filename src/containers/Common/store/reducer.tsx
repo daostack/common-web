@@ -108,6 +108,7 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
   .handleAction(actions.createRequestToJoin.success, (state, action) =>
     produce(state, (nextState) => {
       nextState.proposals = [{ ...action.payload }, ...nextState.proposals];
+      nextState.userProposals = [{ ...action.payload }, ...nextState.userProposals];
     })
   )
   .handleAction(actions.checkUserPaymentMethod.success, (state, action) =>
