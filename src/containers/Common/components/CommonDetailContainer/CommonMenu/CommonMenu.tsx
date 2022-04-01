@@ -11,7 +11,7 @@ import {
   Modal,
 } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
-import { useModal } from "@/shared/hooks";
+import { useAuthorizedModal } from "@/shared/hooks";
 import AgendaIcon from "@/shared/icons/agenda.icon";
 import ContributionIcon from "@/shared/icons/contribution.icon";
 import MenuIcon from "@/shared/icons/menu.icon";
@@ -89,10 +89,10 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
   const {
-    isShowing: isModalMenuShowing,
+    isModalOpen: isModalMenuShowing,
     onOpen: onMenuModalOpen,
     onClose: onMenuModalClose,
-  } = useModal(false);
+  } = useAuthorizedModal();
   const isMobileView = screenSize === ScreenSize.Mobile;
   const commonMember = common?.members.find(
     (member) => member.userId === user?.uid
@@ -119,6 +119,10 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     [menuItems]
   );
 
+  const handleModalOpen = () => {
+    onMenuModalOpen();
+  };
+
   const handleSelect = (value: unknown) => {
     if (isMobileView) {
       onMenuModalClose();
@@ -131,7 +135,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     setSelectedMenuItem(null);
 
     if (isMobileView) {
-      onMenuModalOpen();
+      handleModalOpen();
     } else {
       setTimeout(() => {
         dropdownRef.current?.openDropdown();
@@ -148,7 +152,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
           "edit-common-menu__menu-button--with-border": withBorder,
         }
       )}
-      onClick={isMobileView ? onMenuModalOpen : undefined}
+      onClick={isMobileView ? handleModalOpen : undefined}
     >
       <MenuIcon className="edit-common-menu__menu-button-icon" />
     </ButtonIcon>

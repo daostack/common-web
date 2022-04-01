@@ -540,31 +540,25 @@ export default function CommonDetail() {
                 <div className="text-information-wrapper__info-wrapper">
                   <div className="name">
                     {common?.name}
-                    {isMobileView && !isCommonMember && (
+                    {isMobileView && (
                       <div className="text-information-wrapper__menu-buttons">
-                        <Share
-                          url={sharingURL}
-                          type="modal"
-                          color={Colors.lightGray4}
-                        />
-                        <CommonMenu
-                          className="common-detail-wrapper__common-menu"
-                          menuButtonClassName="common-detail-wrapper__menu-button--small"
-                          common={common}
-                        />
-                      </div>
-                    )}
-                    {isMobileView && isCommonMember && (
-                      <div className="text-information-wrapper__menu-buttons">
-                        <div className="text-information-wrapper__connected-user-avatar-wrapper">
-                          <UserAvatar
-                            className="text-information-wrapper__user-avatar"
-                            photoURL={user?.photoURL}
-                            nameForRandomAvatar={user?.email}
-                            userName={getUserName(user)}
+                        {isCommonMember ? (
+                          <div className="text-information-wrapper__connected-user-avatar-wrapper">
+                            <UserAvatar
+                              className="text-information-wrapper__user-avatar"
+                              photoURL={user?.photoURL}
+                              nameForRandomAvatar={user?.email}
+                              userName={getUserName(user)}
+                            />
+                            <PurpleCheckIcon className="text-information-wrapper__connected-user-avatar-icon" />
+                          </div>
+                        ) : (
+                          <Share
+                            url={sharingURL}
+                            type="modal"
+                            color={Colors.lightGray4}
                           />
-                          <PurpleCheckIcon className="text-information-wrapper__connected-user-avatar-icon" />
-                        </div>
+                        )}
                         <CommonMenu
                           className="common-detail-wrapper__common-menu"
                           menuButtonClassName="common-detail-wrapper__menu-button--small"
