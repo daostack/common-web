@@ -47,7 +47,10 @@ $mobile-h-padding: 1.5rem;
 
 .general-my-contributions-stage__section-title {
   margin: 0 0 1rem;
-  padding: 0 $mobile-h-padding;
+
+  @include big-phone {
+    padding: 0 $mobile-h-padding;
+  }
 }
 
 .general-my-contributions-stage__list {

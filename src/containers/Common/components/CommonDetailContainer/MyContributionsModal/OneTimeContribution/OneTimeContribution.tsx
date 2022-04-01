@@ -1,6 +1,9 @@
 import React, { useCallback, useEffect, useState, FC } from "react";
+import { useSelector } from "react-redux";
+import { ScreenSize } from "@/shared/constants";
 import { useComponentWillUnmount } from "@/shared/hooks";
 import { Common, Payment } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
 import { useMyContributionsContext } from "../context";
 import { AmountSelection } from "./AmountSelection";
 import { Payment as PaymentStep } from "./Payment";
@@ -29,6 +32,8 @@ const OneTimeContribution: FC<OneTimeContributionProps> = (props) => {
   >();
   const [shouldShowGoBackButton, setShouldShowGoBackButton] = useState(true);
   const [createdPayment, setCreatedPayment] = useState<Payment | null>(null);
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   const handleAmountSelect = (amount: number) => {
     setContributionAmount(amount);
@@ -49,20 +54,17 @@ const OneTimeContribution: FC<OneTimeContributionProps> = (props) => {
 
   const handlePaymentFinish = useCallback((payment: Payment) => {
     setCreatedPayment(payment);
-    setStep(OneTimeContributionStep.Success);
   }, []);
 
   const handleSuccessFinish = useCallback(() => {
     if (createdPayment) {
       onFinish(createdPayment);
     }
-  }, [onFinish]);
+  }, [onFinish, createdPayment]);
 
   useEffect(() => {
-    setTitle(
-      step === OneTimeContributionStep.Success ? null : "My contributions"
-    );
-  }, [setTitle, step]);
+    setTitle(!isMobileView && createdPayment ? null : "My contributions");
+  }, [setTitle, isMobileView, createdPayment]);
 
   useEffect(() => {
     setOnGoBack(shouldShowGoBackButton ? handleGoBack : undefined);
@@ -75,6 +77,15 @@ const OneTimeContribution: FC<OneTimeContributionProps> = (props) => {
   useComponentWillUnmount(handleUnmount);
 
   const renderContent = () => {
+    if (!isMobileView && createdPayment) {
+      return (
+        <Success
+          onFinish={handleSuccessFinish}
+          setShouldShowGoBackButton={setShouldShowGoBackButton}
+        />
+      );
+    }
+
     switch (step) {
       case OneTimeContributionStep.AmountSelection:
         return (
@@ -95,19 +106,22 @@ const OneTimeContribution: FC<OneTimeContributionProps> = (props) => {
             setShouldShowGoBackButton={setShouldShowGoBackButton}
           />
         ) : null;
-      case OneTimeContributionStep.Success:
-        return (
-          <Success
-            onFinish={handleSuccessFinish}
-            setShouldShowGoBackButton={setShouldShowGoBackButton}
-          />
-        );
       default:
         return null;
     }
   };
 
-  return renderContent();
+  return (
+    <>
+      {renderContent()}
+      {isMobileView && createdPayment && (
+        <Success
+          onFinish={handleSuccessFinish}
+          setShouldShowGoBackButton={setShouldShowGoBackButton}
+        />
+      )}
+    </>
+  );
 };
 
 export default OneTimeContribution;
