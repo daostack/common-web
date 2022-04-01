@@ -12,6 +12,7 @@ import { Loader, Modal } from "@/shared/components";
 import { ModalProps } from "@/shared/interfaces";
 import { Common, Payment } from "@/shared/models";
 import { getUserContributionsToCommon } from "../../../store/actions";
+import { Error } from "./Error";
 import { General } from "./General";
 import { MonthlyContributionCharges } from "./MonthlyContributionCharges";
 import { OneTimeContribution } from "./OneTimeContribution";
@@ -43,10 +44,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
     isUserContributionsFetchStarted,
     setIsUserContributionsFetchStarted,
   ] = useState(false);
-  const [
-    shouldShowClosePrompt,
-    setShouldShowClosePrompt,
-  ] = useState(false);
+  const [shouldShowClosePrompt, setShouldShowClosePrompt] = useState(false);
   const [userPayments, setUserPayments] = useState<Payment[] | null>(null);
   const [errorText, setErrorText] = useState("");
   const user = useSelector(selectUser());
@@ -121,6 +119,16 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
     }
   }, [isShowing]);
 
+  const contextValue = useMemo<MyContributionsContextValue>(
+    () => ({
+      setTitle,
+      setShouldShowClosePrompt,
+      setOnGoBack: setGoBackHandler,
+      onError: handleError,
+    }),
+    [setGoBackHandler, handleError]
+  );
+
   const renderContent = () => {
     switch (stage) {
       case MyContributionsStage.General:
@@ -147,20 +155,12 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
             goBack={goToGeneralStage}
           />
         );
+      case MyContributionsStage.Error:
+        return <Error errorText={errorText} onFinish={onClose} />;
       default:
         return null;
     }
   };
-
-  const contextValue = useMemo<MyContributionsContextValue>(
-    () => ({
-      setTitle,
-      setShouldShowClosePrompt,
-      setOnGoBack: setGoBackHandler,
-      onError: handleError,
-    }),
-    [setGoBackHandler, handleError]
-  );
 
   return (
     <Modal

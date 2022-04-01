@@ -5,7 +5,7 @@ const ERROR_TEXT = "Please wrap component in MyContributionsModal";
 
 export interface MyContributionsContextValue {
   setTitle: (title: ReactNode) => void;
-  setOnGoBack: (handler: GoBackHandler) => void;
+  setOnGoBack: (handler?: GoBackHandler) => void;
   onError: (errorText: string) => void;
   setShouldShowClosePrompt: (value: boolean) => void;
 }
