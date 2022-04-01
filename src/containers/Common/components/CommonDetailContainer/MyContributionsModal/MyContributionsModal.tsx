@@ -9,8 +9,10 @@ import React, {
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { Loader, Modal } from "@/shared/components";
+import { ScreenSize } from "@/shared/constants";
 import { ModalProps } from "@/shared/interfaces";
 import { Common, Payment } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
 import { getUserContributionsToCommon } from "../../../store/actions";
 import { Error } from "./Error";
 import { General } from "./General";
@@ -47,6 +49,14 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
   const [shouldShowClosePrompt, setShouldShowClosePrompt] = useState(false);
   const [userPayments, setUserPayments] = useState<Payment[] | null>(null);
   const [errorText, setErrorText] = useState("");
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
+  const shouldBeWithoutHorizontalPadding =
+    isMobileView &&
+    [
+      MyContributionsStage.General,
+      MyContributionsStage.MonthlyContributionCharges,
+    ].includes(stage);
   const user = useSelector(selectUser());
   const isLoading = !userPayments;
 
@@ -171,6 +181,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
       onGoBack={onGoBack}
       closePrompt={shouldShowClosePrompt}
       mobileFullScreen
+      withoutHorizontalPadding={shouldBeWithoutHorizontalPadding}
     >
       <MyContributionsContext.Provider value={contextValue}>
         {isLoading ? <Loader /> : renderContent()}

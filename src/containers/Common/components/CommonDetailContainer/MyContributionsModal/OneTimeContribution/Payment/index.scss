@@ -9,6 +9,10 @@ $payment-iframe-height-mobile: 42rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @include big-phone {
+    padding-top: 1.5rem;
+  }
 }
 
 .one-time-payment-my-contributions-stage__title {
@@ -24,6 +28,10 @@ $payment-iframe-height-mobile: 42rem;
   font-size: $xsmall;
   text-align: center;
   color: $light-gray-2;
+
+  @include big-phone {
+    margin-top: 1.5rem;
+  }
 }
 
 .one-time-payment-my-contributions-stage__separator {

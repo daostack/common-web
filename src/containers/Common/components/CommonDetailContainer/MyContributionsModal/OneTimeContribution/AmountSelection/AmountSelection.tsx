@@ -45,9 +45,6 @@ const AmountSelection: FC<AmountSelectionProps> = (props) => {
         funds will be added to the Common balance.
       </p>
       <Separator className="one-time-amount-selection-my-contributions-stage__separator" />
-      <p className="one-time-amount-selection-my-contributions-stage__hint">
-        The change will apply starting from the next charge.
-      </p>
       <ContributionAmountSelection
         contributionAmount={contributionAmount}
         minFeeToJoin={minFeeToJoin}

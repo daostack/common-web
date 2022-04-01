@@ -166,6 +166,8 @@ export default function ContributionAmountSelection(props: IProps) {
             variant={CurrencyInputVariant.Middle}
             allowDecimals={false}
             onCloseClick={handleBackToSelectionClick}
+            autoFocus
+            autoComplete="off"
           />
           {showFinishButton && (
             <Button

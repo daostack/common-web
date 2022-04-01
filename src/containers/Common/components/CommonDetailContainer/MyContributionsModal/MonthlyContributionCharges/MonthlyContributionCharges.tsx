@@ -1,8 +1,16 @@
 import React, { useEffect, useMemo, FC } from "react";
-import { Button, ButtonLink, ButtonVariant } from "@/shared/components";
+import { useSelector } from "react-redux";
+import {
+  Button,
+  ButtonLink,
+  ButtonVariant,
+  ModalFooter,
+} from "@/shared/components";
+import { ScreenSize } from "@/shared/constants";
 import { DateFormat, Payment, PaymentType } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
 import { formatDate, formatPrice } from "@/shared/utils";
-import { HistoryListItem } from "../HistoryListItem";
+import { HistoryListItem, HistoryListItemStyles } from "../HistoryListItem";
 import { useMyContributionsContext } from "../context";
 import "./index.scss";
 
@@ -16,15 +24,43 @@ const MonthlyContributionCharges: FC<MonthlyContributionChargesProps> = (
 ) => {
   const { payments, goToOneTimeContribution } = props;
   const { setTitle } = useMyContributionsContext();
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
   const monthlyPayments = useMemo(
     () =>
       payments.filter((payment) => payment.type === PaymentType.Subscription),
     [payments]
   );
 
+  const itemStyles: HistoryListItemStyles | undefined = isMobileView
+    ? {
+        item: "monthly-contribution-my-contributions-stage__list-item",
+        title: "monthly-contribution-my-contributions-stage__list-item-title",
+      }
+    : undefined;
+
   useEffect(() => {
     setTitle("My contributions");
   }, [setTitle]);
+
+  const buttonWrapperEl = (
+    <div className="monthly-contribution-my-contributions-stage__buttons-wrapper">
+      <Button
+        className="monthly-contribution-my-contributions-stage__button"
+        onClick={goToOneTimeContribution}
+        variant={ButtonVariant.SecondaryPurple}
+        shouldUseFullWidth
+      >
+        Add a one-time contribution
+      </Button>
+      <Button
+        className="monthly-contribution-my-contributions-stage__button"
+        shouldUseFullWidth
+      >
+        Change my monthly contribution
+      </Button>
+    </div>
+  );
 
   return (
     <div className="monthly-contribution-my-contributions-stage">
@@ -43,6 +79,7 @@ const MonthlyContributionCharges: FC<MonthlyContributionChargesProps> = (
               amount={formatPrice(payment.amount.amount, {
                 shouldRemovePrefixFromZero: false,
               })}
+              styles={itemStyles}
             />
           ))}
         </ul>
@@ -50,22 +87,11 @@ const MonthlyContributionCharges: FC<MonthlyContributionChargesProps> = (
       <ButtonLink className="monthly-contribution-my-contributions-stage__edit-link">
         Edit payment details
       </ButtonLink>
-      <div className="monthly-contribution-my-contributions-stage__buttons-wrapper">
-        <Button
-          className="monthly-contribution-my-contributions-stage__button"
-          onClick={goToOneTimeContribution}
-          variant={ButtonVariant.SecondaryPurple}
-          shouldUseFullWidth
-        >
-          Add a one-time contribution
-        </Button>
-        <Button
-          className="monthly-contribution-my-contributions-stage__button"
-          shouldUseFullWidth
-        >
-          Change my monthly contribution
-        </Button>
-      </div>
+      {isMobileView ? (
+        <ModalFooter sticky>{buttonWrapperEl}</ModalFooter>
+      ) : (
+        buttonWrapperEl
+      )}
     </div>
   );
 };

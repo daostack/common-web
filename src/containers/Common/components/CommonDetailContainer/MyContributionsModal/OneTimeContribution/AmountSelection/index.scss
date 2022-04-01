@@ -1,10 +1,15 @@
 @import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
 
 .one-time-amount-selection-my-contributions-stage {
   padding-top: 1.75rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @include big-phone {
+    padding-top: 1.5rem;
+  }
 }
 
 .one-time-amount-selection-my-contributions-stage__title {
@@ -20,16 +25,17 @@
   font-size: $xsmall;
   text-align: center;
   color: $light-gray-2;
+
+  @include big-phone {
+    margin-top: 1.5rem;
+  }
 }
 
 .one-time-amount-selection-my-contributions-stage__separator {
   max-width: 20.5rem;
   margin: 1rem 0;
-}
 
-.one-time-amount-selection-my-contributions-stage__hint {
-  margin: 0 0 1.5rem;
-  font-size: $xsmall;
-  text-align: center;
-  color: $light-gray-2;
+  @include big-phone {
+    margin-bottom: 1.5rem;
+  }
 }

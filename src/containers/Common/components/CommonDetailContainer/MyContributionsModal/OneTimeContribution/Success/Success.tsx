@@ -1,5 +1,9 @@
 import React, { useEffect, FC } from "react";
-import { Button, ButtonVariant } from "@/shared/components";
+import { useSelector } from "react-redux";
+import { Button, ButtonVariant, Modal } from "@/shared/components";
+import { ScreenSize } from "@/shared/constants";
+import { ModalType } from "@/shared/interfaces";
+import { getScreenSize } from "@/shared/store/selectors";
 import "./index.scss";
 
 interface SuccessProps {
@@ -9,12 +13,14 @@ interface SuccessProps {
 
 const Success: FC<SuccessProps> = (props) => {
   const { onFinish, setShouldShowGoBackButton } = props;
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   useEffect(() => {
     setShouldShowGoBackButton(false);
   }, [setShouldShowGoBackButton]);
 
-  return (
+  const contentEl = (
     <section className="one-time-success-my-contributions-stage">
       <img
         className="one-time-success-my-contributions-stage__image"
@@ -33,6 +39,14 @@ const Success: FC<SuccessProps> = (props) => {
         OK
       </Button>
     </section>
+  );
+
+  return isMobileView ? (
+    <Modal isShowing onClose={onFinish} type={ModalType.MobilePopUp}>
+      {contentEl}
+    </Modal>
+  ) : (
+    contentEl
   );
 };
 

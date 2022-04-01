@@ -1,8 +1,11 @@
 import React, { useEffect, useMemo, FC } from "react";
+import { useSelector } from "react-redux";
 import { Button, ButtonVariant } from "@/shared/components";
+import { ScreenSize } from "@/shared/constants";
 import { DateFormat, Payment, PaymentType } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
 import { formatDate, formatPrice } from "@/shared/utils";
-import { HistoryListItem } from "../HistoryListItem";
+import { HistoryListItem, HistoryListItemStyles } from "../HistoryListItem";
 import { useMyContributionsContext } from "../context";
 import "./index.scss";
 
@@ -21,6 +24,8 @@ const General: FC<GeneralProps> = (props) => {
     goToOneTimeContribution,
   } = props;
   const { setTitle } = useMyContributionsContext();
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
   const total = useMemo(
     () => payments.reduce((acc, payment) => acc + payment.amount.amount, 0),
     [payments]
@@ -29,6 +34,12 @@ const General: FC<GeneralProps> = (props) => {
     () => payments.filter((payment) => payment.type === PaymentType.OneTime),
     [payments]
   );
+
+  const itemStyles: HistoryListItemStyles | undefined = isMobileView
+    ? {
+        item: "general-my-contributions-stage__list-item",
+      }
+    : undefined;
 
   useEffect(() => {
     setTitle(commonName);
@@ -55,6 +66,7 @@ const General: FC<GeneralProps> = (props) => {
               description={`Next payment: 20 March 2022`}
               amount={`₪10/mo`}
               onClick={goToMonthlyContribution}
+              styles={itemStyles}
             />
             {oneTimePayments.map((payment) => (
               <HistoryListItem
@@ -67,6 +79,7 @@ const General: FC<GeneralProps> = (props) => {
                 amount={formatPrice(payment.amount.amount, {
                   shouldRemovePrefixFromZero: false,
                 })}
+                styles={itemStyles}
               />
             ))}
           </ul>

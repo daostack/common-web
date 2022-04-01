@@ -1,4 +1,7 @@
 @import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+
+$mobile-h-padding: 1.5rem;
 
 .general-my-contributions-stage {
   display: flex;
@@ -14,6 +17,10 @@
   text-align: center;
   background-color: $light-gray-4;
   border-radius: 0.625rem;
+
+  @include big-phone {
+    margin: 1rem $mobile-h-padding 0;
+  }
 }
 
 .general-my-contributions-stage__total-text {
@@ -31,10 +38,16 @@
   margin-top: 2rem;
   padding: 0 3.625rem;
   box-sizing: border-box;
+
+  @include big-phone {
+    margin-top: 1rem;
+    padding: 0;
+  }
 }
 
 .general-my-contributions-stage__section-title {
   margin: 0 0 1rem;
+  padding: 0 $mobile-h-padding;
 }
 
 .general-my-contributions-stage__list {
@@ -44,14 +57,33 @@
   list-style-type: none;
 }
 
+.general-my-contributions-stage__list-item {
+  padding-left: $mobile-h-padding;
+  padding-right: $mobile-h-padding;
+}
+
 .general-my-contributions-stage__buttons-wrapper {
   margin-top: 2.5rem;
   display: flex;
   justify-content: space-between;
+
+  @include big-phone {
+    margin-top: 1rem;
+    padding: 0 $mobile-h-padding;
+    flex-wrap: wrap-reverse;
+  }
 }
 
 .general-my-contributions-stage__button {
   max-width: 21.5rem;
+
+  @include big-phone {
+    max-width: unset;
+
+    &:first-child {
+      margin-top: 1rem;
+    }
+  }
 }
 
 .general-my-contributions-stage__empty-contributions {
