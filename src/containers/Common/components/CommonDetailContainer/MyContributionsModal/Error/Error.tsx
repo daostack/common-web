@@ -1,5 +1,9 @@
 import React, { useEffect, useState, FC } from "react";
-import { Button, ButtonLink, ButtonVariant } from "@/shared/components";
+import { useSelector } from "react-redux";
+import { Button, ButtonLink, ButtonVariant, Modal } from "@/shared/components";
+import { ScreenSize } from "@/shared/constants";
+import { ModalType } from "@/shared/interfaces";
+import { getScreenSize } from "@/shared/store/selectors";
 import { useMyContributionsContext } from "../context";
 import "./index.scss";
 
@@ -11,6 +15,8 @@ interface ErrorProps {
 const Error: FC<ErrorProps> = (props) => {
   const { errorText, onFinish } = props;
   const { setTitle, setOnGoBack } = useMyContributionsContext();
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
   const [shouldShowError, setShouldShowError] = useState(false);
 
   const handleErrorDetailsButtonClick = () => {
@@ -22,10 +28,12 @@ const Error: FC<ErrorProps> = (props) => {
   }, [setOnGoBack]);
 
   useEffect(() => {
-    setTitle(null);
-  }, [setTitle]);
+    if (!isMobileView) {
+      setTitle(null);
+    }
+  }, [isMobileView, setTitle]);
 
-  return (
+  const contentEl = (
     <section className="error-my-contributions-stage">
       <img
         className="error-my-contributions-stage__image"
@@ -63,6 +71,14 @@ const Error: FC<ErrorProps> = (props) => {
         </>
       )}
     </section>
+  );
+
+  return isMobileView ? (
+    <Modal isShowing onClose={onFinish} type={ModalType.MobilePopUp}>
+      {contentEl}
+    </Modal>
+  ) : (
+    contentEl
   );
 };
 

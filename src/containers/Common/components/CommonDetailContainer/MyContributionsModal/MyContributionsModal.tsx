@@ -26,7 +26,6 @@ enum MyContributionsStage {
   General,
   MonthlyContributionCharges,
   OneTimeContribution,
-  Error,
 }
 
 interface MyContributionsModalProps
@@ -48,7 +47,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
   ] = useState(false);
   const [shouldShowClosePrompt, setShouldShowClosePrompt] = useState(false);
   const [userPayments, setUserPayments] = useState<Payment[] | null>(null);
-  const [errorText, setErrorText] = useState("");
+  const [errorText, setErrorText] = useState<string | null>(null);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const shouldBeWithoutHorizontalPadding =
@@ -88,8 +87,12 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
 
   const handleError = useCallback((errorText: string) => {
     setErrorText(errorText);
-    setStage(MyContributionsStage.Error);
   }, []);
+
+  const handleErrorFinish = useCallback(() => {
+    setErrorText(null);
+    goToGeneralStage();
+  }, [goToGeneralStage]);
 
   useEffect(() => {
     if (!isShowing || isUserContributionsFetchStarted || !user?.uid) {
@@ -125,6 +128,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
     if (!isShowing) {
       setUserPayments(null);
       setIsUserContributionsFetchStarted(false);
+      setErrorText(null);
       setStage(MyContributionsStage.General);
     }
   }, [isShowing]);
@@ -140,6 +144,10 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
   );
 
   const renderContent = () => {
+    if (!isMobileView && errorText !== null) {
+      return <Error errorText={errorText} onFinish={handleErrorFinish} />;
+    }
+
     switch (stage) {
       case MyContributionsStage.General:
         return userPayments ? (
@@ -165,8 +173,6 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
             goBack={goToGeneralStage}
           />
         );
-      case MyContributionsStage.Error:
-        return <Error errorText={errorText} onFinish={onClose} />;
       default:
         return null;
     }
@@ -184,7 +190,16 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
       withoutHorizontalPadding={shouldBeWithoutHorizontalPadding}
     >
       <MyContributionsContext.Provider value={contextValue}>
-        {isLoading ? <Loader /> : renderContent()}
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <>
+            {renderContent()}
+            {isMobileView && errorText !== null && (
+              <Error errorText={errorText} onFinish={handleErrorFinish} />
+            )}
+          </>
+        )}
       </MyContributionsContext.Provider>
     </Modal>
   );

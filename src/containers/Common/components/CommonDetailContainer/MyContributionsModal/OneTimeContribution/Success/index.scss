@@ -10,6 +10,13 @@
 .one-time-success-my-contributions-stage__image {
   width: 10rem;
   height: 10rem;
+
+  @include big-phone {
+    max-width: 7.25rem;
+    width: 100%;
+    max-height: 7.25rem;
+    height: 100%;
+  }
 }
 
 .one-time-success-my-contributions-stage__title {
