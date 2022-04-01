@@ -105,7 +105,7 @@ const General: FC<GeneralProps> = (props) => {
           <img
             className="general-my-contributions-stage__funds-image"
             src="/assets/images/membership-request-funds.svg"
-            alt="No contributions image"
+            alt="No contributions"
           />
           <p className="general-my-contributions-stage__empty-contributions-text">
             You don't have any active contributions yet.

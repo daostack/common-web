@@ -57,6 +57,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
       MyContributionsStage.MonthlyContributionCharges,
     ].includes(stage);
   const user = useSelector(selectUser());
+  const userId = user?.uid;
   const isLoading = !userPayments;
 
   const setGoBackHandler = useCallback((handler: GoBackHandler | null) => {
@@ -66,17 +67,17 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
   const goToGeneralStage = useCallback(() => {
     setStage(MyContributionsStage.General);
     setGoBackHandler(onClose);
-  }, [setGoBackHandler]);
+  }, [setGoBackHandler, onClose]);
 
   const goToMonthlyContributionStage = useCallback(() => {
     setStage(MyContributionsStage.MonthlyContributionCharges);
     setGoBackHandler(goToGeneralStage);
-  }, [setGoBackHandler]);
+  }, [setGoBackHandler, goToGeneralStage]);
 
   const goToOneTimeContributionStage = useCallback(() => {
     setStage(MyContributionsStage.OneTimeContribution);
     setGoBackHandler(goToGeneralStage);
-  }, [setGoBackHandler]);
+  }, [setGoBackHandler, goToGeneralStage]);
 
   const handleOneTimeContributionFinish = useCallback((payment: Payment) => {
     setUserPayments((nextUserPayments) =>
@@ -95,7 +96,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
   }, [goToGeneralStage]);
 
   useEffect(() => {
-    if (!isShowing || isUserContributionsFetchStarted || !user?.uid) {
+    if (!isShowing || isUserContributionsFetchStarted || !userId) {
       return;
     }
 
@@ -103,7 +104,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
     dispatch(
       getUserContributionsToCommon.request({
         payload: {
-          userId: user.uid,
+          userId,
           commonId: common.id,
         },
         callback: (error, payments) => {
@@ -119,7 +120,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
     dispatch,
     isShowing,
     isUserContributionsFetchStarted,
-    user?.uid,
+    userId,
     common.id,
     handleError,
   ]);
