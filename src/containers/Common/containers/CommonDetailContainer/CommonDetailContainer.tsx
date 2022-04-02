@@ -659,7 +659,7 @@ export default function CommonDetail() {
                     </div>
                   )}
 
-                  {!isFounder && (
+                  {isCommonMember && !isFounder && (
                     <Button
                       variant={ButtonVariant.Secondary}
                       className="leave-common-btn"
