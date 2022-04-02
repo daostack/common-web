@@ -13,6 +13,7 @@ import {
   CreateCommonPayload,
   AddMessageToDiscussionDto,
   DeleteCommon,
+  LeaveCommon,
 } from "@/containers/Common/interfaces";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 import { CreateVotePayload } from "@/shared/interfaces/api/vote";
@@ -152,6 +153,12 @@ export const addMessageToProposal = createAsyncAction(
   Proposal,
   Error
 >();
+
+export const leaveCommon = createAsyncAction(
+  CommonsActionTypes.LEAVE_COMMON,
+  CommonsActionTypes.LEAVE_COMMON_SUCCESS,
+  CommonsActionTypes.LEAVE_COMMON_FAILURE
+)<PayloadWithCallback<LeaveCommon, void, Error>, string, Error>();
 
 export const deleteCommon = createAsyncAction(
   CommonsActionTypes.DELETE_COMMON,

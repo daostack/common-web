@@ -1,11 +1,14 @@
 export interface Member {
   joinedAt: { seconds: number; nanoseconds: number };
   userId: string;
+  permission?: Permission;
 }
+
 export interface CommonLink {
   title: string;
   value: string;
 }
+
 export interface CommonRule {
   title: string;
   value: string;
@@ -14,6 +17,11 @@ export interface CommonRule {
 export enum CommonContributionType {
   OneTime = "one-time",
   Monthly = "monthly",
+}
+
+export enum Permission {
+  Founder = "founder",
+  Moderator = "moderator",
 }
 
 export interface Metadata {

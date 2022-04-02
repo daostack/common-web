@@ -25,6 +25,7 @@ import PurpleCheckIcon from "../../../../shared/icons/purpleCheck.icon";
 import ShareIcon from "../../../../shared/icons/share.icon";
 import {
   Discussion,
+  Permission,
   Proposal,
   ProposalState,
   ProposalType,
@@ -80,6 +81,7 @@ import {
   AddProposalSteps,
 } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
+import { LeaveCommonPrompt } from "../../components/CommonDetailContainer/LeaveCommonPrompt";
 import { DeleteCommonPrompt } from "../../components/CommonDetailContainer/DeleteCommonPrompt";
 import "./index.scss";
 
@@ -162,6 +164,11 @@ export default function CommonDetail() {
   const isCommonMember = Boolean(
     common?.members.some((member) => member.userId === user?.uid)
   );
+  
+  const isFounder = Boolean(
+    common?.members.some((member) => member.userId === user?.uid && member.permission === Permission.Founder)
+  );
+
   const isJoiningPending = proposals.some(
     (proposal) =>
       proposal.state === ProposalState.COUNTDOWN &&
@@ -186,6 +193,12 @@ export default function CommonDetail() {
     isShowing: isShowingNewD,
     onOpen: onOpenNewD,
     onClose: onCloseNewD,
+  } = useModal(false);
+
+  const {
+    isShowing: showLeaveCommonPrompt,
+    onOpen: onOpenLeaveCommonPrompt,
+    onClose: onCloseLeaveCommonPrompt
   } = useModal(false);
 
   const {
@@ -529,6 +542,12 @@ export default function CommonDetail() {
           getProposalDetail={getProposalDetail}
         />
       )}
+      {showLeaveCommonPrompt && (
+        <LeaveCommonPrompt
+          isShowing={showLeaveCommonPrompt}
+          onClose={onCloseLeaveCommonPrompt}
+          commonId={common.id} />
+      )}
       {showDeleteCommonPrompt && (
         <DeleteCommonPrompt
           isShowing={showDeleteCommonPrompt}
@@ -638,6 +657,15 @@ export default function CommonDetail() {
                       <CheckIcon className="member-label__icon" />
                       You are a member
                     </div>
+                  )}
+
+                  {!isFounder && (
+                    <Button
+                      variant={ButtonVariant.Secondary}
+                      className="leave-common-btn"
+                      onClick={onOpenLeaveCommonPrompt}>
+                      Leave this Common
+                    </Button>
                   )}
 
                   {isCommonMember && common.members.length === 1 && (

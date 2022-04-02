@@ -25,6 +25,7 @@ import {
   createFundingProposal,
   subscribeToCommonProposal,
   checkUserPaymentMethod,
+  leaveCommon as leaveCommonApi,
   deleteCommon as deleteCommonApi,
   createVote as createVoteApi,
   makeImmediateContribution as makeImmediateContributionApi,
@@ -325,6 +326,23 @@ export function* createRequestToJoin(
   }
 }
 
+export function* leaveCommon(
+  action: ReturnType<typeof actions.leaveCommon.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    yield leaveCommonApi(action.payload.payload);
+
+    yield put(actions.leaveCommon.success(action.payload.payload.commonId));
+    action.payload.callback(null);
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(actions.leaveCommon.failure(error));
+    action.payload.callback(error);
+    yield put(stopLoading());
+  }
+}
+
 export function* deleteCommon(
   action: ReturnType<typeof actions.deleteCommon.request>
 ): Generator {
@@ -502,6 +520,7 @@ export function* commonsSaga() {
     addMessageToDiscussionSaga
   );
   yield takeLatest(actions.createRequestToJoin.request, createRequestToJoin);
+  yield takeLatest(actions.leaveCommon.request, leaveCommon);
   yield takeLatest(actions.deleteCommon.request, deleteCommon);
   yield takeLatest(
     actions.createFundingProposal.request,
