@@ -668,7 +668,7 @@ export default function CommonDetail() {
                     </Button>
                   )}
 
-                  {isCommonMember && common.members.length === 1 && (
+                  {isFounder && common.members.length === 1 && (
                     <Button
                       variant={ButtonVariant.Secondary}
                       className="delete-common-btn"
