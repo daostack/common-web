@@ -1,18 +1,37 @@
-import React, { useCallback, useEffect, useState, ReactElement } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Loader, ModalHeaderContent, Separator } from "@/shared/components";
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  ReactElement,
+} from "react";
+import {
+  useDispatch,
+  useSelector,
+} from "react-redux";
+import {
+  Loader,
+  ModalHeaderContent,
+  Separator,
+  IFrame,
+  PaymentMethod,
+} from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
-import { Common, CommonContributionType, PaymentStatus } from "@/shared/models";
+import {
+  Common,
+  CommonContributionType,
+  PaymentStatus,
+  Card,
+} from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice } from "@/shared/utils";
 import {
-  isImmediateContributionPayment,
   PaymentPayload,
   ImmediateContributionPayment,
 } from "../../../../../interfaces";
 import {
   getCommonsList,
   makeImmediateContribution,
+  loadUserCards,
 } from "../../../../../store/actions";
 import { subscribeToPayment } from "../../../../../store/api";
 import { Progress } from "../Progress";
@@ -60,17 +79,14 @@ export default function RequestPayment(
     { payment, isPaymentLoading, isPaymentIframeLoaded },
     setState,
   ] = useState<State>(INITIAL_STATE);
+  const [cards, setUserCards] = useState<Card[]>([]);
+  const [hasPaymentMethod, setHasPaymentMethod] = useState<boolean>(false);
   const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
+  const isMobileView = (screenSize === ScreenSize.Mobile);
   const selectedAmount = paymentData.contributionAmount;
-  const contributionTypeText =
-    common.metadata.contributionType === CommonContributionType.Monthly
-      ? "monthly"
-      : "one-time";
-
-  const handleIframeLoad = useCallback(() => {
-    setState((nextState) => ({ ...nextState, isPaymentIframeLoaded: true }));
-  }, []);
+  const contributionTypeText = (contributionType === CommonContributionType.Monthly)
+                                ? "monthly"
+                                : "one-time";
 
   const finishPayment = useCallback(() => {
     onFinish();
@@ -80,11 +96,68 @@ export default function RequestPayment(
     }
   }, [isCommonActive, onFinish, dispatch]);
 
+  const handleIframeLoad = useCallback(() => {
+    setState((nextState) => ({ ...nextState, isPaymentIframeLoaded: true }));
+  }, []);
+
+  const handleContinuePayment = useCallback(() => {
+    if (
+      !hasPaymentMethod
+      || !paymentData.contributionAmount
+    ) return;
+
+    dispatch(
+      makeImmediateContribution.request({
+        payload: {
+          commonId,
+          contributionType,
+          amount: paymentData.contributionAmount,
+          saveCard: true,
+        },
+        callback: (error, payment) => {
+          if (error || !payment) {
+            onError(error?.message || "Something went wrong");
+            return;
+          }
+
+          finishPayment();
+          return;
+        },
+      })
+    );
+  }, [
+    hasPaymentMethod,
+    paymentData.contributionAmount,
+    commonId,
+    contributionType,
+    finishPayment,
+    onError,
+    onFinish,
+    dispatch,
+  ]);
+
+  useEffect(() => {
+    dispatch(loadUserCards.request({
+      callback: (error, cards) => {
+        if (error || !cards) {
+          onError(error?.message || "Something went wrong");
+          return;
+        }
+
+        setUserCards(cards);
+        setHasPaymentMethod(!!cards && !!cards.length);
+      }
+    }));
+  }, [dispatch, onError]);
+
   useEffect(() => {
     (async () => {
-      if (payment || isPaymentLoading || !paymentData.contributionAmount) {
-        return;
-      }
+      if (
+        hasPaymentMethod
+        || payment
+        || isPaymentLoading
+        || !paymentData.contributionAmount
+      ) return;
 
       setState((nextState) => ({
         ...nextState,
@@ -104,15 +177,11 @@ export default function RequestPayment(
               onError(error?.message || "Something went wrong");
               return;
             }
-            if (!isImmediateContributionPayment(payment)) {
-              finishPayment();
-              return;
-            }
 
             setShouldShowGoBackButton(true);
             setState((nextState) => ({
               ...nextState,
-              payment,
+              payment: payment as ImmediateContributionPayment,
               isPaymentLoading: false,
             }));
           },
@@ -121,6 +190,7 @@ export default function RequestPayment(
     })();
   }, [
     dispatch,
+    hasPaymentMethod,
     commonId,
     contributionType,
     finishPayment,
@@ -133,9 +203,8 @@ export default function RequestPayment(
   ]);
 
   useEffect(() => {
-    if (!isPaymentIframeLoaded || !payment) {
+    if (!isPaymentIframeLoaded || !payment)
       return;
-    }
 
     try {
       return subscribeToPayment(payment.paymentId, (payment) => {
@@ -161,8 +230,11 @@ export default function RequestPayment(
   return (
     <div className="create-common-payment">
       {!isMobileView && <ModalHeaderContent>{progressEl}</ModalHeaderContent>}
+
       {isMobileView && progressEl}
+
       <h4 className="create-common-payment__sub-title">Payment Details</h4>
+
       <p className="create-common-payment__sub-text">
         You are contributing{" "}
         <strong className="create-common-payment__amount">
@@ -171,20 +243,28 @@ export default function RequestPayment(
         </strong>{" "}
         to this Common.
       </p>
+
       <Separator className="create-common-payment__separator" />
+
       <div className="create-common-payment__content">
-        {!isPaymentIframeLoaded && (
-          <Loader className="create-common-payment__loader" />
-        )}
-        {payment && (
-          <iframe
-            className="create-common-payment__iframe"
-            src={payment.link}
-            frameBorder="0"
-            title="Payment Details"
-            onLoad={handleIframeLoad}
-          />
-        )}
+        {
+          (!isPaymentIframeLoaded && !hasPaymentMethod)
+          && <Loader className="create-common-payment__loader" />
+        }
+        {
+          hasPaymentMethod
+          ? <PaymentMethod
+              card={cards[0]}
+              onContinuePayment={handleContinuePayment}
+              onReplacePaymentMethod={() => setHasPaymentMethod(false)}
+            />
+          : payment && <IFrame
+              src={payment.link}
+              frameBorder="0"
+              title="Payment Details"
+              onLoad={handleIframeLoad}
+            />
+        }
       </div>
     </div>
   );

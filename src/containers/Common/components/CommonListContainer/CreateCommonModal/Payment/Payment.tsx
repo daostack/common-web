@@ -7,7 +7,7 @@ import React, {
   ReactNode,
   SetStateAction,
 } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch, } from "react-redux";
 import { Dots } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { Common } from "@/shared/models";
@@ -43,6 +43,7 @@ export default function Payment(props: PaymentProps) {
     paymentData,
     setPaymentData,
   } = props;
+  const dispatch = useDispatch();
   const [step, setStep] = useState(PaymentStep.PersonalContribution);
   const [shouldShowGoBackButton, setShouldShowGoBackButton] = useState(false);
   const screenSize = useSelector(getScreenSize());

@@ -64,13 +64,4 @@ $payment-iframe-height-mobile: 42rem;
       transform: translateX(-50%);
     }
   }
-
-  .create-common-payment__iframe {
-    width: 100%;
-    height: $payment-iframe-height;
-
-    @include big-phone {
-      height: $payment-iframe-height-mobile;
-    }
-  }
 }
