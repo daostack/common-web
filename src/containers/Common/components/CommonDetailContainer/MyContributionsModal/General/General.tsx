@@ -14,6 +14,7 @@ interface GeneralProps {
   commonName: string;
   goToMonthlyContribution: () => void;
   goToOneTimeContribution: () => void;
+  goToChangeMonthlyContribution: () => void;
 }
 
 const General: FC<GeneralProps> = (props) => {
@@ -22,6 +23,7 @@ const General: FC<GeneralProps> = (props) => {
     commonName,
     goToMonthlyContribution,
     goToOneTimeContribution,
+    goToChangeMonthlyContribution,
   } = props;
   const { setTitle } = useMyContributionsContext();
   const screenSize = useSelector(getScreenSize());
@@ -94,6 +96,7 @@ const General: FC<GeneralProps> = (props) => {
             </Button>
             <Button
               className="general-my-contributions-stage__button"
+              onClick={goToChangeMonthlyContribution}
               shouldUseFullWidth
             >
               Change my monthly contribution

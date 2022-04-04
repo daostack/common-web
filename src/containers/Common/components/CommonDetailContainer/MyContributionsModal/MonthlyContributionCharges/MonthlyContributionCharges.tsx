@@ -17,12 +17,17 @@ import "./index.scss";
 interface MonthlyContributionChargesProps {
   payments: Payment[];
   goToOneTimeContribution: () => void;
+  goToChangeMonthlyContribution: () => void;
 }
 
 const MonthlyContributionCharges: FC<MonthlyContributionChargesProps> = (
   props
 ) => {
-  const { payments, goToOneTimeContribution } = props;
+  const {
+    payments,
+    goToOneTimeContribution,
+    goToChangeMonthlyContribution,
+  } = props;
   const { setTitle } = useMyContributionsContext();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -55,6 +60,7 @@ const MonthlyContributionCharges: FC<MonthlyContributionChargesProps> = (
       </Button>
       <Button
         className="monthly-contribution-my-contributions-stage__button"
+        onClick={goToChangeMonthlyContribution}
         shouldUseFullWidth
       >
         Change my monthly contribution
