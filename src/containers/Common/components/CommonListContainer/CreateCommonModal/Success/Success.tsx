@@ -4,7 +4,7 @@ import { useHistory } from "react-router";
 import {
   Button,
   ButtonVariant,
-  Share,
+  CommonShare,
   SharePopupVariant,
 } from "@/shared/components";
 import { Colors, ScreenSize, ROUTE_PATHS } from "@/shared/constants";
@@ -31,7 +31,6 @@ const Success: FC<SuccessProps> = (props) => {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const commonPath = ROUTE_PATHS.COMMON_DETAIL.replace(":id", common.id);
-  const sharingURL = getSharingURL(commonPath);
 
   const handleGoToCommon = () => {
     history.push(commonPath);
@@ -76,9 +75,9 @@ const Success: FC<SuccessProps> = (props) => {
         can always share it later.
       </p>
       <div className="create-common-confirmation-success__buttons">
-        <Share
+        <CommonShare
           className="create-common-confirmation-success__button-wrapper"
-          url={sharingURL}
+          common={common}
           type={isMobileView ? "modal" : "popup"}
           color={Colors.lightPurple}
           top=""
@@ -94,7 +93,7 @@ const Success: FC<SuccessProps> = (props) => {
           >
             Share now
           </Button>
-        </Share>
+        </CommonShare>
         <Button
           key="create-common-confirmation-success-go-to-common-btn"
           className="create-common-confirmation-success__continue-button"

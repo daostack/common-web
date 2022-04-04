@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 
 import { Loader } from "../../../../../shared/components";
-import { Discussion } from "../../../../../shared/models";
+import { Common, Discussion } from "../../../../../shared/models";
 import { getDaysAgo, getUserName } from "../../../../../shared/utils";
 import { ChatComponent } from "../ChatComponent";
 import "./index.scss";
@@ -14,7 +14,7 @@ import classNames from "classnames";
 
 interface DiscussionDetailModalProps {
   disscussion: Discussion | null;
-  commonId: string;
+  common: Common;
   onOpenJoinModal: () => void;
   isCommonMember?: boolean;
   isJoiningPending: boolean;
@@ -22,7 +22,7 @@ interface DiscussionDetailModalProps {
 
 export default function DiscussionDetailModal({
   disscussion,
-  commonId,
+  common,
   onOpenJoinModal,
   isCommonMember,
   isJoiningPending,
@@ -97,7 +97,7 @@ export default function DiscussionDetailModal({
       </div>
       <div className="chat-container">
         <ChatComponent
-          commonId={commonId}
+          common={common}
           discussionMessage={disscussion.discussionMessage || []}
           onOpenJoinModal={onOpenJoinModal}
           isCommonMember={isCommonMember}
