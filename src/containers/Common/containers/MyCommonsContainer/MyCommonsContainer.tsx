@@ -7,7 +7,7 @@ import { ROUTE_PATHS } from "../../../../shared/constants";
 import { isMobile } from "../../../../shared/utils";
 import { CommonListItem } from "../../components";
 import "./index.scss";
-import { Common, ProposalState } from "../../../../shared/models";
+import { Common, ProposalState, ProposalType } from "../../../../shared/models";
 import { getCommonsList, loadUserProposalList } from "../../store/actions";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -54,7 +54,10 @@ export default function MyCommonsContainer() {
 
   useEffect(() => {
     const ids = myProposals
-      .filter((p) => p.state === ProposalState.COUNTDOWN)
+      .filter(
+        (p) =>
+          p.state === ProposalState.COUNTDOWN && p.type === ProposalType.Join
+      )
       .map((p) => p.commonId);
     const pC = commons.filter((c) => ids.includes(c.id));
     setPendingCommons(pC);

@@ -108,6 +108,7 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
   .handleAction(actions.createRequestToJoin.success, (state, action) =>
     produce(state, (nextState) => {
       nextState.proposals = [{ ...action.payload }, ...nextState.proposals];
+      nextState.userProposals = [{ ...action.payload }, ...nextState.userProposals];
     })
   )
   .handleAction(actions.checkUserPaymentMethod.success, (state, action) =>
@@ -117,7 +118,16 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
   )
   .handleAction(actions.createCommon.success, (state, action) =>
     produce(state, (nextState) => {
-      nextState.commons = [action.payload, ...nextState.commons];
+      if (action.payload.active) {
+        nextState.commons = [action.payload, ...nextState.commons];
+      }
+    })
+  )
+  .handleAction(actions.deleteCommon.success, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.commons = nextState.commons.filter(
+        (common) => common.id !== action.payload
+      );
     })
   );
 

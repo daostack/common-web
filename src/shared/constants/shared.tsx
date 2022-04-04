@@ -22,8 +22,6 @@ export const MIN_CONTRIBUTION_ILS_AMOUNT = 10_00; // ₪10 * 100
 export const MAX_CONTRIBUTION_ILS_AMOUNT = 5000_00; // ₪5000 * 100
 export const MAX_CONTRIBUTION_ILS_AMOUNT_IN_COMMON_CREATION = 500_00; // ₪500 * 100
 
-export const COMMON_SAFETY_DAYS_AMOUNT = 32;
-
 export enum MobileOperatingSystem {
   WindowsPhone = "Windows Phone",
   Android = "Android",
@@ -50,3 +48,8 @@ export const DEFAULT_VIEWPORT_CONFIG = "width=device-width, initial-scale=1";
 export const VIEWPORT_CONFIG_TO_BLOCK_AUTO_ZOOM = `${DEFAULT_VIEWPORT_CONFIG}, maximum-scale=1.0, user-scalable=0`;
 
 export const RECAPTCHA_CONTAINER_ID = "recaptcha-container-id";
+
+export const MAX_LINK_TITLE_LENGTH = 30;
+export const NUMBERS_ONLY_REGEXP = /^[0-9]*$/;
+
+export const URL_REGEXP = /^((((https?|ftp):)?\/\/)|www.)(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;

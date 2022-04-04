@@ -16,6 +16,11 @@ import {
 } from "@/containers/Common/interfaces";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 import { CreateVotePayload } from "@/shared/interfaces/api/vote";
+import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
+import {
+  ImmediateContributionData,
+  ImmediateContributionResponse,
+} from "../interfaces";
 
 export const getCommonsList = createAsyncAction(
   CommonsActionTypes.GET_COMMONS_LIST,
@@ -152,7 +157,7 @@ export const deleteCommon = createAsyncAction(
   CommonsActionTypes.DELETE_COMMON,
   CommonsActionTypes.DELETE_COMMON_SUCCESS,
   CommonsActionTypes.DELETE_COMMON_FAILURE
-)<PayloadWithCallback<DeleteCommon, void, Error>, void, Error>();
+)<PayloadWithCallback<DeleteCommon, void, Error>, string, Error>();
 
 export const createCommon = createAsyncAction(
   CommonsActionTypes.CREATE_COMMON,
@@ -165,3 +170,29 @@ export const createVote = createAsyncAction(
   CommonsActionTypes.CREATE_VOTE_SUCCESS,
   CommonsActionTypes.CREATE_VOTE_FAILURE
 )<PayloadWithCallback<CreateVotePayload, void, Error>, void, Error>();
+
+export const makeImmediateContribution = createAsyncAction(
+  CommonsActionTypes.MAKE_IMMEDIATE_CONTRIBUTION,
+  CommonsActionTypes.MAKE_IMMEDIATE_CONTRIBUTION_SUCCESS,
+  CommonsActionTypes.MAKE_IMMEDIATE_CONTRIBUTION_FAILURE
+)<
+  PayloadWithCallback<
+    ImmediateContributionData,
+    ImmediateContributionResponse,
+    Error
+  >,
+  ImmediateContributionResponse,
+  Error
+>();
+
+export const addBankDetails = createAsyncAction(
+  CommonsActionTypes.ADD_BANK_DETAILS,
+  CommonsActionTypes.ADD_BANK_DETAILS_SUCCESS,
+  CommonsActionTypes.ADD_BANK_DETAILS_FAILURE
+)<PayloadWithCallback<AddBankDetailsPayload, void, Error>, void, Error>();
+
+export const getBankDetails = createAsyncAction(
+  CommonsActionTypes.GET_BANK_DETAILS,
+  CommonsActionTypes.GET_BANK_DETAILS_SUCCESS,
+  CommonsActionTypes.GET_BANK_DETAILS_FAILURE
+)<PayloadWithCallback<void, void, Error>, void, Error>();

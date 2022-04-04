@@ -1,31 +1,51 @@
 import React, { ChangeEventHandler, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { LinksArray, TextField } from "@/shared/components/Form/Formik";
+import {
+  CurrencyInput,
+  LinksArray,
+  TextField,
+} from "@/shared/components/Form/Formik";
+import { URL_REGEXP, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
 import { formatPrice } from "@/shared/utils";
 import { Common } from "@/shared/models";
 import { uploadFile } from "@/shared/utils/firebaseUploadFile";
-import {
-  HTTPS_URL_REGEXP,
-  MAX_LINK_TITLE_LENGTH,
-} from "@/containers/Common/components/CommonListContainer/CreateCommonModal/CreationSteps/GeneralInfo/constants";
-import { ButtonIcon, Loader } from "@/shared/components";
+import { Button, ButtonIcon, Loader, ModalFooter } from "@/shared/components";
 import DeleteIcon from "@/shared/icons/delete.icon";
 import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
+import { getBankDetails } from "@/containers/Common/store/actions";
+import { MAX_PROPOSAL_TITLE_LENGTH } from "./constants";
 
 const validationSchema = Yup.object({
   description: Yup.string().required("Field required"),
-  title: Yup.string().required("Field required").max(49, "Title too long"),
-  links: Yup.array().of(
-    Yup.object().shape({
-      title: Yup.string()
-        .max(MAX_LINK_TITLE_LENGTH, "Entered title is too long")
-        .required("Please enter link title"),
-      link: Yup.string()
-        .matches(HTTPS_URL_REGEXP, "Please enter correct URL")
-        .required("Please enter a link"),
-    })
-  ),
+  title: Yup.string()
+    .required("Field required")
+    .max(MAX_PROPOSAL_TITLE_LENGTH, "Title too long"),
+  links: Yup.array()
+    .of(
+      Yup.object().shape(
+        {
+          title: Yup.string().when("value", (value: string) => {
+            if (value) {
+              return Yup.string()
+                .max(MAX_LINK_TITLE_LENGTH, "Entered title is too long")
+                .required("Please enter link title");
+            }
+          }),
+          value: Yup.string().when("title", (title: string) => {
+            if (title) {
+              return Yup.string()
+                .matches(URL_REGEXP, "Please enter correct URL")
+                .required("Please enter a link");
+            }
+          }),
+        },
+        [["title", "value"]]
+      )
+    )
+    .required("Please add at least 1 link")
+    .min(1, "Please add at least 1 link"),
 });
 
 const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png";
@@ -35,16 +55,15 @@ interface AddProposalFormInterface {
   saveProposalState: (
     payload: Partial<CreateFundingRequestProposalPayload>
   ) => void;
-  hasPaymentMethod: boolean;
-  addPaymentMethod: () => void;
+  addBankDetails: () => void;
 }
 
 export const AddProposalForm = ({
   common,
   saveProposalState,
-  hasPaymentMethod,
-  addPaymentMethod,
+  addBankDetails,
 }: AddProposalFormInterface) => {
+  const dispatch = useDispatch();
   const [isAmountAdded, addAmountToValidation] = useState(false);
   const [showFileLoader, setShowFileLoader] = useState(false);
   const [schema, setSchema] = useState(validationSchema);
@@ -52,11 +71,30 @@ export const AddProposalForm = ({
   const [uploadedFiles, setUploadedFile] = useState<
     { title: string; value: string }[]
   >([]);
+  const [hasBankDetails, setHasBankDetails] = useState<boolean | null>(null);
+
+  /**
+   * For now we fetch the bank details only here.
+   * It's very likely that we'll need this information somewhere else in the app
+   * so maybe we can fetch this info on the app start and save it in the Redux?
+   */
+  useEffect(() => {
+    dispatch(getBankDetails.request({
+      callback: (error) => {
+        if (error) {
+          console.error(error);
+          setHasBankDetails(false);
+          return;
+        }
+        setHasBankDetails(true);
+      }
+    }))
+  }, [dispatch])
 
   const [formValues] = useState({
     title: "",
     description: "",
-    links: [],
+    links: [{ title: "", value: "" }],
     images: [],
     amount: 0,
   });
@@ -143,17 +181,18 @@ export const AddProposalForm = ({
               onChange={formikProps.handleChange}
               onBlur={formikProps.handleBlur}
               isRequired={true}
+              maxLength={MAX_PROPOSAL_TITLE_LENGTH}
             />
             <div className="funding-request-wrapper">
               <div className="funding-input-wrapper">
-                <TextField
+                <CurrencyInput
+                  className="funding-request-wrapper__currency-input"
                   id="funding"
+                  name="amount"
                   label="Funding amount requested"
-                  name={"amount"}
-                  placeholder={"₪0"}
-                  value={formikProps.values.amount}
-                  onChange={formikProps.handleChange}
-                  onBlur={formikProps.handleBlur}
+                  placeholder={formatPrice(0, {
+                    shouldRemovePrefixFromZero: false,
+                  })}
                 />
               </div>
               <div className="funding-description">
@@ -161,18 +200,18 @@ export const AddProposalForm = ({
                 {formatPrice(common.balance)}
               </div>
             </div>
-            {!hasPaymentMethod && (
-              <div className="add-payment-method-wrapper">
+            {hasBankDetails === false && (
+              <div className="add-bank-details-wrapper">
                 <img
                   src="/icons/add-proposal/illustrations-full-page-transparent.svg"
                   alt=""
                 />
-                <div className="add-payment-content">
-                  <div className="add-payment-content-text">
+                <div className="add-bank-details-content">
+                  <div className="add-bank-details-content-text">
                     You must provide bank account details in order to receive
                     funds
                   </div>
-                  <button onClick={addPaymentMethod}>Add Bank Account</button>
+                  <button onClick={addBankDetails}>Add Bank Account</button>
                 </div>
               </div>
             )}
@@ -188,6 +227,7 @@ export const AddProposalForm = ({
                 onChange={formikProps.handleChange}
                 onBlur={formikProps.handleBlur}
                 isTextarea={true}
+                isRequired
               />
             </div>
             <div className="add-additional-information">
@@ -199,21 +239,6 @@ export const AddProposalForm = ({
                   accept={ACCEPTED_EXTENSIONS}
                   style={{ display: "none" }}
                 />
-                <div
-                  className="link"
-                  onClick={() =>
-                    formikProps.setFieldValue("links", [
-                      ...formikProps.values.links,
-                      { title: "", link: "" },
-                    ])
-                  }
-                >
-                  <img
-                    src="/icons/add-proposal/icons-link.svg"
-                    alt="icons-link"
-                  />
-                  <span>Add link</span>
-                </div>
                 <div
                   className="link"
                   onClick={() => document.getElementById("file")?.click()}
@@ -246,7 +271,6 @@ export const AddProposalForm = ({
                 </div>
                 <div className="additional-links">
                   <LinksArray
-                    hideAddButton={true}
                     name="links"
                     values={formikProps.values.links}
                     errors={formikProps.errors.links}
@@ -269,15 +293,15 @@ export const AddProposalForm = ({
                 insufficient for the amount requested.
               </div>
             </div>
-            <div className="action-wrapper">
-              <button
-                className="button-blue"
-                disabled={!formikProps.isValid}
-                onClick={formikProps.submitForm}
-              >
-                Create proposal
-              </button>
-            </div>
+            <ModalFooter sticky>
+              <div className="action-wrapper">
+                <Button
+                  disabled={!formikProps.isValid || !hasBankDetails}
+                  onClick={formikProps.submitForm}>
+                  Create proposal
+                </Button>
+              </div>
+            </ModalFooter>
           </div>
         </div>
       )}

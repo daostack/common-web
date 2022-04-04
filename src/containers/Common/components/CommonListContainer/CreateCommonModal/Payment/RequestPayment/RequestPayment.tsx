@@ -1,53 +1,70 @@
-import React, { ReactElement, useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { selectUser } from "@/containers/Auth/store/selectors";
-import PayMeService from "@/services/PayMeService";
+import React, { useCallback, useEffect, useState, ReactElement } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Loader, ModalHeaderContent, Separator } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
-import { CommonContributionType, CommonPayment } from "@/shared/models";
+import { Common, CommonContributionType, PaymentStatus } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice } from "@/shared/utils";
 import {
-  IntermediateCreateCommonPayload,
+  isImmediateContributionPayment,
   PaymentPayload,
+  ImmediateContributionPayment,
 } from "../../../../../interfaces";
-import { subscribeToCardChange } from "../../../../../store/api";
+import {
+  getCommonsList,
+  makeImmediateContribution,
+} from "../../../../../store/actions";
+import { subscribeToPayment } from "../../../../../store/api";
 import { Progress } from "../Progress";
 import "./index.scss";
 
 interface State {
-  commonPayment: CommonPayment | null;
-  isCommonPaymentLoading: boolean;
+  payment: ImmediateContributionPayment | null;
+  isPaymentLoading: boolean;
   isPaymentIframeLoaded: boolean;
 }
 
 const INITIAL_STATE: State = {
-  commonPayment: null,
-  isCommonPaymentLoading: false,
+  payment: null,
+  isPaymentLoading: false,
   isPaymentIframeLoaded: false,
 };
 
 interface RequestPaymentProps {
   currentStep: number;
   onFinish: () => void;
+  onError: (errorText: string) => void;
+  setShouldShowGoBackButton: (value: boolean) => void;
   paymentData: PaymentPayload;
-  creationData: IntermediateCreateCommonPayload;
+  common: Common;
 }
 
 export default function RequestPayment(
   props: RequestPaymentProps
 ): ReactElement {
-  const { creationData, currentStep, paymentData, onFinish } = props;
+  const {
+    common,
+    currentStep,
+    paymentData,
+    onFinish,
+    onError,
+    setShouldShowGoBackButton,
+  } = props;
+  const {
+    id: commonId,
+    metadata: { contributionType },
+    active: isCommonActive,
+  } = common;
+  const dispatch = useDispatch();
   const [
-    { commonPayment, isCommonPaymentLoading, isPaymentIframeLoaded },
+    { payment, isPaymentLoading, isPaymentIframeLoaded },
     setState,
   ] = useState<State>(INITIAL_STATE);
-  const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const selectedAmount = paymentData.contributionAmount;
   const contributionTypeText =
-    creationData.contributionType === CommonContributionType.Monthly
+    common.metadata.contributionType === CommonContributionType.Monthly
       ? "monthly"
       : "one-time";
 
@@ -55,48 +72,89 @@ export default function RequestPayment(
     setState((nextState) => ({ ...nextState, isPaymentIframeLoaded: true }));
   }, []);
 
+  const finishPayment = useCallback(() => {
+    onFinish();
+
+    if (!isCommonActive) {
+      dispatch(getCommonsList.request());
+    }
+  }, [isCommonActive, onFinish, dispatch]);
+
   useEffect(() => {
     (async () => {
-      if (commonPayment || isCommonPaymentLoading || !user?.uid) {
+      if (payment || isPaymentLoading || !paymentData.contributionAmount) {
         return;
       }
 
-      try {
-        setState((nextState) => ({
-          ...nextState,
-          isCommonPaymentLoading: true,
-        }));
+      setState((nextState) => ({
+        ...nextState,
+        isPaymentLoading: true,
+      }));
 
-        const createdCommonPayment = await PayMeService.createBuyerTokenPage({
-          cardId: paymentData.cardId,
-        });
+      dispatch(
+        makeImmediateContribution.request({
+          payload: {
+            commonId,
+            contributionType,
+            amount: paymentData.contributionAmount,
+            saveCard: true,
+          },
+          callback: (error, payment) => {
+            if (error || !payment) {
+              onError(error?.message || "Something went wrong");
+              return;
+            }
+            if (!isImmediateContributionPayment(payment)) {
+              finishPayment();
+              return;
+            }
 
-        setState((nextState) => ({
-          ...nextState,
-          commonPayment: createdCommonPayment,
-          isCommonPaymentLoading: false,
-        }));
-      } catch (error) {
-        console.error("Error during payment page creation");
-      }
+            setShouldShowGoBackButton(true);
+            setState((nextState) => ({
+              ...nextState,
+              payment,
+              isPaymentLoading: false,
+            }));
+          },
+        })
+      );
     })();
-  }, [commonPayment, isCommonPaymentLoading, paymentData.cardId, user]);
+  }, [
+    dispatch,
+    commonId,
+    contributionType,
+    finishPayment,
+    payment,
+    isPaymentLoading,
+    paymentData.contributionAmount,
+    onFinish,
+    onError,
+    setShouldShowGoBackButton,
+  ]);
 
   useEffect(() => {
-    if (!isPaymentIframeLoaded) {
+    if (!isPaymentIframeLoaded || !payment) {
       return;
     }
 
     try {
-      return subscribeToCardChange(paymentData.cardId, (card) => {
-        if (card) {
-          onFinish();
+      return subscribeToPayment(payment.paymentId, (payment) => {
+        if (payment?.status === PaymentStatus.Confirmed) {
+          finishPayment();
+        } else if (payment?.status === PaymentStatus.Failed) {
+          onError("Payment failed");
         }
       });
     } catch (error) {
-      console.error("Error during subscription to payment status change");
+      console.error("Error during subscribing to payment status change");
     }
-  }, [isPaymentIframeLoaded, paymentData.cardId, onFinish]);
+  }, [
+    isPaymentIframeLoaded,
+    payment,
+    finishPayment,
+    onFinish,
+    onError,
+  ]);
 
   const progressEl = <Progress paymentStep={currentStep} />;
 
@@ -118,10 +176,10 @@ export default function RequestPayment(
         {!isPaymentIframeLoaded && (
           <Loader className="create-common-payment__loader" />
         )}
-        {commonPayment && (
+        {payment && (
           <iframe
             className="create-common-payment__iframe"
-            src={commonPayment.link}
+            src={payment.link}
             frameBorder="0"
             title="Payment Details"
             onLoad={handleIframeLoad}

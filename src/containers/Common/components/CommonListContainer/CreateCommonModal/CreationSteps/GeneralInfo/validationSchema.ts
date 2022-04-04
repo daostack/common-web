@@ -1,11 +1,9 @@
 import * as Yup from "yup";
-
+import { URL_REGEXP, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
 import {
   MAX_COMMON_NAME_LENGTH,
   MAX_TAGLINE_LENGTH,
   MAX_ABOUT_LENGTH,
-  MAX_LINK_TITLE_LENGTH,
-  HTTPS_URL_REGEXP,
 } from "./constants";
 
 const schema = Yup.object().shape({
@@ -30,7 +28,7 @@ const schema = Yup.object().shape({
           value: Yup.string().when("title", (title: string) => {
             if (title) {
               return Yup.string()
-                .matches(HTTPS_URL_REGEXP, "Please enter correct URL")
+                .matches(URL_REGEXP, "Please enter correct URL")
                 .required("Please enter a link");
             }
           }),

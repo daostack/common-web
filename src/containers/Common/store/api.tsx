@@ -10,6 +10,7 @@ import {
   Common,
   Discussion,
   DiscussionMessage,
+  Payment,
   Proposal,
   User,
 } from "@/shared/models";
@@ -24,9 +25,12 @@ import {
   CreateCommonPayload,
   CreateDiscussionDto,
   DeleteCommon,
+  ImmediateContributionData,
+  ImmediateContributionResponse,
 } from "@/containers/Common/interfaces";
 import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
 import { CreateVotePayload, Vote } from "@/shared/interfaces/api/vote";
+import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 
 export async function fetchCommonDiscussions(commonId: string) {
   const commons = await firebase
@@ -71,7 +75,11 @@ export async function fetchUserProposals(userId: string) {
 }
 
 export async function fetchCommonList(): Promise<Common[]> {
-  const commons = await firebase.firestore().collection(Collection.Daos).where("active", "==", true).get();
+  const commons = await firebase
+    .firestore()
+    .collection(Collection.Daos)
+    .where("active", "==", true)
+    .get();
   const data = transformFirebaseDataList<Common>(commons);
   return data;
 }
@@ -265,11 +273,10 @@ export async function createFundingProposal(
   return convertObjectDatesToFirestoreTimestamps(data);
 }
 
-export async function createVote(requestData: CreateVotePayload): Promise<Vote> {
-  const { data } = await Api.post<Vote>(
-    ApiEndpoint.CreateVote,
-    requestData
-  );
+export async function createVote(
+  requestData: CreateVotePayload
+): Promise<Vote> {
+  const { data } = await Api.post<Vote>(ApiEndpoint.CreateVote, requestData);
 
   return data;
 }
@@ -285,10 +292,7 @@ export async function checkUserPaymentMethod(userId: string): Promise<boolean> {
 }
 
 export async function deleteCommon(requestData: DeleteCommon): Promise<void> {
-  const { data } = await Api.post<void>(
-    ApiEndpoint.DeleteCommon,
-    requestData
-  );
+  const { data } = await Api.post<void>(ApiEndpoint.DeleteCommon, requestData);
 
   return data;
 }
@@ -302,4 +306,42 @@ export async function createCommon(
   );
 
   return convertObjectDatesToFirestoreTimestamps(data);
+}
+
+export async function makeImmediateContribution(
+  requestData: ImmediateContributionData
+): Promise<ImmediateContributionResponse> {
+  const { data } = await Api.post<ImmediateContributionResponse>(
+    ApiEndpoint.MakeImmediateContribution,
+    requestData
+  );
+
+  return data;
+}
+
+export function subscribeToPayment(
+  paymentId: string,
+  callback: (payment?: Payment) => void
+): () => void {
+  return firebase
+    .firestore()
+    .collection(Collection.Payments)
+    .doc(paymentId)
+    .onSnapshot((snapshot) => {
+      callback(transformFirebaseDataSingle<Payment>(snapshot));
+    });
+}
+
+export async function getBankDetails(): Promise<void> {
+  const { data } = await Api.get<void>(
+    ApiEndpoint.GetBankAccount,
+  );
+  return data;
+}
+
+export async function addBankDetails(requestData: AddBankDetailsPayload): Promise<void> {
+  await Api.post<void>(
+    ApiEndpoint.AddBankAccount,
+    requestData
+  );
 }

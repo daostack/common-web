@@ -27,12 +27,16 @@ import {
   checkUserPaymentMethod,
   deleteCommon as deleteCommonApi,
   createVote as createVoteApi,
+  makeImmediateContribution as makeImmediateContributionApi,
+  addBankDetails as addBankDetailsApi,
+  getBankDetails as getBankDetailsApi,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
 import store from "@/index";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
 import { Vote } from "@/shared/interfaces/api/vote";
+import { ImmediateContributionResponse } from "../interfaces";
 
 export function* getCommonsList(): Generator {
   try {
@@ -328,7 +332,7 @@ export function* deleteCommon(
     yield put(startLoading());
     yield deleteCommonApi(action.payload.payload);
 
-    yield put(actions.deleteCommon.success());
+    yield put(actions.deleteCommon.success(action.payload.payload.commonId));
     action.payload.callback(null);
     yield put(stopLoading());
   } catch (error) {
@@ -345,19 +349,52 @@ export function* vote(
     yield put(startLoading());
     const vote = (yield createVoteApi(action.payload.payload)) as Vote;
 
-    yield call(
-      async () => {
-        const proposals = await fetchCommonProposals(vote.commonId);
-        store.dispatch(actions.setProposals(proposals));
-        store.dispatch(actions.loadProposalList.request());
-        store.dispatch(stopLoading());
-      }
-    )
+    yield call(async () => {
+      const proposals = await fetchCommonProposals(vote.commonId);
+      store.dispatch(actions.setProposals(proposals));
+      store.dispatch(actions.loadProposalList.request());
+      store.dispatch(actions.loadProposalDetail.request(proposals.filter(p => p.id === action.payload.payload.proposalId)[0]));
+      store.dispatch(stopLoading());
+    });
     yield put(actions.createVote.success());
     action.payload.callback(null);
     yield put(stopLoading());
   } catch (error) {
     yield put(actions.createVote.failure(error));
+    action.payload.callback(error);
+    yield put(stopLoading());
+  }
+}
+
+export function* getBankDetails(
+  action: ReturnType<typeof actions.getBankDetails.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    yield getBankDetailsApi();
+
+    yield put(actions.getBankDetails.success());
+    action.payload.callback(null);
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(actions.getBankDetails.failure(error));
+    action.payload.callback(error);
+    yield put(stopLoading());
+  }
+}
+
+export function* addBankDetails(
+  action: ReturnType<typeof actions.addBankDetails.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    yield addBankDetailsApi(action.payload.payload);
+
+    yield put(actions.addBankDetails.success());
+    action.payload.callback(null);
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(actions.addBankDetails.failure(error));
     action.payload.callback(error);
     yield put(stopLoading());
   }
@@ -431,6 +468,23 @@ export function* createCommon(
   }
 }
 
+export function* makeImmediateContribution(
+  action: ReturnType<typeof actions.makeImmediateContribution.request>
+): Generator {
+  try {
+    const response = (yield call(
+      makeImmediateContributionApi,
+      action.payload.payload
+    )) as ImmediateContributionResponse;
+
+    yield put(actions.makeImmediateContribution.success(response));
+    action.payload.callback(null, response);
+  } catch (error) {
+    yield put(actions.makeImmediateContribution.failure(error));
+    action.payload.callback(error);
+  }
+}
+
 export function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
@@ -463,6 +517,12 @@ export function* commonsSaga() {
   );
   yield takeLatest(actions.createCommon.request, createCommon);
   yield takeLatest(actions.createVote.request, vote);
+  yield takeLatest(
+    actions.makeImmediateContribution.request,
+    makeImmediateContribution
+  );
+  yield takeLatest(actions.getBankDetails.request, getBankDetails);
+  yield takeLatest(actions.addBankDetails.request, addBankDetails);
 }
 
 export default commonsSaga;
