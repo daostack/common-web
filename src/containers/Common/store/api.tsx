@@ -12,6 +12,7 @@ import {
   DiscussionMessage,
   Payment,
   Proposal,
+  Subscription,
   User,
 } from "@/shared/models";
 import {
@@ -333,17 +334,14 @@ export function subscribeToPayment(
 }
 
 export async function getBankDetails(): Promise<void> {
-  const { data } = await Api.get<void>(
-    ApiEndpoint.GetBankAccount,
-  );
+  const { data } = await Api.get<void>(ApiEndpoint.GetBankAccount);
   return data;
 }
 
-export async function addBankDetails(requestData: AddBankDetailsPayload): Promise<void> {
-  await Api.post<void>(
-    ApiEndpoint.AddBankAccount,
-    requestData
-  );
+export async function addBankDetails(
+  requestData: AddBankDetailsPayload
+): Promise<void> {
+  await Api.post<void>(ApiEndpoint.AddBankAccount, requestData);
 }
 
 export async function getUserContributionsToCommon(
@@ -369,4 +367,19 @@ export async function getUserContributionsToCommon(
   });
 
   return payments;
+}
+
+export async function getUserSubscriptionToCommon(
+  commonId: string,
+  userId: string
+): Promise<Subscription | null> {
+  const result = await firebase
+    .firestore()
+    .collection(Collection.Subscriptions)
+    .where("userId", "==", userId)
+    .where("metadata.common.id", "==", commonId)
+    .get();
+  const subscriptions = transformFirebaseDataList<Subscription>(result);
+
+  return subscriptions.length > 0 ? subscriptions[0] : null;
 }

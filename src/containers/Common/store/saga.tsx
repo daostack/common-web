@@ -7,6 +7,7 @@ import {
   DiscussionMessage,
   Proposal,
   Payment,
+  Subscription,
 } from "../../../shared/models";
 import { startLoading, stopLoading } from "@/shared/store/actions";
 import {
@@ -32,6 +33,7 @@ import {
   addBankDetails as addBankDetailsApi,
   getBankDetails as getBankDetailsApi,
   getUserContributionsToCommon as getUserContributionsToCommonApi,
+  getUserSubscriptionToCommon as getUserSubscriptionToCommonApi,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -355,7 +357,11 @@ export function* vote(
       const proposals = await fetchCommonProposals(vote.commonId);
       store.dispatch(actions.setProposals(proposals));
       store.dispatch(actions.loadProposalList.request());
-      store.dispatch(actions.loadProposalDetail.request(proposals.filter(p => p.id === action.payload.payload.proposalId)[0]));
+      store.dispatch(
+        actions.loadProposalDetail.request(
+          proposals.filter((p) => p.id === action.payload.payload.proposalId)[0]
+        )
+      );
       store.dispatch(stopLoading());
     });
     yield put(actions.createVote.success());
@@ -505,6 +511,24 @@ export function* getUserContributionsToCommon(
   }
 }
 
+export function* getUserSubscriptionToCommon(
+  action: ReturnType<typeof actions.getUserSubscriptionToCommon.request>
+): Generator {
+  try {
+    const subscription = (yield call(
+      getUserSubscriptionToCommonApi,
+      action.payload.payload.commonId,
+      action.payload.payload.userId
+    )) as Subscription | null;
+
+    yield put(actions.getUserSubscriptionToCommon.success(subscription));
+    action.payload.callback(null, subscription);
+  } catch (error) {
+    yield put(actions.getUserSubscriptionToCommon.failure(error));
+    action.payload.callback(error);
+  }
+}
+
 export function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
@@ -546,6 +570,10 @@ export function* commonsSaga() {
   yield takeLatest(
     actions.getUserContributionsToCommon.request,
     getUserContributionsToCommon
+  );
+  yield takeLatest(
+    actions.getUserSubscriptionToCommon.request,
+    getUserSubscriptionToCommon
   );
 }
 
