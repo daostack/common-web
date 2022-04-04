@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 
-import { Share } from "../../../../../shared/components";
-import { DiscussionMessage } from "@/shared/models";
+import { CommonShare } from "@/shared/components";
+import { Common, DiscussionMessage } from "@/shared/models";
 import ChatMessage from "./ChatMessage";
 import "./index.scss";
 import { formatDate } from "@/shared/utils";
-import { BASE_URL, Colors, ROUTE_PATHS } from "@/shared/constants";
+import { Colors } from "@/shared/constants";
 import { EmptyTabComponent } from "@/containers/Common/components/CommonDetailContainer";
 
 interface ChatComponentInterface {
-  commonId: string;
+  common: Common;
   discussionMessage: DiscussionMessage[];
   onOpenJoinModal: () => void;
   isCommonMember?: boolean;
@@ -41,7 +41,7 @@ interface Messages {
 }
 
 export default function ChatComponent({
-  commonId,
+  common,
   discussionMessage,
   onOpenJoinModal,
   isCommonMember,
@@ -97,8 +97,8 @@ export default function ChatComponent({
                 Join the effort
               </button>
             )}
-            <Share
-              url={`${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${commonId}`}
+            <CommonShare
+              common={common}
               type="popup"
               color={Colors.lightPurple}
               top="-130px"

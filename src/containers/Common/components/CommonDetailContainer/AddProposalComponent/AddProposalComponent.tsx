@@ -83,12 +83,23 @@ export const AddProposalComponent = ({
     }
   }, [createdProposal, getProposalDetail, onClose]);
 
+  const confirmProposal = useCallback(() => {
+    changeCreationProposalStep(AddProposalSteps.LOADER);
+    fundingRequest.links = fundingRequest.links?.filter((link) => link.title && link.value);
+    fundingRequest.amount = fundingRequest.amount * 100;
+    onProposalAdd(fundingRequest, changeCreationProposalStep);
+  }, [onProposalAdd, fundingRequest]);
+  
   const saveProposalState = useCallback(
     (payload: Partial<CreateFundingRequestProposalPayload>) => {
       setFundingRequest({ ...fundingRequest, ...payload });
-      changeCreationProposalStep(AddProposalSteps.CONFIRM);
+      if (!payload.amount) {
+        confirmProposal();
+      } else {
+        changeCreationProposalStep(AddProposalSteps.CONFIRM);
+      }
     },
-    [fundingRequest]
+    [fundingRequest, confirmProposal]
   );
 
   const onBankDetails = useCallback(() => {
@@ -98,13 +109,6 @@ export const AddProposalComponent = ({
   const addBankDetails = useCallback(() => {
     changeCreationProposalStep(AddProposalSteps.BANK_DETAILS);
   }, []);
-
-  const confirmProposal = useCallback(() => {
-    changeCreationProposalStep(AddProposalSteps.LOADER);
-    fundingRequest.links = fundingRequest.links?.filter((link) => link.title && link.value);
-    fundingRequest.amount = fundingRequest.amount * 100;
-    onProposalAdd(fundingRequest, changeCreationProposalStep);
-  }, [onProposalAdd, fundingRequest]);
 
   const moveStageBack = useCallback(() => {
     changeCreationProposalStep(AddProposalSteps.CREATE);

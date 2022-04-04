@@ -13,6 +13,8 @@ const initialState: SharedStateType = {
   screenSize: window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`).matches
     ? ScreenSize.Desktop
     : ScreenSize.Mobile,
+  shareLinks: {},
+  loadingShareLinks: {},
 };
 
 const reducer = createReducer<SharedStateType, Action>(initialState)
@@ -34,6 +36,34 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
   .handleAction(actions.changeScreenSize, (state, action) =>
     produce(state, (nextState) => {
       nextState.screenSize = action.payload;
+    }),
+  )
+  .handleAction(actions.buildShareLink.request, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.loadingShareLinks = {
+        ...nextState.loadingShareLinks,
+        [payload.payload.key]: true,
+      };
+    }),
+  )
+  .handleAction(actions.buildShareLink.success, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.shareLinks = {
+        ...nextState.shareLinks,
+        [payload.key]: payload.link,
+      };
+      nextState.loadingShareLinks = {
+        ...nextState.loadingShareLinks,
+        [payload.key]: false,
+      };
+    }),
+  )
+  .handleAction(actions.buildShareLink.failure, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.loadingShareLinks = {
+        ...nextState.loadingShareLinks,
+        [payload.key]: false,
+      };
     }),
   );
 export { reducer as SharedReducer };
