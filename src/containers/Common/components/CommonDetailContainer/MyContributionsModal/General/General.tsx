@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, FC } from "react";
 import { useSelector } from "react-redux";
+import classNames from "classnames";
 import { Button, ButtonVariant } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import {
@@ -97,7 +98,14 @@ const General: FC<GeneralProps> = (props) => {
               />
             ))}
           </ul>
-          <div className="general-my-contributions-stage__buttons-wrapper">
+          <div
+            className={classNames(
+              "general-my-contributions-stage__buttons-wrapper",
+              {
+                "general-my-contributions-stage__buttons-wrapper--center": !subscription,
+              }
+            )}
+          >
             <Button
               className="general-my-contributions-stage__button"
               onClick={goToOneTimeContribution}
@@ -106,13 +114,15 @@ const General: FC<GeneralProps> = (props) => {
             >
               Add a one-time contribution
             </Button>
-            <Button
-              className="general-my-contributions-stage__button"
-              onClick={goToChangeMonthlyContribution}
-              shouldUseFullWidth
-            >
-              Change my monthly contribution
-            </Button>
+            {subscription && (
+              <Button
+                className="general-my-contributions-stage__button"
+                onClick={goToChangeMonthlyContribution}
+                shouldUseFullWidth
+              >
+                Change my monthly contribution
+              </Button>
+            )}
           </div>
         </section>
       ) : (

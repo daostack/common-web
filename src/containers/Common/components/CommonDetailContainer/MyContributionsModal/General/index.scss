@@ -76,6 +76,9 @@ $mobile-h-padding: 1.5rem;
     flex-wrap: wrap-reverse;
   }
 }
+.general-my-contributions-stage__buttons-wrapper--center {
+  justify-content: center;
+}
 
 .general-my-contributions-stage__button {
   max-width: 21.5rem;
