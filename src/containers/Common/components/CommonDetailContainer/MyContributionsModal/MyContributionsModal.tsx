@@ -14,6 +14,7 @@ import { ModalProps } from "@/shared/interfaces";
 import { Common, Payment } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { getUserContributionsToCommon } from "../../../store/actions";
+import { ChangeMonthlyContribution } from "./ChangeMonthlyContribution";
 import { Error } from "./Error";
 import { General } from "./General";
 import { MonthlyContributionCharges } from "./MonthlyContributionCharges";
@@ -26,6 +27,7 @@ enum MyContributionsStage {
   General,
   MonthlyContributionCharges,
   OneTimeContribution,
+  ChangeMonthlyContribution,
 }
 
 interface MyContributionsModalProps
@@ -76,6 +78,11 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
 
   const goToOneTimeContributionStage = useCallback(() => {
     setStage(MyContributionsStage.OneTimeContribution);
+    setGoBackHandler(goToGeneralStage);
+  }, [setGoBackHandler, goToGeneralStage]);
+
+  const goToChangeMonthlyContributionStage = useCallback(() => {
+    setStage(MyContributionsStage.ChangeMonthlyContribution);
     setGoBackHandler(goToGeneralStage);
   }, [setGoBackHandler, goToGeneralStage]);
 
@@ -157,6 +164,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
             commonName={common.name}
             goToMonthlyContribution={goToMonthlyContributionStage}
             goToOneTimeContribution={goToOneTimeContributionStage}
+            goToChangeMonthlyContribution={goToChangeMonthlyContributionStage}
           />
         ) : null;
       case MyContributionsStage.MonthlyContributionCharges:
@@ -164,11 +172,20 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
           <MonthlyContributionCharges
             payments={userPayments}
             goToOneTimeContribution={goToOneTimeContributionStage}
+            goToChangeMonthlyContribution={goToChangeMonthlyContributionStage}
           />
         ) : null;
       case MyContributionsStage.OneTimeContribution:
         return (
           <OneTimeContribution
+            common={common}
+            onFinish={handleOneTimeContributionFinish}
+            goBack={goToGeneralStage}
+          />
+        );
+      case MyContributionsStage.ChangeMonthlyContribution:
+        return (
+          <ChangeMonthlyContribution
             common={common}
             onFinish={handleOneTimeContributionFinish}
             goBack={goToGeneralStage}
