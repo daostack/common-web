@@ -5,7 +5,3 @@ export interface InvoicesSubmission {
   payoutDocs: DocInfo[];
   payoutDocsComment?: string;
 }
-
-export enum PayMeTypeCodes {
-  Invoice = 29
-}

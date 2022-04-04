@@ -29,6 +29,8 @@ import {
   deleteCommon as deleteCommonApi,
   createVote as createVoteApi,
   makeImmediateContribution as makeImmediateContributionApi,
+  addBankDetails as addBankDetailsApi,
+  getBankDetails as getBankDetailsApi,
   getUserContributionsToCommon as getUserContributionsToCommonApi,
 } from "./api";
 
@@ -353,6 +355,7 @@ export function* vote(
       const proposals = await fetchCommonProposals(vote.commonId);
       store.dispatch(actions.setProposals(proposals));
       store.dispatch(actions.loadProposalList.request());
+      store.dispatch(actions.loadProposalDetail.request(proposals.filter(p => p.id === action.payload.payload.proposalId)[0]));
       store.dispatch(stopLoading());
     });
     yield put(actions.createVote.success());
@@ -360,6 +363,40 @@ export function* vote(
     yield put(stopLoading());
   } catch (error) {
     yield put(actions.createVote.failure(error));
+    action.payload.callback(error);
+    yield put(stopLoading());
+  }
+}
+
+export function* getBankDetails(
+  action: ReturnType<typeof actions.getBankDetails.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    yield getBankDetailsApi();
+
+    yield put(actions.getBankDetails.success());
+    action.payload.callback(null);
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(actions.getBankDetails.failure(error));
+    action.payload.callback(error);
+    yield put(stopLoading());
+  }
+}
+
+export function* addBankDetails(
+  action: ReturnType<typeof actions.addBankDetails.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    yield addBankDetailsApi(action.payload.payload);
+
+    yield put(actions.addBankDetails.success());
+    action.payload.callback(null);
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(actions.addBankDetails.failure(error));
     action.payload.callback(error);
     yield put(stopLoading());
   }
@@ -504,6 +541,8 @@ export function* commonsSaga() {
     actions.makeImmediateContribution.request,
     makeImmediateContribution
   );
+  yield takeLatest(actions.getBankDetails.request, getBankDetails);
+  yield takeLatest(actions.addBankDetails.request, addBankDetails);
   yield takeLatest(
     actions.getUserContributionsToCommon.request,
     getUserContributionsToCommon

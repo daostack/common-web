@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Modal } from "@/shared/components";
 import { useZoomDisabling } from "@/shared/hooks";
-import { ModalProps } from "@/shared/interfaces";
+import { ModalProps, ModalRef } from "@/shared/interfaces";
 
 import "./index.scss";
 import { Common, Proposal } from "@/shared/models";
@@ -12,19 +12,19 @@ import { AddProposalLoader } from "./AddProposalLoader";
 import { AdProposalSuccess } from "./AddProposalSuccess";
 import { AdProposalFailure } from "./AddProposalFailure";
 import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
-import { AddPaymentMethod } from "./AddPaymentMethod";
+import { AddBankDetails } from "./AddBankDetails/AddBankDetails";
 import { useSelector } from "react-redux";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ScreenSize } from "@/shared/constants";
 import classNames from "classnames";
 
 export enum AddProposalSteps {
-  CREATE = "create",
-  CONFIRM = "confirm",
-  LOADER = "loader",
-  SUCCESS = "success",
-  FAILURE = "failure",
-  PAYMENT_METHOD = "payment_method",
+  CREATE,
+  CONFIRM,
+  LOADER,
+  SUCCESS,
+  FAILURE,
+  BANK_DETAILS,
 }
 
 interface AddDiscussionComponentProps
@@ -44,10 +44,10 @@ export const AddProposalComponent = ({
   onClose,
   onProposalAdd,
   common,
-  hasPaymentMethod,
   proposals,
   getProposalDetail,
 }: AddDiscussionComponentProps) => {
+  const modalRef = useRef<ModalRef>(null);
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
@@ -83,28 +83,36 @@ export const AddProposalComponent = ({
     }
   }, [createdProposal, getProposalDetail, onClose]);
 
-  const saveProposalState = useCallback(
-    (payload: Partial<CreateFundingRequestProposalPayload>) => {
-      setFundingRequest({ ...fundingRequest, ...payload });
-      changeCreationProposalStep(AddProposalSteps.CONFIRM);
-    },
-    [fundingRequest]
-  );
-
-  const onPaymentLoad = useCallback(() => {
-    changeCreationProposalStep(AddProposalSteps.CREATE);
-  }, []);
-
-  const addPaymentMethod = useCallback(() => {
-    changeCreationProposalStep(AddProposalSteps.PAYMENT_METHOD);
-  }, []);
-
   const confirmProposal = useCallback(() => {
     changeCreationProposalStep(AddProposalSteps.LOADER);
     fundingRequest.links = fundingRequest.links?.filter((link) => link.title && link.value);
     fundingRequest.amount = fundingRequest.amount * 100;
     onProposalAdd(fundingRequest, changeCreationProposalStep);
   }, [onProposalAdd, fundingRequest]);
+  
+  const saveProposalState = useCallback(
+    (payload: Partial<CreateFundingRequestProposalPayload>) => {
+      setFundingRequest({ ...fundingRequest, ...payload });
+      if (!payload.amount) {
+        confirmProposal();
+      } else {
+        changeCreationProposalStep(AddProposalSteps.CONFIRM);
+      }
+    },
+    [fundingRequest, confirmProposal]
+  );
+
+  const onBankDetails = useCallback(() => {
+    changeCreationProposalStep(AddProposalSteps.CREATE);
+  }, []);
+
+  const addBankDetails = useCallback(() => {
+    changeCreationProposalStep(AddProposalSteps.BANK_DETAILS);
+  }, []);
+
+  const moveStageBack = useCallback(() => {
+    changeCreationProposalStep(AddProposalSteps.CREATE);
+  }, []);
 
   const renderProposalStep = useMemo(() => {
     switch (proposalCreationStep) {
@@ -113,12 +121,11 @@ export const AddProposalComponent = ({
           <AddProposalForm
             common={common}
             saveProposalState={saveProposalState}
-            hasPaymentMethod={hasPaymentMethod}
-            addPaymentMethod={addPaymentMethod}
+            addBankDetails={addBankDetails}
           />
         );
-      case AddProposalSteps.PAYMENT_METHOD:
-        return <AddPaymentMethod onPaymentMethod={onPaymentLoad} />;
+      case AddProposalSteps.BANK_DETAILS:
+        return <AddBankDetails onBankDetails={onBankDetails} />;
       case AddProposalSteps.CONFIRM:
         return <AddProposalConfirm onConfirm={confirmProposal} />;
       case AddProposalSteps.LOADER:
@@ -137,8 +144,7 @@ export const AddProposalComponent = ({
           <AddProposalForm
             saveProposalState={saveProposalState}
             common={common}
-            hasPaymentMethod={hasPaymentMethod}
-            addPaymentMethod={addPaymentMethod}
+            addBankDetails={addBankDetails}
           />
         );
     }
@@ -146,10 +152,9 @@ export const AddProposalComponent = ({
     proposalCreationStep,
     saveProposalState,
     confirmProposal,
-    onPaymentLoad,
-    addPaymentMethod,
+    onBankDetails,
+    addBankDetails,
     handleProposalCreatedSuccess,
-    hasPaymentMethod,
     common,
     onClose,
   ]);
@@ -162,14 +167,20 @@ export const AddProposalComponent = ({
     }
   }, [isShowing, disableZoom, resetZoom]);
 
+  useEffect(() => {
+    modalRef.current?.scrollToTop();
+  }, [proposalCreationStep]);
+
   return (
     <Modal
+      ref={modalRef}
       isShowing={isShowing}
       onClose={onClose}
       className={classNames("create-proposal-modal", {
         "mobile-full-screen": isMobileView,
       })}
       mobileFullScreen={isMobileView}
+      onGoBack={(proposalCreationStep === AddProposalSteps.BANK_DETAILS || proposalCreationStep === AddProposalSteps.CONFIRM) ? moveStageBack : undefined}
       closePrompt
     >
       {renderProposalStep}

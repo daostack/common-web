@@ -30,6 +30,7 @@ import {
 } from "@/containers/Common/interfaces";
 import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
 import { CreateVotePayload, Vote } from "@/shared/interfaces/api/vote";
+import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 
 export async function fetchCommonDiscussions(commonId: string) {
   const commons = await firebase
@@ -329,6 +330,20 @@ export function subscribeToPayment(
     .onSnapshot((snapshot) => {
       callback(transformFirebaseDataSingle<Payment>(snapshot));
     });
+}
+
+export async function getBankDetails(): Promise<void> {
+  const { data } = await Api.get<void>(
+    ApiEndpoint.GetBankAccount,
+  );
+  return data;
+}
+
+export async function addBankDetails(requestData: AddBankDetailsPayload): Promise<void> {
+  await Api.post<void>(
+    ApiEndpoint.AddBankAccount,
+    requestData
+  );
 }
 
 export async function getUserContributionsToCommon(
