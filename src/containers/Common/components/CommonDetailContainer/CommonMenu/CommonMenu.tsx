@@ -11,7 +11,7 @@ import {
   Modal,
 } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
-import { useAuthorizedModal } from "@/shared/hooks";
+import { useAuthorizedDropdown, useAuthorizedModal } from "@/shared/hooks";
 import AgendaIcon from "@/shared/icons/agenda.icon";
 import ContributionIcon from "@/shared/icons/contribution.icon";
 import MenuIcon from "@/shared/icons/menu.icon";
@@ -88,6 +88,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   );
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
+  const { onDropdownToggle } = useAuthorizedDropdown(dropdownRef);
   const {
     isModalOpen: isModalMenuShowing,
     onOpen: onMenuModalOpen,
@@ -171,6 +172,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         menuList: "edit-common-menu__dropdown-menu-list",
         menuItem: "edit-common-menu__dropdown-menu-item",
       }}
+      onMenuToggle={onDropdownToggle}
     />
   );
 

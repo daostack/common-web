@@ -56,6 +56,7 @@ export interface DropdownProps {
   label?: string;
   shouldBeFixed?: boolean;
   menuButton?: ReactNode;
+  onMenuToggle?: (isOpen: boolean) => void;
 }
 
 const getFixedMenuStyles = (
@@ -119,6 +120,7 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
     styles,
     label,
     menuButton,
+    onMenuToggle,
     shouldBeFixed = true,
   } = props;
   const menuButtonRef = useRef<HTMLElement>(null);
@@ -139,6 +141,10 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
     isOpen,
   }) => {
     setIsOpen(isOpen);
+
+    if (onMenuToggle) {
+      onMenuToggle(isOpen);
+    }
   };
 
   const menuStyles = useMemo(
