@@ -1,7 +1,7 @@
 import React, { useEffect, useState, FC } from "react";
 import { useDispatch } from "react-redux";
 import { Loader, Separator } from "@/shared/components";
-import { Card, CommonPayment } from "@/shared/models";
+import { CommonPayment } from "@/shared/models";
 import { createBuyerTokenPage } from "../../../../../store/actions";
 import { subscribeToCardChange } from "../../../../../store/api";
 import "./index.scss";
