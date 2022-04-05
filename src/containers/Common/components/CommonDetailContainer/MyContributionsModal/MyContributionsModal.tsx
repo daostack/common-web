@@ -20,6 +20,7 @@ import {
 import { Error } from "./Error";
 import { General } from "./General";
 import { MonthlyContributionCharges } from "./MonthlyContributionCharges";
+import { OneTimeContribution } from "./OneTimeContribution";
 import { MyContributionsContext, MyContributionsContextValue } from "./context";
 import { GoBackHandler } from "./types";
 import "./index.scss";
@@ -114,6 +115,13 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
     setGoBackForStages(() => goToMonthlyContributionStage);
     setGoBackHandler(goToMonthlyContributionStage);
   }, [setGoBackHandler, goToMonthlyContributionStage]);
+
+  const handleOneTimeContributionFinish = useCallback((payment: Payment) => {
+    setUserPayments((nextUserPayments) =>
+      nextUserPayments ? [payment, ...nextUserPayments] : [payment]
+    );
+    setStage(MyContributionsStage.General);
+  }, []);
 
   const handleError = useCallback((errorText: string) => {
     setErrorText(errorText);
@@ -219,6 +227,14 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
             goToReplacePaymentMethod={goToReplacePaymentMethodStage}
           />
         ) : null;
+      case MyContributionsStage.OneTimeContribution:
+        return (
+          <OneTimeContribution
+            common={common}
+            onFinish={handleOneTimeContributionFinish}
+            goBack={goBackForStages || goToGeneralStage}
+          />
+        );
       default:
         return null;
     }
