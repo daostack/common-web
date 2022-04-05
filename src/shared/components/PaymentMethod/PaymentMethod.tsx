@@ -1,16 +1,10 @@
 import React, { ReactElement } from "react";
-import { useSelector } from "react-redux";
-import { Button, ButtonLink } from "@/shared/components";
-import { ModalFooter } from "@/shared/components/Modal";
-import { getScreenSize } from "@/shared/store/selectors";
-import { ScreenSize } from "@/shared/constants";
-import { Card } from "../../models";
+import { ButtonLink } from "@/shared/components";
+import { Card, CARD_BRANDS } from "../../models";
 import "./index.scss";
 
 interface PaymentMethodProps {
   card: Card;
-  title?: string;
-  onContinuePayment?: () => void;
   onReplacePaymentMethod: () => void;
 }
 
@@ -24,38 +18,58 @@ const PaymentMethod = (props: PaymentMethodProps): ReactElement => {
         network: cardBrand,
       },
     },
-    onContinuePayment,
     onReplacePaymentMethod,
-    title = "Payment method",
   } = props;
-
-  const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
   const imageAlt = `${cardBrand} logo`;
+  let imageSrc = "/assets/images/";
+
+  switch (cardBrand) {
+    case CARD_BRANDS.VISA:
+      imageSrc += "visa_logo.png";
+      break;
+    case CARD_BRANDS.MASTERCARD:
+      imageSrc += "mastercard_logo.png";
+      break;
+    case CARD_BRANDS.AMERICAN_EXPRESS:
+      imageSrc += "americanexpress_logo.png";
+      break;
+    case CARD_BRANDS.DINERS_CLUB:
+      imageSrc += "dinersclub_logo.png";
+      break;
+    case CARD_BRANDS.PAYPAL:
+      imageSrc += "paypal_logо.png";
+      break;
+  }
 
   return (
     <div className="payment-method">
-      {title && <h4 className="payment-method__title">{title}</h4>}
+      <h4 className="payment-method__title">Payment method</h4>
+
       <div className="payment-method__content-wrapper">
         <div className="payment-method__card-wrapper">
+          {/*
+              FIXME: need to add a multiple card brand icons (into the assets)
+              and its conditional src choosing correspondingly
+            */}
           <img
             className="payment-method__payment-logo"
-            srcSet="
-                /assets/images/mastercard_logo@3x.png 3x,
-                /assets/images/mastercard_logo@2x.png 2x
-              "
-            src="/assets/images/mastercard_logo.png"
+            src={imageSrc}
             alt={imageAlt}
           />
 
           <div className="payment-method__card-info-wrapper">
             <span className="payment-method__card-holder">{cardHolder}</span>
 
-            <span>{`************${lastCardNumberDigits}`}</span>
+            <span>{`**** **** **** ${lastCardNumberDigits}`}</span>
           </div>
 
-          <span className="payment-method__expiration">{expirationDate}</span>
+          <span className="payment-method__expiration">
+            {expirationDate
+              ? `${expirationDate.slice(0, 2)}/${expirationDate.slice(2)}`
+              : ""}
+          </span>
         </div>
+
         <div className="payment-method__replace-wrapper">
           <ButtonLink
             className="payment-method__replace"
@@ -65,21 +79,6 @@ const PaymentMethod = (props: PaymentMethodProps): ReactElement => {
           </ButtonLink>
         </div>
       </div>
-
-      {onContinuePayment && (
-        <ModalFooter sticky>
-          <div className="payment-method__continue-button-wrapper">
-            <Button
-              key="payment-method-continue"
-              className="payment-method__continue-button"
-              shouldUseFullWidth={isMobileView}
-              onClick={onContinuePayment}
-            >
-              Continue to payment
-            </Button>
-          </div>
-        </ModalFooter>
-      )}
     </div>
   );
 };
