@@ -1,0 +1,41 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.one-time-amount-selection-my-contributions-stage {
+  padding-top: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @include big-phone {
+    padding-top: 1.5rem;
+  }
+}
+
+.one-time-amount-selection-my-contributions-stage__title {
+  margin: 0;
+  font-size: $moderate-small;
+  font-weight: bold;
+  text-align: center;
+}
+
+.one-time-amount-selection-my-contributions-stage__description {
+  max-width: 21.125rem;
+  margin: 1rem 0 0;
+  font-size: $xsmall;
+  text-align: center;
+  color: $light-gray-2;
+
+  @include big-phone {
+    margin-top: 1.5rem;
+  }
+}
+
+.one-time-amount-selection-my-contributions-stage__separator {
+  max-width: 20.5rem;
+  margin: 1rem 0;
+
+  @include big-phone {
+    margin-bottom: 1.5rem;
+  }
+}
