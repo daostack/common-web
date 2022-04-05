@@ -1,12 +1,14 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 
 import { PayloadWithCallback } from "@/shared/interfaces";
+import { BuyerTokenPageCreationData } from "@/shared/interfaces/api/payMe";
 import {
   CreateFundingRequestProposalPayload,
   ProposalJoinRequestData,
 } from "@/shared/interfaces/api/proposal";
 import {
   Common,
+  CommonPayment,
   Proposal,
   Discussion,
   Payment,
@@ -188,6 +190,16 @@ export const makeImmediateContribution = createAsyncAction(
     Error
   >,
   ImmediateContributionResponse,
+  Error
+>();
+
+export const createBuyerTokenPage = createAsyncAction(
+  CommonsActionTypes.CREATE_BUYER_TOKEN_PAGE,
+  CommonsActionTypes.CREATE_BUYER_TOKEN_PAGE_SUCCESS,
+  CommonsActionTypes.CREATE_BUYER_TOKEN_PAGE_FAILURE
+)<
+  PayloadWithCallback<BuyerTokenPageCreationData, CommonPayment, Error>,
+  CommonPayment,
   Error
 >();
 

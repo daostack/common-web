@@ -1,7 +1,9 @@
 import { call, put, select, takeLatest } from "redux-saga/effects";
+import PayMeService from "@/services/PayMeService";
 import { actions } from ".";
 import {
   Common,
+  CommonPayment,
   Discussion,
   User,
   DiscussionMessage,
@@ -493,6 +495,23 @@ export function* makeImmediateContribution(
   }
 }
 
+export function* createBuyerTokenPage(
+  action: ReturnType<typeof actions.createBuyerTokenPage.request>
+): Generator {
+  try {
+    const response = (yield call(
+      PayMeService.createBuyerTokenPage,
+      action.payload.payload
+    )) as CommonPayment;
+
+    yield put(actions.createBuyerTokenPage.success(response));
+    action.payload.callback(null, response);
+  } catch (error) {
+    yield put(actions.createBuyerTokenPage.failure(error));
+    action.payload.callback(error);
+  }
+}
+
 export function* getUserContributionsToCommon(
   action: ReturnType<typeof actions.getUserContributionsToCommon.request>
 ): Generator {
@@ -565,6 +584,7 @@ export function* commonsSaga() {
     actions.makeImmediateContribution.request,
     makeImmediateContribution
   );
+  yield takeLatest(actions.createBuyerTokenPage.request, createBuyerTokenPage);
   yield takeLatest(actions.getBankDetails.request, getBankDetails);
   yield takeLatest(actions.addBankDetails.request, addBankDetails);
   yield takeLatest(
