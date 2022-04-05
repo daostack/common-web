@@ -48,6 +48,9 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
   );
   const [title, setTitle] = useState<ReactNode>(common.name);
   const [onGoBack, setOnGoBack] = useState<GoBackHandler>(() => onClose);
+  const [goBackForStages, setGoBackForStages] = useState<(() => void) | null>(
+    null
+  );
   const [
     isUserContributionsFetchStarted,
     setIsUserContributionsFetchStarted,
@@ -93,13 +96,27 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
 
   const goToOneTimeContributionStage = useCallback(() => {
     setStage(MyContributionsStage.OneTimeContribution);
+    setGoBackForStages(() => goToGeneralStage);
     setGoBackHandler(goToGeneralStage);
   }, [setGoBackHandler, goToGeneralStage]);
 
+  const goToOneTimeContributionStageFromMonthly = useCallback(() => {
+    setStage(MyContributionsStage.OneTimeContribution);
+    setGoBackForStages(() => goToMonthlyContributionStage);
+    setGoBackHandler(goToMonthlyContributionStage);
+  }, [setGoBackHandler, goToMonthlyContributionStage]);
+
   const goToChangeMonthlyContributionStage = useCallback(() => {
     setStage(MyContributionsStage.ChangeMonthlyContribution);
+    setGoBackForStages(() => goToGeneralStage);
     setGoBackHandler(goToGeneralStage);
   }, [setGoBackHandler, goToGeneralStage]);
+
+  const goToChangeMonthlyContributionStageFromMonthly = useCallback(() => {
+    setStage(MyContributionsStage.ChangeMonthlyContribution);
+    setGoBackForStages(() => goToMonthlyContributionStage);
+    setGoBackHandler(goToMonthlyContributionStage);
+  }, [setGoBackHandler, goToMonthlyContributionStage]);
 
   const handleOneTimeContributionFinish = useCallback((payment: Payment) => {
     setUserPayments((nextUserPayments) =>
@@ -205,8 +222,10 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
         return userPayments ? (
           <MonthlyContributionCharges
             payments={userPayments}
-            goToOneTimeContribution={goToOneTimeContributionStage}
-            goToChangeMonthlyContribution={goToChangeMonthlyContributionStage}
+            goToOneTimeContribution={goToOneTimeContributionStageFromMonthly}
+            goToChangeMonthlyContribution={
+              goToChangeMonthlyContributionStageFromMonthly
+            }
             goToReplacePaymentMethod={goToReplacePaymentMethodStage}
           />
         ) : null;
@@ -215,7 +234,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
           <OneTimeContribution
             common={common}
             onFinish={handleOneTimeContributionFinish}
-            goBack={goToGeneralStage}
+            goBack={goBackForStages || goToGeneralStage}
           />
         );
       case MyContributionsStage.ChangeMonthlyContribution:
@@ -223,7 +242,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
           <ChangeMonthlyContribution
             common={common}
             onFinish={handleOneTimeContributionFinish}
-            goBack={goToGeneralStage}
+            goBack={goBackForStages || goToGeneralStage}
           />
         );
       case MyContributionsStage.ReplacePaymentMethod:
