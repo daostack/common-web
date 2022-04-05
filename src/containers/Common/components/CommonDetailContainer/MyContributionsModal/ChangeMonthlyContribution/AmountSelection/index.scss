@@ -34,10 +34,6 @@
 .change-monthly-amount-selection-my-contributions-stage__separator {
   max-width: 20.5rem;
   margin: 1rem 0;
-
-  @include big-phone {
-    margin-bottom: 1.5rem;
-  }
 }
 
 .change-monthly-amount-selection-my-contributions-stage__hint {

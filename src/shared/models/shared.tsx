@@ -24,6 +24,7 @@ export enum Collection {
   Daos = "daos",
   DiscussionMessage = "discussionMessage",
   Payments = "payments",
+  Subscriptions = "subscriptions",
 }
 
 export enum DateFormat {

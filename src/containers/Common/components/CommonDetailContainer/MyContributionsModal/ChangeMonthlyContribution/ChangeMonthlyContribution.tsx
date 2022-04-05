@@ -39,7 +39,7 @@ const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
 
   const handleAmountSelect = (amount: number) => {
     setContributionAmount(amount);
-    setStep(ChangeMonthlyContributionStep.Payment);
+    // setStep(ChangeMonthlyContributionStep.Payment);
   };
 
   const handleGoBack = useCallback(() => {

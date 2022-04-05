@@ -1,8 +1,14 @@
 import React, { useEffect, useMemo, FC } from "react";
 import { useSelector } from "react-redux";
+import classNames from "classnames";
 import { Button, ButtonVariant } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
-import { DateFormat, Payment, PaymentType } from "@/shared/models";
+import {
+  DateFormat,
+  Payment,
+  PaymentType,
+  Subscription,
+} from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatDate, formatPrice } from "@/shared/utils";
 import { HistoryListItem, HistoryListItemStyles } from "../HistoryListItem";
@@ -11,6 +17,7 @@ import "./index.scss";
 
 interface GeneralProps {
   payments: Payment[];
+  subscription: Subscription | null;
   commonName: string;
   goToMonthlyContribution: () => void;
   goToOneTimeContribution: () => void;
@@ -20,6 +27,7 @@ interface GeneralProps {
 const General: FC<GeneralProps> = (props) => {
   const {
     payments,
+    subscription,
     commonName,
     goToMonthlyContribution,
     goToOneTimeContribution,
@@ -63,13 +71,18 @@ const General: FC<GeneralProps> = (props) => {
             History
           </h3>
           <ul className="general-my-contributions-stage__list">
-            <HistoryListItem
-              title="Monthly Contribution"
-              description={`Next payment: 20 March 2022`}
-              amount={`₪10/mo`}
-              onClick={goToMonthlyContribution}
-              styles={itemStyles}
-            />
+            {subscription && (
+              <HistoryListItem
+                title="Monthly Contribution"
+                description={`Next payment: ${formatDate(
+                  new Date(subscription.dueDate.seconds * 1000),
+                  DateFormat.LongHuman
+                )}`}
+                amount={`${formatPrice(subscription.amount)}/mo`}
+                onClick={goToMonthlyContribution}
+                styles={itemStyles}
+              />
+            )}
             {oneTimePayments.map((payment) => (
               <HistoryListItem
                 key={payment.id}
@@ -85,7 +98,14 @@ const General: FC<GeneralProps> = (props) => {
               />
             ))}
           </ul>
-          <div className="general-my-contributions-stage__buttons-wrapper">
+          <div
+            className={classNames(
+              "general-my-contributions-stage__buttons-wrapper",
+              {
+                "general-my-contributions-stage__buttons-wrapper--center": !subscription,
+              }
+            )}
+          >
             <Button
               className="general-my-contributions-stage__button"
               onClick={goToOneTimeContribution}
@@ -94,13 +114,15 @@ const General: FC<GeneralProps> = (props) => {
             >
               Add a one-time contribution
             </Button>
-            <Button
-              className="general-my-contributions-stage__button"
-              onClick={goToChangeMonthlyContribution}
-              shouldUseFullWidth
-            >
-              Change my monthly contribution
-            </Button>
+            {subscription && (
+              <Button
+                className="general-my-contributions-stage__button"
+                onClick={goToChangeMonthlyContribution}
+                shouldUseFullWidth
+              >
+                Change my monthly contribution
+              </Button>
+            )}
           </div>
         </section>
       ) : (

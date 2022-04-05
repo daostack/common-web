@@ -1,13 +1,13 @@
 @import "../../../../../../../constants";
 @import "../../../../../../../styles/sizes";
 
-.one-time-success-my-contributions-stage {
+.change-monthly-success-my-contributions-stage {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.one-time-success-my-contributions-stage__image {
+.change-monthly-success-my-contributions-stage__image {
   width: 10rem;
   height: 10rem;
 
@@ -19,7 +19,8 @@
   }
 }
 
-.one-time-success-my-contributions-stage__title {
+.change-monthly-success-my-contributions-stage__title {
+  max-width: 19.375rem;
   margin: 3.75rem 0 5.25rem;
   font-family: NotoSerifSC, serif;
   font-size: $moderate-small;
@@ -28,12 +29,13 @@
   color: $secondary-blue;
 
   @include big-phone {
+    max-width: unset;
     margin: 2.5rem 0;
     font-family: NunitoSans, sans-serif;
   }
 }
 
-.one-time-success-my-contributions-stage__button {
+.change-monthly-success-my-contributions-stage__button {
   max-width: 11.25rem;
 
   @include big-phone {

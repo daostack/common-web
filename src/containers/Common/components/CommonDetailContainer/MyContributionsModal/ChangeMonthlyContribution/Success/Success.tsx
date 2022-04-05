@@ -21,17 +21,17 @@ const Success: FC<SuccessProps> = (props) => {
   }, [setShouldShowGoBackButton]);
 
   const contentEl = (
-    <section className="one-time-success-my-contributions-stage">
+    <section className="change-monthly-success-my-contributions-stage">
       <img
-        className="one-time-success-my-contributions-stage__image"
+        className="change-monthly-success-my-contributions-stage__image"
         src="/assets/images/membership-request-created.svg"
         alt="Request created"
       />
-      <h3 className="one-time-success-my-contributions-stage__title">
-        Contribution was sent
+      <h3 className="change-monthly-success-my-contributions-stage__title">
+        Your monthly Contribution has been changed
       </h3>
       <Button
-        className="one-time-success-my-contributions-stage__button"
+        className="change-monthly-success-my-contributions-stage__button"
         onClick={onFinish}
         variant={ButtonVariant.Secondary}
         shouldUseFullWidth

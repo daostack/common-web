@@ -11,9 +11,12 @@ import { selectUser } from "@/containers/Auth/store/selectors";
 import { Loader, Modal } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { ModalProps } from "@/shared/interfaces";
-import { Common, Payment } from "@/shared/models";
+import { Common, Payment, Subscription } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { getUserContributionsToCommon } from "../../../store/actions";
+import {
+  getUserContributionsToCommon,
+  getUserSubscriptionToCommon,
+} from "../../../store/actions";
 import { ChangeMonthlyContribution } from "./ChangeMonthlyContribution";
 import { Error } from "./Error";
 import { General } from "./General";
@@ -49,6 +52,11 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
   ] = useState(false);
   const [shouldShowClosePrompt, setShouldShowClosePrompt] = useState(false);
   const [userPayments, setUserPayments] = useState<Payment[] | null>(null);
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
+  const [
+    isSubscriptionFetchFinished,
+    setIsSubscriptionFetchFinished,
+  ] = useState(false);
   const [errorText, setErrorText] = useState<string | null>(null);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -60,7 +68,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
     ].includes(stage);
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const isLoading = !userPayments;
+  const isLoading = !userPayments || !isSubscriptionFetchFinished;
 
   const setGoBackHandler = useCallback((handler: GoBackHandler | null) => {
     setOnGoBack(() => handler ?? undefined);
@@ -123,6 +131,22 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
         },
       })
     );
+    dispatch(
+      getUserSubscriptionToCommon.request({
+        payload: {
+          userId,
+          commonId: common.id,
+        },
+        callback: (error, subscription) => {
+          if (error || typeof subscription === "undefined") {
+            handleError("Something went wrong");
+          } else {
+            setSubscription(subscription);
+            setIsSubscriptionFetchFinished(true);
+          }
+        },
+      })
+    );
   }, [
     dispatch,
     isShowing,
@@ -135,7 +159,9 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
   useEffect(() => {
     if (!isShowing) {
       setUserPayments(null);
+      setSubscription(null);
       setIsUserContributionsFetchStarted(false);
+      setIsSubscriptionFetchFinished(false);
       setErrorText(null);
       setStage(MyContributionsStage.General);
     }
@@ -161,6 +187,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
         return userPayments ? (
           <General
             payments={userPayments}
+            subscription={subscription}
             commonName={common.name}
             goToMonthlyContribution={goToMonthlyContributionStage}
             goToOneTimeContribution={goToOneTimeContributionStage}
