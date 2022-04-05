@@ -7,5 +7,6 @@ export * from "./DiscussionMessage";
 export * from "./Discussion";
 export * from "./Invoices";
 export * from "./Payment";
+export * from "./Subscription";
 export * from "./Votes";
 export * from "./BankAccountDetails";
