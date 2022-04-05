@@ -317,7 +317,7 @@ export async function makeImmediateContribution(
     requestData
   );
 
-  return data;
+  return convertObjectDatesToFirestoreTimestamps(data);
 }
 
 export function subscribeToPayment(
