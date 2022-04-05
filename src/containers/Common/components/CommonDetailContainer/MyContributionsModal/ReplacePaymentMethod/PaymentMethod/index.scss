@@ -1,0 +1,24 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.payment-method-my-contributions-step {
+  padding: 1.75rem 3.625rem 0;
+  display: flex;
+  flex-direction: column;
+
+  @include big-phone {
+    padding-top: 1.5rem;
+  }
+}
+
+.payment-method-my-contributions-step__title {
+  margin: 0 0 2rem;
+  font-size: $moderate-small;
+  font-weight: bold;
+}
+
+.payment-method-my-contributions-step__card-wrapper {
+  padding: 1.5rem 1rem;
+  border: 1px solid $light-gray-1;
+  border-radius: 0.5rem;
+}
