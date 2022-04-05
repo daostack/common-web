@@ -1,11 +1,20 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 
 import { PayloadWithCallback } from "@/shared/interfaces";
+import { BuyerTokenPageCreationData } from "@/shared/interfaces/api/payMe";
 import {
   CreateFundingRequestProposalPayload,
   ProposalJoinRequestData,
 } from "@/shared/interfaces/api/proposal";
-import { Common, Proposal, Discussion } from "@/shared/models";
+import {
+  Card,
+  Common,
+  CommonPayment,
+  Proposal,
+  Discussion,
+  Payment,
+  Subscription,
+} from "@/shared/models";
 import { PayloadWithOptionalCallback } from "../../../shared/interfaces";
 import { CommonsActionTypes } from "./constants";
 import {
@@ -185,6 +194,16 @@ export const makeImmediateContribution = createAsyncAction(
   Error
 >();
 
+export const createBuyerTokenPage = createAsyncAction(
+  CommonsActionTypes.CREATE_BUYER_TOKEN_PAGE,
+  CommonsActionTypes.CREATE_BUYER_TOKEN_PAGE_SUCCESS,
+  CommonsActionTypes.CREATE_BUYER_TOKEN_PAGE_FAILURE
+)<
+  PayloadWithCallback<BuyerTokenPageCreationData, CommonPayment, Error>,
+  CommonPayment,
+  Error
+>();
+
 export const addBankDetails = createAsyncAction(
   CommonsActionTypes.ADD_BANK_DETAILS,
   CommonsActionTypes.ADD_BANK_DETAILS_SUCCESS,
@@ -196,3 +215,33 @@ export const getBankDetails = createAsyncAction(
   CommonsActionTypes.GET_BANK_DETAILS_SUCCESS,
   CommonsActionTypes.GET_BANK_DETAILS_FAILURE
 )<PayloadWithCallback<void, void, Error>, void, Error>();
+
+export const getUserContributionsToCommon = createAsyncAction(
+  CommonsActionTypes.GET_USER_CONTRIBUTIONS_TO_COMMON,
+  CommonsActionTypes.GET_USER_CONTRIBUTIONS_TO_COMMON_SUCCESS,
+  CommonsActionTypes.GET_USER_CONTRIBUTIONS_TO_COMMON_FAILURE
+)<
+  PayloadWithCallback<{ commonId: string; userId: string }, Payment[], Error>,
+  Payment[],
+  Error
+>();
+
+export const getUserSubscriptionToCommon = createAsyncAction(
+  CommonsActionTypes.GET_USER_SUBSCRIPTION_TO_COMMON,
+  CommonsActionTypes.GET_USER_SUBSCRIPTION_TO_COMMON_SUCCESS,
+  CommonsActionTypes.GET_USER_SUBSCRIPTION_TO_COMMON_FAILURE
+)<
+  PayloadWithCallback<
+    { commonId: string; userId: string },
+    Subscription | null,
+    Error
+  >,
+  Subscription | null,
+  Error
+>();
+
+export const getCardById = createAsyncAction(
+  CommonsActionTypes.GET_CARD_BY_ID,
+  CommonsActionTypes.GET_CARD_BY_ID_SUCCESS,
+  CommonsActionTypes.GET_CARD_BY_ID_FAILURE
+)<PayloadWithCallback<string, Card | null, Error>, Card | null, Error>();
