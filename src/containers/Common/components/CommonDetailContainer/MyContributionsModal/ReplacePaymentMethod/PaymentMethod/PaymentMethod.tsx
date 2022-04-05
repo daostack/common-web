@@ -1,14 +1,16 @@
 import React, { useEffect, FC } from "react";
-import { Common } from "@/shared/models";
+import { PaymentMethod } from "@/shared/components";
+import { Card } from "@/shared/models";
 import "./index.scss";
 
 interface PaymentMethodProps {
-  common: Common;
+  card: Card;
+  onReplacePaymentMethod: () => void;
   setShouldShowGoBackButton: (value: boolean) => void;
 }
 
-const PaymentMethod: FC<PaymentMethodProps> = (props) => {
-  const { common, setShouldShowGoBackButton } = props;
+const PaymentMethodView: FC<PaymentMethodProps> = (props) => {
+  const { card, onReplacePaymentMethod, setShouldShowGoBackButton } = props;
 
   useEffect(() => {
     setShouldShowGoBackButton(true);
@@ -19,8 +21,15 @@ const PaymentMethod: FC<PaymentMethodProps> = (props) => {
       <h3 className="payment-method-my-contributions-step__title">
         Payment details
       </h3>
+      <div className="payment-method-my-contributions-step__card-wrapper">
+        <PaymentMethod
+          card={card}
+          title=""
+          onReplacePaymentMethod={onReplacePaymentMethod}
+        />
+      </div>
     </section>
   );
 };
 
-export default PaymentMethod;
+export default PaymentMethodView;

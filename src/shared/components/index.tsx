@@ -22,3 +22,4 @@ export * from "./Modal";
 export * from "./Separator";
 export * from "./Tabs";
 export * from "./UserAvatar";
+export * from "./PaymentMethod";

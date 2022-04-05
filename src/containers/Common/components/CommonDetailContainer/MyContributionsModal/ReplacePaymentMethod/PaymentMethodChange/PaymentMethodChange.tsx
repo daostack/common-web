@@ -1,22 +1,13 @@
 import React, { useEffect, useState, FC } from "react";
 import { useDispatch } from "react-redux";
 import { Loader, Separator } from "@/shared/components";
-import {
-  Common,
-  CommonContributionType,
-  Payment,
-  PaymentStatus,
-} from "@/shared/models";
-import {
-  isImmediateContributionPayment,
-  ImmediateContributionPayment,
-} from "../../../../../interfaces";
-import { makeImmediateContribution } from "../../../../../store/actions";
-import { subscribeToPayment } from "../../../../../store/api";
+import { Card, CommonPayment } from "@/shared/models";
+import { createBuyerTokenPage } from "../../../../../store/actions";
+import { subscribeToCardChange } from "../../../../../store/api";
 import "./index.scss";
 
 interface State {
-  payment: ImmediateContributionPayment | null;
+  payment: CommonPayment | null;
   isPaymentLoading: boolean;
   isPaymentIframeLoaded: boolean;
 }
@@ -28,22 +19,14 @@ const INITIAL_STATE: State = {
 };
 
 interface PaymentMethodChangeProps {
-  common: Common;
-  contributionAmount: number;
-  onFinish: (payment: Payment) => void;
+  cardId: string;
+  onFinish: () => void;
   onError: (errorText: string) => void;
   setShouldShowGoBackButton: (value: boolean) => void;
 }
 
 const PaymentMethodChange: FC<PaymentMethodChangeProps> = (props) => {
-  const {
-    common,
-    contributionAmount,
-    onFinish,
-    onError,
-    setShouldShowGoBackButton,
-  } = props;
-  const { id: commonId } = common;
+  const { cardId, onFinish, onError, setShouldShowGoBackButton } = props;
   const dispatch = useDispatch();
   const [
     { payment, isPaymentLoading, isPaymentIframeLoaded },
@@ -56,7 +39,7 @@ const PaymentMethodChange: FC<PaymentMethodChangeProps> = (props) => {
 
   useEffect(() => {
     (async () => {
-      if (payment || isPaymentLoading || !contributionAmount) {
+      if (payment || isPaymentLoading) {
         return;
       }
 
@@ -66,20 +49,11 @@ const PaymentMethodChange: FC<PaymentMethodChangeProps> = (props) => {
       }));
 
       dispatch(
-        makeImmediateContribution.request({
-          payload: {
-            commonId,
-            contributionType: CommonContributionType.OneTime,
-            amount: contributionAmount,
-            saveCard: true,
-          },
+        createBuyerTokenPage.request({
+          payload: { cardId },
           callback: (error, payment) => {
             if (error || !payment) {
               onError(error?.message || "Something went wrong");
-              return;
-            }
-            if (!isImmediateContributionPayment(payment)) {
-              onFinish(payment);
               return;
             }
 
@@ -92,15 +66,7 @@ const PaymentMethodChange: FC<PaymentMethodChangeProps> = (props) => {
         })
       );
     })();
-  }, [
-    dispatch,
-    commonId,
-    payment,
-    isPaymentLoading,
-    contributionAmount,
-    onFinish,
-    onError,
-  ]);
+  }, [dispatch, cardId, payment, isPaymentLoading, onFinish, onError]);
 
   useEffect(() => {
     if (!isPaymentIframeLoaded || !payment) {
@@ -108,21 +74,19 @@ const PaymentMethodChange: FC<PaymentMethodChangeProps> = (props) => {
     }
 
     try {
-      return subscribeToPayment(payment.paymentId, (payment) => {
-        if (payment?.status === PaymentStatus.Confirmed) {
-          onFinish(payment);
-        } else if (payment?.status === PaymentStatus.Failed) {
-          onError("Payment failed");
+      return subscribeToCardChange(cardId, (card) => {
+        if (card) {
+          onFinish();
         }
       });
     } catch (error) {
       console.error("Error during subscribing to payment status change");
     }
-  }, [isPaymentIframeLoaded, payment, onFinish, onError]);
+  }, [isPaymentIframeLoaded, payment, onFinish, cardId]);
 
   useEffect(() => {
-    setShouldShowGoBackButton(Boolean(isPaymentIframeLoaded && payment));
-  }, [setShouldShowGoBackButton, isPaymentIframeLoaded, payment]);
+    setShouldShowGoBackButton(true);
+  }, [setShouldShowGoBackButton]);
 
   return (
     <section className="payment-method-change-my-contributions-stage">

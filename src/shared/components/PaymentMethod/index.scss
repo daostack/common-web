@@ -1,0 +1,75 @@
+@import "../../../constants.scss";
+@import "../../../styles/sizes";
+
+.payment-method {
+  width: 100%;
+  color: $secondary-blue;
+
+  .payment-method__content-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .payment-method__title {
+    margin-top: 0;
+    margin-bottom: 14px;
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: $small;
+    font-weight: bold;
+    line-height: 1.5;
+  }
+
+  .payment-method__payment-logo {
+    width: 64px;
+    height: 32px;
+    object-fit: contain;
+  }
+
+  .payment-method__card-wrapper {
+    display: flex;
+    align-items: center;
+    font-size: $xsmall;
+    line-height: 1.42;
+  }
+
+  .payment-method__card-info-wrapper {
+    margin-left: 16px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .payment-method__card-holder {
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: $small;
+    font-weight: bold;
+    line-height: 1.5;
+  }
+
+  .payment-method__expiration {
+    margin-top: auto;
+    margin-left: auto;
+  }
+
+  .payment-method__replace-wrapper {
+    margin-top: 10px;
+  }
+}
+
+.payment-method__continue-button-wrapper {
+  padding: 1.75rem 0;
+  display: flex;
+  justify-content: center;
+
+  .payment-method__continue-button {
+    min-width: 11.25rem;
+
+    @include big-phone {
+      min-width: unset;
+    }
+  }
+
+  @include big-phone {
+    padding: 1.5rem 0;
+  }
+}

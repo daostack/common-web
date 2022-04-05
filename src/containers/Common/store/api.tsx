@@ -383,3 +383,13 @@ export async function getUserSubscriptionToCommon(
 
   return subscriptions.length > 0 ? subscriptions[0] : null;
 }
+
+export async function getCardById(cardId: string): Promise<Card | null> {
+  const result = await firebase
+    .firestore()
+    .collection(Collection.Cards)
+    .doc(cardId)
+    .get();
+
+  return transformFirebaseDataSingle<Card>(result) || null;
+}

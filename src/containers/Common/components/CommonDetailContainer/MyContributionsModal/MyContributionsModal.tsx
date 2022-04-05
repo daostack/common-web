@@ -227,9 +227,12 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
           />
         );
       case MyContributionsStage.ReplacePaymentMethod:
-        return (
-          <ReplacePaymentMethod common={common} goBack={goToGeneralStage} />
-        );
+        return subscription ? (
+          <ReplacePaymentMethod
+            userCardId={subscription.cardId}
+            goBack={goToMonthlyContributionStage}
+          />
+        ) : null;
       default:
         return null;
     }
