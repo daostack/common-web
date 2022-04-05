@@ -549,7 +549,7 @@ export default function CommonDetail() {
                           <CommonShare
                             common={common}
                             type="modal"
-                            color={Colors.transparent}
+                            color={Colors.lightGray4}
                           />
                         )}
                         <CommonMenu
