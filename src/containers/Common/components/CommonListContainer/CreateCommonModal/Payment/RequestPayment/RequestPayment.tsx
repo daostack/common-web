@@ -14,6 +14,8 @@ import {
   Separator,
   IFrame,
   PaymentMethod,
+  Button,
+  ModalFooter,
 } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import {
@@ -255,7 +257,6 @@ export default function RequestPayment(
           hasPaymentMethod
           ? <PaymentMethod
               card={cards[0]}
-              onContinuePayment={handleContinuePayment}
               onReplacePaymentMethod={() => setHasPaymentMethod(false)}
             />
           : payment && <IFrame
@@ -264,6 +265,20 @@ export default function RequestPayment(
               title="Payment Details"
               onLoad={handleIframeLoad}
             />
+        }
+        {
+          hasPaymentMethod && <ModalFooter sticky>
+            <div className="create-common-payment__continue-button-wrapper">
+              <Button
+                key="request-payment-continue"
+                className="create-common-payment__continue-button"
+                shouldUseFullWidth={isMobileView}
+                onClick={handleContinuePayment}
+              >
+                Continue to payment
+              </Button>
+            </div>
+          </ModalFooter>
         }
       </div>
     </div>

@@ -13,12 +13,20 @@ import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
 import { selectUser } from "../../../../Auth/store/selectors";
 import PayMeService from "../../../../../services/PayMeService";
-import { Loader, IFrame, PaymentMethod, } from "../../../../../shared/components";
+import {
+  Loader,
+  IFrame,
+  PaymentMethod,
+  ModalFooter,
+  Button,
+} from "@/shared/components";
 import { CommonPayment, Card, Common, } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
 import { subscribeToCardChange } from "../../../store/api";
 import { loadUserCards, makeImmediateContribution, } from "../../../store/actions";
+import { getScreenSize } from "@/shared/store/selectors";
+import { ScreenSize } from "@/shared/constants";
 
 interface State {
   commonPayment: CommonPayment | null;
@@ -52,6 +60,8 @@ export default function MembershipRequestPayment(
   ] = useState<State>(INITIAL_STATE);
   const [cards, setUserCards] = useState<Card[]>([]);
   const [hasPaymentMethod, setHasPaymentMethod] = useState<boolean>(false);
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = (screenSize === ScreenSize.Mobile);
   const contributionTypeText = (contributionType === CommonContributionType.Monthly)
                                 ? "monthly"
                                 : "one-time";
@@ -76,7 +86,7 @@ export default function MembershipRequestPayment(
         },
         callback: (error, payment) => {
           if (error || !payment) {
-            console.error(error?.message ||"Error trying to load user's cards");
+            console.error(error?.message ||"Error during immediate payment's attemption");
             return;
           }
 
@@ -169,7 +179,6 @@ export default function MembershipRequestPayment(
           hasPaymentMethod
           ? <PaymentMethod
               card={cards[0]}
-              onContinuePayment={handleContinuePayment}
               onReplacePaymentMethod={() => setHasPaymentMethod(false)}
             />
           : commonPayment && <IFrame
@@ -180,6 +189,20 @@ export default function MembershipRequestPayment(
             />
         }
       </div>
+      {
+          hasPaymentMethod && <ModalFooter sticky>
+            <div className="membership-request-payment__continue-button-wrapper">
+              <Button
+                key="membership-request-payment-continue"
+                className="membership-request-payment__continue-button"
+                shouldUseFullWidth={isMobileView}
+                onClick={handleContinuePayment}
+              >
+                Continue to payment
+              </Button>
+            </div>
+          </ModalFooter>
+      }
       <span className="membership-rejected-text">
         If your membership request will not be accepted, you will not be
         charged.

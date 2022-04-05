@@ -1,19 +1,10 @@
-import React, {
-  useState, 
-  useCallback,
-  ReactElement,
-} from "react";
-import { useSelector } from "react-redux";
-import { Button, ButtonLink, } from "@/shared/components";
-import { ModalFooter } from "@/shared/components/Modal";
-import { getScreenSize } from "@/shared/store/selectors";
-import { ScreenSize } from "@/shared/constants";
+import React, { ReactElement } from "react";
+import { ButtonLink, } from "@/shared/components";
 import { Card } from "../../models";
 import "./index.scss";
 
 interface PaymentMethodProps {
   card: Card;
-  onContinuePayment: () => void;
   onReplacePaymentMethod: () => void;
 }
 
@@ -27,12 +18,8 @@ const PaymentMethod = (props: PaymentMethodProps): ReactElement => {
             network: cardBrand,
         },
     },
-    onContinuePayment,
     onReplacePaymentMethod,
   } = props;
-
-  const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
   const imageAlt = `${cardBrand} logo`;
 
   return (
@@ -40,8 +27,15 @@ const PaymentMethod = (props: PaymentMethodProps): ReactElement => {
       <h4 className="payment-method__title">
         Payment method
       </h4>
+
         <div className="payment-method__content-wrapper">
           <div className="payment-method__card-wrapper">
+            {
+              /*
+                FIXME: need to add a multiple card brand icons (into the assets)
+                and its conditional src choosing correspondingly
+              */
+            }
             <img
               className="payment-method__payment-logo"
               srcSet="
@@ -57,13 +51,18 @@ const PaymentMethod = (props: PaymentMethodProps): ReactElement => {
                   {cardHolder}
                 </span>
 
-                <span>{`************${lastCardNumberDigits}`}</span>
+                <span>{`**** **** **** ${lastCardNumberDigits}`}</span>
             </div>
 
             <span className="payment-method__expiration">
-              {expirationDate}
+              {
+                expirationDate
+                ? `${expirationDate.slice(0, 2)}/${expirationDate.slice(2)}`
+                : ""
+              }
             </span>
           </div>
+
           <div className="payment-method__replace-wrapper">
             <ButtonLink
               className="payment-method__replace"
@@ -73,19 +72,6 @@ const PaymentMethod = (props: PaymentMethodProps): ReactElement => {
             </ButtonLink>
           </div>
         </div>
-
-        <ModalFooter sticky>
-          <div className="payment-method__continue-button-wrapper">
-            <Button
-              key="payment-method-continue"
-              className="payment-method__continue-button"
-              shouldUseFullWidth={isMobileView}
-              onClick={onContinuePayment}
-            >
-              Continue to payment
-            </Button>
-          </div>
-        </ModalFooter>
     </div>
   );
 };

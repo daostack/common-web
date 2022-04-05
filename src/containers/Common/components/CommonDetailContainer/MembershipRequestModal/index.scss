@@ -442,6 +442,24 @@ $payment-iframe-height-mobile: 672px;
   }
 }
 
+.membership-request-payment__continue-button-wrapper {
+  padding: 1.75rem 0;
+  display: flex;
+  justify-content: center;
+
+  .membership-request-payment__continue-button {
+    min-width: 11.25rem;
+
+    @include big-phone {
+      min-width: unset;
+    }
+  }
+
+  @include big-phone {
+    padding: 1.5rem 0;
+  }
+}
+
 .membership-request-creating {
   .loader-container {
     margin: 3rem 0;
