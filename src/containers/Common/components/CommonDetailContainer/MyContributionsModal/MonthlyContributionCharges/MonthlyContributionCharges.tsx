@@ -18,6 +18,7 @@ interface MonthlyContributionChargesProps {
   payments: Payment[];
   goToOneTimeContribution: () => void;
   goToChangeMonthlyContribution: () => void;
+  goToReplacePaymentMethod: () => void;
 }
 
 const MonthlyContributionCharges: FC<MonthlyContributionChargesProps> = (
@@ -27,6 +28,7 @@ const MonthlyContributionCharges: FC<MonthlyContributionChargesProps> = (
     payments,
     goToOneTimeContribution,
     goToChangeMonthlyContribution,
+    goToReplacePaymentMethod,
   } = props;
   const { setTitle } = useMyContributionsContext();
   const screenSize = useSelector(getScreenSize());
@@ -90,7 +92,10 @@ const MonthlyContributionCharges: FC<MonthlyContributionChargesProps> = (
           ))}
         </ul>
       </section>
-      <ButtonLink className="monthly-contribution-my-contributions-stage__edit-link">
+      <ButtonLink
+        className="monthly-contribution-my-contributions-stage__edit-link"
+        onClick={goToReplacePaymentMethod}
+      >
         Edit payment details
       </ButtonLink>
       {isMobileView ? (

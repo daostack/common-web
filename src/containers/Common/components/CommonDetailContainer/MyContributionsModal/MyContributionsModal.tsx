@@ -22,6 +22,7 @@ import { Error } from "./Error";
 import { General } from "./General";
 import { MonthlyContributionCharges } from "./MonthlyContributionCharges";
 import { OneTimeContribution } from "./OneTimeContribution";
+import { ReplacePaymentMethod } from "./ReplacePaymentMethod";
 import { MyContributionsContext, MyContributionsContextValue } from "./context";
 import { GoBackHandler } from "./types";
 import "./index.scss";
@@ -31,6 +32,7 @@ enum MyContributionsStage {
   MonthlyContributionCharges,
   OneTimeContribution,
   ChangeMonthlyContribution,
+  ReplacePaymentMethod,
 }
 
 interface MyContributionsModalProps
@@ -83,6 +85,11 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
     setStage(MyContributionsStage.MonthlyContributionCharges);
     setGoBackHandler(goToGeneralStage);
   }, [setGoBackHandler, goToGeneralStage]);
+
+  const goToReplacePaymentMethodStage = useCallback(() => {
+    setStage(MyContributionsStage.ReplacePaymentMethod);
+    setGoBackHandler(goToMonthlyContributionStage);
+  }, [setGoBackHandler, goToMonthlyContributionStage]);
 
   const goToOneTimeContributionStage = useCallback(() => {
     setStage(MyContributionsStage.OneTimeContribution);
@@ -200,6 +207,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
             payments={userPayments}
             goToOneTimeContribution={goToOneTimeContributionStage}
             goToChangeMonthlyContribution={goToChangeMonthlyContributionStage}
+            goToReplacePaymentMethod={goToReplacePaymentMethodStage}
           />
         ) : null;
       case MyContributionsStage.OneTimeContribution:
@@ -217,6 +225,10 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
             onFinish={handleOneTimeContributionFinish}
             goBack={goToGeneralStage}
           />
+        );
+      case MyContributionsStage.ReplacePaymentMethod:
+        return (
+          <ReplacePaymentMethod common={common} goBack={goToGeneralStage} />
         );
       default:
         return null;
