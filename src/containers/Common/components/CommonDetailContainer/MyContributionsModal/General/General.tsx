@@ -3,12 +3,7 @@ import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { Button, ButtonVariant } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
-import {
-  DateFormat,
-  Payment,
-  PaymentType,
-  Subscription,
-} from "@/shared/models";
+import { DateFormat, Payment, Subscription } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatDate, formatPrice } from "@/shared/utils";
 import { HistoryListItem, HistoryListItemStyles } from "../HistoryListItem";
@@ -41,7 +36,7 @@ const General: FC<GeneralProps> = (props) => {
     [payments]
   );
   const oneTimePayments = useMemo(
-    () => payments.filter((payment) => payment.type === PaymentType.OneTime),
+    () => payments.filter((payment) => !payment.subscriptionId),
     [payments]
   );
 

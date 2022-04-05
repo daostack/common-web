@@ -7,7 +7,7 @@ import {
   ModalFooter,
 } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
-import { DateFormat, Payment, PaymentType } from "@/shared/models";
+import { DateFormat, Payment } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatDate, formatPrice } from "@/shared/utils";
 import { HistoryListItem, HistoryListItemStyles } from "../HistoryListItem";
@@ -34,8 +34,7 @@ const MonthlyContributionCharges: FC<MonthlyContributionChargesProps> = (
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const monthlyPayments = useMemo(
-    () =>
-      payments.filter((payment) => payment.type === PaymentType.Subscription),
+    () => payments.filter((payment) => Boolean(payment.subscriptionId)),
     [payments]
   );
 
