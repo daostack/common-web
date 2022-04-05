@@ -1,9 +1,16 @@
+export enum CARD_BRANDS {
+  VISA = "VISA",
+  MASTERCARD = "MASTERCARD",
+  AMERICAN_EXPRESS = "AMERICAN_EXPRESS",
+  DINERS_CLUB = "DINERS_CLUB",
+  PAYPAL = "PAYPAL",
+}
+
 interface CardMetadata {
   /**
    * The network of the card.
-   * better create enums
    */
-  network: 'VISA' | 'MASTERCARD' | string;
+  network: CARD_BRANDS;
 
   /**
    * The last 4 digits of the card. Useful for

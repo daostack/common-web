@@ -118,9 +118,13 @@ export default function MembershipRequestPayment(
 
   useEffect(() => {
     (async () => {
-      if (commonPayment || isCommonPaymentLoading || !common || !user?.uid) {
-        return;
-      }
+      if (
+        hasPaymentMethod
+        || commonPayment
+        || isCommonPaymentLoading
+        || !common
+        || !user?.uid
+      ) return;
 
       try {
         setState((nextState) => ({
@@ -136,12 +140,19 @@ export default function MembershipRequestPayment(
           ...nextState,
           commonPayment: createdCommonPayment,
           isCommonPaymentLoading: false,
-        }));
+        }));        
       } catch (error) {
         console.error("Error during payment page creation");
       }
     })();
-  }, [commonPayment, isCommonPaymentLoading, userData, common, user]);
+  }, [
+    commonPayment,
+    isCommonPaymentLoading,
+    userData,
+    common,
+    user,
+    hasPaymentMethod,
+  ]);
 
   useEffect(() => {
     if (!isPaymentIframeLoaded) {

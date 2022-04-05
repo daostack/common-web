@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 import { ButtonLink, } from "@/shared/components";
-import { Card } from "../../models";
+import { Card, CARD_BRANDS, } from "../../models";
 import "./index.scss";
 
 interface PaymentMethodProps {
@@ -21,6 +21,20 @@ const PaymentMethod = (props: PaymentMethodProps): ReactElement => {
     onReplacePaymentMethod,
   } = props;
   const imageAlt = `${cardBrand} logo`;
+  let imageSrc = "/assets/images/";
+
+  switch (cardBrand) {
+    case CARD_BRANDS.VISA:
+      imageSrc += "visa_logo.png"; break;
+    case CARD_BRANDS.MASTERCARD:
+      imageSrc += "mastercard_logo.png"; break;
+    case CARD_BRANDS.AMERICAN_EXPRESS:
+      imageSrc += "americanexpress_logo.png"; break;
+    case CARD_BRANDS.DINERS_CLUB:
+      imageSrc += "dinersclub_logo.png"; break;
+    case CARD_BRANDS.PAYPAL:
+      imageSrc += "paypal_logо.png"; break;
+  }
 
   return (
     <div className="payment-method">
@@ -38,11 +52,7 @@ const PaymentMethod = (props: PaymentMethodProps): ReactElement => {
             }
             <img
               className="payment-method__payment-logo"
-              srcSet="
-                /assets/images/mastercard_logo@3x.png 3x,
-                /assets/images/mastercard_logo@2x.png 2x
-              "
-              src="/assets/images/mastercard_logo.png"
+              src={imageSrc}
               alt={imageAlt}
             />
 

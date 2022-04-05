@@ -158,6 +158,7 @@ export default function RequestPayment(
         hasPaymentMethod
         || payment
         || isPaymentLoading
+        || !common
         || !paymentData.contributionAmount
       ) return;
 
@@ -181,6 +182,7 @@ export default function RequestPayment(
             }
 
             setShouldShowGoBackButton(true);
+
             setState((nextState) => ({
               ...nextState,
               payment: payment as ImmediateContributionPayment,
@@ -197,6 +199,7 @@ export default function RequestPayment(
     contributionType,
     finishPayment,
     payment,
+    common,
     isPaymentLoading,
     paymentData.contributionAmount,
     onFinish,
