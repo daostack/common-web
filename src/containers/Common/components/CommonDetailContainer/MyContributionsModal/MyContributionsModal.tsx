@@ -21,6 +21,7 @@ import { Error } from "./Error";
 import { General } from "./General";
 import { MonthlyContributionCharges } from "./MonthlyContributionCharges";
 import { OneTimeContribution } from "./OneTimeContribution";
+import { ReplacePaymentMethod } from "./ReplacePaymentMethod";
 import { MyContributionsContext, MyContributionsContextValue } from "./context";
 import { GoBackHandler } from "./types";
 import "./index.scss";
@@ -235,6 +236,13 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
             goBack={goBackForStages || goToGeneralStage}
           />
         );
+      case MyContributionsStage.ReplacePaymentMethod:
+        return subscription ? (
+          <ReplacePaymentMethod
+            userCardId={subscription.cardId}
+            goBack={goToMonthlyContributionStage}
+          />
+        ) : null;
       default:
         return null;
     }

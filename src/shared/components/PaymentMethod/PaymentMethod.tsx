@@ -5,6 +5,7 @@ import "./index.scss";
 
 interface PaymentMethodProps {
   card: Card;
+  title?: string;
   onReplacePaymentMethod: () => void;
 }
 
@@ -18,6 +19,7 @@ const PaymentMethod = (props: PaymentMethodProps): ReactElement => {
         network: cardBrand,
       },
     },
+    title = "Payment method",
     onReplacePaymentMethod,
   } = props;
   const imageAlt = `${cardBrand} logo`;
@@ -43,7 +45,7 @@ const PaymentMethod = (props: PaymentMethodProps): ReactElement => {
 
   return (
     <div className="payment-method">
-      <h4 className="payment-method__title">Payment method</h4>
+      {title && <h4 className="payment-method__title">{title}</h4>}
 
       <div className="payment-method__content-wrapper">
         <div className="payment-method__card-wrapper">
