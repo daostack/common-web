@@ -5,23 +5,23 @@ import classNames from "classnames";
 import {
   Loader,
   NotFound,
-  Share,
+  CommonShare,
   UserAvatar,
-} from "../../../../shared/components";
-import { Modal } from "../../../../shared/components/Modal";
+} from "@/shared/components";
+import { Modal } from "@/shared/components/Modal";
 import {
   useAuthorizedModal,
   useModal,
   useViewPortHook,
-} from "../../../../shared/hooks";
-import PurpleCheckIcon from "../../../../shared/icons/purpleCheck.icon";
-import ShareIcon from "../../../../shared/icons/share.icon";
+} from "@/shared/hooks";
+import PurpleCheckIcon from "@/shared/icons/purpleCheck.icon";
+import ShareIcon from "@/shared/icons/share.icon";
 import {
   Discussion,
   Proposal,
   ProposalState,
   ProposalType,
-} from "../../../../shared/models";
+} from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice, getUserName } from "@/shared/utils";
 import { LoginModalType } from "../../../Auth/interface";
@@ -38,12 +38,7 @@ import {
 } from "../../components/CommonDetailContainer";
 import { MembershipRequestModal } from "../../components/CommonDetailContainer/MembershipRequestModal";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
-import {
-  BASE_URL,
-  Colors,
-  ROUTE_PATHS,
-  ScreenSize,
-} from "../../../../shared/constants";
+import { Colors, ScreenSize } from "../../../../shared/constants";
 import {
   selectCommonDetail,
   selectCurrentDisscussion,
@@ -449,8 +444,6 @@ export default function CommonDetail() {
     return isCommonFetched ? <NotFound /> : <Loader />;
   }
 
-  const sharingURL = `${BASE_URL}${ROUTE_PATHS.COMMON_LIST}/${common.id}`;
-
   return (
     <>
       {isShowing && (
@@ -474,7 +467,7 @@ export default function CommonDetail() {
           {tab === Tabs.Discussions && (
             <DiscussionDetailModal
               disscussion={currentDisscussion}
-              commonId={common.id}
+              common={common}
               onOpenJoinModal={openJoinModal}
               isCommonMember={isCommonMember}
               isJoiningPending={isJoiningPending}
@@ -483,7 +476,7 @@ export default function CommonDetail() {
           {(tab === Tabs.Proposals || tab === Tabs.History) && (
             <ProposalDetailModal
               proposal={currentProposal}
-              commonId={common.id}
+              common={common}
               onOpenJoinModal={openJoinModal}
               isCommonMember={isCommonMember}
               isJoiningPending={isJoiningPending}
@@ -553,10 +546,10 @@ export default function CommonDetail() {
                             <PurpleCheckIcon className="text-information-wrapper__connected-user-avatar-icon" />
                           </div>
                         ) : (
-                          <Share
-                            url={sharingURL}
+                          <CommonShare
+                            common={common}
                             type="modal"
-                            color={Colors.lightGray4}
+                            color={Colors.transparent}
                           />
                         )}
                         <CommonMenu
@@ -634,9 +627,9 @@ export default function CommonDetail() {
                   )}
 
                   {screenSize === ScreenSize.Desktop && (
-                    <Share
+                    <CommonShare
                       shareButtonClassName="common-detail-wrapper__menu-button--big"
-                      url={sharingURL}
+                      common={common}
                       type="popup"
                       color={Colors.lightGray4}
                       withBorder
@@ -652,8 +645,8 @@ export default function CommonDetail() {
                   )}
                 </div>
                 {isCommonMember && isMobileView && (
-                  <Share
-                    url={sharingURL}
+                  <CommonShare
+                    common={common}
                     type="modal"
                     color={Colors.transparent}
                   >
@@ -661,7 +654,7 @@ export default function CommonDetail() {
                       <ShareIcon className="common-content-selector__share-icon" />
                       Share Common
                     </button>
-                  </Share>
+                  </CommonShare>
                 )}
               </div>
             </div>
