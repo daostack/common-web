@@ -1,6 +1,7 @@
 @import "../../../../../../constants";
 @import "../../../../../../styles/sizes";
 
+$h-padding: 3.625rem;
 $mobile-h-padding: 1.5rem;
 
 .monthly-contribution-my-contributions-stage {
@@ -50,13 +51,12 @@ $mobile-h-padding: 1.5rem;
 }
 
 .monthly-contribution-my-contributions-stage__buttons-wrapper {
-  margin-top: 2.5rem;
+  padding: 2.5rem $h-padding 1.875rem;
   display: flex;
   justify-content: space-between;
 
   @include big-phone {
-    margin-top: 0;
-    padding: 2.5rem 0;
+    padding: 1.5rem 0;
     flex-wrap: wrap-reverse;
   }
 }

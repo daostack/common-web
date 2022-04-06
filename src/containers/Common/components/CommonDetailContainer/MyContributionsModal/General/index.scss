@@ -1,6 +1,7 @@
 @import "../../../../../../constants";
 @import "../../../../../../styles/sizes";
 
+$h-padding: 3rem;
 $mobile-h-padding: 1.5rem;
 
 .general-my-contributions-stage {
@@ -10,7 +11,7 @@ $mobile-h-padding: 1.5rem;
 }
 
 .general-my-contributions-stage__total-wrapper {
-  padding: 1rem 3rem;
+  padding: 1rem $h-padding;
   display: flex;
   flex-direction: column;
   font-size: $xsmall;
@@ -66,13 +67,12 @@ $mobile-h-padding: 1.5rem;
 }
 
 .general-my-contributions-stage__buttons-wrapper {
-  margin-top: 2.5rem;
+  padding: 2.5rem $h-padding 1.875rem;
   display: flex;
   justify-content: space-between;
 
   @include big-phone {
-    margin-top: 1rem;
-    padding: 0 $mobile-h-padding;
+    padding: 1rem 0 1.5rem;
     flex-wrap: wrap-reverse;
   }
 }

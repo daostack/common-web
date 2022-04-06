@@ -40,34 +40,14 @@ const MonthlyContributionCharges: FC<MonthlyContributionChargesProps> = (
 
   const itemStyles: HistoryListItemStyles | undefined = isMobileView
     ? {
-      item: "monthly-contribution-my-contributions-stage__list-item",
-      title: "monthly-contribution-my-contributions-stage__list-item-title",
-    }
+        item: "monthly-contribution-my-contributions-stage__list-item",
+        title: "monthly-contribution-my-contributions-stage__list-item-title",
+      }
     : undefined;
 
   useEffect(() => {
     setTitle("My contributions");
   }, [setTitle]);
-
-  const buttonWrapperEl = (
-    <div className="monthly-contribution-my-contributions-stage__buttons-wrapper">
-      <Button
-        className="monthly-contribution-my-contributions-stage__button"
-        onClick={goToOneTimeContribution}
-        variant={ButtonVariant.SecondaryPurple}
-        shouldUseFullWidth
-      >
-        Add a one-time contribution
-      </Button>
-      <Button
-        className="monthly-contribution-my-contributions-stage__button"
-        onClick={goToChangeMonthlyContribution}
-        shouldUseFullWidth
-      >
-        Change my monthly contribution
-      </Button>
-    </div>
-  );
 
   return (
     <div className="monthly-contribution-my-contributions-stage">
@@ -97,11 +77,25 @@ const MonthlyContributionCharges: FC<MonthlyContributionChargesProps> = (
       >
         Edit payment details
       </ButtonLink>
-      {isMobileView ? (
-        <ModalFooter sticky>{buttonWrapperEl}</ModalFooter>
-      ) : (
-        buttonWrapperEl
-      )}
+      <ModalFooter sticky>
+        <div className="monthly-contribution-my-contributions-stage__buttons-wrapper">
+          <Button
+            className="monthly-contribution-my-contributions-stage__button"
+            onClick={goToOneTimeContribution}
+            variant={ButtonVariant.SecondaryPurple}
+            shouldUseFullWidth
+          >
+            Add a one-time contribution
+          </Button>
+          <Button
+            className="monthly-contribution-my-contributions-stage__button"
+            onClick={goToChangeMonthlyContribution}
+            shouldUseFullWidth
+          >
+            Change my monthly contribution
+          </Button>
+        </div>
+      </ModalFooter>
     </div>
   );
 };

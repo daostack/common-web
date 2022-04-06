@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, FC } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
-import { Button, ButtonVariant } from "@/shared/components";
+import { Button, ButtonVariant, ModalFooter } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { DateFormat, Payment, Subscription } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
@@ -93,32 +93,34 @@ const General: FC<GeneralProps> = (props) => {
               />
             ))}
           </ul>
-          <div
-            className={classNames(
-              "general-my-contributions-stage__buttons-wrapper",
-              {
-                "general-my-contributions-stage__buttons-wrapper--center": !subscription,
-              }
-            )}
-          >
-            <Button
-              className="general-my-contributions-stage__button"
-              onClick={goToOneTimeContribution}
-              variant={ButtonVariant.SecondaryPurple}
-              shouldUseFullWidth
+          <ModalFooter sticky>
+            <div
+              className={classNames(
+                "general-my-contributions-stage__buttons-wrapper",
+                {
+                  "general-my-contributions-stage__buttons-wrapper--center": !subscription,
+                }
+              )}
             >
-              Add a one-time contribution
-            </Button>
-            {subscription && (
               <Button
                 className="general-my-contributions-stage__button"
-                onClick={goToChangeMonthlyContribution}
+                onClick={goToOneTimeContribution}
+                variant={ButtonVariant.SecondaryPurple}
                 shouldUseFullWidth
               >
-                Change my monthly contribution
+                Add a one-time contribution
               </Button>
-            )}
-          </div>
+              {subscription && (
+                <Button
+                  className="general-my-contributions-stage__button"
+                  onClick={goToChangeMonthlyContribution}
+                  shouldUseFullWidth
+                >
+                  Change my monthly contribution
+                </Button>
+              )}
+            </div>
+          </ModalFooter>
         </section>
       ) : (
         <div className="general-my-contributions-stage__empty-contributions">
