@@ -372,6 +372,18 @@ export async function getUserContributionsToCommon(
   return payments;
 }
 
+export async function getSubscriptionById(
+  subscriptionId: string
+): Promise<Subscription | null> {
+  const result = await firebase
+    .firestore()
+    .collection(Collection.Subscriptions)
+    .doc(subscriptionId)
+    .get();
+
+  return transformFirebaseDataSingle<Subscription>(result) || null;
+}
+
 export async function getUserSubscriptionToCommon(
   commonId: string,
   userId: string

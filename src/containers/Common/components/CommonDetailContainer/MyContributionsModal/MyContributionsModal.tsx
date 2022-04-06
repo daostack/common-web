@@ -136,12 +136,12 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
         goToGeneralStage();
       }
     },
-    [goBackForStages, goToGeneralStage]
+    [dispatch, common.id, goBackForStages, goToGeneralStage]
   );
 
   const handleChangeMonthlyContributionFinish = useCallback(
     (subscription: Subscription) => {
-      // setSubscription(subscription);
+      setSubscription(subscription);
 
       if (goBackForStages) {
         goBackForStages();

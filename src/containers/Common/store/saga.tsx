@@ -38,6 +38,7 @@ import {
   getUserContributionsToCommon as getUserContributionsToCommonApi,
   getUserSubscriptionToCommon as getUserSubscriptionToCommonApi,
   updateSubscription as updateSubscriptionApi,
+  getSubscriptionById,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -555,9 +556,10 @@ export function* updateSubscription({
   payload,
 }: ReturnType<typeof actions.updateSubscription.request>): Generator {
   try {
+    yield call(updateSubscriptionApi, payload.payload);
     const subscription = (yield call(
-      updateSubscriptionApi,
-      payload.payload
+      getSubscriptionById,
+      payload.payload.subscriptionId
     )) as Subscription;
 
     yield put(actions.updateSubscription.success(subscription));

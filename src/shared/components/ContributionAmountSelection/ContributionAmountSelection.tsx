@@ -46,7 +46,7 @@ export default function ContributionAmountSelection(props: IProps) {
   const [isCurrencyInputTouched, setIsCurrencyInputTouched] = useState(false);
   const amountsForSelection = useMemo(
     () => getAmountsForSelection(minFeeToJoin, zeroContribution, currentAmount),
-    [minFeeToJoin, zeroContribution]
+    [minFeeToJoin, zeroContribution, currentAmount]
   );
   const [selectedContribution, setSelectedContribution] = useState<
     number | "other" | null
