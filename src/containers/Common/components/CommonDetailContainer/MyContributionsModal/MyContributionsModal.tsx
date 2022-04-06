@@ -14,6 +14,7 @@ import { ModalProps } from "@/shared/interfaces";
 import { Common, Payment, Subscription } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import {
+  getCommonDetail,
   getUserContributionsToCommon,
   getUserSubscriptionToCommon,
 } from "../../../store/actions";
@@ -122,6 +123,11 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
     (payment: Payment) => {
       setUserPayments((nextUserPayments) =>
         nextUserPayments ? [payment, ...nextUserPayments] : [payment]
+      );
+      dispatch(
+        getCommonDetail.request({
+          payload: common.id,
+        })
       );
 
       if (goBackForStages) {
