@@ -69,6 +69,7 @@
     width: 100%;
     margin-bottom: 0.5rem;
     text-align: left;
+    z-index: 1;
 
     @include big-phone {
       max-width: unset;

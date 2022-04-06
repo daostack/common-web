@@ -2,7 +2,8 @@ import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, RouteProps, useHistory } from "react-router-dom";
 import classNames from "classnames";
-//import { Routes } from "@/containers/MyAccount/components/Routes";
+import { Routes } from "@/containers/MyAccount/components/Routes";
+import RightArrowIcon from "@/shared/icons/rightArrow.icon";
 import { UserAvatar } from "../../../shared/components";
 import { useAnyMandatoryRoles, useMatchRoute } from "../../../shared/hooks";
 import { UserRole } from "../../../shared/models";
@@ -52,7 +53,11 @@ const Header = () => {
     ROUTE_PATHS.TRUSTEE_AUTH,
     EXACT_MATCH_ROUTE_PROPS
   );
-  //const [showAccountOptions, setShowAccountOptions] = useState(false);
+  const isMyAccountRoute = useMatchRoute(
+    ROUTE_PATHS.MY_ACCOUNT,
+    NON_EXACT_MATCH_ROUTE_PROPS
+  );
+  const [showAccountLinks, setShowAccountLinks] = useState(isMyAccountRoute ? true : false);
 
   const handleOpen = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: true }));
@@ -75,8 +80,8 @@ const Header = () => {
     setShowMenu((shouldShow) => !shouldShow);
   };
 
-  const handleNavLinkClick = () => {
-    if (showMenu) {
+  const handleNavLinkClick = (e: any) => {
+    if (showMenu && e.target.id !== "myAccountButton") {
       setShowMenu(false);
     }
   };
@@ -87,6 +92,24 @@ const Header = () => {
 
   const links = (
     <div className="navigation-wrapper" onClick={handleNavLinkClick}>
+      {isAuthorized && isMobile() && (
+        <button onClick={() => setShowAccountLinks(!showAccountLinks)}>
+          <div id="myAccountButton" className="my-account-button">
+            My Account
+            <RightArrowIcon
+              className={classNames(
+                "my-account-button__arrow-icon",
+                { "my-account-button__arrow-icon--opened": showAccountLinks }
+              )}
+            />
+          </div>
+
+          {showAccountLinks && (
+            <Routes />
+          )}
+        </button>
+      )}
+
       {!isTrusteeRoute && (
         <>
           <NavLink to="/" exact activeClassName="active">
@@ -105,12 +128,6 @@ const Header = () => {
 
       {isAuthorized && isMobile() && (
         <>
-          <button onClick={handleOpen}>My Account</button>
-
-          {/* <div onClick={() => setShowAccountOptions(!showAccountOptions)}>
-            My Account
-            {showAccountOptions && <Routes />}
-          </div> */}
           {hasAdminAccess && (
             <button onClick={handleReportsDownload}>Download Reports</button>
           )}
