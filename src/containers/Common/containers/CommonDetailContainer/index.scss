@@ -155,10 +155,6 @@
               margin-right: 6px;
             }
           }
-          .delete-common-btn {
-            color: $red;
-            margin: 0 0.3rem;
-          }
         }
       }
     }
@@ -195,6 +191,19 @@
       }
     }
   }
+
+  .common-detail-wrapper__menu-button--big {
+    width: 3rem;
+    height: 3rem;
+  }
+  .common-detail-wrapper__menu-button--small {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .common-detail-wrapper__common-menu {
+    margin-left: 1rem;
+  }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
@@ -218,6 +227,11 @@
           .text {
             .text-information-wrapper__info-wrapper {
               width: 100%;
+            }
+
+            .text-information-wrapper__menu-buttons {
+              display: flex;
+              flex-wrap: nowrap;
             }
 
             .name {
@@ -295,10 +309,6 @@
             .join-the-effort-btn {
               height: 56px;
               margin-right: unset;
-            }
-            .delete-common-btn {
-              width: 100%;
-              margin: 0.6rem 0;
             }
           }
 
