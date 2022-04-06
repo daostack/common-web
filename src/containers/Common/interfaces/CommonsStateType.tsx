@@ -1,4 +1,9 @@
-import { Common, Discussion, Proposal } from "../../../shared/models";
+import { 
+  Common,
+  Discussion,
+  Proposal,
+  Card,
+} from "../../../shared/models";
 
 export interface CommonsStateType {
   commons: Common[];
@@ -11,5 +16,5 @@ export interface CommonsStateType {
   currentDiscussion: Discussion | null;
   currentProposal: Proposal | null;
   userProposals: Proposal[];
-  doesUserHasPaymentMethod: boolean;
+  cards: Card[];
 }

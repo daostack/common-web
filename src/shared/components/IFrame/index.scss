@@ -1,0 +1,13 @@
+@import "../../../styles/sizes";
+
+$payment-iframe-height: 26.5rem;
+$payment-iframe-height-mobile: 42rem;
+
+.payment-iframe {
+    width: 100%;
+    height: $payment-iframe-height;
+  
+    @include big-phone {
+      height: $payment-iframe-height-mobile;
+    }
+}
