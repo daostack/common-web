@@ -6,6 +6,7 @@ import {
   CreateFundingRequestProposalPayload,
   ProposalJoinRequestData,
 } from "@/shared/interfaces/api/proposal";
+import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
   Card,
   Common,
@@ -237,5 +238,15 @@ export const getUserSubscriptionToCommon = createAsyncAction(
     Error
   >,
   Subscription | null,
+  Error
+>();
+
+export const updateSubscription = createAsyncAction(
+  CommonsActionTypes.UPDATE_SUBSCRIPTION,
+  CommonsActionTypes.UPDATE_SUBSCRIPTION_SUCCESS,
+  CommonsActionTypes.UPDATE_SUBSCRIPTION_FAILURE
+)<
+  PayloadWithCallback<SubscriptionUpdateData, Subscription, Error>,
+  Subscription,
   Error
 >();

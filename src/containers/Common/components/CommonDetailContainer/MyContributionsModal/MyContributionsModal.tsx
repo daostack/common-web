@@ -14,9 +14,11 @@ import { ModalProps } from "@/shared/interfaces";
 import { Common, Payment, Subscription } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import {
+  getCommonDetail,
   getUserContributionsToCommon,
   getUserSubscriptionToCommon,
 } from "../../../store/actions";
+import { ChangeMonthlyContribution } from "./ChangeMonthlyContribution";
 import { Error } from "./Error";
 import { General } from "./General";
 import { MonthlyContributionCharges } from "./MonthlyContributionCharges";
@@ -117,12 +119,38 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
     setGoBackHandler(goToMonthlyContributionStage);
   }, [setGoBackHandler, goToMonthlyContributionStage]);
 
-  const handleOneTimeContributionFinish = useCallback((payment: Payment) => {
-    setUserPayments((nextUserPayments) =>
-      nextUserPayments ? [payment, ...nextUserPayments] : [payment]
-    );
-    setStage(MyContributionsStage.General);
-  }, []);
+  const handleOneTimeContributionFinish = useCallback(
+    (payment: Payment) => {
+      setUserPayments((nextUserPayments) =>
+        nextUserPayments ? [payment, ...nextUserPayments] : [payment]
+      );
+      dispatch(
+        getCommonDetail.request({
+          payload: common.id,
+        })
+      );
+
+      if (goBackForStages) {
+        goBackForStages();
+      } else {
+        goToGeneralStage();
+      }
+    },
+    [dispatch, common.id, goBackForStages, goToGeneralStage]
+  );
+
+  const handleChangeMonthlyContributionFinish = useCallback(
+    (subscription: Subscription) => {
+      setSubscription(subscription);
+
+      if (goBackForStages) {
+        goBackForStages();
+      } else {
+        goToGeneralStage();
+      }
+    },
+    [goBackForStages, goToGeneralStage]
+  );
 
   const handleError = useCallback((errorText: string) => {
     setErrorText(errorText);
@@ -236,6 +264,15 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
             goBack={goBackForStages || goToGeneralStage}
           />
         );
+      case MyContributionsStage.ChangeMonthlyContribution:
+        return subscription ? (
+          <ChangeMonthlyContribution
+            currentSubscription={subscription}
+            common={common}
+            onFinish={handleChangeMonthlyContributionFinish}
+            goBack={goBackForStages || goToGeneralStage}
+          />
+        ) : null;
       case MyContributionsStage.ReplacePaymentMethod:
         return subscription ? (
           <ReplacePaymentMethod
