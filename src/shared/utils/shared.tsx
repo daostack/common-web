@@ -7,6 +7,7 @@ import { DateFormat, Proposal, Time, User } from "../models";
 interface FormatPriceOptions {
   shouldMillify?: boolean;
   shouldRemovePrefixFromZero?: boolean;
+  prefix?: string;
 }
 
 /**
@@ -16,8 +17,11 @@ export const formatPrice = (
   price?: number,
   options: FormatPriceOptions = {}
 ): string => {
-  const { shouldMillify = true, shouldRemovePrefixFromZero = true } = options;
-  const prefix = "₪";
+  const {
+    shouldMillify = true,
+    shouldRemovePrefixFromZero = true,
+    prefix = "₪",
+  } = options;
 
   if (!price) {
     return shouldRemovePrefixFromZero ? "0" : `${prefix}0`;

@@ -18,6 +18,8 @@ enum Expense {
 
 export default function ProposalDetails({ commonName, user, proposal, updateSubmissionStatus }: IProps) {
   const expense: Expense = Expense.proposal;
+  //required custom fix since the using currency was changed: CW-411
+  const fundingAmountPrefix = (proposal?.createdAt.toDate() < new Date("02/17/2022 12:00")) ? "$" : "₪";
 
   return (
     <div className="proposal-detailes-wrapper">
@@ -32,7 +34,15 @@ export default function ProposalDetails({ commonName, user, proposal, updateSubm
         <div className="submit-invoices-wrapper__description-content">
           <span className="submit-invoices-wrapper__description">{`${proposal?.description.description}`}</span>
           <span className="submit-invoices-wrapper__description-amount">
-            {`${formatPrice(proposal?.fundingRequest?.amount, { shouldMillify: true })}`}
+            {
+              `${formatPrice(
+                proposal?.fundingRequest?.amount,
+                {
+                  shouldMillify: true,
+                  prefix: fundingAmountPrefix,
+                }
+              )}`
+            }
           </span>
         </div>
       </div>

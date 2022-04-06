@@ -27,6 +27,8 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
       ),
     [proposal.payoutDocs]
   );
+  //required custom fix since the using currency was changed: CW-411
+  const fundingAmountPrefix = (proposal?.createdAt.toDate() < new Date("02/17/2022 12:00")) ? "$" : "₪";
 
   const containerClassName = classNames("trustee-proposal-card", {
     "trustee-proposal-card--without-action": !onClick,
@@ -69,7 +71,7 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
             <div className={priceWrapperClassName}>
               <span>Proposal Requested</span>
               <span className="trustee-proposal-card__price">
-                {formatPrice(proposal.fundingRequest?.amount)}
+                {formatPrice(proposal.fundingRequest?.amount, { prefix: fundingAmountPrefix })}
               </span>
             </div>
             <div className={priceWrapperClassName}>

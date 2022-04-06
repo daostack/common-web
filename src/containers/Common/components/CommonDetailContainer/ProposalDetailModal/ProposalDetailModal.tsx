@@ -40,6 +40,8 @@ export default function ProposalDetailModal({
     proposal?.fundingRequest?.amount || proposal?.join?.funding;
   const screenSize = useSelector(getScreenSize());
   const [expanded, setExpanded] = useState(true);
+  //required custom fix since the using currency was changed: CW-411
+  const fundingAmountPrefix = (proposal?.createdAt.toDate() < new Date("02/17/2022 12:00")) ? "$" : "₪";
 
   const sendMessage = useCallback(
     (message: string) => {
@@ -98,7 +100,7 @@ export default function ProposalDetailModal({
                     <>
                       Requested amount
                       <span className="amount">
-                        {formatPrice(rawRequestedAmount)}
+                        {formatPrice(rawRequestedAmount, { prefix: fundingAmountPrefix })}
                       </span>
                     </>
                   )}
