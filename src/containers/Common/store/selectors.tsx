@@ -13,6 +13,8 @@ export const selectProposals = () =>
   createSelector(selectCommons, (state) => state.proposals);
 export const selectDiscussions = () =>
   createSelector(selectCommons, (state) => state.discussions);
+export const selectCards = () =>
+  createSelector(selectCommons, (state) => state.cards);
 export const selectIsDiscussionsLoaded = () =>
   createSelector(selectCommons, (state) => state.isDiscussionsLoaded);
 export const selectCurrentDisscussion = () =>
@@ -23,5 +25,3 @@ export const selectCurrentProposal = () =>
   createSelector(selectCommons, (state) => state.currentProposal);
 export const selectUserProposalList = () =>
   createSelector(selectCommons, (state) => state.userProposals);
-export const selectUserPaymentMethod = () =>
-  createSelector(selectCommons, (state) => state.doesUserHasPaymentMethod);
