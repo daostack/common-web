@@ -1,0 +1,74 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+
+$mobile-h-padding: 1.5rem;
+
+.monthly-contribution-my-contributions-stage {
+  padding: 1.75rem 3.625rem 0;
+
+  @include big-phone {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.monthly-contribution-my-contributions-stage__section-title {
+  margin: 0 0 2rem;
+  font-size: $moderate-small;
+  font-weight: bold;
+
+  @include big-phone {
+    margin-bottom: 1rem;
+    padding: 0 $mobile-h-padding;
+  }
+}
+
+.monthly-contribution-my-contributions-stage__list {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.monthly-contribution-my-contributions-stage__list-item {
+  padding-left: $mobile-h-padding;
+  padding-right: $mobile-h-padding;
+}
+
+.monthly-contribution-my-contributions-stage__list-item-title {
+  font-size: $xxsmall;
+  font-weight: normal;
+}
+
+.monthly-contribution-my-contributions-stage__edit-link {
+  margin-top: 1rem;
+
+  @include big-phone {
+    padding: 0 $mobile-h-padding;
+    font-size: $xsmall;
+  }
+}
+
+.monthly-contribution-my-contributions-stage__buttons-wrapper {
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+
+  @include big-phone {
+    margin-top: 0;
+    padding: 2.5rem 0;
+    flex-wrap: wrap-reverse;
+  }
+}
+
+.monthly-contribution-my-contributions-stage__button {
+  max-width: 21.5rem;
+
+  @include big-phone {
+    max-width: unset;
+
+    &:first-child {
+      margin-top: 1rem;
+    }
+  }
+}
