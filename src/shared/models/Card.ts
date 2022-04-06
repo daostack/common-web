@@ -31,15 +31,15 @@ export interface Card {
   id: string;
 
   /**
-   * The time that the entity
-   * was created
-   */
+  * The time that the entity
+  * was created
+  */
   createdAt: Date;
 
   /**
-   * The last time that the entity
-   * was modified
-   */
+  * The last time that the entity
+  * was modified
+  */
   updatedAt: Date;
 
   /**

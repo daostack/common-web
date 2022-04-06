@@ -1,6 +1,6 @@
 import React, { useEffect, useState, FC } from "react";
 import { useDispatch } from "react-redux";
-import { Loader, Separator } from "@/shared/components";
+import { IFrame, Loader, Separator } from "@/shared/components";
 import { CommonPayment } from "@/shared/models";
 import { createBuyerTokenPage } from "../../../../../store/actions";
 import { subscribeToCardChange } from "../../../../../store/api";
@@ -102,8 +102,7 @@ const PaymentMethodChange: FC<PaymentMethodChangeProps> = (props) => {
           <Loader className="payment-method-change-my-contributions-stage__loader" />
         )}
         {payment && (
-          <iframe
-            className="payment-method-change-my-contributions-stage__iframe"
+          <IFrame
             src={payment.link}
             frameBorder="0"
             title="Payment Details"

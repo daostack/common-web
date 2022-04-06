@@ -143,11 +143,11 @@ export const createFundingProposal = createAsyncAction(
   Error
 >();
 
-export const checkUserPaymentMethod = createAsyncAction(
-  CommonsActionTypes.CHECK_USER_PAYMENT_METHOD,
-  CommonsActionTypes.CHECK_USER_PAYMENT_METHOD_SUCCESS,
-  CommonsActionTypes.CHECK_USER_PAYMENT_METHOD_FAILURE
-)<void, boolean, Error>();
+export const loadUserCards = createAsyncAction(
+  CommonsActionTypes.LOAD_USER_CARDS,
+  CommonsActionTypes.LOAD_USER_CARDS_SUCCESS,
+  CommonsActionTypes.LOAD_USER_CARDS_FAILURE
+)<PayloadWithCallback<void, Card[], Error>, Card[], Error>();
 
 export const addMessageToProposal = createAsyncAction(
   CommonsActionTypes.ADD_MESSAGE_TO_PROPOSAL,
@@ -239,9 +239,3 @@ export const getUserSubscriptionToCommon = createAsyncAction(
   Subscription | null,
   Error
 >();
-
-export const getCardById = createAsyncAction(
-  CommonsActionTypes.GET_CARD_BY_ID,
-  CommonsActionTypes.GET_CARD_BY_ID_SUCCESS,
-  CommonsActionTypes.GET_CARD_BY_ID_FAILURE
-)<PayloadWithCallback<string, Card | null, Error>, Card | null, Error>();

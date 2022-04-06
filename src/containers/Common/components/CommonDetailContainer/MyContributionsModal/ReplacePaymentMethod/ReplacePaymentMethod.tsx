@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Loader } from "@/shared/components";
 import { useComponentWillUnmount } from "@/shared/hooks";
 import { Card } from "@/shared/models";
-import { getCardById } from "../../../../store/actions";
+import { loadUserCards } from "../../../../store/actions";
 import { useMyContributionsContext } from "../context";
 import { PaymentMethod } from "./PaymentMethod";
 import { PaymentMethodChange } from "./PaymentMethodChange";
@@ -55,13 +55,12 @@ const ReplacePaymentMethod: FC<ReplacePaymentMethodProps> = (props) => {
 
     setIsCardLoadingStarted(true);
     dispatch(
-      getCardById.request({
-        payload: userCardId,
-        callback: (error, card) => {
-          if (error || !card) {
+      loadUserCards.request({
+        callback: (error, cards) => {
+          if (error || !cards) {
             onError(error?.message ?? "Something went wrong :/");
           } else {
-            setCards([card]);
+            setCards(cards);
           }
         },
       })

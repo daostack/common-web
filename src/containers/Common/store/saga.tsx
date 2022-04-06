@@ -29,7 +29,7 @@ import {
   subscribeToMessages,
   createFundingProposal,
   subscribeToCommonProposal,
-  checkUserPaymentMethod,
+  loadUserCards,
   deleteCommon as deleteCommonApi,
   createVote as createVoteApi,
   makeImmediateContribution as makeImmediateContributionApi,
@@ -37,7 +37,6 @@ import {
   getBankDetails as getBankDetailsApi,
   getUserContributionsToCommon as getUserContributionsToCommonApi,
   getUserSubscriptionToCommon as getUserSubscriptionToCommonApi,
-  getCardById as getCardByIdApi,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -443,22 +442,23 @@ export function* createFundingProposalSaga(
   }
 }
 
-export function* checkUserPaymentMethodSaga(
-  action: ReturnType<typeof actions.checkUserPaymentMethod.request>
+export function* loadUserCardsSaga(
+  action: ReturnType<typeof actions.loadUserCards.request>
 ): Generator {
   try {
     const { user } = store.getState().auth;
     if (user && user.uid) {
       yield put(startLoading());
 
-      const hasPaymentMethod = yield checkUserPaymentMethod(user.uid);
+      const cards = (yield loadUserCards(user.uid)) as Card[];
 
-      yield put(actions.checkUserPaymentMethod.success(!!hasPaymentMethod));
+      yield put(actions.loadUserCards.success(cards));
+      action.payload.callback(null, cards);
 
       yield put(stopLoading());
     }
   } catch (e) {
-    yield put(actions.checkUserPaymentMethod.failure(e));
+    yield put(actions.loadUserCards.failure(e));
     yield put(stopLoading());
   }
 }
@@ -550,23 +550,6 @@ export function* getUserSubscriptionToCommon(
   }
 }
 
-export function* getCardById(
-  action: ReturnType<typeof actions.getCardById.request>
-): Generator {
-  try {
-    const card = (yield call(
-      getCardByIdApi,
-      action.payload.payload
-    )) as Card | null;
-
-    yield put(actions.getCardById.success(card));
-    action.payload.callback(null, card);
-  } catch (error) {
-    yield put(actions.getCardById.failure(error));
-    action.payload.callback(error);
-  }
-}
-
 export function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
@@ -589,10 +572,7 @@ export function* commonsSaga() {
     actions.createFundingProposal.request,
     createFundingProposalSaga
   );
-  yield takeLatest(
-    actions.checkUserPaymentMethod.request,
-    checkUserPaymentMethodSaga
-  );
+  yield takeLatest(actions.loadUserCards.request, loadUserCardsSaga);
   yield takeLatest(
     actions.addMessageToProposal.request,
     addMessageToProposalSaga
@@ -614,7 +594,6 @@ export function* commonsSaga() {
     actions.getUserSubscriptionToCommon.request,
     getUserSubscriptionToCommon
   );
-  yield takeLatest(actions.getCardById.request, getCardById);
 }
 
 export default commonsSaga;
