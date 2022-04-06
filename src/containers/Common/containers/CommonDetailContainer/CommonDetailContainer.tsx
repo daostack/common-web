@@ -2,18 +2,9 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import classNames from "classnames";
-import {
-  Loader,
-  NotFound,
-  CommonShare,
-  UserAvatar,
-} from "@/shared/components";
+import { Loader, NotFound, CommonShare, UserAvatar } from "@/shared/components";
 import { Modal } from "@/shared/components/Modal";
-import {
-  useAuthorizedModal,
-  useModal,
-  useViewPortHook,
-} from "@/shared/hooks";
+import { useAuthorizedModal, useModal, useViewPortHook } from "@/shared/hooks";
 import PurpleCheckIcon from "@/shared/icons/purpleCheck.icon";
 import ShareIcon from "@/shared/icons/share.icon";
 import {

@@ -26,7 +26,8 @@ const Button: FC<ButtonProps> = (props) => {
     "custom-button--full-width": shouldUseFullWidth,
     "custom-button--primary": variantToUse === ButtonVariant.Primary,
     "custom-button--secondary": variantToUse === ButtonVariant.Secondary,
-    "custom-button--secondary-purple": variantToUse === ButtonVariant.SecondaryPurple,
+    "custom-button--secondary-purple":
+      variantToUse === ButtonVariant.SecondaryPurple,
     "custom-button--disabled": variantToUse === ButtonVariant.Disabled,
   });
 

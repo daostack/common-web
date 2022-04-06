@@ -40,9 +40,9 @@ const MonthlyContributionCharges: FC<MonthlyContributionChargesProps> = (
 
   const itemStyles: HistoryListItemStyles | undefined = isMobileView
     ? {
-        item: "monthly-contribution-my-contributions-stage__list-item",
-        title: "monthly-contribution-my-contributions-stage__list-item-title",
-      }
+      item: "monthly-contribution-my-contributions-stage__list-item",
+      title: "monthly-contribution-my-contributions-stage__list-item-title",
+    }
     : undefined;
 
   useEffect(() => {

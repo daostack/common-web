@@ -55,21 +55,3 @@
     margin-top: 10px;
   }
 }
-
-.payment-method__continue-button-wrapper {
-  padding: 1.75rem 0;
-  display: flex;
-  justify-content: center;
-
-  .payment-method__continue-button {
-    min-width: 11.25rem;
-
-    @include big-phone {
-      min-width: unset;
-    }
-  }
-
-  @include big-phone {
-    padding: 1.5rem 0;
-  }
-}

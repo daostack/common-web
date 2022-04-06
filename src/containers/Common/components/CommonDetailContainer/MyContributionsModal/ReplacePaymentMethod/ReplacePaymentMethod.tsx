@@ -28,8 +28,8 @@ const ReplacePaymentMethod: FC<ReplacePaymentMethodProps> = (props) => {
     ReplacePaymentMethodStep.PaymentMethod
   );
   const [shouldShowGoBackButton, setShouldShowGoBackButton] = useState(true);
-  const [card, setCard] = useState<Card | null>(null);
-  const [isCardLoading, setIsCardLoading] = useState(false);
+  const [cards, setCards] = useState<Card[]>([]);
+  const [isCardLoadingStarted, setIsCardLoadingStarted] = useState(false);
   const cardId = useMemo(() => uuidv4(), []);
 
   const handleGoBack = useCallback(() => {
@@ -49,11 +49,11 @@ const ReplacePaymentMethod: FC<ReplacePaymentMethodProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    if (isCardLoading || card) {
+    if (isCardLoadingStarted) {
       return;
     }
 
-    setIsCardLoading(true);
+    setIsCardLoadingStarted(true);
     dispatch(
       getCardById.request({
         payload: userCardId,
@@ -61,14 +61,12 @@ const ReplacePaymentMethod: FC<ReplacePaymentMethodProps> = (props) => {
           if (error || !card) {
             onError(error?.message ?? "Something went wrong :/");
           } else {
-            setCard(card);
+            setCards([card]);
           }
-
-          setIsCardLoading(false);
         },
       })
     );
-  }, [dispatch, isCardLoading, card, userCardId, onError]);
+  }, [dispatch, isCardLoadingStarted, userCardId, onError]);
 
   useEffect(() => {
     setTitle("My contributions");
@@ -87,9 +85,9 @@ const ReplacePaymentMethod: FC<ReplacePaymentMethodProps> = (props) => {
   const renderContent = () => {
     switch (step) {
       case ReplacePaymentMethodStep.PaymentMethod:
-        return card ? (
+        return cards.length > 0 ? (
           <PaymentMethod
-            card={card}
+            card={cards[0]}
             onReplacePaymentMethod={handleReplacePaymentMethod}
             setShouldShowGoBackButton={setShouldShowGoBackButton}
           />
