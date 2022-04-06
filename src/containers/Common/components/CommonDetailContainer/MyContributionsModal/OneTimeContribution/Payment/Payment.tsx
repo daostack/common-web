@@ -1,6 +1,6 @@
 import React, { useEffect, useState, FC } from "react";
 import { useDispatch } from "react-redux";
-import { Loader, Separator } from "@/shared/components";
+import { IFrame, Loader, Separator } from "@/shared/components";
 import {
   Common,
   CommonContributionType,
@@ -138,8 +138,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
           <Loader className="one-time-payment-my-contributions-stage__loader" />
         )}
         {payment && (
-          <iframe
-            className="one-time-payment-my-contributions-stage__iframe"
+          <IFrame
             src={payment.link}
             frameBorder="0"
             title="Payment Details"
