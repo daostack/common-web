@@ -7,7 +7,7 @@
   flex-direction: column;
 
   @include big-phone {
-    padding-top: 1.5rem;
+    padding: 1.5rem 0 0;
   }
 }
 
@@ -15,6 +15,10 @@
   margin: 0 0 2rem;
   font-size: $moderate-small;
   font-weight: bold;
+
+  @include big-phone {
+    margin-bottom: 1rem;
+  }
 }
 
 .payment-method-my-contributions-step__card-wrapper {

@@ -1,9 +1,6 @@
 @import "../../../../../../../constants";
 @import "../../../../../../../styles/sizes";
 
-$payment-iframe-height: 26.5rem;
-$payment-iframe-height-mobile: 42rem;
-
 .payment-method-change-my-contributions-stage {
   padding-top: 1.75rem;
   display: flex;
@@ -44,7 +41,7 @@ $payment-iframe-height-mobile: 42rem;
   position: relative;
   max-width: 25rem;
   width: 100%;
-  min-height: $payment-iframe-height;
+  min-height: 26.5rem;
   display: flex;
 
   @include big-phone {
@@ -60,14 +57,5 @@ $payment-iframe-height-mobile: 42rem;
   @include big-phone {
     top: unset;
     transform: translateX(-50%);
-  }
-}
-
-.payment-method-change-my-contributions-stage__iframe {
-  width: 100%;
-  height: $payment-iframe-height;
-
-  @include big-phone {
-    height: $payment-iframe-height-mobile;
   }
 }
