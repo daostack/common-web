@@ -239,9 +239,3 @@ export const getUserSubscriptionToCommon = createAsyncAction(
   Subscription | null,
   Error
 >();
-
-export const getCardById = createAsyncAction(
-  CommonsActionTypes.GET_CARD_BY_ID,
-  CommonsActionTypes.GET_CARD_BY_ID_SUCCESS,
-  CommonsActionTypes.GET_CARD_BY_ID_FAILURE
-)<PayloadWithCallback<string, Card | null, Error>, Card | null, Error>();
