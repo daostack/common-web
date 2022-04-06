@@ -6,6 +6,7 @@ import {
   User,
   DiscussionMessage,
   Proposal,
+  Card,
 } from "../../../shared/models";
 import { startLoading, stopLoading } from "@/shared/store/actions";
 import {
@@ -24,8 +25,8 @@ import {
   subscribeToMessages,
   createFundingProposal,
   subscribeToCommonProposal,
-  checkUserPaymentMethod,
   leaveCommon as leaveCommonApi,
+  loadUserCards,
   deleteCommon as deleteCommonApi,
   createVote as createVoteApi,
   makeImmediateContribution as makeImmediateContributionApi,
@@ -449,22 +450,23 @@ export function* createFundingProposalSaga(
   }
 }
 
-export function* checkUserPaymentMethodSaga(
-  action: ReturnType<typeof actions.checkUserPaymentMethod.request>
+export function* loadUserCardsSaga(
+  action: ReturnType<typeof actions.loadUserCards.request>
 ): Generator {
   try {
     const { user } = store.getState().auth;
     if (user && user.uid) {
       yield put(startLoading());
 
-      const hasPaymentMethod = yield checkUserPaymentMethod(user.uid);
+      const cards = (yield loadUserCards(user.uid)) as Card[];
 
-      yield put(actions.checkUserPaymentMethod.success(!!hasPaymentMethod));
+      yield put(actions.loadUserCards.success(cards));
+      action.payload.callback(null, cards);
 
       yield put(stopLoading());
     }
   } catch (e) {
-    yield put(actions.checkUserPaymentMethod.failure(e));
+    yield put(actions.loadUserCards.failure(e));
     yield put(stopLoading());
   }
 }
@@ -527,8 +529,8 @@ export function* commonsSaga() {
     createFundingProposalSaga
   );
   yield takeLatest(
-    actions.checkUserPaymentMethod.request,
-    checkUserPaymentMethodSaga
+    actions.loadUserCards.request,
+    loadUserCardsSaga
   );
   yield takeLatest(
     actions.addMessageToProposal.request,
