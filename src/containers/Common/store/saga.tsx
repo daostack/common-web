@@ -37,6 +37,7 @@ import {
   getBankDetails as getBankDetailsApi,
   getUserContributionsToCommon as getUserContributionsToCommonApi,
   getUserSubscriptionToCommon as getUserSubscriptionToCommonApi,
+  updateSubscription as updateSubscriptionApi,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -550,6 +551,23 @@ export function* getUserSubscriptionToCommon(
   }
 }
 
+export function* updateSubscription({
+  payload,
+}: ReturnType<typeof actions.updateSubscription.request>): Generator {
+  try {
+    const subscription = (yield call(
+      updateSubscriptionApi,
+      payload.payload
+    )) as Subscription;
+
+    yield put(actions.updateSubscription.success(subscription));
+    payload.callback(null, subscription);
+  } catch (error) {
+    yield put(actions.updateSubscription.failure(error));
+    payload.callback(error);
+  }
+}
+
 export function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
@@ -594,6 +612,7 @@ export function* commonsSaga() {
     actions.getUserSubscriptionToCommon.request,
     getUserSubscriptionToCommon
   );
+  yield takeLatest(actions.updateSubscription.request, updateSubscription);
 }
 
 export default commonsSaga;

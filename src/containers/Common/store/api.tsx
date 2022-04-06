@@ -4,6 +4,7 @@ import {
   CreateFundingRequestProposalPayload,
   ProposalJoinRequestData,
 } from "@/shared/interfaces/api/proposal";
+import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
   Card,
   Collection,
@@ -384,4 +385,15 @@ export async function getUserSubscriptionToCommon(
   const subscriptions = transformFirebaseDataList<Subscription>(result);
 
   return subscriptions.length > 0 ? subscriptions[0] : null;
+}
+
+export async function updateSubscription(
+  requestData: SubscriptionUpdateData
+): Promise<Subscription> {
+  const { data } = await Api.post<Subscription>(
+    ApiEndpoint.UpdateSubscription,
+    requestData
+  );
+
+  return data;
 }

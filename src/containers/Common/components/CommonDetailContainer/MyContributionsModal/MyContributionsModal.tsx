@@ -118,12 +118,33 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
     setGoBackHandler(goToMonthlyContributionStage);
   }, [setGoBackHandler, goToMonthlyContributionStage]);
 
-  const handleOneTimeContributionFinish = useCallback((payment: Payment) => {
-    setUserPayments((nextUserPayments) =>
-      nextUserPayments ? [payment, ...nextUserPayments] : [payment]
-    );
-    setStage(MyContributionsStage.General);
-  }, []);
+  const handleOneTimeContributionFinish = useCallback(
+    (payment: Payment) => {
+      setUserPayments((nextUserPayments) =>
+        nextUserPayments ? [payment, ...nextUserPayments] : [payment]
+      );
+
+      if (goBackForStages) {
+        goBackForStages();
+      } else {
+        goToGeneralStage();
+      }
+    },
+    [goBackForStages, goToGeneralStage]
+  );
+
+  const handleChangeMonthlyContributionFinish = useCallback(
+    (subscription: Subscription) => {
+      // setSubscription(subscription);
+
+      if (goBackForStages) {
+        goBackForStages();
+      } else {
+        goToGeneralStage();
+      }
+    },
+    [goBackForStages, goToGeneralStage]
+  );
 
   const handleError = useCallback((errorText: string) => {
     setErrorText(errorText);
@@ -238,13 +259,14 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
           />
         );
       case MyContributionsStage.ChangeMonthlyContribution:
-        return (
+        return subscription ? (
           <ChangeMonthlyContribution
+            currentSubscription={subscription}
             common={common}
-            onFinish={handleOneTimeContributionFinish}
+            onFinish={handleChangeMonthlyContributionFinish}
             goBack={goBackForStages || goToGeneralStage}
           />
-        );
+        ) : null;
       case MyContributionsStage.ReplacePaymentMethod:
         return subscription ? (
           <ReplacePaymentMethod

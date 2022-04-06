@@ -6,7 +6,6 @@ import "./index.scss";
 
 interface AmountSelectionProps {
   common: Common;
-  contributionAmount?: number;
   onSelect: (amount: number) => void;
   setShouldShowGoBackButton: (value: boolean) => void;
 }
@@ -14,7 +13,6 @@ interface AmountSelectionProps {
 const AmountSelection: FC<AmountSelectionProps> = (props) => {
   const {
     common,
-    contributionAmount,
     onSelect,
     setShouldShowGoBackButton,
   } = props;
@@ -51,7 +49,6 @@ const AmountSelection: FC<AmountSelectionProps> = (props) => {
         The change will apply starting from the next charge.
       </p>
       <ContributionAmountSelection
-        contributionAmount={contributionAmount}
         minFeeToJoin={minFeeToJoin}
         zeroContribution={false}
         pricePostfix="/mo"

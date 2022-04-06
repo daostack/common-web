@@ -1,45 +1,68 @@
 import React, { useCallback, useEffect, useState, FC } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Loader } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { useComponentWillUnmount } from "@/shared/hooks";
-import { Common, Payment } from "@/shared/models";
+import { Common, Subscription } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { updateSubscription } from "../../../../store/actions";
 import { useMyContributionsContext } from "../context";
 import { AmountSelection } from "./AmountSelection";
-import { Payment as PaymentStep } from "./Payment";
 import { Success } from "./Success";
 import { ChangeMonthlyContributionStep } from "./constants";
 
 interface ChangeMonthlyContributionProps {
+  currentSubscription: Subscription;
   common: Common;
-  onFinish: (payment: Payment) => void;
+  onFinish: (subscription: Subscription) => void;
   goBack: () => void;
 }
 
 const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
   props
 ) => {
-  const { common, onFinish, goBack } = props;
+  const { currentSubscription, common, onFinish, goBack } = props;
   const {
     setTitle,
     setOnGoBack,
     onError,
     setShouldShowClosePrompt,
   } = useMyContributionsContext();
+  const dispatch = useDispatch();
   const [step, setStep] = useState<ChangeMonthlyContributionStep>(
     ChangeMonthlyContributionStep.AmountSelection
   );
-  const [contributionAmount, setContributionAmount] = useState<
-    number | undefined
-  >();
+  const [subscription, setSubscription] = useState<Subscription | null>();
   const [shouldShowGoBackButton, setShouldShowGoBackButton] = useState(true);
-  const [createdPayment, setCreatedPayment] = useState<Payment | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
   const handleAmountSelect = (amount: number) => {
-    setContributionAmount(amount);
-    // setStep(ChangeMonthlyContributionStep.Payment);
+    if (currentSubscription.amount === amount) {
+      onFinish(currentSubscription);
+      return;
+    }
+
+    setIsLoading(true);
+
+    dispatch(
+      updateSubscription.request({
+        payload: {
+          subscriptionId: currentSubscription.id,
+          amount,
+        },
+        callback: (error, subscription) => {
+          if (error || !subscription) {
+            onError("Something went wrong");
+          } else {
+            setSubscription(subscription);
+          }
+
+          setIsLoading(false);
+        },
+      })
+    );
   };
 
   const handleGoBack = useCallback(() => {
@@ -54,32 +77,28 @@ const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
     setShouldShowClosePrompt(false);
   }, [setShouldShowClosePrompt]);
 
-  const handlePaymentFinish = useCallback((payment: Payment) => {
-    setCreatedPayment(payment);
-  }, []);
-
   const handleSuccessFinish = useCallback(() => {
-    if (createdPayment) {
-      onFinish(createdPayment);
+    if (subscription) {
+      onFinish(subscription);
     }
-  }, [onFinish, createdPayment]);
+  }, [onFinish, subscription]);
 
   useEffect(() => {
-    setTitle(!isMobileView && createdPayment ? null : "My contributions");
-  }, [setTitle, isMobileView, createdPayment]);
+    setTitle(!isMobileView && subscription ? null : "My contributions");
+  }, [setTitle, isMobileView, subscription]);
 
   useEffect(() => {
     setOnGoBack(shouldShowGoBackButton ? handleGoBack : undefined);
   }, [setOnGoBack, shouldShowGoBackButton, handleGoBack]);
 
   useEffect(() => {
-    setShouldShowClosePrompt(step === ChangeMonthlyContributionStep.Payment);
-  }, [step, setShouldShowClosePrompt]);
+    setShouldShowClosePrompt(isLoading);
+  }, [isLoading, setShouldShowClosePrompt]);
 
   useComponentWillUnmount(handleUnmount);
 
   const renderContent = () => {
-    if (!isMobileView && createdPayment) {
+    if (!isMobileView && subscription) {
       return (
         <Success
           onFinish={handleSuccessFinish}
@@ -93,21 +112,10 @@ const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
         return (
           <AmountSelection
             common={common}
-            contributionAmount={contributionAmount}
             onSelect={handleAmountSelect}
             setShouldShowGoBackButton={setShouldShowGoBackButton}
           />
         );
-      case ChangeMonthlyContributionStep.Payment:
-        return typeof contributionAmount === "number" ? (
-          <PaymentStep
-            common={common}
-            contributionAmount={contributionAmount}
-            onFinish={handlePaymentFinish}
-            onError={onError}
-            setShouldShowGoBackButton={setShouldShowGoBackButton}
-          />
-        ) : null;
       default:
         return null;
     }
@@ -115,8 +123,8 @@ const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
 
   return (
     <>
-      {renderContent()}
-      {isMobileView && createdPayment && (
+      {isLoading ? <Loader /> : renderContent()}
+      {isMobileView && subscription && (
         <Success
           onFinish={handleSuccessFinish}
           setShouldShowGoBackButton={setShouldShowGoBackButton}
