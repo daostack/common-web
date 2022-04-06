@@ -37,7 +37,6 @@ import {
   getBankDetails as getBankDetailsApi,
   getUserContributionsToCommon as getUserContributionsToCommonApi,
   getUserSubscriptionToCommon as getUserSubscriptionToCommonApi,
-  getCardById as getCardByIdApi,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -551,23 +550,6 @@ export function* getUserSubscriptionToCommon(
   }
 }
 
-export function* getCardById(
-  action: ReturnType<typeof actions.getCardById.request>
-): Generator {
-  try {
-    const card = (yield call(
-      getCardByIdApi,
-      action.payload.payload
-    )) as Card | null;
-
-    yield put(actions.getCardById.success(card));
-    action.payload.callback(null, card);
-  } catch (error) {
-    yield put(actions.getCardById.failure(error));
-    action.payload.callback(error);
-  }
-}
-
 export function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
@@ -590,10 +572,7 @@ export function* commonsSaga() {
     actions.createFundingProposal.request,
     createFundingProposalSaga
   );
-  yield takeLatest(
-    actions.loadUserCards.request,
-    loadUserCardsSaga
-  );
+  yield takeLatest(actions.loadUserCards.request, loadUserCardsSaga);
   yield takeLatest(
     actions.addMessageToProposal.request,
     addMessageToProposalSaga
@@ -615,7 +594,6 @@ export function* commonsSaga() {
     actions.getUserSubscriptionToCommon.request,
     getUserSubscriptionToCommon
   );
-  yield takeLatest(actions.getCardById.request, getCardById);
 }
 
 export default commonsSaga;

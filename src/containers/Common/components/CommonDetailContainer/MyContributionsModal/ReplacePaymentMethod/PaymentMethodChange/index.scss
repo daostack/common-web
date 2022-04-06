@@ -1,7 +1,7 @@
 @import "../../../../../../../constants";
 @import "../../../../../../../styles/sizes";
 
-.one-time-payment-my-contributions-stage {
+.payment-method-change-my-contributions-stage {
   padding-top: 1.75rem;
   display: flex;
   flex-direction: column;
@@ -12,14 +12,14 @@
   }
 }
 
-.one-time-payment-my-contributions-stage__title {
+.payment-method-change-my-contributions-stage__title {
   margin: 0;
   font-size: $moderate-small;
   font-weight: bold;
   text-align: center;
 }
 
-.one-time-payment-my-contributions-stage__description {
+.payment-method-change-my-contributions-stage__description {
   max-width: 21.125rem;
   margin: 1rem 0 0;
   font-size: $xsmall;
@@ -31,12 +31,12 @@
   }
 }
 
-.one-time-payment-my-contributions-stage__separator {
+.payment-method-change-my-contributions-stage__separator {
   max-width: 20.5rem;
   margin: 1rem 0;
 }
 
-.one-time-payment-my-contributions-stage__content {
+.payment-method-change-my-contributions-stage__content {
   flex: 1 0;
   position: relative;
   max-width: 25rem;
@@ -49,7 +49,7 @@
   }
 }
 
-.one-time-payment-my-contributions-stage__loader {
+.payment-method-change-my-contributions-stage__loader {
   position: absolute;
   top: 50%;
   transform: translateX(-50%) translateY(-50%);

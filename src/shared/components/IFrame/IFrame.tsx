@@ -3,17 +3,18 @@ import classNames from "classnames";
 import "./index.scss";
 
 interface IFrameProps {
-    src: string;
-    frameBorder: string;
-    title: string;
-    onLoad: () => void;
-    className?: string;
+  src: string;
+  frameBorder: string;
+  title: string;
+  onLoad: () => void;
+  className?: string;
 }
 
-const IFrame = (props: IFrameProps) =>
-    <iframe
-        {...props}
-        className={classNames("payment-iframe", props.className)}
-    />;
+const IFrame = (props: IFrameProps) => (
+  <iframe
+    {...props}
+    className={classNames("payment-iframe", props.className)}
+  />
+);
 
 export default IFrame;
