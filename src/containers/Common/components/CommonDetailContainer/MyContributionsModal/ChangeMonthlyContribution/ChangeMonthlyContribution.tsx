@@ -112,6 +112,7 @@ const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
         return (
           <AmountSelection
             common={common}
+            currentAmount={currentSubscription.amount}
             onSelect={handleAmountSelect}
             setShouldShowGoBackButton={setShouldShowGoBackButton}
           />

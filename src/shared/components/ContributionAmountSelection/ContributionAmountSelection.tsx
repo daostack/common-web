@@ -20,6 +20,7 @@ import "./index.scss";
 interface IProps {
   className?: string;
   contributionAmount?: number;
+  currentAmount?: number;
   minFeeToJoin: number;
   zeroContribution: boolean;
   pricePostfix?: string;
@@ -35,6 +36,7 @@ export default function ContributionAmountSelection(props: IProps) {
   const {
     className,
     contributionAmount,
+    currentAmount,
     minFeeToJoin,
     zeroContribution,
     pricePostfix = "",
@@ -43,7 +45,7 @@ export default function ContributionAmountSelection(props: IProps) {
   } = props;
   const [isCurrencyInputTouched, setIsCurrencyInputTouched] = useState(false);
   const amountsForSelection = useMemo(
-    () => getAmountsForSelection(minFeeToJoin, zeroContribution),
+    () => getAmountsForSelection(minFeeToJoin, zeroContribution, currentAmount),
     [minFeeToJoin, zeroContribution]
   );
   const [selectedContribution, setSelectedContribution] = useState<
@@ -143,6 +145,7 @@ export default function ContributionAmountSelection(props: IProps) {
                 shouldRemovePrefixFromZero: false,
               })}
               {pricePostfix}
+              {amount === currentAmount ? " - Current" : ""}
             </ToggleButton>
           ))}
           <ToggleButton styles={toggleButtonStyles} value="other">
