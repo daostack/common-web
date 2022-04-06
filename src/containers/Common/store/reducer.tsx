@@ -14,7 +14,7 @@ const initialState: CommonsStateType = {
   isProposalsLoaded: false,
   currentDiscussion: null,
   currentProposal: null,
-  doesUserHasPaymentMethod: false,
+  cards: [],
 };
 
 type Action = ActionType<typeof actions>;
@@ -111,9 +111,9 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       nextState.userProposals = [{ ...action.payload }, ...nextState.userProposals];
     })
   )
-  .handleAction(actions.checkUserPaymentMethod.success, (state, action) =>
+  .handleAction(actions.loadUserCards.success, (state, action) =>
     produce(state, (nextState) => {
-      nextState.doesUserHasPaymentMethod = action.payload;
+      nextState.cards = action.payload;
     })
   )
   .handleAction(actions.createCommon.success, (state, action) =>
