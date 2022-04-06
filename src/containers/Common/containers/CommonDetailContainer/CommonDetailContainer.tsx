@@ -53,7 +53,7 @@ import {
   selectIsDiscussionsLoaded,
   selectIsProposalLoaded,
   selectProposals,
-  selectUserPaymentMethod,
+  selectCards,
 } from "../../store/selectors";
 import {
   clearCurrentDiscussion,
@@ -66,7 +66,7 @@ import {
   loadProposalList,
   createDiscussion,
   createFundingProposal,
-  checkUserPaymentMethod,
+  loadUserCards,
 } from "../../store/actions";
 import CheckIcon from "../../../../shared/icons/check.icon";
 import { selectUser } from "../../../Auth/store/selectors";
@@ -129,12 +129,12 @@ export default function CommonDetail() {
   const currentDisscussion = useSelector(selectCurrentDisscussion());
   const proposals = useSelector(selectProposals());
   const discussions = useSelector(selectDiscussions());
+  const cards = useSelector(selectCards());
   const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
   const isProposalsLoaded = useSelector(selectIsProposalLoaded());
   const currentProposal = useSelector(selectCurrentProposal());
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
-  const hasPaymentMethod = useSelector(selectUserPaymentMethod());
 
   const fundingProposals = useMemo(
     () =>
@@ -152,6 +152,11 @@ export default function CommonDetail() {
   const historyProposals = useMemo(
     () => fundingProposals.filter((d) => d.state !== ProposalState.COUNTDOWN),
     [fundingProposals]
+  );
+
+  const hasPaymentMethod = useMemo(
+    () => (!!cards && !!cards.length),
+    [cards]
   );
 
   const isCommonMember = Boolean(
@@ -207,7 +212,7 @@ export default function CommonDetail() {
   }, [onOpenJoinModal]);
 
   useEffect(() => {
-    dispatch(checkUserPaymentMethod.request());
+    dispatch(loadUserCards.request({ callback: () => true }));
     dispatch(
       getCommonDetail.request({
         payload: id,
