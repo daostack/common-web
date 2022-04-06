@@ -1,0 +1,21 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+.sidebar-wrapper {
+  display: flex;
+  flex-direction: column;
+  background-color: $light-purple-background;
+  border-right: 1px solid $light-gray-1;
+  min-width: 16rem;
+  margin-left: -$content-padding; // to compensate on content padding
+  padding: 2rem 0.5rem;
+  .sidebar-title {
+    margin-bottom: 1.5rem;
+    margin-left: 2rem;
+  }
+}
+
+
+@include big-phone {
+
+}

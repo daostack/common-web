@@ -7,7 +7,7 @@ import React, {
   ReactNode,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { UserDetails } from "../../components/LoginContainer/UserDetails";
+import UserDetailsWrapper from "../../components/LoginContainer/UserDetails/UserDetailsWrapper";
 import { Modal } from "../../../../shared/components";
 import { AuthProvider, ScreenSize } from "../../../../shared/constants";
 import { ModalProps, ModalType } from "../../../../shared/interfaces";
@@ -41,8 +41,8 @@ const LoginContainer: FC = () => {
     isMobileView && stage === AuthStage.AuthMethodSelect;
   const modalType =
     type === LoginModalType.RequestToJoin &&
-    stage === AuthStage.AuthMethodSelect &&
-    !isLoading
+      stage === AuthStage.AuthMethodSelect &&
+      !isLoading
       ? ModalType.MobilePopUp
       : ModalType.Default;
 
@@ -155,7 +155,7 @@ const LoginContainer: FC = () => {
         );
       case AuthStage.CompleteAccountDetails:
         return user ? (
-          <UserDetails user={user} closeModal={handleClose} />
+          <UserDetailsWrapper user={user} closeModal={handleClose} />
         ) : null;
       default:
         return null;

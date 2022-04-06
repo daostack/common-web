@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
   ApiEndpoint,
   COMMON_APP_APP_STORE_LINK,
@@ -19,7 +20,6 @@ interface AccountProps {
   logOut: () => void;
   isTrusteeRoute: boolean;
   hasAdminAccess: boolean;
-  showMyAccount: () => void;
 }
 
 const Account = ({
@@ -27,8 +27,8 @@ const Account = ({
   logOut,
   isTrusteeRoute,
   hasAdminAccess,
-  showMyAccount,
 }: AccountProps) => {
+  const history = useHistory();
   const [showMenu, setShowMenu] = useState(false);
   const wrapperRef = useRef(null);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
@@ -43,6 +43,10 @@ const Account = ({
       setOusideValue();
     }
   }, [isOutside, setShowMenu, setOusideValue]);
+
+  const showMyAccount = () => {
+    history.push(ROUTE_PATHS.MY_ACCOUNT_PROFILE);
+  }
 
   return (
     <div className="account-wrapper" onClick={() => setShowMenu(!showMenu)}>

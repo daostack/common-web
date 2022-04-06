@@ -11,27 +11,6 @@
   text-align: center;
   color: $secondary-blue;
 
-  .user-details__title {
-    margin: 0;
-    font-family: NotoSerifSC, serif;
-    text-align: center;
-
-    @include big-phone {
-      font-size: $moderate-med;
-      font-weight: 600;
-    }
-  }
-
-  .user-details__sub-title {
-    margin: 0.5rem 0 0;
-    font-size: $small;
-    color: $light-gray-2;
-
-    @include big-phone {
-      font-size: $xsmall;
-    }
-  }
-
   .user-details__form {
     display: flex;
     flex-direction: column;
@@ -137,6 +116,30 @@
     @include big-phone {
       max-width: unset;
       margin-top: 3.5rem;
+    }
+  }
+}
+
+.user-details-wrapper {
+  .user-details__title {
+    margin: 0;
+    font-family: NotoSerifSC, serif;
+    text-align: center;
+
+    @include big-phone {
+      font-size: $moderate-med;
+      font-weight: 600;
+    }
+  }
+
+  .user-details__sub-title {
+    margin: 0.5rem 0 0;
+    font-size: $small;
+    color: $light-gray-2;
+    text-align: center;
+
+    @include big-phone {
+      font-size: $xsmall;
     }
   }
 }

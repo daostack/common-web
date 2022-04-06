@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, RouteProps, useHistory } from "react-router-dom";
 import classNames from "classnames";
-
+//import { Routes } from "@/containers/MyAccount/components/Routes";
 import { UserAvatar } from "../../../shared/components";
 import { useAnyMandatoryRoles, useMatchRoute } from "../../../shared/hooks";
 import { UserRole } from "../../../shared/models";
@@ -52,6 +52,7 @@ const Header = () => {
     ROUTE_PATHS.TRUSTEE_AUTH,
     EXACT_MATCH_ROUTE_PROPS
   );
+  //const [showAccountOptions, setShowAccountOptions] = useState(false);
 
   const handleOpen = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: true }));
@@ -105,6 +106,11 @@ const Header = () => {
       {isAuthorized && isMobile() && (
         <>
           <button onClick={handleOpen}>My Account</button>
+
+          {/* <div onClick={() => setShowAccountOptions(!showAccountOptions)}>
+            My Account
+            {showAccountOptions && <Routes />}
+          </div> */}
           {hasAdminAccess && (
             <button onClick={handleReportsDownload}>Download Reports</button>
           )}
@@ -150,7 +156,6 @@ const Header = () => {
               logOut={logOutUser}
               isTrusteeRoute={isTrusteeRoute}
               hasAdminAccess={hasAdminAccess}
-              showMyAccount={handleOpen}
             />
           )}
           {!isAuthorized && !isTrusteeRoute ? (
