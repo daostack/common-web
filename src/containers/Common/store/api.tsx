@@ -282,14 +282,16 @@ export async function createVote(
   return data;
 }
 
-export async function checkUserPaymentMethod(userId: string): Promise<boolean> {
+export async function loadUserCards(userId: string): Promise<Card[]> {
   const cards = await firebase
     .firestore()
     .collection(Collection.Cards)
     .where("ownerId", "==", userId)
     .get();
 
-  return !!cards.docs.length;
+  const data = transformFirebaseDataList<Card>(cards);
+
+  return data;
 }
 
 export async function deleteCommon(requestData: DeleteCommon): Promise<void> {
