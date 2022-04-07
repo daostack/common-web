@@ -1,11 +1,11 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, RouteProps, useHistory } from "react-router-dom";
 import classNames from "classnames";
 import { Routes } from "@/containers/MyAccount/components/Routes";
 import RightArrowIcon from "@/shared/icons/rightArrow.icon";
 import { UserAvatar } from "../../../shared/components";
-import { useAnyMandatoryRoles, useMatchRoute } from "../../../shared/hooks";
+import { useAnyMandatoryRoles, useMatchRoute, useOutsideClick } from "../../../shared/hooks";
 import { UserRole } from "../../../shared/models";
 import { ApiEndpoint, Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
@@ -43,6 +43,8 @@ const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const isAuthorized = useSelector(authentificated());
   const user = useSelector(selectUser());
+  const myAccountBtnRef = useRef(null);
+  const { isOutside } = useOutsideClick(myAccountBtnRef);
   const shouldDisplayAvatar = Boolean(screenSize === ScreenSize.Mobile && user);
   const hasAdminAccess = useAnyMandatoryRoles(ADMIN_ACCESS_ROLES, user?.roles);
   const isTrusteeRoute = useMatchRoute(
@@ -57,7 +59,11 @@ const Header = () => {
     ROUTE_PATHS.MY_ACCOUNT,
     NON_EXACT_MATCH_ROUTE_PROPS
   );
-  const [showAccountLinks, setShowAccountLinks] = useState(isMyAccountRoute ? true : false);
+  const [showAccountLinks, setShowAccountLinks] = useState<boolean>();
+
+  useEffect(() => {
+    setShowAccountLinks(isMyAccountRoute ? true : false);
+  }, [showMenu, isMyAccountRoute])
 
   const handleOpen = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: true }));
@@ -80,8 +86,8 @@ const Header = () => {
     setShowMenu((shouldShow) => !shouldShow);
   };
 
-  const handleNavLinkClick = (e: any) => {
-    if (showMenu && e.target.id !== "myAccountButton") {
+  const handleNavLinkClick = () => {
+    if (showMenu && isOutside) {
       setShowMenu(false);
     }
   };
@@ -94,7 +100,7 @@ const Header = () => {
     <div className="navigation-wrapper" onClick={handleNavLinkClick}>
       {isAuthorized && isMobile() && (
         <button onClick={() => setShowAccountLinks(!showAccountLinks)}>
-          <div id="myAccountButton" className="my-account-button">
+          <div ref={myAccountBtnRef} className="my-account-button">
             My Account
             <RightArrowIcon
               className={classNames(
