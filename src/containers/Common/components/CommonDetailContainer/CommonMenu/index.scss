@@ -32,6 +32,9 @@ $border-radius: 0.75rem;
     text-decoration: none;
   }
 }
+.edit-common-menu__menu-modal-button--disabled {
+  color: $light-gray-3;
+}
 
 .edit-common-menu__menu-button {
   width: 2.5rem;
@@ -95,6 +98,10 @@ $border-radius: 0.75rem;
   &:hover {
     background-color: $light-gray-4;
   }
+}
+.edit-common-menu__dropdown-menu-item--disabled {
+  color: $light-gray-3;
+  cursor: not-allowed;
 }
 .edit-common-menu__dropdown-menu-item--red {
   color: $red;
