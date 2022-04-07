@@ -14,6 +14,7 @@ const IFrame = (props: IFrameProps) => (
   <iframe
     {...props}
     className={classNames("payment-iframe", props.className)}
+    title={props.title}
   />
 );
 
