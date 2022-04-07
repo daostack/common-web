@@ -98,22 +98,25 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   const commonMember = common?.members.find(
     (member) => member.userId === user?.uid
   );
+  const isCommonMember = Boolean(commonMember);
   const isCommonOwner = Boolean(
     commonMember?.permission === MemberPermission.Founder
   );
   const menuItems = useMemo<MenuItem[]>(() => {
-    const items: MenuItem[] = [
-      MenuItem.EditInfo,
-      MenuItem.EditRules,
-      MenuItem.MyContributions,
-    ];
+    const items: MenuItem[] = [];
 
+    if (isCommonOwner) {
+      items.push(MenuItem.EditInfo, MenuItem.EditRules);
+    }
+    if (isCommonMember) {
+      items.push(MenuItem.MyContributions);
+    }
     if (isCommonOwner && common.members.length === 1) {
       items.push(MenuItem.DeleteCommon);
     }
 
     return items;
-  }, [isCommonOwner, common.members]);
+  }, [isCommonMember, isCommonOwner, common.members]);
   const options = useMemo(
     () =>
       OPTIONS.filter((option) => menuItems.includes(option.value as MenuItem)),
