@@ -89,8 +89,7 @@ $payment-iframe-height-mobile: 672px;
     align-self: flex-start;
   }
 
-  select,
-  input {
+  select {
     height: 40px;
     padding: 0 0.7rem;
     border-radius: 3px;
@@ -502,8 +501,7 @@ $payment-iframe-height-mobile: 672px;
   .membership-request-content {
     padding: unset;
 
-    select,
-    input {
+    select {
       width: 100%;
     }
   }

@@ -1,3 +1,4 @@
+import { Time } from "./shared";
 import { Currency } from "./Currency";
 
 export enum PaymentStatus {
@@ -10,6 +11,11 @@ export enum PaymentStatus {
 export enum ContributionSourceType {
   JoinProposal = "joinProposal",
   CommonImmediate = "commonImmediate",
+}
+
+export enum PaymentType {
+  OneTime = "one-time",
+  Subscription = "subscription",
 }
 
 export interface PaymentAmount {
@@ -36,7 +42,9 @@ export interface PaymentError {
 
 export interface Payment {
   id: string;
-  type: "one-time" | "subscription";
+  createdAt: Time;
+  updatedAt: Time;
+  type: PaymentType;
   status: PaymentStatus;
   contributionSourceType: ContributionSourceType;
   paymentMethod: "card";

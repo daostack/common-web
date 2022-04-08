@@ -1,0 +1,112 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+
+$h-padding: 3rem;
+$mobile-h-padding: 1.5rem;
+
+.general-my-contributions-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.general-my-contributions-stage__total-wrapper {
+  padding: 1rem $h-padding;
+  display: flex;
+  flex-direction: column;
+  font-size: $xsmall;
+  text-align: center;
+  background-color: $light-gray-4;
+  border-radius: 0.625rem;
+
+  @include big-phone {
+    margin: 1rem $mobile-h-padding 0;
+  }
+}
+
+.general-my-contributions-stage__total-text {
+  max-width: 14.438rem;
+}
+
+.general-my-contributions-stage__total {
+  margin-top: 1rem;
+  font-size: $moderate-med;
+  font-weight: bold;
+}
+
+.general-my-contributions-stage__history {
+  width: 100%;
+  margin-top: 2rem;
+  padding: 0 3.625rem;
+  box-sizing: border-box;
+
+  @include big-phone {
+    margin-top: 1rem;
+    padding: 0;
+  }
+}
+
+.general-my-contributions-stage__section-title {
+  margin: 0 0 1rem;
+
+  @include big-phone {
+    padding: 0 $mobile-h-padding;
+  }
+}
+
+.general-my-contributions-stage__list {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.general-my-contributions-stage__list-item {
+  padding-left: $mobile-h-padding;
+  padding-right: $mobile-h-padding;
+}
+
+.general-my-contributions-stage__buttons-wrapper {
+  padding: 2.5rem $h-padding 1.875rem;
+  display: flex;
+  justify-content: space-between;
+
+  @include big-phone {
+    padding: 1rem 0 1.5rem;
+    flex-wrap: wrap-reverse;
+  }
+}
+.general-my-contributions-stage__buttons-wrapper--center {
+  justify-content: center;
+}
+
+.general-my-contributions-stage__button {
+  max-width: 21.5rem;
+
+  @include big-phone {
+    max-width: unset;
+
+    &:first-child {
+      margin-top: 1rem;
+    }
+  }
+}
+
+.general-my-contributions-stage__empty-contributions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.general-my-contributions-stage__funds-image {
+  max-width: 18.75rem;
+  width: 100%;
+  max-height: 18.75rem;
+  height: 100%;
+}
+
+.general-my-contributions-stage__empty-contributions-text {
+  margin: 1rem 0;
+  font-size: $small;
+  font-weight: 600;
+}
