@@ -10,3 +10,4 @@ export * from "./Payment";
 export * from "./Subscription";
 export * from "./Votes";
 export * from "./BankAccountDetails";
+export * from "./Currency";

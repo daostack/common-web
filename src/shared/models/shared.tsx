@@ -1,6 +1,7 @@
 export interface Time {
   seconds: number;
   nanoseconds: number;
+  toDate: Function;
 }
 
 export interface Moderation {

@@ -1,6 +1,10 @@
 import React from "react";
 import ApprovedIcon from "../../../../shared/icons/approved.icon";
-import { Proposal, User } from "../../../../shared/models";
+import {
+  Proposal,
+  User,
+  CurrencySymbol,
+} from "../../../../shared/models";
 import { formatEpochTime, formatPrice } from "../../../../shared/utils";
 import { AddInvoices } from "../AddInvoices";
 import "./index.scss";
@@ -18,6 +22,10 @@ enum Expense {
 
 export default function ProposalDetails({ commonName, user, proposal, updateSubmissionStatus }: IProps) {
   const expense: Expense = Expense.proposal;
+  //required custom fix since the using currency was changed - CW-411
+  const fundingAmountPrefix = (
+    (proposal?.createdAt || proposal?.createTime)?.toDate() < new Date("02/17/2022 12:00")
+  ) && CurrencySymbol.USD;
 
   return (
     <div className="proposal-detailes-wrapper">
@@ -32,7 +40,19 @@ export default function ProposalDetails({ commonName, user, proposal, updateSubm
         <div className="submit-invoices-wrapper__description-content">
           <span className="submit-invoices-wrapper__description">{`${proposal?.description.description}`}</span>
           <span className="submit-invoices-wrapper__description-amount">
-            {`${formatPrice(proposal?.fundingRequest?.amount, { shouldMillify: true })}`}
+            {
+              formatPrice(
+                proposal?.fundingRequest?.amount,
+                {
+                  ...(
+                    fundingAmountPrefix && {
+                      prefix: fundingAmountPrefix
+                    }
+                  ),
+                  shouldMillify: true,
+                }
+              )
+            }
           </span>
         </div>
       </div>
