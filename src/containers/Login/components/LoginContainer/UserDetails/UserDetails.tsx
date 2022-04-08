@@ -155,7 +155,7 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
               </div>
               <div className="user-details__text-field-container">
                 <TextField
-                  className="user-details__text-field"
+                  className="user-details__text-field user-details__first-name"
                   id="firstName"
                   name="firstName"
                   label="First name"
@@ -163,7 +163,7 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
                   styles={styles}
                 />
                 <TextField
-                  className="user-details__text-field"
+                  className="user-details__text-field user-details__last-name"
                   id="lastName"
                   name="lastName"
                   label="Last name"
@@ -171,7 +171,7 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
                   styles={styles}
                 />
                 <TextField
-                  className="user-details__text-field"
+                  className="user-details__text-field user-details__email"
                   id="email"
                   name="email"
                   label="Email"
@@ -179,7 +179,7 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
                   styles={styles}
                 />
                 <Dropdown
-                  className="user-details__text-field"
+                  className="user-details__text-field user-details__country"
                   name="country"
                   label="Country"
                   placeholder="---Select country---"
@@ -192,6 +192,8 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
                   label="Intro"
                   placeholder="What are you most passionate about, really good at, or love"
                   styles={styles}
+                  isTextarea
+                  rows={1}
                 />
               </div>
               <Button

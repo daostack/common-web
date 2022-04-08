@@ -12,6 +12,7 @@
   color: $secondary-blue;
 
   .user-details__form {
+    width: 100%;
     display: flex;
     flex-direction: column;
   }
@@ -65,20 +66,29 @@
   }
 
   .user-details__text-field {
-    max-width: 17.25rem;
     width: 100%;
-    margin-bottom: 0.5rem;
     text-align: left;
     z-index: 1;
+  }
 
-    @include big-phone {
-      max-width: unset;
-      width: 100%;
-      margin-bottom: 1.5rem;
-    }
+  .user-details__first-name {
+    grid-area: firstName;
+  }
+
+  .user-details__last-name {
+    grid-area: lastName;
+  }
+
+  .user-details__email {
+    grid-area: email;
+  }
+
+  .user-details__country {
+    grid-area: country;
   }
 
   .user-details__textarea {
+    grid-area: intro;
     width: 100%;
   }
 
@@ -88,12 +98,22 @@
 
   .user-details__text-field-container {
     max-width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display: grid;
+    gap: 0.5rem 1.75rem;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "firstName lastName"
+      "email country"
+      "intro intro";
 
     @include big-phone {
-      justify-content: center;
+      gap: 1.5rem 0;
+      grid-template-areas:
+        "firstName"
+        "lastName"
+        "email"
+        "country"
+        "intro";
     }
   }
 

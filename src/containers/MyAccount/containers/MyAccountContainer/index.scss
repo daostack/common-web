@@ -5,9 +5,11 @@
   display: flex;
 
   .route-content {
-    margin: 2.5rem 3.5rem;
+    margin: 2.5rem 0 2.5rem 3.5rem;
   }
   .route-title {
+    margin: 0;
+    font-family: NunitoSans, sans-serif;
     font-size: $moderate-med;
     font-weight: bold;
   }
