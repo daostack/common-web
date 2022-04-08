@@ -16,6 +16,11 @@ import {
 } from "../../../shared/constants";
 import history from "../../../shared/history";
 import { createdUserApi } from "./api";
+import {
+  getProposalById,
+  subscribeToNotification,
+} from "@/containers/Common/store/api";
+import { EventTypeState, NotificationItem } from "@/shared/models/Notification";
 
 const getAuthProviderFromProviderData = (
   providerData?: firebase.User["providerData"]
@@ -468,6 +473,19 @@ function* authSagas() {
       }
     } catch (e) {
       logOut().next();
+    }
+  });
+
+  subscribeToNotification(async (data?: NotificationItem) => {
+    switch (data?.eventType) {
+      case EventTypeState.fundingRequestAccepted:
+      case EventTypeState.fundingRequestRejected:
+        console.log(data);
+        const kek = await getProposalById(data?.eventObjectId);
+        console.log(kek);
+        break;
+      default:
+        break;
     }
   });
 })();

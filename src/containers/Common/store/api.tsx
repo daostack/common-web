@@ -16,6 +16,7 @@ import {
 } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
+  tokenHandler,
   transformFirebaseDataList,
   transformFirebaseDataSingle,
 } from "@/shared/utils";
@@ -31,6 +32,7 @@ import {
 import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
 import { CreateVotePayload, Vote } from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
+import { NotificationItem } from "@/shared/models/Notification";
 
 export async function fetchCommonDiscussions(commonId: string) {
   const commons = await firebase
@@ -335,15 +337,44 @@ export function subscribeToPayment(
 }
 
 export async function getBankDetails(): Promise<void> {
-  const { data } = await Api.get<void>(
-    ApiEndpoint.GetBankAccount,
-  );
+  const { data } = await Api.get<void>(ApiEndpoint.GetBankAccount);
   return data;
 }
 
-export async function addBankDetails(requestData: AddBankDetailsPayload): Promise<void> {
-  await Api.post<void>(
-    ApiEndpoint.AddBankAccount,
-    requestData
-  );
+export async function addBankDetails(
+  requestData: AddBankDetailsPayload
+): Promise<void> {
+  await Api.post<void>(ApiEndpoint.AddBankAccount, requestData);
+}
+
+export function subscribeToNotification(
+  callback: (data?: NotificationItem) => void
+) {
+  const user = tokenHandler.getUser();
+
+  if (!user) return;
+
+  return firebase
+    .firestore()
+    .collection(Collection.Notifications)
+    .where("userFilter", "array-contains", user.uid)
+    .onSnapshot((data) => {
+      data.docChanges().forEach((change) => {
+        switch (change.type) {
+          case "added":
+          case "modified":
+            return callback((change.doc.data() as any) as NotificationItem);
+        }
+      });
+    });
+}
+
+export async function getProposalById(proposalId: string) {
+  const query = await firebase
+    .firestore()
+    .collection(Collection.Proposals)
+    .doc(proposalId)
+    .get();
+
+  return query.data();
 }
