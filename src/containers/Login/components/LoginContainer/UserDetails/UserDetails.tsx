@@ -27,7 +27,7 @@ import "./index.scss";
 
 interface UserDetailsProps {
   user: User;
-  closeModal: () => void;
+  closeModal?: () => void;
 }
 
 interface FormValues {
@@ -92,7 +92,7 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
       dispatch(
         updateUserDetails.request({
           user: { ...user, ...values },
-          callback: closeModal,
+          callback: closeModal || (() => { }),
         })
       );
     },
@@ -108,10 +108,6 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
 
   return (
     <div className="user-details">
-      <h2 className="user-details__title">Complete your account</h2>
-      <p className="user-details__sub-title">
-        Help the community to get to know you better
-      </p>
       <Formik
         initialValues={getInitialValues(user)}
         onSubmit={handleSubmit}
