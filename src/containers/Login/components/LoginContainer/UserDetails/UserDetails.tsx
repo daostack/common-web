@@ -92,7 +92,7 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
       dispatch(
         updateUserDetails.request({
           user: { ...user, ...values },
-          callback: closeModal ? closeModal : () => { },
+          callback: closeModal || (() => { }),
         })
       );
     },

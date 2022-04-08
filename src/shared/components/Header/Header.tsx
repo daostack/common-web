@@ -62,7 +62,7 @@ const Header = () => {
   const [showAccountLinks, setShowAccountLinks] = useState<boolean>();
 
   useEffect(() => {
-    setShowAccountLinks(isMyAccountRoute ? true : false);
+    setShowAccountLinks(isMyAccountRoute);
   }, [showMenu, isMyAccountRoute])
 
   const handleOpen = useCallback(() => {
