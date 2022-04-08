@@ -1,0 +1,76 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+
+.my-contributions-stage-history-list-item-wrapper {
+  border-top: 1px solid $light-gray-1;
+
+  &:first-child {
+    border-top: none;
+  }
+}
+
+.my-contributions-stage-history-list-item {
+  padding: 1rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: $xsmall;
+
+  @include big-phone {
+    padding: 1.5rem 0;
+    font-size: $xxsmall;
+  }
+}
+.my-contributions-stage-history-list-item--clickable {
+  color: $purple-2;
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  @include big-phone {
+    color: $purple;
+  }
+}
+
+.my-contributions-stage-history-list-item__content {
+  display: flex;
+  flex-direction: column;
+}
+
+.my-contributions-stage-history-list-item__title {
+  margin: 0;
+  font-size: $small;
+  font-weight: 600;
+
+  @include big-phone {
+    font-size: $xsmall;
+    font-weight: bold;
+  }
+}
+
+.my-contributions-stage-history-list-item__description {
+  margin-top: 0.375rem;
+
+  @include big-phone {
+    margin-top: 0.5rem;
+  }
+}
+
+.my-contributions-stage-history-list-item__amount {
+  display: flex;
+  align-items: center;
+  color: $secondary-blue;
+}
+
+.my-contributions-stage-history-list-item__right-arrow {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-left: 0.5rem;
+
+  @include big-phone {
+    width: 1rem;
+    height: 1rem;
+    margin-left: 1rem;
+  }
+}

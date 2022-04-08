@@ -16,13 +16,14 @@ const getLastSelectionAmount = (
 
 export const getAmountsForSelection = (
   minFeeToJoin: number,
-  zeroContribution: boolean
+  zeroContribution: boolean,
+  currentAmount?: number
 ): number[] => {
-  if (minFeeToJoin === 0 || zeroContribution) {
+  if ((minFeeToJoin === 0 || zeroContribution) && !currentAmount) {
     return [0, MIN_CONTRIBUTION_ILS_AMOUNT, MIN_CONTRIBUTION_ILS_AMOUNT * 2];
   }
 
-  const minFeeToJoinForUsage = minFeeToJoin / 100;
+  const minFeeToJoinForUsage = (currentAmount || minFeeToJoin) / 100;
   const initialAmount = minFeeToJoinForUsage * 2;
   const firstAmount =
     initialAmount % 10 === 0

@@ -1,7 +1,11 @@
+export enum MemberPermission {
+  Founder = "founder",
+}
+
 export interface Member {
   joinedAt: { seconds: number; nanoseconds: number };
   userId: string;
-  permission?: Permission;
+  permission?: MemberPermission;
 }
 
 export interface CommonLink {

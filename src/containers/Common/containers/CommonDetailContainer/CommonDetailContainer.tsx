@@ -1,26 +1,10 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import classNames from "classnames";
-import {
-  Button,
-  ButtonVariant,
-  Loader,
-  NotFound,
-  CommonShare,
-  UserAvatar,
-} from "@/shared/components";
+import { Loader, NotFound, CommonShare, UserAvatar } from "@/shared/components";
 import { Modal } from "@/shared/components/Modal";
-import {
-  useAuthorizedModal,
-  useModal,
-  useViewPortHook,
-} from "@/shared/hooks";
+import { useAuthorizedModal, useModal, useViewPortHook } from "@/shared/hooks";
 import PurpleCheckIcon from "@/shared/icons/purpleCheck.icon";
 import ShareIcon from "@/shared/icons/share.icon";
 import {
@@ -38,6 +22,7 @@ import {
   PreviewInformationList,
   DiscussionsComponent,
   DiscussionDetailModal,
+  CommonMenu,
   ProposalsComponent,
   ProposalsHistory,
   AboutSidebarComponent,
@@ -76,8 +61,6 @@ import {
   AddProposalSteps,
 } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
-import { LeaveCommonPrompt } from "../../components/CommonDetailContainer/LeaveCommonPrompt";
-import { DeleteCommonPrompt } from "../../components/CommonDetailContainer/DeleteCommonPrompt";
 import "./index.scss";
 
 interface CommonDetailRouterParams {
@@ -88,7 +71,7 @@ export enum Tabs {
   About = "about",
   Discussions = "discussions",
   Proposals = "proposals",
-  History = "history"
+  History = "history",
 }
 
 const tabs = [
@@ -156,19 +139,12 @@ export default function CommonDetail() {
     [fundingProposals]
   );
 
-  const hasPaymentMethod = useMemo(
-    () => (!!cards && !!cards.length),
-    [cards]
-  );
+  const hasPaymentMethod = useMemo(() => !!cards && !!cards.length, [cards]);
 
-  const isCommonMember = Boolean(
-    common?.members.some((member) => member.userId === user?.uid)
+  const commonMember = common?.members.find(
+    (member) => member.userId === user?.uid
   );
-  
-  const isFounder = Boolean(
-    common?.members.some((member) => member.userId === user?.uid && member.permission === Permission.Founder)
-  );
-
+  const isCommonMember = Boolean(commonMember);
   const isJoiningPending = proposals.some(
     (proposal) =>
       proposal.state === ProposalState.COUNTDOWN &&
@@ -193,18 +169,6 @@ export default function CommonDetail() {
     isShowing: isShowingNewD,
     onOpen: onOpenNewD,
     onClose: onCloseNewD,
-  } = useModal(false);
-
-  const {
-    isShowing: showLeaveCommonPrompt,
-    onOpen: onOpenLeaveCommonPrompt,
-    onClose: onCloseLeaveCommonPrompt
-  } = useModal(false);
-
-  const {
-    isShowing: showDeleteCommonPrompt,
-    onOpen: onOpenDeteleCommonPrompt,
-    onClose: onCloseDeleteCommonPrompt
   } = useModal(false);
 
   const {
@@ -540,18 +504,6 @@ export default function CommonDetail() {
           getProposalDetail={getProposalDetail}
         />
       )}
-      {showLeaveCommonPrompt && (
-        <LeaveCommonPrompt
-          isShowing={showLeaveCommonPrompt}
-          onClose={onCloseLeaveCommonPrompt}
-          commonId={common.id} />
-      )}
-      {showDeleteCommonPrompt && (
-        <DeleteCommonPrompt
-          isShowing={showDeleteCommonPrompt}
-          onClose={onCloseDeleteCommonPrompt}
-          commonId={common.id} />
-      )}
       <div className="common-detail-wrapper">
         <div className="main-information-block">
           <div className="main-information-wrapper">
@@ -575,22 +527,32 @@ export default function CommonDetail() {
                 <div className="text-information-wrapper__info-wrapper">
                   <div className="name">
                     {common?.name}
-                    {isMobileView && !isCommonMember && (
-                      <CommonShare
-                        common={common}
-                        type="modal"
-                        color={Colors.transparent}
-                      />
-                    )}
-                    {isMobileView && isCommonMember && (
-                      <div className="text-information-wrapper__connected-user-avatar-wrapper">
-                        <UserAvatar
-                          className="text-information-wrapper__user-avatar"
-                          photoURL={user?.photoURL}
-                          nameForRandomAvatar={user?.email}
-                          userName={getUserName(user)}
-                        />
-                        <PurpleCheckIcon className="text-information-wrapper__connected-user-avatar-icon" />
+                    {isMobileView && (
+                      <div className="text-information-wrapper__menu-buttons">
+                        {isCommonMember ? (
+                          <div className="text-information-wrapper__connected-user-avatar-wrapper">
+                            <UserAvatar
+                              className="text-information-wrapper__user-avatar"
+                              photoURL={user?.photoURL}
+                              nameForRandomAvatar={user?.email}
+                              userName={getUserName(user)}
+                            />
+                            <PurpleCheckIcon className="text-information-wrapper__connected-user-avatar-icon" />
+                          </div>
+                        ) : (
+                          <CommonShare
+                            common={common}
+                            type="modal"
+                            color={Colors.lightGray4}
+                          />
+                        )}
+                        {isCommonMember && (
+                          <CommonMenu
+                            className="common-detail-wrapper__common-menu"
+                            menuButtonClassName="common-detail-wrapper__menu-button--small"
+                            common={common}
+                          />
+                        )}
                       </div>
                     )}
                   </div>
@@ -657,29 +619,21 @@ export default function CommonDetail() {
                     </div>
                   )}
 
-                  {isCommonMember && !isFounder && (
-                    <Button
-                      variant={ButtonVariant.Secondary}
-                      className="leave-common-btn"
-                      onClick={onOpenLeaveCommonPrompt}>
-                      Leave this Common
-                    </Button>
-                  )}
-
-                  {isFounder && common.members.length === 1 && (
-                    <Button
-                      variant={ButtonVariant.Secondary}
-                      className="delete-common-btn"
-                      onClick={onOpenDeteleCommonPrompt}>
-                      Delete this Common
-                    </Button>
-                  )}
-
                   {screenSize === ScreenSize.Desktop && (
                     <CommonShare
+                      shareButtonClassName="common-detail-wrapper__menu-button--big"
                       common={common}
                       type="popup"
-                      color={Colors.lightPurple}
+                      color={Colors.lightGray4}
+                      withBorder
+                    />
+                  )}
+                  {!isMobileView && isCommonMember && (
+                    <CommonMenu
+                      className="common-detail-wrapper__common-menu"
+                      menuButtonClassName="common-detail-wrapper__menu-button--big"
+                      common={common}
+                      withBorder
                     />
                   )}
                 </div>
