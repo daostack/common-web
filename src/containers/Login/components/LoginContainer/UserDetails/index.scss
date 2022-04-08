@@ -20,48 +20,48 @@
   .avatar-wrapper {
     position: relative;
 
-    .avatar {
-      position: relative;
-      text-align: center;
-      margin-top: 24px;
-
-      .avatar__user-photo {
-        width: 4.125rem;
-        height: 4.125rem;
-        border-radius: 50%;
-        object-fit: cover;
-      }
-
-      .avatar__input-file {
-        display: none;
-      }
-
-      .edit-avatar {
-        width: 1.75rem;
-        height: 1.75rem;
-        background-color: #7786ff;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: absolute;
-        top: 38px;
-        left: 52%;
-        cursor: pointer;
-
-        img {
-          width: 0.875rem;
-          height: 0.875rem;
-        }
-      }
-    }
-
     .user-details__auth-info {
       margin: 0.75rem 0 2.5rem;
 
       @include big-phone {
         margin-bottom: 2rem;
       }
+    }
+  }
+
+  .avatar {
+    position: relative;
+    text-align: center;
+    margin-top: 24px;
+
+    .avatar__input-file {
+      display: none;
+    }
+  }
+
+  .avatar__user-photo {
+    width: 4.125rem;
+    height: 4.125rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .edit-avatar {
+    width: 1.75rem;
+    height: 1.75rem;
+    background-color: #7786ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 38px;
+    left: 52%;
+    cursor: pointer;
+
+    img {
+      width: 0.875rem;
+      height: 0.875rem;
     }
   }
 

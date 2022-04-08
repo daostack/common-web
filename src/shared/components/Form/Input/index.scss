@@ -67,6 +67,10 @@ $custom-input-vertical-padding: 14px;
       color: $light-gray-2;
     }
   }
+  .custom-input__input--textarea {
+    min-height: 3rem;
+    height: unset;
+  }
   .custom-input__input--error {
     border-color: $error;
   }
