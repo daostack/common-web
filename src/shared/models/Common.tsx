@@ -1,5 +1,6 @@
 export enum MemberPermission {
   Founder = "founder",
+  Moderator = "moderator",
 }
 
 export interface Member {
@@ -21,11 +22,6 @@ export interface CommonRule {
 export enum CommonContributionType {
   OneTime = "one-time",
   Monthly = "monthly",
-}
-
-export enum Permission {
-  Founder = "founder",
-  Moderator = "moderator",
 }
 
 export interface Metadata {
