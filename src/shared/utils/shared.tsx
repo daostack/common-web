@@ -3,10 +3,12 @@ import moment, { Moment } from "moment";
 
 import { MobileOperatingSystem, BASE_URL } from "../constants";
 import { DateFormat, Proposal, Time, User } from "../models";
+import { CurrencySymbol } from "@/shared/models";
 
 interface FormatPriceOptions {
   shouldMillify?: boolean;
   shouldRemovePrefixFromZero?: boolean;
+  prefix?: string;
 }
 
 /**
@@ -16,8 +18,11 @@ export const formatPrice = (
   price?: number,
   options: FormatPriceOptions = {}
 ): string => {
-  const { shouldMillify = true, shouldRemovePrefixFromZero = true } = options;
-  const prefix = "₪";
+  const {
+    shouldMillify = true,
+    shouldRemovePrefixFromZero = true,
+    prefix = CurrencySymbol.Shekel,
+  } = options;
 
   if (!price) {
     return shouldRemovePrefixFromZero ? "0" : `${prefix}0`;
