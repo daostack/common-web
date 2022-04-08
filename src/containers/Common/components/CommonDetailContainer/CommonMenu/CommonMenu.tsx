@@ -21,6 +21,7 @@ import { ModalType } from "@/shared/interfaces";
 import { Common, MemberPermission } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { DeleteCommonPrompt } from "../DeleteCommonPrompt";
+import { LeaveCommonPrompt } from "../LeaveCommonPrompt";
 import { MyContributionsModal } from "../MyContributionsModal";
 import "./index.scss";
 
@@ -29,6 +30,7 @@ export enum MenuItem {
   EditRules,
   MyContributions,
   DeleteCommon,
+  LeaveCommon,
 }
 
 interface Option extends DropdownOption {
@@ -79,6 +81,16 @@ const OPTIONS: Option[] = [
     value: MenuItem.DeleteCommon,
     className: "edit-common-menu__dropdown-menu-item--red",
   },
+  {
+    text: (
+      <>
+        <TrashIcon className="edit-common-menu__item-icon" /> Leave common
+      </>
+    ),
+    searchText: "Leave common",
+    value: MenuItem.LeaveCommon,
+    className: "edit-common-menu__dropdown-menu-item--red",
+  },
 ];
 
 interface CommonMenuProps {
@@ -121,6 +133,9 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     }
     if (isCommonOwner && common.members.length === 1) {
       items.push(MenuItem.DeleteCommon);
+    }
+    if (!isCommonOwner) {
+      items.push(MenuItem.LeaveCommon);
     }
 
     return items;
@@ -238,6 +253,10 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         onClose={handleMenuClose}
         common={common}
       />
+      <LeaveCommonPrompt
+        isShowing={selectedMenuItem === MenuItem.LeaveCommon}
+        onClose={handleMenuClose}
+        commonId={common.id} />
     </div>
   );
 };

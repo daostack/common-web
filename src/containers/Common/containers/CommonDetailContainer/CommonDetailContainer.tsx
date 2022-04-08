@@ -9,7 +9,6 @@ import PurpleCheckIcon from "@/shared/icons/purpleCheck.icon";
 import ShareIcon from "@/shared/icons/share.icon";
 import {
   Discussion,
-  Permission,
   Proposal,
   ProposalState,
   ProposalType,
