@@ -59,7 +59,7 @@ const Header = () => {
     ROUTE_PATHS.MY_ACCOUNT,
     NON_EXACT_MATCH_ROUTE_PROPS
   );
-  const [showAccountLinks, setShowAccountLinks] = useState<boolean>();
+  const [showAccountLinks, setShowAccountLinks] = useState<boolean>(isMyAccountRoute);
 
   useEffect(() => {
     setShowAccountLinks(isMyAccountRoute);
