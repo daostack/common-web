@@ -138,10 +138,7 @@ export default function CommonDetail() {
     [fundingProposals]
   );
 
-  const hasPaymentMethod = useMemo(
-    () => (!!cards && !!cards.length),
-    [cards]
-  );
+  const hasPaymentMethod = useMemo(() => !!cards && !!cards.length, [cards]);
 
   const commonMember = common?.members.find(
     (member) => member.userId === user?.uid
@@ -548,11 +545,13 @@ export default function CommonDetail() {
                             color={Colors.lightGray4}
                           />
                         )}
-                        <CommonMenu
-                          className="common-detail-wrapper__common-menu"
-                          menuButtonClassName="common-detail-wrapper__menu-button--small"
-                          common={common}
-                        />
+                        {isCommonMember && (
+                          <CommonMenu
+                            className="common-detail-wrapper__common-menu"
+                            menuButtonClassName="common-detail-wrapper__menu-button--small"
+                            common={common}
+                          />
+                        )}
                       </div>
                     )}
                   </div>
@@ -631,7 +630,7 @@ export default function CommonDetail() {
                       withBorder
                     />
                   )}
-                  {!isMobileView && (
+                  {!isMobileView && isCommonMember && (
                     <CommonMenu
                       className="common-detail-wrapper__common-menu"
                       menuButtonClassName="common-detail-wrapper__menu-button--big"

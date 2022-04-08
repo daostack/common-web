@@ -31,7 +31,11 @@ export enum MenuItem {
   DeleteCommon,
 }
 
-const OPTIONS: DropdownOption[] = [
+interface Option extends DropdownOption {
+  disabled?: boolean;
+}
+
+const OPTIONS: Option[] = [
   {
     text: (
       <>
@@ -41,6 +45,8 @@ const OPTIONS: DropdownOption[] = [
     ),
     searchText: "Edit info and cover photo",
     value: MenuItem.EditInfo,
+    className: "edit-common-menu__dropdown-menu-item--disabled",
+    disabled: true,
   },
   {
     text: (
@@ -50,6 +56,8 @@ const OPTIONS: DropdownOption[] = [
     ),
     searchText: "Edit rules",
     value: MenuItem.EditRules,
+    className: "edit-common-menu__dropdown-menu-item--disabled",
+    disabled: true,
   },
   {
     text: (
@@ -98,22 +106,25 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   const commonMember = common?.members.find(
     (member) => member.userId === user?.uid
   );
+  const isCommonMember = Boolean(commonMember);
   const isCommonOwner = Boolean(
     commonMember?.permission === MemberPermission.Founder
   );
   const menuItems = useMemo<MenuItem[]>(() => {
-    const items: MenuItem[] = [
-      MenuItem.EditInfo,
-      MenuItem.EditRules,
-      MenuItem.MyContributions,
-    ];
+    const items: MenuItem[] = [];
 
+    if (isCommonOwner) {
+      items.push(MenuItem.EditInfo, MenuItem.EditRules);
+    }
+    if (isCommonMember) {
+      items.push(MenuItem.MyContributions);
+    }
     if (isCommonOwner && common.members.length === 1) {
       items.push(MenuItem.DeleteCommon);
     }
 
     return items;
-  }, [isCommonOwner, common.members]);
+  }, [isCommonMember, isCommonOwner, common.members]);
   const options = useMemo(
     () =>
       OPTIONS.filter((option) => menuItems.includes(option.value as MenuItem)),
@@ -193,9 +204,17 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
               <ButtonLink
                 className={classNames(
                   "edit-common-menu__menu-modal-button",
-                  option.className
+                  option.className,
+                  {
+                    "edit-common-menu__menu-modal-button--disabled":
+                      option.disabled,
+                  }
                 )}
-                onClick={() => handleSelect(option.value)}
+                onClick={
+                  !option.disabled
+                    ? () => handleSelect(option.value)
+                    : undefined
+                }
               >
                 {option.text}
               </ButtonLink>

@@ -60,80 +60,82 @@ const General: FC<GeneralProps> = (props) => {
           {formatPrice(total, { shouldRemovePrefixFromZero: false })}
         </span>
       </div>
-      {payments.length > 0 ? (
-        <section className="general-my-contributions-stage__history">
-          <h3 className="general-my-contributions-stage__section-title">
-            History
-          </h3>
-          <ul className="general-my-contributions-stage__list">
-            {subscription && (
-              <HistoryListItem
-                title="Monthly Contribution"
-                description={`Next payment: ${formatDate(
-                  new Date(subscription.dueDate.seconds * 1000),
-                  DateFormat.LongHuman
-                )}`}
-                amount={`${formatPrice(subscription.amount)}/mo`}
-                onClick={goToMonthlyContribution}
-                styles={itemStyles}
-              />
-            )}
-            {oneTimePayments.map((payment) => (
-              <HistoryListItem
-                key={payment.id}
-                title="One-time Contribution"
-                description={formatDate(
-                  new Date(payment.createdAt.seconds * 1000),
-                  DateFormat.LongHuman
-                )}
-                amount={formatPrice(payment.amount.amount, {
-                  shouldRemovePrefixFromZero: false,
-                })}
-                styles={itemStyles}
-              />
-            ))}
-          </ul>
-          <ModalFooter sticky>
-            <div
-              className={classNames(
-                "general-my-contributions-stage__buttons-wrapper",
-                {
-                  "general-my-contributions-stage__buttons-wrapper--center": !subscription,
-                }
+      <section className="general-my-contributions-stage__history">
+        {payments.length > 0 ? (
+          <>
+            <h3 className="general-my-contributions-stage__section-title">
+              History
+            </h3>
+            <ul className="general-my-contributions-stage__list">
+              {subscription && (
+                <HistoryListItem
+                  title="Monthly Contribution"
+                  description={`Next payment: ${formatDate(
+                    new Date(subscription.dueDate.seconds * 1000),
+                    DateFormat.LongHuman
+                  )}`}
+                  amount={`${formatPrice(subscription.amount)}/mo`}
+                  onClick={goToMonthlyContribution}
+                  styles={itemStyles}
+                />
               )}
+              {oneTimePayments.map((payment) => (
+                <HistoryListItem
+                  key={payment.id}
+                  title="One-time Contribution"
+                  description={formatDate(
+                    new Date(payment.createdAt.seconds * 1000),
+                    DateFormat.LongHuman
+                  )}
+                  amount={formatPrice(payment.amount.amount, {
+                    shouldRemovePrefixFromZero: false,
+                  })}
+                  styles={itemStyles}
+                />
+              ))}
+            </ul>
+          </>
+        ) : (
+          <div className="general-my-contributions-stage__empty-contributions">
+            <img
+              className="general-my-contributions-stage__funds-image"
+              src="/assets/images/membership-request-funds.svg"
+              alt="No contributions"
+            />
+            <p className="general-my-contributions-stage__empty-contributions-text">
+              You don't have any active contributions yet.
+            </p>
+          </div>
+        )}
+        <ModalFooter sticky>
+          <div
+            className={classNames(
+              "general-my-contributions-stage__buttons-wrapper",
+              {
+                "general-my-contributions-stage__buttons-wrapper--center": !subscription,
+              }
+            )}
+          >
+            <Button
+              className="general-my-contributions-stage__button"
+              onClick={goToOneTimeContribution}
+              variant={ButtonVariant.SecondaryPurple}
+              shouldUseFullWidth
             >
+              Add a one-time contribution
+            </Button>
+            {subscription && (
               <Button
                 className="general-my-contributions-stage__button"
-                onClick={goToOneTimeContribution}
-                variant={ButtonVariant.SecondaryPurple}
+                onClick={goToChangeMonthlyContribution}
                 shouldUseFullWidth
               >
-                Add a one-time contribution
+                Change my monthly contribution
               </Button>
-              {subscription && (
-                <Button
-                  className="general-my-contributions-stage__button"
-                  onClick={goToChangeMonthlyContribution}
-                  shouldUseFullWidth
-                >
-                  Change my monthly contribution
-                </Button>
-              )}
-            </div>
-          </ModalFooter>
-        </section>
-      ) : (
-        <div className="general-my-contributions-stage__empty-contributions">
-          <img
-            className="general-my-contributions-stage__funds-image"
-            src="/assets/images/membership-request-funds.svg"
-            alt="No contributions"
-          />
-          <p className="general-my-contributions-stage__empty-contributions-text">
-            You don't have any active contributions yet.
-          </p>
-        </div>
-      )}
+            )}
+          </div>
+        </ModalFooter>
+      </section>
     </div>
   );
 };
