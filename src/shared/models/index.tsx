@@ -9,3 +9,4 @@ export * from "./Invoices";
 export * from "./Payment";
 export * from "./Votes";
 export * from "./BankAccountDetails";
+export * from "./Currency";
