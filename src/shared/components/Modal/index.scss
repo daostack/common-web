@@ -11,7 +11,7 @@ $modal-mobile-padding: 1.5rem;
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 998;
+  z-index: $modal-z-index;
   width: 100vw;
   height: 100vh;
   background-color: $black;
@@ -24,7 +24,7 @@ $modal-mobile-padding: 1.5rem;
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 999;
+  z-index: $modal-z-index;
   overflow: hidden;
   outline: 0;
   box-sizing: border-box;
@@ -49,6 +49,10 @@ $modal-mobile-padding: 1.5rem;
   box-sizing: border-box;
   border-radius: $modal-border-radius;
   overflow: hidden;
+
+  &.notification{
+    max-width: 375px;
+  }
 
   &.discussions,
   &.proposals,

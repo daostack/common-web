@@ -10,7 +10,6 @@ import {
 import { Colors, ScreenSize, ROUTE_PATHS } from "@/shared/constants";
 import { Common } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { getSharingURL } from "@/shared/utils";
 import "./index.scss";
 
 interface SuccessProps {

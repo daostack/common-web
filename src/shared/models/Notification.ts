@@ -1,5 +1,7 @@
+import { Time } from "@/shared/models/shared";
+
 export interface NotificationItem {
-  createdAt: Date;
+  createdAt: Time;
   eventId: string;
   eventObjectId: string;
   eventType: string;
@@ -42,10 +44,10 @@ export const EventTitleState = {
   requestToJoinRejected: "Membership Rejected",
   subscriptionPaymentConfirmed: "Subscription Payment Confirmed",
   subscriptionCanceledByUser: "Subscription Canceled By User",
-  fundingRequestAccepted: "Proposal Approved",
+  fundingRequestAccepted: "YAY!  Your proposal \n" + "Is Approved",
   fundingRequestCreated: "New Proposal",
   fundingRequestExecuted: "Proposal Executed",
-  fundingRequestRejected: "Proposal Rejected",
+  fundingRequestRejected: "Oh! Your Proposal Was Declined",
   cardCreated: "Card Created",
   voteCreated: "Vote Created",
   paymentFailed: "Payment Failed",

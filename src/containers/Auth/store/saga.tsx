@@ -1,13 +1,14 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { default as store } from "../../../index";
 import {
+  formatPrice,
   getRandomUserAvatarURL,
   tokenHandler,
   transformFirebaseDataSingle,
 } from "../../../shared/utils";
 import * as actions from "./actions";
 import firebase from "../../../shared/utils/firebase";
-import { Collection, User } from "../../../shared/models";
+import { Collection, Proposal, User } from "../../../shared/models";
 import { UserCreationDto } from "../interface";
 import {
   AuthProvider,
@@ -20,7 +21,13 @@ import {
   getProposalById,
   subscribeToNotification,
 } from "@/containers/Common/store/api";
-import { EventTypeState, NotificationItem } from "@/shared/models/Notification";
+import {
+  EventTitleState,
+  EventTypeState,
+  NotificationItem,
+} from "@/shared/models/Notification";
+import { NotificationData } from "@/shared/interfaces";
+import { showNotification } from "@/shared/store/actions";
 
 const getAuthProviderFromProviderData = (
   providerData?: firebase.User["providerData"]
@@ -477,15 +484,39 @@ function* authSagas() {
   });
 
   subscribeToNotification(async (data?: NotificationItem) => {
-    switch (data?.eventType) {
-      case EventTypeState.fundingRequestAccepted:
-      case EventTypeState.fundingRequestRejected:
-        console.log(data);
-        const kek = await getProposalById(data?.eventObjectId);
-        console.log(kek);
-        break;
-      default:
-        break;
+    if (data) {
+      switch (data?.eventType) {
+        case EventTypeState.fundingRequestAccepted:
+        case EventTypeState.fundingRequestRejected:
+          const proposal: Proposal | undefined = await getProposalById(
+            data?.eventObjectId
+          );
+          if (proposal) {
+            const notification: NotificationData = {
+              notification_id: data?.eventId,
+              type: data?.eventType,
+              notification_date: data?.createdAt.toDate(),
+              content: proposal.description.title,
+              title:
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                EventTitleState[data?.eventType],
+              action_title:
+                data?.eventType === EventTypeState.fundingRequestRejected
+                  ? "Done"
+                  : "Let's get to work",
+              additional_information: formatPrice(
+                proposal.fundingRequest?.amount || 0
+              ),
+            };
+
+            store.dispatch(showNotification(notification));
+          }
+
+          break;
+        default:
+          break;
+      }
     }
   });
 })();

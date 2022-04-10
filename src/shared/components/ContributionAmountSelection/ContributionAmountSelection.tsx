@@ -1,8 +1,9 @@
 import React, { useCallback, useMemo, useState } from "react";
 import classNames from "classnames";
-import { ButtonLink } from "../ButtonLink";
+import { Button } from "../Button";
 import {
   CurrencyInput,
+  CurrencyInputVariant,
   ToggleButton,
   ToggleButtonGroup,
   ToggleButtonGroupVariant,
@@ -19,25 +20,33 @@ import "./index.scss";
 interface IProps {
   className?: string;
   contributionAmount?: number;
+  currentAmount?: number;
   minFeeToJoin: number;
   zeroContribution: boolean;
-  pricePostfix: string;
-  onChange: (amount: number | null, hasError: boolean) => void;
+  pricePostfix?: string;
+  showFinishButton?: boolean;
+  onChange: (
+    amount: number | null,
+    hasError: boolean,
+    isSelection: boolean
+  ) => void;
 }
 
 export default function ContributionAmountSelection(props: IProps) {
   const {
     className,
     contributionAmount,
+    currentAmount,
     minFeeToJoin,
     zeroContribution,
-    pricePostfix,
+    pricePostfix = "",
+    showFinishButton = false,
     onChange,
   } = props;
   const [isCurrencyInputTouched, setIsCurrencyInputTouched] = useState(false);
   const amountsForSelection = useMemo(
-    () => getAmountsForSelection(minFeeToJoin, zeroContribution),
-    [minFeeToJoin, zeroContribution]
+    () => getAmountsForSelection(minFeeToJoin, zeroContribution, currentAmount),
+    [minFeeToJoin, zeroContribution, currentAmount]
   );
   const [selectedContribution, setSelectedContribution] = useState<
     number | "other" | null
@@ -62,7 +71,7 @@ export default function ContributionAmountSelection(props: IProps) {
   const handleBackToSelectionClick = useCallback(() => {
     setSelectedContribution(null);
     setEnteredContribution(undefined);
-    onChange(null, true);
+    onChange(null, true, false);
   }, [onChange]);
 
   const handleCurrencyInputBlur = useCallback(() => {
@@ -75,12 +84,12 @@ export default function ContributionAmountSelection(props: IProps) {
 
       if (Number.isNaN(convertedValue)) {
         setSelectedContribution("other");
-        onChange(null, true);
+        onChange(null, true, false);
         return;
       }
 
       setSelectedContribution(convertedValue);
-      onChange(convertedValue, false);
+      onChange(convertedValue, false, true);
     },
     [onChange]
   );
@@ -95,11 +104,22 @@ export default function ContributionAmountSelection(props: IProps) {
       setEnteredContribution(value);
       onChange(
         !Number.isNaN(convertedValue) ? convertedValue * 100 : null,
-        hasError
+        hasError,
+        false
       );
     },
     [minFeeToJoin, zeroContribution, onChange]
   );
+
+  const handleContinueClick = useCallback(() => {
+    const convertedValue = Number(enteredContribution);
+
+    onChange(
+      !Number.isNaN(convertedValue) ? convertedValue * 100 : null,
+      false,
+      true
+    );
+  }, [enteredContribution, onChange]);
 
   const toggleButtonStyles = {
     default: "contribution-amount-selection__toggle-button",
@@ -125,6 +145,7 @@ export default function ContributionAmountSelection(props: IProps) {
                 shouldRemovePrefixFromZero: false,
               })}
               {pricePostfix}
+              {amount === currentAmount ? " - Current" : ""}
             </ToggleButton>
           ))}
           <ToggleButton styles={toggleButtonStyles} value="other">
@@ -136,7 +157,7 @@ export default function ContributionAmountSelection(props: IProps) {
         <>
           <CurrencyInput
             name="contributionAmount"
-            label="Contribution amount"
+            label="Other"
             placeholder={formattedMinFeeToJoin}
             value={enteredContribution}
             onValueChange={handleCurrencyInputChange}
@@ -145,14 +166,22 @@ export default function ContributionAmountSelection(props: IProps) {
             styles={{
               label: "contribution-amount-selection__currency-input-label",
             }}
+            variant={CurrencyInputVariant.Middle}
             allowDecimals={false}
+            onCloseClick={handleBackToSelectionClick}
+            autoFocus
+            autoComplete="off"
           />
-          <ButtonLink
-            className="contribution-amount-selection__back-to-selection"
-            onClick={handleBackToSelectionClick}
-          >
-            Back to amount selection
-          </ButtonLink>
+          {showFinishButton && (
+            <Button
+              className="contribution-amount-selection__continue-button"
+              onClick={handleContinueClick}
+              disabled={Boolean(currencyInputError)}
+              shouldUseFullWidth
+            >
+              Continue to payment
+            </Button>
+          )}
         </>
       )}
     </div>

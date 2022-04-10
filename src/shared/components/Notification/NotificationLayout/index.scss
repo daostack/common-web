@@ -1,0 +1,106 @@
+@import "../../../../constants.scss";
+
+.notification-layout-wrapper {
+  .notification-img-wrapper {
+    margin: 0 auto;
+    text-align: center;
+
+    &.fundingRequestRejected {
+      img {
+        width: 4.5rem;
+        height: 4rem;
+      }
+    }
+
+    &.fundingRequestAccepted {
+      img {
+        width: 15rem;
+        height: 13rem;
+      }
+    }
+  }
+
+  .notification-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.2;
+    letter-spacing: normal;
+    text-align: center;
+    color: #000;
+    margin-top: 1.5rem;
+  }
+
+  .notification-content-wrapper {
+    .content-header {
+      margin: -1.25rem -1rem 1rem;
+      border-radius: 14px 14px 0 0;
+      padding: 13px 60px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      span{
+        font-size: 0.75rem;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.2;
+        letter-spacing: normal;
+        text-align: center;
+
+      }
+      &.approved {
+
+        background: $light-green;
+
+        span {
+          color: $green;
+        }
+
+      }
+
+      &.rejected {
+        background: $light-red;
+
+        span {
+          color: $red;
+        }
+
+      }
+    }
+
+    gap: 16px;
+    padding: 1.25rem 1rem;
+    object-fit: contain;
+    border-radius: 14px;
+    box-shadow: 0 3px 8px 0 #001a3614;
+    background-color: #fff;
+    margin-top: 1.5rem;
+
+    .notification-content,
+    .notification-additional-information {
+      font-size: 1rem;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      text-align: center;
+      color: $secondary-blue;
+    }
+
+    .notification-additional-information {
+      margin-top: 1.5rem;
+    }
+  }
+  .notification-actions{
+    margin-top: 1.5rem;
+
+    text-align: center;
+    button{
+      width: 100%;
+    }
+  }
+}

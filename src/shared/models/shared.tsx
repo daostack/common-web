@@ -25,6 +25,7 @@ export enum Collection {
   Daos = "daos",
   DiscussionMessage = "discussionMessage",
   Payments = "payments",
+  Subscriptions = "subscriptions",
   Notifications = "notification",
 }
 
@@ -32,6 +33,7 @@ export enum DateFormat {
   Long = "DD-MM-YYYY HH:mm",
   Short = "YYYY-MM-DD",
   Human = "MMM, D YYYY",
+  LongHuman = "D MMMM YYYY",
   FullHuman = "MMMM DD, YYYY",
   ShortSecondary = "DD/MM/YYYY",
 }

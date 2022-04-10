@@ -1,0 +1,61 @@
+@import "../../../../../constants";
+
+.custom-currency-input-middle {
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-currency-input-middle__input-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+}
+
+.custom-currency-input-middle__label {
+  position: absolute;
+  top: 0.875rem;
+  left: 50%;
+  font-size: $small;
+  color: $light-gray-2;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.custom-currency-input-middle__close-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5rem;
+}
+
+.custom-currency-input-middle__close-icon {
+  color: $light-gray-2;
+}
+
+.custom-currency-input-middle__input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  width: 100%;
+  margin: 0;
+  padding: 3rem 0.5rem 0.875rem;
+  border-radius: 0.5rem;
+  border: 1px solid $light-gray-3;
+  background-color: $white;
+  font-family: inherit;
+  font-size: $small;
+  font-weight: bold;
+  text-align: center;
+  outline: none;
+  box-sizing: border-box;
+  resize: none;
+  color: $secondary-blue;
+
+  &::placeholder {
+    color: $light-gray-2;
+  }
+}
+.custom-currency-input-middle__input--error {
+  border-color: $error;
+}

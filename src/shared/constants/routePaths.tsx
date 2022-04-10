@@ -1,5 +1,8 @@
 export enum ROUTE_PATHS {
   HOME = "/",
+  MY_ACCOUNT = "/my-account",
+  MY_ACCOUNT_PROFILE = "/my-account/profile",
+  MY_ACCOUNT_ACTIVITIES = "/my-account/activities",
   COMMON_LIST = "/commons",
   COMMON_DETAIL = "/commons/:id",
   CONTACT = "/contact",
