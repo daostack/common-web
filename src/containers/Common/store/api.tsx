@@ -297,9 +297,7 @@ export async function loadUserCards(userId: string): Promise<Card[]> {
 }
 
 export async function leaveCommon(requestData: LeaveCommon): Promise<void> {
-  const { data } = await Api.post<void>(ApiEndpoint.LeaveCommon, requestData);
-
-  return data;
+  await Api.post<void>(ApiEndpoint.LeaveCommon, requestData);
 }
 
 export async function deleteCommon(requestData: DeleteCommon): Promise<void> {
