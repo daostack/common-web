@@ -1,0 +1,61 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.payment-method-change-my-contributions-stage {
+  padding-top: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @include big-phone {
+    padding-top: 1.5rem;
+  }
+}
+
+.payment-method-change-my-contributions-stage__title {
+  margin: 0;
+  font-size: $moderate-small;
+  font-weight: bold;
+  text-align: center;
+}
+
+.payment-method-change-my-contributions-stage__description {
+  max-width: 21.125rem;
+  margin: 1rem 0 0;
+  font-size: $xsmall;
+  text-align: center;
+  color: $light-gray-2;
+
+  @include big-phone {
+    margin-top: 1.5rem;
+  }
+}
+
+.payment-method-change-my-contributions-stage__separator {
+  max-width: 20.5rem;
+  margin: 1rem 0;
+}
+
+.payment-method-change-my-contributions-stage__content {
+  flex: 1 0;
+  position: relative;
+  max-width: 25rem;
+  width: 100%;
+  min-height: 26.5rem;
+  display: flex;
+
+  @include big-phone {
+    min-height: 3.125rem;
+  }
+}
+
+.payment-method-change-my-contributions-stage__loader {
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+
+  @include big-phone {
+    top: unset;
+    transform: translateX(-50%);
+  }
+}
