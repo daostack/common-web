@@ -32,10 +32,10 @@ import {
   getCommonsList,
   makeImmediateContribution,
   loadUserCards,
+  createBuyerTokenPage,
 } from "../../../../../store/actions";
 import { subscribeToCardChange } from "../../../../../store/api";
 import { Progress } from "../Progress";
-import PayMeService from "../../../../../../../services/PayMeService";
 import "./index.scss";
 
 interface State {
@@ -161,26 +161,30 @@ export default function RequestPayment(
         || !paymentData.contributionAmount
       ) return;
 
-      try {
-        setState((nextState) => ({
-          ...nextState,
-          isPaymentLoading: true,
-        }));
+      setState((nextState) => ({
+        ...nextState,
+        isPaymentLoading: true,
+      }));
 
-        const createdPayment = await PayMeService.createBuyerTokenPage({
-          cardId: newCardId as string,
-        });
+      dispatch(
+        createBuyerTokenPage.request({
+          payload: { cardId: newCardId },
+          callback: (error, payment) => {
+            if (error || !payment) {
+              onError(error?.message || "Error during payment page creation");
+              return;
+            }
 
-        setShouldShowGoBackButton(true);
+            setShouldShowGoBackButton(true);
 
-        setState((nextState) => ({
-          ...nextState,
-          payment: createdPayment,
-          isPaymentLoading: false,
-        }));
-      } catch (error) {
-        onError((error as any).message || "Something went wrong");
-      }
+            setState((nextState) => ({
+              ...nextState,
+              payment,
+              isPaymentLoading: false,
+            }));
+          },
+        })
+      );
     })();
   }, [
     hasPaymentMethod,
@@ -190,6 +194,7 @@ export default function RequestPayment(
     paymentData.contributionAmount,
     onError,
     setShouldShowGoBackButton,
+    dispatch,
   ]);
 
   useEffect(() => {
@@ -205,11 +210,12 @@ export default function RequestPayment(
           makeImmediateContributionRequest();
       });
     } catch (error) {
-      onError((error as any).message || "Error during subscription to payment status change");
+      onError((error as Error).message || "Error during subscription to payment status change");
     }
   }, [
     isPaymentIframeLoaded,
     payment,
+    makeImmediateContributionRequest,
     newCardId,
   ]);
 

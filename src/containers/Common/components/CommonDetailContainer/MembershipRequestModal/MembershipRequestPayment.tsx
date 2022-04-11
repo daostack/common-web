@@ -12,7 +12,6 @@ import {
 import "./index.scss";
 import { IStageProps } from "./MembershipRequestModal";
 import { selectUser } from "../../../../Auth/store/selectors";
-import PayMeService from "../../../../../services/PayMeService";
 import {
   Loader,
   IFrame,
@@ -24,7 +23,10 @@ import { CommonPayment, Card, Common, } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
 import { subscribeToCardChange } from "../../../store/api";
-import { loadUserCards } from "../../../store/actions";
+import {
+  loadUserCards,
+  createBuyerTokenPage,
+} from "../../../store/actions";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ScreenSize } from "@/shared/constants";
 
@@ -67,12 +69,12 @@ export default function MembershipRequestPayment(
 
   const handleIframeLoad = useCallback(
     () => setState((nextState) => ({ ...nextState, isPaymentIframeLoaded: true })),
-    []
+    [setState]
   );
 
   const finishPayment = useCallback(
     () => setUserData((nextUserData) => ({ ...nextUserData, stage: 5 })),
-    []
+    [setUserData]
   );
 
   useEffect(() => {
@@ -100,24 +102,28 @@ export default function MembershipRequestPayment(
         || !user?.uid
       ) return;
 
-      try {
-        setState((nextState) => ({
-          ...nextState,
-          isCommonPaymentLoading: true,
-        }));
+      setState((nextState) => ({
+        ...nextState,
+        isCommonPaymentLoading: true,
+      }));
 
-        const createdCommonPayment = await PayMeService.createBuyerTokenPage({
-          cardId: userData.cardId,
-        });
+      dispatch(
+        createBuyerTokenPage.request({
+          payload: { cardId: userData.cardId },
+          callback: (error, payment) => {
+            if (error || !payment) {
+              console.error(error?.message || "Error during payment page creation");
+              return;
+            }
 
-        setState((nextState) => ({
-          ...nextState,
-          commonPayment: createdCommonPayment,
-          isCommonPaymentLoading: false,
-        }));        
-      } catch (error) {
-        console.error("Error during payment page creation");
-      }
+            setState((nextState) => ({
+              ...nextState,
+              commonPayment: payment,
+              isCommonPaymentLoading: false,
+            }));
+          },
+        })
+      );
     })();
   }, [
     commonPayment,
@@ -126,6 +132,7 @@ export default function MembershipRequestPayment(
     common,
     user,
     hasPaymentMethod,
+    dispatch,
   ]);
 
   useEffect(() => {
@@ -142,13 +149,13 @@ export default function MembershipRequestPayment(
           finishPayment();
       });
     } catch (error) {
-      console.error((error as any).message || "Error during subscription to payment status change");
+      console.error((error as Error).message || "Error during subscription to payment status change");
     }
   }, [
     isPaymentIframeLoaded,
     commonPayment,
     userData.cardId,
-    setUserData,
+    finishPayment,
     hasPaymentMethod,
   ]);
 
