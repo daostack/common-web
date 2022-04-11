@@ -4,9 +4,11 @@ import "./index.scss";
 
 export default function Sidebar() {
   return (
-    <div className="sidebar-wrapper">
-      <span className="route-sub-title sidebar-title">Account</span>
+    <div className="general-sidebar-wrapper">
+      <span className="route-sub-title general-sidebar-wrapper__title">
+        Account
+      </span>
       <Routes />
     </div>
-  )
+  );
 }

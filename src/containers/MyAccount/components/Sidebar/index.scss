@@ -1,7 +1,7 @@
 @import "../../../../constants";
 @import "../../../../styles/sizes";
 
-.sidebar-wrapper {
+.general-sidebar-wrapper {
   display: flex;
   flex-direction: column;
   background-color: $light-purple-background;
@@ -9,7 +9,8 @@
   min-width: 16rem;
   margin-left: -$content-padding; // to compensate on content padding
   padding: 2rem 0.5rem;
-  .sidebar-title {
+
+  .general-sidebar-wrapper__title {
     margin-bottom: 1.5rem;
     margin-left: 2rem;
   }
