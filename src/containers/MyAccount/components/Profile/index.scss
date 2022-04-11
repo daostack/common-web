@@ -12,6 +12,36 @@
     justify-content: space-between;
   }
 
+  .profile-wrapper__buttons-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+    @include big-phone {
+      margin-top: 1.5rem;
+      flex-wrap: wrap-reverse;
+    }
+  }
+
+  .profile-wrapper__button {
+    max-width: 9rem;
+    margin-right: 0.625rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    @include big-phone {
+      max-width: unset;
+      margin-top: 0.625rem;
+      margin-right: 0;
+
+      &:last-child {
+        margin-top: 0;
+      }
+    }
+  }
+
   .profile-wrapper__user-details {
     max-width: 43.625rem;
     margin: 0 auto 0 0;
