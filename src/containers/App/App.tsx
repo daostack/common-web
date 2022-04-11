@@ -17,6 +17,7 @@ import { authentificated } from "../Auth/store/selectors";
 import { MyCommonsContainer } from "../Common/containers/MyCommonsContainer";
 import { SubmitInvoicesContainer } from "../Invoices/containers";
 import { TrusteeContainer } from "../Trustee/containers";
+import { MyAccountContainer } from "../MyAccount/containers/MyAccountContainer";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -58,6 +59,11 @@ const App = () => {
           <Switch>
             <Route path="/" exact component={LandingContainer} />
             <Route path={ROUTE_PATHS.COMMON_LIST} component={CommonContainer} />
+            <PrivateRoute
+              path={ROUTE_PATHS.MY_ACCOUNT}
+              component={MyAccountContainer}
+              authenticated={isAuthenticated}
+            />
             <PrivateRoute
               path={ROUTE_PATHS.MY_COMMONS}
               component={MyCommonsContainer}

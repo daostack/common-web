@@ -133,7 +133,6 @@ export default function RequestPayment(
     contributionType,
     finishPayment,
     onError,
-    onFinish,
     dispatch,
   ]);
 

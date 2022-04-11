@@ -1,6 +1,16 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+  useImperativeHandle,
+  forwardRef,
+  ForwardRefRenderFunction,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
+import classNames from "classnames";
 import { Formik, FormikConfig } from "formik";
+import { FormikProps } from "formik/dist/types";
 import {
   Button,
   DropdownOption,
@@ -22,12 +32,33 @@ import {
   selectUserPhoneNumber,
 } from "../../../../Auth/store/selectors";
 import { UserAuthInfo } from "../UserAuthInfo";
+import UserDetailsPreview from "./UserDetailsPreview";
 import { validationSchema } from "./validationSchema";
 import "./index.scss";
 
+interface Styles {
+  avatarWrapper?: string;
+  avatar?: string;
+  userAvatar?: string;
+  editAvatar?: string;
+  fieldContainer?: string;
+  introInputWrapper?: string;
+}
+
+export interface UserDetailsRef {
+  submit: () => void;
+}
+
 interface UserDetailsProps {
+  className?: string;
   user: User;
-  closeModal: () => void;
+  closeModal?: () => void;
+  showAuthProvider?: boolean;
+  customSaveButton?: boolean;
+  isCountryDropdownFixed?: boolean;
+  isEditing?: boolean;
+  onSubmitting?: (isSubmitting: boolean) => void;
+  styles?: Styles;
 }
 
 interface FormValues {
@@ -52,7 +83,22 @@ const getInitialValues = (user: User): FormValues => {
   };
 };
 
-const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
+const UserDetails: ForwardRefRenderFunction<
+  UserDetailsRef,
+  UserDetailsProps
+> = (props, userDetailsRef) => {
+  const {
+    className,
+    user,
+    closeModal,
+    showAuthProvider = true,
+    customSaveButton = false,
+    isCountryDropdownFixed = true,
+    isEditing = true,
+    styles: outerStyles,
+    onSubmitting,
+  } = props;
+  const formRef = useRef<FormikProps<FormValues>>(null);
   const [loading, setLoading] = useState(false);
   const inputFile: any = useRef(null);
   const authProvider = useSelector(selectAuthProvider());
@@ -89,14 +135,35 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
     (values, { setSubmitting }) => {
       setSubmitting(true);
 
+      if (onSubmitting) {
+        onSubmitting(true);
+      }
+
       dispatch(
         updateUserDetails.request({
           user: { ...user, ...values },
-          callback: closeModal,
+          callback: () => {
+            if (closeModal) {
+              closeModal();
+            }
+            if (onSubmitting) {
+              onSubmitting(false);
+            }
+          },
         })
       );
     },
-    [closeModal, dispatch, user]
+    [closeModal, dispatch, user, onSubmitting]
+  );
+
+  useImperativeHandle(
+    userDetailsRef,
+    () => ({
+      submit: () => {
+        formRef.current?.submitForm();
+      },
+    }),
+    [formRef]
   );
 
   const styles = {
@@ -107,12 +174,9 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
   };
 
   return (
-    <div className="user-details">
-      <h2 className="user-details__title">Complete your account</h2>
-      <p className="user-details__sub-title">
-        Help the community to get to know you better
-      </p>
+    <div className={classNames("user-details", className)}>
       <Formik
+        innerRef={formRef}
         initialValues={getInitialValues(user)}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}
@@ -121,17 +185,28 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
         {({ values, setFieldValue, isValid, isSubmitting }) => (
           <>
             <Form className="user-details__form">
-              <div className="avatar-wrapper">
-                <div className="avatar">
+              <div
+                className={classNames(
+                  "avatar-wrapper",
+                  outerStyles?.avatarWrapper
+                )}
+              >
+                <div className={classNames("avatar", outerStyles?.avatar)}>
                   <UserAvatar
-                    className="avatar__user-photo"
+                    className={classNames(
+                      "avatar__user-photo",
+                      outerStyles?.userAvatar
+                    )}
                     photoURL={values.photo}
                     nameForRandomAvatar={values.email}
                     userName={getUserName(values)}
                   />
-                  {!loading ? (
+                  {isEditing && !loading && !isSubmitting ? (
                     <div
-                      className="edit-avatar"
+                      className={classNames(
+                        "edit-avatar",
+                        outerStyles?.editAvatar
+                      )}
                       onClick={() =>
                         inputFile?.current && inputFile?.current?.click()
                       }
@@ -149,62 +224,80 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
                     }
                   />
                 </div>
-                <UserAuthInfo
-                  className="user-details__auth-info"
-                  user={user}
-                  userPhoneNumber={userPhoneNumber}
-                  authProvider={authProvider}
-                />
+                {showAuthProvider && (
+                  <UserAuthInfo
+                    className="user-details__auth-info"
+                    user={user}
+                    userPhoneNumber={userPhoneNumber}
+                    authProvider={authProvider}
+                  />
+                )}
                 {loading ? <Loader /> : null}
               </div>
-              <div className="user-details__text-field-container">
-                <TextField
-                  className="user-details__text-field"
-                  id="firstName"
-                  name="firstName"
-                  label="First name"
-                  isRequired
-                  styles={styles}
-                />
-                <TextField
-                  className="user-details__text-field"
-                  id="lastName"
-                  name="lastName"
-                  label="Last name"
-                  isRequired
-                  styles={styles}
-                />
-                <TextField
-                  className="user-details__text-field"
-                  id="email"
-                  name="email"
-                  label="Email"
-                  isRequired
-                  styles={styles}
-                />
-                <Dropdown
-                  className="user-details__text-field"
-                  name="country"
-                  label="Country"
-                  placeholder="---Select country---"
-                  options={options}
-                />
-                <TextField
-                  className="user-details__textarea"
-                  id="intro"
-                  name="intro"
-                  label="Intro"
-                  placeholder="What are you most passionate about, really good at, or love"
-                  styles={styles}
-                />
-              </div>
-              <Button
-                className="user-details__save-button"
-                type="submit"
-                disabled={!isValid || loading || isSubmitting}
-              >
-                Save
-              </Button>
+              {!isEditing && <UserDetailsPreview user={user} />}
+              {isEditing && (
+                <div
+                  className={classNames(
+                    "user-details__text-field-container",
+                    outerStyles?.fieldContainer
+                  )}
+                >
+                  <TextField
+                    className="user-details__text-field user-details__first-name"
+                    id="firstName"
+                    name="firstName"
+                    label="First name"
+                    isRequired
+                    styles={styles}
+                  />
+                  <TextField
+                    className="user-details__text-field user-details__last-name"
+                    id="lastName"
+                    name="lastName"
+                    label="Last name"
+                    isRequired
+                    styles={styles}
+                  />
+                  <TextField
+                    className="user-details__text-field user-details__email"
+                    id="email"
+                    name="email"
+                    label="Email"
+                    isRequired
+                    styles={styles}
+                  />
+                  <Dropdown
+                    className="user-details__text-field user-details__country"
+                    name="country"
+                    label="Country"
+                    placeholder="---Select country---"
+                    options={options}
+                    shouldBeFixed={isCountryDropdownFixed}
+                  />
+                  <TextField
+                    className="user-details__textarea"
+                    id="intro"
+                    name="intro"
+                    label="Intro"
+                    placeholder="What are you most passionate about, really good at, or love"
+                    styles={{
+                      ...styles,
+                      inputWrapper: outerStyles?.introInputWrapper,
+                    }}
+                    isTextarea
+                    rows={1}
+                  />
+                </div>
+              )}
+              {!customSaveButton && (
+                <Button
+                  className="user-details__save-button"
+                  type="submit"
+                  disabled={!isValid || loading || isSubmitting}
+                >
+                  Save
+                </Button>
+              )}
             </Form>
           </>
         )}
@@ -213,4 +306,4 @@ const UserDetails = ({ user, closeModal }: UserDetailsProps) => {
   );
 };
 
-export default UserDetails;
+export default forwardRef(UserDetails);

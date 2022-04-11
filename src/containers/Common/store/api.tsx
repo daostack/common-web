@@ -4,6 +4,7 @@ import {
   CreateFundingRequestProposalPayload,
   ProposalJoinRequestData,
 } from "@/shared/interfaces/api/proposal";
+import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
   Card,
   Collection,
@@ -12,6 +13,7 @@ import {
   DiscussionMessage,
   Payment,
   Proposal,
+  Subscription,
   User,
 } from "@/shared/models";
 import {
@@ -318,7 +320,7 @@ export async function makeImmediateContribution(
     requestData
   );
 
-  return data;
+  return convertObjectDatesToFirestoreTimestamps(data);
 }
 
 export function subscribeToPayment(
@@ -335,15 +337,75 @@ export function subscribeToPayment(
 }
 
 export async function getBankDetails(): Promise<void> {
-  const { data } = await Api.get<void>(
-    ApiEndpoint.GetBankAccount,
-  );
+  const { data } = await Api.get<void>(ApiEndpoint.GetBankAccount);
   return data;
 }
 
-export async function addBankDetails(requestData: AddBankDetailsPayload): Promise<void> {
-  await Api.post<void>(
-    ApiEndpoint.AddBankAccount,
+export async function addBankDetails(
+  requestData: AddBankDetailsPayload
+): Promise<void> {
+  await Api.post<void>(ApiEndpoint.AddBankAccount, requestData);
+}
+
+export async function getUserContributionsToCommon(
+  commonId: string,
+  userId: string
+): Promise<Payment[]> {
+  const result = await firebase
+    .firestore()
+    .collection(Collection.Payments)
+    .where("userId", "==", userId)
+    .where("commonId", "==", commonId)
+    .get();
+  const payments = transformFirebaseDataList<Payment>(result);
+  payments.sort((a, b) => {
+    if (!b.createdAt) {
+      return -1;
+    }
+    if (!a.createdAt) {
+      return 1;
+    }
+
+    return b.createdAt.seconds - a.createdAt.seconds;
+  });
+
+  return payments;
+}
+
+export async function getSubscriptionById(
+  subscriptionId: string
+): Promise<Subscription | null> {
+  const result = await firebase
+    .firestore()
+    .collection(Collection.Subscriptions)
+    .doc(subscriptionId)
+    .get();
+
+  return transformFirebaseDataSingle<Subscription>(result) || null;
+}
+
+export async function getUserSubscriptionToCommon(
+  commonId: string,
+  userId: string
+): Promise<Subscription | null> {
+  const result = await firebase
+    .firestore()
+    .collection(Collection.Subscriptions)
+    .where("userId", "==", userId)
+    .where("metadata.common.id", "==", commonId)
+    .get();
+  const subscriptions = transformFirebaseDataList<Subscription>(result);
+
+  return subscriptions.length > 0 ? subscriptions[0] : null;
+}
+
+export async function updateSubscription(
+  requestData: SubscriptionUpdateData
+): Promise<Subscription> {
+  const { data } = await Api.post<Subscription>(
+    ApiEndpoint.UpdateSubscription,
     requestData
   );
+
+  return data;
 }

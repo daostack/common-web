@@ -23,6 +23,7 @@ export enum PopupVariant {
 
 export interface IProps {
   className?: string;
+  shareButtonClassName?: string;
   url: string;
   color: Colors;
   type: ViewType;
@@ -31,6 +32,7 @@ export interface IProps {
   popupVariant?: PopupVariant;
   isLoading?: boolean;
   onOpen?: () => void;
+  withBorder?: boolean;
 }
 
 const SOCIAL_LINKS: Record<Social, string> = {
@@ -63,6 +65,7 @@ const getSocialURL = (social: Social, query: string): string =>
 export default function Share(props: PropsWithChildren<IProps>) {
   const {
     className,
+    shareButtonClassName,
     url,
     text = "",
     color,
@@ -71,6 +74,7 @@ export default function Share(props: PropsWithChildren<IProps>) {
     children,
     popupVariant = PopupVariant.bottomLeft,
     isLoading = false,
+    withBorder = false,
   } = props;
   const wrapperRef = useRef(null);
   const [isShown, setShown] = useState(false);
@@ -173,7 +177,12 @@ export default function Share(props: PropsWithChildren<IProps>) {
           {children}
         </div>
       ) : (
-        <div className="share-button" onClick={handleClick} />
+        <div
+          className={classNames("share-button", shareButtonClassName, {
+            "share-button__with-border": withBorder,
+          })}
+          onClick={handleClick}
+        />
       )}
       {type === "popup" && isShown && links}
       {type === "modal" && (

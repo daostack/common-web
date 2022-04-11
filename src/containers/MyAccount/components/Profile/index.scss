@@ -1,0 +1,108 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+.profile-wrapper {
+  width: 100%;
+
+  .profile-wrapper__header {
+    height: 4.5rem;
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    @include big-phone {
+      margin-bottom: 0;
+    }
+  }
+
+  .profile-wrapper__buttons-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+    @include big-phone {
+      margin-top: 1.5rem;
+      flex-wrap: wrap-reverse;
+    }
+  }
+
+  .profile-wrapper__button {
+    max-width: 9rem;
+    margin-right: 0.625rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    @include big-phone {
+      max-width: unset;
+      margin-top: 0.625rem;
+      margin-right: 0;
+
+      &:last-child {
+        margin-top: 0;
+      }
+    }
+  }
+
+  .profile-wrapper__user-details {
+    max-width: 43.625rem;
+    margin: 0 auto 0 0;
+  }
+
+  .profile-wrapper__avatar-wrapper {
+    margin-bottom: 2.5rem;
+    display: flex;
+
+    @include big-phone {
+      margin-bottom: 1.5rem;
+      justify-content: center;
+    }
+  }
+
+  .profile-wrapper__avatar {
+    margin: 0;
+  }
+
+  .profile-wrapper__user-avatar {
+    width: 6.5rem;
+    height: 6.5rem;
+    margin-right: auto;
+  }
+
+  .profile-wrapper__edit-avatar {
+    top: unset;
+    right: 0;
+    bottom: 0;
+    left: unset;
+    width: 2rem;
+    height: 2rem;
+    border: 0.125rem solid $white;
+  }
+
+  .profile-wrapper__field-container {
+    gap: 2rem 2.5rem;
+    grid-template-areas:
+      "firstName country"
+      "lastName intro"
+      "email intro";
+
+    @include big-phone {
+      grid-template-areas:
+        "firstName"
+        "lastName"
+        "email"
+        "country"
+        "intro";
+    }
+  }
+
+  .profile-wrapper__form-intro-input-wrapper {
+    height: 100%;
+
+    @include big-phone {
+      height: 9rem;
+    }
+  }
+}
