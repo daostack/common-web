@@ -182,6 +182,7 @@
     margin: 0 0 0.5rem;
     font-size: $xsmall;
     color: $light-gray-2;
+    word-break: break-word;
 
     &:last-child {
       margin: 0;

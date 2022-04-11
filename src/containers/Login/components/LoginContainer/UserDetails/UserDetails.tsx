@@ -1,7 +1,16 @@
-import React, { useCallback, useMemo, useRef, useState, FC } from "react";
+import React, {
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+  useImperativeHandle,
+  forwardRef,
+  ForwardRefRenderFunction,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { Formik, FormikConfig } from "formik";
+import { FormikProps } from "formik/dist/types";
 import {
   Button,
   DropdownOption,
@@ -36,6 +45,10 @@ interface Styles {
   introInputWrapper?: string;
 }
 
+export interface UserDetailsRef {
+  submit: () => void;
+}
+
 interface UserDetailsProps {
   className?: string;
   user: User;
@@ -44,6 +57,7 @@ interface UserDetailsProps {
   customSaveButton?: boolean;
   isCountryDropdownFixed?: boolean;
   isEditing?: boolean;
+  onSubmitting?: (isSubmitting: boolean) => void;
   styles?: Styles;
 }
 
@@ -69,7 +83,10 @@ const getInitialValues = (user: User): FormValues => {
   };
 };
 
-const UserDetails: FC<UserDetailsProps> = (props) => {
+const UserDetails: ForwardRefRenderFunction<
+  UserDetailsRef,
+  UserDetailsProps
+> = (props, userDetailsRef) => {
   const {
     className,
     user,
@@ -79,7 +96,9 @@ const UserDetails: FC<UserDetailsProps> = (props) => {
     isCountryDropdownFixed = true,
     isEditing = true,
     styles: outerStyles,
+    onSubmitting,
   } = props;
+  const formRef = useRef<FormikProps<FormValues>>(null);
   const [loading, setLoading] = useState(false);
   const inputFile: any = useRef(null);
   const authProvider = useSelector(selectAuthProvider());
@@ -116,14 +135,35 @@ const UserDetails: FC<UserDetailsProps> = (props) => {
     (values, { setSubmitting }) => {
       setSubmitting(true);
 
+      if (onSubmitting) {
+        onSubmitting(true);
+      }
+
       dispatch(
         updateUserDetails.request({
           user: { ...user, ...values },
-          callback: closeModal || (() => {}),
+          callback: () => {
+            if (closeModal) {
+              closeModal();
+            }
+            if (onSubmitting) {
+              onSubmitting(false);
+            }
+          },
         })
       );
     },
-    [closeModal, dispatch, user]
+    [closeModal, dispatch, user, onSubmitting]
+  );
+
+  useImperativeHandle(
+    userDetailsRef,
+    () => ({
+      submit: () => {
+        formRef.current?.submitForm();
+      },
+    }),
+    [formRef]
   );
 
   const styles = {
@@ -136,6 +176,7 @@ const UserDetails: FC<UserDetailsProps> = (props) => {
   return (
     <div className={classNames("user-details", className)}>
       <Formik
+        innerRef={formRef}
         initialValues={getInitialValues(user)}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}
@@ -160,7 +201,7 @@ const UserDetails: FC<UserDetailsProps> = (props) => {
                     nameForRandomAvatar={values.email}
                     userName={getUserName(values)}
                   />
-                  {isEditing && !loading ? (
+                  {isEditing && !loading && !isSubmitting ? (
                     <div
                       className={classNames(
                         "edit-avatar",
@@ -265,4 +306,4 @@ const UserDetails: FC<UserDetailsProps> = (props) => {
   );
 };
 
-export default UserDetails;
+export default forwardRef(UserDetails);
