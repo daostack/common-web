@@ -6,7 +6,10 @@ import { DatePicker } from "@/shared/components";
 import { Dropdown, TextField } from "@/shared/components/Form/Formik";
 import { Button, DropdownOption, Loader } from "@/shared/components";
 import { addBankDetails } from "@/containers/Common/store/actions";
-import { getFileNameForUploading, uploadFile } from "@/shared/utils/firebaseUploadFile";
+import {
+  getFileNameForUploading,
+  uploadFile,
+} from "@/shared/utils/firebaseUploadFile";
 import { PaymeTypeCodes } from "@/shared/interfaces/api/payMe";
 import { countryList } from "@/shared/assets/countries";
 import { BankAccountDetails, DateFormat } from "@/shared/models";
@@ -155,7 +158,10 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
         streetAddress: values.address,
         streetNumber: values.streetNumber!,
         socialId: values.idNumber,
-        socialIdIssueDate: formatDate(values.socialIdIssueDate, DateFormat.ShortSecondary),
+        socialIdIssueDate: formatDate(
+          values.socialIdIssueDate,
+          DateFormat.ShortSecondary
+        ),
         birthdate: formatDate(values.birthdate, DateFormat.ShortSecondary),
         gender: values.gender,
         phoneNumber: values.phoneNumber!,
@@ -188,7 +194,9 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
       </div>
       <div className="add-bank-details-form">
         {sending ? (
-          <Loader />
+          <div>
+            <Loader />
+          </div>
         ) : (
           <Formik
             initialValues={INITIAL_VALUES}
