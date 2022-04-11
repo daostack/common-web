@@ -5,6 +5,7 @@ import { leaveCommon } from "@/containers/Common/store/actions";
 import { Button, ButtonVariant, Modal } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { ModalProps } from "@/shared/interfaces";
+import { useNotification } from "@/shared/hooks";
 import "./index.scss";
 
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
@@ -13,6 +14,7 @@ interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
 
 export default function LeaveCommonPrompt({ isShowing, onClose, commonId }: IProps) {
   const dispatch = useDispatch();
+  const { notify } = useNotification();
   const history = useHistory();
   const [leaving, setLeaving] = useState(false);
   const [error, setError] = useState("");
@@ -29,18 +31,18 @@ export default function LeaveCommonPrompt({ isShowing, onClose, commonId }: IPro
           setError(error?.message ?? "Something went wrong :/");
           return;
         }
-        // TODO: maybe need to show success notification for the user?
         history.push(ROUTE_PATHS.MY_COMMONS);
+        notify("You've successfully left the common");
       }
     }));
-  }, [dispatch, history, commonId]);
+  }, [dispatch, notify, history, commonId]);
 
   return (
     <Modal isShowing={isShowing} onClose={onClose} className="leave-prompt-modal">
       <div className="leave-common-prompt-wrapper">
-        {/* <img src="/assets/images/leave-common-prompt.svg" alt="leave" /> */}
-        <span>LEAVE COMMON PICTURE</span>
+        <img src="/assets/images/delete-common-prompt.svg" alt="delete" />
         <h2>Are you sure you want to leave this common?</h2>
+        <p>By leaving the common you will loose your role and voting power. No more contributions will be charged</p>
         <Button
           disabled={leaving}
           variant={ButtonVariant.Secondary}
