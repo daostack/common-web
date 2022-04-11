@@ -197,7 +197,7 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
             validationSchema={validationSchema}
           >
             {({ values, isValid, setFieldValue }) => (
-              <Form>
+              <Form className="add-bank-details-form__form">
                 <h3>Personal Info</h3>
                 <div className="section personal-info">
                   <TextField

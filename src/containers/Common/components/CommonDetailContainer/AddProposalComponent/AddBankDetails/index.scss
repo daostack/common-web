@@ -29,8 +29,18 @@
   }
 
   .add-bank-details-form {
+    max-width: 43rem;
     display: flex;
     justify-content: center;
+
+    @include big-phone {
+      max-width: unset;
+    }
+
+    .add-bank-details-form__form {
+      width: 100%;
+    }
+
     .section {
       display: flex;
       .field {
