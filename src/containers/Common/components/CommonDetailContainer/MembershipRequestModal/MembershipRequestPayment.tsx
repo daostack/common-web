@@ -24,7 +24,7 @@ import { CommonPayment, Card, Common, } from "../../../../../shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import { CommonContributionType } from "../../../../../shared/models";
 import { subscribeToCardChange } from "../../../store/api";
-import { loadUserCards, makeImmediateContribution, } from "../../../store/actions";
+import { loadUserCards } from "../../../store/actions";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ScreenSize } from "@/shared/constants";
 
@@ -45,7 +45,6 @@ export default function MembershipRequestPayment(
 ): ReactElement {
   const { userData, setUserData, common } = props;
   const {
-    id: commonId,
     metadata: { contributionType },
   } = common as Common;
   const dispatch = useDispatch();
@@ -66,43 +65,15 @@ export default function MembershipRequestPayment(
                                 ? "monthly"
                                 : "one-time";
 
-  const handleIframeLoad = useCallback(() => {
-    setState((nextState) => ({ ...nextState, isPaymentIframeLoaded: true }));
-  }, []);
+  const handleIframeLoad = useCallback(
+    () => setState((nextState) => ({ ...nextState, isPaymentIframeLoaded: true })),
+    []
+  );
 
-  const handleContinuePayment = useCallback(() => {
-    if (
-      !hasPaymentMethod
-      || !userData.contributionAmount
-    ) return;
-
-    dispatch(
-      makeImmediateContribution.request({
-        payload: {
-          commonId,
-          contributionType,
-          amount: userData.contributionAmount,
-          saveCard: true,
-        },
-        callback: (error, payment) => {
-          if (error || !payment) {
-            console.error(error?.message ||"Error during immediate payment's attemption");
-            return;
-          }
-
-          setUserData((nextUserData) => ({ ...nextUserData, stage: 5 }));
-          return;
-        },
-      })
-    );
-  }, [
-    hasPaymentMethod,
-    userData.contributionAmount,
-    commonId,
-    contributionType,
-    dispatch,
-    setUserData,
-  ]);
+  const finishPayment = useCallback(
+    () => setUserData((nextUserData) => ({ ...nextUserData, stage: 5 })),
+    []
+  );
 
   useEffect(() => {
     dispatch(loadUserCards.request({
@@ -158,14 +129,17 @@ export default function MembershipRequestPayment(
   ]);
 
   useEffect(() => {
-    if (!isPaymentIframeLoaded || !commonPayment)
-      return;
+    if (
+      hasPaymentMethod
+      || (hasPaymentMethod === null)
+      || !isPaymentIframeLoaded
+      || !commonPayment
+    ) return;
 
     try {
       return subscribeToCardChange(userData.cardId, (card) => {
-        if (card) {
-          setUserData((nextUserData) => ({ ...nextUserData, stage: 5 }));
-        } else throw new Error("Card's record to listen is not found");
+        if (card)
+          finishPayment();
       });
     } catch (error) {
       console.error((error as any).message || "Error during subscription to payment status change");
@@ -175,6 +149,7 @@ export default function MembershipRequestPayment(
     commonPayment,
     userData.cardId,
     setUserData,
+    hasPaymentMethod,
   ]);
 
   return (
@@ -214,9 +189,9 @@ export default function MembershipRequestPayment(
                 key="membership-request-payment-continue"
                 className="membership-request-payment__continue-button"
                 shouldUseFullWidth={isMobileView}
-                onClick={handleContinuePayment}
+                onClick={finishPayment}
               >
-                Continue to payment
+                Continue
               </Button>
             </div>
           </ModalFooter>

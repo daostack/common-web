@@ -201,9 +201,8 @@ export default function RequestPayment(
 
     try {
       return subscribeToCardChange(newCardId, (card) => {
-        if (card) {
+        if (card)
           makeImmediateContributionRequest();
-        } else throw new Error("Card's record to listen is not found");
       });
     } catch (error) {
       onError((error as any).message || "Error during subscription to payment status change");
