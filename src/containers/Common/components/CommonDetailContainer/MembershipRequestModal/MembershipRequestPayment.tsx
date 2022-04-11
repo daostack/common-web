@@ -59,7 +59,7 @@ export default function MembershipRequestPayment(
     setState,
   ] = useState<State>(INITIAL_STATE);
   const [cards, setUserCards] = useState<Card[]>([]);
-  const [hasPaymentMethod, setHasPaymentMethod] = useState<boolean>(false);
+  const [hasPaymentMethod, setHasPaymentMethod] = useState<boolean | null>(null);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = (screenSize === ScreenSize.Mobile);
   const contributionTypeText = (contributionType === CommonContributionType.Monthly)
@@ -90,6 +90,7 @@ export default function MembershipRequestPayment(
             return;
           }
 
+          setUserData((nextUserData) => ({ ...nextUserData, stage: 5 }));
           return;
         },
       })
@@ -100,6 +101,7 @@ export default function MembershipRequestPayment(
     commonId,
     contributionType,
     dispatch,
+    setUserData,
   ]);
 
   useEffect(() => {
@@ -120,6 +122,7 @@ export default function MembershipRequestPayment(
     (async () => {
       if (
         hasPaymentMethod
+        || (hasPaymentMethod === null)
         || commonPayment
         || isCommonPaymentLoading
         || !common
@@ -155,20 +158,24 @@ export default function MembershipRequestPayment(
   ]);
 
   useEffect(() => {
-    if (!isPaymentIframeLoaded) {
+    if (!isPaymentIframeLoaded || !commonPayment)
       return;
-    }
 
     try {
       return subscribeToCardChange(userData.cardId, (card) => {
         if (card) {
           setUserData((nextUserData) => ({ ...nextUserData, stage: 5 }));
-        }
+        } else throw new Error("Card's record to listen is not found");
       });
     } catch (error) {
-      console.error("Error during subscription to payment status change");
+      console.error((error as any).message || "Error during subscription to payment status change");
     }
-  }, [isPaymentIframeLoaded, userData.cardId, setUserData]);
+  }, [
+    isPaymentIframeLoaded,
+    commonPayment,
+    userData.cardId,
+    setUserData,
+  ]);
 
   return (
     <div className="membership-request-content membership-request-payment">
