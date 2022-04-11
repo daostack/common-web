@@ -164,3 +164,27 @@
     }
   }
 }
+
+.user-details-preview {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+
+  .user-details-preview__name {
+    margin: 0 0 0.5rem;
+    height: 1.5rem;
+    font-family: NotoSerifSC, serif;
+    font-size: $moderate-small;
+    font-weight: bold;
+  }
+
+  .user-details-preview__info {
+    margin: 0 0 0.5rem;
+    font-size: $xsmall;
+    color: $light-gray-2;
+
+    &:last-child {
+      margin: 0;
+    }
+  }
+}

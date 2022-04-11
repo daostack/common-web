@@ -23,6 +23,7 @@ import {
   selectUserPhoneNumber,
 } from "../../../../Auth/store/selectors";
 import { UserAuthInfo } from "../UserAuthInfo";
+import UserDetailsPreview from "./UserDetailsPreview";
 import { validationSchema } from "./validationSchema";
 import "./index.scss";
 
@@ -42,6 +43,7 @@ interface UserDetailsProps {
   showAuthProvider?: boolean;
   customSaveButton?: boolean;
   isCountryDropdownFixed?: boolean;
+  isEditing?: boolean;
   styles?: Styles;
 }
 
@@ -75,6 +77,7 @@ const UserDetails: FC<UserDetailsProps> = (props) => {
     showAuthProvider = true,
     customSaveButton = false,
     isCountryDropdownFixed = true,
+    isEditing = true,
     styles: outerStyles,
   } = props;
   const [loading, setLoading] = useState(false);
@@ -157,7 +160,7 @@ const UserDetails: FC<UserDetailsProps> = (props) => {
                     nameForRandomAvatar={values.email}
                     userName={getUserName(values)}
                   />
-                  {!loading ? (
+                  {isEditing && !loading ? (
                     <div
                       className={classNames(
                         "edit-avatar",
@@ -190,58 +193,61 @@ const UserDetails: FC<UserDetailsProps> = (props) => {
                 )}
                 {loading ? <Loader /> : null}
               </div>
-              <div
-                className={classNames(
-                  "user-details__text-field-container",
-                  outerStyles?.fieldContainer
-                )}
-              >
-                <TextField
-                  className="user-details__text-field user-details__first-name"
-                  id="firstName"
-                  name="firstName"
-                  label="First name"
-                  isRequired
-                  styles={styles}
-                />
-                <TextField
-                  className="user-details__text-field user-details__last-name"
-                  id="lastName"
-                  name="lastName"
-                  label="Last name"
-                  isRequired
-                  styles={styles}
-                />
-                <TextField
-                  className="user-details__text-field user-details__email"
-                  id="email"
-                  name="email"
-                  label="Email"
-                  isRequired
-                  styles={styles}
-                />
-                <Dropdown
-                  className="user-details__text-field user-details__country"
-                  name="country"
-                  label="Country"
-                  placeholder="---Select country---"
-                  options={options}
-                  shouldBeFixed={isCountryDropdownFixed}
-                />
-                <TextField
-                  className="user-details__textarea"
-                  id="intro"
-                  name="intro"
-                  label="Intro"
-                  placeholder="What are you most passionate about, really good at, or love"
-                  styles={{
-                    ...styles,
-                    inputWrapper: outerStyles?.introInputWrapper,
-                  }}
-                  isTextarea
-                  rows={1}
-                />
-              </div>
+              {!isEditing && <UserDetailsPreview user={user} />}
+              {isEditing && (
+                <div
+                  className={classNames(
+                    "user-details__text-field-container",
+                    outerStyles?.fieldContainer
+                  )}
+                >
+                  <TextField
+                    className="user-details__text-field user-details__first-name"
+                    id="firstName"
+                    name="firstName"
+                    label="First name"
+                    isRequired
+                    styles={styles}
+                  />
+                  <TextField
+                    className="user-details__text-field user-details__last-name"
+                    id="lastName"
+                    name="lastName"
+                    label="Last name"
+                    isRequired
+                    styles={styles}
+                  />
+                  <TextField
+                    className="user-details__text-field user-details__email"
+                    id="email"
+                    name="email"
+                    label="Email"
+                    isRequired
+                    styles={styles}
+                  />
+                  <Dropdown
+                    className="user-details__text-field user-details__country"
+                    name="country"
+                    label="Country"
+                    placeholder="---Select country---"
+                    options={options}
+                    shouldBeFixed={isCountryDropdownFixed}
+                  />
+                  <TextField
+                    className="user-details__textarea"
+                    id="intro"
+                    name="intro"
+                    label="Intro"
+                    placeholder="What are you most passionate about, really good at, or love"
+                    styles={{
+                      ...styles,
+                      inputWrapper: outerStyles?.introInputWrapper,
+                    }}
+                    isTextarea
+                    rows={1}
+                  />
+                </div>
+              )}
               {!customSaveButton && (
                 <Button
                   className="user-details__save-button"
