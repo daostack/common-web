@@ -89,8 +89,7 @@ $payment-iframe-height-mobile: 672px;
     align-self: flex-start;
   }
 
-  select,
-  input {
+  select {
     height: 40px;
     padding: 0 0.7rem;
     border-radius: 3px;
@@ -442,57 +441,21 @@ $payment-iframe-height-mobile: 672px;
   }
 }
 
-.membership-request-payment__payment-iframe {
-  width: 100%;
-  height: $payment-iframe-height;
+.membership-request-payment__continue-button-wrapper {
+  padding: 1.75rem 0;
+  display: flex;
+  justify-content: center;
+
+  .membership-request-payment__continue-button {
+    min-width: 11.25rem;
+
+    @include big-phone {
+      min-width: unset;
+    }
+  }
 
   @include big-phone {
-    height: $payment-iframe-height-mobile;
-  }
-}
-
-.membership-request-payment-method {
-  width: 100%;
-  color: $secondary-blue;
-
-  .membership-request-payment-method__title {
-    margin-top: 0;
-    margin-bottom: 14px;
-    font-family: NunitoSans-Bold, sans-serif;
-    font-size: $small;
-    font-weight: bold;
-    line-height: 1.5;
-  }
-
-  .membership-request-payment-method__payment-logo {
-    width: 64px;
-    height: 32px;
-    object-fit: contain;
-  }
-
-  .membership-request-payment-method__content-wrapper {
-    display: flex;
-    align-items: center;
-    font-size: $xsmall;
-    line-height: 1.42;
-  }
-
-  .membership-request-payment-method__card-info-wrapper {
-    margin-left: 16px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .membership-request-payment-method__card-holder {
-    font-family: NunitoSans-Bold, sans-serif;
-    font-size: $small;
-    font-weight: bold;
-    line-height: 1.5;
-  }
-
-  .membership-request-payment-method__expiration {
-    margin-top: auto;
-    margin-left: auto;
+    padding: 1.5rem 0;
   }
 }
 
@@ -538,8 +501,7 @@ $payment-iframe-height-mobile: 672px;
   .membership-request-content {
     padding: unset;
 
-    select,
-    input {
+    select {
       width: 100%;
     }
   }

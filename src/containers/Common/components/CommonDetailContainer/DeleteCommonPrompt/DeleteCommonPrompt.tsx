@@ -5,6 +5,7 @@ import { deleteCommon } from "@/containers/Common/store/actions";
 import { Button, ButtonVariant, Modal } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { ModalProps } from "@/shared/interfaces";
+import { useNotification } from "@/shared/hooks";
 import "./index.scss";
 
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
@@ -13,6 +14,7 @@ interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
 
 export default function DeleteCommonPrompt({ isShowing, onClose, commonId }: IProps) {
   const dispatch = useDispatch();
+  const { notify } = useNotification();
   const history = useHistory();
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
@@ -29,11 +31,11 @@ export default function DeleteCommonPrompt({ isShowing, onClose, commonId }: IPr
           setError(error?.message ?? "Something went wrong :/");
           return;
         }
-        // TODO: maybe need to show success notification for the user?
         history.push(ROUTE_PATHS.MY_COMMONS);
+        notify("The common has been deleted");
       }
     }));
-  }, [dispatch, history, commonId]);
+  }, [dispatch, notify, history, commonId]);
 
   return (
     <Modal isShowing={isShowing} onClose={onClose} className="delete-prompt-modal">

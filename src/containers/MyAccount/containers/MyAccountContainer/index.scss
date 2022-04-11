@@ -1,0 +1,29 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+.my-account-container-wrapper {
+  display: flex;
+
+  .route-content {
+    margin: 2.5rem 0 2.5rem 3.5rem;
+  }
+  .route-title {
+    margin: 0;
+    font-family: NunitoSans, sans-serif;
+    font-size: $moderate-med;
+    font-weight: bold;
+  }
+  .route-sub-title {
+    font-size: $moderate;
+    font-weight: bold;
+  }
+}
+
+@include big-phone {
+  .my-account-container-wrapper {
+    .route-content {
+      margin: unset;
+      margin-top: 1.5rem;
+    }
+  }
+}

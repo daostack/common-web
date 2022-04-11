@@ -1,7 +1,11 @@
 import React, { useCallback, useState } from "react";
 
 import { Loader } from "../../../../../shared/components";
-import { Common, Proposal } from "../../../../../shared/models";
+import {
+  Common,
+  Proposal,
+  CurrencySymbol,
+} from "../../../../../shared/models";
 import {
   formatPrice,
   getDaysAgo,
@@ -40,6 +44,10 @@ export default function ProposalDetailModal({
     proposal?.fundingRequest?.amount || proposal?.join?.funding;
   const screenSize = useSelector(getScreenSize());
   const [expanded, setExpanded] = useState(true);
+  //required custom fix since the using currency was changed - CW-411
+  const fundingAmountPrefix = (
+    (proposal?.createdAt || proposal?.createTime)?.toDate() < new Date("02/17/2022 12:00")
+  ) && CurrencySymbol.USD;
 
   const sendMessage = useCallback(
     (message: string) => {
@@ -98,7 +106,18 @@ export default function ProposalDetailModal({
                     <>
                       Requested amount
                       <span className="amount">
-                        {formatPrice(rawRequestedAmount)}
+                        {
+                          formatPrice(
+                            rawRequestedAmount,
+                            {
+                              ...(
+                                fundingAmountPrefix && {
+                                  prefix: fundingAmountPrefix
+                                }
+                              )
+                            }
+                          )
+                        }
                       </span>
                     </>
                   )}
