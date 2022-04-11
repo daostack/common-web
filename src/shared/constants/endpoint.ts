@@ -9,6 +9,7 @@ export const ApiEndpoint = {
   UploadInvoices: "/payments/payout-docs/add",
   ApproveOrDeclineProposal: "/payments/payout-docs/trustee-decision",
   GetReports: "/reports",
+  LeaveCommon: "/commons/leave",
   UpdateSubscription: "/subscriptions/update",
   DeleteCommon: "/commons/deactivate",
   CreateUser: "/users/create",

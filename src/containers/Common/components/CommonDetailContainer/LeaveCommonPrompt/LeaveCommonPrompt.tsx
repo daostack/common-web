@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { deleteCommon } from "@/containers/Common/store/actions";
+import { leaveCommon } from "@/containers/Common/store/actions";
 import { Button, ButtonVariant, Modal } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { ModalProps } from "@/shared/interfaces";
@@ -12,46 +12,46 @@ interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
   commonId: string
 }
 
-export default function DeleteCommonPrompt({ isShowing, onClose, commonId }: IProps) {
+export default function LeaveCommonPrompt({ isShowing, onClose, commonId }: IProps) {
   const dispatch = useDispatch();
   const { notify } = useNotification();
   const history = useHistory();
-  const [deleting, setDeleting] = useState(false);
+  const [leaving, setLeaving] = useState(false);
   const [error, setError] = useState("");
 
-  const handleDelete = useCallback(() => {
-    setDeleting(true);
+  const handleLeave = useCallback(() => {
+    setLeaving(true);
     setError("");
-    dispatch(deleteCommon.request({
+    dispatch(leaveCommon.request({
       payload: { commonId },
       callback: (error) => {
         if (error) {
           console.error(error);
-          setDeleting(false);
+          setLeaving(false);
           setError(error?.message ?? "Something went wrong :/");
           return;
         }
         history.push(ROUTE_PATHS.MY_COMMONS);
-        notify("The common has been deleted");
+        notify("You've successfully left the common");
       }
     }));
   }, [dispatch, notify, history, commonId]);
 
   return (
-    <Modal isShowing={isShowing} onClose={onClose} className="delete-prompt-modal">
-      <div className="delete-common-prompt-wrapper">
+    <Modal isShowing={isShowing} onClose={onClose} className="leave-prompt-modal">
+      <div className="leave-common-prompt-wrapper">
         <img src="/assets/images/delete-common-prompt.svg" alt="delete" />
-        <h2>Are you sure?</h2>
-        <p>If you delete this Common the data will be erased. You <b>can not</b> restore your Common once you delete it.</p>
+        <h2>Are you sure you want to leave this common?</h2>
+        <p>By leaving the common you will loose your role and voting power. No more contributions will be charged</p>
         <Button
-          disabled={deleting}
+          disabled={leaving}
           variant={ButtonVariant.Secondary}
-          onClick={handleDelete}
-          className="delete-btn">
-          {deleting ? "Deleting..." : "Delete Common"}
+          onClick={handleLeave}
+          className="leave-btn">
+          {leaving ? "Leaving..." : "Leave Common"}
         </Button>
         <Button
-          disabled={deleting}
+          disabled={leaving}
           variant={ButtonVariant.Secondary}
           onClick={onClose}>
           Cancel

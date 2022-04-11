@@ -29,6 +29,7 @@ import {
   DeleteCommon,
   ImmediateContributionData,
   ImmediateContributionResponse,
+  LeaveCommon,
 } from "@/containers/Common/interfaces";
 import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
 import { CreateVotePayload, Vote } from "@/shared/interfaces/api/vote";
@@ -293,6 +294,10 @@ export async function loadUserCards(userId: string): Promise<Card[]> {
   const data = transformFirebaseDataList<Card>(cards);
 
   return data;
+}
+
+export async function leaveCommon(requestData: LeaveCommon): Promise<void> {
+  await Api.post<void>(ApiEndpoint.LeaveCommon, requestData);
 }
 
 export async function deleteCommon(requestData: DeleteCommon): Promise<void> {
