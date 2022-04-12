@@ -403,7 +403,23 @@ export function* updateVote(
 ): Generator {
   try {
     yield put(startLoading());
-    yield updateVoteApi(action.payload.payload);
+    const vote = (yield updateVoteApi(action.payload.payload)) as Vote;
+
+    yield call(async () => {
+      const proposals = await fetchCommonProposals(vote.commonId);
+
+      store.dispatch(actions.setProposals(proposals));
+
+      store.dispatch(actions.loadProposalList.request());
+
+      store.dispatch(
+        actions.loadProposalDetail.request(
+          proposals.filter((p) => p.id === vote.proposalId)[0]
+        )
+      );
+
+      store.dispatch(stopLoading());
+    });
 
     yield put(actions.updateVote.success());
     action.payload.callback(null);
