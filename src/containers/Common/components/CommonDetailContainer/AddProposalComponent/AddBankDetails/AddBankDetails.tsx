@@ -228,6 +228,9 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     onChange={(date) =>
                       setFieldValue("socialIdIssueDate", date)
                     }
+                    showMonthDropdown
+                    showYearDropdown
+                    adjustDateOnChange
                     styles={{
                       label: "add-bank-details-form__label",
                     }}
@@ -239,6 +242,9 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     selected={values.birthdate}
                     maxDate={moment().toDate()}
                     onChange={(date) => setFieldValue("birthdate", date)}
+                    showMonthDropdown
+                    showYearDropdown
+                    adjustDateOnChange
                     styles={{
                       label: "add-bank-details-form__label",
                     }}
