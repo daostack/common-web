@@ -33,6 +33,7 @@ import {
   loadUserCards,
   deleteCommon as deleteCommonApi,
   createVote as createVoteApi,
+  updateVote as updateVoteApi,
   makeImmediateContribution as makeImmediateContributionApi,
   addBankDetails as addBankDetailsApi,
   getBankDetails as getBankDetailsApi,
@@ -369,7 +370,7 @@ export function* deleteCommon(
   }
 }
 
-export function* vote(
+export function* createVote(
   action: ReturnType<typeof actions.createVote.request>
 ): Generator {
   try {
@@ -392,6 +393,23 @@ export function* vote(
     yield put(stopLoading());
   } catch (error) {
     yield put(actions.createVote.failure(error));
+    action.payload.callback(error);
+    yield put(stopLoading());
+  }
+}
+
+export function* updateVote(
+  action: ReturnType<typeof actions.updateVote.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    yield updateVoteApi(action.payload.payload);
+
+    yield put(actions.updateVote.success());
+    action.payload.callback(null);
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(actions.updateVote.failure(error));
     action.payload.callback(error);
     yield put(stopLoading());
   }
@@ -617,7 +635,8 @@ export function* commonsSaga() {
     addMessageToProposalSaga
   );
   yield takeLatest(actions.createCommon.request, createCommon);
-  yield takeLatest(actions.createVote.request, vote);
+  yield takeLatest(actions.createVote.request, createVote);
+  yield takeLatest(actions.updateVote.request, updateVote);
   yield takeLatest(
     actions.makeImmediateContribution.request,
     makeImmediateContribution

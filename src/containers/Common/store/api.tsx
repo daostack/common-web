@@ -32,7 +32,7 @@ import {
   LeaveCommon,
 } from "@/containers/Common/interfaces";
 import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
-import { CreateVotePayload, Vote } from "@/shared/interfaces/api/vote";
+import { CreateVotePayload, UpdateVotePayload, Vote } from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 
 export async function fetchCommonDiscussions(commonId: string) {
@@ -280,6 +280,14 @@ export async function createVote(
   requestData: CreateVotePayload
 ): Promise<Vote> {
   const { data } = await Api.post<Vote>(ApiEndpoint.CreateVote, requestData);
+
+  return data;
+}
+
+export async function updateVote(
+  requestData: UpdateVotePayload
+): Promise<Vote> {
+  const { data } = await Api.post<Vote>(ApiEndpoint.UpdateVote, requestData);
 
   return data;
 }
