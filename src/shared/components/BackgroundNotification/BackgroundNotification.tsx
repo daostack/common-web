@@ -6,7 +6,7 @@ import { EventTypeState } from "@/shared/models/Notification";
 import { formatDate } from "@/shared/utils";
 import { DateFormat } from "@/shared/models";
 
-interface NotificationLayout {
+interface BackgroundNotification {
   notification: NotificationData;
   closeHandler: () => void;
 }
@@ -14,7 +14,7 @@ interface NotificationLayout {
 export default function NotificationLayout({
   notification,
   closeHandler,
-}: NotificationLayout) {
+}: BackgroundNotification) {
   const img = useMemo(() => {
     switch (notification.type) {
       case EventTypeState.fundingRequestAccepted:

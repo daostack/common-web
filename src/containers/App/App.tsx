@@ -12,25 +12,22 @@ import {
   SMALL_SCREEN_BREAKPOINT,
   ScreenSize,
 } from "../../shared/constants";
-import { changeScreenSize, showNotification } from "../../shared/store/actions";
+import { changeScreenSize, showNotification } from "@/shared/store/actions";
 import { authentificated } from "../Auth/store/selectors";
 import { MyCommonsContainer } from "../Common/containers/MyCommonsContainer";
 import { SubmitInvoicesContainer } from "../Invoices/containers";
 import { TrusteeContainer } from "../Trustee/containers";
 import { MyAccountContainer } from "../MyAccount/containers/MyAccountContainer";
 
-import { getNotification, getScreenSize } from "@/shared/store/selectors";
+import { getNotification } from "@/shared/store/selectors";
 import { useModal } from "@/shared/hooks";
 import classNames from "classnames";
-import NotificationLayout from "@/shared/components/Notification/NotificationLayout/NotificationLayout";
+import { BackgroundNotification } from "@/shared/components/BackgroundNotification";
 
 const App = () => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(authentificated());
   const notification = useSelector(getNotification());
-
-  const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
 
   const {
     isShowing: isShowingNotification,
@@ -88,7 +85,7 @@ const App = () => {
           })}
           //  mobileFullScreen={isMobileView}
         >
-          <NotificationLayout
+          <BackgroundNotification
             notification={notification}
             closeHandler={closeNotificationHandler}
           />

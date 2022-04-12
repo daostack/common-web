@@ -484,6 +484,8 @@ function* authSagas() {
   });
 
   subscribeToNotification(async (data?: NotificationItem) => {
+    const notifications = tokenHandler.getShownNotificationList();
+    if (notifications.includes(data?.eventId)) return;
     if (data) {
       switch (data?.eventType) {
         case EventTypeState.fundingRequestAccepted:
@@ -511,6 +513,8 @@ function* authSagas() {
             };
 
             store.dispatch(showNotification(notification));
+
+            tokenHandler.setShownNotificationList(data.eventId);
           }
 
           break;

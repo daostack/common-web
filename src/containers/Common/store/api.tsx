@@ -419,19 +419,20 @@ export function subscribeToNotification(
 
   if (!user) return;
 
-  return firebase
+  const query = firebase
     .firestore()
     .collection(Collection.Notifications)
-    .where("userFilter", "array-contains", user.uid)
-    .onSnapshot((data) => {
-      data.docChanges().forEach((change) => {
-        switch (change.type) {
-          case "added":
-          case "modified":
-            return callback((change.doc.data() as any) as NotificationItem);
-        }
-      });
+    .where("userFilter", "array-contains", user.uid);
+
+  return query.onSnapshot((data) => {
+    data.docChanges().forEach((change) => {
+      switch (change.type) {
+        case "added":
+        case "modified":
+          return callback((change.doc.data() as any) as NotificationItem);
+      }
     });
+  });
 }
 
 export async function getProposalById(proposalId: string) {
