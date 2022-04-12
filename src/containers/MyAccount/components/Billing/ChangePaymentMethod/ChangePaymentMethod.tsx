@@ -1,6 +1,6 @@
 import React, { useState, FC } from "react";
 import { IFrame, Loader } from "@/shared/components";
-import { ChangePaymentMethodState } from "../types";
+import { ChangePaymentMethodState } from "@/shared/hooks/useCases";
 import "./index.scss";
 
 interface ChangePaymentMethodProps {

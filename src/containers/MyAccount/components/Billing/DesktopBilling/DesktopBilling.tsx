@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import { Loader } from "@/shared/components";
+import { ChangePaymentMethodState } from "@/shared/hooks/useCases";
 import { Card } from "@/shared/models";
 import { PaymentInformation } from "../PaymentInformation";
-import { ChangePaymentMethodState } from "../types";
 import "./index.scss";
 
 interface DesktopBillingProps {

@@ -2,11 +2,11 @@ import React, { FC } from "react";
 import { useSelector } from "react-redux";
 import { Modal, PaymentMethod } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
+import { ChangePaymentMethodState } from "@/shared/hooks/useCases";
 import { Card } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { AddingCard } from "../AddingCard";
 import { ChangePaymentMethod } from "../ChangePaymentMethod";
-import { ChangePaymentMethodState } from "../types";
 import "./index.scss";
 
 interface PaymentInformationProps {
@@ -47,7 +47,12 @@ const PaymentInformation: FC<PaymentInformationProps> = (props) => {
       {!isMobileView &&
         (changePaymentMethodState.isPaymentLoading ||
           changePaymentMethodState.payment) && (
-          <Modal isShowing onClose={onChangePaymentMethodStateClear} title="Payment method" closePrompt>
+          <Modal
+            isShowing
+            onClose={onChangePaymentMethodStateClear}
+            title="Payment method"
+            closePrompt
+          >
             <ChangePaymentMethod data={changePaymentMethodState} />
           </Modal>
         )}
