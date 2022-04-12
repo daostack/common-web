@@ -78,7 +78,7 @@ export default function VotePrompt(
       case VoteAction.Update:
         return handleUpdateVote(voteType);
     }
-  }, [handleCreateVote, handleUpdateVote]);
+  }, [handleCreateVote, handleUpdateVote, voteAction]);
 
   return (
     <Modal isShowing={isShowing} onClose={onClose} className="vote-prompt-modal">

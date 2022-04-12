@@ -5,7 +5,6 @@ import {
   Proposal,
   ProposalState,
   VoteOutcome,
-  VoteAction,
 } from "@/shared/models";
 import { percentage } from "@/shared/utils";
 import { UserAvatar } from "@/shared/components";
@@ -32,17 +31,12 @@ export default function VotesComponent({ proposal, isCommonMember, preview, comp
   const [voteType, setVoteType] = useState<VoteOutcome>();
   const userVote = proposal.votes.find((vote) => vote.voterId === user?.uid);
 
-  const getIsVotingOptionDisabled = useCallback(
+  const getIsVotingOptionDisabled = useCallback((votingOption: VoteOutcome | null) =>
     (
-      votingOption: VoteOutcome | null,
-      skipByOptionCheck = false
-    ) => (
       !isCommonMember
       || (proposal.state !== ProposalState.COUNTDOWN)
+      || (!!userVote && (userVote.voteOutcome === votingOption))
       || preview
-      || !skipByOptionCheck
-        ? (!!userVote && (userVote.voteOutcome === votingOption))
-        : !!userVote
     ),
     [
       isCommonMember,
@@ -59,7 +53,7 @@ export default function VotesComponent({ proposal, isCommonMember, preview, comp
 
   return (
     <div className="votes-wrapper">
-      {!getIsVotingOptionDisabled(null, true) && <span className="what-is-your-vote">What's your vote?</span>}
+      {!getIsVotingOptionDisabled(null) && <span className="what-is-your-vote">What's your vote?</span>}
       <div className="votes-columns-container">
         <div className="vote-column approve">
           {percentage(votesFor, totalVotes)}%
