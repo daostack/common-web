@@ -11,7 +11,7 @@ interface BackgroundNotification {
   closeHandler: () => void;
 }
 
-export default function NotificationLayout({
+export default function BackgroundNotification({
   notification,
   closeHandler,
 }: BackgroundNotification) {
