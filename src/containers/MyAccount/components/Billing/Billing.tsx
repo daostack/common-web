@@ -1,15 +1,13 @@
 import React, { useEffect, useState, FC } from "react";
 import { useDispatch } from "react-redux";
-import { loadUserCards } from "@/containers/Common/store/actions";
-import { Card } from "@/shared/models";
+import { v4 as uuidv4 } from "uuid";
+import {
+  createBuyerTokenPage,
+  loadUserCards,
+} from "@/containers/Common/store/actions";
 import { DesktopBilling } from "./DesktopBilling";
+import { CardsState, ChangePaymentMethodState } from "./types";
 import "./index.scss";
-
-interface CardsState {
-  loading: boolean;
-  fetched: boolean;
-  cards: Card[];
-}
 
 const Billing: FC = () => {
   const dispatch = useDispatch();
@@ -18,6 +16,49 @@ const Billing: FC = () => {
     fetched: false,
     cards: [],
   });
+  const [
+    changePaymentMethodState,
+    setChangePaymentMethodState,
+  ] = useState<ChangePaymentMethodState>(() => ({
+    payment: null,
+    isPaymentLoading: false,
+    cardId: uuidv4(),
+  }));
+
+  const handlePaymentMethodChange = () => {
+    setChangePaymentMethodState((nextState) => ({
+      ...nextState,
+      isPaymentLoading: true,
+    }));
+
+    dispatch(
+      createBuyerTokenPage.request({
+        payload: {
+          cardId: changePaymentMethodState.cardId,
+        },
+        callback: (error, payment) => {
+          if (error || !payment) {
+            // onError(error?.message || "Something went wrong");
+            return;
+          }
+
+          setChangePaymentMethodState((nextState) => ({
+            ...nextState,
+            payment,
+            isPaymentLoading: false,
+          }));
+        },
+      })
+    );
+  };
+
+  const handleChangePaymentMethodStateClear = () => {
+    setChangePaymentMethodState({
+      payment: null,
+      isPaymentLoading: false,
+      cardId: uuidv4(),
+    });
+  };
 
   useEffect(() => {
     if (cardsState.loading || cardsState.fetched) {
@@ -49,6 +90,9 @@ const Billing: FC = () => {
       <DesktopBilling
         areCardsLoading={!cardsState.fetched}
         cards={cardsState.cards}
+        changePaymentMethodState={changePaymentMethodState}
+        onPaymentMethodChange={handlePaymentMethodChange}
+        onChangePaymentMethodStateClear={handleChangePaymentMethodStateClear}
       />
     </div>
   );
