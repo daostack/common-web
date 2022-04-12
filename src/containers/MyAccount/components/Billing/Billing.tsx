@@ -2,7 +2,7 @@ import React, { useEffect, useState, FC } from "react";
 import { useDispatch } from "react-redux";
 import { loadUserCards } from "@/containers/Common/store/actions";
 import { Card } from "@/shared/models";
-import { PaymentInformation } from "./PaymentInformation";
+import { DesktopBilling } from "./DesktopBilling";
 import "./index.scss";
 
 interface CardsState {
@@ -46,12 +46,10 @@ const Billing: FC = () => {
       <header className="my-account-billing__header">
         <h2 className="route-title">Billing</h2>
       </header>
-      <div>
-        <section>
-          <h3 className="my-account-billing__section-title">Payment information</h3>
-          <PaymentInformation cards={cardsState.cards} />
-        </section>
-      </div>
+      <DesktopBilling
+        areCardsLoading={!cardsState.fetched}
+        cards={cardsState.cards}
+      />
     </div>
   );
 };
