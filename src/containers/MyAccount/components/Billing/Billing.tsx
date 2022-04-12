@@ -47,9 +47,10 @@ const Billing: FC = () => {
         <h2 className="route-title">Billing</h2>
       </header>
       <div>
-        <div>
+        <section>
+          <h3 className="my-account-billing__section-title">Payment information</h3>
           <PaymentInformation cards={cardsState.cards} />
-        </div>
+        </section>
       </div>
     </div>
   );
