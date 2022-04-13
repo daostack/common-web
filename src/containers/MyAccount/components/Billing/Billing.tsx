@@ -41,6 +41,17 @@ const Billing: FC = () => {
     );
   }, [dispatch, cardsState]);
 
+  useEffect(() => {
+    const card = changePaymentMethodState.createdCard;
+
+    if (card) {
+      setCardsState((nextState) => ({
+        ...nextState,
+        cards: [{ ...card }],
+      }));
+    }
+  }, [changePaymentMethodState.createdCard]);
+
   return (
     <div className="route-content my-account-billing">
       <header className="my-account-billing__header">
