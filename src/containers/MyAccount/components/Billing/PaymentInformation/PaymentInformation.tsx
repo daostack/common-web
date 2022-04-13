@@ -53,7 +53,9 @@ const PaymentInformation: FC<PaymentInformationProps> = (props) => {
             title="Payment method"
             closePrompt
           >
-            <ChangePaymentMethod data={changePaymentMethodState} />
+            <div className="billing-payment-information__modal-content">
+              <ChangePaymentMethod data={changePaymentMethodState} />
+            </div>
           </Modal>
         )}
     </>

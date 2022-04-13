@@ -7,3 +7,7 @@
   border-radius: 0.5rem;
   box-sizing: border-box;
 }
+
+.billing-payment-information__modal-content {
+  min-height: $payment-iframe-height;
+}

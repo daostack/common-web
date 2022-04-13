@@ -16,9 +16,11 @@ const ChangePaymentMethod: FC<ChangePaymentMethodProps> = (props) => {
   };
 
   return (
-    <div>
+    <div className="billing-change-payment-method">
       {(data.isPaymentLoading || !data.payment || !isPaymentIframeLoaded) && (
-        <Loader />
+        <div className="billing-change-payment-method__loader-wrapper">
+          <Loader />
+        </div>
       )}
       {!data.isPaymentLoading && data.payment && (
         <IFrame

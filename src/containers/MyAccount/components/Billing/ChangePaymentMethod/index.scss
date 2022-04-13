@@ -1,12 +1,11 @@
 @import "../../../../../constants";
 
-.my-account-desktop-billing__section {
-  max-width: 20.625rem;
+.billing-change-payment-method {
+  position: relative;
 }
 
-.my-account-desktop-billing__section-title {
-  margin: 0 0 1rem;
-  font-family: NunitoSans, sans-serif;
-  font-size: $small;
-  font-weight: 600;
+.billing-change-payment-method__loader-wrapper {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
