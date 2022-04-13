@@ -1,0 +1,24 @@
+@import "../../../../../constants";
+
+.billing-payment-method-update-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.billing-payment-method-update-success__image {
+  width: 7.25rem;
+  height: 7.25rem;
+}
+
+.billing-payment-method-update-success__title {
+  margin: 1rem 0 3.75rem;
+  font-family: NotoSerifSC, serif;
+  font-size: $moderate-med;
+  font-weight: bold;
+  text-align: center;
+}
+
+.billing-payment-method-update-success__button {
+  max-width: 11.25rem;
+}

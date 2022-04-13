@@ -7,6 +7,7 @@ import { Card } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { AddingCard } from "../AddingCard";
 import { ChangePaymentMethod } from "../ChangePaymentMethod";
+import { PaymentMethodUpdateSuccess } from "../PaymentMethodUpdateSuccess";
 import "./index.scss";
 
 interface PaymentInformationProps {
@@ -46,16 +47,21 @@ const PaymentInformation: FC<PaymentInformationProps> = (props) => {
       )}
       {!isMobileView &&
         (changePaymentMethodState.isPaymentLoading ||
-          changePaymentMethodState.payment) && (
+          changePaymentMethodState.payment ||
+          changePaymentMethodState.createdCard) && (
           <Modal
             isShowing
             onClose={onChangePaymentMethodStateClear}
-            title="Payment method"
-            closePrompt
+            title={changePaymentMethodState.createdCard ? "" : "Payment method"}
+            closePrompt={!changePaymentMethodState.createdCard}
           >
-            <div className="billing-payment-information__modal-content">
-              <ChangePaymentMethod data={changePaymentMethodState} />
-            </div>
+            {changePaymentMethodState.createdCard ? (
+              <PaymentMethodUpdateSuccess onFinish={onChangePaymentMethodStateClear} />
+            ) : (
+              <div className="billing-payment-information__modal-content">
+                <ChangePaymentMethod data={changePaymentMethodState} />
+              </div>
+            )}
           </Modal>
         )}
     </>
