@@ -80,10 +80,7 @@ const App = () => {
         <Modal
           isShowing={isShowingNotification}
           onClose={closeNotificationHandler}
-          className={classNames("notification", {
-            // "mobile-full-screen": isMobileView,
-          })}
-          //  mobileFullScreen={isMobileView}
+          className={classNames("notification")}
         >
           <BackgroundNotification
             notification={notification}

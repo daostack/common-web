@@ -19,7 +19,12 @@ export default function BackgroundNotification({
     switch (notification.type) {
       case EventTypeState.fundingRequestAccepted:
       case EventTypeState.fundingRequestRejected:
-        return <img src={`/icons/notifications/${notification.type}.png`} />;
+        return (
+          <img
+            alt="notification-background"
+            src={`/icons/notifications/${notification.type}.png`}
+          />
+        );
       default:
         return null;
     }

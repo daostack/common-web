@@ -44,7 +44,7 @@ export const EventTitleState = {
   requestToJoinRejected: "Membership Rejected",
   subscriptionPaymentConfirmed: "Subscription Payment Confirmed",
   subscriptionCanceledByUser: "Subscription Canceled By User",
-  fundingRequestAccepted: "YAY!  Your proposal \n" + "Is Approved",
+  fundingRequestAccepted: "YAY!  Your proposal Is Approved",
   fundingRequestCreated: "New Proposal",
   fundingRequestExecuted: "Proposal Executed",
   fundingRequestRejected: "Oh! Your Proposal Was Declined",

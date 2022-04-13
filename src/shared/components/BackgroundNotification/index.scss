@@ -13,6 +13,7 @@
     }
 
     &.fundingRequestAccepted {
+      margin-top: -3.375rem;
       img {
         width: 15rem;
         height: 13rem;
@@ -35,8 +36,8 @@
   .notification-content-wrapper {
     .content-header {
       margin: -1.25rem -1rem 1rem;
-      border-radius: 14px 14px 0 0;
-      padding: 13px 60px;
+      border-radius: 0.875rem 0.875rem 0 0;
+      padding: 0.813rem 3.75rem;
       text-align: center;
       display: flex;
       align-items: center;
@@ -71,11 +72,11 @@
       }
     }
 
-    gap: 16px;
+    gap: 1rem;
     padding: 1.25rem 1rem;
     object-fit: contain;
-    border-radius: 14px;
-    box-shadow: 0 3px 8px 0 #001a3614;
+    border-radius: 0.875rem;
+    box-shadow: 0 0.188rem 0.5rem 0 $shadow-2;
     background-color: #fff;
     margin-top: 1.5rem;
 
@@ -101,6 +102,28 @@
     text-align: center;
     button{
       width: 100%;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-portrait) {
+  .notification-layout-wrapper {
+    .notification-img-wrapper {
+
+
+      &.fundingRequestRejected {
+        img {
+          width: 4.5rem;
+          height: 4rem;
+        }
+      }
+
+      &.fundingRequestAccepted {
+        img {
+          width: 12rem;
+          height: 10rem;
+        }
+      }
     }
   }
 }
