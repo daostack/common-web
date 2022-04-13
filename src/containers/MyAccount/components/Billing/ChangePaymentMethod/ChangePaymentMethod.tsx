@@ -1,14 +1,16 @@
 import React, { useState, FC } from "react";
+import classNames from "classnames";
 import { IFrame, Loader } from "@/shared/components";
 import { ChangePaymentMethodState } from "@/shared/hooks/useCases";
 import "./index.scss";
 
 interface ChangePaymentMethodProps {
+  className?: string;
   data: ChangePaymentMethodState;
 }
 
 const ChangePaymentMethod: FC<ChangePaymentMethodProps> = (props) => {
-  const { data } = props;
+  const { className, data } = props;
   const [isPaymentIframeLoaded, setIsPaymentIframeLoaded] = useState(false);
 
   const handleIframeLoad = () => {
@@ -16,7 +18,7 @@ const ChangePaymentMethod: FC<ChangePaymentMethodProps> = (props) => {
   };
 
   return (
-    <div className="billing-change-payment-method">
+    <div className={classNames("billing-change-payment-method", className)}>
       {(data.isPaymentLoading || !data.payment || !isPaymentIframeLoaded) && (
         <div className="billing-change-payment-method__loader-wrapper">
           <Loader />

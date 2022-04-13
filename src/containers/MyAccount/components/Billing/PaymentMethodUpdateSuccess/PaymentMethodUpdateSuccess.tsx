@@ -13,7 +13,7 @@ const PaymentMethodUpdateSuccess: FC<PaymentMethodUpdateSuccessProps> = ({
     <div className="billing-payment-method-update-success">
       <img
         className="billing-payment-method-update-success__image"
-        src="/assets/images/add-payment-method.svg"
+        src="/assets/images/added-payment-method.svg"
         alt="Payment method"
       />
       <h3 className="billing-payment-method-update-success__title">

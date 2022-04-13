@@ -1,4 +1,5 @@
 @import "../../../../../constants";
+@import "../../../../../styles/sizes";
 
 .billing-payment-method-update-success {
   display: flex;
@@ -17,8 +18,18 @@
   font-size: $moderate-med;
   font-weight: bold;
   text-align: center;
+
+  @include big-phone {
+    margin: 1.5rem 0 2rem;
+    font-family: NunitoSans, sans-serif;
+    font-size: $moderate-small;
+  }
 }
 
 .billing-payment-method-update-success__button {
   max-width: 11.25rem;
+
+  @include big-phone {
+    max-width: unset;
+  }
 }

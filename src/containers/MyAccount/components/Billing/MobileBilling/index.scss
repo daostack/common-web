@@ -1,0 +1,15 @@
+@import "../../../../../constants";
+
+.my-account-mobile-billing__tabs-wrapper {
+  padding: 0 $content-padding-mobile;
+  margin: 0 -#{$content-padding-mobile};
+  white-space: nowrap;
+  border-bottom: 1px solid $light-gray-1;
+}
+
+.my-account-mobile-billing__payment-details-tab {
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

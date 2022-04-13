@@ -4,6 +4,7 @@ import { Modal, PaymentMethod } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { ChangePaymentMethodState } from "@/shared/hooks/useCases";
 import QuestionOutlineIcon from "@/shared/icons/questionOutline.icon";
+import { ModalType } from "@/shared/interfaces";
 import { Card } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { AddingCard } from "../AddingCard";
@@ -29,55 +30,72 @@ const PaymentInformation: FC<PaymentInformationProps> = (props) => {
   } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const shouldShowContent =
+    !isMobileView ||
+    (!changePaymentMethodState.isPaymentLoading &&
+      !changePaymentMethodState.payment);
+  const shouldShowModal =
+    changePaymentMethodState.createdCard ||
+    (!isMobileView &&
+      (changePaymentMethodState.isPaymentLoading ||
+        changePaymentMethodState.payment));
+
+  const contentEl =
+    cards.length === 0 ? (
+      <AddingCard
+        text="Add your payment information. And start joining Common communities."
+        imageSrc="/assets/images/add-payment-method.svg"
+        imageAlt="Add payment method"
+        buttonText="Add Billing Details"
+        onClick={onPaymentMethodChange}
+      />
+    ) : (
+      <div className="billing-payment-information__payment-method-card">
+        {errorText && (
+          <span className="billing-payment-information__alert">
+            <QuestionOutlineIcon className="billing-payment-information__alert-icon" />
+            {errorText}
+          </span>
+        )}
+        <div className="billing-payment-information__payment-method-wrapper">
+          <PaymentMethod
+            card={cards[0]}
+            title=""
+            onReplacePaymentMethod={onPaymentMethodChange}
+          />
+        </div>
+      </div>
+    );
 
   return (
     <>
-      {cards.length === 0 ? (
-        <AddingCard
-          text="Add your payment information. And start joining Common communities."
-          imageSrc="/assets/images/add-payment-method.svg"
-          imageAlt="Add payment method"
-          buttonText="Add Billing Details"
-          onClick={onPaymentMethodChange}
-        />
+      {shouldShowContent ? (
+        contentEl
       ) : (
-        <div className="billing-payment-information__payment-method-card">
-          {errorText && (
-            <span className="billing-payment-information__alert">
-              <QuestionOutlineIcon className="billing-payment-information__alert-icon" />
-              {errorText}
-            </span>
-          )}
-          <div className="billing-payment-information__payment-method-wrapper">
-            <PaymentMethod
-              card={cards[0]}
-              title=""
-              onReplacePaymentMethod={onPaymentMethodChange}
-            />
-          </div>
-        </div>
+        <ChangePaymentMethod
+          className="billing-payment-information__change-payment-method-wrapper"
+          data={changePaymentMethodState}
+        />
       )}
-      {!isMobileView &&
-        (changePaymentMethodState.isPaymentLoading ||
-          changePaymentMethodState.payment ||
-          changePaymentMethodState.createdCard) && (
-          <Modal
-            isShowing
-            onClose={onChangePaymentMethodStateClear}
-            title={changePaymentMethodState.createdCard ? "" : "Payment method"}
-            closePrompt={!changePaymentMethodState.createdCard}
-          >
-            {changePaymentMethodState.createdCard ? (
-              <PaymentMethodUpdateSuccess
-                onFinish={onChangePaymentMethodStateClear}
-              />
-            ) : (
-              <div className="billing-payment-information__modal-content">
-                <ChangePaymentMethod data={changePaymentMethodState} />
-              </div>
-            )}
-          </Modal>
-        )}
+      {shouldShowModal && (
+        <Modal
+          isShowing
+          onClose={onChangePaymentMethodStateClear}
+          title={changePaymentMethodState.createdCard ? "" : "Payment method"}
+          closePrompt={!changePaymentMethodState.createdCard}
+          type={isMobileView ? ModalType.MobilePopUp : ModalType.Default}
+        >
+          {changePaymentMethodState.createdCard ? (
+            <PaymentMethodUpdateSuccess
+              onFinish={onChangePaymentMethodStateClear}
+            />
+          ) : (
+            <div className="billing-payment-information__modal-content">
+              <ChangePaymentMethod data={changePaymentMethodState} />
+            </div>
+          )}
+        </Modal>
+      )}
     </>
   );
 };

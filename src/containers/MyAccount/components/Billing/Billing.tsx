@@ -1,8 +1,11 @@
 import React, { useEffect, useState, FC } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loadUserCards } from "@/containers/Common/store/actions";
+import { ScreenSize } from "@/shared/constants";
 import { usePaymentMethodChange } from "@/shared/hooks/useCases";
+import { getScreenSize } from "@/shared/store/selectors";
 import { DesktopBilling } from "./DesktopBilling";
+import { MobileBilling } from "./MobileBilling";
 import { CardsState } from "./types";
 import "./index.scss";
 
@@ -13,6 +16,8 @@ const Billing: FC = () => {
     fetched: false,
     cards: [],
   });
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
   const {
     changePaymentMethodState,
     onPaymentMethodChange,
@@ -52,18 +57,21 @@ const Billing: FC = () => {
     }
   }, [changePaymentMethodState.createdCard]);
 
+  const Component = isMobileView ? MobileBilling : DesktopBilling;
+  const billingProps = {
+    areCardsLoading: !cardsState.fetched,
+    cards: cardsState.cards,
+    changePaymentMethodState: changePaymentMethodState,
+    onPaymentMethodChange: onPaymentMethodChange,
+    onChangePaymentMethodStateClear: resetPaymentMethodChange,
+  };
+
   return (
     <div className="route-content my-account-billing">
       <header className="my-account-billing__header">
         <h2 className="route-title">Billing</h2>
       </header>
-      <DesktopBilling
-        areCardsLoading={!cardsState.fetched}
-        cards={cardsState.cards}
-        changePaymentMethodState={changePaymentMethodState}
-        onPaymentMethodChange={onPaymentMethodChange}
-        onChangePaymentMethodStateClear={resetPaymentMethodChange}
-      />
+      <Component {...billingProps} />
     </div>
   );
 };
