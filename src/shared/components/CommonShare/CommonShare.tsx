@@ -29,7 +29,7 @@ const CommonShare: FC<CommonShareProps> = (props) => {
     }
 
     const description = [
-      common.metadata.byline || "",
+      common.byline || "",
       "Download the Common app to join now.",
     ]
       .filter(Boolean)

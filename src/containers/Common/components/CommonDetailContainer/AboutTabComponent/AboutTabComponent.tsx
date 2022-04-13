@@ -31,7 +31,7 @@ export default function AboutTabComponent({
   return (
     <div className="about-name-wrapper">
       <div className="description">
-        <Linkify>{common.metadata.description}</Linkify>
+        <Linkify>{common.description}</Linkify>
       </div>
       {common?.links?.length > 0 && (
         <div className="links">

@@ -27,9 +27,9 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
             <div lang={`${containsHebrew(common.name) ? "he" : "en"}`} className="name">
               {common.name}
             </div>
-            {common?.metadata.byline && (
+            {common.byline && (
               <div lang={`${containsHebrew(common.name) ? "he" : "en"}`} className="description">
-                {common?.metadata.byline}
+                {common.byline}
               </div>
             )}
           </div>
@@ -41,7 +41,7 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
           </div>
           <div className="item">
             <div className="title">Members</div>
-            <div className="value">{common.members.length}</div>
+            <div className="value">{common.members?.length}</div>
           </div>
         </div>
       </Link>
