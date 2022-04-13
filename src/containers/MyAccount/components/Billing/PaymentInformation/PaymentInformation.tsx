@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Modal, PaymentMethod } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { ChangePaymentMethodState } from "@/shared/hooks/useCases";
+import QuestionOutlineIcon from "@/shared/icons/questionOutline.icon";
 import { Card } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { AddingCard } from "../AddingCard";
@@ -13,6 +14,7 @@ import "./index.scss";
 interface PaymentInformationProps {
   cards: Card[];
   changePaymentMethodState: ChangePaymentMethodState;
+  errorText?: string;
   onPaymentMethodChange: () => void;
   onChangePaymentMethodStateClear: () => void;
 }
@@ -21,6 +23,7 @@ const PaymentInformation: FC<PaymentInformationProps> = (props) => {
   const {
     cards,
     changePaymentMethodState,
+    errorText,
     onPaymentMethodChange,
     onChangePaymentMethodStateClear,
   } = props;
@@ -38,12 +41,21 @@ const PaymentInformation: FC<PaymentInformationProps> = (props) => {
           onClick={onPaymentMethodChange}
         />
       ) : (
-        <PaymentMethod
-          className="billing-payment-information__payment-method"
-          card={cards[0]}
-          title=""
-          onReplacePaymentMethod={onPaymentMethodChange}
-        />
+        <div className="billing-payment-information__payment-method-card">
+          {errorText && (
+            <span className="billing-payment-information__alert">
+              <QuestionOutlineIcon className="billing-payment-information__alert-icon" />
+              {errorText}
+            </span>
+          )}
+          <div className="billing-payment-information__payment-method-wrapper">
+            <PaymentMethod
+              card={cards[0]}
+              title=""
+              onReplacePaymentMethod={onPaymentMethodChange}
+            />
+          </div>
+        </div>
       )}
       {!isMobileView &&
         (changePaymentMethodState.isPaymentLoading ||
@@ -56,7 +68,9 @@ const PaymentInformation: FC<PaymentInformationProps> = (props) => {
             closePrompt={!changePaymentMethodState.createdCard}
           >
             {changePaymentMethodState.createdCard ? (
-              <PaymentMethodUpdateSuccess onFinish={onChangePaymentMethodStateClear} />
+              <PaymentMethodUpdateSuccess
+                onFinish={onChangePaymentMethodStateClear}
+              />
             ) : (
               <div className="billing-payment-information__modal-content">
                 <ChangePaymentMethod data={changePaymentMethodState} />
