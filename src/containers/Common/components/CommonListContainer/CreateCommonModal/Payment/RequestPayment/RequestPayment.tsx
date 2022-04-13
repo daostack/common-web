@@ -127,7 +127,6 @@ export default function RequestPayment(
       })
     );
   }, [
-    hasPaymentMethod,
     paymentData.contributionAmount,
     commonId,
     contributionType,
@@ -188,6 +187,7 @@ export default function RequestPayment(
     })();
   }, [
     hasPaymentMethod,
+    newCardId,
     payment,
     common,
     isPaymentLoading,
@@ -217,6 +217,7 @@ export default function RequestPayment(
     payment,
     makeImmediateContributionRequest,
     newCardId,
+    onError,
   ]);
 
   const progressEl = <Progress paymentStep={currentStep} />;
