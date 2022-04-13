@@ -11,8 +11,8 @@ export interface UpdateVotePayload {
 }
 
 export interface Vote {
-    voterId: string;
-    proposalId: string;
-    commonId: string;
-    outcome: VoteOutcome;
+  voterId: string;
+  proposalId: string;
+  commonId: string;
+  outcome: VoteOutcome;
 }

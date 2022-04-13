@@ -414,11 +414,9 @@ export function* updateVote(
 
       store.dispatch(
         actions.loadProposalDetail.request(
-          proposals.filter((p) => p.id === vote.proposalId)[0]
+          proposals.find((proposal) => proposal.id === vote.proposalId) as Proposal
         )
       );
-
-      store.dispatch(stopLoading());
     });
 
     yield put(actions.updateVote.success());
