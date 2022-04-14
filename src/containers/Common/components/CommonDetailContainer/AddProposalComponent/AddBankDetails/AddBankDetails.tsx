@@ -76,7 +76,7 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
   const banksOptions = useMemo<DropdownOption[]>(
     () =>
       BANKS_OPTIONS.map((item) => ({
-        text: item.name,
+        text: `${item.name} (${item.value})`,
         value: item.value,
       })),
     []
