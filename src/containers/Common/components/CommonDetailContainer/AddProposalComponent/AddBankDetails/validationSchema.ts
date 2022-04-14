@@ -1,5 +1,4 @@
 import * as Yup from "yup";
-import { isPossiblePhoneNumber } from "react-phone-number-input";
 import { NUMBERS_ONLY_REGEXP } from "@/shared/constants";
 import { Gender, GENDER_OPTIONS } from "@/shared/models/Gender";
 
@@ -11,12 +10,8 @@ const schema = Yup.object().shape({
     .oneOf(GENDER_OPTIONS.map((option) => option.value as Gender))
     .required("Please choose gender"),
   phoneNumber: Yup.string()
-    .required("Please enter a phone number")
-    .test(
-      "phone-number",
-      "Please enter correct phone number",
-      (value) => value && isPossiblePhoneNumber(value)
-    ),
+    .matches(NUMBERS_ONLY_REGEXP, "Only numbers allowed")
+    .required("Please enter a phone number"),
   email: Yup.string()
     .required("Please enter your email")
     .email("Please enter a valid email address"),
