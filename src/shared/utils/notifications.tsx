@@ -1,6 +1,6 @@
 import { NotificationData } from "@/shared/interfaces";
 import {
-  EventTitleState,
+  EVENT_TITLE_STATES,
   EventTypeState,
   NotificationItem,
 } from "@/shared/models/Notification";
@@ -16,7 +16,7 @@ export function getFundingRequestNotification(
     type: data.eventType,
     notificationDate: data.createdAt.toDate(),
     content: proposal.description.title,
-    title: EventTitleState[data.eventType],
+    title: EVENT_TITLE_STATES[data.eventType],
     actionTitle:
       data?.eventType === EventTypeState.fundingRequestRejected
         ? "Done"
