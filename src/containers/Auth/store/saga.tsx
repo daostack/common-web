@@ -1,7 +1,6 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { default as store } from "../../../index";
 import {
-  formatPrice,
   getRandomUserAvatarURL,
   tokenHandler,
   transformFirebaseDataSingle,
@@ -21,13 +20,9 @@ import {
   getProposalById,
   subscribeToNotification,
 } from "@/containers/Common/store/api";
-import {
-  EventTitleState,
-  EventTypeState,
-  NotificationItem,
-} from "@/shared/models/Notification";
-import { NotificationData } from "@/shared/interfaces";
+import { EventTypeState, NotificationItem } from "@/shared/models/Notification";
 import { showNotification } from "@/shared/store/actions";
+import { getFundingRequestNotification } from "@/shared/utils/notifications";
 
 const getAuthProviderFromProviderData = (
   providerData?: firebase.User["providerData"]
@@ -494,23 +489,7 @@ function* authSagas() {
             data?.eventObjectId
           );
           if (proposal) {
-            const notification: NotificationData = {
-              notification_id: data?.eventId,
-              type: data?.eventType,
-              notification_date: data?.createdAt.toDate(),
-              content: proposal.description.title,
-              title:
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                EventTitleState[data?.eventType],
-              action_title:
-                data?.eventType === EventTypeState.fundingRequestRejected
-                  ? "Done"
-                  : "Let's get to work",
-              additional_information: formatPrice(
-                proposal.fundingRequest?.amount || 0
-              ),
-            };
+            const notification = getFundingRequestNotification(data, proposal);
 
             store.dispatch(showNotification(notification));
 

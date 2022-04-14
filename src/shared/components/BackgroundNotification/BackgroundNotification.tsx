@@ -54,7 +54,7 @@ export default function BackgroundNotification({
               {notification.type === EventTypeState.fundingRequestRejected
                 ? "Declined on "
                 : "Approved on "}
-              {formatDate(notification.notification_date, DateFormat.LongHuman)}
+              {formatDate(notification.notificationDate, DateFormat.LongHuman)}
             </span>
           </div>
         );
@@ -77,12 +77,12 @@ export default function BackgroundNotification({
         {header}
         <div className="notification-content">{notification.content}</div>
         <div className="notification-additional-information">
-          {notification.additional_information}
+          {notification.additionalInformation}
         </div>
       </div>
       <div className="notification-actions">
         <button className={`button-blue`} onClick={closeHandler}>
-          {notification.action_title}
+          {notification.actionTitle}
         </button>
       </div>
     </div>

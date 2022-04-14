@@ -429,7 +429,7 @@ export function subscribeToNotification(
       switch (change.type) {
         case "added":
         case "modified":
-          return callback((change.doc.data() as any) as NotificationItem);
+          return callback(change.doc.data() as NotificationItem);
       }
     });
   });
