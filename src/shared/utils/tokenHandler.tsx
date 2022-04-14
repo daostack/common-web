@@ -48,7 +48,7 @@ export default {
 
   setShownNotificationList: (id: string) => {
     const list = localStorage.getItem("notifications")
-      ? JSON.parse(localStorage.getItem("notifications") ?? "")
+      ? JSON.parse(localStorage.getItem("notifications") as string)
       : [];
 
     list.push(id);
@@ -57,7 +57,7 @@ export default {
   },
   getShownNotificationList: () => {
     return localStorage.getItem("notifications")
-      ? JSON.parse(localStorage.getItem("notifications") ?? "")
+      ? JSON.parse(localStorage.getItem("notifications") as string)
       : [];
   },
 };
