@@ -26,7 +26,7 @@ import {
   LeaveCommon,
 } from "@/containers/Common/interfaces";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
-import { CreateVotePayload } from "@/shared/interfaces/api/vote";
+import { CreateVotePayload, UpdateVotePayload } from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 import {
   ImmediateContributionData,
@@ -187,6 +187,12 @@ export const createVote = createAsyncAction(
   CommonsActionTypes.CREATE_VOTE_SUCCESS,
   CommonsActionTypes.CREATE_VOTE_FAILURE
 )<PayloadWithCallback<CreateVotePayload, void, Error>, void, Error>();
+
+export const updateVote = createAsyncAction(
+  CommonsActionTypes.UPDATE_VOTE,
+  CommonsActionTypes.UPDATE_VOTE_SUCCESS,
+  CommonsActionTypes.UPDATE_VOTE_FAILURE
+)<PayloadWithCallback<UpdateVotePayload, void, Error>, void, Error>();
 
 export const makeImmediateContribution = createAsyncAction(
   CommonsActionTypes.MAKE_IMMEDIATE_CONTRIBUTION,

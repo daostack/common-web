@@ -76,7 +76,7 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
   const banksOptions = useMemo<DropdownOption[]>(
     () =>
       BANKS_OPTIONS.map((item) => ({
-        text: item.name,
+        text: `${item.name} (${item.value})`,
         value: item.value,
       })),
     []
@@ -268,6 +268,9 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     label="Phone Number"
                     placeholder="Add your phone number"
                     isRequired
+                    styles={{
+                      label: "add-bank-details-form__label",
+                    }}
                   />
                   <TextField
                     className="field"
@@ -276,11 +279,25 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     label="Email"
                     placeholder="Add your email"
                     isRequired
+                    styles={{
+                      label: "add-bank-details-form__label",
+                    }}
                   />
                 </div>
 
                 <h3>Bank Details</h3>
                 <div className="section bank-details">
+                  <TextField
+                    className="field"
+                    id="accountNumber"
+                    name="accountNumber"
+                    label="Bank Account number"
+                    placeholder="Add your account number"
+                    isRequired
+                    styles={{
+                      label: "add-bank-details-form__label",
+                    }}
+                  />
                   <Dropdown
                     className="field"
                     name="bankCode"
@@ -296,14 +313,9 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     label="Branch Number"
                     placeholder="Exp. 867"
                     isRequired
-                  />
-                  <TextField
-                    className="field"
-                    id="accountNumber"
-                    name="accountNumber"
-                    label="Account Number"
-                    placeholder="Add your account number"
-                    isRequired
+                    styles={{
+                      label: "add-bank-details-form__label",
+                    }}
                   />
                 </div>
 
@@ -316,6 +328,9 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     label="Address"
                     placeholder="Add your address"
                     isRequired
+                    styles={{
+                      label: "add-bank-details-form__label",
+                    }}
                   />
                   <TextField
                     className="field"
@@ -324,6 +339,9 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     label="Street Number"
                     placeholder="Add your street number"
                     isRequired
+                    styles={{
+                      label: "add-bank-details-form__label",
+                    }}
                   />
                   <TextField
                     className="field"
@@ -332,6 +350,9 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     label="City"
                     placeholder="Add city"
                     isRequired
+                    styles={{
+                      label: "add-bank-details-form__label",
+                    }}
                   />
                   <Dropdown
                     className="field"
