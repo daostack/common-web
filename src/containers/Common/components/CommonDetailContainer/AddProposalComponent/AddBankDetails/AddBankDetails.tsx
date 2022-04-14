@@ -281,6 +281,14 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
 
                 <h3>Bank Details</h3>
                 <div className="section bank-details">
+                  <TextField
+                    className="field"
+                    id="accountNumber"
+                    name="accountNumber"
+                    label="Bank Account number"
+                    placeholder="Add your account number"
+                    isRequired
+                  />
                   <Dropdown
                     className="field"
                     name="bankCode"
@@ -295,14 +303,6 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     name="branchNumber"
                     label="Branch Number"
                     placeholder="Exp. 867"
-                    isRequired
-                  />
-                  <TextField
-                    className="field"
-                    id="accountNumber"
-                    name="accountNumber"
-                    label="Account Number"
-                    placeholder="Add your account number"
                     isRequired
                   />
                 </div>
