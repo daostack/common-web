@@ -268,6 +268,9 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     label="Phone Number"
                     placeholder="Add your phone number"
                     isRequired
+                    styles={{
+                      label: "add-bank-details-form__label",
+                    }}
                   />
                   <TextField
                     className="field"
@@ -276,6 +279,9 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     label="Email"
                     placeholder="Add your email"
                     isRequired
+                    styles={{
+                      label: "add-bank-details-form__label",
+                    }}
                   />
                 </div>
 
@@ -288,6 +294,9 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     label="Bank Account number"
                     placeholder="Add your account number"
                     isRequired
+                    styles={{
+                      label: "add-bank-details-form__label",
+                    }}
                   />
                   <Dropdown
                     className="field"
@@ -304,6 +313,9 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     label="Branch Number"
                     placeholder="Exp. 867"
                     isRequired
+                    styles={{
+                      label: "add-bank-details-form__label",
+                    }}
                   />
                 </div>
 
@@ -316,6 +328,9 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     label="Address"
                     placeholder="Add your address"
                     isRequired
+                    styles={{
+                      label: "add-bank-details-form__label",
+                    }}
                   />
                   <TextField
                     className="field"
@@ -324,6 +339,9 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     label="Street Number"
                     placeholder="Add your street number"
                     isRequired
+                    styles={{
+                      label: "add-bank-details-form__label",
+                    }}
                   />
                   <TextField
                     className="field"
@@ -332,6 +350,9 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
                     label="City"
                     placeholder="Add city"
                     isRequired
+                    styles={{
+                      label: "add-bank-details-form__label",
+                    }}
                   />
                   <Dropdown
                     className="field"
