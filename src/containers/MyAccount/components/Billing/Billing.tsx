@@ -49,13 +49,22 @@ const Billing: FC = () => {
   useEffect(() => {
     const card = changePaymentMethodState.createdCard;
 
-    if (card) {
-      setCardsState((nextState) => ({
-        ...nextState,
-        cards: [{ ...card }],
-      }));
+    if (!card) {
+      return;
     }
-  }, [changePaymentMethodState.createdCard]);
+
+    if (cardsState.cards.length === 0) {
+      resetPaymentMethodChange();
+    }
+    setCardsState((nextState) => ({
+      ...nextState,
+      cards: [{ ...card }],
+    }));
+  }, [
+    changePaymentMethodState.createdCard,
+    cardsState.cards.length,
+    resetPaymentMethodChange,
+  ]);
 
   const Component = isMobileView ? MobileBilling : DesktopBilling;
   const billingProps = {
