@@ -3,3 +3,8 @@ export enum VoteOutcome {
   Rejected = "rejected",
   Abstained = "abstained",
 }
+
+export enum VoteAction {
+  Create = "create",
+  Update = "update",
+}
