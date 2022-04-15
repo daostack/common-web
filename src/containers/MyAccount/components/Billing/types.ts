@@ -9,6 +9,7 @@ export interface BillingProps {
   changePaymentMethodState: ChangePaymentMethodState;
   onPaymentMethodChange: () => void;
   onChangePaymentMethodStateClear: () => void;
+  onBankAccountChange: () => void;
 }
 
 export interface CardsState {

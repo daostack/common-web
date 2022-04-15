@@ -32,6 +32,10 @@ const Billing: FC = () => {
     reset: resetPaymentMethodChange,
   } = usePaymentMethodChange();
 
+  const onBankAccountChange = () => {
+    console.log('onBankAccountAdd');
+  };
+
   useEffect(() => {
     if (cardsState.loading || cardsState.fetched) {
       return;
@@ -103,8 +107,9 @@ const Billing: FC = () => {
     isBankAccountLoading: !bankAccountState.fetched,
     bankAccount: bankAccountState.bankAccount,
     changePaymentMethodState: changePaymentMethodState,
-    onPaymentMethodChange: onPaymentMethodChange,
+    onPaymentMethodChange,
     onChangePaymentMethodStateClear: resetPaymentMethodChange,
+    onBankAccountChange,
   };
 
   return (

@@ -1,5 +1,6 @@
 import React, { useState, FC } from "react";
 import { Loader, Tabs, Tab, TabPanel } from "@/shared/components";
+import { BankAccount } from "../BankAccount";
 import { PaymentInformation } from "../PaymentInformation";
 import { BillingProps } from "../types";
 import "./index.scss";
@@ -14,15 +15,24 @@ const MobileBilling: FC<BillingProps> = (props) => {
   const {
     areCardsLoading,
     cards,
+    isBankAccountLoading,
+    bankAccount,
     changePaymentMethodState,
     onPaymentMethodChange,
     onChangePaymentMethodStateClear,
+    onBankAccountChange,
   } = props;
   const [tab, setTab] = useState(BillingTab.PaymentDetails);
 
   const handleTabChange = (value: unknown) => {
     setTab(value as BillingTab);
   };
+
+  const loaderEl = (
+    <div>
+      <Loader />
+    </div>
+  );
 
   return (
     <div className="my-account-mobile-billing">
@@ -37,11 +47,9 @@ const MobileBilling: FC<BillingProps> = (props) => {
       </Tabs>
       <div>
         <TabPanel value={tab} panelValue={BillingTab.PaymentDetails}>
-          <div className="my-account-mobile-billing__payment-details-tab">
+          <div className="my-account-mobile-billing__tab-panel">
             {areCardsLoading ? (
-              <div>
-                <Loader />
-              </div>
+              loaderEl
             ) : (
               <PaymentInformation
                 cards={cards}
@@ -50,6 +58,18 @@ const MobileBilling: FC<BillingProps> = (props) => {
                 onChangePaymentMethodStateClear={
                   onChangePaymentMethodStateClear
                 }
+              />
+            )}
+          </div>
+        </TabPanel>
+        <TabPanel value={tab} panelValue={BillingTab.BankAccount}>
+          <div className="my-account-mobile-billing__tab-panel">
+            {isBankAccountLoading ? (
+              loaderEl
+            ) : (
+              <BankAccount
+                bankAccount={bankAccount}
+                onBankAccountChange={onBankAccountChange}
               />
             )}
           </div>
