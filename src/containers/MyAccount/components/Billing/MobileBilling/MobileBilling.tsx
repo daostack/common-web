@@ -45,7 +45,7 @@ const MobileBilling: FC<BillingProps> = (props) => {
         <Tab label="Bank account" value={BillingTab.BankAccount} />
         <Tab label="Contributions" value={BillingTab.Contributions} />
       </Tabs>
-      <div>
+      <div className="my-account-mobile-billing__tab-panels">
         <TabPanel value={tab} panelValue={BillingTab.PaymentDetails}>
           <div className="my-account-mobile-billing__tab-panel">
             {areCardsLoading ? (
@@ -62,17 +62,19 @@ const MobileBilling: FC<BillingProps> = (props) => {
             )}
           </div>
         </TabPanel>
-        <TabPanel value={tab} panelValue={BillingTab.BankAccount}>
-          <div className="my-account-mobile-billing__tab-panel">
-            {isBankAccountLoading ? (
-              loaderEl
-            ) : (
-              <BankAccount
-                bankAccount={bankAccount}
-                onBankAccountChange={onBankAccountChange}
-              />
-            )}
-          </div>
+        <TabPanel
+          className="my-account-mobile-billing__tab-panel"
+          value={tab}
+          panelValue={BillingTab.BankAccount}
+        >
+          {isBankAccountLoading ? (
+            loaderEl
+          ) : (
+            <BankAccount
+              bankAccount={bankAccount}
+              onBankAccountChange={onBankAccountChange}
+            />
+          )}
         </TabPanel>
       </div>
     </div>

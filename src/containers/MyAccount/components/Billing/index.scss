@@ -6,6 +6,11 @@
   font-family: NunitoSans, sans-serif;
   color: $secondary-blue;
 
+  @include big-phone {
+    display: flex;
+    flex-direction: column;
+  }
+
   .my-account-billing__header {
     height: 4.5rem;
     margin-bottom: 2.5rem;

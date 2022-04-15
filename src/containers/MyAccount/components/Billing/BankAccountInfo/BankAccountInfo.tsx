@@ -16,6 +16,17 @@ const BankAccountInfo: FC<BankAccountInfoProps> = (props) => {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
+  const buttonEl = (
+    <Button
+      className="billing-bank-account-info__details-button"
+      variant={ButtonVariant.Secondary}
+      onClick={onBankAccountChange}
+      shouldUseFullWidth
+    >
+      Edit Details
+    </Button>
+  );
+
   return (
     <div className="billing-bank-account-info">
       <div className="billing-bank-account-info__details">
@@ -37,21 +48,17 @@ const BankAccountInfo: FC<BankAccountInfoProps> = (props) => {
             <span>{bankAccount.accountNumber}</span>
           </li>
         </ul>
-        {!isMobileView && (
-          <Button
-            className="billing-bank-account-info__details-button"
-            variant={ButtonVariant.Secondary}
-            onClick={onBankAccountChange}
-            shouldUseFullWidth
-          >
-            Edit Details
-          </Button>
-        )}
+        {!isMobileView && buttonEl}
       </div>
-      <p className="billing-bank-account-info__hint">
-        These details are needed in order to transfer funds to your account and
-        visible to you only.
-      </p>
+      {isMobileView && (
+        <>
+          <p className="billing-bank-account-info__hint">
+            These details are needed in order to transfer funds to your account
+            and visible to you only.
+          </p>
+          {buttonEl}
+        </>
+      )}
     </div>
   );
 };
