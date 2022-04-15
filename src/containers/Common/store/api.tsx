@@ -6,6 +6,7 @@ import {
 } from "@/shared/interfaces/api/proposal";
 import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
+  BankAccountDetails,
   Card,
   Collection,
   Common,
@@ -32,7 +33,11 @@ import {
   LeaveCommon,
 } from "@/containers/Common/interfaces";
 import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
-import { CreateVotePayload, UpdateVotePayload, Vote } from "@/shared/interfaces/api/vote";
+import {
+  CreateVotePayload,
+  UpdateVotePayload,
+  Vote,
+} from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 
 export async function fetchCommonDiscussions(commonId: string) {
@@ -349,8 +354,11 @@ export function subscribeToPayment(
     });
 }
 
-export async function getBankDetails(): Promise<void> {
-  const { data } = await Api.get<void>(ApiEndpoint.GetBankAccount);
+export async function getBankDetails(): Promise<BankAccountDetails> {
+  const { data } = await Api.get<BankAccountDetails>(
+    ApiEndpoint.GetBankAccount
+  );
+
   return data;
 }
 

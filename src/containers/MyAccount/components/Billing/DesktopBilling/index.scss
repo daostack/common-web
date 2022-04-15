@@ -1,7 +1,21 @@
 @import "../../../../../constants";
 
+.my-account-desktop-billing {
+  display: grid;
+  gap: 2rem 2.5rem;
+  grid-template-areas:
+    "paymentInfo"
+    "bankAccount";
+}
+
 .my-account-desktop-billing__section {
   max-width: 20.625rem;
+}
+.my-account-desktop-billing__payment-info {
+  grid-area: paymentInfo;
+}
+.my-account-desktop-billing__bank-account {
+  grid-area: bankAccount;
 }
 
 .my-account-desktop-billing__section-title {

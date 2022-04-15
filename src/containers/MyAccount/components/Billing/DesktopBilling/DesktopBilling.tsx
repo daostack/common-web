@@ -1,19 +1,10 @@
 import React, { FC } from "react";
 import { Loader } from "@/shared/components";
-import { ChangePaymentMethodState } from "@/shared/hooks/useCases";
-import { Card } from "@/shared/models";
 import { PaymentInformation } from "../PaymentInformation";
+import { BillingProps } from "../types";
 import "./index.scss";
 
-interface DesktopBillingProps {
-  areCardsLoading: boolean;
-  cards: Card[];
-  changePaymentMethodState: ChangePaymentMethodState;
-  onPaymentMethodChange: () => void;
-  onChangePaymentMethodStateClear: () => void;
-}
-
-const DesktopBilling: FC<DesktopBillingProps> = (props) => {
+const DesktopBilling: FC<BillingProps> = (props) => {
   const {
     areCardsLoading,
     cards,
@@ -24,7 +15,7 @@ const DesktopBilling: FC<DesktopBillingProps> = (props) => {
 
   return (
     <div className="my-account-desktop-billing">
-      <section className="my-account-desktop-billing__section">
+      <section className="my-account-desktop-billing__section my-account-desktop-billing__payment-info">
         <h3 className="my-account-desktop-billing__section-title">
           Payment information
         </h3>

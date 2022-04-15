@@ -11,6 +11,7 @@ import {
   Proposal,
   Payment,
   Subscription,
+  BankAccountDetails,
 } from "../../../shared/models";
 import { startLoading, stopLoading } from "@/shared/store/actions";
 import {
@@ -414,7 +415,9 @@ export function* updateVote(
 
       store.dispatch(
         actions.loadProposalDetail.request(
-          proposals.find((proposal) => proposal.id === vote.proposalId) as Proposal
+          proposals.find(
+            (proposal) => proposal.id === vote.proposalId
+          ) as Proposal
         )
       );
     });
@@ -434,10 +437,10 @@ export function* getBankDetails(
 ): Generator {
   try {
     yield put(startLoading());
-    yield getBankDetailsApi();
+    const bankAccountDetails = (yield getBankDetailsApi()) as BankAccountDetails;
 
-    yield put(actions.getBankDetails.success());
-    action.payload.callback(null);
+    yield put(actions.getBankDetails.success(bankAccountDetails));
+    action.payload.callback(null, bankAccountDetails);
     yield put(stopLoading());
   } catch (error) {
     yield put(actions.getBankDetails.failure(error));

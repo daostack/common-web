@@ -8,6 +8,7 @@ import {
 } from "@/shared/interfaces/api/proposal";
 import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
+  BankAccountDetails,
   Card,
   Common,
   CommonPayment,
@@ -26,7 +27,10 @@ import {
   LeaveCommon,
 } from "@/containers/Common/interfaces";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
-import { CreateVotePayload, UpdateVotePayload } from "@/shared/interfaces/api/vote";
+import {
+  CreateVotePayload,
+  UpdateVotePayload,
+} from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 import {
   ImmediateContributionData,
@@ -228,7 +232,11 @@ export const getBankDetails = createAsyncAction(
   CommonsActionTypes.GET_BANK_DETAILS,
   CommonsActionTypes.GET_BANK_DETAILS_SUCCESS,
   CommonsActionTypes.GET_BANK_DETAILS_FAILURE
-)<PayloadWithCallback<void, void, Error>, void, Error>();
+)<
+  PayloadWithCallback<void, BankAccountDetails, Error>,
+  BankAccountDetails,
+  Error
+>();
 
 export const getUserContributionsToCommon = createAsyncAction(
   CommonsActionTypes.GET_USER_CONTRIBUTIONS_TO_COMMON,

@@ -1,8 +1,7 @@
 import React, { useState, FC } from "react";
 import { Loader, Tabs, Tab, TabPanel } from "@/shared/components";
-import { ChangePaymentMethodState } from "@/shared/hooks/useCases";
-import { Card } from "@/shared/models";
 import { PaymentInformation } from "../PaymentInformation";
+import { BillingProps } from "../types";
 import "./index.scss";
 
 enum BillingTab {
@@ -11,15 +10,7 @@ enum BillingTab {
   Contributions = "contributions",
 }
 
-interface MobileBillingProps {
-  areCardsLoading: boolean;
-  cards: Card[];
-  changePaymentMethodState: ChangePaymentMethodState;
-  onPaymentMethodChange: () => void;
-  onChangePaymentMethodStateClear: () => void;
-}
-
-const MobileBilling: FC<MobileBillingProps> = (props) => {
+const MobileBilling: FC<BillingProps> = (props) => {
   const {
     areCardsLoading,
     cards,
