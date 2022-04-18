@@ -1,6 +1,6 @@
-import React, { FC } from "react";
+import React, { FC, MouseEventHandler } from "react";
 import classNames from "classnames";
-import { ButtonIcon } from "@/shared/components";
+import { ButtonIcon, ButtonLink } from "@/shared/components";
 import TrashIcon from "@/shared/icons/trash.icon";
 import { DocInfo } from "@/shared/models";
 import "./index.scss";
@@ -8,17 +8,31 @@ import "./index.scss";
 interface FileInfoProps {
   className?: string;
   file: File | DocInfo;
+  onClick?: () => void;
   onDelete: () => void;
 }
 
-const FileInfo: FC<FileInfoProps> = ({ className, file, onDelete }) => {
+const FileInfo: FC<FileInfoProps> = ({
+  className,
+  file,
+  onClick,
+  onDelete,
+}) => {
+  const handleDeleteClick: MouseEventHandler = (event) => {
+    event.stopPropagation();
+    onDelete();
+  };
+
   return (
-    <div className={classNames("bank-account-file-info-wrapper", className)}>
+    <ButtonLink
+      className={classNames("bank-account-file-info-wrapper", className)}
+      onClick={onClick}
+    >
       <span className="bank-account-file-info-wrapper__text">{file.name}</span>
-      <ButtonIcon onClick={onDelete}>
+      <ButtonIcon onClick={handleDeleteClick}>
         <TrashIcon className="bank-account-file-info-wrapper__icon" />
       </ButtonIcon>
-    </div>
+    </ButtonLink>
   );
 };
 

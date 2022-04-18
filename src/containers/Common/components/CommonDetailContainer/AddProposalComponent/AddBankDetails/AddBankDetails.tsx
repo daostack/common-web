@@ -151,6 +151,10 @@ export const AddBankDetails = ({
     setBankLetterFile(null);
   };
 
+  const handleUploadedFileClick = (file: File | PaymeDocument) => {
+    console.log(file);
+  };
+
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     async (values) => {
       if (!photoIdFile || !bankLetterFile) {
@@ -427,6 +431,11 @@ export const AddBankDetails = ({
                     alt="ID file"
                     onUpload={(file) => selectFile(file, FileType.PhotoID)}
                     onDelete={handlePhotoIDDelete}
+                    onUploadedFileClick={
+                      photoIdFile
+                        ? () => handleUploadedFileClick(photoIdFile)
+                        : undefined
+                    }
                   />
                   <FileUploadButton
                     className="files-upload-wrapper__upload-button"
@@ -438,6 +447,11 @@ export const AddBankDetails = ({
                     alt="Bank letter file"
                     onUpload={(file) => selectFile(file, FileType.BankLetter)}
                     onDelete={handleBankLetterDelete}
+                    onUploadedFileClick={
+                      bankLetterFile
+                        ? () => handleUploadedFileClick(bankLetterFile)
+                        : undefined
+                    }
                   />
                 </div>
                 <Button

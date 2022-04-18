@@ -16,6 +16,7 @@ interface FileInfoProps {
   alt: string;
   onUpload: (file: File) => void;
   onDelete: () => void;
+  onUploadedFileClick?: () => void;
 }
 
 const FileUploadButton: FC<FileInfoProps> = (props) => {
@@ -29,6 +30,7 @@ const FileUploadButton: FC<FileInfoProps> = (props) => {
     alt,
     onUpload,
     onDelete,
+    onUploadedFileClick,
   } = props;
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -70,7 +72,13 @@ const FileUploadButton: FC<FileInfoProps> = (props) => {
         src={logoUploaded}
         alt={alt}
       />
-      {file && <FileInfo file={file} onDelete={onDelete} />}
+      {file && (
+        <FileInfo
+          file={file}
+          onClick={onUploadedFileClick}
+          onDelete={onDelete}
+        />
+      )}
     </div>
   );
 
