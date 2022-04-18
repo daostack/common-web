@@ -11,6 +11,7 @@ import { DesktopBilling } from "./DesktopBilling";
 import { MobileBilling } from "./MobileBilling";
 import { BankAccountState, BillingProps, CardsState } from "./types";
 import "./index.scss";
+import { BankAccountDetails } from "@/shared/models";
 
 const Billing: FC = () => {
   const dispatch = useDispatch();
@@ -32,8 +33,11 @@ const Billing: FC = () => {
     reset: resetPaymentMethodChange,
   } = usePaymentMethodChange();
 
-  const onBankAccountChange = () => {
-    console.log('onBankAccountAdd');
+  const handleBankAccountChange = (data: BankAccountDetails) => {
+    setBankAccountState((nextState) => ({
+      ...nextState,
+      bankAccount: data,
+    }));
   };
 
   useEffect(() => {
@@ -109,7 +113,7 @@ const Billing: FC = () => {
     changePaymentMethodState: changePaymentMethodState,
     onPaymentMethodChange,
     onChangePaymentMethodStateClear: resetPaymentMethodChange,
-    onBankAccountChange,
+    onBankAccountChange: handleBankAccountChange,
   };
 
   return (

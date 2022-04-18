@@ -21,7 +21,7 @@ import { Gender, GENDER_OPTIONS } from "@/shared/models/Gender";
 import "./index.scss";
 
 interface IProps {
-  onBankDetails: () => void;
+  onBankDetails: (data: BankAccountDetails) => void;
 }
 
 interface FormValues {
@@ -170,14 +170,14 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
       dispatch(
         addBankDetails.request({
           payload: bankAccountDetails,
-          callback: (error) => {
+          callback: (error, data) => {
             setSending(false);
-            if (error) {
+            if (error || !data) {
               console.error(error);
               setError(error?.message ?? "Something went wrong :/");
               return;
             }
-            onBankDetails();
+            onBankDetails(data);
           },
         })
       );

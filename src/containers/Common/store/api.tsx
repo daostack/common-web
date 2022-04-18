@@ -364,8 +364,13 @@ export async function getBankDetails(): Promise<BankAccountDetails> {
 
 export async function addBankDetails(
   requestData: AddBankDetailsPayload
-): Promise<void> {
-  await Api.post<void>(ApiEndpoint.AddBankAccount, requestData);
+): Promise<BankAccountDetails> {
+  const { data } = await Api.post<BankAccountDetails>(
+    ApiEndpoint.AddBankAccount,
+    requestData
+  );
+
+  return convertObjectDatesToFirestoreTimestamps<BankAccountDetails>(data);
 }
 
 export async function getUserContributionsToCommon(

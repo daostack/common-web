@@ -454,10 +454,12 @@ export function* addBankDetails(
 ): Generator {
   try {
     yield put(startLoading());
-    yield addBankDetailsApi(action.payload.payload);
+    const bankAccountDetails = (yield addBankDetailsApi(
+      action.payload.payload
+    )) as BankAccountDetails;
 
-    yield put(actions.addBankDetails.success());
-    action.payload.callback(null);
+    yield put(actions.addBankDetails.success(bankAccountDetails));
+    action.payload.callback(null, bankAccountDetails);
     yield put(stopLoading());
   } catch (error) {
     yield put(actions.addBankDetails.failure(error));
