@@ -7,6 +7,7 @@ import { authentificated } from "@/containers/Auth/store/selectors";
 import { Sidebar } from "../../components/Sidebar";
 import { Profile } from "../../components/Profile";
 import { Activities } from "../../components/Activities";
+import { Billing } from "../../components/Billing";
 import "./index.scss";
 
 export default function MyAccountContainer() {
@@ -28,6 +29,12 @@ export default function MyAccountContainer() {
         component={Activities}
         authenticated={isAuthenticated}
       />
+      <PrivateRoute
+        path={ROUTE_PATHS.MY_ACCOUNT_BILLING}
+        exact
+        component={Billing}
+        authenticated={isAuthenticated}
+      />
     </div>
-  )
+  );
 }
