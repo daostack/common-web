@@ -42,7 +42,7 @@ import {
   updateSubscription as updateSubscriptionApi,
   getSubscriptionById,
 } from "./api";
-
+import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
 import store from "@/index";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
@@ -213,9 +213,20 @@ export function* loadUserProposalList(
 ): Generator {
   try {
     yield put(startLoading());
-    const proposals = yield fetchUserProposals(action.payload);
+    const proposals = (yield fetchUserProposals(action.payload)) as Proposal[];
+    const proposer = (yield getUserData(action.payload)) as User;
 
-    yield put(actions.loadUserProposalList.success(proposals as Proposal[]));
+    const processedUserProposals = proposals.map(
+      proposal =>
+      (
+        {
+          ...proposal,
+          proposer,
+        }
+      )
+    );
+
+    yield put(actions.loadUserProposalList.success(processedUserProposals));
     yield put(stopLoading());
   } catch (e) {
     yield put(actions.loadUserProposalList.failure(e));

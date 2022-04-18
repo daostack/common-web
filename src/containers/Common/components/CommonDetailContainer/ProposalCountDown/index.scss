@@ -1,3 +1,5 @@
+@import "../../../../../constants.scss";
+
 .countdown-wrapper {
   align-items: center;
   justify-content: center;
@@ -22,4 +24,9 @@
       color: #ffae26;
     }
   }
+}
+
+.countdown-preview {
+  font-size: 14px;
+  color: $light-gray-2;
 }

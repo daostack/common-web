@@ -10,3 +10,4 @@ export * from "./ProposalsHistory";
 export * from "./AboutSidebarComponent";
 export * from "./EmptyTabContent";
 export * from "./AddDiscussionComponent";
+export * from "./VotesComponent";

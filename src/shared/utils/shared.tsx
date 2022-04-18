@@ -222,7 +222,8 @@ export const percentage = (partialValue: number, totalValue: number): number => 
   if (totalValue === 0) {
     return 0;
   }
-  return Math.round((100 * partialValue) / totalValue * 10) / 10;;
+
+  return Math.round((100 * partialValue) / totalValue * 10) / 10;
 }
 
 export const formatCountdownValue = (value: number): string => {

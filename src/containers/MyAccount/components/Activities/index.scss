@@ -67,12 +67,13 @@
       justify-content: space-between;
       align-items: center;
 
-      .test::after {
-        background-image: url("/icons/icons-share.svg");
-        content: " ";
-        background-size: 15px 15px;
-        height: 0.5rem;
-        width: 0.3rem;
+      .my-account-activities_section-viewall {
+        display: flex;
+        cursor: pointer;
+
+        &.hidden {
+          visibility: hidden;
+        }
       }
     }
 
