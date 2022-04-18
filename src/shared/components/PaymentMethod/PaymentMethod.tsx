@@ -1,9 +1,11 @@
 import React, { ReactElement } from "react";
+import classNames from "classnames";
 import { ButtonLink } from "@/shared/components";
 import { Card, CARD_BRANDS } from "../../models";
 import "./index.scss";
 
 interface PaymentMethodProps {
+  className?: string;
   card: Card;
   title?: "";
   onReplacePaymentMethod: () => void;
@@ -11,6 +13,7 @@ interface PaymentMethodProps {
 
 const PaymentMethod = (props: PaymentMethodProps): ReactElement => {
   const {
+    className,
     card: {
       fullName: cardHolder,
       metadata: {
@@ -44,7 +47,7 @@ const PaymentMethod = (props: PaymentMethodProps): ReactElement => {
   }
 
   return (
-    <div className="payment-method">
+    <div className={classNames("payment-method", className)}>
       {title && <h4 className="payment-method__title">{title}</h4>}
 
       <div className="payment-method__content-wrapper">

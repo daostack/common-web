@@ -12,6 +12,8 @@ $notifications-container-z-index: $secondary-modal-z-index + 5;
 $modal-z-index: 999;
 $element-max-width: 1400px;
 $element-max-height: 850px;
+$payment-iframe-height: 26.5rem;
+$payment-iframe-height-mobile: 42rem;
 
 /* font sizes */
 $xlarge: 46px; // 2.875rem
