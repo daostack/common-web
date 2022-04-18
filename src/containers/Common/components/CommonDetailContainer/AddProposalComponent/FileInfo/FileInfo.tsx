@@ -2,11 +2,12 @@ import React, { FC } from "react";
 import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components";
 import TrashIcon from "@/shared/icons/trash.icon";
+import { DocInfo } from "@/shared/models";
 import "./index.scss";
 
 interface FileInfoProps {
   className?: string;
-  file: File;
+  file: File | DocInfo;
   onDelete: () => void;
 }
 

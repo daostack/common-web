@@ -1,5 +1,6 @@
 import React, { ChangeEventHandler, FC } from "react";
 import classNames from "classnames";
+import { DocInfo } from "@/shared/models";
 import { FileInfo } from "../FileInfo";
 import "./index.scss";
 
@@ -7,7 +8,7 @@ const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png, .pdf";
 
 interface FileInfoProps {
   className?: string;
-  file: File | null;
+  file: File | DocInfo | null;
   text: string;
   hint?: string;
   logo: string;

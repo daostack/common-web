@@ -54,7 +54,10 @@ const BankAccount: FC<BankAccountProps> = (props) => {
       {shouldShowContent ? contentEl : null}
       {isEditing && (
         <Modal isShowing onClose={stopEditing} closePrompt>
-          <AddBankDetails onBankDetails={handleBankDetailsUpdateFinish} />
+          <AddBankDetails
+            onBankDetails={handleBankDetailsUpdateFinish}
+            initialBankAccountDetails={bankAccount}
+          />
         </Modal>
       )}
     </>

@@ -10,7 +10,11 @@ import {
   getFileNameForUploading,
   uploadFile,
 } from "@/shared/utils/firebaseUploadFile";
-import { PaymeTypeCodes } from "@/shared/interfaces/api/payMe";
+import {
+  PaymeTypeCodes,
+  isPaymeDocument,
+  PaymeDocument,
+} from "@/shared/interfaces/api/payMe";
 import { countryList } from "@/shared/assets/countries";
 import { BankAccountDetails, DateFormat } from "@/shared/models";
 import { formatDate } from "@/shared/utils";
@@ -22,6 +26,7 @@ import "./index.scss";
 
 interface IProps {
   onBankDetails: (data: BankAccountDetails) => void;
+  initialBankAccountDetails?: BankAccountDetails | null;
 }
 
 interface FormValues {
@@ -65,11 +70,52 @@ enum FileType {
   BankLetter,
 }
 
-export const AddBankDetails = ({ onBankDetails }: IProps) => {
+const getInitialValues = (data?: BankAccountDetails | null): FormValues => {
+  if (!data) {
+    return INITIAL_VALUES;
+  }
+
+  return {
+    idNumber: data.socialId,
+    socialIdIssueDate: moment(
+      data.socialIdIssueDate,
+      DateFormat.ShortSecondary
+    ).toDate(),
+    birthdate: moment(data.birthdate, DateFormat.ShortSecondary).toDate(),
+    gender: data.gender,
+    phoneNumber: data.phoneNumber,
+    email: "",
+    accountNumber: data.accountNumber,
+    bankCode: data.bankCode,
+    branchNumber: data.branchNumber,
+    address: data.streetAddress,
+    streetNumber: data.streetNumber,
+    city: data.city,
+    country: data.country,
+    photoId: "",
+    bankLetter: "",
+  };
+};
+
+export const AddBankDetails = ({
+  onBankDetails,
+  initialBankAccountDetails,
+}: IProps) => {
   const dispatch = useDispatch();
   const formRef = useRef<FormikProps<FormValues>>(null);
-  const [photoIdFile, setPhotoIdFile] = useState<File | null>(null);
-  const [bankLetterFile, setBankLetterFile] = useState<File | null>(null);
+  const [photoIdFile, setPhotoIdFile] = useState<File | PaymeDocument | null>(
+    () =>
+      initialBankAccountDetails?.identificationDocs.find(
+        (doc) => doc.legalType === PaymeTypeCodes.SocialId
+      ) || null
+  );
+  const [bankLetterFile, setBankLetterFile] = useState<
+    File | PaymeDocument | null
+  >(
+    initialBankAccountDetails?.identificationDocs.find(
+      (doc) => doc.legalType === PaymeTypeCodes.BankAccountOwnership
+    ) || null
+  );
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
@@ -107,23 +153,23 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     async (values) => {
+      if (!photoIdFile || !bankLetterFile) {
+        return;
+      }
+
       setSending(true);
       setError("");
 
-      const photoIdFileName = getFileNameForUploading(photoIdFile?.name!);
-      const bankLetterFileName = getFileNameForUploading(bankLetterFile?.name!);
+      const photoIdFileName = getFileNameForUploading(photoIdFile.name);
+      const bankLetterFileName = getFileNameForUploading(bankLetterFile.name);
 
       try {
-        values.photoId = await uploadFile(
-          photoIdFileName,
-          "private",
-          photoIdFile!
-        );
-        values.bankLetter = await uploadFile(
-          bankLetterFileName,
-          "private",
-          bankLetterFile!
-        );
+        values.photoId = isPaymeDocument(photoIdFile)
+          ? photoIdFile.downloadURL
+          : await uploadFile(photoIdFileName, "private", photoIdFile);
+        values.bankLetter = isPaymeDocument(bankLetterFile)
+          ? bankLetterFile.downloadURL
+          : await uploadFile(bankLetterFileName, "private", bankLetterFile);
       } catch (error: any) {
         console.error(error);
         setError(error?.message ?? "Something went wrong :/");
@@ -138,20 +184,24 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
         branchNumber: Number(values.branchNumber!),
         accountNumber: Number(values.accountNumber!),
         identificationDocs: [
-          {
-            name: photoIdFileName,
-            legalType: PaymeTypeCodes.SocialId,
-            amount: 2000,
-            mimeType: photoIdFile?.type!,
-            downloadURL: values.photoId,
-          },
-          {
-            name: bankLetterFileName,
-            legalType: PaymeTypeCodes.BankAccountOwnership,
-            amount: 2000,
-            mimeType: bankLetterFile?.type!,
-            downloadURL: values.bankLetter,
-          },
+          isPaymeDocument(photoIdFile)
+            ? { ...photoIdFile }
+            : {
+                name: photoIdFileName,
+                legalType: PaymeTypeCodes.SocialId,
+                amount: 2000,
+                mimeType: photoIdFile.type,
+                downloadURL: values.photoId,
+              },
+          isPaymeDocument(bankLetterFile)
+            ? { ...bankLetterFile }
+            : {
+                name: bankLetterFileName,
+                legalType: PaymeTypeCodes.BankAccountOwnership,
+                amount: 2000,
+                mimeType: bankLetterFile.type,
+                downloadURL: values.bankLetter,
+              },
         ],
         city: values.city,
         country: values.country,
@@ -187,7 +237,9 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
 
   return (
     <div className="add-bank-details-wrapper">
-      <div className="add-bank-details-title">Add Bank Account</div>
+      <div className="add-bank-details-title">
+        {initialBankAccountDetails ? "Edit" : "Add"} Bank Account
+      </div>
       <div className="add-bank-details-description">
         The following details are required inorder to transfer funds <br /> to
         you after your proposal is approved
@@ -199,10 +251,11 @@ export const AddBankDetails = ({ onBankDetails }: IProps) => {
           </div>
         ) : (
           <Formik
-            initialValues={INITIAL_VALUES}
+            initialValues={getInitialValues(initialBankAccountDetails)}
             onSubmit={handleSubmit}
             innerRef={formRef}
             validationSchema={validationSchema}
+            validateOnMount
           >
             {({ values, isValid, setFieldValue }) => (
               <Form className="add-bank-details-form__form">

@@ -45,9 +45,9 @@ interface ProposalJoin {
   fundingType?: CommonContributionType;
 }
 
-export interface DocInfo {
+export interface DocInfo<LegalType = number> {
   name: string;
-  legalType: number;
+  legalType: LegalType;
   amount?: number;
   mimeType: string;
   downloadURL: string;
