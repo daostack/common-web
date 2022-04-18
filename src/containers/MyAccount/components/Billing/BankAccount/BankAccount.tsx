@@ -21,16 +21,17 @@ const BankAccount: FC<BankAccountProps> = (props) => {
   const isMobileView = screenSize === ScreenSize.Mobile;
   const shouldShowContent = true;
 
-  const handleEditStart = () => {
+  const startEditing = () => {
     setIsEditing(true);
   };
 
-  const handleModalClose = () => {
+  const stopEditing = () => {
     setIsEditing(false);
   };
 
   const handleBankDetailsUpdateFinish = (data: BankAccountDetails) => {
     onBankAccountChange(data);
+    stopEditing();
   };
 
   const contentEl = !bankAccount ? (
@@ -39,12 +40,12 @@ const BankAccount: FC<BankAccountProps> = (props) => {
       imageSrc="/assets/images/add-bank-account.svg"
       imageAlt="Add bank account"
       buttonText="Add Bank Account"
-      onClick={handleEditStart}
+      onClick={startEditing}
     />
   ) : (
     <BankAccountInfo
       bankAccount={bankAccount}
-      onBankAccountChange={handleEditStart}
+      onBankAccountChange={startEditing}
     />
   );
 
@@ -52,7 +53,7 @@ const BankAccount: FC<BankAccountProps> = (props) => {
     <>
       {shouldShowContent ? contentEl : null}
       {isEditing && (
-        <Modal isShowing onClose={handleModalClose} closePrompt>
+        <Modal isShowing onClose={stopEditing} closePrompt>
           <AddBankDetails onBankDetails={handleBankDetailsUpdateFinish} />
         </Modal>
       )}
