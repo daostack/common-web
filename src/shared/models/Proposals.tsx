@@ -107,6 +107,8 @@ export interface Proposal {
 
   approvalDate?: Time;
   payoutDocs?: DocInfo[];
-  payoutDocsComment?: string
+  payoutDocsComment?: string;
   payoutDocsRejectionReason?: string;
 }
+
+export const isDocInfo = (data: any): data is DocInfo => data.downloadURL;
