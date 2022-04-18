@@ -116,6 +116,11 @@ export interface CommonLink {
   value: string;
 }
 
+export interface CommonRule {
+  title: string;
+  definition: string;
+}
+
 
 // export enum MemberPermission {
 //   Founder = "founder",
@@ -129,11 +134,6 @@ export interface CommonLink {
 // }
 
 // export interface CommonLink {
-//   title: string;
-//   value: string;
-// }
-
-// export interface CommonRule {
 //   title: string;
 //   value: string;
 // }

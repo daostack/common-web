@@ -66,7 +66,7 @@ const RulesArray: FC<RulesArrayProps> = (props) => {
     () =>
       Boolean(
         (errors && errors.length > 0) ||
-          values?.some((value) => !value.title && !value.value)
+          values?.some((value) => !value.title && !value.definition)
       ),
     [errors, values]
   );
@@ -76,7 +76,7 @@ const RulesArray: FC<RulesArrayProps> = (props) => {
       {...restProps}
       render={({ remove, push }) => {
         const handleNewRuleAdd = () =>
-          push({ title: "", value: "" } as CommonRule);
+          push({ title: "", definition: "" } as CommonRule);
 
         return (
           <div className={classNames("description-array", className)}>
@@ -84,8 +84,8 @@ const RulesArray: FC<RulesArrayProps> = (props) => {
               const titleError = isTouched(touched, index, "title")
                 ? getInputError(errors, index, "title")
                 : "";
-              const valueError = isTouched(touched, index, "value")
-                ? getInputError(errors, index, "value")
+              const valueError = isTouched(touched, index, "definition")
+                ? getInputError(errors, index, "definition")
                 : "";
               const error = titleError || valueError;
               const shouldDisplayDeleteButton = values.length > 1;
