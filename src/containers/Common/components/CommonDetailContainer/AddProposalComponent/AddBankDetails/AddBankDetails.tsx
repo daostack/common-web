@@ -10,6 +10,7 @@ import {
   addBankDetails,
   updateBankDetails,
 } from "@/containers/Common/store/actions";
+import { UpdateBankAccountDetailsData } from "@/shared/interfaces/api/bankAccount";
 import {
   getFileNameForUploading,
   uploadFile,
@@ -172,6 +173,21 @@ export const AddBankDetails = (props: IProps) => {
     setReviewingDoc(null);
   };
 
+  const handleDataChange = useCallback(
+    (error: Error | null, data?: BankAccountDetails) => {
+      setSending(false);
+
+      if (error || !data) {
+        console.error(error);
+        setError(error?.message ?? "Something went wrong :/");
+        return;
+      }
+
+      onBankDetails(data);
+    },
+    [onBankDetails]
+  );
+
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     async (values) => {
       if (!photoIdFile || !bankLetterFile) {
@@ -238,34 +254,45 @@ export const AddBankDetails = (props: IProps) => {
         phoneNumber: values.phoneNumber!,
       };
 
-      const requestPayload = {
-        payload: bankAccountDetails,
-        callback: (error: Error | null, data?: BankAccountDetails) => {
-          setSending(false);
+      dispatch(
+        addBankDetails.request({
+          payload: bankAccountDetails,
+          callback: handleDataChange,
+        })
+      );
+    },
+    [dispatch, bankLetterFile, photoIdFile, handleDataChange]
+  );
 
-          if (error || !data) {
-            console.error(error);
-            setError(error?.message ?? "Something went wrong :/");
-            return;
-          }
+  const handleDetailsUpdate = useCallback<FormikConfig<FormValues>["onSubmit"]>(
+    (values) => {
+      const bankName = BANKS_OPTIONS.find(
+        (bank) => bank.value === values.bankCode
+      )?.name;
 
-          onBankDetails(data);
-        },
+      if (!bankName) {
+        return;
+      }
+
+      setSending(true);
+      setError("");
+
+      const payload: Partial<UpdateBankAccountDetailsData> = {
+        bankName,
+        idNumber: values.idNumber,
+        bankCode: values.bankCode,
+        branchNumber: values.branchNumber,
+        accountNumber: values.accountNumber,
       };
 
-      if (initialBankAccountDetails) {
-        dispatch(updateBankDetails.request(requestPayload));
-      } else {
-        dispatch(addBankDetails.request(requestPayload));
-      }
+      dispatch(
+        updateBankDetails.request({
+          payload,
+          callback: handleDataChange,
+        })
+      );
     },
-    [
-      dispatch,
-      onBankDetails,
-      bankLetterFile,
-      photoIdFile,
-      initialBankAccountDetails,
-    ]
+    [dispatch, handleDataChange]
   );
 
   return (
@@ -293,7 +320,9 @@ export const AddBankDetails = (props: IProps) => {
         ) : (
           <Formik
             initialValues={getInitialValues(initialBankAccountDetails)}
-            onSubmit={handleSubmit}
+            onSubmit={
+              initialBankAccountDetails ? handleDetailsUpdate : handleSubmit
+            }
             innerRef={formRef}
             validationSchema={validationSchema}
             validateOnMount
