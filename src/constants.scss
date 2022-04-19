@@ -7,6 +7,7 @@ $share-z-index: 2;
 $header-z-index: 10;
 $dropdown-z-index: $header-z-index + 5;
 $date-picker-z-index: $dropdown-z-index + 1;
+$file-preview-z-index: $date-picker-z-index + 1;
 $secondary-modal-z-index: 20;
 $notifications-container-z-index: $secondary-modal-z-index + 5;
 $modal-z-index: 999;

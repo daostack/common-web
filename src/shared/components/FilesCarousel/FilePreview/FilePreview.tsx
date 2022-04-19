@@ -40,7 +40,8 @@ const FilePreview: FC<FilePreviewProps> = (props) => {
   const downloadURL = isDocInfo(doc)
     ? doc.downloadURL
     : URL.createObjectURL(doc);
-  const shouldShowSwitchActions = !shouldHideSwitchActions && !isZoomed;
+  const shouldShowSwitchActions =
+    !shouldHideSwitchActions && !isZoomed && onLeftClick && onRightClick;
 
   const handleDownload = () => {
     saveByURL(downloadURL, doc.name);
@@ -88,7 +89,7 @@ const FilePreview: FC<FilePreviewProps> = (props) => {
           ) : (
             <div className={generalFileClassName}>{doc.name}</div>
           )}
-          {!hasError && isDocInfo(doc) && (
+          {!hasError && (
             <div className="carousel-file-preview-wrapper__icons-wrapper">
               <ButtonIcon
                 className="carousel-file-preview-wrapper__icon-wrapper"
@@ -96,7 +97,7 @@ const FilePreview: FC<FilePreviewProps> = (props) => {
               >
                 <DownloadIcon className="carousel-file-preview-wrapper__icon" />
               </ButtonIcon>
-              {isImage && (
+              {isImage && onZoomIn && onZoomOut && (
                 <ButtonIcon
                   className="carousel-file-preview-wrapper__icon-wrapper"
                   onClick={isZoomed ? onZoomOut : onZoomIn}

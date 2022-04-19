@@ -2,9 +2,8 @@ import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Form, Formik, FormikConfig, FormikProps } from "formik";
 import { useDispatch } from "react-redux";
 import moment from "moment";
-import { DatePicker } from "@/shared/components";
+import { DatePicker, FilePreview } from "@/shared/components";
 import { Dropdown, TextField } from "@/shared/components/Form/Formik";
-import { FilePreview } from "@/shared/components/FilesCarousel/FilePreview";
 import { Button, DropdownOption, Loader } from "@/shared/components";
 import { addBankDetails } from "@/containers/Common/store/actions";
 import {
@@ -157,6 +156,9 @@ export const AddBankDetails = ({
 
   const handleUploadedFileClick = (file: File | PaymeDocument) => {
     setReviewingDoc(file);
+  };
+  const handleFilePreviewClose = () => {
+    setReviewingDoc(null);
   };
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
@@ -472,11 +474,7 @@ export const AddBankDetails = ({
         )}
       </div>
       {reviewingDoc && (
-        <FilePreview
-          doc={reviewingDoc}
-          isZoomed={false}
-          shouldHideSwitchActions
-        />
+        <FilePreview doc={reviewingDoc} onClose={handleFilePreviewClose} />
       )}
     </div>
   );
