@@ -14,10 +14,11 @@ const FilePreview: FC<FilePreviewProps> = (props) => {
   const { doc, onClose } = props;
 
   useEffect(() => {
+    const initialOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
     return () => {
-      document.body.style.overflow = "initial";
+      document.body.style.overflow = initialOverflow;
     };
   }, []);
 
