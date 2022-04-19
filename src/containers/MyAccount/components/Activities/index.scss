@@ -62,6 +62,10 @@
     flex-direction: column;
     justify-content: space-between;
 
+    > section:not(:last-child) {
+      margin-bottom: 50px;
+    }
+
     .my-account-activities_section-header {
       display: flex;
       justify-content: space-between;
@@ -70,6 +74,8 @@
       .my-account-activities_section-viewall {
         display: flex;
         cursor: pointer;
+        color: $black;
+        text-decoration: none;
 
         &.hidden {
           visibility: hidden;
@@ -82,4 +88,12 @@
       justify-content: space-between;
     }
   }
+}
+
+.my-account-activities__detail-modal-header-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  background-color: transparent;
 }

@@ -18,10 +18,11 @@
   }
   .votes-columns-container {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-evenly;
     width: 100%;
 
     &.compact-card {
+      justify-content: flex-start;
       > div {
         margin-right: 5px;
       }

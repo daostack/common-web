@@ -10,6 +10,7 @@ interface ProposalCountDownInterface {
   date: Date;
   type?: string;
   preview?: boolean;
+  hideCounter?: boolean;
 }
 
 const countDownCount = (date: Date) => {
@@ -41,17 +42,19 @@ const formatCountDown = (step: number) => {
   return string.length === 1 ? `0${string}` : string;
 };
 
-export default function ProposalCountDown({ date, type, preview }: ProposalCountDownInterface) {
+export default function ProposalCountDown({ date, type, preview, hideCounter }: ProposalCountDownInterface) {
   const [state, setState] = useState(countDownCount(date));
   const countdown = useMemo(
     () => (
-      `${!preview ? "Countdown " : ""}${formatCountDown(state.daysDifference)}:${formatCountDown(state.hoursDifference)}:${formatCountDown(state.minutesDifference)}:${formatCountDown(state.secondsDifference)}`
+      hideCounter
+        ? "Countdown"
+        : `${!preview ? "Countdown " : ""}${formatCountDown(state.daysDifference)}:${formatCountDown(state.hoursDifference)}:${formatCountDown(state.minutesDifference)}:${formatCountDown(state.secondsDifference)}`
     ),
     [state]
   );
 
   useEffect(() => {
-    if (state.difference > 0) {
+    if (state.difference > 0 && !hideCounter) {
       const interval = setTimeout(() => {
         return setState(countDownCount(date));
       }, 1000);

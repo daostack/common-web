@@ -24,7 +24,7 @@ import classNames from "classnames";
 
 interface DiscussionDetailModalProps {
   proposal: Proposal | null;
-  common: Common;
+  common: Common | null;
   onOpenJoinModal: () => void;
   isCommonMember: boolean;
   isJoiningPending: boolean;
@@ -67,7 +67,7 @@ export default function ProposalDetailModal({
     [dispatch, user, proposal]
   );
 
-  return !proposal ? (
+  return (!proposal || !common) ? (
     <Loader />
   ) : (
     <div className="proposal-detail-modal-wrapper">

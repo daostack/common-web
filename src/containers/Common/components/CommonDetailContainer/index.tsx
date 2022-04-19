@@ -11,3 +11,5 @@ export * from "./AboutSidebarComponent";
 export * from "./EmptyTabContent";
 export * from "./AddDiscussionComponent";
 export * from "./VotesComponent";
+export * from "./ProposalState";
+export * from "./ProposalDetailModal";
