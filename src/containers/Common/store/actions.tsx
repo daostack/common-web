@@ -1,6 +1,7 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 
 import { PayloadWithCallback } from "@/shared/interfaces";
+import { UpdateBankAccountDetailsData } from "@/shared/interfaces/api/bankAccount";
 import { BuyerTokenPageCreationData } from "@/shared/interfaces/api/payMe";
 import {
   CreateFundingRequestProposalPayload,
@@ -238,7 +239,7 @@ export const updateBankDetails = createAsyncAction(
   CommonsActionTypes.UPDATE_BANK_DETAILS_FAILURE
 )<
   PayloadWithCallback<
-    Partial<AddBankDetailsPayload>,
+    Partial<UpdateBankAccountDetailsData>,
     BankAccountDetails,
     Error
   >,

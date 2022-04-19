@@ -39,6 +39,7 @@ import {
   Vote,
 } from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
+import { UpdateBankAccountDetailsData } from "@/shared/interfaces/api/bankAccount";
 
 export async function fetchCommonDiscussions(commonId: string) {
   const commons = await firebase
@@ -374,12 +375,9 @@ export async function addBankDetails(
 }
 
 export async function updateBankDetails(
-  requestData: Partial<AddBankDetailsPayload>
+  requestData: Partial<UpdateBankAccountDetailsData>
 ): Promise<void> {
-  await Api.patch<BankAccountDetails>(
-    ApiEndpoint.UpdateBankAccount,
-    requestData
-  );
+  await Api.patch(ApiEndpoint.UpdateBankAccount, requestData);
 }
 
 export async function getUserContributionsToCommon(
