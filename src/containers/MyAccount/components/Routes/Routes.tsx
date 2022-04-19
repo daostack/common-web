@@ -12,6 +12,9 @@ export default function Routes() {
       <NavLink to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES} activeClassName="active">
         Activities
       </NavLink>
+      <NavLink to={ROUTE_PATHS.MY_ACCOUNT_BILLING} activeClassName="active">
+        Billing
+      </NavLink>
     </div>
-  )
+  );
 }
