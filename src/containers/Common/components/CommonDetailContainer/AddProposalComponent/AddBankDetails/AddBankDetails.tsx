@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Form, Formik, FormikConfig, FormikProps } from "formik";
 import { useDispatch } from "react-redux";
 import moment from "moment";
+import classNames from "classnames";
 import { DatePicker, FilePreview } from "@/shared/components";
 import { Dropdown, TextField } from "@/shared/components/Form/Formik";
 import { Button, DropdownOption, Loader } from "@/shared/components";
@@ -28,6 +29,9 @@ import { Gender, GENDER_OPTIONS } from "@/shared/models/Gender";
 import "./index.scss";
 
 interface IProps {
+  className?: string;
+  descriptionClassName?: string;
+  title?: string | null;
   onBankDetails: (data: BankAccountDetails) => void;
   initialBankAccountDetails?: BankAccountDetails | null;
 }
@@ -100,10 +104,14 @@ const getInitialValues = (data?: BankAccountDetails | null): FormValues => {
   };
 };
 
-export const AddBankDetails = ({
-  onBankDetails,
-  initialBankAccountDetails,
-}: IProps) => {
+export const AddBankDetails = (props: IProps) => {
+  const {
+    className,
+    descriptionClassName,
+    title,
+    onBankDetails,
+    initialBankAccountDetails,
+  } = props;
   const dispatch = useDispatch();
   const formRef = useRef<FormikProps<FormValues>>(null);
   const [photoIdFile, setPhotoIdFile] = useState<File | PaymeDocument | null>(
@@ -261,13 +269,21 @@ export const AddBankDetails = ({
   );
 
   return (
-    <div className="add-bank-details-wrapper">
-      <div className="add-bank-details-title">
-        {initialBankAccountDetails ? "Edit" : "Add"} Bank Account
-      </div>
-      <div className="add-bank-details-description">
-        The following details are required inorder to transfer funds <br /> to
-        you after your proposal is approved
+    <div className={classNames("add-bank-details-wrapper", className)}>
+      {title !== null && (
+        <div className="add-bank-details-title">
+          {title ||
+            `${initialBankAccountDetails ? "Edit" : "Add"} Bank Account`}
+        </div>
+      )}
+      <div
+        className={classNames(
+          "add-bank-details-description",
+          descriptionClassName
+        )}
+      >
+        The following details are required inorder to transfer funds{" "}
+        {!descriptionClassName && <br />}to you after your proposal is approved
       </div>
       <div className="add-bank-details-form">
         {sending ? (

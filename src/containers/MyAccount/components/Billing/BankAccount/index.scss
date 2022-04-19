@@ -1,4 +1,11 @@
 @import "../../../../../constants";
 @import "../../../../../styles/sizes";
 
-
+.billing-bank-account__form {
+  .billing-bank-account__description {
+    margin: 0 0 0.875rem;
+    padding: 0;
+    text-align: left;
+    border: 0;
+  }
+}

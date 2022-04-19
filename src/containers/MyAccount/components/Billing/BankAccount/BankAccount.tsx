@@ -19,7 +19,7 @@ const BankAccount: FC<BankAccountProps> = (props) => {
   const [isEditing, setIsEditing] = useState(false);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const shouldShowContent = true;
+  const shouldShowContent = !isMobileView || !isEditing;
 
   const startEditing = () => {
     setIsEditing(true);
@@ -51,8 +51,18 @@ const BankAccount: FC<BankAccountProps> = (props) => {
 
   return (
     <>
-      {shouldShowContent ? contentEl : null}
-      {isEditing && (
+      {shouldShowContent ? (
+        contentEl
+      ) : (
+        <AddBankDetails
+          className="billing-bank-account__form"
+          descriptionClassName="billing-bank-account__description"
+          title={null}
+          onBankDetails={handleBankDetailsUpdateFinish}
+          initialBankAccountDetails={bankAccount}
+        />
+      )}
+      {isEditing && !isMobileView && (
         <Modal isShowing onClose={stopEditing} closePrompt>
           <AddBankDetails
             onBankDetails={handleBankDetailsUpdateFinish}
