@@ -37,6 +37,7 @@ import {
   updateVote as updateVoteApi,
   makeImmediateContribution as makeImmediateContributionApi,
   addBankDetails as addBankDetailsApi,
+  updateBankDetails as updateBankDetailsApi,
   getBankDetails as getBankDetailsApi,
   getUserContributionsToCommon as getUserContributionsToCommonApi,
   getUserSubscriptionToCommon as getUserSubscriptionToCommonApi,
@@ -468,6 +469,24 @@ export function* addBankDetails(
   }
 }
 
+export function* updateBankDetails(
+  action: ReturnType<typeof actions.updateBankDetails.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    yield updateBankDetailsApi(action.payload.payload);
+    const bankAccountDetails = (yield getBankDetailsApi()) as BankAccountDetails;
+
+    yield put(actions.updateBankDetails.success(bankAccountDetails));
+    action.payload.callback(null, bankAccountDetails);
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(actions.updateBankDetails.failure(error));
+    action.payload.callback(error);
+    yield put(stopLoading());
+  }
+}
+
 export function* createFundingProposalSaga(
   action: ReturnType<typeof actions.createFundingProposal.request>
 ): Generator {
@@ -663,6 +682,7 @@ export function* commonsSaga() {
   yield takeLatest(actions.createBuyerTokenPage.request, createBuyerTokenPage);
   yield takeLatest(actions.getBankDetails.request, getBankDetails);
   yield takeLatest(actions.addBankDetails.request, addBankDetails);
+  yield takeLatest(actions.updateBankDetails.request, updateBankDetails);
   yield takeLatest(
     actions.getUserContributionsToCommon.request,
     getUserContributionsToCommon

@@ -232,6 +232,20 @@ export const addBankDetails = createAsyncAction(
   Error
 >();
 
+export const updateBankDetails = createAsyncAction(
+  CommonsActionTypes.UPDATE_BANK_DETAILS,
+  CommonsActionTypes.UPDATE_BANK_DETAILS_SUCCESS,
+  CommonsActionTypes.UPDATE_BANK_DETAILS_FAILURE
+)<
+  PayloadWithCallback<
+    Partial<AddBankDetailsPayload>,
+    BankAccountDetails,
+    Error
+  >,
+  BankAccountDetails,
+  Error
+>();
+
 export const getBankDetails = createAsyncAction(
   CommonsActionTypes.GET_BANK_DETAILS,
   CommonsActionTypes.GET_BANK_DETAILS_SUCCESS,

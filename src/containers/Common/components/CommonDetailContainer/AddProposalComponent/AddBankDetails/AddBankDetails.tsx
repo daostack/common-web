@@ -5,7 +5,10 @@ import moment from "moment";
 import { DatePicker, FilePreview } from "@/shared/components";
 import { Dropdown, TextField } from "@/shared/components/Form/Formik";
 import { Button, DropdownOption, Loader } from "@/shared/components";
-import { addBankDetails } from "@/containers/Common/store/actions";
+import {
+  addBankDetails,
+  updateBankDetails,
+} from "@/containers/Common/store/actions";
 import {
   getFileNameForUploading,
   uploadFile,
@@ -227,22 +230,34 @@ export const AddBankDetails = ({
         phoneNumber: values.phoneNumber!,
       };
 
-      dispatch(
-        addBankDetails.request({
-          payload: bankAccountDetails,
-          callback: (error, data) => {
-            setSending(false);
-            if (error || !data) {
-              console.error(error);
-              setError(error?.message ?? "Something went wrong :/");
-              return;
-            }
-            onBankDetails(data);
-          },
-        })
-      );
+      const requestPayload = {
+        payload: bankAccountDetails,
+        callback: (error: Error | null, data?: BankAccountDetails) => {
+          setSending(false);
+
+          if (error || !data) {
+            console.error(error);
+            setError(error?.message ?? "Something went wrong :/");
+            return;
+          }
+
+          onBankDetails(data);
+        },
+      };
+
+      if (initialBankAccountDetails) {
+        dispatch(updateBankDetails.request(requestPayload));
+      } else {
+        dispatch(addBankDetails.request(requestPayload));
+      }
     },
-    [dispatch, onBankDetails, bankLetterFile, photoIdFile]
+    [
+      dispatch,
+      onBankDetails,
+      bankLetterFile,
+      photoIdFile,
+      initialBankAccountDetails,
+    ]
   );
 
   return (

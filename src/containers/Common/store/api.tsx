@@ -359,7 +359,7 @@ export async function getBankDetails(): Promise<BankAccountDetails> {
     ApiEndpoint.GetBankAccount
   );
 
-  return data;
+  return convertObjectDatesToFirestoreTimestamps<BankAccountDetails>(data);
 }
 
 export async function addBankDetails(
@@ -371,6 +371,15 @@ export async function addBankDetails(
   );
 
   return convertObjectDatesToFirestoreTimestamps<BankAccountDetails>(data);
+}
+
+export async function updateBankDetails(
+  requestData: Partial<AddBankDetailsPayload>
+): Promise<void> {
+  await Api.patch<BankAccountDetails>(
+    ApiEndpoint.UpdateBankAccount,
+    requestData
+  );
 }
 
 export async function getUserContributionsToCommon(
