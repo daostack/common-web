@@ -4,18 +4,19 @@
   display: grid;
   gap: 2rem 2.5rem;
   grid-template-areas:
-    "paymentInfo"
-    "bankAccount";
+    "paymentInfo contributions"
+    "bankAccount contributions";
+  grid-template-columns: 20.625rem 1fr;
 }
 
-.my-account-desktop-billing__section {
-  max-width: 20.625rem;
-}
 .my-account-desktop-billing__payment-info {
   grid-area: paymentInfo;
 }
 .my-account-desktop-billing__bank-account {
   grid-area: bankAccount;
+}
+.my-account-desktop-billing__contributions {
+  grid-area: contributions;
 }
 
 .my-account-desktop-billing__section-title {

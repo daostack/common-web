@@ -1,0 +1,19 @@
+@import "../../../../../constants";
+
+.billing-contribution-list__empty-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.billing-contribution-list__empty-hint-image {
+  max-width: 18.75rem;
+  width: 100%;
+}
+
+.billing-contribution-list__empty-hint-text {
+  margin: 1.5rem 0 0;
+  font-size: $small;
+  font-weight: 600;
+  text-align: center;
+}

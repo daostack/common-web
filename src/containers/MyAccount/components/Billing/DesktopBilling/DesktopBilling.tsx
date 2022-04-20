@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { Loader } from "@/shared/components";
 import { BankAccount } from "../BankAccount";
+import { Contributions } from "../Contributions";
 import { PaymentInformation } from "../PaymentInformation";
 import { BillingProps } from "../types";
 import "./index.scss";
@@ -19,7 +20,7 @@ const DesktopBilling: FC<BillingProps> = (props) => {
 
   return (
     <div className="my-account-desktop-billing">
-      <section className="my-account-desktop-billing__section my-account-desktop-billing__payment-info">
+      <section className="my-account-desktop-billing__payment-info">
         <h3 className="my-account-desktop-billing__section-title">
           Payment information
         </h3>
@@ -34,7 +35,7 @@ const DesktopBilling: FC<BillingProps> = (props) => {
           />
         )}
       </section>
-      <section className="my-account-desktop-billing__section my-account-desktop-billing__bank-account">
+      <section className="my-account-desktop-billing__bank-account">
         <h3 className="my-account-desktop-billing__section-title">
           Bank account
         </h3>
@@ -46,6 +47,12 @@ const DesktopBilling: FC<BillingProps> = (props) => {
             onBankAccountChange={onBankAccountChange}
           />
         )}
+      </section>
+      <section className="my-account-desktop-billing__contributions">
+        <h3 className="my-account-desktop-billing__section-title">
+          Contributions
+        </h3>
+        {false ? <Loader /> : <Contributions />}
       </section>
     </div>
   );
