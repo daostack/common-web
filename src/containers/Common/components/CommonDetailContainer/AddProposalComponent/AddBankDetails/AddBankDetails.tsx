@@ -25,7 +25,9 @@ import { BankAccountDetails, DateFormat } from "@/shared/models";
 import { formatDate } from "@/shared/utils";
 import { BANKS_OPTIONS } from "@/shared/assets/banks";
 import { FileUploadButton } from "../FileUploadButton";
-import validationSchema from "./validationSchema";
+import validationSchema, {
+  validationSchemaForEditing,
+} from "./validationSchema";
 import { Gender, GENDER_OPTIONS } from "@/shared/models/Gender";
 import "./index.scss";
 
@@ -133,6 +135,7 @@ export const AddBankDetails = (props: IProps) => {
   );
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+  const isEditing = Boolean(initialBankAccountDetails);
 
   const banksOptions = useMemo<DropdownOption[]>(
     () =>
@@ -299,8 +302,7 @@ export const AddBankDetails = (props: IProps) => {
     <div className={classNames("add-bank-details-wrapper", className)}>
       {title !== null && (
         <div className="add-bank-details-title">
-          {title ||
-            `${initialBankAccountDetails ? "Edit" : "Add"} Bank Account`}
+          {title || `${isEditing ? "Edit" : "Add"} Bank Account`}
         </div>
       )}
       <div
@@ -320,216 +322,237 @@ export const AddBankDetails = (props: IProps) => {
         ) : (
           <Formik
             initialValues={getInitialValues(initialBankAccountDetails)}
-            onSubmit={
-              initialBankAccountDetails ? handleDetailsUpdate : handleSubmit
-            }
+            onSubmit={isEditing ? handleDetailsUpdate : handleSubmit}
             innerRef={formRef}
-            validationSchema={validationSchema}
+            validationSchema={
+              isEditing ? validationSchemaForEditing : validationSchema
+            }
             validateOnMount
           >
-            {({ values, isValid, setFieldValue }) => (
-              <Form className="add-bank-details-form__form">
-                <h3>Personal Info</h3>
-                <div className="section personal-info">
-                  <TextField
-                    className="field"
-                    id="idNumber"
-                    name="idNumber"
-                    label="ID Number"
-                    placeholder="Add your ID number"
-                    isRequired
-                    styles={{
-                      label: "add-bank-details-form__label",
-                    }}
-                  />
-                  <DatePicker
-                    className="add-bank-details-form__date-picker"
-                    name="socialIdIssueDate"
-                    label="ID Issuance day"
-                    selected={values.socialIdIssueDate}
-                    maxDate={moment().toDate()}
-                    onChange={(date) =>
-                      setFieldValue("socialIdIssueDate", date)
-                    }
-                    showMonthDropdown
-                    showYearDropdown
-                    adjustDateOnChange
-                    styles={{
-                      label: "add-bank-details-form__label",
-                    }}
-                  />
-                  <DatePicker
-                    className="add-bank-details-form__date-picker"
-                    name="birthdate"
-                    label="Birth Date"
-                    selected={values.birthdate}
-                    maxDate={moment().toDate()}
-                    onChange={(date) => setFieldValue("birthdate", date)}
-                    showMonthDropdown
-                    showYearDropdown
-                    adjustDateOnChange
-                    styles={{
-                      label: "add-bank-details-form__label",
-                    }}
-                  />
-                  <Dropdown
-                    className="field"
-                    name="gender"
-                    label="Gender"
-                    placeholder="---Select gender---"
-                    options={GENDER_OPTIONS}
-                    shouldBeFixed={false}
-                  />
-                </div>
+            {({ values, isValid, setFieldValue }) => {
+              const isSubmitButtonDisabled = isEditing
+                ? !isValid
+                : !isValid || !photoIdFile || !bankLetterFile;
 
-                <h3>Contact Info</h3>
-                <div className="section contact-info">
-                  <TextField
-                    className="field"
-                    id="phoneNumber"
-                    name="phoneNumber"
-                    label="Phone Number"
-                    placeholder="Add your phone number"
-                    isRequired
-                    styles={{
-                      label: "add-bank-details-form__label",
-                    }}
-                  />
-                  <TextField
-                    className="field"
-                    id="email"
-                    name="email"
-                    label="Email"
-                    placeholder="Add your email"
-                    isRequired
-                    styles={{
-                      label: "add-bank-details-form__label",
-                    }}
-                  />
-                </div>
+              return (
+                <Form className="add-bank-details-form__form">
+                  <h3>Personal Info</h3>
+                  <div className="section personal-info">
+                    <TextField
+                      className="field"
+                      id="idNumber"
+                      name="idNumber"
+                      label="ID Number"
+                      placeholder="Add your ID number"
+                      isRequired
+                      styles={{
+                        label: "add-bank-details-form__label",
+                      }}
+                    />
+                    {!isEditing && (
+                      <>
+                        <DatePicker
+                          className="add-bank-details-form__date-picker"
+                          name="socialIdIssueDate"
+                          label="ID Issuance day"
+                          selected={values.socialIdIssueDate}
+                          maxDate={moment().toDate()}
+                          onChange={(date) =>
+                            setFieldValue("socialIdIssueDate", date)
+                          }
+                          showMonthDropdown
+                          showYearDropdown
+                          adjustDateOnChange
+                          styles={{
+                            label: "add-bank-details-form__label",
+                          }}
+                        />
+                        <DatePicker
+                          className="add-bank-details-form__date-picker"
+                          name="birthdate"
+                          label="Birth Date"
+                          selected={values.birthdate}
+                          maxDate={moment().toDate()}
+                          onChange={(date) => setFieldValue("birthdate", date)}
+                          showMonthDropdown
+                          showYearDropdown
+                          adjustDateOnChange
+                          styles={{
+                            label: "add-bank-details-form__label",
+                          }}
+                        />
+                        <Dropdown
+                          className="field"
+                          name="gender"
+                          label="Gender"
+                          placeholder="---Select gender---"
+                          options={GENDER_OPTIONS}
+                          shouldBeFixed={false}
+                        />
+                      </>
+                    )}
+                  </div>
 
-                <h3>Bank Details</h3>
-                <div className="section bank-details">
-                  <TextField
-                    className="field"
-                    id="accountNumber"
-                    name="accountNumber"
-                    label="Bank Account number"
-                    placeholder="Add your account number"
-                    isRequired
-                    styles={{
-                      label: "add-bank-details-form__label",
-                    }}
-                  />
-                  <Dropdown
-                    className="field"
-                    name="bankCode"
-                    label="Bank Name"
-                    placeholder="---Select bank---"
-                    options={banksOptions}
-                    shouldBeFixed={false}
-                  />
-                  <TextField
-                    className="field"
-                    id="branchNumber"
-                    name="branchNumber"
-                    label="Branch Number"
-                    placeholder="Exp. 867"
-                    isRequired
-                    styles={{
-                      label: "add-bank-details-form__label",
-                    }}
-                  />
-                </div>
+                  {!isEditing && (
+                    <>
+                      <h3>Contact Info</h3>
+                      <div className="section contact-info">
+                        <TextField
+                          className="field"
+                          id="phoneNumber"
+                          name="phoneNumber"
+                          label="Phone Number"
+                          placeholder="Add your phone number"
+                          isRequired
+                          styles={{
+                            label: "add-bank-details-form__label",
+                          }}
+                        />
+                        <TextField
+                          className="field"
+                          id="email"
+                          name="email"
+                          label="Email"
+                          placeholder="Add your email"
+                          isRequired
+                          styles={{
+                            label: "add-bank-details-form__label",
+                          }}
+                        />
+                      </div>
+                    </>
+                  )}
 
-                <h3>Billing Details</h3>
-                <div className="section billing-details">
-                  <TextField
-                    className="field"
-                    id="address"
-                    name="address"
-                    label="Address"
-                    placeholder="Add your address"
-                    isRequired
-                    styles={{
-                      label: "add-bank-details-form__label",
-                    }}
-                  />
-                  <TextField
-                    className="field"
-                    id="streetNumber"
-                    name="streetNumber"
-                    label="Street Number"
-                    placeholder="Add your street number"
-                    isRequired
-                    styles={{
-                      label: "add-bank-details-form__label",
-                    }}
-                  />
-                  <TextField
-                    className="field"
-                    id="city"
-                    name="city"
-                    label="City"
-                    placeholder="Add city"
-                    isRequired
-                    styles={{
-                      label: "add-bank-details-form__label",
-                    }}
-                  />
-                  <Dropdown
-                    className="field"
-                    name="country"
-                    label="Country/Region"
-                    placeholder="---Select country---"
-                    options={countriesOptions}
-                    shouldBeFixed={false}
-                  />
-                </div>
+                  <h3>Bank Details</h3>
+                  <div className="section bank-details">
+                    <TextField
+                      className="field"
+                      id="accountNumber"
+                      name="accountNumber"
+                      label="Bank Account number"
+                      placeholder="Add your account number"
+                      isRequired
+                      styles={{
+                        label: "add-bank-details-form__label",
+                      }}
+                    />
+                    <Dropdown
+                      className="field"
+                      name="bankCode"
+                      label="Bank Name"
+                      placeholder="---Select bank---"
+                      options={banksOptions}
+                      shouldBeFixed={false}
+                    />
+                    <TextField
+                      className="field"
+                      id="branchNumber"
+                      name="branchNumber"
+                      label="Branch Number"
+                      placeholder="Exp. 867"
+                      isRequired
+                      styles={{
+                        label: "add-bank-details-form__label",
+                      }}
+                    />
+                  </div>
 
-                <div className="files-upload-wrapper">
-                  <FileUploadButton
-                    className="files-upload-wrapper__upload-button add-photo-id"
-                    file={photoIdFile}
-                    text="Add photo ID"
-                    logo="/icons/add-proposal/add-photo-id.svg"
-                    logoUploaded="/icons/add-proposal/add-photo-id-done.svg"
-                    alt="ID file"
-                    onUpload={(file) => selectFile(file, FileType.PhotoID)}
-                    onDelete={handlePhotoIDDelete}
-                    onUploadedFileClick={
-                      photoIdFile
-                        ? () => handleUploadedFileClick(photoIdFile)
-                        : undefined
-                    }
-                  />
-                  <FileUploadButton
-                    className="files-upload-wrapper__upload-button"
-                    file={bankLetterFile}
-                    text="Add bank account letter"
-                    hint="The form can be found on the bank's website"
-                    logo="/icons/add-proposal/add-bank-account-letter.svg"
-                    logoUploaded="/icons/add-proposal/add-bank-account-letter-done.svg"
-                    alt="Bank letter file"
-                    onUpload={(file) => selectFile(file, FileType.BankLetter)}
-                    onDelete={handleBankLetterDelete}
-                    onUploadedFileClick={
-                      bankLetterFile
-                        ? () => handleUploadedFileClick(bankLetterFile)
-                        : undefined
-                    }
-                  />
-                </div>
-                <Button
-                  type="submit"
-                  disabled={!isValid || !photoIdFile || !bankLetterFile}
-                  className="save-button"
-                >
-                  Save
-                </Button>
-                {error && <div className="error">{error}</div>}
-              </Form>
-            )}
+                  {!isEditing && (
+                    <>
+                      <h3>Billing Details</h3>
+                      <div className="section billing-details">
+                        <TextField
+                          className="field"
+                          id="address"
+                          name="address"
+                          label="Address"
+                          placeholder="Add your address"
+                          isRequired
+                          styles={{
+                            label: "add-bank-details-form__label",
+                          }}
+                        />
+                        <TextField
+                          className="field"
+                          id="streetNumber"
+                          name="streetNumber"
+                          label="Street Number"
+                          placeholder="Add your street number"
+                          isRequired
+                          styles={{
+                            label: "add-bank-details-form__label",
+                          }}
+                        />
+                        <TextField
+                          className="field"
+                          id="city"
+                          name="city"
+                          label="City"
+                          placeholder="Add city"
+                          isRequired
+                          styles={{
+                            label: "add-bank-details-form__label",
+                          }}
+                        />
+                        <Dropdown
+                          className="field"
+                          name="country"
+                          label="Country/Region"
+                          placeholder="---Select country---"
+                          options={countriesOptions}
+                          shouldBeFixed={false}
+                        />
+                      </div>
+                      <div className="files-upload-wrapper">
+                        <FileUploadButton
+                          className="files-upload-wrapper__upload-button add-photo-id"
+                          file={photoIdFile}
+                          text="Add photo ID"
+                          logo="/icons/add-proposal/add-photo-id.svg"
+                          logoUploaded="/icons/add-proposal/add-photo-id-done.svg"
+                          alt="ID file"
+                          onUpload={(file) =>
+                            selectFile(file, FileType.PhotoID)
+                          }
+                          onDelete={handlePhotoIDDelete}
+                          onUploadedFileClick={
+                            photoIdFile
+                              ? () => handleUploadedFileClick(photoIdFile)
+                              : undefined
+                          }
+                        />
+                        <FileUploadButton
+                          className="files-upload-wrapper__upload-button"
+                          file={bankLetterFile}
+                          text="Add bank account letter"
+                          hint="The form can be found on the bank's website"
+                          logo="/icons/add-proposal/add-bank-account-letter.svg"
+                          logoUploaded="/icons/add-proposal/add-bank-account-letter-done.svg"
+                          alt="Bank letter file"
+                          onUpload={(file) =>
+                            selectFile(file, FileType.BankLetter)
+                          }
+                          onDelete={handleBankLetterDelete}
+                          onUploadedFileClick={
+                            bankLetterFile
+                              ? () => handleUploadedFileClick(bankLetterFile)
+                              : undefined
+                          }
+                        />
+                      </div>
+                    </>
+                  )}
+                  <Button
+                    type="submit"
+                    disabled={isSubmitButtonDisabled}
+                    className="save-button"
+                  >
+                    Save
+                  </Button>
+                  {error && <div className="error">{error}</div>}
+                </Form>
+              );
+            }}
           </Formik>
         )}
       </div>
