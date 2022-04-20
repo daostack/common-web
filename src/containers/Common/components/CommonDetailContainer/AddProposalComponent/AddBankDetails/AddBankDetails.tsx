@@ -3,7 +3,7 @@ import { Form, Formik, FormikConfig, FormikProps } from "formik";
 import { useDispatch } from "react-redux";
 import moment from "moment";
 import classNames from "classnames";
-import { DatePicker, FilePreview } from "@/shared/components";
+import { DatePicker } from "@/shared/components";
 import { Dropdown, TextField } from "@/shared/components/Form/Formik";
 import { Button, DropdownOption, Loader } from "@/shared/components";
 import {

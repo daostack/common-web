@@ -377,10 +377,7 @@ export async function addBankDetails(
 export async function updateBankDetails(
   requestData: Partial<UpdateBankAccountDetailsData>
 ): Promise<void> {
-  await Api.patch(
-    `${ApiEndpoint.UpdateBankAccount}?isSellerBankAccountDetails=true`,
-    requestData
-  );
+  await Api.patch(ApiEndpoint.UpdateBankAccount, requestData);
 }
 
 export async function getUserContributionsToCommon(
