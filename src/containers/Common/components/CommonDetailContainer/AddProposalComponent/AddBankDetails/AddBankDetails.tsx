@@ -130,9 +130,6 @@ export const AddBankDetails = (props: IProps) => {
       (doc) => doc.legalType === PaymeTypeCodes.BankAccountOwnership
     ) || null
   );
-  const [reviewingDoc, setReviewingDoc] = useState<File | PaymeDocument | null>(
-    null
-  );
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const isEditing = Boolean(initialBankAccountDetails);
@@ -167,13 +164,6 @@ export const AddBankDetails = (props: IProps) => {
   };
   const handleBankLetterDelete = () => {
     setBankLetterFile(null);
-  };
-
-  const handleUploadedFileClick = (file: File | PaymeDocument) => {
-    setReviewingDoc(file);
-  };
-  const handleFilePreviewClose = () => {
-    setReviewingDoc(null);
   };
 
   const handleDataChange = useCallback(
@@ -515,11 +505,6 @@ export const AddBankDetails = (props: IProps) => {
                             selectFile(file, FileType.PhotoID)
                           }
                           onDelete={handlePhotoIDDelete}
-                          onUploadedFileClick={
-                            photoIdFile
-                              ? () => handleUploadedFileClick(photoIdFile)
-                              : undefined
-                          }
                         />
                         <FileUploadButton
                           className="files-upload-wrapper__upload-button"
@@ -533,11 +518,6 @@ export const AddBankDetails = (props: IProps) => {
                             selectFile(file, FileType.BankLetter)
                           }
                           onDelete={handleBankLetterDelete}
-                          onUploadedFileClick={
-                            bankLetterFile
-                              ? () => handleUploadedFileClick(bankLetterFile)
-                              : undefined
-                          }
                         />
                       </div>
                     </>
@@ -556,9 +536,6 @@ export const AddBankDetails = (props: IProps) => {
           </Formik>
         )}
       </div>
-      {reviewingDoc && (
-        <FilePreview doc={reviewingDoc} onClose={handleFilePreviewClose} />
-      )}
     </div>
   );
 };
