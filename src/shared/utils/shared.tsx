@@ -8,6 +8,7 @@ import { CurrencySymbol } from "@/shared/models";
 interface FormatPriceOptions {
   shouldMillify?: boolean;
   shouldRemovePrefixFromZero?: boolean;
+  bySubscription?: boolean;
   prefix?: string;
 }
 
@@ -21,6 +22,7 @@ export const formatPrice = (
   const {
     shouldMillify = true,
     shouldRemovePrefixFromZero = true,
+    bySubscription = false,
     prefix = CurrencySymbol.Shekel,
   } = options;
 
@@ -33,7 +35,7 @@ export const formatPrice = (
   return `${prefix}${shouldMillify
       ? millify(convertedPrice)
       : convertedPrice.toLocaleString("en-US")
-    }`;
+    }${bySubscription ? "/mo" : ""}`;
 };
 
 export const formatDate = (
@@ -66,17 +68,35 @@ export const getRandomUserAvatarURL = (name?: string | null): string => (
   `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${name}&rounded=true`
 );
 
-export const getDaysAgo = (currentDate: Date, time: Time) => {
+
+interface GetDaysAgoOptions {
+  withExactTime?: boolean;
+}
+
+export const getDaysAgo = (
+  currentDate: Date,
+  time: Time,
+  options: GetDaysAgoOptions = {},
+) => {
+  const {
+    withExactTime = false,
+  } = options;
   const previousDate = new Date(time.seconds * 1000);
   const differenceInTime = currentDate.getTime() - previousDate.getTime();
   const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+  let daysAgo: string;
+
   if (differenceInDays < 1) {
-    return "Today";
+    daysAgo = "Today";
   } else if (differenceInDays < 2) {
-    return "1 day ago";
+    daysAgo = "1 day ago";
   } else {
-    return `${differenceInDays.toFixed()} days ago`;
+    daysAgo = `${differenceInDays.toFixed()} days ago`;
   }
+
+  return !withExactTime
+    ? daysAgo
+    : `${daysAgo}, ${previousDate.getHours()}:${previousDate.getMinutes()}`;
 };
 
 /**

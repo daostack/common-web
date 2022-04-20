@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { CommonShare } from "@/shared/components";
+import { CommonShare, Loader } from "@/shared/components";
 import { Common, DiscussionMessage } from "@/shared/models";
 import ChatMessage from "./ChatMessage";
 import "./index.scss";
@@ -9,7 +9,7 @@ import { Colors } from "@/shared/constants";
 import { EmptyTabComponent } from "@/containers/Common/components/CommonDetailContainer";
 
 interface ChatComponentInterface {
-  common: Common;
+  common: Common | null;
   discussionMessage: DiscussionMessage[];
   onOpenJoinModal: () => void;
   isCommonMember?: boolean;
@@ -97,12 +97,16 @@ export default function ChatComponent({
                 Join the effort
               </button>
             )}
-            <CommonShare
-              common={common}
-              type="popup"
-              color={Colors.lightPurple}
-              top="-130px"
-            />
+            {
+              common
+              ? <CommonShare
+                common={common}
+                type="popup"
+                color={Colors.lightPurple}
+                top="-130px"
+              />
+              : <Loader />
+            }
           </div>
         </div>
       ) : (

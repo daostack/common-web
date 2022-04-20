@@ -50,7 +50,7 @@ export default function ProposalCountDown({ date, type, preview, hideCounter }: 
         ? "Countdown"
         : `${!preview ? "Countdown " : ""}${formatCountDown(state.daysDifference)}:${formatCountDown(state.hoursDifference)}:${formatCountDown(state.minutesDifference)}:${formatCountDown(state.secondsDifference)}`
     ),
-    [state]
+    [state, hideCounter, preview]
   );
 
   useEffect(() => {
@@ -61,7 +61,7 @@ export default function ProposalCountDown({ date, type, preview, hideCounter }: 
 
       return () => clearTimeout(interval);
     }
-  }, [state, date]);
+  }, [state, date, hideCounter]);
 
   return (
     preview

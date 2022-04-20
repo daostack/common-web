@@ -67,7 +67,7 @@ export default function ProposalDetailModal({
     [dispatch, user, proposal]
   );
 
-  return (!proposal || !common) ? (
+  return !proposal ? (
     <Loader />
   ) : (
     <div className="proposal-detail-modal-wrapper">

@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useCallback, FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { useHistory } from "react-router";
 import classNames from "classnames";
 
 import {
   CommonListItem,
   ProposalListItem,
+  MembershipRequestListItem,
   ProposalDetailModal,
 } from "../../../Common/components";
 import {
@@ -40,7 +40,6 @@ import "./index.scss";
 
 const Activities: FC = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
   const user = useSelector(selectUser());
   const commons = useSelector(selectCommonList());
   const myProposals = useSelector(selectUserProposalList());
@@ -51,18 +50,13 @@ const Activities: FC = () => {
   const { isShowing, onOpen, onClose } = useModal(false);
   const [myCommons, setMyCommons] = useState<Common[]>([]);
   const [myFundingProposals, setMyFundingProposals] = useState<Proposal[]>([]);
+  const [myMembershipRequests, setMyMembershipRequests] = useState<Proposal[]>([]);
   const isMobileView = screenSize === ScreenSize.Mobile;
 
   const commonMember = currentCommon?.members.find(
     (member) => member.userId === user?.uid
   );
   const isCommonMember = Boolean(commonMember);
-
-  const handleViewAllClick = useCallback(
-    (route: ROUTE_PATHS) =>
-      history.push(route),
-    [history]
-  );
 
   const hideViewAllButton = useCallback(
     (collection: Array<any>) =>
@@ -88,7 +82,7 @@ const Activities: FC = () => {
 
     dispatch(
       getCommonDetail.request({
-        payload: currentProposal?.commonId,
+        payload: currentProposal.commonId,
       })
     );
 
@@ -108,20 +102,31 @@ const Activities: FC = () => {
   }, [dispatch, myProposals, user]);
 
   useEffect(() => {
+    if (commons.length === 0 || !user?.uid)
+      return
+
     const myCommons = commons.filter((common) =>
       common.members.some((member) => member.userId === user?.uid)
     );
 
     setMyCommons(myCommons);
-  }, [commons, user]);
+  }, [setMyCommons, commons, user]);
 
   useEffect(() => {
+    if (!myProposals.length)
+      return;
+
     const myFundingProposals = myProposals.filter((proposal) =>
       proposal.type === ProposalType.FundingRequest
     );
 
+    const myMembershipRequests = myProposals.filter((proposal) =>
+      proposal.type === ProposalType.Join
+    );
+
     setMyFundingProposals(myFundingProposals);
-  }, [myProposals, user]);
+    setMyMembershipRequests(myMembershipRequests);
+  }, [setMyFundingProposals, setMyMembershipRequests, myProposals]);
 
   return (
     <>
@@ -163,7 +168,7 @@ const Activities: FC = () => {
               </div>
               <img
                 className="my-account-activities_summary-icon"
-                src="/assets/images/my-account-activities-commons-summary.svg"
+                src="/assets/images/common-sign.svg"
                 alt="Commons summary icon"
               />
             </div>
@@ -178,7 +183,7 @@ const Activities: FC = () => {
               </div>
               <img
                 className="my-account-activities_summary-icon"
-                src="/assets/images/my-account-activities-proposals-summary.svg"
+                src="/assets/images/proposal-sign.svg"
                 alt="Proposals summary icon"
               />
             </div>
@@ -246,10 +251,10 @@ const Activities: FC = () => {
                 ? <div className="my-account-activities_section-list">
                   {
                     myFundingProposals.map(
-                      proposal =>
+                      fundingProposal =>
                         <ProposalListItem
-                          proposal={proposal}
-                          key={proposal.id}
+                          proposal={fundingProposal}
+                          key={fundingProposal.id}
                           loadProposalDetails={getProposalDetail}
                         />
                     ).slice(0, 4)
@@ -261,7 +266,42 @@ const Activities: FC = () => {
             }
           </section>
           <section className="my-account-activities_membership-requests">
-
+            <div className="my-account-activities_section-header">
+              <h3>
+                Membership requests ({myMembershipRequests.length})
+              </h3>
+              <NavLink
+                className={classNames(
+                  "my-account-activities_section-viewall",
+                  {
+                    hidden: hideViewAllButton(myMembershipRequests)
+                  }
+                )}
+                to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_MEMBERSHIP_REQUESTS}
+              >
+                View all
+                <img src="/icons/right-arrow.svg" alt="right-arrow" />
+              </NavLink>
+            </div>
+            {loading ? <Loader /> : null}
+            {
+              (myMembershipRequests.length !== 0)
+                ? <div className="my-account-activities_section-list">
+                  {
+                    myMembershipRequests.map(
+                      joinProposal =>
+                        <MembershipRequestListItem
+                          proposal={joinProposal}
+                          key={joinProposal.id}
+                          loadProposalDetails={getProposalDetail}
+                        />
+                    ).slice(0, 4)
+                  }
+                </div>
+                : !loading && <div>
+                  No membership requests yet
+                </div>
+            }
           </section>
         </div>
       </div>

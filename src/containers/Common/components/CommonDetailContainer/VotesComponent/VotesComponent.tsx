@@ -238,7 +238,22 @@ export default function VotesComponent(
             }
         </div>
       ),
-    []
+    [
+      compact,
+      compactCard,
+      getIsVotingOptionDisabled,
+      handleVote,
+      isShowing,
+      onClose,
+      proposal.id,
+      proposal.proposer,
+      totalVotes,
+      userVote,
+      voteType,
+      votesAbstained,
+      votesAgainst,
+      votesFor
+    ]
   );
 
   return content;
