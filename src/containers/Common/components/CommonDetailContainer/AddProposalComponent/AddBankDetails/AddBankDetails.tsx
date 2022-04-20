@@ -272,10 +272,14 @@ export const AddBankDetails = (props: IProps) => {
 
       const payload: Partial<UpdateBankAccountDetailsData> = {
         bankName,
-        idNumber: values.idNumber,
         bankCode: values.bankCode,
         branchNumber: values.branchNumber,
         accountNumber: values.accountNumber,
+        socialId: values.idNumber,
+        socialIdIssueDate: formatDate(
+          values.socialIdIssueDate,
+          DateFormat.ShortSecondary
+        ),
       };
 
       dispatch(
@@ -339,24 +343,24 @@ export const AddBankDetails = (props: IProps) => {
                         label: "add-bank-details-form__label",
                       }}
                     />
+                    <DatePicker
+                      className="add-bank-details-form__date-picker"
+                      name="socialIdIssueDate"
+                      label="ID Issuance day"
+                      selected={values.socialIdIssueDate}
+                      maxDate={moment().toDate()}
+                      onChange={(date) =>
+                        setFieldValue("socialIdIssueDate", date)
+                      }
+                      showMonthDropdown
+                      showYearDropdown
+                      adjustDateOnChange
+                      styles={{
+                        label: "add-bank-details-form__label",
+                      }}
+                    />
                     {!isEditing && (
                       <>
-                        <DatePicker
-                          className="add-bank-details-form__date-picker"
-                          name="socialIdIssueDate"
-                          label="ID Issuance day"
-                          selected={values.socialIdIssueDate}
-                          maxDate={moment().toDate()}
-                          onChange={(date) =>
-                            setFieldValue("socialIdIssueDate", date)
-                          }
-                          showMonthDropdown
-                          showYearDropdown
-                          adjustDateOnChange
-                          styles={{
-                            label: "add-bank-details-form__label",
-                          }}
-                        />
                         <DatePicker
                           className="add-bank-details-form__date-picker"
                           name="birthdate"
