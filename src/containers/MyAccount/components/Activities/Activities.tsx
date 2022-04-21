@@ -1,6 +1,16 @@
-import React, { useEffect, useState, useCallback, FC } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  FC
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
+import SwiperCore, { Pagination } from "swiper/core";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/swiper.min.css";
+import "swiper/components/pagination/pagination.min.css";
 import classNames from "classnames";
 
 import {
@@ -36,7 +46,28 @@ import {
   getLoading,
   getScreenSize,
 } from "../../../../shared/store/selectors";
+
 import "./index.scss";
+
+SwiperCore.use([Pagination]);
+
+interface ShowSliderViewAllState {
+  showSliderCommonsViewAll: boolean;
+  showSliderProposalsViewAll: boolean;
+  showSliderMembershipRequestsViewAll: boolean;
+}
+
+enum ActivitiesCollection {
+  COMMONS,
+  PROPOSALS,
+  MEMBERSHIP_REQUESTS,
+}
+
+const INITIAL_SHOW_SLIDER_VIEWALL_STATE: ShowSliderViewAllState = {
+  showSliderCommonsViewAll: false,
+  showSliderProposalsViewAll: false,
+  showSliderMembershipRequestsViewAll: false,
+};
 
 const Activities: FC = () => {
   const dispatch = useDispatch();
@@ -51,17 +82,60 @@ const Activities: FC = () => {
   const [myCommons, setMyCommons] = useState<Common[]>([]);
   const [myFundingProposals, setMyFundingProposals] = useState<Proposal[]>([]);
   const [myMembershipRequests, setMyMembershipRequests] = useState<Proposal[]>([]);
-  const isMobileView = screenSize === ScreenSize.Mobile;
+  const [
+    {
+      showSliderCommonsViewAll,
+      showSliderProposalsViewAll,
+      showSliderMembershipRequestsViewAll,
+    },
+    setShowSliderViewAllState,
+  ] = useState<ShowSliderViewAllState>(INITIAL_SHOW_SLIDER_VIEWALL_STATE);
 
-  const commonMember = currentCommon?.members.find(
-    (member) => member.userId === user?.uid
+  document.documentElement.style.setProperty("--swiper-theme-color", "#000000");
+
+  const isMobileView = useMemo(() => (screenSize === ScreenSize.Mobile), [screenSize]);
+
+  const isCommonMember = useMemo(() => {
+    const commonMember = currentCommon?.members.find(
+      (member) => member.userId === user?.uid
+    );
+
+    return Boolean(commonMember);
+  }, [currentCommon, user]);
+
+  const MAX_ROW_ITEMS_AMOUNT = useMemo(() => (isMobileView ? 5 : 4), [isMobileView]);
+
+  const showViewAllButton = useCallback(
+    (collectionLength: number) =>
+      (collectionLength > MAX_ROW_ITEMS_AMOUNT),
+    [MAX_ROW_ITEMS_AMOUNT]
   );
-  const isCommonMember = Boolean(commonMember);
 
-  const hideViewAllButton = useCallback(
-    (collection: Array<any>) =>
-      collection && (collection.length < 4),
-    []
+  const setShowSliderViewAllButton = useCallback(
+    (
+      collectionEnum: ActivitiesCollection,
+      collectionLength: number,
+      showViewAll: boolean
+    ) => {
+      switch (collectionEnum) {
+        case ActivitiesCollection.COMMONS:
+          setShowSliderViewAllState((nextState) => ({
+            ...nextState,
+            showSliderCommonsViewAll: showViewAllButton(collectionLength) && showViewAll,
+          })); return;
+        case ActivitiesCollection.PROPOSALS:
+          setShowSliderViewAllState((nextState) => ({
+            ...nextState,
+            showSliderProposalsViewAll: showViewAllButton(collectionLength) && showViewAll,
+          })); return;
+        case ActivitiesCollection.MEMBERSHIP_REQUESTS:
+          setShowSliderViewAllState((nextState) => ({
+            ...nextState,
+            showSliderMembershipRequestsViewAll: showViewAllButton(collectionLength) && showViewAll,
+          })); return;
+      }
+    },
+    [showViewAllButton]
   );
 
   const getProposalDetail = useCallback(
@@ -76,6 +150,86 @@ const Activities: FC = () => {
     onClose();
     dispatch(clearCurrentProposal());
   }, [onClose, dispatch]);
+
+  const renderCollectionListItem = useCallback(
+    (collectionEnum: ActivitiesCollection, item: Common | Proposal) => {
+      switch (collectionEnum) {
+        case ActivitiesCollection.COMMONS:
+          return (
+            <CommonListItem
+              common={item as Common}
+              key={item.id}
+            />
+          );
+        case ActivitiesCollection.PROPOSALS:
+          return (
+            <ProposalListItem
+              proposal={item as Proposal}
+              key={item.id}
+              loadProposalDetails={getProposalDetail}
+            />
+          );
+        case ActivitiesCollection.MEMBERSHIP_REQUESTS:
+          return (
+            <MembershipRequestListItem
+              proposal={item as Proposal}
+              key={item.id}
+              loadProposalDetails={getProposalDetail}
+            />
+          );
+      }
+    },
+    [getProposalDetail]
+  );
+
+  const renderCollectionList = useCallback(
+    (collection: Common[] | Proposal[], collectionEnum: ActivitiesCollection) =>
+      (
+        isMobileView
+        ? (
+          <div>
+            <Swiper
+              slidesPerView={"auto"}
+              centeredSlides={true}
+              spaceBetween={20}
+              pagination={{ clickable: true }}
+              onReachEnd={() =>
+                setShowSliderViewAllButton(
+                  collectionEnum,
+                  collection.length,
+                  true,
+                )}
+              onFromEdge={() =>
+                setShowSliderViewAllButton(
+                  collectionEnum,
+                  collection.length,
+                  false,
+              )}
+            >
+              {
+                collection.slice(0, MAX_ROW_ITEMS_AMOUNT).map(
+                  (item: Common | Proposal) =>
+                    <SwiperSlide className="swiper-slide" key={item.id}>
+                      {renderCollectionListItem(collectionEnum, item)}
+                    </SwiperSlide>
+                )
+              }
+            </Swiper>
+          </div>
+        )
+        : (
+          <div className="my-account-activities_section-list">
+            {
+              collection.slice(0, MAX_ROW_ITEMS_AMOUNT).map(
+                (item: Common | Proposal) =>
+                  renderCollectionListItem(collectionEnum, item)
+              )
+            }
+          </div>
+        )
+      ),
+    [isMobileView, renderCollectionListItem, MAX_ROW_ITEMS_AMOUNT, setShowSliderViewAllButton]
+  );
 
   useEffect(() => {
     if (!currentProposal) return;
@@ -199,7 +353,8 @@ const Activities: FC = () => {
                 className={classNames(
                   "my-account-activities_section-viewall",
                   {
-                    hidden: hideViewAllButton(myCommons)
+                    hidden: !showViewAllButton(myCommons.length)
+                            || (isMobileView && !showSliderCommonsViewAll)
                   }
                 )}
                 to={ROUTE_PATHS.MY_COMMONS}
@@ -211,17 +366,7 @@ const Activities: FC = () => {
             {loading ? <Loader /> : null}
             {
               (myCommons.length !== 0)
-                ? <div className="my-account-activities_section-list">
-                  {
-                    myCommons.map(
-                      common =>
-                        <CommonListItem
-                          common={common}
-                          key={common.id}
-                        />
-                    ).slice(0, 4)
-                  }
-                </div>
+                ? renderCollectionList(myCommons, ActivitiesCollection.COMMONS)
                 : !loading && <div>
                   No commons yet
                 </div>
@@ -236,7 +381,8 @@ const Activities: FC = () => {
                 className={classNames(
                   "my-account-activities_section-viewall",
                   {
-                    hidden: hideViewAllButton(myFundingProposals)
+                    hidden: !showViewAllButton(myFundingProposals.length)
+                            || (isMobileView && !showSliderProposalsViewAll)
                   }
                 )}
                 to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_PROPOSALS}
@@ -248,18 +394,7 @@ const Activities: FC = () => {
             {loading ? <Loader /> : null}
             {
               (myFundingProposals.length !== 0)
-                ? <div className="my-account-activities_section-list">
-                  {
-                    myFundingProposals.map(
-                      fundingProposal =>
-                        <ProposalListItem
-                          proposal={fundingProposal}
-                          key={fundingProposal.id}
-                          loadProposalDetails={getProposalDetail}
-                        />
-                    ).slice(0, 4)
-                  }
-                </div>
+                ? renderCollectionList(myFundingProposals, ActivitiesCollection.PROPOSALS)
                 : !loading && <div>
                   No proposals yet
                 </div>
@@ -274,7 +409,8 @@ const Activities: FC = () => {
                 className={classNames(
                   "my-account-activities_section-viewall",
                   {
-                    hidden: hideViewAllButton(myMembershipRequests)
+                    hidden: !showViewAllButton(myMembershipRequests.length)
+                            || (isMobileView && !showSliderMembershipRequestsViewAll)
                   }
                 )}
                 to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_MEMBERSHIP_REQUESTS}
@@ -286,18 +422,7 @@ const Activities: FC = () => {
             {loading ? <Loader /> : null}
             {
               (myMembershipRequests.length !== 0)
-                ? <div className="my-account-activities_section-list">
-                  {
-                    myMembershipRequests.map(
-                      joinProposal =>
-                        <MembershipRequestListItem
-                          proposal={joinProposal}
-                          key={joinProposal.id}
-                          loadProposalDetails={getProposalDetail}
-                        />
-                    ).slice(0, 4)
-                  }
-                </div>
+                ? renderCollectionList(myMembershipRequests, ActivitiesCollection.MEMBERSHIP_REQUESTS)
                 : !loading && <div>
                   No membership requests yet
                 </div>
