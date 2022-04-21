@@ -1,5 +1,9 @@
 @import "../../../../../constants";
 
+.billing-contribution-list {
+  overflow-y: auto;
+}
+
 .billing-contribution-list__empty-hint {
   display: flex;
   flex-direction: column;

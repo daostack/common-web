@@ -20,40 +20,44 @@ const DesktopBilling: FC<BillingProps> = (props) => {
 
   return (
     <div className="my-account-desktop-billing">
-      <section className="my-account-desktop-billing__payment-info">
-        <h3 className="my-account-desktop-billing__section-title">
-          Payment information
-        </h3>
-        {areCardsLoading ? (
-          <Loader />
-        ) : (
-          <PaymentInformation
-            cards={cards}
-            changePaymentMethodState={changePaymentMethodState}
-            onPaymentMethodChange={onPaymentMethodChange}
-            onChangePaymentMethodStateClear={onChangePaymentMethodStateClear}
-          />
-        )}
-      </section>
-      <section className="my-account-desktop-billing__bank-account">
-        <h3 className="my-account-desktop-billing__section-title">
-          Bank account
-        </h3>
-        {isBankAccountLoading ? (
-          <Loader />
-        ) : (
-          <BankAccount
-            bankAccount={bankAccount}
-            onBankAccountChange={onBankAccountChange}
-          />
-        )}
-      </section>
-      <section className="my-account-desktop-billing__contributions">
-        <h3 className="my-account-desktop-billing__section-title">
-          Contributions
-        </h3>
-        {false ? <Loader /> : <Contributions />}
-      </section>
+      <div className="my-account-desktop-billing__sections-wrapper">
+        <section className="my-account-desktop-billing__payment-info">
+          <h3 className="my-account-desktop-billing__section-title">
+            Payment information
+          </h3>
+          {areCardsLoading ? (
+            <Loader />
+          ) : (
+            <PaymentInformation
+              cards={cards}
+              changePaymentMethodState={changePaymentMethodState}
+              onPaymentMethodChange={onPaymentMethodChange}
+              onChangePaymentMethodStateClear={onChangePaymentMethodStateClear}
+            />
+          )}
+        </section>
+        <section>
+          <h3 className="my-account-desktop-billing__section-title">
+            Bank account
+          </h3>
+          {isBankAccountLoading ? (
+            <Loader />
+          ) : (
+            <BankAccount
+              bankAccount={bankAccount}
+              onBankAccountChange={onBankAccountChange}
+            />
+          )}
+        </section>
+      </div>
+      <div className="my-account-desktop-billing__contributions-section-wrapper">
+        <section className="my-account-desktop-billing__contributions">
+          <h3 className="my-account-desktop-billing__section-title">
+            Contributions
+          </h3>
+          {false ? <Loader /> : <Contributions />}
+        </section>
+      </div>
     </div>
   );
 };
