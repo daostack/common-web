@@ -82,3 +82,7 @@ export const setAuthProvider = createStandardAction(
 export const setUserPhoneNumber = createStandardAction(
   AuthActionTypes.SET_USER_PHONE_NUMBER
 )<string | null>();
+
+export const setIsAuthenticationReady = createStandardAction(
+  AuthActionTypes.SET_IS_AUTHENTICATION_READY
+)<boolean>();
