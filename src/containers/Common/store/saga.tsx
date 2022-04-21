@@ -40,7 +40,9 @@ import {
   updateBankDetails as updateBankDetailsApi,
   getBankDetails as getBankDetailsApi,
   getUserContributionsToCommon as getUserContributionsToCommonApi,
+  getUserContributions as getUserContributionsApi,
   getUserSubscriptionToCommon as getUserSubscriptionToCommonApi,
+  getUserSubscriptions as getUserSubscriptionsApi,
   updateSubscription as updateSubscriptionApi,
   getSubscriptionById,
 } from "./api";
@@ -608,6 +610,23 @@ export function* getUserContributionsToCommon(
   }
 }
 
+export function* getUserContributions(
+  action: ReturnType<typeof actions.getUserContributions.request>
+): Generator {
+  try {
+    const payments = (yield call(
+      getUserContributionsApi,
+      action.payload.payload
+    )) as Payment[];
+
+    yield put(actions.getUserContributions.success(payments));
+    action.payload.callback(null, payments);
+  } catch (error) {
+    yield put(actions.getUserContributions.failure(error));
+    action.payload.callback(error);
+  }
+}
+
 export function* getUserSubscriptionToCommon(
   action: ReturnType<typeof actions.getUserSubscriptionToCommon.request>
 ): Generator {
@@ -622,6 +641,23 @@ export function* getUserSubscriptionToCommon(
     action.payload.callback(null, subscription);
   } catch (error) {
     yield put(actions.getUserSubscriptionToCommon.failure(error));
+    action.payload.callback(error);
+  }
+}
+
+export function* getUserSubscriptions(
+  action: ReturnType<typeof actions.getUserSubscriptions.request>
+): Generator {
+  try {
+    const subscriptions = (yield call(
+      getUserSubscriptionsApi,
+      action.payload.payload
+    )) as Subscription[];
+
+    yield put(actions.getUserSubscriptions.success(subscriptions));
+    action.payload.callback(null, subscriptions);
+  } catch (error) {
+    yield put(actions.getUserSubscriptions.failure(error));
     action.payload.callback(error);
   }
 }
@@ -687,10 +723,12 @@ export function* commonsSaga() {
     actions.getUserContributionsToCommon.request,
     getUserContributionsToCommon
   );
+  yield takeLatest(actions.getUserContributions.request, getUserContributions);
   yield takeLatest(
     actions.getUserSubscriptionToCommon.request,
     getUserSubscriptionToCommon
   );
+  yield takeLatest(actions.getUserSubscriptions.request, getUserSubscriptions);
   yield takeLatest(actions.updateSubscription.request, updateSubscription);
 }
 

@@ -267,6 +267,12 @@ export const getUserContributionsToCommon = createAsyncAction(
   Error
 >();
 
+export const getUserContributions = createAsyncAction(
+  CommonsActionTypes.GET_USER_CONTRIBUTIONS,
+  CommonsActionTypes.GET_USER_CONTRIBUTIONS_SUCCESS,
+  CommonsActionTypes.GET_USER_CONTRIBUTIONS_FAILURE
+)<PayloadWithCallback<string, Payment[], Error>, Payment[], Error>();
+
 export const getUserSubscriptionToCommon = createAsyncAction(
   CommonsActionTypes.GET_USER_SUBSCRIPTION_TO_COMMON,
   CommonsActionTypes.GET_USER_SUBSCRIPTION_TO_COMMON_SUCCESS,
@@ -280,6 +286,12 @@ export const getUserSubscriptionToCommon = createAsyncAction(
   Subscription | null,
   Error
 >();
+
+export const getUserSubscriptions = createAsyncAction(
+  CommonsActionTypes.GET_USER_SUBSCRIPTIONS,
+  CommonsActionTypes.GET_USER_SUBSCRIPTIONS_SUCCESS,
+  CommonsActionTypes.GET_USER_SUBSCRIPTIONS_FAILURE
+)<PayloadWithCallback<string, Subscription[], Error>, Subscription[], Error>();
 
 export const updateSubscription = createAsyncAction(
   CommonsActionTypes.UPDATE_SUBSCRIPTION,

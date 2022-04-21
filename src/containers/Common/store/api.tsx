@@ -405,6 +405,28 @@ export async function getUserContributionsToCommon(
   return payments;
 }
 
+export async function getUserContributions(userId: string): Promise<Payment[]> {
+  const result = await firebase
+    .firestore()
+    .collection(Collection.Payments)
+    .where("userId", "==", userId)
+    .get();
+
+  return transformFirebaseDataList<Payment>(result);
+}
+
+export async function getUserSubscriptions(
+  userId: string
+): Promise<Subscription[]> {
+  const result = await firebase
+    .firestore()
+    .collection(Collection.Subscriptions)
+    .where("userId", "==", userId)
+    .get();
+
+  return transformFirebaseDataList<Subscription>(result);
+}
+
 export async function getSubscriptionById(
   subscriptionId: string
 ): Promise<Subscription | null> {
