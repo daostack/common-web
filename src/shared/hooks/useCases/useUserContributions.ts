@@ -5,7 +5,12 @@ import {
   getUserContributions,
   getUserSubscriptions,
 } from "@/containers/Common/store/actions";
-import { Payment, Subscription } from "@/shared/models";
+import {
+  Payment,
+  PaymentStatus,
+  Subscription,
+  isPayment,
+} from "@/shared/models";
 
 export interface PaymentsState {
   loading: boolean;
@@ -47,14 +52,17 @@ const useUserContributions = (): Return => {
     }
 
     return [...paymentsState.data, ...subscriptionsState.data].sort((a, b) => {
-      if (!b.createdAt) {
+      const aDate = isPayment(a) ? a.createdAt : a.lastChargedAt;
+      const bDate = isPayment(b) ? b.createdAt : b.lastChargedAt;
+
+      if (!bDate) {
         return -1;
       }
-      if (!a.createdAt) {
+      if (!aDate) {
         return 1;
       }
 
-      return b.createdAt.seconds - a.createdAt.seconds;
+      return bDate.seconds - aDate.seconds;
     });
   }, [isLoading, paymentsState.data, subscriptionsState.data]);
 
@@ -71,10 +79,15 @@ const useUserContributions = (): Return => {
       getUserContributions.request({
         payload: user.uid,
         callback: (error, payments) => {
+          const data = payments?.filter(
+            (item) =>
+              !item.subscriptionId || item.status === PaymentStatus.Failed
+          );
+
           setPaymentsState({
             loading: false,
             fetched: true,
-            data: payments || [],
+            data: data || [],
           });
         },
       })

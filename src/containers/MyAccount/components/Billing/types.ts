@@ -1,5 +1,10 @@
 import { ChangePaymentMethodState } from "@/shared/hooks/useCases";
-import { BankAccountDetails, Card } from "@/shared/models";
+import {
+  BankAccountDetails,
+  Card,
+  Payment,
+  Subscription,
+} from "@/shared/models";
 
 export interface BillingProps {
   areCardsLoading: boolean;
@@ -10,6 +15,8 @@ export interface BillingProps {
   onPaymentMethodChange: () => void;
   onChangePaymentMethodStateClear: () => void;
   onBankAccountChange: (data: BankAccountDetails) => void;
+  areContributionsLoading: boolean;
+  contributions: (Payment | Subscription)[];
 }
 
 export interface CardsState {

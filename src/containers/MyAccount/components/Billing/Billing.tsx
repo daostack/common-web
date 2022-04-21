@@ -5,13 +5,16 @@ import {
   loadUserCards,
 } from "@/containers/Common/store/actions";
 import { ScreenSize } from "@/shared/constants";
-import { usePaymentMethodChange } from "@/shared/hooks/useCases";
+import {
+  usePaymentMethodChange,
+  useUserContributions,
+} from "@/shared/hooks/useCases";
+import { BankAccountDetails } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { DesktopBilling } from "./DesktopBilling";
 import { MobileBilling } from "./MobileBilling";
 import { BankAccountState, BillingProps, CardsState } from "./types";
 import "./index.scss";
-import { BankAccountDetails } from "@/shared/models";
 
 const Billing: FC = () => {
   const dispatch = useDispatch();
@@ -32,6 +35,10 @@ const Billing: FC = () => {
     onPaymentMethodChange,
     reset: resetPaymentMethodChange,
   } = usePaymentMethodChange();
+  const {
+    loading: areContributionsLoading,
+    contributions,
+  } = useUserContributions();
 
   const handleBankAccountChange = (data: BankAccountDetails) => {
     setBankAccountState((nextState) => ({
@@ -114,6 +121,8 @@ const Billing: FC = () => {
     onPaymentMethodChange,
     onChangePaymentMethodStateClear: resetPaymentMethodChange,
     onBankAccountChange: handleBankAccountChange,
+    areContributionsLoading,
+    contributions,
   };
 
   return (

@@ -3,6 +3,11 @@
 .billing-contribution-list {
   overflow-y: auto;
 }
+.billing-contribution-list--non-empty {
+  padding: 1.5rem 1.875rem;
+  border: 1px solid $light-gray-1;
+  border-radius: 0.5rem;
+}
 
 .billing-contribution-list__empty-hint {
   display: flex;
@@ -20,4 +25,12 @@
   font-size: $small;
   font-weight: 600;
   text-align: center;
+}
+
+.billing-contribution-list__list {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
 }
