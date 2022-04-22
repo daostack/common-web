@@ -215,6 +215,15 @@ export function* loadUserProposalList(
     yield put(startLoading());
     const proposals = (yield fetchUserProposals(action.payload)) as Proposal[];
     const proposer = (yield getUserData(action.payload)) as User;
+    const discussions_ids = proposals.map(proposal => proposal.id);
+    const discussionMessages = (yield fetchDiscussionsMessages(discussions_ids)) as DiscussionMessage[];
+
+    const getProposalMessages = (proposal: Proposal) => (
+      discussionMessages.filter(
+        (dMessage: DiscussionMessage) =>
+          (dMessage.discussionId === proposal.id)
+      )
+    );
 
     const processedUserProposals = proposals.map(
       proposal =>
@@ -222,6 +231,7 @@ export function* loadUserProposalList(
         {
           ...proposal,
           proposer,
+          discussionMessage: getProposalMessages(proposal),
         }
       )
     );

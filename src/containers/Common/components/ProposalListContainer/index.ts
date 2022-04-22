@@ -1,2 +1,2 @@
-export * from "./ProposalListItem";
+export * from "./FundingProposalListItem";
 export * from "./MembershipRequestListItem";

@@ -110,3 +110,8 @@ export interface Proposal {
   payoutDocsComment?: string
   payoutDocsRejectionReason?: string;
 }
+
+export interface ProposalListItemInterface {
+    proposal: Proposal;
+    loadProposalDetails: (payload: Proposal) => void;
+}

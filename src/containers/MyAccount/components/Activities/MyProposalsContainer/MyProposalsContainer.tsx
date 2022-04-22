@@ -1,10 +1,20 @@
-import React, { useEffect, useCallback, useState, FC } from "react";
+import React, {
+    useEffect,
+    useCallback,
+    useMemo,
+    useState,
+    FC,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import classNames from "classnames";
 
 import { Proposal, ProposalType } from "@/shared/models";
-import { MembershipRequestListItem, ProposalDetailModal } from "../../../../Common/components";
+import {
+    FundingProposalListItem,
+    MembershipRequestListItem,
+    ProposalDetailModal
+} from "../../../../Common/components";
 import { Loader, Modal } from "@/shared/components";
 import { useModal } from "@/shared/hooks";
 import { ROUTE_PATHS, ScreenSize } from "@/shared/constants";
@@ -27,8 +37,13 @@ import {
 } from "../../../../Common/store/actions";
 import "./index.scss";
 
-const MyMembershipRequestsContainer: FC = () => {
+interface MyProposalsContainerRouterParams {
+    proposalType: ProposalType;
+}
+
+const MyProposalsContainer: FC = () => {
     const dispatch = useDispatch();
+    const { proposalType } = useParams<MyProposalsContainerRouterParams>();
     const myProposals = useSelector(selectUserProposalList());
     const user = useSelector(selectUser());
     const currentProposal = useSelector(selectCurrentProposal());
@@ -36,19 +51,22 @@ const MyMembershipRequestsContainer: FC = () => {
     const loading = useSelector(getLoading());
     const screenSize = useSelector(getScreenSize());
     const { isShowing, onOpen, onClose } = useModal(false);
-    const [myMembershipRequests, setMyMembershipRequests] = useState<Proposal[]>([]);
+    const [myProposalsByType, setMyProposalsByType] = useState<Proposal[]>([]);
 
-    const isMobileView = screenSize === ScreenSize.Mobile;
+    const isMobileView = useMemo(() => (screenSize === ScreenSize.Mobile), [screenSize]);
 
-    const commonMember = currentCommon?.members.find(
-        (member) => member.userId === user?.uid
-    );
-    const isCommonMember = Boolean(commonMember);
+    const isCommonMember = useMemo(() => {
+        const commonMember = currentCommon?.members.find(
+            (member) => member.userId === user?.uid
+        );
+
+        return Boolean(commonMember);
+    }, [currentCommon, user]);
 
     const getProposalDetail = useCallback(
         (payload: Proposal) => {
-        dispatch(loadProposalDetail.request(payload));
-        onOpen();
+            dispatch(loadProposalDetail.request(payload));
+            onOpen();
         },
         [dispatch, onOpen]
     );
@@ -57,6 +75,23 @@ const MyMembershipRequestsContainer: FC = () => {
         onClose();
         dispatch(clearCurrentProposal());
     }, [onClose, dispatch]);
+
+    const renderListItem = useCallback((proposal: Proposal) => {
+        switch (proposalType) {
+            case ProposalType.FundingRequest:
+                return <FundingProposalListItem
+                    proposal={proposal}
+                    key={proposal.id}
+                    loadProposalDetails={getProposalDetail}
+                />;
+            case ProposalType.Join:
+                return <MembershipRequestListItem
+                    proposal={proposal}
+                    key={proposal.id}
+                    loadProposalDetails={getProposalDetail}
+                />;
+        }
+    }, [proposalType, getProposalDetail]);
 
     useEffect(() => {
         if (myProposals.length === 0 && user?.uid)
@@ -67,12 +102,12 @@ const MyMembershipRequestsContainer: FC = () => {
         if (!myProposals.length)
             return;
 
-        const myMembershipRequests = myProposals.filter((proposal) =>
-            proposal.type === ProposalType.Join
+        const myProposalsByType = myProposals.filter((proposal) =>
+            proposal.type === proposalType
         );
 
-        setMyMembershipRequests(myMembershipRequests);
-    }, [myProposals, setMyMembershipRequests]);
+        setMyProposalsByType(myProposalsByType);
+    }, [myProposals, setMyProposalsByType, proposalType]);
 
     useEffect(() => {
         if (!currentProposal) return;
@@ -101,37 +136,35 @@ const MyMembershipRequestsContainer: FC = () => {
                     isHeaderSticky
                     shouldShowHeaderShadow={false}
                     styles={{
-                        headerWrapper: "my-membership-requests__detail-modal-header-wrapper",
+                        headerWrapper: "my-proposals__detail-modal-header-wrapper",
                     }}
                 >
                     <ProposalDetailModal
                         proposal={currentProposal}
                         common={currentCommon}
-                        onOpenJoinModal={() => true}
                         isCommonMember={isCommonMember}
-                        isJoiningPending={false}
                     />
                 </Modal>
             }
-            <div className="my-membership-requests">
-                <h2 className="my-membership-requests_header">
+            <div className="my-proposals">
+                <h2 className="my-proposals_header">
                     <NavLink
                         to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES}
                     >
                         <img src="/icons/left-arrow.svg" alt="left-arrow" />
-                        Membership requests ({myMembershipRequests.length})
+                        {
+                            (proposalType === ProposalType.FundingRequest)
+                                ? "Proposals "
+                                : "Membership requests "
+                        }({myProposalsByType.length})
                     </NavLink>
                 </h2>
                 {loading ? <Loader /> : null}
-                <div className="my-membership-requests_proposals-list">
+                <div className="my-proposals_proposals-list">
                     {
-                        myMembershipRequests.map(
+                        myProposalsByType.map(
                             proposal =>
-                                <MembershipRequestListItem
-                                    proposal={proposal}
-                                    key={proposal.id}
-                                    loadProposalDetails={getProposalDetail}
-                                />
+                                renderListItem(proposal)
                         )
                     }
                 </div>
@@ -140,4 +173,4 @@ const MyMembershipRequestsContainer: FC = () => {
     );
 };
 
-export default MyMembershipRequestsContainer;
+export default MyProposalsContainer;

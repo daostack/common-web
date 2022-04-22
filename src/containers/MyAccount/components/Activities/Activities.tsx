@@ -15,10 +15,11 @@ import classNames from "classnames";
 
 import {
   CommonListItem,
-  ProposalListItem,
+  FundingProposalListItem,
   MembershipRequestListItem,
   ProposalDetailModal,
 } from "../../../Common/components";
+import { CollectionSummaryCard } from "./CollectionSummaryCard";
 import {
   Common,
   Proposal,
@@ -163,7 +164,7 @@ const Activities: FC = () => {
           );
         case ActivitiesCollection.PROPOSALS:
           return (
-            <ProposalListItem
+            <FundingProposalListItem
               proposal={item as Proposal}
               key={item.id}
               loadProposalDetails={getProposalDetail}
@@ -301,9 +302,7 @@ const Activities: FC = () => {
           <ProposalDetailModal
             proposal={currentProposal}
             common={currentCommon}
-            onOpenJoinModal={() => true}
             isCommonMember={isCommonMember}
-            isJoiningPending={false}
           />
         </Modal>
       }
@@ -311,36 +310,18 @@ const Activities: FC = () => {
         <div className="my-account-activities__header">
           <h2 className="route-title">Activities</h2>
           <div className="my-account-activities_summaries">
-            <div className="my-account-activities_summaries-item">
-              <div className="my-account-activities_summary-info">
-                <span className="my-account-activities_summary-amount">
-                  {myCommons.length}
-                </span>
-                <span className="my-account-activities_summary-title">
-                  Commons
-                </span>
-              </div>
-              <img
-                className="my-account-activities_summary-icon"
-                src="/assets/images/common-sign.svg"
-                alt="Commons summary icon"
-              />
-            </div>
-            <div className="my-account-activities_summaries-item">
-              <div className="my-account-activities_summary-info">
-                <span className="my-account-activities_summary-amount">
-                  {myFundingProposals.length}
-                </span>
-                <span className="my-account-activities_summary-title">
-                  Proposals
-                </span>
-              </div>
-              <img
-                className="my-account-activities_summary-icon"
-                src="/assets/images/proposal-sign.svg"
-                alt="Proposals summary icon"
-              />
-            </div>
+            <CollectionSummaryCard
+              collectionName="Commons"
+              collectionLength={myCommons.length}
+              iconSrc="/assets/images/common-sign.svg"
+              iconAlt="Commons summary icon"
+            />
+            <CollectionSummaryCard
+              collectionName="Proposals"
+              collectionLength={myProposals.length}
+              iconSrc="/assets/images/proposal-sign.svg"
+              iconAlt="Proposals summary icon"
+            />
           </div>
         </div>
         <div className="my-account-activities_content-wrapper">
@@ -385,7 +366,7 @@ const Activities: FC = () => {
                             || (isMobileView && !showSliderProposalsViewAll)
                   }
                 )}
-                to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_PROPOSALS}
+                to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_PROPOSALS.replace(":proposalType", ProposalType.FundingRequest)}
               >
                 View all
                 <img src="/icons/right-arrow.svg" alt="right-arrow" />
@@ -413,7 +394,7 @@ const Activities: FC = () => {
                             || (isMobileView && !showSliderMembershipRequestsViewAll)
                   }
                 )}
-                to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_MEMBERSHIP_REQUESTS}
+                to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_PROPOSALS.replace(":proposalType", ProposalType.Join)}
               >
                 View all
                 <img src="/icons/right-arrow.svg" alt="right-arrow" />

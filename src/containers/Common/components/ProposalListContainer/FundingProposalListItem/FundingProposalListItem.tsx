@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 
-import { Proposal } from "@/shared/models";
+import { ProposalListItemInterface } from "@/shared/models";
 import { UserAvatar, Separator } from "@/shared/components";
 import {
     VotesComponent,
@@ -15,12 +15,7 @@ import {
 } from "@/shared/utils";
 import "./index.scss";
 
-interface ProposalListItemInterface {
-    proposal: Proposal;
-    loadProposalDetails: (payload: Proposal) => void;
-}
-
-const ProposalListItem: FC<ProposalListItemInterface> = (
+const FundingProposalListItem: FC<ProposalListItemInterface> = (
     {
         proposal,
         loadProposalDetails
@@ -97,4 +92,4 @@ const ProposalListItem: FC<ProposalListItemInterface> = (
     </div>
 );
 
-export default ProposalListItem;
+export default FundingProposalListItem;

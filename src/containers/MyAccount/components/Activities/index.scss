@@ -19,35 +19,6 @@
       align-items: center;
       justify-content: space-between;
       color: $white;
-
-      .my-account-activities_summaries-item {
-        width: 9rem;
-        height: 4.5rem;
-        border-radius: 8px;
-        background-color: $purple;
-        display: flex;
-        justify-content: space-between;
-
-        .my-account-activities_summary-info {
-          margin: 0.5rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-end;
-
-          .my-account-activities_summary-title {
-            font-size: $xxsmall;
-          }
-        }
-
-        .my-account-activities_summary-icon {
-          width: 1rem;
-          height: 1rem;
-          border-radius: 24px;
-          background-color: $white;
-          margin: 0.5rem;
-          padding: 0.25rem;
-        }
-      }
     }
 
     @include big-phone {
@@ -104,20 +75,6 @@
 
       .my-account-activities_summaries {
         max-width: 100%;
-        .my-account-activities_summaries-item {
-          width: 100%;
-          max-width: 45%;
-          height: 7.8rem;
-          position: relative;
-
-          .my-account-activities_summary-icon {
-            width: 2rem;
-            height: 2rem;
-            position: absolute;
-            top: 6%;
-            left: 5%;
-          }
-        }
       }
     }
     .my-account-activities_content-wrapper {

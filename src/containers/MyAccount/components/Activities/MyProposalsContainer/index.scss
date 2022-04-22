@@ -28,6 +28,12 @@
   }
 }
 
+@media only screen and (max-width: $mobile-breakpoint) {
+  .my-proposals {
+    padding: 15px 0 25px 0;
+  }
+}
+
 .my-proposals__detail-modal-header-wrapper {
   position: absolute;
   top: 0;

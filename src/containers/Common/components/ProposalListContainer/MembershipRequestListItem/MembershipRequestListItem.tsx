@@ -2,9 +2,9 @@ import React, { FC, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import {
-    Proposal,
     Common,
     CommonContributionType,
+    ProposalListItemInterface,
 } from "@/shared/models";
 import { Separator } from "@/shared/components";
 import { fetchCommonDetail } from "../../../../Common/store/api";
@@ -18,11 +18,6 @@ import {
 
 } from "@/shared/utils";
 import "./index.scss";
-
-interface ProposalListItemInterface {
-    proposal: Proposal;
-    loadProposalDetails: (payload: Proposal) => void;
-}
 
 const MembershipRequestListItem: FC<ProposalListItemInterface> = (
     {
