@@ -1,15 +1,16 @@
 import React, { FC } from "react";
 import classNames from "classnames";
-import { Payment, Subscription } from "@/shared/models";
+import { isPayment, Payment, Subscription } from "@/shared/models";
 import { ContributionListItem } from "../ContributionListItem";
 import "./index.scss";
 
 interface ContributionListProps {
   contributions: (Payment | Subscription)[];
+  subscriptions: Subscription[];
 }
 
 const ContributionList: FC<ContributionListProps> = (props) => {
-  const { contributions } = props;
+  const { contributions, subscriptions } = props;
 
   return (
     <div
@@ -30,13 +31,22 @@ const ContributionList: FC<ContributionListProps> = (props) => {
         </div>
       ) : (
         <ul className="billing-contribution-list__list">
-          {contributions.map((contribution) => (
-            <ContributionListItem
-              key={contribution.id}
-              title="Common Name"
-              contribution={contribution}
-            />
-          ))}
+          {contributions.map((contribution) => {
+            const subscription = isPayment(contribution)
+              ? subscriptions.find(
+                  (item) => item.id === contribution.subscriptionId
+                )
+              : null;
+
+            return (
+              <ContributionListItem
+                key={contribution.id}
+                title="Common Name"
+                contribution={contribution}
+                subscription={subscription}
+              />
+            );
+          })}
         </ul>
       )}
     </div>

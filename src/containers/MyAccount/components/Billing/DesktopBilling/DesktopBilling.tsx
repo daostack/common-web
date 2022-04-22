@@ -18,6 +18,7 @@ const DesktopBilling: FC<BillingProps> = (props) => {
     onBankAccountChange,
     areContributionsLoading,
     contributions,
+    subscriptions,
   } = props;
 
   return (
@@ -57,7 +58,14 @@ const DesktopBilling: FC<BillingProps> = (props) => {
           <h3 className="my-account-desktop-billing__section-title">
             Contributions
           </h3>
-          {areContributionsLoading ? <Loader /> : <Contributions contributions={contributions} />}
+          {areContributionsLoading ? (
+            <Loader />
+          ) : (
+            <Contributions
+              contributions={contributions}
+              subscriptions={subscriptions}
+            />
+          )}
         </section>
       </div>
     </div>

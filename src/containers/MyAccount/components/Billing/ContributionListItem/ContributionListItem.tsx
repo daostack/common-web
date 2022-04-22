@@ -6,6 +6,7 @@ import {
   isPayment,
   DateFormat,
   Payment,
+  PaymentStatus,
   Subscription,
   SubscriptionStatus,
 } from "@/shared/models";
@@ -22,6 +23,7 @@ interface Content {
 interface ContributionListProps {
   title: string;
   contribution: Payment | Subscription;
+  subscription?: Subscription | null;
 }
 
 const getSubscriptionContent = (subscription: Subscription): Content => {
@@ -49,31 +51,61 @@ const getSubscriptionContent = (subscription: Subscription): Content => {
   };
 };
 
-const getContent = (contribution: Payment | Subscription): Content => {
-  if (!isPayment(contribution)) {
-    return getSubscriptionContent(contribution);
-  }
+const getPaymentContent = (
+  payment: Payment,
+  subscription?: Subscription | null
+): Content => {
+  const isFailedPayment = payment.status === PaymentStatus.Failed;
+  const isMonthlyPayment = Boolean(payment.subscriptionId);
 
   return {
-    statusText: "Payment failed",
-    statusDescription: "",
+    status: isFailedPayment ? "failure" : "success",
+    statusText: isFailedPayment ? "Payment failed" : "Confirmed",
+    statusDescription: `${formatPrice(payment.amount.amount)}${
+      isMonthlyPayment ? "/mo" : ""
+    }`,
+    description:
+      isMonthlyPayment && subscription
+        ? `Next payment: ${formatDate(
+            new Date(subscription.dueDate.seconds * 1000),
+            DateFormat.GeneralHuman
+          )}`
+        : "",
   };
 };
 
+const getContent = (
+  contribution: Payment | Subscription,
+  subscription?: Subscription | null
+): Content =>
+  isPayment(contribution)
+    ? getPaymentContent(contribution, subscription)
+    : getSubscriptionContent(contribution);
+
 const ContributionListItem: FC<ContributionListProps> = (props) => {
-  const { title, contribution } = props;
+  const { title, contribution, subscription } = props;
   const { status, statusText, statusDescription, description } = getContent(
-    contribution
+    contribution,
+    subscription
   );
 
   return (
     <li className="billing-contribution-list-item">
       <ButtonLink className="billing-contribution-list-item__link">
-        <div className="billing-contribution-list-item__title-wrapper">
+        <div
+          className={classNames(
+            "billing-contribution-list-item__title-wrapper",
+            {
+              "billing-contribution-list-item__title-wrapper--centered": !description,
+            }
+          )}
+        >
           <h3 className="billing-contribution-list-item__title">{title}</h3>
-          <p className="billing-contribution-list-item__description">
-            {description}
-          </p>
+          {description && (
+            <p className="billing-contribution-list-item__description">
+              {description}
+            </p>
+          )}
         </div>
         <div className="billing-contribution-list-item__status-container">
           <div

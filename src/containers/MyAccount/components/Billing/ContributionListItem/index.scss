@@ -31,6 +31,11 @@
   justify-content: space-between;
 }
 
+.billing-contribution-list-item__title-wrapper--centered,
+.billing-contribution-list-item__status-wrapper--centered {
+  justify-content: center;
+}
+
 .billing-contribution-list-item__title {
   margin: 0;
   font-size: $small;
@@ -49,9 +54,6 @@
 
 .billing-contribution-list-item__status-wrapper {
   align-items: flex-end;
-}
-.billing-contribution-list-item__status-wrapper--centered {
-  justify-content: center;
 }
 
 .billing-contribution-list-item__status {

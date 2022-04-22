@@ -27,6 +27,7 @@ export interface SubscriptionsState {
 interface Return {
   loading: boolean;
   contributions: (Payment | Subscription)[];
+  subscriptions: Subscription[];
 }
 
 const useUserContributions = (): Return => {
@@ -81,7 +82,9 @@ const useUserContributions = (): Return => {
         callback: (error, payments) => {
           const data = payments?.filter(
             (item) =>
-              !item.subscriptionId || item.status === PaymentStatus.Failed
+              (!item.subscriptionId &&
+                item.status === PaymentStatus.Confirmed) ||
+              item.status === PaymentStatus.Failed
           );
 
           setPaymentsState({
@@ -123,6 +126,7 @@ const useUserContributions = (): Return => {
 
   return {
     loading: isLoading,
+    subscriptions: subscriptionsState.data,
     contributions,
   };
 };

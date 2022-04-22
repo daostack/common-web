@@ -15,14 +15,18 @@ import "./index.scss";
 
 interface ContributionsProps {
   contributions: (Payment | Subscription)[];
+  subscriptions: Subscription[];
 }
 
 const Contributions: FC<ContributionsProps> = (props) => {
-  const { contributions } = props;
+  const { contributions, subscriptions } = props;
 
   return (
     <>
-      <ContributionList contributions={contributions} />
+      <ContributionList
+        contributions={contributions}
+        subscriptions={subscriptions}
+      />
     </>
   );
 };

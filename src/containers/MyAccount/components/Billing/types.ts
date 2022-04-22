@@ -17,6 +17,7 @@ export interface BillingProps {
   onBankAccountChange: (data: BankAccountDetails) => void;
   areContributionsLoading: boolean;
   contributions: (Payment | Subscription)[];
+  subscriptions: Subscription[];
 }
 
 export interface CardsState {
