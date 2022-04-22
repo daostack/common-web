@@ -1,14 +1,28 @@
 @import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+$sections-breakpoint: 1250px;
 
 .my-account-desktop-billing {
   min-height: 28.625rem;
   display: flex;
+
+  @include viewport-breakpoint($sections-breakpoint) {
+    flex-direction: column;
+  }
 }
 
 .my-account-desktop-billing__sections-wrapper {
   flex-shrink: 0;
   min-width: 20.625rem;
   margin-right: 2.5rem;
+
+  @include viewport-breakpoint($sections-breakpoint) {
+    max-width: 20.625rem;
+    min-width: unset;
+    margin-right: 0;
+    margin-bottom: 2rem;
+  }
 }
 
 .my-account-desktop-billing__payment-info {
@@ -30,6 +44,14 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+
+  @include viewport-breakpoint($sections-breakpoint) {
+    position: static;
+    top: unset;
+    right: unset;
+    bottom: unset;
+    left: unset;
+  }
 }
 
 .my-account-desktop-billing__section-title {

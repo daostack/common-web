@@ -5,6 +5,7 @@
   width: 100%;
   font-family: NunitoSans, sans-serif;
   color: $secondary-blue;
+  overflow: hidden;
 
   @include big-phone {
     display: flex;
