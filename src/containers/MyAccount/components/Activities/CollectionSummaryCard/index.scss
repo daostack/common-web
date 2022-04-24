@@ -3,7 +3,7 @@
 .summary-card {
   width: 9rem;
   height: 4.5rem;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   background-color: $purple;
   display: flex;
   justify-content: space-between;
@@ -22,7 +22,7 @@
   .summary-card_icon {
     width: 1rem;
     height: 1rem;
-    border-radius: 24px;
+    border-radius: 1.5rem;
     background-color: $white;
     margin: 0.5rem;
     padding: 0.25rem;

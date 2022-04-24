@@ -3,7 +3,7 @@
 .my-proposals {
   width: 100%;
   margin-left: 2%;
-  padding: 40px 0;
+  padding: 2.5rem 0;
 
   .my-proposals_header {
     display: flex;
@@ -15,7 +15,8 @@
       color: $black;
       cursor: pointer;
       font-size: $moderate-med;
-      font-family: NunitoSans-Bold, sans-serif;
+      font-family: NunitoSans, sans-serif;
+      font-weight: bold;
     }
   }
 
@@ -30,7 +31,7 @@
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .my-proposals {
-    padding: 15px 0 25px 0;
+    padding: 0.9rem 0 1.5rem 0;
   }
 }
 

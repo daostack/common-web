@@ -5,18 +5,18 @@
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  max-width: 300px;
-  height: 190px;
-  border-radius: 24px;
+  max-width: 18rem;
+  height: 12rem;
+  border-radius: 1.5rem;
   box-shadow: 0 3px 8px 0 #001a3614;
   background-color: #ffffff;
 
   .membership-request-item_header {
-    height: 27px;
-    border-radius: 24px 24px 0 0;
+    height: 1.7rem;
+    border-radius: 1.5rem 1.5rem 0 0;
 
     div {
-      border-radius: 24px 24px 0 0 !important;
+      border-radius: 1.5rem 1.5rem 0 0 !important;
       margin: 0;
     }
   }
@@ -29,7 +29,7 @@
     width: 90%;
 
     > div {
-      margin-top: 10px;
+      margin-top: 0.625rem;
     }
 
     .membership-request-item_info {
@@ -47,7 +47,7 @@
         .common-icon {
           width: 1.5rem;
           height: 1.5rem;
-          margin-right: 5px;
+          margin-right: 0.3rem;
           background-color: transparent;
         }
       }
@@ -58,9 +58,9 @@
         align-items: flex-end;
 
         .days-ago {
-          font-size: 14px;
+          font-size: $xsmall;
           color: $light-gray-2;
-          max-width: 95px;
+          max-width: 5.9rem;
           width: 100%;
           text-align: end;
         }
@@ -70,7 +70,7 @@
 
   .membership-request-item_footer {
     width: 100%;
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
 
     .membership-request-item_footer-wrapper {
       width: 90%;
@@ -84,8 +84,8 @@
         align-items: center;
 
         .count {
-          margin-left: 8px;
-          font-size: 16px;
+          margin-left: 0.5rem;
+          font-size: $small;
           font-weight: bold;
           color: $light-gray-2;
         }
@@ -95,8 +95,9 @@
         display: flex;
         cursor: pointer;
         color: $purple-2;
-        font-family: NunitoSans-Bold;
-        font-size: 14px;
+        font-family: NunitoSans, sans-serif;
+        font-weight: bold;
+        font-size: $xsmall;
         width: 41%;
         align-items: center;
       }

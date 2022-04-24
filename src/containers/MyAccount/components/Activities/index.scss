@@ -6,7 +6,8 @@
 
   .my-account-activities__header {
     margin-bottom: 2.5rem;
-    font-family: NunitoSans-Bold, sans-serif;
+    font-family: NunitoSans, sans-serif;
+    font-weight: bold;
     font-size: $moderate-med;
     display: flex;
     align-items: center;
@@ -33,7 +34,7 @@
     justify-content: space-between;
 
     > section:not(:last-child) {
-      margin-bottom: 50px;
+      margin-bottom: 3.125rem;
     }
 
     .my-account-activities_section-header {
@@ -79,14 +80,14 @@
     }
     .my-account-activities_content-wrapper {
       > section:not(:last-child) {
-        margin-bottom: 20px;
+        margin-bottom: 1.25rem;
       }
     }
 
     .swiper-container {
-      height: 270px;
+      height: 16.875rem;
       .swiper-slide {
-        max-width: 300px;
+        max-width: 18.75rem;
       }
     }
   }

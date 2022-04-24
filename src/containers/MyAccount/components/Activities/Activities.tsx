@@ -18,7 +18,7 @@ import {
   FundingProposalListItem,
   MembershipRequestListItem,
   ProposalDetailModal,
-} from "../../../Common/components";
+} from "@/containers/Common/components";
 import { CollectionSummaryCard } from "./CollectionSummaryCard";
 import {
   Common,

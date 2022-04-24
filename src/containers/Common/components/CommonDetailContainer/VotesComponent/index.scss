@@ -24,7 +24,7 @@
     &.compact-card {
       justify-content: flex-start;
       > div {
-        margin-right: 5px;
+        margin-right: 0.3rem;
       }
     }
 
@@ -47,14 +47,14 @@
 
       &.compact-card {
         flex-direction: row;
-        font-size: 12px;
+        font-size: $xxsmall;
         color: $light-gray-2;
       }
 
       button {
         background-color: transparent;
         border: 1px solid $gray;
-        border-radius: 20px;
+        border-radius: 1.25rem;
         width: 6rem;
         height: 3rem;
         display: flex;

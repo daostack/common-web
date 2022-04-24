@@ -5,18 +5,18 @@
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  max-width: 300px;
-  height: 210px;
-  border-radius: 24px;
+  max-width: 18.75rem;
+  height: 13.125rem;
+  border-radius: 1.5rem;
   box-shadow: 0 3px 8px 0 #001a3614;
   background-color: #ffffff;
 
   .proposal-item_header {
-    height: 27px;
-    border-radius: 24px 24px 0 0;
+    height: 1.7rem;
+    border-radius: 1.5rem 1.5rem 0 0;
 
     div {
-      border-radius: 24px 24px 0 0 !important;
+      border-radius: 1.5rem 1.5rem 0 0 !important;
       margin: 0;
     }
   }
@@ -29,30 +29,31 @@
     width: 90%;
 
     > div:not(:last-child) {
-      margin-bottom: 10px;
+      margin-bottom: 0.625rem;
     }
 
     .proposal-item_description {
       display: flex;
       justify-content: space-between;
-      font-family: NunitoSans-Bold;
-      font-size: 14px;
+      font-family: NunitoSans, sans-serif;
+      font-weight: bold;
+      font-size: $xsmall;
 
       p {
         margin: 0;
         align-self: center;
-        font-size: 14px;
+        font-size: $xsmall;
       }
 
       .proposal-item_vertical-menu {
-        width: 40px;
-        height: 40px;
+        width: 2.5rem;
+        height: 2.5rem;
         background-color: transparent;
         background-image: url("/icons/vertical-menu.svg");
         background-repeat: no-repeat;
         background-position: center;
         cursor: pointer;
-        margin-left: 10px;
+        margin-left: 0.625rem;
 
         &:hover {
           opacity: 0.8;
@@ -69,15 +70,15 @@
         justify-content: space-between;
 
         .proposal-item_info-proposer {
-          margin-left: 5px;
+          margin-left: 0.3rem;
 
           .user-fullname {
-            font-size: 16px;
+            font-size: $small;
             color: #001a36;
           }
 
           .days-ago {
-            font-size: 14px;
+            font-size: $xsmall;
             color: $light-gray-2;
           }
         }
@@ -89,8 +90,9 @@
         align-items: flex-end;
 
         .amount {
-          font-family: NunitoSans-Bold;
-          font-size: 14px;
+          font-family: NunitoSans, sans-serif;
+          font-weight: bold;
+          font-size: $xsmall;
         }
       }
     }
@@ -98,7 +100,7 @@
 
   .proposal-item_footer {
     width: 100%;
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
 
     .proposal-item_footer-wrapper {
       width: 90%;
@@ -112,8 +114,8 @@
         align-items: center;
 
         .count {
-          margin-left: 8px;
-          font-size: 16px;
+          margin-left: 0.5rem;
+          font-size: $small;
           font-weight: bold;
           color: $light-gray-2;
         }
@@ -123,8 +125,9 @@
         display: flex;
         cursor: pointer;
         color: $purple-2;
-        font-family: NunitoSans-Bold;
-        font-size: 14px;
+        font-family: NunitoSans, sans-serif;
+        font-weight: bold;
+        font-size: $xsmall;
         width: 41%;
         align-items: center;
       }
