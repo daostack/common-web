@@ -1,6 +1,9 @@
 import React, { FC } from "react";
 
-import { ProposalListItemInterface } from "@/shared/models";
+import {
+  ProposalListItemInterface,
+  ProposalState as ProposalStateTypes
+} from "@/shared/models";
 import { UserAvatar, Separator } from "@/shared/components";
 import {
     VotesComponent,
@@ -54,10 +57,13 @@ const FundingProposalListItem: FC<ProposalListItemInterface> = (
           <div className="amount">
             {formatPrice(proposal.fundingRequest?.amount, { shouldRemovePrefixFromZero: false })}
           </div>
-          <ProposalCountDown
-            date={getProposalExpirationDate(proposal)}
-            preview
-          />
+          {
+            (proposal.state === ProposalStateTypes.COUNTDOWN)
+            && <ProposalCountDown
+              date={getProposalExpirationDate(proposal)}
+              preview
+            />
+          }
         </div>
       </div>
       <div className="proposal-item_voting">
