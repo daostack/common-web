@@ -1,0 +1,63 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.billing-active-contribution-item {
+  height: 100%;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $light-gray-1;
+  border-radius: 0.5rem;
+  overflow-y: auto;
+}
+
+.billing-active-contribution-item__header {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.billing-active-contribution-item__header-icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.billing-active-contribution-item__title {
+  margin: 0;
+  font-size: $moderate;
+  font-weight: bold;
+}
+
+.billing-active-contribution-item__list {
+  margin: 0;
+  padding: 0 1.5rem;
+  list-style-type: none;
+}
+
+.billing-active-contribution-item__list-item {
+  padding: 1.5rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid $light-gray-1;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.billing-active-contribution-item__list-item-title {
+  font-size: $small;
+  font-weight: 600;
+}
+
+.billing-active-contribution-item__list-item-value {
+  font-size: $xsmall;
+}
+.billing-active-contribution-item__list-item-value--success {
+  color: $green;
+}
+.billing-active-contribution-item__list-item-value--failure {
+  color: $red;
+}

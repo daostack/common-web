@@ -26,6 +26,8 @@ const MobileBilling: FC<BillingProps> = (props) => {
     contributions,
     subscriptions,
     contributionCommons,
+    activeContribution,
+    onActiveContributionSelect,
   } = props;
   const [tab, setTab] = useState(BillingTab.PaymentDetails);
 
@@ -90,9 +92,11 @@ const MobileBilling: FC<BillingProps> = (props) => {
             loaderEl
           ) : (
             <Contributions
+              activeContribution={activeContribution}
               contributions={contributions}
               subscriptions={subscriptions}
               commons={contributionCommons}
+              onActiveContributionSelect={onActiveContributionSelect}
             />
           )}
         </TabPanel>

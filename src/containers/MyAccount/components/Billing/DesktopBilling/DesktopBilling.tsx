@@ -20,6 +20,8 @@ const DesktopBilling: FC<BillingProps> = (props) => {
     contributions,
     subscriptions,
     contributionCommons,
+    activeContribution,
+    onActiveContributionSelect,
   } = props;
 
   return (
@@ -63,9 +65,11 @@ const DesktopBilling: FC<BillingProps> = (props) => {
             <Loader />
           ) : (
             <Contributions
+              activeContribution={activeContribution}
               contributions={contributions}
               subscriptions={subscriptions}
               commons={contributionCommons}
+              onActiveContributionSelect={onActiveContributionSelect}
             />
           )}
         </section>

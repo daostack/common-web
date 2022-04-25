@@ -9,7 +9,7 @@ import {
   usePaymentMethodChange,
   useUserContributions,
 } from "@/shared/hooks/useCases";
-import { BankAccountDetails } from "@/shared/models";
+import { BankAccountDetails, Payment, Subscription } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { DesktopBilling } from "./DesktopBilling";
 import { MobileBilling } from "./MobileBilling";
@@ -28,6 +28,9 @@ const Billing: FC = () => {
     fetched: false,
     bankAccount: null,
   });
+  const [activeContribution, setActiveContribution] = useState<
+    Payment | Subscription | null
+  >(null);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const {
@@ -127,6 +130,8 @@ const Billing: FC = () => {
     contributions,
     subscriptions,
     contributionCommons,
+    activeContribution,
+    onActiveContributionSelect: setActiveContribution,
   };
 
   return (

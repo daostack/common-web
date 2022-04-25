@@ -20,6 +20,8 @@ export interface BillingProps {
   contributions: (Payment | Subscription)[];
   subscriptions: Subscription[];
   contributionCommons: Common[];
+  activeContribution: Payment | Subscription | null;
+  onActiveContributionSelect: (contribution: Payment | Subscription | null) => void;
 }
 
 export interface CardsState {
