@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 
 import {
-  ProposalListItemInterface,
+  ProposalListItem,
   ProposalState as ProposalStateTypes
 } from "@/shared/models";
 import { UserAvatar, Separator } from "@/shared/components";
@@ -18,11 +18,11 @@ import {
 } from "@/shared/utils";
 import "./index.scss";
 
-const FundingProposalListItem: FC<ProposalListItemInterface> = (
+const FundingProposalListItem: FC<ProposalListItem> = (
   {
       proposal,
       loadProposalDetails
-  }: ProposalListItemInterface
+  }: ProposalListItem
 ) => (
   <div className="proposal-item">
     <ProposalState

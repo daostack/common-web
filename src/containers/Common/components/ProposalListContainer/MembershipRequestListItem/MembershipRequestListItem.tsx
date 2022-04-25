@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import {
     Common,
     CommonContributionType,
-    ProposalListItemInterface,
+    ProposalListItem,
 } from "@/shared/models";
 import { Separator } from "@/shared/components";
 import { fetchCommonDetail } from "../../../../Common/store/api";
@@ -19,11 +19,11 @@ import {
 } from "@/shared/utils";
 import "./index.scss";
 
-const MembershipRequestListItem: FC<ProposalListItemInterface> = (
+const MembershipRequestListItem: FC<ProposalListItem> = (
   {
       proposal,
       loadProposalDetails
-  }: ProposalListItemInterface
+  }: ProposalListItem
 ) => {
   const dispatch = useDispatch();
   const [common, setCommon] = useState<Common | null>(null);

@@ -419,6 +419,8 @@ function* authSagas() {
 
 (async () => {
   firebase.auth().onIdTokenChanged(async (data) => {
+    store.dispatch(actions.setIsAuthenticationReady(true));
+
     const newToken = await data?.getIdToken();
     const currentToken = tokenHandler.get();
     if (newToken !== currentToken && currentToken) {

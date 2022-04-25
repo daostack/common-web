@@ -6,6 +6,7 @@ import {
 } from "@/shared/interfaces/api/proposal";
 import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
+  BankAccountDetails,
   Card,
   Collection,
   Common,
@@ -32,8 +33,13 @@ import {
   LeaveCommon,
 } from "@/containers/Common/interfaces";
 import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
-import { CreateVotePayload, UpdateVotePayload, Vote } from "@/shared/interfaces/api/vote";
+import {
+  CreateVotePayload,
+  UpdateVotePayload,
+  Vote,
+} from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
+import { UpdateBankAccountDetailsData } from "@/shared/interfaces/api/bankAccount";
 
 export async function fetchCommonDiscussions(commonId: string) {
   const commons = await firebase
@@ -349,15 +355,29 @@ export function subscribeToPayment(
     });
 }
 
-export async function getBankDetails(): Promise<void> {
-  const { data } = await Api.get<void>(ApiEndpoint.GetBankAccount);
-  return data;
+export async function getBankDetails(): Promise<BankAccountDetails> {
+  const { data } = await Api.get<BankAccountDetails>(
+    ApiEndpoint.GetBankAccount
+  );
+
+  return convertObjectDatesToFirestoreTimestamps<BankAccountDetails>(data);
 }
 
 export async function addBankDetails(
   requestData: AddBankDetailsPayload
+): Promise<BankAccountDetails> {
+  const { data } = await Api.post<BankAccountDetails>(
+    ApiEndpoint.AddBankAccount,
+    requestData
+  );
+
+  return convertObjectDatesToFirestoreTimestamps<BankAccountDetails>(data);
+}
+
+export async function updateBankDetails(
+  requestData: Partial<UpdateBankAccountDetailsData>
 ): Promise<void> {
-  await Api.post<void>(ApiEndpoint.AddBankAccount, requestData);
+  await Api.patch(ApiEndpoint.UpdateBankAccount, requestData);
 }
 
 export async function getUserContributionsToCommon(
