@@ -16,16 +16,18 @@ import "./index.scss";
 interface ContributionsProps {
   contributions: (Payment | Subscription)[];
   subscriptions: Subscription[];
+  commonNames: Record<string, string>;
 }
 
 const Contributions: FC<ContributionsProps> = (props) => {
-  const { contributions, subscriptions } = props;
+  const { contributions, subscriptions, commonNames } = props;
 
   return (
     <>
       <ContributionList
         contributions={contributions}
         subscriptions={subscriptions}
+        commonNames={commonNames}
       />
     </>
   );

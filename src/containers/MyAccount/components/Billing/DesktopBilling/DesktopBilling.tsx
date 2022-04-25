@@ -19,6 +19,7 @@ const DesktopBilling: FC<BillingProps> = (props) => {
     areContributionsLoading,
     contributions,
     subscriptions,
+    commonNames,
   } = props;
 
   return (
@@ -64,6 +65,7 @@ const DesktopBilling: FC<BillingProps> = (props) => {
             <Contributions
               contributions={contributions}
               subscriptions={subscriptions}
+              commonNames={commonNames}
             />
           )}
         </section>

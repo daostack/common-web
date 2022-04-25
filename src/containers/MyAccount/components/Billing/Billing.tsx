@@ -39,6 +39,7 @@ const Billing: FC = () => {
     loading: areContributionsLoading,
     contributions,
     subscriptions,
+    commonNames,
   } = useUserContributions();
 
   const handleBankAccountChange = (data: BankAccountDetails) => {
@@ -125,6 +126,7 @@ const Billing: FC = () => {
     areContributionsLoading,
     contributions,
     subscriptions,
+    commonNames,
   };
 
   return (

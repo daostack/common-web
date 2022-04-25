@@ -55,6 +55,9 @@
 .billing-contribution-list-item__description {
   margin: 0;
   font-size: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .billing-contribution-list-item__status-container {

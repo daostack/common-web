@@ -44,6 +44,12 @@ export const getCommonsList = createAsyncAction(
   CommonsActionTypes.GET_COMMONS_LIST_FAILURE
 )<void, Common[], Error>();
 
+export const getCommonsListByIds = createAsyncAction(
+  CommonsActionTypes.GET_COMMONS_LIST_BY_IDS,
+  CommonsActionTypes.GET_COMMONS_LIST_BY_IDS_SUCCESS,
+  CommonsActionTypes.GET_COMMONS_LIST_BY_IDS_FAILURE
+)<PayloadWithOptionalCallback<string[], Common[], Error>, Common[], Error>();
+
 export const getCommonDetail = createAsyncAction(
   CommonsActionTypes.GET_COMMON_DETAIL,
   CommonsActionTypes.GET_COMMON_DETAIL_SUCCESS,

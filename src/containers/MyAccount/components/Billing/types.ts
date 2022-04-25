@@ -18,6 +18,7 @@ export interface BillingProps {
   areContributionsLoading: boolean;
   contributions: (Payment | Subscription)[];
   subscriptions: Subscription[];
+  commonNames: Record<string, string>;
 }
 
 export interface CardsState {

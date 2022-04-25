@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import {
+  getCommonsListByIds,
   getUserContributions,
   getUserSubscriptions,
 } from "@/containers/Common/store/actions";
@@ -24,10 +25,17 @@ export interface SubscriptionsState {
   data: Subscription[];
 }
 
+export interface CommonNamesState {
+  loading: boolean;
+  fetched: boolean;
+  data: Record<string, string>;
+}
+
 interface Return {
   loading: boolean;
   contributions: (Payment | Subscription)[];
   subscriptions: Subscription[];
+  commonNames: CommonNamesState["data"];
 }
 
 const useUserContributions = (): Return => {
@@ -44,6 +52,11 @@ const useUserContributions = (): Return => {
     loading: false,
     fetched: false,
     data: [],
+  });
+  const [commonNamesState, setCommonNamesState] = useState<CommonNamesState>({
+    loading: false,
+    fetched: false,
+    data: {},
   });
   const user = useSelector(selectUser());
   const isLoading = !paymentsState.fetched || !subscriptionsState.fetched;
@@ -66,6 +79,19 @@ const useUserContributions = (): Return => {
       return bDate.seconds - aDate.seconds;
     });
   }, [isLoading, paymentsState.data, subscriptionsState.data]);
+  const commonNames = useMemo<Return["commonNames"]>(
+    () => ({
+      ...commonNamesState.data,
+      ...subscriptionsState.data.reduce(
+        (acc, item) => ({
+          ...acc,
+          [item.metadata.common.id]: item.metadata.common.name,
+        }),
+        {}
+      ),
+    }),
+    [subscriptionsState.data, commonNamesState.data]
+  );
 
   useEffect(() => {
     if (paymentsState.loading || paymentsState.fetched || !user?.uid) {
@@ -99,6 +125,61 @@ const useUserContributions = (): Return => {
 
   useEffect(() => {
     if (
+      !paymentsState.fetched ||
+      commonNamesState.loading ||
+      commonNamesState.fetched ||
+      !user?.uid
+    ) {
+      return;
+    }
+
+    if (paymentsState.data.length === 0) {
+      setCommonNamesState((nextState) => ({
+        ...nextState,
+        fetched: true,
+      }));
+
+      return;
+    }
+
+    setCommonNamesState((nextState) => ({
+      ...nextState,
+      loading: true,
+    }));
+
+    const commonIds = paymentsState.data
+      .map((item) => item.commonId)
+      .filter((item): item is string => Boolean(item));
+
+    dispatch(
+      getCommonsListByIds.request({
+        payload: commonIds,
+        callback: (error, commons) => {
+          setCommonNamesState({
+            loading: false,
+            fetched: true,
+            data:
+              commons?.reduce(
+                (acc, common) => ({
+                  ...acc,
+                  [common.id]: common.name,
+                }),
+                {}
+              ) || {},
+          });
+        },
+      })
+    );
+  }, [
+    dispatch,
+    paymentsState.fetched,
+    paymentsState.data,
+    commonNamesState,
+    user,
+  ]);
+
+  useEffect(() => {
+    if (
       subscriptionsState.loading ||
       subscriptionsState.fetched ||
       !user?.uid
@@ -125,9 +206,10 @@ const useUserContributions = (): Return => {
   }, [dispatch, subscriptionsState, user]);
 
   return {
-    loading: isLoading,
+    loading: isLoading || !commonNamesState.fetched,
     subscriptions: subscriptionsState.data,
     contributions,
+    commonNames,
   };
 };
 

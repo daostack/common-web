@@ -45,6 +45,7 @@ import {
   getUserSubscriptions as getUserSubscriptionsApi,
   updateSubscription as updateSubscriptionApi,
   getSubscriptionById,
+  fetchCommonListByIds as fetchCommonListByIdsApi,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -63,6 +64,29 @@ export function* getCommonsList(): Generator {
   } catch (e) {
     yield put(actions.getCommonsList.failure(e));
     yield put(stopLoading());
+  }
+}
+
+export function* getCommonsListByIds({
+  payload,
+}: ReturnType<typeof actions.getCommonsListByIds.request>): Generator {
+  try {
+    const commons = (yield call(
+      fetchCommonListByIdsApi,
+      payload.payload
+    )) as Common[];
+
+    yield put(actions.getCommonsListByIds.success(commons));
+
+    if (payload.callback) {
+      payload.callback(null, commons);
+    }
+  } catch (error) {
+    yield put(actions.getCommonsListByIds.failure(error));
+
+    if (payload.callback) {
+      payload.callback(error);
+    }
   }
 }
 
@@ -682,6 +706,7 @@ export function* updateSubscription({
 
 export function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
+  yield takeLatest(actions.getCommonsListByIds.request, getCommonsListByIds);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
   yield takeLatest(
     actions.loadCommonDiscussionList.request,

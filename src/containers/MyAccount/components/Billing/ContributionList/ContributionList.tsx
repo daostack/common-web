@@ -7,10 +7,11 @@ import "./index.scss";
 interface ContributionListProps {
   contributions: (Payment | Subscription)[];
   subscriptions: Subscription[];
+  commonNames: Record<string, string>;
 }
 
 const ContributionList: FC<ContributionListProps> = (props) => {
-  const { contributions, subscriptions } = props;
+  const { contributions, subscriptions, commonNames } = props;
 
   return (
     <div
@@ -32,6 +33,10 @@ const ContributionList: FC<ContributionListProps> = (props) => {
       ) : (
         <ul className="billing-contribution-list__list">
           {contributions.map((contribution) => {
+            const commonId = isPayment(contribution)
+              ? contribution.commonId
+              : contribution.metadata.common.id;
+            const title = commonId && commonNames[commonId];
             const subscription = isPayment(contribution)
               ? subscriptions.find(
                   (item) => item.id === contribution.subscriptionId
@@ -41,7 +46,7 @@ const ContributionList: FC<ContributionListProps> = (props) => {
             return (
               <ContributionListItem
                 key={contribution.id}
-                title="Common Name"
+                title={title || ""}
                 contribution={contribution}
                 subscription={subscription}
               />
