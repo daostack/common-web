@@ -1,4 +1,5 @@
 @import "../../../../../constants.scss";
+@import "../../../../../styles/sizes";
 
 .proposal-item {
   display: flex;
@@ -11,17 +12,18 @@
   box-shadow: 0 3px 8px 0 #001a3614;
   background-color: #ffffff;
 
-  .proposal-item_header {
+  .proposal-item__header {
     height: 1.7rem;
     border-radius: 1.5rem 1.5rem 0 0;
 
-    div {
-      border-radius: 1.5rem 1.5rem 0 0 !important;
+    .state-inner-wrapper,
+    .inner-wrapper {
+      border-radius: 1.5rem 1.5rem 0 0;
       margin: 0;
     }
   }
 
-  .proposal-item_content-wrapper {
+  .proposal-item__content-wrapper {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -32,7 +34,7 @@
       margin-bottom: 0.625rem;
     }
 
-    .proposal-item_description {
+    .proposal-item__description {
       display: flex;
       justify-content: space-between;
       font-family: NunitoSans, sans-serif;
@@ -46,7 +48,7 @@
         font-size: $xsmall;
       }
 
-      .proposal-item_vertical-menu {
+      .proposal-item__vertical-menu {
         width: 2.5rem;
         background-color: transparent;
         background-image: url("/icons/vertical-menu.svg");
@@ -61,15 +63,15 @@
       }
     }
 
-    .proposal-item_info {
+    .proposal-item__info {
       display: flex;
       justify-content: space-between;
 
-      .proposal-item_info-proposer-wrapper {
+      .proposal-item__info-proposer-wrapper {
         display: flex;
         justify-content: space-between;
 
-        .proposal-item_info-proposer {
+        .proposal-item__info-proposer {
           margin-left: 0.3rem;
 
           .user-fullname {
@@ -84,7 +86,7 @@
         }
       }
 
-      .proposal-item_info-amount-countdown {
+      .proposal-item__info-amount-countdown {
         display: flex;
         flex-direction: column;
         align-items: flex-end;
@@ -98,17 +100,17 @@
     }
   }
 
-  .proposal-item_footer {
+  .proposal-item__footer {
     width: 100%;
     margin-bottom: 0.5rem;
 
-    .proposal-item_footer-wrapper {
+    .proposal-item__footer-wrapper {
       width: 90%;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
 
-      .proposal-item_footer-discussions {
+      .proposal-item__footer-discussions {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -121,7 +123,7 @@
         }
       }
 
-      .proposal-item_footer-viewall {
+      .proposal-item__footer-viewall {
         display: flex;
         cursor: pointer;
         color: $purple-2;
@@ -130,13 +132,11 @@
         font-size: $xsmall;
         width: 41%;
         align-items: center;
+
+        @include big-phone {
+          width: 45%;
+        }
       }
     }
-  }
-}
-
-@media only screen and (max-width: $mobile-breakpoint) {
-  .proposal-item_footer-viewall {
-    width: 45% !important;
   }
 }

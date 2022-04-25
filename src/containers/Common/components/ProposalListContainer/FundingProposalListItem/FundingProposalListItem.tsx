@@ -28,10 +28,10 @@ const FundingProposalListItem: FC<ProposalListItem> = (
     <ProposalState
       proposal={proposal}
       hideCounter
-      className="proposal-item_header"
+      className="proposal-item__header"
     />
-    <div className="proposal-item_content-wrapper">
-      <div className="proposal-item_description">
+    <div className="proposal-item__content-wrapper">
+      <div className="proposal-item__description">
         <p>
           {
             proposal.title
@@ -40,21 +40,21 @@ const FundingProposalListItem: FC<ProposalListItem> = (
           }
         </p>
         {/* TODO: need to clarify what to action on clicking this dots-menu btn */}
-        {/* <div className="proposal-item_vertical-menu" /> */}
+        {/* <div className="proposal-item__vertical-menu" /> */}
       </div>
-      <div className="proposal-item_info">
-        <div className="proposal-item_info-proposer-wrapper">
+      <div className="proposal-item__info">
+        <div className="proposal-item__info-proposer-wrapper">
           <UserAvatar
             photoURL={proposal.proposer?.photoURL}
             nameForRandomAvatar={proposal.proposer?.email}
             userName={getUserName(proposal.proposer)}
           />
-          <div className="proposal-item_info-proposer">
+          <div className="proposal-item__info-proposer">
             <div className="user-fullname">{getUserName(proposal.proposer)}</div>
             <div className="days-ago">{getDaysAgo(new Date(), proposal.createdAt || proposal.createTime)}</div>
           </div>
         </div>
-        <div className="proposal-item_info-amount-countdown">
+        <div className="proposal-item__info-amount-countdown">
           <div className="amount">
             {formatPrice(proposal.fundingRequest?.amount, { shouldRemovePrefixFromZero: false })}
           </div>
@@ -67,17 +67,17 @@ const FundingProposalListItem: FC<ProposalListItem> = (
           }
         </div>
       </div>
-      <div className="proposal-item_voting">
+      <div className="proposal-item__voting">
         <VotesComponent
           proposal={proposal}
           compactCard
         />
       </div>
     </div>
-    <Separator className="proposal-item_separator" />
-    <div className="proposal-item_footer">
-      <div className="proposal-item_footer-wrapper">
-        <div className="proposal-item_footer-discussions">
+    <Separator className="proposal-item__separator" />
+    <div className="proposal-item__footer">
+      <div className="proposal-item__footer-wrapper">
+        <div className="proposal-item__footer-discussions">
           <img
             src="/icons/discussions.svg"
             alt="discussions"
@@ -85,7 +85,7 @@ const FundingProposalListItem: FC<ProposalListItem> = (
           <div className="count">{proposal.discussionMessage?.length || 0}</div>
         </div>
         <div
-          className="proposal-item_footer-viewall"
+          className="proposal-item__footer-viewall"
           onClick={() => loadProposalDetails(proposal)}
         >
           <div>View proposal</div>

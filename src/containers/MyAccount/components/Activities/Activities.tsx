@@ -219,7 +219,7 @@ const Activities: FC = () => {
           </div>
         )
         : (
-          <div className="my-account-activities_section-list">
+          <div className="my-account-activities__section-list">
             {
               collection.slice(0, MAX_ROW_ITEMS_AMOUNT).map(
                 (item: Common | Proposal) =>
@@ -309,7 +309,7 @@ const Activities: FC = () => {
       <div className="route-content my-account-activities">
         <div className="my-account-activities__header">
           <h2 className="route-title">Activities</h2>
-          <div className="my-account-activities_summaries">
+          <div className="my-account-activities__summaries">
             <CollectionSummaryCard
               collectionName="Commons"
               collectionLength={myCommons.length}
@@ -324,15 +324,15 @@ const Activities: FC = () => {
             />
           </div>
         </div>
-        <div className="my-account-activities_content-wrapper">
-          <section className="my-account-activities_commons">
-            <div className="my-account-activities_section-header">
+        <div className="my-account-activities__content-wrapper">
+          <section className="my-account-activities__commons">
+            <div className="my-account-activities__section-header">
               <h3>
                 Commons ({myCommons.length})
               </h3>
               <NavLink
                 className={classNames(
-                  "my-account-activities_section-viewall",
+                  "my-account-activities__section-viewall",
                   {
                     hidden: !showViewAllButton(myCommons.length)
                             || (isMobileView && !showSliderCommonsViewAll)
@@ -353,14 +353,14 @@ const Activities: FC = () => {
                 </div>
             }
           </section>
-          <section className="my-account-activities_proposals">
-            <div className="my-account-activities_section-header">
+          <section className="my-account-activities__proposals">
+            <div className="my-account-activities__section-header">
               <h3>
                 Prososals ({myFundingProposals.length})
               </h3>
               <NavLink
                 className={classNames(
-                  "my-account-activities_section-viewall",
+                  "my-account-activities__section-viewall",
                   {
                     hidden: !showViewAllButton(myFundingProposals.length)
                             || (isMobileView && !showSliderProposalsViewAll)
@@ -381,14 +381,14 @@ const Activities: FC = () => {
                 </div>
             }
           </section>
-          <section className="my-account-activities_membership-requests">
-            <div className="my-account-activities_section-header">
+          <section className="my-account-activities__membership-requests">
+            <div className="my-account-activities__section-header">
               <h3>
                 Membership requests ({myMembershipRequests.length})
               </h3>
               <NavLink
                 className={classNames(
-                  "my-account-activities_section-viewall",
+                  "my-account-activities__section-viewall",
                   {
                     hidden: !showViewAllButton(myMembershipRequests.length)
                             || (isMobileView && !showSliderMembershipRequestsViewAll)

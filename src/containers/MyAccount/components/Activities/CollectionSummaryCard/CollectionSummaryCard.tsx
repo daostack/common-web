@@ -17,18 +17,18 @@ const CollectionSummaryCard: FC<CollectionSummaryCardProps> = (
   }
 ) => (
   <div className="summary-card">
-    <div className="summary-card_info">
-      <span className="summary-card_info-amount">
+    <div className="summary-card__info">
+      <span className="summary-card__info-amount">
         {collectionLength}
       </span>
-      <span className="summary-card_info-title">
+      <span className="summary-card__info-title">
         {collectionName}
       </span>
     </div>
     <img
       src={iconSrc}
       alt={iconAlt}
-      className="summary-card_icon"
+      className="summary-card__icon"
     />
   </div>
 );

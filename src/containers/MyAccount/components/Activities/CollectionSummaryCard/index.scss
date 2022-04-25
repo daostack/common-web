@@ -1,4 +1,5 @@
 @import "../../../../../constants";
+@import "../../../../../styles/sizes";
 
 .summary-card {
   width: 9rem;
@@ -8,18 +9,18 @@
   display: flex;
   justify-content: space-between;
 
-  .summary-card_info {
+  .summary-card__info {
     margin: 0.5rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
 
-    .summary-card_info-title {
+    .summary-card__info-title {
       font-size: $xxsmall;
     }
   }
 
-  .summary-card_icon {
+  .summary-card__icon {
     width: 1rem;
     height: 1rem;
     border-radius: 1.5rem;
@@ -27,16 +28,14 @@
     margin: 0.5rem;
     padding: 0.25rem;
   }
-}
 
-@media only screen and (max-width: $mobile-breakpoint) {
-  .summary-card {
+  @include big-phone {
     width: 100%;
     max-width: 46%;
     height: 7.8rem;
     position: relative;
 
-    .summary-card_icon {
+    .summary-card__icon {
       width: 2rem;
       height: 2rem;
       position: absolute;

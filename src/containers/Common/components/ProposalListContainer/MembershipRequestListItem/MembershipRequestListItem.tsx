@@ -47,11 +47,11 @@ const MembershipRequestListItem: FC<ProposalListItem> = (
             <ProposalState
                 proposal={proposal}
                 hideCounter
-                className="membership-request-item_header"
+                className="membership-request-item__header"
             />
-            <div className="membership-request-item_content-wrapper">
-                <div className="membership-request-item_info">
-                    <div className="membership-request-item_common-info">
+            <div className="membership-request-item__content-wrapper">
+                <div className="membership-request-item__info">
+                    <div className="membership-request-item__common-info">
                         <img
                             className="common-icon"
                             src="/assets/images/common-sign.svg"
@@ -61,7 +61,7 @@ const MembershipRequestListItem: FC<ProposalListItem> = (
                             {common?.name}
                         </div>
                     </div>
-                    <div className="membership-request-item_info-join">
+                    <div className="membership-request-item__info-join">
                         <div className="amount">
                                 {
                                     formatPrice(proposal.join?.funding,
@@ -83,17 +83,17 @@ const MembershipRequestListItem: FC<ProposalListItem> = (
                         </div>
                     </div>
                 </div>
-                <div className="membership-request-item_voting">
+                <div className="membership-request-item__voting">
                     <VotesComponent
                         proposal={proposal}
                         compactCard
                     />
                 </div>
             </div>
-            <Separator className="membership-request-item_separator" />
-            <div className="membership-request-item_footer">
-                <div className="membership-request-item_footer-wrapper">
-                    <div className="membership-request-item_footer-discussions">
+            <Separator className="membership-request-item__separator" />
+            <div className="membership-request-item__footer">
+                <div className="membership-request-item__footer-wrapper">
+                    <div className="membership-request-item__footer-discussions">
                         <img
                             src="/icons/discussions.svg"
                             alt="discussions"
@@ -101,7 +101,7 @@ const MembershipRequestListItem: FC<ProposalListItem> = (
                         <div className="count">{proposal.discussionMessage?.length || 0}</div>
                     </div>
                     <div
-                        className="membership-request-item_footer-viewall"
+                        className="membership-request-item__footer-viewall"
                         onClick={() => loadProposalDetails(proposal)}
                     >
                         <div>View request</div>

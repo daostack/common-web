@@ -1,4 +1,5 @@
 @import "../../../../../constants.scss";
+@import "../../../../../styles/sizes";
 
 .membership-request-item {
   display: flex;
@@ -11,17 +12,18 @@
   box-shadow: 0 3px 8px 0 #001a3614;
   background-color: #ffffff;
 
-  .membership-request-item_header {
+  .membership-request-item__header {
     height: 1.7rem;
     border-radius: 1.5rem 1.5rem 0 0;
 
-    div {
-      border-radius: 1.5rem 1.5rem 0 0 !important;
+    .state-inner-wrapper,
+    .inner-wrapper {
+      border-radius: 1.5rem 1.5rem 0 0;
       margin: 0;
     }
   }
 
-  .membership-request-item_content-wrapper {
+  .membership-request-item__content-wrapper {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -32,12 +34,12 @@
       margin-top: 0.625rem;
     }
 
-    .membership-request-item_info {
+    .membership-request-item__info {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
 
-      .membership-request-item_common-info {
+      .membership-request-item__common-info {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -52,7 +54,7 @@
         }
       }
 
-      .membership-request-item_info-join {
+      .membership-request-item__info-join {
         display: flex;
         flex-direction: column;
         align-items: flex-end;
@@ -68,17 +70,17 @@
     }
   }
 
-  .membership-request-item_footer {
+  .membership-request-item__footer {
     width: 100%;
     margin-bottom: 0.5rem;
 
-    .membership-request-item_footer-wrapper {
+    .membership-request-item__footer-wrapper {
       width: 90%;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
 
-      .membership-request-item_footer-discussions {
+      .membership-request-item__footer-discussions {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -91,7 +93,7 @@
         }
       }
 
-      .membership-request-item_footer-viewall {
+      .membership-request-item__footer-viewall {
         display: flex;
         cursor: pointer;
         color: $purple-2;
@@ -100,13 +102,11 @@
         font-size: $xsmall;
         width: 41%;
         align-items: center;
+
+        @include big-phone {
+          width: 45%;
+        }
       }
     }
-  }
-}
-
-@media only screen and (max-width: $mobile-breakpoint) {
-  .membership-request-item_footer-viewall {
-    width: 45% !important;
   }
 }

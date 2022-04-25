@@ -13,7 +13,7 @@
     align-items: center;
     justify-content: space-between;
 
-    .my-account-activities_summaries {
+    .my-account-activities__summaries {
       max-width: 19rem;
       width: 100%;
       display: flex;
@@ -21,13 +21,9 @@
       justify-content: space-between;
       color: $white;
     }
-
-    @include big-phone {
-      margin-bottom: 0.75rem;
-    }
   }
 
-  .my-account-activities_content-wrapper {
+  .my-account-activities__content-wrapper {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -37,12 +33,12 @@
       margin-bottom: 3.125rem;
     }
 
-    .my-account-activities_section-header {
+    .my-account-activities__section-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
 
-      .my-account-activities_section-viewall {
+      .my-account-activities__section-viewall {
         display: flex;
         cursor: pointer;
         color: $black;
@@ -54,7 +50,7 @@
       }
     }
 
-    .my-account-activities_section-list {
+    .my-account-activities__section-list {
       display: grid;
       justify-items: center;
       grid-column-gap: 2rem;
@@ -64,8 +60,10 @@
   }
 }
 
-@media only screen and (max-width: $mobile-breakpoint) {
+@include big-phone {
   .my-account-activities {
+    margin-bottom: 0.75rem;
+
     .my-account-activities__header {
       flex-direction: column;
       height: 11rem;
@@ -74,11 +72,12 @@
         align-self: flex-start;
       }
 
-      .my-account-activities_summaries {
+      .my-account-activities__summaries {
         max-width: 100%;
       }
     }
-    .my-account-activities_content-wrapper {
+
+    .my-account-activities__content-wrapper {
       > section:not(:last-child) {
         margin-bottom: 1.25rem;
       }
@@ -87,7 +86,7 @@
         font-size: $small;
       }
 
-      .my-account-activities_section-list {
+      .my-account-activities__section-list {
         grid-template-columns: repeat(auto-fill, minmax(17.5rem, 1fr));
       }
     }

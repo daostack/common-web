@@ -1,11 +1,12 @@
 @import "../../../../../constants";
+@import "../../../../../styles/sizes";
 
 .my-proposals {
   width: 100%;
   margin-left: 2%;
   padding: 2.5rem 0;
 
-  .my-proposals_header {
+  .my-proposals__header {
     display: flex;
     justify-content: flex-start;
 
@@ -20,21 +21,19 @@
     }
   }
 
-  .my-proposals_proposals-list {
+  .my-proposals__proposals-list {
     display: grid;
     justify-items: center;
     grid-column-gap: 2rem;
     grid-row-gap: 2rem;
     grid-template-columns: repeat(auto-fill, minmax(18.75rem, 1fr));
   }
-}
 
-@media only screen and (max-width: $mobile-breakpoint) {
-  .my-proposals {
+  @include big-phone {
     padding: 0.9rem 0 1.5rem 0;
     margin-left: 0;
 
-    .my-proposals_proposals-list {
+    .my-proposals__proposals-list {
       grid-template-columns: repeat(auto-fill, minmax(17.5rem, 1fr));
     }
   }

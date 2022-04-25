@@ -147,7 +147,7 @@ const MyProposalsContainer: FC = () => {
         </Modal>
       }
       <div className="my-proposals">
-        <h2 className="my-proposals_header">
+        <h2 className="my-proposals__header">
           <NavLink
             to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES}
           >
@@ -160,7 +160,7 @@ const MyProposalsContainer: FC = () => {
           </NavLink>
         </h2>
         {loading ? <Loader /> : null}
-        <div className="my-proposals_proposals-list">
+        <div className="my-proposals__proposals-list">
           {
             myProposalsByType.map(
               proposal =>
