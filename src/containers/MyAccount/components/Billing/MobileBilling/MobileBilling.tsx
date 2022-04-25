@@ -1,6 +1,7 @@
 import React, { useState, FC } from "react";
 import { Loader, Tabs, Tab, TabPanel } from "@/shared/components";
 import { BankAccount } from "../BankAccount";
+import { Contributions } from "../Contributions";
 import { PaymentInformation } from "../PaymentInformation";
 import { BillingProps } from "../types";
 import "./index.scss";
@@ -21,6 +22,9 @@ const MobileBilling: FC<BillingProps> = (props) => {
     onPaymentMethodChange,
     onChangePaymentMethodStateClear,
     onBankAccountChange,
+    areContributionsLoading,
+    contributions,
+    subscriptions,
   } = props;
   const [tab, setTab] = useState(BillingTab.PaymentDetails);
 
@@ -73,6 +77,20 @@ const MobileBilling: FC<BillingProps> = (props) => {
             <BankAccount
               bankAccount={bankAccount}
               onBankAccountChange={onBankAccountChange}
+            />
+          )}
+        </TabPanel>
+        <TabPanel
+          className="my-account-mobile-billing__tab-panel my-account-mobile-billing__contributions-tab-panel"
+          value={tab}
+          panelValue={BillingTab.Contributions}
+        >
+          {areContributionsLoading ? (
+            loaderEl
+          ) : (
+            <Contributions
+              contributions={contributions}
+              subscriptions={subscriptions}
             />
           )}
         </TabPanel>

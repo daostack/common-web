@@ -10,6 +10,7 @@
   @include big-phone {
     display: flex;
     flex-direction: column;
+    overflow: initial;
   }
 
   .my-account-billing__header {
