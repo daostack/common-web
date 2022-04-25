@@ -8,6 +8,7 @@ export * from "./ContributionAmountSelection";
 export * from "./DatePicker";
 export * from "./Dots";
 export * from "./Dropdown";
+export * from "./FilePreview";
 export * from "./FilesCarousel";
 export * from "./NotFound";
 export * from "./SocialLoginButton";

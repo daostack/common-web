@@ -4,6 +4,7 @@ export const ApiEndpoint = {
   CreateRequestToJoin: "/proposals/create/join",
   CreateFunding: "/proposals/create/funding",
   AddBankAccount: "/payments/bank-account-details/add",
+  UpdateBankAccount: "/payments/bank-account-details/update",
   GetBankAccount: "/payments/bank-account-details/get",
   CreateVote: "/proposals/create/vote",
   UpdateVote: "/proposals/update/vote",

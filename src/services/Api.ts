@@ -4,13 +4,35 @@ import axios, {
   AxiosResponse,
   CancelTokenSource,
 } from "axios";
-import config from "../config";
-import getFirebaseToken from "../helpers/getFirebaseToken";
-import { AXIOS_TIMEOUT } from "../shared/constants";
+import config from "@/config";
+import getFirebaseToken from "@/helpers/getFirebaseToken";
+import { default as store } from "@/index";
+import { AXIOS_TIMEOUT } from "@/shared/constants";
 
 interface RequestConfig extends AxiosRequestConfig {
   isAuthorizedRequest?: boolean;
 }
+
+const waitForAuthenticationToBeReady = async (): Promise<void> =>
+  new Promise((resolve, reject) => {
+    let count = 0;
+
+    const checkIsAuthenticationReady = () => {
+      count++;
+
+      if (store.getState().auth.isAuthenticationReady) {
+        resolve();
+        return;
+      }
+      if (count >= 50) {
+        reject(new Error("Authentication readiness check is timed out"));
+      }
+
+      setTimeout(checkIsAuthenticationReady, 100);
+    };
+
+    checkIsAuthenticationReady();
+  });
 
 class Api {
   private createApiEngine = () => {
@@ -75,6 +97,7 @@ class Api {
     const newHeaders = { ...headers };
 
     if (isAuthorizedRequest && !newHeaders.Authorization) {
+      await waitForAuthenticationToBeReady();
       newHeaders.Authorization = await getFirebaseToken();
     }
 

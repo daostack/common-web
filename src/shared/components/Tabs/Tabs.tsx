@@ -1,11 +1,14 @@
 import React, { useMemo, FC } from "react";
+import classNames from "classnames";
 import { TabContext, TabContextValue } from "./context";
 import "./index.scss";
 
-type TabsProps = TabContextValue;
+interface TabsProps extends TabContextValue {
+  className?: string;
+}
 
 const Tabs: FC<TabsProps> = (props) => {
-  const { value, onChange, panelIdTemplate, children } = props;
+  const { className, value, onChange, panelIdTemplate, children } = props;
 
   const contextValue = useMemo<TabContextValue>(
     () => ({
@@ -18,7 +21,7 @@ const Tabs: FC<TabsProps> = (props) => {
 
   return (
     <TabContext.Provider value={contextValue}>
-      <div className="custom-tabs" role="tablist">
+      <div className={classNames("custom-tabs", className)} role="tablist">
         {children}
       </div>
     </TabContext.Provider>

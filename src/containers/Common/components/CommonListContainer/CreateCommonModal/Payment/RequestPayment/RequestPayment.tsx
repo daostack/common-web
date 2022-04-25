@@ -82,6 +82,7 @@ export default function RequestPayment(
   ] = useState<State>(INITIAL_STATE);
   const [cards, setUserCards] = useState<Card[]>([]);
   const [hasPaymentMethod, setHasPaymentMethod] = useState<boolean | null>(null);
+  const [isImmediatePaymentLoading, setIsImmediatePaymentLoading] = useState<boolean>(false);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = (screenSize === ScreenSize.Mobile);
   const selectedAmount = paymentData.contributionAmount;
@@ -105,6 +106,8 @@ export default function RequestPayment(
   const makeImmediateContributionRequest = useCallback(() => {
     if (!paymentData.contributionAmount)
       return;
+    
+    setIsImmediatePaymentLoading(true);
 
     dispatch(
       makeImmediateContribution.request({
@@ -243,8 +246,10 @@ export default function RequestPayment(
 
       <div className="create-common-payment__content">
         {
-          (!isPaymentIframeLoaded && !hasPaymentMethod)
-          && <Loader className="create-common-payment__loader" />
+          (
+            (!isPaymentIframeLoaded && !hasPaymentMethod)
+            || isImmediatePaymentLoading
+          ) && <Loader className="create-common-payment__loader" />
         }
         {
           hasPaymentMethod
@@ -266,6 +271,7 @@ export default function RequestPayment(
                 key="request-payment-continue"
                 className="create-common-payment__continue-button"
                 shouldUseFullWidth={isMobileView}
+                disabled={isImmediatePaymentLoading}
                 onClick={makeImmediateContributionRequest}
               >
                 Continue to payment

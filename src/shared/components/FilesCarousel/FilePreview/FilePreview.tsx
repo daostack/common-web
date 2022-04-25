@@ -6,20 +6,20 @@ import RightArrowIcon from "../../../icons/rightArrow.icon";
 import ZoomOutIcon from "../../../icons/zoomOut.icon";
 import ZoomInIcon from "../../../icons/zoomIn.icon";
 import { saveByURL } from "../../../utils";
-import { DocInfo } from "../../../models";
+import { isDocInfo, DocInfo } from "../../../models";
 import { ButtonIcon } from "../../ButtonIcon";
 import { Image } from "../../Image";
 import "./index.scss";
 
 interface FilePreviewProps {
   className?: string;
-  doc: DocInfo;
+  doc: DocInfo | File;
   isZoomed: boolean;
   shouldHideSwitchActions?: boolean;
-  onLeftClick: () => void;
-  onRightClick: () => void;
-  onZoomIn: () => void;
-  onZoomOut: () => void;
+  onLeftClick?: () => void;
+  onRightClick?: () => void;
+  onZoomIn?: () => void;
+  onZoomOut?: () => void;
 }
 
 const FilePreview: FC<FilePreviewProps> = (props) => {
@@ -34,11 +34,17 @@ const FilePreview: FC<FilePreviewProps> = (props) => {
     shouldHideSwitchActions = false,
   } = props;
   const [hasError, setHasError] = useState(false);
-  const isImage = doc.mimeType.startsWith("image/");
-  const shouldShowSwitchActions = !shouldHideSwitchActions && !isZoomed;
+  const isImage = (isDocInfo(doc) ? doc.mimeType : doc.type).startsWith(
+    "image/"
+  );
+  const downloadURL = isDocInfo(doc)
+    ? doc.downloadURL
+    : URL.createObjectURL(doc);
+  const shouldShowSwitchActions =
+    !shouldHideSwitchActions && !isZoomed && onLeftClick && onRightClick;
 
   const handleDownload = () => {
-    saveByURL(doc.downloadURL, doc.name);
+    saveByURL(downloadURL, doc.name);
   };
 
   const handleImageError = () => {
@@ -53,7 +59,7 @@ const FilePreview: FC<FilePreviewProps> = (props) => {
 
   useEffect(() => {
     setHasError(false);
-  }, [doc.downloadURL]);
+  }, [downloadURL]);
 
   return (
     <div className={classNames("carousel-file-preview-wrapper", className)}>
@@ -69,9 +75,9 @@ const FilePreview: FC<FilePreviewProps> = (props) => {
         <div className="carousel-file-preview-wrapper__image-wrapper">
           {isImage ? (
             <Image
-              key={doc.downloadURL}
+              key={downloadURL}
               className={imageClassName}
-              src={doc.downloadURL}
+              src={downloadURL}
               alt={doc.name}
               onError={handleImageError}
               placeholderElement={
@@ -91,7 +97,7 @@ const FilePreview: FC<FilePreviewProps> = (props) => {
               >
                 <DownloadIcon className="carousel-file-preview-wrapper__icon" />
               </ButtonIcon>
-              {isImage && (
+              {isImage && onZoomIn && onZoomOut && (
                 <ButtonIcon
                   className="carousel-file-preview-wrapper__icon-wrapper"
                   onClick={isZoomed ? onZoomOut : onZoomIn}

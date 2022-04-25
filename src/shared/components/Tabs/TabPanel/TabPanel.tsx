@@ -2,19 +2,21 @@ import React, { FC } from "react";
 import { getPanelId, getLabelId } from "../helpers";
 
 interface TabPanelProps {
+  className?: string;
   value: unknown;
   panelValue: unknown;
   panelIdTemplate?: string;
 }
 
 const TabPanel: FC<TabPanelProps> = (props) => {
-  const { value, panelValue, panelIdTemplate, children } = props;
+  const { className, value, panelValue, panelIdTemplate, children } = props;
   const panelId = getPanelId(panelValue, panelIdTemplate);
   const labelId = getLabelId(panelId);
   const isHidden = value !== panelValue;
 
   return (
     <div
+      className={className}
       id={panelId}
       role="tabpanel"
       aria-labelledby={labelId}

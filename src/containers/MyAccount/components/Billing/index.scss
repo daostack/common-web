@@ -1,0 +1,31 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+.my-account-billing {
+  width: 100%;
+  font-family: NunitoSans, sans-serif;
+  color: $secondary-blue;
+
+  @include big-phone {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .my-account-billing__header {
+    height: 4.5rem;
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+
+    @include big-phone {
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  .my-account-billing__section-title {
+    margin: 0 0 1rem;
+    font-family: NunitoSans, sans-serif;
+    font-size: $small;
+    font-weight: 600;
+  }
+}
