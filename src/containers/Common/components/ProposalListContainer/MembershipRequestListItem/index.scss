@@ -104,3 +104,9 @@
     }
   }
 }
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .membership-request-item_footer-viewall {
+    width: 45% !important;
+  }
+}

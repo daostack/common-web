@@ -39,7 +39,8 @@ const FundingProposalListItem: FC<ProposalListItemInterface> = (
             || proposal.description.description
           }
         </p>
-        <div className="proposal-item_vertical-menu" />
+        {/* TODO: need to clarify what to action on clicking this dots-menu btn */}
+        {/* <div className="proposal-item_vertical-menu" /> */}
       </div>
       <div className="proposal-item_info">
         <div className="proposal-item_info-proposer-wrapper">

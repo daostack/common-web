@@ -59,7 +59,7 @@
       justify-items: center;
       grid-column-gap: 2rem;
       grid-row-gap: 2rem;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(18.75rem, 1fr));
     }
   }
 }
@@ -82,10 +82,19 @@
       > section:not(:last-child) {
         margin-bottom: 1.25rem;
       }
+
+      > section h3 {
+        font-size: $small;
+      }
+
+      .my-account-activities_section-list {
+        grid-template-columns: repeat(auto-fill, minmax(17.5rem, 1fr));
+      }
     }
 
     .swiper-container {
       height: 16.875rem;
+
       .swiper-slide {
         max-width: 18.75rem;
       }

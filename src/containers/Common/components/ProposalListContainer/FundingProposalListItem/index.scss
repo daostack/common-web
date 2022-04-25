@@ -38,6 +38,7 @@
       font-family: NunitoSans, sans-serif;
       font-weight: bold;
       font-size: $xsmall;
+      height: 2.5rem;
 
       p {
         margin: 0;
@@ -47,7 +48,6 @@
 
       .proposal-item_vertical-menu {
         width: 2.5rem;
-        height: 2.5rem;
         background-color: transparent;
         background-image: url("/icons/vertical-menu.svg");
         background-repeat: no-repeat;
@@ -132,5 +132,11 @@
         align-items: center;
       }
     }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .proposal-item_footer-viewall {
+    width: 45% !important;
   }
 }
