@@ -9,4 +9,5 @@ export interface AuthStateType {
   loginModalState: LoginModalState;
   isAuthLoading: boolean;
   authProvider: AuthProvider | null;
+  isAuthenticationReady: boolean;
 }

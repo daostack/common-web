@@ -45,9 +45,9 @@ interface ProposalJoin {
   fundingType?: CommonContributionType;
 }
 
-export interface DocInfo {
+export interface DocInfo<LegalType = number> {
   name: string;
-  legalType: number;
+  legalType: LegalType;
   amount?: number;
   mimeType: string;
   downloadURL: string;
@@ -107,6 +107,8 @@ export interface Proposal {
 
   approvalDate?: Time;
   payoutDocs?: DocInfo[];
-  payoutDocsComment?: string
+  payoutDocsComment?: string;
   payoutDocsRejectionReason?: string;
 }
+
+export const isDocInfo = (data: any): data is DocInfo => data.downloadURL;

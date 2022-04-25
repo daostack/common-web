@@ -21,6 +21,8 @@
 
 @include big-phone {
   .my-account-container-wrapper {
+    flex: 1;
+
     .route-content {
       margin: unset;
       margin-top: 1.5rem;

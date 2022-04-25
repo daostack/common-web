@@ -1,8 +1,8 @@
 import React, { useState, FC } from "react";
 import { Loader, Tabs, Tab, TabPanel } from "@/shared/components";
-import { ChangePaymentMethodState } from "@/shared/hooks/useCases";
-import { Card } from "@/shared/models";
+import { BankAccount } from "../BankAccount";
 import { PaymentInformation } from "../PaymentInformation";
+import { BillingProps } from "../types";
 import "./index.scss";
 
 enum BillingTab {
@@ -11,27 +11,28 @@ enum BillingTab {
   Contributions = "contributions",
 }
 
-interface MobileBillingProps {
-  areCardsLoading: boolean;
-  cards: Card[];
-  changePaymentMethodState: ChangePaymentMethodState;
-  onPaymentMethodChange: () => void;
-  onChangePaymentMethodStateClear: () => void;
-}
-
-const MobileBilling: FC<MobileBillingProps> = (props) => {
+const MobileBilling: FC<BillingProps> = (props) => {
   const {
     areCardsLoading,
     cards,
+    isBankAccountLoading,
+    bankAccount,
     changePaymentMethodState,
     onPaymentMethodChange,
     onChangePaymentMethodStateClear,
+    onBankAccountChange,
   } = props;
   const [tab, setTab] = useState(BillingTab.PaymentDetails);
 
   const handleTabChange = (value: unknown) => {
     setTab(value as BillingTab);
   };
+
+  const loaderEl = (
+    <div>
+      <Loader />
+    </div>
+  );
 
   return (
     <div className="my-account-mobile-billing">
@@ -44,13 +45,11 @@ const MobileBilling: FC<MobileBillingProps> = (props) => {
         <Tab label="Bank account" value={BillingTab.BankAccount} />
         <Tab label="Contributions" value={BillingTab.Contributions} />
       </Tabs>
-      <div>
+      <div className="my-account-mobile-billing__tab-panels">
         <TabPanel value={tab} panelValue={BillingTab.PaymentDetails}>
-          <div className="my-account-mobile-billing__payment-details-tab">
+          <div className="my-account-mobile-billing__tab-panel">
             {areCardsLoading ? (
-              <div>
-                <Loader />
-              </div>
+              loaderEl
             ) : (
               <PaymentInformation
                 cards={cards}
@@ -62,6 +61,20 @@ const MobileBilling: FC<MobileBillingProps> = (props) => {
               />
             )}
           </div>
+        </TabPanel>
+        <TabPanel
+          className="my-account-mobile-billing__tab-panel"
+          value={tab}
+          panelValue={BillingTab.BankAccount}
+        >
+          {isBankAccountLoading ? (
+            loaderEl
+          ) : (
+            <BankAccount
+              bankAccount={bankAccount}
+              onBankAccountChange={onBankAccountChange}
+            />
+          )}
         </TabPanel>
       </div>
     </div>

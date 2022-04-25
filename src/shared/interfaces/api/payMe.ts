@@ -1,3 +1,5 @@
+import { DocInfo } from "@/shared/models";
+
 export interface BuyerTokenPageCreationData {
   cardId: string;
 }
@@ -27,13 +29,10 @@ export enum PaymeTypeCodes {
   Passport, //Relevant if you are onboarding sellers for Keep services
   OriginTaxConfirmation, //Relevant if you are onboarding sellers for Keep services
   BookkeepingCertificate, //Relevant if you are onboarding sellers for Keep services
-  Invoice , // Not related to PayMe
+  Invoice, // Not related to PayMe
 }
 
-export interface PaymeDocument {
-  name: string;
-  legalType: PaymeTypeCodes;
-  amount: number;
-  mimeType: string;
-  downloadURL: string;
-}
+export type PaymeDocument = DocInfo<PaymeTypeCodes>;
+
+export const isPaymeDocument = (data: any): data is PaymeDocument =>
+  data.downloadURL;
