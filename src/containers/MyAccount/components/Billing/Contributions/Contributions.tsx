@@ -5,7 +5,7 @@ import { ScreenSize } from "@/shared/constants";
 import { ChangePaymentMethodState } from "@/shared/hooks/useCases";
 import QuestionOutlineIcon from "@/shared/icons/questionOutline.icon";
 import { ModalType } from "@/shared/interfaces";
-import { Payment, Subscription } from "@/shared/models";
+import { Common, Payment, Subscription } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { AddingCard } from "../AddingCard";
 import { ContributionList } from "../ContributionList";
@@ -16,18 +16,18 @@ import "./index.scss";
 interface ContributionsProps {
   contributions: (Payment | Subscription)[];
   subscriptions: Subscription[];
-  commonNames: Record<string, string>;
+  commons: Common[];
 }
 
 const Contributions: FC<ContributionsProps> = (props) => {
-  const { contributions, subscriptions, commonNames } = props;
+  const { contributions, subscriptions, commons } = props;
 
   return (
     <>
       <ContributionList
         contributions={contributions}
         subscriptions={subscriptions}
-        commonNames={commonNames}
+        commons={commons}
       />
     </>
   );

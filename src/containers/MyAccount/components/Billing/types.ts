@@ -2,6 +2,7 @@ import { ChangePaymentMethodState } from "@/shared/hooks/useCases";
 import {
   BankAccountDetails,
   Card,
+  Common,
   Payment,
   Subscription,
 } from "@/shared/models";
@@ -18,7 +19,7 @@ export interface BillingProps {
   areContributionsLoading: boolean;
   contributions: (Payment | Subscription)[];
   subscriptions: Subscription[];
-  commonNames: Record<string, string>;
+  contributionCommons: Common[];
 }
 
 export interface CardsState {

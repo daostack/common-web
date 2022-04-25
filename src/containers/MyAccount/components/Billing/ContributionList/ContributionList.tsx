@@ -1,17 +1,17 @@
 import React, { FC } from "react";
 import classNames from "classnames";
-import { isPayment, Payment, Subscription } from "@/shared/models";
+import { isPayment, Common, Payment, Subscription } from "@/shared/models";
 import { ContributionListItem } from "../ContributionListItem";
 import "./index.scss";
 
 interface ContributionListProps {
   contributions: (Payment | Subscription)[];
   subscriptions: Subscription[];
-  commonNames: Record<string, string>;
+  commons: Common[];
 }
 
 const ContributionList: FC<ContributionListProps> = (props) => {
-  const { contributions, subscriptions, commonNames } = props;
+  const { contributions, subscriptions, commons } = props;
 
   return (
     <div
@@ -36,7 +36,8 @@ const ContributionList: FC<ContributionListProps> = (props) => {
             const commonId = isPayment(contribution)
               ? contribution.commonId
               : contribution.metadata.common.id;
-            const title = commonId && commonNames[commonId];
+            const common =
+              commons.find((common) => common.id === commonId) || null;
             const subscription = isPayment(contribution)
               ? subscriptions.find(
                   (item) => item.id === contribution.subscriptionId
@@ -46,7 +47,7 @@ const ContributionList: FC<ContributionListProps> = (props) => {
             return (
               <ContributionListItem
                 key={contribution.id}
-                title={title || ""}
+                title={common?.name || ""}
                 contribution={contribution}
                 subscription={subscription}
               />
