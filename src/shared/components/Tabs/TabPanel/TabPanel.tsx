@@ -16,7 +16,7 @@ const TabPanel: FC<TabPanelProps> = (props) => {
 
   return (
     <div
-      className={className}
+      className={!isHidden ? className : ""}
       id={panelId}
       role="tabpanel"
       aria-labelledby={labelId}
