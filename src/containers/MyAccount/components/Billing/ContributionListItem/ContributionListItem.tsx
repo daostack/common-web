@@ -40,10 +40,12 @@ const getSubscriptionContent = (subscription: Subscription): Content => {
     status: isCanceled ? "failure" : "success",
     statusText: isCanceled ? "Canceled" : "Active",
     statusDescription: isCanceled
-      ? `${formatDate(
-          new Date(subscription.updatedAt.seconds * 1000),
-          DateFormat.GeneralHuman
-        )}`
+      ? subscription.canceledAt
+        ? `${formatDate(
+            new Date(subscription.canceledAt.seconds * 1000),
+            DateFormat.GeneralHuman
+          )}`
+        : ""
       : `${formatPrice(subscription.amount)}/mo`,
     description: isCanceled
       ? `Canceled by ${
