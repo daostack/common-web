@@ -126,7 +126,7 @@
       align-items: center;
       margin-left: unset;
       width: 100%;
-      height: calc(100vh - (#{$header-height} + 50px));
+      height: calc(100vh - (#{$header-height} + #{$download-common-app-mobile-menu-height}));
       overflow: scroll;
       button,
       a {
