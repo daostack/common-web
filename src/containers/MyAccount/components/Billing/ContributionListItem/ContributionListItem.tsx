@@ -68,9 +68,9 @@ const getPaymentContent = (
   return {
     status: isFailedPayment ? "failure" : "success",
     statusText: isFailedPayment ? "Payment failed" : "Payment succeeded",
-    statusDescription: `${formatPrice(payment.amount.amount)}${
-      isMonthlyPayment ? "/mo" : ""
-    }`,
+    statusDescription: `${formatPrice(
+      subscription?.amount ?? payment.amount.amount
+    )}${isMonthlyPayment ? "/mo" : ""}`,
     description:
       isMonthlyPayment &&
       subscription &&
