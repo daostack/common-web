@@ -43,6 +43,8 @@ import {
   getUserSubscriptionToCommon as getUserSubscriptionToCommonApi,
   updateSubscription as updateSubscriptionApi,
   getSubscriptionById,
+  fetchDiscussionForCommonList,
+  fetchProposalsForCommonList,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -50,13 +52,37 @@ import store from "@/index";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
 import { Vote } from "@/shared/interfaces/api/vote";
 import { ImmediateContributionResponse } from "../interfaces";
+import { groupBy } from "@/shared/utils";
 
 export function* getCommonsList(): Generator {
   try {
     yield put(startLoading());
-    const commons = yield call(fetchCommonList);
+    const commons = (yield call(fetchCommonList)) as Common[];
 
-    yield put(actions.getCommonsList.success(commons as Common[]));
+    const cIds = commons.map((c) => c.id);
+
+    const [discussions, proposals] = (yield Promise.all([
+      fetchDiscussionForCommonList(cIds),
+      fetchProposalsForCommonList(cIds),
+    ])) as [Discussion[], Proposal[]];
+
+    const discussionGrouped = groupBy<Discussion>(
+      discussions,
+      (item: Discussion) => item.commonId
+    );
+    const proposalGrouped = groupBy<Proposal>(
+      proposals,
+      (item: Proposal) => item.commonId
+    );
+
+    const data = commons.map((c) => {
+      c.proposals = proposalGrouped.get(c.id) ?? [];
+      c.discussions = discussionGrouped.get(c.id) ?? [];
+
+      return c;
+    });
+
+    yield put(actions.getCommonsList.success(data));
     yield put(stopLoading());
   } catch (e) {
     yield put(actions.getCommonsList.failure(e));

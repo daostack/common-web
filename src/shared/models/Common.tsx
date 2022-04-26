@@ -1,3 +1,6 @@
+import { Proposal } from "@/shared/models/Proposals";
+import { Discussion } from "@/shared/models/Discussion";
+
 export enum MemberPermission {
   Founder = "founder",
   Moderator = "moderator",
@@ -47,7 +50,8 @@ export interface Common {
 
   register: string;
   members: Member[];
-
+  proposals?: Proposal[];
+  discussions?: Discussion[];
   rules: CommonRule[];
   fundingGoalDeadline: number;
 
