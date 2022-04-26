@@ -27,11 +27,14 @@ interface ContributionListProps {
   onClick?: () => void;
 }
 
-const getSubscriptionContent = (subscription: Subscription): Content => {
-  const isCanceled = [
+const checkCanceledSubscription = (subscription: Subscription): boolean =>
+  [
     SubscriptionStatus.CanceledByUser,
     SubscriptionStatus.CanceledByPaymentFailure,
   ].includes(subscription.status);
+
+const getSubscriptionContent = (subscription: Subscription): Content => {
+  const isCanceled = checkCanceledSubscription(subscription);
 
   return {
     status: isCanceled ? "failure" : "success",
@@ -69,7 +72,9 @@ const getPaymentContent = (
       isMonthlyPayment ? "/mo" : ""
     }`,
     description:
-      isMonthlyPayment && subscription
+      isMonthlyPayment &&
+      subscription &&
+      !checkCanceledSubscription(subscription)
         ? `Next payment: ${formatDate(
             new Date(subscription.dueDate.seconds * 1000),
             DateFormat.GeneralHuman
