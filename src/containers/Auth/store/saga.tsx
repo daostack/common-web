@@ -54,23 +54,6 @@ const getUserData = async (userId: string) => {
   return null;
 };
 
-const saveTokenToDatabase = async (token: string) => {
-  const currentUser = await firebase.auth().currentUser;
-  if (currentUser) {
-    await firebase
-      .firestore()
-      .collection(Collection.Users)
-      .doc(currentUser?.uid)
-      .update({
-        tokens: firebase.firestore.FieldValue.arrayUnion(token),
-      })
-      .then(() => {
-        console.log("FCM token updated");
-      })
-      .catch((err) => console.error(err));
-  }
-};
-
 const createUser = async (
   user: firebase.User
 ): Promise<{ user: User; isNewUser: boolean }> => {
@@ -440,7 +423,6 @@ function* authSagas() {
     if (newToken !== currentToken && currentToken) {
       if (newToken) {
         tokenHandler.set(newToken);
-        await saveTokenToDatabase(newToken);
       } else {
         logOut().next();
       }
