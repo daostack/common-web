@@ -111,4 +111,9 @@ export interface Proposal {
   payoutDocsRejectionReason?: string;
 }
 
+export interface ProposalListItem {
+  proposal: Proposal;
+  loadProposalDetails: (payload: Proposal) => void;
+}
+
 export const isDocInfo = (data: any): data is DocInfo => data.downloadURL;

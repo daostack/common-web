@@ -44,7 +44,7 @@ import {
   updateSubscription as updateSubscriptionApi,
   getSubscriptionById,
 } from "./api";
-
+import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
 import store from "@/index";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
@@ -215,9 +215,30 @@ export function* loadUserProposalList(
 ): Generator {
   try {
     yield put(startLoading());
-    const proposals = yield fetchUserProposals(action.payload);
+    const proposals = (yield fetchUserProposals(action.payload)) as Proposal[];
+    const proposer = (yield getUserData(action.payload)) as User;
+    const discussions_ids = proposals.map(proposal => proposal.id);
+    const discussionMessages = (yield fetchDiscussionsMessages(discussions_ids)) as DiscussionMessage[];
 
-    yield put(actions.loadUserProposalList.success(proposals as Proposal[]));
+    const getProposalMessages = (proposal: Proposal) => (
+      discussionMessages.filter(
+        (dMessage: DiscussionMessage) =>
+          (dMessage.discussionId === proposal.id)
+      )
+    );
+
+    const processedUserProposals = proposals.map(
+      proposal =>
+      (
+        {
+          ...proposal,
+          proposer,
+          discussionMessage: getProposalMessages(proposal),
+        }
+      )
+    );
+
+    yield put(actions.loadUserProposalList.success(processedUserProposals));
     yield put(stopLoading());
   } catch (e) {
     yield put(actions.loadUserProposalList.failure(e));
