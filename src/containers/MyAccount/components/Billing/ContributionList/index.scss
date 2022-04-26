@@ -21,6 +21,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @include big-phone {
+    padding: 0 $content-padding-mobile;
+  }
 }
 
 .billing-contribution-list__empty-hint-image {
