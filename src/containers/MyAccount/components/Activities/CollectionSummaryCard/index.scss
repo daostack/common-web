@@ -1,0 +1,46 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.summary-card {
+  width: 9rem;
+  height: 4.5rem;
+  border-radius: 0.5rem;
+  background-color: $purple;
+  display: flex;
+  justify-content: space-between;
+
+  .summary-card__info {
+    margin: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    .summary-card__info-title {
+      font-size: $xxsmall;
+    }
+  }
+
+  .summary-card__icon {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 1.5rem;
+    background-color: $white;
+    margin: 0.5rem;
+    padding: 0.25rem;
+  }
+
+  @include big-phone {
+    width: 100%;
+    max-width: 46%;
+    height: 7.8rem;
+    position: relative;
+
+    .summary-card__icon {
+      width: 2rem;
+      height: 2rem;
+      position: absolute;
+      top: 6%;
+      left: 5%;
+    }
+  }
+}
