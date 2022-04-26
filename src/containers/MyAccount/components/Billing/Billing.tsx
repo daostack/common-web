@@ -136,9 +136,11 @@ const Billing: FC = () => {
 
   return (
     <div className="route-content my-account-billing">
-      <header className="my-account-billing__header">
-        <h2 className="route-title">Billing</h2>
-      </header>
+      {(!isMobileView || !activeContribution) && (
+        <header className="my-account-billing__header">
+          <h2 className="route-title">Billing</h2>
+        </header>
+      )}
       <Component {...billingProps} />
     </div>
   );

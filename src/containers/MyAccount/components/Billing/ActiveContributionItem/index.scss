@@ -16,23 +16,47 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @include big-phone {
+    margin-bottom: 2rem;
+    justify-content: flex-start;
+  }
 }
 
 .billing-active-contribution-item__header-icon {
   width: 2rem;
   height: 2rem;
+
+  @include big-phone {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+.billing-active-contribution-item__right-icon {
+  @include big-phone {
+    margin-left: auto;
+  }
 }
 
 .billing-active-contribution-item__title {
   margin: 0;
   font-size: $moderate;
   font-weight: bold;
+
+  @include big-phone {
+    font-size: $moderate-med;
+  }
 }
 
 .billing-active-contribution-item__list {
   margin: 0;
   padding: 0 1.5rem;
   list-style-type: none;
+
+  @include big-phone {
+    padding: 0;
+  }
 }
 
 .billing-active-contribution-item__list-item {
@@ -50,6 +74,11 @@
 .billing-active-contribution-item__list-item-title {
   font-size: $small;
   font-weight: 600;
+
+  @include big-phone {
+    font-size: $xsmall;
+    font-weight: normal;
+  }
 }
 
 .billing-active-contribution-item__list-item-value {

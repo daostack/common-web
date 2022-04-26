@@ -21,6 +21,7 @@ interface ActiveContributionDataItem {
 }
 
 interface ActiveContributionItemProps {
+  className?: string;
   contribution: Payment | Subscription;
   subscription: Subscription | null;
   common: Common;
@@ -99,7 +100,7 @@ const getData = (
 };
 
 const ActiveContributionItem: FC<ActiveContributionItemProps> = (props) => {
-  const { contribution, subscription, common, onBackClick } = props;
+  const { className, contribution, subscription, common, onBackClick } = props;
 
   if (isPayment(contribution) && contribution.subscriptionId && !subscription) {
     return null;
@@ -108,7 +109,7 @@ const ActiveContributionItem: FC<ActiveContributionItemProps> = (props) => {
   const data = getData(contribution, subscription);
 
   return (
-    <div className="billing-active-contribution-item">
+    <div className={classNames("billing-active-contribution-item", className)}>
       <header className="billing-active-contribution-item__header">
         <ButtonIcon onClick={onBackClick}>
           <LeftArrowIcon className="billing-active-contribution-item__header-icon" />
@@ -116,7 +117,7 @@ const ActiveContributionItem: FC<ActiveContributionItemProps> = (props) => {
         <h4 className="billing-active-contribution-item__title">
           {common?.name}
         </h4>
-        <div className="billing-active-contribution-item__header-icon" />
+        <div className="billing-active-contribution-item__header-icon billing-active-contribution-item__right-icon" />
       </header>
       <ul className="billing-active-contribution-item__list">
         {data.map((item) => (
