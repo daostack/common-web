@@ -1,0 +1,9 @@
+@import "../../../../../../styles/sizes";
+
+.change-monthly-contribution__loader-wrapper {
+  min-height: 35.875rem;
+
+  @include big-phone {
+    min-height: unset;
+  }
+}

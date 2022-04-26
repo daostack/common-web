@@ -24,10 +24,10 @@ import classNames from "classnames";
 
 interface DiscussionDetailModalProps {
   proposal: Proposal | null;
-  common: Common;
-  onOpenJoinModal: () => void;
+  common: Common | null;
+  onOpenJoinModal?: () => void;
+  isJoiningPending?: boolean;
   isCommonMember: boolean;
-  isJoiningPending: boolean;
 }
 
 export default function ProposalDetailModal({
@@ -94,8 +94,8 @@ export default function ProposalDetailModal({
             </>
           )}
           <div className="proposal-information-wrapper">
-            <div className="proposal-name" title={proposal.description.title}>
-              {proposal.description.title}
+            <div className="proposal-name" title={proposal.description.title || "Memberhip request"}>
+              {proposal.description.title || "Memberhip request"}
             </div>
             {expanded && (
               <>

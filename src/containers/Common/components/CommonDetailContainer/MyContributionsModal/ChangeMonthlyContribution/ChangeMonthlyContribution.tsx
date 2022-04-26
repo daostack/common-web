@@ -10,6 +10,7 @@ import { useMyContributionsContext } from "../context";
 import { AmountSelection } from "./AmountSelection";
 import { Success } from "./Success";
 import { ChangeMonthlyContributionStep } from "./constants";
+import "./index.scss";
 
 interface ChangeMonthlyContributionProps {
   currentSubscription: Subscription;
@@ -124,7 +125,13 @@ const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
 
   return (
     <>
-      {isLoading ? <Loader /> : renderContent()}
+      {isLoading ? (
+        <div className="change-monthly-contribution__loader-wrapper">
+          <Loader />
+        </div>
+      ) : (
+        renderContent()
+      )}
       {isMobileView && subscription && (
         <Success
           onFinish={handleSuccessFinish}

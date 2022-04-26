@@ -57,3 +57,5 @@ export interface Payment {
   userId: string;
   error?: PaymentError;
 }
+
+export const isPayment = (payment: any): payment is Payment => payment.source;
