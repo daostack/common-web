@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import {
@@ -37,6 +37,7 @@ interface Return {
   contributions: (Payment | Subscription)[];
   subscriptions: Subscription[];
   commons: CommonNamesState["data"];
+  updateSubscription: (subscription: Subscription) => void;
 }
 
 const useUserContributions = (): Return => {
@@ -80,6 +81,19 @@ const useUserContributions = (): Return => {
       return bDate.seconds - aDate.seconds;
     });
   }, [isLoading, paymentsState.data, subscriptionsState.data]);
+
+  const updateSubscription = useCallback((subscription: Subscription) => {
+    setSubscriptionsState((nextState) => {
+      const nextData = nextState.data.map((item) =>
+        item.id === subscription.id ? { ...subscription } : item
+      );
+
+      return {
+        ...nextState,
+        data: nextData,
+      };
+    });
+  }, []);
 
   useEffect(() => {
     if (paymentsState.loading || paymentsState.fetched || !user?.uid) {
@@ -200,6 +214,7 @@ const useUserContributions = (): Return => {
     subscriptions: subscriptionsState.data,
     contributions,
     commons: commonNamesState.data,
+    updateSubscription,
   };
 };
 

@@ -1,4 +1,4 @@
-import React, { useMemo, FC } from "react";
+import React, { useMemo, useState, FC } from "react";
 import { ChangeMonthlyContribution } from "@/containers/Common/components/CommonDetailContainer/MyContributionsModal/ChangeMonthlyContribution";
 import {
   MyContributionsContext,
@@ -13,6 +13,7 @@ interface ChangeMonthlyContributionModalProps {
   onClose: () => void;
   common: Common;
   subscription: Subscription;
+  onFinish: (subscription: Subscription) => void;
 }
 
 const emptyFunction = () => {
@@ -22,7 +23,12 @@ const emptyFunction = () => {
 const ChangeMonthlyContributionModal: FC<ChangeMonthlyContributionModalProps> = (
   props
 ) => {
-  const { isOpen, onClose, common, subscription } = props;
+  const { isOpen, onClose, common, subscription, onFinish } = props;
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleLoadingStateToggle = (isLoading: boolean) => {
+    setIsLoading(isLoading);
+  };
 
   const contextValue = useMemo<MyContributionsContextValue>(
     () => ({
@@ -35,13 +41,19 @@ const ChangeMonthlyContributionModal: FC<ChangeMonthlyContributionModalProps> = 
   );
 
   return (
-    <Modal isShowing={isOpen} onClose={onClose}>
+    <Modal
+      isShowing={isOpen}
+      onClose={onClose}
+      mobileFullScreen
+      closePrompt={isLoading}
+    >
       <MyContributionsContext.Provider value={contextValue}>
         <ChangeMonthlyContribution
           currentSubscription={subscription}
           common={common}
-          onFinish={() => {}}
+          onFinish={onFinish}
           goBack={() => {}}
+          onLoadingToggle={handleLoadingStateToggle}
           styles={{
             amountSelection: {
               container:

@@ -90,3 +90,11 @@
 .billing-active-contribution-item__list-item-value--failure {
   color: $red;
 }
+
+.billing-active-contribution-item__active-item-buttons {
+  margin-top: 1rem;
+
+  @include big-phone {
+    margin-top: 2rem;
+  }
+}

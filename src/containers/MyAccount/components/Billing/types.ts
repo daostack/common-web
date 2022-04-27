@@ -22,6 +22,7 @@ export interface BillingProps {
   contributionCommons: Common[];
   activeContribution: Payment | Subscription | null;
   onActiveContributionSelect: (contribution: Payment | Subscription | null) => void;
+  onActiveSubscriptionUpdate: (subscription: Subscription) => void;
 }
 
 export interface CardsState {

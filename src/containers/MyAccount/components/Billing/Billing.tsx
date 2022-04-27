@@ -43,6 +43,7 @@ const Billing: FC = () => {
     contributions,
     subscriptions,
     commons: contributionCommons,
+    updateSubscription,
   } = useUserContributions();
 
   const handleBankAccountChange = (data: BankAccountDetails) => {
@@ -50,6 +51,10 @@ const Billing: FC = () => {
       ...nextState,
       bankAccount: data,
     }));
+  };
+  const handleActiveSubscriptionUpdate = (subscription: Subscription) => {
+    setActiveContribution(subscription);
+    updateSubscription(subscription);
   };
 
   useEffect(() => {
@@ -132,6 +137,7 @@ const Billing: FC = () => {
     contributionCommons,
     activeContribution,
     onActiveContributionSelect: setActiveContribution,
+    onActiveSubscriptionUpdate: handleActiveSubscriptionUpdate,
   };
 
   return (

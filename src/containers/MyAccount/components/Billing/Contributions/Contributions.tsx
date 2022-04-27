@@ -15,6 +15,7 @@ interface ContributionsProps {
   onActiveContributionSelect: (
     contribution: Payment | Subscription | null
   ) => void;
+  onActiveSubscriptionUpdate?: (subscription: Subscription) => void;
 }
 
 const Contributions: FC<ContributionsProps> = (props) => {
@@ -24,6 +25,7 @@ const Contributions: FC<ContributionsProps> = (props) => {
     subscriptions,
     commons,
     onActiveContributionSelect,
+    onActiveSubscriptionUpdate,
   } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -56,14 +58,18 @@ const Contributions: FC<ContributionsProps> = (props) => {
           onClick={onActiveContributionSelect}
         />
       )}
-      {activeContribution && !isMobileView && common && (
-        <ActiveContributionItem
-          contribution={activeContribution}
-          subscription={subscription}
-          common={common}
-          onBackClick={handleBackClick}
-        />
-      )}
+      {activeContribution &&
+        !isMobileView &&
+        common &&
+        onActiveSubscriptionUpdate && (
+          <ActiveContributionItem
+            contribution={activeContribution}
+            subscription={subscription}
+            common={common}
+            onBackClick={handleBackClick}
+            onSubscriptionUpdate={onActiveSubscriptionUpdate}
+          />
+        )}
     </>
   );
 };

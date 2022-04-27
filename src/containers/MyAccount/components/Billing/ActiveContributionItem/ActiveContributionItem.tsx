@@ -12,6 +12,7 @@ import {
   SubscriptionStatus,
 } from "@/shared/models";
 import { formatDate, formatPrice } from "@/shared/utils";
+import { ActiveItemButtons } from "../ActiveItemButtons";
 import "./index.scss";
 
 interface ActiveContributionDataItem {
@@ -26,6 +27,7 @@ interface ActiveContributionItemProps {
   subscription: Subscription | null;
   common: Common;
   onBackClick?: () => void;
+  onSubscriptionUpdate: (subscription: Subscription) => void;
 }
 
 const getPaymentData = (payment: Payment): ActiveContributionDataItem[] => {
@@ -100,7 +102,14 @@ const getData = (
 };
 
 const ActiveContributionItem: FC<ActiveContributionItemProps> = (props) => {
-  const { className, contribution, subscription, common, onBackClick } = props;
+  const {
+    className,
+    contribution,
+    subscription,
+    common,
+    onBackClick,
+    onSubscriptionUpdate,
+  } = props;
 
   if (isPayment(contribution) && contribution.subscriptionId && !subscription) {
     return null;
@@ -144,6 +153,13 @@ const ActiveContributionItem: FC<ActiveContributionItemProps> = (props) => {
           </li>
         ))}
       </ul>
+      <ActiveItemButtons
+        className="billing-active-contribution-item__active-item-buttons"
+        contribution={contribution}
+        subscription={subscription}
+        common={common}
+        onSubscriptionUpdate={onSubscriptionUpdate}
+      />
     </div>
   );
 };

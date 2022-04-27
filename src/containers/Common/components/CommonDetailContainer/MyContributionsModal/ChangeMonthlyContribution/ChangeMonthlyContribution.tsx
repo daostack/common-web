@@ -21,13 +21,21 @@ interface ChangeMonthlyContributionProps {
   common: Common;
   onFinish: (subscription: Subscription) => void;
   goBack: () => void;
+  onLoadingToggle?: (isLoading: boolean) => void;
   styles?: Styles;
 }
 
 const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
   props
 ) => {
-  const { currentSubscription, common, onFinish, goBack, styles } = props;
+  const {
+    currentSubscription,
+    common,
+    onFinish,
+    goBack,
+    onLoadingToggle,
+    styles,
+  } = props;
   const {
     setTitle,
     setOnGoBack,
@@ -51,6 +59,9 @@ const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
     }
 
     setIsLoading(true);
+    if (onLoadingToggle) {
+      onLoadingToggle(true);
+    }
 
     dispatch(
       updateSubscription.request({
@@ -66,6 +77,9 @@ const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
           }
 
           setIsLoading(false);
+          if (onLoadingToggle) {
+            onLoadingToggle(false);
+          }
         },
       })
     );

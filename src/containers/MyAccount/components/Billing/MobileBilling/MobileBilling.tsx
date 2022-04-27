@@ -31,6 +31,7 @@ const MobileBilling: FC<BillingProps> = (props) => {
     contributionCommons,
     activeContribution,
     onActiveContributionSelect,
+    onActiveSubscriptionUpdate,
   } = props;
   const [tab, setTab] = useState(BillingTab.PaymentDetails);
   const commonId =
@@ -145,6 +146,7 @@ const MobileBilling: FC<BillingProps> = (props) => {
           subscription={subscription}
           common={common}
           onBackClick={handleActiveItemBackClick}
+          onSubscriptionUpdate={onActiveSubscriptionUpdate}
         />
       )}
     </div>
