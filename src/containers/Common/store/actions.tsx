@@ -308,3 +308,9 @@ export const updateSubscription = createAsyncAction(
   Subscription,
   Error
 >();
+
+export const cancelSubscription = createAsyncAction(
+  CommonsActionTypes.CANCEL_SUBSCRIPTION,
+  CommonsActionTypes.CANCEL_SUBSCRIPTION_SUCCESS,
+  CommonsActionTypes.CANCEL_SUBSCRIPTION_FAILURE
+)<PayloadWithCallback<string, Subscription, Error>, Subscription, Error>();

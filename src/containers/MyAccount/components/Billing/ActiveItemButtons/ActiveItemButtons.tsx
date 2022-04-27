@@ -1,9 +1,8 @@
-import React, { useEffect, useState, FC } from "react";
+import React, { useState, FC } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { Button, ButtonVariant } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
-import { useUserSubscriptionToCommon } from "@/shared/hooks/useCases";
 import {
   isPayment,
   Common,
@@ -12,6 +11,7 @@ import {
   SubscriptionStatus,
 } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { CancelMonthlyPaymentModal } from "../CancelMonthlyPaymentModal";
 import { ChangeMonthlyContributionModal } from "../ChangeMonthlyContributionModal";
 import "./index.scss";
 
@@ -39,9 +39,9 @@ const ActiveItemButtons: FC<ActiveContributionItemProps> = (props) => {
   const [isChangeContributionOpen, setIsChangeContributionOpen] = useState(
     false
   );
+  const [isPaymentCancelingOpen, setIsPaymentCancelingOpen] = useState(false);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const latestSubscriptionState = useUserSubscriptionToCommon();
   const subscriptionIdToUse: Subscription | null =
     subscription || (!isPayment(contribution) && contribution) || null;
 
@@ -56,18 +56,16 @@ const ActiveItemButtons: FC<ActiveContributionItemProps> = (props) => {
     handleChangeContributionClose();
   };
 
-  useEffect(() => {
-    if (
-      latestSubscriptionState.loading ||
-      latestSubscriptionState.fetched ||
-      !subscriptionIdToUse ||
-      !CANCELED_SUBSCRIPTION_STATUSES.includes(subscriptionIdToUse.status)
-    ) {
-      return;
-    }
-
-    latestSubscriptionState.fetch(common.id);
-  }, [latestSubscriptionState, subscriptionIdToUse, common.id]);
+  const handlePaymentCancelingOpen = () => {
+    setIsPaymentCancelingOpen(true);
+  };
+  const handlePaymentCancelingClose = () => {
+    setIsPaymentCancelingOpen(false);
+  };
+  const handlePaymentCancelingFinish = (subscription: Subscription) => {
+    onSubscriptionUpdate(subscription);
+    handlePaymentCancelingClose();
+  };
 
   if (
     !subscriptionIdToUse ||
@@ -81,7 +79,11 @@ const ActiveItemButtons: FC<ActiveContributionItemProps> = (props) => {
       <div className={classNames("billing-active-item-buttons", className)}>
         <Button
           className="billing-active-item-buttons__button"
-          variant={isMobileView ? ButtonVariant.SecondaryPurple : ButtonVariant.Secondary}
+          variant={
+            isMobileView
+              ? ButtonVariant.SecondaryPurple
+              : ButtonVariant.Secondary
+          }
           onClick={handleChangeContributionOpen}
           shouldUseFullWidth
           shadowed={!isMobileView}
@@ -90,7 +92,12 @@ const ActiveItemButtons: FC<ActiveContributionItemProps> = (props) => {
         </Button>
         <Button
           className="billing-active-item-buttons__button"
-          variant={isMobileView ? ButtonVariant.SecondaryPurple : ButtonVariant.Secondary}
+          variant={
+            isMobileView
+              ? ButtonVariant.SecondaryPurple
+              : ButtonVariant.Secondary
+          }
+          onClick={handlePaymentCancelingOpen}
           shouldUseFullWidth
           shadowed={!isMobileView}
         >
@@ -103,6 +110,13 @@ const ActiveItemButtons: FC<ActiveContributionItemProps> = (props) => {
         common={common}
         subscription={subscriptionIdToUse}
         onFinish={handleChangeContributionFinish}
+      />
+      <CancelMonthlyPaymentModal
+        isOpen={isPaymentCancelingOpen}
+        onClose={handlePaymentCancelingClose}
+        common={common}
+        subscription={subscriptionIdToUse}
+        onFinish={handlePaymentCancelingFinish}
       />
     </>
   );
