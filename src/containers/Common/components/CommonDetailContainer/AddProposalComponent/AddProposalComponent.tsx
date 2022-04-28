@@ -92,9 +92,10 @@ export const AddProposalComponent = ({
   
   const saveProposalState = useCallback(
     (payload: Partial<CreateFundingRequestProposalPayload>) => {
-      setFundingRequest({ ...fundingRequest, ...payload });
+      const fundingRequestData = { ...fundingRequest, ...payload };
+      setFundingRequest(fundingRequestData);
       if (!payload.amount) {
-        confirmProposal({ ...fundingRequest, ...payload });
+        confirmProposal(fundingRequestData);
       } else {
         changeCreationProposalStep(AddProposalSteps.CONFIRM);
       }
