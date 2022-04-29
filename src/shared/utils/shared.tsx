@@ -38,11 +38,6 @@ export const formatPrice = (
     }${bySubscription ? "/mo" : ""}`;
 };
 
-export const formatDate = (
-  date: string | Date | Moment,
-  format: DateFormat = DateFormat.Short
-): string => moment(date).format(format);
-
 /**
  * Returns the date in a given format. Default is DD-MM-YYYY HH:mm
  * @param {Time} time

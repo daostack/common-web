@@ -1,7 +1,7 @@
 module.exports = {
   roots: ["<rootDir>/src"],
   transform: {
-    "^.+\\.tsx?$": "ts-jest",
+    "^.+\\.[jt]sx?$": "ts-jest",
   },
   setupFilesAfterEnv: ["@testing-library/jest-dom/extend-expect"],
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
@@ -11,4 +11,5 @@ module.exports = {
   },
   testPathIgnorePatterns: ["/node_modules/", "/public/"],
   testEnvironment: "jsdom",
+  setupFiles: ["<rootDir>/src/shared/utils/mocks/setupJestMock.ts"],
 };
