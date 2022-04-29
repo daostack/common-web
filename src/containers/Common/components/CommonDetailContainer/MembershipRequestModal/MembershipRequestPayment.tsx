@@ -72,10 +72,15 @@ export default function MembershipRequestPayment(
     [setState]
   );
 
-  const finishPayment = useCallback(
-    () => setUserData((nextUserData) => ({ ...nextUserData, stage: 5 })),
-    [setUserData]
-  );
+  const finishPayment = useCallback(() => {
+    const cardId = hasPaymentMethod && cards[0]?.id;
+
+    setUserData((nextUserData) => ({
+      ...nextUserData,
+      cardId: cardId || nextUserData.cardId,
+      stage: 5,
+    }));
+  }, [setUserData, hasPaymentMethod, cards]);
 
   useEffect(() => {
     dispatch(loadUserCards.request({

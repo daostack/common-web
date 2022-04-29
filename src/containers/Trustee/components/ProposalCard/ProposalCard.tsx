@@ -4,7 +4,6 @@ import ApprovedIcon from "../../../../shared/icons/approved.icon";
 import {
   DateFormat,
   Proposal,
-  CurrencySymbol,
 } from "../../../../shared/models";
 import { formatEpochTime, formatPrice } from "../../../../shared/utils";
 import {
@@ -31,10 +30,6 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
       ),
     [proposal.payoutDocs]
   );
-  //required custom fix since the using currency was changed - CW-411
-  const fundingAmountPrefix = (
-    (proposal?.createdAt || proposal?.createTime)?.toDate() < new Date("02/17/2022 12:00")
-  ) && CurrencySymbol.USD;
 
   const containerClassName = classNames("trustee-proposal-card", {
     "trustee-proposal-card--without-action": !onClick,
@@ -77,18 +72,7 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
             <div className={priceWrapperClassName}>
               <span>Proposal Requested</span>
               <span className="trustee-proposal-card__price">
-                {
-                  formatPrice(
-                    proposal.fundingRequest?.amount,
-                    {
-                      ...(
-                        fundingAmountPrefix && {
-                          prefix: fundingAmountPrefix
-                        }
-                      )
-                    }
-                  )
-                }
+                {formatPrice(proposal.fundingRequest?.amount)}
               </span>
             </div>
             <div className={priceWrapperClassName}>

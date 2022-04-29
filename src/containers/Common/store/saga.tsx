@@ -40,11 +40,14 @@ import {
   updateBankDetails as updateBankDetailsApi,
   getBankDetails as getBankDetailsApi,
   getUserContributionsToCommon as getUserContributionsToCommonApi,
+  getUserContributions as getUserContributionsApi,
   getUserSubscriptionToCommon as getUserSubscriptionToCommonApi,
+  getUserSubscriptions as getUserSubscriptionsApi,
   updateSubscription as updateSubscriptionApi,
   getSubscriptionById,
+  fetchCommonListByIds as fetchCommonListByIdsApi,
 } from "./api";
-
+import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
 import store from "@/index";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
@@ -61,6 +64,29 @@ export function* getCommonsList(): Generator {
   } catch (e) {
     yield put(actions.getCommonsList.failure(e));
     yield put(stopLoading());
+  }
+}
+
+export function* getCommonsListByIds({
+  payload,
+}: ReturnType<typeof actions.getCommonsListByIds.request>): Generator {
+  try {
+    const commons = (yield call(
+      fetchCommonListByIdsApi,
+      payload.payload
+    )) as Common[];
+
+    yield put(actions.getCommonsListByIds.success(commons));
+
+    if (payload.callback) {
+      payload.callback(null, commons);
+    }
+  } catch (error) {
+    yield put(actions.getCommonsListByIds.failure(error));
+
+    if (payload.callback) {
+      payload.callback(error);
+    }
   }
 }
 
@@ -215,9 +241,30 @@ export function* loadUserProposalList(
 ): Generator {
   try {
     yield put(startLoading());
-    const proposals = yield fetchUserProposals(action.payload);
+    const proposals = (yield fetchUserProposals(action.payload)) as Proposal[];
+    const proposer = (yield getUserData(action.payload)) as User;
+    const discussions_ids = proposals.map(proposal => proposal.id);
+    const discussionMessages = (yield fetchDiscussionsMessages(discussions_ids)) as DiscussionMessage[];
 
-    yield put(actions.loadUserProposalList.success(proposals as Proposal[]));
+    const getProposalMessages = (proposal: Proposal) => (
+      discussionMessages.filter(
+        (dMessage: DiscussionMessage) =>
+          (dMessage.discussionId === proposal.id)
+      )
+    );
+
+    const processedUserProposals = proposals.map(
+      proposal =>
+      (
+        {
+          ...proposal,
+          proposer,
+          discussionMessage: getProposalMessages(proposal),
+        }
+      )
+    );
+
+    yield put(actions.loadUserProposalList.success(processedUserProposals));
     yield put(stopLoading());
   } catch (e) {
     yield put(actions.loadUserProposalList.failure(e));
@@ -608,6 +655,23 @@ export function* getUserContributionsToCommon(
   }
 }
 
+export function* getUserContributions(
+  action: ReturnType<typeof actions.getUserContributions.request>
+): Generator {
+  try {
+    const payments = (yield call(
+      getUserContributionsApi,
+      action.payload.payload
+    )) as Payment[];
+
+    yield put(actions.getUserContributions.success(payments));
+    action.payload.callback(null, payments);
+  } catch (error) {
+    yield put(actions.getUserContributions.failure(error));
+    action.payload.callback(error);
+  }
+}
+
 export function* getUserSubscriptionToCommon(
   action: ReturnType<typeof actions.getUserSubscriptionToCommon.request>
 ): Generator {
@@ -622,6 +686,23 @@ export function* getUserSubscriptionToCommon(
     action.payload.callback(null, subscription);
   } catch (error) {
     yield put(actions.getUserSubscriptionToCommon.failure(error));
+    action.payload.callback(error);
+  }
+}
+
+export function* getUserSubscriptions(
+  action: ReturnType<typeof actions.getUserSubscriptions.request>
+): Generator {
+  try {
+    const subscriptions = (yield call(
+      getUserSubscriptionsApi,
+      action.payload.payload
+    )) as Subscription[];
+
+    yield put(actions.getUserSubscriptions.success(subscriptions));
+    action.payload.callback(null, subscriptions);
+  } catch (error) {
+    yield put(actions.getUserSubscriptions.failure(error));
     action.payload.callback(error);
   }
 }
@@ -646,6 +727,7 @@ export function* updateSubscription({
 
 export function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
+  yield takeLatest(actions.getCommonsListByIds.request, getCommonsListByIds);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
   yield takeLatest(
     actions.loadCommonDiscussionList.request,
@@ -687,10 +769,12 @@ export function* commonsSaga() {
     actions.getUserContributionsToCommon.request,
     getUserContributionsToCommon
   );
+  yield takeLatest(actions.getUserContributions.request, getUserContributions);
   yield takeLatest(
     actions.getUserSubscriptionToCommon.request,
     getUserSubscriptionToCommon
   );
+  yield takeLatest(actions.getUserSubscriptions.request, getUserSubscriptions);
   yield takeLatest(actions.updateSubscription.request, updateSubscription);
 }
 

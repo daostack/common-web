@@ -52,10 +52,6 @@ const PaymentMethod = (props: PaymentMethodProps): ReactElement => {
 
       <div className="payment-method__content-wrapper">
         <div className="payment-method__card-wrapper">
-          {/*
-                FIXME: need to add a multiple card brand icons (into the assets)
-                and its conditional src choosing correspondingly
-              */}
           <img
             className="payment-method__payment-logo"
             src={imageSrc}

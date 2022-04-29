@@ -34,5 +34,6 @@ export enum DateFormat {
   Human = "MMM, D YYYY",
   LongHuman = "D MMMM YYYY",
   FullHuman = "MMMM DD, YYYY",
+  GeneralHuman = "D MMMM YYYY",
   ShortSecondary = "DD/MM/YYYY",
 }

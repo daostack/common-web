@@ -1,0 +1,48 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.my-proposals {
+  width: 100%;
+  margin-left: 2%;
+  padding: 2.5rem 0;
+
+  .my-proposals__header {
+    display: flex;
+    justify-content: flex-start;
+
+    > a {
+      display: flex;
+      text-decoration: none;
+      color: $black;
+      cursor: pointer;
+      font-size: $moderate-med;
+      font-family: NunitoSans, sans-serif;
+      font-weight: bold;
+    }
+  }
+
+  .my-proposals__proposals-list {
+    display: grid;
+    justify-items: center;
+    grid-column-gap: 2rem;
+    grid-row-gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(18.75rem, 1fr));
+  }
+
+  @include big-phone {
+    padding: 0.9rem 0 1.5rem 0;
+    margin-left: 0;
+
+    .my-proposals__proposals-list {
+      grid-template-columns: repeat(auto-fill, minmax(17.5rem, 1fr));
+    }
+  }
+}
+
+.my-proposals__detail-modal-header-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  background-color: transparent;
+}

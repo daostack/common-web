@@ -25,3 +25,6 @@
   align-items: center;
   box-sizing: border-box;
 }
+.my-account-mobile-billing__contributions-tab-panel {
+  margin: 0 -#{$content-padding-mobile};
+}
