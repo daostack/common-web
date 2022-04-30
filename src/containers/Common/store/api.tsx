@@ -124,6 +124,22 @@ export async function fetchOwners(ownerids: string[]) {
   return data;
 }
 
+export async function fetchMessagesForCommonList(cIds: string[]) {
+  const idsChunks = createIdsChunk(cIds);
+
+  const messages = await Promise.all(
+    idsChunks.map((ids: string[]) =>
+      firebase
+        .firestore()
+        .collection(Collection.DiscussionMessage)
+        .where("commonId", "in", ids)
+        .get()
+    )
+  );
+
+  return flatChunk<DiscussionMessage>(messages);
+}
+
 export async function fetchProposalsForCommonList(cIds: string[]) {
   const idsChunks = createIdsChunk(cIds);
 

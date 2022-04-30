@@ -3,7 +3,7 @@
 .common-item {
   width: 100%;
   max-width: 300px;
-  height: 210px;
+  height: 276px;
   border-radius: 24px;
   box-shadow: 0 3px 8px 0 #001a3614;
   background-color: #ffffff;
@@ -87,9 +87,10 @@
     text-align: center;
     justify-content: center;
     align-items: center;
-    height: 80px;
+    height: 70px;
+    margin-bottom: 20px;
     .item {
-      flex: 50%;
+      flex: 33%;
       .title {
         font-size: 12px;
         font-weight: 600;
@@ -103,6 +104,32 @@
         line-height: 1.5;
         text-align: center;
         color: #001a36;
+      }
+    }
+  }
+
+  .relation-additional-information {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    height: 48px;
+    border-top:1px solid  lightgray;;;
+    .item {
+      flex: 33%;
+      .value {
+        font-size: 1rem;
+        font-weight: bold;
+        line-height: 1.5;
+        text-align: center;
+        color: $light-gray-2 ;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        img{
+          margin-right: 20px;
+        }
       }
     }
   }

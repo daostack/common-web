@@ -45,6 +45,7 @@ import {
   getSubscriptionById,
   fetchDiscussionForCommonList,
   fetchProposalsForCommonList,
+  fetchMessagesForCommonList,
 } from "./api";
 
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -61,10 +62,11 @@ export function* getCommonsList(): Generator {
 
     const cIds = commons.map((c) => c.id);
 
-    const [discussions, proposals] = (yield Promise.all([
+    const [discussions, proposals, messages] = (yield Promise.all([
       fetchDiscussionForCommonList(cIds),
       fetchProposalsForCommonList(cIds),
-    ])) as [Discussion[], Proposal[]];
+      fetchMessagesForCommonList(cIds),
+    ])) as [Discussion[], Proposal[], DiscussionMessage[]];
 
     const discussionGrouped = groupBy<Discussion>(
       discussions,
@@ -75,9 +77,15 @@ export function* getCommonsList(): Generator {
       (item: Proposal) => item.commonId
     );
 
+    const messagesGrouped = groupBy<DiscussionMessage>(
+      messages,
+      (item: DiscussionMessage) => item.commonId
+    );
+
     const data = commons.map((c) => {
       c.proposals = proposalGrouped.get(c.id) ?? [];
       c.discussions = discussionGrouped.get(c.id) ?? [];
+      c.messages = messagesGrouped.get(c.id) ?? [];
 
       return c;
     });
