@@ -9,7 +9,7 @@ import {
   usePaymentMethodChange,
   useUserContributions,
 } from "@/shared/hooks/useCases";
-import { BankAccountDetails } from "@/shared/models";
+import { BankAccountDetails, Payment, Subscription } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { DesktopBilling } from "./DesktopBilling";
 import { MobileBilling } from "./MobileBilling";
@@ -28,6 +28,9 @@ const Billing: FC = () => {
     fetched: false,
     bankAccount: null,
   });
+  const [activeContribution, setActiveContribution] = useState<
+    Payment | Subscription | null
+  >(null);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const {
@@ -39,7 +42,8 @@ const Billing: FC = () => {
     loading: areContributionsLoading,
     contributions,
     subscriptions,
-    commonNames,
+    commons: contributionCommons,
+    updateSubscription,
   } = useUserContributions();
 
   const handleBankAccountChange = (data: BankAccountDetails) => {
@@ -47,6 +51,10 @@ const Billing: FC = () => {
       ...nextState,
       bankAccount: data,
     }));
+  };
+  const handleActiveSubscriptionUpdate = (subscription: Subscription) => {
+    setActiveContribution(subscription);
+    updateSubscription(subscription);
   };
 
   useEffect(() => {
@@ -126,14 +134,19 @@ const Billing: FC = () => {
     areContributionsLoading,
     contributions,
     subscriptions,
-    commonNames,
+    contributionCommons,
+    activeContribution,
+    onActiveContributionSelect: setActiveContribution,
+    onActiveSubscriptionUpdate: handleActiveSubscriptionUpdate,
   };
 
   return (
     <div className="route-content my-account-billing">
-      <header className="my-account-billing__header">
-        <h2 className="route-title">Billing</h2>
-      </header>
+      {(!isMobileView || !activeContribution) && (
+        <header className="my-account-billing__header">
+          <h2 className="route-title">Billing</h2>
+        </header>
+      )}
       <Component {...billingProps} />
     </div>
   );

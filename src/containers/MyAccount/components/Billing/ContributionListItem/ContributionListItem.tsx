@@ -24,22 +24,28 @@ interface ContributionListProps {
   title: string;
   contribution: Payment | Subscription;
   subscription?: Subscription | null;
+  onClick?: () => void;
 }
 
-const getSubscriptionContent = (subscription: Subscription): Content => {
-  const isCanceled = [
+const checkCanceledSubscription = (subscription: Subscription): boolean =>
+  [
     SubscriptionStatus.CanceledByUser,
     SubscriptionStatus.CanceledByPaymentFailure,
   ].includes(subscription.status);
+
+const getSubscriptionContent = (subscription: Subscription): Content => {
+  const isCanceled = checkCanceledSubscription(subscription);
 
   return {
     status: isCanceled ? "failure" : "success",
     statusText: isCanceled ? "Canceled" : "Active",
     statusDescription: isCanceled
-      ? `${formatDate(
-          new Date(subscription.updatedAt.seconds * 1000),
-          DateFormat.GeneralHuman
-        )}`
+      ? subscription.canceledAt
+        ? `${formatDate(
+            new Date(subscription.canceledAt.seconds * 1000),
+            DateFormat.GeneralHuman
+          )}`
+        : ""
       : `${formatPrice(subscription.amount)}/mo`,
     description: isCanceled
       ? `Canceled by ${
@@ -63,12 +69,14 @@ const getPaymentContent = (
 
   return {
     status: isFailedPayment ? "failure" : "success",
-    statusText: isFailedPayment ? "Payment failed" : "Confirmed",
-    statusDescription: `${formatPrice(payment.amount.amount)}${
-      isMonthlyPayment ? "/mo" : ""
-    }`,
+    statusText: isFailedPayment ? "Payment failed" : "Payment succeeded",
+    statusDescription: `${formatPrice(
+      subscription?.amount ?? payment.amount.amount
+    )}${isMonthlyPayment ? "/mo" : ""}`,
     description:
-      isMonthlyPayment && subscription
+      isMonthlyPayment &&
+      subscription &&
+      !checkCanceledSubscription(subscription)
         ? `Next payment: ${formatDate(
             new Date(subscription.dueDate.seconds * 1000),
             DateFormat.GeneralHuman
@@ -86,7 +94,7 @@ const getContent = (
     : getSubscriptionContent(contribution);
 
 const ContributionListItem: FC<ContributionListProps> = (props) => {
-  const { title, contribution, subscription } = props;
+  const { title, contribution, subscription, onClick } = props;
   const { status, statusText, statusDescription, description } = getContent(
     contribution,
     subscription
@@ -94,7 +102,10 @@ const ContributionListItem: FC<ContributionListProps> = (props) => {
 
   return (
     <li className="billing-contribution-list-item">
-      <ButtonLink className="billing-contribution-list-item__link">
+      <ButtonLink
+        className="billing-contribution-list-item__link"
+        onClick={onClick}
+      >
         <div
           className={classNames(
             "billing-contribution-list-item__title-wrapper",
