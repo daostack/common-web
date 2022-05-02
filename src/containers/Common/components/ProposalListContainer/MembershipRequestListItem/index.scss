@@ -1,0 +1,112 @@
+@import "../../../../../constants.scss";
+@import "../../../../../styles/sizes";
+
+.membership-request-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 18rem;
+  height: 12rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 3px 8px 0 #001a3614;
+  background-color: #ffffff;
+
+  .membership-request-item__header {
+    height: 1.7rem;
+    border-radius: 1.5rem 1.5rem 0 0;
+
+    .state-inner-wrapper,
+    .inner-wrapper {
+      border-radius: 1.5rem 1.5rem 0 0;
+      margin: 0;
+    }
+  }
+
+  .membership-request-item__content-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 0 auto;
+    width: 90%;
+
+    > div {
+      margin-top: 0.625rem;
+    }
+
+    .membership-request-item__info {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      .membership-request-item__common-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+        height: fit-content;
+
+        .common-icon {
+          width: 1.5rem;
+          height: 1.5rem;
+          margin-right: 0.3rem;
+          background-color: transparent;
+        }
+      }
+
+      .membership-request-item__info-join {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+
+        .days-ago {
+          font-size: $xsmall;
+          color: $light-gray-2;
+          max-width: 5.9rem;
+          width: 100%;
+          text-align: end;
+        }
+      }
+    }
+  }
+
+  .membership-request-item__footer {
+    width: 100%;
+    margin-bottom: 0.5rem;
+
+    .membership-request-item__footer-wrapper {
+      width: 90%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+
+      .membership-request-item__footer-discussions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .count {
+          margin-left: 0.5rem;
+          font-size: $small;
+          font-weight: bold;
+          color: $light-gray-2;
+        }
+      }
+
+      .membership-request-item__footer-viewall {
+        display: flex;
+        cursor: pointer;
+        color: $purple-2;
+        font-family: NunitoSans, sans-serif;
+        font-weight: bold;
+        font-size: $xsmall;
+        width: 41%;
+        align-items: center;
+
+        @include big-phone {
+          width: 45%;
+        }
+      }
+    }
+  }
+}

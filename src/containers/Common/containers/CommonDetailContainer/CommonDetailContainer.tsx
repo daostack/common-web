@@ -561,9 +561,8 @@ export default function CommonDetail() {
               <div className="numbers">
                 <div className="item">
                   <div className="value">{formatPrice(common?.balance)}</div>
-                  <div className="name">{`Available ${
-                    screenSize === ScreenSize.Desktop ? "Funds" : ""
-                  }`}</div>
+                  <div className="name">{`Available ${screenSize === ScreenSize.Desktop ? "Funds" : ""
+                    }`}</div>
                   {Boolean(common.reservedBalance) && (
                     <div className="text-information-wrapper__secondary-text">
                       In process: {formatPrice(common.reservedBalance)}
@@ -572,9 +571,8 @@ export default function CommonDetail() {
                 </div>
                 <div className="item">
                   <div className="value">{formatPrice(common?.raised)}</div>
-                  <div className="name">{`${
-                    screenSize === ScreenSize.Desktop ? "Total" : ""
-                  } Raised`}</div>
+                  <div className="name">{`${screenSize === ScreenSize.Desktop ? "Total" : ""
+                    } Raised`}</div>
                 </div>
                 <div className="item">
                   <div className="value">{common?.members.length}</div>
@@ -582,9 +580,8 @@ export default function CommonDetail() {
                 </div>
                 <div className="item">
                   <div className="value">{activeProposals.length}</div>
-                  <div className="name">{`${
-                    screenSize === ScreenSize.Desktop ? "Active" : ""
-                  } Proposals`}</div>
+                  <div className="name">{`${screenSize === ScreenSize.Desktop ? "Active" : ""
+                    } Proposals`}</div>
                 </div>
               </div>
             </div>

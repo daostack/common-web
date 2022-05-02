@@ -4,4 +4,5 @@ export * from "./CreateDiscussionDto";
 export * from "./AddMessageToDiscussionDto";
 export * from "./ImmediateContribution";
 export * from "./PaymentPayload";
+export * from "./LeaveCommon";
 export * from "./DeleteCommon";

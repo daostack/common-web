@@ -1,5 +1,6 @@
 export enum MemberPermission {
   Founder = "founder",
+  Moderator = "moderator",
 }
 
 export interface Member {
@@ -7,10 +8,12 @@ export interface Member {
   userId: string;
   permission?: MemberPermission;
 }
+
 export interface CommonLink {
   title: string;
   value: string;
 }
+
 export interface CommonRule {
   title: string;
   value: string;

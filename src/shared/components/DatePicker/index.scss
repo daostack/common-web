@@ -25,6 +25,38 @@ $custom-dropdown-vertical-padding: 0.875rem;
   .custom-date-picker__date-picker-wrapper {
     position: relative;
     width: 100%;
+
+    .react-datepicker__month-dropdown-container {
+      .react-datepicker__month-read-view {
+        margin-right: 1.125rem;
+      }
+    }
+
+    .react-datepicker__year-dropdown {
+      user-select: none;
+    }
+
+    .react-datepicker__navigation--years-upcoming::before,
+    .react-datepicker__navigation--years-previous::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0.5625rem;
+      height: 0.5625rem;
+      display: block;
+      border-color: $date-picker-arrow-color;
+      border-style: solid;
+      border-width: 0.1875rem 0.1875rem 0 0;
+    }
+
+    .react-datepicker__navigation--years-upcoming::before {
+      transform: translateX(-50%) rotate(-45deg);
+    }
+
+    .react-datepicker__navigation--years-previous::before {
+      transform: translate(-50%, -100%) rotate(135deg);
+    }
   }
 
   .custom-date-picker__date-picker {
@@ -35,7 +67,8 @@ $custom-dropdown-vertical-padding: 0.875rem;
     width: 100%;
     height: 3rem;
     margin: 0;
-    padding: $custom-dropdown-vertical-padding 1.875rem $custom-dropdown-vertical-padding 0.75rem;
+    padding: $custom-dropdown-vertical-padding 1.875rem
+      $custom-dropdown-vertical-padding 0.75rem;
     border-radius: 3px;
     border: 1px solid $light-gray-1;
     background-color: $white;

@@ -1,9 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React,
+{
+  useEffect,
+  useState,
+  useMemo,
+} from "react";
 import "./index.scss";
 
 interface ProposalCountDownInterface {
   date: Date;
   type?: string;
+  preview?: boolean;
+  hideCounter?: boolean;
 }
 
 const countDownCount = (date: Date) => {
@@ -35,37 +42,45 @@ const formatCountDown = (step: number) => {
   return string.length === 1 ? `0${string}` : string;
 };
 
-export default function ProposalCountDown({ date, type }: ProposalCountDownInterface) {
+export default function ProposalCountDown({ date, type, preview, hideCounter }: ProposalCountDownInterface) {
   const [state, setState] = useState(countDownCount(date));
+  const countdown = useMemo(
+    () => (
+      hideCounter
+        ? "Countdown"
+        : `${!preview ? "Countdown " : ""}${formatCountDown(state.daysDifference)}:${formatCountDown(state.hoursDifference)}:${formatCountDown(state.minutesDifference)}:${formatCountDown(state.secondsDifference)}`
+    ),
+    [state, hideCounter, preview]
+  );
 
   useEffect(() => {
-    if (state.difference > 0) {
+    if (state.difference > 0 && !hideCounter) {
       const interval = setTimeout(() => {
         return setState(countDownCount(date));
       }, 1000);
 
       return () => clearTimeout(interval);
     }
-  }, [state, date]);
+  }, [state, date, hideCounter]);
 
   return (
-    <div className="countdown-wrapper">
-      <div className="inner-wrapper">
-        {!type ? (
-          <img className="clock-icon" src="/icons/alarm-clock.svg" alt="alarm-clock" />
-        ) : (
-          <img className="clock-icon" src="/icons/alarm-clock-gray.svg" alt="alarm-clock" />
-        )}
-        <div className="text">
-          <span>
-            {state.difference > 0
-              ? `Countdown ${formatCountDown(state.daysDifference)}:${formatCountDown(
-                  state.hoursDifference,
-                )}:${formatCountDown(state.minutesDifference)}:${formatCountDown(state.secondsDifference)}`
-              : "Time's up!"}
-          </span>
-        </div>
+    preview
+      ? <div className="countdown-preview">{countdown}</div>
+      : <div className="countdown-wrapper">
+          <div className="inner-wrapper">
+            {!type ? (
+              <img className="clock-icon" src="/icons/alarm-clock.svg" alt="alarm-clock" />
+            ) : (
+              <img className="clock-icon" src="/icons/alarm-clock-gray.svg" alt="alarm-clock" />
+            )}
+            <div className="text">
+              <span>
+                {state.difference > 0
+                  ? countdown
+                  : "Time's up!"}
+              </span>
+            </div>
+          </div>
       </div>
-    </div>
   );
 }

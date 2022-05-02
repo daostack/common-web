@@ -15,7 +15,7 @@ import {
   ROUTE_PATHS,
 } from "../../../shared/constants";
 import history from "../../../shared/history";
-import { createdUserApi } from "./api";
+import { createdUserApi, getUserData } from "./api";
 import {
   getProposalById,
   subscribeToNotification,
@@ -44,37 +44,6 @@ const getAuthProviderFromProviderData = (
       return AuthProvider.Phone;
     default:
       return null;
-  }
-};
-
-const getUserData = async (userId: string) => {
-  const userSnapshot = await firebase
-    .firestore()
-    .collection(Collection.Users)
-    .where("uid", "==", userId)
-    .get();
-
-  if (userSnapshot.docs.length) {
-    const user: User = (userSnapshot.docs[0].data() as unknown) as User;
-    return user;
-  }
-  return null;
-};
-
-const saveTokenToDatabase = async (token: string) => {
-  const currentUser = await firebase.auth().currentUser;
-  if (currentUser) {
-    await firebase
-      .firestore()
-      .collection(Collection.Users)
-      .doc(currentUser?.uid)
-      .update({
-        tokens: firebase.firestore.FieldValue.arrayUnion(token),
-      })
-      .then(() => {
-        console.log("FCM token updated");
-      })
-      .catch((err) => console.error(err));
   }
 };
 
@@ -440,12 +409,13 @@ function* authSagas() {
 
 (async () => {
   firebase.auth().onIdTokenChanged(async (data) => {
+    store.dispatch(actions.setIsAuthenticationReady(true));
+
     const newToken = await data?.getIdToken();
     const currentToken = tokenHandler.get();
     if (newToken !== currentToken && currentToken) {
       if (newToken) {
         tokenHandler.set(newToken);
-        await saveTokenToDatabase(newToken);
       } else {
         logOut().next();
       }

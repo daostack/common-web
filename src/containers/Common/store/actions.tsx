@@ -1,6 +1,7 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 
 import { PayloadWithCallback } from "@/shared/interfaces";
+import { UpdateBankAccountDetailsData } from "@/shared/interfaces/api/bankAccount";
 import { BuyerTokenPageCreationData } from "@/shared/interfaces/api/payMe";
 import {
   CreateFundingRequestProposalPayload,
@@ -8,6 +9,7 @@ import {
 } from "@/shared/interfaces/api/proposal";
 import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
+  BankAccountDetails,
   Card,
   Common,
   CommonPayment,
@@ -23,9 +25,13 @@ import {
   CreateCommonPayload,
   AddMessageToDiscussionDto,
   DeleteCommon,
+  LeaveCommon,
 } from "@/containers/Common/interfaces";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
-import { CreateVotePayload } from "@/shared/interfaces/api/vote";
+import {
+  CreateVotePayload,
+  UpdateVotePayload,
+} from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 import {
   ImmediateContributionData,
@@ -37,6 +43,12 @@ export const getCommonsList = createAsyncAction(
   CommonsActionTypes.GET_COMMONS_LIST_SUCCESS,
   CommonsActionTypes.GET_COMMONS_LIST_FAILURE
 )<void, Common[], Error>();
+
+export const getCommonsListByIds = createAsyncAction(
+  CommonsActionTypes.GET_COMMONS_LIST_BY_IDS,
+  CommonsActionTypes.GET_COMMONS_LIST_BY_IDS_SUCCESS,
+  CommonsActionTypes.GET_COMMONS_LIST_BY_IDS_FAILURE
+)<PayloadWithOptionalCallback<string[], Common[], Error>, Common[], Error>();
 
 export const getCommonDetail = createAsyncAction(
   CommonsActionTypes.GET_COMMON_DETAIL,
@@ -163,6 +175,12 @@ export const addMessageToProposal = createAsyncAction(
   Error
 >();
 
+export const leaveCommon = createAsyncAction(
+  CommonsActionTypes.LEAVE_COMMON,
+  CommonsActionTypes.LEAVE_COMMON_SUCCESS,
+  CommonsActionTypes.LEAVE_COMMON_FAILURE
+)<PayloadWithCallback<LeaveCommon, void, Error>, string, Error>();
+
 export const deleteCommon = createAsyncAction(
   CommonsActionTypes.DELETE_COMMON,
   CommonsActionTypes.DELETE_COMMON_SUCCESS,
@@ -180,6 +198,12 @@ export const createVote = createAsyncAction(
   CommonsActionTypes.CREATE_VOTE_SUCCESS,
   CommonsActionTypes.CREATE_VOTE_FAILURE
 )<PayloadWithCallback<CreateVotePayload, void, Error>, void, Error>();
+
+export const updateVote = createAsyncAction(
+  CommonsActionTypes.UPDATE_VOTE,
+  CommonsActionTypes.UPDATE_VOTE_SUCCESS,
+  CommonsActionTypes.UPDATE_VOTE_FAILURE
+)<PayloadWithCallback<UpdateVotePayload, void, Error>, void, Error>();
 
 export const makeImmediateContribution = createAsyncAction(
   CommonsActionTypes.MAKE_IMMEDIATE_CONTRIBUTION,
@@ -209,13 +233,35 @@ export const addBankDetails = createAsyncAction(
   CommonsActionTypes.ADD_BANK_DETAILS,
   CommonsActionTypes.ADD_BANK_DETAILS_SUCCESS,
   CommonsActionTypes.ADD_BANK_DETAILS_FAILURE
-)<PayloadWithCallback<AddBankDetailsPayload, void, Error>, void, Error>();
+)<
+  PayloadWithCallback<AddBankDetailsPayload, BankAccountDetails, Error>,
+  BankAccountDetails,
+  Error
+>();
+
+export const updateBankDetails = createAsyncAction(
+  CommonsActionTypes.UPDATE_BANK_DETAILS,
+  CommonsActionTypes.UPDATE_BANK_DETAILS_SUCCESS,
+  CommonsActionTypes.UPDATE_BANK_DETAILS_FAILURE
+)<
+  PayloadWithCallback<
+    Partial<UpdateBankAccountDetailsData>,
+    BankAccountDetails,
+    Error
+  >,
+  BankAccountDetails,
+  Error
+>();
 
 export const getBankDetails = createAsyncAction(
   CommonsActionTypes.GET_BANK_DETAILS,
   CommonsActionTypes.GET_BANK_DETAILS_SUCCESS,
   CommonsActionTypes.GET_BANK_DETAILS_FAILURE
-)<PayloadWithCallback<void, void, Error>, void, Error>();
+)<
+  PayloadWithCallback<void, BankAccountDetails, Error>,
+  BankAccountDetails,
+  Error
+>();
 
 export const getUserContributionsToCommon = createAsyncAction(
   CommonsActionTypes.GET_USER_CONTRIBUTIONS_TO_COMMON,
@@ -226,6 +272,12 @@ export const getUserContributionsToCommon = createAsyncAction(
   Payment[],
   Error
 >();
+
+export const getUserContributions = createAsyncAction(
+  CommonsActionTypes.GET_USER_CONTRIBUTIONS,
+  CommonsActionTypes.GET_USER_CONTRIBUTIONS_SUCCESS,
+  CommonsActionTypes.GET_USER_CONTRIBUTIONS_FAILURE
+)<PayloadWithCallback<string, Payment[], Error>, Payment[], Error>();
 
 export const getUserSubscriptionToCommon = createAsyncAction(
   CommonsActionTypes.GET_USER_SUBSCRIPTION_TO_COMMON,
@@ -241,6 +293,12 @@ export const getUserSubscriptionToCommon = createAsyncAction(
   Error
 >();
 
+export const getUserSubscriptions = createAsyncAction(
+  CommonsActionTypes.GET_USER_SUBSCRIPTIONS,
+  CommonsActionTypes.GET_USER_SUBSCRIPTIONS_SUCCESS,
+  CommonsActionTypes.GET_USER_SUBSCRIPTIONS_FAILURE
+)<PayloadWithCallback<string, Subscription[], Error>, Subscription[], Error>();
+
 export const updateSubscription = createAsyncAction(
   CommonsActionTypes.UPDATE_SUBSCRIPTION,
   CommonsActionTypes.UPDATE_SUBSCRIPTION_SUCCESS,
@@ -250,3 +308,9 @@ export const updateSubscription = createAsyncAction(
   Subscription,
   Error
 >();
+
+export const cancelSubscription = createAsyncAction(
+  CommonsActionTypes.CANCEL_SUBSCRIPTION,
+  CommonsActionTypes.CANCEL_SUBSCRIPTION_SUCCESS,
+  CommonsActionTypes.CANCEL_SUBSCRIPTION_FAILURE
+)<PayloadWithCallback<string, Subscription, Error>, Subscription, Error>();

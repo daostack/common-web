@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { CommonShare } from "@/shared/components";
+import { CommonShare, Loader } from "@/shared/components";
 import { Common, DiscussionMessage } from "@/shared/models";
 import ChatMessage from "./ChatMessage";
 import "./index.scss";
@@ -9,17 +9,17 @@ import { Colors } from "@/shared/constants";
 import { EmptyTabComponent } from "@/containers/Common/components/CommonDetailContainer";
 
 interface ChatComponentInterface {
-  common: Common;
+  common: Common | null;
   discussionMessage: DiscussionMessage[];
-  onOpenJoinModal: () => void;
+  onOpenJoinModal?: () => void;
   isCommonMember?: boolean;
-  isJoiningPending: boolean;
+  isJoiningPending?: boolean;
   isAuthorized?: boolean;
   sendMessage?: (text: string) => void;
 }
 
 function groupday(acc: any, currentValue: DiscussionMessage): Messages {
-  let d = new Date(currentValue.createTime.seconds * 1000);
+  const d = new Date(currentValue.createTime.seconds * 1000);
   const i = Math.floor(d.getTime() / (1000 * 60 * 60 * 24));
   const timestamp = i * (1000 * 60 * 60 * 24);
   acc[timestamp] = acc[timestamp] || [];
@@ -97,12 +97,16 @@ export default function ChatComponent({
                 Join the effort
               </button>
             )}
-            <CommonShare
-              common={common}
-              type="popup"
-              color={Colors.lightPurple}
-              top="-130px"
-            />
+            {
+              common
+              ? <CommonShare
+                common={common}
+                type="popup"
+                color={Colors.lightPurple}
+                top="-130px"
+              />
+              : <Loader />
+            }
           </div>
         </div>
       ) : (

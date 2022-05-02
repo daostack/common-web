@@ -6,6 +6,7 @@ import {
 } from "@/shared/interfaces/api/proposal";
 import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
+  BankAccountDetails,
   Card,
   Collection,
   Common,
@@ -30,10 +31,16 @@ import {
   DeleteCommon,
   ImmediateContributionData,
   ImmediateContributionResponse,
+  LeaveCommon,
 } from "@/containers/Common/interfaces";
 import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
-import { CreateVotePayload, Vote } from "@/shared/interfaces/api/vote";
+import {
+  CreateVotePayload,
+  UpdateVotePayload,
+  Vote,
+} from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
+import { UpdateBankAccountDetailsData } from "@/shared/interfaces/api/bankAccount";
 import { NotificationItem } from "@/shared/models/Notification";
 
 export async function fetchCommonDiscussions(commonId: string) {
@@ -86,6 +93,25 @@ export async function fetchCommonList(): Promise<Common[]> {
     .get();
   const data = transformFirebaseDataList<Common>(commons);
   return data;
+}
+
+export async function fetchCommonListByIds(ids: string[]): Promise<Common[]> {
+  if (ids.length === 0) {
+    return [];
+  }
+
+  const queries: firebase.firestore.Query[] = [];
+  const config = firebase.firestore().collection(Collection.Daos);
+
+  // Firebase allows to use at most 10 items per query for `in` option
+  for (let i = 0; i < ids.length; i += 10) {
+    queries.push(config.where("id", "in", ids.slice(i, i + 10)));
+  }
+  const results = await Promise.all(queries.map((query) => query.get()));
+
+  return results
+    .map((result) => transformFirebaseDataList<Common>(result))
+    .reduce((acc, items) => [...acc, ...items], []);
 }
 
 export async function fetchCommonDetail(id: string): Promise<Common> {
@@ -285,6 +311,14 @@ export async function createVote(
   return data;
 }
 
+export async function updateVote(
+  requestData: UpdateVotePayload
+): Promise<Vote> {
+  const { data } = await Api.post<Vote>(ApiEndpoint.UpdateVote, requestData);
+
+  return data;
+}
+
 export async function loadUserCards(userId: string): Promise<Card[]> {
   const cards = await firebase
     .firestore()
@@ -295,6 +329,10 @@ export async function loadUserCards(userId: string): Promise<Card[]> {
   const data = transformFirebaseDataList<Card>(cards);
 
   return data;
+}
+
+export async function leaveCommon(requestData: LeaveCommon): Promise<void> {
+  await Api.post<void>(ApiEndpoint.LeaveCommon, requestData);
 }
 
 export async function deleteCommon(requestData: DeleteCommon): Promise<void> {
@@ -338,15 +376,29 @@ export function subscribeToPayment(
     });
 }
 
-export async function getBankDetails(): Promise<void> {
-  const { data } = await Api.get<void>(ApiEndpoint.GetBankAccount);
-  return data;
+export async function getBankDetails(): Promise<BankAccountDetails> {
+  const { data } = await Api.get<BankAccountDetails>(
+    ApiEndpoint.GetBankAccount
+  );
+
+  return convertObjectDatesToFirestoreTimestamps<BankAccountDetails>(data);
 }
 
 export async function addBankDetails(
   requestData: AddBankDetailsPayload
+): Promise<BankAccountDetails> {
+  const { data } = await Api.post<BankAccountDetails>(
+    ApiEndpoint.AddBankAccount,
+    requestData
+  );
+
+  return convertObjectDatesToFirestoreTimestamps<BankAccountDetails>(data);
+}
+
+export async function updateBankDetails(
+  requestData: Partial<UpdateBankAccountDetailsData>
 ): Promise<void> {
-  await Api.post<void>(ApiEndpoint.AddBankAccount, requestData);
+  await Api.patch(ApiEndpoint.UpdateBankAccount, requestData);
 }
 
 export async function getUserContributionsToCommon(
@@ -372,6 +424,28 @@ export async function getUserContributionsToCommon(
   });
 
   return payments;
+}
+
+export async function getUserContributions(userId: string): Promise<Payment[]> {
+  const result = await firebase
+    .firestore()
+    .collection(Collection.Payments)
+    .where("userId", "==", userId)
+    .get();
+
+  return transformFirebaseDataList<Payment>(result);
+}
+
+export async function getUserSubscriptions(
+  userId: string
+): Promise<Subscription[]> {
+  const result = await firebase
+    .firestore()
+    .collection(Collection.Subscriptions)
+    .where("userId", "==", userId)
+    .get();
+
+  return transformFirebaseDataList<Subscription>(result);
 }
 
 export async function getSubscriptionById(
@@ -443,4 +517,12 @@ export async function getProposalById(proposalId: string) {
     .get();
 
   return query.data() as Proposal;
+}
+
+export async function cancelSubscription(
+  subscriptionId: string
+): Promise<void> {
+  await Api.post<Subscription>(ApiEndpoint.CancelSubscription, {
+    subscriptionId,
+  });
 }

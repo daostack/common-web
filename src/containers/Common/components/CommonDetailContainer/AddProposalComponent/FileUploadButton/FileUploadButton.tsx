@@ -1,5 +1,6 @@
 import React, { ChangeEventHandler, FC } from "react";
 import classNames from "classnames";
+import { DocInfo } from "@/shared/models";
 import { FileInfo } from "../FileInfo";
 import "./index.scss";
 
@@ -7,7 +8,7 @@ const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png, .pdf";
 
 interface FileInfoProps {
   className?: string;
-  file: File | null;
+  file: File | DocInfo | null;
   text: string;
   hint?: string;
   logo: string;
@@ -15,6 +16,7 @@ interface FileInfoProps {
   alt: string;
   onUpload: (file: File) => void;
   onDelete: () => void;
+  onUploadedFileClick?: () => void;
 }
 
 const FileUploadButton: FC<FileInfoProps> = (props) => {
@@ -28,6 +30,7 @@ const FileUploadButton: FC<FileInfoProps> = (props) => {
     alt,
     onUpload,
     onDelete,
+    onUploadedFileClick,
   } = props;
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -69,7 +72,13 @@ const FileUploadButton: FC<FileInfoProps> = (props) => {
         src={logoUploaded}
         alt={alt}
       />
-      {file && <FileInfo file={file} onDelete={onDelete} />}
+      {file && (
+        <FileInfo
+          file={file}
+          onClick={onUploadedFileClick}
+          onDelete={onDelete}
+        />
+      )}
     </div>
   );
 

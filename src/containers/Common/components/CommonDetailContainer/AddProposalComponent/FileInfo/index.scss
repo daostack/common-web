@@ -10,6 +10,11 @@
   border-radius: 0.25rem;
   background-color: $light-gray-10;
   box-sizing: border-box;
+  overflow: hidden;
+
+  &:hover {
+    text-decoration: none;
+  }
 }
 
 .bank-account-file-info-wrapper__text {
