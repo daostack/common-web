@@ -50,3 +50,19 @@
     background-color: $light-gray-1;
   }
 }
+.custom-button--secondary-purple {
+  border: 1px solid $purple;
+  background-color: $white;
+  color: $purple;
+
+  &:hover,
+  &:active,
+  &:focus {
+    border-color: $purple-2;
+    background-color: $purple-2;
+    color: $white;
+  }
+}
+.custom-button--shadowed {
+  box-shadow: 0 3px 8px $shadow-2;
+}

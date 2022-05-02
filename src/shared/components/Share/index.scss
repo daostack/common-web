@@ -20,13 +20,16 @@
   .share-button:active {
     background-color: $purple-pressed;
   }
+  .share-button__with-border {
+    border: 1px solid $light-gray-1;
+  }
 
   .social-wrapper__children-wrapper {
     width: 100%;
   }
 }
 .social-buttons-wrapper {
-  z-index: 2;
+  z-index: $share-z-index;
   position: absolute;
   padding: 0.75rem 1.5rem 1.5rem 1.5rem;
   border-radius: 30px;
@@ -50,6 +53,9 @@
   top: -1rem;
   transform: translateX(50%) translateY(-100%);
   right: 50%;
+}
+.social-buttons-wrapper--loading {
+  min-width: 7rem;
 }
 
 .social-buttons {

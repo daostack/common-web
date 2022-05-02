@@ -1,7 +1,10 @@
 import React, { useCallback, useState } from "react";
 
 import { Loader } from "../../../../../shared/components";
-import { Proposal } from "../../../../../shared/models";
+import {
+  Common,
+  Proposal,
+} from "../../../../../shared/models";
 import {
   formatPrice,
   getDaysAgo,
@@ -20,15 +23,15 @@ import classNames from "classnames";
 
 interface DiscussionDetailModalProps {
   proposal: Proposal | null;
-  commonId: string;
-  onOpenJoinModal: () => void;
+  common: Common | null;
+  onOpenJoinModal?: () => void;
+  isJoiningPending?: boolean;
   isCommonMember: boolean;
-  isJoiningPending: boolean;
 }
 
 export default function ProposalDetailModal({
   proposal,
-  commonId,
+  common,
   onOpenJoinModal,
   isCommonMember,
   isJoiningPending,
@@ -86,8 +89,8 @@ export default function ProposalDetailModal({
             </>
           )}
           <div className="proposal-information-wrapper">
-            <div className="proposal-name" title={proposal.description.title}>
-              {proposal.description.title}
+            <div className="proposal-name" title={proposal.description.title || "Memberhip request"}>
+              {proposal.description.title || "Memberhip request"}
             </div>
             {expanded && (
               <>
@@ -123,7 +126,7 @@ export default function ProposalDetailModal({
       </div>
       <div className="chat-container">
         <ChatComponent
-          commonId={commonId}
+          common={common}
           discussionMessage={proposal.discussionMessage || []}
           onOpenJoinModal={onOpenJoinModal}
           isCommonMember={isCommonMember}

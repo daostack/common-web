@@ -21,6 +21,23 @@
     width: 100%;
     margin-left: 7.5rem;
     display: flex;
+    .my-account-button {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1rem;
+      .my-account-button__arrow-icon {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 1.5rem;
+        transform: rotate(90deg);
+        transition: all 0.2s;
+        margin-left: 0.5rem;
+      }
+
+      .my-account-button__arrow-icon--opened {
+        transform: rotate(-90deg);
+      }
+    }
     .login-button {
       margin-left: auto;
       margin-right: 1.5rem;
@@ -109,6 +126,8 @@
       align-items: center;
       margin-left: unset;
       width: 100%;
+      height: calc(100vh - (#{$header-height} + #{$download-common-app-mobile-menu-height}));
+      overflow: scroll;
       button,
       a {
         margin-right: unset;
@@ -122,6 +141,10 @@
       }
       a:not(.active):hover {
         background-color: $light-purple;
+      }
+      button:not(:first-child),
+      a:not(:first-child) {
+        border-top: 1px solid $light-gray-1;
       }
     }
   }

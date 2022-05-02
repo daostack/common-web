@@ -11,6 +11,7 @@ interface InputStyles {
   input?: {
     default?: string;
   };
+  inputWrapper?: string;
   error?: string;
 }
 
@@ -71,6 +72,7 @@ const Input: FC<FullInputProps> = (props) => {
     "custom-input__input",
     styles?.input?.default,
     {
+      "custom-input__input--textarea": restProps.isTextarea,
       "custom-input__input--error": error,
     }
   );
@@ -131,7 +133,12 @@ const Input: FC<FullInputProps> = (props) => {
           {description}
         </p>
       )}
-      <div className="custom-input__input-wrapper">
+      <div
+        className={classNames(
+          "custom-input__input-wrapper",
+          styles?.inputWrapper
+        )}
+      >
         {!restProps.isTextarea && (
           <input
             {...filterExtraProps(restProps)}

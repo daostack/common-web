@@ -1,6 +1,7 @@
 export interface Time {
   seconds: number;
   nanoseconds: number;
+  toDate: Function;
 }
 
 export interface Moderation {
@@ -24,11 +25,16 @@ export enum Collection {
   Daos = "daos",
   DiscussionMessage = "discussionMessage",
   Payments = "payments",
+  Subscriptions = "subscriptions",
 }
 
 export enum DateFormat {
   Long = "DD-MM-YYYY HH:mm",
   Short = "YYYY-MM-DD",
   Human = "MMM, D YYYY",
+  LongHuman = "D MMMM YYYY",
   FullHuman = "MMMM DD, YYYY",
+  GeneralHuman = "D MMMM YYYY",
+  ShortSecondary = "DD/MM/YYYY",
+  ShortWithDots = "DD.MM.YY",
 }

@@ -11,70 +11,14 @@
   text-align: center;
   color: $secondary-blue;
 
-  .user-details__title {
-    margin: 0;
-    font-family: NotoSerifSC, serif;
-    text-align: center;
-
-    @include big-phone {
-      font-size: $moderate-med;
-      font-weight: 600;
-    }
-  }
-
-  .user-details__sub-title {
-    margin: 0.5rem 0 0;
-    font-size: $small;
-    color: $light-gray-2;
-
-    @include big-phone {
-      font-size: $xsmall;
-    }
-  }
-
   .user-details__form {
+    width: 100%;
     display: flex;
     flex-direction: column;
   }
 
   .avatar-wrapper {
     position: relative;
-
-    .avatar {
-      position: relative;
-      text-align: center;
-      margin-top: 24px;
-
-      .avatar__user-photo {
-        width: 4.125rem;
-        height: 4.125rem;
-        border-radius: 50%;
-        object-fit: cover;
-      }
-
-      .avatar__input-file {
-        display: none;
-      }
-
-      .edit-avatar {
-        width: 1.75rem;
-        height: 1.75rem;
-        background-color: #7786ff;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: absolute;
-        top: 38px;
-        left: 52%;
-        cursor: pointer;
-
-        img {
-          width: 0.875rem;
-          height: 0.875rem;
-        }
-      }
-    }
 
     .user-details__auth-info {
       margin: 0.75rem 0 2.5rem;
@@ -85,20 +29,66 @@
     }
   }
 
-  .user-details__text-field {
-    max-width: 17.25rem;
-    width: 100%;
-    margin-bottom: 0.5rem;
-    text-align: left;
+  .avatar {
+    position: relative;
+    text-align: center;
+    margin-top: 1.5rem;
 
-    @include big-phone {
-      max-width: unset;
-      width: 100%;
-      margin-bottom: 1.5rem;
+    .avatar__input-file {
+      display: none;
     }
   }
 
+  .avatar__user-photo {
+    width: 4.125rem;
+    height: 4.125rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .edit-avatar {
+    width: 1.75rem;
+    height: 1.75rem;
+    background-color: $purple;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 38px;
+    left: 52%;
+    cursor: pointer;
+
+    img {
+      width: 0.875rem;
+      height: 0.875rem;
+    }
+  }
+
+  .user-details__text-field {
+    width: 100%;
+    text-align: left;
+    z-index: 1;
+  }
+
+  .user-details__first-name {
+    grid-area: firstName;
+  }
+
+  .user-details__last-name {
+    grid-area: lastName;
+  }
+
+  .user-details__email {
+    grid-area: email;
+  }
+
+  .user-details__country {
+    grid-area: country;
+  }
+
   .user-details__textarea {
+    grid-area: intro;
     width: 100%;
   }
 
@@ -108,12 +98,22 @@
 
   .user-details__text-field-container {
     max-width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display: grid;
+    gap: 0.5rem 1.75rem;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "firstName lastName"
+      "email country"
+      "intro intro";
 
     @include big-phone {
-      justify-content: center;
+      gap: 1.5rem 0;
+      grid-template-areas:
+        "firstName"
+        "lastName"
+        "email"
+        "country"
+        "intro";
     }
   }
 
@@ -137,6 +137,55 @@
     @include big-phone {
       max-width: unset;
       margin-top: 3.5rem;
+    }
+  }
+}
+
+.user-details-wrapper {
+  .user-details__title {
+    margin: 0;
+    font-family: NotoSerifSC, serif;
+    text-align: center;
+
+    @include big-phone {
+      font-size: $moderate-med;
+      font-weight: 600;
+    }
+  }
+
+  .user-details__sub-title {
+    margin: 0.5rem 0 0;
+    font-size: $small;
+    color: $light-gray-2;
+    text-align: center;
+
+    @include big-phone {
+      font-size: $xsmall;
+    }
+  }
+}
+
+.user-details-preview {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+
+  .user-details-preview__name {
+    margin: 0 0 0.5rem;
+    height: 1.5rem;
+    font-family: NotoSerifSC, serif;
+    font-size: $moderate-small;
+    font-weight: bold;
+  }
+
+  .user-details-preview__info {
+    margin: 0 0 0.5rem;
+    font-size: $xsmall;
+    color: $light-gray-2;
+    word-break: break-word;
+
+    &:last-child {
+      margin: 0;
     }
   }
 }

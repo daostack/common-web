@@ -1,0 +1,11 @@
+@import "../../../constants";
+@import "../../../styles/sizes";
+
+.payment-iframe {
+  width: 100%;
+  height: $payment-iframe-height;
+
+  @include big-phone {
+    height: $payment-iframe-height-mobile;
+  }
+}

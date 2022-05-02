@@ -1,7 +1,10 @@
 import React, { useMemo, FC } from "react";
 import classNames from "classnames";
 import ApprovedIcon from "../../../../shared/icons/approved.icon";
-import { DateFormat, Proposal } from "../../../../shared/models";
+import {
+  DateFormat,
+  Proposal,
+} from "../../../../shared/models";
 import { formatEpochTime, formatPrice } from "../../../../shared/utils";
 import {
   checkDeclinedProposal,

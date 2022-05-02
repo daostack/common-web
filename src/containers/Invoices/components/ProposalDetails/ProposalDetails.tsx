@@ -1,6 +1,9 @@
 import React from "react";
 import ApprovedIcon from "../../../../shared/icons/approved.icon";
-import { Proposal, User } from "../../../../shared/models";
+import {
+  Proposal,
+  User,
+} from "../../../../shared/models";
 import { formatEpochTime, formatPrice } from "../../../../shared/utils";
 import { AddInvoices } from "../AddInvoices";
 import "./index.scss";

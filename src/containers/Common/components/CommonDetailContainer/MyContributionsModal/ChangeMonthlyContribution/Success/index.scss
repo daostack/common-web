@@ -1,0 +1,45 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.change-monthly-success-my-contributions-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.change-monthly-success-my-contributions-stage__image {
+  width: 10rem;
+  height: 10rem;
+
+  @include big-phone {
+    max-width: 7.25rem;
+    width: 100%;
+    max-height: 7.25rem;
+    height: 100%;
+  }
+}
+
+.change-monthly-success-my-contributions-stage__title {
+  max-width: 19.375rem;
+  margin: 3.75rem 0 5.25rem;
+  font-family: NotoSerifSC, serif;
+  font-size: $moderate-small;
+  font-weight: bold;
+  text-align: center;
+  color: $secondary-blue;
+
+  @include big-phone {
+    max-width: unset;
+    margin: 2.5rem 0;
+    font-family: NunitoSans, sans-serif;
+  }
+}
+
+.change-monthly-success-my-contributions-stage__button {
+  max-width: 11.25rem;
+
+  @include big-phone {
+    max-width: 100%;
+    margin-bottom: 1rem;
+  }
+}

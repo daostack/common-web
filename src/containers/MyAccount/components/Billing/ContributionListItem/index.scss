@@ -1,0 +1,90 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.billing-contribution-list-item {
+  border-bottom: 1px solid $light-gray-1;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.billing-contribution-list-item__link {
+  height: 5rem;
+  padding: 1rem 0;
+  display: flex;
+  justify-content: space-between;
+  font-family: NunitoSans, sans-serif;
+  font-size: $xsmall;
+  color: $secondary-blue;
+  box-sizing: border-box;
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  @include big-phone {
+    height: 6rem;
+    padding: 1.5rem $content-padding-mobile;
+  }
+}
+
+.billing-contribution-list-item__title-wrapper,
+.billing-contribution-list-item__status-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.billing-contribution-list-item__title-wrapper--centered,
+.billing-contribution-list-item__status-wrapper--centered {
+  justify-content: center;
+}
+
+.billing-contribution-list-item__title {
+  margin: 0;
+  font-size: $small;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.billing-contribution-list-item__description {
+  margin: 0;
+  font-size: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.billing-contribution-list-item__status-container {
+  display: flex;
+  align-items: center;
+}
+
+.billing-contribution-list-item__status-wrapper {
+  align-items: flex-end;
+  white-space: nowrap;
+}
+
+.billing-contribution-list-item__status {
+  color: $green;
+}
+.billing-contribution-list-item__status--failed {
+  color: $red;
+}
+
+.billing-contribution-list-item__right-arrow-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-left: 2rem;
+
+  @include big-phone {
+    width: 1rem;
+    height: 1rem;
+    margin-left: 1rem;
+  }
+}

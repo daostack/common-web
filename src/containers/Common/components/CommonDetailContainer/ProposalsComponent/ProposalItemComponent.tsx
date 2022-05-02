@@ -44,7 +44,10 @@ export default function ProposalItemComponent({
             "No funding requested"
           ) : (
             <>
-              Requested amount <span className="amount">{formatPrice(rawRequestedAmount)}</span>
+              Requested amount
+              <span className="amount">
+                {formatPrice(rawRequestedAmount)}
+              </span>
             </>
           )}
         </div>

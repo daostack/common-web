@@ -14,7 +14,7 @@ const initialState: CommonsStateType = {
   isProposalsLoaded: false,
   currentDiscussion: null,
   currentProposal: null,
-  doesUserHasPaymentMethod: false,
+  cards: [],
 };
 
 type Action = ActionType<typeof actions>;
@@ -77,10 +77,16 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
     produce(state, (nextState) => {
       const proposal = { ...action.payload };
       const { proposals } = state;
+
       proposal.isLoaded = true;
-      const index = proposals.findIndex((d) => d.id === proposal.id);
-      proposals[index] = proposal;
-      nextState.proposals = [...proposals];
+
+      if (proposals.length) {
+        const index = proposals.findIndex((d) => d.id === proposal.id);
+
+        proposals[index] = proposal;
+        nextState.proposals = [...proposals];
+      }
+
       nextState.currentProposal = proposal;
     })
   )
@@ -108,11 +114,12 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
   .handleAction(actions.createRequestToJoin.success, (state, action) =>
     produce(state, (nextState) => {
       nextState.proposals = [{ ...action.payload }, ...nextState.proposals];
+      nextState.userProposals = [{ ...action.payload }, ...nextState.userProposals];
     })
   )
-  .handleAction(actions.checkUserPaymentMethod.success, (state, action) =>
+  .handleAction(actions.loadUserCards.success, (state, action) =>
     produce(state, (nextState) => {
-      nextState.doesUserHasPaymentMethod = action.payload;
+      nextState.cards = action.payload;
     })
   )
   .handleAction(actions.createCommon.success, (state, action) =>

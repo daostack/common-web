@@ -1,11 +1,17 @@
 import { call, put, select, takeLatest } from "redux-saga/effects";
+import PayMeService from "@/services/PayMeService";
 import { actions } from ".";
 import {
+  Card,
   Common,
+  CommonPayment,
   Discussion,
   User,
   DiscussionMessage,
   Proposal,
+  Payment,
+  Subscription,
+  BankAccountDetails,
 } from "../../../shared/models";
 import { startLoading, stopLoading } from "@/shared/store/actions";
 import {
@@ -24,12 +30,25 @@ import {
   subscribeToMessages,
   createFundingProposal,
   subscribeToCommonProposal,
-  checkUserPaymentMethod,
+  leaveCommon as leaveCommonApi,
+  loadUserCards,
   deleteCommon as deleteCommonApi,
   createVote as createVoteApi,
+  updateVote as updateVoteApi,
   makeImmediateContribution as makeImmediateContributionApi,
+  addBankDetails as addBankDetailsApi,
+  updateBankDetails as updateBankDetailsApi,
+  getBankDetails as getBankDetailsApi,
+  getUserContributionsToCommon as getUserContributionsToCommonApi,
+  getUserContributions as getUserContributionsApi,
+  getUserSubscriptionToCommon as getUserSubscriptionToCommonApi,
+  getUserSubscriptions as getUserSubscriptionsApi,
+  updateSubscription as updateSubscriptionApi,
+  cancelSubscription as cancelSubscriptionApi,
+  getSubscriptionById,
+  fetchCommonListByIds as fetchCommonListByIdsApi,
 } from "./api";
-
+import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
 import store from "@/index";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
@@ -46,6 +65,29 @@ export function* getCommonsList(): Generator {
   } catch (e) {
     yield put(actions.getCommonsList.failure(e));
     yield put(stopLoading());
+  }
+}
+
+export function* getCommonsListByIds({
+  payload,
+}: ReturnType<typeof actions.getCommonsListByIds.request>): Generator {
+  try {
+    const commons = (yield call(
+      fetchCommonListByIdsApi,
+      payload.payload
+    )) as Common[];
+
+    yield put(actions.getCommonsListByIds.success(commons));
+
+    if (payload.callback) {
+      payload.callback(null, commons);
+    }
+  } catch (error) {
+    yield put(actions.getCommonsListByIds.failure(error));
+
+    if (payload.callback) {
+      payload.callback(error);
+    }
   }
 }
 
@@ -200,9 +242,25 @@ export function* loadUserProposalList(
 ): Generator {
   try {
     yield put(startLoading());
-    const proposals = yield fetchUserProposals(action.payload);
+    const proposals = (yield fetchUserProposals(action.payload)) as Proposal[];
+    const proposer = (yield getUserData(action.payload)) as User;
+    const discussions_ids = proposals.map((proposal) => proposal.id);
+    const discussionMessages = (yield fetchDiscussionsMessages(
+      discussions_ids
+    )) as DiscussionMessage[];
 
-    yield put(actions.loadUserProposalList.success(proposals as Proposal[]));
+    const getProposalMessages = (proposal: Proposal) =>
+      discussionMessages.filter(
+        (dMessage: DiscussionMessage) => dMessage.discussionId === proposal.id
+      );
+
+    const processedUserProposals = proposals.map((proposal) => ({
+      ...proposal,
+      proposer,
+      discussionMessage: getProposalMessages(proposal),
+    }));
+
+    yield put(actions.loadUserProposalList.success(processedUserProposals));
     yield put(stopLoading());
   } catch (e) {
     yield put(actions.loadUserProposalList.failure(e));
@@ -323,6 +381,23 @@ export function* createRequestToJoin(
   }
 }
 
+export function* leaveCommon(
+  action: ReturnType<typeof actions.leaveCommon.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    yield leaveCommonApi(action.payload.payload);
+
+    yield put(actions.leaveCommon.success(action.payload.payload.commonId));
+    action.payload.callback(null);
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(actions.leaveCommon.failure(error));
+    action.payload.callback(error);
+    yield put(stopLoading());
+  }
+}
+
 export function* deleteCommon(
   action: ReturnType<typeof actions.deleteCommon.request>
 ): Generator {
@@ -340,7 +415,7 @@ export function* deleteCommon(
   }
 }
 
-export function* vote(
+export function* createVote(
   action: ReturnType<typeof actions.createVote.request>
 ): Generator {
   try {
@@ -351,6 +426,11 @@ export function* vote(
       const proposals = await fetchCommonProposals(vote.commonId);
       store.dispatch(actions.setProposals(proposals));
       store.dispatch(actions.loadProposalList.request());
+      store.dispatch(
+        actions.loadProposalDetail.request(
+          proposals.filter((p) => p.id === action.payload.payload.proposalId)[0]
+        )
+      );
       store.dispatch(stopLoading());
     });
     yield put(actions.createVote.success());
@@ -358,6 +438,93 @@ export function* vote(
     yield put(stopLoading());
   } catch (error) {
     yield put(actions.createVote.failure(error));
+    action.payload.callback(error);
+    yield put(stopLoading());
+  }
+}
+
+export function* updateVote(
+  action: ReturnType<typeof actions.updateVote.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    const vote = (yield updateVoteApi(action.payload.payload)) as Vote;
+
+    yield call(async () => {
+      const proposals = await fetchCommonProposals(vote.commonId);
+
+      store.dispatch(actions.setProposals(proposals));
+
+      store.dispatch(actions.loadProposalList.request());
+
+      store.dispatch(
+        actions.loadProposalDetail.request(
+          proposals.find(
+            (proposal) => proposal.id === vote.proposalId
+          ) as Proposal
+        )
+      );
+    });
+
+    yield put(actions.updateVote.success());
+    action.payload.callback(null);
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(actions.updateVote.failure(error));
+    action.payload.callback(error);
+    yield put(stopLoading());
+  }
+}
+
+export function* getBankDetails(
+  action: ReturnType<typeof actions.getBankDetails.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    const bankAccountDetails = (yield getBankDetailsApi()) as BankAccountDetails;
+
+    yield put(actions.getBankDetails.success(bankAccountDetails));
+    action.payload.callback(null, bankAccountDetails);
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(actions.getBankDetails.failure(error));
+    action.payload.callback(error);
+    yield put(stopLoading());
+  }
+}
+
+export function* addBankDetails(
+  action: ReturnType<typeof actions.addBankDetails.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    const bankAccountDetails = (yield addBankDetailsApi(
+      action.payload.payload
+    )) as BankAccountDetails;
+
+    yield put(actions.addBankDetails.success(bankAccountDetails));
+    action.payload.callback(null, bankAccountDetails);
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(actions.addBankDetails.failure(error));
+    action.payload.callback(error);
+    yield put(stopLoading());
+  }
+}
+
+export function* updateBankDetails(
+  action: ReturnType<typeof actions.updateBankDetails.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    yield updateBankDetailsApi(action.payload.payload);
+    const bankAccountDetails = (yield getBankDetailsApi()) as BankAccountDetails;
+
+    yield put(actions.updateBankDetails.success(bankAccountDetails));
+    action.payload.callback(null, bankAccountDetails);
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(actions.updateBankDetails.failure(error));
     action.payload.callback(error);
     yield put(stopLoading());
   }
@@ -394,22 +561,23 @@ export function* createFundingProposalSaga(
   }
 }
 
-export function* checkUserPaymentMethodSaga(
-  action: ReturnType<typeof actions.checkUserPaymentMethod.request>
+export function* loadUserCardsSaga(
+  action: ReturnType<typeof actions.loadUserCards.request>
 ): Generator {
   try {
     const { user } = store.getState().auth;
     if (user && user.uid) {
       yield put(startLoading());
 
-      const hasPaymentMethod = yield checkUserPaymentMethod(user.uid);
+      const cards = (yield loadUserCards(user.uid)) as Card[];
 
-      yield put(actions.checkUserPaymentMethod.success(!!hasPaymentMethod));
+      yield put(actions.loadUserCards.success(cards));
+      action.payload.callback(null, cards);
 
       yield put(stopLoading());
     }
   } catch (e) {
-    yield put(actions.checkUserPaymentMethod.failure(e));
+    yield put(actions.loadUserCards.failure(e));
     yield put(stopLoading());
   }
 }
@@ -448,8 +616,132 @@ export function* makeImmediateContribution(
   }
 }
 
+export function* createBuyerTokenPage(
+  action: ReturnType<typeof actions.createBuyerTokenPage.request>
+): Generator {
+  try {
+    const response = (yield call(
+      PayMeService.createBuyerTokenPage,
+      action.payload.payload
+    )) as CommonPayment;
+
+    yield put(actions.createBuyerTokenPage.success(response));
+    action.payload.callback(null, response);
+  } catch (error) {
+    yield put(actions.createBuyerTokenPage.failure(error));
+    action.payload.callback(error);
+  }
+}
+
+export function* getUserContributionsToCommon(
+  action: ReturnType<typeof actions.getUserContributionsToCommon.request>
+): Generator {
+  try {
+    const payments = (yield call(
+      getUserContributionsToCommonApi,
+      action.payload.payload.commonId,
+      action.payload.payload.userId
+    )) as Payment[];
+
+    yield put(actions.getUserContributionsToCommon.success(payments));
+    action.payload.callback(null, payments);
+  } catch (error) {
+    yield put(actions.getUserContributionsToCommon.failure(error));
+    action.payload.callback(error);
+  }
+}
+
+export function* getUserContributions(
+  action: ReturnType<typeof actions.getUserContributions.request>
+): Generator {
+  try {
+    const payments = (yield call(
+      getUserContributionsApi,
+      action.payload.payload
+    )) as Payment[];
+
+    yield put(actions.getUserContributions.success(payments));
+    action.payload.callback(null, payments);
+  } catch (error) {
+    yield put(actions.getUserContributions.failure(error));
+    action.payload.callback(error);
+  }
+}
+
+export function* getUserSubscriptionToCommon(
+  action: ReturnType<typeof actions.getUserSubscriptionToCommon.request>
+): Generator {
+  try {
+    const subscription = (yield call(
+      getUserSubscriptionToCommonApi,
+      action.payload.payload.commonId,
+      action.payload.payload.userId
+    )) as Subscription | null;
+
+    yield put(actions.getUserSubscriptionToCommon.success(subscription));
+    action.payload.callback(null, subscription);
+  } catch (error) {
+    yield put(actions.getUserSubscriptionToCommon.failure(error));
+    action.payload.callback(error);
+  }
+}
+
+export function* getUserSubscriptions(
+  action: ReturnType<typeof actions.getUserSubscriptions.request>
+): Generator {
+  try {
+    const subscriptions = (yield call(
+      getUserSubscriptionsApi,
+      action.payload.payload
+    )) as Subscription[];
+
+    yield put(actions.getUserSubscriptions.success(subscriptions));
+    action.payload.callback(null, subscriptions);
+  } catch (error) {
+    yield put(actions.getUserSubscriptions.failure(error));
+    action.payload.callback(error);
+  }
+}
+
+export function* updateSubscription({
+  payload,
+}: ReturnType<typeof actions.updateSubscription.request>): Generator {
+  try {
+    yield call(updateSubscriptionApi, payload.payload);
+    const subscription = (yield call(
+      getSubscriptionById,
+      payload.payload.subscriptionId
+    )) as Subscription;
+
+    yield put(actions.updateSubscription.success(subscription));
+    payload.callback(null, subscription);
+  } catch (error) {
+    yield put(actions.updateSubscription.failure(error));
+    payload.callback(error);
+  }
+}
+
+export function* cancelSubscription({
+  payload,
+}: ReturnType<typeof actions.cancelSubscription.request>): Generator {
+  try {
+    yield call(cancelSubscriptionApi, payload.payload);
+    const subscription = (yield call(
+      getSubscriptionById,
+      payload.payload
+    )) as Subscription;
+
+    yield put(actions.cancelSubscription.success(subscription));
+    payload.callback(null, subscription);
+  } catch (error) {
+    yield put(actions.cancelSubscription.failure(error));
+    payload.callback(error);
+  }
+}
+
 export function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
+  yield takeLatest(actions.getCommonsListByIds.request, getCommonsListByIds);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
   yield takeLatest(
     actions.loadCommonDiscussionList.request,
@@ -465,25 +757,40 @@ export function* commonsSaga() {
     addMessageToDiscussionSaga
   );
   yield takeLatest(actions.createRequestToJoin.request, createRequestToJoin);
+  yield takeLatest(actions.leaveCommon.request, leaveCommon);
   yield takeLatest(actions.deleteCommon.request, deleteCommon);
   yield takeLatest(
     actions.createFundingProposal.request,
     createFundingProposalSaga
   );
-  yield takeLatest(
-    actions.checkUserPaymentMethod.request,
-    checkUserPaymentMethodSaga
-  );
+  yield takeLatest(actions.loadUserCards.request, loadUserCardsSaga);
   yield takeLatest(
     actions.addMessageToProposal.request,
     addMessageToProposalSaga
   );
   yield takeLatest(actions.createCommon.request, createCommon);
-  yield takeLatest(actions.createVote.request, vote);
+  yield takeLatest(actions.createVote.request, createVote);
+  yield takeLatest(actions.updateVote.request, updateVote);
   yield takeLatest(
     actions.makeImmediateContribution.request,
     makeImmediateContribution
   );
+  yield takeLatest(actions.createBuyerTokenPage.request, createBuyerTokenPage);
+  yield takeLatest(actions.getBankDetails.request, getBankDetails);
+  yield takeLatest(actions.addBankDetails.request, addBankDetails);
+  yield takeLatest(actions.updateBankDetails.request, updateBankDetails);
+  yield takeLatest(
+    actions.getUserContributionsToCommon.request,
+    getUserContributionsToCommon
+  );
+  yield takeLatest(actions.getUserContributions.request, getUserContributions);
+  yield takeLatest(
+    actions.getUserSubscriptionToCommon.request,
+    getUserSubscriptionToCommon
+  );
+  yield takeLatest(actions.getUserSubscriptions.request, getUserSubscriptions);
+  yield takeLatest(actions.updateSubscription.request, updateSubscription);
+  yield takeLatest(actions.cancelSubscription.request, cancelSubscription);
 }
 
 export default commonsSaga;

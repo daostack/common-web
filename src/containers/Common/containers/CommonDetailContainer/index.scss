@@ -43,7 +43,6 @@
             color: $secondary-blue;
             font-family: NotoSerifSC-Black;
             word-break: break-word;
-
           }
 
           .tagline {
@@ -155,10 +154,6 @@
               margin-right: 6px;
             }
           }
-          .delete-common-btn {
-            color: $red;
-            margin: 0 0.3rem;
-          }
         }
       }
     }
@@ -195,6 +190,19 @@
       }
     }
   }
+
+  .common-detail-wrapper__menu-button--big {
+    width: 3rem;
+    height: 3rem;
+  }
+  .common-detail-wrapper__menu-button--small {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .common-detail-wrapper__common-menu {
+    margin-left: 1rem;
+  }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
@@ -220,6 +228,11 @@
               width: 100%;
             }
 
+            .text-information-wrapper__menu-buttons {
+              display: flex;
+              flex-wrap: nowrap;
+            }
+
             .name {
               display: flex;
               justify-content: space-between;
@@ -234,7 +247,7 @@
 
             .text-information-wrapper__connected-user-avatar-wrapper {
               position: relative;
-              padding-top: .375rem;
+              padding-top: 0.375rem;
               display: flex;
             }
 
@@ -295,10 +308,6 @@
             .join-the-effort-btn {
               height: 56px;
               margin-right: unset;
-            }
-            .delete-common-btn {
-              width: 100%;
-              margin: 0.6rem 0;
             }
           }
 

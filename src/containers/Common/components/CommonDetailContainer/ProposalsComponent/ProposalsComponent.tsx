@@ -8,7 +8,7 @@ import ProposalItemComponent from "./ProposalItemComponent";
 interface DiscussionsComponentProps {
   proposals: Proposal[];
   loadProposalDetail: (payload: Proposal) => void;
-  currentTab: string;
+  currentTab: Tabs;
   common: Common;
   isCommonMember: boolean;
   isJoiningPending: boolean;
