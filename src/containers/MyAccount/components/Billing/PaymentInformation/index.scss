@@ -16,6 +16,12 @@
 .billing-payment-information__payment-method-wrapper {
   padding: 1.5rem 1rem;
   box-sizing: border-box;
+
+  .billing-payment-information__payment-method-content-wrapper {
+    padding: 0;
+    border: unset;
+    border-radius: unset;
+  }
 }
 
 .billing-payment-information__alert {

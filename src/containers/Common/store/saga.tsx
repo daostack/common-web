@@ -44,6 +44,7 @@ import {
   getUserSubscriptionToCommon as getUserSubscriptionToCommonApi,
   getUserSubscriptions as getUserSubscriptionsApi,
   updateSubscription as updateSubscriptionApi,
+  cancelSubscription as cancelSubscriptionApi,
   getSubscriptionById,
   fetchCommonListByIds as fetchCommonListByIdsApi,
 } from "./api";
@@ -243,26 +244,21 @@ export function* loadUserProposalList(
     yield put(startLoading());
     const proposals = (yield fetchUserProposals(action.payload)) as Proposal[];
     const proposer = (yield getUserData(action.payload)) as User;
-    const discussions_ids = proposals.map(proposal => proposal.id);
-    const discussionMessages = (yield fetchDiscussionsMessages(discussions_ids)) as DiscussionMessage[];
+    const discussions_ids = proposals.map((proposal) => proposal.id);
+    const discussionMessages = (yield fetchDiscussionsMessages(
+      discussions_ids
+    )) as DiscussionMessage[];
 
-    const getProposalMessages = (proposal: Proposal) => (
+    const getProposalMessages = (proposal: Proposal) =>
       discussionMessages.filter(
-        (dMessage: DiscussionMessage) =>
-          (dMessage.discussionId === proposal.id)
-      )
-    );
+        (dMessage: DiscussionMessage) => dMessage.discussionId === proposal.id
+      );
 
-    const processedUserProposals = proposals.map(
-      proposal =>
-      (
-        {
-          ...proposal,
-          proposer,
-          discussionMessage: getProposalMessages(proposal),
-        }
-      )
-    );
+    const processedUserProposals = proposals.map((proposal) => ({
+      ...proposal,
+      proposer,
+      discussionMessage: getProposalMessages(proposal),
+    }));
 
     yield put(actions.loadUserProposalList.success(processedUserProposals));
     yield put(stopLoading());
@@ -725,6 +721,24 @@ export function* updateSubscription({
   }
 }
 
+export function* cancelSubscription({
+  payload,
+}: ReturnType<typeof actions.cancelSubscription.request>): Generator {
+  try {
+    yield call(cancelSubscriptionApi, payload.payload);
+    const subscription = (yield call(
+      getSubscriptionById,
+      payload.payload
+    )) as Subscription;
+
+    yield put(actions.cancelSubscription.success(subscription));
+    payload.callback(null, subscription);
+  } catch (error) {
+    yield put(actions.cancelSubscription.failure(error));
+    payload.callback(error);
+  }
+}
+
 export function* commonsSaga() {
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonsListByIds.request, getCommonsListByIds);
@@ -776,6 +790,7 @@ export function* commonsSaga() {
   );
   yield takeLatest(actions.getUserSubscriptions.request, getUserSubscriptions);
   yield takeLatest(actions.updateSubscription.request, updateSubscription);
+  yield takeLatest(actions.cancelSubscription.request, cancelSubscription);
 }
 
 export default commonsSaga;
