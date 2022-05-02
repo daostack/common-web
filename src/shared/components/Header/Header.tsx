@@ -100,7 +100,8 @@ const Header = () => {
     <div className="navigation-wrapper" onClick={handleNavLinkClick}>
       {isAuthorized && isMobile() && (
         <button onClick={() => setShowAccountLinks(!showAccountLinks)}>
-          <div ref={myAccountBtnRef} className="my-account-button">
+          {/* TODO: Temporay hide My Account */}
+          {/* <div ref={myAccountBtnRef} className="my-account-button">
             My Account
             <RightArrowIcon
               className={classNames(
@@ -108,7 +109,7 @@ const Header = () => {
                 { "my-account-button__arrow-icon--opened": showAccountLinks }
               )}
             />
-          </div>
+          </div> */}
 
           {showAccountLinks && (
             <Routes />

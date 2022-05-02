@@ -62,11 +62,12 @@ const Account = ({
         <div className="menu-wrapper" ref={wrapperRef}>
           {!isTrusteeRoute && (
             <>
-              <div
+              {/* TODO: Temporay hide My Account */}
+              {/* <div
                 className="account-wrapper__menu-item"
                 onClick={showMyAccount}>
                 My Account
-              </div>
+              </div> */}
               <div
                 className="account-wrapper__menu-item"
                 onClick={() => (window.location.href = ROUTE_PATHS.MY_COMMONS)}
