@@ -7,6 +7,7 @@ export interface NotificationItem {
   eventType: EventTypeState;
 
   userFilter: Array<string>;
+  seen: Array<string>;
 }
 
 export enum EventTypeState {

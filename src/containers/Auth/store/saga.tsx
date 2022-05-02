@@ -18,6 +18,7 @@ import history from "../../../shared/history";
 import { createdUserApi, getUserData } from "./api";
 import {
   getProposalById,
+  seenNotification,
   subscribeToNotification,
 } from "@/containers/Common/store/api";
 import { EventTypeState, NotificationItem } from "@/shared/models/Notification";
@@ -449,9 +450,9 @@ function* authSagas() {
   });
 
   subscribeToNotification(async (data?: NotificationItem) => {
-    const notifications = tokenHandler.getShownNotificationList();
-    if (notifications.includes(data?.eventId)) return;
-    if (data) {
+    const user = await firebase.auth().currentUser;
+
+    if (data && !data?.seen?.includes(user?.uid ?? "")) {
       switch (data?.eventType) {
         case EventTypeState.fundingRequestAccepted:
         case EventTypeState.fundingRequestRejected:
@@ -463,7 +464,7 @@ function* authSagas() {
 
             store.dispatch(showNotification(notification));
 
-            tokenHandler.setShownNotificationList(data.eventId);
+            seenNotification(data.eventId);
           }
 
           break;

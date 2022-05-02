@@ -526,3 +526,9 @@ export async function cancelSubscription(
     subscriptionId,
   });
 }
+
+export async function seenNotification(id: string): Promise<void> {
+  await Api.post(ApiEndpoint.SeenNotification, {
+    id,
+  });
+}

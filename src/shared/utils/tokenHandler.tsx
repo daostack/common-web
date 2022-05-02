@@ -46,15 +46,6 @@ export default {
     localStorage.clear();
   },
 
-  setShownNotificationList: (id: string) => {
-    const list = localStorage.getItem("notifications")
-      ? JSON.parse(localStorage.getItem("notifications") as string)
-      : [];
-
-    list.push(id);
-
-    localStorage.setItem("notifications", JSON.stringify(list));
-  },
   getShownNotificationList: () => {
     return localStorage.getItem("notifications")
       ? JSON.parse(localStorage.getItem("notifications") as string)
