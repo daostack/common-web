@@ -483,3 +483,11 @@ export async function updateSubscription(
 
   return data;
 }
+
+export async function cancelSubscription(
+  subscriptionId: string
+): Promise<void> {
+  await Api.post<Subscription>(ApiEndpoint.CancelSubscription, {
+    subscriptionId,
+  });
+}

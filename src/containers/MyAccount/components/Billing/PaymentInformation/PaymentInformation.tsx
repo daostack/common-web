@@ -62,6 +62,10 @@ const PaymentInformation: FC<PaymentInformationProps> = (props) => {
             card={cards[0]}
             title=""
             onReplacePaymentMethod={onPaymentMethodChange}
+            styles={{
+              contentWrapper:
+                "billing-payment-information__payment-method-content-wrapper",
+            }}
           />
         </div>
       </div>
