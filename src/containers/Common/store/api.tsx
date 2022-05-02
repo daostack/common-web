@@ -95,6 +95,25 @@ export async function fetchCommonList(): Promise<Common[]> {
   return data;
 }
 
+export async function fetchCommonListByIds(ids: string[]): Promise<Common[]> {
+  if (ids.length === 0) {
+    return [];
+  }
+
+  const queries: firebase.firestore.Query[] = [];
+  const config = firebase.firestore().collection(Collection.Daos);
+
+  // Firebase allows to use at most 10 items per query for `in` option
+  for (let i = 0; i < ids.length; i += 10) {
+    queries.push(config.where("id", "in", ids.slice(i, i + 10)));
+  }
+  const results = await Promise.all(queries.map((query) => query.get()));
+
+  return results
+    .map((result) => transformFirebaseDataList<Common>(result))
+    .reduce((acc, items) => [...acc, ...items], []);
+}
+
 export async function fetchCommonDetail(id: string): Promise<Common> {
   const common = await firebase
     .firestore()
@@ -424,6 +443,28 @@ export async function getUserContributionsToCommon(
   return payments;
 }
 
+export async function getUserContributions(userId: string): Promise<Payment[]> {
+  const result = await firebase
+    .firestore()
+    .collection(Collection.Payments)
+    .where("userId", "==", userId)
+    .get();
+
+  return transformFirebaseDataList<Payment>(result);
+}
+
+export async function getUserSubscriptions(
+  userId: string
+): Promise<Subscription[]> {
+  const result = await firebase
+    .firestore()
+    .collection(Collection.Subscriptions)
+    .where("userId", "==", userId)
+    .get();
+
+  return transformFirebaseDataList<Subscription>(result);
+}
+
 export async function getSubscriptionById(
   subscriptionId: string
 ): Promise<Subscription | null> {
@@ -460,4 +501,12 @@ export async function updateSubscription(
   );
 
   return data;
+}
+
+export async function cancelSubscription(
+  subscriptionId: string
+): Promise<void> {
+  await Api.post<Subscription>(ApiEndpoint.CancelSubscription, {
+    subscriptionId,
+  });
 }

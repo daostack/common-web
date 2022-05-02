@@ -4,7 +4,6 @@ import { Loader } from "../../../../../shared/components";
 import {
   Common,
   Proposal,
-  CurrencySymbol,
 } from "../../../../../shared/models";
 import {
   formatPrice,
@@ -24,10 +23,10 @@ import classNames from "classnames";
 
 interface DiscussionDetailModalProps {
   proposal: Proposal | null;
-  common: Common;
-  onOpenJoinModal: () => void;
+  common: Common | null;
+  onOpenJoinModal?: () => void;
+  isJoiningPending?: boolean;
   isCommonMember: boolean;
-  isJoiningPending: boolean;
 }
 
 export default function ProposalDetailModal({
@@ -44,10 +43,6 @@ export default function ProposalDetailModal({
     proposal?.fundingRequest?.amount || proposal?.join?.funding;
   const screenSize = useSelector(getScreenSize());
   const [expanded, setExpanded] = useState(true);
-  //required custom fix since the using currency was changed - CW-411
-  const fundingAmountPrefix = (
-    (proposal?.createdAt || proposal?.createTime)?.toDate() < new Date("02/17/2022 12:00")
-  ) && CurrencySymbol.USD;
 
   const sendMessage = useCallback(
     (message: string) => {
@@ -94,8 +89,8 @@ export default function ProposalDetailModal({
             </>
           )}
           <div className="proposal-information-wrapper">
-            <div className="proposal-name" title={proposal.description.title}>
-              {proposal.description.title}
+            <div className="proposal-name" title={proposal.description.title || "Memberhip request"}>
+              {proposal.description.title || "Memberhip request"}
             </div>
             {expanded && (
               <>
@@ -106,18 +101,7 @@ export default function ProposalDetailModal({
                     <>
                       Requested amount
                       <span className="amount">
-                        {
-                          formatPrice(
-                            rawRequestedAmount,
-                            {
-                              ...(
-                                fundingAmountPrefix && {
-                                  prefix: fundingAmountPrefix
-                                }
-                              )
-                            }
-                          )
-                        }
+                        {formatPrice(rawRequestedAmount)}
                       </span>
                     </>
                   )}

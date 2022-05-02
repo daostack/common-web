@@ -7,22 +7,35 @@ import { Common, Subscription } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { updateSubscription } from "../../../../store/actions";
 import { useMyContributionsContext } from "../context";
-import { AmountSelection } from "./AmountSelection";
+import { AmountSelection, AmountSelectionStyles } from "./AmountSelection";
 import { Success } from "./Success";
 import { ChangeMonthlyContributionStep } from "./constants";
 import "./index.scss";
+
+interface Styles {
+  amountSelection?: AmountSelectionStyles;
+}
 
 interface ChangeMonthlyContributionProps {
   currentSubscription: Subscription;
   common: Common;
   onFinish: (subscription: Subscription) => void;
   goBack: () => void;
+  onLoadingToggle?: (isLoading: boolean) => void;
+  styles?: Styles;
 }
 
 const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
   props
 ) => {
-  const { currentSubscription, common, onFinish, goBack } = props;
+  const {
+    currentSubscription,
+    common,
+    onFinish,
+    goBack,
+    onLoadingToggle,
+    styles,
+  } = props;
   const {
     setTitle,
     setOnGoBack,
@@ -46,6 +59,9 @@ const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
     }
 
     setIsLoading(true);
+    if (onLoadingToggle) {
+      onLoadingToggle(true);
+    }
 
     dispatch(
       updateSubscription.request({
@@ -61,6 +77,9 @@ const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
           }
 
           setIsLoading(false);
+          if (onLoadingToggle) {
+            onLoadingToggle(false);
+          }
         },
       })
     );
@@ -116,6 +135,7 @@ const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
             currentAmount={currentSubscription.amount}
             onSelect={handleAmountSelect}
             setShouldShowGoBackButton={setShouldShowGoBackButton}
+            styles={styles?.amountSelection}
           />
         );
       default:

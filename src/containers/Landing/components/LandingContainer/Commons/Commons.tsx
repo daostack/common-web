@@ -11,7 +11,7 @@ import {
   getLoading,
   getScreenSize,
 } from "../../../../../shared/store/selectors";
-import { CommonListItem } from "../../../../Common/components";
+import { CommonListItem } from "@/containers/Common/components";
 import "./index.scss";
 import "swiper/swiper.min.css";
 import "swiper/components/pagination/pagination.min.css";

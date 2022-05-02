@@ -77,10 +77,16 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
     produce(state, (nextState) => {
       const proposal = { ...action.payload };
       const { proposals } = state;
+
       proposal.isLoaded = true;
-      const index = proposals.findIndex((d) => d.id === proposal.id);
-      proposals[index] = proposal;
-      nextState.proposals = [...proposals];
+
+      if (proposals.length) {
+        const index = proposals.findIndex((d) => d.id === proposal.id);
+
+        proposals[index] = proposal;
+        nextState.proposals = [...proposals];
+      }
+
       nextState.currentProposal = proposal;
     })
   )

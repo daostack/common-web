@@ -1,0 +1,75 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.billing-cancel-monthly-payment-modal__content {
+  min-height: 25.125rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  @include big-phone {
+    min-height: 21.625rem;
+  }
+}
+
+.billing-cancel-monthly-payment-modal__image {
+  width: 10rem;
+
+  @include big-phone {
+    max-width: 7.25rem;
+    width: 100%;
+  }
+}
+
+.billing-cancel-monthly-payment-modal__title {
+  margin: 3.625rem 0 2rem;
+  font-family: NotoSerifSC, serif;
+  font-size: $moderate-med;
+
+  @include big-phone {
+    margin: 0.5rem 0;
+    font-family: NunitoSans, sans-serif;
+  }
+}
+
+.billing-cancel-monthly-payment-modal__hint {
+  max-width: 18rem;
+  margin: 0 0 2rem;
+  font-size: $xsmall;
+}
+
+.billing-cancel-monthly-payment-modal__buttons-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @include big-phone {
+    flex-direction: column;
+  }
+}
+
+.billing-cancel-monthly-payment-modal__button {
+  max-width: 11.25rem;
+  margin-left: 1rem;
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  @include big-phone {
+    max-width: unset;
+    margin-top: 1rem;
+    margin-left: 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
+.billing-cancel-monthly-payment-modal__button--red {
+  color: $red;
+}

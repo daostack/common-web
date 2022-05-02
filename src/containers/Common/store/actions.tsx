@@ -44,6 +44,12 @@ export const getCommonsList = createAsyncAction(
   CommonsActionTypes.GET_COMMONS_LIST_FAILURE
 )<void, Common[], Error>();
 
+export const getCommonsListByIds = createAsyncAction(
+  CommonsActionTypes.GET_COMMONS_LIST_BY_IDS,
+  CommonsActionTypes.GET_COMMONS_LIST_BY_IDS_SUCCESS,
+  CommonsActionTypes.GET_COMMONS_LIST_BY_IDS_FAILURE
+)<PayloadWithOptionalCallback<string[], Common[], Error>, Common[], Error>();
+
 export const getCommonDetail = createAsyncAction(
   CommonsActionTypes.GET_COMMON_DETAIL,
   CommonsActionTypes.GET_COMMON_DETAIL_SUCCESS,
@@ -267,6 +273,12 @@ export const getUserContributionsToCommon = createAsyncAction(
   Error
 >();
 
+export const getUserContributions = createAsyncAction(
+  CommonsActionTypes.GET_USER_CONTRIBUTIONS,
+  CommonsActionTypes.GET_USER_CONTRIBUTIONS_SUCCESS,
+  CommonsActionTypes.GET_USER_CONTRIBUTIONS_FAILURE
+)<PayloadWithCallback<string, Payment[], Error>, Payment[], Error>();
+
 export const getUserSubscriptionToCommon = createAsyncAction(
   CommonsActionTypes.GET_USER_SUBSCRIPTION_TO_COMMON,
   CommonsActionTypes.GET_USER_SUBSCRIPTION_TO_COMMON_SUCCESS,
@@ -281,6 +293,12 @@ export const getUserSubscriptionToCommon = createAsyncAction(
   Error
 >();
 
+export const getUserSubscriptions = createAsyncAction(
+  CommonsActionTypes.GET_USER_SUBSCRIPTIONS,
+  CommonsActionTypes.GET_USER_SUBSCRIPTIONS_SUCCESS,
+  CommonsActionTypes.GET_USER_SUBSCRIPTIONS_FAILURE
+)<PayloadWithCallback<string, Subscription[], Error>, Subscription[], Error>();
+
 export const updateSubscription = createAsyncAction(
   CommonsActionTypes.UPDATE_SUBSCRIPTION,
   CommonsActionTypes.UPDATE_SUBSCRIPTION_SUCCESS,
@@ -290,3 +308,9 @@ export const updateSubscription = createAsyncAction(
   Subscription,
   Error
 >();
+
+export const cancelSubscription = createAsyncAction(
+  CommonsActionTypes.CANCEL_SUBSCRIPTION,
+  CommonsActionTypes.CANCEL_SUBSCRIPTION_SUCCESS,
+  CommonsActionTypes.CANCEL_SUBSCRIPTION_FAILURE
+)<PayloadWithCallback<string, Subscription, Error>, Subscription, Error>();

@@ -4,11 +4,16 @@ import { ButtonLink } from "@/shared/components";
 import { Card, CARD_BRANDS } from "../../models";
 import "./index.scss";
 
+interface Styles {
+  contentWrapper?: string;
+}
+
 interface PaymentMethodProps {
   className?: string;
   card: Card;
   title?: "";
   onReplacePaymentMethod: () => void;
+  styles?: Styles;
 }
 
 const PaymentMethod = (props: PaymentMethodProps): ReactElement => {
@@ -24,6 +29,7 @@ const PaymentMethod = (props: PaymentMethodProps): ReactElement => {
     },
     title = "Payment method",
     onReplacePaymentMethod,
+    styles,
   } = props;
   const imageAlt = `${cardBrand} logo`;
   let imageSrc = "/assets/images/";
@@ -50,12 +56,13 @@ const PaymentMethod = (props: PaymentMethodProps): ReactElement => {
     <div className={classNames("payment-method", className)}>
       {title && <h4 className="payment-method__title">{title}</h4>}
 
-      <div className="payment-method__content-wrapper">
+      <div
+        className={classNames(
+          "payment-method__content-wrapper",
+          styles?.contentWrapper
+        )}
+      >
         <div className="payment-method__card-wrapper">
-          {/*
-                FIXME: need to add a multiple card brand icons (into the assets)
-                and its conditional src choosing correspondingly
-              */}
           <img
             className="payment-method__payment-logo"
             src={imageSrc}

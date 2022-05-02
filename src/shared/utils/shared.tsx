@@ -9,6 +9,7 @@ import { transformFirebaseDataList } from "@/shared/utils/transformFirebaseDataT
 interface FormatPriceOptions {
   shouldMillify?: boolean;
   shouldRemovePrefixFromZero?: boolean;
+  bySubscription?: boolean;
   prefix?: string;
 }
 
@@ -22,6 +23,7 @@ export const formatPrice = (
   const {
     shouldMillify = true,
     shouldRemovePrefixFromZero = true,
+    bySubscription = false,
     prefix = CurrencySymbol.Shekel,
   } = options;
 
@@ -31,11 +33,10 @@ export const formatPrice = (
 
   const convertedPrice = price / 100;
 
-  return `${prefix}${
-    shouldMillify
+  return `${prefix}${shouldMillify
       ? millify(convertedPrice)
       : convertedPrice.toLocaleString("en-US")
-  }`;
+    }${bySubscription ? "/mo" : ""}`;
 };
 
 export const formatDate = (
@@ -53,7 +54,7 @@ export const formatEpochTime = (
   format: DateFormat = DateFormat.Long
 ) => {
   return moment.unix(time.seconds).local().format(format);
-};
+}
 
 export const getUserName = (
   user?: Pick<User, "firstName" | "lastName" | "displayName"> | null
@@ -70,17 +71,35 @@ export const getUserInitials = (user: User | undefined) => {
 export const getRandomUserAvatarURL = (name?: string | null): string =>
   `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${name}&rounded=true`;
 
-export const getDaysAgo = (currentDate: Date, time: Time) => {
+
+interface GetDaysAgoOptions {
+  withExactTime?: boolean;
+}
+
+export const getDaysAgo = (
+  currentDate: Date,
+  time: Time,
+  options: GetDaysAgoOptions = {},
+) => {
+  const {
+    withExactTime = false,
+  } = options;
   const previousDate = new Date(time.seconds * 1000);
   const differenceInTime = currentDate.getTime() - previousDate.getTime();
   const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+  let daysAgo: string;
+
   if (differenceInDays < 1) {
-    return "Today";
+    daysAgo = "Today";
   } else if (differenceInDays < 2) {
-    return "1 day ago";
+    daysAgo = "1 day ago";
   } else {
-    return `${differenceInDays.toFixed()} days ago`;
+    daysAgo = `${differenceInDays.toFixed()} days ago`;
   }
+
+  return !withExactTime
+    ? daysAgo
+    : `${daysAgo}, ${previousDate.getHours()}:${previousDate.getMinutes()}`;
 };
 
 /**
@@ -222,15 +241,13 @@ export const getCommonExampleImageURL = (index: number): string =>
 
 export const getSharingURL = (path: string): string => `${BASE_URL}${path}`;
 
-export const percentage = (
-  partialValue: number,
-  totalValue: number
-): number => {
+export const percentage = (partialValue: number, totalValue: number): number => {
   if (totalValue === 0) {
     return 0;
   }
-  return Math.round(((100 * partialValue) / totalValue) * 10) / 10;
-};
+
+  return Math.round((100 * partialValue) / totalValue * 10) / 10;
+}
 
 export const formatCountdownValue = (value: number): string => {
   const convertedValue = String(value);

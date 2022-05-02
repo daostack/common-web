@@ -5,13 +5,16 @@ import {
   loadUserCards,
 } from "@/containers/Common/store/actions";
 import { ScreenSize } from "@/shared/constants";
-import { usePaymentMethodChange } from "@/shared/hooks/useCases";
+import {
+  usePaymentMethodChange,
+  useUserContributions,
+} from "@/shared/hooks/useCases";
+import { BankAccountDetails, Payment, Subscription } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { DesktopBilling } from "./DesktopBilling";
 import { MobileBilling } from "./MobileBilling";
 import { BankAccountState, BillingProps, CardsState } from "./types";
 import "./index.scss";
-import { BankAccountDetails } from "@/shared/models";
 
 const Billing: FC = () => {
   const dispatch = useDispatch();
@@ -25,6 +28,9 @@ const Billing: FC = () => {
     fetched: false,
     bankAccount: null,
   });
+  const [activeContribution, setActiveContribution] = useState<
+    Payment | Subscription | null
+  >(null);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const {
@@ -32,12 +38,23 @@ const Billing: FC = () => {
     onPaymentMethodChange,
     reset: resetPaymentMethodChange,
   } = usePaymentMethodChange();
+  const {
+    loading: areContributionsLoading,
+    contributions,
+    subscriptions,
+    commons: contributionCommons,
+    updateSubscription,
+  } = useUserContributions();
 
   const handleBankAccountChange = (data: BankAccountDetails) => {
     setBankAccountState((nextState) => ({
       ...nextState,
       bankAccount: data,
     }));
+  };
+  const handleActiveSubscriptionUpdate = (subscription: Subscription) => {
+    setActiveContribution(subscription);
+    updateSubscription(subscription);
   };
 
   useEffect(() => {
@@ -114,13 +131,22 @@ const Billing: FC = () => {
     onPaymentMethodChange,
     onChangePaymentMethodStateClear: resetPaymentMethodChange,
     onBankAccountChange: handleBankAccountChange,
+    areContributionsLoading,
+    contributions,
+    subscriptions,
+    contributionCommons,
+    activeContribution,
+    onActiveContributionSelect: setActiveContribution,
+    onActiveSubscriptionUpdate: handleActiveSubscriptionUpdate,
   };
 
   return (
     <div className="route-content my-account-billing">
-      <header className="my-account-billing__header">
-        <h2 className="route-title">Billing</h2>
-      </header>
+      {(!isMobileView || !activeContribution) && (
+        <header className="my-account-billing__header">
+          <h2 className="route-title">Billing</h2>
+        </header>
+      )}
       <Component {...billingProps} />
     </div>
   );
