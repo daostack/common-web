@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { useRef, FC } from "react";
 import classNames from "classnames";
 import { ButtonLink } from "@/shared/components";
 import RightArrowIcon from "@/shared/icons/rightArrow.icon";
@@ -25,7 +25,7 @@ interface ContributionListProps {
   title: string;
   contribution: Payment | Subscription;
   subscription?: Subscription | null;
-  onClick?: () => void;
+  onClick?: (elementTopOffset?: number) => void;
 }
 
 const checkCanceledSubscription = (subscription: Subscription): boolean =>
@@ -96,16 +96,23 @@ const getContent = (
 
 const ContributionListItem: FC<ContributionListProps> = (props) => {
   const { id, title, contribution, subscription, onClick } = props;
+  const itemRef = useRef<HTMLLIElement>(null);
   const { status, statusText, statusDescription, description } = getContent(
     contribution,
     subscription
   );
 
+  const handleClick = () => {
+    if (onClick) {
+      onClick(itemRef.current?.offsetTop);
+    }
+  };
+
   return (
-    <li id={id} className="billing-contribution-list-item">
+    <li ref={itemRef} id={id} className="billing-contribution-list-item">
       <ButtonLink
         className="billing-contribution-list-item__link"
-        onClick={onClick}
+        onClick={handleClick}
       >
         <div
           className={classNames(

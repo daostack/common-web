@@ -19,7 +19,10 @@ interface ContributionListProps {
   contributions: (Payment | Subscription)[];
   subscriptions: Subscription[];
   commons: Common[];
-  onClick?: (contribution: Payment | Subscription) => void;
+  onClick?: (
+    contribution: Payment | Subscription,
+    elementTopOffset?: number
+  ) => void;
 }
 
 const ContributionList: ForwardRefRenderFunction<
@@ -83,7 +86,9 @@ const ContributionList: ForwardRefRenderFunction<
                 title={common?.name || ""}
                 contribution={contribution}
                 subscription={subscription}
-                onClick={() => onClick && onClick(contribution)}
+                onClick={(elementTopOffset) =>
+                  onClick && onClick(contribution, elementTopOffset)
+                }
               />
             );
           })}

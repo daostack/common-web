@@ -15,7 +15,8 @@ interface ContributionsProps {
   subscriptions: Subscription[];
   commons: Common[];
   onActiveContributionSelect: (
-    contribution: Payment | Subscription | null
+    contribution: Payment | Subscription | null,
+    elementTopOffset?: number
   ) => void;
   onActiveSubscriptionUpdate?: (subscription: Subscription) => void;
 }
