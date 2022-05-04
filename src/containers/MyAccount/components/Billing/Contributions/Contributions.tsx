@@ -1,11 +1,13 @@
-import React, { FC } from "react";
+import React, { useRef, FC } from "react";
 import { useSelector } from "react-redux";
 import { ScreenSize } from "@/shared/constants";
 import { Common, isPayment, Payment, Subscription } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ActiveContributionItem } from "../ActiveContributionItem";
-import { ContributionList } from "../ContributionList";
+import { ContributionList, ContributionListRef } from "../ContributionList";
 import "./index.scss";
+
+const CONTRIBUTION_LIST_ID = "contribution-list";
 
 interface ContributionsProps {
   activeContribution?: Payment | Subscription | null;
@@ -27,6 +29,7 @@ const Contributions: FC<ContributionsProps> = (props) => {
     onActiveContributionSelect,
     onActiveSubscriptionUpdate,
   } = props;
+  const contributionListRef = useRef<ContributionListRef>(null);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const commonId =
@@ -45,13 +48,23 @@ const Contributions: FC<ContributionsProps> = (props) => {
     null;
 
   const handleBackClick = () => {
-    onActiveContributionSelect(null);
+    setTimeout(() => {
+      if (!activeContribution) {
+        return;
+      }
+
+      const itemId = activeContribution.id;
+      onActiveContributionSelect(null);
+      contributionListRef.current?.scrollTo(itemId);
+    }, 0);
   };
 
   return (
     <>
       {!activeContribution && (
         <ContributionList
+          ref={contributionListRef}
+          listId={CONTRIBUTION_LIST_ID}
           contributions={contributions}
           subscriptions={subscriptions}
           commons={commons}

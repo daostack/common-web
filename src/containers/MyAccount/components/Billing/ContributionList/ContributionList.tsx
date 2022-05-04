@@ -1,18 +1,49 @@
-import React, { FC } from "react";
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  ForwardRefRenderFunction,
+} from "react";
+import { scroller } from "react-scroll";
 import classNames from "classnames";
 import { isPayment, Common, Payment, Subscription } from "@/shared/models";
 import { ContributionListItem } from "../ContributionListItem";
+import { getContributionListItemId } from "./helpers";
 import "./index.scss";
 
+export interface ContributionListRef {
+  scrollTo: (itemId: string) => void;
+}
+
 interface ContributionListProps {
+  listId: string;
   contributions: (Payment | Subscription)[];
   subscriptions: Subscription[];
   commons: Common[];
   onClick?: (contribution: Payment | Subscription) => void;
 }
 
-const ContributionList: FC<ContributionListProps> = (props) => {
-  const { contributions, subscriptions, commons, onClick } = props;
+const ContributionList: ForwardRefRenderFunction<
+  ContributionListRef,
+  ContributionListProps
+> = (props, contributionListRef) => {
+  const { listId, contributions, subscriptions, commons, onClick } = props;
+
+  useImperativeHandle(
+    contributionListRef,
+    () => ({
+      scrollTo: (itemId: string) => {
+        scroller.scrollTo(getContributionListItemId(itemId), {
+          containerId: listId,
+          delay: 0,
+          duration: 200,
+          horizontal: false,
+          offset: -170,
+          smooth: true,
+        });
+      },
+    }),
+    [listId]
+  );
 
   return (
     <div
@@ -32,7 +63,7 @@ const ContributionList: FC<ContributionListProps> = (props) => {
           </p>
         </div>
       ) : (
-        <ul className="billing-contribution-list__list">
+        <ul id={listId} className="billing-contribution-list__list">
           {contributions.map((contribution) => {
             const commonId = isPayment(contribution)
               ? contribution.commonId
@@ -48,6 +79,7 @@ const ContributionList: FC<ContributionListProps> = (props) => {
             return (
               <ContributionListItem
                 key={contribution.id}
+                id={getContributionListItemId(contribution.id)}
                 title={common?.name || ""}
                 contribution={contribution}
                 subscription={subscription}
@@ -61,4 +93,4 @@ const ContributionList: FC<ContributionListProps> = (props) => {
   );
 };
 
-export default ContributionList;
+export default forwardRef(ContributionList);

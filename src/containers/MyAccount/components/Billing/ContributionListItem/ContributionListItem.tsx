@@ -21,6 +21,7 @@ interface Content {
 }
 
 interface ContributionListProps {
+  id: string;
   title: string;
   contribution: Payment | Subscription;
   subscription?: Subscription | null;
@@ -94,14 +95,14 @@ const getContent = (
     : getSubscriptionContent(contribution);
 
 const ContributionListItem: FC<ContributionListProps> = (props) => {
-  const { title, contribution, subscription, onClick } = props;
+  const { id, title, contribution, subscription, onClick } = props;
   const { status, statusText, statusDescription, description } = getContent(
     contribution,
     subscription
   );
 
   return (
-    <li className="billing-contribution-list-item">
+    <li id={id} className="billing-contribution-list-item">
       <ButtonLink
         className="billing-contribution-list-item__link"
         onClick={onClick}
