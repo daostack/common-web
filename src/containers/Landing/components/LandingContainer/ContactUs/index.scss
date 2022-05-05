@@ -57,10 +57,10 @@
       font-size: $xxsmall;
       text-align: left;
     }
-    .success-message {
-      font-size: $xxsmall;
-      text-align: left;
-    }
+  }
+  .success-message {
+    font-size: $medium;
+    font-weight: bold;
   }
 }
 

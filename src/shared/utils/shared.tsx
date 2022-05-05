@@ -4,6 +4,7 @@ import moment, { Moment } from "moment";
 import { MobileOperatingSystem, BASE_URL } from "../constants";
 import { DateFormat, Proposal, Time, User } from "../models";
 import { CurrencySymbol } from "@/shared/models";
+import { transformFirebaseDataList } from "@/shared/utils/transformFirebaseDataToModel";
 
 interface FormatPriceOptions {
   shouldMillify?: boolean;
@@ -48,7 +49,10 @@ export const formatDate = (
  * @param {Time} time
  * @param {DateFormat} format the desired format
  */
-export const formatEpochTime = (time: Time, format: DateFormat = DateFormat.Long) => {
+export const formatEpochTime = (
+  time: Time,
+  format: DateFormat = DateFormat.Long
+) => {
   return moment.unix(time.seconds).local().format(format);
 }
 
@@ -64,9 +68,8 @@ export const getUserInitials = (user: User | undefined) => {
   return user.displayName || `${user.firstName[0]}${user.lastName[0]}`;
 };
 
-export const getRandomUserAvatarURL = (name?: string | null): string => (
-  `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${name}&rounded=true`
-);
+export const getRandomUserAvatarURL = (name?: string | null): string =>
+  `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${name}&rounded=true`;
 
 
 interface GetDaysAgoOptions {
@@ -251,3 +254,39 @@ export const formatCountdownValue = (value: number): string => {
 
   return convertedValue.length === 1 ? `0${convertedValue}` : convertedValue;
 };
+
+export const createIdsChunk = (pool: string[]) =>
+  pool.reduce((resultArray: any, item, index) => {
+    const chunkIndex = Math.floor(index / 10);
+
+    if (!resultArray[chunkIndex]) {
+      resultArray[chunkIndex] = [];
+    }
+
+    resultArray[chunkIndex].push(item);
+
+    return resultArray;
+  }, []);
+
+export function flatChunk<T>(data: unknown[]) {
+  return (data as unknown[])
+    .map((d: any) => transformFirebaseDataList<T>(d))
+    .reduce((resultArray: any, item) => {
+      resultArray.push(...item);
+      return resultArray;
+    }, []);
+}
+
+export function groupBy<T>(list: T[], keyGetter: Function) {
+  const map = new Map();
+  list.forEach((item) => {
+    const key = keyGetter(item);
+    const collection = map.get(key);
+    if (!collection) {
+      map.set(key, [item]);
+    } else {
+      collection.push(item);
+    }
+  });
+  return map;
+}
