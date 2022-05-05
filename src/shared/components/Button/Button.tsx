@@ -34,7 +34,9 @@ const Button: FC<ButtonProps> = (props) => {
     "custom-button--disabled": variantToUse === ButtonVariant.Disabled,
   });
 
-  return <button tabIndex={0} {...restProps} className={className} />;
+  return (
+    <button tabIndex={0} type="button" {...restProps} className={className} />
+  );
 };
 
 export default Button;
