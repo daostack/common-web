@@ -33,6 +33,14 @@ $sections-breakpoint: 1250px;
   position: relative;
   max-width: 43.625rem;
   width: 100%;
+
+  @include viewport-breakpoint($sections-breakpoint) {
+    height: 30rem;
+  }
+
+  @include big-phone {
+    height: unset;
+  }
 }
 
 .my-account-desktop-billing__contributions {
@@ -45,7 +53,7 @@ $sections-breakpoint: 1250px;
   flex-direction: column;
   overflow: hidden;
 
-  @include viewport-breakpoint($sections-breakpoint) {
+  @include big-phone {
     position: static;
     top: unset;
     right: unset;
