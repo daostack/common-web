@@ -30,6 +30,8 @@ import {
   CreateCommonPayload,
   CreateDiscussionDto,
   DeleteCommon,
+  GovernanceCreate,
+  GovernanceCreate as GovernanceCreatePayload,
   ImmediateContributionData,
   ImmediateContributionResponse,
   LeaveCommon,
@@ -42,6 +44,18 @@ import {
 } from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 import { UpdateBankAccountDetailsData } from "@/shared/interfaces/api/bankAccount";
+
+export async function createGovernance(
+  requestData: GovernanceCreatePayload
+): Promise<GovernanceCreate> {
+  const { data } = await Api.post<GovernanceCreate>(
+    ApiEndpoint.GovernanceCreate,
+    requestData
+  );
+  
+  console.log(data);
+  return data;
+}
 
 export async function fetchCommonDiscussions(commonId: string) {
   const commons = await firebase

@@ -50,14 +50,32 @@ import {
   fetchProposalsForCommonList,
   fetchMessagesForCommonList,
   fetchCommonListByIds as fetchCommonListByIdsApi,
+  createGovernance as createGovernanceApi,
 } from "./api";
 import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
 import store from "@/index";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
 import { Vote } from "@/shared/interfaces/api/vote";
-import { ImmediateContributionResponse } from "../interfaces";
+import { GovernanceCreate, ImmediateContributionResponse } from "../interfaces";
 import { groupBy } from "@/shared/utils";
+
+export function* createGovernance(
+  action: ReturnType<typeof actions.createGovernance.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    const governance = (yield createGovernanceApi(action.payload.payload)) as GovernanceCreate;
+
+    yield put(actions.createGovernance.success(governance));
+    action.payload.callback(null);
+    yield put(stopLoading());
+  } catch (error) {
+    yield put(actions.createGovernance.failure(error));
+    action.payload.callback(error);
+    yield put(stopLoading());
+  }
+}
 
 export function* getCommonsList(): Generator {
   try {
@@ -774,6 +792,7 @@ export function* cancelSubscription({
 }
 
 export function* commonsSaga() {
+  yield takeLatest(actions.createGovernance.request, createGovernance);
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonsListByIds.request, getCommonsListByIds);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);

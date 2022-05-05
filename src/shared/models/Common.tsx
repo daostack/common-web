@@ -59,6 +59,20 @@ export interface Common {
    */
   raised: number;
 
+  /**
+ * Number of proposals in common
+ */
+  proposalCount: number;
+
+  /**
+   * Number of discussions in common
+   */
+  discussionCount: number;
+
+  /**
+   * Number of messages in all the discussions of the common
+   */
+  messageCount: number;
 
   /**
    * The whitelisting status of the common

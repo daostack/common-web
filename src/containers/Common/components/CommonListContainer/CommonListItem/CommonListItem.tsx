@@ -62,19 +62,19 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
                 src="/icons/common-icons/proposals.svg"
                 alt="proposals-ico"
               />
-              {common.proposals?.length}
+              {common.proposalCount}
             </div>
           </div>
           <div className="item">
             <div className="value">
               <img src="/icons/common-icons/disc.svg" alt="disc-ico" />
-              {common.discussions?.length}
+              {common.discussionCount}
             </div>
           </div>
           <div className="item">
             <div className="value">
               <img src="/icons/common-icons/messages.svg" alt="messages-ico" />
-              {common.messages?.length}
+              {common.messageCount}
             </div>
           </div>
         </div>

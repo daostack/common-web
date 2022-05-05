@@ -26,6 +26,8 @@ import {
   AddMessageToDiscussionDto,
   DeleteCommon,
   LeaveCommon,
+  GovernanceCreate,
+  GovernanceCreate as GovernanceCreatePayload,
 } from "@/containers/Common/interfaces";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 import {
@@ -37,6 +39,16 @@ import {
   ImmediateContributionData,
   ImmediateContributionResponse,
 } from "../interfaces";
+
+export const createGovernance = createAsyncAction(
+  CommonsActionTypes.CREATE_GOVERNANCE,
+  CommonsActionTypes.CREATE_GOVERNANCE_SUCCESS,
+  CommonsActionTypes.CREATE_GOVERNANCE_FAILURE
+)<
+  PayloadWithCallback<GovernanceCreatePayload, GovernanceCreate, Error>,
+  GovernanceCreate,
+  Error
+>();
 
 export const getCommonsList = createAsyncAction(
   CommonsActionTypes.GET_COMMONS_LIST,
