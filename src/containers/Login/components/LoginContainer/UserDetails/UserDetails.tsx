@@ -1,5 +1,6 @@
 import React, {
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -57,6 +58,7 @@ interface UserDetailsProps {
   customSaveButton?: boolean;
   isCountryDropdownFixed?: boolean;
   isEditing?: boolean;
+  onLoading?: (isLoading: boolean) => void;
   onSubmitting?: (isSubmitting: boolean) => void;
   styles?: Styles;
 }
@@ -96,10 +98,12 @@ const UserDetails: ForwardRefRenderFunction<
     isCountryDropdownFixed = true,
     isEditing = true,
     styles: outerStyles,
+    onLoading,
     onSubmitting,
   } = props;
   const formRef = useRef<FormikProps<FormValues>>(null);
   const [loading, setLoading] = useState(false);
+  const [uploadedPhoto, setUploadedPhoto] = useState("");
   const inputFile: any = useRef(null);
   const authProvider = useSelector(selectAuthProvider());
   const userPhoneNumber = useSelector(selectUserPhoneNumber());
@@ -119,16 +123,30 @@ const UserDetails: ForwardRefRenderFunction<
     files: FileList | null,
     setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
   ) => {
-    if (files) {
-      setLoading(true);
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(files[0]);
-      fileReader.addEventListener("load", async function () {
-        const imageUrl = await uploadImage(this.result);
-        setLoading(false);
-        setFieldValue("photo", imageUrl);
-      });
+    const file = files && files[0];
+
+    if (!file) {
+      return;
     }
+
+    setLoading(true);
+
+    if (onLoading) {
+      onLoading(true);
+    }
+
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
+    fileReader.addEventListener("load", async function () {
+      const imageUrl = await uploadImage(this.result);
+      setUploadedPhoto(URL.createObjectURL(file));
+      setLoading(false);
+      setFieldValue("photo", imageUrl);
+
+      if (onLoading) {
+        onLoading(false);
+      }
+    });
   };
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
@@ -149,6 +167,8 @@ const UserDetails: ForwardRefRenderFunction<
             if (onSubmitting) {
               onSubmitting(false);
             }
+
+            setSubmitting(false);
           },
         })
       );
@@ -172,6 +192,13 @@ const UserDetails: ForwardRefRenderFunction<
       default: "user-details__text-field-input",
     },
   };
+
+  useEffect(() => {
+    if (!isEditing) {
+      formRef.current?.setFieldValue("photo", user.photoURL || "");
+      setUploadedPhoto("");
+    }
+  }, [isEditing, user]);
 
   return (
     <div className={classNames("user-details", className)}>
@@ -198,6 +225,7 @@ const UserDetails: ForwardRefRenderFunction<
                       outerStyles?.userAvatar
                     )}
                     photoURL={values.photo}
+                    preloaderSrc={uploadedPhoto}
                     nameForRandomAvatar={values.email}
                     userName={getUserName(values)}
                   />
@@ -232,7 +260,9 @@ const UserDetails: ForwardRefRenderFunction<
                     authProvider={authProvider}
                   />
                 )}
-                {loading ? <Loader /> : null}
+                {loading ? (
+                  <Loader className="user-details__avatar-loader" />
+                ) : null}
               </div>
               {!isEditing && <UserDetailsPreview user={user} />}
               {isEditing && (

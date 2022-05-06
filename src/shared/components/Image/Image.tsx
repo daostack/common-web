@@ -1,5 +1,6 @@
 import React, {
   useCallback,
+  useEffect,
   useState,
   FC,
   ImgHTMLAttributes,
@@ -7,14 +8,24 @@ import React, {
   ReactEventHandler,
 } from "react";
 
-interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {
+interface CustomImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   alt: string;
+  preloaderSrc?: string;
   placeholderElement?: ReactNode;
 }
 
-const Image: FC<ImageProps> = (props) => {
-  const { alt, onError, placeholderElement = null, ...restProps } = props;
+const CustomImage: FC<CustomImageProps> = (props) => {
+  const {
+    src,
+    alt,
+    preloaderSrc,
+    onError,
+    placeholderElement = null,
+    ...restProps
+  } = props;
+  const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const imageSrc = isLoaded || !preloaderSrc ? src : preloaderSrc;
 
   const handleError = useCallback<ReactEventHandler<HTMLImageElement>>(
     (...args) => {
@@ -27,11 +38,32 @@ const Image: FC<ImageProps> = (props) => {
     [onError]
   );
 
+  useEffect(() => {
+    if (!src) {
+      return;
+    }
+
+    setIsLoaded(false);
+
+    const handleLoad = () => {
+      setIsLoaded(true);
+    };
+
+    const image = new Image();
+    image.src = src;
+    image.addEventListener("load", handleLoad);
+
+    return () => {
+      image.removeEventListener("load", handleLoad);
+      setIsLoaded(false);
+    };
+  }, [src]);
+
   return hasError && placeholderElement ? (
     <>{placeholderElement}</>
   ) : (
-    <img {...restProps} alt={alt} onError={handleError} />
+    <img {...restProps} src={imageSrc} alt={alt} onError={handleError} />
   );
 };
 
-export default Image;
+export default CustomImage;
