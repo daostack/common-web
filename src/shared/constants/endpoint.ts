@@ -13,6 +13,7 @@ export const ApiEndpoint = {
   GetReports: "/reports",
   LeaveCommon: "/commons/leave",
   UpdateSubscription: "/subscriptions/update",
+  CancelSubscription: "/subscriptions/cancel",
   DeleteCommon: "/commons/deactivate",
   CreateUser: "/users/create",
   SendEmail: "/notifications/send-email",

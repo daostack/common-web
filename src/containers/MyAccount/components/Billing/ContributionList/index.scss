@@ -2,16 +2,15 @@
 @import "../../../../../styles/sizes";
 
 .billing-contribution-list {
-  overflow-y: auto;
+  height: 100%;
+  overflow: hidden;
 }
 .billing-contribution-list--non-empty {
-  padding: 1.5rem 1.875rem;
   border: 1px solid $light-gray-1;
   border-radius: 0.5rem;
 
   @include big-phone {
     width: 100%;
-    padding: 0;
     border: unset;
     border-radius: unset;
   }
@@ -40,9 +39,16 @@
 }
 
 .billing-contribution-list__list {
+  height: 100%;
   margin: 0;
-  padding: 0;
+  padding: 1.5rem 1.875rem;
   display: flex;
   flex-direction: column;
   list-style-type: none;
+  overflow-y: auto;
+  box-sizing: border-box;
+
+  @include big-phone {
+    padding: 0;
+  }
 }

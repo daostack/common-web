@@ -16,6 +16,12 @@
 .billing-payment-information__payment-method-wrapper {
   padding: 1.5rem 1rem;
   box-sizing: border-box;
+
+  .billing-payment-information__payment-method-content-wrapper {
+    padding: 0;
+    border: unset;
+    border-radius: unset;
+  }
 }
 
 .billing-payment-information__alert {
@@ -38,4 +44,8 @@
 
 .billing-payment-information__change-payment-method-wrapper {
   margin: 0 -0.9375rem;
+}
+
+.billing-payment-information__modal-content {
+  min-height: 26.875rem;
 }

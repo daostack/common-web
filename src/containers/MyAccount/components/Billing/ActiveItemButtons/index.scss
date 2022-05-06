@@ -1,0 +1,31 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.billing-active-item-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @include big-phone {
+    flex-direction: column;
+  }
+}
+
+.billing-active-item-buttons__button {
+  max-width: 15.625rem;
+  margin-left: 1rem;
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  @include big-phone {
+    max-width: unset;
+    margin-top: 1rem;
+    margin-left: 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}

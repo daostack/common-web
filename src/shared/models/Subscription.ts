@@ -37,4 +37,5 @@ export interface Subscription {
   revoked: boolean;
   charges: number;
   lastChargedAt: Time;
+  canceledAt?: Time;
 }

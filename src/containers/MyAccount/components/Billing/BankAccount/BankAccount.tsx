@@ -34,6 +34,11 @@ const BankAccount: FC<BankAccountProps> = (props) => {
     stopEditing();
   };
 
+  const handleCancel = () => {
+    window.scrollTo(0, 0);
+    stopEditing();
+  };
+
   const contentEl = !bankAccount ? (
     <AddingCard
       text="You must provide bank account details in order to receive funds."
@@ -60,6 +65,7 @@ const BankAccount: FC<BankAccountProps> = (props) => {
           title={null}
           onBankDetails={handleBankDetailsUpdateFinish}
           initialBankAccountDetails={bankAccount}
+          onCancel={handleCancel}
         />
       )}
       {isEditing && !isMobileView && (
