@@ -78,6 +78,19 @@
           font-family: Assistant-Light;
         }
       }
+      .last-activity{
+        z-index: 1;
+        font-family: 'Nunito Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 0.75rem;
+        line-height: 1rem;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin-top: 48px;
+        color: $light-gray-1;
+      }
     }
   }
   .additional-information {

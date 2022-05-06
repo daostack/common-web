@@ -1,6 +1,7 @@
 import { Proposal } from "@/shared/models/Proposals";
 import { Discussion } from "@/shared/models/Discussion";
 import { DiscussionMessage } from "@/shared/models/DiscussionMessage";
+import { Time } from "@/shared/models/shared";
 
 export enum MemberPermission {
   Founder = "founder",
@@ -40,7 +41,7 @@ export interface Metadata {
 
 export interface Common {
   id: string;
-  createdAt: Date;
+  createdAt: Time;
   updatedAt: Date;
   name: string;
   balance: number;
