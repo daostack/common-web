@@ -224,6 +224,7 @@ const updateUserData = async (user: User) => {
         lastName: user.lastName,
         email: user.email,
         photoURL: user.photo,
+        intro: user.intro,
         displayName: `${user.firstName} ${user.lastName}`,
         country: user.country,
       })

@@ -79,7 +79,7 @@ const getInitialValues = (user: User): FormValues => {
     email: user.email || "",
     country: user.country || "",
     photo: user.photoURL || "",
-    intro: "",
+    intro: user.intro || "",
   };
 };
 
