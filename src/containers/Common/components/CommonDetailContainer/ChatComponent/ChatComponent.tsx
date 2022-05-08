@@ -1,11 +1,17 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
+import { getScreenSize } from "@/shared/store/selectors";
 import { CommonShare, Loader } from "@/shared/components";
 import { Common, DiscussionMessage } from "@/shared/models";
 import ChatMessage from "./ChatMessage";
 import "./index.scss";
 import { formatDate } from "@/shared/utils";
-import { Colors } from "@/shared/constants";
+import {
+  Colors,
+  ShareViewType,
+  ScreenSize,
+} from "@/shared/constants";
 import { EmptyTabComponent } from "@/containers/Common/components/CommonDetailContainer";
 
 interface ChatComponentInterface {
@@ -49,10 +55,11 @@ export default function ChatComponent({
   isAuthorized,
   sendMessage,
 }: ChatComponentInterface) {
+  const screenSize = useSelector(getScreenSize());
   const [message, setMessage] = useState("");
   const shouldShowJoinToCommonButton = !isCommonMember && !isJoiningPending;
   const messages = discussionMessage.reduce(groupday, {});
-
+  const isMobileView = (screenSize === ScreenSize.Mobile);
   const dateList = Object.keys(messages);
 
   return (
@@ -101,7 +108,11 @@ export default function ChatComponent({
               common
               ? <CommonShare
                 common={common}
-                type="popup"
+                type={
+                  isMobileView
+                  ? ShareViewType.modalMobile
+                  : ShareViewType.modalDesktop
+                }
                 color={Colors.lightPurple}
                 top="-130px"
               />

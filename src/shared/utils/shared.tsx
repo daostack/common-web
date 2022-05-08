@@ -251,3 +251,6 @@ export const formatCountdownValue = (value: number): string => {
 
   return convertedValue.length === 1 ? `0${convertedValue}` : convertedValue;
 };
+
+export const copyToClipboard = (text: string) =>
+  navigator.clipboard.writeText(text);

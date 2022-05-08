@@ -1,8 +1,10 @@
 import React, { useMemo, FC } from "react";
 import classNames from "classnames";
 
+import { Orientation } from "@/shared/constants";
 import { ErrorText } from "../ErrorText";
-import { ToggleButtonGroupContext, ToggleButtonGroupContextValue, ToggleButtonGroupVariant } from "./context";
+import { ToggleButtonGroupContext, ToggleButtonGroupContextValue } from "./context";
+
 import "./index.scss";
 
 interface ToggleButtonGroupStyles {
@@ -15,13 +17,13 @@ export interface ToggleButtonGroupProps {
   label?: string;
   value?: unknown;
   onChange: (value: unknown) => void;
-  variant?: ToggleButtonGroupVariant;
+  variant?: Orientation;
   error?: string;
   styles?: ToggleButtonGroupStyles;
 }
 
 const ToggleButtonGroup: FC<ToggleButtonGroupProps> = (props) => {
-  const { className, label, value, onChange, error, styles, children, variant = ToggleButtonGroupVariant.Horizontal } = props;
+  const { className, label, value, onChange, error, styles, children, variant = Orientation.horizontal } = props;
 
   const contextValue = useMemo<ToggleButtonGroupContextValue>(() => ({
     currentValue: value,
@@ -38,7 +40,7 @@ const ToggleButtonGroup: FC<ToggleButtonGroupProps> = (props) => {
       )}
       <div
         className={classNames("custom-toggle-button-group__buttons", {
-          "custom-toggle-button-group__buttons--vertical": variant === ToggleButtonGroupVariant.Vertical,
+          "custom-toggle-button-group__buttons--vertical": variant === Orientation.vertical,
         })}
         role="group"
         aria-label={label}

@@ -5,9 +5,14 @@ import {
   Button,
   ButtonVariant,
   CommonShare,
-  SharePopupVariant,
 } from "@/shared/components";
-import { Colors, ScreenSize, ROUTE_PATHS } from "@/shared/constants";
+import {
+  Colors,
+  ScreenSize,
+  ROUTE_PATHS,
+  ShareViewType,
+  SharePopupVariant,
+} from "@/shared/constants";
 import { Common } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import "./index.scss";
@@ -77,7 +82,7 @@ const Success: FC<SuccessProps> = (props) => {
         <CommonShare
           className="create-common-confirmation-success__button-wrapper"
           common={common}
-          type={isMobileView ? "modal" : "popup"}
+          type={isMobileView ? ShareViewType.modalMobile : ShareViewType.popup}
           color={Colors.lightPurple}
           top=""
           popupVariant={SharePopupVariant.topCenter}

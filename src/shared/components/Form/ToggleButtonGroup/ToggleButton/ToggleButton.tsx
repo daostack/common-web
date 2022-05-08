@@ -1,7 +1,8 @@
 import React, { useCallback, FC } from "react";
 import classNames from "classnames";
 
-import { useToggleButtonGroupContext, ToggleButtonGroupVariant } from "../context";
+import { Orientation } from "@/shared/constants";
+import { useToggleButtonGroupContext } from "../context";
 import "./index.scss";
 
 interface ToggleButtonStyles {
@@ -25,7 +26,7 @@ const ToggleButton: FC<ToggleButtonProps> = (props) => {
 
   const buttonClassName = classNames("custom-toggle-button", styles?.default, {
     [classNames("custom-toggle-button--active", styles?.active)]: value === currentValue,
-    [classNames("custom-toggle-button--vertical", styles?.vertical)]: variant === ToggleButtonGroupVariant.Vertical,
+    [classNames("custom-toggle-button--vertical", styles?.vertical)]: variant === Orientation.vertical,
   });
 
   return (

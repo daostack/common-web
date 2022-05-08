@@ -1,10 +1,11 @@
 import React from "react";
 import classNames from "classnames";
 
-import { UserAvatar } from "../../../../../shared/components";
-import { useFullText } from "../../../../../shared/hooks";
-import { Proposal, CurrencySymbol, } from "../../../../../shared/models";
-import { formatPrice, getUserName, getDaysAgo } from "../../../../../shared/utils";
+import { UserAvatar, ElementDropdown } from "@/shared/components";
+import { useFullText } from "@/shared/hooks";
+import { Proposal, CurrencySymbol, } from "@/shared/models";
+import { formatPrice, getUserName, getDaysAgo } from "@/shared/utils";
+import { DynamicLinkType } from "@/shared/constants";
 import { VotesComponent } from "../VotesComponent";
 import ProposalState from "../ProposalState/ProposalState";
 
@@ -43,6 +44,12 @@ export default function ProposalItemComponent({
         >
           {proposal.description.title}
         </div>
+        <ElementDropdown
+          linkType={DynamicLinkType.Proposal}
+          elem={proposal}
+          className="dropdown-menu"
+          transparent
+        />
         <div className="requested-amount">
           {!rawRequestedAmount ? (
             "No funding requested"

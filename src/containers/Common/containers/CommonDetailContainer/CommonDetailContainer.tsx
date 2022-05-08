@@ -29,7 +29,7 @@ import {
 } from "../../components/CommonDetailContainer";
 import { MembershipRequestModal } from "../../components/CommonDetailContainer/MembershipRequestModal";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
-import { Colors, ScreenSize } from "../../../../shared/constants";
+import { Colors, ScreenSize, ShareViewType } from "@/shared/constants";
 import {
   selectCommonDetail,
   selectCurrentDisscussion,
@@ -541,7 +541,7 @@ export default function CommonDetail() {
                         ) : (
                           <CommonShare
                             common={common}
-                            type="modal"
+                            type={ShareViewType.modalMobile}
                             color={Colors.lightGray4}
                           />
                         )}
@@ -622,7 +622,7 @@ export default function CommonDetail() {
                     <CommonShare
                       shareButtonClassName="common-detail-wrapper__menu-button--big"
                       common={common}
-                      type="popup"
+                      type={ShareViewType.modalDesktop}
                       color={Colors.lightGray4}
                       withBorder
                     />
@@ -639,7 +639,7 @@ export default function CommonDetail() {
                 {isCommonMember && isMobileView && (
                   <CommonShare
                     common={common}
-                    type="modal"
+                    type={ShareViewType.modalMobile}
                     color={Colors.transparent}
                   >
                     <button className="button-blue common-content-selector__long-share-button">

@@ -71,6 +71,8 @@
         flex-direction: row;
         width: 85%;
         box-sizing: border-box;
+        position: relative;
+
         .message-name {
           font-size: 14px;
           font-weight: bold;
@@ -87,6 +89,16 @@
             color: $light-gray-2;
             text-align: right;
           }
+        }
+      }
+
+      .dropdown-menu {
+        position: absolute;
+        top: 0;
+        right: 0.5rem;
+
+        svg {
+          color: $light-gray-2;
         }
       }
     }

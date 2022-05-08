@@ -6,9 +6,9 @@ import {
   CurrencyInputVariant,
   ToggleButton,
   ToggleButtonGroup,
-  ToggleButtonGroupVariant,
 } from "../Form";
 import { formatPrice } from "../../utils";
+import { Orientation } from "@/shared/constants";
 import {
   getAmountsForSelection,
   getInitialEnteredContributionValue,
@@ -132,7 +132,7 @@ export default function ContributionAmountSelection(props: IProps) {
           className="contribution-amount-selection__toggle-button-group"
           value={selectedContribution}
           onChange={handleChange}
-          variant={ToggleButtonGroupVariant.Vertical}
+          variant={Orientation.vertical}
         >
           {amountsForSelection.map((amount) => (
             <ToggleButton

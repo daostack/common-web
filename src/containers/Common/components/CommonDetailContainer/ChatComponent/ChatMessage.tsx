@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Linkify } from "@/shared/components";
+import { Linkify, ElementDropdown } from "@/shared/components";
 import { DiscussionMessage } from "@/shared/models";
 import { getUserName, getUserInitials } from "@/shared/utils";
+import { DynamicLinkType, Orientation } from "@/shared/constants";
 
 interface ChatMessageProps {
   disscussionMessage: DiscussionMessage;
@@ -47,6 +48,13 @@ export default function ChatMessage({ disscussionMessage }: ChatMessageProps) {
             })}
           </div>
         </div>
+        <ElementDropdown
+          linkType={DynamicLinkType.DiscussionMessage}
+          elem={disscussionMessage}
+          className="dropdown-menu"
+          variant={Orientation.horizontal}
+          transparent
+        />
       </div>
     </div>
   );
