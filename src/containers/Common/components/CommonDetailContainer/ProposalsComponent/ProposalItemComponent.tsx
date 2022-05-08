@@ -3,7 +3,7 @@ import classNames from "classnames";
 
 import { UserAvatar, ElementDropdown } from "@/shared/components";
 import { useFullText } from "@/shared/hooks";
-import { Proposal, CurrencySymbol, } from "@/shared/models";
+import { Proposal } from "@/shared/models";
 import { formatPrice, getUserName, getDaysAgo } from "@/shared/utils";
 import { DynamicLinkType } from "@/shared/constants";
 import { VotesComponent } from "../VotesComponent";
@@ -28,10 +28,6 @@ export default function ProposalItemComponent({
   } = useFullText();
   const date = new Date();
   const rawRequestedAmount = proposal.fundingRequest?.amount || proposal.join?.funding;
-  //required custom fix since the using currency was changed - CW-411
-  const fundingAmountPrefix = (
-    (proposal?.createdAt || proposal?.createTime)?.toDate() < new Date("02/17/2022 12:00")
-  ) && CurrencySymbol.USD;
 
   return (
     <div className="discussion-item-wrapper">
@@ -55,20 +51,10 @@ export default function ProposalItemComponent({
             "No funding requested"
           ) : (
             <>
-                Requested amount <span className="amount">
-                  {
-                    formatPrice(
-                      rawRequestedAmount,
-                      {
-                        ...(
-                          fundingAmountPrefix && {
-                            prefix: fundingAmountPrefix
-                          }
-                        )
-                      }
-                    )
-                  }
-                </span>
+              Requested amount
+              <span className="amount">
+                {formatPrice(rawRequestedAmount)}
+              </span>
             </>
           )}
         </div>

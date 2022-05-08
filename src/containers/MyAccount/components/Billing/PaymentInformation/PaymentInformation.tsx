@@ -40,6 +40,11 @@ const PaymentInformation: FC<PaymentInformationProps> = (props) => {
       (changePaymentMethodState.isPaymentLoading ||
         changePaymentMethodState.payment));
 
+  const handlePaymentMethodChangeCancel = () => {
+    onChangePaymentMethodStateClear();
+    window.scrollTo(0, 0);
+  };
+
   const contentEl =
     cards.length === 0 ? (
       <AddingCard
@@ -62,6 +67,10 @@ const PaymentInformation: FC<PaymentInformationProps> = (props) => {
             card={cards[0]}
             title=""
             onReplacePaymentMethod={onPaymentMethodChange}
+            styles={{
+              contentWrapper:
+                "billing-payment-information__payment-method-content-wrapper",
+            }}
           />
         </div>
       </div>
@@ -75,6 +84,7 @@ const PaymentInformation: FC<PaymentInformationProps> = (props) => {
         <ChangePaymentMethod
           className="billing-payment-information__change-payment-method-wrapper"
           data={changePaymentMethodState}
+          onCancel={isMobileView ? handlePaymentMethodChangeCancel : undefined}
         />
       )}
       {shouldShowModal && (

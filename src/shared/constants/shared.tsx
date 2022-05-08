@@ -70,3 +70,5 @@ export enum SharePopupVariant {
   bottomLeft,
   topCenter,
 }
+
+export const DAYS_TILL_REMOVAL_FROM_COMMON_AFTER_CANCELING = 16;

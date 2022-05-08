@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import {
@@ -7,6 +7,7 @@ import {
   getUserSubscriptions,
 } from "@/containers/Common/store/actions";
 import {
+  Common,
   Payment,
   PaymentStatus,
   Subscription,
@@ -28,14 +29,15 @@ export interface SubscriptionsState {
 export interface CommonNamesState {
   loading: boolean;
   fetched: boolean;
-  data: Record<string, string>;
+  data: Common[];
 }
 
 interface Return {
   loading: boolean;
   contributions: (Payment | Subscription)[];
   subscriptions: Subscription[];
-  commonNames: CommonNamesState["data"];
+  commons: CommonNamesState["data"];
+  updateSubscription: (subscription: Subscription) => void;
 }
 
 const useUserContributions = (): Return => {
@@ -56,7 +58,7 @@ const useUserContributions = (): Return => {
   const [commonNamesState, setCommonNamesState] = useState<CommonNamesState>({
     loading: false,
     fetched: false,
-    data: {},
+    data: [],
   });
   const user = useSelector(selectUser());
   const isLoading = !paymentsState.fetched || !subscriptionsState.fetched;
@@ -79,19 +81,19 @@ const useUserContributions = (): Return => {
       return bDate.seconds - aDate.seconds;
     });
   }, [isLoading, paymentsState.data, subscriptionsState.data]);
-  const commonNames = useMemo<Return["commonNames"]>(
-    () => ({
-      ...commonNamesState.data,
-      ...subscriptionsState.data.reduce(
-        (acc, item) => ({
-          ...acc,
-          [item.metadata.common.id]: item.metadata.common.name,
-        }),
-        {}
-      ),
-    }),
-    [subscriptionsState.data, commonNamesState.data]
-  );
+
+  const updateSubscription = useCallback((subscription: Subscription) => {
+    setSubscriptionsState((nextState) => {
+      const nextData = nextState.data.map((item) =>
+        item.id === subscription.id ? { ...subscription } : item
+      );
+
+      return {
+        ...nextState,
+        data: nextData,
+      };
+    });
+  }, []);
 
   useEffect(() => {
     if (paymentsState.loading || paymentsState.fetched || !user?.uid) {
@@ -126,6 +128,7 @@ const useUserContributions = (): Return => {
   useEffect(() => {
     if (
       !paymentsState.fetched ||
+      !subscriptionsState.fetched ||
       commonNamesState.loading ||
       commonNamesState.fetched ||
       !user?.uid
@@ -133,7 +136,10 @@ const useUserContributions = (): Return => {
       return;
     }
 
-    if (paymentsState.data.length === 0) {
+    if (
+      paymentsState.data.length === 0 &&
+      subscriptionsState.data.length === 0
+    ) {
       setCommonNamesState((nextState) => ({
         ...nextState,
         fetched: true,
@@ -147,25 +153,21 @@ const useUserContributions = (): Return => {
       loading: true,
     }));
 
-    const commonIds = paymentsState.data
-      .map((item) => item.commonId)
-      .filter((item): item is string => Boolean(item));
+    const commonIdsSet = new Set(
+      [
+        ...paymentsState.data.map((item) => item.commonId),
+        ...subscriptionsState.data.map((item) => item.metadata.common.id),
+      ].filter((item): item is string => Boolean(item))
+    );
 
     dispatch(
       getCommonsListByIds.request({
-        payload: commonIds,
+        payload: Array.from(commonIdsSet),
         callback: (error, commons) => {
           setCommonNamesState({
             loading: false,
             fetched: true,
-            data:
-              commons?.reduce(
-                (acc, common) => ({
-                  ...acc,
-                  [common.id]: common.name,
-                }),
-                {}
-              ) || {},
+            data: commons || [],
           });
         },
       })
@@ -174,6 +176,8 @@ const useUserContributions = (): Return => {
     dispatch,
     paymentsState.fetched,
     paymentsState.data,
+    subscriptionsState.fetched,
+    subscriptionsState.data,
     commonNamesState,
     user,
   ]);
@@ -209,7 +213,8 @@ const useUserContributions = (): Return => {
     loading: isLoading || !commonNamesState.fetched,
     subscriptions: subscriptionsState.data,
     contributions,
-    commonNames,
+    commons: commonNamesState.data,
+    updateSubscription,
   };
 };
 

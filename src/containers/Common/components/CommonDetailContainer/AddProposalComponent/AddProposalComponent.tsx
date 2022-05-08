@@ -83,18 +83,19 @@ export const AddProposalComponent = ({
     }
   }, [createdProposal, getProposalDetail, onClose]);
 
-  const confirmProposal = useCallback(() => {
+  const confirmProposal = useCallback((fundingRequest: CreateFundingRequestProposalPayload) => {
     changeCreationProposalStep(AddProposalSteps.LOADER);
     fundingRequest.links = fundingRequest.links?.filter((link) => link.title && link.value);
     fundingRequest.amount = fundingRequest.amount * 100;
     onProposalAdd(fundingRequest, changeCreationProposalStep);
-  }, [onProposalAdd, fundingRequest]);
+  }, [onProposalAdd]);
   
   const saveProposalState = useCallback(
     (payload: Partial<CreateFundingRequestProposalPayload>) => {
-      setFundingRequest({ ...fundingRequest, ...payload });
+      const fundingRequestData = { ...fundingRequest, ...payload };
+      setFundingRequest(fundingRequestData);
       if (!payload.amount) {
-        confirmProposal();
+        confirmProposal(fundingRequestData);
       } else {
         changeCreationProposalStep(AddProposalSteps.CONFIRM);
       }
@@ -127,7 +128,7 @@ export const AddProposalComponent = ({
       case AddProposalSteps.BANK_DETAILS:
         return <AddBankDetails onBankDetails={onBankDetails} />;
       case AddProposalSteps.CONFIRM:
-        return <AddProposalConfirm onConfirm={confirmProposal} />;
+        return <AddProposalConfirm onConfirm={() => confirmProposal(fundingRequest)} />;
       case AddProposalSteps.LOADER:
         return <AddProposalLoader />;
       case AddProposalSteps.SUCCESS:
@@ -157,6 +158,7 @@ export const AddProposalComponent = ({
     handleProposalCreatedSuccess,
     common,
     onClose,
+    fundingRequest,
   ]);
 
   useEffect(() => {
