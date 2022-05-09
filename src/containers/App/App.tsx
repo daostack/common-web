@@ -5,7 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import PrivateRoute from "./PrivateRoute";
 import { Content, NotFound, Footer, Header } from "@/shared/components";
 import { NotificationProvider } from "@/shared/components/Notification";
-import { CommonContainer } from "../Common";
+import {
+  CommonContainer,
+  ProposalContainer,
+  DiscussionContainer,
+  DiscussionMessageContainer,
+} from "../Common";
 import { LandingContainer } from "../Landing";
 import {
   ROUTE_PATHS,
@@ -59,6 +64,9 @@ const App = () => {
           <Switch>
             <Route path="/" exact component={LandingContainer} />
             <Route path={ROUTE_PATHS.COMMON_LIST} component={CommonContainer} />
+            <Route path={ROUTE_PATHS.PROPOSAL_DETAIL} component={ProposalContainer} />
+            <Route path={ROUTE_PATHS.DISCUSSION_DETAIL} component={DiscussionContainer} />
+            <Route path={ROUTE_PATHS.DISCUSSION_MESSAGE} component={DiscussionMessageContainer} />
             <PrivateRoute
               path={ROUTE_PATHS.MY_ACCOUNT}
               component={MyAccountContainer}

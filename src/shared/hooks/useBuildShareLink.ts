@@ -35,12 +35,12 @@ const getLinkMetaData = ( //FIXME
       return (
         {
           link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.Common}/${elem.id}`,
-          socialTitle: elem.name,
+          socialTitle: elem.name || "",
           socialDescription: [
               elem.metadata.byline || "",
               "Download the Common app to join now."
             ].filter(Boolean).join(". "),
-          socialImageLink: elem.image,
+          socialImageLink: elem.image || "",
         }
       );
     case DynamicLinkType.Proposal:
@@ -60,8 +60,8 @@ const getLinkMetaData = ( //FIXME
       return (
         {
           link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.Discussion}/${elem.id}`,
-          socialTitle: elem.title,
-          socialDescription: elem.description,
+          socialTitle: elem.title || "",
+          socialDescription: elem.description || "",
           socialImageLink: "/assets/images/join.jpg", //FIXME
         }
       );
@@ -71,8 +71,8 @@ const getLinkMetaData = ( //FIXME
       return (
         {
           link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.DiscussionMessage}/${elem.id}`,
-          socialTitle: `${elem.flag} discussion's message`,
-          socialDescription: elem.text,
+          socialTitle: `${elem.flag || ""} discussion's message`,
+          socialDescription: elem.text || "",
           socialImageLink: "/assets/images/join.jpg", //FIXME
         }
       );
@@ -124,14 +124,20 @@ const useBuildShareLink = (
         },
       })
     );
-  }, [linkURL, isLoading, dispatch, linkKey, elem]);
+  }, [
+    linkURL,
+    isLoading,
+    dispatch,
+    linkKey,
+    linkMetaData
+  ]);
 
   useEffect(() => {
     if (isLoading || !linkURL)
       return;
 
     setLinkURL(linkURL);
-  }, [isLoading, linkURL]);
+  }, [isLoading, linkURL, setLinkURL]);
 
   return { handleOpen };
 };

@@ -25,3 +25,5 @@ export const selectCurrentProposal = () =>
   createSelector(selectCommons, (state) => state.currentProposal);
 export const selectUserProposalList = () =>
   createSelector(selectCommons, (state) => state.userProposals);
+export const selectCommonActiveTab = () =>
+  createSelector(selectCommons, (state) => state.activeTab);

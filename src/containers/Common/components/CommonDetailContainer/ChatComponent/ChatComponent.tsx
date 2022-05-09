@@ -22,6 +22,7 @@ interface ChatComponentInterface {
   isJoiningPending?: boolean;
   isAuthorized?: boolean;
   sendMessage?: (text: string) => void;
+  highlightedMessageId?: string | null;
 }
 
 function groupday(acc: any, currentValue: DiscussionMessage): Messages {
@@ -54,6 +55,7 @@ export default function ChatComponent({
   isJoiningPending,
   isAuthorized,
   sendMessage,
+  highlightedMessageId,
 }: ChatComponentInterface) {
   const screenSize = useSelector(getScreenSize());
   const [message, setMessage] = useState("");
@@ -74,7 +76,13 @@ export default function ChatComponent({
               </div>
               <div className="message-list">
                 {messages[Number(day)].map((m) => {
-                  return <ChatMessage key={m.id} disscussionMessage={m} />;
+                  return (
+                    <ChatMessage
+                      key={m.id}
+                      disscussionMessage={m}
+                      highlighted={m.id === highlightedMessageId}
+                    />
+                  );
                 })}
               </div>
             </div>

@@ -54,17 +54,6 @@
       .share-modal_title {
         font-size: $small;
       }
-
-      .share-modal_copy-link {
-        width: 80%;
-        .copy-link-field {
-          padding: 0.2rem 0.7rem 0.5rem 0.5rem;
-          max-height: 15px;
-          white-space: nowrap;
-          overflow-x: scroll;
-          overflow-y: hidden;
-        }
-      }
     }
   }
 }

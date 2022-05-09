@@ -15,6 +15,7 @@ const initialState: CommonsStateType = {
   currentDiscussion: null,
   currentProposal: null,
   cards: [],
+  activeTab: null,
 };
 
 type Action = ActionType<typeof actions>;
@@ -134,6 +135,16 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       nextState.commons = nextState.commons.filter(
         (common) => common.id !== action.payload
       );
+    })
+  )
+  .handleAction(actions.setCommonActiveTab, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.activeTab = action.payload;
+    })
+  )
+  .handleAction(actions.clearCommonActiveTab, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.activeTab = null;
     })
   );
 

@@ -21,3 +21,7 @@ export interface Discussion {
   isLoaded?: boolean;
   description: string;
 }
+
+export interface DiscussionWithHighlightedMessage extends Discussion {
+  highlightedMessageId: string;
+}

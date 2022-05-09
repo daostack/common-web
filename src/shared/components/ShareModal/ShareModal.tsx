@@ -80,10 +80,13 @@ const ShareModal: FC<PropsWithChildren<ShareModalProps>> = (
                   isLoading={isLoading}
                   linkText={linkText}
                 />
-                <div className="share-modal_copy-link">
-                  Copy
-                  <p className="copy-link-field">{sourceUrl}</p>
-                </div>
+                {
+                  !isMobileModal
+                  && <div className="share-modal_copy-link">
+                    Copy
+                    <p className="copy-link-field">{sourceUrl}</p>
+                  </div>
+                }
               </div>
             )
         )
