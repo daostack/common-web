@@ -124,6 +124,9 @@ export const AddBankDetails = (props: IProps) => {
   } = props;
   const dispatch = useDispatch();
   const formRef = useRef<FormikProps<FormValues>>(null);
+  const [initialValues, setInitialValues] = useState<FormValues>(() =>
+    getInitialValues(initialBankAccountDetails)
+  );
   const [photoIdFile, setPhotoIdFile] = useState<File | PaymeDocument | null>(
     () =>
       initialBankAccountDetails?.identificationDocs.find(
@@ -214,6 +217,8 @@ export const AddBankDetails = (props: IProps) => {
         return;
       }
 
+      setInitialValues(values);
+
       const bankAccountDetails: BankAccountDetails = {
         bankName: BANKS_OPTIONS.find((bank) => bank.value === values.bankCode)
           ?.name!, // TODO: maybe save it while selecting?
@@ -276,6 +281,7 @@ export const AddBankDetails = (props: IProps) => {
 
       setSending(true);
       setError("");
+      setInitialValues(values);
 
       const payload: Partial<UpdateBankAccountDetailsData> = {
         bankName,
@@ -322,7 +328,7 @@ export const AddBankDetails = (props: IProps) => {
           </div>
         ) : (
           <Formik
-            initialValues={getInitialValues(initialBankAccountDetails)}
+            initialValues={initialValues}
             onSubmit={isEditing ? handleDetailsUpdate : handleSubmit}
             innerRef={formRef}
             validationSchema={
