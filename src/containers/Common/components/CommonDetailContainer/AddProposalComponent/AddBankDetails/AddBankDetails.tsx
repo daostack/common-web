@@ -3,9 +3,14 @@ import { Form, Formik, FormikConfig, FormikProps } from "formik";
 import { useDispatch } from "react-redux";
 import moment from "moment";
 import classNames from "classnames";
-import { DatePicker } from "@/shared/components";
+import {
+  Button,
+  ButtonVariant,
+  DatePicker,
+  DropdownOption,
+  Loader,
+} from "@/shared/components";
 import { Dropdown, TextField } from "@/shared/components/Form/Formik";
-import { Button, DropdownOption, Loader } from "@/shared/components";
 import {
   addBankDetails,
   updateBankDetails,
@@ -37,6 +42,7 @@ interface IProps {
   title?: string | null;
   onBankDetails: (data: BankAccountDetails) => void;
   initialBankAccountDetails?: BankAccountDetails | null;
+  onCancel?: () => void;
 }
 
 interface FormValues {
@@ -114,6 +120,7 @@ export const AddBankDetails = (props: IProps) => {
     title,
     onBankDetails,
     initialBankAccountDetails,
+    onCancel,
   } = props;
   const dispatch = useDispatch();
   const formRef = useRef<FormikProps<FormValues>>(null);
@@ -533,6 +540,15 @@ export const AddBankDetails = (props: IProps) => {
                   >
                     Save
                   </Button>
+                  {onCancel && (
+                    <Button
+                      onClick={onCancel}
+                      disabled={isSubmitButtonDisabled}
+                      variant={ButtonVariant.Secondary}
+                    >
+                      Cancel
+                    </Button>
+                  )}
                   {error && <div className="error">{error}</div>}
                 </Form>
               );

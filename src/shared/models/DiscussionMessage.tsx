@@ -15,6 +15,7 @@ export enum DiscussionMessageFlag {
 export interface DiscussionMessage {
   id: string;
   discussionId: string;
+  commonId: string;
   ownerId: string;
   text: string;
   type: DiscussionMessageType;

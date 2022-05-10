@@ -19,6 +19,8 @@ import {
 } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
+  createIdsChunk,
+  flatChunk,
   tokenHandler,
   transformFirebaseDataList,
   transformFirebaseDataSingle,
@@ -126,17 +128,7 @@ export async function fetchCommonDetail(id: string): Promise<Common> {
 }
 
 export async function fetchOwners(ownerids: string[]) {
-  const idsChunks = ownerids.reduce((resultArray: any, item, index) => {
-    const chunkIndex = Math.floor(index / 10);
-
-    if (!resultArray[chunkIndex]) {
-      resultArray[chunkIndex] = [];
-    }
-
-    resultArray[chunkIndex].push(item);
-
-    return resultArray;
-  }, []);
+  const idsChunks = createIdsChunk(ownerids);
 
   const users = await Promise.all(
     idsChunks.map((ids: string[]) =>
@@ -148,28 +140,61 @@ export async function fetchOwners(ownerids: string[]) {
     )
   );
 
-  const data = (users as unknown[])
-    .map((d: any) => transformFirebaseDataList<User>(d))
-    .reduce((resultArray: any, item) => {
-      resultArray.push(...item);
-      return resultArray;
-    }, []);
+  const data = flatChunk<User>(users);
 
   return data;
 }
 
+export async function fetchMessagesForCommonList(cIds: string[]) {
+  const idsChunks = createIdsChunk(cIds);
+
+  const messages = await Promise.all(
+    idsChunks.map((ids: string[]) =>
+      firebase
+        .firestore()
+        .collection(Collection.DiscussionMessage)
+        .where("commonId", "in", ids)
+        .get()
+    )
+  );
+
+  return flatChunk<DiscussionMessage>(messages);
+}
+
+export async function fetchProposalsForCommonList(cIds: string[]) {
+  const idsChunks = createIdsChunk(cIds);
+
+  const proposals = await Promise.all(
+    idsChunks.map((ids: string[]) =>
+      firebase
+        .firestore()
+        .collection(Collection.Proposals)
+        .where("commonId", "in", ids)
+        .get()
+    )
+  );
+
+  return flatChunk<Proposal>(proposals);
+}
+
+export async function fetchDiscussionForCommonList(cIds: string[]) {
+  const idsChunks = createIdsChunk(cIds);
+
+  const discussions = await Promise.all(
+    idsChunks.map((ids: string[]) =>
+      firebase
+        .firestore()
+        .collection(Collection.Discussion)
+        .where("commonId", "in", ids)
+        .get()
+    )
+  );
+
+  return flatChunk<Discussion>(discussions);
+}
+
 export async function fetchDiscussionsMessages(dIds: string[]) {
-  const idsChunks = dIds.reduce((resultArray: any, item, index) => {
-    const chunkIndex = Math.floor(index / 10);
-
-    if (!resultArray[chunkIndex]) {
-      resultArray[chunkIndex] = [];
-    }
-
-    resultArray[chunkIndex].push(item);
-
-    return resultArray;
-  }, []);
+  const idsChunks = createIdsChunk(dIds);
 
   const discussions = await Promise.all(
     idsChunks.map((ids: string[]) =>
@@ -180,16 +205,10 @@ export async function fetchDiscussionsMessages(dIds: string[]) {
         .get()
     )
   );
-  const data = (discussions as unknown[])
-    .map((d: any) => transformFirebaseDataList<DiscussionMessage>(d))
-    .reduce((resultArray: any, item) => {
-      resultArray.push(...item);
-      return resultArray;
-    }, [])
-    .sort(
-      (m: DiscussionMessage, mP: DiscussionMessage) =>
-        m.createTime?.seconds - mP.createTime?.seconds
-    );
+  const data = flatChunk<DiscussionMessage>(discussions).sort(
+    (m: DiscussionMessage, mP: DiscussionMessage) =>
+      m.createTime?.seconds - mP.createTime?.seconds
+  );
 
   return data;
 }
@@ -503,7 +522,10 @@ export function subscribeToNotification(
       switch (change.type) {
         case "added":
         case "modified":
-          return callback(change.doc.data() as NotificationItem);
+          return callback({
+            ...change.doc.data(),
+            id: change.doc.id,
+          } as NotificationItem);
       }
     });
   });

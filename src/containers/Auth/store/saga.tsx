@@ -232,6 +232,7 @@ const updateUserData = async (user: User) => {
         lastName: user.lastName,
         email: user.email,
         photoURL: user.photo,
+        intro: user.intro,
         displayName: `${user.firstName} ${user.lastName}`,
         country: user.country,
       })
@@ -464,7 +465,7 @@ function* authSagas() {
 
             store.dispatch(showNotification(notification));
 
-            seenNotification(data.eventId);
+            seenNotification(data.id);
           }
 
           break;

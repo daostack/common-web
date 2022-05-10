@@ -5,7 +5,7 @@ export interface NotificationItem {
   eventId: string;
   eventObjectId: string;
   eventType: EventTypeState;
-
+  id: string;
   userFilter: Array<string>;
   seen: Array<string>;
 }

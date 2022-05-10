@@ -3,7 +3,7 @@ import { DEFAULT_PANEL_ID_TEMPLATE } from "./constants";
 
 export interface TabContextValue {
   value?: unknown;
-  onChange: (value: unknown) => void;
+  onChange: (value: unknown, itemId: string) => void;
   panelIdTemplate?: string;
 }
 
