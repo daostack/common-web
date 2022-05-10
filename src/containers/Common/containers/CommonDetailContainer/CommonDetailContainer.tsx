@@ -209,36 +209,6 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     onOpenJoinModal(LoginModalType.RequestToJoin);
   }, [onOpenJoinModal]);
 
-  useEffect(() => {
-    if (!activeTab)
-      return;
-
-    setTab(activeTab);
-
-    if (!props.commonId) {
-      return (
-        () => {
-          dispatch(clearCommonActiveTab())
-        }
-      );
-    }
-  }, [dispatch, activeTab, props.commonId]);
-
-  useEffect(() => {
-    dispatch(loadUserCards.request({ callback: () => true }));
-    dispatch(
-      getCommonDetail.request({
-        payload: id,
-        callback: () => {
-          setIsCommonFetched(true);
-        },
-      })
-    );
-    return () => {
-      dispatch(closeCurrentCommon());
-    };
-  }, [dispatch, id]);
-
   const changeTabHandler = useCallback(
     (tab: Tabs) => {
       switch (tab) {
@@ -257,10 +227,47 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
         default:
           break;
       }
+
       setTab(tab);
     },
     [dispatch, isDiscussionsLoaded, isProposalsLoaded]
   );
+
+  useEffect(() => {
+    if (!activeTab || !isCommonFetched)
+      return;
+
+    changeTabHandler(activeTab);
+
+    if (!props.commonId) {
+      return (
+        () => {
+          dispatch(clearCommonActiveTab())
+        }
+      );
+    }
+  }, [
+    dispatch,
+    activeTab,
+    props.commonId,
+    changeTabHandler,
+    isCommonFetched
+  ]);
+
+  useEffect(() => {
+    dispatch(loadUserCards.request({ callback: () => true }));
+    dispatch(
+      getCommonDetail.request({
+        payload: id,
+        callback: () => {
+          setIsCommonFetched(true);
+        },
+      })
+    );
+    return () => {
+      dispatch(closeCurrentCommon());
+    };
+  }, [dispatch, id]);
 
   const getDisscussionDetail = useCallback(
     (payload: Discussion | DiscussionWithHighlightedMessage) => {
@@ -314,7 +321,6 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     onClose();
     dispatch(clearCurrentDiscussion());
     dispatch(clearCurrentProposal());
-    dispatch(loadCommonDiscussionList.request());
 
     if (props.commonId) {
       dispatch(setCommonActiveTab(tab));
@@ -322,6 +328,8 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
       history.push(
         ROUTE_PATHS.COMMON_DETAIL.replace(":id", props.commonId)
       );
+    } else {
+      dispatch(loadCommonDiscussionList.request());
     }
   }, [
     onClose,
