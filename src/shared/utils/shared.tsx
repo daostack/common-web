@@ -332,10 +332,22 @@ export function getLastActivity(data: Common) {
     if (d.createdAt) {
       activities.push(d.createdAt?.toDate().getTime());
     }
+    if (d.updatedAt) {
+      activities.push(d.updatedAt?.toDate().getTime());
+    }
+    if (d.createTime) {
+      activities.push(d.createTime?.toDate().getTime());
+    }
   });
   proposals?.forEach((d) => {
     if (d.createdAt) {
       activities.push(d.createdAt?.toDate().getTime());
+    }
+    if (d.updatedAt) {
+      activities.push(d.updatedAt?.toDate().getTime());
+    }
+    if (d.createTime) {
+      activities.push(d.createTime?.toDate().getTime());
     }
   });
   messages?.forEach((d) => {
@@ -344,7 +356,7 @@ export function getLastActivity(data: Common) {
     }
   });
 
-  const last_activity = Math.max.apply(null, activities);
+  const lastActivity = Math.max.apply(null, activities);
 
-  return timeSince(new Date(last_activity));
+  return timeSince(new Date(lastActivity));
 }
