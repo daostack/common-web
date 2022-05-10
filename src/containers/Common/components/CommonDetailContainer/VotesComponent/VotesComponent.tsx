@@ -78,7 +78,7 @@ export default function VotesComponent(
                 className="disabled compact compact-card"
               >
                 <img
-                  src="/icons/votes/approved.svg"
+                  src="/icons/votes/approved-rounded.svg"
                   alt="vote type symbol"
                 />
               </button>
@@ -91,7 +91,7 @@ export default function VotesComponent(
                 className="disabled compact compact-card"
               >
                 <img
-                  src="/icons/votes/abstained.svg"
+                  src="/icons/votes/abstained-rounded.svg"
                   alt="vote type symbol"
                 />
               </button>
@@ -104,7 +104,7 @@ export default function VotesComponent(
                 className="disabled compact compact-card"
               >
                 <img
-                  src="/icons/votes/rejected.svg"
+                  src="/icons/votes/rejected-rounded.svg"
                   alt="vote type symbol"
                 />
               </button>
