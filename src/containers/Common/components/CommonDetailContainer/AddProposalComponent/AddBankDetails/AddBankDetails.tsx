@@ -49,7 +49,7 @@ interface FormValues {
   idNumber: string;
   socialIdIssueDate: Date;
   birthdate: Date;
-  gender: Gender;
+  gender?: Gender;
   phoneNumber: string;
   email: string;
   accountNumber: number | undefined;
@@ -67,7 +67,6 @@ const INITIAL_VALUES: FormValues = {
   idNumber: "",
   socialIdIssueDate: new Date(),
   birthdate: new Date(),
-  gender: Gender.None,
   phoneNumber: "",
   email: "",
   accountNumber: undefined,
@@ -193,7 +192,7 @@ export const AddBankDetails = (props: IProps) => {
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     async (values) => {
-      if (!photoIdFile || !bankLetterFile) {
+      if (!photoIdFile || !bankLetterFile || !values.gender) {
         return;
       }
 
