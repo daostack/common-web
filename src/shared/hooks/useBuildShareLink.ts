@@ -24,7 +24,7 @@ interface LinkMetaData {
   socialImageLink: string;
 }
 
-const getLinkMetaData = ( //FIXME
+const getLinkMetaData = ( //FIXME: need to add an appropriate social images
   linkType: DynamicLinkType,
   elem: Common | Proposal | Discussion | DiscussionMessage,
 ): LinkMetaData | null => {
@@ -51,7 +51,7 @@ const getLinkMetaData = ( //FIXME
           link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.Proposal}/${elem.id}`,
           socialTitle: elem.title || elem.description.title || "",
           socialDescription: elem.description.description || "",
-          socialImageLink: "/assets/images/join.jpg", //FIXME
+          socialImageLink: "", //FIXME
         }
       );
     case DynamicLinkType.Discussion:
@@ -62,7 +62,7 @@ const getLinkMetaData = ( //FIXME
           link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.Discussion}/${elem.id}`,
           socialTitle: elem.title || "",
           socialDescription: elem.description || "",
-          socialImageLink: "/assets/images/join.jpg", //FIXME
+          socialImageLink: "", //FIXME
         }
       );
     case DynamicLinkType.DiscussionMessage:
@@ -73,7 +73,7 @@ const getLinkMetaData = ( //FIXME
           link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.DiscussionMessage}/${elem.id}`,
           socialTitle: `${elem.flag || ""} discussion's message`,
           socialDescription: elem.text || "",
-          socialImageLink: "/assets/images/join.jpg", //FIXME
+          socialImageLink: "", //FIXME
         }
       );
     default:
