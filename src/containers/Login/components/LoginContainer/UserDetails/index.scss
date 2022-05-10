@@ -29,6 +29,12 @@
     }
   }
 
+  .user-details__avatar-loader {
+    align-self: center;
+    left: unset;
+    transform: unset;
+  }
+
   .avatar {
     position: relative;
     text-align: center;
