@@ -8,4 +8,5 @@ export interface SharedStateType {
   screenSize: ScreenSize;
   shareLinks: Record<string, string>;
   loadingShareLinks: Record<string, boolean>;
+  areReportsLoading: boolean;
 }

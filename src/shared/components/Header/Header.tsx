@@ -4,9 +4,15 @@ import { Link, NavLink, RouteProps, useHistory } from "react-router-dom";
 import classNames from "classnames";
 import { Routes } from "@/containers/MyAccount/components/Routes";
 import RightArrowIcon from "@/shared/icons/rightArrow.icon";
-import { UserAvatar } from "../../../shared/components";
-import { useAnyMandatoryRoles, useMatchRoute, useOutsideClick } from "../../../shared/hooks";
-import { UserRole } from "../../../shared/models";
+import { Loader, UserAvatar } from "@/shared/components";
+import {
+  useAnyMandatoryRoles,
+  useMatchRoute,
+  useOutsideClick,
+} from "@/shared/hooks";
+import { UserRole } from "@/shared/models";
+import { setAreReportsLoading } from "@/shared/store/actions";
+import { selectAreReportsLoading } from "@/shared/store/selectors";
 import { ApiEndpoint, Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
@@ -40,6 +46,7 @@ const Header = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
+  const areReportsLoading = useSelector(selectAreReportsLoading());
   const [showMenu, setShowMenu] = useState(false);
   const isAuthorized = useSelector(authentificated());
   const user = useSelector(selectUser());
@@ -59,18 +66,22 @@ const Header = () => {
     ROUTE_PATHS.MY_ACCOUNT,
     NON_EXACT_MATCH_ROUTE_PROPS
   );
-  const [showAccountLinks, setShowAccountLinks] = useState<boolean>(isMyAccountRoute);
+  const [showAccountLinks, setShowAccountLinks] = useState<boolean>(
+    isMyAccountRoute
+  );
 
   useEffect(() => {
     setShowAccountLinks(isMyAccountRoute);
-  }, [showMenu, isMyAccountRoute])
+  }, [showMenu, isMyAccountRoute]);
 
   const handleOpen = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: true }));
   }, [dispatch]);
 
-  const handleReportsDownload = () => {
-    saveByURL(ApiEndpoint.GetReports, "reports.zip");
+  const handleReportsDownload = async () => {
+    dispatch(setAreReportsLoading(true));
+    await saveByURL(ApiEndpoint.GetReports, "reports.zip");
+    dispatch(setAreReportsLoading(false));
   };
 
   React.useEffect(() => {
@@ -103,16 +114,13 @@ const Header = () => {
           <div ref={myAccountBtnRef} className="my-account-button">
             My Account
             <RightArrowIcon
-              className={classNames(
-                "my-account-button__arrow-icon",
-                { "my-account-button__arrow-icon--opened": showAccountLinks }
-              )}
+              className={classNames("my-account-button__arrow-icon", {
+                "my-account-button__arrow-icon--opened": showAccountLinks,
+              })}
             />
           </div>
 
-          {showAccountLinks && (
-            <Routes />
-          )}
+          {showAccountLinks && <Routes />}
         </button>
       )}
 
@@ -135,7 +143,16 @@ const Header = () => {
       {isAuthorized && isMobile() && (
         <>
           {hasAdminAccess && (
-            <button onClick={handleReportsDownload}>Download Reports</button>
+            <button
+              className="header-wrapper__mobile-link"
+              onClick={handleReportsDownload}
+              disabled={areReportsLoading}
+            >
+              Download Reports
+              {areReportsLoading && (
+                <Loader className="header-wrapper__link-loader" />
+              )}
+            </button>
           )}
           <button onClick={logOutUser}>Log out</button>
         </>

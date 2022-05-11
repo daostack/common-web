@@ -3,7 +3,11 @@ import { Link } from "react-router-dom";
 
 import { ROUTE_PATHS } from "../../../../../shared/constants";
 import { Common } from "../../../../../shared/models";
-import { containsHebrew, formatPrice } from "../../../../../shared/utils";
+import {
+  containsHebrew,
+  formatPrice,
+  getLastActivity,
+} from "../../../../../shared/utils";
 import "./index.scss";
 
 interface CommonListItemInterface {
@@ -39,6 +43,9 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
                 {common.byline}
               </div>
             )}
+            <div className="last-activity">
+              Active {getLastActivity(common)}
+            </div>
           </div>
         </div>
         <div className="additional-information">

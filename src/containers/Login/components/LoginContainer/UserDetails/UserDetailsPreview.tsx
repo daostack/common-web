@@ -14,9 +14,21 @@ const UserDetailsPreview: FC<UserDetailsPreviewProps> = (props) => {
 
   return (
     <div className="user-details-preview">
-      <p className="user-details-preview__name">{getUserName(user)}</p>
-      {user.email && <p className="user-details-preview__info">{user.email}</p>}
-      {country && <p className="user-details-preview__info">{country.name}</p>}
+      <div>
+        <p className="user-details-preview__name">{getUserName(user)}</p>
+        {user.email && (
+          <p className="user-details-preview__info">{user.email}</p>
+        )}
+        {country && (
+          <p className="user-details-preview__info">{country.name}</p>
+        )}
+      </div>
+      {user.intro && (
+        <div className="user-details-preview__intro-wrapper">
+          <h4 className="user-details-preview__intro-title">Intro</h4>
+          <p className="user-details-preview__intro-content">{user.intro}</p>
+        </div>
+      )}
     </div>
   );
 };

@@ -115,6 +115,7 @@ export function* getCommonsList(): Generator {
     yield put(actions.getCommonsList.success(data));
     yield put(stopLoading());
   } catch (e) {
+    console.error(e);
     yield put(actions.getCommonsList.failure(e));
     yield put(stopLoading());
   }
@@ -349,6 +350,7 @@ export function* createDiscussionSaga(
 
         store.dispatch(actions.setDiscussion(ds));
         store.dispatch(actions.loadCommonDiscussionList.request());
+        store.dispatch(actions.getCommonsList.request());
       }
     )) as () => void;
 
@@ -378,6 +380,7 @@ export function* addMessageToDiscussionSaga(
             m.createTime?.seconds - mP.createTime?.seconds
         );
         store.dispatch(actions.loadDisscussionDetail.request(discussion));
+        store.dispatch(actions.getCommonsList.request());
       }
     );
 
@@ -408,6 +411,7 @@ export function* addMessageToProposalSaga(
         );
 
         store.dispatch(actions.loadProposalDetail.request(proposal));
+        store.dispatch(actions.getCommonsList.request());
       }
     );
 
@@ -601,6 +605,7 @@ export function* createFundingProposalSaga(
         store.dispatch(actions.loadProposalList.request());
         store.dispatch(stopLoading());
         action.payload.callback(AddProposalSteps.SUCCESS);
+        store.dispatch(actions.getCommonsList.request());
       }
     );
 

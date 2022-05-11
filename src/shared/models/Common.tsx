@@ -89,6 +89,8 @@ export interface Common {
   readonly governanceId: string;
 
   state: CommonState;
+
+  score: number;
 }
 
 /**
