@@ -13,6 +13,7 @@ export interface User {
   email?: string;
   photo?: string;
   photoURL?: string;
+  intro?: string;
   createdAt?: Date;
   lastLoginAt?: Date;
   tokens?: string[];

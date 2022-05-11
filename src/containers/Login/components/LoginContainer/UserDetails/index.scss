@@ -29,6 +29,12 @@
     }
   }
 
+  .user-details__avatar-loader {
+    align-self: center;
+    left: unset;
+    transform: unset;
+  }
+
   .avatar {
     position: relative;
     text-align: center;
@@ -187,5 +193,26 @@
     &:last-child {
       margin: 0;
     }
+  }
+
+  .user-details-preview__intro-wrapper {
+    max-width: 20.5rem;
+    margin-top: 2.5rem;
+
+    @include big-phone {
+      max-width: unset;
+      margin-top: 1.5rem;
+    }
+  }
+
+  .user-details-preview__intro-title {
+    margin: 0 0 0.5rem;
+    font-family: NunitoSans, sans-serif;
+    font-size: $moderate;
+  }
+
+  .user-details-preview__intro-content {
+    margin: 0;
+    font-size: $xsmall;
   }
 }

@@ -9,6 +9,9 @@ export const startLoading = createStandardAction(SharedActionTypes.START_LOADING
 export const stopLoading = createStandardAction(SharedActionTypes.STOP_LOADING)();
 export const showNotification = createStandardAction(SharedActionTypes.SHOW_NOTIFICATION)<Notification>();
 export const changeScreenSize = createStandardAction(SharedActionTypes.CHANGE_SCREEN_SIZE)<ScreenSize>();
+export const setAreReportsLoading = createStandardAction(
+  SharedActionTypes.SET_ARE_REPORTS_LOADING
+)<boolean>();
 
 export const buildShareLink = createAsyncAction(
   SharedActionTypes.BUILD_SHARE_LINK,
