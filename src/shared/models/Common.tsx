@@ -62,6 +62,7 @@ export interface Common {
   fundingGoalDeadline: number;
 
   metadata: Metadata;
+  score: number;
   active: boolean;
 }
 
