@@ -78,7 +78,7 @@ export interface Proposal {
 
   quietEndingPeriod: number;
 
-  updatedAt: Date;
+  updatedAt: Time;
   votes: Vote[];
   votesAgainst?: number;
   votesFor?: number;

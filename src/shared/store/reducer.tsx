@@ -15,6 +15,7 @@ const initialState: SharedStateType = {
     : ScreenSize.Mobile,
   shareLinks: {},
   loadingShareLinks: {},
+  areReportsLoading: false,
 };
 
 const reducer = createReducer<SharedStateType, Action>(initialState)
@@ -65,5 +66,11 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
         [payload.key]: false,
       };
     }),
+  )
+  .handleAction(actions.setAreReportsLoading, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.areReportsLoading = action.payload;
+    })
   );
+
 export { reducer as SharedReducer };
