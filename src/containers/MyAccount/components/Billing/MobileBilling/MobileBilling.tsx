@@ -33,6 +33,10 @@ const MobileBilling: FC<BillingProps> = (props) => {
     onActiveContributionSelect,
     onActiveSubscriptionUpdate,
   } = props;
+  const [
+    activeContributionTopOffset,
+    setActiveContributionTopOffset,
+  ] = useState<number>(0);
   const [tab, setTab] = useState(BillingTab.PaymentDetails);
   const commonId =
     activeContribution &&
@@ -54,15 +58,19 @@ const MobileBilling: FC<BillingProps> = (props) => {
   };
 
   const handleActiveContributionSelect = (
-    contribution: Payment | Subscription | null
+    contribution: Payment | Subscription | null,
+    elementTopOffset?: number
   ) => {
     onActiveContributionSelect(contribution);
+    setActiveContributionTopOffset((elementTopOffset || 0) - 250);
     window.scrollTo(0, 0);
   };
 
   const handleActiveItemBackClick = () => {
     onActiveContributionSelect(null);
-    window.scrollTo(0, 0);
+    setTimeout(() => {
+      window.scrollTo(0, activeContributionTopOffset);
+    }, 0);
   };
 
   const loaderEl = (

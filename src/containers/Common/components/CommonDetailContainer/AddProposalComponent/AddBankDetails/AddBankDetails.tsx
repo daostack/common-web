@@ -3,9 +3,14 @@ import { Form, Formik, FormikConfig, FormikProps } from "formik";
 import { useDispatch } from "react-redux";
 import moment from "moment";
 import classNames from "classnames";
-import { DatePicker } from "@/shared/components";
+import {
+  Button,
+  ButtonVariant,
+  DatePicker,
+  DropdownOption,
+  Loader,
+} from "@/shared/components";
 import { Dropdown, TextField } from "@/shared/components/Form/Formik";
-import { Button, DropdownOption, Loader } from "@/shared/components";
 import {
   addBankDetails,
   updateBankDetails,
@@ -37,13 +42,14 @@ interface IProps {
   title?: string | null;
   onBankDetails: (data: BankAccountDetails) => void;
   initialBankAccountDetails?: BankAccountDetails | null;
+  onCancel?: () => void;
 }
 
 interface FormValues {
   idNumber: string;
   socialIdIssueDate: Date;
   birthdate: Date;
-  gender: Gender;
+  gender?: Gender;
   phoneNumber: string;
   email: string;
   accountNumber: number | undefined;
@@ -61,7 +67,6 @@ const INITIAL_VALUES: FormValues = {
   idNumber: "",
   socialIdIssueDate: new Date(),
   birthdate: new Date(),
-  gender: Gender.None,
   phoneNumber: "",
   email: "",
   accountNumber: undefined,
@@ -114,9 +119,13 @@ export const AddBankDetails = (props: IProps) => {
     title,
     onBankDetails,
     initialBankAccountDetails,
+    onCancel,
   } = props;
   const dispatch = useDispatch();
   const formRef = useRef<FormikProps<FormValues>>(null);
+  const [initialValues, setInitialValues] = useState<FormValues>(() =>
+    getInitialValues(initialBankAccountDetails)
+  );
   const [photoIdFile, setPhotoIdFile] = useState<File | PaymeDocument | null>(
     () =>
       initialBankAccountDetails?.identificationDocs.find(
@@ -183,7 +192,7 @@ export const AddBankDetails = (props: IProps) => {
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     async (values) => {
-      if (!photoIdFile || !bankLetterFile) {
+      if (!photoIdFile || !bankLetterFile || !values.gender) {
         return;
       }
 
@@ -206,6 +215,8 @@ export const AddBankDetails = (props: IProps) => {
         setSending(false);
         return;
       }
+
+      setInitialValues(values);
 
       const bankAccountDetails: BankAccountDetails = {
         bankName: BANKS_OPTIONS.find((bank) => bank.value === values.bankCode)
@@ -269,6 +280,7 @@ export const AddBankDetails = (props: IProps) => {
 
       setSending(true);
       setError("");
+      setInitialValues(values);
 
       const payload: Partial<UpdateBankAccountDetailsData> = {
         bankName,
@@ -315,7 +327,7 @@ export const AddBankDetails = (props: IProps) => {
           </div>
         ) : (
           <Formik
-            initialValues={getInitialValues(initialBankAccountDetails)}
+            initialValues={initialValues}
             onSubmit={isEditing ? handleDetailsUpdate : handleSubmit}
             innerRef={formRef}
             validationSchema={
@@ -533,6 +545,15 @@ export const AddBankDetails = (props: IProps) => {
                   >
                     Save
                   </Button>
+                  {onCancel && (
+                    <Button
+                      onClick={onCancel}
+                      disabled={isSubmitButtonDisabled}
+                      variant={ButtonVariant.Secondary}
+                    >
+                      Cancel
+                    </Button>
+                  )}
                   {error && <div className="error">{error}</div>}
                 </Form>
               );

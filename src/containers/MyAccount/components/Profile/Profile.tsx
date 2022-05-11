@@ -84,6 +84,7 @@ export default function Profile() {
             customSaveButton
             isCountryDropdownFixed={false}
             isEditing={isEditing}
+            onLoading={setIsSubmitting}
             onSubmitting={handleSubmittingChange}
             styles={{
               avatarWrapper: "profile-wrapper__avatar-wrapper",

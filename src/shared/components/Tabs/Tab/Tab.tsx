@@ -18,8 +18,8 @@ const Tab: FC<TabProps> = (props) => {
   const labelId = getLabelId(panelId);
 
   const handleChange = useCallback(() => {
-    onChange(value);
-  }, [onChange, value]);
+    onChange(value, labelId);
+  }, [onChange, value, labelId]);
 
   const buttonClassName = classNames(
     "custom-tab",

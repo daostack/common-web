@@ -1,5 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { setAreReportsLoading } from "@/shared/store/actions";
+import { selectAreReportsLoading } from "@/shared/store/selectors";
 import {
   ApiEndpoint,
   COMMON_APP_APP_STORE_LINK,
@@ -9,7 +12,7 @@ import {
 } from "../../constants";
 import { useOutsideClick } from "../../hooks";
 
-import { UserAvatar } from "../../../shared/components";
+import { Loader, UserAvatar } from "../../../shared/components";
 import { User } from "../../../shared/models";
 import { getMobileOperatingSystem, getUserName, saveByURL } from "../../utils";
 
@@ -28,13 +31,21 @@ const Account = ({
   isTrusteeRoute,
   hasAdminAccess,
 }: AccountProps) => {
+  const dispatch = useDispatch();
   const history = useHistory();
   const [showMenu, setShowMenu] = useState(false);
   const wrapperRef = useRef(null);
   const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
+  const areReportsLoading = useSelector(selectAreReportsLoading());
 
-  const handleReportsDownload = () => {
-    saveByURL(ApiEndpoint.GetReports, "reports.zip");
+  const handleReportsDownload = async () => {
+    if (areReportsLoading) {
+      return;
+    }
+
+    dispatch(setAreReportsLoading(true));
+    await saveByURL(ApiEndpoint.GetReports, "reports.zip");
+    dispatch(setAreReportsLoading(false));
   };
 
   useEffect(() => {
@@ -46,7 +57,7 @@ const Account = ({
 
   const showMyAccount = () => {
     history.push(ROUTE_PATHS.MY_ACCOUNT_PROFILE);
-  }
+  };
 
   return (
     <div className="account-wrapper" onClick={() => setShowMenu(!showMenu)}>
@@ -64,7 +75,8 @@ const Account = ({
             <>
               <div
                 className="account-wrapper__menu-item"
-                onClick={showMyAccount}>
+                onClick={showMyAccount}
+              >
                 My Account
               </div>
               <div
@@ -93,6 +105,9 @@ const Account = ({
               onClick={handleReportsDownload}
             >
               Download Reports
+              {areReportsLoading && (
+                <Loader className="account-wrapper__menu-item-loader" />
+              )}
             </div>
           )}
           <div className="account-wrapper__menu-item" onClick={() => logOut()}>

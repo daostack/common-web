@@ -2,8 +2,9 @@ import millify from "millify";
 import moment, { Moment } from "moment";
 
 import { MobileOperatingSystem, BASE_URL } from "../constants";
-import { DateFormat, Proposal, Time, User } from "../models";
+import { Common, DateFormat, Proposal, Time, User } from "../models";
 import { CurrencySymbol } from "@/shared/models";
+import { transformFirebaseDataList } from "@/shared/utils/transformFirebaseDataToModel";
 
 interface FormatPriceOptions {
   shouldMillify?: boolean;
@@ -32,10 +33,11 @@ export const formatPrice = (
 
   const convertedPrice = price / 100;
 
-  return `${prefix}${shouldMillify
+  return `${prefix}${
+    shouldMillify
       ? millify(convertedPrice)
       : convertedPrice.toLocaleString("en-US")
-    }${bySubscription ? "/mo" : ""}`;
+  }${bySubscription ? "/mo" : ""}`;
 };
 
 export const formatDate = (
@@ -48,9 +50,12 @@ export const formatDate = (
  * @param {Time} time
  * @param {DateFormat} format the desired format
  */
-export const formatEpochTime = (time: Time, format: DateFormat = DateFormat.Long) => {
+export const formatEpochTime = (
+  time: Time,
+  format: DateFormat = DateFormat.Long
+) => {
   return moment.unix(time.seconds).local().format(format);
-}
+};
 
 export const getUserName = (
   user?: Pick<User, "firstName" | "lastName" | "displayName"> | null
@@ -64,10 +69,8 @@ export const getUserInitials = (user: User | undefined) => {
   return user.displayName || `${user.firstName[0]}${user.lastName[0]}`;
 };
 
-export const getRandomUserAvatarURL = (name?: string | null): string => (
-  `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${name}&rounded=true`
-);
-
+export const getRandomUserAvatarURL = (name?: string | null): string =>
+  `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${name}&rounded=true`;
 
 interface GetDaysAgoOptions {
   withExactTime?: boolean;
@@ -76,11 +79,9 @@ interface GetDaysAgoOptions {
 export const getDaysAgo = (
   currentDate: Date,
   time: Time,
-  options: GetDaysAgoOptions = {},
+  options: GetDaysAgoOptions = {}
 ) => {
-  const {
-    withExactTime = false,
-  } = options;
+  const { withExactTime = false } = options;
   const previousDate = new Date(time.seconds * 1000);
   const differenceInTime = currentDate.getTime() - previousDate.getTime();
   const differenceInDays = differenceInTime / (1000 * 3600 * 24);
@@ -238,16 +239,124 @@ export const getCommonExampleImageURL = (index: number): string =>
 
 export const getSharingURL = (path: string): string => `${BASE_URL}${path}`;
 
-export const percentage = (partialValue: number, totalValue: number): number => {
+export const percentage = (
+  partialValue: number,
+  totalValue: number
+): number => {
   if (totalValue === 0) {
     return 0;
   }
 
-  return Math.round((100 * partialValue) / totalValue * 10) / 10;
-}
+  return Math.round(((100 * partialValue) / totalValue) * 10) / 10;
+};
 
 export const formatCountdownValue = (value: number): string => {
   const convertedValue = String(value);
 
   return convertedValue.length === 1 ? `0${convertedValue}` : convertedValue;
 };
+
+export const createIdsChunk = (pool: string[]) =>
+  pool.reduce((resultArray: any, item, index) => {
+    const chunkIndex = Math.floor(index / 10);
+
+    if (!resultArray[chunkIndex]) {
+      resultArray[chunkIndex] = [];
+    }
+
+    resultArray[chunkIndex].push(item);
+
+    return resultArray;
+  }, []);
+
+export function flatChunk<T>(data: unknown[]) {
+  return (data as unknown[])
+    .map((d: any) => transformFirebaseDataList<T>(d))
+    .reduce((resultArray: any, item) => {
+      resultArray.push(...item);
+      return resultArray;
+    }, []);
+}
+
+export function groupBy<T>(list: T[], keyGetter: Function) {
+  const map = new Map();
+  list.forEach((item) => {
+    const key = keyGetter(item);
+    const collection = map.get(key);
+    if (!collection) {
+      map.set(key, [item]);
+    } else {
+      collection.push(item);
+    }
+  });
+  return map;
+}
+
+function timeSince(date: Date) {
+  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+
+  let interval = seconds / 31536000;
+
+  if (interval > 1) {
+    return Math.floor(interval) + " years ago";
+  }
+  interval = seconds / 2592000;
+  if (interval > 1) {
+    const m = Math.floor(interval);
+    return m + (m > 1 ? " months ago" : "month ago");
+  }
+  interval = seconds / 86400;
+  if (interval > 1) {
+    const d = Math.floor(interval);
+    return d + (d > 1 ? " days ago" : "day ago");
+  }
+  interval = seconds / 3600;
+  if (interval > 1) {
+    const h = Math.floor(interval);
+    return h + (h > 1 ? " hours ago" : "hour ago");
+  }
+  interval = seconds / 60;
+  if (interval > 1) {
+    const min = Math.floor(interval);
+    return min + (min > 1 ? " minutes ago" : "minute ago");
+  }
+  return Math.floor(seconds) + " seconds ago";
+}
+
+export function getLastActivity(data: Common) {
+  const { discussions, createdAt, proposals, messages } = data;
+
+  const activities = [createdAt.toDate().getTime()];
+
+  discussions?.forEach((d) => {
+    if (d.createdAt) {
+      activities.push(d.createdAt?.toDate().getTime());
+    }
+    if (d.updatedAt) {
+      activities.push(d.updatedAt?.toDate().getTime());
+    }
+    if (d.createTime) {
+      activities.push(d.createTime?.toDate().getTime());
+    }
+  });
+  proposals?.forEach((d) => {
+    if (d.createdAt) {
+      activities.push(d.createdAt?.toDate().getTime());
+    }
+    if (d.updatedAt) {
+      activities.push(d.updatedAt?.toDate().getTime());
+    }
+    if (d.createTime) {
+      activities.push(d.createTime?.toDate().getTime());
+    }
+  });
+  messages?.forEach((d) => {
+    if (d.createTime) {
+      activities.push(d.createTime?.toDate().getTime());
+    }
+  });
+
+  const lastActivity = Math.max.apply(null, activities);
+
+  return timeSince(new Date(lastActivity));
+}

@@ -46,6 +46,9 @@ import {
   updateSubscription as updateSubscriptionApi,
   cancelSubscription as cancelSubscriptionApi,
   getSubscriptionById,
+  fetchDiscussionForCommonList,
+  fetchProposalsForCommonList,
+  fetchMessagesForCommonList,
   fetchCommonListByIds as fetchCommonListByIdsApi,
 } from "./api";
 import { getUserData } from "../../Auth/store/api";
@@ -54,15 +57,47 @@ import store from "@/index";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
 import { Vote } from "@/shared/interfaces/api/vote";
 import { ImmediateContributionResponse } from "../interfaces";
+import { groupBy } from "@/shared/utils";
 
 export function* getCommonsList(): Generator {
   try {
     yield put(startLoading());
-    const commons = yield call(fetchCommonList);
+    const commons = (yield call(fetchCommonList)) as Common[];
 
-    yield put(actions.getCommonsList.success(commons as Common[]));
+    const cIds = commons.map((c) => c.id);
+
+    const [discussions, proposals, messages] = (yield Promise.all([
+      fetchDiscussionForCommonList(cIds),
+      fetchProposalsForCommonList(cIds),
+      fetchMessagesForCommonList(cIds),
+    ])) as [Discussion[], Proposal[], DiscussionMessage[]];
+
+    const discussionGrouped = groupBy<Discussion>(
+      discussions,
+      (item: Discussion) => item.commonId
+    );
+    const proposalGrouped = groupBy<Proposal>(
+      proposals,
+      (item: Proposal) => item.commonId
+    );
+
+    const messagesGrouped = groupBy<DiscussionMessage>(
+      messages,
+      (item: DiscussionMessage) => item.commonId
+    );
+
+    const data = commons.map((c) => {
+      c.proposals = proposalGrouped.get(c.id) ?? [];
+      c.discussions = discussionGrouped.get(c.id) ?? [];
+      c.messages = messagesGrouped.get(c.id) ?? [];
+
+      return c;
+    });
+
+    yield put(actions.getCommonsList.success(data));
     yield put(stopLoading());
   } catch (e) {
+    console.error(e);
     yield put(actions.getCommonsList.failure(e));
     yield put(stopLoading());
   }
@@ -297,6 +332,7 @@ export function* createDiscussionSaga(
 
         store.dispatch(actions.setDiscussion(ds));
         store.dispatch(actions.loadCommonDiscussionList.request());
+        store.dispatch(actions.getCommonsList.request());
       }
     )) as () => void;
 
@@ -326,6 +362,7 @@ export function* addMessageToDiscussionSaga(
             m.createTime?.seconds - mP.createTime?.seconds
         );
         store.dispatch(actions.loadDisscussionDetail.request(discussion));
+        store.dispatch(actions.getCommonsList.request());
       }
     );
 
@@ -356,6 +393,7 @@ export function* addMessageToProposalSaga(
         );
 
         store.dispatch(actions.loadProposalDetail.request(proposal));
+        store.dispatch(actions.getCommonsList.request());
       }
     );
 
@@ -549,6 +587,7 @@ export function* createFundingProposalSaga(
         store.dispatch(actions.loadProposalList.request());
         store.dispatch(stopLoading());
         action.payload.callback(AddProposalSteps.SUCCESS);
+        store.dispatch(actions.getCommonsList.request());
       }
     );
 

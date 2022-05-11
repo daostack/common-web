@@ -42,26 +42,29 @@ export default function ContactUs() {
 
   return (
     <div className="contact-us-wrapper">
-      <div className="title">
-        <h1>Contact us</h1>
-        <div className="email-wrapper">
-          <img src={"/icons/email.svg"} alt="envelope" />
-          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-        </div>
-      </div>
-      <div className="form-wrapper">
-        <input disabled={sending} type="text" placeholder="Your Name" onChange={(e) => setName(e.target.value)} />
-        <input disabled={sending} type="email" placeholder="Your Email" onChange={(e) => setEmail(e.target.value)} />
-        <textarea disabled={sending} placeholder="Notes" onChange={(e) => setDescription(e.target.value)} />
-        {error && <span className="error-message">{error}</span>}
-        {success && <span className="success-message">Thanks for contacting us!</span>}
-        <Button
-          className="send"
-          disabled={!name || !email || !description || sending}
-          onClick={handleSend}>
-          {sending ? "Sending..." : "Send"}
-        </Button>
-      </div>
+      {!success ? (
+        <>
+          <div className="title">
+            <h1>Contact us</h1>
+            <div className="email-wrapper">
+              <img src={"/icons/email.svg"} alt="envelope" />
+              <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+            </div>
+          </div>
+          <div className="form-wrapper">
+            <input disabled={sending} type="text" placeholder="Your Name" onChange={(e) => setName(e.target.value)} />
+            <input disabled={sending} type="email" placeholder="Your Email" onChange={(e) => setEmail(e.target.value)} />
+            <textarea disabled={sending} placeholder="Notes" onChange={(e) => setDescription(e.target.value)} />
+            {error && <span className="error-message">{error}</span>}
+            <Button
+              className="send"
+              disabled={!name || !email || !description || sending}
+              onClick={handleSend}>
+              {sending ? "Sending..." : "Send"}
+            </Button>
+          </div>
+        </>
+      ) : <span className="success-message">Thank you for contacting us. <br /> Our team will get back to you soon.</span>}
     </div>
   );
 }

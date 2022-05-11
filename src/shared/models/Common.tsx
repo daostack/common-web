@@ -1,3 +1,8 @@
+import { Proposal } from "@/shared/models/Proposals";
+import { Discussion } from "@/shared/models/Discussion";
+import { DiscussionMessage } from "@/shared/models/DiscussionMessage";
+import { Time } from "@/shared/models/shared";
+
 export enum MemberPermission {
   Founder = "founder",
   Moderator = "moderator",
@@ -36,8 +41,8 @@ export interface Metadata {
 
 export interface Common {
   id: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Time;
+  updatedAt: Time;
   name: string;
   balance: number;
   reservedBalance?: number;
@@ -48,10 +53,16 @@ export interface Common {
   register: string;
   members: Member[];
 
+  proposals?: Proposal[];
+  discussions?: Discussion[];
+  messages?: DiscussionMessage[];
+
   rules: CommonRule[];
+
   fundingGoalDeadline: number;
 
   metadata: Metadata;
+  score: number;
   active: boolean;
 }
 
