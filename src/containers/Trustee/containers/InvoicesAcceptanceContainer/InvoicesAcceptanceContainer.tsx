@@ -16,11 +16,8 @@ import {
 } from "../../store/actions";
 import {
   selectPendingApprovalProposals,
-  selectArePendingApprovalProposalsLoaded,
   selectApprovedProposals,
-  selectAreApprovedProposalsLoaded,
   selectDeclinedProposals,
-  selectAreDeclinedProposalsLoaded,
 } from "../../store/selectors";
 import {
   InvoicesPageTabState,
@@ -40,17 +37,8 @@ const InvoicesAcceptanceContainer: FC = () => {
   const pendingApprovalProposals = useSelector(
     selectPendingApprovalProposals()
   );
-  const arePendingApprovalProposalsLoaded = useSelector(
-    selectArePendingApprovalProposalsLoaded()
-  );
   const approvedProposals = useSelector(selectApprovedProposals());
-  const areApprovedProposalsLoaded = useSelector(
-    selectAreApprovedProposalsLoaded()
-  );
   const declinedProposals = useSelector(selectDeclinedProposals());
-  const areDeclinedProposalsLoaded = useSelector(
-    selectAreDeclinedProposalsLoaded()
-  );
 
   const handleTabChange = useCallback(
     (value: unknown) => {
@@ -71,22 +59,29 @@ const InvoicesAcceptanceContainer: FC = () => {
   );
 
   useEffect(() => {
-    if (!arePendingApprovalProposalsLoaded) {
+    if (
+      !pendingApprovalProposals.loading &&
+      !pendingApprovalProposals.fetched
+    ) {
       dispatch(getPendingApprovalProposals.request());
     }
-  }, [dispatch, arePendingApprovalProposalsLoaded]);
+  }, [
+    dispatch,
+    pendingApprovalProposals.loading,
+    pendingApprovalProposals.fetched,
+  ]);
 
   useEffect(() => {
-    if (!areApprovedProposalsLoaded) {
+    if (!approvedProposals.loading && !approvedProposals.fetched) {
       dispatch(getApprovedProposals.request());
     }
-  }, [dispatch, areApprovedProposalsLoaded]);
+  }, [dispatch, approvedProposals.loading, approvedProposals.fetched]);
 
   useEffect(() => {
-    if (!areDeclinedProposalsLoaded) {
+    if (!declinedProposals.loading && !declinedProposals.fetched) {
       dispatch(getDeclinedProposals.request());
     }
-  }, [dispatch, areDeclinedProposalsLoaded]);
+  }, [dispatch, declinedProposals.loading, declinedProposals.fetched]);
 
   return (
     <>
@@ -100,17 +95,17 @@ const InvoicesAcceptanceContainer: FC = () => {
       <div className="invoices-acceptance-container">
         <TabPanel value={tab} panelValue={InvoicesPageTabState.InProgress}>
           <ProposalList
-            title={`Pending approval (${pendingApprovalProposals.length})`}
+            title={`Pending approval (${pendingApprovalProposals.data.length})`}
             emptyListText="There are no pending approval invoices"
-            proposals={pendingApprovalProposals}
-            isLoading={!arePendingApprovalProposalsLoaded}
+            proposals={pendingApprovalProposals.data}
+            isLoading={!pendingApprovalProposals.fetched}
             onProposalView={handleProposalView}
           />
           <ProposalList
-            title={`Declined (${declinedProposals.length})`}
+            title={`Declined (${declinedProposals.data.length})`}
             emptyListText="There are no declined invoices"
-            proposals={declinedProposals}
-            isLoading={!areDeclinedProposalsLoaded}
+            proposals={declinedProposals.data}
+            isLoading={!declinedProposals.fetched}
             onProposalView={handleProposalView}
           />
         </TabPanel>
@@ -118,8 +113,8 @@ const InvoicesAcceptanceContainer: FC = () => {
           <VirtualizedProposalList
             title="Approved Invoices"
             emptyListText="There are no approved invoices"
-            proposals={approvedProposals}
-            isLoading={!areApprovedProposalsLoaded}
+            proposals={approvedProposals.data}
+            isLoading={!approvedProposals.fetched}
             onProposalView={handleProposalView}
           />
         </TabPanel>

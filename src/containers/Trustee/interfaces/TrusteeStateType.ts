@@ -1,12 +1,10 @@
-import { Proposal } from "../../../shared/models";
+import { LoadingState } from "@/shared/interfaces";
+import { Proposal } from "@/shared/models";
 
 export interface TrusteeStateType {
-  pendingApprovalProposals: Proposal[];
-  arePendingApprovalProposalsLoaded: boolean;
-  approvedProposals: Proposal[];
-  areApprovedProposalsLoaded: boolean;
-  declinedProposals: Proposal[];
-  areDeclinedProposalsLoaded: boolean;
+  pendingApprovalProposals: LoadingState<Proposal[]>;
+  approvedProposals: LoadingState<Proposal[]>;
+  declinedProposals: LoadingState<Proposal[]>;
   proposalForApproval: Proposal | null;
   isProposalForApprovalLoaded: boolean;
 }
