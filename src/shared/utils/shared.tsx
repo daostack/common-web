@@ -323,36 +323,48 @@ function timeSince(date: Date) {
   return Math.floor(seconds) + " seconds ago";
 }
 
+const getDateValue = (data: Time | Date) => {
+  if ("toDate" in data) {
+    return data?.toDate()?.getTime();
+  } else {
+    if (data) {
+      if ("getTime" in data) {
+        return data?.getTime();
+      }
+    }
+  }
+  return 0;
+};
+
 export function getLastActivity(data: Common) {
   const { discussions, createdAt, proposals, messages } = data;
-
-  const activities = [createdAt?.toDate()?.getTime()];
+  const activities = [getDateValue(createdAt)];
 
   discussions?.forEach((d) => {
     if (d.createdAt) {
-      activities.push(d.createdAt?.toDate()?.getTime());
+      activities.push(getDateValue(d.createdAt));
     }
     if (d.updatedAt) {
-      activities.push(d.updatedAt?.toDate()?.getTime());
+      activities.push(getDateValue(d.updatedAt));
     }
     if (d.createTime) {
-      activities.push(d.createTime?.toDate()?.getTime());
+      activities.push(getDateValue(d.createTime));
     }
   });
   proposals?.forEach((d) => {
     if (d.createdAt) {
-      activities.push(d.createdAt?.toDate()?.getTime());
+      activities.push(getDateValue(d.createdAt));
     }
     if (d.updatedAt) {
-      activities.push(d.updatedAt?.toDate()?.getTime());
+      activities.push(getDateValue(d.updatedAt));
     }
     if (d.createTime) {
-      activities.push(d.createTime?.toDate()?.getTime());
+      activities.push(getDateValue(d.createTime));
     }
   });
   messages?.forEach((d) => {
     if (d.createTime) {
-      activities.push(d.createTime?.toDate()?.getTime());
+      activities.push(getDateValue(d.createTime));
     }
   });
 
