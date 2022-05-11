@@ -21,6 +21,7 @@ import {
   convertObjectDatesToFirestoreTimestamps,
   createIdsChunk,
   flatChunk,
+  tokenHandler,
   transformFirebaseDataList,
   transformFirebaseDataSingle,
 } from "@/shared/utils";
@@ -42,6 +43,7 @@ import {
 } from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 import { UpdateBankAccountDetailsData } from "@/shared/interfaces/api/bankAccount";
+import { NotificationItem } from "@/shared/models/Notification";
 
 export async function fetchCommonDiscussions(commonId: string) {
   const commons = await firebase
@@ -504,10 +506,52 @@ export async function updateSubscription(
   return data;
 }
 
+export function subscribeToNotification(
+  callback: (data?: NotificationItem) => void
+) {
+  const user = tokenHandler.getUser();
+
+  if (!user) return;
+
+  const query = firebase
+    .firestore()
+    .collection(Collection.Notifications)
+    .where("userFilter", "array-contains", user.uid);
+
+  return query.onSnapshot((data) => {
+    data.docChanges().forEach((change) => {
+      switch (change.type) {
+        case "added":
+        case "modified":
+          return callback({
+            ...change.doc.data(),
+            id: change.doc.id,
+          } as NotificationItem);
+      }
+    });
+  });
+}
+
+export async function getProposalById(proposalId: string) {
+  const query = await firebase
+    .firestore()
+    .collection(Collection.Proposals)
+    .doc(proposalId)
+    .get();
+
+  return query.data() as Proposal;
+}
+
 export async function cancelSubscription(
   subscriptionId: string
 ): Promise<void> {
   await Api.post<Subscription>(ApiEndpoint.CancelSubscription, {
     subscriptionId,
+  });
+}
+
+export async function seenNotification(id: string): Promise<void> {
+  await Api.post(ApiEndpoint.SeenNotification, {
+    id,
   });
 }
