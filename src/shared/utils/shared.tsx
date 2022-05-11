@@ -326,33 +326,33 @@ function timeSince(date: Date) {
 export function getLastActivity(data: Common) {
   const { discussions, createdAt, proposals, messages } = data;
 
-  const activities = [createdAt.toDate().getTime()];
+  const activities = [createdAt?.toDate()?.getTime()];
 
   discussions?.forEach((d) => {
     if (d.createdAt) {
-      activities.push(d.createdAt?.toDate().getTime());
+      activities.push(d.createdAt?.toDate()?.getTime());
     }
     if (d.updatedAt) {
-      activities.push(d.updatedAt?.toDate().getTime());
+      activities.push(d.updatedAt?.toDate()?.getTime());
     }
     if (d.createTime) {
-      activities.push(d.createTime?.toDate().getTime());
+      activities.push(d.createTime?.toDate()?.getTime());
     }
   });
   proposals?.forEach((d) => {
     if (d.createdAt) {
-      activities.push(d.createdAt?.toDate().getTime());
+      activities.push(d.createdAt?.toDate()?.getTime());
     }
     if (d.updatedAt) {
-      activities.push(d.updatedAt?.toDate().getTime());
+      activities.push(d.updatedAt?.toDate()?.getTime());
     }
     if (d.createTime) {
-      activities.push(d.createTime?.toDate().getTime());
+      activities.push(d.createTime?.toDate()?.getTime());
     }
   });
   messages?.forEach((d) => {
     if (d.createTime) {
-      activities.push(d.createTime?.toDate().getTime());
+      activities.push(d.createTime?.toDate()?.getTime());
     }
   });
 
