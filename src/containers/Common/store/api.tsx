@@ -90,6 +90,7 @@ export async function fetchCommonList(): Promise<Common[]> {
     .firestore()
     .collection(Collection.Daos)
     .where("active", "==", true)
+    .orderBy("score")
     .get();
   const data = transformFirebaseDataList<Common>(commons);
   return data;
