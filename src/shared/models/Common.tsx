@@ -41,7 +41,7 @@ export interface Metadata {
 
 export interface Common {
   id: string;
-  createdAt: Time;
+  createdAt: Time | Date;
   updatedAt: Time;
   name: string;
   balance: number;
