@@ -59,11 +59,21 @@
       background-color: $purple-hover;
     }
   }
+  .account-wrapper__menu-item--disabled {
+    background-color: $light-gray-1;
+
+    &:hover {
+      background-color: $light-gray-1;
+    }
+  }
 
   .account-wrapper__menu-item-loader {
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    right: 0.5rem;
+    left: unset;
+    width: 1.5rem;
+    height: 1.5rem;
+    transform: translateY(-50%);
   }
 }
