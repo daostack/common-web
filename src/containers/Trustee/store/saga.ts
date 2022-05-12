@@ -1,4 +1,4 @@
-import { call, put, select, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeEvery, takeLatest } from "redux-saga/effects";
 import { fetchCommonListByIds } from "@/containers/Common/store/api";
 import { Common, Proposal } from "@/shared/models";
 import { TrusteeStateType } from "../interfaces";
@@ -112,7 +112,7 @@ function* trusteeSaga(): Generator {
   );
   yield takeLatest(actions.getApprovedProposals.request, getApprovedProposals);
   yield takeLatest(actions.getDeclinedProposals.request, getDeclinedProposals);
-  yield takeLatest(actions.getProposalsData.request, getProposalsData);
+  yield takeEvery(actions.getProposalsData.request, getProposalsData);
   yield takeLatest(
     actions.getProposalForApproval.request,
     getProposalForApproval

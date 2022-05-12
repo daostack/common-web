@@ -45,4 +45,10 @@ export default {
   removeAll: () => {
     localStorage.clear();
   },
+
+  getShownNotificationList: () => {
+    return localStorage.getItem("notifications")
+      ? JSON.parse(localStorage.getItem("notifications") as string)
+      : [];
+  },
 };

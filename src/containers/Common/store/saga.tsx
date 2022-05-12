@@ -97,6 +97,7 @@ export function* getCommonsList(): Generator {
     yield put(actions.getCommonsList.success(data));
     yield put(stopLoading());
   } catch (e) {
+    console.error(e);
     yield put(actions.getCommonsList.failure(e));
     yield put(stopLoading());
   }
