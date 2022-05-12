@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import classNames from "classnames";
 import { setAreReportsLoading } from "@/shared/store/actions";
 import { selectAreReportsLoading } from "@/shared/store/selectors";
 import {
@@ -101,7 +102,9 @@ const Account = ({
           )}
           {hasAdminAccess && (
             <div
-              className="account-wrapper__menu-item"
+              className={classNames("account-wrapper__menu-item", {
+                "account-wrapper__menu-item--disabled": areReportsLoading,
+              })}
               onClick={handleReportsDownload}
             >
               Download Reports
