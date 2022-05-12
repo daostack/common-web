@@ -324,6 +324,7 @@ function timeSince(date: Date) {
 }
 
 const getDateValue = (data: Time | Date) => {
+  if (!data) return 0;
   if ("toDate" in data) {
     return data?.toDate()?.getTime();
   } else {
