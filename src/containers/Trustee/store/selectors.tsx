@@ -11,6 +11,8 @@ export const selectDeclinedProposals = () =>
   createSelector(selectTrustee, (state) => state.declinedProposals);
 export const selectCommons = () =>
   createSelector(selectTrustee, (state) => state.commons);
+export const selectUsers = () =>
+  createSelector(selectTrustee, (state) => state.users);
 export const selectProposalForApproval = () =>
   createSelector(selectTrustee, (state) => state.proposalForApproval);
 export const selectIsProposalForApprovalLoaded = () =>

@@ -1,6 +1,6 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { PayloadWithCallback } from "@/shared/interfaces";
-import { Common, Proposal } from "@/shared/models";
+import { Common, Proposal, User } from "@/shared/models";
 import { ApproveOrDeclineProposalDto } from "../interfaces";
 import { TrusteeActionTypes } from "./constants";
 
@@ -26,11 +26,15 @@ export const getProposalsData = createAsyncAction(
   TrusteeActionTypes.GET_PROPOSALS_DATA,
   TrusteeActionTypes.GET_PROPOSALS_DATA_SUCCESS,
   TrusteeActionTypes.GET_PROPOSALS_DATA_FAILURE
-)<{ commonIds: string[] }, { commons: Common[] }, Error>();
+)<
+  { commonIds: string[]; userIds: string[] },
+  { commons: Common[]; users: User[] },
+  Error
+>();
 
 export const updateProposalsData = createStandardAction(
   TrusteeActionTypes.UPDATE_PROPOSALS_DATA
-)<{ commonIds: string[] }>();
+)<{ commonIds: string[]; userIds: string[] }>();
 
 export const clearProposals = createStandardAction(
   TrusteeActionTypes.CLEAR_PROPOSALS

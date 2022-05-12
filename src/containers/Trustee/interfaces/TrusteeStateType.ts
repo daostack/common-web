@@ -1,5 +1,5 @@
 import { LoadingState } from "@/shared/interfaces";
-import { Common, Proposal } from "@/shared/models";
+import { Common, Proposal, User } from "@/shared/models";
 
 export interface TrusteeStateType {
   pendingApprovalProposals: LoadingState<Proposal[]>;
@@ -7,7 +7,11 @@ export interface TrusteeStateType {
   declinedProposals: LoadingState<Proposal[]>;
   commons: {
     ids: string[];
-    data: Common[];
+    data: Common[] | null;
+  };
+  users: {
+    ids: string[];
+    data: User[] | null;
   };
   proposalForApproval: Proposal | null;
   isProposalForApprovalLoaded: boolean;

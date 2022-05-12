@@ -1,5 +1,6 @@
-import { Common, Proposal } from "@/shared/models";
+import { Common, Proposal, User } from "@/shared/models";
 
 export interface ExtendedProposal extends Proposal {
-  common: Common;
+  common?: Common;
+  user?: User;
 }
