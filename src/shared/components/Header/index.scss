@@ -41,8 +41,10 @@
     }
 
     .header-wrapper__mobile-link {
-      @include big-phone {
-        position: relative;
+      position: relative;
+
+      &:disabled {
+        background-color: $light-gray-1;
       }
     }
 
@@ -50,8 +52,11 @@
       @include big-phone {
         position: absolute;
         top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        right: 0.5rem;
+        left: unset;
+        width: 2rem;
+        height: 2rem;
+        transform: translateY(-50%);
       }
     }
 

@@ -453,7 +453,7 @@ function* authSagas() {
   subscribeToNotification(async (data?: NotificationItem) => {
     const user = await firebase.auth().currentUser;
 
-    if (data && !data?.seen?.includes(user?.uid ?? "")) {
+    if (data && (!data.seen || !data?.seen?.includes(user?.uid ?? ""))) {
       switch (data?.eventType) {
         case EventTypeState.fundingRequestAccepted:
         case EventTypeState.fundingRequestRejected:
