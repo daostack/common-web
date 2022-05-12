@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState, FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { Separator, Tabs, Tab, TabPanel } from "../../../../shared/components";
-import { ROUTE_PATHS } from "../../../../shared/constants";
-import { useQueryParams } from "../../../../shared/hooks";
-import { Proposal } from "../../../../shared/models";
+import { Separator, Tabs, Tab, TabPanel } from "@/shared/components";
+import { ROUTE_PATHS } from "@/shared/constants";
+import { useQueryParams } from "@/shared/hooks";
+import { Proposal } from "@/shared/models";
 import { ProposalList } from "../../components/ProposalList";
 import { StickyInfo } from "../../components/StickyInfo";
 import { VirtualizedProposalList } from "../../components/VirtualizedProposalList";
@@ -19,6 +19,7 @@ import {
   selectApprovedProposals,
   selectDeclinedProposals,
 } from "../../store/selectors";
+import { useProposalsData } from "../../useCases/useProposalsData";
 import {
   InvoicesPageTabState,
   INVOICES_PAGE_TAB_QUERY_PARAM,
@@ -39,6 +40,11 @@ const InvoicesAcceptanceContainer: FC = () => {
   );
   const approvedProposals = useSelector(selectApprovedProposals());
   const declinedProposals = useSelector(selectDeclinedProposals());
+  const {
+    extendedPendingApprovalProposals,
+    extendedApprovedProposals,
+    extendedDeclinedProposals,
+  } = useProposalsData();
 
   const handleTabChange = useCallback(
     (value: unknown) => {
@@ -95,17 +101,19 @@ const InvoicesAcceptanceContainer: FC = () => {
       <div className="invoices-acceptance-container">
         <TabPanel value={tab} panelValue={InvoicesPageTabState.InProgress}>
           <ProposalList
-            title={`Pending approval (${pendingApprovalProposals.data.length})`}
+            title={`Pending approval (${
+              extendedPendingApprovalProposals?.length || 0
+            })`}
             emptyListText="There are no pending approval invoices"
-            proposals={pendingApprovalProposals.data}
-            isLoading={!pendingApprovalProposals.fetched}
+            proposals={extendedPendingApprovalProposals || []}
+            isLoading={!extendedPendingApprovalProposals}
             onProposalView={handleProposalView}
           />
           <ProposalList
-            title={`Declined (${declinedProposals.data.length})`}
+            title={`Declined (${extendedDeclinedProposals?.length || 0})`}
             emptyListText="There are no declined invoices"
-            proposals={declinedProposals.data}
-            isLoading={!declinedProposals.fetched}
+            proposals={extendedDeclinedProposals || []}
+            isLoading={!extendedDeclinedProposals}
             onProposalView={handleProposalView}
           />
         </TabPanel>
@@ -113,8 +121,8 @@ const InvoicesAcceptanceContainer: FC = () => {
           <VirtualizedProposalList
             title="Approved Invoices"
             emptyListText="There are no approved invoices"
-            proposals={approvedProposals.data}
-            isLoading={!approvedProposals.fetched}
+            proposals={extendedApprovedProposals || []}
+            isLoading={!extendedApprovedProposals}
             onProposalView={handleProposalView}
           />
         </TabPanel>

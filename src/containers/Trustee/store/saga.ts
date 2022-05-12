@@ -1,5 +1,7 @@
-import { call, put, takeLatest } from "redux-saga/effects";
-import { Proposal } from "../../../shared/models";
+import { call, put, select, takeLatest } from "redux-saga/effects";
+import { fetchCommonListByIds } from "@/containers/Common/store/api";
+import { Common, Proposal } from "@/shared/models";
+import { TrusteeStateType } from "../interfaces";
 import * as actions from "./actions";
 import {
   fetchPendingApprovalProposals,
@@ -8,6 +10,7 @@ import {
   fetchProposalById,
   approveOrDeclineProposal as approveOrDeclineProposalApi,
 } from "./api";
+import { selectCommons } from "./selectors";
 
 export function* getPendingApprovalProposals(): Generator {
   try {
@@ -36,6 +39,37 @@ export function* getDeclinedProposals(): Generator {
     yield put(actions.getDeclinedProposals.success(proposals));
   } catch (error) {
     yield put(actions.getDeclinedProposals.failure(error));
+  }
+}
+
+export function* getProposalsData({
+  payload,
+}: ReturnType<typeof actions.getProposalsData.request>): Generator {
+  const { ids: currentCommonIds } = (yield select(
+    selectCommons()
+  )) as TrusteeStateType["commons"];
+  const nextCommonIds = payload.commonIds.filter(
+    (id) => !currentCommonIds.includes(id)
+  );
+
+  yield put(
+    actions.updateProposalsData({
+      commonIds: nextCommonIds,
+    })
+  );
+
+  try {
+    const { commons } = (yield call(async () => {
+      const [commons] = await Promise.all([
+        fetchCommonListByIds(nextCommonIds),
+      ]);
+
+      return { commons };
+    })) as { commons: Common[] };
+
+    yield put(actions.getProposalsData.success({ commons }));
+  } catch (error) {
+    yield put(actions.getProposalsData.failure(error));
   }
 }
 
@@ -78,6 +112,7 @@ function* trusteeSaga(): Generator {
   );
   yield takeLatest(actions.getApprovedProposals.request, getApprovedProposals);
   yield takeLatest(actions.getDeclinedProposals.request, getDeclinedProposals);
+  yield takeLatest(actions.getProposalsData.request, getProposalsData);
   yield takeLatest(
     actions.getProposalForApproval.request,
     getProposalForApproval

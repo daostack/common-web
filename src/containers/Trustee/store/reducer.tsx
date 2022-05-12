@@ -15,6 +15,10 @@ const initialState: TrusteeStateType = {
   pendingApprovalProposals: { ...INITIAL_PROPOSALS_STATE },
   approvedProposals: { ...INITIAL_PROPOSALS_STATE },
   declinedProposals: { ...INITIAL_PROPOSALS_STATE },
+  commons: {
+    ids: [],
+    data: [],
+  },
   proposalForApproval: null,
   isProposalForApprovalLoaded: false,
 };
@@ -97,6 +101,30 @@ const reducer = createReducer<TrusteeStateType, Action>(initialState)
         ...nextState.declinedProposals,
         loading: false,
         fetched: false,
+      };
+    })
+  )
+  .handleAction(actions.getProposalsData.success, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.commons = {
+        ...nextState.commons,
+        data: nextState.commons.data.concat(payload.commons),
+      };
+    })
+  )
+  .handleAction(actions.getProposalsData.failure, (state) =>
+    produce(state, (nextState) => {
+      nextState.commons = {
+        ids: [],
+        data: [],
+      };
+    })
+  )
+  .handleAction(actions.updateProposalsData, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.commons = {
+        ...nextState.commons,
+        ids: nextState.commons.ids.concat(payload.commonIds),
       };
     })
   )
