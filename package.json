@@ -76,7 +76,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.5",
     "@types/file-saver": "^2.0.5",
-    "@types/jest": "^27.1.4",
+    "@types/jest": "^24.9.0",
     "@types/lodash": "^4.14.163",
     "@types/node": "^12.19.3",
     "@types/openpgp": "4.4.12",
@@ -107,13 +107,13 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-unused-imports": "^1.0.0",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "^27.1.4",
+    "jest": "^24.9.0",
     "prettier": "^2.1.1",
     "react-test-renderer": "^16.10.0",
     "redux-devtools": "^3.5.0",
     "redux-devtools-extension": "^2.13.8",
     "redux-freeze": "^0.1.7",
-    "ts-jest": "^27.1.4",
+    "ts-jest": "^24.3.0",
     "typescript": "^4.0.5"
   }
 }
