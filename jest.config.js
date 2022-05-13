@@ -11,5 +11,5 @@ module.exports = {
   },
   testPathIgnorePatterns: ["/node_modules/", "/public/"],
   testEnvironment: "jsdom",
-  setupFiles: ["<rootDir>/src/shared/utils/mocks/setupJestMock.ts"],
+  setupFiles: ["<rootDir>/src/shared/utils/tests/setupTests.ts"],
 };
