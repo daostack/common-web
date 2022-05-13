@@ -40,6 +40,7 @@
   }
 
   .account-wrapper__menu-item {
+    position: relative;
     cursor: pointer;
     padding: 0.7rem 2rem;
     width: 200px;
@@ -57,5 +58,22 @@
     &:hover {
       background-color: $purple-hover;
     }
+  }
+  .account-wrapper__menu-item--disabled {
+    background-color: $light-gray-1;
+
+    &:hover {
+      background-color: $light-gray-1;
+    }
+  }
+
+  .account-wrapper__menu-item-loader {
+    position: absolute;
+    top: 50%;
+    right: 0.5rem;
+    left: unset;
+    width: 1.5rem;
+    height: 1.5rem;
+    transform: translateY(-50%);
   }
 }

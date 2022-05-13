@@ -1,11 +1,12 @@
 import { ScreenSize } from "../constants";
 
-import { Notification } from "./";
+import { NotificationData } from "./";
 
 export interface SharedStateType {
   loading: boolean;
-  notification: Notification | null;
+  notification: NotificationData | null;
   screenSize: ScreenSize;
   shareLinks: Record<string, string>;
   loadingShareLinks: Record<string, boolean>;
+  areReportsLoading: boolean;
 }

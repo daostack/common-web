@@ -50,6 +50,10 @@ $modal-mobile-padding: 1.5rem;
   border-radius: $modal-border-radius;
   overflow: hidden;
 
+  &.notification{
+    max-width: 23.5rem;
+  }
+
   &.discussions,
   &.proposals,
   &.history {
