@@ -2,21 +2,15 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Router } from "react-router-dom";
 import { Provider } from "react-redux";
-
-import configureStore from "./store";
+import { history, store } from "@/shared/appConfig";
 import "./index.scss";
 import App from "./containers/App/App";
-import history from "./shared/history";
-
-const { store } = configureStore(history);
 
 if (process.env.REACT_APP_ENV === "dev") {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const whyDidYouRender = require("@welldone-software/why-did-you-render");
   whyDidYouRender(React, { trackHooks: true });
 }
-
-export default store;
 
 ReactDOM.render(
   <Router history={history}>
