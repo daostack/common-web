@@ -9,7 +9,7 @@ module.exports = {
   ],
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
   moduleNameMapper: {
-    "^.+\\.(gif|ttf|eot|svg|png)$":
+    "^.+\\.(gif|ttf|eot|svg|png|pdf)$":
       "<rootDir>/src/shared/utils/tests/mockFile.ts",
     "^.+\\.(css|less|scss)$": "identity-obj-proxy",
     "^@/(.*)$": "<rootDir>/src/$1",
