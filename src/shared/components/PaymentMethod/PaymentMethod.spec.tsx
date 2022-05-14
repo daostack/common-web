@@ -19,11 +19,41 @@ describe("PaymentMethod", () => {
     },
   };
 
+  it("should display all necessary data", () => {
+    render(<PaymentMethod card={card} onReplacePaymentMethod={() => {}} />);
+
+    expect(screen.getByText(card.fullName)).toBeInTheDocument();
+    expect(
+      screen.getByText(new RegExp(card.metadata.digits, "i"))
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        `${card.metadata.expiration.slice(
+          0,
+          2
+        )}/${card.metadata.expiration.slice(2)}`
+      )
+    ).toBeInTheDocument();
+  });
+
+  it("should display specified title", () => {
+    const title = "Title for component";
+    render(
+      <PaymentMethod
+        card={card}
+        title={title}
+        onReplacePaymentMethod={() => {}}
+      />
+    );
+
+    expect(screen.getByText(title)).toBeInTheDocument();
+  });
+
   it("should call replace method handler", () => {
     const spy = jest.fn();
     render(<PaymentMethod card={card} onReplacePaymentMethod={spy} />);
 
-    fireEvent.click(screen.getByText(/Replace payment method?/i));
+    fireEvent.click(screen.getByText(/Replace payment method\?/i));
     expect(spy).toBeCalledTimes(1);
   });
 });
