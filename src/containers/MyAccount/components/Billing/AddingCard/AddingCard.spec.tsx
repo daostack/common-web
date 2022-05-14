@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, screen } from "@testing-library/react";
+import { render, fireEvent, screen } from "@/shared/utils/tests";
 import AddingCard from "./AddingCard";
 
 describe("AddingCard", () => {

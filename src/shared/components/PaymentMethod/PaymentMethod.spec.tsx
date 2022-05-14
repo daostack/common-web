@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, screen } from "@testing-library/react";
+import { render, fireEvent, screen } from "@/shared/utils/tests";
 import { Card, CARD_BRANDS } from "@/shared/models";
 import PaymentMethod from "./PaymentMethod";
 
