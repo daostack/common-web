@@ -12,6 +12,7 @@ import {
   Payment,
   Subscription,
   BankAccountDetails,
+  ProposalType,
 } from "../../../shared/models";
 import { startLoading, stopLoading } from "@/shared/store/actions";
 import {
@@ -108,6 +109,10 @@ export function* getCommonsList(): Generator {
       c.proposals = proposalGrouped.get(c.id) ?? [];
       c.discussions = discussionGrouped.get(c.id) ?? [];
       c.messages = messagesGrouped.get(c.id) ?? [];
+
+      c.proposals = c.proposals?.filter(
+        (e) => e.type === ProposalType.FundingRequest
+      );
 
       return c;
     });
