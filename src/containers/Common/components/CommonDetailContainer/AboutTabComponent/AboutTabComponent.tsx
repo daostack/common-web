@@ -21,10 +21,6 @@ export default function AboutTabComponent({
   isJoiningPending,
 }: AboutTabComponentProps) {
   const shouldShowJoinToCommonButton = screenSize === ScreenSize.Desktop && !isCommonMember && !isJoiningPending;
-  const minFeeToJoin = common.metadata.zeroContribution
-    ? 0
-    : common.metadata.minFeeToJoin;
-
   const renderContributionType = (type: string) => {
     return <b>{type}</b>;
   };
@@ -46,12 +42,6 @@ export default function AboutTabComponent({
       <div className="line"></div>
       <div className="join-wrapper">
         <div className="title">Join this Common</div>
-        <div className="contribution">
-          Minimum contribution for new members:
-          <br />
-          {formatPrice(minFeeToJoin) + " "}
-          {renderContributionType(common.metadata.contributionType || "")} contribution
-        </div>
         {shouldShowJoinToCommonButton && (
           <div className="social-wrapper">
             <button className={`button-blue`} onClick={onOpenJoinModal}>

@@ -1,6 +1,6 @@
 import { Reputation } from "@/shared/models/Reputation"
 import { GovernanceActions } from "./GovernanceActions"
-import { GovernanceProposals } from "./GovernanceProposals"
+import { ProposalsTypes } from "./ProposalsTypes"
 
 export interface Circles {
   [key: string]: {
@@ -10,7 +10,7 @@ export interface Circles {
       [key in GovernanceActions]?: true
     },
     allowedProposals: {
-      [key in GovernanceProposals]?: true
+      [key in ProposalsTypes]?: true
     }
   }
 }

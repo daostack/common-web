@@ -14,7 +14,7 @@ import { Modal } from "../../../../../shared/components";
 import { useZoomDisabling } from "../../../../../shared/hooks";
 import { ModalProps, ModalRef } from "../../../../../shared/interfaces";
 import { Common, CommonLink } from "../../../../../shared/models";
-import MembershipRequestContribution from "./MembershipRequestContribution";
+//import MembershipRequestContribution from "./MembershipRequestContribution";
 import MembershipRequestCreated from "./MembershipRequestCreated";
 import MembershipRequestCreating from "./MembershipRequestCreating";
 import MembershipRequestIntroduce from "./MembershipRequestIntroduce";
@@ -102,9 +102,13 @@ export function MembershipRequestModal(props: IProps) {
       dispatch(getCommonsList.request());
     }
 
-    const isMember = commons.some((c) =>
-      c.members.some((m) => m.userId === user?.uid)
-    );
+    // TODO: export to a function to get common members
+    const isMember = commons.some(async (common) => {
+      if (common.members) {
+        return (await common.members.doc(user?.uid).get()).exists;
+      }
+      return false;
+    })
 
     setIsMember(isMember);
 
@@ -153,7 +157,7 @@ export function MembershipRequestModal(props: IProps) {
         );
       case 3:
         return (
-          <MembershipRequestContribution
+          <MembershipRequestPayment
             userData={userData}
             setUserData={setUserData}
             common={common}
@@ -161,21 +165,13 @@ export function MembershipRequestModal(props: IProps) {
         );
       case 4:
         return (
-          <MembershipRequestPayment
-            userData={userData}
-            setUserData={setUserData}
-            common={common}
-          />
-        );
-      case 5:
-        return (
           <MembershipRequestCreating
             userData={userData}
             setUserData={setUserData}
             common={common}
           />
         );
-      case 6:
+      case 5:
         return <MembershipRequestCreated closeModal={onClose} />;
     }
   };
@@ -203,7 +199,7 @@ export function MembershipRequestModal(props: IProps) {
   }, [common]);
 
   useEffect(() => {
-    if (stage === 5) {
+    if (stage === 4) {
       onCreationStageReach(true);
     }
   }, [stage, onCreationStageReach]);
@@ -219,7 +215,7 @@ export function MembershipRequestModal(props: IProps) {
       onClose={onClose}
       className="mobile-full-screen membership-request-modal"
       mobileFullScreen
-      closePrompt={stage !== 6}
+      closePrompt={stage !== 5}
       title={renderedTitle}
       onGoBack={shouldDisplayGoBack ? moveStageBack : undefined}
       styles={{

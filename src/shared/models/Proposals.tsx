@@ -1,6 +1,6 @@
 import { Moderation, Time } from "./shared";
 
-import { CommonContributionType, DiscussionMessage, User } from ".";
+import { DiscussionMessage, User } from ".";
 import { VoteOutcome } from "./Votes";
 
 export enum ProposalFundingState {
@@ -42,7 +42,6 @@ interface ProposalJoin {
   __typename?: "ProposalJoin";
   cardId: string;
   funding: number;
-  fundingType?: CommonContributionType;
 }
 
 export interface DocInfo<LegalType = number> {

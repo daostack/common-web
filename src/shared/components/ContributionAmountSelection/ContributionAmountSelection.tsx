@@ -21,8 +21,6 @@ interface IProps {
   className?: string;
   contributionAmount?: number;
   currentAmount?: number;
-  minFeeToJoin: number;
-  zeroContribution: boolean;
   pricePostfix?: string;
   showFinishButton?: boolean;
   onChange: (
@@ -37,8 +35,6 @@ export default function ContributionAmountSelection(props: IProps) {
     className,
     contributionAmount,
     currentAmount,
-    minFeeToJoin,
-    zeroContribution,
     pricePostfix = "",
     showFinishButton = false,
     onChange,
@@ -58,13 +54,7 @@ export default function ContributionAmountSelection(props: IProps) {
   >(() =>
     getInitialEnteredContributionValue(selectedContribution, contributionAmount)
   );
-  const formattedMinFeeToJoin = formatPrice(
-    zeroContribution ? 0 : minFeeToJoin,
-    { shouldMillify: false, shouldRemovePrefixFromZero: false }
-  );
   const currencyInputError = validateContributionAmount(
-    minFeeToJoin,
-    zeroContribution,
     enteredContribution
   );
 

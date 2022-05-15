@@ -1,24 +1,15 @@
 import { Reputation } from "./Reputation";
+import firebase from "firebase/app";
+import { BaseEntity } from "../interfaces/BaseEntity";
+import { Proposal } from "./Proposals";
+import { Discussion } from "./Discussion";
+import { DiscussionMessage } from "./DiscussionMessage";
 
-export interface Common {
-  /**
-  * The main identifier of the common
-  */
-  id: string;
-
-  /**
-   * The time that the entity was created
-   */
-  createdAt: Date;
-
-  /**
-   * The last time that the entity was modified
-   */
-  updatedAt: Date;
+export interface Common extends BaseEntity {
   /**
    * The name of the common showed in the app and
    * other places (email, notification etc.)
-  */
+   */
   name: string;
 
   byline: string;
@@ -60,8 +51,8 @@ export interface Common {
   raised: number;
 
   /**
- * Number of proposals in common
- */
+   * Number of proposals in common
+   */
   proposalCount: number;
 
   /**
@@ -74,6 +65,7 @@ export interface Common {
    */
   messageCount: number;
 
+
   /**
    * The whitelisting status of the common
    */
@@ -82,15 +74,24 @@ export interface Common {
   /**
    * Subcollection of users, since a collection cant exist and be empty, it might be null until members are added.
    */
-  readonly members: CommonMember[] | null;
+  readonly members: firebase.firestore.CollectionReference<CommonMember> | null;
+
+  readonly governanceId: string | null;
 
   readonly founderId: string;
 
-  readonly governanceId: string;
-
   state: CommonState;
-
+  /**
+   * Score of common for prioritization purposes
+   */
   score: number;
+
+  /**
+   * This is not fetched from the database. It's calcualted while the commons are fetched.
+   */
+  proposals?: Proposal[];
+  discussions?: Discussion[];
+  messages?: DiscussionMessage[];
 }
 
 /**
@@ -136,39 +137,3 @@ export interface CommonRule {
   title: string;
   definition: string;
 }
-
-
-// export enum MemberPermission {
-//   Founder = "founder",
-//   Moderator = "moderator",
-// }
-
-// export interface Member {
-//   joinedAt: { seconds: number; nanoseconds: number };
-//   userId: string;
-//   permission?: MemberPermission;
-// }
-
-// export interface CommonLink {
-//   title: string;
-//   value: string;
-// }
-
-// export enum CommonContributionType {
-//   OneTime = "one-time",
-//   Monthly = "monthly",
-// }
-
-// export interface Metadata {
-//   byline?: string;
-//   description?: string;
-//   founderId: string;
-//   minFeeToJoin: number;
-//   contributionType: CommonContributionType;
-//   zeroContribution?: boolean;
-//   searchable?: boolean;
-// }
-
-// export interface CommonPayment {
-//   link: string;
-// }

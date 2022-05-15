@@ -555,7 +555,7 @@ export default function CommonDetail() {
                       </div>
                     )}
                   </div>
-                  <div className="tagline">{common?.metadata.byline}</div>
+                  <div className="tagline">{common.byline}</div>
                 </div>
               </div>
               <div className="numbers">

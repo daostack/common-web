@@ -13,7 +13,6 @@ import { ScreenSize } from "@/shared/constants";
 import { Common } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { PaymentPayload } from "../../../../interfaces";
-import { PersonalContribution } from "./PersonalContribution";
 import { PROGRESS_RELATED_STEPS } from "./Progress";
 import { PaymentStep } from "./constants";
 import { RequestPayment } from "./RequestPayment";
@@ -136,8 +135,6 @@ export default function Payment(props: PaymentProps) {
     };
 
     switch (step) {
-      case PaymentStep.PersonalContribution:
-        return <PersonalContribution {...stepProps} />;
       case PaymentStep.PaymentDetails:
         return (
           <RequestPayment

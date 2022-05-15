@@ -19,15 +19,11 @@ interface AmountSelectionProps {
 
 const AmountSelection: FC<AmountSelectionProps> = (props) => {
   const {
-    common,
     currentAmount,
     onSelect,
     setShouldShowGoBackButton,
     styles,
   } = props;
-  const {
-    metadata: { minFeeToJoin },
-  } = common;
 
   const handleChange = (
     amount: number | null,
@@ -63,8 +59,6 @@ const AmountSelection: FC<AmountSelectionProps> = (props) => {
         The change will apply starting from the next charge.
       </p>
       <ContributionAmountSelection
-        minFeeToJoin={minFeeToJoin}
-        zeroContribution={false}
         currentAmount={currentAmount}
         pricePostfix="/mo"
         onChange={handleChange}
