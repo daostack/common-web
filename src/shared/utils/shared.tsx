@@ -298,7 +298,8 @@ function timeSince(date: Date) {
   let interval = seconds / 31536000;
 
   if (interval > 1) {
-    return Math.floor(interval) + " years ago";
+    const y = Math.floor(interval);
+    return y + (y > 1 ? " years ago" : "year ago");
   }
   interval = seconds / 2592000;
   if (interval > 1) {
