@@ -299,27 +299,27 @@ function timeSince(date: Date) {
 
   if (interval > 1) {
     const y = Math.floor(interval);
-    return y + (y > 1 ? " years ago" : "year ago");
+    return y + (y > 1 ? " years ago" : " year ago");
   }
   interval = seconds / 2592000;
   if (interval > 1) {
     const m = Math.floor(interval);
-    return m + (m > 1 ? " months ago" : "month ago");
+    return m + (m > 1 ? " months ago" : " month ago");
   }
   interval = seconds / 86400;
   if (interval > 1) {
     const d = Math.floor(interval);
-    return d + (d > 1 ? " days ago" : "day ago");
+    return d + (d > 1 ? " days ago" : " day ago");
   }
   interval = seconds / 3600;
   if (interval > 1) {
     const h = Math.floor(interval);
-    return h + (h > 1 ? " hours ago" : "hour ago");
+    return h + (h > 1 ? " hours ago" : " hour ago");
   }
   interval = seconds / 60;
   if (interval > 1) {
     const min = Math.floor(interval);
-    return min + (min > 1 ? " minutes ago" : "minute ago");
+    return min + (min > 1 ? " minutes ago" : " minute ago");
   }
   return Math.floor(seconds) + " seconds ago";
 }
