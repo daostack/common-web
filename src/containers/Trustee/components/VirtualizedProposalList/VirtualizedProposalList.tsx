@@ -1,21 +1,21 @@
 import React, { FC } from "react";
 import { AutoSizer, Grid, WindowScroller } from "react-virtualized";
-import { Loader } from "../../../../shared/components";
-import { Proposal } from "../../../../shared/models";
+import { Loader } from "@/shared/components";
+import { ExtendedProposal } from "../../interfaces";
 import { ProposalCard } from "../ProposalCard";
 import "./index.scss";
 
 const CARD_WIDTH = 384;
-const CARD_HEIGHT = 328;
+const CARD_HEIGHT = 382;
 const CARDS_V_GAP = 32;
 const CARDS_H_GAP = 24;
 
 interface VirtualizedProposalListProps {
   title: string;
   emptyListText: string;
-  proposals: Proposal[];
+  proposals: ExtendedProposal[];
   isLoading: boolean;
-  onProposalView: (proposal: Proposal) => void;
+  onProposalView: (proposal: ExtendedProposal) => void;
 }
 
 const VirtualizedProposalList: FC<VirtualizedProposalListProps> = (props) => {
@@ -73,6 +73,9 @@ const VirtualizedProposalList: FC<VirtualizedProposalListProps> = (props) => {
                           >
                             <ProposalCard
                               proposal={proposal}
+                              common={proposal.common}
+                              user={proposal.user}
+                              withAdditionalData
                               onClick={() => onProposalView(proposal)}
                             />
                           </div>
