@@ -41,7 +41,7 @@ interface MyProposalsContainerRouterParams {
     proposalType: ProposalType;
 }
 
-const MyProposalsContainer: FC = () => {
+const ActivitiesProposalsContainer: FC = () => {
   const dispatch = useDispatch();
   const { proposalType } = useParams<MyProposalsContainerRouterParams>();
   const myProposals = useSelector(selectUserProposalList());
@@ -136,7 +136,7 @@ const MyProposalsContainer: FC = () => {
           isHeaderSticky
           shouldShowHeaderShadow={false}
           styles={{
-              headerWrapper: "my-proposals__detail-modal-header-wrapper",
+              headerWrapper: "activities-proposals__detail-modal-header-wrapper",
           }}
         >
           <ProposalDetailModal
@@ -146,8 +146,8 @@ const MyProposalsContainer: FC = () => {
           />
         </Modal>
       }
-      <div className="my-proposals">
-        <h2 className="my-proposals__header">
+      <div className="activities-proposals">
+        <h2 className="activities-proposals__header">
           <NavLink
             to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES}
           >
@@ -160,7 +160,7 @@ const MyProposalsContainer: FC = () => {
           </NavLink>
         </h2>
         {loading ? <Loader /> : null}
-        <div className="my-proposals__proposals-list">
+        <div className="activities-proposals__proposals-list">
           {
             myProposalsByType.map(
               proposal =>
@@ -173,4 +173,4 @@ const MyProposalsContainer: FC = () => {
   );
 };
 
-export default MyProposalsContainer;
+export default ActivitiesProposalsContainer;

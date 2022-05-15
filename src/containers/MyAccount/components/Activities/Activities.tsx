@@ -194,6 +194,13 @@ const Activities: FC = () => {
               centeredSlides={true}
               spaceBetween={20}
               pagination={{ clickable: true }}
+              className={
+                classNames({
+                  "commons-list": (collectionEnum === ActivitiesCollection.COMMONS),
+                  "proposals-list": (collectionEnum === ActivitiesCollection.PROPOSALS),
+                  "membership-requests-list": (collectionEnum === ActivitiesCollection.MEMBERSHIP_REQUESTS),
+                })
+              }
               onReachEnd={() =>
                 setShowSliderViewAllButton(
                   collectionEnum,
@@ -338,7 +345,7 @@ const Activities: FC = () => {
                             || (isMobileView && !showSliderCommonsViewAll)
                   }
                 )}
-                to={ROUTE_PATHS.MY_COMMONS}
+                to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_COMMONS}
               >
                 View all
                 <img src="/icons/right-arrow.svg" alt="right-arrow" />

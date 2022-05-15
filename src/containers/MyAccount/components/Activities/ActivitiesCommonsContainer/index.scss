@@ -1,0 +1,40 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.activities-commons {
+  width: 100%;
+  margin-left: 2%;
+  padding: 2.5rem 0;
+
+  .activities-commons__header {
+    display: flex;
+    justify-content: flex-start;
+
+    > a {
+      display: flex;
+      text-decoration: none;
+      color: $black;
+      cursor: pointer;
+      font-size: $moderate-med;
+      font-family: NunitoSans, sans-serif;
+      font-weight: bold;
+    }
+  }
+
+  .activities-commons__commons-list {
+    display: grid;
+    justify-items: center;
+    grid-column-gap: 2rem;
+    grid-row-gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(18.75rem, 1fr));
+  }
+
+  @include big-phone {
+    padding: 0.9rem 0 1.5rem 0;
+    margin-left: 0;
+
+    .activities-commons__commons-list {
+      grid-template-columns: repeat(auto-fill, minmax(17.5rem, 1fr));
+    }
+  }
+}

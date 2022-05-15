@@ -92,7 +92,15 @@
     }
 
     .swiper-container {
-      height: 16.875rem;
+      &.commons-list {
+        height: 20.25rem;
+      }
+      &.proposals-list {
+        height: 16.125rem;
+      }
+      &.membership-requests-list {
+        height: 15rem;
+      }
 
       .swiper-slide {
         max-width: 18.75rem;
