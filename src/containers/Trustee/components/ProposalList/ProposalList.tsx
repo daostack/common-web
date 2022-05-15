@@ -1,15 +1,15 @@
 import React, { FC } from "react";
-import { Loader } from "../../../../shared/components";
-import { Proposal } from "../../../../shared/models";
+import { Loader } from "@/shared/components";
+import { ExtendedProposal } from "../../interfaces";
 import { ProposalCard } from "../ProposalCard";
 import "./index.scss";
 
 interface ProposalListProps {
   title: string;
   emptyListText: string;
-  proposals: Proposal[];
+  proposals: ExtendedProposal[];
   isLoading: boolean;
-  onProposalView: (proposal: Proposal) => void;
+  onProposalView: (proposal: ExtendedProposal) => void;
 }
 
 const ProposalList: FC<ProposalListProps> = (props) => {
@@ -33,6 +33,9 @@ const ProposalList: FC<ProposalListProps> = (props) => {
             >
               <ProposalCard
                 proposal={proposal}
+                common={proposal.common}
+                user={proposal.user}
+                withAdditionalData
                 onClick={() => onProposalView(proposal)}
               />
             </li>
