@@ -159,7 +159,7 @@ const ActivitiesProposalsContainer: FC = () => {
             }({myProposalsByType.length})
           </NavLink>
         </h2>
-        {loading ? <Loader /> : null}
+        {loading && <Loader />}
         <div className="activities-proposals__proposals-list">
           {
             myProposalsByType.map(

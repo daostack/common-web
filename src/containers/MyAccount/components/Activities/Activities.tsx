@@ -351,7 +351,7 @@ const Activities: FC = () => {
                 <img src="/icons/right-arrow.svg" alt="right-arrow" />
               </NavLink>
             </div>
-            {loading ? <Loader /> : null}
+            {loading && <Loader />}
             {
               (myCommons.length !== 0)
                 ? renderCollectionList(myCommons, ActivitiesCollection.COMMONS)
@@ -379,7 +379,7 @@ const Activities: FC = () => {
                 <img src="/icons/right-arrow.svg" alt="right-arrow" />
               </NavLink>
             </div>
-            {loading ? <Loader /> : null}
+            {loading && <Loader />}
             {
               (myFundingProposals.length !== 0)
                 ? renderCollectionList(myFundingProposals, ActivitiesCollection.PROPOSALS)
@@ -407,7 +407,7 @@ const Activities: FC = () => {
                 <img src="/icons/right-arrow.svg" alt="right-arrow" />
               </NavLink>
             </div>
-            {loading ? <Loader /> : null}
+            {loading && <Loader />}
             {
               (myMembershipRequests.length !== 0)
                 ? renderCollectionList(myMembershipRequests, ActivitiesCollection.MEMBERSHIP_REQUESTS)

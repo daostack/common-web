@@ -2,9 +2,9 @@ import React, { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 
-import { selectUser } from "../../../../Auth/store/selectors";
-import { selectCommonList } from "../../../../Common/store/selectors";
-import { getCommonsList } from "../../../../Common/store/actions";
+import { selectUser } from "@/containers/Auth/store/selectors";
+import { selectCommonList } from "@/containers/Common/store/selectors";
+import { getCommonsList } from "@/containers/Common/store/actions";
 import { Loader } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { getLoading } from "@/shared/store/selectors";
@@ -46,7 +46,7 @@ const ActivitiesCommonsContainer: FC = () => {
           Commons ({myCommons.length})
         </NavLink>
       </h2>
-      {loading ? <Loader /> : null}
+      {loading && <Loader />}
       <div className="activities-commons__commons-list">
         {
           myCommons.map(
