@@ -74,3 +74,5 @@ Create a new file near the file you are going to test. Use the same file name, b
 Examples:
 - `formatDate.ts` -> `formatDate.spec.ts`
 - `Button.ts` -> `Button.spec.ts`
+
+If you need to mock something you can create a file in [utils/tests](./src/shared/utils/tests) and import a newly created file in the [setupTests.ts](./src/shared/utils/tests/setupTests.ts) file.
