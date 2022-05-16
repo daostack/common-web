@@ -7,7 +7,7 @@ import { authentificated } from "@/containers/Auth/store/selectors";
 import { Sidebar } from "../../components/Sidebar";
 import { Profile } from "../../components/Profile";
 import { Activities } from "../../components/Activities";
-import { MyProposalsContainer } from "../../components/Activities/MyProposalsContainer";
+import { ActivitiesProposalsContainer, ActivitiesCommonsContainer } from "../../components/Activities";
 import { Billing } from "../../components/Billing";
 import "./index.scss";
 
@@ -31,9 +31,15 @@ export default function MyAccountContainer() {
         authenticated={isAuthenticated}
       />
       <PrivateRoute
+        path={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_COMMONS}
+        exact
+        component={ActivitiesCommonsContainer}
+        authenticated={isAuthenticated}
+      />
+      <PrivateRoute
         path={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_PROPOSALS}
         exact
-        component={MyProposalsContainer}
+        component={ActivitiesProposalsContainer}
         authenticated={isAuthenticated}
       />
       <PrivateRoute

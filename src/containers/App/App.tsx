@@ -23,11 +23,15 @@ import { getNotification } from "@/shared/store/selectors";
 import { useModal } from "@/shared/hooks";
 import classNames from "classnames";
 import { BackgroundNotification } from "@/shared/components/BackgroundNotification";
+import { EventTypeState } from "@/shared/models/Notification";
+
+import { useHistory } from "react-router";
 
 const App = () => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(authentificated());
   const notification = useSelector(getNotification());
+  const history = useHistory();
 
   const {
     isShowing: isShowingNotification,
@@ -72,7 +76,15 @@ const App = () => {
   const closeNotificationHandler = useCallback(() => {
     closeNotification();
     dispatch(showNotification(null));
-  }, [closeNotification, dispatch]);
+    if (notification?.type === EventTypeState.fundingRequestAccepted) {
+      history.push(
+        ROUTE_PATHS.SUBMIT_INVOICES.replace(
+          ":proposalId",
+          notification.eventObjectId
+        )
+      );
+    }
+  }, [closeNotification, history, notification, dispatch]);
 
   return (
     <div className="App">

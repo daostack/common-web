@@ -194,6 +194,13 @@ const Activities: FC = () => {
               centeredSlides={true}
               spaceBetween={20}
               pagination={{ clickable: true }}
+              className={
+                classNames({
+                  "commons-list": (collectionEnum === ActivitiesCollection.COMMONS),
+                  "proposals-list": (collectionEnum === ActivitiesCollection.PROPOSALS),
+                  "membership-requests-list": (collectionEnum === ActivitiesCollection.MEMBERSHIP_REQUESTS),
+                })
+              }
               onReachEnd={() =>
                 setShowSliderViewAllButton(
                   collectionEnum,
@@ -338,13 +345,13 @@ const Activities: FC = () => {
                             || (isMobileView && !showSliderCommonsViewAll)
                   }
                 )}
-                to={ROUTE_PATHS.MY_COMMONS}
+                to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_COMMONS}
               >
                 View all
                 <img src="/icons/right-arrow.svg" alt="right-arrow" />
               </NavLink>
             </div>
-            {loading ? <Loader /> : null}
+            {loading && <Loader />}
             {
               (myCommons.length !== 0)
                 ? renderCollectionList(myCommons, ActivitiesCollection.COMMONS)
@@ -372,7 +379,7 @@ const Activities: FC = () => {
                 <img src="/icons/right-arrow.svg" alt="right-arrow" />
               </NavLink>
             </div>
-            {loading ? <Loader /> : null}
+            {loading && <Loader />}
             {
               (myFundingProposals.length !== 0)
                 ? renderCollectionList(myFundingProposals, ActivitiesCollection.PROPOSALS)
@@ -400,7 +407,7 @@ const Activities: FC = () => {
                 <img src="/icons/right-arrow.svg" alt="right-arrow" />
               </NavLink>
             </div>
-            {loading ? <Loader /> : null}
+            {loading && <Loader />}
             {
               (myMembershipRequests.length !== 0)
                 ? renderCollectionList(myMembershipRequests, ActivitiesCollection.MEMBERSHIP_REQUESTS)
