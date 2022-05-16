@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { PaymeTypeCodes } from "@/shared/interfaces/api/payMe";
-import { Loader } from "../../../../shared/components";
+import { Button, Loader } from "../../../../shared/components";
 import { InvoicesSubmission } from "../../../../shared/models";
 import { uploadFile } from "../../../../shared/utils/firebaseUploadFile";
 import { uploadInvoices } from "../../api";
@@ -52,8 +52,8 @@ export default function PendingUpload({ proposalId, selectedFiles, updateUploadS
 
   return (
     <div className="pending-upload-wrapper">
-      {!error && <Loader />}
-      <span>{!error ? "Uploading Invoices..." : error}</span>
+      {!error ? <Loader /> : <Button onClick={() => updateUploadState(UploadState.PreUpload)}>Try Again</Button>}
+      <span>{!error ? "Uploading Invoices..." : <span className="upload-error-text">{error}</span>}</span>
     </div>
   )
 }
