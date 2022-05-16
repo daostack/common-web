@@ -76,7 +76,7 @@ export default function MyCommonsContainer() {
           </Link>
         ) : null}
       </div>
-      {loading ? <Loader /> : null}
+      {loading && <Loader />}
 
       <div className="common-list">
         {myCommons.map((c) => (

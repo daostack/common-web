@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { PaymeTypeCodes } from "@/shared/interfaces/api/payMe";
-import { Loader } from "../../../../shared/components";
+import { Button, Loader } from "../../../../shared/components";
 import { InvoicesSubmission } from "../../../../shared/models";
 import { uploadFile } from "../../../../shared/utils/firebaseUploadFile";
 import { uploadInvoices } from "../../api";
@@ -15,6 +15,7 @@ interface IProps {
 }
 
 export default function PendingUpload({ proposalId, selectedFiles, updateUploadState, payoutDocsComment }: IProps) {
+  const [error, setError] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -39,17 +40,20 @@ export default function PendingUpload({ proposalId, selectedFiles, updateUploadS
         await uploadInvoices(invoicesData);
         updateUploadState(UploadState.Success);
       } catch (error) {
+        let errorText = "Something went wrong :/";
+        if (error instanceof Error) {
+          errorText = error.message;
+        }
+        setError(errorText);
         console.error(error);
-        // TODO: Need to show error to the user
-        updateUploadState(UploadState.PreUpload);
       }
     })();
   }, [selectedFiles, updateUploadState, proposalId, payoutDocsComment])
 
   return (
     <div className="pending-upload-wrapper">
-      <Loader />
-      <span>Uploading Invoices...</span>
+      {!error ? <Loader /> : <Button onClick={() => updateUploadState(UploadState.PreUpload)}>Try Again</Button>}
+      <span>{!error ? "Uploading Invoices..." : <span className="upload-error-text">{error}</span>}</span>
     </div>
   )
 }
