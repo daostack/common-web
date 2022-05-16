@@ -10,6 +10,7 @@ export interface Notification {
 export interface NotificationData {
   notificationId: string;
   type: EventTypeState;
+  eventObjectId: string;
   notificationDate: Date;
   title: string;
   content: string;

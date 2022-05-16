@@ -89,6 +89,9 @@
         span {
           color: $purple;
           margin-top: 1.5rem;
+          .upload-error-text {
+            color: $red;
+          }
         }
       }
       .upload-success-wrapper {
