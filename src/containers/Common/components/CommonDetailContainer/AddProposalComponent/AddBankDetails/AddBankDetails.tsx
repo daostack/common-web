@@ -49,7 +49,7 @@ interface FormValues {
   idNumber: string;
   socialIdIssueDate: Date;
   birthdate: Date;
-  gender: Gender;
+  gender?: Gender;
   phoneNumber: string;
   email: string;
   accountNumber: number | undefined;
@@ -67,7 +67,6 @@ const INITIAL_VALUES: FormValues = {
   idNumber: "",
   socialIdIssueDate: new Date(),
   birthdate: new Date(),
-  gender: Gender.None,
   phoneNumber: "",
   email: "",
   accountNumber: undefined,
@@ -124,6 +123,9 @@ export const AddBankDetails = (props: IProps) => {
   } = props;
   const dispatch = useDispatch();
   const formRef = useRef<FormikProps<FormValues>>(null);
+  const [initialValues, setInitialValues] = useState<FormValues>(() =>
+    getInitialValues(initialBankAccountDetails)
+  );
   const [photoIdFile, setPhotoIdFile] = useState<File | PaymeDocument | null>(
     () =>
       initialBankAccountDetails?.identificationDocs.find(
@@ -190,7 +192,7 @@ export const AddBankDetails = (props: IProps) => {
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     async (values) => {
-      if (!photoIdFile || !bankLetterFile) {
+      if (!photoIdFile || !bankLetterFile || !values.gender) {
         return;
       }
 
@@ -213,6 +215,8 @@ export const AddBankDetails = (props: IProps) => {
         setSending(false);
         return;
       }
+
+      setInitialValues(values);
 
       const bankAccountDetails: BankAccountDetails = {
         bankName: BANKS_OPTIONS.find((bank) => bank.value === values.bankCode)
@@ -276,6 +280,7 @@ export const AddBankDetails = (props: IProps) => {
 
       setSending(true);
       setError("");
+      setInitialValues(values);
 
       const payload: Partial<UpdateBankAccountDetailsData> = {
         bankName,
@@ -322,7 +327,7 @@ export const AddBankDetails = (props: IProps) => {
           </div>
         ) : (
           <Formik
-            initialValues={getInitialValues(initialBankAccountDetails)}
+            initialValues={initialValues}
             onSubmit={isEditing ? handleDetailsUpdate : handleSubmit}
             innerRef={formRef}
             validationSchema={

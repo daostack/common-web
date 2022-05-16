@@ -12,6 +12,7 @@ import {
   Payment,
   Subscription,
   BankAccountDetails,
+  ProposalType,
 } from "../../../shared/models";
 import { startLoading, stopLoading } from "@/shared/store/actions";
 import {
@@ -91,12 +92,17 @@ export function* getCommonsList(): Generator {
       c.discussions = discussionGrouped.get(c.id) ?? [];
       c.messages = messagesGrouped.get(c.id) ?? [];
 
+      c.proposals = c.proposals?.filter(
+        (e) => e.type === ProposalType.FundingRequest
+      );
+
       return c;
     });
 
     yield put(actions.getCommonsList.success(data));
     yield put(stopLoading());
   } catch (e) {
+    console.error(e);
     yield put(actions.getCommonsList.failure(e));
     yield put(stopLoading());
   }
@@ -345,6 +351,7 @@ export function* createDiscussionSaga(
 
         store.dispatch(actions.setDiscussion(ds));
         store.dispatch(actions.loadCommonDiscussionList.request());
+        store.dispatch(actions.getCommonsList.request());
       }
     )) as () => void;
 
@@ -374,6 +381,7 @@ export function* addMessageToDiscussionSaga(
             m.createTime?.seconds - mP.createTime?.seconds
         );
         store.dispatch(actions.loadDisscussionDetail.request(discussion));
+        store.dispatch(actions.getCommonsList.request());
       }
     );
 
@@ -404,6 +412,7 @@ export function* addMessageToProposalSaga(
         );
 
         store.dispatch(actions.loadProposalDetail.request(proposal));
+        store.dispatch(actions.getCommonsList.request());
       }
     );
 
@@ -597,6 +606,7 @@ export function* createFundingProposalSaga(
         store.dispatch(actions.loadProposalList.request());
         store.dispatch(stopLoading());
         action.payload.callback(AddProposalSteps.SUCCESS);
+        store.dispatch(actions.getCommonsList.request());
       }
     );
 

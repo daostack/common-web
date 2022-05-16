@@ -66,6 +66,23 @@ $approved-bg-color: $secondary-green;
     flex-direction: column;
   }
 
+  .trustee-proposal-card__extended-data-wrapper {
+    height: 2.875rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .trustee-proposal-card__extended-data {
+    margin: 0 0 0.5rem;
+    font-size: $xsmall;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
   .trustee-proposal-card__title {
     height: 2.75rem;
     margin: 0 0 1rem;
@@ -126,7 +143,7 @@ $approved-bg-color: $secondary-green;
   .trustee-proposal-card__view-button {
     width: 100%;
     height: unset;
-    margin-top: .5rem;
+    margin-top: 0.5rem;
     padding: 14px;
     font-family: NunitoSans-Regular, sans-serif;
     font-size: $small;

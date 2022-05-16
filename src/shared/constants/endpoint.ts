@@ -17,4 +17,5 @@ export const ApiEndpoint = {
   DeleteCommon: "/commons/deactivate",
   CreateUser: "/users/create",
   SendEmail: "/notifications/send-email",
+  SeenNotification: "/notifications/seen",
 };
