@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { default as store } from "../../../index";
+import { store } from "@/shared/appConfig";
 import {
   getRandomUserAvatarURL,
   tokenHandler,
