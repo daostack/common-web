@@ -10,17 +10,27 @@
   border-radius: 0 12px 12px 0;
   position: relative;
   box-sizing: border-box;
+
   .messages {
     height: 100%;
-    overflow: auto;
-    scrollbar-width: none;
+    overflow: hidden;
+
     &.empty {
       display: flex;
       justify-content: center;
     }
-    .date {
-      .title {
-        text-align: center;
+
+    .message-list {
+      height: 100%;
+      scrollbar-width: none;
+      overflow: auto;
+      padding: 0;
+
+      > li {
+        list-style: none;
+      }
+
+      .date-title {
         padding: 8px;
         border-radius: 15px;
         background-color: $white;
@@ -32,8 +42,9 @@
         margin: 24px auto;
       }
     }
+
     .message-wrapper {
-      width: 100%;
+      width: 95%;
       .message {
         display: flex;
         position: relative;

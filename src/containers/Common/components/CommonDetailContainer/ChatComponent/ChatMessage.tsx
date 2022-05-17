@@ -15,7 +15,10 @@ export default function ChatMessage({ disscussionMessage, highlighted = false }:
   const mDate = new Date(disscussionMessage.createTime.seconds * 1000);
 
   return (
-    <div className={classNames("message-wrapper", { highlighted })}>
+    <li
+      id={disscussionMessage.id}
+      className={classNames("message-wrapper", { highlighted })}
+    >
       <div className="message">
         <div className="icon-wrapper">
           {disscussionMessage.owner?.photoURL && !imageError ? (
@@ -60,6 +63,6 @@ export default function ChatMessage({ disscussionMessage, highlighted = false }:
           />
         </div>
       </div>
-    </div>
+    </li>
   );
 }

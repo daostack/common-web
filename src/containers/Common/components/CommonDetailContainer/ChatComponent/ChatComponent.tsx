@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+} from "react";
 import { useSelector } from "react-redux";
+import { scroller } from "react-scroll";
+import { v4 as uuidv4 } from "uuid";
 
 import { getScreenSize } from "@/shared/store/selectors";
 import { CommonShare, Loader } from "@/shared/components";
 import { Common, DiscussionMessage } from "@/shared/models";
 import ChatMessage from "./ChatMessage";
-import "./index.scss";
 import { formatDate } from "@/shared/utils";
 import {
   Colors,
@@ -13,6 +18,7 @@ import {
   ScreenSize,
 } from "@/shared/constants";
 import { EmptyTabComponent } from "@/containers/Common/components/CommonDetailContainer";
+import "./index.scss";
 
 interface ChatComponentInterface {
   common: Common | null;
@@ -63,6 +69,28 @@ export default function ChatComponent({
   const messages = discussionMessage.reduce(groupday, {});
   const isMobileView = (screenSize === ScreenSize.Mobile);
   const dateList = Object.keys(messages);
+  const chatId = useMemo(() => `chat-${uuidv4()}`, []);
+
+  useEffect(
+    () => {
+      if (!highlightedMessageId)
+        return;
+
+      setTimeout(
+        () => {
+          scroller.scrollTo(highlightedMessageId, {
+            containerId: chatId,
+            delay: 0,
+            duration: 300,
+            offset: -15,
+            smooth: true,
+          });
+        },
+        0
+      );
+    },
+    [chatId, highlightedMessageId]
+  );
 
   return (
     <div className="chat-wrapper">
@@ -70,12 +98,16 @@ export default function ChatComponent({
         {dateList.map((day) => {
           const date = new Date(Number(day));
           return (
-            <div className="date" key={day}>
-              <div className="title">
+            <ul
+              id={chatId}
+              className="message-list"
+              key={day}
+            >
+              <li className="date-title">
                 {isToday(date) ? "Today" : formatDate(date)}
-              </div>
-              <div className="message-list">
-                {messages[Number(day)].map((m) => {
+              </li>
+              {
+                messages[Number(day)].map((m) => {
                   return (
                     <ChatMessage
                       key={m.id}
@@ -83,9 +115,9 @@ export default function ChatComponent({
                       highlighted={m.id === highlightedMessageId}
                     />
                   );
-                })}
-              </div>
-            </div>
+                })
+              }
+            </ul>
           );
         })}
 
