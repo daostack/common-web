@@ -10,11 +10,11 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
+import { commonMembersSubCollection } from "@/containers/Common/store/api";
 import { Modal } from "../../../../../shared/components";
 import { useZoomDisabling } from "../../../../../shared/hooks";
 import { ModalProps, ModalRef } from "../../../../../shared/interfaces";
 import { Common, CommonLink } from "../../../../../shared/models";
-//import MembershipRequestContribution from "./MembershipRequestContribution";
 import MembershipRequestCreated from "./MembershipRequestCreated";
 import MembershipRequestCreating from "./MembershipRequestCreating";
 import MembershipRequestIntroduce from "./MembershipRequestIntroduce";
@@ -102,13 +102,7 @@ export function MembershipRequestModal(props: IProps) {
       dispatch(getCommonsList.request());
     }
 
-    // TODO: export to a function to get common members
-    const isMember = commons.some(async (common) => {
-      if (common.members) {
-        return (await common.members.doc(user?.uid).get()).exists;
-      }
-      return false;
-    })
+    const isMember = commons.some(async (common) => (await commonMembersSubCollection(common.id).doc(user?.uid).get()).exists);
 
     setIsMember(isMember);
 
@@ -185,12 +179,7 @@ export function MembershipRequestModal(props: IProps) {
 
   const moveStageBack = useCallback(() => {
     setUserData((data) => {
-      const isContributionStage = data.stage === 3;
-      const prevStage =
-        isContributionStage && common.rules.length === 0
-          ? data.stage - 2
-          : data.stage - 1;
-
+      const prevStage = data.stage - 1;
       return {
         ...data,
         stage: prevStage,

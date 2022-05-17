@@ -65,16 +65,15 @@ export interface Common extends BaseEntity {
    */
   messageCount: number;
 
+  /**
+   * Number of memebers in the common
+   */
+  memberCount: number;
 
   /**
    * The whitelisting status of the common
    */
   register: CommonRegistered;
-
-  /**
-   * Subcollection of users, since a collection cant exist and be empty, it might be null until members are added.
-   */
-  readonly members: firebase.firestore.CollectionReference<CommonMember> | null;
 
   readonly governanceId: string | null;
 

@@ -10,10 +10,12 @@ import {
   Card,
   Collection,
   Common,
+  CommonMember,
   Discussion,
   DiscussionMessage,
   Payment,
   Proposal,
+  SubCollections,
   Subscription,
   User,
 } from "@/shared/models";
@@ -46,6 +48,7 @@ import {
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 import { UpdateBankAccountDetailsData } from "@/shared/interfaces/api/bankAccount";
 import { NotificationItem } from "@/shared/models/Notification";
+import { Governance } from "../interfaces/Governance";
 
 export async function createGovernance(
   requestData: GovernanceCreatePayload
@@ -54,7 +57,7 @@ export async function createGovernance(
     ApiEndpoint.GovernanceCreate,
     requestData
   );
-  
+
   console.log(data);
   return data;
 }
@@ -568,4 +571,32 @@ export async function seenNotification(id: string): Promise<void> {
   await Api.post(ApiEndpoint.SeenNotification, {
     id,
   });
+}
+
+// TODO: verify it's the correct place to have these functions
+export const commonMembersSubCollection = (commonId: string) => {
+  return firebase.firestore().collection(Collection.Daos).doc(commonId).collection(SubCollections.Members).withConverter<CommonMember>({
+    fromFirestore(snapshot: firebase.firestore.QueryDocumentSnapshot<CommonMember>): CommonMember {
+      return snapshot.data()
+    },
+
+    toFirestore(object: Partial<CommonMember>): firebase.firestore.DocumentData {
+      return object;
+    }
+  });;
+}
+
+export const governanceCollection = firebase.firestore().collection(Collection.Governance)
+  .withConverter<Governance>({
+    fromFirestore(snapshot: firebase.firestore.QueryDocumentSnapshot): Governance {
+      return snapshot.data() as Governance;
+    },
+
+    toFirestore(object: Partial<Governance>): firebase.firestore.DocumentData {
+      return object;
+    }
+  });
+
+export const getCommonGovernanceRules = async (governanceId: string) => {
+  return (await governanceCollection.doc(governanceId).get()).data()?.unstructuredRules;
 }

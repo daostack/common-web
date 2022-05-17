@@ -18,6 +18,7 @@ export interface File {
 }
 
 export enum Collection {
+  Governance = "governance",
   Cards = "cards",
   Proposals = "proposals",
   Discussion = "discussion",
@@ -27,6 +28,11 @@ export enum Collection {
   Payments = "payments",
   Subscriptions = "subscriptions",
   Notifications = "notification",
+}
+
+export enum SubCollections {
+  Members = "members",
+  Votes = "votes",
 }
 
 export enum DateFormat {

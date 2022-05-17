@@ -1,21 +1,22 @@
 import React, { useEffect } from "react";
 import { Button } from "../../../../../shared/components";
 import { IStageProps } from "./MembershipRequestModal"
-import firebase from "firebase/app";
+import { getCommonGovernanceRules } from "@/containers/Common/store/api";
 import "./index.scss";
-import { Common } from "@/shared/models";
-import { Governance } from "@/containers/Common/interfaces/Governanve";
-
-// TODO: need to put in a seperate file
-const getRules = async (common: Common) => {
-  if (common.governanceId) {
-    const governance = (await firebase.firestore().collection("governance").doc(common.governanceId).get()).data() as Governance;
-    return Object.entries(governance.unstructuredRules);
-  }
-}
+import { UnstructuredRules } from "@/containers/Common/interfaces/UnstructuredRules";
 
 export default function MembershipRequestRules(props: IStageProps) {
   const { userData, setUserData, common } = props;
+  let rules: UnstructuredRules | undefined;
+
+  useEffect(() => {
+    (async () => {
+      if (common) {
+        rules = await getCommonGovernanceRules(common.governanceId!)
+      }
+    })();
+  }, [common])
+
 
   return (
     <div className="membership-request-content membership-request-rules">
@@ -25,7 +26,7 @@ export default function MembershipRequestRules(props: IStageProps) {
         equal voting rights
       </div>
       <ol className="membership-request-rules__rules-wrapper">
-        {common?.rules.map((rule, index) => (
+        {rules.map((rule, index) => (
           <li
             key={index}
             className="membership-request-rules__rules-item-wrapper"
