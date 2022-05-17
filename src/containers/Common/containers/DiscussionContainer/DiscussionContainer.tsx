@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CommonDetailContainer, Tabs } from "..";
 import { fetchDiscussionById } from "../../store/api";
@@ -9,7 +9,7 @@ interface DiscussionRouterParams {
   id: string;
 }
 
-const DiscussionContainer = () => {
+const DiscussionContainer: FC = () => {
   const { id: discussionId } = useParams<DiscussionRouterParams>();
   const [currentDiscussion, setCurrentDiscussion] = useState<Discussion | null>(null);
   const [currentTab, setCurrentTab] = useState<Tabs | null>(null);
