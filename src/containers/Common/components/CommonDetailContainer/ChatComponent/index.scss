@@ -48,12 +48,12 @@
       .message {
         display: flex;
         position: relative;
-        margin-bottom: 16px;
-        width: 400px;
+        margin-bottom: 1rem;
+        width: 25rem;
         .icon-wrapper {
           flex-shrink: 0;
-          width: 32px;
-          height: 32px;
+          width: 2rem;
+          height: 2rem;
           border-radius: 50%;
           font-size: 14px;
           font-weight: bold;
@@ -63,7 +63,7 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          margin-right: 12px;
+          margin-right: 0.75rem;
           position: relative;
           margin-bottom: 8px;
           overflow: hidden;
@@ -78,8 +78,8 @@
           }
         }
         .message-text {
-          padding: 8px 16px;
-          border-radius: 14px;
+          padding: 0.5rem 1rem;
+          border-radius: 0.875rem;
           background-color: #e0e3ff;
           flex-direction: row;
           width: 85%;
@@ -87,17 +87,17 @@
           position: relative;
 
           .message-name {
-            font-size: 14px;
+            font-size: $xsmall;
             font-weight: bold;
             color: #001a36;
-            margin-bottom: 8px;
+            margin-bottom: 0.5rem;
           }
           .message-content {
-            font-size: 16px;
+            font-size: $small;
             color: #001a36;
             word-wrap: break-word;
             .time-wrapper {
-              font-size: 10px;
+              font-size: $xxxsmall;
               font-weight: bold;
               color: $light-gray-2;
               text-align: right;

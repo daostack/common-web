@@ -86,7 +86,7 @@ const ElementDropdown: FC<ElementDropdownProps> = (
     linkType,
     elem,
     transparent = false,
-    variant = Orientation.vertical,
+    variant = Orientation.Vertical,
     styles = {},
     className,
   }
@@ -178,7 +178,7 @@ const ElementDropdown: FC<ElementDropdownProps> = (
         isLoading={isShareLinkGenerating}
         sourceUrl={linkURL || ""}
         onClose={onClose}
-        type={isMobileView ? ShareViewType.modalMobile : ShareViewType.modalDesktop}
+        type={isMobileView ? ShareViewType.ModalMobile : ShareViewType.ModalDesktop}
       />
     </>
   );

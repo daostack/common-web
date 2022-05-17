@@ -86,16 +86,16 @@ export const SocialLinks: FC<SocialLinksProps> = (
       className={classNames(
         "social-links-wrapper",
         {
-          "social-links-wrapper--modal-mobile": (shareViewType === ShareViewType.modalMobile),
-          "social-links-wrapper--top-center": (shareViewType === ShareViewType.popup) && (popupVariant === SharePopupVariant.topCenter),
+          "social-links-wrapper--modal-mobile": (shareViewType === ShareViewType.ModalMobile),
+          "social-links-wrapper--top-center": (shareViewType === ShareViewType.Popup) && (popupVariant === SharePopupVariant.TopCenter),
           "social-links-wrapper--loading": isLoading,
 
-          "social-links-wrapper--modal-desktop": (shareViewType === ShareViewType.modalDesktop),
+          "social-links-wrapper--modal-desktop": (shareViewType === ShareViewType.ModalDesktop),
         }
       )}
       style={{ top: `${top ?? "64px"}` }}
     >
-      {shareViewType === ShareViewType.popup && <div className="title">Share with</div>}
+      {shareViewType === ShareViewType.Popup && <div className="title">Share with</div>}
       {
         isLoading
           ? <Loader />
@@ -104,7 +104,7 @@ export const SocialLinks: FC<SocialLinksProps> = (
               className={classNames(
                 "social-links",
                 {
-                "social-links--modal-mobile": (shareViewType === ShareViewType.modalMobile),
+                "social-links--modal-mobile": (shareViewType === ShareViewType.ModalMobile),
                 }
               )}
             >

@@ -150,8 +150,8 @@ export default function ChatComponent({
                 common={common}
                 type={
                   isMobileView
-                  ? ShareViewType.modalMobile
-                  : ShareViewType.modalDesktop
+                  ? ShareViewType.ModalMobile
+                  : ShareViewType.ModalDesktop
                 }
                 color={Colors.lightPurple}
                 top="-130px"

@@ -632,7 +632,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                         ) : (
                           <CommonShare
                             common={common}
-                            type={ShareViewType.modalMobile}
+                            type={ShareViewType.ModalMobile}
                             color={Colors.lightGray4}
                           />
                         )}
@@ -713,7 +713,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                     <CommonShare
                       shareButtonClassName="common-detail-wrapper__menu-button--big"
                       common={common}
-                      type={ShareViewType.modalDesktop}
+                      type={ShareViewType.ModalDesktop}
                       color={Colors.lightGray4}
                       withBorder
                     />
@@ -730,7 +730,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                 {isCommonMember && isMobileView && (
                   <CommonShare
                     common={common}
-                    type={ShareViewType.modalMobile}
+                    type={ShareViewType.ModalMobile}
                     color={Colors.transparent}
                   >
                     <button className="button-blue common-content-selector__long-share-button">

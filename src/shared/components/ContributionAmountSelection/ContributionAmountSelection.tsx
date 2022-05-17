@@ -132,7 +132,7 @@ export default function ContributionAmountSelection(props: IProps) {
           className="contribution-amount-selection__toggle-button-group"
           value={selectedContribution}
           onChange={handleChange}
-          variant={Orientation.vertical}
+          variant={Orientation.Vertical}
         >
           {amountsForSelection.map((amount) => (
             <ToggleButton

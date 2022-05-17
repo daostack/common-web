@@ -11,7 +11,7 @@ export const ToggleButtonGroupContext = React.createContext<ToggleButtonGroupCon
   onChange: () => {
     throw new Error("onChange is called not from the child of ToggleButtonGroup");
   },
-  variant: Orientation.horizontal,
+  variant: Orientation.Horizontal,
 });
 
 export const useToggleButtonGroupContext = () => useContext(ToggleButtonGroupContext);

@@ -199,7 +199,7 @@ export function* loadDiscussionDetail(
 
     let discussionMessage: DiscussionMessage[];
 
-    if (action.payload.discussionMessage && action.payload.discussionMessage.length) {
+    if (action.payload.discussionMessage?.length) {
       discussionMessage = action.payload.discussionMessage;
     } else {
       discussionMessage = (yield fetchDiscussionsMessages([discussion.id])) as DiscussionMessage[];
@@ -267,7 +267,7 @@ export function* loadProposalDetail(
 
     let discussionMessage: DiscussionMessage[];
 
-    if (action.payload.discussionMessage && action.payload.discussionMessage.length) {
+    if (action.payload.discussionMessage?.length) {
       discussionMessage = action.payload.discussionMessage;
     } else {
       discussionMessage = (yield fetchDiscussionsMessages([proposal.id])) as DiscussionMessage[];

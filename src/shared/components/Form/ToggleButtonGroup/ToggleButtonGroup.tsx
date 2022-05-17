@@ -23,7 +23,7 @@ export interface ToggleButtonGroupProps {
 }
 
 const ToggleButtonGroup: FC<ToggleButtonGroupProps> = (props) => {
-  const { className, label, value, onChange, error, styles, children, variant = Orientation.horizontal } = props;
+  const { className, label, value, onChange, error, styles, children, variant = Orientation.Horizontal } = props;
 
   const contextValue = useMemo<ToggleButtonGroupContextValue>(() => ({
     currentValue: value,
@@ -40,7 +40,7 @@ const ToggleButtonGroup: FC<ToggleButtonGroupProps> = (props) => {
       )}
       <div
         className={classNames("custom-toggle-button-group__buttons", {
-          "custom-toggle-button-group__buttons--vertical": variant === Orientation.vertical,
+          "custom-toggle-button-group__buttons--vertical": variant === Orientation.Vertical,
         })}
         role="group"
         aria-label={label}

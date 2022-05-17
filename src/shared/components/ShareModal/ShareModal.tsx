@@ -9,7 +9,7 @@ interface ShareModalProps {
   isShowing: boolean;
   onClose: () => void;
   title?: string;
-  type: (ShareViewType.modalDesktop | ShareViewType.modalMobile);
+  type: (ShareViewType.ModalDesktop | ShareViewType.ModalMobile);
   sourceUrl: string;
   isLoading: boolean;
   linkText?: string;
@@ -27,7 +27,7 @@ const ShareModal: FC<PropsWithChildren<ShareModalProps>> = (
     linkText,
   }
 ) => {
-  const isMobileModal = useMemo(() => (type === ShareViewType.modalMobile), [type]);
+  const isMobileModal = useMemo(() => (type === ShareViewType.ModalMobile), [type]);
 
   return (
     <Modal

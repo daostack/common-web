@@ -17,7 +17,7 @@ const MenuButton: FC<MenuButtonProps> = (
     onClick,
     className,
     withBorder,
-    variant = Orientation.vertical,
+    variant = Orientation.Vertical,
   }
 ) => (
   <ButtonIcon

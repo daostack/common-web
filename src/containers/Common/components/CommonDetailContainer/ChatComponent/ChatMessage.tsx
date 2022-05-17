@@ -58,7 +58,7 @@ export default function ChatMessage({ disscussionMessage, highlighted = false }:
             linkType={DynamicLinkType.DiscussionMessage}
             elem={disscussionMessage}
             className="dropdown-menu"
-            variant={Orientation.horizontal}
+            variant={Orientation.Horizontal}
             transparent
           />
         </div>

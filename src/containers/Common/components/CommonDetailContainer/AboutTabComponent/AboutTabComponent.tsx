@@ -59,7 +59,7 @@ export default function AboutTabComponent({
             </button>
             <CommonShare
               common={common}
-              type={ShareViewType.popup}
+              type={ShareViewType.Popup}
               color={Colors.lightPurple}
             />
           </div>

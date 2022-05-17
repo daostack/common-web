@@ -33,7 +33,7 @@ export default function Share(props: PropsWithChildren<IProps>) {
     type,
     top,
     children,
-    popupVariant = SharePopupVariant.bottomLeft,
+    popupVariant = SharePopupVariant.BottomLeft,
     isLoading = false,
     withBorder = false,
   } = props;
@@ -45,14 +45,14 @@ export default function Share(props: PropsWithChildren<IProps>) {
   document.documentElement.style.setProperty("--share-button-bg", color);
 
   useEffect(() => {
-    if (type === ShareViewType.popup && isOutside) {
+    if (type === ShareViewType.Popup && isOutside) {
       setShown(false);
       setOusideValue();
     }
   }, [isOutside, setShown, setOusideValue, type]);
 
   const handleClick = () => {
-    if (type !== ShareViewType.popup) {
+    if (type !== ShareViewType.Popup) {
       onOpen();
     } else {
       setShown(true);
@@ -77,7 +77,7 @@ export default function Share(props: PropsWithChildren<IProps>) {
         />
       )}
       {
-        (type === ShareViewType.popup)
+        (type === ShareViewType.Popup)
         ? (
             isShown && <SocialLinks
               shareViewType={type}

@@ -82,10 +82,10 @@ const Success: FC<SuccessProps> = (props) => {
         <CommonShare
           className="create-common-confirmation-success__button-wrapper"
           common={common}
-          type={isMobileView ? ShareViewType.modalMobile : ShareViewType.popup}
+          type={isMobileView ? ShareViewType.ModalMobile : ShareViewType.Popup}
           color={Colors.lightPurple}
           top=""
-          popupVariant={SharePopupVariant.topCenter}
+          popupVariant={SharePopupVariant.TopCenter}
         >
           <Button
             key="create-common-confirmation-success-share-btn"

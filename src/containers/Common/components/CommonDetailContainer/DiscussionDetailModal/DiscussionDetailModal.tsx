@@ -1,20 +1,21 @@
 import React, { useCallback, useState, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import classNames from "classnames";
 
-import { Loader } from "../../../../../shared/components";
+import { Loader } from "@/shared/components";
 import {
   Common,
   Discussion,
   DiscussionWithHighlightedMessage,
-} from "../../../../../shared/models";
-import { getDaysAgo, getUserName } from "../../../../../shared/utils";
+  isDiscussionWithHighlightedMessage,
+} from "@/shared/models";
+import { getDaysAgo, getUserName } from "@/shared/utils";
 import { ChatComponent } from "../ChatComponent";
-import "./index.scss";
-import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { addMessageToDiscussion } from "@/containers/Common/store/actions";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ScreenSize } from "@/shared/constants";
-import classNames from "classnames";
+import "./index.scss";
 
 interface DiscussionDetailModalProps {
   disscussion: Discussion | DiscussionWithHighlightedMessage | null;
@@ -37,10 +38,9 @@ export default function DiscussionDetailModal({
   const screenSize = useSelector(getScreenSize());
   const [expanded, setExpanded] = useState(true);
   const highlightedMessageId = useMemo(
-    () => (
-            disscussion
-            && (disscussion as DiscussionWithHighlightedMessage).highlightedMessageId
-          ) ? (disscussion as DiscussionWithHighlightedMessage).highlightedMessageId : null,
+    () => isDiscussionWithHighlightedMessage(disscussion)
+          ? disscussion.highlightedMessageId
+          : null,
     [disscussion]
   );
 

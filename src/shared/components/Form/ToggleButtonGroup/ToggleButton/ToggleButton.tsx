@@ -26,7 +26,7 @@ const ToggleButton: FC<ToggleButtonProps> = (props) => {
 
   const buttonClassName = classNames("custom-toggle-button", styles?.default, {
     [classNames("custom-toggle-button--active", styles?.active)]: value === currentValue,
-    [classNames("custom-toggle-button--vertical", styles?.vertical)]: variant === Orientation.vertical,
+    [classNames("custom-toggle-button--vertical", styles?.vertical)]: variant === Orientation.Vertical,
   });
 
   return (

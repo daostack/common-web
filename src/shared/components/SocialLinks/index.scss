@@ -5,17 +5,17 @@
   z-index: $share-z-index;
   position: absolute;
   padding: 0.75rem 1.5rem 1.5rem 1.5rem;
-  border-radius: 30px;
-  box-shadow: 0 4px 15px 0 $shadow;
+  border-radius: 1.875rem;
+  box-shadow: 0 0.25rem 1rem 0 $shadow;
   background-color: $white;
-  top: 64px;
+  top: 4rem;
   right: 10%;
   .title {
     font-size: $xsmall;
     font-weight: bold;
     text-align: center;
     color: $blue;
-    margin-bottom: 16px;
+    margin-bottom: 1rem;
   }
 }
 .social-links-wrapper--modal-mobile {
@@ -41,12 +41,12 @@
   justify-content: center;
   button {
     flex-shrink: 0;
-    width: 40px;
-    height: 40px;
+    width: 2.5rem;
+    height: 2.5rem;
     border-radius: 50%;
     border: none;
     cursor: pointer;
-    margin: 0 10px;
+    margin: 0 0.625rem;
     background-repeat: no-repeat;
     background-size: cover;
     &.facebook {
@@ -98,7 +98,7 @@
     box-shadow: unset;
 
     .social-links {
-      height: 110px;
+      height: 6.875rem;
       align-items: center;
     }
   }
