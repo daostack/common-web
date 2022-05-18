@@ -112,7 +112,7 @@ export default function VotesComponent(
             </div>
             </div>
             <UserAvatar
-              photoURL={proposal.proposer?.photoURL ?? ""}
+              photoURL={user?.photoURL ?? ""}
               className={classNames(
                 "user-avatar",
                 "compact-card",
@@ -155,7 +155,7 @@ export default function VotesComponent(
                 {
                   (userVote?.voteOutcome === VoteOutcome.Approved)
                   ? <UserAvatar
-                    photoURL={proposal.proposer?.photoURL ?? ""}
+                    photoURL={user?.photoURL ?? ""}
                     className="user-avatar approve"
                   />
                   : <img
@@ -185,7 +185,7 @@ export default function VotesComponent(
                 {
                   (userVote?.voteOutcome === VoteOutcome.Abstained)
                   ? <UserAvatar
-                    photoURL={proposal.proposer?.photoURL ?? ""}
+                    photoURL={user?.photoURL ?? ""}
                     className="user-avatar abstain"
                   />
                   : <img
@@ -215,7 +215,7 @@ export default function VotesComponent(
                 {
                   (userVote?.voteOutcome === VoteOutcome.Rejected)
                   ? <UserAvatar
-                    photoURL={proposal.proposer?.photoURL ?? ""}
+                    photoURL={user?.photoURL ?? ""}
                     className="user-avatar reject"
                   />
                   : <img
@@ -233,7 +233,7 @@ export default function VotesComponent(
                 proposalId={proposal.id}
                 voteType={voteType!}
                 prevVote={userVote}
-                avatarURL={proposal.proposer?.photoURL ?? ""}
+                avatarURL={user?.photoURL ?? ""}
               />
             }
         </div>
