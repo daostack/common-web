@@ -6,7 +6,7 @@ import { Button, Separator } from "@/shared/components";
 import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
 import { Form, RulesArray } from "@/shared/components/Form/Formik";
 import { ScreenSize } from "@/shared/constants";
-import { CommonRule } from "@/shared/models";
+import { BaseRule } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
@@ -24,7 +24,7 @@ interface RulesProps {
 }
 
 interface FormValues {
-  rules: CommonRule[];
+  rules: BaseRule[];
 }
 
 const getInitialValues = (
@@ -50,7 +50,9 @@ export default function Rules({
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
-      const rules = values.rules.filter((rule) => rule.title && rule.definition);
+      const rules = values.rules.filter(
+        (rule) => rule.title && rule.definition
+      );
 
       onFinish({ rules });
     },
