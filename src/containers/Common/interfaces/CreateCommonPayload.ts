@@ -1,19 +1,12 @@
-import {
-  CommonContributionType,
-  CommonLink,
-  CommonRule,
-} from "@/shared/models";
+import { BaseRule, CommonLink } from "@/shared/models";
 
 export interface CreateCommonPayload {
   name: string;
   image: string;
   byline?: string;
   description?: string;
-  contributionAmount: number;
-  contributionType: CommonContributionType;
-  rules?: CommonRule[];
+  rules?: BaseRule[];
   links?: CommonLink[];
-  zeroContribution?: boolean;
   searchable?: boolean;
 }
 

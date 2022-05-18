@@ -1,5 +1,5 @@
 import { GovernanceActions } from "@/shared/constants";
-import { Circles, CommonRule, Consequences } from "@/shared/models";
+import { BaseRule, Circles, Consequences } from '@/shared/models';
 import { Proposals } from "@/shared/models/governance/proposals";
 
 export interface CreateGovernance {
@@ -7,7 +7,7 @@ export interface CreateGovernance {
   actions: GovernanceActions;
   proposals: Proposals;
   consequences: Consequences;
-  unstructuredRules: CommonRule[];
+  unstructuredRules: BaseRule[];
   tokenPool: number;
   commonId: string;
 }

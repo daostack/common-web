@@ -11,7 +11,7 @@ import { Modal } from "@/shared/components";
 import { getScreenSize } from "@/shared/store/selectors";
 import { useZoomDisabling } from "@/shared/hooks";
 import { ScreenSize } from "@/shared/constants";
-import { Common, CommonContributionType } from "@/shared/models";
+import { Common } from "@/shared/models";
 import {
   IntermediateCreateCommonPayload,
   PaymentPayload,
@@ -28,8 +28,6 @@ import "./index.scss";
 const INITIAL_DATA: IntermediateCreateCommonPayload = {
   name: "",
   image: null,
-  contributionAmount: 0,
-  contributionType: CommonContributionType.OneTime,
   agreementAccepted: false,
 };
 
