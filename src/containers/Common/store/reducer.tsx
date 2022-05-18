@@ -10,8 +10,10 @@ const initialState: CommonsStateType = {
   proposals: [],
   discussions: [],
   userProposals: [],
-  isDiscussionsLoaded: false,
+  isCommonsLoaded: false,
   isProposalsLoaded: false,
+  isUserProposalsLoaded: false,
+  isDiscussionsLoaded: false,
   currentDiscussion: null,
   currentProposal: null,
   cards: [],
@@ -23,6 +25,7 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
   .handleAction(actions.getCommonsList.success, (state, action) =>
     produce(state, (nextState) => {
       nextState.commons = action.payload;
+      nextState.isCommonsLoaded = true;
     })
   )
   .handleAction(actions.updatePage, (state, action) =>
@@ -60,6 +63,7 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
   .handleAction(actions.loadUserProposalList.success, (state, action) =>
     produce(state, (nextState) => {
       nextState.userProposals = action.payload;
+      nextState.isUserProposalsLoaded = true;
     })
   )
   .handleAction(actions.loadDisscussionDetail.success, (state, action) =>
@@ -108,6 +112,7 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       nextState.proposals = [];
       nextState.isDiscussionsLoaded = false;
       nextState.isProposalsLoaded = false;
+      nextState.isUserProposalsLoaded = false;
     })
   )
 

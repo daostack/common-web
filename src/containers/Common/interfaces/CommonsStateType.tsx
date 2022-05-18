@@ -11,8 +11,10 @@ export interface CommonsStateType {
   page: number;
   proposals: Proposal[];
   discussions: Discussion[];
-  isDiscussionsLoaded: boolean;
+  isCommonsLoaded: boolean;
   isProposalsLoaded: boolean;
+  isUserProposalsLoaded: boolean;
+  isDiscussionsLoaded: boolean;
   currentDiscussion: Discussion | null;
   currentProposal: Proposal | null;
   userProposals: Proposal[];
