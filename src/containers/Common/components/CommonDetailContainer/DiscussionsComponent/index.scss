@@ -51,6 +51,8 @@
     background-color: $white;
     margin-bottom: 24px;
     padding-bottom: 20px;
+    position: relative;
+
     .discussion-top-bar {
       display: flex;
       margin-bottom: 24px;
@@ -159,6 +161,12 @@
           right: -4px;
         }
       }
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
     }
   }
 }

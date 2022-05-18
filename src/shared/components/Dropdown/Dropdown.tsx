@@ -20,6 +20,7 @@ import {
 } from "react-aria-menubutton";
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
+import { Loader } from "@/shared/components";
 import RightArrowIcon from "../../icons/rightArrow.icon";
 import { GlobalOverlay } from "../GlobalOverlay";
 import "./index.scss";
@@ -40,6 +41,12 @@ export interface Option {
   className?: string;
 }
 
+export enum ElementDropdownMenuItems {
+  Share,
+  CopyLink,
+  Report,
+}
+
 export interface DropdownRef {
   openDropdown: () => void;
   closeDropdown: () => void;
@@ -57,6 +64,7 @@ export interface DropdownProps {
   shouldBeFixed?: boolean;
   menuButton?: ReactNode;
   onMenuToggle?: (isOpen: boolean) => void;
+  isLoading?: boolean;
 }
 
 const getFixedMenuStyles = (
@@ -122,6 +130,7 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
     menuButton,
     onMenuToggle,
     shouldBeFixed = true,
+    isLoading = false,
   } = props;
   const menuButtonRef = useRef<HTMLElement>(null);
   const [menuRef, setMenuRef] = useState<HTMLUListElement | null>(null);
@@ -213,37 +222,43 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
           })}
           style={menuStyles}
         >
-          <ul
-            className={classNames(
-              "custom-dropdown-wrapper__menu-list",
-              styles?.menuList
-            )}
-            style={menuStyles?.bottom === 0 ? { maxHeight: "100%" } : undefined}
-            ref={setMenuRef}
-          >
-            {options.map((option) => (
-              <MenuItem
-                key={String(option.value)}
-                className={classNames(
-                  "custom-dropdown-wrapper__menu-item",
-                  styles?.menuItem,
-                  option.className,
-                  {
-                    "custom-dropdown-wrapper__menu-item--active":
-                      option.value === selectedOption?.value,
-                  }
-                )}
-                tag="li"
-                value={option.value}
-                text={
-                  option.searchText ||
-                  (typeof option.text === "string" ? option.text : undefined)
-                }
+          {
+            isLoading
+              ? <Loader />
+              : <ul
+                  className={classNames(
+                    "custom-dropdown-wrapper__menu-list",
+                    styles?.menuList
+                  )}
+                  style={menuStyles?.bottom === 0 ? { maxHeight: "100%" } : undefined}
+                  ref={setMenuRef}
               >
-                {option.text}
-              </MenuItem>
-            ))}
-          </ul>
+                {
+                  options.map((option) => (
+                    <MenuItem
+                      key={String(option.value)}
+                      className={classNames(
+                        "custom-dropdown-wrapper__menu-item",
+                        styles?.menuItem,
+                        option.className,
+                        {
+                          "custom-dropdown-wrapper__menu-item--active":
+                          option.value === selectedOption?.value,
+                        }
+                      )}
+                      tag="li"
+                      value={option.value}
+                      text={
+                        option.searchText ||
+                        (typeof option.text === "string" ? option.text : undefined)
+                      }
+                    >
+                      {option.text}
+                    </MenuItem>
+                  ))
+                }
+              </ul>
+          }
         </Menu>
       </MenuWrapper>
       {isOpen && shouldBeFixed && <GlobalOverlay />}

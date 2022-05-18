@@ -1,0 +1,59 @@
+@import "../../../constants.scss";
+
+.share-modal__wrapper {
+  box-shadow: 0 0.25rem 1rem 0 $shadow;
+
+  &.mobile {
+    margin: 5vh 3vh;
+  }
+
+  .share-modal__wrapper-header {
+    padding-top: 1rem;
+  }
+  .share-modal__wrapper-content-mobile {
+    padding: 0 0.5rem 0.5rem;
+  }
+
+  .copy-link-field {
+    border: 1px solid #eeeeee;
+    font-size: $xsmall;
+    color: $light-gray-2;
+    margin: 0;
+    overflow-x: scroll;
+  }
+
+  .share-modal_title {
+    font-weight: bold;
+  }
+
+  .share-modal__wrapper-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0.5rem 0.5rem;
+
+    &.desktop {
+      .share-modal_title {
+        font-size: $moderate-med;
+      }
+
+      .share-modal_copy-link {
+        width: 50%;
+        .copy-link-field {
+          padding: 0.75rem;
+          max-height: 45px;
+          white-space: nowrap;
+          overflow-x: scroll;
+          overflow-y: hidden;
+        }
+      }
+    }
+
+    &.mobile {
+      .share-modal_title {
+        font-size: $small;
+      }
+    }
+  }
+}

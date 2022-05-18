@@ -1,6 +1,6 @@
 import React from "react";
 import { CommonShare, Linkify } from "@/shared/components";
-import { Colors, ScreenSize } from "@/shared/constants";
+import { Colors, ScreenSize, ShareViewType } from "@/shared/constants";
 import { Common } from "@/shared/models";
 import { formatPrice } from "@/shared/utils";
 import "./index.scss";
@@ -49,7 +49,7 @@ export default function AboutTabComponent({
             </button>
             <CommonShare
               common={common}
-              type="popup"
+              type={ShareViewType.Popup}
               color={Colors.lightPurple}
             />
           </div>

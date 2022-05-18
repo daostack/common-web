@@ -4,7 +4,12 @@ import {
   ProposalListItem,
   ProposalState as ProposalStateTypes
 } from "@/shared/models";
-import { UserAvatar, Separator } from "@/shared/components";
+import {
+  UserAvatar,
+  Separator,
+  ElementDropdown,
+} from "@/shared/components";
+import { DynamicLinkType } from "@/shared/constants";
 import {
     VotesComponent,
     ProposalCountDown,
@@ -39,8 +44,12 @@ const FundingProposalListItem: FC<ProposalListItem> = (
             || proposal.description.description
           }
         </p>
-        {/* TODO: need to clarify what to action on clicking this dots-menu btn */}
-        {/* <div className="proposal-item__vertical-menu" /> */}
+        <ElementDropdown
+          linkType={DynamicLinkType.Proposal}
+          elem={proposal}
+          className="dropdown-menu"
+          transparent
+        />
       </div>
       <div className="proposal-item__info">
         <div className="proposal-item__info-proposer-wrapper">

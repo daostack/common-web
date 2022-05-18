@@ -5,5 +5,4 @@ export enum DynamicLinkType {
   Proposal = "proposal",
   Discussion = "discussion",
   DiscussionMessage = "discussionMessage",
-  User = "user",
 }
