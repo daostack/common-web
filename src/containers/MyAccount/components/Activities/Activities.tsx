@@ -80,11 +80,11 @@ const Activities: FC = () => {
   const screenSize = useSelector(getScreenSize());
   const { isShowing, onOpen, onClose } = useModal(false);
   const [myCommons, setMyCommons] = useState<Common[] | null>(null);
-  const myCommonsAmount = useMemo(() => (myCommons ? myCommons.length : 0), [myCommons]);
+  const myCommonsAmount = myCommons?.length || 0;
   const [myFundingProposals, setMyFundingProposals] = useState<Proposal[] | null>(null);
-  const myFundingProposalsAmount = useMemo(() => (myFundingProposals ? myFundingProposals.length : 0), [myFundingProposals]);
+  const myFundingProposalsAmount = myFundingProposals?.length || 0;
   const [myMembershipRequests, setMyMembershipRequests] = useState<Proposal[] | null>(null);
-  const myMembershipRequestsAmount = useMemo(() => (myMembershipRequests ? myMembershipRequests.length : 0), [myMembershipRequests]);
+  const myMembershipRequestsAmount = myMembershipRequests?.length || 0;
   const [
     {
       showSliderCommonsViewAll,
