@@ -1,4 +1,5 @@
 export * from "./CommonsStateType";
+export * from "./CreateGovernance";
 export * from "./CreateCommonPayload";
 export * from "./CreateDiscussionDto";
 export * from "./AddMessageToDiscussionDto";
@@ -6,4 +7,3 @@ export * from "./ImmediateContribution";
 export * from "./PaymentPayload";
 export * from "./LeaveCommon";
 export * from "./DeleteCommon";
-export * from "./GovernanceCreate";
