@@ -31,23 +31,21 @@ import { useModal } from "@/shared/hooks";
 import {
   getCommonsList,
   loadUserProposalList,
+  getCommonDetail,
   loadProposalDetail,
   clearCurrentProposal,
   closeCurrentCommon,
-  getCommonDetail,
 } from "../../../Common/store/actions";
 import {
   selectCommonList,
   selectUserProposalList,
   selectCurrentProposal,
   selectCommonDetail,
+  selectIsCommonsLoaded,
+  selectIsUserProposalsLoaded,
 } from "../../../Common/store/selectors";
 import { selectUser } from "../../../Auth/store/selectors";
-import {
-  getLoading,
-  getScreenSize,
-} from "../../../../shared/store/selectors";
-
+import { getScreenSize } from "../../../../shared/store/selectors";
 import "./index.scss";
 
 SwiperCore.use([Pagination]);
@@ -74,15 +72,19 @@ const Activities: FC = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser());
   const commons = useSelector(selectCommonList());
+  const isCommonsLoaded = useSelector(selectIsCommonsLoaded());
   const myProposals = useSelector(selectUserProposalList());
+  const isUserProposalsLoaded = useSelector(selectIsUserProposalsLoaded());
   const currentProposal = useSelector(selectCurrentProposal());
   const currentCommon = useSelector(selectCommonDetail());
-  const loading = useSelector(getLoading());
   const screenSize = useSelector(getScreenSize());
   const { isShowing, onOpen, onClose } = useModal(false);
-  const [myCommons, setMyCommons] = useState<Common[]>([]);
-  const [myFundingProposals, setMyFundingProposals] = useState<Proposal[]>([]);
-  const [myMembershipRequests, setMyMembershipRequests] = useState<Proposal[]>([]);
+  const [myCommons, setMyCommons] = useState<Common[] | null>(null);
+  const myCommonsAmount = useMemo(() => (myCommons ? myCommons.length : 0), [myCommons]);
+  const [myFundingProposals, setMyFundingProposals] = useState<Proposal[] | null>(null);
+  const myFundingProposalsAmount = useMemo(() => (myFundingProposals ? myFundingProposals.length : 0), [myFundingProposals]);
+  const [myMembershipRequests, setMyMembershipRequests] = useState<Proposal[] | null>(null);
+  const myMembershipRequestsAmount = useMemo(() => (myMembershipRequests ? myMembershipRequests.length : 0), [myMembershipRequests]);
   const [
     {
       showSliderCommonsViewAll,
@@ -319,7 +321,7 @@ const Activities: FC = () => {
           <div className="my-account-activities__summaries">
             <CollectionSummaryCard
               collectionName="Commons"
-              collectionLength={myCommons.length}
+              collectionLength={myCommonsAmount}
               iconSrc="/assets/images/common-sign.svg"
               iconAlt="Commons summary icon"
             />
@@ -335,13 +337,13 @@ const Activities: FC = () => {
           <section className="my-account-activities__commons">
             <div className="my-account-activities__section-header">
               <h3>
-                Commons ({myCommons.length})
+                Commons ({myCommonsAmount})
               </h3>
               <NavLink
                 className={classNames(
                   "my-account-activities__section-viewall",
                   {
-                    hidden: !showViewAllButton(myCommons.length)
+                    hidden: !showViewAllButton(myCommonsAmount)
                             || (isMobileView && !showSliderCommonsViewAll)
                   }
                 )}
@@ -351,25 +353,24 @@ const Activities: FC = () => {
                 <img src="/icons/right-arrow.svg" alt="right-arrow" />
               </NavLink>
             </div>
-            {loading && <Loader />}
             {
-              (myCommons.length !== 0)
+              (isCommonsLoaded && !!myCommons)
+              ? (myCommonsAmount !== 0)
                 ? renderCollectionList(myCommons, ActivitiesCollection.COMMONS)
-                : !loading && <div>
-                  No commons yet
-                </div>
+                : <div>No commons yet</div>
+              : <Loader />
             }
           </section>
           <section className="my-account-activities__proposals">
             <div className="my-account-activities__section-header">
               <h3>
-                Prososals ({myFundingProposals.length})
+                Prososals ({myFundingProposalsAmount})
               </h3>
               <NavLink
                 className={classNames(
                   "my-account-activities__section-viewall",
                   {
-                    hidden: !showViewAllButton(myFundingProposals.length)
+                    hidden: !showViewAllButton(myFundingProposalsAmount)
                             || (isMobileView && !showSliderProposalsViewAll)
                   }
                 )}
@@ -379,25 +380,24 @@ const Activities: FC = () => {
                 <img src="/icons/right-arrow.svg" alt="right-arrow" />
               </NavLink>
             </div>
-            {loading && <Loader />}
             {
-              (myFundingProposals.length !== 0)
+              (isUserProposalsLoaded && !!myFundingProposals)
+              ? (myFundingProposalsAmount !== 0)
                 ? renderCollectionList(myFundingProposals, ActivitiesCollection.PROPOSALS)
-                : !loading && <div>
-                  No proposals yet
-                </div>
+                : <div>No proposals yet</div>
+              : <Loader />
             }
           </section>
           <section className="my-account-activities__membership-requests">
             <div className="my-account-activities__section-header">
               <h3>
-                Membership requests ({myMembershipRequests.length})
+                Membership requests ({myMembershipRequestsAmount})
               </h3>
               <NavLink
                 className={classNames(
                   "my-account-activities__section-viewall",
                   {
-                    hidden: !showViewAllButton(myMembershipRequests.length)
+                    hidden: !showViewAllButton(myMembershipRequestsAmount)
                             || (isMobileView && !showSliderMembershipRequestsViewAll)
                   }
                 )}
@@ -407,13 +407,12 @@ const Activities: FC = () => {
                 <img src="/icons/right-arrow.svg" alt="right-arrow" />
               </NavLink>
             </div>
-            {loading && <Loader />}
             {
-              (myMembershipRequests.length !== 0)
+              (isUserProposalsLoaded && !!myMembershipRequests)
+              ? (myMembershipRequestsAmount !== 0)
                 ? renderCollectionList(myMembershipRequests, ActivitiesCollection.MEMBERSHIP_REQUESTS)
-                : !loading && <div>
-                  No membership requests yet
-                </div>
+                : <div>No membership requests yet</div>
+              : <Loader />
             }
           </section>
         </div>

@@ -5,6 +5,8 @@ const selectCommons = (state: AppState) => state.commons;
 
 export const selectCommonList = () =>
   createSelector(selectCommons, (state) => state.commons);
+export const selectIsCommonsLoaded = () =>
+  createSelector(selectCommons, (state) => state.isCommonsLoaded);
 export const selectCommonDetail = () =>
   createSelector(selectCommons, (state) => state.common);
 export const selectCurrentPage = () =>
@@ -21,6 +23,8 @@ export const selectCurrentDisscussion = () =>
   createSelector(selectCommons, (state) => state.currentDiscussion);
 export const selectIsProposalLoaded = () =>
   createSelector(selectCommons, (state) => state.isProposalsLoaded);
+export const selectIsUserProposalsLoaded = () =>
+  createSelector(selectCommons, (state) => state.isUserProposalsLoaded);
 export const selectCurrentProposal = () =>
   createSelector(selectCommons, (state) => state.currentProposal);
 export const selectUserProposalList = () =>
