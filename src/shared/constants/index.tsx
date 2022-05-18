@@ -1,3 +1,4 @@
+export * from "./governance";
 export * from "./authProvider";
 export * from "./dynamicLink";
 export * from "./endpoint";
