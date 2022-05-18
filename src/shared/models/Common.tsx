@@ -1,6 +1,5 @@
-import { Reputation } from "./Reputation";
-import firebase from "firebase/app";
-import { BaseEntity } from "../interfaces/BaseEntity";
+import { Reputation } from "./governance/Reputation";
+import { BaseEntity } from "./BaseEntity";
 import { Proposal } from "./Proposals";
 import { Discussion } from "./Discussion";
 import { DiscussionMessage } from "./DiscussionMessage";
@@ -28,8 +27,8 @@ export interface Common extends BaseEntity {
   links: CommonLink[];
 
   /**
-  * Will this common appear in the search results page
-  */
+   * Will this common appear in the search results page
+   */
   searchable: boolean;
 
   /**
@@ -100,24 +99,24 @@ export interface Common extends BaseEntity {
  * "registered" - The common is whitelisted and part of the featured list
  */
 export enum CommonRegistered {
-  NA = 'na',
-  REGISTERED = 'registered',
+  NA = "na",
+  REGISTERED = "registered",
 }
 
 export enum CommonState {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  DRAFT = 'DRAFT'
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  DRAFT = "DRAFT",
 }
 
 export interface CommonMember {
   readonly userId: string;
   joinedAt: Date;
   circles: {
-    [key in string]: true
+    [key in string]: true;
   };
   tokenBalance: number;
-  reputation: Partial<Reputation>
+  reputation: Partial<Reputation>;
 }
 
 export interface CommonLink {

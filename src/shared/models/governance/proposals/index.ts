@@ -1,9 +1,9 @@
 import { ProposalsTypes } from "@/shared/constants";
+import { BaseEntity } from "../../BaseEntity";
 import { BasicArgsProposal } from "./BasicArgsProposal";
 import { FundsAllocation } from "./FundsAllocation";
 import { FundsRequest } from "./FundsRequest";
 import { MemberAdmittance } from "./MemberAdmittance";
-import { BaseEntity } from "../BaseEntity";
 
 type ProposalInProgressKeys =
   | "data"

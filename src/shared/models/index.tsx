@@ -1,5 +1,4 @@
 export * from "./governance";
-export * from "./proposals";
 export * from "./BaseEntity";
 export * from "./User";
 export * from "./Card";

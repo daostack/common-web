@@ -58,7 +58,7 @@ import { selectDiscussions, selectProposals } from "./selectors";
 import { store } from "@/shared/appConfig";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
 import { Vote } from "@/shared/interfaces/api/vote";
-import { GovernanceCreate, ImmediateContributionResponse } from "../interfaces";
+import { CreateGovernance, ImmediateContributionResponse } from "../interfaces";
 import { groupBy } from "@/shared/utils";
 
 export function* createGovernance(
@@ -66,7 +66,7 @@ export function* createGovernance(
 ): Generator {
   try {
     yield put(startLoading());
-    const governance = (yield createGovernanceApi(action.payload.payload)) as GovernanceCreate;
+    const governance = (yield createGovernanceApi(action.payload.payload)) as CreateGovernance;
 
     yield put(actions.createGovernance.success(governance));
     action.payload.callback(null);
