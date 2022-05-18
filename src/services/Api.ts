@@ -6,7 +6,7 @@ import axios, {
 } from "axios";
 import config from "@/config";
 import getFirebaseToken from "@/helpers/getFirebaseToken";
-import { default as store } from "@/index";
+import { store } from "@/shared/appConfig";
 import { AXIOS_TIMEOUT } from "@/shared/constants";
 
 interface RequestConfig extends AxiosRequestConfig {

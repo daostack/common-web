@@ -13,6 +13,7 @@ export function getFundingRequestNotification(
 ): NotificationData {
   return {
     notificationId: data.eventId,
+    eventObjectId: data.eventObjectId,
     type: data.eventType,
     notificationDate: data.createdAt.toDate(),
     content: proposal.description.title,
