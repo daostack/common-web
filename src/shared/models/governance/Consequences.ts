@@ -1,27 +1,27 @@
 import { GovernanceConsequences, Math } from "@/shared/constants";
 
 export interface Consequences {
-  [GovernanceConsequences.SuccessfulInvitation]: {
+  [GovernanceConsequences.SUCCESSFUL_INVITATION]: {
     tokens: number;
     action: Math;
   };
-  [GovernanceConsequences.PostReported]: {
+  [GovernanceConsequences.POST_REPORTED]: {
     tokens: number;
     action: Math;
   };
-  [GovernanceConsequences.ProposalAccepted]: {
+  [GovernanceConsequences.PROPOSAL_ACCEPTED]: {
     tokens: number;
     action: Math;
   };
-  [GovernanceConsequences.ProposalRejected]: {
+  [GovernanceConsequences.PROPOSAL_REJECTED]: {
     tokens: number;
     action: Math;
   };
-  [GovernanceConsequences.CorrectVote]: {
+  [GovernanceConsequences.CORRECT_VOTE]: {
     tokens: number;
     action: Math;
   };
-  [GovernanceConsequences.WrongVote]: {
+  [GovernanceConsequences.WRONG_VOTE]: {
     tokens: number;
     action: Math;
   };
