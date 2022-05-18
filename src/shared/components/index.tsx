@@ -26,3 +26,4 @@ export * from "./Tabs";
 export * from "./UserAvatar";
 export * from "./IFrame";
 export * from "./PaymentMethod";
+export * from "./StepProgress";
