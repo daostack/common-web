@@ -13,3 +13,4 @@ export { default as useMatchRoute } from "./useMatchRoute";
 export { default as useZoomDisabling } from "./useZoomDisabling";
 export { default as useQueryParams } from "./useQueryParams";
 export { default as useNotification } from "./useNotification";
+export { default as useBuildShareLink } from "./useBuildShareLink";

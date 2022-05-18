@@ -1,0 +1,105 @@
+@import "../../../constants.scss";
+@import "../../../styles/sizes";
+
+.social-links-wrapper {
+  z-index: $share-z-index;
+  position: absolute;
+  padding: 0.75rem 1.5rem 1.5rem 1.5rem;
+  border-radius: 1.875rem;
+  box-shadow: 0 0.25rem 1rem 0 $shadow;
+  background-color: $white;
+  top: 4rem;
+  right: 10%;
+  .title {
+    font-size: $xsmall;
+    font-weight: bold;
+    text-align: center;
+    color: $blue;
+    margin-bottom: 1rem;
+  }
+}
+.social-links-wrapper--modal-mobile {
+  padding-top: 0.5rem;
+  padding-bottom: 2.5rem;
+}
+.social-links-wrapper--modal-desktop {
+  box-shadow: none;
+  border-radius: 0;
+  position: static;
+}
+.social-links-wrapper--top-center {
+  top: -1rem;
+  transform: translateX(50%) translateY(-100%);
+  right: 50%;
+}
+.social-links-wrapper--loading {
+  min-width: 7rem;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  button {
+    flex-shrink: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    margin: 0 0.625rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    &.facebook {
+      background-image: url("/icons/social-share/facebook.svg");
+      &:hover {
+        background-image: url("/icons/social-share/facebook-h.svg");
+      }
+    }
+    &.linkedin {
+      background-image: url("/icons/social-share/linkedin.svg");
+      &:hover {
+        background-image: url("/icons/social-share/linkedin-h.svg");
+      }
+    }
+    &.telegram {
+      background-image: url("/icons/social-share/telegram.svg");
+      &:hover {
+        background-image: url("/icons/social-share/telegram-h.svg");
+      }
+    }
+    &.twitter {
+      background-image: url("/icons/social-share/twitter.svg");
+      &:hover {
+        background-image: url("/icons/social-share/twitter-h.svg");
+      }
+    }
+  }
+  button:first-child {
+    margin-left: unset;
+  }
+  button:last-child {
+    margin-right: unset;
+  }
+  button:hover {
+    opacity: 0.9;
+  }
+}
+.social-links--modal-mobile {
+  button {
+    width: 3rem;
+    height: 3rem;
+    margin: 0 0.75rem;
+  }
+}
+
+@include big-phone {
+  .social-links-wrapper {
+    position: unset;
+    box-shadow: unset;
+
+    .social-links {
+      height: 6.875rem;
+      align-items: center;
+    }
+  }
+}

@@ -21,3 +21,10 @@ export interface Discussion {
   isLoaded?: boolean;
   description: string;
 }
+
+export interface DiscussionWithHighlightedMessage extends Discussion {
+  highlightedMessageId: string;
+}
+
+export const isDiscussionWithHighlightedMessage = (discussion: any): discussion is DiscussionWithHighlightedMessage =>
+  (discussion && discussion.highlightedMessageId);

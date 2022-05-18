@@ -1,19 +1,24 @@
-import React, { useCallback, useState } from "react";
-
-import { Loader } from "../../../../../shared/components";
-import { Common, Discussion } from "../../../../../shared/models";
-import { getDaysAgo, getUserName } from "../../../../../shared/utils";
-import { ChatComponent } from "../ChatComponent";
-import "./index.scss";
+import React, { useCallback, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import classNames from "classnames";
+
+import { Loader } from "@/shared/components";
+import {
+  Common,
+  Discussion,
+  DiscussionWithHighlightedMessage,
+  isDiscussionWithHighlightedMessage,
+} from "@/shared/models";
+import { getDaysAgo, getUserName } from "@/shared/utils";
+import { ChatComponent } from "../ChatComponent";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { addMessageToDiscussion } from "@/containers/Common/store/actions";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ScreenSize } from "@/shared/constants";
-import classNames from "classnames";
+import "./index.scss";
 
 interface DiscussionDetailModalProps {
-  disscussion: Discussion | null;
+  disscussion: Discussion | DiscussionWithHighlightedMessage | null;
   common: Common;
   onOpenJoinModal: () => void;
   isCommonMember?: boolean;
@@ -32,6 +37,12 @@ export default function DiscussionDetailModal({
   const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
   const [expanded, setExpanded] = useState(true);
+  const highlightedMessageId = useMemo(
+    () => isDiscussionWithHighlightedMessage(disscussion)
+          ? disscussion.highlightedMessageId
+          : null,
+    [disscussion]
+  );
 
   const sendMessage = useCallback(
     (message: string) => {
@@ -99,6 +110,7 @@ export default function DiscussionDetailModal({
         <ChatComponent
           common={common}
           discussionMessage={disscussion.discussionMessage || []}
+          highlightedMessageId={highlightedMessageId}
           onOpenJoinModal={onOpenJoinModal}
           isCommonMember={isCommonMember}
           isJoiningPending={isJoiningPending}

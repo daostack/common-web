@@ -1,7 +1,7 @@
 import React from "react";
 import { Route } from "react-router-dom";
 
-import { ROUTE_PATHS } from "../../../../shared/constants";
+import { ROUTE_PATHS } from "@/shared/constants";
 import { CommonListContainer, CommonDetailContainer } from "..";
 
 export default function CommonContainer() {

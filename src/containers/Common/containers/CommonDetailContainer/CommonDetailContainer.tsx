@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { useHistory } from "react-router";
 import classNames from "classnames";
 import { Loader, NotFound, CommonShare, UserAvatar } from "@/shared/components";
 import { Modal } from "@/shared/components/Modal";
@@ -9,6 +10,7 @@ import PurpleCheckIcon from "@/shared/icons/purpleCheck.icon";
 import ShareIcon from "@/shared/icons/share.icon";
 import {
   Discussion,
+  DiscussionWithHighlightedMessage,
   Proposal,
   ProposalState,
   ProposalType,
@@ -29,7 +31,13 @@ import {
 } from "../../components/CommonDetailContainer";
 import { MembershipRequestModal } from "../../components/CommonDetailContainer/MembershipRequestModal";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
-import { Colors, ScreenSize } from "../../../../shared/constants";
+import {
+  Colors,
+  ScreenSize,
+  ShareViewType,
+  DynamicLinkType,
+  ROUTE_PATHS,
+} from "@/shared/constants";
 import {
   selectCommonDetail,
   selectCurrentDisscussion,
@@ -39,6 +47,7 @@ import {
   selectIsProposalLoaded,
   selectProposals,
   selectCards,
+  selectCommonActiveTab,
 } from "../../store/selectors";
 import {
   clearCurrentDiscussion,
@@ -52,6 +61,8 @@ import {
   createDiscussion,
   createFundingProposal,
   loadUserCards,
+  setCommonActiveTab,
+  clearCommonActiveTab,
 } from "../../store/actions";
 import CheckIcon from "../../../../shared/icons/check.icon";
 import { selectUser } from "../../../Auth/store/selectors";
@@ -64,6 +75,13 @@ import "./index.scss";
 
 interface CommonDetailRouterParams {
   id: string;
+}
+
+interface CommonDetailProps {
+  commonId?: string;
+  tab?: Tabs;
+  activeModalElement?: Proposal | Discussion | DiscussionWithHighlightedMessage;
+  linkType?: DynamicLinkType;
 }
 
 export enum Tabs {
@@ -92,8 +110,10 @@ const tabs = [
   },
 ];
 
-export default function CommonDetail() {
-  const { id } = useParams<CommonDetailRouterParams>();
+export default function CommonDetail(props: CommonDetailProps = {}) {
+  const { id: routeCommonId } = useParams<CommonDetailRouterParams>();
+  const id = props.commonId || routeCommonId;
+
   const [joinEffortRef, setJoinEffortRef] = useState<HTMLDivElement | null>(
     null
   );
@@ -104,7 +124,7 @@ export default function CommonDetail() {
   );
   const [stickyClass, setStickyClass] = useState("");
   const [footerClass, setFooterClass] = useState("");
-  const [tab, setTab] = useState("about");
+  const [tab, setTab] = useState(Tabs.About);
   const [imageError, setImageError] = useState(false);
   const [isCreationStageReached, setIsCreationStageReached] = useState(false);
   const [isCommonFetched, setIsCommonFetched] = useState(false);
@@ -119,6 +139,7 @@ export default function CommonDetail() {
   const currentProposal = useSelector(selectCurrentProposal());
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
+  const activeTab = useSelector(selectCommonActiveTab());
 
   const fundingProposals = useMemo(
     () =>
@@ -162,6 +183,7 @@ export default function CommonDetail() {
     (stickyClass || footerClass);
 
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const { isShowing, onOpen, onClose } = useModal(false);
   const {
@@ -187,6 +209,51 @@ export default function CommonDetail() {
     onOpenJoinModal(LoginModalType.RequestToJoin);
   }, [onOpenJoinModal]);
 
+  const changeTabHandler = useCallback(
+    (tab: Tabs) => {
+      switch (tab) {
+        case Tabs.Discussions:
+          if (!isDiscussionsLoaded) {
+            dispatch(loadCommonDiscussionList.request());
+          }
+          break;
+        case Tabs.History:
+        case Tabs.Proposals:
+          if (!isProposalsLoaded) {
+            dispatch(loadProposalList.request());
+          }
+          break;
+
+        default:
+          break;
+      }
+
+      setTab(tab);
+    },
+    [dispatch, isDiscussionsLoaded, isProposalsLoaded]
+  );
+
+  useEffect(() => {
+    if (!activeTab || !isCommonFetched)
+      return;
+
+    changeTabHandler(activeTab);
+
+    if (!props.commonId) {
+      return (
+        () => {
+          dispatch(clearCommonActiveTab())
+        }
+      );
+    }
+  }, [
+    dispatch,
+    activeTab,
+    props.commonId,
+    changeTabHandler,
+    isCommonFetched
+  ]);
+
   useEffect(() => {
     dispatch(loadUserCards.request({ callback: () => true }));
     dispatch(
@@ -202,31 +269,8 @@ export default function CommonDetail() {
     };
   }, [dispatch, id]);
 
-  const changeTabHandler = useCallback(
-    (tab: string) => {
-      switch (tab) {
-        case "discussions":
-          if (!isDiscussionsLoaded) {
-            dispatch(loadCommonDiscussionList.request());
-          }
-          break;
-        case "history":
-        case "proposals":
-          if (!isProposalsLoaded) {
-            dispatch(loadProposalList.request());
-          }
-          break;
-
-        default:
-          break;
-      }
-      setTab(tab);
-    },
-    [dispatch, isDiscussionsLoaded, isProposalsLoaded]
-  );
-
   const getDisscussionDetail = useCallback(
-    (payload: Discussion) => {
+    (payload: Discussion | DiscussionWithHighlightedMessage) => {
       dispatch(loadDisscussionDetail.request(payload));
       onOpen();
     },
@@ -241,16 +285,63 @@ export default function CommonDetail() {
     [dispatch, onOpen]
   );
 
+  useEffect(() => {
+    if (!props.commonId)
+      return;
+
+    const {
+      tab,
+      activeModalElement,
+      linkType
+    } = props;
+
+    if (
+      !tab
+      || !activeModalElement
+      || !linkType
+    ) return;
+
+    setTab(tab);
+
+    switch (linkType) {
+      case DynamicLinkType.Proposal:
+        getProposalDetail(activeModalElement as Proposal);
+        break;
+      case DynamicLinkType.Discussion:
+        getDisscussionDetail(activeModalElement as Discussion);
+        break;
+      case DynamicLinkType.DiscussionMessage:
+        getDisscussionDetail(activeModalElement as DiscussionWithHighlightedMessage);
+        break;
+    }
+    // eslint-disable-next-line
+  }, []);
+
   const closeModalHandler = useCallback(() => {
     onClose();
     dispatch(clearCurrentDiscussion());
     dispatch(clearCurrentProposal());
-    dispatch(loadCommonDiscussionList.request());
-  }, [onClose, dispatch]);
+
+    if (props.commonId) {
+      dispatch(setCommonActiveTab(tab));
+
+      history.push(
+        ROUTE_PATHS.COMMON_DETAIL.replace(":id", props.commonId)
+      );
+    } else {
+      dispatch(loadCommonDiscussionList.request());
+    }
+  }, [
+    onClose,
+    dispatch,
+    history,
+    tab,
+    props.commonId
+  ]);
 
   const clickPreviewDisscusionHandler = useCallback(
     (id: string) => {
-      changeTabHandler("discussions");
+      changeTabHandler(Tabs.Discussions);
       const disscussion = discussions.find((f) => f.id === id);
       if (disscussion) {
         getDisscussionDetail(disscussion);
@@ -261,7 +352,7 @@ export default function CommonDetail() {
 
   const clickPreviewProposalHandler = useCallback(
     (id: string) => {
-      changeTabHandler("proposals");
+      changeTabHandler(Tabs.Proposals);
       const proposal = proposals.find((f) => f.id === id);
       if (proposal) {
         getProposalDetail(proposal);
@@ -328,13 +419,13 @@ export default function CommonDetail() {
   const renderSidebarContent = () => {
     if (!common) return null;
     switch (tab) {
-      case "about":
+      case Tabs.About:
         return (
           <>
             <PreviewInformationList
               title="Latest Discussions"
               discussions={discussions}
-              vievAllHandler={() => changeTabHandler("discussions")}
+              vievAllHandler={() => changeTabHandler(Tabs.Discussions)}
               onClickItem={clickPreviewDisscusionHandler}
               type="discussions"
               isCommonMember={isCommonMember}
@@ -342,7 +433,7 @@ export default function CommonDetail() {
             <PreviewInformationList
               title="Latest Proposals"
               proposals={activeProposals}
-              vievAllHandler={() => changeTabHandler("proposals")}
+              vievAllHandler={() => changeTabHandler(Tabs.Proposals)}
               onClickItem={clickPreviewProposalHandler}
               type="proposals"
               isCommonMember={isCommonMember}
@@ -350,43 +441,43 @@ export default function CommonDetail() {
           </>
         );
 
-      case "discussions":
+      case Tabs.Discussions:
         return (
           <>
             <AboutSidebarComponent
               title="About"
-              vievAllHandler={() => changeTabHandler("about")}
+              vievAllHandler={() => changeTabHandler(Tabs.About)}
               common={common}
             />
             <PreviewInformationList
               title="Latest Proposals"
               proposals={activeProposals}
-              vievAllHandler={() => changeTabHandler("proposals")}
+              vievAllHandler={() => changeTabHandler(Tabs.Proposals)}
               onClickItem={clickPreviewProposalHandler}
               type="proposals"
               isCommonMember={isCommonMember}
             />
           </>
         );
-      case "proposals":
+      case Tabs.Proposals:
         return (
           <>
             <AboutSidebarComponent
               title="About"
-              vievAllHandler={() => changeTabHandler("about")}
+              vievAllHandler={() => changeTabHandler(Tabs.About)}
               common={common}
             />
             <PreviewInformationList
               title="Latest Discussions"
               discussions={discussions}
-              vievAllHandler={() => changeTabHandler("discussions")}
+              vievAllHandler={() => changeTabHandler(Tabs.Discussions)}
               onClickItem={clickPreviewDisscusionHandler}
               type="discussions"
               isCommonMember={isCommonMember}
             />
           </>
         );
-      case "history":
+      case Tabs.History:
         return (
           <ProposalsHistory proposals={historyProposals} common={common} />
         );
@@ -541,7 +632,7 @@ export default function CommonDetail() {
                         ) : (
                           <CommonShare
                             common={common}
-                            type="modal"
+                            type={ShareViewType.ModalMobile}
                             color={Colors.lightGray4}
                           />
                         )}
@@ -622,7 +713,7 @@ export default function CommonDetail() {
                     <CommonShare
                       shareButtonClassName="common-detail-wrapper__menu-button--big"
                       common={common}
-                      type="popup"
+                      type={ShareViewType.ModalDesktop}
                       color={Colors.lightGray4}
                       withBorder
                     />
@@ -639,7 +730,7 @@ export default function CommonDetail() {
                 {isCommonMember && isMobileView && (
                   <CommonShare
                     common={common}
-                    type="modal"
+                    type={ShareViewType.ModalMobile}
                     color={Colors.transparent}
                   >
                     <button className="button-blue common-content-selector__long-share-button">
@@ -716,7 +807,7 @@ export default function CommonDetail() {
                 Join the effort
               </button>
             )}
-            {(screenSize === ScreenSize.Desktop || tab !== "about") && (
+            {(screenSize === ScreenSize.Desktop || tab !== Tabs.About) && (
               <div className="sidebar-wrapper">{renderSidebarContent()}</div>
             )}
           </div>

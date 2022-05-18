@@ -3,7 +3,8 @@ import {
   Discussion,
   Proposal,
   Card,
-} from "../../../shared/models";
+} from "@/shared/models";
+import { Tabs } from "@/containers/Common";
 
 export interface CommonsStateType {
   commons: Common[];
@@ -19,4 +20,5 @@ export interface CommonsStateType {
   currentProposal: Proposal | null;
   userProposals: Proposal[];
   cards: Card[];
+  activeTab: Tabs | null;
 }

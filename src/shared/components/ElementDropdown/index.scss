@@ -1,0 +1,37 @@
+@import "../../../constants";
+
+.element-dropdown__menu-wrapper {
+  .element-dropdown__menu {
+    width: 10rem;
+    height: 8.375rem;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 0.5rem;
+  }
+
+  .element-dropdown__menu-item {
+    display: flex;
+    align-items: center;
+    padding: 0.7rem 1.1rem;
+    font-size: $small;
+
+    > :first-child {
+      margin-right: 0.3rem;
+    }
+  }
+
+  .element-dropdown__menu-button--transparent {
+    background-color: transparent;
+
+    button {
+      background-color: transparent;
+    }
+  }
+
+  .share-icon {
+    width: 16px;
+    height: 16px;
+  }
+}

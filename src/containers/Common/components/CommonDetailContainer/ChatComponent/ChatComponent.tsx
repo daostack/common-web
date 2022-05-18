@@ -1,12 +1,24 @@
-import React, { useState } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+} from "react";
+import { useSelector } from "react-redux";
+import { scroller } from "react-scroll";
+import { v4 as uuidv4 } from "uuid";
 
+import { getScreenSize } from "@/shared/store/selectors";
 import { CommonShare, Loader } from "@/shared/components";
 import { Common, DiscussionMessage } from "@/shared/models";
 import ChatMessage from "./ChatMessage";
-import "./index.scss";
 import { formatDate } from "@/shared/utils";
-import { Colors } from "@/shared/constants";
+import {
+  Colors,
+  ShareViewType,
+  ScreenSize,
+} from "@/shared/constants";
 import { EmptyTabComponent } from "@/containers/Common/components/CommonDetailContainer";
+import "./index.scss";
 
 interface ChatComponentInterface {
   common: Common | null;
@@ -16,6 +28,7 @@ interface ChatComponentInterface {
   isJoiningPending?: boolean;
   isAuthorized?: boolean;
   sendMessage?: (text: string) => void;
+  highlightedMessageId?: string | null;
 }
 
 function groupday(acc: any, currentValue: DiscussionMessage): Messages {
@@ -48,12 +61,36 @@ export default function ChatComponent({
   isJoiningPending,
   isAuthorized,
   sendMessage,
+  highlightedMessageId,
 }: ChatComponentInterface) {
+  const screenSize = useSelector(getScreenSize());
   const [message, setMessage] = useState("");
   const shouldShowJoinToCommonButton = !isCommonMember && !isJoiningPending;
   const messages = discussionMessage.reduce(groupday, {});
-
+  const isMobileView = (screenSize === ScreenSize.Mobile);
   const dateList = Object.keys(messages);
+  const chatId = useMemo(() => `chat-${uuidv4()}`, []);
+
+  useEffect(
+    () => {
+      if (!highlightedMessageId)
+        return;
+
+      setTimeout(
+        () => {
+          scroller.scrollTo(highlightedMessageId, {
+            containerId: chatId,
+            delay: 0,
+            duration: 300,
+            offset: -15,
+            smooth: true,
+          });
+        },
+        0
+      );
+    },
+    [chatId, highlightedMessageId]
+  );
 
   return (
     <div className="chat-wrapper">
@@ -61,16 +98,26 @@ export default function ChatComponent({
         {dateList.map((day) => {
           const date = new Date(Number(day));
           return (
-            <div className="date" key={day}>
-              <div className="title">
+            <ul
+              id={chatId}
+              className="message-list"
+              key={day}
+            >
+              <li className="date-title">
                 {isToday(date) ? "Today" : formatDate(date)}
-              </div>
-              <div className="message-list">
-                {messages[Number(day)].map((m) => {
-                  return <ChatMessage key={m.id} disscussionMessage={m} />;
-                })}
-              </div>
-            </div>
+              </li>
+              {
+                messages[Number(day)].map((m) => {
+                  return (
+                    <ChatMessage
+                      key={m.id}
+                      disscussionMessage={m}
+                      highlighted={m.id === highlightedMessageId}
+                    />
+                  );
+                })
+              }
+            </ul>
           );
         })}
 
@@ -101,7 +148,11 @@ export default function ChatComponent({
               common
               ? <CommonShare
                 common={common}
-                type="popup"
+                type={
+                  isMobileView
+                  ? ShareViewType.ModalMobile
+                  : ShareViewType.ModalDesktop
+                }
                 color={Colors.lightPurple}
                 top="-130px"
               />

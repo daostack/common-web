@@ -251,6 +251,9 @@ export const formatCountdownValue = (value: number): string => {
   return convertedValue.length === 1 ? `0${convertedValue}` : convertedValue;
 };
 
+export const copyToClipboard = (text: string) =>
+  navigator.clipboard.writeText(text);
+
 export const createIdsChunk = (pool: string[]) =>
   pool.reduce((resultArray: any, item, index) => {
     const chunkIndex = Math.floor(index / 10);
