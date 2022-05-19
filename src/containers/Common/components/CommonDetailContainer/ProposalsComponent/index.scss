@@ -208,7 +208,7 @@
           margin-bottom: 2rem;
           .images-list{
             display: flex;
-
+            justify-content: space-around;
             .image-item{
               margin-right: 1rem;
             }
@@ -251,6 +251,7 @@
               line-height: 1.43;
               letter-spacing:0.018rem;
               color: $light-gray-2;
+
             }
           }
         }
