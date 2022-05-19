@@ -89,6 +89,30 @@ export async function fetchCommonProposals(commonId: string) {
   );
 }
 
+export async function fetchProposalById(proposalId: string) {
+  const proposal = await firebase
+    .firestore()
+    .collection(Collection.Proposals)
+    .doc(proposalId)
+    .get();
+
+  const data = transformFirebaseDataSingle<Proposal>(proposal);
+
+  return data;
+}
+
+export async function fetchDiscussionById(discussionId: string) {
+  const discussion = await firebase
+    .firestore()
+    .collection(Collection.Discussion)
+    .doc(discussionId)
+    .get();
+
+  const data = transformFirebaseDataSingle<Discussion>(discussion);
+
+  return data;
+}
+
 export async function fetchUserProposals(userId: string) {
   const commons = await firebase
     .firestore()
@@ -208,6 +232,18 @@ export async function fetchDiscussionForCommonList(cIds: string[]) {
   );
 
   return flatChunk<Discussion>(discussions);
+}
+
+export async function fetchDiscussionMessageById(discussionMsgId: string) {
+  const discussionMsg = await firebase
+    .firestore()
+    .collection(Collection.DiscussionMessage)
+    .doc(discussionMsgId)
+    .get();
+
+  const data = transformFirebaseDataSingle<DiscussionMessage>(discussionMsg);
+
+  return data;
 }
 
 export async function fetchDiscussionsMessages(dIds: string[]) {

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import classNames from "classnames";
 
-import { useFullText } from "../../../../../shared/hooks";
-import { Discussion } from "../../../../../shared/models";
-import { getUserName, getDaysAgo } from "../../../../../shared/utils";
+import { useFullText } from "@/shared/hooks";
+import { Discussion } from "@/shared/models";
+import { getUserName, getDaysAgo } from "@/shared/utils";
+import { ElementDropdown } from "@/shared/components";
+import { DynamicLinkType } from "@/shared/constants";
 
 interface DiscussionItemComponentProps {
   discussion: Discussion;
@@ -45,6 +47,12 @@ export default function DiscussionItemComponent({
             {getDaysAgo(date, discussion.createTime)}
           </div>
         </div>
+        <ElementDropdown
+          linkType={DynamicLinkType.Discussion}
+          elem={discussion}
+          className="dropdown-menu"
+          transparent
+        />
       </div>
       <div className="discussion-content">
         <div

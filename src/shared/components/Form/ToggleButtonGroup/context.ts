@@ -1,21 +1,17 @@
 import React, { useContext } from "react";
-
-export enum ToggleButtonGroupVariant {
-  Horizontal,
-  Vertical,
-}
+import { Orientation } from "@/shared/constants";
 
 export interface ToggleButtonGroupContextValue {
   currentValue?: unknown;
   onChange: (value: unknown) => void;
-  variant: ToggleButtonGroupVariant;
+  variant: Orientation;
 }
 
 export const ToggleButtonGroupContext = React.createContext<ToggleButtonGroupContextValue>({
   onChange: () => {
     throw new Error("onChange is called not from the child of ToggleButtonGroup");
   },
-  variant: ToggleButtonGroupVariant.Horizontal,
+  variant: Orientation.Horizontal,
 });
 
 export const useToggleButtonGroupContext = () => useContext(ToggleButtonGroupContext);

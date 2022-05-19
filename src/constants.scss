@@ -9,8 +9,9 @@ $date-picker-z-index: $header-z-index - 1;
 $dropdown-z-index: $date-picker-z-index - 1;
 $file-preview-z-index: $date-picker-z-index + 1;
 $secondary-modal-z-index: 20;
-$notifications-container-z-index: $secondary-modal-z-index + 5;
 $modal-z-index: 999;
+$notifications-container-z-index: $modal-z-index + 1;
+$modal-dropdown-menu-z-index: $modal-z-index + 1;
 $element-max-width: 1400px;
 $element-max-height: 850px;
 $payment-iframe-height: 26.5rem;
@@ -28,10 +29,11 @@ $moderate: 18px; // 1.125rem
 $small: 16px; // 1rem
 $xsmall: 14px; // 0.875rem
 $xxsmall: 12px; // 0.75rem
-$xxxsmall: 6px; // 0.375rem
+$xxxsmall: 10px; // 0.625rem
+$xxxxsmall: 6px; // 0.375rem
 
 /* colors */
-$box-shadow-color:#001a3614;
+$box-shadow-color: #001a3614;
 $purple: #7786ff;
 $purple-alpha-10: rgba(119, 134, 255, 0.1);
 $purple-2: #5666f5;

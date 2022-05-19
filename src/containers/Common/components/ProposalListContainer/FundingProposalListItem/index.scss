@@ -29,6 +29,7 @@
     justify-content: space-between;
     margin: 0 auto;
     width: 90%;
+    position: relative;
 
     > div:not(:last-child) {
       margin-bottom: 0.625rem;
@@ -97,6 +98,13 @@
           font-size: $xsmall;
         }
       }
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-weight: normal;
     }
   }
 

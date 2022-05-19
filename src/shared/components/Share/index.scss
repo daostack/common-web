@@ -28,117 +28,12 @@
     width: 100%;
   }
 }
-.social-buttons-wrapper {
-  z-index: $share-z-index;
-  position: absolute;
-  padding: 0.75rem 1.5rem 1.5rem 1.5rem;
-  border-radius: 30px;
-  box-shadow: 0 4px 15px 0 $shadow;
-  background-color: $white;
-  top: 64px;
-  right: 10%;
-  .title {
-    font-size: $xsmall;
-    font-weight: bold;
-    text-align: center;
-    color: $blue;
-    margin-bottom: 16px;
-  }
-}
-.social-buttons-wrapper--modal {
-  padding-top: .5rem;
-  padding-bottom: 2.5rem;
-}
-.social-buttons-wrapper--top-center {
-  top: -1rem;
-  transform: translateX(50%) translateY(-100%);
-  right: 50%;
-}
-.social-buttons-wrapper--loading {
-  min-width: 7rem;
-}
-
-.social-buttons {
-  display: flex;
-  justify-content: center;
-  button {
-    flex-shrink: 0;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-    margin: 0 10px;
-    background-repeat: no-repeat;
-    background-size: cover;
-    &.facebook {
-      background-image: url("/icons/social-share/facebook.svg");
-      &:hover {
-        background-image: url("/icons/social-share/facebook-h.svg");
-      }
-    }
-    &.linkedin {
-      background-image: url("/icons/social-share/linkedin.svg");
-      &:hover {
-        background-image: url("/icons/social-share/linkedin-h.svg");
-      }
-    }
-    &.telegram {
-      background-image: url("/icons/social-share/telegram.svg");
-      &:hover {
-        background-image: url("/icons/social-share/telegram-h.svg");
-      }
-    }
-    &.twitter {
-      background-image: url("/icons/social-share/twitter.svg");
-      &:hover {
-        background-image: url("/icons/social-share/twitter-h.svg");
-      }
-    }
-  }
-  button:first-child {
-    margin-left: unset;
-  }
-  button:last-child {
-    margin-right: unset;
-  }
-  button:hover {
-    opacity: 0.9;
-  }
-}
-.social-buttons--modal {
-  button {
-    width: 3rem;
-    height: 3rem;
-    margin: 0 .75rem;
-  }
-}
-
-.social-wrapper__modal {
-  box-shadow: 0 0.25rem 1rem 0 $shadow;
-
-  .social-wrapper__modal-header {
-    padding-top: 1rem;
-  }
-
-  .social-wrapper__modal-content {
-    padding: 0 .5rem .5rem;
-  }
-}
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .social-wrapper {
     align-self: self-end;
     .share-button:active {
       background-color: unset;
-    }
-  }
-  .social-buttons-wrapper {
-    position: unset;
-    box-shadow: unset;
-    .social-buttons {
-      height: 110px;
-      align-items: center;
     }
   }
 }

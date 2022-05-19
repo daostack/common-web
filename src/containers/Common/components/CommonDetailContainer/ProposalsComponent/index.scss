@@ -41,6 +41,7 @@
 
 .proposals-component-wrapper {
   .discussion-item-wrapper {
+    position: relative;
     padding: 40px;
     padding-top: 0;
     border-radius: 14px;
@@ -247,6 +248,12 @@
         }
       }
     }
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 2.5rem;
+    right: 1rem;
   }
 }
 

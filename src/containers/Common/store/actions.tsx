@@ -16,9 +16,11 @@ import {
   Governance,
   Proposal,
   Discussion,
+  DiscussionWithHighlightedMessage,
   Payment,
   Subscription,
 } from "@/shared/models";
+import { Tabs } from "@/containers/Common";
 import { PayloadWithOptionalCallback } from "@/shared/interfaces";
 import { CommonsActionTypes } from "./constants";
 import {
@@ -84,12 +86,20 @@ export const setProposals = createStandardAction(
   CommonsActionTypes.SET_PROPOSALS
 )<Proposal[]>();
 
+export const setCommonActiveTab = createStandardAction(
+  CommonsActionTypes.SET_ACTIVE_TAB
+)<Tabs | null>();
+
 export const clearCurrentDiscussion = createStandardAction(
   CommonsActionTypes.CLEAR_CURRENT_DISCUSSION
 )();
 
 export const clearCurrentProposal = createStandardAction(
   CommonsActionTypes.CLEAR_CURRENT_PROPOSAL
+)();
+
+export const clearCommonActiveTab = createStandardAction(
+  CommonsActionTypes.CLEAR_ACTIVE_TAB
 )();
 
 export const loadCommonDiscussionList = createAsyncAction(
@@ -102,7 +112,11 @@ export const loadDisscussionDetail = createAsyncAction(
   CommonsActionTypes.LOAD_DISCUSSION_DETAIL,
   CommonsActionTypes.LOAD_DISCUSSION_DETAIL_SUCCESS,
   CommonsActionTypes.LOAD_DISCUSSION_DETAIL_FAILURE
-)<Discussion, Discussion, Error>();
+)<
+  Discussion | DiscussionWithHighlightedMessage,
+  Discussion | DiscussionWithHighlightedMessage,
+  Error
+>();
 
 export const closeCurrentCommon = createStandardAction(
   CommonsActionTypes.CLOSE_CURRENT_COMMON

@@ -26,4 +26,8 @@ export * from "./Tabs";
 export * from "./UserAvatar";
 export * from "./IFrame";
 export * from "./PaymentMethod";
+export * from "./MenuButton";
+export * from "./ElementDropdown";
+export * from "./SocialLinks";
+export * from "./ShareModal";
 export * from "./StepProgress";
