@@ -1,10 +1,17 @@
-import { createStore, applyMiddleware, compose, Middleware, Dispatch } from "redux";
+import {
+  createStore,
+  applyMiddleware,
+  compose,
+  Middleware,
+  Dispatch,
+  Store,
+} from "redux";
 import { History } from "history";
 import { routerMiddleware } from "connected-react-router";
 import { composeWithDevTools } from "redux-devtools-extension";
 import freeze from "redux-freeze";
 import createSagaMiddleware from "redux-saga";
-
+import { AppState } from '@/shared/interfaces';
 import appSagas from "./saga";
 import rootReducer from "./reducer";
 
@@ -48,10 +55,16 @@ const errorHandlerMiddleware: Middleware = () => (next: Dispatch) => (action) =>
 };
 
 export default function configureStore(history: History) {
-  const store = createStore(
+  const store: Store<AppState> = createStore(
     rootReducer(history),
     undefined,
-    composer(applyMiddleware(...middleware, routerMiddleware(history), errorHandlerMiddleware)),
+    composer(
+      applyMiddleware(
+        ...middleware,
+        routerMiddleware(history),
+        errorHandlerMiddleware
+      )
+    )
   );
 
   sagaMiddleware.run(appSagas);

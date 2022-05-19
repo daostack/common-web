@@ -12,6 +12,7 @@ import {
   Payment,
   Subscription,
   BankAccountDetails,
+  ProposalType,
 } from "../../../shared/models";
 import { startLoading, stopLoading } from "@/shared/store/actions";
 import {
@@ -53,7 +54,7 @@ import {
 } from "./api";
 import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
-import store from "@/index";
+import { store } from "@/shared/appConfig";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
 import { Vote } from "@/shared/interfaces/api/vote";
 import { ImmediateContributionResponse } from "../interfaces";
@@ -90,6 +91,10 @@ export function* getCommonsList(): Generator {
       c.proposals = proposalGrouped.get(c.id) ?? [];
       c.discussions = discussionGrouped.get(c.id) ?? [];
       c.messages = messagesGrouped.get(c.id) ?? [];
+
+      c.proposals = c.proposals?.filter(
+        (e) => e.type === ProposalType.FundingRequest
+      );
 
       return c;
     });

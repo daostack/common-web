@@ -11,7 +11,7 @@ interface Styles {
 interface PaymentMethodProps {
   className?: string;
   card: Card;
-  title?: "";
+  title?: string;
   onReplacePaymentMethod: () => void;
   styles?: Styles;
 }

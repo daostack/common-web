@@ -1,11 +1,9 @@
 import React, { useMemo, FC } from "react";
 import classNames from "classnames";
-import ApprovedIcon from "../../../../shared/icons/approved.icon";
-import {
-  DateFormat,
-  Proposal,
-} from "../../../../shared/models";
-import { formatEpochTime, formatPrice } from "../../../../shared/utils";
+import { ROUTE_PATHS } from "@/shared/constants";
+import ApprovedIcon from "@/shared/icons/approved.icon";
+import { Common, DateFormat, Proposal, User } from "@/shared/models";
+import { formatEpochTime, formatPrice, getUserName } from "@/shared/utils";
 import {
   checkDeclinedProposal,
   checkPendingApprovalProposal,
@@ -14,11 +12,14 @@ import "./index.scss";
 
 interface ProposalCardProps {
   proposal: Proposal;
+  common?: Common;
+  user?: User;
+  withAdditionalData?: boolean;
   onClick?: () => void;
 }
 
 const ProposalCard: FC<ProposalCardProps> = (props) => {
-  const { proposal, onClick } = props;
+  const { proposal, common, user, withAdditionalData = false, onClick } = props;
   const isPendingApproval = checkPendingApprovalProposal(proposal);
   const isDeclined = checkDeclinedProposal(proposal);
   const isApproved = !isPendingApproval && !isDeclined;
@@ -62,6 +63,27 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
       </span>
       <div className="trustee-proposal-card__content-wrapper">
         <div className="trustee-proposal-card__content">
+          {withAdditionalData && (
+            <div className="trustee-proposal-card__extended-data-wrapper">
+              <p className="trustee-proposal-card__extended-data">
+                Common name:{" "}
+                {common ? (
+                  <a
+                    href={ROUTE_PATHS.COMMON_DETAIL.replace(":id", common.id)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {common.name}
+                  </a>
+                ) : (
+                  "-"
+                )}
+              </p>
+              <p className="trustee-proposal-card__extended-data">
+                Proposer name: {user ? getUserName(user) : "-"}
+              </p>
+            </div>
+          )}
           <h3
             className="trustee-proposal-card__title"
             title={proposal.description.description}

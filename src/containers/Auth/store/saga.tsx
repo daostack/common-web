@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { default as store } from "../../../index";
+import { store } from "@/shared/appConfig";
 import {
   getRandomUserAvatarURL,
   tokenHandler,
@@ -7,7 +7,7 @@ import {
 } from "../../../shared/utils";
 import * as actions from "./actions";
 import firebase from "../../../shared/utils/firebase";
-import { Collection, User } from "../../../shared/models";
+import { Collection, Proposal, User } from "../../../shared/models";
 import { UserCreationDto } from "../interface";
 import {
   AuthProvider,
@@ -16,6 +16,14 @@ import {
 } from "../../../shared/constants";
 import history from "../../../shared/history";
 import { createdUserApi, getUserData } from "./api";
+import {
+  getProposalById,
+  seenNotification,
+  subscribeToNotification,
+} from "@/containers/Common/store/api";
+import { EventTypeState, NotificationItem } from "@/shared/models/Notification";
+import { showNotification } from "@/shared/store/actions";
+import { getFundingRequestNotification } from "@/shared/utils/notifications";
 
 const getAuthProviderFromProviderData = (
   providerData?: firebase.User["providerData"]
@@ -439,6 +447,31 @@ function* authSagas() {
       }
     } catch (e) {
       logOut().next();
+    }
+  });
+
+  subscribeToNotification(async (data?: NotificationItem) => {
+    const user = await firebase.auth().currentUser;
+
+    if (data && (!data.seen || !data?.seen?.includes(user?.uid ?? ""))) {
+      switch (data?.eventType) {
+        case EventTypeState.fundingRequestAccepted:
+        case EventTypeState.fundingRequestRejected:
+          const proposal: Proposal | undefined = await getProposalById(
+            data?.eventObjectId
+          );
+          if (proposal) {
+            const notification = getFundingRequestNotification(data, proposal);
+
+            store.dispatch(showNotification(notification));
+
+            seenNotification(data.id);
+          }
+
+          break;
+        default:
+          break;
+      }
     }
   });
 })();

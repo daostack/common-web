@@ -1,12 +1,12 @@
 @import "../../../../../constants";
 @import "../../../../../styles/sizes";
 
-.my-proposals {
+.activities-proposals {
   width: 100%;
   margin-left: 2%;
   padding: 2.5rem 0;
 
-  .my-proposals__header {
+  .activities-proposals__header {
     display: flex;
     justify-content: flex-start;
 
@@ -21,7 +21,7 @@
     }
   }
 
-  .my-proposals__proposals-list {
+  .activities-proposals__proposals-list {
     display: grid;
     justify-items: center;
     grid-column-gap: 2rem;
@@ -33,13 +33,13 @@
     padding: 0.9rem 0 1.5rem 0;
     margin-left: 0;
 
-    .my-proposals__proposals-list {
+    .activities-proposals__proposals-list {
       grid-template-columns: repeat(auto-fill, minmax(17.5rem, 1fr));
     }
   }
 }
 
-.my-proposals__detail-modal-header-wrapper {
+.activities-proposals__detail-modal-header-wrapper {
   position: absolute;
   top: 0;
   right: 0;

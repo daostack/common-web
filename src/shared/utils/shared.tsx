@@ -40,11 +40,6 @@ export const formatPrice = (
   }${bySubscription ? "/mo" : ""}`;
 };
 
-export const formatDate = (
-  date: string | Date | Moment,
-  format: DateFormat = DateFormat.Short
-): string => moment(date).format(format);
-
 /**
  * Returns the date in a given format. Default is DD-MM-YYYY HH:mm
  * @param {Time} time
@@ -298,61 +293,75 @@ function timeSince(date: Date) {
   let interval = seconds / 31536000;
 
   if (interval > 1) {
-    return Math.floor(interval) + " years ago";
+    const y = Math.floor(interval);
+    return y + (y > 1 ? " years ago" : " year ago");
   }
   interval = seconds / 2592000;
   if (interval > 1) {
     const m = Math.floor(interval);
-    return m + (m > 1 ? " months ago" : "month ago");
+    return m + (m > 1 ? " months ago" : " month ago");
   }
   interval = seconds / 86400;
   if (interval > 1) {
     const d = Math.floor(interval);
-    return d + (d > 1 ? " days ago" : "day ago");
+    return d + (d > 1 ? " days ago" : " day ago");
   }
   interval = seconds / 3600;
   if (interval > 1) {
     const h = Math.floor(interval);
-    return h + (h > 1 ? " hours ago" : "hour ago");
+    return h + (h > 1 ? " hours ago" : " hour ago");
   }
   interval = seconds / 60;
   if (interval > 1) {
     const min = Math.floor(interval);
-    return min + (min > 1 ? " minutes ago" : "minute ago");
+    return min + (min > 1 ? " minutes ago" : " minute ago");
   }
   return Math.floor(seconds) + " seconds ago";
 }
 
+const getDateValue = (data: Time | Date) => {
+  if (!data) return 0;
+  if ("toDate" in data) {
+    return data?.toDate()?.getTime();
+  } else {
+    if (data) {
+      if ("getTime" in data) {
+        return data?.getTime();
+      }
+    }
+  }
+  return 0;
+};
+
 export function getLastActivity(data: Common) {
   const { discussions, createdAt, proposals, messages } = data;
-
-  const activities = [createdAt.toDate().getTime()];
+  const activities = [getDateValue(createdAt)];
 
   discussions?.forEach((d) => {
     if (d.createdAt) {
-      activities.push(d.createdAt?.toDate().getTime());
+      activities.push(getDateValue(d.createdAt));
     }
     if (d.updatedAt) {
-      activities.push(d.updatedAt?.toDate().getTime());
+      activities.push(getDateValue(d.updatedAt));
     }
     if (d.createTime) {
-      activities.push(d.createTime?.toDate().getTime());
+      activities.push(getDateValue(d.createTime));
     }
   });
   proposals?.forEach((d) => {
     if (d.createdAt) {
-      activities.push(d.createdAt?.toDate().getTime());
+      activities.push(getDateValue(d.createdAt));
     }
     if (d.updatedAt) {
-      activities.push(d.updatedAt?.toDate().getTime());
+      activities.push(getDateValue(d.updatedAt));
     }
     if (d.createTime) {
-      activities.push(d.createTime?.toDate().getTime());
+      activities.push(getDateValue(d.createTime));
     }
   });
   messages?.forEach((d) => {
     if (d.createTime) {
-      activities.push(d.createTime?.toDate().getTime());
+      activities.push(getDateValue(d.createTime));
     }
   });
 

@@ -6,6 +6,7 @@ import { Common } from "../../../../../shared/models";
 import {
   containsHebrew,
   formatPrice,
+  getLastActivity,
 } from "../../../../../shared/utils";
 import "./index.scss";
 
@@ -45,10 +46,9 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
                 {common?.metadata.byline}
               </div>
             )}
-            {/* TODO: temporary disable last activity */}
-            {/* <div className="last-activity">
+            <div className="last-activity">
               Active {getLastActivity(common)}
-            </div> */}
+            </div>
           </div>
         </div>
         <div className="additional-information">
