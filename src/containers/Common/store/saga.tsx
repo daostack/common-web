@@ -59,11 +59,9 @@ import { selectDiscussions, selectProposals } from "./selectors";
 import { store } from "@/shared/appConfig";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
 import { Vote } from "@/shared/interfaces/api/vote";
-import {
-  CreateGovernancePayload,
-  ImmediateContributionResponse,
-} from "../interfaces";
+import { ImmediateContributionResponse } from "../interfaces";
 import { groupBy } from "@/shared/utils";
+import { createDefaultGovernanceCreationPayload } from "./helpers";
 
 export function* createGovernance(
   action: ReturnType<typeof actions.createGovernance.request>
@@ -660,16 +658,13 @@ export function* createCommon(
       commonCreationPayload
     )) as Common;
 
-    const governanceCreationPayload: CreateGovernancePayload = {
-      circles: [],
-      actions: {},
-      proposals: {},
-      consequences: {},
-      unstructuredRules: rules || [],
-      tokenPool: 0,
-      commonId: common.id,
-    };
-    yield call(createGovernanceApi, governanceCreationPayload);
+    yield call(
+      createGovernanceApi,
+      createDefaultGovernanceCreationPayload({
+        unstructuredRules: rules || [],
+        commonId: common.id,
+      })
+    );
 
     yield put(actions.createCommon.success(common));
     action.payload.callback(null, common);
