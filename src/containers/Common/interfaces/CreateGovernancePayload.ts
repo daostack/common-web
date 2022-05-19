@@ -1,10 +1,14 @@
 import { GovernanceConsequences } from "@/shared/constants";
-import { BaseRule, Circles, Consequences } from "@/shared/models";
+import { BaseRule, Circle, Consequences } from "@/shared/models";
 import { Actions, BaseAction } from "@/shared/models/governance/actions";
 import { Proposals } from "@/shared/models/governance/proposals";
 
-export interface CreateGovernance {
-  circles: Circles[];
+interface CreateGovernanceCircle extends Omit<Circle, "id"> {
+  id: string;
+}
+
+export interface CreateGovernancePayload {
+  circles: CreateGovernanceCircle[];
   actions: Partial<Record<keyof Actions, Pick<BaseAction, "cost">>>;
   proposals: Partial<Proposals>;
   consequences: Partial<

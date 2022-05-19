@@ -13,21 +13,21 @@ import {
   Card,
   Common,
   CommonPayment,
+  Governance,
   Proposal,
   Discussion,
   Payment,
   Subscription,
 } from "@/shared/models";
-import { PayloadWithOptionalCallback } from "../../../shared/interfaces";
+import { PayloadWithOptionalCallback } from "@/shared/interfaces";
 import { CommonsActionTypes } from "./constants";
 import {
   CreateDiscussionDto,
   CreateCommonPayload,
+  CreateGovernancePayload,
   AddMessageToDiscussionDto,
   DeleteCommon,
   LeaveCommon,
-  CreateGovernance,
-  CreateGovernance as GovernanceCreatePayload,
 } from "@/containers/Common/interfaces";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 import {
@@ -45,8 +45,8 @@ export const createGovernance = createAsyncAction(
   CommonsActionTypes.CREATE_GOVERNANCE_SUCCESS,
   CommonsActionTypes.CREATE_GOVERNANCE_FAILURE
 )<
-  PayloadWithCallback<GovernanceCreatePayload, CreateGovernance, Error>,
-  CreateGovernance,
+  PayloadWithCallback<CreateGovernancePayload, Governance, Error>,
+  Governance,
   Error
 >();
 
