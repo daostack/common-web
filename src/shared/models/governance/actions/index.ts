@@ -5,3 +5,5 @@ export interface Actions {
   [GovernanceActions.CREATE_PROPOSAL]: CreateProposal;
   // Expended for each action
 }
+
+export * from "./BaseAction";
