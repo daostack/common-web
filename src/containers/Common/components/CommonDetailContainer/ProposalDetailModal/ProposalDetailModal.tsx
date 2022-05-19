@@ -1,10 +1,7 @@
 import React, { useCallback, useState } from "react";
 
 import { Loader } from "../../../../../shared/components";
-import {
-  Common,
-  Proposal,
-} from "../../../../../shared/models";
+import { Common, Proposal } from "../../../../../shared/models";
 import {
   formatPrice,
   getDaysAgo,
@@ -76,11 +73,15 @@ export default function ProposalDetailModal({
                   <img
                     src={proposal.proposer?.photoURL}
                     alt={getUserName(proposal.proposer)}
-                    onError={(event: any) => event.target.src = "/icons/default_user.svg"}
+                    onError={(event: any) =>
+                      (event.target.src = "/icons/default_user.svg")
+                    }
                   />
                 </div>
                 <div className="owner-name-and-days-container">
-                  <div className="owner-name">{getUserName(proposal.proposer)}</div>
+                  <div className="owner-name">
+                    {getUserName(proposal.proposer)}
+                  </div>
                   <div className="days-ago">
                     {getDaysAgo(date, proposal.createdAt)}
                   </div>
@@ -89,7 +90,10 @@ export default function ProposalDetailModal({
             </>
           )}
           <div className="proposal-information-wrapper">
-            <div className="proposal-name" title={proposal.description.title || "Memberhip request"}>
+            <div
+              className="proposal-name"
+              title={proposal.description.title || "Memberhip request"}
+            >
               {proposal.description.title || "Memberhip request"}
             </div>
             {expanded && (
@@ -106,8 +110,12 @@ export default function ProposalDetailModal({
                     </>
                   )}
                 </div>
-                <VotesComponent proposal={proposal} isCommonMember={isCommonMember} />
-              </>)}
+                <VotesComponent
+                  proposal={proposal}
+                  isCommonMember={isCommonMember}
+                />
+              </>
+            )}
           </div>
         </div>
 
@@ -119,10 +127,17 @@ export default function ProposalDetailModal({
 
         {screenSize === ScreenSize.Mobile && (
           <div className="expand-btn-container">
-            <img className={classNames({ "expanded": expanded, "collapsed": !expanded })} onClick={() => setExpanded(!expanded)} src="/icons/expand-arrow.svg" alt="expand icon" />
+            <img
+              className={classNames({
+                expanded: expanded,
+                collapsed: !expanded,
+              })}
+              onClick={() => setExpanded(!expanded)}
+              src="/icons/expand-arrow.svg"
+              alt="expand icon"
+            />
           </div>
         )}
-
       </div>
       <div className="chat-container">
         <ChatComponent

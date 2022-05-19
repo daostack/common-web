@@ -171,7 +171,90 @@
         }
       }
     }
+
     .discussion-content {
+      .additional-information{
+        .links {
+          display: flex;
+          flex-direction: column;
+          a {
+            color: $secondary-blue;
+            margin-bottom: 1rem;
+            vertical-align: middle;
+            display: inline-block;
+            font-size: 0.875rem;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.43;
+            letter-spacing:0.018rem;
+            text-align: left;
+            &::before {
+              background-image: url("/icons/link.svg");
+              display: inline-block;
+              content: " ";
+              background-size:  0.938rem  0.938rem;
+              height: 0.938rem;
+              width:  0.938rem;
+              margin-right: 0.5rem;
+            }
+            &:hover {
+              color: $purple;
+            }
+          }
+        }
+
+        .images-wrapper{
+          margin-bottom: 2rem;
+          .images-list{
+            display: flex;
+
+            .image-item{
+              margin-right: 1rem;
+            }
+            .pagination-item{
+              width: 6rem;
+              height: 15.625rem;
+              border-radius: 0.625rem;
+              background-color: $light-gray-3;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 1.25rem;
+              font-weight: bold;
+              font-stretch: normal;
+              font-style: normal;
+              line-height: 1.2;
+              letter-spacing: normal;
+              text-align: center;
+              color: $secondary-blue;
+              cursor: pointer;
+            }
+          }
+          .image-item{
+
+            &.swiper-slide{
+              margin-bottom: 2.5rem;
+            }
+            flex-shrink: initial !important;
+            img {
+              width: 20rem;
+              height: 15.625rem;
+              flex-grow: 0;
+              border-radius: 0.625rem;
+            }
+            .image-title{
+              font-size: 0.875rem;
+              font-weight: normal;
+              font-stretch: normal;
+              font-style: normal;
+              line-height: 1.43;
+              letter-spacing:0.018rem;
+              color: $light-gray-2;
+            }
+          }
+        }
+      }
       .title {
         font-size: 18px;
         font-weight: bold;
