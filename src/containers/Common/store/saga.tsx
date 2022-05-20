@@ -159,17 +159,40 @@ export function* getCommonDetail({
   payload,
 }: ReturnType<typeof actions.getCommonDetail.request>): Generator {
   try {
-    yield put(startLoading());
-    const common = (yield call(fetchCommonDetail, payload.payload)) as Common;
+    const commonId = payload.payload;
 
-    const [discussions, proposals] = (yield Promise.all([
+    yield put(startLoading());
+    const common = (yield call(fetchCommonDetail, commonId)) as Common | null;
+
+    if (!common) {
+      throw new Error(`Common with id = "${commonId}" was not found`);
+    }
+    if (!common.governanceId) {
+      throw new Error(
+        `Common with id = "${commonId}" doesn't have specified governance id`
+      );
+    }
+
+    const [governance, discussions, proposals] = (yield Promise.all([
+      getGovernanceApi(common.governanceId),
       fetchCommonDiscussions(common.id),
       fetchCommonProposals(common.id),
-    ])) as any[];
+    ])) as [
+      Awaited<ReturnType<typeof getGovernanceApi>>,
+      Awaited<ReturnType<typeof fetchCommonDiscussions>>,
+      Awaited<ReturnType<typeof fetchCommonProposals>>
+    ];
+
+    if (!governance) {
+      throw new Error(
+        `Governance with id = "${common.governanceId}" was not found`
+      );
+    }
 
     yield put(actions.getCommonDetail.success(common));
     yield put(actions.setDiscussion(discussions));
     yield put(actions.setProposals(proposals));
+    yield put(actions.getGovernance.success(governance));
 
     if (payload.callback) {
       payload.callback(null, common);

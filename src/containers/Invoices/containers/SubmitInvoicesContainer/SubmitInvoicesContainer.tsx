@@ -55,7 +55,7 @@ export default function SubmitInvoicesContainer() {
         }
         setProposal(proposal);
         const commonProposal = await fetchCommonDetail(proposal.commonId);
-        setCommonName(commonProposal.name);
+        setCommonName(commonProposal?.name || "");
         setSubmissionStatus(SubmissionStatus.PendingUser);
       } catch (error) {
         console.error(error);

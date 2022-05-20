@@ -158,7 +158,7 @@ export async function fetchCommonListByIds(ids: string[]): Promise<Common[]> {
     .reduce((acc, items) => [...acc, ...items], []);
 }
 
-export async function fetchCommonDetail(id: string): Promise<Common> {
+export async function fetchCommonDetail(id: string): Promise<Common | null> {
   const common = await firebase
     .firestore()
     .collection(Collection.Daos)
@@ -166,7 +166,7 @@ export async function fetchCommonDetail(id: string): Promise<Common> {
     .where("active", "==", true)
     .get();
   const data = transformFirebaseDataList<Common>(common);
-  return data[0];
+  return data[0] || null;
 }
 
 export async function fetchOwners(ownerids: string[]) {
