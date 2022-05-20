@@ -17,13 +17,13 @@ import { Common, CommonLink, Governance } from "@/shared/models";
 import MembershipRequestCreated from "./MembershipRequestCreated";
 import MembershipRequestCreating from "./MembershipRequestCreating";
 import MembershipRequestIntroduce from "./MembershipRequestIntroduce";
-import MembershipRequestPayment from "./MembershipRequestPayment";
 import MembershipRequestProgressBar from "./MembershipRequestProgressBar";
 import MembershipRequestRules from "./MembershipRequestRules";
 import MembershipRequestWelcome from "./MembershipRequestWelcome";
 import { selectUser } from "../../../../Auth/store/selectors";
 import { selectCommonList } from "../../../store/selectors";
 import { getCommonsList } from "../../../store/actions";
+import { MembershipRequestStage } from "./constants";
 import "./index.scss";
 
 export interface IStageProps {
@@ -34,13 +34,13 @@ export interface IStageProps {
 }
 
 export interface IMembershipRequestData {
-  stage: number;
+  stage: MembershipRequestStage;
   intro: string;
   links?: CommonLink[];
 }
 
 const initData: IMembershipRequestData = {
-  stage: 0,
+  stage: MembershipRequestStage.Welcome,
   intro: "",
 };
 
@@ -68,9 +68,13 @@ export function MembershipRequestModal(props: IProps) {
     governance,
     onCreationStageReach,
   } = props;
-  const shouldDisplayProgressBar = stage > 0 && stage < 5;
+  const shouldDisplayProgressBar =
+    stage > MembershipRequestStage.Welcome &&
+    stage < MembershipRequestStage.Creating;
   const shouldDisplayGoBack =
-    (stage > 1 && stage < 5) || (stage === 1 && !isMember);
+    (stage > MembershipRequestStage.Introduce &&
+      stage < MembershipRequestStage.Creating) ||
+    (stage === MembershipRequestStage.Introduce && !isMember);
   const commons = useSelector(selectCommonList());
 
   /**
@@ -98,7 +102,9 @@ export function MembershipRequestModal(props: IProps) {
 
     const payload: IMembershipRequestData = {
       ...initData,
-      stage: isMember ? 1 : 0,
+      stage: isMember
+        ? MembershipRequestStage.Introduce
+        : MembershipRequestStage.Welcome,
     };
 
     setUserData(payload);
@@ -115,14 +121,14 @@ export function MembershipRequestModal(props: IProps) {
 
   const renderCurrentStage = (stage: number) => {
     switch (stage) {
-      case 0:
+      case MembershipRequestStage.Welcome:
         return (
           <MembershipRequestWelcome
             userData={userData}
             setUserData={setUserData}
           />
         );
-      case 1:
+      case MembershipRequestStage.Introduce:
         return (
           <MembershipRequestIntroduce
             userData={userData}
@@ -131,7 +137,7 @@ export function MembershipRequestModal(props: IProps) {
             governance={governance}
           />
         );
-      case 2:
+      case MembershipRequestStage.Rules:
         return (
           <MembershipRequestRules
             userData={userData}
@@ -139,15 +145,7 @@ export function MembershipRequestModal(props: IProps) {
             governance={governance}
           />
         );
-      case 3:
-        return (
-          <MembershipRequestPayment
-            userData={userData}
-            setUserData={setUserData}
-            common={common}
-          />
-        );
-      case 4:
+      case MembershipRequestStage.Creating:
         return (
           <MembershipRequestCreating
             userData={userData}
@@ -155,13 +153,16 @@ export function MembershipRequestModal(props: IProps) {
             common={common}
           />
         );
-      case 5:
+      case MembershipRequestStage.Created:
         return <MembershipRequestCreated closeModal={onClose} />;
     }
   };
 
   const renderedTitle = useMemo((): ReactNode => {
-    if (stage >= 5 || stage === 0) {
+    if (
+      stage >= MembershipRequestStage.Creating ||
+      stage === MembershipRequestStage.Welcome
+    ) {
       return null;
     }
     return (
@@ -180,7 +181,7 @@ export function MembershipRequestModal(props: IProps) {
   }, [common]);
 
   useEffect(() => {
-    if (stage === 4) {
+    if (stage === MembershipRequestStage.Creating) {
       onCreationStageReach(true);
     }
   }, [stage, onCreationStageReach]);
@@ -196,12 +197,14 @@ export function MembershipRequestModal(props: IProps) {
       onClose={onClose}
       className="mobile-full-screen membership-request-modal"
       mobileFullScreen
-      closePrompt={stage !== 5}
+      closePrompt={stage !== MembershipRequestStage.Created}
       title={renderedTitle}
       onGoBack={shouldDisplayGoBack ? moveStageBack : undefined}
       styles={{
         content:
-          stage === 0 ? "membership-request-modal__content--introduction" : "",
+          stage === MembershipRequestStage.Welcome
+            ? "membership-request-modal__content--introduction"
+            : "",
       }}
     >
       <div className="membership-request-wrapper">

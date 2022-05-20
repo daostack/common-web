@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Loader } from "../../../../../shared/components";
-import { getLoading } from "../../../../../shared/store/selectors";
+import { Loader } from "@/shared/components";
+import { getLoading } from "@/shared/store/selectors";
 import { createRequestToJoin } from "../../../store/actions";
 import { IStageProps } from "./MembershipRequestModal";
+import { MembershipRequestStage } from "./constants";
 
 export default function MembershipRequestCreating(props: IStageProps) {
   const { userData, setUserData, common } = props;
@@ -35,7 +36,10 @@ export default function MembershipRequestCreating(props: IStageProps) {
 
   useEffect(() => {
     if (isCreationSubmitted && !isLoading) {
-      setUserData((nextUserData) => ({ ...nextUserData, stage: 6 }));
+      setUserData((nextUserData) => ({
+        ...nextUserData,
+        stage: MembershipRequestStage.Created,
+      }));
     }
   }, [isCreationSubmitted, isLoading, setUserData]);
 

@@ -7,6 +7,7 @@ import { ScreenSize, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
 import { CommonLink } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { IStageProps } from "./MembershipRequestModal";
+import { MembershipRequestStage } from "./constants";
 import { introduceStageSchema } from "./validationSchemas";
 import "./index.scss";
 
@@ -29,7 +30,9 @@ export default function MembershipRequestIntroduce(props: IStageProps) {
     (values) => {
       const areRulesSpecified =
         governance && Object.keys(governance.unstructuredRules).length > 0;
-      const nextStage = areRulesSpecified ? 2 : 3;
+      const nextStage = areRulesSpecified
+        ? MembershipRequestStage.Rules
+        : MembershipRequestStage.Creating;
       const links = values.links.filter((link) => link.title && link.value);
 
       setUserData((nextUserData) => ({
