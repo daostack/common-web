@@ -1,6 +1,7 @@
-import { 
+import {
   Common,
   Discussion,
+  Governance,
   Proposal,
   Card,
 } from "@/shared/models";
@@ -9,6 +10,7 @@ import { Tabs } from "@/containers/Common";
 export interface CommonsStateType {
   commons: Common[];
   common: Common | null;
+  governance: Governance | null;
   page: number;
   proposals: Proposal[];
   discussions: Discussion[];

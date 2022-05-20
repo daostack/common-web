@@ -53,6 +53,7 @@ import {
   fetchMessagesForCommonList,
   fetchCommonListByIds as fetchCommonListByIdsApi,
   createGovernance as createGovernanceApi,
+  getGovernance as getGovernanceApi,
 } from "./api";
 import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -62,6 +63,7 @@ import { Vote } from "@/shared/interfaces/api/vote";
 import { ImmediateContributionResponse } from "../interfaces";
 import { groupBy } from "@/shared/utils";
 import { createDefaultGovernanceCreationPayload } from "./helpers";
+import { Awaited } from "@/shared/interfaces";
 
 export function* createGovernance(
   action: ReturnType<typeof actions.createGovernance.request>
@@ -224,7 +226,9 @@ export function* loadDiscussionDetail(
     if (action.payload.discussionMessage?.length) {
       discussionMessage = action.payload.discussionMessage;
     } else {
-      discussionMessage = (yield fetchDiscussionsMessages([discussion.id])) as DiscussionMessage[];
+      discussionMessage = (yield fetchDiscussionsMessages([
+        discussion.id,
+      ])) as DiscussionMessage[];
     }
 
     const ownerIds = Array.from(
@@ -292,7 +296,9 @@ export function* loadProposalDetail(
     if (action.payload.discussionMessage?.length) {
       discussionMessage = action.payload.discussionMessage;
     } else {
-      discussionMessage = (yield fetchDiscussionsMessages([proposal.id])) as DiscussionMessage[];
+      discussionMessage = (yield fetchDiscussionsMessages([
+        proposal.id,
+      ])) as DiscussionMessage[];
     }
 
     const ownerIds = Array.from(
@@ -828,6 +834,36 @@ export function* cancelSubscription({
   }
 }
 
+export function* getGovernance({
+  payload,
+}: ReturnType<typeof actions.getGovernance.request>): Generator {
+  try {
+    const governanceId = payload.payload;
+
+    yield put(startLoading());
+    const governance = (yield call(getGovernanceApi, governanceId)) as Awaited<
+      ReturnType<typeof getGovernanceApi>
+    >;
+
+    if (!governance) {
+      throw new Error(`Governance with id = "${governanceId}" was not found`);
+    }
+
+    yield put(actions.getGovernance.success(governance));
+
+    if (payload.callback) {
+      payload.callback(null, governance);
+    }
+  } catch (error) {
+    yield put(actions.getGovernance.failure(error));
+    if (payload.callback) {
+      payload.callback(error);
+    }
+  } finally {
+    yield put(stopLoading());
+  }
+}
+
 export function* commonsSaga() {
   yield takeLatest(actions.createGovernance.request, createGovernance);
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
@@ -881,6 +917,7 @@ export function* commonsSaga() {
   yield takeLatest(actions.getUserSubscriptions.request, getUserSubscriptions);
   yield takeLatest(actions.updateSubscription.request, updateSubscription);
   yield takeLatest(actions.cancelSubscription.request, cancelSubscription);
+  yield takeLatest(actions.getGovernance.request, getGovernance);
 }
 
 export default commonsSaga;

@@ -1,3 +1,4 @@
+export * from "./Awaited";
 export * from "./State";
 export * from "./Configuration";
 export * from "./LoadingState";

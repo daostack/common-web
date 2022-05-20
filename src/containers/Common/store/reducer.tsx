@@ -6,6 +6,7 @@ import * as actions from "./actions";
 const initialState: CommonsStateType = {
   commons: [],
   common: null,
+  governance: null,
   page: 1,
   proposals: [],
   discussions: [],
@@ -109,6 +110,7 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
     produce(state, (nextState) => {
       nextState.currentDiscussion = null;
       nextState.common = null;
+      nextState.governance = null;
       nextState.discussions = [];
       nextState.proposals = [];
       nextState.isDiscussionsLoaded = false;
@@ -150,6 +152,16 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
   .handleAction(actions.clearCommonActiveTab, (state, action) =>
     produce(state, (nextState) => {
       nextState.activeTab = null;
+    })
+  )
+  .handleAction(actions.getGovernance.success, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.governance = action.payload;
+    })
+  )
+  .handleAction(actions.getGovernance.failure, (state) =>
+    produce(state, (nextState) => {
+      nextState.governance = null;
     })
   );
 

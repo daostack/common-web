@@ -340,3 +340,9 @@ export const cancelSubscription = createAsyncAction(
   CommonsActionTypes.CANCEL_SUBSCRIPTION_SUCCESS,
   CommonsActionTypes.CANCEL_SUBSCRIPTION_FAILURE
 )<PayloadWithCallback<string, Subscription, Error>, Subscription, Error>();
+
+export const getGovernance = createAsyncAction(
+  CommonsActionTypes.GET_GOVERNANCE,
+  CommonsActionTypes.GET_GOVERNANCE_SUCCESS,
+  CommonsActionTypes.GET_GOVERNANCE_FAILURE
+)<PayloadWithOptionalCallback<string, Governance, Error>, Governance, Error>();
