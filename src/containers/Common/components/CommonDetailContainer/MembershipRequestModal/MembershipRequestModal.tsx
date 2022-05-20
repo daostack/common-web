@@ -136,7 +136,7 @@ export function MembershipRequestModal(props: IProps) {
           <MembershipRequestRules
             userData={userData}
             setUserData={setUserData}
-            common={common}
+            governance={governance}
           />
         );
       case 3:
