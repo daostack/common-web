@@ -18,6 +18,7 @@ import {
   Proposal,
   SubCollections,
   Subscription,
+  UnstructuredRules,
   User,
 } from "@/shared/models";
 import {
@@ -645,7 +646,20 @@ export const governanceCollection = firebase
     },
   });
 
-export const getCommonGovernanceRules = async (governanceId: string) => {
-  return (await governanceCollection.doc(governanceId).get()).data()
-    ?.unstructuredRules;
+export const getGovernance = async (
+  governanceId: string
+): Promise<Governance | null> => {
+  const governance = (
+    await governanceCollection.doc(governanceId).get()
+  ).data();
+
+  return governance || null;
+};
+
+export const getCommonGovernanceRules = async (
+  governanceId: string
+): Promise<UnstructuredRules | null> => {
+  const governance = await getGovernance(governanceId);
+
+  return governance?.unstructuredRules || null;
 };
