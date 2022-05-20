@@ -9,12 +9,11 @@ import React, {
   SetStateAction,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { v4 as uuidv4 } from "uuid";
 import { commonMembersSubCollection } from "@/containers/Common/store/api";
-import { Modal } from "../../../../../shared/components";
-import { useZoomDisabling } from "../../../../../shared/hooks";
-import { ModalProps, ModalRef } from "../../../../../shared/interfaces";
-import { Common, CommonLink } from "../../../../../shared/models";
+import { Modal } from "@/shared/components";
+import { useZoomDisabling } from "@/shared/hooks";
+import { ModalProps, ModalRef } from "@/shared/interfaces";
+import { Common, CommonLink } from "@/shared/models";
 import MembershipRequestCreated from "./MembershipRequestCreated";
 import MembershipRequestCreating from "./MembershipRequestCreating";
 import MembershipRequestIntroduce from "./MembershipRequestIntroduce";
@@ -37,33 +36,11 @@ export interface IMembershipRequestData {
   stage: number;
   intro: string;
   links?: CommonLink[];
-  contributionAmount: number | undefined;
-  fullname: string;
-  city: string;
-  country: string;
-  district: string;
-  address: string;
-  postal: string;
-  card_number: number | undefined;
-  cvv: number | undefined;
-  expiration_date: string;
-  cardId: string;
 }
 
 const initData: IMembershipRequestData = {
   stage: 0,
   intro: "",
-  contributionAmount: undefined,
-  fullname: "",
-  city: "",
-  country: "",
-  district: "",
-  address: "",
-  postal: "",
-  card_number: undefined,
-  cvv: undefined,
-  expiration_date: "",
-  cardId: uuidv4(),
 };
 
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
@@ -84,7 +61,8 @@ export function MembershipRequestModal(props: IProps) {
   const { stage } = userData;
   const { isShowing, onClose, common, onCreationStageReach } = props;
   const shouldDisplayProgressBar = stage > 0 && stage < 5;
-  const shouldDisplayGoBack = (stage > 1 && stage < 5) || (stage === 1 && !isMember);
+  const shouldDisplayGoBack =
+    (stage > 1 && stage < 5) || (stage === 1 && !isMember);
   const commons = useSelector(selectCommonList());
 
   /**
@@ -102,27 +80,30 @@ export function MembershipRequestModal(props: IProps) {
       dispatch(getCommonsList.request());
     }
 
-    const isMember = commons.some(async (common) => (await commonMembersSubCollection(common.id).doc(user?.uid).get()).exists);
+    const isMember = commons.some(
+      async (common) =>
+        (await commonMembersSubCollection(common.id).doc(user?.uid).get())
+          .exists
+    );
 
     setIsMember(isMember);
 
     const payload: IMembershipRequestData = {
       ...initData,
-      cardId: uuidv4(),
       stage: isMember ? 1 : 0,
     };
 
-    if (user) {
-      payload.fullname = user.displayName ?? "";
-      if (!payload.fullname) {
-        payload.fullname = `${user.firstName} ${user.lastName}`;
-      }
-      payload.country = user.country ?? "";
-    }
-
     setUserData(payload);
     onCreationStageReach(false);
-  }, [isShowing, user, onCreationStageReach, disableZoom, resetZoom, commons, dispatch]);
+  }, [
+    isShowing,
+    user,
+    onCreationStageReach,
+    disableZoom,
+    resetZoom,
+    commons,
+    dispatch,
+  ]);
 
   const renderCurrentStage = (stage: number) => {
     switch (stage) {
@@ -174,7 +155,9 @@ export function MembershipRequestModal(props: IProps) {
     if (stage >= 5 || stage === 0) {
       return null;
     }
-    return <h3 className="membership-request-modal__title">Membership Request</h3>;
+    return (
+      <h3 className="membership-request-modal__title">Membership Request</h3>
+    );
   }, [stage]);
 
   const moveStageBack = useCallback(() => {
@@ -208,7 +191,8 @@ export function MembershipRequestModal(props: IProps) {
       title={renderedTitle}
       onGoBack={shouldDisplayGoBack ? moveStageBack : undefined}
       styles={{
-        content: stage === 0 ? "membership-request-modal__content--introduction" : ""
+        content:
+          stage === 0 ? "membership-request-modal__content--introduction" : "",
       }}
     >
       <div className="membership-request-wrapper">
