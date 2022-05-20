@@ -771,6 +771,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                 <DiscussionsComponent
                   onAddNewPost={addPost}
                   common={common}
+                  governance={governance}
                   discussions={discussions || []}
                   loadDisscussionDetail={getDisscussionDetail}
                   isCommonMember={isCommonMember}
@@ -782,6 +783,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                 <ProposalsComponent
                   onAddNewProposal={addNewProposal}
                   common={common}
+                  governance={governance}
                   currentTab={tab}
                   proposals={activeProposals}
                   loadProposalDetail={getProposalDetail}
@@ -794,6 +796,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                 <ProposalsComponent
                   onAddNewProposal={addNewProposal}
                   common={common}
+                  governance={governance}
                   currentTab={tab}
                   proposals={historyProposals}
                   loadProposalDetail={getProposalDetail}

@@ -1,6 +1,5 @@
 import React from "react";
-
-import { Common, Discussion } from "../../../../../shared/models";
+import { Common, Discussion, Governance } from "@/shared/models";
 import { EmptyTabComponent } from "../EmptyTabContent";
 import DiscussionItemComponent from "./DiscussionItemComponent";
 import "./index.scss";
@@ -9,6 +8,7 @@ interface DiscussionsComponentProps {
   discussions: Discussion[];
   loadDisscussionDetail: (payload: Discussion) => void;
   common: Common;
+  governance: Governance;
   isCommonMember: boolean;
   isJoiningPending: boolean;
   onAddNewPost: () => void;
@@ -18,6 +18,7 @@ export default function DiscussionsComponent({
   discussions,
   loadDisscussionDetail,
   common,
+  governance,
   isCommonMember,
   isJoiningPending,
   onAddNewPost,
@@ -46,6 +47,7 @@ export default function DiscussionsComponent({
         ) : (
           <EmptyTabComponent
             common={common}
+            governance={governance}
             currentTab="discussions"
             message={
               "This is where members can discuss and share their thoughts and ideas."
