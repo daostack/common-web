@@ -13,7 +13,7 @@ import { commonMembersSubCollection } from "@/containers/Common/store/api";
 import { Modal } from "@/shared/components";
 import { useZoomDisabling } from "@/shared/hooks";
 import { ModalProps, ModalRef } from "@/shared/interfaces";
-import { Common, CommonLink } from "@/shared/models";
+import { Common, CommonLink, Governance } from "@/shared/models";
 import MembershipRequestCreated from "./MembershipRequestCreated";
 import MembershipRequestCreating from "./MembershipRequestCreating";
 import MembershipRequestIntroduce from "./MembershipRequestIntroduce";
@@ -30,6 +30,7 @@ export interface IStageProps {
   setUserData: Dispatch<SetStateAction<IMembershipRequestData>>;
   userData: IMembershipRequestData;
   common?: Common;
+  governance?: Governance;
 }
 
 export interface IMembershipRequestData {
@@ -45,6 +46,7 @@ const initData: IMembershipRequestData = {
 
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
   common: Common;
+  governance: Governance;
   onCreationStageReach: (reached: boolean) => void;
 }
 
@@ -59,7 +61,13 @@ export function MembershipRequestModal(props: IProps) {
   const user = useSelector(selectUser());
   const [isMember, setIsMember] = useState<boolean>();
   const { stage } = userData;
-  const { isShowing, onClose, common, onCreationStageReach } = props;
+  const {
+    isShowing,
+    onClose,
+    common,
+    governance,
+    onCreationStageReach,
+  } = props;
   const shouldDisplayProgressBar = stage > 0 && stage < 5;
   const shouldDisplayGoBack =
     (stage > 1 && stage < 5) || (stage === 1 && !isMember);
@@ -120,6 +128,7 @@ export function MembershipRequestModal(props: IProps) {
             userData={userData}
             setUserData={setUserData}
             common={common}
+            governance={governance}
           />
         );
       case 2:

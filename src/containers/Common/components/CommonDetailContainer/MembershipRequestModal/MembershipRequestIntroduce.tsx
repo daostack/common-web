@@ -21,13 +21,15 @@ const getInitialValues = (data: IStageProps["userData"]): FormValues => ({
 });
 
 export default function MembershipRequestIntroduce(props: IStageProps) {
-  const { userData, setUserData, common } = props;
+  const { userData, setUserData, common, governance } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
-      const nextStage = common && common.rules.length > 0 ? 2 : 3;
+      const areRulesSpecified =
+        governance && Object.keys(governance.unstructuredRules).length > 0;
+      const nextStage = areRulesSpecified ? 2 : 3;
       const links = values.links.filter((link) => link.title && link.value);
 
       setUserData((nextUserData) => ({
