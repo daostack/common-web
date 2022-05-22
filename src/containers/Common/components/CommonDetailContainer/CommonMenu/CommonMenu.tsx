@@ -3,18 +3,17 @@ import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import {
-  ButtonIcon,
   ButtonLink,
   Dropdown,
   DropdownOption,
   DropdownRef,
   Modal,
+  MenuButton,
 } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { useAuthorizedDropdown, useAuthorizedModal } from "@/shared/hooks";
 import AgendaIcon from "@/shared/icons/agenda.icon";
 import ContributionIcon from "@/shared/icons/contribution.icon";
-import MenuIcon from "@/shared/icons/menu.icon";
 import MosaicIcon from "@/shared/icons/mosaic.icon";
 import TrashIcon from "@/shared/icons/trash.icon";
 import { ModalType } from "@/shared/interfaces";
@@ -171,18 +170,11 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   };
 
   const buttonElement = (
-    <ButtonIcon
-      className={classNames(
-        "edit-common-menu__menu-button",
-        menuButtonClassName,
-        {
-          "edit-common-menu__menu-button--with-border": withBorder,
-        }
-      )}
+    <MenuButton
       onClick={isMobileView ? handleModalOpen : undefined}
-    >
-      <MenuIcon className="edit-common-menu__menu-button-icon" />
-    </ButtonIcon>
+      className={menuButtonClassName}
+      withBorder={withBorder}
+    />
   );
 
   const renderMenuDropdown = () => (

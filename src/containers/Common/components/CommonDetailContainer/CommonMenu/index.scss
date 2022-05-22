@@ -36,29 +36,6 @@ $border-radius: 0.75rem;
   color: $light-gray-3;
 }
 
-.edit-common-menu__menu-button {
-  width: 2.5rem;
-  height: 2.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  background-color: $light-gray-4;
-  color: $secondary-blue;
-
-  &:hover {
-    background-color: $purple-hover;
-  }
-}
-.edit-common-menu__menu-button--with-border {
-  border: 1px solid $light-gray-1;
-}
-
-.edit-common-menu__menu-button-icon {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
 .edit-common-menu__dropdown {
   z-index: $share-z-index;
 }

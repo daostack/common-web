@@ -6,5 +6,4 @@ export * from "./PhoneInput";
 export {
   ToggleButtonGroup,
   ToggleButton,
-  ToggleButtonGroupVariant,
 } from "./ToggleButtonGroup";

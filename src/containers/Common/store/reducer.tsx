@@ -10,11 +10,14 @@ const initialState: CommonsStateType = {
   proposals: [],
   discussions: [],
   userProposals: [],
-  isDiscussionsLoaded: false,
+  isCommonsLoaded: false,
   isProposalsLoaded: false,
+  isUserProposalsLoaded: false,
+  isDiscussionsLoaded: false,
   currentDiscussion: null,
   currentProposal: null,
   cards: [],
+  activeTab: null,
 };
 
 type Action = ActionType<typeof actions>;
@@ -23,6 +26,7 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
   .handleAction(actions.getCommonsList.success, (state, action) =>
     produce(state, (nextState) => {
       nextState.commons = action.payload;
+      nextState.isCommonsLoaded = true;
     })
   )
   .handleAction(actions.updatePage, (state, action) =>
@@ -60,6 +64,7 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
   .handleAction(actions.loadUserProposalList.success, (state, action) =>
     produce(state, (nextState) => {
       nextState.userProposals = action.payload;
+      nextState.isUserProposalsLoaded = true;
     })
   )
   .handleAction(actions.loadDisscussionDetail.success, (state, action) =>
@@ -108,6 +113,7 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       nextState.proposals = [];
       nextState.isDiscussionsLoaded = false;
       nextState.isProposalsLoaded = false;
+      nextState.isUserProposalsLoaded = false;
     })
   )
 
@@ -134,6 +140,16 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       nextState.commons = nextState.commons.filter(
         (common) => common.id !== action.payload
       );
+    })
+  )
+  .handleAction(actions.setCommonActiveTab, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.activeTab = action.payload;
+    })
+  )
+  .handleAction(actions.clearCommonActiveTab, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.activeTab = null;
     })
   );
 
