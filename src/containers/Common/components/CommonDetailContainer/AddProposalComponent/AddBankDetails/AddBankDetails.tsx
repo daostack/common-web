@@ -29,6 +29,7 @@ import { countryList } from "@/shared/assets/countries";
 import { BankAccountDetails, DateFormat } from "@/shared/models";
 import { formatDate } from "@/shared/utils";
 import { BANKS_OPTIONS } from "@/shared/assets/banks";
+import { useNotification } from "@/shared/hooks";
 import { FileUploadButton } from "../FileUploadButton";
 import validationSchema, {
   validationSchemaForEditing,
@@ -121,6 +122,7 @@ export const AddBankDetails = (props: IProps) => {
     initialBankAccountDetails,
     onCancel,
   } = props;
+  const { notify } = useNotification();
   const dispatch = useDispatch();
   const formRef = useRef<FormikProps<FormValues>>(null);
   const [initialValues, setInitialValues] = useState<FormValues>(() =>
@@ -192,23 +194,19 @@ export const AddBankDetails = (props: IProps) => {
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     async (values) => {
-      if (!photoIdFile || !bankLetterFile || !values.gender) {
-        return;
-      }
-
       setSending(true);
       setError("");
 
-      const photoIdFileName = getFileNameForUploading(photoIdFile.name);
-      const bankLetterFileName = getFileNameForUploading(bankLetterFile.name);
+      const photoIdFileName = getFileNameForUploading(photoIdFile!.name);
+      const bankLetterFileName = getFileNameForUploading(bankLetterFile!.name);
 
       try {
         values.photoId = isPaymeDocument(photoIdFile)
           ? photoIdFile.downloadURL
-          : await uploadFile(photoIdFileName, "private", photoIdFile);
+          : await uploadFile(photoIdFileName, "private", photoIdFile!);
         values.bankLetter = isPaymeDocument(bankLetterFile)
           ? bankLetterFile.downloadURL
-          : await uploadFile(bankLetterFileName, "private", bankLetterFile);
+          : await uploadFile(bankLetterFileName, "private", bankLetterFile!);
       } catch (error: any) {
         console.error(error);
         setError(error?.message ?? "Something went wrong :/");
@@ -231,7 +229,7 @@ export const AddBankDetails = (props: IProps) => {
                 name: photoIdFileName,
                 legalType: PaymeTypeCodes.SocialId,
                 amount: 2000,
-                mimeType: photoIdFile.type,
+                mimeType: photoIdFile!.type,
                 downloadURL: values.photoId,
               },
           isPaymeDocument(bankLetterFile)
@@ -240,7 +238,7 @@ export const AddBankDetails = (props: IProps) => {
                 name: bankLetterFileName,
                 legalType: PaymeTypeCodes.BankAccountOwnership,
                 amount: 2000,
-                mimeType: bankLetterFile.type,
+                mimeType: bankLetterFile!.type,
                 downloadURL: values.bankLetter,
               },
         ],
@@ -254,7 +252,7 @@ export const AddBankDetails = (props: IProps) => {
           DateFormat.ShortSecondary
         ),
         birthdate: formatDate(values.birthdate, DateFormat.ShortSecondary),
-        gender: values.gender,
+        gender: values.gender!,
         phoneNumber: values.phoneNumber!,
       };
 
@@ -264,6 +262,7 @@ export const AddBankDetails = (props: IProps) => {
           callback: handleDataChange,
         })
       );
+      notify("Bank details added successfully");
     },
     [dispatch, bankLetterFile, photoIdFile, handleDataChange]
   );
