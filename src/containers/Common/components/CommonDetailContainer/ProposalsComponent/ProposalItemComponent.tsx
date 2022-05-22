@@ -33,8 +33,7 @@ export default function ProposalItemComponent({
 
   const [swipperState, setSwipperState] = useState(false);
 
-  const images: ProposalLink[] = (proposal?.description
-    .images as unknown) as ProposalLink[];
+  const images = proposal?.description.images ?? [];
 
   const imagesChunk = images.filter((image, index) => {
     if (index < 2) {

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 
-import { Loader } from "../../../../../shared/components";
-import { Common, Proposal } from "../../../../../shared/models";
+import { Loader, UserAvatar } from "../../../../../shared/components";
+import { Common, Proposal } from "@/shared/models";
 import {
   formatPrice,
   getDaysAgo,
@@ -70,14 +70,13 @@ export default function ProposalDetailModal({
               <ProposalState proposal={proposal} />
               <div className="owner-wrapper">
                 <div className="owner-icon-wrapper">
-                  <img
-                    src={proposal.proposer?.photoURL}
-                    alt={getUserName(proposal.proposer)}
-                    onError={(event: any) =>
-                      (event.target.src = "/icons/default_user.svg")
-                    }
+                  <UserAvatar
+                    photoURL={proposal.proposer?.photoURL}
+                    nameForRandomAvatar={proposal.proposer?.email}
+                    userName={getUserName(proposal.proposer)}
                   />
                 </div>
+
                 <div className="owner-name-and-days-container">
                   <div className="owner-name">
                     {getUserName(proposal.proposer)}
@@ -92,9 +91,9 @@ export default function ProposalDetailModal({
           <div className="proposal-information-wrapper">
             <div
               className="proposal-name"
-              title={proposal.description.title || "Memberhip request"}
+              title={proposal.description.title || "Membership request"}
             >
-              {proposal.description.title || "Memberhip request"}
+              {proposal.description.title || "Membership request"}
             </div>
             {expanded && (
               <>

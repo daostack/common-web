@@ -94,7 +94,7 @@ export interface Proposal {
   description: {
     description: string;
     links: ProposalLink[];
-    images: File[];
+    images: ProposalLink[];
     files: File[];
     title: string;
   };
