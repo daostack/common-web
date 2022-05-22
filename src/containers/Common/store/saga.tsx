@@ -6,6 +6,7 @@ import {
   Common,
   CommonPayment,
   Discussion,
+  Governance,
   User,
   DiscussionMessage,
   Proposal,
@@ -58,15 +59,18 @@ import { selectDiscussions, selectProposals } from "./selectors";
 import { store } from "@/shared/appConfig";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
 import { Vote } from "@/shared/interfaces/api/vote";
-import { CreateGovernance, ImmediateContributionResponse } from "../interfaces";
+import { ImmediateContributionResponse } from "../interfaces";
 import { groupBy } from "@/shared/utils";
+import { createDefaultGovernanceCreationPayload } from "./helpers";
 
 export function* createGovernance(
   action: ReturnType<typeof actions.createGovernance.request>
 ): Generator {
   try {
     yield put(startLoading());
-    const governance = (yield createGovernanceApi(action.payload.payload)) as CreateGovernance;
+    const governance = (yield createGovernanceApi(
+      action.payload.payload
+    )) as Governance;
 
     yield put(actions.createGovernance.success(governance));
     action.payload.callback(null);
@@ -662,10 +666,19 @@ export function* createCommon(
   action: ReturnType<typeof actions.createCommon.request>
 ): Generator {
   try {
+    const { rules, ...commonCreationPayload } = action.payload.payload;
     const common = (yield call(
       createCommonApi,
-      action.payload.payload
+      commonCreationPayload
     )) as Common;
+
+    yield call(
+      createGovernanceApi,
+      createDefaultGovernanceCreationPayload({
+        unstructuredRules: rules || [],
+        commonId: common.id,
+      })
+    );
 
     yield put(actions.createCommon.success(common));
     action.payload.callback(null, common);

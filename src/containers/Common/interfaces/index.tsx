@@ -1,5 +1,5 @@
 export * from "./CommonsStateType";
-export * from "./CreateGovernance";
+export * from "./CreateGovernancePayload";
 export * from "./CreateCommonPayload";
 export * from "./CreateDiscussionDto";
 export * from "./AddMessageToDiscussionDto";

@@ -3,20 +3,20 @@ import classNames from "classnames";
 import { FieldArray, FieldArrayConfig, FormikErrors } from "formik";
 import { FormikTouched } from "formik/dist/types";
 import DeleteIcon from "@/shared/icons/delete.icon";
-import { CommonRule } from "@/shared/models";
+import { BaseRule } from "@/shared/models";
 import { ButtonIcon } from "../../../ButtonIcon";
 import { ButtonLink } from "../../../ButtonLink";
 import { ErrorText } from "../../ErrorText";
 import { TextField } from "../TextField";
 import "./index.scss";
 
-type Errors = string | string[] | FormikErrors<CommonRule[]> | undefined;
-type Touched = FormikTouched<CommonRule>[] | undefined;
+type Errors = string | string[] | FormikErrors<BaseRule[]> | undefined;
+type Touched = FormikTouched<BaseRule>[] | undefined;
 
 interface RulesArrayProps extends FieldArrayConfig {
   title?: string;
   description?: string;
-  values: CommonRule[];
+  values: BaseRule[];
   errors: Errors;
   touched: Touched;
   maxTitleLength?: number;
@@ -28,7 +28,7 @@ interface RulesArrayProps extends FieldArrayConfig {
 const getInputError = (
   errors: Errors,
   index: number,
-  key: keyof CommonRule
+  key: keyof BaseRule
 ): string => {
   if (!errors || typeof errors !== "object") {
     return "";
@@ -46,7 +46,7 @@ const getInputError = (
 const isTouched = (
   touched: Touched,
   index: number,
-  key: keyof CommonRule
+  key: keyof BaseRule
 ): boolean => Boolean(touched && touched[index] && touched[index][key]);
 
 const RulesArray: FC<RulesArrayProps> = (props) => {
@@ -76,7 +76,7 @@ const RulesArray: FC<RulesArrayProps> = (props) => {
       {...restProps}
       render={({ remove, push }) => {
         const handleNewRuleAdd = () =>
-          push({ title: "", definition: "" } as CommonRule);
+          push({ title: "", definition: "" } as BaseRule);
 
         return (
           <div className={classNames("description-array", className)}>

@@ -20,13 +20,10 @@ export interface BaseProposal extends BaseEntity {
   global: {
     duration: number; // time in hours
     quorum: number; // required percentage of common member votes (any vote)
-    weights: [
-      {
-        circles: [string, ...string[]];
-        value: number;
-      },
-      ...[]
-    ]; // sum of values is 100%, ordered array by value (descending)
+    weights: {
+      circles: [string, ...string[]];
+      value: number;
+    }[]; // sum of values is 100%, ordered array by value (descending)
     minApprove: number; // weight based percentage
     maxReject: number; // weight based percentage
   };

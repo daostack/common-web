@@ -11,7 +11,7 @@ import { Modal } from "@/shared/components";
 import { getScreenSize } from "@/shared/store/selectors";
 import { useZoomDisabling } from "@/shared/hooks";
 import { ScreenSize } from "@/shared/constants";
-import { Common, CommonContributionType } from "@/shared/models";
+import { Common } from "@/shared/models";
 import {
   IntermediateCreateCommonPayload,
   PaymentPayload,
@@ -20,7 +20,6 @@ import { Confirmation } from "./Confirmation";
 import { CreationSteps } from "./CreationSteps";
 import { Error } from "./Error";
 import { Introduction } from "./Introduction";
-import { Payment } from "./Payment";
 import { Success } from "./Success";
 import { CreateCommonStage } from "./constants";
 import "./index.scss";
@@ -28,8 +27,6 @@ import "./index.scss";
 const INITIAL_DATA: IntermediateCreateCommonPayload = {
   name: "",
   image: null,
-  contributionAmount: 0,
-  contributionType: CommonContributionType.OneTime,
   agreementAccepted: false,
 };
 
@@ -66,10 +63,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   const [errorText, setErrorText] = useState("");
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const isHeaderSticky = [
-    CreateCommonStage.CreationSteps,
-    CreateCommonStage.Payment,
-  ].includes(stage);
+  const isHeaderSticky = stage === CreateCommonStage.CreationSteps;
   const setBigTitle = useCallback((title: string) => {
     setTitle(title);
     setIsBigTitle(true);
@@ -119,18 +113,11 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       setCreatedCommon(common);
       setStageState((state) => ({
         ...state,
-        stage: CreateCommonStage.Payment,
+        stage: CreateCommonStage.Success,
       }));
     },
     [handleError]
   );
-  const handlePaymentFinish = useCallback(() => {
-    setStageState((state) => ({
-      ...state,
-      stage: CreateCommonStage.Success,
-    }));
-  }, []);
-
   const renderedTitle = useMemo((): ReactNode => {
     if (!title) {
       return null;
@@ -174,20 +161,6 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             creationData={creationData}
           />
         );
-      case CreateCommonStage.Payment:
-        return createdCommon ? (
-          <Payment
-            isHeaderScrolledToTop={isHeaderScrolledToTop}
-            setTitle={setSmallTitle}
-            setGoBackHandler={setGoBackHandler}
-            setShouldShowCloseButton={setShouldShowCloseButton}
-            onFinish={handlePaymentFinish}
-            onError={handleError}
-            common={createdCommon}
-            paymentData={paymentData}
-            setPaymentData={setPaymentData}
-          />
-        ) : null;
       case CreateCommonStage.Success:
         return createdCommon ? (
           <Success
@@ -226,7 +199,6 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     props.onClose,
     errorText,
     handleCommonCreation,
-    handlePaymentFinish,
   ]);
 
   useEffect(() => {

@@ -34,8 +34,7 @@ import {
   CreateCommonPayload,
   CreateDiscussionDto,
   DeleteCommon,
-  CreateGovernance,
-  CreateGovernance as CreateGovernancePayload,
+  CreateGovernancePayload,
   ImmediateContributionData,
   ImmediateContributionResponse,
   LeaveCommon,
@@ -52,8 +51,8 @@ import { NotificationItem } from "@/shared/models/Notification";
 
 export async function createGovernance(
   requestData: CreateGovernancePayload
-): Promise<CreateGovernance> {
-  const { data } = await Api.post<CreateGovernance>(
+): Promise<Governance> {
+  const { data } = await Api.post<Governance>(
     ApiEndpoint.GovernanceCreate,
     requestData
   );

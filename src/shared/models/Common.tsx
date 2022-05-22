@@ -130,8 +130,3 @@ export interface CommonLink {
    */
   value: string;
 }
-
-export interface CommonRule {
-  title: string;
-  definition: string;
-}

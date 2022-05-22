@@ -1,7 +1,12 @@
+export interface BaseRule {
+  title: string;
+  definition: string;
+}
+
+interface Rule extends BaseRule {
+  readonly id: string;
+}
+
 export interface UnstructuredRules {
-  [key: string]: {
-    readonly id: string;
-    title: string;
-    definition: string;
-  };
+  [key: string]: Rule;
 }
