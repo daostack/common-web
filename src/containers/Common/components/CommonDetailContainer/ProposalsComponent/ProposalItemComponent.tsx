@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import classNames from "classnames";
 
 import { UserAvatar, ElementDropdown } from "@/shared/components";
@@ -35,8 +35,6 @@ export default function ProposalItemComponent({
   const date = new Date();
   const rawRequestedAmount =
     proposal.fundingRequest?.amount || proposal.join?.funding;
-
-  const [swipperState, setSwipperState] = useState(false);
 
   const images = proposal?.description.images ?? [];
 
@@ -116,7 +114,7 @@ export default function ProposalItemComponent({
           )}
           {proposal.description?.images?.length > 0 && (
             <div className="images-wrapper">
-              {swipperState ? (
+              {imagePreviewLength < images.length ? (
                 <Swiper
                   spaceBetween={30}
                   pagination
@@ -138,14 +136,6 @@ export default function ProposalItemComponent({
                       <div className="image-title">{i.title}</div>
                     </div>
                   ))}
-                  {images.length > imagePreviewLength && (
-                    <div
-                      className="pagination-item"
-                      onClick={() => setSwipperState(true)}
-                    >
-                      +{images.length - imagePreviewLength}
-                    </div>
-                  )}
                 </div>
               )}
             </div>
