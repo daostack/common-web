@@ -27,6 +27,8 @@ import {
   CreateDiscussionDto,
   CreateCommonPayload,
   CreateGovernancePayload,
+  CreateProposalPayload,
+  CreateProposalResponse,
   AddMessageToDiscussionDto,
   DeleteCommon,
   LeaveCommon,
@@ -160,6 +162,20 @@ export const addMessageToDiscussion = createAsyncAction(
     discussion: Discussion;
   },
   Discussion,
+  Error
+>();
+
+export const createProposal = createAsyncAction(
+  CommonsActionTypes.CREATE_PROPOSAL,
+  CommonsActionTypes.CREATE_PROPOSAL_SUCCESS,
+  CommonsActionTypes.CREATE_PROPOSAL_FAILURE
+)<
+  PayloadWithOptionalCallback<
+    CreateProposalPayload,
+    CreateProposalResponse,
+    Error
+  >,
+  CreateProposalResponse,
   Error
 >();
 

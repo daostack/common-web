@@ -17,3 +17,5 @@ interface CreateMemberAdmittance {
 export type CreateProposalPayload =
   | CreateFundsAllocation
   | CreateMemberAdmittance;
+
+export type CreateProposalResponse = FundsAllocation | MemberAdmittance;

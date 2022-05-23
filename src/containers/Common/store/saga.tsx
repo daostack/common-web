@@ -18,6 +18,7 @@ import {
 import { startLoading, stopLoading } from "@/shared/store/actions";
 import {
   createCommon as createCommonApi,
+  createProposal as createProposalApi,
   createRequestToJoin as createRequestToJoinApi,
   fetchCommonList,
   fetchCommonDetail,
@@ -474,6 +475,32 @@ export function* addMessageToProposalSaga(
   }
 }
 
+export function* createProposal({
+  payload,
+}: ReturnType<typeof actions.createProposal.request>): Generator {
+  try {
+    yield put(startLoading());
+    const proposal = (yield call(
+      createProposalApi,
+      payload.payload
+    )) as Awaited<ReturnType<typeof createProposalApi>>;
+
+    yield put(actions.createProposal.success(proposal));
+
+    if (payload.callback) {
+      payload.callback(null, proposal);
+    }
+  } catch (error) {
+    yield put(actions.createProposal.failure(error));
+
+    if (payload.callback) {
+      payload.callback(error);
+    }
+  } finally {
+    yield put(stopLoading());
+  }
+}
+
 export function* createRequestToJoin(
   action: ReturnType<typeof actions.createRequestToJoin.request>
 ): Generator {
@@ -905,6 +932,7 @@ export function* commonsSaga() {
     actions.addMessageToDiscussion.request,
     addMessageToDiscussionSaga
   );
+  yield takeLatest(actions.createProposal.request, createProposal);
   yield takeLatest(actions.createRequestToJoin.request, createRequestToJoin);
   yield takeLatest(actions.leaveCommon.request, leaveCommon);
   yield takeLatest(actions.deleteCommon.request, deleteCommon);

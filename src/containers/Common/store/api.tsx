@@ -36,6 +36,8 @@ import {
   CreateDiscussionDto,
   DeleteCommon,
   CreateGovernancePayload,
+  CreateProposalPayload,
+  CreateProposalResponse,
   ImmediateContributionData,
   ImmediateContributionResponse,
   LeaveCommon,
@@ -352,6 +354,17 @@ export function subscribeToMessages(
   return query.onSnapshot((snapshot) => {
     callback(transformFirebaseDataList(snapshot));
   });
+}
+
+export async function createProposal(
+  requestData: CreateProposalPayload
+): Promise<CreateProposalResponse> {
+  const { data } = await Api.post<CreateProposalResponse>(
+    ApiEndpoint.CreateProposal,
+    requestData
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
 }
 
 export async function createRequestToJoin(
