@@ -36,8 +36,7 @@ import {
   CreateDiscussionDto,
   DeleteCommon,
   CreateGovernancePayload,
-  CreateProposalPayload,
-  CreateProposalResponse,
+  CreateProposal,
   ImmediateContributionData,
   ImmediateContributionResponse,
   LeaveCommon,
@@ -356,10 +355,10 @@ export function subscribeToMessages(
   });
 }
 
-export async function createProposal(
-  requestData: CreateProposalPayload
-): Promise<CreateProposalResponse> {
-  const { data } = await Api.post<CreateProposalResponse>(
+export async function createProposal<T extends keyof CreateProposal>(
+  requestData: CreateProposal[T]["data"]
+): Promise<CreateProposal[T]["response"]> {
+  const { data } = await Api.post<CreateProposal[T]["response"]>(
     ApiEndpoint.CreateProposal,
     requestData
   );

@@ -14,8 +14,18 @@ interface CreateMemberAdmittance {
   args: Omit<MemberAdmittance["data"]["args"], "proposerId">;
 }
 
-export type CreateProposalPayload =
-  | CreateFundsAllocation
-  | CreateMemberAdmittance;
+interface Request<P, R> {
+  data: P;
+  response: R;
+}
 
-export type CreateProposalResponse = FundsAllocation | MemberAdmittance;
+export interface CreateProposal {
+  [ProposalsTypes.FUNDS_ALLOCATION]: Request<
+    CreateFundsAllocation,
+    FundsAllocation
+  >;
+  [ProposalsTypes.MEMBER_ADMITTANCE]: Request<
+    CreateMemberAdmittance,
+    MemberAdmittance
+  >;
+}
