@@ -72,6 +72,7 @@ import {
   AddProposalSteps,
 } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
+import { useCommonMember } from "../../hooks";
 import "./index.scss";
 
 interface CommonDetailRouterParams {
@@ -142,6 +143,11 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
   const activeTab = useSelector(selectCommonActiveTab());
+  const {
+    fetched: isCommonMemberFetched,
+    data: commonMember,
+    fetchCommonMember,
+  } = useCommonMember();
 
   const fundingProposals = useMemo(
     () =>
@@ -163,9 +169,6 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
 
   const hasPaymentMethod = useMemo(() => !!cards && !!cards.length, [cards]);
 
-  const commonMember = common?.members.find(
-    (member) => member.userId === user?.uid
-  );
   const isCommonMember = Boolean(commonMember);
   const isJoiningPending = proposals.some(
     (proposal) =>
@@ -270,6 +273,10 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
       dispatch(closeCurrentCommon());
     };
   }, [dispatch, id]);
+
+  useEffect(() => {
+    fetchCommonMember(id);
+  }, [fetchCommonMember, id]);
 
   const getDisscussionDetail = useCallback(
     (payload: Discussion | DiscussionWithHighlightedMessage) => {
@@ -526,8 +533,8 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     }
   }, [showJoinModal, shouldAllowJoiningToCommon, closeJoinModal]);
 
-  if (!common || !governance) {
-    return isCommonFetched ? <NotFound /> : <Loader />;
+  if (!common || !governance || !isCommonMemberFetched) {
+    return isCommonFetched && isCommonMemberFetched ? <NotFound /> : <Loader />;
   }
 
   return (
