@@ -1,22 +1,12 @@
-import React, { useEffect } from "react";
-import { Button } from "../../../../../shared/components";
-import { IStageProps } from "./MembershipRequestModal"
-import { getCommonGovernanceRules } from "@/containers/Common/store/api";
+import React from "react";
+import { Button } from "@/shared/components";
+import { IStageProps } from "./MembershipRequestModal";
+import { MembershipRequestStage } from "./constants";
 import "./index.scss";
-import { UnstructuredRules } from "@/containers/Common/interfaces/UnstructuredRules";
 
 export default function MembershipRequestRules(props: IStageProps) {
-  const { userData, setUserData, common } = props;
-  let rules: UnstructuredRules | undefined;
-
-  useEffect(() => {
-    (async () => {
-      if (common) {
-        rules = await getCommonGovernanceRules(common.governanceId!)
-      }
-    })();
-  }, [common])
-
+  const { userData, setUserData, governance } = props;
+  const rules = Object.values(governance?.unstructuredRules || {});
 
   return (
     <div className="membership-request-content membership-request-rules">
@@ -36,14 +26,19 @@ export default function MembershipRequestRules(props: IStageProps) {
                 {rule.title}
               </h4>
               <p className="membership-request-rules__rules-item-description">
-                {rule.value}
+                {rule.definition}
               </p>
             </div>
           </li>
         ))}
       </ol>
       <Button
-        onClick={() => setUserData({ ...userData, stage: 3 })}
+        onClick={() =>
+          setUserData({
+            ...userData,
+            stage: MembershipRequestStage.Creating,
+          })
+        }
         className="membership-request-rules__submit-button"
       >
         Accept Rules

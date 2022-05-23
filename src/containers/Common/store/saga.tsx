@@ -18,7 +18,7 @@ import {
 import { startLoading, stopLoading } from "@/shared/store/actions";
 import {
   createCommon as createCommonApi,
-  createRequestToJoin as createRequestToJoinApi,
+  createProposal as createProposalApi,
   fetchCommonList,
   fetchCommonDetail,
   fetchCommonDiscussions,
@@ -53,15 +53,19 @@ import {
   fetchMessagesForCommonList,
   fetchCommonListByIds as fetchCommonListByIdsApi,
   createGovernance as createGovernanceApi,
+  getGovernance as getGovernanceApi,
 } from "./api";
 import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
+import { ProposalsTypes } from "@/shared/constants";
 import { store } from "@/shared/appConfig";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
 import { Vote } from "@/shared/interfaces/api/vote";
 import { ImmediateContributionResponse } from "../interfaces";
 import { groupBy } from "@/shared/utils";
 import { createDefaultGovernanceCreationPayload } from "./helpers";
+import { Awaited } from "@/shared/interfaces";
+import { MemberAdmittance } from "@/shared/models/governance/proposals";
 
 export function* createGovernance(
   action: ReturnType<typeof actions.createGovernance.request>
@@ -157,17 +161,40 @@ export function* getCommonDetail({
   payload,
 }: ReturnType<typeof actions.getCommonDetail.request>): Generator {
   try {
-    yield put(startLoading());
-    const common = (yield call(fetchCommonDetail, payload.payload)) as Common;
+    const commonId = payload.payload;
 
-    const [discussions, proposals] = (yield Promise.all([
+    yield put(startLoading());
+    const common = (yield call(fetchCommonDetail, commonId)) as Common | null;
+
+    if (!common) {
+      throw new Error(`Common with id = "${commonId}" was not found`);
+    }
+    if (!common.governanceId) {
+      throw new Error(
+        `Common with id = "${commonId}" doesn't have specified governance id`
+      );
+    }
+
+    const [governance, discussions, proposals] = (yield Promise.all([
+      getGovernanceApi(common.governanceId),
       fetchCommonDiscussions(common.id),
       fetchCommonProposals(common.id),
-    ])) as any[];
+    ])) as [
+      Awaited<ReturnType<typeof getGovernanceApi>>,
+      Awaited<ReturnType<typeof fetchCommonDiscussions>>,
+      Awaited<ReturnType<typeof fetchCommonProposals>>
+    ];
+
+    if (!governance) {
+      throw new Error(
+        `Governance with id = "${common.governanceId}" was not found`
+      );
+    }
 
     yield put(actions.getCommonDetail.success(common));
     yield put(actions.setDiscussion(discussions));
     yield put(actions.setProposals(proposals));
+    yield put(actions.getGovernance.success(governance));
 
     if (payload.callback) {
       payload.callback(null, common);
@@ -224,7 +251,9 @@ export function* loadDiscussionDetail(
     if (action.payload.discussionMessage?.length) {
       discussionMessage = action.payload.discussionMessage;
     } else {
-      discussionMessage = (yield fetchDiscussionsMessages([discussion.id])) as DiscussionMessage[];
+      discussionMessage = (yield fetchDiscussionsMessages([
+        discussion.id,
+      ])) as DiscussionMessage[];
     }
 
     const ownerIds = Array.from(
@@ -292,7 +321,9 @@ export function* loadProposalDetail(
     if (action.payload.discussionMessage?.length) {
       discussionMessage = action.payload.discussionMessage;
     } else {
-      discussionMessage = (yield fetchDiscussionsMessages([proposal.id])) as DiscussionMessage[];
+      discussionMessage = (yield fetchDiscussionsMessages([
+        proposal.id,
+      ])) as DiscussionMessage[];
     }
 
     const ownerIds = Array.from(
@@ -445,17 +476,32 @@ export function* addMessageToProposalSaga(
   }
 }
 
-export function* createRequestToJoin(
-  action: ReturnType<typeof actions.createRequestToJoin.request>
-): Generator {
+export function* createMemberAdmittanceProposal({
+  payload,
+}: ReturnType<
+  typeof actions.createMemberAdmittanceProposal.request
+>): Generator {
   try {
     yield put(startLoading());
-    const proposal = (yield createRequestToJoinApi(action.payload)) as Proposal;
+    const memberAdmittanceProposal = (yield call(createProposalApi, {
+      ...payload.payload,
+      type: ProposalsTypes.MEMBER_ADMITTANCE,
+    })) as MemberAdmittance;
 
-    yield put(actions.createRequestToJoin.success(proposal));
-    yield put(stopLoading());
+    yield put(
+      actions.createMemberAdmittanceProposal.success(memberAdmittanceProposal)
+    );
+
+    if (payload.callback) {
+      payload.callback(null, memberAdmittanceProposal);
+    }
   } catch (error) {
-    yield put(actions.createRequestToJoin.failure(error));
+    yield put(actions.createMemberAdmittanceProposal.failure(error));
+
+    if (payload.callback) {
+      payload.callback(error);
+    }
+  } finally {
     yield put(stopLoading());
   }
 }
@@ -828,6 +874,36 @@ export function* cancelSubscription({
   }
 }
 
+export function* getGovernance({
+  payload,
+}: ReturnType<typeof actions.getGovernance.request>): Generator {
+  try {
+    const governanceId = payload.payload;
+
+    yield put(startLoading());
+    const governance = (yield call(getGovernanceApi, governanceId)) as Awaited<
+      ReturnType<typeof getGovernanceApi>
+    >;
+
+    if (!governance) {
+      throw new Error(`Governance with id = "${governanceId}" was not found`);
+    }
+
+    yield put(actions.getGovernance.success(governance));
+
+    if (payload.callback) {
+      payload.callback(null, governance);
+    }
+  } catch (error) {
+    yield put(actions.getGovernance.failure(error));
+    if (payload.callback) {
+      payload.callback(error);
+    }
+  } finally {
+    yield put(stopLoading());
+  }
+}
+
 export function* commonsSaga() {
   yield takeLatest(actions.createGovernance.request, createGovernance);
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
@@ -846,7 +922,10 @@ export function* commonsSaga() {
     actions.addMessageToDiscussion.request,
     addMessageToDiscussionSaga
   );
-  yield takeLatest(actions.createRequestToJoin.request, createRequestToJoin);
+  yield takeLatest(
+    actions.createMemberAdmittanceProposal.request,
+    createMemberAdmittanceProposal
+  );
   yield takeLatest(actions.leaveCommon.request, leaveCommon);
   yield takeLatest(actions.deleteCommon.request, deleteCommon);
   yield takeLatest(
@@ -881,6 +960,7 @@ export function* commonsSaga() {
   yield takeLatest(actions.getUserSubscriptions.request, getUserSubscriptions);
   yield takeLatest(actions.updateSubscription.request, updateSubscription);
   yield takeLatest(actions.cancelSubscription.request, cancelSubscription);
+  yield takeLatest(actions.getGovernance.request, getGovernance);
 }
 
 export default commonsSaga;

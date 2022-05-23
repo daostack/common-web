@@ -7,6 +7,7 @@ import { ScreenSize, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
 import { CommonLink } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { IStageProps } from "./MembershipRequestModal";
+import { MembershipRequestStage } from "./constants";
 import { introduceStageSchema } from "./validationSchemas";
 import "./index.scss";
 
@@ -21,13 +22,17 @@ const getInitialValues = (data: IStageProps["userData"]): FormValues => ({
 });
 
 export default function MembershipRequestIntroduce(props: IStageProps) {
-  const { userData, setUserData, common } = props;
+  const { userData, setUserData, common, governance } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
-      const nextStage = common && common.rules.length > 0 ? 2 : 3;
+      const areRulesSpecified =
+        governance && Object.keys(governance.unstructuredRules).length > 0;
+      const nextStage = areRulesSpecified
+        ? MembershipRequestStage.Rules
+        : MembershipRequestStage.Creating;
       const links = values.links.filter((link) => link.title && link.value);
 
       setUserData((nextUserData) => ({

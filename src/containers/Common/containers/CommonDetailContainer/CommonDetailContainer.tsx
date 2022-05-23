@@ -43,6 +43,7 @@ import {
   selectCurrentDisscussion,
   selectCurrentProposal,
   selectDiscussions,
+  selectGovernance,
   selectIsDiscussionsLoaded,
   selectIsProposalLoaded,
   selectProposals,
@@ -130,6 +131,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const [isCommonFetched, setIsCommonFetched] = useState(false);
 
   const common = useSelector(selectCommonDetail());
+  const governance = useSelector(selectGovernance());
   const currentDisscussion = useSelector(selectCurrentDisscussion());
   const proposals = useSelector(selectProposals());
   const discussions = useSelector(selectDiscussions());
@@ -524,7 +526,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     }
   }, [showJoinModal, shouldAllowJoiningToCommon, closeJoinModal]);
 
-  if (!common) {
+  if (!common || !governance) {
     return isCommonFetched ? <NotFound /> : <Loader />;
   }
 
@@ -573,6 +575,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
           isShowing={showJoinModal}
           onClose={closeJoinModal}
           common={common}
+          governance={governance}
           onCreationStageReach={setIsCreationStageReached}
         />
       )}
@@ -768,6 +771,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                 <DiscussionsComponent
                   onAddNewPost={addPost}
                   common={common}
+                  governance={governance}
                   discussions={discussions || []}
                   loadDisscussionDetail={getDisscussionDetail}
                   isCommonMember={isCommonMember}
@@ -779,6 +783,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                 <ProposalsComponent
                   onAddNewProposal={addNewProposal}
                   common={common}
+                  governance={governance}
                   currentTab={tab}
                   proposals={activeProposals}
                   loadProposalDetail={getProposalDetail}
@@ -791,6 +796,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                 <ProposalsComponent
                   onAddNewProposal={addNewProposal}
                   common={common}
+                  governance={governance}
                   currentTab={tab}
                   proposals={historyProposals}
                   loadProposalDetail={getProposalDetail}

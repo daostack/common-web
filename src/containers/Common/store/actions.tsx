@@ -30,6 +30,7 @@ import {
   AddMessageToDiscussionDto,
   DeleteCommon,
   LeaveCommon,
+  CreateProposal,
 } from "@/containers/Common/interfaces";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 import {
@@ -41,6 +42,7 @@ import {
   ImmediateContributionData,
   ImmediateContributionResponse,
 } from "../interfaces";
+import { ProposalsTypes } from "@/shared/constants";
 
 export const createGovernance = createAsyncAction(
   CommonsActionTypes.CREATE_GOVERNANCE,
@@ -163,11 +165,19 @@ export const addMessageToDiscussion = createAsyncAction(
   Error
 >();
 
-export const createRequestToJoin = createAsyncAction(
-  CommonsActionTypes.CREATE_REQUEST_TO_JOIN,
-  CommonsActionTypes.CREATE_REQUEST_TO_JOIN_SUCCESS,
-  CommonsActionTypes.CREATE_REQUEST_TO_JOIN_FAILURE
-)<ProposalJoinRequestData, Proposal, Error>();
+export const createMemberAdmittanceProposal = createAsyncAction(
+  CommonsActionTypes.CREATE_MEMBER_ADMITTANCE_PROPOSAL,
+  CommonsActionTypes.CREATE_MEMBER_ADMITTANCE_PROPOSAL_SUCCESS,
+  CommonsActionTypes.CREATE_MEMBER_ADMITTANCE_PROPOSAL_FAILURE
+)<
+  PayloadWithOptionalCallback<
+    Omit<CreateProposal[ProposalsTypes.MEMBER_ADMITTANCE]["data"], "type">,
+    CreateProposal[ProposalsTypes.MEMBER_ADMITTANCE]["response"],
+    Error
+  >,
+  CreateProposal[ProposalsTypes.MEMBER_ADMITTANCE]["response"],
+  Error
+>();
 
 export const createFundingProposal = createAsyncAction(
   CommonsActionTypes.CREATE_FUNDING_PROPOSAL,
@@ -340,3 +350,9 @@ export const cancelSubscription = createAsyncAction(
   CommonsActionTypes.CANCEL_SUBSCRIPTION_SUCCESS,
   CommonsActionTypes.CANCEL_SUBSCRIPTION_FAILURE
 )<PayloadWithCallback<string, Subscription, Error>, Subscription, Error>();
+
+export const getGovernance = createAsyncAction(
+  CommonsActionTypes.GET_GOVERNANCE,
+  CommonsActionTypes.GET_GOVERNANCE_SUCCESS,
+  CommonsActionTypes.GET_GOVERNANCE_FAILURE
+)<PayloadWithOptionalCallback<string, Governance, Error>, Governance, Error>();

@@ -18,6 +18,7 @@ import {
   Proposal,
   SubCollections,
   Subscription,
+  UnstructuredRules,
   User,
 } from "@/shared/models";
 import {
@@ -35,6 +36,7 @@ import {
   CreateDiscussionDto,
   DeleteCommon,
   CreateGovernancePayload,
+  CreateProposal,
   ImmediateContributionData,
   ImmediateContributionResponse,
   LeaveCommon,
@@ -157,7 +159,7 @@ export async function fetchCommonListByIds(ids: string[]): Promise<Common[]> {
     .reduce((acc, items) => [...acc, ...items], []);
 }
 
-export async function fetchCommonDetail(id: string): Promise<Common> {
+export async function fetchCommonDetail(id: string): Promise<Common | null> {
   const common = await firebase
     .firestore()
     .collection(Collection.Daos)
@@ -165,7 +167,7 @@ export async function fetchCommonDetail(id: string): Promise<Common> {
     .where("active", "==", true)
     .get();
   const data = transformFirebaseDataList<Common>(common);
-  return data[0];
+  return data[0] || null;
 }
 
 export async function fetchOwners(ownerids: string[]) {
@@ -353,11 +355,11 @@ export function subscribeToMessages(
   });
 }
 
-export async function createRequestToJoin(
-  requestData: ProposalJoinRequestData
-): Promise<Proposal> {
-  const { data } = await Api.post<Proposal>(
-    ApiEndpoint.CreateRequestToJoin,
+export async function createProposal<T extends keyof CreateProposal>(
+  requestData: CreateProposal[T]["data"]
+): Promise<CreateProposal[T]["response"]> {
+  const { data } = await Api.post<CreateProposal[T]["response"]>(
+    ApiEndpoint.CreateProposal,
     requestData
   );
 
@@ -645,7 +647,20 @@ export const governanceCollection = firebase
     },
   });
 
-export const getCommonGovernanceRules = async (governanceId: string) => {
-  return (await governanceCollection.doc(governanceId).get()).data()
-    ?.unstructuredRules;
+export const getGovernance = async (
+  governanceId: string
+): Promise<Governance | null> => {
+  const governance = (
+    await governanceCollection.doc(governanceId).get()
+  ).data();
+
+  return governance || null;
+};
+
+export const getCommonGovernanceRules = async (
+  governanceId: string
+): Promise<UnstructuredRules | null> => {
+  const governance = await getGovernance(governanceId);
+
+  return governance?.unstructuredRules || null;
 };

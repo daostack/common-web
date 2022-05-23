@@ -1,15 +1,16 @@
-import { Tabs } from "@/containers/Common/containers/CommonDetailContainer/CommonDetailContainer";
 import React from "react";
-
-import { Common, Proposal } from "../../../../../shared/models";
+import { Tabs } from "@/containers/Common/containers/CommonDetailContainer/CommonDetailContainer";
+import { Common, Governance, Proposal } from "@/shared/models";
 import { EmptyTabComponent } from "../EmptyTabContent";
 import "./index.scss";
 import ProposalItemComponent from "./ProposalItemComponent";
+
 interface DiscussionsComponentProps {
   proposals: Proposal[];
   loadProposalDetail: (payload: Proposal) => void;
   currentTab: Tabs;
   common: Common;
+  governance: Governance;
   isCommonMember: boolean;
   isJoiningPending: boolean;
   onAddNewProposal: () => void;
@@ -20,6 +21,7 @@ export default function ProposalsComponent({
   loadProposalDetail,
   currentTab,
   common,
+  governance,
   isCommonMember,
   isJoiningPending,
   onAddNewProposal,
@@ -50,6 +52,7 @@ export default function ProposalsComponent({
         ) : (
           <EmptyTabComponent
             common={common}
+            governance={governance}
             currentTab={currentTab}
             message={
               currentTab === Tabs.Proposals

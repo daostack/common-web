@@ -2,6 +2,7 @@ export * from "./CommonsStateType";
 export * from "./CreateGovernancePayload";
 export * from "./CreateCommonPayload";
 export * from "./CreateDiscussionDto";
+export * from "./CreateProposalPayload";
 export * from "./AddMessageToDiscussionDto";
 export * from "./ImmediateContribution";
 export * from "./PaymentPayload";
