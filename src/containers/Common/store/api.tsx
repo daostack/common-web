@@ -1,9 +1,5 @@
 import { ApiEndpoint } from "@/shared/constants";
 import Api from "@/services/Api";
-import {
-  CreateFundingRequestProposalPayload,
-  ProposalJoinRequestData,
-} from "@/shared/interfaces/api/proposal";
 import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
   BankAccountDetails,
@@ -360,17 +356,6 @@ export async function createProposal<T extends keyof CreateProposal>(
 ): Promise<CreateProposal[T]["response"]> {
   const { data } = await Api.post<CreateProposal[T]["response"]>(
     ApiEndpoint.CreateProposal,
-    requestData
-  );
-
-  return convertObjectDatesToFirestoreTimestamps(data);
-}
-
-export async function createFundingProposal(
-  requestData: CreateFundingRequestProposalPayload
-): Promise<Proposal> {
-  const { data } = await Api.post<Proposal>(
-    ApiEndpoint.CreateFunding,
     requestData
   );
 

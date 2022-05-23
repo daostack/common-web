@@ -188,7 +188,7 @@ export const createFundingProposal = createAsyncAction(
     payload: CreateFundingRequestProposalPayload;
     callback: (step: AddProposalSteps) => void;
   },
-  Proposal,
+  CreateProposal[ProposalsTypes.FUNDS_ALLOCATION]["response"],
   Error
 >();
 
