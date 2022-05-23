@@ -30,7 +30,17 @@ export default function MembershipRequestCreating(props: IStageProps) {
               links: userData.links || [],
             },
           },
-          callback: () => {},
+          callback: (error) => {
+            if (error) {
+              console.error(error);
+              return;
+            }
+
+            setUserData((nextUserData) => ({
+              ...nextUserData,
+              stage: MembershipRequestStage.Created,
+            }));
+          },
         })
       );
 
