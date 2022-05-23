@@ -86,9 +86,9 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
           )}
           <h3
             className="trustee-proposal-card__title"
-            title={proposal.description.description}
+            title={proposal.description.title}
           >
-            {proposal.description.description}
+            {proposal.description.title}
           </h3>
           <div className="trustee-proposal-card__prices-wrapper">
             <div className={priceWrapperClassName}>
