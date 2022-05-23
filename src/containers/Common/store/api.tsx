@@ -628,6 +628,14 @@ export const getCommonMember = async (
   return member || null;
 };
 
+export const getCommonMembersAmount = async (
+  commonId: string
+): Promise<number | null> => {
+  const membersAmount = (await commonMembersSubCollection(commonId).get()).size;
+
+  return membersAmount ?? null;
+};
+
 export const governanceCollection = firebase
   .firestore()
   .collection(Collection.Governance)

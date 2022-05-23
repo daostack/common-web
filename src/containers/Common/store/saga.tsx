@@ -54,6 +54,7 @@ import {
   createGovernance as createGovernanceApi,
   getGovernance as getGovernanceApi,
   getCommonMember as getCommonMemberApi,
+  getCommonMembersAmount as getCommonMembersAmountApi,
 } from "./api";
 import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -943,6 +944,40 @@ export function* getCommonMember({
   }
 }
 
+export function* getCommonMembersAmount({
+  payload,
+}: ReturnType<typeof actions.getCommonMembersAmount.request>): Generator {
+  try {
+    const commonId = payload.payload;
+
+    yield put(startLoading());
+    const commonMembersAmount = (yield call(
+      getCommonMembersAmountApi,
+      commonId
+    )) as Awaited<ReturnType<typeof getCommonMembersAmountApi>>;
+
+    if (commonMembersAmount === null) {
+      throw new Error(
+        `Couldn't get members amount for common with id = "${commonId}"`
+      );
+    }
+
+    yield put(actions.getCommonMembersAmount.success(commonMembersAmount));
+
+    if (payload.callback) {
+      payload.callback(null, commonMembersAmount);
+    }
+  } catch (error) {
+    yield put(actions.getCommonMembersAmount.failure(error));
+
+    if (payload.callback) {
+      payload.callback(error);
+    }
+  } finally {
+    yield put(stopLoading());
+  }
+}
+
 export function* commonsSaga() {
   yield takeLatest(actions.createGovernance.request, createGovernance);
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
@@ -1001,6 +1036,10 @@ export function* commonsSaga() {
   yield takeLatest(actions.cancelSubscription.request, cancelSubscription);
   yield takeLatest(actions.getGovernance.request, getGovernance);
   yield takeLatest(actions.getCommonMember.request, getCommonMember);
+  yield takeLatest(
+    actions.getCommonMembersAmount.request,
+    getCommonMembersAmount
+  );
 }
 
 export default commonsSaga;

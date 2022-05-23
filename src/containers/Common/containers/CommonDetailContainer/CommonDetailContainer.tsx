@@ -72,7 +72,7 @@ import {
   AddProposalSteps,
 } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
-import { useCommonMember } from "../../hooks";
+import { useCommonMember, useCommonMembersAmount } from "../../hooks";
 import "./index.scss";
 
 interface CommonDetailRouterParams {
@@ -148,6 +148,11 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     data: commonMember,
     fetchCommonMember,
   } = useCommonMember();
+  const {
+    fetched: isCommonMembersAmountFetched,
+    data: commonMembersAmount,
+    fetchCommonMembersAmount,
+  } = useCommonMembersAmount();
 
   const fundingProposals = useMemo(
     () =>
@@ -277,6 +282,10 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   useEffect(() => {
     fetchCommonMember(id);
   }, [fetchCommonMember, id]);
+
+  useEffect(() => {
+    fetchCommonMembersAmount(id);
+  }, [fetchCommonMembersAmount, id]);
 
   const getDisscussionDetail = useCallback(
     (payload: Discussion | DiscussionWithHighlightedMessage) => {
@@ -533,8 +542,19 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     }
   }, [showJoinModal, shouldAllowJoiningToCommon, closeJoinModal]);
 
-  if (!common || !governance || !isCommonMemberFetched) {
-    return isCommonFetched && isCommonMemberFetched ? <NotFound /> : <Loader />;
+  if (
+    !common ||
+    !governance ||
+    !isCommonMemberFetched ||
+    !isCommonMembersAmountFetched
+  ) {
+    return isCommonFetched &&
+      isCommonMemberFetched &&
+      isCommonMembersAmountFetched ? (
+      <NotFound />
+    ) : (
+      <Loader />
+    );
   }
 
   return (
@@ -676,7 +696,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                     } Raised`}</div>
                 </div>
                 <div className="item">
-                  <div className="value">{common?.members.length}</div>
+                  <div className="value">{commonMembersAmount}</div>
                   <div className="name">Members</div>
                 </div>
                 <div className="item">

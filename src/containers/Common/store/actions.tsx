@@ -368,3 +368,9 @@ export const getCommonMember = createAsyncAction(
   CommonMember,
   Error
 >();
+
+export const getCommonMembersAmount = createAsyncAction(
+  CommonsActionTypes.GET_COMMON_MEMBERS_AMOUNT,
+  CommonsActionTypes.GET_COMMON_MEMBERS_AMOUNT_SUCCESS,
+  CommonsActionTypes.GET_COMMON_MEMBERS_AMOUNT_FAILURE
+)<PayloadWithOptionalCallback<string, number, Error>, number, Error>();
