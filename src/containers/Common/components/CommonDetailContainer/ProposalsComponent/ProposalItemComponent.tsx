@@ -5,10 +5,12 @@ import { UserAvatar, ElementDropdown } from "@/shared/components";
 import { useFullText } from "@/shared/hooks";
 import { Proposal, ProposalLink } from "@/shared/models";
 import { formatPrice, getUserName, getDaysAgo } from "@/shared/utils";
-import { DynamicLinkType } from "@/shared/constants";
+import { DynamicLinkType, ScreenSize } from "@/shared/constants";
 import { VotesComponent } from "../VotesComponent";
 import ProposalState from "../ProposalState/ProposalState";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { useSelector } from "react-redux";
+import { getScreenSize } from "@/shared/store/selectors";
 
 interface ProposalItemComponentProps {
   loadProposalDetail: (payload: Proposal) => void;
@@ -21,6 +23,9 @@ export default function ProposalItemComponent({
   loadProposalDetail,
   isCommonMember,
 }: ProposalItemComponentProps) {
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
+  const imagePreviewLength = isMobileView ? 1 : 2;
   const {
     ref: descriptionRef,
     isFullTextShowing,
@@ -36,7 +41,7 @@ export default function ProposalItemComponent({
   const images = proposal?.description.images ?? [];
 
   const imagesChunk = images.filter((image, index) => {
-    if (index < 2) {
+    if (index < imagePreviewLength) {
       return image;
     }
     return false;
@@ -128,12 +133,12 @@ export default function ProposalItemComponent({
                       <div className="image-title">{i.title}</div>
                     </div>
                   ))}
-                  {images.length > 2 && (
+                  {images.length > imagePreviewLength && (
                     <div
                       className="pagination-item"
                       onClick={() => setSwipperState(true)}
                     >
-                      +{images.length - 2}
+                      +{images.length - imagePreviewLength}
                     </div>
                   )}
                 </div>
