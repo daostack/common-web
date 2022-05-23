@@ -105,7 +105,7 @@ export default function ProposalItemComponent({
               {proposal.description.links.map((link) => (
                 <a
                   href={link.value}
-                  key={link.title}
+                  key={link.value}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -117,9 +117,14 @@ export default function ProposalItemComponent({
           {proposal.description?.images?.length > 0 && (
             <div className="images-wrapper">
               {swipperState ? (
-                <Swiper spaceBetween={30} pagination navigation>
+                <Swiper
+                  spaceBetween={30}
+                  pagination
+                  navigation
+                  slidesPerView={imagePreviewLength}
+                >
                   {images.map((imageURL: ProposalLink, index) => (
-                    <SwiperSlide key={index} className="image-item">
+                    <SwiperSlide key={imageURL.value} className="image-item">
                       <img src={imageURL.value} alt={imageURL.title} />
                       <div className="image-title">{imageURL.title}</div>
                     </SwiperSlide>
@@ -128,7 +133,7 @@ export default function ProposalItemComponent({
               ) : (
                 <div className="images-list">
                   {imagesChunk.map((i) => (
-                    <div className="image-item">
+                    <div className="image-item" key={i.value}>
                       <img src={i.value} alt={i.title} />
                       <div className="image-title">{i.title}</div>
                     </div>

@@ -262,7 +262,9 @@
           .image-item {
 
             &.swiper-slide {
-              margin-bottom: 2.5rem;
+              margin-bottom: 2rem;
+              flex-shrink: 0 !important;
+              text-align: center;
             }
 
             flex-shrink: initial !important;
