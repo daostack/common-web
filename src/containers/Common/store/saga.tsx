@@ -30,7 +30,6 @@ import {
   subscribeToCommonDiscussion,
   addMessageToDiscussion,
   subscribeToMessages,
-  createFundingProposal,
   subscribeToCommonProposal,
   leaveCommon as leaveCommonApi,
   loadUserCards,
@@ -65,7 +64,7 @@ import { ImmediateContributionResponse } from "../interfaces";
 import { groupBy } from "@/shared/utils";
 import { createDefaultGovernanceCreationPayload } from "./helpers";
 import { Awaited } from "@/shared/interfaces";
-import { MemberAdmittance } from "@/shared/models/governance/proposals";
+import { FundsAllocation, MemberAdmittance } from "@/shared/models/governance/proposals";
 
 export function* createGovernance(
   action: ReturnType<typeof actions.createGovernance.request>
@@ -506,6 +505,39 @@ export function* createMemberAdmittanceProposal({
   }
 }
 
+export function* createFundingProposal(
+  action: ReturnType<typeof actions.createFundingProposal.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    const fundingProposal = (yield call(createProposalApi, {
+      ...action.payload.payload,
+      type: ProposalsTypes.FUNDS_ALLOCATION
+    })) as FundsAllocation;
+
+    yield call(
+      subscribeToCommonProposal,
+      action.payload.payload.commonId,
+      async (data) => {
+        const ds = await fetchCommonProposals(action.payload.payload.commonId);
+
+        store.dispatch(actions.setProposals(ds));
+        store.dispatch(actions.loadProposalList.request());
+        store.dispatch(stopLoading());
+        action.payload.callback(AddProposalSteps.SUCCESS);
+        store.dispatch(actions.getCommonsList.request());
+      }
+    );
+
+    yield put(actions.createFundingProposal.success(fundingProposal));
+    yield put(stopLoading());
+  } catch (error) {
+    action.payload.callback(AddProposalSteps.FAILURE);
+    yield put(actions.createFundingProposal.failure(error));
+    yield put(stopLoading());
+  }
+}
+
 export function* leaveCommon(
   action: ReturnType<typeof actions.leaveCommon.request>
 ): Generator {
@@ -651,38 +683,6 @@ export function* updateBankDetails(
   } catch (error) {
     yield put(actions.updateBankDetails.failure(error));
     action.payload.callback(error);
-    yield put(stopLoading());
-  }
-}
-
-export function* createFundingProposalSaga(
-  action: ReturnType<typeof actions.createFundingProposal.request>
-): Generator {
-  try {
-    yield put(startLoading());
-    const proposal = (yield createFundingProposal(
-      action.payload.payload
-    )) as Proposal;
-
-    yield call(
-      subscribeToCommonProposal,
-      action.payload.payload.commonId,
-      async (data) => {
-        const ds = await fetchCommonProposals(action.payload.payload.commonId);
-
-        store.dispatch(actions.setProposals(ds));
-        store.dispatch(actions.loadProposalList.request());
-        store.dispatch(stopLoading());
-        action.payload.callback(AddProposalSteps.SUCCESS);
-        store.dispatch(actions.getCommonsList.request());
-      }
-    );
-
-    yield put(actions.createFundingProposal.success(proposal));
-    yield put(stopLoading());
-  } catch (error) {
-    action.payload.callback(AddProposalSteps.FAILURE);
-    yield put(actions.createFundingProposal.failure(error));
     yield put(stopLoading());
   }
 }
@@ -930,7 +930,7 @@ export function* commonsSaga() {
   yield takeLatest(actions.deleteCommon.request, deleteCommon);
   yield takeLatest(
     actions.createFundingProposal.request,
-    createFundingProposalSaga
+    createFundingProposal
   );
   yield takeLatest(actions.loadUserCards.request, loadUserCardsSaga);
   yield takeLatest(
