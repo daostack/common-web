@@ -3,15 +3,13 @@ import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { PayloadWithCallback } from "@/shared/interfaces";
 import { UpdateBankAccountDetailsData } from "@/shared/interfaces/api/bankAccount";
 import { BuyerTokenPageCreationData } from "@/shared/interfaces/api/payMe";
-import {
-  CreateFundingRequestProposalPayload,
-  ProposalJoinRequestData,
-} from "@/shared/interfaces/api/proposal";
+import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
 import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
   BankAccountDetails,
   Card,
   Common,
+  CommonMember,
   CommonPayment,
   Governance,
   Proposal,
@@ -356,3 +354,17 @@ export const getGovernance = createAsyncAction(
   CommonsActionTypes.GET_GOVERNANCE_SUCCESS,
   CommonsActionTypes.GET_GOVERNANCE_FAILURE
 )<PayloadWithOptionalCallback<string, Governance, Error>, Governance, Error>();
+
+export const getCommonMember = createAsyncAction(
+  CommonsActionTypes.GET_COMMON_MEMBER,
+  CommonsActionTypes.GET_COMMON_MEMBER_SUCCESS,
+  CommonsActionTypes.GET_COMMON_MEMBER_FAILURE
+)<
+  PayloadWithOptionalCallback<
+    { commonId: string; userId: string },
+    CommonMember,
+    Error
+  >,
+  CommonMember,
+  Error
+>();

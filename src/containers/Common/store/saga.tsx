@@ -53,6 +53,7 @@ import {
   fetchCommonListByIds as fetchCommonListByIdsApi,
   createGovernance as createGovernanceApi,
   getGovernance as getGovernanceApi,
+  getCommonMember as getCommonMemberApi,
 } from "./api";
 import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -64,7 +65,10 @@ import { ImmediateContributionResponse } from "../interfaces";
 import { groupBy } from "@/shared/utils";
 import { createDefaultGovernanceCreationPayload } from "./helpers";
 import { Awaited } from "@/shared/interfaces";
-import { FundsAllocation, MemberAdmittance } from "@/shared/models/governance/proposals";
+import {
+  FundsAllocation,
+  MemberAdmittance,
+} from "@/shared/models/governance/proposals";
 
 export function* createGovernance(
   action: ReturnType<typeof actions.createGovernance.request>
@@ -512,7 +516,7 @@ export function* createFundingProposal(
     yield put(startLoading());
     const fundingProposal = (yield call(createProposalApi, {
       ...action.payload.payload,
-      type: ProposalsTypes.FUNDS_ALLOCATION
+      type: ProposalsTypes.FUNDS_ALLOCATION,
     })) as FundsAllocation;
 
     yield call(
@@ -904,6 +908,41 @@ export function* getGovernance({
   }
 }
 
+export function* getCommonMember({
+  payload,
+}: ReturnType<typeof actions.getCommonMember.request>): Generator {
+  try {
+    const { commonId, userId } = payload.payload;
+
+    yield put(startLoading());
+    const commonMember = (yield call(
+      getCommonMemberApi,
+      commonId,
+      userId
+    )) as Awaited<ReturnType<typeof getCommonMemberApi>>;
+
+    if (!commonMember) {
+      throw new Error(
+        `Member for commonId = "${commonId}" and userId = "${userId}" was not found`
+      );
+    }
+
+    yield put(actions.getCommonMember.success(commonMember));
+
+    if (payload.callback) {
+      payload.callback(null, commonMember);
+    }
+  } catch (error) {
+    yield put(actions.getCommonMember.failure(error));
+
+    if (payload.callback) {
+      payload.callback(error);
+    }
+  } finally {
+    yield put(stopLoading());
+  }
+}
+
 export function* commonsSaga() {
   yield takeLatest(actions.createGovernance.request, createGovernance);
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
@@ -961,6 +1000,7 @@ export function* commonsSaga() {
   yield takeLatest(actions.updateSubscription.request, updateSubscription);
   yield takeLatest(actions.cancelSubscription.request, cancelSubscription);
   yield takeLatest(actions.getGovernance.request, getGovernance);
+  yield takeLatest(actions.getCommonMember.request, getCommonMember);
 }
 
 export default commonsSaga;

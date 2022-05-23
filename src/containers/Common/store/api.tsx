@@ -617,6 +617,17 @@ export const commonMembersSubCollection = (commonId: string) => {
     });
 };
 
+export const getCommonMember = async (
+  commonId: string,
+  userId: string
+): Promise<CommonMember | null> => {
+  const member = (
+    await commonMembersSubCollection(commonId).doc(userId).get()
+  ).data();
+
+  return member || null;
+};
+
 export const governanceCollection = firebase
   .firestore()
   .collection(Collection.Governance)
