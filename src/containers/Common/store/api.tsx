@@ -366,17 +366,6 @@ export async function createProposal<T extends keyof CreateProposal>(
   return convertObjectDatesToFirestoreTimestamps(data);
 }
 
-export async function createRequestToJoin(
-  requestData: ProposalJoinRequestData
-): Promise<Proposal> {
-  const { data } = await Api.post<Proposal>(
-    ApiEndpoint.CreateRequestToJoin,
-    requestData
-  );
-
-  return convertObjectDatesToFirestoreTimestamps(data);
-}
-
 export async function createFundingProposal(
   requestData: CreateFundingRequestProposalPayload
 ): Promise<Proposal> {

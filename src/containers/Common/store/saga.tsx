@@ -19,7 +19,6 @@ import { startLoading, stopLoading } from "@/shared/store/actions";
 import {
   createCommon as createCommonApi,
   createProposal as createProposalApi,
-  createRequestToJoin as createRequestToJoinApi,
   fetchCommonList,
   fetchCommonDetail,
   fetchCommonDiscussions,
@@ -58,6 +57,7 @@ import {
 } from "./api";
 import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
+import { ProposalsTypes } from "@/shared/constants";
 import { store } from "@/shared/appConfig";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
 import { Vote } from "@/shared/interfaces/api/vote";
@@ -65,6 +65,7 @@ import { ImmediateContributionResponse } from "../interfaces";
 import { groupBy } from "@/shared/utils";
 import { createDefaultGovernanceCreationPayload } from "./helpers";
 import { Awaited } from "@/shared/interfaces";
+import { MemberAdmittance } from "@/shared/models/governance/proposals";
 
 export function* createGovernance(
   action: ReturnType<typeof actions.createGovernance.request>
@@ -475,17 +476,32 @@ export function* addMessageToProposalSaga(
   }
 }
 
-export function* createRequestToJoin(
-  action: ReturnType<typeof actions.createRequestToJoin.request>
-): Generator {
+export function* createMemberAdmittanceProposal({
+  payload,
+}: ReturnType<
+  typeof actions.createMemberAdmittanceProposal.request
+>): Generator {
   try {
     yield put(startLoading());
-    const proposal = (yield createRequestToJoinApi(action.payload)) as Proposal;
+    const memberAdmittanceProposal = (yield call(createProposalApi, {
+      ...payload.payload,
+      type: ProposalsTypes.MEMBER_ADMITTANCE,
+    })) as MemberAdmittance;
 
-    yield put(actions.createRequestToJoin.success(proposal));
-    yield put(stopLoading());
+    yield put(
+      actions.createMemberAdmittanceProposal.success(memberAdmittanceProposal)
+    );
+
+    if (payload.callback) {
+      payload.callback(null, memberAdmittanceProposal);
+    }
   } catch (error) {
-    yield put(actions.createRequestToJoin.failure(error));
+    yield put(actions.createMemberAdmittanceProposal.failure(error));
+
+    if (payload.callback) {
+      payload.callback(error);
+    }
+  } finally {
     yield put(stopLoading());
   }
 }
@@ -906,7 +922,10 @@ export function* commonsSaga() {
     actions.addMessageToDiscussion.request,
     addMessageToDiscussionSaga
   );
-  yield takeLatest(actions.createRequestToJoin.request, createRequestToJoin);
+  yield takeLatest(
+    actions.createMemberAdmittanceProposal.request,
+    createMemberAdmittanceProposal
+  );
   yield takeLatest(actions.leaveCommon.request, leaveCommon);
   yield takeLatest(actions.deleteCommon.request, deleteCommon);
   yield takeLatest(

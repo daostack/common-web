@@ -1,3 +1,5 @@
+import { CommonLink } from "../../Common";
+
 export interface BasicArgsProposal {
   readonly commonId: string;
 
@@ -10,4 +12,6 @@ export interface BasicArgsProposal {
   images: string[];
 
   files: string[];
+
+  links: CommonLink[];
 }

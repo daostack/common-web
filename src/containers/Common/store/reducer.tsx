@@ -118,13 +118,6 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       nextState.isUserProposalsLoaded = false;
     })
   )
-
-  .handleAction(actions.createRequestToJoin.success, (state, action) =>
-    produce(state, (nextState) => {
-      nextState.proposals = [{ ...action.payload }, ...nextState.proposals];
-      nextState.userProposals = [{ ...action.payload }, ...nextState.userProposals];
-    })
-  )
   .handleAction(actions.loadUserCards.success, (state, action) =>
     produce(state, (nextState) => {
       nextState.cards = action.payload;
