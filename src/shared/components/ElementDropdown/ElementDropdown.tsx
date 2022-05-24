@@ -60,16 +60,17 @@ const ElementDropdownMenuItemsList: DropdownOption[] = [
     searchText: "Copy link",
     value: ElementDropdownMenuItems.CopyLink,
   },
-  {
-    text: (
-      <>
-        <ReportIcon />
-        <span>Report</span>
-      </>
-    ),
-    searchText: "Report",
-    value: ElementDropdownMenuItems.Report,
-  },
+  //TODO: "Reports" dev scope
+  // {
+  //   text: (
+  //     <>
+  //       <ReportIcon />
+  //       <span>Report</span>
+  //     </>
+  //   ),
+  //   searchText: "Report",
+  //   value: ElementDropdownMenuItems.Report,
+  // },
 ];
 
 interface ElementDropdownProps {
@@ -101,7 +102,7 @@ const ElementDropdown: FC<ElementDropdownProps> = (
   const isMobileView = (screenSize === ScreenSize.Mobile);
 
   const handleMenuItemSelect = useCallback((value: unknown) => {
-    if (value === ElementDropdownMenuItems.Report) return; //TODO
+    if (value === ElementDropdownMenuItems.Report) return; //TODO: "Reports" dev scope
 
       if (!linkURL) {
         handleOpen();
@@ -140,8 +141,8 @@ const ElementDropdown: FC<ElementDropdownProps> = (
         copyToClipboard(linkURL);
         notify("The link has copied!");
         break;
-      case ElementDropdownMenuItems.Report:
-        break; //TODO
+      case ElementDropdownMenuItems.Report: //TODO: "Reports" dev scope
+        break;
     }
 
     setSelectedItem(null);
