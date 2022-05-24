@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 
-import { Loader, UserAvatar } from "../../../../../shared/components";
+import { Loader, UserAvatar } from "@/shared/components";
 import { Common, Proposal } from "@/shared/models";
 import {
   formatPrice,
