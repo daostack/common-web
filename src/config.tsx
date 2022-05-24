@@ -16,8 +16,7 @@ const dev: Configuration = {
     messagingSenderId: "1027354410661",
     appId: "1:1027354410661:web:486445886843ffcc5b974c",
   },
-  cloudFunctionUrl:
-    "https://us-central1-common-dev-dea4e.cloudfunctions.net",
+  cloudFunctionUrl: "https://us-central1-common-dev-dea4e.cloudfunctions.net",
 };
 
 const stage: Configuration = {
