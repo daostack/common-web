@@ -64,7 +64,7 @@
         margin-bottom: 24px;
         align-items: center;
         justify-content: center;
-        height: 32px;
+        height: 3.125rem;
 
         img {
           width: 17px;
@@ -109,6 +109,7 @@
       .inner-wrapper {
         width: 100%;
         margin: 0;
+        height: 3.125rem;
       }
     }
 
@@ -161,7 +162,8 @@
 
     .discussion-top-bar {
       display: flex;
-      margin: 24px 0;
+      margin: 1rem 0;
+      justify-content: center;
 
       .img-wrapper {
         margin-right: 16px;
@@ -194,6 +196,18 @@
     }
 
     .discussion-content {
+      .proposal-pitch-title{
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
+        font-size: 1.25rem;
+        font-weight: bold;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.2;
+        letter-spacing: normal;
+        text-align: center;
+        color: #001a36;
+      }
       .additional-information {
         .links {
           display: flex;
@@ -361,7 +375,7 @@
 
   .dropdown-menu {
     position: absolute;
-    top: 2.5rem;
+    top: 4.5rem;
     right: 1rem;
   }
 }
