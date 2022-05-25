@@ -1,12 +1,9 @@
 import React, { FC, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
-import {
-    Common,
-    CommonContributionType,
-    ProposalListItem,
-} from "@/shared/models";
+import { Common, ProposalListItem } from "@/shared/models";
 import { Separator } from "@/shared/components";
+import { ContributionType } from "@/shared/constants";
 import { fetchCommonDetail } from "../../../../Common/store/api";
 import {
     VotesComponent,
@@ -67,7 +64,7 @@ const MembershipRequestListItem: FC<ProposalListItem> = (
                                     formatPrice(proposal.join?.funding,
                                         {
                                             shouldRemovePrefixFromZero: false,
-                                            bySubscription: proposal.join?.fundingType === CommonContributionType.Monthly
+                                            bySubscription: proposal.join?.fundingType === ContributionType.Monthly
                                         }
                                     )
                                 }

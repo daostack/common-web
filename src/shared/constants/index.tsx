@@ -1,5 +1,6 @@
 export * from "./governance";
 export * from "./authProvider";
+export * from "./ContributionType";
 export * from "./dynamicLink";
 export * from "./endpoint";
 export * from "./formErrorMessages";
