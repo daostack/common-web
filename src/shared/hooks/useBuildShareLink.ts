@@ -54,6 +54,17 @@ const getLinkMetaData = ( //FIXME: need to add an appropriate social images
           socialImageLink: "", //FIXME
         }
       );
+    case DynamicLinkType.ProposalComment:
+      elem = elem as DiscussionMessage;
+
+      return (
+        {
+          link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.ProposalComment}/${elem.id}`,
+          socialTitle: `${elem.flag || ""} proposal's comment`,
+          socialDescription: elem.text || "",
+          socialImageLink: "", //FIXME
+        }
+      );
     case DynamicLinkType.Discussion:
       elem = elem as Discussion;
 
