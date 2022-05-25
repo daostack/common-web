@@ -7,14 +7,14 @@ import {
   LinksArray,
   TextField,
 } from "@/shared/components/Form/Formik";
-import { URL_REGEXP, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
+import { URL_REGEXP, MAX_LINK_TITLE_LENGTH, ProposalsTypes } from "@/shared/constants";
 import { formatPrice } from "@/shared/utils";
 import { Common } from "@/shared/models";
 import { uploadFile } from "@/shared/utils/firebaseUploadFile";
 import { Button, ButtonIcon, Loader, ModalFooter } from "@/shared/components";
 import DeleteIcon from "@/shared/icons/delete.icon";
-import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
 import { getBankDetails } from "@/containers/Common/store/actions";
+import { CreateProposal } from "@/containers/Common/interfaces";
 import { MAX_PROPOSAL_TITLE_LENGTH } from "./constants";
 
 const validationSchema = Yup.object({
@@ -53,7 +53,7 @@ const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png";
 interface AddProposalFormInterface {
   common: Common;
   saveProposalState: (
-    payload: Partial<CreateFundingRequestProposalPayload>
+    payload: Partial<CreateProposal[ProposalsTypes.FUNDS_ALLOCATION]>
   ) => void;
   addBankDetails: () => void;
 }
@@ -154,6 +154,7 @@ export const AddProposalForm = ({
       validationSchema={schema}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(false);
+        // TODO: need to fix content
         saveProposalState({ ...values, images: uploadedFiles });
       }}
       initialValues={formValues}

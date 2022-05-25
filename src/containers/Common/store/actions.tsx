@@ -3,7 +3,6 @@ import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { PayloadWithCallback } from "@/shared/interfaces";
 import { UpdateBankAccountDetailsData } from "@/shared/interfaces/api/bankAccount";
 import { BuyerTokenPageCreationData } from "@/shared/interfaces/api/payMe";
-import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
 import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
   BankAccountDetails,
@@ -183,7 +182,7 @@ export const createFundingProposal = createAsyncAction(
   CommonsActionTypes.CREATE_FUNDING_PROPOSAL_FAILURE
 )<
   {
-    payload: CreateFundingRequestProposalPayload;
+    payload: CreateProposal[ProposalsTypes.FUNDS_ALLOCATION];
     callback: (step: AddProposalSteps) => void;
   },
   CreateProposal[ProposalsTypes.FUNDS_ALLOCATION]["response"],
