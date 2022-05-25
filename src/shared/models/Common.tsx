@@ -130,3 +130,7 @@ export interface CommonLink {
    */
   value: string;
 }
+
+export interface CommonPayment {
+  link: string;
+}
