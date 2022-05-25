@@ -60,7 +60,7 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
           </div>
           <div className="item">
             <div className="title">Members</div>
-            <div className="value">{common.members?.length}</div>
+            <div className="value">{common.memberCount}</div>
           </div>
         </div>
         <div className="relation-additional-information">

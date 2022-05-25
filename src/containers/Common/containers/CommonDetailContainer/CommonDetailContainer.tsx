@@ -653,6 +653,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                             className="common-detail-wrapper__common-menu"
                             menuButtonClassName="common-detail-wrapper__menu-button--small"
                             common={common}
+                            currentCommonMember={commonMember}
                           />
                         )}
                       </div>
@@ -735,6 +736,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                       className="common-detail-wrapper__common-menu"
                       menuButtonClassName="common-detail-wrapper__menu-button--big"
                       common={common}
+                      currentCommonMember={commonMember}
                       withBorder
                     />
                   )}
