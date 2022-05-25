@@ -1,5 +1,6 @@
 import produce from "immer";
 import { ActionType, createReducer } from "typesafe-actions";
+import { CommonState } from "@/shared/models";
 import { CommonsStateType } from "../interfaces";
 import * as actions from "./actions";
 
@@ -125,7 +126,7 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
   )
   .handleAction(actions.createCommon.success, (state, action) =>
     produce(state, (nextState) => {
-      if (action.payload.active) {
+      if (action.payload.state === CommonState.ACTIVE) {
         nextState.commons = [action.payload, ...nextState.commons];
       }
     })
