@@ -1,4 +1,4 @@
-export * from "./governance/Governance";
+export * from "./governance";
 export * from "./BaseEntity";
 export * from "./User";
 export * from "./Card";
