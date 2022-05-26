@@ -397,7 +397,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
 
   const addProposal = useCallback(
     (
-      payload: CreateProposal[ProposalsTypes.FUNDS_ALLOCATION],
+      payload: CreateProposal[ProposalsTypes.FUNDS_ALLOCATION]["data"],
       callback: (step: AddProposalSteps) => void
     ) => {
       dispatch(createFundingProposal.request({ payload, callback }));
