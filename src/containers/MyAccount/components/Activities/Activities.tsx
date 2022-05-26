@@ -19,7 +19,7 @@ import {
   MembershipRequestListItem,
   ProposalDetailModal,
 } from "@/containers/Common/components";
-import { useUserCommons } from "@/containers/Common/hooks";
+import { useCommonMember, useUserCommons } from "@/containers/Common/hooks";
 import { CollectionSummaryCard } from "./CollectionSummaryCard";
 import {
   Common,
@@ -76,6 +76,12 @@ const Activities: FC = () => {
     data: myCommons,
     fetchUserCommons,
   } = useUserCommons();
+  const {
+    fetched: isCommonMemberFetched,
+    data: commonMember,
+    fetchCommonMember,
+    resetCommonMember,
+  } = useCommonMember();
   const user = useSelector(selectUser());
   const commons = useSelector(selectCommonList());
   const isCommonsLoaded = useSelector(selectIsCommonsLoaded());
@@ -103,13 +109,7 @@ const Activities: FC = () => {
 
   const isMobileView = useMemo(() => (screenSize === ScreenSize.Mobile), [screenSize]);
 
-  const isCommonMember = useMemo(() => {
-    const commonMember = currentCommon?.members.find(
-      (member) => member.userId === user?.uid
-    );
-
-    return Boolean(commonMember);
-  }, [currentCommon, user]);
+  const isCommonMember = Boolean(commonMember);
 
   const MAX_ROW_ITEMS_AMOUNT = useMemo(() => (isMobileView ? 5 : 4), [isMobileView]);
 
@@ -247,8 +247,17 @@ const Activities: FC = () => {
   );
 
   useEffect(() => {
+    if (!currentProposal) {
+      return;
+    }
+
+    fetchCommonMember(currentProposal.commonId);
+  }, [currentProposal, fetchCommonMember]);
+
+  useEffect(() => {
     if (!currentProposal) return;
 
+    resetCommonMember();
     dispatch(
       getCommonDetail.request({
         payload: currentProposal.commonId,
@@ -258,7 +267,7 @@ const Activities: FC = () => {
     return () => {
       dispatch(closeCurrentCommon());
     };
-  }, [dispatch, currentProposal]);
+  }, [dispatch, resetCommonMember, currentProposal]);
 
   useEffect(() => {
     if (commons.length === 0)
@@ -306,11 +315,17 @@ const Activities: FC = () => {
             headerWrapper: "my-account-activities__detail-modal-header-wrapper",
           }}
         >
-          <ProposalDetailModal
-            proposal={currentProposal}
-            common={currentCommon}
-            isCommonMember={isCommonMember}
-          />
+          {isCommonMemberFetched ? (
+            <ProposalDetailModal
+              proposal={currentProposal}
+              common={currentCommon}
+              isCommonMember={isCommonMember}
+            />
+          ) : (
+            <div>
+              <Loader />
+            </div>
+          )}
         </Modal>
       }
       <div className="route-content my-account-activities">

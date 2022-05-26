@@ -9,6 +9,7 @@ type State = LoadingState<CommonMember | null>;
 
 interface Return extends State {
   fetchCommonMember: (commonId: string) => void;
+  resetCommonMember: () => void;
 }
 
 export const useCommonMember = (): Return => {
@@ -64,8 +65,17 @@ export const useCommonMember = (): Return => {
     [state, dispatch, userId]
   );
 
+  const resetCommonMember = useCallback(() => {
+    setState({
+      loading: false,
+      fetched: false,
+      data: null,
+    });
+  }, []);
+
   return {
     ...state,
     fetchCommonMember,
+    resetCommonMember,
   };
 };
