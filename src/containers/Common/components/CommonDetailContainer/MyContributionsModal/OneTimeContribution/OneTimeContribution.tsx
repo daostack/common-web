@@ -90,7 +90,6 @@ const OneTimeContribution: FC<OneTimeContributionProps> = (props) => {
       case OneTimeContributionStep.AmountSelection:
         return (
           <AmountSelection
-            common={common}
             contributionAmount={contributionAmount}
             onSelect={handleAmountSelect}
             setShouldShowGoBackButton={setShouldShowGoBackButton}
