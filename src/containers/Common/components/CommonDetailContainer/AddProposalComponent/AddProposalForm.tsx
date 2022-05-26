@@ -154,7 +154,6 @@ export const AddProposalForm = ({
       validationSchema={schema}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(false);
-        // TODO: Need to change the images to objct of "title" and "value" in BasicArgsProposal?
         saveProposalState({ ...values, images: uploadedFiles });
       }}
       initialValues={formValues}
