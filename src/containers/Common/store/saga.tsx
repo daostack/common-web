@@ -516,15 +516,15 @@ export function* createFundingProposal(
   try {
     yield put(startLoading());
     const fundingProposal = (yield call(createProposalApi, {
-      ...action.payload.payload,
+      ...action.payload.payload.data,
       type: ProposalsTypes.FUNDS_ALLOCATION,
     })) as FundsAllocation;
 
     yield call(
       subscribeToCommonProposal,
-      action.payload.payload.commonId,
+      action.payload.payload.data.args.commonId,
       async (data) => {
-        const ds = await fetchCommonProposals(action.payload.payload.commonId);
+        const ds = await fetchCommonProposals(action.payload.payload.data.args.commonId);
 
         store.dispatch(actions.setProposals(ds));
         store.dispatch(actions.loadProposalList.request());

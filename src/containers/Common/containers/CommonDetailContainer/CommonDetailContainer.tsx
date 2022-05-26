@@ -37,6 +37,7 @@ import {
   ShareViewType,
   DynamicLinkType,
   ROUTE_PATHS,
+  ProposalsTypes,
 } from "@/shared/constants";
 import {
   selectCommonDetail,
@@ -71,9 +72,10 @@ import {
   AddProposalComponent,
   AddProposalSteps,
 } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
-import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
 import { useCommonMember } from "../../hooks";
+import { CreateProposal } from "../../interfaces";
 import "./index.scss";
+
 
 interface CommonDetailRouterParams {
   id: string;
@@ -395,7 +397,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
 
   const addProposal = useCallback(
     (
-      payload: CreateFundingRequestProposalPayload,
+      payload: CreateProposal[ProposalsTypes.FUNDS_ALLOCATION]["data"],
       callback: (step: AddProposalSteps) => void
     ) => {
       dispatch(createFundingProposal.request({ payload, callback }));

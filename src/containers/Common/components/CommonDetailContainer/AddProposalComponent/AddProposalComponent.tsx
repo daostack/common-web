@@ -1,22 +1,20 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-
+import { useSelector } from "react-redux";
+import classNames from "classnames";
 import { Modal } from "@/shared/components";
 import { useZoomDisabling } from "@/shared/hooks";
 import { ModalProps, ModalRef } from "@/shared/interfaces";
-
-import "./index.scss";
 import { Common, Proposal } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
+import { ScreenSize } from "@/shared/constants";
 import { AddProposalForm } from "./AddProposalForm";
 import { AddProposalConfirm } from "./AddProposalConfirm";
 import { AddProposalLoader } from "./AddProposalLoader";
 import { AdProposalSuccess } from "./AddProposalSuccess";
 import { AdProposalFailure } from "./AddProposalFailure";
-import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
 import { AddBankDetails } from "./AddBankDetails/AddBankDetails";
-import { useSelector } from "react-redux";
-import { getScreenSize } from "@/shared/store/selectors";
-import { ScreenSize } from "@/shared/constants";
-import classNames from "classnames";
+import { CreateFundsAllocationData, CreateFundsAllocationFormData } from "./types";
+import "./index.scss";
 
 export enum AddProposalSteps {
   CREATE,
@@ -30,7 +28,7 @@ export enum AddProposalSteps {
 interface AddDiscussionComponentProps
   extends Pick<ModalProps, "isShowing" | "onClose"> {
   onProposalAdd: (
-    payload: CreateFundingRequestProposalPayload,
+    payload: CreateFundsAllocationData,
     callback: (step: AddProposalSteps) => void
   ) => void;
   common: Common;
@@ -51,17 +49,23 @@ export const AddProposalComponent = ({
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
+
   const [
     fundingRequest,
     setFundingRequest,
-  ] = useState<CreateFundingRequestProposalPayload>({
-    title: "",
-    description: "",
-    links: [],
-    images: [],
-    amount: 0,
-    commonId: common.id,
+  ] = useState<CreateFundsAllocationData>({
+    args: {
+      title: "",
+      description: "",
+      links: [],
+      images: [],
+      amount: 0,
+      commonId: common.id,
+      files: [],
+
+    },
   });
+
   const [proposalCreationStep, changeCreationProposalStep] = useState(
     AddProposalSteps.CREATE
   );
@@ -83,18 +87,18 @@ export const AddProposalComponent = ({
     }
   }, [createdProposal, getProposalDetail, onClose]);
 
-  const confirmProposal = useCallback((fundingRequest: CreateFundingRequestProposalPayload) => {
+  const confirmProposal = useCallback((fundingRequest: CreateFundsAllocationData) => {
     changeCreationProposalStep(AddProposalSteps.LOADER);
-    fundingRequest.links = fundingRequest.links?.filter((link) => link.title && link.value);
-    fundingRequest.amount = fundingRequest.amount * 100;
+    fundingRequest.args.links = fundingRequest.args.links?.filter((link) => link.title && link.value);
+    fundingRequest.args.amount = fundingRequest.args.amount * 100;
     onProposalAdd(fundingRequest, changeCreationProposalStep);
   }, [onProposalAdd]);
-  
+
   const saveProposalState = useCallback(
-    (payload: Partial<CreateFundingRequestProposalPayload>) => {
+    (payload: Partial<CreateFundsAllocationFormData>) => {
       const fundingRequestData = { ...fundingRequest, ...payload };
       setFundingRequest(fundingRequestData);
-      if (!payload.amount) {
+      if (payload?.amount) {
         confirmProposal(fundingRequestData);
       } else {
         changeCreationProposalStep(AddProposalSteps.CONFIRM);

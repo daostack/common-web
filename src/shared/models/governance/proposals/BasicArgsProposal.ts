@@ -9,9 +9,19 @@ export interface BasicArgsProposal {
 
   description: string;
 
-  images: string[];
+  images: ProposalImage[];
 
-  files: string[];
+  files: ProposalFile[];
 
   links: CommonLink[];
+}
+
+export interface ProposalImage {
+  title: string;
+  value: string;
+}
+
+export interface ProposalFile {
+  title: string;
+  value: string;
 }

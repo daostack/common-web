@@ -13,9 +13,9 @@ import { Common } from "@/shared/models";
 import { uploadFile } from "@/shared/utils/firebaseUploadFile";
 import { Button, ButtonIcon, Loader, ModalFooter } from "@/shared/components";
 import DeleteIcon from "@/shared/icons/delete.icon";
-import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
 import { getBankDetails } from "@/containers/Common/store/actions";
 import { MAX_PROPOSAL_TITLE_LENGTH } from "./constants";
+import { CreateFundsAllocationFormData } from "./types";
 
 const validationSchema = Yup.object({
   description: Yup.string().required("Field required"),
@@ -53,7 +53,7 @@ const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png";
 interface AddProposalFormInterface {
   common: Common;
   saveProposalState: (
-    payload: Partial<CreateFundingRequestProposalPayload>
+    payload: CreateFundsAllocationFormData
   ) => void;
   addBankDetails: () => void;
 }
