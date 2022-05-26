@@ -16,7 +16,7 @@ export interface BasicArgsProposal {
   links: CommonLink[];
 }
 
-export interface ProposalImges {
+export interface ProposalImage {
   title: string;
   value: string;
 }
