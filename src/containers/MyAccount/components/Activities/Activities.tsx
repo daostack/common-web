@@ -19,6 +19,7 @@ import {
   MembershipRequestListItem,
   ProposalDetailModal,
 } from "@/containers/Common/components";
+import { useUserCommons } from "@/containers/Common/hooks";
 import { CollectionSummaryCard } from "./CollectionSummaryCard";
 import {
   Common,
@@ -70,6 +71,11 @@ const INITIAL_SHOW_SLIDER_VIEWALL_STATE: ShowSliderViewAllState = {
 
 const Activities: FC = () => {
   const dispatch = useDispatch();
+  const {
+    fetched: areUserCommonsFetched,
+    data: myCommons,
+    fetchUserCommons,
+  } = useUserCommons();
   const user = useSelector(selectUser());
   const commons = useSelector(selectCommonList());
   const isCommonsLoaded = useSelector(selectIsCommonsLoaded());
@@ -79,8 +85,7 @@ const Activities: FC = () => {
   const currentCommon = useSelector(selectCommonDetail());
   const screenSize = useSelector(getScreenSize());
   const { isShowing, onOpen, onClose } = useModal(false);
-  const [myCommons, setMyCommons] = useState<Common[] | null>(null);
-  const myCommonsAmount = myCommons?.length || 0;
+  const myCommonsAmount = myCommons.length;
   const [myFundingProposals, setMyFundingProposals] = useState<Proposal[] | null>(null);
   const myFundingProposalsAmount = myFundingProposals?.length || 0;
   const [myMembershipRequests, setMyMembershipRequests] = useState<Proposal[] | null>(null);
@@ -266,15 +271,8 @@ const Activities: FC = () => {
   }, [dispatch, myProposals, user]);
 
   useEffect(() => {
-    if (commons.length === 0 || !user?.uid)
-      return
-
-    const myCommons = commons.filter((common) =>
-      common.members.some((member) => member.userId === user?.uid)
-    );
-
-    setMyCommons(myCommons);
-  }, [setMyCommons, commons, user]);
+    fetchUserCommons();
+  }, [fetchUserCommons]);
 
   useEffect(() => {
     if (!myProposals.length)
@@ -354,7 +352,7 @@ const Activities: FC = () => {
               </NavLink>
             </div>
             {
-              (isCommonsLoaded && !!myCommons)
+              (isCommonsLoaded && areUserCommonsFetched)
               ? (myCommonsAmount !== 0)
                 ? renderCollectionList(myCommons, ActivitiesCollection.COMMONS)
                 : <div>No commons yet</div>
