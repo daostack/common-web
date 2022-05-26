@@ -8,6 +8,7 @@ import { NotificationProvider } from "@/shared/components/Notification";
 import {
   CommonContainer,
   ProposalContainer,
+  ProposalCommentContainer,
   DiscussionContainer,
   DiscussionMessageContainer,
 } from "../Common";
@@ -112,6 +113,7 @@ const App = () => {
             <Route path="/" exact component={LandingContainer} />
             <Route path={ROUTE_PATHS.COMMON_LIST} component={CommonContainer} />
             <Route path={ROUTE_PATHS.PROPOSAL_DETAIL} component={ProposalContainer} />
+            <Route path={ROUTE_PATHS.PROPOSAL_COMMENT} component={ProposalCommentContainer} />
             <Route path={ROUTE_PATHS.DISCUSSION_DETAIL} component={DiscussionContainer} />
             <Route path={ROUTE_PATHS.DISCUSSION_MESSAGE} component={DiscussionMessageContainer} />
             <PrivateRoute

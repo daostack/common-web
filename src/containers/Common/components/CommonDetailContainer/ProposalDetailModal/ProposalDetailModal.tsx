@@ -1,25 +1,30 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useMemo } from "react";
+import classNames from "classnames";
 
 import { Loader, UserAvatar } from "@/shared/components";
-import { Common, Proposal } from "@/shared/models";
+import {
+  Common,
+  Proposal,
+  ProposalWithHighlightedComment,
+  isProposalWithHighlightedComment,
+} from "@/shared/models";
 import {
   formatPrice,
   getDaysAgo,
   getUserName,
-} from "../../../../../shared/utils";
+} from "@/shared/utils";
 import { ChatComponent } from "../ChatComponent";
 import { VotesComponent } from "../VotesComponent";
 import { ProposalState } from "../ProposalState";
 import { addMessageToProposal } from "@/containers/Common/store/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/containers/Auth/store/selectors";
-import "./index.scss";
 import { getScreenSize } from "@/shared/store/selectors";
-import { ScreenSize } from "@/shared/constants";
-import classNames from "classnames";
+import { ScreenSize, ChatType } from "@/shared/constants";
+import "./index.scss";
 
-interface DiscussionDetailModalProps {
-  proposal: Proposal | null;
+interface ProposalDetailModalProps {
+  proposal: Proposal | ProposalWithHighlightedComment | null;
   common: Common | null;
   onOpenJoinModal?: () => void;
   isJoiningPending?: boolean;
@@ -32,7 +37,7 @@ export default function ProposalDetailModal({
   onOpenJoinModal,
   isCommonMember,
   isJoiningPending,
-}: DiscussionDetailModalProps) {
+}: ProposalDetailModalProps) {
   const date = new Date();
   const dispatch = useDispatch();
   const user = useSelector(selectUser());
@@ -40,6 +45,12 @@ export default function ProposalDetailModal({
     proposal?.fundingRequest?.amount || proposal?.join?.funding;
   const screenSize = useSelector(getScreenSize());
   const [expanded, setExpanded] = useState(true);
+  const highlightedCommentId = useMemo(
+    () => isProposalWithHighlightedComment(proposal)
+          ? proposal.highlightedCommentId
+          : null,
+    [proposal]
+  );
 
   const sendMessage = useCallback(
     (message: string) => {
@@ -142,6 +153,8 @@ export default function ProposalDetailModal({
         <ChatComponent
           common={common}
           discussionMessage={proposal.discussionMessage || []}
+          type={ChatType.ProposalComments}
+          highlightedMessageId={highlightedCommentId}
           onOpenJoinModal={onOpenJoinModal}
           isCommonMember={isCommonMember}
           isJoiningPending={isJoiningPending}
