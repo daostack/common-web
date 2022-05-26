@@ -60,6 +60,7 @@ const AmountSelection: FC<AmountSelectionProps> = (props) => {
         The change will apply starting from the next charge.
       </p>
       <ContributionAmountSelection
+        minimalAmount={minSelectionAmount}
         currentAmount={currentAmount}
         pricePostfix="/mo"
         onChange={handleChange}

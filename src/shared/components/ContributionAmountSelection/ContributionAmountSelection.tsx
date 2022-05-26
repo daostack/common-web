@@ -19,6 +19,7 @@ import "./index.scss";
 
 interface IProps {
   className?: string;
+  minimalAmount: number;
   contributionAmount?: number;
   currentAmount?: number;
   pricePostfix?: string;
@@ -33,6 +34,7 @@ interface IProps {
 export default function ContributionAmountSelection(props: IProps) {
   const {
     className,
+    minimalAmount,
     contributionAmount,
     currentAmount,
     pricePostfix = "",
@@ -40,9 +42,11 @@ export default function ContributionAmountSelection(props: IProps) {
     onChange,
   } = props;
   const [isCurrencyInputTouched, setIsCurrencyInputTouched] = useState(false);
+  const zeroContribution = false;
   const amountsForSelection = useMemo(
-    () => getAmountsForSelection(minFeeToJoin, zeroContribution, currentAmount),
-    [minFeeToJoin, zeroContribution, currentAmount]
+    () =>
+      getAmountsForSelection(minimalAmount, zeroContribution, currentAmount),
+    [minimalAmount, zeroContribution, currentAmount]
   );
   const [selectedContribution, setSelectedContribution] = useState<
     number | "other" | null
@@ -54,7 +58,13 @@ export default function ContributionAmountSelection(props: IProps) {
   >(() =>
     getInitialEnteredContributionValue(selectedContribution, contributionAmount)
   );
+  const formattedMinimalAmount = formatPrice(
+    zeroContribution ? 0 : minimalAmount,
+    { shouldMillify: false, shouldRemovePrefixFromZero: false }
+  );
   const currencyInputError = validateContributionAmount(
+    minimalAmount,
+    zeroContribution,
     enteredContribution
   );
 
@@ -87,7 +97,7 @@ export default function ContributionAmountSelection(props: IProps) {
   const handleCurrencyInputChange = useCallback(
     (value: string | undefined) => {
       const hasError = Boolean(
-        validateContributionAmount(minFeeToJoin, zeroContribution, value)
+        validateContributionAmount(minimalAmount, zeroContribution, value)
       );
       const convertedValue = Number(value);
 
@@ -98,7 +108,7 @@ export default function ContributionAmountSelection(props: IProps) {
         false
       );
     },
-    [minFeeToJoin, zeroContribution, onChange]
+    [minimalAmount, zeroContribution, onChange]
   );
 
   const handleContinueClick = useCallback(() => {
@@ -148,7 +158,7 @@ export default function ContributionAmountSelection(props: IProps) {
           <CurrencyInput
             name="contributionAmount"
             label="Other"
-            placeholder={formattedMinFeeToJoin}
+            placeholder={formattedMinimalAmount}
             value={enteredContribution}
             onValueChange={handleCurrencyInputChange}
             onBlur={handleCurrencyInputBlur}
