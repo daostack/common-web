@@ -49,6 +49,21 @@ export default function ProposalItemComponent({
     <div className="discussion-item-wrapper">
       <ProposalState proposal={proposal} />
       <div className="proposal-charts-wrapper">
+        <div className="discussion-top-bar">
+          <div className="img-wrapper">
+            <UserAvatar
+              photoURL={proposal.proposer?.photoURL}
+              nameForRandomAvatar={proposal.proposer?.email}
+              userName={getUserName(proposal.proposer)}
+            />
+          </div>
+          <div className="creator-information">
+            <div className="name">{getUserName(proposal.proposer)}</div>
+            <div className="days-ago">
+              {getDaysAgo(date, proposal.createdAt)}
+            </div>
+          </div>
+        </div>
         <div
           className="proposal-title"
           onClick={() => loadProposalDetail(proposal)}
@@ -77,20 +92,9 @@ export default function ProposalItemComponent({
         </div>
       </div>
       <div className="line" />
-      <div className="discussion-top-bar">
-        <div className="img-wrapper">
-          <UserAvatar
-            photoURL={proposal.proposer?.photoURL}
-            nameForRandomAvatar={proposal.proposer?.email}
-            userName={getUserName(proposal.proposer)}
-          />
-        </div>
-        <div className="creator-information">
-          <div className="name">{getUserName(proposal.proposer)}</div>
-          <div className="days-ago">{getDaysAgo(date, proposal.createdAt)}</div>
-        </div>
-      </div>
+
       <div className="discussion-content">
+        <div className="proposal-pitch-title">Proposal Pitch</div>
         <div
           className={classNames("description", { full: shouldShowFullText })}
           ref={descriptionRef}

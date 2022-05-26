@@ -5,10 +5,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom:  1.5rem;
 
   .title {
-    font-size: 1.5rem;
+    font-size: $moderate-med;
     font-weight: bold;
     line-height: 1.17;
     letter-spacing: normal;
@@ -49,22 +49,22 @@
     border-radius: 14px;
     box-shadow: 0 3px 8px 0 #001a3614;
     background-color: $white;
-    margin-bottom: 24px;
+    margin-bottom: 1.5rem;
     padding-bottom: 20px;
 
     .state-wrapper {
       margin: 0 -40px;
-      margin-bottom: 24px;
+      margin-bottom: 1.5rem;
 
       .state-inner-wrapper {
         width: 100%;
         margin: 0;
         border-radius: 6px 6px 0 0;
         display: flex;
-        margin-bottom: 24px;
+        margin-bottom: 1.5rem;
         align-items: center;
         justify-content: center;
-        height: 32px;
+        height: 3.125rem;
 
         img {
           width: 17px;
@@ -104,23 +104,24 @@
 
     .countdown-wrapper {
       margin: 0 -40px;
-      margin-bottom: 24px;
+      margin-bottom: 1.5rem;
 
       .inner-wrapper {
         width: 100%;
         margin: 0;
+        height: 3.125rem;
       }
     }
 
     .proposal-charts-wrapper {
-      margin-bottom: 24px;
+      margin-bottom:1.5rem;
 
       .proposal-title {
         font-size: 18px;
         font-weight: bold;
         text-align: center;
-        color: #001a36;
-        margin-bottom: 24px;
+        color: $secondary-blue;
+        margin-bottom: 1.5rem;
         cursor: pointer;
         overflow-wrap: break-word;
         display: -webkit-box;
@@ -148,7 +149,7 @@
         .amount {
           font-size: 18px;
           font-weight: bold;
-          color: #001a36;
+          color: $secondary-blue;
           margin-left: 4px;
         }
       }
@@ -161,7 +162,8 @@
 
     .discussion-top-bar {
       display: flex;
-      margin: 24px 0;
+      margin: 1rem 0;
+      justify-content: center;
 
       .img-wrapper {
         margin-right: 16px;
@@ -183,7 +185,7 @@
       .creator-information {
         .name {
           font-size: 16px;
-          color: #001a36;
+          color: $secondary-blue;
         }
 
         .days-ago {
@@ -194,6 +196,18 @@
     }
 
     .discussion-content {
+      .proposal-pitch-title{
+        margin-top:1rem;
+        margin-bottom: 1.5rem;
+        font-size: 18px;
+        font-weight: bold;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.2;
+        letter-spacing: normal;
+        text-align: center;
+        color: $secondary-blue;
+      }
       .additional-information {
         .links {
           display: flex;
@@ -287,7 +301,7 @@
 
       .description {
         font-size: 16px;
-        color: #001a36;
+        color: $secondary-blue;
         margin-bottom: 16px;
         overflow-wrap: break-word;
         display: -webkit-box;
@@ -308,7 +322,7 @@
         color: #7786ff;
         cursor: pointer;
         margin-bottom: 16px;
-        color: #001a36;
+        color: $secondary-blue;
 
         &:hover {
           color: #7786ff;
@@ -361,7 +375,7 @@
 
   .dropdown-menu {
     position: absolute;
-    top: 2.5rem;
+    top: 4.5rem;
     right: 1rem;
   }
 }
@@ -370,8 +384,8 @@
   .proposal-title-wrapper {
     .add-button {
       position: fixed;
-      right: 24px;
-      bottom: 24px;
+      right: 1.5rem;
+      bottom:  1.5rem;
       z-index: 2;
       box-shadow: 0 0 6px 0 $fixed-button-shadow;
       background-color: $purple;
