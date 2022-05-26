@@ -660,3 +660,25 @@ export const getCommonGovernanceRules = async (
 
   return governance?.unstructuredRules || null;
 };
+
+export const getUserCommons = async (userId: string): Promise<Common[]> => {
+  const querySnapshot = await firebase
+    .firestore()
+    .collectionGroup(SubCollections.Members)
+    .where("userId", "==", userId)
+    .get();
+  const promises: Promise<firebase.firestore.DocumentSnapshot>[] = [];
+
+  querySnapshot.forEach((queryDocumentSnapshot) => {
+    const documentReference = queryDocumentSnapshot.ref;
+    const documentGrandParent = documentReference.parent.parent;
+
+    if (documentGrandParent) {
+      promises.push(documentGrandParent.get());
+    }
+  });
+
+  const results = await Promise.all(promises);
+
+  return results.map((result) => result.data() as Common);
+};
