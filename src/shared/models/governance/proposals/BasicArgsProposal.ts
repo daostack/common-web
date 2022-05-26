@@ -21,7 +21,7 @@ export interface ProposalImage {
   value: string;
 }
 
-export interface ProposalFiles {
+export interface ProposalFile {
   title: string;
   value: string;
 }
