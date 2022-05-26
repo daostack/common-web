@@ -9,7 +9,7 @@ export interface BasicArgsProposal {
 
   description: string;
 
-  images: ProposalImges[];
+  images: ProposalImage[];
 
   files: ProposalFiles[];
 
