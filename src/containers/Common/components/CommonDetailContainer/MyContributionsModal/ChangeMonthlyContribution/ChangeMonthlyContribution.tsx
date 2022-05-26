@@ -131,7 +131,6 @@ const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
       case ChangeMonthlyContributionStep.AmountSelection:
         return (
           <AmountSelection
-            common={common}
             currentAmount={currentSubscription.amount}
             onSelect={handleAmountSelect}
             setShouldShowGoBackButton={setShouldShowGoBackButton}
