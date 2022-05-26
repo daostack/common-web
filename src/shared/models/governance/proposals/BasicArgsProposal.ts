@@ -11,7 +11,7 @@ export interface BasicArgsProposal {
 
   images: ProposalImage[];
 
-  files: ProposalFiles[];
+  files: ProposalFile[];
 
   links: CommonLink[];
 }
