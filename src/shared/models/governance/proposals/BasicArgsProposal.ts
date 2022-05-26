@@ -9,9 +9,9 @@ export interface BasicArgsProposal {
 
   description: string;
 
-  images: string[];
+  images: { title: string, value: string }[]
 
-  files: string[];
+  files: { title: string, value: string }[]
 
   links: CommonLink[];
 }
