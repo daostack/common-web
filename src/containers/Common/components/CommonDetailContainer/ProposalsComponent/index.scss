@@ -5,10 +5,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: $moderate-med;
 
   .title {
-    font-size: 1.5rem;
+    font-size: $moderate-med;
     font-weight: bold;
     line-height: 1.17;
     letter-spacing: normal;
@@ -49,19 +49,19 @@
     border-radius: 14px;
     box-shadow: 0 3px 8px 0 #001a3614;
     background-color: $white;
-    margin-bottom: 24px;
+    margin-bottom: $moderate-med;
     padding-bottom: 20px;
 
     .state-wrapper {
       margin: 0 -40px;
-      margin-bottom: 24px;
+      margin-bottom: $moderate-med;
 
       .state-inner-wrapper {
         width: 100%;
         margin: 0;
         border-radius: 6px 6px 0 0;
         display: flex;
-        margin-bottom: 24px;
+        margin-bottom: $moderate-med;
         align-items: center;
         justify-content: center;
         height: 3.125rem;
@@ -104,7 +104,7 @@
 
     .countdown-wrapper {
       margin: 0 -40px;
-      margin-bottom: 24px;
+      margin-bottom: $moderate-med;
 
       .inner-wrapper {
         width: 100%;
@@ -114,14 +114,14 @@
     }
 
     .proposal-charts-wrapper {
-      margin-bottom: 24px;
+      margin-bottom: $moderate-med;
 
       .proposal-title {
         font-size: 18px;
         font-weight: bold;
         text-align: center;
         color: #001a36;
-        margin-bottom: 24px;
+        margin-bottom: $moderate-med;
         cursor: pointer;
         overflow-wrap: break-word;
         display: -webkit-box;
@@ -198,7 +198,7 @@
     .discussion-content {
       .proposal-pitch-title{
         margin-top: 1rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: $moderate-med;
         font-size: 1.25rem;
         font-weight: bold;
         font-stretch: normal;
@@ -384,8 +384,8 @@
   .proposal-title-wrapper {
     .add-button {
       position: fixed;
-      right: 24px;
-      bottom: 24px;
+      right: $moderate-med;
+      bottom: $moderate-med;
       z-index: 2;
       box-shadow: 0 0 6px 0 $fixed-button-shadow;
       background-color: $purple;
