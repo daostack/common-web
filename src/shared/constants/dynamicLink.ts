@@ -8,4 +8,5 @@ export enum DynamicLinkType {
   Proposal = "proposal",
   Discussion = "discussion",
   DiscussionMessage = "discussionMessage",
+  ProposalComment = "proposalComment",
 }

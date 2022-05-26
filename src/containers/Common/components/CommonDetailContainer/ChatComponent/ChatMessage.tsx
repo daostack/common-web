@@ -3,14 +3,30 @@ import classNames from "classnames";
 import { Linkify, ElementDropdown } from "@/shared/components";
 import { DiscussionMessage } from "@/shared/models";
 import { getUserName, getUserInitials } from "@/shared/utils";
-import { DynamicLinkType, Orientation } from "@/shared/constants";
+import { DynamicLinkType, Orientation, ChatType } from "@/shared/constants";
 
 interface ChatMessageProps {
   disscussionMessage: DiscussionMessage;
+  chatType: ChatType;
   highlighted?: boolean;
 }
 
-export default function ChatMessage({ disscussionMessage, highlighted = false }: ChatMessageProps) {
+const getDynamicLinkByChatType = (chatType: ChatType): DynamicLinkType => {
+  switch (chatType) {
+    case ChatType.DiscussionMessages:
+      return DynamicLinkType.DiscussionMessage;
+    case ChatType.ProposalComments:
+      return DynamicLinkType.ProposalComment;
+  }
+};
+
+export default function ChatMessage(
+  {
+    disscussionMessage,
+    chatType,
+    highlighted = false,
+  }: ChatMessageProps
+) {
   const [imageError, setImageError] = useState(false);
   const mDate = new Date(disscussionMessage.createTime.seconds * 1000);
 
@@ -55,7 +71,7 @@ export default function ChatMessage({ disscussionMessage, highlighted = false }:
             </div>
           </div>
           <ElementDropdown
-            linkType={DynamicLinkType.DiscussionMessage}
+            linkType={getDynamicLinkByChatType(chatType)}
             elem={disscussionMessage}
             className="dropdown-menu"
             variant={Orientation.Horizontal}
