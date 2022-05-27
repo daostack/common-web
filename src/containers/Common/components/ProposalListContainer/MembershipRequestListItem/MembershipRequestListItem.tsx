@@ -29,7 +29,7 @@ const MembershipRequestListItem: FC<ProposalListItem> = (
     (async () => {
       if (!proposal) return;
 
-      const proposalCommon = await fetchCommonDetail(proposal.commonId);
+      const proposalCommon = await fetchCommonDetail(proposal.data.args.commonId);
 
       setCommon(proposalCommon);
     })();
@@ -61,6 +61,7 @@ const MembershipRequestListItem: FC<ProposalListItem> = (
                     <div className="membership-request-item__info-join">
                         <div className="amount">
                                 {
+                                  // TODO: What to do with this logic? We don't have amount in member admittance anymore.
                                     formatPrice(proposal.join?.funding,
                                         {
                                             shouldRemovePrefixFromZero: false,
@@ -73,7 +74,7 @@ const MembershipRequestListItem: FC<ProposalListItem> = (
                             {
                                 getDaysAgo(
                                     new Date(),
-                                    proposal.createdAt || proposal.createTime,
+                                    proposal.createdAt,
                                     { withExactTime: true },
                                 )
                             }
