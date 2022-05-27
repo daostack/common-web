@@ -13,7 +13,6 @@ import {
   Payment,
   Subscription,
   BankAccountDetails,
-  ProposalType,
 } from "../../../shared/models";
 import { startLoading, stopLoading } from "@/shared/store/actions";
 import {
@@ -109,7 +108,7 @@ export function* getCommonsList(): Generator {
     );
     const proposalGrouped = groupBy<Proposal>(
       proposals,
-      (item: Proposal) => item.commonId
+      (item: Proposal) => item.data.args.commonId
     );
 
     const messagesGrouped = groupBy<DiscussionMessage>(
@@ -123,7 +122,7 @@ export function* getCommonsList(): Generator {
       c.messages = messagesGrouped.get(c.id) ?? [];
 
       c.proposals = c.proposals?.filter(
-        (e) => e.type === ProposalType.FundingRequest
+        (e) => e.type === ProposalsTypes.FUNDS_ALLOCATION
       );
 
       return c;
@@ -281,9 +280,7 @@ export function* loadDiscussionDetail(
   }
 }
 
-export function* loadProposalList(
-  action: ReturnType<typeof actions.loadProposalList.request>
-): Generator {
+export function* loadProposalList(): Generator {
   try {
     yield put(startLoading());
 
@@ -291,7 +288,9 @@ export function* loadProposalList(
       selectProposals()
     )) as Proposal[];
 
-    const ownerIds = Array.from(new Set(proposals.map((d) => d.proposerId)));
+    const ownerIds = Array.from(
+      new Set(proposals.map((d) => d.data.args.proposerId))
+    );
     const discussions_ids = proposals.map((d) => d.id);
 
     const owners = (yield fetchOwners(ownerIds)) as User[];
@@ -301,7 +300,7 @@ export function* loadProposalList(
 
     const loadedProposals = proposals.map((d) => {
       d.discussionMessage = dMessages.filter((dM) => dM.discussionId === d.id);
-      d.proposer = owners.find((o) => o.uid === d.proposerId);
+      d.proposer = owners.find((o) => o.uid === d.data.args.proposerId);
       return d;
     });
 
@@ -514,17 +513,19 @@ export function* createFundingProposal(
   action: ReturnType<typeof actions.createFundingProposal.request>
 ): Generator {
   try {
+    const data = action.payload.payload;
+
     yield put(startLoading());
     const fundingProposal = (yield call(createProposalApi, {
-      ...action.payload.payload.data,
+      ...data,
       type: ProposalsTypes.FUNDS_ALLOCATION,
     })) as FundsAllocation;
 
     yield call(
       subscribeToCommonProposal,
-      action.payload.payload.data.args.commonId,
+      data.args.commonId,
       async (data) => {
-        const ds = await fetchCommonProposals(action.payload.payload.data.args.commonId);
+        const ds = await fetchCommonProposals(data.args.commonId);
 
         store.dispatch(actions.setProposals(ds));
         store.dispatch(actions.loadProposalList.request());

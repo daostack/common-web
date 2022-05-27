@@ -1,7 +1,11 @@
-import { Moderation, Time } from "./shared";
-
-import { DiscussionMessage, User } from ".";
+import {
+  FundsAllocation,
+  FundsRequest,
+  MemberAdmittance,
+} from "@/shared/models/governance/proposals";
+import { DiscussionMessage } from "./DiscussionMessage";
 import { VoteOutcome } from "./Votes";
+import { User } from "./User";
 
 export enum ProposalFundingState {
   NotRelevant = "notRelevant",
@@ -63,52 +67,10 @@ export interface Vote {
   voterId: string;
 }
 
-export interface Proposal {
-  commonId: string;
-  proposerId: string;
-  countdownPeriod: number;
-  createTime: Time;
-  createdAt: Time;
-  expiresAt: Date;
-  fundingRequest?: { funded: boolean; amount: number };
-
-  id: string;
-  moderation: Moderation;
-
-  quietEndingPeriod: number;
-
-  updatedAt: Time;
-  votes: Vote[];
-  votesAgainst?: number;
-  votesFor?: number;
-  votesAbstained?: number;
-  user?: User;
-  proposer?: User;
+export type Proposal = (MemberAdmittance | FundsRequest | FundsAllocation) & {
   discussionMessage?: DiscussionMessage[];
-  isLoaded?: boolean;
-
-  title: string;
-
-  state: string;
-  description: {
-    description: string;
-    links: ProposalLink[];
-    images: ProposalLink[];
-    files: File[];
-    title: string;
-  };
-  type: ProposalType;
-  paymentState?: ProposalPaymentState;
-  fundingState?: ProposalFundingState;
-  /** Details about the join request. Exists only on join request proposals */
-  join?: ProposalJoin;
-  fundingProcessStage?: FundingProcessStage;
-
-  approvalDate?: Time;
-  payoutDocs?: DocInfo[];
-  payoutDocsComment?: string;
-  payoutDocsRejectionReason?: string;
-}
+  proposer?: User;
+};
 
 export interface ProposalListItem {
   proposal: Proposal;
