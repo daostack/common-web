@@ -182,7 +182,10 @@ export const createFundingProposal = createAsyncAction(
   CommonsActionTypes.CREATE_FUNDING_PROPOSAL_FAILURE
 )<
   {
-    payload: CreateProposal[ProposalsTypes.FUNDS_ALLOCATION]["data"];
+    payload: Omit<
+      CreateProposal[ProposalsTypes.FUNDS_ALLOCATION]["data"],
+      "type"
+    >;
     callback: (step: AddProposalSteps) => void;
   },
   CreateProposal[ProposalsTypes.FUNDS_ALLOCATION]["response"],
