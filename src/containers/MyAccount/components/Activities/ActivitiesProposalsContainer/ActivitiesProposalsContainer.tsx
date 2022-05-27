@@ -9,15 +9,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useParams } from "react-router-dom";
 import classNames from "classnames";
 
-import { Proposal, ProposalType } from "@/shared/models";
+import { Proposal } from "@/shared/models";
 import {
     FundingProposalListItem,
     MembershipRequestListItem,
     ProposalDetailModal
 } from "@/containers/Common/components";
 import { Loader, Modal } from "@/shared/components";
+import { useCommonMember } from "@/containers/Common/hooks";
 import { useModal } from "@/shared/hooks";
-import { ROUTE_PATHS, ScreenSize } from "@/shared/constants";
+import { ProposalsTypes, ROUTE_PATHS, ScreenSize } from "@/shared/constants";
 import {
     selectUserProposalList,
     selectCurrentProposal,
@@ -38,7 +39,7 @@ import {
 import "./index.scss";
 
 interface MyProposalsContainerRouterParams {
-    proposalType: ProposalType;
+    proposalType: ProposalsTypes;
 }
 
 const ActivitiesProposalsContainer: FC = () => {
@@ -52,16 +53,16 @@ const ActivitiesProposalsContainer: FC = () => {
   const screenSize = useSelector(getScreenSize());
   const { isShowing, onOpen, onClose } = useModal(false);
   const [myProposalsByType, setMyProposalsByType] = useState<Proposal[]>([]);
+  const {
+    fetched: isCommonMemberFetched,
+    data: commonMember,
+    fetchCommonMember,
+    resetCommonMember,
+  } = useCommonMember();
 
   const isMobileView = useMemo(() => (screenSize === ScreenSize.Mobile), [screenSize]);
 
-  const isCommonMember = useMemo(() => {
-    const commonMember = currentCommon?.members.find(
-      (member) => member.userId === user?.uid
-    );
-
-    return Boolean(commonMember);
-  }, [currentCommon, user]);
+  const isCommonMember = Boolean(commonMember);
 
   const getProposalDetail = useCallback(
     (payload: Proposal) => {
@@ -78,13 +79,13 @@ const ActivitiesProposalsContainer: FC = () => {
 
   const renderListItem = useCallback((proposal: Proposal) => {
     switch (proposalType) {
-      case ProposalType.FundingRequest:
+      case ProposalsTypes.FUNDS_ALLOCATION:
         return <FundingProposalListItem
           proposal={proposal}
           key={proposal.id}
           loadProposalDetails={getProposalDetail}
         />;
-      case ProposalType.Join:
+      case ProposalsTypes.MEMBER_ADMITTANCE:
         return <MembershipRequestListItem
           proposal={proposal}
           key={proposal.id}
@@ -92,6 +93,12 @@ const ActivitiesProposalsContainer: FC = () => {
         />;
     }
   }, [proposalType, getProposalDetail]);
+
+  useEffect(() => {
+    if (currentProposal) {
+      fetchCommonMember(currentProposal.data.args.commonId);
+    }
+  }, [currentProposal, fetchCommonMember]);
 
   useEffect(() => {
     if (myProposals.length === 0 && user?.uid)
@@ -112,16 +119,17 @@ const ActivitiesProposalsContainer: FC = () => {
   useEffect(() => {
     if (!currentProposal) return;
 
+    resetCommonMember();
     dispatch(
       getCommonDetail.request({
-        payload: currentProposal?.commonId,
+        payload: currentProposal.data.args.commonId,
       })
     );
 
     return () => {
       dispatch(closeCurrentCommon());
     };
-  }, [dispatch, currentProposal]);
+  }, [dispatch, resetCommonMember, currentProposal]);
 
   return (
     <>
@@ -139,11 +147,17 @@ const ActivitiesProposalsContainer: FC = () => {
               headerWrapper: "activities-proposals__detail-modal-header-wrapper",
           }}
         >
-          <ProposalDetailModal
+          {isCommonMemberFetched ? (
+            <ProposalDetailModal
               proposal={currentProposal}
               common={currentCommon}
               isCommonMember={isCommonMember}
-          />
+            />
+          ) : (
+            <div>
+              <Loader />
+            </div>
+          )}
         </Modal>
       }
       <div className="activities-proposals">
@@ -153,7 +167,7 @@ const ActivitiesProposalsContainer: FC = () => {
           >
             <img src="/icons/left-arrow.svg" alt="left-arrow" />
             {
-              (proposalType === ProposalType.FundingRequest)
+              (proposalType === ProposalsTypes.FUNDS_ALLOCATION)
                 ? "Proposals "
                 : "Membership requests "
             }({myProposalsByType.length})

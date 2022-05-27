@@ -37,11 +37,6 @@ export enum ProposalState {
   EXPIRED_INVOCIES_NOT_UPLOADED = "expiredInvociesNotUploaded",
 }
 
-export enum ProposalType {
-  FundingRequest = "fundingRequest",
-  Join = "join",
-}
-
 interface ProposalJoin {
   __typename?: "ProposalJoin";
   cardId: string;
