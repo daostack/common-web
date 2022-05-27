@@ -33,7 +33,7 @@ export interface Proposals {
 }
 
 export const isFundsAllocationProposal = (
-  proposal?: Proposal
+  proposal?: Proposal | null
 ): proposal is FundsAllocation =>
   Boolean(proposal?.type === ProposalsTypes.FUNDS_ALLOCATION);
 
