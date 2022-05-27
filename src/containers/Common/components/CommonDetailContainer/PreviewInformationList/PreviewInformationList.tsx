@@ -46,7 +46,7 @@ export default function PreviewInformationList(
         [...proposals].splice(0, 5).map((d) => {
           return {
             id: d.id,
-            value: d.description.title || d.description.description,
+            value: d.data.args.title || d.data.args.description,
           };
         })
       );
