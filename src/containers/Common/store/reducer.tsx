@@ -148,8 +148,7 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
   )
   .handleAction(actions.getGovernance.success, (state, action) =>
     produce(state, (nextState) => {
-      // Using typeof here to fix the issue with immer library's DraftArray
-      nextState.governance = action.payload as typeof nextState.governance;
+      nextState.governance = action.payload;
     })
   )
   .handleAction(actions.getGovernance.failure, (state) =>
