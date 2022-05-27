@@ -85,8 +85,6 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       const proposal = { ...action.payload };
       const { proposals } = state;
 
-      proposal.isLoaded = true;
-
       if (proposals.length) {
         const index = proposals.findIndex((d) => d.id === proposal.id);
 
