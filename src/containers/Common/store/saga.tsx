@@ -514,17 +514,19 @@ export function* createFundingProposal(
   action: ReturnType<typeof actions.createFundingProposal.request>
 ): Generator {
   try {
+    const data = action.payload.payload;
+
     yield put(startLoading());
     const fundingProposal = (yield call(createProposalApi, {
-      ...action.payload.payload.data,
+      ...data,
       type: ProposalsTypes.FUNDS_ALLOCATION,
     })) as FundsAllocation;
 
     yield call(
       subscribeToCommonProposal,
-      action.payload.payload.data.args.commonId,
+      data.args.commonId,
       async (data) => {
-        const ds = await fetchCommonProposals(action.payload.payload.data.args.commonId);
+        const ds = await fetchCommonProposals(data.args.commonId);
 
         store.dispatch(actions.setProposals(ds));
         store.dispatch(actions.loadProposalList.request());
