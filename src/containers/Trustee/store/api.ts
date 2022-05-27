@@ -1,20 +1,20 @@
 import Api from "../../../services/Api";
-import { ApiEndpoint } from "../../../shared/constants";
+import { ApiEndpoint, ProposalsTypes } from "@/shared/constants";
+import { Collection, Proposal, ProposalState } from "@/shared/models";
 import {
-  Collection,
-  FundingProcessStage,
-  Proposal,
-  ProposalType,
-  ProposalState,
-} from "../../../shared/models";
+  FundsAllocation,
+  FundingAllocationStatus,
+} from "@/shared/models/governance/proposals";
 import {
   transformFirebaseDataList,
   transformFirebaseDataSingle,
-} from "../../../shared/utils";
-import firebase from "../../../shared/utils/firebase";
+} from "@/shared/utils";
+import firebase from "@/shared/utils/firebase";
 import { ApproveOrDeclineProposalDto } from "../interfaces";
 
-function sortByCreateTime(data: Proposal[]) {
+function sortByCreateTime<
+  T extends { createdAt: firebase.firestore.Timestamp }[]
+>(data: T): T {
   return data.sort((itemA, itemB) => {
     if (!itemB.createdAt) {
       return -1;
@@ -76,16 +76,19 @@ export async function fetchApprovedProposals(): Promise<Proposal[]> {
   return sortByCreateTime(data);
 }
 
-export async function fetchDeclinedProposals(): Promise<Proposal[]> {
+export async function fetchDeclinedProposals(): Promise<FundsAllocation[]> {
   const proposals = await firebase
     .firestore()
     .collection(Collection.Proposals)
-    .where("payoutDocsRejectionReason", "!=", "")
+    .where("type", "==", ProposalsTypes.FUNDS_ALLOCATION)
+    .where("data.legal.payoutDocsRejectionReason", "!=", null)
+    .where(
+      "data.tracker.status",
+      "==",
+      FundingAllocationStatus.PENDING_INVOICE_UPLOAD
+    )
     .get();
-  const data = transformFirebaseDataList<Proposal>(proposals).filter(
-    (proposal) =>
-      proposal.fundingProcessStage === FundingProcessStage.PendingInvoiceUpload
-  );
+  const data = transformFirebaseDataList<FundsAllocation>(proposals);
 
   return sortByCreateTime(data);
 }
