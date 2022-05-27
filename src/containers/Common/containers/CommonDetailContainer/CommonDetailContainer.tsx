@@ -13,7 +13,6 @@ import {
   DiscussionWithHighlightedMessage,
   Proposal,
   ProposalState,
-  ProposalType,
 } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice, getUserName } from "@/shared/utils";
@@ -36,6 +35,7 @@ import {
   ScreenSize,
   ShareViewType,
   DynamicLinkType,
+  ProposalsTypes,
   ROUTE_PATHS,
 } from "@/shared/constants";
 import {
@@ -153,7 +153,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const fundingProposals = useMemo(
     () =>
       proposals.filter(
-        (proposal) => proposal.type === ProposalType.FundingRequest
+        (proposal) => proposal.type === ProposalsTypes.FUNDS_ALLOCATION
       ),
     [proposals]
   );
@@ -174,7 +174,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const isJoiningPending = proposals.some(
     (proposal) =>
       proposal.state === ProposalState.COUNTDOWN &&
-      proposal.proposerId === user?.uid
+      proposal.data.args.proposerId === user?.uid
   );
   const shouldAllowJoiningToCommon =
     !isCommonMember && (isCreationStageReached || !isJoiningPending);
