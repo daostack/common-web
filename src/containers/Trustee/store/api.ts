@@ -27,17 +27,20 @@ function sortByCreateTime<
   });
 }
 
-export async function fetchPendingApprovalProposals(): Promise<Proposal[]> {
+export async function fetchPendingApprovalProposals(): Promise<
+  FundsAllocation[]
+> {
   const proposals = await firebase
     .firestore()
     .collection(Collection.Proposals)
+    .where("type", "==", ProposalsTypes.FUNDS_ALLOCATION)
     .where(
-      "fundingProcessStage",
+      "data.tracker.status",
       "==",
-      FundingProcessStage.PendingInvoiceApproval
+      FundingAllocationStatus.PENDING_INVOICE_APPROVAL
     )
     .get();
-  const data = transformFirebaseDataList<Proposal>(proposals);
+  const data = transformFirebaseDataList<FundsAllocation>(proposals);
 
   return sortByCreateTime(data);
 }
