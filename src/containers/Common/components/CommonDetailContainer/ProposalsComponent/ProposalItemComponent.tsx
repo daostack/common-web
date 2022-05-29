@@ -34,7 +34,7 @@ export default function ProposalItemComponent({
     showFullText,
   } = useFullText();
   const date = new Date();
-  const rawRequestedAmount = (proposal.data.args as FundsAllocationArgs).amount;
+  const rawRequestedAmount = (proposal.data.args as FundsAllocationArgs)?.amount;
   const images = proposal.data.args.images ?? [];
 
   const imagesChunk = images.filter((image, index) => {
