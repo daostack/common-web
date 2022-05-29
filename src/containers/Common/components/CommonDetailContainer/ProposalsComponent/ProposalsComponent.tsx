@@ -40,10 +40,10 @@ export default function ProposalsComponent({
       <div className="proposals-component-wrapper">
         {proposals.length > 0 ? (
           <>
-            {proposals.map((p) => (
+            {proposals.map((proposal) => (
               <ProposalItemComponent
-                key={p.id}
-                proposal={p}
+                key={proposal.id}
+                proposal={proposal}
                 loadProposalDetail={loadProposalDetail}
                 isCommonMember={isCommonMember}
               />
