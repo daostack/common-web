@@ -586,7 +586,7 @@ export function* createVote(
     const vote = (yield createVoteApi(action.payload.payload)) as Vote;
 
     yield call(async () => {
-      const proposals = await fetchCommonProposals(vote.);
+      const proposals = await fetchCommonProposals(vote.commonId);
       store.dispatch(actions.setProposals(proposals));
       store.dispatch(actions.loadProposalList.request());
       store.dispatch(

@@ -704,6 +704,7 @@ export const proposalVotesSubCollection = (proposalId: string) => {
     });
 };
 
+// TODO: need to understand how to return the right object
 export const getVote = async (
   proposalId: string,
   userId: string
