@@ -5,7 +5,6 @@ import { fetchDiscussionMessageById, fetchProposalById } from "../../store/api";
 import {
   DiscussionMessage,
   ProposalWithHighlightedComment,
-  ProposalState,
 } from "@/shared/models";
 import { DynamicLinkType } from "@/shared/constants";
 
@@ -15,65 +14,68 @@ interface ProposalCommentRouterParams {
 
 const ProposalCommentContainer = () => {
   const { id: proposalCommentId } = useParams<ProposalCommentRouterParams>();
-  const [currentProposalComment, setCurrentProposalComment] = useState<DiscussionMessage | null>(null);
-  const [proposalWithHighlightedComment, setProposalWithHighlightedComment] = useState<ProposalWithHighlightedComment | null>(null);
+  const [
+    currentProposalComment,
+    setCurrentProposalComment,
+  ] = useState<DiscussionMessage | null>(null);
+  const [
+    proposalWithHighlightedComment,
+    setProposalWithHighlightedComment,
+  ] = useState<ProposalWithHighlightedComment | null>(null);
   const [currentTab, setCurrentTab] = useState<Tabs | null>(null);
 
   useEffect(() => {
     if (
-      currentProposalComment
-      || proposalWithHighlightedComment
-      || !proposalCommentId
-    ) return;
+      currentProposalComment ||
+      proposalWithHighlightedComment ||
+      !proposalCommentId
+    )
+      return;
 
-    (
-      async () => {
-        try {
-          const requestingProposalComment = await fetchDiscussionMessageById(proposalCommentId);
-          const relatedProposal = await fetchProposalById(requestingProposalComment.discussionId);
+    (async () => {
+      try {
+        const requestingProposalComment = await fetchDiscussionMessageById(
+          proposalCommentId
+        );
+        const relatedProposal = await fetchProposalById(
+          requestingProposalComment.discussionId
+        );
 
-          setCurrentProposalComment(requestingProposalComment);
-          setProposalWithHighlightedComment(
-            {
-              ...relatedProposal,
-              highlightedCommentId: proposalCommentId,
-              id: requestingProposalComment.discussionId,
-            }
-          );
-        } catch (error) {
-          console.log(error);
-        }
+        setCurrentProposalComment(requestingProposalComment);
+        setProposalWithHighlightedComment({
+          ...relatedProposal,
+          highlightedCommentId: proposalCommentId,
+          id: requestingProposalComment.discussionId,
+        });
+      } catch (error) {
+        console.log(error);
       }
-    )();
+    })();
   }, [
     currentProposalComment,
     proposalWithHighlightedComment,
     setCurrentProposalComment,
     setProposalWithHighlightedComment,
-    proposalCommentId
+    proposalCommentId,
   ]);
 
   useEffect(() => {
-    if (!currentProposalComment || !proposalWithHighlightedComment)
-      return;
-    
-    if (proposalWithHighlightedComment.state === ProposalState.COUNTDOWN) {
-      setCurrentTab(Tabs.Proposals);
-    } else {
-      setCurrentTab(Tabs.History);
-    }
-  },
-    [currentProposalComment, proposalWithHighlightedComment, setCurrentTab]
-  );
+    if (!currentProposalComment || !proposalWithHighlightedComment) return;
+
+    setCurrentTab(Tabs.Proposals);
+  }, [currentProposalComment, proposalWithHighlightedComment, setCurrentTab]);
 
   return (
-    (currentProposalComment && proposalWithHighlightedComment && currentTab)
-    && <CommonDetailContainer
-      commonId={currentProposalComment.commonId}
-      activeModalElement={proposalWithHighlightedComment}
-      linkType={DynamicLinkType.ProposalComment}
-      tab={currentTab}
-    />
+    currentProposalComment &&
+    proposalWithHighlightedComment &&
+    currentTab && (
+      <CommonDetailContainer
+        commonId={currentProposalComment.commonId}
+        activeModalElement={proposalWithHighlightedComment}
+        linkType={DynamicLinkType.ProposalComment}
+        tab={currentTab}
+      />
+    )
   );
 };
 
