@@ -38,9 +38,9 @@ export default function VotesComponent(
 ) {
   const user = useSelector(selectUser());
   const { isShowing, onOpen, onClose } = useModal(false);
-  const votesFor = proposal.votesFor || 0;
-  const votesAgainst = proposal.votesAgainst || 0;
-  const votesAbstained = proposal.votesAbstained || 0;
+  const votesFor = proposal.votes.totalWeightedApproved || 0;
+  const votesAgainst = proposal.votes.totalWeightedRejected || 0;
+  const votesAbstained = proposal.votes.totalWeightedAbstained || 0;
   const totalVotes = votesFor + votesAgainst + votesAbstained;
   const [voteType, setVoteType] = useState<VoteOutcome>();
   const userVote = proposal.votes.find((vote) => vote.voterId === user?.uid);

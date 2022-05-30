@@ -4,7 +4,6 @@ import {
   BaseEntity,
   Moderation,
   ProposalState,
-  Vote,
   VoteOutcome,
 } from "@/shared/models";
 
@@ -14,6 +13,18 @@ export interface VoteTracker {
     [VoteOutcome.Abstained]: number;
     [VoteOutcome.Rejected]: number;
   };
+}
+
+export interface CalculatedVotes {
+  circles: VoteTracker
+
+  totalWeightedApproved: number,
+
+  totalWeightedAbstained: number,
+
+  totalWeightedRejected: number,
+
+  totalVotes: number
 }
 
 export interface BaseProposal extends BaseEntity {
@@ -32,17 +43,7 @@ export interface BaseProposal extends BaseEntity {
 
   limitations: Record<string, unknown>;
 
-  votes: {
-    circles: VoteTracker;
-
-    totalWeightedApproved: number;
-
-    totalWeightedAbstained: number;
-
-    totalWeightedRejected: number;
-
-    readonly collection: firebase.firestore.CollectionReference<Vote> | null;
-  };
+  votes: CalculatedVotes
 
   data: Record<string, unknown>;
 

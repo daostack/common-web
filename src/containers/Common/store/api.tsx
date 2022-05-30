@@ -16,6 +16,7 @@ import {
   Subscription,
   UnstructuredRules,
   User,
+  Vote,
 } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
@@ -41,7 +42,6 @@ import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMes
 import {
   CreateVotePayload,
   UpdateVotePayload,
-  Vote,
 } from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 import { UpdateBankAccountDetailsData } from "@/shared/interfaces/api/bankAccount";
@@ -365,7 +365,7 @@ export async function createProposal<T extends keyof CreateProposal>(
 export async function createVote(
   requestData: CreateVotePayload
 ): Promise<Vote> {
-  const { data } = await Api.post<Vote>(ApiEndpoint.CreateVote, requestData);
+  const { data } = await Api.post<Vote>(ApiEndpoint.VoteProposal, requestData);
 
   return data;
 }
@@ -373,7 +373,7 @@ export async function createVote(
 export async function updateVote(
   requestData: UpdateVotePayload
 ): Promise<Vote> {
-  const { data } = await Api.post<Vote>(ApiEndpoint.UpdateVote, requestData);
+  const { data } = await Api.patch<Vote>(ApiEndpoint.UpdateVote, requestData);
 
   return data;
 }
@@ -681,4 +681,33 @@ export const getUserCommons = async (userId: string): Promise<Common[]> => {
   const results = await Promise.all(promises);
 
   return results.map((result) => result.data() as Common);
+};
+
+export const proposalVotesSubCollection = (proposalId: string) => {
+  return firebase
+    .firestore()
+    .collection(Collection.Proposals)
+    .doc(proposalId)
+    .collection(SubCollections.Votes)
+    .withConverter<Vote>({
+      fromFirestore(
+        snapshot: firebase.firestore.QueryDocumentSnapshot<Vote>
+      ): Vote {
+        return snapshot.data();
+      },
+
+      toFirestore(
+        object: Partial<Vote>
+      ): firebase.firestore.DocumentData {
+        return object;
+      },
+    });
+};
+
+export const getVote = async (
+  proposalId: string,
+  userId: string
+): Promise<Vote | null> => {
+  const vote = await proposalVotesSubCollection(proposalId).where("voterId", "==", userId).get();
+  return vote || null;
 };

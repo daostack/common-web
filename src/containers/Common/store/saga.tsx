@@ -13,6 +13,7 @@ import {
   Payment,
   Subscription,
   BankAccountDetails,
+  Vote,
 } from "../../../shared/models";
 import { startLoading, stopLoading } from "@/shared/store/actions";
 import {
@@ -60,7 +61,6 @@ import { selectDiscussions, selectProposals } from "./selectors";
 import { ProposalsTypes } from "@/shared/constants";
 import { store } from "@/shared/appConfig";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
-import { Vote } from "@/shared/interfaces/api/vote";
 import { ImmediateContributionResponse } from "../interfaces";
 import { groupBy } from "@/shared/utils";
 import { createDefaultGovernanceCreationPayload } from "./helpers";
@@ -586,7 +586,7 @@ export function* createVote(
     const vote = (yield createVoteApi(action.payload.payload)) as Vote;
 
     yield call(async () => {
-      const proposals = await fetchCommonProposals(vote.commonId);
+      const proposals = await fetchCommonProposals(vote.);
       store.dispatch(actions.setProposals(proposals));
       store.dispatch(actions.loadProposalList.request());
       store.dispatch(
