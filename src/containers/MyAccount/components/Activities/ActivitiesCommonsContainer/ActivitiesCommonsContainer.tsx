@@ -1,40 +1,23 @@
-import React, { FC, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { FC, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
-import { selectUser } from "@/containers/Auth/store/selectors";
-import { selectCommonList } from "@/containers/Common/store/selectors";
-import { getCommonsList } from "@/containers/Common/store/actions";
+import { useUserCommons } from "@/containers/Common/hooks";
 import { Loader } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
-import { getLoading } from "@/shared/store/selectors";
 import { Common } from "@/shared/models";
 import { CommonListItem } from "@/containers/Common/components";
 import "./index.scss";
 
 const ActivitiesCommonsContainer: FC = () => {
-  const dispatch = useDispatch();
-  const user = useSelector(selectUser());
-  const commons = useSelector(selectCommonList());
-  const loading = useSelector(getLoading());
-  const [myCommons, setMyCommons] = useState<Common[]>([]);
+  const {
+    fetched: areUserCommonsFetched,
+    data: myCommons,
+    fetchUserCommons,
+  } = useUserCommons();
 
   useEffect(() => {
-    if (commons.length === 0)
-      dispatch(getCommonsList.request());
-  }, [dispatch, commons]);
-
-  useEffect(() => {
-    if (commons.length === 0 || !user?.uid)
-      return;
-
-    const myCommons = commons.filter(
-      (common: Common) =>
-        common.members.some((member) => member.userId === user?.uid)
-    );
-
-    setMyCommons(myCommons);
-  }, [setMyCommons, commons, user]);
+    fetchUserCommons();
+  }, [fetchUserCommons]);
 
   return (
     <div className="activities-commons">
@@ -46,7 +29,7 @@ const ActivitiesCommonsContainer: FC = () => {
           Commons ({myCommons.length})
         </NavLink>
       </h2>
-      {loading && <Loader />}
+      {!areUserCommonsFetched && <Loader />}
       <div className="activities-commons__commons-list">
         {
           myCommons.map(
