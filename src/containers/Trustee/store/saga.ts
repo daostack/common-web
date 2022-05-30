@@ -12,10 +12,13 @@ import {
   approveOrDeclineProposal as approveOrDeclineProposalApi,
 } from "./api";
 import { selectCommons, selectUsers } from "./selectors";
+import { Awaited } from "@/shared/interfaces";
 
 export function* getPendingApprovalProposals(): Generator {
   try {
-    const proposals = (yield call(fetchPendingApprovalProposals)) as Proposal[];
+    const proposals = (yield call(fetchPendingApprovalProposals)) as Awaited<
+      ReturnType<typeof fetchPendingApprovalProposals>
+    >;
 
     yield put(actions.getPendingApprovalProposals.success(proposals));
   } catch (error) {
@@ -25,7 +28,9 @@ export function* getPendingApprovalProposals(): Generator {
 
 export function* getApprovedProposals(): Generator {
   try {
-    const proposals = (yield call(fetchApprovedProposals)) as Proposal[];
+    const proposals = (yield call(fetchApprovedProposals)) as Awaited<
+      ReturnType<typeof fetchApprovedProposals>
+    >;
 
     yield put(actions.getApprovedProposals.success(proposals));
   } catch (error) {
@@ -35,7 +40,9 @@ export function* getApprovedProposals(): Generator {
 
 export function* getDeclinedProposals(): Generator {
   try {
-    const proposals = (yield call(fetchDeclinedProposals)) as Proposal[];
+    const proposals = (yield call(fetchDeclinedProposals)) as Awaited<
+      ReturnType<typeof fetchDeclinedProposals>
+    >;
 
     yield put(actions.getDeclinedProposals.success(proposals));
   } catch (error) {

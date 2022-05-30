@@ -72,7 +72,7 @@ const VirtualizedProposalList: FC<VirtualizedProposalListProps> = (props) => {
                             className="virtualized-invoice-list-wrapper__card-wrapper"
                           >
                             <ProposalCard
-                              proposal={proposal}
+                              proposal={proposal.proposal}
                               common={proposal.common}
                               user={proposal.user}
                               withAdditionalData
