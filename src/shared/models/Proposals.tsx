@@ -1,20 +1,17 @@
-import { Moderation, Time } from "./shared";
-
-import { DiscussionMessage, User } from ".";
+import {
+  FundsAllocation,
+  FundsRequest,
+  MemberAdmittance,
+} from "@/shared/models/governance/proposals";
+import { DiscussionMessage } from "./DiscussionMessage";
 import { VoteOutcome } from "./Votes";
+import { User } from "./User";
 
 export enum ProposalFundingState {
   NotRelevant = "notRelevant",
   NotAvailable = "notAvailable",
   Available = "available",
   Funded = "funded",
-}
-
-export enum FundingProcessStage {
-  PendingInvoiceUpload = "pendingInvoiceUpload",
-  PendingInvoiceApproval = "pendingInvoiceApproval",
-  FundsTransferInProgress = "fundsTransferInProgress",
-  Completed = "completed",
 }
 
 export enum ProposalPaymentState {
@@ -31,11 +28,6 @@ export enum ProposalState {
   REJECTED = "failed",
   PASSED_INSUFFICIENT_BALANCE = "passedInsufficientBalance",
   EXPIRED_INVOCIES_NOT_UPLOADED = "expiredInvociesNotUploaded",
-}
-
-export enum ProposalType {
-  FundingRequest = "fundingRequest",
-  Join = "join",
 }
 
 interface ProposalJoin {
@@ -63,54 +55,17 @@ export interface Vote {
   voterId: string;
 }
 
-export interface Proposal {
-  commonId: string;
-  proposerId: string;
-  countdownPeriod: number;
-  createTime: Time;
-  createdAt: Time;
-  expiresAt: Date;
-  fundingRequest?: { funded: boolean; amount: number };
-
-  id: string;
-  moderation: Moderation;
-
-  quietEndingPeriod: number;
-
-  updatedAt: Time;
-  votes: Vote[];
-  votesAgainst?: number;
-  votesFor?: number;
-  votesAbstained?: number;
-  user?: User;
-  proposer?: User;
+interface ExtendedProposalOptions {
   discussionMessage?: DiscussionMessage[];
-  isLoaded?: boolean;
-
-  title: string;
-
-  state: string;
-  description: {
-    description: string;
-    links: ProposalLink[];
-    images: ProposalLink[];
-    files: File[];
-    title: string;
-  };
-  type: ProposalType;
-  paymentState?: ProposalPaymentState;
-  fundingState?: ProposalFundingState;
-  /** Details about the join request. Exists only on join request proposals */
-  join?: ProposalJoin;
-  fundingProcessStage?: FundingProcessStage;
-
-  approvalDate?: Time;
-  payoutDocs?: DocInfo[];
-  payoutDocsComment?: string;
-  payoutDocsRejectionReason?: string;
+  proposer?: User;
 }
 
-export interface ProposalWithHighlightedComment extends Proposal {
+export type Proposal = (MemberAdmittance | FundsRequest | FundsAllocation) &
+  ExtendedProposalOptions;
+
+export interface ProposalWithHighlightedComment
+  extends FundsAllocation,
+    ExtendedProposalOptions {
   highlightedCommentId: string;
 }
 
@@ -119,7 +74,9 @@ export interface ProposalListItem {
   loadProposalDetails: (payload: Proposal) => void;
 }
 
-export const isProposalWithHighlightedComment = (proposal: any): proposal is ProposalWithHighlightedComment =>
-  (proposal && proposal.highlightedCommentId);
+export const isProposalWithHighlightedComment = (
+  proposal: any
+): proposal is ProposalWithHighlightedComment =>
+  proposal && proposal.highlightedCommentId;
 
 export const isDocInfo = (data: any): data is DocInfo => data.downloadURL;

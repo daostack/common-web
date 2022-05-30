@@ -85,8 +85,6 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       const proposal = { ...action.payload };
       const { proposals } = state;
 
-      proposal.isLoaded = true;
-
       if (proposals.length) {
         const index = proposals.findIndex((d) => d.id === proposal.id);
 
@@ -150,8 +148,7 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
   )
   .handleAction(actions.getGovernance.success, (state, action) =>
     produce(state, (nextState) => {
-      // Using typeof here to fix the issue with immer library's DraftArray
-      nextState.governance = action.payload as typeof nextState.governance;
+      nextState.governance = action.payload;
     })
   )
   .handleAction(actions.getGovernance.failure, (state) =>

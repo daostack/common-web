@@ -8,6 +8,7 @@ import {
   ProposalWithHighlightedComment,
   isProposalWithHighlightedComment,
 } from "@/shared/models";
+import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
 import {
   formatPrice,
   getDaysAgo,
@@ -41,8 +42,9 @@ export default function ProposalDetailModal({
   const date = new Date();
   const dispatch = useDispatch();
   const user = useSelector(selectUser());
-  const rawRequestedAmount =
-    proposal?.fundingRequest?.amount || proposal?.join?.funding;
+  const rawRequestedAmount = isFundsAllocationProposal(proposal)
+    ? proposal.data.args.amount
+    : 0;
   const screenSize = useSelector(getScreenSize());
   const [expanded, setExpanded] = useState(true);
   const highlightedCommentId = useMemo(
@@ -60,7 +62,7 @@ export default function ProposalDetailModal({
           text: message,
           createTime: d,
           ownerId: user.uid,
-          commonId: proposal.commonId,
+          commonId: proposal.data.args.commonId,
           discussionId: proposal.id,
         };
 
@@ -102,9 +104,9 @@ export default function ProposalDetailModal({
           <div className="proposal-information-wrapper">
             <div
               className="proposal-name"
-              title={proposal.description.title || "Membership request"}
+              title={proposal.data.args.title || "Membership request"}
             >
-              {proposal.description.title || "Membership request"}
+              {proposal.data.args.title || "Membership request"}
             </div>
             {expanded && (
               <>
@@ -131,7 +133,7 @@ export default function ProposalDetailModal({
 
         {expanded && (
           <div className="description-container">
-            <p className="description">{proposal.description.description}</p>
+            <p className="description">{proposal.data.args.description}</p>
           </div>
         )}
 

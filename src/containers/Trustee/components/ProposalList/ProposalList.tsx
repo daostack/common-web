@@ -28,11 +28,11 @@ const ProposalList: FC<ProposalListProps> = (props) => {
         <ul className="invoice-list-wrapper__cards">
           {proposals.map((proposal) => (
             <li
-              key={proposal.id}
+              key={proposal.proposal.id}
               className="invoice-list-wrapper__card-wrapper"
             >
               <ProposalCard
-                proposal={proposal}
+                proposal={proposal.proposal}
                 common={proposal.common}
                 user={proposal.user}
                 withAdditionalData

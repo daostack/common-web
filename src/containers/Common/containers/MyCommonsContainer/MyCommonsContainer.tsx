@@ -4,10 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { Loader } from "@/shared/components";
 import DownloadCommonApp from "@/shared/components/DownloadCommonApp/DownloadCommonApp";
-import { ROUTE_PATHS } from "@/shared/constants";
+import { ProposalsTypes, ROUTE_PATHS } from "@/shared/constants";
 import { isMobile } from "@/shared/utils";
 import "./index.scss";
-import { Common, ProposalState, ProposalType } from "@/shared/models";
+import { Common, ProposalState } from "@/shared/models";
 import { getLoading } from "@/shared/store/selectors";
 import { CommonListItem, EmptyTabComponent } from "../../components";
 import { useUserCommons } from "../../hooks";
@@ -58,9 +58,10 @@ export default function MyCommonsContainer() {
     const ids = myProposals
       .filter(
         (p) =>
-          p.state === ProposalState.COUNTDOWN && p.type === ProposalType.Join
+          p.state === ProposalState.COUNTDOWN &&
+          p.type === ProposalsTypes.MEMBER_ADMITTANCE
       )
-      .map((p) => p.commonId);
+      .map((p) => p.data.args.commonId);
     const pC = commons.filter((c) => ids.includes(c.id));
     setPendingCommons(pC);
   }, [myProposals, commons]);

@@ -21,13 +21,9 @@ import {
 } from "@/containers/Common/components";
 import { useCommonMember, useUserCommons } from "@/containers/Common/hooks";
 import { CollectionSummaryCard } from "./CollectionSummaryCard";
-import {
-  Common,
-  Proposal,
-  ProposalType,
-} from "@/shared/models";
+import { Common, Proposal } from "@/shared/models";
 import { Loader, Modal } from "@/shared/components";
-import { ROUTE_PATHS, ScreenSize } from "@/shared/constants";
+import { ProposalsTypes, ROUTE_PATHS, ScreenSize } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
 import {
   getCommonsList,
@@ -251,7 +247,7 @@ const Activities: FC = () => {
       return;
     }
 
-    fetchCommonMember(currentProposal.commonId);
+    fetchCommonMember(currentProposal.data.args.commonId);
   }, [currentProposal, fetchCommonMember]);
 
   useEffect(() => {
@@ -260,7 +256,7 @@ const Activities: FC = () => {
     resetCommonMember();
     dispatch(
       getCommonDetail.request({
-        payload: currentProposal.commonId,
+        payload: currentProposal.data.args.commonId,
       })
     );
 
@@ -288,11 +284,11 @@ const Activities: FC = () => {
       return;
 
     const myFundingProposals = myProposals.filter((proposal) =>
-      proposal.type === ProposalType.FundingRequest
+      proposal.type === ProposalsTypes.FUNDS_ALLOCATION
     );
 
     const myMembershipRequests = myProposals.filter((proposal) =>
-      proposal.type === ProposalType.Join
+      proposal.type === ProposalsTypes.MEMBER_ADMITTANCE
     );
 
     setMyFundingProposals(myFundingProposals);
@@ -387,7 +383,10 @@ const Activities: FC = () => {
                             || (isMobileView && !showSliderProposalsViewAll)
                   }
                 )}
-                to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_PROPOSALS.replace(":proposalType", ProposalType.FundingRequest)}
+                to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_PROPOSALS.replace(
+                  ":proposalType",
+                  ProposalsTypes.FUNDS_ALLOCATION
+                )}
               >
                 View all
                 <img src="/icons/right-arrow.svg" alt="right-arrow" />
@@ -414,7 +413,10 @@ const Activities: FC = () => {
                             || (isMobileView && !showSliderMembershipRequestsViewAll)
                   }
                 )}
-                to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_PROPOSALS.replace(":proposalType", ProposalType.Join)}
+                to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_PROPOSALS.replace(
+                  ":proposalType",
+                  ProposalsTypes.MEMBER_ADMITTANCE
+                )}
               >
                 View all
                 <img src="/icons/right-arrow.svg" alt="right-arrow" />

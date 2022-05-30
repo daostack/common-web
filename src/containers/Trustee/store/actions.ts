@@ -1,6 +1,7 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { PayloadWithCallback } from "@/shared/interfaces";
 import { Common, Proposal, User } from "@/shared/models";
+import { FundsAllocation } from "@/shared/models/governance/proposals";
 import { ApproveOrDeclineProposalDto } from "../interfaces";
 import { TrusteeActionTypes } from "./constants";
 
@@ -8,19 +9,19 @@ export const getPendingApprovalProposals = createAsyncAction(
   TrusteeActionTypes.GET_PENDING_APPROVAL_PROPOSALS,
   TrusteeActionTypes.GET_PENDING_APPROVAL_PROPOSALS_SUCCESS,
   TrusteeActionTypes.GET_PENDING_APPROVAL_PROPOSALS_FAILURE
-)<void, Proposal[], Error>();
+)<void, FundsAllocation[], Error>();
 
 export const getApprovedProposals = createAsyncAction(
   TrusteeActionTypes.GET_APPROVED_PROPOSALS,
   TrusteeActionTypes.GET_APPROVED_PROPOSALS_SUCCESS,
   TrusteeActionTypes.GET_APPROVED_PROPOSALS_FAILURE
-)<void, Proposal[], Error>();
+)<void, FundsAllocation[], Error>();
 
 export const getDeclinedProposals = createAsyncAction(
   TrusteeActionTypes.GET_DECLINED_PROPOSALS,
   TrusteeActionTypes.GET_DECLINED_PROPOSALS_SUCCESS,
   TrusteeActionTypes.GET_DECLINED_PROPOSALS_FAILURE
-)<void, Proposal[], Error>();
+)<void, FundsAllocation[], Error>();
 
 export const getProposalsData = createAsyncAction(
   TrusteeActionTypes.GET_PROPOSALS_DATA,

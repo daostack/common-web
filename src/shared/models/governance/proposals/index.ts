@@ -1,5 +1,6 @@
 import { ProposalsTypes } from "@/shared/constants";
 import { BaseEntity } from "../../BaseEntity";
+import { Proposal } from "../../Proposals";
 import { BasicArgsProposal } from "./BasicArgsProposal";
 import { FundsAllocation } from "./FundsAllocation";
 import { FundsRequest } from "./FundsRequest";
@@ -30,6 +31,11 @@ export interface Proposals {
   >;
   // Expended for each proposal
 }
+
+export const isFundsAllocationProposal = (
+  proposal?: Proposal | null
+): proposal is FundsAllocation =>
+  Boolean(proposal?.type === ProposalsTypes.FUNDS_ALLOCATION);
 
 export * from "./BaseProposal";
 export * from "./BasicArgsProposal";
