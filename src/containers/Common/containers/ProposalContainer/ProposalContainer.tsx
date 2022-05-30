@@ -34,7 +34,7 @@ const ProposalContainer = () => {
   useEffect(() => {
     if (!currentProposal)
       return;
-    
+
     if (currentProposal.state === ProposalState.COUNTDOWN) {
       setCurrentTab(Tabs.Proposals);
     } else {
@@ -47,7 +47,7 @@ const ProposalContainer = () => {
   return (
     (currentProposal && currentTab)
     && <CommonDetailContainer
-      commonId={currentProposal.commonId}
+      commonId={currentProposal.data.args.commonId}
       activeModalElement={currentProposal}
       linkType={DynamicLinkType.Proposal}
       tab={currentTab}
