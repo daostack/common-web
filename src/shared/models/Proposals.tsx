@@ -63,9 +63,7 @@ interface ExtendedProposalOptions {
 export type Proposal = (MemberAdmittance | FundsRequest | FundsAllocation) &
   ExtendedProposalOptions;
 
-export interface ProposalWithHighlightedComment
-  extends FundsAllocation,
-    ExtendedProposalOptions {
+export interface ProposalWithHighlightedComment extends Proposal {
   highlightedCommentId: string;
 }
 
