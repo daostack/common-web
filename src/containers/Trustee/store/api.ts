@@ -45,36 +45,15 @@ export async function fetchPendingApprovalProposals(): Promise<
   return sortByCreateTime(data);
 }
 
-export async function fetchApprovedProposals(): Promise<Proposal[]> {
-  const results = await Promise.all([
-    await firebase
-      .firestore()
-      .collection(Collection.Proposals)
-      .where("type", "==", ProposalType.FundingRequest)
-      .where("state", "==", ProposalState.PASSED)
-      .get(),
-    await firebase
-      .firestore()
-      .collection(Collection.Proposals)
-      .where(
-        "fundingProcessStage",
-        "==",
-        FundingProcessStage.FundsTransferInProgress
-      )
-      .get(),
-  ]);
-  const filteredProposals = transformFirebaseDataList<Proposal>(
-    results[0]
-  ).filter(
-    (proposal) =>
-      !proposal.fundingProcessStage ||
-      proposal.fundingProcessStage === FundingProcessStage.Completed
-  );
-
-  const data = [
-    ...filteredProposals,
-    ...transformFirebaseDataList<Proposal>(results[1]),
-  ];
+export async function fetchApprovedProposals(): Promise<FundsAllocation[]> {
+  const proposals = await firebase
+    .firestore()
+    .collection(Collection.Proposals)
+    .where("type", "==", ProposalsTypes.FUNDS_ALLOCATION)
+    .where("state", "==", ProposalState.PASSED)
+    .where("data.tracker.trusteeApprovedAt", "!=", null)
+    .get();
+  const data = transformFirebaseDataList<FundsAllocation>(proposals);
 
   return sortByCreateTime(data);
 }
