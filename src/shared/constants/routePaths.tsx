@@ -16,6 +16,7 @@ export enum ROUTE_PATHS {
   TRUSTEE_INVOICES = "/trustee/invoices",
   TRUSTEE_INVOICE = "/trustee/invoices/:proposalId",
   PROPOSAL_DETAIL = "/proposals/:id",
+  PROPOSAL_COMMENT = "/proposal-comments/:id",
   DISCUSSION_DETAIL = "/discussions/:id",
   DISCUSSION_MESSAGE = "/discussion-messages/:id",
 }

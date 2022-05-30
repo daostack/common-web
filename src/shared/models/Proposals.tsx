@@ -60,9 +60,16 @@ export type Proposal = (MemberAdmittance | FundsRequest | FundsAllocation) & {
   proposer?: User;
 };
 
+export interface ProposalWithHighlightedComment extends Proposal {
+  highlightedCommentId: string;
+}
+
 export interface ProposalListItem {
   proposal: Proposal;
   loadProposalDetails: (payload: Proposal) => void;
 }
+
+export const isProposalWithHighlightedComment = (proposal: any): proposal is ProposalWithHighlightedComment =>
+  (proposal && proposal.highlightedCommentId);
 
 export const isDocInfo = (data: any): data is DocInfo => data.downloadURL;

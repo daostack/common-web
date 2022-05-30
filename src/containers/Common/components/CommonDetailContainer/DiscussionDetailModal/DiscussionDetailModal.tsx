@@ -14,7 +14,7 @@ import { ChatComponent } from "../ChatComponent";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { addMessageToDiscussion } from "@/containers/Common/store/actions";
 import { getScreenSize } from "@/shared/store/selectors";
-import { ScreenSize } from "@/shared/constants";
+import { ScreenSize, ChatType } from "@/shared/constants";
 import "./index.scss";
 
 interface DiscussionDetailModalProps {
@@ -110,6 +110,7 @@ export default function DiscussionDetailModal({
         <ChatComponent
           common={common}
           discussionMessage={disscussion.discussionMessage || []}
+          type={ChatType.DiscussionMessages}
           highlightedMessageId={highlightedMessageId}
           onOpenJoinModal={onOpenJoinModal}
           isCommonMember={isCommonMember}

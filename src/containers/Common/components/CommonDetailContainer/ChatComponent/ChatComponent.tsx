@@ -16,6 +16,7 @@ import {
   Colors,
   ShareViewType,
   ScreenSize,
+  ChatType,
 } from "@/shared/constants";
 import { EmptyTabComponent } from "@/containers/Common/components/CommonDetailContainer";
 import "./index.scss";
@@ -23,6 +24,7 @@ import "./index.scss";
 interface ChatComponentInterface {
   common: Common | null;
   discussionMessage: DiscussionMessage[];
+  type: ChatType;
   onOpenJoinModal?: () => void;
   isCommonMember?: boolean;
   isJoiningPending?: boolean;
@@ -56,6 +58,7 @@ interface Messages {
 export default function ChatComponent({
   common,
   discussionMessage,
+  type,
   onOpenJoinModal,
   isCommonMember,
   isJoiningPending,
@@ -112,6 +115,7 @@ export default function ChatComponent({
                     <ChatMessage
                       key={m.id}
                       disscussionMessage={m}
+                      chatType={type}
                       highlighted={m.id === highlightedMessageId}
                     />
                   );

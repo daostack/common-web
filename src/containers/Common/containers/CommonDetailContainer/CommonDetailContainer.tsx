@@ -12,6 +12,7 @@ import {
   Discussion,
   DiscussionWithHighlightedMessage,
   Proposal,
+  ProposalWithHighlightedComment,
   ProposalState,
 } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
@@ -83,7 +84,10 @@ interface CommonDetailRouterParams {
 interface CommonDetailProps {
   commonId?: string;
   tab?: Tabs;
-  activeModalElement?: Proposal | Discussion | DiscussionWithHighlightedMessage;
+  activeModalElement?: Proposal
+                      | ProposalWithHighlightedComment
+                      | Discussion
+                      | DiscussionWithHighlightedMessage;
   linkType?: DynamicLinkType;
 }
 
@@ -315,6 +319,9 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
 
     switch (linkType) {
       case DynamicLinkType.Proposal:
+        getProposalDetail(activeModalElement as Proposal);
+        break;
+      case DynamicLinkType.ProposalComment:
         getProposalDetail(activeModalElement as Proposal);
         break;
       case DynamicLinkType.Discussion:
