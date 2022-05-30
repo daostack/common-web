@@ -55,12 +55,17 @@ export interface Vote {
   voterId: string;
 }
 
-export type Proposal = (MemberAdmittance | FundsRequest | FundsAllocation) & {
+interface ExtendedProposalOptions {
   discussionMessage?: DiscussionMessage[];
   proposer?: User;
-};
+}
 
-export interface ProposalWithHighlightedComment extends Proposal {
+export type Proposal = (MemberAdmittance | FundsRequest | FundsAllocation) &
+  ExtendedProposalOptions;
+
+export interface ProposalWithHighlightedComment
+  extends FundsAllocation,
+    ExtendedProposalOptions {
   highlightedCommentId: string;
 }
 
@@ -69,7 +74,9 @@ export interface ProposalListItem {
   loadProposalDetails: (payload: Proposal) => void;
 }
 
-export const isProposalWithHighlightedComment = (proposal: any): proposal is ProposalWithHighlightedComment =>
-  (proposal && proposal.highlightedCommentId);
+export const isProposalWithHighlightedComment = (
+  proposal: any
+): proposal is ProposalWithHighlightedComment =>
+  proposal && proposal.highlightedCommentId;
 
 export const isDocInfo = (data: any): data is DocInfo => data.downloadURL;
