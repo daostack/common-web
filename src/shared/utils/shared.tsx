@@ -224,7 +224,7 @@ export const roundNumberToNextTenths = (
   Math.floor((value + valueForRounding) / valueForRounding) * valueForRounding;
 
 export const getProposalExpirationDate = (proposal: Proposal): Date =>
-  new Date((proposal.createdAt.seconds + proposal.countdownPeriod) * 1000);
+  new Date((proposal.createdAt.seconds + 5 * 24 * 60 * 60) * 1000);
 
 /**
  * Allowed {index}: 1 <= index <= 8
