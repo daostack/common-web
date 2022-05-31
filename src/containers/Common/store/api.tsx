@@ -704,11 +704,10 @@ export const proposalVotesSubCollection = (proposalId: string) => {
     });
 };
 
-// TODO: need to understand how to return the right object
 export const getVote = async (
   proposalId: string,
   userId: string
 ): Promise<Vote | null> => {
-  const vote = await proposalVotesSubCollection(proposalId).where("voterId", "==", userId).get();
-  return vote || null;
+  const [vote] = (await proposalVotesSubCollection(proposalId).where("voterId", "==", userId).get()).docs;
+  return vote?.data();
 };
