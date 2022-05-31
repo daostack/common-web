@@ -49,12 +49,6 @@ export interface ProposalLink {
   value: string;
 }
 
-export interface Vote {
-  voteId: string;
-  voteOutcome: VoteOutcome;
-  voterId: string;
-}
-
 interface ExtendedProposalOptions {
   discussionMessage?: DiscussionMessage[];
   proposer?: User;
