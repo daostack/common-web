@@ -358,9 +358,6 @@ export function getLastActivity(data: Common) {
     if (d.updatedAt) {
       activities.push(getDateValue(d.updatedAt));
     }
-    if (d.createTime) {
-      activities.push(getDateValue(d.createTime));
-    }
   });
   messages?.forEach((d) => {
     if (d.createTime) {
