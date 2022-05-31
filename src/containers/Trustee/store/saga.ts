@@ -1,7 +1,8 @@
 import { call, put, select, takeLatest } from "redux-saga/effects";
 import { getUserListByIds } from "@/containers/Auth/store/api";
 import { fetchCommonListByIds } from "@/containers/Common/store/api";
-import { Common, Proposal, User } from "@/shared/models";
+import { Common, User } from "@/shared/models";
+import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
 import { TrusteeStateType } from "../interfaces";
 import * as actions from "./actions";
 import {
@@ -93,13 +94,14 @@ export function* getProposalForApproval(
   action: ReturnType<typeof actions.getProposalForApproval.request>
 ): Generator {
   try {
-    const proposal = (yield call(
-      fetchProposalById,
-      action.payload
-    )) as Proposal | null;
+    const proposal = (yield call(fetchProposalById, action.payload)) as Awaited<
+      ReturnType<typeof fetchProposalById>
+    >;
 
-    if (!proposal) {
-      throw new Error(`There is no proposal with id="${action.payload}"`);
+    if (!isFundsAllocationProposal(proposal)) {
+      throw new Error(
+        `There is no proposal with id="${action.payload}" or it is not funds allocation one`
+      );
     }
 
     yield put(actions.getProposalForApproval.success(proposal));
