@@ -223,8 +223,9 @@ export const roundNumberToNextTenths = (
 ): number =>
   Math.floor((value + valueForRounding) / valueForRounding) * valueForRounding;
 
+// TODO: Use correct countdown logic when BE is ready
 export const getProposalExpirationDate = (proposal: Proposal): Date =>
-  new Date((proposal.createdAt.seconds + proposal.countdownPeriod) * 1000);
+  new Date((proposal.createdAt.seconds + 5 * 24 * 60 * 60) * 1000);
 
 /**
  * Allowed {index}: 1 <= index <= 8
