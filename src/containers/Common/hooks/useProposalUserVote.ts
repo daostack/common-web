@@ -25,8 +25,8 @@ export const useProposalUserVote = (): Return => {
       return;
     }
 
-    setState((nextState) => ({
-      ...nextState,
+    setState((prevState) => ({
+      ...prevState,
       loading: true,
     }));
 
