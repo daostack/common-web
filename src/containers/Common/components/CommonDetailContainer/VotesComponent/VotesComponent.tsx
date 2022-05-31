@@ -45,8 +45,7 @@ export default function VotesComponent(
   const votesAbstained = proposal.votes.totalWeightedAbstained || 0;
   const totalVotes = votesFor + votesAgainst + votesAbstained;
   const [voteType, setVoteType] = useState<VoteOutcome>();
-  const { fetched: isVoteType, data: userVote, fetchProposalVote } = useProposalUserVote();
-  //const userVote = proposal.votes.find((vote) => vote.voterId === user?.uid);
+  const { fetched: isVoteFetched, data: userVote, fetchProposalVote } = useProposalUserVote();
 
   useEffect(() => {
     fetchProposalVote(proposal.id);
@@ -234,13 +233,13 @@ export default function VotesComponent(
               </div>
             </div>
             {
-              isShowing && userVote && (
+              isShowing && isVoteFetched && (
                 <VotePrompt
                   isShowing={isShowing}
                   onClose={onClose}
                   proposalId={proposal.id}
                   voteType={voteType!}
-                  prevVote={userVote}
+                  prevVote={userVote!}
                   avatarURL={user?.photoURL ?? ""}
                 />
               )

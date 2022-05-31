@@ -709,5 +709,5 @@ export const getVote = async (
   userId: string
 ): Promise<Vote | null> => {
   const [vote] = (await proposalVotesSubCollection(proposalId).where("voterId", "==", userId).get()).docs;
-  return vote?.data();
+  return vote?.data() || null;
 };
