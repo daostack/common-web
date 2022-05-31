@@ -37,7 +37,7 @@ const getLinkMetaData = ( //FIXME: need to add an appropriate social images
           link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.Common}/${elem.id}`,
           socialTitle: elem.name || "",
           socialDescription: [
-              elem.metadata.byline || "",
+              elem.byline || "",
               "Download the Common app to join now."
             ].filter(Boolean).join(". "),
           socialImageLink: elem.image || "",
@@ -49,8 +49,8 @@ const getLinkMetaData = ( //FIXME: need to add an appropriate social images
       return (
         {
           link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.Proposal}/${elem.id}`,
-          socialTitle: elem.title || elem.description.title || "",
-          socialDescription: elem.description.description || "",
+          socialTitle: elem.data.args.title || "",
+          socialDescription: elem.data.args.description || "",
           socialImageLink: "", //FIXME
         }
       );
