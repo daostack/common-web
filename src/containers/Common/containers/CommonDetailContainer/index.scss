@@ -118,8 +118,15 @@
               cursor: pointer;
               border-bottom: 4px solid;
               border-bottom-color: transparent;
-              padding-bottom: 20px;
+              padding-bottom: 0.625rem;
               margin-right: 3rem;
+
+              img{
+                display: block;
+                text-align: center;
+                padding-bottom: 0.625rem;
+                margin: 0 auto;
+              }
 
               &.active {
                 border-bottom-color: $purple;

@@ -89,28 +89,38 @@ interface CommonDetailProps {
 }
 
 export enum Tabs {
-  About = "about",
-  Discussions = "discussions",
+  About = "agenda",
+  Discussions = "discussion",
   Proposals = "proposals",
   Wallet = "wallet",
-  Notification = "notification",
+  Notifications = "notifications",
 }
 
 const tabs = [
   {
     name: "Agenda",
     key: Tabs.About,
-    icon: "agenda",
+    icon: Tabs.About,
   },
   {
     name: "Discussions",
     key: Tabs.Discussions,
-    icon: "discussions",
+    icon: Tabs.Discussions,
   },
   {
     name: "Proposals",
     key: Tabs.Proposals,
-    icon: "proposals",
+    icon: Tabs.Proposals,
+  },
+  {
+    name: "Wallet",
+    key: Tabs.Wallet,
+    icon: Tabs.Wallet,
+  },
+  {
+    name: "Notifications",
+    key: Tabs.Notifications,
+    icon: Tabs.Notifications,
   },
 ];
 
@@ -454,7 +464,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
             />
           </>
         );
-      case Tabs.Notification:
+      case Tabs.Notifications:
         return <div>Coming soon</div>;
       case Tabs.Wallet:
         return <div>Coming soon</div>;
@@ -665,6 +675,12 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                       className={`tab-item ${tab === t.key ? "active" : ""}`}
                       onClick={() => changeTabHandler(t.key)}
                     >
+                      <img
+                        src={`/icons/common-icons/${t.icon}${
+                          tab === t.key ? "-active" : ""
+                        }.svg`}
+                        alt={t.name}
+                      />
                       {t.name}
                     </div>
                   ))}
