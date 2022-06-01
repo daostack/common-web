@@ -53,7 +53,8 @@
     "test:watch": "TZ=UTC jest --watch",
     "eject": "react-scripts eject",
     "commit-hook": "git add .",
-    "lint": "eslint './src/**/*.ts{,x}' --fix",
+    "lint": "eslint -c .eslintrc.json --ext .js,.jsx,.ts,.tsx './src'",
+    "lint:fix": "npm run lint -- --fix",
     "prettier": "prettier --write \"**/*.+(ts|tsx)\"",
     "hooks:precommit": "yarn prettier && yarn commit-hook"
   },
