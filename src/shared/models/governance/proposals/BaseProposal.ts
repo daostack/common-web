@@ -16,15 +16,21 @@ export interface VoteTracker {
 }
 
 export interface CalculatedVotes {
-  circles: VoteTracker
+  circles: VoteTracker;
 
-  totalWeightedApproved: number,
+  weightedApproved: number;
 
-  totalWeightedAbstained: number,
+  weightedAbstained: number;
 
-  totalWeightedRejected: number,
+  weightedRejected: number;
 
-  totalVotes: number
+  total: number;
+
+  abstained: number;
+
+  rejected: number;
+
+  approved: number;
 }
 
 export interface BaseProposal extends BaseEntity {

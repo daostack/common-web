@@ -40,9 +40,9 @@ export default function VotesComponent(
 ) {
   const user = useSelector(selectUser());
   const { isShowing, onOpen, onClose } = useModal(false);
-  const votesFor = proposal.votes.totalWeightedApproved || 0;
-  const votesAgainst = proposal.votes.totalWeightedRejected || 0;
-  const votesAbstained = proposal.votes.totalWeightedAbstained || 0;
+  const votesFor = proposal.votes.approved || 0;
+  const votesAgainst = proposal.votes.rejected || 0;
+  const votesAbstained = proposal.votes.abstained || 0;
   const totalVotes = votesFor + votesAgainst + votesAbstained;
   const [voteType, setVoteType] = useState<VoteOutcome>();
   const { fetched: isVoteFetched, data: userVote, fetchProposalVote } = useProposalUserVote();
