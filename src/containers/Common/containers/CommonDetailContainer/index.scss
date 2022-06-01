@@ -30,7 +30,7 @@
         display: flex;
         margin-top: 32px;
         border-bottom: 1px solid $light-gray-1;
-        padding-bottom: 30px;
+        padding-bottom: 1.875rem;
         justify-content: space-between;
 
         .text {
@@ -138,7 +138,7 @@
     .tabs-wrapper {
       display: flex;
       align-items: flex-end;
-      padding-top: 30px;
+      padding-top: 1.875rem;
       font-family: NunitoSans, sans-serif;
       font-weight: bold;
       overflow-x: auto;
@@ -180,11 +180,11 @@
     .inner-main-content-wrapper {
       display: flex;
       padding: 0px $content-padding;
-      padding-bottom: 30px;
+      padding-bottom: 1.875rem;
       //max-width: $element-max-width;
       //margin: auto;
       .tab-content-wrapper {
-        margin-bottom: 20px;
+        margin-bottom: 1.25rem;
         width: 60%;
 
         .about-title {
@@ -192,7 +192,7 @@
           font-size: $moderate-med;
           font-weight: bold;
           color: $blue-text;
-          padding-bottom: 20px;
+          padding-bottom: 1.25rem;
         }
       }
 
@@ -308,7 +308,7 @@
               box-shadow: 0px -2px 4px rgba(0, 26, 54, 0.1);
               .tabs-wrapper {
                 position: absolute;
-                bottom: 25px;
+                bottom: 1.563rem;
                 display: none;
 
               }
@@ -375,7 +375,7 @@
     .main-content-container {
       margin: 0px -#{$content-padding-mobile};
       background-color: $light-purple-background;
-      padding: 20px 0;
+      padding: 1.25rem 0;
 
       .inner-main-content-wrapper {
         position: relative;
@@ -398,26 +398,26 @@
         .tabs-container {
           flex-direction: column-reverse;
           align-items: center;
-          margin: 0px -20px;
-          padding: 0px 20px;
+          margin: 0px -1.25rem;
+          padding: 0px 1.25rem;
           background: #FFFFFF;
           box-shadow: 0px -2px 4px rgba(0, 26, 54, 0.1);
           .tabs-wrapper {
             display: flex;
             align-items: flex-end;
-            padding-top: 30px;
+            padding-top:1.875rem;
             background: white;
             justify-content: space-between;
             width: 100%;
             .tab-item {
               margin-right: 0;
               font-weight: bold;
-              color: #071836;
+              color: $deep-blue;
               cursor: pointer;
 
               border-bottom-color: transparent;
               padding-bottom: 0.625rem;
-              font-size: 14px;
+              font-size: $xsmall;
 
               &.active{
                 color:$purple
@@ -439,7 +439,7 @@
           &.sticky {
             position: fixed;
             z-index: 1;
-            bottom: 110px;
+            bottom: 6.875rem;
             width: 90%;
             transform: translateX(-50%);
             margin-right: unset;
@@ -447,7 +447,7 @@
 
             &.footer-sticky {
               position: absolute;
-              bottom: 110px;
+              bottom: 6.875rem;
             }
           }
         }
