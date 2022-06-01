@@ -777,27 +777,29 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                 />
               )}
             </div>
-            <div
-              className={`tabs-container bottom ${stickyClass} ${footerClass}`}
-            >
-              <div className="tabs-wrapper">
-                {tabs.map((t) => (
-                  <div
-                    key={t.key}
-                    className={`tab-item ${tab === t.key ? "active" : ""}`}
-                    onClick={() => changeTabHandler(t.key)}
-                  >
-                    <img
-                      src={`/icons/common-icons/${t.icon}${
-                        tab === t.key ? "-active" : ""
-                      }.svg`}
-                      alt={t.name}
-                    />
-                    {t.name}
-                  </div>
-                ))}
+            {isMobileView && (
+              <div
+                className={`tabs-container bottom ${stickyClass} ${footerClass}`}
+              >
+                <div className="tabs-wrapper">
+                  {tabs.map((t) => (
+                    <div
+                      key={t.key}
+                      className={`tab-item ${tab === t.key ? "active" : ""}`}
+                      onClick={() => changeTabHandler(t.key)}
+                    >
+                      <img
+                        src={`/icons/common-icons/${t.icon}${
+                          tab === t.key ? "-active" : ""
+                        }.svg`}
+                        alt={t.name}
+                      />
+                      {t.name}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
             {shouldShowStickyJoinEffortButton && (
               <>
                 <button
