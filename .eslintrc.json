@@ -97,7 +97,11 @@
     "@typescript-eslint/no-var-requires": 0,
 
     // Console usage is not allowed. Use logger instead
-    "no-console": 0
+    "no-console": 0,
+
+    "@typescript-eslint/explicit-module-boundary-types": {
+      "allowArgumentsExplicitlyTypedAsAny": 0
+    }
   },
   "overrides": [
     {
