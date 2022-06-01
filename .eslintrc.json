@@ -86,7 +86,7 @@
     // Prefer using arrow functions for callbacks
     "prefer-arrow-callback": 1,
     // Return inside each then() to create readable and reusable Promise chains.
-    // Forces developers to return console logs and http calls in promises. 
+    // Forces developers to return console logs and http calls in promises.
     "promise/always-return": 2,
     //Enforces the use of catch() on un-returned promises
     "promise/catch-or-return": 2,
@@ -97,7 +97,18 @@
     "@typescript-eslint/no-var-requires": 0,
 
     // Console usage is not allowed. Use logger instead
-    "no-console": 2
+    "no-console": 0,
+
+    "@typescript-eslint/explicit-module-boundary-types": [
+      "error",
+      {
+        "allowArgumentsExplicitlyTypedAsAny": true
+      }
+    ],
+
+    "@typescript-eslint/no-non-null-assertion": 0,
+
+    "@typescript-eslint/no-non-null-asserted-optional-chain": 0
   },
   "overrides": [
     {
