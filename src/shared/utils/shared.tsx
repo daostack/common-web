@@ -167,8 +167,8 @@ export const luhnAlgo = (ccNumber: string | number) => {
   ccNumber = String(ccNumber).replace(/\D/g, "");
 
   for (let n = ccNumber.length - 1; n >= 0; n--) {
-    let cDigit = ccNumber.charAt(n),
-      nDigit = parseInt(cDigit, 10);
+    const cDigit = ccNumber.charAt(n);
+    let nDigit = parseInt(cDigit, 10);
 
     if (bEven) {
       if ((nDigit *= 2) > 9) nDigit -= 9;
@@ -276,7 +276,7 @@ export function flatChunk<T>(data: unknown[]) {
     }, []);
 }
 
-export function groupBy<T>(list: T[], keyGetter: Function) {
+export function groupBy<T>(list: T[], keyGetter: (key: T) => string) {
   const map = new Map();
   list.forEach((item) => {
     const key = keyGetter(item);
