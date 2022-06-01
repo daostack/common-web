@@ -112,16 +112,16 @@ const tabs = [
     key: Tabs.Proposals,
     icon: Tabs.Proposals,
   },
-  {
-    name: "Wallet",
-    key: Tabs.Wallet,
-    icon: Tabs.Wallet,
-  },
-  {
-    name: "Notifications",
-    key: Tabs.Notifications,
-    icon: Tabs.Notifications,
-  },
+  // {
+  //   name: "Wallet",
+  //   key: Tabs.Wallet,
+  //   icon: Tabs.Wallet,
+  // },
+  // {
+  //   name: "Notifications",
+  //   key: Tabs.Notifications,
+  //   icon: Tabs.Notifications,
+  // },
 ];
 
 export default function CommonDetail(props: CommonDetailProps = {}) {
@@ -667,7 +667,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
               </div>
             </div>
             <div className="common-content-selector">
-              <div className="content-element tabs-container">
+              <div className={`content-element tabs-container ${footerClass}`}>
                 <div className="tabs-wrapper">
                   {tabs.map((t) => (
                     <div
@@ -777,13 +777,36 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                 />
               )}
             </div>
+            <div
+              className={`tabs-container bottom ${stickyClass} ${footerClass}`}
+            >
+              <div className="tabs-wrapper">
+                {tabs.map((t) => (
+                  <div
+                    key={t.key}
+                    className={`tab-item ${tab === t.key ? "active" : ""}`}
+                    onClick={() => changeTabHandler(t.key)}
+                  >
+                    <img
+                      src={`/icons/common-icons/${t.icon}${
+                        tab === t.key ? "-active" : ""
+                      }.svg`}
+                      alt={t.name}
+                    />
+                    {t.name}
+                  </div>
+                ))}
+              </div>
+            </div>
             {shouldShowStickyJoinEffortButton && (
-              <button
-                className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
-                onClick={handleOpen}
-              >
-                Join the effort
-              </button>
+              <>
+                <button
+                  className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
+                  onClick={handleOpen}
+                >
+                  Join the effort
+                </button>
+              </>
             )}
             {(screenSize === ScreenSize.Desktop || tab !== Tabs.About) && (
               <div className="sidebar-wrapper">{renderSidebarContent()}</div>

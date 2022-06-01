@@ -99,46 +99,6 @@
         padding: 0px $content-padding;
         justify-content: space-between;
 
-        .tabs-container {
-          width: 100%;
-          display: flex;
-          justify-content: space-between;
-
-          .tabs-wrapper {
-            display: flex;
-            align-items: flex-end;
-            padding-top: 30px;
-            font-family: NunitoSans, sans-serif;
-            font-weight: bold;
-            overflow-x: auto;
-
-            .tab-item {
-              font-weight: bold;
-              color: $deep-blue;
-              cursor: pointer;
-              border-bottom: 4px solid;
-              border-bottom-color: transparent;
-              padding-bottom: 0.625rem;
-              margin-right: 3rem;
-
-              img{
-                display: block;
-                text-align: center;
-                padding-bottom: 0.625rem;
-                margin: 0 auto;
-              }
-
-              &.active {
-                border-bottom-color: $purple;
-                color: $purple;
-              }
-
-              &:hover {
-                color: $purple;
-              }
-            }
-          }
-        }
 
         .social-wrapper {
           display: flex;
@@ -161,6 +121,51 @@
               margin-right: 6px;
             }
           }
+        }
+      }
+    }
+  }
+
+  .tabs-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    &.mobile {
+      position: fixed;
+    }
+
+    .tabs-wrapper {
+      display: flex;
+      align-items: flex-end;
+      padding-top: 30px;
+      font-family: NunitoSans, sans-serif;
+      font-weight: bold;
+      overflow-x: auto;
+
+      .tab-item {
+        font-weight: bold;
+        color: $deep-blue;
+        cursor: pointer;
+        border-bottom: 4px solid;
+        border-bottom-color: transparent;
+        padding-bottom: 0.625rem;
+        margin-right: 3rem;
+
+        img {
+          display: block;
+          text-align: center;
+          padding-bottom: 0.625rem;
+          margin: 0 auto;
+        }
+
+        &.active {
+          border-bottom-color: $purple;
+          color: $purple;
+        }
+
+        &:hover {
+          color: $purple;
         }
       }
     }
@@ -202,6 +207,7 @@
     width: 3rem;
     height: 3rem;
   }
+
   .common-detail-wrapper__menu-button--small {
     width: 2.5rem;
     height: 2.5rem;
@@ -298,13 +304,42 @@
             margin: 0px -#{$content-padding-mobile};
             padding: 0px #{$content-padding-mobile};
 
+            &.footer-sticky {
+              box-shadow: 0px -2px 4px rgba(0, 26, 54, 0.1);
+              .tabs-wrapper {
+                position: absolute;
+                bottom: 25px;
+                display: none;
+
+              }
+            }
+
+            &.bottom {
+
+              display: block !important;
+              z-index: 20;
+
+              .tabs-wrapper {
+                .tab-item {
+                  margin-right: 0;
+                }
+              }
+            }
+
             .tabs-wrapper {
-              justify-content: space-between;
+              box-shadow: 0px -2px 4px rgba(0, 26, 54, 0.1);
+              justify-content: space-around;
               width: 100%;
               font-size: $xsmall;
+              position: fixed;
+              bottom: 0;
+              background: white;
+              z-index: 20;
+
 
               .tab-item {
                 margin-right: unset;
+                border: none;
               }
             }
           }
@@ -360,6 +395,39 @@
           }
         }
 
+        .tabs-container {
+          flex-direction: column-reverse;
+          align-items: center;
+          margin: 0px -20px;
+          padding: 0px 20px;
+          background: #FFFFFF;
+          box-shadow: 0px -2px 4px rgba(0, 26, 54, 0.1);
+          .tabs-wrapper {
+            display: flex;
+            align-items: flex-end;
+            padding-top: 30px;
+            background: white;
+            justify-content: space-between;
+            width: 100%;
+            .tab-item {
+              margin-right: 0;
+              font-weight: bold;
+              color: #071836;
+              cursor: pointer;
+
+              border-bottom-color: transparent;
+              padding-bottom: 0.625rem;
+              font-size: 14px;
+
+              &.active{
+                color:$purple
+              }
+            }
+          }
+        }
+
+
+
         .sidebar-wrapper {
           width: unset;
           padding-left: unset;
@@ -371,7 +439,7 @@
           &.sticky {
             position: fixed;
             z-index: 1;
-            bottom: 30px;
+            bottom: 110px;
             width: 90%;
             transform: translateX(-50%);
             margin-right: unset;
@@ -379,7 +447,7 @@
 
             &.footer-sticky {
               position: absolute;
-              bottom: 25px;
+              bottom: 110px;
             }
           }
         }
