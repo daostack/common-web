@@ -90,24 +90,7 @@
     "promise/no-nesting": 1,
 
     // This is temporary rule that we should remove on later stage
-    "@typescript-eslint/no-var-requires": 0,
-
-    // Console usage is not allowed. Use logger instead
-    "no-console": 0,
-
-    "no-case-declarations": 0,
-
-    "callback-return": 0,
-
-    "@typescript-eslint/explicit-module-boundary-types": 0,
-
-    "@typescript-eslint/no-non-null-assertion": 0,
-
-    "@typescript-eslint/no-non-null-asserted-optional-chain": 0,
-
-    "@typescript-eslint/no-unnecessary-type-constraint": 0,
-
-    "@typescript-eslint/no-empty-function": 0
+    "@typescript-eslint/no-var-requires": 0
   },
   "overrides": [
     {
@@ -119,8 +102,27 @@
         "plugin:@typescript-eslint/recommended"
       ],
       "rules": {
+        "no-console": 0,
+
+        "no-case-declarations": 0,
+
+        "callback-return": 0,
+
+        "no-empty-function": 0,
+
         "@typescript-eslint/no-explicit-any": 0,
-        "@typescript-eslint/interface-name-prefix": 0
+
+        "@typescript-eslint/interface-name-prefix": 0,
+
+        "@typescript-eslint/explicit-module-boundary-types": 0,
+
+        "@typescript-eslint/no-non-null-assertion": 0,
+
+        "@typescript-eslint/no-non-null-asserted-optional-chain": 0,
+
+        "@typescript-eslint/no-unnecessary-type-constraint": 0,
+
+        "@typescript-eslint/no-empty-function": 0
       }
     }
   ]
