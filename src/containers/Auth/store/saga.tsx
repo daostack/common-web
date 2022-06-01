@@ -4,6 +4,7 @@ import {
   getRandomUserAvatarURL,
   tokenHandler,
   transformFirebaseDataSingle,
+  isError,
 } from "../../../shared/utils";
 import * as actions from "./actions";
 import firebase from "../../../shared/utils/firebase";
@@ -273,10 +274,12 @@ function* socialLoginSaga({
       payload.callback(null, { user, isNewUser });
     }
   } catch (error) {
-    yield put(actions.socialLogin.failure(error));
+    if (isError(error)) {
+      yield put(actions.socialLogin.failure(error));
 
-    if (payload.callback) {
-      payload.callback(error);
+      if (payload.callback) {
+        payload.callback(error);
+      }
     }
   } finally {
     yield put(actions.stopAuthLoading());
@@ -300,10 +303,12 @@ function* loginUsingEmailAndPasswordSaga({
       payload.callback(null, user);
     }
   } catch (error) {
-    yield put(actions.loginUsingEmailAndPassword.failure(error));
+    if (isError(error)) {
+      yield put(actions.loginUsingEmailAndPassword.failure(error));
 
-    if (payload.callback) {
-      payload.callback(error);
+      if (payload.callback) {
+        payload.callback(error);
+      }
     }
   } finally {
     yield put(actions.stopAuthLoading());
@@ -326,10 +331,12 @@ function* sendVerificationCodeSaga({
       payload.callback(null, confirmationResult);
     }
   } catch (error) {
-    yield put(actions.sendVerificationCode.failure(error));
+    if (isError(error)) {
+      yield put(actions.sendVerificationCode.failure(error));
 
-    if (payload.callback) {
-      payload.callback(error);
+      if (payload.callback) {
+        payload.callback(error);
+      }
     }
   } finally {
     yield put(actions.stopAuthLoading());
@@ -353,10 +360,12 @@ function* confirmVerificationCodeSaga({
       payload.callback(null, { user, isNewUser });
     }
   } catch (error) {
-    yield put(actions.confirmVerificationCode.failure(error));
+    if (isError(error)) {
+      yield put(actions.confirmVerificationCode.failure(error));
 
-    if (payload.callback) {
-      payload.callback(error);
+      if (payload.callback) {
+        payload.callback(error);
+      }
     }
   } finally {
     yield put(actions.stopAuthLoading());
@@ -384,8 +393,10 @@ function* updateUserDetails({
     tokenHandler.setUser(user);
     yield payload.callback();
   } catch (error) {
-    yield put(actions.updateUserDetails.failure(error));
-    yield payload.callback();
+    if (isError(error)) {
+      yield put(actions.updateUserDetails.failure(error));
+      yield payload.callback();
+    }
   } finally {
     yield put(actions.stopAuthLoading());
   }
