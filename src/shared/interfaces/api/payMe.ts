@@ -5,7 +5,7 @@ export interface BuyerTokenPageCreationData {
 }
 
 export enum PaymeTypeCodes {
-  SocialId, //Social ID document. For additional information see Note 3 above
+  SocialId = 1, //Social ID document. For additional information see Note 3 above
   BankAccountOwnership, //Proof of bank account ownership or a cancelled cheque photo. For additional information see Note 3 above
   CorporateCertificate, //For additional information see Note 3 above
   BankAuthorization, //Bank authorization
