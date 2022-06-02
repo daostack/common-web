@@ -60,6 +60,7 @@
           .current-balance-title {
             font-size: $xsmall;
             font-weight: 600;
+            text-align: center;
           }
 
           .current-balance-amount {
@@ -91,7 +92,7 @@
       }
 
       .common-transactions-chart-wrapper {
-        width: 74%;
+        width: 67%;
       }
     }
   }

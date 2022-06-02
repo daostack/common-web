@@ -385,3 +385,10 @@ export const sortByCreatedTime = (
 
   return (operandB.createdAt.seconds - operandA.createdAt.seconds);
 };
+
+export const getMonthsDifference = (startDate: Date, endDate: Date): number =>
+  (
+    endDate.getMonth() -
+    startDate.getMonth() +
+    12 * (endDate.getFullYear() - startDate.getFullYear())
+  );

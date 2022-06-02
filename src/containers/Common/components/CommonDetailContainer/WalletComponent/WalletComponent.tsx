@@ -23,7 +23,7 @@ import {
 } from "@/shared/models";
 import { Loader, ChartCanvas } from "@/shared/components";
 import { ChartType, ScreenSize } from "@/shared/constants";
-import { sortByCreatedTime, formatPrice } from "@/shared/utils";
+import { sortByCreatedTime, formatPrice, getMonthsDifference } from "@/shared/utils";
 import { getScreenSize } from "@/shared/store/selectors";
 import { fetchCommonContributions, fetchCommonProposals } from "../../../store/api";
 import { TransactionsList } from "../";
@@ -169,6 +169,7 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
       return;
 
     const BRIEF_MONTH_NAMES = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    const TRANSACTIONS_PERIOD_MONTHS_AMOUNT = 6;
 
     const uniqueTransactionsMonths = new Set();
 
@@ -176,6 +177,10 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
     const groupedByMonthPayOutsSummaries: { [key: string]: number } = {};
 
     orderedCommonTransactions
+      .filter(
+        transaction =>
+          (getMonthsDifference(new Date(transaction.createdAt.seconds * 1000), new Date()) < TRANSACTIONS_PERIOD_MONTHS_AMOUNT)
+      )
       .map(
         transaction => (
           {
@@ -210,7 +215,10 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
     const commonCreatedAtMonthNotation = BRIEF_MONTH_NAMES[new Date((common.createdAt as Time).seconds * 1000).getMonth()];
     const chartMonthLabelsList = Array.from(uniqueTransactionsMonths) as string[];
 
-    if (!chartMonthLabelsList.includes(commonCreatedAtMonthNotation)) {
+    if (
+      !chartMonthLabelsList.includes(commonCreatedAtMonthNotation)
+      && (getMonthsDifference(new Date((common.createdAt as Time).seconds * 1000), new Date()) < TRANSACTIONS_PERIOD_MONTHS_AMOUNT)
+    ) {
       chartMonthLabelsList.unshift(commonCreatedAtMonthNotation);
 
       groupedByMonthPayInsSummaries[commonCreatedAtMonthNotation] = 0;
