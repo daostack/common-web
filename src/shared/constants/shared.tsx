@@ -77,3 +77,14 @@ export enum ChatType {
   ProposalComments,
   DiscussionMessages,
 }
+
+export enum ChartType {
+  Line = "line",
+  Bar = "bar",
+  Scatter = "scatter",
+  Bubble = "bubble",
+  Pie = "pie",
+  Doughnut = "doughnut",
+  PolarArea = "polarArea",
+  Radar = "radar",  
+}

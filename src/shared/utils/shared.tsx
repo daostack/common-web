@@ -1,5 +1,5 @@
 import millify from "millify";
-import moment, { Moment } from "moment";
+import moment from "moment";
 
 import { MobileOperatingSystem, BASE_URL } from "../constants";
 import { Common, DateFormat, Proposal, Time, User } from "../models";
@@ -372,3 +372,16 @@ export function getLastActivity(data: Common) {
 
   return timeSince(new Date(lastActivity));
 }
+
+export const sortByCreatedTime = (
+  operandA: { [key: string]: any, createdAt: Time },
+  operandB: { [key: string]: any, createdAt: Time },
+): number => {
+  if (!operandB.createdAt)
+    return -1;
+
+  if (!operandA.createdAt)
+    return 1;
+
+  return (operandB.createdAt.seconds - operandA.createdAt.seconds);
+};

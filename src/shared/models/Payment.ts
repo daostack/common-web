@@ -59,3 +59,16 @@ export interface Payment {
 }
 
 export const isPayment = (payment: any): payment is Payment => payment.source;
+
+export enum TransactionType {
+  PayIn,
+  PayOut,
+}
+
+export interface TransactionData {
+  type: TransactionType;
+  amount: number;
+  createdAt: Time;
+  payerId?: string;
+  fundingRequestDescription?: string;
+}

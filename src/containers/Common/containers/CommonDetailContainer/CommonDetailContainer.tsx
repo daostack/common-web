@@ -29,6 +29,7 @@ import {
   ProposalsHistory,
   AboutSidebarComponent,
   AddDiscussionComponent,
+  WalletComponent,
 } from "../../components/CommonDetailContainer";
 import { MembershipRequestModal } from "../../components/CommonDetailContainer/MembershipRequestModal";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
@@ -93,6 +94,7 @@ export enum Tabs {
   Discussions = "discussions",
   Proposals = "proposals",
   History = "history",
+  Wallet = "wallet",
 }
 
 const tabs = [
@@ -111,6 +113,10 @@ const tabs = [
   {
     name: "History",
     key: Tabs.History,
+  },
+  {
+    name: "Wallet",
+    key: Tabs.Wallet,
   },
 ];
 
@@ -227,7 +233,6 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
             dispatch(loadProposalList.request());
           }
           break;
-
         default:
           break;
       }
@@ -750,12 +755,25 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
             </div>
           </div>
         </div>
-        <div className="main-content-container">
+        <div
+          className={
+            classNames(
+              "main-content-container",
+              {
+                wallet: (tab === Tabs.Wallet),
+              }
+            )
+          }
+        >
           <div
             className={
-              tab === Tabs.History
-                ? "content-element inner-main-content-wrapper history"
-                : "content-element inner-main-content-wrapper"
+              classNames(
+                "content-element inner-main-content-wrapper",
+                {
+                  history: tab === Tabs.History,
+                  wallet: tab === Tabs.Wallet,
+                }
+              )
             }
           >
             <div className="tab-content-wrapper">
@@ -805,6 +823,11 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                   isJoiningPending={isJoiningPending}
                 />
               )}
+              {tab === Tabs.Wallet && (
+                <WalletComponent
+                  common={common}
+                />
+              )}
             </div>
             {shouldShowStickyJoinEffortButton && (
               <button
@@ -814,9 +837,16 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                 Join the effort
               </button>
             )}
-            {(screenSize === ScreenSize.Desktop || tab !== Tabs.About) && (
-              <div className="sidebar-wrapper">{renderSidebarContent()}</div>
-            )}
+            {
+              (
+                (screenSize === ScreenSize.Desktop)
+                || (tab !== Tabs.About)
+              )
+              && (tab !== Tabs.Wallet)
+              && (
+                <div className="sidebar-wrapper">{renderSidebarContent()}</div>
+              )
+            }
           </div>
         </div>
       </div>

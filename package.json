@@ -8,6 +8,7 @@
     "@react-firebase/auth": "^0.2.10",
     "apollo-link-context": "^1.0.20",
     "axios": "^0.21.0",
+    "chart.js": "^3.8.0",
     "classnames": "^2.3.1",
     "connected-react-router": "^6.8.0",
     "craco-alias": "^3.0.1",
@@ -75,6 +76,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.5",
+    "@types/chart.js": "^2.9.37",
     "@types/file-saver": "^2.0.5",
     "@types/jest": "^24.9.0",
     "@types/lodash": "^4.14.163",

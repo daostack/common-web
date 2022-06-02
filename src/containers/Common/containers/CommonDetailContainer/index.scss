@@ -184,6 +184,10 @@
         }
       }
 
+      &.wallet {
+        justify-content: center;
+      }
+
       .sidebar-wrapper {
         width: 40%;
         padding-left: 80px;
@@ -375,6 +379,14 @@
               bottom: 25px;
             }
           }
+        }
+      }
+
+      &.wallet {
+        padding-top: 0;
+
+        .inner-main-content-wrapper {
+          padding: 0;
         }
       }
     }
