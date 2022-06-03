@@ -145,7 +145,7 @@
 
       .tab-item {
         font-weight: bold;
-        color: $deep-blue;
+        color:$light-gray-2;
         cursor: pointer;
         border-bottom: 4px solid;
         border-bottom-color: transparent;
@@ -321,6 +321,7 @@
 
               .tabs-wrapper {
                 .tab-item {
+
                   margin-right: 0;
                 }
               }
@@ -408,11 +409,12 @@
             padding-top:1.875rem;
             background: white;
             justify-content: space-between;
-            width: 100%;
+            width: 94%;
+            margin-bottom: 7px;
             .tab-item {
               margin-right: 0;
               font-weight: bold;
-              color: $deep-blue;
+              color:$light-gray-2;
               cursor: pointer;
 
               border-bottom-color: transparent;
