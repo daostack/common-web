@@ -23,20 +23,16 @@ import {
 } from "@/shared/models";
 import { Loader, ChartCanvas } from "@/shared/components";
 import { ChartType, ScreenSize } from "@/shared/constants";
-import { sortByCreatedTime, formatPrice, getMonthsDifference } from "@/shared/utils";
+import { sortByCreatedTime, formatPrice } from "@/shared/utils";
 import { getScreenSize } from "@/shared/store/selectors";
 import { fetchCommonContributions, fetchCommonProposals } from "../../../store/api";
 import { TransactionsList } from "../";
+import { CommonWalletChartOptions, WalletMenuItems } from "./constants";
+import { useCommonTransactionsChartDataSet } from "./hooks";
 import "./index.scss";
 
 interface WalletComponentProps {
   common: Common;
-}
-
-enum WalletMenuItems {
-  All = "All",
-  PayIn = "Pay-In",
-  PayOut = "Pay-Out",
 }
 
 const getTransactionsListTitle = (activeMenuItem: WalletMenuItems): string => {
@@ -52,14 +48,14 @@ const getTransactionsListTitle = (activeMenuItem: WalletMenuItems): string => {
 
 const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
   const walletMenuRef = useRef<HTMLDivElement>(null);
-  // eslint-disable-next-line
-  const initialWalletMenuOffsetTop = useMemo(() => walletMenuRef.current?.offsetTop, [walletMenuRef.current]);
+  const initialWalletMenuOffsetTop = walletMenuRef.current?.offsetTop || null;
   const [isWalletMenuSticked, setIsWalletMenuSticked] = useState<boolean>(false);
 
   const [activeMenuItem, setActiveMenuItem] = useState<WalletMenuItems>(WalletMenuItems.All);
   const [paymentsInData, setPaymentsInData] = useState<TransactionData[] | null>(null);
   const [paymentsOutData, setPaymentsOutData] = useState<TransactionData[] | null>(null);
   const [formattedChartData, setFormattedChartData] = useState<ChartData | null>(null);
+  const { getCommonTransactionsChartDataSet } = useCommonTransactionsChartDataSet();
 
   const screenSize = useSelector(getScreenSize());
   const isMobileView = (screenSize === ScreenSize.Mobile);
@@ -168,84 +164,12 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
     if (!!formattedChartData || !orderedCommonTransactions)
       return;
 
-    const BRIEF_MONTH_NAMES = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
-    const TRANSACTIONS_PERIOD_MONTHS_AMOUNT = 6;
-
-    const uniqueTransactionsMonths = new Set();
-
-    const groupedByMonthPayInsSummaries: { [key: string]: number } = {};
-    const groupedByMonthPayOutsSummaries: { [key: string]: number } = {};
-
-    orderedCommonTransactions
-      .filter(
-        transaction =>
-          (getMonthsDifference(new Date(transaction.createdAt.seconds * 1000), new Date()) < TRANSACTIONS_PERIOD_MONTHS_AMOUNT)
-      )
-      .map(
-        transaction => (
-          {
-            ...transaction,
-            amount: (transaction.amount / 100),
-          }
-        )
-      )
-      .reverse()
-      .map(
-        transaction => {
-          const transactionMonthNotation = BRIEF_MONTH_NAMES[new Date(transaction.createdAt.seconds * 1000).getMonth()];
-
-          uniqueTransactionsMonths.add(transactionMonthNotation);
-
-          if (groupedByMonthPayInsSummaries[transactionMonthNotation] === undefined)
-            groupedByMonthPayInsSummaries[transactionMonthNotation] = 0;
-
-          if (groupedByMonthPayOutsSummaries[transactionMonthNotation] === undefined)
-            groupedByMonthPayOutsSummaries[transactionMonthNotation] = 0;
-
-          if (transaction.type === TransactionType.PayIn) {
-            groupedByMonthPayInsSummaries[transactionMonthNotation] += transaction.amount;
-          } else if (transaction.type === TransactionType.PayOut) {
-            groupedByMonthPayOutsSummaries[transactionMonthNotation] += transaction.amount;
-          }
-
-          return transaction;
-        }
-    );
-
-    const commonCreatedAtMonthNotation = BRIEF_MONTH_NAMES[new Date((common.createdAt as Time).seconds * 1000).getMonth()];
-    const chartMonthLabelsList = Array.from(uniqueTransactionsMonths) as string[];
-
-    if (
-      !chartMonthLabelsList.includes(commonCreatedAtMonthNotation)
-      && (getMonthsDifference(new Date((common.createdAt as Time).seconds * 1000), new Date()) < TRANSACTIONS_PERIOD_MONTHS_AMOUNT)
-    ) {
-      chartMonthLabelsList.unshift(commonCreatedAtMonthNotation);
-
-      groupedByMonthPayInsSummaries[commonCreatedAtMonthNotation] = 0;
-      groupedByMonthPayOutsSummaries[commonCreatedAtMonthNotation] = 0;
-    }
-
-    const payInsChartData = chartMonthLabelsList.map(monthLabel => groupedByMonthPayInsSummaries[monthLabel]);
-    const payOutsChartData = chartMonthLabelsList.map(monthLabel => groupedByMonthPayOutsSummaries[monthLabel]);
-    const balanceChartData = payInsChartData.reduce(
-      (accum: { currentBalance: number, balances: number[] }, payInsMonthSum, index) => {
-        let newBalance = accum.currentBalance;
-
-        newBalance += payInsMonthSum;
-        newBalance -= payOutsChartData[index];
-
-        return (
-          {
-            currentBalance: newBalance,
-            balances: [...accum.balances, newBalance],
-          }
-        );
-      },
-      {
-        currentBalance: 0,
-        balances: [],
-      }
-    ).balances;
+    const {
+      chartMonthLabelsList,
+      balanceChartData,
+      payInsChartData,
+      payOutsChartData,
+    } = getCommonTransactionsChartDataSet(orderedCommonTransactions, common.createdAt as Time);
 
     setFormattedChartData(
       {
@@ -278,17 +202,19 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
         ],
       }
     );
-  }, [formattedChartData, orderedCommonTransactions, common.createdAt]);
+  }, [
+      formattedChartData,
+      orderedCommonTransactions,
+      common.createdAt,
+      getCommonTransactionsChartDataSet,
+    ]
+  );
 
   useEffect(() => {
     if (!isMobileView || !initialWalletMenuOffsetTop)
       return;
 
-    if (window.pageYOffset >= (initialWalletMenuOffsetTop + 680)) {
-      setIsWalletMenuSticked(true);
-    } else {
-      setIsWalletMenuSticked(false);
-    }
+    setIsWalletMenuSticked(window.pageYOffset >= (initialWalletMenuOffsetTop + 680));
     // eslint-disable-next-line
   }, [isMobileView, initialWalletMenuOffsetTop, window.pageYOffset]);
 
@@ -337,56 +263,7 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
                     ? <ChartCanvas
                         type={ChartType.Line}
                         data={formattedChartData}
-                        options={
-                          {
-                            elements: {
-                              point: {
-                                pointStyle: "circle",
-                              }
-                            },
-                            plugins: {
-                              tooltip: {
-                                enabled: true,
-                                position: "nearest",
-                                usePointStyle: true,
-                              },
-                              legend: {
-                                display: true,
-                                position: "right",
-                                labels: {
-                                  color: "rgb(179, 186, 195)",
-                                  usePointStyle: true,
-                                  font: {
-                                    size: 12,
-                                  },
-                                  boxWidth: 7,
-                                }
-                              }
-                            },
-                            scales: {
-                              y: {
-                                beginAtZero: true,
-                                ticks: {
-                                  color: "rgb(179, 186, 195)",
-                                  font: {
-                                    size: 10
-                                  }
-                                }
-                              },
-                              x: {
-                                ticks: {
-                                  color: "rgb(179, 186, 195)",
-                                  font: {
-                                    size: 10
-                                  }
-                                }
-                              }
-                            },
-                            interaction: {
-                              mode: 'index',
-                            },
-                          }
-                        }
+                        options={CommonWalletChartOptions}
                       />
                   : <Loader />
                 }

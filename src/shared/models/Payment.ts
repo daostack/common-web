@@ -72,3 +72,10 @@ export interface TransactionData {
   payerId?: string;
   fundingRequestDescription?: string;
 }
+
+export interface CommonTransactionsChartDataSet {
+  chartMonthLabelsList: string[];
+  payInsChartData: number[];
+  payOutsChartData: number[];
+  balanceChartData: number[];
+}

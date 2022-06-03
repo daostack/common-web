@@ -1,8 +1,7 @@
 import React, {
   FC,
-  useRef,
   useEffect,
-  useCallback,
+  useState,
 } from "react";
 import {
   Chart,
@@ -41,35 +40,28 @@ const ChartCanvas: FC<ChartCanvasProps> = (
     Legend,
   );
 
-  const chartRef = useRef<Chart | null>(null);
+  const [chartCanvas, setChartCanvas] = useState<HTMLCanvasElement | null>(null);
 
-  const canvasCallback = useCallback((canvas: HTMLCanvasElement | null) => {
-    if (!canvas)
+  useEffect(() => {
+    if (!chartCanvas)
       return;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = chartCanvas.getContext("2d");
 
     if (!ctx)
       return;
 
-    chartRef.current = new Chart(ctx, {
-      type,
-      data,
-      options,
-    });
-    // eslint-disable-next-line
-  }, []);
+    new Chart(
+      ctx,
+      {
+        type,
+        data,
+        options,
+      }
+    );
+  }, [chartCanvas, type, data, options]);
 
-  useEffect(() => {
-    if (!chartRef.current)
-      return;
-
-    chartRef.current.data = data;
-    chartRef.current.update();
-    // eslint-disable-next-line
-  }, [data, chartRef.current]);
-
-  return <canvas ref={canvasCallback} />;
+  return <canvas ref={setChartCanvas} />;
 };
 
 export default ChartCanvas;

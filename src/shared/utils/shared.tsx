@@ -374,8 +374,8 @@ export function getLastActivity(data: Common) {
 }
 
 export const sortByCreatedTime = (
-  operandA: { [key: string]: any, createdAt: Time },
-  operandB: { [key: string]: any, createdAt: Time },
+  operandA: { createdAt: Time },
+  operandB: { createdAt: Time },
 ): number => {
   if (!operandB.createdAt)
     return -1;

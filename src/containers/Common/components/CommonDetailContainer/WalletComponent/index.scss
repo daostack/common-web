@@ -198,6 +198,7 @@
       &.sticked {
         position: fixed;
         top: 60px;
+        z-index: $header-z-index;
       }
 
       .wallet__menu {
