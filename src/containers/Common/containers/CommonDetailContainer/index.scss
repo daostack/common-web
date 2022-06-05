@@ -336,11 +336,18 @@
               bottom: 0;
               background: white;
               z-index: 20;
+              padding-top: 0.875rem;
 
 
               .tab-item {
                 margin-right: unset;
                 border: none;
+                font-size: $xxxsmall;
+
+                img{
+                  max-height: 20px;
+                  padding-bottom: 0.5rem;
+                }
               }
             }
           }
@@ -406,20 +413,27 @@
           .tabs-wrapper {
             display: flex;
             align-items: flex-end;
-            padding-top:1.875rem;
+            padding-top:0.875rem;
             background: white;
-            justify-content: space-between;
-            width: 94%;
-            margin-bottom: 7px;
+            justify-content: space-around;
+            width: 100vw;
+            margin-bottom: 0px;
+            padding-bottom: 0.5rem;
             .tab-item {
               margin-right: 0;
               font-weight: bold;
               color:$light-gray-2;
               cursor: pointer;
+              line-height: 120%;
 
               border-bottom-color: transparent;
-              padding-bottom: 0.625rem;
-              font-size: $xsmall;
+              padding-bottom: 0.5rem;
+              font-size: $xxxsmall;
+
+              img{
+                max-height: 20px;
+                padding-bottom: 0.5rem;
+              }
 
               &.active{
                 color:$purple
