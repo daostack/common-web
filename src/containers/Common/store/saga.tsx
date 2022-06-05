@@ -184,9 +184,10 @@ export function* loadCommonDiscussionList(): Generator {
     )) as DiscussionMessage[];
 
     const loadedDiscussions = discussions.map((d) => {
-      d.discussionMessage = dMessages.filter((dM) => dM.discussionId === d.id);
-      d.owner = owners.find((o) => o.uid === d.ownerId);
-      return d;
+      const newDiscussion = { ...d };
+      newDiscussion.discussionMessage = dMessages.filter((dM) => dM.discussionId === d.id);
+      newDiscussion.owner = owners.find((o) => o.uid === d.ownerId);
+      return newDiscussion;
     });
 
     yield put(actions.loadCommonDiscussionList.success(loadedDiscussions));
@@ -221,8 +222,9 @@ export function* loadDiscussionDetail(
     const owners = (yield fetchOwners(ownerIds)) as User[];
 
     const loadedDisscussionMessage = discussionMessage?.map((d) => {
-      d.owner = owners.find((o) => o.uid === d.ownerId);
-      return d;
+      const newDiscussionMessage = { ...d };
+      newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+      return newDiscussionMessage;
     });
 
     discussion.discussionMessage = loadedDisscussionMessage;
@@ -256,9 +258,10 @@ export function* loadProposalList(
     )) as DiscussionMessage[];
 
     const loadedProposals = proposals.map((d) => {
-      d.discussionMessage = dMessages.filter((dM) => dM.discussionId === d.id);
-      d.proposer = owners.find((o) => o.uid === d.proposerId);
-      return d;
+      const newProposal = { ...d };
+      newProposal.discussionMessage = dMessages.filter((dM) => dM.discussionId === d.id);
+      newProposal.proposer = owners.find((o) => o.uid === d.proposerId);
+      return newProposal;
     });
 
     yield put(actions.loadProposalList.success(loadedProposals));
