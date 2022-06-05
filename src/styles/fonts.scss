@@ -9,7 +9,7 @@ $openTypeFontFormat: "opentype";
 @font-face {
   font-family: $nunitoSansFontName;
   src: local($nunitoSansFontName),
-    url("/assets/fonts/NunitoSans-Regular.ttf")
+    url("/shared/assets/fonts/NunitoSans-Regular.ttf")
       format($trueTypeFontFormat);
   font-weight: normal;
 }
@@ -17,7 +17,7 @@ $openTypeFontFormat: "opentype";
 @font-face {
   font-family: $nunitoSansFontName;
   src: local($nunitoSansFontName),
-    url("/assets/fonts/NunitoSans-Italic.ttf")
+    url("/shared/assets/fonts/NunitoSans-Italic.ttf")
       format($trueTypeFontFormat);
   font-weight: normal;
   font-style: italic;
@@ -26,7 +26,7 @@ $openTypeFontFormat: "opentype";
 @font-face {
   font-family: $nunitoSansFontName;
   src: local($nunitoSansFontName),
-    url("/assets/fonts/NunitoSans-SemiBold.ttf")
+    url("/shared/assets/fonts/NunitoSans-SemiBold.ttf")
       format($trueTypeFontFormat);
   font-weight: 600;
 }
@@ -34,7 +34,7 @@ $openTypeFontFormat: "opentype";
 @font-face {
   font-family: $nunitoSansFontName;
   src: local($nunitoSansFontName),
-    url("/assets/fonts/NunitoSans-Bold.ttf") format($trueTypeFontFormat);
+    url("/shared/assets/fonts/NunitoSans-Bold.ttf") format($trueTypeFontFormat);
   font-weight: bold;
 }
 
@@ -42,7 +42,7 @@ $openTypeFontFormat: "opentype";
 @font-face {
   font-family: $notoSerifSCFontName;
   src: local($notoSerifSCFontName),
-    url("/assets/fonts/NotoSerifSC-SemiBold.otf")
+    url("/shared/assets/fonts/NotoSerifSC-SemiBold.otf")
       format($openTypeFontFormat);
   font-weight: 600;
 }
@@ -50,14 +50,14 @@ $openTypeFontFormat: "opentype";
 @font-face {
   font-family: $notoSerifSCFontName;
   src: local($notoSerifSCFontName),
-    url("/assets/fonts/NotoSerifSC-Bold.otf") format($openTypeFontFormat);
+    url("/shared/assets/fonts/NotoSerifSC-Bold.otf") format($openTypeFontFormat);
   font-weight: bold;
 }
 
 @font-face {
   font-family: $notoSerifSCFontName;
   src: local($notoSerifSCFontName),
-    url("/assets/fonts/NotoSerifSC-Black.otf")
+    url("/shared/assets/fonts/NotoSerifSC-Black.otf")
       format($openTypeFontFormat);
   font-weight: 900;
 }
@@ -66,13 +66,13 @@ $openTypeFontFormat: "opentype";
 @font-face {
   font-family: $assistantFontName;
   src: local($assistantFontName),
-    url("/assets/fonts/Assistant-Light.ttf") format($trueTypeFontFormat);
+    url("/shared/assets/fonts/Assistant-Light.ttf") format($trueTypeFontFormat);
   font-weight: 300;
 }
 
 @font-face {
   font-family: $assistantFontName;
   src: local($assistantFontName),
-    url("/assets/fonts/Assistant-Bold.ttf") format($trueTypeFontFormat);
+    url("/shared/assets/fonts/Assistant-Bold.ttf") format($trueTypeFontFormat);
   font-weight: bold;
 }

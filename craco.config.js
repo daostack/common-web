@@ -3,7 +3,11 @@ const CracoAlias = require("craco-alias");
 module.exports = {
   style: {
     css: {
-      loaderOptions: () => ({ url: false }),
+      loaderOptions: () => ({
+        url: {
+          filter: (url) => url.includes("/fonts/"),
+        },
+      }),
     },
   },
   plugins: [
