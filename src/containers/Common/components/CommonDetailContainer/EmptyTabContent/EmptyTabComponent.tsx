@@ -33,8 +33,12 @@ export default function EmptyTabComponent({
     onOpen: onJoinModalOpen,
     onClose: onCloseJoinModal,
   } = useAuthorizedModal();
-  const shouldShowJoinToCommonButton = Boolean(common) && !isCommonMember && !isJoiningPending;
-  const shouldAllowJoiningToCommon = Boolean(common) && !isCommonMember && (isCreationStageReached || !isJoiningPending);
+  const shouldShowJoinToCommonButton =
+    Boolean(common) && !isCommonMember && !isJoiningPending;
+  const shouldAllowJoiningToCommon =
+    Boolean(common) &&
+    !isCommonMember &&
+    (isCreationStageReached || !isJoiningPending);
 
   const handleModalOpen = useCallback(() => {
     onJoinModalOpen(LoginModalType.RequestToJoin);
@@ -62,17 +66,12 @@ export default function EmptyTabComponent({
           {currentTab === Tabs.Proposals && (
             <img alt={currentTab} src="/icons/proposals-empty.svg" />
           )}
-          {currentTab === Tabs.History && (
-            <img alt={currentTab} src="/icons/proposals-empty.svg" />
-          )}
+
           {currentTab === Tabs.Discussions && (
             <img alt={currentTab} src="/icons/discussions-empty.svg" />
           )}
           {currentTab === "my-commons" && (
-            <img
-              alt={currentTab}
-              src="/assets/images/human-pyramid.svg"
-            />
+            <img alt={currentTab} src="/assets/images/human-pyramid.svg" />
           )}
           {currentTab === "messages" && (
             <img
