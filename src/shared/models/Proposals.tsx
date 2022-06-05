@@ -4,7 +4,6 @@ import {
   MemberAdmittance,
 } from "@/shared/models/governance/proposals";
 import { DiscussionMessage } from "./DiscussionMessage";
-import { VoteOutcome } from "./Votes";
 import { User } from "./User";
 
 export enum ProposalFundingState {

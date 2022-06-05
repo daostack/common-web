@@ -1,5 +1,5 @@
 import millify from "millify";
-import moment, { Moment } from "moment";
+import moment from "moment";
 
 import { MobileOperatingSystem, BASE_URL } from "../constants";
 import { Common, DateFormat, Proposal, Time, User } from "../models";

@@ -28,20 +28,10 @@ interface ChangeMonthlyContributionProps {
 const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
   props
 ) => {
-  const {
-    currentSubscription,
-    common,
-    onFinish,
-    goBack,
-    onLoadingToggle,
-    styles,
-  } = props;
-  const {
-    setTitle,
-    setOnGoBack,
-    onError,
-    setShouldShowClosePrompt,
-  } = useMyContributionsContext();
+  const { currentSubscription, onFinish, goBack, onLoadingToggle, styles } =
+    props;
+  const { setTitle, setOnGoBack, onError, setShouldShowClosePrompt } =
+    useMyContributionsContext();
   const dispatch = useDispatch();
   const [step, setStep] = useState<ChangeMonthlyContributionStep>(
     ChangeMonthlyContributionStep.AmountSelection

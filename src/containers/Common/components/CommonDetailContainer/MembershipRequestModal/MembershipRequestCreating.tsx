@@ -46,7 +46,7 @@ export default function MembershipRequestCreating(props: IStageProps) {
 
       setIsCreationSubmitted(true);
     })();
-  }, [isCreationSubmitted, common, dispatch, userData]);
+  }, [isCreationSubmitted, common, dispatch, userData, setUserData]);
 
   useEffect(() => {
     if (isCreationSubmitted && !isLoading) {

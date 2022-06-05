@@ -178,7 +178,7 @@ export function MembershipRequestModal(props: IProps) {
         stage: prevStage,
       };
     });
-  }, [common]);
+  }, []);
 
   useEffect(() => {
     if (stage === MembershipRequestStage.Creating) {

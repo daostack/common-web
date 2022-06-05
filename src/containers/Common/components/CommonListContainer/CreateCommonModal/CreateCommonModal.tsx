@@ -12,10 +12,7 @@ import { getScreenSize } from "@/shared/store/selectors";
 import { useZoomDisabling } from "@/shared/hooks";
 import { ScreenSize } from "@/shared/constants";
 import { Common } from "@/shared/models";
-import {
-  IntermediateCreateCommonPayload,
-  PaymentPayload,
-} from "../../../interfaces";
+import { IntermediateCreateCommonPayload } from "../../../interfaces";
 import { Confirmation } from "./Confirmation";
 import { CreationSteps } from "./CreationSteps";
 import { Error } from "./Error";
@@ -47,11 +44,8 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     stage: CreateCommonStage.Introduction,
     shouldStartFromLastStep: false,
   });
-  const [
-    creationData,
-    setCreationData,
-  ] = useState<IntermediateCreateCommonPayload>(INITIAL_DATA);
-  const [paymentData, setPaymentData] = useState<PaymentPayload>({});
+  const [creationData, setCreationData] =
+    useState<IntermediateCreateCommonPayload>(INITIAL_DATA);
   const [title, setTitle] = useState<ReactNode>("");
   const [isBigTitle, setIsBigTitle] = useState(true);
   const [isHeaderScrolledToTop, setIsHeaderScrolledToTop] = useState(true);
@@ -191,11 +185,9 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     setBigTitle,
     setGoBackHandler,
     moveStageForward,
-    handleError,
     creationData,
     createdCommon,
     shouldStartFromLastStep,
-    paymentData,
     props.onClose,
     errorText,
     handleCommonCreation,

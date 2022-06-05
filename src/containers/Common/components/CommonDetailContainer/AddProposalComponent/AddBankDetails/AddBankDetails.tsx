@@ -262,7 +262,7 @@ export const AddBankDetails = (props: IProps) => {
       );
       notify("Bank details added successfully");
     },
-    [dispatch, bankLetterFile, photoIdFile, handleDataChange]
+    [dispatch, bankLetterFile, photoIdFile, handleDataChange, notify]
   );
 
   const handleDetailsUpdate = useCallback<FormikConfig<FormValues>["onSubmit"]>(

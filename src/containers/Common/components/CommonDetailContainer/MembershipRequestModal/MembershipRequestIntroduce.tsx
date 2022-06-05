@@ -22,7 +22,7 @@ const getInitialValues = (data: IStageProps["userData"]): FormValues => ({
 });
 
 export default function MembershipRequestIntroduce(props: IStageProps) {
-  const { userData, setUserData, common, governance } = props;
+  const { userData, setUserData, governance } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
@@ -42,7 +42,7 @@ export default function MembershipRequestIntroduce(props: IStageProps) {
         stage: nextStage,
       }));
     },
-    [setUserData, common]
+    [setUserData, governance]
   );
 
   return (

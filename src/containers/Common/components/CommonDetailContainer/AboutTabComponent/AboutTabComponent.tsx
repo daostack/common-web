@@ -2,7 +2,6 @@ import React from "react";
 import { CommonShare, Linkify } from "@/shared/components";
 import { Colors, ScreenSize, ShareViewType } from "@/shared/constants";
 import { Common } from "@/shared/models";
-import { formatPrice } from "@/shared/utils";
 import "./index.scss";
 
 interface AboutTabComponentProps {
@@ -21,9 +20,6 @@ export default function AboutTabComponent({
   isJoiningPending,
 }: AboutTabComponentProps) {
   const shouldShowJoinToCommonButton = screenSize === ScreenSize.Desktop && !isCommonMember && !isJoiningPending;
-  const renderContributionType = (type: string) => {
-    return <b>{type}</b>;
-  };
   return (
     <div className="about-name-wrapper">
       <div className="description">
