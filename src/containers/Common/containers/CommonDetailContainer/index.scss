@@ -30,7 +30,7 @@
         display: flex;
         margin-top: 32px;
         border-bottom: 1px solid $light-gray-1;
-        padding-bottom: 30px;
+        padding-bottom: 1.875rem;
         justify-content: space-between;
 
         .text {
@@ -99,39 +99,6 @@
         padding: 0px $content-padding;
         justify-content: space-between;
 
-        .tabs-container {
-          width: 100%;
-          display: flex;
-          justify-content: space-between;
-
-          .tabs-wrapper {
-            display: flex;
-            align-items: flex-end;
-            padding-top: 30px;
-            font-family: NunitoSans, sans-serif;
-            font-weight: bold;
-            overflow-x: auto;
-
-            .tab-item {
-              font-weight: bold;
-              color: $deep-blue;
-              cursor: pointer;
-              border-bottom: 4px solid;
-              border-bottom-color: transparent;
-              padding-bottom: 20px;
-              margin-right: 3rem;
-
-              &.active {
-                border-bottom-color: $purple;
-                color: $purple;
-              }
-
-              &:hover {
-                color: $purple;
-              }
-            }
-          }
-        }
 
         .social-wrapper {
           display: flex;
@@ -159,6 +126,51 @@
     }
   }
 
+  .tabs-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    &.mobile {
+      position: fixed;
+    }
+
+    .tabs-wrapper {
+      display: flex;
+      align-items: flex-end;
+      padding-top: 1.875rem;
+      font-family: NunitoSans, sans-serif;
+      font-weight: bold;
+      overflow-x: auto;
+
+      .tab-item {
+        font-weight: bold;
+        color:$light-gray-2;
+        cursor: pointer;
+        border-bottom: 4px solid;
+        border-bottom-color: transparent;
+        padding-bottom: 0.625rem;
+        margin-right: 3rem;
+
+        img {
+          display: block;
+          text-align: center;
+          padding-bottom: 0.625rem;
+          margin: 0 auto;
+        }
+
+        &.active {
+          border-bottom-color: $purple;
+          color: $purple;
+        }
+
+        &:hover {
+          color: $purple;
+        }
+      }
+    }
+  }
+
   .main-content-container {
     margin-top: 50px;
     margin: 0px -#{$content-padding};
@@ -168,11 +180,11 @@
     .inner-main-content-wrapper {
       display: flex;
       padding: 0px $content-padding;
-      padding-bottom: 30px;
+      padding-bottom: 1.875rem;
       //max-width: $element-max-width;
       //margin: auto;
       .tab-content-wrapper {
-        margin-bottom: 20px;
+        margin-bottom: 1.25rem;
         width: 60%;
 
         .about-title {
@@ -180,7 +192,7 @@
           font-size: $moderate-med;
           font-weight: bold;
           color: $blue-text;
-          padding-bottom: 20px;
+          padding-bottom: 1.25rem;
         }
       }
 
@@ -195,6 +207,7 @@
     width: 3rem;
     height: 3rem;
   }
+
   .common-detail-wrapper__menu-button--small {
     width: 2.5rem;
     height: 2.5rem;
@@ -291,13 +304,50 @@
             margin: 0px -#{$content-padding-mobile};
             padding: 0px #{$content-padding-mobile};
 
+            &.footer-sticky {
+              box-shadow: 0px -2px 4px rgba(0, 26, 54, 0.1);
+              .tabs-wrapper {
+                position: absolute;
+                bottom: 1.563rem;
+                display: none;
+
+              }
+            }
+
+            &.bottom {
+
+              display: block !important;
+              z-index: 20;
+
+              .tabs-wrapper {
+                .tab-item {
+
+                  margin-right: 0;
+                }
+              }
+            }
+
             .tabs-wrapper {
-              justify-content: space-between;
+              box-shadow: 0px -2px 4px rgba(0, 26, 54, 0.1);
+              justify-content: space-around;
               width: 100%;
               font-size: $xsmall;
+              position: fixed;
+              bottom: 0;
+              background: white;
+              z-index: 20;
+              padding-top: 0.875rem;
+
 
               .tab-item {
                 margin-right: unset;
+                border: none;
+                font-size: $xxxsmall;
+
+                img{
+                  max-height: 20px;
+                  padding-bottom: 0.5rem;
+                }
               }
             }
           }
@@ -333,7 +383,7 @@
     .main-content-container {
       margin: 0px -#{$content-padding-mobile};
       background-color: $light-purple-background;
-      padding: 20px 0;
+      padding: 1.25rem 0;
 
       .inner-main-content-wrapper {
         position: relative;
@@ -353,6 +403,47 @@
           }
         }
 
+        .tabs-container {
+          flex-direction: column-reverse;
+          align-items: center;
+          margin: 0px -1.25rem;
+          padding: 0px 1.25rem;
+          background: #FFFFFF;
+          box-shadow: 0px -2px 4px rgba(0, 26, 54, 0.1);
+          .tabs-wrapper {
+            display: flex;
+            align-items: flex-end;
+            padding-top:0.875rem;
+            background: white;
+            justify-content: space-around;
+            width: 100vw;
+            margin-bottom: 0px;
+            padding-bottom: 0.5rem;
+            .tab-item {
+              margin-right: 0;
+              font-weight: bold;
+              color:$light-gray-2;
+              cursor: pointer;
+              line-height: 120%;
+
+              border-bottom-color: transparent;
+              padding-bottom: 0.5rem;
+              font-size: $xxxsmall;
+
+              img{
+                max-height: 20px;
+                padding-bottom: 0.5rem;
+              }
+
+              &.active{
+                color:$purple
+              }
+            }
+          }
+        }
+
+
+
         .sidebar-wrapper {
           width: unset;
           padding-left: unset;
@@ -364,7 +455,7 @@
           &.sticky {
             position: fixed;
             z-index: 1;
-            bottom: 30px;
+            bottom: 6.875rem;
             width: 90%;
             transform: translateX(-50%);
             margin-right: unset;
@@ -372,7 +463,7 @@
 
             &.footer-sticky {
               position: absolute;
-              bottom: 25px;
+              bottom: 6.875rem;
             }
           }
         }
