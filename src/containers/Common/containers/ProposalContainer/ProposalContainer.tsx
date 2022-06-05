@@ -38,7 +38,7 @@ const ProposalContainer = () => {
     currentProposal &&
     currentTab && (
       <CommonDetailContainer
-        commonId={currentProposal.commonId}
+        commonId={currentProposal.data.args.commonId}
         activeModalElement={currentProposal}
         linkType={DynamicLinkType.Proposal}
         tab={currentTab}
