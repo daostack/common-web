@@ -7,7 +7,7 @@
   justify-content: space-between;
   width: 100%;
   max-width: 18.75rem;
-  height: 13.125rem;
+  height: 14rem;
   border-radius: 1.5rem;
   box-shadow: 0 3px 8px 0 #001a3614;
   background-color: #ffffff;
@@ -15,6 +15,7 @@
   .proposal-item__header {
     height: 1.7rem;
     border-radius: 1.5rem 1.5rem 0 0;
+    margin-bottom: 1.3rem;
 
     .state-inner-wrapper,
     .inner-wrapper {
