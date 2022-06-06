@@ -8,24 +8,10 @@ import {
 import {
   transformFirebaseDataList,
   transformFirebaseDataSingle,
+  sortByCreatedTime,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 import { ApproveOrDeclineProposalDto } from "../interfaces";
-
-function sortByCreateTime<
-  T extends { createdAt: firebase.firestore.Timestamp }[]
->(data: T): T {
-  return data.sort((itemA, itemB) => {
-    if (!itemB.createdAt) {
-      return -1;
-    }
-    if (!itemA.createdAt) {
-      return 1;
-    }
-
-    return itemB.createdAt.seconds - itemA.createdAt.seconds;
-  });
-}
 
 export async function fetchPendingApprovalProposals(): Promise<
   FundsAllocation[]
@@ -40,9 +26,12 @@ export async function fetchPendingApprovalProposals(): Promise<
       FundingAllocationStatus.PENDING_INVOICE_APPROVAL
     )
     .get();
-  const data = transformFirebaseDataList<FundsAllocation>(proposals);
+  const data =
+    transformFirebaseDataList<FundsAllocation>(proposals).sort(
+      sortByCreatedTime
+    );
 
-  return sortByCreateTime(data);
+  return data;
 }
 
 export async function fetchApprovedProposals(): Promise<FundsAllocation[]> {
@@ -53,9 +42,12 @@ export async function fetchApprovedProposals(): Promise<FundsAllocation[]> {
     .where("state", "==", ProposalState.PASSED)
     .where("data.tracker.trusteeApprovedAt", "!=", null)
     .get();
-  const data = transformFirebaseDataList<FundsAllocation>(proposals);
+  const data =
+    transformFirebaseDataList<FundsAllocation>(proposals).sort(
+      sortByCreatedTime
+    );
 
-  return sortByCreateTime(data);
+  return data;
 }
 
 export async function fetchDeclinedProposals(): Promise<FundsAllocation[]> {
@@ -70,9 +62,12 @@ export async function fetchDeclinedProposals(): Promise<FundsAllocation[]> {
       FundingAllocationStatus.PENDING_INVOICE_UPLOAD
     )
     .get();
-  const data = transformFirebaseDataList<FundsAllocation>(proposals);
+  const data =
+    transformFirebaseDataList<FundsAllocation>(proposals).sort(
+      sortByCreatedTime
+    );
 
-  return sortByCreateTime(data);
+  return data;
 }
 
 export async function fetchProposalById(
