@@ -1,3 +1,4 @@
+import firebase from "firebase/app";
 import { ProposalsTypes } from "@/shared/constants";
 import { BaseProposal } from "./BaseProposal";
 import { BasicArgsProposal } from "./BasicArgsProposal";
@@ -13,6 +14,7 @@ export interface FundsRequest extends BaseProposal {
   type: ProposalsTypes.FUNDS_REQUEST;
   data: {
     args: FundsRequestArgs;
+    expiresOn: firebase.firestore.Timestamp;
   };
   limitations: {
     minAmount: number;

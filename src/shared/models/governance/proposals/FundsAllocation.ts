@@ -22,6 +22,7 @@ export interface FundsAllocationArgs extends BasicArgsProposal {
 
 export interface FundsAllocation extends BaseProposal {
   data: {
+    expiresOn: firebase.firestore.Timestamp;
     args: FundsAllocationArgs;
     legal: {
       payoutDocs: DocInfo[];

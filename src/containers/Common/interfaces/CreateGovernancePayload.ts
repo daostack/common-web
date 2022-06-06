@@ -3,14 +3,21 @@ import { BaseRule, Circle, Consequences } from "@/shared/models";
 import { Actions, BaseAction } from "@/shared/models/governance/actions";
 import { Proposals } from "@/shared/models/governance/proposals";
 
-interface CreateGovernanceCircle extends Omit<Circle, "id"> {
-  id: string;
-}
+type CreateGovernanceProposals = {
+  [key in keyof Proposals]: Omit<Proposals[key], "global"> & {
+    global: Omit<Proposals[key]["global"], "weights"> & {
+      weights: {
+        circles: number[];
+        value: number;
+      }[];
+    };
+  };
+};
 
 export interface CreateGovernancePayload {
-  circles: CreateGovernanceCircle[];
+  circles: Circle[];
   actions: Partial<Record<keyof Actions, Pick<BaseAction, "cost">>>;
-  proposals: Partial<Proposals>;
+  proposals: Partial<CreateGovernanceProposals>;
   consequences: Partial<
     Pick<Consequences, GovernanceConsequences.SUCCESSFUL_INVITATION>
   >;

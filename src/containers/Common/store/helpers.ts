@@ -7,14 +7,12 @@ export const createDefaultGovernanceCreationPayload = (
   return {
     circles: [
       {
-        id: "b5ac9ddf-a916-4c10-b712-ddc31103ecc3",
         name: "FOLLOWER",
         reputation: {},
         allowedActions: {},
         allowedProposals: {},
       },
       {
-        id: "70c0da4f-aa0d-46f4-ae96-6ee4bf9bac7f",
         name: "STANDARD_MEMBER",
         reputation: {},
         allowedActions: {
@@ -25,7 +23,6 @@ export const createDefaultGovernanceCreationPayload = (
         },
       },
       {
-        id: "29c3fba9-74c8-48aa-b850-d04a2718356f",
         name: "COMMON_LEADER",
         reputation: {},
         allowedActions: {
@@ -46,25 +43,16 @@ export const createDefaultGovernanceCreationPayload = (
         global: {
           quorum: 30,
           weights: [
-            {
-              circles: ["29c3fba9-74c8-48aa-b850-d04a2718356f"],
-              value: 60,
-            },
-            {
-              circles: ["70c0da4f-aa0d-46f4-ae96-6ee4bf9bac7f"],
-              value: 30,
-            },
-            {
-              circles: ["b5ac9ddf-a916-4c10-b712-ddc31103ecc3"],
-              value: 10,
-            },
+            { circles: [2], value: 60 },
+            { circles: [1], value: 30 },
+            { circles: [0], value: 10 },
           ],
           minApprove: 50,
           maxReject: 0,
           duration: 24,
         },
         local: {
-          defaultCircle: "29c3fba9-74c8-48aa-b850-d04a2718356f",
+          defaultCircle: 1,
           optimisticAdmittance: true,
         },
         limitations: {},

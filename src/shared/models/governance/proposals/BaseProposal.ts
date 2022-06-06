@@ -38,7 +38,7 @@ export interface BaseProposal extends BaseEntity {
     duration: number; // time in hours
     quorum: number; // required percentage of common member votes (any vote)
     weights: {
-      circles: string[]; // at least one circle is required
+      circles: number;
       value: number;
     }[]; // sum of values is 100%, ordered array by value (descending)
     minApprove: number; // weight based percentage
@@ -49,9 +49,11 @@ export interface BaseProposal extends BaseEntity {
 
   limitations: Record<string, unknown>;
 
-  votes: CalculatedVotes
+  votes: CalculatedVotes;
 
-  data: Record<string, unknown>;
+  data: {
+    expiresOn: firebase.firestore.Timestamp;
+  } & Record<string, unknown>;
 
   state: ProposalState;
 
