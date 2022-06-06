@@ -6,33 +6,12 @@ import {
 import { DiscussionMessage } from "./DiscussionMessage";
 import { User } from "./User";
 
-export enum ProposalFundingState {
-  NotRelevant = "notRelevant",
-  NotAvailable = "notAvailable",
-  Available = "available",
-  Funded = "funded",
-}
-
-export enum ProposalPaymentState {
-  NotAttempted = "notAttempted",
-  NotRelevant = "notRelevant",
-  Confirmed = "confirmed",
-  Pending = "pending",
-  Failed = "failed",
-}
-
 export enum ProposalState {
   COUNTDOWN = "countdown",
   PASSED = "passed",
   REJECTED = "failed",
   PASSED_INSUFFICIENT_BALANCE = "passedInsufficientBalance",
   EXPIRED_INVOCIES_NOT_UPLOADED = "expiredInvociesNotUploaded",
-}
-
-interface ProposalJoin {
-  __typename?: "ProposalJoin";
-  cardId: string;
-  funding: number;
 }
 
 export interface DocInfo<LegalType = number> {
