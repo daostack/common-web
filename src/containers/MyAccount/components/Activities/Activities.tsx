@@ -276,7 +276,7 @@ const Activities: FC = () => {
       && myProposals.length === 0
       && user?.uid
     ) dispatch(loadUserProposalList.request(user?.uid));
-  }, [dispatch, myProposals, user]);
+  }, [isUserProposalsLoaded, dispatch, myProposals, user]);
 
   useEffect(() => {
     fetchUserCommons();
