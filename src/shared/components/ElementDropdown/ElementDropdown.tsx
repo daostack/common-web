@@ -29,7 +29,6 @@ import {
 import { copyToClipboard } from "@/shared/utils";
 import { getScreenSize } from "@/shared/store/selectors";
 import ShareIcon from "@/shared/icons/share.icon";
-import ReportIcon from "@/shared/icons/report.icon";
 import CopyLinkIcon from "@/shared/icons/copyLink.icon";
 import {
   Common,

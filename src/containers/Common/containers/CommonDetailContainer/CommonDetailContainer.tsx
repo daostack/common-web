@@ -27,6 +27,7 @@ import {
   ProposalsComponent,
   AboutSidebarComponent,
   AddDiscussionComponent,
+  WalletComponent,
 } from "../../components/CommonDetailContainer";
 import { MembershipRequestModal } from "../../components/CommonDetailContainer/MembershipRequestModal";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
@@ -115,11 +116,11 @@ const tabs = [
     key: Tabs.Proposals,
     icon: Tabs.Proposals,
   },
-  // {
-  //   name: "Wallet",
-  //   key: Tabs.Wallet,
-  //   icon: Tabs.Wallet,
-  // },
+  {
+    name: "Wallet",
+    key: Tabs.Wallet,
+    icon: Tabs.Wallet,
+  },
   // {
   //   name: "Notifications",
   //   key: Tabs.Notifications,
@@ -237,7 +238,6 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
             dispatch(loadProposalList.request());
           }
           break;
-
         default:
           break;
       }
@@ -752,8 +752,26 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
             </div>
           </div>
         </div>
-        <div className="main-content-container">
-          <div className={"content-element inner-main-content-wrapper"}>
+        <div
+          className={
+            classNames(
+              "main-content-container",
+              {
+                wallet: (tab === Tabs.Wallet),
+              }
+            )
+          }
+        >
+          <div
+            className={
+              classNames(
+                "content-element inner-main-content-wrapper",
+                {
+                  wallet: tab === Tabs.Wallet,
+                }
+              )
+            }
+          >
             <div className="tab-content-wrapper">
               {tab === Tabs.About && (
                 <>
@@ -791,6 +809,11 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                   isJoiningPending={isJoiningPending}
                 />
               )}
+              {tab === Tabs.Wallet && (
+                <WalletComponent
+                  common={common}
+                />
+              )}
             </div>
             {isMobileView && (
               <div
@@ -825,9 +848,16 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                 </button>
               </>
             )}
-            {(screenSize === ScreenSize.Desktop || tab !== Tabs.About) && (
-              <div className="sidebar-wrapper">{renderSidebarContent()}</div>
-            )}
+            {
+              (
+                (screenSize === ScreenSize.Desktop)
+                || (tab !== Tabs.About)
+              )
+              && (tab !== Tabs.Wallet)
+              && (
+                <div className="sidebar-wrapper">{renderSidebarContent()}</div>
+              )
+            }
           </div>
         </div>
       </div>

@@ -13,3 +13,5 @@ export * from "./AddDiscussionComponent";
 export * from "./VotesComponent";
 export * from "./ProposalState";
 export * from "./ProposalDetailModal";
+export * from "./WalletComponent";
+export * from "./TransactionsList";

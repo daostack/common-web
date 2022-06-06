@@ -31,3 +31,4 @@ export * from "./ElementDropdown";
 export * from "./SocialLinks";
 export * from "./ShareModal";
 export * from "./StepProgress";
+export * from "./ChartCanvas";

@@ -25,6 +25,7 @@ import {
   tokenHandler,
   transformFirebaseDataList,
   transformFirebaseDataSingle,
+  sortByCreatedTime,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 import {
@@ -74,17 +75,32 @@ export async function fetchCommonDiscussions(commonId: string) {
 }
 
 export async function fetchCommonProposals(commonId: string) {
-  const commons = await firebase
+  const proposals = await firebase
     .firestore()
     .collection(Collection.Proposals)
     .where("commonId", "==", commonId)
     .get();
-  const data = transformFirebaseDataList<Proposal>(commons);
+
+  const data = transformFirebaseDataList<Proposal>(proposals);
 
   return data.sort(
     (proposal: Proposal, prevProposal: Proposal) =>
       prevProposal.createdAt?.seconds - proposal.createdAt?.seconds
   );
+}
+
+export async function fetchCommonContributions(commonId: string): Promise<Payment[]> {
+  const payments = await firebase
+    .firestore()
+    .collection(Collection.Payments)
+    .where("commonId", "==", commonId)
+    .get();
+
+  const data = transformFirebaseDataList<Payment>(payments);
+
+  data.sort(sortByCreatedTime);
+
+  return data;
 }
 
 export async function fetchProposalById(proposalId: string) {
@@ -471,16 +487,7 @@ export async function getUserContributionsToCommon(
     .where("commonId", "==", commonId)
     .get();
   const payments = transformFirebaseDataList<Payment>(result);
-  payments.sort((a, b) => {
-    if (!b.createdAt) {
-      return -1;
-    }
-    if (!a.createdAt) {
-      return 1;
-    }
-
-    return b.createdAt.seconds - a.createdAt.seconds;
-  });
+  payments.sort(sortByCreatedTime);
 
   return payments;
 }

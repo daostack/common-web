@@ -370,3 +370,23 @@ export function getLastActivity(data: Common) {
 
   return timeSince(new Date(lastActivity));
 }
+
+export const sortByCreatedTime = (
+  operandA: { createdAt: Time },
+  operandB: { createdAt: Time },
+): number => {
+  if (!operandB.createdAt)
+    return -1;
+
+  if (!operandA.createdAt)
+    return 1;
+
+  return (operandB.createdAt.seconds - operandA.createdAt.seconds);
+};
+
+export const getMonthsDifference = (startDate: Date, endDate: Date): number =>
+  (
+    endDate.getMonth() -
+    startDate.getMonth() +
+    12 * (endDate.getFullYear() - startDate.getFullYear())
+  );

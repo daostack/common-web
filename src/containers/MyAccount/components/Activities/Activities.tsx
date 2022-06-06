@@ -271,8 +271,11 @@ const Activities: FC = () => {
   }, [dispatch, commons]);
 
   useEffect(() => {
-    if (myProposals.length === 0 && user?.uid)
-      dispatch(loadUserProposalList.request(user?.uid));
+    if (
+      !isUserProposalsLoaded
+      && myProposals.length === 0
+      && user?.uid
+    ) dispatch(loadUserProposalList.request(user?.uid));
   }, [dispatch, myProposals, user]);
 
   useEffect(() => {
@@ -373,7 +376,7 @@ const Activities: FC = () => {
           <section className="my-account-activities__proposals">
             <div className="my-account-activities__section-header">
               <h3>
-                Prososals ({myFundingProposalsAmount})
+                Proposals ({myFundingProposalsAmount})
               </h3>
               <NavLink
                 className={classNames(
@@ -393,7 +396,7 @@ const Activities: FC = () => {
               </NavLink>
             </div>
             {
-              (isUserProposalsLoaded && !!myFundingProposals)
+              myFundingProposals
               ? (myFundingProposalsAmount !== 0)
                 ? renderCollectionList(myFundingProposals, ActivitiesCollection.PROPOSALS)
                 : <div>No proposals yet</div>
@@ -423,7 +426,7 @@ const Activities: FC = () => {
               </NavLink>
             </div>
             {
-              (isUserProposalsLoaded && !!myMembershipRequests)
+              myMembershipRequests
               ? (myMembershipRequestsAmount !== 0)
                 ? renderCollectionList(myMembershipRequests, ActivitiesCollection.MEMBERSHIP_REQUESTS)
                 : <div>No membership requests yet</div>
