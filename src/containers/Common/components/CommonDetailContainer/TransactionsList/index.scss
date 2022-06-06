@@ -1,0 +1,95 @@
+@import "../../../../../constants.scss";
+@import "../../../../../styles/sizes";
+
+.transactions-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  > div:not(:last-child) {
+    margin-bottom: 0.625rem;
+  }
+}
+
+.transactions-list-empty-set {
+  font-size: $xsmall;
+  font-weight: bold;
+  color: $purple-2;
+}
+
+.transaction__wrapper {
+  padding: 1rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: $white;
+  border-radius: 1rem;
+  box-shadow: 0 0.188rem 0.625rem rgba(0, 0, 0, 0.05);
+
+  .transaction__content {
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    .transaction__main-info {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 0.1rem solid $light-gray-1;
+
+      .transaction__amount {
+        font-weight: bold;
+        font-size: $moderate-small;
+
+        &.pay-in {
+          color: $green;
+        }
+        &.pay-out {
+          color: $red;
+        }
+      }
+
+      .transaction__time {
+        font-size: $xxsmall;
+        color: $secondary-blue;
+      }
+    }
+
+    .transaction__additional-info {
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      .transaction__payin-payer-data {
+        margin-top: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .payer-avatar {
+          width: 1.5rem;
+          height: 1.5rem;
+        }
+
+        .payer-name {
+          font-size: $xxsmall;
+          color: $gray;
+          margin-left: 0.4rem;
+        }
+      }
+
+      .transaction__payout-description {
+        color: $secondary-blue;
+        font-weight: bold;
+        font-size: $xsmall;
+      }
+    }
+  }
+}

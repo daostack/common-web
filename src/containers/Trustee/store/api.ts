@@ -1,31 +1,19 @@
 import Api from "../../../services/Api";
-import { ApiEndpoint } from "../../../shared/constants";
+import { ApiEndpoint } from "@/shared/constants";
 import {
   Collection,
   FundingProcessStage,
   Proposal,
   ProposalType,
   ProposalState,
-} from "../../../shared/models";
+} from "@/shared/models";
 import {
   transformFirebaseDataList,
   transformFirebaseDataSingle,
-} from "../../../shared/utils";
-import firebase from "../../../shared/utils/firebase";
+  sortByCreatedTime,
+} from "@/shared/utils";
+import firebase from "@/shared/utils/firebase";
 import { ApproveOrDeclineProposalDto } from "../interfaces";
-
-function sortByCreateTime(data: Proposal[]) {
-  return data.sort((itemA, itemB) => {
-    if (!itemB.createdAt) {
-      return -1;
-    }
-    if (!itemA.createdAt) {
-      return 1;
-    }
-
-    return itemB.createdAt.seconds - itemA.createdAt.seconds;
-  });
-}
 
 export async function fetchPendingApprovalProposals(): Promise<Proposal[]> {
   const proposals = await firebase
@@ -37,9 +25,9 @@ export async function fetchPendingApprovalProposals(): Promise<Proposal[]> {
       FundingProcessStage.PendingInvoiceApproval
     )
     .get();
-  const data = transformFirebaseDataList<Proposal>(proposals);
+  const data = transformFirebaseDataList<Proposal>(proposals).sort(sortByCreatedTime);
 
-  return sortByCreateTime(data);
+  return data;
 }
 
 export async function fetchApprovedProposals(): Promise<Proposal[]> {
@@ -71,9 +59,9 @@ export async function fetchApprovedProposals(): Promise<Proposal[]> {
   const data = [
     ...filteredProposals,
     ...transformFirebaseDataList<Proposal>(results[1]),
-  ];
+  ].sort(sortByCreatedTime);
 
-  return sortByCreateTime(data);
+  return data;
 }
 
 export async function fetchDeclinedProposals(): Promise<Proposal[]> {
@@ -85,9 +73,9 @@ export async function fetchDeclinedProposals(): Promise<Proposal[]> {
   const data = transformFirebaseDataList<Proposal>(proposals).filter(
     (proposal) =>
       proposal.fundingProcessStage === FundingProcessStage.PendingInvoiceUpload
-  );
+  ).sort(sortByCreatedTime);
 
-  return sortByCreateTime(data);
+  return data;
 }
 
 export async function fetchProposalById(

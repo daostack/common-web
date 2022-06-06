@@ -90,7 +90,7 @@ export interface Proposal {
 
   title: string;
 
-  state: string;
+  state: ProposalState;
   description: {
     description: string;
     links: ProposalLink[];

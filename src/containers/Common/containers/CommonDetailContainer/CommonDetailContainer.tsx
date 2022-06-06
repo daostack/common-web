@@ -26,9 +26,9 @@ import {
   DiscussionDetailModal,
   CommonMenu,
   ProposalsComponent,
-  ProposalsHistory,
   AboutSidebarComponent,
   AddDiscussionComponent,
+  WalletComponent,
 } from "../../components/CommonDetailContainer";
 import { MembershipRequestModal } from "../../components/CommonDetailContainer/MembershipRequestModal";
 import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
@@ -81,37 +81,48 @@ interface CommonDetailRouterParams {
 interface CommonDetailProps {
   commonId?: string;
   tab?: Tabs;
-  activeModalElement?: Proposal
-                      | ProposalWithHighlightedComment
-                      | Discussion
-                      | DiscussionWithHighlightedMessage;
+  activeModalElement?:
+    | Proposal
+    | ProposalWithHighlightedComment
+    | Discussion
+    | DiscussionWithHighlightedMessage;
   linkType?: DynamicLinkType;
 }
 
 export enum Tabs {
-  About = "about",
-  Discussions = "discussions",
+  About = "agenda",
+  Discussions = "discussion",
   Proposals = "proposals",
-  History = "history",
+  Wallet = "wallet",
+  Notifications = "notifications",
 }
 
 const tabs = [
   {
     name: "Agenda",
     key: Tabs.About,
+    icon: Tabs.About,
   },
   {
     name: "Discussions",
     key: Tabs.Discussions,
+    icon: Tabs.Discussions,
   },
   {
     name: "Proposals",
     key: Tabs.Proposals,
+    icon: Tabs.Proposals,
   },
   {
-    name: "History",
-    key: Tabs.History,
+    name: "Wallet",
+    key: Tabs.Wallet,
+    icon: Tabs.Wallet,
   },
+  // {
+  //   name: "Notifications",
+  //   key: Tabs.Notifications,
+  //   icon: Tabs.Notifications,
+  // },
 ];
 
 export default function CommonDetail(props: CommonDetailProps = {}) {
@@ -158,11 +169,6 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     [fundingProposals]
   );
 
-  const historyProposals = useMemo(
-    () => fundingProposals.filter((d) => d.state !== ProposalState.COUNTDOWN),
-    [fundingProposals]
-  );
-
   const hasPaymentMethod = useMemo(() => !!cards && !!cards.length, [cards]);
 
   const commonMember = common?.members.find(
@@ -179,8 +185,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const shouldShowStickyJoinEffortButton =
     screenSize === ScreenSize.Mobile &&
     ((tab === Tabs.Discussions && discussions?.length > 0) ||
-      (tab === Tabs.Proposals && activeProposals.length > 0) ||
-      (tab === Tabs.History && historyProposals.length > 0)) &&
+      (tab === Tabs.Proposals && activeProposals.length > 0)) &&
     !isCommonMember &&
     !isJoiningPending &&
     !inViewport &&
@@ -221,13 +226,12 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
             dispatch(loadCommonDiscussionList.request());
           }
           break;
-        case Tabs.History:
+
         case Tabs.Proposals:
           if (!isProposalsLoaded) {
             dispatch(loadProposalList.request());
           }
           break;
-
         default:
           break;
       }
@@ -238,25 +242,16 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   );
 
   useEffect(() => {
-    if (!activeTab || !isCommonFetched)
-      return;
+    if (!activeTab || !isCommonFetched) return;
 
     changeTabHandler(activeTab);
 
     if (!props.commonId) {
-      return (
-        () => {
-          dispatch(clearCommonActiveTab())
-        }
-      );
+      return () => {
+        dispatch(clearCommonActiveTab());
+      };
     }
-  }, [
-    dispatch,
-    activeTab,
-    props.commonId,
-    changeTabHandler,
-    isCommonFetched
-  ]);
+  }, [dispatch, activeTab, props.commonId, changeTabHandler, isCommonFetched]);
 
   useEffect(() => {
     dispatch(loadUserCards.request({ callback: () => true }));
@@ -290,20 +285,11 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   );
 
   useEffect(() => {
-    if (!props.commonId)
-      return;
+    if (!props.commonId) return;
 
-    const {
-      tab,
-      activeModalElement,
-      linkType
-    } = props;
+    const { tab, activeModalElement, linkType } = props;
 
-    if (
-      !tab
-      || !activeModalElement
-      || !linkType
-    ) return;
+    if (!tab || !activeModalElement || !linkType) return;
 
     setTab(tab);
 
@@ -318,7 +304,9 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
         getDisscussionDetail(activeModalElement as Discussion);
         break;
       case DynamicLinkType.DiscussionMessage:
-        getDisscussionDetail(activeModalElement as DiscussionWithHighlightedMessage);
+        getDisscussionDetail(
+          activeModalElement as DiscussionWithHighlightedMessage
+        );
         break;
     }
     // eslint-disable-next-line
@@ -332,19 +320,11 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     if (props.commonId) {
       dispatch(setCommonActiveTab(tab));
 
-      history.push(
-        ROUTE_PATHS.COMMON_DETAIL.replace(":id", props.commonId)
-      );
+      history.push(ROUTE_PATHS.COMMON_DETAIL.replace(":id", props.commonId));
     } else {
       dispatch(loadCommonDiscussionList.request());
     }
-  }, [
-    onClose,
-    dispatch,
-    history,
-    tab,
-    props.commonId
-  ]);
+  }, [onClose, dispatch, history, tab, props.commonId]);
 
   const clickPreviewDisscusionHandler = useCallback(
     (id: string) => {
@@ -484,10 +464,10 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
             />
           </>
         );
-      case Tabs.History:
-        return (
-          <ProposalsHistory proposals={historyProposals} common={common} />
-        );
+      case Tabs.Notifications:
+        return <div>Coming soon</div>;
+      case Tabs.Wallet:
+        return <div>Coming soon</div>;
     }
   };
 
@@ -500,7 +480,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
           setStickyClass("sticky");
         } else if (tab === Tabs.Proposals && activeProposals.length) {
           setStickyClass("sticky");
-        } else if (tab === Tabs.History || tab === Tabs.About) {
+        } else if (tab === Tabs.About) {
           setStickyClass("sticky");
         }
       }
@@ -564,7 +544,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
               isJoiningPending={isJoiningPending}
             />
           )}
-          {(tab === Tabs.Proposals || tab === Tabs.History) && (
+          {tab === Tabs.Proposals && (
             <ProposalDetailModal
               proposal={currentProposal}
               common={common}
@@ -659,8 +639,9 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
               <div className="numbers">
                 <div className="item">
                   <div className="value">{formatPrice(common?.balance)}</div>
-                  <div className="name">{`Available ${screenSize === ScreenSize.Desktop ? "Funds" : ""
-                    }`}</div>
+                  <div className="name">{`Available ${
+                    screenSize === ScreenSize.Desktop ? "Funds" : ""
+                  }`}</div>
                   {Boolean(common.reservedBalance) && (
                     <div className="text-information-wrapper__secondary-text">
                       In process: {formatPrice(common.reservedBalance)}
@@ -669,8 +650,9 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                 </div>
                 <div className="item">
                   <div className="value">{formatPrice(common?.raised)}</div>
-                  <div className="name">{`${screenSize === ScreenSize.Desktop ? "Total" : ""
-                    } Raised`}</div>
+                  <div className="name">{`${
+                    screenSize === ScreenSize.Desktop ? "Total" : ""
+                  } Raised`}</div>
                 </div>
                 <div className="item">
                   <div className="value">{common?.members.length}</div>
@@ -678,13 +660,14 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                 </div>
                 <div className="item">
                   <div className="value">{activeProposals.length}</div>
-                  <div className="name">{`${screenSize === ScreenSize.Desktop ? "Active" : ""
-                    } Proposals`}</div>
+                  <div className="name">{`${
+                    screenSize === ScreenSize.Desktop ? "Active" : ""
+                  } Proposals`}</div>
                 </div>
               </div>
             </div>
             <div className="common-content-selector">
-              <div className="content-element tabs-container">
+              <div className={`content-element tabs-container ${footerClass}`}>
                 <div className="tabs-wrapper">
                   {tabs.map((t) => (
                     <div
@@ -692,6 +675,12 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                       className={`tab-item ${tab === t.key ? "active" : ""}`}
                       onClick={() => changeTabHandler(t.key)}
                     >
+                      <img
+                        src={`/icons/common-icons/${t.icon}${
+                          tab === t.key ? "-active" : ""
+                        }.svg`}
+                        alt={t.name}
+                      />
                       {t.name}
                     </div>
                   ))}
@@ -750,12 +739,24 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
             </div>
           </div>
         </div>
-        <div className="main-content-container">
+        <div
+          className={
+            classNames(
+              "main-content-container",
+              {
+                wallet: (tab === Tabs.Wallet),
+              }
+            )
+          }
+        >
           <div
             className={
-              tab === Tabs.History
-                ? "content-element inner-main-content-wrapper history"
-                : "content-element inner-main-content-wrapper"
+              classNames(
+                "content-element inner-main-content-wrapper",
+                {
+                  wallet: tab === Tabs.Wallet,
+                }
+              )
             }
           >
             <div className="tab-content-wrapper">
@@ -787,36 +788,61 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                   onAddNewProposal={addNewProposal}
                   common={common}
                   currentTab={tab}
-                  proposals={activeProposals}
+                  proposals={fundingProposals}
                   loadProposalDetail={getProposalDetail}
                   isCommonMember={isCommonMember}
                   isJoiningPending={isJoiningPending}
                 />
               )}
-
-              {tab === Tabs.History && (
-                <ProposalsComponent
-                  onAddNewProposal={addNewProposal}
+              {tab === Tabs.Wallet && (
+                <WalletComponent
                   common={common}
-                  currentTab={tab}
-                  proposals={historyProposals}
-                  loadProposalDetail={getProposalDetail}
-                  isCommonMember={isCommonMember}
-                  isJoiningPending={isJoiningPending}
                 />
               )}
             </div>
-            {shouldShowStickyJoinEffortButton && (
-              <button
-                className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
-                onClick={handleOpen}
+            {isMobileView && (
+              <div
+                className={`tabs-container bottom ${stickyClass} ${footerClass}`}
               >
-                Join the effort
-              </button>
+                <div className="tabs-wrapper">
+                  {tabs.map((t) => (
+                    <div
+                      key={t.key}
+                      className={`tab-item ${tab === t.key ? "active" : ""}`}
+                      onClick={() => changeTabHandler(t.key)}
+                    >
+                      <img
+                        src={`/icons/common-icons/${t.icon}${
+                          tab === t.key ? "-active" : ""
+                        }.svg`}
+                        alt={t.name}
+                      />
+                      {t.name}
+                    </div>
+                  ))}
+                </div>
+              </div>
             )}
-            {(screenSize === ScreenSize.Desktop || tab !== Tabs.About) && (
-              <div className="sidebar-wrapper">{renderSidebarContent()}</div>
+            {shouldShowStickyJoinEffortButton && (
+              <>
+                <button
+                  className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
+                  onClick={handleOpen}
+                >
+                  Join the effort
+                </button>
+              </>
             )}
+            {
+              (
+                (screenSize === ScreenSize.Desktop)
+                || (tab !== Tabs.About)
+              )
+              && (tab !== Tabs.Wallet)
+              && (
+                <div className="sidebar-wrapper">{renderSidebarContent()}</div>
+              )
+            }
           </div>
         </div>
       </div>
