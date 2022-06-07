@@ -1,9 +1,13 @@
 import React from "react";
-import { StepProgress, StepProgressItem } from "../../../../../shared/components/StepProgress";
+import {
+  StepProgress,
+  StepProgressItem,
+} from "@/shared/components/StepProgress";
+import { MembershipRequestStage } from "./constants";
 import "./index.scss";
 
 interface IProps {
-  currentStage: number;
+  currentStage: MembershipRequestStage;
 }
 
 const STEPS: StepProgressItem[] = [
@@ -21,11 +25,6 @@ const STEPS: StepProgressItem[] = [
     title: "Contribution",
     activeImageSource: "/icons/membership-request/contribution-current.svg",
     inactiveImageSource: "/icons/membership-request/contribution-gray.svg",
-  },
-  {
-    title: "Payment",
-    activeImageSource: "/icons/membership-request/payment-current.svg",
-    inactiveImageSource: "/icons/membership-request/payment-gray.svg",
   },
 ];
 

@@ -23,6 +23,7 @@ import {
   subscribeToNotification,
 } from "@/containers/Common/store/api";
 import { EventTypeState, NotificationItem } from "@/shared/models/Notification";
+import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
 import { showNotification } from "@/shared/store/actions";
 import { getFundingRequestNotification } from "@/shared/utils/notifications";
 
@@ -471,7 +472,7 @@ function* authSagas() {
           const proposal: Proposal | undefined = await getProposalById(
             data?.eventObjectId
           );
-          if (proposal) {
+          if (isFundsAllocationProposal(proposal)) {
             const notification = getFundingRequestNotification(data, proposal);
 
             store.dispatch(showNotification(notification));

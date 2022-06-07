@@ -1,18 +1,19 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { MembershipRequestModal } from "../MembershipRequestModal";
-import { useAuthorizedModal } from "../../../../../shared/hooks";
-import { Common } from "../../../../../shared/models";
-import { ROUTE_PATHS } from "../../../../../shared/constants";
-import { LoginModalType } from "../../../../Auth/interface";
-import "./index.scss";
+import { useAuthorizedModal } from "@/shared/hooks";
+import { Common, Governance } from "@/shared/models";
+import { ROUTE_PATHS } from "@/shared/constants";
+import { LoginModalType } from "@/containers/Auth/interface";
 import { Tabs } from "@/containers/Common/containers/CommonDetailContainer/CommonDetailContainer";
+import "./index.scss";
+import { MembershipRequestModal } from "../MembershipRequestModal";
 
 interface EmptyTabComponentProps {
   currentTab: string;
   message: string;
   title: string;
   common?: Common;
+  governance?: Governance;
   isCommonMember?: boolean;
   isJoiningPending?: boolean;
 }
@@ -22,6 +23,7 @@ export default function EmptyTabComponent({
   message,
   title,
   common,
+  governance,
   isCommonMember,
   isJoiningPending,
 }: EmptyTabComponentProps) {
@@ -50,11 +52,12 @@ export default function EmptyTabComponent({
 
   return (
     <>
-      {common && (
+      {common && governance && (
         <MembershipRequestModal
           isShowing={showJoinModal}
           onClose={onCloseJoinModal}
           common={common}
+          governance={governance}
           onCreationStageReach={setIsCreationStageReached}
         />
       )}

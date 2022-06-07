@@ -1,42 +1,48 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
-import { Loader } from "../../../../shared/components";
-import DownloadCommonApp from "../../../../shared/components/DownloadCommonApp/DownloadCommonApp";
-import { ROUTE_PATHS } from "../../../../shared/constants";
-import { isMobile } from "../../../../shared/utils";
-import { CommonListItem } from "../../components";
-import "./index.scss";
-import { Common, ProposalState, ProposalType } from "../../../../shared/models";
-import { getCommonsList, loadUserProposalList } from "../../store/actions";
 import { useDispatch, useSelector } from "react-redux";
+import { selectUser } from "@/containers/Auth/store/selectors";
+import { Loader } from "@/shared/components";
+import DownloadCommonApp from "@/shared/components/DownloadCommonApp/DownloadCommonApp";
+import { ProposalsTypes, ROUTE_PATHS } from "@/shared/constants";
+import { isMobile } from "@/shared/utils";
+import "./index.scss";
+import { Common, ProposalState } from "@/shared/models";
+import { getLoading } from "@/shared/store/selectors";
+import { CommonListItem, EmptyTabComponent } from "../../components";
+import { useUserCommons } from "../../hooks";
+import { getCommonsList, loadUserProposalList } from "../../store/actions";
 import {
   selectCommonList,
   selectUserProposalList,
 } from "../../store/selectors";
-import { selectUser } from "../../../Auth/store/selectors";
-import { getLoading } from "../../../../shared/store/selectors";
-import { EmptyTabComponent } from "../../components/CommonDetailContainer";
 
 export default function MyCommonsContainer() {
   const dispatch = useDispatch();
+  const {
+    fetched: areUserCommonsFetched,
+    data: myCommons,
+    fetchUserCommons,
+  } = useUserCommons();
   const user = useSelector(selectUser());
   const commons = useSelector(selectCommonList());
   const myProposals = useSelector(selectUserProposalList());
   const loading = useSelector(getLoading());
   const [pendingCommons, setPendingCommons] = useState<Common[]>([]);
-  const [myCommons, setMyCommons] = useState<Common[]>([]);
   const [isProposalLoaded, setProposalLoaded] = useState<boolean>(false);
+  const [isCommonsLoadingStarted, setIsCommonsLoadingStarted] = useState(false);
+  const isDataLoading = loading || !areUserCommonsFetched;
 
   const [hasClosedPopup, setHasClosedPopup] = useState(
     sessionStorage.getItem("hasClosedPopup")
   );
 
   useEffect(() => {
-    if (commons.length === 0) {
+    if (!isCommonsLoadingStarted && commons.length === 0) {
+      setIsCommonsLoadingStarted(true);
       dispatch(getCommonsList.request());
     }
-  }, [dispatch, commons]);
+  }, [dispatch, isCommonsLoadingStarted, commons]);
 
   useEffect(() => {
     if (myProposals.length === 0 && user?.uid && !isProposalLoaded) {
@@ -46,19 +52,18 @@ export default function MyCommonsContainer() {
   }, [dispatch, isProposalLoaded, myProposals, user]);
 
   useEffect(() => {
-    const myCommons = commons.filter((c) =>
-      c.members.some((m) => m.userId === user?.uid)
-    );
-    setMyCommons(myCommons);
-  }, [commons, user]);
+    fetchUserCommons();
+  }, [fetchUserCommons]);
 
   useEffect(() => {
+    // TODO: Maybe we should fetch user proposals here in other way
     const ids = myProposals
       .filter(
         (p) =>
-          p.state === ProposalState.COUNTDOWN && p.type === ProposalType.Join
+          p.state === ProposalState.COUNTDOWN &&
+          p.type === ProposalsTypes.MEMBER_ADMITTANCE
       )
-      .map((p) => p.commonId);
+      .map((p) => p.data.args.commonId);
     const pC = commons.filter((c) => ids.includes(c.id));
     setPendingCommons(pC);
   }, [myProposals, commons]);
@@ -76,7 +81,7 @@ export default function MyCommonsContainer() {
           </Link>
         ) : null}
       </div>
-      {loading && <Loader />}
+      {isDataLoading && <Loader />}
 
       <div className="common-list">
         {myCommons.map((c) => (
@@ -95,13 +100,15 @@ export default function MyCommonsContainer() {
         </div>
       ) : null}
 
-      {myCommons.length === 0 && pendingCommons.length === 0 && !loading && (
-        <EmptyTabComponent
-          currentTab={"my-commons"}
-          message={"This is where you can find your future commons"}
-          title={"No commons yet"}
-        />
-      )}
+      {myCommons.length === 0 &&
+        pendingCommons.length === 0 &&
+        !isDataLoading && (
+          <EmptyTabComponent
+            currentTab={"my-commons"}
+            message={"This is where you can find your future commons"}
+            title={"No commons yet"}
+          />
+        )}
     </div>
   );
 }

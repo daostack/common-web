@@ -1,7 +1,8 @@
 import { call, put, select, takeLatest } from "redux-saga/effects";
 import { getUserListByIds } from "@/containers/Auth/store/api";
 import { fetchCommonListByIds } from "@/containers/Common/store/api";
-import { Common, Proposal, User } from "@/shared/models";
+import { Common, User } from "@/shared/models";
+import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
 import { isError } from "@/shared/utils";
 import { TrusteeStateType } from "../interfaces";
 import * as actions from "./actions";
@@ -13,10 +14,13 @@ import {
   approveOrDeclineProposal as approveOrDeclineProposalApi,
 } from "./api";
 import { selectCommons, selectUsers } from "./selectors";
+import { Awaited } from "@/shared/interfaces";
 
 export function* getPendingApprovalProposals(): Generator {
   try {
-    const proposals = (yield call(fetchPendingApprovalProposals)) as Proposal[];
+    const proposals = (yield call(fetchPendingApprovalProposals)) as Awaited<
+      ReturnType<typeof fetchPendingApprovalProposals>
+    >;
 
     yield put(actions.getPendingApprovalProposals.success(proposals));
   } catch (error) {
@@ -28,7 +32,9 @@ export function* getPendingApprovalProposals(): Generator {
 
 export function* getApprovedProposals(): Generator {
   try {
-    const proposals = (yield call(fetchApprovedProposals)) as Proposal[];
+    const proposals = (yield call(fetchApprovedProposals)) as Awaited<
+      ReturnType<typeof fetchApprovedProposals>
+    >;
 
     yield put(actions.getApprovedProposals.success(proposals));
   } catch (error) {
@@ -40,7 +46,9 @@ export function* getApprovedProposals(): Generator {
 
 export function* getDeclinedProposals(): Generator {
   try {
-    const proposals = (yield call(fetchDeclinedProposals)) as Proposal[];
+    const proposals = (yield call(fetchDeclinedProposals)) as Awaited<
+      ReturnType<typeof fetchDeclinedProposals>
+    >;
 
     yield put(actions.getDeclinedProposals.success(proposals));
   } catch (error) {
@@ -95,13 +103,14 @@ export function* getProposalForApproval(
   action: ReturnType<typeof actions.getProposalForApproval.request>
 ): Generator {
   try {
-    const proposal = (yield call(
-      fetchProposalById,
-      action.payload
-    )) as Proposal | null;
+    const proposal = (yield call(fetchProposalById, action.payload)) as Awaited<
+      ReturnType<typeof fetchProposalById>
+    >;
 
-    if (!proposal) {
-      throw new Error(`There is no proposal with id="${action.payload}"`);
+    if (!isFundsAllocationProposal(proposal)) {
+      throw new Error(
+        `There is no proposal with id="${action.payload}" or it is not funds allocation one`
+      );
     }
 
     yield put(actions.getProposalForApproval.success(proposal));

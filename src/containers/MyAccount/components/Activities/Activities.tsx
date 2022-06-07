@@ -19,14 +19,11 @@ import {
   MembershipRequestListItem,
   ProposalDetailModal,
 } from "@/containers/Common/components";
+import { useCommonMember, useUserCommons } from "@/containers/Common/hooks";
 import { CollectionSummaryCard } from "./CollectionSummaryCard";
-import {
-  Common,
-  Proposal,
-  ProposalType,
-} from "@/shared/models";
+import { Common, Proposal } from "@/shared/models";
 import { Loader, Modal } from "@/shared/components";
-import { ROUTE_PATHS, ScreenSize } from "@/shared/constants";
+import { ProposalsTypes, ROUTE_PATHS, ScreenSize } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
 import {
   getCommonsList,
@@ -70,6 +67,17 @@ const INITIAL_SHOW_SLIDER_VIEWALL_STATE: ShowSliderViewAllState = {
 
 const Activities: FC = () => {
   const dispatch = useDispatch();
+  const {
+    fetched: areUserCommonsFetched,
+    data: myCommons,
+    fetchUserCommons,
+  } = useUserCommons();
+  const {
+    fetched: isCommonMemberFetched,
+    data: commonMember,
+    fetchCommonMember,
+    resetCommonMember,
+  } = useCommonMember();
   const user = useSelector(selectUser());
   const commons = useSelector(selectCommonList());
   const isCommonsLoaded = useSelector(selectIsCommonsLoaded());
@@ -79,8 +87,7 @@ const Activities: FC = () => {
   const currentCommon = useSelector(selectCommonDetail());
   const screenSize = useSelector(getScreenSize());
   const { isShowing, onOpen, onClose } = useModal(false);
-  const [myCommons, setMyCommons] = useState<Common[] | null>(null);
-  const myCommonsAmount = myCommons?.length || 0;
+  const myCommonsAmount = myCommons.length;
   const [myFundingProposals, setMyFundingProposals] = useState<Proposal[] | null>(null);
   const myFundingProposalsAmount = myFundingProposals?.length || 0;
   const [myMembershipRequests, setMyMembershipRequests] = useState<Proposal[] | null>(null);
@@ -98,13 +105,7 @@ const Activities: FC = () => {
 
   const isMobileView = useMemo(() => (screenSize === ScreenSize.Mobile), [screenSize]);
 
-  const isCommonMember = useMemo(() => {
-    const commonMember = currentCommon?.members.find(
-      (member) => member.userId === user?.uid
-    );
-
-    return Boolean(commonMember);
-  }, [currentCommon, user]);
+  const isCommonMember = Boolean(commonMember);
 
   const MAX_ROW_ITEMS_AMOUNT = useMemo(() => (isMobileView ? 5 : 4), [isMobileView]);
 
@@ -242,18 +243,27 @@ const Activities: FC = () => {
   );
 
   useEffect(() => {
+    if (!currentProposal) {
+      return;
+    }
+
+    fetchCommonMember(currentProposal.data.args.commonId);
+  }, [currentProposal, fetchCommonMember]);
+
+  useEffect(() => {
     if (!currentProposal) return;
 
+    resetCommonMember();
     dispatch(
       getCommonDetail.request({
-        payload: currentProposal.commonId,
+        payload: currentProposal.data.args.commonId,
       })
     );
 
     return () => {
       dispatch(closeCurrentCommon());
     };
-  }, [dispatch, currentProposal]);
+  }, [dispatch, resetCommonMember, currentProposal]);
 
   useEffect(() => {
     if (commons.length === 0)
@@ -266,29 +276,22 @@ const Activities: FC = () => {
       && myProposals.length === 0
       && user?.uid
     ) dispatch(loadUserProposalList.request(user?.uid));
-  }, [dispatch, myProposals, user]);
+  }, [isUserProposalsLoaded, dispatch, myProposals, user]);
 
   useEffect(() => {
-    if (commons.length === 0 || !user?.uid)
-      return
-
-    const myCommons = commons.filter((common) =>
-      common.members.some((member) => member.userId === user?.uid)
-    );
-
-    setMyCommons(myCommons);
-  }, [setMyCommons, commons, user]);
+    fetchUserCommons();
+  }, [fetchUserCommons]);
 
   useEffect(() => {
     if (!myProposals.length)
       return;
 
     const myFundingProposals = myProposals.filter((proposal) =>
-      proposal.type === ProposalType.FundingRequest
+      proposal.type === ProposalsTypes.FUNDS_ALLOCATION
     );
 
     const myMembershipRequests = myProposals.filter((proposal) =>
-      proposal.type === ProposalType.Join
+      proposal.type === ProposalsTypes.MEMBER_ADMITTANCE
     );
 
     setMyFundingProposals(myFundingProposals);
@@ -311,11 +314,17 @@ const Activities: FC = () => {
             headerWrapper: "my-account-activities__detail-modal-header-wrapper",
           }}
         >
-          <ProposalDetailModal
-            proposal={currentProposal}
-            common={currentCommon}
-            isCommonMember={isCommonMember}
-          />
+          {isCommonMemberFetched ? (
+            <ProposalDetailModal
+              proposal={currentProposal}
+              common={currentCommon}
+              isCommonMember={isCommonMember}
+            />
+          ) : (
+            <div>
+              <Loader />
+            </div>
+          )}
         </Modal>
       }
       <div className="route-content my-account-activities">
@@ -357,7 +366,7 @@ const Activities: FC = () => {
               </NavLink>
             </div>
             {
-              (isCommonsLoaded && !!myCommons)
+              (isCommonsLoaded && areUserCommonsFetched)
               ? (myCommonsAmount !== 0)
                 ? renderCollectionList(myCommons, ActivitiesCollection.COMMONS)
                 : <div>No commons yet</div>
@@ -377,7 +386,10 @@ const Activities: FC = () => {
                             || (isMobileView && !showSliderProposalsViewAll)
                   }
                 )}
-                to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_PROPOSALS.replace(":proposalType", ProposalType.FundingRequest)}
+                to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_PROPOSALS.replace(
+                  ":proposalType",
+                  ProposalsTypes.FUNDS_ALLOCATION
+                )}
               >
                 View all
                 <img src="/icons/right-arrow.svg" alt="right-arrow" />
@@ -404,7 +416,10 @@ const Activities: FC = () => {
                             || (isMobileView && !showSliderMembershipRequestsViewAll)
                   }
                 )}
-                to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_PROPOSALS.replace(":proposalType", ProposalType.Join)}
+                to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_PROPOSALS.replace(
+                  ":proposalType",
+                  ProposalsTypes.MEMBER_ADMITTANCE
+                )}
               >
                 View all
                 <img src="/icons/right-arrow.svg" alt="right-arrow" />

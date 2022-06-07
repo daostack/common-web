@@ -1,6 +1,8 @@
-import { Common, Proposal, User } from "@/shared/models";
+import { Common, User } from "@/shared/models";
+import { FundsAllocation } from "@/shared/models/governance/proposals";
 
-export interface ExtendedProposal extends Proposal {
+export interface ExtendedProposal {
+  proposal: FundsAllocation;
   common?: Common;
   user?: User;
 }

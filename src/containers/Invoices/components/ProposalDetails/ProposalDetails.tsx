@@ -1,10 +1,11 @@
 import React from "react";
-import ApprovedIcon from "../../../../shared/icons/approved.icon";
+import ApprovedIcon from "@/shared/icons/approved.icon";
 import {
   Proposal,
   User,
-} from "../../../../shared/models";
-import { formatEpochTime, formatPrice } from "../../../../shared/utils";
+} from "@/shared/models";
+import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
+import { formatEpochTime, formatPrice } from "@/shared/utils";
 import { AddInvoices } from "../AddInvoices";
 import "./index.scss";
 
@@ -21,6 +22,9 @@ enum Expense {
 
 export default function ProposalDetails({ commonName, user, proposal, updateSubmissionStatus }: IProps) {
   const expense: Expense = Expense.proposal;
+  const amount = isFundsAllocationProposal(proposal)
+    ? proposal.data.args.amount
+    : 0;
 
   return (
     <div className="proposal-detailes-wrapper">
@@ -33,16 +37,16 @@ export default function ProposalDetails({ commonName, user, proposal, updateSubm
           <span>{`Approved on ${proposal?.approvalDate ? formatEpochTime(proposal.approvalDate) : "UNKNOWN"}`}</span>
         </span>
         <div className="submit-invoices-wrapper__description-content">
-          <span className="submit-invoices-wrapper__description">{`${proposal?.description.description}`}</span>
+          <span className="submit-invoices-wrapper__description">{`${proposal?.data.args.description}`}</span>
           <span className="submit-invoices-wrapper__description-amount">
-            {`${formatPrice(proposal?.fundingRequest?.amount, { shouldMillify: true })}`}
+            {formatPrice(amount, { shouldMillify: true })}
           </span>
         </div>
       </div>
       <AddInvoices
         proposalId={proposal?.id ?? ""}
         className="submit-invoices-wrapper__add-invoice"
-        proposalRequest={proposal?.fundingRequest?.amount}
+        proposalRequest={amount}
         updateSubmissionStatus={updateSubmissionStatus} />
     </div>
   )

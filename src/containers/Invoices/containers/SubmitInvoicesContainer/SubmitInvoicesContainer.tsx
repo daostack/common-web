@@ -45,17 +45,20 @@ export default function SubmitInvoicesContainer() {
           return;
         }
         const proposal = await fetchProposal(proposalId);
-        if (!(proposal.proposerId === user?.uid)) {
+        if (!proposal) {
+          return;
+        }
+        if (!(proposal.data.args.proposerId === user?.uid)) {
           setSubmissionStatus(SubmissionStatus.NotAuthorized);
           return;
         }
-        if (proposal.payoutDocs && proposal.payoutDocs?.length > 0) {
+        if (proposal.data.legal.payoutDocs?.length > 0) {
           setSubmissionStatus(SubmissionStatus.Submitted);
           return;
         }
         setProposal(proposal);
-        const commonProposal = await fetchCommonDetail(proposal.commonId);
-        setCommonName(commonProposal.name);
+        const commonProposal = await fetchCommonDetail(proposal.data.args.commonId);
+        setCommonName(commonProposal?.name || "");
         setSubmissionStatus(SubmissionStatus.PendingUser);
       } catch (error) {
         console.error(error);

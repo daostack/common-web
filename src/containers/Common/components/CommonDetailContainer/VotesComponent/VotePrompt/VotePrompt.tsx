@@ -59,7 +59,7 @@ export default function VotePrompt(
 
     setVoting(true);
     dispatch(updateVote.request({
-      payload: { id: prevVote.voteId, outcome: vote },
+      payload: { id: prevVote.id, outcome: vote },
       callback: (error) => {
         setVoting(false);
         if (error) {

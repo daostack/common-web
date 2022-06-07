@@ -30,6 +30,7 @@ export default function CommonListContainer() {
   const loading = useSelector(getLoading());
   const dispatch = useDispatch();
   const [loaderHack, setLoaderHack] = useState(false);
+  const [isCommonsLoadingStarted, setIsCommonsLoadingStarted] = useState(false);
   const { isModalOpen, onOpen, onClose } = useAuthorizedModal();
 
   const loader = useRef(null);
@@ -39,10 +40,11 @@ export default function CommonListContainer() {
   );
 
   useEffect(() => {
-    if (commons.length === 0) {
+    if (!isCommonsLoadingStarted && commons.length === 0) {
+      setIsCommonsLoadingStarted(true);
       dispatch(getCommonsList.request());
     }
-  }, [dispatch, commons]);
+  }, [dispatch, isCommonsLoadingStarted, commons]);
 
   const handleObserver = useCallback(
     (entities: any[]) => {

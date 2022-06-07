@@ -1,7 +1,7 @@
 import React, { useEffect, FC } from "react";
 import classNames from "classnames";
 import { ContributionAmountSelection, Separator } from "@/shared/components";
-import { Common } from "@/shared/models";
+import { MIN_CONTRIBUTION_ILS_AMOUNT } from "@/shared/constants";
 import { formatPrice } from "@/shared/utils";
 import "./index.scss";
 
@@ -10,7 +10,7 @@ export interface Styles {
 }
 
 interface AmountSelectionProps {
-  common: Common;
+  minSelectionAmount?: number;
   currentAmount: number;
   onSelect: (amount: number) => void;
   setShouldShowGoBackButton: (value: boolean) => void;
@@ -19,15 +19,12 @@ interface AmountSelectionProps {
 
 const AmountSelection: FC<AmountSelectionProps> = (props) => {
   const {
-    common,
+    minSelectionAmount = MIN_CONTRIBUTION_ILS_AMOUNT,
     currentAmount,
     onSelect,
     setShouldShowGoBackButton,
     styles,
   } = props;
-  const {
-    metadata: { minFeeToJoin },
-  } = common;
 
   const handleChange = (
     amount: number | null,
@@ -55,7 +52,7 @@ const AmountSelection: FC<AmountSelectionProps> = (props) => {
       </h3>
       <p className="change-monthly-amount-selection-my-contributions-stage__description">
         Select the amount for your monthly contribution to this Common. The
-        minimum contribution to this Common is {formatPrice(minFeeToJoin)}{" "}
+        minimum contribution to this Common is {formatPrice(minSelectionAmount)}{" "}
         monthly.
       </p>
       <Separator className="change-monthly-amount-selection-my-contributions-stage__separator" />
@@ -63,8 +60,7 @@ const AmountSelection: FC<AmountSelectionProps> = (props) => {
         The change will apply starting from the next charge.
       </p>
       <ContributionAmountSelection
-        minFeeToJoin={minFeeToJoin}
-        zeroContribution={false}
+        minimalAmount={minSelectionAmount}
         currentAmount={currentAmount}
         pricePostfix="/mo"
         onChange={handleChange}

@@ -1,9 +1,10 @@
-import { CommonContributionType, Payment } from "@/shared/models";
+import { ContributionType } from "@/shared/constants";
+import { Payment } from "@/shared/models";
 
 export interface ImmediateContributionData {
   amount: number;
   commonId: string;
-  contributionType: CommonContributionType;
+  contributionType: ContributionType;
   saveCard: boolean;
 }
 

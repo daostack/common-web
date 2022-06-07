@@ -1,11 +1,13 @@
 import produce from "immer";
 import { ActionType, createReducer } from "typesafe-actions";
+import { CommonState } from "@/shared/models";
 import { CommonsStateType } from "../interfaces";
 import * as actions from "./actions";
 
 const initialState: CommonsStateType = {
   commons: [],
   common: null,
+  governance: null,
   page: 1,
   proposals: [],
   discussions: [],
@@ -83,8 +85,6 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       const proposal = { ...action.payload };
       const proposals = [...state.proposals];
 
-      proposal.isLoaded = true;
-
       if (proposals.length) {
         const index = proposals.findIndex((d) => d.id === proposal.id);
 
@@ -109,18 +109,12 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
     produce(state, (nextState) => {
       nextState.currentDiscussion = null;
       nextState.common = null;
+      nextState.governance = null;
       nextState.discussions = [];
       nextState.proposals = [];
       nextState.isDiscussionsLoaded = false;
       nextState.isProposalsLoaded = false;
       nextState.isUserProposalsLoaded = false;
-    })
-  )
-
-  .handleAction(actions.createRequestToJoin.success, (state, action) =>
-    produce(state, (nextState) => {
-      nextState.proposals = [{ ...action.payload }, ...nextState.proposals];
-      nextState.userProposals = [{ ...action.payload }, ...nextState.userProposals];
     })
   )
   .handleAction(actions.loadUserCards.success, (state, action) =>
@@ -130,7 +124,7 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
   )
   .handleAction(actions.createCommon.success, (state, action) =>
     produce(state, (nextState) => {
-      if (action.payload.active) {
+      if (action.payload.state === CommonState.ACTIVE) {
         nextState.commons = [action.payload, ...nextState.commons];
       }
     })
@@ -150,6 +144,16 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
   .handleAction(actions.clearCommonActiveTab, (state, action) =>
     produce(state, (nextState) => {
       nextState.activeTab = null;
+    })
+  )
+  .handleAction(actions.getGovernance.success, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.governance = action.payload;
+    })
+  )
+  .handleAction(actions.getGovernance.failure, (state) =>
+    produce(state, (nextState) => {
+      nextState.governance = null;
     })
   );
 
