@@ -1,6 +1,15 @@
 const CracoAlias = require("craco-alias");
 
 module.exports = {
+  style: {
+    css: {
+      loaderOptions: () => ({
+        url: {
+          filter: (url) => url.includes("/fonts/"),
+        },
+      }),
+    },
+  },
   plugins: [
     {
       plugin: CracoAlias,

@@ -70,7 +70,7 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
   .handleAction(actions.loadDisscussionDetail.success, (state, action) =>
     produce(state, (nextState) => {
       const disscussion = { ...action.payload };
-      const { discussions } = state;
+      const { discussions } = nextState;
       disscussion.isLoaded = true;
       const index = discussions.findIndex((d) => d.id === disscussion.id);
       discussions[index] = disscussion;
@@ -81,7 +81,7 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
   .handleAction(actions.loadProposalDetail.success, (state, action) =>
     produce(state, (nextState) => {
       const proposal = { ...action.payload };
-      const { proposals } = state;
+      const proposals = [...state.proposals];
 
       proposal.isLoaded = true;
 

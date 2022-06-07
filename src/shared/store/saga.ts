@@ -1,4 +1,5 @@
 import { call, put, takeLatest } from "redux-saga/effects";
+import { isError } from "@/shared/utils";
 import { buildShareLink as buildShareLinkApi } from "./api";
 import { actions } from ".";
 
@@ -23,13 +24,16 @@ export function* buildShareLink({
     }
   } catch (error) {
     console.log("Building of share links work only in production");
-    yield put(actions.buildShareLink.failure({
-      key: payload.payload.key,
-      error,
-    }));
 
-    if (payload.callback) {
-      payload.callback(error);
+    if (isError(error)) {
+      yield put(actions.buildShareLink.failure({
+        key: payload.payload.key,
+        error,
+      }));
+
+      if (payload.callback) {
+        payload.callback(error);
+      }
     }
   }
 }
