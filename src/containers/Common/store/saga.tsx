@@ -51,6 +51,7 @@ import {
   fetchMessagesForCommonList,
   fetchCommonListByIds as fetchCommonListByIdsApi,
   createGovernance as createGovernanceApi,
+  addFounderToMembers as addFounderToMembersApi,
   getGovernance as getGovernanceApi,
   getCommonMember as getCommonMemberApi,
   getUserCommons as getUserCommonsApi,
@@ -721,13 +722,20 @@ export function* createCommon(
       commonCreationPayload
     )) as Common;
 
+    const governanceCreationPayload = createDefaultGovernanceCreationPayload({
+      unstructuredRules: rules || [],
+      commonId: common.id,
+    });
+
     yield call(
       createGovernanceApi,
-      createDefaultGovernanceCreationPayload({
-        unstructuredRules: rules || [],
-        commonId: common.id,
-      })
+      governanceCreationPayload
     );
+
+    yield call(addFounderToMembersApi, {
+      commonId: common.id,
+      circles: governanceCreationPayload.circles.map((circle, index) => index),
+    });
 
     yield put(actions.createCommon.success(common));
     action.payload.callback(null, common);

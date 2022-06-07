@@ -30,6 +30,7 @@ import {
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 import {
+  AddFounderToMembersPayload,
   AddMessageToProposalDto,
   CreateCommonPayload,
   CreateDiscussionDto,
@@ -53,6 +54,12 @@ export async function createGovernance(
   requestData: CreateGovernancePayload
 ): Promise<void> {
   await Api.post(ApiEndpoint.GovernanceCreate, requestData);
+}
+
+export async function addFounderToMembers(
+  requestData: AddFounderToMembersPayload
+): Promise<void> {
+  await Api.post(ApiEndpoint.AddFounderToMembers, requestData);
 }
 
 export async function fetchCommonDiscussions(commonId: string) {

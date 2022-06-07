@@ -1,3 +1,4 @@
+export * from "./AddFounderToMembersPayload";
 export * from "./CommonsStateType";
 export * from "./CreateGovernancePayload";
 export * from "./CreateCommonPayload";

@@ -1,5 +1,6 @@
 export const ApiEndpoint = {
   GovernanceCreate: "/governance/create",
+  AddFounderToMembers: "/commons/add-founder-to-members",
   CreateCommon: "/commons/create",
   CreateProposal: "/proposals/create",
   VoteProposal: "/proposals/vote",
