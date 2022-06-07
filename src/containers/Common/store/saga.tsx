@@ -81,9 +81,11 @@ export function* createGovernance(
     action.payload.callback(null);
     yield put(stopLoading());
   } catch (error) {
-    yield put(actions.createGovernance.failure(error));
-    action.payload.callback(error);
-    yield put(stopLoading());
+    if (isError(error)) {
+      yield put(actions.createGovernance.failure(error));
+      action.payload.callback(error);
+      yield put(stopLoading());
+    }
   }
 }
 
@@ -523,10 +525,12 @@ export function* createMemberAdmittanceProposal({
       payload.callback(null, memberAdmittanceProposal);
     }
   } catch (error) {
-    yield put(actions.createMemberAdmittanceProposal.failure(error));
+    if (isError(error)) {
+      yield put(actions.createMemberAdmittanceProposal.failure(error));
 
-    if (payload.callback) {
-      payload.callback(error);
+      if (payload.callback) {
+        payload.callback(error);
+      }
     }
   } finally {
     yield put(stopLoading());
@@ -968,9 +972,11 @@ export function* getGovernance({
       payload.callback(null, governance);
     }
   } catch (error) {
-    yield put(actions.getGovernance.failure(error));
-    if (payload.callback) {
-      payload.callback(error);
+    if (isError(error)) {
+      yield put(actions.getGovernance.failure(error));
+      if (payload.callback) {
+        payload.callback(error);
+      }
     }
   } finally {
     yield put(stopLoading());
@@ -1002,10 +1008,12 @@ export function* getCommonMember({
       payload.callback(null, commonMember);
     }
   } catch (error) {
-    yield put(actions.getCommonMember.failure(error));
+    if (isError(error)) {
+      yield put(actions.getCommonMember.failure(error));
 
-    if (payload.callback) {
-      payload.callback(error);
+      if (payload.callback) {
+        payload.callback(error);
+      }
     }
   } finally {
     yield put(stopLoading());
@@ -1029,10 +1037,12 @@ export function* getUserCommons({
       payload.callback(null, commons);
     }
   } catch (error) {
-    yield put(actions.getUserCommons.failure(error));
+    if (isError(error)) {
+      yield put(actions.getUserCommons.failure(error));
 
-    if (payload.callback) {
-      payload.callback(error);
+      if (payload.callback) {
+        payload.callback(error);
+      }
     }
   } finally {
     yield put(stopLoading());
