@@ -46,8 +46,8 @@ export const createGovernance = createAsyncAction(
   CommonsActionTypes.CREATE_GOVERNANCE_SUCCESS,
   CommonsActionTypes.CREATE_GOVERNANCE_FAILURE
 )<
-  PayloadWithCallback<CreateGovernancePayload, Governance, Error>,
-  Governance,
+  PayloadWithCallback<CreateGovernancePayload, void, Error>,
+  void,
   Error
 >();
 

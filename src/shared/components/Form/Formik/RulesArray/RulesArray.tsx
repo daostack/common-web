@@ -119,8 +119,8 @@ const RulesArray: FC<RulesArrayProps> = (props) => {
                   />
                   <div className="description-array__description-input-wrapper">
                     <TextField
-                      id={`${restProps.name}.${index}.value`}
-                      name={`${restProps.name}.${index}.value`}
+                      id={`${restProps.name}.${index}.definition`}
+                      name={`${restProps.name}.${index}.definition`}
                       placeholder="Rule description"
                       rows={5}
                       isTextarea

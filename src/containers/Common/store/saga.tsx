@@ -75,11 +75,9 @@ export function* createGovernance(
 ): Generator {
   try {
     yield put(startLoading());
-    const governance = (yield createGovernanceApi(
-      action.payload.payload
-    )) as Governance;
+    yield createGovernanceApi(action.payload.payload);
 
-    yield put(actions.createGovernance.success(governance));
+    yield put(actions.createGovernance.success());
     action.payload.callback(null);
     yield put(stopLoading());
   } catch (error) {

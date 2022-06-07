@@ -50,14 +50,8 @@ import { NotificationItem } from "@/shared/models/Notification";
 
 export async function createGovernance(
   requestData: CreateGovernancePayload
-): Promise<Governance> {
-  const { data } = await Api.post<Governance>(
-    ApiEndpoint.GovernanceCreate,
-    requestData
-  );
-
-  console.log(data);
-  return data;
+): Promise<void> {
+  await Api.post(ApiEndpoint.GovernanceCreate, requestData);
 }
 
 export async function fetchCommonDiscussions(commonId: string) {
