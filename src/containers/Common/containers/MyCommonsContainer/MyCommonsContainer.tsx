@@ -30,6 +30,7 @@ export default function MyCommonsContainer() {
   const loading = useSelector(getLoading());
   const [pendingCommons, setPendingCommons] = useState<Common[]>([]);
   const [isProposalLoaded, setProposalLoaded] = useState<boolean>(false);
+  const [isCommonsLoadingStarted, setIsCommonsLoadingStarted] = useState(false);
   const isDataLoading = loading || !areUserCommonsFetched;
 
   const [hasClosedPopup, setHasClosedPopup] = useState(
@@ -37,10 +38,11 @@ export default function MyCommonsContainer() {
   );
 
   useEffect(() => {
-    if (commons.length === 0) {
+    if (!isCommonsLoadingStarted && commons.length === 0) {
+      setIsCommonsLoadingStarted(true);
       dispatch(getCommonsList.request());
     }
-  }, [dispatch, commons]);
+  }, [dispatch, isCommonsLoadingStarted, commons]);
 
   useEffect(() => {
     if (myProposals.length === 0 && user?.uid && !isProposalLoaded) {
