@@ -1,7 +1,9 @@
+import firebase from "@/shared/utils/firebase";
+
 export interface Time {
   seconds: number;
   nanoseconds: number;
-  toDate: Function;
+  toDate: firebase.firestore.Timestamp["toDate"];
 }
 
 export interface Moderation {

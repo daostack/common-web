@@ -3,6 +3,7 @@ import { getUserListByIds } from "@/containers/Auth/store/api";
 import { fetchCommonListByIds } from "@/containers/Common/store/api";
 import { Common, User } from "@/shared/models";
 import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
+import { isError } from "@/shared/utils";
 import { TrusteeStateType } from "../interfaces";
 import * as actions from "./actions";
 import {
@@ -23,7 +24,9 @@ export function* getPendingApprovalProposals(): Generator {
 
     yield put(actions.getPendingApprovalProposals.success(proposals));
   } catch (error) {
-    yield put(actions.getPendingApprovalProposals.failure(error));
+    if (isError(error)) {
+      yield put(actions.getPendingApprovalProposals.failure(error));
+    }
   }
 }
 
@@ -35,7 +38,9 @@ export function* getApprovedProposals(): Generator {
 
     yield put(actions.getApprovedProposals.success(proposals));
   } catch (error) {
-    yield put(actions.getApprovedProposals.failure(error));
+    if (isError(error)) {
+      yield put(actions.getApprovedProposals.failure(error));
+    }
   }
 }
 
@@ -47,7 +52,9 @@ export function* getDeclinedProposals(): Generator {
 
     yield put(actions.getDeclinedProposals.success(proposals));
   } catch (error) {
-    yield put(actions.getDeclinedProposals.failure(error));
+    if (isError(error)) {
+      yield put(actions.getDeclinedProposals.failure(error));
+    }
   }
 }
 
@@ -86,7 +93,9 @@ export function* getProposalsData({
 
     yield put(actions.getProposalsData.success({ commons, users }));
   } catch (error) {
-    yield put(actions.getProposalsData.failure(error));
+    if (isError(error)) {
+      yield put(actions.getProposalsData.failure(error));
+    }
   }
 }
 
@@ -106,7 +115,9 @@ export function* getProposalForApproval(
 
     yield put(actions.getProposalForApproval.success(proposal));
   } catch (error) {
-    yield put(actions.getProposalForApproval.failure(error));
+    if (isError(error)) {
+      yield put(actions.getProposalForApproval.failure(error));
+    }
   }
 }
 
@@ -118,8 +129,10 @@ export function* approveOrDeclineProposal(
     yield put(actions.approveOrDeclineProposal.success());
     action.payload.callback(null);
   } catch (error) {
-    yield put(actions.approveOrDeclineProposal.failure(error));
-    action.payload.callback(error);
+    if (isError(error)) {
+      yield put(actions.approveOrDeclineProposal.failure(error));
+      action.payload.callback(error);
+    }
   }
 }
 
