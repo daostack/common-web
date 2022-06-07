@@ -7,6 +7,7 @@ import {
   Collection,
   Common,
   CommonMember,
+  CommonState,
   Discussion,
   DiscussionMessage,
   Governance,
@@ -170,7 +171,7 @@ export async function fetchCommonDetail(id: string): Promise<Common | null> {
     .firestore()
     .collection(Collection.Daos)
     .where("id", "==", id)
-    .where("active", "==", true)
+    .where("state", "==", CommonState.ACTIVE)
     .get();
   const data = transformFirebaseDataList<Common>(common);
   return data[0] || null;

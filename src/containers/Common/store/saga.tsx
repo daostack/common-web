@@ -6,7 +6,6 @@ import {
   Common,
   CommonPayment,
   Discussion,
-  Governance,
   User,
   DiscussionMessage,
   Proposal,
