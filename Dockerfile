@@ -1,8 +1,8 @@
-FROM node:12 AS builder
+FROM node:14 AS builder
 WORKDIR /usr/src/app-build
 COPY . .
 ARG REACT_APP_ENV=stage
-RUN npm install && npm run build
+RUN yarn install && yarn run build
 
 FROM nginx:latest
 WORKDIR /usr/share/nginx/html
