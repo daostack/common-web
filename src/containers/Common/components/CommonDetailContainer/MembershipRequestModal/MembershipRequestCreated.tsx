@@ -1,7 +1,7 @@
 import React from "react";
 
 interface IProps {
-  closeModal: Function;
+  closeModal: () => void;
 }
 
 export default function MembershipRequestCreated(props: IProps) {

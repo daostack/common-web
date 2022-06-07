@@ -2,6 +2,7 @@ export * from "./shared";
 export { default as tokenHandler } from "./tokenHandler";
 export * from "./download";
 export * from "./formatDate";
+export * from "./isError";
 export * from "./matchRoute";
 export { default as request } from "./request";
 export * from "./convertDatesToFirestoreTimestamps";

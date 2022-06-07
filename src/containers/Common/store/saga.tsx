@@ -58,7 +58,7 @@ import { store } from "@/shared/appConfig";
 import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
 import { Vote } from "@/shared/interfaces/api/vote";
 import { ImmediateContributionResponse } from "../interfaces";
-import { groupBy } from "@/shared/utils";
+import { groupBy, isError } from "@/shared/utils";
 
 export function* getCommonsList(): Generator {
   try {
@@ -103,8 +103,11 @@ export function* getCommonsList(): Generator {
     yield put(stopLoading());
   } catch (e) {
     console.error(e);
-    yield put(actions.getCommonsList.failure(e));
-    yield put(stopLoading());
+
+    if (isError(e)) {
+      yield put(actions.getCommonsList.failure(e));
+      yield put(stopLoading());
+    }
   }
 }
 
@@ -123,10 +126,12 @@ export function* getCommonsListByIds({
       payload.callback(null, commons);
     }
   } catch (error) {
-    yield put(actions.getCommonsListByIds.failure(error));
+    if (isError(error)) {
+      yield put(actions.getCommonsListByIds.failure(error));
 
-    if (payload.callback) {
-      payload.callback(error);
+      if (payload.callback) {
+        payload.callback(error);
+      }
     }
   }
 }
@@ -151,10 +156,12 @@ export function* getCommonDetail({
       payload.callback(null, common);
     }
   } catch (e) {
-    yield put(actions.getCommonDetail.failure(e));
+    if (isError(e)) {
+      yield put(actions.getCommonDetail.failure(e));
 
-    if (payload.callback) {
-      payload.callback(e);
+      if (payload.callback) {
+        payload.callback(e);
+      }
     }
   } finally {
     yield put(stopLoading());
@@ -177,16 +184,19 @@ export function* loadCommonDiscussionList(): Generator {
     )) as DiscussionMessage[];
 
     const loadedDiscussions = discussions.map((d) => {
-      d.discussionMessage = dMessages.filter((dM) => dM.discussionId === d.id);
-      d.owner = owners.find((o) => o.uid === d.ownerId);
-      return d;
+      const newDiscussion = { ...d };
+      newDiscussion.discussionMessage = dMessages.filter((dM) => dM.discussionId === d.id);
+      newDiscussion.owner = owners.find((o) => o.uid === d.ownerId);
+      return newDiscussion;
     });
 
     yield put(actions.loadCommonDiscussionList.success(loadedDiscussions));
     yield put(stopLoading());
   } catch (e) {
-    yield put(actions.loadCommonDiscussionList.failure(e));
-    yield put(stopLoading());
+    if (isError(e)) {
+      yield put(actions.loadCommonDiscussionList.failure(e));
+      yield put(stopLoading());
+    }
   }
 }
 
@@ -212,8 +222,9 @@ export function* loadDiscussionDetail(
     const owners = (yield fetchOwners(ownerIds)) as User[];
 
     const loadedDisscussionMessage = discussionMessage?.map((d) => {
-      d.owner = owners.find((o) => o.uid === d.ownerId);
-      return d;
+      const newDiscussionMessage = { ...d };
+      newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+      return newDiscussionMessage;
     });
 
     discussion.discussionMessage = loadedDisscussionMessage;
@@ -221,8 +232,10 @@ export function* loadDiscussionDetail(
     yield put(actions.loadDisscussionDetail.success(discussion));
     yield put(stopLoading());
   } catch (e) {
-    yield put(actions.loadDisscussionDetail.failure(e));
-    yield put(stopLoading());
+    if (isError(e)) {
+      yield put(actions.loadDisscussionDetail.failure(e));
+      yield put(stopLoading());
+    }
   }
 }
 
@@ -245,16 +258,19 @@ export function* loadProposalList(
     )) as DiscussionMessage[];
 
     const loadedProposals = proposals.map((d) => {
-      d.discussionMessage = dMessages.filter((dM) => dM.discussionId === d.id);
-      d.proposer = owners.find((o) => o.uid === d.proposerId);
-      return d;
+      const newProposal = { ...d };
+      newProposal.discussionMessage = dMessages.filter((dM) => dM.discussionId === d.id);
+      newProposal.proposer = owners.find((o) => o.uid === d.proposerId);
+      return newProposal;
     });
 
     yield put(actions.loadProposalList.success(loadedProposals));
     yield put(stopLoading());
   } catch (e) {
-    yield put(actions.loadProposalList.failure(e));
-    yield put(stopLoading());
+    if (isError(e)) {
+      yield put(actions.loadProposalList.failure(e));
+      yield put(stopLoading());
+    }
   }
 }
 
@@ -286,8 +302,10 @@ export function* loadProposalDetail(
     yield put(actions.loadProposalDetail.success(proposal));
     yield put(stopLoading());
   } catch (e) {
-    yield put(actions.loadProposalDetail.failure(e));
-    yield put(stopLoading());
+    if (isError(e)) {
+      yield put(actions.loadProposalDetail.failure(e));
+      yield put(stopLoading());
+    }
   }
 }
 
@@ -317,8 +335,10 @@ export function* loadUserProposalList(
     yield put(actions.loadUserProposalList.success(processedUserProposals));
     yield put(stopLoading());
   } catch (e) {
-    yield put(actions.loadUserProposalList.failure(e));
-    yield put(stopLoading());
+    if (isError(e)) {
+      yield put(actions.loadUserProposalList.failure(e));
+      yield put(stopLoading());
+    }
   }
 }
 
@@ -357,8 +377,10 @@ export function* createDiscussionSaga(
 
     yield put(stopLoading());
   } catch (e) {
-    yield put(actions.createDiscussion.failure(e));
-    yield put(stopLoading());
+    if (isError(e)) {
+      yield put(actions.createDiscussion.failure(e));
+      yield put(stopLoading());
+    }
   }
 }
 
@@ -387,8 +409,10 @@ export function* addMessageToDiscussionSaga(
 
     yield put(stopLoading());
   } catch (e) {
-    yield put(actions.addMessageToDiscussion.failure(e));
-    yield put(stopLoading());
+    if (isError(e)) {
+      yield put(actions.addMessageToDiscussion.failure(e));
+      yield put(stopLoading());
+    }
   }
 }
 
@@ -418,8 +442,10 @@ export function* addMessageToProposalSaga(
 
     yield put(stopLoading());
   } catch (e) {
-    yield put(actions.addMessageToProposal.failure(e));
-    yield put(stopLoading());
+    if (isError(e)) {
+      yield put(actions.addMessageToProposal.failure(e));
+      yield put(stopLoading());
+    }
   }
 }
 
@@ -433,8 +459,10 @@ export function* createRequestToJoin(
     yield put(actions.createRequestToJoin.success(proposal));
     yield put(stopLoading());
   } catch (error) {
-    yield put(actions.createRequestToJoin.failure(error));
-    yield put(stopLoading());
+    if (isError(error)) {
+      yield put(actions.createRequestToJoin.failure(error));
+      yield put(stopLoading());
+    }
   }
 }
 
@@ -449,9 +477,11 @@ export function* leaveCommon(
     action.payload.callback(null);
     yield put(stopLoading());
   } catch (error) {
-    yield put(actions.leaveCommon.failure(error));
-    action.payload.callback(error);
-    yield put(stopLoading());
+    if (isError(error)) {
+      yield put(actions.leaveCommon.failure(error));
+      action.payload.callback(error);
+      yield put(stopLoading());
+    }
   }
 }
 
@@ -466,9 +496,11 @@ export function* deleteCommon(
     action.payload.callback(null);
     yield put(stopLoading());
   } catch (error) {
-    yield put(actions.deleteCommon.failure(error));
-    action.payload.callback(error);
-    yield put(stopLoading());
+    if (isError(error)) {
+      yield put(actions.deleteCommon.failure(error));
+      action.payload.callback(error);
+      yield put(stopLoading());
+    }
   }
 }
 
@@ -494,9 +526,11 @@ export function* createVote(
     action.payload.callback(null);
     yield put(stopLoading());
   } catch (error) {
-    yield put(actions.createVote.failure(error));
-    action.payload.callback(error);
-    yield put(stopLoading());
+    if (isError(error)) {
+      yield put(actions.createVote.failure(error));
+      action.payload.callback(error);
+      yield put(stopLoading());
+    }
   }
 }
 
@@ -527,9 +561,11 @@ export function* updateVote(
     action.payload.callback(null);
     yield put(stopLoading());
   } catch (error) {
-    yield put(actions.updateVote.failure(error));
-    action.payload.callback(error);
-    yield put(stopLoading());
+    if (isError(error)) {
+      yield put(actions.updateVote.failure(error));
+      action.payload.callback(error);
+      yield put(stopLoading());
+    }
   }
 }
 
@@ -544,9 +580,11 @@ export function* getBankDetails(
     action.payload.callback(null, bankAccountDetails);
     yield put(stopLoading());
   } catch (error) {
-    yield put(actions.getBankDetails.failure(error));
-    action.payload.callback(error);
-    yield put(stopLoading());
+    if (isError(error)) {
+      yield put(actions.getBankDetails.failure(error));
+      action.payload.callback(error);
+      yield put(stopLoading());
+    }
   }
 }
 
@@ -563,9 +601,11 @@ export function* addBankDetails(
     action.payload.callback(null, bankAccountDetails);
     yield put(stopLoading());
   } catch (error) {
-    yield put(actions.addBankDetails.failure(error));
-    action.payload.callback(error);
-    yield put(stopLoading());
+    if (isError(error)) {
+      yield put(actions.addBankDetails.failure(error));
+      action.payload.callback(error);
+      yield put(stopLoading());
+    }
   }
 }
 
@@ -581,9 +621,11 @@ export function* updateBankDetails(
     action.payload.callback(null, bankAccountDetails);
     yield put(stopLoading());
   } catch (error) {
-    yield put(actions.updateBankDetails.failure(error));
-    action.payload.callback(error);
-    yield put(stopLoading());
+    if (isError(error)) {
+      yield put(actions.updateBankDetails.failure(error));
+      action.payload.callback(error);
+      yield put(stopLoading());
+    }
   }
 }
 
@@ -613,9 +655,11 @@ export function* createFundingProposalSaga(
     yield put(actions.createFundingProposal.success(proposal));
     yield put(stopLoading());
   } catch (error) {
-    action.payload.callback(AddProposalSteps.FAILURE);
-    yield put(actions.createFundingProposal.failure(error));
-    yield put(stopLoading());
+    if (isError(error)) {
+      action.payload.callback(AddProposalSteps.FAILURE);
+      yield put(actions.createFundingProposal.failure(error));
+      yield put(stopLoading());
+    }
   }
 }
 
@@ -635,8 +679,10 @@ export function* loadUserCardsSaga(
       yield put(stopLoading());
     }
   } catch (e) {
-    yield put(actions.loadUserCards.failure(e));
-    yield put(stopLoading());
+    if (isError(e)) {
+      yield put(actions.loadUserCards.failure(e));
+      yield put(stopLoading());
+    }
   }
 }
 
@@ -652,8 +698,10 @@ export function* createCommon(
     yield put(actions.createCommon.success(common));
     action.payload.callback(null, common);
   } catch (error) {
-    yield put(actions.createCommon.failure(error));
-    action.payload.callback(error);
+    if (isError(error)) {
+      yield put(actions.createCommon.failure(error));
+      action.payload.callback(error);
+    }
   }
 }
 
@@ -669,8 +717,10 @@ export function* makeImmediateContribution(
     yield put(actions.makeImmediateContribution.success(response));
     action.payload.callback(null, response);
   } catch (error) {
-    yield put(actions.makeImmediateContribution.failure(error));
-    action.payload.callback(error);
+    if (isError(error)) {
+      yield put(actions.makeImmediateContribution.failure(error));
+      action.payload.callback(error);
+    }
   }
 }
 
@@ -686,8 +736,10 @@ export function* createBuyerTokenPage(
     yield put(actions.createBuyerTokenPage.success(response));
     action.payload.callback(null, response);
   } catch (error) {
-    yield put(actions.createBuyerTokenPage.failure(error));
-    action.payload.callback(error);
+    if (isError(error)) {
+      yield put(actions.createBuyerTokenPage.failure(error));
+      action.payload.callback(error);
+    }
   }
 }
 
@@ -704,8 +756,10 @@ export function* getUserContributionsToCommon(
     yield put(actions.getUserContributionsToCommon.success(payments));
     action.payload.callback(null, payments);
   } catch (error) {
-    yield put(actions.getUserContributionsToCommon.failure(error));
-    action.payload.callback(error);
+    if (isError(error)) {
+      yield put(actions.getUserContributionsToCommon.failure(error));
+      action.payload.callback(error);
+    }
   }
 }
 
@@ -721,8 +775,10 @@ export function* getUserContributions(
     yield put(actions.getUserContributions.success(payments));
     action.payload.callback(null, payments);
   } catch (error) {
-    yield put(actions.getUserContributions.failure(error));
-    action.payload.callback(error);
+    if (isError(error)) {
+      yield put(actions.getUserContributions.failure(error));
+      action.payload.callback(error);
+    }
   }
 }
 
@@ -739,8 +795,10 @@ export function* getUserSubscriptionToCommon(
     yield put(actions.getUserSubscriptionToCommon.success(subscription));
     action.payload.callback(null, subscription);
   } catch (error) {
-    yield put(actions.getUserSubscriptionToCommon.failure(error));
-    action.payload.callback(error);
+    if (isError(error)) {
+      yield put(actions.getUserSubscriptionToCommon.failure(error));
+      action.payload.callback(error);
+    }
   }
 }
 
@@ -756,8 +814,10 @@ export function* getUserSubscriptions(
     yield put(actions.getUserSubscriptions.success(subscriptions));
     action.payload.callback(null, subscriptions);
   } catch (error) {
-    yield put(actions.getUserSubscriptions.failure(error));
-    action.payload.callback(error);
+    if (isError(error)) {
+      yield put(actions.getUserSubscriptions.failure(error));
+      action.payload.callback(error);
+    }
   }
 }
 
@@ -774,8 +834,10 @@ export function* updateSubscription({
     yield put(actions.updateSubscription.success(subscription));
     payload.callback(null, subscription);
   } catch (error) {
-    yield put(actions.updateSubscription.failure(error));
-    payload.callback(error);
+    if (isError(error)) {
+      yield put(actions.updateSubscription.failure(error));
+      payload.callback(error);
+    }
   }
 }
 
@@ -792,8 +854,10 @@ export function* cancelSubscription({
     yield put(actions.cancelSubscription.success(subscription));
     payload.callback(null, subscription);
   } catch (error) {
-    yield put(actions.cancelSubscription.failure(error));
-    payload.callback(error);
+    if (isError(error)) {
+      yield put(actions.cancelSubscription.failure(error));
+      payload.callback(error);
+    }
   }
 }
 
