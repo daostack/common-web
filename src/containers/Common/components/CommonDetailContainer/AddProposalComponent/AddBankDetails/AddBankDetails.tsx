@@ -32,9 +32,7 @@ import { formatDate } from "@/shared/utils";
 import { BANKS_OPTIONS } from "@/shared/assets/banks";
 import { useNotification } from "@/shared/hooks";
 import { FileUploadButton } from "../FileUploadButton";
-import validationSchema, {
-  validationSchemaForEditing,
-} from "./validationSchema";
+import validationSchema from "./validationSchema";
 import { Gender, GENDER_OPTIONS } from "@/shared/models/Gender";
 import { AVAILABLE_COUNTRIES } from "./constants";
 import "./index.scss";
@@ -330,9 +328,7 @@ export const AddBankDetails = (props: IProps) => {
             initialValues={initialValues}
             onSubmit={handleSubmit}
             innerRef={formRef}
-            validationSchema={
-              isEditing ? validationSchemaForEditing : validationSchema
-            }
+            validationSchema={validationSchema}
             validateOnMount
           >
             {({ values, isValid, setFieldValue }) => {
