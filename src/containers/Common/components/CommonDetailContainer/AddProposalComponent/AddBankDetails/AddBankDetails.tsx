@@ -9,6 +9,7 @@ import {
   ButtonVariant,
   DatePicker,
   DropdownOption,
+  FilePreview,
   Loader,
 } from "@/shared/components";
 import { Dropdown, TextField } from "@/shared/components/Form/Formik";
@@ -157,6 +158,9 @@ export const AddBankDetails = (props: IProps) => {
       (doc) => doc.legalType === PaymeTypeCodes.BankAccountOwnership
     ) || null
   );
+  const [reviewingDoc, setReviewingDoc] = useState<File | PaymeDocument | null>(
+    null
+  );
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const isEditing = Boolean(initialBankAccountDetails);
@@ -193,6 +197,13 @@ export const AddBankDetails = (props: IProps) => {
   };
   const handleBankLetterDelete = () => {
     setBankLetterFile(null);
+  };
+
+  const handleUploadedFileClick = (file: File | PaymeDocument) => {
+    setReviewingDoc(file);
+  };
+  const handleFilePreviewClose = () => {
+    setReviewingDoc(null);
   };
 
   const handleDataChange = useCallback(
@@ -524,6 +535,11 @@ export const AddBankDetails = (props: IProps) => {
                       alt="ID file"
                       onUpload={(file) => selectFile(file, FileType.PhotoID)}
                       onDelete={handlePhotoIDDelete}
+                      onUploadedFileClick={
+                        photoIdFile
+                          ? () => handleUploadedFileClick(photoIdFile)
+                          : undefined
+                      }
                     />
                     <FileUploadButton
                       className="files-upload-wrapper__upload-button"
@@ -535,6 +551,11 @@ export const AddBankDetails = (props: IProps) => {
                       alt="Bank letter file"
                       onUpload={(file) => selectFile(file, FileType.BankLetter)}
                       onDelete={handleBankLetterDelete}
+                      onUploadedFileClick={
+                        bankLetterFile
+                          ? () => handleUploadedFileClick(bankLetterFile)
+                          : undefined
+                      }
                     />
                   </div>
                   <Button
@@ -560,6 +581,9 @@ export const AddBankDetails = (props: IProps) => {
           </Formik>
         )}
       </div>
+      {reviewingDoc && (
+        <FilePreview doc={reviewingDoc} onClose={handleFilePreviewClose} />
+      )}
     </div>
   );
 };
