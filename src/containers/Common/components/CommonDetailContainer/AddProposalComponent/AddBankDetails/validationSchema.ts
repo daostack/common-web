@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import { NUMBERS_ONLY_REGEXP } from "@/shared/constants";
 import { Gender, GENDER_OPTIONS } from "@/shared/models/Gender";
+import { AVAILABLE_COUNTRIES } from "./constants";
 
 const baseValidationSchema = {
   idNumber: Yup.string()
@@ -13,11 +14,11 @@ const baseValidationSchema = {
   accountNumber: Yup.string()
     .required("Please enter the account number")
     .matches(NUMBERS_ONLY_REGEXP, "Only numbers allowed"),
+  country: Yup.string().oneOf(AVAILABLE_COUNTRIES).required(),
 };
 
-export const validationSchemaForEditing = Yup.object().shape(
-  baseValidationSchema
-);
+export const validationSchemaForEditing =
+  Yup.object().shape(baseValidationSchema);
 
 const schema = Yup.object().shape({
   ...baseValidationSchema,

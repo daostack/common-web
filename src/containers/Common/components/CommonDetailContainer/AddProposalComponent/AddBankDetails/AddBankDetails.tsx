@@ -36,6 +36,7 @@ import validationSchema, {
   validationSchemaForEditing,
 } from "./validationSchema";
 import { Gender, GENDER_OPTIONS } from "@/shared/models/Gender";
+import { AVAILABLE_COUNTRIES } from "./constants";
 import "./index.scss";
 
 interface IProps {
@@ -81,7 +82,7 @@ const INITIAL_VALUES: FormValues = {
   address: "",
   streetNumber: undefined,
   city: "",
-  country: "",
+  country: AVAILABLE_COUNTRIES.length === 1 ? AVAILABLE_COUNTRIES[0] : "",
   photoId: "",
   bankLetter: "",
 };
@@ -172,10 +173,12 @@ export const AddBankDetails = (props: IProps) => {
 
   const countriesOptions = useMemo<DropdownOption[]>(
     () =>
-      countryList.map((item) => ({
-        text: item.name,
-        value: item.value,
-      })),
+      countryList
+        .filter((item) => AVAILABLE_COUNTRIES.includes(item.value))
+        .map((item) => ({
+          text: item.name,
+          value: item.value,
+        })),
     []
   );
 
