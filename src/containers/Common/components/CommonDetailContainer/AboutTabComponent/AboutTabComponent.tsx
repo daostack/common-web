@@ -35,22 +35,24 @@ export default function AboutTabComponent({
           ))}
         </div>
       )}
-      <div className="line"></div>
-      <div className="join-wrapper">
-        <div className="title">Join this Common</div>
-        {shouldShowJoinToCommonButton && (
-          <div className="social-wrapper">
-            <button className={`button-blue`} onClick={onOpenJoinModal}>
-              Join the effort
-            </button>
-            <CommonShare
-              common={common}
-              type={ShareViewType.Popup}
-              color={Colors.lightPurple}
-            />
+      {shouldShowJoinToCommonButton && (
+        <>
+          <div className="line"></div>
+          <div className="join-wrapper">
+            <div className="title">Join this Common</div>
+            <div className="social-wrapper">
+              <button className={`button-blue`} onClick={onOpenJoinModal}>
+                Join the effort
+              </button>
+              <CommonShare
+                common={common}
+                type={ShareViewType.Popup}
+                color={Colors.lightPurple}
+              />
+            </div>
           </div>
-        )}
-      </div>
+        </>
+      )}
     </div>
   );
 }

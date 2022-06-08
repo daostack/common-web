@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { LoadingState } from "@/shared/interfaces";
@@ -72,6 +72,10 @@ export const useCommonMember = (): Return => {
       data: null,
     });
   }, []);
+
+  useEffect(() => {
+    resetCommonMember();
+  }, [resetCommonMember, userId]);
 
   return {
     ...state,
