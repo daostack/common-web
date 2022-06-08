@@ -255,7 +255,6 @@ export const AddBankDetails = (props: IProps) => {
             : {
                 name: photoIdFileName,
                 legalType: PaymeTypeCodes.SocialId,
-                amount: 2000,
                 mimeType: photoIdFile!.type,
                 downloadURL: values.photoId,
               },
@@ -264,7 +263,6 @@ export const AddBankDetails = (props: IProps) => {
             : {
                 name: bankLetterFileName,
                 legalType: PaymeTypeCodes.BankAccountOwnership,
-                amount: 2000,
                 mimeType: bankLetterFile!.type,
                 downloadURL: values.bankLetter,
               },
