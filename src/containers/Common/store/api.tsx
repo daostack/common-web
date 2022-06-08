@@ -630,11 +630,12 @@ export const getCommonMember = async (
   commonId: string,
   userId: string
 ): Promise<CommonMember | null> => {
-  const member = (
-    await commonMembersSubCollection(commonId).doc(userId).get()
-  ).data();
+  const result = await commonMembersSubCollection(commonId)
+    .where("userId", "==", userId)
+    .get();
+  const members = transformFirebaseDataList<CommonMember>(result);
 
-  return member || null;
+  return members[0] || null;
 };
 
 export const governanceCollection = firebase
