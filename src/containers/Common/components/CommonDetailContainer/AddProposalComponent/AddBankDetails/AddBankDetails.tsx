@@ -1,8 +1,9 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Form, Formik, FormikConfig, FormikProps } from "formik";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import classNames from "classnames";
+import { selectUser } from "@/containers/Auth/store/selectors";
 import {
   Button,
   ButtonVariant,
@@ -26,7 +27,7 @@ import {
   PaymeDocument,
 } from "@/shared/interfaces/api/payMe";
 import { countryList } from "@/shared/assets/countries";
-import { BankAccountDetails, DateFormat } from "@/shared/models";
+import { BankAccountDetails, DateFormat, User } from "@/shared/models";
 import { formatDate } from "@/shared/utils";
 import { BANKS_OPTIONS } from "@/shared/assets/banks";
 import { useNotification } from "@/shared/hooks";
@@ -51,6 +52,8 @@ interface FormValues {
   socialIdIssueDate: Date;
   birthdate: Date;
   gender?: Gender;
+  firstName: string;
+  lastName: string;
   phoneNumber: string;
   email: string;
   accountNumber: number | undefined;
@@ -68,6 +71,8 @@ const INITIAL_VALUES: FormValues = {
   idNumber: "",
   socialIdIssueDate: new Date(),
   birthdate: new Date(),
+  firstName: "",
+  lastName: "",
   phoneNumber: "",
   email: "",
   accountNumber: undefined,
@@ -86,9 +91,17 @@ enum FileType {
   BankLetter,
 }
 
-const getInitialValues = (data?: BankAccountDetails | null): FormValues => {
+const getInitialValues = (
+  data?: BankAccountDetails | null,
+  user?: User | null
+): FormValues => {
   if (!data) {
-    return INITIAL_VALUES;
+    return {
+      ...INITIAL_VALUES,
+      firstName: user?.firstName || "",
+      lastName: user?.lastName || "",
+      email: user?.email || "",
+    };
   }
 
   return {
@@ -98,9 +111,11 @@ const getInitialValues = (data?: BankAccountDetails | null): FormValues => {
       DateFormat.ShortSecondary
     ).toDate(),
     birthdate: moment(data.birthdate, DateFormat.ShortSecondary).toDate(),
+    firstName: user?.firstName || "",
+    lastName: user?.lastName || "",
     gender: data.gender,
     phoneNumber: data.phoneNumber,
-    email: "",
+    email: user?.email || "",
     accountNumber: data.accountNumber,
     bankCode: data.bankCode,
     branchNumber: data.branchNumber,
@@ -125,8 +140,9 @@ export const AddBankDetails = (props: IProps) => {
   const { notify } = useNotification();
   const dispatch = useDispatch();
   const formRef = useRef<FormikProps<FormValues>>(null);
+  const user = useSelector(selectUser());
   const [initialValues, setInitialValues] = useState<FormValues>(() =>
-    getInitialValues(initialBankAccountDetails)
+    getInitialValues(initialBankAccountDetails, user)
   );
   const [photoIdFile, setPhotoIdFile] = useState<File | PaymeDocument | null>(
     () =>
@@ -217,8 +233,6 @@ export const AddBankDetails = (props: IProps) => {
       setInitialValues(values);
 
       const bankAccountDetails: BankAccountDetails = {
-        bankName: BANKS_OPTIONS.find((bank) => bank.value === values.bankCode)
-          ?.name!, // TODO: maybe save it while selecting?
         bankCode: values.bankCode!,
         branchNumber: Number(values.branchNumber!),
         accountNumber: Number(values.accountNumber!),
@@ -246,6 +260,8 @@ export const AddBankDetails = (props: IProps) => {
         country: values.country,
         streetAddress: values.address,
         streetNumber: values.streetNumber!,
+        firstName: values.firstName,
+        lastName: values.lastName,
         socialId: values.idNumber,
         socialIdIssueDate: formatDate(
           values.socialIdIssueDate,
@@ -254,6 +270,7 @@ export const AddBankDetails = (props: IProps) => {
         birthdate: formatDate(values.birthdate, DateFormat.ShortSecondary),
         gender: values.gender!,
         phoneNumber: values.phoneNumber!,
+        email: values.email,
       };
 
       dispatch(
