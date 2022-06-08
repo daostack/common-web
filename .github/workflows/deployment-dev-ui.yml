@@ -17,4 +17,4 @@ jobs:
           key: ${{ secrets.INSTANCE_KEY_DEV }}
           passphrase: ${{ secrets.INSTANCE_PASSPHRASE_DEV }}
           command_timeout: 200m 
-          script: echo "${{ secrets.GIT_REPO_KEY }}" > /home/common/.ssh/id_rsa && chmod 600 /home/common/.ssh/id_rsa && cd ~ && sudo rm -rf common-web && GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" git clone git@github.com:daostack/common-web.git && cd common-web && git checkout dev && sudo docker build -t common-ui:latest . && docker rm -f  common-ui || true && sudo docker run -d -p 80:80 --name  common-ui common-ui:latest
+          script: echo "${{ secrets.GIT_REPO_KEY }}" > /home/common/.ssh/id_rsa && chmod 600 /home/common/.ssh/id_rsa && cd ~ && sudo rm -rf common-web && GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" git clone git@github.com:daostack/common-web.git && cd common-web && git checkout dev && sudo docker build --build-arg REACT_APP_ENV=dev -t common-ui:latest . && docker rm -f  common-ui || true && sudo docker run -d -p 80:80 --name  common-ui common-ui:latest
