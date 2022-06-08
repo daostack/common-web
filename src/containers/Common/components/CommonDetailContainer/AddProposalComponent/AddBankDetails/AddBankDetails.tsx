@@ -421,7 +421,31 @@ export const AddBankDetails = (props: IProps) => {
                   {!isEditing && (
                     <>
                       <h3>Contact Info</h3>
-                      <div className="section contact-info">
+                      <div className="section">
+                        <TextField
+                          className="field"
+                          id="firstName"
+                          name="firstName"
+                          label="First Name"
+                          placeholder="Add your first name"
+                          isRequired
+                          styles={{
+                            label: "add-bank-details-form__label",
+                          }}
+                        />
+                        <TextField
+                          className="field"
+                          id="lastName"
+                          name="lastName"
+                          label="Last Name"
+                          placeholder="Add your last name"
+                          isRequired
+                          styles={{
+                            label: "add-bank-details-form__label",
+                          }}
+                        />
+                      </div>
+                      <div className="section add-bank-details-form__contact-info-general-data">
                         <TextField
                           className="field"
                           id="phoneNumber"

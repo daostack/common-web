@@ -89,6 +89,14 @@
       margin-bottom: 10px;
     }
   }
+
+  .add-bank-details-form__contact-info-general-data {
+    margin-top: 1rem;
+
+    @include big-phone {
+      margin-top: 0;
+    }
+  }
 }
 
 @include big-phone {
