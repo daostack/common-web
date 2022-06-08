@@ -104,15 +104,16 @@ const tabs = [
     icon: Tabs.About,
   },
   {
-    name: "Discussions",
-    key: Tabs.Discussions,
-    icon: Tabs.Discussions,
-  },
-  {
     name: "Proposals",
     key: Tabs.Proposals,
     icon: Tabs.Proposals,
   },
+  {
+    name: "Discussions",
+    key: Tabs.Discussions,
+    icon: Tabs.Discussions,
+  },
+
   {
     name: "Wallet",
     key: Tabs.Wallet,
@@ -740,24 +741,17 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
           </div>
         </div>
         <div
-          className={
-            classNames(
-              "main-content-container",
-              {
-                wallet: (tab === Tabs.Wallet),
-              }
-            )
-          }
+          className={classNames("main-content-container", {
+            wallet: tab === Tabs.Wallet,
+          })}
         >
           <div
-            className={
-              classNames(
-                "content-element inner-main-content-wrapper",
-                {
-                  wallet: tab === Tabs.Wallet,
-                }
-              )
-            }
+            className={classNames(
+              "content-element inner-main-content-wrapper",
+              {
+                wallet: tab === Tabs.Wallet,
+              }
+            )}
           >
             <div className="tab-content-wrapper">
               {tab === Tabs.About && (
@@ -794,11 +788,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                   isJoiningPending={isJoiningPending}
                 />
               )}
-              {tab === Tabs.Wallet && (
-                <WalletComponent
-                  common={common}
-                />
-              )}
+              {tab === Tabs.Wallet && <WalletComponent common={common} />}
             </div>
             {isMobileView && (
               <div
@@ -833,16 +823,10 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                 </button>
               </>
             )}
-            {
-              (
-                (screenSize === ScreenSize.Desktop)
-                || (tab !== Tabs.About)
-              )
-              && (tab !== Tabs.Wallet)
-              && (
+            {(screenSize === ScreenSize.Desktop || tab !== Tabs.About) &&
+              tab !== Tabs.Wallet && (
                 <div className="sidebar-wrapper">{renderSidebarContent()}</div>
-              )
-            }
+              )}
           </div>
         </div>
       </div>
