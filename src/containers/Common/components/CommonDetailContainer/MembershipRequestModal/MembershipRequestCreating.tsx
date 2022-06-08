@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { selectUser } from "@/containers/Auth/store/selectors";
 import { Loader } from "@/shared/components";
 import { getLoading } from "@/shared/store/selectors";
+import { getUserName } from "@/shared/utils";
 import { createMemberAdmittanceProposal } from "../../../store/actions";
 import { IStageProps } from "./MembershipRequestModal";
 import { MembershipRequestStage } from "./constants";
@@ -11,6 +13,8 @@ export default function MembershipRequestCreating(props: IStageProps) {
   const [isCreationSubmitted, setIsCreationSubmitted] = useState(false);
   const dispatch = useDispatch();
   const isLoading = useSelector(getLoading());
+  const user = useSelector(selectUser());
+  const userName = getUserName(user);
 
   useEffect(() => {
     (async () => {
@@ -23,7 +27,7 @@ export default function MembershipRequestCreating(props: IStageProps) {
           payload: {
             args: {
               commonId: common.id,
-              title: "",
+              title: `Membership request from ${userName}`,
               description: userData.intro,
               images: [],
               files: [],
@@ -46,7 +50,7 @@ export default function MembershipRequestCreating(props: IStageProps) {
 
       setIsCreationSubmitted(true);
     })();
-  }, [isCreationSubmitted, common, dispatch, userData, setUserData]);
+  }, [isCreationSubmitted, common, dispatch, userData, setUserData, userName]);
 
   useEffect(() => {
     if (isCreationSubmitted && !isLoading) {
