@@ -3,7 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useHistory } from "react-router";
 import classNames from "classnames";
-import { Loader, NotFound, CommonShare, UserAvatar } from "@/shared/components";
+import {
+  GlobalLoader,
+  Loader,
+  NotFound,
+  CommonShare,
+  UserAvatar,
+} from "@/shared/components";
 import { Modal } from "@/shared/components/Modal";
 import { useAuthorizedModal, useModal, useViewPortHook } from "@/shared/hooks";
 import PurpleCheckIcon from "@/shared/icons/purpleCheck.icon";
@@ -75,7 +81,6 @@ import {
 } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 import { useCommonMember } from "../../hooks";
 import "./index.scss";
-
 
 interface CommonDetailRouterParams {
   id: string;
@@ -214,10 +219,11 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   } = useModal(false);
 
   const {
-    isModalOpen: showJoinModal,
+    isModalOpen: isJoinModalOpen,
     onOpen: onOpenJoinModal,
     onClose: onCloseJoinModal,
   } = useAuthorizedModal();
+  const showJoinModal = isJoinModalOpen && isCommonMemberFetched;
   const isMobileView = screenSize === ScreenSize.Mobile;
 
   const handleOpen = useCallback(() => {
@@ -521,8 +527,8 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     }
   }, [showJoinModal, shouldAllowJoiningToCommon, closeJoinModal]);
 
-  if (!common || !governance || !isCommonMemberFetched) {
-    return isCommonFetched && isCommonMemberFetched ? <NotFound /> : <Loader />;
+  if (!common || !governance) {
+    return isCommonFetched ? <NotFound /> : <Loader />;
   }
 
   return (
@@ -551,6 +557,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
               common={common}
               onOpenJoinModal={openJoinModal}
               isCommonMember={isCommonMember}
+              isCommonMemberFetched={isCommonMemberFetched}
               isJoiningPending={isJoiningPending}
             />
           )}
@@ -560,6 +567,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
               common={common}
               onOpenJoinModal={openJoinModal}
               isCommonMember={isCommonMember}
+              isCommonMemberFetched={isCommonMemberFetched}
               isJoiningPending={isJoiningPending}
             />
           )}
@@ -593,6 +601,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
         />
       )}
       <div className="common-detail-wrapper">
+        {!isCommonMemberFetched && <GlobalLoader />}
         <div className="main-information-block">
           <div className="main-information-wrapper">
             <div className="content-element img-wrapper">
@@ -753,24 +762,17 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
           </div>
         </div>
         <div
-          className={
-            classNames(
-              "main-content-container",
-              {
-                wallet: (tab === Tabs.Wallet),
-              }
-            )
-          }
+          className={classNames("main-content-container", {
+            wallet: tab === Tabs.Wallet,
+          })}
         >
           <div
-            className={
-              classNames(
-                "content-element inner-main-content-wrapper",
-                {
-                  wallet: tab === Tabs.Wallet,
-                }
-              )
-            }
+            className={classNames(
+              "content-element inner-main-content-wrapper",
+              {
+                wallet: tab === Tabs.Wallet,
+              }
+            )}
           >
             <div className="tab-content-wrapper">
               {tab === Tabs.About && (
@@ -793,6 +795,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                   discussions={discussions || []}
                   loadDisscussionDetail={getDisscussionDetail}
                   isCommonMember={isCommonMember}
+                  isCommonMemberFetched={isCommonMemberFetched}
                   isJoiningPending={isJoiningPending}
                 />
               )}
@@ -806,14 +809,11 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                   proposals={fundingProposals}
                   loadProposalDetail={getProposalDetail}
                   isCommonMember={isCommonMember}
+                  isCommonMemberFetched={isCommonMemberFetched}
                   isJoiningPending={isJoiningPending}
                 />
               )}
-              {tab === Tabs.Wallet && (
-                <WalletComponent
-                  common={common}
-                />
-              )}
+              {tab === Tabs.Wallet && <WalletComponent common={common} />}
             </div>
             {isMobileView && (
               <div
@@ -848,16 +848,10 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                 </button>
               </>
             )}
-            {
-              (
-                (screenSize === ScreenSize.Desktop)
-                || (tab !== Tabs.About)
-              )
-              && (tab !== Tabs.Wallet)
-              && (
+            {(screenSize === ScreenSize.Desktop || tab !== Tabs.About) &&
+              tab !== Tabs.Wallet && (
                 <div className="sidebar-wrapper">{renderSidebarContent()}</div>
-              )
-            }
+              )}
           </div>
         </div>
       </div>

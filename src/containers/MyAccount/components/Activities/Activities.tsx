@@ -319,6 +319,7 @@ const Activities: FC = () => {
               proposal={currentProposal}
               common={currentCommon}
               isCommonMember={isCommonMember}
+              isCommonMemberFetched={isCommonMemberFetched}
             />
           ) : (
             <div>

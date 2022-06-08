@@ -22,6 +22,7 @@ interface DiscussionDetailModalProps {
   common: Common;
   onOpenJoinModal: () => void;
   isCommonMember?: boolean;
+  isCommonMemberFetched: boolean;
   isJoiningPending: boolean;
 }
 
@@ -30,6 +31,7 @@ export default function DiscussionDetailModal({
   common,
   onOpenJoinModal,
   isCommonMember,
+  isCommonMemberFetched,
   isJoiningPending,
 }: DiscussionDetailModalProps) {
   const dispatch = useDispatch();
@@ -114,6 +116,7 @@ export default function DiscussionDetailModal({
           highlightedMessageId={highlightedMessageId}
           onOpenJoinModal={onOpenJoinModal}
           isCommonMember={isCommonMember}
+          isCommonMemberFetched={isCommonMemberFetched}
           isJoiningPending={isJoiningPending}
           isAuthorized={Boolean(user)}
           sendMessage={sendMessage}

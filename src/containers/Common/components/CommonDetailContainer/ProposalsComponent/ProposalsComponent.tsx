@@ -12,6 +12,7 @@ interface DiscussionsComponentProps {
   common: Common;
   governance: Governance;
   isCommonMember: boolean;
+  isCommonMemberFetched: boolean;
   isJoiningPending: boolean;
   onAddNewProposal: () => void;
 }
@@ -23,6 +24,7 @@ export default function ProposalsComponent({
   common,
   governance,
   isCommonMember,
+  isCommonMemberFetched,
   isJoiningPending,
   onAddNewProposal,
 }: DiscussionsComponentProps) {
@@ -65,6 +67,7 @@ export default function ProposalsComponent({
                 : "No past activity"
             }
             isCommonMember={isCommonMember}
+            isCommonMemberFetched={isCommonMemberFetched}
             isJoiningPending={isJoiningPending}
           />
         )}

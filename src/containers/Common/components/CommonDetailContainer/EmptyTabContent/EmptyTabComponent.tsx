@@ -15,6 +15,7 @@ interface EmptyTabComponentProps {
   common?: Common;
   governance?: Governance;
   isCommonMember?: boolean;
+  isCommonMemberFetched?: boolean;
   isJoiningPending?: boolean;
 }
 
@@ -25,14 +26,16 @@ export default function EmptyTabComponent({
   common,
   governance,
   isCommonMember,
+  isCommonMemberFetched = false,
   isJoiningPending,
 }: EmptyTabComponentProps) {
   const [isCreationStageReached, setIsCreationStageReached] = useState(false);
   const {
-    isModalOpen: showJoinModal,
+    isModalOpen: isJoinModalOpen,
     onOpen: onJoinModalOpen,
     onClose: onCloseJoinModal,
   } = useAuthorizedModal();
+  const showJoinModal = isJoinModalOpen && isCommonMemberFetched;
   const shouldShowJoinToCommonButton =
     Boolean(common) && !isCommonMember && !isJoiningPending;
   const shouldAllowJoiningToCommon =

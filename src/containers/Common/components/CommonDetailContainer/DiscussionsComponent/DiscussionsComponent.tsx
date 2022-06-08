@@ -11,6 +11,7 @@ interface DiscussionsComponentProps {
   common: Common;
   governance: Governance;
   isCommonMember: boolean;
+  isCommonMemberFetched: boolean;
   isJoiningPending: boolean;
   onAddNewPost: () => void;
 }
@@ -21,6 +22,7 @@ export default function DiscussionsComponent({
   common,
   governance,
   isCommonMember,
+  isCommonMemberFetched,
   isJoiningPending,
   onAddNewPost,
 }: DiscussionsComponentProps) {
@@ -55,6 +57,7 @@ export default function DiscussionsComponent({
             }
             title="No discussions yet"
             isCommonMember={isCommonMember}
+            isCommonMemberFetched={isCommonMemberFetched}
             isJoiningPending={isJoiningPending}
           />
         )}

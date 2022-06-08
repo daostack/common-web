@@ -27,6 +27,7 @@ interface ChatComponentInterface {
   type: ChatType;
   onOpenJoinModal?: () => void;
   isCommonMember?: boolean;
+  isCommonMemberFetched: boolean;
   isJoiningPending?: boolean;
   isAuthorized?: boolean;
   sendMessage?: (text: string) => void;
@@ -61,6 +62,7 @@ export default function ChatComponent({
   type,
   onOpenJoinModal,
   isCommonMember,
+  isCommonMemberFetched,
   isJoiningPending,
   isAuthorized,
   sendMessage,
@@ -133,6 +135,7 @@ export default function ChatComponent({
             }
             title="No comments yet"
             isCommonMember={isCommonMember}
+            isCommonMemberFetched={isCommonMemberFetched}
             isJoiningPending={isJoiningPending}
           />
         ) : null}

@@ -30,6 +30,7 @@ interface ProposalDetailModalProps {
   onOpenJoinModal?: () => void;
   isJoiningPending?: boolean;
   isCommonMember: boolean;
+  isCommonMemberFetched: boolean;
 }
 
 export default function ProposalDetailModal({
@@ -37,6 +38,7 @@ export default function ProposalDetailModal({
   common,
   onOpenJoinModal,
   isCommonMember,
+  isCommonMemberFetched,
   isJoiningPending,
 }: ProposalDetailModalProps) {
   const date = new Date();
@@ -159,6 +161,7 @@ export default function ProposalDetailModal({
           highlightedMessageId={highlightedCommentId}
           onOpenJoinModal={onOpenJoinModal}
           isCommonMember={isCommonMember}
+          isCommonMemberFetched={isCommonMemberFetched}
           isJoiningPending={isJoiningPending}
           isAuthorized={Boolean(user)}
           sendMessage={sendMessage}
