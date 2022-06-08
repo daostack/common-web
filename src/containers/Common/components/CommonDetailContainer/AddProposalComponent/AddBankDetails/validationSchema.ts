@@ -39,6 +39,8 @@ const schema = Yup.object().shape({
   lastName: Yup.string()
     .matches(NAME_REGEXP, "Only alphabets are allowed for this field")
     .required("Please enter your last name"),
+  socialIdIssueDate: Yup.date().required("Please select a date"),
+  birthdate: Yup.date().required("Please select a date"),
 });
 
 export default schema;
