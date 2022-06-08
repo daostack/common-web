@@ -217,8 +217,9 @@ export const AddBankDetails = (props: IProps) => {
       }
 
       onBankDetails(data);
+      notify(`Bank details ${isEditing ? "updated" : "added"} successfully`);
     },
-    [onBankDetails]
+    [onBankDetails, notify, isEditing]
   );
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
@@ -299,8 +300,6 @@ export const AddBankDetails = (props: IProps) => {
           })
         );
       }
-
-      notify(`Bank details ${isEditing ? "updated" : "added"} successfully`);
     },
     [dispatch, isEditing, bankLetterFile, photoIdFile, handleDataChange]
   );
