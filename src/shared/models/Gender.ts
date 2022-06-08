@@ -1,8 +1,8 @@
 import { DropdownOption } from "../components";
 
 export enum Gender {
-  Male,
-  Female,
+  Male = 0,
+  Female = 1,
 }
 
 export const GENDER_OPTIONS: DropdownOption[] = [

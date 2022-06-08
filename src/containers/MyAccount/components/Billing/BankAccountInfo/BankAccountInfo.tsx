@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
+import { BANKS_OPTIONS } from "@/shared/assets/banks";
 import { Button, ButtonVariant } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { BankAccountDetails } from "@/shared/models";
@@ -15,6 +16,9 @@ const BankAccountInfo: FC<BankAccountInfoProps> = (props) => {
   const { bankAccount, onBankAccountChange } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const bankName = BANKS_OPTIONS.find(
+    (bank) => bank.value === bankAccount.bankCode
+  )?.name;
 
   const buttonEl = (
     <Button
@@ -37,7 +41,7 @@ const BankAccountInfo: FC<BankAccountInfoProps> = (props) => {
           </li>
           <li className="billing-bank-account-info__details-list-item">
             <strong>Bank Name</strong>
-            <span>{bankAccount.bankName}</span>
+            <span>{bankName}</span>
           </li>
           <li className="billing-bank-account-info__details-list-item">
             <strong>Branch</strong>
