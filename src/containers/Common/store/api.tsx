@@ -693,6 +693,16 @@ export const getUserCommons = async (userId: string): Promise<Common[]> => {
   return results.map((result) => result.data() as Common);
 };
 
+export const verifyIsUserMemberOfAnyCommon = async (userId: string): Promise<boolean> => {
+  const querySnapshot = await firebase
+    .firestore()
+    .collectionGroup(SubCollections.Members)
+    .where("userId", "==", userId)
+    .get();
+
+  return !querySnapshot.empty;
+};
+
 export const proposalVotesSubCollection = (proposalId: string) => {
   return firebase
     .firestore()
