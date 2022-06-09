@@ -283,8 +283,10 @@ const Activities: FC = () => {
   }, [fetchUserCommons]);
 
   useEffect(() => {
-    if (!myProposals.length)
-      return;
+    if (isUserProposalsLoaded && !!myProposals.length) {
+      setMyFundingProposals([]);
+      setMyMembershipRequests([]);
+    }
 
     const myFundingProposals = myProposals.filter((proposal) =>
       proposal.type === ProposalsTypes.FUNDS_ALLOCATION
