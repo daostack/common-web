@@ -57,20 +57,22 @@ jest.mock("@/shared/components", () => {
 
 describe("BankAccount", () => {
   const bankAccount: BankAccountDetails = {
-    bankName: "Bank Name",
     bankCode: 123,
     branchNumber: 11111,
     accountNumber: 22222,
     identificationDocs: [],
     city: "City",
-    country: "Country",
+    country: "IL",
     streetAddress: "Street Address",
     streetNumber: 33,
+    firstName: 'Ignat',
+    lastName: 'Petrovich',
     socialId: "123456789",
     socialIdIssueDate: "10/03/2022",
     birthdate: "01/02/1995",
     gender: Gender.Male,
     phoneNumber: "9999999999",
+    email: "example@gmail.com",
   };
 
   beforeEach(() => {
