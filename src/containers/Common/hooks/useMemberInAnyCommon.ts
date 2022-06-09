@@ -22,9 +22,6 @@ export const useMemberInAnyCommon = (): Return => {
   const userId = user?.uid;
 
   const checkMembershipInAnyCommon = useCallback(() => {
-    if (state.loading || state.fetched) {
-      return;
-    }
     if (!userId) {
       setState((nextState) => ({
         ...nextState,
@@ -55,7 +52,7 @@ export const useMemberInAnyCommon = (): Return => {
         });
       }
     })();
-  }, [state, dispatch, userId]);
+  }, [dispatch, userId]);
 
   const resetMembershipCheck = useCallback(() => {
     setState({

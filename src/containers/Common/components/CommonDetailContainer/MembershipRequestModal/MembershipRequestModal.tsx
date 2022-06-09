@@ -59,6 +59,7 @@ export function MembershipRequestModal(props: IProps) {
   const { isShowing, onClose, common, governance, onCreationStageReach } =
     props;
   const {
+    loading: isMembershipCheckLoading,
     fetched: isMembershipCheckDone,
     data: isMember,
     checkMembershipInAnyCommon,
@@ -83,12 +84,18 @@ export function MembershipRequestModal(props: IProps) {
   }, [isShowing, disableZoom, resetZoom]);
 
   useEffect(() => {
-    checkMembershipInAnyCommon();
-  }, [checkMembershipInAnyCommon]);
+    if (!isMembershipCheckLoading && !isMembershipCheckDone) {
+      checkMembershipInAnyCommon();
+    }
+  }, [
+    isMembershipCheckLoading,
+    isMembershipCheckDone,
+    checkMembershipInAnyCommon,
+  ]);
 
   useEffect(() => {
     resetMembershipCheck();
-  }, [userId, resetMembershipCheck]);
+  }, [userId]);
 
   /**
    * The data is saved only when we are on the Common Details Page.
