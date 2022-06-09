@@ -1,11 +1,13 @@
 import * as Yup from "yup";
 import { NUMBERS_ONLY_REGEXP } from "@/shared/constants";
 import { Gender, GENDER_OPTIONS } from "@/shared/models/Gender";
+import { AVAILABLE_COUNTRIES, NAME_REGEXP } from "./constants";
 
-const baseValidationSchema = {
+const schema = Yup.object().shape({
   idNumber: Yup.string()
     .required("Please enter your ID number")
-    .matches(NUMBERS_ONLY_REGEXP, "Only numbers allowed"),
+    .matches(NUMBERS_ONLY_REGEXP, "Only numbers allowed")
+    .length(10, "Social ID should have 10 digits"),
   bankCode: Yup.number().required("Please choose a bank"),
   branchNumber: Yup.string()
     .required("Please enter the branch number")
@@ -13,19 +15,12 @@ const baseValidationSchema = {
   accountNumber: Yup.string()
     .required("Please enter the account number")
     .matches(NUMBERS_ONLY_REGEXP, "Only numbers allowed"),
-};
-
-export const validationSchemaForEditing = Yup.object().shape(
-  baseValidationSchema
-);
-
-const schema = Yup.object().shape({
-  ...baseValidationSchema,
   gender: Yup.number()
     .oneOf(GENDER_OPTIONS.map((option) => option.value as Gender))
     .required("Please choose gender"),
   phoneNumber: Yup.string()
     .matches(NUMBERS_ONLY_REGEXP, "Only numbers allowed")
+    .length(10, "Phone number should have 10 digits")
     .required("Please enter a phone number"),
   email: Yup.string()
     .required("Please enter your email")
@@ -35,6 +30,17 @@ const schema = Yup.object().shape({
     .required("Please enter the street number")
     .matches(NUMBERS_ONLY_REGEXP, "Only numbers allowed"),
   city: Yup.string().required("Please enter your city"),
+  country: Yup.string()
+    .oneOf(AVAILABLE_COUNTRIES)
+    .required("Please select a country"),
+  firstName: Yup.string()
+    .matches(NAME_REGEXP, "Only alphabets are allowed for this field")
+    .required("Please enter your first name"),
+  lastName: Yup.string()
+    .matches(NAME_REGEXP, "Only alphabets are allowed for this field")
+    .required("Please enter your last name"),
+  socialIdIssueDate: Yup.date().required("Please select a date"),
+  birthdate: Yup.date().required("Please select a date"),
 });
 
 export default schema;

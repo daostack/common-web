@@ -112,15 +112,16 @@ const tabs = [
     icon: Tabs.About,
   },
   {
-    name: "Discussions",
-    key: Tabs.Discussions,
-    icon: Tabs.Discussions,
-  },
-  {
     name: "Proposals",
     key: Tabs.Proposals,
     icon: Tabs.Proposals,
   },
+  {
+    name: "Discussions",
+    key: Tabs.Discussions,
+    icon: Tabs.Discussions,
+  },
+
   {
     name: "Wallet",
     key: Tabs.Wallet,
