@@ -84,10 +84,11 @@ export function MembershipRequestModal(props: IProps) {
   }, [isShowing, disableZoom, resetZoom]);
 
   useEffect(() => {
-    if (!isMembershipCheckLoading && !isMembershipCheckDone) {
+    if (isShowing && !isMembershipCheckLoading && !isMembershipCheckDone) {
       checkMembershipInAnyCommon();
     }
   }, [
+    isShowing,
     isMembershipCheckLoading,
     isMembershipCheckDone,
     checkMembershipInAnyCommon,
@@ -188,7 +189,7 @@ export function MembershipRequestModal(props: IProps) {
     modalRef.current?.scrollToTop();
   }, [stage]);
 
-  if (!isMembershipCheckDone) {
+  if (isShowing && !isMembershipCheckDone) {
     return <GlobalLoader />;
   }
 
