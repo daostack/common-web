@@ -155,6 +155,13 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
     produce(state, (nextState) => {
       nextState.governance = null;
     })
+  )
+  .handleAction(
+    actions.createMemberAdmittanceProposal.success,
+    (state, action) =>
+      produce(state, (nextState) => {
+        nextState.proposals = [action.payload, ...nextState.proposals];
+      })
   );
 
 export default reducer;
