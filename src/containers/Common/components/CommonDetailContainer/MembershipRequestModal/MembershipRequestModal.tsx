@@ -39,7 +39,7 @@ export interface IMembershipRequestData {
 
 const INIT_DATA: IMembershipRequestData = {
   stage: MembershipRequestStage.Welcome,
-  intro: "",
+  intro: "Intro",
 };
 
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
