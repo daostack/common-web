@@ -1,7 +1,7 @@
 FROM node:14 AS builder
 WORKDIR /usr/src/app-build
 COPY . .
-ARG REACT_APP_ENV=dev 
+ARG REACT_APP_ENV 
 RUN yarn install && yarn run build
 
 FROM nginx:latest
