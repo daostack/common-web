@@ -398,11 +398,15 @@ export function* addMessageToDiscussionSaga(
       async (data) => {
         const { discussion } = action.payload;
 
-        discussion.discussionMessage = data.sort(
-          (m: DiscussionMessage, mP: DiscussionMessage) =>
-            m.createTime?.seconds - mP.createTime?.seconds
-        );
-        store.dispatch(actions.loadDisscussionDetail.request(discussion));
+        const updatedDiscussion = {
+          ...discussion,
+          discussionMessage: data.sort(
+            (m: DiscussionMessage, mP: DiscussionMessage) =>
+              m.createTime?.seconds - mP.createTime?.seconds
+          ),
+        };
+
+        store.dispatch(actions.loadDisscussionDetail.request(updatedDiscussion));
         store.dispatch(actions.getCommonsList.request());
       }
     );
