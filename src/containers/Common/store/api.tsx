@@ -690,7 +690,9 @@ export const getUserCommons = async (userId: string): Promise<Common[]> => {
 
   const results = await Promise.all(promises);
 
-  return results.map((result) => result.data() as Common);
+  return results
+    .map((result) => result.data() as Common)
+    .filter((common) => common.state === CommonState.ACTIVE);
 };
 
 export const verifyIsUserMemberOfAnyCommon = async (userId: string): Promise<boolean> => {
