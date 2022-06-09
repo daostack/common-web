@@ -80,7 +80,7 @@ export async function fetchCommonProposals(commonId: string) {
   const proposals = await firebase
     .firestore()
     .collection(Collection.Proposals)
-    .where("commonId", "==", commonId)
+    .where("data.args.commonId", "==", commonId)
     .get();
 
   const data = transformFirebaseDataList<Proposal>(proposals);

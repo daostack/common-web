@@ -188,6 +188,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const isCommonMember = Boolean(commonMember);
   const isJoiningPending = proposals.some(
     (proposal) =>
+      proposal.type === ProposalsTypes.MEMBER_ADMITTANCE &&
       proposal.state === ProposalState.COUNTDOWN &&
       proposal.data.args.proposerId === user?.uid
   );
