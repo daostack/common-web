@@ -11,6 +11,46 @@ export const createDefaultGovernanceCreationPayload = (
         reputation: {},
         allowedActions: {},
         allowedProposals: {},
+        assignProposalDefinition: {
+          global: {
+            quorum: 30,
+            weights: [
+              {
+                circles: [2, 1],
+                value: 60,
+              },
+              {
+                circles: [0],
+                value: 40,
+              },
+            ],
+            minApprove: 50,
+            maxReject: 0,
+            duration: 24,
+          },
+          local: {},
+          limitations: {},
+        },
+        removeProposalDefinition: {
+          global: {
+            quorum: 30,
+            weights: [
+              {
+                circles: [2, 1],
+                value: 60,
+              },
+              {
+                circles: [0],
+                value: 40,
+              },
+            ],
+            minApprove: 50,
+            maxReject: 0,
+            duration: 24,
+          },
+          local: {},
+          limitations: {},
+        },
       },
       {
         name: "STANDARD_MEMBER",
@@ -21,6 +61,46 @@ export const createDefaultGovernanceCreationPayload = (
         allowedProposals: {
           [ProposalsTypes.MEMBER_ADMITTANCE]: true,
         },
+        assignProposalDefinition: {
+          global: {
+            quorum: 30,
+            weights: [
+              {
+                circles: [2, 1],
+                value: 60,
+              },
+              {
+                circles: [0],
+                value: 40,
+              },
+            ],
+            minApprove: 50,
+            maxReject: 0,
+            duration: 24,
+          },
+          local: {},
+          limitations: {},
+        },
+        removeProposalDefinition: {
+          global: {
+            quorum: 30,
+            weights: [
+              {
+                circles: [2, 1],
+                value: 60,
+              },
+              {
+                circles: [0],
+                value: 40,
+              },
+            ],
+            minApprove: 50,
+            maxReject: 0,
+            duration: 24,
+          },
+          local: {},
+          limitations: {},
+        },
       },
       {
         name: "COMMON_LEADER",
@@ -30,6 +110,46 @@ export const createDefaultGovernanceCreationPayload = (
         },
         allowedProposals: {
           [ProposalsTypes.MEMBER_ADMITTANCE]: true,
+        },
+        assignProposalDefinition: {
+          global: {
+            quorum: 30,
+            weights: [
+              {
+                circles: [2, 1],
+                value: 60,
+              },
+              {
+                circles: [0],
+                value: 40,
+              },
+            ],
+            minApprove: 50,
+            maxReject: 0,
+            duration: 24,
+          },
+          local: {},
+          limitations: {},
+        },
+        removeProposalDefinition: {
+          global: {
+            quorum: 30,
+            weights: [
+              {
+                circles: [2, 1],
+                value: 60,
+              },
+              {
+                circles: [0],
+                value: 40,
+              },
+            ],
+            minApprove: 50,
+            maxReject: 0,
+            duration: 24,
+          },
+          local: {},
+          limitations: {},
         },
       },
     ],
@@ -43,9 +163,14 @@ export const createDefaultGovernanceCreationPayload = (
         global: {
           quorum: 30,
           weights: [
-            { circles: [2], value: 60 },
-            { circles: [1], value: 30 },
-            { circles: [0], value: 10 },
+            {
+              circles: [2, 1],
+              value: 60,
+            },
+            {
+              circles: [0],
+              value: 40,
+            },
           ],
           minApprove: 50,
           maxReject: 0,
