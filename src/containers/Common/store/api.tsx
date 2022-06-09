@@ -43,7 +43,6 @@ import {
   Vote,
 } from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
-import { UpdateBankAccountDetailsData } from "@/shared/interfaces/api/bankAccount";
 import { NotificationItem } from "@/shared/models/Notification";
 
 export async function fetchCommonDiscussions(commonId: string) {
@@ -468,7 +467,7 @@ export async function addBankDetails(
 }
 
 export async function updateBankDetails(
-  requestData: Partial<UpdateBankAccountDetailsData>
+  requestData: Partial<BankAccountDetails>
 ): Promise<void> {
   await Api.patch(ApiEndpoint.UpdateBankAccount, requestData);
 }

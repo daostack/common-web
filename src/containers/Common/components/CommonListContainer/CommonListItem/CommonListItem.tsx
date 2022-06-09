@@ -46,7 +46,6 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
                 {common?.metadata.byline}
               </div>
             )}
-
             <div className="last-activity">
               Active {getLastActivity(common)}
             </div>
