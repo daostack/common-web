@@ -132,7 +132,7 @@ export async function fetchUserProposals(userId: string) {
   const commons = await firebase
     .firestore()
     .collection(Collection.Proposals)
-    .where("proposerId", "==", userId)
+    .where("data.args.proposerId", "==", userId)
     .get();
   const data = transformFirebaseDataList<Proposal>(commons);
 
