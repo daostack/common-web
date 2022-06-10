@@ -546,6 +546,7 @@ export function* createFundingProposal(
 ): Generator {
   try {
     const data = action.payload.payload;
+    const { commonId } = data.args;
 
     yield put(startLoading());
     const fundingProposal = (yield call(createProposalApi, {
@@ -555,9 +556,9 @@ export function* createFundingProposal(
 
     yield call(
       subscribeToCommonProposal,
-      data.args.commonId,
-      async (data) => {
-        const ds = await fetchCommonProposals(data.args.commonId);
+      commonId,
+      async () => {
+        const ds = await fetchCommonProposals(commonId);
 
         store.dispatch(actions.setProposals(ds));
         store.dispatch(actions.loadProposalList.request());

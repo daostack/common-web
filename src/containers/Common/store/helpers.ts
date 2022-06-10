@@ -182,6 +182,29 @@ export const createDefaultGovernanceCreationPayload = (
         },
         limitations: {},
       },
+      [ProposalsTypes.FUNDS_ALLOCATION]: {
+        global: {
+          quorum: 30,
+          weights: [
+            {
+              circles: [2, 1],
+              value: 60,
+            },
+            {
+              circles: [0],
+              value: 40,
+            },
+          ],
+          minApprove: 50,
+          maxReject: 0,
+          duration: 24,
+        },
+        local: {
+          defaultCircle: 1,
+          optimisticAdmittance: true,
+        },
+        limitations: {},
+      },
     },
     consequences: {},
     unstructuredRules: settings.unstructuredRules,

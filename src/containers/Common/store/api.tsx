@@ -346,7 +346,7 @@ export function subscribeToCommonProposal(
   const query = firebase
     .firestore()
     .collection(Collection.Proposals)
-    .where("commonId", "==", commonId);
+    .where("data.args.commonId", "==", commonId);
   const subscribe = query.onSnapshot((snapshot) => {
     callback(transformFirebaseDataList(snapshot));
     setTimeout(subscribe, 0);
