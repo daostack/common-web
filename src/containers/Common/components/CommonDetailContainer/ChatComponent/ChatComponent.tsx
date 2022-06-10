@@ -1,8 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-} from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { scroller } from "react-scroll";
 import { v4 as uuidv4 } from "uuid";
@@ -72,30 +68,23 @@ export default function ChatComponent({
   const [message, setMessage] = useState("");
   const shouldShowJoinToCommonButton = !isCommonMember && !isJoiningPending;
   const messages = discussionMessage.reduce(groupday, {});
-  const isMobileView = (screenSize === ScreenSize.Mobile);
+  const isMobileView = screenSize === ScreenSize.Mobile;
   const dateList = Object.keys(messages);
   const chatId = useMemo(() => `chat-${uuidv4()}`, []);
 
-  useEffect(
-    () => {
-      if (!highlightedMessageId)
-        return;
+  useEffect(() => {
+    if (!highlightedMessageId) return;
 
-      setTimeout(
-        () => {
-          scroller.scrollTo(highlightedMessageId, {
-            containerId: chatId,
-            delay: 0,
-            duration: 300,
-            offset: -15,
-            smooth: true,
-          });
-        },
-        0
-      );
-    },
-    [chatId, highlightedMessageId]
-  );
+    setTimeout(() => {
+      scroller.scrollTo(highlightedMessageId, {
+        containerId: chatId,
+        delay: 0,
+        duration: 300,
+        offset: -15,
+        smooth: true,
+      });
+    }, 0);
+  }, [chatId, highlightedMessageId]);
 
   return (
     <div className="chat-wrapper">
@@ -103,26 +92,20 @@ export default function ChatComponent({
         {dateList.map((day) => {
           const date = new Date(Number(day));
           return (
-            <ul
-              id={chatId}
-              className="message-list"
-              key={day}
-            >
+            <ul id={chatId} className="message-list" key={day}>
               <li className="date-title">
                 {isToday(date) ? "Today" : formatDate(date)}
               </li>
-              {
-                messages[Number(day)].map((m) => {
-                  return (
-                    <ChatMessage
-                      key={m.id}
-                      disscussionMessage={m}
-                      chatType={type}
-                      highlighted={m.id === highlightedMessageId}
-                    />
-                  );
-                })
-              }
+              {messages[Number(day)].map((m) => {
+                return (
+                  <ChatMessage
+                    key={m.id}
+                    disscussionMessage={m}
+                    chatType={type}
+                    highlighted={m.id === highlightedMessageId}
+                  />
+                );
+              })}
             </ul>
           );
         })}
@@ -151,25 +134,27 @@ export default function ChatComponent({
                 Join the effort
               </button>
             )}
-            {
-              common
-              ? <CommonShare
+            {common ? (
+              <CommonShare
                 common={common}
                 type={
                   isMobileView
-                  ? ShareViewType.ModalMobile
-                  : ShareViewType.ModalDesktop
+                    ? ShareViewType.ModalMobile
+                    : ShareViewType.ModalDesktop
                 }
                 color={Colors.lightPurple}
                 top="-130px"
               />
-              : <Loader />
-            }
+            ) : (
+              <Loader />
+            )}
           </div>
         </div>
       ) : (
         <div className="bottom-chat-wrapper">
-          {!isCommonMember ? <span className="text">Only members can send messages</span> :
+          {!isCommonMember ? (
+            <span className="text">Only members can send messages</span>
+          ) : (
             <>
               <input
                 className="message-input"
@@ -188,7 +173,7 @@ export default function ChatComponent({
                 <img src="/icons/send-message.svg" alt="send-message" />
               </button>
             </>
-          }
+          )}
         </div>
       )}
     </div>
