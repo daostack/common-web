@@ -21,7 +21,7 @@ export default function PendingUpload({ proposalId, selectedFiles, updateUploadS
     (async () => {
       try {
         const invoicesData: InvoicesSubmission = {
-          proposalID: proposalId,
+          proposalId,
           payoutDocs: [],
           payoutDocsComment: payoutDocsComment
         };
