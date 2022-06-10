@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { Modal } from "@/shared/components";
@@ -13,7 +19,10 @@ import { AddProposalLoader } from "./AddProposalLoader";
 import { AdProposalSuccess } from "./AddProposalSuccess";
 import { AdProposalFailure } from "./AddProposalFailure";
 import { AddBankDetails } from "./AddBankDetails/AddBankDetails";
-import { CreateFundsAllocationData, CreateFundsAllocationFormData } from "./types";
+import {
+  CreateFundsAllocationData,
+  CreateFundsAllocationFormData,
+} from "./types";
 import "./index.scss";
 
 export enum AddProposalSteps {
@@ -62,7 +71,6 @@ export const AddProposalComponent = ({
       amount: 0,
       commonId: common.id,
       files: [],
-
     },
   });
 
@@ -87,16 +95,23 @@ export const AddProposalComponent = ({
     }
   }, [createdProposal, getProposalDetail, onClose]);
 
-  const confirmProposal = useCallback((fundingRequest: CreateFundsAllocationData) => {
-    changeCreationProposalStep(AddProposalSteps.LOADER);
-    fundingRequest.args.links = fundingRequest.args.links?.filter((link) => link.title && link.value);
-    fundingRequest.args.amount = fundingRequest.args.amount * 100;
-    onProposalAdd(fundingRequest, changeCreationProposalStep);
-  }, [onProposalAdd]);
+  const confirmProposal = useCallback(
+    (fundingRequest: CreateFundsAllocationData) => {
+      changeCreationProposalStep(AddProposalSteps.LOADER);
+      fundingRequest.args.links = fundingRequest.args.links?.filter(
+        (link) => link.title && link.value
+      );
+      fundingRequest.args.amount = fundingRequest.args.amount * 100;
+      onProposalAdd(fundingRequest, changeCreationProposalStep);
+    },
+    [onProposalAdd]
+  );
 
   const saveProposalState = useCallback(
     (payload: Partial<CreateFundsAllocationFormData>) => {
-      const fundingRequestData = { ...fundingRequest, ...payload };
+      const fundingRequestData = {
+        args: { ...fundingRequest.args, ...payload },
+      };
       setFundingRequest(fundingRequestData);
       if (payload?.amount) {
         confirmProposal(fundingRequestData);
@@ -132,7 +147,11 @@ export const AddProposalComponent = ({
       case AddProposalSteps.BANK_DETAILS:
         return <AddBankDetails onBankDetails={onBankDetails} />;
       case AddProposalSteps.CONFIRM:
-        return <AddProposalConfirm onConfirm={() => confirmProposal(fundingRequest)} />;
+        return (
+          <AddProposalConfirm
+            onConfirm={() => confirmProposal(fundingRequest)}
+          />
+        );
       case AddProposalSteps.LOADER:
         return <AddProposalLoader />;
       case AddProposalSteps.SUCCESS:
@@ -186,7 +205,12 @@ export const AddProposalComponent = ({
         "mobile-full-screen": isMobileView,
       })}
       mobileFullScreen={isMobileView}
-      onGoBack={(proposalCreationStep === AddProposalSteps.BANK_DETAILS || proposalCreationStep === AddProposalSteps.CONFIRM) ? moveStageBack : undefined}
+      onGoBack={
+        proposalCreationStep === AddProposalSteps.BANK_DETAILS ||
+        proposalCreationStep === AddProposalSteps.CONFIRM
+          ? moveStageBack
+          : undefined
+      }
       closePrompt
     >
       {renderProposalStep}
