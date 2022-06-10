@@ -39,7 +39,6 @@ export async function fetchApprovedProposals(): Promise<FundsAllocation[]> {
     .firestore()
     .collection(Collection.Proposals)
     .where("type", "==", ProposalsTypes.FUNDS_ALLOCATION)
-    .where("state", "==", ProposalState.PASSED)
     .where("data.tracker.trusteeApprovedAt", "!=", null)
     .get();
   const data =
