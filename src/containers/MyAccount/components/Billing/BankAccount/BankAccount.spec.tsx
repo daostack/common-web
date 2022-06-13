@@ -75,6 +75,7 @@ describe("BankAccount", () => {
     email: "example@gmail.com",
   };
 
+
   beforeEach(() => {
     mockScreenSize(ScreenSize.Desktop);
   });
