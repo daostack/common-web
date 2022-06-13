@@ -34,7 +34,6 @@ export interface Subscription {
   amount: number;
   metadata: SubscriptionMetadata;
   paymentFailures?: SubscriptionPayment[];
-  revoked: boolean;
   charges: number;
   lastChargedAt: Time;
   canceledAt?: Time;
