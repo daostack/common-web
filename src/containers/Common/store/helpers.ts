@@ -174,7 +174,7 @@ export const createDefaultGovernanceCreationPayload = (
           ],
           minApprove: 50,
           maxReject: 0,
-          duration: 24,
+          duration: 0.2,
         },
         local: {
           defaultCircle: 1,
@@ -197,7 +197,7 @@ export const createDefaultGovernanceCreationPayload = (
           ],
           minApprove: 50,
           maxReject: 0,
-          duration: 0.02,
+          duration: 0.2,
         },
         local: {
           defaultCircle: 1,
