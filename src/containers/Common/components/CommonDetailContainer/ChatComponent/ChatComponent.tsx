@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { getScreenSize } from "@/shared/store/selectors";
 import { CommonShare, Loader } from "@/shared/components";
-import { Common, DiscussionMessage } from "@/shared/models";
+import { Common, CommonMember, DiscussionMessage } from "@/shared/models";
 import ChatMessage from "./ChatMessage";
 import { formatDate } from "@/shared/utils";
 import {
@@ -22,7 +22,7 @@ interface ChatComponentInterface {
   discussionMessage: DiscussionMessage[];
   type: ChatType;
   onOpenJoinModal?: () => void;
-  isCommonMember?: boolean;
+  commonMember: CommonMember | null;
   isCommonMemberFetched: boolean;
   isJoiningPending?: boolean;
   isAuthorized?: boolean;
@@ -57,7 +57,7 @@ export default function ChatComponent({
   discussionMessage,
   type,
   onOpenJoinModal,
-  isCommonMember,
+  commonMember,
   isCommonMemberFetched,
   isJoiningPending,
   isAuthorized,
@@ -66,7 +66,7 @@ export default function ChatComponent({
 }: ChatComponentInterface) {
   const screenSize = useSelector(getScreenSize());
   const [message, setMessage] = useState("");
-  const shouldShowJoinToCommonButton = !isCommonMember && !isJoiningPending;
+  const shouldShowJoinToCommonButton = !commonMember && !isJoiningPending;
   const messages = discussionMessage.reduce(groupday, {});
   const isMobileView = screenSize === ScreenSize.Mobile;
   const dateList = Object.keys(messages);
@@ -117,7 +117,7 @@ export default function ChatComponent({
               "Have any thoughts? Share them with other members by adding the first comment."
             }
             title="No comments yet"
-            isCommonMember={isCommonMember}
+            isCommonMember={Boolean(commonMember)}
             isCommonMemberFetched={isCommonMemberFetched}
             isJoiningPending={isJoiningPending}
           />
@@ -152,7 +152,7 @@ export default function ChatComponent({
         </div>
       ) : (
         <div className="bottom-chat-wrapper">
-          {!isCommonMember ? (
+          {!commonMember ? (
             <span className="text">Only members can send messages</span>
           ) : (
             <>

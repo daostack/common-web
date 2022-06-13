@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs } from "@/containers/Common/containers/CommonDetailContainer/CommonDetailContainer";
-import { Common, Governance, Proposal } from "@/shared/models";
+import { Common, CommonMember, Governance, Proposal } from "@/shared/models";
 import { EmptyTabComponent } from "../EmptyTabContent";
 import "./index.scss";
 import ProposalItemComponent from "./ProposalItemComponent";
@@ -11,7 +11,7 @@ interface DiscussionsComponentProps {
   currentTab: Tabs;
   common: Common;
   governance: Governance;
-  isCommonMember: boolean;
+  commonMember: CommonMember | null;
   isCommonMemberFetched: boolean;
   isJoiningPending: boolean;
   onAddNewProposal: () => void;
@@ -23,7 +23,7 @@ export default function ProposalsComponent({
   currentTab,
   common,
   governance,
-  isCommonMember,
+  commonMember,
   isCommonMemberFetched,
   isJoiningPending,
   onAddNewProposal,
@@ -32,7 +32,7 @@ export default function ProposalsComponent({
     <>
       <div className="proposal-title-wrapper">
         <div className="title">Proposals</div>
-        {isCommonMember && currentTab === Tabs.Proposals && (
+        {commonMember && currentTab === Tabs.Proposals && (
           <div className="add-button" onClick={onAddNewProposal}>
             <img src="/icons/add-proposal.svg" alt="add-proposal" />
             <span>Add New Proposal</span>
@@ -47,7 +47,7 @@ export default function ProposalsComponent({
                 key={proposal.id}
                 proposal={proposal}
                 loadProposalDetail={loadProposalDetail}
-                isCommonMember={isCommonMember}
+                commonMember={commonMember}
               />
             ))}
           </>
@@ -66,7 +66,7 @@ export default function ProposalsComponent({
                 ? "No proposals yet"
                 : "No past activity"
             }
-            isCommonMember={isCommonMember}
+            isCommonMember={Boolean(commonMember)}
             isCommonMemberFetched={isCommonMemberFetched}
             isJoiningPending={isJoiningPending}
           />
