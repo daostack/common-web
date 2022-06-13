@@ -13,7 +13,7 @@
 
   .messages {
     height: 100%;
-    overflow: hidden;
+    overflow: auto;
 
     &.empty {
       display: flex;
@@ -21,10 +21,11 @@
     }
 
     .message-list {
-      height: 100%;
+
       scrollbar-width: none;
       overflow: auto;
       padding: 0;
+      margin: 0;
 
       > li {
         list-style: none;
