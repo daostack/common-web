@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
+import { ButtonLink } from "@/shared/components";
 
 export const AdProposalFailure = ({
   closePopup,
+  errorMessage,
 }: {
   closePopup: () => void;
+  errorMessage?: string;
 }) => {
+  const [shouldShowError, setShouldShowError] = useState(false);
+
+  const handleErrorDetailsButtonClick = () => {
+    setShouldShowError((shouldShow) => !shouldShow);
+  };
+
   return (
     <div className="add-proposal-failure-wrapper">
       <img
@@ -23,7 +32,21 @@ export const AdProposalFailure = ({
         >
           Ok
         </button>
-        <div className="error-details">View error details</div>
+        {errorMessage && (
+          <div className="add-proposal-failure-wrapper__error-wrapper">
+            <ButtonLink
+              className="add-proposal-failure-wrapper__view-error-button"
+              onClick={handleErrorDetailsButtonClick}
+            >
+              View error details
+            </ButtonLink>
+            {shouldShowError && (
+              <span className="add-proposal-failure-wrapper__error">
+                {errorMessage}
+              </span>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

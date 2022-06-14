@@ -1,5 +1,7 @@
 import { call, put, select, takeLatest } from "redux-saga/effects";
+import { isRequestError } from "@/services/Api";
 import PayMeService from "@/services/PayMeService";
+import { ErrorCode } from "@/shared/constants";
 import { actions } from ".";
 import {
   Card,
@@ -651,7 +653,7 @@ export function* createFundingProposalSaga(
         store.dispatch(actions.setProposals(ds));
         store.dispatch(actions.loadProposalList.request());
         store.dispatch(stopLoading());
-        action.payload.callback(AddProposalSteps.SUCCESS);
+        action.payload.callback(null);
         store.dispatch(actions.getCommonsList.request());
       }
     );
@@ -660,7 +662,17 @@ export function* createFundingProposalSaga(
     yield put(stopLoading());
   } catch (error) {
     if (isError(error)) {
-      action.payload.callback(AddProposalSteps.FAILURE);
+      let errorMessage = "";
+
+      if (
+        isRequestError(error) &&
+        error.response?.data?.errorCode === ErrorCode.SellerIsRejected
+      ) {
+        errorMessage =
+          "Your bank account details couldn’t be verified. Please update them in your account settings.";
+      }
+
+      action.payload.callback(errorMessage);
       yield put(actions.createFundingProposal.failure(error));
       yield put(stopLoading());
     }
