@@ -2,9 +2,11 @@ import React, {
   useState,
   useEffect,
   useMemo,
+  useCallback,
 } from "react";
 import { useSelector } from "react-redux";
-import { scroller } from "react-scroll";
+import { scroller, animateScroll } from "react-scroll";
+import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
 
 import { getScreenSize } from "@/shared/store/selectors";
@@ -19,6 +21,7 @@ import {
   ChatType,
 } from "@/shared/constants";
 import { EmptyTabComponent } from "@/containers/Common/components/CommonDetailContainer";
+import { usePrevious } from "@/shared/hooks";
 import "./index.scss";
 
 interface ChatComponentInterface {
@@ -66,13 +69,35 @@ export default function ChatComponent({
   sendMessage,
   highlightedMessageId,
 }: ChatComponentInterface) {
+  const prevDiscussionMessages = usePrevious<DiscussionMessage[]>(discussionMessage);
   const screenSize = useSelector(getScreenSize());
   const [message, setMessage] = useState("");
   const shouldShowJoinToCommonButton = !isCommonMember && !isJoiningPending;
   const messages = discussionMessage.reduce(groupday, {});
+  const [isNewMessageLoading, setIsNewMessageLoading] = useState<boolean>(false);
   const isMobileView = (screenSize === ScreenSize.Mobile);
   const dateList = Object.keys(messages);
+  const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
   const chatId = useMemo(() => `chat-${uuidv4()}`, []);
+
+  const scrollToContainerBottom = useCallback((containerId: string) =>
+    setTimeout(
+      () =>
+        animateScroll.scrollToBottom(
+          {
+            containerId,
+            smooth: true,
+            delay: 0,
+          }
+        ),
+      0
+    ),
+    []
+  );
+
+  useEffect(() => {
+    scrollToContainerBottom(chatWrapperId);
+  }, [scrollToContainerBottom, chatWrapperId]);
 
   useEffect(
     () => {
@@ -80,26 +105,46 @@ export default function ChatComponent({
         return;
 
       setTimeout(
-        () => {
-          scroller.scrollTo(highlightedMessageId, {
-            containerId: chatId,
-            delay: 0,
-            duration: 300,
-            offset: -15,
-            smooth: true,
-          });
-        },
+        () =>
+          scroller.scrollTo(
+            highlightedMessageId,
+            {
+              containerId: chatId,
+              delay: 0,
+              duration: 300,
+              offset: -15,
+              smooth: true,
+            }
+          ),
         0
       );
     },
     [chatId, highlightedMessageId]
   );
 
+  useEffect(() => {
+    if (isNewMessageLoading)
+      scrollToContainerBottom(chatWrapperId);
+  }, [chatWrapperId, isNewMessageLoading, scrollToContainerBottom]);
+
+  useEffect(() => {
+    if (
+      !prevDiscussionMessages
+      || (prevDiscussionMessages?.length === discussionMessage.length)
+    ) return;
+
+    setIsNewMessageLoading(false);
+  }, [discussionMessage, prevDiscussionMessages, setIsNewMessageLoading]);
+
   return (
     <div className="chat-wrapper">
-      <div className={`messages ${!dateList.length ? "empty" : ""}`}>
+      <div
+        className={`messages ${!dateList.length ? "empty" : ""}`}
+        id={chatWrapperId}
+      >
         {dateList.map((day) => {
           const date = new Date(Number(day));
+
           return (
             <ul
               id={chatId}
@@ -110,22 +155,21 @@ export default function ChatComponent({
                 {isToday(date) ? "Today" : formatDate(date)}
               </li>
               {
-                messages[Number(day)].map((m) => {
-                  return (
+                messages[Number(day)].map(m =>
+                  (
                     <ChatMessage
                       key={m.id}
                       disscussionMessage={m}
                       chatType={type}
                       highlighted={m.id === highlightedMessageId}
                     />
-                  );
-                })
+                  )
+                )
               }
             </ul>
           );
         })}
-
-        {!dateList.length ? (
+        {(!dateList.length && !isNewMessageLoading) ? (
           <EmptyTabComponent
             currentTab="messages"
             message={
@@ -135,7 +179,25 @@ export default function ChatComponent({
             isCommonMember={isCommonMember}
             isJoiningPending={isJoiningPending}
           />
-        ) : null}
+        ) : isNewMessageLoading && (
+            <div
+              className={
+                classNames(
+                  "new-message-loader-wrapper",
+                  {
+                    "very-first-message": !dateList.length,
+                    "day-first-message":
+                      Boolean(dateList.length)
+                      && isToday(new Date(Number(dateList[dateList.length - 1])))
+                      && messages[Number(dateList[dateList.length - 1])].length === 1,
+                  }
+                )
+              }
+            >
+              <Loader />
+            </div>
+          )
+        }
       </div>
       {!isAuthorized ? (
         <div className="bottom-chat-wrapper">
@@ -177,6 +239,7 @@ export default function ChatComponent({
               <button
                 className="send"
                 onClick={() => {
+                  setIsNewMessageLoading(true);
                   sendMessage && sendMessage(message);
                   setMessage("");
                 }}

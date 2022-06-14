@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Common, Discussion } from "../../../../../shared/models";
+import { Tabs } from "../../../containers/CommonDetailContainer";
 import { EmptyTabComponent } from "../EmptyTabContent";
 import DiscussionItemComponent from "./DiscussionItemComponent";
 import "./index.scss";
@@ -46,7 +47,7 @@ export default function DiscussionsComponent({
         ) : (
           <EmptyTabComponent
             common={common}
-            currentTab="discussions"
+            currentTab={Tabs.Discussions}
             message={
               "This is where members can discuss and share their thoughts and ideas."
             }
