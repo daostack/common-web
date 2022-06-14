@@ -12,7 +12,7 @@ import { getMonthsDifference } from "@/shared/utils";
 interface UseCommonTransactionsChartDataReturn {
   getCommonTransactionsChartDataSet: (
     orderedCommonTransactions: TransactionData[],
-    commonCreatedAt: Time
+    commonCreatedAt?: Time,
   ) => CommonTransactionsChartDataSet
 }
 
@@ -20,7 +20,7 @@ export const useCommonTransactionsChartDataSet = (): UseCommonTransactionsChartD
   const getCommonTransactionsChartDataSet = useCallback(
     (
       orderedCommonTransactions: TransactionData[],
-      commonCreatedAt: Time,
+      commonCreatedAt?: Time,
     ) => {
       const uniqueTransactionsMonths = new Set();
 
@@ -30,7 +30,7 @@ export const useCommonTransactionsChartDataSet = (): UseCommonTransactionsChartD
       orderedCommonTransactions
           .filter(
             transaction =>
-              (getMonthsDifference(new Date(transaction.createdAt.seconds * 1000), new Date()) < TRANSACTIONS_PERIOD_MONTHS_AMOUNT)
+              (getMonthsDifference(new Date(transaction.createdAt.seconds * 1000), new Date()) <= TRANSACTIONS_PERIOD_MONTHS_AMOUNT)
           )
           .map(
             transaction => (
@@ -61,51 +61,58 @@ export const useCommonTransactionsChartDataSet = (): UseCommonTransactionsChartD
 
               return transaction;
             }
-        );
+          );
 
+      const chartMonthLabelsList = Array.from(uniqueTransactionsMonths) as string[];
+
+      /*
+        FIXME: tempo decision to prevent common's crashing (some common-records have createdAt set in null),
+        should be reverted after full merging of the Governance & clearing the DB from legacy stuff
+      */
+      if (commonCreatedAt) {
         const commonCreatedAtMonthNotation = BRIEF_MONTH_NAMES[new Date(commonCreatedAt.seconds * 1000).getMonth()];
-        const chartMonthLabelsList = Array.from(uniqueTransactionsMonths) as string[];
 
         if (
           !chartMonthLabelsList.includes(commonCreatedAtMonthNotation)
-          && (getMonthsDifference(new Date(commonCreatedAt.seconds * 1000), new Date()) < TRANSACTIONS_PERIOD_MONTHS_AMOUNT)
+          && (getMonthsDifference(new Date(commonCreatedAt.seconds * 1000), new Date()) <= TRANSACTIONS_PERIOD_MONTHS_AMOUNT)
         ) {
           chartMonthLabelsList.unshift(commonCreatedAtMonthNotation);
 
           groupedByMonthPayInsSummaries[commonCreatedAtMonthNotation] = 0;
           groupedByMonthPayOutsSummaries[commonCreatedAtMonthNotation] = 0;
         }
+      }
 
-        const payInsChartData = chartMonthLabelsList.map(monthLabel => groupedByMonthPayInsSummaries[monthLabel]);
-        const payOutsChartData = chartMonthLabelsList.map(monthLabel => groupedByMonthPayOutsSummaries[monthLabel]);
-        const balanceChartData = payInsChartData.reduce(
-          (accum: { currentBalance: number, balances: number[] }, payInsMonthSum, index) => {
-            let newBalance = accum.currentBalance;
+      const payInsChartData = chartMonthLabelsList.map(monthLabel => groupedByMonthPayInsSummaries[monthLabel]);
+      const payOutsChartData = chartMonthLabelsList.map(monthLabel => groupedByMonthPayOutsSummaries[monthLabel]);
+      const balanceChartData = payInsChartData.reduce(
+        (accum: { currentBalance: number, balances: number[] }, payInsMonthSum, index) => {
+          let newBalance = accum.currentBalance;
 
-            newBalance += payInsMonthSum;
-            newBalance -= payOutsChartData[index];
+          newBalance += payInsMonthSum;
+          newBalance -= payOutsChartData[index];
 
-            return (
-              {
-                currentBalance: newBalance,
-                balances: [...accum.balances, newBalance],
-              }
-            );
-          },
-          {
-            currentBalance: 0,
-            balances: [],
-          }
-        ).balances;
-      
-        return (
-          {
-            chartMonthLabelsList,
-            payInsChartData,
-            payOutsChartData,
-            balanceChartData,
-          }
-        );
+          return (
+            {
+              currentBalance: newBalance,
+              balances: [...accum.balances, newBalance],
+            }
+          );
+        },
+        {
+          currentBalance: 0,
+          balances: [],
+        }
+      ).balances;
+    
+      return (
+        {
+          chartMonthLabelsList,
+          payInsChartData,
+          payOutsChartData,
+          balanceChartData,
+        }
+      );
     },
     []
   );
