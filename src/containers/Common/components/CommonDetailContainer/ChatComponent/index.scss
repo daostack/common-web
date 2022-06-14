@@ -136,7 +136,14 @@
 
     .new-message-loader-wrapper {
       width: 100%;
-      height: 7rem;
+      height: 6rem;
+
+      &.very-first-message {
+        margin-top: 5rem;
+      }
+      &.day-first-message {
+        height: 10rem;
+      }
     }
   }
   .bottom-chat-wrapper {

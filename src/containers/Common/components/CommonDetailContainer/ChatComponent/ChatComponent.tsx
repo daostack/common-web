@@ -6,6 +6,7 @@ import React, {
 } from "react";
 import { useSelector } from "react-redux";
 import { scroller, animateScroll } from "react-scroll";
+import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
 
 import { getScreenSize } from "@/shared/store/selectors";
@@ -143,6 +144,7 @@ export default function ChatComponent({
       >
         {dateList.map((day) => {
           const date = new Date(Number(day));
+
           return (
             <ul
               id={chatId}
@@ -153,29 +155,21 @@ export default function ChatComponent({
                 {isToday(date) ? "Today" : formatDate(date)}
               </li>
               {
-                messages[Number(day)].map((m) => {
-                  return (
+                messages[Number(day)].map(m =>
+                  (
                     <ChatMessage
                       key={m.id}
                       disscussionMessage={m}
                       chatType={type}
                       highlighted={m.id === highlightedMessageId}
                     />
-                  );
-                })
+                  )
+                )
               }
             </ul>
           );
         })}
-        {
-          isNewMessageLoading
-          && (
-            <div className="new-message-loader-wrapper">
-              <Loader />
-            </div>
-          )
-        }
-        {!dateList.length ? (
+        {(!dateList.length && !isNewMessageLoading) ? (
           <EmptyTabComponent
             currentTab="messages"
             message={
@@ -185,7 +179,25 @@ export default function ChatComponent({
             isCommonMember={isCommonMember}
             isJoiningPending={isJoiningPending}
           />
-        ) : null}
+        ) : isNewMessageLoading && (
+            <div
+              className={
+                classNames(
+                  "new-message-loader-wrapper",
+                  {
+                    "very-first-message": !dateList.length,
+                    "day-first-message":
+                      Boolean(dateList.length)
+                      && isToday(new Date(Number(dateList[dateList.length - 1])))
+                      && messages[Number(dateList[dateList.length - 1])].length === 1,
+                  }
+                )
+              }
+            >
+              <Loader />
+            </div>
+          )
+        }
       </div>
       {!isAuthorized ? (
         <div className="bottom-chat-wrapper">
