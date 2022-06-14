@@ -26,7 +26,6 @@ interface ProposalDetailModalProps {
   common: Common | null;
   onOpenJoinModal?: () => void;
   isJoiningPending?: boolean;
-
   isCommonMemberFetched: boolean;
   commonMember: CommonMember | null;
 }
