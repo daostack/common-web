@@ -3,7 +3,7 @@ import classNames from "classnames";
 
 import { UserAvatar, ElementDropdown } from "@/shared/components";
 import { useFullText } from "@/shared/hooks";
-import { Proposal, ProposalLink } from "@/shared/models";
+import { CommonMember, Proposal, ProposalLink } from "@/shared/models";
 import { formatPrice, getUserName, getDaysAgo } from "@/shared/utils";
 import { DynamicLinkType, ScreenSize } from "@/shared/constants";
 import { VotesComponent } from "../VotesComponent";
@@ -16,13 +16,13 @@ import { FundsAllocationArgs } from "@/shared/models/governance/proposals";
 interface ProposalItemComponentProps {
   loadProposalDetail: (payload: Proposal) => void;
   proposal: Proposal;
-  isCommonMember: boolean;
+  commonMember: CommonMember | null;
 }
 
 export default function ProposalItemComponent({
   proposal,
   loadProposalDetail,
-  isCommonMember,
+  commonMember,
 }: ProposalItemComponentProps) {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -34,7 +34,8 @@ export default function ProposalItemComponent({
     showFullText,
   } = useFullText();
   const date = new Date();
-  const rawRequestedAmount = (proposal.data.args as FundsAllocationArgs)?.amount;
+  const rawRequestedAmount = (proposal.data.args as FundsAllocationArgs)
+    ?.amount;
   const images = proposal.data.args.images ?? [];
 
   const imagesChunk = images.filter((image, index) => {
@@ -87,7 +88,7 @@ export default function ProposalItemComponent({
           )}
         </div>
         <div className="votes">
-          <VotesComponent proposal={proposal} isCommonMember={isCommonMember} />
+          <VotesComponent proposal={proposal} commonMember={commonMember} />
         </div>
       </div>
       <div className="line" />

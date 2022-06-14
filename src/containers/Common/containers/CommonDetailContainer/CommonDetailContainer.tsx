@@ -433,7 +433,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
               vievAllHandler={() => changeTabHandler(Tabs.Discussions)}
               onClickItem={clickPreviewDisscusionHandler}
               type="discussions"
-              isCommonMember={isCommonMember}
+              commonMember={commonMember}
             />
             <PreviewInformationList
               title="Latest Proposals"
@@ -441,7 +441,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
               vievAllHandler={() => changeTabHandler(Tabs.Proposals)}
               onClickItem={clickPreviewProposalHandler}
               type="proposals"
-              isCommonMember={isCommonMember}
+              commonMember={commonMember}
             />
           </>
         );
@@ -460,7 +460,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
               vievAllHandler={() => changeTabHandler(Tabs.Proposals)}
               onClickItem={clickPreviewProposalHandler}
               type="proposals"
-              isCommonMember={isCommonMember}
+              commonMember={commonMember}
             />
           </>
         );
@@ -478,7 +478,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
               vievAllHandler={() => changeTabHandler(Tabs.Discussions)}
               onClickItem={clickPreviewDisscusionHandler}
               type="discussions"
-              isCommonMember={isCommonMember}
+              commonMember={commonMember}
             />
           </>
         );
@@ -558,7 +558,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
               disscussion={currentDisscussion}
               common={common}
               onOpenJoinModal={openJoinModal}
-              isCommonMember={isCommonMember}
+              commonMember={commonMember}
               isCommonMemberFetched={isCommonMemberFetched}
               isJoiningPending={isJoiningPending}
             />
@@ -568,7 +568,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
               proposal={currentProposal}
               common={common}
               onOpenJoinModal={openJoinModal}
-              isCommonMember={isCommonMember}
+              commonMember={commonMember}
               isCommonMemberFetched={isCommonMemberFetched}
               isJoiningPending={isJoiningPending}
             />
@@ -810,7 +810,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                   currentTab={tab}
                   proposals={fundingProposals}
                   loadProposalDetail={getProposalDetail}
-                  isCommonMember={isCommonMember}
+                  commonMember={commonMember}
                   isCommonMemberFetched={isCommonMemberFetched}
                   isJoiningPending={isJoiningPending}
                 />

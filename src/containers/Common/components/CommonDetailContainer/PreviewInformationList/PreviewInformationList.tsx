@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 
 import { ProposalCountDown } from "..";
 import RightArrowIcon from "../../../../../shared/icons/rightArrow.icon";
-import { Proposal, Discussion } from "../../../../../shared/models";
+import {
+  Proposal,
+  Discussion,
+  CommonMember,
+} from "../../../../../shared/models";
 import { getProposalExpirationDate } from "../../../../../shared/utils";
 import { VotesComponent } from "../VotesComponent";
 import "./index.scss";
@@ -18,14 +22,21 @@ interface PreviewInformationListProps {
   vievAllHandler: () => void;
   onClickItem: (id: string) => void;
   type: string;
-  isCommonMember: boolean;
+  commonMember: CommonMember | null;
 }
 
 export default function PreviewInformationList(
   props: PreviewInformationListProps
 ) {
   const [data, setData] = useState<PreviedData[]>([]);
-  const { title, vievAllHandler, type, discussions, proposals, isCommonMember } = props;
+  const {
+    title,
+    vievAllHandler,
+    type,
+    discussions,
+    proposals,
+    commonMember,
+  } = props;
 
   useEffect(() => {
     if (type === "discussions" && discussions) {
@@ -84,7 +95,12 @@ export default function PreviewInformationList(
                 {type === "proposals" && proposal ? (
                   <div className="item-bottom">
                     <div className="votes">
-                      <VotesComponent proposal={proposal} isCommonMember={isCommonMember} preview compact />
+                      <VotesComponent
+                        proposal={proposal}
+                        commonMember={commonMember}
+                        preview
+                        compact
+                      />
                     </div>
                     <div className="discussion-count">
                       <img src="/icons/discussions.svg" alt="discussions" />

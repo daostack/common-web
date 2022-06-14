@@ -7,13 +7,10 @@ import {
   Proposal,
   ProposalWithHighlightedComment,
   isProposalWithHighlightedComment,
+  CommonMember,
 } from "@/shared/models";
 import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
-import {
-  formatPrice,
-  getDaysAgo,
-  getUserName,
-} from "@/shared/utils";
+import { formatPrice, getDaysAgo, getUserName } from "@/shared/utils";
 import { ChatComponent } from "../ChatComponent";
 import { VotesComponent } from "../VotesComponent";
 import { ProposalState } from "../ProposalState";
@@ -29,17 +26,17 @@ interface ProposalDetailModalProps {
   common: Common | null;
   onOpenJoinModal?: () => void;
   isJoiningPending?: boolean;
-  isCommonMember: boolean;
   isCommonMemberFetched: boolean;
+  commonMember: CommonMember | null;
 }
 
 export default function ProposalDetailModal({
   proposal,
   common,
   onOpenJoinModal,
-  isCommonMember,
   isCommonMemberFetched,
   isJoiningPending,
+  commonMember,
 }: ProposalDetailModalProps) {
   const date = new Date();
   const dispatch = useDispatch();
@@ -50,9 +47,10 @@ export default function ProposalDetailModal({
   const screenSize = useSelector(getScreenSize());
   const [expanded, setExpanded] = useState(true);
   const highlightedCommentId = useMemo(
-    () => isProposalWithHighlightedComment(proposal)
-          ? proposal.highlightedCommentId
-          : null,
+    () =>
+      isProposalWithHighlightedComment(proposal)
+        ? proposal.highlightedCommentId
+        : null,
     [proposal]
   );
 
@@ -126,7 +124,7 @@ export default function ProposalDetailModal({
                 </div>
                 <VotesComponent
                   proposal={proposal}
-                  isCommonMember={isCommonMember}
+                  commonMember={commonMember}
                 />
               </>
             )}
@@ -160,7 +158,7 @@ export default function ProposalDetailModal({
           type={ChatType.ProposalComments}
           highlightedMessageId={highlightedCommentId}
           onOpenJoinModal={onOpenJoinModal}
-          isCommonMember={isCommonMember}
+          commonMember={commonMember}
           isCommonMemberFetched={isCommonMemberFetched}
           isJoiningPending={isJoiningPending}
           isAuthorized={Boolean(user)}

@@ -5,6 +5,7 @@ import classNames from "classnames";
 import { Loader } from "@/shared/components";
 import {
   Common,
+  CommonMember,
   Discussion,
   DiscussionWithHighlightedMessage,
   isDiscussionWithHighlightedMessage,
@@ -21,7 +22,7 @@ interface DiscussionDetailModalProps {
   disscussion: Discussion | DiscussionWithHighlightedMessage | null;
   common: Common;
   onOpenJoinModal: () => void;
-  isCommonMember?: boolean;
+  commonMember: CommonMember | null;
   isCommonMemberFetched: boolean;
   isJoiningPending: boolean;
 }
@@ -30,7 +31,7 @@ export default function DiscussionDetailModal({
   disscussion,
   common,
   onOpenJoinModal,
-  isCommonMember,
+  commonMember,
   isCommonMemberFetched,
   isJoiningPending,
 }: DiscussionDetailModalProps) {
@@ -40,9 +41,10 @@ export default function DiscussionDetailModal({
   const screenSize = useSelector(getScreenSize());
   const [expanded, setExpanded] = useState(true);
   const highlightedMessageId = useMemo(
-    () => isDiscussionWithHighlightedMessage(disscussion)
-          ? disscussion.highlightedMessageId
-          : null,
+    () =>
+      isDiscussionWithHighlightedMessage(disscussion)
+        ? disscussion.highlightedMessageId
+        : null,
     [disscussion]
   );
 
@@ -78,11 +80,15 @@ export default function DiscussionDetailModal({
                 <img
                   src={disscussion.owner?.photoURL}
                   alt={getUserName(disscussion.owner)}
-                  onError={(event: any) => event.target.src = "/icons/default_user.svg"}
+                  onError={(event: any) =>
+                    (event.target.src = "/icons/default_user.svg")
+                  }
                 />
               </div>
               <div className="owner-name-and-days-container">
-                <div className="owner-name">{getUserName(disscussion.owner)}</div>
+                <div className="owner-name">
+                  {getUserName(disscussion.owner)}
+                </div>
                 <div className="days-ago">
                   {getDaysAgo(date, disscussion.createTime)}
                 </div>
@@ -104,7 +110,15 @@ export default function DiscussionDetailModal({
 
         {screenSize === ScreenSize.Mobile && (
           <div className="expand-btn-container">
-            <img className={classNames({ "expanded": expanded, "collapsed": !expanded })} onClick={() => setExpanded(!expanded)} src="/icons/expand-arrow.svg" alt="expand icon" />
+            <img
+              className={classNames({
+                expanded: expanded,
+                collapsed: !expanded,
+              })}
+              onClick={() => setExpanded(!expanded)}
+              src="/icons/expand-arrow.svg"
+              alt="expand icon"
+            />
           </div>
         )}
       </div>
@@ -115,7 +129,7 @@ export default function DiscussionDetailModal({
           type={ChatType.DiscussionMessages}
           highlightedMessageId={highlightedMessageId}
           onOpenJoinModal={onOpenJoinModal}
-          isCommonMember={isCommonMember}
+          commonMember={commonMember}
           isCommonMemberFetched={isCommonMemberFetched}
           isJoiningPending={isJoiningPending}
           isAuthorized={Boolean(user)}
