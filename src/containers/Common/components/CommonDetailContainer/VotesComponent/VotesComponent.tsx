@@ -9,6 +9,7 @@ import {
 } from "@/shared/models";
 import { percentage } from "@/shared/utils";
 import { UserAvatar } from "@/shared/components";
+import { GovernanceActions } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import VotePrompt from "./VotePrompt/VotePrompt";
@@ -51,7 +52,7 @@ export default function VotesComponent({
   const isVotingAllowed = useMemo(
     () =>
       commonMember &&
-      commonMember.allowedActions.CREATE_VOTE &&
+      commonMember.allowedActions[GovernanceActions.CREATE_VOTE] &&
       proposal.global.weights.some(
         ({ circles }) => commonMember.circles & circles
       ),
