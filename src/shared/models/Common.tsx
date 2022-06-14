@@ -1,3 +1,4 @@
+import firebase from "firebase/app";
 import { Reputation } from "./governance/Reputation";
 import { BaseEntity } from "./BaseEntity";
 import { Proposal } from "./Proposals";
@@ -112,7 +113,7 @@ export enum CommonState {
 
 export interface CommonMember {
   readonly userId: string;
-  joinedAt: Date;
+  joinedAt: firebase.firestore.Timestamp;
   allowedActions: {
     [key in GovernanceActions]: boolean;
   };
