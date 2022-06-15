@@ -113,7 +113,7 @@ export const AddProposalComponent = ({
         args: { ...fundingRequest.args, ...payload },
       };
       setFundingRequest(fundingRequestData);
-      if (payload?.amount) {
+      if (!payload?.amount) {
         confirmProposal(fundingRequestData);
       } else {
         changeCreationProposalStep(AddProposalSteps.CONFIRM);
