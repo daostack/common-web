@@ -179,10 +179,11 @@ export const createFundingProposal = createAsyncAction(
   CommonsActionTypes.CREATE_FUNDING_PROPOSAL_SUCCESS,
   CommonsActionTypes.CREATE_FUNDING_PROPOSAL_FAILURE
 )<
-  PayloadWithCallback<Omit<
-    CreateProposal[ProposalsTypes.FUNDS_ALLOCATION]["data"],
-    "type"
-    >, void, string>,
+  PayloadWithCallback<
+    Omit<CreateProposal[ProposalsTypes.FUNDS_ALLOCATION]["data"], "type">,
+    void,
+    string
+  >,
   CreateProposal[ProposalsTypes.FUNDS_ALLOCATION]["response"],
   Error
 >();

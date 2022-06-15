@@ -62,7 +62,6 @@ import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
 import { ProposalsTypes } from "@/shared/constants";
 import { store } from "@/shared/appConfig";
-import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
 import { ImmediateContributionResponse } from "../interfaces";
 import { groupBy, isError } from "@/shared/utils";
 import { createDefaultGovernanceCreationPayload } from "./helpers";
@@ -566,7 +565,7 @@ export function* createFundingProposal(
         store.dispatch(actions.setProposals(ds));
         store.dispatch(actions.loadProposalList.request());
         store.dispatch(stopLoading());
-        action.payload.callback(AddProposalSteps.SUCCESS);
+        action.payload.callback(null);
         store.dispatch(actions.getCommonsList.request());
       }
     );
@@ -575,7 +574,17 @@ export function* createFundingProposal(
     yield put(stopLoading());
   } catch (error) {
     if (isError(error)) {
-      action.payload.callback(AddProposalSteps.FAILURE);
+      let errorMessage = "";
+
+      if (
+        isRequestError(error) &&
+        error.response?.data?.errorCode === ErrorCode.SellerRejected
+      ) {
+        errorMessage =
+          "Your bank account details couldn’t be verified. Please update them in your account settings.";
+      }
+
+      action.payload.callback(errorMessage);
       yield put(actions.createFundingProposal.failure(error));
       yield put(stopLoading());
     }
