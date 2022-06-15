@@ -170,7 +170,7 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
       balanceChartData,
       payInsChartData,
       payOutsChartData,
-    } = getCommonTransactionsChartDataSet(orderedCommonTransactions, common.createdAt as Time);
+    } = getCommonTransactionsChartDataSet(orderedCommonTransactions, common?.createdAt as Time);
 
     setFormattedChartData(
       {
