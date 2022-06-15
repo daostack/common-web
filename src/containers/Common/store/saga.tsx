@@ -1,5 +1,7 @@
 import { call, put, select, takeLatest } from "redux-saga/effects";
+import { isRequestError } from "@/services/Api";
 import PayMeService from "@/services/PayMeService";
+import { ErrorCode } from "@/shared/constants";
 import { actions } from ".";
 import {
   Card,

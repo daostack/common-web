@@ -438,6 +438,9 @@
 
   .actions-wrapper {
     margin-top: 3.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
     .button-blue {
       font-weight: normal;
@@ -448,7 +451,6 @@
         background-color: #fff;
         color: $secondary-blue;
         font-weight: normal;
-        margin-right: 16px;
       }
     }
 
@@ -458,6 +460,43 @@
       font-size: 0.875rem;
       color: $light-gray-2;
       text-align: center;
+    }
+  }
+
+  .add-proposal-failure-wrapper__error-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .add-proposal-failure-wrapper__view-error-button {
+    margin: 1rem 0;
+    font-size: $xsmall;
+    color: $light-gray-2;
+    text-align: center;
+    text-decoration: none;
+
+    @include big-phone {
+      width: 100%;
+      margin: 0.5rem 0 0;
+      padding: 1rem 0;
+    }
+  }
+
+  .add-proposal-failure-wrapper__error {
+    max-width: 27rem;
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 1rem 1.5rem;
+    background-color: $purple-alpha-10;
+    border-radius: 0.875rem;
+    color: $error;
+    text-align: center;
+    word-break: break-word;
+    box-sizing: border-box;
+
+    @include big-phone {
+      padding: 0.5rem 1rem;
     }
   }
 }
@@ -485,7 +524,7 @@
         button {
           width: 100%;
         }
-      } 
+      }
     }
   }
 
