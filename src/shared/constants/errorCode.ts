@@ -1,3 +1,3 @@
 export enum ErrorCode {
-  SellerIsRejected = "SellerIsRejected",
+  SellerRejected = "External.PayMeError.SellerRejected",
 }

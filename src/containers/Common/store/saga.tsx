@@ -666,7 +666,7 @@ export function* createFundingProposalSaga(
 
       if (
         isRequestError(error) &&
-        error.response?.data?.errorCode === ErrorCode.SellerIsRejected
+        error.response?.data?.errorCode === ErrorCode.SellerRejected
       ) {
         errorMessage =
           "Your bank account details couldn’t be verified. Please update them in your account settings.";
