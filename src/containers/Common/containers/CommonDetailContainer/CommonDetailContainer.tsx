@@ -76,7 +76,6 @@ import CheckIcon from "../../../../shared/icons/check.icon";
 import { selectUser } from "../../../Auth/store/selectors";
 import {
   AddProposalComponent,
-  AddProposalSteps,
   CreateFundsAllocationData,
 } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 import { useCommonMember } from "../../hooks";
