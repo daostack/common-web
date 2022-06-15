@@ -7,7 +7,7 @@ const schema = Yup.object().shape({
   idNumber: Yup.string()
     .required("Please enter your ID number")
     .matches(NUMBERS_ONLY_REGEXP, "Only numbers allowed")
-    .length(10, "Social ID should have 10 digits"),
+    .length(9, "Social ID should have 9 digits"),
   bankCode: Yup.number().required("Please choose a bank"),
   branchNumber: Yup.string()
     .required("Please enter the branch number")
