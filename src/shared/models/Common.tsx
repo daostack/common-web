@@ -1,10 +1,10 @@
 import firebase from "firebase/app";
+import { AllowedActions, AllowedProposals } from "./governance/Circles";
 import { Reputation } from "./governance/Reputation";
 import { BaseEntity } from "./BaseEntity";
 import { Proposal } from "./Proposals";
 import { Discussion } from "./Discussion";
 import { DiscussionMessage } from "./DiscussionMessage";
-import { GovernanceActions, ProposalsTypes } from "@/shared/constants";
 
 export interface Common extends BaseEntity {
   /**
@@ -114,13 +114,9 @@ export enum CommonState {
 export interface CommonMember {
   readonly userId: string;
   joinedAt: firebase.firestore.Timestamp;
-  allowedActions: {
-    [key in GovernanceActions]: boolean;
-  };
-  allowedProposals: {
-    [key in ProposalsTypes]: boolean;
-  };
   circles: number;
+  allowedActions: AllowedActions;
+  allowedProposals: AllowedProposals;
   tokenBalance: number;
   reputation: Partial<Reputation>;
 }

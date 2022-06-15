@@ -1,10 +1,12 @@
 import { ProposalsTypes } from "@/shared/constants";
 import { BaseEntity } from "../../BaseEntity";
 import { Proposal } from "../../Proposals";
+import { circleIndex } from "../Circles";
+import { AssignCircle } from "./AssignCircle";
 import { BasicArgsProposal } from "./BasicArgsProposal";
 import { FundsAllocation } from "./FundsAllocation";
-import { FundsRequest } from "./FundsRequest";
 import { MemberAdmittance } from "./MemberAdmittance";
+import { RemoveCircle } from "./RemoveCircle";
 
 type ProposalInProgressKeys =
   | "data"
@@ -24,11 +26,16 @@ export interface Proposals {
     MemberAdmittance,
     ProposalInProgressKeys
   >;
-  [ProposalsTypes.FUNDS_REQUEST]: Omit<FundsRequest, ProposalInProgressKeys>;
   [ProposalsTypes.FUNDS_ALLOCATION]: Omit<
     FundsAllocation,
     ProposalInProgressKeys
   >;
+  [ProposalsTypes.ASSIGN_CIRCLE]: {
+    [K in circleIndex]: Omit<AssignCircle, ProposalInProgressKeys>;
+  };
+  [ProposalsTypes.REMOVE_CIRCLE]: {
+    [K in circleIndex]: Omit<RemoveCircle, ProposalInProgressKeys>;
+  };
   // Expended for each proposal
 }
 
@@ -37,8 +44,10 @@ export const isFundsAllocationProposal = (
 ): proposal is FundsAllocation =>
   Boolean(proposal?.type === ProposalsTypes.FUNDS_ALLOCATION);
 
+export * from "./AssignCircle";
 export * from "./BaseProposal";
 export * from "./BasicArgsProposal";
 export * from "./FundsAllocation";
 export * from "./FundsRequest";
 export * from "./MemberAdmittance";
+export * from "./RemoveCircle";

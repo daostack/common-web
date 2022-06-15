@@ -8,7 +8,7 @@ import {
 } from "@/shared/models";
 
 export interface VoteTracker {
-  [key: string]: {
+  [key: number]: {
     [VoteOutcome.Approved]: number;
     [VoteOutcome.Abstained]: number;
     [VoteOutcome.Rejected]: number;

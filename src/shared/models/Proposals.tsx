@@ -1,7 +1,9 @@
 import {
+  AssignCircle,
   FundsAllocation,
   FundsRequest,
   MemberAdmittance,
+  RemoveCircle,
 } from "@/shared/models/governance/proposals";
 import { DiscussionMessage } from "./DiscussionMessage";
 import { User } from "./User";
@@ -32,7 +34,13 @@ interface ExtendedProposalOptions {
   proposer?: User;
 }
 
-export type Proposal = (MemberAdmittance | FundsRequest | FundsAllocation) &
+export type Proposal = (
+  | MemberAdmittance
+  | FundsRequest
+  | FundsAllocation
+  | AssignCircle
+  | RemoveCircle
+) &
   ExtendedProposalOptions;
 
 export type ProposalWithHighlightedComment = Proposal & {

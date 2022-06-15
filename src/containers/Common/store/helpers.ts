@@ -7,146 +7,96 @@ export const createDefaultGovernanceCreationPayload = (
   return {
     circles: [
       {
-        name: "FOLLOWER",
+        name: "Member",
         reputation: {},
-        allowedActions: {},
-        allowedProposals: {},
+        allowedActions: {
+          [GovernanceActions.CREATE_MESSAGE]: true,
+          [GovernanceActions.CREATE_DISCUSSION]: true,
+          [GovernanceActions.REPORT_PROPOSAL]: true,
+          [GovernanceActions.REPORT_MESSAGE]: true,
+          [GovernanceActions.REPORT_DISCUSSION]: true,
+        },
+        allowedProposals: {
+          [ProposalsTypes.ASSIGN_CIRCLE]: { "1": true },
+        },
+      },
+      {
+        name: "Senior",
+        reputation: {},
+        allowedActions: {
+          [GovernanceActions.CREATE_MESSAGE]: true,
+          [GovernanceActions.CREATE_DISCUSSION]: true,
+          [GovernanceActions.REPORT_PROPOSAL]: true,
+          [GovernanceActions.REPORT_MESSAGE]: true,
+          [GovernanceActions.REPORT_DISCUSSION]: true,
+          [GovernanceActions.DELETE_MESSAGE]: true,
+          [GovernanceActions.DELETE_DISCUSSION]: true,
+          [GovernanceActions.CREATE_PROPOSAL]: true,
+        },
+        allowedProposals: {
+          [ProposalsTypes.ASSIGN_CIRCLE]: { "1": true, "2": true },
+          [ProposalsTypes.REMOVE_CIRCLE]: { "1": true, "2": true },
+          [ProposalsTypes.FUNDS_ALLOCATION]: true,
+        },
         assignProposalDefinition: {
           global: {
-            quorum: 30,
-            weights: [
-              {
-                circles: [2, 1],
-                value: 60,
-              },
-              {
-                circles: [0],
-                value: 40,
-              },
-            ],
+            quorum: 25,
+            weights: [{ circles: [2], value: 100 }],
             minApprove: 50,
-            maxReject: 0,
-            duration: 24,
+            maxReject: 20,
+            duration: 12,
           },
           local: {},
           limitations: {},
         },
         removeProposalDefinition: {
           global: {
-            quorum: 30,
-            weights: [
-              {
-                circles: [2, 1],
-                value: 60,
-              },
-              {
-                circles: [0],
-                value: 40,
-              },
-            ],
+            quorum: 25,
+            weights: [{ circles: [2], value: 100 }],
             minApprove: 50,
-            maxReject: 0,
-            duration: 24,
+            maxReject: 20,
+            duration: 48,
           },
           local: {},
           limitations: {},
         },
       },
       {
-        name: "STANDARD_MEMBER",
+        name: "Leader",
         reputation: {},
         allowedActions: {
+          [GovernanceActions.CREATE_MESSAGE]: true,
+          [GovernanceActions.CREATE_DISCUSSION]: true,
+          [GovernanceActions.REPORT_PROPOSAL]: true,
+          [GovernanceActions.REPORT_MESSAGE]: true,
+          [GovernanceActions.REPORT_DISCUSSION]: true,
+          [GovernanceActions.DELETE_MESSAGE]: true,
+          [GovernanceActions.DELETE_DISCUSSION]: true,
           [GovernanceActions.CREATE_PROPOSAL]: true,
         },
         allowedProposals: {
-          [ProposalsTypes.MEMBER_ADMITTANCE]: true,
+          [ProposalsTypes.ASSIGN_CIRCLE]: { "1": true, "2": true },
+          [ProposalsTypes.REMOVE_CIRCLE]: { "1": true, "2": true },
+          [ProposalsTypes.FUNDS_ALLOCATION]: true,
         },
         assignProposalDefinition: {
           global: {
-            quorum: 30,
-            weights: [
-              {
-                circles: [2, 1],
-                value: 60,
-              },
-              {
-                circles: [0],
-                value: 40,
-              },
-            ],
+            quorum: 25,
+            weights: [{ circles: [2], value: 100 }],
             minApprove: 50,
-            maxReject: 0,
-            duration: 24,
+            maxReject: 20,
+            duration: 12,
           },
           local: {},
           limitations: {},
         },
         removeProposalDefinition: {
           global: {
-            quorum: 30,
-            weights: [
-              {
-                circles: [2, 1],
-                value: 60,
-              },
-              {
-                circles: [0],
-                value: 40,
-              },
-            ],
+            quorum: 25,
+            weights: [{ circles: [2], value: 100 }],
             minApprove: 50,
-            maxReject: 0,
-            duration: 24,
-          },
-          local: {},
-          limitations: {},
-        },
-      },
-      {
-        name: "COMMON_LEADER",
-        reputation: {},
-        allowedActions: {
-          [GovernanceActions.CREATE_PROPOSAL]: true,
-        },
-        allowedProposals: {
-          [ProposalsTypes.MEMBER_ADMITTANCE]: true,
-        },
-        assignProposalDefinition: {
-          global: {
-            quorum: 30,
-            weights: [
-              {
-                circles: [2, 1],
-                value: 60,
-              },
-              {
-                circles: [0],
-                value: 40,
-              },
-            ],
-            minApprove: 50,
-            maxReject: 0,
-            duration: 24,
-          },
-          local: {},
-          limitations: {},
-        },
-        removeProposalDefinition: {
-          global: {
-            quorum: 30,
-            weights: [
-              {
-                circles: [2, 1],
-                value: 60,
-              },
-              {
-                circles: [0],
-                value: 40,
-              },
-            ],
-            minApprove: 50,
-            maxReject: 0,
-            duration: 24,
+            maxReject: 20,
+            duration: 48,
           },
           local: {},
           limitations: {},
@@ -154,61 +104,43 @@ export const createDefaultGovernanceCreationPayload = (
       },
     ],
     actions: {
-      [GovernanceActions.CREATE_PROPOSAL]: {
-        cost: 0,
-      },
+      [GovernanceActions.CREATE_MESSAGE]: true,
+      [GovernanceActions.CREATE_DISCUSSION]: true,
+      [GovernanceActions.REPORT_PROPOSAL]: true,
+      [GovernanceActions.REPORT_MESSAGE]: true,
+      [GovernanceActions.REPORT_DISCUSSION]: true,
+      [GovernanceActions.DELETE_MESSAGE]: true,
+      [GovernanceActions.DELETE_DISCUSSION]: true,
+      [GovernanceActions.CREATE_PROPOSAL]: true,
     },
     proposals: {
       [ProposalsTypes.MEMBER_ADMITTANCE]: {
         global: {
-          quorum: 30,
-          weights: [
-            {
-              circles: [2, 1],
-              value: 60,
-            },
-            {
-              circles: [0],
-              value: 40,
-            },
-          ],
-          minApprove: 50,
-          maxReject: 0,
-          duration: 24,
+          quorum: 0,
+          weights: [{ circles: [2, 1], value: 100 }],
+          minApprove: 0,
+          maxReject: 20,
+          duration: 8,
         },
         local: {
-          defaultCircle: 1,
-          optimisticAdmittance: true,
+          defaultCircle: 0,
+          optimisticAdmittance: false,
         },
         limitations: {},
       },
       [ProposalsTypes.FUNDS_ALLOCATION]: {
         global: {
-          quorum: 30,
-          weights: [
-            {
-              circles: [2, 1],
-              value: 60,
-            },
-            {
-              circles: [0],
-              value: 40,
-            },
-          ],
+          quorum: 10,
+          weights: [{ circles: [2, 1], value: 100 }],
           minApprove: 50,
-          maxReject: 0,
-          duration: 24,
+          maxReject: 33,
+          duration: 36,
         },
-        local: {
-          defaultCircle: 1,
-          optimisticAdmittance: true,
-        },
+        local: {},
         limitations: {},
       },
     },
-    consequences: {},
     unstructuredRules: settings.unstructuredRules,
-    tokenPool: 0,
     commonId: settings.commonId,
   };
 };

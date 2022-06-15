@@ -1,6 +1,6 @@
-import { GovernanceConsequences } from "@/shared/constants";
-import { BaseRule, Circle, Consequences } from "@/shared/models";
-import { Actions, BaseAction } from "@/shared/models/governance/actions";
+import { GovernanceActions, ProposalsTypes } from "@/shared/constants";
+import { BaseRule, Circle, circleIndex } from "@/shared/models";
+import { AllowedProposals } from "@/shared/models/governance";
 import { BaseProposal, Proposals } from "@/shared/models/governance/proposals";
 
 type CreateGovernanceWeights = {
@@ -8,8 +8,14 @@ type CreateGovernanceWeights = {
   value: number;
 }[];
 
+type CircleIndexToBooleanMap = Partial<Record<circleIndex, boolean>>;
+
+type CreateGovernanceProposalsKeys =
+  | ProposalsTypes.MEMBER_ADMITTANCE
+  | ProposalsTypes.FUNDS_ALLOCATION;
+
 type CreateGovernanceProposals = {
-  [key in keyof Proposals]: Omit<Proposals[key], "global"> & {
+  [key in CreateGovernanceProposalsKeys]: Omit<Proposals[key], "global"> & {
     global: Omit<Proposals[key]["global"], "weights"> & {
       weights: CreateGovernanceWeights;
     };
@@ -23,19 +29,25 @@ interface ProposalDefinition
   };
 }
 
-interface CreateGovernanceCircle extends Circle {
-  assignProposalDefinition: ProposalDefinition;
-  removeProposalDefinition: ProposalDefinition;
+type CreateGovernanceCircleAllowedProposals = Omit<
+  AllowedProposals,
+  ProposalsTypes.ASSIGN_CIRCLE | ProposalsTypes.REMOVE_CIRCLE
+> & {
+  [ProposalsTypes.ASSIGN_CIRCLE]?: CircleIndexToBooleanMap;
+  [ProposalsTypes.REMOVE_CIRCLE]?: CircleIndexToBooleanMap;
+};
+
+interface CreateGovernanceCircle
+  extends Omit<Circle, "id" | "allowedProposals"> {
+  allowedProposals: CreateGovernanceCircleAllowedProposals;
+  assignProposalDefinition?: ProposalDefinition;
+  removeProposalDefinition?: ProposalDefinition;
 }
 
 export interface CreateGovernancePayload {
   circles: CreateGovernanceCircle[];
-  actions: Partial<Record<keyof Actions, Pick<BaseAction, "cost">>>;
+  actions: Partial<Record<GovernanceActions, true>>;
   proposals: Partial<CreateGovernanceProposals>;
-  consequences: Partial<
-    Pick<Consequences, GovernanceConsequences.SUCCESSFUL_INVITATION>
-  >;
   unstructuredRules: BaseRule[];
-  tokenPool: number;
   commonId: string;
 }
