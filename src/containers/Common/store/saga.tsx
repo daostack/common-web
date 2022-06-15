@@ -350,8 +350,9 @@ export function* loadProposalDetail(
     );
     const owners = (yield fetchOwners(ownerIds)) as User[];
     const loadedDisscussionMessage = discussionMessage?.map((d) => {
-      d.owner = owners.find((o) => o.uid === d.ownerId);
-      return d;
+      const newDiscussionMessage = { ...d };
+      newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+      return newDiscussionMessage;
     });
     proposal.discussionMessage = loadedDisscussionMessage;
 
@@ -488,7 +489,7 @@ export function* addMessageToProposalSaga(
       subscribeToMessages,
       action.payload.payload.discussionId,
       async (data) => {
-        const { proposal } = action.payload;
+        const proposal = { ...action.payload.proposal };
 
         proposal.discussionMessage = data.sort(
           (m: DiscussionMessage, mP: DiscussionMessage) =>
