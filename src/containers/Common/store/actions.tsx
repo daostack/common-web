@@ -28,7 +28,6 @@ import {
   DeleteCommon,
   LeaveCommon,
 } from "@/containers/Common/interfaces";
-import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 import {
   CreateVotePayload,
   UpdateVotePayload,
@@ -161,10 +160,7 @@ export const createFundingProposal = createAsyncAction(
   CommonsActionTypes.CREATE_FUNDING_PROPOSAL_SUCCESS,
   CommonsActionTypes.CREATE_FUNDING_PROPOSAL_FAILURE
 )<
-  {
-    payload: CreateFundingRequestProposalPayload;
-    callback: (step: AddProposalSteps) => void;
-  },
+  PayloadWithCallback<CreateFundingRequestProposalPayload, void, string>,
   Proposal,
   Error
 >();

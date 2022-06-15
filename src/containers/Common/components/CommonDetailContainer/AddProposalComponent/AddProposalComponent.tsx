@@ -31,7 +31,7 @@ interface AddDiscussionComponentProps
   extends Pick<ModalProps, "isShowing" | "onClose"> {
   onProposalAdd: (
     payload: CreateFundingRequestProposalPayload,
-    callback: (step: AddProposalSteps) => void
+    callback: (error: string | null) => void
   ) => void;
   common: Common;
   hasPaymentMethod: boolean;
@@ -62,6 +62,7 @@ export const AddProposalComponent = ({
     amount: 0,
     commonId: common.id,
   });
+  const [errorMessage, setErrorMessage] = useState("");
   const [proposalCreationStep, changeCreationProposalStep] = useState(
     AddProposalSteps.CREATE
   );
@@ -87,9 +88,16 @@ export const AddProposalComponent = ({
     changeCreationProposalStep(AddProposalSteps.LOADER);
     fundingRequest.links = fundingRequest.links?.filter((link) => link.title && link.value);
     fundingRequest.amount = fundingRequest.amount * 100;
-    onProposalAdd(fundingRequest, changeCreationProposalStep);
+    onProposalAdd(fundingRequest, (error) => {
+      if (error !== null) {
+        setErrorMessage(error);
+        changeCreationProposalStep(AddProposalSteps.FAILURE);
+      } else {
+        changeCreationProposalStep(AddProposalSteps.SUCCESS);
+      }
+    });
   }, [onProposalAdd]);
-  
+
   const saveProposalState = useCallback(
     (payload: Partial<CreateFundingRequestProposalPayload>) => {
       const fundingRequestData = { ...fundingRequest, ...payload };
@@ -139,7 +147,9 @@ export const AddProposalComponent = ({
           />
         );
       case AddProposalSteps.FAILURE:
-        return <AdProposalFailure closePopup={onClose} />;
+        return (
+          <AdProposalFailure closePopup={onClose} errorMessage={errorMessage} />
+        );
       default:
         return (
           <AddProposalForm
@@ -159,6 +169,7 @@ export const AddProposalComponent = ({
     common,
     onClose,
     fundingRequest,
+    errorMessage,
   ]);
 
   useEffect(() => {
