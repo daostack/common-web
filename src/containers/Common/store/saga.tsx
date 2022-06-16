@@ -53,7 +53,6 @@ import {
   fetchMessagesForCommonList,
   fetchCommonListByIds as fetchCommonListByIdsApi,
   createGovernance as createGovernanceApi,
-  addFounderToMembers as addFounderToMembersApi,
   getGovernance as getGovernanceApi,
   getCommonMember as getCommonMemberApi,
   getUserCommons as getUserCommonsApi,
@@ -64,7 +63,6 @@ import { ProposalsTypes } from "@/shared/constants";
 import { store } from "@/shared/appConfig";
 import { ImmediateContributionResponse } from "../interfaces";
 import { groupBy, isError } from "@/shared/utils";
-import { createDefaultGovernanceCreationPayload } from "./helpers";
 import { Awaited } from "@/shared/interfaces";
 import {
   FundsAllocation,
@@ -781,10 +779,9 @@ export function* createCommon(
   action: ReturnType<typeof actions.createCommon.request>
 ): Generator {
   try {
-    const { rules, ...commonCreationPayload } = action.payload.payload;
     const common = (yield call(
       createCommonApi,
-      commonCreationPayload
+      action.payload.payload
     )) as Awaited<ReturnType<typeof createCommonApi>>;
 
     // const governanceCreationPayload = createDefaultGovernanceCreationPayload({

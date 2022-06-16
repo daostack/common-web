@@ -65,7 +65,7 @@ const useCommonCreation = (): Return => {
         image: commonImageURL,
         byline: creationData.byline,
         description: creationData.description,
-        rules: creationData.rules,
+        unstructuredRules: creationData.rules,
         links: creationData.links,
         useTemplate: true,
       };
