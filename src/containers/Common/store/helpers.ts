@@ -114,6 +114,7 @@ export const createDefaultGovernanceCreationPayload = (
     actions: {
       [GovernanceActions.CREATE_MESSAGE]: true,
       [GovernanceActions.CREATE_DISCUSSION]: true,
+      [GovernanceActions.CREATE_VOTE]: true,
       [GovernanceActions.REPORT_PROPOSAL]: true,
       [GovernanceActions.REPORT_MESSAGE]: true,
       [GovernanceActions.REPORT_DISCUSSION]: true,
