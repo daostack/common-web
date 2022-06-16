@@ -208,6 +208,13 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     onClose: onCloseNewP,
   } = useModal(false);
 
+
+  const {
+    isShowing: isShowingModeratorActions,
+    onOpen: openModeratorModel,
+    onClose: clodeModeratorModal,
+  } = useModal(false);
+
   const {
     isModalOpen: showJoinModal,
     onOpen: onOpenJoinModal,

@@ -37,6 +37,7 @@ import {
   DiscussionMessage,
 } from "@/shared/models";
 import "./index.scss";
+import ReportIcon from "@/shared/icons/report.icon";
 
 const ElementDropdownMenuItemsList: DropdownOption[] = [
   {
@@ -59,17 +60,17 @@ const ElementDropdownMenuItemsList: DropdownOption[] = [
     searchText: "Copy link",
     value: ElementDropdownMenuItems.CopyLink,
   },
-  //TODO: "Reports" dev scope
-  // {
-  //   text: (
-  //     <>
-  //       <ReportIcon />
-  //       <span>Report</span>
-  //     </>
-  //   ),
-  //   searchText: "Report",
-  //   value: ElementDropdownMenuItems.Report,
-  // },
+  {
+    text: (
+      <>
+        <ReportIcon />
+        <span>Report</span>
+      </>
+    ),
+    searchText: "Report",
+    value: ElementDropdownMenuItems.Report,
+  },
+
 ];
 
 interface ElementDropdownProps {
