@@ -12,7 +12,7 @@ export interface CreateCommonPayload {
 }
 
 export interface IntermediateCreateCommonPayload
-  extends Omit<CreateCommonPayload, "image" | "searchable"> {
+  extends Omit<CreateCommonPayload, "image" | "searchable" | "useTemplate"> {
   image: string | File | null;
   agreementAccepted: boolean;
 }
