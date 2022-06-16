@@ -10,6 +10,8 @@ export const createDefaultGovernanceCreationPayload = (
         name: "Member",
         reputation: {},
         allowedActions: {
+          [GovernanceActions.CONTRIBUTE]: true,
+          [GovernanceActions.CREATE_VOTE]: true,
           [GovernanceActions.CREATE_MESSAGE]: true,
           [GovernanceActions.CREATE_DISCUSSION]: true,
           [GovernanceActions.REPORT_PROPOSAL]: true,
@@ -24,6 +26,9 @@ export const createDefaultGovernanceCreationPayload = (
         name: "Senior",
         reputation: {},
         allowedActions: {
+          [GovernanceActions.CONTRIBUTE]: true,
+          [GovernanceActions.RECEIVE_FUNDS]: true,
+          [GovernanceActions.CREATE_VOTE]: true,
           [GovernanceActions.CREATE_MESSAGE]: true,
           [GovernanceActions.CREATE_DISCUSSION]: true,
           [GovernanceActions.REPORT_PROPOSAL]: true,
@@ -65,6 +70,9 @@ export const createDefaultGovernanceCreationPayload = (
         name: "Leader",
         reputation: {},
         allowedActions: {
+          [GovernanceActions.CONTRIBUTE]: true,
+          [GovernanceActions.RECEIVE_FUNDS]: true,
+          [GovernanceActions.CREATE_VOTE]: true,
           [GovernanceActions.CREATE_MESSAGE]: true,
           [GovernanceActions.CREATE_DISCUSSION]: true,
           [GovernanceActions.REPORT_PROPOSAL]: true,
