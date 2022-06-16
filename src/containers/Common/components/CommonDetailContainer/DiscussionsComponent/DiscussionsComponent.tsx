@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs } from "@/containers/Common";
-import { Common, Discussion, Governance } from "@/shared/models";
+import {Common, CommonMember, Discussion, Governance} from "@/shared/models";
 import { EmptyTabComponent } from "../EmptyTabContent";
 import DiscussionItemComponent from "./DiscussionItemComponent";
 import "./index.scss";
@@ -9,6 +9,7 @@ interface DiscussionsComponentProps {
   discussions: Discussion[];
   loadDisscussionDetail: (payload: Discussion) => void;
   common: Common;
+  commonMember:CommonMember | null;
   governance: Governance;
   isCommonMember: boolean;
   isCommonMemberFetched: boolean;
@@ -25,6 +26,7 @@ export default function DiscussionsComponent({
   isCommonMemberFetched,
   isJoiningPending,
   onAddNewPost,
+                                               commonMember,
 }: DiscussionsComponentProps) {
   return (
     <>
@@ -44,6 +46,7 @@ export default function DiscussionsComponent({
                 key={d.id}
                 discussion={d}
                 loadDisscussionDetail={loadDisscussionDetail}
+                commonMember={commonMember}
               />
             ))}
           </>

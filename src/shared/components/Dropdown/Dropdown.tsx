@@ -45,6 +45,7 @@ export enum ElementDropdownMenuItems {
   Share,
   CopyLink,
   Report,
+  Hide
 }
 
 export interface DropdownRef {

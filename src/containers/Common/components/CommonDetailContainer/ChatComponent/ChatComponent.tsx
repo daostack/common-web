@@ -160,6 +160,7 @@ export default function ChatComponent({
                       disscussionMessage={m}
                       chatType={type}
                       highlighted={m.id === highlightedMessageId}
+                      commonMember={commonMember}
                     />
                   )
                 )

@@ -192,6 +192,9 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
       proposal.state === ProposalState.VOTING &&
       proposal.data.args.proposerId === user?.uid
   );
+
+
+
   const shouldAllowJoiningToCommon =
     !isCommonMember && (isCreationStageReached || !isJoiningPending);
   const shouldShowStickyJoinEffortButton =
@@ -805,6 +808,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                   isCommonMember={isCommonMember}
                   isCommonMemberFetched={isCommonMemberFetched}
                   isJoiningPending={isJoiningPending}
+                  commonMember={commonMember}
                 />
               )}
 

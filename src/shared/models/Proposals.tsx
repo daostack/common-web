@@ -7,6 +7,7 @@ import {
 } from "@/shared/models/governance/proposals";
 import { DiscussionMessage } from "./DiscussionMessage";
 import { User } from "./User";
+import {CommonMember} from "@/shared/models/Common";
 
 export enum ProposalState {
   PASSED = "passed",
@@ -51,6 +52,7 @@ export type ProposalWithHighlightedComment = Proposal & {
 export interface ProposalListItem {
   proposal: Proposal;
   loadProposalDetails: (payload: Proposal) => void;
+  commonMember: CommonMember | null;
 }
 
 export const isProposalWithHighlightedComment = (

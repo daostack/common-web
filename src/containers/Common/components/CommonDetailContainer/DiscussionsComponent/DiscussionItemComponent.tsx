@@ -2,19 +2,22 @@ import React, { useState } from "react";
 import classNames from "classnames";
 
 import { useFullText } from "@/shared/hooks";
-import { Discussion } from "@/shared/models";
+import {CommonMember, Discussion} from "@/shared/models";
 import { getUserName, getDaysAgo } from "@/shared/utils";
 import { ElementDropdown } from "@/shared/components";
 import { DynamicLinkType } from "@/shared/constants";
+import {ElementType} from "@/shared/components/ElementDropdown/ElementDropdown";
 
 interface DiscussionItemComponentProps {
   discussion: Discussion;
   loadDisscussionDetail: (payload: Discussion) => void;
+  commonMember: CommonMember | null;
 }
 
 export default function DiscussionItemComponent({
   discussion,
   loadDisscussionDetail,
+                                                  commonMember,
 }: DiscussionItemComponentProps) {
   const [imageError, setImageError] = useState(false);
   const {
@@ -50,6 +53,8 @@ export default function DiscussionItemComponent({
         <ElementDropdown
           linkType={DynamicLinkType.Discussion}
           elem={discussion}
+          commonMember={commonMember}
+          elemType={ElementType.discussion}
           className="dropdown-menu"
           transparent
         />

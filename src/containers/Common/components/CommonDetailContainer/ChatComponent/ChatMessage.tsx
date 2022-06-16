@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import classNames from "classnames";
 import { Linkify, ElementDropdown } from "@/shared/components";
-import { DiscussionMessage } from "@/shared/models";
+import {CommonMember, DiscussionMessage} from "@/shared/models";
 import { getUserName, getUserInitials } from "@/shared/utils";
 import { DynamicLinkType, Orientation, ChatType } from "@/shared/constants";
+import {ElementType} from "@/shared/components/ElementDropdown/ElementDropdown";
 
 interface ChatMessageProps {
   disscussionMessage: DiscussionMessage;
   chatType: ChatType;
   highlighted?: boolean;
+  commonMember: CommonMember | null;
 }
 
 const getDynamicLinkByChatType = (chatType: ChatType): DynamicLinkType => {
@@ -25,6 +27,7 @@ export default function ChatMessage(
     disscussionMessage,
     chatType,
     highlighted = false,
+    commonMember,
   }: ChatMessageProps
 ) {
   const [imageError, setImageError] = useState(false);
@@ -76,6 +79,8 @@ export default function ChatMessage(
             className="dropdown-menu"
             variant={Orientation.Horizontal}
             transparent
+            commonMember={commonMember}
+            elemType={ElementType.discussionMessage}
           />
         </div>
       </div>

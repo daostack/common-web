@@ -50,7 +50,7 @@ const production: Configuration = {
 };
 
 const config: ConfigurationObject = {
-  dev:stage,
+  dev,
   stage,
   production,
 };

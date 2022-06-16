@@ -173,6 +173,7 @@ const Activities: FC = () => {
               proposal={item as Proposal}
               key={item.id}
               loadProposalDetails={getProposalDetail}
+              commonMember={commonMember}
             />
           );
         case ActivitiesCollection.MEMBERSHIP_REQUESTS:
@@ -181,11 +182,12 @@ const Activities: FC = () => {
               proposal={item as Proposal}
               key={item.id}
               loadProposalDetails={getProposalDetail}
+              commonMember={commonMember}
             />
           );
       }
     },
-    [getProposalDetail]
+    [getProposalDetail,commonMember]
   );
 
   const renderCollectionList = useCallback(

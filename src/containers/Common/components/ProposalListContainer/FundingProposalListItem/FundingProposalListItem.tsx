@@ -23,11 +23,13 @@ import {
     formatPrice,
 } from "@/shared/utils";
 import "./index.scss";
+import {ElementType} from "@/shared/components/ElementDropdown/ElementDropdown";
 
 const FundingProposalListItem: FC<ProposalListItem> = (
   {
       proposal,
-      loadProposalDetails
+      loadProposalDetails,
+      commonMember,
   }: ProposalListItem
 ) => (
   <div className="proposal-item">
@@ -47,8 +49,10 @@ const FundingProposalListItem: FC<ProposalListItem> = (
         <ElementDropdown
           linkType={DynamicLinkType.Proposal}
           elem={proposal}
+          elemType={ElementType.proposal}
           className="dropdown-menu"
           transparent
+          commonMember={commonMember}
         />
       </div>
       <div className="proposal-item__info">

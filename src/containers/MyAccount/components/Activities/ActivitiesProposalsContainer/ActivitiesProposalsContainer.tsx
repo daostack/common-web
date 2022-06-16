@@ -82,6 +82,7 @@ const ActivitiesProposalsContainer: FC = () => {
               proposal={proposal}
               key={proposal.id}
               loadProposalDetails={getProposalDetail}
+              commonMember={commonMember}
             />
           );
         case ProposalsTypes.MEMBER_ADMITTANCE:
@@ -90,6 +91,8 @@ const ActivitiesProposalsContainer: FC = () => {
               proposal={proposal}
               key={proposal.id}
               loadProposalDetails={getProposalDetail}
+              commonMember={commonMember}
+
             />
           );
       }
