@@ -11,28 +11,33 @@ interface IProps {
   className?: string;
 }
 
-export default function ProposalState({ proposal, hideCounter, className }: IProps) {
-
-  const state = proposal.state === ProposalStateTypes.REJECTED ? "Rejected" :
-    proposal.state === ProposalStateTypes.EXPIRED_INVOCIES_NOT_UPLOADED ? "Unclaimed" : "Approved";
+export default function ProposalState({
+  proposal,
+  hideCounter,
+  className,
+}: IProps) {
+  const state =
+    proposal.state === ProposalStateTypes.FAILED ? "Rejected" : "Approved";
 
   return (
     <div className={classNames("proposal-state-wrapper", className)}>
-      {
-        (proposal.state === ProposalStateTypes.COUNTDOWN)
-        && <ProposalCountDown
+      {proposal.state === ProposalStateTypes.VOTING && (
+        <ProposalCountDown
           date={getProposalExpirationDate(proposal)}
           hideCounter={hideCounter}
         />
-      }
-      {proposal.state !== ProposalStateTypes.COUNTDOWN && (
+      )}
+      {proposal.state !== ProposalStateTypes.VOTING && (
         <div className={`state-wrapper ${state.toLocaleLowerCase()}`}>
           <div className="state-inner-wrapper">
-            {state !== "Unclaimed" && <img src={`/icons/${state.toLocaleLowerCase()}.svg`} alt="proposal state" />}
+            <img
+              src={`/icons/${state.toLocaleLowerCase()}.svg`}
+              alt="proposal state"
+            />
             <span className="state-name">{state}</span>
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }

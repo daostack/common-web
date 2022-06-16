@@ -56,7 +56,7 @@ const InvoiceAcceptanceContainer: FC = () => {
   const isProposalForApprovalLoaded = useSelector(
     selectIsProposalForApprovalLoaded()
   );
-  const payoutDocs = proposalForApproval?.payoutDocs || [];
+  const payoutDocs = proposalForApproval?.data.legal.payoutDocs || [];
   const isPendingApprovalProposal = Boolean(
     proposalForApproval && checkPendingApprovalProposal(proposalForApproval)
   );
@@ -170,9 +170,9 @@ const InvoiceAcceptanceContainer: FC = () => {
         )}
         {proposalForApproval && isProposalForApprovalLoaded && (
           <>
-            {proposalForApproval.title && (
+            {proposalForApproval.data.args.title && (
               <h2 className="invoice-acceptance-container__title">
-                {proposalForApproval.title}
+                {proposalForApproval.data.args.title}
               </h2>
             )}
             <ProposalCard proposal={proposalForApproval} />

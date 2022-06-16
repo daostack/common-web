@@ -1,3 +1,5 @@
+export * from "./governance";
+export * from "./BaseEntity";
 export * from "./User";
 export * from "./Card";
 export * from "./Common";

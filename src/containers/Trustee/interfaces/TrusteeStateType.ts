@@ -1,10 +1,11 @@
 import { LoadingState } from "@/shared/interfaces";
-import { Common, Proposal, User } from "@/shared/models";
+import { Common, User } from "@/shared/models";
+import { FundsAllocation } from "@/shared/models/governance/proposals";
 
 export interface TrusteeStateType {
-  pendingApprovalProposals: LoadingState<Proposal[]>;
-  approvedProposals: LoadingState<Proposal[]>;
-  declinedProposals: LoadingState<Proposal[]>;
+  pendingApprovalProposals: LoadingState<FundsAllocation[]>;
+  approvedProposals: LoadingState<FundsAllocation[]>;
+  declinedProposals: LoadingState<FundsAllocation[]>;
   commons: {
     ids: string[];
     data: Common[] | null;
@@ -13,6 +14,6 @@ export interface TrusteeStateType {
     ids: string[];
     data: User[] | null;
   };
-  proposalForApproval: Proposal | null;
+  proposalForApproval: FundsAllocation | null;
   isProposalForApprovalLoaded: boolean;
 }

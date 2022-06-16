@@ -127,7 +127,7 @@ export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
                     shouldUseFullWidth={isMobileView}
                     disabled={!isValid}
                   >
-                    Continue to Funding
+                    Continue to Rules
                   </Button>
                 </div>
               </ModalFooter>

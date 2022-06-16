@@ -1,12 +1,8 @@
 import React, { useEffect, useState, FC } from "react";
 import { useDispatch } from "react-redux";
 import { IFrame, Loader, Separator } from "@/shared/components";
-import {
-  Common,
-  CommonContributionType,
-  Payment,
-  PaymentStatus,
-} from "@/shared/models";
+import { ContributionType } from "@/shared/constants";
+import { Common, Payment, PaymentStatus } from "@/shared/models";
 import {
   isImmediateContributionPayment,
   ImmediateContributionPayment,
@@ -69,7 +65,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
         makeImmediateContribution.request({
           payload: {
             commonId,
-            contributionType: CommonContributionType.OneTime,
+            contributionType: ContributionType.OneTime,
             amount: contributionAmount,
             saveCard: true,
           },

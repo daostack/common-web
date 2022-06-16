@@ -10,7 +10,6 @@ import classNames from "classnames";
 import {
   Dropdown,
   MenuButton,
-  ElementDropdownMenuItems,
   DropdownOption,
   DropdownStyles,
   ShareModal,
@@ -36,6 +35,7 @@ import {
   Discussion,
   DiscussionMessage,
 } from "@/shared/models";
+import { ElementDropdownMenuItems } from "../Dropdown";
 import "./index.scss";
 import ReportIcon from "@/shared/icons/report.icon";
 

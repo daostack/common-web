@@ -12,6 +12,7 @@ $secondary-modal-z-index: 20;
 $modal-z-index: 999;
 $notifications-container-z-index: $modal-z-index + 1;
 $modal-dropdown-menu-z-index: $modal-z-index + 1;
+$global-overlay-z-index: $modal-dropdown-menu-z-index + 1;
 $element-max-width: 1400px;
 $element-max-height: 850px;
 $payment-iframe-height: 26.5rem;

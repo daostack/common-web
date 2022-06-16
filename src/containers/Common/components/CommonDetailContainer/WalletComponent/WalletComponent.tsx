@@ -15,15 +15,16 @@ import {
   Currency,
   TransactionType,
   TransactionData,
-  ProposalType,
   ProposalState,
-  ProposalFundingState,
-  FundingProcessStage,
   Time,
 } from "@/shared/models";
 import { Loader, ChartCanvas } from "@/shared/components";
 import { ChartType, ScreenSize } from "@/shared/constants";
 import { sortByCreatedTime, formatPrice } from "@/shared/utils";
+import {
+  isFundsAllocationProposal,
+  FundingAllocationStatus,
+} from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
 import { fetchCommonContributions, fetchCommonProposals } from "../../../store/api";
 import { TransactionsList } from "../";
@@ -132,23 +133,23 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
         try {
           const commonProposals = await fetchCommonProposals(common.id);
 
-          const chargedCommonProposals = commonProposals.filter(
-            proposal => (
-              proposal.type === ProposalType.FundingRequest
-              && proposal.state === ProposalState.PASSED
-              && proposal.fundingState === ProposalFundingState.Funded
-              && proposal.fundingProcessStage === FundingProcessStage.Completed
-            )
-          );
+          const chargedCommonProposals = commonProposals
+            .filter(isFundsAllocationProposal)
+            .filter(
+              (proposal) =>
+                proposal.state === ProposalState.PASSED &&
+                proposal.data.tracker.status ===
+                  FundingAllocationStatus.COMPLETED
+            );
 
           setPaymentsOutData(
             chargedCommonProposals.map(
               proposal => (
                 {
                   type: TransactionType.PayOut,
-                  amount: proposal.fundingRequest?.amount,
-                  createdAt: proposal.createdAt || proposal.createTime,
-                  fundingRequestDescription: proposal.description.description,
+                  amount: proposal.data.args.amount,
+                  createdAt: proposal.createdAt,
+                  fundingRequestDescription: proposal.data.args.description,
                 }
               )
             ).sort(sortByCreatedTime) as TransactionData[]
@@ -282,7 +283,7 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
               sticked: isWalletMenuSticked,
             }
           )
-        } 
+        }
       >
         <ul className="wallet__menu">
           <li

@@ -2,7 +2,6 @@ import React from "react";
 import { CommonShare, Linkify } from "@/shared/components";
 import { Colors, ScreenSize, ShareViewType } from "@/shared/constants";
 import { Common } from "@/shared/models";
-import { formatPrice } from "@/shared/utils";
 import "./index.scss";
 
 interface AboutTabComponentProps {
@@ -21,17 +20,10 @@ export default function AboutTabComponent({
   isJoiningPending,
 }: AboutTabComponentProps) {
   const shouldShowJoinToCommonButton = screenSize === ScreenSize.Desktop && !isCommonMember && !isJoiningPending;
-  const minFeeToJoin = common.metadata.zeroContribution
-    ? 0
-    : common.metadata.minFeeToJoin;
-
-  const renderContributionType = (type: string) => {
-    return <b>{type}</b>;
-  };
   return (
     <div className="about-name-wrapper">
       <div className="description">
-        <Linkify>{common.metadata.description}</Linkify>
+        <Linkify>{common.description}</Linkify>
       </div>
       {common?.links?.length > 0 && (
         <div className="links">
@@ -43,28 +35,24 @@ export default function AboutTabComponent({
           ))}
         </div>
       )}
-      <div className="line"></div>
-      <div className="join-wrapper">
-        <div className="title">Join this Common</div>
-        <div className="contribution">
-          Minimum contribution for new members:
-          <br />
-          {formatPrice(minFeeToJoin) + " "}
-          {renderContributionType(common.metadata.contributionType || "")} contribution
-        </div>
-        {shouldShowJoinToCommonButton && (
-          <div className="social-wrapper">
-            <button className={`button-blue`} onClick={onOpenJoinModal}>
-              Join the effort
-            </button>
-            <CommonShare
-              common={common}
-              type={ShareViewType.Popup}
-              color={Colors.lightPurple}
-            />
+      {shouldShowJoinToCommonButton && (
+        <>
+          <div className="line"></div>
+          <div className="join-wrapper">
+            <div className="title">Join this Common</div>
+            <div className="social-wrapper">
+              <button className={`button-blue`} onClick={onOpenJoinModal}>
+                Join the effort
+              </button>
+              <CommonShare
+                common={common}
+                type={ShareViewType.Popup}
+                color={Colors.lightPurple}
+              />
+            </div>
           </div>
-        )}
-      </div>
+        </>
+      )}
     </div>
   );
 }

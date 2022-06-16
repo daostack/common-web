@@ -38,12 +38,9 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
             >
               {common.name}
             </div>
-            {common?.metadata.byline && (
-              <div
-                lang={`${containsHebrew(common.name) ? "he" : "en"}`}
-                className="description"
-              >
-                {common?.metadata.byline}
+            {common.byline && (
+              <div lang={`${containsHebrew(common.name) ? "he" : "en"}`} className="description">
+                {common.byline}
               </div>
             )}
             <div className="last-activity">
@@ -62,7 +59,7 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
           </div>
           <div className="item">
             <div className="title">Members</div>
-            <div className="value">{common.members.length}</div>
+            <div className="value">{common.memberCount}</div>
           </div>
         </div>
         <div className="relation-additional-information">
@@ -72,19 +69,19 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
                 src="/icons/common-icons/proposals.svg"
                 alt="proposals-ico"
               />
-              {common.proposals?.length}
+              {common.proposalCount}
             </div>
           </div>
           <div className="item">
             <div className="value">
               <img src="/icons/common-icons/disc.svg" alt="disc-ico" />
-              {common.discussions?.length}
+              {common.discussionCount}
             </div>
           </div>
           <div className="item">
             <div className="value">
               <img src="/icons/common-icons/messages.svg" alt="messages-ico" />
-              {common.messages?.length}
+              {common.messageCount}
             </div>
           </div>
         </div>
