@@ -785,22 +785,22 @@ export function* createCommon(
     const common = (yield call(
       createCommonApi,
       commonCreationPayload
-    )) as Common;
+    )) as Awaited<ReturnType<typeof createCommonApi>>;
 
-    const governanceCreationPayload = createDefaultGovernanceCreationPayload({
-      unstructuredRules: rules || [],
-      commonId: common.id,
-    });
-
-    yield call(
-      createGovernanceApi,
-      governanceCreationPayload
-    );
-
-    yield call(addFounderToMembersApi, {
-      commonId: common.id,
-      circles: governanceCreationPayload.circles.map((circle, index) => index),
-    });
+    // const governanceCreationPayload = createDefaultGovernanceCreationPayload({
+    //   unstructuredRules: rules || [],
+    //   commonId: common.id,
+    // });
+    //
+    // yield call(
+    //   createGovernanceApi,
+    //   governanceCreationPayload
+    // );
+    //
+    // yield call(addFounderToMembersApi, {
+    //   commonId: common.id,
+    //   circles: governanceCreationPayload.circles.map((circle, index) => index),
+    // });
 
     yield put(actions.createCommon.success(common));
     action.payload.callback(null, common);

@@ -8,6 +8,7 @@ export interface CreateCommonPayload {
   rules?: BaseRule[];
   links?: CommonLink[];
   searchable?: boolean;
+  useTemplate: boolean;
 }
 
 export interface IntermediateCreateCommonPayload

@@ -67,6 +67,7 @@ const useCommonCreation = (): Return => {
         description: creationData.description,
         rules: creationData.rules,
         links: creationData.links,
+        useTemplate: true,
       };
 
       dispatch(
