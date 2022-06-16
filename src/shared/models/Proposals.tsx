@@ -9,11 +9,12 @@ import { DiscussionMessage } from "./DiscussionMessage";
 import { User } from "./User";
 
 export enum ProposalState {
-  COUNTDOWN = "countdown",
   PASSED = "passed",
-  REJECTED = "failed",
-  PASSED_INSUFFICIENT_BALANCE = "passedInsufficientBalance",
-  EXPIRED_INVOCIES_NOT_UPLOADED = "expiredInvociesNotUploaded",
+  FAILED = "failed",
+  VOTING = "voting",
+  DISCUSSION = "discussion",
+  RETRACTED = "retracted",
+  COMPLETED = "completed",
 }
 
 export interface DocInfo<LegalType = number> {

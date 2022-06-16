@@ -73,7 +73,7 @@ const FundingProposalListItem: FC<ProposalListItem> = (
             )}
           </div>
           {
-            (proposal.state === ProposalStateTypes.COUNTDOWN)
+            (proposal.state === ProposalStateTypes.VOTING)
             && <ProposalCountDown
               date={getProposalExpirationDate(proposal)}
               preview

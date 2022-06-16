@@ -179,7 +179,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   );
 
   const activeProposals = useMemo(
-    () => fundingProposals.filter((d) => d.state === ProposalState.COUNTDOWN),
+    () => fundingProposals.filter((d) => d.state === ProposalState.VOTING),
     [fundingProposals]
   );
 
@@ -189,7 +189,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const isJoiningPending = proposals.some(
     (proposal) =>
       proposal.type === ProposalsTypes.MEMBER_ADMITTANCE &&
-      proposal.state === ProposalState.COUNTDOWN &&
+      proposal.state === ProposalState.VOTING &&
       proposal.data.args.proposerId === user?.uid
   );
   const shouldAllowJoiningToCommon =

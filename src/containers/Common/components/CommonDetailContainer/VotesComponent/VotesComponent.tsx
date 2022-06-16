@@ -62,7 +62,7 @@ export default function VotesComponent({
   const getIsVotingOptionDisabled = useCallback(
     (votingOption: VoteOutcome | null) =>
       !isVotingAllowed ||
-      proposal.state !== ProposalState.COUNTDOWN ||
+      proposal.state !== ProposalState.VOTING ||
       (!!userVote && userVote.outcome === votingOption) ||
       preview,
     [proposal.state, isVotingAllowed, preview, userVote]

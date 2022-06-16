@@ -60,7 +60,7 @@ export default function MyCommonsContainer() {
     const ids = myProposals
       .filter(
         (p) =>
-          p.state === ProposalState.COUNTDOWN &&
+          p.state === ProposalState.VOTING &&
           p.type === ProposalsTypes.MEMBER_ADMITTANCE
       )
       .map((p) => p.data.args.commonId);
