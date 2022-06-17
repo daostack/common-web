@@ -2,8 +2,9 @@ import millify from "millify";
 import moment from "moment";
 
 import { MobileOperatingSystem, BASE_URL } from "../constants";
-import { Common, DateFormat, Proposal, Time, User } from "../models";
+import { Common, DateFormat, Time, User } from "../models";
 import { CurrencySymbol } from "@/shared/models";
+import { BaseProposal } from "@/shared/models/governance/proposals";
 import { transformFirebaseDataList } from "@/shared/utils/transformFirebaseDataToModel";
 
 interface FormatPriceOptions {
@@ -223,9 +224,12 @@ export const roundNumberToNextTenths = (
 ): number =>
   Math.floor((value + valueForRounding) / valueForRounding) * valueForRounding;
 
-// TODO: Use correct countdown logic when BE is ready
-export const getProposalExpirationDate = (proposal: Proposal): Date =>
-  new Date((proposal.createdAt.seconds + 5 * 24 * 60 * 60) * 1000);
+export const getProposalExpirationDate = (proposal: BaseProposal): Date => {
+  const timestamp =
+    proposal.data.votingExpiresOn || proposal.data.discussionExpiresOn;
+
+  return timestamp ? new Date(timestamp.seconds * 1000) : new Date();
+};
 
 /**
  * Allowed {index}: 1 <= index <= 8
