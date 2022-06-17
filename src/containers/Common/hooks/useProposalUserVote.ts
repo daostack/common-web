@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { LoadingState } from "@/shared/interfaces";
 import { Vote } from "@/shared/models";
@@ -9,6 +9,8 @@ type State = LoadingState<Vote | null>;
 
 interface Return extends State {
   fetchProposalVote: (proposalId: string) => void;
+  setVote: (vote: Vote) => void;
+  resetProposalVote: () => void;
 }
 
 export const useProposalUserVote = (): Return => {
@@ -20,35 +22,59 @@ export const useProposalUserVote = (): Return => {
   const user = useSelector(selectUser());
   const userId = user?.uid;
 
-  const fetchProposalVote = useCallback(async (proposalId: string) => {
-    if (state.loading || state.fetched || !userId) {
-      return;
-    }
+  const fetchProposalVote = useCallback(
+    async (proposalId: string) => {
+      if (state.loading || state.fetched || !userId) {
+        return;
+      }
 
-    setState((prevState) => ({
-      ...prevState,
-      loading: true,
-    }));
+      setState((prevState) => ({
+        ...prevState,
+        loading: true,
+      }));
 
-    try {
-      const data = await getVote(proposalId, userId);
-      setState({
-        loading: false,
-        fetched: true,
-        data: data
-      });
-    } catch (error) {
-      setState({
-        loading: false,
-        fetched: false,
-        data: null
-      });
-    }
-  }, [state, userId])
+      try {
+        const data = await getVote(proposalId, userId);
+        setState({
+          loading: false,
+          fetched: true,
+          data: data,
+        });
+      } catch (error) {
+        setState({
+          loading: false,
+          fetched: false,
+          data: null,
+        });
+      }
+    },
+    [state, userId]
+  );
 
+  const setVote = useCallback((vote: Vote) => {
+    setState({
+      loading: false,
+      fetched: true,
+      data: vote,
+    });
+  }, []);
+
+  const resetProposalVote = useCallback(() => {
+    setState({
+      loading: false,
+      fetched: false,
+      data: null,
+    });
+  }, []);
+
+  useEffect(() => {
+    resetProposalVote();
+  }, [resetProposalVote, userId]);
 
   return {
     ...state,
     fetchProposalVote,
+    setVote,
+    resetProposalVote,
   };
 };

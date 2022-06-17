@@ -646,7 +646,7 @@ export function* createVote(
       store.dispatch(stopLoading());
     });
     yield put(actions.createVote.success());
-    action.payload.callback(null);
+    action.payload.callback(null, vote);
     yield put(stopLoading());
   } catch (error) {
     if (isError(error)) {
@@ -681,7 +681,7 @@ export function* updateVote(
     });
 
     yield put(actions.updateVote.success());
-    action.payload.callback(null);
+    action.payload.callback(null, vote);
     yield put(stopLoading());
   } catch (error) {
     if (isError(error)) {

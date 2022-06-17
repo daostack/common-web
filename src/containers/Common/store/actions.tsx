@@ -15,6 +15,7 @@ import {
   DiscussionWithHighlightedMessage,
   Payment,
   Subscription,
+  Vote,
 } from "@/shared/models";
 import { Tabs } from "@/containers/Common";
 import { PayloadWithOptionalCallback } from "@/shared/interfaces";
@@ -229,13 +230,13 @@ export const createVote = createAsyncAction(
   CommonsActionTypes.CREATE_VOTE,
   CommonsActionTypes.CREATE_VOTE_SUCCESS,
   CommonsActionTypes.CREATE_VOTE_FAILURE
-)<PayloadWithCallback<CreateVotePayload, void, Error>, void, Error>();
+)<PayloadWithCallback<CreateVotePayload, Vote, Error>, void, Error>();
 
 export const updateVote = createAsyncAction(
   CommonsActionTypes.UPDATE_VOTE,
   CommonsActionTypes.UPDATE_VOTE_SUCCESS,
   CommonsActionTypes.UPDATE_VOTE_FAILURE
-)<PayloadWithCallback<UpdateVotePayload, void, Error>, void, Error>();
+)<PayloadWithCallback<UpdateVotePayload, Vote, Error>, void, Error>();
 
 export const makeImmediateContribution = createAsyncAction(
   CommonsActionTypes.MAKE_IMMEDIATE_CONTRIBUTION,

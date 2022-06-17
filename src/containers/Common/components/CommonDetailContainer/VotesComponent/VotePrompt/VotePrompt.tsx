@@ -16,6 +16,7 @@ interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
   voteType: VoteOutcome;
   prevVote?: Vote;
   avatarURL: string;
+  onVoteUpdate: (vote: Vote) => void;
 }
 
 export default function VotePrompt(
@@ -26,6 +27,7 @@ export default function VotePrompt(
     voteType,
     prevVote,
     avatarURL,
+    onVoteUpdate,
   }: IProps
 ) {
   const dispatch = useDispatch();
@@ -43,33 +45,35 @@ export default function VotePrompt(
     setVoting(true);
     dispatch(createVote.request({
       payload: { proposalId, outcome: vote },
-      callback: (error) => {
+      callback: (error, vote) => {
         setVoting(false);
-        if (error) {
+        if (error || !vote) {
           console.error(error);
           return;
         }
+        onVoteUpdate(vote);
         onClose();
       }
     }))
-  }, [dispatch, onClose, proposalId]);
+  }, [dispatch, onClose, proposalId, onVoteUpdate]);
 
   const handleUpdateVote = useCallback((vote: VoteOutcome) => {
     if (!prevVote) return;
 
     setVoting(true);
     dispatch(updateVote.request({
-      payload: { id: prevVote.id, outcome: vote },
-      callback: (error) => {
+      payload: { proposalId, outcome: vote },
+      callback: (error, vote) => {
         setVoting(false);
-        if (error) {
+        if (error || !vote) {
           console.error(error);
           return;
         }
+        onVoteUpdate(vote);
         onClose();
       }
     }))
-  }, [dispatch, onClose, prevVote]);
+  }, [dispatch, onClose, prevVote, proposalId, onVoteUpdate]);
 
   const handleVote = useCallback((voteType: VoteOutcome) => {
     switch (voteAction) {

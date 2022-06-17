@@ -6,6 +6,6 @@ export interface CreateVotePayload {
 }
 
 export interface UpdateVotePayload {
-  id: string;
+  proposalId: string;
   outcome: VoteOutcome;
 }

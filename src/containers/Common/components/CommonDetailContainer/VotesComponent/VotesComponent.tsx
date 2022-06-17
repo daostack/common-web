@@ -43,6 +43,7 @@ export default function VotesComponent({
     fetched: isVoteFetched,
     data: userVote,
     fetchProposalVote,
+    setVote,
   } = useProposalUserVote();
 
   useEffect(() => {
@@ -227,6 +228,7 @@ export default function VotesComponent({
               voteType={voteType!}
               prevVote={userVote!}
               avatarURL={user?.photoURL ?? ""}
+              onVoteUpdate={setVote}
             />
           )}
         </div>
