@@ -5,9 +5,9 @@ import { selectUser } from "@/containers/Auth/store/selectors";
 import { Loader } from "@/shared/components";
 import DownloadCommonApp from "@/shared/components/DownloadCommonApp/DownloadCommonApp";
 import { ProposalsTypes, ROUTE_PATHS } from "@/shared/constants";
-import { isMobile } from "@/shared/utils";
+import { checkIsCountdownState, isMobile } from "@/shared/utils";
 import "./index.scss";
-import { Common, ProposalState } from "@/shared/models";
+import { Common } from "@/shared/models";
 import { getLoading } from "@/shared/store/selectors";
 import { CommonListItem, EmptyTabComponent } from "../../components";
 import { useUserCommons } from "../../hooks";
@@ -60,7 +60,7 @@ export default function MyCommonsContainer() {
     const ids = myProposals
       .filter(
         (p) =>
-          p.state === ProposalState.VOTING &&
+          checkIsCountdownState(p) &&
           p.type === ProposalsTypes.MEMBER_ADMITTANCE
       )
       .map((p) => p.data.args.commonId);

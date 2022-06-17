@@ -19,10 +19,9 @@ import {
   DiscussionWithHighlightedMessage,
   Proposal,
   ProposalWithHighlightedComment,
-  ProposalState,
 } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { formatPrice, getUserName } from "@/shared/utils";
+import { checkIsCountdownState, formatPrice, getUserName } from "@/shared/utils";
 import { LoginModalType } from "../../../Auth/interface";
 import {
   AboutTabComponent,
@@ -179,7 +178,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   );
 
   const activeProposals = useMemo(
-    () => fundingProposals.filter((d) => d.state === ProposalState.VOTING),
+    () => fundingProposals.filter((d) => checkIsCountdownState(d)),
     [fundingProposals]
   );
 
@@ -189,7 +188,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const isJoiningPending = proposals.some(
     (proposal) =>
       proposal.type === ProposalsTypes.MEMBER_ADMITTANCE &&
-      proposal.state === ProposalState.VOTING &&
+      checkIsCountdownState(proposal) &&
       proposal.data.args.proposerId === user?.uid
   );
   const shouldAllowJoiningToCommon =

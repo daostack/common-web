@@ -17,6 +17,7 @@ import {
     ProposalState,
 } from "../../CommonDetailContainer";
 import {
+    checkIsCountdownState,
     getUserName,
     getDaysAgo,
     getProposalExpirationDate,
@@ -72,13 +73,12 @@ const FundingProposalListItem: FC<ProposalListItem> = (
               { shouldRemovePrefixFromZero: false }
             )}
           </div>
-          {
-            (proposal.state === ProposalStateTypes.VOTING)
-            && <ProposalCountDown
+          {checkIsCountdownState(proposal) && (
+            <ProposalCountDown
               date={getProposalExpirationDate(proposal)}
               preview
             />
-          }
+          )}
         </div>
       </div>
       <div className="proposal-item__voting">

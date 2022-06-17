@@ -1,7 +1,10 @@
 import React from "react";
 import classNames from "classnames";
 import { Proposal, ProposalState as ProposalStateTypes } from "@/shared/models";
-import { getProposalExpirationDate } from "@/shared/utils";
+import {
+  checkIsCountdownState,
+  getProposalExpirationDate,
+} from "@/shared/utils";
 import ProposalCountDown from "../ProposalCountDown/ProposalCountDown";
 import "./index.scss";
 
@@ -18,16 +21,17 @@ export default function ProposalState({
 }: IProps) {
   const state =
     proposal.state === ProposalStateTypes.FAILED ? "Rejected" : "Approved";
+  const isCountdownState = checkIsCountdownState(proposal);
 
   return (
     <div className={classNames("proposal-state-wrapper", className)}>
-      {proposal.state === ProposalStateTypes.VOTING && (
+      {isCountdownState && (
         <ProposalCountDown
           date={getProposalExpirationDate(proposal)}
           hideCounter={hideCounter}
         />
       )}
-      {proposal.state !== ProposalStateTypes.VOTING && (
+      {!isCountdownState && (
         <div className={`state-wrapper ${state.toLocaleLowerCase()}`}>
           <div className="state-inner-wrapper">
             <img
