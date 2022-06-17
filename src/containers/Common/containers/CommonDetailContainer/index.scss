@@ -362,6 +362,7 @@
             .join-the-effort-btn {
               height: 56px;
               margin-right: unset;
+              margin-bottom: 1.5rem;
             }
           }
 
@@ -459,7 +460,7 @@
 
           &.sticky {
             position: fixed;
-            z-index: 1;
+            z-index: 10;
             bottom: 6.875rem;
             width: 90%;
             transform: translateX(-50%);
