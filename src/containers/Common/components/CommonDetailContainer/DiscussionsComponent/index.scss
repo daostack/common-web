@@ -175,9 +175,9 @@
   .discussion-title-wrapper {
     .add-button {
       position: fixed;
-      right: 24px;
-      bottom: 24px;
-      z-index: 2;
+      right: 1.5rem;
+      bottom: 4.625rem;
+      z-index: 10;
       box-shadow: 0 0 6px 0 $fixed-button-shadow;
       background-color: $purple;
       width: 64px;
