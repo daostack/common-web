@@ -9,7 +9,8 @@ export interface AssignCircleArgs extends BasicArgsProposal {
 
 export interface AssignCircle extends BaseProposal {
   data: {
-    expiresOn: firebase.firestore.Timestamp;
+    votingExpiresOn: firebase.firestore.Timestamp | null;
+    discussionExpiresOn: firebase.firestore.Timestamp | null;
     args: AssignCircleArgs;
   };
   type: ProposalsTypes.ASSIGN_CIRCLE;

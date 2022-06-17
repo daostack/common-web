@@ -9,7 +9,8 @@ export interface RemoveCircleArgs extends BasicArgsProposal {
 
 export interface RemoveCircle extends BaseProposal {
   data: {
-    expiresOn: firebase.firestore.Timestamp;
+    votingExpiresOn: firebase.firestore.Timestamp | null;
+    discussionExpiresOn: firebase.firestore.Timestamp | null;
     args: RemoveCircleArgs;
   };
   type: ProposalsTypes.REMOVE_CIRCLE;

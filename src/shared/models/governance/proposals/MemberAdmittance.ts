@@ -10,7 +10,8 @@ export interface MemberAdmittanceArgs extends BasicArgsProposal {
 
 export interface MemberAdmittance extends BaseProposal {
   data: {
-    expiresOn: firebase.firestore.Timestamp;
+    votingExpiresOn: firebase.firestore.Timestamp | null;
+    discussionExpiresOn: firebase.firestore.Timestamp | null;
     args: MemberAdmittanceArgs;
   };
   type: ProposalsTypes.MEMBER_ADMITTANCE;

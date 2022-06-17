@@ -14,7 +14,8 @@ export interface FundsRequest extends BaseProposal {
   type: ProposalsTypes.FUNDS_REQUEST;
   data: {
     args: FundsRequestArgs;
-    expiresOn: firebase.firestore.Timestamp;
+    votingExpiresOn: firebase.firestore.Timestamp | null;
+    discussionExpiresOn: firebase.firestore.Timestamp | null;
   };
   limitations: {
     minAmount: number;

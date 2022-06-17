@@ -35,7 +35,8 @@ export interface CalculatedVotes {
 
 export interface BaseProposal extends BaseEntity {
   global: {
-    duration: number; // time in hours
+    votingDuration: number; // time in hours
+    discussionDuration: number; // time in hours
     quorum: number; // required percentage of common member votes (any vote)
     weights: {
       circles: number;
@@ -51,13 +52,16 @@ export interface BaseProposal extends BaseEntity {
 
   votes: CalculatedVotes;
 
-  data: {
-    expiresOn: firebase.firestore.Timestamp;
-  } & Record<string, unknown>;
+  data: Record<string, unknown> & {
+    votingExpiresOn: firebase.firestore.Timestamp | null;
+    discussionExpiresOn: firebase.firestore.Timestamp | null;
+  };
 
   state: ProposalState;
 
   approvalDate: firebase.firestore.Timestamp | null;
+
+  messageCount: number;
 
   type: ProposalsTypes;
 
