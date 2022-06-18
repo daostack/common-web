@@ -55,7 +55,7 @@ import {
   selectIsProposalLoaded,
   selectProposals,
   selectCards,
-  selectCommonActiveTab,
+  selectCommonActiveTab, selectModerationModalData,
 } from "../../store/selectors";
 import {
   clearCurrentDiscussion,
@@ -80,6 +80,7 @@ import {
 } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 import { useCommonMember } from "../../hooks";
 import "./index.scss";
+import {ModerateModal} from "@/containers/Common/components/CommonDetailContainer/ModerateModel";
 
 interface CommonDetailRouterParams {
   id: string;
@@ -164,6 +165,8 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
   const activeTab = useSelector(selectCommonActiveTab());
+  const moderationModal = useSelector(selectModerationModalData());
+
   const {
     fetched: isCommonMemberFetched,
     data: commonMember,
@@ -222,12 +225,14 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     onClose: onCloseNewP,
   } = useModal(false);
 
-
   const {
-    isShowing: isShowingModeratorActions,
-    onOpen: openModeratorModel,
-    onClose: clodeModeratorModal,
+    isShowing: isShowingModerateModal,
+    onOpen: onOpenModerateModal,
+    onClose: onCloseModerateModal,
   } = useModal(false);
+
+
+
 
   const {
     isModalOpen: isJoinModalOpen,
@@ -275,6 +280,14 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
       };
     }
   }, [dispatch, activeTab, props.commonId, changeTabHandler, isCommonFetched]);
+
+
+  useEffect(() => {
+ if(moderationModal && !isShowingModerateModal){
+     onOpenModerateModal()
+ }
+  }, [moderationModal,isShowingModerateModal]);
+
 
   useEffect(() => {
     dispatch(loadUserCards.request({ callback: () => true }));
@@ -544,6 +557,11 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
 
   return (
     <>
+        {
+            isShowingModerateModal && moderationModal && (
+                <ModerateModal onClose={onCloseModerateModal} isShowing={isShowingModerateModal} moderationModalData={moderationModal} />
+            )
+        }
       {isShowing && (
         <Modal
           isShowing={isShowing}

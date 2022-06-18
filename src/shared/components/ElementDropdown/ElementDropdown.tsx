@@ -4,7 +4,7 @@ import React, {
     useState,
     useEffect,
 } from "react";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import classNames from "classnames";
 
 import {
@@ -39,6 +39,9 @@ import {
 import {ElementDropdownMenuItems} from "../Dropdown";
 import "./index.scss";
 import ReportIcon from "@/shared/icons/report.icon";
+import {openModerateModal} from "@/containers/Common/store/actions";
+import {MODERATION_TYPES} from "../../../../../common-backend/functions/src/shared/enums/MODERATION_TYPES";
+import {ModerationActionType} from "@/containers/Common/interfaces";
 
 const ElementDropdownMenuItemsList: DropdownOption[] = [
     {
@@ -85,17 +88,12 @@ const hideItem = {
     value: ElementDropdownMenuItems.Hide,
 }
 
-export enum ElementType {
-    common = "common",
-    proposal = "proposal",
-    discussion = "discussion",
-    discussionMessage = "message",
-}
+
 
 interface ElementDropdownProps {
     linkType: DynamicLinkType;
     elem: Common | Proposal | Discussion | DiscussionMessage;
-    elemType: ElementType;
+    elemType: MODERATION_TYPES;
     variant?: Orientation;
     transparent?: boolean;
     className?: string;
@@ -115,6 +113,7 @@ const ElementDropdown: FC<ElementDropdownProps> = (
         elemType
     }
 ) => {
+    const dispatch = useDispatch();
     const screenSize = useSelector(getScreenSize());
     const {notify} = useNotification();
     const [linkURL, setLinkURL] = useState<string | null>(null);
@@ -135,7 +134,15 @@ const ElementDropdown: FC<ElementDropdownProps> = (
 
 
     const handleMenuItemSelect = useCallback((value: unknown) => {
-            if (value === ElementDropdownMenuItems.Report) return; //TODO: "Reports" dev scope
+            if (value === ElementDropdownMenuItems.Report || value === ElementDropdownMenuItems.Hide ){
+
+                dispatch(openModerateModal({
+                actionType:ElementDropdownMenuItems.Hide === value ? ModerationActionType.hide : ModerationActionType.report,
+                    type:elemType,
+                    itemId:elem.id
+                }))
+                return;
+                }
 
             if (!linkURL) {
                 handleOpen();

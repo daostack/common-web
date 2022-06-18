@@ -1,8 +1,13 @@
 
- enum MODERATION_TYPES {
+ export enum MODERATION_TYPES {
     proposals = 'proposals',
     discussion = 'discussion',
     discussionMessage = 'discussionMessage',
+}
+
+export enum ModerationActionType{
+    hide="hide",
+    report="report"
 }
 
 export interface ReportContentPayload{
@@ -20,4 +25,10 @@ export interface HideContentPayload{
     commonId: string;
     userId: string;
     type: MODERATION_TYPES;
+}
+
+export interface ModerateModalAction{
+    type: MODERATION_TYPES;
+    itemId: string;
+    actionType:ModerationActionType;
 }

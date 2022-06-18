@@ -26,7 +26,7 @@ import {
   AddMessageToDiscussionDto,
   DeleteCommon,
   LeaveCommon,
-  CreateProposal,
+  CreateProposal, ModerateModalAction, CommonsStateType,
 } from "@/containers/Common/interfaces";
 import {
   CreateVotePayload,
@@ -372,3 +372,7 @@ export const getUserCommons = createAsyncAction(
   CommonsActionTypes.GET_USER_COMMONS_SUCCESS,
   CommonsActionTypes.GET_USER_COMMONS_FAILURE
 )<PayloadWithOptionalCallback<string, Common[], Error>, Common[], Error>();
+
+export const openModerateModal = createStandardAction(
+    CommonsActionTypes.OPEN_MODERATE_MODAL
+)<CommonsStateType["moderateModal"]>();

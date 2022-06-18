@@ -23,7 +23,7 @@ import {
     formatPrice,
 } from "@/shared/utils";
 import "./index.scss";
-import {ElementType} from "@/shared/components/ElementDropdown/ElementDropdown";
+import {MODERATION_TYPES} from "@/containers/Common/interfaces";
 
 const FundingProposalListItem: FC<ProposalListItem> = (
   {
@@ -49,7 +49,7 @@ const FundingProposalListItem: FC<ProposalListItem> = (
         <ElementDropdown
           linkType={DynamicLinkType.Proposal}
           elem={proposal}
-          elemType={ElementType.proposal}
+          elemType={MODERATION_TYPES.proposals}
           className="dropdown-menu"
           transparent
           commonMember={commonMember}

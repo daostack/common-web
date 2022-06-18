@@ -6,6 +6,7 @@ import {
   Card,
 } from "@/shared/models";
 import { Tabs } from "@/containers/Common";
+import {ModerateModalAction} from "@/containers/Common/interfaces/ModerateContent";
 
 export interface CommonsStateType {
   commons: Common[];
@@ -23,4 +24,5 @@ export interface CommonsStateType {
   userProposals: Proposal[];
   cards: Card[];
   activeTab: Tabs | null;
+  moderateModal:ModerateModalAction | null;
 }

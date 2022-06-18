@@ -4,7 +4,7 @@ import { Linkify, ElementDropdown } from "@/shared/components";
 import {CommonMember, DiscussionMessage} from "@/shared/models";
 import { getUserName, getUserInitials } from "@/shared/utils";
 import { DynamicLinkType, Orientation, ChatType } from "@/shared/constants";
-import {ElementType} from "@/shared/components/ElementDropdown/ElementDropdown";
+import {MODERATION_TYPES} from "@/containers/Common/interfaces";
 
 interface ChatMessageProps {
   disscussionMessage: DiscussionMessage;
@@ -80,7 +80,7 @@ export default function ChatMessage(
             variant={Orientation.Horizontal}
             transparent
             commonMember={commonMember}
-            elemType={ElementType.discussionMessage}
+            elemType={MODERATION_TYPES.discussionMessage}
           />
         </div>
       </div>

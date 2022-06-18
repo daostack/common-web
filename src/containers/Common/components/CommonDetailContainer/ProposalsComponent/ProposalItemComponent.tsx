@@ -12,7 +12,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useSelector } from "react-redux";
 import { getScreenSize } from "@/shared/store/selectors";
 import { FundsAllocationArgs } from "@/shared/models/governance/proposals";
-import {ElementType} from "@/shared/components/ElementDropdown/ElementDropdown";
+import {MODERATION_TYPES} from "@/containers/Common/interfaces";
+
 
 interface ProposalItemComponentProps {
   loadProposalDetail: (payload: Proposal) => void;
@@ -75,7 +76,7 @@ export default function ProposalItemComponent({
         <ElementDropdown
           linkType={DynamicLinkType.Proposal}
           elem={proposal}
-          elemType={ElementType.proposal}
+          elemType={MODERATION_TYPES.proposals}
           className="dropdown-menu"
           transparent
           commonMember={commonMember}

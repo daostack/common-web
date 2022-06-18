@@ -20,6 +20,7 @@ const initialState: CommonsStateType = {
   currentProposal: null,
   cards: [],
   activeTab: null,
+    moderateModal:null,
 };
 
 type Action = ActionType<typeof actions>;
@@ -162,6 +163,13 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       produce(state, (nextState) => {
         nextState.proposals = [action.payload, ...nextState.proposals];
       })
-  );
+  )
+  .handleAction(
+    actions.openModerateModal,
+    (state, action) =>
+      produce(state, (nextState) => {
+        nextState.moderateModal = action.payload;
+      })
+  )
 
 export default reducer;

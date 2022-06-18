@@ -6,7 +6,7 @@ import {CommonMember, Discussion} from "@/shared/models";
 import { getUserName, getDaysAgo } from "@/shared/utils";
 import { ElementDropdown } from "@/shared/components";
 import { DynamicLinkType } from "@/shared/constants";
-import {ElementType} from "@/shared/components/ElementDropdown/ElementDropdown";
+import {MODERATION_TYPES} from "@/containers/Common/interfaces";
 
 interface DiscussionItemComponentProps {
   discussion: Discussion;
@@ -54,7 +54,7 @@ export default function DiscussionItemComponent({
           linkType={DynamicLinkType.Discussion}
           elem={discussion}
           commonMember={commonMember}
-          elemType={ElementType.discussion}
+          elemType={MODERATION_TYPES.discussion}
           className="dropdown-menu"
           transparent
         />
