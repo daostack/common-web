@@ -75,29 +75,35 @@ export default function ChatComponent({
   const shouldShowJoinToCommonButton = !isCommonMember && !isJoiningPending;
   const messages = discussionMessage.reduce(groupday, {});
   const [isNewMessageLoading, setIsNewMessageLoading] = useState<boolean>(false);
+  const [lastMessageWithOpenedDropdownId, setLastMessageWithOpenedDropdownId] = useState<string | null>(null);
   const isMobileView = (screenSize === ScreenSize.Mobile);
   const dateList = Object.keys(messages);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
   const chatId = useMemo(() => `chat-${uuidv4()}`, []);
 
-  const scrollToContainerBottom = useCallback((containerId: string) =>
+  const scrollToContainerBottom = useCallback(() =>
     setTimeout(
       () =>
         animateScroll.scrollToBottom(
           {
-            containerId,
+            containerId: chatWrapperId,
             smooth: true,
             delay: 0,
           }
         ),
       0
     ),
-    []
+    [chatWrapperId]
   );
 
   useEffect(() => {
-    scrollToContainerBottom(chatWrapperId);
-  }, [scrollToContainerBottom, chatWrapperId]);
+    if(discussionMessage.length || isNewMessageLoading)
+      scrollToContainerBottom();
+  }, [
+    scrollToContainerBottom,
+    discussionMessage.length,
+    isNewMessageLoading
+  ]);
 
   useEffect(
     () => {
@@ -123,18 +129,18 @@ export default function ChatComponent({
   );
 
   useEffect(() => {
-    if (isNewMessageLoading)
-      scrollToContainerBottom(chatWrapperId);
-  }, [chatWrapperId, isNewMessageLoading, scrollToContainerBottom]);
-
-  useEffect(() => {
     if (
       !prevDiscussionMessages
       || (prevDiscussionMessages?.length === discussionMessage.length)
     ) return;
 
     setIsNewMessageLoading(false);
-  }, [discussionMessage, prevDiscussionMessages, setIsNewMessageLoading]);
+  }, [
+    discussionMessage.length,
+    prevDiscussionMessages,
+    prevDiscussionMessages?.length,
+    setIsNewMessageLoading,
+  ]);
 
   return (
     <div className="chat-wrapper">
@@ -142,7 +148,7 @@ export default function ChatComponent({
         className={`messages ${!dateList.length ? "empty" : ""}`}
         id={chatWrapperId}
       >
-        {dateList.map((day) => {
+        {dateList.map((day, dayIndex) => {
           const date = new Date(Number(day));
 
           return (
@@ -155,13 +161,24 @@ export default function ChatComponent({
                 {isToday(date) ? "Today" : formatDate(date)}
               </li>
               {
-                messages[Number(day)].map(m =>
+                messages[Number(day)].map((message, messageIndex) =>
                   (
                     <ChatMessage
-                      key={m.id}
-                      disscussionMessage={m}
+                      key={message.id}
+                      disscussionMessage={message}
                       chatType={type}
-                      highlighted={m.id === highlightedMessageId}
+                      highlighted={message.id === highlightedMessageId}
+                      className={classNames({"last-message-with-dropdown": message.id === lastMessageWithOpenedDropdownId })}
+                      onMessageDropdownOpen={
+                        (messageIndex === messages[Number(day)].length - 1)
+                          ? (isOpen: boolean) => {
+                            setLastMessageWithOpenedDropdownId(isOpen ? message.id : null);
+
+                            if(dayIndex === dateList.length - 1)
+                              scrollToContainerBottom();
+                          }
+                          : undefined
+                      }
                     />
                   )
                 )
@@ -186,10 +203,6 @@ export default function ChatComponent({
                   "new-message-loader-wrapper",
                   {
                     "very-first-message": !dateList.length,
-                    "day-first-message":
-                      Boolean(dateList.length)
-                      && isToday(new Date(Number(dateList[dateList.length - 1])))
-                      && messages[Number(dateList[dateList.length - 1])].length === 1,
                   }
                 )
               }
