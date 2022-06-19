@@ -2,6 +2,7 @@ import React from "react";
 import { CommonShare, Linkify } from "@/shared/components";
 import { Colors, ScreenSize, ShareViewType } from "@/shared/constants";
 import { Common } from "@/shared/models";
+import { CommonWhitepaper } from "../CommonWhitepaper";
 import "./index.scss";
 
 interface AboutTabComponentProps {
@@ -25,6 +26,7 @@ export default function AboutTabComponent({
       <div className="description">
         <Linkify>{common.description}</Linkify>
       </div>
+      <CommonWhitepaper />
       {common?.links?.length > 0 && (
         <div className="links">
           <div className="title">Links</div>
