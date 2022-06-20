@@ -8,6 +8,7 @@ export const ApiEndpoint = {
   MakeImmediateContribution: "/commons/immediate-contribution",
   AddBankAccount: "/payments/bank-account-details/add",
   UpdateBankAccount: "/payments/bank-account-details/update",
+  DeleteBankAccount: "/payments/bank-account-details/delete",
   GetBankAccount: "/payments/bank-account-details/get",
   UploadInvoices: "/payments/payout-docs/add",
   ApproveOrDeclineProposal: "/payments/payout-docs/trustee-decision",

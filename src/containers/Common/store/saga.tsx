@@ -41,6 +41,7 @@ import {
   makeImmediateContribution as makeImmediateContributionApi,
   addBankDetails as addBankDetailsApi,
   updateBankDetails as updateBankDetailsApi,
+  deleteBankDetails as deleteBankDetailsApi,
   getBankDetails as getBankDetailsApi,
   getUserContributionsToCommon as getUserContributionsToCommonApi,
   getUserContributions as getUserContributionsApi,
@@ -785,6 +786,28 @@ export function* updateBankDetails(
   }
 }
 
+export function* deleteBankDetails(
+  action: ReturnType<typeof actions.deleteBankDetails.request>
+): Generator {
+  try {
+    yield put(startLoading());
+
+    const bankAccountDetails = (yield deleteBankDetailsApi()) as BankAccountDetails;
+
+    yield put(actions.deleteBankDetails.success(bankAccountDetails));
+    action.payload.callback(null, bankAccountDetails);
+
+    yield put(stopLoading());
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.deleteBankDetails.failure(error));
+      action.payload.callback(error);
+
+      yield put(stopLoading());
+    }
+  }
+}
+
 export function* loadUserCardsSaga(
   action: ReturnType<typeof actions.loadUserCards.request>
 ): Generator {
@@ -1140,6 +1163,7 @@ export function* commonsSaga() {
   yield takeLatest(actions.getBankDetails.request, getBankDetails);
   yield takeLatest(actions.addBankDetails.request, addBankDetails);
   yield takeLatest(actions.updateBankDetails.request, updateBankDetails);
+  yield takeLatest(actions.deleteBankDetails.request, deleteBankDetails);
   yield takeLatest(
     actions.getUserContributionsToCommon.request,
     getUserContributionsToCommon

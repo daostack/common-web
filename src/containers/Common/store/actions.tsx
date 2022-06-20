@@ -309,6 +309,20 @@ export const updateBankDetails = createAsyncAction(
   Error
 >();
 
+export const deleteBankDetails = createAsyncAction(
+  CommonsActionTypes.DELETE_BANK_DETAILS,
+  CommonsActionTypes.DELETE_BANK_DETAILS_SUCCESS,
+  CommonsActionTypes.DELETE_BANK_DETAILS_FAILURE
+)<
+  PayloadWithCallback<
+    void,
+    BankAccountDetails,
+    Error
+  >,
+  BankAccountDetails,
+  Error
+>();
+
 export const getBankDetails = createAsyncAction(
   CommonsActionTypes.GET_BANK_DETAILS,
   CommonsActionTypes.GET_BANK_DETAILS_SUCCESS,

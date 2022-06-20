@@ -33,3 +33,4 @@ export * from "./SocialLinks";
 export * from "./ShareModal";
 export * from "./StepProgress";
 export * from "./ChartCanvas";
+export * from "./DeletePrompt";

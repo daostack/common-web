@@ -492,6 +492,12 @@ export async function updateBankDetails(
   await Api.patch(ApiEndpoint.UpdateBankAccount, requestData);
 }
 
+export async function deleteBankDetails(): Promise<BankAccountDetails> {
+  const { data } = await Api.delete(ApiEndpoint.DeleteBankAccount);
+
+  return convertObjectDatesToFirestoreTimestamps<BankAccountDetails>(data);
+}
+
 export async function getUserContributionsToCommon(
   commonId: string,
   userId: string
