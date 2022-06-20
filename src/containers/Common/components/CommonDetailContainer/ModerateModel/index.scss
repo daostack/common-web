@@ -1,0 +1,82 @@
+@import "../../../../../constants.scss";
+@import "../../../../../styles/sizes";
+
+.moderate-modal-wrapper {
+  .moderate-title {
+    font-family: "NunitoSans";
+    font-size: 20px;
+    font-weight: 800;
+    text-transform: capitalize;
+    line-height: 28px;
+    letter-spacing: 0;
+    text-align: center;
+    margin-bottom: 24pt;
+  }
+
+  .moderate-description {
+    text-align: center;
+
+    .description-title {
+      font-family: "NunitoSans";
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 20px;
+      letter-spacing: 0;
+      text-align: center;
+      margin-bottom: 8pt;
+    }
+
+    .description-content {
+      font-family: "NunitoSans";
+      font-size: 14px;
+      font-weight: normal;
+      line-height: 20px;
+      letter-spacing: 0;
+      text-align: center;
+      margin-bottom: 8pt;
+    }
+  }
+
+  .moderate-content {
+    text-align: center;
+
+    .reasons {
+      padding-bottom: 24pt;
+      border-bottom: 1px solid $light-gray-1;
+      .reason-item {
+        border: 1px solid $light-gray-1;
+        border-radius: 20px;
+        display: inline-block;
+        font-size: 16px;
+        font-weight: normal;
+        line-height: 20px;
+        padding: 10px;
+        margin-right: 8pt;
+        cursor: pointer;
+        &.active{
+          background: $purple;
+          color:white;;
+        }
+      }
+    }
+
+    .note-wrapper{
+      width: 90%;
+      margin: 0 auto;
+      margin-top: 24pt;
+      .moderate-note{
+        text-align: left;
+        font-family: "NunitoSans";
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 20px;
+        margin-bottom: 10pt;
+      }
+      .custom-input__input--textarea{
+        height: 7rem;
+
+        margin: 0 auto;
+      }
+    }
+  }
+}
