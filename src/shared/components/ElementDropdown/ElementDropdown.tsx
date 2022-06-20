@@ -79,6 +79,7 @@ interface ElementDropdownProps {
   transparent?: boolean;
   className?: string;
   styles?: DropdownStyles;
+  onMenuToggle?: (isOpen: boolean) => void;
 }
 
 const ElementDropdown: FC<ElementDropdownProps> = (
@@ -89,6 +90,7 @@ const ElementDropdown: FC<ElementDropdownProps> = (
     variant = Orientation.Vertical,
     styles = {},
     className,
+    onMenuToggle,
   }
 ) => {
   const screenSize = useSelector(getScreenSize());
@@ -158,6 +160,7 @@ const ElementDropdown: FC<ElementDropdownProps> = (
       <Dropdown
         options={ElementDropdownMenuItemsList}
         menuButton={<MenuButton variant={variant} />}
+        onMenuToggle={onMenuToggle}
         className={classNames("element-dropdown__menu-wrapper", className)}
         shouldBeFixed={false}
         onSelect={handleMenuItemSelect}

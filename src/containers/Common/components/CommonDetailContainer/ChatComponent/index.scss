@@ -132,6 +132,10 @@
           background-color: transparent;
         }
       }
+
+      &.last-message-with-dropdown {
+        padding-bottom: 2.3rem;
+      }
     }
 
     .new-message-loader-wrapper {
@@ -140,9 +144,6 @@
 
       &.very-first-message {
         margin-top: 5rem;
-      }
-      &.day-first-message {
-        height: 10rem;
       }
     }
   }

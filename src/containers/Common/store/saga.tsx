@@ -281,6 +281,7 @@ export function* loadProposalDetail(
 ): Generator {
   try {
     yield put(startLoading());
+
     const proposal = { ...action.payload };
 
     let discussionMessage: DiscussionMessage[];
@@ -295,10 +296,11 @@ export function* loadProposalDetail(
       new Set(discussionMessage?.map((d) => d.ownerId))
     );
     const owners = (yield fetchOwners(ownerIds)) as User[];
-    const loadedDisscussionMessage = discussionMessage?.map((d) => {
-      d.owner = owners.find((o) => o.uid === d.ownerId);
-      return d;
-    });
+
+    const loadedDisscussionMessage = discussionMessage?.map((d) =>
+      ({ ...d, owner: owners.find((o) => o.uid === d.ownerId) })
+    );
+
     proposal.discussionMessage = loadedDisscussionMessage;
 
     yield put(actions.loadProposalDetail.success(proposal));
@@ -436,12 +438,16 @@ export function* addMessageToProposalSaga(
       async (data) => {
         const { proposal } = action.payload;
 
-        proposal.discussionMessage = data.sort(
-          (m: DiscussionMessage, mP: DiscussionMessage) =>
-            m.createTime?.seconds - mP.createTime?.seconds
-        );
+        const updatedProposal = {
+          ...proposal,
+          discussionMessage: data.sort(
+            (m: DiscussionMessage, mP: DiscussionMessage) =>
+              m.createTime?.seconds - mP.createTime?.seconds
+          ),
+        };
 
-        store.dispatch(actions.loadProposalDetail.request(proposal));
+        store.dispatch(actions.loadProposalDetail.request(updatedProposal));
+
         store.dispatch(actions.getCommonsList.request());
       }
     );
