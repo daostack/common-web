@@ -110,6 +110,7 @@ export default function PreviewInformationList(
                     </div>
                     <div className="countdown">
                       <ProposalCountDown
+                        state={proposal.state}
                         type="preview"
                         date={getProposalExpirationDate(proposal)}
                       />

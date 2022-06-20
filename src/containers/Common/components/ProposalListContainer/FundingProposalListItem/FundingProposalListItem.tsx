@@ -76,6 +76,7 @@ const FundingProposalListItem: FC<ProposalListItem> = (
           {checkIsCountdownState(proposal) && (
             <ProposalCountDown
               date={getProposalExpirationDate(proposal)}
+              state={proposal.state}
               preview
             />
           )}

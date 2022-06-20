@@ -28,6 +28,7 @@ export default function ProposalState({
       {isCountdownState && (
         <ProposalCountDown
           date={getProposalExpirationDate(proposal)}
+          state={proposal.state}
           hideCounter={hideCounter}
         />
       )}
