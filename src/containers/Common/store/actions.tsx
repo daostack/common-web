@@ -34,6 +34,7 @@ import {
   UpdateVotePayload,
 } from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
+import { CalculatedVotes } from "@/shared/models/governance/proposals";
 import {
   ImmediateContributionData,
   ImmediateContributionResponse,
@@ -230,13 +231,35 @@ export const createVote = createAsyncAction(
   CommonsActionTypes.CREATE_VOTE,
   CommonsActionTypes.CREATE_VOTE_SUCCESS,
   CommonsActionTypes.CREATE_VOTE_FAILURE
-)<PayloadWithCallback<CreateVotePayload, Vote, Error>, void, Error>();
+)<
+  PayloadWithCallback<
+    {
+      votePayload: CreateVotePayload;
+      proposalVotes: CalculatedVotes;
+    },
+    Vote,
+    Error
+  >,
+  void,
+  Error
+>();
 
 export const updateVote = createAsyncAction(
   CommonsActionTypes.UPDATE_VOTE,
   CommonsActionTypes.UPDATE_VOTE_SUCCESS,
   CommonsActionTypes.UPDATE_VOTE_FAILURE
-)<PayloadWithCallback<UpdateVotePayload, Vote, Error>, void, Error>();
+)<
+  PayloadWithCallback<
+    {
+      votePayload: UpdateVotePayload;
+      proposalVotes: CalculatedVotes;
+    },
+    Vote,
+    Error
+  >,
+  void,
+  Error
+>();
 
 export const makeImmediateContribution = createAsyncAction(
   CommonsActionTypes.MAKE_IMMEDIATE_CONTRIBUTION,

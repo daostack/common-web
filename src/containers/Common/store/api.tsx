@@ -354,6 +354,21 @@ export function subscribeToCommonProposal(
   return subscribe;
 }
 
+export function subscribeToProposal(
+  proposalId: string,
+  callback: (proposal: Proposal) => void
+): () => void {
+  const query = firebase
+    .firestore()
+    .collection(Collection.Proposals)
+    .doc(proposalId);
+  const unsubscribe = query.onSnapshot((snapshot) => {
+    callback(transformFirebaseDataSingle<Proposal>(snapshot));
+  });
+
+  return unsubscribe;
+}
+
 export function subscribeToMessages(
   discussionId: string,
   callback: (payload: any) => void

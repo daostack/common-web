@@ -225,6 +225,7 @@ export default function VotesComponent({
               isShowing={isShowing}
               onClose={onClose}
               proposalId={proposal.id}
+              proposalVotes={proposal.votes}
               voteType={voteType!}
               prevVote={userVote!}
               avatarURL={user?.photoURL ?? ""}

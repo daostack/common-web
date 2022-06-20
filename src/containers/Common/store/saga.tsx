@@ -32,6 +32,7 @@ import {
   addMessageToDiscussion,
   subscribeToMessages,
   subscribeToCommonProposal,
+  subscribeToProposal,
   leaveCommon as leaveCommonApi,
   loadUserCards,
   deleteCommon as deleteCommonApi,
@@ -65,6 +66,7 @@ import { ImmediateContributionResponse } from "../interfaces";
 import { groupBy, isError } from "@/shared/utils";
 import { Awaited } from "@/shared/interfaces";
 import {
+  CalculatedVotes,
   FundsAllocation,
   MemberAdmittance,
 } from "@/shared/models/governance/proposals";
@@ -627,66 +629,97 @@ export function* deleteCommon(
   }
 }
 
-export function* createVote(
-  action: ReturnType<typeof actions.createVote.request>
-): Generator {
+async function waitForVoteToBeApplied(
+  commonId: string,
+  proposalId: string,
+  proposalVotes: CalculatedVotes
+): Promise<void> {
+  await new Promise<void>((resolve, reject) => {
+    try {
+      const unsubscribe = subscribeToProposal(proposalId, async (proposal) => {
+        if (
+          proposal.votes.approved === proposalVotes.approved &&
+          proposal.votes.rejected === proposalVotes.rejected &&
+          proposal.votes.abstained === proposalVotes.abstained
+        ) {
+          return;
+        }
+
+        try {
+          const proposals = await fetchCommonProposals(commonId);
+          store.dispatch(actions.setProposals(proposals));
+          store.dispatch(actions.loadProposalList.request());
+          store.dispatch(
+            actions.loadProposalDetail.request(
+              proposals.filter((p) => p.id === proposalId)[0]
+            )
+          );
+          store.dispatch(stopLoading());
+          resolve();
+        } catch (error) {
+          reject(error);
+        } finally {
+          unsubscribe();
+        }
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+export function* createVote({
+  payload,
+}: ReturnType<typeof actions.createVote.request>): Generator {
+  const { votePayload, proposalVotes } = payload.payload;
+
   try {
     yield put(startLoading());
-    const vote = (yield createVoteApi(action.payload.payload)) as Vote;
+    const vote = (yield createVoteApi(votePayload)) as Vote;
 
     yield call(async () => {
-      const proposals = await fetchCommonProposals(vote.commonId);
-      store.dispatch(actions.setProposals(proposals));
-      store.dispatch(actions.loadProposalList.request());
-      store.dispatch(
-        actions.loadProposalDetail.request(
-          proposals.filter((p) => p.id === action.payload.payload.proposalId)[0]
-        )
+      await waitForVoteToBeApplied(
+        vote.commonId,
+        vote.proposalId,
+        proposalVotes
       );
-      store.dispatch(stopLoading());
     });
     yield put(actions.createVote.success());
-    action.payload.callback(null, vote);
+    payload.callback(null, vote);
     yield put(stopLoading());
   } catch (error) {
     if (isError(error)) {
       yield put(actions.createVote.failure(error));
-      action.payload.callback(error);
+      payload.callback(error);
       yield put(stopLoading());
     }
   }
 }
 
-export function* updateVote(
-  action: ReturnType<typeof actions.updateVote.request>
-): Generator {
+export function* updateVote({
+  payload,
+}: ReturnType<typeof actions.updateVote.request>): Generator {
+  const { votePayload, proposalVotes } = payload.payload;
+
   try {
     yield put(startLoading());
-    const vote = (yield updateVoteApi(action.payload.payload)) as Vote;
+    const vote = (yield updateVoteApi(votePayload)) as Vote;
 
     yield call(async () => {
-      const proposals = await fetchCommonProposals(vote.commonId);
-
-      store.dispatch(actions.setProposals(proposals));
-
-      store.dispatch(actions.loadProposalList.request());
-
-      store.dispatch(
-        actions.loadProposalDetail.request(
-          proposals.find(
-            (proposal) => proposal.id === vote.proposalId
-          ) as Proposal
-        )
+      await waitForVoteToBeApplied(
+        vote.commonId,
+        vote.proposalId,
+        proposalVotes
       );
     });
 
     yield put(actions.updateVote.success());
-    action.payload.callback(null, vote);
+    payload.callback(null, vote);
     yield put(stopLoading());
   } catch (error) {
     if (isError(error)) {
       yield put(actions.updateVote.failure(error));
-      action.payload.callback(error);
+      payload.callback(error);
       yield put(stopLoading());
     }
   }

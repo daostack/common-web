@@ -9,21 +9,26 @@ import {
   VoteOutcome,
   VoteAction,
 } from "@/shared/models";
+import { CalculatedVotes } from "@/shared/models/governance/proposals";
 import "./index.scss";
 
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
   proposalId: string;
+  proposalVotes: CalculatedVotes;
   voteType: VoteOutcome;
   prevVote?: Vote;
   avatarURL: string;
   onVoteUpdate: (vote: Vote) => void;
 }
 
+const emptyFunction = () => {};
+
 export default function VotePrompt(
   {
     isShowing,
     onClose,
     proposalId,
+    proposalVotes,
     voteType,
     prevVote,
     avatarURL,
@@ -44,7 +49,13 @@ export default function VotePrompt(
   const handleCreateVote = useCallback((vote: VoteOutcome) => {
     setVoting(true);
     dispatch(createVote.request({
-      payload: { proposalId, outcome: vote },
+      payload: {
+        proposalVotes,
+        votePayload: {
+          proposalId,
+          outcome: vote,
+        },
+      },
       callback: (error, vote) => {
         setVoting(false);
         if (error || !vote) {
@@ -55,14 +66,20 @@ export default function VotePrompt(
         onClose();
       }
     }))
-  }, [dispatch, onClose, proposalId, onVoteUpdate]);
+  }, [dispatch, onClose, proposalId, proposalVotes, onVoteUpdate]);
 
   const handleUpdateVote = useCallback((vote: VoteOutcome) => {
     if (!prevVote) return;
 
     setVoting(true);
     dispatch(updateVote.request({
-      payload: { proposalId, outcome: vote },
+      payload: {
+        proposalVotes,
+        votePayload: {
+          proposalId,
+          outcome: vote,
+        },
+      },
       callback: (error, vote) => {
         setVoting(false);
         if (error || !vote) {
@@ -73,7 +90,7 @@ export default function VotePrompt(
         onClose();
       }
     }))
-  }, [dispatch, onClose, prevVote, proposalId, onVoteUpdate]);
+  }, [dispatch, onClose, prevVote, proposalId, proposalVotes, onVoteUpdate]);
 
   const handleVote = useCallback((voteType: VoteOutcome) => {
     switch (voteAction) {
@@ -85,7 +102,12 @@ export default function VotePrompt(
   }, [handleCreateVote, handleUpdateVote, voteAction]);
 
   return (
-    <Modal isShowing={isShowing} onClose={onClose} className="vote-prompt-modal">
+    <Modal
+      isShowing={isShowing}
+      onClose={voting ? emptyFunction : onClose}
+      hideCloseButton={voting}
+      className="vote-prompt-modal"
+    >
       <div className="vote-ptompt-wrapper">
         <UserAvatar photoURL={avatarURL} className={`user-avatar ${voteText}`} />
         <h3 className={`vote-type ${voteText}`}>{voteText}</h3>
