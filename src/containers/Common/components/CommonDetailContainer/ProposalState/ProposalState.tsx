@@ -1,6 +1,13 @@
 import React from "react";
 import classNames from "classnames";
-import { Proposal, ProposalState as ProposalStateTypes } from "@/shared/models";
+import {
+  Proposal,
+  ProposalState as ProposalStateTypes,
+} from "@/shared/models";
+import {
+  FundingAllocationStatus,
+  isFundsAllocationProposal,
+} from "@/shared/models/governance/proposals";
 import {
   checkIsCountdownState,
   getProposalExpirationDate,
@@ -19,8 +26,16 @@ export default function ProposalState({
   hideCounter,
   className,
 }: IProps) {
+  const isUnclaimedProposal =
+    isFundsAllocationProposal(proposal) &&
+    proposal.data.tracker.status ===
+      FundingAllocationStatus.EXPIRED_INVOICES_NOT_UPLOADED;
   const state =
-    proposal.state === ProposalStateTypes.FAILED ? "Rejected" : "Approved";
+    proposal.state === ProposalStateTypes.FAILED
+      ? "Rejected"
+      : isUnclaimedProposal
+      ? "Unclaimed"
+      : "Approved";
   const isCountdownState = checkIsCountdownState(proposal);
 
   return (
@@ -35,10 +50,12 @@ export default function ProposalState({
       {!isCountdownState && (
         <div className={`state-wrapper ${state.toLocaleLowerCase()}`}>
           <div className="state-inner-wrapper">
-            <img
-              src={`/icons/${state.toLocaleLowerCase()}.svg`}
-              alt="proposal state"
-            />
+            {state !== "Unclaimed" && (
+              <img
+                src={`/icons/${state.toLocaleLowerCase()}.svg`}
+                alt="proposal state"
+              />
+            )}
             <span className="state-name">{state}</span>
           </div>
         </div>
