@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import classNames from "classnames";
 import { selectUser } from "@/containers/Auth/store/selectors";
+import { isRequestError } from "@/services/Api";
 import {
   Button,
   ButtonVariant,
@@ -13,6 +14,7 @@ import {
   Loader,
 } from "@/shared/components";
 import { Dropdown, TextField } from "@/shared/components/Form/Formik";
+import { ErrorCode } from "@/shared/constants";
 import {
   addBankDetails,
   updateBankDetails,
@@ -208,14 +210,31 @@ export const AddBankDetails = (props: IProps) => {
     (error: Error | null, data?: BankAccountDetails) => {
       setSending(false);
 
-      if (error || !data) {
-        console.error(error);
+      if (!error && data) {
+        onBankDetails(data);
+        notify(`Bank details ${isEditing ? "updated" : "added"} successfully`);
+        return;
+      }
+
+      console.error(error);
+
+      if (!error || !isRequestError(error)) {
         setError(error?.message ?? "Something went wrong :/");
         return;
       }
 
-      onBankDetails(data);
-      notify(`Bank details ${isEditing ? "updated" : "added"} successfully`);
+      const errorCode = error.response?.data?.errorCode;
+      let errorMessage = "Something went wrong :/";
+
+      if (errorCode === ErrorCode.InvalidBankDetails) {
+        errorMessage = "Please enter correct bank account details and try again.";
+      } else if (
+        errorCode === ErrorCode.CannotUploadDocs
+      ) {
+        errorMessage = "Please upload valid identification docs.";
+      }
+
+      setError(errorMessage);
     },
     [onBankDetails, notify, isEditing]
   );
