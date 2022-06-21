@@ -3,6 +3,7 @@ import { useHistory } from "react-router";
 import landingVideoSrc from "@/shared/assets/videos/landing-video.mp4";
 import { Button } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
+import { StructureInfoSection } from "../../components/LandingContainer";
 import "./index.scss";
 
 const LandingContainer = () => {
@@ -40,6 +41,7 @@ const LandingContainer = () => {
           <Button onClick={moveToContactUsPage}>Launch a Common</Button>
         </div>
       </section>
+      <StructureInfoSection />
     </div>
   );
 };

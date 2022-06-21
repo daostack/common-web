@@ -1,0 +1,58 @@
+@import "../../../../../constants";
+
+.landing-structure-info-section {
+  padding: 6rem 4rem 5.875rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: linear-gradient(180deg, $white 0%, $light-gray-4 100%);
+}
+
+.landing-structure-info-section__title {
+  max-width: 31rem;
+  margin: 0 0 9.125rem;
+  display: inline-block;
+  font-family: NotoSerifSC, serif;
+  font-weight: 600;
+  font-size: $large;
+  line-height: 133%;
+}
+
+.landing-structure-info-section__cards-wrapper {
+}
+
+.landing-structure-info-section__card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.landing-structure-info-section__card-image {
+  height: 12.625rem;
+  object-fit: contain;
+}
+
+.landing-structure-info-section__card-title {
+  margin: 2.25rem 0 1.375rem;
+  font-family: NotoSerifSC, serif;
+  font-weight: 600;
+  font-size: $moderate-med;
+  letter-spacing: 0.02em;
+}
+
+.landing-structure-info-section__card-description {
+  max-width: 22.5rem;
+  margin: 0;
+  font-size: $moderate;
+  line-height: 120%;
+  letter-spacing: 0.01em;
+}
+.landing-structure-info-section__card-description--small {
+  max-width: 15.75rem;
+}
+.landing-structure-info-section__card-description--medium {
+  max-width: 22.125rem;
+}
