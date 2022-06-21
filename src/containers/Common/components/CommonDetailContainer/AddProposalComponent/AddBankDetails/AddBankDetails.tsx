@@ -223,12 +223,13 @@ export const AddBankDetails = (props: IProps) => {
         return;
       }
 
+      const errorCode = error.response?.data?.errorCode;
       let errorMessage = "Something went wrong :/";
 
-      if (error.response?.data?.errorCode === ErrorCode.InvalidBankDetails) {
+      if (errorCode === ErrorCode.InvalidBankDetails) {
         errorMessage = "Please enter correct bank account details and try again.";
       } else if (
-        error.response?.data?.errorCode === ErrorCode.CannotUploadDocs
+        errorCode === ErrorCode.CannotUploadDocs
       ) {
         errorMessage = "Please upload valid identification docs.";
       }
