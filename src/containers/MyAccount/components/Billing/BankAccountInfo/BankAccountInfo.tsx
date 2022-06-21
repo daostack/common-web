@@ -1,7 +1,12 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { useSelector } from "react-redux";
 import { BANKS_OPTIONS } from "@/shared/assets/banks";
-import { Button, ButtonVariant, DeletePrompt } from "@/shared/components";
+import {
+  Modal,
+  Button,
+  ButtonVariant,
+  DeletePrompt,
+} from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { BankAccountDetails } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
@@ -43,7 +48,7 @@ const BankAccountInfo: FC<BankAccountInfoProps> = (props) => {
       </Button>
       <Button
         className="billing-bank-account-info__details-button delete-details"
-        variant={ButtonVariant.SecondaryPurple}
+        variant={ButtonVariant.Secondary}
         onClick={() => setShowDeletePrompt(true)}
         shouldUseFullWidth={isMobileView}
       >
@@ -54,13 +59,18 @@ const BankAccountInfo: FC<BankAccountInfoProps> = (props) => {
 
   return (
     <>
-      {
-        showDeletePrompt && <DeletePrompt
+      <Modal
+        isShowing={showDeletePrompt}
+        onClose={() => true}
+        withoutHeader
+        className="billing-bank-account-info__delete-prompt-modal"
+      >
+        <DeletePrompt
           onCancel={() => setShowDeletePrompt(false)}
           onDelete={onBankAccountDelete}
           isDeletingInProgress={isDeletingInProgress}
         />
-      }
+      </Modal>
       <div className="billing-bank-account-info">
         <div className="billing-bank-account-info__details">
           <ul className="billing-bank-account-info__details-list">
