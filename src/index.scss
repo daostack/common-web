@@ -63,7 +63,7 @@ body {
   .content-wrapper {
     flex: 1 0 auto;
     padding: 0px $content-padding;
-    padding-bottom: 20px;
+    padding-bottom: $content-padding-bottom;
     min-height: 350px;
     margin-top: $header-height;
     display: flex;
@@ -178,7 +178,7 @@ body {
 
     .content-wrapper {
       padding: 0px $content-padding-mobile;
-      padding-bottom: 20px;
+      padding-bottom: $content-padding-bottom;
       margin-top: $header-height-mobile;
 
       .page-title {

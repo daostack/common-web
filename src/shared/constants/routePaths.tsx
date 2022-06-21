@@ -1,5 +1,6 @@
 export enum ROUTE_PATHS {
   HOME = "/",
+  CONTACT_US = "/contact-us",
   MY_ACCOUNT = "/my-account",
   MY_ACCOUNT_PROFILE = "/my-account/profile",
   MY_ACCOUNT_ACTIVITIES = "/my-account/activities",
