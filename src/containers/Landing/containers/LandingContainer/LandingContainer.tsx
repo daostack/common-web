@@ -20,9 +20,9 @@ const LandingContainer = () => {
   return (
     <div className="landing">
       <VideoSection onLaunchClick={moveToContactUsPage} />
+      <ImagineSection />
       <StructureInfoSection />
       <CommonInfoSection />
-      <ImagineSection />
       <CollectiveActionSection onLaunchClick={moveToContactUsPage} />
     </div>
   );
