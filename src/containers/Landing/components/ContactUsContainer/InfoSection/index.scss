@@ -39,13 +39,19 @@
 }
 
 .contact-us-info-section__main-content {
-  max-width: 31.25rem;
+  max-width: 33.125rem;
   display: flex;
   flex-direction: column;
 }
 
+.contact-us-info-section__back-link {
+  display: flex;
+  align-items: center;
+  color: $white;
+}
+
 .contact-us-info-section__title {
-  margin: 0 0 2rem;
+  margin: 1.75rem 0 2rem;
   font-family: NotoSerifSC, serif;
   font-weight: 600;
   font-size: $large;
@@ -55,4 +61,24 @@
 
 .contact-us-info-section__description {
   margin: 0 0 2.125rem;
+}
+
+.contact-us-info-section__list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.contact-us-info-section__list-item {
+  margin-bottom: 2.5rem;
+  display: flex;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.contact-us-info-section__list-item-icon {
+  flex-shrink: 0;
+  margin-right: 0.875rem;
 }
