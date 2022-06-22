@@ -44,6 +44,15 @@
     .whitepaper-members__sub-title {
       font-size: $moderate-med;
       font-weight: bold;
+      margin: 1rem 0;
+    }
+    .whitepaper-members__feature-title {
+      display: flex;
+      align-items: center;
+      margin: 1rem 0;
+      .whitepaper-members__checkmark-icon {
+        margin-right: 1.5rem;
+      }
     }
   }
 }

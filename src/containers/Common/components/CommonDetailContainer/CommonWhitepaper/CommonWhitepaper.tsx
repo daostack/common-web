@@ -25,8 +25,6 @@ export default function CommonWhitepaper() {
           </div>
           {tab === Tabs.Members ? <WhitepaperMembers /> : <WhitepaperProposals />}
         </div>
-
-
       )}
       <div className="common-whitepaper__see-more" onClick={() => setToggle(!toggle)}>See {toggle ? "less <" : "more >"}</div>
     </div>

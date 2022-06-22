@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { selectGovernance } from "@/containers/Common/store/selectors";
+import { formatCamelSnakeCase } from "../../utils";
 import "./index.scss";
 
 export default function WhitepaperMembers() {
@@ -22,18 +23,26 @@ export default function WhitepaperMembers() {
 
   const renderContent = () => {
     const circle = governance?.circles.filter(circle => circle.name === selectedMember)[0];
-    const proposals = Object.keys(circle?.allowedProposals!).map((proposal, index) => {
-      return <span key={index}>{proposal}</span>
+    const allowedProposals = Object.keys(circle?.allowedProposals!).map((proposal, index) => {
+      return (
+        <span key={index} className="whitepaper-members__feature-title">
+          <img src="/icons/check.png" className="whitepaper-members__checkmark-icon" alt="checkmark" />
+          {formatCamelSnakeCase(proposal)}
+        </span>)
     });
-    const actions = Object.keys(circle?.allowedActions!).map((action, index) => {
-      return <span key={index}>{action}</span>
+    const allowedActions = Object.keys(circle?.allowedActions!).map((action, index) => {
+      return (
+        <span key={index} className="whitepaper-members__feature-title">
+          <img src="/icons/check.png" className="whitepaper-members__checkmark-icon" alt="checkmark" />
+          {formatCamelSnakeCase(action)}
+        </span>)
     })
     return (
       <div className="whitepaper-members__content">
         <div className="whitepaper-members__sub-title">Allowed Proposals</div>
-        {proposals}
+        {allowedProposals}
         <div className="whitepaper-members__sub-title">Allowed Actions</div>
-        {actions}
+        {allowedActions}
       </div>
     )
   }
