@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router";
+import landingVideoPosterSrc from "@/shared/assets/images/landing-video-poster.jpeg";
 import landingVideoSrc from "@/shared/assets/videos/landing-video.mp4";
 import { Button } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
@@ -23,7 +24,7 @@ const LandingContainer = () => {
             loop
             muted
             playsInline
-            poster=""
+            poster={landingVideoPosterSrc}
             preload="auto"
           >
             <source src={landingVideoSrc} type="video/mp4" />
