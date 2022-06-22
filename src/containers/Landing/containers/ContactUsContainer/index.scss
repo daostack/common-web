@@ -1,0 +1,17 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+.contact-us {
+  flex: 1 0 auto;
+  margin: 0px -#{$content-padding} -#{$content-padding-bottom};
+  color: $secondary-blue;
+
+  @include big-phone {
+    margin: 0px -#{$content-padding-mobile} -#{$content-padding-bottom};
+  }
+}
+
+.contact-us__content {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
