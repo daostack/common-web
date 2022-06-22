@@ -5,6 +5,7 @@ import landingVideoSrc from "@/shared/assets/videos/landing-video.mp4";
 import { Button } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import {
+  CollectiveActionSection,
   CommonInfoSection,
   ImagineSection,
   StructureInfoSection,
@@ -49,6 +50,7 @@ const LandingContainer = () => {
       <StructureInfoSection />
       <CommonInfoSection />
       <ImagineSection />
+      <CollectiveActionSection onLaunchClick={moveToContactUsPage} />
     </div>
   );
 };
