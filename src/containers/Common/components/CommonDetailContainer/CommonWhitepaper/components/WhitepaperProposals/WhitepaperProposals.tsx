@@ -4,13 +4,13 @@ import { selectGovernance } from "@/containers/Common/store/selectors";
 import WhitepaperProposalCard from "./components/WhitepaperProposalCard/WhitepaperProposalCard";
 import "./index.scss";
 
-
+// TODO: temporary until we have a design for the other proposal types
 const PROPOSALS_TO_RENDER = ["FUNDS_ALLOCATION", "MEMBER_ADMITTANCE"];
 
 export default function WhitepaperProposals() {
   const governance = useSelector(selectGovernance());
 
-  const proposals = [] as any;
+  const proposals: JSX.Element[] | undefined = [];
   for (const proposal in governance?.proposals) {
     if (PROPOSALS_TO_RENDER.includes(proposal)) {
       proposals.push(

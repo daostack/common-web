@@ -23,9 +23,19 @@
     }
   }
   .whitepaper-proposal-card__content {
+    display: flex;
+    flex-direction: column;
     padding: 1.25rem;
     box-shadow: 0rem 0.1875rem 0.5rem rgba(0, 26, 54, 0.08);
     border-radius: 0.875rem;
     margin-bottom: 1.5rem;
+    color: $light-gray-2;
+    .whitepaper-proposal-card__content-sub-title {
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+    .whitepaper-proposal-card__content-sub-title:first-child {
+      margin-top: unset;
+    }
   }
 }
