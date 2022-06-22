@@ -26,7 +26,11 @@ import {
   AddMessageToDiscussionDto,
   DeleteCommon,
   LeaveCommon,
-  CreateProposal, ModerateModalAction, CommonsStateType,
+  CreateProposal,
+  ModerateModalAction,
+  CommonsStateType,
+  ReportContentPayload,
+  HideContentPayload,
 } from "@/containers/Common/interfaces";
 import {
   CreateVotePayload,
@@ -43,11 +47,7 @@ export const createGovernance = createAsyncAction(
   CommonsActionTypes.CREATE_GOVERNANCE,
   CommonsActionTypes.CREATE_GOVERNANCE_SUCCESS,
   CommonsActionTypes.CREATE_GOVERNANCE_FAILURE
-)<
-  PayloadWithCallback<CreateGovernancePayload, void, Error>,
-  void,
-  Error
->();
+)<PayloadWithCallback<CreateGovernancePayload, void, Error>, void, Error>();
 
 export const getCommonsList = createAsyncAction(
   CommonsActionTypes.GET_COMMONS_LIST,
@@ -276,11 +276,7 @@ export const updateBankDetails = createAsyncAction(
   CommonsActionTypes.UPDATE_BANK_DETAILS_SUCCESS,
   CommonsActionTypes.UPDATE_BANK_DETAILS_FAILURE
 )<
-  PayloadWithCallback<
-    Partial<BankAccountDetails>,
-    BankAccountDetails,
-    Error
-  >,
+  PayloadWithCallback<Partial<BankAccountDetails>, BankAccountDetails, Error>,
   BankAccountDetails,
   Error
 >();
@@ -374,5 +370,17 @@ export const getUserCommons = createAsyncAction(
 )<PayloadWithOptionalCallback<string, Common[], Error>, Common[], Error>();
 
 export const openModerateModal = createStandardAction(
-    CommonsActionTypes.OPEN_MODERATE_MODAL
+  CommonsActionTypes.OPEN_MODERATE_MODAL
 )<CommonsStateType["moderateModal"]>();
+
+export const reportItem = createAsyncAction(
+  CommonsActionTypes.REPORT_ITEM,
+  CommonsActionTypes.REPORT_ITEM_SUCCESS,
+  CommonsActionTypes.REPORT_ITEM_FAILURE
+)<ReportContentPayload, void, Error>();
+
+export const hideItem = createAsyncAction(
+  CommonsActionTypes.HIDE_ITEM,
+  CommonsActionTypes.HIDE_ITEM_SUCCESS,
+  CommonsActionTypes.HIDE_ITEM_FAILURE
+)<HideContentPayload, void, Error>();

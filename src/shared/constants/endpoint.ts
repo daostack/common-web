@@ -19,4 +19,6 @@ export const ApiEndpoint = {
   CreateUser: "/users/create",
   SendEmail: "/notifications/send-email",
   SeenNotification: "/notifications/seen",
+  ReportItem: "/moderation/report",
+  HideItem: "/moderation/hide",
 };

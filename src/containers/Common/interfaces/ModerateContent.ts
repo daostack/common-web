@@ -22,7 +22,7 @@ export interface ReportContentPayload {
 export interface HideContentPayload {
   itemId: string;
   commonId: string;
-  userId: string;
+  userId?: string;
   type: MODERATION_TYPES;
 }
 

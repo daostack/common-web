@@ -56,6 +56,8 @@ import {
   getGovernance as getGovernanceApi,
   getCommonMember as getCommonMemberApi,
   getUserCommons as getUserCommonsApi,
+  reportItemApi,
+  hideItemApi,
 } from "./api";
 import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -236,7 +238,9 @@ export function* loadCommonDiscussionList(): Generator {
 
     const loadedDiscussions = discussions.map((d) => {
       const newDiscussion = { ...d };
-      newDiscussion.discussionMessage = dMessages.filter((dM) => dM.discussionId === d.id);
+      newDiscussion.discussionMessage = dMessages.filter(
+        (dM) => dM.discussionId === d.id
+      );
       newDiscussion.owner = owners.find((o) => o.uid === d.ownerId);
       return newDiscussion;
     });
@@ -312,8 +316,12 @@ export function* loadProposalList(): Generator {
 
     const loadedProposals = proposals.map((d) => {
       const newProposal = { ...d };
-      newProposal.discussionMessage = dMessages.filter((dM) => dM.discussionId === d.id);
-      newProposal.proposer = owners.find((o) => o.uid === d.data.args.proposerId);
+      newProposal.discussionMessage = dMessages.filter(
+        (dM) => dM.discussionId === d.id
+      );
+      newProposal.proposer = owners.find(
+        (o) => o.uid === d.data.args.proposerId
+      );
       return newProposal;
     });
 
@@ -462,7 +470,9 @@ export function* addMessageToDiscussionSaga(
           ),
         };
 
-        store.dispatch(actions.loadDisscussionDetail.request(updatedDiscussion));
+        store.dispatch(
+          actions.loadDisscussionDetail.request(updatedDiscussion)
+        );
         store.dispatch(actions.getCommonsList.request());
       }
     );
@@ -554,19 +564,15 @@ export function* createFundingProposal(
       type: ProposalsTypes.FUNDS_ALLOCATION,
     })) as FundsAllocation;
 
-    yield call(
-      subscribeToCommonProposal,
-      commonId,
-      async () => {
-        const ds = await fetchCommonProposals(commonId);
+    yield call(subscribeToCommonProposal, commonId, async () => {
+      const ds = await fetchCommonProposals(commonId);
 
-        store.dispatch(actions.setProposals(ds));
-        store.dispatch(actions.loadProposalList.request());
-        store.dispatch(stopLoading());
-        action.payload.callback(null);
-        store.dispatch(actions.getCommonsList.request());
-      }
-    );
+      store.dispatch(actions.setProposals(ds));
+      store.dispatch(actions.loadProposalList.request());
+      store.dispatch(stopLoading());
+      action.payload.callback(null);
+      store.dispatch(actions.getCommonsList.request());
+    });
 
     yield put(actions.createFundingProposal.success(fundingProposal));
     yield put(stopLoading());
@@ -697,7 +703,8 @@ export function* getBankDetails(
 ): Generator {
   try {
     yield put(startLoading());
-    const bankAccountDetails = (yield getBankDetailsApi()) as BankAccountDetails;
+    const bankAccountDetails =
+      (yield getBankDetailsApi()) as BankAccountDetails;
 
     yield put(actions.getBankDetails.success(bankAccountDetails));
     action.payload.callback(null, bankAccountDetails);
@@ -738,7 +745,8 @@ export function* updateBankDetails(
   try {
     yield put(startLoading());
     yield updateBankDetailsApi(action.payload.payload);
-    const bankAccountDetails = (yield getBankDetailsApi()) as BankAccountDetails;
+    const bankAccountDetails =
+      (yield getBankDetailsApi()) as BankAccountDetails;
 
     yield put(actions.updateBankDetails.success(bankAccountDetails));
     action.payload.callback(null, bankAccountDetails);
@@ -1063,6 +1071,42 @@ export function* getUserCommons({
   }
 }
 
+export function* reportItemSaga(
+  action: ReturnType<typeof actions.reportItem.request>
+): Generator {
+  try {
+    const moderateResponse = (yield call(
+      reportItemApi,
+      action.payload
+    )) as Awaited<any>;
+
+    yield put(actions.reportItem.success());
+    // action.payload.callback(null, common);
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.reportItem.failure(error));
+    }
+  }
+}
+
+export function* hideItemSaga(
+  action: ReturnType<typeof actions.hideItem.request>
+): Generator {
+  try {
+    const hideItemResponse = (yield call(
+      hideItemApi,
+      action.payload
+    )) as Awaited<any>;
+
+    yield put(actions.hideItem.success());
+    // action.payload.callback(null, common);
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.hideItem.failure(error));
+    }
+  }
+}
+
 export function* commonsSaga() {
   yield takeLatest(actions.createGovernance.request, createGovernance);
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
@@ -1122,6 +1166,8 @@ export function* commonsSaga() {
   yield takeLatest(actions.getGovernance.request, getGovernance);
   yield takeLatest(actions.getCommonMember.request, getCommonMember);
   yield takeLatest(actions.getUserCommons.request, getUserCommons);
+  yield takeLatest(actions.hideItem.request, hideItemSaga);
+  yield takeLatest(actions.reportItem.request, reportItemSaga);
 }
 
 export default commonsSaga;

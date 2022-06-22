@@ -1,12 +1,16 @@
 import React, { useCallback, useState } from "react";
 import { Formik } from "formik";
-import { ElementDropdownMenuItems, Modal } from "@/shared/components";
+import { Modal } from "@/shared/components";
 import {
   ModerateModalAction,
   MODERATION_TYPES,
   ModerationActionType,
 } from "@/containers/Common/interfaces";
-import { openModerateModal } from "@/containers/Common/store/actions";
+import {
+  hideItem,
+  openModerateModal,
+  reportItem,
+} from "@/containers/Common/store/actions";
 import { useDispatch, useSelector } from "react-redux";
 import "./index.scss";
 import { Input } from "@/shared/components/Form";
@@ -71,12 +75,14 @@ const ModerateModal = ({
 
   const getTitle = () => {
     const title =
-      moderationModalData.actionType === "hide" ? "Hide " : "Report ";
+      moderationModalData.actionType === ModerationActionType.hide
+        ? "Hide "
+        : "Report ";
     return title + getEntityType();
   };
 
   const getDescription = () => {
-    if (moderationModalData.actionType !== "hide") {
+    if (moderationModalData.actionType !== ModerationActionType.hide) {
       return (
         <>
           <div className="description-title">
@@ -98,7 +104,7 @@ const ModerateModal = ({
   };
 
   const submitModerateForm = (values: ModerateModal) => {
-    if (moderationModalData.actionType !== "report") {
+    if (moderationModalData.actionType === "report") {
       const payload = {
         moderationData: {
           reasons: values.reason,
@@ -108,7 +114,7 @@ const ModerateModal = ({
         userId: user?.uid,
         type: moderationModalData.type,
       };
-
+      dispatch(reportItem.request(payload));
       return;
     }
     const payload = {
@@ -117,6 +123,7 @@ const ModerateModal = ({
       userId: user?.uid,
       type: moderationModalData.type,
     };
+    dispatch(hideItem.request(payload));
   };
 
   return (

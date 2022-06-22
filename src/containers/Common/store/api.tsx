@@ -40,6 +40,8 @@ import {
   ImmediateContributionData,
   ImmediateContributionResponse,
   LeaveCommon,
+  ReportContentPayload,
+  HideContentPayload,
 } from "@/containers/Common/interfaces";
 import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
 import {
@@ -90,7 +92,9 @@ export async function fetchCommonProposals(commonId: string) {
   );
 }
 
-export async function fetchCommonContributions(commonId: string): Promise<Payment[]> {
+export async function fetchCommonContributions(
+  commonId: string
+): Promise<Payment[]> {
   const payments = await firebase
     .firestore()
     .collection(Collection.Payments)
@@ -694,7 +698,9 @@ export const getUserCommons = async (userId: string): Promise<Common[]> => {
     .filter((common) => common.state === CommonState.ACTIVE);
 };
 
-export const verifyIsUserMemberOfAnyCommon = async (userId: string): Promise<boolean> => {
+export const verifyIsUserMemberOfAnyCommon = async (
+  userId: string
+): Promise<boolean> => {
   const querySnapshot = await firebase
     .firestore()
     .collectionGroup(SubCollections.Members)
@@ -717,9 +723,7 @@ export const proposalVotesSubCollection = (proposalId: string) => {
         return snapshot.data();
       },
 
-      toFirestore(
-        object: Partial<Vote>
-      ): firebase.firestore.DocumentData {
+      toFirestore(object: Partial<Vote>): firebase.firestore.DocumentData {
         return object;
       },
     });
@@ -729,6 +733,25 @@ export const getVote = async (
   proposalId: string,
   userId: string
 ): Promise<Vote | null> => {
-  const [vote] = (await proposalVotesSubCollection(proposalId).where("voterId", "==", userId).get()).docs;
+  const [vote] = (
+    await proposalVotesSubCollection(proposalId)
+      .where("voterId", "==", userId)
+      .get()
+  ).docs;
   return vote?.data() || null;
 };
+
+export async function reportItemApi(
+  requestData: ReportContentPayload
+): Promise<any> {
+  const { data } = await Api.post(ApiEndpoint.ReportItem, requestData);
+
+  return data;
+}
+export async function hideItemApi(
+  requestData: HideContentPayload
+): Promise<any> {
+  const { data } = await Api.post(ApiEndpoint.HideItem, requestData);
+
+  return data;
+}
