@@ -6,6 +6,7 @@ import { Button } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import {
   CommonInfoSection,
+  ImagineSection,
   StructureInfoSection,
 } from "../../components/LandingContainer";
 import "./index.scss";
@@ -47,6 +48,7 @@ const LandingContainer = () => {
       </section>
       <StructureInfoSection />
       <CommonInfoSection />
+      <ImagineSection />
     </div>
   );
 };
