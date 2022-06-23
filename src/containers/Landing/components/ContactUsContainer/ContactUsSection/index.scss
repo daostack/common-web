@@ -7,6 +7,11 @@
   flex-direction: column;
   align-items: center;
   background-color: $light-gray-11;
+
+  @include big-phone {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
 }
 
 .contact-us-contact-us-section__content {

@@ -38,6 +38,10 @@
   line-height: 120%;
   letter-spacing: 0.01em;
   color: $white;
+
+  @include big-phone {
+    padding: 2rem 1.25rem 3rem;
+  }
 }
 
 .contact-us-info-section__main-content {
