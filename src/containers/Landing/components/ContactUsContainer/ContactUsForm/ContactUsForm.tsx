@@ -6,6 +6,7 @@ import { Button, Loader } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
 import { Form, TextField } from "@/shared/components/Form/Formik";
 import { SUPPORT_EMAIL } from "@/shared/constants";
+import { useNotification } from "@/shared/hooks";
 import { EmailType } from "@/shared/interfaces/SendEmail";
 import validationSchema from "./validationSchema";
 import "./index.scss";
@@ -31,6 +32,7 @@ const INITIAL_VALUES: FormValues = {
 const ContactUsForm: FC = () => {
   const dispatch = useDispatch();
   const [errorText, setErrorText] = useState("");
+  const { notify } = useNotification();
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values, { setSubmitting }) => {
@@ -55,6 +57,8 @@ const ContactUsForm: FC = () => {
           callback: (error) => {
             if (error) {
               setErrorText(error?.message ?? "Something went wrong");
+            } else {
+              notify("The form is successfully sent!");
             }
 
             setSubmitting(false);
@@ -62,7 +66,7 @@ const ContactUsForm: FC = () => {
         })
       );
     },
-    [dispatch]
+    [dispatch, notify]
   );
 
   return (
