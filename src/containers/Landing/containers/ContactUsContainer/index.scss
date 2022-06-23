@@ -4,6 +4,8 @@
 .contact-us {
   flex: 1 0 auto;
   margin: 0px -#{$content-padding} -#{$content-padding-bottom};
+  display: flex;
+  flex-direction: column;
   color: $secondary-blue;
 
   @include big-phone {
@@ -12,6 +14,7 @@
 }
 
 .contact-us__content {
+  flex: 1 0 auto;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
