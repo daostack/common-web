@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { Formik } from "formik";
-import { Modal } from "@/shared/components";
+import { Loader, Modal } from "@/shared/components";
 import {
   ModerateModalAction,
   MODERATION_TYPES,
@@ -16,6 +16,8 @@ import "./index.scss";
 import { Input } from "@/shared/components/Form";
 import * as Yup from "yup";
 import { selectUser } from "@/containers/Auth/store/selectors";
+import { getLoading } from "@/shared/store/selectors";
+import { useNotification } from "@/shared/hooks";
 
 interface ModerateModalProps {
   onClose: () => void;
@@ -51,15 +53,20 @@ const ModerateModal = ({
   commonId,
 }: ModerateModalProps) => {
   const user = useSelector(selectUser());
+  const { notify } = useNotification();
+  const loading = useSelector(getLoading());
   const dispatch = useDispatch();
   const [formValues] = useState<ModerateModal>({
     reason: "",
     moderatorNote: "",
   });
 
-  const closeModerateModalHandler = useCallback(() => {
+  const closeModerateModalHandler = useCallback((message?: string) => {
     onClose();
     dispatch(openModerateModal(null));
+    if (message) {
+      notify(message);
+    }
   }, []);
 
   const getEntityType = () => {
@@ -114,7 +121,9 @@ const ModerateModal = ({
         userId: user?.uid,
         type: moderationModalData.type,
       };
-      dispatch(reportItem.request(payload));
+      dispatch(
+        reportItem.request({ payload, callback: closeModerateModalHandler })
+      );
       return;
     }
     const payload = {
@@ -123,7 +132,9 @@ const ModerateModal = ({
       userId: user?.uid,
       type: moderationModalData.type,
     };
-    dispatch(hideItem.request(payload));
+    dispatch(
+      hideItem.request({ payload, callback: closeModerateModalHandler })
+    );
   };
 
   return (
@@ -145,6 +156,7 @@ const ModerateModal = ({
             <div className="moderate-title">{getTitle()}</div>
             <div className="moderate-description">{getDescription()}</div>
             <div className="moderate-content">
+              {loading ? <Loader /> : null}
               <div className="reasons">
                 {reasons.map((r) => (
                   <div
@@ -175,7 +187,7 @@ const ModerateModal = ({
               <div className="action-wrapper">
                 <button
                   className="button-blue"
-                  disabled={!formikProps.isValid}
+                  disabled={!formikProps.isValid || loading}
                   type="submit"
                   onClick={formikProps.submitForm}
                 >

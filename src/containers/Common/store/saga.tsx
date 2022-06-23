@@ -1075,17 +1075,19 @@ export function* reportItemSaga(
   action: ReturnType<typeof actions.reportItem.request>
 ): Generator {
   try {
-    const moderateResponse = (yield call(
-      reportItemApi,
-      action.payload
-    )) as Awaited<any>;
+    yield put(startLoading());
+
+    yield call(reportItemApi, action.payload.payload);
 
     yield put(actions.reportItem.success());
-    // action.payload.callback(null, common);
+    action.payload.callback("Your report was accepted");
   } catch (error) {
+    action.payload.callback("Something went wrong");
     if (isError(error)) {
       yield put(actions.reportItem.failure(error));
     }
+  } finally {
+    yield put(stopLoading());
   }
 }
 
@@ -1093,17 +1095,21 @@ export function* hideItemSaga(
   action: ReturnType<typeof actions.hideItem.request>
 ): Generator {
   try {
-    const hideItemResponse = (yield call(
-      hideItemApi,
-      action.payload
-    )) as Awaited<any>;
+    yield put(startLoading());
+
+    yield call(hideItemApi, action.payload.payload);
 
     yield put(actions.hideItem.success());
-    // action.payload.callback(null, common);
+    action.payload.callback(
+      `Your ${action.payload.payload.type} was successfully hidden`
+    );
   } catch (error) {
+    action.payload.callback("Something went wrong");
     if (isError(error)) {
       yield put(actions.hideItem.failure(error));
     }
+  } finally {
+    yield put(stopLoading());
   }
 }
 

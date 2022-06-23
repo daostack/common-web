@@ -27,7 +27,6 @@ import {
   DeleteCommon,
   LeaveCommon,
   CreateProposal,
-  ModerateModalAction,
   CommonsStateType,
   ReportContentPayload,
   HideContentPayload,
@@ -377,10 +376,18 @@ export const reportItem = createAsyncAction(
   CommonsActionTypes.REPORT_ITEM,
   CommonsActionTypes.REPORT_ITEM_SUCCESS,
   CommonsActionTypes.REPORT_ITEM_FAILURE
-)<ReportContentPayload, void, Error>();
+)<
+  { payload: ReportContentPayload; callback: (message?: string) => void },
+  void,
+  Error
+>();
 
 export const hideItem = createAsyncAction(
   CommonsActionTypes.HIDE_ITEM,
   CommonsActionTypes.HIDE_ITEM_SUCCESS,
   CommonsActionTypes.HIDE_ITEM_FAILURE
-)<HideContentPayload, void, Error>();
+)<
+  { payload: HideContentPayload; callback: (message?: string) => void },
+  void,
+  Error
+>();
