@@ -9,4 +9,5 @@ export enum FORM_ERROR_MESSAGES {
   LOWERCASE = "At least 1 lowercase letter",
   DIGIT = "At least 1 digit",
   ONLY_TEXT = "must be without numbers",
+  PHONE_NUMBER = "Please enter a valid phone number",
 }

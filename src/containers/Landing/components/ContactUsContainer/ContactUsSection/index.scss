@@ -1,0 +1,24 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.contact-us-contact-us-section {
+  padding: 4.5rem 1.25rem 5.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: $light-gray-11;
+}
+
+.contact-us-contact-us-section__content {
+  width: 100%;
+  max-width: 25.75rem;
+}
+
+.contact-us-contact-us-section__title {
+  margin: 0 0 2.125rem;
+  font-family: NotoSerifSC, serif;
+  font-weight: 600;
+  font-size: $large;
+  line-height: 133%;
+  letter-spacing: unset;
+}

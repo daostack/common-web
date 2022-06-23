@@ -1,7 +1,10 @@
 import React from "react";
 import { useHistory } from "react-router";
 import { ROUTE_PATHS } from "@/shared/constants";
-import { InfoSection } from "../../components/ContactUsContainer";
+import {
+  ContactUsSection,
+  InfoSection,
+} from "../../components/ContactUsContainer";
 import "./index.scss";
 
 const ContactUsContainer = () => {
@@ -15,7 +18,7 @@ const ContactUsContainer = () => {
     <div className="contact-us">
       <div className="contact-us__content">
         <InfoSection onGoBack={moveToHomePage} />
-        <InfoSection onGoBack={moveToHomePage} />
+        <ContactUsSection />
       </div>
     </div>
   );
