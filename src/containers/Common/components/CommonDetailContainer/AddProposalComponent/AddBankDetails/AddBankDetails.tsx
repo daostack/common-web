@@ -44,6 +44,7 @@ interface IProps {
   descriptionClassName?: string;
   title?: string | null;
   onBankDetails: (data: BankAccountDetails) => void;
+  onBankDetailsAfterError?: (data: BankAccountDetails) => void;
   initialBankAccountDetails?: BankAccountDetails | null;
   onCancel?: () => void;
 }
@@ -135,6 +136,7 @@ export const AddBankDetails = (props: IProps) => {
     descriptionClassName,
     title,
     onBankDetails,
+    onBankDetailsAfterError,
     initialBankAccountDetails,
     onCancel,
   } = props;
@@ -224,6 +226,8 @@ export const AddBankDetails = (props: IProps) => {
       }
 
       const errorCode = error.response?.data?.errorCode;
+      const { errorDescription, bankAccountDetails } =
+        error.response?.data?.data || {};
       let errorMessage = "Something went wrong :/";
 
       if (errorCode === ErrorCode.InvalidBankDetails) {
@@ -234,9 +238,15 @@ export const AddBankDetails = (props: IProps) => {
         errorMessage = "Please upload valid identification docs.";
       }
 
+      errorMessage = errorDescription || errorMessage;
+
+      if (!isEditing && onBankDetailsAfterError && bankAccountDetails) {
+        onBankDetailsAfterError(bankAccountDetails);
+      }
+
       setError(errorMessage);
     },
-    [onBankDetails, notify, isEditing]
+    [onBankDetails, notify, isEditing, onBankDetailsAfterError]
   );
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(

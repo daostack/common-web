@@ -7,14 +7,7 @@ import React, {
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 
-import {
-  Dropdown,
-  MenuButton,
-  ElementDropdownMenuItems,
-  DropdownOption,
-  DropdownStyles,
-  ShareModal,
-} from "@/shared/components";
+import { MenuButton, ShareModal } from "@/shared/components";
 import {
   DynamicLinkType,
   Orientation,
@@ -36,6 +29,12 @@ import {
   Discussion,
   DiscussionMessage,
 } from "@/shared/models";
+import {
+  Dropdown,
+  ElementDropdownMenuItems,
+  DropdownOption,
+  DropdownStyles,
+} from "../Dropdown";
 import "./index.scss";
 
 const ElementDropdownMenuItemsList: DropdownOption[] = [
