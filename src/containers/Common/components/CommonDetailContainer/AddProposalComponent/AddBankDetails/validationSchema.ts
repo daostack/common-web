@@ -3,8 +3,6 @@ import { NUMBERS_ONLY_REGEXP } from "@/shared/constants";
 import { Gender, GENDER_OPTIONS } from "@/shared/models/Gender";
 import { AVAILABLE_COUNTRIES, NAME_REGEXP } from "./constants";
 
-const ISRAEL_COUNTRY_CODE = 'IL';
-
 const schema = Yup.object().shape({
   idNumber: Yup.string()
     .required("Please enter your ID number")
@@ -20,7 +18,7 @@ const schema = Yup.object().shape({
   gender: Yup.number()
     .oneOf(GENDER_OPTIONS.map((option) => option.value as Gender))
     .required("Please choose gender"),
-  phoneNumber: Yup.string().phone(ISRAEL_COUNTRY_CODE, 'Phone number must be a valid')
+  phoneNumber: Yup.string().phone('Phone number must be a valid')
     .required("Please enter a phone number"),
   email: Yup.string()
     .required("Please enter your email")

@@ -3,8 +3,9 @@ import gPhoneNumber from 'google-libphonenumber';
 
 const phoneUtil = gPhoneNumber.PhoneNumberUtil.getInstance();
 
+const ISRAEL_COUNTRY_CODE = 'IL';
+
 Yup.addMethod(Yup.string, 'phone', function yupPhone(
-  countryCode?: string,
   errorMessage = ''
 ) {
   const errMsg =
@@ -14,13 +15,13 @@ Yup.addMethod(Yup.string, 'phone', function yupPhone(
       : '${path} must be a valid phone number.';
   return this.test('phone', errMsg, (value: string) => {
     try {
-      const phoneNumber = phoneUtil.parseAndKeepRawInput(value, countryCode);
+      const phoneNumber = phoneUtil.parseAndKeepRawInput(value, ISRAEL_COUNTRY_CODE);
 
       if (!phoneUtil.isPossibleNumber(phoneNumber)) {
         return false;
       }
 
-      return phoneUtil.isValidNumberForRegion(phoneNumber, countryCode);
+      return phoneUtil.isValidNumberForRegion(phoneNumber, ISRAEL_COUNTRY_CODE);
     } catch {
       return false;
     }
