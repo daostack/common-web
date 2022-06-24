@@ -88,7 +88,7 @@ export default function Review({
             onClick={handleContinueClick}
             shouldUseFullWidth={isMobileView}
           >
-            Personal Contribution
+            Create a Common
           </Button>
         </div>
       </div>
