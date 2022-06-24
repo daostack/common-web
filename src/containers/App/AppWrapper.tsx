@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import { Router } from "react-router-dom";
 import { Provider } from "react-redux";
 import { history, store } from "@/shared/appConfig";
+import '@/shared/utils/yup';
 
 if (process.env.REACT_APP_ENV === "dev") {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
