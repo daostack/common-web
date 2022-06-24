@@ -97,10 +97,22 @@ export default function ChatComponent({
   );
 
   useEffect(() => {
-    if(discussionMessage.length || isNewMessageLoading)
+    if (!highlightedMessageId)
       scrollToContainerBottom();
+  }, [highlightedMessageId, scrollToContainerBottom]);
+
+  useEffect(() => {
+    if (
+      (
+        Boolean(prevDiscussionMessages)
+        && (prevDiscussionMessages?.length !== discussionMessage.length)
+      )
+      || isNewMessageLoading
+    ) scrollToContainerBottom();
   }, [
     scrollToContainerBottom,
+    prevDiscussionMessages,
+    prevDiscussionMessages?.length,
     discussionMessage.length,
     isNewMessageLoading
   ]);

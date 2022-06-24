@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useState,
   useEffect,
+  useMemo,
 } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
@@ -37,40 +38,6 @@ import {
 } from "../Dropdown";
 import "./index.scss";
 
-const ElementDropdownMenuItemsList: DropdownOption[] = [
-  {
-    text: (
-      <>
-        <ShareIcon className="share-icon"/>
-        <span>Share</span>
-      </>
-    ),
-    searchText: "Share",
-    value: ElementDropdownMenuItems.Share,
-  },
-  {
-    text: (
-      <>
-        <CopyLinkIcon />
-        <span>Copy link</span>
-      </>
-    ),
-    searchText: "Copy link",
-    value: ElementDropdownMenuItems.CopyLink,
-  },
-  //TODO: "Reports" dev scope
-  // {
-  //   text: (
-  //     <>
-  //       <ReportIcon />
-  //       <span>Report</span>
-  //     </>
-  //   ),
-  //   searchText: "Report",
-  //   value: ElementDropdownMenuItems.Report,
-  // },
-];
-
 interface ElementDropdownProps {
   linkType: DynamicLinkType;
   elem: Common | Proposal | Discussion | DiscussionMessage;
@@ -101,22 +68,68 @@ const ElementDropdown: FC<ElementDropdownProps> = (
   const { isShowing, onOpen, onClose } = useModal(false);
   const isMobileView = (screenSize === ScreenSize.Mobile);
 
-  const handleMenuItemSelect = useCallback((value: unknown) => {
-    if (value === ElementDropdownMenuItems.Report) return; //TODO: "Reports" dev scope
+  const ElementDropdownMenuItemsList: DropdownOption[] = useMemo(
+    () =>
+      [
+        {
+          text: (
+            <>
+              <ShareIcon className="share-icon"/>
+              <span>Share</span>
+            </>
+          ),
+          searchText: "Share",
+          value: ElementDropdownMenuItems.Share,
+        },
+        {
+          text: (
+            <div
+              className="dropdown-copy-link"
+              onClick={() => copyToClipboard(linkURL || "")}
+            >
+              <CopyLinkIcon />
+              <span>Copy link</span>
+            </div>
+          ),
+          searchText: "Copy link",
+          value: ElementDropdownMenuItems.CopyLink,
+        },
+        //TODO: "Reports" dev scope
+        // {
+        //   text: (
+        //     <>
+        //       <ReportIcon />
+        //       <span>Report</span>
+        //     </>
+        //   ),
+        //   searchText: "Report",
+        //   value: ElementDropdownMenuItems.Report,
+        // },
+      ],
+      [linkURL]
+  );
 
-      if (!linkURL) {
-        handleOpen();
-        setIsShareLinkGenerating(true);
-      }
+  const handleMenuToggle = useCallback((isOpen: boolean) => {
+    if (!linkURL) {
+      handleOpen();
+      setIsShareLinkGenerating(true);
+    }
+
+    if (onMenuToggle)
+      onMenuToggle(isOpen);
+  }, [
+    linkURL,
+    onMenuToggle,
+    handleOpen,
+    setIsShareLinkGenerating
+  ]);
+
+  const handleMenuItemSelect = useCallback((value: unknown) => {
+      if (value === ElementDropdownMenuItems.Report) return; //TODO: "Reports" dev scope
 
       setSelectedItem(value);
     },
-    [
-      setIsShareLinkGenerating,
-      handleOpen,
-      setSelectedItem,
-      linkURL
-    ]
+    [setSelectedItem]
   );
 
   useEffect(() => {
@@ -138,7 +151,6 @@ const ElementDropdown: FC<ElementDropdownProps> = (
         onOpen();
         break;
       case ElementDropdownMenuItems.CopyLink:
-        copyToClipboard(linkURL);
         notify("The link has copied!");
         break;
       case ElementDropdownMenuItems.Report: //TODO: "Reports" dev scope
@@ -151,7 +163,8 @@ const ElementDropdown: FC<ElementDropdownProps> = (
     notify,
     isShareLinkGenerating,
     linkURL,
-    onOpen
+    onOpen,
+    setSelectedItem,
   ]);
 
   return (
@@ -159,7 +172,7 @@ const ElementDropdown: FC<ElementDropdownProps> = (
       <Dropdown
         options={ElementDropdownMenuItemsList}
         menuButton={<MenuButton variant={variant} />}
-        onMenuToggle={onMenuToggle}
+        onMenuToggle={handleMenuToggle}
         className={classNames("element-dropdown__menu-wrapper", className)}
         shouldBeFixed={false}
         onSelect={handleMenuItemSelect}
