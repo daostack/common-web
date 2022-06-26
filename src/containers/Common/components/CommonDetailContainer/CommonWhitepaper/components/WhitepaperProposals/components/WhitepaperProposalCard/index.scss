@@ -34,8 +34,28 @@
       font-weight: bold;
       margin-top: 1rem;
     }
+    .whitepaper-proposal-card__voters-wrapper {
+      display: flex;
+      margin: 1rem 0;
+      .whitepaper-proposal-card__voter {
+        margin-left: 1rem;
+      }
+    }
     .whitepaper-proposal-card__content-sub-title:first-child {
       margin-top: unset;
+    }
+    .whitepaper-proposal-card__content-duration-wrapper {
+      display: flex;
+      .whitepaper-proposal-card__voting {
+        margin-left: 5rem;
+        color: $purple;
+      }
+    }
+    .arrow {
+      margin-right: 0.5rem;
+      &.object {
+        margin-left: 2rem;
+      }
     }
   }
 }
