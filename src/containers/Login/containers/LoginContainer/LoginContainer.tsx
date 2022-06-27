@@ -9,7 +9,7 @@ import React, {
 import { useDispatch, useSelector } from "react-redux";
 import { Modal } from "@/shared/components";
 import { AuthProvider, ErrorCode, ScreenSize } from "@/shared/constants";
-import { useQueryParams } from "@/shared/hooks";
+import { useQueryParams, useRemoveQueryParams } from "@/shared/hooks";
 import { ModalProps, ModalType } from "@/shared/interfaces";
 import { getScreenSize } from "@/shared/store/selectors";
 import { isFirebaseError } from "@/shared/utils/firebase";
@@ -27,6 +27,7 @@ import { Connect } from "../../components/LoginContainer/Connect";
 import { PhoneAuth } from "../../components/LoginContainer/PhoneAuth";
 import { AuthStage } from "../../components/LoginContainer/constants";
 import {
+  AUTH_CODE_QUERY_PARAM_KEY,
   DEFAULT_AUTH_ERROR_TEXT,
   ERROR_TEXT_FOR_NON_EXISTENT_USER,
 } from "../../constants";
@@ -35,6 +36,7 @@ import "./index.scss";
 const LoginContainer: FC = () => {
   const dispatch = useDispatch();
   const queryParams = useQueryParams();
+  const { removeQueryParams } = useRemoveQueryParams();
   const isAuthenticated = useSelector(authentificated());
   const isLoading = useSelector(selectIsAuthLoading());
   const user = useSelector(selectUser());
@@ -56,7 +58,9 @@ const LoginContainer: FC = () => {
       : ModalType.Default;
   const hasError = Boolean(errorText);
   const authCode =
-    typeof queryParams.authCode === "string" ? queryParams.authCode : "";
+    typeof queryParams[AUTH_CODE_QUERY_PARAM_KEY] === "string"
+      ? queryParams[AUTH_CODE_QUERY_PARAM_KEY]
+      : "";
 
   const handleClose = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: false }));
@@ -66,6 +70,19 @@ const LoginContainer: FC = () => {
     setErrorText(errorText || DEFAULT_AUTH_ERROR_TEXT);
     setStage(AuthStage.AuthMethodSelect);
   }, []);
+
+  const handleAuthFinish = useCallback(
+    (isNewUser?: boolean) => {
+      removeQueryParams(AUTH_CODE_QUERY_PARAM_KEY);
+
+      if (isNewUser) {
+        setStage(AuthStage.CompleteAccountDetails);
+      } else {
+        handleClose();
+      }
+    },
+    [removeQueryParams, handleClose]
+  );
 
   const handleAuthButtonClick = useCallback(
     (provider: AuthProvider) => {
@@ -96,16 +113,12 @@ const LoginContainer: FC = () => {
               return;
             }
 
-            if (data?.isNewUser) {
-              setStage(AuthStage.CompleteAccountDetails);
-            } else {
-              handleClose();
-            }
+            handleAuthFinish();
           },
         })
       );
     },
-    [dispatch, handleClose, handleError]
+    [dispatch, handleError, handleAuthFinish]
   );
 
   const handleGoBack = useCallback(() => {
@@ -113,17 +126,6 @@ const LoginContainer: FC = () => {
       stage === AuthStage.PhoneAuth ? AuthStage.AuthMethodSelect : stage - 1
     );
   }, []);
-
-  const handlePhoneStageFinish = useCallback(
-    (isNewUser: boolean) => {
-      if (isNewUser) {
-        setStage(AuthStage.CompleteAccountDetails);
-      } else {
-        handleClose();
-      }
-    },
-    [handleClose]
-  );
 
   useEffect(() => {
     if (!isShowing) {
@@ -174,7 +176,7 @@ const LoginContainer: FC = () => {
         );
       case AuthStage.PhoneAuth:
         return (
-          <PhoneAuth onFinish={handlePhoneStageFinish} onError={handleError} />
+          <PhoneAuth onFinish={handleAuthFinish} onError={handleError} />
         );
       case AuthStage.CompleteAccountDetails:
         return user ? (
@@ -191,7 +193,7 @@ const LoginContainer: FC = () => {
     user,
     type,
     handleAuthButtonClick,
-    handlePhoneStageFinish,
+    handleAuthFinish,
     handleError,
   ]);
 
