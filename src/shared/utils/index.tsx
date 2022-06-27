@@ -1,3 +1,4 @@
+export * from "./error";
 export * from "./shared";
 export { default as tokenHandler } from "./tokenHandler";
 export * from "./download";
