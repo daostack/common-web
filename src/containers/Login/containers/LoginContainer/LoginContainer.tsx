@@ -9,6 +9,7 @@ import React, {
 import { useDispatch, useSelector } from "react-redux";
 import { Modal } from "@/shared/components";
 import { AuthProvider, ErrorCode, ScreenSize } from "@/shared/constants";
+import { useQueryParams } from "@/shared/hooks";
 import { ModalProps, ModalType } from "@/shared/interfaces";
 import { getScreenSize } from "@/shared/store/selectors";
 import { isFirebaseError } from "@/shared/utils/firebase";
@@ -16,6 +17,7 @@ import { isGeneralError } from "@/shared/utils";
 import { LoginModalType } from "../../../Auth/interface";
 import { setLoginModalState, socialLogin } from "../../../Auth/store/actions";
 import {
+  authentificated,
   selectIsAuthLoading,
   selectLoginModalState,
   selectUser,
@@ -32,6 +34,8 @@ import "./index.scss";
 
 const LoginContainer: FC = () => {
   const dispatch = useDispatch();
+  const queryParams = useQueryParams();
+  const isAuthenticated = useSelector(authentificated());
   const isLoading = useSelector(selectIsAuthLoading());
   const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
@@ -51,6 +55,8 @@ const LoginContainer: FC = () => {
       ? ModalType.MobilePopUp
       : ModalType.Default;
   const hasError = Boolean(errorText);
+  const authCode =
+    typeof queryParams.authCode === "string" ? queryParams.authCode : "";
 
   const handleClose = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: false }));
@@ -127,6 +133,12 @@ const LoginContainer: FC = () => {
       setErrorText("");
     }
   }, [isShowing, user]);
+
+  useEffect(() => {
+    if (!isAuthenticated && authCode) {
+      dispatch(setLoginModalState({ isShowing: true }));
+    }
+  }, [authCode]);
 
   const title = useMemo((): ReactNode => {
     if (!isMobileView || stage !== AuthStage.CompleteAccountDetails) {
