@@ -129,13 +129,19 @@ const Header = () => {
           <NavLink to="/" exact activeClassName="active">
             About
           </NavLink>
-          <NavLink to={ROUTE_PATHS.COMMON_LIST} activeClassName="active">
-            Explore
-          </NavLink>
           {isAuthorized && (
-            <NavLink to={ROUTE_PATHS.MY_COMMONS} exact activeClassName="active">
-              My Commons
-            </NavLink>
+            <>
+              <NavLink to={ROUTE_PATHS.COMMON_LIST} activeClassName="active">
+                Explore
+              </NavLink>
+              <NavLink
+                to={ROUTE_PATHS.MY_COMMONS}
+                exact
+                activeClassName="active"
+              >
+                My Commons
+              </NavLink>
+            </>
           )}
         </>
       )}
