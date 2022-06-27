@@ -99,6 +99,7 @@ const BankAccount: FC<BankAccountProps> = (props) => {
           descriptionClassName="billing-bank-account__description"
           title={null}
           onBankDetails={handleBankDetailsUpdateFinish}
+          onBankDetailsAfterError={onBankAccountChange}
           initialBankAccountDetails={bankAccount}
           onCancel={handleCancel}
         />
@@ -107,6 +108,7 @@ const BankAccount: FC<BankAccountProps> = (props) => {
         <Modal isShowing onClose={stopEditing} closePrompt>
           <AddBankDetails
             onBankDetails={handleBankDetailsUpdateFinish}
+            onBankDetailsAfterError={onBankAccountChange}
             initialBankAccountDetails={bankAccount}
           />
         </Modal>

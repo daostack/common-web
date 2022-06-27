@@ -9,6 +9,8 @@ interface ChatMessageProps {
   disscussionMessage: DiscussionMessage;
   chatType: ChatType;
   highlighted?: boolean;
+  className?: string;
+  onMessageDropdownOpen?: (isOpen: boolean) => void;
 }
 
 const getDynamicLinkByChatType = (chatType: ChatType): DynamicLinkType => {
@@ -25,6 +27,8 @@ export default function ChatMessage(
     disscussionMessage,
     chatType,
     highlighted = false,
+    className,
+    onMessageDropdownOpen,
   }: ChatMessageProps
 ) {
   const [imageError, setImageError] = useState(false);
@@ -33,7 +37,7 @@ export default function ChatMessage(
   return (
     <li
       id={disscussionMessage.id}
-      className={classNames("message-wrapper", { highlighted })}
+      className={classNames("message-wrapper", className, { highlighted })}
     >
       <div className="message">
         <div className="icon-wrapper">
@@ -75,6 +79,7 @@ export default function ChatMessage(
             elem={disscussionMessage}
             className="dropdown-menu"
             variant={Orientation.Horizontal}
+            onMenuToggle={onMessageDropdownOpen}
             transparent
           />
         </div>
