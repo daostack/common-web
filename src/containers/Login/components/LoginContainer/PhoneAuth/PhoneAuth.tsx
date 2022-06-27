@@ -121,7 +121,8 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish, onError }) => {
           ) {
             onError(ERROR_TEXT_FOR_NON_EXISTENT_USER);
             return;
-          } else if (
+          }
+          if (
             !isFirebaseError(error) ||
             error.code !== "auth/invalid-verification-code"
           ) {
