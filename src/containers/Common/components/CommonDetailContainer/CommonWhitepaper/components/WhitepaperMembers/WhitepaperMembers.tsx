@@ -23,7 +23,7 @@ export default function WhitepaperMembers() {
 
   const renderContent = () => {
     const circle = governance?.circles.filter(circle => circle.name === selectedMember)[0];
-    const allowedProposals = Object.keys(circle?.allowedProposals!).map((proposal, index) => {
+    const allowedProposals = Object.keys(circle?.allowedProposals || {}).map((proposal, index) => {
       return (
         <span key={index} className="whitepaper-members__feature-title">
           <img src="/icons/check.png" className="whitepaper-members__checkmark-icon" alt="checkmark" />
