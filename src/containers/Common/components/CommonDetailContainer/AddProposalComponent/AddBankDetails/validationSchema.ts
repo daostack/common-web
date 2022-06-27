@@ -18,9 +18,7 @@ const schema = Yup.object().shape({
   gender: Yup.number()
     .oneOf(GENDER_OPTIONS.map((option) => option.value as Gender))
     .required("Please choose gender"),
-  phoneNumber: Yup.string()
-    .matches(NUMBERS_ONLY_REGEXP, "Only numbers allowed")
-    .length(10, "Phone number should have 10 digits")
+  phoneNumber: Yup.string().phone('Phone number must be in valid international Israeli format')
     .required("Please enter a phone number"),
   email: Yup.string()
     .required("Please enter your email")
