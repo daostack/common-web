@@ -334,6 +334,7 @@ export function* loadProposalDetail(
 ): Generator {
   try {
     yield put(startLoading());
+
     const proposal = { ...action.payload };
 
     let discussionMessage: DiscussionMessage[];
@@ -492,12 +493,16 @@ export function* addMessageToProposalSaga(
       async (data) => {
         const proposal = { ...action.payload.proposal };
 
-        proposal.discussionMessage = data.sort(
-          (m: DiscussionMessage, mP: DiscussionMessage) =>
-            m.createTime?.seconds - mP.createTime?.seconds
-        );
+        const updatedProposal = {
+          ...proposal,
+          discussionMessage: data.sort(
+            (m: DiscussionMessage, mP: DiscussionMessage) =>
+              m.createTime?.seconds - mP.createTime?.seconds
+          ),
+        };
 
-        store.dispatch(actions.loadProposalDetail.request(proposal));
+        store.dispatch(actions.loadProposalDetail.request(updatedProposal));
+
         store.dispatch(actions.getCommonsList.request());
       }
     );
