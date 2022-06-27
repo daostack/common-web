@@ -16,7 +16,7 @@ export default function CommonWhitepaper() {
   return (
     <div className="common-whitepaper-wrapper">
       <div className="common-whitepaper__title">White Paper</div>
-      <span>Common's set of guides are managed by user type.</span>
+      <span>Common’s set of guides are managed by user type.</span>
       {toggle && (
         <div className="common-whitepaper__content">
           <div className="common-whitepaper__tabs">
