@@ -24,7 +24,7 @@ export const calculateVoters = (circles: string[], weights: any) => {
     return { binary: generateCirclesBinaryNumber([index]), id: circle };
   });
 
-  const circlesWithVotingWeight = binaryCircles.filter(({ binary, id }) => {
+  const circlesWithVotingWeight = binaryCircles.filter(({ binary }) => {
     return weights?.find(({ circles }) => { return circles & binary });
   })
 

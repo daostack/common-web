@@ -27,8 +27,8 @@ export default function WhitepaperProposals() {
         <WhitepaperProposalCard
           key={proposal}
           proposalType={proposal}
-          proposalData={governance?.proposals[proposal][1]}
-          circles={governance?.circles.map(c => c.name)!} /> // TODO: need to verify this
+          proposalData={governance?.proposals[proposal][1]} // TODO: for now we take the first index for "CIRCLE" proposal. Need to check this.
+          circles={governance?.circles.map(c => c.name)!} />
       );
     }
   }
