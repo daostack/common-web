@@ -73,7 +73,7 @@ export default function Review({
           <LinkList links={links} />
         </div>
         <RuleList rules={rules} className="create-common-review__rules" />
-        <div className="create-common-review__additional-info-container">
+        {/* <div className="create-common-review__additional-info-container">
           <div className="create-common-review__additional-info-text">
             To publish the Common, add a personal contribution.{" "}
             <span className="create-common-review__additional-info-text--bold">
@@ -81,14 +81,14 @@ export default function Review({
             </span>{" "}
             to the Common info after it is published.
           </div>
-        </div>
+        </div> */}
         <div className="create-common-review__submit-button-wrapper">
           <Button
             key="rules-continue"
             onClick={handleContinueClick}
             shouldUseFullWidth={isMobileView}
           >
-            Personal Contribution
+            Create a Common
           </Button>
         </div>
       </div>
