@@ -40,7 +40,9 @@
 
     .wallet__common-balance-chart {
       display: flex;
-      justify-content: space-between;
+      //FIXME
+      // justify-content: space-between;
+      justify-content: center;
       align-items: center;
       width: 95%;
 
@@ -91,9 +93,10 @@
         }
       }
 
-      .common-transactions-chart-wrapper {
-        width: 67%;
-      }
+      //FIXME: temporary hidden Common Wallet chart. Uncomment this and adjust other related styles after clearing up the DB from USD-payments and legacy Commons to which they were made
+      // .common-transactions-chart-wrapper {
+      //   width: 67%;
+      // }
     }
   }
 
