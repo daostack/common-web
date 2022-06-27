@@ -3,20 +3,21 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import moment from "moment";
-import { Button, Loader, ModalFooter } from "../../../../../shared/components";
+import { ERROR_TEXT_FOR_NON_EXISTENT_USER } from "@/containers/Login/constants";
+import { Button, Loader, ModalFooter } from "@/shared/components";
 import {
   PhoneInput,
   PhoneInputCountryCode,
   PhoneInputValue,
-} from "../../../../../shared/components/Form";
+} from "@/shared/components/Form";
 import {
+  ErrorCode,
   ScreenSize,
   RECAPTCHA_CONTAINER_ID,
-} from "../../../../../shared/constants";
-import { getScreenSize } from "../../../../../shared/store/selectors";
-import firebase, {
-  isFirebaseError,
-} from "../../../../../shared/utils/firebase";
+} from "@/shared/constants";
+import { getScreenSize } from "@/shared/store/selectors";
+import { isGeneralError } from "@/shared/utils";
+import firebase, { isFirebaseError } from "@/shared/utils/firebase";
 import {
   confirmVerificationCode,
   sendVerificationCode,
@@ -27,7 +28,7 @@ import "./index.scss";
 
 interface PhoneAuthProps {
   onFinish: (isNewUser: boolean) => void;
-  onError: () => void;
+  onError: (errorText?: string) => void;
 }
 
 const getCountdownDate = (): Date => moment().add(1, "minute").toDate();
@@ -115,6 +116,12 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish, onError }) => {
             return;
           }
           if (
+            isGeneralError(error) &&
+            error.code === ErrorCode.CUserDoesNotExist
+          ) {
+            onError(ERROR_TEXT_FOR_NON_EXISTENT_USER);
+            return;
+          } else if (
             !isFirebaseError(error) ||
             error.code !== "auth/invalid-verification-code"
           ) {

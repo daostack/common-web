@@ -7,12 +7,12 @@ import React, {
   ReactNode,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import UserDetailsWrapper from "../../components/LoginContainer/UserDetails/UserDetailsWrapper";
-import { Modal } from "../../../../shared/components";
-import { AuthProvider, ScreenSize } from "../../../../shared/constants";
-import { ModalProps, ModalType } from "../../../../shared/interfaces";
-import { getScreenSize } from "../../../../shared/store/selectors";
-import { isFirebaseError } from "../../../../shared/utils/firebase";
+import { Modal } from "@/shared/components";
+import { AuthProvider, ErrorCode, ScreenSize } from "@/shared/constants";
+import { ModalProps, ModalType } from "@/shared/interfaces";
+import { getScreenSize } from "@/shared/store/selectors";
+import { isFirebaseError } from "@/shared/utils/firebase";
+import { isGeneralError } from "@/shared/utils";
 import { LoginModalType } from "../../../Auth/interface";
 import { setLoginModalState, socialLogin } from "../../../Auth/store/actions";
 import {
@@ -20,9 +20,14 @@ import {
   selectLoginModalState,
   selectUser,
 } from "../../../Auth/store/selectors";
+import UserDetailsWrapper from "../../components/LoginContainer/UserDetails/UserDetailsWrapper";
 import { Connect } from "../../components/LoginContainer/Connect";
 import { PhoneAuth } from "../../components/LoginContainer/PhoneAuth";
 import { AuthStage } from "../../components/LoginContainer/constants";
+import {
+  DEFAULT_AUTH_ERROR_TEXT,
+  ERROR_TEXT_FOR_NON_EXISTENT_USER,
+} from "../../constants";
 import "./index.scss";
 
 const LoginContainer: FC = () => {
@@ -34,30 +39,31 @@ const LoginContainer: FC = () => {
   const [stage, setStage] = useState(
     user ? AuthStage.CompleteAccountDetails : AuthStage.AuthMethodSelect
   );
-  const [hasError, setHasError] = useState(false);
+  const [errorText, setErrorText] = useState("");
   const { isShowing, type } = useSelector(selectLoginModalState());
   const shouldShowBackButton = stage === AuthStage.PhoneAuth && !isLoading;
   const shouldRemoveHorizontalPadding =
     isMobileView && stage === AuthStage.AuthMethodSelect;
   const modalType =
     type === LoginModalType.RequestToJoin &&
-      stage === AuthStage.AuthMethodSelect &&
-      !isLoading
+    stage === AuthStage.AuthMethodSelect &&
+    !isLoading
       ? ModalType.MobilePopUp
       : ModalType.Default;
+  const hasError = Boolean(errorText);
 
   const handleClose = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: false }));
   }, [dispatch]);
 
-  const handleError = useCallback(() => {
-    setHasError(true);
+  const handleError = useCallback((errorText?: string) => {
+    setErrorText(errorText || DEFAULT_AUTH_ERROR_TEXT);
     setStage(AuthStage.AuthMethodSelect);
   }, []);
 
   const handleAuthButtonClick = useCallback(
     (provider: AuthProvider) => {
-      setHasError(false);
+      setErrorText("");
 
       if (provider === AuthProvider.Phone) {
         setStage(AuthStage.PhoneAuth);
@@ -70,6 +76,11 @@ const LoginContainer: FC = () => {
           callback: (error, data) => {
             if (error) {
               if (
+                isGeneralError(error) &&
+                error.code === ErrorCode.CUserDoesNotExist
+              ) {
+                handleError(ERROR_TEXT_FOR_NON_EXISTENT_USER);
+              } else if (
                 !isFirebaseError(error) ||
                 error.code !== "auth/popup-closed-by-user"
               ) {
@@ -113,7 +124,7 @@ const LoginContainer: FC = () => {
       setStage(
         user ? AuthStage.CompleteAccountDetails : AuthStage.AuthMethodSelect
       );
-      setHasError(false);
+      setErrorText("");
     }
   }, [isShowing, user]);
 
@@ -144,7 +155,7 @@ const LoginContainer: FC = () => {
       case AuthStage.AuthMethodSelect:
         return (
           <Connect
-            hasError={hasError}
+            errorText={errorText}
             isJoinRequestType={type === LoginModalType.RequestToJoin}
             onAuthButtonClick={handleAuthButtonClick}
           />
@@ -163,6 +174,7 @@ const LoginContainer: FC = () => {
   }, [
     stage,
     hasError,
+    errorText,
     handleClose,
     user,
     type,

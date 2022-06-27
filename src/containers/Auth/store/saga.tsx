@@ -1,6 +1,7 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { store } from "@/shared/appConfig";
 import {
+  GeneralError,
   getRandomUserAvatarURL,
   isError,
   tokenHandler,
@@ -12,6 +13,7 @@ import { Collection, Proposal, User } from "../../../shared/models";
 import { UserCreationDto } from "../interface";
 import {
   AuthProvider,
+  ErrorCode,
   RECAPTCHA_CONTAINER_ID,
   ROUTE_PATHS,
 } from "../../../shared/constants";
@@ -138,16 +140,25 @@ const verifyLoggedInUser = async (
     throw new Error("User is not logged in");
   }
 
-  const result = shouldCreateUserIfNotExist
-    ? await createUser(user)
-    : {
-        user: await getUserData(user.uid),
-        isNewUser: false,
-      };
+  const isAllowedToCreateUser = false;
+  const result =
+    shouldCreateUserIfNotExist && isAllowedToCreateUser
+      ? await createUser(user)
+      : {
+          user: await getUserData(user.uid),
+          isNewUser: false,
+        };
 
   if (!result.user) {
     await firebase.auth().signOut();
-    throw new Error("User is not logged in");
+
+    if (isAllowedToCreateUser) {
+      throw new Error("User is not logged in");
+    }
+
+    throw new GeneralError({
+      code: ErrorCode.CUserDoesNotExist,
+    });
   }
 
   tokenHandler.set(token);
