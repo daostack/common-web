@@ -7,7 +7,7 @@ import "./index.scss";
 
 export default function WhitepaperMembers() {
   const governance = useSelector(selectGovernance());
-  const [selectedMember, setSelectedMember] = useState(governance?.circles[0].name);
+  const [selectedMember, setSelectedMember] = useState(governance?.circles[0]?.name);
 
   const members = governance?.circles.map((circle, index) => {
     return (
