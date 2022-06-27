@@ -46,14 +46,15 @@ const BankAccountInfo: FC<BankAccountInfoProps> = (props) => {
       >
         Edit Details
       </Button>
-      <Button
+      {//FIXME: uncomment this after an issues with bank account's deleting will be resolved on the BE
+      /* <Button
         className="billing-bank-account-info__details-button delete-details"
         variant={ButtonVariant.Secondary}
         onClick={() => setShowDeletePrompt(true)}
         shouldUseFullWidth={isMobileView}
       >
         Delete
-      </Button>
+      </Button> */}
     </div>
   );
 

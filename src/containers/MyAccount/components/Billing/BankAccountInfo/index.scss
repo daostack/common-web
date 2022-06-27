@@ -70,7 +70,9 @@
 .billing-bank-account-info__details-buttons-wrapper {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
+  // FIXME: uncomment & adjust this after an issues with bank account's deleting will be resolved on the BE
+  // justify-content: space-between;
   align-items: center;
   width: 80%;
 
