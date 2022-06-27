@@ -2,7 +2,6 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { selectGovernance } from "@/containers/Common/store/selectors";
 import WhitepaperProposalCard from "./components/WhitepaperProposalCard/WhitepaperProposalCard";
-import "./index.scss";
 
 export default function WhitepaperProposals() {
   const governance = useSelector(selectGovernance());
@@ -14,7 +13,7 @@ export default function WhitepaperProposals() {
         key={proposal}
         proposalType={proposal}
         proposalData={governance?.proposals[proposal]}
-        circles={governance?.circles.map(c => c.name)!} />
+        circles={governance?.circles.map(c => c.name)} />
     );
   }
 

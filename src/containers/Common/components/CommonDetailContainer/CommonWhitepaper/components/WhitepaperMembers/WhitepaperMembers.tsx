@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
+import { startCase, lowerCase } from "lodash";
 import { selectGovernance } from "@/containers/Common/store/selectors";
-import { formatCamelSnakeCase } from "../../utils";
 import "./index.scss";
 
 export default function WhitepaperMembers() {
@@ -27,14 +27,14 @@ export default function WhitepaperMembers() {
       return (
         <span key={index} className="whitepaper-members__feature-title">
           <img src="/icons/check.png" className="whitepaper-members__checkmark-icon" alt="checkmark" />
-          {formatCamelSnakeCase(proposal)}
+          {startCase(lowerCase(proposal))}
         </span>)
     });
-    const allowedActions = Object.keys(circle?.allowedActions!).map((action, index) => {
+    const allowedActions = Object.keys(circle?.allowedActions || {}).map((action, index) => {
       return (
         <span key={index} className="whitepaper-members__feature-title">
           <img src="/icons/check.png" className="whitepaper-members__checkmark-icon" alt="checkmark" />
-          {formatCamelSnakeCase(action)}
+          {startCase(lowerCase(action))}
         </span>)
     })
     return (

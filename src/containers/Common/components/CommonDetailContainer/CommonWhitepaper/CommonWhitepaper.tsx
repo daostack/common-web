@@ -20,8 +20,8 @@ export default function CommonWhitepaper() {
       {toggle && (
         <div className="common-whitepaper__content">
           <div className="common-whitepaper__tabs">
-            <div onClick={() => setTab(Tabs.Members)} className={classNames("common-whitepaper__tab", { active: tab === Tabs.Members })}>Members</div>
-            <div onClick={() => setTab(Tabs.Proposals)} className={classNames("common-whitepaper__tab", { active: tab === Tabs.Proposals })}>Proposals</div>
+            <div onClick={() => setTab(Tabs.Members)} className={classNames("common-whitepaper__tab", { "common-whitepaper__tab--active": tab === Tabs.Members })}>Members</div>
+            <div onClick={() => setTab(Tabs.Proposals)} className={classNames("common-whitepaper__tab", { "common-whitepaper__tab--active": tab === Tabs.Proposals })}>Proposals</div>
           </div>
           {tab === Tabs.Members ? <WhitepaperMembers /> : <WhitepaperProposals />}
         </div>

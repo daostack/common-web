@@ -1,15 +1,16 @@
 import React from "react";
 import { useState } from "react";
 import classNames from "classnames";
+import { startCase, lowerCase } from "lodash";
 import { Proposals } from "@/shared/models/governance/proposals";
 import { Proposal } from "@/shared/models";
-import { calculateVoters, formatCamelSnakeCase } from "../../../../utils";
+import { calculateVoters } from "../../../../utils";
 import "./index.scss";
 
 interface IProps {
   proposalType: string;
   proposalData: Partial<Proposals>;
-  circles: string[];
+  circles: string[] | undefined;
 }
 
 // TODO: temporary until we have a better way to handle this
@@ -22,14 +23,14 @@ export default function WhitepaperProposalCard({ circles, proposalType, proposal
   // TODO: for now we take the first index for "CIRCLE" proposal. Need to check this.
   const data = PROPOSALS_TYPE_1.includes(proposalType) ? proposalData as Proposal : proposalData[1] as Proposal;
 
-  const voters = calculateVoters(circles, data.global.weights).map((voter, index) => {
+  const voters = calculateVoters(circles, data.global.weights)?.map((voter, index) => {
     return <span className="whitepaper-proposal-card__voter" key={index}>{voter}</span>
   });
 
   return (
     <div className="whitepaper-proposal-card-wrapper">
       <div className="whitepaper-proposal-card__top-wrapper" onClick={() => setToggle(!toggle)}>
-        <div>{formatCamelSnakeCase(proposalType)}</div>
+        <div>{startCase(lowerCase(proposalType))}</div>
         <img src="/icons/up-arrow.svg" className={classNames("collapsed", { "expanded": toggle })} alt="arrow" />
       </div>
       {toggle && (
