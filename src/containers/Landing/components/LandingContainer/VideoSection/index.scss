@@ -1,0 +1,55 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+$viewport-breakpoint: 1000px;
+
+.landing-video-section {
+  position: relative;
+}
+
+.landing-video-section__video-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.landing-video-section__video {
+  width: 100%;
+  height: 37.125rem;
+  object-fit: cover;
+}
+
+.landing-video-section__main-info {
+  position: absolute;
+  bottom: 8.125rem;
+  left: 50%;
+  width: 100%;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+
+  @include viewport-breakpoint($viewport-breakpoint) {
+    top: 50%;
+    bottom: unset;
+    transform: translateX(-50%) translateY(-50%);
+  }
+}
+
+.landing-video-section__main-info-title {
+  margin: 0;
+  font-family: NotoSerifSC, serif;
+  font-weight: 600;
+  font-size: $large;
+  line-height: 133%;
+}
+
+.landing-video-section__main-info-description {
+  margin: 0.875rem 0 4.125rem;
+  font-size: $moderate-small;
+  line-height: 120%;
+}

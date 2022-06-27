@@ -639,9 +639,10 @@ async function waitForVoteToBeApplied(
     try {
       const unsubscribe = subscribeToProposal(proposalId, async (proposal) => {
         if (
-          proposal.votes.approved === proposalVotes.approved &&
-          proposal.votes.rejected === proposalVotes.rejected &&
-          proposal.votes.abstained === proposalVotes.abstained
+          (proposal.votes.approved === proposalVotes.approved &&
+            proposal.votes.rejected === proposalVotes.rejected &&
+            proposal.votes.abstained === proposalVotes.abstained) ||
+          proposal.votes.total < proposalVotes.total
         ) {
           return;
         }
