@@ -12,10 +12,17 @@ interface IProps {
   circles: string[];
 }
 
+// TODO: temporary until we have a better way to handle this
+const PROPOSALS_TYPE_1 = ["FUNDS_ALLOCATION", "MEMBER_ADMITTANCE"];
+//const PROPOSALS_TYPE_2 = ["ASSIGN_CIRCLE", "REMOVE_CIRCLE"];
+
 export default function WhitepaperProposalCard({ circles, proposalType, proposalData }: IProps) {
   const [toggle, setToggle] = useState(false);
 
-  const voters = calculateVoters(circles, (proposalData as Proposal).global.weights).map((voter, index) => {
+  // TODO: for now we take the first index for "CIRCLE" proposal. Need to check this.
+  const data = PROPOSALS_TYPE_1.includes(proposalType) ? proposalData as Proposal : proposalData[1] as Proposal;
+
+  const voters = calculateVoters(circles, data.global.weights).map((voter, index) => {
     return <span className="whitepaper-proposal-card__voter" key={index}>{voter}</span>
   });
 
@@ -30,18 +37,18 @@ export default function WhitepaperProposalCard({ circles, proposalType, proposal
           <div className="whitepaper-proposal-card__content-sub-title">Duration:</div>
           <div className="whitepaper-proposal-card__content-duration-wrapper">
             <span>
-              <b>{((proposalData as Proposal)).global.discussionDuration} hrs</b>
+              <b>{data.global.discussionDuration} hrs</b>
               <br />
               Discussion
             </span>
             <span className="whitepaper-proposal-card__voting">
-              <b>{((proposalData as Proposal)).global.votingDuration} hrs</b>
+              <b>{data.global.votingDuration} hrs</b>
               <br />
               Voting
             </span>
           </div>
           <div className="whitepaper-proposal-card__content-sub-title">Voting Model:</div>
-          <span>Quorum: {((proposalData as Proposal)).global.quorum}%</span>
+          <span>Quorum: {data.global.quorum}%</span>
           <div className="whitepaper-proposal-card__voters-wrapper">
             <div className="whitepaper-proposal-card__content-sub-title">
               Voters:
@@ -50,9 +57,9 @@ export default function WhitepaperProposalCard({ circles, proposalType, proposal
           </div>
           <span>
             <img className="arrow" src="/icons/down-arrow-light-purple.svg" alt="down arrow" />
-            Support (min): {((proposalData as Proposal)).global.minApprove}%
+            Support (min): {data.global.minApprove}%
             <img className="arrow object" src="/icons/up-arrow-purple.svg" alt="up arrow" />
-            Object (max): {((proposalData as Proposal)).global.maxReject}%
+            Object (max): {data.global.maxReject}%
           </span>
         </div>
       )}
