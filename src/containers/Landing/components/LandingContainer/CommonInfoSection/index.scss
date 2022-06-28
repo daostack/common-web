@@ -1,0 +1,65 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+$vertical-view-breakpoint: 790px;
+
+.landing-common-info-section {
+  padding: 5.25rem 4rem 6.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @include viewport-breakpoint($vertical-view-breakpoint) {
+    padding: 3rem 1.25rem;
+  }
+}
+
+.landing-common-info-section__content {
+  max-width: 56.375rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-gap: 3.875rem 1rem;
+
+  @include viewport-breakpoint($vertical-view-breakpoint) {
+    max-width: unset;
+    grid-template-columns: 1fr;
+  }
+}
+
+.landing-common-info-section__title {
+  max-width: 11.875rem;
+  margin: 0;
+  font-family: NotoSerifSC, serif;
+  font-weight: 600;
+  font-size: $large;
+  line-height: 133%;
+
+  @include viewport-breakpoint($vertical-view-breakpoint) {
+    max-width: unset;
+    text-align: center;
+  }
+}
+
+.landing-common-info-section__card {
+  display: flex;
+  align-items: flex-start;
+}
+
+.landing-common-info-section__card-image {
+  flex-shrink: 0;
+  width: 2.625rem;
+}
+
+.landing-common-info-section__card-description {
+  max-width: 23rem;
+  margin: 0 0 0 1rem;
+  font-size: $moderate;
+  line-height: 134%;
+  letter-spacing: 0.01em;
+}
+.landing-common-info-section__card-description--voting-process {
+  max-width: 21.375rem;
+}
+.landing-common-info-section__card-description--collaboration {
+  max-width: 23.25rem;
+}

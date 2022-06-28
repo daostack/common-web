@@ -12,7 +12,7 @@ import {
   DiscussionContainer,
   DiscussionMessageContainer,
 } from "../Common";
-import { LandingContainer } from "../Landing";
+import { ContactUsContainer, LandingContainer } from "../Landing";
 import {
   ROUTE_PATHS,
   SMALL_SCREEN_BREAKPOINT,
@@ -110,7 +110,16 @@ const App = () => {
         <Header />
         <Content>
           <Switch>
-            <Route path="/" exact component={LandingContainer} />
+            <Route
+              path={ROUTE_PATHS.HOME}
+              exact
+              component={LandingContainer}
+            />
+            <Route
+              path={ROUTE_PATHS.CONTACT_US}
+              exact
+              component={ContactUsContainer}
+            />
             <Route path={ROUTE_PATHS.COMMON_LIST} component={CommonContainer} />
             <Route path={ROUTE_PATHS.PROPOSAL_DETAIL} component={ProposalContainer} />
             <Route path={ROUTE_PATHS.PROPOSAL_COMMENT} component={ProposalCommentContainer} />

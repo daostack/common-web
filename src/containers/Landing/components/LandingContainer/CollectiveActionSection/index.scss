@@ -1,0 +1,60 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+$mobile-view-breakpoint: 500px;
+
+.landing-collective-action-section {
+  position: relative;
+}
+
+.landing-collective-action-section__image {
+  flex-shrink: 0;
+  display: flex;
+  width: 100%;
+  height: 26.625rem;
+  object-fit: cover;
+  background: $secondary-blue;
+
+  @include viewport-breakpoint($mobile-view-breakpoint) {
+    height: 24rem;
+  }
+}
+
+.landing-collective-action-section__overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(95.49deg, $black-gray-5 17.86%, $crimson 94.09%);
+  mix-blend-mode: overlay;
+}
+
+.landing-collective-action-section__main-content {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 0 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: $light-purple-background;
+  text-align: center;
+}
+
+.landing-collective-action-section__title {
+  margin: 0;
+  font-family: NotoSerifSC, serif;
+  font-weight: 600;
+  font-size: $moderate-med;
+  letter-spacing: 0.02em;
+}
+
+.landing-collective-action-section__description {
+  margin: 0.5rem 0 3.625rem;
+  font-size: $moderate-small;
+  line-height: 120%;
+}

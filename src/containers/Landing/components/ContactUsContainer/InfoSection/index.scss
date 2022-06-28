@@ -1,0 +1,90 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.contact-us-info-section {
+  position: relative;
+}
+
+.contact-us-info-section__image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: $secondary-blue;
+}
+
+.contact-us-info-section__overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(95.49deg, $black-gray-5 17.86%, $crimson 94.09%);
+  mix-blend-mode: overlay;
+}
+
+.contact-us-info-section__main-content-wrapper {
+  position: relative;
+  z-index: 1;
+  padding: 2rem 3rem;
+  display: flex;
+  justify-content: center;
+  font-size: $moderate;
+  line-height: 120%;
+  letter-spacing: 0.01em;
+  color: $white;
+
+  @include big-phone {
+    padding: 2rem 1.25rem 3rem;
+  }
+}
+
+.contact-us-info-section__main-content {
+  max-width: 33.125rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-us-info-section__back-link {
+  display: flex;
+  align-items: center;
+  color: $white;
+}
+
+.contact-us-info-section__title {
+  margin: 1.75rem 0 2rem;
+  font-family: NotoSerifSC, serif;
+  font-weight: 600;
+  font-size: $large;
+  line-height: 133%;
+  letter-spacing: unset;
+}
+
+.contact-us-info-section__description {
+  margin: 0 0 2.125rem;
+}
+
+.contact-us-info-section__list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.contact-us-info-section__list-item {
+  margin-bottom: 2.5rem;
+  display: flex;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.contact-us-info-section__list-item-icon {
+  flex-shrink: 0;
+  margin-right: 0.875rem;
+}
