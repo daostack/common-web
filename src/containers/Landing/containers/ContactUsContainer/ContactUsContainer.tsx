@@ -1,6 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router";
 import { ROUTE_PATHS } from "@/shared/constants";
+import { useZoomDisabling } from "@/shared/hooks";
 import {
   ContactUsSection,
   InfoSection,
@@ -9,6 +10,7 @@ import "./index.scss";
 
 const ContactUsContainer = () => {
   const history = useHistory();
+  useZoomDisabling();
 
   const moveToHomePage = () => {
     history.push(ROUTE_PATHS.HOME);
