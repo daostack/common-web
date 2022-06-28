@@ -148,13 +148,17 @@ export const AddProposalComponent = ({
     switch (proposalCreationStep) {
       case AddProposalSteps.CREATE:
       case AddProposalSteps.BANK_DETAILS:
+      case AddProposalSteps.CONFIRM:
         return (
           <>
             <AddProposalForm
               common={common}
               saveProposalState={saveProposalState}
               addBankDetails={addBankDetails}
-              hidden={proposalCreationStep === AddProposalSteps.BANK_DETAILS}
+              hidden={
+                (proposalCreationStep === AddProposalSteps.BANK_DETAILS)
+                || (proposalCreationStep === AddProposalSteps.CONFIRM)
+              }
             />
             {
               (proposalCreationStep === AddProposalSteps.BANK_DETAILS)
@@ -165,13 +169,13 @@ export const AddProposalComponent = ({
                 initialBankAccountDetails={initialBankAccountDetails}
               />
             }
+            {
+              (proposalCreationStep === AddProposalSteps.CONFIRM)
+              && <AddProposalConfirm
+                onConfirm={() => confirmProposal(fundingRequest)}
+              />
+            }
           </>
-        );
-      case AddProposalSteps.CONFIRM:
-        return (
-          <AddProposalConfirm
-            onConfirm={() => confirmProposal(fundingRequest)}
-          />
         );
       case AddProposalSteps.LOADER:
         return <AddProposalLoader />;
