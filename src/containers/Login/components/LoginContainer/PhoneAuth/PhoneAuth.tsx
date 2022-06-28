@@ -27,13 +27,14 @@ import { PhoneAuthStep } from "./constants";
 import "./index.scss";
 
 interface PhoneAuthProps {
+  authCode: string;
   onFinish: (isNewUser: boolean) => void;
   onError: (errorText?: string) => void;
 }
 
 const getCountdownDate = (): Date => moment().add(1, "minute").toDate();
 
-const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish, onError }) => {
+const PhoneAuth: FC<PhoneAuthProps> = ({ authCode, onFinish, onError }) => {
   const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -109,6 +110,7 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish, onError }) => {
         payload: {
           confirmation,
           code,
+          authCode,
         },
         callback: (error, data) => {
           if (!error && data) {

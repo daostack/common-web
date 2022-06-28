@@ -95,7 +95,7 @@ const LoginContainer: FC = () => {
 
       dispatch(
         socialLogin.request({
-          payload: provider,
+          payload: { provider, authCode },
           callback: (error, data) => {
             if (error) {
               if (
@@ -118,7 +118,7 @@ const LoginContainer: FC = () => {
         })
       );
     },
-    [dispatch, handleError, handleAuthFinish]
+    [dispatch, handleError, handleAuthFinish, authCode]
   );
 
   const handleGoBack = useCallback(() => {
@@ -176,7 +176,11 @@ const LoginContainer: FC = () => {
         );
       case AuthStage.PhoneAuth:
         return (
-          <PhoneAuth onFinish={handleAuthFinish} onError={handleError} />
+          <PhoneAuth
+            authCode={authCode}
+            onFinish={handleAuthFinish}
+            onError={handleError}
+          />
         );
       case AuthStage.CompleteAccountDetails:
         return user ? (
@@ -192,6 +196,7 @@ const LoginContainer: FC = () => {
     handleClose,
     user,
     type,
+    authCode,
     handleAuthButtonClick,
     handleAuthFinish,
     handleError,

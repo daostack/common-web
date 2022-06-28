@@ -12,6 +12,7 @@ import firebase from "../../../shared/utils/firebase";
 import { Collection, Proposal, User } from "../../../shared/models";
 import { UserCreationDto } from "../interface";
 import {
+  AUTH_CODE_FOR_SIGN_UP,
   AuthProvider,
   ErrorCode,
   RECAPTCHA_CONTAINER_ID,
@@ -126,7 +127,8 @@ const getFirebaseAuthProvider = (
 
 const verifyLoggedInUser = async (
   user: firebase.User | null,
-  shouldCreateUserIfNotExist = false
+  shouldCreateUserIfNotExist: boolean,
+  authCode = ""
 ): Promise<{ user: User; isNewUser: boolean }> => {
   if (!user) {
     await firebase.auth().signOut();
@@ -140,7 +142,7 @@ const verifyLoggedInUser = async (
     throw new Error("User is not logged in");
   }
 
-  const isAllowedToCreateUser = false;
+  const isAllowedToCreateUser = authCode === AUTH_CODE_FOR_SIGN_UP;
   const result =
     shouldCreateUserIfNotExist && isAllowedToCreateUser
       ? await createUser(user)
@@ -170,15 +172,19 @@ const verifyLoggedInUser = async (
   };
 };
 
-const authorizeUser = async (
-  authProvider: AuthProvider
-): Promise<{ user: User; isNewUser: boolean }> => {
+const authorizeUser = async ({
+  provider: authProvider,
+  authCode,
+}: {
+  provider: AuthProvider;
+  authCode: string;
+}): Promise<{ user: User; isNewUser: boolean }> => {
   await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
   const provider = getFirebaseAuthProvider(authProvider);
   const { user } = await firebase.auth().signInWithPopup(provider);
 
-  return verifyLoggedInUser(user, true);
+  return verifyLoggedInUser(user, true, authCode);
 };
 
 const loginUsingEmailAndPassword = async (
@@ -190,7 +196,7 @@ const loginUsingEmailAndPassword = async (
   const { user } = await firebase
     .auth()
     .signInWithEmailAndPassword(email, password);
-  const data = await verifyLoggedInUser(user);
+  const data = await verifyLoggedInUser(user, false);
 
   return data.user;
 };
@@ -217,13 +223,14 @@ const sendVerificationCode = async (
 
 const confirmVerificationCode = async (
   confirmation: firebase.auth.ConfirmationResult,
-  code: string
+  code: string,
+  authCode: string
 ): Promise<{ user: User; isNewUser: boolean }> => {
   await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
   const { user } = await confirmation.confirm(code);
 
-  return verifyLoggedInUser(user, true);
+  return verifyLoggedInUser(user, true, authCode);
 };
 
 const updateUserData = async (user: User) => {
@@ -364,7 +371,8 @@ function* confirmVerificationCodeSaga({
     const { user, isNewUser }: { user: User; isNewUser: boolean } = yield call(
       confirmVerificationCode,
       payload.payload.confirmation,
-      payload.payload.code
+      payload.payload.code,
+      payload.payload.authCode
     );
     yield put(actions.confirmVerificationCode.success(user));
 
