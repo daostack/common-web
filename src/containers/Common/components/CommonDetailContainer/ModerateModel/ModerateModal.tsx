@@ -141,7 +141,6 @@ const ModerateModal = ({
     <Modal
       isShowing={isShowing}
       onClose={closeModerateModalHandler}
-      mobileFullScreen
       isHeaderSticky
       shouldShowHeaderShadow={false}
     >

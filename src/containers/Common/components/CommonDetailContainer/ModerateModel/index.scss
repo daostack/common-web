@@ -4,13 +4,13 @@
 .moderate-modal-wrapper {
   .moderate-title {
     font-family: "NunitoSans";
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 800;
     text-transform: capitalize;
-    line-height: 28px;
+    line-height: 1.75rem;
     letter-spacing: 0;
     text-align: center;
-    margin-bottom: 24pt;
+    margin-bottom: 2rem;
   }
 
   .moderate-description {
@@ -18,22 +18,22 @@
 
     .description-title {
       font-family: "NunitoSans";
-      font-size: 14px;
+      font-size: 0.875rem;
       font-weight: 800;
-      line-height: 20px;
+      line-height: 1.25rem;
       letter-spacing: 0;
       text-align: center;
-      margin-bottom: 8pt;
+      margin-bottom: 0.666rem;
     }
 
     .description-content {
       font-family: "NunitoSans";
-      font-size: 14px;
+      font-size: 0.875rem;
       font-weight: normal;
-      line-height: 20px;
+      line-height: 1.25rem;
       letter-spacing: 0;
       text-align: center;
-      margin-bottom: 8pt;
+      margin-bottom: 0.666rem;
     }
   }
 
@@ -41,17 +41,17 @@
     text-align: center;
 
     .reasons {
-      padding-bottom: 24pt;
+      padding-bottom: 2rem;
       border-bottom: 1px solid $light-gray-1;
       .reason-item {
         border: 1px solid $light-gray-1;
-        border-radius: 20px;
+        border-radius: 1.25rem;
         display: inline-block;
-        font-size: 16px;
+        font-size: 1rem;
         font-weight: normal;
-        line-height: 20px;
-        padding: 10px;
-        margin-right: 8pt;
+        line-height: 1.25rem;
+        padding: 0.625rem;
+        margin-right: 0.666rem;
         cursor: pointer;
         &.active{
           background: $purple;
@@ -63,14 +63,14 @@
     .note-wrapper{
       width: 90%;
       margin: 0 auto;
-      margin-top: 24pt;
+      margin-top: 2rem;
       .moderate-note{
         text-align: left;
         font-family: "NunitoSans";
-        font-size: 14px;
+        font-size: 0.875rem;
         font-weight: normal;
-        line-height: 20px;
-        margin-bottom: 10pt;
+        line-height: 1.25rem;
+        margin-bottom: 0.833rem;
       }
       .custom-input__input--textarea{
         height: 7rem;
@@ -79,4 +79,26 @@
       }
     }
   }
+}
+
+@include big-phone {
+  .moderate-modal-wrapper {
+    .moderate-title {
+      margin-bottom: 0.75rem;
+    }
+    .moderate-content {
+      .reasons {
+        padding-bottom: 1rem;
+        .reason-item {
+          font-size: 0.75rem;
+          margin-bottom: 0.3rem;
+        }
+      }
+    }
+
+    .note-wrapper{
+      margin-top: 1rem;
+    }
+  }
+
 }
