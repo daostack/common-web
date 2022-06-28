@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useHistory, useLocation } from "react-router";
-import { parse, stringify } from "query-string";
+import { removeParamsFromQuery } from "./removeParamsFromQuery";
 
 interface Return {
   removeQueryParams: (queryParams: string | string[]) => void;
@@ -12,20 +12,11 @@ const useRemoveQueryParams = (): Return => {
 
   const removeQueryParams = useCallback(
     (keys: string | string[]) => {
-      const queryParams = parse(search);
-      const keysArray = typeof keys === "string" ? [keys] : keys;
-      let isAnyParamRemoved = false;
+      const newQuery = removeParamsFromQuery(search, keys);
 
-      keysArray.forEach((key) => {
-        if (key in queryParams) {
-          delete queryParams[key];
-          isAnyParamRemoved = true;
-        }
-      });
-
-      if (isAnyParamRemoved) {
+      if (newQuery !== search) {
         replace({
-          search: stringify(queryParams),
+          search: newQuery,
         });
       }
     },
