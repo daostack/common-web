@@ -113,7 +113,7 @@ const LoginContainer: FC = () => {
               return;
             }
 
-            handleAuthFinish();
+            handleAuthFinish(data?.isNewUser);
           },
         })
       );
