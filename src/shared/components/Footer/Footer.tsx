@@ -11,7 +11,7 @@ const Footer = () => {
       <div className="footer-top">
         <img src="/icons/logo-all-white.svg" alt="logo" className="logo" />
         <div className="links">
-          <a href="/#about_section">About</a>
+          <a href={ROUTE_PATHS.HOME}>About</a>
           <Link to={ROUTE_PATHS.COMMON_LIST}>Explore Commons</Link>
           <a href={COMMON_APP_APP_STORE_LINK} target="_blank" rel="noopener noreferrer">
             Download IOS
