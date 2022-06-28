@@ -17,7 +17,6 @@ import { Input } from "@/shared/components/Form";
 import * as Yup from "yup";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { getLoading } from "@/shared/store/selectors";
-import { useNotification } from "@/shared/hooks";
 
 interface ModerateModalProps {
   onClose: () => void;
@@ -53,7 +52,7 @@ const ModerateModal = ({
   commonId,
 }: ModerateModalProps) => {
   const user = useSelector(selectUser());
-  const { notify } = useNotification();
+
   const loading = useSelector(getLoading());
   const dispatch = useDispatch();
   const [formValues] = useState<ModerateModal>({
@@ -61,12 +60,11 @@ const ModerateModal = ({
     moderatorNote: "",
   });
 
-  const closeModerateModalHandler = useCallback((message?: string) => {
+  const [showResult, setShowResult] = useState("");
+
+  const closeModerateModalHandler = useCallback(() => {
     onClose();
     dispatch(openModerateModal(null));
-    if (message) {
-      notify(message);
-    }
   }, []);
 
   const getEntityType = () => {
@@ -121,9 +119,7 @@ const ModerateModal = ({
         userId: user?.uid,
         type: moderationModalData.type,
       };
-      dispatch(
-        reportItem.request({ payload, callback: closeModerateModalHandler })
-      );
+      dispatch(reportItem.request({ payload, callback: setShowResult }));
       return;
     }
     const payload = {
@@ -132,9 +128,7 @@ const ModerateModal = ({
       userId: user?.uid,
       type: moderationModalData.type,
     };
-    dispatch(
-      hideItem.request({ payload, callback: closeModerateModalHandler })
-    );
+    dispatch(hideItem.request({ payload, callback: setShowResult }));
   };
 
   return (
@@ -144,61 +138,109 @@ const ModerateModal = ({
       isHeaderSticky
       shouldShowHeaderShadow={false}
     >
-      <Formik
-        initialValues={formValues}
-        onSubmit={submitModerateForm}
-        validationSchema={validationSchema}
-        validateOnMount={true}
-      >
-        {(formikProps) => (
-          <div className="moderate-modal-wrapper">
-            <div className="moderate-title">{getTitle()}</div>
-            <div className="moderate-description">{getDescription()}</div>
-            <div className="moderate-content">
-              {loading ? <Loader /> : null}
-              <div className="reasons">
-                {reasons.map((r) => (
-                  <div
-                    className={`reason-item ${
-                      r === formikProps.values.reason ? "active" : ""
-                    }`}
-                    key={r}
-                    onClick={() => formikProps.setFieldValue("reason", r)}
-                  >
-                    {r}
-                  </div>
-                ))}
-              </div>
-              <div className="note-wrapper">
-                <div className="moderate-note">Moderator note:</div>
-                <Input
-                  id="moderatorNote"
-                  name="moderatorNote"
-                  placeholder="Add Note"
-                  isTextarea
-                  value={formikProps.values.moderatorNote}
-                  onChange={(e) =>
-                    formikProps.setFieldValue("moderatorNote", e.target.value)
-                  }
-                />
-              </div>
+      {!showResult ? (
+        <Formik
+          initialValues={formValues}
+          onSubmit={submitModerateForm}
+          validationSchema={validationSchema}
+          validateOnMount={true}
+        >
+          {(formikProps) => (
+            <div className="moderate-modal-wrapper">
+              <div className="moderate-title">{getTitle()}</div>
+              <div className="moderate-description">{getDescription()}</div>
+              <div className="moderate-content">
+                {loading ? <Loader /> : null}
+                <div className="reasons">
+                  {reasons.map((r) => (
+                    <div
+                      className={`reason-item ${
+                        r === formikProps.values.reason ? "active" : ""
+                      }`}
+                      key={r}
+                      onClick={() => formikProps.setFieldValue("reason", r)}
+                    >
+                      {r}
+                    </div>
+                  ))}
+                </div>
+                <div className="note-wrapper">
+                  <div className="moderate-note">Moderator note:</div>
+                  <Input
+                    id="moderatorNote"
+                    name="moderatorNote"
+                    placeholder="Add Note"
+                    isTextarea
+                    value={formikProps.values.moderatorNote}
+                    onChange={(e) =>
+                      formikProps.setFieldValue("moderatorNote", e.target.value)
+                    }
+                  />
+                </div>
 
-              <div className="action-wrapper">
-                <button
-                  className="button-blue"
-                  disabled={!formikProps.isValid || loading}
-                  type="submit"
-                  onClick={formikProps.submitForm}
-                >
-                  {moderationModalData.actionType === "hide"
-                    ? "Hide "
-                    : "Report "}
-                </button>
+                <div className="action-wrapper">
+                  <button
+                    className="button-blue"
+                    disabled={!formikProps.isValid || loading}
+                    type="submit"
+                    onClick={formikProps.submitForm}
+                  >
+                    {moderationModalData.actionType === "hide"
+                      ? "Hide "
+                      : "Report "}
+                  </button>
+                </div>
               </div>
             </div>
+          )}
+        </Formik>
+      ) : showResult === "success" ? (
+        <div className="moderate-success-wrapper">
+          <img
+            src="/icons/add-proposal/illustrations-full-page-send.svg"
+            alt="confirm"
+          />
+          <div className="moderate-success-title">
+            {moderationModalData.actionType === ModerationActionType.hide
+              ? `The ${getEntityType()} was successfully hidden`
+              : `Thanks for letting us know!`}
           </div>
-        )}
-      </Formik>
+          <div className="moderate-success-description">
+            {moderationModalData.actionType === ModerationActionType.hide
+              ? `The ${getEntityType()} will not be visible to members. You can undo this at any time.`
+              : `We appreciate you letting us know, your feedback is important in helping us keep the Common safe.`}
+          </div>
+          <div className="actions-wrapper">
+            <button
+              className="button-blue white"
+              type="button"
+              onClick={() => closeModerateModalHandler()}
+            >
+              Ok
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="moderate-success-wrapper">
+          <img
+            src="/icons/add-proposal/illustrations-medium-alert.svg"
+            alt="confirm"
+          />
+          <div className="moderate-success-title">Something went wrong</div>
+          <div className="moderate-success-description">
+            This took longer than expected, please try again later
+          </div>
+          <div className="actions-wrapper">
+            <button
+              className="button-blue white"
+              type="submit"
+              onClick={() => closeModerateModalHandler()}
+            >
+              Ok
+            </button>
+          </div>
+        </div>
+      )}
     </Modal>
   );
 };

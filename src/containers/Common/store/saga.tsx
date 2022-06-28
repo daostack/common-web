@@ -1080,9 +1080,9 @@ export function* reportItemSaga(
     yield call(reportItemApi, action.payload.payload);
 
     yield put(actions.reportItem.success());
-    action.payload.callback("Your report was accepted");
+    action.payload.callback("success");
   } catch (error) {
-    action.payload.callback("Something went wrong");
+    action.payload.callback("failure");
     if (isError(error)) {
       yield put(actions.reportItem.failure(error));
     }
@@ -1100,11 +1100,9 @@ export function* hideItemSaga(
     yield call(hideItemApi, action.payload.payload);
 
     yield put(actions.hideItem.success());
-    action.payload.callback(
-      `Your ${action.payload.payload.type} was successfully hidden`
-    );
+    action.payload.callback("success");
   } catch (error) {
-    action.payload.callback("Something went wrong");
+    action.payload.callback("failure");
     if (isError(error)) {
       yield put(actions.hideItem.failure(error));
     }

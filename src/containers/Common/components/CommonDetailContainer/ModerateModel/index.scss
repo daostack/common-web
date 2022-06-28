@@ -1,6 +1,47 @@
 @import "../../../../../constants.scss";
 @import "../../../../../styles/sizes";
 
+.moderate-success-wrapper{
+  margin: 0 auto;
+  text-align: center;
+  img{
+    width: 10rem;
+  }
+  .moderate-success-title{
+    font-family: "NunitoSans";
+    font-size: 1.25rem;
+    font-weight: 800;
+    text-transform: capitalize;
+    line-height: 1.75rem;
+    letter-spacing: 0;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .moderate-success-description{
+    font-family: "NunitoSans";
+    font-size: 0.875rem;
+    font-weight: normal;
+    line-height: 1.25rem;
+    letter-spacing: 0;
+    text-align: center;
+    margin-bottom: 0.666rem;
+    text-align: center;
+  }
+  .actions-wrapper {
+    .button-blue {
+      font-weight: normal;
+
+      &.white {
+        border: solid 1px #eee;
+        background-color: #fff;
+        color: #001a36;
+        font-weight: normal;
+        margin-right: 16px;
+      }
+    }
+  }
+}
+
 .moderate-modal-wrapper {
   .moderate-title {
     font-family: "NunitoSans";
