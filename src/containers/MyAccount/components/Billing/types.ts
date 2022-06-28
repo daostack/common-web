@@ -15,7 +15,7 @@ export interface BillingProps {
   changePaymentMethodState: ChangePaymentMethodState;
   onPaymentMethodChange: () => void;
   onChangePaymentMethodStateClear: () => void;
-  onBankAccountChange: (data: BankAccountDetails) => void;
+  onBankAccountChange: (data: BankAccountDetails | null) => void;
   areContributionsLoading: boolean;
   contributions: (Payment | Subscription)[];
   subscriptions: Subscription[];

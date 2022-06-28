@@ -24,6 +24,7 @@ export interface ModalProps {
   onHeaderScrolledToTop?: (isHeaderScrolledToTop: boolean) => void;
   closePrompt?: boolean;
   withoutHorizontalPadding?: boolean;
+  withoutHeader?: boolean;
   styles?: {
     modalWrapper?: string;
     headerWrapper?: string;
