@@ -1,0 +1,79 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+$vertical-view-breakpoint: 1100px;
+
+.landing-imagine-section {
+  padding: 6.375rem 4rem 9.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(180deg, $light-gray-4 0%, $white 100%);
+
+  @include viewport-breakpoint($vertical-view-breakpoint) {
+    padding: 3rem;
+  }
+
+  @include big-phone {
+    padding-right: 1.25rem;
+    padding-left: 1.25rem;
+  }
+}
+
+.landing-imagine-section__content {
+  max-width: 72.125rem;
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 25.625rem);
+  grid-gap: 2.875rem;
+  align-items: flex-end;
+
+  @include viewport-breakpoint($vertical-view-breakpoint) {
+    grid-template-columns: 1fr;
+    grid-auto-flow: row;
+  }
+}
+
+.landing-imagine-section__image {
+  width: 100%;
+  max-width: 43.625rem;
+  margin: 0 auto;
+
+  @include viewport-breakpoint($vertical-view-breakpoint) {
+    max-width: 26.875rem;
+  }
+}
+
+.landing-imagine-section__info-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.landing-imagine-section__title {
+  width: 100%;
+  margin: 0 0 2rem;
+  font-family: NotoSerifSC, serif;
+  font-weight: 600;
+  font-size: $large;
+  line-height: 133%;
+
+  @include viewport-breakpoint($vertical-view-breakpoint) {
+    text-align: center;
+  }
+}
+
+.landing-imagine-section__description {
+  width: 100%;
+  margin: 0 0 2rem;
+  font-size: $moderate;
+  line-height: 120%;
+  letter-spacing: 0.01em;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  @include viewport-breakpoint($vertical-view-breakpoint) {
+    max-width: 26.875rem;
+  }
+}
