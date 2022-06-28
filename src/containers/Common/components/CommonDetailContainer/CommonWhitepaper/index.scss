@@ -1,0 +1,54 @@
+@import "../../../../../constants.scss";
+@import "../../../../../styles/sizes";
+
+.common-whitepaper-wrapper {
+  .common-whitepaper__title {
+    font-size: $moderate-med;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+  }
+  .common-whitepaper__see-more {
+    text-align: right;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+  .common-whitepaper__content {
+    display: flex;
+    flex-direction: column;
+    .common-whitepaper__tabs {
+      display: flex;
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+      .common-whitepaper__tab {
+        height: 3rem;
+        line-height: 3rem;
+        color: $purple;
+        width: 50%;
+        text-align: center;
+        cursor: pointer;
+        border: 1px solid $light-gray-1;
+        font-weight: bold;
+        &:hover {
+          opacity: 0.9;
+        }
+        &.common-whitepaper__tab--active {
+          background-color: $purple;
+          color: $white;
+        }
+      }
+      .common-whitepaper__tab:first-child {
+        border-top-left-radius: 0.5rem;
+        border-bottom-left-radius: 0.5rem;
+      }
+      .common-whitepaper__tab:last-child {
+        border-top-right-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
+      }
+    }
+  }
+}
