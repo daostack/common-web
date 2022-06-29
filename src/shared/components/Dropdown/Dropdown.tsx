@@ -268,7 +268,9 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
           }
         </Menu>
       </MenuWrapper>
-      {isOpen && shouldBeFixed && <GlobalOverlay />}
+      {isOpen && shouldBeFixed && (
+        <GlobalOverlay className="custom-dropdown-wrapper__global-overlay" />
+      )}
     </>
   );
 };
