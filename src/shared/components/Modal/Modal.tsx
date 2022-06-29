@@ -45,6 +45,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     closePrompt = false,
     withoutHorizontalPadding = false,
     withoutHeader = false,
+    fullHeight = false,
   } = props;
   const contentRef = useRef<HTMLDivElement>(null);
   const [footer, setFooter] = useState<ReactNode>(null);
@@ -129,6 +130,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
   const modalClassName = classNames("modal", props.className, {
     "modal--mobile-full-screen": mobileFullScreen && type !== ModalType.MobilePopUp,
     "modal--mobile-pop-up": type === ModalType.MobilePopUp,
+    "modal--full-height": fullHeight,
   });
   const headerWrapperClassName = classNames(
     "modal__header-wrapper",
