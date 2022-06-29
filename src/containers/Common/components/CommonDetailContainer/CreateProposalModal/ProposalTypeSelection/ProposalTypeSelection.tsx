@@ -19,8 +19,12 @@ const PROPOSAL_TYPE_OPTIONS: DropdownOption[] = [
 ];
 
 const ProposalTypeSelection: FC = () => {
-  const { setTitle, setOnGoBack, setShouldShowClosePrompt } =
-    useCreateProposalContext();
+  const {
+    setTitle,
+    setOnGoBack,
+    setShouldShowClosePrompt,
+    setShouldBeOnFullHeight,
+  } = useCreateProposalContext();
   const [selectedType, setSelectedType] = useState<ProposalsTypes | null>(null);
 
   const handleSelect = (value: unknown) => {
@@ -38,6 +42,10 @@ const ProposalTypeSelection: FC = () => {
   useEffect(() => {
     setShouldShowClosePrompt(true);
   }, [setShouldShowClosePrompt]);
+
+  useEffect(() => {
+    setShouldBeOnFullHeight(true);
+  }, [setShouldBeOnFullHeight]);
 
   return (
     <div className="proposal-type-selection-stage">

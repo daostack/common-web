@@ -33,6 +33,7 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
   const [title, setTitle] = useState<ReactNode>("Create New Proposal");
   const [onGoBack, setOnGoBack] = useState<GoBackHandler>();
   const [shouldShowClosePrompt, setShouldShowClosePrompt] = useState(false);
+  const [shouldBeOnFullHeight, setShouldBeOnFullHeight] = useState(true);
   const [errorText, setErrorText] = useState<string | null>(null);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -65,6 +66,7 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
     () => ({
       setTitle,
       setShouldShowClosePrompt,
+      setShouldBeOnFullHeight,
       setOnGoBack: setGoBackHandler,
       onError: handleError,
     }),
@@ -89,6 +91,7 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
       onGoBack={onGoBack}
       closePrompt={shouldShowClosePrompt}
       mobileFullScreen
+      fullHeight={shouldBeOnFullHeight}
     >
       <CreateProposalContext.Provider value={contextValue}>
         {renderContent()}

@@ -8,6 +8,7 @@ export interface CreateProposalContextValue {
   setTitle: (title: ReactNode) => void;
   setOnGoBack: (handler?: GoBackHandler) => void;
   setShouldShowClosePrompt: (value: boolean) => void;
+  setShouldBeOnFullHeight: (value: boolean) => void;
   onError: (errorText: string) => void;
 }
 
@@ -20,6 +21,9 @@ export const CreateProposalContext =
       throw new Error(ERROR_TEXT);
     },
     setShouldShowClosePrompt: () => {
+      throw new Error(ERROR_TEXT);
+    },
+    setShouldBeOnFullHeight: () => {
       throw new Error(ERROR_TEXT);
     },
     onError: () => {
