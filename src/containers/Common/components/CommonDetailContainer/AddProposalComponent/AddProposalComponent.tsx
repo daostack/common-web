@@ -147,27 +147,35 @@ export const AddProposalComponent = ({
   const renderProposalStep = useMemo(() => {
     switch (proposalCreationStep) {
       case AddProposalSteps.CREATE:
-        return (
-          <AddProposalForm
-            common={common}
-            saveProposalState={saveProposalState}
-            addBankDetails={addBankDetails}
-          />
-        );
       case AddProposalSteps.BANK_DETAILS:
-        return (
-          <AddBankDetails
-            onBankDetails={onBankDetails}
-            onBankDetailsAfterError={setInitialBankAccountDetails}
-            title="Add Bank Account"
-            initialBankAccountDetails={initialBankAccountDetails}
-          />
-        );
       case AddProposalSteps.CONFIRM:
         return (
-          <AddProposalConfirm
-            onConfirm={() => confirmProposal(fundingRequest)}
-          />
+          <>
+            <AddProposalForm
+              common={common}
+              saveProposalState={saveProposalState}
+              addBankDetails={addBankDetails}
+              hidden={
+                (proposalCreationStep === AddProposalSteps.BANK_DETAILS)
+                || (proposalCreationStep === AddProposalSteps.CONFIRM)
+              }
+            />
+            {
+              (proposalCreationStep === AddProposalSteps.BANK_DETAILS)
+              && <AddBankDetails
+                onBankDetails={onBankDetails}
+                onBankDetailsAfterError={setInitialBankAccountDetails}
+                title="Add Bank Account"
+                initialBankAccountDetails={initialBankAccountDetails}
+              />
+            }
+            {
+              (proposalCreationStep === AddProposalSteps.CONFIRM)
+              && <AddProposalConfirm
+                onConfirm={() => confirmProposal(fundingRequest)}
+              />
+            }
+          </>
         );
       case AddProposalSteps.LOADER:
         return <AddProposalLoader />;
