@@ -21,7 +21,11 @@ import {
   ProposalWithHighlightedComment,
 } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { checkIsCountdownState, formatPrice, getUserName } from "@/shared/utils";
+import {
+  checkIsCountdownState,
+  formatPrice,
+  getUserName,
+} from "@/shared/utils";
 import { LoginModalType } from "../../../Auth/interface";
 import {
   AboutTabComponent,
@@ -29,6 +33,7 @@ import {
   DiscussionsComponent,
   DiscussionDetailModal,
   CommonMenu,
+  CreateProposalModal,
   ProposalsComponent,
   AboutSidebarComponent,
   AddDiscussionComponent,
@@ -590,14 +595,10 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
         />
       )}
       {isShowingNewP && (
-        <AddProposalComponent
+        <CreateProposalModal
           isShowing={isShowingNewP}
           onClose={onCloseNewP}
-          onProposalAdd={addProposal}
-          common={common}
-          hasPaymentMethod={hasPaymentMethod}
-          proposals={proposals}
-          getProposalDetail={getProposalDetail}
+          governance={governance}
         />
       )}
       <div className="common-detail-wrapper">
