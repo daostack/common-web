@@ -10,9 +10,7 @@
   ],
   "parserOptions": {
     // Required for certain syntax usages
-    "ecmaVersion": 2020,
-    "sourceType": "module",
-    "allowImportExportEverywhere": true
+    "ecmaVersion": 2018
   },
   "env": {
     "amd": true,
