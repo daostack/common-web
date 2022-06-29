@@ -2,7 +2,8 @@ import React, { useMemo, FC } from "react";
 import classNames from "classnames";
 import { ROUTE_PATHS } from "@/shared/constants";
 import ApprovedIcon from "@/shared/icons/approved.icon";
-import { Common, DateFormat, Proposal, User } from "@/shared/models";
+import { Common, DateFormat, User } from "@/shared/models";
+import { FundsAllocation } from "@/shared/models/governance/proposals";
 import { formatEpochTime, formatPrice, getUserName } from "@/shared/utils";
 import {
   checkDeclinedProposal,
@@ -11,7 +12,7 @@ import {
 import "./index.scss";
 
 interface ProposalCardProps {
-  proposal: Proposal;
+  proposal: FundsAllocation;
   common?: Common;
   user?: User;
   withAdditionalData?: boolean;
@@ -23,13 +24,10 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
   const isPendingApproval = checkPendingApprovalProposal(proposal);
   const isDeclined = checkDeclinedProposal(proposal);
   const isApproved = !isPendingApproval && !isDeclined;
+  const { payoutDocs, payoutDocsUserComment } = proposal.data.legal;
   const invoicesTotal = useMemo(
-    () =>
-      (proposal.payoutDocs || []).reduce(
-        (acc, doc) => acc + (doc.amount || 0),
-        0
-      ),
-    [proposal.payoutDocs]
+    () => (payoutDocs || []).reduce((acc, doc) => acc + (doc.amount || 0), 0),
+    [payoutDocs]
   );
 
   const containerClassName = classNames("trustee-proposal-card", {
@@ -86,15 +84,15 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
           )}
           <h3
             className="trustee-proposal-card__title"
-            title={proposal.description.title}
+            title={proposal.data.args.title}
           >
-            {proposal.description.title}
+            {proposal.data.args.title}
           </h3>
           <div className="trustee-proposal-card__prices-wrapper">
             <div className={priceWrapperClassName}>
               <span>Proposal Requested</span>
               <span className="trustee-proposal-card__price">
-                {formatPrice(proposal.fundingRequest?.amount)}
+                {formatPrice(proposal.data.args.amount)}
               </span>
             </div>
             <div className={priceWrapperClassName}>
@@ -106,12 +104,12 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
           </div>
           <p
             className="trustee-proposal-card__note"
-            title={proposal.payoutDocsComment}
+            title={payoutDocsUserComment || ""}
           >
-            {proposal.payoutDocsComment && (
+            {payoutDocsUserComment && (
               <>
                 <strong>Note: </strong>
-                {proposal.payoutDocsComment}
+                {payoutDocsUserComment}
               </>
             )}
           </p>

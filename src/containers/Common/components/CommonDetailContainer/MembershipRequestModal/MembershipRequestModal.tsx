@@ -8,166 +8,143 @@ import React, {
   ReactNode,
   SetStateAction,
 } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { v4 as uuidv4 } from "uuid";
-import { Modal } from "../../../../../shared/components";
-import { useZoomDisabling } from "../../../../../shared/hooks";
-import { ModalProps, ModalRef } from "../../../../../shared/interfaces";
-import { Common, CommonLink } from "../../../../../shared/models";
-import MembershipRequestContribution from "./MembershipRequestContribution";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/containers/Auth/store/selectors";
+import { GlobalLoader, Modal } from "@/shared/components";
+import { useZoomDisabling } from "@/shared/hooks";
+import { ModalProps, ModalRef } from "@/shared/interfaces";
+import { Common, CommonLink, Governance } from "@/shared/models";
 import MembershipRequestCreated from "./MembershipRequestCreated";
 import MembershipRequestCreating from "./MembershipRequestCreating";
 import MembershipRequestIntroduce from "./MembershipRequestIntroduce";
-import MembershipRequestPayment from "./MembershipRequestPayment";
 import MembershipRequestProgressBar from "./MembershipRequestProgressBar";
 import MembershipRequestRules from "./MembershipRequestRules";
 import MembershipRequestWelcome from "./MembershipRequestWelcome";
-import { selectUser } from "../../../../Auth/store/selectors";
-import { selectCommonList } from "../../../store/selectors";
-import { getCommonsList } from "../../../store/actions";
+import { useMemberInAnyCommon } from "../../../hooks";
+import { MembershipRequestStage } from "./constants";
 import "./index.scss";
 
 export interface IStageProps {
   setUserData: Dispatch<SetStateAction<IMembershipRequestData>>;
   userData: IMembershipRequestData;
   common?: Common;
+  governance?: Governance;
 }
 
 export interface IMembershipRequestData {
-  stage: number;
+  stage: MembershipRequestStage;
   intro: string;
   links?: CommonLink[];
-  contributionAmount: number | undefined;
-  fullname: string;
-  city: string;
-  country: string;
-  district: string;
-  address: string;
-  postal: string;
-  card_number: number | undefined;
-  cvv: number | undefined;
-  expiration_date: string;
-  cardId: string;
 }
 
-const initData: IMembershipRequestData = {
-  stage: 0,
+const INIT_DATA: IMembershipRequestData = {
+  stage: MembershipRequestStage.Welcome,
   intro: "",
-  contributionAmount: undefined,
-  fullname: "",
-  city: "",
-  country: "",
-  district: "",
-  address: "",
-  postal: "",
-  card_number: undefined,
-  cvv: undefined,
-  expiration_date: "",
-  cardId: uuidv4(),
 };
 
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
   common: Common;
+  governance: Governance;
   onCreationStageReach: (reached: boolean) => void;
 }
 
 export function MembershipRequestModal(props: IProps) {
-  const dispatch = useDispatch();
   // TODO: should be saved in the localstorage for saving the progress?
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
   const modalRef = useRef<ModalRef>(null);
-  const [userData, setUserData] = useState(initData);
-  const user = useSelector(selectUser());
-  const [isMember, setIsMember] = useState<boolean>();
+  const [userData, setUserData] = useState(INIT_DATA);
   const { stage } = userData;
-  const { isShowing, onClose, common, onCreationStageReach } = props;
-  const shouldDisplayProgressBar = stage > 0 && stage < 5;
-  const shouldDisplayGoBack = (stage > 1 && stage < 5) || (stage === 1 && !isMember);
-  const commons = useSelector(selectCommonList());
+  const { isShowing, onClose, common, governance, onCreationStageReach } =
+    props;
+  const {
+    loading: isMembershipCheckLoading,
+    fetched: isMembershipCheckDone,
+    data: isMember,
+    checkMembershipInAnyCommon,
+    resetMembershipCheck,
+  } = useMemberInAnyCommon();
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
+  const shouldDisplayProgressBar =
+    stage > MembershipRequestStage.Welcome &&
+    stage < MembershipRequestStage.Creating;
+  const shouldDisplayGoBack =
+    (stage > MembershipRequestStage.Introduce &&
+      stage < MembershipRequestStage.Creating) ||
+    (stage === MembershipRequestStage.Introduce && !isMember);
 
-  /**
-   * The data is saved only when we are on the Common Details Page.
-   * Until implementing a robust way to handle the saving of the data the user will be notified of losing the data.
-   */
   useEffect(() => {
     if (isShowing) {
       disableZoom();
     } else {
       resetZoom();
     }
+  }, [isShowing, disableZoom, resetZoom]);
 
-    if (commons.length === 0) {
-      dispatch(getCommonsList.request());
+  useEffect(() => {
+    if (isShowing && !isMembershipCheckLoading && !isMembershipCheckDone) {
+      checkMembershipInAnyCommon();
     }
+  }, [
+    isShowing,
+    isMembershipCheckLoading,
+    isMembershipCheckDone,
+    checkMembershipInAnyCommon,
+  ]);
 
-    const isMember = commons.some((c) =>
-      c.members.some((m) => m.userId === user?.uid)
-    );
+  useEffect(() => {
+    resetMembershipCheck();
+  }, [userId]);
 
-    setIsMember(isMember);
+  /**
+   * The data is saved only when we are on the Common Details Page.
+   * Until implementing a robust way to handle the saving of the data the user will be notified of losing the data.
+   */
+  useEffect(() => {
+    if (!isMembershipCheckDone || !isShowing) {
+      return;
+    }
 
     const payload: IMembershipRequestData = {
-      ...initData,
-      cardId: uuidv4(),
-      stage: isMember ? 1 : 0,
+      ...INIT_DATA,
+      stage: isMember
+        ? MembershipRequestStage.Introduce
+        : MembershipRequestStage.Welcome,
     };
-
-    if (user) {
-      payload.fullname = user.displayName ?? "";
-      if (!payload.fullname) {
-        payload.fullname = `${user.firstName} ${user.lastName}`;
-      }
-      payload.country = user.country ?? "";
-    }
 
     setUserData(payload);
     onCreationStageReach(false);
-  }, [isShowing, user, onCreationStageReach, disableZoom, resetZoom, commons, dispatch]);
+  }, [isMembershipCheckDone, isMember, isShowing, onCreationStageReach]);
 
   const renderCurrentStage = (stage: number) => {
     switch (stage) {
-      case 0:
+      case MembershipRequestStage.Welcome:
         return (
           <MembershipRequestWelcome
             userData={userData}
             setUserData={setUserData}
           />
         );
-      case 1:
+      case MembershipRequestStage.Introduce:
         return (
           <MembershipRequestIntroduce
             userData={userData}
             setUserData={setUserData}
             common={common}
+            governance={governance}
           />
         );
-      case 2:
+      case MembershipRequestStage.Rules:
         return (
           <MembershipRequestRules
             userData={userData}
             setUserData={setUserData}
-            common={common}
+            governance={governance}
           />
         );
-      case 3:
-        return (
-          <MembershipRequestContribution
-            userData={userData}
-            setUserData={setUserData}
-            common={common}
-          />
-        );
-      case 4:
-        return (
-          <MembershipRequestPayment
-            userData={userData}
-            setUserData={setUserData}
-            common={common}
-          />
-        );
-      case 5:
+      case MembershipRequestStage.Creating:
         return (
           <MembershipRequestCreating
             userData={userData}
@@ -175,35 +152,35 @@ export function MembershipRequestModal(props: IProps) {
             common={common}
           />
         );
-      case 6:
+      case MembershipRequestStage.Created:
         return <MembershipRequestCreated closeModal={onClose} />;
     }
   };
 
   const renderedTitle = useMemo((): ReactNode => {
-    if (stage >= 5 || stage === 0) {
+    if (
+      stage >= MembershipRequestStage.Creating ||
+      stage === MembershipRequestStage.Welcome
+    ) {
       return null;
     }
-    return <h3 className="membership-request-modal__title">Membership Request</h3>;
+    return (
+      <h3 className="membership-request-modal__title">Membership Request</h3>
+    );
   }, [stage]);
 
   const moveStageBack = useCallback(() => {
     setUserData((data) => {
-      const isContributionStage = data.stage === 3;
-      const prevStage =
-        isContributionStage && common.rules.length === 0
-          ? data.stage - 2
-          : data.stage - 1;
-
+      const prevStage = data.stage - 1;
       return {
         ...data,
         stage: prevStage,
       };
     });
-  }, [common]);
+  }, []);
 
   useEffect(() => {
-    if (stage === 5) {
+    if (stage === MembershipRequestStage.Creating) {
       onCreationStageReach(true);
     }
   }, [stage, onCreationStageReach]);
@@ -212,6 +189,10 @@ export function MembershipRequestModal(props: IProps) {
     modalRef.current?.scrollToTop();
   }, [stage]);
 
+  if (isShowing && !isMembershipCheckDone) {
+    return <GlobalLoader />;
+  }
+
   return (
     <Modal
       ref={modalRef}
@@ -219,11 +200,14 @@ export function MembershipRequestModal(props: IProps) {
       onClose={onClose}
       className="mobile-full-screen membership-request-modal"
       mobileFullScreen
-      closePrompt={stage !== 6}
+      closePrompt={stage !== MembershipRequestStage.Created}
       title={renderedTitle}
       onGoBack={shouldDisplayGoBack ? moveStageBack : undefined}
       styles={{
-        content: stage === 0 ? "membership-request-modal__content--introduction" : ""
+        content:
+          stage === MembershipRequestStage.Welcome
+            ? "membership-request-modal__content--introduction"
+            : "",
       }}
     >
       <div className="membership-request-wrapper">

@@ -1,27 +1,22 @@
-import React, {
-    useEffect,
-    useCallback,
-    useMemo,
-    useState,
-    FC,
-} from "react";
+import React, { useEffect, useCallback, useMemo, useState, FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useParams } from "react-router-dom";
 import classNames from "classnames";
 
-import { Proposal, ProposalType } from "@/shared/models";
+import { Proposal } from "@/shared/models";
 import {
-    FundingProposalListItem,
-    MembershipRequestListItem,
-    ProposalDetailModal
+  FundingProposalListItem,
+  MembershipRequestListItem,
+  ProposalDetailModal,
 } from "@/containers/Common/components";
 import { Loader, Modal } from "@/shared/components";
+import { useCommonMember } from "@/containers/Common/hooks";
 import { useModal } from "@/shared/hooks";
-import { ROUTE_PATHS, ScreenSize } from "@/shared/constants";
+import { ProposalsTypes, ROUTE_PATHS, ScreenSize } from "@/shared/constants";
 import {
-    selectUserProposalList,
-    selectCurrentProposal,
-    selectCommonDetail,
+  selectUserProposalList,
+  selectCurrentProposal,
+  selectCommonDetail,
 } from "../../../../Common/store/selectors";
 import { selectUser } from "../../../../Auth/store/selectors";
 import {
@@ -29,16 +24,16 @@ import {
   getScreenSize,
 } from "../../../../../shared/store/selectors";
 import {
-    getCommonDetail,
-    loadUserProposalList,
-    loadProposalDetail,
-    clearCurrentProposal,
-    closeCurrentCommon,
+  getCommonDetail,
+  loadUserProposalList,
+  loadProposalDetail,
+  clearCurrentProposal,
+  closeCurrentCommon,
 } from "../../../../Common/store/actions";
 import "./index.scss";
 
 interface MyProposalsContainerRouterParams {
-    proposalType: ProposalType;
+  proposalType: ProposalsTypes;
 }
 
 const ActivitiesProposalsContainer: FC = () => {
@@ -52,16 +47,18 @@ const ActivitiesProposalsContainer: FC = () => {
   const screenSize = useSelector(getScreenSize());
   const { isShowing, onOpen, onClose } = useModal(false);
   const [myProposalsByType, setMyProposalsByType] = useState<Proposal[]>([]);
+  const {
+    fetched: isCommonMemberFetched,
+    data: commonMember,
+    fetchCommonMember,
+    resetCommonMember,
+  } = useCommonMember();
 
-  const isMobileView = useMemo(() => (screenSize === ScreenSize.Mobile), [screenSize]);
+  const isMobileView = useMemo(() => screenSize === ScreenSize.Mobile, [
+    screenSize,
+  ]);
 
-  const isCommonMember = useMemo(() => {
-    const commonMember = currentCommon?.members.find(
-      (member) => member.userId === user?.uid
-    );
-
-    return Boolean(commonMember);
-  }, [currentCommon, user]);
+  const isCommonMember = Boolean(commonMember);
 
   const getProposalDetail = useCallback(
     (payload: Proposal) => {
@@ -76,22 +73,35 @@ const ActivitiesProposalsContainer: FC = () => {
     dispatch(clearCurrentProposal());
   }, [onClose, dispatch]);
 
-  const renderListItem = useCallback((proposal: Proposal) => {
-    switch (proposalType) {
-      case ProposalType.FundingRequest:
-        return <FundingProposalListItem
-          proposal={proposal}
-          key={proposal.id}
-          loadProposalDetails={getProposalDetail}
-        />;
-      case ProposalType.Join:
-        return <MembershipRequestListItem
-          proposal={proposal}
-          key={proposal.id}
-          loadProposalDetails={getProposalDetail}
-        />;
+  const renderListItem = useCallback(
+    (proposal: Proposal) => {
+      switch (proposalType) {
+        case ProposalsTypes.FUNDS_ALLOCATION:
+          return (
+            <FundingProposalListItem
+              proposal={proposal}
+              key={proposal.id}
+              loadProposalDetails={getProposalDetail}
+            />
+          );
+        case ProposalsTypes.MEMBER_ADMITTANCE:
+          return (
+            <MembershipRequestListItem
+              proposal={proposal}
+              key={proposal.id}
+              loadProposalDetails={getProposalDetail}
+            />
+          );
+      }
+    },
+    [proposalType, getProposalDetail]
+  );
+
+  useEffect(() => {
+    if (currentProposal) {
+      fetchCommonMember(currentProposal.data.args.commonId);
     }
-  }, [proposalType, getProposalDetail]);
+  }, [currentProposal, fetchCommonMember]);
 
   useEffect(() => {
     if (myProposals.length === 0 && user?.uid)
@@ -99,11 +109,10 @@ const ActivitiesProposalsContainer: FC = () => {
   }, [dispatch, myProposals, user]);
 
   useEffect(() => {
-    if (!myProposals.length)
-      return;
+    if (!myProposals.length) return;
 
-    const myProposalsByType = myProposals.filter((proposal) =>
-      proposal.type === proposalType
+    const myProposalsByType = myProposals.filter(
+      (proposal) => proposal.type === proposalType
     );
 
     setMyProposalsByType(myProposalsByType);
@@ -112,61 +121,61 @@ const ActivitiesProposalsContainer: FC = () => {
   useEffect(() => {
     if (!currentProposal) return;
 
+    resetCommonMember();
     dispatch(
       getCommonDetail.request({
-        payload: currentProposal?.commonId,
+        payload: currentProposal.data.args.commonId,
       })
     );
 
     return () => {
       dispatch(closeCurrentCommon());
     };
-  }, [dispatch, currentProposal]);
+  }, [dispatch, resetCommonMember, currentProposal]);
 
   return (
     <>
-      {
-        isShowing && <Modal
+      {isShowing && (
+        <Modal
           isShowing={isShowing}
           onClose={closeModalHandler}
           mobileFullScreen
           className={classNames("proposals", {
-              "mobile-full-screen": isMobileView,
+            "mobile-full-screen": isMobileView,
           })}
           isHeaderSticky
           shouldShowHeaderShadow={false}
           styles={{
-              headerWrapper: "activities-proposals__detail-modal-header-wrapper",
+            headerWrapper: "activities-proposals__detail-modal-header-wrapper",
           }}
         >
-          <ProposalDetailModal
+          {isCommonMemberFetched ? (
+            <ProposalDetailModal
               proposal={currentProposal}
               common={currentCommon}
-              isCommonMember={isCommonMember}
-          />
+              commonMember={commonMember}
+              isCommonMemberFetched={isCommonMemberFetched}
+            />
+          ) : (
+            <div>
+              <Loader />
+            </div>
+          )}
         </Modal>
-      }
+      )}
       <div className="activities-proposals">
         <h2 className="activities-proposals__header">
-          <NavLink
-            to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES}
-          >
+          <NavLink to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES}>
             <img src="/icons/left-arrow.svg" alt="left-arrow" />
-            {
-              (proposalType === ProposalType.FundingRequest)
-                ? "Proposals "
-                : "Membership requests "
-            }({myProposalsByType.length})
+            {proposalType === ProposalsTypes.FUNDS_ALLOCATION
+              ? "Proposals "
+              : "Membership requests "}
+            ({myProposalsByType.length})
           </NavLink>
         </h2>
         {loading && <Loader />}
         <div className="activities-proposals__proposals-list">
-          {
-            myProposalsByType.map(
-              proposal =>
-                renderListItem(proposal)
-            )
-          }
+          {myProposalsByType.map((proposal) => renderListItem(proposal))}
         </div>
       </div>
     </>

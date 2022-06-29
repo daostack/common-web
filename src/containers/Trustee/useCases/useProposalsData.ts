@@ -1,7 +1,8 @@
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { LoadingState } from "@/shared/interfaces";
-import { Common, Proposal, User } from "@/shared/models";
+import { Common, User } from "@/shared/models";
+import { FundsAllocation } from "@/shared/models/governance/proposals";
 import { getProposalsData } from "../store/actions";
 import { ExtendedProposal } from "../interfaces";
 import {
@@ -19,7 +20,7 @@ interface Return {
 }
 
 const getExtendedProposals = (
-  { loading, fetched, data: proposals }: LoadingState<Proposal[]>,
+  { loading, fetched, data: proposals }: LoadingState<FundsAllocation[]>,
   commons: Common[] | null,
   users: User[] | null
 ): ExtendedProposal[] | null => {
@@ -30,11 +31,11 @@ const getExtendedProposals = (
   const extendedProposals: ExtendedProposal[] = [];
 
   for (const proposal of proposals) {
-    const common = commons.find(({ id }) => id === proposal.commonId);
-    const user = users.find(({ uid }) => uid === proposal.proposerId);
+    const common = commons.find(({ id }) => id === proposal.data.args.commonId);
+    const user = users.find(({ uid }) => uid === proposal.data.args.proposerId);
 
     extendedProposals.push({
-      ...proposal,
+      proposal,
       common,
       user,
     });
@@ -81,8 +82,8 @@ export const useProposalsData = (): Return => {
       ...declinedProposals.data,
     ];
 
-    const commonIds = proposals.map((proposal) => proposal.commonId);
-    const userIds = proposals.map((proposal) => proposal.proposerId);
+    const commonIds = proposals.map((proposal) => proposal.data.args.commonId);
+    const userIds = proposals.map((proposal) => proposal.data.args.proposerId);
 
     dispatch(
       getProposalsData.request({

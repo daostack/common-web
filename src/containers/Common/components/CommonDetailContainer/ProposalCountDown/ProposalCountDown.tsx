@@ -4,10 +4,12 @@ import React,
   useState,
   useMemo,
 } from "react";
+import { ProposalState } from "@/shared/models";
 import "./index.scss";
 
 interface ProposalCountDownInterface {
   date: Date;
+  state: ProposalState;
   type?: string;
   preview?: boolean;
   hideCounter?: boolean;
@@ -42,15 +44,20 @@ const formatCountDown = (step: number) => {
   return string.length === 1 ? `0${string}` : string;
 };
 
-export default function ProposalCountDown({ date, type, preview, hideCounter }: ProposalCountDownInterface) {
+export default function ProposalCountDown({ date, state: proposalState, type, preview, hideCounter }: ProposalCountDownInterface) {
   const [state, setState] = useState(countDownCount(date));
+  const countdownText =
+    proposalState === ProposalState.DISCUSSION ? "Discussion" : "Voting";
   const countdown = useMemo(
-    () => (
+    () =>
       hideCounter
-        ? "Countdown"
-        : `${!preview ? "Countdown " : ""}${formatCountDown(state.daysDifference)}:${formatCountDown(state.hoursDifference)}:${formatCountDown(state.minutesDifference)}:${formatCountDown(state.secondsDifference)}`
-    ),
-    [state, hideCounter, preview]
+        ? countdownText
+        : `${!preview ? `${countdownText} ` : ""}${formatCountDown(
+            state.daysDifference
+          )}:${formatCountDown(state.hoursDifference)}:${formatCountDown(
+            state.minutesDifference
+          )}:${formatCountDown(state.secondsDifference)}`,
+    [state, hideCounter, countdownText, preview]
   );
 
   useEffect(() => {

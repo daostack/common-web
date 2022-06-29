@@ -14,12 +14,12 @@ import {
   Payment,
   Subscription,
   BankAccountDetails,
-  ProposalType,
+  Vote,
 } from "../../../shared/models";
 import { startLoading, stopLoading } from "@/shared/store/actions";
 import {
   createCommon as createCommonApi,
-  createRequestToJoin as createRequestToJoinApi,
+  createProposal as createProposalApi,
   fetchCommonList,
   fetchCommonDetail,
   fetchCommonDiscussions,
@@ -31,8 +31,8 @@ import {
   subscribeToCommonDiscussion,
   addMessageToDiscussion,
   subscribeToMessages,
-  createFundingProposal,
   subscribeToCommonProposal,
+  subscribeToProposal,
   leaveCommon as leaveCommonApi,
   loadUserCards,
   deleteCommon as deleteCommonApi,
@@ -41,6 +41,7 @@ import {
   makeImmediateContribution as makeImmediateContributionApi,
   addBankDetails as addBankDetailsApi,
   updateBankDetails as updateBankDetailsApi,
+  deleteBankDetails as deleteBankDetailsApi,
   getBankDetails as getBankDetailsApi,
   getUserContributionsToCommon as getUserContributionsToCommonApi,
   getUserContributions as getUserContributionsApi,
@@ -53,14 +54,42 @@ import {
   fetchProposalsForCommonList,
   fetchMessagesForCommonList,
   fetchCommonListByIds as fetchCommonListByIdsApi,
+  createGovernance as createGovernanceApi,
+  getGovernance as getGovernanceApi,
+  getCommonMember as getCommonMemberApi,
+  getUserCommons as getUserCommonsApi,
 } from "./api";
 import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
+import { ProposalsTypes } from "@/shared/constants";
 import { store } from "@/shared/appConfig";
-import { AddProposalSteps } from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddProposalComponent";
-import { Vote } from "@/shared/interfaces/api/vote";
 import { ImmediateContributionResponse } from "../interfaces";
 import { groupBy, isError } from "@/shared/utils";
+import { Awaited } from "@/shared/interfaces";
+import {
+  CalculatedVotes,
+  FundsAllocation,
+  MemberAdmittance,
+} from "@/shared/models/governance/proposals";
+
+export function* createGovernance(
+  action: ReturnType<typeof actions.createGovernance.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    yield createGovernanceApi(action.payload.payload);
+
+    yield put(actions.createGovernance.success());
+    action.payload.callback(null);
+    yield put(stopLoading());
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.createGovernance.failure(error));
+      action.payload.callback(error);
+      yield put(stopLoading());
+    }
+  }
+}
 
 export function* getCommonsList(): Generator {
   try {
@@ -81,7 +110,7 @@ export function* getCommonsList(): Generator {
     );
     const proposalGrouped = groupBy<Proposal>(
       proposals,
-      (item: Proposal) => item.commonId
+      (item: Proposal) => item.data.args.commonId
     );
 
     const messagesGrouped = groupBy<DiscussionMessage>(
@@ -95,7 +124,7 @@ export function* getCommonsList(): Generator {
       c.messages = messagesGrouped.get(c.id) ?? [];
 
       c.proposals = c.proposals?.filter(
-        (e) => e.type === ProposalType.FundingRequest
+        (e) => e.type === ProposalsTypes.FUNDS_ALLOCATION
       );
 
       return c;
@@ -142,17 +171,40 @@ export function* getCommonDetail({
   payload,
 }: ReturnType<typeof actions.getCommonDetail.request>): Generator {
   try {
-    yield put(startLoading());
-    const common = (yield call(fetchCommonDetail, payload.payload)) as Common;
+    const commonId = payload.payload;
 
-    const [discussions, proposals] = (yield Promise.all([
+    yield put(startLoading());
+    const common = (yield call(fetchCommonDetail, commonId)) as Common | null;
+
+    if (!common) {
+      throw new Error(`Common with id = "${commonId}" was not found`);
+    }
+    if (!common.governanceId) {
+      throw new Error(
+        `Common with id = "${commonId}" doesn't have specified governance id`
+      );
+    }
+
+    const [governance, discussions, proposals] = (yield Promise.all([
+      getGovernanceApi(common.governanceId),
       fetchCommonDiscussions(common.id),
       fetchCommonProposals(common.id),
-    ])) as any[];
+    ])) as [
+      Awaited<ReturnType<typeof getGovernanceApi>>,
+      Awaited<ReturnType<typeof fetchCommonDiscussions>>,
+      Awaited<ReturnType<typeof fetchCommonProposals>>
+    ];
+
+    if (!governance) {
+      throw new Error(
+        `Governance with id = "${common.governanceId}" was not found`
+      );
+    }
 
     yield put(actions.getCommonDetail.success(common));
     yield put(actions.setDiscussion(discussions));
     yield put(actions.setProposals(proposals));
+    yield put(actions.getGovernance.success(governance));
 
     if (payload.callback) {
       payload.callback(null, common);
@@ -214,7 +266,9 @@ export function* loadDiscussionDetail(
     if (action.payload.discussionMessage?.length) {
       discussionMessage = action.payload.discussionMessage;
     } else {
-      discussionMessage = (yield fetchDiscussionsMessages([discussion.id])) as DiscussionMessage[];
+      discussionMessage = (yield fetchDiscussionsMessages([
+        discussion.id,
+      ])) as DiscussionMessage[];
     }
 
     const ownerIds = Array.from(
@@ -241,9 +295,7 @@ export function* loadDiscussionDetail(
   }
 }
 
-export function* loadProposalList(
-  action: ReturnType<typeof actions.loadProposalList.request>
-): Generator {
+export function* loadProposalList(): Generator {
   try {
     yield put(startLoading());
 
@@ -251,7 +303,9 @@ export function* loadProposalList(
       selectProposals()
     )) as Proposal[];
 
-    const ownerIds = Array.from(new Set(proposals.map((d) => d.proposerId)));
+    const ownerIds = Array.from(
+      new Set(proposals.map((d) => d.data.args.proposerId))
+    );
     const discussions_ids = proposals.map((d) => d.id);
 
     const owners = (yield fetchOwners(ownerIds)) as User[];
@@ -262,7 +316,7 @@ export function* loadProposalList(
     const loadedProposals = proposals.map((d) => {
       const newProposal = { ...d };
       newProposal.discussionMessage = dMessages.filter((dM) => dM.discussionId === d.id);
-      newProposal.proposer = owners.find((o) => o.uid === d.proposerId);
+      newProposal.proposer = owners.find((o) => o.uid === d.data.args.proposerId);
       return newProposal;
     });
 
@@ -289,18 +343,20 @@ export function* loadProposalDetail(
     if (action.payload.discussionMessage?.length) {
       discussionMessage = action.payload.discussionMessage;
     } else {
-      discussionMessage = (yield fetchDiscussionsMessages([proposal.id])) as DiscussionMessage[];
+      discussionMessage = (yield fetchDiscussionsMessages([
+        proposal.id,
+      ])) as DiscussionMessage[];
     }
 
     const ownerIds = Array.from(
       new Set(discussionMessage?.map((d) => d.ownerId))
     );
     const owners = (yield fetchOwners(ownerIds)) as User[];
-
-    const loadedDisscussionMessage = discussionMessage?.map((d) =>
-      ({ ...d, owner: owners.find((o) => o.uid === d.ownerId) })
-    );
-
+    const loadedDisscussionMessage = discussionMessage?.map((d) => {
+      const newDiscussionMessage = { ...d };
+      newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+      return newDiscussionMessage;
+    });
     proposal.discussionMessage = loadedDisscussionMessage;
 
     yield put(actions.loadProposalDetail.success(proposal));
@@ -436,7 +492,7 @@ export function* addMessageToProposalSaga(
       subscribeToMessages,
       action.payload.payload.discussionId,
       async (data) => {
-        const { proposal } = action.payload;
+        const proposal = { ...action.payload.proposal };
 
         const updatedProposal = {
           ...proposal,
@@ -461,18 +517,81 @@ export function* addMessageToProposalSaga(
   }
 }
 
-export function* createRequestToJoin(
-  action: ReturnType<typeof actions.createRequestToJoin.request>
-): Generator {
+export function* createMemberAdmittanceProposal({
+  payload,
+}: ReturnType<
+  typeof actions.createMemberAdmittanceProposal.request
+>): Generator {
   try {
     yield put(startLoading());
-    const proposal = (yield createRequestToJoinApi(action.payload)) as Proposal;
+    const memberAdmittanceProposal = (yield call(createProposalApi, {
+      ...payload.payload,
+      type: ProposalsTypes.MEMBER_ADMITTANCE,
+    })) as MemberAdmittance;
 
-    yield put(actions.createRequestToJoin.success(proposal));
+    yield put(
+      actions.createMemberAdmittanceProposal.success(memberAdmittanceProposal)
+    );
+
+    if (payload.callback) {
+      payload.callback(null, memberAdmittanceProposal);
+    }
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.createMemberAdmittanceProposal.failure(error));
+
+      if (payload.callback) {
+        payload.callback(error);
+      }
+    }
+  } finally {
+    yield put(stopLoading());
+  }
+}
+
+export function* createFundingProposal(
+  action: ReturnType<typeof actions.createFundingProposal.request>
+): Generator {
+  try {
+    const data = action.payload.payload;
+    const { commonId } = data.args;
+
+    yield put(startLoading());
+    const fundingProposal = (yield call(createProposalApi, {
+      ...data,
+      type: ProposalsTypes.FUNDS_ALLOCATION,
+    })) as FundsAllocation;
+
+    yield call(
+      subscribeToCommonProposal,
+      commonId,
+      async () => {
+        const ds = await fetchCommonProposals(commonId);
+
+        store.dispatch(actions.setProposals(ds));
+        store.dispatch(actions.loadProposalList.request());
+        store.dispatch(stopLoading());
+        action.payload.callback(null);
+        store.dispatch(actions.getCommonsList.request());
+      }
+    );
+
+    yield put(actions.createFundingProposal.success(fundingProposal));
     yield put(stopLoading());
   } catch (error) {
     if (isError(error)) {
-      yield put(actions.createRequestToJoin.failure(error));
+      let errorMessage = "";
+
+      if (
+        isRequestError(error) &&
+        error.response?.data?.errorCode === ErrorCode.SellerRejected
+      ) {
+        errorMessage =
+          "Your bank account details couldn’t be verified. Please update them in your account settings.";
+      }
+
+      action.payload.callback(errorMessage);
+      yield put(actions.createFundingProposal.failure(error));
       yield put(stopLoading());
     }
   }
@@ -516,66 +635,98 @@ export function* deleteCommon(
   }
 }
 
-export function* createVote(
-  action: ReturnType<typeof actions.createVote.request>
-): Generator {
+async function waitForVoteToBeApplied(
+  commonId: string,
+  proposalId: string,
+  proposalVotes: CalculatedVotes
+): Promise<void> {
+  await new Promise<void>((resolve, reject) => {
+    try {
+      const unsubscribe = subscribeToProposal(proposalId, async (proposal) => {
+        if (
+          (proposal.votes.approved === proposalVotes.approved &&
+            proposal.votes.rejected === proposalVotes.rejected &&
+            proposal.votes.abstained === proposalVotes.abstained) ||
+          proposal.votes.total < proposalVotes.total
+        ) {
+          return;
+        }
+
+        try {
+          const proposals = await fetchCommonProposals(commonId);
+          store.dispatch(actions.setProposals(proposals));
+          store.dispatch(actions.loadProposalList.request());
+          store.dispatch(
+            actions.loadProposalDetail.request(
+              proposals.filter((p) => p.id === proposalId)[0]
+            )
+          );
+          store.dispatch(stopLoading());
+          resolve();
+        } catch (error) {
+          reject(error);
+        } finally {
+          unsubscribe();
+        }
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+export function* createVote({
+  payload,
+}: ReturnType<typeof actions.createVote.request>): Generator {
+  const { votePayload, proposalVotes } = payload.payload;
+
   try {
     yield put(startLoading());
-    const vote = (yield createVoteApi(action.payload.payload)) as Vote;
+    const vote = (yield createVoteApi(votePayload)) as Vote;
 
     yield call(async () => {
-      const proposals = await fetchCommonProposals(vote.commonId);
-      store.dispatch(actions.setProposals(proposals));
-      store.dispatch(actions.loadProposalList.request());
-      store.dispatch(
-        actions.loadProposalDetail.request(
-          proposals.filter((p) => p.id === action.payload.payload.proposalId)[0]
-        )
+      await waitForVoteToBeApplied(
+        vote.commonId,
+        vote.proposalId,
+        proposalVotes
       );
-      store.dispatch(stopLoading());
     });
     yield put(actions.createVote.success());
-    action.payload.callback(null);
+    payload.callback(null, vote);
     yield put(stopLoading());
   } catch (error) {
     if (isError(error)) {
       yield put(actions.createVote.failure(error));
-      action.payload.callback(error);
+      payload.callback(error);
       yield put(stopLoading());
     }
   }
 }
 
-export function* updateVote(
-  action: ReturnType<typeof actions.updateVote.request>
-): Generator {
+export function* updateVote({
+  payload,
+}: ReturnType<typeof actions.updateVote.request>): Generator {
+  const { votePayload, proposalVotes } = payload.payload;
+
   try {
     yield put(startLoading());
-    const vote = (yield updateVoteApi(action.payload.payload)) as Vote;
+    const vote = (yield updateVoteApi(votePayload)) as Vote;
 
     yield call(async () => {
-      const proposals = await fetchCommonProposals(vote.commonId);
-
-      store.dispatch(actions.setProposals(proposals));
-
-      store.dispatch(actions.loadProposalList.request());
-
-      store.dispatch(
-        actions.loadProposalDetail.request(
-          proposals.find(
-            (proposal) => proposal.id === vote.proposalId
-          ) as Proposal
-        )
+      await waitForVoteToBeApplied(
+        vote.commonId,
+        vote.proposalId,
+        proposalVotes
       );
     });
 
     yield put(actions.updateVote.success());
-    action.payload.callback(null);
+    payload.callback(null, vote);
     yield put(stopLoading());
   } catch (error) {
     if (isError(error)) {
       yield put(actions.updateVote.failure(error));
-      action.payload.callback(error);
+      payload.callback(error);
       yield put(stopLoading());
     }
   }
@@ -641,45 +792,23 @@ export function* updateBankDetails(
   }
 }
 
-export function* createFundingProposalSaga(
-  action: ReturnType<typeof actions.createFundingProposal.request>
+export function* deleteBankDetails(
+  action: ReturnType<typeof actions.deleteBankDetails.request>
 ): Generator {
   try {
     yield put(startLoading());
-    const proposal = (yield createFundingProposal(
-      action.payload.payload
-    )) as Proposal;
 
-    yield call(
-      subscribeToCommonProposal,
-      action.payload.payload.commonId,
-      async (data) => {
-        const ds = await fetchCommonProposals(action.payload.payload.commonId);
+    const bankAccountDetails = (yield deleteBankDetailsApi()) as BankAccountDetails;
 
-        store.dispatch(actions.setProposals(ds));
-        store.dispatch(actions.loadProposalList.request());
-        store.dispatch(stopLoading());
-        action.payload.callback(null);
-        store.dispatch(actions.getCommonsList.request());
-      }
-    );
+    yield put(actions.deleteBankDetails.success(bankAccountDetails));
+    action.payload.callback(null, bankAccountDetails);
 
-    yield put(actions.createFundingProposal.success(proposal));
     yield put(stopLoading());
   } catch (error) {
     if (isError(error)) {
-      let errorMessage = "";
+      yield put(actions.deleteBankDetails.failure(error));
+      action.payload.callback(error);
 
-      if (
-        isRequestError(error) &&
-        error.response?.data?.errorCode === ErrorCode.SellerRejected
-      ) {
-        errorMessage =
-          "Your bank account details couldn’t be verified. Please update them in your account settings.";
-      }
-
-      action.payload.callback(errorMessage);
-      yield put(actions.createFundingProposal.failure(error));
       yield put(stopLoading());
     }
   }
@@ -715,7 +844,22 @@ export function* createCommon(
     const common = (yield call(
       createCommonApi,
       action.payload.payload
-    )) as Common;
+    )) as Awaited<ReturnType<typeof createCommonApi>>;
+
+    // const governanceCreationPayload = createDefaultGovernanceCreationPayload({
+    //   unstructuredRules: rules || [],
+    //   commonId: common.id,
+    // });
+    //
+    // yield call(
+    //   createGovernanceApi,
+    //   governanceCreationPayload
+    // );
+    //
+    // yield call(addFounderToMembersApi, {
+    //   commonId: common.id,
+    //   circles: governanceCreationPayload.circles.map((circle, index) => index),
+    // });
 
     yield put(actions.createCommon.success(common));
     action.payload.callback(null, common);
@@ -883,7 +1027,106 @@ export function* cancelSubscription({
   }
 }
 
+export function* getGovernance({
+  payload,
+}: ReturnType<typeof actions.getGovernance.request>): Generator {
+  try {
+    const governanceId = payload.payload;
+
+    yield put(startLoading());
+    const governance = (yield call(getGovernanceApi, governanceId)) as Awaited<
+      ReturnType<typeof getGovernanceApi>
+    >;
+
+    if (!governance) {
+      throw new Error(`Governance with id = "${governanceId}" was not found`);
+    }
+
+    yield put(actions.getGovernance.success(governance));
+
+    if (payload.callback) {
+      payload.callback(null, governance);
+    }
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.getGovernance.failure(error));
+      if (payload.callback) {
+        payload.callback(error);
+      }
+    }
+  } finally {
+    yield put(stopLoading());
+  }
+}
+
+export function* getCommonMember({
+  payload,
+}: ReturnType<typeof actions.getCommonMember.request>): Generator {
+  try {
+    const { commonId, userId } = payload.payload;
+
+    yield put(startLoading());
+    const commonMember = (yield call(
+      getCommonMemberApi,
+      commonId,
+      userId
+    )) as Awaited<ReturnType<typeof getCommonMemberApi>>;
+
+    if (!commonMember) {
+      throw new Error(
+        `Member for commonId = "${commonId}" and userId = "${userId}" was not found`
+      );
+    }
+
+    yield put(actions.getCommonMember.success(commonMember));
+
+    if (payload.callback) {
+      payload.callback(null, commonMember);
+    }
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.getCommonMember.failure(error));
+
+      if (payload.callback) {
+        payload.callback(error);
+      }
+    }
+  } finally {
+    yield put(stopLoading());
+  }
+}
+
+export function* getUserCommons({
+  payload,
+}: ReturnType<typeof actions.getUserCommons.request>): Generator {
+  try {
+    const userId = payload.payload;
+
+    yield put(startLoading());
+    const commons = (yield call(getUserCommonsApi, userId)) as Awaited<
+      ReturnType<typeof getUserCommonsApi>
+    >;
+
+    yield put(actions.getUserCommons.success(commons));
+
+    if (payload.callback) {
+      payload.callback(null, commons);
+    }
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.getUserCommons.failure(error));
+
+      if (payload.callback) {
+        payload.callback(error);
+      }
+    }
+  } finally {
+    yield put(stopLoading());
+  }
+}
+
 export function* commonsSaga() {
+  yield takeLatest(actions.createGovernance.request, createGovernance);
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(actions.getCommonsListByIds.request, getCommonsListByIds);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
@@ -900,12 +1143,15 @@ export function* commonsSaga() {
     actions.addMessageToDiscussion.request,
     addMessageToDiscussionSaga
   );
-  yield takeLatest(actions.createRequestToJoin.request, createRequestToJoin);
+  yield takeLatest(
+    actions.createMemberAdmittanceProposal.request,
+    createMemberAdmittanceProposal
+  );
   yield takeLatest(actions.leaveCommon.request, leaveCommon);
   yield takeLatest(actions.deleteCommon.request, deleteCommon);
   yield takeLatest(
     actions.createFundingProposal.request,
-    createFundingProposalSaga
+    createFundingProposal
   );
   yield takeLatest(actions.loadUserCards.request, loadUserCardsSaga);
   yield takeLatest(
@@ -923,6 +1169,7 @@ export function* commonsSaga() {
   yield takeLatest(actions.getBankDetails.request, getBankDetails);
   yield takeLatest(actions.addBankDetails.request, addBankDetails);
   yield takeLatest(actions.updateBankDetails.request, updateBankDetails);
+  yield takeLatest(actions.deleteBankDetails.request, deleteBankDetails);
   yield takeLatest(
     actions.getUserContributionsToCommon.request,
     getUserContributionsToCommon
@@ -935,6 +1182,9 @@ export function* commonsSaga() {
   yield takeLatest(actions.getUserSubscriptions.request, getUserSubscriptions);
   yield takeLatest(actions.updateSubscription.request, updateSubscription);
   yield takeLatest(actions.cancelSubscription.request, cancelSubscription);
+  yield takeLatest(actions.getGovernance.request, getGovernance);
+  yield takeLatest(actions.getCommonMember.request, getCommonMember);
+  yield takeLatest(actions.getUserCommons.request, getUserCommons);
 }
 
 export default commonsSaga;

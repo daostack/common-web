@@ -7,12 +7,10 @@ import {
   Proposal,
   ProposalWithHighlightedComment,
   isProposalWithHighlightedComment,
+  CommonMember,
 } from "@/shared/models";
-import {
-  formatPrice,
-  getDaysAgo,
-  getUserName,
-} from "@/shared/utils";
+import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
+import { formatPrice, getDaysAgo, getUserName } from "@/shared/utils";
 import { ChatComponent } from "../ChatComponent";
 import { VotesComponent } from "../VotesComponent";
 import { ProposalState } from "../ProposalState";
@@ -28,27 +26,31 @@ interface ProposalDetailModalProps {
   common: Common | null;
   onOpenJoinModal?: () => void;
   isJoiningPending?: boolean;
-  isCommonMember: boolean;
+  isCommonMemberFetched: boolean;
+  commonMember: CommonMember | null;
 }
 
 export default function ProposalDetailModal({
   proposal,
   common,
   onOpenJoinModal,
-  isCommonMember,
+  isCommonMemberFetched,
   isJoiningPending,
+  commonMember,
 }: ProposalDetailModalProps) {
   const date = new Date();
   const dispatch = useDispatch();
   const user = useSelector(selectUser());
-  const rawRequestedAmount =
-    proposal?.fundingRequest?.amount || proposal?.join?.funding;
+  const rawRequestedAmount = isFundsAllocationProposal(proposal)
+    ? proposal.data.args.amount
+    : 0;
   const screenSize = useSelector(getScreenSize());
   const [expanded, setExpanded] = useState(true);
   const highlightedCommentId = useMemo(
-    () => isProposalWithHighlightedComment(proposal)
-          ? proposal.highlightedCommentId
-          : null,
+    () =>
+      isProposalWithHighlightedComment(proposal)
+        ? proposal.highlightedCommentId
+        : null,
     [proposal]
   );
 
@@ -60,7 +62,7 @@ export default function ProposalDetailModal({
           text: message,
           createTime: d,
           ownerId: user.uid,
-          commonId: proposal.commonId,
+          commonId: proposal.data.args.commonId,
           discussionId: proposal.id,
         };
 
@@ -102,9 +104,9 @@ export default function ProposalDetailModal({
           <div className="proposal-information-wrapper">
             <div
               className="proposal-name"
-              title={proposal.description.title || "Membership request"}
+              title={proposal.data.args.title || "Membership request"}
             >
-              {proposal.description.title || "Membership request"}
+              {proposal.data.args.title || "Membership request"}
             </div>
             {expanded && (
               <>
@@ -122,7 +124,7 @@ export default function ProposalDetailModal({
                 </div>
                 <VotesComponent
                   proposal={proposal}
-                  isCommonMember={isCommonMember}
+                  commonMember={commonMember}
                 />
               </>
             )}
@@ -131,7 +133,7 @@ export default function ProposalDetailModal({
 
         {expanded && (
           <div className="description-container">
-            <p className="description">{proposal.description.description}</p>
+            <p className="description">{proposal.data.args.description}</p>
           </div>
         )}
 
@@ -156,7 +158,8 @@ export default function ProposalDetailModal({
           type={ChatType.ProposalComments}
           highlightedMessageId={highlightedCommentId}
           onOpenJoinModal={onOpenJoinModal}
-          isCommonMember={isCommonMember}
+          commonMember={commonMember}
+          isCommonMemberFetched={isCommonMemberFetched}
           isJoiningPending={isJoiningPending}
           isAuthorized={Boolean(user)}
           sendMessage={sendMessage}

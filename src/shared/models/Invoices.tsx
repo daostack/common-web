@@ -1,7 +1,7 @@
 import { DocInfo } from "./Proposals";
 
 export interface InvoicesSubmission {
-  proposalID: string;
+  proposalId: string;
   payoutDocs: DocInfo[];
   payoutDocsComment?: string;
 }

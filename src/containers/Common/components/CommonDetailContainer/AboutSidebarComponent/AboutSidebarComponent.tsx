@@ -10,7 +10,7 @@ interface AboutSidebarComponentProps {
 }
 
 export default function AboutSidebarComponent({ title, vievAllHandler, common }: AboutSidebarComponentProps) {
-  const description = common?.metadata.description;
+  const description = common.description;
 
   return description ? (
     <div className="about-sidebar-wrapper">

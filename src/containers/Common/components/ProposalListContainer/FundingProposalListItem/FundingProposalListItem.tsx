@@ -4,6 +4,7 @@ import {
   ProposalListItem,
   ProposalState as ProposalStateTypes
 } from "@/shared/models";
+import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
 import {
   UserAvatar,
   Separator,
@@ -16,6 +17,7 @@ import {
     ProposalState,
 } from "../../CommonDetailContainer";
 import {
+    checkIsCountdownState,
     getUserName,
     getDaysAgo,
     getProposalExpirationDate,
@@ -39,9 +41,8 @@ const FundingProposalListItem: FC<ProposalListItem> = (
       <div className="proposal-item__description">
         <p>
           {
-            proposal.title
-            || proposal.description.title
-            || proposal.description.description
+            proposal.data.args.title
+            || proposal.data.args.description
           }
         </p>
         <ElementDropdown
@@ -60,20 +61,25 @@ const FundingProposalListItem: FC<ProposalListItem> = (
           />
           <div className="proposal-item__info-proposer">
             <div className="user-fullname">{getUserName(proposal.proposer)}</div>
-            <div className="days-ago">{getDaysAgo(new Date(), proposal.createdAt || proposal.createTime)}</div>
+            <div className="days-ago">{getDaysAgo(new Date(), proposal.createdAt)}</div>
           </div>
         </div>
         <div className="proposal-item__info-amount-countdown">
           <div className="amount">
-            {formatPrice(proposal.fundingRequest?.amount, { shouldRemovePrefixFromZero: false })}
+            {formatPrice(
+              isFundsAllocationProposal(proposal)
+                ? proposal.data.args.amount
+                : 0,
+              { shouldRemovePrefixFromZero: false }
+            )}
           </div>
-          {
-            (proposal.state === ProposalStateTypes.COUNTDOWN)
-            && <ProposalCountDown
+          {checkIsCountdownState(proposal) && (
+            <ProposalCountDown
               date={getProposalExpirationDate(proposal)}
+              state={proposal.state}
               preview
             />
-          }
+          )}
         </div>
       </div>
       <div className="proposal-item__voting">

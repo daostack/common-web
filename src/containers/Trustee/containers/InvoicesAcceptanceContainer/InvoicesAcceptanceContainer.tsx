@@ -4,10 +4,10 @@ import { useHistory } from "react-router";
 import { Separator, Tabs, Tab, TabPanel } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
-import { Proposal } from "@/shared/models";
 import { ProposalList } from "../../components/ProposalList";
 import { StickyInfo } from "../../components/StickyInfo";
 import { VirtualizedProposalList } from "../../components/VirtualizedProposalList";
+import { ExtendedProposal } from "../../interfaces";
 import {
   getPendingApprovalProposals,
   getApprovedProposals,
@@ -55,7 +55,7 @@ const InvoicesAcceptanceContainer: FC = () => {
   );
 
   const handleProposalView = useCallback(
-    (proposal: Proposal) => {
+    ({ proposal }: ExtendedProposal) => {
       dispatch(getProposalForApproval.success(proposal));
       history.push(
         ROUTE_PATHS.TRUSTEE_INVOICE.replace(":proposalId", proposal.id)

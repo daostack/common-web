@@ -3,7 +3,7 @@ import classNames from "classnames";
 
 import { UserAvatar, ElementDropdown } from "@/shared/components";
 import { useFullText } from "@/shared/hooks";
-import { Proposal, ProposalLink } from "@/shared/models";
+import { CommonMember, Proposal, ProposalLink } from "@/shared/models";
 import { formatPrice, getUserName, getDaysAgo } from "@/shared/utils";
 import { DynamicLinkType, ScreenSize } from "@/shared/constants";
 import { VotesComponent } from "../VotesComponent";
@@ -11,17 +11,18 @@ import ProposalState from "../ProposalState/ProposalState";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useSelector } from "react-redux";
 import { getScreenSize } from "@/shared/store/selectors";
+import { FundsAllocationArgs } from "@/shared/models/governance/proposals";
 
 interface ProposalItemComponentProps {
   loadProposalDetail: (payload: Proposal) => void;
   proposal: Proposal;
-  isCommonMember: boolean;
+  commonMember: CommonMember | null;
 }
 
 export default function ProposalItemComponent({
   proposal,
   loadProposalDetail,
-  isCommonMember,
+  commonMember,
 }: ProposalItemComponentProps) {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -33,10 +34,9 @@ export default function ProposalItemComponent({
     showFullText,
   } = useFullText();
   const date = new Date();
-  const rawRequestedAmount =
-    proposal.fundingRequest?.amount || proposal.join?.funding;
-
-  const images = proposal?.description.images ?? [];
+  const rawRequestedAmount = (proposal.data.args as FundsAllocationArgs)
+    ?.amount;
+  const images = proposal.data.args.images ?? [];
 
   const imagesChunk = images.filter((image, index) => {
     if (index < imagePreviewLength) {
@@ -67,9 +67,9 @@ export default function ProposalItemComponent({
         <div
           className="proposal-title"
           onClick={() => loadProposalDetail(proposal)}
-          title={proposal.description.title}
+          title={proposal.data.args.title}
         >
-          {proposal.description.title}
+          {proposal.data.args.title}
         </div>
         <ElementDropdown
           linkType={DynamicLinkType.Proposal}
@@ -88,7 +88,7 @@ export default function ProposalItemComponent({
           )}
         </div>
         <div className="votes">
-          <VotesComponent proposal={proposal} isCommonMember={isCommonMember} />
+          <VotesComponent proposal={proposal} commonMember={commonMember} />
         </div>
       </div>
       <div className="line" />
@@ -99,12 +99,12 @@ export default function ProposalItemComponent({
           className={classNames("description", { full: shouldShowFullText })}
           ref={descriptionRef}
         >
-          {proposal.description.description}
+          {proposal.data.args.description}
         </div>
         <div className="additional-information">
-          {proposal.description?.links?.length > 0 && (
+          {proposal.data.args.links.length > 0 && (
             <div className="links">
-              {proposal.description.links.map((link) => (
+              {proposal.data.args.links.map((link) => (
                 <a
                   href={link.value}
                   key={link.value}
@@ -116,7 +116,7 @@ export default function ProposalItemComponent({
               ))}
             </div>
           )}
-          {proposal.description?.images?.length > 0 && (
+          {proposal.data.args.images?.length > 0 && (
             <div className="images-wrapper">
               {imagePreviewLength < images.length ? (
                 <Swiper

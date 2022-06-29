@@ -1,11 +1,11 @@
 import produce from "immer";
 import { ActionType, createReducer } from "typesafe-actions";
 import { LoadingState } from "@/shared/interfaces";
-import { Proposal } from "@/shared/models";
+import { FundsAllocation } from "@/shared/models/governance/proposals";
 import { TrusteeStateType } from "../interfaces";
 import * as actions from "./actions";
 
-const INITIAL_PROPOSALS_STATE: LoadingState<Proposal[]> = {
+const INITIAL_PROPOSALS_STATE: LoadingState<FundsAllocation[]> = {
   data: [],
   loading: false,
   fetched: false,

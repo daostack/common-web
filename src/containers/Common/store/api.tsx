@@ -1,21 +1,23 @@
 import { ApiEndpoint } from "@/shared/constants";
 import Api from "@/services/Api";
-import {
-  CreateFundingRequestProposalPayload,
-  ProposalJoinRequestData,
-} from "@/shared/interfaces/api/proposal";
 import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
   BankAccountDetails,
   Card,
   Collection,
   Common,
+  CommonMember,
+  CommonState,
   Discussion,
   DiscussionMessage,
+  Governance,
   Payment,
   Proposal,
+  SubCollections,
   Subscription,
+  UnstructuredRules,
   User,
+  Vote,
 } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
@@ -28,10 +30,13 @@ import {
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 import {
+  AddFounderToMembersPayload,
   AddMessageToProposalDto,
   CreateCommonPayload,
   CreateDiscussionDto,
   DeleteCommon,
+  CreateGovernancePayload,
+  CreateProposal,
   ImmediateContributionData,
   ImmediateContributionResponse,
   LeaveCommon,
@@ -40,10 +45,21 @@ import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMes
 import {
   CreateVotePayload,
   UpdateVotePayload,
-  Vote,
 } from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 import { NotificationItem } from "@/shared/models/Notification";
+
+export async function createGovernance(
+  requestData: CreateGovernancePayload
+): Promise<void> {
+  await Api.post(ApiEndpoint.GovernanceCreate, requestData);
+}
+
+export async function addFounderToMembers(
+  requestData: AddFounderToMembersPayload
+): Promise<void> {
+  await Api.post(ApiEndpoint.AddFounderToMembers, requestData);
+}
 
 export async function fetchCommonDiscussions(commonId: string) {
   const commons = await firebase
@@ -63,7 +79,7 @@ export async function fetchCommonProposals(commonId: string) {
   const proposals = await firebase
     .firestore()
     .collection(Collection.Proposals)
-    .where("commonId", "==", commonId)
+    .where("data.args.commonId", "==", commonId)
     .get();
 
   const data = transformFirebaseDataList<Proposal>(proposals);
@@ -116,7 +132,7 @@ export async function fetchUserProposals(userId: string) {
   const commons = await firebase
     .firestore()
     .collection(Collection.Proposals)
-    .where("proposerId", "==", userId)
+    .where("data.args.proposerId", "==", userId)
     .get();
   const data = transformFirebaseDataList<Proposal>(commons);
 
@@ -130,7 +146,7 @@ export async function fetchCommonList(): Promise<Common[]> {
   const commons = await firebase
     .firestore()
     .collection(Collection.Daos)
-    .where("active", "==", true)
+    .where("state", "==", CommonState.ACTIVE)
     .orderBy("score", "desc")
     .get();
   const data = transformFirebaseDataList<Common>(commons);
@@ -156,15 +172,15 @@ export async function fetchCommonListByIds(ids: string[]): Promise<Common[]> {
     .reduce((acc, items) => [...acc, ...items], []);
 }
 
-export async function fetchCommonDetail(id: string): Promise<Common> {
+export async function fetchCommonDetail(id: string): Promise<Common | null> {
   const common = await firebase
     .firestore()
     .collection(Collection.Daos)
     .where("id", "==", id)
-    .where("active", "==", true)
+    .where("state", "==", CommonState.ACTIVE)
     .get();
   const data = transformFirebaseDataList<Common>(common);
-  return data[0];
+  return data[0] || null;
 }
 
 export async function fetchOwners(ownerids: string[]) {
@@ -330,12 +346,27 @@ export function subscribeToCommonProposal(
   const query = firebase
     .firestore()
     .collection(Collection.Proposals)
-    .where("commonId", "==", commonId);
+    .where("data.args.commonId", "==", commonId);
   const subscribe = query.onSnapshot((snapshot) => {
     callback(transformFirebaseDataList(snapshot));
     setTimeout(subscribe, 0);
   });
   return subscribe;
+}
+
+export function subscribeToProposal(
+  proposalId: string,
+  callback: (proposal: Proposal) => void
+): () => void {
+  const query = firebase
+    .firestore()
+    .collection(Collection.Proposals)
+    .doc(proposalId);
+  const unsubscribe = query.onSnapshot((snapshot) => {
+    callback(transformFirebaseDataSingle<Proposal>(snapshot));
+  });
+
+  return unsubscribe;
 }
 
 export function subscribeToMessages(
@@ -352,22 +383,11 @@ export function subscribeToMessages(
   });
 }
 
-export async function createRequestToJoin(
-  requestData: ProposalJoinRequestData
-): Promise<Proposal> {
-  const { data } = await Api.post<Proposal>(
-    ApiEndpoint.CreateRequestToJoin,
-    requestData
-  );
-
-  return convertObjectDatesToFirestoreTimestamps(data);
-}
-
-export async function createFundingProposal(
-  requestData: CreateFundingRequestProposalPayload
-): Promise<Proposal> {
-  const { data } = await Api.post<Proposal>(
-    ApiEndpoint.CreateFunding,
+export async function createProposal<T extends keyof CreateProposal>(
+  requestData: CreateProposal[T]["data"]
+): Promise<CreateProposal[T]["response"]> {
+  const { data } = await Api.post<CreateProposal[T]["response"]>(
+    ApiEndpoint.CreateProposal,
     requestData
   );
 
@@ -377,7 +397,7 @@ export async function createFundingProposal(
 export async function createVote(
   requestData: CreateVotePayload
 ): Promise<Vote> {
-  const { data } = await Api.post<Vote>(ApiEndpoint.CreateVote, requestData);
+  const { data } = await Api.post<Vote>(ApiEndpoint.VoteProposal, requestData);
 
   return data;
 }
@@ -385,7 +405,7 @@ export async function createVote(
 export async function updateVote(
   requestData: UpdateVotePayload
 ): Promise<Vote> {
-  const { data } = await Api.post<Vote>(ApiEndpoint.UpdateVote, requestData);
+  const { data } = await Api.patch<Vote>(ApiEndpoint.UpdateVote, requestData);
 
   return data;
 }
@@ -470,6 +490,12 @@ export async function updateBankDetails(
   requestData: Partial<BankAccountDetails>
 ): Promise<void> {
   await Api.patch(ApiEndpoint.UpdateBankAccount, requestData);
+}
+
+export async function deleteBankDetails(): Promise<BankAccountDetails> {
+  const { data } = await Api.delete(ApiEndpoint.DeleteBankAccount);
+
+  return convertObjectDatesToFirestoreTimestamps<BankAccountDetails>(data);
 }
 
 export async function getUserContributionsToCommon(
@@ -597,3 +623,133 @@ export async function seenNotification(id: string): Promise<void> {
     id,
   });
 }
+
+// TODO: verify it's the correct place to have these functions
+export const commonMembersSubCollection = (commonId: string) => {
+  return firebase
+    .firestore()
+    .collection(Collection.Daos)
+    .doc(commonId)
+    .collection(SubCollections.Members)
+    .withConverter<CommonMember>({
+      fromFirestore(
+        snapshot: firebase.firestore.QueryDocumentSnapshot<CommonMember>
+      ): CommonMember {
+        return snapshot.data();
+      },
+
+      toFirestore(
+        object: Partial<CommonMember>
+      ): firebase.firestore.DocumentData {
+        return object;
+      },
+    });
+};
+
+export const getCommonMember = async (
+  commonId: string,
+  userId: string
+): Promise<CommonMember | null> => {
+  const result = await commonMembersSubCollection(commonId)
+    .where("userId", "==", userId)
+    .get();
+  const members = transformFirebaseDataList<CommonMember>(result);
+
+  return members[0] || null;
+};
+
+export const governanceCollection = firebase
+  .firestore()
+  .collection(Collection.Governance)
+  .withConverter<Governance>({
+    fromFirestore(
+      snapshot: firebase.firestore.QueryDocumentSnapshot
+    ): Governance {
+      return snapshot.data() as Governance;
+    },
+
+    toFirestore(object: Partial<Governance>): firebase.firestore.DocumentData {
+      return object;
+    },
+  });
+
+export const getGovernance = async (
+  governanceId: string
+): Promise<Governance | null> => {
+  const governance = (
+    await governanceCollection.doc(governanceId).get()
+  ).data();
+
+  return governance || null;
+};
+
+export const getCommonGovernanceRules = async (
+  governanceId: string
+): Promise<UnstructuredRules | null> => {
+  const governance = await getGovernance(governanceId);
+
+  return governance?.unstructuredRules || null;
+};
+
+export const getUserCommons = async (userId: string): Promise<Common[]> => {
+  const querySnapshot = await firebase
+    .firestore()
+    .collectionGroup(SubCollections.Members)
+    .where("userId", "==", userId)
+    .get();
+  const promises: Promise<firebase.firestore.DocumentSnapshot>[] = [];
+
+  querySnapshot.forEach((queryDocumentSnapshot) => {
+    const documentReference = queryDocumentSnapshot.ref;
+    const documentGrandParent = documentReference.parent.parent;
+
+    if (documentGrandParent) {
+      promises.push(documentGrandParent.get());
+    }
+  });
+
+  const results = await Promise.all(promises);
+
+  return results
+    .map((result) => result.data() as Common)
+    .filter((common) => common.state === CommonState.ACTIVE);
+};
+
+export const verifyIsUserMemberOfAnyCommon = async (userId: string): Promise<boolean> => {
+  const querySnapshot = await firebase
+    .firestore()
+    .collectionGroup(SubCollections.Members)
+    .where("userId", "==", userId)
+    .get();
+
+  return !querySnapshot.empty;
+};
+
+export const proposalVotesSubCollection = (proposalId: string) => {
+  return firebase
+    .firestore()
+    .collection(Collection.Proposals)
+    .doc(proposalId)
+    .collection(SubCollections.Votes)
+    .withConverter<Vote>({
+      fromFirestore(
+        snapshot: firebase.firestore.QueryDocumentSnapshot<Vote>
+      ): Vote {
+        return snapshot.data();
+      },
+
+      toFirestore(
+        object: Partial<Vote>
+      ): firebase.firestore.DocumentData {
+        return object;
+      },
+    });
+};
+
+export const getVote = async (
+  proposalId: string,
+  userId: string
+): Promise<Vote | null> => {
+  const [vote] = (await proposalVotesSubCollection(proposalId).where("voterId", "==", userId).get()).docs;
+  return vote?.data() || null;
+};
