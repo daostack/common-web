@@ -1,18 +1,24 @@
 import React from "react";
 import classNames from "classnames";
-import { Proposal, ProposalState as ProposalStateTypes } from "@/shared/models";
+import {
+  Moderation,
+  Proposal,
+  ProposalState as ProposalStateTypes,
+} from "@/shared/models";
 import { getProposalExpirationDate } from "@/shared/utils";
 import ProposalCountDown from "../ProposalCountDown/ProposalCountDown";
 import "./index.scss";
 
 interface IProps {
   proposal: Proposal;
+  moderation?: Moderation;
   hideCounter?: boolean;
   className?: string;
 }
 
 export default function ProposalState({
   proposal,
+  moderation,
   hideCounter,
   className,
 }: IProps) {
@@ -29,12 +35,23 @@ export default function ProposalState({
       )}
       {proposal.state !== ProposalStateTypes.VOTING && (
         <div className={`state-wrapper ${state.toLocaleLowerCase()}`}>
-          <div className="state-inner-wrapper">
-            <img
-              src={`/icons/${state.toLocaleLowerCase()}.svg`}
-              alt="proposal state"
-            />
-            <span className="state-name">{state}</span>
+          <div
+            className={`state-inner-wrapper ${
+              moderation && moderation.reporter ? "moderation" : ""
+            }`}
+          >
+            <span className="state-name">
+              <img
+                src={`/icons/${state.toLocaleLowerCase()}.svg`}
+                alt="proposal state"
+              />
+              {state}
+            </span>
+            {moderation && moderation.reporter && (
+              <div className="moderation">
+                The proposal was reporter by {moderation.reporter}
+              </div>
+            )}
           </div>
         </div>
       )}

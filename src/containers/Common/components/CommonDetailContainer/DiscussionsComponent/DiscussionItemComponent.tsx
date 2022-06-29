@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import classNames from "classnames";
 
 import { useFullText } from "@/shared/hooks";
-import {CommonMember, Discussion} from "@/shared/models";
+import { CommonMember, Discussion } from "@/shared/models";
 import { getUserName, getDaysAgo } from "@/shared/utils";
 import { ElementDropdown } from "@/shared/components";
 import { DynamicLinkType } from "@/shared/constants";
-import {MODERATION_TYPES} from "@/containers/Common/interfaces";
+import { MODERATION_TYPES } from "@/containers/Common/interfaces";
 
 interface DiscussionItemComponentProps {
   discussion: Discussion;
@@ -17,7 +17,7 @@ interface DiscussionItemComponentProps {
 export default function DiscussionItemComponent({
   discussion,
   loadDisscussionDetail,
-                                                  commonMember,
+  commonMember,
 }: DiscussionItemComponentProps) {
   const [imageError, setImageError] = useState(false);
   const {
@@ -27,8 +27,14 @@ export default function DiscussionItemComponent({
     showFullText,
   } = useFullText();
   const date = new Date();
+
   return (
     <div className="discussion-item-wrapper">
+      {discussion.moderation && discussion.moderation.reporter && (
+        <div className="moderation">
+          The discussion was reporter by {discussion.moderation.reporter}
+        </div>
+      )}
       <div className="discussion-top-bar">
         <div className="img-wrapper">
           {!imageError ? (

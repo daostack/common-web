@@ -6,6 +6,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+
   .title {
     font-size: 1.5rem;
     font-weight: bold;
@@ -52,6 +53,21 @@
     margin-bottom: 24px;
     padding-bottom: 20px;
     position: relative;
+    .moderation{
+      position: absolute;
+      color: $light-gray-2;
+      padding: -20px;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      margin-bottom: 8px;
+      background: $light-gray-1;
+      font-weight: bold;
+      border-radius: 14px 14px 0 0;
+      text-align: center;
+    }
 
     .discussion-top-bar {
       display: flex;

@@ -12,8 +12,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useSelector } from "react-redux";
 import { getScreenSize } from "@/shared/store/selectors";
 import { FundsAllocationArgs } from "@/shared/models/governance/proposals";
-import {MODERATION_TYPES} from "@/containers/Common/interfaces";
-
+import { MODERATION_TYPES } from "@/containers/Common/interfaces";
 
 interface ProposalItemComponentProps {
   loadProposalDetail: (payload: Proposal) => void;
@@ -49,7 +48,7 @@ export default function ProposalItemComponent({
 
   return (
     <div className="discussion-item-wrapper">
-      <ProposalState proposal={proposal} />
+      <ProposalState proposal={proposal} moderation={proposal.moderation} />
       <div className="proposal-charts-wrapper">
         <div className="discussion-top-bar">
           <div className="img-wrapper">
