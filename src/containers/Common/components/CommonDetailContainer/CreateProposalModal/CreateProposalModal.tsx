@@ -13,6 +13,7 @@ import { useZoomDisabling } from "@/shared/hooks";
 import { ModalProps } from "@/shared/interfaces";
 import { Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { ProposalTypeSelection } from "./ProposalTypeSelection";
 import { CreateProposalStage } from "./constants";
 import { CreateProposalContext, CreateProposalContextValue } from "./context";
 import { GoBackHandler } from "./types";
@@ -73,7 +74,7 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
   const renderContent = () => {
     switch (stage) {
       case CreateProposalStage.ProposalTypeSelection:
-        return null;
+        return <ProposalTypeSelection />;
       default:
         return null;
     }

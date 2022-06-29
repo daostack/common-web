@@ -1,0 +1,41 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+
+.proposal-type-selection-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.proposal-type-selection-stage__description {
+  max-width: 23.25rem;
+  margin: 0;
+  font-size: $xsmall;
+  line-height: 120%;
+  text-align: center;
+}
+
+.proposal-type-selection-stage__separator {
+  max-width: 33.5rem;
+  margin: 1.5rem 0;
+}
+
+.proposal-type-selection-stage__form {
+  max-width: 36.5rem;
+  width: 100%;
+}
+
+.proposal-type-selection-stage__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
+}
+
+.proposal-type-selection-stage__submit-button {
+  max-width: 13.125rem;
+
+  @include big-phone {
+    max-width: unset;
+  }
+}
