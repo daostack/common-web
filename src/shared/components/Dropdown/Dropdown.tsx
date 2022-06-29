@@ -27,6 +27,7 @@ import "./index.scss";
 
 export interface Styles {
   menuButton?: string;
+  value?: string;
   placeholder?: string;
   arrowIcon?: string;
   menu?: string;
@@ -197,8 +198,14 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
             <>
               <span
                 className={classNames(
-                  "custom-dropdown-wrapper__placeholder",
-                  styles?.placeholder
+                  "custom-dropdown-wrapper__value",
+                  styles?.value,
+                  {
+                    [classNames(
+                      "custom-dropdown-wrapper__placeholder",
+                      styles?.placeholder
+                    )]: !menuButtonText && !selectedOption && placeholder,
+                  }
                 )}
               >
                 {menuButtonText ??
