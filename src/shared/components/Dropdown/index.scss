@@ -99,3 +99,7 @@
 .custom-dropdown-wrapper__menu-item--active {
   background-color: $light-gray-6;
 }
+
+.custom-dropdown-wrapper__global-overlay {
+  z-index: $dropdown-z-index - 1;
+}
