@@ -59,7 +59,6 @@ const ProposalTypeDetails: FC<ProposalTypeDetailsProps> = (props) => {
         hint="Failing"
         hintColor="red"
       />
-      <Item name="Weight" value="?" hint="" />
       <Item name="Discussion Duration" value={discussionDuration} hint="Days" />
       <Item name="Voting Duration" value={votingDuration} hint="Days" />
     </div>
