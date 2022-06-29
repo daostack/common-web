@@ -7,6 +7,9 @@ import {
   Separator,
 } from "@/shared/components";
 import { ProposalsTypes } from "@/shared/constants";
+import { Governance } from "@/shared/models";
+import { BaseProposal } from "@/shared/models/governance/proposals";
+import { ProposalTypeDetails } from "../ProposalTypeDetails";
 import { useCreateProposalContext } from "../context";
 import "./index.scss";
 
@@ -18,7 +21,27 @@ const PROPOSAL_TYPE_OPTIONS: DropdownOption[] = [
   },
 ];
 
-const ProposalTypeSelection: FC = () => {
+interface ProposalTypeSelectionProps {
+  governance: Governance;
+}
+
+const getProposalTypeDetails = (
+  governance: Governance,
+  proposalType: ProposalsTypes
+): Pick<BaseProposal, "global"> | null => {
+  if (
+    [ProposalsTypes.ASSIGN_CIRCLE, ProposalsTypes.REMOVE_CIRCLE].includes(
+      proposalType
+    )
+  ) {
+    return governance.proposals[proposalType][1] || null;
+  }
+
+  return governance.proposals[proposalType] || null;
+};
+
+const ProposalTypeSelection: FC<ProposalTypeSelectionProps> = (props) => {
+  const { governance } = props;
   const {
     setTitle,
     setOnGoBack,
@@ -26,6 +49,8 @@ const ProposalTypeSelection: FC = () => {
     setShouldBeOnFullHeight,
   } = useCreateProposalContext();
   const [selectedType, setSelectedType] = useState<ProposalsTypes | null>(null);
+  const proposalTypeDetails =
+    selectedType && getProposalTypeDetails(governance, selectedType);
 
   const handleSelect = (value: unknown) => {
     setSelectedType(value as ProposalsTypes);
@@ -64,12 +89,19 @@ const ProposalTypeSelection: FC = () => {
           placeholder="Select Type"
           shouldBeFixed={false}
         />
+        {proposalTypeDetails && (
+          <ProposalTypeDetails
+            className="proposal-type-selection-stage__details"
+            data={proposalTypeDetails}
+          />
+        )}
       </div>
       <ModalFooter sticky>
         <div className="proposal-type-selection-stage__modal-footer">
           <Button
             className="proposal-type-selection-stage__submit-button"
             onClick={() => {}}
+            disabled={!proposalTypeDetails}
             shouldUseFullWidth
           >
             Continue

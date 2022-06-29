@@ -25,7 +25,7 @@ interface CreateProposalModalProps
 }
 
 const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
-  const { isShowing, onClose } = props;
+  const { governance, isShowing, onClose } = props;
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
@@ -76,7 +76,7 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
   const renderContent = () => {
     switch (stage) {
       case CreateProposalStage.ProposalTypeSelection:
-        return <ProposalTypeSelection />;
+        return <ProposalTypeSelection governance={governance} />;
       default:
         return null;
     }
