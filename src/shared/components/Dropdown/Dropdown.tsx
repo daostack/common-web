@@ -49,7 +49,7 @@ export enum ElementDropdownMenuItems {
 }
 
 export interface DropdownRef {
-  openDropdown: () => void;
+  openDropdown: (focusMenu?: boolean) => void;
   closeDropdown: () => void;
 }
 
@@ -165,8 +165,8 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
   useImperativeHandle(
     dropdownRef,
     () => ({
-      openDropdown: () => {
-        openMenu(dropdownId, { focusMenu: true });
+      openDropdown: (focusMenu = true) => {
+        openMenu(dropdownId, { focusMenu });
       },
       closeDropdown: () => {
         closeMenu(dropdownId);
