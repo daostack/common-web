@@ -9,7 +9,7 @@ import {
 import { ProposalsTypes } from "@/shared/constants";
 import { Governance } from "@/shared/models";
 import { BaseProposal } from "@/shared/models/governance/proposals";
-import { ProposalTypeDetails } from "../ProposalTypeDetails";
+import { ProposalTypeDetails } from "./ProposalTypeDetails";
 import { useCreateProposalContext } from "../context";
 import "./index.scss";
 
