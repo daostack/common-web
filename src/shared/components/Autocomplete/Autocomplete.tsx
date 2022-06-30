@@ -69,9 +69,11 @@ const Autocomplete: FC<AutocompleteProps> = (props) => {
       return;
     }
 
+    const option = options.find(({ value }) => value === restProps.value);
+    setFilterValue(option?.searchText || "");
     setIsOpen(false);
     dropdownRef.current?.closeDropdown();
-  }, [dropdownRef, inputClickedRef]);
+  }, [dropdownRef, inputClickedRef, restProps.value, options]);
 
   useEffect(() => {
     document.body.addEventListener("click", handleClose);
