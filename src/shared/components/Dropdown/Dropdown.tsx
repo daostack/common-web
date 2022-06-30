@@ -64,6 +64,7 @@ export interface DropdownProps {
   label?: string;
   shouldBeFixed?: boolean;
   menuButton?: ReactNode;
+  fullMenuButtonChange?: boolean;
   onMenuToggle?: (isOpen: boolean) => void;
   isLoading?: boolean;
 }
@@ -130,6 +131,7 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
     label,
     menuButton,
     onMenuToggle,
+    fullMenuButtonChange = false,
     shouldBeFixed = true,
     isLoading = false,
   } = props;
@@ -188,41 +190,49 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
             <span className="custom-dropdown-wrapper__label">{label}</span>
           </div>
         )}
-        <MenuButton
-          className={classNames(styles?.menuButton, {
-            "custom-dropdown-wrapper__menu-button": !menuButton,
-          })}
-          ref={menuButtonRef}
-        >
-          {menuButton || (
-            <>
-              <span
-                className={classNames(
-                  "custom-dropdown-wrapper__value",
-                  styles?.value,
-                  {
-                    [classNames(
-                      "custom-dropdown-wrapper__placeholder",
-                      styles?.placeholder
-                    )]: !menuButtonText && !selectedOption && placeholder,
-                  }
-                )}
-              >
-                {menuButtonText ??
-                  (selectedOption ? selectedOption.text : placeholder)}
-              </span>
-              <RightArrowIcon
-                className={classNames(
-                  "custom-dropdown-wrapper__arrow-icon",
-                  styles?.arrowIcon,
-                  {
-                    "custom-dropdown-wrapper__arrow-icon--opened": isOpen,
-                  }
-                )}
-              />
-            </>
-          )}
-        </MenuButton>
+        {fullMenuButtonChange && (
+          <>
+            <MenuButton />
+            <div>{menuButton}</div>
+          </>
+        )}
+        {!fullMenuButtonChange && (
+          <MenuButton
+            className={classNames(styles?.menuButton, {
+              "custom-dropdown-wrapper__menu-button": !menuButton,
+            })}
+            ref={menuButtonRef}
+          >
+            {menuButton || (
+              <>
+                <span
+                  className={classNames(
+                    "custom-dropdown-wrapper__value",
+                    styles?.value,
+                    {
+                      [classNames(
+                        "custom-dropdown-wrapper__placeholder",
+                        styles?.placeholder
+                      )]: !menuButtonText && !selectedOption && placeholder,
+                    }
+                  )}
+                >
+                  {menuButtonText ??
+                    (selectedOption ? selectedOption.text : placeholder)}
+                </span>
+                <RightArrowIcon
+                  className={classNames(
+                    "custom-dropdown-wrapper__arrow-icon",
+                    styles?.arrowIcon,
+                    {
+                      "custom-dropdown-wrapper__arrow-icon--opened": isOpen,
+                    }
+                  )}
+                />
+              </>
+            )}
+          </MenuButton>
+        )}
         <Menu
           className={classNames("custom-dropdown-wrapper__menu", styles?.menu, {
             "custom-dropdown-wrapper__menu--fixed": shouldBeFixed,
