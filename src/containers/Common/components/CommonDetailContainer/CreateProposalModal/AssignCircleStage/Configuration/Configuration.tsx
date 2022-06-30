@@ -1,24 +1,17 @@
 import React, { FC, useMemo, useState } from "react";
 import {
+  Autocomplete,
+  AutocompleteOption,
   Button,
   Dropdown,
   DropdownOption,
   ModalFooter,
   Separator,
 } from "@/shared/components";
-import { ProposalsTypes } from "@/shared/constants";
 import AvatarIcon from "@/shared/icons/avatar.icon";
 import { Governance } from "@/shared/models";
 import { StageName } from "../../StageName";
 import "./index.scss";
-
-const PROPOSAL_TYPE_OPTIONS: DropdownOption[] = [
-  {
-    text: "Assign Circle",
-    searchText: "Assign Circle",
-    value: ProposalsTypes.ASSIGN_CIRCLE,
-  },
-];
 
 interface ConfigurationProps {
   governance: Governance;
@@ -36,8 +29,21 @@ const Configuration: FC<ConfigurationProps> = (props) => {
       })),
     [governance.circles]
   );
+  const memberOptions = useMemo<AutocompleteOption[]>(
+    () =>
+      governance.circles.map((circle) => ({
+        text: circle.name,
+        searchText: circle.name,
+        value: circle.id,
+      })),
+    [governance.circles]
+  );
 
   const handleCircleSelect = (value: unknown) => {
+    setCircleId(value as string);
+  };
+
+  const handleMemberSelect = (value: unknown) => {
     setCircleId(value as string);
   };
 
@@ -61,11 +67,11 @@ const Configuration: FC<ConfigurationProps> = (props) => {
           placeholder="Select Circle"
           shouldBeFixed={false}
         />
-        <Dropdown
-          className="assign-circle-configuration__member-dropdown"
-          options={PROPOSAL_TYPE_OPTIONS}
+        <Autocomplete
+          className="assign-circle-configuration__member-autocomplete"
+          options={memberOptions}
           value={circleId}
-          onSelect={handleCircleSelect}
+          onSelect={handleMemberSelect}
           label="Member"
           placeholder="Select Member"
           shouldBeFixed={false}
