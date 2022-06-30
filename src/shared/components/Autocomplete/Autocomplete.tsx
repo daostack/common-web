@@ -45,10 +45,20 @@ const Autocomplete: FC<AutocompleteProps> = (props) => {
     );
   }, [restProps.options, filterValue]);
 
-  const handleInputClick = () => {
-    inputClickedRef.current = true;
+  const handleOpen = () => {
     setIsOpen(true);
     dropdownRef.current?.openDropdown(false);
+  };
+
+  const handleInputClick = () => {
+    inputClickedRef.current = true;
+    handleOpen();
+  };
+
+  const handleInputFocus = () => {
+    setTimeout(() => {
+      handleOpen();
+    }, 0);
   };
 
   const handleClose = useCallback(() => {
@@ -71,6 +81,14 @@ const Autocomplete: FC<AutocompleteProps> = (props) => {
     };
   }, [handleClose]);
 
+  useEffect(() => {
+    const option = options.find(({ value }) => value === restProps.value);
+
+    if (option) {
+      setFilterValue(option.searchText);
+    }
+  }, [restProps.value]);
+
   const input = (
     <div className="custom-auto-complete__input-wrapper">
       <Input
@@ -79,6 +97,7 @@ const Autocomplete: FC<AutocompleteProps> = (props) => {
         placeholder={placeholder}
         onChange={(event) => setFilterValue(event.target.value)}
         onClick={handleInputClick}
+        onFocus={handleInputFocus}
         styles={{
           input: {
             default: "custom-auto-complete__input",
@@ -92,14 +111,6 @@ const Autocomplete: FC<AutocompleteProps> = (props) => {
       />
     </div>
   );
-
-  useEffect(() => {
-    const option = options.find(({ value }) => value === restProps.value);
-
-    if (option) {
-      setFilterValue(option.searchText);
-    }
-  }, [restProps.value]);
 
   return (
     <Dropdown
