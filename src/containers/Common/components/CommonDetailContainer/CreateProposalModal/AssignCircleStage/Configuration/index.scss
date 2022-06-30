@@ -25,7 +25,12 @@
   width: 100%;
 }
 
+.assign-circle-configuration__circle-dropdown {
+  z-index: $dropdown-z-index + 1;
+}
+
 .assign-circle-configuration__member-dropdown {
+  z-index: $dropdown-z-index;
   margin-top: 1.5rem;
 }
 

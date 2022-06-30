@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useMemo, useState } from "react";
 import {
   Button,
   Dropdown,
@@ -8,6 +8,7 @@ import {
 } from "@/shared/components";
 import { ProposalsTypes } from "@/shared/constants";
 import AvatarIcon from "@/shared/icons/avatar.icon";
+import { Governance } from "@/shared/models";
 import { StageName } from "../../StageName";
 import "./index.scss";
 
@@ -19,11 +20,25 @@ const PROPOSAL_TYPE_OPTIONS: DropdownOption[] = [
   },
 ];
 
-const Configuration: FC = () => {
-  const [circle, setCircle] = useState<string | null>(null);
+interface ConfigurationProps {
+  governance: Governance;
+}
+
+const Configuration: FC<ConfigurationProps> = (props) => {
+  const { governance } = props;
+  const [circleId, setCircleId] = useState<string | null>(null);
+  const circleOptions = useMemo<DropdownOption[]>(
+    () =>
+      governance.circles.map((circle) => ({
+        text: circle.name,
+        searchText: circle.name,
+        value: circle.id,
+      })),
+    [governance.circles]
+  );
 
   const handleCircleSelect = (value: unknown) => {
-    setCircle(value as string);
+    setCircleId(value as string);
   };
 
   return (
@@ -38,8 +53,9 @@ const Configuration: FC = () => {
       <Separator className="assign-circle-configuration__separator" />
       <div className="assign-circle-configuration__form">
         <Dropdown
-          options={PROPOSAL_TYPE_OPTIONS}
-          value={circle}
+          className="assign-circle-configuration__circle-dropdown"
+          options={circleOptions}
+          value={circleId}
           onSelect={handleCircleSelect}
           label="Circle to Assign"
           placeholder="Select Circle"
@@ -48,7 +64,7 @@ const Configuration: FC = () => {
         <Dropdown
           className="assign-circle-configuration__member-dropdown"
           options={PROPOSAL_TYPE_OPTIONS}
-          value={circle}
+          value={circleId}
           onSelect={handleCircleSelect}
           label="Member"
           placeholder="Select Member"
@@ -64,7 +80,7 @@ const Configuration: FC = () => {
             disabled={false}
             shouldUseFullWidth
           >
-            Continue
+            Create Proposal
           </Button>
         </div>
       </ModalFooter>
