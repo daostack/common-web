@@ -23,6 +23,7 @@ const PROPOSAL_TYPE_OPTIONS: DropdownOption[] = [
 
 interface ProposalTypeSelectionProps {
   governance: Governance;
+  onFinish: (proposalType: ProposalsTypes) => void;
 }
 
 const getProposalTypeDetails = (
@@ -41,7 +42,7 @@ const getProposalTypeDetails = (
 };
 
 const ProposalTypeSelection: FC<ProposalTypeSelectionProps> = (props) => {
-  const { governance } = props;
+  const { governance, onFinish } = props;
   const {
     setTitle,
     setOnGoBack,
@@ -54,6 +55,12 @@ const ProposalTypeSelection: FC<ProposalTypeSelectionProps> = (props) => {
 
   const handleSelect = (value: unknown) => {
     setSelectedType(value as ProposalsTypes);
+  };
+
+  const handleContinue = () => {
+    if (selectedType) {
+      onFinish(selectedType);
+    }
   };
 
   useEffect(() => {
@@ -99,8 +106,9 @@ const ProposalTypeSelection: FC<ProposalTypeSelectionProps> = (props) => {
       <ModalFooter sticky>
         <div className="proposal-type-selection-stage__modal-footer">
           <Button
+            key="proposal-type-selection"
             className="proposal-type-selection-stage__submit-button"
-            onClick={() => {}}
+            onClick={handleContinue}
             disabled={!proposalTypeDetails}
             shouldUseFullWidth
           >

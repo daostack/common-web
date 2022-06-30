@@ -8,11 +8,12 @@ import React, {
 } from "react";
 import { useSelector } from "react-redux";
 import { Modal } from "@/shared/components";
-import { ScreenSize } from "@/shared/constants";
+import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { useZoomDisabling } from "@/shared/hooks";
 import { ModalProps } from "@/shared/interfaces";
 import { Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { AssignCircleStage } from "./AssignCircleStage";
 import { ProposalTypeSelection } from "./ProposalTypeSelection";
 import { CreateProposalStage } from "./constants";
 import { CreateProposalContext, CreateProposalContextValue } from "./context";
@@ -51,6 +52,15 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
     setErrorText(errorText);
   }, []);
 
+  const handleProposalTypeSelectionFinish = useCallback(
+    (proposalType: ProposalsTypes) => {
+      if (proposalType === ProposalsTypes.ASSIGN_CIRCLE) {
+        setStage(CreateProposalStage.AssignCircle);
+      }
+    },
+    []
+  );
+
   useEffect(() => {
     if (isShowing) {
       disableZoom();
@@ -76,7 +86,19 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
   const renderContent = () => {
     switch (stage) {
       case CreateProposalStage.ProposalTypeSelection:
-        return <ProposalTypeSelection governance={governance} />;
+        return (
+          <ProposalTypeSelection
+            governance={governance}
+            onFinish={handleProposalTypeSelectionFinish}
+          />
+        );
+      case CreateProposalStage.AssignCircle:
+        return (
+          <AssignCircleStage
+            governance={governance}
+            onGoBack={goToProposalTypeSelectionStage}
+          />
+        );
       default:
         return null;
     }

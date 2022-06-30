@@ -1,0 +1,45 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.assign-circle-configuration {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.assign-circle-configuration__stage-name {
+  margin-top: 0.75rem;
+}
+
+.assign-circle-configuration__avatar-icon {
+  flex-shrink: 0;
+}
+
+.assign-circle-configuration__separator {
+  max-width: 33.5rem;
+  margin: 1.5rem 0;
+}
+
+.assign-circle-configuration__form {
+  max-width: 36.5rem;
+  width: 100%;
+}
+
+.assign-circle-configuration__member-dropdown {
+  margin-top: 1.5rem;
+}
+
+.assign-circle-configuration__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
+}
+
+.assign-circle-configuration__submit-button {
+  max-width: 13.125rem;
+
+  @include big-phone {
+    max-width: unset;
+  }
+}
