@@ -32,7 +32,8 @@ export default function DiscussionItemComponent({
     <div className="discussion-item-wrapper">
       {discussion.moderation && discussion.moderation.reporter && (
         <div className="moderation">
-          The discussion was reporter by {discussion.moderation.reporter}
+          The discussion was {discussion.moderation.flag} by
+          {discussion.moderation.reporter}
         </div>
       )}
       <div className="discussion-top-bar">

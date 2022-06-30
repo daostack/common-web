@@ -49,7 +49,7 @@ export default function ProposalState({
             </span>
             {moderation && moderation.reporter && (
               <div className="moderation">
-                The proposal was reporter by {moderation.reporter}
+                The proposal was {moderation.flag} by {moderation.reporter}
               </div>
             )}
           </div>
