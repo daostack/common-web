@@ -1,8 +1,9 @@
 import React, { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useCommonMembers } from "@/containers/Common/hooks";
-import { Loader } from "@/shared/components";
+import { Loader, Modal } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
+import { ModalType } from "@/shared/interfaces";
 import { Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { useCreateProposalContext } from "../context";
@@ -86,6 +87,22 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
     setShouldBeOnFullHeight(isConfigurationStep);
   }, [setShouldBeOnFullHeight, isConfigurationStep]);
 
+  const renderConfirmationStep = () =>
+    assignCircleData && (
+      <Confirmation
+        circle={assignCircleData.circle}
+        onSubmit={handleConfirm}
+        onCancel={handleConfirmationCancel}
+      />
+    );
+
+  const renderSuccessStep = () => (
+    <Success
+      onBackToCommon={handleBackToCommon}
+      onViewProposal={handleViewProposal}
+    />
+  );
+
   return (
     <div className="assign-circle-creation-stage">
       {!areCommonMembersFetched && <Loader />}
@@ -99,19 +116,32 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
               onFinish={handleConfigurationFinish}
             />
           )}
-          {step === AssignCircleStep.Confirmation && assignCircleData && (
-            <Confirmation
-              circle={assignCircleData.circle}
-              onSubmit={handleConfirm}
-              onCancel={handleConfirmationCancel}
-            />
-          )}
-          {isSuccessStep && (
-            <Success
-              onBackToCommon={handleBackToCommon}
-              onViewProposal={handleViewProposal}
-            />
-          )}
+          {step === AssignCircleStep.Confirmation &&
+            (isMobileView ? (
+              <Modal
+                isShowing
+                onClose={handleConfirmationCancel}
+                type={ModalType.MobilePopUp}
+                hideCloseButton
+              >
+                {renderConfirmationStep()}
+              </Modal>
+            ) : (
+              renderConfirmationStep()
+            ))}
+          {isSuccessStep &&
+            (isMobileView ? (
+              <Modal
+                isShowing
+                onClose={handleBackToCommon}
+                type={ModalType.MobilePopUp}
+                hideCloseButton
+              >
+                {renderSuccessStep()}
+              </Modal>
+            ) : (
+              renderSuccessStep()
+            ))}
         </>
       )}
     </div>

@@ -11,6 +11,12 @@
 .assign-circle-success__image {
   width: 16rem;
   margin-bottom: 1rem;
+
+  @include big-phone {
+    max-width: 7.5rem;
+    width: 100%;
+    margin-bottom: 2rem;
+  }
 }
 
 .assign-circle-success__title {
@@ -25,6 +31,11 @@
   margin: 1rem 0 0;
   font-size: $small;
   line-height: 125%;
+
+  @include big-phone {
+    max-width: 17.5rem;
+    margin-top: 2rem;
+  }
 }
 
 .assign-circle-success__buttons-wrapper {
@@ -35,4 +46,17 @@
   display: grid;
   grid-column-gap: 0.5rem;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  @include big-phone {
+    margin-top: 2rem;
+    padding-bottom: 0;
+    grid-gap: 1rem 0;
+    grid-template-columns: 1fr;
+  }
+}
+
+.assign-circle-success__back-button {
+  @include big-phone {
+    grid-row: 2;
+  }
 }

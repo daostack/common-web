@@ -1,5 +1,8 @@
 import React, { FC } from "react";
+import { useSelector } from "react-redux";
 import { Button, ButtonVariant } from "@/shared/components";
+import { ScreenSize } from "@/shared/constants";
+import { getScreenSize } from "@/shared/store/selectors";
 import "./index.scss";
 
 interface SuccessProps {
@@ -9,6 +12,8 @@ interface SuccessProps {
 
 const Success: FC<SuccessProps> = (props) => {
   const { onBackToCommon, onViewProposal } = props;
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   return (
     <div className="assign-circle-success">
@@ -24,8 +29,13 @@ const Success: FC<SuccessProps> = (props) => {
       </p>
       <div className="assign-circle-success__buttons-wrapper">
         <Button
+          className="assign-circle-success__back-button"
           onClick={onBackToCommon}
-          variant={ButtonVariant.Secondary}
+          variant={
+            isMobileView
+              ? ButtonVariant.SecondaryPurple
+              : ButtonVariant.Secondary
+          }
           shouldUseFullWidth
         >
           Back to Common

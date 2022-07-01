@@ -1,6 +1,9 @@
 import React, { FC } from "react";
+import { useSelector } from "react-redux";
 import { Button, ButtonVariant } from "@/shared/components";
+import { ScreenSize } from "@/shared/constants";
 import { Circle } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
 import "./index.scss";
 
 interface ConfirmationProps {
@@ -11,6 +14,8 @@ interface ConfirmationProps {
 
 const Confirmation: FC<ConfirmationProps> = (props) => {
   const { circle, onSubmit, onCancel } = props;
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   return (
     <div className="assign-circle-confirmation">
@@ -23,8 +28,13 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
       <p className="assign-circle-confirmation__circle-name">{circle.name}</p>
       <div className="assign-circle-confirmation__buttons-wrapper">
         <Button
+          className="assign-circle-confirmation__cancel-button"
           onClick={onCancel}
-          variant={ButtonVariant.Secondary}
+          variant={
+            isMobileView
+              ? ButtonVariant.SecondaryPurple
+              : ButtonVariant.Secondary
+          }
           shouldUseFullWidth
         >
           Cancel
