@@ -68,6 +68,7 @@ import { ImmediateContributionResponse } from "../interfaces";
 import { groupBy, isError } from "@/shared/utils";
 import { Awaited } from "@/shared/interfaces";
 import {
+  AssignCircle,
   CalculatedVotes,
   FundsAllocation,
   MemberAdmittance,
@@ -540,6 +541,34 @@ export function* createMemberAdmittanceProposal({
   } catch (error) {
     if (isError(error)) {
       yield put(actions.createMemberAdmittanceProposal.failure(error));
+
+      if (payload.callback) {
+        payload.callback(error);
+      }
+    }
+  } finally {
+    yield put(stopLoading());
+  }
+}
+
+export function* createAssignCircleProposal({
+  payload,
+}: ReturnType<typeof actions.createAssignCircleProposal.request>): Generator {
+  try {
+    yield put(startLoading());
+    const assignCircleProposal = (yield call(createProposalApi, {
+      ...payload.payload,
+      type: ProposalsTypes.ASSIGN_CIRCLE,
+    })) as AssignCircle;
+
+    yield put(actions.createAssignCircleProposal.success(assignCircleProposal));
+
+    if (payload.callback) {
+      payload.callback(null, assignCircleProposal);
+    }
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.createAssignCircleProposal.failure(error));
 
       if (payload.callback) {
         payload.callback(error);
@@ -1175,6 +1204,10 @@ export function* commonsSaga() {
   yield takeLatest(
     actions.createMemberAdmittanceProposal.request,
     createMemberAdmittanceProposal
+  );
+  yield takeLatest(
+    actions.createAssignCircleProposal.request,
+    createAssignCircleProposal
   );
   yield takeLatest(actions.leaveCommon.request, leaveCommon);
   yield takeLatest(actions.deleteCommon.request, deleteCommon);

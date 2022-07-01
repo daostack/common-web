@@ -1,11 +1,15 @@
 import React, { FC, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUser } from "@/containers/Auth/store/selectors";
 import { useCommonMembers } from "@/containers/Common/hooks";
+import { CreateProposal } from "@/containers/Common/interfaces";
+import { createAssignCircleProposal } from "@/containers/Common/store/actions";
 import { Loader, Modal } from "@/shared/components";
-import { ScreenSize } from "@/shared/constants";
+import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { ModalType } from "@/shared/interfaces";
-import { Governance } from "@/shared/models";
+import { Common, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { getUserName } from "@/shared/utils";
 import { useCreateProposalContext } from "../context";
 import { Configuration } from "./Configuration";
 import { Confirmation } from "./Confirmation";
@@ -15,16 +19,19 @@ import { AssignCircleData } from "./types";
 import "./index.scss";
 
 interface AssignCircleStageProps {
+  common: Common;
   governance: Governance;
   onFinish: (shouldViewProposal?: boolean) => void;
   onGoBack: () => void;
 }
 
 const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
-  const { governance, onFinish, onGoBack } = props;
+  const { common, governance, onFinish, onGoBack } = props;
+  const dispatch = useDispatch();
   const [assignCircleData, setAssignCircleData] =
     useState<AssignCircleData | null>(null);
   const [step, setStep] = useState(AssignCircleStep.Configuration);
+  const [isProposalCreating, setIsProposalCreating] = useState(false);
   const {
     setTitle,
     setOnGoBack,
@@ -36,6 +43,7 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
     data: commonMembers,
     fetchCommonMembers,
   } = useCommonMembers();
+  const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const isConfigurationStep = step === AssignCircleStep.Configuration;
@@ -48,11 +56,38 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
   };
 
   const handleConfirm = () => {
-    if (!assignCircleData) {
+    if (!assignCircleData || !user) {
       return;
     }
 
-    setStep(AssignCircleStep.Success);
+    setIsProposalCreating(true);
+    const payload: Omit<
+      CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"],
+      "type"
+    > = {
+      args: {
+        commonId: common.id,
+        // TODO: Use here name of common member
+        title: `Assign circle proposal for Firstname Lastname`,
+        description: `Request from ${getUserName(user)}`,
+        images: [],
+        links: [],
+        files: [],
+        circleId: assignCircleData.circle.id,
+      },
+    };
+
+    dispatch(
+      createAssignCircleProposal.request({
+        payload,
+        callback: (error, data) => {
+          if (!error && data) {
+            setStep(AssignCircleStep.Success);
+            setIsProposalCreating(false);
+          }
+        },
+      })
+    );
   };
 
   const handleConfirmationCancel = () => {

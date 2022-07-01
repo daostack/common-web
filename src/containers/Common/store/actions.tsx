@@ -176,6 +176,20 @@ export const createMemberAdmittanceProposal = createAsyncAction(
   Error
 >();
 
+export const createAssignCircleProposal = createAsyncAction(
+  CommonsActionTypes.CREATE_ASSIGN_CIRCLE_PROPOSAL,
+  CommonsActionTypes.CREATE_ASSIGN_CIRCLE_PROPOSAL_SUCCESS,
+  CommonsActionTypes.CREATE_ASSIGN_CIRCLE_PROPOSAL_FAILURE
+)<
+  PayloadWithOptionalCallback<
+    Omit<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"], "type">,
+    CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["response"],
+    Error
+  >,
+  CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["response"],
+  Error
+>();
+
 export const createFundingProposal = createAsyncAction(
   CommonsActionTypes.CREATE_FUNDING_PROPOSAL,
   CommonsActionTypes.CREATE_FUNDING_PROPOSAL_SUCCESS,

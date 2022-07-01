@@ -11,7 +11,7 @@ import { Modal } from "@/shared/components";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { useZoomDisabling } from "@/shared/hooks";
 import { ModalProps } from "@/shared/interfaces";
-import { Governance } from "@/shared/models";
+import { Common, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { AssignCircleStage } from "./AssignCircleStage";
 import { ProposalTypeSelection } from "./ProposalTypeSelection";
@@ -22,11 +22,12 @@ import "./index.scss";
 
 interface CreateProposalModalProps
   extends Pick<ModalProps, "isShowing" | "onClose"> {
+  common: Common;
   governance: Governance;
 }
 
 const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
-  const { governance, isShowing, onClose } = props;
+  const { common, governance, isShowing, onClose } = props;
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
@@ -106,6 +107,7 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
       case CreateProposalStage.AssignCircle:
         return (
           <AssignCircleStage
+            common={common}
             governance={governance}
             onFinish={handleAssignProposalCreationFinish}
             onGoBack={goToProposalTypeSelectionStage}

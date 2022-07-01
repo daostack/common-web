@@ -598,6 +598,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
         <CreateProposalModal
           isShowing={isShowingNewP}
           onClose={onCloseNewP}
+          common={common}
           governance={governance}
         />
       )}
