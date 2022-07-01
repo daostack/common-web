@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo, useState } from "react";
+import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import {
@@ -20,13 +20,19 @@ import "./index.scss";
 interface ConfigurationProps {
   governance: Governance;
   commonMembers: CommonMember[];
+  initialData: AssignCircleData | null;
   onFinish: (data: AssignCircleData) => void;
 }
 
 const Configuration: FC<ConfigurationProps> = (props) => {
-  const { governance, commonMembers, onFinish } = props;
-  const [circle, setCircle] = useState<Circle | null>(null);
-  const [commonMember, setCommonMember] = useState<CommonMember | null>(null);
+  const { governance, commonMembers, initialData, onFinish } = props;
+  const isInitialCircleUpdate = useRef(true);
+  const [circle, setCircle] = useState<Circle | null>(
+    initialData?.circle || null
+  );
+  const [commonMember, setCommonMember] = useState<CommonMember | null>(
+    initialData?.commonMember || null
+  );
   const user = useSelector(selectUser());
   const circleIndex = governance.circles.findIndex(
     ({ id }) => id === circle?.id
@@ -79,6 +85,11 @@ const Configuration: FC<ConfigurationProps> = (props) => {
   };
 
   useEffect(() => {
+    if (isInitialCircleUpdate.current) {
+      isInitialCircleUpdate.current = false;
+      return;
+    }
+
     setCommonMember(null);
   }, [circle?.id]);
 
