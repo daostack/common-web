@@ -35,14 +35,16 @@ const Autocomplete: FC<AutocompleteProps> = (props) => {
   const inputName = useMemo(() => uuidv4(), []);
   const options = useMemo(() => {
     if (!filterValue) {
-      return restProps.options;
+      return restProps.options.slice(0, 15);
     }
 
     const lowerCasedFilterValue = filterValue.toLowerCase();
 
-    return restProps.options.filter((option) =>
-      option.searchText.toLowerCase().includes(lowerCasedFilterValue)
-    );
+    return restProps.options
+      .filter((option) =>
+        option.searchText.toLowerCase().includes(lowerCasedFilterValue)
+      )
+      .slice(0, 15);
   }, [restProps.options, filterValue]);
 
   const handleOpen = () => {
