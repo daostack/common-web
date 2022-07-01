@@ -77,6 +77,12 @@ const Autocomplete: FC<AutocompleteProps> = (props) => {
     dropdownRef.current?.closeDropdown();
   }, [dropdownRef, inputClickedRef, restProps.value, options]);
 
+  const handleMenuToggle = (isOpen: boolean) => {
+    if (!isOpen) {
+      handleClose();
+    }
+  };
+
   useEffect(() => {
     document.body.addEventListener("click", handleClose);
 
@@ -122,6 +128,7 @@ const Autocomplete: FC<AutocompleteProps> = (props) => {
       ref={dropdownRef}
       options={options}
       menuButton={input}
+      onMenuToggle={handleMenuToggle}
       fullMenuButtonChange
     />
   );
