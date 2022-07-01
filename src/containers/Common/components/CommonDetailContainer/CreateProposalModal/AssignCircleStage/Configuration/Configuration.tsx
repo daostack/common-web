@@ -14,17 +14,19 @@ import AvatarIcon from "@/shared/icons/avatar.icon";
 import { Circle, CommonMember, Governance } from "@/shared/models";
 import { generateCirclesBinaryNumber } from "../../../CommonWhitepaper/utils";
 import { StageName } from "../../StageName";
+import { AssignCircleData } from "../types";
 import "./index.scss";
 
 interface ConfigurationProps {
   governance: Governance;
   commonMembers: CommonMember[];
+  onFinish: (data: AssignCircleData) => void;
 }
 
 const Configuration: FC<ConfigurationProps> = (props) => {
-  const { governance, commonMembers } = props;
+  const { governance, commonMembers, onFinish } = props;
   const [circle, setCircle] = useState<Circle | null>(null);
-  const [commonMemberId, setCommonMemberId] = useState<string | null>(null);
+  const [commonMember, setCommonMember] = useState<CommonMember | null>(null);
   const user = useSelector(selectUser());
   const circleIndex = governance.circles.findIndex(
     ({ id }) => id === circle?.id
@@ -43,14 +45,14 @@ const Configuration: FC<ConfigurationProps> = (props) => {
   const memberOptions = useMemo(
     () =>
       commonMembers.reduce<AutocompleteOption[]>(
-        (acc, commonMember) =>
-          commonMember.userId !== user?.uid &&
+        (acc, member) =>
+          member.userId !== user?.uid &&
           circleBinary !== null &&
-          !(commonMember.circles & circleBinary)
+          !(member.circles & circleBinary)
             ? acc.concat({
-                text: commonMember.circles.toString(),
-                searchText: commonMember.circles.toString(),
-                value: commonMember.id,
+                text: member.circles.toString(),
+                searchText: member.circles.toString(),
+                value: member.id,
               })
             : acc,
         []
@@ -63,12 +65,21 @@ const Configuration: FC<ConfigurationProps> = (props) => {
     setCircle(circle || null);
   };
 
-  const handleCommonMemberSelect = (value: unknown) => {
-    setCommonMemberId(value as string);
+  const handleCommonMemberSelect = (selectedCommonMemberId: unknown) => {
+    const member = commonMembers.find(
+      ({ id }) => id === selectedCommonMemberId
+    );
+    setCommonMember(member || null);
+  };
+
+  const handleContinue = () => {
+    if (circle && commonMember) {
+      onFinish({ circle, commonMember });
+    }
   };
 
   useEffect(() => {
-    setCommonMemberId(null);
+    setCommonMember(null);
   }, [circle?.id]);
 
   return (
@@ -97,7 +108,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
               <Autocomplete
                 className="assign-circle-configuration__member-autocomplete"
                 options={memberOptions}
-                value={commonMemberId}
+                value={commonMember?.id}
                 onSelect={handleCommonMemberSelect}
                 label="Member"
                 placeholder="Select Member"
@@ -116,8 +127,8 @@ const Configuration: FC<ConfigurationProps> = (props) => {
           <Button
             key="assign-circle-configuration"
             className="assign-circle-configuration__submit-button"
-            onClick={() => {}}
-            disabled={!commonMemberId}
+            onClick={handleContinue}
+            disabled={!commonMember}
             shouldUseFullWidth
           >
             Create Proposal
