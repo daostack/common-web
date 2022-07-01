@@ -61,6 +61,17 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
     []
   );
 
+  const handleAssignProposalCreationFinish = useCallback(
+    (shouldViewProposal = false) => {
+      onClose();
+
+      if (shouldViewProposal) {
+        // TODO: Open created proposal
+      }
+    },
+    [onClose]
+  );
+
   useEffect(() => {
     if (isShowing) {
       disableZoom();
@@ -96,6 +107,7 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
         return (
           <AssignCircleStage
             governance={governance}
+            onFinish={handleAssignProposalCreationFinish}
             onGoBack={goToProposalTypeSelectionStage}
           />
         );

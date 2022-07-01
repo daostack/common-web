@@ -8,19 +8,22 @@ import { getScreenSize } from "@/shared/store/selectors";
 import { useCreateProposalContext } from "../context";
 import { Configuration } from "./Configuration";
 import { Confirmation } from "./Confirmation";
+import { Success } from "./Success";
+import { AssignCircleStep } from "./constants";
 import { AssignCircleData } from "./types";
 import "./index.scss";
 
 interface AssignCircleStageProps {
   governance: Governance;
+  onFinish: (shouldViewProposal?: boolean) => void;
   onGoBack: () => void;
 }
 
 const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
-  const { governance, onGoBack } = props;
+  const { governance, onFinish, onGoBack } = props;
   const [assignCircleData, setAssignCircleData] =
     useState<AssignCircleData | null>(null);
-  const [isConfirmationStep, setIsConfirmationStep] = useState(false);
+  const [step, setStep] = useState(AssignCircleStep.Configuration);
   const {
     setTitle,
     setOnGoBack,
@@ -34,22 +37,33 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
   } = useCommonMembers();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const shouldShowModalTitle = isMobileView || !isConfirmationStep;
+  const isConfigurationStep = step === AssignCircleStep.Configuration;
+  const isSuccessStep = step === AssignCircleStep.Success;
+  const shouldShowModalTitle = isMobileView || isConfigurationStep;
 
   const handleConfigurationFinish = (data: AssignCircleData) => {
     setAssignCircleData(data);
-    setIsConfirmationStep(true);
+    setStep(AssignCircleStep.Confirmation);
   };
 
   const handleConfirm = () => {
     if (!assignCircleData) {
       return;
     }
-    // Create proposal
+
+    setStep(AssignCircleStep.Success);
   };
 
   const handleConfirmationCancel = () => {
-    setIsConfirmationStep(false);
+    setStep(AssignCircleStep.Configuration);
+  };
+
+  const handleBackToCommon = () => {
+    onFinish(false);
+  };
+
+  const handleViewProposal = () => {
+    onFinish(true);
   };
 
   useEffect(() => {
@@ -65,19 +79,19 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
   }, [setOnGoBack, onGoBack, shouldShowModalTitle]);
 
   useEffect(() => {
-    setShouldShowClosePrompt(true);
-  }, [setShouldShowClosePrompt]);
+    setShouldShowClosePrompt(!isSuccessStep);
+  }, [setShouldShowClosePrompt, isSuccessStep]);
 
   useEffect(() => {
-    setShouldBeOnFullHeight(true);
-  }, [setShouldBeOnFullHeight]);
+    setShouldBeOnFullHeight(isConfigurationStep);
+  }, [setShouldBeOnFullHeight, isConfigurationStep]);
 
   return (
     <div className="assign-circle-creation-stage">
       {!areCommonMembersFetched && <Loader />}
       {areCommonMembersFetched && (
         <>
-          {(isMobileView || !isConfirmationStep) && (
+          {(isConfigurationStep || isMobileView) && (
             <Configuration
               governance={governance}
               commonMembers={commonMembers}
@@ -85,11 +99,17 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
               onFinish={handleConfigurationFinish}
             />
           )}
-          {isConfirmationStep && assignCircleData && (
+          {step === AssignCircleStep.Confirmation && assignCircleData && (
             <Confirmation
               circle={assignCircleData.circle}
               onSubmit={handleConfirm}
               onCancel={handleConfirmationCancel}
+            />
+          )}
+          {isSuccessStep && (
+            <Success
+              onBackToCommon={handleBackToCommon}
+              onViewProposal={handleViewProposal}
             />
           )}
         </>
