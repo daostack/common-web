@@ -405,6 +405,16 @@ export const getCommonMember = createAsyncAction(
   Error
 >();
 
+export const getCommonMembers = createAsyncAction(
+  CommonsActionTypes.GET_COMMON_MEMBERS,
+  CommonsActionTypes.GET_COMMON_MEMBERS_SUCCESS,
+  CommonsActionTypes.GET_COMMON_MEMBERS_FAILURE
+)<
+  PayloadWithOptionalCallback<string, CommonMember[], Error>,
+  CommonMember[],
+  Error
+>();
+
 export const getUserCommons = createAsyncAction(
   CommonsActionTypes.GET_USER_COMMONS,
   CommonsActionTypes.GET_USER_COMMONS_SUCCESS,

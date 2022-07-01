@@ -658,6 +658,13 @@ export const getCommonMember = async (
   return members[0] || null;
 };
 
+export const getCommonMembers = async (commonId: string): Promise<CommonMember[]> => {
+  const result = await commonMembersSubCollection(commonId).get();
+  const members = transformFirebaseDataList<CommonMember>(result);
+
+  return members || [];
+};
+
 export const governanceCollection = firebase
   .firestore()
   .collection(Collection.Governance)

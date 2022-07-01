@@ -1,4 +1,6 @@
 import React, { FC, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/containers/Auth/store/selectors";
 import {
   Autocomplete,
   AutocompleteOption,
@@ -9,17 +11,20 @@ import {
   Separator,
 } from "@/shared/components";
 import AvatarIcon from "@/shared/icons/avatar.icon";
-import { Governance } from "@/shared/models";
+import { CommonMember, Governance } from "@/shared/models";
 import { StageName } from "../../StageName";
 import "./index.scss";
 
 interface ConfigurationProps {
   governance: Governance;
+  commonMembers: CommonMember[];
 }
 
 const Configuration: FC<ConfigurationProps> = (props) => {
-  const { governance } = props;
+  const { governance, commonMembers } = props;
   const [circleId, setCircleId] = useState<string | null>(null);
+  const [commonMemberId, setCommonMemberId] = useState<string | null>(null);
+  const user = useSelector(selectUser());
   const circleOptions = useMemo<DropdownOption[]>(
     () =>
       governance.circles.map((circle) => ({
@@ -29,22 +34,28 @@ const Configuration: FC<ConfigurationProps> = (props) => {
       })),
     [governance.circles]
   );
-  const memberOptions = useMemo<AutocompleteOption[]>(
+  const memberOptions = useMemo(
     () =>
-      governance.circles.map((circle) => ({
-        text: circle.name,
-        searchText: circle.name,
-        value: circle.id,
-      })),
-    [governance.circles]
+      commonMembers.reduce<AutocompleteOption[]>(
+        (acc, commonMember) =>
+          commonMember.userId !== user?.uid
+            ? acc.concat({
+                text: commonMember.circles.toString(),
+                searchText: commonMember.circles.toString(),
+                value: commonMember.id,
+              })
+            : acc,
+        []
+      ),
+    [commonMembers, user?.uid]
   );
 
   const handleCircleSelect = (value: unknown) => {
     setCircleId(value as string);
   };
 
-  const handleMemberSelect = (value: unknown) => {
-    setCircleId(value as string);
+  const handleCommonMemberSelect = (value: unknown) => {
+    setCommonMemberId(value as string);
   };
 
   return (
@@ -70,8 +81,8 @@ const Configuration: FC<ConfigurationProps> = (props) => {
         <Autocomplete
           className="assign-circle-configuration__member-autocomplete"
           options={memberOptions}
-          value={circleId}
-          onSelect={handleMemberSelect}
+          value={commonMemberId}
+          onSelect={handleCommonMemberSelect}
           label="Member"
           placeholder="Select Member"
           shouldBeFixed={false}

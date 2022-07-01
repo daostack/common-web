@@ -57,6 +57,7 @@ import {
   createGovernance as createGovernanceApi,
   getGovernance as getGovernanceApi,
   getCommonMember as getCommonMemberApi,
+  getCommonMembers as getCommonMembersApi,
   getUserCommons as getUserCommonsApi,
 } from "./api";
 import { getUserData } from "../../Auth/store/api";
@@ -1096,6 +1097,34 @@ export function* getCommonMember({
   }
 }
 
+export function* getCommonMembers({
+  payload,
+}: ReturnType<typeof actions.getCommonMembers.request>): Generator {
+  try {
+    yield put(startLoading());
+    const commonMembers = (yield call(
+      getCommonMembersApi,
+      payload.payload
+    )) as Awaited<ReturnType<typeof getCommonMembersApi>>;
+
+    yield put(actions.getCommonMembers.success(commonMembers));
+
+    if (payload.callback) {
+      payload.callback(null, commonMembers);
+    }
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.getCommonMembers.failure(error));
+
+      if (payload.callback) {
+        payload.callback(error);
+      }
+    }
+  } finally {
+    yield put(stopLoading());
+  }
+}
+
 export function* getUserCommons({
   payload,
 }: ReturnType<typeof actions.getUserCommons.request>): Generator {
@@ -1184,6 +1213,7 @@ export function* commonsSaga() {
   yield takeLatest(actions.cancelSubscription.request, cancelSubscription);
   yield takeLatest(actions.getGovernance.request, getGovernance);
   yield takeLatest(actions.getCommonMember.request, getCommonMember);
+  yield takeLatest(actions.getCommonMembers.request, getCommonMembers);
   yield takeLatest(actions.getUserCommons.request, getUserCommons);
 }
 
