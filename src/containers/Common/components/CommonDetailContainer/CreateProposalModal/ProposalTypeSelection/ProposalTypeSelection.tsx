@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   Button,
   Dropdown,
@@ -6,9 +7,10 @@ import {
   ModalFooter,
   Separator,
 } from "@/shared/components";
-import { ProposalsTypes } from "@/shared/constants";
+import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { Governance } from "@/shared/models";
 import { BaseProposal } from "@/shared/models/governance/proposals";
+import { getScreenSize } from "@/shared/store/selectors";
 import { ProposalTypeDetails } from "./ProposalTypeDetails";
 import { useCreateProposalContext } from "../context";
 import "./index.scss";
@@ -50,6 +52,8 @@ const ProposalTypeSelection: FC<ProposalTypeSelectionProps> = (props) => {
     setShouldBeOnFullHeight,
   } = useCreateProposalContext();
   const [selectedType, setSelectedType] = useState<ProposalsTypes | null>(null);
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
   const proposalTypeDetails =
     selectedType && getProposalTypeDetails(governance, selectedType);
 
@@ -97,10 +101,17 @@ const ProposalTypeSelection: FC<ProposalTypeSelectionProps> = (props) => {
           shouldBeFixed={false}
         />
         {proposalTypeDetails && (
-          <ProposalTypeDetails
-            className="proposal-type-selection-stage__details"
-            data={proposalTypeDetails}
-          />
+          <>
+            {isMobileView && (
+              <h4 className="proposal-type-selection-stage__disclaimer-title">
+                Disclaimer
+              </h4>
+            )}
+            <ProposalTypeDetails
+              className="proposal-type-selection-stage__details"
+              data={proposalTypeDetails}
+            />
+          </>
         )}
       </div>
       <ModalFooter sticky>

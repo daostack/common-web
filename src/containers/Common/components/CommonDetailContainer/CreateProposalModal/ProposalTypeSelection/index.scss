@@ -13,6 +13,11 @@
   font-size: $xsmall;
   line-height: 120%;
   text-align: center;
+
+  @include big-phone {
+    margin-top: 1.5rem;
+    color: $blue-2;
+  }
 }
 
 .proposal-type-selection-stage__separator {
@@ -23,6 +28,13 @@
 .proposal-type-selection-stage__form {
   max-width: 36.5rem;
   width: 100%;
+}
+
+.proposal-type-selection-stage__disclaimer-title {
+  margin: 1.5rem 0 0;
+  font-family: NunitoSans, sans-serif;
+  font-weight: 400;
+  font-size: $xsmall;
 }
 
 .proposal-type-selection-stage__details {

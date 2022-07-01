@@ -9,6 +9,10 @@
 
 .assign-circle-configuration__stage-name {
   margin-top: 0.75rem;
+
+  @include big-phone {
+    margin-top: 1.5rem;
+  }
 }
 
 .assign-circle-configuration__avatar-icon {
