@@ -1,0 +1,36 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.assign-circle-confirmation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.assign-circle-confirmation__image {
+  width: 18rem;
+  margin-bottom: 1.125rem;
+}
+
+.assign-circle-confirmation__title {
+  margin: 0;
+  font-family: NotoSerifSC, serif;
+  font-size: $moderate-med;
+  letter-spacing: 0.02em;
+}
+
+.assign-circle-confirmation__circle-name {
+  margin: 1rem 0;
+  font-size: $small;
+  line-height: 125%;
+}
+
+.assign-circle-confirmation__buttons-wrapper {
+  max-width: 23rem;
+  width: 100%;
+  margin-top: 2.25rem;
+  display: grid;
+  grid-column-gap: 0.5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
