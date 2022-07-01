@@ -10,8 +10,10 @@ import {
   ModalFooter,
   Separator,
 } from "@/shared/components";
+import { ScreenSize } from "@/shared/constants";
 import AvatarIcon from "@/shared/icons/avatar.icon";
 import { Circle, CommonMember, Governance } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
 import { generateCirclesBinaryNumber } from "../../../CommonWhitepaper/utils";
 import { StageName } from "../../StageName";
 import { AssignCircleData } from "../types";
@@ -34,6 +36,8 @@ const Configuration: FC<ConfigurationProps> = (props) => {
     initialData?.commonMember || null
   );
   const user = useSelector(selectUser());
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
   const circleIndex = governance.circles.findIndex(
     ({ id }) => id === circle?.id
   );
@@ -142,7 +146,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
             disabled={!commonMember}
             shouldUseFullWidth
           >
-            Create Proposal
+            {isMobileView ? "Continue" : "Create Proposal"}
           </Button>
         </div>
       </ModalFooter>
