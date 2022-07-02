@@ -114,8 +114,10 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
   }, [setTitle, shouldShowModalTitle]);
 
   useEffect(() => {
-    setOnGoBack(shouldShowModalTitle ? onGoBack : undefined);
-  }, [setOnGoBack, onGoBack, shouldShowModalTitle]);
+    setOnGoBack(
+      shouldShowModalTitle && !isProposalCreating ? onGoBack : undefined
+    );
+  }, [setOnGoBack, onGoBack, shouldShowModalTitle, isProposalCreating]);
 
   useEffect(() => {
     setShouldShowClosePrompt(!isSuccessStep);
