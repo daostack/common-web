@@ -128,6 +128,7 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
     assignCircleData && (
       <Confirmation
         circle={assignCircleData.circle}
+        commonMember={assignCircleData.commonMember}
         onSubmit={handleConfirm}
         onCancel={handleConfirmationCancel}
       />
