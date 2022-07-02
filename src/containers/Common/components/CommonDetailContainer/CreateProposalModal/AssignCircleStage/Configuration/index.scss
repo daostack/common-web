@@ -36,6 +36,18 @@
 .assign-circle-configuration__member-autocomplete {
   z-index: $dropdown-z-index;
   margin-top: 1.5rem;
+
+  .assign-circle-configuration__member-info {
+    font-weight: normal;
+    font-size: $xsmall;
+    line-height: 120%;
+
+    @include big-phone {
+      font-weight: 600;
+      font-size: $small;
+      line-height: 100%;
+    }
+  }
 }
 
 .assign-circle-configuration__no-members-text {

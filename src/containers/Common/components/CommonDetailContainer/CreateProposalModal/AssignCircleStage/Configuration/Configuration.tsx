@@ -9,13 +9,16 @@ import {
   DropdownOption,
   ModalFooter,
   Separator,
+  UserAvatar,
 } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import AvatarIcon from "@/shared/icons/avatar.icon";
 import { Circle, CommonMemberWithUserInfo, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { getUserName } from "@/shared/utils";
 import { generateCirclesBinaryNumber } from "../../../CommonWhitepaper/utils";
 import { StageName } from "../../StageName";
+import { MemberInfo } from "../MemberInfo";
 import { AssignCircleData } from "../types";
 import "./index.scss";
 
@@ -32,9 +35,10 @@ const Configuration: FC<ConfigurationProps> = (props) => {
   const [circle, setCircle] = useState<Circle | null>(
     initialData?.circle || null
   );
-  const [commonMember, setCommonMember] = useState<CommonMemberWithUserInfo | null>(
-    initialData?.commonMember || null
-  );
+  const [commonMember, setCommonMember] =
+    useState<CommonMemberWithUserInfo | null>(
+      initialData?.commonMember || null
+    );
   const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -60,8 +64,13 @@ const Configuration: FC<ConfigurationProps> = (props) => {
           circleBinary !== null &&
           !(member.circles & circleBinary)
             ? acc.concat({
-                text: member.circles.toString(),
-                searchText: member.circles.toString(),
+                text: (
+                  <MemberInfo
+                    className="assign-circle-configuration__member-info"
+                    user={member.user}
+                  />
+                ),
+                searchText: getUserName(member.user),
                 value: member.id,
               })
             : acc,
