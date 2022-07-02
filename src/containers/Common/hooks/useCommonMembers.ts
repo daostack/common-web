@@ -1,10 +1,10 @@
 import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { LoadingState } from "@/shared/interfaces";
-import { CommonMember } from "@/shared/models";
+import { CommonMemberWithUserInfo } from "@/shared/models";
 import { getCommonMembers } from "../store/actions";
 
-type State = LoadingState<CommonMember[]>;
+type State = LoadingState<CommonMemberWithUserInfo[]>;
 
 interface Return extends State {
   fetchCommonMembers: (commonId: string) => void;

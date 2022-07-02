@@ -12,7 +12,7 @@ import {
 } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import AvatarIcon from "@/shared/icons/avatar.icon";
-import { Circle, CommonMember, Governance } from "@/shared/models";
+import { Circle, CommonMemberWithUserInfo, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { generateCirclesBinaryNumber } from "../../../CommonWhitepaper/utils";
 import { StageName } from "../../StageName";
@@ -21,7 +21,7 @@ import "./index.scss";
 
 interface ConfigurationProps {
   governance: Governance;
-  commonMembers: CommonMember[];
+  commonMembers: CommonMemberWithUserInfo[];
   initialData: AssignCircleData | null;
   onFinish: (data: AssignCircleData) => void;
 }
@@ -32,7 +32,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
   const [circle, setCircle] = useState<Circle | null>(
     initialData?.circle || null
   );
-  const [commonMember, setCommonMember] = useState<CommonMember | null>(
+  const [commonMember, setCommonMember] = useState<CommonMemberWithUserInfo | null>(
     initialData?.commonMember || null
   );
   const user = useSelector(selectUser());

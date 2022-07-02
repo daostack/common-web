@@ -5,6 +5,7 @@ import { BaseEntity } from "./BaseEntity";
 import { Proposal } from "./Proposals";
 import { Discussion } from "./Discussion";
 import { DiscussionMessage } from "./DiscussionMessage";
+import { User } from "./User";
 
 export interface Common extends BaseEntity {
   /**
@@ -120,6 +121,10 @@ export interface CommonMember {
   allowedProposals: AllowedProposals;
   tokenBalance: number;
   reputation: Partial<Reputation>;
+}
+
+export interface CommonMemberWithUserInfo extends CommonMember {
+  user: User;
 }
 
 export interface CommonLink {

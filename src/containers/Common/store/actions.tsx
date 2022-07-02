@@ -8,6 +8,7 @@ import {
   Card,
   Common,
   CommonMember,
+  CommonMemberWithUserInfo,
   CommonPayment,
   Governance,
   Proposal,
@@ -424,8 +425,8 @@ export const getCommonMembers = createAsyncAction(
   CommonsActionTypes.GET_COMMON_MEMBERS_SUCCESS,
   CommonsActionTypes.GET_COMMON_MEMBERS_FAILURE
 )<
-  PayloadWithOptionalCallback<string, CommonMember[], Error>,
-  CommonMember[],
+  PayloadWithOptionalCallback<string, CommonMemberWithUserInfo[], Error>,
+  CommonMemberWithUserInfo[],
   Error
 >();
 

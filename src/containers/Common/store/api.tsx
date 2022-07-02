@@ -1,3 +1,4 @@
+import { getUserListByIds } from "@/containers/Auth/store/api";
 import { ApiEndpoint } from "@/shared/constants";
 import Api from "@/services/Api";
 import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
@@ -7,6 +8,7 @@ import {
   Collection,
   Common,
   CommonMember,
+  CommonMemberWithUserInfo,
   CommonState,
   Discussion,
   DiscussionMessage,
@@ -658,11 +660,23 @@ export const getCommonMember = async (
   return members[0] || null;
 };
 
-export const getCommonMembers = async (commonId: string): Promise<CommonMember[]> => {
+export const getCommonMembers = async (
+  commonId: string
+): Promise<CommonMemberWithUserInfo[]> => {
   const result = await commonMembersSubCollection(commonId).get();
   const members = transformFirebaseDataList<CommonMember>(result);
+  const userIds = Array.from(new Set(members.map(({ userId }) => userId)));
+  const users = await getUserListByIds(userIds);
+  const extendedMembers = members.reduce<CommonMemberWithUserInfo[]>(
+    (acc, member) => {
+      const user = users.find(({ uid }) => uid === member.userId);
 
-  return members || [];
+      return user ? acc.concat({ ...member, user }) : acc;
+    },
+    []
+  );
+
+  return extendedMembers;
 };
 
 export const governanceCollection = firebase
