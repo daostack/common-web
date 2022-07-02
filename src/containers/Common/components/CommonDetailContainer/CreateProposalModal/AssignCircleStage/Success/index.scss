@@ -10,11 +10,13 @@
 
 .assign-circle-success__image {
   width: 16rem;
+  height: 16rem;
   margin-bottom: 1rem;
 
   @include big-phone {
     max-width: 7.5rem;
     width: 100%;
+    height: unset;
     margin-bottom: 2rem;
   }
 }
