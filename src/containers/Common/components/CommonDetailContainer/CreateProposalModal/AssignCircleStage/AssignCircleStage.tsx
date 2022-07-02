@@ -124,8 +124,8 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
   }, [setShouldShowClosePrompt, isSuccessStep]);
 
   useEffect(() => {
-    setShouldBeOnFullHeight(isConfigurationStep);
-  }, [setShouldBeOnFullHeight, isConfigurationStep]);
+    setShouldBeOnFullHeight(isConfigurationStep || isLoading);
+  }, [setShouldBeOnFullHeight, isConfigurationStep, isLoading]);
 
   const renderConfirmationStep = () =>
     assignCircleData && (
