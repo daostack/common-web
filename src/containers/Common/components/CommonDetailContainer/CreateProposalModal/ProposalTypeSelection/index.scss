@@ -40,6 +40,10 @@
 .proposal-type-selection-stage__details {
   max-width: 19rem;
   margin-top: 1.5rem;
+
+  @include big-phone {
+    max-width: unset;
+  }
 }
 
 .proposal-type-selection-stage__modal-footer {
