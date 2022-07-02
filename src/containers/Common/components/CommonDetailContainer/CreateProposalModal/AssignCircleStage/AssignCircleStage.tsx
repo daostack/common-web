@@ -49,6 +49,7 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
   const isConfigurationStep = step === AssignCircleStep.Configuration;
   const isSuccessStep = step === AssignCircleStep.Success;
   const shouldShowModalTitle = isMobileView || isConfigurationStep;
+  const isLoading = !areCommonMembersFetched || isProposalCreating;
 
   const handleConfigurationFinish = (data: AssignCircleData) => {
     setAssignCircleData(data);
@@ -143,8 +144,8 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
 
   return (
     <div className="assign-circle-creation-stage">
-      {!areCommonMembersFetched && <Loader />}
-      {areCommonMembersFetched && (
+      {isLoading && <Loader />}
+      {!isLoading && (
         <>
           {(isConfigurationStep || isMobileView) && (
             <Configuration
