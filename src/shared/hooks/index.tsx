@@ -12,6 +12,7 @@ export { default as useFullText } from "./useFullText";
 export { default as useMatchRoute } from "./useMatchRoute";
 export { default as useZoomDisabling } from "./useZoomDisabling";
 export { default as useQueryParams } from "./useQueryParams";
+export { default as useRemoveQueryParams } from "./useRemoveQueryParams";
 export { default as useNotification } from "./useNotification";
 export { default as useBuildShareLink } from "./useBuildShareLink";
 export { default as usePrevious } from "./usePrevious";
