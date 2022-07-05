@@ -161,7 +161,6 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const currentDisscussion = useSelector(selectCurrentDisscussion());
   const proposals = useSelector(selectProposals());
   const discussions = useSelector(selectDiscussions());
-  const cards = useSelector(selectCards());
   const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
   const isProposalsLoaded = useSelector(selectIsProposalLoaded());
   const currentProposal = useSelector(selectCurrentProposal());
@@ -174,20 +173,10 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     fetchCommonMember,
   } = useCommonMember();
 
-  const fundingProposals = useMemo(
-    () =>
-      proposals.filter(
-        (proposal) => proposal.type === ProposalsTypes.FUNDS_ALLOCATION
-      ),
+  const activeProposals = useMemo(
+    () => proposals.filter((d) => checkIsCountdownState(d)),
     [proposals]
   );
-
-  const activeProposals = useMemo(
-    () => fundingProposals.filter((d) => checkIsCountdownState(d)),
-    [fundingProposals]
-  );
-
-  const hasPaymentMethod = useMemo(() => !!cards && !!cards.length, [cards]);
 
   const isCommonMember = Boolean(commonMember);
   const isJoiningPending = proposals.some(
@@ -808,7 +797,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                   common={common}
                   governance={governance}
                   currentTab={tab}
-                  proposals={fundingProposals}
+                  proposals={proposals}
                   loadProposalDetail={getProposalDetail}
                   commonMember={commonMember}
                   isCommonMemberFetched={isCommonMemberFetched}
