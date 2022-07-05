@@ -182,7 +182,7 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
             <FilePreview
               fileURL={URL.createObjectURL(fileForPreview)}
               fileName={fileForPreview.name}
-              isImage={fileForPreview.type.startsWith("image/")}
+              fileType={fileForPreview.type}
               topContent={topFilePreviewContent}
               bottomContent={bottomFilePreviewContent}
               styles={{
