@@ -21,7 +21,11 @@ import {
   ProposalWithHighlightedComment,
 } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { checkIsCountdownState, formatPrice, getUserName } from "@/shared/utils";
+import {
+  checkIsCountdownState,
+  formatPrice,
+  getUserName,
+} from "@/shared/utils";
 import { LoginModalType } from "../../../Auth/interface";
 import {
   AboutTabComponent,
@@ -29,6 +33,7 @@ import {
   DiscussionsComponent,
   DiscussionDetailModal,
   CommonMenu,
+  CreateProposalModal,
   ProposalsComponent,
   AboutSidebarComponent,
   AddDiscussionComponent,
@@ -156,7 +161,6 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const currentDisscussion = useSelector(selectCurrentDisscussion());
   const proposals = useSelector(selectProposals());
   const discussions = useSelector(selectDiscussions());
-  const cards = useSelector(selectCards());
   const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
   const isProposalsLoaded = useSelector(selectIsProposalLoaded());
   const currentProposal = useSelector(selectCurrentProposal());
@@ -169,20 +173,10 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     fetchCommonMember,
   } = useCommonMember();
 
-  const fundingProposals = useMemo(
-    () =>
-      proposals.filter(
-        (proposal) => proposal.type === ProposalsTypes.FUNDS_ALLOCATION
-      ),
+  const activeProposals = useMemo(
+    () => proposals.filter((d) => checkIsCountdownState(d)),
     [proposals]
   );
-
-  const activeProposals = useMemo(
-    () => fundingProposals.filter((d) => checkIsCountdownState(d)),
-    [fundingProposals]
-  );
-
-  const hasPaymentMethod = useMemo(() => !!cards && !!cards.length, [cards]);
 
   const isCommonMember = Boolean(commonMember);
   const isJoiningPending = proposals.some(
@@ -590,14 +584,11 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
         />
       )}
       {isShowingNewP && (
-        <AddProposalComponent
+        <CreateProposalModal
           isShowing={isShowingNewP}
           onClose={onCloseNewP}
-          onProposalAdd={addProposal}
           common={common}
-          hasPaymentMethod={hasPaymentMethod}
-          proposals={proposals}
-          getProposalDetail={getProposalDetail}
+          governance={governance}
         />
       )}
       <div className="common-detail-wrapper">
@@ -806,7 +797,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                   common={common}
                   governance={governance}
                   currentTab={tab}
-                  proposals={fundingProposals}
+                  proposals={proposals}
                   loadProposalDetail={getProposalDetail}
                   commonMember={commonMember}
                   isCommonMemberFetched={isCommonMemberFetched}
