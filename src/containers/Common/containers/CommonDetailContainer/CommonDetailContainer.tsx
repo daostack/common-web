@@ -58,7 +58,6 @@ import {
   selectIsDiscussionsLoaded,
   selectIsProposalLoaded,
   selectProposals,
-  selectCards,
   selectCommonActiveTab,
 } from "../../store/selectors";
 import {
@@ -70,18 +69,12 @@ import {
   loadDisscussionDetail,
   loadProposalDetail,
   loadProposalList,
-  createDiscussion,
-  createFundingProposal,
   loadUserCards,
   setCommonActiveTab,
   clearCommonActiveTab,
 } from "../../store/actions";
 import CheckIcon from "../../../../shared/icons/check.icon";
 import { selectUser } from "../../../Auth/store/selectors";
-import {
-  AddProposalComponent,
-  CreateFundsAllocationData,
-} from "@/containers/Common/components/CommonDetailContainer/AddProposalComponent";
 import { useCommonMember } from "../../hooks";
 import "./index.scss";
 
@@ -93,10 +86,10 @@ interface CommonDetailProps {
   commonId?: string;
   tab?: Tabs;
   activeModalElement?:
-    | Proposal
-    | ProposalWithHighlightedComment
-    | Discussion
-    | DiscussionWithHighlightedMessage;
+  | Proposal
+  | ProposalWithHighlightedComment
+  | Discussion
+  | DiscussionWithHighlightedMessage;
   linkType?: DynamicLinkType;
 }
 
@@ -358,38 +351,15 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     [proposals, changeTabHandler, getProposalDetail]
   );
 
-  const addDiscussion = useCallback(
-    (payload) => {
-      dispatch(
-        createDiscussion.request({
-          payload: {
-            ...payload,
-            createTime: new Date(),
-            lastMessage: new Date(),
-            ownerId: user?.uid,
-            commonId: common?.id,
-          },
-          callback: (discussion: Discussion) => {
-            onCloseNewD();
-            setTimeout(() => {
-              getDisscussionDetail(discussion);
-            }, 0);
-          },
-        })
-      );
-    },
-    [dispatch, user, common, onCloseNewD, getDisscussionDetail]
-  );
-
-  const addProposal = useCallback(
-    (
-      payload: CreateFundsAllocationData,
-      callback: (error: string | null) => void
-    ) => {
-      dispatch(createFundingProposal.request({ payload, callback }));
-    },
-    [dispatch]
-  );
+  // const addProposal = useCallback(
+  //   (
+  //     payload: CreateFundsAllocationData,
+  //     callback: (error: string | null) => void
+  //   ) => {
+  //     dispatch(createFundingProposal.request({ payload, callback }));
+  //   },
+  //   [dispatch]
+  // );
 
   const openJoinModal = useCallback(() => {
     onClose();
@@ -580,7 +550,9 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
         <AddDiscussionComponent
           isShowing={isShowingNewD}
           onClose={onCloseNewD}
-          onDiscussionAdd={addDiscussion}
+          onSucess={(discussion: Discussion) => { onCloseNewD(); getDisscussionDetail(discussion); }}
+          uid={user?.uid!}
+          commonId={common.id}
         />
       )}
       {isShowingNewP && (
@@ -651,9 +623,8 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
               <div className="numbers">
                 <div className="item">
                   <div className="value">{formatPrice(common?.balance)}</div>
-                  <div className="name">{`Available ${
-                    screenSize === ScreenSize.Desktop ? "Funds" : ""
-                  }`}</div>
+                  <div className="name">{`Available ${screenSize === ScreenSize.Desktop ? "Funds" : ""
+                    }`}</div>
                   {Boolean(common.reservedBalance) && (
                     <div className="text-information-wrapper__secondary-text">
                       In process: {formatPrice(common.reservedBalance)}
@@ -662,9 +633,8 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                 </div>
                 <div className="item">
                   <div className="value">{formatPrice(common?.raised)}</div>
-                  <div className="name">{`${
-                    screenSize === ScreenSize.Desktop ? "Total" : ""
-                  } Raised`}</div>
+                  <div className="name">{`${screenSize === ScreenSize.Desktop ? "Total" : ""
+                    } Raised`}</div>
                 </div>
                 <div className="item">
                   <div className="value">{common.memberCount}</div>
@@ -672,9 +642,8 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                 </div>
                 <div className="item">
                   <div className="value">{activeProposals.length}</div>
-                  <div className="name">{`${
-                    screenSize === ScreenSize.Desktop ? "Active" : ""
-                  } Proposals`}</div>
+                  <div className="name">{`${screenSize === ScreenSize.Desktop ? "Active" : ""
+                    } Proposals`}</div>
                 </div>
               </div>
             </div>
@@ -688,9 +657,8 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                       onClick={() => changeTabHandler(t.key)}
                     >
                       <img
-                        src={`/icons/common-icons/${t.icon}${
-                          tab === t.key ? "-active" : ""
-                        }.svg`}
+                        src={`/icons/common-icons/${t.icon}${tab === t.key ? "-active" : ""
+                          }.svg`}
                         alt={t.name}
                       />
                       {t.name}
@@ -818,9 +786,8 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                       onClick={() => changeTabHandler(t.key)}
                     >
                       <img
-                        src={`/icons/common-icons/${t.icon}${
-                          tab === t.key ? "-active" : ""
-                        }.svg`}
+                        src={`/icons/common-icons/${t.icon}${tab === t.key ? "-active" : ""
+                          }.svg`}
                         alt={t.name}
                       />
                       {t.name}
