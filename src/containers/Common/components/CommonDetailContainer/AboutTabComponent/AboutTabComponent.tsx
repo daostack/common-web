@@ -1,7 +1,8 @@
-import React from "react";
+import React, {useState} from "react";
 import { CommonShare, Linkify } from "@/shared/components";
 import { Colors, ScreenSize, ShareViewType } from "@/shared/constants";
 import { Common } from "@/shared/models";
+import classNames from "classnames";
 import "./index.scss";
 
 interface AboutTabComponentProps {
@@ -20,12 +21,13 @@ export default function AboutTabComponent({
   isJoiningPending,
 }: AboutTabComponentProps) {
   const shouldShowJoinToCommonButton = screenSize === ScreenSize.Desktop && !isCommonMember && !isJoiningPending;
+  const [expanded, setExpanded] = useState(false);
   return (
     <div className="about-name-wrapper">
       <div className="description">
-        <Linkify>{common.description}</Linkify>
+        <Linkify>{expanded ? common.description :  common.description.substring(0, 200)}</Linkify>
       </div>
-      {common?.links?.length > 0 && (
+      {common?.links?.length > 0  && expanded && (
         <div className="links">
           <div className="title">Links</div>
           {common.links.map((link) => (
@@ -35,6 +37,9 @@ export default function AboutTabComponent({
           ))}
         </div>
       )}
+        <h4 className={`see-more-button`} onClick={() => {setExpanded(!expanded)}}>
+          {expanded ? 'Hide <' : 'See more >'}
+        </h4>
       {shouldShowJoinToCommonButton && (
         <>
           <div className="line"></div>
