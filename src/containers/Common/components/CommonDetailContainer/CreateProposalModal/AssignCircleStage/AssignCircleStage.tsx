@@ -77,6 +77,7 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
         links: [],
         files: [],
         circleId: assignCircleData.circle.id,
+        userId: assignCircleData.commonMember.userId
       },
     };
 
