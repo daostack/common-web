@@ -131,7 +131,7 @@ export default function UserAcknowledgment({
               shouldUseFullWidth={isMobileView}
               disabled={!areTermsConfirmed}
             >
-              Continue to Funding
+              Continue to Rules
             </Button>
           </div>
         </ModalFooter>
