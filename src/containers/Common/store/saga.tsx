@@ -359,6 +359,8 @@ export function* loadProposalDetail(
     });
     proposal.discussionMessage = loadedDisscussionMessage;
 
+    proposal.proposer = (yield getUserData(action.payload.data.args.proposerId)) as User;
+
     yield put(actions.loadProposalDetail.success(proposal));
     yield put(stopLoading());
   } catch (e) {

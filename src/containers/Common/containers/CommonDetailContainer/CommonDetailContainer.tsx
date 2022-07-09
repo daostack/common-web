@@ -295,7 +295,10 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const getProposalDetail = useCallback(
     (payload: Proposal) => {
       dispatch(loadProposalDetail.request(payload));
-      onOpen();
+
+      //onOpen();
+
+      history.push(ROUTE_PATHS.PROPOSAL_DETAIL.replace(":id", payload.id));
     },
     [dispatch, onOpen]
   );
