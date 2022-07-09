@@ -11,16 +11,17 @@ import { LoginHelpButtons } from "../LoginHelpButtons";
 import "./index.scss";
 
 interface ConnectProps {
-  hasError: boolean;
+  errorText?: string;
   isJoinRequestType: boolean;
   onAuthButtonClick: (provider: AuthProvider) => void;
 }
 
 const Connect: FC<ConnectProps> = (props) => {
-  const { hasError, isJoinRequestType, onAuthButtonClick } = props;
+  const { errorText, isJoinRequestType, onAuthButtonClick } = props;
   const screenSize = useSelector(getScreenSize());
   const isLoading = useSelector(selectIsAuthLoading());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const hasError = Boolean(errorText);
 
   const subTitleText =
     isMobileView && !isJoinRequestType
@@ -67,7 +68,11 @@ const Connect: FC<ConnectProps> = (props) => {
         >
           {subTitleText}
         </p>
-        {hasError && <LoginError className="connect-wrapper__error" />}
+        {hasError && (
+          <LoginError className="connect-wrapper__error">
+            {errorText}
+          </LoginError>
+        )}
         <LoginButtons onLogin={onAuthButtonClick} />
         <p
           className={classNames("connect-wrapper__sub-text", {

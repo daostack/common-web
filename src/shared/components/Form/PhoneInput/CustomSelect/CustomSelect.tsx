@@ -29,7 +29,7 @@ const CustomSelect: FC<CustomSelectProps> = (props) => {
       menuButtonText={`+${getCountryCallingCode(countryCode)}`}
       styles={{
         menuButton: "custom-phone-input-custom-select__menu-button",
-        placeholder: "custom-phone-input-custom-select__placeholder",
+        value: "custom-phone-input-custom-select__value",
         arrowIcon: "custom-phone-input-custom-select__arrow-icon",
         menu: "custom-phone-input-custom-select__menu",
         menuList: "custom-phone-input-custom-select__menu-list",

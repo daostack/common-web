@@ -1,4 +1,4 @@
-const generateCirclesBinaryNumber = (circles: number[]) => {
+export const generateCirclesBinaryNumber = (circles: number[]) => {
   const circlesSet = new Set(circles);
 
   let binary = '';

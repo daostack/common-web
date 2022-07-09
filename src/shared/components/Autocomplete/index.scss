@@ -1,0 +1,26 @@
+@import "../../../constants";
+
+.custom-auto-complete__input-wrapper {
+  position: relative;
+
+  .custom-auto-complete__input {
+    padding-right: 2.5rem;
+    cursor: pointer;
+  }
+}
+
+.custom-auto-complete__arrow-icon {
+  position: absolute;
+  top: 50%;
+  right: 0.8rem;
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  transform: translateY(-50%) rotate(90deg);
+  transition: all 0.2s;
+  pointer-events: none;
+  user-select: none;
+}
+.custom-auto-complete__arrow-icon--opened {
+  transform: translateY(-50%) rotate(-90deg);
+}
