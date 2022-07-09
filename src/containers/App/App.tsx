@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
+import firebase from '@/shared/utils/firebase';
 import PrivateRoute from "./PrivateRoute";
 import { Content, NotFound, Footer, Header, Modal } from "@/shared/components";
 import { NotificationProvider } from "@/shared/components/Notification";
@@ -32,6 +33,10 @@ import { BackgroundNotification } from "@/shared/components/BackgroundNotificati
 import { EventTypeState } from "@/shared/models/Notification";
 
 import { useHistory } from "react-router";
+import { parseJson } from "@/shared/utils/json";
+import { get } from "lodash";
+
+import { webviewLogin } from "../Auth/store/actions";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -44,6 +49,26 @@ const App = () => {
     onOpen: showNote,
     onClose: closeNotification,
   } = useModal(false);
+
+  useEffect(() => {
+    window.addEventListener('message', event => {
+      if (get(parseJson(event.data), 'providerId')) {
+        (async () => {
+          try {
+            const provider = firebase.auth.GoogleAuthProvider;
+            const credential = provider.credential(parseJson(event.data).idToken);
+
+            const { user } = await firebase.auth().signInWithCredential(credential);
+            dispatch(webviewLogin.request({
+              payload: user,
+            }))
+          } catch (err) {
+            window.ReactNativeWebView.postMessage(JSON.stringify({ action: JSON.stringify(err) }));
+          }
+        })()
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (notification) {
