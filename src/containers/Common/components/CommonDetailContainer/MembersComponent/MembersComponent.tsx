@@ -169,25 +169,28 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = (screenSize === ScreenSize.Mobile);
 
+  const pendingProposals = proposals.filter(proposal => proposal.type ===
+    ProposalsTypes.MEMBER_ADMITTANCE &&
+    proposal.state === ProposalState.DISCUSSION ||
+    proposal.state === ProposalState.VOTING) as MemberAdmittance[]
+
+  const historyProposals = proposals.filter(proposal => proposal.type ===
+    ProposalsTypes.MEMBER_ADMITTANCE &&
+    proposal.state !== ProposalState.VOTING &&
+    proposal.state !== ProposalState.DISCUSSION) as MemberAdmittance[]
+
+
+
   const renderTab = useCallback((activeMenuItem: MemberListTab) => {
     switch (activeMenuItem) {
       case MemberListTab.Members:
         return <MembersList members={commonMembers} />;
 
       case MemberListTab.Pending:
-        return <ProposalsList proposals={
-          proposals.filter(proposal => proposal.type ===
-            ProposalsTypes.MEMBER_ADMITTANCE &&
-            proposal.state === ProposalState.DISCUSSION ||
-            proposal.state === ProposalState.VOTING) as MemberAdmittance[]
-        } common={common} />;
+        return <ProposalsList proposals={pendingProposals} common={common} />;
 
       case MemberListTab.History:
-        return <ProposalsList proposals={proposals.filter(proposal => proposal.type ===
-          ProposalsTypes.MEMBER_ADMITTANCE &&
-          proposal.state !== ProposalState.VOTING &&
-          proposal.state !== ProposalState.DISCUSSION) as MemberAdmittance[]
-        } common={common} />;
+        return <ProposalsList proposals={historyProposals} common={common} />;
 
       default:
         return null;
@@ -236,21 +239,21 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
         <ul className="members__menu">
           <li
             onClick={() => setActiveMenuItem(MemberListTab.Members)}
-            className={classNames({ active: activeMenuItem === MemberListTab.Members })}
+            className={classNames({ active: activeMenuItem === MemberListTab.Members, isMobileView })}
           >
-            {MemberListTab.Members}
+            {MemberListTab.Members} ({commonMembers.length})
           </li>
           <li
             onClick={() => setActiveMenuItem(MemberListTab.Pending)}
-            className={classNames({ active: activeMenuItem === MemberListTab.Pending })}
+            className={classNames({ active: activeMenuItem === MemberListTab.Pending, isMobileView })}
           >
-            {MemberListTab.Pending}
+            {MemberListTab.Pending} ({pendingProposals.length})
           </li>
           <li
             onClick={() => setActiveMenuItem(MemberListTab.History)}
-            className={classNames({ active: activeMenuItem === MemberListTab.History })}
+            className={classNames({ active: activeMenuItem === MemberListTab.History, isMobileView })}
           >
-            {MemberListTab.History}
+            {MemberListTab.History} ({historyProposals.length})
           </li>
         </ul>
       </div>
