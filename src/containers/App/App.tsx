@@ -18,6 +18,7 @@ import {
   ROUTE_PATHS,
   SMALL_SCREEN_BREAKPOINT,
   ScreenSize,
+  AuthProviderID,
 } from "../../shared/constants";
 import { changeScreenSize, showNotification } from "@/shared/store/actions";
 import { authentificated } from "../Auth/store/selectors";
@@ -37,6 +38,7 @@ import { parseJson } from "@/shared/utils/json";
 import { get } from "lodash";
 
 import { webviewLogin } from "../Auth/store/actions";
+import { getProvider } from "@/shared/utils/authProvide";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -52,11 +54,17 @@ const App = () => {
 
   useEffect(() => {
     window.addEventListener('message', event => {
-      if (get(parseJson(event.data), 'providerId')) {
+      const data = parseJson(event.data);
+      if (data?.providerId) {
         (async () => {
           try {
-            const provider = firebase.auth.GoogleAuthProvider;
-            const credential = provider.credential(parseJson(event.data).idToken);
+            let credential;
+            if(data.providerId === AuthProviderID.Apple) {
+              credential = firebase.auth.OAuthProvider?.credentialFromResult(event.data);
+            } else {
+              const provider = getProvider(data?.providerId);
+              credential = provider.credential(data.idToken);
+            }
 
             const { user } = await firebase.auth().signInWithCredential(credential);
             dispatch(webviewLogin.request({
