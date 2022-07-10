@@ -185,7 +185,7 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
       case MemberListTab.History:
         return <ProposalsList proposals={proposals.filter(proposal => proposal.type ===
           ProposalsTypes.MEMBER_ADMITTANCE &&
-          proposal.state !== ProposalState.VOTING ||
+          proposal.state !== ProposalState.VOTING &&
           proposal.state !== ProposalState.DISCUSSION) as MemberAdmittance[]
         } common={common} />;
 
