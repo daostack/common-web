@@ -55,7 +55,7 @@
         font-family: 'NunitoSans';
         font-style: normal;
         font-weight: 600;
-        font-size: 1rem;
+        font-size: $small;
 
       }
 
@@ -144,7 +144,7 @@
             font-family: 'NunitoSans';
             font-style: normal;
             font-weight: 400;
-            font-size: 0.72rem;
+            font-size: $xxsmall;
             color: $purple-2;
             margin-top: 0.1rem;
           }
@@ -154,7 +154,7 @@
             font-family: 'NunitoSans';
             font-style: normal;
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: $xsmall;
             color: $secondary-blue;
             
           }
@@ -165,7 +165,7 @@
             font-family: 'NunitoSans';
             font-style: normal;
             font-weight: 400;
-            font-size: 0.75rem;
+            font-size: $xxsmall;
             text-align: center;
             color: $light-gray-2;        
           }
