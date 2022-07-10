@@ -57,6 +57,12 @@
         font-weight: 600;
         font-size: $small;
 
+        @media only screen and (max-width: 390px) {
+          & {
+            font-size: $xsmall;
+          }
+        }
+
       }
 
       > li {
@@ -92,6 +98,12 @@
           background-color: $purple;
           position: absolute;
           top: 2rem;
+
+          @media only screen and (max-width: 390px) {
+            & {
+              height: 0.24rem;
+            }
+          }
         }
       }
     }
@@ -156,6 +168,8 @@
             font-weight: 700;
             font-size: $xsmall;
             color: $secondary-blue;
+
+            
             
           }
         }
