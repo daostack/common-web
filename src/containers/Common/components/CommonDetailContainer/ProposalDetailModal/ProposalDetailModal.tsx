@@ -108,7 +108,7 @@ export default function ProposalDetailModal({
             >
               {proposal.data.args.title || "Membership request"}
             </div>
-            {expanded && (
+            {rawRequestedAmount && expanded && (
               <>
                 <div className="requested-amount">
                   {!rawRequestedAmount ? (

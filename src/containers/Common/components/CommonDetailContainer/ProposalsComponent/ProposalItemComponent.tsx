@@ -77,7 +77,7 @@ export default function ProposalItemComponent({
           className="dropdown-menu"
           transparent
         />
-        <div className="requested-amount">
+        {rawRequestedAmount && <div className="requested-amount">
           {!rawRequestedAmount ? (
             "No funding requested"
           ) : (
@@ -86,7 +86,7 @@ export default function ProposalItemComponent({
               <span className="amount">{formatPrice(rawRequestedAmount)}</span>
             </>
           )}
-        </div>
+        </div>}
         <div className="votes">
           <VotesComponent proposal={proposal} commonMember={commonMember} />
         </div>
