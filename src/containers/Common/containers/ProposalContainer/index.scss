@@ -362,3 +362,25 @@
     margin: 0;
   }
 }
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .voting-content__wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 0 2rem;
+    .voting-content__proposal-details {
+      flex-direction: column;
+      .voting-content__proposal-details-item {
+        width: 100%;
+        margin: 0.25rem 0;
+      }
+    }
+    .voting-content__voting-chart {
+      flex-direction: column;
+      .voting-content__voting-chart-main-info {
+        margin-right: unset;
+        width: 100%;
+      }
+    }
+  }
+}
