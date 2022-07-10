@@ -216,12 +216,6 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
           <div className="members__common-title">
             Members List
           </div>
-          {
-            isMobileView
-            && <div className="members__common-name">
-              {common.name || ""}
-            </div>
-          }
         </div>
       </div>
       <div
