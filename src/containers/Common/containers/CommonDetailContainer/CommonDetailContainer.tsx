@@ -40,7 +40,6 @@ import {
   WalletComponent,
 } from "../../components/CommonDetailContainer";
 import { MembershipRequestModal } from "../../components/CommonDetailContainer/MembershipRequestModal";
-import { ProposalDetailModal } from "../../components/CommonDetailContainer/ProposalDetailModal";
 import {
   Colors,
   ScreenSize,
@@ -52,7 +51,6 @@ import {
 import {
   selectCommonDetail,
   selectCurrentDisscussion,
-  selectCurrentProposal,
   selectDiscussions,
   selectGovernance,
   selectIsDiscussionsLoaded,
@@ -62,12 +60,10 @@ import {
 } from "../../store/selectors";
 import {
   clearCurrentDiscussion,
-  clearCurrentProposal,
   closeCurrentCommon,
   getCommonDetail,
   loadCommonDiscussionList,
   loadDisscussionDetail,
-  loadProposalDetail,
   loadProposalList,
   loadUserCards,
   setCommonActiveTab,
@@ -156,7 +152,6 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const discussions = useSelector(selectDiscussions());
   const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
   const isProposalsLoaded = useSelector(selectIsProposalLoaded());
-  const currentProposal = useSelector(selectCurrentProposal());
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
   const activeTab = useSelector(selectCommonActiveTab());
@@ -280,14 +275,9 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   );
 
   const getProposalDetail = useCallback(
-    (payload: Proposal) => {
-      dispatch(loadProposalDetail.request(payload));
-
-      //onOpen();
-
-      history.push(ROUTE_PATHS.PROPOSAL_DETAIL.replace(":id", payload.id));
-    },
-    [dispatch, onOpen]
+    (payload: Proposal) =>
+      history.push(ROUTE_PATHS.PROPOSAL_DETAIL.replace(":id", payload.id)),
+    []
   );
 
   useEffect(() => {
@@ -321,7 +311,6 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const closeModalHandler = useCallback(() => {
     onClose();
     dispatch(clearCurrentDiscussion());
-    dispatch(clearCurrentProposal());
 
     if (props.commonId) {
       dispatch(setCommonActiveTab(tab));
@@ -371,10 +360,10 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
 
   const closeJoinModal = useCallback(() => {
     onCloseJoinModal();
-    if (currentDisscussion || currentProposal) {
+    if (currentDisscussion) {
       setTimeout(onOpen, 0);
     }
-  }, [onOpen, currentProposal, currentDisscussion, onCloseJoinModal]);
+  }, [onOpen, currentDisscussion, onCloseJoinModal]);
 
   const addPost = useCallback(() => {
     if (!user) return setTimeout(onOpenJoinModal, 0);
@@ -518,26 +507,14 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
             content: "common-detail-container__detail-modal-content",
           }}
         >
-          {tab === Tabs.Discussions && (
-            <DiscussionDetailModal
-              disscussion={currentDisscussion}
-              common={common}
-              onOpenJoinModal={openJoinModal}
-              commonMember={commonMember}
-              isCommonMemberFetched={isCommonMemberFetched}
-              isJoiningPending={isJoiningPending}
-            />
-          )}
-          {tab === Tabs.Proposals && (
-            <ProposalDetailModal
-              proposal={currentProposal}
-              common={common}
-              onOpenJoinModal={openJoinModal}
-              commonMember={commonMember}
-              isCommonMemberFetched={isCommonMemberFetched}
-              isJoiningPending={isJoiningPending}
-            />
-          )}
+          <DiscussionDetailModal
+            disscussion={currentDisscussion}
+            common={common}
+            onOpenJoinModal={openJoinModal}
+            commonMember={commonMember}
+            isCommonMemberFetched={isCommonMemberFetched}
+            isJoiningPending={isJoiningPending}
+          />
         </Modal>
       )}
       {showJoinModal && (

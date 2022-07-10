@@ -1,4 +1,5 @@
-import React, { FC, useEffect, useState, useCallback, useMemo } from "react";
+import React, { FC, useMemo } from "react";
+import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { Proposal, VotingCardType } from "@/shared/models";
 import {
@@ -10,7 +11,8 @@ import {
   FUNDING_TYPES,
   FundingAllocationStatus,
 } from "@/shared/models/governance/proposals";
-import { ProposalsTypes } from "@/shared/constants";
+import { getScreenSize } from "@/shared/store/selectors";
+import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { formatPrice, formatDate } from "@/shared/utils";
 import { VotingCard } from "./VotingCard";
 import "./index.scss";
@@ -25,6 +27,9 @@ interface ProposalDetailsItem {
 }
 
 export const VotingContentContainer: FC<VotingContentContainerProps> = ({ proposal }) => {
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
+
   const proposalDetailsByType = useMemo((): ProposalDetailsItem[] => {
     let typedProposal;
 
@@ -130,10 +135,11 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
     [proposal, proposal.type]
   );
 
-  // useEffect(() => {
-  //   console.log("typedProposal  ", typedProposal);
-  //       console.log("proposalDetailsByType  ", proposalDetailsByType);
-  // }, [proposalDetailsByType, typedProposal]);
+  const votingContentAdditionalInfoElem = (
+    <div className="voting-content__additional-info">
+      At least 3 more support and 4 more <br /> abstain\support are required to pass
+    </div>
+  );
 
   return (
     <div className="voting-content__wrapper">
@@ -165,11 +171,11 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
             <span>Voting Status</span>
             {votingStatusElem}
           </div>
-          <div className="voting-content__additional-info">
-            At least 3 more support and 4 more <br /> abstain\support are required to pass
-          </div>
+          {
+            !isMobileView && votingContentAdditionalInfoElem
+          }
         </div>
-        {/* TODO: fill up with a real proposal's dataset */}
+        {/* TODO: fill up with a real proposal's datasets */}
         <div className="voting-content__voting-stats-container">
           <VotingCard
             type={VotingCardType.AllVotes}
@@ -196,6 +202,9 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
           />
         </div>
       </div>
+      {
+        isMobileView && votingContentAdditionalInfoElem
+      }
     </div>
   );
 };

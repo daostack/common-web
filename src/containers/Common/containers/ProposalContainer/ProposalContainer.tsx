@@ -15,11 +15,12 @@ import {
   Button,
   ButtonVariant,
 } from "@/shared/components";
-import { Proposal, VoteOutcome } from "@/shared/models";
+import { Proposal } from "@/shared/models";
 import { getUserName, checkIsCountdownState } from "@/shared/utils";
-import { ProposalsTypes, ChatType } from "@/shared/constants";
+import { ProposalsTypes, ChatType, ScreenSize } from "@/shared/constants";
 import { addMessageToProposal } from "@/containers/Common/store/actions";
 import { selectUser } from "@/containers/Auth/store/selectors";
+import { getScreenSize } from "@/shared/store/selectors";
 import { selectCommonDetail, selectCurrentProposal } from "../../../Common/store/selectors";
 import { getCommonDetail, loadProposalDetail } from "../../../Common/store/actions";
 import { VotingContentContainer } from "./VotingContentContainer";
@@ -27,6 +28,8 @@ import { PitchContentContainer } from "./PitchContentContainer";
 import { ChatComponent } from "../../components";
 import { useCommonMember } from "../../hooks";
 import { useModal } from "@/shared/hooks";
+import { VotingPopup } from "./VotingPopup";
+import { useProposalUserVote } from "@/containers/Common/hooks";
 import "./index.scss";
 
 interface ProposalRouterParams {
@@ -58,6 +61,14 @@ const ProposalContainer = () => {
     data: commonMember,
     fetchCommonMember,
   } = useCommonMember();
+  const {
+    fetched: isVoteFetched,
+    data: userVote,
+    fetchProposalVote,
+    setVote,
+  } = useProposalUserVote();
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   const sendMessage = useCallback(
     (message: string) => {
@@ -108,6 +119,17 @@ const ProposalContainer = () => {
     }
   }, [activeTab, currentCommon]);
 
+  const voteButtonElem = useMemo(() =>
+    <Button
+      variant={ButtonVariant.Primary}
+      onClick={onOpen}
+      className="proposal-page__proposal-vote-btn"
+    >
+      Vote Now
+    </Button>,
+    [onOpen]
+  );
+
   useEffect(() => {
     if (currentProposal || !proposalId)
       return;
@@ -139,58 +161,64 @@ const ProposalContainer = () => {
       fetchCommonMember(currentCommon.id);
   }, [fetchCommonMember, currentCommon]);
 
-  // useEffect(() => {
-  //   if (currentProposal)
-  //     console.log("currentProposal.proposer  ", currentProposal.proposer);
-  // });
+  useEffect(() => {
+    if (currentProposal)
+      fetchProposalVote(currentProposal.id);
+  }, [fetchProposalVote, currentProposal]);
+
+  useEffect(() => {
+    console.log("response ", userVote, isVoteFetched);
+  }, [userVote]);
 
   return (currentCommon && currentProposal)
     ? (
       <>
-        {/* {isShowing && (
-          <VotePrompt
-            isShowing={isShowing}
-            onClose={onClose}
-            proposalId={currentProposal.id}
-            proposalVotes={currentProposal.votes}
-            voteType={voteType!}
-            avatarURL={user?.photoURL ?? ""}
-            onVoteUpdate={setVote}
-          />
-        )} */}
+        <VotingPopup
+          proposal={currentProposal}
+          isShowing={isShowing}
+          onClose={onClose}
+          setVote={setVote}
+        />
         <div className="proposal-page__wrapper">
-          <div className="proposal-page__heading-info-wrapper section-wrapper">
+          <div className="proposal-page__common-title-wrapper section-wrapper">
+            {
+              isMobileView && <img
+                src="/icons/left-arrow.svg"
+                alt="left-arrow"
+                onClick={() => history.back()}
+              />
+            }
             <h1 className="proposal-page__common-title">
               {currentCommon?.name}
             </h1>
-            <div className="proposal-page__proposer-info-wrapper">
-              <div className="proposal-page__proposer-info">
-                <UserAvatar
-                  photoURL={currentProposal.proposer?.photoURL}
-                  nameForRandomAvatar={currentProposal.proposer?.email}
-                  userName={getUserName(currentProposal.proposer)}
-                />
-                <div className="proposal-page__proposer-info-username">
-                  {getUserName(currentProposal.proposer)}
+          </div>
+          <div className="proposal-page__heading-info-wrapper section-wrapper">
+            <div className="proposal-page__heading-info-main">
+              <div className="proposal-page__proposer-info-wrapper">
+                <div className="proposal-page__proposer-info">
+                  <UserAvatar
+                    photoURL={currentProposal.proposer?.photoURL}
+                    nameForRandomAvatar={currentProposal.proposer?.email}
+                    userName={getUserName(currentProposal.proposer)}
+                  />
+                  <div className="proposal-page__proposer-info-username">
+                    {getUserName(currentProposal.proposer)}
+                  </div>
                 </div>
+              </div> 
+              <div className="proposal-page__proposal-info-wrapper">
+                <div className="proposal-page__proposal-info-description">
+                  <div className="proposal-title">
+                    {currentProposal.data.args.title}
+                  </div>
+                  <div className="proposal-type">
+                    {PROPOSAL_TYPE_CAPTION[currentProposal.type] || ""}
+                  </div>
+                </div>
+                {
+                  !isMobileView && (isVoteFetched && !userVote) && voteButtonElem
+                }
               </div>
-            </div> 
-            <div className="proposal-page__proposal-info-wrapper">
-              <div className="proposal-page__proposal-info-description">
-                <div className="proposal-title">
-                  {currentProposal.data.args.title}
-                </div>
-                <div className="proposal-type">
-                  {PROPOSAL_TYPE_CAPTION[currentProposal.type] || ""}
-                </div>
-              </div>
-              <Button
-                variant={ButtonVariant.Primary}
-                onClick={onOpen}
-                className="proposal-page__proposal-vote-btn"
-              >
-                Vote Now
-              </Button>
             </div>
             <div className="proposal-page__proposal-menu-wrapper">
               <ul className="proposal-page__proposal-menu">
@@ -228,6 +256,11 @@ const ProposalContainer = () => {
           >
             <div className="proposal-page__content-container section-wrapper">
               {renderContentByActiveTab(currentProposal)}
+            </div>
+            <div className="proposal-page__proposal-vote-btn-wrapper">
+              {
+                isMobileView && (isVoteFetched && !userVote) && voteButtonElem
+              }
             </div>
           </div>
         </div>

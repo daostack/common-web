@@ -1,11 +1,11 @@
 import React, { FC } from "react";
 import { Proposal } from "@/shared/models";
 
-interface DetailsContentContainerProps {
+interface PitchContentContainerProps {
   proposal: Proposal;
 }
 
-export const PitchContentContainer: FC<DetailsContentContainerProps> = (
+export const PitchContentContainer: FC<PitchContentContainerProps> = (
   {
     proposal,
   }
@@ -19,7 +19,10 @@ export const PitchContentContainer: FC<DetailsContentContainerProps> = (
         {
           proposal.data.args.links.map(
             link => (
-              <li className="pitch-content__links-item">
+              <li
+                key={link.title}
+                className="pitch-content__links-item"
+              >
                 <img
                   src="/icons/link.svg"
                   alt={link.title}
@@ -43,7 +46,10 @@ export const PitchContentContainer: FC<DetailsContentContainerProps> = (
         {
           proposal.data.args.images.map(
             image => (
-              <li className="pitch-content__images-item">
+              <li
+                key={image.title}
+                className="pitch-content__images-item"
+              >
                 <img
                   src={image.value}
                   alt={image.title}

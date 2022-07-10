@@ -141,11 +141,6 @@
   }
 
   .voting-content__proposal-details {
-    // display: grid;
-    // grid-column-gap: 1.2rem;
-    // grid-row-gap: 1rem;
-    // grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
-    // justify-items: center;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -153,10 +148,6 @@
     .voting-content__proposal-details-item {
       width: 17%;
       height: 4.375rem;
-
-      // &:nth-child(odd):last-child {
-      //   grid-column: 1/3;
-      // }
 
       .title {
         font-size: $xsmall;
@@ -218,10 +209,6 @@
           background-color: $dark-yellow;
         }
       }
-
-      .voting-content__additional-info {
-        color: $light-gray-2;
-      }
     }
 
     .voting-content__voting-stats-container {
@@ -237,6 +224,11 @@
         width: 98%;
       }
     }
+  }
+
+  .voting-content__additional-info {
+    color: $light-gray-2;
+    text-align: center;
   }
 }
 
@@ -363,23 +355,178 @@
   }
 }
 
+.voting-popup__modal-wrapper {
+  width: 21.25rem;
+  height: 28.125rem;
+
+  .voting-popup {
+    width: 100%;
+    height: 86%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    .voting-popup__title {
+      font-size: $small;
+      font-weight: bold;
+    }
+
+    .voting-popup__description {
+      text-align: center;
+      font-size: $xsmall;
+    }
+
+    .voting-popup__vote-options-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 90%;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      .voting-popup__vote-options-item {
+        box-shadow: 0px 0.625rem 1.25rem rgba(0, 0, 0, 0.25);
+        border-radius: 50%;
+        background-color: $white;
+        width: 4rem;
+        height: 4rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+          width: 2rem;
+          height: 2rem;
+        }
+      }
+    }
+  }
+}
+
 @media only screen and (max-width: $mobile-breakpoint) {
+  .proposal-page__wrapper {
+    padding-top: unset;
+
+    .proposal-page__heading-info-wrapper {
+      .proposal-page__heading-info-main {
+        margin-top: 1.75rem;
+        box-shadow: 0px 0.188rem 0.5rem rgba(0, 26, 54, 0.08);
+        border-radius: 0.625rem;
+        position: relative;
+        padding: 1rem;
+
+        .proposal-page__proposal-info-wrapper {
+          margin-top: unset;
+        }
+
+        .proposal-page__proposer-info {
+          position: absolute;
+          top: -9px;
+        }
+
+        .proposal-page__proposal-info-description {
+          .proposal-title {
+            font-size: $moderate;
+          }
+
+          .proposal-type {
+            position: absolute;
+            top: -9px;
+            right: 0;
+          }
+        }
+      }
+
+      .proposal-page__proposal-menu-wrapper {
+        margin-top: 3rem;
+
+        .proposal-page__proposal-menu {
+          width: 100%;
+
+          .proposal-page__proposal-menu-item {
+            font-size: $xsmall;
+            margin-right: unset;
+          }
+        }
+      }
+    }
+
+    .proposal-page__proposal-vote-btn-wrapper {
+      margin-top: 3rem;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .proposal-page__proposal-vote-btn {
+        width: 60%;
+      }
+    }
+
+    .proposal-page__common-title-wrapper {
+      display: grid;
+      grid-template-columns: auto 10rem auto;
+      align-items: center;
+
+      .proposal-page__common-title {
+        font-size: $moderate;
+        font-family: "Nunito Sans";
+        text-align: center;
+      }
+    }
+  }
+
   .voting-content__wrapper {
     display: flex;
     flex-direction: column;
     padding: 0 2rem;
+
     .voting-content__proposal-details {
-      flex-direction: column;
+      display: grid;
+      grid-column-gap: 1.2rem;
+      grid-row-gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+      justify-items: center;
+
       .voting-content__proposal-details-item {
         width: 100%;
-        margin: 0.25rem 0;
+
+        &:nth-child(odd):last-child {
+          grid-column: 1/3;
+        }
       }
     }
+
     .voting-content__voting-chart {
       flex-direction: column;
+      margin-top: unset;
+
       .voting-content__voting-chart-main-info {
         margin-right: unset;
+        height: 14rem;
         width: 100%;
+        box-shadow: unset;
+        background-color: inherit;
+      }
+    }
+
+    .voting-content__additional-info {
+      margin-top: 1rem;
+    }
+  }
+
+  .pitch-content__wrapper {
+    width: 79%;
+    margin-left: 3rem;
+
+    .pitch-content__images {
+      .pitch-content__images-item {
+        img {
+          height: 15.625rem;
+        }
       }
     }
   }
