@@ -4,6 +4,7 @@ import { Common, CommonMember, Governance, Proposal } from "@/shared/models";
 import { EmptyTabComponent } from "../EmptyTabContent";
 import "./index.scss";
 import ProposalItemComponent from "./ProposalItemComponent";
+import { ProposalsTypes } from "../../../../../shared/constants";
 
 interface DiscussionsComponentProps {
   proposals: Proposal[];
@@ -42,14 +43,18 @@ export default function ProposalsComponent({
       <div className="proposals-component-wrapper">
         {proposals.length > 0 ? (
           <>
-            {proposals.map((proposal) => (
-              <ProposalItemComponent
-                key={proposal.id}
-                proposal={proposal}
-                loadProposalDetail={loadProposalDetail}
-                commonMember={commonMember}
-              />
-            ))}
+            {proposals.map((proposal) => {
+              if (proposal.type !== ProposalsTypes.MEMBER_ADMITTANCE) {
+                return (
+                  <ProposalItemComponent
+                    key={proposal.id}
+                    proposal={proposal}
+                    loadProposalDetail={loadProposalDetail}
+                    commonMember={commonMember}
+                  />
+                )
+              }
+            })}
           </>
         ) : (
           <EmptyTabComponent
