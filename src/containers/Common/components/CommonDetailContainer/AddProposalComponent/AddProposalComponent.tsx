@@ -10,9 +10,9 @@ import classNames from "classnames";
 import { Modal } from "@/shared/components";
 import { useZoomDisabling } from "@/shared/hooks";
 import { ModalProps, ModalRef } from "@/shared/interfaces";
-import { Common, Proposal } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ScreenSize } from "@/shared/constants";
+import { BankAccountDetails, Common, Proposal } from "@/shared/models";
 import { AddProposalForm } from "./AddProposalForm";
 import { AddProposalConfirm } from "./AddProposalConfirm";
 import { AddProposalLoader } from "./AddProposalLoader";
@@ -77,6 +77,8 @@ export const AddProposalComponent = ({
   const [proposalCreationStep, changeCreationProposalStep] = useState(
     AddProposalSteps.CREATE
   );
+  const [initialBankAccountDetails, setInitialBankAccountDetails] =
+    useState<BankAccountDetails | null>(null);
 
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -131,6 +133,7 @@ export const AddProposalComponent = ({
 
   const onBankDetails = useCallback(() => {
     changeCreationProposalStep(AddProposalSteps.CREATE);
+    setInitialBankAccountDetails(null);
   }, []);
 
   const addBankDetails = useCallback(() => {
@@ -144,20 +147,35 @@ export const AddProposalComponent = ({
   const renderProposalStep = useMemo(() => {
     switch (proposalCreationStep) {
       case AddProposalSteps.CREATE:
-        return (
-          <AddProposalForm
-            common={common}
-            saveProposalState={saveProposalState}
-            addBankDetails={addBankDetails}
-          />
-        );
       case AddProposalSteps.BANK_DETAILS:
-        return <AddBankDetails onBankDetails={onBankDetails} />;
       case AddProposalSteps.CONFIRM:
         return (
-          <AddProposalConfirm
-            onConfirm={() => confirmProposal(fundingRequest)}
-          />
+          <>
+            <AddProposalForm
+              common={common}
+              saveProposalState={saveProposalState}
+              addBankDetails={addBankDetails}
+              hidden={
+                (proposalCreationStep === AddProposalSteps.BANK_DETAILS)
+                || (proposalCreationStep === AddProposalSteps.CONFIRM)
+              }
+            />
+            {
+              (proposalCreationStep === AddProposalSteps.BANK_DETAILS)
+              && <AddBankDetails
+                onBankDetails={onBankDetails}
+                onBankDetailsAfterError={setInitialBankAccountDetails}
+                title="Add Bank Account"
+                initialBankAccountDetails={initialBankAccountDetails}
+              />
+            }
+            {
+              (proposalCreationStep === AddProposalSteps.CONFIRM)
+              && <AddProposalConfirm
+                onConfirm={() => confirmProposal(fundingRequest)}
+              />
+            }
+          </>
         );
       case AddProposalSteps.LOADER:
         return <AddProposalLoader />;
@@ -186,6 +204,7 @@ export const AddProposalComponent = ({
     saveProposalState,
     confirmProposal,
     onBankDetails,
+    initialBankAccountDetails,
     addBankDetails,
     handleProposalCreatedSuccess,
     common,

@@ -8,6 +8,7 @@ import {
   Card,
   Common,
   CommonMember,
+  CommonMemberWithUserInfo,
   CommonPayment,
   Governance,
   Proposal,
@@ -176,6 +177,20 @@ export const createMemberAdmittanceProposal = createAsyncAction(
   Error
 >();
 
+export const createAssignCircleProposal = createAsyncAction(
+  CommonsActionTypes.CREATE_ASSIGN_CIRCLE_PROPOSAL,
+  CommonsActionTypes.CREATE_ASSIGN_CIRCLE_PROPOSAL_SUCCESS,
+  CommonsActionTypes.CREATE_ASSIGN_CIRCLE_PROPOSAL_FAILURE
+)<
+  PayloadWithOptionalCallback<
+    Omit<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"], "type">,
+    CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["response"],
+    Error
+  >,
+  CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["response"],
+  Error
+>();
+
 export const createFundingProposal = createAsyncAction(
   CommonsActionTypes.CREATE_FUNDING_PROPOSAL,
   CommonsActionTypes.CREATE_FUNDING_PROPOSAL_SUCCESS,
@@ -309,6 +324,20 @@ export const updateBankDetails = createAsyncAction(
   Error
 >();
 
+export const deleteBankDetails = createAsyncAction(
+  CommonsActionTypes.DELETE_BANK_DETAILS,
+  CommonsActionTypes.DELETE_BANK_DETAILS_SUCCESS,
+  CommonsActionTypes.DELETE_BANK_DETAILS_FAILURE
+)<
+  PayloadWithCallback<
+    void,
+    BankAccountDetails,
+    Error
+  >,
+  BankAccountDetails,
+  Error
+>();
+
 export const getBankDetails = createAsyncAction(
   CommonsActionTypes.GET_BANK_DETAILS,
   CommonsActionTypes.GET_BANK_DETAILS_SUCCESS,
@@ -388,6 +417,16 @@ export const getCommonMember = createAsyncAction(
     Error
   >,
   CommonMember,
+  Error
+>();
+
+export const getCommonMembers = createAsyncAction(
+  CommonsActionTypes.GET_COMMON_MEMBERS,
+  CommonsActionTypes.GET_COMMON_MEMBERS_SUCCESS,
+  CommonsActionTypes.GET_COMMON_MEMBERS_FAILURE
+)<
+  PayloadWithOptionalCallback<string, CommonMemberWithUserInfo[], Error>,
+  CommonMemberWithUserInfo[],
   Error
 >();
 

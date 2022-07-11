@@ -46,7 +46,7 @@ const Billing: FC = () => {
     updateSubscription,
   } = useUserContributions();
 
-  const handleBankAccountChange = (data: BankAccountDetails) => {
+  const handleBankAccountChange = (data: BankAccountDetails | null) => {
     setBankAccountState((nextState) => ({
       ...nextState,
       bankAccount: data,

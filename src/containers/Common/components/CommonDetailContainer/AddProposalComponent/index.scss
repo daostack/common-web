@@ -5,6 +5,10 @@
   width: 576px;
   margin: 0 auto;
 
+  &.hidden {
+    display: none;
+  }
+
   .common-title {
     font-family: NunitoSans-Bold, sans-serif;
     font-size: 1.125rem;

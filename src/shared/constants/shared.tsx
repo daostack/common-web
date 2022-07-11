@@ -1,6 +1,7 @@
 export const SMALL_SCREEN_BREAKPOINT = "770px";
 
 export const BASE_URL = window.location.origin;
+export const AUTH_CODE_FOR_SIGN_UP = "5a81Ec29e6";
 
 export enum ScreenSize {
   Mobile = "MOBILE",
@@ -86,5 +87,5 @@ export enum ChartType {
   Pie = "pie",
   Doughnut = "doughnut",
   PolarArea = "polarArea",
-  Radar = "radar",  
+  Radar = "radar",
 }

@@ -1,7 +1,7 @@
-@import "../../../../constants.scss";
-@import "../../../../styles/sizes.scss";
+@import "../../../constants";
+@import "../../../styles/sizes";
 
-.delete-prompt-wrapper {
+.delete-prompt__wrapper {
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -14,13 +14,16 @@
   box-shadow: $secondary-modal-shadow;
   border-radius: 30px;
   padding: 45px;
-  .buttons-wrapper {
+
+  .delete-prompt__buttons-wrapper {
     display: flex;
     margin-top: 3.5rem;
+
     button {
       font-family: NunitoSans-Regular;
       font-weight: 100;
       min-width: 9.5rem;
+
       &.delete {
         background-color: $red;
         color: $white;
@@ -31,16 +34,18 @@
 }
 
 @include big-phone {
-  .delete-prompt-wrapper {
+  .delete-prompt__wrapper {
     transform: translate(-50%, -100%);
     top: 100%;
     padding: 15px;
     border-radius: 50px 50px 0 0;
     width: 100%;
-    .text {
+
+    .delete-prompt__title {
       margin-top: 15px;
     }
-    .buttons-wrapper {
+
+    .delete-prompt__buttons-wrapper {
       margin-top: 3rem;
       margin-bottom: 2rem;
     }

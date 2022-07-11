@@ -1,4 +1,11 @@
-import React, { useState, ChangeEventHandler, FC } from "react";
+import React, {
+  useState,
+  ChangeEventHandler,
+  useImperativeHandle,
+  forwardRef,
+  ForwardRefRenderFunction,
+  useRef,
+} from "react";
 import classNames from "classnames";
 
 import { ErrorText } from "../ErrorText";
@@ -15,8 +22,12 @@ interface InputStyles {
   error?: string;
 }
 
-type InputProps = JSX.IntrinsicElements["input"] & { isTextarea?: false };
-type TextareaProps = JSX.IntrinsicElements["textarea"] & { isTextarea: true };
+type InputProps = Omit<JSX.IntrinsicElements["input"], "ref"> & {
+  isTextarea?: false;
+};
+type TextareaProps = Omit<JSX.IntrinsicElements["textarea"], "ref"> & {
+  isTextarea: true;
+};
 type FilterExtraPropsFunction = {
   (props: InputProps): JSX.IntrinsicElements["input"];
   (props: TextareaProps): JSX.IntrinsicElements["textarea"];
@@ -33,6 +44,10 @@ export type FullInputProps = (InputProps | TextareaProps) & {
   styles?: InputStyles;
 };
 
+export interface InputRef {
+  focus: () => void;
+}
+
 const filterExtraProps: FilterExtraPropsFunction = <
   T extends InputProps | TextareaProps
 >(
@@ -46,7 +61,10 @@ const filterExtraProps: FilterExtraPropsFunction = <
 const isChangeAllowed = (value: string, maxLength?: number): boolean =>
   !maxLength || value.length <= maxLength;
 
-const Input: FC<FullInputProps> = (props) => {
+const Input: ForwardRefRenderFunction<InputRef, FullInputProps> = (
+  props,
+  inputRef
+) => {
   const {
     className,
     label,
@@ -58,6 +76,7 @@ const Input: FC<FullInputProps> = (props) => {
     styles,
     ...restProps
   } = props;
+  const innerInputRef = useRef<HTMLInputElement>(null);
   const [inputLengthRef, setInputLengthRef] = useState<HTMLSpanElement | null>(
     null
   );
@@ -103,6 +122,16 @@ const Input: FC<FullInputProps> = (props) => {
     }
   };
 
+  useImperativeHandle(
+    inputRef,
+    () => ({
+      focus: () => {
+        innerInputRef.current?.focus();
+      },
+    }),
+    []
+  );
+
   return (
     <div className={classNames("custom-input", className)}>
       {(label || hint) && (
@@ -143,6 +172,7 @@ const Input: FC<FullInputProps> = (props) => {
           <input
             {...filterExtraProps(restProps)}
             {...generalInputProps}
+            ref={innerInputRef}
             onChange={handleInputChange}
           />
         )}
@@ -167,4 +197,4 @@ const Input: FC<FullInputProps> = (props) => {
   );
 };
 
-export default Input;
+export default forwardRef(Input);

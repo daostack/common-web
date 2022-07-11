@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import { CommonShare, Linkify } from "@/shared/components";
 import { Colors, ScreenSize, ShareViewType } from "@/shared/constants";
 import { Common } from "@/shared/models";
+import { CommonWhitepaper } from "../CommonWhitepaper";
 import classNames from "classnames";
 import "./index.scss";
 
@@ -27,7 +28,8 @@ export default function AboutTabComponent({
       <div className="description">
         <Linkify>{expanded ? common.description :  common.description.substring(0, 200)}</Linkify>
       </div>
-      {common?.links?.length > 0  && expanded && (
+      <CommonWhitepaper />
+      {common?.links?.length > 0 && expanded && (
         <div className="links">
           <div className="title">Links</div>
           {common.links.map((link) => (

@@ -67,15 +67,44 @@
   text-align: center;
 }
 
-.billing-bank-account-info__details-button {
-  max-width: 9rem;
-  margin: 0 auto;
-  color: $purple;
-  border-radius: 0.5rem;
+.billing-bank-account-info__details-buttons-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  // FIXME: uncomment & adjust this after an issues with bank account's deleting will be resolved on the BE
+  // justify-content: space-between;
+  align-items: center;
+  width: 80%;
 
   @include big-phone {
-    max-width: unset;
-    margin-top: auto;
-    border-radius: 6.25rem;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .billing-bank-account-info__details-button {
+    max-width: 9rem;
+    border-radius: 0.5rem;
+
+    &.edit-details {
+      color: $purple;
+    }
+
+    &.delete-details {
+      color: $red;
+    }
+
+    @include big-phone {
+      max-width: unset;
+      margin-bottom: 0.5rem;
+      border-radius: 6.25rem;
+    }
+  }
+}
+
+.billing-bank-account-info__delete-prompt-modal {
+  margin: 0;
+
+  .modal__content {
+    padding: 0;
   }
 }

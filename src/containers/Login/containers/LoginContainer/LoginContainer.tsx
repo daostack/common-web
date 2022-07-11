@@ -7,26 +7,37 @@ import React, {
   ReactNode,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import UserDetailsWrapper from "../../components/LoginContainer/UserDetails/UserDetailsWrapper";
-import { Modal } from "../../../../shared/components";
-import { AuthProvider, ScreenSize } from "../../../../shared/constants";
-import { ModalProps, ModalType } from "../../../../shared/interfaces";
-import { getScreenSize } from "../../../../shared/store/selectors";
-import { isFirebaseError } from "../../../../shared/utils/firebase";
+import { Modal } from "@/shared/components";
+import { AuthProvider, ErrorCode, ScreenSize } from "@/shared/constants";
+import { useQueryParams, useRemoveQueryParams } from "@/shared/hooks";
+import { ModalProps, ModalType } from "@/shared/interfaces";
+import { getScreenSize } from "@/shared/store/selectors";
+import { isFirebaseError } from "@/shared/utils/firebase";
+import { isGeneralError } from "@/shared/utils";
 import { LoginModalType } from "../../../Auth/interface";
 import { setLoginModalState, socialLogin } from "../../../Auth/store/actions";
 import {
+  authentificated,
   selectIsAuthLoading,
   selectLoginModalState,
   selectUser,
 } from "../../../Auth/store/selectors";
+import UserDetailsWrapper from "../../components/LoginContainer/UserDetails/UserDetailsWrapper";
 import { Connect } from "../../components/LoginContainer/Connect";
 import { PhoneAuth } from "../../components/LoginContainer/PhoneAuth";
 import { AuthStage } from "../../components/LoginContainer/constants";
+import {
+  AUTH_CODE_QUERY_PARAM_KEY,
+  DEFAULT_AUTH_ERROR_TEXT,
+  ERROR_TEXT_FOR_NON_EXISTENT_USER,
+} from "../../constants";
 import "./index.scss";
 
 const LoginContainer: FC = () => {
   const dispatch = useDispatch();
+  const queryParams = useQueryParams();
+  const { removeQueryParams } = useRemoveQueryParams();
+  const isAuthenticated = useSelector(authentificated());
   const isLoading = useSelector(selectIsAuthLoading());
   const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
@@ -34,30 +45,48 @@ const LoginContainer: FC = () => {
   const [stage, setStage] = useState(
     user ? AuthStage.CompleteAccountDetails : AuthStage.AuthMethodSelect
   );
-  const [hasError, setHasError] = useState(false);
+  const [errorText, setErrorText] = useState("");
   const { isShowing, type } = useSelector(selectLoginModalState());
   const shouldShowBackButton = stage === AuthStage.PhoneAuth && !isLoading;
   const shouldRemoveHorizontalPadding =
     isMobileView && stage === AuthStage.AuthMethodSelect;
   const modalType =
     type === LoginModalType.RequestToJoin &&
-      stage === AuthStage.AuthMethodSelect &&
-      !isLoading
+    stage === AuthStage.AuthMethodSelect &&
+    !isLoading
       ? ModalType.MobilePopUp
       : ModalType.Default;
+  const hasError = Boolean(errorText);
+  const authCode =
+    typeof queryParams[AUTH_CODE_QUERY_PARAM_KEY] === "string"
+      ? queryParams[AUTH_CODE_QUERY_PARAM_KEY]
+      : "";
 
   const handleClose = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: false }));
   }, [dispatch]);
 
-  const handleError = useCallback(() => {
-    setHasError(true);
+  const handleError = useCallback((errorText?: string) => {
+    setErrorText(errorText || DEFAULT_AUTH_ERROR_TEXT);
     setStage(AuthStage.AuthMethodSelect);
   }, []);
 
+  const handleAuthFinish = useCallback(
+    (isNewUser?: boolean) => {
+      removeQueryParams(AUTH_CODE_QUERY_PARAM_KEY);
+
+      if (isNewUser) {
+        setStage(AuthStage.CompleteAccountDetails);
+      } else {
+        handleClose();
+      }
+    },
+    [removeQueryParams, handleClose]
+  );
+
   const handleAuthButtonClick = useCallback(
     (provider: AuthProvider) => {
-      setHasError(false);
+      setErrorText("");
 
       if (provider === AuthProvider.Phone) {
         setStage(AuthStage.PhoneAuth);
@@ -66,10 +95,15 @@ const LoginContainer: FC = () => {
 
       dispatch(
         socialLogin.request({
-          payload: provider,
+          payload: { provider, authCode },
           callback: (error, data) => {
             if (error) {
               if (
+                isGeneralError(error) &&
+                error.code === ErrorCode.CUserDoesNotExist
+              ) {
+                handleError(ERROR_TEXT_FOR_NON_EXISTENT_USER);
+              } else if (
                 !isFirebaseError(error) ||
                 error.code !== "auth/popup-closed-by-user"
               ) {
@@ -79,16 +113,12 @@ const LoginContainer: FC = () => {
               return;
             }
 
-            if (data?.isNewUser) {
-              setStage(AuthStage.CompleteAccountDetails);
-            } else {
-              handleClose();
-            }
+            handleAuthFinish(data?.isNewUser);
           },
         })
       );
     },
-    [dispatch, handleClose, handleError]
+    [dispatch, handleError, handleAuthFinish, authCode]
   );
 
   const handleGoBack = useCallback(() => {
@@ -97,25 +127,20 @@ const LoginContainer: FC = () => {
     );
   }, []);
 
-  const handlePhoneStageFinish = useCallback(
-    (isNewUser: boolean) => {
-      if (isNewUser) {
-        setStage(AuthStage.CompleteAccountDetails);
-      } else {
-        handleClose();
-      }
-    },
-    [handleClose]
-  );
-
   useEffect(() => {
     if (!isShowing) {
       setStage(
         user ? AuthStage.CompleteAccountDetails : AuthStage.AuthMethodSelect
       );
-      setHasError(false);
+      setErrorText("");
     }
   }, [isShowing, user]);
+
+  useEffect(() => {
+    if (!isAuthenticated && authCode) {
+      dispatch(setLoginModalState({ isShowing: true }));
+    }
+  }, [authCode]);
 
   const title = useMemo((): ReactNode => {
     if (!isMobileView || stage !== AuthStage.CompleteAccountDetails) {
@@ -144,14 +169,18 @@ const LoginContainer: FC = () => {
       case AuthStage.AuthMethodSelect:
         return (
           <Connect
-            hasError={hasError}
+            errorText={errorText}
             isJoinRequestType={type === LoginModalType.RequestToJoin}
             onAuthButtonClick={handleAuthButtonClick}
           />
         );
       case AuthStage.PhoneAuth:
         return (
-          <PhoneAuth onFinish={handlePhoneStageFinish} onError={handleError} />
+          <PhoneAuth
+            authCode={authCode}
+            onFinish={handleAuthFinish}
+            onError={handleError}
+          />
         );
       case AuthStage.CompleteAccountDetails:
         return user ? (
@@ -163,11 +192,13 @@ const LoginContainer: FC = () => {
   }, [
     stage,
     hasError,
+    errorText,
     handleClose,
     user,
     type,
+    authCode,
     handleAuthButtonClick,
-    handlePhoneStageFinish,
+    handleAuthFinish,
     handleError,
   ]);
 

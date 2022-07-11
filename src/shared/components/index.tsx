@@ -1,3 +1,4 @@
+export * from "./Autocomplete";
 export * from "./Button";
 export * from "./ButtonIcon";
 export * from "./ButtonLink";
@@ -33,3 +34,4 @@ export * from "./SocialLinks";
 export * from "./ShareModal";
 export * from "./StepProgress";
 export * from "./ChartCanvas";
+export * from "./DeletePrompt";

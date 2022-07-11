@@ -6,11 +6,8 @@ interface LoginErrorProps {
   className?: string;
 }
 
-const LoginError: FC<LoginErrorProps> = ({ className }) => (
-  <span className={classNames("login-error", className)}>
-    There was an error logging you in. Please try again or try connecting a
-    different account.
-  </span>
+const LoginError: FC<LoginErrorProps> = ({ className, children }) => (
+  <span className={classNames("login-error", className)}>{children}</span>
 );
 
 export default LoginError;

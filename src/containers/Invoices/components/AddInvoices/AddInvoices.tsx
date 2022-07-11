@@ -7,13 +7,12 @@ import React, {
 } from "react";
 import classNames from "classnames";
 import { FilePreview } from "../FilePreview";
-import { InvoiceTile, InvoiceTileVariant } from "../../../../shared/components";
+import { InvoiceTile, InvoiceTileVariant, DeletePrompt } from "@/shared/components";
 import { useSelector } from "react-redux";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import { ScreenSize } from "../../../../shared/constants";
 import { formatPrice } from "../../../../shared/utils";
 import { AmountPrompt } from "../AmountPrompt";
-import { DeletePrompt } from "../DeletePrompt";
 import { UploadPrompt } from "../UploadPrompt";
 import "./index.scss";
 
@@ -183,7 +182,7 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
             <FilePreview
               fileURL={URL.createObjectURL(fileForPreview)}
               fileName={fileForPreview.name}
-              isImage={fileForPreview.type.startsWith("image/")}
+              fileType={fileForPreview.type}
               topContent={topFilePreviewContent}
               bottomContent={bottomFilePreviewContent}
               styles={{

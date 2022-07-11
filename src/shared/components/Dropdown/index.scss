@@ -36,12 +36,16 @@
   }
 }
 
-.custom-dropdown-wrapper__placeholder {
+.custom-dropdown-wrapper__value {
   flex: 1;
   margin-right: 0.5rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.custom-dropdown-wrapper__placeholder {
+  color: $light-gray-2;
 }
 
 .custom-dropdown-wrapper__arrow-icon {
@@ -98,4 +102,8 @@
 }
 .custom-dropdown-wrapper__menu-item--active {
   background-color: $light-gray-6;
+}
+
+.custom-dropdown-wrapper__global-overlay {
+  z-index: $dropdown-z-index - 1;
 }
