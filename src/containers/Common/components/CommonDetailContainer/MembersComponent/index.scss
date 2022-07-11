@@ -33,6 +33,16 @@
     }
   }
 
+  .members__section-element.members__menu-wrapper {
+    
+    @media only screen and (max-width: 620px) {
+      & {
+        background-color: transparent;
+        box-shadow: none;
+      }
+    }
+  }
+
 
   .members__menu-wrapper {
     font-weight: bold;
@@ -101,7 +111,8 @@
 
           @media only screen and (max-width: 390px) {
             & {
-              height: 0.24rem;
+              margin-top: -0.58rem;
+              height: 0.15rem;
             }
           }
         }
@@ -109,6 +120,16 @@
     }
     .proposals-component-wrapper{
       width: 100%;
+
+      .proposals-component-wrapper-empty-text{
+        font-family: 'NunitoSans';
+        font-style: normal;
+        font-weight: 400;
+        font-size: $xsmall;
+        text-align: center;
+        color: $light-gray-2;        
+
+      }
     }
   }
 
@@ -132,6 +153,14 @@
       padding: 1.5rem;
       margin: 0;
 
+      
+      @media only screen and (max-width: 620px) {
+        & {
+          width: 100%;
+          padding: 0;
+        }
+      }
+
       .members__section__common-member {
         box-shadow: 0rem 0.25rem 0.25rem 0rem $box-shadow-color;
         padding-bottom: 0.25rem;
@@ -148,7 +177,6 @@
           margin: 1rem ;
           
           .members__section__common-member-avatar{
-            // margin-top: 0.2rem;
             margin-right: 3.7rem ;
           }
 
@@ -182,6 +210,15 @@
             font-size: $xxsmall;
             text-align: center;
             color: $light-gray-2;        
+          }
+
+          @media only screen and (max-width: 620px) {
+            & {
+              background-color: $white;
+              box-shadow: inset 0px -1px 0px $light-gray-1;
+              width: 100%;
+              padding: 0;
+            }
           }
       }
     }
