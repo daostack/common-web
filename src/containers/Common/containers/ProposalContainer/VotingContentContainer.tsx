@@ -1,7 +1,7 @@
 import React, { FC, useMemo } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
-import { Proposal, VotingCardType } from "@/shared/models";
+import { Proposal, Common, VotingCardType } from "@/shared/models";
 import {
   AssignCircle,
   FundsAllocation,
@@ -19,6 +19,7 @@ import "./index.scss";
 
 interface VotingContentContainerProps {
   proposal: Proposal;
+  common: Common;
 }
 
 interface ProposalDetailsItem {
@@ -26,7 +27,7 @@ interface ProposalDetailsItem {
   value: string;
 }
 
-export const VotingContentContainer: FC<VotingContentContainerProps> = ({ proposal }) => {
+export const VotingContentContainer: FC<VotingContentContainerProps> = ({ proposal, common }) => {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
@@ -73,7 +74,7 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
           },
           {
             title: "Sum of money",
-            value: "",
+            value: formatPrice(typedProposal.data.legal.totalInvoicesAmount || 0, { shouldRemovePrefixFromZero: false }),
           },
           {
             title: "Recipients circles",
@@ -175,30 +176,29 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
             !isMobileView && votingContentAdditionalInfoElem
           }
         </div>
-        {/* TODO: fill up with a real proposal's datasets */}
         <div className="voting-content__voting-stats-container">
           <VotingCard
             type={VotingCardType.AllVotes}
-            votedMembersAmount={20}
-            membersAmount={30}
-            percentageCondition={50}
+            votedMembersAmount={proposal.votes.total}
+            membersAmount={common.memberCount}
+            percentageCondition={proposal.global.quorum}
           />
           <VotingCard
             type={VotingCardType.Object}
-            percentageCondition={20}
-            targetVotersAmount={15}
-            votedMembersAmount={20}
+            percentageCondition={proposal.global.maxReject}
+            targetVotersAmount={proposal.votes.rejected}
+            votedMembersAmount={proposal.votes.total}
           />
           <VotingCard
             type={VotingCardType.Support}
-            percentageCondition={20}
-            targetVotersAmount={15}
-            votedMembersAmount={20}
+            percentageCondition={proposal.global.minApprove}
+            targetVotersAmount={proposal.votes.approved}
+            votedMembersAmount={proposal.votes.total}
           />
           <VotingCard
             type={VotingCardType.Abstain}
-            targetVotersAmount={9}
-            votedMembersAmount={20}
+            targetVotersAmount={proposal.votes.abstained}
+            votedMembersAmount={proposal.votes.total}
           />
         </div>
       </div>

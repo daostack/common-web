@@ -15,7 +15,7 @@ import {
   Button,
   ButtonVariant,
 } from "@/shared/components";
-import { Proposal } from "@/shared/models";
+import { Proposal, ProposalState } from "@/shared/models";
 import { getUserName, checkIsCountdownState } from "@/shared/utils";
 import { ProposalsTypes, ChatType, ScreenSize } from "@/shared/constants";
 import { addMessageToProposal } from "@/containers/Common/store/actions";
@@ -69,6 +69,11 @@ const ProposalContainer = () => {
   } = useProposalUserVote();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const showVoteButton = useMemo(
+    () =>
+      isVoteFetched && !userVote && currentProposal?.state === ProposalState.VOTING,
+    [isVoteFetched, userVote, currentProposal]
+  );
 
   const sendMessage = useCallback(
     (message: string) => {
@@ -102,7 +107,10 @@ const ProposalContainer = () => {
   const renderContentByActiveTab = useCallback((currentProposal: Proposal) => {
     switch (activeTab) {
       case PROPOSAL_MENU_TABS.Voting:
-        return <VotingContentContainer proposal={currentProposal} />;
+        return currentCommon && <VotingContentContainer
+          proposal={currentProposal}
+          common={currentCommon}
+        />;
       case PROPOSAL_MENU_TABS.Pitch:
         return <PitchContentContainer proposal={currentProposal} />;
       case PROPOSAL_MENU_TABS.Discussions:
@@ -166,10 +174,6 @@ const ProposalContainer = () => {
       fetchProposalVote(currentProposal.id);
   }, [fetchProposalVote, currentProposal]);
 
-  useEffect(() => {
-    console.log("response ", userVote, isVoteFetched);
-  }, [userVote]);
-
   return (currentCommon && currentProposal)
     ? (
       <>
@@ -216,7 +220,7 @@ const ProposalContainer = () => {
                   </div>
                 </div>
                 {
-                  !isMobileView && (isVoteFetched && !userVote) && voteButtonElem
+                  !isMobileView && showVoteButton && voteButtonElem
                 }
               </div>
             </div>
@@ -259,7 +263,7 @@ const ProposalContainer = () => {
             </div>
             <div className="proposal-page__proposal-vote-btn-wrapper">
               {
-                isMobileView && (isVoteFetched && !userVote) && voteButtonElem
+                isMobileView && showVoteButton && voteButtonElem
               }
             </div>
           </div>

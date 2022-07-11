@@ -1,7 +1,7 @@
 import React, { FC, useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { Proposal, Vote, VoteOutcome, } from "@/shared/models";
-import { Modal } from "@/shared/components";
+import { Modal, Loader } from "@/shared/components";
 import { createVote } from "@/containers/Common/store/actions";
 
 interface VotingPopupProps {
@@ -51,7 +51,8 @@ export const VotingPopup: FC<VotingPopupProps> = (
       onClose,
       proposal.id,
       proposal.votes,
-      setVote
+      setVote,
+      setVoting
     ]
   );
 
@@ -74,38 +75,44 @@ export const VotingPopup: FC<VotingPopupProps> = (
         <p className="voting-popup__description">
           Amet minim mollit non deserunt ullamcest sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sun
         </p>
-        <ul className="voting-popup__vote-options-container">
-          <li
-            key="approve"
-            className="voting-popup__vote-options-item"
-            onClick={() => handleCreateVote(VoteOutcome.Approved)}
-          >
-            <img
-              src="/icons/votes/approved.svg"
-              alt="vote type symbol"
-            />
-          </li>
-          <li
-            key="abstain"
-            className="voting-popup__vote-options-item"
-            onClick={() => handleCreateVote(VoteOutcome.Abstained)}
-          >
-            <img
-              src="/icons/votes/abstained.svg"
-              alt="vote type symbol"
-            />
-          </li>
-          <li
-            key="reject"
-            className="voting-popup__vote-options-item"
-            onClick={() => handleCreateVote(VoteOutcome.Rejected)}
-          >
-            <img
-              src="/icons/votes/rejected.svg"
-              alt="vote type symbol"
-            />
-          </li>
-        </ul>
+        {
+          voting
+            ? <div className="voting-popup__loader-wrapper">
+              <Loader />
+            </div>
+            : <ul className="voting-popup__vote-options-container">
+              <li
+                key="approve"
+                className="voting-popup__vote-options-item"
+                onClick={() => handleCreateVote(VoteOutcome.Approved)}
+              >
+                <img
+                  src="/icons/votes/approved.svg"
+                  alt="vote type symbol"
+                />
+              </li>
+              <li
+                key="abstain"
+                className="voting-popup__vote-options-item"
+                onClick={() => handleCreateVote(VoteOutcome.Abstained)}
+              >
+                <img
+                  src="/icons/votes/abstained.svg"
+                  alt="vote type symbol"
+                />
+              </li>
+              <li
+                key="reject"
+                className="voting-popup__vote-options-item"
+                onClick={() => handleCreateVote(VoteOutcome.Rejected)}
+              >
+                <img
+                  src="/icons/votes/rejected.svg"
+                  alt="vote type symbol"
+                />
+              </li>
+            </ul>
+        }
       </div>
     </Modal>
   )

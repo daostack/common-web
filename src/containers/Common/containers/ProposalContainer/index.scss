@@ -142,12 +142,13 @@
 
   .voting-content__proposal-details {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 
     .voting-content__proposal-details-item {
       width: 17%;
       height: 4.375rem;
+      margin-right: 1.5rem;
 
       .title {
         font-size: $xsmall;
