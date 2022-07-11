@@ -39,6 +39,10 @@
       & {
         background-color: transparent;
         box-shadow: none;
+
+        .members__menu {
+          width: 90%;
+        }
       }
     }
   }
