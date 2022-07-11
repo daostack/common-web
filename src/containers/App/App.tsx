@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
+import firebase from '@/shared/utils/firebase';
 import PrivateRoute from "./PrivateRoute";
 import { Content, NotFound, Footer, Header, Modal } from "@/shared/components";
 import { NotificationProvider } from "@/shared/components/Notification";
@@ -17,6 +18,7 @@ import {
   ROUTE_PATHS,
   SMALL_SCREEN_BREAKPOINT,
   ScreenSize,
+  AuthProviderID,
 } from "../../shared/constants";
 import { changeScreenSize, showNotification } from "@/shared/store/actions";
 import { authentificated } from "../Auth/store/selectors";
@@ -32,6 +34,11 @@ import { BackgroundNotification } from "@/shared/components/BackgroundNotificati
 import { EventTypeState } from "@/shared/models/Notification";
 
 import { useHistory } from "react-router";
+import { parseJson } from "@/shared/utils/json";
+import { get } from "lodash";
+
+import { webviewLogin } from "../Auth/store/actions";
+import { getProvider } from "@/shared/utils/authProvide";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -44,6 +51,32 @@ const App = () => {
     onOpen: showNote,
     onClose: closeNotification,
   } = useModal(false);
+
+  useEffect(() => {
+    window.addEventListener('message', event => {
+      const data = parseJson(event.data);
+      if (data?.providerId) {
+        (async () => {
+          try {
+            let credential;
+            if(data.providerId === AuthProviderID.Apple) {
+              credential = firebase.auth.OAuthProvider?.credentialFromResult(event.data);
+            } else {
+              const provider = getProvider(data?.providerId);
+              credential = provider.credential(data.idToken);
+            }
+
+            const { user } = await firebase.auth().signInWithCredential(credential);
+            dispatch(webviewLogin.request({
+              payload: user,
+            }))
+          } catch (err) {
+            window.ReactNativeWebView.postMessage(JSON.stringify({ action: JSON.stringify(err) }));
+          }
+        })()
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (notification) {

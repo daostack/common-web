@@ -21,6 +21,20 @@ export const socialLogin = createAsyncAction(
   Error
 >();
 
+export const webviewLogin = createAsyncAction(
+  AuthActionTypes.WEBVIEW_LOGIN,
+  AuthActionTypes.WEBVIEW_LOGIN_SUCCESS,
+  AuthActionTypes.WEBVIEW_LOGIN_FAILURE
+)<
+  PayloadWithOptionalCallback<
+    any,
+    { user: User; isNewUser: boolean },
+    Error
+  >,
+  User,
+  Error
+>();
+
 export const loginUsingEmailAndPassword = createAsyncAction(
   AuthActionTypes.LOGIN_USING_EMAIL_AND_PASSWORD,
   AuthActionTypes.LOGIN_USING_EMAIL_AND_PASSWORD_SUCCESS,

@@ -4,3 +4,11 @@ export enum AuthProvider {
   Google = "google",
   Phone = "phone",
 }
+
+export enum AuthProviderID {
+  Apple = "apple.com",
+  Facebook = "facebook.com",
+  Google = "google.com",
+  Phone = "phone",
+}
+
