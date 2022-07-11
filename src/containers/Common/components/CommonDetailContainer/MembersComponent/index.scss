@@ -33,32 +33,16 @@
     }
   }
 
-  .members__section-element.members__menu-wrapper {
-    
-    @media only screen and (max-width: 620px) {
-      & {
-        background-color: transparent;
-        box-shadow: none;
-
-        .members__menu {
-          width: 90%;
-        }
-      }
-    }
-  }
-
-
   .members__menu-wrapper {
     font-weight: bold;
     font-size: $moderate;
     width: 100%;
     height: 4.875rem;
     margin-top: 2rem;
-    
 
     .members__menu {
       display: flex;
-      justify-content: space-between; 
+      justify-content: space-between;
       align-items: center;
       padding: 0;
 
@@ -66,17 +50,10 @@
         margin-left: 1rem;
         margin-right: 1rem;
         color: $gray;
-        font-family: 'NunitoSans';
+        font-family: "NunitoSans";
         font-style: normal;
         font-weight: 600;
         font-size: $small;
-
-        @media only screen and (max-width: 390px) {
-          & {
-            font-size: $xsmall;
-          }
-        }
-
       }
 
       > li {
@@ -112,27 +89,19 @@
           background-color: $purple;
           position: absolute;
           top: 2rem;
-
-          @media only screen and (max-width: 390px) {
-            & {
-              margin-top: -0.58rem;
-              height: 0.15rem;
-            }
-          }
         }
       }
     }
-    .proposals-component-wrapper{
+    .proposals-component-wrapper {
       width: 100%;
 
-      .proposals-component-wrapper-empty-text{
-        font-family: 'NunitoSans';
+      .proposals-component-wrapper-empty-text {
+        font-family: "NunitoSans";
         font-style: normal;
         font-weight: 400;
         font-size: $xsmall;
         text-align: center;
-        color: $light-gray-2;        
-
+        color: $light-gray-2;
       }
     }
   }
@@ -141,29 +110,21 @@
     height: auto;
     min-height: 20rem;
     flex-direction: row;
-    align-items:baseline;
+    align-items: baseline;
 
-    .loader-wrapper{
+    .loader-wrapper {
       margin-left: 15%;
       margin-top: 10%;
-      position:inherit;
-    }  
+      position: inherit;
+    }
 
-    .members__section__members-list{
+    .members__section__members-list {
       cursor: default;
-      list-style-type:none;
+      list-style-type: none;
       overflow: auto;
       flex: 1;
       padding: 1.5rem;
       margin: 0;
-
-      
-      @media only screen and (max-width: 620px) {
-        & {
-          width: 100%;
-          padding: 0;
-        }
-      }
 
       .members__section__common-member {
         box-shadow: 0rem 0.25rem 0.25rem 0rem $box-shadow-color;
@@ -172,20 +133,20 @@
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        padding: 1rem ;
+        padding: 1rem;
 
-        .members__section__common-member-details{
+        .members__section__common-member-details {
           display: flex;
           flex-direction: row;
-          justify-content: space-between;  
-          margin: 1rem ;
-          
-          .members__section__common-member-avatar{
-            margin-right: 3.7rem ;
+          justify-content: space-between;
+          margin: 1rem;
+
+          .members__section__common-member-avatar {
+            margin-right: 3rem;
           }
 
-          .members__section__common-member-circles{
-            font-family: 'NunitoSans';
+          .members__section__common-member-circles {
+            font-family: "NunitoSans";
             font-style: normal;
             font-weight: 400;
             font-size: $xxsmall;
@@ -193,48 +154,35 @@
             margin-top: 0.1rem;
           }
 
-          .members__section__common-member-name{
+          .members__section__common-member-name {
             margin-top: 0.2rem;
-            font-family: 'NunitoSans';
+            font-family: "NunitoSans";
             font-style: normal;
             font-weight: 700;
             font-size: $xsmall;
             color: $secondary-blue;
-
-            
-            
           }
         }
-        
-          .members__section__common-member-date{
-            margin-right: 1rem;
-            font-family: 'NunitoSans';
-            font-style: normal;
-            font-weight: 400;
-            font-size: $xxsmall;
-            text-align: center;
-            color: $light-gray-2;        
-          }
 
-          @media only screen and (max-width: 620px) {
-            & {
-              background-color: $white;
-              box-shadow: inset 0px -1px 0px $light-gray-1;
-              width: 100%;
-              padding: 0;
-            }
-          }
+        .members__section__common-member-date {
+          margin-right: 1rem;
+          font-family: "NunitoSans";
+          font-style: normal;
+          font-weight: 400;
+          font-size: $xxsmall;
+          text-align: center;
+          color: $light-gray-2;
+        }
       }
     }
   }
-
 }
 
 @include big-phone {
   .members__component-wrapper {
     .members__component-header-wrapper {
       background-color: $light-purple-background;
-      height: 10rem;
+      height: 5rem;
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -244,7 +192,7 @@
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
-        font-family: 'NotoSerifSC';
+        font-family: "NotoSerifSC";
         font-style: normal;
         font-weight: 600;
         color: $secondary-blue;
@@ -256,20 +204,35 @@
       border-radius: 0;
 
       &.sticked {
+        left: 0;
         position: fixed;
         top: 3.75rem;
         z-index: $header-z-index;
       }
 
       .members__menu {
-        width: 75%;
+        width: 100%;
+        padding: 1rem;
 
         li {
-          margin: 0
+          margin: 0;
         }
 
         &.active::after {
           top: 1.7rem;
+        }
+      }
+    }
+    .members__section-list {
+      .members__section__members-list {
+        padding: unset;
+        .members__section__common-member {
+          margin: 0.2rem 0;
+          .members__section__common-member-details {
+            .members__section__common-member-avatar {
+              margin-right: 1.5rem;
+            }
+          }
         }
       }
     }
