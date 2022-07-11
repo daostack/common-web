@@ -1,53 +1,62 @@
 import React from "react";
-import classNames from "classnames";
-
 import { UserAvatar, ElementDropdown } from "@/shared/components";
-import { useFullText } from "@/shared/hooks";
-import { CommonMember, Proposal, ProposalLink } from "@/shared/models";
-import { formatPrice, getUserName, getDaysAgo } from "@/shared/utils";
+import { Proposal } from "@/shared/models";
+import { getUserName } from "@/shared/utils";
 import { DynamicLinkType, ScreenSize } from "@/shared/constants";
-import { VotesComponent } from "../VotesComponent";
 import ProposalState from "../ProposalState/ProposalState";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { useSelector } from "react-redux";
-import { getScreenSize } from "@/shared/store/selectors";
-import { FundsAllocationArgs } from "@/shared/models/governance/proposals";
 
 interface ProposalItemComponentProps {
   loadProposalDetail: (payload: Proposal) => void;
   proposal: Proposal;
-  commonMember: CommonMember | null;
 }
 
 export default function ProposalItemComponent({
   proposal,
   loadProposalDetail,
-  commonMember,
 }: ProposalItemComponentProps) {
-  const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
-  const imagePreviewLength = isMobileView ? 1 : 2;
-  const {
-    ref: descriptionRef,
-    isFullTextShowing,
-    shouldShowFullText,
-    showFullText,
-  } = useFullText();
-  const date = new Date();
-  const rawRequestedAmount = (proposal.data.args as FundsAllocationArgs)
-    ?.amount;
-  const images = proposal.data.args.images ?? [];
-
-  const imagesChunk = images.filter((image, index) => {
-    if (index < imagePreviewLength) {
-      return image;
-    }
-    return false;
-  });
 
   return (
-    <div className="discussion-item-wrapper">
-      <ProposalState proposal={proposal} />
+    <div className="proposal-item-wrapper">
+      <div className="proposal-item-header">
+        <div
+          onClick={() => loadProposalDetail(proposal)}
+          className="proposal-title"
+          title={proposal.data.args.title}
+        >
+          {proposal.data.args.title}
+        </div>
+        <ElementDropdown
+          linkType={DynamicLinkType.Proposal}
+          elem={proposal}
+          transparent
+        />
+      </div>
+      <div className="proposal-item-body">
+        <div className="user-info-wrapper">
+          <UserAvatar
+            photoURL={proposal.proposer?.photoURL}
+            nameForRandomAvatar={proposal.proposer?.email}
+            userName={getUserName(proposal.proposer)}
+          />
+          <div className="name-and-proposal-state">
+            <div className="user-name">{getUserName(proposal.proposer)}</div>
+            <ProposalState proposal={proposal} />
+          </div>
+        </div>
+        <div className="proposal-item-bottom">
+          <div className="discussion-count-wrapper">
+            <img src="/icons/discussions.svg" alt="discussions" />
+            <div className="discussion-count">{proposal.discussionMessage?.length || 0}</div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+      {/* <ProposalState proposal={proposal} />
       <div className="proposal-charts-wrapper">
         <div className="discussion-top-bar">
           <div className="img-wrapper">
@@ -165,7 +174,7 @@ export default function ProposalItemComponent({
             View proposal
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 }
