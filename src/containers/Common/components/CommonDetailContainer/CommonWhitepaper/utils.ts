@@ -23,3 +23,9 @@ export const calculateVoters = (circles: string[] | undefined, weights: any) => 
 
   return voters;
 }
+
+
+export const numberToBinary = (n: number) => {
+  const padding = '0'.repeat(Math.clz32(n));
+  return padding + (n >>> 0).toString(2)
+}
