@@ -71,10 +71,6 @@ export const VotingPopup: FC<VotingPopupProps> = (
         <div className="voting-popup__title">
           Please vote
         </div>
-        {/* TODO: revise the text */}
-        <p className="voting-popup__description">
-          Amet minim mollit non deserunt ullamcest sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sun
-        </p>
         {
           voting
             ? <div className="voting-popup__loader-wrapper">
@@ -87,7 +83,7 @@ export const VotingPopup: FC<VotingPopupProps> = (
                 onClick={() => handleCreateVote(VoteOutcome.Approved)}
               >
                 <img
-                  src="/icons/votes/approved.svg"
+                  src="/icons/votes/approved-old.svg"
                   alt="vote type symbol"
                 />
               </li>
@@ -97,7 +93,7 @@ export const VotingPopup: FC<VotingPopupProps> = (
                 onClick={() => handleCreateVote(VoteOutcome.Abstained)}
               >
                 <img
-                  src="/icons/votes/abstained.svg"
+                  src="/icons/votes/abstained-old.svg"
                   alt="vote type symbol"
                 />
               </li>
@@ -107,7 +103,7 @@ export const VotingPopup: FC<VotingPopupProps> = (
                 onClick={() => handleCreateVote(VoteOutcome.Rejected)}
               >
                 <img
-                  src="/icons/votes/rejected.svg"
+                  src="/icons/votes/rejected-old.svg"
                   alt="vote type symbol"
                 />
               </li>

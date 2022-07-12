@@ -6,14 +6,12 @@ import {
   AssignCircle,
   FundsAllocation,
   FundsRequest,
-  MemberAdmittance,
   RemoveCircle,
-  FUNDING_TYPES,
   FundingAllocationStatus,
 } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
-import { formatPrice, formatDate } from "@/shared/utils";
+import { formatPrice } from "@/shared/utils";
 import { VotingCard } from "./VotingCard";
 import "./index.scss";
 
@@ -49,9 +47,9 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
           },
           {
             title: "Recurring",
-            value: (Math.random()%2 === 0)
-                    ? "Monthly"
-                    : "Single",
+            value: (Math.random() % 2 === 0)
+              ? "Monthly"
+              : "Single",
           },
           {
             title: "Recipients",
@@ -68,9 +66,9 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
         return [
           {
             title: "Recurring indication",
-            value: (Math.random()%2 === 0)
-                    ? "Monthly"
-                    : "Single",
+            value: (Math.random() % 2 === 0)
+              ? "Monthly"
+              : "Single",
           },
           {
             title: "Sum of money",
@@ -83,7 +81,7 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
         ];
       case ProposalsTypes.ASSIGN_CIRCLE:
         typedProposal = proposal as AssignCircle;
-        
+
         return [
           {
             title: "Name of member",

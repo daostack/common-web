@@ -138,7 +138,7 @@ export default function VotesComponent({
             <span className="what-is-your-vote">What's your vote?</span>
           )}
           <div className="votes-columns-container">
-            <div className="vote-column approve">
+            <div className={classNames("vote-column", { "voted": userVote?.outcome === VoteOutcome.Approved })}>
               {percentage(votesFor, totalVotes)}%
               {!compact && (
                 <VoteBar
@@ -154,17 +154,10 @@ export default function VotesComponent({
                   compact: compact,
                 })}
               >
-                {userVote?.outcome === VoteOutcome.Approved ? (
-                  <UserAvatar
-                    photoURL={user?.photoURL ?? ""}
-                    className="user-avatar approve"
-                  />
-                ) : (
-                  <img src="/icons/votes/approved.svg" alt="vote type symbol" />
-                )}
+                <img src="/icons/votes/approved.svg" alt="vote type symbol" />
               </button>
             </div>
-            <div className="vote-column abstain">
+            <div className={classNames("vote-column", { "voted": userVote?.outcome === VoteOutcome.Abstained })}>
               {percentage(votesAbstained, totalVotes)}%
               {!compact && (
                 <VoteBar
@@ -180,20 +173,13 @@ export default function VotesComponent({
                   compact: compact,
                 })}
               >
-                {userVote?.outcome === VoteOutcome.Abstained ? (
-                  <UserAvatar
-                    photoURL={user?.photoURL ?? ""}
-                    className="user-avatar abstain"
-                  />
-                ) : (
-                  <img
-                    src="/icons/votes/abstained.svg"
-                    alt="vote type symbol"
-                  />
-                )}
+                <img
+                  src="/icons/votes/abstained.svg"
+                  alt="vote type symbol"
+                />
               </button>
             </div>
-            <div className="vote-column reject">
+            <div className={classNames("vote-column", { "voted": userVote?.outcome === VoteOutcome.Rejected })}>
               {percentage(votesAgainst, totalVotes)}%
               {!compact && (
                 <VoteBar
@@ -209,14 +195,7 @@ export default function VotesComponent({
                   compact: compact,
                 })}
               >
-                {userVote?.outcome === VoteOutcome.Rejected ? (
-                  <UserAvatar
-                    photoURL={user?.photoURL ?? ""}
-                    className="user-avatar reject"
-                  />
-                ) : (
-                  <img src="/icons/votes/rejected.svg" alt="vote type symbol" />
-                )}
+                <img src="/icons/votes/rejected.svg" alt="vote type symbol" />
               </button>
             </div>
           </div>

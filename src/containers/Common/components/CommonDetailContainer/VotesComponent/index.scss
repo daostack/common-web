@@ -30,20 +30,11 @@
 
     .vote-column {
       display: flex;
-      flex-direction: column;
+      flex-direction: row-reverse;
       align-items: center;
       justify-content: flex-end;
-      font-weight: bold;
-
-      &.approve {
-        color: $green;
-      }
-      &.reject {
-        color: $red;
-      }
-      &.abstain {
-        color: $gray;
-      }
+      color: $gray;
+      padding-bottom: 0.5rem;
 
       &.compact-card {
         flex-direction: row;
@@ -65,7 +56,7 @@
         &.compact {
           border: none;
           box-shadow: none;
-          width: 4rem;
+          width: 2rem;
           height: unset;
         }
         &.compact-card {
@@ -77,6 +68,9 @@
         &:hover {
           opacity: 0.9;
         }
+      }
+      &.voted {
+        border-bottom: 3px solid $purple;
       }
     }
   }
