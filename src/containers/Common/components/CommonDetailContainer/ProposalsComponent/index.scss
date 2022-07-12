@@ -53,9 +53,24 @@
       background-color: $purple-2;
       border-top-right-radius: 0.625rem;
       border-top-left-radius: 0.625rem;
-      padding: 2rem 0.5rem 2rem 2rem;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+      padding: 2rem 0rem 2rem 2rem;
+      .proposal-item-header-top {
+        display: flex;
+        justify-content: space-between;
+        //padding: 2rem 0.5rem 2rem 2rem;
+        margin-bottom: 0.5rem;
+      }
+      .proposal-item-type {
+        text-align: right;
+        background-color: $light-gray-9;
+        display: flex;
+        align-self: flex-end;
+        padding: 0.3rem;
+        border-bottom-left-radius: 0.4rem;
+        border-top-left-radius: 0.4rem;
+      }
       .proposal-title {
         font-size: $moderate-med;
         color: $white;

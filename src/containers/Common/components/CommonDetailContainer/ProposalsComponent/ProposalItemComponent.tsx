@@ -1,4 +1,5 @@
 import React from "react";
+import { startCase, lowerCase } from "lodash";
 import { UserAvatar, ElementDropdown } from "@/shared/components";
 import { Proposal } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
@@ -24,18 +25,21 @@ export default function ProposalItemComponent({
   return (
     <div className="proposal-item-wrapper">
       <div className="proposal-item-header">
-        <div
-          onClick={() => loadProposalDetail(proposal)}
-          className="proposal-title"
-          title={proposal.data.args.title}
-        >
-          {proposal.data.args.title}
+        <div className="proposal-item-header-top">
+          <div
+            onClick={() => loadProposalDetail(proposal)}
+            className="proposal-title"
+            title={proposal.data.args.title}
+          >
+            {proposal.data.args.title}
+          </div>
+          <ElementDropdown
+            linkType={DynamicLinkType.Proposal}
+            elem={proposal}
+            transparent
+          />
         </div>
-        <ElementDropdown
-          linkType={DynamicLinkType.Proposal}
-          elem={proposal}
-          transparent
-        />
+        <div className="proposal-item-type">{startCase(lowerCase(proposal.type))}</div>
       </div>
       <div className="proposal-item-body">
         <div className="user-info-wrapper">
