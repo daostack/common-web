@@ -55,10 +55,10 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
         return <MembersList members={commonMembers} />;
 
       case MemberListTab.Pending:
-        return <ProposalsList proposals={pendingProposals} common={common} emptyText={"No pending proposals"} />;
+        return <ProposalsList proposals={pendingProposals} emptyText={"No pending proposals"} />;
 
       case MemberListTab.History:
-        return <ProposalsList proposals={historyProposals} common={common} emptyText={"History is empty"} />;
+        return <ProposalsList proposals={historyProposals} emptyText={"History is empty"} />;
 
       default:
         return null;
