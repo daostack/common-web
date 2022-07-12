@@ -35,7 +35,6 @@ import { EventTypeState } from "@/shared/models/Notification";
 
 import { useHistory } from "react-router";
 import { parseJson } from "@/shared/utils/json";
-import { get } from "lodash";
 
 import { webviewLogin } from "../Auth/store/actions";
 import { getProvider } from "@/shared/utils/authProvide";
@@ -60,7 +59,7 @@ const App = () => {
           try {
             let credential;
             if(data.providerId === AuthProviderID.Apple) {
-              credential = firebase.auth.OAuthProvider?.credentialFromResult(event.data);
+              credential = (firebase.auth.OAuthProvider as unknown as {credentialFromResult: (data: object) => firebase.auth.OAuthCredential})?.credentialFromResult(event.data);
             } else {
               const provider = getProvider(data?.providerId);
               credential = provider.credential(data.idToken);
