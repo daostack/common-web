@@ -27,7 +27,7 @@ export const webviewLogin = createAsyncAction(
   AuthActionTypes.WEBVIEW_LOGIN_FAILURE
 )<
   PayloadWithOptionalCallback<
-    any,
+    firebase.User | null,
     { user: User; isNewUser: boolean },
     Error
   >,
