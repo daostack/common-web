@@ -73,6 +73,7 @@ import CheckIcon from "../../../../shared/icons/check.icon";
 import { selectUser } from "../../../Auth/store/selectors";
 import { useCommonMember } from "../../hooks";
 import "./index.scss";
+import { MembersComponent } from "../../components/CommonDetailContainer/MembersComponent";
 
 interface CommonDetailRouterParams {
   id: string;
@@ -95,6 +96,7 @@ export enum Tabs {
   Proposals = "proposals",
   Wallet = "wallet",
   Notifications = "notifications",
+  Members = "members"
 }
 
 const tabs = [
@@ -118,6 +120,11 @@ const tabs = [
     name: "Wallet",
     key: Tabs.Wallet,
     icon: Tabs.Wallet,
+  },
+  {
+    name: "Members",
+    key: Tabs.Members,
+    icon: Tabs.Members,
   },
   // {
   //   name: "Notifications",
@@ -425,6 +432,27 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
               title="About"
               vievAllHandler={() => changeTabHandler(Tabs.About)}
               common={common}
+            />
+            <PreviewInformationList
+              title="Latest Discussions"
+              discussions={discussions}
+              vievAllHandler={() => changeTabHandler(Tabs.Discussions)}
+              onClickItem={clickPreviewDisscusionHandler}
+              type="discussions"
+              commonMember={commonMember}
+            />
+          </>
+        );
+      case Tabs.Members:
+        return (
+          <>
+            <PreviewInformationList
+              title="Latest Proposals"
+              proposals={activeProposals}
+              vievAllHandler={() => changeTabHandler(Tabs.Proposals)}
+              onClickItem={clickPreviewProposalHandler}
+              type="proposals"
+              commonMember={commonMember}
             />
             <PreviewInformationList
               title="Latest Discussions"
@@ -753,6 +781,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                 />
               )}
               {tab === Tabs.Wallet && <WalletComponent common={common} />}
+              {tab === Tabs.Members && <MembersComponent common={common} />}
             </div>
             {isMobileView && (
               <div
