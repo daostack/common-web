@@ -59,7 +59,8 @@ const App = () => {
           try {
             let credential;
             if(data.providerId === AuthProviderID.Apple) {
-              credential = (firebase.auth.OAuthProvider as unknown as {credentialFromResult: (data: object) => firebase.auth.OAuthCredential})?.credentialFromResult(event.data);
+              const provider = new firebase.auth.OAuthProvider(data.providerId);
+              credential = provider.credential(data);
             } else {
               const provider = getProvider(data?.providerId);
               credential = provider.credential(data.idToken);
