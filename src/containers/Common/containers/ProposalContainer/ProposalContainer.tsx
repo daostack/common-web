@@ -54,6 +54,10 @@ const ProposalContainer = () => {
   const { isShowing, onOpen, onClose } = useModal(false);
   const user = useSelector(selectUser());
   const currentProposal = useSelector(selectCurrentProposal());
+  /**
+   * TODO: this should fetch the common by commonId in the proposal
+   * currentProposal.data.args.commonId
+   */
   const currentCommon = useSelector(selectCommonDetail());
   const [activeTab, setActiveTab] = useState<PROPOSAL_MENU_TABS>(PROPOSAL_MENU_TABS.Voting);
   const {

@@ -2,8 +2,8 @@ import React from "react";
 import { startCase, lowerCase } from "lodash";
 import { UserAvatar, ElementDropdown } from "@/shared/components";
 import { Proposal } from "@/shared/models";
-import { getUserName } from "@/shared/utils";
-import { DynamicLinkType } from "@/shared/constants";
+import { formatPrice, getUserName } from "@/shared/utils";
+import { DynamicLinkType, ProposalsTypes } from "@/shared/constants";
 import ProposalState from "../ProposalState/ProposalState";
 import { VotesComponent } from "../VotesComponent";
 import { useCommonMember } from "@/containers/Common/hooks";
@@ -21,6 +21,13 @@ export default function ProposalItemComponent({
   const {
     data: commonMember,
   } = useCommonMember();
+
+  let extraData;
+  switch (proposal.type) {
+    case ProposalsTypes.FUNDS_ALLOCATION:
+      extraData = `${formatPrice(proposal.data.args.amount)}₪`;
+      break;
+  }
 
   return (
     <div className="proposal-item-wrapper">
@@ -65,6 +72,9 @@ export default function ProposalItemComponent({
           <div className="discussion-count-wrapper">
             <img src="/icons/discussions.svg" alt="discussions" />
             <div className="discussion-count">{proposal.discussionMessage?.length || 0}</div>
+          </div>
+          <div className="extra-data">
+            {extraData}
           </div>
         </div>
       </div>
