@@ -40,9 +40,8 @@ interface ConfigurationProps {
 }
 
 interface FormValues {
-  title: string;
-  description: string;
-  goalOfPayment: string;
+  fund: FundType;
+  amount: number;
 }
 
 const FundDetails: FC<ConfigurationProps> = (props) => {
@@ -59,12 +58,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     fetched: false,
     bankAccount: null,
   });
-  const [fund, setFund] = useState<FundType | null>(
-    initialData?.fund || null
-  );
-  const [recipient, setRecipient] = useState<RecipientType | null>(
-    initialData?.recipient || null
-  );
+  const [selectedFund, setSelectedFund] = useState<FundType | null>(null);
 
   useEffect(() => {
     if (bankAccountState.loading || bankAccountState.fetched) {
@@ -89,17 +83,19 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
   }, [dispatch, bankAccountState]);
 
   const getInitialValues = (): FormValues => ({
-    title: "",
-    description: "",
-    goalOfPayment: "",
+    fund: 'ILS',
+    amount: 0 
   });
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
+      console.log('fund', selectedFund);
       onFinish({
-        title: values.title,
-        description: values.description,
-        goalOfPayment: values.goalOfPayment
+        fund: selectedFund,
+        amount: values.amount
+        //title: values.title,
+        //description: values.description,
+        //goalOfPayment: values.goalOfPayment
       });
     },
     [onFinish]
@@ -108,7 +104,6 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
   const handleContinueClick = useCallback(() => {
     if (formRef.current) {
       formRef.current.submitForm();
-      console.log('formRef.current', formRef.current.values)
       onFinish(formRef.current.values)
     }
   }, []);
@@ -134,16 +129,12 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     setIsEditing(true);
   };
 
-  const handleFundSelect = (selectedFund: FundType): void => {
-    setFund(selectedFund);
-  };
-
-  const handleRecipientSelect = (selectedRecipient: RecipientType): void => {
-    setRecipient(selectedRecipient);
+  const handleFundSelect = (selectedFund: unknown) => {
+    setSelectedFund(selectedFund as FundType);
   };
 
   const getPrefix = () => {
-    switch (fund) {
+    switch (selectedFund) {
       case "ILS":
         return '₪';
       case "Dollars":
@@ -178,7 +169,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
               <Dropdown
                 className="assign-circle-configuration__circle-dropdown"
                 options={fundsOptions}
-                value={fund}
+                value={selectedFund}
                 onSelect={handleFundSelect}
                 label="Type of Funds"
                 placeholder="Select Type"

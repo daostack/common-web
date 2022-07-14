@@ -55,7 +55,12 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   const handleConfigurationFinish = (data: FundsAllocationData) => {
     setfundsAllocationData(data);
     setStep(FundsAllocationStep.Funds);
-    console.log('set step to confirm')
+  };
+
+  const handleFundDetailsFinish = (data: FundsAllocationData) => {
+    console.log('data', data, 'fundsAllocationData', fundsAllocationData)
+    setfundsAllocationData(data);
+    setStep(FundsAllocationStep.Confirmation);
   };
 
   const handleConfirm = () => {
@@ -168,7 +173,7 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
               governance={governance}
               //commonMembers={commonMembers}
               initialData={fundsAllocationData}
-              onFinish={handleConfigurationFinish}
+              onFinish={handleFundDetailsFinish}
             />
            }
           {step === FundsAllocationStep.Confirmation &&

@@ -9,5 +9,5 @@ export interface FundsAllocationData {
   description: string;
   goalOfPayment: string;
   fund: FundType;
-  recipient: RecipientType;
+  amount: number;
 }
