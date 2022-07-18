@@ -1,14 +1,14 @@
 @import "../../../../../../../constants";
 @import "../../../../../../../styles/sizes";
 
-.funds-allocation-success {
+.assign-circle-success {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-.funds-allocation-success__image {
+.assign-circle-success__image {
   width: 16rem;
   height: 16rem;
   margin-bottom: 1rem;
@@ -21,14 +21,14 @@
   }
 }
 
-.funds-allocation-success__title {
+.assign-circle-success__title {
   margin: 0;
   font-family: NotoSerifSC, serif;
   font-size: $moderate-med;
   letter-spacing: 0.02em;
 }
 
-.funds-allocation-success__description {
+.assign-circle-success__description {
   max-width: 24.875rem;
   margin: 1rem 0 0;
   font-size: $small;
@@ -40,7 +40,7 @@
   }
 }
 
-.funds-allocation-success__buttons-wrapper {
+.assign-circle-success__buttons-wrapper {
   max-width: 23rem;
   width: 100%;
   margin-top: 2.25rem;
@@ -57,7 +57,7 @@
   }
 }
 
-.funds-allocation-success__back-button {
+.assign-circle-success__back-button {
   @include big-phone {
     grid-row: 2;
   }
