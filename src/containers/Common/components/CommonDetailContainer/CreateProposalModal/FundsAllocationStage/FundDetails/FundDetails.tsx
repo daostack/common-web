@@ -15,7 +15,6 @@ import { getScreenSize } from "@/shared/store/selectors";
 import { getUserName } from "@/shared/utils";
 import { generateCirclesBinaryNumber } from "../../../CommonWhitepaper/utils";
 import { StageName } from "../../StageName";
-import { MemberInfo } from "../MemberInfo";
 import { FundsAllocationData, FundType, RecipientType } from "../types";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
@@ -35,7 +34,7 @@ const fundTypes = ['ILS', 'Dollars', 'Tokens'];
 
 interface ConfigurationProps {
   governance: Governance;
-  initialData: FundsAllocationData | null;
+  initialData: FundsAllocationData;
   onFinish: (data: FundsAllocationData) => void;
 }
 
@@ -58,7 +57,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     fetched: false,
     bankAccount: null,
   });
-  const [selectedFund, setSelectedFund] = useState<FundType | null>('ILS');
+  const [selectedFund, setSelectedFund] = useState<FundType>('ILS');
 
   useEffect(() => {
     if (bankAccountState.loading || bankAccountState.fetched) {
@@ -89,13 +88,10 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
-      console.log('fund', selectedFund);
       onFinish({
+        ...initialData,
         fund: selectedFund,
         amount: values.amount || 10
-        //title: values.title,
-        //description: values.description,
-        //goalOfPayment: values.goalOfPayment
       });
     },
     [onFinish]
@@ -104,7 +100,10 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
   const handleContinueClick = useCallback(() => {
     if (formRef.current) {
       formRef.current.submitForm();
-      onFinish(formRef.current.values)
+      onFinish({
+        ...initialData,
+        ...formRef.current.values
+      })
     }
   }, []);
 

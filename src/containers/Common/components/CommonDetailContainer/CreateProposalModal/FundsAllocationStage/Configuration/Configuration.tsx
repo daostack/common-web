@@ -13,7 +13,6 @@ import { getScreenSize } from "@/shared/store/selectors";
 import { getUserName } from "@/shared/utils";
 import { generateCirclesBinaryNumber } from "../../../CommonWhitepaper/utils";
 import { StageName } from "../../StageName";
-import { MemberInfo } from "../MemberInfo";
 import { FundsAllocationData } from "../types";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
@@ -23,7 +22,7 @@ import "./index.scss";
 interface ConfigurationProps {
   governance: Governance;
   //commonMembers: CommonMemberWithUserInfo[];
-  initialData: FundsAllocationData | null;
+  initialData: FundsAllocationData;
   onFinish: (data: FundsAllocationData) => void;
 }
 
@@ -50,6 +49,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
       onFinish({
+        ...initialData,
         title: values.title,
         description: values.description,
         goalOfPayment: values.goalOfPayment
@@ -61,7 +61,10 @@ const Configuration: FC<ConfigurationProps> = (props) => {
   const handleContinueClick = useCallback(() => {
     if (formRef.current) {
       formRef.current.submitForm();
-      onFinish(formRef.current.values)
+      onFinish({
+        ...initialData,
+        ...formRef.current.values
+      })
     }
   }, []);
 

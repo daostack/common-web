@@ -15,7 +15,7 @@ import { Confirmation } from "./Confirmation";
 import { FundDetails } from "./FundDetails";
 import { Success } from "./Success";
 import { FundsAllocationStep } from "./constants";
-import { FundsAllocationData } from "./types";
+import { FundsAllocationData, FundType } from "./types";
 import {
   UserDetails,
   UserDetailsRef,
@@ -29,12 +29,20 @@ interface FundsAllocationStageProps {
   onGoBack: () => void;
 }
 
+const initialFundsData = {
+  title: 'title',
+  description: 'description',
+  goalOfPayment: 'goalOfPayment',
+  amount: 10,
+  fund: 'ILS' as FundType,
+}
+
 const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   const user = useSelector(selectUser());
   const { common, governance, onFinish, onGoBack } = props;
   const dispatch = useDispatch();
   const [fundsAllocationData, setfundsAllocationData] =
-    useState<FundsAllocationData | null>(null);
+    useState<FundsAllocationData>(initialFundsData);
   const [step, setStep] = useState(FundsAllocationStep.Configuration);
   const [isProposalCreating, setIsProposalCreating] = useState(false);
   const {
@@ -56,7 +64,7 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   };
 
   const handleFundDetailsFinish = (data: FundsAllocationData) => {
-    setfundsAllocationData({...fundsAllocationData, ...data});
+    setfundsAllocationData(data);
     setStep(FundsAllocationStep.Confirmation);
   };
 
@@ -73,9 +81,11 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
       args: {
         amount: fundsAllocationData.amount * 100,
         commonId: common.id,
-        proposerId: user.uid,
         title: fundsAllocationData.title,
         description: fundsAllocationData.description,
+        images: [],
+        links: [],
+        files: [],
       },
     };
 

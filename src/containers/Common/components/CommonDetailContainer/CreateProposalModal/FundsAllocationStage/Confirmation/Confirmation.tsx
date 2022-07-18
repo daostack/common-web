@@ -4,7 +4,6 @@ import { Button, ButtonVariant } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { Circle, CommonMemberWithUserInfo } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { MemberInfo } from "../MemberInfo";
 import "./index.scss";
 
 const getPrefix = (fund) => {
