@@ -1,170 +1,82 @@
 import React from "react";
-import classNames from "classnames";
-
+import { startCase, lowerCase } from "lodash";
 import { UserAvatar, ElementDropdown } from "@/shared/components";
-import { useFullText } from "@/shared/hooks";
-import { CommonMember, Proposal, ProposalLink } from "@/shared/models";
-import { formatPrice, getUserName, getDaysAgo } from "@/shared/utils";
-import { DynamicLinkType, ScreenSize } from "@/shared/constants";
-import { VotesComponent } from "../VotesComponent";
+import { Proposal } from "@/shared/models";
+import { formatPrice, getUserName } from "@/shared/utils";
+import { DynamicLinkType, ProposalsTypes } from "@/shared/constants";
 import ProposalState from "../ProposalState/ProposalState";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { useSelector } from "react-redux";
-import { getScreenSize } from "@/shared/store/selectors";
-import { FundsAllocationArgs } from "@/shared/models/governance/proposals";
+import { VotesComponent } from "../VotesComponent";
+import { useCommonMember } from "@/containers/Common/hooks";
 
 interface ProposalItemComponentProps {
   loadProposalDetail: (payload: Proposal) => void;
   proposal: Proposal;
-  commonMember: CommonMember | null;
 }
 
 export default function ProposalItemComponent({
   proposal,
   loadProposalDetail,
-  commonMember,
 }: ProposalItemComponentProps) {
-  const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
-  const imagePreviewLength = isMobileView ? 1 : 2;
-  const {
-    ref: descriptionRef,
-    isFullTextShowing,
-    shouldShowFullText,
-    showFullText,
-  } = useFullText();
-  const date = new Date();
-  const rawRequestedAmount = (proposal.data.args as FundsAllocationArgs)
-    ?.amount;
-  const images = proposal.data.args.images ?? [];
 
-  const imagesChunk = images.filter((image, index) => {
-    if (index < imagePreviewLength) {
-      return image;
-    }
-    return false;
-  });
+  const {
+    data: commonMember,
+  } = useCommonMember();
+
+  let extraData;
+  switch (proposal.type) {
+    case ProposalsTypes.FUNDS_ALLOCATION:
+      extraData = `${formatPrice(proposal.data.args.amount)}₪`;
+      break;
+  }
 
   return (
-    <div className="discussion-item-wrapper">
-      <ProposalState proposal={proposal} />
-      <div className="proposal-charts-wrapper">
-        <div className="discussion-top-bar">
-          <div className="img-wrapper">
-            <UserAvatar
-              photoURL={proposal.proposer?.photoURL}
-              nameForRandomAvatar={proposal.proposer?.email}
-              userName={getUserName(proposal.proposer)}
-            />
-          </div>
-          <div className="creator-information">
-            <div className="name">{getUserName(proposal.proposer)}</div>
-            <div className="days-ago">
-              {getDaysAgo(date, proposal.createdAt)}
-            </div>
-          </div>
-        </div>
-        <div
-          className="proposal-title"
-          onClick={() => loadProposalDetail(proposal)}
-          title={proposal.data.args.title}
-        >
-          {proposal.data.args.title}
-        </div>
-        <ElementDropdown
-          linkType={DynamicLinkType.Proposal}
-          elem={proposal}
-          className="dropdown-menu"
-          transparent
-        />
-        {rawRequestedAmount && <div className="requested-amount">
-          {!rawRequestedAmount ? (
-            "No funding requested"
-          ) : (
-            <>
-              Requested amount
-              <span className="amount">{formatPrice(rawRequestedAmount)}</span>
-            </>
-          )}
-        </div>}
-        <div className="votes">
-          <VotesComponent proposal={proposal} commonMember={commonMember} />
-        </div>
-      </div>
-      <div className="line" />
-
-      <div className="discussion-content">
-        <div className="proposal-pitch-title">Proposal Pitch</div>
-        <div
-          className={classNames("description", { full: shouldShowFullText })}
-          ref={descriptionRef}
-        >
-          {proposal.data.args.description}
-        </div>
-        <div className="additional-information">
-          {proposal.data.args.links.length > 0 && (
-            <div className="links">
-              {proposal.data.args.links.map((link) => (
-                <a
-                  href={link.value}
-                  key={link.value}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {link.title}
-                </a>
-              ))}
-            </div>
-          )}
-          {proposal.data.args.images?.length > 0 && (
-            <div className="images-wrapper">
-              {imagePreviewLength < images.length ? (
-                <Swiper
-                  spaceBetween={30}
-                  pagination
-                  navigation
-                  slidesPerView={imagePreviewLength}
-                >
-                  {images.map((imageURL: ProposalLink, index) => (
-                    <SwiperSlide key={imageURL.value} className="image-item">
-                      <img src={imageURL.value} alt={imageURL.title} />
-                      <div className="image-title">{imageURL.title}</div>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              ) : (
-                <div className="images-list">
-                  {imagesChunk.map((i) => (
-                    <div className="image-item" key={i.value}>
-                      <img src={i.value} alt={i.title} />
-                      <div className="image-title">{i.title}</div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-        {!isFullTextShowing ? (
-          <div className="read-more" onClick={showFullText}>
-            Read More
-          </div>
-        ) : null}
-        <div className="line"></div>
-      </div>
-      <div className="bottom-content">
-        <div className="discussion-count">
-          <img src="/icons/discussions.svg" alt="discussions" />
-          <div className="count">{proposal.discussionMessage?.length || 0}</div>
-        </div>
-        {proposal && (
+    <div className="proposal-item-wrapper">
+      <div className="proposal-item-header">
+        <div className="proposal-item-header-top">
           <div
-            className="view-all-discussions"
             onClick={() => loadProposalDetail(proposal)}
+            className="proposal-title"
+            title={proposal.data.args.title}
           >
-            View proposal
+            {proposal.data.args.title}
           </div>
-        )}
+          <ElementDropdown
+            linkType={DynamicLinkType.Proposal}
+            elem={proposal}
+            transparent
+          />
+        </div>
+        <div className="proposal-item-type">{startCase(lowerCase(proposal.type))}</div>
+      </div>
+      <div className="proposal-item-body">
+        <div className="user-info-wrapper">
+          <UserAvatar
+            photoURL={proposal.proposer?.photoURL}
+            nameForRandomAvatar={proposal.proposer?.email}
+            userName={getUserName(proposal.proposer)}
+          />
+          <div className="name-and-proposal-state">
+            <div className="user-name">{getUserName(proposal.proposer)}</div>
+            <ProposalState proposal={proposal} />
+          </div>
+        </div>
+        <div className="proposal-item-votes-wrapper">
+          <VotesComponent
+            proposal={proposal}
+            commonMember={commonMember}
+            preview
+            compact
+          />
+        </div>
+        <div className="proposal-item-bottom">
+          <div className="discussion-count-wrapper">
+            <img src="/icons/discussions.svg" alt="discussions" />
+            <div className="discussion-count">{proposal.discussionMessage?.length || 0}</div>
+          </div>
+          <div className="extra-data">
+            {extraData}
+          </div>
+        </div>
       </div>
     </div>
   );

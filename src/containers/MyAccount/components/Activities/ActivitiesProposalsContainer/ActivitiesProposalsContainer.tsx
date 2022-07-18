@@ -1,33 +1,18 @@
-import React, { useEffect, useCallback, useMemo, useState, FC } from "react";
+import React, { useEffect, useCallback, useState, FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
 import { NavLink, useParams } from "react-router-dom";
-import classNames from "classnames";
 
 import { Proposal } from "@/shared/models";
-import {
-  FundingProposalListItem,
-  MembershipRequestListItem,
-  ProposalDetailModal,
-} from "@/containers/Common/components";
-import { Loader, Modal } from "@/shared/components";
-import { useCommonMember } from "@/containers/Common/hooks";
-import { useModal } from "@/shared/hooks";
-import { ProposalsTypes, ROUTE_PATHS, ScreenSize } from "@/shared/constants";
-import {
-  selectUserProposalList,
-  selectCurrentProposal,
-  selectCommonDetail,
-} from "../../../../Common/store/selectors";
+import { FundingProposalListItem, MembershipRequestListItem } from "@/containers/Common/components";
+import { Loader } from "@/shared/components";
+import { ProposalsTypes, ROUTE_PATHS } from "@/shared/constants";
+import { selectUserProposalList, selectCurrentProposal } from "../../../../Common/store/selectors";
 import { selectUser } from "../../../../Auth/store/selectors";
-import {
-  getLoading,
-  getScreenSize,
-} from "../../../../../shared/store/selectors";
+import { getLoading } from "../../../../../shared/store/selectors";
 import {
   getCommonDetail,
   loadUserProposalList,
-  loadProposalDetail,
-  clearCurrentProposal,
   closeCurrentCommon,
 } from "../../../../Common/store/actions";
 import "./index.scss";
@@ -38,40 +23,19 @@ interface MyProposalsContainerRouterParams {
 
 const ActivitiesProposalsContainer: FC = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const { proposalType } = useParams<MyProposalsContainerRouterParams>();
   const myProposals = useSelector(selectUserProposalList());
   const user = useSelector(selectUser());
   const currentProposal = useSelector(selectCurrentProposal());
-  const currentCommon = useSelector(selectCommonDetail());
   const loading = useSelector(getLoading());
-  const screenSize = useSelector(getScreenSize());
-  const { isShowing, onOpen, onClose } = useModal(false);
   const [myProposalsByType, setMyProposalsByType] = useState<Proposal[]>([]);
-  const {
-    fetched: isCommonMemberFetched,
-    data: commonMember,
-    fetchCommonMember,
-    resetCommonMember,
-  } = useCommonMember();
-
-  const isMobileView = useMemo(() => screenSize === ScreenSize.Mobile, [
-    screenSize,
-  ]);
-
-  const isCommonMember = Boolean(commonMember);
 
   const getProposalDetail = useCallback(
-    (payload: Proposal) => {
-      dispatch(loadProposalDetail.request(payload));
-      onOpen();
-    },
-    [dispatch, onOpen]
+    (payload: Proposal) =>
+      history.push(ROUTE_PATHS.PROPOSAL_DETAIL.replace(":id", payload.id)),
+    []
   );
-
-  const closeModalHandler = useCallback(() => {
-    onClose();
-    dispatch(clearCurrentProposal());
-  }, [onClose, dispatch]);
 
   const renderListItem = useCallback(
     (proposal: Proposal) => {
@@ -98,12 +62,6 @@ const ActivitiesProposalsContainer: FC = () => {
   );
 
   useEffect(() => {
-    if (currentProposal) {
-      fetchCommonMember(currentProposal.data.args.commonId);
-    }
-  }, [currentProposal, fetchCommonMember]);
-
-  useEffect(() => {
     if (myProposals.length === 0 && user?.uid)
       dispatch(loadUserProposalList.request(user?.uid));
   }, [dispatch, myProposals, user]);
@@ -121,7 +79,6 @@ const ActivitiesProposalsContainer: FC = () => {
   useEffect(() => {
     if (!currentProposal) return;
 
-    resetCommonMember();
     dispatch(
       getCommonDetail.request({
         payload: currentProposal.data.args.commonId,
@@ -131,54 +88,24 @@ const ActivitiesProposalsContainer: FC = () => {
     return () => {
       dispatch(closeCurrentCommon());
     };
-  }, [dispatch, resetCommonMember, currentProposal]);
+  }, [dispatch, currentProposal]);
 
   return (
-    <>
-      {isShowing && (
-        <Modal
-          isShowing={isShowing}
-          onClose={closeModalHandler}
-          mobileFullScreen
-          className={classNames("proposals", {
-            "mobile-full-screen": isMobileView,
-          })}
-          isHeaderSticky
-          shouldShowHeaderShadow={false}
-          styles={{
-            headerWrapper: "activities-proposals__detail-modal-header-wrapper",
-          }}
-        >
-          {isCommonMemberFetched ? (
-            <ProposalDetailModal
-              proposal={currentProposal}
-              common={currentCommon}
-              commonMember={commonMember}
-              isCommonMemberFetched={isCommonMemberFetched}
-            />
-          ) : (
-            <div>
-              <Loader />
-            </div>
-          )}
-        </Modal>
-      )}
-      <div className="activities-proposals">
-        <h2 className="activities-proposals__header">
-          <NavLink to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES}>
-            <img src="/icons/left-arrow.svg" alt="left-arrow" />
-            {proposalType === ProposalsTypes.FUNDS_ALLOCATION
-              ? "Proposals "
-              : "Membership requests "}
-            ({myProposalsByType.length})
-          </NavLink>
-        </h2>
-        {loading && <Loader />}
-        <div className="activities-proposals__proposals-list">
-          {myProposalsByType.map((proposal) => renderListItem(proposal))}
-        </div>
+    <div className="activities-proposals">
+      <h2 className="activities-proposals__header">
+        <NavLink to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES}>
+          <img src="/icons/left-arrow.svg" alt="left-arrow" />
+          {proposalType === ProposalsTypes.FUNDS_ALLOCATION
+            ? "Proposals "
+            : "Membership requests "}
+          ({myProposalsByType.length})
+        </NavLink>
+      </h2>
+      {loading && <Loader />}
+      <div className="activities-proposals__proposals-list">
+        {myProposalsByType.map((proposal) => renderListItem(proposal))}
       </div>
-    </>
+    </div>
   );
 };
 

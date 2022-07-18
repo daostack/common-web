@@ -1,5 +1,12 @@
-import React, { useEffect, useState, useCallback, useMemo, FC } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  FC,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
 import { NavLink } from "react-router-dom";
 import SwiperCore, { Pagination } from "swiper/core";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -11,27 +18,22 @@ import {
   CommonListItem,
   FundingProposalListItem,
   MembershipRequestListItem,
-  ProposalDetailModal,
 } from "@/containers/Common/components";
-import { useCommonMember, useUserCommons } from "@/containers/Common/hooks";
+import { useUserCommons } from "@/containers/Common/hooks";
 import { CollectionSummaryCard } from "./CollectionSummaryCard";
 import { Common, Proposal } from "@/shared/models";
-import { Loader, Modal } from "@/shared/components";
+import { Loader } from "@/shared/components";
 import { ProposalsTypes, ROUTE_PATHS, ScreenSize } from "@/shared/constants";
-import { useModal } from "@/shared/hooks";
 import {
   getCommonsList,
   loadUserProposalList,
   getCommonDetail,
-  loadProposalDetail,
-  clearCurrentProposal,
   closeCurrentCommon,
 } from "../../../Common/store/actions";
 import {
   selectCommonList,
   selectUserProposalList,
   selectCurrentProposal,
-  selectCommonDetail,
   selectIsCommonsLoaded,
   selectIsUserProposalsLoaded,
 } from "../../../Common/store/selectors";
@@ -61,26 +63,19 @@ const INITIAL_SHOW_SLIDER_VIEWALL_STATE: ShowSliderViewAllState = {
 
 const Activities: FC = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const {
     fetched: areUserCommonsFetched,
     data: myCommons,
     fetchUserCommons,
   } = useUserCommons();
-  const {
-    fetched: isCommonMemberFetched,
-    data: commonMember,
-    fetchCommonMember,
-    resetCommonMember,
-  } = useCommonMember();
   const user = useSelector(selectUser());
   const commons = useSelector(selectCommonList());
   const isCommonsLoaded = useSelector(selectIsCommonsLoaded());
   const myProposals = useSelector(selectUserProposalList());
   const isUserProposalsLoaded = useSelector(selectIsUserProposalsLoaded());
   const currentProposal = useSelector(selectCurrentProposal());
-  const currentCommon = useSelector(selectCommonDetail());
   const screenSize = useSelector(getScreenSize());
-  const { isShowing, onOpen, onClose } = useModal(false);
   const myCommonsAmount = myCommons.length;
   const [myFundingProposals, setMyFundingProposals] = useState<
     Proposal[] | null
@@ -104,8 +99,6 @@ const Activities: FC = () => {
   const isMobileView = useMemo(() => screenSize === ScreenSize.Mobile, [
     screenSize,
   ]);
-
-  const isCommonMember = Boolean(commonMember);
 
   const MAX_ROW_ITEMS_AMOUNT = useMemo(() => (isMobileView ? 5 : 4), [
     isMobileView,
@@ -150,17 +143,10 @@ const Activities: FC = () => {
   );
 
   const getProposalDetail = useCallback(
-    (payload: Proposal) => {
-      dispatch(loadProposalDetail.request(payload));
-      onOpen();
-    },
-    [dispatch, onOpen]
+    (payload: Proposal) =>
+      history.push(ROUTE_PATHS.PROPOSAL_DETAIL.replace(":id", payload.id)),
+    []
   );
-
-  const closeModalHandler = useCallback(() => {
-    onClose();
-    dispatch(clearCurrentProposal());
-  }, [onClose, dispatch]);
 
   const renderCollectionListItem = useCallback(
     (collectionEnum: ActivitiesCollection, item: Common | Proposal) => {
@@ -246,17 +232,8 @@ const Activities: FC = () => {
   );
 
   useEffect(() => {
-    if (!currentProposal) {
-      return;
-    }
-
-    fetchCommonMember(currentProposal.data.args.commonId);
-  }, [currentProposal, fetchCommonMember]);
-
-  useEffect(() => {
     if (!currentProposal) return;
 
-    resetCommonMember();
     dispatch(
       getCommonDetail.request({
         payload: currentProposal.data.args.commonId,
@@ -266,7 +243,7 @@ const Activities: FC = () => {
     return () => {
       dispatch(closeCurrentCommon());
     };
-  }, [dispatch, resetCommonMember, currentProposal]);
+  }, [dispatch, currentProposal]);
 
   useEffect(() => {
     if (commons.length === 0) dispatch(getCommonsList.request());
@@ -300,153 +277,123 @@ const Activities: FC = () => {
   }, [setMyFundingProposals, setMyMembershipRequests, myProposals]);
 
   return (
-    <>
-      {isShowing && (
-        <Modal
-          isShowing={isShowing}
-          onClose={closeModalHandler}
-          mobileFullScreen
-          className={classNames("proposals", {
-            "mobile-full-screen": isMobileView,
-          })}
-          isHeaderSticky
-          shouldShowHeaderShadow={false}
-          styles={{
-            headerWrapper: "my-account-activities__detail-modal-header-wrapper",
-          }}
-        >
-          {isCommonMemberFetched ? (
-            <ProposalDetailModal
-              proposal={currentProposal}
-              common={currentCommon}
-              commonMember={commonMember}
-              isCommonMemberFetched={isCommonMemberFetched}
-            />
-          ) : (
-            <div>
-              <Loader />
-            </div>
-          )}
-        </Modal>
-      )}
-      <div className="route-content my-account-activities">
-        <div className="my-account-activities__header">
-          <h2 className="route-title">Activities</h2>
-          <div className="my-account-activities__summaries">
-            <CollectionSummaryCard
-              collectionName="Commons"
-              collectionLength={myCommonsAmount}
-              iconSrc="/assets/images/common-sign.svg"
-              iconAlt="Commons summary icon"
-            />
-            <CollectionSummaryCard
-              collectionName="Proposals"
-              collectionLength={myProposals.length}
-              iconSrc="/assets/images/proposal-sign.svg"
-              iconAlt="Proposals summary icon"
-            />
-          </div>
-        </div>
-        <div className="my-account-activities__content-wrapper">
-          <section className="my-account-activities__commons">
-            <div className="my-account-activities__section-header">
-              <h3>Commons ({myCommonsAmount})</h3>
-              <NavLink
-                className={classNames(
-                  "my-account-activities__section-viewall",
-                  {
-                    hidden:
-                      !showViewAllButton(myCommonsAmount) ||
-                      (isMobileView && !showSliderCommonsViewAll),
-                  }
-                )}
-                to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_COMMONS}
-              >
-                View all
-                <img src="/icons/right-arrow.svg" alt="right-arrow" />
-              </NavLink>
-            </div>
-            {isCommonsLoaded && areUserCommonsFetched ? (
-              myCommonsAmount !== 0 ? (
-                renderCollectionList(myCommons, ActivitiesCollection.COMMONS)
-              ) : (
-                <div>No commons yet</div>
-              )
-            ) : (
-              <Loader />
-            )}
-          </section>
-          <section className="my-account-activities__proposals">
-            <div className="my-account-activities__section-header">
-              <h3>Proposals ({myFundingProposalsAmount})</h3>
-              <NavLink
-                className={classNames(
-                  "my-account-activities__section-viewall",
-                  {
-                    hidden:
-                      !showViewAllButton(myFundingProposalsAmount) ||
-                      (isMobileView && !showSliderProposalsViewAll),
-                  }
-                )}
-                to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_PROPOSALS.replace(
-                  ":proposalType",
-                  ProposalsTypes.FUNDS_ALLOCATION
-                )}
-              >
-                View all
-                <img src="/icons/right-arrow.svg" alt="right-arrow" />
-              </NavLink>
-            </div>
-            {myFundingProposals ? (
-              myFundingProposalsAmount !== 0 ? (
-                renderCollectionList(
-                  myFundingProposals,
-                  ActivitiesCollection.PROPOSALS
-                )
-              ) : (
-                <div>No proposals yet</div>
-              )
-            ) : (
-              <Loader />
-            )}
-          </section>
-          <section className="my-account-activities__membership-requests">
-            <div className="my-account-activities__section-header">
-              <h3>Membership requests ({myMembershipRequestsAmount})</h3>
-              <NavLink
-                className={classNames(
-                  "my-account-activities__section-viewall",
-                  {
-                    hidden:
-                      !showViewAllButton(myMembershipRequestsAmount) ||
-                      (isMobileView && !showSliderMembershipRequestsViewAll),
-                  }
-                )}
-                to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_PROPOSALS.replace(
-                  ":proposalType",
-                  ProposalsTypes.MEMBER_ADMITTANCE
-                )}
-              >
-                View all
-                <img src="/icons/right-arrow.svg" alt="right-arrow" />
-              </NavLink>
-            </div>
-            {myMembershipRequests ? (
-              myMembershipRequestsAmount !== 0 ? (
-                renderCollectionList(
-                  myMembershipRequests,
-                  ActivitiesCollection.MEMBERSHIP_REQUESTS
-                )
-              ) : (
-                <div>No membership requests yet</div>
-              )
-            ) : (
-              <Loader />
-            )}
-          </section>
+    <div className="route-content my-account-activities">
+      <div className="my-account-activities__header">
+        <h2 className="route-title">Activities</h2>
+        <div className="my-account-activities__summaries">
+          <CollectionSummaryCard
+            collectionName="Commons"
+            collectionLength={myCommonsAmount}
+            iconSrc="/assets/images/common-sign.svg"
+            iconAlt="Commons summary icon"
+          />
+          <CollectionSummaryCard
+            collectionName="Proposals"
+            collectionLength={myProposals.length}
+            iconSrc="/assets/images/proposal-sign.svg"
+            iconAlt="Proposals summary icon"
+          />
         </div>
       </div>
-    </>
+      <div className="my-account-activities__content-wrapper">
+        <section className="my-account-activities__commons">
+          <div className="my-account-activities__section-header">
+            <h3>Commons ({myCommonsAmount})</h3>
+            <NavLink
+              className={classNames(
+                "my-account-activities__section-viewall",
+                {
+                  hidden:
+                    !showViewAllButton(myCommonsAmount) ||
+                    (isMobileView && !showSliderCommonsViewAll),
+                }
+              )}
+              to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_COMMONS}
+            >
+              View all
+              <img src="/icons/right-arrow.svg" alt="right-arrow" />
+            </NavLink>
+          </div>
+          {isCommonsLoaded && areUserCommonsFetched ? (
+            myCommonsAmount !== 0 ? (
+              renderCollectionList(myCommons, ActivitiesCollection.COMMONS)
+            ) : (
+              <div>No commons yet</div>
+            )
+          ) : (
+            <Loader />
+          )}
+        </section>
+        <section className="my-account-activities__proposals">
+          <div className="my-account-activities__section-header">
+            <h3>Proposals ({myFundingProposalsAmount})</h3>
+            <NavLink
+              className={classNames(
+                "my-account-activities__section-viewall",
+                {
+                  hidden:
+                    !showViewAllButton(myFundingProposalsAmount) ||
+                    (isMobileView && !showSliderProposalsViewAll),
+                }
+              )}
+              to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_PROPOSALS.replace(
+                ":proposalType",
+                ProposalsTypes.FUNDS_ALLOCATION
+              )}
+            >
+              View all
+              <img src="/icons/right-arrow.svg" alt="right-arrow" />
+            </NavLink>
+          </div>
+          {myFundingProposals ? (
+            myFundingProposalsAmount !== 0 ? (
+              renderCollectionList(
+                myFundingProposals,
+                ActivitiesCollection.PROPOSALS
+              )
+            ) : (
+              <div>No proposals yet</div>
+            )
+          ) : (
+            <Loader />
+          )}
+        </section>
+        <section className="my-account-activities__membership-requests">
+          <div className="my-account-activities__section-header">
+            <h3>Membership requests ({myMembershipRequestsAmount})</h3>
+            <NavLink
+              className={classNames(
+                "my-account-activities__section-viewall",
+                {
+                  hidden:
+                    !showViewAllButton(myMembershipRequestsAmount) ||
+                    (isMobileView && !showSliderMembershipRequestsViewAll),
+                }
+              )}
+              to={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_PROPOSALS.replace(
+                ":proposalType",
+                ProposalsTypes.MEMBER_ADMITTANCE
+              )}
+            >
+              View all
+              <img src="/icons/right-arrow.svg" alt="right-arrow" />
+            </NavLink>
+          </div>
+          {myMembershipRequests ? (
+            myMembershipRequestsAmount !== 0 ? (
+              renderCollectionList(
+                myMembershipRequests,
+                ActivitiesCollection.MEMBERSHIP_REQUESTS
+              )
+            ) : (
+              <div>No membership requests yet</div>
+            )
+          ) : (
+            <Loader />
+          )}
+        </section>
+      </div>
+    </div>
   );
 };
 
