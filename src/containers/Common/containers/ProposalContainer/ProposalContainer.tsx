@@ -18,7 +18,7 @@ import {
 import { Proposal, ProposalState } from "@/shared/models";
 import { getUserName, checkIsCountdownState } from "@/shared/utils";
 import { ProposalsTypes, ChatType, ScreenSize } from "@/shared/constants";
-import { addMessageToProposal } from "@/containers/Common/store/actions";
+import { addMessageToProposal, clearCurrentProposal } from "@/containers/Common/store/actions";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { getScreenSize } from "@/shared/store/selectors";
 import { selectCommonDetail, selectCurrentProposal } from "../../../Common/store/selectors";
@@ -143,6 +143,8 @@ const ProposalContainer = () => {
   );
 
   useEffect(() => {
+    if (currentProposal?.id === proposalId) return;
+
     if (currentProposal || !proposalId)
       return;
 
@@ -158,6 +160,12 @@ const ProposalContainer = () => {
   }, [currentProposal, dispatch, proposalId]);
 
   useEffect(() => {
+    dispatch(clearCurrentProposal())
+  }, [])
+
+  useEffect(() => {
+    if (currentCommon?.id === currentProposal?.data.args.commonId) return;
+
     if (currentCommon || !currentProposal)
       return;
 
@@ -213,7 +221,7 @@ const ProposalContainer = () => {
                     {getUserName(currentProposal.proposer)}
                   </div>
                 </div>
-              </div> 
+              </div>
               <div className="proposal-page__proposal-info-wrapper">
                 <div className="proposal-page__proposal-info-description">
                   <div className="proposal-title">
