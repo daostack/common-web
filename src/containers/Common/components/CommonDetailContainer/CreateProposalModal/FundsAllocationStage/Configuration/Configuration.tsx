@@ -61,7 +61,6 @@ const Configuration: FC<ConfigurationProps> = (props) => {
   const handleContinueClick = useCallback(() => {
     if (formRef.current) {
       formRef.current.submitForm();
-      console.log('formRef.current', formRef.current.values)
       onFinish(formRef.current.values)
     }
   }, []);

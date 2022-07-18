@@ -58,7 +58,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     fetched: false,
     bankAccount: null,
   });
-  const [selectedFund, setSelectedFund] = useState<FundType | null>(null);
+  const [selectedFund, setSelectedFund] = useState<FundType | null>('ILS');
 
   useEffect(() => {
     if (bankAccountState.loading || bankAccountState.fetched) {
@@ -92,7 +92,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
       console.log('fund', selectedFund);
       onFinish({
         fund: selectedFund,
-        amount: values.amount
+        amount: values.amount || 10
         //title: values.title,
         //description: values.description,
         //goalOfPayment: values.goalOfPayment
@@ -180,8 +180,8 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                 id="amount"
                 name="amount"
                 label="Amount"
-                placeholder="0"
-                prefix={getPrefix()}
+                placeholder="10"
+                prefix={getPrefix()}        
               />
               <BankAccount
                 bankAccount={bankAccountState.bankAccount}
@@ -194,7 +194,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                     shouldUseFullWidth={isMobileView}
                     disabled={!isValid}
                   >
-                    Continue
+                    Create proposal
                   </Button>
                 </div>
               </ModalFooter>

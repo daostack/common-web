@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/containers/Auth/store/selectors";
-import { useCommonMembers } from "@/containers/Common/hooks";
 import { CreateProposal } from "@/containers/Common/interfaces";
 import { createFundingProposal } from "@/containers/Common/store/actions";
 import { Loader, Modal } from "@/shared/components";
@@ -17,6 +16,10 @@ import { FundDetails } from "./FundDetails";
 import { Success } from "./Success";
 import { FundsAllocationStep } from "./constants";
 import { FundsAllocationData } from "./types";
+import {
+  UserDetails,
+  UserDetailsRef,
+} from "@/containers/Login/components/LoginContainer/UserDetails";
 import "./index.scss";
 
 interface FundsAllocationStageProps {
@@ -27,6 +30,7 @@ interface FundsAllocationStageProps {
 }
 
 const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
+  const user = useSelector(selectUser());
   const { common, governance, onFinish, onGoBack } = props;
   const dispatch = useDispatch();
   const [fundsAllocationData, setfundsAllocationData] =
@@ -39,18 +43,12 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
     setShouldShowClosePrompt,
     setShouldBeOnFullHeight,
   } = useCreateProposalContext();
-  const {
-    fetched: areCommonMembersFetched,
-    data: commonMembers,
-    fetchCommonMembers,
-  } = useCommonMembers();
-  const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const isConfigurationStep = step === FundsAllocationStep.Configuration;
   const isSuccessStep = step === FundsAllocationStep.Success;
   const shouldShowModalTitle = isMobileView || isConfigurationStep;
-  const isLoading = !areCommonMembersFetched || isProposalCreating;
+  const isLoading = isProposalCreating;
 
   const handleConfigurationFinish = (data: FundsAllocationData) => {
     setfundsAllocationData(data);
@@ -58,13 +56,12 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   };
 
   const handleFundDetailsFinish = (data: FundsAllocationData) => {
-    console.log('data', data, 'fundsAllocationData', fundsAllocationData)
-    setfundsAllocationData(data);
+    setfundsAllocationData({...fundsAllocationData, ...data});
     setStep(FundsAllocationStep.Confirmation);
   };
 
   const handleConfirm = () => {
-    if (!fundsAllocationData || !user) {
+    if (!fundsAllocationData) {
       return;
     }
 
@@ -74,17 +71,11 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
       "type"
     > = {
       args: {
-        //commonId: common.id,
-        // TODO: Use here name of common member
+        amount: fundsAllocationData.amount * 100,
+        commonId: common.id,
+        proposerId: user.uid,
         title: fundsAllocationData.title,
-        description: fundsAllocationData.description, //`Request from ${getUserName(user)}`,
-        //proposerId: user.id,
-        //goalOfPayment: fundsAllocationData.goalOfPayment,
-        //images: [],
-        //links: [],
-        //files: [],
-        //circleId: '',
-        //userId: '' //fundsAllocationData.commonMember.userId
+        description: fundsAllocationData.description,
       },
     };
 
@@ -92,7 +83,7 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
       createFundingProposal.request({
         payload,
         callback: (error, data) => {
-          if (!error && data) {
+          if (!error) {
             setStep(FundsAllocationStep.Success);
             setIsProposalCreating(false);
           }
@@ -114,10 +105,6 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   };
 
   useEffect(() => {
-    fetchCommonMembers(governance.commonId);
-  }, [fetchCommonMembers, governance.commonId]);
-
-  useEffect(() => {
     setTitle(shouldShowModalTitle ? "Create New Proposal" : "");
   }, [setTitle, shouldShowModalTitle]);
 
@@ -135,17 +122,15 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
     setShouldBeOnFullHeight(isConfigurationStep || isLoading);
   }, [setShouldBeOnFullHeight, isConfigurationStep, isLoading]);
 
-  const renderConfirmationStep = () => <></>
-    /*fundsAllocationData && (
+  const renderConfirmationStep = () =>
+    fundsAllocationData && (
       <Confirmation
-        circle={fundsAllocationData.circle}
-        commonMember={fundsAllocationData.commonMember}
+        fund={fundsAllocationData.fund}
+        amount={fundsAllocationData.amount}
         onSubmit={handleConfirm}
         onCancel={handleConfirmationCancel}
       />
-    );*/
-
-
+    );
 
   const renderSuccessStep = () => (
     <Success
@@ -162,7 +147,6 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
           {(isConfigurationStep || isMobileView) && (
             <Configuration
               governance={governance}
-              //commonMembers={commonMembers}
               initialData={fundsAllocationData}
               onFinish={handleConfigurationFinish}
             />
@@ -171,7 +155,6 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
           {(step === FundsAllocationStep.Funds || isMobileView) &&
               <FundDetails
               governance={governance}
-              //commonMembers={commonMembers}
               initialData={fundsAllocationData}
               onFinish={handleFundDetailsFinish}
             />
