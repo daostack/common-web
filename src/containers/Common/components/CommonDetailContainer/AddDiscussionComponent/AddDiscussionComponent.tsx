@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { TextField } from "@/shared/components/Form/Formik";
@@ -7,17 +7,21 @@ import { useZoomDisabling } from "@/shared/hooks";
 import { ModalProps } from "@/shared/interfaces";
 
 import "./index.scss";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ScreenSize } from "@/shared/constants";
 import classNames from "classnames";
+import { createDiscussion } from "@/containers/Common/store/actions";
+import { Discussion } from "@/shared/models";
 
 const MAX_TITLE_LENGTH = 49;
 const MAX_MESSAGE_LENGTH = 690;
 
 interface AddDiscussionComponentProps
   extends Pick<ModalProps, "isShowing" | "onClose"> {
-  onDiscussionAdd: (payload: { title: string; message: string }) => void;
+  onSucess: (discussion: Discussion) => void,
+  uid: string,
+  commonId: string,
 }
 
 const validationSchema = Yup.object({
@@ -32,7 +36,9 @@ const validationSchema = Yup.object({
 const AddDiscussionComponent = ({
   isShowing,
   onClose,
-  onDiscussionAdd,
+  onSucess,
+  uid,
+  commonId
 }: AddDiscussionComponentProps) => {
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
@@ -42,7 +48,9 @@ const AddDiscussionComponent = ({
     message: "",
   });
 
+  const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
+  const [pending, setPending] = useState(false);
   const isMobileView = screenSize === ScreenSize.Mobile;
 
   useEffect(() => {
@@ -52,6 +60,27 @@ const AddDiscussionComponent = ({
       resetZoom();
     }
   }, [isShowing, disableZoom, resetZoom]);
+
+  const addDiscussion = useCallback(
+    (payload) => {
+      setPending(true);
+      dispatch(
+        createDiscussion.request({
+          payload: {
+            ...payload,
+            createTime: new Date(),
+            lastMessage: new Date(),
+            ownerId: uid,
+            commonId: commonId,
+          },
+          callback: (discussion: Discussion) => {
+            onSucess(discussion);
+          },
+        })
+      );
+    },
+    [dispatch]
+  );
 
   return (
     <Modal
@@ -67,7 +96,7 @@ const AddDiscussionComponent = ({
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting }) => {
           setSubmitting(false);
-          onDiscussionAdd(values);
+          addDiscussion(values);
         }}
         initialValues={formValues}
         validateOnChange={true}
@@ -121,7 +150,7 @@ const AddDiscussionComponent = ({
               <div className="action-wrapper">
                 <button
                   className="button-blue"
-                  disabled={!formikProps.isValid}
+                  disabled={!formikProps.isValid || pending}
                   onClick={formikProps.submitForm}
                 >
                   Publish Discussion

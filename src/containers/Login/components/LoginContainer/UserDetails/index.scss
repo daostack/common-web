@@ -91,6 +91,7 @@
 
   .user-details__country {
     grid-area: country;
+    z-index: 10000;
   }
 
   .user-details__textarea {

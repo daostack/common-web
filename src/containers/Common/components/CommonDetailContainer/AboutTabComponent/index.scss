@@ -52,6 +52,12 @@
       width: 270px;
     }
   }
+  .see-more-button {
+    font-family: NunitoSans-Regular;
+    color: gray;
+    text-align: right;
+    
+  }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {

@@ -57,6 +57,7 @@ import {
   createGovernance as createGovernanceApi,
   getGovernance as getGovernanceApi,
   getCommonMember as getCommonMemberApi,
+  getCommonMembers as getCommonMembersApi,
   getUserCommons as getUserCommonsApi,
 } from "./api";
 import { getUserData } from "../../Auth/store/api";
@@ -67,6 +68,7 @@ import { ImmediateContributionResponse } from "../interfaces";
 import { groupBy, isError } from "@/shared/utils";
 import { Awaited } from "@/shared/interfaces";
 import {
+  AssignCircle,
   CalculatedVotes,
   FundsAllocation,
   MemberAdmittance,
@@ -359,6 +361,8 @@ export function* loadProposalDetail(
     });
     proposal.discussionMessage = loadedDisscussionMessage;
 
+    proposal.proposer = (yield getUserData(action.payload.data.args.proposerId)) as User;
+
     yield put(actions.loadProposalDetail.success(proposal));
     yield put(stopLoading());
   } catch (e) {
@@ -539,6 +543,34 @@ export function* createMemberAdmittanceProposal({
   } catch (error) {
     if (isError(error)) {
       yield put(actions.createMemberAdmittanceProposal.failure(error));
+
+      if (payload.callback) {
+        payload.callback(error);
+      }
+    }
+  } finally {
+    yield put(stopLoading());
+  }
+}
+
+export function* createAssignCircleProposal({
+  payload,
+}: ReturnType<typeof actions.createAssignCircleProposal.request>): Generator {
+  try {
+    yield put(startLoading());
+    const assignCircleProposal = (yield call(createProposalApi, {
+      ...payload.payload,
+      type: ProposalsTypes.ASSIGN_CIRCLE,
+    })) as AssignCircle;
+
+    yield put(actions.createAssignCircleProposal.success(assignCircleProposal));
+
+    if (payload.callback) {
+      payload.callback(null, assignCircleProposal);
+    }
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.createAssignCircleProposal.failure(error));
 
       if (payload.callback) {
         payload.callback(error);
@@ -1096,6 +1128,34 @@ export function* getCommonMember({
   }
 }
 
+export function* getCommonMembers({
+  payload,
+}: ReturnType<typeof actions.getCommonMembers.request>): Generator {
+  try {
+    yield put(startLoading());
+    const commonMembers = (yield call(
+      getCommonMembersApi,
+      payload.payload
+    )) as Awaited<ReturnType<typeof getCommonMembersApi>>;
+
+    yield put(actions.getCommonMembers.success(commonMembers));
+
+    if (payload.callback) {
+      payload.callback(null, commonMembers);
+    }
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.getCommonMembers.failure(error));
+
+      if (payload.callback) {
+        payload.callback(error);
+      }
+    }
+  } finally {
+    yield put(stopLoading());
+  }
+}
+
 export function* getUserCommons({
   payload,
 }: ReturnType<typeof actions.getUserCommons.request>): Generator {
@@ -1147,6 +1207,10 @@ export function* commonsSaga() {
     actions.createMemberAdmittanceProposal.request,
     createMemberAdmittanceProposal
   );
+  yield takeLatest(
+    actions.createAssignCircleProposal.request,
+    createAssignCircleProposal
+  );
   yield takeLatest(actions.leaveCommon.request, leaveCommon);
   yield takeLatest(actions.deleteCommon.request, deleteCommon);
   yield takeLatest(
@@ -1184,6 +1248,7 @@ export function* commonsSaga() {
   yield takeLatest(actions.cancelSubscription.request, cancelSubscription);
   yield takeLatest(actions.getGovernance.request, getGovernance);
   yield takeLatest(actions.getCommonMember.request, getCommonMember);
+  yield takeLatest(actions.getCommonMembers.request, getCommonMembers);
   yield takeLatest(actions.getUserCommons.request, getUserCommons);
 }
 

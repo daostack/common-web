@@ -13,7 +13,7 @@ export const socialLogin = createAsyncAction(
   AuthActionTypes.SOCIAL_LOGIN_FAILURE
 )<
   PayloadWithOptionalCallback<
-    AuthProvider,
+    { provider: AuthProvider; authCode: string },
     { user: User; isNewUser: boolean },
     Error
   >,
@@ -61,7 +61,11 @@ export const confirmVerificationCode = createAsyncAction(
   AuthActionTypes.CONFIRM_VERIFICATION_CODE_FAILURE
 )<
   PayloadWithOptionalCallback<
-    { confirmation: firebase.auth.ConfirmationResult; code: string },
+    {
+      confirmation: firebase.auth.ConfirmationResult;
+      code: string;
+      authCode: string;
+    },
     { user: User; isNewUser: boolean },
     Error
   >,

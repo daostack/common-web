@@ -3,20 +3,21 @@ import { isValidPhoneNumber } from "react-phone-number-input";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import moment from "moment";
-import { Button, Loader, ModalFooter } from "../../../../../shared/components";
+import { ERROR_TEXT_FOR_NON_EXISTENT_USER } from "@/containers/Login/constants";
+import { Button, Loader, ModalFooter } from "@/shared/components";
 import {
   PhoneInput,
   PhoneInputCountryCode,
   PhoneInputValue,
-} from "../../../../../shared/components/Form";
+} from "@/shared/components/Form";
 import {
+  ErrorCode,
   ScreenSize,
   RECAPTCHA_CONTAINER_ID,
-} from "../../../../../shared/constants";
-import { getScreenSize } from "../../../../../shared/store/selectors";
-import firebase, {
-  isFirebaseError,
-} from "../../../../../shared/utils/firebase";
+} from "@/shared/constants";
+import { getScreenSize } from "@/shared/store/selectors";
+import { isGeneralError } from "@/shared/utils";
+import firebase, { isFirebaseError } from "@/shared/utils/firebase";
 import {
   confirmVerificationCode,
   sendVerificationCode,
@@ -26,13 +27,14 @@ import { PhoneAuthStep } from "./constants";
 import "./index.scss";
 
 interface PhoneAuthProps {
+  authCode: string;
   onFinish: (isNewUser: boolean) => void;
-  onError: () => void;
+  onError: (errorText?: string) => void;
 }
 
 const getCountdownDate = (): Date => moment().add(1, "minute").toDate();
 
-const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish, onError }) => {
+const PhoneAuth: FC<PhoneAuthProps> = ({ authCode, onFinish, onError }) => {
   const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -108,10 +110,18 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ onFinish, onError }) => {
         payload: {
           confirmation,
           code,
+          authCode,
         },
         callback: (error, data) => {
           if (!error && data) {
             onFinish(data.isNewUser);
+            return;
+          }
+          if (
+            isGeneralError(error) &&
+            error.code === ErrorCode.CUserDoesNotExist
+          ) {
+            onError(ERROR_TEXT_FOR_NON_EXISTENT_USER);
             return;
           }
           if (
