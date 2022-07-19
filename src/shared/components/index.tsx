@@ -35,3 +35,4 @@ export * from "./ShareModal";
 export * from "./StepProgress";
 export * from "./ChartCanvas";
 export * from "./DeletePrompt";
+export * from "./ProgressBar";

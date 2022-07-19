@@ -6,15 +6,12 @@
   display: flex;
 
   .inner-wrapper {
-    width: 20rem;
-    height: 2rem;
-    border-top-right-radius: 0.375rem;
-    border-top-left-radius: 0.375rem;
+    border-radius: 0.375rem;
     background-color: #fff3d8;
     display: flex;
-    margin-bottom: 1.5rem;
     align-items: center;
     justify-content: center;
+    padding: .2rem;
 
     .clock-icon {
       width: 0.9rem;

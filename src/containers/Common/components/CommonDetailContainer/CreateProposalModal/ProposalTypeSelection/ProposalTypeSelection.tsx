@@ -21,6 +21,11 @@ const PROPOSAL_TYPE_OPTIONS: DropdownOption[] = [
     searchText: "Assign Circle",
     value: ProposalsTypes.ASSIGN_CIRCLE,
   },
+  {
+    text: "Funds Allocation",
+    searchText: "Funds Allocation",
+    value: ProposalsTypes.FUNDS_ALLOCATION,
+  },
 ];
 
 interface ProposalTypeSelectionProps {
