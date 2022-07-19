@@ -201,7 +201,7 @@ const ProposalContainer = () => {
               isMobileView && <img
                 src="/icons/left-arrow.svg"
                 alt="left-arrow"
-                onClick={() => history.back()}
+                onClick={() => window.history.back()}
               />
             }
             <h1 className="proposal-page__common-title">
