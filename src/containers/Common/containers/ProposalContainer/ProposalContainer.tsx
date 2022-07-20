@@ -73,14 +73,11 @@ const ProposalContainer = () => {
   } = useProposalUserVote();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const showVoteButton = useMemo(
-    () =>
-      isVoteFetched &&
-      !userVote &&
-      currentProposal?.state === ProposalState.VOTING &&
-      commonMember,
-    [isVoteFetched, userVote, currentProposal, commonMember]
-  );
+  const showVoteButton =
+    isVoteFetched &&
+    !userVote &&
+    currentProposal?.state === ProposalState.VOTING &&
+    commonMember;
 
   const sendMessage = useCallback(
     (message: string) => {
