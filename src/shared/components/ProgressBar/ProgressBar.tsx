@@ -16,6 +16,7 @@ const ProgressBar: FC<ProgressBarProps> = (
   }
 ) => {
   const isProgressCompleted = useMemo((): boolean => {
+    if (minPercentCondition === 0) return true;
     switch (true) {
       case Boolean(minPercentCondition):
         return Boolean(minPercentCondition && (completedPercentage >= minPercentCondition));
@@ -36,7 +37,7 @@ const ProgressBar: FC<ProgressBarProps> = (
               {
                 completed: isProgressCompleted,
                 incompleted: !isProgressCompleted,
-                neutral: !minPercentCondition && !maxPercentCondition,
+                neutral: minPercentCondition !== 0 && !minPercentCondition && !maxPercentCondition,
               }
             )
           }
