@@ -75,8 +75,11 @@ const ProposalContainer = () => {
   const isMobileView = screenSize === ScreenSize.Mobile;
   const showVoteButton = useMemo(
     () =>
-      isVoteFetched && !userVote && currentProposal?.state === ProposalState.VOTING,
-    [isVoteFetched, userVote, currentProposal]
+      isVoteFetched &&
+      !userVote &&
+      currentProposal?.state === ProposalState.VOTING &&
+      commonMember,
+    [isVoteFetched, userVote, currentProposal, commonMember]
   );
 
   const sendMessage = useCallback(
@@ -186,7 +189,7 @@ const ProposalContainer = () => {
       fetchProposalVote(currentProposal.id);
   }, [fetchProposalVote, currentProposal]);
 
-  return (currentCommon && currentProposal)
+  return (currentCommon && currentProposal && isCommonMemberFetched)
     ? (
       <>
         <VotingPopup
