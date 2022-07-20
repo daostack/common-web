@@ -32,7 +32,6 @@ export const VotingPopup: FC<VotingPopupProps> = (
           proposalId: proposal.id,
           outcome: voteOutcome,
         },
-        shouldWaitForVoteToBeApplied: false,
       },
       callback: (error, vote) => {
         setVoting(false);

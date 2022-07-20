@@ -251,7 +251,6 @@ export const createVote = createAsyncAction(
     {
       votePayload: CreateVotePayload;
       proposalVotes: CalculatedVotes;
-      shouldWaitForVoteToBeApplied?: boolean;
     },
     Vote,
     Error
