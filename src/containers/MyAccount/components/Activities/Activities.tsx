@@ -259,7 +259,7 @@ const Activities: FC = () => {
   }, [fetchUserCommons]);
 
   useEffect(() => {
-    if (isUserProposalsLoaded && !!myProposals.length) {
+    if (isUserProposalsLoaded && Boolean(myProposals.length)) {
       setMyFundingProposals([]);
       setMyMembershipRequests([]);
     }
@@ -289,7 +289,7 @@ const Activities: FC = () => {
           />
           <CollectionSummaryCard
             collectionName="Proposals"
-            collectionLength={myProposals.length}
+            collectionLength={myFundingProposalsAmount}
             iconSrc="/assets/images/proposal-sign.svg"
             iconAlt="Proposals summary icon"
           />
