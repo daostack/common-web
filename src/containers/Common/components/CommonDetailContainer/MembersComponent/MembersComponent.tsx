@@ -5,6 +5,7 @@ import { Common, ProposalState } from "@/shared/models";
 import { useCommonMembers } from "@/containers/Common/hooks";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
+import { checkIsCountdownState } from "@/shared/utils";
 import { MemberListTab } from './constants'
 import { MemberAdmittance } from "../../../../../shared/models/governance/proposals";
 import { Loader } from "../../../../../shared/components";
@@ -37,10 +38,11 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = (screenSize === ScreenSize.Mobile);
 
-  const pendingProposals = proposals.filter(proposal => proposal.type ===
-    ProposalsTypes.MEMBER_ADMITTANCE &&
-    proposal.state === ProposalState.DISCUSSION ||
-    proposal.state === ProposalState.VOTING) as MemberAdmittance[]
+  const pendingProposals = proposals.filter(
+    (proposal) =>
+      proposal.type === ProposalsTypes.MEMBER_ADMITTANCE &&
+      checkIsCountdownState(proposal)
+  ) as MemberAdmittance[];
 
   const historyProposals = proposals.filter(proposal => proposal.type ===
     ProposalsTypes.MEMBER_ADMITTANCE &&
