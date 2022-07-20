@@ -39,7 +39,7 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
           // },
           {
             title: "Sum of money",
-            value: formatPrice(typedProposal.data.legal.totalInvoicesAmount || 0, { shouldRemovePrefixFromZero: false }),
+            value: formatPrice(typedProposal.data.args.amount || 0, { shouldRemovePrefixFromZero: false }),
           },
           {
             title: "Recurring",

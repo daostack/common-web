@@ -25,7 +25,7 @@ export default function ProposalItemComponent({
   let extraData;
   switch (proposal.type) {
     case ProposalsTypes.FUNDS_ALLOCATION:
-      extraData = `${formatPrice(proposal.data.args.amount)}₪`;
+      extraData = formatPrice(proposal.data.args.amount);
       break;
   }
 
