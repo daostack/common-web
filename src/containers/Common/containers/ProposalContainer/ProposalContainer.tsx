@@ -17,7 +17,12 @@ import {
 } from "@/shared/components";
 import { Proposal, ProposalState } from "@/shared/models";
 import { getUserName, checkIsCountdownState } from "@/shared/utils";
-import { ProposalsTypes, ChatType, ScreenSize } from "@/shared/constants";
+import {
+  ProposalsTypes,
+  ChatType,
+  GovernanceActions,
+  ScreenSize,
+} from "@/shared/constants";
 import { addMessageToProposal, clearCurrentProposal } from "@/containers/Common/store/actions";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { getScreenSize } from "@/shared/store/selectors";
@@ -65,19 +70,17 @@ const ProposalContainer = () => {
     data: commonMember,
     fetchCommonMember,
   } = useCommonMember();
-  const {
-    fetched: isVoteFetched,
-    data: userVote,
-    fetchProposalVote,
-    setVote,
-  } = useProposalUserVote();
+  const { data: userVote, fetchProposalVote, setVote } = useProposalUserVote();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const showVoteButton =
-    isVoteFetched &&
     !userVote &&
     currentProposal?.state === ProposalState.VOTING &&
-    commonMember;
+    commonMember &&
+    commonMember.allowedActions[GovernanceActions.CREATE_VOTE] &&
+    currentProposal?.global.weights.some(
+      ({ circles }) => commonMember.circles & circles
+    );
 
   const sendMessage = useCallback(
     (message: string) => {
