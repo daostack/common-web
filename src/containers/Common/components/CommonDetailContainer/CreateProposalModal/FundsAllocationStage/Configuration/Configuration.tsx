@@ -104,6 +104,8 @@ const Configuration: FC<ConfigurationProps> = (props) => {
                 name="description"
                 label="Description"
                 placeholder="What exactly do you plan to do and how? How does it align with the Common's agenda and goals"
+                rows={isMobileView ? 4 : 3}
+                isTextarea
                 isRequired
               />
               <TextField
