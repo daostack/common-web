@@ -1,5 +1,7 @@
 @import "../../../../constants";
 
+$max-details-width: 74.875rem;
+
 .proposal-page__wrapper {
   padding-top: 3rem;
   margin-bottom: -1.25rem;
@@ -148,9 +150,12 @@
   }
 
   .voting-content__proposal-details {
+    max-width: $max-details-width;
+    margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 17.625rem));
     grid-column-gap: 1.5rem;
+    justify-content: center;
 
     .voting-content__proposal-details-item {
       width: 100%;

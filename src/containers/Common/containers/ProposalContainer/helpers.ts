@@ -3,6 +3,7 @@ import {
   AssignCircle,
   BaseProposal,
   FundsAllocation,
+  MemberAdmittance,
 } from "@/shared/models/governance/proposals";
 import { formatPrice, getUserName } from "@/shared/utils";
 import { ProposalDetailsItem } from "./types";
@@ -70,3 +71,18 @@ export const getAssignCircleDetails = (
     },
   ];
 };
+
+export const getMemberAdmittanceDetails = (
+  proposal: MemberAdmittance,
+  proposer: User,
+  governance: Governance
+): ProposalDetailsItem[] => [
+  {
+    title: "Name of member",
+    value: getUserName(proposer),
+  },
+  {
+    title: "Voters",
+    value: getVotersString(proposal.global.weights, governance.circles),
+  },
+];

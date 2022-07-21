@@ -1,4 +1,5 @@
 import React, { FC, useMemo } from "react";
+import { useSelector } from "react-redux";
 import classNames from "classnames";
 import {
   Proposal,
@@ -13,11 +14,17 @@ import {
   FundsRequest,
   RemoveCircle,
   FundingAllocationStatus,
+  MemberAdmittance,
 } from "@/shared/models/governance/proposals";
-import { ProposalsTypes } from "@/shared/constants";
+import { ProposalsTypes, ScreenSize } from "@/shared/constants";
+import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice } from "@/shared/utils";
 import { VotingCard } from "./VotingCard";
-import { getAssignCircleDetails, getFundsAllocationDetails } from "./helpers";
+import {
+  getAssignCircleDetails,
+  getFundsAllocationDetails,
+  getMemberAdmittanceDetails,
+} from "./helpers";
 import { ProposalDetailsItem } from "./types";
 import "./index.scss";
 
@@ -29,6 +36,8 @@ interface VotingContentContainerProps {
 }
 
 export const VotingContentContainer: FC<VotingContentContainerProps> = ({ proposal, common, governance, proposer }) => {
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   const proposalDetailsByType = useMemo((): ProposalDetailsItem[] => {
     let typedProposal;
@@ -76,6 +85,12 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
             value: "",
           }
         ];
+      case ProposalsTypes.MEMBER_ADMITTANCE:
+        return getMemberAdmittanceDetails(
+          proposal as MemberAdmittance,
+          proposer,
+          governance
+        );
       default:
         return [];
     }
@@ -107,23 +122,25 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
 
   return (
     <div className="voting-content__wrapper">
-      <div className="voting-content__proposal-details">
-        {
-          proposalDetailsByType.map(
-            ({ title, value }) =>
-              <div
-                key={title}
-                className="voting-content__proposal-details-item voting-content__info-block"
-              >
-                <div className="title">
-                  {title}
-                </div>
-                <div className="value">
-                  {value}
-                </div>
-              </div>
-          )
+      <div
+        className="voting-content__proposal-details"
+        style={
+          !isMobileView
+            ? {
+                gridTemplateColumns: `repeat(${proposalDetailsByType.length}, minmax(0, 17.625rem))`,
+              }
+            : {}
         }
+      >
+        {proposalDetailsByType.map(({ title, value }) => (
+          <div
+            key={title}
+            className="voting-content__proposal-details-item voting-content__info-block"
+          >
+            <div className="title">{title}</div>
+            <div className="value">{value}</div>
+          </div>
+        ))}
       </div>
       <div className="voting-content__voting-chart">
         {/* <div className="voting-content__voting-chart-main-info voting-content__info-block">
