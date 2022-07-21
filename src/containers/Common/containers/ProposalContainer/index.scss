@@ -186,64 +186,22 @@ $max-details-width: 74.875rem;
     align-items: center;
     margin-top: 2.875rem;
 
-    .voting-content__voting-chart-main-info {
-      font-size: $xsmall;
-      height: 17.5rem;
-      width: 30%;
-      margin-right: 1rem;
-
-      > div {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-
-        > div {
-          margin-top: 0.5rem;
-        }
-      }
-
-      .expire-time {
-        font-size: $mlarge;
-        font-weight: 800;
-      }
-
-      .voting-status {
-        color: $white;
-        font-size: $small;
-        padding: 0.188rem 0.5rem;
-        border-radius: 0.25rem;
-
-        &.approved,
-        &.passing {
-          background-color: $green;
-        }
-
-        &.failing,
-        &.rejected {
-          background-color: $red;
-        }
-
-        &.withdrawn {
-          background-color: $dark-yellow;
-        }
-      }
-    }
-
     .voting-content__voting-stats-container {
       max-width: 49.625rem;
       width: 100%;
       display: grid;
       justify-items: center;
-      grid-column-gap: 0.5rem;
-      grid-row-gap: 1rem;
+      grid-gap: 1.5rem;
       grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
 
       .voting-card__wrapper {
         width: 98%;
       }
     }
+  }
+
+  .voting-content__countdown-card {
+    margin-right: 1.5rem;
   }
 }
 
@@ -518,14 +476,6 @@ $max-details-width: 74.875rem;
     .voting-content__voting-chart {
       flex-direction: column;
       margin-top: unset;
-
-      .voting-content__voting-chart-main-info {
-        margin-right: unset;
-        height: 14rem;
-        width: 100%;
-        box-shadow: unset;
-        background-color: inherit;
-      }
     }
   }
 

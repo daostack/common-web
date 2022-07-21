@@ -19,6 +19,7 @@ import {
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice } from "@/shared/utils";
+import { CountDownCard } from "../../components/ProposalContainer";
 import { VotingCard } from "./VotingCard";
 import {
   getAssignCircleDetails,
@@ -143,16 +144,12 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
         ))}
       </div>
       <div className="voting-content__voting-chart">
-        {/* <div className="voting-content__voting-chart-main-info voting-content__info-block">
-          <div className="voting-content__voting-time">
-            <span>Time to Vote</span>
-            <div className="expire-time">{proposal.global.votingDuration}</div>
-          </div>
-          <div className="voting-content__voting-status">
-            <span>Voting Status</span>
-            {votingStatusElem}
-          </div>
-        </div> */}
+        {proposal.data.votingExpiresOn && (
+          <CountDownCard
+            className="voting-content__countdown-card"
+            date={new Date(proposal.data.votingExpiresOn.seconds * 1000)}
+          />
+        )}
         <div className="voting-content__voting-stats-container">
           <VotingCard
             type={VotingCardType.AllVotes}
