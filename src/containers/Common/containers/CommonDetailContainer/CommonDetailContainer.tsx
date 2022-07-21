@@ -569,6 +569,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
           onClose={onCloseNewP}
           common={common}
           governance={governance}
+          redirectToProposal={getProposalDetail}
         />
       )}
       <div className="common-detail-wrapper">

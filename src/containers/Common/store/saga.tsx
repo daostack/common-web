@@ -582,17 +582,18 @@ export function* createAssignCircleProposal({
 }
 
 export function* createFundingProposal(
-  action: ReturnType<typeof actions.createFundingProposal.request>
+  {payload}
 ): Generator {
   try {
-    const data = action.payload.payload;
-    const { commonId } = data.args;
+    const { commonId } = payload.payload.args;
 
     yield put(startLoading());
     const fundingProposal = (yield call(createProposalApi, {
-      ...data,
+      ...payload.payload,
       type: ProposalsTypes.FUNDS_ALLOCATION,
     })) as FundsAllocation;
+
+    payload.callback(fundingProposal);
 
     yield call(
       subscribeToCommonProposal,
@@ -602,8 +603,7 @@ export function* createFundingProposal(
 
         store.dispatch(actions.setProposals(ds));
         store.dispatch(actions.loadProposalList.request());
-        store.dispatch(stopLoading());
-        action.payload.callback(null);
+        store.dispatch(stopLoading());     
         store.dispatch(actions.getCommonsList.request());
       }
     );
@@ -622,7 +622,7 @@ export function* createFundingProposal(
           "Your bank account details couldn’t be verified. Please update them in your account settings.";
       }
 
-      action.payload.callback(errorMessage);
+      payload.callback(errorMessage);
       yield put(actions.createFundingProposal.failure(error));
       yield put(stopLoading());
     }

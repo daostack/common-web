@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { CreateProposal } from "@/containers/Common/interfaces";
@@ -6,7 +6,7 @@ import { createFundingProposal } from "@/containers/Common/store/actions";
 import { Loader, Modal } from "@/shared/components";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { ModalType } from "@/shared/interfaces";
-import { Common, Governance } from "@/shared/models";
+import { Common, Governance, Proposal } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { getUserName } from "@/shared/utils";
 import { useCreateProposalContext } from "../context";
@@ -25,7 +25,7 @@ import "./index.scss";
 interface FundsAllocationStageProps {
   common: Common;
   governance: Governance;
-  onFinish: (shouldViewProposal?: boolean) => void;
+  onFinish: (proposal?: Proposal) => void;
   onGoBack: () => void;
 }
 
@@ -45,6 +45,7 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
     useState<FundsAllocationData>(initialFundsData);
   const [step, setStep] = useState(FundsAllocationStep.Configuration);
   const [isProposalCreating, setIsProposalCreating] = useState(false);
+  const [createdProposal, setCreatedProposal] = useState(null);
   const {
     setTitle,
     setOnGoBack,
@@ -92,8 +93,9 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
     dispatch(
       createFundingProposal.request({
         payload,
-        callback: (error, data) => {
-          if (!error) {
+        callback: (proposal: any) => {
+          if (proposal){
+            setCreatedProposal(proposal);
             setStep(FundsAllocationStep.Success);
             setIsProposalCreating(false);
           }
@@ -107,11 +109,13 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   };
 
   const handleBackToCommon = () => {
-    onFinish(false);
+    onFinish();
   };
 
   const handleViewProposal = () => {
-    onFinish(true);
+    if (createdProposal) {
+      onFinish(createdProposal);
+    }
   };
 
   useEffect(() => {
