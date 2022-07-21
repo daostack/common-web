@@ -27,6 +27,13 @@
   font-weight: 800;
   font-size: $mlarge;
   line-height: 112%;
+
+  @include big-phone {
+    margin: 0 0 0.5rem;
+    font-weight: bold;
+    font-size: $moderate-med;
+    line-height: 120%;
+  }
 }
 
 .proposal-container-countdown-card__status-title {
@@ -42,4 +49,8 @@
   color: $white;
   background-color: $green;
   border-radius: 0.25rem;
+
+  @include big-phone {
+    margin-top: 0.5rem;
+  }
 }

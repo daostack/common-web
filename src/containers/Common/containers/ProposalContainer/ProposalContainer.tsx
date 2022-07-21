@@ -150,6 +150,7 @@ const ProposalContainer = () => {
       variant={ButtonVariant.Primary}
       onClick={onOpen}
       className="proposal-page__proposal-vote-btn"
+      shouldUseFullWidth
     >
       Vote Now
     </Button>,
@@ -227,6 +228,7 @@ const ProposalContainer = () => {
               <div className="proposal-page__proposer-info-wrapper">
                 <div className="proposal-page__proposer-info">
                   <UserAvatar
+                    className="proposal-page__proposer-avatar"
                     photoURL={currentProposal.proposer?.photoURL}
                     nameForRandomAvatar={currentProposal.proposer?.email}
                     userName={getUserName(currentProposal.proposer)}

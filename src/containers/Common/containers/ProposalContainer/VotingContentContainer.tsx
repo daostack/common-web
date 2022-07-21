@@ -1,5 +1,6 @@
 import React, { FC, useMemo } from "react";
 import { useSelector } from "react-redux";
+import classNames from 'classnames';
 import {
   Proposal,
   Common,
@@ -119,34 +120,44 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
           </div>
         ))}
       </div>
-      <div className="voting-content__voting-chart">
+      <div
+        className={classNames("voting-content__voting-chart", {
+          "voting-content__voting-chart--two-columns":
+            !checkIsCountdownState(proposal) || !expirationTimestamp,
+        })}
+      >
         {checkIsCountdownState(proposal) && expirationTimestamp && (
           <div className="voting-content__countdown-card-wrapper">
             <CountDownCard
+              className="voting-content__countdown-card"
               date={new Date(expirationTimestamp.seconds * 1000)}
               state={proposal.state}
             />
           </div>
         )}
         <VotingCard
+          className="voting-content__voting-card"
           type={VotingCardType.AllVotes}
           votedMembersAmount={proposal.votes.total}
           membersAmount={common.memberCount}
           percentageCondition={proposal.global.quorum}
         />
         <VotingCard
+          className="voting-content__voting-card"
           type={VotingCardType.Object}
           percentageCondition={proposal.global.maxReject}
           targetVotersAmount={proposal.votes.rejected}
           votedMembersAmount={proposal.votes.total}
         />
         <VotingCard
+          className="voting-content__voting-card"
           type={VotingCardType.Support}
           percentageCondition={proposal.global.minApprove}
           targetVotersAmount={proposal.votes.approved}
           votedMembersAmount={proposal.votes.total}
         />
         <VotingCard
+          className="voting-content__voting-card"
           type={VotingCardType.Abstain}
           targetVotersAmount={proposal.votes.abstained}
           votedMembersAmount={proposal.votes.total}

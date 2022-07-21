@@ -1,5 +1,7 @@
 @import "../../../../constants";
+@import "../../../../styles/sizes";
 
+$small-viewport-width: 440px;
 $max-details-width: 74.875rem;
 
 .proposal-page__wrapper {
@@ -11,6 +13,19 @@ $max-details-width: 74.875rem;
 
   .section-wrapper {
     padding: 0 2.75rem;
+
+    @include big-phone {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
+  .proposal-page__common-title-wrapper {
+    @include big-phone {
+      display: grid;
+      grid-template-columns: 2rem 1fr 2rem;
+      align-items: center;
+    }
   }
 
   .proposal-page__common-title {
@@ -18,6 +33,13 @@ $max-details-width: 74.875rem;
     font-family: NotoSerifSC, serif;
     font-weight: 600;
     line-height: 3rem;
+
+    @include big-phone {
+      font-family: NunitoSans, sans-serif;
+      font-size: $moderate;
+      font-weight: bold;
+      text-align: center;
+    }
   }
 
   .proposal-page__heading-info-wrapper {
@@ -41,6 +63,16 @@ $max-details-width: 74.875rem;
           font-size: $xsmall;
           font-weight: bold;
           color: $light-gray-2;
+
+          @include big-phone {
+            margin-top: 0.875rem;
+          }
+        }
+      }
+
+      .proposal-page__proposer-avatar {
+        @include big-phone {
+          border: 0.25rem solid $white;
         }
       }
     }
@@ -70,10 +102,6 @@ $max-details-width: 74.875rem;
           padding: 0.125rem 0.313rem;
         }
       }
-
-      .proposal-page__proposal-vote-btn {
-        width: 14%;
-      }
     }
 
     .proposal-page__proposal-menu-wrapper {
@@ -82,48 +110,83 @@ $max-details-width: 74.875rem;
       justify-content: flex-start;
       align-items: center;
       margin-top: 2.875rem;
+      box-sizing: border-box;
 
-      .proposal-page__proposal-menu {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-weight: bold;
-        font-size: $small;
-        list-style: none;
-        padding: 0;
-        margin: 0;
+      @include big-phone {
+        margin-top: 3rem;
+      }
+    }
 
-        .proposal-page__proposal-menu-item {
-          height: 3rem;
-          cursor: pointer;
-          margin-right: 4.5rem;
+    .proposal-page__proposal-menu {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: NunitoSans, sans-serif;
+      font-weight: bold;
+      font-size: $small;
+      list-style: none;
+      padding: 0;
+      margin: 0;
 
-          &.active {
-            color: $purple;
-            //border-bottom: 0.25rem solid $purple;
-            position: relative;
-          }
+      @include big-phone {
+        width: 100%;
+        font-weight: 600;
+      }
+    }
 
-          &.active::after {
-            content: "";
-            display: block;
-            width: 100%;
-            height: 0.25rem;
-            background-color: $purple;
-            position: absolute;
-            bottom: 0;
-          }
+    .proposal-page__proposal-menu-item {
+      height: 3rem;
+      cursor: pointer;
+      margin-right: 4.5rem;
+
+      @include big-phone {
+        flex: 1 0;
+        height: 1.75rem;
+        font-size: $xsmall;
+        margin-right: unset;
+        text-align: center;
+      }
+
+      &.active {
+        color: $purple;
+        position: relative;
+      }
+
+      &.active::after {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 0.25rem;
+        background-color: $purple;
+        position: absolute;
+        bottom: 0;
+
+        @include big-phone {
+          height: 0.1875rem;
         }
       }
     }
   }
 
+  .proposal-page__proposal-vote-btn {
+    max-width: 15.75rem;
+
+    @include big-phone {
+      max-width: 24rem;
+    }
+  }
+
   .proposal-page__content-wrapper {
     flex: 1;
-    margin: 0 -5rem;
+    margin: 0 -#{$content-padding};
     background-color: $light-purple-background;
     padding: 2.75rem 0;
     box-shadow: inset 0 0.188rem 0.625rem rgba(0, 26, 54, 0.08);
+
+    @include big-phone {
+      margin: 0 -#{$content-padding-mobile};
+      padding: 1.5rem 0;
+    }
 
     &.chat-wrapper {
       padding: 0;
@@ -186,12 +249,32 @@ $max-details-width: 74.875rem;
     grid-gap: 1.5rem;
     justify-content: center;
   }
+  .voting-content__voting-chart--two-columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 
   .voting-content__countdown-card-wrapper {
     grid-row: 1 / 3;
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+    @include big-phone {
+      align-items: center;
+    }
+  }
+
+  .voting-content__countdown-card {
+    @include big-phone {
+      background-color: transparent;
+      box-shadow: unset;
+    }
+  }
+
+  .voting-content__voting-card {
+    @include big-phone {
+      margin: 0 auto;
+    }
   }
 }
 
@@ -208,6 +291,10 @@ $max-details-width: 74.875rem;
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
+
+  @include big-phone {
+    max-width: 24rem;
+  }
 
   .voting-card__title {
     font-weight: 700;
@@ -369,8 +456,10 @@ $max-details-width: 74.875rem;
     padding-top: unset;
 
     .proposal-page__heading-info-wrapper {
+      margin: 0 -#{$content-padding-mobile};
+
       .proposal-page__heading-info-main {
-        margin-top: 1.75rem;
+        margin: 1.75rem $content-padding-mobile 0;
         box-shadow: 0px 0.188rem 0.5rem rgba(0, 26, 54, 0.08);
         border-radius: 0.625rem;
         position: relative;
@@ -382,12 +471,18 @@ $max-details-width: 74.875rem;
 
         .proposal-page__proposer-info {
           position: absolute;
-          top: -9px;
+          top: -0.875rem;
         }
 
         .proposal-page__proposal-info-description {
+          overflow: hidden;
+
           .proposal-title {
+            width: 100%;
             font-size: $moderate;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
 
           .proposal-type {
@@ -397,70 +492,54 @@ $max-details-width: 74.875rem;
           }
         }
       }
-
-      .proposal-page__proposal-menu-wrapper {
-        margin-top: 3rem;
-
-        .proposal-page__proposal-menu {
-          width: 100%;
-
-          .proposal-page__proposal-menu-item {
-            font-size: $xsmall;
-            margin-right: unset;
-          }
-        }
-      }
     }
 
     .proposal-page__proposal-vote-btn-wrapper {
       margin-top: 3rem;
+      padding: 0 $content-padding-mobile;
       width: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-
-      .proposal-page__proposal-vote-btn {
-        width: 60%;
-      }
-    }
-
-    .proposal-page__common-title-wrapper {
-      display: grid;
-      grid-template-columns: auto 10rem auto;
-      align-items: center;
-
-      .proposal-page__common-title {
-        font-size: $moderate;
-        font-family: "Nunito Sans";
-        text-align: center;
-      }
+      box-sizing: border-box;
     }
   }
 
   .voting-content__wrapper {
     display: flex;
     flex-direction: column;
-    padding: 0 2rem;
+    padding: 0 $content-padding-mobile;
 
     .voting-content__proposal-details {
       display: grid;
-      grid-column-gap: 1.2rem;
+      grid-column-gap: 1.375rem;
       grid-row-gap: 1rem;
-      grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 17.625rem));
       justify-items: center;
+
+      @include viewport-breakpoint($small-viewport-width) {
+        width: 100%;
+        grid-template-columns: 1fr;
+      }
 
       .voting-content__proposal-details-item {
         width: 100%;
 
         &:nth-child(odd):last-child {
           grid-column: 1/3;
+
+          @include viewport-breakpoint($small-viewport-width) {
+            grid-column: unset;
+          }
         }
       }
     }
 
     .voting-content__voting-chart {
-      flex-direction: column;
-      margin-top: unset;
+      width: 100%;
+      margin-top: 1rem;
+      grid-template-columns: 1fr;
+      grid-gap: 1rem;
     }
   }
 
