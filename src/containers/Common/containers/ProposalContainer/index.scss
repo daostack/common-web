@@ -149,21 +149,28 @@
 
   .voting-content__proposal-details {
     display: grid;
-    grid-auto-columns: minmax(0, 1fr);
-    grid-auto-flow: column;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-column-gap: 1.5rem;
 
     .voting-content__proposal-details-item {
       width: 100%;
       height: 4.375rem;
-
-      .title {
-        font-size: $xsmall;
-        color: $light-gray-2;
-      }
+      overflow: hidden;
+      text-align: center;
 
       .value {
+        width: 100%;
         font-size: $moderate-small;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .title {
+        @extend .value;
+
+        font-size: $xsmall;
+        color: $light-gray-2;
       }
     }
   }
