@@ -145,36 +145,35 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
       </div>
       <div className="voting-content__voting-chart">
         {proposal.data.votingExpiresOn && (
-          <CountDownCard
-            className="voting-content__countdown-card"
-            date={new Date(proposal.data.votingExpiresOn.seconds * 1000)}
-          />
+          <div className="voting-content__countdown-card-wrapper">
+            <CountDownCard
+              date={new Date(proposal.data.votingExpiresOn.seconds * 1000)}
+            />
+          </div>
         )}
-        <div className="voting-content__voting-stats-container">
-          <VotingCard
-            type={VotingCardType.AllVotes}
-            votedMembersAmount={proposal.votes.total}
-            membersAmount={common.memberCount}
-            percentageCondition={proposal.global.quorum}
-          />
-          <VotingCard
-            type={VotingCardType.Object}
-            percentageCondition={proposal.global.maxReject}
-            targetVotersAmount={proposal.votes.rejected}
-            votedMembersAmount={proposal.votes.total}
-          />
-          <VotingCard
-            type={VotingCardType.Support}
-            percentageCondition={proposal.global.minApprove}
-            targetVotersAmount={proposal.votes.approved}
-            votedMembersAmount={proposal.votes.total}
-          />
-          <VotingCard
-            type={VotingCardType.Abstain}
-            targetVotersAmount={proposal.votes.abstained}
-            votedMembersAmount={proposal.votes.total}
-          />
-        </div>
+        <VotingCard
+          type={VotingCardType.AllVotes}
+          votedMembersAmount={proposal.votes.total}
+          membersAmount={common.memberCount}
+          percentageCondition={proposal.global.quorum}
+        />
+        <VotingCard
+          type={VotingCardType.Object}
+          percentageCondition={proposal.global.maxReject}
+          targetVotersAmount={proposal.votes.rejected}
+          votedMembersAmount={proposal.votes.total}
+        />
+        <VotingCard
+          type={VotingCardType.Support}
+          percentageCondition={proposal.global.minApprove}
+          targetVotersAmount={proposal.votes.approved}
+          votedMembersAmount={proposal.votes.total}
+        />
+        <VotingCard
+          type={VotingCardType.Abstain}
+          targetVotersAmount={proposal.votes.abstained}
+          votedMembersAmount={proposal.votes.total}
+        />
       </div>
     </div>
   );
