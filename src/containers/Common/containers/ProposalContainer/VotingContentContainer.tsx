@@ -17,7 +17,7 @@ import {
 import { ProposalsTypes } from "@/shared/constants";
 import { formatPrice } from "@/shared/utils";
 import { VotingCard } from "./VotingCard";
-import { getFundsAllocationDetails } from "./helpers";
+import { getAssignCircleDetails, getFundsAllocationDetails } from "./helpers";
 import { ProposalDetailsItem } from "./types";
 import "./index.scss";
 
@@ -58,18 +58,11 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
           }
         ];
       case ProposalsTypes.ASSIGN_CIRCLE:
-        typedProposal = proposal as AssignCircle;
-
-        return [
-          {
-            title: "Name of member",
-            value: ""
-          },
-          {
-            title: "Circle to be assigned to",
-            value: "",
-          }
-        ];
+        return getAssignCircleDetails(
+          proposal as AssignCircle,
+          proposer,
+          governance
+        );
       case ProposalsTypes.REMOVE_CIRCLE:
         typedProposal = proposal as RemoveCircle;
 

@@ -141,14 +141,14 @@
   }
 
   .voting-content__proposal-details {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    grid-column-gap: 1.5rem;
 
     .voting-content__proposal-details-item {
-      width: 17%;
+      width: 100%;
       height: 4.375rem;
-      margin-right: 1.5rem;
 
       .title {
         font-size: $xsmall;

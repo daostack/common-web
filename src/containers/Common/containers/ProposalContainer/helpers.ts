@@ -1,5 +1,6 @@
 import { Circles, Governance, User } from "@/shared/models";
 import {
+  AssignCircle,
   BaseProposal,
   FundsAllocation,
 } from "@/shared/models/governance/proposals";
@@ -44,3 +45,28 @@ export const getFundsAllocationDetails = (
     value: getVotersString(proposal.global.weights, governance.circles),
   },
 ];
+
+export const getAssignCircleDetails = (
+  proposal: AssignCircle,
+  proposer: User,
+  governance: Governance
+): ProposalDetailsItem[] => {
+  const circleToBeAssigned = governance.circles.find(
+    (circle) => circle.id === proposal.data.args.circleId
+  );
+
+  return [
+    {
+      title: "Name of member",
+      value: getUserName(proposer),
+    },
+    {
+      title: "Circle to be assigned",
+      value: circleToBeAssigned?.name || "",
+    },
+    {
+      title: "Voters",
+      value: getVotersString(proposal.global.weights, governance.circles),
+    },
+  ];
+};

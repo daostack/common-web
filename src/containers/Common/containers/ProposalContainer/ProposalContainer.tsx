@@ -46,10 +46,11 @@ interface ProposalRouterParams {
 }
 
 const PROPOSAL_TYPE_CAPTION = {
-  [ProposalsTypes.FUNDS_REQUEST]: 'Funds Request',
-  [ProposalsTypes.FUNDS_ALLOCATION]: 'Funds Allocation',
-  [ProposalsTypes.MEMBER_ADMITTANCE]: 'Membership Request',
-}
+  [ProposalsTypes.FUNDS_REQUEST]: "Funds Request",
+  [ProposalsTypes.FUNDS_ALLOCATION]: "Funds Allocation",
+  [ProposalsTypes.MEMBER_ADMITTANCE]: "Membership Request",
+  [ProposalsTypes.ASSIGN_CIRCLE]: "Assign Circle",
+};
 
 enum PROPOSAL_MENU_TABS {
   Voting = "Voting",
