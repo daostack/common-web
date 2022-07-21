@@ -1,4 +1,4 @@
-@import "../../../../constants.scss";
+@import "../../../../constants";
 
 .proposal-page__wrapper {
   padding-top: 3rem;
@@ -7,6 +7,13 @@
   .section-wrapper {
     margin: 0 auto;
     max-width: 92%;
+  }
+
+  .proposal-page__common-title {
+    margin: 0;
+    font-family: NotoSerifSC, serif;
+    font-weight: 600;
+    line-height: 3rem;
   }
 
   .proposal-page__heading-info-wrapper {
