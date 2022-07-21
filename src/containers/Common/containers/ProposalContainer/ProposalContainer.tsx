@@ -26,7 +26,11 @@ import {
 import { addMessageToProposal, clearCurrentProposal } from "@/containers/Common/store/actions";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { getScreenSize } from "@/shared/store/selectors";
-import { selectCommonDetail, selectCurrentProposal } from "../../../Common/store/selectors";
+import {
+  selectCommonDetail,
+  selectCurrentProposal,
+  selectGovernance,
+} from "../../../Common/store/selectors";
 import { getCommonDetail, loadProposalDetail } from "../../../Common/store/actions";
 import { VotingContentContainer } from "./VotingContentContainer";
 import { PitchContentContainer } from "./PitchContentContainer";
@@ -59,11 +63,8 @@ const ProposalContainer = () => {
   const { isShowing, onOpen, onClose } = useModal(false);
   const user = useSelector(selectUser());
   const currentProposal = useSelector(selectCurrentProposal());
-  /**
-   * TODO: this should fetch the common by commonId in the proposal
-   * currentProposal.data.args.commonId
-   */
   const currentCommon = useSelector(selectCommonDetail());
+  const governance = useSelector(selectGovernance());
   const [activeTab, setActiveTab] = useState<PROPOSAL_MENU_TABS>(PROPOSAL_MENU_TABS.Voting);
   const {
     fetched: isCommonMemberFetched,
@@ -73,6 +74,7 @@ const ProposalContainer = () => {
   const { data: userVote, fetchProposalVote, setVote } = useProposalUserVote();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const proposer = currentProposal?.proposer;
   const showVoteButton =
     !userVote &&
     currentProposal?.state === ProposalState.VOTING &&
@@ -114,10 +116,18 @@ const ProposalContainer = () => {
   const renderContentByActiveTab = useCallback((currentProposal: Proposal) => {
     switch (activeTab) {
       case PROPOSAL_MENU_TABS.Voting:
-        return currentCommon && <VotingContentContainer
-          proposal={currentProposal}
-          common={currentCommon}
-        />;
+        return (
+          currentCommon &&
+          proposer &&
+          governance && (
+            <VotingContentContainer
+              proposal={currentProposal}
+              common={currentCommon}
+              governance={governance}
+              proposer={proposer}
+            />
+          )
+        );
       case PROPOSAL_MENU_TABS.Pitch:
         return <PitchContentContainer proposal={currentProposal} />;
       case PROPOSAL_MENU_TABS.Discussions:
@@ -132,7 +142,7 @@ const ProposalContainer = () => {
           commonMember={commonMember}
         />;
     }
-  }, [activeTab, currentCommon]);
+  }, [activeTab, currentCommon, proposer, governance]);
 
   const voteButtonElem = useMemo(() =>
     <Button
@@ -189,7 +199,7 @@ const ProposalContainer = () => {
       fetchProposalVote(currentProposal.id);
   }, [fetchProposalVote, currentProposal]);
 
-  return (currentCommon && currentProposal && isCommonMemberFetched)
+  return (currentCommon && currentProposal && isCommonMemberFetched && governance)
     ? (
       <>
         <VotingPopup

@@ -1,6 +1,12 @@
 import React, { FC, useMemo } from "react";
 import classNames from "classnames";
-import { Proposal, Common, VotingCardType } from "@/shared/models";
+import {
+  Proposal,
+  Common,
+  Governance,
+  VotingCardType,
+  User,
+} from "@/shared/models";
 import {
   AssignCircle,
   FundsAllocation,
@@ -11,49 +17,29 @@ import {
 import { ProposalsTypes } from "@/shared/constants";
 import { formatPrice } from "@/shared/utils";
 import { VotingCard } from "./VotingCard";
+import { getFundsAllocationDetails } from "./helpers";
+import { ProposalDetailsItem } from "./types";
 import "./index.scss";
 
 interface VotingContentContainerProps {
   proposal: Proposal;
   common: Common;
+  governance: Governance;
+  proposer: User;
 }
 
-interface ProposalDetailsItem {
-  title: string;
-  value: string;
-}
-
-export const VotingContentContainer: FC<VotingContentContainerProps> = ({ proposal, common }) => {
+export const VotingContentContainer: FC<VotingContentContainerProps> = ({ proposal, common, governance, proposer }) => {
 
   const proposalDetailsByType = useMemo((): ProposalDetailsItem[] => {
     let typedProposal;
 
     switch (proposal.type) { //TODO: fill up with a real proposal's data
       case ProposalsTypes.FUNDS_ALLOCATION:
-        typedProposal = proposal as FundsAllocation;
-
-        return [
-          // {
-          //   title: "Type of funds",
-          //   value: "ToDo"
-          // },
-          {
-            title: "Sum of money",
-            value: formatPrice(typedProposal.data.args.amount || 0, { shouldRemovePrefixFromZero: false }),
-          },
-          {
-            title: "Recurring",
-            value: "Single"
-          },
-          {
-            title: "Recipients",
-            value: String(typedProposal.global.weights.length),
-          },
-          // {
-          //   title: "Net+",
-          //   value: "Immediately",
-          // },
-        ];
+        return getFundsAllocationDetails(
+          proposal as FundsAllocation,
+          proposer,
+          governance
+        );
       case ProposalsTypes.FUNDS_REQUEST:
         typedProposal = proposal as FundsRequest;
 
