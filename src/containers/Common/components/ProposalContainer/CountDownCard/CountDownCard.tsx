@@ -13,14 +13,7 @@ interface CountDownCardProps {
 
 const CountDownCard: FC<CountDownCardProps> = (props) => {
   const { className, date, state } = props;
-  const {
-    isFinished: isCountdownFinished,
-    days,
-    hours,
-    minutes,
-    seconds,
-    startCountdown,
-  } = useCountdown();
+  const { days, hours, minutes, seconds, startCountdown } = useCountdown();
   const daysText = days > 0 ? `${days} Day${days > 1 ? "s " : " "}` : "";
   const timerString = `${daysText}${formatCountdownValue(
     hours

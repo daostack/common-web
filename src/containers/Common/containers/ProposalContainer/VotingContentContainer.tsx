@@ -1,6 +1,5 @@
 import React, { FC, useMemo } from "react";
 import { useSelector } from "react-redux";
-import classNames from "classnames";
 import {
   Proposal,
   Common,
@@ -13,7 +12,6 @@ import {
   FundsAllocation,
   FundsRequest,
   RemoveCircle,
-  FundingAllocationStatus,
   MemberAdmittance,
 } from "@/shared/models/governance/proposals";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
@@ -98,30 +96,6 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
         return [];
     }
   }, [proposal, proposal.type]);
-
-  const votingStatusElem = useMemo(//TODO: expand this with more options
-    () => {
-      switch (proposal.type) {
-        case ProposalsTypes.FUNDS_ALLOCATION:
-          switch (proposal.data.tracker.status) {
-            case FundingAllocationStatus.PENDING_PROPOSAL_APPROVAL:
-              return (
-                <div
-                  className={
-                    classNames(
-                      "voting-status",
-                      { passing: true }
-                    )
-                  }
-                >
-                  Passing
-                </div>
-              );
-          }
-      }
-    },
-    [proposal, proposal.type]
-  );
 
   return (
     <div className="voting-content__wrapper">
