@@ -18,7 +18,7 @@ import {
 } from "@/shared/models/governance/proposals";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
-import { formatPrice } from "@/shared/utils";
+import { checkIsCountdownState, formatPrice } from "@/shared/utils";
 import { CountDownCard } from "../../components/ProposalContainer";
 import { VotingCard } from "./VotingCard";
 import {
@@ -39,6 +39,8 @@ interface VotingContentContainerProps {
 export const VotingContentContainer: FC<VotingContentContainerProps> = ({ proposal, common, governance, proposer }) => {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const expirationTimestamp =
+    proposal.data.votingExpiresOn || proposal.data.discussionExpiresOn;
 
   const proposalDetailsByType = useMemo((): ProposalDetailsItem[] => {
     let typedProposal;
@@ -144,10 +146,11 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
         ))}
       </div>
       <div className="voting-content__voting-chart">
-        {proposal.data.votingExpiresOn && (
+        {checkIsCountdownState(proposal) && expirationTimestamp && (
           <div className="voting-content__countdown-card-wrapper">
             <CountDownCard
-              date={new Date(proposal.data.votingExpiresOn.seconds * 1000)}
+              date={new Date(expirationTimestamp.seconds * 1000)}
+              state={proposal.state}
             />
           </div>
         )}

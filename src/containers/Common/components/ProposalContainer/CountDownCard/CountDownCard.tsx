@@ -1,16 +1,18 @@
 import React, { FC, useLayoutEffect } from "react";
 import classNames from "classnames";
 import { useCountdown } from "@/shared/hooks";
-import { formatCountdownValue } from "@/shared/utils";
+import { ProposalState } from "@/shared/models";
+import { checkIsCountdownState, formatCountdownValue } from "@/shared/utils";
 import "./index.scss";
 
 interface CountDownCardProps {
   className?: string;
   date: Date;
+  state: ProposalState;
 }
 
 const CountDownCard: FC<CountDownCardProps> = (props) => {
-  const { className, date } = props;
+  const { className, date, state } = props;
   const {
     isFinished: isCountdownFinished,
     days,
@@ -30,10 +32,18 @@ const CountDownCard: FC<CountDownCardProps> = (props) => {
 
   return (
     <div className={classNames("proposal-container-countdown-card", className)}>
-      <span className="proposal-container-countdown-card__time-title">
-        Time to Vote
-      </span>
-      <p className="proposal-container-countdown-card__timer">{timerString}</p>
+      {checkIsCountdownState({ state }) && (
+        <>
+          <span className="proposal-container-countdown-card__time-title">
+            {state === ProposalState.DISCUSSION
+              ? "Voting starts in"
+              : "Time to Vote"}
+          </span>
+          <p className="proposal-container-countdown-card__timer">
+            {timerString}
+          </p>
+        </>
+      )}
       <span className="proposal-container-countdown-card__status-title">
         Voting Status
       </span>
