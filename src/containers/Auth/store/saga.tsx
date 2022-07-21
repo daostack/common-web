@@ -305,6 +305,39 @@ function* socialLoginSaga({
   }
 }
 
+function* webviewLoginSaga({
+  payload,
+}: ReturnType<typeof actions.webviewLogin.request>) {
+  try {
+    yield put(actions.startAuthLoading());
+
+    const { user }: { user: User; } = yield call(
+      verifyLoggedInUser,
+      payload.payload,
+      true
+    );
+    const firebaseUser: User = yield call(getUserData, user.uid ?? "");
+    if (firebaseUser) {
+      yield put(actions.webviewLogin.success(firebaseUser));
+    }
+
+    if (payload.callback) {
+      payload.callback(true);
+    }
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.webviewLogin.failure(error));
+
+    }
+
+    if (payload.callback) {
+      payload.callback(false);
+    }
+  } finally {
+    yield put(actions.stopAuthLoading());
+  }
+}
+
 function* loginUsingEmailAndPasswordSaga({
   payload,
 }: ReturnType<typeof actions.loginUsingEmailAndPassword.request>) {
