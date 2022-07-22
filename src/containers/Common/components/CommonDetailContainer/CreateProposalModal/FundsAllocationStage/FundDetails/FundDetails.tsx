@@ -8,7 +8,7 @@ import {
   ModalFooter,
   Separator,
 } from "@/shared/components";
-import { ScreenSize } from "@/shared/constants";
+import { ScreenSize, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
 import DollarIcon from "@/shared/icons/dollar.icon";
 import { Circle, CommonMemberWithUserInfo, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
@@ -21,7 +21,7 @@ import { FormikProps } from "formik/dist/types";
 import { Form, TextField, LinksArray, CurrencyInput } from "@/shared/components/Form/Formik";
 import { AddingCard } from '../../../../../../MyAccount/components/Billing/AddingCard'
 import { BankAccountInfo } from "../../../../../../MyAccount/components/Billing/BankAccountInfo";
-import { BankAccountDetails } from "@/shared/models";
+import { BankAccountDetails, CommonLink } from "@/shared/models";
 import { BankAccount } from "../../../../../../MyAccount/components/Billing/BankAccount";
 import { BankAccountState } from '../../../../../../MyAccount/components/Billing/types'
 import {
@@ -41,6 +41,7 @@ interface ConfigurationProps {
 interface FormValues {
   fund: FundType;
   amount: number;
+  links: CommonLink[];
 }
 
 const FundDetails: FC<ConfigurationProps> = (props) => {
@@ -83,7 +84,8 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
 
   const getInitialValues = (): FormValues => ({
     fund: 'ILS',
-    amount: 0 
+    amount: 0,
+    links: [],
   });
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
@@ -91,7 +93,8 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
       onFinish({
         ...initialData,
         fund: selectedFund,
-        amount: values.amount || 10
+        amount: values.amount || 10,
+        links: values.links,
       });
     },
     [onFinish]
@@ -185,6 +188,15 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
               <BankAccount
                 bankAccount={bankAccountState.bankAccount}
                 onBankAccountChange={handleBankAccountChange}
+              />         
+              <LinksArray
+                name="links"
+                values={values.links}
+                errors={errors.links}
+                touched={touched.links}
+                maxTitleLength={MAX_LINK_TITLE_LENGTH}
+                className="create-funds-allocation__text-field"
+                itemClassName="funds_allocation__links-array-item"
               />
               <ModalFooter sticky={!isMobileView}>
                 <div className="funds-allocation-configuration__modal-footer">
