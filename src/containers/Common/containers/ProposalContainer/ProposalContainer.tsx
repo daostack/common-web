@@ -48,7 +48,7 @@ interface ProposalRouterParams {
 const PROPOSAL_TYPE_CAPTION = {
   [ProposalsTypes.FUNDS_REQUEST]: "Funds Request",
   [ProposalsTypes.FUNDS_ALLOCATION]: "Funds Allocation",
-  [ProposalsTypes.MEMBER_ADMITTANCE]: "Membership Request",
+  [ProposalsTypes.MEMBER_ADMITTANCE]: "Member Admittance",
   [ProposalsTypes.ASSIGN_CIRCLE]: "Assign Circle",
 };
 
@@ -157,6 +157,12 @@ const ProposalContainer = () => {
     [onOpen]
   );
 
+  const proposalTypeEl = currentProposal && (
+    <div className="proposal-page__proposal-type">
+      {PROPOSAL_TYPE_CAPTION[currentProposal.type] || ""}
+    </div>
+  );
+
   useEffect(() => {
     if (currentProposal?.id === proposalId) return;
 
@@ -236,6 +242,7 @@ const ProposalContainer = () => {
                   <div className="proposal-page__proposer-info-username">
                     {getUserName(currentProposal.proposer)}
                   </div>
+                  {isMobileView && proposalTypeEl}
                 </div>
               </div>
               <div className="proposal-page__proposal-info-wrapper">
@@ -243,9 +250,7 @@ const ProposalContainer = () => {
                   <div className="proposal-title">
                     {currentProposal.data.args.title}
                   </div>
-                  <div className="proposal-type">
-                    {PROPOSAL_TYPE_CAPTION[currentProposal.type] || ""}
-                  </div>
+                  {!isMobileView && proposalTypeEl}
                 </div>
                 {
                   !isMobileView && showVoteButton && voteButtonElem
