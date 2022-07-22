@@ -456,6 +456,7 @@ function* updateUserDetails({
 }
 
 function* authSagas() {
+  yield takeLatest(actions.webviewLogin.request, webviewLoginSaga);
   yield takeLatest(actions.socialLogin.request, socialLoginSaga);
   yield takeLatest(
     actions.loginUsingEmailAndPassword.request,
