@@ -120,22 +120,19 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
           </div>
         ))}
       </div>
-      <div
-        className={classNames("voting-content__voting-chart", {
-          "voting-content__voting-chart--two-columns":
-            !checkIsCountdownState(proposal) || !expirationTimestamp,
-        })}
-      >
-        {checkIsCountdownState(proposal) && expirationTimestamp && (
-          <div className="voting-content__countdown-card-wrapper">
-            <CountDownCard
-              className="voting-content__countdown-card"
-              date={new Date(expirationTimestamp.seconds * 1000)}
-              proposal={proposal}
-              memberCount={common.memberCount}
-            />
-          </div>
-        )}
+      <div className="voting-content__voting-chart">
+        <div className="voting-content__countdown-card-wrapper">
+          <CountDownCard
+            className="voting-content__countdown-card"
+            date={
+              expirationTimestamp
+                ? new Date(expirationTimestamp.seconds * 1000)
+                : null
+            }
+            proposal={proposal}
+            memberCount={common.memberCount}
+          />
+        </div>
         <VotingCard
           className="voting-content__voting-card"
           type={VotingCardType.AllVotes}

@@ -8,7 +8,7 @@ import "./index.scss";
 
 interface CountDownCardProps {
   className?: string;
-  date: Date;
+  date?: Date | null;
   proposal: Proposal;
   memberCount: number;
 }
@@ -22,7 +22,9 @@ const CountDownCard: FC<CountDownCardProps> = (props) => {
   )}:${formatCountdownValue(minutes)}:${formatCountdownValue(seconds)}`;
 
   useLayoutEffect(() => {
-    startCountdown(date);
+    if (date) {
+      startCountdown(date);
+    }
   }, [startCountdown, date]);
 
   return (

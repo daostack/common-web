@@ -266,9 +266,6 @@ $max-details-width: 74.875rem;
     grid-gap: 1.5rem;
     justify-content: center;
   }
-  .voting-content__voting-chart--two-columns {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 
   .voting-content__countdown-card-wrapper {
     grid-row: 1 / 3;
