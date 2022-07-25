@@ -38,6 +38,7 @@ import { parseJson } from "@/shared/utils/json";
 
 import { webviewLogin } from "../Auth/store/actions";
 import { getProvider } from "@/shared/utils/authProvider";
+import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
 
 
 const App = () => {
@@ -54,33 +55,20 @@ const App = () => {
 
   useEffect(() => {
     window.addEventListener('message', event => {
-      const data = parseJson(event.data);
-      if (data?.providerId) {
-        (async () => {
-          try {
-            let credential;
-            if(data.providerId === AuthProviderID.Apple) {
-              const provider = new firebase.auth.OAuthProvider(data.providerId);
-              credential = provider.credential(data);
-            } else {
-              const provider = getProvider(data?.providerId);
-              credential = provider.credential(data.idToken);
-            }
-
-            const { user } = await firebase.auth().signInWithCredential(credential);
-            dispatch(webviewLogin.request({
-              payload: user,
-              callback: (isLoggedIn) => {
-                if(isLoggedIn) {
-                  history.push(ROUTE_PATHS.MY_COMMONS)
-                }
+    const data = parseJson(event.data) as FirebaseCredentials;
+    if (data?.providerId) {
+      try {
+        dispatch(webviewLogin.request({
+          payload: data,
+            callback: (isLoggedIn) => {
+              if(isLoggedIn) {
+                history.push(ROUTE_PATHS.MY_COMMONS)
               }
-            }));
-         
-          } catch (err) {
-            window.ReactNativeWebView.postMessage(JSON.stringify({ action: JSON.stringify(err) }));
-          }
-        })()
+             }
+          }));
+        } catch (err) {
+          window.ReactNativeWebView.postMessage(JSON.stringify({ action: JSON.stringify(err) }));
+        }
       }
     });
   }, []);

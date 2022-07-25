@@ -14,6 +14,7 @@ import { UserCreationDto } from "../interface";
 import {
   AUTH_CODE_FOR_SIGN_UP,
   AuthProvider,
+  AuthProviderID,
   ErrorCode,
   RECAPTCHA_CONTAINER_ID,
   ROUTE_PATHS,
@@ -29,6 +30,8 @@ import { EventTypeState, NotificationItem } from "@/shared/models/Notification";
 import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
 import { showNotification } from "@/shared/store/actions";
 import { getFundingRequestNotification } from "@/shared/utils/notifications";
+import { getProvider } from "@/shared/utils/authProvider";
+import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
 
 const getAuthProviderFromProviderData = (
   providerData?: firebase.User["providerData"]
@@ -187,6 +190,23 @@ const authorizeUser = async ({
   return verifyLoggedInUser(user, true, authCode);
 };
 
+const authorizeUserViaCredentials = async (
+  data: FirebaseCredentials
+): Promise<firebase.User | null> => {
+  let credential;
+  if(data.providerId === AuthProviderID.Apple) {
+    const provider = new firebase.auth.OAuthProvider(data.providerId);
+    credential = provider.credential(data);
+  } else {
+    const provider = getProvider(data?.providerId);
+    credential = provider.credential(data.idToken);
+  }
+
+  const { user } = await firebase.auth().signInWithCredential(credential);
+
+  return user;
+};
+
 const loginUsingEmailAndPassword = async (
   email: string,
   password: string
@@ -311,9 +331,14 @@ function* webviewLoginSaga({
   try {
     yield put(actions.startAuthLoading());
 
+    const loggedFirebaseUser = yield call(
+      authorizeUserViaCredentials,
+      payload.payload
+    );
+
     const { user }: { user: User; } = yield call(
       verifyLoggedInUser,
-      payload.payload,
+      loggedFirebaseUser,
       true
     );
     const firebaseUser: User = yield call(getUserData, user.uid ?? "");
