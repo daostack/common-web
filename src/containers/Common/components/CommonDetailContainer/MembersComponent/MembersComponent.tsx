@@ -1,4 +1,4 @@
-import React, { FC, useState, useCallback, useRef, useEffect } from "react";
+import React, { FC, useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { Common, ProposalState } from "@/shared/models";
@@ -28,6 +28,13 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
     fetchCommonMembers,
     resetCommonMembers
   } = useCommonMembers();
+  const sortedCommonMembers = useMemo(
+    () =>
+      [...commonMembers].sort(
+        (a, b) => b.joinedAt.seconds - a.joinedAt.seconds
+      ),
+    [commonMembers]
+  );
 
   const proposals = useSelector(selectProposals());
 
@@ -54,7 +61,7 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
   const renderTab = useCallback((activeMenuItem: MemberListTab) => {
     switch (activeMenuItem) {
       case MemberListTab.Members:
-        return <MembersList members={commonMembers} />;
+        return <MembersList members={sortedCommonMembers} />;
 
       case MemberListTab.Pending:
         return <ProposalsList proposals={pendingProposals} emptyText={"No pending proposals"} />;
@@ -105,7 +112,7 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
             onClick={() => setActiveMenuItem(MemberListTab.Members)}
             className={classNames({ active: activeMenuItem === MemberListTab.Members, isMobileView })}
           >
-            {MemberListTab.Members} ({commonMembers.length})
+            {MemberListTab.Members} ({sortedCommonMembers.length})
           </li>
           <li
             onClick={() => setActiveMenuItem(MemberListTab.Pending)}
