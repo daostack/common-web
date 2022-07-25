@@ -5,7 +5,7 @@ import React, {
   useMemo,
 } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import classNames from "classnames";
 
 import { fetchProposalById } from "../../store/api";
@@ -13,15 +13,18 @@ import {
   Loader,
   UserAvatar,
   Button,
+  ButtonLink,
   ButtonVariant,
 } from "@/shared/components";
 import { Proposal, ProposalState } from "@/shared/models";
+import LeftArrowIcon from "@/shared/icons/leftArrow.icon";
 import { getUserName, checkIsCountdownState } from "@/shared/utils";
 import {
   ProposalsTypes,
   ChatType,
   GovernanceActions,
   ScreenSize,
+  ROUTE_PATHS,
 } from "@/shared/constants";
 import { addMessageToProposal, clearCurrentProposal } from "@/containers/Common/store/actions";
 import { selectUser } from "@/containers/Auth/store/selectors";
@@ -61,6 +64,7 @@ enum PROPOSAL_MENU_TABS {
 const ProposalContainer = () => {
   const { id: proposalId } = useParams<ProposalRouterParams>();
   const dispatch = useDispatch();
+  const history = useHistory();
   const { isShowing, onOpen, onClose } = useModal(false);
   const user = useSelector(selectUser());
   const currentProposal = useSelector(selectCurrentProposal());
@@ -102,6 +106,12 @@ const ProposalContainer = () => {
     },
     [dispatch, user, currentProposal]
   );
+
+  const handleGoBack = () => {
+    if (currentCommon) {
+      history.push(ROUTE_PATHS.COMMON_DETAIL.replace(":id", currentCommon.id));
+    }
+  };
 
   const isJoiningPending = useMemo(() =>
     currentProposal
@@ -218,13 +228,12 @@ const ProposalContainer = () => {
         />
         <div className="proposal-page__wrapper">
           <div className="proposal-page__common-title-wrapper section-wrapper">
-            {
-              isMobileView && <img
-                src="/icons/left-arrow.svg"
-                alt="left-arrow"
-                onClick={() => history.back()}
-              />
-            }
+            <ButtonLink
+              className="proposal-page__back-button"
+              onClick={handleGoBack}
+            >
+              <LeftArrowIcon />
+            </ButtonLink>
             <h1 className="proposal-page__common-title">
               {currentCommon?.name}
             </h1>
