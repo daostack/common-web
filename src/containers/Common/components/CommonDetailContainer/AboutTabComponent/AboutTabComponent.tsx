@@ -39,9 +39,7 @@ export default function AboutTabComponent({
           ))}
         </div>
       )}
-        <h4 className={`see-more-button`} onClick={() => {setExpanded(!expanded)}}>
-          {expanded ? 'Hide <' : 'See more >'}
-        </h4>
+
       {shouldShowJoinToCommonButton && (
         <>
           <div className="line"></div>

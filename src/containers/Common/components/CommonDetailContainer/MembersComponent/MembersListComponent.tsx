@@ -26,7 +26,15 @@ const MembersList: FC<MembersListComponentProps> = ({ members }) => {
 
             circlesString = circlesString.slice(0, -2)
 
-            return <CommonMember circles={circlesString} memberName={memberName} avatar={member.user.photoURL} joinedAt={member.joinedAt} />
+            return (
+              <CommonMember
+                key={member.id}
+                circles={circlesString}
+                memberName={memberName}
+                avatar={member.user.photoURL}
+                joinedAt={member.joinedAt}
+              />
+            );
         })}
     </ul>
 }

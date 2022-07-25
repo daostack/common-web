@@ -1,0 +1,525 @@
+@import "../../../../constants.scss";
+
+.proposal-page__wrapper {
+  padding-top: 3rem;
+  margin-bottom: -1.25rem;
+
+  .section-wrapper {
+    margin: 0 auto;
+    max-width: 92%;
+  }
+
+  .proposal-page__heading-info-wrapper {
+    display: flex;
+    flex-direction: column;
+
+    .proposal-page__proposer-info-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-top: 2rem;
+
+      .proposal-page__proposer-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .proposal-page__proposer-info-username {
+          margin-left: 0.3rem;
+          font-size: $xsmall;
+          font-weight: bold;
+          color: $light-gray-2;
+        }
+      }
+    }
+
+    .proposal-page__proposal-info-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2rem;
+
+      .proposal-page__proposal-info-description {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+
+        .proposal-title {
+          font-size: $moderate-med;
+          font-weight: bold;
+        }
+
+        .proposal-type {
+          font-size: $xsmall;
+          background: $light-red;
+          border-radius: 0.25rem;
+          margin-top: 1rem;
+          padding: 0.125rem 0.313rem;
+        }
+      }
+
+      .proposal-page__proposal-vote-btn {
+        width: 14%;
+      }
+    }
+
+    .proposal-page__proposal-menu-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-top: 4rem;
+
+      .proposal-page__proposal-menu {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+        font-size: $small;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        .proposal-page__proposal-menu-item {
+          height: 3rem;
+          cursor: pointer;
+          margin-right: 4.5rem;
+
+          &.active {
+            color: $purple;
+            //border-bottom: 0.25rem solid $purple;
+            position: relative;
+          }
+
+          &.active::after {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 0.25rem;
+            background-color: $purple;
+            position: absolute;
+            bottom: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .proposal-page__content-wrapper {
+    margin: 0 -5rem;
+    background-color: $light-purple-background;
+    padding: 2rem 0;
+    box-shadow: inset 0 0.188rem 0.625rem rgba(0, 26, 54, 0.08);
+
+    &.chat-wrapper {
+      padding: 0;
+      height: 43.75rem;
+
+      .proposal-page__content-container {
+        height: inherit;
+      }
+    }
+
+    .section-wrapper {
+      margin: 0 auto;
+      max-width: 85%;
+    }
+  }
+}
+
+.voting-content__wrapper {
+  .voting-content__info-block {
+    background-color: $white;
+    border-radius: 0.5rem;
+    box-shadow: 0px 0.188rem 0.5rem rgba(0, 26, 54, 0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .voting-content__proposal-details {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .voting-content__proposal-details-item {
+      width: 17%;
+      height: 4.375rem;
+      margin-right: 1.5rem;
+
+      .title {
+        font-size: $xsmall;
+        color: $light-gray-2;
+      }
+
+      .value {
+        font-size: $moderate-small;
+      }
+    }
+  }
+
+  .voting-content__voting-chart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2.875rem;
+
+    .voting-content__voting-chart-main-info {
+      font-size: $xsmall;
+      height: 17.5rem;
+      width: 30%;
+      margin-right: 1rem;
+
+      > div {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        > div {
+          margin-top: 0.5rem;
+        }
+      }
+
+      .expire-time {
+        font-size: $mlarge;
+        font-weight: 800;
+      }
+
+      .voting-status {
+        color: $white;
+        font-size: $small;
+        padding: 0.188rem 0.5rem;
+        border-radius: 0.25rem;
+
+        &.approved,
+        &.passing {
+          background-color: $green;
+        }
+
+        &.failing,
+        &.rejected {
+          background-color: $red;
+        }
+
+        &.withdrawn {
+          background-color: $dark-yellow;
+        }
+      }
+    }
+
+    .voting-content__voting-stats-container {
+      max-width: 49.625rem;
+      width: 100%;
+      display: grid;
+      justify-items: center;
+      grid-column-gap: 0.5rem;
+      grid-row-gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+
+      .voting-card__wrapper {
+        width: 98%;
+      }
+    }
+  }
+}
+
+.voting-card__wrapper {
+  min-width: 5.375rem;
+  height: 8.125rem;
+  background-color: $white;
+  border-radius: 0.5rem;
+  box-shadow: 0px 0.188rem 0.5rem rgba(0, 26, 54, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  > div:not(:last-child) {
+    margin-bottom: 0.875rem;
+  }
+
+  .voting-card__title {
+    font-weight: 700;
+    font-size: $moderate-small;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    .votes-title-container {
+      min-width: 8.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .title {
+        margin-right: 0.3rem;
+      }
+
+      .ratio {
+        font-size: $xsmall;
+        font-weight: normal;
+      }
+    }
+  }
+
+  .voting-card__percent-condition {
+    font-size: $xsmall;
+  }
+}
+
+.pitch-content__wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 39%;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+  }
+
+  > *:not(:last-child) {
+    margin-bottom: 2.375rem;
+  }
+
+  .pitch-content__description {
+    font-size: $small;
+  }
+
+  .pitch-content__links {
+    display: flex;
+    flex-direction: column;
+    min-width: 8%;
+
+    .pitch-content__links-item {
+      color: $secondary-blue;
+      font-size: $xsmall;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      &:not(:last-child) {
+        margin-bottom: 2rem;
+      }
+
+      a {
+        margin-left: 0.5rem;
+      }
+    }
+  }
+
+  .pitch-content__images {
+    margin-bottom: 5rem;
+
+    .pitch-content__images-item {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      img {
+        width: 100%;
+        height: 22.25rem;
+        border-radius: 0.625rem;
+      }
+
+      .title {
+        font-size: $xsmall;
+      }
+
+      &:not(:last-child) {
+        margin-bottom: 2.625rem;
+      }
+    }
+  }
+}
+
+.chat-wrapper {
+  padding-bottom: unset;
+  margin: 0;
+
+  .messages {
+    margin: 0;
+  }
+}
+
+.voting-popup__modal-wrapper {
+  width: 21.25rem;
+  height: 28.125rem;
+
+  .voting-popup {
+    width: 100%;
+    height: 86%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    .voting-popup__title {
+      font-size: $small;
+      font-weight: bold;
+    }
+
+    .voting-popup__description {
+      text-align: center;
+      font-size: $xsmall;
+    }
+
+    .voting-popup__vote-options-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 90%;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      .voting-popup__vote-options-item {
+        box-shadow: 0px 0.625rem 1.25rem rgba(0, 0, 0, 0.25);
+        border-radius: 50%;
+        background-color: $white;
+        width: 4rem;
+        height: 4rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+          width: 2rem;
+          height: 2rem;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .proposal-page__wrapper {
+    padding-top: unset;
+
+    .proposal-page__heading-info-wrapper {
+      .proposal-page__heading-info-main {
+        margin-top: 1.75rem;
+        box-shadow: 0px 0.188rem 0.5rem rgba(0, 26, 54, 0.08);
+        border-radius: 0.625rem;
+        position: relative;
+        padding: 1rem;
+
+        .proposal-page__proposal-info-wrapper {
+          margin-top: unset;
+        }
+
+        .proposal-page__proposer-info {
+          position: absolute;
+          top: -9px;
+        }
+
+        .proposal-page__proposal-info-description {
+          .proposal-title {
+            font-size: $moderate;
+          }
+
+          .proposal-type {
+            position: absolute;
+            top: -9px;
+            right: 0;
+          }
+        }
+      }
+
+      .proposal-page__proposal-menu-wrapper {
+        margin-top: 3rem;
+
+        .proposal-page__proposal-menu {
+          width: 100%;
+
+          .proposal-page__proposal-menu-item {
+            font-size: $xsmall;
+            margin-right: unset;
+          }
+        }
+      }
+    }
+
+    .proposal-page__proposal-vote-btn-wrapper {
+      margin-top: 3rem;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .proposal-page__proposal-vote-btn {
+        width: 60%;
+      }
+    }
+
+    .proposal-page__common-title-wrapper {
+      display: grid;
+      grid-template-columns: auto 10rem auto;
+      align-items: center;
+
+      .proposal-page__common-title {
+        font-size: $moderate;
+        font-family: "Nunito Sans";
+        text-align: center;
+      }
+    }
+  }
+
+  .voting-content__wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 0 2rem;
+
+    .voting-content__proposal-details {
+      display: grid;
+      grid-column-gap: 1.2rem;
+      grid-row-gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+      justify-items: center;
+
+      .voting-content__proposal-details-item {
+        width: 100%;
+
+        &:nth-child(odd):last-child {
+          grid-column: 1/3;
+        }
+      }
+    }
+
+    .voting-content__voting-chart {
+      flex-direction: column;
+      margin-top: unset;
+
+      .voting-content__voting-chart-main-info {
+        margin-right: unset;
+        height: 14rem;
+        width: 100%;
+        box-shadow: unset;
+        background-color: inherit;
+      }
+    }
+  }
+
+  .pitch-content__wrapper {
+    width: 79%;
+    margin-left: 3rem;
+
+    .pitch-content__images {
+      .pitch-content__images-item {
+        img {
+          height: 15.625rem;
+        }
+      }
+    }
+  }
+}

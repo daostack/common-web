@@ -32,3 +32,10 @@ export interface Vote extends BaseEntity {
    */
   proposalId: string;
 }
+
+export enum VotingCardType {
+  AllVotes = "Votes",
+  Object = "Object",
+  Support = "Support",
+  Abstain = "Abstain",
+}

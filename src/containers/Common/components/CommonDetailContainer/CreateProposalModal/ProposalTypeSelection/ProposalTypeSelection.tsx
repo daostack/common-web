@@ -26,6 +26,11 @@ const PROPOSAL_TYPE_OPTIONS: DropdownOption[] = [
     searchText: "Remove Circle",
     value: ProposalsTypes.REMOVE_CIRCLE,
   },
+  {
+    text: "Funds Allocation",
+    searchText: "Funds Allocation",
+    value: ProposalsTypes.FUNDS_ALLOCATION,
+  },
 ];
 
 interface ProposalTypeSelectionProps {
