@@ -26,7 +26,11 @@ import {
 import { addMessageToProposal, clearCurrentProposal } from "@/containers/Common/store/actions";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { getScreenSize } from "@/shared/store/selectors";
-import { selectCommonDetail, selectCurrentProposal } from "../../../Common/store/selectors";
+import {
+  selectCommonDetail,
+  selectCurrentProposal,
+  selectGovernance,
+} from "../../../Common/store/selectors";
 import { getCommonDetail, loadProposalDetail } from "../../../Common/store/actions";
 import { VotingContentContainer } from "./VotingContentContainer";
 import { PitchContentContainer } from "./PitchContentContainer";
@@ -42,10 +46,11 @@ interface ProposalRouterParams {
 }
 
 const PROPOSAL_TYPE_CAPTION = {
-  [ProposalsTypes.FUNDS_REQUEST]: 'Funds Request',
-  [ProposalsTypes.FUNDS_ALLOCATION]: 'Funds Allocation',
-  [ProposalsTypes.MEMBER_ADMITTANCE]: 'Membership Request',
-}
+  [ProposalsTypes.FUNDS_REQUEST]: "Funds Request",
+  [ProposalsTypes.FUNDS_ALLOCATION]: "Funds Allocation",
+  [ProposalsTypes.MEMBER_ADMITTANCE]: "Member Admittance",
+  [ProposalsTypes.ASSIGN_CIRCLE]: "Assign Circle",
+};
 
 enum PROPOSAL_MENU_TABS {
   Voting = "Voting",
@@ -59,11 +64,8 @@ const ProposalContainer = () => {
   const { isShowing, onOpen, onClose } = useModal(false);
   const user = useSelector(selectUser());
   const currentProposal = useSelector(selectCurrentProposal());
-  /**
-   * TODO: this should fetch the common by commonId in the proposal
-   * currentProposal.data.args.commonId
-   */
   const currentCommon = useSelector(selectCommonDetail());
+  const governance = useSelector(selectGovernance());
   const [activeTab, setActiveTab] = useState<PROPOSAL_MENU_TABS>(PROPOSAL_MENU_TABS.Voting);
   const {
     fetched: isCommonMemberFetched,
@@ -73,6 +75,7 @@ const ProposalContainer = () => {
   const { data: userVote, fetchProposalVote, setVote } = useProposalUserVote();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const proposer = currentProposal?.proposer;
   const showVoteButton =
     !userVote &&
     currentProposal?.state === ProposalState.VOTING &&
@@ -114,10 +117,18 @@ const ProposalContainer = () => {
   const renderContentByActiveTab = useCallback((currentProposal: Proposal) => {
     switch (activeTab) {
       case PROPOSAL_MENU_TABS.Voting:
-        return currentCommon && <VotingContentContainer
-          proposal={currentProposal}
-          common={currentCommon}
-        />;
+        return (
+          currentCommon &&
+          proposer &&
+          governance && (
+            <VotingContentContainer
+              proposal={currentProposal}
+              common={currentCommon}
+              governance={governance}
+              proposer={proposer}
+            />
+          )
+        );
       case PROPOSAL_MENU_TABS.Pitch:
         return <PitchContentContainer proposal={currentProposal} />;
       case PROPOSAL_MENU_TABS.Discussions:
@@ -132,17 +143,24 @@ const ProposalContainer = () => {
           commonMember={commonMember}
         />;
     }
-  }, [activeTab, currentCommon]);
+  }, [activeTab, currentCommon, proposer, governance]);
 
   const voteButtonElem = useMemo(() =>
     <Button
       variant={ButtonVariant.Primary}
       onClick={onOpen}
       className="proposal-page__proposal-vote-btn"
+      shouldUseFullWidth
     >
       Vote Now
     </Button>,
     [onOpen]
+  );
+
+  const proposalTypeEl = currentProposal && (
+    <div className="proposal-page__proposal-type">
+      {PROPOSAL_TYPE_CAPTION[currentProposal.type] || ""}
+    </div>
   );
 
   useEffect(() => {
@@ -189,7 +207,7 @@ const ProposalContainer = () => {
       fetchProposalVote(currentProposal.id);
   }, [fetchProposalVote, currentProposal]);
 
-  return (currentCommon && currentProposal && isCommonMemberFetched)
+  return (currentCommon && currentProposal && isCommonMemberFetched && governance)
     ? (
       <>
         <VotingPopup
@@ -216,6 +234,7 @@ const ProposalContainer = () => {
               <div className="proposal-page__proposer-info-wrapper">
                 <div className="proposal-page__proposer-info">
                   <UserAvatar
+                    className="proposal-page__proposer-avatar"
                     photoURL={currentProposal.proposer?.photoURL}
                     nameForRandomAvatar={currentProposal.proposer?.email}
                     userName={getUserName(currentProposal.proposer)}
@@ -223,6 +242,7 @@ const ProposalContainer = () => {
                   <div className="proposal-page__proposer-info-username">
                     {getUserName(currentProposal.proposer)}
                   </div>
+                  {isMobileView && proposalTypeEl}
                 </div>
               </div>
               <div className="proposal-page__proposal-info-wrapper">
@@ -230,9 +250,7 @@ const ProposalContainer = () => {
                   <div className="proposal-title">
                     {currentProposal.data.args.title}
                   </div>
-                  <div className="proposal-type">
-                    {PROPOSAL_TYPE_CAPTION[currentProposal.type] || ""}
-                  </div>
+                  {!isMobileView && proposalTypeEl}
                 </div>
                 {
                   !isMobileView && showVoteButton && voteButtonElem
