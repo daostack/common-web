@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, memo } from "react";
 import CommonMember from './CommonMemberComponent';
 import { numberToBinary } from "../CommonWhitepaper/utils";
 import { CommonMemberWithUserInfo } from "@/shared/models";
@@ -40,4 +40,4 @@ const MembersList: FC<MembersListComponentProps> = ({ members }) => {
 }
 
 
-export default MembersList;
+export default memo(MembersList);
