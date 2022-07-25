@@ -131,7 +131,8 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
             <CountDownCard
               className="voting-content__countdown-card"
               date={new Date(expirationTimestamp.seconds * 1000)}
-              state={proposal.state}
+              proposal={proposal}
+              memberCount={common.memberCount}
             />
           </div>
         )}
