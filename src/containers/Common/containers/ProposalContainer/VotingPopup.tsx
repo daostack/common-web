@@ -33,7 +33,6 @@ export const VotingPopup: FC<VotingPopupProps> = ({
               proposalId: proposal.id,
               outcome: voteOutcome,
             },
-            shouldWaitForVoteToBeApplied: false,
           },
           callback: (error, vote) => {
             setVoting(false);
@@ -59,7 +58,7 @@ export const VotingPopup: FC<VotingPopupProps> = ({
           <img
             className="voting-popup__approved-illustration"
             src="/icons/preview-approved.svg"
-            alt="popup-pic"
+            alt="Success"
           />
           <p>Your vote was submitted! It will take some time to apply.</p>
           <Button

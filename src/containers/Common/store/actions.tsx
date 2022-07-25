@@ -94,6 +94,10 @@ export const clearCurrentDiscussion = createStandardAction(
   CommonsActionTypes.CLEAR_CURRENT_DISCUSSION
 )();
 
+export const updateCurrentProposal = createStandardAction(
+  CommonsActionTypes.UPDATE_CURRENT_PROPOSAL
+)<Proposal>();
+
 export const clearCurrentProposal = createStandardAction(
   CommonsActionTypes.CLEAR_CURRENT_PROPOSAL
 )();
@@ -251,7 +255,6 @@ export const createVote = createAsyncAction(
     {
       votePayload: CreateVotePayload;
       proposalVotes: CalculatedVotes;
-      shouldWaitForVoteToBeApplied?: boolean;
     },
     Vote,
     Error

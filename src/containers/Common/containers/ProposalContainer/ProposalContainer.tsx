@@ -31,7 +31,12 @@ import {
   selectCurrentProposal,
   selectGovernance,
 } from "../../../Common/store/selectors";
-import { getCommonDetail, loadProposalDetail } from "../../../Common/store/actions";
+import {
+  getCommonDetail,
+  loadProposalDetail,
+  updateCurrentProposal,
+} from "../../../Common/store/actions";
+import { subscribeToProposal } from "../../../Common/store/api";
 import { VotingContentContainer } from "./VotingContentContainer";
 import { PitchContentContainer } from "./PitchContentContainer";
 import { ChatComponent } from "../../components";
@@ -75,6 +80,7 @@ const ProposalContainer = () => {
   const { data: userVote, fetchProposalVote, setVote } = useProposalUserVote();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const currentProposalId = currentProposal?.id;
   const proposer = currentProposal?.proposer;
   const showVoteButton =
     !userVote &&
@@ -196,6 +202,18 @@ const ProposalContainer = () => {
       })
     );
   }, [currentCommon, currentProposal]);
+
+  useEffect(() => {
+    if (!currentProposalId) {
+      return;
+    }
+
+    const unsubscribe = subscribeToProposal(currentProposalId, (proposal) => {
+      dispatch(updateCurrentProposal(proposal));
+    });
+
+    return unsubscribe;
+  }, [dispatch, currentProposalId]);
 
   useEffect(() => {
     if (currentCommon)

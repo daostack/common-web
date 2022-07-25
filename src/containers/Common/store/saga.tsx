@@ -710,25 +710,19 @@ async function waitForVoteToBeApplied(
 export function* createVote({
   payload,
 }: ReturnType<typeof actions.createVote.request>): Generator {
-  const {
-    votePayload,
-    proposalVotes,
-    shouldWaitForVoteToBeApplied = true,
-  } = payload.payload;
+  const { votePayload, proposalVotes } = payload.payload;
 
   try {
     yield put(startLoading());
     const vote = (yield createVoteApi(votePayload)) as Vote;
 
-    if (shouldWaitForVoteToBeApplied) {
-      yield call(async () => {
-        await waitForVoteToBeApplied(
-          vote.commonId,
-          vote.proposalId,
-          proposalVotes
-        );
-      });
-    }
+    yield call(async () => {
+      await waitForVoteToBeApplied(
+        vote.commonId,
+        vote.proposalId,
+        proposalVotes
+      );
+    });
     yield put(actions.createVote.success());
     payload.callback(null, vote);
     yield put(stopLoading());
