@@ -68,7 +68,6 @@ const RemoveCircleStage: FC<RemoveCircleStageProps> = (props) => {
     > = {
       args: {
         commonId: common.id,
-        // TODO: Use here name of common member
         title: `Remove circle proposal for ${getUserName(
           removeCircleData.commonMember.user
         )}`,
