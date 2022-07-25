@@ -17,6 +17,7 @@ import {
   ButtonVariant,
 } from "@/shared/components";
 import { Proposal, ProposalState } from "@/shared/models";
+import { isMemberAdmittanceProposal } from "@/shared/models/governance/proposals";
 import LeftArrowIcon from "@/shared/icons/leftArrow.icon";
 import { getUserName, checkIsCountdownState } from "@/shared/utils";
 import {
@@ -42,6 +43,7 @@ import { useCommonMember } from "../../hooks";
 import { useModal } from "@/shared/hooks";
 import { VotingPopup } from "./VotingPopup";
 import { useProposalUserVote } from "@/containers/Common/hooks";
+import { Tabs as CommonDetailsTabs } from "../CommonDetailContainer";
 import "./index.scss";
 
 interface ProposalRouterParams {
@@ -108,9 +110,17 @@ const ProposalContainer = () => {
   );
 
   const handleGoBack = () => {
-    if (currentCommon) {
-      history.push(ROUTE_PATHS.COMMON_DETAIL.replace(":id", currentCommon.id));
+    if (!currentCommon || !currentProposal) {
+      return;
     }
+
+    const tab = isMemberAdmittanceProposal(currentProposal)
+      ? CommonDetailsTabs.Members
+      : CommonDetailsTabs.Proposals;
+
+    history.push(
+      `${ROUTE_PATHS.COMMON_DETAIL.replace(":id", currentCommon.id)}?tab=${tab}`
+    );
   };
 
   const isJoiningPending = useMemo(() =>
