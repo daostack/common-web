@@ -42,21 +42,25 @@ const CountDownCard: FC<CountDownCardProps> = (props) => {
           </p>
         </>
       )}
-      <span className="proposal-container-countdown-card__status-title">
-        Voting Status
-      </span>
-      <p
-        className={classNames("proposal-container-countdown-card__status", {
-          "proposal-container-countdown-card__status--red": [
-            VotingStatus.Failing,
-            VotingStatus.Rejected,
-          ].includes(votingStatus),
-          "proposal-container-countdown-card__status--orange":
-            votingStatus === VotingStatus.Withdrawn,
-        })}
-      >
-        {votingStatus}
-      </p>
+      {proposal.state !== ProposalState.DISCUSSION && (
+        <>
+          <span className="proposal-container-countdown-card__status-title">
+            Voting Status
+          </span>
+          <p
+            className={classNames("proposal-container-countdown-card__status", {
+              "proposal-container-countdown-card__status--red": [
+                VotingStatus.Failing,
+                VotingStatus.Rejected,
+              ].includes(votingStatus),
+              "proposal-container-countdown-card__status--orange":
+                votingStatus === VotingStatus.Withdrawn,
+            })}
+          >
+            {votingStatus}
+          </p>
+        </>
+      )}
     </div>
   );
 };
