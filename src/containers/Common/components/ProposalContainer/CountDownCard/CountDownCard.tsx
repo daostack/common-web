@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { useCountdown } from "@/shared/hooks";
 import { Proposal, ProposalState } from "@/shared/models";
 import { checkIsCountdownState, formatCountdownValue } from "@/shared/utils";
-import { calculateProposalStatus } from "./helpers";
+import { calculateVotingStatus, VotingStatus } from "./helpers";
 import "./index.scss";
 
 interface CountDownCardProps {
@@ -20,6 +20,7 @@ const CountDownCard: FC<CountDownCardProps> = (props) => {
   const timerString = `${daysText}${formatCountdownValue(
     hours
   )}:${formatCountdownValue(minutes)}:${formatCountdownValue(seconds)}`;
+  const votingStatus = calculateVotingStatus(proposal, memberCount);
 
   useLayoutEffect(() => {
     if (date) {
@@ -44,8 +45,17 @@ const CountDownCard: FC<CountDownCardProps> = (props) => {
       <span className="proposal-container-countdown-card__status-title">
         Voting Status
       </span>
-      <p className="proposal-container-countdown-card__status">
-        {calculateProposalStatus(proposal, memberCount)}
+      <p
+        className={classNames("proposal-container-countdown-card__status", {
+          "proposal-container-countdown-card__status--red": [
+            VotingStatus.Failing,
+            VotingStatus.Rejected,
+          ].includes(votingStatus),
+          "proposal-container-countdown-card__status--orange":
+            votingStatus === VotingStatus.Withdrawn,
+        })}
+      >
+        {votingStatus}
       </p>
     </div>
   );

@@ -1,7 +1,7 @@
 import { Proposal, ProposalState } from "@/shared/models";
 import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
 
-enum VotingStatus {
+export enum VotingStatus {
   Failing = "Failing",
   Passing = "Passing",
   Rejected = "Rejected",
@@ -30,10 +30,10 @@ const calculateFinalState = (
   return ProposalState.FAILED;
 };
 
-export const calculateProposalStatus = (
+export const calculateVotingStatus = (
   proposal: Proposal,
   memberCount: number
-): string => {
+): VotingStatus => {
   if (
     [ProposalState.FAILED, ProposalState.RETRACTED].includes(proposal.state)
   ) {
