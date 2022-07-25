@@ -8,14 +8,15 @@ import "./index.scss";
 
 interface CountDownCardProps {
   className?: string;
-  date?: Date | null;
   proposal: Proposal;
   memberCount: number;
 }
 
 const CountDownCard: FC<CountDownCardProps> = (props) => {
-  const { className, date, proposal, memberCount } = props;
+  const { className, proposal, memberCount } = props;
   const { days, hours, minutes, seconds, startCountdown } = useCountdown();
+  const expirationTimestamp =
+    proposal.data.votingExpiresOn || proposal.data.discussionExpiresOn;
   const daysText = days > 0 ? `${days} Day${days > 1 ? "s " : " "}` : "";
   const timerString = `${daysText}${formatCountdownValue(
     hours
@@ -23,10 +24,10 @@ const CountDownCard: FC<CountDownCardProps> = (props) => {
   const votingStatus = calculateVotingStatus(proposal, memberCount);
 
   useLayoutEffect(() => {
-    if (date) {
-      startCountdown(date);
+    if (expirationTimestamp) {
+      startCountdown(new Date(expirationTimestamp.seconds * 1000));
     }
-  }, [startCountdown, date]);
+  }, [startCountdown, expirationTimestamp]);
 
   return (
     <div className={classNames("proposal-container-countdown-card", className)}>

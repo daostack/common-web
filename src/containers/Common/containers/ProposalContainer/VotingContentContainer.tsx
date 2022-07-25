@@ -1,6 +1,5 @@
 import React, { FC, useMemo } from "react";
 import { useSelector } from "react-redux";
-import classNames from 'classnames';
 import {
   Proposal,
   Common,
@@ -17,7 +16,7 @@ import {
 } from "@/shared/models/governance/proposals";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
-import { checkIsCountdownState, formatPrice } from "@/shared/utils";
+import { formatPrice } from "@/shared/utils";
 import { CountDownCard } from "../../components/ProposalContainer";
 import { VotingCard } from "./VotingCard";
 import {
@@ -38,8 +37,6 @@ interface VotingContentContainerProps {
 export const VotingContentContainer: FC<VotingContentContainerProps> = ({ proposal, common, governance, proposer }) => {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const expirationTimestamp =
-    proposal.data.votingExpiresOn || proposal.data.discussionExpiresOn;
 
   const proposalDetailsByType = useMemo((): ProposalDetailsItem[] => {
     let typedProposal;
@@ -124,11 +121,6 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
         <div className="voting-content__countdown-card-wrapper">
           <CountDownCard
             className="voting-content__countdown-card"
-            date={
-              expirationTimestamp
-                ? new Date(expirationTimestamp.seconds * 1000)
-                : null
-            }
             proposal={proposal}
             memberCount={common.memberCount}
           />
