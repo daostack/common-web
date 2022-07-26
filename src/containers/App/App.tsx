@@ -2,7 +2,6 @@ import React, { useCallback, useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import firebase from '@/shared/utils/firebase';
 import PrivateRoute from "./PrivateRoute";
 import { Content, NotFound, Footer, Header, Modal } from "@/shared/components";
 import { NotificationProvider } from "@/shared/components/Notification";
@@ -18,7 +17,6 @@ import {
   ROUTE_PATHS,
   SMALL_SCREEN_BREAKPOINT,
   ScreenSize,
-  AuthProviderID,
 } from "../../shared/constants";
 import { changeScreenSize, showNotification } from "@/shared/store/actions";
 import { authentificated } from "../Auth/store/selectors";
@@ -37,7 +35,6 @@ import { useHistory } from "react-router";
 import { parseJson } from "@/shared/utils/json";
 
 import { webviewLogin } from "../Auth/store/actions";
-import { getProvider } from "@/shared/utils/authProvider";
 import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
 
 
@@ -55,8 +52,11 @@ const App = () => {
 
   useEffect(() => {
     window.addEventListener('message', event => {
-    const data = parseJson(event.data) as FirebaseCredentials;
-    if (data?.providerId) {
+      const data = parseJson(event.data) as FirebaseCredentials;
+      if (!data?.providerId) {
+        return;
+      }
+
       try {
         dispatch(webviewLogin.request({
           payload: data,
@@ -64,11 +64,10 @@ const App = () => {
               if(isLoggedIn) {
                 history.push(ROUTE_PATHS.MY_COMMONS)
               }
-             }
-          }));
-        } catch (err) {
-          window.ReactNativeWebView.postMessage(JSON.stringify({ action: JSON.stringify(err) }));
-        }
+            }
+        }));
+      } catch (err) {
+        window.ReactNativeWebView.postMessage(JSON.stringify({ action: JSON.stringify(err) }));
       }
     });
   }, []);
