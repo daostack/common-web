@@ -1,6 +1,5 @@
-import React, { FC, useEffect, useMemo, useRef, useState, useCallback } from "react";
+import React, { FC, useRef, useCallback } from "react";
 import { useSelector } from "react-redux";
-import { selectUser } from "@/containers/Auth/store/selectors";
 import {
   Button,
   ModalFooter,
@@ -8,20 +7,19 @@ import {
 } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import DollarIcon from "@/shared/icons/dollar.icon";
-import { Circle, CommonMemberWithUserInfo, Governance } from "@/shared/models";
+import { Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { getUserName } from "@/shared/utils";
-import { generateCirclesBinaryNumber } from "../../../CommonWhitepaper/utils";
 import { StageName } from "../../StageName";
 import { FundsAllocationData } from "../types";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
-import { Form, TextField, LinksArray } from "@/shared/components/Form/Formik";
+import { Form, TextField } from "@/shared/components/Form/Formik";
+import { FUNDS_ALLOCATION_PROPOSAL_TITLE_LENGTH } from "./constants";
+import { validationSchema } from "./validationSchema";
 import "./index.scss";
 
 interface ConfigurationProps {
   governance: Governance;
-  //commonMembers: CommonMemberWithUserInfo[];
   initialData: FundsAllocationData;
   onFinish: (data: FundsAllocationData) => void;
 }
@@ -33,9 +31,7 @@ interface FormValues {
 }
 
 const Configuration: FC<ConfigurationProps> = (props) => {
-  const { governance, initialData, onFinish } = props;
-  const isInitialCircleUpdate = useRef(true);
-  const user = useSelector(selectUser());
+  const { initialData, onFinish } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const formRef = useRef<FormikProps<FormValues>>(null);
@@ -52,21 +48,15 @@ const Configuration: FC<ConfigurationProps> = (props) => {
         ...initialData,
         title: values.title,
         description: values.description,
-        goalOfPayment: values.goalOfPayment
+        goalOfPayment: values.goalOfPayment,
       });
     },
-    [onFinish]
+    [onFinish, initialData]
   );
 
-  const handleContinueClick = useCallback(() => {
-    if (formRef.current) {
-      formRef.current.submitForm();
-      onFinish({
-        ...initialData,
-        ...formRef.current.values
-      })
-    }
-  }, []);
+  const handleContinueClick = () => {
+    formRef.current?.submitForm();
+  };
 
   return (
     <div className="funds-allocation-configuration">
@@ -84,10 +74,10 @@ const Configuration: FC<ConfigurationProps> = (props) => {
           initialValues={getInitialValues()}
           onSubmit={handleSubmit}
           innerRef={formRef}
-          //validationSchema={validationSchema}
+          validationSchema={validationSchema}
           validateOnMount
         >
-          {({ values, errors, touched, isValid }) => (
+          {({ isValid }) => (
             <Form>
               <TextField
                 className="create-funds-allocation__text-field"
@@ -95,7 +85,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
                 name="title"
                 label="Title"
                 placeholder="Briefly describe your proposal"
-                maxLength={60}
+                maxLength={FUNDS_ALLOCATION_PROPOSAL_TITLE_LENGTH}
                 isRequired
               />
               <TextField
