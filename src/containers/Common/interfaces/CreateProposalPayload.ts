@@ -22,7 +22,7 @@ interface CreateAssignCircle {
 }
 interface CreateRemoveCircle {
   type: ProposalsTypes.REMOVE_CIRCLE;
-  args: Omit<AssignCircle["data"]["args"], "proposerId">;
+  args: Omit<RemoveCircle["data"]["args"], "proposerId">;
 }
 
 interface Request<P, R> {
