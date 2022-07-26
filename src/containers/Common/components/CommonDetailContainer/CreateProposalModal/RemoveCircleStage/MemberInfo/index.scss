@@ -1,7 +1,7 @@
 @import "../../../../../../../constants";
 @import "../../../../../../../styles/sizes";
 
-.assign-circle-member-info {
+.remove-circle-member-info {
   display: flex;
   align-items: center;
   font-weight: 600;
@@ -9,7 +9,7 @@
   line-height: 100%;
 }
 
-.assign-circle-member-info__avatar {
+.remove-circle-member-info__avatar {
   flex-shrink: 0;
   width: 1.5rem;
   height: 1.5rem;

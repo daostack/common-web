@@ -1,14 +1,14 @@
 @import "../../../../../../../constants";
 @import "../../../../../../../styles/sizes";
 
-.assign-circle-confirmation {
+.remove-circle-confirmation {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-.assign-circle-confirmation__image {
+.remove-circle-confirmation__image {
   width: 18rem;
   height: 17.875rem;
   margin-bottom: 1.125rem;
@@ -21,7 +21,7 @@
   }
 }
 
-.assign-circle-confirmation__title {
+.remove-circle-confirmation__title {
   margin: 0;
   font-family: NotoSerifSC, serif;
   font-size: $moderate-med;
@@ -34,7 +34,7 @@
   }
 }
 
-.assign-circle-confirmation__circle-name {
+.remove-circle-confirmation__circle-name {
   margin: 1rem 0;
   font-size: $small;
   line-height: 125%;
@@ -44,7 +44,7 @@
   }
 }
 
-.assign-circle-confirmation__buttons-wrapper {
+.remove-circle-confirmation__buttons-wrapper {
   max-width: 23rem;
   width: 100%;
   margin-top: 2.25rem;
@@ -61,7 +61,7 @@
   }
 }
 
-.assign-circle-confirmation__cancel-button {
+.remove-circle-confirmation__cancel-button {
   @include big-phone {
     grid-row: 2;
   }

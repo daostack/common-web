@@ -16,20 +16,20 @@ const Success: FC<SuccessProps> = (props) => {
   const isMobileView = screenSize === ScreenSize.Mobile;
 
   return (
-    <div className="assign-circle-success">
+    <div className="remove-circle-success">
       <img
-        className="assign-circle-success__image"
+        className="remove-circle-success__image"
         src="/assets/images/illustrations-full-page-launch.svg"
         alt="Avatar"
       />
-      <h4 className="assign-circle-success__title">Your proposal is live!</h4>
-      <p className="assign-circle-success__description">
+      <h4 className="remove-circle-success__title">Your proposal is live!</h4>
+      <p className="remove-circle-success__description">
         The Common members will now discuss the proposal and vote to accept or
         reject it. You will be notified when the voting ends.
       </p>
-      <div className="assign-circle-success__buttons-wrapper">
+      <div className="remove-circle-success__buttons-wrapper">
         <Button
-          className="assign-circle-success__back-button"
+          className="remove-circle-success__back-button"
           onClick={onBackToCommon}
           variant={
             isMobileView

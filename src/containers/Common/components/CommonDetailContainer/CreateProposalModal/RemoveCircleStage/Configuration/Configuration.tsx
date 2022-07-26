@@ -8,8 +8,7 @@ import {
   Dropdown,
   DropdownOption,
   ModalFooter,
-  Separator,
-  UserAvatar,
+  Separator
 } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import AvatarIcon from "@/shared/icons/avatar.icon";
@@ -66,7 +65,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
             ? acc.concat({
               text: (
                 <MemberInfo
-                  className="assign-circle-configuration__member-info"
+                  className="remove-circle-configuration__member-info"
                   user={member.user}
                 />
               ),
@@ -107,22 +106,22 @@ const Configuration: FC<ConfigurationProps> = (props) => {
   }, [circle?.id]);
 
   return (
-    <div className="assign-circle-configuration">
+    <div className="remove-circle-configuration">
       <StageName
-        className="assign-circle-configuration__stage-name"
-        name="Assign Circle"
+        className="remove-circle-configuration__stage-name"
+        name="Remove Circle"
         icon={
-          <AvatarIcon className="assign-circle-configuration__avatar-icon" />
+          <AvatarIcon className="remove-circle-configuration__avatar-icon" />
         }
       />
-      <Separator className="assign-circle-configuration__separator" />
-      <div className="assign-circle-configuration__form">
+      <Separator className="remove-circle-configuration__separator" />
+      <div className="remove-circle-configuration__form">
         <Dropdown
-          className="assign-circle-configuration__circle-dropdown"
+          className="remove-circle-configuration__circle-dropdown"
           options={circleOptions}
           value={circle?.id}
           onSelect={handleCircleSelect}
-          label="Circle to Assign"
+          label="Circle to Remove"
           placeholder="Select Circle"
           shouldBeFixed={false}
         />
@@ -130,7 +129,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
           <>
             {memberOptions.length > 0 ? (
               <Autocomplete
-                className="assign-circle-configuration__member-autocomplete"
+                className="remove-circle-configuration__member-autocomplete"
                 options={memberOptions}
                 value={commonMember?.id}
                 onSelect={handleCommonMemberSelect}
@@ -139,18 +138,18 @@ const Configuration: FC<ConfigurationProps> = (props) => {
                 shouldBeFixed={false}
               />
             ) : (
-              <p className="assign-circle-configuration__no-members-text">
-                There are no common members to assign selected circle.
+              <p className="remove-circle-configuration__no-members-text">
+                There are no common members to remove selected circle.
               </p>
             )}
           </>
         )}
       </div>
       <ModalFooter sticky>
-        <div className="assign-circle-configuration__modal-footer">
+        <div className="remove-circle-configuration__modal-footer">
           <Button
-            key="assign-circle-configuration"
-            className="assign-circle-configuration__submit-button"
+            key="remove-circle-configuration"
+            className="remove-circle-configuration__submit-button"
             onClick={handleContinue}
             disabled={!commonMember}
             shouldUseFullWidth

@@ -14,9 +14,9 @@ const MemberInfo: FC<MemberInfoProps> = (props) => {
   const { className, user } = props;
 
   return (
-    <div className={classNames("assign-circle-member-info", className)}>
+    <div className={classNames("remove-circle-member-info", className)}>
       <UserAvatar
-        className="assign-circle-member-info__avatar"
+        className="remove-circle-member-info__avatar"
         photoURL={user.photoURL}
         nameForRandomAvatar={user.email}
         userName={getUserName(user)}
