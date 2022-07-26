@@ -1,35 +1,40 @@
 import React, { FC, useLayoutEffect } from "react";
 import classNames from "classnames";
 import { useCountdown } from "@/shared/hooks";
-import { ProposalState } from "@/shared/models";
+import { Proposal, ProposalState } from "@/shared/models";
 import { checkIsCountdownState, formatCountdownValue } from "@/shared/utils";
-import { calculateProposalStatus } from "./helpers";
+import { calculateVotingStatus, VotingStatus } from "./helpers";
 import "./index.scss";
 
 interface CountDownCardProps {
   className?: string;
-  date: Date;
-  state: ProposalState;
+  proposal: Proposal;
+  memberCount: number;
 }
 
 const CountDownCard: FC<CountDownCardProps> = (props) => {
-  const { className, date, state } = props;
+  const { className, proposal, memberCount } = props;
   const { days, hours, minutes, seconds, startCountdown } = useCountdown();
+  const expirationTimestamp =
+    proposal.data.votingExpiresOn || proposal.data.discussionExpiresOn;
   const daysText = days > 0 ? `${days} Day${days > 1 ? "s " : " "}` : "";
   const timerString = `${daysText}${formatCountdownValue(
     hours
   )}:${formatCountdownValue(minutes)}:${formatCountdownValue(seconds)}`;
+  const votingStatus = calculateVotingStatus(proposal, memberCount);
 
   useLayoutEffect(() => {
-    startCountdown(date);
-  }, [startCountdown, date]);
+    if (expirationTimestamp) {
+      startCountdown(new Date(expirationTimestamp.seconds * 1000));
+    }
+  }, [startCountdown, expirationTimestamp]);
 
   return (
     <div className={classNames("proposal-container-countdown-card", className)}>
-      {checkIsCountdownState({ state }) && (
+      {checkIsCountdownState(proposal) && (
         <>
           <span className="proposal-container-countdown-card__time-title">
-            {state === ProposalState.DISCUSSION
+            {proposal.state === ProposalState.DISCUSSION
               ? "Voting starts in"
               : "Time to Vote"}
           </span>
@@ -38,12 +43,25 @@ const CountDownCard: FC<CountDownCardProps> = (props) => {
           </p>
         </>
       )}
-      <span className="proposal-container-countdown-card__status-title">
-        Voting Status
-      </span>
-      <p className="proposal-container-countdown-card__status">
-        {calculateProposalStatus(state)}
-      </p>
+      {proposal.state !== ProposalState.DISCUSSION && (
+        <>
+          <span className="proposal-container-countdown-card__status-title">
+            Voting Status
+          </span>
+          <p
+            className={classNames("proposal-container-countdown-card__status", {
+              "proposal-container-countdown-card__status--red": [
+                VotingStatus.Failing,
+                VotingStatus.Rejected,
+              ].includes(votingStatus),
+              "proposal-container-countdown-card__status--orange":
+                votingStatus === VotingStatus.Withdrawn,
+            })}
+          >
+            {votingStatus}
+          </p>
+        </>
+      )}
     </div>
   );
 };

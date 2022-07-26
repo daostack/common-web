@@ -21,10 +21,23 @@ $max-details-width: 74.875rem;
   }
 
   .proposal-page__common-title-wrapper {
+    display: grid;
+    grid-template-columns: auto 1fr;
+
     @include big-phone {
-      display: grid;
+      min-height: 3rem;
       grid-template-columns: 2rem 1fr 2rem;
       align-items: center;
+    }
+  }
+
+  .proposal-page__back-button {
+    margin-top: 0.75rem;
+    display: flex;
+    color: $secondary-blue;
+
+    @include big-phone {
+      margin-top: 0;
     }
   }
 
@@ -32,7 +45,7 @@ $max-details-width: 74.875rem;
     margin: 0;
     font-family: NotoSerifSC, serif;
     font-weight: 600;
-    line-height: 3rem;
+    line-height: 133%;
 
     @include big-phone {
       font-family: NunitoSans, sans-serif;
@@ -265,9 +278,6 @@ $max-details-width: 74.875rem;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-gap: 1.5rem;
     justify-content: center;
-  }
-  .voting-content__voting-chart--two-columns {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .voting-content__countdown-card-wrapper {

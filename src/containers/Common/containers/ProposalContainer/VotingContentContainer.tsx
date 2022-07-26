@@ -1,6 +1,5 @@
 import React, { FC, useMemo } from "react";
 import { useSelector } from "react-redux";
-import classNames from 'classnames';
 import {
   Proposal,
   Common,
@@ -17,7 +16,7 @@ import {
 } from "@/shared/models/governance/proposals";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
-import { checkIsCountdownState, formatPrice } from "@/shared/utils";
+import { formatPrice } from "@/shared/utils";
 import { CountDownCard } from "../../components/ProposalContainer";
 import { VotingCard } from "./VotingCard";
 import {
@@ -38,8 +37,6 @@ interface VotingContentContainerProps {
 export const VotingContentContainer: FC<VotingContentContainerProps> = ({ proposal, common, governance, proposer }) => {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const expirationTimestamp =
-    proposal.data.votingExpiresOn || proposal.data.discussionExpiresOn;
 
   const proposalDetailsByType = useMemo((): ProposalDetailsItem[] => {
     let typedProposal;
@@ -120,21 +117,14 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
           </div>
         ))}
       </div>
-      <div
-        className={classNames("voting-content__voting-chart", {
-          "voting-content__voting-chart--two-columns":
-            !checkIsCountdownState(proposal) || !expirationTimestamp,
-        })}
-      >
-        {checkIsCountdownState(proposal) && expirationTimestamp && (
-          <div className="voting-content__countdown-card-wrapper">
-            <CountDownCard
-              className="voting-content__countdown-card"
-              date={new Date(expirationTimestamp.seconds * 1000)}
-              state={proposal.state}
-            />
-          </div>
-        )}
+      <div className="voting-content__voting-chart">
+        <div className="voting-content__countdown-card-wrapper">
+          <CountDownCard
+            className="voting-content__countdown-card"
+            proposal={proposal}
+            memberCount={common.memberCount}
+          />
+        </div>
         <VotingCard
           className="voting-content__voting-card"
           type={VotingCardType.AllVotes}

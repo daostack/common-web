@@ -1,5 +1,5 @@
 import React from "react";
-import { Tabs } from "@/containers/Common/containers/CommonDetailContainer/CommonDetailContainer";
+import { Tabs } from "@/containers/Common/containers/CommonDetailContainer";
 import { Common, CommonMember, Governance, Proposal } from "@/shared/models";
 import { EmptyTabComponent } from "../EmptyTabContent";
 import "./index.scss";

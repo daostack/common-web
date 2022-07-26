@@ -44,6 +44,11 @@ export const isFundsAllocationProposal = (
 ): proposal is FundsAllocation =>
   Boolean(proposal?.type === ProposalsTypes.FUNDS_ALLOCATION);
 
+export const isMemberAdmittanceProposal = (
+  proposal?: Proposal | null
+): proposal is MemberAdmittance =>
+  Boolean(proposal?.type === ProposalsTypes.MEMBER_ADMITTANCE);
+
 export * from "./AssignCircle";
 export * from "./BaseProposal";
 export * from "./BasicArgsProposal";
