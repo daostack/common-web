@@ -1,3 +1,3 @@
-export enum KEYBOARD_KEYS {
-    ENTER = 'Enter'
+export enum KeyboardKeys {
+    Enter = 'Enter'
 }

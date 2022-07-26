@@ -23,7 +23,7 @@ import {
 import { EmptyTabComponent } from "@/containers/Common/components/CommonDetailContainer";
 import { usePrevious } from "@/shared/hooks";
 import "./index.scss";
-import { KEYBOARD_KEYS } from "@/shared/constants/keyboardKeys";
+import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 
 interface ChatComponentInterface {
   common: Common | null;
@@ -106,7 +106,7 @@ export default function ChatComponent({
   }
 
   const onEnterKeyDown = (event: React.KeyboardEvent<HTMLElement>): void => {
-    if(event.key === KEYBOARD_KEYS.ENTER) {
+    if(event.key === KeyboardKeys.Enter) {
       sendChatMessage();
     }
   }
