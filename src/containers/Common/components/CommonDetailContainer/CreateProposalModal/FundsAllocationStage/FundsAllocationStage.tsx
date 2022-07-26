@@ -168,6 +168,7 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
               governance={governance}
               initialData={fundsAllocationData}
               onFinish={handleFundDetailsFinish}
+              commonBalance={common.balance}
             />
            }
           {step === FundsAllocationStep.Confirmation &&
