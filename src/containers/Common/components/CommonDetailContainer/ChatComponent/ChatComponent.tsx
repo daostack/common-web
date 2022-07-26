@@ -100,9 +100,11 @@ export default function ChatComponent({
   );
 
   const sendChatMessage = (): void => {
-    setIsNewMessageLoading(true);
-    sendMessage && sendMessage(message);
-    setMessage("");
+    if(message) {
+      setIsNewMessageLoading(true);
+      sendMessage && sendMessage(message);
+      setMessage("");
+    }
   }
 
   const onEnterKeyDown = (event: React.KeyboardEvent<HTMLElement>): void => {
