@@ -16,6 +16,7 @@ import {
   Button,
   Dropdown,
   DropdownOption,
+  Loader,
   ModalFooter,
   Separator,
 } from "@/shared/components";
@@ -187,10 +188,16 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                 placeholder="10"
                 prefix={getPrefix()}
               />
-              <BankAccount
-                bankAccount={bankAccountState.bankAccount}
-                onBankAccountChange={handleBankAccountChange}
-              />
+              {bankAccountState.loading ? (
+                <div>
+                  <Loader />
+                </div>
+              ) : (
+                <BankAccount
+                  bankAccount={bankAccountState.bankAccount}
+                  onBankAccountChange={handleBankAccountChange}
+                />
+              )}
               <LinksArray
                 name="links"
                 values={values.links}
@@ -205,7 +212,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                   <Button
                     onClick={handleContinueClick}
                     shouldUseFullWidth={isMobileView}
-                    disabled={!isValid}
+                    disabled={!isValid || !bankAccountState.bankAccount}
                   >
                     Create proposal
                   </Button>
