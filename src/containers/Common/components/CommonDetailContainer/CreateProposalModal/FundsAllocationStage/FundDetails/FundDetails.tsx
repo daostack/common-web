@@ -1,29 +1,37 @@
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Formik, FormikConfig } from "formik";
+import { FormikProps } from "formik/dist/types";
+import { getBankDetails } from "@/containers/Common/store/actions";
+import { BankAccount } from "@/containers/MyAccount/components/Billing/BankAccount";
+import { BankAccountState } from "@/containers/MyAccount/components/Billing/types";
 import {
-  getBankDetails
-} from "@/containers/Common/store/actions";
-import {
-  Button, Dropdown,
-  DropdownOption, ModalFooter,
-  Separator
+  Button,
+  Dropdown,
+  DropdownOption,
+  ModalFooter,
+  Separator,
 } from "@/shared/components";
+import {
+  CurrencyInput,
+  Form,
+  LinksArray,
+} from "@/shared/components/Form/Formik";
 import { ScreenSize, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
-import { CurrencyInput, Form } from "@/shared/components/Form/Formik";
 import DollarIcon from "@/shared/icons/dollar.icon";
 import { BankAccountDetails, Governance, CommonLink } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { Formik, FormikConfig } from "formik";
-import { FormikProps } from "formik/dist/types";
-import { TextField, LinksArray } from "@/shared/components/Form/Formik";
-import { AddingCard } from '../../../../../../MyAccount/components/Billing/AddingCard'
-import { BankAccountInfo } from "../../../../../../MyAccount/components/Billing/BankAccountInfo";
-import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { BankAccount } from "../../../../../../MyAccount/components/Billing/BankAccount";
-import { BankAccountState } from '../../../../../../MyAccount/components/Billing/types';
 import { StageName } from "../../StageName";
 import { FundsAllocationData, FundType } from "../types";
+import { validationSchema } from "./validationSchema";
 import "./index.scss";
-import { validationSchema } from './validationSchema';
 
 const fundTypes = ['ILS', 'Dollars', 'Tokens'];
 
@@ -177,12 +185,12 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                 name="amount"
                 label="Amount"
                 placeholder="10"
-                prefix={getPrefix()}        
+                prefix={getPrefix()}
               />
               <BankAccount
                 bankAccount={bankAccountState.bankAccount}
                 onBankAccountChange={handleBankAccountChange}
-              />         
+              />
               <LinksArray
                 name="links"
                 values={values.links}
