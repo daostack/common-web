@@ -1,4 +1,4 @@
-import { Circle, CommonMemberWithUserInfo } from "@/shared/models";
+import { Circle, CommonMemberWithUserInfo, CommonLink } from "@/shared/models";
 
 export type FundType = 'ILS' | 'Dollars' | 'Token';
 
@@ -10,4 +10,5 @@ export interface FundsAllocationData {
   goalOfPayment: string;
   fund: FundType;
   amount: number;
+  links: CommonLink[];
 }

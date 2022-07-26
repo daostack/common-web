@@ -30,11 +30,13 @@ export default function ProposalItemComponent({
   }
 
   return (
-    <div className="proposal-item-wrapper">
+    <div
+      className="proposal-item-wrapper"
+      onClick={() => loadProposalDetail(proposal)}
+    >
       <div className="proposal-item-header">
         <div className="proposal-item-header-top">
           <div
-            onClick={() => loadProposalDetail(proposal)}
             className="proposal-title"
             title={proposal.data.args.title}
           >

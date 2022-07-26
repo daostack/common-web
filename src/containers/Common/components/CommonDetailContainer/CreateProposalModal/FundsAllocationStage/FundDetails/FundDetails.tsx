@@ -1,26 +1,37 @@
-import {
-  getBankDetails
-} from "@/containers/Common/store/actions";
-import {
-  Button, Dropdown,
-  DropdownOption, ModalFooter,
-  Separator
-} from "@/shared/components";
-import { CurrencyInput, Form } from "@/shared/components/Form/Formik";
-import { ScreenSize } from "@/shared/constants";
-import DollarIcon from "@/shared/icons/dollar.icon";
-import { BankAccountDetails, Governance } from "@/shared/models";
-import { getScreenSize } from "@/shared/store/selectors";
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
-import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { BankAccount } from "../../../../../../MyAccount/components/Billing/BankAccount";
-import { BankAccountState } from '../../../../../../MyAccount/components/Billing/types';
+import { getBankDetails } from "@/containers/Common/store/actions";
+import { BankAccount } from "@/containers/MyAccount/components/Billing/BankAccount";
+import { BankAccountState } from "@/containers/MyAccount/components/Billing/types";
+import {
+  Button,
+  Dropdown,
+  DropdownOption,
+  ModalFooter,
+  Separator,
+} from "@/shared/components";
+import {
+  CurrencyInput,
+  Form,
+  LinksArray,
+} from "@/shared/components/Form/Formik";
+import { ScreenSize, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
+import DollarIcon from "@/shared/icons/dollar.icon";
+import { BankAccountDetails, Governance, CommonLink } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
 import { StageName } from "../../StageName";
 import { FundsAllocationData, FundType } from "../types";
+import { validationSchema } from "./validationSchema";
 import "./index.scss";
-import { validationSchema } from './validationSchema';
 
 const fundTypes = ['ILS', 'Dollars', 'Tokens'];
 
@@ -34,6 +45,7 @@ interface ConfigurationProps {
 interface FormValues {
   fund: FundType;
   amount: number;
+  links: CommonLink[];
   commonBalance: number;
   bankAccountDetails: BankAccountDetails | null;
 }
@@ -76,6 +88,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
   const getInitialValues = (): FormValues => ({
     fund: 'ILS',
     amount: 0,
+    links: [],
     commonBalance: commonBalance / 100,
     bankAccountDetails: bankAccountState.bankAccount
   });
@@ -85,7 +98,8 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
       onFinish({
         ...initialData,
         fund: selectedFund,
-        amount: values.amount || 10
+        amount: values.amount || 10,
+        links: values.links,
       });
     },
     [onFinish]
@@ -154,7 +168,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
           validationSchema={validationSchema}
           validateOnMount
         >
-          {({ isValid }) => (
+          {({ values, errors, touched, isValid }) => (
             <Form>
               <Dropdown
                 className="assign-circle-configuration__circle-dropdown"
@@ -171,11 +185,20 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                 name="amount"
                 label="Amount"
                 placeholder="10"
-                prefix={getPrefix()}        
+                prefix={getPrefix()}
               />
               <BankAccount
                 bankAccount={bankAccountState.bankAccount}
                 onBankAccountChange={handleBankAccountChange}
+              />
+              <LinksArray
+                name="links"
+                values={values.links}
+                errors={errors.links}
+                touched={touched.links}
+                maxTitleLength={MAX_LINK_TITLE_LENGTH}
+                className="create-funds-allocation__text-field"
+                itemClassName="funds_allocation__links-array-item"
               />
               <ModalFooter sticky={!isMobileView}>
                 <div className="funds-allocation-configuration__modal-footer">
