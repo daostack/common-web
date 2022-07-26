@@ -63,7 +63,7 @@ const RemoveCircleStage: FC<RemoveCircleStageProps> = (props) => {
 
     setIsProposalCreating(true);
     const payload: Omit<
-      CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"],
+      CreateProposal[ProposalsTypes.REMOVE_CIRCLE]["data"],
       "type"
     > = {
       args: {

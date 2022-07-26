@@ -59,7 +59,8 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
     (proposalType: ProposalsTypes) => {
       if (proposalType === ProposalsTypes.ASSIGN_CIRCLE) {
         setStage(CreateProposalStage.AssignCircle);
-      } else {
+      }
+      if (proposalType === ProposalsTypes.FUNDS_ALLOCATION) {
         setStage(CreateProposalStage.FundsAllocation);
       }
       if (proposalType === ProposalsTypes.REMOVE_CIRCLE) {
