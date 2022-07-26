@@ -20,14 +20,16 @@ const AddingCard: FC<AddingCardProps> = (props) => {
         src={imageSrc}
         alt={imageAlt}
       />
-      <p className="billing-adding-card__text">{text}</p>
-      <Button
-        className="billing-adding-card__button"
-        variant={ButtonVariant.Secondary}
-        onClick={onClick}
-      >
-        {buttonText}
-      </Button>
+      <div className="billing-adding-card__content">
+        <p className="billing-adding-card__content__text">{text}</p>
+        <Button
+          className="billing-adding-card__content__button"
+          variant={ButtonVariant.Secondary}
+          onClick={onClick}
+        >
+          {buttonText}
+        </Button>
+      </div>
     </div>
   );
 };

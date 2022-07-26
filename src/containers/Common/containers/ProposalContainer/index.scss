@@ -466,6 +466,24 @@ $max-details-width: 74.875rem;
       font-size: $xsmall;
     }
 
+    .voting-popup__success-details-wrapper {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .voting-popup__approved-illustration {
+      max-width: 10rem;
+      width: 100%;
+    }
+
+    .voting-popup__success-button {
+      max-width: 8.125rem;
+      margin-top: auto;
+    }
+
     .voting-popup__vote-options-container {
       display: flex;
       justify-content: space-between;
