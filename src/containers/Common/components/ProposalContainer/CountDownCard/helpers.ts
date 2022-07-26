@@ -34,21 +34,19 @@ export const calculateVotingStatus = (
   proposal: Proposal,
   memberCount: number
 ): VotingStatus => {
-  if (
-    [ProposalState.FAILED, ProposalState.RETRACTED].includes(proposal.state)
-  ) {
-    return VotingStatus.Rejected;
+  switch (proposal.state) {
+    case ProposalState.FAILED:
+    case ProposalState.RETRACTED:
+      return VotingStatus.Rejected;
+    case ProposalState.PASSED:
+      return VotingStatus.Approved;
+    case ProposalState.COMPLETED:
+      return isFundsAllocationProposal(proposal)
+        ? VotingStatus.Withdrawn
+        : VotingStatus.Approved;
+    default:
+      return calculateFinalState(proposal, memberCount) === ProposalState.PASSED
+        ? VotingStatus.Passing
+        : VotingStatus.Failing;
   }
-  if (proposal.state === ProposalState.PASSED) {
-    return VotingStatus.Approved;
-  }
-  if (proposal.state === ProposalState.COMPLETED) {
-    return isFundsAllocationProposal(proposal)
-      ? VotingStatus.Withdrawn
-      : VotingStatus.Approved;
-  }
-
-  return calculateFinalState(proposal, memberCount) === ProposalState.PASSED
-    ? VotingStatus.Passing
-    : VotingStatus.Failing;
 };
