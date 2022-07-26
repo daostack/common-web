@@ -14,6 +14,7 @@ import { ModalProps } from "@/shared/interfaces";
 import { Common, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { AssignCircleStage } from "./AssignCircleStage";
+import { RemoveCircleStage } from "./RemoveCircleStage";
 import { FundsAllocationStage } from "./FundsAllocationStage";
 import { ProposalTypeSelection } from "./ProposalTypeSelection";
 import { CreateProposalStage } from "./constants";
@@ -58,8 +59,12 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
     (proposalType: ProposalsTypes) => {
       if (proposalType === ProposalsTypes.ASSIGN_CIRCLE) {
         setStage(CreateProposalStage.AssignCircle);
-      } else {
+      }
+      if (proposalType === ProposalsTypes.FUNDS_ALLOCATION) {
         setStage(CreateProposalStage.FundsAllocation);
+      }
+      if (proposalType === ProposalsTypes.REMOVE_CIRCLE) {
+        setStage(CreateProposalStage.RemoveCircle);
       }
     },
     []
@@ -123,6 +128,14 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
             onGoBack={goToProposalTypeSelectionStage}
           />
         );
+      case CreateProposalStage.RemoveCircle:
+        return (
+          <RemoveCircleStage
+            common={common}
+            governance={governance}
+            onFinish={handleFundsAllocationDescriptionFinish}
+            onGoBack={goToProposalTypeSelectionStage}
+          />)
       case CreateProposalStage.FundsAllocation:
         return (
           <FundsAllocationStage

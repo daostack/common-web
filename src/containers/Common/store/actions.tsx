@@ -195,6 +195,20 @@ export const createAssignCircleProposal = createAsyncAction(
   Error
 >();
 
+export const createRemoveCircleProposal = createAsyncAction(
+  CommonsActionTypes.CREATE_REMOVE_CIRCLE_PROPOSAL,
+  CommonsActionTypes.CREATE_REMOVE_CIRCLE_PROPOSAL_SUCCESS,
+  CommonsActionTypes.CREATE_REMOVE_CIRCLE_PROPOSAL_FAILURE
+)<
+  PayloadWithOptionalCallback<
+    Omit<CreateProposal[ProposalsTypes.REMOVE_CIRCLE]["data"], "type">,
+    CreateProposal[ProposalsTypes.REMOVE_CIRCLE]["response"],
+    Error
+  >,
+  CreateProposal[ProposalsTypes.REMOVE_CIRCLE]["response"],
+  Error
+>();
+
 export const createFundingProposal = createAsyncAction(
   CommonsActionTypes.CREATE_FUNDING_PROPOSAL,
   CommonsActionTypes.CREATE_FUNDING_PROPOSAL_SUCCESS,
