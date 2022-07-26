@@ -7,14 +7,8 @@ import React, {
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import classNames from "classnames";
-
-import { fetchProposalById } from "../../store/api";
-import {
-  Loader,
-  UserAvatar,
-  Button,
-  ButtonVariant,
-} from "@/shared/components";
+import { Loader, UserAvatar, Button, ButtonVariant } from "@/shared/components";
+import { useModal } from "@/shared/hooks";
 import { Proposal, ProposalState } from "@/shared/models";
 import { getUserName, checkIsCountdownState } from "@/shared/utils";
 import {
@@ -23,27 +17,26 @@ import {
   GovernanceActions,
   ScreenSize,
 } from "@/shared/constants";
-import { addMessageToProposal, clearCurrentProposal } from "@/containers/Common/store/actions";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { getScreenSize } from "@/shared/store/selectors";
+import { ChatComponent } from "../../components";
+import { useCommonMember, useProposalUserVote } from "../../hooks";
+import {
+  addMessageToProposal,
+  clearCurrentProposal,
+  getCommonDetail,
+  loadProposalDetail,
+  updateCurrentProposal,
+} from "../../store/actions";
+import { fetchProposalById, subscribeToProposal } from "../../store/api";
 import {
   selectCommonDetail,
   selectCurrentProposal,
   selectGovernance,
-} from "../../../Common/store/selectors";
-import {
-  getCommonDetail,
-  loadProposalDetail,
-  updateCurrentProposal,
-} from "../../../Common/store/actions";
-import { subscribeToProposal } from "../../../Common/store/api";
+} from "../../store/selectors";
 import { VotingContentContainer } from "./VotingContentContainer";
 import { PitchContentContainer } from "./PitchContentContainer";
-import { ChatComponent } from "../../components";
-import { useCommonMember } from "../../hooks";
-import { useModal } from "@/shared/hooks";
 import { VotingPopup } from "./VotingPopup";
-import { useProposalUserVote } from "@/containers/Common/hooks";
 import "./index.scss";
 
 interface ProposalRouterParams {
