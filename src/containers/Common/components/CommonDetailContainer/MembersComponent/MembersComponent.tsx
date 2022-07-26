@@ -72,7 +72,7 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
       default:
         return null;
     }
-  }, [activeMenuItem, areCommonMembersFetched]);
+  }, [sortedCommonMembers, pendingProposals, historyProposals]);
 
   useEffect(() => {
     fetchCommonMembers(common.id);
