@@ -23,6 +23,7 @@ import {
 import { EmptyTabComponent } from "@/containers/Common/components/CommonDetailContainer";
 import { usePrevious } from "@/shared/hooks";
 import "./index.scss";
+import { KEYBOARD_KEYS } from "@/shared/constants/keyboardKeys";
 
 interface ChatComponentInterface {
   common: Common | null;
@@ -97,6 +98,18 @@ export default function ChatComponent({
     ),
     [chatWrapperId]
   );
+
+  const sendChatMessage = (): void => {
+    setIsNewMessageLoading(true);
+    sendMessage && sendMessage(message);
+    setMessage("");
+  }
+
+  const onEnterKeyDown = (event: React.KeyboardEvent<HTMLElement>): void => {
+    if(event.key === KEYBOARD_KEYS.ENTER) {
+      sendChatMessage();
+    }
+  }
 
   useEffect(() => {
     if (!highlightedMessageId)
@@ -260,15 +273,12 @@ export default function ChatComponent({
                 className="message-input"
                 placeholder="What do you think?"
                 value={message}
+                onKeyDown={onEnterKeyDown}
                 onChange={(e) => setMessage(e.target.value)}
               />
               <button
                 className="send"
-                onClick={() => {
-                  setIsNewMessageLoading(true);
-                  sendMessage && sendMessage(message);
-                  setMessage("");
-                }}
+                onClick={sendChatMessage}
                 disabled={!message.length}
               >
                 <img src="/icons/send-message.svg" alt="send-message" />
