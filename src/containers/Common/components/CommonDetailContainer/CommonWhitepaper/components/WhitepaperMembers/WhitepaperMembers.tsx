@@ -2,9 +2,9 @@ import React, { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { startCase, lowerCase } from "lodash";
-import { selectGovernance } from "@/containers/Common/store/selectors";
 import { generateCirclesBinaryNumber } from "../../utils";
-import { ProposalsTypes } from "../../../../../../../shared/constants";
+import { selectGovernance } from "@/containers/Common/store/selectors";
+import { ProposalsTypes } from "@/shared/constants";
 import "./index.scss";
 
 export default function WhitepaperMembers() {
