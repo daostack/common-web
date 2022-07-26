@@ -38,7 +38,6 @@ export const VotingPopup: FC<VotingPopupProps> = ({
             setVoting(false);
 
             if (error || !vote) {
-              console.error(error);
               return;
             }
 
