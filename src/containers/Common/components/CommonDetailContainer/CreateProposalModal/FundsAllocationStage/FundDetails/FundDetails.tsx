@@ -1,34 +1,26 @@
-import React, { FC, useEffect, useMemo, useRef, useState, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "@/containers/Auth/store/selectors";
 import {
-  Dropdown,
-  DropdownOption,
-  Button,
-  ModalFooter,
-  Separator,
+  getBankDetails
+} from "@/containers/Common/store/actions";
+import {
+  Button, Dropdown,
+  DropdownOption, ModalFooter,
+  Separator
 } from "@/shared/components";
+import { CurrencyInput, Form } from "@/shared/components/Form/Formik";
 import { ScreenSize } from "@/shared/constants";
 import DollarIcon from "@/shared/icons/dollar.icon";
-import { Circle, CommonMemberWithUserInfo, Governance } from "@/shared/models";
+import { BankAccountDetails, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { getUserName } from "@/shared/utils";
-import { generateCirclesBinaryNumber } from "../../../CommonWhitepaper/utils";
-import { StageName } from "../../StageName";
-import { FundsAllocationData, FundType, RecipientType } from "../types";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
-import { Form, TextField, LinksArray, CurrencyInput } from "@/shared/components/Form/Formik";
-import { AddingCard } from '../../../../../../MyAccount/components/Billing/AddingCard'
-import { BankAccountInfo } from "../../../../../../MyAccount/components/Billing/BankAccountInfo";
-import { BankAccountDetails } from "@/shared/models";
+import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { BankAccount } from "../../../../../../MyAccount/components/Billing/BankAccount";
-import { BankAccountState } from '../../../../../../MyAccount/components/Billing/types'
-import {
-  getBankDetails,
-  loadUserCards,
-} from "@/containers/Common/store/actions";
+import { BankAccountState } from '../../../../../../MyAccount/components/Billing/types';
+import { StageName } from "../../StageName";
+import { FundsAllocationData, FundType } from "../types";
 import "./index.scss";
+import { validationSchema } from './validationSchema';
 
 const fundTypes = ['ILS', 'Dollars', 'Tokens'];
 
@@ -36,22 +28,22 @@ interface ConfigurationProps {
   governance: Governance;
   initialData: FundsAllocationData;
   onFinish: (data: FundsAllocationData) => void;
+  commonBalance: number;
 }
 
 interface FormValues {
   fund: FundType;
   amount: number;
+  commonBalance: number;
+  bankAccountDetails: BankAccountDetails | null;
 }
 
 const FundDetails: FC<ConfigurationProps> = (props) => {
   const dispatch = useDispatch();
-  const { governance, initialData, onFinish } = props;
-  const isInitialCircleUpdate = useRef(true);
-  const user = useSelector(selectUser());
+  const { commonBalance, initialData, onFinish } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const formRef = useRef<FormikProps<FormValues>>(null);
-  const [isEditing, setIsEditing] = useState(false);
   const [bankAccountState, setBankAccountState] = useState<BankAccountState>({
     loading: false,
     fetched: false,
@@ -83,7 +75,9 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
 
   const getInitialValues = (): FormValues => ({
     fund: 'ILS',
-    amount: 0 
+    amount: 0,
+    commonBalance: commonBalance / 100,
+    bankAccountDetails: bankAccountState.bankAccount
   });
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
@@ -124,10 +118,6 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     }));
   };
 
-  const startEditing = () => {
-    setIsEditing(true);
-  };
-
   const handleFundSelect = (selectedFund: unknown) => {
     setSelectedFund(selectedFund as FundType);
   };
@@ -158,12 +148,13 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
       <div className="funds-allocation-configuration__form">
         <Formik
           initialValues={getInitialValues()}
+          enableReinitialize
           onSubmit={handleSubmit}
           innerRef={formRef}
-          //validationSchema={validationSchema}
+          validationSchema={validationSchema}
           validateOnMount
         >
-          {({ values, errors, touched, isValid }) => (
+          {({ isValid }) => (
             <Form>
               <Dropdown
                 className="assign-circle-configuration__circle-dropdown"

@@ -32,6 +32,11 @@ import { BackgroundNotification } from "@/shared/components/BackgroundNotificati
 import { EventTypeState } from "@/shared/models/Notification";
 
 import { useHistory } from "react-router";
+import { parseJson } from "@/shared/utils/json";
+
+import { webviewLogin } from "../Auth/store/actions";
+import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
+
 
 const App = () => {
   const dispatch = useDispatch();
@@ -44,6 +49,28 @@ const App = () => {
     onOpen: showNote,
     onClose: closeNotification,
   } = useModal(false);
+
+  useEffect(() => {
+    window.addEventListener('message', event => {
+      const data = parseJson(event.data) as FirebaseCredentials;
+      if (!data?.providerId) {
+        return;
+      }
+
+      try {
+        dispatch(webviewLogin.request({
+          payload: data,
+            callback: (isLoggedIn) => {
+              if(isLoggedIn) {
+                history.push(ROUTE_PATHS.MY_COMMONS)
+              }
+            }
+        }));
+      } catch (err) {
+        window.ReactNativeWebView.postMessage(JSON.stringify({ action: JSON.stringify(err) }));
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (notification) {

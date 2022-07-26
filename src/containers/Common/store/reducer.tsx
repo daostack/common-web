@@ -100,6 +100,16 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       nextState.currentDiscussion = null;
     })
   )
+  .handleAction(actions.updateCurrentProposal, (state, action) =>
+    produce(state, (nextState) => {
+      if (nextState.currentProposal) {
+        nextState.currentProposal = {
+          ...nextState.currentProposal,
+          ...action.payload,
+        };
+      }
+    })
+  )
   .handleAction(actions.clearCurrentProposal, (state, action) =>
     produce(state, (nextState) => {
       nextState.currentProposal = null;
