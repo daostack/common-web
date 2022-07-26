@@ -45,16 +45,26 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = (screenSize === ScreenSize.Mobile);
 
-  const pendingProposals = proposals.filter(
-    (proposal) =>
-      proposal.type === ProposalsTypes.MEMBER_ADMITTANCE &&
-      checkIsCountdownState(proposal)
-  ) as MemberAdmittance[];
+  const pendingProposals = useMemo(
+    () =>
+      proposals.filter(
+        (proposal) =>
+          proposal.type === ProposalsTypes.MEMBER_ADMITTANCE &&
+          checkIsCountdownState(proposal)
+      ) as MemberAdmittance[],
+    [proposals]
+  );
 
-  const historyProposals = proposals.filter(proposal => proposal.type ===
-    ProposalsTypes.MEMBER_ADMITTANCE &&
-    proposal.state !== ProposalState.VOTING &&
-    proposal.state !== ProposalState.DISCUSSION) as MemberAdmittance[]
+  const historyProposals = useMemo(
+    () =>
+      proposals.filter(
+        (proposal) =>
+          proposal.type === ProposalsTypes.MEMBER_ADMITTANCE &&
+          proposal.state !== ProposalState.VOTING &&
+          proposal.state !== ProposalState.DISCUSSION
+      ) as MemberAdmittance[],
+    [proposals]
+  );
 
 
 
