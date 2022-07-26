@@ -4,7 +4,7 @@ import { useAuthorizedModal } from "@/shared/hooks";
 import { Common, Governance } from "@/shared/models";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { LoginModalType } from "@/containers/Auth/interface";
-import { Tabs } from "@/containers/Common/containers/CommonDetailContainer/CommonDetailContainer";
+import { Tabs } from "@/containers/Common/containers/CommonDetailContainer";
 import "./index.scss";
 import { MembershipRequestModal } from "../MembershipRequestModal";
 

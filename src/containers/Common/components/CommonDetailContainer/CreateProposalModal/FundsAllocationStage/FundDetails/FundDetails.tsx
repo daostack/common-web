@@ -1,33 +1,36 @@
-import React, { FC, useEffect, useMemo, useRef, useState, useCallback } from "react";
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "@/containers/Auth/store/selectors";
+import { Formik, FormikConfig } from "formik";
+import { FormikProps } from "formik/dist/types";
+import { getBankDetails } from "@/containers/Common/store/actions";
+import { BankAccount } from "@/containers/MyAccount/components/Billing/BankAccount";
+import { BankAccountState } from "@/containers/MyAccount/components/Billing/types";
 import {
+  Button,
   Dropdown,
   DropdownOption,
-  Button,
   ModalFooter,
   Separator,
 } from "@/shared/components";
-import { ScreenSize } from "@/shared/constants";
-import DollarIcon from "@/shared/icons/dollar.icon";
-import { Circle, CommonMemberWithUserInfo, Governance } from "@/shared/models";
-import { getScreenSize } from "@/shared/store/selectors";
-import { getUserName } from "@/shared/utils";
-import { generateCirclesBinaryNumber } from "../../../CommonWhitepaper/utils";
-import { StageName } from "../../StageName";
-import { FundsAllocationData, FundType, RecipientType } from "../types";
-import { Formik, FormikConfig } from "formik";
-import { FormikProps } from "formik/dist/types";
-import { Form, TextField, LinksArray, CurrencyInput } from "@/shared/components/Form/Formik";
-import { AddingCard } from '../../../../../../MyAccount/components/Billing/AddingCard'
-import { BankAccountInfo } from "../../../../../../MyAccount/components/Billing/BankAccountInfo";
-import { BankAccountDetails } from "@/shared/models";
-import { BankAccount } from "../../../../../../MyAccount/components/Billing/BankAccount";
-import { BankAccountState } from '../../../../../../MyAccount/components/Billing/types'
 import {
-  getBankDetails,
-  loadUserCards,
-} from "@/containers/Common/store/actions";
+  CurrencyInput,
+  Form,
+  LinksArray,
+} from "@/shared/components/Form/Formik";
+import { ScreenSize, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
+import DollarIcon from "@/shared/icons/dollar.icon";
+import { BankAccountDetails, Governance, CommonLink } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
+import { StageName } from "../../StageName";
+import { FundsAllocationData, FundType } from "../types";
+import { validationSchema } from "./validationSchema";
 import "./index.scss";
 
 const fundTypes = ['ILS', 'Dollars', 'Tokens'];
@@ -36,22 +39,23 @@ interface ConfigurationProps {
   governance: Governance;
   initialData: FundsAllocationData;
   onFinish: (data: FundsAllocationData) => void;
+  commonBalance: number;
 }
 
 interface FormValues {
   fund: FundType;
   amount: number;
+  links: CommonLink[];
+  commonBalance: number;
+  bankAccountDetails: BankAccountDetails | null;
 }
 
 const FundDetails: FC<ConfigurationProps> = (props) => {
   const dispatch = useDispatch();
-  const { governance, initialData, onFinish } = props;
-  const isInitialCircleUpdate = useRef(true);
-  const user = useSelector(selectUser());
+  const { commonBalance, initialData, onFinish } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const formRef = useRef<FormikProps<FormValues>>(null);
-  const [isEditing, setIsEditing] = useState(false);
   const [bankAccountState, setBankAccountState] = useState<BankAccountState>({
     loading: false,
     fetched: false,
@@ -83,7 +87,10 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
 
   const getInitialValues = (): FormValues => ({
     fund: 'ILS',
-    amount: 0 
+    amount: 0,
+    links: [],
+    commonBalance: commonBalance / 100,
+    bankAccountDetails: bankAccountState.bankAccount
   });
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
@@ -91,7 +98,8 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
       onFinish({
         ...initialData,
         fund: selectedFund,
-        amount: values.amount || 10
+        amount: values.amount || 10,
+        links: values.links,
       });
     },
     [onFinish]
@@ -124,10 +132,6 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     }));
   };
 
-  const startEditing = () => {
-    setIsEditing(true);
-  };
-
   const handleFundSelect = (selectedFund: unknown) => {
     setSelectedFund(selectedFund as FundType);
   };
@@ -158,9 +162,10 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
       <div className="funds-allocation-configuration__form">
         <Formik
           initialValues={getInitialValues()}
+          enableReinitialize
           onSubmit={handleSubmit}
           innerRef={formRef}
-          //validationSchema={validationSchema}
+          validationSchema={validationSchema}
           validateOnMount
         >
           {({ values, errors, touched, isValid }) => (
@@ -180,11 +185,20 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                 name="amount"
                 label="Amount"
                 placeholder="10"
-                prefix={getPrefix()}        
+                prefix={getPrefix()}
               />
               <BankAccount
                 bankAccount={bankAccountState.bankAccount}
                 onBankAccountChange={handleBankAccountChange}
+              />
+              <LinksArray
+                name="links"
+                values={values.links}
+                errors={errors.links}
+                touched={touched.links}
+                maxTitleLength={MAX_LINK_TITLE_LENGTH}
+                className="create-funds-allocation__text-field"
+                itemClassName="funds_allocation__links-array-item"
               />
               <ModalFooter sticky={!isMobileView}>
                 <div className="funds-allocation-configuration__modal-footer">

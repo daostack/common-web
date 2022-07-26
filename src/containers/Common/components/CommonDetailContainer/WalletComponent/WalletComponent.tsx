@@ -256,7 +256,8 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
                 </div>
               </div>
             </div>
-            {
+            {//FIXME: temporary hidden Common Wallet chart. Uncomment this after clearing the DB from USD-payments and legacy Commons to which they were made
+            /* {
               !isMobileView
               && <div className="common-transactions-chart-wrapper">
                 {
@@ -269,7 +270,7 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
                   : <Loader />
                 }
               </div>
-            }
+            } */}
           </div>
         </div>
       </div>

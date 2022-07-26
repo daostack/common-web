@@ -1,4 +1,4 @@
-import React, { FC, useState, useCallback, useRef, useEffect } from "react";
+import React, { FC, useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { Common, ProposalState } from "@/shared/models";
@@ -26,8 +26,15 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
     fetched: areCommonMembersFetched,
     data: commonMembers,
     fetchCommonMembers,
-    resetCommonMembers
   } = useCommonMembers();
+  const sortedCommonMembers = useMemo(
+    () =>
+      [...commonMembers].sort(
+        (commonMember, prevCommonMember) =>
+          prevCommonMember.joinedAt.seconds - commonMember.joinedAt.seconds
+      ),
+    [commonMembers]
+  );
 
   const proposals = useSelector(selectProposals());
 
@@ -38,23 +45,33 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = (screenSize === ScreenSize.Mobile);
 
-  const pendingProposals = proposals.filter(
-    (proposal) =>
-      proposal.type === ProposalsTypes.MEMBER_ADMITTANCE &&
-      checkIsCountdownState(proposal)
-  ) as MemberAdmittance[];
+  const pendingProposals = useMemo(
+    () =>
+      proposals.filter(
+        (proposal) =>
+          proposal.type === ProposalsTypes.MEMBER_ADMITTANCE &&
+          checkIsCountdownState(proposal)
+      ) as MemberAdmittance[],
+    [proposals]
+  );
 
-  const historyProposals = proposals.filter(proposal => proposal.type ===
-    ProposalsTypes.MEMBER_ADMITTANCE &&
-    proposal.state !== ProposalState.VOTING &&
-    proposal.state !== ProposalState.DISCUSSION) as MemberAdmittance[]
+  const historyProposals = useMemo(
+    () =>
+      proposals.filter(
+        (proposal) =>
+          proposal.type === ProposalsTypes.MEMBER_ADMITTANCE &&
+          proposal.state !== ProposalState.VOTING &&
+          proposal.state !== ProposalState.DISCUSSION
+      ) as MemberAdmittance[],
+    [proposals]
+  );
 
 
 
   const renderTab = useCallback((activeMenuItem: MemberListTab) => {
     switch (activeMenuItem) {
       case MemberListTab.Members:
-        return <MembersList members={commonMembers} />;
+        return <MembersList members={sortedCommonMembers} />;
 
       case MemberListTab.Pending:
         return <ProposalsList proposals={pendingProposals} emptyText={"No pending proposals"} />;
@@ -65,7 +82,7 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
       default:
         return null;
     }
-  }, [activeMenuItem, areCommonMembersFetched]);
+  }, [sortedCommonMembers, pendingProposals, historyProposals]);
 
   useEffect(() => {
     fetchCommonMembers(common.id);
@@ -105,7 +122,7 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
             onClick={() => setActiveMenuItem(MemberListTab.Members)}
             className={classNames({ active: activeMenuItem === MemberListTab.Members, isMobileView })}
           >
-            {MemberListTab.Members} ({commonMembers.length})
+            {MemberListTab.Members} ({sortedCommonMembers.length})
           </li>
           <li
             onClick={() => setActiveMenuItem(MemberListTab.Pending)}

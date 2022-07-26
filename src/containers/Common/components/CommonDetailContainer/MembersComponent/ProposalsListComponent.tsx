@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, memo } from "react";
 import { MemberAdmittance } from "../../../../../shared/models/governance/proposals";
 import ProposalItemComponent from "../ProposalsComponent/ProposalItemComponent";
 import { Proposal } from "@/shared/models";
@@ -31,4 +31,4 @@ const ProposalsList: FC<ProposalsListComponentProps> = ({ proposals, emptyText }
   </div >
 }
 
-export default ProposalsList;
+export default memo(ProposalsList);

@@ -6,7 +6,7 @@ import { createFundingProposal } from "@/containers/Common/store/actions";
 import { Loader, Modal } from "@/shared/components";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { ModalType } from "@/shared/interfaces";
-import { Common, Governance } from "@/shared/models";
+import { Common, Governance, CommonLink } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { getUserName } from "@/shared/utils";
 import { useCreateProposalContext } from "../context";
@@ -35,6 +35,7 @@ const initialFundsData = {
   goalOfPayment: 'goalOfPayment',
   amount: 10,
   fund: 'ILS' as FundType,
+  links: [] as CommonLink[],
 }
 
 const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
@@ -167,6 +168,7 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
               governance={governance}
               initialData={fundsAllocationData}
               onFinish={handleFundDetailsFinish}
+              commonBalance={common.balance}
             />
            }
           {step === FundsAllocationStep.Confirmation &&
