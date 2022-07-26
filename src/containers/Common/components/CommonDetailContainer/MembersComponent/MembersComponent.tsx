@@ -26,12 +26,12 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
     fetched: areCommonMembersFetched,
     data: commonMembers,
     fetchCommonMembers,
-    resetCommonMembers
   } = useCommonMembers();
   const sortedCommonMembers = useMemo(
     () =>
       [...commonMembers].sort(
-        (a, b) => b.joinedAt.seconds - a.joinedAt.seconds
+        (commonMember, prevCommonMember) =>
+          prevCommonMember.joinedAt.seconds - commonMember.joinedAt.seconds
       ),
     [commonMembers]
   );
