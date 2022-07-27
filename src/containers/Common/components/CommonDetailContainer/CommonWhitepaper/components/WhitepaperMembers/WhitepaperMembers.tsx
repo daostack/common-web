@@ -26,7 +26,7 @@ export default function WhitepaperMembers() {
   const renderContent = () => {
     const circle = governance?.circles.filter(circle => circle.name === selectedMember?.name)[0];
 
-    const allowedProposals = Object.keys(circle?.allowedProposals || {}).map((proposal, index) => {
+    const allowedProposals = Object.keys(circle?.allowedProposals || {}).sort().map((proposal, index) => {
       return (
         <span key={index} className="whitepaper-members__feature-title">
           <img src="/icons/check.png" className="whitepaper-members__checkmark-icon" alt="checkmark" />
@@ -34,7 +34,7 @@ export default function WhitepaperMembers() {
         </span>)
     });
 
-    const allowedActions = Object.keys(circle?.allowedActions || {}).map((action, index) => {
+    const allowedActions = Object.keys(circle?.allowedActions || {}).sort().map((action, index) => {
       return (
         <span key={index} className="whitepaper-members__feature-title">
           <img src="/icons/check.png" className="whitepaper-members__checkmark-icon" alt="checkmark" />
@@ -57,7 +57,7 @@ export default function WhitepaperMembers() {
       if (governance?.proposals[proposal]?.global?.weights?.find(({ circles }) => circles & circleBin)) {
         return true
       }
-    }).map((proposalKey, index) => {
+    }).sort().map((proposalKey, index) => {
       return (<span key={index} className="whitepaper-members__feature-title">
         <img src="/icons/check.png" className="whitepaper-members__checkmark-icon" alt="checkmark" />
         {startCase(lowerCase(proposalKey))}
